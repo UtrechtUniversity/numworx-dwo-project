@@ -1,0 +1,220 @@
+// Source file:
+// N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\SelectCoursesDialog.java
+
+package fi.dwo.client.gui;
+
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JScrollPane;
+
+import fi.dwo.client.domain.Course;
+import fi.dwo.client.domain.DwoHelper;
+import fi.dwo.client.system.TextMapper;
+
+/**
+ * This class represents a dialog for selecting courses.
+ * 
+ * @author M.J.B. Kupers
+ *  
+ */
+public final class SelectCoursesDialog extends JDialog implements ActionListener {
+
+    private Course[] selectedCourses;
+
+    private JButton okButton;
+
+    private JButton cancelButton;
+    
+    private JButton selectAllButton;
+    
+    private JButton deselectAllButton;
+
+    private Hashtable checkBoxCourse;
+
+	private Box jTable;
+
+      
+    
+    
+    /**
+     * Creates a new instance of a SelectCoursesDialog. It shows a overview of
+     * the selected courses, and gives an opportunity to select courses.
+     * 
+     * @param owner The owner component of the dialog.
+     * @param title The title of the dialog.
+     * @param modal If true, the dialog is modal.
+     * @param allCourses A list of all course to select.
+     * @param selectedCourses A list of all the currently selected courses.
+     */
+    public SelectCoursesDialog(Component owner, String title, boolean modal,
+            Course[] allCourses, Course[] selectedCourses) {
+        super(DwoHelper.getFrameForComponent(owner), title, modal);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        Container contentPane = getContentPane();
+        contentPane.setLayout(new BorderLayout());
+        contentPane.setBackground(GuiConstants.MAIN_BACKGROUND);
+        setBackground(GuiConstants.MAIN_BACKGROUND);
+        setSize(600, 310);
+
+        this.selectedCourses = selectedCourses;
+
+        /*
+         * Create a Vector with all the selected courses. We can now easily
+         * check if a course is selected
+         */
+        Vector vSelectedCourses = new Vector(selectedCourses.length);
+        for (int i = 0; i < selectedCourses.length; i++) {
+            vSelectedCourses.addElement(selectedCourses[i]);
+        }
+
+        /*
+         * Every checkbox maps a course. So if we know the checkbox, we know the
+         * corresponding course
+         */
+        checkBoxCourse = new Hashtable();
+
+        jTable = Box.createVerticalBox();
+        JCheckBox cb;
+
+        for (int i = 0; i < allCourses.length; i++) {
+            cb = new JCheckBox(allCourses[i].getName());
+            cb.setBackground(getBackground());
+            cb.setFont(GuiConstants.NORMAL_TEXT);
+            if (vSelectedCourses.contains(allCourses[i])) {
+                cb.setSelected(true);
+            }
+            checkBoxCourse.put(cb, allCourses[i]);
+
+            jTable.add(cb);
+        }
+
+        
+        
+        JScrollPane pane = new JScrollPane(jTable);
+        pane.getViewport().setBackground(getBackground());
+        pane.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        pane.setOpaque(false);
+        contentPane.add(pane);
+        
+        Box southPane = Box.createHorizontalBox();
+        southPane.setBorder(BorderFactory.createEmptyBorder(0,5,5,5));
+        contentPane.add(southPane, BorderLayout.SOUTH);
+        /* Select All Button */
+        selectAllButton = new JButton(TextMapper.getText(TextMapper.GUISC_BTN_SELECT_ALL));
+        selectAllButton.addActionListener(this);
+        southPane.add(selectAllButton);
+        southPane.add(Box.createHorizontalStrut(5));
+        /* Deselect All Button */
+        deselectAllButton = new JButton(TextMapper.getText(TextMapper.GUISC_BTN_DESELECT_ALL));
+        deselectAllButton.addActionListener(this);
+        southPane.add(deselectAllButton);
+
+        southPane.add(Box.createGlue());
+        
+        /* Cancel button */
+        cancelButton = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));
+        cancelButton.addActionListener(this);
+        southPane.add(cancelButton);
+        southPane.add(Box.createHorizontalStrut(5));
+
+        /* Ok button */
+        okButton = new JButton(TextMapper.getText(TextMapper.BTN_OK));
+        okButton.addActionListener(this);
+        southPane.add(okButton);
+
+
+        // set location to center of parent
+        int x = 0;
+        int y = 0;
+
+        Point p = owner != null ? owner.getLocation() : new Point(0, 0);
+        Dimension parentSize = owner != null ? owner.getSize()
+                : Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension mySize = getSize();
+        x = p.x + (parentSize.width - mySize.width) / 2;
+        y = p.y + (parentSize.height - mySize.height) / 2;
+
+        setLocation(x, y);
+    }
+
+    /**
+     * Shows the SelectCoursesDialog and returns the selected courses.
+     * 
+     * @param parent The parent component of the dialog.
+     * @param allCourses A list of all the possible courses.
+     * @param selectedCourses A list of all the selected courses.
+     * @return A list of all the selected courses.
+     */
+    public static Course[] selectCourses(Component parent, Course[] allCourses,
+            Course[] selectedCourses) {
+        String title = TextMapper.getText(TextMapper.GUISC_TITLE);
+        SelectCoursesDialog scd = new SelectCoursesDialog(parent, title, true, allCourses, selectedCourses);
+        scd.show();
+        return scd.getSelectedCourses();
+    }
+
+    /**
+     * Invoked when an action occurs.
+     * 
+     * @param e The ActionEvent.
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == cancelButton) {
+        	selectedCourses = null;
+        	this.setVisible(false);
+        } else if (e.getSource() == okButton) {
+            Vector tmpSelected = new Vector();
+            JCheckBox key;
+            for (Enumeration keys = checkBoxCourse.keys(); keys.hasMoreElements();) {
+                key = (JCheckBox) keys.nextElement();
+                if (key.isSelected()) {
+                    tmpSelected.addElement(checkBoxCourse.get(key));
+                }
+            }
+
+            selectedCourses = new Course[tmpSelected.size()];
+            tmpSelected.copyInto(selectedCourses);
+            this.hide();
+
+        } else if (e.getSource() == selectAllButton) {
+            JCheckBox key;
+            for (Enumeration keys = checkBoxCourse.keys(); keys.hasMoreElements();) {
+                key = (JCheckBox) keys.nextElement();
+                key.setSelected(true);
+            }
+        } else if (e.getSource() == deselectAllButton) {
+            JCheckBox key;
+            for (Enumeration keys = checkBoxCourse.keys(); keys.hasMoreElements();) {
+                key = (JCheckBox) keys.nextElement();
+                key.setSelected(false);
+            }            
+        }
+
+    }
+
+    /**
+     * Returns all the selected courses.
+     * 
+     * @return All the selected courses.
+     */
+    public Course[] getSelectedCourses() {
+        return selectedCourses;
+    }
+
+}

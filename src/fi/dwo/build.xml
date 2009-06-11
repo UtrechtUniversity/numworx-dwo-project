@@ -1,0 +1,229 @@
+<?xml version='1.0' ?>
+
+<!--
+     Zet dit file met de naam 'build.xml' eerst in de main package source folder van je project:
+	..../&lt;ProjectName&gt;/src/fi/&lt;packagename&gt;/
+
+    Vervang bij name='ProjectName' ProjectName door de naam van je project, d.w.z de naam van je main appliction name.
+ -->
+<project name='DWO' basedir='../../..' default='cpjc' >
+
+	<description>
+	Auteur: Wim
+
+	Deze ant build kan je gebruiken voor het automatiseren van common tasks in de referentie omgeving.
+	!Let op de eis dat de main application name gelijk is aan de project name!
+
+
+	</description>
+
+	<dirname property="ant.dir" file="${ant.file}"  />
+	<property file="${ant.dir}/build.properties"/>
+
+	<property name='dosdrive' value='N:' />
+	<property name='java.resources' value='/home/java/resources' />
+	<property name='common.build' value='${java.resources}/ant/common-build.xml' />
+	<condition property='dos' value='dos' >
+	   	<os family='dos' />
+	</condition>
+	<condition property='drive' value='${dosdrive}'>
+		<os family='dos' />
+	</condition>
+	<condition property='drive' value=''  >
+		<os family='unix' />
+	</condition>
+
+	<import file="${drive}${common.build}" />
+
+	
+    <!-- ================================= 
+          target: jar              
+         ================================= -->
+    <target name="jar" depends="compile, resources" description="maak een jar mbv jshrink">
+<!--    	<exec
+    		executable = "cmd"
+    		dir='toolfiles'
+        >
+    		<arg line="/c jshrink.bat" />
+    	</exec>
+ -->
+    	<property name="toolfiles" location="${basedir}/toolfiles"/>
+    	<java jar="../../tools/jshrink.exe" fork="true"
+    		dir='${toolfiles}' >
+    		<arg line='-script "${toolfiles}\jshrink_all.txt"'/>
+    		<sysproperty key="user.dir" file="${toolfiles}" />
+    	</java>
+    	
+    	<jar destfile="${packagename.jar}" update="true" index="true">   	
+    	 <manifest>
+    		<attribute name="Main-Class" value="${main-class}"/>
+    	 	<attribute name="Class-Path" value="algebrapijlenoefenen.jar functiesraden.jar  haakjessommen_opp.jar 
+    	 		 haakjessommen_tab.jar  haakjessommen_ontb.jar  heks.jar  herleiden.jar 
+    	 		 kwadverg.jar  linverg.jar  nabouwenaanzichten.jar   oppervlaktealgebra.jar 
+    	 		 popupurlapplet.jar  vermtabel.jar  waarmakers.jar  getallenlijn.jar  bordjes.jar 
+    	 		 wiskopdr.jar  algebrapijlenopdr.jar  aanzichtenraden.jar  vlakkenkleuren.jar 
+    	 		 profielendraaien.jar  bordjesopdr.jar  spot_problems_dwo.jar  oppervlakte_dwo.jar 
+    	 		 algebrapijlen.jar  geomalgebra.jar  geomalgebraopdr.jar  geomalgebra1d.jar 
+    	 		 tekenveelvlakopdr.jar  doorziendwo.jar  grkijken1.jar  grkijken2.jar 
+    	 		 mysql-connector-java-3.0.16-ga-bin.jar" />
+    	</manifest>
+    	<indexjars>
+    		<fileset dir="${jar}" includes="*.jar" />
+    	</indexjars>
+    	</jar>	
+    </target>
+
+	
+    <!-- - - - - - - - - - - - - - - - - - 
+          target: keystore                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="keystore">
+            <property name="keystore" value="output/keys.keystore"/>
+    </target>
+
+	<target name='make.keys' depends='keystore' description="Genereer certificaat en sleutel">
+		<delete file='${keystore}'/>
+		<genkey alias='signkey'
+				storepass='secret'
+				keystore='${keystore}'
+				verbose='${true}'
+		>
+			<dname>
+				<param name="CN" value="Peter Boon" />
+				<param name="OU" value="Freudenthal Instituut" />
+				<param name="O" value="Universiteit Utrecht" />
+				<param name="C" value="NL" />
+			</dname>
+		</genkey>
+	</target>
+
+	<target name="sign.jars" depends='keystore' description="Onderteken jars" >
+		<signjar
+			alias='signkey'
+			verbose='true'
+			lazy='true'
+			storepass='secret'
+			keystore='${keystore}'
+		>
+			<fileset dir='${jar}' includes='*.jar' />
+		</signjar>
+	</target>
+	
+	<target name='jnlp' depends='init' description='Genereeer JNLP file' >
+		<taskdef 
+			classpath="${javaclasses}/jars/_sources/orangevolt-ant-tasks-1.3.5.jar"
+			name="jnlp"
+			classname="com.orangevolt.tools.ant.JNLPTask"
+		/>
+		<!--resource="com/orangevolt/tools/ant/taskdefs.properties"-->
+		<jnlp toFile="${jar}/${packagename}.jnlp" href="${packagename}.jnlp" codebase="http://www.fi.uu.nl/dwo/jnlp" >
+			<information>
+				<title>${ant.project.name}</title>
+				<vendor>Freudenthal Instituut</vendor>
+			</information>
+			<security>
+				<all_permissions/>
+			</security>
+			<resources>
+				<j2se version="1.2+"/>
+				<jar href="dwo.jar" main="yes" />
+				<fileset dir="${jar}" includes="*.jar" excludes="dwo.jar" />
+			</resources>
+			<application_desc main_class="${main-class}" >
+				<argument>jnlp=yes</argument>
+			</application_desc>
+		</jnlp>
+	</target>	
+	
+	<!-- ================================= 
+          target: web.xml              
+         ================================= -->
+    <target name="web.xml" depends="init" description="genereeer web.xml file">
+		<taskdef name="webdoclet" classname="xdoclet.modules.web.WebDocletTask">
+			<classpath>
+				<fileset dir='${dir.xdoclet}' includes='*.jar' />
+				<pathelement location="${classes}"/>
+				<pathelement location="${javaclasses}/jars/jsdk.jar" />
+			</classpath>
+    	</taskdef>
+
+    	<webdoclet 
+    	    		destdir="WebContent/WEB-INF"
+    	    		mergedir="WebContent/WEB-INF"
+    	    	    excludedtags="@version,@author,@todo"
+    	    	    addedtags="@wtp generated"
+    	    	    force="${xdoclet.force}"
+    	    	    verbose="true" >
+    	    	
+    	    	<!-- SERVLETS START -->
+    	    	 	   <fileset dir="${src}" > 
+    	    	   	    	<include name="**/DbAccessServlet.java **/DwoWebPageServlet.java" />
+    	    	 	   </fileset>
+    	    	<!-- SERVLETS END -->
+    	     	
+			    	<deploymentdescriptor  
+			    		useIds="false" 
+			    		servletspec="2.4" 
+			    		validatexml="false"  />
+    	   	</webdoclet>
+    </target>
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: webclasses                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="war" depends="jar" description="maak een dwo.war mbv een geprepareerde home/javaclasses">
+    	<condition property="localtest"><equals arg1="${drive}" arg2="C:"/></condition>
+    	<fail unless="localtest" message="Alleen met drive = C:" />
+    	<war
+    		warfile="output/dwo.war"
+    		webxml="WebContent/WEB-INF/web.xml"	 
+    		duplicate="preserve"
+    	>
+    		<fileset dir="WebContent" />
+    		<zipfileset dir="${jar}" includes="*.jar" prefix="jars"/>
+    		<zipfileset dir="${src}/fi/dwo/client/domain/resources" prefix="resources"/>
+        	<classes dir="${classes}" includes="**/*.class" />
+       		<classes dir="${javaclasses}" excludes="jars/** fi/dwo/**" includes="**/*.class" />
+    		<lib dir="${jar}" includes="*mysql*.jar" />
+    	</war>
+    	
+    </target>
+
+	<property name="catalina.home" location="C:/Program Files/Apache Software Foundation/Tomcat 5.5"/>
+	<property name="tomcat.user" value="tomcat" />
+	<property name="tomcat.password" value="tomcat"/>
+	<property name="tomcat.path" value="/dwo" />
+	<property name="tomcat.url" value="http://localhost:8080/manager" />
+	
+	<target name="prepare.tomcat">
+		<condition property="webapp.installed">
+			<http url="http://localhost:8080${tomcat.path}" />
+		</condition>
+	</target>
+	
+	<target name="remove.tomcat" depends="prepare.tomcat" if="webapp.installed" >
+		<taskdef name="remove"
+			classname="org.apache.catalina.ant.RemoveTask"
+			classpath="${catalina.home}/server/lib/catalina-ant.jar"		/>
+		<remove username='${tomcat.user}' password='${tomcat.password}' url='${tomcat.url}' path='${tomcat.path}' />
+	</target>
+
+	<target name="install.tomcat" depends="remove.tomcat, war" description="Installatie locale tomcat" >
+		<taskdef name="install"
+			classname="org.apache.catalina.ant.InstallTask"
+			classpath="${catalina.home}/server/lib/catalina-ant.jar"		/>
+		<pathconvert dirsep="/" property="war" >
+			<path location="output/dwo.war" />
+		</pathconvert>
+		<echo message="${war}"/>
+		<delete dir="${catalina.home}/webapps${tomcat.path}" />
+		<install username='${tomcat.user}' password='${tomcat.password}' url='${tomcat.url}' path='${tomcat.path}' 
+			war="file:/${war}" 
+		/>
+	</target>
+
+	
+	
+	
+	
+	
+</project>

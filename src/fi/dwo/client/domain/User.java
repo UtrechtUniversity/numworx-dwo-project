@@ -1,0 +1,338 @@
+// Source file:
+// N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\domain\\User.java
+
+package fi.dwo.client.domain;
+
+import java.text.MessageFormat;
+
+import fi.dwo.client.system.TextMapper;
+
+/**
+ * This class is responsible for the User data. 
+ * @author M.J.B. Kupers
+ *  
+ */
+public class User implements UserGroup {
+
+    private int userID;
+
+    private String username;
+
+    private String firstname;
+
+    private String middleName;
+
+    private String lastName;
+
+    private String email;
+
+    private SchoolClass inClass;
+
+    private School school;
+
+    /**
+     * Creates a new User object.
+     *  
+     */
+    public User() {
+
+    }
+
+    /**
+     * Returns the fullname of the user.
+     * 
+     * @return The fullname of the user.
+     *  
+     */
+    public String getName() {
+        if ((middleName == null) || middleName.equals("")) {
+            return firstname + " " + lastName;
+        } else {
+            return firstname + " " + middleName + " " + lastName;
+        }
+    }
+
+    /**
+     * Returns the unique-identifier for the UserGroup object.
+     * 
+     * @return The unique-identifier for the UserGroup object.
+     */
+    public int getID() {
+        return userID;
+    }
+
+    /**
+     * Returns the e-mail address of the user.
+     * 
+     * @return The e-mail address of the user.
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * Sets the e-mail address of the user.
+     * 
+     * @param email The new e-mail address of the user.
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * Returns the firstname of the user.
+     * 
+     * @return The firstname of the user.
+     */
+    public String getFirstname() {
+        return firstname;
+    }
+
+    /**
+     * Sets the firstname of the user
+     * 
+     * @param firstname The firstname of the user.
+     */
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    /**
+     * Returns the current class of the user.
+     * 
+     * @return The current class of the user.
+     */
+    public SchoolClass getInClass() {
+        return inClass;
+    }
+
+    /**
+     * Sets the schoolclass of the user.
+     * 
+     * @param inClass The schoolclass of the user.
+     */
+    public void setInClass(SchoolClass inClass) {
+        this.inClass = inClass;
+    }
+
+    /**
+     * Returns the lastname of the user.
+     * 
+     * @return The lastname of the user.
+     */
+    public String getLastName() {
+        return lastName;
+    }
+
+    /**
+     * Sets the lastname of the user.
+     * 
+     * @param lastName The lastname of the user.
+     */
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    /**
+     * Returns the middlename of the user.
+     * 
+     * @return The middlename of the user.
+     */
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    /**
+     * Sets the middlename of the user.
+     * 
+     * @param middleName The new middlename of the user.
+     */
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+
+    /**
+     * Returns the school of the user.
+     * 
+     * @return The school of the user.
+     */
+    public School getSchool() {
+        return school;
+    }
+
+    /**
+     * Sets the school for the user.
+     * 
+     * @param school The new school for the user.
+     */
+    public void setSchool(School school) {
+        this.school = school;
+    }
+
+    /**
+     * Returns the unique-identifier of the user.
+     * 
+     * @return The unique-identifier of the user.
+     */
+    public int getUserID() {
+        return userID;
+    }
+
+    /**
+     * Sets the unique-identifier of the user.
+     * 
+     * @param userID The unique-identifier of the user.
+     */
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
+
+    /**
+     * Returns the username of the user.
+     * 
+     * @return The username of the user.
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * Sets the username of the user.
+     * 
+     * @param username The username of the user.
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    /**
+     * Indicates if this is the deepest UserGroup.
+     * 
+     * @return If this is the deepest UserGroup it returns true. Otherwise it
+     *         returns false.
+     * @see fi.dwo.client.domain.UserGroup#isDeepestLevel()
+     */
+    public boolean isDeepestLevel() {
+        return true;
+    }
+
+    /**
+     * Indicates if this is the highest UserGroup.
+     * 
+     * @return If this is the highest UserGroup it returns true. Otherwise it
+     *         returns false.
+     * @see fi.dwo.client.domain.UserGroup#isHighestLevel()
+     */
+    public boolean isHighestLevel() {
+        return false;
+    }
+
+    /**
+     * Returns a title representing the UserGroup object.
+     * 
+     * @return A title representing the UserGroup object.
+     * @see fi.dwo.client.domain.UserGroup#getTitle()
+     */
+    public String getTitle() {
+        String[] arguments = new String[1];
+        if (inClass != null) {
+            arguments[0] = inClass.getName();
+        } else {
+            arguments[0] = "";
+        }
+        String s = TextMapper.getText(TextMapper.UG_STUDENTS_OF_CLASS);
+        return MessageFormat.format(s, arguments);
+    }
+
+    /**
+     * Returns the name to order the usergroup. In this case, it returns the
+     * lastName of the user.
+     * 
+     * @return The name to order the usergroup.
+     * @see fi.dwo.client.domain.UserGroup#getOrderName()
+     */
+    public String getOrderName() {
+        return lastName.toLowerCase();
+    }
+
+    /**
+     * Returns a typename representing the User.
+     * @return A typename representing the User.
+     * @see fi.dwo.client.domain.UserGroup#getType()
+     */
+    public String getType() {
+        return TextMapper.getText(TextMapper.UG_USER_TITLE);
+    }
+
+    /**
+     * Returns a title represents the parent item.
+     * @return A title represents the parent item.
+     * @see fi.dwo.client.domain.UserGroup#getParentTitle()
+     */
+    public String getParentTitle() {
+    return TextMapper.getText(TextMapper.UG_USER_PARENT);
+    }
+
+    /**
+     * Returns a title represents the child item.
+     * @return A title represents the child item.
+     * @see fi.dwo.client.domain.UserGroup#getChildTitle()
+     */
+    public String getChildTitle() {
+        return "";
+    }
+
+    /**
+     * Returns a title represents the Ascending Order item.
+     * @return A title represents the Ascending Order item.
+     * @see fi.dwo.client.domain.UserGroup#getOrderAscTitle()
+     */
+    public String getOrderAscTitle() {
+        return TextMapper.getText(TextMapper.UG_USER_ORDER_ASC);
+    }
+
+    /**
+     * Returns a title represents the Descending Order item.
+     * @return A title represents the Descending Order item.
+     * @see fi.dwo.client.domain.UserGroup#getOrderDescTitle()
+     */
+    public String getOrderDescTitle() {
+        return TextMapper.getText(TextMapper.UG_USER_ORDER_DESC);
+    }
+// single value, for once and for all.
+    private static boolean _logout = true;
+    private boolean _readonly = false;
+/**
+ * Kan deze gebruiker wel uitloggen?
+ * @return logout flag
+ */
+    
+    public boolean canLogout()
+    {
+        return _logout;
+    }
+    
+    void setLogout(boolean logout)
+    {
+        _logout = logout;
+    }
+    
+    /**
+     * Bepaal of van deze gebruiker de inloggegevens mogen worden gewijzigd.
+     * @param readonly zet readonly on/off
+     */
+    void setReadonly(boolean readonly)
+    {
+        _readonly = readonly;
+        
+    }
+    
+    /**
+     * Is deze gebruiker readonly. Kan deze gebruiker zijn profiel wijzigen?
+     * @return readonly.
+     */
+    public boolean isReadonly()
+    {
+        return _readonly;
+    }
+}

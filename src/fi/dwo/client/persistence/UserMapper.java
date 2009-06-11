@@ -1,0 +1,168 @@
+// Source file:
+// N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\UserMapper.java
+
+package fi.dwo.client.persistence;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Hashtable;
+
+import org.apache.xmlrpc.applet.XmlRpcException;
+
+import fi.dwo.client.domain.School;
+import fi.dwo.client.domain.SchoolClass;
+import fi.dwo.client.domain.Teacher;
+import fi.dwo.client.domain.Admin;
+import fi.dwo.client.domain.User;
+
+public class UserMapper extends XmlRpcMapper {
+
+    private static final String TABLENAME = "tblUser";
+
+    private static final String IDCOL = "userID";
+    
+    private static final String ORDERCOL = "lastname";
+
+    /**
+
+     */
+    public UserMapper() {
+
+    }
+
+    /**
+     * @param oid
+     * @param obj
+
+     */
+    public void put(int oid, Object obj) throws IOException, SQLException,
+            XmlRpcException {
+        System.err.println("UserMapper.put() Not yet implemented!");
+    }
+
+    /**
+     * @param data
+     * @return Object
+
+     */
+    public Object getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException {
+        User u = null;
+        if (data.get("userID") == null) { //We don't know enough to make a
+                                          // userobject
+            return null;
+        } else if (objects.containsKey(data.get("userID"))) { // Did we know the
+                                                              // user?
+            u = (User) objects.get(data.get("userID"));
+        } else {
+            /* Is the user a teacher? */
+            if (data.containsKey("groupname")) {
+                if (((String) data.get("groupname")).equals("TEACHER")) {
+                    u = new Teacher();
+                }
+                else if (((String) data.get("groupname")).equals("ADMIN")) {
+                    u = new Admin();
+                }
+            }
+        }
+
+        if (u == null) {
+            u = new User();
+        }
+        u = (User) update(u, data);
+        if(!objects.containsKey(new Integer(u.getID()))) {
+            objects.put(new Integer(u.getID()), u);
+        }
+        return u;
+    }
+
+    /**
+     * Returns all the Users with the object as restriction.
+     * @param obj The object who specifies the restriction. possible objects are:
+     * <ul>
+     * <li><code>SchoolClass</code>: The users of the specified SchoolClass are returned.
+     * </ul>
+     * @return The Users who satisfies the restriction. 
+     */
+    public Object[] get(Object obj) throws IOException, SQLException,
+            XmlRpcException {
+        Hashtable ht = new Hashtable();
+        if(obj instanceof SchoolClass) {
+            SchoolClass sc = (SchoolClass) obj;
+            ht.put("classID", new Integer(sc.getID()));
+        }
+        return super.get(ht);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see fi.dwo.client.persistence.XmlRpcMapper#getIDCol()
+     */
+    protected String getIDCol() {
+        return IDCOL;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see fi.dwo.client.persistence.XmlRpcMapper#getTableName()
+     */
+    protected String getTableName() {
+        return TABLENAME;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see fi.dwo.client.persistence.XmlRpcMapper#update(java.lang.Object,
+     *      java.util.Hashtable)
+     */
+    protected Object update(Object obj, Hashtable data) throws IOException, SQLException, XmlRpcException {
+        User u = (User) obj;
+        u.setEmail((String) data.get("email"));
+        u.setFirstname((String) data.get("firstname"));
+        u.setLastName((String) data.get("lastname"));
+        u.setMiddleName((String) data.get("middlename"));
+        u.setUserID(((Integer) data.get("userID")).intValue());
+        u.setUsername((String) data.get("username"));
+
+        /* Maybe we've got some information about the school */
+        School s = (School) MapperCreator.instance(School.class)
+                .getObjectFromReturn(data);
+        if (s != null) {
+            u.setSchool(s);
+        }
+
+        if(!data.get("classID").equals("")) {
+            SchoolClass c = (SchoolClass) MapperCreator.instance(SchoolClass.class).get(((Integer) data.get("classID")).intValue());
+		    if (c != null) {
+		        u.setInClass(c);
+		    }
+        }
+        
+        if(u instanceof Teacher) {
+            Object[] o = MapperCreator.instance(SchoolClass.class).get(u);
+            ((Teacher) u).setClasses((SchoolClass[]) o);
+        }
+        /*if(u instanceof Admin) {
+            Object[] o = MapperCreator.instance(SchoolClass.class).get(u);
+            ((Admin) u).setClasses((SchoolClass[]) o);
+        }*/
+        
+        return u;
+    }
+
+    /* (non-Javadoc)
+     * @see fi.dwo.client.persistence.XmlRpcMapper#createArray(int)
+     */
+    protected Object[] createArray(int size) {
+        return new User[size];
+    }
+
+    /* (non-Javadoc)
+     * @see fi.dwo.client.persistence.XmlRpcMapper#getOrderbyCol()
+     */
+    protected String getOrderbyCol() {
+        return ORDERCOL;
+    }
+}

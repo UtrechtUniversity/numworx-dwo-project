@@ -1,0 +1,374 @@
+// Source file:
+// N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\domain\\Course.java
+
+package fi.dwo.client.domain;
+
+import java.awt.Image;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.MessageFormat;
+
+import javax.swing.JOptionPane;
+
+import org.apache.xmlrpc.applet.XmlRpcException;
+
+import fi.dwo.client.gui.CenterSubPanel;
+import fi.dwo.client.gui.CoursePanel;
+import fi.dwo.client.gui.DwoMessageDialog;
+import fi.dwo.client.gui.GuiConstants;
+import fi.dwo.client.persistence.MapperCreator;
+import fi.dwo.client.persistence.PersistenceFacade;
+
+import java.util.Arrays;
+import java.util.Collections;
+import fi.dwo.client.system.PersistenceException;
+import fi.dwo.client.system.TextMapper;
+
+/**
+ * This class is responsible for the Course data.
+ * @author M.J.B. Kupers
+ */
+public class Course implements LessonGroup, Comparable {
+    private int courseID;
+
+    private String name;
+
+    private String description;
+
+    private Sco scoList[];
+
+    private Sco currentSco;
+
+    private String imageUrl;
+    private byte[] imageData;
+    
+    private CenterSubPanel coursePanel = null;
+    
+    private int dwoProfile;
+    
+    private int schoolID;
+
+    /**
+     * Creates a new Course object
+     *  
+     */
+    public Course() {
+    }
+
+    /**
+     * Returns the description of the course.
+     * 
+     * @return The description of the course.
+     *  
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Returns the name of the course.
+     * 
+     * @return The name of the course.
+     *  
+     */
+    public String getName() {
+        return name;
+    }
+    
+    /**
+     * Returns the dwoProfile of the course.
+     * 
+     * @return The dwoProfile of the course.
+     *  
+     */
+    public int getDwoProfile() {
+        return dwoProfile;
+    }
+
+    /**
+     * Returns the schoolID of the course.
+     * 
+     * @return The schoolID of the course.
+     *  
+     */
+    public int getSchoolID() {
+        return schoolID;
+    }
+    
+    /**
+     * Returns the ID of the course.
+     * 
+     * @return The ID of the course.
+     *  
+     */
+    public int getID() {
+        return courseID;
+    }
+
+    /**
+     * Sets the ID of the course.
+     * 
+     * @param courseID The ID of the course.
+     */
+    public void setCourseID(int courseID) {
+        this.courseID = courseID;
+    }
+
+    /**
+     * Sets the current sco of the course.
+     * 
+     * @param currentSco The currentSco to set.
+     */
+    public void setCurrentSco(Sco currentSco) {
+        this.currentSco = currentSco;
+    }
+	
+	/**
+     * Sets the current sco of the course.
+     * 
+     * @param currentSco The currentSco to set.
+     */
+    public Sco getCurrentSco() {
+        return currentSco;
+    }
+    
+    /**
+     * Sets the description of the course.
+     * 
+     * @param description The description to set.
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * Sets the name of the course.
+     * 
+     * @param name The name to set.
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+	/**
+     * Sets the dwoProfile of the course.
+     * 
+     * @param dwoProfile The dwoProfile to set.
+     */
+    public void setDwoProfile(int dwoProfile) {
+        this.dwoProfile = dwoProfile;
+    }
+    
+    /**
+     * Sets the schoolID of the course.
+     * 
+     * @param schoolID  The schoolID to set.
+     */
+    public void setSchoolID(int schoolID) {
+        this.schoolID = schoolID;
+    }
+    
+    /**
+     * Returns the global url to the image of the Course.
+     * 
+     * @return The global url to the image of the Course.
+     */
+    public String getImageUrl() {
+        return imageUrl;
+    }
+    
+    
+    private Image courseLogo;
+    /**
+     * Logo van deze course.
+     * Op de grens tussen gui en domain.
+     * @return Image
+     */
+    public Image getCourseLogo() {
+    	if(courseLogo != null)
+    		return courseLogo;
+    	try {
+    		if(getImageData() != null)
+    		{
+    			Logo l = new Logo(getImageData());
+    			return courseLogo = l.getImage();
+    		}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        if ((getImageUrl() != null)
+                && (!getImageUrl().equals(""))) {
+            /* Add FI logo */
+            return courseLogo = DwoHelper.getImage(GuiConstants.RESOURCES + getImageUrl());
+        } else {
+            /* Add empty course logo */
+            return courseLogo = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.EMPTY_COURSE_IMAGE);
+        }
+    }
+    
+    
+    public void setCourseLogo(Image logo)
+    {
+    	courseLogo = logo;	
+    }
+    
+    
+    
+    /**
+     * Sets the global url to the image of the Course.
+     * 
+     * @param imageUrl The global url to the image of the Course.
+     */
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    /**
+	 * @return the imageData
+	 */
+	public byte[] getImageData() {
+		return imageData;
+	}
+
+	/**
+	 * @param imageData the imageData to set
+	 */
+	public void setImageData(byte[] imageData) {
+		this.imageData = imageData;
+	}
+
+	/**
+     * Returns the list of the sco's of this Course.
+     * 
+     * @return The list of the sco's of this Course.
+     */
+    public Sco[] getScoList() {
+        return scoList;
+    }
+
+    /**
+     * Sets the list of the sco's of this Course.
+     * 
+     * @param scoList The list of the sco's of this Course.
+     */
+    public void setScoList(Sco[] scoList) {
+        this.scoList = scoList;
+        Arrays.sort(this.scoList);
+    }
+
+    /**
+     * Finalizes the current sco. The sco can save the work.
+     */
+    public void end() {
+        if (currentSco != null) {
+            currentSco.end();
+        }
+    }
+
+    /**
+     * Indicates if this is the deepest LessonGroup.
+     * 
+     * @return If this is the deepest LessonGroup it returns true. Otherwise it
+     *         returns false.
+     * @see fi.dwo.client.domain.LessonGroup#isDeepestLevel()
+     */
+    public boolean isDeepestLevel() {
+        return false;
+    }
+
+    /**
+     * Indicates if this is the highest LessonGroup.
+     * 
+     * @return If this is the highest LessonGroup it returns true. Otherwise it
+     *         returns false.
+     * @see fi.dwo.client.domain.LessonGroup#isHighestLevel()
+     */
+    public boolean isHighestLevel() {
+        return true;
+    }
+
+    /**
+     * Returns the Course specific title for the LessonGroup.
+     * 
+     * @return The Course specific title.
+     * @see fi.dwo.client.domain.LessonGroup#getTitle()
+     */
+    public String getTitle() {
+        return TextMapper.getText(TextMapper.LG_COURSES);
+    }
+
+    /**
+     * Returns a title represents the parent item.
+     * @return A title represents the parent item.
+     * @see fi.dwo.client.domain.UserGroup#getParentTitle()
+     */
+    public String getParentTitle() {
+        return "";
+    }
+
+    /**
+     * Returns a title represents the child item.
+     * @return A title represents the child item.
+     * @see fi.dwo.client.domain.UserGroup#getChildTitle()
+     */
+    public String getChildTitle() {
+        String[] arguments = new String[1];
+            arguments[0] = name;
+        String s = TextMapper.getText(TextMapper.LG_COURSE_CHILD);
+        return MessageFormat.format(s, arguments);
+    }
+
+    /**
+     * Returns a title represents the Ascending Order item.
+     * @return A title represents the Ascending Order item.
+     * @see fi.dwo.client.domain.UserGroup#getOrderAscTitle()
+     */
+    public String getOrderAscTitle() {
+        return TextMapper.getText(TextMapper.LG_COURSE_ORDER_ASC);
+    }
+
+    /**
+     * Returns a title represents the Descending Order item.
+     * @return A title represents the Descending Order item.
+     * @see fi.dwo.client.domain.UserGroup#getOrderDescTitle()
+     */
+    public String getOrderDescTitle() {
+        return TextMapper.getText(TextMapper.LG_COURSE_ORDER_DESC);
+    }
+
+    /**
+     * Returns a tooltip for the LessonGroup.
+     * @return A tooltip for the LessonGroup.
+     * @see fi.dwo.client.domain.LessonGroup#getToolTip()
+     */
+    public String getToolTip() {
+        return name;
+    }
+    
+    public void loadScos() {
+        try {
+            scoList = (Sco[]) PersistenceFacade.instance().get(Sco.class, this);
+        } catch (PersistenceException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }        
+    }
+    
+    public CenterSubPanel getCoursePanel() {
+        if(coursePanel == null) {
+            loadScos();
+            coursePanel = new CoursePanel(this);
+        }
+        
+        return coursePanel;
+        
+    }
+
+    /* (non-Javadoc)
+     * @see fi.dwo.client.system.Comparable#compareTo(java.lang.Object)
+     */
+    public int compareTo(Object o) {
+        Course c = (Course) o;
+        return getName().toLowerCase().compareTo(c.getName().toLowerCase());
+    }
+}
