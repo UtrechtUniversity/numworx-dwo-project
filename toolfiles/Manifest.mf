@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Main-Class: fi.dwo.client.domain.DWO
+Class-Path: algebrapijlenoefenen.jar functiesraden.jar haakjessommen_opp.jar haakjessommen_tab.jar haakjessommen_ontb.jar heks.jar herleiden.jar kwadverg.jar linverg.jar nabouwenaanzichten.jar oppervlaktealgebra.jar popupurlapplet.jar vermtabel.jar waarmakers.jar

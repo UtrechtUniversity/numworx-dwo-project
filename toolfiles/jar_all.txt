@@ -1,0 +1,6 @@
+-C ..\output\classes fi
+-C ..\output\classes org
+-C ..\output\classes hplb
+-C ..\output\classes uk
+
+

@@ -1,0 +1,34 @@
+-classpath %JAVA_HOME%\jre\lib\rt.jar
+..\output\classes\fi
+..\output\classes\org
+..\output\classes\hplb
+..\output\classes\uk
+..\output\classes\META-INF
+-keepInterface fi.?
+-keepInterface org.?
+-keepInterface hplb.?
+-keepInterface uk.?
+-delete fi/beans/fidentity/build.xml
+-delete fi/dwo/build.xml
+-delete fi/dwo/build.properties
+-delete fi/dwo/test.htm
+-delete fi/beans/fidentity/AllTests.class
+-delete fi/beans/fidentity/NovellLdapTest.class
+-delete fi/beans/fidentity/PhpAccessTest.class
+-delete fi/beans/fidentity/SchoolIdentityTest.class
+-delete fi/beans/fidentity/SchoolManagerTest.class
+-delete fi/beans/fidentity/db/DbAccess.class
+-delete fi/beans/fidentity/db/DbAccessTest.class
+-delete fi/dwo/server/persistence/DbAccessTest.class
+-delete fi/dwo/server/persistence/DbAccessLdapTest.class
+-delete fi/dwo/server/persistence/DbAccessServlet.class
+-delete fi/dwo/server/persistence/DbAccessLdapServlet.class
+-delete fi/dwo/server/persistence/DbAccessLdapServletTest.class
+-delete fi/dwo/server/persistence/DwoWebPageServlet.class
+-delete fi/beans/xmlrpc/Servlet.class
+-delete fi/beans/xmlrpc/XmlRpcC.class
+-delete fi/servlet/persistence/PersistenceServlet.class
+-delete fi/servlet/persistence/Main.class
+-delete fi/servlet/persistence/JDBCServlet.class
+-o ..\output\jar\dwo.jar
+

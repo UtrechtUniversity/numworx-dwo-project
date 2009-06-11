@@ -1,0 +1,27 @@
+-classpath %JAVA_HOME%\jre\lib\rt\jar
+..\output\classes\meta-inf\
+..\output\classes\fi\dwo\client\gui\AddScoDialog.class
+..\output\classes\fi\dwo\client\gui\TeacherMenuPanel.class
+..\output\classes\fi\dwo\parameters\system\text
+..\output\classes\fi\dwo\client\gui\AutoScrollPanel.class
+..\output\classes\fi\dwo\client\gui\CourseNameDialog.class
+..\output\classes\fi\dwo\client\gui\ClassUsersPanel.class
+..\output\classes\fi\dwo\client\gui\ScoDialog.class
+..\output\classes\fi\dwo\parameters\system
+..\output\classes\fi\dwo\parameters\domain
+..\output\classes\fi\dwo\client\gui\ParameterManagementPanel.class
+..\output\classes\fi\dwo\client\gui\ResultTableHeader.class
+..\output\classes\fi\dwo\client\gui\SelectCoursesDialog.class
+..\output\classes\fi\dwo\client\gui\ClassPanel.class
+..\output\classes\fi\dwo\client\gui\ResultsModulePanel.class
+..\output\classes\fi\dwo\client\gui\ResultsModuleGuiIF.class
+..\output\classes\fi\dwo\client\gui\ScoNameDialog.class
+..\output\classes\fi\dwo\parameters\gui
+..\output\classes\fi\dwo\client\gui\ScoManagementPanel.class
+..\output\classes\fi\dwo\client\gui\CourseManagementPanel.class
+..\output\classes\fi\dwo\client\gui\ResultScoreButton.class
+..\output\classes\fi\dwo\client\gui\TeacherProfilePanel.class
+..\output\classes\fi\dwo\client\persistence\UserResultListMapper.class
+-keepInterface fi.?
+-o ..\output\jar\dwoclientteacher.jar
+

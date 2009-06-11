@@ -1,0 +1,10 @@
+-classpath %JAVA_HOME%\jre\lib\rt\jar
+-manifestMain
+
+-keepInterface fi.?
+-keepInterface org.?
+-keepInterface hplb.?
+-keepInterface uk.?
+-keepInterface javax.?
+-o ..\output\jar\dwo.jar
+
