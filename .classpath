@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/aanzichtenraden.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/algebrapijlen.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/algebrapijlenoefenen.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/algebrapijlenopdr.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/bordjes.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/bordjesopdr.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/doorziendwo.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/functiesraden.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/geomalgebra.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/geomalgebra1d.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/geomalgebraopdr.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/getallenlijn.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/grkijken1.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/grkijken2.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/haakjessommen_ontb.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/haakjessommen_opp.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/haakjessommen_tab.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/heks.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/herleiden.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/jl020.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/kwadverg.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/linverg.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/mysql-connector-java-3.0.16-ga-bin.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/nabouwenaanzichten.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/oppervlakte_dwo.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/oppervlaktealgebra.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/popupurlapplet.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/profielendraaien.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/spot_problems_dwo.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/tekenveelvlakopdr.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/vermtabel.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/vlakkenkleuren.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/waarmakers.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase" sourcepath="C:/java/beans"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/mayscript.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/jsdk.jar"/>
+	<classpathentry kind="var" path="JUNIT_HOME/junit.jar" sourcepath="ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.1.1/src/org.junit_3.8.1/junitsrc.zip"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/ldap.jar"/>
+	<classpathentry kind="lib" path="output/jar/wiskopdr.jar"/>
+	<classpathentry kind="output" path="output/classes"/>
+</classpath>
