@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jnlp PUBLIC "-//Sun Microsystems, Inc//DTD JNLP Discriptor 1.1//EN" "http://java.sun.com/dtd/JNLP-1.5.dtd">
+<jnlp spec="1.0+" codebase="http://www.fi.uu.nl/dwo/jnlp" href="dwo.jnlp">
+	<information>
+		<title>DWO</title>
+		<vendor>Freudenthal Instituut</vendor>
+	</information>
+	<security>
+		<all-permissions/>
+	</security>
+	<resources>
+		<j2se version="1.2+"/>
+		<jar href="dwo.jar" main="true"/>
+		<jar href="aanzichtenraden.jar"/>
+		<jar href="algebrapijlen.jar"/>
+		<jar href="algebrapijlenoefenen.jar"/>
+		<jar href="algebrapijlenopdr.jar"/>
+		<jar href="bordjes.jar"/>
+		<jar href="bordjesopdr.jar"/>
+		<jar href="doorziendwo.jar"/>
+		<jar href="functiesraden.jar"/>
+		<jar href="geomalgebra.jar"/>
+		<jar href="geomalgebra1d.jar"/>
+		<jar href="geomalgebraopdr.jar"/>
+		<jar href="getallenlijn.jar"/>
+		<jar href="grkijken1.jar"/>
+		<jar href="grkijken2.jar"/>
+		<jar href="haakjessommen_ontb.jar"/>
+		<jar href="haakjessommen_opp.jar"/>
+		<jar href="haakjessommen_tab.jar"/>
+		<jar href="heks.jar"/>
+		<jar href="herleiden.jar"/>
+		<jar href="jl020.jar"/>
+		<jar href="kwadverg.jar"/>
+		<jar href="linverg.jar"/>
+		<jar href="mysql-connector-java-3.0.16-ga-bin.jar"/>
+		<jar href="nabouwenaanzichten.jar"/>
+		<jar href="oppervlakte_dwo.jar"/>
+		<jar href="oppervlaktealgebra.jar"/>
+		<jar href="popupurlapplet.jar"/>
+		<jar href="profielendraaien.jar"/>
+		<jar href="spot_problems_dwo.jar"/>
+		<jar href="tekenveelvlakopdr.jar"/>
+		<jar href="vermtabel.jar"/>
+		<jar href="vlakkenkleuren.jar"/>
+		<jar href="waarmakers.jar"/>
+		<jar href="wiskopdr.jar"/>
+	</resources>
+	<application-desc main-class="fi.dwo.client.domain.DWO">
+		<argument>jnlp=yes</argument>
+	</application-desc>
+</jnlp>
