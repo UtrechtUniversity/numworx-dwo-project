@@ -4,6 +4,8 @@
 package fi.dwo.client.gui;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -33,7 +35,7 @@ public class MainPanel extends Panel {
 
     private CenterPanel center;
 
-    private Panel header;
+    private Container header;
     
     private Image guiImage;
 
@@ -209,7 +211,7 @@ public class MainPanel extends Panel {
      * 
      * @param p The panel to set as a header.
      */
-    public void setHeaderPanel(Panel p) {
+    public void setHeaderPanel(Container p) {
         if (this.header != null) {
             header.setVisible(false);
             this.remove(header);

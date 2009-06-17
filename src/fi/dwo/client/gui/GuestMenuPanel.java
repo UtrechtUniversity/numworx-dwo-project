@@ -4,12 +4,22 @@
  */
 package fi.dwo.client.gui;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Panel;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.system.TextMapper;
@@ -20,10 +30,49 @@ import fi.dwo.client.system.TextMapper;
  * @author M.J.B. Kupers
  *  
  */
-public class GuestMenuPanel extends Panel implements ActionListener {
-    protected CenterPanel center;
+public class GuestMenuPanel extends JPanel implements ActionListener {
 
-    protected DwoButton mainMenuButton;
+	/**
+	 * Stretchable JButton voor het menu panel
+	 * @author wim
+	 *
+	 */
+    public static final class MenuPanelButton extends JButton {
+		public  MenuPanelButton(String label) {
+			super(label);
+// niet instelbaar!
+	        this.setFont(new Font("Arial", Font.BOLD, 12));
+		}
+
+		/* (non-Javadoc)
+		 * @see javax.swing.JComponent#getMaximumSize()
+		 */
+		public Dimension getMaximumSize() {
+			return new Dimension(1000,getPreferredSize().height);
+		}
+	}
+
+	public static class HRuler extends JPanel {
+    	public HRuler() {
+    		setOpaque(true);
+    		setBackground(Color.black);
+    	}
+    	public Dimension getPreferredSize() {
+    		return new Dimension(1000, 1);
+    	}
+    	public Dimension getMaximumSize() {
+    		return getPreferredSize();
+    	}
+    	public Dimension getMinimumSize() { 
+    		return new Dimension(1,1);
+    	}
+	}
+
+	
+	
+	protected CenterPanel center;
+
+    protected JButton mainMenuButton;
 
     /**
      * Creates a new GuestMenuPanel. The panel contains only a button for the
@@ -32,33 +81,23 @@ public class GuestMenuPanel extends Panel implements ActionListener {
      */
     public GuestMenuPanel() {
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
-        this.setLayout(null);
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setSize(149, 481);
+        setOpaque(!GuiConstants.GUI_IMAGE_BG);
+        createButtons();
+        add(Box.createVerticalGlue());
+    }
 
-        /* Variables used to create items */
-        FontMetrics fm;
 
+	protected void createButtons() {
+		add(Box.createVerticalStrut(5));
         /* Add MainMenu button */
-        mainMenuButton = new DwoButton(TextMapper.getText(TextMapper.GUIMNU_MAIN_MENU), GuiConstants.MAIN_BACKGROUND);
-        fm = mainMenuButton.getFontMetrics(mainMenuButton.getFont());
-        mainMenuButton.setSize(this.getSize().width - 20, fm.getHeight() + 10);
-        mainMenuButton.setLocation(10, 10);
+        mainMenuButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_MAIN_MENU));
         mainMenuButton.addActionListener(this);
-        mainMenuButton.setVisible(false);
         this.add(mainMenuButton);
-        mainMenuButton.setVisible(true);
+	}
 
-    }
-
-    
-    public void paint(Graphics g)
-    {	if(GuiConstants.GUI_IMAGE_BG) {
-	       	Point p = DwoHelper.getComponentLocation(this);
-	       	g.drawImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE),-p.x,-p.y,null);
-    	}       
-    	super.paint(g);
-    }
-     
+       
     /**
      * Invoked when an action occurs.
      * 

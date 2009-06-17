@@ -7,6 +7,7 @@ import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.FileDialog;
@@ -276,7 +277,7 @@ public class ParameterManagementPanel extends Panel implements CenterSubPanel, A
      * @return A panel that can functionate as a header panel.
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
-    public Panel getHeaderPanel() {
+    public Container getHeaderPanel() {
         Panel p = new BorderedPanel(null);
         p.setBackground(GuiConstants.MAIN_BACKGROUND);
         p.setBounds(181, 20, 449, 71);

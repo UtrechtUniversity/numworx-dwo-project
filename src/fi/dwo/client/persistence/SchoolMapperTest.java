@@ -32,7 +32,7 @@ public class SchoolMapperTest extends TestCase {
 		System.out.println(System.currentTimeMillis()- tim1);
 	}
 
-	public void testSchoolPanel() throws IOException, SQLException, XmlRpcException {
+	public void testSchoolPanel() throws Exception {
 		DWO.main(new String[0]);
 		new GuiCreatorAdmin((DwoIF) DwoHelper.getApplet());
 		long tim0 = System.currentTimeMillis();

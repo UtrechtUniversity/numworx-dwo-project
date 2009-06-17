@@ -8,6 +8,7 @@ import java.awt.Panel;
 import javax.swing.JOptionPane;
 
 import fi.dwo.client.domain.AppletConfig;
+import fi.dwo.client.domain.ContactDocent;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DWO;
 import fi.dwo.client.domain.DwoIF;
@@ -111,7 +112,11 @@ public class GuiCreator {
     public void login(User u)
     {
         if (u instanceof Teacher) {
-            GuiCreator gc = new GuiCreatorTeacher(dwo);
+        	GuiCreator gc;
+        	if(u instanceof ContactDocent)
+        		gc = new GuiCreatorContactDocent(dwo);
+        	else
+        		gc = new GuiCreatorTeacher(dwo);
             gc.mainPanel = mainPanel;
             gc.welcomePanel = welcomePanel;
             gc.mainPanel = new MainPanel(dwo.getDwoProfile());
@@ -824,6 +829,11 @@ public class GuiCreator {
 	 */
 	public boolean swapSco(Sco sco1, Sco sco2) {
 		return false;
+	}
+
+	public CenterSubPanel getUserManagementPanel() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

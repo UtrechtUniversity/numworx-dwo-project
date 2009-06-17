@@ -696,7 +696,7 @@ public class ResultsModulePanel extends JPanel implements
      * @return A panel that can functionate as a header panel.
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
-    public Panel getHeaderPanel() {
+    public Container getHeaderPanel() {
         Panel p = new BorderedPanel(null);
         if(GuiConstants.GUI_IMAGE_BG) {
         	p = new BorderedPanel(null,0)

@@ -10,7 +10,10 @@ import java.awt.Panel;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 
+import javax.swing.Box;
+import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.SchoolClass;
@@ -25,43 +28,51 @@ import fi.dwo.client.system.TextMapper;
  */
 public class TeacherMenuPanel extends MenuPanel {
 
-    private DwoButton classManagementButton;
+    private JButton classManagementButton;
     
-    private DwoButton courseManagementButton;
+    private JButton courseManagementButton;
 
     private ClassLinkedLabel[] classLinkedList;
     
-    private Panel classPanel;
+    private JPanel classPanel;
 
-    /**
+    /* (non-Javadoc)
+	 * @see fi.dwo.client.gui.MenuPanel#createButtons()
+	 */
+	protected void createMenuButtons() {
+		// TODO Auto-generated method stub
+		super.createMenuButtons();
+        /* Variables used to create items */
+        //FontMetrics fm;
+
+        /* Add ClassManagement button */
+        classManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_CLASS_MANAGEMENT));
+        //fm = classManagementButton.getFontMetrics(classManagementButton.getFont());
+        //classManagementButton.setSize(this.getSize().width - 20, fm.getHeight() + 10);
+        //classManagementButton.setLocation(10, 70);
+        classManagementButton.addActionListener(this);
+        //classManagementButton.setVisible(false);
+        //if(GuiCreator.instance().getUser() instanceof Teacher)
+        this.add(classManagementButton);
+        //classManagementButton.setVisible(true);
+        
+        /* Add CourseManagement Button */
+        courseManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_COURSE_MANAGEMENT));
+        //fm = courseManagementButton.getFontMetrics(courseManagementButton.getFont());
+        //courseManagementButton.setSize(this.getSize().width - 20, fm.getHeight() + 10);
+        //courseManagementButton.setLocation(10, 100);
+        courseManagementButton.addActionListener(this);
+        //courseManagementButton.setVisible(false);
+        this.add(courseManagementButton);
+        //courseManagementButton.setVisible(true);
+	}
+
+	/**
      * Creates a new MenuPanel for the user. It contains the parent items (from
      * MenuPanel) and buttons to show the reult of students, and to add a class.
      */
     public TeacherMenuPanel() {
         super();
-        /* Variables used to create items */
-        FontMetrics fm;
-
-        /* Add ClassManagement button */
-        classManagementButton = new DwoButton(TextMapper.getText(TextMapper.GUIMNU_CLASS_MANAGEMENT), GuiConstants.MAIN_BACKGROUND);
-        fm = classManagementButton.getFontMetrics(classManagementButton.getFont());
-        classManagementButton.setSize(this.getSize().width - 20, fm.getHeight() + 10);
-        classManagementButton.setLocation(10, 70);
-        classManagementButton.addActionListener(this);
-        classManagementButton.setVisible(false);
-        //if(GuiCreator.instance().getUser() instanceof Teacher)
-        this.add(classManagementButton);
-        classManagementButton.setVisible(true);
-        
-        /* Add CourseManagement Button */
-        courseManagementButton = new DwoButton(TextMapper.getText(TextMapper.GUIMNU_COURSE_MANAGEMENT), GuiConstants.MAIN_BACKGROUND);
-        fm = courseManagementButton.getFontMetrics(courseManagementButton.getFont());
-        courseManagementButton.setSize(this.getSize().width - 20, fm.getHeight() + 10);
-        courseManagementButton.setLocation(10, 100);
-        courseManagementButton.addActionListener(this);
-        courseManagementButton.setVisible(false);
-        this.add(courseManagementButton);
-        courseManagementButton.setVisible(true);
     }
 
     /**
@@ -74,16 +85,13 @@ public class TeacherMenuPanel extends MenuPanel {
         FontMetrics fm;
         JLabel l;
 
-        Panel p = new BorderedPanel(null, BorderedPanel.NORTH);
-        p.setSize(this.getSize().width - 1, 1);
-        p.setLocation(0, 135);
-        p.setVisible(false);
-        this.add(p);
-        p.setVisible(true);
+        add(Box.createVerticalStrut(10));
+        this.add(new HRuler());
+        add(Box.createVerticalStrut(4));
         
-        classPanel = new Panel(null);
+        classPanel = new JPanel(null);
         if(GuiConstants.GUI_IMAGE_BG) {
-        	classPanel = new Panel(null)
+        	classPanel = new JPanel(null)
             {
 	        	public void paint(Graphics g)
 	            {	Point p = DwoHelper.getComponentLocation(this);
@@ -93,8 +101,8 @@ public class TeacherMenuPanel extends MenuPanel {
 	        };
         }
         classPanel.setSize(this.getSize().width - 1, 1);
-        classPanel.setLocation(0, 136);
-
+        //classPanel.setLocation(0, 136);
+        classPanel.setOpaque(false);
         /* Add class-info */
         if(GuiCreator.instance().getUser() instanceof Teacher){
 	        Teacher t = (Teacher) GuiCreator.instance().getUser();

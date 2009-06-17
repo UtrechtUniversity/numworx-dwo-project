@@ -5,6 +5,7 @@ package fi.dwo.client.gui;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -223,7 +224,7 @@ public class CoursePanel extends Panel implements CenterSubPanel,
      * @return A panel that can function as a header panel.
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
-    public Panel getHeaderPanel() {
+    public Container getHeaderPanel() {
         Panel p = new BorderedPanel(null);
         if(GuiConstants.GUI_IMAGE_BG) {
         	p = new BorderedPanel(null,0)

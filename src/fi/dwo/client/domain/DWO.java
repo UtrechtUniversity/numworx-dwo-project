@@ -19,6 +19,7 @@ import java.util.Vector;
 
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.base64code.StringCodeObject;
@@ -1115,9 +1116,16 @@ private static boolean isValidEmail(String email) {
      * The main method of the class.
      * 
      * @param args
+     * @throws Exception 
+     * @throws IllegalAccessException 
+     * @throws InstantiationException 
+     * @throws ClassNotFoundException 
      */
-    public static void main(String[] args) {
-
+    public static void main(String[] args) throws Exception {
+    	String  lookAndFeel = UIManager.getCrossPlatformLookAndFeelClassName();
+    	//lookAndFeel = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
+    	//lookAndFeel = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
+    	UIManager.setLookAndFeel(lookAndFeel);
     	int width = 805;
         int height = 615;
         MainFrame mf = new MainFrame(new DWO(args), width, height);

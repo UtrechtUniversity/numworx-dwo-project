@@ -6,6 +6,7 @@ package fi.dwo.client.gui;
 import java.awt.Choice;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -649,7 +650,7 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
    
-    public Panel getHeaderPanel() {
+    public Container getHeaderPanel() {
         Panel p = new BorderedPanel(null);
         if(GuiConstants.GUI_IMAGE_BG) {
         	p = new BorderedPanel(null,0)

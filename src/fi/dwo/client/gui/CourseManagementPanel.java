@@ -3,6 +3,7 @@
 package fi.dwo.client.gui;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.FileDialog;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -322,7 +323,7 @@ public class CourseManagementPanel extends Panel implements CenterSubPanel, Acti
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
     
-    public Panel getHeaderPanel() {
+    public Container getHeaderPanel() {
         Panel p = new BorderedPanel(null);
         if(GuiConstants.GUI_IMAGE_BG) {
         	p = new BorderedPanel(null,0)

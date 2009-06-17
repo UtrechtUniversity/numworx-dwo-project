@@ -4,6 +4,7 @@
 package fi.dwo.client.gui;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Panel;
 
 /**
@@ -26,7 +27,7 @@ public interface CenterSubPanel {
      * 
      * @return The Header Panel.
      */
-    public Panel getHeaderPanel();
+    public Container getHeaderPanel();
 
     /**
      * Sets the centerpanel.
