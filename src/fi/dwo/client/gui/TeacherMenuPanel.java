@@ -44,7 +44,7 @@ public class TeacherMenuPanel extends MenuPanel {
 		super.createMenuButtons();
         /* Variables used to create items */
         //FontMetrics fm;
-
+		createGap();
         /* Add ClassManagement button */
         classManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_CLASS_MANAGEMENT));
         //fm = classManagementButton.getFontMetrics(classManagementButton.getFont());
@@ -55,7 +55,7 @@ public class TeacherMenuPanel extends MenuPanel {
         //if(GuiCreator.instance().getUser() instanceof Teacher)
         this.add(classManagementButton);
         //classManagementButton.setVisible(true);
-        
+        createGap();
         /* Add CourseManagement Button */
         courseManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_COURSE_MANAGEMENT));
         //fm = courseManagementButton.getFontMetrics(courseManagementButton.getFont());
@@ -85,9 +85,7 @@ public class TeacherMenuPanel extends MenuPanel {
         FontMetrics fm;
         JLabel l;
 
-        add(Box.createVerticalStrut(10));
-        this.add(new HRuler());
-        add(Box.createVerticalStrut(4));
+        createRuler();
         
         classPanel = new JPanel(null);
         if(GuiConstants.GUI_IMAGE_BG) {

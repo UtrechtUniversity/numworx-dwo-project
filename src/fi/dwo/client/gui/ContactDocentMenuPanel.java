@@ -1,13 +1,18 @@
 package fi.dwo.client.gui;
 
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 
+import javax.swing.table.AbstractTableModel;
+
+import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.GuestMenuPanel.MenuPanelButton;
 
 public class ContactDocentMenuPanel extends TeacherMenuPanel {
 
 	protected MenuPanelButton userManagementButton;
 
+	
 	public ContactDocentMenuPanel() {
 		// TODO Auto-generated constructor stub
 	}
@@ -17,7 +22,7 @@ public class ContactDocentMenuPanel extends TeacherMenuPanel {
 	 */
 	protected void createMenuButtons() {
 		super.createMenuButtons();
-		
+		createGap();
 		this.userManagementButton = new MenuPanelButton("Gebruikers");
 		userManagementButton.addActionListener(this);
 		add(userManagementButton);

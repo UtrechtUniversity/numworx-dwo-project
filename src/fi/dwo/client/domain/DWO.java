@@ -146,7 +146,10 @@ public class DWO extends Applet implements SCORM12APIInterface, DwoIF  {
      */
     public boolean login(String username, String password)
             throws LoginException {
-        currentUser = PersistenceFacade.instance().login(username, password);
+    	if(password == null)
+    		currentUser = PersistenceFacade.instance().login(username);
+    	else
+    		currentUser = PersistenceFacade.instance().login(username, password);
         if(currentUser instanceof Admin) 
         		DwoHelper.setAdminLoggedIn(true);
         else DwoHelper.setAdminLoggedIn(false);

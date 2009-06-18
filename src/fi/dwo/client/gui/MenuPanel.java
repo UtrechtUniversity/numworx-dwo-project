@@ -36,8 +36,10 @@ public class MenuPanel extends GuestMenuPanel {
 
 	private JButton myProfileButton;
 
-    public JComponent createRuler() {
-    	return new HRuler();
+    public void createRuler() {
+        add(Box.createVerticalStrut(10));
+        add(new HRuler());
+        add(Box.createVerticalStrut(15));
     }
     
     /* (non-Javadoc)
@@ -50,6 +52,7 @@ public class MenuPanel extends GuestMenuPanel {
 	}
 
 	protected void createMenuButtons() {
+		createGap();
 		/* Variables used to create items */
         //FontMetrics fm;
 
@@ -93,18 +96,11 @@ public class MenuPanel extends GuestMenuPanel {
      */
     protected void addClassList() {
         /* Variables used to create items */
-        FontMetrics fm;
+       //FontMetrics fm;
         JLabel l;
-
-        add(Box.createVerticalStrut(10));
-        JComponent p = new HRuler();
-        //p.setSize(this.getSize().width - 1, 1);
-        //p.setLocation(0, 75);
-        //p.setVisible(false);
-        this.add(p);
-        //p.setVisible(true);
-        add(Box.createVerticalStrut(15));
-        
+        createRuler();
+        Box p = Box.createVerticalBox();
+        p.setOpaque(false);
         /* Add class-info */
         User u = GuiCreator.instance().getUser();
         if (u.getInClass() != null) {
@@ -116,7 +112,7 @@ public class MenuPanel extends GuestMenuPanel {
             //l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
             //l.setLocation(10, 85);
             //l.setVisible(false);
-            this.add(l);
+            p.add(l);
             //l.setVisible(true);
 
             l = new JLabel("-  " + u.getInClass().getName());
@@ -126,8 +122,9 @@ public class MenuPanel extends GuestMenuPanel {
             //l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
             //l.setLocation(20, 100);
             //l.setVisible(false);
-            this.add(l);
+            p.add(l);
             //l.setVisible(true);
+            add(p);
         }
 // if user is readonly, geen rode tekst die alleen maar afleid.
 // TODO nadenken of er niet mischien een andere tekst moet komen?
@@ -140,12 +137,12 @@ public class MenuPanel extends GuestMenuPanel {
             l.setFont(GuiConstants.RED_TEXT);
             l.setForeground(Color.red);
             l.setBorder(border);
-            fm = l.getFontMetrics(l.getFont());
+            //fm = l.getFontMetrics(l.getFont());
             
             //l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
             //l.setLocation(10, 100);
             //l.setVisible(false);
-            this.add(l);
+            p.add(l);
             //l.setVisible(true);
             
             l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_STUDENT_NO_CLASS_1));
@@ -157,7 +154,7 @@ public class MenuPanel extends GuestMenuPanel {
             //l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
             //l.setLocation(10, 120);
             //l.setVisible(false);
-            this.add(l);
+            p.add(l);
             //l.setVisible(true);
             
             l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_STUDENT_NO_CLASS_2));
@@ -169,7 +166,7 @@ public class MenuPanel extends GuestMenuPanel {
             //l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
             //l.setLocation(10, 140);
             //l.setVisible(false);
-            this.add(l);
+            p.add(l);
             //l.setVisible(true);
             
             l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_STUDENT_NO_CLASS_3));
@@ -181,7 +178,7 @@ public class MenuPanel extends GuestMenuPanel {
             //l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
             //l.setLocation(10, 160);
             //l.setVisible(false);
-            this.add(l);
+            p.add(l);
             //l.setVisible(true);
             
             l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_STUDENT_NO_CLASS_4));
@@ -193,9 +190,9 @@ public class MenuPanel extends GuestMenuPanel {
             //l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
             //l.setLocation(10, 180);
             //l.setVisible(false);
-            this.add(l);
+            p.add(l);
             //l.setVisible(true);
-            
+            add(p);
             
         }
 

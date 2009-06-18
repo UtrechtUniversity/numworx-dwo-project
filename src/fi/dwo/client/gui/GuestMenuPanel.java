@@ -5,6 +5,7 @@
 package fi.dwo.client.gui;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -37,7 +38,9 @@ public class GuestMenuPanel extends JPanel implements ActionListener {
 	 * @author wim
 	 *
 	 */
-    public static final class MenuPanelButton extends JButton {
+	private static final int MARGIN = 10;
+    public final class MenuPanelButton extends JButton {
+
 		public  MenuPanelButton(String label) {
 			super(label);
 // niet instelbaar!
@@ -48,7 +51,7 @@ public class GuestMenuPanel extends JPanel implements ActionListener {
 		 * @see javax.swing.JComponent#getMaximumSize()
 		 */
 		public Dimension getMaximumSize() {
-			return new Dimension(1000,getPreferredSize().height);
+			return new Dimension(GuestMenuPanel.this.getWidth()-MARGIN,getPreferredSize().height);
 		}
 	}
 
@@ -84,13 +87,28 @@ public class GuestMenuPanel extends JPanel implements ActionListener {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setSize(149, 481);
         setOpaque(!GuiConstants.GUI_IMAGE_BG);
+        createGap();
         createButtons();
         add(Box.createVerticalGlue());
     }
 
 
-	protected void createButtons() {
+	protected void createGap() {
 		add(Box.createVerticalStrut(5));
+	}
+
+
+	/* (non-Javadoc)
+	 * @see java.awt.Container#add(java.awt.Component)
+	 */
+	public Component add(JComponent component) {
+		component.setAlignmentX(Component.CENTER_ALIGNMENT);
+		return super.add(component);
+	}
+
+
+	protected void createButtons() {
+		createGap();
         /* Add MainMenu button */
         mainMenuButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_MAIN_MENU));
         mainMenuButton.addActionListener(this);

@@ -9,8 +9,10 @@ import java.util.Hashtable;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
+import fi.dwo.client.domain.ContactDocent;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.SchoolClass;
+import fi.dwo.client.domain.SchoolGroup;
 import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.Admin;
 import fi.dwo.client.domain.User;
@@ -58,6 +60,7 @@ public class UserMapper extends XmlRpcMapper {
             if (data.containsKey("groupname")) {
                 if (((String) data.get("groupname")).equals("TEACHER")) {
                     u = new Teacher();
+                    //u = new ContactDocent();
                 }
                 else if (((String) data.get("groupname")).equals("ADMIN")) {
                     u = new Admin();
@@ -89,6 +92,9 @@ public class UserMapper extends XmlRpcMapper {
         if(obj instanceof SchoolClass) {
             SchoolClass sc = (SchoolClass) obj;
             ht.put("classID", new Integer(sc.getID()));
+        } else if(obj instanceof SchoolGroup) {
+        	SchoolGroup sg = (SchoolGroup) obj;
+        	ht.put("schoolGroupID", new Integer(sg.getSchoolGroupID()));
         }
         return super.get(ht);
     }
