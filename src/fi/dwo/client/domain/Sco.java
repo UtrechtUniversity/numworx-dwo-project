@@ -643,8 +643,12 @@ System.err.println("sum = ["+result+"]");
      */
     public void end() {
         if (applet != null) {
-            applet.stop();
-            applet.destroy();
+            try {
+				applet.stop();
+				applet.destroy();
+			} catch (RuntimeException e) {
+				e.printStackTrace();
+			}
             applet = null;
             LMSFinish("");
             
@@ -654,7 +658,11 @@ System.err.println("sum = ["+result+"]");
     
     public void endWithoutSaving() {
         if (applet != null) {
-            applet.destroy();
+            try {
+				applet.destroy();
+			} catch (RuntimeException e) {
+				e.printStackTrace();
+			}
             applet = null;
             scoPanel = null;
             

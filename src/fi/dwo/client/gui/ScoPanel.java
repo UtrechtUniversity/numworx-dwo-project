@@ -226,7 +226,8 @@ public class ScoPanel extends Panel implements CenterSubPanel,
 	        }
 	        l = new JLabel(new ImageIcon(courseLogo));
 	        hbox.add(l);
-	        hbox.add(Box.createHorizontalStrut(10));
+	        
+	        hbox.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 10));
 		}
         
         jp.add(hp, BorderLayout.CENTER);

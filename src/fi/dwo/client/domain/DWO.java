@@ -1125,10 +1125,11 @@ private static boolean isValidEmail(String email) {
      * @throws ClassNotFoundException 
      */
     public static void main(String[] args) throws Exception {
-    	String  lookAndFeel = UIManager.getCrossPlatformLookAndFeelClassName();
+    	//String  lookAndFeel = UIManager.getCrossPlatformLookAndFeelClassName();
     	//lookAndFeel = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
     	//lookAndFeel = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
-    	UIManager.setLookAndFeel(lookAndFeel);
+    	//lookAndFeel = UIManager.getSystemLookAndFeelClassName();
+    	//UIManager.setLookAndFeel(lookAndFeel);
     	int width = 805;
         int height = 615;
         MainFrame mf = new MainFrame(new DWO(args), width, height);

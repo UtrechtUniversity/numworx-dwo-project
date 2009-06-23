@@ -49,7 +49,8 @@ public class ToolTippedLabel extends JLabel implements ToolTipIF {
      */
     public void setToolTip(String toolTip) {
         this.toolTip = toolTip;
-        ToolTipManager.registerComponent(this);
+        //ToolTipManager.registerComponent(this);
+        super.setToolTipText(toolTip);
     }
 
     /**

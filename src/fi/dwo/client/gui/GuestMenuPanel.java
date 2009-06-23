@@ -38,7 +38,7 @@ public class GuestMenuPanel extends JPanel implements ActionListener {
 	 * @author wim
 	 *
 	 */
-	private static final int MARGIN = 10;
+	private static final int MARGIN = 8;
     public final class MenuPanelButton extends JButton {
 
 		public  MenuPanelButton(String label) {
