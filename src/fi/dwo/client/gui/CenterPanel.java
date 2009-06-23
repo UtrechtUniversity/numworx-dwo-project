@@ -296,6 +296,7 @@ public class CenterPanel extends Panel {
     	            g.drawLine(0, 9, 161, 9);
     	            g.drawLine(629, 9, getSize().width - 2, 9);
     	        }
+    	        g.drawLine(0,0,150,0);	// border-lijntje van filogo panel 
 		}
     	
     }

@@ -277,24 +277,8 @@ public class ParameterManagementPanel extends Panel implements CenterSubPanel, A
      * @return A panel that can functionate as a header panel.
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
-    public Container getHeaderPanel() {
-        Panel p = new BorderedPanel(null);
-        p.setBackground(GuiConstants.MAIN_BACKGROUND);
-        p.setBounds(181, 20, 449, 71);
-//        this.add(p);
-
-        /* My Profile-Label */
-        Label l = new Label(TextMapper.getText(TextMapper.GUIPA_SCO_EDIT));
-        l.setFont(GuiConstants.HEADER_TEXT);
-        FontMetrics fm = l.getFontMetrics(l.getFont());
-        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-        l.setLocation((p.getSize().width / 2) - (l.getSize().width / 2), (p.getSize().height / 2)
-                - (l.getSize().height / 2));
-        l.setVisible(false);
-        p.add(l);
-        l.setVisible(true);
-
-        return p;
+    public Component getHeaderPanel() {
+    	return new HeaderPanel(TextMapper.getText(TextMapper.GUIPA_SCO_EDIT));
     }
 
     /**

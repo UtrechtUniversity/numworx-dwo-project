@@ -18,7 +18,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DwoHelper;
@@ -224,69 +228,34 @@ public class CoursePanel extends Panel implements CenterSubPanel,
      * @return A panel that can function as a header panel.
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
-    public Container getHeaderPanel() {
-        Panel p = new BorderedPanel(null);
-        if(GuiConstants.GUI_IMAGE_BG) {
-        	p = new BorderedPanel(null,0)
-            {  	public void paint(Graphics g)
-	            {	Point p = DwoHelper.getComponentLocation(this);
-	            	g.drawImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE),-p.x,-p.y,null);
-	            	super.paint(g);
-	            }
-	        };
-        }
-        p.setBackground(GuiConstants.MAIN_BACKGROUND);
-        p.setBounds(181, 20, 449, 71);
-        this.add(p);
-
-        Image courseLogo;
-        courseLogo = course.getCourseLogo();
-        MediaTracker tr = new MediaTracker(this);
-        tr.addImage(courseLogo, 0);
-        try {
-            tr.waitForAll();
-        } catch (Exception e) {
-        }
-        courseLogo = courseLogo.getScaledInstance(courseLogo.getWidth(null)/2 , courseLogo.getHeight(null)/2 , Image.SCALE_SMOOTH);
-        tr.addImage(courseLogo, 0);
-        try {
-            tr.waitForAll();
-        } catch (Exception e) {
-        }
-        ImagePanel ip = new ImagePanel(courseLogo);
-        //ip.setLocation(p.getSize().width - ip.getSize().width - 2 , 2);
-        ip.setLocation(10, (p.getSize().height / 2) - (ip.getSize().height / 2));
-        p.add(ip, 0);
-        if(GuiConstants.GUI_IMAGE_BG) p.remove(ip);
-
-        /* My Course-Label */
-        JLabel l = new JLabel(course.getName());
-        l.setOpaque(false);
-        l.setFont(GuiConstants.HEADER_TEXT);
-        FontMetrics fm = l.getFontMetrics(l.getFont());
-        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-
-        /* Scale the fontsize */
-        Font f = null;
-        int maxHeight = (int) p.getSize().height - 4;
-        int maxWidth = p.getSize().width - ip.getSize().width + ip.getLocation().x - 40;
-        
-        if(GuiConstants.GUI_IMAGE_BG) maxHeight = 26;
-
-        /* Scale the fontsize */
-        while ((l.getSize().width > maxWidth)
-                || (l.getSize().height > maxHeight)) {
-            f = l.getFont();
-            l.setFont(new Font(f.getName(), f.getStyle(), f.getSize() - 1));
-            fm = l.getFontMetrics(l.getFont());
-            l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-        }
-        l.setLocation(ip.getLocation().x + ip.getSize().width + 20, (p.getSize().height / 2) - (l.getSize().height / 2));
-        if(GuiConstants.GUI_IMAGE_BG) l.setLocation(ip.getLocation().x + ip.getSize().width + 20, 42);
-        //l.setLocation(30, (p.getSize().height / 2) - (l.getSize().height / 2));
-        p.add(l);
-
-        return p;
+    public Component getHeaderPanel() {   
+    	
+    	HeaderPanel hp = new HeaderPanel(course.getName(), true);
+    	if (!GuiConstants.GUI_IMAGE_BG)
+    	{
+    	    hp.setHorizontalAlignment(SwingConstants.LEFT);
+            Image courseLogo;
+            courseLogo = course.getCourseLogo();
+            MediaTracker tr = new MediaTracker(this);
+            tr.addImage(courseLogo, 0);
+            try {
+                tr.waitForAll();
+            } catch (Exception e) {
+            }
+            courseLogo = courseLogo.getScaledInstance(courseLogo.getWidth(null)/2 , courseLogo.getHeight(null)/2 , Image.SCALE_SMOOTH);
+            tr.addImage(courseLogo, 0);
+            try {
+                tr.waitForAll();
+            } catch (Exception e) {
+            }
+    		ImageIcon icon = new ImageIcon(courseLogo);
+            hp.setIcon(icon);
+            hp.setIconTextGap(20); 
+            Border oldBorder = hp.getBorder();
+            Border gapBorder = BorderFactory.createEmptyBorder(0, 10, 0, 0);
+            hp.setBorder(BorderFactory.createCompoundBorder(oldBorder, gapBorder));
+    	}
+    	return hp; 
     }
 
     /**

@@ -232,7 +232,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 		return this;
 	}
 
-	public Container getHeaderPanel() {
+	public Component getHeaderPanel() {
 		// TODO Auto-generated method stub
 		return new HeaderPanel("Gebruikers beheren");
 	}

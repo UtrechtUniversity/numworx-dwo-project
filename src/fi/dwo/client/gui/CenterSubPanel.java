@@ -27,7 +27,7 @@ public interface CenterSubPanel {
      * 
      * @return The Header Panel.
      */
-    public Container getHeaderPanel();
+    public Component getHeaderPanel();
 
     /**
      * Sets the centerpanel.

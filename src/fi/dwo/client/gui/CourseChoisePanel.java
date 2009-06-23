@@ -153,71 +153,13 @@ public class CourseChoisePanel extends Panel implements ActionListener,
      * @return A panel that can functionate as a header panel.
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
-    public Container getHeaderPanel() {
-        Panel p = new BorderedPanel(null); 
-        if(GuiConstants.GUI_IMAGE_BG) {
-        	p = new Panel()
-            {
-	        	public void paint(Graphics g)
-	            {	Point p = DwoHelper.getComponentLocation(this);
-	            	System.out.println(""+p);
-	            	g.drawImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE),-p.x,-p.y,null);
-	            	super.paint(g);
-	            }
-	        };
-        }
-        p.setBackground(GuiConstants.MAIN_BACKGROUND);
-        p.setBounds(181, 20, 449, 71);
-//        this.add(p);
+    public Component getHeaderPanel() {
+        Container p; //  = new BorderedPanel(null); 
 
-        /* My Profile-Label */
-       
-        JLabel l = new JLabel(TextMapper.getText(TextMapper.GUIM_MAIN_MENU));
-        l.setOpaque(false);
+        p = new HeaderPanel(TextMapper.getText(TextMapper.GUIM_MAIN_MENU));
         String s = dwoProfile.getText();
-        l.setFont(GuiConstants.HEADER_TEXT);
-        if((s != null) && (!s.trim().equals(""))) l.setText(dwoProfile.getDescription());
-        FontMetrics fm = l.getFontMetrics(l.getFont());
-        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-        l.setLocation((p.getSize().width / 2) - (l.getSize().width / 2), (p.getSize().height / 2)
-                - (l.getSize().height / 2));
-        /*l.setVisible(false);
-        p.add(l);
-        l.setVisible(true);*/
-        
-        /* Scale the fontsize */
-        
-        if((s != null) && (!s.trim().equals(""))) 
-        {	l.setText(dwoProfile.getDescription());
-	    	Font f = null;
-	        int maxHeight = (int) p.getSize().height - 4;
-	        int maxWidth = p.getSize().width - 40 ;
-	        
-	        if(GuiConstants.GUI_IMAGE_BG) maxHeight = 26;
-	        
-	        while ((l.getSize().width > maxWidth)
-	                || (l.getSize().height > maxHeight)) {
-	            f = l.getFont();
-	            l.setFont(new Font(f.getName(), f.getStyle(), f.getSize() - 1));
-	            fm = l.getFontMetrics(l.getFont());
-	            l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-	            
-	        }
-	        l.setLocation(30, (p.getSize().height / 2) - (l.getSize().height / 2));
-	        
-	    }
-        
-        p.add(l);
-        if(GuiConstants.GUI_IMAGE_BG) 
-        {	p.remove(l);
-        	Font f = l.getFont();
-            l.setFont(new Font(f.getName(), f.getStyle(), 26));
-	        fm = l.getFontMetrics(l.getFont());
-	        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-	        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-	        l.setLocation(60, 38);
-	        p.add(l);
-        }
+        if(s != null && s.trim().length()>0)
+        	p = new HeaderPanel(dwoProfile.getDescription(), true);
         return p;
     }
 

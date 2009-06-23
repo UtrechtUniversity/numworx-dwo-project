@@ -9,13 +9,18 @@ import java.awt.Container;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Label;
 import java.awt.MediaTracker;
 import java.awt.Panel;
 import java.awt.Point;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.border.LineBorder;
 
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.School;
@@ -35,7 +40,7 @@ public class MainPanel extends Panel {
 
     private CenterPanel center;
 
-    private Container header;
+    private Component header;
     
     private Image guiImage;
 
@@ -51,24 +56,25 @@ public class MainPanel extends Panel {
 
         /* Variables used to create items */
         FontMetrics fm;
-        Panel p;
+        Container p;
         JLabel l;
         
         if(GuiConstants.GUI_IMAGE_BG) guiImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE);
 
-        //l = new Label(TextMapper.getText(TextMapper.GUIM_DWO_FULL));
-        l = new JLabel(" "+dwoProfile.getDescription());
-        l.setFont(GuiConstants.RED_TEXT);
-        l.setOpaque(false);
-        l.setForeground(GuiConstants.RED_COLOR);
-        l.setForeground(new Color(3,65,123));
-        fm = l.getFontMetrics(l.getFont());
-        l.setBounds(0, 2, fm.stringWidth(l.getText()) + 10, fm.getHeight());
-        l.setVisible(false);
-        this.add(l);
-        if(GuiConstants.GUI_IMAGE_BG) remove(l);
-        l.setVisible(true);
-        
+        Box hbox = Box.createHorizontalBox();
+        if(!GuiConstants.GUI_IMAGE_BG)
+        { 
+            hbox.add(Box.createHorizontalStrut(5));
+        	l = new JLabel(dwoProfile.getDescription());
+        	l.setFont(GuiConstants.RED_TEXT);
+        	l.setOpaque(false);
+        	l.setForeground(GuiConstants.RED_COLOR);
+        	l.setForeground(new Color(3,65,123));
+        	hbox.add(l);
+        }
+        hbox.add(Box.createGlue());
+// als alles ontbreekt, creeer een riggel, nodig bij variable layout.        
+//      hbox.add(Box.createVerticalStrut(getFontMetrics(GuiConstants.RED_TEXT).getHeight()));
         User u = GuiCreator.instance().getUser();
         if(u != null) {
             School s = u.getSchool();
@@ -77,104 +83,40 @@ public class MainPanel extends Panel {
                 l.setOpaque(false);
                 l.setFont(GuiConstants.RED_TEXT_ITALIC);
                 l.setForeground(GuiConstants.RED_COLOR);
-                fm = l.getFontMetrics(l.getFont());
-                l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-                l.setLocation(this.getSize().width - 10 - l.getSize().width, 2);
-                l.setVisible(false);
-                this.add(l);
-                l.setVisible(true);                
+                hbox.add(l);
+                hbox.add(Box.createHorizontalStrut(20));
             }
         }
-       
-        p = new BorderedPanel(null);
-        if(GuiConstants.GUI_IMAGE_BG) {
-        	p = new BorderedPanel(null,0)
-            {
-	        	public void paint(Graphics g)
-	            {	Point p = DwoHelper.getComponentLocation(this);
-	            	System.out.println(""+p);
-	            	g.drawImage(guiImage,-p.x,-p.y,null);
-	            	super.paint(g);
-	            }
-	        };
-        }
-        p.setBackground(GuiConstants.MAIN_BACKGROUND);
-        p.setBounds(5, 20, 151, 71);
-        p.setVisible(false);
-        this.add(p);
-        p.setVisible(true);
-
-        /* Add FI logo */
-        Image fiLogo;
-        fiLogo = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.WISWEB_LOGO_SMALL_LOCATION);
-        MediaTracker tr = new MediaTracker(this);
-        tr.addImage(fiLogo, 0);
-        try {
-            tr.waitForAll();
-        } catch (Exception e) {
-        }
-        Panel ip = new ImagePanel(fiLogo);
-        ip.setLocation(40, 1);
-        ip.setVisible(false);
-        p.add(ip);
-        if(GuiConstants.GUI_IMAGE_BG) p.remove(ip);
-        ip.setVisible(true);
-
-        /* DWO-Label 
-        l = new Label(TextMapper.getText(TextMapper.GUIM_DWO_SHORT));
-        l.setFont(GuiConstants.HEADER_TEXT);
-        l.setForeground(GuiConstants.RED_COLOR);
-        fm = l.getFontMetrics(l.getFont());
-        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-        l.setLocation(ip.getSize().width + ip.getLocation().x, (p.getSize().height / 2)
-                - (l.getSize().height / 2));
-        l.setVisible(false);
-        p.add(l);
-        l.setVisible(true);*/
+        add(hbox);
+        hbox.setBounds(0, 0, getWidth(), hbox.getPreferredSize().height);
         
-        l = new JLabel(TextMapper.getText(TextMapper.GUIM_FI_NAME));
-        l.setOpaque(false);
-        l.setFont(new Font("SansSerif", Font.BOLD, 12));
-        l.setForeground(new Color(3,65,123));
-        fm = l.getFontMetrics(l.getFont());
-        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-        l.setLocation(20, 50);
-        l.setVisible(false);
-        p.add(l);
-        if(GuiConstants.GUI_IMAGE_BG) p.remove(l);
-        l.setVisible(true);
-
-        header = new BorderedPanel(null);
-        if(GuiConstants.GUI_IMAGE_BG) {
-        	header = new BorderedPanel(null,0)
-            {
-	        	public void paint(Graphics g)
-	            {	Point p = DwoHelper.getComponentLocation(this);
-	            	System.out.println(""+p);
-	            	g.drawImage(guiImage,-p.x,-p.y,null);
-	            	super.paint(g);
-	            }
-	        };
+        if(!GuiConstants.GUI_IMAGE_BG)
+        {
+		
+		    /* Add FI logo */
+		    Image fiLogo;
+		    fiLogo = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.WISWEB_LOGO_SMALL_LOCATION);
+		    ImageIcon ip = new ImageIcon(fiLogo);
+		    
+		    l = new JLabel(TextMapper.getText(TextMapper.GUIM_FI_NAME));
+		    l.setIcon(ip);
+		    l.setVerticalTextPosition(JLabel.BOTTOM);
+		    l.setHorizontalTextPosition(JLabel.CENTER);
+		    l.setHorizontalAlignment(JLabel.CENTER);
+		    l.setVerticalAlignment(JLabel.CENTER);
+		    l.setBackground(GuiConstants.MAIN_BACKGROUND);
+		    l.setOpaque(true);
+		    l.setFont(new Font("SansSerif", Font.BOLD, 12));
+		    l.setForeground(new Color(3,65,123));
+		    l.setBorder(BorderFactory.createCompoundBorder(LineBorder.createBlackLineBorder(),
+		    		BorderFactory.createEmptyBorder(2, 0, 4, 0)));
+// nota bene: het CenterPanel ligt als heavy weight over de bottom-borderline heen
+// daarom wordt daar dit lijntje hertekend.
+		    l.setBounds(5, 20, 151, 71); add(l);
         }
-        header.setLayout(null);
-        header.setBackground(GuiConstants.MAIN_BACKGROUND);
-        header.setBounds(171, 10, 469, 81);
-        header.setVisible(false);
-        this.add(header);
-        header.setVisible(true);
 
-        /* DWO-full-Label */
-        l = new JLabel(TextMapper.getText(TextMapper.GUIM_MAIN_MENU));
-        l.setOpaque(false);
-        l.setFont(GuiConstants.HEADER_TEXT);
-        l.setForeground(new Color(3,65,123));
-        fm = l.getFontMetrics(l.getFont());
-        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-        l.setLocation((header.getSize().width / 2) - (l.getSize().width / 2), (header.getSize().height / 2)
-                - (l.getSize().height / 2));
-        l.setVisible(false);
-        header.add(l);
-        l.setVisible(true);
+        header = new HeaderPanel(TextMapper.getText(TextMapper.GUIM_MAIN_MENU));
+        this.add(header);
 
         /* Logged In panel */
         loggedIn = new LoggedInPanel();
@@ -211,7 +153,7 @@ public class MainPanel extends Panel {
      * 
      * @param p The panel to set as a header.
      */
-    public void setHeaderPanel(Container p) {
+    public void setHeaderPanel(Component p) {
         if (this.header != null) {
             header.setVisible(false);
             this.remove(header);
@@ -221,7 +163,11 @@ public class MainPanel extends Panel {
         header = p;
         header.setVisible(false);
         this.add(header);
-        header.setBounds(166, 20, 469, 71);
+// EPN-logo hok is wat breder, 
+        int margin = GuiConstants.GUI_IMAGE_BG?30:0;
+        int x = 166 + margin;
+		int width = 469 - margin;
+		header.setBounds(x, 20, width, 71);
         header.setVisible(true);
     }
 

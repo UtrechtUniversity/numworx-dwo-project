@@ -58,8 +58,8 @@ public abstract class GuiConstants {
     public final static String RESULTS_ORDER_DESC = "resources/orderdesc.gif";
     public final static String RESULTS_ORDER_ASCDESC = "resources/orderascdesc.png";
     
-    public final static String BACK_MAINMENU_IMAGE = "resources/home.gif";
-    public final static String BACK_COURSEMENU_IMAGE = "resources/terugknopklein.gif";
+    public final static String BACK_MAINMENU_IMAGE = "resources/home.png";
+    public final static String BACK_COURSEMENU_IMAGE = "resources/terugknopklein.png";
     
     public static String GUI_IMAGE_WELCOME = "resources/EPN-welkom.jpg";
     public static String GUI_IMAGE_SCO = "resources/EPN-sco.png";
@@ -115,7 +115,8 @@ public abstract class GuiConstants {
 		if(profile==3)
 		{	MAIN_BACKGROUND = new Color(255,255,200);
     		CELL_BACKGROUND = new Color(255,255,200);
-			FI_LOGO_LOCATION = "resources/rekenweb.gif";
+			FI_LOGO_LOCATION = "resources/rekenweb.png";
+			WISWEB_LOGO_SMALL_LOCATION = FI_LOGO_LOCATION; // Dit is REKENWEB!
 			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 33);
 			GUI_IMAGE_BG = false;
 		} else

@@ -44,7 +44,11 @@ public class MainFrame extends Frame   implements WindowListener, AppletStub, Ap
     public AppletContext getAppletContext(){return this;}
     	
     // AppletContext methodes
-    public AudioClip getAudioClip( URL url ){return null;}
+    public AudioClip getAudioClip( URL url )
+    {
+    	return java.applet.Applet.newAudioClip(url);
+    }
+    
     public Image getImage( URL url )
     {	Toolkit tk = Toolkit.getDefaultToolkit();
 		try

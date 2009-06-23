@@ -255,23 +255,9 @@ public class ClassUsersPanel extends Panel implements CenterSubPanel/*, ActionLi
      * @return A panel that can functionate as a header panel.
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
-    public Container getHeaderPanel() {
-        Panel p = new BorderedPanel(null);
-        p.setBackground(GuiConstants.MAIN_BACKGROUND);
-        p.setBounds(181, 20, 449, 71);
-        this.add(p);
-
-        /* My Profile-Label */
-        Label l = new Label(TextMapper.getText(TextMapper.GUIC_STUDENTS) + " "
+    public Component getHeaderPanel() {
+    	return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_STUDENTS) + " "
                 + schoolClass.getName());
-        l.setFont(GuiConstants.HEADER_TEXT);
-        FontMetrics fm = l.getFontMetrics(l.getFont());
-        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-        l.setLocation((p.getSize().width / 2) - (l.getSize().width / 2), (p.getSize().height / 2)
-                - (l.getSize().height / 2));
-        p.add(l);
-
-        return p;
     }
 
     /**

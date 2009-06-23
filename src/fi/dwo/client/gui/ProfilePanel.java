@@ -650,43 +650,8 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
    
-    public Container getHeaderPanel() {
-        Panel p = new BorderedPanel(null);
-        if(GuiConstants.GUI_IMAGE_BG) {
-        	p = new BorderedPanel(null,0)
-            {  	public void paint(Graphics g)
-	            {	Point p = DwoHelper.getComponentLocation(this);
-	            	g.drawImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE),-p.x,-p.y,null);
-	            	super.paint(g);
-	            }
-	        };
-        }
-        p.setBackground(GuiConstants.MAIN_BACKGROUND);
-        p.setBounds(181, 20, 449, 71);
-        this.add(p);
-
-        /* My Profile-Label */
-        JLabel l = new JLabel(TextMapper.getText(TextMapper.GUIP_MY_PROFILE));
-        l.setOpaque(false);
-        l.setFont(GuiConstants.HEADER_TEXT);
-        FontMetrics fm = l.getFontMetrics(l.getFont());
-        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-        l.setLocation((p.getSize().width / 2) - (l.getSize().width / 2), (p.getSize().height / 2)
-                - (l.getSize().height / 2));
-        p.add(l);
-        
-        if(GuiConstants.GUI_IMAGE_BG) 
-        {	p.remove(l);
-        	Font f = l.getFont();
-            l.setFont(new Font(f.getName(), f.getStyle(), 26));
-	        fm = l.getFontMetrics(l.getFont());
-	        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-	        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-	        l.setLocation(60, 38);
-	        p.add(l);
-        }
-
-        return p;
+    public Component getHeaderPanel() {
+    	return new HeaderPanel(TextMapper.getText(TextMapper.GUIP_MY_PROFILE));
     }
 
     /**
