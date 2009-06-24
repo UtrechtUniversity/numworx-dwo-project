@@ -20,6 +20,7 @@ import java.util.Vector;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.plaf.ColorUIResource;
 
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.base64code.StringCodeObject;
@@ -874,7 +875,8 @@ private static boolean isValidEmail(String email) {
     	UIDefaults defaults;
     	defaults = UIManager.getDefaults();
     	defaults.addResourceBundle("fi/dwo/client/gui/resources/swing");
-
+// standaard Tooltip geel
+    	UIManager.put("ToolTip.background", new ColorUIResource(255, 247, 200));
         
         String lang = getParameter("language");
         System.out.println(lang);

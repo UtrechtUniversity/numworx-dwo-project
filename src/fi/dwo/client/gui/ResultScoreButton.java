@@ -15,7 +15,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.MessageFormat;
 
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 import fi.beans.tooltip.ToolTipIF;
 import fi.beans.tooltip.ToolTipManager;
@@ -49,7 +53,7 @@ public class ResultScoreButton extends Panel implements
         int red = 255;
         int green = 255;
         int blue = 0;
-        JLabel l;
+        JComponent l;
         if (score != 0) {
             if(score == -1) { //it is -1 he did the course but has no score
                 score = 0;
@@ -73,16 +77,17 @@ public class ResultScoreButton extends Panel implements
             this.setBackground(new Color(red, green, blue));
 
             if (domain.isDeepest()) {
-                l = new LinkedLabel(((int) score) + " %");
-                ((LinkedLabel) l).addActionListener(this);
-                ((LinkedLabel) l).setMouseoverColor(Color.black);
+                LinkedLabel ll = new LinkedLabel(((int) score) + " %");
+                ll.addActionListener(this);
+                ll.setMouseoverColor(Color.black);
                 String[] arguments = new String[2];
                 arguments[0] = domain.getUserGroup().getName();
                 arguments[1] = domain.getLessonGroup().getToolTip();
                 String s = TextMapper.getText(TextMapper.GUIRS_TLTP_RESULT_SCORE_BUTTON);
                 s = MessageFormat.format(s, arguments);
                 this.setToolTip(s);
-                ((LinkedLabel) l).setToolTip(s);
+                ll.setToolTipText(s);
+                l = ll;
             } else {
                 l = new JLabel(((int) score) + " %");
                 //addMouseListener(this);
@@ -92,11 +97,11 @@ public class ResultScoreButton extends Panel implements
         	//addMouseListener(this);
         	 
         }
-            l.setHorizontalAlignment(JLabel.CENTER);
+            center(l);
             FontMetrics fm;
             l.setFont(GuiConstants.NORMAL_TEXT);
             fm = l.getFontMetrics(l.getFont());
-            l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
+            l.setSize(fm.stringWidth(getText(l)) + 10, fm.getHeight());
 
             this.setSize(l.getSize().width + 5, l.getSize().height + 5);
             this.add(l, BorderLayout.CENTER);
@@ -104,6 +109,30 @@ public class ResultScoreButton extends Panel implements
             
 
     }
+    
+    /**
+     * De text van label of button
+     * @param l label of button
+     * @return
+     */
+	private String getText(JComponent l) {
+		if(l instanceof JLabel)
+			return ((JLabel) l).getText();
+		if(l instanceof AbstractButton)
+			return ((AbstractButton)l).getText();
+		return "";
+	}
+/**
+ * setHorizontalAlignment voor labels en buttons.
+ * Helaas geen common class/interface.
+ * @param l button of label
+ */
+	private void center(JComponent l) {
+		if(l instanceof AbstractButton)
+			((AbstractButton) l).setHorizontalAlignment(SwingConstants.CENTER);
+		if(l instanceof JLabel)
+			((JLabel) l).setHorizontalAlignment(SwingConstants.CENTER);
+	}
     
     public void setBarMode()
     {	setBackground(GuiConstants.MAIN_BACKGROUND);

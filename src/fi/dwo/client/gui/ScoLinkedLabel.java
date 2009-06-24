@@ -25,7 +25,7 @@ public class ScoLinkedLabel extends LinkedLabel {
     public ScoLinkedLabel(Sco s) {
         super(s.getSequencenr() + ".  " + s.getScoName());
         sco = s;
-        this.setToolTip(sco.getDescription());
+        this.setToolTipText(sco.getDescription());
     }
 
     /**

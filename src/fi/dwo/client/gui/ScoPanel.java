@@ -50,34 +50,6 @@ public class ScoPanel extends Panel implements CenterSubPanel,
 
 	private static final Color HOME_COLOR = new Color(3,65,123);
 
-	public static class HoverDecorator extends MouseAdapter {
-
-		private Component component;
-		private Color fg;
-		private Color hover;
-
-		public HoverDecorator(Component component, Color fg, Color hover) {
-			this.component = component;
-			this.fg = fg;
-			this.hover = hover;
-		}
-
-		public static void decorate(Component component, Color fg, Color hover) {
-			component.addMouseListener(new HoverDecorator(component, fg, hover));
-		}
-
-		public void mouseEntered(MouseEvent e) {
-			component.setForeground(hover);
-			component.repaint();
-		}
-
-		public void mouseExited(MouseEvent e) {
-			component.setForeground(fg);
-			component.repaint();
-		}
-
-	}
-
 	private Applet applet;
 
     private Sco sco;
@@ -87,8 +59,8 @@ public class ScoPanel extends Panel implements CenterSubPanel,
     private LinkedLabel mainMenuButton;
     private JButton mainMenuImageButton;
     
-    private JButton courseButton;
-    private JButton courseImageButton;
+    private LinkedLabel courseButton;
+//    private JButton courseImageButton;
     
     private DwoButton closeButton;
     
@@ -192,13 +164,10 @@ public class ScoPanel extends Panel implements CenterSubPanel,
 // goto course
     	if(!scoView)
     	{
-    		courseButton = new JButton(sco.getCourse().getName());
-			HoverDecorator.decorate(courseButton, HOME_COLOR, GuiConstants.RED_COLOR);	
+    		courseButton = new LinkedLabel(sco.getCourse().getName());
+    		//courseButton.setCursor(new JButton().getCursor()); // restore button cursor
+    		courseButton.setNewForeground(HOME_COLOR);	
         	courseButton.setFont(GuiConstants.RED_TEXT);
-        	courseButton.setBorderPainted(false);
-        	courseButton.setBackground(GuiConstants.MAIN_BACKGROUND);
-        	courseButton.setBorder(null);
-        	courseButton.setContentAreaFilled(false);
         	courseButton.addActionListener(this);
         	courseButton.setIcon(
         		new ImageIcon(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.BACK_COURSEMENU_IMAGE))
@@ -396,7 +365,7 @@ public class ScoPanel extends Panel implements CenterSubPanel,
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == mainMenuButton || e.getSource() == mainMenuImageButton) {
             center.loadCenter(GuiCreator.instance().getCourseChoisePanel());
-        } else if (e.getSource() == courseButton || e.getSource() == courseImageButton) {
+        } else if (e.getSource() == courseButton ) {
             center.loadCenter(GuiCreator.instance().getCoursePanel(sco.getCourse()));
         } 
         // aanpassing umpc

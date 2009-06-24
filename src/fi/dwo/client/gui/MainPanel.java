@@ -89,6 +89,7 @@ public class MainPanel extends Panel {
         }
         add(hbox);
         hbox.setBounds(0, 0, getWidth(), hbox.getPreferredSize().height);
+        hbox.doLayout();
         
         if(!GuiConstants.GUI_IMAGE_BG)
         {
@@ -121,7 +122,7 @@ public class MainPanel extends Panel {
         /* Logged In panel */
         loggedIn = new LoggedInPanel();
         loggedIn.setBounds(645, 20, 151, 71);
-        loggedIn.doLayout();
+        //loggedIn.doLayout();
         loggedIn.setVisible(false);
         this.add(loggedIn);
         loggedIn.setVisible(true);

@@ -25,6 +25,7 @@ import java.util.Hashtable;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -105,7 +106,7 @@ public class AddScoDialog extends Dialog implements ActionListener,
         l.setSize(fm.stringWidth(l.getText()) + 8, 18);
         l.setLocation(10, 1);
         panel.add(l);
-        JLabel last = l;
+        JComponent last = l;
         
         LinkedLabel ll = new LinkedLabel(TextMapper.getText(TextMapper.GUISDLG_ALL));
         allItems = ll;
