@@ -3,9 +3,11 @@
 
 package fi.dwo.client.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -20,6 +22,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import fi.dwo.client.domain.DwoHelper;
@@ -36,6 +39,31 @@ import fi.dwo.client.system.TextMapper;
  *  
  */
 public class MainPanel extends Panel {
+	
+	static class TopPanel extends JPanel {
+		TopPanel() {
+			super(new BorderLayout(10,0), false);
+			setOpaque(false);
+			setDoubleBuffered(false);
+			setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+		}
+	    /**
+	     * check valid!
+	     * Bij een setLayout(null) wordt niet meer automatische gevalideerd.
+	     * Kan weg als DWO een LayoutManager heeft.
+	     * @see javax.swing.JComponent#paint(java.awt.Graphics)
+	     * @see java.awt.LayoutManager
+	     */
+	    public void paint(Graphics g)
+	    {
+	    	if(!isValid()) {
+	    		validate();
+	    	}
+	    	super.paint(g);
+	    }
+
+	}
+	
     private LoggedInPanel loggedIn;
 
     private CenterPanel center;
@@ -44,6 +72,8 @@ public class MainPanel extends Panel {
     
     private Image guiImage;
 
+	private TopPanel top;
+
     /**
      * Creates a new instance of the MainPanel. The main panel shows the
      * FI-logo, the header panel, the logg-of panel and the center panel.
@@ -51,20 +81,21 @@ public class MainPanel extends Panel {
     public MainPanel(DwoProfile dwoProfile) {
         this.setVisible(false);
         this.setBackground(GuiConstants.SUB_BACKGROUND);
-        this.setLayout(null);
+        this.setLayout(null);///new BorderLayout());
         this.setSize(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
 
         /* Variables used to create items */
         FontMetrics fm;
         Container p;
         JLabel l;
-        
+        top = new TopPanel();
+		top.setBounds(0,0, GuiConstants.DWO_WIDTH, 91); // TODO 70!
+        add(top, BorderLayout.NORTH);
         if(GuiConstants.GUI_IMAGE_BG) guiImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE);
 
         Box hbox = Box.createHorizontalBox();
         if(!GuiConstants.GUI_IMAGE_BG)
         { 
-            hbox.add(Box.createHorizontalStrut(5));
         	l = new JLabel(dwoProfile.getDescription());
         	l.setFont(GuiConstants.RED_TEXT);
         	l.setOpaque(false);
@@ -74,7 +105,7 @@ public class MainPanel extends Panel {
         }
         hbox.add(Box.createGlue());
 // als alles ontbreekt, creeer een riggel, nodig bij variable layout.        
-//      hbox.add(Box.createVerticalStrut(getFontMetrics(GuiConstants.RED_TEXT).getHeight()));
+        hbox.add(Box.createVerticalStrut(getFontMetrics(GuiConstants.RED_TEXT).getHeight()));
         User u = GuiCreator.instance().getUser();
         if(u != null) {
             School s = u.getSchool();
@@ -84,10 +115,10 @@ public class MainPanel extends Panel {
                 l.setFont(GuiConstants.RED_TEXT_ITALIC);
                 l.setForeground(GuiConstants.RED_COLOR);
                 hbox.add(l);
-                hbox.add(Box.createHorizontalStrut(20));
+                hbox.add(Box.createHorizontalStrut(15));
             }
         }
-        add(hbox);
+        top.add(hbox, BorderLayout.NORTH);
         hbox.setBounds(0, 0, getWidth(), hbox.getPreferredSize().height);
         hbox.doLayout();
         
@@ -113,18 +144,27 @@ public class MainPanel extends Panel {
 		    		BorderFactory.createEmptyBorder(2, 0, 4, 0)));
 // nota bene: het CenterPanel ligt als heavy weight over de bottom-borderline heen
 // daarom wordt daar dit lijntje hertekend.
-		    l.setBounds(5, 20, 151, 71); add(l);
+		    l.setBounds(5, 20, 151, 71); top.add(l, BorderLayout.WEST);
+		    l.setPreferredSize(new Dimension(151,71));
+        } else {
+        	top.add(Box.createRigidArea(new Dimension(151+30,71)), BorderLayout.WEST);
         }
 
         header = new HeaderPanel(TextMapper.getText(TextMapper.GUIM_MAIN_MENU));
-        this.add(header);
+        top.add(header, BorderLayout.CENTER);
 
         /* Logged In panel */
         loggedIn = new LoggedInPanel();
         loggedIn.setBounds(645, 20, 151, 71);
+        int w = 150;
+        if(GuiConstants.GUI_IMAGE_BG)
+        {
+        	w = w - 30;
+        }
+		loggedIn.setPreferredSize(new Dimension(w,71));
         //loggedIn.doLayout();
         loggedIn.setVisible(false);
-        this.add(loggedIn);
+        top.add(loggedIn, BorderLayout.EAST);
         loggedIn.setVisible(true);
 
         center = new CenterPanel(this);
@@ -157,13 +197,13 @@ public class MainPanel extends Panel {
     public void setHeaderPanel(Component p) {
         if (this.header != null) {
             header.setVisible(false);
-            this.remove(header);
+            top.remove(header);
             header.setVisible(true);
         }
 
         header = p;
         header.setVisible(false);
-        this.add(header);
+        top.add(header, BorderLayout.CENTER);
 // EPN-logo hok is wat breder, 
         int margin = GuiConstants.GUI_IMAGE_BG?30:0;
         int x = 166 + margin;

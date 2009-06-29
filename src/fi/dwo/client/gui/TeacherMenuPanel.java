@@ -40,7 +40,6 @@ public class TeacherMenuPanel extends MenuPanel {
 	 * @see fi.dwo.client.gui.MenuPanel#createButtons()
 	 */
 	protected void createMenuButtons() {
-		// TODO Auto-generated method stub
 		super.createMenuButtons();
         /* Variables used to create items */
         //FontMetrics fm;
@@ -88,16 +87,7 @@ public class TeacherMenuPanel extends MenuPanel {
         createRuler();
         
         classPanel = new JPanel(null);
-        if(GuiConstants.GUI_IMAGE_BG) {
-        	classPanel = new JPanel(null)
-            {
-	        	public void paint(Graphics g)
-	            {	Point p = DwoHelper.getComponentLocation(this);
-	            	g.drawImage(DwoHelper.getImage(GuiConstants.RESOURCES + "resources/EPN-course.png"),-p.x,-p.y,null);
-	            	super.paint(g);
-	            }
-	        };
-        }
+        classPanel.setDoubleBuffered(false);
         classPanel.setSize(this.getSize().width - 1, 1);
         //classPanel.setLocation(0, 136);
         classPanel.setOpaque(false);

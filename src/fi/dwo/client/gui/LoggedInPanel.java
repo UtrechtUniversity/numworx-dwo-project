@@ -93,7 +93,7 @@ public class LoggedInPanel extends Box implements ActionListener {
     	{
     		if(GuiConstants.GUI_IMAGE_BG)
     		{
-    			loggedin.setText(loggedin.getText()+" "+user.getName());
+    			loggedin.setText(user.getName());
     			loggedin.setHorizontalAlignment(SwingConstants.RIGHT);
     		} else {
     			username = new JLabel(user.getName());
@@ -145,8 +145,12 @@ public class LoggedInPanel extends Box implements ActionListener {
      */
     public void paint(Graphics g)
     {
-    	if(!isValid()) {
-    		validate();
+//    	if(!isValid()) {
+//    		validate();
+//    	}
+    	if(isOpaque())
+    	{	g.setColor(getBackground());
+    		g.fillRect(0, 0, getWidth(), getHeight());
     	}
     	super.paint(g);
     }

@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -99,7 +100,18 @@ public class MenuPanel extends GuestMenuPanel {
        //FontMetrics fm;
         JLabel l;
         createRuler();
-        Box p = Box.createVerticalBox();
+        Box p = new Box(BoxLayout.PAGE_AXIS) {
+
+			/* (non-Javadoc)
+			 * @see javax.swing.JComponent#paint(java.awt.Graphics)
+			 */
+			public void paint(Graphics g) {
+				// TODO Auto-generated method stub
+				super.paint(g);
+			} 
+        	
+        	
+        };
         p.setOpaque(false);
         /* Add class-info */
         User u = GuiCreator.instance().getUser();

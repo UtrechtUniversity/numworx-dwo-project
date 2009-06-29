@@ -297,6 +297,8 @@ public class CenterPanel extends Panel {
     	            g.drawLine(629, 9, getSize().width - 2, 9);
     	        }
     	        g.drawLine(0,0,150,0);	// border-lijntje van filogo panel 
+    	        int w = getWidth();
+    	        g.drawLine(w-3, 0, w-152, 0); // border-lijntje loggedin panel
 		}
     	
     }
@@ -330,6 +332,7 @@ public class CenterPanel extends Panel {
         menu.setVisible(false);
         centermainSub.add(menu);
         menu.setVisible(true);
+        menu.repaint();
     }
     
     public GuestMenuPanel getMenu() {
