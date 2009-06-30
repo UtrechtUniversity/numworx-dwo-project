@@ -23,6 +23,7 @@ import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
 import fi.dwo.client.domain.DwoHelper;
@@ -81,15 +82,15 @@ public class MainPanel extends Panel {
     public MainPanel(DwoProfile dwoProfile) {
         this.setVisible(false);
         this.setBackground(GuiConstants.SUB_BACKGROUND);
-        this.setLayout(null);///new BorderLayout());
+        this.setLayout(new BorderLayout());
         this.setSize(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
-
+        invalidate();
         /* Variables used to create items */
         FontMetrics fm;
         Container p;
         JLabel l;
         top = new TopPanel();
-		top.setBounds(0,0, GuiConstants.DWO_WIDTH, 91); // TODO 70!
+		top.setBounds(0,0, GuiConstants.DWO_WIDTH, 90); // TODO 70!
         add(top, BorderLayout.NORTH);
         if(GuiConstants.GUI_IMAGE_BG) guiImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE);
 
@@ -140,7 +141,7 @@ public class MainPanel extends Panel {
 		    l.setOpaque(true);
 		    l.setFont(new Font("SansSerif", Font.BOLD, 12));
 		    l.setForeground(new Color(3,65,123));
-		    l.setBorder(BorderFactory.createCompoundBorder(LineBorder.createBlackLineBorder(),
+		    l.setBorder(BorderFactory.createCompoundBorder(createNBorder(),
 		    		BorderFactory.createEmptyBorder(2, 0, 4, 0)));
 // nota bene: het CenterPanel ligt als heavy weight over de bottom-borderline heen
 // daarom wordt daar dit lijntje hertekend.
@@ -175,6 +176,13 @@ public class MainPanel extends Panel {
         this.setVisible(true);
 
     }
+
+	/**
+	 * @return
+	 */
+	static Border createNBorder() {
+		return BorderFactory.createMatteBorder(1, 1, 0, 1, Color.black);
+	}
     
     public void setGuiImage(Image image)
     {	loggedIn.setGuiImage(image);
@@ -182,6 +190,7 @@ public class MainPanel extends Panel {
     }
 
     public void paint(Graphics g) {
+    	validate();
     	if(GuiConstants.GUI_IMAGE_BG) {
 	       	Point p = DwoHelper.getComponentLocation(this);
 	       	g.drawImage(guiImage,0,0,null);

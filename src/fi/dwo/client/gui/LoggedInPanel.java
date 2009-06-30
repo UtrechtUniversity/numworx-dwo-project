@@ -72,7 +72,7 @@ public class LoggedInPanel extends Box implements ActionListener {
     	{
     		setOpaque(false);
     	} else {
-    		setBorder(LineBorder.createBlackLineBorder());
+    		setBorder(MainPanel.createNBorder());
     		setBackground(GuiConstants.MAIN_BACKGROUND);
     		setOpaque(true);
     	}

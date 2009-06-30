@@ -77,6 +77,7 @@ public class CenterMainSubPanel extends BorderedPanel {
     }*/
     
     public void paint(Graphics g) {
+    	validate();
     	if(GuiConstants.GUI_IMAGE_BG) {
 	       	Point p = DwoHelper.getComponentLocation(this);
 	       	g.drawImage(guiImage,-p.x,-p.y,null);
@@ -91,13 +92,13 @@ public class CenterMainSubPanel extends BorderedPanel {
             double facBlue = (double)(255 - GuiConstants.MAIN_BACKGROUND.getBlue())/10;
             for (int i = 0; i < 10; i++) {
                 g.setColor(new Color((int) (255 - facRed * i), (int) (255 - facGreen * i), (int) (255 - facBlue * i)));
-                g.fillRect(151, 1 + i * 20, 10, 20);
+                g.fillRect(151-1, 1 + i * 20, 10, 20);
             }
 
            
             g.setColor(Color.black);
-            g.drawLine(150, 0, 150, 200);
-            g.drawLine(161, 0, 161, 445);
+            g.drawLine(150-1, 0, 150-1, 200);
+            g.drawLine(161-1, 0, 161-1, 445);
     	}
     	
     }

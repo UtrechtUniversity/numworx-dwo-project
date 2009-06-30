@@ -86,12 +86,21 @@ public class GuestMenuPanel extends JPanel implements ActionListener {
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setDoubleBuffered(false);
-        this.setSize(149, 481);
+        //this.setSize(149, 481);
         setOpaque(!GuiConstants.GUI_IMAGE_BG);
         createGap();
         createButtons();
         add(Box.createVerticalGlue());
     }
+
+
+	/* (non-Javadoc)
+	 * @see java.awt.Component#setBounds(int, int, int, int)
+	 */
+	public void setBounds(int x, int y, int width, int height) {
+		// TODO Auto-generated method stub
+		super.setBounds(x, y, width, height);
+	}
 
 
 	protected void createGap() {

@@ -137,6 +137,7 @@ public class ScoPanel extends Panel implements CenterSubPanel,
     	JPanel jp = new JPanel(new BorderLayout());
     	jp.setBackground(GuiConstants.MAIN_BACKGROUND);
     	jp.setOpaque(!GuiConstants.GUI_IMAGE_BG);
+    	jp.setDoubleBuffered(false);
     	Box hbox = Box.createHorizontalBox();
     	String text = sco.getScoName();
     	JLabel l;
@@ -202,7 +203,7 @@ public class ScoPanel extends Panel implements CenterSubPanel,
         jp.add(hp, BorderLayout.CENTER);
         jp.add(hbox, BorderLayout.NORTH);
     	if(!GuiConstants.GUI_IMAGE_BG)
-    		jp.setBorder(LineBorder.createBlackLineBorder()); // TODO ....
+    		jp.setBorder(MainPanel.createNBorder()); // n shape border ....
     	jp.setSize(469, 71); // FIXME
     	jp.invalidate();
     	jp.validate();

@@ -5,12 +5,15 @@ package fi.dwo.client.domain;
 
 import java.applet.Applet;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.Panel;
 import java.awt.Toolkit;
 import java.util.Hashtable;
@@ -949,7 +952,7 @@ private static boolean isValidEmail(String email) {
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
 
         this.setLayout(new BorderLayout());
-        this.setLayout(null);
+        //this.setLayout(null);
         
         if(userName!=null && passWord!=null) {
 	        try {
@@ -1132,13 +1135,13 @@ private static boolean isValidEmail(String email) {
     	//lookAndFeel = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
     	//lookAndFeel = UIManager.getSystemLookAndFeelClassName();
     	//UIManager.setLookAndFeel(lookAndFeel);
-    	int width = 805;
-        int height = 615;
+    	int width = GuiConstants.DWO_WIDTH;
+        int height = GuiConstants.DWO_HEIGHT;
         MainFrame mf = new MainFrame(new DWO(args), width, height);
         mf.setTitle("DWO");
         mf.pack();
         mf.show();
-        mf.setSize(width + 10, height + 20);
+        //mf.setSize(width + 10, height + 20);
     }
 
     /**

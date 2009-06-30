@@ -40,7 +40,7 @@ public class HeaderPanel extends JLabel
 	    setVerticalAlignment(ibg?SwingConstants.BOTTOM: SwingConstants.CENTER);
 	    setBackground(GuiConstants.MAIN_BACKGROUND);
 	    if (!ibg)
-	    	setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	    	setBorder(MainPanel.createNBorder());
 	    
 	}
 

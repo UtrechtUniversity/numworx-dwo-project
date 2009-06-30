@@ -3,8 +3,10 @@
 
 package fi.dwo.client.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Label;
@@ -13,6 +15,11 @@ import java.awt.Point;
 import java.awt.Image;
 import java.awt.ScrollPane;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
 import fi.dwo.client.domain.DwoHelper;
@@ -24,8 +31,10 @@ import fi.dwo.client.domain.DwoHelper;
  * @author M.J.B. Kupers
  *  
  */
-public class CenterPanel extends Panel {
-    private final class RequestFocusAST implements Runnable {
+public class CenterPanel extends JPanel {
+    private static final Component RAND = Box.createHorizontalStrut(12);
+
+	private final class RequestFocusAST implements Runnable {
 		private final Component c;
 
 		private RequestFocusAST(Component c) {
@@ -45,7 +54,7 @@ public class CenterPanel extends Panel {
 
     private Panel centermainSub;
 
-    private ScrollPane sp;
+    private JScrollPane sp;
     private Panel spRand;
 
     private boolean showMenu;
@@ -62,11 +71,11 @@ public class CenterPanel extends Panel {
         mainPanel = mp;
         if(GuiConstants.GUI_IMAGE_BG) guiImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE); 
         this.setBackground(GuiConstants.SUB_BACKGROUND);
-        this.setLayout(null);
-        this.setSize(GuiConstants.CENTER_WIDTH, GuiConstants.CENTER_HEIGHT);
+        this.setLayout(new BorderLayout());
+        //this.setSize(GuiConstants.CENTER_WIDTH, GuiConstants.CENTER_HEIGHT);
 
-        centermainSub = new CenterMainSubPanel(null, BorderedPanel.SOUTH
-                | BorderedPanel.EAST | BorderedPanel.WEST);
+        centermainSub = new CenterMainSubPanel(null, 0  // SOUTH
+                /*| BorderedPanel.EAST  | BorderedPanel.WEST */);
         
         if(GuiConstants.GUI_IMAGE_BG) {
         	centermainSub = new CenterMainSubPanel(null, 0) /*{
@@ -77,27 +86,40 @@ public class CenterPanel extends Panel {
 	            }
 	        }*/;
         }
+        centermainSub.setLayout(new BoxLayout(centermainSub, BoxLayout.LINE_AXIS));
         centermainSub.setBackground(GuiConstants.MAIN_BACKGROUND);
-        centermainSub.setBounds(0, 10, GuiConstants.CENTER_WIDTH - 1, GuiConstants.CENTER_HEIGHT-10);
-        this.add(centermainSub);
-
+       // centermainSub.setBounds(0, 10, GuiConstants.CENTER_WIDTH - 1, GuiConstants.CENTER_HEIGHT-10);
+        this.add(centermainSub, BorderLayout.CENTER);
+        if(!GuiConstants.GUI_IMAGE_BG) {
+        	setBorder(BorderFactory.createMatteBorder(10, 5, 9, 5, GuiConstants.SUB_BACKGROUND));
+        	setBorder(BorderFactory.createCompoundBorder(getBorder(),
+        		BorderFactory.createMatteBorder(0, 1, 1, 1, Color.black)));
+        } else {
+// TODO Tuning!!!
+        	setOpaque(false);
+         	setDoubleBuffered(false);
+        	setBorder(BorderFactory.createEmptyBorder(12, 6, 8, 10));
+        }
+        
         loadMenu();
-
         showMenu = true;
 
 		spRand = new Panel();
         spRand.setBounds(162, -2, 2, 494);
-        centermainSub.add(spRand);
+		centermainSub.add(RAND);
+       // centermainSub.add(spRand);
 		
-        sp = new ScrollPane();
-        sp.setBounds(162, -2, 628, 494);
+        sp = new JScrollPane();
+        sp.setViewportBorder(null);
+        sp.setBorder(null);
+        //sp.setBounds(162, -2, 628, 494);
         centermainSub.add(sp);
 
         //loadCenter(new CourseChoisePanel());
         
         CenterSubPanel csp = GuiCreator.instance().getCourseChoisePanel();
         if(csp instanceof ScoPanel ) {
-        	centermainSub.remove(spRand);
+        	//centermainSub.remove(spRand);
         	centermainSub.remove(sp);
         	((CenterMainSubPanel)centermainSub).setGuiImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_SCO));
         	mainPanel.setGuiImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_SCO));
@@ -154,27 +176,28 @@ public class CenterPanel extends Panel {
 
         /* If we didn't show the menu, show it */
         if (!showMenu) {
-            menu.setVisible(false);
-            centermainSub.add(menu);
             menu.setVisible(true);
+            //centermainSub.add(menu,0);
+            RAND.setVisible(true);
         }
 
         final Component c = centerSubPanel.getComponent();
 
         if (c.getSize().height > sp.getSize().height) {
             c.setVisible(false);
-            sp.add(c);
+            sp.setViewportView(c);
             c.setVisible(true);
             sp.setVisible(true);
-            spRand.setVisible(true);
-            sp.invalidate();
+            //spRand.setVisible(true);
+            c.invalidate();
         } else {
-            sp.setVisible(false);
-            spRand.setVisible(false);
-            c.setLocation(162, 10);
-            c.setVisible(false);
-            centermainSub.add(c);
-            c.setVisible(true);
+            //sp.setVisible(false);
+            //spRand.setVisible(false);
+            //c.setLocation(162, 10);
+            //c.setVisible(false);
+            sp.setViewportView(c);
+            //c.setVisible(true);
+            c.invalidate();
         }
 //        c.invalidate();
         showMenu = true;
@@ -194,6 +217,7 @@ public class CenterPanel extends Panel {
      * @see fi.dwo.client.gui.CenterSubPanel
      */
     public void loadTotal(CenterSubPanel panel) {
+    	invalidate();
         if (centerSubPanel != null) {
             if(DwoHelper.umpc) {
         	getParent().add(this,0);
@@ -211,7 +235,7 @@ public class CenterPanel extends Panel {
             }
         }
         sp.setVisible(false); // centerSubPanel direct aan centerMainSub -> sp.hide();
-        spRand.setVisible(false); // een extra randje wegwerken
+        //spRand.setVisible(false); // een extra randje wegwerken
         centerSubPanel = panel;
         panel.setCenterPanel(this);
         
@@ -221,9 +245,10 @@ public class CenterPanel extends Panel {
 
         /* We don't want to see the menu */
         if (showMenu) {
+            RAND.setVisible(false);
+            //centermainSub.remove(menu);
             menu.setVisible(false);
-            centermainSub.remove(menu);
-            menu.setVisible(true);
+            centermainSub.invalidate();
         }
 
         Component c = centerSubPanel.getComponent();
@@ -279,26 +304,26 @@ public class CenterPanel extends Panel {
     	else {
     		 super.paint(g);
 
+	            int w = getWidth();
     	        if (showMenu) {
     	            g.setColor(Color.black);
-    	            g.drawLine(151, 0, 629, 0);
-    	            g.drawLine(150, 0, 150, 9);
-    	            g.drawLine(161, 0, 161, 9);
-    	            g.drawLine(0, 9, getSize().width - 2, 9);
+    	            g.drawLine(151+5, 0, /*629+5*/ w - 155-11, 0);
+    	            g.drawLine(150+5, 0, 150+5, 9);
+    	            g.drawLine(161+5, 0, 161+5, 9);
+    	            g.drawLine(0+5, 9, getSize().width - 6, 9);
     	        } else {
     	            g.setColor(GuiConstants.MAIN_BACKGROUND);
-    	            g.fillRect(162, 0, 468, 10);
+    	            g.fillRect(162+5, 0, w-155-12-162-5, 10);
 
     	            g.setColor(Color.black);
-    	            g.drawLine(161, 0, 161, 10);
-    	            g.drawLine(629, 0, 629, 10);
+    	            g.drawLine(161+5, 0, 161+5, 10);
+    	            g.drawLine(w-155-11, 0, w-155-11, 10);
 
-    	            g.drawLine(0, 9, 161, 9);
-    	            g.drawLine(629, 9, getSize().width - 2, 9);
+    	            g.drawLine(0+5, 9,161+5 , 9);
+    	            g.drawLine(w-155-10, 9, w - 6, 9);
     	        }
-    	        g.drawLine(0,0,150,0);	// border-lijntje van filogo panel 
-    	        int w = getWidth();
-    	        g.drawLine(w-3, 0, w-152, 0); // border-lijntje loggedin panel
+    	        g.drawLine(5,0,155,0);	// border-lijntje van filogo panel     	      
+    	        g.drawLine(w-6, 0, w-155, 0); // border-lijntje loggedin panel
 		}
     	
     }
@@ -327,12 +352,17 @@ public class CenterPanel extends Panel {
         }
 
         menu = GuiCreator.instance().getMenuPanel();
-        menu.setLocation(1, 1);
+        //menu.setLocation(1, 1);
         menu.setCenterPanel(this);
         menu.setVisible(false);
-        centermainSub.add(menu);
+        centermainSub.add(menu, 0);
+        menu.setMaximumSize(new Dimension(150-1, Short.MAX_VALUE));
+        menu.setMinimumSize(new Dimension(150-1, 100));
+        menu.setPreferredSize(menu.getMinimumSize());
         menu.setVisible(true);
+        RAND.setVisible(true);
         menu.repaint();
+        centermainSub.invalidate();
     }
     
     public GuestMenuPanel getMenu() {
