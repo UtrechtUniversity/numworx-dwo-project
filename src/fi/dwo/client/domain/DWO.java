@@ -1137,13 +1137,18 @@ private static boolean isValidEmail(String email) {
     	//UIManager.setLookAndFeel(lookAndFeel);
     	int width = GuiConstants.DWO_WIDTH;
         int height = GuiConstants.DWO_HEIGHT;
-        MainFrame mf = new MainFrame(new DWO(args), width, height);
+        DWO dwo = new DWO(args);
+		MainFrame mf = new MainFrame(dwo, width, height);
         mf.setTitle("DWO");
         mf.pack();
-        mf.show();
-        //mf.setSize(width + 10, height + 20);
+        mf.show();        
     }
 
+    public Dimension getPreferredSize() 
+    {
+    	return new Dimension(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
+    }
+    
     /**
      * Renames the specified class.
      * 

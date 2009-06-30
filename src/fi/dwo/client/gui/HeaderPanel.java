@@ -44,8 +44,12 @@ public class HeaderPanel extends JLabel
 	    
 	}
 
+	Dimension lastdim = new Dimension();
 	private void scale() {
-		scale = scalable;
+		if(scalable && !lastdim.equals(getSize()))
+		{ 	scale = scalable;
+			getSize(lastdim);
+		}
 	}
 
 	public HeaderPanel(String description, boolean b) {
