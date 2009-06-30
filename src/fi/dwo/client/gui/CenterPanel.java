@@ -21,6 +21,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
 
 import fi.dwo.client.domain.DwoHelper;
 
@@ -32,7 +33,9 @@ import fi.dwo.client.domain.DwoHelper;
  *  
  */
 public class CenterPanel extends JPanel {
-    private static final Component RAND = Box.createHorizontalStrut(12);
+    private static final Border MAIN_BORDER = BorderFactory.createEmptyBorder(18, 6, 8, 10);
+
+	private static final Component RAND = Box.createHorizontalStrut(12);
 
 	private final class RequestFocusAST implements Runnable {
 		private final Component c;
@@ -98,7 +101,8 @@ public class CenterPanel extends JPanel {
 // TODO Tuning!!!
         	setOpaque(false);
          	setDoubleBuffered(false);
-        	setBorder(BorderFactory.createEmptyBorder(12, 6, 8, 10));
+// er is een andere border nodig voor sco's 
+         	setBorder(MAIN_BORDER);
         }
         
         loadMenu();
@@ -154,6 +158,8 @@ public class CenterPanel extends JPanel {
      */
     public void loadCenter(CenterSubPanel panel) {
         GuiCreator.instance().setWait();
+        if(GuiConstants.GUI_IMAGE_BG)
+        	setBorder(MAIN_BORDER);
         if (centerSubPanel != null) {
             centerSubPanel.end();
             if (sp.isVisible()) {
@@ -217,6 +223,8 @@ public class CenterPanel extends JPanel {
      * @see fi.dwo.client.gui.CenterSubPanel
      */
     public void loadTotal(CenterSubPanel panel) {
+    	if(GuiConstants.GUI_IMAGE_BG) // todo tuning
+    		setBorder(BorderFactory.createEmptyBorder(10, 7, 8, 7));
     	invalidate();
         if (centerSubPanel != null) {
             if(DwoHelper.umpc) {
