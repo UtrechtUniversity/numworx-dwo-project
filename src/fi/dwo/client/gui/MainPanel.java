@@ -46,7 +46,7 @@ public class MainPanel extends Panel {
 			super(new BorderLayout(10,0), false);
 			setOpaque(false);
 			setDoubleBuffered(false);
-			setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+			setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 4));
 		}
 	    /**
 	     * check valid!
@@ -106,7 +106,7 @@ public class MainPanel extends Panel {
         }
         hbox.add(Box.createGlue());
 // als alles ontbreekt, creeer een riggel, nodig bij variable layout.        
-        hbox.add(Box.createVerticalStrut(getFontMetrics(GuiConstants.RED_TEXT).getHeight()));
+        hbox.add(Box.createVerticalStrut(2+getFontMetrics(GuiConstants.RED_TEXT).getHeight()));
         User u = GuiCreator.instance().getUser();
         if(u != null) {
             School s = u.getSchool();
@@ -145,10 +145,10 @@ public class MainPanel extends Panel {
 		    		BorderFactory.createEmptyBorder(2, 0, 4, 0)));
 // nota bene: het CenterPanel ligt als heavy weight over de bottom-borderline heen
 // daarom wordt daar dit lijntje hertekend.
-		    l.setBounds(5, 20, 151, 71); top.add(l, BorderLayout.WEST);
-		    l.setPreferredSize(new Dimension(151,71));
+		    l.setBounds(5, 20, 151, 70); top.add(l, BorderLayout.WEST);
+		    l.setPreferredSize(new Dimension(151,70));
         } else {
-        	top.add(Box.createRigidArea(new Dimension(151+30,71)), BorderLayout.WEST);
+        	top.add(Box.createRigidArea(new Dimension(151+30,70)), BorderLayout.WEST);
         }
 
         header = new HeaderPanel(TextMapper.getText(TextMapper.GUIM_MAIN_MENU));
@@ -156,13 +156,13 @@ public class MainPanel extends Panel {
 
         /* Logged In panel */
         loggedIn = new LoggedInPanel();
-        loggedIn.setBounds(645, 20, 151, 71);
-        int w = 150;
+        loggedIn.setBounds(645, 20, 151, 70);
+        int w = 151;
         if(GuiConstants.GUI_IMAGE_BG)
         {
         	w = w - 30;
         }
-		loggedIn.setPreferredSize(new Dimension(w,71));
+		loggedIn.setPreferredSize(new Dimension(w,70));
         //loggedIn.doLayout();
         loggedIn.setVisible(false);
         top.add(loggedIn, BorderLayout.EAST);

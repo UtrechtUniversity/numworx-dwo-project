@@ -56,8 +56,11 @@ public class HeaderPanel extends JLabel
 		this(description);
 		this.scalable = b;
 		scale();
+		
 	}
 
+
+	
 	/* (non-Javadoc)
 	 * @see java.awt.Component#resize(java.awt.Dimension)
 	 */
@@ -118,8 +121,10 @@ public class HeaderPanel extends JLabel
 		if(scale)
 		{
 			int width = getWidth();
+			int height = getHeight();
 			Insets inset = getInsets();
 			width -= inset.left + inset.right;
+			height -= inset.top + inset.bottom;
 			width -= MARGIN;
 			Icon icon = getIcon();
 			if(icon != null)
@@ -129,7 +134,7 @@ public class HeaderPanel extends JLabel
 			}
 			String text = getText();
 			Font f = origFont;
-			while(g.getFontMetrics(f).stringWidth(text) > width)
+			while(g.getFontMetrics(f).stringWidth(text) > width || g.getFontMetrics(f).getHeight() > height)
 			{
 				f = new Font(f.getName(), f.getStyle(), f.getSize()-1);
 			}

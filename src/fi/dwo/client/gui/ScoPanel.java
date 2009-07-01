@@ -8,6 +8,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.MediaTracker;
@@ -204,11 +205,14 @@ public class ScoPanel extends Panel implements CenterSubPanel,
         jp.add(hbox, BorderLayout.NORTH);
     	if(!GuiConstants.GUI_IMAGE_BG)
     		jp.setBorder(MainPanel.createNBorder()); // n shape border ....
-    	jp.setSize(469, 71); // FIXME
+    	jp.setSize(469, 70); // FIXME
+    	jp.setMaximumSize(new Dimension(Short.MAX_VALUE, 70));
+    	jp.setPreferredSize(jp.getSize());
+    	jp.setMinimumSize(new Dimension(50, 70));
     	jp.invalidate();
-    	jp.validate();
-    	jp.doLayout();
-    	hbox.doLayout();
+    	//jp.validate();
+    	//jp.doLayout();
+    	//hbox.doLayout();
         return jp;
 //    	
 //    	

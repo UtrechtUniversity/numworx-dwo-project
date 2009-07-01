@@ -94,7 +94,7 @@ public class CenterPanel extends JPanel {
        // centermainSub.setBounds(0, 10, GuiConstants.CENTER_WIDTH - 1, GuiConstants.CENTER_HEIGHT-10);
         this.add(centermainSub, BorderLayout.CENTER);
         if(!GuiConstants.GUI_IMAGE_BG) {
-        	setBorder(BorderFactory.createMatteBorder(10, 5, 9, 5, GuiConstants.SUB_BACKGROUND));
+        	setBorder(BorderFactory.createMatteBorder(10, 5, 7, 4, GuiConstants.SUB_BACKGROUND));
         	setBorder(BorderFactory.createCompoundBorder(getBorder(),
         		BorderFactory.createMatteBorder(0, 1, 1, 1, Color.black)));
         } else {
