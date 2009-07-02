@@ -20,6 +20,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
@@ -63,6 +64,8 @@ public class CenterPanel extends JPanel {
     private boolean showMenu;
     
     private Image guiImage;
+
+	private Panel spe;
     
     /**
      * Creates a new CenterPanel. Adds a menu to it and loads a new
@@ -108,23 +111,26 @@ public class CenterPanel extends JPanel {
         loadMenu();
         showMenu = true;
 
-		spRand = new Panel();
-        spRand.setBounds(162, -2, 2, 494);
+		//spRand = new Panel();
+        //spRand.setBounds(162, -2, 2, 494);
 		centermainSub.add(RAND);
        // centermainSub.add(spRand);
 		
         sp = new JScrollPane();
+        spe = new Panel(new BorderLayout());
+		//sp.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
         sp.setViewportBorder(null);
         sp.setBorder(null);
         //sp.setBounds(162, -2, 628, 494);
-        centermainSub.add(sp);
+        spe.add(sp);
+        centermainSub.add(spe);
 
         //loadCenter(new CourseChoisePanel());
         
         CenterSubPanel csp = GuiCreator.instance().getCourseChoisePanel();
         if(csp instanceof ScoPanel ) {
         	//centermainSub.remove(spRand);
-        	centermainSub.remove(sp);
+        	centermainSub.remove(spe);
         	((CenterMainSubPanel)centermainSub).setGuiImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_SCO));
         	mainPanel.setGuiImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_SCO));
         	guiImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_SCO);
@@ -162,7 +168,7 @@ public class CenterPanel extends JPanel {
         	setBorder(MAIN_BORDER);
         if (centerSubPanel != null) {
             centerSubPanel.end();
-            if (sp.isVisible()) {
+            if (spe.isVisible()) {
                 ((Component) centerSubPanel).setVisible(false);
                 sp.remove((Component) centerSubPanel);
                 ((Component) centerSubPanel).setVisible(true);
@@ -193,7 +199,7 @@ public class CenterPanel extends JPanel {
             c.setVisible(false);
             sp.setViewportView(c);
             c.setVisible(true);
-            sp.setVisible(true);
+            spe.setVisible(true);
             //spRand.setVisible(true);
             c.invalidate();
         } else {
@@ -242,7 +248,7 @@ public class CenterPanel extends JPanel {
                 ((Component) centerSubPanel).setVisible(true);
             }
         }
-        sp.setVisible(false); // centerSubPanel direct aan centerMainSub -> sp.hide();
+        spe.setVisible(false); // centerSubPanel direct aan centerMainSub -> sp.hide();
         //spRand.setVisible(false); // een extra randje wegwerken
         centerSubPanel = panel;
         panel.setCenterPanel(this);
