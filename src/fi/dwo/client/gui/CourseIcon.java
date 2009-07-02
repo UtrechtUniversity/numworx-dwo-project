@@ -59,6 +59,7 @@ public class CourseIcon extends JButton implements CourseIconIF {
         super();
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setBorder(null);
+        setBorderPainted(false);
         this.setContentAreaFilled(false);
         this.setFocusPainted(false);
         this.course = course;
