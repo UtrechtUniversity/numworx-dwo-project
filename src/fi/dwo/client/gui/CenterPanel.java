@@ -324,7 +324,7 @@ public class CenterPanel extends JPanel {
     	            g.drawLine(151+5, 0, /*629+5*/ w - 155-11, 0);
     	            g.drawLine(150+5, 0, 150+5, 9);
     	            g.drawLine(161+5, 0, 161+5, 9);
-    	            g.drawLine(0+5, 9, getSize().width - 6, 9);
+    	            g.drawLine(0+5, 9, w - 5, 9);
     	        } else {
     	            g.setColor(GuiConstants.MAIN_BACKGROUND);
     	            g.fillRect(162+5, 0, w-155-12-162-5, 10);
@@ -334,10 +334,10 @@ public class CenterPanel extends JPanel {
     	            g.drawLine(w-155-11, 0, w-155-11, 10);
 
     	            g.drawLine(0+5, 9,161+5 , 9);
-    	            g.drawLine(w-155-10, 9, w - 6, 9);
+    	            g.drawLine(w-155-10, 9, w - 5, 9);
     	        }
     	        g.drawLine(5,0,155,0);	// border-lijntje van filogo panel     	      
-    	        g.drawLine(w-6, 0, w-155, 0); // border-lijntje loggedin panel
+    	        g.drawLine(w-5, 0, w-155, 0); // border-lijntje loggedin panel
 		}
     	
     }

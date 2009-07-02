@@ -6,6 +6,7 @@ package fi.dwo.client.gui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -19,10 +20,15 @@ import java.awt.MediaTracker;
 import java.awt.Panel;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
+import javax.swing.JEditorPane;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 import fi.beans.tekstobjects.TekstArea;
 import fi.dwo.client.domain.Course;
@@ -35,13 +41,13 @@ import fi.dwo.client.system.TextMapper;
  * @author M.J.B. Kupers
  *  
  */
-public class CourseChoisePanel extends Panel implements ActionListener,
+public class CourseChoisePanel extends JPanel implements ActionListener,
         CenterSubPanel {
     private CenterPanel center;
 
     private int NR_COLUMNS = 4;
     
-    private TekstArea profileTextArea;
+    private JTextArea profileTextArea;
     
     private DwoProfile dwoProfile;
 
@@ -58,42 +64,56 @@ public class CourseChoisePanel extends Panel implements ActionListener,
         
         Course[] courses = GuiCreator.instance().getCourseList();
 
-        Panel ph;
-        ph = new Panel(null);
-        ph.setLayout(null);
+        //Panel ph;
+        //ph = new Panel(null);
         
         
         String s = dwoProfile.getText();
-        profileTextArea = new TekstArea();
-        profileTextArea.setBounds(20,20,580,0);
+        profileTextArea = new JTextArea();
+        profileTextArea.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        profileTextArea.setLineWrap(true);
+        profileTextArea.setEditable(false);
+        profileTextArea.setWrapStyleWord(true);
+        profileTextArea.setBounds(20,20,600,110);
         profileTextArea.setText(s);
-        profileTextArea.resize();
+        //profileTextArea.resize();
 		if((s != null) && (!s.trim().equals(""))) 
-		{	ph.add(profileTextArea);
-			ph.setBounds(0,0,600, profileTextArea.getSize().height+40);
-			add(ph,BorderLayout.NORTH);
+		{	add(profileTextArea, BorderLayout.NORTH);
+			//ph.setBounds(0,0,600, profileTextArea.getSize().height+40);
+			//add(ph,BorderLayout.NORTH);
 		}
-		ph.setBounds(0,0,600, profileTextArea.getSize().height+40);
-        
-        Panel pp = new Panel();
+		//ph.setBounds(0,0,200, profileTextArea.getSize().height+40);
+        //profileTextArea.setMinimumSize(new Dimension(100, 100));
+        //profileTextArea.setPreferredSize(profileTextArea.getMinimumSize());
+       //ph.setPreferredSize(getSize());
+       // ph.setMaximumSize(getSize());
+
+        JPanel pp = new JPanel();
+        pp.setBackground(GuiConstants.MAIN_BACKGROUND);
+        pp.setOpaque(true);
+        pp.setDoubleBuffered(false);
         add(pp);
         
         GridLayout gl = new GridLayout();
         gl.setColumns(NR_COLUMNS);
         gl.setRows((courses.length / NR_COLUMNS) + 1);
         pp.setLayout(gl);
-
+        
         CourseIcon courseIcon = null;
        
         
-        Panel p = new Panel(null);
+        JPanel p = new JPanel(null);
+        p.setOpaque(false);
+        p.setDoubleBuffered(false);
         p.setSize(0, 10);
         
         int maxWidth = 0;
         int maxHeight = 0;
 
         for (int i = 0; i < courses.length; i++) {
-            p = new Panel(new FlowLayout());
+            p = new JPanel(new FlowLayout());
+            p.setOpaque(false);
+            p.setDoubleBuffered(false);
             courseIcon = new CourseIcon(courses[i]);
             courseIcon.addActionListener(this);
             if(courseIcon.getSize().width > maxWidth) {
@@ -113,17 +133,21 @@ public class CourseChoisePanel extends Panel implements ActionListener,
 
         if (courseIcon != null) {
             if((maxWidth * NR_COLUMNS) < 600) {
-	            this.setSize(600, maxHeight * gl.getRows() + ph.getSize().height);                
+	            this.setSize(600, maxHeight * gl.getRows() + profileTextArea.getSize().height);                
             } else {
 	            this.setSize(maxWidth * NR_COLUMNS, maxHeight
-	                    * gl.getRows() + ph.getSize().height);
+	                    * gl.getRows() + profileTextArea.getSize().height);
             }
         }
-
-        repaint();
+        profileTextArea.invalidate();
+        //doLayout();
     }
 
-   
+   public void paint(Graphics g)
+   {
+	   //validate();
+	   super.paint(g);
+   }
     
     /**
      * Invoked when an action occurs.
