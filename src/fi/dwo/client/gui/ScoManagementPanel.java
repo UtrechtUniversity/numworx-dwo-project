@@ -4,6 +4,7 @@ package fi.dwo.client.gui;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.FileDialog;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -33,10 +34,13 @@ import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractCellEditor;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -70,20 +74,20 @@ import fi.dwo.server.persistence.DwoXmlRpcException;
  * @author Wim van Velthoven
  *
  */
-public class ScoManagementPanel extends Panel implements CenterSubPanel, ActionListener {
+public class ScoManagementPanel extends JPanel implements CenterSubPanel, ActionListener {
 
 	private CenterPanel center;
 
-    private DwoButton addScoButton, exportCourseButton, importScosButton;
-    private ImageButton courseLogoButton; 
+    private JButton addScoButton, exportCourseButton, importScosButton;
+    private JButton courseLogoButton; 
 
     private Image removeImage, editImage, courseImage, parametersImage, upImage, downImage;
 
     private Course course;
     
-    private Label label;
+    private JLabel label;
     
-    private Label noScosLabel;
+    private JLabel noScosLabel;
 	private FileDialog saveDial, openDial;
 
     /**
@@ -94,6 +98,7 @@ public class ScoManagementPanel extends Panel implements CenterSubPanel, ActionL
         this.course = course;
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setSize(620, 485);
+        setPreferredSize(getSize());
         course.loadScos();
         Image logo = course.getCourseLogo();
         /* Add Remove-course image */
@@ -123,67 +128,62 @@ public class ScoManagementPanel extends Panel implements CenterSubPanel, ActionL
         } catch (Exception e) {
         }
 
-        FontMetrics fm;
-
-        addScoButton = new DwoButton(TextMapper
+        Box top = Box.createHorizontalBox();
+        top.add(Box.createHorizontalStrut(30));
+        addScoButton = new JButton(TextMapper
                 .getText(TextMapper.GUIS_ADD_SCO));
-        fm = addScoButton.getFontMetrics(addScoButton.getFont());
-        addScoButton.setSize(
-                fm.stringWidth(addScoButton.getLabel()) + 20,
-                fm.getHeight() + 10);
+        addScoButton.setSize(addScoButton.getPreferredSize());
         addScoButton.addActionListener(this);
         addScoButton.setLocation(30, 10);
-        addScoButton.setVisible(false);
-        this.add(addScoButton);
-        addScoButton.setVisible(true);
-
-        exportCourseButton = new DwoButton("Backup module");
-        fm = exportCourseButton.getFontMetrics(exportCourseButton.getFont());
-        exportCourseButton.setSize(
-                fm.stringWidth(exportCourseButton.getLabel()) + 20,
-                fm.getHeight() + 10);
+        top.add(addScoButton);
+        top.add(Box.createHorizontalGlue());
+        exportCourseButton = new JButton("Backup module");
+        exportCourseButton.setSize(exportCourseButton.getPreferredSize());
         exportCourseButton.addActionListener(this);
-        exportCourseButton.setLocation(100+addScoButton.getWidth()+10, 10);
         exportCourseButton.setVisible(false);
-        this.add(exportCourseButton);
+        top.add(exportCourseButton);
         if(DwoHelper.isApplication())
         	exportCourseButton.setVisible(true);
-        
-        importScosButton = new DwoButton("Maak activiteiten vanuit backup");
-        fm = importScosButton.getFontMetrics(importScosButton.getFont());
-        importScosButton.setSize(
-                fm.stringWidth(importScosButton.getLabel()) + 20,
-                fm.getHeight() + 10);
+        top.add(Box.createHorizontalStrut(10));
+        importScosButton = new JButton("Maak activiteiten vanuit backup");
+        importScosButton.setSize(importScosButton.getPreferredSize());
         importScosButton.addActionListener(this);
-        importScosButton.setLocation(exportCourseButton.getX()+exportCourseButton.getWidth()+10, 10);
         importScosButton.setVisible(false);
-        this.add(importScosButton);
+        top.add(importScosButton);
+        top.add(Box.createHorizontalStrut(10));
+        courseLogoButton = new JButton(new ImageIcon(logo));
+        courseLogoButton.setBorderPainted(false);
+// TODO Mac?
+        courseLogoButton.setBorder(BorderFactory.createLineBorder(getForeground()));
+        courseLogoButton.setContentAreaFilled(false);
+        top.setBounds(0, 10, getWidth(), addScoButton.getPreferredSize().height);
+        add(top);
+        top.doLayout();
         
-        courseLogoButton = new ImageButton(logo);
- 
-        if(DwoHelper.isApplication())
+        if(false && DwoHelper.isApplication())
         {	importScosButton.setVisible(true);
             courseLogoButton.addActionListener(this);
+            courseLogoButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            courseLogoButton.setBorderPainted(true);
         }
         
         String[] arguments = new String[1];
         arguments[0] = course.getName();
-        label = new Label(MessageFormat.format(TextMapper.getText(TextMapper.GUIS_LBL_SCO_OF_COURSE), arguments));
+        label = new JLabel(MessageFormat.format(TextMapper.getText(TextMapper.GUIS_LBL_SCO_OF_COURSE), arguments));
         
         label.setFont(GuiConstants.SCO_TEXT);
-        fm = label.getFontMetrics(label.getFont());
-        label.setSize(fm.stringWidth(label.getText()) + 10, fm.getHeight());
+        label.setSize(label.getPreferredSize());
         label.setLocation(30, 50);
         this.add(label);
         courseLogoButton.setLocation(520, label.getLocation().y);
+        courseLogoButton.setSize(courseLogoButton.getPreferredSize());
         this.add(courseLogoButton);
         arguments = new String[1];
         arguments[0] = course.getName();
         String s = TextMapper.getText(TextMapper.GUIS_NO_SCOS);
-        noScosLabel = new Label(MessageFormat.format(s, arguments));
+        noScosLabel = new JLabel(MessageFormat.format(s, arguments));
         noScosLabel.setFont(GuiConstants.SCO_TEXT);
-        fm = noScosLabel.getFontMetrics(noScosLabel.getFont());
-        noScosLabel.setSize(fm.stringWidth(noScosLabel.getText()) + 10, fm.getHeight());
+        noScosLabel.setSize(noScosLabel.getPreferredSize());
         noScosLabel.setLocation((this.getSize().width/2) - (noScosLabel.getSize().width/2), 100);
         this.add(noScosLabel);
         
@@ -484,7 +484,7 @@ public class ScoManagementPanel extends Panel implements CenterSubPanel, ActionL
     		reduced = Toolkit.getDefaultToolkit().createImage(data);
     		
     		course.setCourseLogo(reduced);
-    		courseLogoButton.setImage(reduced);
+    		courseLogoButton.setIcon(new ImageIcon(reduced));
 // TODO omzetten in PersistenceFacade!
     		try {
 				DbAccessCreator.instance().setLogo(course.getID(), data);

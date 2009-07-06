@@ -1039,9 +1039,10 @@ private static boolean isValidEmail(String email) {
         this.panel = p;
         panel.setVisible(false);
         this.add(panel, 0);
+        invalidate();
         panel.setVisible(true);
         panel.requestFocus();
-        
+        validate();
     }
 
     /**

@@ -22,6 +22,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -41,11 +42,11 @@ import fi.dwo.client.system.TextMapper;
  * @author M.J.B. Kupers
  *
  */
-public class ClassPanel extends Panel implements CenterSubPanel, ActionListener {
+public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener {
 
     private CenterPanel center;
 
-    private DwoButton addClassButton;
+    private JButton addClassButton;
 
     private Image removeImage, editImage, usersImage, assignImage;
 
@@ -233,6 +234,7 @@ public class ClassPanel extends Panel implements CenterSubPanel, ActionListener 
         super(null);
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setSize(620, 485);
+        this.setPreferredSize(getSize());
 
         /* Add Remove-class image */
         MediaTracker tr = new MediaTracker(this);
@@ -249,11 +251,11 @@ public class ClassPanel extends Panel implements CenterSubPanel, ActionListener 
         } catch (Exception e) {
         }
 
-        FontMetrics fm;
+        //FontMetrics fm;
 
-        addClassButton = new DwoButton(TextMapper.getText(TextMapper.GUIC_ADD_CLASS));
-        fm = addClassButton.getFontMetrics(addClassButton.getFont());
-        addClassButton.setSize(fm.stringWidth(addClassButton.getLabel()) + 20, fm.getHeight() + 10);
+        addClassButton = new JButton(TextMapper.getText(TextMapper.GUIC_ADD_CLASS));
+        //fm = addClassButton.getFontMetrics(addClassButton.getFont());
+        addClassButton.setSize(addClassButton.getPreferredSize());
         addClassButton.addActionListener(this);
         addClassButton.setLocation(30, 10);
         addClassButton.setVisible(false);

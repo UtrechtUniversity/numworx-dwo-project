@@ -20,7 +20,10 @@ import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 
@@ -39,7 +42,7 @@ import fi.beans.tekstobjects.TekstArea;
  * @author M.J.B. Kupers
  *  
  */
-public class CoursePanel extends Panel implements CenterSubPanel,
+public class CoursePanel extends JPanel implements CenterSubPanel,
         ActionListener {
 	
 	private static final int MINWIDTH = 600;
@@ -51,15 +54,15 @@ public class CoursePanel extends Panel implements CenterSubPanel,
 
     private Course course;
     
-    private Label scoListHeader;
+    private JLabel scoListHeader;
     
-    private TekstArea courseDescription;
+    private JTextArea courseDescription;
 
-    private DwoButton showResultsButton;
+    private JButton showResultsButton;
     
     private boolean courseView;
 
-	private ImagePanel ip;
+	private JLabel ip;
 
 	private int startY;
 
@@ -81,16 +84,23 @@ public class CoursePanel extends Panel implements CenterSubPanel,
         
         startY = 30;
 		String s = course.getDescription();
-		courseDescription = new TekstArea();
-		courseDescription.setBounds(20,startY,550,0);
-		courseDescription.setText(s);
-		courseDescription.resize();
+		courseDescription = new JTextArea();
+		
 		if((s != null) && (!s.trim().equals(""))) 
-		{	add(courseDescription);
-			startY += courseDescription.getSize().height + 10;
+		{
+			add(courseDescription);
+			courseDescription.setFont(new Font("SansSerif", Font.PLAIN, 13));
+			courseDescription.setOpaque(false);
+			courseDescription.setLineWrap(true);
+			courseDescription.setEditable(false);
+			courseDescription.setWrapStyleWord(true);
+			courseDescription.setBounds(20,startY,550,110);
+			courseDescription.setText(s);
+			courseDescription.setSize(courseDescription.getPreferredSize());
+			startY += courseDescription.getHeight() + 10;
 		}
 
-        scoListHeader = new Label(TextMapper.getText(TextMapper.GUICO_SCO_LIST_TITLE));
+        scoListHeader = new JLabel(TextMapper.getText(TextMapper.GUICO_SCO_LIST_TITLE));
         scoListHeader.setFont(GuiConstants.SCO_HEADER_TEXT);
         fm = scoListHeader.getFontMetrics(scoListHeader.getFont());
         scoListHeader.setSize(fm.stringWidth(scoListHeader.getText()) + 10, fm.getHeight());
@@ -106,7 +116,8 @@ public class CoursePanel extends Panel implements CenterSubPanel,
             tr.waitForAll();
         } catch (Exception e) {
         }
-        ip = new ImagePanel(courseLogo);
+        ip = new JLabel(new ImageIcon(courseLogo));
+        ip.setSize(courseLogo.getWidth(null), courseLogo.getHeight(null));
 		ip.setLocation(this.getSize().width - ip.getSize().width - 50, startY);
         add(ip);
 
@@ -126,12 +137,11 @@ public class CoursePanel extends Panel implements CenterSubPanel,
         
         /* If the user is a teacher, show a button to go to the results */
         if(GuiCreator.instance().getUser() instanceof Teacher) {
-            showResultsButton = new DwoButton(TextMapper.getText(TextMapper.GUIMNU_RESULTS));
-            fm = showResultsButton.getFontMetrics(showResultsButton.getFont());
-            showResultsButton.setSize(fm.stringWidth(showResultsButton.getLabel()) + 20, fm.getHeight() + 10);
+            showResultsButton = new JButton(TextMapper.getText(TextMapper.GUIMNU_RESULTS));
             showResultsButton.setLocation(30, nextY+20);
             showResultsButton.addActionListener(this);
             this.add(showResultsButton);
+            showResultsButton.setSize(showResultsButton.getPreferredSize());
             
             nextY += showResultsButton.getSize().height + 10;
             
@@ -139,6 +149,8 @@ public class CoursePanel extends Panel implements CenterSubPanel,
 // resize panel.
         if(nextY + BOTTOM > MINHEIGHT)
         	setSize(MINWIDTH, nextY + BOTTOM);   
+        
+        setPreferredSize(getSize());
     }
     
     public void setCourseView(boolean b) {

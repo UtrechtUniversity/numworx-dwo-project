@@ -41,7 +41,12 @@ import java.util.zip.ZipOutputStream;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import fi.beans.base64code.StringCodeObject;
 import fi.beans.licman.LicMan;
@@ -69,7 +74,7 @@ import fi.dwo.server.persistence.DbAccess;
  * @author M.J.B. Kupers
  *
  */
-public class ParameterManagementPanel extends Panel implements CenterSubPanel, ActionListener, WindowListener {
+public class ParameterManagementPanel extends JPanel implements CenterSubPanel, ActionListener, WindowListener {
     private CenterPanel center;
 
     private ScormEditComponentIF editComponent;
@@ -80,17 +85,17 @@ public class ParameterManagementPanel extends Panel implements CenterSubPanel, A
     
     private Sco sco;
     
-    private DwoButton previewButton;
-    private DwoButton saveButton;
-    private DwoButton resetButton;
-    private DwoButton cancelButton;
-    private DwoButton importScormButton;
-    private DwoButton exportScormButton;
-    private DwoButton exportAppletButton;
+    private JButton previewButton;
+    private JButton saveButton;
+    private JButton resetButton;
+    private JButton cancelButton;
+    private JButton importScormButton;
+    private JButton exportScormButton;
+    private JButton exportAppletButton;
     
-    private Label noParamLabel;
+    private JLabel noParamLabel;
     
-    private Panel scrollPanel;
+    private JScrollPane scrollPanel;
     
     private Dialog editModeDialog;
     private ScoDialog scoDialog;
@@ -110,14 +115,16 @@ public class ParameterManagementPanel extends Panel implements CenterSubPanel, A
         GuiCreator.instance().setWait();
         this.sco = sco;
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
-        Panel buttonPanel, mainPanel;
-        buttonPanel = new BorderedPanel(new FlowLayout(),BorderedPanel.SOUTH);
-        buttonPanel.setSize(800, 40);
+        JPanel buttonPanel;
+		JPanel mainPanel;  // import van awt componenten
+        buttonPanel = new JPanel(new FlowLayout()/*,BorderedPanel.SOUTH*/);
+        buttonPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black));
+       // buttonPanel.setSize(800, 40);
         buttonPanel.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.add(buttonPanel, BorderLayout.NORTH);
         
         //mainPanel = new Panel(new BorderLayout());
-        mainPanel = new Panel(null);
+        mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.add(mainPanel, BorderLayout.CENTER);
         
@@ -130,6 +137,7 @@ public class ParameterManagementPanel extends Panel implements CenterSubPanel, A
             launchData.put("language", TextMapper.getLanguage());
         	editComponent = applet.getEditComponent(launchData);
             this.setSize(800, 620);
+            this.setPreferredSize(getSize());
             String title = TextMapper.getText(TextMapper.GUIPA_DLG_TTL);
             String[] tmp = {sco.getScoName()};
             title = MessageFormat.format(title, tmp);
@@ -159,64 +167,65 @@ public class ParameterManagementPanel extends Panel implements CenterSubPanel, A
             parameters = applet.getEditableParameters();
             if(parameters == null)parameters = new Parameter[0];
             this.setSize(627, 485);
+            this.setPreferredSize(getPreferredSize());
             editModeDialog = null;
         }
         
         
         FontMetrics fm;
 
-        previewButton = new DwoButton(TextMapper.getText(TextMapper.GUIPA_BTN_PREVIEW));
-        fm = previewButton.getFontMetrics(previewButton.getFont());
-        previewButton.setSize(90, fm.getHeight() + 10);
-        previewButton.setLocation(20, 20);
-        previewButton.addActionListener(this);
+        previewButton = new JButton(TextMapper.getText(TextMapper.GUIPA_BTN_PREVIEW));
+        //fm = previewButton.getFontMetrics(previewButton.getFont());
+        //previewButton.setSize(90, fm.getHeight() + 10);
+        //previewButton.setLocation(20, 20);
+        //previewButton.addActionListener(this);
         buttonPanel.add(previewButton);
         
         if(sco.getAppletID()==12) previewButton.setEnabled(false);// geen preview mogelijk bij popupurlapplet
         
-        saveButton = new DwoButton(TextMapper.getText(TextMapper.GUIPA_BTN_SAVE));
-        fm = saveButton.getFontMetrics(saveButton.getFont());
-        saveButton.setSize(90, fm.getHeight() + 10);
-        saveButton.setLocation(previewButton.getLocation().x + previewButton.getSize().width + 10, 20);
+        saveButton = new JButton(TextMapper.getText(TextMapper.GUIPA_BTN_SAVE));
+        //fm = saveButton.getFontMetrics(saveButton.getFont());
+        //saveButton.setSize(90, fm.getHeight() + 10);
+        //saveButton.setLocation(previewButton.getLocation().x + previewButton.getSize().width + 10, 20);
         saveButton.addActionListener(this);
         buttonPanel.add(saveButton);
 
-        resetButton = new DwoButton(TextMapper.getText(TextMapper.GUIPA_BTN_RESET));
-        fm = resetButton.getFontMetrics(resetButton.getFont());
-        resetButton.setSize(90, fm.getHeight() + 10);
-        resetButton.setLocation(saveButton.getLocation().x + saveButton.getSize().width + 10, 20);
+        resetButton = new JButton(TextMapper.getText(TextMapper.GUIPA_BTN_RESET));
+        //fm = resetButton.getFontMetrics(resetButton.getFont());
+        //resetButton.setSize(90, fm.getHeight() + 10);
+        //resetButton.setLocation(saveButton.getLocation().x + saveButton.getSize().width + 10, 20);
         resetButton.addActionListener(this);
         buttonPanel.add(resetButton);
 
-        cancelButton = new DwoButton(TextMapper.getText(TextMapper.GUIPA_BTN_CANCEL));
-        fm = cancelButton.getFontMetrics(cancelButton.getFont());
-        cancelButton.setSize(90, fm.getHeight() + 10);
-        cancelButton.setLocation(resetButton.getLocation().x + resetButton.getSize().width + 10, 20);
+        cancelButton = new JButton(TextMapper.getText(TextMapper.GUIPA_BTN_CANCEL));
+        //fm = cancelButton.getFontMetrics(cancelButton.getFont());
+        //cancelButton.setSize(90, fm.getHeight() + 10);
+        //cancelButton.setLocation(resetButton.getLocation().x + resetButton.getSize().width + 10, 20);
         cancelButton.addActionListener(this);
         buttonPanel.add(cancelButton);
         
         if(DwoHelper.isApplication())
         {	if(DwoHelper.isAdminLoggedIn() || DwoHelper.isScormExportLoggedIn() || sco.getCourse().getSchoolID()==190  || sco.getCourse().getSchoolID()==264 || sco.getCourse().getSchoolID()==385) 
-        	{   importScormButton = new DwoButton("Import Scorm");
-		        fm = cancelButton.getFontMetrics(cancelButton.getFont());
-		        importScormButton.setSize(90, fm.getHeight() + 10);
-		        importScormButton.setLocation(cancelButton.getLocation().x + resetButton.getSize().width + 10, 20);
+        	{   importScormButton = new JButton("Import Scorm");
+		        //fm = cancelButton.getFontMetrics(cancelButton.getFont());
+		        //importScormButton.setSize(90, fm.getHeight() + 10);
+		        //importScormButton.setLocation(cancelButton.getLocation().x + resetButton.getSize().width + 10, 20);
 		        importScormButton.addActionListener(this);
 		        buttonPanel.add(importScormButton);
 		        
-		        exportScormButton = new DwoButton("Export Scorm");
-		        fm = cancelButton.getFontMetrics(cancelButton.getFont());
-		        exportScormButton.setSize(90, fm.getHeight() + 10);
-		        exportScormButton.setLocation(cancelButton.getLocation().x + resetButton.getSize().width + 10, 20);
-		        exportScormButton.addActionListener(this);
+		        exportScormButton = new JButton("Export Scorm");
+		        //fm = cancelButton.getFontMetrics(cancelButton.getFont());
+		        //exportScormButton.setSize(90, fm.getHeight() + 10);
+		        //exportScormButton.setLocation(cancelButton.getLocation().x + resetButton.getSize().width + 10, 20);
+		        //exportScormButton.addActionListener(this);
 		        buttonPanel.add(exportScormButton);
         	}
 	        if(DwoHelper.isAdminLoggedIn() || DwoHelper.isAppletExportLoggedIn() && (sco.getCourse().getDwoProfile()==13 || sco.getCourse().getDwoProfile()==20 || sco.getCourse().getDwoProfile()==27)) 
-	    	{   exportAppletButton = new DwoButton("Export Applet");
-		        fm = cancelButton.getFontMetrics(cancelButton.getFont());
-		        exportAppletButton.setSize(90, fm.getHeight() + 10);
-		        exportAppletButton.setLocation(cancelButton.getLocation().x + resetButton.getSize().width + 10, 20);
-		        exportAppletButton.addActionListener(this);
+	    	{   exportAppletButton = new JButton("Export Applet");
+		        //fm = cancelButton.getFontMetrics(cancelButton.getFont());
+		        //exportAppletButton.setSize(90, fm.getHeight() + 10);
+		        //exportAppletButton.setLocation(cancelButton.getLocation().x + resetButton.getSize().width + 10, 20);
+		        //exportAppletButton.addActionListener(this);
 		        buttonPanel.add(exportAppletButton);
 	    	}
 	        
@@ -232,9 +241,12 @@ public class ParameterManagementPanel extends Panel implements CenterSubPanel, A
         }
         
                 
-        scrollPanel = new AutoScrollPanel(null);
-        scrollPanel.setSize(633, 455);
-        scrollPanel.setLocation(-3, -3);
+        scrollPanel = new JScrollPane();
+        scrollPanel.setBorder(null);
+        scrollPanel.setBackground(GuiConstants.MAIN_BACKGROUND);
+        scrollPanel.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
+        //scrollPanel.setSize(633, 455);
+        //scrollPanel.setLocation(-3, -3);
         mainPanel.add(scrollPanel);
         
            
@@ -243,22 +255,23 @@ public class ParameterManagementPanel extends Panel implements CenterSubPanel, A
             ConvertorIF convertor = ConvertorCreator.createConverter(ConvertorCreator.CONV_LAUNCHDATA);
             tmp = (Hashtable) convertor.convertHashtable(tmp, parameters);
             parameterComponent = new MainParameterComponent(parameters, tmp);
-            scrollPanel.add(parameterComponent);
+            scrollPanel.setViewportView(parameterComponent);
         } else {
             scrollPanel.setSize(editModeDialog.getSize());
-            scrollPanel.add(editComponent.getComponent());
+            scrollPanel.setViewportView(editComponent.getComponent());
             scrollPanel.validate();
             System.out.println(editComponent.getComponent());
             
         }
         
-        noParamLabel = new Label(TextMapper.getText(TextMapper.GUIPA_NO_PARAMS));
+        noParamLabel = new JLabel(TextMapper.getText(TextMapper.GUIPA_NO_PARAMS));
         noParamLabel.setFont(GuiConstants.SCO_TEXT);
         fm = noParamLabel.getFontMetrics(noParamLabel.getFont());
         noParamLabel.setSize(fm.stringWidth(noParamLabel.getText()) + 10, fm.getHeight());
         noParamLabel.setLocation((this.getSize().width/2) - (noParamLabel.getSize().width/2), 100);
-        if(parameters != null && parameters.length == 0)scrollPanel.add(noParamLabel);
-        
+        noParamLabel.setHorizontalAlignment(JLabel.CENTER);
+        if(parameters != null && parameters.length == 0)scrollPanel.setViewportView(noParamLabel);
+        doLayout();
         GuiCreator.instance().setReady();
         if(editMode) {
             editModeDialog.setVisible(true);
@@ -272,9 +285,9 @@ public class ParameterManagementPanel extends Panel implements CenterSubPanel, A
     }
 
     /**
-     * Returns a Panel that can functionate as a header panel.
+     * Returns a Panel that can function as a header panel.
      * 
-     * @return A panel that can functionate as a header panel.
+     * @return A panel that can function as a header panel.
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
     public Component getHeaderPanel() {

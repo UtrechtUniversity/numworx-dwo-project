@@ -32,6 +32,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -59,17 +60,17 @@ import fi.dwo.server.form.DWOFile;
  * @author M.J.B. Kupers
  *
  */
-public class CourseManagementPanel extends Panel implements CenterSubPanel, ActionListener {
+public class CourseManagementPanel extends JPanel implements CenterSubPanel, ActionListener {
     private CenterPanel center;
 
 
-    private DwoButton addCourseButton, uploadCourseButton;
+    private JButton addCourseButton, uploadCourseButton;
 
     private Image removeImage, editImage, scoImage;
     
     private Course[] courses;
 
-    private Label noCoursesLabel;
+    private JLabel noCoursesLabel;
 
 	private FileDialog openDial;
 
@@ -227,6 +228,7 @@ public class CourseManagementPanel extends Panel implements CenterSubPanel, Acti
         this.courses = courses;
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setSize(620, 485);
+        this.setPreferredSize(getSize());
 
         /* Add Remove-class image */
         MediaTracker tr = new MediaTracker(this);
@@ -241,20 +243,14 @@ public class CourseManagementPanel extends Panel implements CenterSubPanel, Acti
         } catch (Exception e) {
         }
 
-        FontMetrics fm;
-
-        addCourseButton = new DwoButton(TextMapper.getText(TextMapper.GUIC_ADD_COURSE));
-        fm = addCourseButton.getFontMetrics(addCourseButton.getFont());
-        addCourseButton.setSize(fm.stringWidth(addCourseButton.getLabel()) + 20, fm.getHeight() + 10);
+        addCourseButton = new JButton(TextMapper.getText(TextMapper.GUIC_ADD_COURSE));
+        addCourseButton.setSize(addCourseButton.getPreferredSize());
         addCourseButton.addActionListener(this);
         addCourseButton.setLocation(30, 10);
-        addCourseButton.setVisible(false);
         this.add(addCourseButton);
-        addCourseButton.setVisible(true);
         
-        uploadCourseButton = new DwoButton("Restore module backup"); // TODO TextMapper
-        fm = uploadCourseButton.getFontMetrics(uploadCourseButton.getFont());
-        uploadCourseButton.setSize(fm.stringWidth(uploadCourseButton.getLabel()) + 20, fm.getHeight() + 10);
+        uploadCourseButton = new JButton("Restore module backup"); // TODO TextMapper
+        uploadCourseButton.setSize(uploadCourseButton.getPreferredSize());
         uploadCourseButton.addActionListener(this);
         uploadCourseButton.setLocation(200+addCourseButton.getWidth()+10, 10);
         uploadCourseButton.setVisible(false);
@@ -265,10 +261,9 @@ public class CourseManagementPanel extends Panel implements CenterSubPanel, Acti
         Arrays.sort(courses);
 
         
-        noCoursesLabel = new Label(TextMapper.getText(TextMapper.GUIC_NO_COURSES));
+        noCoursesLabel = new JLabel(TextMapper.getText(TextMapper.GUIC_NO_COURSES));
         noCoursesLabel.setFont(GuiConstants.SCO_TEXT);
-        fm = noCoursesLabel.getFontMetrics(noCoursesLabel.getFont());
-        noCoursesLabel.setSize(fm.stringWidth(noCoursesLabel.getText()) + 10, fm.getHeight());
+        noCoursesLabel.setSize(noCoursesLabel.getPreferredSize());
         noCoursesLabel.setLocation((this.getSize().width/2) - (noCoursesLabel.getSize().width/2), 100);
         this.add(noCoursesLabel);
         buildJTable();

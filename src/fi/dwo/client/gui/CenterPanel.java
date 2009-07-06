@@ -6,6 +6,7 @@ package fi.dwo.client.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -56,16 +57,12 @@ public class CenterPanel extends JPanel {
 
     private CenterSubPanel centerSubPanel;
 
-    private Panel centermainSub;
+    private Container centermainSub;
 
     private JScrollPane sp;
-    private Panel spRand;
-
     private boolean showMenu;
     
-    private Image guiImage;
-
-	private Panel spe;
+    private Panel spe;
     
     /**
      * Creates a new CenterPanel. Adds a menu to it and loads a new
@@ -75,26 +72,13 @@ public class CenterPanel extends JPanel {
      */
     public CenterPanel(MainPanel mp) {
         mainPanel = mp;
-        if(GuiConstants.GUI_IMAGE_BG) guiImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE); 
         this.setBackground(GuiConstants.SUB_BACKGROUND);
         this.setLayout(new BorderLayout());
         //this.setSize(GuiConstants.CENTER_WIDTH, GuiConstants.CENTER_HEIGHT);
 
-        centermainSub = new CenterMainSubPanel(null, 0  // SOUTH
-                /*| BorderedPanel.EAST  | BorderedPanel.WEST */);
-        
-        if(GuiConstants.GUI_IMAGE_BG) {
-        	centermainSub = new CenterMainSubPanel(null, 0) /*{
-	        	public void paint(Graphics g)
-	            {	Point p = DwoHelper.getComponentLocation(this);
-	            	g.drawImage(DwoHelper.getImage(GuiConstants.RESOURCES + "resources/EPN-sco.png"),-p.x,-p.y,null);
-	            	super.paint(g);
-	            }
-	        }*/;
-        }
+        centermainSub = new CenterMainSubPanel(null);
         centermainSub.setLayout(new BoxLayout(centermainSub, BoxLayout.LINE_AXIS));
         centermainSub.setBackground(GuiConstants.MAIN_BACKGROUND);
-       // centermainSub.setBounds(0, 10, GuiConstants.CENTER_WIDTH - 1, GuiConstants.CENTER_HEIGHT-10);
         this.add(centermainSub, BorderLayout.CENTER);
         if(!GuiConstants.GUI_IMAGE_BG) {
         	setBorder(BorderFactory.createMatteBorder(10, 5, 7, 4, GuiConstants.SUB_BACKGROUND));
@@ -111,36 +95,25 @@ public class CenterPanel extends JPanel {
         loadMenu();
         showMenu = true;
 
-		//spRand = new Panel();
-        //spRand.setBounds(162, -2, 2, 494);
 		centermainSub.add(RAND);
-       // centermainSub.add(spRand);
 		
         sp = new JScrollPane();
         spe = new Panel(new BorderLayout());
 		//sp.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
         sp.setViewportBorder(null);
         sp.setBorder(null);
-        //sp.setBounds(162, -2, 628, 494);
         spe.add(sp);
         centermainSub.add(spe);
 
-        //loadCenter(new CourseChoisePanel());
-        
         CenterSubPanel csp = GuiCreator.instance().getCourseChoisePanel();
         if(csp instanceof ScoPanel ) {
-        	//centermainSub.remove(spRand);
         	centermainSub.remove(spe);
-        	((CenterMainSubPanel)centermainSub).setGuiImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_SCO));
         	mainPanel.setGuiImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_SCO));
-        	guiImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_SCO);
         	loadTotal(csp);
         }
         else if(csp instanceof CoursePanel ) {
         	menu.hideMainButton();
-        	((CenterMainSubPanel)centermainSub).setGuiImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE));
         	mainPanel.setGuiImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE));
-        	guiImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE);
         	loadCenter(csp);
         }
         else loadCenter(csp);
@@ -182,36 +155,20 @@ public class CenterPanel extends JPanel {
         centerSubPanel = panel;
         centerSubPanel.setCenterPanel(this);
         
-        ((CenterMainSubPanel)centermainSub).setGuiImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE));
     	mainPanel.setGuiImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE));
-    	guiImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE);
 
         /* If we didn't show the menu, show it */
         if (!showMenu) {
             menu.setVisible(true);
-            //centermainSub.add(menu,0);
             RAND.setVisible(true);
         }
 
         final Component c = centerSubPanel.getComponent();
 
-        if (c.getSize().height > sp.getSize().height) {
-            c.setVisible(false);
-            sp.setViewportView(c);
-            c.setVisible(true);
-            spe.setVisible(true);
-            //spRand.setVisible(true);
-            c.invalidate();
-        } else {
-            //sp.setVisible(false);
-            //spRand.setVisible(false);
-            //c.setLocation(162, 10);
-            //c.setVisible(false);
-            sp.setViewportView(c);
-            //c.setVisible(true);
-            c.invalidate();
-        }
-//        c.invalidate();
+        sp.setViewportView(c);
+        c.setVisible(true);
+        spe.setVisible(true);
+        c.invalidate();
         showMenu = true;
         mainPanel.setHeaderPanel(panel.getHeaderPanel());
 
@@ -249,29 +206,23 @@ public class CenterPanel extends JPanel {
             }
         }
         spe.setVisible(false); // centerSubPanel direct aan centerMainSub -> sp.hide();
-        //spRand.setVisible(false); // een extra randje wegwerken
         centerSubPanel = panel;
         panel.setCenterPanel(this);
         
-        ((CenterMainSubPanel)centermainSub).setGuiImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_SCO));
     	mainPanel.setGuiImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_SCO));
-    	guiImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_SCO);
 
         /* We don't want to see the menu */
         if (showMenu) {
             RAND.setVisible(false);
-            //centermainSub.remove(menu);
             menu.setVisible(false);
             centermainSub.invalidate();
         }
 
         Component c = centerSubPanel.getComponent();
-        c.setLocation(1, 0);
-        c.setVisible(false);
         centermainSub.add(c);
         c.setVisible(true);
         SwingUtilities.invokeLater(new RequestFocusAST(c));
-//        c.invalidate();
+        c.invalidate();
 
         showMenu = false;
         mainPanel.setHeaderPanel(panel.getHeaderPanel());
@@ -309,14 +260,8 @@ public class CenterPanel extends JPanel {
     
     
     public void paint(Graphics g) {
-    	validate();
-    	if(GuiConstants.GUI_IMAGE_BG) {
-	       	Point p = DwoHelper.getComponentLocation(this);
-	       	g.drawImage(guiImage,-p.x,-p.y,null);
-	       	super.paint(g);
-    	}
-    	else {
-    		 super.paint(g);
+       	super.paint(g);
+    	if(!GuiConstants.GUI_IMAGE_BG) {
 
 	            int w = getWidth();
     	        if (showMenu) {
@@ -360,22 +305,17 @@ public class CenterPanel extends JPanel {
      */
     public void loadMenu() {
         if (menu != null) {
-            menu.setVisible(false);
             centermainSub.remove(menu);
-            menu.setVisible(true);
         }
 
         menu = GuiCreator.instance().getMenuPanel();
-        //menu.setLocation(1, 1);
         menu.setCenterPanel(this);
-        menu.setVisible(false);
         centermainSub.add(menu, 0);
         menu.setMaximumSize(new Dimension(150-1, Short.MAX_VALUE));
         menu.setMinimumSize(new Dimension(150-1, 100));
         menu.setPreferredSize(menu.getMinimumSize());
         menu.setVisible(true);
         RAND.setVisible(true);
-        menu.repaint();
         centermainSub.invalidate();
     }
     

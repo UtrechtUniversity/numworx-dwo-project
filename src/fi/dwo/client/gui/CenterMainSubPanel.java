@@ -10,6 +10,8 @@ import java.awt.LayoutManager;
 import java.awt.Point;
 import java.awt.Image;
 
+import javax.swing.JPanel;
+
 import fi.dwo.client.domain.DwoHelper;
 
 /**
@@ -18,38 +20,12 @@ import fi.dwo.client.domain.DwoHelper;
  * @author M.J.B. Kupers
  *  
  */
-public class CenterMainSubPanel extends BorderedPanel {
-
-    /**
-     * Creates a new CenterMainSubPanel with the specified LayoutManager. The
-     * Panel has a gradient overlay on the left side (from white to blue).
-     * 
-     * @param lm The LayoutManager to set.
-     */
-	private Image guiImage;
+public class CenterMainSubPanel extends JPanel {
 	
     public CenterMainSubPanel(LayoutManager lm) {
         super(lm);
-        this.setLayout(null);
-        if(GuiConstants.GUI_IMAGE_BG)guiImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE); 
-    }
-
-    /**
-     * Creates a new CenterMainSubPanel with the specified LayoutManager. The
-     * Panel has a gradient overlay on the left side (from white to blue).
-     * 
-     * @param lm The LayoutManager to set.
-     * @param borders The borders to show.
-     */
-    public CenterMainSubPanel(LayoutManager lm, int borders) {
-        super(lm, borders);
-        this.setLayout(null);
-        if(GuiConstants.GUI_IMAGE_BG)guiImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE); 
-    }
-
-    public void setGuiImage(Image image)
-    {
-    	guiImage = image;
+        setDoubleBuffered(false);
+        setOpaque(!GuiConstants.GUI_IMAGE_BG);
     }
     
     /**
@@ -77,16 +53,8 @@ public class CenterMainSubPanel extends BorderedPanel {
     }*/
     
     public void paint(Graphics g) {
-    	validate();
-    	if(GuiConstants.GUI_IMAGE_BG) {
-	       	Point p = DwoHelper.getComponentLocation(this);
-	       	g.drawImage(guiImage,-p.x,-p.y,null);
-	       	super.paint(g);
-    	} 
-    	else {
-    		super.paint(g);
-
-            
+		super.paint(g);
+    	if(!GuiConstants.GUI_IMAGE_BG) {
             double facRed = (double)(255 - GuiConstants.MAIN_BACKGROUND.getRed())/10;
             double facGreen = (double)(255 - GuiConstants.MAIN_BACKGROUND.getGreen())/10;
             double facBlue = (double)(255 - GuiConstants.MAIN_BACKGROUND.getBlue())/10;
@@ -94,13 +62,10 @@ public class CenterMainSubPanel extends BorderedPanel {
                 g.setColor(new Color((int) (255 - facRed * i), (int) (255 - facGreen * i), (int) (255 - facBlue * i)));
                 g.fillRect(151-1, 1 + i * 20, 10, 20);
             }
-
-           
             g.setColor(Color.black);
             g.drawLine(150-1, 0, 150-1, 200);
             g.drawLine(161-1, 0, 161-1, 445);
     	}
-    	
     }
     
 }

@@ -158,6 +158,7 @@ public class GuestMenuPanel extends JPanel implements ActionListener {
     
     public void hideMainButton() {
     	mainMenuButton.setVisible(false);
+    	invalidate();
     }
     
 

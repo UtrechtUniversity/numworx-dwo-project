@@ -19,6 +19,7 @@ import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import fi.beans.tooltip.ToolTipIF;
@@ -29,7 +30,7 @@ import fi.dwo.client.system.TextMapper;
 /**
  * Shows a panel with the color representing the score. It also shows the score.
  */
-public class ResultScoreButton extends Panel implements
+public class ResultScoreButton extends JPanel implements
         /*MouseListener,*/ ActionListener, ToolTipIF {
     private float score;
 
@@ -136,12 +137,14 @@ public class ResultScoreButton extends Panel implements
     
     public void setBarMode()
     {	setBackground(GuiConstants.MAIN_BACKGROUND);
-    	Panel p = new Panel();
+    	JPanel p = new JPanel();
     	p.setLayout(null);
-    	Panel bar = new Panel();
+    	JPanel bar = new JPanel();
     	p.setBounds(0,0,(int)(getSize().width*score/100),getSize().height/3);
+    	p.setPreferredSize(p.getSize());
     	p.setBackground(new Color(200,220,240));
     	bar.setBounds(0,0,(int)(getSize().width*score/100),getSize().height/3);
+    	bar.setPreferredSize(getSize());
     	bar.setBackground(new Color(0,180,0));
     	
     	add(p,BorderLayout.SOUTH);
@@ -218,7 +221,8 @@ public class ResultScoreButton extends Panel implements
      */
     public void setToolTip(String toolTip) {
         this.toolTip = toolTip;
-        ToolTipManager.registerComponent(this);
+        //ToolTipManager.registerComponent(this);
+        setToolTipText(toolTip);
     }
 
     /**

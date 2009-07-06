@@ -72,6 +72,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 			{
 				try {
 					// TODO edit password, naam
+					JOptionPane.showInputDialog(this,"PASSWORD");
 					model.fireTableRowsUpdated(row, row);
 				} catch (Exception e) {
 					e.printStackTrace();

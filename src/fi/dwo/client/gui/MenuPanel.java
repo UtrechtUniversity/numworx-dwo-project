@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DebugGraphics;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -54,21 +55,10 @@ public class MenuPanel extends GuestMenuPanel {
 
 	protected void createMenuButtons() {
 		createGap();
-		/* Variables used to create items */
-        //FontMetrics fm;
-
         /* Add MainMenu button */
         myProfileButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_MY_PROFILE));
-			
-			
-        //myProfileButton.setBackground(GuiConstants.MAIN_BACKGROUND);
-        //fm = myProfileButton.getFontMetrics(myProfileButton.getFont());
-        //myProfileButton.setSize(this.getSize().width - 20, fm.getHeight() + 10);
-        //myProfileButton.setLocation(10, 40);
         myProfileButton.addActionListener(this);
-        //myProfileButton.setVisible(false);
         this.add(myProfileButton);
-        //myProfileButton.setVisible(true);
 	}
 
 
@@ -77,41 +67,19 @@ public class MenuPanel extends GuestMenuPanel {
      * GuestMenuPanel) and a button to show the profile for editing.
      */
     public MenuPanel() {
-        super();
-
+//        setDebugGraphicsOptions(DebugGraphics.FLASH_OPTION);
     }
 
   
-    public void paint(Graphics g) {
-    	if(GuiConstants.GUI_IMAGE_BG) {
-	       	Point p = DwoHelper.getComponentLocation(this);
-	       	g.drawImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE),-p.x,-p.y,null);
-    	}       
-    	super.paint(g);
-    } 
-    
     /**
      * Adds the name of the class of the user to the panel. Can be overridden by
      * subclasses.
      *  
      */
     protected void addClassList() {
-        /* Variables used to create items */
-       //FontMetrics fm;
         JLabel l;
         createRuler();
-        Box p = new Box(BoxLayout.PAGE_AXIS) {
-
-			/* (non-Javadoc)
-			 * @see javax.swing.JComponent#paint(java.awt.Graphics)
-			 */
-			public void paint(Graphics g) {
-				// TODO Auto-generated method stub
-				super.paint(g);
-			} 
-        	
-        	
-        };
+        Box p = new Box(BoxLayout.PAGE_AXIS);
         p.setOpaque(false);
         /* Add class-info */
         User u = GuiCreator.instance().getUser();
@@ -120,22 +88,11 @@ public class MenuPanel extends GuestMenuPanel {
                     + ":");
             l.setOpaque(false);
             l.setFont(GuiConstants.NORMAL_TEXT);
-            //fm = l.getFontMetrics(l.getFont());
-            //l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-            //l.setLocation(10, 85);
-            //l.setVisible(false);
             p.add(l);
-            //l.setVisible(true);
-
             l = new JLabel("-  " + u.getInClass().getName());
             l.setOpaque(false);
             l.setFont(GuiConstants.NORMAL_TEXT);
-            //fm = l.getFontMetrics(l.getFont());
-            //l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-            //l.setLocation(20, 100);
-            //l.setVisible(false);
             p.add(l);
-            //l.setVisible(true);
             add(p);
         }
 // if user is readonly, geen rode tekst die alleen maar afleid.
@@ -149,63 +106,36 @@ public class MenuPanel extends GuestMenuPanel {
             l.setFont(GuiConstants.RED_TEXT);
             l.setForeground(Color.red);
             l.setBorder(border);
-            //fm = l.getFontMetrics(l.getFont());
-            
-            //l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-            //l.setLocation(10, 100);
-            //l.setVisible(false);
             p.add(l);
-            //l.setVisible(true);
-            
+
             l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_STUDENT_NO_CLASS_1));
             l.setOpaque(false);
             l.setFont(GuiConstants.RED_TEXT);
             l.setForeground(Color.red);
             l.setBorder(border);
-            //fm = l.getFontMetrics(l.getFont());
-            //l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-            //l.setLocation(10, 120);
-            //l.setVisible(false);
             p.add(l);
-            //l.setVisible(true);
             
             l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_STUDENT_NO_CLASS_2));
             l.setOpaque(false);
             l.setFont(GuiConstants.RED_TEXT);
             l.setForeground(Color.red);
             l.setBorder(border);
-            //fm = l.getFontMetrics(l.getFont());
-            //l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-            //l.setLocation(10, 140);
-            //l.setVisible(false);
             p.add(l);
-            //l.setVisible(true);
             
             l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_STUDENT_NO_CLASS_3));
             l.setOpaque(false);
             l.setFont(GuiConstants.RED_TEXT);
             l.setForeground(Color.red);
-            //fm = l.getFontMetrics(l.getFont());
             l.setBorder(border);
-            //l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-            //l.setLocation(10, 160);
-            //l.setVisible(false);
             p.add(l);
-            //l.setVisible(true);
             
             l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_STUDENT_NO_CLASS_4));
             l.setOpaque(false);
             l.setFont(GuiConstants.RED_TEXT);
             l.setForeground(Color.red);
             l.setBorder(border);
-            //fm = l.getFontMetrics(l.getFont());
-            //l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-            //l.setLocation(10, 180);
-            //l.setVisible(false);
             p.add(l);
-            //l.setVisible(true);
             add(p);
-            
         }
 
     }
