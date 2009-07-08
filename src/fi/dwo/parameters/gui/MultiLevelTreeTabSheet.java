@@ -8,12 +8,14 @@ import java.awt.FontMetrics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
 import java.util.Hashtable;
 import java.util.Vector;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 import fi.beans.scorm.Parameter;
 import fi.beans.scorm.ScormTree;
@@ -26,7 +28,7 @@ public class MultiLevelTreeTabSheet extends TreeTabSheet implements
 
     private GridBagLayout gridbag;
 
-    private DwoButton addButton;
+    private JButton addButton;
 
     private MultiLevelTreeParameterComponent parentCom;
 
@@ -64,8 +66,8 @@ public class MultiLevelTreeTabSheet extends TreeTabSheet implements
         arguments[0] = subParameter.getPreLabel();
         String s = TextMapper.getText(TextMapper.BTN_TREE_ADD_ITEM);
 
-        addButton = new DwoButton(MessageFormat.format(s, arguments),
-                getColor());
+        addButton = new JButton(MessageFormat.format(s, arguments));
+        //,getColor());
         FontMetrics fm = addButton.getFontMetrics(addButton.getFont());
         addButton.setSize(fm.stringWidth(addButton.getLabel()) + 20, fm
                 .getHeight() + 10);
@@ -76,7 +78,8 @@ public class MultiLevelTreeTabSheet extends TreeTabSheet implements
         addButton.setVisible(true);
 
         c.gridwidth = GridBagConstraints.REMAINDER;
-        Panel p = new Panel();
+        JPanel p = new JPanel();
+        p.setOpaque(false);
         gridbag.addLayoutComponent(p, c);
         this.add(p);
 
@@ -96,7 +99,8 @@ public class MultiLevelTreeTabSheet extends TreeTabSheet implements
             }
         }
 
-        Panel panel = new Panel();
+        JPanel panel = new JPanel();
+        panel.setOpaque(false);
 //        panel.setFocusable(true); //TODO weghalen!!
         panel.setVisible(false);
         this.add(panel);
@@ -105,8 +109,8 @@ public class MultiLevelTreeTabSheet extends TreeTabSheet implements
 //        gridbag.addLayoutComponent(panel, c);
 
         this.setSize(gridbag.preferredLayoutSize(this));
-
-        this.validate();
+        //doLayout();
+        this.invalidate();
     }
 
     /**
@@ -215,4 +219,14 @@ public class MultiLevelTreeTabSheet extends TreeTabSheet implements
     public String getSequenceString(ParameterComponentIF component) {
         return "_" + (subComponents.indexOf(component) + 1);
     }
+
+	/* (non-Javadoc)
+	 * @see java.awt.Component#setBounds(int, int, int, int)
+	 */
+	public void setBounds(int x, int y, int width, int height) {
+		// TODO Auto-generated method stub
+		super.setBounds(x, y, width, height);
+	}
+    
+    
 }

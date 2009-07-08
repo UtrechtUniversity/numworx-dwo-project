@@ -16,11 +16,15 @@ import java.awt.event.MouseListener;
 import java.net.URL;
 import java.util.Vector;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+
 import fi.beans.tooltip.ToolTipIF;
 import fi.beans.tooltip.ToolTipManager;
 import fi.dwo.parameters.system.TextMapper;
 
-public class HelpButton extends Panel implements ToolTipIF, MouseListener, ActionListener {
+public class HelpButton extends JButton implements ToolTipIF, MouseListener, ActionListener {
 
     private String toolTip;
     
@@ -29,53 +33,32 @@ public class HelpButton extends Panel implements ToolTipIF, MouseListener, Actio
     private boolean mouseOver = false;
     private String helpText;
 
-    private Vector actionListeners = new Vector();
 
     /**
      * @roseuid 425E240E00FA
      */
     public HelpButton(String helpText) {
         this.helpText = helpText;
+        setBorderPainted(false);
+        
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         URL url = this.getClass().getResource(ParameterConstants.HELP_IMAGE1);
         mouseOutImage = toolkit.getImage(url);
-        MediaTracker tr = new MediaTracker(this);
-        tr.addImage(mouseOutImage, 0);
-        try {
-            tr.waitForAll();
-        } catch (Exception e) {
-        }
+        Icon mouseOutIcon = new ImageIcon(mouseOutImage);
+        setIcon(mouseOutIcon);
         
         url = this.getClass().getResource(ParameterConstants.HELP_IMAGE2);
         mouseOverImage = toolkit.getImage(url);
-        tr = new MediaTracker(this);
-        tr.addImage(mouseOverImage, 0);
-        try {
-            tr.waitForAll();
-        } catch (Exception e) {
-        }
+        Icon mouseOverIcon = new ImageIcon(mouseOverImage);
+        setSelectedIcon(mouseOverIcon);
         
-        setSize(mouseOutImage.getWidth(this), mouseOutImage.getHeight(this));
+        setSize(mouseOutIcon.getIconWidth(), mouseOutIcon.getIconHeight());
         this.setToolTip(TextMapper.getText(TextMapper.TLTP_HELP));
         
         this.addMouseListener(this);
         this.addActionListener(this);
     }
     
-    /**
-     * Adds the specified action listener to receive action events from this
-     * button. Action events occur when a user presses or releases the mouse
-     * over this button. If l is null, no exception is thrown and no action is
-     * performed.
-     * 
-     * @param l the action listener.
-     * @see fi.dwo.client.gui.CourseIconIF#addActionListener(java.awt.event.ActionListener)
-     */
-    public void addActionListener(ActionListener l) {
-        if (l != null) {
-            actionListeners.addElement(l);
-        }
-    }
 
     /**
      * Paints the image on the panel and calls the super.paint(g).
@@ -100,7 +83,8 @@ public class HelpButton extends Panel implements ToolTipIF, MouseListener, Actio
      */
     public void setToolTip(String toolTip) {
         this.toolTip = toolTip;
-        ToolTipManager.registerComponent(this);
+        //ToolTipManager.registerComponent(this);
+        setToolTipText(toolTip);
     }
 
     /**
@@ -166,9 +150,6 @@ public class HelpButton extends Panel implements ToolTipIF, MouseListener, Actio
      */
     public void mouseReleased(MouseEvent e) {
         mouseOver = false;
-        for (int i = 0; i < actionListeners.size(); i++) {
-            ((ActionListener) actionListeners.elementAt(i)).actionPerformed(new ActionEvent(this, 0, ""));
-        }
         setCursor(new Cursor(Cursor.HAND_CURSOR));
         repaint();
         

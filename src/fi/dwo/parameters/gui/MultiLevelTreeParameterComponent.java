@@ -12,9 +12,11 @@ import java.text.MessageFormat;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import javax.swing.JButton;
+
 import fi.beans.scorm.Parameter;
 import fi.beans.scorm.TreeParameter;
-import fi.dwo.client.gui.DwoButton;
+import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.parameters.system.TextMapper;
 
 public class MultiLevelTreeParameterComponent extends ParameterComponent
@@ -23,9 +25,9 @@ public class MultiLevelTreeParameterComponent extends ParameterComponent
 
     private MultiLevelTreeTabSheet tabSheet;
 
-    private DwoButton button;
+    private JButton button;
     
-    private DwoButton addButton; //with no elements, we show a button
+    private JButton addButton; //with no elements, we show a button
 
     private Vector hashtables;
     
@@ -78,10 +80,11 @@ public class MultiLevelTreeParameterComponent extends ParameterComponent
         arguments[0] = "" + nrItems;
         String s = TextMapper.getText(TextMapper.BTN_TREE_NR_ITEMS);
 
-        button = new DwoButton(MessageFormat.format(s, arguments), parent.getColor());
+        button = new JButton(MessageFormat.format(s, arguments));//, parent.getColor());
         FontMetrics fm = button.getFontMetrics(button.getFont());
-        button.setSize(fm.stringWidth(button.getLabel()) + 20,
-                fm.getHeight() + 10);
+        button.setSize(button.getPreferredSize());
+        //fm.stringWidth(button.getLabel()) + 20,
+          //      fm.getHeight() + 10);
         button.setLocation(preLabel.getLocation().x + preLabel.getSize().width
                 + 10, 1);
         button.addActionListener(this);
@@ -89,10 +92,11 @@ public class MultiLevelTreeParameterComponent extends ParameterComponent
         arguments[0] = parameter.getItemLabel();
         s = TextMapper.getText(TextMapper.BTN_TREE_ADD_ITEM);
 
-        addButton = new DwoButton(MessageFormat.format(s, arguments), getColor());
+        addButton = new JButton(MessageFormat.format(s, arguments));//;, getColor());
         fm = addButton.getFontMetrics(addButton.getFont());
-        addButton.setSize(fm.stringWidth(addButton.getLabel()) + 20,
-                fm.getHeight() + 10);
+        addButton.setSize(addButton.getPreferredSize());
+        //fm.stringWidth(addButton.getLabel()) + 20,
+          //      fm.getHeight() + 10);
         addButton.setLocation(preLabel.getLocation().x + preLabel.getSize().width
                 + 10, 1);
         addButton.addActionListener(this);
@@ -148,6 +152,7 @@ public class MultiLevelTreeParameterComponent extends ParameterComponent
      */
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == button) {
+//System.out.println("start uitklappen");
             createTabPane(false);
             
             tabPane.setVisible(false);
@@ -159,7 +164,10 @@ public class MultiLevelTreeParameterComponent extends ParameterComponent
             parent.isFocussed(this);
             this.setSize(tabPane.getLocation().x + tabPane.getSize().width, tabPane.getLocation().y + tabPane.getSize().height);
             invalidate();
-            validate();
+            //validate();
+           // DwoHelper.getApplet().validate();
+           // DwoHelper.getApplet().repaint();
+//System.out.println("einde uitklappen " + getSize() + "pref = " + getPreferredSize());
         } else if(e.getSource() == addButton) {
             createTabPane(true);
             tabPane.setVisible(false);
@@ -171,7 +179,7 @@ public class MultiLevelTreeParameterComponent extends ParameterComponent
             parent.isFocussed(this);
             this.setSize(tabPane.getLocation().x + tabPane.getSize().width, tabPane.getLocation().y + tabPane.getSize().height);
             invalidate();
-            validate();
+            //validate();
         }
 
     }
@@ -245,8 +253,8 @@ public class MultiLevelTreeParameterComponent extends ParameterComponent
 
         
         if(getNrItems() != 0) {
-	        this.add(button);     
 	        this.add(preLabel);
+	        this.add(button);     
         }
         
         this.setSize(last.getLocation().x + last.getSize().width + 5, button
@@ -297,4 +305,13 @@ public class MultiLevelTreeParameterComponent extends ParameterComponent
             return super.getSequenceString(component);
         }
     }
+
+	/* (non-Javadoc)
+	 * @see java.awt.Component#setBounds(int, int, int, int)
+	 */
+	public void setBounds(int x, int y, int width, int height) {
+		// TODO Auto-generated method stub
+		super.setBounds(x, y, width, height);
+	}
+    
 }

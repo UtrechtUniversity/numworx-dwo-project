@@ -10,10 +10,13 @@ import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.TextEvent;
 
+import javax.swing.JTextField;
+
 /**
+ * TODO paste events.
  * @author M.J.B. Kupers
  */
-public class IntegerTextField extends TextField {
+public class IntegerTextField extends JTextField {
 
     String oldText = null;
 
@@ -72,7 +75,7 @@ public class IntegerTextField extends TextField {
         String newText = getText();
         if (newText.equals("") || textIsInteger(newText)) {
             oldText = newText;
-            super.processTextEvent(te);
+            //super.processTextEvent(te);
             return;
         }
         Toolkit.getDefaultToolkit().beep();

@@ -19,13 +19,16 @@ import java.awt.event.ActionListener;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+
 import fi.dwo.client.gui.BorderedPanel;
 
 /**
  * @author M.J.B. Kupers
  *
  */
-public class TabLabelPanel extends BorderedPanel implements ActionListener {
+public class TabLabelPanel extends JPanel implements ActionListener {
     
     private GridLayout gridLayout;
     
@@ -38,7 +41,9 @@ public class TabLabelPanel extends BorderedPanel implements ActionListener {
     private Color selectedTabColor;
     
     public TabLabelPanel(TabPane tabPane) {
-        super(null, BorderedPanel.EAST);
+        super(null);
+        //, BorderedPanel.EAST);
+        setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, getForeground()));
         this.tabPane = tabPane;
         tabLabels = new Hashtable();
         gridLayout = new GridLayout(0, 1);

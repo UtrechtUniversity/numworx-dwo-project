@@ -29,6 +29,8 @@ public class TabLinkedLabel extends LinkedLabel {
     public TabLinkedLabel(String s) {
         super(s);
         isSelected = false;
+        setContentAreaFilled(true);
+        setFocusPainted(false);
     }
 
     /**

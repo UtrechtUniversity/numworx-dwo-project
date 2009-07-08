@@ -15,10 +15,13 @@ import java.awt.event.FocusListener;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+
 import fi.beans.scorm.Parameter;
 import fi.dwo.client.gui.BorderedPanel;
 
-public class ParameterComponent extends BorderedPanel implements ParameterComponentIF, FocusListener, ComponentListener {
+public class ParameterComponent extends JPanel implements ParameterComponentIF, FocusListener, ComponentListener {
 	
     protected static final int LEFT_MARGIN = 5;
 
@@ -42,8 +45,8 @@ public class ParameterComponent extends BorderedPanel implements ParameterCompon
 
     protected HelpButton helpButton;
     
-    protected Label preLabel;
-    protected Label postLabel;
+    protected FixedLabel preLabel;
+    protected FixedLabel postLabel;
     
     protected boolean isSub;
     
@@ -55,7 +58,7 @@ public class ParameterComponent extends BorderedPanel implements ParameterCompon
 	}
 	
 	public ParameterComponent(ParameterComponentIF parent, Parameter parameter, Hashtable defaultValue, boolean isSub) {
-		super(null, BorderedPanel.NONE);
+		super(null);
 		this.parent = parent;
 		this.parameter = parameter;
 		if(defaultValue == null) {
@@ -67,6 +70,7 @@ public class ParameterComponent extends BorderedPanel implements ParameterCompon
 		if(parent != null) {
 		    this.setBackground(parent.getColor());
 		}
+		setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		subComponents = new Vector();
 		focussedComponent = null;
 		this.setLayout(null);
@@ -143,7 +147,7 @@ public class ParameterComponent extends BorderedPanel implements ParameterCompon
 	public void unFocus() {
 		if (parent != null) {
 			this.setBackground(parent.getColor());
-			this.setBorders(BorderedPanel.NONE);
+			this.setBorder(BorderFactory.createLineBorder(parent.getColor()));
 			
 		}
 		if(preLabel != null) {
@@ -215,7 +219,7 @@ public class ParameterComponent extends BorderedPanel implements ParameterCompon
 					this.setBackground(SELECTED_COLOR_1);
 				}
 	
-				this.setBorders(BorderedPanel.ALL);
+				this.setBorder(BorderFactory.createLineBorder(getForeground()));
 				parent.isFocussed(this);
 				if(preLabel != null) {
 				    preLabel.setBackground(getBackground());
@@ -291,7 +295,10 @@ public class ParameterComponent extends BorderedPanel implements ParameterCompon
      * @see java.awt.Component#getPreferredSize()
      */
     public Dimension getPreferredSize() {
-        return super.getSize();
+    	if(getLayout() == null)
+    		return super.getSize();
+    	else
+    		return super.getPreferredSize(); // layout manager takes precedence
     }
 
     /* (non-Javadoc)
@@ -311,7 +318,7 @@ public class ParameterComponent extends BorderedPanel implements ParameterCompon
      */
     public void componentResized(ComponentEvent e) {
         if(! isResizing) {
-            this.setVisible(false);
+            //this.setVisible(false);
             isResizing = true;
             Dimension oldSize, newSize;
             LayoutManager layout = getLayout();
@@ -323,6 +330,7 @@ public class ParameterComponent extends BorderedPanel implements ParameterCompon
             }
             if( oldSize.height != newSize.height || oldSize.width != newSize.width)
             {
+            	invalidate();
                 setSize(newSize);
                 validate();
             }
@@ -344,7 +352,7 @@ public class ParameterComponent extends BorderedPanel implements ParameterCompon
         preLabel.setText(parameter.getPreLabel() + " " + nr + ":");
     }
     
-    public String toString() {
+    public String toStringx() {
         String s = "";
         if(parameter != null) {
             s += "This: " + parameter.getPreLabel() + "; " + getLocation() + "; " + getSize() + " {";

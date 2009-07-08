@@ -12,7 +12,9 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-public class DoubleTextField extends TextField {
+import javax.swing.JTextField;
+
+public class DoubleTextField extends JTextField {
 
     String oldText = null;
 
@@ -79,7 +81,7 @@ public class DoubleTextField extends TextField {
         String newText = getText();
         if (newText.equals("") || textIsDouble(newText)) {
             oldText = newText;
-            super.processTextEvent(te);
+            //super.processTextEvent(te);
             return;
         }
         Toolkit.getDefaultToolkit().beep();

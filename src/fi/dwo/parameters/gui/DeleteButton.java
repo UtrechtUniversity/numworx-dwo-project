@@ -16,11 +16,15 @@ import java.awt.event.MouseListener;
 import java.net.URL;
 import java.util.Vector;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+
 import fi.beans.tooltip.ToolTipIF;
 import fi.beans.tooltip.ToolTipManager;
 import fi.dwo.parameters.system.TextMapper;
 
-public class DeleteButton extends Panel implements ToolTipIF, MouseListener {
+public class DeleteButton extends JButton implements ToolTipIF, MouseListener {
 
     private String toolTip;
     
@@ -28,7 +32,6 @@ public class DeleteButton extends Panel implements ToolTipIF, MouseListener {
     private Image mouseOverImage;
     private boolean mouseOver = false;
 
-    private Vector actionListeners = new Vector();
 
     /**
      * @roseuid 425E240E00FA
@@ -37,43 +40,21 @@ public class DeleteButton extends Panel implements ToolTipIF, MouseListener {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         URL url = this.getClass().getResource(ParameterConstants.DELETE_IMAGE1);
         mouseOutImage = toolkit.getImage(url);
-        MediaTracker tr = new MediaTracker(this);
-        tr.addImage(mouseOutImage, 0);
-        try {
-            tr.waitForAll();
-        } catch (Exception e) {
-        }
-        
+        Icon mouseOutIcon = new ImageIcon(mouseOutImage);
+        setIcon(mouseOutIcon);
         url = this.getClass().getResource(ParameterConstants.DELETE_IMAGE2);
         mouseOverImage = toolkit.getImage(url);
-        tr = new MediaTracker(this);
-        tr.addImage(mouseOverImage, 0);
-        try {
-            tr.waitForAll();
-        } catch (Exception e) {
-        }
-        
-        setSize(mouseOutImage.getWidth(this), mouseOutImage.getHeight(this));
+        Icon mouseOverIcon = new ImageIcon(mouseOverImage);
+        setSelectedIcon(mouseOverIcon);
+        setPressedIcon(mouseOverIcon);
+        setContentAreaFilled(false);
+        setBorderPainted(false);
+        setSize(mouseOutIcon.getIconWidth(), mouseOutIcon.getIconHeight());
         this.setToolTip(TextMapper.getText(TextMapper.TLTP_DELETE_ITEM));
         
         this.addMouseListener(this);
     }
     
-    /**
-     * Adds the specified action listener to receive action events from this
-     * button. Action events occur when a user presses or releases the mouse
-     * over this button. If l is null, no exception is thrown and no action is
-     * performed.
-     * 
-     * @param l the action listener.
-     * @see fi.dwo.client.gui.CourseIconIF#addActionListener(java.awt.event.ActionListener)
-     */
-    public void addActionListener(ActionListener l) {
-        if (l != null) {
-            actionListeners.addElement(l);
-        }
-    }
-
     /**
      * Paints the image on the panel and calls the super.paint(g).
      * 
@@ -97,7 +78,7 @@ public class DeleteButton extends Panel implements ToolTipIF, MouseListener {
      */
     public void setToolTip(String toolTip) {
         this.toolTip = toolTip;
-        ToolTipManager.registerComponent(this);
+        setToolTipText(toolTip);
     }
 
     /**
@@ -163,9 +144,6 @@ public class DeleteButton extends Panel implements ToolTipIF, MouseListener {
      */
     public void mouseReleased(MouseEvent e) {
         mouseOver = false;
-        for (int i = 0; i < actionListeners.size(); i++) {
-            ((ActionListener) actionListeners.elementAt(i)).actionPerformed(new ActionEvent(this, 0, ""));
-        }
         setCursor(new Cursor(Cursor.HAND_CURSOR));
         repaint();
         

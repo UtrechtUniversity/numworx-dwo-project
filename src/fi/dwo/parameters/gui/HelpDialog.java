@@ -15,6 +15,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import javax.swing.JButton;
+
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.gui.DwoButton;
 import fi.dwo.client.gui.GuiConstants;
@@ -22,7 +24,7 @@ import fi.dwo.parameters.system.TextMapper;
 
 public class HelpDialog extends Dialog implements ActionListener, WindowListener {
 
-    private DwoButton closeButton;
+    private JButton closeButton;
     /**
      * @roseuid 425E240D0242
      */
@@ -41,10 +43,10 @@ public class HelpDialog extends Dialog implements ActionListener, WindowListener
         this.add(wl);
         wl.setVisible(true);
         
-        closeButton = new DwoButton(TextMapper.getText(TextMapper.BTN_CLOSE));
+        closeButton = new JButton(TextMapper.getText(TextMapper.BTN_CLOSE));
 
         FontMetrics fm = closeButton.getFontMetrics(closeButton.getFont());
-        closeButton.setSize(fm.stringWidth(closeButton.getLabel()) + 20, fm.getHeight() + 10);
+        closeButton.setSize(fm.stringWidth(closeButton.getLabel()) + 40, fm.getHeight() + 10);
         closeButton.addActionListener(this);
 
         closeButton.setLocation(0, wl.getSize().height

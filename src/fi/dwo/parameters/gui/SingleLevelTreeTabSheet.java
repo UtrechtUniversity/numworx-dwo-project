@@ -3,6 +3,7 @@
 
 package fi.dwo.parameters.gui;
 
+import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -13,15 +14,19 @@ import java.awt.event.ActionListener;
 import java.text.MessageFormat;
 import java.util.Hashtable;
 
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
 import fi.beans.scorm.TreeParameter;
 import fi.dwo.client.gui.DwoButton;
 import fi.dwo.parameters.system.TextMapper;
+import fi.dwo.parameters.test.ParametersTest;
 
 public class SingleLevelTreeTabSheet extends TreeTabSheet implements
         ItemLaunchdataIF, ActionListener {
     
-    private DwoButton addButton;
-    private DwoButton deleteButton;
+    private JButton addButton;
+    private JButton deleteButton;
 
     private GridBagLayout gridbag;
     private Object key;
@@ -43,7 +48,7 @@ public class SingleLevelTreeTabSheet extends TreeTabSheet implements
 		} else {
 			this.setBackground(SELECTED_COLOR_1);
 		}
-//		setBackground(ParametersTest.randomColor());
+		//setBackground(ParametersTest.randomColor());
 		
         GridBagConstraints c = new GridBagConstraints();
         gridbag = new GridBagLayout();
@@ -57,7 +62,7 @@ public class SingleLevelTreeTabSheet extends TreeTabSheet implements
         arguments[0] = parameter.getItemLabel();
         String s = TextMapper.getText(TextMapper.BTN_TREE_ADD_ITEM);
 
-        addButton = new DwoButton(MessageFormat.format(s, arguments), getColor());
+        addButton = new JButton(MessageFormat.format(s, arguments));
         FontMetrics fm = addButton.getFontMetrics(addButton.getFont());
         addButton.setSize(fm.stringWidth(addButton.getLabel()) + 20,
                 fm.getHeight() + 10);
@@ -69,7 +74,7 @@ public class SingleLevelTreeTabSheet extends TreeTabSheet implements
         
         s = TextMapper.getText(TextMapper.BTN_TREE_DELETE_ITEM);
 
-        deleteButton = new DwoButton(MessageFormat.format(s, arguments), getColor());
+        deleteButton = new JButton(MessageFormat.format(s, arguments));//, getColor());
         fm = deleteButton.getFontMetrics(deleteButton.getFont());
         deleteButton.setSize(fm.stringWidth(deleteButton.getLabel()) + 20,
                 fm.getHeight() + 10);
@@ -81,7 +86,8 @@ public class SingleLevelTreeTabSheet extends TreeTabSheet implements
 
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.fill = GridBagConstraints.HORIZONTAL;
-        Panel p = new Panel();
+        JPanel p = new JPanel();
+        p.setOpaque(false);
 //        p.setBackground(ParametersTest.randomColor());
         p.setVisible(false);
         this.add(p);
@@ -170,4 +176,15 @@ public class SingleLevelTreeTabSheet extends TreeTabSheet implements
         this.key = key;
     }
 
+    public Dimension getPreferredSize() {
+    	Dimension size = getLayout().preferredLayoutSize(this);
+//System.out.println("single tab sheet pref=" + size + "now = " + getSize());
+    	return size;
+    	
+    }
+    
+    public Dimension getMinimumSize() { 
+    	return getPreferredSize();
+    }
+    
 }

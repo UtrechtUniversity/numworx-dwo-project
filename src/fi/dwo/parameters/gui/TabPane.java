@@ -5,17 +5,19 @@ package fi.dwo.parameters.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Panel;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.Hashtable;
 
-import fi.beans.stringutils.StringUtils;
-import fi.dwo.client.gui.BorderedPanel;
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
 
-public class TabPane extends Panel implements ActionListener, ComponentListener {
+import fi.beans.stringutils.StringUtils;
+
+public class TabPane extends JPanel implements ActionListener, ComponentListener {
     private Color tabColor;
 
     private TabSheetCreatorIF tabSheetCreator;
@@ -24,31 +26,42 @@ public class TabPane extends Panel implements ActionListener, ComponentListener 
     
     private TabLabelPanel tabLabelPanel;
     
-    private BorderedPanel tabSheetPanel;
-    private Panel topTabSheetPanel;
+    private JPanel tabSheetPanel;
+    private JPanel topTabSheetPanel;
     
     private TabSheetIF selectedTab;
     
     private int largestWidth;
     
     public TabPane() {
-        super(new BorderLayout());
+        super(new BorderLayout(), false);
+        //setDebugGraphicsOptions(DebugGraphics.LOG_OPTION);
+        setOpaque(false);
         createdTabs = new Hashtable();
-        Panel p = new Panel(new BorderLayout());
+        JPanel p = new JPanel(new BorderLayout());
+        p.setOpaque(false);
+        p.setDoubleBuffered(false);
         add(p, BorderLayout.WEST);
         tabLabelPanel = new TabLabelPanel(this);
         tabLabelPanel.setVisible(false);
         p.add(tabLabelPanel, BorderLayout.NORTH);
         tabLabelPanel.setVisible(true);
-        p.add(new BorderedPanel(null, BorderedPanel.EAST), BorderLayout.CENTER);
+        JPanel panel = new JPanel(null);
+		p.add(panel, BorderLayout.CENTER);
+		panel.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, getForeground()));
+		panel.setOpaque(false);
+		panel.setDoubleBuffered(false);
         tabLabelPanel.addComponentListener(this);
         
-        tabSheetPanel = new BorderedPanel(new BorderLayout(), BorderedPanel.NORTH | BorderedPanel.SOUTH | BorderedPanel.EAST);
-        tabSheetPanel.setVisible(false);
+        tabSheetPanel = new JPanel(new BorderLayout(), false);
+        tabSheetPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 1, getForeground()));
+        tabSheetPanel.setVisible(true);			// false, 1011
+        tabSheetPanel.setOpaque(true); //must be true
         add(tabSheetPanel, BorderLayout.CENTER);
         tabSheetPanel.setVisible(true);
         
-        topTabSheetPanel = new Panel(new BorderLayout());
+        topTabSheetPanel = new JPanel(new BorderLayout(), false);
+        topTabSheetPanel.setOpaque(true);
         tabSheetPanel.add(topTabSheetPanel, BorderLayout.NORTH);
         
         selectedTab = null;
@@ -61,6 +74,7 @@ public class TabPane extends Panel implements ActionListener, ComponentListener 
         largestWidth = width;
     }
 
+    
     /**
      * @param tabSheet
      * @param label
@@ -103,6 +117,8 @@ public class TabPane extends Panel implements ActionListener, ComponentListener 
         tabColor = color;
         tabLabelPanel.setSelectedTabColor(color);
         tabSheetPanel.setBackground(color);
+        if(topTabSheetPanel != null)
+        	topTabSheetPanel.setBackground(color);
 
     }
 
@@ -111,7 +127,13 @@ public class TabPane extends Panel implements ActionListener, ComponentListener 
      */
     public void setBackground(Color color) {
         super.setBackground(color);
-        tabLabelPanel.setBackground(color);
+        if(tabLabelPanel != null)
+           tabLabelPanel.setBackground(color);
+        if(tabSheetPanel != null)
+           tabSheetPanel.setBackground(color);
+
+       // if(panel != null)
+       // 	panel.setBackground(color);
 
     }
 
@@ -207,18 +229,27 @@ public class TabPane extends Panel implements ActionListener, ComponentListener 
      * @see java.awt.event.ComponentListener#componentResized(java.awt.event.ComponentEvent)
      */
     public void componentResized(ComponentEvent e) {
+    	if(false)
+    	{
+    		setSize(getPreferredSize());
+    		invalidate();
+    		return;
+    	}
+    	Insets inset = getInsets();
         Dimension prefSize1 = tabLabelPanel.getPreferredSize();
         Dimension prefSize2 = tabSheetPanel.getPreferredSize();
-        int width = prefSize1.width + prefSize2.width;
+        int width = prefSize1.width + prefSize2.width + inset.left + inset.right;
         
         if(width > largestWidth) {
             largestWidth = width;
         }
-        int height = Math.max(prefSize1.height, prefSize2.height);
+        int height = Math.max(prefSize1.height, prefSize2.height) + inset.top + inset.bottom;
 
         if((getSize().width != largestWidth) || (getSize().height != height)) {
 	        this.setSize(largestWidth, height);
+	        invalidate();
         }
+        
         this.validate();
     }
 
@@ -233,6 +264,32 @@ public class TabPane extends Panel implements ActionListener, ComponentListener 
      * @see java.awt.Component#getPreferredSize()
      */
     public Dimension getPreferredSize() {
-        return super.getSize();
+//    	System.out.println("Tabpane pref=" + super.getPreferredSize() + " now = " + getSize());
+        return 
+        new Dimension( largestWidth, super.getPreferredSize().height);
     }
+    public Dimension getMinimumSize() { 
+//    	System.out.println("Tabpane min=" + super.getPreferredSize() + " now = " + getSize());
+        return super.getPreferredSize();
+    	
+    }
+
+	/* (non-Javadoc)
+	 * @see java.awt.Component#setBounds(int, int, int, int)
+	 */
+	public void setBounds(int x, int y, int width, int height) {
+		
+		super.setBounds(x, y, width, height);
+	}
+
+
+	/* (non-Javadoc)
+	 * @see java.awt.Component#processComponentEvent(java.awt.event.ComponentEvent)
+	 */
+	protected void processComponentEvent(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		super.processComponentEvent(e);
+	}
+    
+    
 }

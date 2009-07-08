@@ -3,14 +3,16 @@
 package fi.dwo.parameters.gui;
 
 import java.awt.Component;
-import java.awt.TextArea;
 import java.util.Hashtable;
+
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 import fi.beans.scorm.Parameter;
 
 public class TextParameterComponent extends ParameterComponent {
 
-    private TextArea textArea;
+    private JTextArea textArea;
 
     public TextParameterComponent(ParameterComponentIF parent,
             Parameter parameter, Hashtable defaultValue) {
@@ -26,7 +28,7 @@ public class TextParameterComponent extends ParameterComponent {
             Parameter parameter, Hashtable defaultValue, boolean isSub) {
         super(parent, parameter, defaultValue, isSub);
 
-        textArea = new TextArea("", 1, 1, TextArea.SCROLLBARS_VERTICAL_ONLY );
+        textArea = new JTextArea("", 1, 1 );
 
         if(this.defaultValue.containsKey(parameter.getName())) {
             textArea.setText((String) this.defaultValue.get(parameter.getName()));
@@ -35,14 +37,13 @@ public class TextParameterComponent extends ParameterComponent {
         if(size <= 0) {
             size = 20;
         }
-        textArea.setSize(size * 8, 84);
-        textArea.setLocation(preLabel.getLocation().x + preLabel.getSize().width + 10, 1);
         textArea.addFocusListener(this);
-        textArea.setVisible(false);
-        this.add(textArea);
-        textArea.setVisible(true);
-        Component last = generatePostItems(textArea);
-        this.setSize(last.getLocation().x + last.getSize().width + 5, textArea.getSize().height + 2);
+        JScrollPane pane = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        pane.setLocation(preLabel.getLocation().x + preLabel.getSize().width + 10, 1);
+        pane.setSize(size * 8, 84);
+		this.add(pane);
+        Component last = generatePostItems(pane);
+        this.setSize(last.getLocation().x + last.getSize().width + 5, pane.getSize().height + 2);
     }
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.ParameterComponentIF#reset()

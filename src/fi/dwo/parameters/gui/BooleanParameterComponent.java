@@ -2,19 +2,22 @@
 
 package fi.dwo.parameters.gui;
 
-import java.awt.Checkbox;
-import java.awt.CheckboxGroup;
 import java.awt.Component;
 import java.awt.FontMetrics;
 import java.awt.event.FocusEvent;
 import java.util.Hashtable;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JRadioButton;
+
 import fi.beans.scorm.Parameter;
 import fi.dwo.parameters.system.TextMapper;
 
 public class BooleanParameterComponent extends ParameterComponent {
-    private Checkbox falseValue;
-    private Checkbox trueValue;
+    private JRadioButton falseValue;
+    private JRadioButton trueValue;
 
     public BooleanParameterComponent(ParameterComponentIF parent,
             Parameter parameter, Hashtable defaultValue) {
@@ -29,26 +32,28 @@ public class BooleanParameterComponent extends ParameterComponent {
     public BooleanParameterComponent(ParameterComponentIF parent,
             Parameter parameter, Hashtable defaultValue, boolean isSub) {
         super(parent, parameter, defaultValue, isSub);
-		CheckboxGroup cbg = new CheckboxGroup();
-		trueValue = new Checkbox(TextMapper.getText(TextMapper.BOOLEAN_TRUE),
-				cbg, false);
+		ButtonGroup cbg = new ButtonGroup();
+		trueValue = new JRadioButton(TextMapper.getText(TextMapper.BOOLEAN_TRUE),
+				 false);
+		cbg.add(trueValue);
 		trueValue.setFont(ParameterConstants.LABEL_FONT);
 		FontMetrics fm = trueValue.getFontMetrics(trueValue.getFont());
-		trueValue.setSize(fm.stringWidth(trueValue.getLabel()) + 20, fm
-				.getHeight());
-
+		trueValue.setSize(trueValue.getPreferredSize());
+				//fm.stringWidth(trueValue.getLabel()) + 20, fm
+				//.getHeight());
+		
 		trueValue.setLocation(preLabel.getLocation().x + preLabel.getSize().width + 10, 1);
 		trueValue.addFocusListener(this);
 		trueValue.setVisible(false);
 		this.add(trueValue);
 		trueValue.setVisible(true);
-
-		falseValue = new Checkbox(TextMapper.getText(TextMapper.BOOLEAN_FALSE),
-				cbg, true);
+		
+		falseValue = new JRadioButton(TextMapper.getText(TextMapper.BOOLEAN_FALSE),
+				 true);
+		cbg.add(falseValue);
 		falseValue.setFont(ParameterConstants.LABEL_FONT);
 		fm = falseValue.getFontMetrics(falseValue.getFont());
-		falseValue.setSize(fm.stringWidth(falseValue.getLabel()) + 20, fm
-				.getHeight());
+		falseValue.setSize(falseValue.getPreferredSize());
 
 		falseValue.setLocation(trueValue.getLocation().x + trueValue.getSize().width + 10, 1);
 		falseValue.addFocusListener(this);
@@ -56,6 +61,10 @@ public class BooleanParameterComponent extends ParameterComponent {
 		this.add(falseValue);
 		falseValue.setVisible(true);
 
+		falseValue.setBackground(parent.getColor());
+		trueValue.setBackground(parent.getColor());
+		
+		
 		this.setSize(falseValue.getLocation().x + falseValue.getSize().width
 				+ ParameterComponent.LEFT_MARGIN, falseValue.getSize().height
 				+ ParameterComponent.COMPONENT_SPACING);
@@ -67,9 +76,9 @@ public class BooleanParameterComponent extends ParameterComponent {
             boolean boolValue = false; 
             if(boolValueString!=null & boolValueString.equals("true")) boolValue = true;
             if(boolValue) {
-                trueValue.setState(true);
+                trueValue.setSelected(true);
             } else {
-                falseValue.setState(true);
+                falseValue.setSelected(true);
             }
             //Boolean boolValue = (Boolean) this.defaultValue.get(parameter.getName());
             //if(boolValue.booleanValue()) {
@@ -87,7 +96,7 @@ public class BooleanParameterComponent extends ParameterComponent {
      * @see fi.dwo.parameters.gui.ParameterComponentIF#addParameters(java.util.Hashtable)
      */
     public void addParameters(Hashtable parameters) {
-        String value = Boolean.toString(trueValue.getState());
+        String value = Boolean.toString(trueValue.isSelected());
         addParameter(parameters, value);
     }
     
@@ -103,13 +112,13 @@ public class BooleanParameterComponent extends ParameterComponent {
         if(this.defaultValue.containsKey(parameter.getName())) {
             Boolean boolValue = (Boolean) this.defaultValue.get(parameter.getName());
             if(boolValue.booleanValue()) {
-                trueValue.setState(true);
+                trueValue.setSelected(true);
             } else {
-                falseValue.setState(true);
+                falseValue.setSelected(true);
             }
                 
         } else { //No launchdata -> default true is selected
-            trueValue.setState(true);
+            trueValue.setSelected(true);
             
         }
     }

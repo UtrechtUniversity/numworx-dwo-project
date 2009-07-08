@@ -75,6 +75,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
         profileTextArea.setEditable(false);
         profileTextArea.setWrapStyleWord(true);
         profileTextArea.setBounds(20,20,600,110);
+        profileTextArea.setOpaque(false);
         profileTextArea.setText(s);
         //profileTextArea.resize();
 		if((s != null) && (!s.trim().equals(""))) 

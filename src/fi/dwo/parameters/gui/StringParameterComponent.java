@@ -6,11 +6,13 @@ import java.awt.Component;
 import java.awt.TextField;
 import java.util.Hashtable;
 
+import javax.swing.JTextField;
+
 import fi.beans.scorm.Parameter;
 
 public class StringParameterComponent extends ParameterComponent {
     
-    private TextField textField;
+    private JTextField textField;
 
     public StringParameterComponent(ParameterComponentIF parent,
             Parameter parameter, Hashtable defaultValue) {
@@ -26,7 +28,7 @@ public class StringParameterComponent extends ParameterComponent {
             Parameter parameter, Hashtable defaultValue, boolean isSub) {
         super(parent, parameter, defaultValue, isSub);
         
-        textField = new TextField();
+        textField = new JTextField();
 
         if(this.defaultValue.containsKey(parameter.getName())) {
             textField.setText((String) this.defaultValue.get(parameter.getName()));

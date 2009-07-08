@@ -6,7 +6,8 @@ package fi.dwo.parameters.gui;
 
 
 import java.awt.Dimension;
-import java.awt.Label;
+
+import javax.swing.JLabel;
 
 /**
  * @author M.J.B. Kupers
@@ -14,7 +15,7 @@ import java.awt.Label;
  * This class is the same as a label, but the prefered size, and the minimum size
  * are equal to the current size (so the size can't be fucked up by the layoutmanager).
  */
-public class FixedLabel extends Label {
+public class FixedLabel extends JLabel {
 
     
     /**
@@ -41,6 +42,9 @@ public class FixedLabel extends Label {
      * @see java.awt.Component#getMinimumSize()
      */
     public Dimension getMinimumSize() {
+        return super.getSize();
+    }
+    public Dimension getMaximumSize() {
         return super.getSize();
     }
 

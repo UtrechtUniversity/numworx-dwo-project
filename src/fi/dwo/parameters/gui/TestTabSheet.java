@@ -13,7 +13,7 @@ import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import fi.dwo.client.gui.DwoButton;
+import javax.swing.JButton;
 
 /**
  * @author M.J.B. Kupers
@@ -21,14 +21,14 @@ import fi.dwo.client.gui.DwoButton;
  */
 public class TestTabSheet extends Panel implements TabSheetIF, ActionListener {
 
-    private DwoButton button;
+    private JButton button;
     
     private boolean large;
     
     public TestTabSheet() {
         super(null);
         this.setBackground(ParameterComponent.SELECTED_COLOR_2);
-        button = new DwoButton("Test" + Math.random());
+        button = new JButton("Test" + Math.random());
         
         FontMetrics fm = button.getFontMetrics(button.getFont());
         button.setSize(fm.stringWidth(button.getLabel()) + 20, fm.getHeight() + 10);

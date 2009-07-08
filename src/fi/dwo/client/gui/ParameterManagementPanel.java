@@ -255,7 +255,9 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             ConvertorIF convertor = ConvertorCreator.createConverter(ConvertorCreator.CONV_LAUNCHDATA);
             tmp = (Hashtable) convertor.convertHashtable(tmp, parameters);
             parameterComponent = new MainParameterComponent(parameters, tmp);
-            scrollPanel.setViewportView(parameterComponent);
+            JPanel hulp = new JPanel(new FlowLayout(FlowLayout.LEADING), false); hulp.add(parameterComponent);
+            hulp.setOpaque(false);
+            scrollPanel.setViewportView(hulp);//parameterComponent);
         } else {
             scrollPanel.setSize(editModeDialog.getSize());
             scrollPanel.setViewportView(editComponent.getComponent());

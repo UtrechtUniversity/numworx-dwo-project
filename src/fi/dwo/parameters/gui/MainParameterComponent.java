@@ -4,6 +4,7 @@ package fi.dwo.parameters.gui;
 
 import fi.beans.scorm.Parameter;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -15,7 +16,30 @@ public class MainParameterComponent extends ParameterComponent implements TabShe
     
     
     
-    /**
+    /* (non-Javadoc)
+	 * @see fi.dwo.parameters.gui.ParameterComponent#getMinimumSize()
+	 */
+	public Dimension getMinimumSize() {
+		return getLayout().minimumLayoutSize(this);
+		//return super.getMinimumSize();
+	}
+
+
+
+	/* (non-Javadoc)
+	 * @see fi.dwo.parameters.gui.ParameterComponent#getPreferredSize()
+	 */
+	public Dimension getPreferredSize() {
+		//return super.getPreferredSize();
+		Dimension size = getLayout().preferredLayoutSize(this);
+//System.out.println("main preferred=" + size + " now= " + getSize());
+		return size;
+		
+	}
+
+
+
+	/**
      * @param parameters
      * @param default
      * @roseuid 425A79BE02AF
