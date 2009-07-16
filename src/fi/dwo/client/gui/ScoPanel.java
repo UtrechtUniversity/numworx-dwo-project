@@ -63,7 +63,7 @@ public class ScoPanel extends Panel implements CenterSubPanel,
     private LinkedLabel courseButton;
 //    private JButton courseImageButton;
     
-    private DwoButton closeButton;
+    private JButton closeButton;
     
     private boolean scoView;
     
@@ -87,7 +87,7 @@ public class ScoPanel extends Panel implements CenterSubPanel,
         applet.setVisible(true);
         
         if(DwoHelper.umpc) {
-	        closeButton = new DwoButton("X");
+	        closeButton = new JButton("X");
 	        closeButton.setBounds(getSize().width-18,2,16,16);
 	        closeButton.addActionListener(this);
 	        add(closeButton,0);

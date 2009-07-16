@@ -20,6 +20,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -39,7 +40,7 @@ import fi.dwo.client.system.TextMapper;
  * @author M.J.B. Kupers
  *  
  */
-public class ClassUsersPanel extends Panel implements CenterSubPanel/*, ActionListener*/ {
+public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionListener*/ {
 
     private CenterPanel center;
 
@@ -191,6 +192,7 @@ public class ClassUsersPanel extends Panel implements CenterSubPanel/*, ActionLi
         super(null);
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setSize(627, 485);
+        this.setPreferredSize(getSize());
 
         schoolClass = c;
         
@@ -199,7 +201,7 @@ public class ClassUsersPanel extends Panel implements CenterSubPanel/*, ActionLi
             String[] arguments = new String[1];
             arguments[0] = c.getName();
             String s = TextMapper.getText(TextMapper.GUIC_NO_STUDENTS);
-            Label label = new Label(MessageFormat.format(s, arguments));
+            JLabel label = new JLabel(MessageFormat.format(s, arguments));
             label.setFont(GuiConstants.SCO_TEXT);
             FontMetrics fm = label.getFontMetrics(label.getFont());
             label.setSize(fm.stringWidth(label.getText()) + 10, fm.getHeight());

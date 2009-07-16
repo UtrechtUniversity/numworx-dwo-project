@@ -48,7 +48,7 @@ import fi.dwo.client.system.TextMapper;
  * @author Wim van Velthoven
  *
  */
-public class SchoolPanel extends Panel implements CenterSubPanel, ActionListener {
+public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListener {
 
     public class ImageButtonEditor extends AbstractCellEditor implements
 			TableCellEditor, ActionListener {
@@ -205,7 +205,7 @@ public class SchoolPanel extends Panel implements CenterSubPanel, ActionListener
 
 	private CenterPanel center;
 
-    private DwoButton addSchoolButton, copyButton;
+    private JButton addSchoolButton, copyButton;
     
     private Image removeImage, editImage, usersImage, assignImage;
 
@@ -217,6 +217,7 @@ public class SchoolPanel extends Panel implements CenterSubPanel, ActionListener
         super(null);
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setSize(627, 485);
+        setPreferredSize(getSize());
 
         /* Add Remove-school image */
         MediaTracker tr = new MediaTracker(this);
@@ -233,24 +234,19 @@ public class SchoolPanel extends Panel implements CenterSubPanel, ActionListener
         } catch (Exception e) {
         }
 
-        FontMetrics fm;
         int w; 
-        addSchoolButton = new DwoButton(TextMapper.getText(TextMapper.GUIS_ADD_SCHOOL));
-        fm = addSchoolButton.getFontMetrics(addSchoolButton.getFont());
-        addSchoolButton.setSize(w = fm.stringWidth(addSchoolButton.getLabel()) + 20, fm.getHeight() + 10);
+        addSchoolButton = new JButton(TextMapper.getText(TextMapper.GUIS_ADD_SCHOOL));
+        addSchoolButton.setSize(addSchoolButton.getPreferredSize());
+        w = addSchoolButton.getWidth();
         addSchoolButton.addActionListener(this);
         addSchoolButton.setLocation(30, 10);
-        addSchoolButton.setVisible(false);
         this.add(addSchoolButton);
-        addSchoolButton.setVisible(true);
         
-        copyButton = new DwoButton(/*FIXME*/ "Copy");
-        fm = copyButton.getFontMetrics(copyButton.getFont());
-        copyButton.setSize(fm.stringWidth(copyButton.getLabel())+20, fm.getHeight() + 10);
+        copyButton = new JButton(/*FIXME*/ "Copy");
+        copyButton.setSize(copyButton.getPreferredSize());
         copyButton.addActionListener(this);
         copyButton.setLocation(30 + w + 10, 10);
         add(copyButton);
-        copyButton.setVisible(true);
         
         buildJTable();
 

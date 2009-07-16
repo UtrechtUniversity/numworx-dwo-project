@@ -4,16 +4,19 @@ import java.awt.TextField;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
 import fi.dwo.client.system.TextMapper;
 
 class GroupItemListener implements ItemListener {
-	private TextField schoolpassword;
+	private JTextField schoolpassword;
 	
 	/**
-	 * @param schoolpassword
+	 * @param schoolpassword2
 	 */
-	GroupItemListener(TextField schoolpassword) {
-		this.schoolpassword = schoolpassword;
+	GroupItemListener(JPasswordField schoolpassword2) {
+		this.schoolpassword = schoolpassword2;
 	}
 
 	public void itemStateChanged(ItemEvent e) {

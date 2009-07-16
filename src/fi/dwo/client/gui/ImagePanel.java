@@ -9,6 +9,9 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Panel;
 
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+
 import fi.beans.tooltip.ToolTipIF;
 import fi.beans.tooltip.ToolTipManager;
 
@@ -18,7 +21,7 @@ import fi.beans.tooltip.ToolTipManager;
  * @author M.J.B. Kupers
  *  
  */
-public class ImagePanel extends Panel implements ToolTipIF {
+public class ImagePanel extends JLabel implements ToolTipIF {
     private Image image;
     private String toolTip;
 
@@ -30,18 +33,8 @@ public class ImagePanel extends Panel implements ToolTipIF {
      */
     public ImagePanel(Image i) {
         image = i;
+        setIcon(new ImageIcon(i));
         setSize(image.getWidth(this), image.getHeight(this));
-    }
-
-    /**
-     * Paints the image on the panel and calls the super.paint(g).
-     * 
-     * @param g The graphics context to use for painting.
-     * @see java.awt.Component#paint(java.awt.Graphics)
-     */
-    public void paint(Graphics g) {
-        super.paint(g);
-        g.drawImage(image, 0, 0, this);
     }
 
     /**
@@ -51,7 +44,7 @@ public class ImagePanel extends Panel implements ToolTipIF {
      */
     public void setToolTip(String toolTip) {
         this.toolTip = toolTip;
-        ToolTipManager.registerComponent(this);
+        setToolTipText(toolTip);
     }
 
     /**

@@ -8,6 +8,8 @@ import java.text.MessageFormat;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
 import fi.beans.scorm.Parameter;
 import fi.beans.scorm.ScormTree;
 import fi.beans.scorm.TreeParameter;
@@ -78,7 +80,7 @@ public class TreeSheetCreator implements TabSheetCreatorIF, ItemLaunchdataCallBa
                 String s = TextMapper.getText(TextMapper.MSG_TO_MANY_TREE_ITEMS);
 
                 s = MessageFormat.format(s, arguments);
-                DwoMessageDialog.showMessageDialog(null, s);
+                JOptionPane.showMessageDialog(null, s);
                 return;
             }
         }

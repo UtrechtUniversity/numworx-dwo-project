@@ -20,6 +20,7 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -434,7 +435,7 @@ private static boolean isValidEmail(String email) {
         try {
             return (Group[]) PersistenceFacade.instance().get(Group.class);
         } catch (PersistenceException e) {
-            DwoMessageDialog.showMessageDialog(this, e.getMessage());
+        	JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
     }
@@ -475,7 +476,7 @@ private static boolean isValidEmail(String email) {
             courseList = PersistenceFacade.instance().getCourses(currentUser);
             return selectDwoProfileCourses(courseList);
         } catch (PersistenceException e) {
-            DwoMessageDialog.showMessageDialog(this, e.getMessage());
+        	JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
     }
@@ -492,7 +493,7 @@ private static boolean isValidEmail(String email) {
             courseList = PersistenceFacade.instance().getCourses(schoolClass);
             return selectDwoProfileCourses(courseList);
         } catch (PersistenceException e) {
-            DwoMessageDialog.showMessageDialog(this, e.getMessage());
+        	JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
     }
@@ -772,7 +773,7 @@ private static boolean isValidEmail(String email) {
         try {
             PersistenceFacade.instance().deleteUser(currentUser);
         } catch (RegisterException e) {
-            DwoMessageDialog.showMessageDialog(this, e.getMessage());
+        	JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }
 
@@ -788,15 +789,15 @@ private static boolean isValidEmail(String email) {
         boolean returnvalue = false;
         try {
             if (!PersistenceFacade.instance().deleteClass(c, true)) {
-                if (DwoMessageDialog.showConfirmDialog(this, TextMapper.getText(TextMapper.GUIC_CLASS_NOT_EMPTY)
-                        + "?", TextMapper.getText(TextMapper.GUIC_CLASS_NOT_EMPTY_TITLE), DwoMessageDialog.YES_NO_OPTION) == DwoMessageDialog.YES_OPTION) {
+                if (JOptionPane.showConfirmDialog(this, TextMapper.getText(TextMapper.GUIC_CLASS_NOT_EMPTY)
+                        + "?", TextMapper.getText(TextMapper.GUIC_CLASS_NOT_EMPTY_TITLE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     returnvalue = PersistenceFacade.instance().deleteClass(c, false);
                 }
             } else {
                 returnvalue = true;
             }
         } catch (ClassException e) {
-            DwoMessageDialog.showMessageDialog(this, e.getMessage());
+        	JOptionPane.showMessageDialog(this, e.getMessage());
         }
 
         if (returnvalue) {
@@ -959,7 +960,7 @@ private static boolean isValidEmail(String email) {
 	            GuiCreator.instance().login(userName, passWord);
 	            return;
 	        } catch (LoginException exc) {
-	            DwoMessageDialog.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), DwoMessageDialog.ERROR_MESSAGE);
+	        	JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
 	        }
         }
         else if(guestUser) {
@@ -967,7 +968,7 @@ private static boolean isValidEmail(String email) {
 	            GuiCreator.instance().login();
 	            return;
 	        } catch (LoginException exc) {
-	            DwoMessageDialog.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), DwoMessageDialog.ERROR_MESSAGE);
+	        	JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
 	        }
         }
         
@@ -1067,7 +1068,7 @@ private static boolean isValidEmail(String email) {
 	        try {
 	            return PersistenceFacade.instance().LMSGetValue(sco, user, iDataModelElement);
 	        } catch (PersistenceException e) {
-	            DwoMessageDialog.showMessageDialog(this, e.getMessage());
+	        	JOptionPane.showMessageDialog(this, e.getMessage());
 	            return "";
 	        }
         }
@@ -1092,7 +1093,7 @@ private static boolean isValidEmail(String email) {
         try {
             return PersistenceFacade.instance().LMSSetValue(sco, currentUser, iDataModelElement, iValue);
         } catch (PersistenceException e) {
-            DwoMessageDialog.showMessageDialog(this, e.getMessage());
+        	JOptionPane.showMessageDialog(this, e.getMessage());
             return false + "";
         }
 
@@ -1166,7 +1167,7 @@ private static boolean isValidEmail(String email) {
             schoolClass.setClassName(newName);
             return true;
         } catch (ClassException e) {
-            DwoMessageDialog.showMessageDialog(this, e.getMessage());
+        	JOptionPane.showMessageDialog(this, e.getMessage());
             return false;
         }
     }
@@ -1258,7 +1259,7 @@ private static boolean isValidEmail(String email) {
 	        courseList = PersistenceFacade.instance().getEditableCourses(currentUser);
 	        return selectDwoProfileCourses(courseList);
 	    } catch (PersistenceException e) {
-	        DwoMessageDialog.showMessageDialog(this, e.getMessage());
+	    	JOptionPane.showMessageDialog(this, e.getMessage());
 	        return null;
 	    }
     }
@@ -1270,7 +1271,7 @@ private static boolean isValidEmail(String email) {
         try {
             return PersistenceFacade.instance().addCourse(currentUser.getSchool(), name, description, dwoProfile);
         } catch(CourseException e) {
-            DwoMessageDialog.showMessageDialog(this, e.getMessage());
+            JOptionPane.showMessageDialog(this, e.getMessage());
             return null;            
         }
     }
@@ -1282,7 +1283,7 @@ private static boolean isValidEmail(String email) {
         try {
             return PersistenceFacade.instance().updateCourse(course);
         } catch(CourseException e) {
-            DwoMessageDialog.showMessageDialog(this, e.getMessage());
+        	JOptionPane.showMessageDialog(this, e.getMessage());
             return false;            
         }
     }
@@ -1294,7 +1295,7 @@ private static boolean isValidEmail(String email) {
         try {
             return PersistenceFacade.instance().addSco(course, appletConfig, name, description);
         } catch(ScoException e) {
-            DwoMessageDialog.showMessageDialog(this, e.getMessage());
+        	JOptionPane.showMessageDialog(this, e.getMessage());
             return null;            
         }
     }
@@ -1306,7 +1307,7 @@ private static boolean isValidEmail(String email) {
         try {
             return PersistenceFacade.instance().updateSco(sco);
         } catch(ScoException e) {
-            DwoMessageDialog.showMessageDialog(this, e.getMessage());
+        	JOptionPane.showMessageDialog(this, e.getMessage());
             return false;            
         }
     }
@@ -1318,7 +1319,7 @@ private static boolean isValidEmail(String email) {
         try {
             return PersistenceFacade.instance().deleteCourse(course);
         } catch(CourseException e) {
-            DwoMessageDialog.showMessageDialog(this, e.getMessage());
+        	JOptionPane.showMessageDialog(this, e.getMessage());
             return false;
         }
     }
@@ -1330,7 +1331,7 @@ private static boolean isValidEmail(String email) {
         try {
             return PersistenceFacade.instance().deleteSco(sco);
         } catch(ScoException e) {
-            DwoMessageDialog.showMessageDialog(this, e.getMessage());
+        	JOptionPane.showMessageDialog(this, e.getMessage());
             return false;
         }
     }
@@ -1346,7 +1347,7 @@ private static boolean isValidEmail(String email) {
 //            }
             return  ac;
         } catch (PersistenceException e) {
-            DwoMessageDialog.showMessageDialog(this, e.getMessage());
+        	JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
     }
@@ -1359,7 +1360,7 @@ private static boolean isValidEmail(String email) {
             School[] sc = (School[]) PersistenceFacade.instance().get(School.class);
             return  sc;
         } catch (PersistenceException e) {
-            DwoMessageDialog.showMessageDialog(this, e.getMessage());
+        	JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
     }
@@ -1649,7 +1650,7 @@ System.out.println(schoolUid);
 		try {
 			return PersistenceFacade.instance().deleteSchool(sc);
 		} catch(SchoolException e) {
-			DwoMessageDialog.showMessageDialog(this, e.getMessage());
+			JOptionPane.showMessageDialog(this, e.getMessage());
 			return false;
 		}
 	}
@@ -1667,7 +1668,7 @@ System.out.println(schoolUid);
 		try {
 			return PersistenceFacade.instance().swapScoSequenceNr(sco1, sco2);
 		} catch (ScoException e) {
-			DwoMessageDialog.showMessageDialog(this, e.getMessage());
+			JOptionPane.showMessageDialog(this, e.getMessage());
 			return false;
 		}
 	}

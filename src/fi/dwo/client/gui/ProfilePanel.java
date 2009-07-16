@@ -17,8 +17,14 @@ import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.Group;
@@ -34,38 +40,38 @@ import fi.dwo.client.system.TextMapper;
  * @author M.J.B. Kupers
  *  
  */
-public class ProfilePanel extends Panel implements CenterSubPanel,
+public class ProfilePanel extends JPanel implements CenterSubPanel,
         ActionListener {
 
     protected Group groupList[];
 
     protected SchoolClass classList[];
 
-    protected TextField oldpassword;
+    protected JPasswordField oldpassword;
 
-    protected TextField password;
+    protected JPasswordField password;
 
-    protected TextField repassword;
+    protected JPasswordField repassword;
 
-    protected TextField firstname;
+    protected JTextField firstname;
 
-    protected TextField middlename;
+    protected JTextField middlename;
 
-    protected TextField lastname;
+    protected JTextField lastname;
 
-    protected TextField email;
+    protected JTextField email;
 
-    protected TextField schoollogin;
+    protected JTextField schoollogin;
 
-    private TextField schoolpassword;
+    private JPasswordField schoolpassword;
 
-    protected DwoButton changeButton;
+    protected JButton changeButton;
 
-    protected DwoButton resetButton;
+    protected JButton resetButton;
 
-    protected DwoButton deleteButton;
+    protected JButton deleteButton;
 
-    private Choice groupChoice;
+    private JComboBox groupChoice;
 
     protected User user;
 
@@ -80,21 +86,22 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
         groupList = groups;
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setSize(600, 480);
+        this.setPreferredSize(getSize());
         this.setLayout(null);
 
         /* Variables used to create items */
         FontMetrics fm;
-        Panel p;
-        Label l;
+        JPanel p;
+        JLabel l;
 
         /* Add Register-panel */
-        p = new BorderedPanel(null);
+        p = new JPanel(null); p.setBorder(BorderFactory.createLineBorder(getForeground()));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         p.setBounds(getSize().width / 2 - 155, 20, 310, 130);
         this.add(p);
 
         /* registerinfo label */
-        l = new Label(TextMapper.getText(TextMapper.GUIP_REGISTERINFO) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIP_REGISTERINFO) + ":");
         l.setForeground(GuiConstants.RED_COLOR);
         l.setFont(GuiConstants.RED_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -102,7 +109,7 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
         p.add(l);
 
         /* Username label */
-        l = new Label(TextMapper.getText(TextMapper.GUIP_USERNAME) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIP_USERNAME) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -111,7 +118,7 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
         p.add(l);
 
         /* Username Label */
-        l = new Label(user.getUsername());
+        l = new JLabel(user.getUsername());
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
@@ -119,7 +126,7 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
         p.add(l);
 
         /* Old-Password label */
-        l = new Label(TextMapper.getText(TextMapper.GUIP_OLD_PASSWORD) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIP_OLD_PASSWORD) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -129,7 +136,7 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
         p.add(l);
 
         /* Old-Password field */
-        oldpassword = new TextField();
+        oldpassword = new JPasswordField();
         oldpassword.setBounds(160, 53, 120, 20);
         oldpassword.setEchoChar('*');
         oldpassword.setVisible(!user.isReadonly());
@@ -142,7 +149,7 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
         p.add(l);
 
         /* Password label */
-        l = new Label(TextMapper.getText(TextMapper.GUIP_PASSWORD) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIP_PASSWORD) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -152,14 +159,14 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
         p.add(l);
 
         /* Password field */
-        password = new TextField();
+        password = new JPasswordField();
         password.setBounds(160, 78, 120, 20);
         password.setEchoChar('*');
         password.setVisible(!user.isReadonly());
         p.add(password);
 
         /* RePassword label */
-        l = new Label(TextMapper.getText(TextMapper.GUIP_RE_PASSWORD) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIP_RE_PASSWORD) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -169,20 +176,20 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
         p.add(l);
 
         /* RePassword field */
-        repassword = new TextField();
+        repassword = new JPasswordField();
         repassword.setBounds(160, 103, 120, 20);
         repassword.setEchoChar('*');
         repassword.setVisible(!user.isReadonly());
         p.add(repassword);
 
         /* Add PersonalInfo-panel */
-        p = new BorderedPanel(null);
+        p = new JPanel(null); p.setBorder(BorderFactory.createLineBorder(getForeground()));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         p.setBounds(getSize().width / 2 - 155, 149, 310, 130);
         this.add(p);
 
         /* personalinfo label */
-        l = new Label(TextMapper.getText(TextMapper.GUIP_PERSONALINFO) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIP_PERSONALINFO) + ":");
         l.setForeground(GuiConstants.RED_COLOR);
         l.setFont(GuiConstants.RED_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -190,7 +197,7 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
         p.add(l);
 
         /* Firstname label */
-        l = new Label(TextMapper.getText(TextMapper.GUIP_FIRSTNAME) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIP_FIRSTNAME) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -199,7 +206,7 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
         p.add(l);
 
         /* Firstname field */
-        firstname = new TextField();
+        firstname = new JTextField();
         firstname.setText(user.getFirstname());
         firstname.setBounds(160, 28, 120, 20);
         firstname.setEditable(!user.isReadonly());
@@ -211,7 +218,7 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
         p.add(l);
 
         /* Middlename label */
-        l = new Label(TextMapper.getText(TextMapper.GUIP_MIDDLENAME) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIP_MIDDLENAME) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -220,14 +227,14 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
         p.add(l);
 
         /* Middlename field */
-        middlename = new TextField();
+        middlename = new JTextField();
         middlename.setText(user.getMiddleName());
         middlename.setBounds(160, 53, 120, 20);
         middlename.setEditable(!user.isReadonly());
         p.add(middlename);
 
         /* Lastname label */
-        l = new Label(TextMapper.getText(TextMapper.GUIP_LASTNAME) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIP_LASTNAME) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -236,7 +243,7 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
         p.add(l);
 
         /* Lastname field */
-        lastname = new TextField();
+        lastname = new JTextField();
         lastname.setText(user.getLastName());
         lastname.setBounds(160, 78, 120, 20);
         lastname.setEditable(!user.isReadonly());
@@ -248,7 +255,7 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
         p.add(l);
 
         /* Email label */
-        l = new Label(TextMapper.getText(TextMapper.GUIP_EMAIL) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIP_EMAIL) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -257,7 +264,7 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
         p.add(l);
 
         /* Email field */
-        email = new TextField();
+        email = new JTextField();
         email.setText(user.getEmail());
         email.setBounds(160, 103, 120, 20);
         email.setEditable(!user.isReadonly());
@@ -267,17 +274,17 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
         l = createMandatoryLabel();
         l.setLocation(285, 103);
         p.add(l);
+        Container c = p;
 // readonly users are unable to set school stuff.
 // TODO hoe zit dat dan precies?
         if(!user.isReadonly() || user.getSchool() != null )
         {
-        	p = getUserPanel(p);
-            this.add(p);
+        	add(c = getUserPanel(p));
         } else {
         	getUserPanel(p);
         }
         if(!user.isReadonly())
-        	addButtonsPanel(p);
+        	addButtonsPanel(c);
 
     }
 
@@ -285,25 +292,25 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
      * This method returns the specific panel for the user. <BR>
      * Can be overridden by subclasses.
      * 
-     * @param lastPanel The panel where under this panel must appear.
+     * @param p2 The panel where under this panel must appear.
      * @return A panel representing user-specific information.
      */
-    protected Panel getUserPanel(Panel lastPanel) {
-        int posY = lastPanel.getLocation().y + lastPanel.getSize().height - 1;
+    protected Container getUserPanel(Container p2) {
+        int posY = p2.getLocation().y + p2.getSize().height - 1;
         /* We don't know the school */
 
-        Panel p;
-        Label l;
+        JPanel p;
+        JLabel l;
         FontMetrics fm;
         if (user.getSchool() == null) {
             /* Add School-panel */
-            p = new BorderedPanel(null);
+            p = new JPanel(null); p.setBorder(BorderFactory.createLineBorder(getForeground()));
             p.setBackground(GuiConstants.SUB_BACKGROUND);
             p.setBounds(getSize().width / 2 - 155, posY, 310, 115);
             this.add(p);
 
             /* schoolinfo label */
-            l = new Label(TextMapper.getText(TextMapper.GUIP_SCHOOLINFO) + ":");
+            l = new JLabel(TextMapper.getText(TextMapper.GUIP_SCHOOLINFO) + ":");
             l.setForeground(GuiConstants.RED_COLOR);
             l.setFont(GuiConstants.RED_TEXT);
             fm = l.getFontMetrics(l.getFont());
@@ -311,7 +318,7 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
             p.add(l);
 
             /* schoolinfo sublabel */
-            l = new Label(TextMapper.getText(TextMapper.GUIP_MSG_PROVIDED_SCHOOL)
+            l = new JLabel(TextMapper.getText(TextMapper.GUIP_MSG_PROVIDED_SCHOOL)
                     + ":");
             l.setForeground(GuiConstants.RED_COLOR);
             l.setFont(GuiConstants.SMALL_TEXT);
@@ -320,7 +327,7 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
             p.add(l);
 
             /* Schoologin label */
-            l = new Label(TextMapper.getText(TextMapper.GUIP_SCHOOLLOGIN) + ":");
+            l = new JLabel(TextMapper.getText(TextMapper.GUIP_SCHOOLLOGIN) + ":");
             l.setForeground(Color.black);
             l.setFont(GuiConstants.NORMAL_TEXT);
             fm = l.getFontMetrics(l.getFont());
@@ -329,12 +336,12 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
             p.add(l);
 
             /* Schoologin field */
-            schoollogin = new TextField();
+            schoollogin = new JTextField();
             schoollogin.setBounds(160, 38, 120, 20);
             p.add(schoollogin);
 
             /* Group label */
-            l = new Label(TextMapper.getText(TextMapper.GUIP_SCHOOLGROUP) + ":");
+            l = new JLabel(TextMapper.getText(TextMapper.GUIP_SCHOOLGROUP) + ":");
             l.setForeground(Color.black);
             l.setFont(GuiConstants.NORMAL_TEXT);
             fm = l.getFontMetrics(l.getFont());
@@ -343,16 +350,18 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
             p.add(l);
 
             /* Password field */
-            groupChoice = new Choice();
-            groupChoice.add(TextMapper.getText(TextMapper.GUIP_OPT_SELECT_GROUP));
+            groupChoice = new JComboBox();
+            groupChoice.setBackground(p.getBackground());
+            groupChoice.setFont(GuiConstants.NORMAL_TEXT);
+            groupChoice.addItem(TextMapper.getText(TextMapper.GUIP_OPT_SELECT_GROUP));
             for (int i = 0; i < groupList.length; i++) {
-                groupChoice.add(TextMapper.getText(groupList[i].getName()));
+                groupChoice.addItem(TextMapper.getText(groupList[i].getName()));
             }
             groupChoice.setBounds(160, 63, 120, 20);
             p.add(groupChoice);
 
             /* Schoolpassword label */
-            l = new Label(TextMapper.getText(TextMapper.GUIP_SCHOOLPASSWORD)
+            l = new JLabel(TextMapper.getText(TextMapper.GUIP_SCHOOLPASSWORD)
                     + ":");
             l.setForeground(Color.black);
             l.setFont(GuiConstants.NORMAL_TEXT);
@@ -362,7 +371,7 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
             p.add(l);
 
             /* Schoolpassword field */
-            schoolpassword = new TextField();
+            schoolpassword = new JPasswordField();
             schoolpassword.setBounds(160, 88, 120, 20);
             schoolpassword.setEchoChar('*');
             p.add(schoolpassword);
@@ -371,13 +380,13 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
         } else {
             /* We know the school, so show the classlist */
             /* Add School-panel */
-            p = new BorderedPanel(null);
+            p = new JPanel(null); p.setBorder(BorderFactory.createLineBorder(getForeground()));
             p.setBackground(GuiConstants.SUB_BACKGROUND);
             p.setBounds(getSize().width / 2 - 155, posY, 310, 80);
             this.add(p);
 
             /* schoolinfo label */
-            l = new Label(TextMapper.getText(TextMapper.GUIP_SCHOOLINFO) + ":");
+            l = new JLabel(TextMapper.getText(TextMapper.GUIP_SCHOOLINFO) + ":");
             l.setForeground(GuiConstants.RED_COLOR);
             l.setFont(GuiConstants.RED_TEXT);
             fm = l.getFontMetrics(l.getFont());
@@ -385,7 +394,7 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
             p.add(l);
 
             /* Schoologin label */
-            l = new Label(TextMapper.getText(TextMapper.GUIP_SCHOOLLOGIN) + ":");
+            l = new JLabel(TextMapper.getText(TextMapper.GUIP_SCHOOLLOGIN) + ":");
             l.setForeground(Color.black);
             l.setFont(GuiConstants.NORMAL_TEXT);
             fm = l.getFontMetrics(l.getFont());
@@ -394,7 +403,7 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
             p.add(l);
 
             /* Schoologin label */
-            l = new Label(user.getSchool().getName());
+            l = new JLabel(user.getSchool().getName());
             if(l.getText() == null) {
                 l.setText("");
             }
@@ -406,7 +415,7 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
             p.add(l);
 
             /* Class label */
-            l = new Label(TextMapper.getText(TextMapper.GUIP_CLASS) + ":");
+            l = new JLabel(TextMapper.getText(TextMapper.GUIP_CLASS) + ":");
             l.setForeground(Color.black);
             l.setFont(GuiConstants.NORMAL_TEXT);
             fm = l.getFontMetrics(l.getFont());
@@ -415,18 +424,20 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
             p.add(l);
 
             /* Class field */
-            groupChoice = new Choice();
+            groupChoice = new JComboBox();
+            groupChoice.setBackground(p.getBackground());
+            groupChoice.setFont(GuiConstants.NORMAL_TEXT);
             if (user.getInClass() == null) {
-                groupChoice.add(TextMapper.getText(TextMapper.GUIP_OPT_SELECT_GROUP));
+                groupChoice.addItem(TextMapper.getText(TextMapper.GUIP_OPT_SELECT_GROUP));
             }
 
             classList = user.getSchool().getClassList();
 
             for (int i = 0; i < classList.length; i++) {
-                groupChoice.add(classList[i].getName());
+                groupChoice.addItem(classList[i].getName());
             }
             if (user.getInClass() != null) {
-                groupChoice.select(user.getInClass().getName());
+                groupChoice.setSelectedItem(user.getInClass().getName());
             }
             groupChoice.setBounds(160, 53, 120, 20);
             groupChoice.setEnabled(!user.isReadonly());
@@ -440,29 +451,29 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
     /**
      * This method adds a button panel under the last panel. <BR>
      * 
-     * @param lastPanel The panel where under this panel must appear.
+     * @param p2 The panel where under this panel must appear.
      */
-    protected void addButtonsPanel(Panel lastPanel) {
+    protected void addButtonsPanel(Container p2) {
         /* Add Button-panel */
         FontMetrics fm;
 
-        int locationY = lastPanel.getSize().height + lastPanel.getLocation().y
+        int locationY = p2.getSize().height + p2.getLocation().y
                 - 1;
-        Panel p = new BorderedPanel(null);
+        JPanel p = new JPanel(null); p.setBorder(BorderFactory.createLineBorder(getForeground()));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         p.setBounds(getSize().width / 2 - 155, locationY, 310, 35);
         this.add(p);
 
         /* Change button */
-        changeButton = new DwoButton(TextMapper.getText(TextMapper.GUIP_BTN_SAVE), GuiConstants.SUB_BACKGROUND);
-        fm = changeButton.getFontMetrics(changeButton.getFont());
-        changeButton.setSize(fm.stringWidth(changeButton.getLabel()) + 20, fm.getHeight() + 10);
-
+        changeButton = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_SAVE));//, GuiConstants.SUB_BACKGROUND);
+        //fm = changeButton.getFontMetrics(changeButton.getFont());
+        //changeButton.setSize(fm.stringWidth(changeButton.getLabel()) + 20, fm.getHeight() + 10);
+        changeButton.setSize(changeButton.getPreferredSize());
         /* Reset button */
-        resetButton = new DwoButton(TextMapper.getText(TextMapper.GUIP_BTN_RESET), GuiConstants.SUB_BACKGROUND);
-        fm = resetButton.getFontMetrics(resetButton.getFont());
-        resetButton.setSize(fm.stringWidth(resetButton.getLabel()) + 20, fm.getHeight() + 10);
-
+        resetButton = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_RESET));//, GuiConstants.SUB_BACKGROUND);
+        //fm = resetButton.getFontMetrics(resetButton.getFont());
+        //resetButton.setSize(fm.stringWidth(resetButton.getLabel()) + 20, fm.getHeight() + 10);
+        resetButton.setSize(resetButton.getPreferredSize());
         changeButton.setLocation((p.getSize().width / 2)
                 - ((changeButton.getSize().width + resetButton.getSize().width + 5) / 2), 5);
         p.add(changeButton);
@@ -472,9 +483,10 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
                 + changeButton.getSize().width + 5, 5);
         p.add(resetButton);
 
-        deleteButton = new DwoButton(TextMapper.getText(TextMapper.GUIP_BTN_DELETE_PROFILE), GuiConstants.MAIN_BACKGROUND);
-        fm = deleteButton.getFontMetrics(deleteButton.getFont());
-        deleteButton.setSize(fm.stringWidth(deleteButton.getLabel()) + 20, fm.getHeight() + 10);
+        deleteButton = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_DELETE_PROFILE));//, GuiConstants.MAIN_BACKGROUND);
+        //fm = deleteButton.getFontMetrics(deleteButton.getFont());
+        //deleteButton.setSize(fm.stringWidth(deleteButton.getLabel()) + 20, fm.getHeight() + 10);
+        deleteButton.setSize(deleteButton.getPreferredSize());
         deleteButton.setLocation(getSize().width / 2
                 - deleteButton.getSize().width / 2, p.getLocation().y
                 + p.getSize().height + 10);
@@ -511,8 +523,8 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
      * 
      * @return A label with the caption of a asterisk.
      */
-    private Label createMandatoryLabel() {
-        Label mandatoryLabel = new Label("*");
+    private JLabel createMandatoryLabel() {
+        JLabel mandatoryLabel = new JLabel("*");
         mandatoryLabel.setForeground(GuiConstants.RED_COLOR);
         mandatoryLabel.setFont(GuiConstants.RED_TEXT);
         FontMetrics fm = mandatoryLabel.getFontMetrics(mandatoryLabel.getFont());
@@ -538,14 +550,14 @@ public class ProfilePanel extends Panel implements CenterSubPanel,
             email.setText(user.getEmail());
             if (user.getSchool() == null) {
                 schoollogin.setText("");
-                groupChoice.select(0);
+                groupChoice.setSelectedIndex(0);
                 schoolpassword.setText("");
                 schoolpassword.setVisible(true);
             } else {
                 if (user.getInClass() != null) {
-                    groupChoice.select(user.getInClass().getName());
+                    groupChoice.setSelectedItem(user.getInClass().getName());
                 } else {
-                    groupChoice.select(0);
+                    groupChoice.setSelectedIndex(0);
                 }
             }
 

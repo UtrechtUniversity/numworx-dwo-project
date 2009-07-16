@@ -18,7 +18,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.Group;
@@ -50,13 +52,13 @@ public class RegisterPanel extends Panel implements ActionListener {
 
     private TextField schoollogin;
 
-    private TextField schoolpassword;
+    private JPasswordField schoolpassword;
 
-    private DwoButton registerButton;
+    private JButton registerButton;
 
-    private DwoButton resetButton;
+    private JButton resetButton;
 
-    private DwoButton backButton;
+    private JButton backButton;
 
     private Choice groupChoice;
 
@@ -325,7 +327,7 @@ public class RegisterPanel extends Panel implements ActionListener {
         p.add(l);
 
         /* Schoolpassword field */
-        schoolpassword = new TextField();
+        schoolpassword = new JPasswordField();
         schoolpassword.setBounds(160, 88, 120, 20);
         schoolpassword.setEchoChar('*');
         p.add(schoolpassword);
@@ -337,14 +339,14 @@ public class RegisterPanel extends Panel implements ActionListener {
         this.add(p);
 
         /* Register button */
-        registerButton = new DwoButton(TextMapper.getText(TextMapper.GUIR_BTN_REGISTER), GuiConstants.SUB_BACKGROUND);
+        registerButton = new JButton(TextMapper.getText(TextMapper.GUIR_BTN_REGISTER));//, GuiConstants.SUB_BACKGROUND);
         fm = registerButton.getFontMetrics(registerButton.getFont());
-        registerButton.setSize(fm.stringWidth(registerButton.getLabel()) + 20, fm.getHeight() + 10);
+        registerButton.setSize(registerButton.getPreferredSize());
 
         /* Reset button */
-        resetButton = new DwoButton(TextMapper.getText(TextMapper.GUIR_BTN_RESET), GuiConstants.SUB_BACKGROUND);
+        resetButton = new JButton(TextMapper.getText(TextMapper.GUIR_BTN_RESET));//, GuiConstants.SUB_BACKGROUND);
         fm = resetButton.getFontMetrics(resetButton.getFont());
-        resetButton.setSize(fm.stringWidth(resetButton.getLabel()) + 20, fm.getHeight() + 10);
+        resetButton.setSize(resetButton.getPreferredSize());
 
         registerButton.setLocation((p.getSize().width / 2)
                 - ((registerButton.getSize().width
@@ -357,9 +359,9 @@ public class RegisterPanel extends Panel implements ActionListener {
                 + registerButton.getSize().width + 5, 5);
         p.add(resetButton);
 
-        backButton = new DwoButton(TextMapper.getText(TextMapper.GUIR_BTN_BACK), GuiConstants.MAIN_BACKGROUND);
+        backButton = new JButton(TextMapper.getText(TextMapper.GUIR_BTN_BACK));//, GuiConstants.MAIN_BACKGROUND);
         fm = backButton.getFontMetrics(backButton.getFont());
-        backButton.setSize(fm.stringWidth(backButton.getLabel()) + 20, fm.getHeight() + 10);
+        backButton.setSize(backButton.getPreferredSize());
         backButton.setLocation(getSize().width / 2 - backButton.getSize().width
                 / 2, 530);
         this.add(backButton);

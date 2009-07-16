@@ -14,6 +14,9 @@ import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.persistence.UserResultListMapper;
 import java.util.Collections;
 import java.util.Comparator;
+
+import javax.swing.JOptionPane;
+
 import fi.dwo.client.system.PersistenceException;
 
 /**
@@ -191,27 +194,27 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
             try {
                 userResultList = PersistenceFacade.instance().getResults(courses, teacher);
             } catch (PersistenceException e) {
-                DwoMessageDialog.showMessageDialog(dwo, e.getMessage());
+            	JOptionPane.showMessageDialog(dwo, e.getMessage());
             }
         } else if ((currentlyZoomedUser == null)
                 && (currentlyZoomedLesson instanceof Course)) {
             try {
                 userResultList = PersistenceFacade.instance().getResults((Course) currentlyZoomedLesson, teacher);
             } catch (PersistenceException e) {
-                DwoMessageDialog.showMessageDialog(dwo, e.getMessage());
+            	JOptionPane.showMessageDialog(dwo, e.getMessage());
             }
         } else if ((currentlyZoomedLesson == null)
                 && (currentlyZoomedUser instanceof SchoolClass)) {
             try {
                 userResultList = PersistenceFacade.instance().getResults(courses, (SchoolClass) currentlyZoomedUser, teacher);
             } catch (PersistenceException e) {
-                DwoMessageDialog.showMessageDialog(dwo, e.getMessage());
+            	JOptionPane.showMessageDialog(dwo, e.getMessage());
             }
         } else {
             try {
                 userResultList = PersistenceFacade.instance().getResults((Course) currentlyZoomedLesson, (SchoolClass) currentlyZoomedUser, teacher);
             } catch (PersistenceException e) {
-                DwoMessageDialog.showMessageDialog(dwo, e.getMessage());
+            	JOptionPane.showMessageDialog(dwo, e.getMessage());
             }
         }
 

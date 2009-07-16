@@ -15,6 +15,8 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import javax.swing.JOptionPane;
+
 import fi.beans.base64code.StringCodeObject;
 import fi.beans.scorm.SCORM12APIInterface;
 import fi.dwo.client.gui.DwoMessageDialog;
@@ -136,7 +138,7 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
                 sc = null; //something is changed, so the scopanel must created again
             }
         } catch (PersistenceException e) {
-            DwoMessageDialog.showMessageDialog(null, e.getMessage());
+        	JOptionPane.showMessageDialog(null, e.getMessage());
         }
         
     }

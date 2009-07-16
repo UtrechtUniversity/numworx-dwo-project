@@ -5,6 +5,8 @@ package fi.dwo.client.domain;
 
 import java.text.MessageFormat;
 
+import javax.swing.JOptionPane;
+
 import fi.dwo.client.gui.DwoMessageDialog;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.PersistenceException;
@@ -36,7 +38,7 @@ public class SchoolClass implements UserGroup, Comparable {
             courses = (Course[]) PersistenceFacade.instance()
                     .getSelectedSchoolCourses(this);
         } catch (PersistenceException e) {
-            DwoMessageDialog.showMessageDialog(null, e.getMessage());
+        	JOptionPane.showMessageDialog(null, e.getMessage());
         }
         return courses;
     }
@@ -48,7 +50,7 @@ public class SchoolClass implements UserGroup, Comparable {
                 PersistenceFacade.instance().deSelectCoursesForClass(getID(),
                         allCourses[i].getID());
             } catch (PersistenceException e) {
-                DwoMessageDialog.showMessageDialog(null, e.getMessage());
+            	JOptionPane.showMessageDialog(null, e.getMessage());
             }
         }
         for (int i = 0; i < selectedCourses.length; i++) {
@@ -56,7 +58,7 @@ public class SchoolClass implements UserGroup, Comparable {
                 PersistenceFacade.instance().selectCoursesForClass(getID(),
                         selectedCourses[i].getID());
             } catch (PersistenceException e) {
-                DwoMessageDialog.showMessageDialog(null, e.getMessage());
+            	JOptionPane.showMessageDialog(null, e.getMessage());
             }
         }
     }

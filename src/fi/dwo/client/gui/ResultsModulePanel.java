@@ -529,9 +529,9 @@ public class ResultsModulePanel extends JPanel implements
 
     private CenterPanel center;
 
-    private DwoButton selectCoursesButton, copyButton;
+    private JButton selectCoursesButton, copyButton;
 
-    private Label label;
+    private JLabel label;
 
     private UserGroup currentUserGroup;
 
@@ -549,6 +549,7 @@ public class ResultsModulePanel extends JPanel implements
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         //this.setSize(600, 480);
         this.setSize(627, 490);
+        setPreferredSize(getSize());
         this.setLayout(null);
         domain = rm;
 
@@ -566,19 +567,17 @@ public class ResultsModulePanel extends JPanel implements
         currentUserGroup = domain.getZoomedUserGroup();
         currentLessonGroup = domain.getZoomedLessonGroup();;
         int x;
-        selectCoursesButton = new DwoButton(TextMapper.getText(TextMapper.GUIRS_BTN_SELECT_COURSES));
-        FontMetrics fm = selectCoursesButton.getFontMetrics(selectCoursesButton.getFont());
-        selectCoursesButton.setSize(fm.stringWidth(selectCoursesButton.getLabel()) + 20, fm.getHeight() + 10);
+        selectCoursesButton = new JButton(TextMapper.getText(TextMapper.GUIRS_BTN_SELECT_COURSES));
+        selectCoursesButton.setSize(selectCoursesButton.getPreferredSize());
         selectCoursesButton.addActionListener(this);
         selectCoursesButton.setLocation(x = getSize().width - selectCoursesButton.getSize().width - 20, 3);
-        selectCoursesButton.setToolTip(TextMapper.getText(TextMapper.GUIRS_TLTP_SELECT_COURSES));
+        selectCoursesButton.setToolTipText(TextMapper.getText(TextMapper.GUIRS_TLTP_SELECT_COURSES));
         selectCoursesButton.setVisible(false);
         this.add(selectCoursesButton);
         selectCoursesButton.setVisible(true);
 
-        copyButton = new DwoButton(/*FIXME*/ "Copy");
-        fm = copyButton.getFontMetrics(copyButton.getFont());
-        copyButton.setSize(fm.stringWidth(copyButton.getLabel()) + 20, fm.getHeight() + 10);
+        copyButton = new JButton(/*FIXME*/ "Copy");
+        copyButton.setSize(copyButton.getPreferredSize());
         copyButton.addActionListener(this);
         copyButton.setLocation(x - copyButton.getSize().width - 20, 3);
         //TODO copyButton.setToolTip(TextMapper.getText(TextMapper.GUIRS_TLTP_SELECT_COURSES));
@@ -889,7 +888,7 @@ public class ResultsModulePanel extends JPanel implements
             repaint();
  
     	} else {
-            label = new Label(TextMapper.getText(TextMapper.GUIRS_NO_RESULTS));
+            label = new JLabel(TextMapper.getText(TextMapper.GUIRS_NO_RESULTS));
             label.setFont(GuiConstants.SCO_TEXT);
             FontMetrics fm = label.getFontMetrics(label.getFont());
             label.setSize(fm.stringWidth(label.getText()) + 10, fm.getHeight());

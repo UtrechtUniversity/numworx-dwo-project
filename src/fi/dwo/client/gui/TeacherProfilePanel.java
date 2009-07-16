@@ -4,10 +4,13 @@
 package fi.dwo.client.gui;
 
 import java.awt.Button;
+import java.awt.Container;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import fi.dwo.client.domain.Group;
 import fi.dwo.client.system.LoginException;
@@ -42,10 +45,10 @@ public class TeacherProfilePanel extends ProfilePanel {
      * @param lastPanel The panel where under this panel must appear.
      * @return A panel representing user-specific information.
      */
-    protected Panel getUserPanel(Panel lastPanel) {
+    protected Container getUserPanel(Container lastPanel) {
         int posY = lastPanel.getLocation().y + lastPanel.getSize().height - 1;
-        Panel p;
-        p = new Panel(null);
+        JPanel p;
+        p = new JPanel(null); //p.setBorder(BorderFactory.createLineBorder(getForeground()));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         p.setBounds(getSize().width / 2 - 155, posY, 0, 0);
         return p;

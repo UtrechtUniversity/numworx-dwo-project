@@ -9,12 +9,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Hashtable;
 
+import javax.swing.JButton;
+
 import fi.beans.scorm.Parameter;
 import fi.dwo.client.gui.DwoButton;
 
 public class TreeParameterComponent extends ParameterComponent implements ActionListener {
     
-    private DwoButton button;
+    private JButton button;
     
     private boolean large;
     
@@ -35,10 +37,9 @@ public class TreeParameterComponent extends ParameterComponent implements Action
             Parameter parameter, Hashtable defaultValue, boolean isSub) {
         super(parent, parameter, defaultValue, isSub);
         
-        button = new DwoButton("Test");
+        button = new JButton("Test");
         
-        FontMetrics fm = button.getFontMetrics(button.getFont());
-        button.setSize(fm.stringWidth(button.getLabel()) + 20, fm.getHeight() + 10);
+        button.setSize(button.getPreferredSize());
         button.setLocation(preLabel.getLocation().x + preLabel.getSize().width + 10, 1);
         button.setVisible(false);
         button.addActionListener(this);

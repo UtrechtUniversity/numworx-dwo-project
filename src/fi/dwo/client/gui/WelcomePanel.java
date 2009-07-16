@@ -16,6 +16,7 @@ import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 import fi.dwo.client.domain.DwoHelper;
@@ -37,11 +38,11 @@ public class WelcomePanel extends Panel implements ActionListener {
 
     private TextField password;
 
-    private DwoButton loginButton;
+    private JButton loginButton;
 
-    private DwoButton guestButton;
+    private JButton guestButton;
 
-    private DwoButton registerButton;
+    private JButton registerButton;
     
 
     /**
@@ -193,9 +194,9 @@ public class WelcomePanel extends Panel implements ActionListener {
         password.setVisible(true);
 
         /* Login button */
-        loginButton = new DwoButton(TextMapper.getText(TextMapper.GUIW_BTN_LOGIN), GuiConstants.SUB_BACKGROUND);
+        loginButton = new JButton(TextMapper.getText(TextMapper.GUIW_BTN_LOGIN));//, GuiConstants.SUB_BACKGROUND);
         fm = loginButton.getFontMetrics(loginButton.getFont());
-        loginButton.setSize(fm.stringWidth(loginButton.getLabel()) + 20, fm.getHeight() + 10);
+        loginButton.setSize(loginButton.getPreferredSize());
         loginButton.setLocation((p.getSize().width / 2)
                 - (loginButton.getSize().width / 2), 80);
         loginButton.setVisible(false);
@@ -222,9 +223,9 @@ public class WelcomePanel extends Panel implements ActionListener {
         l.setVisible(true);
 
         /* GuestLogin button */
-        guestButton = new DwoButton(TextMapper.getText(TextMapper.GUIW_BTN_GUESTLOGIN), GuiConstants.SUB_BACKGROUND);
+        guestButton = new JButton(TextMapper.getText(TextMapper.GUIW_BTN_GUESTLOGIN));//, GuiConstants.SUB_BACKGROUND);
         fm = guestButton.getFontMetrics(guestButton.getFont());
-        guestButton.setSize(fm.stringWidth(guestButton.getLabel()) + 20, fm.getHeight() + 10);
+        guestButton.setSize(guestButton.getPreferredSize());
         guestButton.setLocation((p.getSize().width / 2)
                 - (guestButton.getSize().width / 2), 27);
         guestButton.setVisible(false);
@@ -262,9 +263,9 @@ public class WelcomePanel extends Panel implements ActionListener {
         l.setVisible(true);
 
         /* Register button */
-        registerButton = new DwoButton(TextMapper.getText(TextMapper.GUIW_BTN_REGISTER), GuiConstants.SUB_BACKGROUND);
+        registerButton = new JButton(TextMapper.getText(TextMapper.GUIW_BTN_REGISTER));//, GuiConstants.SUB_BACKGROUND);
         fm = registerButton.getFontMetrics(registerButton.getFont());
-        registerButton.setSize(fm.stringWidth(registerButton.getLabel()) + 20, fm.getHeight() + 10);
+        registerButton.setSize(registerButton.getPreferredSize());
         registerButton.setLocation((p.getSize().width / 2)
                 - (registerButton.getSize().width / 2), 27);
         registerButton.setVisible(false);
