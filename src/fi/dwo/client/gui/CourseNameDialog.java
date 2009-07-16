@@ -21,6 +21,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
@@ -42,8 +43,8 @@ public class CourseNameDialog extends Dialog implements ActionListener, WindowLi
     private TextField name;
     private TextArea description;
     
-    private DwoButton okButton;
-    private DwoButton cancelButton;
+    private JButton okButton;
+    private JButton cancelButton;
     
     public CourseNameDialog(Component owner, String windowTitle, String courseName, String courseDescription) {
         super(DwoHelper.getFrameForComponent(owner), windowTitle, true);
@@ -96,15 +97,15 @@ public class CourseNameDialog extends Dialog implements ActionListener, WindowLi
         contentPane.setSize(360, 220);
 
         /* Register button */
-        okButton = new DwoButton(TextMapper.getText(TextMapper.BTN_OK), GuiConstants.MAIN_BACKGROUND);
+        okButton = new JButton(TextMapper.getText(TextMapper.BTN_OK));//, GuiConstants.MAIN_BACKGROUND);
         fm = okButton.getFontMetrics(okButton.getFont());
-        okButton.setSize(fm.stringWidth(okButton.getLabel()) + 20, fm.getHeight() + 10);
+        okButton.setSize(okButton.getPreferredSize());
         okButton.addActionListener(this);
 
         /* Reset button */
-        cancelButton = new DwoButton(TextMapper.getText(TextMapper.BTN_CANCEL), GuiConstants.MAIN_BACKGROUND);
+        cancelButton = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));//, GuiConstants.MAIN_BACKGROUND);
         fm = cancelButton.getFontMetrics(cancelButton.getFont());
-        cancelButton.setSize(fm.stringWidth(cancelButton.getLabel()) + 20, fm.getHeight() + 10);
+        cancelButton.setSize(cancelButton.getPreferredSize());
         cancelButton.addActionListener(this);
 
         okButton.setLocation((contentPane.getSize().width / 2)

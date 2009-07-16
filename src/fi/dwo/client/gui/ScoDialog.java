@@ -19,6 +19,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.text.MessageFormat;
 
+import javax.swing.JButton;
+
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.UserGroup;
 import fi.dwo.client.system.TextMapper;
@@ -33,7 +35,7 @@ public class ScoDialog extends Dialog implements ActionListener, WindowListener 
 
     private ScoPanel scoPanel;
 
-    private DwoButton closeButton;
+    private JButton closeButton;
 
     /**
      * Creates a new instance of a ScoDialog. It shows the sco, made by an user.
@@ -48,10 +50,10 @@ public class ScoDialog extends Dialog implements ActionListener, WindowListener 
         this.setLayout(null);
         scoPanel = sp;
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
-        closeButton = new DwoButton(TextMapper.getText(TextMapper.BTN_CLOSE));
+        closeButton = new JButton(TextMapper.getText(TextMapper.BTN_CLOSE));
 
         FontMetrics fm = closeButton.getFontMetrics(closeButton.getFont());
-        closeButton.setSize(fm.stringWidth(closeButton.getLabel()) + 20, fm.getHeight() + 10);
+        closeButton.setSize(closeButton.getPreferredSize());
         closeButton.addActionListener(this);
 
         this.pack();

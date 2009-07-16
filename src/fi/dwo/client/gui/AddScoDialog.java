@@ -25,6 +25,7 @@ import java.util.Hashtable;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -50,11 +51,11 @@ public class AddScoDialog extends Dialog implements ActionListener,
     private AppletConfig[] appletConfigs;
     private AppletConfig[] selectedConfigs;
 
-    private DwoButton okButton;
+    private JButton okButton;
 
-    private DwoButton cancelButton;
+    private JButton cancelButton;
 
-    private DwoButton previewButton;
+    private JButton previewButton;
 
     private Hashtable radioApplet;
 
@@ -157,31 +158,26 @@ public class AddScoDialog extends Dialog implements ActionListener,
         selectChar(null);
 
         /* Preview Button */
-        previewButton = new DwoButton(TextMapper
+        previewButton = new JButton(TextMapper
                 .getText(TextMapper.GUISDLG_BTN_PREVIEW_SCO));
-        fm = previewButton.getFontMetrics(previewButton.getFont());
-        previewButton.setSize(fm.stringWidth(previewButton.getLabel()) + 20, fm
-                .getHeight() + 10);
+        previewButton.setSize(previewButton.getPreferredSize());
         previewButton.setLocation(10, 320-TOP);
         previewButton.addActionListener(this);
         contentPane.add(previewButton);
 
         /* Cancel button */
-        cancelButton = new DwoButton(TextMapper.getText(TextMapper.BTN_CANCEL));
-        fm = cancelButton.getFontMetrics(cancelButton.getFont());
-        cancelButton.setSize(fm.stringWidth(cancelButton.getLabel()) + 20, fm
-                .getHeight() + 10);
+        cancelButton = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));
+        cancelButton.setSize(cancelButton.getPreferredSize());
         cancelButton.setLocation(contentPane.getSize().width - contentPane.getInsets().right
                 - cancelButton.getSize().width - 15, 320-TOP);
         cancelButton.addActionListener(this);
         contentPane.add(cancelButton);
 
         /* Ok button */
-        okButton = new DwoButton(TextMapper
+        okButton = new JButton(TextMapper
                 .getText(TextMapper.GUISDLG_BTN_ADD_SCO));
         fm = okButton.getFontMetrics(okButton.getFont());
-        okButton.setSize(fm.stringWidth(okButton.getLabel()) + 20, fm
-                .getHeight() + 10);
+        okButton.setSize(okButton.getPreferredSize());
         okButton.setLocation(cancelButton.getLocation().x
                 - okButton.getSize().width - 5, 320-TOP);
         okButton.addActionListener(this);

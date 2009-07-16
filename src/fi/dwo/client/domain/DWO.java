@@ -1470,6 +1470,7 @@ private static boolean isValidEmail(String email) {
         User u =  null; // Guest.instance();
         try
      {
+         DwoHelper.setContact(fidentity.getRole().equals(Fidentity.CONTACTDOCENT));
          u = PersistenceFacade.instance().login(username);
          u.setFirstname(fidentity.getFirstName());
          u.setMiddleName(fidentity.getMiddleName());
@@ -1631,7 +1632,7 @@ System.out.println(schoolUid);
          if (role == null)
              return null;
          // TODO is deze mapping compleet?
-         if ("docent".equals(role))
+         if (role.indexOf("docent")>=0) // docent en contactdocent
              role = "TEACHER";
          if ("leerling".equals(role))
              role = "STUDENT";

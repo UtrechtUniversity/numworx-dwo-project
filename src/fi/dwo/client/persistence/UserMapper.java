@@ -10,6 +10,7 @@ import java.util.Hashtable;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.dwo.client.domain.ContactDocent;
+import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.SchoolClass;
 import fi.dwo.client.domain.SchoolGroup;
@@ -60,7 +61,8 @@ public class UserMapper extends XmlRpcMapper {
             if (data.containsKey("groupname")) {
                 if (((String) data.get("groupname")).equals("TEACHER")) {
                     u = new Teacher();
-                    //u = new ContactDocent();
+                    if (DwoHelper.isContact())
+                    	u = new ContactDocent();
                 }
                 else if (((String) data.get("groupname")).equals("ADMIN")) {
                     u = new Admin();

@@ -23,6 +23,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 
+import javax.swing.JButton;
+
 
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.School;
@@ -59,9 +61,9 @@ public class AddSchoolDialog extends Dialog implements ActionListener,
     
     private TextField teacherPasswdField;
 
-    private DwoButton okButton;
+    private JButton okButton;
 
-    private DwoButton cancelButton;
+    private JButton cancelButton;
 
     public AddSchoolDialog(Component owner, String windowTitle, String schoolName, String schoolLogin,
             String studentPasswd, String teacherPasswd) {
@@ -176,19 +178,15 @@ public class AddSchoolDialog extends Dialog implements ActionListener,
         this.setSize(460, 280);
 
         /* Register button */
-        okButton = new DwoButton(TextMapper.getText(TextMapper.BTN_OK),
-                GuiConstants.MAIN_BACKGROUND);
-        fm = okButton.getFontMetrics(okButton.getFont());
-        okButton.setSize(fm.stringWidth(okButton.getLabel()) + 20, fm
-                .getHeight() + 10);
+        okButton = new JButton(TextMapper.getText(TextMapper.BTN_OK));//,GuiConstants.MAIN_BACKGROUND);
+        //fm = okButton.getFontMetrics(okButton.getFont());
+        okButton.setSize(okButton.getPreferredSize());
         okButton.addActionListener(this);
 
         /* Reset button */
-        cancelButton = new DwoButton(TextMapper.getText(TextMapper.BTN_CANCEL),
-                GuiConstants.MAIN_BACKGROUND);
-        fm = cancelButton.getFontMetrics(cancelButton.getFont());
-        cancelButton.setSize(fm.stringWidth(cancelButton.getLabel()) + 20, fm
-                .getHeight() + 10);
+        cancelButton = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));//, GuiConstants.MAIN_BACKGROUND);
+        //fm = cancelButton.getFontMetrics(cancelButton.getFont());
+        cancelButton.setSize(cancelButton.getPreferredSize());
         cancelButton.addActionListener(this);
 
         okButton.setLocation(

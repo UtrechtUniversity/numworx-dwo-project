@@ -178,7 +178,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         //fm = previewButton.getFontMetrics(previewButton.getFont());
         //previewButton.setSize(90, fm.getHeight() + 10);
         //previewButton.setLocation(20, 20);
-        //previewButton.addActionListener(this);
+        previewButton.addActionListener(this);
         buttonPanel.add(previewButton);
         
         if(sco.getAppletID()==12) previewButton.setEnabled(false);// geen preview mogelijk bij popupurlapplet
@@ -217,7 +217,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 		        //fm = cancelButton.getFontMetrics(cancelButton.getFont());
 		        //exportScormButton.setSize(90, fm.getHeight() + 10);
 		        //exportScormButton.setLocation(cancelButton.getLocation().x + resetButton.getSize().width + 10, 20);
-		        //exportScormButton.addActionListener(this);
+		        exportScormButton.addActionListener(this);
 		        buttonPanel.add(exportScormButton);
         	}
 	        if(DwoHelper.isAdminLoggedIn() || DwoHelper.isAppletExportLoggedIn() && (sco.getCourse().getDwoProfile()==13 || sco.getCourse().getDwoProfile()==20 || sco.getCourse().getDwoProfile()==27)) 
@@ -225,7 +225,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 		        //fm = cancelButton.getFontMetrics(cancelButton.getFont());
 		        //exportAppletButton.setSize(90, fm.getHeight() + 10);
 		        //exportAppletButton.setLocation(cancelButton.getLocation().x + resetButton.getSize().width + 10, 20);
-		        //exportAppletButton.addActionListener(this);
+		        exportAppletButton.addActionListener(this);
 		        buttonPanel.add(exportAppletButton);
 	    	}
 	        

@@ -6,6 +6,8 @@ import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.Panel;
 
+import javax.swing.JOptionPane;
+
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.fidentity.Fidentity;
 import fi.beans.jvmchecker.JVMChecker;
@@ -253,7 +255,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
         try {
             return (Group[]) PersistenceFacade.instance().get(Group.class);
         } catch (PersistenceException e) {
-            DwoMessageDialog.showMessageDialog(this, e.getMessage());
+            JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
     }
@@ -536,7 +538,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	            GuiCreator.instance().login(userName, passWord);
 	            return;
 	        } catch (LoginException exc) {
-	            DwoMessageDialog.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), DwoMessageDialog.ERROR_MESSAGE);
+	        	JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
 	        }
         }
         else if(guestUser) {
@@ -544,7 +546,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	            GuiCreator.instance().login();
 	            return;
 	        } catch (LoginException exc) {
-	            DwoMessageDialog.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), DwoMessageDialog.ERROR_MESSAGE);
+	        	JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
 	        }
         }
         
@@ -559,7 +561,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
         try {
 			gc.login();
 		} catch (LoginException e) {
-            DwoMessageDialog.showMessageDialog(this, e.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), DwoMessageDialog.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, e.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
 		}
     }
     /**
@@ -854,7 +856,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 		        try {
 		            return PersistenceFacade.instance().LMSGetValue(sco, user, iDataModelElement);
 		        } catch (PersistenceException e) {
-		            DwoMessageDialog.showMessageDialog(this, e.getMessage());
+		        	JOptionPane.showMessageDialog(this, e.getMessage());
 		            return "";
 		        }
 	        }
@@ -879,7 +881,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	        try {
 	            return PersistenceFacade.instance().LMSSetValue(sco, currentUser, iDataModelElement, iValue);
 	        } catch (PersistenceException e) {
-	            DwoMessageDialog.showMessageDialog(this, e.getMessage());
+	        	JOptionPane.showMessageDialog(this, e.getMessage());
 	            return Boolean.FALSE.toString();
 	        }
 

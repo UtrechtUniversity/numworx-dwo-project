@@ -41,7 +41,7 @@ public final class DwoHelper {
     
     private static boolean isApplication = true; // default als je setApplet niet aanroept.
     
-    public static boolean umpc;
+    public static boolean umpc, contact;
     
     public static boolean scormExportLoggedIn, appletExportLoggedIn, adminLoggedIn;
 
@@ -178,4 +178,18 @@ public final class DwoHelper {
         if(im!=null)loadedImages.put(image,im);
         return im;
     }
+
+	/**
+	 * @return the contact
+	 */
+	public static boolean isContact() {
+		return contact;
+	}
+
+	/**
+	 * @param contact the contact to set
+	 */
+	public static void setContact(boolean contact) {
+		DwoHelper.contact = contact;
+	}
 }
