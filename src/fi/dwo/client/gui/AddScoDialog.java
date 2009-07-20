@@ -22,6 +22,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Hashtable;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
@@ -80,10 +81,11 @@ public class AddScoDialog extends Dialog implements ActionListener,
                 TextMapper.getText(TextMapper.GUISDLG_TTL_ADD_SCO), true);
         Container contentPane = this;
         final int TOP = 25, BOTTOM=4; 	// gezien onder WXP
-        setLayout(new FlowLayout());contentPane = new Panel(null); add(contentPane);
+        setLayout(new FlowLayout());contentPane = new JPanel(null); add(contentPane);
         contentPane.setLayout(null);
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         contentPane.setSize(600, 380-TOP-BOTTOM);
+        contentPane.setPreferredSize(contentPane.getSize());
         confirmed = false;
         this.appletConfigs = appletConfigs;
         selectedConfigs = appletConfigs;
@@ -96,7 +98,9 @@ public class AddScoDialog extends Dialog implements ActionListener,
         l.setSize(fm.stringWidth(l.getText()) + 10, 20);
         contentPane.add(l);
         
-        Panel panel = new BorderedPanel(null, BorderedPanel.NORTH | BorderedPanel.SOUTH);
+        //Panel panel = new BorderedPanel(null, BorderedPanel.NORTH | BorderedPanel.SOUTH);
+        JPanel panel = new JPanel(null);
+        panel.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.black));
         panel.setSize(contentPane.getSize().width, 20);
         panel.setLocation(0, 45-TOP);
         contentPane.add(panel);

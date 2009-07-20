@@ -27,6 +27,7 @@ import fi.beans.tooltip.ToolTipManager;
  * MAIN_BACKGROUND
  * 
  * @author M.J.B. Kupers
+ * @deprecated gebruik JButton
  */
 public class DwoButton extends BorderedPanel implements MouseListener, FocusListener, KeyListener, ToolTipIF {
     private Vector actionListeners = new Vector();

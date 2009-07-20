@@ -16,8 +16,13 @@ import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.system.LoginException;
@@ -34,9 +39,9 @@ import fi.beans.copyright.FIButton;
  */
 public class WelcomePanel extends Panel implements ActionListener {
 
-    private TextField loginname;
+    private JTextField loginname;
 
-    private TextField password;
+    private JPasswordField password;
 
     private JButton loginButton;
 
@@ -64,6 +69,7 @@ public class WelcomePanel extends Panel implements ActionListener {
 			{	"versie-info: " + fi.dwo.VERSION.VERSION,
 				"auteur: Peter Boon",
 				"programmeur: M.J.B. Kupers",
+				"Wim van Velthoven",
 				"Freudenthal Instituut",
 				"www.fi.uu.nl",
 				""
@@ -72,8 +78,8 @@ public class WelcomePanel extends Panel implements ActionListener {
 		add(fiButton);
 
         /* Variables used to create items */
-        BorderedPanel p;
-        Label l;
+        JPanel p;
+        JLabel l;
         FontMetrics fm;
 
         /* Add FI logo */
@@ -105,7 +111,7 @@ public class WelcomePanel extends Panel implements ActionListener {
         
         /* Welcome Label */
         //l = new Label(TextMapper.getText(TextMapper.GUIW_WELCOME) + "!");
-        l = new Label(TextMapper.getText(TextMapper.GUIM_FI_NAME));
+        l = new JLabel(TextMapper.getText(TextMapper.GUIM_FI_NAME));
         l.setFont(new Font("SansSerif", Font.BOLD, 26));
         l.setForeground(new Color(3,65,123));
         fm = l.getFontMetrics(l.getFont());
@@ -115,7 +121,7 @@ public class WelcomePanel extends Panel implements ActionListener {
         if(GuiConstants.GUI_IMAGE_BG) remove(l);
         l.setVisible(true);
         
-        l = new Label(TextMapper.getText(TextMapper.GUIM_DWO_SHORT));
+        l = new JLabel(TextMapper.getText(TextMapper.GUIM_DWO_SHORT));
         l.setFont(GuiConstants.HEADER_TEXT);
         l.setForeground(new Color(3,65,123));
         fm = l.getFontMetrics(l.getFont());
@@ -125,7 +131,7 @@ public class WelcomePanel extends Panel implements ActionListener {
         if(GuiConstants.GUI_IMAGE_BG) remove(l);
         l.setVisible(true);
         
-        l = new Label(TextMapper.getText(TextMapper.GUIM_DWO_FULL));
+        l = new JLabel(TextMapper.getText(TextMapper.GUIM_DWO_FULL));
         l.setFont(new Font("SansSerif", Font.BOLD, 26));
         fm = l.getFontMetrics(l.getFont());
         l.setForeground(new Color(3,65,123));
@@ -136,16 +142,17 @@ public class WelcomePanel extends Panel implements ActionListener {
         l.setVisible(true);
 
         /* Add Login-panel */
-        p = new BorderedPanel(null);
+        p = new JPanel(null);
+        p.setBorder(BorderFactory.createLineBorder(new Color(52,90,126)));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBorderColor(new Color(52,90,126));
+        //p.setBorderColor(new Color(52,90,126));
         p.setBounds(getSize().width / 2 - 130, 110, 260, 115);
         p.setVisible(false);
         this.add(p);
         p.setVisible(true);
 
         /* Inlogdata label */
-        l = new Label(TextMapper.getText(TextMapper.GUIW_LOGINDATA) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIW_LOGINDATA) + ":");
         l.setForeground(GuiConstants.RED_COLOR);
         l.setFont(GuiConstants.RED_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -155,7 +162,7 @@ public class WelcomePanel extends Panel implements ActionListener {
         l.setVisible(true);
 
         /* Username label */
-        l = new Label(TextMapper.getText(TextMapper.GUIW_USERNAME) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIW_USERNAME) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -166,7 +173,7 @@ public class WelcomePanel extends Panel implements ActionListener {
         l.setVisible(true);
 
         /* Username field */
-        loginname = new TextField();
+        loginname = new JTextField();
         loginname.setBounds(130, 28, 120, 20);
         loginname.addActionListener(this);
         loginname.setVisible(false);
@@ -174,7 +181,7 @@ public class WelcomePanel extends Panel implements ActionListener {
         loginname.setVisible(true);
 
         /* Password label */
-        l = new Label(TextMapper.getText(TextMapper.GUIW_PASSWORD) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIW_PASSWORD) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -185,7 +192,7 @@ public class WelcomePanel extends Panel implements ActionListener {
         l.setVisible(true);
 
         /* Password field */
-        password = new TextField();
+        password = new JPasswordField();
         password.setBounds(130, 53, 120, 20);
         password.setEchoChar('*');
         password.addActionListener(this);
@@ -204,16 +211,17 @@ public class WelcomePanel extends Panel implements ActionListener {
         loginButton.setVisible(true);
 
         /* Add GuestLogin-panel */
-        p = new BorderedPanel(null);
+        p = new JPanel(null);
+        p.setBorder(BorderFactory.createLineBorder(new Color(52,90,126)));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         p.setBounds(getSize().width / 2 - 130, 235, 260, 85);
-        p.setBorderColor(new Color(52,90,126));
+        //p.setBorderColor(new Color(52,90,126));
         p.setVisible(false);
         this.add(p);
         p.setVisible(true);
 
         /* Guestlogin label */
-        l = new Label(TextMapper.getText(TextMapper.GUIW_GUESTLOGIN) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIW_GUESTLOGIN) + ":");
         l.setForeground(GuiConstants.RED_COLOR);
         l.setFont(GuiConstants.RED_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -233,8 +241,7 @@ public class WelcomePanel extends Panel implements ActionListener {
         guestButton.setVisible(true);
 
         /* GuestLogin message */
-        l = new Label(TextMapper.getText(TextMapper.GUIW_MSG_WORK_NOT_SAVE)
-                + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIW_MSG_WORK_NOT_SAVE));
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setSize(fm.stringWidth(l.getText()), fm.getHeight());
@@ -244,16 +251,17 @@ public class WelcomePanel extends Panel implements ActionListener {
         l.setVisible(true);
 
         /* Add Register-panel */
-        p = new BorderedPanel(null);
+        p = new JPanel(null);
+        p.setBorder(BorderFactory.createLineBorder(new Color(52,90,126)));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         p.setBounds(getSize().width / 2 - 130, 330, 260, 85);
-        p.setBorderColor(new Color(52,90,126));
+        //p.setBorderColor(new Color(52,90,126));
         p.setVisible(false);
         this.add(p);
         p.setVisible(true);
 
         /* Register label */
-        l = new Label(TextMapper.getText(TextMapper.GUIW_REGISTER) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIW_REGISTER) + ":");
         l.setForeground(GuiConstants.RED_COLOR);
         l.setFont(GuiConstants.RED_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -273,8 +281,7 @@ public class WelcomePanel extends Panel implements ActionListener {
         registerButton.setVisible(true);
 
         /* Register message */
-        l = new Label(TextMapper.getText(TextMapper.GUIW_MSG_REGISTER_NEW)
-                + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIW_MSG_REGISTER_NEW));
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setSize(fm.stringWidth(l.getText()), fm.getHeight());

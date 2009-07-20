@@ -15,7 +15,7 @@ import java.awt.Panel;
  * The user can define the location of the borders (NORTH, SOUTH, EAST, WEST).
  * 
  * @author M.J.B. Kupers
- *  
+ * @deprecated gebruik JPanel en setBorder 
  */
 public class BorderedPanel extends Panel {
 

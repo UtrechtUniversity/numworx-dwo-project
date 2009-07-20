@@ -5,6 +5,7 @@ package fi.dwo.client.gui;
 
 import java.awt.Choice;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -12,15 +13,20 @@ import java.awt.Label;
 import java.awt.MediaTracker;
 import java.awt.Panel;
 import java.awt.Point;
-import java.awt.TextField;
+//import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.Group;
@@ -36,21 +42,21 @@ import fi.dwo.client.system.TextMapper;
 public class RegisterPanel extends Panel implements ActionListener {
     private Group groupList[];
 
-    private TextField username;
+    private JTextField username;
 
-    private TextField password;
+    private JPasswordField password;
 
-    private TextField repassword;
+    private JPasswordField repassword;
 
-    private TextField firstname;
+    private JTextField firstname;
 
-    private TextField middlename;
+    private JTextField middlename;
 
-    private TextField lastname;
+    private JTextField lastname;
 
-    private TextField email;
+    private JTextField email;
 
-    private TextField schoollogin;
+    private JTextField schoollogin;
 
     private JPasswordField schoolpassword;
 
@@ -60,7 +66,7 @@ public class RegisterPanel extends Panel implements ActionListener {
 
     private JButton backButton;
 
-    private Choice groupChoice;
+    private JComboBox groupChoice;
 
     /**
      * Creates a new RegisterPanel. At the registerpanel, a user can register
@@ -74,11 +80,12 @@ public class RegisterPanel extends Panel implements ActionListener {
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setLayout(null);
         this.setSize(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
+        setPreferredSize(getSize());
 
         /* Variables used to create items */
         FontMetrics fm;
-        Panel p;
-        Label l;
+        JPanel p;
+        JLabel l;
 
         /* Add FI logo */
         Image fiLogo;
@@ -96,7 +103,7 @@ public class RegisterPanel extends Panel implements ActionListener {
         if(GuiConstants.GUI_IMAGE_BG) remove(ip);
 
         /* Register Label */
-        l = new Label(TextMapper.getText(TextMapper.GUIR_REGISTER));
+        l = new JLabel(TextMapper.getText(TextMapper.GUIR_REGISTER));
         l.setFont(GuiConstants.HEADER_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setBounds(ip.getLocation().x + ip.getSize().width + 10, 70, fm.stringWidth(l.getText()), fm.getHeight());
@@ -104,13 +111,14 @@ public class RegisterPanel extends Panel implements ActionListener {
         if(GuiConstants.GUI_IMAGE_BG) remove(l);
 
         /* Add Register-panel */
-        p = new BorderedPanel(null);
+        p = new JPanel(null);
+        p.setBorder(BorderFactory.createLineBorder(getForeground()));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         p.setBounds(getSize().width / 2 - 155, 140, 310, 105);
         this.add(p);
 
         /* registerinfo label */
-        l = new Label(TextMapper.getText(TextMapper.GUIR_REGISTERINFO) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIR_REGISTERINFO) + ":");
         l.setForeground(GuiConstants.RED_COLOR);
         l.setFont(GuiConstants.RED_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -118,7 +126,7 @@ public class RegisterPanel extends Panel implements ActionListener {
         p.add(l);
 
         /* Username label */
-        l = new Label(TextMapper.getText(TextMapper.GUIR_USERNAME) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIR_USERNAME) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -127,7 +135,7 @@ public class RegisterPanel extends Panel implements ActionListener {
         p.add(l);
 
         /* Username field */
-        username = new TextField();
+        username = new JTextField();
         username.setBounds(160, 28, 120, 20);
         p.add(username);
 
@@ -137,7 +145,7 @@ public class RegisterPanel extends Panel implements ActionListener {
         p.add(l);
 
         /* Password label */
-        l = new Label(TextMapper.getText(TextMapper.GUIR_PASSWORD) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIR_PASSWORD) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -146,7 +154,7 @@ public class RegisterPanel extends Panel implements ActionListener {
         p.add(l);
 
         /* Password field */
-        password = new TextField();
+        password = new JPasswordField();
         password.setBounds(160, 53, 120, 20);
         password.setEchoChar('*');
         p.add(password);
@@ -157,7 +165,7 @@ public class RegisterPanel extends Panel implements ActionListener {
         p.add(l);
 
         /* RePassword label */
-        l = new Label(TextMapper.getText(TextMapper.GUIR_RE_PASSWORD) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIR_RE_PASSWORD) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -166,7 +174,7 @@ public class RegisterPanel extends Panel implements ActionListener {
         p.add(l);
 
         /* RePassword field */
-        repassword = new TextField();
+        repassword = new JPasswordField();
         repassword.setBounds(160, 78, 120, 20);
         repassword.setEchoChar('*');
         p.add(repassword);
@@ -177,13 +185,14 @@ public class RegisterPanel extends Panel implements ActionListener {
         p.add(l);
 
         /* Add PersonalInfo-panel */
-        p = new BorderedPanel(null);
+        p = new JPanel(null);
+        p.setBorder(BorderFactory.createLineBorder(getForeground()));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         p.setBounds(getSize().width / 2 - 155, 244, 310, 130);
         this.add(p);
 
         /* personalinfo label */
-        l = new Label(TextMapper.getText(TextMapper.GUIR_PERSONALINFO) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIR_PERSONALINFO) + ":");
         l.setForeground(GuiConstants.RED_COLOR);
         l.setFont(GuiConstants.RED_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -191,7 +200,7 @@ public class RegisterPanel extends Panel implements ActionListener {
         p.add(l);
 
         /* Firstname label */
-        l = new Label(TextMapper.getText(TextMapper.GUIR_FIRSTNAME) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIR_FIRSTNAME) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -200,7 +209,7 @@ public class RegisterPanel extends Panel implements ActionListener {
         p.add(l);
 
         /* Firstname field */
-        firstname = new TextField();
+        firstname = new JTextField();
         firstname.setBounds(160, 28, 120, 20);
         p.add(firstname);
 
@@ -210,7 +219,7 @@ public class RegisterPanel extends Panel implements ActionListener {
         p.add(l);
 
         /* Middlename label */
-        l = new Label(TextMapper.getText(TextMapper.GUIR_MIDDLENAME) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIR_MIDDLENAME) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -219,12 +228,12 @@ public class RegisterPanel extends Panel implements ActionListener {
         p.add(l);
 
         /* Middlename field */
-        middlename = new TextField();
+        middlename = new JTextField();
         middlename.setBounds(160, 53, 120, 20);
         p.add(middlename);
 
         /* Lastname label */
-        l = new Label(TextMapper.getText(TextMapper.GUIR_LASTNAME) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIR_LASTNAME) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -233,7 +242,7 @@ public class RegisterPanel extends Panel implements ActionListener {
         p.add(l);
 
         /* Lastname field */
-        lastname = new TextField();
+        lastname = new JTextField();
         lastname.setBounds(160, 78, 120, 20);
         p.add(lastname);
 
@@ -243,7 +252,7 @@ public class RegisterPanel extends Panel implements ActionListener {
         p.add(l);
 
         /* Email label */
-        l = new Label(TextMapper.getText(TextMapper.GUIR_EMAIL) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIR_EMAIL) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -252,7 +261,7 @@ public class RegisterPanel extends Panel implements ActionListener {
         p.add(l);
 
         /* Email field */
-        email = new TextField();
+        email = new JTextField();
         email.setBounds(160, 103, 120, 20);
         p.add(email);
 
@@ -262,13 +271,14 @@ public class RegisterPanel extends Panel implements ActionListener {
         p.add(l);
 
         /* Add School-panel */
-        p = new BorderedPanel(null);
+        p = new JPanel(null);
+        p.setBorder(BorderFactory.createLineBorder(Color.black));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         p.setBounds(getSize().width / 2 - 155, 373, 310, 115);
         this.add(p);
 
         /* schoolinfo label */
-        l = new Label(TextMapper.getText(TextMapper.GUIR_SCHOOLINFO) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIR_SCHOOLINFO) + ":");
         l.setForeground(GuiConstants.RED_COLOR);
         l.setFont(GuiConstants.RED_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -276,7 +286,7 @@ public class RegisterPanel extends Panel implements ActionListener {
         p.add(l);
 
         /* schoolinfo sublabel */
-        l = new Label(TextMapper.getText(TextMapper.GUIR_MSG_PROVIDED_SCHOOL)
+        l = new JLabel(TextMapper.getText(TextMapper.GUIR_MSG_PROVIDED_SCHOOL)
                 + ":");
         l.setForeground(GuiConstants.RED_COLOR);
         l.setFont(GuiConstants.SMALL_TEXT);
@@ -285,7 +295,7 @@ public class RegisterPanel extends Panel implements ActionListener {
         p.add(l);
 
         /* Schoologin label */
-        l = new Label(TextMapper.getText(TextMapper.GUIR_SCHOOLLOGIN) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIR_SCHOOLLOGIN) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -294,12 +304,12 @@ public class RegisterPanel extends Panel implements ActionListener {
         p.add(l);
 
         /* Schoologin field */
-        schoollogin = new TextField();
+        schoollogin = new JTextField();
         schoollogin.setBounds(160, 38, 120, 20);
         p.add(schoollogin);
 
         /* Group label */
-        l = new Label(TextMapper.getText(TextMapper.GUIR_SCHOOLGROUP) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIR_SCHOOLGROUP) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -308,17 +318,19 @@ public class RegisterPanel extends Panel implements ActionListener {
         p.add(l);
 
         /* Password field */
-        groupChoice = new Choice();
-        groupChoice.add(TextMapper.getText(TextMapper.GUIR_OPT_SELECT_GROUP));
+        groupChoice = new JComboBox();
+        groupChoice.addItem(TextMapper.getText(TextMapper.GUIR_OPT_SELECT_GROUP));
         for (int i = 0; i < groupList.length; i++) {
             //if(!groupList[i].getName().equals("ADMIN"))
-            groupChoice.add(TextMapper.getText(groupList[i].getName()));
+            groupChoice.addItem(TextMapper.getText(groupList[i].getName()));
         }
-        groupChoice.setBounds(160, 63, 120, 20);
+        groupChoice.setSize(groupChoice.getPreferredSize());
+// past niet op de mac 
+        groupChoice.setBounds(160, 63, Math.max(120, groupChoice.getWidth()), 20);
         p.add(groupChoice);
 
         /* Schoolpassword label */
-        l = new Label(TextMapper.getText(TextMapper.GUIR_SCHOOLPASSWORD) + ":");
+        l = new JLabel(TextMapper.getText(TextMapper.GUIR_SCHOOLPASSWORD) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -333,7 +345,8 @@ public class RegisterPanel extends Panel implements ActionListener {
         p.add(schoolpassword);
 
         /* Add Button-panel */
-        p = new BorderedPanel(null);
+        p = new JPanel(null);
+        p.setBorder(BorderFactory.createLineBorder(Color.black));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         p.setBounds(getSize().width / 2 - 155, 487, 310, 35);
         this.add(p);
@@ -379,8 +392,8 @@ public class RegisterPanel extends Panel implements ActionListener {
      * 
      * @return A label with the caption of a asterisk.
      */
-    private Label createMandatoryLabel() {
-        Label mandatoryLabel = new Label("*");
+    private JLabel createMandatoryLabel() {
+        JLabel mandatoryLabel = new JLabel("*");
         mandatoryLabel.setForeground(GuiConstants.RED_COLOR);
         mandatoryLabel.setFont(GuiConstants.RED_TEXT);
         FontMetrics fm = mandatoryLabel.getFontMetrics(mandatoryLabel.getFont());
@@ -430,7 +443,7 @@ public class RegisterPanel extends Panel implements ActionListener {
             lastname.setText("");
             email.setText("");
             schoollogin.setText("");
-            groupChoice.select(0);
+            groupChoice.setSelectedIndex(0);
             schoolpassword.setText("");
             schoolpassword.setVisible(true);
         } else if (e.getSource() == backButton) {
