@@ -79,7 +79,7 @@ public class AddScoDialog extends Dialog implements ActionListener,
     public AddScoDialog(Component owner, AppletConfig[] appletConfigs) {
         super(DwoHelper.getFrameForComponent(owner),
                 TextMapper.getText(TextMapper.GUISDLG_TTL_ADD_SCO), true);
-        Container contentPane = this;
+        JPanel contentPane = null;
         final int TOP = 25, BOTTOM=4; 	// gezien onder WXP
         setLayout(new FlowLayout());contentPane = new JPanel(null); add(contentPane);
         contentPane.setLayout(null);

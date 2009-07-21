@@ -117,6 +117,7 @@ public abstract class GuiConstants {
     		CELL_BACKGROUND = new Color(255,255,200);
 			FI_LOGO_LOCATION = "resources/rekenweb.png";
 			WISWEB_LOGO_SMALL_LOCATION = FI_LOGO_LOCATION; // Dit is REKENWEB!
+			WISWEB_LOGO_LOCATION = FI_LOGO_LOCATION;
 			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 33);
 			GUI_IMAGE_BG = false;
 		} else

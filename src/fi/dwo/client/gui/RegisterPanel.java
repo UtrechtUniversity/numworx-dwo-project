@@ -3,22 +3,15 @@
 
 package fi.dwo.client.gui;
 
-import java.awt.Choice;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Label;
 import java.awt.MediaTracker;
 import java.awt.Panel;
 import java.awt.Point;
-//import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -80,7 +73,7 @@ public class RegisterPanel extends Panel implements ActionListener {
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setLayout(null);
         this.setSize(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
-        setPreferredSize(getSize());
+        //setPreferredSize(getSize()); // Sinds 1.5
 
         /* Variables used to create items */
         FontMetrics fm;
