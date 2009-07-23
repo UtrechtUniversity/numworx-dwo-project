@@ -20,6 +20,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.text.MessageFormat;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -54,6 +55,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         super(DwoHelper.getFrameForComponent(owner), windowTitle, modal);
         Box hbox;
         JPanel contentPane = new JPanel(new BorderLayout(0, 5));
+        contentPane.setBorder(BorderFactory.createEmptyBorder(0,0,5,0));
         setContentPane(contentPane);
         scoPanel = sp;
         contentPane.setBackground(GuiConstants.MAIN_BACKGROUND);
@@ -138,7 +140,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
     }
     
     public static void showScoPreview(Component parent, ScoPanel sp) {
-        ScoDialog sd = new ScoDialog(parent, sp.getSco().getScoName(), "voorbeeld tekst", true, sp);
+        ScoDialog sd = new ScoDialog(parent, sp.getSco().getScoName(), "", true, sp);
         sd.show();        
     }
 

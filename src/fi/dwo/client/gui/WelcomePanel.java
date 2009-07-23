@@ -4,6 +4,7 @@
 package fi.dwo.client.gui;
 
 import java.awt.Color;
+import java.awt.Event;
 import java.awt.Graphics;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -15,6 +16,7 @@ import java.awt.Point;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -146,6 +148,7 @@ public class WelcomePanel extends JPanel implements ActionListener {
 
         /* Add Login-panel */
         p = new JPanel(null);
+        //p.setFocusCycleRoot(true);
         p.setBorder(BorderFactory.createLineBorder(new Color(52,90,126)));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         //p.setBorderColor(new Color(52,90,126));

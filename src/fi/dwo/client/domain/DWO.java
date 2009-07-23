@@ -21,6 +21,8 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Vector;
 
+import javax.swing.JApplet;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
@@ -59,7 +61,7 @@ import fi.dwo.client.system.TextMapper;
  * @author M.J.B. Kupers
  *  
  */
-public class DWO extends Applet implements SCORM12APIInterface, DwoIF  {
+public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 
     private Course currentCourse;
 
@@ -953,7 +955,7 @@ private static boolean isValidEmail(String email) {
         this.setSize(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
 
-        this.setLayout(new BorderLayout());
+        //this.setLayout(new BorderLayout());
         //this.setLayout(null);
         
         if(userName!=null && passWord!=null) {
@@ -991,7 +993,7 @@ private static boolean isValidEmail(String email) {
         panel.setVisible(false);
         panel.setSize(this.getSize());
         panel.setLocation(0, 0);
-        add(panel, BorderLayout.CENTER);
+        setContentPane(panel);//, BorderLayout.CENTER);
         panel.setVisible(true);
         
         
@@ -1011,7 +1013,7 @@ private static boolean isValidEmail(String email) {
      * super. If the mainpanel is made invisible, nothing is showed above the
      * wait string, so the wait string is showed.
      */
-    public void paint(Graphics g) {
+    public void paintx(Graphics g) {
         g.setColor(getBackground());
         g.fillRect(0, 0, getSize().width, getSize().height);
         String text = waitText;
@@ -1040,7 +1042,7 @@ private static boolean isValidEmail(String email) {
         }
         this.panel = p;
         panel.setVisible(false);
-        this.add(panel, 0);
+        setContentPane(panel);
         invalidate();
         panel.setVisible(true);
         panel.requestFocus();
@@ -1183,6 +1185,13 @@ private static boolean isValidEmail(String email) {
         setWait(TextMapper.getText(TextMapper.GUI_WAIT_A_MOMENT));
     }
 
+    private JLabel waitLabel = new JLabel();
+    {
+    	waitLabel.setFont(GuiConstants.HEADER_TEXT);
+    	waitLabel.setHorizontalAlignment(JLabel.CENTER);
+    	waitLabel.setVerticalAlignment(JLabel.CENTER);
+    	
+    }
     /**
      * Shows a wait cursor and the specified wait message to indicate that the
      * user must wait for a while.
@@ -1196,7 +1205,11 @@ private static boolean isValidEmail(String email) {
 	        if (panel != null) {
 	            panel.setVisible(false);
 	        }
-	        if(this.getGraphics()!=null) paint(this.getGraphics());
+	        waitLabel.setText(waitText);
+	        //if(this.getGraphics()!=null) paint(this.getGraphics());
+	        setContentPane(waitLabel);
+	        repaint();
+	        System.out.println(waitText);
         }
         nestedWait++;
     }
@@ -1210,8 +1223,10 @@ private static boolean isValidEmail(String email) {
     public void setReady() {
         if(nestedWait == 1) {
 	        if (panel != null) {
-	            panel.setVisible(true);
+	        	panel.setVisible(true);
+	            setContentPane(panel);
 	            panel.requestFocus();
+	            System.out.println("setReady");
 	        }
 	        setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         }

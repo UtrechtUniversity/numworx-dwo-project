@@ -84,6 +84,7 @@ public class AddScoDialog extends Dialog implements ActionListener,
         setLayout(new FlowLayout());contentPane = new JPanel(null); add(contentPane);
         contentPane.setLayout(null);
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        contentPane.setBackground(GuiConstants.MAIN_BACKGROUND);
         contentPane.setSize(600, 380-TOP-BOTTOM);
         contentPane.setPreferredSize(contentPane.getSize());
         confirmed = false;
@@ -100,6 +101,7 @@ public class AddScoDialog extends Dialog implements ActionListener,
         
         //Panel panel = new BorderedPanel(null, BorderedPanel.NORTH | BorderedPanel.SOUTH);
         JPanel panel = new JPanel(null);
+        panel.setOpaque(false);
         panel.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.black));
         panel.setSize(contentPane.getSize().width, 20);
         panel.setLocation(0, 45-TOP);
