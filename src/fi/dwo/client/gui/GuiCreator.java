@@ -3,6 +3,7 @@
 
 package fi.dwo.client.gui;
 
+import java.awt.Container;
 import java.awt.Panel;
 
 import javax.swing.JOptionPane;
@@ -675,7 +676,7 @@ public class GuiCreator {
      * @param p
      *            The panel to load.
      */
-    public void loadPanel(Panel p) {
+    public void loadPanel(Container p) {
         dwo.setPanel(p);
     }
 

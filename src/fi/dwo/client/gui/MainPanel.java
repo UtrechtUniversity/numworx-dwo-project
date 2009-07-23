@@ -39,7 +39,7 @@ import fi.dwo.client.system.TextMapper;
  * @author M.J.B. Kupers
  *  
  */
-public class MainPanel extends Panel {
+public class MainPanel extends JPanel {
 	
 	static class TopPanel extends JPanel {
 		TopPanel() {
@@ -189,13 +189,12 @@ public class MainPanel extends Panel {
     	guiImage = image;
     }
 
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
     	validate();
     	if(GuiConstants.GUI_IMAGE_BG) {
-	       	Point p = DwoHelper.getComponentLocation(this);
+	       	//Point p = DwoHelper.getComponentLocation(this);
 	       	g.drawImage(guiImage,0,0,null);
     	}       
-    	super.paint(g);
     }
     
     /**

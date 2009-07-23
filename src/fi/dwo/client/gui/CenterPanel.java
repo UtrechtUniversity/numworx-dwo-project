@@ -62,7 +62,7 @@ public class CenterPanel extends JPanel {
     private JScrollPane sp;
     private boolean showMenu;
     
-    private Panel spe;
+    private Container spe;
     
     /**
      * Creates a new CenterPanel. Adds a menu to it and loads a new
@@ -98,11 +98,12 @@ public class CenterPanel extends JPanel {
 		centermainSub.add(RAND);
 		
         sp = new JScrollPane();
-        spe = new Panel(new BorderLayout());
+        //spe = new Panel(new BorderLayout());
 		//sp.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
         sp.setViewportBorder(null);
         sp.setBorder(null);
-        spe.add(sp);
+        //spe.add(sp);
+        spe = sp; // alles is nu jpanel
         centermainSub.add(spe);
 
         CenterSubPanel csp = GuiCreator.instance().getCourseChoisePanel();

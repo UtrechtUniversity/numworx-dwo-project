@@ -3,6 +3,7 @@ package fi.dwo.client.domain;
 import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.Panel;
 
@@ -413,7 +414,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#setPanel(java.awt.Panel)
 	 */
-	public void setPanel(Panel p) {
+	public void setPanel(Container p) {
 		System.out.println(p);
 		setLayout(new GridLayout(1,1));
 		if(scoPanel != null)

@@ -37,7 +37,7 @@ import fi.beans.copyright.FIButton;
  * @author M.J.B. Kupers
  *  
  */
-public class WelcomePanel extends Panel implements ActionListener {
+public class WelcomePanel extends JPanel implements ActionListener {
 
     private JTextField loginname;
 
@@ -56,9 +56,12 @@ public class WelcomePanel extends Panel implements ActionListener {
      *  
      */
     public WelcomePanel() {
+    	super(null, true);
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setLayout(null);
         this.setSize(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
+        this.setPreferredSize(getSize());
+        this.setOpaque(true);
         
 // TODO Let op, fi.dwo.VERSION wordt gegenereerd door de ant target 'version'
 // en daarna (eenmalig) F5 om Version.jave in eclipse te importeren.
@@ -68,7 +71,7 @@ public class WelcomePanel extends Panel implements ActionListener {
         FIButton fiButton = new FIButton("DWO",new String[]
 			{	"versie-info: " + fi.dwo.VERSION.VERSION,
 				"auteur: Peter Boon",
-				"programmeur: M.J.B. Kupers",
+				"programmeur: M.J.B. Kupers,",
 				"Wim van Velthoven",
 				"Freudenthal Instituut",
 				"www.fi.uu.nl",
@@ -296,12 +299,12 @@ public class WelcomePanel extends Panel implements ActionListener {
         
     }
     
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
     	if(GuiConstants.GUI_IMAGE_BG) {
-	       	Point p = DwoHelper.getComponentLocation(this);
+	       	//Point p = DwoHelper.getComponentLocation(this);
 	       	g.drawImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_WELCOME),0,0,null);
-    	}       
-    	super.paint(g);
+    	} else
+    		super.paintComponent(g);
     }
 
     /**

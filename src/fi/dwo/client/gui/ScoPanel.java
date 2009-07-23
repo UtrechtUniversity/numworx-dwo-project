@@ -10,6 +10,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Font;
@@ -46,7 +47,7 @@ import fi.dwo.client.system.TextMapper;
  * @author M.J.B. Kupers
  *  
  */
-public class ScoPanel extends Panel implements CenterSubPanel,
+public class ScoPanel extends JPanel implements CenterSubPanel,
         SCORM12APIInterface, ActionListener {
 
 	private static final Color HOME_COLOR = new Color(3,65,123);
@@ -75,10 +76,14 @@ public class ScoPanel extends Panel implements CenterSubPanel,
      * @param sco The sco wherefrom the applet must be showed.
      */
     public ScoPanel(Sco sco) {
-        super(null);
+        super(new GridLayout(1,1));
         this.sco = sco;
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        this.setOpaque(!GuiConstants.GUI_IMAGE_BG);
+        //this.setBackground(Color.red);
         this.setSize(789, 492);
+        this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        setPreferredSize(new Dimension(1,1)); // Applet volgt de maat der dingen
         applet = sco.getApplet();
         applet.setVisible(false);
         applet.setSize(this.getSize().width-10, this.getSize().height);
@@ -352,13 +357,12 @@ public class ScoPanel extends Panel implements CenterSubPanel,
 //        return p;
     }
 
-    public void paint(Graphics g) {
+    public void xxxpaintComponent(Graphics g) {
     	if(GuiConstants.GUI_IMAGE_BG) {
 	       	Point p = DwoHelper.getComponentLocation(this);
 	       	Image image = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_SCO);
 	       	if(image!=null && p!=null) g.drawImage(image,-p.x,-p.y,null);
-    	}       
-    	super.paint(g);
+    	}
     } 
     
     /**

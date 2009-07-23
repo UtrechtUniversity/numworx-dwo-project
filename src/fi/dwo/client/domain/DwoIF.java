@@ -3,6 +3,7 @@
 
 package fi.dwo.client.domain;
 
+import java.awt.Container;
 import java.awt.Panel;
 
 import fi.dwo.client.gui.CenterSubPanel;
@@ -28,7 +29,7 @@ public interface DwoIF {
      * @param p The panel to set.
      * @see fi.dwo.client.domain.DwoIF#setPanel(java.awt.Panel)
      */
-    public void setPanel(Panel p);
+    public void setPanel(Container p);
 
     /**
      * Logs a user in into the system. The user will be remembered while the

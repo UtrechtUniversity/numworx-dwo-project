@@ -4,6 +4,7 @@
 package fi.dwo.client.domain;
 
 import java.applet.Applet;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
@@ -68,7 +69,7 @@ public class DWO extends Applet implements SCORM12APIInterface, DwoIF  {
 
     private ResultsModule resultsModule;
 
-    private Panel panel;
+    private Container panel;
 
     private String waitText;
     
@@ -1031,7 +1032,7 @@ private static boolean isValidEmail(String email) {
      * @param p The panel to set.
      * @see fi.dwo.client.domain.DwoIF#setPanel(java.awt.Panel)
      */
-    public void setPanel(Panel p) {
+    public void setPanel(Container p) {
         if(panel != null) {
 	        panel.setVisible(false);
 	        this.remove(panel);

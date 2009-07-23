@@ -32,7 +32,7 @@ import fi.dwo.client.system.TextMapper;
  * @author M.J.B. Kupers
  *  
  */
-public class RegisterPanel extends Panel implements ActionListener {
+public class RegisterPanel extends JPanel implements ActionListener {
     private Group groupList[];
 
     private JTextField username;
@@ -394,12 +394,11 @@ public class RegisterPanel extends Panel implements ActionListener {
         return mandatoryLabel;
     }
     
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
     	if(GuiConstants.GUI_IMAGE_BG) {
 	       	Point p = DwoHelper.getComponentLocation(this);
 	       	g.drawImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_WELCOME),0,0,null);
     	}       
-    	super.paint(g);
     }
 
     /**
