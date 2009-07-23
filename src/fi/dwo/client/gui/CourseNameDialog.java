@@ -5,6 +5,7 @@ package fi.dwo.client.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -22,7 +23,13 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import fi.dwo.client.domain.Course;
@@ -34,32 +41,34 @@ import fi.dwo.client.system.TextMapper;
  * @author M.J.B. Kupers
  *
  */
-public class CourseNameDialog extends Dialog implements ActionListener, WindowListener {
+public class CourseNameDialog extends JDialog implements ActionListener {
 
     private String courseName;
     private String courseDescription;
     private boolean confirmed;
     
-    private TextField name;
-    private TextArea description;
+    private JTextField name;
+    private JTextArea description;
     
     private JButton okButton;
     private JButton cancelButton;
     
-    public CourseNameDialog(Component owner, String windowTitle, String courseName, String courseDescription) {
+    CourseNameDialog(Component owner, String windowTitle, String courseName, String courseDescription, String courseNameLabel, String courseDescriptionLabel) {
         super(DwoHelper.getFrameForComponent(owner), windowTitle, true);
-        this.setLayout(new FlowLayout());
-        this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        //this.setLayout(new FlowLayout());
+        //this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.courseName = courseName;
         this.courseDescription = courseDescription;
         confirmed = false;
-        Panel contentPane = new Panel(null);
-        add(contentPane);
-        Label l;
+        JPanel contentPane = new JPanel(null);
+        contentPane.setBackground(GuiConstants.MAIN_BACKGROUND);
+        setContentPane(contentPane);
+        //add(contentPane);
+        JLabel l;
         FontMetrics fm;
         
         /* Coursename label */
-        l = new Label(TextMapper.getText(TextMapper.GUICDLG_COURSE_NAME) + ":");
+        l = new JLabel(TextMapper.getText(courseNameLabel) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -70,14 +79,14 @@ public class CourseNameDialog extends Dialog implements ActionListener, WindowLi
         l.setVisible(true);
 
         /* Coursename field */
-        name = new TextField(courseName);
+        name = new JTextField(courseName);
         name.setBounds(150, 28, 200, 20);
         name.setVisible(false);
         contentPane.add(name);
         name.setVisible(true);
         
         /* Coursedescription label */
-        l = new Label(TextMapper.getText(TextMapper.GUICDLG_COURSE_DESCRIPTION) + ":");
+        l = new JLabel(TextMapper.getText(courseDescriptionLabel) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -88,14 +97,13 @@ public class CourseNameDialog extends Dialog implements ActionListener, WindowLi
         l.setVisible(true);
 
         /* Coursedescription field */
-        description = new TextArea(courseDescription, 0, 0, TextArea.SCROLLBARS_VERTICAL_ONLY);
-        description.setBounds(150, 53, 200, 100);
-        description.setVisible(false);
-        contentPane.add(description);
-        description.setVisible(true);
+        description = new JTextArea(courseDescription, 0, 0);//, TextArea.SCROLLBARS_VERTICAL_ONLY);
+        JScrollPane pane = new JScrollPane(description, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        pane.setBounds(150, 53, 200, 100);
+        contentPane.add(pane);
         
-        contentPane.setSize(360, 220);
-
+        contentPane.setPreferredSize(new Dimension(360, 220));
+        contentPane.setSize(contentPane.getPreferredSize());
         /* Register button */
         okButton = new JButton(TextMapper.getText(TextMapper.BTN_OK));//, GuiConstants.MAIN_BACKGROUND);
         fm = okButton.getFontMetrics(okButton.getFont());
@@ -119,17 +127,18 @@ public class CourseNameDialog extends Dialog implements ActionListener, WindowLi
                 + okButton.getSize().width + 5, 163);
         contentPane.add(cancelButton);
 
-        Point p = owner != null ? owner.getLocation() : new Point(0, 0);
+        Point p = owner != null ? owner.getLocationOnScreen() : new Point(0, 0);
         Dimension parentSize = owner != null ? owner.getSize()
                 : Toolkit.getDefaultToolkit().getScreenSize();
+        pack();
         Dimension mySize = getSize();
         int x = p.x + (parentSize.width - mySize.width) / 2;
         int y = p.y + (parentSize.height - mySize.height) / 2;
 
         setLocation(x, y);
-        this.addWindowListener(this);
-        pack();
-    }
+        //this.addWindowListener(this);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+     }
     
     public static Course addCourse() {
         return addCourse(null);
@@ -139,7 +148,7 @@ public class CourseNameDialog extends Dialog implements ActionListener, WindowLi
      * @return fi.dwo.client.domain.Course
      */
     public static Course addCourse(Component owner) {
-        CourseNameDialog cnd = new CourseNameDialog(owner, TextMapper.getText(TextMapper.GUICDLG_TTL_ADD_COURSE), "", "");
+        CourseNameDialog cnd = new CourseNameDialog(owner, TextMapper.getText(TextMapper.GUICDLG_TTL_ADD_COURSE), "", "", TextMapper.GUICDLG_COURSE_NAME, TextMapper.GUICDLG_COURSE_DESCRIPTION);
         cnd.show();
         if(cnd.isConfirmed()) {
             Course c = GuiCreator.instance().addCourse(cnd.getCourseName(), cnd.getCourseDescription());
@@ -150,7 +159,7 @@ public class CourseNameDialog extends Dialog implements ActionListener, WindowLi
     }
     
     public static boolean editCourse(Course course) {
-        return editCourse(course, null);
+        return editCourse(course, DwoHelper.getApplet());
     }
 
     /**
@@ -158,7 +167,7 @@ public class CourseNameDialog extends Dialog implements ActionListener, WindowLi
      * @return boolean
      */
     public static boolean editCourse(Course course, Component owner) {
-        CourseNameDialog cnd = new CourseNameDialog(owner, TextMapper.getText(TextMapper.GUICDLG_TTL_EDIT_COURSE), course.getName(), course.getDescription());
+        CourseNameDialog cnd = new CourseNameDialog(owner, TextMapper.getText(TextMapper.GUICDLG_TTL_EDIT_COURSE), course.getName(), course.getDescription(), TextMapper.GUICDLG_COURSE_NAME, TextMapper.GUICDLG_COURSE_DESCRIPTION);
         cnd.show();
         if(cnd.isConfirmed()) {
             String oldName = course.getName();
@@ -193,63 +202,6 @@ public class CourseNameDialog extends Dialog implements ActionListener, WindowLi
     }
 
     /**
-     * Invoked when the window is set to be the user's active window, which means the window (or one of its subcomponents) will receive keyboard events.
-     * @param e The WindowEvent.
-     * @see java.awt.event.WindowListener#windowActivated(java.awt.event.WindowEvent)
-     */
-    public void windowActivated(WindowEvent e) {
-    }
-
-    /**
-     * Invoked when a window has been closed as the result of calling dispose on the window.
-     * @param e The WindowEvent.
-     * @see java.awt.event.WindowListener#windowClosed(java.awt.event.WindowEvent)
-     */
-    public void windowClosed(WindowEvent e) {
-    }
-
-    /**
-     * Invoked when the user attempts to close the window from the window's system menu. If the program does not explicitly hide or dispose the window while processing this event, the window close operation will be cancelled.
-     * @param e The WindowEvent.
-     * @see java.awt.event.WindowListener#windowClosing(java.awt.event.WindowEvent)
-     */
-    public void windowClosing(WindowEvent e) {
-        setVisible(false);
-        dispose();
-    }
-
-    /**
-     * Invoked when a window is no longer the user's active window, which means that keyboard events will no longer be delivered to the window or its subcomponents.
-     * @param e The WindowEvent.
-     * @see java.awt.event.WindowListener#windowDeactivated(java.awt.event.WindowEvent)
-     */
-    public void windowDeactivated(WindowEvent e) {
-    }
-
-    /**
-     * Invoked when a window is changed from a minimized to a normal state.
-     * @param e The WindowEvent.
-     * @see java.awt.event.WindowListener#windowDeiconified(java.awt.event.WindowEvent)
-     */
-    public void windowDeiconified(WindowEvent e) {
-    }
-
-    /**
-     * Invoked when a window is changed from a minimized to a normal state.
-     * @param e The WindowEvent.
-     * @see java.awt.event.WindowListener#windowIconified(java.awt.event.WindowEvent)
-     */
-    public void windowIconified(WindowEvent e) {
-    }
-
-    /**
-     * Invoked when a window is changed from a normal to a minimized state. For many platforms, a minimized window is displayed as the icon specified in the window's iconImage property.
-     * @param e The WindowEvent.
-     * @see java.awt.event.WindowListener#windowOpened(java.awt.event.WindowEvent)
-     */
-    public void windowOpened(WindowEvent e) {
-    }
-    /**
      * @return Returns the confirmed.
      */
     public boolean isConfirmed() {
@@ -261,10 +213,17 @@ public class CourseNameDialog extends Dialog implements ActionListener, WindowLi
     public String getCourseDescription() {
         return courseDescription;
     }
+    
+    public String getScoDescription() {
+    	return courseDescription;
+    }
     /**
      * @return Returns the courseName.
      */
     public String getCourseName() {
         return courseName;
+    }
+    public String getScoName() {
+    	return courseName;
     }
 }

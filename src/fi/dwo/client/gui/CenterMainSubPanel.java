@@ -52,8 +52,8 @@ public class CenterMainSubPanel extends JPanel {
         g.drawLine(161, 0, 161, 445);
     }*/
     
-    public void paint(Graphics g) {
-		super.paint(g);
+    public void paintComponent(Graphics g) {
+		super.paintComponent(g);
     	if(!GuiConstants.GUI_IMAGE_BG) {
             double facRed = (double)(255 - GuiConstants.MAIN_BACKGROUND.getRed())/10;
             double facGreen = (double)(255 - GuiConstants.MAIN_BACKGROUND.getGreen())/10;

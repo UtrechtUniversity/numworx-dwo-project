@@ -4,6 +4,7 @@
  */
 package fi.dwo.client.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Dimension;
@@ -19,7 +20,11 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.text.MessageFormat;
 
+import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.UserGroup;
@@ -31,7 +36,7 @@ import fi.dwo.client.system.TextMapper;
  * @author M.J.B. Kupers
  *  
  */
-public class ScoDialog extends Dialog implements ActionListener, WindowListener {
+public class ScoDialog extends JDialog implements ActionListener, WindowListener {
 
     private ScoPanel scoPanel;
 
@@ -47,47 +52,59 @@ public class ScoDialog extends Dialog implements ActionListener, WindowListener 
      */
     public ScoDialog(Component owner, String windowTitle, String title, boolean modal, ScoPanel sp) {
         super(DwoHelper.getFrameForComponent(owner), windowTitle, modal);
-        this.setLayout(null);
+        Box hbox;
+        JPanel contentPane = new JPanel(new BorderLayout(0, 5));
+        setContentPane(contentPane);
         scoPanel = sp;
-        this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        contentPane.setBackground(GuiConstants.MAIN_BACKGROUND);
         closeButton = new JButton(TextMapper.getText(TextMapper.BTN_CLOSE));
 
         FontMetrics fm = closeButton.getFontMetrics(closeButton.getFont());
         closeButton.setSize(closeButton.getPreferredSize());
         closeButton.addActionListener(this);
 
-        this.pack();
-        Insets insets = this.getInsets();
+       // this.pack();
+        Insets insets = contentPane.getInsets();
 
-        Label l = new Label(title);
+        JLabel l = new JLabel(title);
         l.setFont(GuiConstants.RED_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
         l.setLocation(insets.left + 10, insets.top);
         l.setVisible(false);        
-        this.add(l);
+        hbox = Box.createHorizontalBox();
+        hbox.add(Box.createRigidArea(new Dimension(10, fm.getHeight())));
+        hbox.add(l);
+        contentPane.add(hbox, BorderLayout.NORTH);
         l.setVisible(true);
 
         scoPanel.setLocation(insets.left, l.getSize().height
                 + l.getLocation().y + 5);
 //        scoPanel.setVisible(true);
         scoPanel.setVisible(false);
-        this.add(scoPanel);
+        scoPanel.setPreferredSize(scoPanel.getSize());
+        contentPane.add(scoPanel, BorderLayout.CENTER);
         scoPanel.setVisible(true);
 
         closeButton.setLocation(insets.left + 10, scoPanel.getSize().height
                 + scoPanel.getLocation().y + 10);
         closeButton.setVisible(false);
-        this.add(closeButton);
+        hbox = Box.createHorizontalBox();
+        hbox.add(Box.createHorizontalStrut(10));
+        hbox.add(closeButton);
+        hbox.add(Box.createHorizontalGlue());
+        contentPane.add(hbox, BorderLayout.SOUTH);
         closeButton.setVisible(true);
 
-        this.setSize(scoPanel.getSize().width + insets.left + insets.right, closeButton.getSize().height
-                + closeButton.getLocation().y + insets.bottom + 10);
-        // set location to center of parent
+//        contentPane.setSize(scoPanel.getSize().width + insets.left + insets.right, closeButton.getSize().height
+//                + closeButton.getLocation().y + insets.bottom + 10);
+//        // set location to center of parent
+//        contentPane.setPreferredSize(contentPane.getSize());
+        pack();
         int x = 0;
         int y = 0;
 
-        Point p = owner != null ? owner.getLocation() : new Point(0, 0);
+        Point p = owner != null ? owner.getLocationOnScreen() : new Point(0, 0);
         Dimension parentSize = owner != null ? owner.getSize()
                 : Toolkit.getDefaultToolkit().getScreenSize();
         Dimension mySize = getSize();
@@ -102,6 +119,7 @@ public class ScoDialog extends Dialog implements ActionListener, WindowListener 
         }
 
         setLocation(x, y);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         this.addWindowListener(this);
     }
 
@@ -120,7 +138,7 @@ public class ScoDialog extends Dialog implements ActionListener, WindowListener 
     }
     
     public static void showScoPreview(Component parent, ScoPanel sp) {
-        ScoDialog sd = new ScoDialog(parent, sp.getSco().getScoName(), "", true, sp);
+        ScoDialog sd = new ScoDialog(parent, sp.getSco().getScoName(), "voorbeeld tekst", true, sp);
         sd.show();        
     }
 

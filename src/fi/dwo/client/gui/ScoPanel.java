@@ -82,7 +82,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
         this.setOpaque(!GuiConstants.GUI_IMAGE_BG);
         //this.setBackground(Color.red);
         this.setSize(789, 492);
-        this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        this.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
         setPreferredSize(new Dimension(1,1)); // Applet volgt de maat der dingen
         applet = sco.getApplet();
         applet.setVisible(false);

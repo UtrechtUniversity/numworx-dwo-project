@@ -169,7 +169,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
     	                arguments = new String[1];
     	                arguments[0] = schoolClass.getName();
     	                String s = TextMapper.getText(TextMapper.GUIC_NO_STUDENTS);
-    	                Label label = new Label(MessageFormat.format(s, arguments));
+    	                JLabel label = new JLabel(MessageFormat.format(s, arguments));
     	                label.setFont(GuiConstants.SCO_TEXT);
     	                FontMetrics fm = label.getFontMetrics(label.getFont());
     	                label.setSize(fm.stringWidth(label.getText()) + 10, fm.getHeight());

@@ -194,7 +194,8 @@ public class MainPanel extends JPanel {
     	if(GuiConstants.GUI_IMAGE_BG) {
 	       	//Point p = DwoHelper.getComponentLocation(this);
 	       	g.drawImage(guiImage,0,0,null);
-    	}       
+    	} else
+    		super.paintComponent(g);
     }
     
     /**
