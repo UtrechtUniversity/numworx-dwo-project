@@ -2,27 +2,28 @@
 
 package fi.dwo.parameters.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dialog;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
-import java.awt.Frame;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JTextArea;
 
 import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.gui.DwoButton;
 import fi.dwo.client.gui.GuiConstants;
 import fi.dwo.parameters.system.TextMapper;
 
-public class HelpDialog extends Dialog implements ActionListener, WindowListener {
+public class HelpDialog extends JDialog implements ActionListener {
 
     private JButton closeButton;
     /**
@@ -31,16 +32,22 @@ public class HelpDialog extends Dialog implements ActionListener, WindowListener
     public HelpDialog(Component owner, String title, boolean modal,
             String text) {
         super(DwoHelper.getFrameForComponent(owner), title, modal);
-        this.setLayout(null);
-        this.setBackground(GuiConstants.MAIN_BACKGROUND);
-        WrappingLabel wl = new WrappingLabel(text, WrappingLabel.LEFT_ALIGNMENT, WrappingLabel.TOP_ALIGNMENT);
+        Container contentPane = getContentPane();
+        contentPane.setLayout(new BorderLayout(5,5));
+        contentPane.setBackground(GuiConstants.MAIN_BACKGROUND);
+        JTextArea wl = new JTextArea(text);
+        wl.setOpaque(false);
+        wl.setEditable(false);
+        wl.setWrapStyleWord(true);
+        wl.setLineWrap(true);
         wl.setSize(400, 300);
+        wl.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         wl.setFont(ParameterConstants.LABEL_FONT);
         Insets insets = this.getInsets();
         wl.setLocation(insets.left + 10, insets.top + 30);
         wl.setVisible(false);
         
-        this.add(wl);
+        contentPane.add(wl, BorderLayout.CENTER);
         wl.setVisible(true);
         
         closeButton = new JButton(TextMapper.getText(TextMapper.BTN_CLOSE));
@@ -58,14 +65,18 @@ public class HelpDialog extends Dialog implements ActionListener, WindowListener
         closeButton.setLocation((this.getSize().width / 2) - (closeButton.getSize().width / 2), wl.getSize().height
                 + wl.getLocation().y + 10);
         closeButton.setVisible(false);
-        this.add(closeButton);
+        Box hbox = Box.createHorizontalBox();
+        hbox.add(Box.createHorizontalGlue());
+        hbox.add(closeButton);
+        hbox.add(Box.createHorizontalGlue());
+        contentPane.add(hbox, BorderLayout.SOUTH);
         closeButton.setVisible(true);
 
         // set location to center of parent
         int x = 0;
         int y = 0;
 
-        Point p = owner != null ? owner.getLocation() : new Point(0, 0);
+        Point p = owner != null ? owner.getLocationOnScreen() : new Point(0, 0);
         Dimension parentSize = owner != null ? owner.getSize()
                 : Toolkit.getDefaultToolkit().getScreenSize();
         Dimension mySize = getSize();
@@ -79,7 +90,7 @@ public class HelpDialog extends Dialog implements ActionListener, WindowListener
         }
 
         setLocation(x, y);
-        this.addWindowListener(this);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
     /**
@@ -101,47 +112,4 @@ public class HelpDialog extends Dialog implements ActionListener, WindowListener
         }
     }
 
-    /* (non-Javadoc)
-     * @see java.awt.event.WindowListener#windowActivated(java.awt.event.WindowEvent)
-     */
-    public void windowActivated(WindowEvent e) {
-    }
-
-    /* (non-Javadoc)
-     * @see java.awt.event.WindowListener#windowClosed(java.awt.event.WindowEvent)
-     */
-    public void windowClosed(WindowEvent e) {
-    }
-
-    /* (non-Javadoc)
-     * @see java.awt.event.WindowListener#windowClosing(java.awt.event.WindowEvent)
-     */
-    public void windowClosing(WindowEvent e) {
-        setVisible(false);
-        dispose();
-    }
-
-    /* (non-Javadoc)
-     * @see java.awt.event.WindowListener#windowDeactivated(java.awt.event.WindowEvent)
-     */
-    public void windowDeactivated(WindowEvent e) {
-    }
-
-    /* (non-Javadoc)
-     * @see java.awt.event.WindowListener#windowDeiconified(java.awt.event.WindowEvent)
-     */
-    public void windowDeiconified(WindowEvent e) {
-    }
-
-    /* (non-Javadoc)
-     * @see java.awt.event.WindowListener#windowIconified(java.awt.event.WindowEvent)
-     */
-    public void windowIconified(WindowEvent e) {
-    }
-
-    /* (non-Javadoc)
-     * @see java.awt.event.WindowListener#windowOpened(java.awt.event.WindowEvent)
-     */
-    public void windowOpened(WindowEvent e) {
-    }
 }
