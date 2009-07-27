@@ -4,7 +4,6 @@
 package fi.dwo.client.gui;
 
 import java.awt.FontMetrics;
-import java.awt.Panel;
 import java.awt.event.ActionEvent;
 
 import fi.dwo.client.gui.GuestMenuPanel.MenuPanelButton;

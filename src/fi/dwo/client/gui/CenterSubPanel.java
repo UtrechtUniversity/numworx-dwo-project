@@ -5,7 +5,6 @@ package fi.dwo.client.gui;
 
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Panel;
 
 /**
  * This interface is used as the subpanel of the centerpanel.

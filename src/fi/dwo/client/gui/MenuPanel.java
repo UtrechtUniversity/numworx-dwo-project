@@ -7,9 +7,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Label;
 import java.awt.Color;
-import java.awt.Panel;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 

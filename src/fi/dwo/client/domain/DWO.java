@@ -1206,10 +1206,9 @@ private static boolean isValidEmail(String email) {
 	            panel.setVisible(false);
 	        }
 	        waitLabel.setText(waitText);
-	        //if(this.getGraphics()!=null) paint(this.getGraphics());
 	        setContentPane(waitLabel);
-	        repaint();
-	        System.out.println(waitText);
+	        validate();
+	        if(this.getGraphics()!=null) paint(this.getGraphics());
         }
         nestedWait++;
     }
@@ -1226,7 +1225,6 @@ private static boolean isValidEmail(String email) {
 	        	panel.setVisible(true);
 	            setContentPane(panel);
 	            panel.requestFocus();
-	            System.out.println("setReady");
 	        }
 	        setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         }

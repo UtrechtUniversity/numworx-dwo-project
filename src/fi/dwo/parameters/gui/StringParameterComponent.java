@@ -3,7 +3,6 @@
 package fi.dwo.parameters.gui;
 
 import java.awt.Component;
-import java.awt.TextField;
 import java.util.Hashtable;
 
 import javax.swing.JTextField;

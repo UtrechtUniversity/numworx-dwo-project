@@ -3,7 +3,6 @@ package fi.dwo.client.gui;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Image;
-import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;

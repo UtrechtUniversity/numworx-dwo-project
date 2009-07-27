@@ -8,24 +8,15 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.FlowLayout;
 import java.awt.FontMetrics;
 import java.awt.Frame;
 import java.awt.Graphics;
-import java.awt.Label;
-import java.awt.Menu;
-import java.awt.MenuBar;
-import java.awt.MenuItem;
-import java.awt.Panel;
-import java.awt.PrintJob;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
@@ -43,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -74,7 +66,7 @@ import fi.dwo.server.persistence.DbAccess;
  * @author M.J.B. Kupers
  *
  */
-public class ParameterManagementPanel extends JPanel implements CenterSubPanel, ActionListener, WindowListener {
+public class ParameterManagementPanel extends JPanel implements CenterSubPanel, ActionListener {
     private CenterPanel center;
 
     private ScormEditComponentIF editComponent;
@@ -97,7 +89,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
     
     private JScrollPane scrollPanel;
     
-    private Dialog editModeDialog;
+    private JDialog editModeDialog;
     private ScoDialog scoDialog;
     
     private FileDialog openDial;
@@ -142,12 +134,12 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             String[] tmp = {sco.getScoName()};
             title = MessageFormat.format(title, tmp);
             
-            editModeDialog = new Dialog(DwoHelper.getFrameForComponent(DwoHelper.getApplet()), title, false);
+            editModeDialog = new JDialog(DwoHelper.getFrameForComponent(DwoHelper.getApplet()), title, false);
             //editModeDialog = new Frame(title);
             
             editModeDialog.setSize(800, 620);
-            editModeDialog.setLayout(new BorderLayout());
-            editModeDialog.add(this);
+            //editModeDialog.setLayout(new BorderLayout());
+            editModeDialog.setContentPane(this);
             
             Dimension parentSize = Toolkit.getDefaultToolkit().getScreenSize();
             Dimension size = editModeDialog.getSize();
@@ -162,7 +154,8 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             }
 
             editModeDialog.setLocation(x, y);
-            editModeDialog.addWindowListener(this);
+            //editModeDialog.addWindowListener(this);
+            editModeDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         } else {
             parameters = applet.getEditableParameters();
             if(parameters == null)parameters = new Parameter[0];
@@ -389,66 +382,6 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         } else if(e.getSource() == exportAppletButton) {
         	saveApplet();
         }
-    }
-
-    /**
-     * Invoked when the window is set to be the user's active window, which means the window (or one of its subcomponents) will receive keyboard events.
-     * @param e The WindowEvent.
-     * @see java.awt.event.WindowListener#windowActivated(java.awt.event.WindowEvent)
-     */
-    public void windowActivated(WindowEvent e) {
-    }
-
-    /**
-     * Invoked when a window has been closed as the result of calling dispose on the window.
-     * @param e The WindowEvent.
-     * @see java.awt.event.WindowListener#windowClosed(java.awt.event.WindowEvent)
-     */
-    public void windowClosed(WindowEvent e) {
-    }
-
-    /**
-     * Invoked when the user attempts to close the window from the window's system menu. If the program does not explicitly hide or dispose the window while processing this event, the window close operation will be cancelled.
-     * @param e The WindowEvent.
-     * @see java.awt.event.WindowListener#windowClosing(java.awt.event.WindowEvent)
-     */
-    public void windowClosing(WindowEvent e) {
-        if(editModeDialog != null) {
-            editModeDialog.setVisible(false);
-            editModeDialog.dispose();
-        }
-    }
-
-    /**
-     * Invoked when a window is no longer the user's active window, which means that keyboard events will no longer be delivered to the window or its subcomponents.
-     * @param e The WindowEvent.
-     * @see java.awt.event.WindowListener#windowDeactivated(java.awt.event.WindowEvent)
-     */
-    public void windowDeactivated(WindowEvent e) {
-    }
-
-    /**
-     * Invoked when a window is changed from a minimized to a normal state.
-     * @param e The WindowEvent.
-     * @see java.awt.event.WindowListener#windowDeiconified(java.awt.event.WindowEvent)
-     */
-    public void windowDeiconified(WindowEvent e) {
-    }
-
-    /**
-     * Invoked when a window is changed from a minimized to a normal state.
-     * @param e The WindowEvent.
-     * @see java.awt.event.WindowListener#windowIconified(java.awt.event.WindowEvent)
-     */
-    public void windowIconified(WindowEvent e) {
-    }
-
-    /**
-     * Invoked when a window is changed from a normal to a minimized state. For many platforms, a minimized window is displayed as the icon specified in the window's iconImage property.
-     * @param e The WindowEvent.
-     * @see java.awt.event.WindowListener#windowOpened(java.awt.event.WindowEvent)
-     */
-    public void windowOpened(WindowEvent e) {
     }
     	
 	public void open()

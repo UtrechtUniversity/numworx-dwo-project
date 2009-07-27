@@ -6,12 +6,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dialog;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.FontMetrics;
-import java.awt.Label;
-import java.awt.Panel;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -28,6 +24,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -47,7 +44,7 @@ import fi.dwo.client.system.TextMapper;
  * @author M.J.B. Kupers
  *
  */
-public class AddScoDialog extends Dialog implements ActionListener,
+public class AddScoDialog extends JDialog implements ActionListener,
         WindowListener {
     private AppletConfig[] appletConfigs;
     private AppletConfig[] selectedConfigs;
@@ -81,9 +78,11 @@ public class AddScoDialog extends Dialog implements ActionListener,
                 TextMapper.getText(TextMapper.GUISDLG_TTL_ADD_SCO), true);
         JPanel contentPane = null;
         final int TOP = 25, BOTTOM=4; 	// gezien onder WXP
-        setLayout(new FlowLayout());contentPane = new JPanel(null); add(contentPane);
-        contentPane.setLayout(null);
-        this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        //setLayout(new FlowLayout());contentPane = new JPanel(null); add(contentPane);
+        contentPane = new JPanel(null);
+        setContentPane(contentPane);
+        //contentPane.setLayout(null);
+        //this.setBackground(GuiConstants.MAIN_BACKGROUND);
         contentPane.setBackground(GuiConstants.MAIN_BACKGROUND);
         contentPane.setSize(600, 380-TOP-BOTTOM);
         contentPane.setPreferredSize(contentPane.getSize());

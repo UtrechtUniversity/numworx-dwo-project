@@ -10,11 +10,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Label;
-import java.awt.Panel;
-import java.awt.Point;
-import java.awt.Image;
-import java.awt.ScrollPane;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;

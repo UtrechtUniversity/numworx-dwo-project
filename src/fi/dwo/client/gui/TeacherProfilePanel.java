@@ -5,7 +5,6 @@ package fi.dwo.client.gui;
 
 import java.awt.Button;
 import java.awt.Container;
-import java.awt.Panel;
 import java.awt.event.ActionEvent;
 
 import javax.swing.BorderFactory;

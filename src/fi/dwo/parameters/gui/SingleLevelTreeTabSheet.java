@@ -8,7 +8,6 @@ import java.awt.FontMetrics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
@@ -18,7 +17,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import fi.beans.scorm.TreeParameter;
-import fi.dwo.client.gui.DwoButton;
 import fi.dwo.parameters.system.TextMapper;
 import fi.dwo.parameters.test.ParametersTest;
 

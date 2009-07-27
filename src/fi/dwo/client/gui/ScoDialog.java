@@ -6,12 +6,9 @@ package fi.dwo.client.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
-import java.awt.Frame;
 import java.awt.Insets;
-import java.awt.Label;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;

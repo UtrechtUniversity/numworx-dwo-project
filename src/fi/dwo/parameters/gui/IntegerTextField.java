@@ -5,7 +5,6 @@
 package fi.dwo.parameters.gui;
 
 import java.awt.AWTEvent;
-import java.awt.TextField;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.TextEvent;

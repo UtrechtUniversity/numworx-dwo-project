@@ -2,17 +2,12 @@
 
 package fi.dwo.client.gui;
 
-import java.awt.Choice;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dialog;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
-import java.awt.Frame;
-import java.awt.Label;
 import java.awt.Point;
-import java.awt.TextComponent;
-import java.awt.TextField;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,6 +19,10 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 
 import fi.dwo.client.domain.DwoHelper;
@@ -38,7 +37,7 @@ import fi.dwo.client.system.SchoolException;
  * @author M.J.B. Kupers
  *
  */
-public class AddSchoolDialog extends Dialog implements ActionListener,
+public class AddSchoolDialog extends JDialog implements ActionListener,
         WindowListener {
 
     private static final Object ZERO = new Integer(0);
@@ -55,11 +54,11 @@ public class AddSchoolDialog extends Dialog implements ActionListener,
 
     private Component schoolNameField;
     
-    private TextField schoolLoginField;
+    private JTextField schoolLoginField;
 
-    private TextField studentPasswdField;
+    private JTextField studentPasswdField;
     
-    private TextField teacherPasswdField;
+    private JTextField teacherPasswdField;
 
     private JButton okButton;
 
@@ -69,31 +68,32 @@ public class AddSchoolDialog extends Dialog implements ActionListener,
             String studentPasswd, String teacherPasswd) {
         super(DwoHelper.getFrameForComponent(owner),
                 windowTitle, true);
-        this.setLayout(null);
-        this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        Container contentPane = getContentPane();
+        contentPane.setLayout(null);
+        contentPane.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.schoolName = schoolName;
         this.schoolName = schoolLogin;
         this.studentPasswd = studentPasswd;
         this.teacherPasswd = teacherPasswd;
         confirmed = false;
 
-        Label l;
+        JLabel l;
         FontMetrics fm;
 
         /* schoolName label */
-        l = new Label("Naam van de school");
+        l = new JLabel("Naam van de school");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 30);
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
         l.setVisible(false);
-        this.add(l);
+        contentPane.add(l);
         l.setVisible(true);
 
         /* schoolName field */
         if(!"".equals(schoolName)) {
-        	TextField tf = new TextField(schoolName);
+        	JTextField tf = new JTextField(schoolName);
         	tf.setEditable(PersistenceFacade.instance().getFidentitySchools()==null);
         	schoolNameField = tf;
         } else {
@@ -102,75 +102,75 @@ public class AddSchoolDialog extends Dialog implements ActionListener,
         	Hashtable v = 
         	PersistenceFacade.instance().getFidentitySchools();
         	if(v == null)
-        		schoolNameField = new TextField();
+        		schoolNameField = new JTextField();
         	else {
-                schoolNameField = new Choice(); 
+                schoolNameField = new JComboBox(); 
         		Enumeration enumeration = v.keys();
         		while (enumeration.hasMoreElements()) {
         			Object element = enumeration.nextElement();
         			schoolIdVector.addElement(new Integer(element.toString()));
-        			((Choice)schoolNameField).add(v.get(element).toString());
+        			((JComboBox)schoolNameField).addItem(v.get(element).toString());
         		}
         	}
         }
         schoolNameField.setBounds(150, 28, 300, 20);
         schoolNameField.setVisible(false);
-        this.add(schoolNameField);
+        contentPane.add(schoolNameField);
         schoolNameField.setVisible(true);
         
         /* schoolLogin label */
-        l = new Label("Schoollogin");
+        l = new JLabel("Schoollogin");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 80);
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
         l.setVisible(false);
-        this.add(l);
+        contentPane.add(l);
         l.setVisible(true);
 
         /* schoolLogin field */
-        schoolLoginField = new TextField(schoolLogin);
+        schoolLoginField = new JTextField(schoolLogin);
         schoolLoginField.setBounds(150, 78, 150, 20);
         schoolLoginField.setVisible(false);
-        this.add(schoolLoginField);
+        contentPane.add(schoolLoginField);
         schoolLoginField.setVisible(true);
         
         /* studentPasswd label */
-        l = new Label("Wachtwoord Leerlingen");
+        l = new JLabel("Wachtwoord Leerlingen");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 110);
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
         l.setVisible(false);
-        this.add(l);
+        contentPane.add(l);
         l.setVisible(true);
 
         /* studentPasswd field */
-        studentPasswdField = new TextField(studentPasswd);
+        studentPasswdField = new JTextField(studentPasswd);
         studentPasswdField.setBounds(150, 108, 150, 20);
         studentPasswdField.setVisible(false);
-        this.add(studentPasswdField);
+        contentPane.add(studentPasswdField);
         studentPasswdField.setVisible(true);
         
         
         /* teacherPasswd label */
-        l = new Label("Wachtwoord Docenten");
+        l = new JLabel("Wachtwoord Docenten");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 140);
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
         l.setVisible(false);
-        this.add(l);
+        contentPane.add(l);
         l.setVisible(true);
 
         /* teacherPasswd field */
-        teacherPasswdField = new TextField(teacherPasswd);
+        teacherPasswdField = new JTextField(teacherPasswd);
         teacherPasswdField.setBounds(150, 138, 150, 20);
         teacherPasswdField.setVisible(false);
-        this.add(teacherPasswdField);
+        contentPane.add(teacherPasswdField);
         teacherPasswdField.setVisible(true);
 
         
@@ -193,16 +193,16 @@ public class AddSchoolDialog extends Dialog implements ActionListener,
                 (getSize().width / 2)
                         - ((okButton.getSize().width
                                 + cancelButton.getSize().width + 5) / 2), 163);
-        add(okButton);
+        contentPane.add(okButton);
 
         cancelButton.setLocation(
                 (getSize().width / 2)
                         - ((okButton.getSize().width
                                 + cancelButton.getSize().width + 5) / 2)
                         + okButton.getSize().width + 5, 163);
-        add(cancelButton);
+        contentPane.add(cancelButton);
 
-        Point p = owner != null ? owner.getLocation() : new Point(0, 0);
+        Point p = owner != null ? owner.getLocationOnScreen() : new Point(0, 0);
         Dimension parentSize = owner != null ? owner.getSize() : Toolkit
                 .getDefaultToolkit().getScreenSize();
         Dimension mySize = getSize();
@@ -275,10 +275,10 @@ public class AddSchoolDialog extends Dialog implements ActionListener,
         if (e.getSource() == cancelButton) {
             this.setVisible(false);
         } else if (e.getSource() == okButton) {
-        	if(schoolNameField instanceof Choice)
-        		schoolName = ((Choice) schoolNameField).getSelectedItem();
+        	if(schoolNameField instanceof JComboBox)
+        		schoolName = (String) ((JComboBox) schoolNameField).getSelectedItem();
         	else
-        		schoolName = ((TextComponent) schoolNameField).getText();
+        		schoolName = ((JTextField) schoolNameField).getText();
         	
             schoolLogin = schoolLoginField.getText();
             studentPasswd = studentPasswdField.getText();
@@ -388,9 +388,9 @@ public class AddSchoolDialog extends Dialog implements ActionListener,
     private Vector schoolIdVector = new Vector();
     
     private int getSchoolId() { 
-    	if(schoolNameField instanceof Choice)
+    	if(schoolNameField instanceof JComboBox)
     	{ 
-    		Integer n = (Integer) schoolIdVector.get(((Choice) schoolNameField).getSelectedIndex()+1);
+    		Integer n = (Integer) schoolIdVector.get(((JComboBox) schoolNameField).getSelectedIndex()+1);
     		return n.intValue();
     	}
     	return 0;

@@ -5,7 +5,6 @@
 package fi.dwo.client.gui;
 
 import java.awt.Component;
-import java.awt.Label;
 
 import javax.swing.JLabel;
 

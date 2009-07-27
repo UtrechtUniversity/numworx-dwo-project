@@ -4,10 +4,6 @@
 package fi.dwo.client.gui;
 
 import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Label;
-import java.awt.Panel;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 
 import javax.swing.Box;

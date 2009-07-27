@@ -2,7 +2,6 @@ package fi.dwo.client.gui;
 
 import java.awt.Dimension;
 import java.awt.FontMetrics;
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.PrintGraphics;
 import java.awt.PrintJob;
