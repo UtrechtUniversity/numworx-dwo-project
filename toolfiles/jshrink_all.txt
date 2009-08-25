@@ -15,12 +15,13 @@
 -delete fi/beans/fidentity/AllTests.class
 -delete fi/beans/fidentity/NovellLdapTest.class
 -delete fi/beans/fidentity/PhpAccessTest.class
--delete fi/beans/fidentity/SchoolIdentityTest.class
--delete fi/beans/fidentity/SchoolManagerTest.class
 -delete fi/beans/fidentity/db/DbAccess.class
 -delete fi/beans/fidentity/db/DbAccessTest.class
+-delete fi/dwo/client/gui/ClipboardExportTest.class
+-delete fi/dwo/client/persistence/SchoolMapperTest.class
 -delete fi/dwo/server/persistence/DbAccessTest.class
 -delete fi/dwo/server/persistence/DbAccessLdapTest.class
+-delete fi/dwo/server/persistence/DeleteSchoolTest.class
 -delete fi/dwo/server/persistence/DbAccessServlet.class
 -delete fi/dwo/server/persistence/DbAccessLdapServlet.class
 -delete fi/dwo/server/persistence/DbAccessLdapServletTest.class
