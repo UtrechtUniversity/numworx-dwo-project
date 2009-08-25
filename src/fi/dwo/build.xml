@@ -48,7 +48,8 @@
     	</exec>
  -->
     	<property name="toolfiles" location="${basedir}/toolfiles"/>
-    	<java jar="../../tools/jshrink.exe" fork="true"
+    	<property name="tools" location="../../tools" />
+    	<java jar="${tools}/jshrink.exe" fork="true"
     		dir='${toolfiles}' >
     		<arg line='-script "${toolfiles}\jshrink_all.txt"'/>
     		<sysproperty key="user.dir" file="${toolfiles}" />
