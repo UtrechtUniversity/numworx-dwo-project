@@ -1190,6 +1190,7 @@ private static boolean isValidEmail(String email) {
     	waitLabel.setFont(GuiConstants.HEADER_TEXT);
     	waitLabel.setHorizontalAlignment(JLabel.CENTER);
     	waitLabel.setVerticalAlignment(JLabel.CENTER);
+    	waitLabel.setOpaque(true);
     	
     }
     /**
@@ -1206,6 +1207,7 @@ private static boolean isValidEmail(String email) {
 	            panel.setVisible(false);
 	        }
 	        waitLabel.setText(waitText);
+	        waitLabel.setBackground(GuiConstants.MAIN_BACKGROUND);
 	        setContentPane(waitLabel);
 	        validate();
 	        if(this.getGraphics()!=null) paint(this.getGraphics());
