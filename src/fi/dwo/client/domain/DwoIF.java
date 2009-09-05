@@ -444,6 +444,8 @@ public interface DwoIF {
      */
     public ScoPanel previewSco(Sco sco);
     
+    public void setCurrentSco(Sco sco);
+        
     public int getScoViewNr();
     
     public int getCourseViewNr();

@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
 
 import fi.beans.base64code.StringCodeObject;
 import fi.beans.scorm.SCORM12APIInterface;
-import fi.dwo.client.gui.DwoMessageDialog;
+//import fi.dwo.client.gui.DwoMessageDialog;
 import fi.dwo.client.gui.ScoPanel;
 import fi.dwo.client.persistence.MapperCreator;
 import fi.dwo.client.persistence.PersistenceFacade;

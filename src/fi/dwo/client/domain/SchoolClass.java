@@ -7,7 +7,7 @@ import java.text.MessageFormat;
 
 import javax.swing.JOptionPane;
 
-import fi.dwo.client.gui.DwoMessageDialog;
+//import fi.dwo.client.gui.DwoMessageDialog;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.PersistenceException;
 import fi.dwo.client.system.RegisterException;

@@ -14,7 +14,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.dwo.client.gui.CenterSubPanel;
 import fi.dwo.client.gui.CoursePanel;
-import fi.dwo.client.gui.DwoMessageDialog;
+//import fi.dwo.client.gui.DwoMessageDialog;
 import fi.dwo.client.gui.GuiConstants;
 import fi.dwo.client.persistence.MapperCreator;
 import fi.dwo.client.persistence.PersistenceFacade;

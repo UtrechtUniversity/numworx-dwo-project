@@ -39,7 +39,7 @@ import fi.beans.jvmchecker.JVMChecker;
 
 import fi.dwo.client.gui.CenterSubPanel;
 import fi.dwo.client.gui.CourseIcon;
-import fi.dwo.client.gui.DwoMessageDialog;
+//import fi.dwo.client.gui.DwoMessageDialog;
 import fi.dwo.client.gui.GuiConstants;
 import fi.dwo.client.gui.GuiCreator;
 import fi.dwo.client.gui.ScoLinkedLabel;
@@ -64,6 +64,9 @@ import fi.dwo.client.system.TextMapper;
 public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 
     private Course currentCourse;
+    
+    //alleen nodig indien scoViewNr>0
+    private Sco currentSco;
 
     private Course courseList[];
 
@@ -892,6 +895,12 @@ private static boolean isValidEmail(String email) {
             fi.dwo.parameters.system.TextMapper.setLanguage(lang);
         }
         
+        boolean cookies = false; 
+        String cookiesString = getParameter("cookies");
+        if(cookiesString!=null && cookiesString.equals("true")) {
+        	cookies = true;
+        }
+
         boolean guestUser = false; // Wim: teruggezet
         String guestUserString = getParameter("guestUser");
         if(guestUserString!=null && guestUserString.equals("true")) {
@@ -973,6 +982,19 @@ private static boolean isValidEmail(String email) {
 	        } catch (LoginException exc) {
 	        	JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
 	        }
+        }
+        else if(cookies)
+        {	userName = DwoHelper.getCookie("dwoUserName");
+        	passWord = DwoHelper.getCookie("dwoPassWord");
+        	if(userName!=null && passWord!=null) {
+	        	try {
+		        	GuiCreator.instance().login(userName, passWord);
+		            return;
+	        	}
+	        	catch(Exception ex)
+	        	{	        		
+	        	}
+        	}
         }
         
         
@@ -1121,8 +1143,15 @@ private static boolean isValidEmail(String email) {
         if (currentCourse != null) {
             currentCourse.end();
         }
+        else if (currentSco != null) {
+        	currentSco.end();
+        }
         logoff();
     	this.setReady();
+    }
+    
+    public void setCurrentSco(Sco sco)
+    {  	currentSco = sco;
     }
 
     /**

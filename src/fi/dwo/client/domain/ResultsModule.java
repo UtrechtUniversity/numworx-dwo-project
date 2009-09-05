@@ -5,7 +5,7 @@ package fi.dwo.client.domain;
 
 import java.util.Vector;
 
-import fi.dwo.client.gui.DwoMessageDialog;
+//import fi.dwo.client.gui.DwoMessageDialog;
 import fi.dwo.client.gui.ScoDialog;
 import fi.dwo.client.gui.ScoPanel;
 import fi.dwo.client.persistence.MapperCreator;

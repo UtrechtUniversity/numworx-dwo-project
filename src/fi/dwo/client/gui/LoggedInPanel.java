@@ -226,6 +226,8 @@ public class LoggedInPanel extends Box implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == logoffButton) {
             GuiCreator.instance().logoff();
+            DwoHelper.deleteCookie("dwoUserName");
+            DwoHelper.deleteCookie("dwoPassWord");
         }
 
     }

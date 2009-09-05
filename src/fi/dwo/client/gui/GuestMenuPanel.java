@@ -13,6 +13,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Insets;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -20,6 +21,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+
 
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.system.TextMapper;
@@ -37,11 +39,13 @@ public class GuestMenuPanel extends JPanel implements ActionListener {
 	 * @author wim
 	 *
 	 */
-	private static final int MARGIN = 8;
+	private static final int MARGIN = 16;
     public final class MenuPanelButton extends JButton {
 
 		public  MenuPanelButton(String label) {
 			super(label);
+			this.setMargin(new Insets(2,10,2,10));
+			
 // niet instelbaar!
 	        this.setFont(new Font("Arial", Font.BOLD, 12));
 		}

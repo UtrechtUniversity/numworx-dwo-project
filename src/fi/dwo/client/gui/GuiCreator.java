@@ -372,6 +372,7 @@ public class GuiCreator {
 	        	viewSco = (Sco)PersistenceFacade.instance().get(dwo.getScoViewNr(),Sco.class);
 	        }
 	        catch (Exception exc) {}
+	        if(viewSco!=null) dwo.setCurrentSco(viewSco);
 	        viewSco.setLessonMode(Sco.NORMAL);
         	csp = getScoPanel(viewSco);
         	((ScoPanel)csp).setScoView(true);

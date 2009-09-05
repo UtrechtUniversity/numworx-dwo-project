@@ -18,6 +18,9 @@ import java.util.Hashtable;
 
 import javax.swing.JOptionPane;
 
+import netscape.javascript.JSObject;
+
+import fi.dwo.client.gui.GuiCreator;
 import fi.dwo.client.gui.MainPanel;
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.mainframe.MainFrame;
@@ -192,4 +195,54 @@ public final class DwoHelper {
 	public static void setContact(boolean contact) {
 		DwoHelper.contact = contact;
 	}
+	
+	public static String getCookie()
+    {  	String cookie = null;
+    	try {
+    		cookie =(String)JSObject.getWindow (applet).eval ("document.cookie");
+    	    return cookie;
+    	}
+    	catch(Exception ex){
+    		return null;
+    	}
+    }
+    
+    
+    public static String getCookie(String name)
+    { 	String cookie = getCookie();
+    	if(cookie==null) return null;
+    	
+    	String value = null;
+       	String nameIs = name + "=";
+    	if (cookie.length()>0){
+    		int begin = cookie.indexOf(nameIs);
+    		if (begin!=-1){
+    			begin += nameIs.length();
+    			int einde = cookie.indexOf(";", begin);
+    			if (einde==-1){
+    					einde = cookie.length();
+    				}
+    			value = cookie.substring(begin, einde);
+    			return value;
+    		}
+    	}
+    	return null;
+    }
+    
+    public static void setCookie(String name, String value)
+    { 	try {
+    		JSObject.getWindow (applet).eval ("document.cookie ='" + name + "=" + value +"';");
+   	    }
+    	catch (Exception ex) {
+    	}
+    }
+    
+    public static void deleteCookie(String name)
+    {
+    	try {
+    		JSObject.getWindow (applet).eval ("document.cookie ='" + name + "=dummy" + "';");
+   	    }
+    	catch (Exception ex) {
+    	}
+    }
 }

@@ -318,6 +318,8 @@ public class WelcomePanel extends JPanel implements ActionListener {
         if ((src == loginButton) || (src == loginname) || (src == password)) {
             try {
                 GuiCreator.instance().login(loginname.getText(), password.getText());
+                DwoHelper.setCookie("dwoUserName", loginname.getText());
+                DwoHelper.setCookie("dwoPassWord", password.getText());
             } catch (LoginException exc) {
                 JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
             }

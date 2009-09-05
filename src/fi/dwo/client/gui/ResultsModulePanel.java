@@ -464,7 +464,7 @@ public class ResultsModulePanel extends JPanel implements
 				setOpaque(true);
 				JTableHeader header = table.getTableHeader();
 				setForeground(table.getForeground());
-				setBackground(table.getBackground());
+				setBackground(new Color(230,230,230));
 				if(value instanceof UserGroup)
 					setText(((UserGroup) value).getTitle());
 				else
@@ -474,7 +474,7 @@ public class ResultsModulePanel extends JPanel implements
 					//setLineWrap(true);
 				}
 				//setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-				setBorder(BorderFactory.createLineBorder(Color.white, 1));
+				setBorder(BorderFactory.createLineBorder(new Color(230,230,230), 1));
 				setHorizontalAlignment(SwingConstants.CENTER);
 				if(value instanceof LessonGroup)
 		        { 
@@ -546,7 +546,7 @@ public class ResultsModulePanel extends JPanel implements
     public ResultsModulePanel(ResultsModuleIF rm) {
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         //this.setSize(600, 480);
-        this.setSize(627, 490);
+        this.setSize(600, 480);
         setPreferredSize(getSize());
         this.setLayout(null);
         domain = rm;
@@ -764,7 +764,7 @@ public class ResultsModulePanel extends JPanel implements
             imageRenderer.setHorizontalAlignment(SwingConstants.CENTER);
             //imageRenderer.setBorder(BorderFactory.createRaisedBevelBorder());
     		JTable table = new JTable(new ResultsModel(data)) {
-
+    			
 				public TableCellRenderer getCellRenderer(int row, int column) {
 					if(row == 0)
 						return imageRenderer;
@@ -863,7 +863,7 @@ public class ResultsModulePanel extends JPanel implements
     		JScrollPane pane = new JScrollPane(panel,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     		pane.getViewport().setBackground(Color.RED);
     		TableUtil.setBorder(pane);
-    		table.setGridColor(Color.white);
+    		table.setGridColor(new Color(230,230,230));
     		jtbl = new JPanel(new BorderLayout());
     		JLabel title = new JLabel(lg.getTitle()); // FIXME je juiste naam...
     		title.setOpaque(false);

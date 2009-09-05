@@ -47,6 +47,7 @@ public class ResultScoreButton extends JPanel implements
      */
     public ResultScoreButton(float score, ResultScoreIF rs) {
         super(new BorderLayout());
+        
         domain = rs;
         this.score = score;
         int red = 255;
@@ -87,12 +88,15 @@ public class ResultScoreButton extends JPanel implements
                 this.setToolTip(s);
                 ll.setToolTipText(s);
                 l = ll;
+                setBackground(new Color(230,230,230));
             } else {
                 l = new JLabel(((int) score) + " %");
+                setBackground(new Color(230,230,230));
                 //addMouseListener(this);
                            }
         } else {
         	l = new JLabel(" ");
+        	setBackground(new Color(230,230,230));
         	//addMouseListener(this);
         	 
         }

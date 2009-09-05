@@ -95,7 +95,8 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         super(null);
         this.course = course;
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
-        this.setSize(620, 485);
+        //this.setSize(620, 485);
+        this.setSize(600, 470);
         setPreferredSize(getSize());
         course.loadScos();
         Image logo = course.getCourseLogo();
@@ -425,7 +426,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         	Sco s = null;
         	
         	// speciaal voor de SAG en REV: er kan maar 1 soort appletConfig gebruikt worden, nl WiskOpdr
-        	if(course.getDwoProfile()==15 || course.getDwoProfile()==22) {
+        	if(course.getDwoProfile()==15 ) {
         		try {
         		AppletConfig ac = (AppletConfig)(PersistenceFacade.instance().get(55,AppletConfig.class));
         		s = ScoNameDialog.addSco(this, course, ac);

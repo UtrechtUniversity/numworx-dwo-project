@@ -29,7 +29,11 @@ import javax.swing.table.TableCellRenderer;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.SchoolClass;
 import fi.dwo.client.domain.Sco;
+import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.User;
+import fi.dwo.client.gui.ClassPanel.ClassModel;
+import fi.dwo.client.gui.ClassPanel.ImageButtonEditor;
+import fi.dwo.client.gui.ClassPanel.ImageRenderer;
 import fi.dwo.client.gui.ScoManagementPanel.ScoModel;
 import fi.dwo.client.system.TextMapper;
 
@@ -189,7 +193,8 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
     public ClassUsersPanel(SchoolClass c) {
         super(null);
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
-        this.setSize(627, 485);
+        //this.setSize(627, 485);
+        this.setSize(600, 470);
         this.setPreferredSize(getSize());
 
         schoolClass = c;
@@ -225,10 +230,16 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 	        TableUtil.setDefaults(table, false, new ImageRenderer(), new ImageButtonEditor());
 	        TableUtil.setJTableSizes(table);
 	        tbl = new JScrollPane(table);
-			tbl.setLocation(30, 0);
+			tbl.setLocation(30, 15);
+			tbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
 
-	        TableUtil.shrinkToFit(table, tbl, 602, 492);
+			TableUtil.setBorder(tbl);
+	        TableUtil.shrinkToFit(table, tbl, 602, 452);
 	        this.add(tbl);
+	        
+	       
+	        
+	        
         }
     }
 

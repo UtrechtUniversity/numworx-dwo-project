@@ -215,6 +215,7 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
         super(null);
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setSize(627, 485);
+        this.setSize(600, 470);
         setPreferredSize(getSize());
 
         /* Add Remove-school image */

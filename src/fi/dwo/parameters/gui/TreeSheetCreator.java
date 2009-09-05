@@ -14,7 +14,7 @@ import fi.beans.scorm.Parameter;
 import fi.beans.scorm.ScormTree;
 import fi.beans.scorm.TreeParameter;
 import fi.beans.stringutils.StringUtils;
-import fi.dwo.client.gui.DwoMessageDialog;
+//import fi.dwo.client.gui.DwoMessageDialog;
 import fi.dwo.parameters.system.TextMapper;
 
 public class TreeSheetCreator implements TabSheetCreatorIF, ItemLaunchdataCallBackIF,

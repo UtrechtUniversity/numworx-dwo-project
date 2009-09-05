@@ -231,7 +231,8 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
     public ClassPanel() {
         super(null);
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
-        this.setSize(620, 485);
+        //this.setSize(620, 485);
+        this.setSize(600, 470);
         this.setPreferredSize(getSize());
 
         /* Add Remove-class image */
