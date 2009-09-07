@@ -935,6 +935,7 @@ private static boolean isValidEmail(String email) {
         DwoHelper.setAu(new AppletUtil(this));
         DwoHelper.setApplet(this);
         DwoHelper.setUmpc(umpc);
+        initWaitLabel(); // wim: GuiConstants nu actief en correct!
         
         if(!DwoHelper.isApplication()) {
         	dwoProfileID = 1; 
@@ -1215,10 +1216,13 @@ private static boolean isValidEmail(String email) {
     }
 
     private JLabel waitLabel = new JLabel();
+
+    private void initWaitLabel() 
     {
     	waitLabel.setFont(GuiConstants.HEADER_TEXT);
     	waitLabel.setHorizontalAlignment(JLabel.CENTER);
     	waitLabel.setVerticalAlignment(JLabel.CENTER);
+        waitLabel.setBackground(GuiConstants.MAIN_BACKGROUND);
     	waitLabel.setOpaque(true);
     	
     }
@@ -1236,7 +1240,6 @@ private static boolean isValidEmail(String email) {
 	            panel.setVisible(false);
 	        }
 	        waitLabel.setText(waitText);
-	        waitLabel.setBackground(GuiConstants.MAIN_BACKGROUND);
 	        setContentPane(waitLabel);
 	        validate();
 	        if(this.getGraphics()!=null) paint(this.getGraphics());

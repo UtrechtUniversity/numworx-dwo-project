@@ -896,4 +896,9 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 			return super.getParameter(name);
 		}
 
+		public void setCurrentSco(Sco sco) {
+			// TODO Auto-generated method stub
+			
+		}
+
 }
