@@ -85,7 +85,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
         applet = sco.getApplet();
         applet.setVisible(false);
         applet.setSize(this.getSize().width-10, this.getSize().height);
-        applet.setLocation(5, 0);
+        applet.setLocation(5, 5);
         this.add(applet);
         applet.setVisible(true);
         

@@ -122,12 +122,9 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
                 maxHeight = courseIcon.getSize().height; 
             }
             courseIcon.setLocation(0, 0);
-            courseIcon.setVisible(false);
             p.add(courseIcon);
-            courseIcon.setVisible(true);
-            p.setVisible(false);
             pp.add(p);
-            p.setVisible(true);
+            
         }
 
         if (courseIcon != null) {

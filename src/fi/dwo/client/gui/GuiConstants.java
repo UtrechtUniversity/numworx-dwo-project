@@ -141,6 +141,16 @@ public abstract class GuiConstants {
 			GUI_IMAGE_SCO = "resources/UU-nkbw-sco.png";
 			GUI_IMAGE_COURSE = "resources/UU-nkbw-course.png";
 		} else
+		if(profile==32)
+		{	MAIN_BACKGROUND = new Color(255,255,255);
+		   	CELL_BACKGROUND = new Color(255,255,255);
+			FI_LOGO_LOCATION = "resources/fi.gif";
+			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
+			GUI_IMAGE_BG = true;
+			GUI_IMAGE_WELCOME = "resources/zoefi-welkom22.jpg";
+			GUI_IMAGE_SCO = "resources/zoefi-sco.jpg";
+			GUI_IMAGE_COURSE = "resources/zoefi-course.jpg";
+		} else
 		if(profile==34)
 		{	MAIN_BACKGROUND = new Color(255,255,255);
 		   	CELL_BACKGROUND = new Color(255,255,255);
