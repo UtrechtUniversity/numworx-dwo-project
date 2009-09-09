@@ -196,28 +196,17 @@ public class MainPanel extends JPanel {
 	       	int dw = w-800;
 	       	int dh = h-600;
 	       	int rand = 20;
-	       	int strook = 20;
-	       	int aantalHStroken = (h-600)/strook+1;
-	       	int aantalVStroken = (w-800)/strook+1;
-	        for(int i=0 ; i<aantalHStroken ; i++)
-	       	{	
-	        	g.drawImage(guiImage,0,600-rand+i*strook,800,600-rand+(i+1)*strook,0,600-rand-strook,800,600-rand,null);
-	       	}
-	        g.drawImage(guiImage,0,h-rand,800,h,0,600-rand,800,600,null);
-	        
-	        
-	        {	for(int i=0 ; i<aantalVStroken ; i++)
-		       	{	
-		        	g.drawImage(guiImage,800-rand+i*strook,0,800-rand+(i+1)*strook,600,800-rand-strook,0,800-rand,600,null);
-		       	}
-		       	
-		       	g.drawImage(guiImage,w-rand,0,w,600,800-rand,0,800,600,null);
-		       	
-	        }
-	        if(dh<0 && dw<0)g.drawImage(guiImage,w-rand,h-rand,w,h,800-rand,600-rand,800,600,null);
-	        else if(dh<0)g.drawImage(guiImage,800-rand,h-rand,w,h,800-dw-rand,600-rand,800,600,null);
-	        else if(dw<0)g.drawImage(guiImage,w-rand,600-rand,w,h,800-rand,600-dh-rand,800,600,null);
-	        else g.drawImage(guiImage,800-rand,600-rand,w,h,800-dw-rand,600-dh-rand,800,600,null);
+	       	int strook = 100;
+	       	
+	       	g.drawImage(guiImage,0,600-rand-strook,800-rand-strook,h-rand,0,600-rand-strook,800-rand-strook,600-rand,null);
+	       	g.drawImage(guiImage,800-rand-strook,0,w-rand,600-rand-strook,800-rand-strook,0,800-rand,600-rand-strook,null);
+	       	g.drawImage(guiImage,0,h-rand,800-rand-strook,h,0,600-rand,800-rand-strook,600,null);
+	       	g.drawImage(guiImage,w-rand,0,w,600-rand-strook,800-rand,0,800,600-rand-strook,null);
+	       	g.drawImage(guiImage,800-rand-strook,600-rand-strook,w-rand,h-rand,800-rand-strook,600-rand-strook,800-rand,600-rand,null);
+	       	g.drawImage(guiImage,800-rand-strook,h-rand,w-rand,h,800-rand-strook,600-rand,800-rand,600,null);
+	       	g.drawImage(guiImage,w-rand,600-rand-strook,w,h-rand,800-rand,600-rand-strook,800,600-rand,null);
+	    	g.drawImage(guiImage,w-rand,h-rand,w,h,800-rand,600-rand,800,600,null);
+		    
     	} else
     		super.paintComponent(g);
     }
