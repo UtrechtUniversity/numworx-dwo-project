@@ -195,7 +195,8 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
      */
     public String LMSInitialize(String iParam) {
     	initialized = true;
-    	LMSSetValue("cmi.core.session_time", "00:00:00");
+    	if(NORMAL.equals(getLessonMode()))
+    		LMSSetValue("cmi.core.session_time", "00:00:00");
         return true + "";
     }
 
