@@ -30,7 +30,7 @@ public class IconBorder implements Border {
 	public static final int RIGHT = 1;
 	
 	private int  orientation;
-	private int  padding = 1;
+	private int  padding = 6;
 	static private Insets NULL = new Insets(1, 1, 1, 1);
 
 	public Insets getBorderInsets(Component c) {
@@ -39,7 +39,7 @@ public class IconBorder implements Border {
 		switch(orientation) {
 		default:
 		case TOP:
-			return new Insets(padding*2+getIconHeight(), 1, 1, 1);
+			return new Insets(padding*2+getIconHeight(), 5, 5, 5);
 		case RIGHT:
 			return new Insets(1, 1, 1, padding*2+getIconWidth());
 		}
@@ -67,7 +67,7 @@ public class IconBorder implements Border {
 		if(icon != null)
 			icon.paintIcon(c, g, x, y);
 		g = g.create();
-		g.setColor(Color.white);
+		g.setColor(new Color(230,230,230));
 		g.drawRect(0, 0, width-1, height-1);
 		g.dispose();
 	}

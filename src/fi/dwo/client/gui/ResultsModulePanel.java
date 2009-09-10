@@ -79,6 +79,7 @@ public class ResultsModulePanel extends JPanel implements
 		 */
 		public ImageEditor() {
 			button.addActionListener(this);
+			
 		}
 
 		JButton button = new JButton();
@@ -321,6 +322,7 @@ public class ResultsModulePanel extends JPanel implements
 					setBackground(table.getSelectionBackground());
 				else
 					setBackground(table.getBackground());
+					
 			} else {
 		        int red = 255;
 		        int green = 255;
@@ -546,9 +548,9 @@ public class ResultsModulePanel extends JPanel implements
     public ResultsModulePanel(ResultsModuleIF rm) {
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         //this.setSize(600, 480);
-        this.setSize(600, 480);
+        this.setSize(600, 280);
         setPreferredSize(getSize());
-        this.setLayout(null);
+        this.setLayout(new BorderLayout());
         domain = rm;
 
         imageAsc = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.RESULTS_ORDER_ASC);
@@ -565,13 +567,18 @@ public class ResultsModulePanel extends JPanel implements
         currentUserGroup = domain.getZoomedUserGroup();
         currentLessonGroup = domain.getZoomedLessonGroup();;
         int x;
+        
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(GuiConstants.MAIN_BACKGROUND);
+        add(buttonPanel,BorderLayout.NORTH);
+        
         selectCoursesButton = new JButton(TextMapper.getText(TextMapper.GUIRS_BTN_SELECT_COURSES));
         selectCoursesButton.setSize(selectCoursesButton.getPreferredSize());
         selectCoursesButton.addActionListener(this);
         selectCoursesButton.setLocation(x = getSize().width - selectCoursesButton.getSize().width - 20, 3);
         selectCoursesButton.setToolTipText(TextMapper.getText(TextMapper.GUIRS_TLTP_SELECT_COURSES));
         selectCoursesButton.setVisible(false);
-        this.add(selectCoursesButton);
+        buttonPanel.add(selectCoursesButton);
         selectCoursesButton.setVisible(true);
 
         copyButton = new JButton(/*FIXME*/ "Copy");
@@ -580,7 +587,7 @@ public class ResultsModulePanel extends JPanel implements
         copyButton.setLocation(x - copyButton.getSize().width - 20, 3);
         //TODO copyButton.setToolTip(TextMapper.getText(TextMapper.GUIRS_TLTP_SELECT_COURSES));
         copyButton.setVisible(false);
-        this.add(copyButton);
+        buttonPanel.add(copyButton);
         copyButton.setVisible(true);
 
         jtbl = null;
@@ -830,7 +837,7 @@ public class ResultsModulePanel extends JPanel implements
 			}
 	        IconBorder border = new IconBorder(new ImageIcon(image));
 	        mrenderer.setBorder(border);
-
+	        
 	        if(in)
 	        	renderer = mrenderer;
 	        else 
@@ -853,6 +860,8 @@ public class ResultsModulePanel extends JPanel implements
    				column.setMinWidth(width);
    				column.setMaxWidth(width);
     		}
+   			
+   			
    			table.validate();
             table.setSize(table.getPreferredSize());
         	JPanel panel = new JPanel(new BorderLayout());
@@ -860,27 +869,30 @@ public class ResultsModulePanel extends JPanel implements
         	panel.add(table, BorderLayout.CENTER);
 
         	table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-    		JScrollPane pane = new JScrollPane(panel,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    		pane.getViewport().setBackground(Color.RED);
-    		TableUtil.setBorder(pane);
-    		table.setGridColor(new Color(230,230,230));
+    		//JScrollPane pane = new JScrollPane(panel,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    		//pane.getViewport().setBackground(Color.RED);
+    		//TableUtil.setBorder(pane);
+    		table.setGridColor(new Color(210,210,210));
     		jtbl = new JPanel(new BorderLayout());
     		JLabel title = new JLabel(lg.getTitle()); // FIXME je juiste naam...
     		title.setOpaque(false);
     		jtbl.setOpaque(false);
     		jtbl.add(title, BorderLayout.NORTH);
-    		TableUtil.shrinkToFit(table, pane, 600, 470);
-    		jtbl.add(pane, BorderLayout.CENTER);
+    		//TableUtil.shrinkToFit(table, pane, 600, 470);
+    		jtbl.add(panel, BorderLayout.CENTER);
     		
-    		Dimension pref = jtbl.getPreferredSize();
-    		pref.width = Math.min(623-10, pref.width);
-    		pref.height = Math.min(487-10-10, pref.height);
-    		jtbl.setSize(623-10, 487-10-10);
+    		//Dimension pref = jtbl.getPreferredSize();
+    		//pref.width = Math.min(623-10, pref.width);
+    		//pref.height = Math.min(487-10-10, pref.height);
+    		//jtbl.setSize(623-10, 487-10-10);
     		//jtbl.setSize(pref);
     		
             jtbl.setLocation(10, 10+5);
             jtbl.validate();
             add(jtbl);
+            Dimension pref = jtbl.getPreferredSize();
+    		pref.height += 40;
+            setPreferredSize(pref);
             jtbl.invalidate();
             validate();
             repaint();

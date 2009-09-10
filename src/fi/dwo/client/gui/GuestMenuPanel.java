@@ -60,7 +60,7 @@ public class GuestMenuPanel extends JPanel implements ActionListener {
 
 	public static class HRuler extends JPanel {
     	public HRuler() {
-    		setOpaque(true);
+    		setOpaque(false);
     		setBackground(Color.black);
     	}
     	public Dimension getPreferredSize() {

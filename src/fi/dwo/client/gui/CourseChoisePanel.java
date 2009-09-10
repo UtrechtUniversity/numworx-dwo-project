@@ -75,6 +75,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
         profileTextArea.setBounds(20,20,600,110);
         profileTextArea.setOpaque(false);
         profileTextArea.setText(s);
+        
         //profileTextArea.resize();
 		if((s != null) && (!s.trim().equals(""))) 
 		{	add(profileTextArea, BorderLayout.NORTH);
@@ -135,10 +136,11 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
 	                    * gl.getRows() + profileTextArea.getSize().height);
             }
         }
-        profileTextArea.invalidate();
+        //profileTextArea.invalidate();
         //doLayout();
     }
-
+    
+  
    public void paint(Graphics g)
    {
 	   //validate();

@@ -1,10 +1,13 @@
 package fi.dwo.client.gui;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Insets;
+import javax.swing.BorderFactory;
 
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.text.Document;
@@ -21,6 +24,7 @@ public class MultiLineTableCellRenderer extends JTextArea implements TableCellRe
 	MultiLineTableCellRenderer() {
 		super();
 		initialize();
+		this.setAlignmentY(SwingConstants.CENTER);
 	}
 
 	private void initialize() {
@@ -54,6 +58,7 @@ public class MultiLineTableCellRenderer extends JTextArea implements TableCellRe
 
 		setForeground(adaptee.getForeground());
 	    setBackground(adaptee.getBackground());
+	    setBackground(new Color(230,230,230));//
 	    //setBorder(adaptee.getBorder());
 	    setFont(adaptee.getFont());
 	    String text = adaptee.getText();
