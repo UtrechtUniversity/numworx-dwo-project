@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -291,7 +292,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         super(MYSQL, (DEBUG ? "dwo" : "dwo_tst"), "dwo", "_dwo");
         //        super(MYSQL, "thijsk_tst", "thijsk", "_thijsk");
         if(DEBUG)
-        	System.err.println("Dbacces DEBUG aan");
+        	log("Dbacces DEBUG aan");
     }
 
     /**
@@ -335,7 +336,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         String query = MessageFormat
                 .format(QRY_DEFAULT_SELECT_TABLE_ORDER, arguments);
 
-        System.out.println(query);
+        log("DbAccess.getTable " + query);
         return executeQueryWithResult(query);
     }
     /**
@@ -1279,6 +1280,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         }
     }
 
+    private Date currentTime = new Date();
     /*
      * (non-Javadoc)
      * 
@@ -1286,54 +1288,64 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      *      java.lang.String)
      */
     public String LMSSetValue(int scoID, int userID, String iDataModelElement,
-            String iValue) throws IOException, XmlRpcException, SQLException {
-        String[] arguments = { "studentSco" };
-        String query = MessageFormat.format(QRY_GET_STUDENT_SCO, arguments);
+            String iValue) throws SQLException {
+        try {
+			String[] arguments = { "studentSco" };
+			String query = MessageFormat.format(QRY_GET_STUDENT_SCO, arguments);
 
-        PreparedStatement ps = getStatement(query);
-        ps.setInt(1, scoID);
-        ps.setInt(2, userID);
+			PreparedStatement ps = getStatement(query);
+			ps.setInt(1, scoID);
+			ps.setInt(2, userID);
 
-        Hashtable ht = executeQueryWithRecord(ps);
-//        System.err.println("waar naar toe?" + System.currentTimeMillis() + "("
-//                + scoID + ", " + userID + ", " + iDataModelElement + ", "
-//                + iValue + ")");
-//        if ((iValue == null) || (iValue.equals(""))) {
-//            System.err.println("Hij is leeg... " + iDataModelElement + " "
-//                    + userID);
-//        }
-        ps.close();
-        if (ht == null) {
-            ps = getStatement(QRY_ADD_EMPTY_STUDENT_SCO);
-            ps.setInt(1, scoID);
-            ps.setInt(2, userID);
-            ps.execute();
-            int count = ps.getUpdateCount();
-            if (count != 1) {
-                System.err.println("iets mis1 " + count);
-            }
-            ps.close();
-        }
+			Hashtable ht = executeQueryWithRecord(ps);
+			log("DbAccess.LMSSetValue("
+			        + scoID + ", " + userID + ", " + iDataModelElement + ", "
+			        + iValue + ")");
+			if ((iValue == null) || (iValue.equals(""))) {
+			    log("Hij is leeg... " + iDataModelElement + " "
+			            + userID);
+			}
+			ps.close();
+			if (ht == null) {
+			    ps = getStatement(QRY_ADD_EMPTY_STUDENT_SCO);
+			    ps.setInt(1, scoID);
+			    ps.setInt(2, userID);
+			    ps.execute();
+			    int count = ps.getUpdateCount();
+			    if (count != 1) {
+			        log("iets mis1 " + count);
+			    }
+			    ps.close();
+			}
 
-        arguments[0] = iDataModelElement;
-        query = MessageFormat.format(QRY_UPDATE_STUDENT_SCO, arguments);
+			arguments[0] = iDataModelElement;
+			query = MessageFormat.format(QRY_UPDATE_STUDENT_SCO, arguments);
 
-        ps = getStatement(query);
-        ps.setObject(1, iValue);
-        ps.setInt(2, scoID);
-        ps.setInt(3, userID);
+			ps = getStatement(query);
+			ps.setObject(1, iValue);
+			ps.setInt(2, scoID);
+			ps.setInt(3, userID);
 
-        ps.execute();
-        int count = ps.getUpdateCount();
-        if (count != 1) {
-            // iets mis2 ...
-            System.err.println("iets mis2 " + count);
+			ps.execute();
+			int count = ps.getUpdateCount();
+			if (count != 1) {
+			    // iets mis2 ...
+			    log("iets mis2 " + count);
 
-        }
+			}
 
-        ps.close();
+			ps.close();
 
-        return "";
+			return "";
+		} catch (SQLException e) {
+			log("DbAccess.setLMSSetValue " + iDataModelElement  + " throws " + userID);
+			e.printStackTrace();
+			throw e;
+		} catch (RuntimeException e) {
+			log("DbAccess.setLMSValue " + iDataModelElement  + " runtime " + userID);
+			e.printStackTrace();
+			throw e;
+		}
 
     }
 
@@ -1529,8 +1541,9 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @see fi.dwo.client.persistence.DbAccessIF#log(java.lang.String)
      */
     public boolean log(String s) {
-        System.err.println("DbAccessLog " + System.currentTimeMillis() + ":("
-                + s + ")");
+    	currentTime.setTime(System.currentTimeMillis());
+        System.err.println("DbAccessLog " + currentTime + ":"
+                + s );
         return false;
     }
 
@@ -1570,7 +1583,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     public int addCourse(int schoolID, String name, String description, int dwoProfile)
             throws DwoXmlRpcException, SQLException {
         Hashtable schoolData = getRecord("tblSchool", "schoolID", schoolID);
-        System.out.println(schoolData);
+        log("DbAccess.addCourse" + schoolData);
         String image = "";
         if (schoolData.containsKey("image")
                 && (!schoolData.get("image").equals(""))) {
@@ -1711,7 +1724,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     	else
         data = getRecord("tblAppletConfig", "appletConfigID",
                 appletConfigID);
-        System.out.println(data);
+        log("DbAccess.addSco " + data);
         int appletID = -1;
         String launchdata = "";
         if (data.containsKey("appletID")) {
@@ -1790,7 +1803,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps.setString(3, launchdata);
         ps.setInt(4, scoID);
         
-        System.out.println(ps);
+        log("DbAccess.changeSco " + ps);
 
         try {
             ps.execute();
@@ -1874,7 +1887,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             ps = getStatement(QRY_UPDATE_SCO_SEQUENCE);
             ps.setInt(1, sequencenr);
             ps.setInt(2, courseid);
-            System.out.println(ps);
+            log(ps.toString());
             ps.execute();
             ps.close();
         }

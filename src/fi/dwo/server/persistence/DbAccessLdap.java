@@ -312,12 +312,12 @@ private Hashtable restrict(Hashtable user) {
 			return user;
 // TODO 1 call met 3, 7, 1, 8?
 		
-		if ( !manager.isSchoolOK(schoolID.intValue(), 3) && !manager.isSchoolOK(schoolID.intValue(), 1)&& !manager.isSchoolOK(schoolID.intValue(), 7))
-		{
-			user.remove("schoolID");
-			user.remove("groupname");
-			user.put("classID", "");
-		}
+//		if ( !manager.isSchoolOK(schoolID.intValue(), 3) && !manager.isSchoolOK(schoolID.intValue(), 1)&& !manager.isSchoolOK(schoolID.intValue(), 7))
+//		{
+//			user.remove("schoolID");
+//			user.remove("groupname");
+//			user.put("classID", "");
+//		}
 		return user;
 	}
 
