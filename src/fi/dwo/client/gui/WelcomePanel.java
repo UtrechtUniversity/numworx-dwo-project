@@ -13,6 +13,8 @@ import java.awt.MediaTracker;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
@@ -47,7 +49,27 @@ public class WelcomePanel extends JPanel implements ActionListener {
     private JButton guestButton;
 
     private JButton registerButton;
+
+	private FIButton fiButton;
     
+	/**
+	 * Layout manager voor de fiButton. 
+	 * Hou de fiButton in de rechtsbovenhoek.
+	 * @author wim
+	 *
+	 */
+    private class FiButtonMover extends ComponentAdapter {
+
+		/* (non-Javadoc)
+		 * @see java.awt.event.ComponentAdapter#componentResized(java.awt.event.ComponentEvent)
+		 */
+		public void componentResized(ComponentEvent e) {
+			super.componentResized(e);
+			int width = getWidth();
+			fiButton.setLocation(width-fiButton.getWidth(),fiButton.getY());
+		}
+    	
+    }
 
     /**
      * Creates a new WelcomePanel with the posibilities to login (as guest) or
@@ -62,12 +84,7 @@ public class WelcomePanel extends JPanel implements ActionListener {
         this.setPreferredSize(getSize());
         this.setOpaque(true);
         
-// TODO Let op, fi.dwo.VERSION wordt gegenereerd door de ant target 'version'
-// en daarna (eenmalig) F5 om Version.jave in eclipse te importeren.
-// Je hoeft dan niet steeds de datum van dit file te wijzigen!
-// vind ik (Wim) een *GROOT* voordeel!
-// en deze file verandert dan niet steeds om niets!
-        FIButton fiButton = new FIButton("DWO",new String[]
+        fiButton = new FIButton("DWO",new String[]
 			{	"versie-info: " + fi.dwo.VERSION.VERSION,
 				"auteur: Peter Boon",
 				"programmeur: M.J.B. Kupers,",
@@ -76,9 +93,9 @@ public class WelcomePanel extends JPanel implements ActionListener {
 				"www.fi.uu.nl",
 				""
 			});
-		fiButton.setBounds(0,0,20,30);
+		fiButton.setBounds(GuiConstants.DWO_WIDTH-30,0,20,30);
 		add(fiButton);
-
+		addComponentListener(new FiButtonMover()); // layout management voor FiButton
         /* Variables used to create items */
         JPanel p;
         JLabel l;
