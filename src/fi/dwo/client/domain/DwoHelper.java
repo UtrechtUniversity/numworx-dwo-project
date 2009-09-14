@@ -40,7 +40,7 @@ public final class DwoHelper {
     
     private static String key;
 
-    private static Applet applet;
+    public static Applet applet;
     
     private static boolean isApplication = true; // default als je setApplet niet aanroept.
     

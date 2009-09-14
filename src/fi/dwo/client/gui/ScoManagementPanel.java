@@ -159,7 +159,8 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         add(top);
         top.doLayout();
         
-        if(false && DwoHelper.isApplication())
+        //if(false && DwoHelper.isApplication())
+        if(DwoHelper.isApplication())
         {	importScosButton.setVisible(true);
             courseLogoButton.addActionListener(this);
             courseLogoButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
