@@ -14,6 +14,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
+import org.apache.xmlrpc.XmlRpcException;
+
 import fi.beans.base64code.Base64StringEncoder;
 import fi.beans.fidentity.FidentityManager;
 import fi.dwo.client.system.LoginException;
@@ -202,6 +204,14 @@ public class DbAccessLdap extends DbAccess
         	if(schoolGroupId == -1)
         		throw new DwoXmlRpcException(
                     DwoXmlRpcException.EXC_UNKNOWN_SCHOOLGROUP);
+        	Hashtable h = getRecord("tblSchoolGroup", "schoolGroupID", schoolGroupId);
+        	Object schoolID = h.get("schoolID");
+        	if(schoolID instanceof Number && isNoDWOSchool(((Number) schoolID).intValue()))
+    			throw new DwoXmlRpcException(
+                    DwoXmlRpcException.EXC_UNKNOWN_SCHOOLGROUP);
+        		
+        	
+        	
 		}
 		registerLDAP(username, password, firstname, middlename, lastname, email);
 // groupID = 4: schoollogin is digicode.		
@@ -211,7 +221,16 @@ public class DbAccessLdap extends DbAccess
 			super.register(username, password, firstname, middlename, lastname, email);
 			Hashtable rr = login(username, "");
 			int userID = ((Integer)rr.get("userID")).intValue();
-			addToSchool(userID, schoolLogin, groupID, groupPassword);
+// TODO als add to school mislukt, remove user!!!!!
+			try {
+				addToSchool(userID, schoolLogin, groupID, groupPassword);
+			} catch (SQLException e) {
+				deleteUser(userID);
+				throw e;
+			} catch (DwoXmlRpcException e) {
+				deleteUser(userID);
+				throw e;
+			}
 			
 			return result;
 		}
@@ -308,11 +327,11 @@ private Hashtable restrict(Hashtable user) {
 		if(!(o instanceof Number))
 			return user;
 		Number schoolID = (Number) o;
-		if(schoolID.intValue() <= 1)
+		int intValue = schoolID.intValue();
+		if(intValue <= 1)
 			return user;
-// TODO 1 call met 3, 7, 1, 8?
 		
-//		if ( !manager.isSchoolOK(schoolID.intValue(), 3) && !manager.isSchoolOK(schoolID.intValue(), 1)&& !manager.isSchoolOK(schoolID.intValue(), 7))
+//		if ( isNoDWOSchool(intValue))
 //		{
 //			user.remove("schoolID");
 //			user.remove("groupname");
@@ -320,6 +339,11 @@ private Hashtable restrict(Hashtable user) {
 //		}
 		return user;
 	}
+
+//TODO 1 call met 3, 7, 1, 8?
+private boolean isNoDWOSchool(int intValue) {
+	return !manager.isSchoolOK(intValue, 3) && !manager.isSchoolOK(intValue, 1)&& !manager.isSchoolOK(intValue, 7);
+}
 
 /**
  * Update de LastLogin bij fidentity.
