@@ -1500,7 +1500,7 @@ private static boolean isValidEmail(String email) {
      private User getInitialUser()
      {
  		this.fidentity = Fidentity.getInstance(this);
-        String username = fidentity.getUid();
+ 		String username = fidentity.getUid();
  System.out.println("[" + username + "]");
         if(username == null||"".equals(username))
             return null;
@@ -1518,7 +1518,7 @@ private static boolean isValidEmail(String email) {
         User u =  null; // Guest.instance();
         try
      {
-         DwoHelper.setContact(fidentity.getRole().equals(Fidentity.CONTACTDOCENT));
+         DwoHelper.setContact(Fidentity.CONTACTDOCENT.equals(fidentity.getRole()));
          u = PersistenceFacade.instance().login(username);
          u.setFirstname(fidentity.getFirstName());
          u.setMiddleName(fidentity.getMiddleName());
