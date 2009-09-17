@@ -6,10 +6,13 @@ package fi.dwo.client.gui;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.border.Border;
 
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.SchoolClass;
@@ -24,13 +27,15 @@ import fi.dwo.client.system.TextMapper;
  */
 public class TeacherMenuPanel extends MenuPanel {
 
-    private JButton classManagementButton;
+    private static final Border TITLE_BORDER = BorderFactory.createEmptyBorder(0, 10, 0, 0);
+    private static final Border CLASS_BORDER = BorderFactory.createEmptyBorder(0, 20, 0, 0);
+	private JButton classManagementButton;
     
     private JButton courseManagementButton;
 
     private ClassLinkedLabel[] classLinkedList;
     
-    private JPanel classPanel;
+    private JScrollPane classPanel;
 
     /* (non-Javadoc)
 	 * @see fi.dwo.client.gui.MenuPanel#createButtons()
@@ -81,12 +86,13 @@ public class TeacherMenuPanel extends MenuPanel {
         JLabel l;
 
         createRuler();
-        
-        classPanel = new JPanel(null);
+        Box classBox = Box.createVerticalBox();
+        classPanel = new JScrollPane(classBox);
         classPanel.setDoubleBuffered(false);
-        classPanel.setSize(this.getSize().width - 1, 1);
-        //classPanel.setLocation(0, 136);
         classPanel.setOpaque(false);
+        classPanel.getViewport().setOpaque(false);
+        classPanel.setViewportBorder(null);
+        classPanel.setBorder(null);
         /* Add class-info */
         if(GuiCreator.instance().getUser() instanceof Teacher){
 	        Teacher t = (Teacher) GuiCreator.instance().getUser();
@@ -95,12 +101,8 @@ public class TeacherMenuPanel extends MenuPanel {
 	                    + ":");
 	            l.setOpaque(false);
 	            l.setFont(GuiConstants.NORMAL_TEXT);
-	            fm = l.getFontMetrics(l.getFont());
-	            l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-	            l.setLocation(10, 10);
-	            l.setVisible(false);
-	            classPanel.add(l);
-	            l.setVisible(true);
+	            l.setBorder(TITLE_BORDER);
+	            classBox.add(l);
 	
 	            SchoolClass[] classes = t.getClasses();
 	            classLinkedList = new ClassLinkedLabel[classes.length];
@@ -109,18 +111,12 @@ public class TeacherMenuPanel extends MenuPanel {
 	
 	            for (int i = 0; i < classes.length; i++) {
 	                cll = new ClassLinkedLabel(classes[i]);
+	                cll.setBorder(CLASS_BORDER);
 	                cll.addActionListener(this);
 	                classLinkedList[i] = cll;
 	                cll.setFont(GuiConstants.NORMAL_TEXT);
-	                fm = cll.getFontMetrics(cll.getFont());
-	                cll.setSize(fm.stringWidth(cll.getText()) + 10, fm.getHeight());
-	                cll.setLocation(20, 26 + i * (cll.getSize().height + 3));
-	                cll.setVisible(false);
-	                classPanel.add(cll);
-	                cll.setVisible(true);
+	                classBox.add(cll);
 	            }
-	
-	            classPanel.setSize(this.getSize().width - 1, 26 + classes.length * (l.getSize().height + 3));
 	        }
 	        classPanel.setVisible(false);
 	        this.add(classPanel);
