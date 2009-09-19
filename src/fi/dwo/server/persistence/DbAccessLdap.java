@@ -221,8 +221,12 @@ public class DbAccessLdap extends DbAccess
 			super.register(username, password, firstname, middlename, lastname, email);
 			Hashtable rr = login(username, "");
 			int userID = ((Integer)rr.get("userID")).intValue();
+			
+			addToSchool(userID, schoolLogin, groupID, groupPassword);
 // TODO als add to school mislukt, remove user!!!!!
-			try {
+			
+			
+			/*try {
 				addToSchool(userID, schoolLogin, groupID, groupPassword);
 			} catch (SQLException e) {
 				deleteUser(userID);
@@ -230,7 +234,7 @@ public class DbAccessLdap extends DbAccess
 			} catch (DwoXmlRpcException e) {
 				deleteUser(userID);
 				throw e;
-			}
+			}*/
 			
 			return result;
 		}
