@@ -2,6 +2,7 @@
 
 package fi.dwo.client.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
@@ -36,6 +37,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -92,12 +94,13 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
      * @param course
      */
     public ScoManagementPanel(Course course) {
-        super(null);
+        super(new BorderLayout(10,10));
+        setBorder(BorderFactory.createEmptyBorder(10, 30, 0, 10));
         this.course = course;
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         //this.setSize(620, 485);
-        this.setSize(600, 470);
-        setPreferredSize(getSize());
+        //this.setSize(600, 470);
+        //setPreferredSize(getSize());
         course.loadScos();
         Image logo = course.getCourseLogo();
         /* Add Remove-course image */
@@ -128,7 +131,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         }
 
         Box top = Box.createHorizontalBox();
-        top.add(Box.createHorizontalStrut(30));
+        //top.add(Box.createHorizontalStrut(30));
         addScoButton = new JButton(TextMapper
                 .getText(TextMapper.GUIS_ADD_SCO));
         addScoButton.setSize(addScoButton.getPreferredSize());
@@ -149,16 +152,20 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         importScosButton.addActionListener(this);
         importScosButton.setVisible(false);
         top.add(importScosButton);
-        top.add(Box.createHorizontalStrut(10));
+        //top.add(Box.createHorizontalStrut(10));
         courseLogoButton = new JButton(new ImageIcon(logo));
         courseLogoButton.setBorderPainted(false);
 // TODO Mac?
         courseLogoButton.setBorder(BorderFactory.createLineBorder(getForeground()));
         courseLogoButton.setContentAreaFilled(false);
         top.setBounds(0, 10, getWidth(), addScoButton.getPreferredSize().height);
-        add(top);
+        add(top, BorderLayout.NORTH);
         top.doLayout();
-        
+        JPanel panel = new JPanel(new BorderLayout(10,10));
+		panel.setOpaque(false);
+		cpanel = Box.createHorizontalBox();
+		panel.add(cpanel, BorderLayout.CENTER);
+        add(panel, BorderLayout.CENTER);
         //if(false && DwoHelper.isApplication())
         if(DwoHelper.isApplication())
         {	importScosButton.setVisible(true);
@@ -174,10 +181,13 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         label.setFont(GuiConstants.SCO_TEXT);
         label.setSize(label.getPreferredSize());
         label.setLocation(30, 50);
-        this.add(label);
+        panel.add(label, BorderLayout.NORTH);
         courseLogoButton.setLocation(520, label.getLocation().y);
         courseLogoButton.setSize(courseLogoButton.getPreferredSize());
-        this.add(courseLogoButton);
+        Box hulp = Box.createVerticalBox();
+        hulp.add(courseLogoButton);
+        hulp.add(Box.createVerticalGlue());
+        this.add(hulp, BorderLayout.EAST);
         arguments = new String[1];
         arguments[0] = course.getName();
         String s = TextMapper.getText(TextMapper.GUIS_NO_SCOS);
@@ -185,9 +195,9 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         noScosLabel.setFont(GuiConstants.SCO_TEXT);
         noScosLabel.setSize(noScosLabel.getPreferredSize());
         noScosLabel.setLocation((this.getSize().width/2) - (noScosLabel.getSize().width/2), 100);
-        this.add(noScosLabel);
         
-        buildJTable();
+        
+        addScoTable();
         if(DwoHelper.isApplication())
         {
         	final Frame topFrame = DwoHelper.getFrameForComponent(null);		
@@ -199,7 +209,9 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     }
 
     
-    JScrollPane jtbl;
+    JTable jtbl;
+
+	private Box cpanel;
 	public class ImageRenderer extends JLabel implements TableCellRenderer {
 
 		private ImageIcon icon = new ImageIcon();
@@ -278,6 +290,10 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
                 if (JOptionPane.showConfirmDialog(ScoManagementPanel.this, message, TextMapper.getText(TextMapper.GUIS_MSG_TTL_SCO_DELETE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     if (GuiCreator.instance().deleteSco(s)) {
                     	model.fireTableRowsDeleted(row, row);
+                    	if(model.getRowCount()==0)
+                    	{
+                    		addScoTable();
+                    	}
                     }
                 }
     		} else if (value == parametersImage) {
@@ -343,17 +359,21 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     
     
     
-    private void buildJTable() {
+    private JComponent buildJTable() {
     	if(jtbl != null)
     	{
-    		remove(jtbl);
+    		if(jtbl.getParent()!= null)
+    			jtbl.getParent().remove(jtbl);
     		jtbl = null;
+    	} else {
+    		if(noScosLabel.isShowing())
+    			noScosLabel.getParent().remove(noScosLabel);
     	}
         Sco[] scos = course.getScoList();
         if(scos == null || scos.length == 0) {
             noScosLabel.setVisible(true);
             label.setVisible(false);
-            return;
+            return noScosLabel;
         } else {
             noScosLabel.setVisible(false);            
             label.setVisible(true);
@@ -362,16 +382,15 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     	TableUtil.setDefaults(table, false, new ImageRenderer(), new ImageButtonEditor());
 
     	TableUtil.setJTableSizes(table);
-    	jtbl = new JScrollPane(table);
-    	TableUtil.setBorder(jtbl);
-        jtbl.setLocation(30, label.getSize().height
-                + label.getLocation().y+10);
-        TableUtil.shrinkToFit(table, jtbl, 520-30, 405);
-        jtbl.setVisible(false);
-        this.add(jtbl);
-        jtbl.setVisible(true);
-
-    	
+    	//table.setSize(table.getPreferredSize());
+    	//table.setMaximumSize(table.getPreferredSize());
+    	jtbl = table;
+    	//TableUtil.setBorder(jtbl);
+    	//jtbl.setBorder(TableUtil.tableBorder);
+        //jtbl.setLocation(30, label.getSize().height
+        //        + label.getLocation().y+10);
+        //TableUtil.shrinkToFit(table, jtbl, 520-30, 405);
+    	return table;
     }
     
     
@@ -447,7 +466,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 	            System.arraycopy(as, 0, tmp, 0, as.length);
 	            tmp[tmp.length - 1] = s;
 	            course.setScoList(tmp);
-	            buildJTable();                
+	            addScoTable();
             }
 
         }
@@ -526,7 +545,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 			}
 			zipper.appendCourse(course.getID(), offset, result);
 			course.loadScos();
-			buildJTable();
+			addScoTable();
 		}
 	}
 
@@ -568,5 +587,22 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         // TODO Auto-generated method stub
         
     }
+
+
+
+	/**
+	 * 
+	 */
+    
+    
+	private void addScoTable() {
+		cpanel.removeAll();
+		JComponent comp = buildJTable();
+		comp.setAlignmentY(0.0f);
+		cpanel.add(comp);
+		cpanel.add(Box.createHorizontalStrut(20));
+		cpanel.invalidate();
+		cpanel.repaint();
+	}
 
 }
