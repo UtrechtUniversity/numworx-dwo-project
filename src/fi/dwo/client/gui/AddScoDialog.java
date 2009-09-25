@@ -77,11 +77,11 @@ public class AddScoDialog extends JDialog implements ActionListener,
 			{
 				int height2 = visibleRect.height;
 				if(getComponentCount() != 0) {
-					int w = getComponent(0).getWidth();
-					if(height2 > w)
-						height2 -= height2 % w;
+					int h = getComponent(0).getHeight();
+					if(height2 > h)
+						height2 -= height2 % h;
 					else 
-						height2 = w;
+						height2 = h;
 				} 
 				return height2;
 			}
