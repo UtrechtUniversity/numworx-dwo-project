@@ -8,7 +8,9 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
+import java.awt.LayoutManager;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,6 +21,7 @@ import java.awt.event.WindowListener;
 import java.util.Hashtable;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
@@ -30,6 +33,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.Scrollable;
+import javax.swing.SwingConstants;
 
 import fi.dwo.client.domain.AppletConfig;
 import fi.dwo.client.domain.Course;
@@ -46,6 +51,61 @@ import fi.dwo.client.system.TextMapper;
  */
 public class AddScoDialog extends JDialog implements ActionListener,
         WindowListener {
+	
+	class ScoTable extends JPanel implements Scrollable {
+
+		
+		/**
+		 * @param layout
+		 */
+		public ScoTable(LayoutManager layout) {
+			super(layout);
+		}
+
+		public Dimension getPreferredScrollableViewportSize() {
+			int h;
+			if(getComponentCount() == 0)
+				h = 300;
+			else 
+				h = 12*getComponent(0).getPreferredSize().height;
+			return new Dimension(585, h);
+		}
+
+		public int getScrollableBlockIncrement(Rectangle visibleRect,
+				int orientation, int direction) {
+			if(orientation == SwingConstants.VERTICAL)
+			{
+				int height2 = visibleRect.height;
+				if(getComponentCount() != 0) {
+					int w = getComponent(0).getWidth();
+					if(height2 > w)
+						height2 -= height2 % w;
+					else 
+						height2 = w;
+				} 
+				return height2;
+			}
+			return visibleRect.width;
+		}
+
+		public boolean getScrollableTracksViewportHeight() {
+			return false;
+		}
+
+		public boolean getScrollableTracksViewportWidth() {
+			return false;
+		}
+
+		public int getScrollableUnitIncrement(Rectangle visibleRect,
+				int orientation, int direction) {
+			if(orientation == SwingConstants.VERTICAL && getComponentCount()!= 0)
+				return getComponent(0).getHeight();
+			return 20;
+		}
+		
+	}
+	
+	
     private AppletConfig[] appletConfigs;
     private AppletConfig[] selectedConfigs;
 
@@ -68,6 +128,11 @@ public class AddScoDialog extends JDialog implements ActionListener,
     
     private ButtonGroup checkboxGroup;
 
+    /** 
+     * Box om '(x) standaard (o) eigen act' aan toe te voegen.
+     */
+    private Box titleBox;
+
     /**
      * Creates a new AddScoDialog.
      * @param owner The parent component of the dialog.
@@ -76,118 +141,92 @@ public class AddScoDialog extends JDialog implements ActionListener,
     public AddScoDialog(Component owner, AppletConfig[] appletConfigs) {
         super(DwoHelper.getFrameForComponent(owner),
                 TextMapper.getText(TextMapper.GUISDLG_TTL_ADD_SCO), true);
-        JPanel contentPane = null;
+        Box contentPane = Box.createVerticalBox();
         final int TOP = 25, BOTTOM=4; 	// gezien onder WXP
-        //setLayout(new FlowLayout());contentPane = new JPanel(null); add(contentPane);
-        contentPane = new JPanel(null);
         setContentPane(contentPane);
-        //contentPane.setLayout(null);
-        //this.setBackground(GuiConstants.MAIN_BACKGROUND);
         contentPane.setBackground(GuiConstants.MAIN_BACKGROUND);
-        contentPane.setSize(600, 380-TOP-BOTTOM);
-        contentPane.setPreferredSize(contentPane.getSize());
+        setBackground(GuiConstants.MAIN_BACKGROUND);
+//        contentPane.setSize(600, 380-TOP-BOTTOM);
+//        contentPane.setPreferredSize(contentPane.getSize());
         confirmed = false;
         this.appletConfigs = appletConfigs;
         selectedConfigs = appletConfigs;
-
-        FontMetrics fm;
+        titleBox = Box.createHorizontalBox();
+        titleBox.add(Box.createRigidArea(new Dimension(10,20)));
         JLabel l = new JLabel(TextMapper.getText(TextMapper.GUISDLG_MSG_SELECT_SCO) + ":");
         l.setFont(GuiConstants.RESULTS_HEADER_TEXT);
-        fm = l.getFontMetrics(l.getFont());
-        l.setLocation(10, 25-TOP);
-        l.setSize(fm.stringWidth(l.getText()) + 10, 20);
-        contentPane.add(l);
+
+        titleBox.add(l);
+        titleBox.add(Box.createHorizontalGlue());
+        contentPane.add(titleBox);
         
-        //Panel panel = new BorderedPanel(null, BorderedPanel.NORTH | BorderedPanel.SOUTH);
-        JPanel panel = new JPanel(null);
-        panel.setOpaque(false);
+        Box panel = Box.createHorizontalBox();
         panel.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.black));
-        panel.setSize(contentPane.getSize().width, 20);
-        panel.setLocation(0, 45-TOP);
+        panel.add(Box.createRigidArea(new Dimension(10,20)));
         contentPane.add(panel);
-        
         l = new JLabel(TextMapper.getText(TextMapper.GUISDLG_SHOW) + ": ");
         l.setFont(GuiConstants.NORMAL_TEXT);
-        fm = l.getFontMetrics(l.getFont());
-        l.setSize(fm.stringWidth(l.getText()) + 8, 18);
-        l.setLocation(10, 1);
         panel.add(l);
-        JComponent last = l;
-        
+        panel.add(Box.createHorizontalGlue());
         LinkedLabel ll = new LinkedLabel(TextMapper.getText(TextMapper.GUISDLG_ALL));
         allItems = ll;
         ll.setFont(GuiConstants.NORMAL_TEXT);
-        fm = ll.getFontMetrics(ll.getFont());
-        ll.setSize(fm.stringWidth(ll.getText()) + 8, 18);
-        ll.setLocation(last.getLocation().x + last.getSize().width + 3, 1);
         ll.addActionListener(this);
         panel.add(ll);
-        last = ll;
         
         String s;
         for(int i = 65; i < 91; i++) {
+        	panel.add(Box.createHorizontalGlue());
             l = new JLabel("-");
             l.setFont(GuiConstants.NORMAL_TEXT);
-            fm = l.getFontMetrics(l.getFont());
-            l.setSize(fm.stringWidth(l.getText()) + 1, 18);
-            l.setLocation(last.getLocation().x + last.getSize().width + 2, 1);
             panel.add(l);
-            last = l;
+        	panel.add(Box.createHorizontalGlue());
 
             s = "" + ((char) i);
             ll = new LinkedLabel(s);
             ll.setFont(GuiConstants.NORMAL_TEXT);
-            fm = ll.getFontMetrics(ll.getFont());
-            ll.setSize(fm.stringWidth(ll.getText()) + 2, 18);
-            ll.setLocation(last.getLocation().x + last.getSize().width + 2, 1);
             ll.addActionListener(this);
             panel.add(ll);
-            last = ll;
-            
         }
-
+        panel.add(Box.createHorizontalStrut(10));
         
-        table = new JPanel( );
+        table = new ScoTable(null);
         table.setBackground(GuiConstants.MAIN_BACKGROUND);
         table.setLayout(new BoxLayout(table, BoxLayout.Y_AXIS));
         tableTitle = new JLabel();
         tableTitle.setText(allItems.getText() + ":");
         JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.getViewport().setBackground(table.getBackground());
         JPanel jp = new JPanel(new BorderLayout());
         jp.setBackground(GuiConstants.MAIN_BACKGROUND);
         jp.add(tableTitle, BorderLayout.NORTH);
         jp.add(scrollPane, BorderLayout.CENTER);
-        jp.setBounds(10, 70-TOP, 590, 250);
-        
+        jp.setBorder(BorderFactory.createEmptyBorder(4, 10, 2, 5));
 		contentPane.add(jp);
         selectChar(null);
-
+        Box buttonBox = Box.createHorizontalBox();
+        buttonBox.add(Box.createHorizontalStrut(10));
         /* Preview Button */
         previewButton = new JButton(TextMapper
                 .getText(TextMapper.GUISDLG_BTN_PREVIEW_SCO));
-        previewButton.setSize(previewButton.getPreferredSize());
-        previewButton.setLocation(10, 320-TOP);
         previewButton.addActionListener(this);
-        contentPane.add(previewButton);
+        buttonBox.add(previewButton);
 
+        buttonBox.add(Box.createHorizontalGlue());
         /* Cancel button */
         cancelButton = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));
-        cancelButton.setSize(cancelButton.getPreferredSize());
-        cancelButton.setLocation(contentPane.getSize().width - contentPane.getInsets().right
-                - cancelButton.getSize().width - 15, 320-TOP);
         cancelButton.addActionListener(this);
-        contentPane.add(cancelButton);
+        buttonBox.add(cancelButton);
+        buttonBox.add(Box.createHorizontalStrut(20));
 
         /* Ok button */
         okButton = new JButton(TextMapper
                 .getText(TextMapper.GUISDLG_BTN_ADD_SCO));
-        fm = okButton.getFontMetrics(okButton.getFont());
-        okButton.setSize(okButton.getPreferredSize());
-        okButton.setLocation(cancelButton.getLocation().x
-                - okButton.getSize().width - 5, 320-TOP);
         okButton.addActionListener(this);
-        contentPane.add(okButton);
-
+        buttonBox.add(okButton);
+        buttonBox.add(Box.createHorizontalStrut(10));
+        contentPane.add(buttonBox);
+        contentPane.add(Box.createVerticalStrut(2));
         // set location to center of parent
         int x = 0;
         int y = 0;
@@ -226,13 +265,12 @@ public class AddScoDialog extends JDialog implements ActionListener,
         swap.add(algemeen);
         swap.add(eigen);
         algemeen.setSelected(true);
-        
- final int EXTRA = -25;
-        algemeen.setBounds(120, 25+EXTRA, 100, 20);
-        contentPane.add(algemeen);
-        eigen.setBounds(220, 25+EXTRA, 150, 20);
-        contentPane.add(eigen);
-        
+        titleBox.remove(titleBox.getComponentCount()-1); // remove Glue
+        titleBox.add(Box.createHorizontalStrut(30));
+        titleBox.add(algemeen);
+        titleBox.add(Box.createHorizontalStrut(15));
+        titleBox.add(eigen);
+        titleBox.add(Box.createHorizontalGlue());
         ItemListener listener = new ItemListener() {
             public void itemStateChanged(ItemEvent e)
             {
