@@ -150,8 +150,8 @@ public class CenterPanel extends JPanel {
 
         centerSubPanel = panel;
         centerSubPanel.setCenterPanel(this);
-        
-    	mainPanel.setGuiImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE));
+        if(GuiConstants.GUI_IMAGE_BG)
+        	mainPanel.setGuiImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE));
 
         /* If we didn't show the menu, show it */
         if (!showMenu) {

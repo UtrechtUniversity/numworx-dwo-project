@@ -935,7 +935,6 @@ private static boolean isValidEmail(String email) {
         DwoHelper.setAu(new AppletUtil(this));
         DwoHelper.setApplet(this);
         DwoHelper.setUmpc(umpc);
-        initWaitLabel(); // wim: GuiConstants nu actief en correct!
         
         if(!DwoHelper.isApplication()) {
         	dwoProfileID = 1; 
@@ -954,6 +953,7 @@ private static boolean isValidEmail(String email) {
 		} catch (PersistenceException e) {
 		}
 		GuiConstants.setDwoProfile(dwoProfileID);
+        initWaitLabel(); // wim: GuiConstants nu actief en correct!
         
 		
         /* ToolTipManager ttm = */ new ToolTipManager(this);

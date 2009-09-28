@@ -46,11 +46,11 @@ public class TableUtil {
 				Component c = renderer.getTableCellRendererComponent(jTable,
 						jTable.getValueAt(i, j), false, false, i, j);
 				Dimension preferredSize = c.getPreferredSize();
-				max = Math.max(max-1, preferredSize.width)+1;//+3;
+				max = Math.max(max, preferredSize.width);//+3;
 				h = Math.max(h, preferredSize.height);
 			}
 			column = jTable.getColumnModel().getColumn(j);
-			column.setPreferredWidth(max);
+			column.setPreferredWidth(max+3);
 		}
 		jTable.setRowHeight(h + jTable.getRowMargin());
 	}

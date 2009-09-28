@@ -7,6 +7,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.FileDialog;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Frame;
@@ -163,7 +164,8 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         top.doLayout();
         JPanel panel = new JPanel(new BorderLayout(10,10));
 		panel.setOpaque(false);
-		cpanel = Box.createHorizontalBox();
+		cpanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		cpanel.setOpaque(false);
 		panel.add(cpanel, BorderLayout.CENTER);
         add(panel, BorderLayout.CENTER);
         //if(false && DwoHelper.isApplication())
@@ -211,7 +213,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     
     JTable jtbl;
 
-	private Box cpanel;
+	private JPanel cpanel;
 	public class ImageRenderer extends JLabel implements TableCellRenderer {
 
 		private ImageIcon icon = new ImageIcon();
@@ -600,9 +602,9 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 		JComponent comp = buildJTable();
 		comp.setAlignmentY(0.0f);
 		cpanel.add(comp);
-		cpanel.add(Box.createHorizontalStrut(20));
 		cpanel.invalidate();
-		cpanel.repaint();
+		validate();
+		repaint();
 	}
 
 }

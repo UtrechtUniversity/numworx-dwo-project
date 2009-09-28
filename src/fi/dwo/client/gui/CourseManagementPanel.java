@@ -2,9 +2,11 @@
 
 package fi.dwo.client.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.FileDialog;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Frame;
@@ -26,8 +28,11 @@ import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.AbstractCellEditor;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -73,7 +78,10 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	private FileDialog openDial;
 
 
-	private JScrollPane jScrollPane;
+	private JTable jTable;
+
+
+	private JComponent tablePane;
 
 	class CourseModel extends AbstractTableModel {
 
@@ -221,14 +229,19 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
      * @param courses
      */
     public CourseManagementPanel(Course[] courses) {
-        super(null);
-        System.out.println(java.util.Locale.getDefault());
+        super(new BorderLayout(10,10));
+       // System.out.println(java.util.Locale.getDefault());
         this.courses = courses;
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         //this.setSize(620, 485);
-        this.setSize(600, 470);
-        this.setPreferredSize(getSize());
-
+        //this.setSize(600, 470);
+        //this.setPreferredSize(getSize());
+        tablePane = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        tablePane.setOpaque(false);
+        add(tablePane, BorderLayout.CENTER);
+        setBorder(BorderFactory.createEmptyBorder(10,30,5,10));
+        Box header = Box.createHorizontalBox();
+        add(header, BorderLayout.NORTH);
         /* Add Remove-class image */
         MediaTracker tr = new MediaTracker(this);
         removeImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.REMOVE_COURSE_IMAGE);
@@ -246,14 +259,14 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         addCourseButton.setSize(addCourseButton.getPreferredSize());
         addCourseButton.addActionListener(this);
         addCourseButton.setLocation(30, 10);
-        this.add(addCourseButton);
-        
+        header.add(addCourseButton);
+        header.add(Box.createHorizontalGlue());
         uploadCourseButton = new JButton("Restore module backup"); // TODO TextMapper
         uploadCourseButton.setSize(uploadCourseButton.getPreferredSize());
         uploadCourseButton.addActionListener(this);
         uploadCourseButton.setLocation(200+addCourseButton.getWidth()+10, 10);
         uploadCourseButton.setVisible(false);
-        this.add(uploadCourseButton);
+        header.add(uploadCourseButton);
         if(DwoHelper.isApplication()) 
         	uploadCourseButton.setVisible(true);
         
@@ -264,7 +277,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         noCoursesLabel.setFont(GuiConstants.SCO_TEXT);
         noCoursesLabel.setSize(noCoursesLabel.getPreferredSize());
         noCoursesLabel.setLocation((this.getSize().width/2) - (noCoursesLabel.getSize().width/2), 100);
-        this.add(noCoursesLabel);
+        //this.add(noCoursesLabel);
         buildJTable();
 
         if(DwoHelper.isApplication()) {
@@ -276,27 +289,34 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
  
     private void buildJTable() {
-    	if(jScrollPane != null)
-    		remove(jScrollPane);
+    	if(jTable != null)
+    		tablePane.remove(jTable);
         if(courses.length == 0) {
             noCoursesLabel.setVisible(true);
+            tablePane.add(noCoursesLabel);
             return;
         } else {
-            noCoursesLabel.setVisible(false);            
+            noCoursesLabel.setVisible(false);
+            tablePane.remove(noCoursesLabel);
         }
 
     	CourseModel tm = new CourseModel();
-    	JTable jTable = new JTable(tm);
+    	jTable = new JTable(tm);
     	jTable.setTableHeader(null);
-    	jScrollPane = new JScrollPane(jTable);
+    	//jScrollPane = new JScrollPane(jTable);
     	TableUtil.setDefaults(jTable, false, new ImageRenderer(), new ImageButtonEditor());
    	
     	TableUtil.setJTableSizes(jTable);
-       	TableUtil.setBorder(jScrollPane);
-       	jScrollPane.setLocation(30, addCourseButton.getSize().height
-                + addCourseButton.getLocation().y + 15);
-       	TableUtil.shrinkToFit(jTable, jScrollPane, 520, 405);
-        add(jScrollPane);
+       	//TableUtil.setBorder(jScrollPane);
+       	jTable.setBorder(TableUtil.tableBorder);
+       	//jTable.setLocation(30, addCourseButton.getSize().height
+        //        + addCourseButton.getLocation().y + 15);
+       	//TableUtil.shrinkToFit(jTable, jScrollPane, 520, 405);
+        jTable.setSize(jTable.getPreferredSize());
+        tablePane.add(jTable);
+        tablePane.invalidate();
+        validate();
+        repaint();
     }
     
     
