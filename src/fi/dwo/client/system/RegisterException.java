@@ -25,6 +25,8 @@ public class RegisterException extends Exception {
     public final static int RE_MANDATORY = 5;
     
     public final static int RE_WRONG_FORMAT = 6;
+    
+    public final static int RE_WRONG_EMAILFORMAT = 7;
     /**
 
      */
@@ -53,6 +55,9 @@ public class RegisterException extends Exception {
             break;
         case (RE_WRONG_FORMAT):
             result = TextMapper.getText(TextMapper.EXR_WRONG_FORMAT);
+    		result = MessageFormat.format(result, arguments);
+        case (RE_WRONG_EMAILFORMAT):
+            result = TextMapper.getText(TextMapper.EXR_WRONG_EMAILFORMAT);
     		result = MessageFormat.format(result, arguments);
         break;
         

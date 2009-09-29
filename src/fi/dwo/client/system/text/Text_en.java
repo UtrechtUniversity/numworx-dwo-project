@@ -27,6 +27,7 @@ public class Text_en extends ListResourceBundle {
          { TextMapper.EXR_UNKNOWN_SCHOOLGROUP, "Unknown school/group/password combination" },
          { TextMapper.EXR_MANDATORY, "{0} at {1} isn't filled. This is a required field"},
          { TextMapper.EXR_WRONG_FORMAT, "{0} at {1} contains illegal characters" },
+         { TextMapper.EXR_WRONG_EMAILFORMAT, "{0} at {1} is illegal" },
          { TextMapper.EXC_CLASS_EXISTS, "The specified class already exists" },
          { TextMapper.EXS_SCHOOL_EXISTS, "A school with the specified schoollogin already exists" },
          { TextMapper.EXL_UNKNOWN_USER, "An user with the specified username and password was not found" },

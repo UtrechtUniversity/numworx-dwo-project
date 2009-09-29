@@ -27,6 +27,7 @@ public class Text_nl extends ListResourceBundle {
          { TextMapper.EXR_UNKNOWN_SCHOOLGROUP, "Onbekende school/groep/wachtwoord combinatie" },
          { TextMapper.EXR_MANDATORY, "{0} bij {1} is niet ingevuld. Deze is verplicht"},
          { TextMapper.EXR_WRONG_FORMAT, "{0} bij {1} bevat illegale tekens." },
+         { TextMapper.EXR_WRONG_EMAILFORMAT, "{0} bij {1} is niet goed." },
          { TextMapper.EXC_CLASS_EXISTS, "Er bestaat al een klas met de opgegeven naam" },
          { TextMapper.EXS_SCHOOL_EXISTS, "Er bestaat al een school met de opgegeven schoollogin" },
          { TextMapper.EXL_UNKNOWN_USER, "De opgegeven gebruikersnaam en wachtwoord komen niet overeen" },

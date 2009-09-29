@@ -48,6 +48,7 @@ public abstract class TextMapper {
     public final static String EXR_UNKNOWN_SCHOOLGROUP = "EXR_UNKNOWN_SCHOOLGROUP";
     
     public final static String EXR_WRONG_FORMAT = "EXR_WRONG_FORMAT";
+    public final static String EXR_WRONG_EMAILFORMAT = "EXR_WRONG_EMAILFORMAT";
 
 	/* School Exception Messages */
     public final static String EXS_SCHOOL_EXISTS = "EXS_SCHOOL_EXISTS";

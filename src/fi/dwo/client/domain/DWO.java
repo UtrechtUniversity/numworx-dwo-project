@@ -17,6 +17,8 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Panel;
 import java.awt.Toolkit;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Vector;
@@ -31,6 +33,7 @@ import javax.swing.plaf.ColorUIResource;
 
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.base64code.StringCodeObject;
+import fi.beans.fidentity.CheckEmail;
 import fi.beans.fidentity.Fidentity;
 import fi.beans.mainframe.MainFrame;
 import fi.beans.scorm.SCORM12APIInterface;
@@ -273,7 +276,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
         } else if (!isValidEmail(email)) {
         	arguments[0] = TextMapper.getText(TextMapper.GUIR_EMAIL);
         	arguments[1] = TextMapper.getText(TextMapper.GUIR_PERSONALINFO);
-        	throw new RegisterException(RegisterException.RE_WRONG_FORMAT, arguments);
+        	throw new RegisterException(RegisterException.RE_WRONG_EMAILFORMAT, arguments);
         }
         if (!password.equals(rePassword)) {
             throw new RegisterException(RegisterException.RE_WRONG_SECOND_PASSWORD);
@@ -294,7 +297,16 @@ private static boolean isValidEmail(String email) {
 		if ( c <= 0x20 || c >= 0x7F ) 
 			return false;
 	}
-	return true;
+// echte check email check
+	try {
+// application altijd www.fi.uu.nl		
+		if(DwoHelper.isApplication())
+			return new CheckEmail().check(email);		
+		CheckEmail checkEmail = new CheckEmail(DwoHelper.getApplet().getCodeBase());
+		return checkEmail.check(email);
+	} catch (MalformedURLException e) {
+		return true;
+	}
 	}
 
 //  checks:
@@ -409,7 +421,7 @@ private static boolean isValidEmail(String email) {
         } else if (!isValidEmail(email)) {
         	arguments[0] = TextMapper.getText(TextMapper.GUIR_EMAIL);
         	arguments[1] = TextMapper.getText(TextMapper.GUIR_PERSONALINFO);
-        	throw new RegisterException(RegisterException.RE_WRONG_FORMAT, arguments);
+        	throw new RegisterException(RegisterException.RE_WRONG_EMAILFORMAT, arguments);
         } else if (isEmpty(schoolLogin)) {
             arguments[0] = TextMapper.getText(TextMapper.GUIR_SCHOOLLOGIN);
             arguments[1] = TextMapper.getText(TextMapper.GUIR_SCHOOLINFO);
@@ -571,24 +583,7 @@ private static boolean isValidEmail(String email) {
             String lastName, String email, SchoolClass c)
             throws RegisterException {
 
-        String[] arguments = new String[2];
-        if (isEmpty(password)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIP_OLD_PASSWORD);
-            arguments[1] = TextMapper.getText(TextMapper.GUIP_REGISTERINFO);
-            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        } else if (isEmpty(firstName)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIP_FIRSTNAME);
-            arguments[1] = TextMapper.getText(TextMapper.GUIP_PERSONALINFO);
-            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        } else if (isEmpty(lastName)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIP_LASTNAME);
-            arguments[1] = TextMapper.getText(TextMapper.GUIP_PERSONALINFO);
-            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        } else if (isEmpty(email)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIP_EMAIL);
-            arguments[1] = TextMapper.getText(TextMapper.GUIP_PERSONALINFO);
-            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        }
+    	validateAccount(password, firstName, lastName, email);
 
         if (!newPassword.equals(reNewPassword)) {
             throw new RegisterException(RegisterException.RE_WRONG_SECOND_PASSWORD);
@@ -623,24 +618,11 @@ private static boolean isValidEmail(String email) {
             String reNewPassword, String firstName, String middleName,
             String lastName, String email, String schoolLogin, Group group,
             String groupPassword) throws RegisterException {
-        String[] arguments = new String[2];
-        if (isEmpty(password)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIP_OLD_PASSWORD);
-            arguments[1] = TextMapper.getText(TextMapper.GUIP_REGISTERINFO);
-            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        } else if (isEmpty(firstName)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIP_FIRSTNAME);
-            arguments[1] = TextMapper.getText(TextMapper.GUIP_PERSONALINFO);
-            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        } else if (isEmpty(lastName)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIP_LASTNAME);
-            arguments[1] = TextMapper.getText(TextMapper.GUIP_PERSONALINFO);
-            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        } else if (isEmpty(email)) {
-            arguments[0] = TextMapper.getText(TextMapper.GUIP_EMAIL);
-            arguments[1] = TextMapper.getText(TextMapper.GUIP_PERSONALINFO);
-            throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        } else if (isEmpty(schoolLogin)) {
+    	
+    	validateAccount(password, firstName, lastName, email);
+
+    	String[] arguments = new String[2];
+        if (isEmpty(schoolLogin)) {
             arguments[0] = TextMapper.getText(TextMapper.GUIP_SCHOOLLOGIN);
             arguments[1] = TextMapper.getText(TextMapper.GUIP_SCHOOLINFO);
             throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
@@ -652,7 +634,7 @@ private static boolean isValidEmail(String email) {
             arguments[0] = TextMapper.getText(TextMapper.GUIP_SCHOOLPASSWORD);
             arguments[1] = TextMapper.getText(TextMapper.GUIP_SCHOOLINFO);
             throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
-        }
+        } 
 
         if (!newPassword.equals(reNewPassword)) {
             throw new RegisterException(RegisterException.RE_WRONG_SECOND_PASSWORD);
@@ -684,7 +666,27 @@ private static boolean isValidEmail(String email) {
             String reNewPassword, String firstName, String middleName,
             String lastName, String email) throws RegisterException {
 
-        String[] arguments = new String[2];
+        validateAccount(password, firstName, lastName, email);
+
+        if (!newPassword.equals(reNewPassword)) {
+            throw new RegisterException(RegisterException.RE_WRONG_SECOND_PASSWORD);
+        } else {
+            PersistenceFacade.instance().changeAccount(currentUser, password, newPassword, firstName, middleName, lastName, email);
+        }
+
+    }
+
+    /**
+     * Common code voor changeAccount 1, 2 en 3.
+     * @param password
+     * @param firstName
+     * @param lastName
+     * @param email
+     * @throws RegisterException
+     */
+	private void validateAccount(String password, String firstName,
+			String lastName, String email) throws RegisterException {
+		String[] arguments = new String[2];
         if (isEmpty(password)) {
             arguments[0] = TextMapper.getText(TextMapper.GUIP_OLD_PASSWORD);
             arguments[1] = TextMapper.getText(TextMapper.GUIP_REGISTERINFO);
@@ -701,15 +703,12 @@ private static boolean isValidEmail(String email) {
             arguments[0] = TextMapper.getText(TextMapper.GUIP_EMAIL);
             arguments[1] = TextMapper.getText(TextMapper.GUIP_PERSONALINFO);
             throw new RegisterException(RegisterException.RE_MANDATORY, arguments);
+        } else if (!isValidEmail(email)) {
+            arguments[0] = TextMapper.getText(TextMapper.GUIP_EMAIL);
+            arguments[1] = TextMapper.getText(TextMapper.GUIP_PERSONALINFO);
+            throw new RegisterException(RegisterException.RE_WRONG_EMAILFORMAT, arguments);
         }
-
-        if (!newPassword.equals(reNewPassword)) {
-            throw new RegisterException(RegisterException.RE_WRONG_SECOND_PASSWORD);
-        } else {
-            PersistenceFacade.instance().changeAccount(currentUser, password, newPassword, firstName, middleName, lastName, email);
-        }
-
-    }
+	}
 
     /**
      * Adds a class to the school of the current user. The current user will
