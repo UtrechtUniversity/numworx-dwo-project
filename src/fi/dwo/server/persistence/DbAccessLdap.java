@@ -205,10 +205,10 @@ public class DbAccessLdap extends DbAccess
         		throw new DwoXmlRpcException(
                     DwoXmlRpcException.EXC_UNKNOWN_SCHOOLGROUP);
         	Hashtable h = getRecord("tblSchoolGroup", "schoolGroupID", schoolGroupId);
-        	Object schoolID = h.get("schoolID");
-        	if(schoolID instanceof Number && isNoDWOSchool(((Number) schoolID).intValue()))
-    			throw new DwoXmlRpcException(
-                    DwoXmlRpcException.EXC_UNKNOWN_SCHOOLGROUP);
+//        	Object schoolID = h.get("schoolID");
+//        	if(schoolID instanceof Number && isNoDWOSchool(((Number) schoolID).intValue()))
+//    			throw new DwoXmlRpcException(
+//                    DwoXmlRpcException.EXC_UNKNOWN_SCHOOLGROUP);
         		
         	
         	
@@ -222,11 +222,11 @@ public class DbAccessLdap extends DbAccess
 			Hashtable rr = login(username, "");
 			int userID = ((Integer)rr.get("userID")).intValue();
 			
-			addToSchool(userID, schoolLogin, groupID, groupPassword);
+			//addToSchool(userID, schoolLogin, groupID, groupPassword);
 // TODO als add to school mislukt, remove user!!!!!
 			
 			
-			/*try {
+			try {
 				addToSchool(userID, schoolLogin, groupID, groupPassword);
 			} catch (SQLException e) {
 				deleteUser(userID);
@@ -234,7 +234,7 @@ public class DbAccessLdap extends DbAccess
 			} catch (DwoXmlRpcException e) {
 				deleteUser(userID);
 				throw e;
-			}*/
+			}
 			
 			return result;
 		}
