@@ -18,6 +18,9 @@ import java.text.MessageFormat;
 import java.util.Hashtable;
 
 import javax.swing.AbstractCellEditor;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -214,10 +217,11 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
     public SchoolPanel() {
         super(null);
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
-        this.setSize(627, 485);
-        this.setSize(600, 470);
-        setPreferredSize(getSize());
-
+        setBorder(BorderFactory.createEmptyBorder(10, 5, 0, 10));
+        //this.setSize(627, 485);
+        //this.setSize(600, 470);
+        //setPreferredSize(getSize());
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         /* Add Remove-school image */
         MediaTracker tr = new MediaTracker(this);
         removeImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.REMOVE_CLASS_IMAGE);
@@ -235,18 +239,22 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
 
         int w; 
         addSchoolButton = new JButton(TextMapper.getText(TextMapper.GUIS_ADD_SCHOOL));
-        addSchoolButton.setSize(addSchoolButton.getPreferredSize());
+        //addSchoolButton.setSize(addSchoolButton.getPreferredSize());
         w = addSchoolButton.getWidth();
         addSchoolButton.addActionListener(this);
-        addSchoolButton.setLocation(30, 10);
-        this.add(addSchoolButton);
-        
+        //addSchoolButton.setLocation(30, 10);
+        Box header = Box.createHorizontalBox();
+        header.add(Box.createHorizontalStrut(25));
+        header.add(addSchoolButton);
+        header.add(Box.createHorizontalStrut(10));
         copyButton = new JButton(/*FIXME*/ "Copy");
-        copyButton.setSize(copyButton.getPreferredSize());
+        //copyButton.setSize(copyButton.getPreferredSize());
         copyButton.addActionListener(this);
-        copyButton.setLocation(30 + w + 10, 10);
-        add(copyButton);
-        
+        //copyButton.setLocation(30 + w + 10, 10);
+        header.add(copyButton);
+        header.add(Box.createHorizontalGlue());
+        add(header);
+        add(Box.createVerticalStrut(5));
         buildJTable();
 
     }
@@ -259,7 +267,7 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
 
     }
     
-    private JScrollPane jtbl;
+    private Box jtbl;
     private void buildJTable() {
     	if (jtbl != null)
     	{
@@ -286,10 +294,12 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
     	//panel.add(table.getTableHeader(),BorderLayout.NORTH);
     	//panel.add(table, BorderLayout.CENTER);
     	//panel.setPreferredSize(table.getPreferredSize());
-    	jtbl = new JScrollPane(table);
-        TableUtil.setBorder(jtbl);
+    	jtbl = Box.createVerticalBox();
+    	jtbl.add(table.getTableHeader());
+    	jtbl.add(table);
+        //TableUtil.setBorder(table);
     	int h = addSchoolButton.getSize().height + addSchoolButton.getLocation().y + 5;
-        jtbl.setBounds(5, h, 627 - 5 , 492 - h - 5);
+        //jtbl.setBounds(5, h, 627 - 5 , 492 - h - 5);
         jtbl.validate();
         this.add(jtbl);
     }

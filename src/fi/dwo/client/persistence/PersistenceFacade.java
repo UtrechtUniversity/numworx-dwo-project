@@ -711,7 +711,10 @@ public class PersistenceFacade {
     public boolean changeAccount(User user, String password,
             String newPassword, String firstname, String middlename,
             String lastname, String email) throws RegisterException {
-        password = MD5.getHashString(password);
+        if(password != null) 
+        	password = MD5.getHashString(password);
+        else 
+        	password = "";
         newPassword = MD5.getHashString(newPassword);
 
         DbAccessIF dbAccess = DbAccessCreator.instance();

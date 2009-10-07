@@ -9,6 +9,7 @@ import java.text.MessageFormat;
 import java.util.EventObject;
 
 import javax.swing.AbstractCellEditor;
+import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -58,10 +59,11 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 		}
 
 		public void actionPerformed(ActionEvent event) {
+			User user = userList[row];
 			if(value == userImage)
 			{
 				try {
-					GuiCreator.instance().login(userList[row].getUsername(), null);
+					GuiCreator.instance().login(user.getUsername(), null);
 				} catch (LoginException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -70,9 +72,12 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 			if(value == editImage)
 			{
 				try {
-					// TODO edit password, naam
-					JOptionPane.showInputDialog(this,"PASSWORD");
-					model.fireTableRowsUpdated(row, row);
+					String newPassword = JOptionPane.showInputDialog(UserManagementPanel.this,TextMapper.getText(TextMapper.GUIP_PASSWORD), "");
+					if(newPassword != null)
+					{
+						PersistenceFacade.instance().changeAccount(user, null, newPassword, user.getFirstname(), user.getMiddleName(), user.getLastName(), user.getEmail());
+						model.fireTableRowsUpdated(row, row);
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -80,7 +85,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 			if (value == removeImage)
 			{
                 /* Delete the school */
-                User u = userList[row];
+                User u = user;
                 if (u != docent) {
 					final String title = TextMapper.getText(TextMapper.GUIS_DELETE_STUDENT);
 					final String text = MessageFormat.format(TextMapper.getText(TextMapper.GUIS_MSG_DELETE_STUDENT), new Object[] { u.getName() });
@@ -108,7 +113,6 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 	class UserModel extends AbstractTableModel {
 
 		public int getColumnCount() {
-			// TODO Auto-generated method stub
 			return 5;
 		}
 
@@ -162,8 +166,6 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 
 	}
 	
-	JScrollPane jtbl;
-
 	public UserManagementPanel(DwoIF dwo) {
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setSize(620, 485);
@@ -192,9 +194,11 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
     	TableUtil.setDefaults(table, true, new ImageRenderer(), new ImageButtonEditor());
 
     	TableUtil.setJTableSizes(table);
-
-		jtbl = new JScrollPane(table);
-		add(jtbl);
+    	Box b = Box.createVerticalBox();
+    	b.add(table.getTableHeader());
+    	b.add(table);
+		
+		add(b);
 		
 	}
     /**

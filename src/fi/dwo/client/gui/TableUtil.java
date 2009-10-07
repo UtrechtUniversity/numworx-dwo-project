@@ -100,4 +100,9 @@ public class TableUtil {
 		pane.setBorder(tableBorder);
 	}
 	
+	static void setBorder(JTable table)
+	{
+		table.setBorder(tableBorder);
+	}
+	
 }

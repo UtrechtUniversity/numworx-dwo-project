@@ -6,6 +6,7 @@ package fi.dwo.client.gui;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -16,6 +17,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
 import javax.swing.AbstractCellEditor;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -192,7 +196,7 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
 
 }
 
-    private JScrollPane jtbl;
+    private Box jtbl;
     
     private void buildJTable() {
     	if(jtbl != null)
@@ -202,8 +206,10 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
     	}
     	
     	JTable table = new JTable();
-    	jtbl = new JScrollPane(table);
-    	jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
+    	jtbl = Box.createHorizontalBox();
+    	jtbl.add(table);
+    	jtbl.add(Box.createHorizontalGlue());
+    	//jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
         if(GuiCreator.instance().getUser() instanceof Teacher){
 	        Teacher t = (Teacher) GuiCreator.instance().getUser();
 	        SchoolClass[] classes = t.getClasses();
@@ -213,10 +219,14 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
         
     	TableUtil.setDefaults(table, false, new ImageRenderer(), new ImageButtonEditor());
         TableUtil.setJTableSizes(table);
+// TODO shrink to fit heeft 520 als breedte
+        Dimension size = table.getPreferredSize();
+        if(size.width<520) size.width=520;
+        table.setMaximumSize(size);
         jtbl.setLocation(30, addClassButton.getSize().height
                 + addClassButton.getLocation().y + 15);
-        TableUtil.setBorder(jtbl);
-        TableUtil.shrinkToFit(table, jtbl, 520, 405);
+        TableUtil.setBorder(table);
+        //TableUtil.shrinkToFit(table, jtbl, 520, 405);
         jtbl.setVisible(false);
         this.add(jtbl);
         jtbl.setVisible(true);
@@ -230,11 +240,12 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
      */
     public ClassPanel() {
         super(null);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         //this.setSize(620, 485);
-        this.setSize(600, 470);
-        this.setPreferredSize(getSize());
-
+        //this.setSize(600, 470);
+        //this.setPreferredSize(getSize());
+        setBorder(BorderFactory.createEmptyBorder(10, 30, 0, 0));
         /* Add Remove-class image */
         MediaTracker tr = new MediaTracker(this);
         removeImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.REMOVE_CLASS_IMAGE);
@@ -256,11 +267,14 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
         //fm = addClassButton.getFontMetrics(addClassButton.getFont());
         addClassButton.setSize(addClassButton.getPreferredSize());
         addClassButton.addActionListener(this);
-        addClassButton.setLocation(30, 10);
-        addClassButton.setVisible(false);
-        this.add(addClassButton);
-        addClassButton.setVisible(true);
-        
+        //addClassButton.setLocation(30, 10);
+        //addClassButton.setVisible(false);
+        Box header = Box.createHorizontalBox();
+        header.add(addClassButton);
+        header.add(Box.createHorizontalGlue());
+        this.add(header);
+        //addClassButton.setVisible(true);
+        this.add(Box.createVerticalStrut(15));
         buildJTable();
 
     }

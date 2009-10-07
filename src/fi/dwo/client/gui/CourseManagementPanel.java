@@ -308,7 +308,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
    	
     	TableUtil.setJTableSizes(jTable);
        	//TableUtil.setBorder(jScrollPane);
-       	jTable.setBorder(TableUtil.tableBorder);
+       	TableUtil.setBorder(jTable);
        	//jTable.setLocation(30, addCourseButton.getSize().height
         //        + addCourseButton.getLocation().y + 15);
        	//TableUtil.shrinkToFit(jTable, jScrollPane, 520, 405);
