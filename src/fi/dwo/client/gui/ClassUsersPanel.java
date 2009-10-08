@@ -4,22 +4,22 @@
 package fi.dwo.client.gui;
 
 import java.awt.Component;
-import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
-import java.util.Hashtable;
-
 import javax.swing.AbstractCellEditor;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
@@ -28,18 +28,13 @@ import javax.swing.table.TableCellRenderer;
 
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.SchoolClass;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.ClassPanel.ClassModel;
-import fi.dwo.client.gui.ClassPanel.ImageButtonEditor;
-import fi.dwo.client.gui.ClassPanel.ImageRenderer;
-import fi.dwo.client.gui.ScoManagementPanel.ScoModel;
 import fi.dwo.client.system.TextMapper;
 
 /**
  * This class is a panel where the users of a SchoolClass can be viewed and removed.
  * @author M.J.B. Kupers
+ * @author Velth101
  *  
  */
 public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionListener*/ {
@@ -48,13 +43,9 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 
     private SchoolClass schoolClass;
 
-   // private Table tbl;
-
-    //private Hashtable userDeletebuttons;
-
 	Image removeImage;
 
-	private JScrollPane tbl;
+	private Box tbl;
 
     class ClassUsersModel extends AbstractTableModel {
 
@@ -193,9 +184,8 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
     public ClassUsersPanel(SchoolClass c) {
         super(null);
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
-        //this.setSize(627, 485);
-        this.setSize(600, 470);
-        this.setPreferredSize(getSize());
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        setBorder(BorderFactory.createEmptyBorder(15, 30, 0, 0));
 
         schoolClass = c;
         
@@ -206,9 +196,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
             String s = TextMapper.getText(TextMapper.GUIC_NO_STUDENTS);
             JLabel label = new JLabel(MessageFormat.format(s, arguments));
             label.setFont(GuiConstants.SCO_TEXT);
-            FontMetrics fm = label.getFontMetrics(label.getFont());
-            label.setSize(fm.stringWidth(label.getText()) + 10, fm.getHeight());
-            label.setLocation((this.getSize().width/2) - (label.getSize().width/2), 100);
+			label.setAlignmentY(0.24f);
             this.add(label);
             
         } else {
@@ -220,26 +208,19 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 	            tr.waitForAll();
 	        } catch (Exception e) {
 	        }
-	
-//	        Label l;
-//	        DwoButton b;
-//	        FontMetrics fm;
-//	        int i;
-	
 	        JTable table = new JTable(new ClassUsersModel());
 	        TableUtil.setDefaults(table, false, new ImageRenderer(), new ImageButtonEditor());
 	        TableUtil.setJTableSizes(table);
-	        tbl = new JScrollPane(table);
-			tbl.setLocation(30, 15);
-			tbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
-
-			TableUtil.setBorder(tbl);
-	        TableUtil.shrinkToFit(table, tbl, 602, 452);
-	        this.add(tbl);
-	        
-	       
-	        
-	        
+			TableUtil.setBorder(table);
+			
+			Dimension size = table.getPreferredSize();
+			if(size.width < 602)
+				size.width = 602;
+			table.setMaximumSize(size);
+			table.setAlignmentX(0);
+			table.setAlignmentY(0);
+	        add(table);
+	        add(Box.createHorizontalGlue());
         }
     }
 
@@ -261,9 +242,9 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
     }
 
     /**
-     * Returns a Panel that can functionate as a header panel.
+     * Returns a Panel that can function as a header panel.
      * 
-     * @return A panel that can functionate as a header panel.
+     * @return A panel that can function as a header panel.
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
     public Component getHeaderPanel() {
@@ -271,11 +252,11 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
                 + schoolClass.getName());
     }
 
-    /**
-     * Invoked when an action occurs.
-     * 
-     * @param e The ActionEvent.
-     */
+//    /**
+//     * Invoked when an action occurs.
+//     * 
+//     * @param e The ActionEvent.
+//     */
 //    public void actionPerformed(ActionEvent e) {
 //        if (e.getSource() instanceof ImageButton) {
 //            User u = (User) userDeletebuttons.get(e.getSource());
