@@ -239,6 +239,13 @@ public class ResultsModulePanel extends JPanel implements
 // Float.valueOf(float) is 1.5
 			return new Float( data[row].getResultScore()[col-1].getScore() );
 		}
+		
+		public long getTotalTimeAt(int row, int col)
+		{
+			if(row == 0 || col == 0)
+				return -1;
+			return data[row-1].getResultScore()[col-1].getTotal_time();
+		}
 
 
 		/* (non-Javadoc)
@@ -322,7 +329,7 @@ public class ResultsModulePanel extends JPanel implements
 					setBackground(table.getSelectionBackground());
 				else
 					setBackground(table.getBackground());
-					
+				setToolTipText(null);
 			} else {
 		        int red = 255;
 		        int green = 255;
@@ -359,6 +366,18 @@ public class ResultsModulePanel extends JPanel implements
                 	arguments[1] = domain.getLessonGroup().getToolTip();
                 	String s = TextMapper.getText(TextMapper.GUIRS_TLTP_RESULT_SCORE_BUTTON);
                 	s = MessageFormat.format(s, arguments);
+                	ResultsModel model = (ResultsModel) table.getModel();
+                	long totalTime = model.getTotalTimeAt(row, col);
+// TODO maak hier eens iets moois van
+                	if(totalTime > 0)
+                	{	String time;
+                		if(totalTime < 120000)
+                			time = " (in " + (totalTime/1000) + " sec)";
+                		else 
+                			time = " (in " + (totalTime/60000) + " min)";
+                		setText(getText() + time);
+                	}
+                	
                 	setToolTipText(s);
                 } else 
                 	setToolTipText(null);

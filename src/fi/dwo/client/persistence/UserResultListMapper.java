@@ -6,7 +6,11 @@ package fi.dwo.client.persistence;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Hashtable;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.Vector;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
@@ -135,6 +139,18 @@ public class UserResultListMapper extends XmlRpcMapper {
         } else if (totaal instanceof Number)
         {
         	rs.setTotaal(((Number)totaal).intValue());
+        }
+        Object total_time = data.get("total_time");
+        if(total_time instanceof String && !("".equals(total_time))) { 
+        	SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        	formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+        	formatter.setLenient(true);
+        	try {
+				rs.setTotal_time(formatter.parse(total_time.toString()).getTime());
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
         return rs;
     }

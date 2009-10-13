@@ -208,7 +208,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             + "group by tblUser.userID, tblCourse.courseID "
             + "ORDER BY tblUser.userID";
 
-    private final static String QRY_RESULTS_STUDENT_COURSE = "SELECT tblUser.userID, tblSco.scoID, tblSco.sequencenr,  if(score=0,-1,score) as score "
+    private final static String QRY_RESULTS_STUDENT_COURSE = "SELECT tblUser.userID, tblSco.scoID, tblSco.sequencenr,  if(score=0,-1,score) as score, total_time "
             + "FROM tblClass right join tblUser on tblClass.classID = tblUser.classID "
             + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID "
             + "right join tblSco on tblStudentSco.scoID = tblSco.scoID "
@@ -222,7 +222,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     /**
      * Select the SCO scores of one student.
      */
-    private final static String QRY_RESULTS_SINGLE_STUDENT_COURSE = "SELECT tblUser.userID, tblSco.scoID, tblSco.sequencenr,  if(score=0,-1,score) as score "
+    private final static String QRY_RESULTS_SINGLE_STUDENT_COURSE = "SELECT tblUser.userID, tblSco.scoID, tblSco.sequencenr,  if(score=0,-1,score) as score, total_time "
         + "FROM tblUser "
         + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID "
         + "right join tblSco on tblStudentSco.scoID = tblSco.scoID "
@@ -1838,7 +1838,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     /**
      * Update het sequencenr van een sco. Niet gecombineerd met changeSco, 
      * omdat er geen bijeffect is dat de studenten hun data verliezen.
-     * Voor een swap zijn twee sco's nodig. Daarom hier meteen twee voor de prijs van één!
+     * Voor een swap zijn twee sco's nodig. Daarom hier meteen twee voor de prijs van ï¿½ï¿½n!
      * @param scoID 
      * @param sequencenr nieuw sequence
      * nummer voor scoID, bij swap oude van scoID2

@@ -38,7 +38,7 @@ public class DbAccessCreator {
            if(DwoHelper.isApplication()) { 
         	   //Bij testen van lokale dbAcces, TODO in comment bij productie!
         	   //if(true) dbAccess = new DbAccessLocal(); else
-        	   
+        	   //if(true) dbAccess = new DbAccessLdap(); else
         	   try {
 	        	   server = new URL(new URL("http://www.fi.uu.nl/") , SERVLET);
 	               dbAccess = new DbAccessClient(server);

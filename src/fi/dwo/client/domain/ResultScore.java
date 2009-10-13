@@ -19,6 +19,7 @@ public class ResultScore implements ResultScoreIF {
 
     private float score;
     private int totaal, corrtotaal; 
+    private long total_time;
     
     private UserGroup userGroup;
 
@@ -157,6 +158,20 @@ public class ResultScore implements ResultScoreIF {
 	public void setCorrTotaal(int correctie)
 	{
 		this.corrtotaal = correctie;
+	}
+
+	/**
+	 * @param total_time the total_time to set
+	 */
+	public void setTotal_time(long total_time) {
+		this.total_time = total_time;
+	}
+
+	/**
+	 * @return the total_time
+	 */
+	public long getTotal_time() {
+		return total_time;
 	}
 	
     //public void end()

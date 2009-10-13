@@ -82,6 +82,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
 	        dwo.setWait();
 	            Thread thread = new Thread() {	
 	                public void run() {	
+	                	sco.setLessonMode(Sco.REVIEW);
 			            ScoPanel sp = sco.getScoPanel(dwo, user);
 			            dwo.setReady();
 			            if(sp != null) {
