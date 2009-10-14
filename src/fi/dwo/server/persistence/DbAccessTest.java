@@ -25,12 +25,6 @@ public class DbAccessTest extends TestCase
         super.setUp();
     }
 
-    public void testGetNrJars() throws IOException, SQLException
-    {
-        DbAccess db = new DbAccess();
-        db.close();
-        assertTrue("nrjars", db.getNrJars() > 2 );
-    }
 
     /**
      * test login met empty password.

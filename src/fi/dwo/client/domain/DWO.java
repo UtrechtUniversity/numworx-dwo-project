@@ -925,12 +925,12 @@ private static boolean isValidEmail(String email) {
         if(umpcString!=null && umpcString.equals("true")) {
         	umpc = true;
         }
-        
-        String key = getParameter("key");
-        if(key == null) {
-            key = "";
-        }
-        DwoHelper.setKey(key);
+        // deprecated
+//        String key = getParameter("key");
+//        if(key == null) {
+//            key = "";
+//        }
+//        DwoHelper.setKey(key);
         DwoHelper.setAu(new AppletUtil(this));
         DwoHelper.setApplet(this);
         DwoHelper.setUmpc(umpc);

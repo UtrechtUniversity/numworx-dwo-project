@@ -44,7 +44,7 @@ public class DwoWebPageServlet extends Servlet {
 
     private String HTML_SOURCE = "file:/space/WWW/InfoGroups/dwo/dwo.html";
 
-    private String SERVLET = "/servlet/fi.dwo.server.persistence.DbAccessServlet";
+    //private String SERVLET = "/servlet/fi.dwo.server.persistence.DbAccessServlet";
 
     private DbAccess dbAccess;
 
@@ -97,21 +97,21 @@ public class DwoWebPageServlet extends Servlet {
 	        String jar = null;
 	        
 	        String archives = "";
-	        
-	        /* Create for the number of jars a reference to the servlet */
-	        try {
-		        dbAccess.close(); //for lazy connection
-	            int nrJars = dbAccess.getNrJars();
-//	            log("Total nr Jars: " + nrJars);
-                for(int i = 0; i < nrJars; i++) {
-                    /* the 'nr'-param is just for uniquenes of the archive name */
-                    archives += "," + SERVLET + "?key=" + key + "&nr=" + i;
-                    //log("loop: " + i + ";" + archives);
-                }
-            } catch (Exception e) {
-                getServletContext().log(e, "nrjars");
-            }
-	        dbAccess.close(); //for lazy connection
+	        // End of life!
+//	        /* Create for the number of jars a reference to the servlet */
+//	        try {
+//		        dbAccess.close(); //for lazy connection
+//	            int nrJars = dbAccess.getNrJars();
+////	            log("Total nr Jars: " + nrJars);
+//                for(int i = 0; i < nrJars; i++) {
+//                    /* the 'nr'-param is just for uniquenes of the archive name */
+//                    archives += "," + SERVLET + "?key=" + key + "&nr=" + i;
+//                    //log("loop: " + i + ";" + archives);
+//                }
+//            } catch (Exception e) {
+//                getServletContext().log(e, "nrjars");
+//            }
+//	        dbAccess.close(); //for lazy connection
 	        
 	        String lang = (String) req.getParameter("language");
 	        
@@ -199,9 +199,9 @@ public class DwoWebPageServlet extends Servlet {
         String param = getInitParameter("html_source");
         if(param!=null)
             HTML_SOURCE = param;
-        param = getInitParameter("servlet");
-        if(param!=null)
-        	SERVLET = param;
+//        param = getInitParameter("servlet");
+//        if(param!=null)
+//        	SERVLET = param;
         if("true".equals(getInitParameter("local")))
         {
         	dbAccess = new DbAccessLocal();

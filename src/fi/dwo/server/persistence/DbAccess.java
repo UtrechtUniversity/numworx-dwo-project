@@ -1476,9 +1476,9 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
      * 
+     * @deprecated weg ermee
      * @see fi.dwo.client.persistence.DbAccessIF#selectJar(java.lang.String,
      *      java.lang.String)
      */
@@ -1507,8 +1507,14 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         }
         return false;
     }
-
-    public String getJar(String key) throws IOException, SQLException {
+    /**
+     * @deprecated weg ermee
+     * @param key
+     * @return
+     * @throws IOException
+     * @throws SQLException
+     */
+    private String getJar(String key) throws IOException, SQLException {
         PreparedStatement ps = getStatement(QRY_JAR_SELECT_KEY);
 
         ps.setString(1, key);
@@ -1518,8 +1524,13 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return (String) result.get("jarname");
 
     }
-
-    public int getNrJars() throws IOException, SQLException {
+    /**
+     * @deprecated weg ermee
+     * @return
+     * @throws IOException
+     * @throws SQLException
+     */
+    private int getNrJars() throws IOException, SQLException {
         Hashtable result = executeQueryWithRecord(getStatement(QRY_JAR_COUNT_JARS));
         return ((Number) result.get("number")).intValue();
     }

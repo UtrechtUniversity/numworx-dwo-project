@@ -108,7 +108,7 @@ public class AppletMapper extends XmlRpcMapper {
         Applet a = null;
         
         String jarname = (String) data.get("jarname");
-        DbAccessCreator.instance().selectJar(DwoHelper.getKey(), jarname);
+        //DbAccessCreator.instance().selectJar(DwoHelper.getKey(), jarname);
         
         
         

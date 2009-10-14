@@ -66,6 +66,10 @@ public final class DwoHelper {
         DwoHelper.au = au;
     }
     
+    /**
+     * @deprecated weg ermee
+     * @param key
+     */
     public static void setKey(String key) {
         DwoHelper.key = key;
     }
@@ -73,7 +77,10 @@ public final class DwoHelper {
     public static void setUmpc(boolean b) {
         DwoHelper.umpc = b;
     }
-    
+    /**
+     * @deprecated weg ermee
+     * @return the key
+     */
     public static String getKey() {
         return DwoHelper.key;
     }

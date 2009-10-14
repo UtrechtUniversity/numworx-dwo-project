@@ -349,6 +349,7 @@ public interface DbAccessIF {
      * @throws XmlRpcException
      * @throws SQLException
      * @see <a href="doc-files/DbAccessIF-1.pdf">Dynamisch inladen van JAR's (dutch)</a>
+     * @deprecated niet meer gebruiken
      */
     public boolean selectJar(String key, String jar) throws IOException,
     XmlRpcException, SQLException;
