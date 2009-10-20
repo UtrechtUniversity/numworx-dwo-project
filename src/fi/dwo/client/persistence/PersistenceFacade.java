@@ -175,13 +175,14 @@ public class PersistenceFacade {
         }
     }
 
+    boolean noRandom;
     /**
      * Saves a value for a SCO and a user.
      * @param sco The SCO of the value.
      * @param user The User of the value.
      * @param iDataModelElement Indicates which item must be saved.
      * @param iValue The value to save.
-     * @return
+     * @return "true" or "false"
      * @throws PersistenceException
      */
     public String LMSSetValue(Sco sco, User user, String iDataModelElement,
@@ -207,6 +208,26 @@ public class PersistenceFacade {
                     if (scormDatabaseLink[i][0].equals(iDataModelElement)) {
                         if (iValue == null) {
                             iValue = "";
+                        }
+                        if(!noRandom) {
+                        String random = Long.toHexString(Double.doubleToRawLongBits(Math.random()));
+                        try { 
+                        	result = DbAccessCreator.instance().LMSSetValue(
+                        		sco.getScoID(), user.getUserID(), scormDatabaseLink[i][1], iValue, random);
+                        
+                        	if( result.equals(random))
+                        	{	return "true"; // all's well
+                        	}
+                        	result = "LMSSetValue " + iDataModelElement + ": " + result + " <> " + random;
+                        	DbAccessCreator.instance().log(result);
+                        	throw new PersistenceException(PersistenceException.EX_DB);
+                        } catch(XmlRpcException e )
+                        { 
+                        	e.printStackTrace();
+                        	if(!e.getMessage().startsWith(NoSuchMethodException.class.getName()))
+                        		throw e;
+                        	noRandom = true; 
+                        }
                         }
                         result = DbAccessCreator.instance().LMSSetValue(
                                 sco.getScoID(), user.getUserID(),

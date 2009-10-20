@@ -180,6 +180,9 @@ public interface DbAccessIF {
     public String LMSSetValue(int scoID, int userID, String iDataModelElement, String iValue) throws IOException, XmlRpcException,
     SQLException;
 
+    public String LMSSetValue(int scoID, int userID, String iDataModelElement, String iValue, String random) throws IOException, XmlRpcException,
+    SQLException;
+
         /**
      * @param username
      * @param password

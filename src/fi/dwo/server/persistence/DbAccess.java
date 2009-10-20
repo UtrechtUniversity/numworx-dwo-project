@@ -600,10 +600,16 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      */
     protected boolean passwordCorrect(int userID, String password)
             throws SQLException {
-        PreparedStatement ps = getStatement(QRY_PASSWORD_CORRECT);
-        ps.setInt(1, userID);
-        ps.setString(2, password);
-
+        PreparedStatement ps;
+        if(password.length()==0)
+        {
+        	ps = getStatement(SELECT_USERNAME_FROM_USERID);
+            ps.setInt(1, userID);	
+        } else {
+        	ps = getStatement(QRY_PASSWORD_CORRECT);
+        	ps.setInt(1, userID);
+        	ps.setString(2, password);
+        }
         ResultSet rs = ps.executeQuery();
         boolean isCorrect = (!isEmpty(rs));
         rs.close();
@@ -1348,6 +1354,12 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 		}
 
     }
+    
+    public String LMSSetValue(int scoID, int userID, String iDataModelElement,
+            String iValue, String random) throws SQLException {
+    	LMSSetValue(scoID, userID, iDataModelElement, iValue);
+    	return random;
+    }
 
     /*
      * (non-Javadoc)
@@ -1845,6 +1857,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
     static private final String QRY_UPDATE_SCO_SEQUENCENR =
     	"UPDATE tblSco SET sequencenr = ? WHERE (scoID = ?) ";
+
+	protected static final String SELECT_USERNAME_FROM_USERID = "select username, passwd from tblUser where userID=?";
     
     /**
      * Update het sequencenr van een sco. Niet gecombineerd met changeSco, 

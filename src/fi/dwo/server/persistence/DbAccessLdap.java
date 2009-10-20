@@ -58,7 +58,7 @@ public class DbAccessLdap extends DbAccess
     public boolean changeAccount(int userID, String password, String newPassword, String firstname, String middlename, String lastname, String email) throws DwoXmlRpcException, SQLException
     {        
         String user = getUser(userID);
-        if( user != null && manager.verifyMD5(user, password) )
+        if( user != null && (password.length()==0 || manager.verifyMD5(user, password) ))
         {   manager.changeAccount(user, firstname, middlename, lastname, email);
 // not null, not empty and changed
         if(newPassword != null && !"".equals(newPassword) && !newPassword.equals(password))
@@ -87,7 +87,6 @@ public class DbAccessLdap extends DbAccess
                 middlename, lastname, email);
     }
 
-    final static private String SELECT_USERNAME_FROM_USERID = "select username, passwd from tblUser where userID=?";
     private final static String QRY_UPDATE_USER_NO_PWD = "UPDATE tblUser "
         + "SET firstname = ?, " + "middlename = ?, " + "lastname = ?, "
         + "email = ? " + "WHERE (userID = ?)";

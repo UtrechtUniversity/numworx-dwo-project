@@ -72,11 +72,12 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 			if(value == editImage)
 			{
 				try {
-					String newPassword = JOptionPane.showInputDialog(UserManagementPanel.this,TextMapper.getText(TextMapper.GUIP_PASSWORD), "");
+					String newPassword =  JOptionPane.showInputDialog(UserManagementPanel.this, TextMapper.getText(TextMapper.GUIP_PASSWORD), user.getUsername(), JOptionPane.QUESTION_MESSAGE);
 					if(newPassword != null)
 					{
 						PersistenceFacade.instance().changeAccount(user, null, newPassword, user.getFirstname(), user.getMiddleName(), user.getLastName(), user.getEmail());
 						model.fireTableRowsUpdated(row, row);
+						JOptionPane.showMessageDialog(UserManagementPanel.this, TextMapper.getText(TextMapper.GUIP_MSG_PROFILE_CHANGED));
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
