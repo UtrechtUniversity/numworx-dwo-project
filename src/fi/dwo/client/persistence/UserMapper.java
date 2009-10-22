@@ -59,12 +59,12 @@ public class UserMapper extends XmlRpcMapper {
         } else {
             /* Is the user a teacher? */
             if (data.containsKey("groupname")) {
-                if (((String) data.get("groupname")).equals("TEACHER")) {
+                if ((data.get("groupname")).equals("TEACHER")) {
                     u = new Teacher();
-                    if (true || DwoHelper.isContact())
+                    if (DwoHelper.isContact())
                     	u = new ContactDocent();
                 }
-                else if (((String) data.get("groupname")).equals("ADMIN")) {
+                else if (( data.get("groupname")).equals("ADMIN")) {
                     u = new Admin();
                 }
             }

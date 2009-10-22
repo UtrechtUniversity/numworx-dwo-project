@@ -74,7 +74,9 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
         profileTextArea.setWrapStyleWord(true);
         profileTextArea.setBounds(20,20,600,110);
         profileTextArea.setOpaque(false);
+        profileTextArea.setColumns(20);
         profileTextArea.setText(s);
+        
         
         //profileTextArea.resize();
 		if((s != null) && (!s.trim().equals(""))) 
@@ -138,6 +140,13 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
         }
         //profileTextArea.invalidate();
         //doLayout();
+// calculate preferred size and keep it that way!
+        //setSize(GuiConstants.CENTER_WIDTH, GuiConstants.CENTER_HEIGHT);
+        Dimension pref = getPreferredSize();
+        setPreferredSize(pref);
+        if(courseIcon != null)
+        	pref.width = maxWidth * NR_COLUMNS;
+        setMinimumSize(pref);
     }
     
   

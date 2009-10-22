@@ -44,4 +44,12 @@ public class SchoolMapperTest extends TestCase {
 		System.out.println(System.currentTimeMillis()- tim1);
 	}
 
+	public void testSchoolById() throws Exception {
+		Object o = MapperCreator.instance(School.class).get(100);
+		assertNotNull(o);
+		School s = (School)o;
+		assertEquals("schoolid", 100, s.getSchoolID());
+		System.out.println(s.getPasswd(1));
+	}
+	
 }
