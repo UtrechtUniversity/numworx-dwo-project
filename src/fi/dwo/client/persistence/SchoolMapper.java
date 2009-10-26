@@ -16,6 +16,7 @@ import fi.dwo.client.domain.SchoolClass;
 public class SchoolMapper extends XmlRpcMapper {
 
 	// lazy evaluation.
+	// DIT STAAT NU AAN!
 	
 	static class LazySchool extends School
 	{
@@ -136,7 +137,7 @@ public class SchoolMapper extends XmlRpcMapper {
                                                                 // the school?
             s = (School) objects.get(data.get("schoolID"));
         } else {
-            s = new /*Lazy*/School();
+            s = new LazySchool();
         }
         s = (School) update(s, data);
         if(!objects.containsKey(new Integer(s.getSchoolID()))) {
@@ -184,7 +185,7 @@ public class SchoolMapper extends XmlRpcMapper {
         s.setSchoolID(((Integer) data.get("schoolID")).intValue());
         s.setName((String) data.get("schoolName"));
         s.setSchoolLogin((String) data.get("schoollogin"));
-        if(true|| !(s instanceof LazySchool))
+        if(!(s instanceof LazySchool))
         	s.setSchoolGroupList((SchoolGroup[]) MapperCreator.instance(SchoolGroup.class).get(s));
         if(data.contains("image") && (!data.get("image").equals(""))) {
             s.setImage((String) data.get("image"));

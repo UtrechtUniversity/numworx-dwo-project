@@ -86,6 +86,10 @@ public class CourseMapper extends XmlRpcMapper {
         if(obj instanceof SchoolClass) {
             SchoolClass sc = (SchoolClass) obj;
             ht.put("classID", new Integer(sc.getID()));
+        } else if(obj instanceof School)
+        {
+        	School s = (School) obj;
+        	ht.put("schoolID", new Integer(s.getSchoolID()));
         }
         return super.get(ht);
     }
