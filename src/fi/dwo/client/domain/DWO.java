@@ -1498,7 +1498,9 @@ private static boolean isValidEmail(String email) {
       */
      private User getInitialUser()
      {
- 		this.fidentity = Fidentity.getInstance(this);
+ 		fidentity = Fidentity.getInstance(this);
+ // DEBUGGING, uitzettten bij commmit!
+ //		fidentity = new Fidentity(this, "peterb", "DL_FIUUNL_K3K=C100");
  		String username = fidentity.getUid();
  System.out.println("[" + username + "]");
         if(username == null||"".equals(username))
@@ -1507,12 +1509,15 @@ private static boolean isValidEmail(String email) {
         System.out.println(fidentity.getSchoolUid());
         String className = fidentity.getClassName();
 		System.out.println(className);
-        if ("school".equals(fidentity.getRole()))
+        if (Fidentity.SCHOOL.equals(fidentity.getRole()))
         {
             System.out.println("Guest from school " + fidentity.getSchoolUid());
             return null;
         }
-        
+        if(Fidentity.GAST.equals(fidentity.getRole()))
+        {
+        	return Guest.instance();
+        }
         
         User u =  null; // Guest.instance();
         try
@@ -1544,6 +1549,10 @@ private static boolean isValidEmail(String email) {
 					e.printStackTrace();
 				}
                  u = PersistenceFacade.instance().login(username);
+                 u.setFirstname(fidentity.getFirstName());
+                 u.setMiddleName(fidentity.getMiddleName());
+                 u.setLastName(fidentity.getSurName());
+                 u.setEmail(fidentity.getEmailAddress());
                  school = u.getSchool();
         	 }
         	 setInitialUserInClass(className, u, school);
@@ -1582,12 +1591,7 @@ private static boolean isValidEmail(String email) {
                      u.setReadonly(true); // TODO is dit wel
                                                              // ok?
                  } else { 
-                     u = new Guest() { 
-                         public String getName() { 
-                             return fidentity.getName();
-                         }
-                     };
-                     u.setLogout(false); // fi-ers en uu-ers.
+                     u = Guest.instance(); // fi-ers en uu-ers.
                  }
                  return u;
              } catch (RegisterException e1)
@@ -1641,22 +1645,15 @@ private static boolean isValidEmail(String email) {
 		     {
 System.out.println(group.getName() + " " + group.getGroupID());
  				String schoolUid = fidentity.getSchoolUid();
+ 				int schoolId = Integer.parseInt(schoolUid);
 System.out.println(schoolUid);
  				 String schoolname   = "";
 		         String schoolpasswd = "";
-		         School[] school = (School[]) PersistenceFacade.instance().get(School.class);
-		         for (int i = 0; i < school.length; i++)
-		         {
-		             if(school[i].getSchoolLogin().equals (schoolUid) ||
-		            	schoolUid.equals(String.valueOf(school[i].getSchoolID()))     
-		             )
-		             {
-		                 schoolpasswd = school[i].getPasswd(group.getGroupID());
-		                 schoolname   = school[i].getSchoolLogin();
-		                 System.out.println(school[i].getSchoolLogin() + " " + group.getName() + " " + schoolpasswd);
-		                 break;
-		             }
-		         }
+		         School school = (School) PersistenceFacade.instance().get(schoolId,School.class);
+		         schoolpasswd = school.getPasswd(group.getGroupID());
+		         schoolname   = school.getSchoolLogin();
+System.out.println(school.getSchoolLogin() + " " + group.getName() + " " + schoolpasswd);
+// TODO addToSchool(u, school, group);	zonder gedoe met passwords.	         
 		         PersistenceFacade.instance().addToSchool(u, schoolname, group, schoolpasswd);
 		         MapperCreator.instance(User.class).removeAllObjects();
 		     }
@@ -1679,9 +1676,9 @@ System.out.println(schoolUid);
          if (role == null)
              return null;
          // TODO is deze mapping compleet?
-         if (role.indexOf("docent")>=0) // docent en contactdocent
+         if (role.indexOf(Fidentity.DOCENT)>=0) // docent en contactdocent
              role = "TEACHER";
-         if ("leerling".equals(role))
+         if (Fidentity.LEERLING.equals(role))
              role = "STUDENT";
          //
          Group[] groups = getGroups();

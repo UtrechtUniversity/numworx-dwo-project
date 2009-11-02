@@ -438,8 +438,8 @@ public class ExportImportDialog extends JDialog implements ActionListener {
 		
 		JLabel header = new JLabel("<html>(1) Selecteer een school<br>" +
 								   "(2) Bekijk eventueel de beschikbaar gestelde modules<br>" +
-								   "(3) Selecteer ŽŽn of meer modules voor gebruik in de eigen omgeving<br><br>" +
-								   "De geselecteerde modules worden gekopi‘erd naar de eigen omgeving<br>"+
+								   "(3) Selecteer Ã©Ã©n of meer modules voor gebruik in de eigen omgeving<br><br>" +
+								   "De geselecteerde modules worden gekopiÃ«erd naar de eigen omgeving<br>"+
 								   "en kunnen gebruikt worden binnen de eigen school.");
 		
 		importPanel.add(header, BorderLayout.NORTH);
@@ -517,7 +517,7 @@ public class ExportImportDialog extends JDialog implements ActionListener {
 		buttonBox = Box.createHorizontalBox();
 		importPanel.add(buttonBox, BorderLayout.SOUTH);
 		buttonBox.add(Box.createGlue());
-		JButton importOK = new JButton("Kopi‘er");
+		JButton importOK = new JButton("KopiÃ«er");
 		importOK.addActionListener(this);
 		
 		buttonBox.add(importOK);
