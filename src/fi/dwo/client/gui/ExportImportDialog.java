@@ -6,6 +6,7 @@ package fi.dwo.client.gui;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.FlowLayout;
@@ -17,7 +18,10 @@ import java.awt.HeadlessException;
 import java.awt.Polygon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.AbstractCellEditor;
@@ -27,17 +31,21 @@ import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -50,6 +58,7 @@ import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DWO;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.School;
+import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.PersistenceException;
@@ -61,6 +70,132 @@ import fi.dwo.client.system.PersistenceException;
 public class ExportImportDialog extends JDialog implements ActionListener {
 
 	
+	class ImportTask extends JDialog implements Runnable, ActionListener, WindowListener {
+
+		private ImportModuleModel model;
+		public ImportTask(Dialog parent, ImportModuleModel model) throws HeadlessException {
+			super(parent);
+			this.model = model;
+			fuse = true;
+			initialize();
+		}
+
+		private void initialize() {
+			setModal(true);
+			setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+			Box box = Box.createVerticalBox();
+			setTitle("Kopiëer modules");
+			box.add(bar);
+			box.add(Box.createVerticalStrut(20));
+			box.add(status);
+			box.add(status1);
+			box.add(Box.createVerticalStrut(20));
+			JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER));
+			p.add(cancel);
+			cancel.addActionListener(this);
+			addWindowListener(this);
+			box.add(p);
+			p.setAlignmentX(0.0f);
+			box.setBorder(BorderFactory.createEmptyBorder(20, 22, 22, 22));
+			getContentPane().add(box);
+			
+			status.setHorizontalAlignment(JLabel.LEFT);
+			status1.setHorizontalAlignment(JLabel.LEFT);
+			status.setAlignmentY(0.0f);
+			status.setAlignmentX(0.0f);
+			status1.setAlignmentX(0.0f); 
+			bar.setAlignmentX(0.0f); 
+			
+			cancel.setAlignmentX(0.5f); 
+			count = 0;
+			Course[]c = model.getCourses();
+			for (int i = 0; i < c.length; i++) {
+				if(Boolean.TRUE.equals(model.getValueAt(i, 0)))
+				{
+					c[i].loadScos();
+					count += c[i].getScoList().length;
+				}
+			}
+			bar.setMaximum(count);
+			bar.setMinimum(0);
+			bar.setValue(0);
+			invalidate();
+			setSize(400,getPreferredSize().height);
+			//pack();
+		}
+		
+
+		JProgressBar bar = new JProgressBar();
+		JLabel status  = new JLabel(" ");
+		JLabel status1 = new JLabel(" ");
+		JButton cancel = new JButton("cancel");
+		int count;
+		private boolean fuse;
+		public void run() {
+			int  n = 0;
+			for(int i = 0; i < model.getCourses().length && fuse; i++) {
+				if(Boolean.TRUE.equals(model.getValueAt(i, 0)))
+				{
+					Course c = (Course) model.getCourses()[i];
+					status.setText("Importeer " + model.getValueAt(i, 1));
+					status.invalidate();
+					status1.setText("   ");
+					status1.invalidate();
+					Sco[] scos = c.getScoList();
+					for (int j = 0; j < scos.length && fuse; j++) {
+						status1.setText(" ... " + scos[j].getScoName());
+						status1.invalidate();
+						bar.setValue(n++);
+						doit();
+					}					
+					
+				} 	
+			}
+			dispose();
+		}
+
+		private void doit() {
+			validate();
+			repaint();
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		public void actionPerformed(ActionEvent arg0) {
+			fuse = false;
+		}
+
+		public void windowActivated(WindowEvent arg0) {
+		}
+
+		public void windowClosed(WindowEvent arg0) {
+			fuse = false;
+		}
+
+		public void windowClosing(WindowEvent arg0) {
+			fuse = false;
+		}
+
+		public void windowDeactivated(WindowEvent arg0) {
+		}
+
+		public void windowDeiconified(WindowEvent arg0) {
+		}
+
+		public void windowIconified(WindowEvent arg0) {
+		}
+
+		public void windowOpened(WindowEvent arg0) {
+		}
+
+	}
+
+	private static final String COPY = "Copy";
+
 	static class PijlIcon implements Icon {
 
 		private Polygon p;
@@ -364,6 +499,10 @@ public class ExportImportDialog extends JDialog implements ActionListener {
 	}
 
 	private User user;
+	private JTabbedPane pane;
+	private JCheckBox enableImport;
+	private ImportModuleModel importModuleModel;
+	private JTable importModuleTable;
 
 	/**
 	 * @throws HeadlessException
@@ -378,14 +517,27 @@ public class ExportImportDialog extends JDialog implements ActionListener {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE); // one shot!
 
 		setTitle("Modules delen");
-		JTabbedPane pane = new JTabbedPane();
+		pane = new JTabbedPane();
 		JPanel exportPanel = new JPanel(new BorderLayout(5,5));
 		JPanel importPanel = new JPanel(new BorderLayout());
-		JCheckBox enableImport = new JCheckBox("<html>Ik wil meedoen in deze manier van uitwisselen en daarbij zichtbaar worden als school in de lijsten");
+		enableImport = new JCheckBox("<html>Ik wil meedoen in deze manier van uitwisselen en daarbij zichtbaar worden als school in de lijsten");
+// From DATABASE
+		enableImport.setSelected(true);
+// track changes
+		enableImport.addChangeListener(new ChangeListener() {
+
+			public void stateChanged(ChangeEvent arg0) {
+				ieEnabler();
+			} });
 		
-		pane.insertTab("Toestaan" , null, enableImport, null, 0);
+		pane.insertTab("Modules opvragen", null, importPanel, null, 0);
 		pane.insertTab("Modules beschikbaar stellen", null, exportPanel, null, 1);
-		pane.insertTab("Modules opvragen", null, importPanel, "importeer stuff", 2);
+		pane.insertTab("Toestaan" , null, enableImport, null, 2);
+
+// if enableImport is not checked:
+		
+		ieEnabler();
+		
 		getContentPane().add(pane);
 // exportstuff		
 		ExportModuleModel exportModuleModel = new ExportModuleModel(user);
@@ -443,11 +595,11 @@ public class ExportImportDialog extends JDialog implements ActionListener {
 								   "en kunnen gebruikt worden binnen de eigen school.");
 		
 		importPanel.add(header, BorderLayout.NORTH);
-		final ImportModuleModel importModuleModel = new ImportModuleModel();
+		importModuleModel = new ImportModuleModel();
 		final ImportSchoolModel importSchoolModel = new ImportSchoolModel(schools);
 		final JLabel schoolLabel = new JLabel("          ");
 		schoolLabel.setFont(new Font("Sans", Font.BOLD, 14));
-		JTable importModuleTable = new JTable(importModuleModel);
+		importModuleTable = new JTable(importModuleModel);
 		//TableUtil.setJTableSizes(importModuleTable);
 		kolom = importModuleTable.getColumnModel().getColumn(0);
 		kolom.setMaxWidth(prefWidth);
@@ -489,12 +641,21 @@ public class ExportImportDialog extends JDialog implements ActionListener {
 				schoolLabel.invalidate();
 				Course[] courses;
 				try {
+					ArrayList clist = new ArrayList();
 					courses = (Course[]) PersistenceFacade.instance().get(Course.class, s);
+					for (int i = 0; i < courses.length; i++) {
+						if(courses[i].getDwoProfile() == profileID)
+							clist.add(courses[i]);
+					}
+					courses = (Course[]) clist.toArray(new Course[clist.size()]);
 				} catch (PersistenceException e1) {
 					courses = null;
 					e1.printStackTrace();
 				}
+// TODO pas op, als COPY aan de gang is, dan geen veranderingen aan importModuleModel
+				//importModuleModel = new ImportModuleModel();
 				importModuleModel.setCourses(courses);
+				//importModuleTable.setModel(importModuleModel);
 				repaint();
 			}
 		});
@@ -518,6 +679,7 @@ public class ExportImportDialog extends JDialog implements ActionListener {
 		importPanel.add(buttonBox, BorderLayout.SOUTH);
 		buttonBox.add(Box.createGlue());
 		JButton importOK = new JButton("Kopiëer");
+		importOK.setActionCommand(COPY);
 		importOK.addActionListener(this);
 		
 		buttonBox.add(importOK);
@@ -525,6 +687,19 @@ public class ExportImportDialog extends JDialog implements ActionListener {
 // sizeen
 		setSize(getContentPane().getPreferredSize());
 		pack();
+	}
+
+	private void ieEnabler() {
+		if(enableImport.isSelected())
+		{
+			pane.setEnabledAt(0, true);
+			pane.setEnabledAt(1, true);
+		} else
+		{ 
+			pane.setEnabledAt(0, false);
+			pane.setEnabledAt(1, false);
+			pane.getModel().setSelectedIndex(2);
+		}
 	}
 
 	/**
@@ -567,7 +742,14 @@ public class ExportImportDialog extends JDialog implements ActionListener {
 			CenterSubPanel cp = course.getCoursePanel();
 			
 			JOptionPane.showConfirmDialog(this, cp.getComponent(), e.getActionCommand(), JOptionPane.DEFAULT_OPTION);
+		} else if (COPY.equals(e.getActionCommand())) 
+		{
+			ImportTask r = new ImportTask(this, importModuleModel);
+			new Thread(r).start();
+			r.show();
 		}
+		
+		
 	}
 
 	/**
