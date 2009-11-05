@@ -15,7 +15,7 @@ import fi.dwo.server.persistence.DwoXmlRpcException;
 /**
  * The interface between the client and the server.
  * @author M.J.B. Kupers
- *
+ * @xmlrpc.generate
  */
 public interface DbAccessIF {
     

@@ -20,7 +20,9 @@ import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
+import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DwoHelper;
+import fi.dwo.client.domain.ResultsModuleIF;
 
 /**
  * The main-centerpanel.
@@ -29,7 +31,7 @@ import fi.dwo.client.domain.DwoHelper;
  * @author M.J.B. Kupers
  *  
  */
-public class CenterPanel extends JPanel {
+public class CenterPanel extends JPanel implements CourseContainer {
     private static final Border MAIN_BORDER = BorderFactory.createEmptyBorder(18, 6, 8, 10);
 
 	private static final Component RAND = Box.createHorizontalStrut(12);
@@ -318,4 +320,15 @@ public class CenterPanel extends JPanel {
     public GuestMenuPanel getMenu() {
         return menu;
     }
+
+	public void showClassList() {
+		getMenu().showClassList();
+	}
+	public void hideClassList() {
+		getMenu().hideClassList();
+	}
+
+	public ResultsModuleIF getUserResultsModule(Course course) {
+		return GuiCreator.instance().dwo.getUserResultsModule(course);
+	}
 }

@@ -109,7 +109,7 @@ public class SimpleXmlRpcClient {
 
 }
 
-class XmlRpcSupport extends HandlerBase {
+class XmlRpcSupport extends org.xml.sax.HandlerBase {
 
     URL url;
     String methodName;

@@ -56,7 +56,9 @@ import javax.swing.table.TableColumn;
 import fi.beans.appletutil.AppletUtil;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DWO;
+import fi.dwo.client.domain.DWOlight;
 import fi.dwo.client.domain.DwoHelper;
+import fi.dwo.client.domain.ResultsModuleIF;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.User;
@@ -67,7 +69,7 @@ import fi.dwo.client.system.PersistenceException;
  * @author Velth101
  *
  */
-public class ExportImportDialog extends JDialog implements ActionListener {
+public class ExportImportDialog extends JDialog implements ActionListener, CourseContainer {
 
 	
 	class ImportTask extends JDialog implements Runnable, ActionListener, WindowListener {
@@ -201,7 +203,6 @@ public class ExportImportDialog extends JDialog implements ActionListener {
 		private Polygon p;
 
 		public int getIconHeight() {
-			// TODO Auto-generated method stub
 			return 30;
 		}
 
@@ -503,6 +504,8 @@ public class ExportImportDialog extends JDialog implements ActionListener {
 	private JCheckBox enableImport;
 	private ImportModuleModel importModuleModel;
 	private JTable importModuleTable;
+	private JPanel previewPanel;
+	private Component coursePanel;
 
 	/**
 	 * @throws HeadlessException
@@ -593,8 +596,8 @@ public class ExportImportDialog extends JDialog implements ActionListener {
 								   "(3) Selecteer één of meer modules voor gebruik in de eigen omgeving<br><br>" +
 								   "De geselecteerde modules worden gekopiëerd naar de eigen omgeving<br>"+
 								   "en kunnen gebruikt worden binnen de eigen school.");
-		
-		importPanel.add(header, BorderLayout.NORTH);
+		p = new JPanel(new FlowLayout(FlowLayout.CENTER)); p.add(header);
+		importPanel.add(p, BorderLayout.NORTH);
 		importModuleModel = new ImportModuleModel();
 		final ImportSchoolModel importSchoolModel = new ImportSchoolModel(schools);
 		final JLabel schoolLabel = new JLabel("          ");
@@ -704,15 +707,6 @@ public class ExportImportDialog extends JDialog implements ActionListener {
 
 	/**
 	 * @param owner
-	 * @throws HeadlessException
-	 */
-	public ExportImportDialog(Dialog owner) throws HeadlessException {
-		super(owner);
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * @param owner
 	 * @param p 
 	 * @throws HeadlessException
 	 * @throws PersistenceException 
@@ -737,11 +731,12 @@ public class ExportImportDialog extends JDialog implements ActionListener {
 		System.out.println(e);
 		if(e.getSource() instanceof Course)
 		{
-
 			Course course = (Course) e.getSource();
-			CenterSubPanel cp = course.getCoursePanel();
-			
-			JOptionPane.showConfirmDialog(this, cp.getComponent(), e.getActionCommand(), JOptionPane.DEFAULT_OPTION);
+			CoursePanel cp = (CoursePanel) course.getCoursePanel();
+			cp.lessonMode = Sco.BROWSE;
+			this.previewPanel = cp;
+			cp.setCenterPanel(this);
+			JOptionPane.showConfirmDialog(this, previewPanel, e.getActionCommand(), JOptionPane.DEFAULT_OPTION);
 		} else if (COPY.equals(e.getActionCommand())) 
 		{
 			ImportTask r = new ImportTask(this, importModuleModel);
@@ -798,6 +793,23 @@ public class ExportImportDialog extends JDialog implements ActionListener {
 		ExportImportDialog dialog = new ExportImportDialog(null, user, 1);		
 		dialog.setVisible(true);
 		System.exit(0);
+	}
+
+	public ResultsModuleIF getUserResultsModule(Course course) {
+		return null;
+	}
+
+	public void hideClassList() {
+	}
+	public void loadCenter(CenterSubPanel cp) {
+	}
+
+	public void loadTotal(CenterSubPanel csp) {
+		ScoPanel sp = (ScoPanel) csp;
+		ScoDialog.showScoPreview(this, sp);
+	}
+
+	public void showClassList() {
 	}
 
 }

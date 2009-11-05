@@ -222,7 +222,26 @@
 		/>
 	</target>
 
-	
+	<target name='xmlrpcc' depends='init' description="generate XmlRpcClient">
+		<property name='xdoclet.lib' location='${dir.xdoclet}' />
+		<property name='module.jar' location="${xdoclet.lib}/fisme-guid-module.jar" />
+		<taskdef name='doclet' classname='xdoclet.DocletTask' >
+			<classpath>
+				<pathelement location='${xdoclet.lib}/xdoclet-1.2.3.jar' />
+				<pathelement location="${xdoclet.lib}/xjavadoc-1.1.jar"/>
+				<pathelement location="${xdoclet.lib}/commons-collections-2.0.jar" />
+				<pathelement location="${xdoclet.lib}/commons-logging.jar" />
+				<pathelement location="${module.jar}"/>
+			</classpath>
+		</taskdef>
+		<doclet
+			destdir='${src}'
+		>
+			<fileset dir='${src}' includes="${fullpackagename}/**/*.java"  />
+			<xmlrpcc/>
+		</doclet>
+	</target>
+
 	
 	
 	

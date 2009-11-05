@@ -9,6 +9,7 @@ import java.awt.Toolkit;
 import java.util.Properties;
 
 import fi.dwo.client.domain.DwoHelper;
+import fi.dwo.client.gui.Exporter.ExportBuffer;
 
 class PrinterExport extends Exporter {
 

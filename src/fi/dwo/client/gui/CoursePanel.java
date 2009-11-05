@@ -48,7 +48,8 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 	// if endy + bottom > MINHEIGT -> setBOUNDS(...)
     private static final int MINHEIGHT = 480, BOTTOM = 20;
 
-	CenterPanel center;
+	CourseContainer center;
+    String lessonMode = Sco.NORMAL;
 
     private Course course;
     
@@ -164,7 +165,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
      * must be closed.
      */
     public void end() {
-        center.getMenu().showClassList();
+        center.showClassList();
         removeButtons();
     }
 
@@ -187,7 +188,8 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
      */
     private void refresh() {
     	removeButtons();
-        ResultsModuleIF results = GuiCreator.instance().dwo.getUserResultsModule(course);
+        //ResultsModuleIF results = GuiCreator.instance().dwo.getUserResultsModule(course);
+        ResultsModuleIF results = center.getUserResultsModule(course);
         UserResultList scoresults = null;
         if(results != null)
         {	
@@ -226,9 +228,9 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
      * 
      * @param centerPanel The centerPanel to communicate with.
      */
-    public void setCenterPanel(CenterPanel centerPanel) {
+    public void setCenterPanel(CourseContainer centerPanel) {
         center = centerPanel;
-        center.getMenu().hideClassList();
+        center.hideClassList();
         refresh();
     }
 
@@ -279,10 +281,11 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
             GuiCreator.instance().setWait();
             final Sco s = sco;
             Thread thread = new Thread() {	
-                public void run() {	
+
+				public void run() {	
                     CenterSubPanel csp = GuiCreator.instance().getScoPanel(s);
                     if(csp != null) {
-                    	s.setLessonMode(Sco.NORMAL);
+                    	s.setLessonMode(lessonMode);
                         center.loadTotal(csp);
                     }
                     GuiCreator.instance().setReady();
@@ -306,4 +309,10 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
     public Component getComponent() {
         return this;
     }
+
+	public void setCenterPanel(CenterPanel centerPanel) {
+        center = centerPanel;
+        center.hideClassList();
+        refresh();
+	}
 }
