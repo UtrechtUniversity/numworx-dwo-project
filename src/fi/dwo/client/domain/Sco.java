@@ -6,6 +6,7 @@ package fi.dwo.client.domain;
 import java.applet.Applet;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
+import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -17,10 +18,13 @@ import java.util.StringTokenizer;
 
 import javax.swing.JOptionPane;
 
+import org.apache.xmlrpc.applet.XmlRpcException;
+
 import fi.beans.base64code.StringCodeObject;
 import fi.beans.scorm.SCORM12APIInterface;
 //import fi.dwo.client.gui.DwoMessageDialog;
 import fi.dwo.client.gui.ScoPanel;
+import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.MapperCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.PersistenceException;
@@ -47,8 +51,6 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
     private Applet applet;
 
     protected Hashtable launchdata; // subclass implements lazyness
-
-    private ScoPanel scoPanel;
 
     public DwoIF dwo;
 
@@ -651,6 +653,13 @@ System.err.println("sum = ["+result+"]");
 				applet.destroy();
 			} catch (RuntimeException e) {
 				e.printStackTrace();
+				try {
+					DbAccessCreator.instance().log("Sco " + scoID + " exception in Sco.end: "+e.toString());
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} catch (XmlRpcException e1) {
+					e1.printStackTrace();
+				}
 			}
             applet = null;
             LMSFinish("");
@@ -667,7 +676,7 @@ System.err.println("sum = ["+result+"]");
 				e.printStackTrace();
 			}
             applet = null;
-            scoPanel = null;
+            sc = null;
             
             
 //            dwo.endSco(this);

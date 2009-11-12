@@ -1557,7 +1557,9 @@ private static boolean isValidEmail(String email) {
         	 }
         	 setInitialUserInClass(className, u, school);
          } else
-         {	 /* TODO als user lid en getBrin == null, meld user af! */
+         {	 /* FIXME als user lid en getBrin == null, meld user af! */
+        	 //u.setSchool(null);
+        	 //u.setInClass(null);
          }
          
          u.setLogout(!fidentity.isForeign()); // op verzoek van Peter, logout als          									  // een eigen account.

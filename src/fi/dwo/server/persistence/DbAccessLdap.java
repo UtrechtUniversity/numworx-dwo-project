@@ -6,6 +6,7 @@
  */
 package fi.dwo.server.persistence;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -42,7 +43,7 @@ public class DbAccessLdap extends DbAccess
 
             ps.execute();
             ps.close();
-
+            manager.addUserToClass(user, classID);
         }
         if("".equals(password))
         {
@@ -392,4 +393,40 @@ public Hashtable getFidentitySchools() {
 	}
 	return result;
 }
+
+public Hashtable addClass(int teacher, String className)
+		throws DwoXmlRpcException, SQLException {
+	Hashtable result = super.addClass(teacher, className);
+	manager.addClass(className, getUser(teacher), ((Number) result.get("schoolID")).intValue(), ((Number) result.get("classID")).intValue());
+	return result;
+}
+
+public boolean renameClass(int classID, String newName)
+		throws DwoXmlRpcException, IOException,
+		org.apache.xmlrpc.applet.XmlRpcException, SQLException {
+	boolean result = super.renameClass(classID, newName);
+	Hashtable record = getRecord("tblClass", "classID", classID);
+	int u = ((Number)record.get("userID")).intValue();
+	manager.addClass(newName, getUser(u), ((Number)record.get("schoolID")).intValue(), classID);
+	return result;
+}
+
+public boolean deleteClass(int classID, boolean mustEmpty) throws SQLException {
+	boolean result = super.deleteClass(classID, mustEmpty);
+	if (result) 
+	{
+		manager.deleteClass(classID);
+	}
+	return result;
+}
+
+public boolean disconnectFromClass(int uid) throws SQLException {
+	boolean result = super.disconnectFromClass(uid);
+	manager.addUserToClass(getUser(uid), 0);
+	return result;
+}
+
+
+
+
 }
