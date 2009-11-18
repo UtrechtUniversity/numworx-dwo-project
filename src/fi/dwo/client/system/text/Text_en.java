@@ -79,6 +79,7 @@ public class Text_en extends ListResourceBundle {
             { TextMapper.GUIR_OPT_STUDENT, "Student" },
             { TextMapper.GUIR_OPT_TEACHER, "Teacher" },
             { TextMapper.GUIR_OPT_ADMIN, "Administrator"},
+            { TextMapper.GUIR_OPT_SCHOOLCODE, "Key code"},
             
             { TextMapper.GUIR_ERR_REGISTER, "An error has occured" },
 

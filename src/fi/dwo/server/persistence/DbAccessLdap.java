@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
@@ -18,6 +19,7 @@ import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcException;
 
 import fi.beans.base64code.Base64StringEncoder;
+import fi.beans.fidentity.Fidentity;
 import fi.beans.fidentity.FidentityManager;
 import fi.dwo.client.system.LoginException;
 
@@ -109,45 +111,7 @@ public class DbAccessLdap extends DbAccess
 		{
 			String uid = getUser(userID);
 			manager.cashDigicode(uid, schoolLogin);
-			Map m = manager.getAccount(uid);
-			Iterator keys = m.keySet().iterator();
-			while (keys.hasNext()) {
-				String key = (String) keys.next();
-				if(key.startsWith("DL_FIUUNL_K"))
-				{
-					String value = (String)m.get(key);
-					int schoolID = Integer.parseInt(value.substring(1));
-					char ch = value.charAt(0);
-					groupID = 1; // leerling
-					if(ch == 'D' || ch == 'C') groupID=2; // (contact-)docent
-					PreparedStatement ps = getStatement(GET_SCHOOLGROUPID);
-					ps.setInt(1, groupID);
-					ps.setInt(2, schoolID);
-					int schoolGroupID;
-					ResultSet rs = ps.executeQuery();
-					if(!isEmpty(rs))
-						schoolGroupID = rs.getInt(1);
-					else 
-						break;
-					rs.close();
-					ps.close();
-		            ps = getStatement(QRY_ADD_TO_SCHOOL);
-		            ps.setInt(1, schoolGroupID);
-		            ps.setInt(2, userID);
-		            ps.execute();
-		            ps.close();
-
-		            ps = getStatement(QRY_SELECT_SCHOOL_USER);
-		            ps.setInt(1, userID);
-
-		            return executeQueryWithRecord(ps);
-				}
-				
-			}
-            throw new DwoXmlRpcException(
-                    DwoXmlRpcException.EXC_UNKNOWN_SCHOOLGROUP);
-			
-			
+			return addFidentitySchool(userID, manager.getFidentity(uid));
 		}
 		Hashtable result = super.addToSchool(userID, schoolLogin, groupID, groupPassword);
 		Integer schoolId = (Integer) result.get("schoolID");
@@ -162,6 +126,48 @@ public class DbAccessLdap extends DbAccess
                     DwoXmlRpcException.EXC_UNKNOWN_SCHOOLGROUP); 
 		
 		return result;
+	}
+
+	private Hashtable addFidentitySchool(int userID, Fidentity fidentity)
+			throws SQLException, DwoXmlRpcException {
+		
+		Enumeration keys = fidentity.getKeys();
+		while (keys.hasMoreElements()) {
+			String key = (String) keys.nextElement();
+			if(key.startsWith("DL_FIUUNL_K"))
+			{
+				String value = fidentity.get(key);
+				int schoolID = Integer.parseInt(value.substring(1));
+				char ch = value.charAt(0);
+				int ngroupID = 1; // leerling
+				if(ch == 'D' || ch == 'C') ngroupID=2; // (contact-)docent
+				PreparedStatement ps = getStatement(GET_SCHOOLGROUPID);
+				ps.setInt(1, ngroupID);
+				ps.setInt(2, schoolID);
+				int schoolGroupID;
+				ResultSet rs = ps.executeQuery();
+				if(!isEmpty(rs))
+					schoolGroupID = rs.getInt(1);
+				else 
+					break
+					;
+				rs.close();
+				ps.close();
+		        ps = getStatement(QRY_ADD_TO_SCHOOL);
+		        ps.setInt(1, schoolGroupID);
+		        ps.setInt(2, userID);
+		        ps.execute();
+		        ps.close();
+
+		        ps = getStatement(QRY_SELECT_SCHOOL_USER);
+		        ps.setInt(1, userID);
+
+		        return executeQueryWithRecord(ps);
+			}
+			
+		}
+		throw new DwoXmlRpcException(
+		        DwoXmlRpcException.EXC_UNKNOWN_SCHOOLGROUP);
 	}
 
 	private Object passwd;
@@ -219,7 +225,7 @@ public class DbAccessLdap extends DbAccess
 		{
 			boolean result = 
 			super.register(username, password, firstname, middlename, lastname, email);
-			Hashtable rr = login(username, "");
+			Hashtable rr = super.login(username, "");
 			int userID = ((Integer)rr.get("userID")).intValue();
 			
 			//addToSchool(userID, schoolLogin, groupID, groupPassword);
@@ -310,7 +316,7 @@ public class DbAccessLdap extends DbAccess
 	 * @see fi.dwo.server.persistence.DbAccess#login(java.lang.String, java.lang.String)
 	 */
 	public Hashtable login(String username, String password) throws SQLException, DwoXmlRpcException {
-		updateLogin(username);
+		Fidentity fidentity = updateLogin(username);
 		try {
 			return restrict(super.login(username, password));
 		} catch (DwoXmlRpcException e) {
@@ -318,7 +324,26 @@ public class DbAccessLdap extends DbAccess
 				e.getMessage() .equals(  LoginException.class.getName() ))
 			{
 				if(manager.verifyMD5(username, password)) // TODO wat als het een school account betreft.
+				{
+					if(!usernameExists(username))
+					{
+						String lastname = fidentity.getSurName();
+						String email = fidentity.getEmailAddress();
+						String firstname = fidentity.getFirstName();
+						String middlename = fidentity.getMiddleName();
+						super.register(username, password, firstname, middlename, lastname, email);
+						try { 
+							addFidentitySchool(getUserID(username).intValue(), fidentity);
+						} catch(Exception e1) {}
+							
+						
+						
+					}	
 					return restrict(super.login(username, ""));
+					
+					
+					
+				}
 			}
 			throw e;
 		}
@@ -355,10 +380,10 @@ private boolean isNoDWOSchool(int intValue) {
  * @param uid
  * @return Map met gebruikersgegevens of null
  */
-	private Map updateLogin(String uid)
+	private Fidentity updateLogin(String uid)
 	{
 		try { 
-			return manager.getAccount(uid);
+			return manager.getFidentity(uid);
 		} catch (Throwable t)
 		{}
 		return null;

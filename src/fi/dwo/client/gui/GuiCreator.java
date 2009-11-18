@@ -11,6 +11,7 @@ import fi.dwo.client.domain.AppletConfig;
 import fi.dwo.client.domain.ContactDocent;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DWO;
+import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.Group;
 import fi.dwo.client.domain.Guest;
@@ -197,7 +198,7 @@ public class GuiCreator {
             throws RegisterException {
         dwo.register(username, password, rePassword, firstname, middlename,
                 lastname, email);
-        JOptionPane.showMessageDialog(null, TextMapper
+        JOptionPane.showMessageDialog(DwoHelper.getApplet(), TextMapper
                 .getText(TextMapper.GUIR_MSG_REGISTERED));
         WelcomePanel wcp = getWelcomePanel();
         wcp.setUsername(username);
@@ -246,7 +247,7 @@ public class GuiCreator {
             throws RegisterException {
         dwo.register(username, password, rePassword, firstname, middlename,
                 lastname, email, schoolLogin, group, groupPassword);
-        JOptionPane.showMessageDialog(null, TextMapper
+        JOptionPane.showMessageDialog(DwoHelper.getApplet(), TextMapper
                 .getText(TextMapper.GUIR_MSG_REGISTERED));
         WelcomePanel wcp = getWelcomePanel();
         wcp.setUsername(username);

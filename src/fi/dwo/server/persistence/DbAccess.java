@@ -436,6 +436,20 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         rs.close();
         return usernameExists;
     }
+    /**
+     * return null or userID as Number.
+     * @param username
+     * @return userID as a number
+     * @throws SQLException
+     */
+    protected Number getUserID(String username) throws SQLException {
+        PreparedStatement ps = getStatement(QRY_CHECK_USERNAME_EXISTS);
+        ps.setString(1, username);
+        Hashtable h = executeQueryWithRecord(ps);
+        if(h != null)
+        	return (Number) h.get("userID");
+        return null;
+    }
     
     /**
      * Checks if a schoolLogin already exists in the database

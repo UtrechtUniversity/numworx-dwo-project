@@ -45,7 +45,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 
 	Image removeImage;
 
-	private Box tbl;
+	//private Box tbl;
 
     class ClassUsersModel extends AbstractTableModel {
 
@@ -158,18 +158,22 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
                 	schoolClass.disconnect(u);
                  	model.refresh();
     	            if(model.getRowCount() == 0) {
-    	                tbl.setVisible(false);
+    	                //tbl.setVisible(false);
     	                arguments = new String[1];
     	                arguments[0] = schoolClass.getName();
     	                String s = TextMapper.getText(TextMapper.GUIC_NO_STUDENTS);
     	                JLabel label = new JLabel(MessageFormat.format(s, arguments));
     	                label.setFont(GuiConstants.SCO_TEXT);
-    	                FontMetrics fm = label.getFontMetrics(label.getFont());
-    	                label.setSize(fm.stringWidth(label.getText()) + 10, fm.getHeight());
-    	                label.setLocation((ClassUsersPanel.this.getSize().width/2) - (label.getSize().width/2), 100);
+    	                //FontMetrics fm = label.getFontMetrics(label.getFont());
+    	                //label.setSize(fm.stringWidth(label.getText()) + 10, fm.getHeight());
+    	                //label.setLocation((ClassUsersPanel.this.getSize().width/2) - (label.getSize().width/2), 100);
+    	                label.setAlignmentY(0.24f);
+    	                ClassUsersPanel.this.removeAll();
     	                ClassUsersPanel.this.add(label);
-    	            }               	}
-                } 
+    	                ClassUsersPanel.this.repaint();
+    	            }
+    	        }
+            } 
     		fireEditingStopped();
     	}
 
