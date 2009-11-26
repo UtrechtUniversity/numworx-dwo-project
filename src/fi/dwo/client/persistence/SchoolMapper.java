@@ -153,6 +153,12 @@ public class SchoolMapper extends XmlRpcMapper {
      */
     public Object[] get(Object obj) throws IOException, SQLException,
             XmlRpcException {
+    	if(Boolean.TRUE.equals(obj))
+    	{
+    		Hashtable h = new Hashtable();
+    		h.put("export", obj);
+    		return get(h);
+    	}
         return get();
     }
 
@@ -197,6 +203,8 @@ public class SchoolMapper extends XmlRpcMapper {
         //    s.setClassList((SchoolClass[]) MapperCreator.instance(SchoolClass.class).get(s));
         //}
 
+        s.setExport(Boolean.TRUE.equals(data.get("export")));
+        
         return s;
     }
 

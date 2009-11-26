@@ -22,6 +22,8 @@ public class School {
     private SchoolClass[] classList;
     
     private String image;
+    
+    private boolean export;
 
     /**
      * Creates a new School object.
@@ -180,4 +182,18 @@ public class School {
     public void setImage(String image) {
         this.image = image;
     }
+
+	/**
+	 * @param export the export to set
+	 */
+	public void setExport(boolean export) {
+		this.export = export;
+	}
+
+	/**
+	 * @return the export
+	 */
+	public boolean isExport() {
+		return export;
+	}
 }

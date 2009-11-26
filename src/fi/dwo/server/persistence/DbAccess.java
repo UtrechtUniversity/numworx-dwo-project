@@ -114,7 +114,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         + "FROM tblUser LEFT JOIN tblClass ON tblUser.classID = tblClass.classID "
         + "WHERE (username = ?) ";
 
-    private final static String QRY_GET_USER_DATA = "SELECT tblUser.*, tblGroup.*, tblSchool.schoolID, tblSchool.schoolName, tblSchool.schoollogin, tblSchool.image "
+    private final static String QRY_GET_USER_DATA = "SELECT tblUser.*, tblGroup.*, tblSchool.schoolID, tblSchool.schoolName, tblSchool.schoollogin, tblSchool.image, tblSchool.export "
             + "FROM tblUser, tblSchoolGroup, tblGroup, tblSchool "
             + "WHERE (tblUser.schoolGroupID = tblSchoolGroup.schoolGroupID) "
             + "AND   (tblSchoolGroup.groupID = tblGroup.groupID) "
@@ -249,6 +249,9 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     private final static String QRY_UPDATE_SCHOOL = "UPDATE tblSchool "
             + "SET schoolName = ?, " + "schoollogin = ? "  + "WHERE (schoolID = ?) ";
 
+    private final static String QRY_UPDATE_SCHOOL2 = "UPDATE tblSchool "
+        + "SET export = ? WHERE (schoolID = ?) ";
+
 	private final static String QRY_UPDATE_SCHOOLGROUP_PASSW = "UPDATE tblSchoolGroup "
             + "SET passwd = ? " + "WHERE (schoolGroupID = ?) ";
             
@@ -270,6 +273,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
     private final static String QRY_UPDATE_COURSE = "UPDATE tblCourse "
             + "SET name = ?, " + "description = ? " + "WHERE (courseID = ?) ";
+    private final static String QRY_UPDATE_COURSE2 = "UPDATE tblCourse "
+        + "SET name = ?, description = ?, export = ? WHERE (courseID = ?) ";
 
     private final static String QRY_ADD_SCO = "INSERT INTO tblSco(courseID, appletID, sconame, description, launchdata, sequencenr) "
             + "VALUES(?, ?, ?, ?, ?, ?) ";
@@ -1695,6 +1700,28 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         }
         return true;
     }
+    public boolean changeCourse(int courseID, String name, String description, boolean export)
+    throws DwoXmlRpcException, SQLException {
+    	PreparedStatement ps;
+    	ps = getStatement(QRY_UPDATE_COURSE2);
+    	ps.setString(1, name);
+    	ps.setString(2, description);
+    	ps.setBoolean(3, export);
+    	ps.setInt(4, courseID);
+		
+		try {
+		    ps.execute();
+		} catch (SQLException e) {
+		    if (e.getErrorCode() == 1062) {
+		        /* The course already exists */
+		        throw new DwoXmlRpcException(
+		                DwoXmlRpcException.EXC_COURSE_EXISTS);
+		    } else {
+		        throw e;
+		    }
+		}
+		return true;
+		}
 
     /*
      * (non-Javadoc)
@@ -2077,5 +2104,29 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 	public Hashtable getFidentitySchools() throws DwoXmlRpcException
 	{
 		throw new DwoXmlRpcException(DwoXmlRpcException.EXC_SCHOOL_UNSUPPORTED);
+	}
+
+	public void editSchool(int schoolID, boolean export) throws IOException,
+			XmlRpcException, SQLException {
+		
+		PreparedStatement ps = getStatement(QRY_UPDATE_SCHOOL2);
+        ps.setBoolean(1, export);
+        ps.setInt(2, schoolID);
+        ps.execute();
+        ps.close();		
+	}
+
+	public Vector getImportCourses(int schoolFrom, int schoolTo, int profileID)
+			throws IOException, XmlRpcException, SQLException {
+		String sql = 
+			"SELECT c.* FROM tblCourse c, tblfromto ft" +
+			" WHERE c.schoolID = ? AND c.export = 1 AND c.schoolID = ft.schoolFrom AND (ft.schoolTo = -1 OR ft.schoolTO = ?) AND c.dwoProfileID = ?" +
+			" ORDER BY c.name ASC";
+		PreparedStatement ps = getStatement(sql);
+		ps.setInt(1, schoolFrom);
+		ps.setInt(2, schoolTo);
+		ps.setInt(3, profileID);
+		return executeQueryWithResult(ps);
+		
 	}
 }

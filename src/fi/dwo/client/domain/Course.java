@@ -47,6 +47,7 @@ public class Course implements LessonGroup, Comparable {
     private int dwoProfile;
     
     private int schoolID;
+    private boolean export;
 
     /**
      * Creates a new Course object
@@ -371,4 +372,18 @@ public class Course implements LessonGroup, Comparable {
         Course c = (Course) o;
         return getName().toLowerCase().compareTo(c.getName().toLowerCase());
     }
+
+	/**
+	 * @param export the export to set
+	 */
+	public void setExport(boolean export) {
+		this.export = export;
+	}
+
+	/**
+	 * @return the export
+	 */
+	public boolean isExport() {
+		return export;
+	}
 }

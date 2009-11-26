@@ -73,10 +73,11 @@ public class CourseMapper extends XmlRpcMapper {
 
     ////peter
     /**
-     * Returns all the Courses whith the object as restriction.
+     * Returns all the Courses with the object as restriction.
      * @param obj The object who specifies the restriction. possible objects are:
      * <ul>
      * <li><code>SchoolClass</code>: the courses of the class are returned;
+     * <li><code>School</code>: the courses of the school are returned;
      * </ul>
      * @return The Courses who satisfy to the restriction. 
      */
@@ -132,6 +133,8 @@ public class CourseMapper extends XmlRpcMapper {
         catch(Exception e){}
         try { c.setImageData((byte[]) data.get("imageData"));
         } catch(Exception e){};
+        
+        c.setExport(Boolean.TRUE.equals(data.get("export")));
         
         return c;
     }

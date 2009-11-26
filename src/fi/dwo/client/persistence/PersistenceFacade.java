@@ -1231,7 +1231,7 @@ public class PersistenceFacade {
         try {
             try {
                 return dbAccess.changeCourse(course.getID(), course.getName(),
-                        course.getDescription());
+                        course.getDescription(), course.isExport());
             } catch (IOException e) {
                 throw new CourseException(CourseException.EX_IO);
             } catch (XmlRpcException e) {
@@ -1539,6 +1539,41 @@ e1.printStackTrace();
         } catch (SQLException e) {
             throw new PersistenceException(PersistenceException.EX_DB);
         }
+	}
+	/**
+	 * 
+	 * @param school
+	 * @throws PersistenceException 
+	 */
+	public void updateSchool(School school) throws PersistenceException {
+			int schoolID = school.getSchoolID();
+			boolean export = school.isExport();
+			try {
+				DbAccessCreator.instance().editSchool(schoolID, export);
+			} catch (IOException e) {
+				throw new PersistenceException(PersistenceException.EX_IO);
+			} catch (XmlRpcException e) {
+				throw new PersistenceException(PersistenceException.EX_XML_RPC);
+			} catch (SQLException e) {
+				throw new PersistenceException(PersistenceException.EX_DB);
+			}
+		
+	}
+
+	public Course[] getImportCourses(School s, School school, int profileID) throws PersistenceException {
+        try {
+            Vector v;
+            v = DbAccessCreator.instance().getImportCourses(s.getSchoolID(), school.getSchoolID(), profileID);
+            MapperIF mapper = MapperCreator.instance(Course.class);
+            return (Course[]) mapper.getObjectFromReturn(v);
+        } catch (IOException e) {
+            throw new PersistenceException(PersistenceException.EX_IO);
+        } catch (XmlRpcException e) {
+            throw new PersistenceException(PersistenceException.EX_XML_RPC);
+        } catch (SQLException e) {
+            throw new PersistenceException(PersistenceException.EX_DB);
+        }
+
 	}
 
 }

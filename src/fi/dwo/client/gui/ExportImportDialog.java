@@ -22,6 +22,10 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.AbstractCellEditor;
@@ -63,6 +67,7 @@ import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.persistence.PersistenceFacade;
+import fi.dwo.client.system.CourseException;
 import fi.dwo.client.system.PersistenceException;
 
 /**
@@ -367,7 +372,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 	
 	class ExportModuleModel extends AbstractTableModel {
 
-		Object[] export;
+		HashMap  dirty = new HashMap();
 		Course[] courses;
 		
 		public ExportModuleModel(User user) throws PersistenceException {
@@ -378,12 +383,13 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 // filter only courses within profile.
 			Vector v = new Vector();
 	        for(int i=0 ; i<courses.length; i++){
-	        	if(courses[i].getDwoProfile() == profileID) v.addElement(courses[i]);
+	        	Course course = courses[i];
+				if(course.getDwoProfile() == profileID && course.getSchoolID()== user.getSchool().getSchoolID()) 
+	        			v.addElement(course);
 			}
 			courses = new Course[v.size()];
 			v.toArray(courses);
 
-			export = new Boolean[courses.length];
 		}
 
 		public int getColumnCount() {
@@ -391,12 +397,12 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		}
 
 		public int getRowCount() {
-			return export.length;
+			return courses.length;
 		}
 
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			if(columnIndex == 0)
-				return export[rowIndex];
+				return courses[rowIndex].isExport()? Boolean.TRUE : Boolean.FALSE;
 			return courses[rowIndex].getName();
 		}
 		
@@ -427,9 +433,15 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 			if(columnIndex == 0)
-			{
-				export[rowIndex] = aValue;
-				fireTableCellUpdated(rowIndex, columnIndex);
+			{		
+				Course course = courses[rowIndex];
+				boolean export = course.isExport();
+				if( ((Boolean)aValue).booleanValue() != export)
+				{	course.setExport(!export);
+				    if(! dirty.containsKey(course))
+				    	dirty.put(course, export?Boolean.TRUE:Boolean.FALSE);
+					fireTableCellUpdated(rowIndex, columnIndex);
+				}
 			}
 			
 		}
@@ -506,6 +518,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 	private JTable importModuleTable;
 	private JPanel previewPanel;
 	private Component coursePanel;
+	private ExportModuleModel exportModuleModel;
 
 	/**
 	 * @throws HeadlessException
@@ -525,12 +538,26 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		JPanel importPanel = new JPanel(new BorderLayout());
 		enableImport = new JCheckBox("<html>Ik wil meedoen in deze manier van uitwisselen en daarbij zichtbaar worden als school in de lijsten");
 // From DATABASE
-		enableImport.setSelected(true);
+		enableImport.setSelected(user.getSchool().isExport());
 // track changes
 		enableImport.addChangeListener(new ChangeListener() {
 
-			public void stateChanged(ChangeEvent arg0) {
+			public void stateChanged(ChangeEvent event) {
+				
+				School school = user.getSchool();
+				boolean oldExport = school.isExport();
+				if(oldExport == enableImport.isSelected())
+					return;
+				school.setExport(enableImport.isSelected());
+				try {
+					PersistenceFacade.instance().updateSchool(school);
+				} catch (PersistenceException e) {
+					school.setExport(oldExport);
+					enableImport.setSelected(oldExport);
+					JOptionPane.showMessageDialog(enableImport, e.getMessage(), e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
+				}
 				ieEnabler();
+				
 			} });
 		
 		pane.insertTab("Modules opvragen", null, importPanel, null, 0);
@@ -542,9 +569,8 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		ieEnabler();
 		
 		getContentPane().add(pane);
-// exportstuff		
-		ExportModuleModel exportModuleModel = new ExportModuleModel(user);
-		School[] schools = (School[]) PersistenceFacade.instance().get(School.class);
+		exportModuleModel = new ExportModuleModel(user);
+		School[] schools = (School[]) PersistenceFacade.instance().get(School.class, Boolean.TRUE);
 		ExportSchoolModel exportSchoolModel = new ExportSchoolModel(schools);
 		JTable exportModuleTable = new JTable(exportModuleModel);
 		JTable exportSchoolTable = new JTable(exportSchoolModel);
@@ -584,8 +610,26 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		p = new JPanel(new FlowLayout(FlowLayout.CENTER));p.add(buttonBox);
 		exportPanel.add(p, BorderLayout.SOUTH);
 		JButton exportOK = new JButton("OK");
+		exportOK.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+					persistCourses(exportModuleModel.dirty);
+					ExportImportDialog.this.dispose();
+			} });
+		
+		
 		JButton exportCancel = new JButton("annuleer");
+		exportCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ExportImportDialog.this.dispose();
+			}});
 		JButton exportApply = new JButton("toepassen");
+		exportApply.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				HashMap dirty = exportModuleModel.dirty;
+				persistCourses(dirty);
+				dirty.clear();
+			}});
 		buttonBox.add(exportOK);
 		buttonBox.add(exportCancel);
 		buttonBox.add(exportApply);
@@ -645,12 +689,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 				Course[] courses;
 				try {
 					ArrayList clist = new ArrayList();
-					courses = (Course[]) PersistenceFacade.instance().get(Course.class, s);
-					for (int i = 0; i < courses.length; i++) {
-						if(courses[i].getDwoProfile() == profileID)
-							clist.add(courses[i]);
-					}
-					courses = (Course[]) clist.toArray(new Course[clist.size()]);
+					courses = (Course[]) PersistenceFacade.instance().getImportCourses(s, user.getSchool(), profileID);
 				} catch (PersistenceException e1) {
 					courses = null;
 					e1.printStackTrace();
@@ -690,6 +729,35 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 // sizeen
 		setSize(getContentPane().getPreferredSize());
 		pack();
+	}
+
+	/**
+	 * Update courses. 
+	 * Als het fout gaat, cancel dat wat nog niet gepersist is.
+	 * @param dirty
+	 */
+	protected void persistCourses(HashMap dirty) {
+		Iterator iterator = dirty.entrySet().iterator();
+		boolean inerror = false;
+		while (iterator.hasNext()) {
+			Map.Entry entry = (Map.Entry) iterator.next();
+			Course course = (Course) entry.getKey();
+			boolean oldExport = Boolean.TRUE.equals(entry.getValue());
+			if(oldExport != course.isExport())
+				if(inerror)
+					course.setExport(oldExport);
+				else
+				try {
+System.out.println("persistCourses " + course.getName());
+					PersistenceFacade.instance().updateCourse(course);
+				} catch (CourseException e) {
+					JOptionPane.showMessageDialog(this, e.getMessage(), e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
+					e.printStackTrace();
+					inerror = true;
+				}
+		}
+		if(inerror)
+			exportModuleModel.fireTableDataChanged();
 	}
 
 	private void ieEnabler() {

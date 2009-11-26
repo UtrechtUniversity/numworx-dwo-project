@@ -396,4 +396,21 @@ public interface DbAccessIF {
 	public Vector getUserResults(Vector courses, int i) throws SQLException, IOException, XmlRpcException;
 
 	public boolean setLogo(int id, byte[] image) throws SQLException, IOException, XmlRpcException;
+
+	/**
+	 * update course met name, description en export.
+	 * @param id
+	 * @param name
+	 * @param description
+	 * @param export
+	 * @return
+	 * @throws IOException
+	 * @throws XmlRpcException
+	 */
+	public boolean changeCourse(int id, String name, String description,
+			boolean export) throws IOException, XmlRpcException, SQLException, DwoXmlRpcException;
+
+	public void editSchool(int schoolID, boolean export) throws IOException, XmlRpcException, SQLException;
+
+	public Vector getImportCourses(int schoolFrom, int schoolTo, int profileID) throws IOException, XmlRpcException, SQLException;
 }
