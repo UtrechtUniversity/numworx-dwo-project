@@ -37,6 +37,8 @@ public class ResultScoreButton extends JPanel implements
     //private ResultsModulePanel resultsModulePanel;
     
     private String toolTip;
+    
+    private boolean active = true;
 
     /**
      * Creates a new ResultScoreButton. This represents a ResultScore, and shows
@@ -151,6 +153,7 @@ public class ResultScoreButton extends JPanel implements
     	
     	add(p,BorderLayout.SOUTH);
     	p.add(bar);
+    	active = false;
     }
 
     /**
@@ -160,7 +163,7 @@ public class ResultScoreButton extends JPanel implements
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
-        domain.showResult();
+        if(active)domain.showResult();
     }
 
     /**
@@ -170,7 +173,7 @@ public class ResultScoreButton extends JPanel implements
      * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
      */
     public void mouseClicked(MouseEvent arg0) {
-        domain.showResult();
+    	if(active)domain.showResult();
     }
 
     /**
@@ -180,7 +183,7 @@ public class ResultScoreButton extends JPanel implements
      * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
      */
     public void mouseEntered(MouseEvent arg0) {
-        if (domain.isDeepest()) {
+        if (active && domain.isDeepest()) {
             setCursor(new Cursor(Cursor.HAND_CURSOR));
             repaint();
         }
@@ -193,7 +196,7 @@ public class ResultScoreButton extends JPanel implements
      * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
      */
     public void mouseExited(MouseEvent arg0) {
-        if (domain.isDeepest()) {
+        if (active && domain.isDeepest()) {
             setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
             repaint();
         }
