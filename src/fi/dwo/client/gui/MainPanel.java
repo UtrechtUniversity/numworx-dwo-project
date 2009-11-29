@@ -146,6 +146,9 @@ public class MainPanel extends JPanel {
 		    l.setPreferredSize(new Dimension(151,70));
         } else {
         	top.add(Box.createRigidArea(new Dimension(151+30,70)), BorderLayout.WEST);
+        	
+        	//toevoeging om iets meer ruimte te krijgen tussen sco en header
+        	top.add(Box.createRigidArea(new Dimension(151+30,6)), BorderLayout.SOUTH);
         }
 
         header = new HeaderPanel(TextMapper.getText(TextMapper.GUIM_MAIN_MENU));

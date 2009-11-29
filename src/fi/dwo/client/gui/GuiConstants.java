@@ -202,12 +202,13 @@ public abstract class GuiConstants {
 			GUI_IMAGE_SCO = "resources/UU-mbo-sco.png";
 			GUI_IMAGE_COURSE = "resources/UU-mbo-course.png";
 		}else
-		if(profile==38)
+		if(profile==38 || profile==13)
 		{	MAIN_BACKGROUND = new Color(255,255,255);
 	    	CELL_BACKGROUND = new Color(255,255,255);
 			FI_LOGO_LOCATION = "resources/fi.gif";
 			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
-			GUI_IMAGE_BG = true;
+			if(!DwoHelper.isApplication())GUI_IMAGE_BG = true;
+			else GUI_IMAGE_BG = false;
 			GUI_IMAGE_WELCOME = "resources/EPN-welkom.jpg";
 			GUI_IMAGE_SCO = "resources/EPN-sco.png";
 			GUI_IMAGE_COURSE = "resources/EPN-course.png";
