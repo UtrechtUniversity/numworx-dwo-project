@@ -157,7 +157,7 @@ public class SchoolMapper extends XmlRpcMapper {
     	{
     		Hashtable h = new Hashtable();
     		h.put("export", obj);
-    		return get(h);
+    		return super.get(h);
     	}
         return get();
     }
