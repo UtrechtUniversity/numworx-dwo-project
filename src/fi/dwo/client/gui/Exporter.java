@@ -2,6 +2,7 @@ package fi.dwo.client.gui;
 
 import fi.dwo.client.domain.ResultScore;
 import fi.dwo.client.domain.School;
+import fi.dwo.client.domain.SchoolGroup;
 import fi.dwo.client.domain.UserResultList;
 
 abstract class Exporter {
@@ -22,14 +23,15 @@ abstract class Exporter {
     	{	sb.export();
     		return;
     	}
-		String[] line = { "School", "Login", "Leerling", "Docent" };
+		String[] line = { "School", "Login", "Leerling", "Docent", "SchoolAdmin" };
 		sb.exportHeader( line);
 		for (int i = 0; i < schools.length; i++) {
 			School school = schools[i];
 			line[0] = school.getName();
 			line[1] = school.getSchoolLogin();
-			line[2] = school.getPasswd(1);
-			line[3] = school.getPasswd(2);
+			line[2] = school.getPasswd(SchoolGroup.STUDENT);
+			line[3] = school.getPasswd(SchoolGroup.TEACHER);
+			line[4] = school.getPasswd(SchoolGroup.SCHOOLADMIN);
 			sb.export(line);
 		}
 		sb.export();

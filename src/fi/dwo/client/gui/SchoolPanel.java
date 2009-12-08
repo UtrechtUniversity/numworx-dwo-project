@@ -76,7 +76,7 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
 			if(value == editImage)
 			{
 				try {
-					School s = AddSchoolDialog.editSchool(SchoolPanel.this, model.school[row]);
+					School s = AddSchoolDialog.editSchool(SchoolPanel.this.center, model.school[row]);
 					if(s != null)
 						model.fireTableRowsUpdated(row, row);
 				} catch (SchoolException e) {
@@ -112,12 +112,12 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
 			setOpaque(true);
 			Object[] arguments = new Object[]  { table.getValueAt(row, 0) };
 			switch(col) {
-			case 4:	String s = TextMapper.getText(TextMapper.GUIS_TLTP_USERS_SCHOOL);
+			case 4-2:	String s = TextMapper.getText(TextMapper.GUIS_TLTP_USERS_SCHOOL);
 	    			setToolTipText(MessageFormat.format(s, arguments));
 	    			break;
-			case 5: setToolTipText(TextMapper.getText(TextMapper.GUIS_TLTP_EDIT_SCHOOL));
+			case 5-2: setToolTipText(TextMapper.getText(TextMapper.GUIS_TLTP_EDIT_SCHOOL));
 				break;
-			case 6: String format = TextMapper.getText(TextMapper.GUIS_TLTP_DELETE_SCHOOL);
+			case 6-2: String format = TextMapper.getText(TextMapper.GUIS_TLTP_DELETE_SCHOOL);
 					setToolTipText(MessageFormat.format(format, arguments));
 				break;
 			default:
@@ -143,17 +143,17 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
 		}
 
 		public int getColumnCount() {
-			return 7;
+			return 7-2;
 		}
 
 		public Class getColumnClass(int col) {
-			if(col >= 4)
+			if(col >= 4-2)
 				return Image.class;
 			return super.getColumnClass(col);
 		}
 
 		public boolean isCellEditable(int row, int col) {
-			if(col >= 4)
+			if(col >= 4-2)
 				return true;
 			return super.isCellEditable(row, col);
 		}
@@ -167,19 +167,19 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
 			switch(col) {
 			case 0: return s.getName();
 			case 1: return s.getSchoolLogin();
-			case 2: try {
-						return s.getSchoolGroupList()[0].getPasswd();
-					} catch (RuntimeException e) {
-					} 
-					break;
-			case 3: try {
-						return s.getSchoolGroupList()[1].getPasswd();
-					} catch (RuntimeException e) {
-					}
-					break;
-			case 4: return usersImage;
-			case 5: return editImage;
-			case 6: return removeImage;
+//			case 2: try {
+//						return s.getSchoolGroupList()[0].getPasswd();
+//					} catch (RuntimeException e) {
+//					} 
+//					break;
+//			case 3: try {
+//						return s.getSchoolGroupList()[1].getPasswd();
+//					} catch (RuntimeException e) {
+//					}
+//					break;
+			case 4-2: return usersImage;
+			case 5-2: return editImage;
+			case 6-2: return removeImage;
 			}
  			
 			return "";
@@ -189,8 +189,8 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
 			switch(col) {
 			case 0: return "School";
 			case 1: return "Login";
-			case 2: return "Leerling";
-			case 3: return "Docent";
+//			case 2: return "Leerling";
+//			case 3: return "Docent";
 			}
 			return "";
 		}
@@ -339,7 +339,7 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
     	}
         if(e.getSource() == addSchoolButton) {
             try {
-            	School s = AddSchoolDialog.addSchool(this);
+            	School s = AddSchoolDialog.addSchool(center);
             	if(s != null) {
 	            	buildJTable(); 
 	            }               

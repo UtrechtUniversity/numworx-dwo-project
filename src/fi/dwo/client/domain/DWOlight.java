@@ -120,13 +120,6 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see fi.dwo.client.domain.DwoIF#addSchool(int, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
-	 */
-	public School addSchool(int id, String schoolName, String schoolLogin,
-			String studentPassw, String teacherPassw) throws SchoolException {
-		return null;
-	}
 
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#addSco(fi.dwo.client.domain.Course, fi.dwo.client.domain.AppletConfig, java.lang.String, java.lang.String)
@@ -899,6 +892,18 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 		public void setCurrentSco(Sco sco) {
 			// TODO Auto-generated method stub
 			
+		}
+
+		public School addSchool(int id, String schoolName, String schoolLogin,
+				SchoolPasswdMap schoolPasswdMap) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public School editSchool(int schoolID, String schoolName,
+				String schoolLogin, SchoolPasswdMap schoolPasswdMap) {
+			// TODO Auto-generated method stub
+			return null;
 		}
 
 }

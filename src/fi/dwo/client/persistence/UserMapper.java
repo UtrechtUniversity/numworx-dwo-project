@@ -17,6 +17,7 @@ import fi.dwo.client.domain.SchoolGroup;
 import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.Admin;
 import fi.dwo.client.domain.User;
+import fi.dwo.client.system.TextMapper;
 
 public class UserMapper extends XmlRpcMapper {
 
@@ -58,14 +59,21 @@ public class UserMapper extends XmlRpcMapper {
             u = (User) objects.get(data.get("userID"));
         } else {
             /* Is the user a teacher? */
-            if (data.containsKey("groupname")) {
-                if ((data.get("groupname")).equals("TEACHER")) {
-                    u = new Teacher();
+            Object groupName = data.get("groupname");
+            if (groupName != null) {
+				if (TextMapper.GUIR_OPT_TEACHER.equals(groupName)) {
                     if (DwoHelper.isContact())
                     	u = new ContactDocent();
+                    else
+                    	u = new Teacher();
                 }
-                else if (( data.get("groupname")).equals("ADMIN")) {
+                else if (TextMapper.GUIR_OPT_ADMIN.equals(groupName)) {
                     u = new Admin();
+                }
+                else if (TextMapper.GUIR_OPT_SCHOOLADMIN.equals(groupName))
+                {
+                	u = new ContactDocent();
+                	DwoHelper.setContact(true);
                 }
             }
         }

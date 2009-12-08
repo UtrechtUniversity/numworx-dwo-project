@@ -17,6 +17,7 @@ import fi.dwo.client.domain.Group;
 import fi.dwo.client.domain.Guest;
 import fi.dwo.client.domain.SchoolClass;
 import fi.dwo.client.domain.School;
+import fi.dwo.client.domain.SchoolPasswdMap;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.Admin;
@@ -569,20 +570,21 @@ public class GuiCreator {
      * @return edited School 
      *  
      */
-    public School editSchool(int schoolID, String schoolName, String schoolLogin, String studentPasswd, String teacherPasswd)  throws SchoolException {
-        return dwo.editSchool(schoolID, schoolName, schoolLogin, studentPasswd, teacherPasswd);
+    public School editSchool(int schoolID, String schoolName, String schoolLogin, SchoolPasswdMap schoolPasswdMap)  throws SchoolException {
+        return dwo.editSchool(schoolID, schoolName, schoolLogin, schoolPasswdMap);
     }
     
     /**
      * Shows a dialog to add a school and adds the school.
      * @param id 
+     * @param schooladminPasswd 
      * 
      * @return boolean Indicates if the school is added, or the operation is
      *         canceled.
      *  
      */
-    public School addSchool(int id, String schoolName, String schoolLogin, String studentPasswd, String teacherPasswd)  throws SchoolException {
-        return dwo.addSchool(id, schoolName, schoolLogin, studentPasswd, teacherPasswd);
+    public School addSchool(int id, String schoolName, String schoolLogin, SchoolPasswdMap schoolPasswdMap)  throws SchoolException {
+        return dwo.addSchool(id, schoolName, schoolLogin, schoolPasswdMap);
     }
 
     /**
@@ -837,5 +839,5 @@ public class GuiCreator {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 }

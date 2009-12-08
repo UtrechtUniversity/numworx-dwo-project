@@ -2119,8 +2119,9 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 	public Vector getImportCourses(int schoolFrom, int schoolTo, int profileID)
 			throws IOException, XmlRpcException, SQLException {
 		String sql = 
-			"SELECT c.* FROM tblCourse c, tblfromto ft" +
+			"SELECT c.* FROM tblCourse c, tblfromto ft, tblSchool s" +
 			" WHERE c.schoolID = ? AND c.export = 1 AND c.schoolID = ft.schoolFrom AND (ft.schoolTo = -1 OR ft.schoolTO = ?) AND c.dwoProfileID = ?" +
+			" AND s.schoolID = c.schoolID AND s.export = 1" +
 			" ORDER BY c.name ASC";
 		PreparedStatement ps = getStatement(sql);
 		ps.setInt(1, schoolFrom);

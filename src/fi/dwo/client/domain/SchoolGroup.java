@@ -12,6 +12,14 @@ package fi.dwo.client.domain;
  *  
  */
 public class SchoolGroup {
+	
+	public static final int STUDENT = 1;
+	public static final int TEACHER = 2;
+	public static final int ADMIN = 3;
+	public static final int DIGICODE = 4;
+	public static final int SCHOOLADMIN = 5;
+	public static final int LENGTH = 6; // for arrays
+	
     private int schoolGroupID;
 
     private int schoolID;

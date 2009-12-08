@@ -2,6 +2,7 @@
 
 package fi.dwo.client.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -18,15 +19,21 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.Spring;
+import javax.swing.SpringLayout;
 
 
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.School;
+import fi.dwo.client.domain.SchoolGroup;
+import fi.dwo.client.domain.SchoolPasswdMap;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.TextMapper;
 import fi.dwo.client.system.SchoolException;
@@ -46,35 +53,47 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
     
     private String schoolLogin;
     
-   	private String studentPasswd;
-   
-   	private String teacherPasswd;
-
     private boolean confirmed;
 
     private Component schoolNameField;
     
     private JTextField schoolLoginField;
 
-    private JTextField studentPasswdField;
+    private JTextField passwdField[] = new JTextField[SchoolGroup.LENGTH];
+    private String   passwdLabel[] = new String[SchoolGroup.LENGTH];
     
-    private JTextField teacherPasswdField;
-
+    { 
+    	passwdLabel[SchoolGroup.STUDENT] = "Wachtwoord Leerlingen";
+    	passwdLabel[SchoolGroup.TEACHER] = "Wachtwoord Docenten";
+    	passwdLabel[SchoolGroup.SCHOOLADMIN] = "Wachtwoord Schooladmin";
+    	passwdLabel[SchoolGroup.ADMIN] = "Wachtwoord Administrator";
+    }
+    private boolean usePasswd[] = new boolean[SchoolGroup.LENGTH];
+    {
+    	usePasswd[SchoolGroup.STUDENT] = true;
+    	usePasswd[SchoolGroup.TEACHER] = true;
+    	usePasswd[SchoolGroup.SCHOOLADMIN] = true;
+    }
+    
+    private SchoolPasswdMap passwdMap;
+    
     private JButton okButton;
 
     private JButton cancelButton;
 
     public AddSchoolDialog(Component owner, String windowTitle, String schoolName, String schoolLogin,
-            String studentPasswd, String teacherPasswd) {
+            SchoolPasswdMap spm) {
         super(DwoHelper.getFrameForComponent(owner),
                 windowTitle, true);
         Container contentPane = getContentPane();
-        contentPane.setLayout(null);
+        SpringLayout layout = new SpringLayout();
+        contentPane.setLayout(new BorderLayout());
+        JPanel form = new JPanel(layout); // form
         contentPane.setBackground(GuiConstants.MAIN_BACKGROUND);
+        form.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.schoolName = schoolName;
         this.schoolName = schoolLogin;
-        this.studentPasswd = studentPasswd;
-        this.teacherPasswd = teacherPasswd;
+        this.passwdMap =  spm;
         confirmed = false;
 
         JLabel l;
@@ -88,7 +107,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         l.setLocation(10, 30);
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
         l.setVisible(false);
-        contentPane.add(l);
+        form.add(l);
         l.setVisible(true);
 
         /* schoolName field */
@@ -115,7 +134,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         }
         schoolNameField.setBounds(150, 28, 300, 20);
         schoolNameField.setVisible(false);
-        contentPane.add(schoolNameField);
+        form.add(schoolNameField);
         schoolNameField.setVisible(true);
         
         /* schoolLogin label */
@@ -126,57 +145,35 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         l.setLocation(10, 80);
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
         l.setVisible(false);
-        contentPane.add(l);
+        form.add(l);
         l.setVisible(true);
 
         /* schoolLogin field */
         schoolLoginField = new JTextField(schoolLogin);
         schoolLoginField.setBounds(150, 78, 150, 20);
         schoolLoginField.setVisible(false);
-        contentPane.add(schoolLoginField);
+        form.add(schoolLoginField);
         schoolLoginField.setVisible(true);
         
-        /* studentPasswd label */
-        l = new JLabel("Wachtwoord Leerlingen");
-        l.setForeground(Color.black);
-        l.setFont(GuiConstants.NORMAL_TEXT);
-        fm = l.getFontMetrics(l.getFont());
-        l.setLocation(10, 110);
-        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-        l.setVisible(false);
-        contentPane.add(l);
-        l.setVisible(true);
-
-        /* studentPasswd field */
-        studentPasswdField = new JTextField(studentPasswd);
-        studentPasswdField.setBounds(150, 108, 150, 20);
-        studentPasswdField.setVisible(false);
-        contentPane.add(studentPasswdField);
-        studentPasswdField.setVisible(true);
+        for (int groupId = 0; groupId < SchoolGroup.LENGTH; groupId++)
+        {
+        	String text = spm.getPasswd(groupId);
+        	if(text.length()!=0)
+        		usePasswd[groupId] = true;
+        	if(usePasswd[groupId]) {
+                l = new JLabel(passwdLabel[groupId]);
+                l.setForeground(Color.black);
+                l.setFont(GuiConstants.NORMAL_TEXT);
+                form.add(l);
+                passwdField[groupId] = new JTextField(text);
+                form.add(passwdField[groupId]);
+        	}
+        }
         
-        
-        /* teacherPasswd label */
-        l = new JLabel("Wachtwoord Docenten");
-        l.setForeground(Color.black);
-        l.setFont(GuiConstants.NORMAL_TEXT);
-        fm = l.getFontMetrics(l.getFont());
-        l.setLocation(10, 140);
-        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-        l.setVisible(false);
-        contentPane.add(l);
-        l.setVisible(true);
-
-        /* teacherPasswd field */
-        teacherPasswdField = new JTextField(teacherPasswd);
-        teacherPasswdField.setBounds(150, 138, 150, 20);
-        teacherPasswdField.setVisible(false);
-        contentPane.add(teacherPasswdField);
-        teacherPasswdField.setVisible(true);
-
-        
-
         this.setSize(460, 280);
 
+        Box okbox = Box.createHorizontalBox();
+        okbox.add(Box.createHorizontalGlue());
         /* Register button */
         okButton = new JButton(TextMapper.getText(TextMapper.BTN_OK));//,GuiConstants.MAIN_BACKGROUND);
         //fm = okButton.getFontMetrics(okButton.getFont());
@@ -193,15 +190,25 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
                 (getSize().width / 2)
                         - ((okButton.getSize().width
                                 + cancelButton.getSize().width + 5) / 2), 163);
-        contentPane.add(okButton);
-
+        okbox.add(okButton);
+        okbox.add(Box.createHorizontalStrut(10));
         cancelButton.setLocation(
                 (getSize().width / 2)
                         - ((okButton.getSize().width
                                 + cancelButton.getSize().width + 5) / 2)
                         + okButton.getSize().width + 5, 163);
-        contentPane.add(cancelButton);
+        okbox.add(cancelButton);
+        okbox.add(Box.createHorizontalGlue());
+        makeCompactGrid(form, //parent
+                form.getComponentCount()/2, 2,
+                10, 10,  //initX, initY
+                10, 10); //xPad, yPad
 
+        
+        contentPane.add(form, BorderLayout.CENTER);
+        contentPane.add(okbox, BorderLayout.SOUTH);
+        pack();
+        setSize(460, getHeight());
         Point p = owner != null ? owner.getLocationOnScreen() : new Point(0, 0);
         Dimension parentSize = owner != null ? owner.getSize() : Toolkit
                 .getDefaultToolkit().getScreenSize();
@@ -221,10 +228,10 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
      * @return fi.dwo.client.domain.Sco
      */
     public static School addSchool(Component owner)  throws SchoolException {
-        AddSchoolDialog asd = new AddSchoolDialog(owner, "Nieuwe school", "", "", "", "");
+        AddSchoolDialog asd = new AddSchoolDialog(owner, "Nieuwe school", "", "", new SchoolPasswdMap());
         asd.show();
         if (asd.isConfirmed()) {
-            School s = GuiCreator.instance().addSchool(asd.getSchoolId(), asd.getSchoolName(), asd.getSchoolLogin(), asd.getStudentPasswd(), asd.getTeacherPasswd());
+            School s = GuiCreator.instance().addSchool(asd.getSchoolId(), asd.getSchoolName(), asd.getSchoolLogin(), asd.getSchoolPasswdMap());
             if(s == null) { //something went wrong, reshow the dialog
                 s = addSchool(owner);
             }
@@ -244,17 +251,12 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
     public static School editSchool(Component owner, School school)  throws SchoolException {
         String sn = school.getName();
         String sl = school.getSchoolLogin();
-        String ps = school.getPasswd(1);
-        String pt = school.getPasswd(2);
-        if(sn==null) sn = "";
-        if(sl==null) sl = "";
-        if(ps==null) ps = "";
-        if(pt==null) pt = "";
+        SchoolPasswdMap spm = new SchoolPasswdMap(school);
                 
-        AddSchoolDialog asd = new AddSchoolDialog(owner, "Schoolgegevens wijzigen", sn, sl, ps, pt);
+        AddSchoolDialog asd = new AddSchoolDialog(owner, "Schoolgegevens wijzigen", sn, sl, spm);
         asd.show();
         if (asd.isConfirmed()) {
-            School s = GuiCreator.instance().editSchool(school.getSchoolID(), asd.getSchoolName(), asd.getSchoolLogin(), asd.getStudentPasswd(), asd.getTeacherPasswd());
+            School s = GuiCreator.instance().editSchool(school.getSchoolID(), asd.getSchoolName(), asd.getSchoolLogin(), asd.getSchoolPasswdMap());
             if(s == null) { //something went wrong, reshow the dialog
                 s = editSchool(owner, school);
             }
@@ -266,7 +268,17 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
     
 
    
-    /*
+    private SchoolPasswdMap getSchoolPasswdMap() {
+    	SchoolPasswdMap result = new SchoolPasswdMap(passwdMap);
+    	for (int i = 0; i < passwdField.length; i++) {
+			JTextField field = passwdField[i];
+			if(field != null)
+				result.setPasswd(i, field.getText());
+		}
+		return result;
+	}
+
+	/*
      * (non-Javadoc)
      * 
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
@@ -281,8 +293,6 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         		schoolName = ((JTextField) schoolNameField).getText();
         	
             schoolLogin = schoolLoginField.getText();
-            studentPasswd = studentPasswdField.getText();
-            teacherPasswd = teacherPasswdField.getText();
             confirmed = true;
             this.setVisible(false);
         }
@@ -395,24 +405,93 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
     	}
     	return 0;
     }
-    /**
-     * @return Returns the studentPasswd.
-     */
-    public String getStudentPasswd() {
-        return studentPasswd;
-    }
-    
-    /**
-     * @return Returns the teacherPasswd.
-     */
-    public String getTeacherPasswd() {
-        return teacherPasswd;
-    }
-
+   
     /**
      * @return Returns the schoolName.
      */
     public String getSchoolName() {
         return schoolName;
     }
+    
+    
+    /**
+     * Aligns the first <code>rows</code> * <code>cols</code>
+     * components of <code>parent</code> in
+     * a grid. Each component in a column is as wide as the maximum
+     * preferred width of the components in that column;
+     * height is similarly determined for each row.
+     * The parent is made just big enough to fit them all.
+     *
+     * @param rows number of rows
+     * @param cols number of columns
+     * @param initialX x location to start the grid at
+     * @param initialY y location to start the grid at
+     * @param xPad x padding between cells
+     * @param yPad y padding between cells
+     */
+    public static void makeCompactGrid(Container parent,
+                                       int rows, int cols,
+                                       int initialX, int initialY,
+                                       int xPad, int yPad) {
+        SpringLayout layout;
+        try {
+            layout = (SpringLayout)parent.getLayout();
+        } catch (ClassCastException exc) {
+            System.err.println("The first argument to makeCompactGrid must use SpringLayout.");
+            return;
+        }
+
+        //Align all cells in each column and make them the same width.
+        Spring x = Spring.constant(initialX);
+        for (int c = 0; c < cols; c++) {
+            Spring width = Spring.constant(0);
+            for (int r = 0; r < rows; r++) {
+                width = Spring.max(width,
+                                   getConstraintsForCell(r, c, parent, cols).
+                                       getWidth());
+            }
+            for (int r = 0; r < rows; r++) {
+                SpringLayout.Constraints constraints =
+                        getConstraintsForCell(r, c, parent, cols);
+                constraints.setX(x);
+                constraints.setWidth(width);
+            }
+            x = Spring.sum(x, Spring.sum(width, Spring.constant(xPad)));
+        }
+
+        //Align all cells in each row and make them the same height.
+        Spring y = Spring.constant(initialY);
+        for (int r = 0; r < rows; r++) {
+            Spring height = Spring.constant(0);
+            for (int c = 0; c < cols; c++) {
+                height = Spring.max(height,
+                                    getConstraintsForCell(r, c, parent, cols).
+                                        getHeight());
+            }
+            for (int c = 0; c < cols; c++) {
+                SpringLayout.Constraints constraints =
+                        getConstraintsForCell(r, c, parent, cols);
+                constraints.setY(y);
+                constraints.setHeight(height);
+            }
+            y = Spring.sum(y, Spring.sum(height, Spring.constant(yPad)));
+        }
+
+        //Set the parent's size.
+        SpringLayout.Constraints pCons = layout.getConstraints(parent);
+        pCons.setConstraint(SpringLayout.SOUTH, y);
+        pCons.setConstraint(SpringLayout.EAST, x);
+    }
+    /* Used by makeCompactGrid. */
+    private static SpringLayout.Constraints getConstraintsForCell(
+                                                int row, int col,
+                                                Container parent,
+                                                int cols) {
+        SpringLayout layout = (SpringLayout) parent.getLayout();
+        Component c = parent.getComponent(row * cols + col);
+        return layout.getConstraints(c);
+    }
+
+
+    
 }

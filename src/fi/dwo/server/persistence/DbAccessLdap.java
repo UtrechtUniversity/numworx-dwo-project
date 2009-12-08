@@ -101,6 +101,7 @@ public class DbAccessLdap extends DbAccess
 
 	private static final String GET_SCHOOLGROUPID = "SELECT schoolGroupID FROM tblSchoolGroup WHERE groupID=? AND schoolID=?";
 	private static final int TEACHER = 2;
+	private static final int SCHOOLADMIN = 5;
 	
     /* (non-Javadoc)
 	 * @see fi.dwo.server.persistence.DbAccess#addToSchool(int, java.lang.String, int, java.lang.String)
@@ -116,9 +117,12 @@ public class DbAccessLdap extends DbAccess
 		Hashtable result = super.addToSchool(userID, schoolLogin, groupID, groupPassword);
 		Integer schoolId = (Integer) result.get("schoolID");
 		String uid = getUser(userID);
-		char rolId = 'L';
-		if(groupID == TEACHER)
-			rolId = 'D';
+		char rolId;
+		switch(groupID) {
+		default:          rolId = 'L'; break;
+		case TEACHER:     rolId = 'D'; break;
+		case SCHOOLADMIN: rolId = 'C'; break;
+		}
 		manager.cashDigicode(uid, schoolId.intValue(), rolId);
 		String errorCode = manager.getLastError();
 		if(errorCode != null && errorCode.startsWith("210"))
@@ -140,7 +144,8 @@ public class DbAccessLdap extends DbAccess
 				int schoolID = Integer.parseInt(value.substring(1));
 				char ch = value.charAt(0);
 				int ngroupID = 1; // leerling
-				if(ch == 'D' || ch == 'C') ngroupID=2; // (contact-)docent
+				if(ch == 'D') ngroupID = TEACHER; // (contact-)docent
+				if(ch == 'C') ngroupID = SCHOOLADMIN;
 				PreparedStatement ps = getStatement(GET_SCHOOLGROUPID);
 				ps.setInt(1, ngroupID);
 				ps.setInt(2, schoolID);
@@ -149,8 +154,25 @@ public class DbAccessLdap extends DbAccess
 				if(!isEmpty(rs))
 					schoolGroupID = rs.getInt(1);
 				else 
-					break
-					;
+				{
+// TODO if no schooladmin yet, make Teacher:
+					if(ngroupID == SCHOOLADMIN)
+					{ 
+						rs.close();
+					    ps.close();
+					    ps = getStatement(GET_SCHOOLGROUPID);
+					    ps.setInt(1, TEACHER);
+					    ps.setInt(2, schoolID);
+					    rs = ps.executeQuery();
+					    if(!isEmpty(rs))
+					    	schoolGroupID = rs.getInt(1);
+					    else
+					    	break;
+					} 
+					else
+						break;
+				}
+					
 				rs.close();
 				ps.close();
 		        ps = getStatement(QRY_ADD_TO_SCHOOL);

@@ -733,43 +733,7 @@ private static boolean isValidEmail(String email) {
         }
         return false;
     }
-    
-    /**
-     * Adds a school to the database. 
-     * @param id The id of the new school
-     * @param schoolName The name of the new school.
-     * @param schoolLogin The login name of the new school.
-     * @param studentPassw Password for students.
-     * @param teacherPassw Password for teachers.
-     * @return boolean If the school is successfully inserted it returns true.
-     *         Otherwise it returns false.
-     * @throws fi.dwo.client.system.ClassException If some school-information is
-     *             incorrect.
-     *  
-     */
-    public School addSchool(int id, String schoolName, String schoolLogin, String studentPassw, String teacherPassw)  throws SchoolException {
-    	return PersistenceFacade.instance().addSchool(id, schoolName, schoolLogin, studentPassw, teacherPassw);
         
-    }
-
-	/**
-     * Edit a school to the database. 
-     * 
-     * @param schoolID The ID of the school.
-     * @param schoolName The new name of the school.
-     * @param schoolLogin The new login name of the school.
-     * @param studentPassw new Password for students.
-     * @param teacherPassw new Password for teachers.
-     * @return school
-     * @throws fi.dwo.client.system.ClassException If some school-information is
-     *             incorrect.
-     *  
-     */
-    public School editSchool(int schoolID, String schoolName, String schoolLogin, String studentPassw, String teacherPassw)  throws SchoolException {
-    	return PersistenceFacade.instance().editSchool(schoolID, schoolName, schoolLogin, studentPassw, teacherPassw);
-        
-    }
-    
     /**
      * Deletes the current user.
      *  
@@ -1734,6 +1698,45 @@ System.out.println(school.getSchoolLogin() + " " + group.getName() + " " + schoo
 			return languageOveride;
 			
 		return super.getParameter(name);
+	}
+
+    /**
+     * Adds a school to the database. 
+     * @param id The id of the new school
+     * @param schoolName The name of the new school.
+     * @param schoolLogin The login name of the new school.
+     * @param schoolPasswMap Passwords.
+     * @return boolean If the school is successfully inserted it returns true.
+     *         Otherwise it returns false.
+     * @throws fi.dwo.client.system.ClassException If some school-information is
+     *             incorrect.
+     *  
+     */
+	public School addSchool(int id, String schoolName, String schoolLogin,
+			SchoolPasswdMap schoolPasswdMap) throws SchoolException {
+		
+    	String studentPassw = schoolPasswdMap.getPasswd(SchoolGroup.STUDENT);
+		String teacherPassw = schoolPasswdMap.getPasswd(SchoolGroup.TEACHER);
+		return PersistenceFacade.instance().addSchool(id, schoolName, schoolLogin, studentPassw, teacherPassw);
+	}
+	/**
+     * Edit a school to the database. 
+     * 
+     * @param schoolID The ID of the school.
+     * @param schoolName The new name of the school.
+     * @param schoolLogin The new login name of the school.
+     * @param schoolPasswMap new Passwords.
+     * @return school
+     * @throws fi.dwo.client.system.ClassException If some school-information is
+     *             incorrect.
+     *  
+     */
+
+	public School editSchool(int schoolID, String schoolName,
+			String schoolLogin, SchoolPasswdMap schoolPasswdMap) throws SchoolException {
+		String studentPassw = schoolPasswdMap.getPasswd(SchoolGroup.STUDENT);
+		String teacherPassw = schoolPasswdMap.getPasswd(SchoolGroup.TEACHER);		
+		return PersistenceFacade.instance().editSchool(schoolID, schoolName, schoolLogin, studentPassw, teacherPassw);
 	}
 	
 }

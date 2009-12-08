@@ -264,7 +264,7 @@ public interface DwoIF {
      *             incorrect.
      *  
      */
-    public School editSchool(int schoolID, String schoolName, String schoolLogin, String studentPassw, String teacherPassw) throws SchoolException;
+  //  public School editSchool(int schoolID, String schoolName, String schoolLogin, String studentPassw, String teacherPassw) throws SchoolException;
     
     	/**
      * Adds a school to the database. 
@@ -274,13 +274,14 @@ public interface DwoIF {
      * @param schoolLogin The login name of the new school.
      * @param studentPassw Password for students.
      * @param teacherPassw Password for teachers.
+     * @param schooladminPasswd Password for SchoolAdministrators
      * @return boolean If the school is successfully inserted it returns true.
      *         Otherwise it returns false.
      * @throws fi.dwo.client.system.ClassException If some school-information is
      *             incorrect.
      *  
      */
-    public School addSchool(int id, String schoolName, String schoolLogin, String studentPassw, String teacherPassw) throws SchoolException;
+   // public School addSchool(int id, String schoolName, String schoolLogin, String studentPassw, String teacherPassw, String schooladminPasswd) throws SchoolException;
     
     /**
      * Deletes the account of the current user.
@@ -471,5 +472,11 @@ public interface DwoIF {
 	public String LMSGetValue(Sco sco, User user, String dataModelElement);
 
 	public String LMSSetValue(Sco sco, String dataModelElement, String value);
+
+	public School addSchool(int id, String schoolName, String schoolLogin,
+			SchoolPasswdMap schoolPasswdMap) throws SchoolException;
+
+	public School editSchool(int schoolID, String schoolName,
+			String schoolLogin, SchoolPasswdMap schoolPasswdMap) throws SchoolException;
 
 }

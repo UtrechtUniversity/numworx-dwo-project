@@ -306,7 +306,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 				this.courses = new Course[0];
 			else
 				this.courses = courses;
-			imports = new Object[courses.length];
+			imports = new Object[this.courses.length];
 			fireTableDataChanged();
 		}
 
