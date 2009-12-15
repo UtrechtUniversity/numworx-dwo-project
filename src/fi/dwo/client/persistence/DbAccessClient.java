@@ -534,4 +534,35 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
         return (java.util.Vector)object;
     }
 
+    public java.util.Hashtable editSchool(int a, java.lang.String b, java.lang.String c, java.util.Hashtable d) throws IOException, XmlRpcException
+    {
+        Vector vv = new Vector(4);
+        vv.addElement( new Integer(a));
+        vv.addElement(b);
+        vv.addElement(c);
+        vv.addElement(d);
+        Object object = invoke("editSchool", vv);
+        return (java.util.Hashtable)object;
+    }
+
+    public java.util.Hashtable addSchool(int a, java.lang.String b, java.lang.String c, java.util.Hashtable d) throws IOException, XmlRpcException
+    {
+        Vector vv = new Vector(4);
+        vv.addElement( new Integer(a));
+        vv.addElement(b);
+        vv.addElement(c);
+        vv.addElement(d);
+        Object object = invoke("addSchool", vv);
+        return (java.util.Hashtable)object;
+    }
+
+    public boolean deleteUserFromSchool(int a, int b) throws IOException, XmlRpcException
+    {
+        Vector vv = new Vector(2);
+        vv.addElement( new Integer(a));
+        vv.addElement( new Integer(b));
+        Object object = invoke("deleteUserFromSchool", vv);
+        return ((Boolean)object).booleanValue();
+    }
+
 }

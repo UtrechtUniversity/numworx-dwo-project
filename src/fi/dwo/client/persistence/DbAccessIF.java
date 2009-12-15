@@ -413,4 +413,14 @@ public interface DbAccessIF {
 	public void editSchool(int schoolID, boolean export) throws IOException, XmlRpcException, SQLException;
 
 	public Vector getImportCourses(int schoolFrom, int schoolTo, int profileID) throws IOException, XmlRpcException, SQLException;
+
+	public Hashtable editSchool(int schoolID, String schoolName, String schoolLogin, Hashtable passwd) 
+	throws IOException, XmlRpcException, SQLException, DwoXmlRpcException ;
+
+    public Hashtable addSchool(int schoolId, String schoolName, String schoolLogin, Hashtable passwd)
+    throws DwoXmlRpcException, IOException, XmlRpcException, SQLException, DwoXmlRpcException ;
+
+    public boolean deleteUserFromSchool(int id, int schoolID)
+    throws IOException, XmlRpcException, SQLException;
+    
 }

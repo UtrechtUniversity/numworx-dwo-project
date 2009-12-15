@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import org.apache.xmlrpc.XmlRpc;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.beans.base64code.StringCodeObject;
@@ -19,6 +20,7 @@ import fi.dwo.client.domain.Group;
 import fi.dwo.client.domain.Guest;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.SchoolClass;
+import fi.dwo.client.domain.SchoolPasswdMap;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.Admin;
@@ -798,6 +800,7 @@ public class PersistenceFacade {
     
     /**
      * Creates a new school
+     * @deprecated use {@link #addSchool(int, String, String, Hashtable)}
      * @param id The id of the new school
      * @param schoolName The name of the new school.
      * @param schoolLogin The login name of the new school.
@@ -835,17 +838,42 @@ public class PersistenceFacade {
         }
     }
     
-    /* Creates a new school
+    public School addSchool(int id, String schoolName, String schoolLogin, Hashtable passw)
+    throws SchoolException {
+    	DbAccessIF dbAccess = DbAccessCreator.instance();
+    	try {
+    		try {
+    			MapperIF mapper = MapperCreator.instance(School.class);
+    			Hashtable result = dbAccess.addSchool(id, schoolName, schoolLogin, passw);
+    			return (School) mapper.getObjectFromReturn(result);
+    		} catch (IOException e) { System.out.println(e.toString());
+    		throw new SchoolException(SchoolException.EX_IO);
+    		} catch (XmlRpcException e) {
+    			if (e.code != 0) {
+    				throw (SchoolException) getException(e, e.code);
+    			} else {
+    				throw new SchoolException(SchoolException.EX_XML_RPC);
+    			}
+    		} catch (SQLException e) { System.out.println(e.toString());
+    			throw new SchoolException(SchoolException.EX_DB);
+    		} catch (DwoXmlRpcException e) {
+    			throw (SchoolException) getException(e, e.code);
+    		}
+    	} catch (PersistenceException e) {
+    		throw new SchoolException(SchoolException.EX_UNKNOWN_ERROR);
+    	}
+    }
+    
+    /** Edit an old school
+     * @deprecated use {@link #editSchool(int, String, String, Hashtable)}
      * @param schoolName The name of the new school.
      * @param schoolLogin The login name of the new school.
      * @param studentPassw Password for students.
      * @param teacherPassw Password for teachers.
      * @return The new schoolclass. If an exception occurs, null is returned.
      * @throws fi.dwo.client.system.ClassException If something went wrong with the classname.
-     *  
+     * 
      */
-     
-    
     public School editSchool(int schoolID, String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
             throws SchoolException {
         DbAccessIF dbAccess = DbAccessCreator.instance();
@@ -1579,4 +1607,50 @@ e1.printStackTrace();
 
 	}
 
+	public School editSchool(int schoolID, String schoolName,
+			String schoolLogin, Hashtable passwd) throws SchoolException {
+        DbAccessIF dbAccess = DbAccessCreator.instance();
+        try {
+            try {
+                MapperIF mapper = MapperCreator.instance(School.class);
+                Hashtable result = dbAccess.editSchool(schoolID,schoolName, schoolLogin, passwd);
+                return (School) mapper.getObjectFromReturn(result);
+            } catch (IOException e) { System.out.println(e.toString());
+                throw new SchoolException(SchoolException.EX_IO);
+            } catch (XmlRpcException e) {
+                if (e.code != 0) {
+                    throw (SchoolException) getException(e, e.code);
+                } else {
+                    throw new SchoolException(SchoolException.EX_XML_RPC);
+                }
+            } catch (SQLException e) { System.out.println(e.toString());
+                throw new SchoolException(SchoolException.EX_DB);
+            } catch (DwoXmlRpcException e) {
+                throw (SchoolException) getException(e, e.code);
+            }
+        } catch (PersistenceException e) {
+            throw new SchoolException(SchoolException.EX_UNKNOWN_ERROR);
+        }
+	}
+
+	public boolean deleteUserFromSchool(User u) {
+		if(u.getSchool()!= null)
+			try {
+				boolean result =  DbAccessCreator.instance().deleteUserFromSchool(u.getID(), u.getSchool().getSchoolID());
+				MapperCreator.instance(User.class).removeObject(u.getID());
+				return result;
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (XmlRpcException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		return false;
+	}
+	
 }

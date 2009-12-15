@@ -12,11 +12,15 @@ import java.text.MessageFormat;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.beans.jdbc.DbConnect;
+import fi.dwo.client.domain.SchoolGroup;
 import fi.dwo.client.persistence.DbAccessIF;
 
 public class DbAccess extends DbConnect implements DbAccessIF {
@@ -861,6 +865,29 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return result;
     }
     
+    public Hashtable addSchool(int schoolID, String schoolName, String schoolLogin, Hashtable passwdMap)
+    throws DwoXmlRpcException, SQLException {
+    	Hashtable result = null;
+    	if (schoolLoginExists(schoolLogin)) {
+    		throw new DwoXmlRpcException(DwoXmlRpcException.EXC_SCHOOL_EXISTS);
+    	} else {
+    		PreparedStatement ps = getStatement(QRY_ADD_SCHOOLID);
+    		ps.setString(1, schoolName);
+    		ps.setString(2, schoolLogin);
+    		ps.setInt(3, schoolID);
+    		ps.execute();
+    		if(schoolID == 0 )
+    		{	ResultSet rs = ps.getGeneratedKeys();
+    			rs.first();
+    			schoolID = rs.getInt(1);
+    			rs.close();
+    		}
+    	}
+    	updateSchoolGroupPasswdMap(schoolID, passwdMap);
+    	result = getRecord("tblSchool", "schoolID", schoolID);
+    	return result;
+    }
+
     /**
      * @param schoolName
      * @param schoolLogin
@@ -873,7 +900,47 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     public Hashtable editSchool(int schoolID, String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
             throws DwoXmlRpcException, SQLException {
         Hashtable result = getRecord("tblSchool", "schoolID", schoolID);
-        String schoolNameOld = (String)result.get("schoolName");
+		updateSchoolNameLogin(schoolID, schoolName, schoolLogin, result);
+		updateSchoolGroupPasswd(schoolID, SchoolGroup.STUDENT, studentPassw);
+		updateSchoolGroupPasswd(schoolID, SchoolGroup.TEACHER, teacherPassw);
+        result = getRecord("tblSchool", "schoolID", schoolID);
+        return result;
+    }
+
+	private void updateSchoolGroupPasswd(int schoolID, int groupID, String passwd)
+			throws SQLException {
+		PreparedStatement ps;
+        ps = getStatement(QRY_CHECK_SCHOOLGROUP_EXISTS);
+        ps.setInt(1, schoolID);
+        ps.setInt(2, groupID);
+            
+        ResultSet rs = ps.executeQuery();
+        int schoolGroupID = 0;
+        if(!isEmpty(rs)) {
+        	rs.first();
+        	schoolGroupID = rs.getInt("schoolGroupID");
+        	String passwdOld = rs.getString("passwd");
+        	if(!passwdOld.equals(passwd)) {
+        		ps = getStatement(QRY_UPDATE_SCHOOLGROUP_PASSW);
+        		ps.setString(1, passwd);
+        		ps.setInt(2, schoolGroupID);
+        		ps.execute();
+        		ps.close();
+        	}
+        }
+        else {
+        	ps = getStatement(QRY_INSERT_SCHOOLGROUP);
+        	ps.setInt(1, groupID);
+        	ps.setInt(2, schoolID);
+        	ps.setString(3, passwd);
+        	ps.execute();
+        	ps.close();	
+        }
+	}
+
+	private void updateSchoolNameLogin(int schoolID, String schoolName,
+			String schoolLogin, Hashtable result) throws SQLException {
+		String schoolNameOld = (String)result.get("schoolName");
         String schoolLoginOld = (String)result.get("schoollogin");
         PreparedStatement ps = null;
         if(!schoolName.equals(schoolNameOld) || !schoolLoginOld.equals(schoolLogin)) {
@@ -885,66 +952,32 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             ps.execute();
             ps.close();
         }
-        ps = getStatement(QRY_CHECK_SCHOOLGROUP_EXISTS);
-        ps.setInt(1, schoolID);
-        ps.setInt(2, 1);
-            
-        ResultSet rs = ps.executeQuery();
-        int schoolGroupID = 0;
-        if(!isEmpty(rs)) {
-        	rs.first();
-        	schoolGroupID = rs.getInt("schoolGroupID");
-        	String passwdOld = rs.getString("passwd");
-        	if(!passwdOld.equals(studentPassw)) {
-        		ps = getStatement(QRY_UPDATE_SCHOOLGROUP_PASSW);
-        		ps.setString(1, studentPassw);
-        		ps.setInt(2, schoolGroupID);
-        		ps.execute();
-        		ps.close();
-        	}
-        }
-        else {
-        	ps = getStatement(QRY_INSERT_SCHOOLGROUP);
-        	ps.setInt(1, 1);
-        	ps.setInt(2, schoolID);
-        	ps.setString(3, studentPassw);
-        	ps.execute();
-        	ps.close();	
-        }
-        
-        ps = getStatement(QRY_CHECK_SCHOOLGROUP_EXISTS);
-        ps.setInt(1, schoolID);
-        ps.setInt(2, 2);
-            
-        rs = ps.executeQuery();
-        schoolGroupID = 0;
-        if(!isEmpty(rs)) {
-        	rs.first();
-        	schoolGroupID = rs.getInt("schoolGroupID");
-        	String passwdOld = rs.getString("passwd");
-        	if(!passwdOld.equals(teacherPassw)) {
-        		ps = getStatement(QRY_UPDATE_SCHOOLGROUP_PASSW);
-        		ps.setString(1, teacherPassw);
-        		ps.setInt(2, schoolGroupID);
-        		ps.execute();
-        		ps.close();
-        	}
-        }
-        else {
-        	ps = getStatement(QRY_INSERT_SCHOOLGROUP);
-        	ps.setInt(1, 2);
-        	ps.setInt(2, schoolID);
-        	ps.setString(3, teacherPassw);
-        	ps.execute();
-        	ps.close();	
-        }
-
-        result = getRecord("tblSchool", "schoolID", schoolID);
-            
-            
-		
-        return result;
+	}
+    
+    
+    public Hashtable editSchool(int schoolID, String schoolName, String schoolLogin, Hashtable passwdMap) throws SQLException
+    {
+    	Hashtable result;
+    	result = getRecord("tblSchool", "schoolID", schoolID);
+    	updateSchoolNameLogin(schoolID, schoolName, schoolLogin, result);
+    	updateSchoolGroupPasswdMap(schoolID, passwdMap);
+    	result = getRecord("tblSchool", "schoolID", schoolID);
+    	return result;
     }
+
+	private void updateSchoolGroupPasswdMap(int schoolID, Hashtable passwdMap)
+			throws SQLException {
+		Set entries = passwdMap.entrySet();
+    	Iterator iterator = entries.iterator();
+    	while (iterator.hasNext()) {
+			Map.Entry entry = (Map.Entry) iterator.next();
+			int groupID = ((Number) entry.getKey()).intValue();
+			String passwd = entry.getValue().toString();
+			updateSchoolGroupPasswd(schoolID, groupID, passwd);
+		}
+	}
+    
+    
     
     /*
     public boolean register(String username, String password, String firstname,
@@ -2129,5 +2162,16 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 		ps.setInt(3, profileID);
 		return executeQueryWithResult(ps);
 		
+	}
+
+	public boolean deleteUserFromSchool(int id, int schoolID)
+			throws IOException, XmlRpcException, SQLException {
+		String sql = "UPDATE tblUser SET classID = NULL, schoolGroupID = NULL WHERE " +
+					" userID = ? AND schoolGroupID IN (SELECT schoolGroupID FROM tblSchoolGroup where schoolID = ?)";
+		PreparedStatement ps = getStatement(sql);
+		ps.setInt(1, id);
+		ps.setInt(2, schoolID);
+		int cnt = ps.executeUpdate();
+		return cnt != 0;
 	}
 }

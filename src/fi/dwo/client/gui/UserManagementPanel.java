@@ -29,6 +29,7 @@ import fi.dwo.client.domain.SchoolGroup;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.SchoolPanel.SchoolModel;
 
+import fi.dwo.client.persistence.MapperCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.LoginException;
 import fi.dwo.client.system.PersistenceException;
@@ -63,6 +64,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 			if(value == userImage)
 			{
 				try {
+					MapperCreator.instance(User.class).removeObject(user.getID()); // not good enough, need fresh copy.
 					GuiCreator.instance().login(user.getUsername(), null);
 				} catch (LoginException e) {
 					// TODO Auto-generated catch block
@@ -92,7 +94,8 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 					final String text = MessageFormat.format(TextMapper.getText(TextMapper.GUIS_MSG_DELETE_STUDENT), new Object[] { u.getName() });
 					if (JOptionPane.showConfirmDialog(UserManagementPanel.this, text
 					       + "?", title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-					    //deleteUser(u);
+						u.setSchool(docent.getSchool());
+					    PersistenceFacade.instance().deleteUserFromSchool(u);
 					    //center.loadMenu();
 					    model.deleteRow(row);
 					       

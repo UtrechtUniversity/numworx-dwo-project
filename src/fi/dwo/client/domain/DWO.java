@@ -1715,10 +1715,11 @@ System.out.println(school.getSchoolLogin() + " " + group.getName() + " " + schoo
 	public School addSchool(int id, String schoolName, String schoolLogin,
 			SchoolPasswdMap schoolPasswdMap) throws SchoolException {
 		
-    	String studentPassw = schoolPasswdMap.getPasswd(SchoolGroup.STUDENT);
-		String teacherPassw = schoolPasswdMap.getPasswd(SchoolGroup.TEACHER);
-		return PersistenceFacade.instance().addSchool(id, schoolName, schoolLogin, studentPassw, teacherPassw);
-	}
+//    	String studentPassw = schoolPasswdMap.getPasswd(SchoolGroup.STUDENT);
+//		String teacherPassw = schoolPasswdMap.getPasswd(SchoolGroup.TEACHER);
+//		return PersistenceFacade.instance().addSchool(id, schoolName, schoolLogin, studentPassw, teacherPassw);
+		return PersistenceFacade.instance().addSchool(id, schoolName, schoolLogin, schoolPasswdMap);
+	}	
 	/**
      * Edit a school to the database. 
      * 
@@ -1734,9 +1735,10 @@ System.out.println(school.getSchoolLogin() + " " + group.getName() + " " + schoo
 
 	public School editSchool(int schoolID, String schoolName,
 			String schoolLogin, SchoolPasswdMap schoolPasswdMap) throws SchoolException {
-		String studentPassw = schoolPasswdMap.getPasswd(SchoolGroup.STUDENT);
-		String teacherPassw = schoolPasswdMap.getPasswd(SchoolGroup.TEACHER);		
-		return PersistenceFacade.instance().editSchool(schoolID, schoolName, schoolLogin, studentPassw, teacherPassw);
+//		String studentPassw = schoolPasswdMap.getPasswd(SchoolGroup.STUDENT);
+//		String teacherPassw = schoolPasswdMap.getPasswd(SchoolGroup.TEACHER);		
+//		return PersistenceFacade.instance().editSchool(schoolID, schoolName, schoolLogin, studentPassw, teacherPassw);
+		return PersistenceFacade.instance().editSchool(schoolID, schoolName, schoolLogin, schoolPasswdMap);
 	}
 	
 }
