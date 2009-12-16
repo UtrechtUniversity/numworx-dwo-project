@@ -1464,7 +1464,7 @@ private static boolean isValidEmail(String email) {
      {
  		fidentity = Fidentity.getInstance(this);
  // DEBUGGING, uitzettten bij commmit!
- //		fidentity = new Fidentity(this, "peterb", "DL_FIUUNL_K3K=C100");
+ 		//fidentity = new Fidentity(this, "peterb", "DL_FIUUNL_K3K=C100&sn=Boon&givenName=Peter");
  		String username = fidentity.getUid();
  System.out.println("[" + username + "]");
         if(username == null||"".equals(username))

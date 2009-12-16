@@ -1900,8 +1900,6 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps.setString(3, launchdata);
         ps.setInt(4, scoID);
         
-        log("DbAccess.changeSco " + ps);
-
         try {
             ps.execute();
         } catch (SQLException e) {
@@ -1986,7 +1984,6 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             ps = getStatement(QRY_UPDATE_SCO_SEQUENCE);
             ps.setInt(1, sequencenr);
             ps.setInt(2, courseid);
-            log(ps.toString());
             ps.execute();
             ps.close();
         }
