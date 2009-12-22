@@ -33,7 +33,11 @@ public class School {
 
     }
 
-    /**
+    public School(int i) {
+		setSchoolID(i);
+	}
+
+	/**
      * Returns the name of the school.
      * 
      * @return The name of the school.

@@ -4,6 +4,7 @@
 package fi.dwo.server.persistence;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -1821,7 +1822,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     	else
         data = getRecord("tblAppletConfig", "appletConfigID",
                 appletConfigID);
-        log("DbAccess.addSco " + data);
+        //log("DbAccess.addSco " + data);
         int appletID = -1;
         String launchdata = "";
         if (data.containsKey("appletID")) {
@@ -2149,7 +2150,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 	public Vector getImportCourses(int schoolFrom, int schoolTo, int profileID)
 			throws IOException, XmlRpcException, SQLException {
 		String sql = 
-			"SELECT c.* FROM tblCourse c, tblfromto ft, tblSchool s" +
+			"SELECT DISTINCT c.* FROM tblCourse c, tblfromto ft, tblSchool s" +
 			" WHERE c.schoolID = ? AND c.export = 1 AND c.schoolID = ft.schoolFrom AND (ft.schoolTo = -1 OR ft.schoolTO = ?) AND c.dwoProfileID = ?" +
 			" AND s.schoolID = c.schoolID AND s.export = 1" +
 			" ORDER BY c.name ASC";
@@ -2170,5 +2171,30 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 		ps.setInt(2, schoolID);
 		int cnt = ps.executeUpdate();
 		return cnt != 0;
+	}
+
+	public boolean updateSchoolTo(int schoolID, Vector schoolTo)
+			throws IOException, XmlRpcException, SQLException {
+		Connection c = getConnection();
+		try { 
+			c.setAutoCommit(false);			
+			String sql = "DELETE FROM tblfromto WHERE schoolFrom = ?";
+			PreparedStatement ps = getStatement(sql);
+			ps.setInt(1, schoolID);
+			ps.executeUpdate();
+			sql = "INSERT INTO tblfromto(schoolFrom, schoolTo) VALUES (?,?)";
+			ps = getStatement(sql);
+			Enumeration e = schoolTo.elements();
+			while (e.hasMoreElements()) {
+				Number to = (Number) e.nextElement();
+				ps.setInt(1, schoolID);
+				ps.setInt(2, to.intValue());
+				ps.executeUpdate();
+			}
+		c.commit();
+		} finally { 
+			c.setAutoCommit(true);
+		}
+		return true;
 	}
 }

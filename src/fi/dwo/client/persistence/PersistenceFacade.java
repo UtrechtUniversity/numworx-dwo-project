@@ -1272,6 +1272,7 @@ public class PersistenceFacade {
                     throw new CourseException(CourseException.EX_XML_RPC);
                 }
             } catch (SQLException e) {
+            	e.printStackTrace();
                 throw new CourseException(CourseException.EX_DB);
             } catch (DwoXmlRpcException e) {
                 throw (CourseException) getException(e, e.code);
@@ -1602,6 +1603,7 @@ e1.printStackTrace();
         } catch (XmlRpcException e) {
             throw new PersistenceException(PersistenceException.EX_XML_RPC);
         } catch (SQLException e) {
+        	e.printStackTrace();
             throw new PersistenceException(PersistenceException.EX_DB);
         }
 
@@ -1650,6 +1652,28 @@ e1.printStackTrace();
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		return false;
+	}
+	
+	public boolean updateSchoolTo(School from, School[] to)
+	{
+		int schoolID = from.getSchoolID();
+		Vector schoolTo = new Vector(to.length);
+		for (int i = 0; i < to.length; i++) {
+			schoolTo.add(new Integer(to[i].getSchoolID()));
+		}
+		try {
+			return DbAccessCreator.instance().updateSchoolTo(schoolID, schoolTo);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (XmlRpcException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return false;
 	}
 	

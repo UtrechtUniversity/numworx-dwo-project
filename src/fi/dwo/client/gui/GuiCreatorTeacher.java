@@ -27,7 +27,7 @@ import fi.dwo.client.domain.User;
  */
 public class GuiCreatorTeacher extends GuiCreator {
 
-    private static final class LazyAppletConfig extends AppletConfig {
+    public static final class LazyAppletConfig extends AppletConfig {
 		private Sco sco;
 
 		/* (non-Javadoc)

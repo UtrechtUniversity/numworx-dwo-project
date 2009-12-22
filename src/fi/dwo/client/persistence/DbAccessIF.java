@@ -423,4 +423,7 @@ public interface DbAccessIF {
     public boolean deleteUserFromSchool(int id, int schoolID)
     throws IOException, XmlRpcException, SQLException;
     
+    public boolean updateSchoolTo(int schoolID, Vector schoolTo)
+    throws IOException, XmlRpcException, SQLException;
+    
 }

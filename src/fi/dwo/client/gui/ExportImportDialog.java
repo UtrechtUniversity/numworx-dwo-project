@@ -20,18 +20,24 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeSet;
 import java.util.Vector;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.AbstractListModel;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.ButtonModel;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -57,16 +63,25 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import org.apache.xmlrpc.applet.XmlRpcException;
+
 import fi.beans.appletutil.AppletUtil;
+import fi.dwo.client.domain.AppletConfig;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DWO;
 import fi.dwo.client.domain.DWOlight;
 import fi.dwo.client.domain.DwoHelper;
+import fi.dwo.client.domain.DwoProfile;
 import fi.dwo.client.domain.ResultsModuleIF;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.User;
+import fi.dwo.client.gui.GuiCreatorTeacher.LazyAppletConfig;
+import fi.dwo.client.persistence.ClassMapper;
+import fi.dwo.client.persistence.DbAccessCreator;
+import fi.dwo.client.persistence.MapperCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
+import fi.dwo.client.persistence.XmlRpcMapper;
 import fi.dwo.client.system.CourseException;
 import fi.dwo.client.system.PersistenceException;
 
@@ -77,6 +92,8 @@ import fi.dwo.client.system.PersistenceException;
 public class ExportImportDialog extends JDialog implements ActionListener, CourseContainer {
 
 	
+	public DwoProfile profile;
+
 	class ImportTask extends JDialog implements Runnable, ActionListener, WindowListener {
 
 		private ImportModuleModel model;
@@ -139,12 +156,37 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		int count;
 		private boolean fuse;
 		public void run() {
+			School s = user.getSchool();
+			HashSet set = new HashSet();
+			try {
+				Course[] courses = (Course[]) MapperCreator.instance(Course.class).get(s);
+				for (int i = 0; i < courses.length; i++) {
+					Course course = courses[i];
+					set.add(course.getName());
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
 			int  n = 0;
 			for(int i = 0; i < model.getCourses().length && fuse; i++) {
 				if(Boolean.TRUE.equals(model.getValueAt(i, 0)))
 				{
-					Course c = (Course) model.getCourses()[i];
-					status.setText("Importeer " + model.getValueAt(i, 1));
+					Course c = model.getCourses()[i];
+					Course newc = null;
+					String name = c.getName();
+					String description = c.getDescription();
+					name = CourseManagementPanel.replaceDuplicate(name, set);
+					try {
+						newc = PersistenceFacade.instance().addCourse(s, name, description, profile);
+						newc.setScoList(new Sco[0]);
+					} catch (CourseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					status.setText("Importeer " + name);
 					status.invalidate();
 					status1.setText("   ");
 					status1.invalidate();
@@ -153,7 +195,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 						status1.setText(" ... " + scos[j].getScoName());
 						status1.invalidate();
 						bar.setValue(n++);
-						doit();
+						doit(newc, scos[j]);
 					}					
 					
 				} 	
@@ -161,12 +203,29 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 			dispose();
 		}
 
-		private void doit() {
+		private void doit(Course course, Sco sco) {
 			validate();
 			repaint();
 			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
+// TODO duplicate code.... create constructor LazyAppletConfig(Sco)
+				String description = sco.getDescription();
+				LazyAppletConfig config = new LazyAppletConfig();
+				config.setSco(sco);
+				String name = sco.getScoName();
+				int    aid  = sco.getAppletID();
+				int    sid  = sco.getScoID();
+				config.setAppletID(aid);
+				config.setAppletConfigID(-sid); // HACK HACK negatief = scoid
+				config.setName(name);
+				Sco news = PersistenceFacade.instance().addSco(course, config, name, description);
+// TODO common code?		
+				news.setSequencenr(sco.getSequencenr());
+				Sco[] oldsa = course.getScoList();
+				Sco[] newsa = new Sco[oldsa.length+1];
+				System.arraycopy(oldsa, 0, newsa, 0, oldsa.length);
+				newsa[oldsa.length] = news;
+				course.setScoList(newsa);
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -202,6 +261,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 	}
 
 	private static final String COPY = "Copy";
+	private static final School ALLE_SCHOLEN = new School(-1);
 
 	static class PijlIcon implements Icon {
 
@@ -453,11 +513,19 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 
 		School[] schools;
 		Object[] export;
+		private Map map;
 		
 		public int getColumnCount() {
 			return 2;
 		}
 
+		public int getIndex(int schoolID) {
+			Object o = map.get(new Integer(schoolID));
+			if(o != null)
+				return ((Number) o).intValue();
+			return -1;
+		}
+		
 		public int getRowCount() {
 			return export.length;
 		}
@@ -473,7 +541,11 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 
 		ExportSchoolModel(School[] s) {
 			schools = s;
-			export = new Object[s.length];			
+			export = new Object[s.length];	
+			map = new Hashtable();
+			for (int i = 0; i < s.length; i++) {
+				map.put(new Integer(s[i].getSchoolID()), new Integer(i));
+			}
 		}
 
 		public Class getColumnClass(int columnIndex) {
@@ -571,7 +643,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		getContentPane().add(pane);
 		exportModuleModel = new ExportModuleModel(user);
 		School[] schools = (School[]) PersistenceFacade.instance().get(School.class, Boolean.TRUE);
-		ExportSchoolModel exportSchoolModel = new ExportSchoolModel(schools);
+		final ExportSchoolModel exportSchoolModel = new ExportSchoolModel(schools);
 		JTable exportModuleTable = new JTable(exportModuleModel);
 		JTable exportSchoolTable = new JTable(exportSchoolModel);
 		TableUtil.setJTableSizes(exportSchoolTable);
@@ -597,10 +669,12 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		exportSplit.add(deelLabel);
 		Box exportSchoolBox = Box.createVerticalBox();
 		exportSchoolBox.add(exportSchools);
-		JCheckBox exportAlleScholen = new JCheckBox("Alle scholen");
+		final JCheckBox exportAlleScholen = new JCheckBox("Alle scholen");
 		exportSchoolBox.add(exportAlleScholen);
 		exportSplit.add(exportSchoolBox);
 
+		initializeExportSchoolModels(exportSchoolModel, exportAlleScholen.getModel());
+		
 		JLabel label = new JLabel("<html>(1) Selecteer een verzameling modules<br>(2) Selecteer een groep scholen<br><br>De geselecteerde modules worden beschikbaar<br>gesteld aan de geselecteerde scholen.");
 		
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER)); p.add(label);
@@ -613,6 +687,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		exportOK.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 					persistCourses(exportModuleModel.dirty);
+					updateSchoolTo(user.getSchool(), exportSchoolModel, exportAlleScholen.isSelected());
 					ExportImportDialog.this.dispose();
 			} });
 		
@@ -628,6 +703,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 			public void actionPerformed(ActionEvent e) {
 				HashMap dirty = exportModuleModel.dirty;
 				persistCourses(dirty);
+				updateSchoolTo(user.getSchool(), exportSchoolModel, exportAlleScholen.isSelected());
 				dirty.clear();
 			}});
 		buttonBox.add(exportOK);
@@ -673,10 +749,8 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		importSchoolList.addListSelectionListener(new ListSelectionListener() {
 			int lastIndex = -1;
 			public void valueChanged(ListSelectionEvent e) {
-				System.err.println(e);
 				if(e.getValueIsAdjusting())
 				{
-				    System.err.println("Is Adjusting???");
 					return;
 				}
 				int index = importSchoolList.getSelectedIndex();
@@ -731,6 +805,58 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		pack();
 	}
 
+	private void initializeExportSchoolModels(
+			ExportSchoolModel exportSchoolModel, ButtonModel model) {
+		Hashtable wheredef = new Hashtable();
+		wheredef.put("schoolFrom", new Integer(user.getSchool().getSchoolID()));
+		try {
+			Vector result = DbAccessCreator.instance().getTable("tblfromto", wheredef);
+			Enumeration e = result.elements();
+			while (e.hasMoreElements()) {
+				Hashtable  row = (Hashtable ) e.nextElement();
+				int to = ((Number) row.get("schoolTo")).intValue();
+				if(to == ALLE_SCHOLEN.getSchoolID())
+					model.setSelected(true);
+				else {
+					int index = exportSchoolModel.getIndex(to);
+					if(index >= 0)
+						exportSchoolModel.export[index] = Boolean.TRUE;
+				}				
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (XmlRpcException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	protected void updateSchoolTo(School from,
+			ExportSchoolModel exportSchoolModel, boolean all) {
+		int cnt = all?1:0;
+		int rows = exportSchoolModel.getRowCount();
+		for(int i = 0; i < rows; i++) {
+			if( Boolean.TRUE.equals( exportSchoolModel.export[i])) 
+				cnt++;
+		}
+		School[] to = new School[cnt];
+		int index = 0;
+		for(int i = 0; i < rows; i++)
+		{
+			if (Boolean.TRUE.equals( exportSchoolModel.export[i]) )
+				to[index++] = exportSchoolModel.schools[i];
+		}
+		if(all)
+			to[index] = ALLE_SCHOLEN;
+		boolean result = 
+			PersistenceFacade.instance().updateSchoolTo(from, to);
+	}
+
 	/**
 	 * Update courses. 
 	 * Als het fout gaat, cancel dat wat nog niet gepersist is.
@@ -783,6 +909,8 @@ System.out.println("persistCourses " + course.getName());
 		super(owner);
 		this.user = u;
 		this.profileID = p;
+		profile = new DwoProfile();
+		profile.setID(p);
 		initialize();
 	}
 

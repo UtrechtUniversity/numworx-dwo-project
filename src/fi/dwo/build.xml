@@ -235,10 +235,10 @@
 			</classpath>
 		</taskdef>
 		<doclet
-			destdir='${src}'
+			destdir='${src}' force='true'
 		>
 			<fileset dir='${src}' includes="${fullpackagename}/**/*.java"  />
-			<xmlrpcc/>
+			<xmlrpcc />
 		</doclet>
 	</target>
 
