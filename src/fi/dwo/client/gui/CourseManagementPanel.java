@@ -11,6 +11,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Point;
@@ -53,6 +54,8 @@ import fi.dwo.client.gui.SchoolPanel.ImageRenderer;
 import fi.dwo.client.gui.SchoolPanel.SchoolModel;
 import fi.dwo.client.persistence.DbAccessCreator;
 import java.util.Collections;
+
+import fi.dwo.client.system.PersistenceException;
 import fi.dwo.client.system.SchoolException;
 import fi.dwo.client.system.TextMapper;
 import fi.dwo.server.form.DWOFile;
@@ -67,7 +70,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     private CenterPanel center;
 
 
-    private JButton addCourseButton, uploadCourseButton;
+    private JButton addCourseButton, uploadCourseButton, shareCourseButton;
 
     private Image removeImage, editImage, scoImage;
     
@@ -256,15 +259,24 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         }
 
         addCourseButton = new JButton(TextMapper.getText(TextMapper.GUIC_ADD_COURSE));
-        addCourseButton.setSize(addCourseButton.getPreferredSize());
+        //addCourseButton.setSize(addCourseButton.getPreferredSize());
         addCourseButton.addActionListener(this);
-        addCourseButton.setLocation(30, 10);
+        //addCourseButton.setLocation(30, 10);
         header.add(addCourseButton);
         header.add(Box.createHorizontalGlue());
+        
+        
+        shareCourseButton = new JButton("Modules delen");
+        shareCourseButton.addActionListener(this);
+        header.add(shareCourseButton);
+        if(DwoHelper.isApplication())
+        	header.add(Box.createHorizontalStrut(10));
+        
+        
         uploadCourseButton = new JButton("Restore module backup"); // TODO TextMapper
-        uploadCourseButton.setSize(uploadCourseButton.getPreferredSize());
+        //uploadCourseButton.setSize(uploadCourseButton.getPreferredSize());
         uploadCourseButton.addActionListener(this);
-        uploadCourseButton.setLocation(200+addCourseButton.getWidth()+10, 10);
+        //uploadCourseButton.setLocation(200+addCourseButton.getWidth()+10, 10);
         uploadCourseButton.setVisible(false);
         header.add(uploadCourseButton);
         if(DwoHelper.isApplication()) 
@@ -366,6 +378,18 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+        } else if(src == shareCourseButton) {
+        	
+    		ExportImportDialog dialog;
+			try {
+				dialog = new ExportImportDialog(DwoHelper.getFrameForComponent(this), GuiCreator.instance().getUser(), GuiCreator.instance().dwo.getDwoProfile());
+				dialog.setVisible(true);
+			} catch (PersistenceException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}		
+    		
+
         }
             
     }

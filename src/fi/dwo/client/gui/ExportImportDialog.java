@@ -905,12 +905,11 @@ System.out.println("persistCourses " + course.getName());
 	 * @throws HeadlessException
 	 * @throws PersistenceException 
 	 */
-	public ExportImportDialog(Frame owner, User u, int p) throws HeadlessException, PersistenceException {
+	public ExportImportDialog(Frame owner, User u, DwoProfile p) throws PersistenceException {
 		super(owner);
 		this.user = u;
-		this.profileID = p;
-		profile = new DwoProfile();
-		profile.setID(p);
+		this.profileID = p.getID();
+		profile = p;
 		initialize();
 	}
 
@@ -932,7 +931,7 @@ System.out.println("persistCourses " + course.getName());
 			cp.lessonMode = Sco.BROWSE;
 			this.previewPanel = cp;
 			cp.setCenterPanel(this);
-			JOptionPane.showConfirmDialog(this, previewPanel, e.getActionCommand(), JOptionPane.DEFAULT_OPTION);
+			showCourseDialog(this, previewPanel, course.getName());
 		} else if (COPY.equals(e.getActionCommand())) 
 		{
 			ImportTask r = new ImportTask(this, importModuleModel);
@@ -941,6 +940,20 @@ System.out.println("persistCourses " + course.getName());
 		}
 		
 		
+	}
+
+	// TODO DIALOG met [sluiten] knop.
+	private void showCourseDialog(JDialog parent,
+			JPanel content, String title) {
+			JDialog jd = new JDialog(parent, title, true);
+			jd.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+			jd.setContentPane(content);
+			jd.pack();
+// center...
+			int x = parent.getX()+parent.getWidth()/2;
+			int y = parent.getY()+parent.getHeight()/2;
+			jd.setLocation(x-jd.getWidth()/2, y-jd.getHeight()/2);
+			jd.setVisible(true);
 	}
 
 	/**
@@ -986,7 +999,9 @@ System.out.println("persistCourses " + course.getName());
 		dwo.setSize(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
 		new GuiCreator(dwo);
 		User user = PersistenceFacade.instance().login("peterb");
-		ExportImportDialog dialog = new ExportImportDialog(null, user, 1);		
+		DwoProfile p = new DwoProfile();
+		p.setID(1);
+		ExportImportDialog dialog = new ExportImportDialog(null, user, p);		
 		dialog.setVisible(true);
 		System.exit(0);
 	}
