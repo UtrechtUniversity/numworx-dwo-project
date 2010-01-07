@@ -49,7 +49,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
     private static final int MINHEIGHT = 470, BOTTOM = 20;
 
 	CourseContainer center;
-    String lessonMode = Sco.NORMAL;
+    private String lessonMode = Sco.NORMAL;
 
     private Course course;
     
@@ -285,7 +285,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 				public void run() {	
                     CenterSubPanel csp = GuiCreator.instance().getScoPanel(s);
                     if(csp != null) {
-                    	s.setLessonMode(lessonMode);
+                    	s.setLessonMode(getLessonMode());
                         center.loadTotal(csp);
                     }
                     GuiCreator.instance().setReady();
@@ -314,5 +314,24 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
         center = centerPanel;
         center.hideClassList();
         refresh();
+	}
+
+	/**
+	 * @return the lessonMode
+	 */
+	String getLessonMode() {
+		return lessonMode;
+	}
+
+	/**
+	 * @param lessonMode the lessonMode to set
+	 */
+	void setLessonMode(String lessonMode) {
+		this.lessonMode = lessonMode;
+		if (showResultsButton != null)
+		{
+				showResultsButton.setVisible(lessonMode != Sco.BROWSE);
+		}
+			
 	}
 }

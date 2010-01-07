@@ -923,12 +923,11 @@ System.out.println("persistCourses " + course.getName());
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent e) {
-		System.out.println(e);
 		if(e.getSource() instanceof Course)
 		{
 			Course course = (Course) e.getSource();
 			CoursePanel cp = (CoursePanel) course.getCoursePanel();
-			cp.lessonMode = Sco.BROWSE;
+			cp.setLessonMode(Sco.BROWSE);
 			this.previewPanel = cp;
 			cp.setCenterPanel(this);
 			showCourseDialog(this, previewPanel, course.getName());

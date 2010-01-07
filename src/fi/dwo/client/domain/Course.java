@@ -42,7 +42,7 @@ public class Course implements LessonGroup, Comparable {
     private String imageUrl;
     private byte[] imageData;
     
-    private CenterSubPanel coursePanel = null;
+    private CoursePanel coursePanel = null;
     
     private int dwoProfile;
     
@@ -355,11 +355,11 @@ public class Course implements LessonGroup, Comparable {
         }        
     }
     
-    public CenterSubPanel getCoursePanel() {
+    public CoursePanel getCoursePanel() {
         if(coursePanel == null) {
             loadScos();
             coursePanel = new CoursePanel(this);
-        }
+        } 
         
         return coursePanel;
         

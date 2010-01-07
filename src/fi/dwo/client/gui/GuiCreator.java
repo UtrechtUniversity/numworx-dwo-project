@@ -359,7 +359,8 @@ public class GuiCreator {
      */
     public CenterSubPanel getCoursePanel(Course course) {
         dwo.setWait();
-        CenterSubPanel csp = dwo.loadCourse(course);
+        CoursePanel csp = (CoursePanel) dwo.loadCourse(course);
+        csp.setLessonMode(Sco.NORMAL);
         dwo.setReady();
         csp.getComponent().requestFocus();
         return csp;
