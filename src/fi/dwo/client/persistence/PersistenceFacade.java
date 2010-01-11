@@ -1585,6 +1585,7 @@ e1.printStackTrace();
 			} catch (IOException e) {
 				throw new PersistenceException(PersistenceException.EX_IO);
 			} catch (XmlRpcException e) {
+				e.printStackTrace();
 				throw new PersistenceException(PersistenceException.EX_XML_RPC);
 			} catch (SQLException e) {
 				throw new PersistenceException(PersistenceException.EX_DB);

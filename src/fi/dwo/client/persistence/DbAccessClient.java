@@ -51,7 +51,7 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
     {
         Vector vv = new Vector(2);
         vv.addElement( new Integer(a));
-        vv.addElement( new Boolean(b));
+        vv.addElement( Boolean.valueOf(b));
         Object object = invoke("getCourses", vv);
         return (java.util.Vector)object;
     }
@@ -304,7 +304,7 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
     {
         Vector vv = new Vector(2);
         vv.addElement( new Integer(a));
-        vv.addElement( new Boolean(b));
+        vv.addElement( Boolean.valueOf(b));
         Object object = invoke("deleteClass", vv);
         return ((Boolean)object).booleanValue();
     }
@@ -511,17 +511,18 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
         vv.addElement( new Integer(a));
         vv.addElement(b);
         vv.addElement(c);
-        vv.addElement( new Boolean(d));
+        vv.addElement( Boolean.valueOf(d));
         Object object = invoke("changeCourse", vv);
         return ((Boolean)object).booleanValue();
     }
 
-    public void editSchool(int a, boolean b) throws IOException, XmlRpcException
+    public boolean editSchool(int a, boolean b) throws IOException, XmlRpcException
     {
         Vector vv = new Vector(2);
         vv.addElement( new Integer(a));
-        vv.addElement( new Boolean(b));
+        vv.addElement( Boolean.valueOf(b));
         Object object = invoke("editSchool", vv);
+        return ((Boolean)object).booleanValue();
     }
 
     public java.util.Vector getImportCourses(int a, int b, int c) throws IOException, XmlRpcException

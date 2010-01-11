@@ -172,8 +172,6 @@
           target: webclasses                      
          - - - - - - - - - - - - - - - - - -->
     <target name="war" depends="jar" description="maak een dwo.war mbv een geprepareerde home/javaclasses">
-    	<condition property="localtest"><equals arg1="${drive}" arg2="C:"/></condition>
-    	<fail unless="localtest" message="Alleen met drive = C:" />
     	<war
     		warfile="output/dwo.war"
     		webxml="WebContent/WEB-INF/web.xml"	 
@@ -183,13 +181,12 @@
     		<zipfileset dir="${jar}" includes="*.jar" prefix="jars"/>
     		<zipfileset dir="${src}/fi/dwo/client/domain/resources" prefix="resources"/>
         	<classes dir="${classes}" includes="**/*.class" />
-       		<classes dir="${javaclasses}" excludes="jars/** fi/dwo/**" includes="**/*.class" />
     		<lib dir="${jar}" includes="*mysql*.jar" />
     	</war>
     	
     </target>
-
-	<property name="catalina.home" location="C:/Program Files/Apache Software Foundation/Tomcat 5.5"/>
+	<property name='catalina.drive' value='U:' />
+	<property name="catalina.home" location="${catalina.drive}/Program Files/Apache Software Foundation/Tomcat 5.5"/>
 	<property name="tomcat.user" value="tomcat" />
 	<property name="tomcat.password" value="tomcat"/>
 	<property name="tomcat.path" value="/dwo" />

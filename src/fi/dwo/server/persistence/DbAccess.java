@@ -2137,14 +2137,15 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 		throw new DwoXmlRpcException(DwoXmlRpcException.EXC_SCHOOL_UNSUPPORTED);
 	}
 
-	public void editSchool(int schoolID, boolean export) throws IOException,
+	public boolean editSchool(int schoolID, boolean export) throws IOException,
 			XmlRpcException, SQLException {
 		
 		PreparedStatement ps = getStatement(QRY_UPDATE_SCHOOL2);
         ps.setBoolean(1, export);
         ps.setInt(2, schoolID);
         ps.execute();
-        ps.close();		
+        ps.close();
+        return export;
 	}
 
 	public Vector getImportCourses(int schoolFrom, int schoolTo, int profileID)
