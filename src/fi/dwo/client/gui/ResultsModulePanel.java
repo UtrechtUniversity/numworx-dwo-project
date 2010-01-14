@@ -322,6 +322,8 @@ public class ResultsModulePanel extends JPanel implements
 		}
 		public Component getTableCellRendererComponent(JTable table,
 				Object value, boolean selected, boolean hasFocus, int row, int col) {
+			
+			setFont(GuiConstants.NORMAL_TEXT);
 			if(ZERO.equals(value))
 			{
 				setText("");
@@ -375,7 +377,7 @@ public class ResultsModulePanel extends JPanel implements
                 			time = " (in " + (totalTime/1000) + " sec)";
                 		else 
                 			time = " (in " + (totalTime/60000) + " min)";
-                		setText(getText() + time);
+                		setText("<html><b>"+getText()+"</b>" + time+"</html>");
                 	}
                 	
                 	setToolTipText(s);
@@ -535,7 +537,7 @@ public class ResultsModulePanel extends JPanel implements
 				setToolTipText(MessageFormat.format(tooltip, arguments));
 			} else
 				setToolTipText(null);
-			
+				
 			
 			return super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
 					row, column);
