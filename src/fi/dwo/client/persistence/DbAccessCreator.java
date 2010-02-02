@@ -19,7 +19,12 @@ public class DbAccessCreator {
      * @see fi.dwo.client.domain.DWO#init()
      * @see fi.dwo.client.domain.DWO#main(String[])
      */
-	public static String SERVLET = "/servlet/fi.dwo.server.persistence.DbAccessLdapServlet";
+	
+    
+    public static String SERVLET = "/servlet/fi.dwo.server.persistence.DbAccessLdapServlet";
+	//public static String SERVLET = "/dwo/dbaccess";
+	
+	// Let op, bovenstaande switch is nodig voor de dwoserver (bij start.jar)
 
     /**
 
@@ -41,6 +46,9 @@ public class DbAccessCreator {
         	   //if(true) dbAccess = new DbAccessLdap(); else
         	   try {
 	        	   server = new URL(new URL("http://www.fi.uu.nl/") , SERVLET);
+	        	// server = new URL(new URL("http://dwo.fi.uu.nl/") , SERVLET);
+	        	// Let op, bovenstaande switch is nodig voor de dwoserver (bij start.jar)
+	        	   
 	               dbAccess = new DbAccessClient(server);
         	   } 
         	   catch (MalformedURLException e) {
@@ -57,6 +65,7 @@ public class DbAccessCreator {
 //         	   
 	            try {
 	                server = new URL(DwoHelper.getApplet().getCodeBase() , SERVLET);
+	                System.out.println(DwoHelper.getApplet().getCodeBase() + SERVLET);
 	                //server = new URL("http://www.fi.uu.nl/servlet/fi.dwo.server.persistence.DbAccessServlet");
 	                dbAccess = new DbAccessClient(server);
 	            } 

@@ -202,7 +202,7 @@ public abstract class GuiConstants {
 			GUI_IMAGE_SCO = "resources/UU-mbo-sco.png";
 			GUI_IMAGE_COURSE = "resources/UU-mbo-course.png";
 		}else
-		if(profile==38 || profile==13)
+		if(profile==38 || profile==13 || profile==48)
 		{	MAIN_BACKGROUND = new Color(255,255,255);
 	    	CELL_BACKGROUND = new Color(255,255,255);
 			FI_LOGO_LOCATION = "resources/fi.gif";
@@ -293,6 +293,7 @@ public abstract class GuiConstants {
 				GUI_IMAGE_SCO = "resources/UU-dwo-sco.png";
 				GUI_IMAGE_COURSE = "resources/UU-dwo-course.png";
 			} else
+				
 //		if(profile==4)
 //		{	MAIN_BACKGROUND = new Color(221, 238, 255);
 //    		CELL_BACKGROUND = new Color(221, 238, 255);

@@ -37,6 +37,12 @@ Class-Path: algebrapijlenoefenen.jar
  flowdiagrams.jar 
  inderoos.jar 
  plofsomdwo.jar 
+ balansfruitapplet.jar 
+ anyonrow.jar 
+ roostertelling_brx.jar 
+ flitsbeeld_brx.jar 
+ tafel.jar 
+ vangen.jar 
  inderoos.jar 
  geogebra.jar 
  geogebra_properties.jar 
