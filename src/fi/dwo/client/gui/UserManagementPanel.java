@@ -6,6 +6,8 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.EventObject;
 
 import javax.swing.AbstractCellEditor;
@@ -25,7 +27,9 @@ import fi.dwo.client.domain.ContactDocent;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.School;
+import fi.dwo.client.domain.SchoolClass;
 import fi.dwo.client.domain.SchoolGroup;
+import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.SchoolPanel.SchoolModel;
 
@@ -37,8 +41,140 @@ import fi.dwo.client.system.RegisterException;
 import fi.dwo.client.system.SchoolException;
 import fi.dwo.client.system.TextMapper;
 
-public class UserManagementPanel extends JPanel implements CenterSubPanel {
+public class UserManagementPanel extends JPanel implements CenterSubPanel, Comparator {
 
+	static class TeacherDelegate extends Teacher {
+		User u;
+
+		TeacherDelegate(User u) {
+			super();
+			this.u = u;
+		}
+
+		public boolean canLogout() {
+			return u.canLogout();
+		}
+
+		public String getChildTitle() {
+			return u.getChildTitle();
+		}
+
+		public String getEmail() {
+			return u.getEmail();
+		}
+
+		public String getFirstname() {
+			return u.getFirstname();
+		}
+
+		public int getID() {
+			return u.getID();
+		}
+
+		public SchoolClass getInClass() {
+			return u.getInClass();
+		}
+
+		public String getLastName() {
+			return u.getLastName();
+		}
+
+		public String getMiddleName() {
+			return u.getMiddleName();
+		}
+
+		public String getName() {
+			return u.getName();
+		}
+
+		public String getOrderAscTitle() {
+			return u.getOrderAscTitle();
+		}
+
+		public String getOrderDescTitle() {
+			return u.getOrderDescTitle();
+		}
+
+		public String getOrderName() {
+			return u.getOrderName();
+		}
+
+		public String getParentTitle() {
+			return u.getParentTitle();
+		}
+
+		public School getSchool() {
+			return u.getSchool();
+		}
+
+		public String getTitle() {
+			return u.getTitle();
+		}
+
+		public String getType() {
+			return u.getType();
+		}
+
+		public int getUserID() {
+			return u.getUserID();
+		}
+
+		public String getUsername() {
+			return u.getUsername();
+		}
+
+		public boolean isDeepestLevel() {
+			return u.isDeepestLevel();
+		}
+
+		public boolean isHighestLevel() {
+			return u.isHighestLevel();
+		}
+
+		public boolean isReadonly() {
+			return u.isReadonly();
+		}
+
+		public void setEmail(String email) {
+			u.setEmail(email);
+		}
+
+		public void setFirstname(String firstname) {
+			u.setFirstname(firstname);
+		}
+
+		public void setInClass(SchoolClass inClass) {
+			u.setInClass(inClass);
+		}
+
+		public void setLastName(String lastName) {
+			u.setLastName(lastName);
+		}
+
+		public void setMiddleName(String middleName) {
+			u.setMiddleName(middleName);
+		}
+
+		public void setSchool(School school) {
+			u.setSchool(school);
+		}
+
+		public void setUserID(int userID) {
+			u.setUserID(userID);
+		}
+
+		public void setUsername(String username) {
+			u.setUsername(username);
+		}
+
+		public String toString() {
+			return u.toString();
+		}
+		
+	}
+	
+	
+	
 	public class ImageButtonEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
 
 	   	Object value;
@@ -61,7 +197,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 
 		public void actionPerformed(ActionEvent event) {
 			User user = userList[row];
-			if(value == userImage)
+			if(value == userImage || value == teacherImage)
 			{
 				try {
 					MapperCreator.instance(User.class).removeObject(user.getID()); // not good enough, need fresh copy.
@@ -111,7 +247,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 	private ContactDocent docent;
 
 	User[] userList;
-    private Image removeImage, editImage, userImage;
+    private Image removeImage, editImage, userImage, teacherImage;
 
 	
 	class UserModel extends AbstractTableModel {
@@ -134,12 +270,12 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			switch(columnIndex) {
-			case 0: 
+			case 1: 
 					return userList[rowIndex].getUsername();
-			case 1:
+			case 0:
 					return userList[rowIndex].getName();
 			case 2:
-					return userImage;
+					return userList[rowIndex] instanceof Teacher ? teacherImage: userImage;
 			case 3: 
 					return editImage;
 			case 4:
@@ -156,10 +292,10 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 
 		public String getColumnName(int col) {
 			switch(col) {
-			case 0: return "Login";
-			case 1: return "Naam";
-			case 2: return "Ga naar";
-			case 3: return "Edit";
+			case 1: return "Gebruikersnaam";
+			case 0: return "Naam";
+			case 2: return "Login als";
+			case 3: return "Wachtwoord";
 			case 4: return "Verwijder";
 			}
 			return "";
@@ -178,7 +314,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
         editImage = DwoHelper.getImage(GuiConstants.RESOURCES
                 + GuiConstants.EDIT_SCO_IMAGE);
         userImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.USERS_CLASS_IMAGE);
-
+        teacherImage = DwoHelper.getImage(GuiConstants.RESOURCES + "resources/assign.gif");
 		this.dwo = dwo;
 		docent = (ContactDocent) dwo.getUser();
 		School school = docent.getSchool();
@@ -188,12 +324,22 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 			SchoolGroup schoolGroup = groups[i];
 			try {
 				User[] u = (User[]) PersistenceFacade.instance().get(User.class, schoolGroup);
+				if(schoolGroup.getGroupID()==SchoolGroup.TEACHER ||
+				   schoolGroup.getGroupID()== SchoolGroup.SCHOOLADMIN)
+				{
+					for (int j = 0; j < u.length; j++) {
+						if(!(u[j] instanceof Teacher))
+							u[j] = new TeacherDelegate(u[j]); // force Teacher!
+					}
+				}
 				merge(u);
 			} catch (PersistenceException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		Arrays.sort(userList, this);
+		
 		JTable table = new JTable(new UserModel());
     	TableUtil.setDefaults(table, true, new ImageRenderer(), new ImageButtonEditor());
 
@@ -248,6 +394,22 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 	public void setCenterPanel(CenterPanel centerPanel) {
 		center = centerPanel;
 
+	}
+	
+	/**
+	 * Compare 2 users
+	 * @param o1 user 1
+	 * @param o2 user 2
+	 * @return -1/0/+1
+	 */
+	
+	public int compare(Object o1, Object o2) {
+		User u1 = (User)o1;
+		User u2 = (User)o2;
+		int r = u1.getName().compareToIgnoreCase(u2.getName());
+		if(r == 0)
+			r = u1.getUsername().compareToIgnoreCase(u2.getUsername());
+		return r;
 	}
 
 }
