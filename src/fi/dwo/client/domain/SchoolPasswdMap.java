@@ -20,13 +20,13 @@ public class SchoolPasswdMap extends Hashtable {
 	public SchoolPasswdMap(SchoolGroup[] schoolGroupList) {
 		for (int i = 0; i < schoolGroupList.length; i++) {
 			SchoolGroup sg = schoolGroupList[i];
-			put(new Integer(sg.getGroupID()), sg.getPasswd());
+			put(Integer.toString(sg.getGroupID()), sg.getPasswd());
 		}
 	}
 	
 	public String getPasswd(int groupID)
 	{
-		String result = (String)get(new Integer(groupID));
+		String result = (String)get(Integer.toString(groupID));
 		if(result == null)
 			return "";
 		return result;
@@ -36,7 +36,7 @@ public class SchoolPasswdMap extends Hashtable {
 	{
 		if (passwd == null)
 			passwd = "";
-		put(new Integer(groupID), passwd);
+		put(Integer.toString(groupID), passwd);
 	}
 	
 }

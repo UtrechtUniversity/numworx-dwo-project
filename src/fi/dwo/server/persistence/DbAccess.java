@@ -972,7 +972,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     	Iterator iterator = entries.iterator();
     	while (iterator.hasNext()) {
 			Map.Entry entry = (Map.Entry) iterator.next();
-			int groupID = ((Number) entry.getKey()).intValue();
+			//int groupID = ((Number) entry.getKey()).intValue();
+			int groupID = Integer.parseInt( entry.getKey().toString() );
 			String passwd = entry.getValue().toString();
 			updateSchoolGroupPasswd(schoolID, groupID, passwd);
 		}

@@ -193,12 +193,17 @@ public class SchoolMapper extends XmlRpcMapper {
         s.setSchoolLogin((String) data.get("schoollogin"));
         if(!(s instanceof LazySchool))
         	s.setSchoolGroupList((SchoolGroup[]) MapperCreator.instance(SchoolGroup.class).get(s));
+        else 
+        	s.setSchoolGroupList(null);
         if(data.contains("image") && (!data.get("image").equals(""))) {
             s.setImage((String) data.get("image"));
         }
         if( !(s instanceof LazySchool) && s.getClassList() == null  ) {
             s.setClassList((SchoolClass[]) MapperCreator.instance(SchoolClass.class).get(s));
-        }
+        } else
+        	if(s instanceof LazySchool)
+        		s.setClassList(null);
+        
         //if(s.getClassList() == null) {
         //    s.setClassList((SchoolClass[]) MapperCreator.instance(SchoolClass.class).get(s));
         //}
