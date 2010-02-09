@@ -56,6 +56,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
     private JLabel scoListHeader;
     
     private JTextArea courseDescription;
+    private JLabel courseDescriptionHTML;
 
     private JButton showResultsButton;
     
@@ -85,18 +86,31 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 		String s = course.getDescription();
 		courseDescription = new JTextArea();
 		
+		
 		if((s != null) && (!s.trim().equals(""))) 
 		{
-			add(courseDescription);
-			courseDescription.setFont(new Font("SansSerif", Font.PLAIN, 13));
-			courseDescription.setOpaque(false);
-			courseDescription.setLineWrap(true);
-			courseDescription.setEditable(false);
-			courseDescription.setWrapStyleWord(true);
-			courseDescription.setBounds(20,startY,550,110);
-			courseDescription.setText(s);
-			courseDescription.setSize(courseDescription.getPreferredSize());
-			startY += courseDescription.getHeight() + 10;
+			if(s.substring(0,6).equals("<html>"))
+			{
+				courseDescriptionHTML = new JLabel(s);
+				add(courseDescriptionHTML);
+				courseDescriptionHTML.setFont(new Font("SansSerif", Font.PLAIN, 13));
+				courseDescriptionHTML.setOpaque(false);
+				courseDescriptionHTML.setBounds(20,startY,550,110);
+				courseDescriptionHTML.setSize(courseDescriptionHTML.getPreferredSize());
+				startY += courseDescriptionHTML.getHeight() + 10;
+			}
+			else
+			{	add(courseDescription);
+				courseDescription.setFont(new Font("SansSerif", Font.PLAIN, 13));
+				courseDescription.setOpaque(false);
+				courseDescription.setLineWrap(true);
+				courseDescription.setEditable(false);
+				courseDescription.setWrapStyleWord(true);
+				courseDescription.setBounds(20,startY,550,110);
+				courseDescription.setText(s);
+				courseDescription.setSize(courseDescription.getPreferredSize());
+				startY += courseDescription.getHeight() + 10;
+			}
 		}
 
         scoListHeader = new JLabel(TextMapper.getText(TextMapper.GUICO_SCO_LIST_TITLE));

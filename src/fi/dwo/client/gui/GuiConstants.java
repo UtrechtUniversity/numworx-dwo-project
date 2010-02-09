@@ -21,6 +21,7 @@ public abstract class GuiConstants {
     public static Color SUB_BACKGROUND = new Color(255, 255, 255);
 
     public final static Color RED_COLOR = new Color(190, 61, 46);
+    public static Color HEADER_COLOR = Color.black;
 
     public static String FI_LOGO_LOCATION = "resources/fi.gif";
     public static String WISWEB_LOGO_LOCATION = "resources/wisweb.gif";
@@ -121,6 +122,17 @@ public abstract class GuiConstants {
 			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 33);
 			GUI_IMAGE_BG = false;
 		} else
+		if(profile==49)
+		{	MAIN_BACKGROUND = new Color(255,255,255);
+		   	CELL_BACKGROUND = new Color(255,255,255);
+			FI_LOGO_LOCATION = "resources/fi.gif";
+			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
+			HEADER_COLOR = new Color(211,222,250);
+			GUI_IMAGE_BG = true;
+			GUI_IMAGE_WELCOME = "resources/UU-rekenweb-welkom.png";
+			GUI_IMAGE_SCO = "resources/UU-rekenweb-sco.png";
+			GUI_IMAGE_COURSE = "resources/UU-rekenweb-course.png";
+		} else /**/
 		if(profile==1)
 		{	MAIN_BACKGROUND = new Color(255,255,255);
 		   	CELL_BACKGROUND = new Color(255,255,255);
