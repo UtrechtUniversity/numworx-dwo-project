@@ -85,12 +85,12 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
         startY = 30;
 		String s = course.getDescription();
 		courseDescription = new JTextArea();
-		
+		boolean htmlMode = false;
 		
 		if((s != null) && (!s.trim().equals(""))) 
 		{
 			if(s.substring(0,6).equals("<html>"))
-			{
+			{	htmlMode=true;
 				courseDescriptionHTML = new JLabel(s);
 				add(courseDescriptionHTML);
 				courseDescriptionHTML.setFont(new Font("SansSerif", Font.PLAIN, 13));
@@ -132,7 +132,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
         ip = new JLabel(new ImageIcon(courseLogo));
         ip.setSize(courseLogo.getWidth(null), courseLogo.getHeight(null));
 		ip.setLocation(this.getSize().width - ip.getSize().width - 50, startY);
-        add(ip);
+        if(!htmlMode)add(ip);
 
         int nextY = startY;
         int i;
