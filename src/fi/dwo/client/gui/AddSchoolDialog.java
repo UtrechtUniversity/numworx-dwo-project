@@ -272,7 +272,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
     	SchoolPasswdMap result = new SchoolPasswdMap(passwdMap);
     	for (int i = 0; i < passwdField.length; i++) {
 			JTextField field = passwdField[i];
-			if(field != null)
+			if(field != null && field.getText().trim().length()>0)
 				result.setPasswd(i, field.getText());
 		}
 		return result;
