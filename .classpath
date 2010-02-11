@@ -42,5 +42,7 @@
 	<classpathentry kind="lib" path="/_base/codebase/jars/ldap.jar"/>
 	<classpathentry kind="lib" path="output/jar/wiskopdr.jar"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/geogebra.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/anyonrow.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/balansfruitapplet.jar"/>
 	<classpathentry kind="output" path="output/classes"/>
 </classpath>
