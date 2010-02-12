@@ -45,7 +45,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
     private JButton okButton;
     private JButton cancelButton;
     
-    CourseNameDialog(Component owner, String windowTitle, String courseName, String courseDescription, String courseNameLabel, String courseDescriptionLabel) {
+    CourseNameDialog(Component owner, String windowTitle, int courseID, String courseName, String courseDescription, String courseNameLabel, String courseDescriptionLabel) {
         super(DwoHelper.getFrameForComponent(owner), windowTitle, true);
         //this.setLayout(new FlowLayout());
         //this.setBackground(GuiConstants.MAIN_BACKGROUND);
@@ -58,6 +58,17 @@ public class CourseNameDialog extends JDialog implements ActionListener {
         //add(contentPane);
         JLabel l;
         FontMetrics fm;
+        
+        /* CourseID label */
+        l = new JLabel("" + courseID);
+        l.setForeground(Color.black);
+        l.setFont(GuiConstants.NORMAL_TEXT);
+        fm = l.getFontMetrics(l.getFont());
+        l.setLocation(10, 5);
+        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
+        l.setVisible(false);
+        contentPane.add(l);
+        l.setVisible(true);
         
         /* Coursename label */
         l = new JLabel(TextMapper.getText(courseNameLabel) + ":");
@@ -140,7 +151,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
      * @return fi.dwo.client.domain.Course
      */
     public static Course addCourse(Component owner) {
-        CourseNameDialog cnd = new CourseNameDialog(owner, TextMapper.getText(TextMapper.GUICDLG_TTL_ADD_COURSE), "", "", TextMapper.GUICDLG_COURSE_NAME, TextMapper.GUICDLG_COURSE_DESCRIPTION);
+        CourseNameDialog cnd = new CourseNameDialog(owner, TextMapper.getText(TextMapper.GUICDLG_TTL_ADD_COURSE), 0, "", "", TextMapper.GUICDLG_COURSE_NAME, TextMapper.GUICDLG_COURSE_DESCRIPTION);
         cnd.show();
         if(cnd.isConfirmed()) {
             Course c = GuiCreator.instance().addCourse(cnd.getCourseName(), cnd.getCourseDescription());
@@ -159,7 +170,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
      * @return boolean
      */
     public static boolean editCourse(Course course, Component owner) {
-        CourseNameDialog cnd = new CourseNameDialog(owner, TextMapper.getText(TextMapper.GUICDLG_TTL_EDIT_COURSE), course.getName(), course.getDescription(), TextMapper.GUICDLG_COURSE_NAME, TextMapper.GUICDLG_COURSE_DESCRIPTION);
+        CourseNameDialog cnd = new CourseNameDialog(owner, TextMapper.getText(TextMapper.GUICDLG_TTL_EDIT_COURSE), course.getID(), course.getName(), course.getDescription(), TextMapper.GUICDLG_COURSE_NAME, TextMapper.GUICDLG_COURSE_DESCRIPTION);
         cnd.show();
         if(cnd.isConfirmed()) {
             String oldName = course.getName();
