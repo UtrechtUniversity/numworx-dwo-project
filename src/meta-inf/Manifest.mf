@@ -43,6 +43,8 @@ Class-Path: algebrapijlenoefenen.jar
  flitsbeeld_brx.jar 
  tafel.jar 
  vangen.jar 
+ vergroten.jar 
+ knikkerschuif.jar 
  inderoos.jar 
  geogebra.jar 
  geogebra_properties.jar 
