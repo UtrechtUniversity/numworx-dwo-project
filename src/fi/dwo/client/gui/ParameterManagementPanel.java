@@ -641,7 +641,11 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 		String jarName = className.substring(3,className.indexOf(".",3));
 		String launchDataString = StringCodeObject.encodeObjectToString(launchData);
 		String scoName = sco.getScoName();
-				
+		
+		String language = TextMapper.getLanguage();
+		//String bgcolor = "#" + Integer.toHexString(GuiConstants.MAIN_BACKGROUND.getRGB()).substring(2);
+		String bgcolor = "#FFFFFF";
+		/*
 		out.println("<!-- saved from url=(0022)http://internet.e-mail -->");
 		out.println("	<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
 		out.println("	<html xmlns=\"http://www.w3.org/1999/xhtml\">");
@@ -670,7 +674,36 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 		out.println("	    </p><div>");
 		out.println("	  </body>");
 		out.println("	</html>");
+		*/
 		
+		String[] arguments = {scoName, className, jarName, language, bgcolor, launchDataString};
+		
+		try {	
+			URL htmlSource = new URL("http://www.fi.uu.nl/dwo/scorm/applet/applet.htm");
+			if(sco.getCourse().getDwoProfile()==13)htmlSource = new URL("http://www.fi.uu.nl/dwo/scorm/applet/appletGR.htm");
+			if(sco.getCourse().getDwoProfile()==27)htmlSource = new URL("http://www.fi.uu.nl/dwo/scorm/applet/appletMW.htm");
+	        URLConnection connection = htmlSource.openConnection();
+	        BufferedReader in = null;
+	        try {
+	            in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+	        } catch (FileNotFoundException exception) {
+	            System.out.println(exception.toString());
+	        }
+	
+	        if (in != null) {
+	            String result = "";
+	            String tmp = "";
+	            while ((tmp = in.readLine()) != null) {
+	                result += tmp + "\n";
+	            }
+	            in.close();
+	            result = MessageFormat.format(result, arguments); 
+	            out.print(result);
+	        }
+		}
+        catch (IOException e) 
+	    {   }
+        
 	}
 	
 

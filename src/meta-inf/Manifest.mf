@@ -44,6 +44,7 @@ Class-Path: algebrapijlenoefenen.jar
  tafel.jar 
  vangen.jar 
  vergroten.jar 
+ makkekeersom.jar 
  knikkerschuif.jar 
  inderoos.jar 
  geogebra.jar 
