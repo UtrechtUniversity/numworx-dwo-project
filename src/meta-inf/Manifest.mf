@@ -49,4 +49,5 @@ Class-Path: algebrapijlenoefenen.jar
  inderoos.jar 
  geogebra.jar 
  geogebra_properties.jar 
+ vergroten.jar 
  mysql-connector-java-3.0.16-ga-bin.jar 

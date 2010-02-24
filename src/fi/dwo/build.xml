@@ -59,13 +59,13 @@
     	 <manifest>
     		<attribute name="Main-Class" value="${main-class}"/>
     	 	<attribute name="Class-Path" value="algebrapijlenoefenen.jar functiesraden.jar  haakjessommen_opp.jar 
-    	 		 haakjessommen_tab.jar  haakjessommen_ontb.jar  heks.jar  herleiden.jar 
+    	 		 haakjessommen_tab.jar  haakjessommen_ontb.jar  heks.jar  herleiden.jar euclides.jar
     	 		 kwadverg.jar  linverg.jar  nabouwenaanzichten.jar   oppervlaktealgebra.jar 
     	 		 popupurlapplet.jar  vermtabel.jar  waarmakers.jar  getallenlijn.jar  bordjes.jar 
     	 		 wiskopdr.jar  algebrapijlenopdr.jar  aanzichtenraden.jar  vlakkenkleuren.jar 
     	 		 profielendraaien.jar  bordjesopdr.jar  spot_problems_dwo.jar  oppervlakte_dwo.jar 
     	 		 algebrapijlen.jar  geomalgebra.jar  geomalgebraopdr.jar  geomalgebra1d.jar 
-    	 		 tekenveelvlakopdr.jar  doorziendwo.jar  grkijken1.jar  grkijken2.jar 
+    	 		 tekenveelvlakopdr.jar  doorziendwo.jar  grkijken1.jar  grkijken2.jar vergroten.jar
     	 		 mysql-connector-java-3.0.16-ga-bin.jar" />
     	</manifest>
     	<indexjars>

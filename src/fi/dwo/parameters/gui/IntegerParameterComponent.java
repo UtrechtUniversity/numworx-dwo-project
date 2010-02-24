@@ -29,8 +29,8 @@ public class IntegerParameterComponent extends ParameterComponent {
         textField = new IntegerTextField();
         
         if(this.defaultValue.containsKey(parameter.getName())) {
-            Integer intValue = (Integer) this.defaultValue.get(parameter.getName());
-            textField.setText(intValue.toString());
+            Object object = this.defaultValue.get(parameter.getName());
+			textField.setText(object.toString());
         }
         
         int size = parameter.getType().getSize();
@@ -54,7 +54,7 @@ public class IntegerParameterComponent extends ParameterComponent {
      */
     public void reset() {
         if(this.defaultValue.containsKey(parameter.getName())) {
-            Integer intValue = (Integer) this.defaultValue.get(parameter.getName());
+            Object intValue = this.defaultValue.get(parameter.getName());
             textField.setText(intValue.toString());
         } else {
             textField.setText("");

@@ -120,10 +120,15 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         mainPanel.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.add(mainPanel, BorderLayout.CENTER);
         
+		ScormAppletIF applet = null;
+        Applet editableApplet = sco.getApplet();
+        if(editableApplet instanceof ScormAppletIF)
+        {
+        	applet = (ScormAppletIF) editableApplet;
+            editMode = applet.hasEditMode();
+        } else 
+        	editMode = false;
         
-        ScormAppletIF applet  = (ScormAppletIF) sco.getApplet();
-
-        editMode = applet.hasEditMode();
         if(editMode) {
             Hashtable launchData = sco.getLaunchdata();
             launchData.put("language", TextMapper.getLanguage());
@@ -157,7 +162,10 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             //editModeDialog.addWindowListener(this);
             editModeDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         } else {
-            parameters = applet.getEditableParameters();
+            if(applet != null)
+            	parameters = applet.getEditableParameters();
+            else 
+            	parameters = null;
             if(parameters == null)parameters = new Parameter[0];
             this.setSize(627, 485);
             this.setPreferredSize(getPreferredSize());
