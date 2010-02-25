@@ -29,6 +29,9 @@ import javax.swing.table.TableCellRenderer;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.SchoolClass;
 import fi.dwo.client.domain.User;
+import fi.dwo.client.persistence.MapperCreator;
+import fi.dwo.client.persistence.PersistenceFacade;
+import fi.dwo.client.system.LoginException;
 import fi.dwo.client.system.TextMapper;
 
 /**
@@ -43,7 +46,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 
     private SchoolClass schoolClass;
 
-	Image removeImage;
+	Image removeImage, editImage, userImage;
 
 	//private Box tbl;
 
@@ -61,7 +64,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 		}
 		
 		public int getColumnCount() {
-			return 2;
+			return 5;
 		}
 
 		public int getRowCount() {
@@ -70,9 +73,15 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 
 		public Object getValueAt(int row, int col) {
 			switch (col) {
-			case 0:
-				return students[row].getName();
 			case 1:
+				return students[row].getName();
+			case 0: 
+				return students[row].getUsername();
+			case 3: 
+				return editImage;
+			case 2: 
+				return userImage;
+			case 4:
 				return removeImage;
 			}
 			
@@ -80,13 +89,13 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 		}
 
 		public Class getColumnClass(int col) {
-			if(col > 0)
+			if(col > 1)
 				return Image.class;
 			return super.getColumnClass(col);
 		}
 
 		public boolean isCellEditable(int row, int col) {
-			return col > 0;
+			return col > 1;
 		}
     	
     }
@@ -146,36 +155,56 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 
     	public void actionPerformed(ActionEvent event) {
             User u = schoolClass.getStudents()[row];
-    		if (value == removeImage) {
-                String[] arguments = new String[1];
-                arguments[0] = u.getName();
-                String msg = TextMapper.getText(TextMapper.GUIC_MSG_DELETE_STUDENT);
-                msg = MessageFormat.format(msg, arguments);
-                if (JOptionPane.showConfirmDialog(ClassUsersPanel.this, msg
-                        + "?", TextMapper.getText(TextMapper.GUIC_DELETE_STUDENT), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                	
-                	u.setInClass(null);
-                	schoolClass.disconnect(u);
-                 	model.refresh();
-    	            if(model.getRowCount() == 0) {
-    	                //tbl.setVisible(false);
-    	                arguments = new String[1];
-    	                arguments[0] = schoolClass.getName();
-    	                String s = TextMapper.getText(TextMapper.GUIC_NO_STUDENTS);
-    	                JLabel label = new JLabel(MessageFormat.format(s, arguments));
-    	                label.setFont(GuiConstants.SCO_TEXT);
-    	                //FontMetrics fm = label.getFontMetrics(label.getFont());
-    	                //label.setSize(fm.stringWidth(label.getText()) + 10, fm.getHeight());
-    	                //label.setLocation((ClassUsersPanel.this.getSize().width/2) - (label.getSize().width/2), 100);
-    	                label.setAlignmentY(0.24f);
-    	                ClassUsersPanel.this.removeAll();
-    	                ClassUsersPanel.this.add(label);
-    	                ClassUsersPanel.this.repaint();
-    	            }
-    	        }
-            } 
-    		fireEditingStopped();
-    	}
+			if(value == userImage )
+			{
+				try {
+					MapperCreator.instance(User.class).removeObject(u.getID()); // not good enough, need fresh copy.
+					GuiCreator.instance().login(u.getUsername(), null);
+				} catch (LoginException e) {
+					e.printStackTrace();
+				}
+			} else
+			if(value == editImage)
+			{
+				try {
+					String newPassword =  JOptionPane.showInputDialog(ClassUsersPanel.this, TextMapper.getText(TextMapper.GUIP_PASSWORD), u.getUsername(), JOptionPane.QUESTION_MESSAGE);
+					if(newPassword != null)
+					{
+						PersistenceFacade.instance().changeAccount(u, null, newPassword, u.getFirstname(), u.getMiddleName(), u.getLastName(), u.getEmail());
+						model.fireTableRowsUpdated(row, row);
+						JOptionPane.showMessageDialog(ClassUsersPanel.this, TextMapper.getText(TextMapper.GUIP_MSG_PROFILE_CHANGED));
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}	else
+			if (value == removeImage) {
+            String[] arguments = new String[1];
+            arguments[0] = u.getName();
+            String msg = TextMapper.getText(TextMapper.GUIC_MSG_DELETE_STUDENT);
+            msg = MessageFormat.format(msg, arguments);
+            if (JOptionPane.showConfirmDialog(ClassUsersPanel.this, msg
+                    + "?", TextMapper.getText(TextMapper.GUIC_DELETE_STUDENT), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            	
+            	u.setInClass(null);
+            	schoolClass.disconnect(u);
+             	model.refresh();
+	            if(model.getRowCount() == 0) {
+	                //tbl.setVisible(false);
+	                arguments = new String[1];
+	                arguments[0] = schoolClass.getName();
+	                String s = TextMapper.getText(TextMapper.GUIC_NO_STUDENTS);
+	                JLabel label = new JLabel(MessageFormat.format(s, arguments));
+	                label.setFont(GuiConstants.SCO_TEXT);
+	                label.setAlignmentY(0.24f);
+	                ClassUsersPanel.this.removeAll();
+	                ClassUsersPanel.this.add(label);
+	                ClassUsersPanel.this.repaint();
+	            }
+	        }
+        } 
+    	fireEditingStopped();
+    }
 
 }
 
@@ -206,8 +235,13 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
         } else {
 
 	        removeImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.REMOVE_STUDENT_IMAGE);
+	        userImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.USERS_CLASS_IMAGE);
+	        editImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.EDIT_SCO_IMAGE);
+	        
 	        MediaTracker tr = new MediaTracker(this);
 	        tr.addImage(removeImage, 0);
+	        tr.addImage(userImage, 0);
+	        tr.addImage(editImage, 0);
 	        try {
 	            tr.waitForAll();
 	        } catch (Exception e) {

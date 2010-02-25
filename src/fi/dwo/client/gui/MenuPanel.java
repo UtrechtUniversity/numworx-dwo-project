@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 
 import fi.dwo.client.domain.DwoHelper;
+import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.system.TextMapper;
 
@@ -69,7 +70,11 @@ public class MenuPanel extends GuestMenuPanel {
     }
 
   
-    /**
+    public MenuPanel(DwoIF dwo) {
+		super(dwo);
+	}
+
+	/**
      * Adds the name of the class of the user to the panel. Can be overridden by
      * subclasses.
      *  

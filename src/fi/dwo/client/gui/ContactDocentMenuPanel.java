@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.table.AbstractTableModel;
 
+import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.GuestMenuPanel.MenuPanelButton;
 
@@ -13,8 +14,8 @@ public class ContactDocentMenuPanel extends TeacherMenuPanel {
 	protected MenuPanelButton userManagementButton;
 
 	
-	public ContactDocentMenuPanel() {
-		// TODO Auto-generated constructor stub
+	public ContactDocentMenuPanel(DwoIF dwo) {
+		super(dwo);
 	}
 
 	/* (non-Javadoc)

@@ -15,6 +15,7 @@ import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 
 import fi.dwo.client.domain.DwoHelper;
+import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.SchoolClass;
 import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.system.TextMapper;
@@ -42,37 +43,28 @@ public class TeacherMenuPanel extends MenuPanel {
 	 */
 	protected void createMenuButtons() {
 		super.createMenuButtons();
-        /* Variables used to create items */
-        //FontMetrics fm;
 		createGap();
         /* Add ClassManagement button */
         classManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_CLASS_MANAGEMENT));
-        //fm = classManagementButton.getFontMetrics(classManagementButton.getFont());
-        //classManagementButton.setSize(this.getSize().width - 20, fm.getHeight() + 10);
-        //classManagementButton.setLocation(10, 70);
         classManagementButton.addActionListener(this);
-        //classManagementButton.setVisible(false);
-        //if(GuiCreator.instance().getUser() instanceof Teacher)
         this.add(classManagementButton);
-        //classManagementButton.setVisible(true);
+        /* Als dwo in Deeplink mode, geen coursemanagement */
+        if(dwo.getCourseViewNr()>0)
+        	return;
+        
         createGap();
         /* Add CourseManagement Button */
         courseManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_COURSE_MANAGEMENT));
-        //fm = courseManagementButton.getFontMetrics(courseManagementButton.getFont());
-        //courseManagementButton.setSize(this.getSize().width - 20, fm.getHeight() + 10);
-        //courseManagementButton.setLocation(10, 100);
         courseManagementButton.addActionListener(this);
-        //courseManagementButton.setVisible(false);
-        this.add(courseManagementButton);
-        //courseManagementButton.setVisible(true);
+        add(courseManagementButton);
 	}
 
 	/**
      * Creates a new MenuPanel for the user. It contains the parent items (from
-     * MenuPanel) and buttons to show the reult of students, and to add a class.
+     * MenuPanel) and buttons to show the result of students, and to add a class.
      */
-    public TeacherMenuPanel() {
-        super();
+    public TeacherMenuPanel(DwoIF dwo) {
+        super(dwo);
     }
 
     /**

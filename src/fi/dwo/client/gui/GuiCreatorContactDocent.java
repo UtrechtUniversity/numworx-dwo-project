@@ -20,7 +20,7 @@ public class GuiCreatorContactDocent extends GuiCreatorTeacher {
         User u = dwo.getUser();
 
         if (u instanceof ContactDocent) {
-            return new ContactDocentMenuPanel();
+            return new ContactDocentMenuPanel(dwo);
         }
 		return super.getMenuPanel();
 	}
@@ -29,7 +29,6 @@ public class GuiCreatorContactDocent extends GuiCreatorTeacher {
 	 * @see fi.dwo.client.gui.GuiCreator#getUserManagementPanel()
 	 */
 	public CenterSubPanel getUserManagementPanel() {
-		// TODO Auto-generated method stub
 		return new UserManagementPanel(dwo);
 	}
 

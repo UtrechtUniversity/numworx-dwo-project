@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 
 
 import fi.dwo.client.domain.DwoHelper;
+import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.system.TextMapper;
 
 /**
@@ -80,21 +81,28 @@ public class GuestMenuPanel extends JPanel implements ActionListener {
 
     protected JButton mainMenuButton;
 
+	protected DwoIF dwo;
+
     /**
      * Creates a new GuestMenuPanel. The panel contains only a button for the
      * main menu.
      *  
      */
     public GuestMenuPanel() {
+    	this(null);
+    }
+
+
+	public GuestMenuPanel(DwoIF dwo) {
+		this.dwo = dwo;
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setDoubleBuffered(false);
-        //this.setSize(149, 481);
         setOpaque(!GuiConstants.GUI_IMAGE_BG);
         createGap();
         createButtons();
         add(Box.createVerticalGlue());
-    }
+	}
 
 
 	/* (non-Javadoc)
