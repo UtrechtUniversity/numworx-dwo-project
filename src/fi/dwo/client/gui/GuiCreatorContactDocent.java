@@ -31,5 +31,9 @@ public class GuiCreatorContactDocent extends GuiCreatorTeacher {
 	public CenterSubPanel getUserManagementPanel() {
 		return new UserManagementPanel(dwo);
 	}
+	
+	public CenterSubPanel getClassAdminPanel() {
+		return new ClassAdminPanel(dwo);
+	}
 
 }

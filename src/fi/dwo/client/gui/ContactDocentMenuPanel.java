@@ -12,6 +12,7 @@ import fi.dwo.client.gui.GuestMenuPanel.MenuPanelButton;
 public class ContactDocentMenuPanel extends TeacherMenuPanel {
 
 	protected MenuPanelButton userManagementButton;
+	protected MenuPanelButton klasKeuzeButton;
 
 	
 	public ContactDocentMenuPanel(DwoIF dwo) {
@@ -27,6 +28,10 @@ public class ContactDocentMenuPanel extends TeacherMenuPanel {
 		this.userManagementButton = new MenuPanelButton("Gebruikers");
 		userManagementButton.addActionListener(this);
 		add(userManagementButton);
+		createGap();
+		klasKeuzeButton = new MenuPanelButton("Klassen toewijzen");
+		klasKeuzeButton.addActionListener(this);
+		//add(klasKeuzeButton);
 	}
 
 	/* (non-Javadoc)
@@ -39,6 +44,12 @@ public class ContactDocentMenuPanel extends TeacherMenuPanel {
 		{    
 			GuiCreator.instance().setWait();
 	        CenterSubPanel cp = GuiCreator.instance().getUserManagementPanel();
+	        center.loadCenter(cp);
+	        GuiCreator.instance().setReady();
+		} else if(e.getSource() == klasKeuzeButton)
+		{
+			GuiCreator.instance().setWait();
+	        CenterSubPanel cp = GuiCreator.instance().getClassAdminPanel();
 	        center.loadCenter(cp);
 	        GuiCreator.instance().setReady();
 		}

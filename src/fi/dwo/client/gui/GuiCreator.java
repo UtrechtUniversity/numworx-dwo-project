@@ -841,4 +841,9 @@ public class GuiCreator {
 		return null;
 	}
 
+	public CenterSubPanel getClassAdminPanel() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
