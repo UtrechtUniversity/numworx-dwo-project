@@ -79,15 +79,17 @@ public class SchoolMapper extends XmlRpcMapper {
 		 * assert classList != null.
 		 */
 		public void addClass(SchoolClass c) {
-			getClassList();
-			super.addClass(c);
+			//getClassList();
+			//super.addClass(c);
+			super.setClassList(null);
 		}
 		/**
 		 * assert classList != null.
 		 */
 		public void deleteClass(SchoolClass schoolClass) {
-			getClassList();
-			super.deleteClass(schoolClass);
+			//getClassList();
+			//super.deleteClass(schoolClass);
+			super.setClassList(null); 
 		}
 		
 		

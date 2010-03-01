@@ -1,6 +1,9 @@
 package fi.dwo.client.gui;
 
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -29,12 +32,15 @@ import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.PersistenceException;
 import fi.dwo.client.system.TextMapper;
 
-public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparator {
+public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparator, ActionListener {
 
 
 	SchoolClass[] classes;
+	boolean[] dirty;
 	Teacher[] teachers;
 	HashMap teacherMap = new HashMap();
+	HashMap nameMap = new HashMap();
+	HashMap oldTeacher = new HashMap();
 	DwoIF dwo;
 	
 	class ClassModel extends AbstractTableModel
@@ -50,6 +56,7 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 			if(columnIndex == 1)
 			{
 				teacherMap.put(classes[rowIndex], value);
+				dirty[rowIndex] = true;
 			}
 		}
 
@@ -155,11 +162,16 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 	public ClassAdminPanel(DwoIF dwo) {
 		super(null);
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		setOpaque(false);
+		setBackground(GuiConstants.MAIN_BACKGROUND);
 		this.dwo = dwo;
 		ContactDocent docent = (ContactDocent) dwo.getUser();
 		School school = docent.getSchool();
 		SchoolGroup[] groups = school.getSchoolGroupList();
 		classes = school.getClassList();
+		if(classes == null)
+			classes = new SchoolClass[0];
+		dirty = new boolean[classes.length];
 		MapperIF usermapper =  MapperCreator.instance(User.class);
 		teachers = new Teacher[0];
 		for (int i = 0; i < groups.length; i++) {
@@ -195,12 +207,15 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 		{	
 			Teacher teacher = teachers[i];
 			items[i] = teacher.getName();
+			nameMap.put(items[i], teacher);
 			SchoolClass[] classlist = teacher.getClasses();
 			for (int j = 0; j < classlist.length; j++) {
 				SchoolClass schoolClass = classlist[j];
 				teacherMap.put(schoolClass, teacher.getName());
+				oldTeacher.put(schoolClass, teacher);
 			}
 		}
+		
 		JTable table = new JTable(new ClassModel());
 		ComboBoxEditor editor = new ComboBoxEditor(items);
 		ComboBoxRenderer renderer = new ComboBoxRenderer(items);
@@ -213,8 +228,11 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 		add(table);
 		
 		JPanel box = new JPanel();
+		box.setOpaque(true);
+		box.setBackground(GuiConstants.MAIN_BACKGROUND);
 		add(box);
 		JButton okBtn = new JButton("Opslaan");
+		okBtn.addActionListener(this);
 		box.add(okBtn);
 	}
 
@@ -222,6 +240,24 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 		User u0 = (User) arg0;
 		User u1 = (User) arg1;
 		return u0.getName().compareTo(u1.getName());
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		for(int i = 0; i < dirty.length; i++)
+			if(dirty[i])
+			{
+				SchoolClass c = classes[i];
+				String name = teacherMap.get(c).toString();
+				Teacher t = (Teacher) nameMap.get(name);
+				Teacher o = (Teacher) oldTeacher.get(c);
+				o.deleteClass(c);
+				t.addClass(c);
+				oldTeacher.put(c, t);
+				// dbaccess.....
+				dirty[i] = false;
+			}
+		
+		center.loadMenu();
 	}
 
 }

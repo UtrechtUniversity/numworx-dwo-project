@@ -20,7 +20,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.event.CellEditorListener;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 
 import fi.dwo.client.domain.ContactDocent;
@@ -196,8 +195,8 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel, Compa
 		}
 
 		public void actionPerformed(ActionEvent event) {
-			User user = userList[row];
-			if(value == userImage || value == teacherImage)
+			User user = model.userList[row];
+			if(value == model.userImage || value == model.teacherImage)
 			{
 				try {
 					MapperCreator.instance(User.class).removeObject(user.getID()); // not good enough, need fresh copy.
@@ -207,7 +206,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel, Compa
 					e.printStackTrace();
 				}
 			} else
-			if(value == editImage)
+			if(value == model.editImage)
 			{
 				try {
 					String newPassword =  JOptionPane.showInputDialog(UserManagementPanel.this, TextMapper.getText(TextMapper.GUIP_PASSWORD), user.getUsername(), JOptionPane.QUESTION_MESSAGE);
@@ -221,7 +220,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel, Compa
 					e.printStackTrace();
 				}
 			} else
-			if (value == removeImage)
+			if (value == model.removeImage)
 			{
                 /* Delete the school */
                 User u = user;
@@ -245,76 +244,18 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel, Compa
 	private CenterPanel center;
 	private DwoIF dwo;
 	private ContactDocent docent;
+	private User[] userList;
 
-	User[] userList;
-    private Image removeImage, editImage, userImage, teacherImage;
-
-	
-	class UserModel extends AbstractTableModel {
-
-		public int getColumnCount() {
-			return 5;
-		}
-
-		public void deleteRow(int row) {
-			User[] nu = new User[userList.length-1];
-			System.arraycopy(userList, 0, nu, 0, row);
-			System.arraycopy(userList, row+1, nu, row, nu.length-row);
-			userList = nu;
-			fireTableRowsDeleted(row, row);
-		}
-
-		public int getRowCount() {
-			return userList.length;
-		}
-
-		public Object getValueAt(int rowIndex, int columnIndex) {
-			switch(columnIndex) {
-			case 1: 
-					return userList[rowIndex].getUsername();
-			case 0:
-					return userList[rowIndex].getName();
-			case 2:
-					return userList[rowIndex] instanceof Teacher ? teacherImage: userImage;
-			case 3: 
-					return editImage;
-			case 4:
-					return removeImage;
-			}
-			return null;
-		}
-
-		public Class getColumnClass(int col) {
-			if(col > 1)
-				return Image.class;
-			return super.getColumnClass(col);
-		}
-
-		public String getColumnName(int col) {
-			switch(col) {
-			case 1: return "Gebruikersnaam";
-			case 0: return "Naam";
-			case 2: return "Login als";
-			case 3: return "Wachtwoord";
-			case 4: return "Verwijder";
-			}
-			return "";
-		}
-		public boolean isCellEditable(int row, int col) {
-			return col >= 2;
-		}
-
-	}
 	
 	public UserManagementPanel(DwoIF dwo) {
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setSize(620, 485);
-        removeImage = DwoHelper.getImage(GuiConstants.RESOURCES
+        Image removeImage = DwoHelper.getImage(GuiConstants.RESOURCES
                 + GuiConstants.REMOVE_SCO_IMAGE);
-        editImage = DwoHelper.getImage(GuiConstants.RESOURCES
+        Image editImage = DwoHelper.getImage(GuiConstants.RESOURCES
                 + GuiConstants.EDIT_SCO_IMAGE);
-        userImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.USERS_CLASS_IMAGE);
-        teacherImage = DwoHelper.getImage(GuiConstants.RESOURCES + "resources/assign.gif");
+        Image userImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.USERS_CLASS_IMAGE);
+        Image teacherImage = DwoHelper.getImage(GuiConstants.RESOURCES + "resources/assign.gif");
 		this.dwo = dwo;
 		docent = (ContactDocent) dwo.getUser();
 		School school = docent.getSchool();
@@ -340,7 +281,13 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel, Compa
 		}
 		Arrays.sort(userList, this);
 		
-		JTable table = new JTable(new UserModel());
+		UserModel dm = new UserModel();
+		dm.userList = userList; userList = null;
+		dm.editImage = editImage;
+		dm.removeImage = removeImage;
+		dm.teacherImage = teacherImage;
+		dm.userImage = userImage;
+		JTable table = new JTable(dm);
     	TableUtil.setDefaults(table, true, new ImageRenderer(), new ImageButtonEditor());
 
     	TableUtil.setJTableSizes(table);
