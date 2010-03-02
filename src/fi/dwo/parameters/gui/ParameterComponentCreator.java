@@ -10,6 +10,7 @@ import fi.beans.scorm.DataTypeIF;
 import fi.beans.scorm.Parameter;
 import fi.beans.scorm.ScormBoolean;
 import fi.beans.scorm.ScormDouble;
+import fi.beans.scorm.ScormEnum;
 import fi.beans.scorm.ScormFormula;
 import fi.beans.scorm.ScormGroup;
 import fi.beans.scorm.ScormInteger;
@@ -45,6 +46,8 @@ public class ParameterComponentCreator {
             return new BooleanParameterComponent(parent, parameter, defaultValue, isSub);
         } else if(type instanceof ScormDouble) {
             return new DoubleParameterComponent(parent, parameter, defaultValue, isSub);
+        } else if(type instanceof ScormEnum) {
+        	return new EnumParameterComponent(parent, parameter, defaultValue, isSub);
         } else if(type instanceof ScormString) {
             return new StringParameterComponent(parent, parameter, defaultValue, isSub);
         } else if(type instanceof ScormText) {

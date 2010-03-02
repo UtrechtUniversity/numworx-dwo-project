@@ -20,6 +20,7 @@ import fi.beans.scorm.ScormAppletIF;
 import fi.beans.scorm.ScormBoolean;
 import fi.beans.scorm.ScormDouble;
 import fi.beans.scorm.ScormEditComponentIF;
+import fi.beans.scorm.ScormEnum;
 import fi.beans.scorm.ScormFormula;
 import fi.beans.scorm.ScormGroup;
 import fi.beans.scorm.ScormInteger;
@@ -212,7 +213,7 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
             parameters[1] = tree;
             
         } else if (getal == 5) {
-            parameters = new Parameter[10]; // De methode moet uiteindelijk een array van parameters teruggeven
+            parameters = new Parameter[11]; // De methode moet uiteindelijk een array van parameters teruggeven
             
             DataType type = new ScormString();
             Parameter param = new Parameter("description", "Omschrijving", type);
@@ -234,7 +235,7 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
             type = new ScormDouble();
             type.setSize(8);
             param = new Parameter("temperature", "Hoe warm is het", type);
-            param.setPostLabel("° C");
+            param.setPostLabel("ï¿½ C");
             parameters[3] = param;
 
             /* Maak een Text */
@@ -324,6 +325,8 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
             
             parameters[9] = treeParam;
             
+            type = new ScormEnum(new String[] {"rood", "groen", "blauw"});
+            parameters[10] = new Parameter("enumstest","Opsomming", type);
             
 //             Op dit moment is er nog geen speciaal formule invoerveld. Tot die tijd wordt een stringparameter weergegeven
         }
@@ -367,7 +370,7 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
 
     public void init() {
         super.init();
-        int aantal = 10;
+        int aantal = 11;
         String par = getParameter("aantal");
         System.out.println(par);
         if(par != null) {

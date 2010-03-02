@@ -3,13 +3,19 @@
 package fi.dwo.parameters.gui;
 
 import java.awt.Component;
+import java.text.NumberFormat;
 import java.util.Hashtable;
 
+import javax.swing.JFormattedTextField;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
+
 import fi.beans.scorm.Parameter;
+import fi.beans.scorm.ScormInteger;
 
 public class IntegerParameterComponent extends ParameterComponent {
-    protected IntegerTextField textField;
-
+    protected JFormattedTextField textField;
+    protected Number n;
     
     public IntegerParameterComponent(ParameterComponentIF parent,
             Parameter parameter, Hashtable defaultValue) {
@@ -25,8 +31,21 @@ public class IntegerParameterComponent extends ParameterComponent {
             Parameter parameter, Hashtable defaultValue, boolean isSub) {
         super(parent, parameter, defaultValue, isSub);
 
+        ScormInteger i = (ScormInteger)parameter.getType();
+        NumberFormatter numberFormatter = new NumberFormatter();
+        numberFormatter.setValueClass(Integer.class);
+        numberFormatter.setAllowsInvalid(false);
+        numberFormatter.setMinimum(new Integer(i.getMin()));
+        numberFormatter.setMaximum(new Integer(i.getMax()));
+        DefaultFormatterFactory defaultFormatterFactory = new DefaultFormatterFactory();
+        defaultFormatterFactory.setDefaultFormatter(numberFormatter);
+
+        textField = new JFormattedTextField();
+        textField.setFormatterFactory(defaultFormatterFactory);
+        int n = Math.max(Math.min(0, i.getMax()), i.getMin());
+        textField.setValue(this.n = new Integer(n));
         
-        textField = new IntegerTextField();
+        
         
         if(this.defaultValue.containsKey(parameter.getName())) {
             Object object = this.defaultValue.get(parameter.getName());
@@ -37,6 +56,7 @@ public class IntegerParameterComponent extends ParameterComponent {
         if(size <= 0) {
             size = 20;
         }
+        textField.setColumns(size);
         textField.setSize(size * 8, 21);
         textField.setLocation(preLabel.getLocation().x + preLabel.getSize().width + 10, 1);
         textField.addFocusListener(this);
@@ -57,7 +77,7 @@ public class IntegerParameterComponent extends ParameterComponent {
             Object intValue = this.defaultValue.get(parameter.getName());
             textField.setText(intValue.toString());
         } else {
-            textField.setText("");
+            textField.setValue(n);
         }
     }
     
