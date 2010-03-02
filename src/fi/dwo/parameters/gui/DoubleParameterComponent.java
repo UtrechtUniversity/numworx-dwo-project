@@ -28,7 +28,7 @@ public class DoubleParameterComponent extends ParameterComponent {
 
         textField = new DoubleTextField();
         if(this.defaultValue.containsKey(parameter.getName())) {
-            Double dblValue = (Double) this.defaultValue.get(parameter.getName());
+            Object dblValue = this.defaultValue.get(parameter.getName());
             textField.setText(dblValue.toString());
         }
         int size = parameter.getType().getSize();
@@ -49,7 +49,7 @@ public class DoubleParameterComponent extends ParameterComponent {
      */
     public void reset() {
         if(this.defaultValue.containsKey(parameter.getName())) {
-            Double dblValue = (Double) this.defaultValue.get(parameter.getName());
+            Object dblValue = this.defaultValue.get(parameter.getName());
             textField.setText(dblValue.toString());
         } else {
             textField.setText("");

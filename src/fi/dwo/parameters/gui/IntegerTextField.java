@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 /**
  * TODO paste events.
  * @author M.J.B. Kupers
+ * @deprecated gebruik JFormattedTextField
  */
 public class IntegerTextField extends JTextField {
 
