@@ -122,7 +122,7 @@ public abstract class GuiConstants {
 			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 33);
 			GUI_IMAGE_BG = false;
 		} else
-		if(profile==49)
+		if(profile==49 || profile==45)
 		{	MAIN_BACKGROUND = new Color(255,255,255);
 		   	CELL_BACKGROUND = new Color(255,255,255);
 			FI_LOGO_LOCATION = "resources/fi.gif";
@@ -133,7 +133,7 @@ public abstract class GuiConstants {
 			GUI_IMAGE_SCO = "resources/UU-rekenweb-sco.png";
 			GUI_IMAGE_COURSE = "resources/UU-rekenweb-course.png";
 		} else /**/
-		if(profile==1 || profile==23 || profile==33 || profile==34 || profile==43 || profile==44 || profile==45 || profile==46 || profile==47)
+		if(profile==1 || profile==23 || profile==33 || profile==34 || profile==43 || profile==44 || profile==46 || profile==47)
 		{	MAIN_BACKGROUND = new Color(255,255,255);
 		   	CELL_BACKGROUND = new Color(255,255,255);
 			FI_LOGO_LOCATION = "resources/fi.gif";
@@ -184,7 +184,7 @@ public abstract class GuiConstants {
 			GUI_IMAGE_SCO = "resources/UU-mi-sco.png";
 			GUI_IMAGE_COURSE = "resources/UU-mi-course.png";
 		} else
-		if(profile==16 || profile==25 || profile==26 || profile==29 || profile==30 || profile==35 || profile==37)
+		if(profile==16 || profile==25 || profile==26 || profile==29 || profile==30 || profile==35 || profile==37 || profile==50)
 		{	MAIN_BACKGROUND = new Color(255,255,255);
 		   	CELL_BACKGROUND = new Color(255,255,255);
 			FI_LOGO_LOCATION = "resources/fi.gif";
