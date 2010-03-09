@@ -3,6 +3,8 @@ package fi.dwo.client.gui;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 
+import javax.swing.Box;
+import javax.swing.JLabel;
 import javax.swing.table.AbstractTableModel;
 
 import fi.dwo.client.domain.DwoIF;
@@ -24,14 +26,16 @@ public class ContactDocentMenuPanel extends TeacherMenuPanel {
 	 */
 	protected void createMenuButtons() {
 		super.createMenuButtons();
+		add(Box.createVerticalStrut(20));
+		add(new JLabel("Opties Schooladmin"));
 		createGap();
-		this.userManagementButton = new MenuPanelButton("Gebruikers");
+		this.userManagementButton = new MenuPanelButton("Gebruikers school");
 		userManagementButton.addActionListener(this);
 		add(userManagementButton);
 		createGap();
-		klasKeuzeButton = new MenuPanelButton("Klassen toewijzen");
+		klasKeuzeButton = new MenuPanelButton("Klassen school");
 		klasKeuzeButton.addActionListener(this);
-		//add(klasKeuzeButton);
+		add(klasKeuzeButton);
 	}
 
 	/* (non-Javadoc)
