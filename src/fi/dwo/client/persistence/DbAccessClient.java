@@ -137,6 +137,15 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
         return ((Boolean)object).booleanValue();
     }
 
+    public boolean reassignClass(int a, int b) throws IOException, XmlRpcException
+    {
+        Vector vv = new Vector(2);
+        vv.addElement( new Integer(a));
+        vv.addElement( new Integer(b));
+        Object object = invoke("reassignClass", vv);
+        return ((Boolean)object).booleanValue();
+    }
+
     public boolean register(java.lang.String a, java.lang.String b, java.lang.String c, java.lang.String d, java.lang.String e, java.lang.String f) throws IOException, XmlRpcException
     {
         Vector vv = new Vector(6);

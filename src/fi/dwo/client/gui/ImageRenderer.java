@@ -21,6 +21,14 @@ public class ImageRenderer extends JLabel implements TableCellRenderer {
 		{
 			icon.setImage((Image) value);
 			setIcon(icon);
+			setHorizontalAlignment(CENTER);
+		}
+		setOpaque(true);
+		if(isSelected)
+		{
+			setBackground(table.getSelectionBackground());
+		} else {
+			setBackground(table.getBackground());
 		}
 		return this;
 	}

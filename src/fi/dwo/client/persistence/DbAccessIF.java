@@ -155,9 +155,33 @@ public interface DbAccessIF {
      */
     public Vector getTable(String tableName, Vector columnnames, Hashtable wheredef, String orderBy) throws IOException,
     		XmlRpcException, SQLException;
+    /**
+     * Give a class a new name.
+     * @param classID
+     * @param newName
+     * @return
+     * @throws DwoXmlRpcException
+     * @throws IOException
+     * @throws XmlRpcException
+     * @throws SQLException
+     */
+    
     public boolean renameClass(int classID, String newName) throws DwoXmlRpcException, IOException, XmlRpcException,
     SQLException;
 
+    /**
+     * Give a class a new teacher
+     * @param classID
+     * @param newTeacher
+     * @return
+     * @throws IOException
+     * @throws SQLException
+     * @throws XmlRpcException
+     * @throws DwoXmlRpcException
+     */
+    public boolean reassignClass(int classID, int newTeacher) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
+    
+    
     /**
      * @param username
      * @param password

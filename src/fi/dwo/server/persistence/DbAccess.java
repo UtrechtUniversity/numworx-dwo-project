@@ -250,7 +250,10 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
     private final static String QRY_UPDATE_CLASS_NAME = "UPDATE tblClass "
             + "SET class = ? " + "WHERE (classID = ?) ";
-            
+     
+    private final static String QRY_UPDATE_CLASS_USER = "UPDATE tblClass "
+    		+ "SET userID = ? WHERE (classID = ?";
+    
     private final static String QRY_UPDATE_SCHOOL = "UPDATE tblSchool "
             + "SET schoolName = ?, " + "schoollogin = ? "  + "WHERE (schoolID = ?) ";
 
@@ -1540,6 +1543,15 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps.execute();
 
         return true;
+    }
+    
+    public boolean reassignClass(int classID, int userID)
+    throws SQLException {
+    	PreparedStatement ps = getStatement(QRY_UPDATE_CLASS_USER);
+    	ps.setInt(1, userID);
+    	ps.setInt(2, classID);
+    	ps.execute();
+    	return true;
     }
 
     /**

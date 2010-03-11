@@ -2,6 +2,7 @@ package fi.dwo.client.gui;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
@@ -19,6 +20,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import fi.dwo.client.domain.ContactDocent;
+import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.SchoolClass;
@@ -43,19 +45,30 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 	HashMap oldTeacher = new HashMap();
 	DwoIF dwo;
 	
+	static final int CLASS_NAME = 0;
+	static final int CLASS_USER = 1;
+	static final int CLASS_MEMBERS = 2;
+	static final int CLASS_DELETE = 3;
+	
+	Image usersImage, removeImage;
+	
 	class ClassModel extends AbstractTableModel
 	{
 		public int getColumnCount() {
-			return 2;
+			return 4;
 		}
 
 		/* (non-Javadoc)
 		 * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
 		 */
 		public void setValueAt(Object value, int rowIndex, int columnIndex) {
-			if(columnIndex == 1)
+			if(columnIndex == CLASS_USER)
 			{
 				teacherMap.put(classes[rowIndex], value);
+				dirty[rowIndex] = true;
+			} else if(columnIndex == CLASS_NAME)
+			{
+				classes[rowIndex].setClassName(value.toString());
 				dirty[rowIndex] = true;
 			}
 		}
@@ -66,8 +79,11 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 		public String getColumnName(int column) {
 			switch(column)
 			{
-			case 0: return "Klas";
-			case 1: return "Docent";
+			case CLASS_NAME: return "Klas";
+			case CLASS_USER: return "Docent";
+			case CLASS_MEMBERS: return "Leerlingen";
+			case CLASS_DELETE: return "Verwijder";
+
 			}
 			return super.getColumnName(column);
 		}
@@ -77,7 +93,7 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 		 */
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
 			// TODO Auto-generated method stub
-			return columnIndex == 1;
+			return true;
 		}
 
 		public int getRowCount() {
@@ -88,13 +104,32 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 			SchoolClass c = classes[rowIndex];
 			switch(columnIndex)
 			{
-			case 0: 
+			case CLASS_NAME: 
 				return c.getName();
-			case 1:
+			case CLASS_USER:
 				return teacherMap.get(c);
+			case CLASS_MEMBERS:
+				return usersImage;
+			case CLASS_DELETE:
+				return removeImage;
 			}
 			return null;
 		}
+
+		public Class getColumnClass(int columnIndex) {
+			switch(columnIndex)
+			{
+			case CLASS_NAME:
+			case CLASS_USER:
+					return String.class;
+			case CLASS_MEMBERS:
+			case CLASS_DELETE:
+					return Image.class;
+			}
+			return super.getColumnClass(columnIndex);
+		}
+		
+		
 	}
 
 	public class ComboBoxRenderer extends JComboBox implements TableCellRenderer
@@ -165,6 +200,8 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 		setOpaque(false);
 		setBackground(GuiConstants.MAIN_BACKGROUND);
 		this.dwo = dwo;
+        removeImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.REMOVE_CLASS_IMAGE);
+        usersImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.USERS_CLASS_IMAGE);
 		ContactDocent docent = (ContactDocent) dwo.getUser();
 		School school = docent.getSchool();
 		SchoolGroup[] groups = school.getSchoolGroupList();
@@ -206,12 +243,12 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 		for(int i = 0; i < teachers.length; i++)
 		{	
 			Teacher teacher = teachers[i];
-			items[i] = teacher.getName();
+			items[i] = teacher.getName() + " (" + teacher.getUsername() + ")";
 			nameMap.put(items[i], teacher);
 			SchoolClass[] classlist = teacher.getClasses();
 			for (int j = 0; j < classlist.length; j++) {
 				SchoolClass schoolClass = classlist[j];
-				teacherMap.put(schoolClass, teacher.getName());
+				teacherMap.put(schoolClass, items[i]);
 				oldTeacher.put(schoolClass, teacher);
 			}
 		}
