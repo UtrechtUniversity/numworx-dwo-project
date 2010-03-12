@@ -170,12 +170,15 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
         if(currentUser.getID()==4 		//peterb
         	|| currentUser.getID()==8691 	//peterb_gr
         	|| currentUser.getID()==24073	//peterb_mw
-        	|| currentUser.getID()==13584) 	//peterb_mbo
+        	|| currentUser.getID()==54220	//peterb_nwk
+        	|| currentUser.getID()==13584 	//peterb_mbo
+        	|| currentUser.getID()==63490) 	//scormadmin De Amersfoortse Berg (Guido van der Waal)
         		DwoHelper.setScormExportLoggedIn(true);
         else DwoHelper.setScormExportLoggedIn(false);
         if(	currentUser.getID()==4 		//peterb
         		|| currentUser.getID()==8691 	//peterb_gr
         		|| currentUser.getID()==24073	//peterb_mw
+        		|| currentUser.getID()==54220	//peterb_nwk
         		|| currentUser.getID()==13584 	//peterb_mbo 
         		|| currentUser.getID()==55549) 	//exportgr
         		//|| currentUser.getID()==22194) 	//harmh
