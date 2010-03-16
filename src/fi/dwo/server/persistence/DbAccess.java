@@ -252,7 +252,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             + "SET class = ? " + "WHERE (classID = ?) ";
      
     private final static String QRY_UPDATE_CLASS_USER = "UPDATE tblClass "
-    		+ "SET userID = ? WHERE (classID = ?";
+    		+ "SET userID = ? WHERE (classID = ?)";
     
     private final static String QRY_UPDATE_SCHOOL = "UPDATE tblSchool "
             + "SET schoolName = ?, " + "schoollogin = ? "  + "WHERE (schoolID = ?) ";

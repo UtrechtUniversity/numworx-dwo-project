@@ -315,6 +315,7 @@ public class CenterPanel extends JPanel implements CourseContainer {
         menu.setVisible(true);
         RAND.setVisible(true);
         centermainSub.invalidate();
+        centermainSub.repaint();
     }
     
     public GuestMenuPanel getMenu() {

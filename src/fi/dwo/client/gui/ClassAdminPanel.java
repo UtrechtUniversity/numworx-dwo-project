@@ -5,21 +5,31 @@ import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 
+import javax.swing.AbstractCellEditor;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import org.apache.xmlrpc.applet.XmlRpcException;
+
+import fi.beans.jdbc.DbConnect;
 import fi.dwo.client.domain.ContactDocent;
+import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.School;
@@ -27,12 +37,16 @@ import fi.dwo.client.domain.SchoolClass;
 import fi.dwo.client.domain.SchoolGroup;
 import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.User;
+import fi.dwo.client.gui.ClassPanel.ClassModel;
 import fi.dwo.client.gui.UserManagementPanel.TeacherDelegate;
+import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.MapperCreator;
 import fi.dwo.client.persistence.MapperIF;
 import fi.dwo.client.persistence.PersistenceFacade;
+import fi.dwo.client.system.ClassException;
 import fi.dwo.client.system.PersistenceException;
 import fi.dwo.client.system.TextMapper;
+import fi.dwo.server.persistence.DwoXmlRpcException;
 
 public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparator, ActionListener {
 
@@ -64,12 +78,34 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 		public void setValueAt(Object value, int rowIndex, int columnIndex) {
 			if(columnIndex == CLASS_USER)
 			{
-				teacherMap.put(classes[rowIndex], value);
 				dirty[rowIndex] = true;
+				SchoolClass c = classes[rowIndex];
+				Teacher t = (Teacher) nameMap.get(value);
+				Teacher o = (Teacher) oldTeacher.get(c);
+				try {
+					if(DbAccessCreator.instance().reassignClass(c.getID(), t.getID()))
+					{
+						teacherMap.put(classes[rowIndex], value);	
+						o.deleteClass(c);
+						t.addClass(c);
+						oldTeacher.put(c, t);
+						center.loadMenu();
+						fireTableCellUpdated(rowIndex, columnIndex);
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
+
 			} else if(columnIndex == CLASS_NAME)
 			{
-				classes[rowIndex].setClassName(value.toString());
-				dirty[rowIndex] = true;
+				SchoolClass schoolClass = classes[rowIndex];
+				if(dwo.renameClass(schoolClass, value.toString())) 
+				{
+					dirty[rowIndex] = true;
+					center.loadMenu();
+					fireTableCellUpdated(rowIndex, columnIndex);
+				}
 			}
 		}
 
@@ -92,7 +128,6 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 		 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
 		 */
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
-			// TODO Auto-generated method stub
 			return true;
 		}
 
@@ -128,8 +163,15 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 			}
 			return super.getColumnClass(columnIndex);
 		}
-		
-		
+
+		public void removeRow(int row) {	
+			SchoolClass[] sc = new SchoolClass[classes.length-1];
+			System.arraycopy(classes, 0, sc, 0, row);
+			System.arraycopy(classes, row+1, sc,row, sc.length-row);
+			classes = sc;
+			fireTableRowsDeleted(row,row);
+		}
+
 	}
 
 	public class ComboBoxRenderer extends JComboBox implements TableCellRenderer
@@ -161,6 +203,47 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 		{ super(new JComboBox(items)); 
 		}
 	}
+
+    public class ImageButtonEditor extends AbstractCellEditor implements
+	TableCellEditor, ActionListener {
+
+    	Object value;
+    	ClassModel model;
+    	int row;
+
+    	public Component getTableCellEditorComponent(JTable table, Object value,
+    			boolean arg2, int row, int col) {
+    		this.value = value;
+    		JButton button = new JButton(new ImageIcon((Image)value));
+    		button.addActionListener(this);
+    		this.row = row;
+    		model = (ClassModel) table.getModel();
+    		return button;
+    	}
+
+    	public Object getCellEditorValue() {
+    		return value;
+    	}
+
+    	public void actionPerformed(ActionEvent event) {
+            SchoolClass sc = classes[row];
+    		if (value == removeImage) {
+                /* Delete the course */
+                if (JOptionPane.showConfirmDialog(ClassAdminPanel.this, TextMapper.getText(TextMapper.GUIC_MSG_DELETE_CLASS)
+                        + "?", TextMapper.getText(TextMapper.GUIC_DELETE_CLASS), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    if (GuiCreator.instance().deleteClass(sc)) {
+                        center.loadMenu();
+        	            model.removeRow(row);
+                    }
+                }
+    		} else if (value == usersImage) {
+                center.loadCenter(GuiCreator.instance().getClassUsersPanel(sc));
+    		}
+    		fireEditingStopped();
+    	}
+
+}
+	
 	private CenterPanel center;
 
 	public void end() {
@@ -259,7 +342,7 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 		TableColumn col = table.getColumnModel().getColumn(1); 
 		col.setCellEditor(editor);
 		col.setCellRenderer(renderer);
-		TableUtil.setDefaults(table, true, new ImageRenderer(), null);
+		TableUtil.setDefaults(table, true, new ImageRenderer(), new ImageButtonEditor());
 		TableUtil.setJTableSizes(table);
 		add(table.getTableHeader());
 		add(table);
@@ -268,9 +351,7 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 		box.setOpaque(true);
 		box.setBackground(GuiConstants.MAIN_BACKGROUND);
 		add(box);
-		JButton okBtn = new JButton("Opslaan");
-		okBtn.addActionListener(this);
-		box.add(okBtn);
+
 	}
 
 	public int compare(Object arg0, Object arg1) {
