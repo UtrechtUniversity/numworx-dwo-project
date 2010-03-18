@@ -246,17 +246,11 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         Box header = Box.createHorizontalBox();
         add(header, BorderLayout.NORTH);
         /* Add Remove-class image */
-        MediaTracker tr = new MediaTracker(this);
-        removeImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.REMOVE_COURSE_IMAGE);
-        editImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.EDIT_COURSE_IMAGE);
-        scoImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.SCO_COURSE_IMAGE);
-        tr.addImage(removeImage, 0);
-        tr.addImage(editImage, 1);
-        tr.addImage(scoImage, 2);
-        try {
-            tr.waitForAll();
-        } catch (Exception e) {
-        }
+        
+        removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_COURSE_IMAGE);
+        editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_COURSE_IMAGE);
+        scoImage = DwoHelper.getResourceImage(GuiConstants.SCO_COURSE_IMAGE);
+        
 
         addCourseButton = new JButton(TextMapper.getText(TextMapper.GUIC_ADD_COURSE));
         //addCourseButton.setSize(addCourseButton.getPreferredSize());

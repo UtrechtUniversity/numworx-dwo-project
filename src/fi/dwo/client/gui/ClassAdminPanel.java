@@ -283,8 +283,8 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 		setOpaque(false);
 		setBackground(GuiConstants.MAIN_BACKGROUND);
 		this.dwo = dwo;
-        removeImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.REMOVE_CLASS_IMAGE);
-        usersImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.USERS_CLASS_IMAGE);
+        removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
+        usersImage = DwoHelper.getResourceImage(GuiConstants.USERS_CLASS_IMAGE);
 		ContactDocent docent = (ContactDocent) dwo.getUser();
 		School school = docent.getSchool();
 		SchoolGroup[] groups = school.getSchoolGroupList();

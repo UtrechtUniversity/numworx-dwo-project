@@ -157,7 +157,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
 // goto modules
     	if(!scoView && !courseView)
     	{
-    		mainMenuImageButton = new JButton(new ImageIcon(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.BACK_MAINMENU_IMAGE)));
+    		mainMenuImageButton = new JButton(new ImageIcon(DwoHelper.getResourceImage(GuiConstants.BACK_MAINMENU_IMAGE)));
     		mainMenuImageButton.setBorder(null);
     		mainMenuImageButton.setContentAreaFilled(false);
     		hbox.add(mainMenuImageButton);	
@@ -178,7 +178,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
         	courseButton.setFont(GuiConstants.RED_TEXT);
         	courseButton.addActionListener(this);
         	courseButton.setIcon(
-        		new ImageIcon(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.BACK_COURSEMENU_IMAGE))
+        		new ImageIcon(DwoHelper.getResourceImage(GuiConstants.BACK_COURSEMENU_IMAGE))
         	);
         	courseButton.setHorizontalTextPosition(JButton.LEADING);
         	hbox.add(courseButton);

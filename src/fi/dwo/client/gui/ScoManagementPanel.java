@@ -105,31 +105,14 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         course.loadScos();
         Image logo = course.getCourseLogo();
         /* Add Remove-course image */
-        MediaTracker tr = new MediaTracker(this);
-        removeImage = DwoHelper.getImage(GuiConstants.RESOURCES
-                + GuiConstants.REMOVE_SCO_IMAGE);
-        editImage = DwoHelper.getImage(GuiConstants.RESOURCES
-                + GuiConstants.EDIT_SCO_IMAGE);
-        courseImage = DwoHelper.getImage(GuiConstants.RESOURCES
-                + GuiConstants.COURSE_SCO_IMAGE);
-        parametersImage = DwoHelper.getImage(GuiConstants.RESOURCES
-                + GuiConstants.PARAMETERS_SCO_IMAGE);
+        removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_SCO_IMAGE);
+        editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_SCO_IMAGE);
+        courseImage = DwoHelper.getResourceImage(GuiConstants.COURSE_SCO_IMAGE);
+        parametersImage = DwoHelper.getResourceImage(GuiConstants.PARAMETERS_SCO_IMAGE);
         
-        upImage = DwoHelper.getImage(GuiConstants.RESOURCES
-        		+ GuiConstants.UP_SCO_IMAGE);
-        downImage = DwoHelper.getImage(GuiConstants.RESOURCES
-        		+ GuiConstants.DOWN_SCO_IMAGE);
-        tr.addImage(removeImage, 0);
-        tr.addImage(editImage, 1);
-        tr.addImage(courseImage, 2);
-        tr.addImage(parametersImage, 3);
-        tr.addImage(upImage, 0);
-        tr.addImage(downImage, 0);
-        tr.addImage(logo, 4);
-        try {
-            tr.waitForAll();
-        } catch (Exception e) {
-        }
+        upImage = DwoHelper.getResourceImage(GuiConstants.UP_SCO_IMAGE);
+        downImage = DwoHelper.getResourceImage(GuiConstants.DOWN_SCO_IMAGE);
+        
 
         Box top = Box.createHorizontalBox();
         //top.add(Box.createHorizontalStrut(30));

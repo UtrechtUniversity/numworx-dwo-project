@@ -163,23 +163,58 @@ public final class DwoHelper {
 		return null;
     }
     
+    public static Image getResourceImage(String image)
+    {
+        if(loadedImages==null)loadedImages = new Hashtable();
+        if(loadedImages.containsKey(image))return (Image)loadedImages.get(image);
+        Image im = au.getImage(image);
+        return loadImage(image, im);
+    }
+    
+    static URL applicationBase;
     public static Image getImage(String image) {
         if(loadedImages==null)loadedImages = new Hashtable();
         if(loadedImages.containsKey(image))return (Image)loadedImages.get(image);
         
         Image im = null;
+        URL url = null;
+        if(isApplication) 
+        {	
+        	if(applicationBase == null)
+				try {
+					applicationBase = new URL("http://www.fi.uu.nl/dwo/");
+				} catch (MalformedURLException e) {
+				}
+			try {
+				url = new URL(applicationBase, image);
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         
-        if(isApplication) im = au.getImage(image);
+        }
         else {
         	try {
-	          	URL url = new URL(applet.getCodeBase(), image);
-	            im = applet.getImage(url);
+	          	url = new URL(applet.getCodeBase(), image);
 		     } 
 		    catch (MalformedURLException e) {
-		          im =  null;
 		    }/**/
 	    }
-        MediaTracker tr = new MediaTracker(applet);
+        if(url == null)
+        {
+        	return null;
+        }
+        im = applet.getImage(url);
+        return loadImage(image, im);
+    }
+
+	/**
+	 * @param image
+	 * @param im
+	 * @return
+	 */
+	private static Image loadImage(String image, Image im) {
+		MediaTracker tr = new MediaTracker(applet);
         tr.addImage(im, 0);
         try {
             tr.waitForAll();
@@ -187,7 +222,7 @@ public final class DwoHelper {
         }
         if(im!=null)loadedImages.put(image,im);
         return im;
-    }
+	}
 
 	/**
 	 * @return the contact

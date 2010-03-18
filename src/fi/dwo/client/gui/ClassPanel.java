@@ -248,10 +248,10 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
         setBorder(BorderFactory.createEmptyBorder(10, 30, 0, 0));
         /* Add Remove-class image */
         MediaTracker tr = new MediaTracker(this);
-        removeImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.REMOVE_CLASS_IMAGE);
-        editImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.EDIT_CLASS_IMAGE);
-        usersImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.USERS_CLASS_IMAGE);
-        assignImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.ASSIGN_CLASS_IMAGE);
+        removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
+        editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_CLASS_IMAGE);
+        usersImage = DwoHelper.getResourceImage(GuiConstants.USERS_CLASS_IMAGE);
+        assignImage = DwoHelper.getResourceImage(GuiConstants.ASSIGN_CLASS_IMAGE);
         tr.addImage(removeImage, 0);
         tr.addImage(editImage, 1);
         tr.addImage(usersImage, 2);

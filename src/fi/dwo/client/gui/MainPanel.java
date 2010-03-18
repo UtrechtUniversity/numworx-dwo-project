@@ -89,7 +89,12 @@ public class MainPanel extends JPanel {
         top = new TopPanel();
 		top.setBounds(0,0, GuiConstants.DWO_WIDTH, 90); // TODO 70!
         add(top, BorderLayout.NORTH);
-        if(GuiConstants.GUI_IMAGE_BG) guiImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE);
+        if(GuiConstants.GUI_IMAGE_BG)
+        {
+        	guiImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE);
+        	if(guiImage == null)
+        		GuiConstants.GUI_IMAGE_BG = false;
+        }
 
         Box hbox = Box.createHorizontalBox();
         if(!GuiConstants.GUI_IMAGE_BG)
@@ -125,7 +130,7 @@ public class MainPanel extends JPanel {
 		
 		    /* Add FI logo */
 		    Image fiLogo;
-		    fiLogo = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.WISWEB_LOGO_SMALL_LOCATION);
+		    fiLogo = DwoHelper.getResourceImage(GuiConstants.WISWEB_LOGO_SMALL_LOCATION);
 		    ImageIcon ip = new ImageIcon(fiLogo);
 		    
 		    l = new JLabel(TextMapper.getText(TextMapper.GUIM_FI_NAME));

@@ -65,7 +65,7 @@ public class DbAccessCreator {
 //         	   
 	            try {
 	                server = new URL(DwoHelper.getApplet().getCodeBase() , SERVLET);
-	                System.out.println(DwoHelper.getApplet().getCodeBase() + SERVLET);
+	                //System.out.println(DwoHelper.getApplet().getCodeBase() + SERVLET);
 	                //server = new URL("http://www.fi.uu.nl/servlet/fi.dwo.server.persistence.DbAccessServlet");
 	                dbAccess = new DbAccessClient(server);
 	            } 

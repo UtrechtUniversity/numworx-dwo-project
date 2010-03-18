@@ -250,12 +250,10 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel, Compa
 	public UserManagementPanel(DwoIF dwo) {
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setSize(620, 485);
-        Image removeImage = DwoHelper.getImage(GuiConstants.RESOURCES
-                + GuiConstants.REMOVE_SCO_IMAGE);
-        Image editImage = DwoHelper.getImage(GuiConstants.RESOURCES
-                + GuiConstants.EDIT_SCO_IMAGE);
-        Image userImage = DwoHelper.getImage(GuiConstants.RESOURCES + "resources/student.png" );
-        Image teacherImage = DwoHelper.getImage(GuiConstants.RESOURCES + "resources/docent.png");
+        Image removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_STUDENT_IMAGE);
+        Image editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_SCO_IMAGE);
+        Image userImage = DwoHelper.getResourceImage("resources/student.png" );
+        Image teacherImage = DwoHelper.getResourceImage("resources/docent.png");
 		this.dwo = dwo;
 		docent = (ContactDocent) dwo.getUser();
 		School school = docent.getSchool();

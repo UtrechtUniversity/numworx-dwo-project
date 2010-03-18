@@ -454,14 +454,7 @@ public class ResultsModulePanel extends JPanel implements
 		public ClassRenderer(String zoom, boolean head) {
 			super();
 			if(zoom != null) {
-	           Image image = DwoHelper.getImage(GuiConstants.RESOURCES + zoom);
-	           MediaTracker tr = new MediaTracker(ResultsModulePanel.this);
-	           tr.addImage(image, 0);
-	           try {
-				tr.waitForID(0);
-	           } catch (InterruptedException e) {
-	           }
-	           
+	           Image image = DwoHelper.getResourceImage(zoom);
 	           setIcon(new ImageIcon(image));
 			}
 	           //System.out.println("getIw " + getIcon().getIconWidth());
@@ -574,16 +567,11 @@ public class ResultsModulePanel extends JPanel implements
         this.setLayout(new BorderLayout());
         domain = rm;
 
-        imageAsc = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.RESULTS_ORDER_ASC);
-        imageDesc = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.RESULTS_ORDER_DESC);
-        imageAscDesc = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.RESULTS_ORDER_ASCDESC);
+        imageAsc = DwoHelper.getResourceImage(GuiConstants.RESULTS_ORDER_ASC);
+        imageDesc = DwoHelper.getResourceImage(GuiConstants.RESULTS_ORDER_DESC);
+        imageAscDesc = DwoHelper.getResourceImage(GuiConstants.RESULTS_ORDER_ASCDESC);
 // Track media before rendering.
-        MediaTracker tr = new MediaTracker(this);
-        tr.addImage(imageAscDesc, 0);
-        try {
-			tr.waitForID(0);
-        } catch (InterruptedException e) {
-        }
+        
         
         currentUserGroup = domain.getZoomedUserGroup();
         currentLessonGroup = domain.getZoomedLessonGroup();;
@@ -849,13 +837,8 @@ public class ResultsModulePanel extends JPanel implements
 // modules
 			MultiLineTableCellRenderer mrenderer = new MultiLineTableCellRenderer(in?3:1,in?20:10);
 			String zoom =  in?GuiConstants.RESULTS_ZOOM_IN:GuiConstants.RESULTS_ZOOM_OUT;
-			Image image = DwoHelper.getImage(GuiConstants.RESOURCES + zoom);
-			MediaTracker tr = new MediaTracker(ResultsModulePanel.this);
-			tr.addImage(image, 0);
-			try {
-				tr.waitForID(0);
-			} catch (InterruptedException e) {
-			}
+			Image image = DwoHelper.getResourceImage(zoom);
+			
 	        IconBorder border = new IconBorder(new ImageIcon(image));
 	        mrenderer.setBorder(border);
 	        

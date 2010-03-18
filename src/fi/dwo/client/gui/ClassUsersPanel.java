@@ -187,9 +187,9 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
             
         } else {
 
-	        removeImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.REMOVE_STUDENT_IMAGE);
-	        userImage = DwoHelper.getImage(GuiConstants.RESOURCES + "resources/student.png" );
-	        editImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.EDIT_SCO_IMAGE);
+	        removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_STUDENT_IMAGE);
+	        userImage = DwoHelper.getResourceImage("resources/student.png" );
+	        editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_SCO_IMAGE);
 	        
 	        MediaTracker tr = new MediaTracker(this);
 	        tr.addImage(removeImage, 0);

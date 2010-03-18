@@ -201,11 +201,14 @@ public class Course implements LessonGroup, Comparable {
         if ((getImageUrl() != null)
                 && (!getImageUrl().equals(""))) {
             /* Add FI logo */
-            return courseLogo = DwoHelper.getImage(GuiConstants.RESOURCES + getImageUrl());
-        } else {
+            courseLogo = DwoHelper.getImage(GuiConstants.RESOURCES + getImageUrl());
+        } 
+        if(courseLogo == null)
+        {
             /* Add empty course logo */
-            return courseLogo = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.EMPTY_COURSE_IMAGE);
+            courseLogo = DwoHelper.getResourceImage(GuiConstants.EMPTY_COURSE_IMAGE);
         }
+        return courseLogo;
     }
     
     

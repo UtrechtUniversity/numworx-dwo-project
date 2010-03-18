@@ -55,7 +55,7 @@ public class MainFrame extends Frame   implements WindowListener, AppletStub, Ap
 		{	ImageProducer prod = (ImageProducer) url.getContent();
 		    return tk.createImage( prod );
 		}
-		catch ( IOException e )
+		catch ( Exception e )
 		{
 			return null;
 		}

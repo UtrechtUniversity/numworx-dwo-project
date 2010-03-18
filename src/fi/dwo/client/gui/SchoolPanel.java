@@ -223,19 +223,12 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
         //setPreferredSize(getSize());
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         /* Add Remove-school image */
-        MediaTracker tr = new MediaTracker(this);
-        removeImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.REMOVE_CLASS_IMAGE);
-        editImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.EDIT_CLASS_IMAGE);
-        usersImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.USERS_CLASS_IMAGE);
-        assignImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.ASSIGN_CLASS_IMAGE);
-        tr.addImage(removeImage, 0);
-        tr.addImage(editImage, 1);
-        tr.addImage(usersImage, 2);
-        tr.addImage(assignImage, 3);
-        try {
-            tr.waitForAll();
-        } catch (Exception e) {
-        }
+        
+        removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
+        editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_CLASS_IMAGE);
+        usersImage = DwoHelper.getResourceImage(GuiConstants.USERS_CLASS_IMAGE);
+        assignImage = DwoHelper.getResourceImage(GuiConstants.ASSIGN_CLASS_IMAGE);
+        
 
         int w; 
         addSchoolButton = new JButton(TextMapper.getText(TextMapper.GUIS_ADD_SCHOOL));
