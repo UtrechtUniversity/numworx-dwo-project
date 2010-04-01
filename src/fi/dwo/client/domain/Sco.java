@@ -68,6 +68,7 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
 	public static final String REVIEW = "review";
 	public static final String BROWSE = "browse";
 	public static final String LESSON_MODE = "cmi.core.lesson_mode";
+	public static final String LAUNCH_DATA = "cmi.launch_data";
 	private String  lessonMode = NORMAL;
 	
 
@@ -276,6 +277,16 @@ System.err.println("sum = ["+result+"]");
     public String LMSGetValue(String iDataModelElement) {
     	if(LESSON_MODE.equals(iDataModelElement))
     		return getLessonMode();
+    	if(LAUNCH_DATA.equals(iDataModelElement))
+    	{
+    		String value;
+    		Hashtable ld = getLaunchdata();
+    		value = (String)ld.get(LAUNCH_DATA);
+    		if(value == null)
+    			value = getLaunchdataString();
+    		return value;
+    		
+    	}
         return dwo.LMSGetValue(this, user, iDataModelElement);
     }
 

@@ -141,10 +141,12 @@ public class AddScoDialog extends JDialog implements ActionListener,
     public AddScoDialog(Component owner, AppletConfig[] appletConfigs) {
         super(DwoHelper.getFrameForComponent(owner),
                 TextMapper.getText(TextMapper.GUISDLG_TTL_ADD_SCO), true);
-        Box contentPane = Box.createVerticalBox();
-        final int TOP = 25, BOTTOM=4; 	// gezien onder WXP
-        setContentPane(contentPane);
-        contentPane.setBackground(GuiConstants.MAIN_BACKGROUND);
+        JPanel contentPane = new JPanel(null);
+        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+        	
+        setContentPane(contentPane);  // box is nooit opaque, 
+        getContentPane().setBackground(GuiConstants.MAIN_BACKGROUND);
+        
         setBackground(GuiConstants.MAIN_BACKGROUND);
 //        contentPane.setSize(600, 380-TOP-BOTTOM);
 //        contentPane.setPreferredSize(contentPane.getSize());

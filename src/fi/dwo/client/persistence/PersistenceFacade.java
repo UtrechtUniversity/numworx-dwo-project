@@ -606,7 +606,7 @@ public class PersistenceFacade {
                 throw new LoginException(LoginException.EX_IO);
             } catch (XmlRpcException e) {
                 if (e.code != 0) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                     throw (LoginException) getException(e, e.code);
                 } else {
                     e.printStackTrace();

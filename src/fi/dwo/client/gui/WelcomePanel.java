@@ -103,14 +103,8 @@ public class WelcomePanel extends JPanel implements ActionListener {
 
         /* Add FI logo */
         Image fiLogo = null;
-        fiLogo = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.WISWEB_LOGO_LOCATION);
-        MediaTracker tr = new MediaTracker(this);
-        tr.addImage(fiLogo, 0);
-        try {
-            tr.waitForAll();
-        } catch (Exception e) {
-        }
-        ;
+        fiLogo = DwoHelper.getResourceImage(GuiConstants.WISWEB_LOGO_LOCATION);
+        
         ImagePanel ip = new ImagePanel(fiLogo);
         ip.setLocation(getSize().width / 2 - ip.getSize().width / 2, 440);
         ip.setVisible(false);
@@ -320,7 +314,14 @@ public class WelcomePanel extends JPanel implements ActionListener {
     	if(GuiConstants.GUI_IMAGE_BG) {
 	       	//Point p = DwoHelper.getComponentLocation(this);
 	       Image guiImage = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_WELCOME);
-    		g.drawImage(guiImage,0,0,null);
+    		if(guiImage == null)
+    		{   // Oops.
+    			GuiConstants.GUI_IMAGE_BG = false;
+    			super.paintComponent(g);
+    			return;
+    		}
+	       
+	       g.drawImage(guiImage,0,0,null);
 	       	
 	       	int w = getSize().width;
 	       	int h = getSize().height;

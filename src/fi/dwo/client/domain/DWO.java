@@ -40,6 +40,7 @@ import fi.beans.scorm.SCORM12APIInterface;
 import fi.beans.tooltip.ToolTipManager;
 import fi.beans.jvmchecker.JVMChecker;
 
+import fi.dwo.VERSION;
 import fi.dwo.client.gui.CenterSubPanel;
 import fi.dwo.client.gui.CourseIcon;
 //import fi.dwo.client.gui.DwoMessageDialog;
@@ -122,17 +123,35 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
         nestedWait = 0;
         dwoProfileID = 1;
         int o = 0;
-// allow update van SERVLET
-        if(args!= null && args.length>1 && "-s".equals(args[0]))
+        
+        while(args != null && args.length > 1+o &&
+        		args[0].length()>1 &&
+        		'-' == args[o].charAt(0) &&
+        		"rls".indexOf(args[0].charAt(1))>=0
+        )
+        {	
+        	// allow update van SERVLET
+        if("-s".equals(args[o]))
         {
-        	fi.dwo.client.persistence.DbAccessCreator.SERVLET = args[1];
-        	o = 2;
+        	fi.dwo.client.persistence.DbAccessCreator.SERVLET = args[1+o];
+        	o += 2;
+        }
+        	// initialize applicationBase
+        if(args.length>1+o && "-r".equals(args[o]))
+        {
+        	try {
+				DwoHelper.applicationBase = new URL(args[o+1]);
+			} catch (MalformedURLException e) {
+				System.err.println("-r option: " + e);
+			}
+        	o += 2;
         }
 // allow definitie van Locale.
-        if(args != null && args.length>1+o && "-l".equals(args[o]))
+        if(args.length>1+o && "-l".equals(args[o]))
         {
         	languageOveride=args[o+1];
         	o += 2;
+        }
         }
         if (args != null && args.length>o && args[o] != null) {
             try	{
@@ -1137,6 +1156,7 @@ private static boolean isValidEmail(String email) {
     	//lookAndFeel = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
     	//lookAndFeel = UIManager.getSystemLookAndFeelClassName();
     	//UIManager.setLookAndFeel(lookAndFeel);
+    	System.out.println("Starting DWO r" + VERSION.REVISION);
     	int width = GuiConstants.DWO_WIDTH;
         int height = GuiConstants.DWO_HEIGHT;
         DWO dwo = new DWO(args);
