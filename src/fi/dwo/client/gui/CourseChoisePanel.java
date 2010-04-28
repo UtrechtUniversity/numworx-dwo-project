@@ -3,34 +3,25 @@
 
 package fi.dwo.client.gui;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.BorderLayout;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.MediaTracker;
-import java.awt.Point;
-import java.awt.RenderingHints;
-import java.awt.TextArea;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.JEditorPane;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.Scrollable;
+import javax.swing.SwingConstants;
 
-import fi.beans.tekstobjects.TekstArea;
+
 import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoProfile;
 import fi.dwo.client.system.TextMapper;
 
@@ -40,13 +31,13 @@ import fi.dwo.client.system.TextMapper;
  *  
  */
 public class CourseChoisePanel extends JPanel implements ActionListener,
-        CenterSubPanel {
+        CenterSubPanel, Scrollable {
     private CenterPanel center;
 
     private int NR_COLUMNS = 4;
     
     private JTextArea profileTextArea;
-    
+    private Dimension unit = new Dimension(1,1);
     private DwoProfile dwoProfile;
 
     /**
@@ -109,8 +100,8 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
         p.setDoubleBuffered(false);
         p.setSize(0, 10);
         
-        int maxWidth = 0;
-        int maxHeight = 0;
+        int maxWidth = 10;
+        int maxHeight = 10;
 
         for (int i = 0; i < courses.length; i++) {
             p = new JPanel(new FlowLayout());
@@ -146,6 +137,8 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
         setPreferredSize(pref);
         if(courseIcon != null)
         	pref.width = maxWidth * NR_COLUMNS;
+        unit.width = maxWidth/2;
+        unit.height = maxHeight/4;
         setMinimumSize(pref);
     }
     
@@ -214,4 +207,33 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
     public Component getComponent() {
         return this;
     }
+
+
+	public Dimension getPreferredScrollableViewportSize() {
+		return getPreferredSize();
+	}
+
+	public int getScrollableBlockIncrement(Rectangle visibleRect,
+			int orientation, int direction) {
+		if(orientation == SwingConstants.VERTICAL)			
+		{
+			return Math.max(unit.height,visibleRect.height-unit.height); // 1 page
+		}
+		else 
+			return visibleRect.width;
+	}
+	public boolean getScrollableTracksViewportHeight() {
+		return false;
+	}
+	public boolean getScrollableTracksViewportWidth() {
+		return getParent().getWidth() > getMinimumSize().width;
+	}
+// onder windows xp, een mousewheel click is 3 units.	
+	public int getScrollableUnitIncrement(Rectangle visibleRect,
+			int orientation, int direction) {
+		if(orientation == SwingConstants.VERTICAL)			
+		{	return unit.height; // 1 line
+		} else 
+			return unit.width;
+	}
 }
