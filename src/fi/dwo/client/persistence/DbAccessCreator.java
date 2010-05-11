@@ -45,8 +45,8 @@ public class DbAccessCreator {
         	   //if(true) dbAccess = new DbAccessLocal(); else
         	   //if(true) dbAccess = new DbAccessLdap(); else
         	   try {
-        		    server = new URL(new URL("http://www.fi.uu.nl/") , SERVLET);
-        		    //server = new URL(new URL("http://dwo.fi.uu.nl/") , SERVLET);
+        		   server = new URL(new URL("http://www.fi.uu.nl/") , SERVLET);
+        		   // server = new URL(new URL("http://dwo.fi.uu.nl/") , SERVLET);
 	        	// Let op, bovenstaande switch is nodig voor de dwoserver (bij start.jar)
 	        	   
 	               dbAccess = new DbAccessClient(server);

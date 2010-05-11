@@ -36,7 +36,6 @@ Class-Path: algebrapijlenoefenen.jar
  flitsbeeld.jar 
  flowdiagrams.jar 
  inderoos.jar 
- plofsomdwo.jar 
  balansfruitapplet.jar 
  anyonrow.jar 
  roostertelling_brx.jar 
@@ -44,10 +43,14 @@ Class-Path: algebrapijlenoefenen.jar
  tafel.jar 
  vangen.jar 
  vergroten.jar 
+ javalogoweb.jar 
+ plofsomdwo.jar 
  makkekeersom.jar 
  knikkerschuif.jar 
  inderoos.jar 
  geogebra.jar 
+ normaleverdeling.jar 
+ tinyplayerapplet.jar 
+ jl020.jar 
  geogebra_properties.jar 
- vergroten.jar 
  mysql-connector-java-3.0.16-ga-bin.jar 
