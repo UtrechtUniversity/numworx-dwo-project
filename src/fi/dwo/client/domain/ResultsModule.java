@@ -3,11 +3,15 @@
 
 package fi.dwo.client.domain;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.MessageFormat;
 import java.util.Vector;
 
 //import fi.dwo.client.gui.DwoMessageDialog;
 import fi.dwo.client.gui.ScoDialog;
 import fi.dwo.client.gui.ScoPanel;
+import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.MapperCreator;
 import fi.dwo.client.persistence.MapperIF;
 import fi.dwo.client.persistence.PersistenceFacade;
@@ -16,6 +20,8 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import javax.swing.JOptionPane;
+
+import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.dwo.client.system.PersistenceException;
 
@@ -72,6 +78,35 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      *  
      */
     public void showResult(ResultScore rs) {
+    	if((rs.getUserGroup() instanceof SchoolClass)
+    			&& (rs.getLessonGroup() instanceof Course)
+    		)
+    	{
+    		final SchoolClass sc = (SchoolClass) rs.getUserGroup();
+    		final Course course = (Course) rs.getLessonGroup();
+    		String klasnaam = sc.getName();
+    		String coursenaam = course.getName();
+    		Object[] params = { coursenaam, klasnaam };
+    		String message = MessageFormat.format("Alle resultaten van ''{0}'' verwijderen voor {1}?", params);
+    		int result = 
+    		JOptionPane.showConfirmDialog(DwoHelper.getFrameForComponent(dwo), message, "Verwijderen", JOptionPane.OK_CANCEL_OPTION);
+    		if(JOptionPane.OK_OPTION == result)
+    		{
+    			System.out.println("VERWIJDEREN");
+// TODO HIERO komt 't (naar persistencelayer.
+    			int courseID = course.getID();
+    			int classID = sc.getID();
+    			try {
+					DbAccessCreator.instance().deleteCourseDataFromClass(courseID, classID);
+				} catch (Exception e) {
+					e.printStackTrace();
+				} 
+    			
+    			rs.setScore(0.0f);
+    		}
+    		
+    		return;
+    	}
         if ((rs.getUserGroup() instanceof User)
                 && (rs.getLessonGroup() instanceof Sco)) {
             

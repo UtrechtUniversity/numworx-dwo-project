@@ -875,7 +875,7 @@ private static boolean isValidEmail(String email) {
     	UIManager.put("ToolTip.background", new ColorUIResource(255, 247, 200));
         
         String lang = getParameter("language");
-        System.out.println(lang);
+        //System.out.println(lang);
         if ((lang != null) && (!lang.equals(""))) {
             TextMapper.setLanguage(lang);
             fi.dwo.parameters.system.TextMapper.setLanguage(lang);
@@ -948,7 +948,7 @@ private static boolean isValidEmail(String email) {
 			PersistenceFacade.instance().reConnect();
 		} catch (PersistenceException e) {
 		}
-        this.setSize(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
+        //this.setSize(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
 
         //this.setLayout(new BorderLayout());
@@ -1550,7 +1550,7 @@ private static boolean isValidEmail(String email) {
         	 //u.setInClass(null);
          }
          
-         u.setLogout(!fidentity.isForeign()); // op verzoek van Peter, logout als          									  // een eigen account.
+         u.setLogout(false); // op verzoek van Peter          									  // een eigen account.
          u.setReadonly(false); // voor de klas keuze
          return u;
      } catch (LoginException e)
@@ -1577,7 +1577,7 @@ private static boolean isValidEmail(String email) {
                      // u kan nu een Teacher zijn...
                      u = PersistenceFacade.instance().login(username);
                      setInitialUserInClass(className, u, u.getSchool());
-                     u.setLogout(!fidentity.isForeign()); // op verzoek van peter
+                     u.setLogout(false); // op verzoek van peter
                      u.setReadonly(true); // TODO is dit wel
                                                              // ok?
                  } else { 

@@ -450,4 +450,13 @@ public interface DbAccessIF {
     public boolean updateSchoolTo(int schoolID, Vector schoolTo)
     throws IOException, XmlRpcException, SQLException;
     
+    /**
+     * delete scores/suspenddata van een klas en van een module
+     * @param courseID
+     * @param classID
+     * @return true
+     * @throws SQLException
+     */
+    public boolean deleteCourseDataFromClass(int courseID, int classID)
+	throws SQLException, IOException, XmlRpcException;
 }

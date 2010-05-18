@@ -83,7 +83,8 @@ public class GuiCreator {
     public void login(String username, String password) throws LoginException {
         dwo.setWait();
         try {
-            if (dwo.login(username, password)) {
+        	DwoHelper.setContact(false);
+        	if (dwo.login(username, password)) {
 // HOOK: check if username is valide volgens de nieuwe regels.
             	validUsernameCheck(username);
             	

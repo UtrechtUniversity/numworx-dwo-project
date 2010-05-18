@@ -67,7 +67,7 @@
     	 		 profielendraaien.jar  bordjesopdr.jar  spot_problems_dwo.jar  oppervlakte_dwo.jar 
     	 		 algebrapijlen.jar  geomalgebra.jar  geomalgebraopdr.jar  geomalgebra1d.jar 
     	 		 tekenveelvlakopdr.jar  doorziendwo.jar  grkijken1.jar  grkijken2.jar vergroten.jar
-    	 		 mysql-connector-java-3.0.16-ga-bin.jar" />
+    	 		 mysql-connector-java-3.0.16-ga-bin.jar tinyplayerapplet.jar jl020.jar" />
     	</manifest>
     	<indexjars>
     		<fileset dir="${jar}" includes="*.jar" />

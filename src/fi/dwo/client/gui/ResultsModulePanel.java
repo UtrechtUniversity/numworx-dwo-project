@@ -257,9 +257,19 @@ public class ResultsModulePanel extends JPanel implements
 			row--;
 			boolean isUser = data[row].getResultScore()[0].getUserGroup().isDeepestLevel();
 			if(column > 0)
+			{	
+				if(!isUser) // is klas
+				{
+					return 
+					data[row].getResultScore()[column-1].getLessonGroup().isHighestLevel() && 
+					data[row].getResultScore()[column-1].getScore() != 0.0f;
+				}
+				
+				
 				return isUser &&
 					data[row].getResultScore()[column-1].getLessonGroup().isDeepestLevel() && 
 					data[row].getResultScore()[column-1].getScore() != 0.0f;
+			}
 			return !isUser;
 		}
 
@@ -270,6 +280,8 @@ public class ResultsModulePanel extends JPanel implements
 		private JButton button = new JButton();
 		private Float value;
 		private ResultScore domain;
+		private ResultsModel model;
+		
 
 		/**
 		 * 
@@ -279,9 +291,15 @@ public class ResultsModulePanel extends JPanel implements
 			button.addActionListener(this);
 		}
 
-		public void actionPerformed(ActionEvent e) {			
-			domain.showResult();			
-			fireEditingCanceled();
+		public void actionPerformed(ActionEvent e) {
+			float f = domain.getScore();
+			domain.showResult();		
+			if(f == domain.getScore())
+				fireEditingCanceled();
+			else
+			{	fireEditingStopped();
+				model.fireTableDataChanged();
+			}
 		}
 
 		public Object getCellEditorValue() {
@@ -295,7 +313,7 @@ public class ResultsModulePanel extends JPanel implements
 			TableCellRenderer renderer = table.getCellRenderer(row, column);
 			Component component = renderer.getTableCellRendererComponent(table, value, true, true, row, column);
 			row--;
-			ResultsModel model = (ResultsModel) table.getModel();
+			model = (ResultsModel) table.getModel();
 			domain = model.data[row].getResultScore()[column-1];
 			if(value.equals(ZERO))	
 			{	

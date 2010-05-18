@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
 import fi.dwo.client.system.PersistenceException;
 
 /**
- * Een ResultsModuleIF geschikt gemaakt voor één enkele student.
+ * Een ResultsModuleIF geschikt gemaakt voor Ã©Ã©n enkele student.
  * TODO een common AbstractResultsModule base class samen met
  * ResultsModule
  * @author Wim

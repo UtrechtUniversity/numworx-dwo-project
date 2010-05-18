@@ -2211,4 +2211,30 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 		}
 		return true;
 	}
+	
+	public boolean deleteCourseDataFromClass(int courseID, int classID)
+	throws SQLException
+	{
+		Connection c = getConnection();
+		try {
+			c.setAutoCommit(false);
+			c.commit();
+			String sql = "DELETE FROM tblStudentSco where scoID in (select scoID from tblSco where courseID = ?) and userID in (select userID from tblUser where classID = ?)";
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setInt(1, courseID);
+			ps.setInt(2, classID);
+			int n = ps.executeUpdate();
+			log("course " + courseID + " class " + classID + " deleted: " + n);
+			
+			c.commit();
+			ps.close();
+			
+			
+		} finally {
+			c.setAutoCommit(true);
+		}
+	
+		return true;
+	}
+	
 }
