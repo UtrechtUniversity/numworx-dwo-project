@@ -342,31 +342,49 @@ public class DbAccessLdap extends DbAccess
 		try {
 			return restrict(super.login(username, password));
 		} catch (DwoXmlRpcException e) {
-			if( e.code == LoginException.LE_UNKNOWN_USER &&
-				e.getMessage() .equals(  LoginException.class.getName() ))
-			{
-				if(manager.verifyMD5(username, password)) // TODO wat als het een school account betreft.
+			try {
+				if( e.code == LoginException.LE_UNKNOWN_USER &&
+					e.getMessage() .equals(  LoginException.class.getName() ))
 				{
-					if(!usernameExists(username))
+					if(manager.verifyMD5(username, password)) // TODO wat als het een school account betreft.
 					{
-						String lastname = fidentity.getSurName();
-						String email = fidentity.getEmailAddress();
-						String firstname = fidentity.getFirstName();
-						String middlename = fidentity.getMiddleName();
-						super.register(username, password, firstname, middlename, lastname, email);
-						try { 
-							addFidentitySchool(getUserID(username).intValue(), fidentity);
-						} catch(Exception e1) {}
+						if(!usernameExists(username))
+						{
+							String lastname = fidentity.getSurName();
+							String email = fidentity.getEmailAddress();
+							String firstname = fidentity.getFirstName();
+							String middlename = fidentity.getMiddleName();
+							super.register(username, password, firstname, middlename, lastname, email);
+							try { 
+								Hashtable h = addFidentitySchool(getUserID(username).intValue(), fidentity);
+// TODO if (fidentity.getClassName() != null .. set in klas:
+								String klas = fidentity.getClassName();
+								if(klas != null)
+								{
+									System.err.println("TODO set " + username + " in " + klas + " van " + h);
+								}
+
+							} catch(Exception e1) {
+								System.err.println("Error in addFSchool");
+								e1.printStackTrace();
+								
+							}
+								
 							
+							
+						}	
+						return restrict(super.login(username, ""));
 						
 						
-					}	
-					return restrict(super.login(username, ""));
-					
-					
-					
+						
+					}
 				}
+			} catch (Exception e1) {
+				System.err.println("Error in catch");
+				e1.printStackTrace();
 			}
+			System.err.println("Error in login");
+			e.printStackTrace();
 			throw e;
 		}
 	}
@@ -407,7 +425,12 @@ private boolean isNoDWOSchool(int intValue) {
 		try { 
 			return manager.getFidentity(uid);
 		} catch (Throwable t)
-		{}
+		{
+			System.err.println("Error in updateLogin " + uid);
+			System.err.println(manager.getLastError());
+			t.printStackTrace();
+
+		}
 		return null;
 	}
 

@@ -300,7 +300,7 @@ public class User implements UserGroup {
         return TextMapper.getText(TextMapper.UG_USER_ORDER_DESC);
     }
 // single value, for once and for all.
-    private static boolean _logout = true;
+    private boolean _logout = true;
     private boolean _readonly = false;
 /**
  * Kan deze gebruiker wel uitloggen?
