@@ -308,6 +308,11 @@ public class GuiCreator {
         return new WelcomePanel();
 
     }
+    
+    public WelcomePanel getWelcomePanel(boolean loginOnly) {
+        return new WelcomePanel(loginOnly);
+
+    }
 
     /**
      * Returns all the courses available for the user. If some courses are
@@ -337,7 +342,7 @@ public class GuiCreator {
         mainPanel.end();
         mainPanel = null;
         dwo.logoff();
-        dwo.setPanel(new WelcomePanel());
+        dwo.setWelcomePanel();
 
     }
 

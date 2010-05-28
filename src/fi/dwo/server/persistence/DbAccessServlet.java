@@ -61,7 +61,7 @@ public class DbAccessServlet extends Servlet {
 //            throws ServletException, IOException {
 //        try {
 //	        String key = (String) req.getParameter("key");
-////	        log("we've got a get!");
+//	        log("we've got a get!");
 //	        
 //	        String jar = null;
 //	        jar = dbAccess.getJar(key);

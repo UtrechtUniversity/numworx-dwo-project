@@ -15,12 +15,14 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import java.awt.BorderLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JFrame;
 import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
@@ -33,6 +35,7 @@ import fi.dwo.client.domain.User;
 import fi.dwo.client.persistence.MapperCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.LoginException;
+import fi.dwo.client.system.RegisterException;
 import fi.dwo.client.system.TextMapper;
 
 /**
@@ -170,9 +173,13 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
     public ClassUsersPanel(SchoolClass c) {
         super(null);
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        
+        
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setBorder(BorderFactory.createEmptyBorder(15, 30, 0, 0));
 
+        
+        
         schoolClass = c;
         
         User[] users = c.getStudents();
@@ -224,8 +231,18 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 			vbox.add(table);
 			add(vbox);
 	        add(Box.createHorizontalGlue());
+	        
+	       
+	        
+	        RegisterClassListButton registerClassListButton = new RegisterClassListButton(schoolClass);
+	        if(DwoHelper.isApplication())vbox.add(registerClassListButton);
+	        
+	       
         }
+        
     }
+    
+    
 
 	/**
      * Indicate that another panel is loaded and the connections of this panel

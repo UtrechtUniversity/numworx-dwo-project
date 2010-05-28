@@ -17,10 +17,12 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Panel;
 import java.awt.Toolkit;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.Vector;
 
 import javax.swing.JApplet;
@@ -58,6 +60,7 @@ import fi.dwo.client.system.PersistenceException;
 import fi.dwo.client.system.RegisterException;
 import fi.dwo.client.system.ScoException;
 import fi.dwo.client.system.TextMapper;
+
 
 /**
  * This is the main applet class of the DWO.<br>
@@ -97,6 +100,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 	private int courseViewNr;
 	
 	private int scoViewNr;
+	
+	private Hashtable testViewKeys;
 
 	private String languageOveride;
 	
@@ -203,6 +208,14 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
         		//|| currentUser.getID()==22194) 	//harmh
         	DwoHelper.setAppletExportLoggedIn(true);
         else DwoHelper.setAppletExportLoggedIn(false);
+        
+        if(testViewKeys!=null)
+        {	int classNumber = currentUser.getInClass().getID();
+        	String testNumberString = "0";
+        	if(testViewKeys.containsKey(""+classNumber)) testNumberString = (String)testViewKeys.get(""+classNumber);
+        	else return false;
+        	scoViewNr = Integer.parseInt(testNumberString);
+        }
         
         return currentUser != null;
     }
@@ -912,6 +925,42 @@ private static boolean isValidEmail(String email) {
         if(umpcString!=null && umpcString.equals("true")) {
         	umpc = true;
         }
+        
+        boolean testView = false;
+        String testViewString = getParameter("testView");
+        if(testViewString!=null && testViewString.equals("true")) {
+        	testView = true;
+        }
+        
+        if(testView)
+        {
+        	String testViewPropertiesString = getParameter("testViewProperties");
+                        
+        	Properties testProperties = null;
+        
+	        try
+	        {	URL url = new URL(getDocumentBase(), testViewPropertiesString);
+	        	InputStream in = url.openStream();
+	        	testProperties = new Properties();
+	        	testProperties.load(in);
+	        	testViewKeys = new Hashtable();
+				int number = Integer.parseInt(testProperties.getProperty("number"));
+				for (int i = 1; i<number+1; i++)
+				{
+					String classNumber = testProperties.getProperty("class." + i);
+					String testNumber = testProperties.getProperty("test." + i);
+					testViewKeys.put(classNumber, testNumber);
+				}
+	        }
+	        catch(Exception e)
+	        {	testViewKeys = null;
+	        	e.printStackTrace();
+	        }
+	       
+	        
+			
+        }
+        
         // deprecated
 //        String key = getParameter("key");
 //        if(key == null) {
@@ -998,7 +1047,7 @@ private static boolean isValidEmail(String email) {
         }
 // einde
         
-        panel = gc.getWelcomePanel();
+        panel = gc.getWelcomePanel(testView);
         panel.setVisible(false);
         panel.setSize(this.getSize());
         panel.setLocation(0, 0);
@@ -1006,6 +1055,11 @@ private static boolean isValidEmail(String email) {
         panel.setVisible(true);
         
         
+    }
+    
+    public void setWelcomePanel()
+    {
+    	setPanel(GuiCreator.instance().getWelcomePanel(testViewKeys!=null));
     }
     
     public int getCourseViewNr() {

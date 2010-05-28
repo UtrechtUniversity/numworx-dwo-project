@@ -30,6 +30,8 @@ public interface DwoIF {
      * @see fi.dwo.client.domain.DwoIF#setPanel(java.awt.Panel)
      */
     public void setPanel(Container p);
+    
+    public void setWelcomePanel();
 
     /**
      * Logs a user in into the system. The user will be remembered while the

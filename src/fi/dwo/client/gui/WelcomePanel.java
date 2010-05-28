@@ -76,7 +76,11 @@ public class WelcomePanel extends JPanel implements ActionListener {
      * to register.
      *  
      */
+    
     public WelcomePanel() {
+    	this(false);
+    }
+    public WelcomePanel(boolean loginOnly) {
     	super(null, true);
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setLayout(null);
@@ -224,6 +228,9 @@ public class WelcomePanel extends JPanel implements ActionListener {
         p.add(loginButton);
         loginButton.setVisible(true);
 
+        loginButton.addActionListener(this);
+        
+        if(loginOnly) return;
         /* Add GuestLogin-panel */
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(new Color(52,90,126)));
@@ -304,7 +311,7 @@ public class WelcomePanel extends JPanel implements ActionListener {
         p.add(l);
         l.setVisible(true);
 
-        loginButton.addActionListener(this);
+        
         guestButton.addActionListener(this);
         registerButton.addActionListener(this);
         
