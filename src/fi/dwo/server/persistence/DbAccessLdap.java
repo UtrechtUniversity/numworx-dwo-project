@@ -361,7 +361,13 @@ public class DbAccessLdap extends DbAccess
 								String klas = fidentity.getClassName();
 								if(klas != null)
 								{
-									System.err.println("TODO set " + username + " in " + klas + " van " + h);
+									Object schoolID = h.get("schoolID");
+									Number classID = getClassID(schoolID, klas);
+									if(classID != null)
+									{
+										addToKlas(username, classID.intValue());
+									}
+									
 								}
 
 							} catch(Exception e1) {
@@ -387,6 +393,29 @@ public class DbAccessLdap extends DbAccess
 			e.printStackTrace();
 			throw e;
 		}
+	}
+
+void addToKlas(String username, int classID) throws SQLException {
+	PreparedStatement ps = getStatement("UPDATE tblUser SET classID = ? WHERE username = ?");
+	ps.setInt(1, classID);
+	ps.setString(2, username);
+	ps.executeUpdate();
+}
+
+Number getClassID(Object schoolID, String klas) throws IOException, org.apache.xmlrpc.applet.XmlRpcException, SQLException {
+		if(schoolID instanceof Number)
+		{
+			Hashtable h = new Hashtable();
+			h.put("schoolID", schoolID);
+			h.put("class", klas);
+			Vector v = getTable("tblClass", h);
+			if(!v.isEmpty())
+			{
+				h = (Hashtable) v.firstElement();
+				return (Number) h.get("classID");
+			}
+		}
+		return null;
 	}
 
 private Hashtable restrict(Hashtable user) {
