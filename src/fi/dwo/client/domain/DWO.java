@@ -210,7 +210,12 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
         else DwoHelper.setAppletExportLoggedIn(false);
         
         if(testViewKeys!=null)
-        {	int classNumber = currentUser.getInClass().getID();
+        {	SchoolClass sc = currentUser.getInClass();
+        	if(sc==null) 
+        	{	JOptionPane.showMessageDialog(this, "leerling heeft geen klas");
+        		return false;
+        	}
+        	int classNumber = sc.getID();
         	String testNumberString = "0";
         	if(testViewKeys.containsKey(""+classNumber)) testNumberString = (String)testViewKeys.get(""+classNumber);
         	else return false;
