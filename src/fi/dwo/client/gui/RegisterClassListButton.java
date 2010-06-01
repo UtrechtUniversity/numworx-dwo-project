@@ -45,7 +45,7 @@ public class RegisterClassListButton extends JButton implements ActionListener
 	
 	public RegisterClassListButton(SchoolClass schoolClass)
 	{
-		super("Voeg nieuwe accouts toe");
+		super("Voeg nieuwe accounts toe");
 		addActionListener(this);
 		
 		this.schoolClass = schoolClass;
@@ -71,7 +71,7 @@ public class RegisterClassListButton extends JButton implements ActionListener
 	     
 	    addTable = new JTable(addTableModel);
 	    addTable.setPreferredScrollableViewportSize(new Dimension(800, 400));
-	    addTable.setFillsViewportHeight(true);
+	    //addTable.setFillsViewportHeight(true);
 	    JScrollPane scrollPane = new JScrollPane(addTable);
 	    
 	    
@@ -99,12 +99,17 @@ public class RegisterClassListButton extends JButton implements ActionListener
 		 	try 
 		 	{ 	String tempString;
 		 		tempString = (String) clipboardContent.getTransferData(DataFlavor.stringFlavor);
-		 		System.out.println(tempString);
-		 		String[] rowStrings = StringUtils.split(tempString, "\n");
+// Wim: Remove ending \n, niet nodig als je String.split (1.4.2) gebruikt.
+//		 		if(tempString.endsWith("\n"))
+//		 		{
+//		 			tempString = tempString.substring(0, tempString.length()-1); 
+//		 		}
+		 		//System.out.println(tempString);
+		 		String[] rowStrings = tempString.split("\n"); // was: StringUtils.split(tempString, "\n");
 		 		String[][] celStrings = new String[rowStrings.length][];
 		 		for(int i=0 ; i<rowStrings.length ; i++)
-		    	{	celStrings[i] = StringUtils.split(rowStrings[i], "\t");
-		 			System.out.println(rowStrings[i]);
+		    	{	celStrings[i] = rowStrings[i].split("\t", 6); // was: StringUtils.split(rowStrings[i], "\t");
+		 			//System.out.println(rowStrings[i]);
 		    	}
 		    	addTableModel.setDataVector(celStrings, columnNames);
 				return true;

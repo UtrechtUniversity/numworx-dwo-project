@@ -906,4 +906,10 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 			return null;
 		}
 
+		/**
+		 * Dummy. DWOLight heeft geen Welcome panel
+		 */
+		public void setWelcomePanel() {
+		}
+
 }

@@ -179,7 +179,7 @@ public class StringUtils {
         index = 0;
         count = 0;
 
-        while (index < upperBound) {
+        while (index <= upperBound) {
             int nextIndex = inputString.indexOf(splitString, index);
 
             if (nextIndex == -1) {
