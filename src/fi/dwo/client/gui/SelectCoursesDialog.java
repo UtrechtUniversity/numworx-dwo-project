@@ -21,6 +21,9 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DwoHelper;
@@ -44,11 +47,71 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     
     private JButton deselectAllButton;
 
-    private Hashtable checkBoxCourse;
+	private JTable jTable;
 
-	private Box jTable;
+    class CoursesModel extends AbstractTableModel {
 
-      
+    	Course[] courses;
+    	Object[] select;
+    	Object[] data;
+    	
+		public int getColumnCount() {
+			return 3;
+		}
+
+		public int getRowCount() {
+			return courses.length;
+		}
+
+		public Object getValueAt(int rowIndex, int columnIndex) {
+			switch(columnIndex) {
+			case 0: return select[rowIndex];
+			case 1: return courses[rowIndex].getName();
+			case 2: return data[rowIndex];
+			}
+			return null;
+		}
+
+		@Override
+		public Class<?> getColumnClass(int columnIndex) {
+			if(columnIndex != 1)
+				return Boolean.TRUE.getClass();
+			return super.getColumnClass(columnIndex);
+		}
+
+		@Override
+		public String getColumnName(int column) {
+			switch(column) {
+			case 0: return "";
+			case 1: return "Module";
+			case 2: return "data aanwezig";
+			}
+			return super.getColumnName(column);
+		}
+
+		@Override
+		public boolean isCellEditable(int rowIndex, int columnIndex) {
+			switch(columnIndex) {
+			case 0: return true;
+			case 1: return false;
+			case 2: return data[rowIndex] == Boolean.TRUE;
+			}
+			return super.isCellEditable(rowIndex, columnIndex);
+		}
+
+		@Override
+		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+			switch(columnIndex) {
+			case 0:
+				select[rowIndex] = aValue;
+				break;
+			case 2:
+				data[rowIndex] = aValue;
+			}
+			fireTableCellUpdated(rowIndex, columnIndex);
+		}
+		
+    }
     
     
     /**
@@ -71,8 +134,13 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         setBackground(GuiConstants.MAIN_BACKGROUND);
         setSize(600, 310);
 
-        this.selectedCourses = selectedCourses;
-
+        CoursesModel cm = new CoursesModel();
+        cm.courses = allCourses;
+        cm.data    = new Boolean[allCourses.length];
+        cm.select  = new Boolean[allCourses.length];
+        
+        this.selectedCourses = null;
+        
         /*
          * Create a Vector with all the selected courses. We can now easily
          * check if a course is selected
@@ -82,25 +150,12 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
             vSelectedCourses.addElement(selectedCourses[i]);
         }
 
-        /*
-         * Every checkbox maps a course. So if we know the checkbox, we know the
-         * corresponding course
-         */
-        checkBoxCourse = new Hashtable();
-
-        jTable = Box.createVerticalBox();
-        JCheckBox cb;
+        jTable = new JTable(cm);
 
         for (int i = 0; i < allCourses.length; i++) {
-            cb = new JCheckBox(allCourses[i].getName());
-            cb.setBackground(getBackground());
-            cb.setFont(GuiConstants.NORMAL_TEXT);
             if (vSelectedCourses.contains(allCourses[i])) {
-                cb.setSelected(true);
+                cm.select[i] = Boolean.TRUE;
             }
-            checkBoxCourse.put(cb, allCourses[i]);
-
-            jTable.add(cb);
         }
 
         
@@ -180,12 +235,12 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         	this.setVisible(false);
         } else if (e.getSource() == okButton) {
             Vector tmpSelected = new Vector();
-            JCheckBox key;
-            for (Enumeration keys = checkBoxCourse.keys(); keys.hasMoreElements();) {
-                key = (JCheckBox) keys.nextElement();
-                if (key.isSelected()) {
-                    tmpSelected.addElement(checkBoxCourse.get(key));
-                }
+            CoursesModel model = (CoursesModel) jTable.getModel();
+            int len = model.getRowCount();
+            for(int i = 0; i < len; i++ )
+            {
+            	if(Boolean.TRUE.equals(model.getValueAt(i, 0)))
+            		tmpSelected.addElement(model.courses[i]);
             }
 
             selectedCourses = new Course[tmpSelected.size()];
@@ -193,17 +248,18 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
             this.hide();
 
         } else if (e.getSource() == selectAllButton) {
-            JCheckBox key;
-            for (Enumeration keys = checkBoxCourse.keys(); keys.hasMoreElements();) {
-                key = (JCheckBox) keys.nextElement();
-                key.setSelected(true);
-            }
+            TableModel model = jTable.getModel();
+            int len = model.getRowCount();
+            for(int i = 0; i < len; i++)
+            	model.setValueAt(Boolean.TRUE, i, 0);
+            
         } else if (e.getSource() == deselectAllButton) {
-            JCheckBox key;
-            for (Enumeration keys = checkBoxCourse.keys(); keys.hasMoreElements();) {
-                key = (JCheckBox) keys.nextElement();
-                key.setSelected(false);
-            }            
+            TableModel model = jTable.getModel();
+            int len = model.getRowCount();
+            for(int i = 0; i < len; i++)
+            	model.setValueAt(Boolean.FALSE, i, 0);
+            
+            
         }
 
     }
