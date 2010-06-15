@@ -72,24 +72,21 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			return null;
 		}
 
-		@Override
-		public Class<?> getColumnClass(int columnIndex) {
+		public Class getColumnClass(int columnIndex) {
 			if(columnIndex != 1)
 				return Boolean.TRUE.getClass();
 			return super.getColumnClass(columnIndex);
 		}
 
-		@Override
 		public String getColumnName(int column) {
 			switch(column) {
 			case 0: return "";
 			case 1: return "Module";
-			case 2: return "data aanwezig";
+			case 2: return "Leerlinggegevens aanwezig";
 			}
 			return super.getColumnName(column);
 		}
 
-		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
 			switch(columnIndex) {
 			case 0: return true;
@@ -99,7 +96,6 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			return super.isCellEditable(rowIndex, columnIndex);
 		}
 
-		@Override
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 			switch(columnIndex) {
 			case 0:
