@@ -459,4 +459,17 @@ public interface DbAccessIF {
      */
     public boolean deleteCourseDataFromClass(int courseID, int classID)
 	throws SQLException, IOException, XmlRpcException;
+
+    /**
+     * get courses with resultdata from a class.
+     * 
+     * @param profile
+     * @param classId
+     * @return
+     * @throws SQLException
+     * @throws IOException
+     * @throws XmlRpcException
+     */
+	public Vector getResultCount(int profile, int classId)
+	throws SQLException, IOException, XmlRpcException;
 }

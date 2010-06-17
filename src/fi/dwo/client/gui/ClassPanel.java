@@ -187,7 +187,7 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
     		} else if (value == assignImage) {
                 //setData(domain.selectCourses(SelectCoursesDialog.selectCourses(this, domain.getAllCourses(), domain.getSelectedCourse()), true));
                 Course[] allCourses = GuiCreator.instance().getCourseList();
-                Course[] selectedCourses = SelectCoursesDialog.selectCourses(ClassPanel.this,GuiCreator.instance().getCourseList(),sc.getSelectedSchoolCourses());
+                Course[] selectedCourses = SelectCoursesDialog.selectCourses(ClassPanel.this,GuiCreator.instance().getCourseList(),sc.getSelectedSchoolCourses(), sc );
                 if(selectedCourses!=null)sc.saveSelectedCourses(allCourses,selectedCourses);
 
     		}
