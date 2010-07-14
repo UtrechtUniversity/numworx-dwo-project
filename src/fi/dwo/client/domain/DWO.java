@@ -1483,6 +1483,10 @@ private static boolean isValidEmail(String email) {
     
     
     public String LMSInitialize(String iParam) {
+        if(currentSco != null)
+        {
+            return currentSco.LMSInitialize(iParam);
+        } else
         if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
         {	return currentCourse.getCurrentSco().LMSInitialize(iParam);
         }
