@@ -1008,6 +1008,19 @@ private static boolean isValidEmail(String email) {
         //this.setLayout(new BorderLayout());
         //this.setLayout(null);
         
+        if(userName==null) {
+        	String userName = getParameter("userName");
+            if(userName!=null && "".equals(userName)) {
+            	userName = null;
+            }
+        }
+        if(passWord==null) {
+        	String passWord = getParameter("passWord");
+            if(passWord!=null && "".equals(passWord)) {
+            	passWord = null;
+            }
+        }
+        
         if(userName!=null && passWord!=null) {
 	        try {
 	            GuiCreator.instance().login(userName, passWord);
@@ -1484,59 +1497,79 @@ private static boolean isValidEmail(String email) {
     
     public String LMSInitialize(String iParam) {
         if(currentSco != null)
-        {
-            return currentSco.LMSInitialize(iParam);
-        } else
-        if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
+        {   return currentSco.LMSInitialize(iParam);
+        } 
+        else if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
         {	return currentCourse.getCurrentSco().LMSInitialize(iParam);
         }
         else return null;
     }
 
     public String LMSFinish(String iParam) {
-        if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
+    	if(currentSco != null)
+        {   return currentSco.LMSFinish(iParam);
+        } 
+    	else if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
         {	return currentCourse.getCurrentSco().LMSFinish(iParam);
         }
         else return null;
     }
 
     public String LMSGetValue(String iDataModelElement) {
-        if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
+    	if(currentSco != null)
+        {   return currentSco.LMSGetValue(iDataModelElement);
+        } 
+    	else if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
         {	return currentCourse.getCurrentSco().LMSGetValue(iDataModelElement);
         }
         else return null;
     }
 
     public String LMSSetValue(String iDataModelElement, String iValue) {
-        if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
+    	if(currentSco != null)
+        {   return currentSco.LMSSetValue(iDataModelElement, iValue);
+        } 
+    	else if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
         {	return currentCourse.getCurrentSco().LMSSetValue(iDataModelElement, iValue);
         }
         else return null;
     }
 
     public String LMSCommit(String iParam) {
-        if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
+    	if(currentSco != null)
+        {   return currentSco.LMSCommit(iParam);
+        } 
+    	else if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
         {	return currentCourse.getCurrentSco().LMSCommit(iParam);
         }
         else return null;
     }
 
     public String LMSGetLastError() {
-        if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
+    	if(currentSco != null)
+        {   return currentSco.LMSGetLastError();
+        } 
+    	else if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
         {	return currentCourse.getCurrentSco().LMSGetLastError();
         }
         else return null;
     }
 
     public String LMSGetErrorString(String iErrorCode) {
-        if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
+    	if(currentSco != null)
+        {   return currentSco.LMSGetErrorString(iErrorCode);
+        } 
+    	else if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
         {	return currentCourse.getCurrentSco().LMSGetErrorString(iErrorCode);
         }
         else return null;
     }
 
      public String LMSGetDiagnostic(String iErrorCode) {
-        if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
+    	if(currentSco != null)
+        {   return currentSco.LMSGetDiagnostic(iErrorCode);
+        } 
+     	else if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
         {	return currentCourse.getCurrentSco().LMSGetDiagnostic(iErrorCode);
         }
         else return null;

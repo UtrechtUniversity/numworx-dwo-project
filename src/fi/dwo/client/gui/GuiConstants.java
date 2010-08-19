@@ -51,6 +51,7 @@ public abstract class GuiConstants {
     public final static String DOWN_SCO_IMAGE= "resources/orderdesc.gif"; // TODO beter plaatje!
 
     public final static String RESULTS_ZOOM_IN = "resources/zoomin.gif";
+    
 
     public final static String RESULTS_ZOOM_OUT = "resources/zoomout.gif";
 
@@ -58,6 +59,7 @@ public abstract class GuiConstants {
 
     public final static String RESULTS_ORDER_DESC = "resources/orderdesc.gif";
     public final static String RESULTS_ORDER_ASCDESC = "resources/orderascdesc.png";
+    public final static String RESULTS_STATS = "resources/stat.gif";
     
     public final static String BACK_MAINMENU_IMAGE = "resources/home.png";
     public final static String BACK_COURSEMENU_IMAGE = "resources/terugknopklein.png";

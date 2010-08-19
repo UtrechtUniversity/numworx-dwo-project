@@ -9,7 +9,7 @@ Class-Path: algebrapijlenoefenen.jar
  herleiden.jar 
  kwadverg.jar 
  linverg.jar 
- nabouwenaanzichten.jar  
+ nabouwenaanzichten.jar 
  oppervlaktealgebra.jar 
  popupurlapplet.jar 
  vermtabel.jar 

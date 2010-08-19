@@ -52,6 +52,7 @@ import javax.swing.table.TableColumnModel;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.LessonGroup;
 import fi.dwo.client.domain.Course;
+import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.ResultScore;
 import fi.dwo.client.domain.ResultScoreIF;
 import fi.dwo.client.domain.ResultsModuleIF;
@@ -69,26 +70,24 @@ import fi.dwo.client.system.TextMapper;
  * @author Wim van Velthoven
  *  
  */
-public class ResultsModulePanel extends JPanel implements
-        ActionListener, CenterSubPanel {
+public class ResultsModulePanel extends JPanel implements  ActionListener, CenterSubPanel {
+	
     public class ImageEditor extends AbstractCellEditor implements
 			TableCellEditor, ActionListener {
 
-    	/**
-		 * 
-		 */
+    	JButton button = new JButton();
+    	ImageIcon icon = new ImageIcon();
+    	int col;
+    	ResultsModel model;
+    	JTable table;
+    	
 		public ImageEditor() {
 			button.addActionListener(this);
 			
 		}
 
-		JButton button = new JButton();
-    	ImageIcon icon = new ImageIcon();
-    	int col;
-    	ResultsModel model;
-    	JTable table;
-    	public Component getTableCellEditorComponent(JTable table,
-				Object value, boolean isSelected, int row, int column) {
+		
+    	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
     		this.col = column;
     		model = (ResultsModel) table.getModel();
     		this.table = table;
@@ -105,29 +104,41 @@ public class ResultsModulePanel extends JPanel implements
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			if(sortedCol == col)
-			{
-				image = image == imageAsc? imageDesc: imageAsc;
-			} else {
-				sortedCol = col;
-				image = col ==0 ?imageAsc: imageDesc;
+			if(icon.getImage()!=null && icon.getImage()==imageStats){
+				currentUserGroup = domain.getZoomedUserGroup();
+		        currentLessonGroup = domain.getZoomedLessonGroup();
+		        if(currentUserGroup instanceof SchoolClass && currentLessonGroup instanceof Course){
+					SchoolClass schoolClass = ((SchoolClass)currentUserGroup);
+					Sco sco = ((Course)currentLessonGroup).getScoList()[col-1];
+					ResultLogger.showLogs(sco,schoolClass);
+				}
+				
 			}
-//			model.fireTableRowsUpdated(0, 0);
-			fireEditingCanceled();
-
-			if(col == 0)
-			{
-				if(image == imageAsc)
+			else {
+				if(sortedCol == col)
 				{
-					model.setData(domain.orderBy(new User(), ResultsModuleIF.ASC));
-				} else
-					model.setData(domain.orderBy(new User(), ResultsModuleIF.DESC));
-			} else {
-				int sort = image==imageAsc?ResultsModuleIF.ASC: ResultsModuleIF.DESC;
-				LessonGroup lg = (LessonGroup) table.getColumnModel().getColumn(col).getHeaderValue();
-				model.setData(domain.orderBy(lg, sort));
+					image = image == imageAsc? imageDesc: imageAsc;
+				} else {
+					sortedCol = col;
+					image = col ==0 ?imageAsc: imageDesc;
+				}
+	//			model.fireTableRowsUpdated(0, 0);
+				fireEditingCanceled();
+	
+				if(col == 0)
+				{
+					if(image == imageAsc)
+					{
+						model.setData(domain.orderBy(new User(), ResultsModuleIF.ASC));
+					} else
+						model.setData(domain.orderBy(new User(), ResultsModuleIF.DESC));
+				} else {
+					int sort = image==imageAsc?ResultsModuleIF.ASC: ResultsModuleIF.DESC;
+					LessonGroup lg = (LessonGroup) table.getColumnModel().getColumn(col).getHeaderValue();
+					model.setData(domain.orderBy(lg, sort));
+				}
+				model.fireTableDataChanged();
 			}
-			model.fireTableDataChanged();
 			
 //          if (e.getID() == ResultTableHeader.ACT_SORT_ASC) {
 //          setData(domain.orderBy(new User(), ResultsModuleIF.ASC));
@@ -189,7 +200,7 @@ public class ResultsModulePanel extends JPanel implements
 
 	}
 
-	private Image image, imageAsc, imageDesc, imageAscDesc;
+	private Image image, imageAsc, imageDesc, imageAscDesc, imageStats;
 	private int sortedCol;
 	
 	public class ResultsModel extends AbstractTableModel {
@@ -224,15 +235,22 @@ public class ResultsModulePanel extends JPanel implements
 		}
 
 		public int getRowCount() {
-			return rowCount+1;
+			return rowCount+2;
 		}
 
 		public Object getValueAt(int row, int col) {
-			if(row == 0)
+			if(row == 1)
 			{
 				return imageAscDesc; // col == sortedCol?image:null;
-			}	
-			row--;
+			}
+			if(row == 0)
+			{
+				boolean scoView = domain.getZoomedLessonGroup()instanceof Course;
+				boolean classView = domain.getZoomedUserGroup()instanceof SchoolClass;
+				if(col!=0 && scoView && classView)return imageStats; // col == sortedCol?image:null;
+				else return null;
+			}
+			row-=2;
 			if(col == 0) {
 				return data[row].getResultScore()[0].getUserGroup().getName(); 
 			}
@@ -244,7 +262,7 @@ public class ResultsModulePanel extends JPanel implements
 		{
 			if(row == 0 || col == 0)
 				return -1;
-			return data[row-1].getResultScore()[col-1].getTotal_time();
+			return data[row-2].getResultScore()[col-1].getTotal_time();
 		}
 
 
@@ -252,9 +270,9 @@ public class ResultsModulePanel extends JPanel implements
 		 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
 		 */
 		public boolean isCellEditable(int row, int column) {
-			if(row == 0)
+			if(row == 0 || row == 1)
 				return true;
-			row--;
+			row-=2;
 			boolean isUser = data[row].getResultScore()[0].getUserGroup().isDeepestLevel();
 			if(column > 0)
 			{	
@@ -312,7 +330,7 @@ public class ResultsModulePanel extends JPanel implements
 			this.value = (Float) value;
 			TableCellRenderer renderer = table.getCellRenderer(row, column);
 			Component component = renderer.getTableCellRendererComponent(table, value, true, true, row, column);
-			row--;
+			row-=2;
 			model = (ResultsModel) table.getModel();
 			domain = model.data[row].getResultScore()[column-1];
 			if(value.equals(ZERO))	
@@ -378,7 +396,7 @@ public class ResultsModulePanel extends JPanel implements
 		        setBackground(new Color(red, green, blue));
 				setText( Math.round(f) + " %");
 				ResultScoreIF domain;
-				domain = ((UserResultList) data.get(row-1)).getResultScore()[col-1];
+				domain = ((UserResultList) data.get(row-2)).getResultScore()[col-1];
                 if(domain.isDeepest())
                 {
     				Object[] arguments = new Object[2];
@@ -435,7 +453,7 @@ public class ResultsModulePanel extends JPanel implements
 			//this.value = (UserGroup) value;
 			TableCellRenderer renderer = table.getCellRenderer(row, column);
 			JLabel label = (JLabel) renderer.getTableCellRendererComponent(table, value, true, true, row, column);
-			row--;
+			row-=2;
 			ResultsModel model = (ResultsModel) table.getModel();
 			this.value = model.data[row].getResultScore()[0].getUserGroup();
 			button.setIcon(label.getIcon());
@@ -588,6 +606,7 @@ public class ResultsModulePanel extends JPanel implements
         imageAsc = DwoHelper.getResourceImage(GuiConstants.RESULTS_ORDER_ASC);
         imageDesc = DwoHelper.getResourceImage(GuiConstants.RESULTS_ORDER_DESC);
         imageAscDesc = DwoHelper.getResourceImage(GuiConstants.RESULTS_ORDER_ASCDESC);
+        imageStats = DwoHelper.getResourceImage(GuiConstants.RESULTS_STATS);
 // Track media before rendering.
         
         
@@ -800,7 +819,7 @@ public class ResultsModulePanel extends JPanel implements
     		JTable table = new JTable(new ResultsModel(data)) {
     			
 				public TableCellRenderer getCellRenderer(int row, int column) {
-					if(row == 0)
+					if(row == 0  && column!=0 || row == 1)
 						return imageRenderer;
 					return super.getCellRenderer(row, column);
 				}
@@ -809,7 +828,7 @@ public class ResultsModulePanel extends JPanel implements
 				 * @see javax.swing.JTable#getCellEditor(int, int)
 				 */
 				public TableCellEditor getCellEditor(int row, int column) {
-					if(row==0)
+					if(row==0 || row == 1)
 						return new ImageEditor();
 					return super.getCellEditor(row, column);
 				}
