@@ -1,0 +1,537 @@
+package fi.dwo.client.gui;
+
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Font;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.Map.Entry;
+
+import javax.swing.AbstractCellEditor;
+import javax.swing.AbstractListModel;
+import javax.swing.Box;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.MutableComboBoxModel;
+import javax.swing.SwingConstants;
+import javax.swing.event.ListDataListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
+
+import org.apache.xmlrpc.applet.XmlRpcException;
+
+import fi.beans.mainframe.MainFrame;
+import fi.dwo.client.domain.DwoHelper;
+import fi.dwo.client.domain.ResultScore;
+import fi.dwo.client.domain.ResultScoreIF;
+import fi.dwo.client.domain.School;
+import fi.dwo.client.domain.SchoolClass;
+import fi.dwo.client.domain.SchoolGroup;
+import fi.dwo.client.domain.Sco;
+import fi.dwo.client.domain.User;
+import fi.dwo.client.domain.UserResultList;
+import fi.dwo.client.gui.ResultsModulePanel.ImageEditor;
+import fi.dwo.client.gui.ResultsModulePanel.ResultsModel;
+import fi.dwo.client.persistence.MapperCreator;
+import fi.dwo.client.persistence.MapperIF;
+import fi.dwo.client.persistence.PersistenceFacade;
+import fi.dwo.client.system.PersistenceException;
+import fi.dwo.client.system.TextMapper;
+import fi.wiskopdr.WiskOpdr;
+
+public class  ResultLogger extends JPanel implements ActionListener {
+
+	private static final UserComparator USER_COMPARATOR = new UserComparator();
+
+	private static final long serialVersionUID = 1L;
+	private static final String SAVE = "bewaar";
+	private static final String SUSPEND_DATA = "cmi.suspend_data";
+	private static final String BUTTON_ITEMSCORES = "item scores";
+	private static final String BUTTON_LOGANSWERS = "log answers";
+	private static final String BUTTON_LOGSCORES = "log scores";
+	private static final String BUTTON_LOGERRORCOUNT = "log errors";
+	private static final String BUTTON_LOGATTEMPTS = "log attempts";
+	private static final String TAB = "\t";
+	
+	private static final String LOGKEY_ANSWER = "logAnswer";
+	private static final String LOGKEY_SCORE = "logScore";
+	private static final String LOGKEY_MAXSCORE = "logMaxScore";
+	private static final String LOGKEY_ERRORCOUNT = "logErrorCount";
+	private static final String LOGKEY_ATTEMPTS = "logAttempts";
+	
+	private LogTable table;
+	private Map itemScores;
+	private Map logAnswers;
+	private Map logScores;
+	private DefaultTableModel model;
+	private User[] leerlingen;
+	
+	private Sco sco;
+	private SchoolClass schoolClass;
+	private List keys = new ArrayList();
+	
+	private String logModeKey = LOGKEY_SCORE;
+	private JPanel contentPane;
+	
+	
+	public void alert(Throwable t) {
+		JOptionPane.showMessageDialog(this, t.toString());
+		t.printStackTrace();
+		throw new RuntimeException(t);
+	}
+	
+	
+	public static void showLogs(Sco sco, SchoolClass schoolClass) {
+		JFrame frame = new JFrame();
+		frame.getContentPane().add(new ResultLogger(sco, schoolClass));
+        frame.setTitle("Overzicht Logs ");
+        frame.pack();
+        frame.setSize(400,300);
+        frame.show();        
+	}
+	
+	public ResultLogger(Sco sco, SchoolClass schoolClass) {
+		this.sco = sco;
+		this.schoolClass = schoolClass;
+		Box v = Box.createVerticalBox();
+		Box b = Box.createHorizontalBox();
+		
+		JButton btn = null;
+		
+		btn = new JButton(BUTTON_ITEMSCORES);
+		btn.setActionCommand(BUTTON_ITEMSCORES);
+		btn.addActionListener(this);
+		//b.add(btn);
+		
+		//b.add(Box.createHorizontalStrut(10));
+		
+		btn = new JButton(BUTTON_LOGANSWERS);
+		btn.setActionCommand(BUTTON_LOGANSWERS);
+		btn.addActionListener(this);
+		b.add(btn);
+		
+		b.add(Box.createHorizontalStrut(10));
+		
+		btn = new JButton(BUTTON_LOGSCORES);
+		btn.setActionCommand(BUTTON_LOGSCORES);
+		btn.addActionListener(this);
+		b.add(btn);
+		
+		b.add(Box.createHorizontalStrut(10));
+		
+		btn = new JButton(BUTTON_LOGERRORCOUNT);
+		btn.setActionCommand(BUTTON_LOGERRORCOUNT);
+		btn.addActionListener(this);
+		b.add(btn);
+		
+		b.add(Box.createHorizontalStrut(10));
+		
+		btn = new JButton(BUTTON_LOGATTEMPTS);
+		btn.setActionCommand(BUTTON_LOGATTEMPTS);
+		btn.addActionListener(this);
+		b.add(btn);
+		
+		v.add(Box.createVerticalStrut(10));
+		v.add(b);
+		
+		model = new DefaultTableModel(1, 1);
+		
+		contentPane = new JPanel(new BorderLayout());
+		
+		table = new LogTable(model);
+		table.setEnabled(false);
+		contentPane.add(table,BorderLayout.CENTER);
+		contentPane.add(table.getTableHeader(),BorderLayout.NORTH);
+		
+		JScrollPane scrollPane = new JScrollPane(contentPane,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		
+		btn = new JButton("Bewaar");
+		btn.setActionCommand(SAVE);
+		btn.addActionListener(this);
+		
+		setLayout(new BorderLayout(5,5));
+		add(v, BorderLayout.NORTH);
+		add(scrollPane, BorderLayout.CENTER);
+		add(btn, BorderLayout.SOUTH);
+		
+		requestLog();
+		
+		resizeTable();
+	}
+	
+	public void resizeTable()
+	{
+		TableUtil.setJTableSizes(table);
+		TableColumnModel columnModel = table.getColumnModel();
+		int sum = 0;
+			for(int i = 0; i < table.getColumnCount(); i++)
+		{
+				TableColumn column = columnModel.getColumn(i);
+			int width = column.getPreferredWidth();
+			//if(width > 100) width = 100;
+			sum += width;
+			//System.out.println(i + " : " + width + " " + sum);
+				//column.setMinWidth(width);
+				//column.setMaxWidth(width);
+		}
+		contentPane.revalidate();
+	}
+
+	public void requestLog()
+	{
+		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+		try {
+			leerlingen = schoolClass.getStudents();
+			Arrays.sort(leerlingen, USER_COMPARATOR);
+			model.setRowCount(leerlingen.length+1);
+			//model.setValueAt("Naam", 0, 0);
+			
+			SortedSet set = new TreeSet();
+			keys.clear();
+			Map[] data = new Map[leerlingen.length];
+			for(int i = 0; i < leerlingen.length; i++)
+			{
+				User leerling = leerlingen[i];
+				String suspendData = getSuspendData(leerling, sco);
+				Map strings = getLog(suspendData);
+				data[i] = strings;
+				if(strings == null)	continue;
+				set.addAll(strings.keySet());
+			}
+			
+			keys.addAll(set);
+			model.setColumnCount(1 + keys.size());
+			TableColumnModel columnModel = table.getColumnModel();
+			columnModel.getColumn(0).setHeaderValue("Naam");
+			for (int i = 0; i < keys.size(); i++)
+			{	columnModel.getColumn(i+1).setHeaderValue(keys.get(i));
+			}
+			
+			for (int i = 0; i < leerlingen.length; i++) {
+				User leerling = leerlingen[i];
+				int i1 = i+1;
+				model.setValueAt(leerling.getName(), i1, 0);
+				Map strings = data[i];
+				if(strings == null)
+					continue;
+				Iterator iterator;
+				iterator = strings.entrySet().iterator();
+				for (int j = 1; j < keys.size()+1; j++) {
+					model.setValueAt(null, i1, j);
+				}
+				while (iterator.hasNext()) {
+					Entry object = (Entry) iterator.next();
+					Object key = object.getKey();
+					Object value = object.getValue();
+					int index = getIndex(key);
+					model.setValueAt(value, i1, index+1);
+					if(((Hashtable)value).containsKey(LOGKEY_MAXSCORE))model.setValueAt(value, 0, index+1);
+				}
+			}
+		} catch (Exception e1) {
+			alert(e1);
+		}
+		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+	}
+	
+	public void actionPerformed(ActionEvent e) {
+		if(BUTTON_LOGERRORCOUNT == e.getActionCommand()){
+			logModeKey = LOGKEY_ERRORCOUNT;
+			table.setLogMode(logModeKey);
+			resizeTable();
+		}
+		else if(BUTTON_LOGANSWERS == e.getActionCommand()){
+			logModeKey = LOGKEY_ANSWER;
+			table.setLogMode(logModeKey);
+			resizeTable();
+		}
+		else if(BUTTON_LOGSCORES == e.getActionCommand()){
+			logModeKey = LOGKEY_SCORE;
+			table.setLogMode(logModeKey);
+			resizeTable();
+		}
+		else if(BUTTON_LOGATTEMPTS == e.getActionCommand()){
+			logModeKey = LOGKEY_ATTEMPTS;
+			table.setLogMode(logModeKey);
+			resizeTable();
+		}
+		else if(e.getActionCommand() == SAVE)
+		{
+			int result = chooser.showSaveDialog(this);
+			if(result == JFileChooser.APPROVE_OPTION)
+			{
+				File f = chooser.getSelectedFile();
+				try {
+					PrintWriter out = new PrintWriter(new FileWriter(f));
+					int len = model.getRowCount();
+					int width = model.getColumnCount();
+					for(int i = 0; i < len; i++)
+					{
+						for(int j = 0; j < width; j++)
+						{
+							if(j!=0) out.print(TAB);
+							Object value = model.getValueAt(i, j);
+							if(value == null)
+								value = "";
+							if(value!=null && value instanceof Hashtable)
+							{	value = ((Hashtable)value).get(logModeKey);
+							}
+							out.print(value);
+						}
+						out.println();
+					}
+					out.close();
+				} catch (IOException e1) {
+					alert(e1);
+				}
+			}			
+		}
+	}
+
+	
+	private int getIndex(Object key) {
+		return keys.indexOf(key);
+	}
+
+	private Map getLog(String suspendData) {
+		return WiskOpdr.getLog(suspendData);
+	}
+	
+	private Map getLogScores(String suspendData) {
+		return WiskOpdr.getLogScores(suspendData);
+	}
+	
+	private Map getLogMaxScores(String suspendData) {
+		return WiskOpdr.getLogMaxScores(suspendData);
+	}
+	
+	private Map getScores(String suspendData) {
+		return WiskOpdr.getScores(suspendData);
+	}
+
+	private JFileChooser chooser = new JFileChooser();
+
+	private String getSuspendData(User u, Sco s) throws PersistenceException {
+
+		return PersistenceFacade.instance().LMSGetValue(s, u, SUSPEND_DATA);
+	}
+
+	static class UserComparator implements Comparator {
+
+		public int compare(Object o1, Object o2) {
+			User l1 = (User)o1;
+			User l2 = (User)o2;			
+			return l1.getUsername().compareTo(l2.getUsername());
+		}
+
+	}
+	
+	public class LogTable extends JTable
+	{
+		private String logModeKey = LOGKEY_SCORE;
+		private LogRenderer renderer = new LogRenderer();
+		private LogEditor editor = new LogEditor();
+		
+		public LogTable(TableModel model)
+		{	super(model);
+			
+		}
+		public void setLogMode(String logModeKey)
+		{	this.logModeKey = logModeKey;
+			renderer.setLogMode(logModeKey);
+			repaint();
+		}
+		
+		public TableCellRenderer getCellRenderer(int row, int column) {
+			if(column>0)
+				return renderer;
+			return super.getCellRenderer(row, column);
+		}
+		
+		public TableCellEditor getCellEditor(int row, int column) {
+			if(column>0)
+				return editor;
+			return super.getCellEditor(row, column);
+		}
+	}
+	
+	public class LogRenderer extends JLabel implements TableCellRenderer {
+
+		private String logModeKey = "logScore";
+		
+		public LogRenderer() {
+			super();
+			setOpaque(true);
+			setHorizontalAlignment(SwingConstants.CENTER);
+
+		}
+		
+		public void setLogMode(String logModeKey)
+		{	this.logModeKey = logModeKey;
+		}
+		
+		public Component getTableCellRendererComponent(JTable table,
+				Object value, boolean selected, boolean hasFocus, int row, int col) {
+			
+			setFont(GuiConstants.NORMAL_TEXT);
+			if(value==null)
+			{
+				setText("");
+				if(selected)
+					setBackground(table.getSelectionBackground());
+				else
+					setBackground(table.getBackground());
+				setToolTipText(null);
+			} else {
+		        int red = 255;
+		        int green = 255;
+		        int blue = 0;
+		        if(value instanceof Hashtable)
+		        {	Hashtable logMap = (Hashtable)value;
+		        	String answer = (String)logMap.get(LOGKEY_ANSWER);
+		        	int score = ((Integer)logMap.get(LOGKEY_SCORE)).intValue();
+			        int maxScore = ((Integer)logMap.get(LOGKEY_MAXSCORE)).intValue();
+			        int errorCount = ((Integer)logMap.get(LOGKEY_ERRORCOUNT)).intValue();
+			        Vector attempts = (Vector)logMap.get(LOGKEY_ATTEMPTS);
+					float f = (float)score/(float)maxScore;
+			        
+			            if (f > 1.0001) {
+			                red = 0;
+			            } else {
+				            if (f < 0.5) {
+				                green = (int) (green * (f / 0.5));
+				            } else {
+				                red = (int) (red * (1 - (f - 0.5) / 0.5));
+				            }
+			            }
+			        
+			        if(red>255)red=255;
+			        if(green>255)green=255;
+			        if(blue>255)blue=255;
+			        if(red<0)red=0;
+			        if(green<0)green=0;
+			        if(blue<0)blue=0;
+			        if(logModeKey == LOGKEY_SCORE)
+			        {
+				        if(row==0) {
+				        	setFont(new Font("SansSerif",Font.BOLD,12));
+				        	setText(""+maxScore);
+				        }
+				        else {
+				        	setBackground(new Color(red, green, blue));
+				        	setText(""+score);
+				        }
+			        }
+			        if(logModeKey == LOGKEY_ANSWER)
+			        {
+			        	if(row==0) {
+				        	
+				        }
+				        else {
+				        	setBackground(new Color(red, green, blue));
+				        	setText(answer);
+				        }
+			        }
+			        if(logModeKey == LOGKEY_ERRORCOUNT)
+				    {
+				       	if(row==0) {
+					        	
+					    }
+					    else {
+					    	setBackground(new Color(red, green, blue));
+					        setText(""+errorCount);
+				        }
+				    }
+			        if(logModeKey == LOGKEY_ATTEMPTS)
+				    {
+				       	if(row==0) {
+					        	
+					    }
+					    else if(attempts!=null){
+					    	
+					    	String text = "<html>";
+							for(int i=0 ; i<attempts.size() ; i++)
+							{	String newText = (String)attempts.elementAt(i);
+								text = text + newText.substring(0, newText.indexOf(";")) + "<BR>";
+							}
+							text = text + "</html>";
+							setText(text);
+							
+				        }
+				    }
+		        }
+				
+			}
+			return this;
+		}
+	
+	}
+	
+	public class LogEditor extends AbstractCellEditor implements  TableCellEditor
+	{
+		private JButton button = new JButton();
+		private Object value;
+		private ResultScore domain;
+		private ResultsModel model;
+		
+
+		public LogEditor() {
+			super();
+			
+		}
+
+		public Object getCellEditorValue() {
+			
+			if(value!=null && value instanceof Hashtable)
+			{	int score = ((Integer)((Hashtable)value).get("logScore")).intValue();
+				return new Integer(score);
+			}
+			return value;
+		}
+
+		public Component getTableCellEditorComponent(JTable table,
+				Object value, boolean isSelected, int row, int column) {
+			this.value = value;
+			TableCellRenderer renderer = table.getCellRenderer(row, column);
+			Component component = renderer.getTableCellRendererComponent(table, value, true, true, row, column);
+			return component;
+			
+			
+		}
+		
+	}
+}
