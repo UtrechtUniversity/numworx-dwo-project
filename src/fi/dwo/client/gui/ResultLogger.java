@@ -494,6 +494,10 @@ public class  ResultLogger extends JPanel implements ActionListener {
 				        }
 				    }
 		        }
+		        else if(value instanceof String)
+		        {
+		            setText((String)value);
+		        }
 				
 			}
 			return this;
