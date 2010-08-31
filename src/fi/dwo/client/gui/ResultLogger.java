@@ -3,6 +3,7 @@ package fi.dwo.client.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Component;
@@ -54,6 +55,7 @@ import javax.swing.table.TableModel;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
+import fi.beans.base64code.StringCodeObject;
 import fi.beans.mainframe.MainFrame;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.ResultScore;
@@ -71,7 +73,6 @@ import fi.dwo.client.persistence.MapperIF;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.PersistenceException;
 import fi.dwo.client.system.TextMapper;
-import fi.wiskopdr.WiskOpdr;
 
 public class  ResultLogger extends JPanel implements ActionListener {
 
@@ -80,10 +81,11 @@ public class  ResultLogger extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private static final String SAVE = "bewaar";
 	private static final String SUSPEND_DATA = "cmi.suspend_data";
-	private static final String BUTTON_ITEMSCORES = "item scores";
+	private static final String BUTTON_REFRESH = "refresh";
 	private static final String BUTTON_LOGANSWERS = "log answers";
 	private static final String BUTTON_LOGSCORES = "log scores";
 	private static final String BUTTON_LOGERRORCOUNT = "log errors";
+	private static final String BUTTON_LOGATTEMPTSCOUNT = "log attempts count";
 	private static final String BUTTON_LOGATTEMPTS = "log attempts";
 	private static final String TAB = "\t";
 	
@@ -91,6 +93,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 	private static final String LOGKEY_SCORE = "logScore";
 	private static final String LOGKEY_MAXSCORE = "logMaxScore";
 	private static final String LOGKEY_ERRORCOUNT = "logErrorCount";
+	private static final String LOGKEY_ATTEMPTSCOUNT = "logAttemptsCount";
 	private static final String LOGKEY_ATTEMPTS = "logAttempts";
 	
 	private LogTable table;
@@ -107,6 +110,8 @@ public class  ResultLogger extends JPanel implements ActionListener {
 	private String logModeKey = LOGKEY_SCORE;
 	private JPanel contentPane;
 	
+	private Box b;
+	
 	
 	public void alert(Throwable t) {
 		JOptionPane.showMessageDialog(this, t.toString());
@@ -120,7 +125,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		frame.getContentPane().add(new ResultLogger(sco, schoolClass));
         frame.setTitle("Overzicht Logs ");
         frame.pack();
-        frame.setSize(400,300);
+        frame.setSize(800,600);
         frame.show();        
 	}
 	
@@ -128,16 +133,16 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		this.sco = sco;
 		this.schoolClass = schoolClass;
 		Box v = Box.createVerticalBox();
-		Box b = Box.createHorizontalBox();
+		b = Box.createHorizontalBox();
 		
 		JButton btn = null;
 		
-		btn = new JButton(BUTTON_ITEMSCORES);
-		btn.setActionCommand(BUTTON_ITEMSCORES);
+		btn = new JButton(BUTTON_REFRESH);
+		btn.setActionCommand(BUTTON_REFRESH);
 		btn.addActionListener(this);
-		//b.add(btn);
+		b.add(btn);
 		
-		//b.add(Box.createHorizontalStrut(10));
+		b.add(Box.createHorizontalStrut(30));
 		
 		btn = new JButton(BUTTON_LOGANSWERS);
 		btn.setActionCommand(BUTTON_LOGANSWERS);
@@ -155,6 +160,13 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		
 		btn = new JButton(BUTTON_LOGERRORCOUNT);
 		btn.setActionCommand(BUTTON_LOGERRORCOUNT);
+		btn.addActionListener(this);
+		b.add(btn);
+		
+		b.add(Box.createHorizontalStrut(10));
+		
+		btn = new JButton(BUTTON_LOGATTEMPTSCOUNT);
+		btn.setActionCommand(BUTTON_LOGATTEMPTSCOUNT);
 		btn.addActionListener(this);
 		b.add(btn);
 		
@@ -211,8 +223,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		contentPane.revalidate();
 	}
 
-	public void requestLog()
-	{
+	public void requestLog() {
 		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		try {
 			leerlingen = schoolClass.getStudents();
@@ -223,8 +234,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 			SortedSet set = new TreeSet();
 			keys.clear();
 			Map[] data = new Map[leerlingen.length];
-			for(int i = 0; i < leerlingen.length; i++)
-			{
+			for(int i = 0; i < leerlingen.length; i++) {
 				User leerling = leerlingen[i];
 				String suspendData = getSuspendData(leerling, sco);
 				Map strings = getLog(suspendData);
@@ -237,8 +247,8 @@ public class  ResultLogger extends JPanel implements ActionListener {
 			model.setColumnCount(1 + keys.size());
 			TableColumnModel columnModel = table.getColumnModel();
 			columnModel.getColumn(0).setHeaderValue("Naam");
-			for (int i = 0; i < keys.size(); i++)
-			{	columnModel.getColumn(i+1).setHeaderValue(keys.get(i));
+			for (int i = 0; i < keys.size(); i++) {	
+				columnModel.getColumn(i+1).setHeaderValue(keys.get(i));
 			}
 			
 			for (int i = 0; i < leerlingen.length; i++) {
@@ -259,7 +269,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 					Object value = object.getValue();
 					int index = getIndex(key);
 					model.setValueAt(value, i1, index+1);
-					if(((Hashtable)value).containsKey(LOGKEY_MAXSCORE))model.setValueAt(value, 0, index+1);
+					if(value instanceof Hashtable && ((Hashtable)value).containsKey(LOGKEY_MAXSCORE))model.setValueAt(value, 0, index+1);
 				}
 			}
 		} catch (Exception e1) {
@@ -269,7 +279,11 @@ public class  ResultLogger extends JPanel implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		if(BUTTON_LOGERRORCOUNT == e.getActionCommand()){
+		if(BUTTON_REFRESH == e.getActionCommand()){
+			requestLog();
+			resizeTable();
+		}
+		else if(BUTTON_LOGERRORCOUNT == e.getActionCommand()){
 			logModeKey = LOGKEY_ERRORCOUNT;
 			table.setLogMode(logModeKey);
 			resizeTable();
@@ -284,6 +298,11 @@ public class  ResultLogger extends JPanel implements ActionListener {
 			table.setLogMode(logModeKey);
 			resizeTable();
 		}
+		else if(BUTTON_LOGATTEMPTSCOUNT == e.getActionCommand()){
+			logModeKey = LOGKEY_ATTEMPTSCOUNT;
+			table.setLogMode(logModeKey);
+			resizeTable();
+		}
 		else if(BUTTON_LOGATTEMPTS == e.getActionCommand()){
 			logModeKey = LOGKEY_ATTEMPTS;
 			table.setLogMode(logModeKey);
@@ -291,6 +310,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		}
 		else if(e.getActionCommand() == SAVE)
 		{
+			JFileChooser chooser = new JFileChooser();
 			int result = chooser.showSaveDialog(this);
 			if(result == JFileChooser.APPROVE_OPTION)
 			{
@@ -328,25 +348,19 @@ public class  ResultLogger extends JPanel implements ActionListener {
 	}
 
 	private Map getLog(String suspendData) {
-		return WiskOpdr.getLog(suspendData);
+		Object o = StringCodeObject.decodeStringToObject(suspendData);
+		Hashtable h = (Hashtable)o;
+		Hashtable log = new Hashtable();
+		if(h!=null && h.containsKey("log"))
+		{	log = (Hashtable)h.get("log");
+		}
+		return log;
 	}
 	
-	private Map getLogScores(String suspendData) {
-		return WiskOpdr.getLogScores(suspendData);
-	}
 	
-	private Map getLogMaxScores(String suspendData) {
-		return WiskOpdr.getLogMaxScores(suspendData);
-	}
 	
-	private Map getScores(String suspendData) {
-		return WiskOpdr.getScores(suspendData);
-	}
-
-	private JFileChooser chooser = new JFileChooser();
 
 	private String getSuspendData(User u, Sco s) throws PersistenceException {
-
 		return PersistenceFacade.instance().LMSGetValue(s, u, SUSPEND_DATA);
 	}
 
@@ -360,18 +374,18 @@ public class  ResultLogger extends JPanel implements ActionListener {
 
 	}
 	
-	public class LogTable extends JTable
-	{
+	public class LogTable extends JTable {
+		
 		private String logModeKey = LOGKEY_SCORE;
 		private LogRenderer renderer = new LogRenderer();
 		private LogEditor editor = new LogEditor();
 		
-		public LogTable(TableModel model)
-		{	super(model);
-			
+		public LogTable(TableModel model) {	
+			super(model);
 		}
-		public void setLogMode(String logModeKey)
-		{	this.logModeKey = logModeKey;
+		
+		public void setLogMode(String logModeKey) {	
+			this.logModeKey = logModeKey;
 			renderer.setLogMode(logModeKey);
 			repaint();
 		}
@@ -400,44 +414,60 @@ public class  ResultLogger extends JPanel implements ActionListener {
 
 		}
 		
-		public void setLogMode(String logModeKey)
-		{	this.logModeKey = logModeKey;
+		public void setLogMode(String logModeKey) {	
+			this.logModeKey = logModeKey;
 		}
 		
-		public Component getTableCellRendererComponent(JTable table,
-				Object value, boolean selected, boolean hasFocus, int row, int col) {
-			
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean hasFocus, int row, int col) {
 			setFont(GuiConstants.NORMAL_TEXT);
-			if(value==null)
-			{
+			if(value==null) {
 				setText("");
 				if(selected)
 					setBackground(table.getSelectionBackground());
 				else
 					setBackground(table.getBackground());
 				setToolTipText(null);
-			} else {
+			} 
+			else {
 		        int red = 255;
 		        int green = 255;
 		        int blue = 0;
-		        if(value instanceof Hashtable)
-		        {	Hashtable logMap = (Hashtable)value;
-		        	String answer = (String)logMap.get(LOGKEY_ANSWER);
-		        	int score = ((Integer)logMap.get(LOGKEY_SCORE)).intValue();
-			        int maxScore = ((Integer)logMap.get(LOGKEY_MAXSCORE)).intValue();
-			        int errorCount = ((Integer)logMap.get(LOGKEY_ERRORCOUNT)).intValue();
-			        Vector attempts = (Vector)logMap.get(LOGKEY_ATTEMPTS);
-					float f = (float)score/(float)maxScore;
+		        if(value instanceof Hashtable) {	
+		        	Hashtable logMap = (Hashtable)value;
+		        	
+		        	String answer = "";
+		        	int score = 0;
+			        int maxScore = 10;
+			        int errorCount = 0;
+			        int attemptsCount = 0;
+			        Vector attempts = new Vector();
 			        
-			            if (f > 1.0001) {
-			                red = 0;
-			            } else {
-				            if (f < 0.5) {
-				                green = (int) (green * (f / 0.5));
-				            } else {
-				                red = (int) (red * (1 - (f - 0.5) / 0.5));
-				            }
-			            }
+			        boolean hasAnswer = true;
+			        boolean hasScore = true;
+			        boolean hasMaxScore = true;
+			        boolean hasErrorCount = true;
+			        boolean hasAttemptsCount = true;
+			        boolean hasAttempts = true;
+					
+					if(logMap.containsKey(LOGKEY_ANSWER))answer = (String)logMap.get(LOGKEY_ANSWER); else hasAnswer = false;
+					if(logMap.containsKey(LOGKEY_SCORE))score = ((Integer)logMap.get(LOGKEY_SCORE)).intValue(); else hasScore = false;
+					if(logMap.containsKey(LOGKEY_MAXSCORE))maxScore = ((Integer)logMap.get(LOGKEY_MAXSCORE)).intValue(); else hasMaxScore = false;
+					if(logMap.containsKey(LOGKEY_ERRORCOUNT))errorCount = ((Integer)logMap.get(LOGKEY_ERRORCOUNT)).intValue(); else hasErrorCount = false;
+					if(logMap.containsKey(LOGKEY_ATTEMPTSCOUNT))attemptsCount = ((Integer)logMap.get(LOGKEY_ATTEMPTSCOUNT)).intValue(); else hasAttemptsCount = false;
+					if(logMap.containsKey(LOGKEY_ATTEMPTS))attempts = (Vector)logMap.get(LOGKEY_ATTEMPTS); else hasAttempts = false;
+					
+					float f = 0;
+					if(maxScore!=0) f = (float)score/(float)maxScore;
+					
+			        if (f > 1.0001) {
+			            red = 0;
+			        } else {
+				        if (f < 0.5) {
+				            green = (int) (green * (f / 0.5));
+				        } else {
+				            red = (int) (red * (1 - (f - 0.5) / 0.5));
+				        }
+			        }
 			        
 			        if(red>255)red=255;
 			        if(green>255)green=255;
@@ -445,44 +475,56 @@ public class  ResultLogger extends JPanel implements ActionListener {
 			        if(red<0)red=0;
 			        if(green<0)green=0;
 			        if(blue<0)blue=0;
-			        if(logModeKey == LOGKEY_SCORE)
-			        {
+			        
+			        red = red + (255 - red)/2;
+			        green = green + (255 - green)/2;
+			        blue = blue + (255 - blue)/2;
+			        
+			        if(logModeKey == LOGKEY_SCORE && hasScore) {
 				        if(row==0) {
 				        	setFont(new Font("SansSerif",Font.BOLD,12));
 				        	setText(""+maxScore);
 				        }
 				        else {
-				        	setBackground(new Color(red, green, blue));
+				        	 //if(!hasAttemptsCount || attemptsCount>0) 
+				        		 setBackground(new Color(red, green, blue));
 				        	setText(""+score);
 				        }
-			        }
-			        if(logModeKey == LOGKEY_ANSWER)
-			        {
+				    }
+			        if(logModeKey == LOGKEY_ANSWER && hasAnswer) {
 			        	if(row==0) {
 				        	
 				        }
 				        else {
-				        	setBackground(new Color(red, green, blue));
+				        	//if(hasScore && (!hasAttemptsCount || attemptsCount>0))
+				        		setBackground(new Color(red, green, blue));
 				        	setText(answer);
 				        }
 			        }
-			        if(logModeKey == LOGKEY_ERRORCOUNT)
-				    {
+			        if(logModeKey == LOGKEY_ERRORCOUNT && hasErrorCount) {
 				       	if(row==0) {
 					        	
 					    }
 					    else {
-					    	setBackground(new Color(red, green, blue));
+					    	if(hasScore && (!hasAttemptsCount || attemptsCount>0))setBackground(new Color(red, green, blue));
 					        setText(""+errorCount);
 				        }
 				    }
-			        if(logModeKey == LOGKEY_ATTEMPTS)
-				    {
+			        if(logModeKey == LOGKEY_ATTEMPTSCOUNT && hasAttemptsCount) {
+				       	if(row==0) {
+					        	
+					    }
+					    else {
+					    	if(hasScore)setBackground(new Color(red, green, blue));
+					        setText(""+attemptsCount);
+				        }
+				    }
+			        if(logModeKey == LOGKEY_ATTEMPTS && hasAttempts) {
 				       	if(row==0) {
 					        	
 					    }
 					    else if(attempts!=null){
-					    	
+					    	if(hasScore)setBackground(new Color(red, green, blue));
 					    	String text = "<html>";
 							for(int i=0 ; i<attempts.size() ; i++)
 							{	String newText = (String)attempts.elementAt(i);
@@ -490,23 +532,31 @@ public class  ResultLogger extends JPanel implements ActionListener {
 							}
 							text = text + "</html>";
 							setText(text);
-							
-				        }
+							/*if(attempts.size()>4)
+							{
+								JPanel panel = new JPanel();
+								JScrollPane scrollPane = new JScrollPane(this,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+								//panel.setMaximumSize(new Dimension(80,50));
+								panel.add(scrollPane);
+								scrollPane.setPreferredSize(new Dimension(120,50));
+								scrollPane.revalidate();
+								return panel;
+							}*/
+						}
 				    }
 		        }
-		        else if(value instanceof String)
-		        {
+		        else if(value instanceof String) {
 		            setText((String)value);
+		            b.setVisible(false);
 		        }
 				
 			}
 			return this;
 		}
-	
 	}
 	
-	public class LogEditor extends AbstractCellEditor implements  TableCellEditor
-	{
+	public class LogEditor extends AbstractCellEditor implements  TableCellEditor {
+		
 		private JButton button = new JButton();
 		private Object value;
 		private ResultScore domain;
@@ -515,11 +565,9 @@ public class  ResultLogger extends JPanel implements ActionListener {
 
 		public LogEditor() {
 			super();
-			
 		}
 
 		public Object getCellEditorValue() {
-			
 			if(value!=null && value instanceof Hashtable)
 			{	int score = ((Integer)((Hashtable)value).get("logScore")).intValue();
 				return new Integer(score);
@@ -527,14 +575,11 @@ public class  ResultLogger extends JPanel implements ActionListener {
 			return value;
 		}
 
-		public Component getTableCellEditorComponent(JTable table,
-				Object value, boolean isSelected, int row, int column) {
+		public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
 			this.value = value;
 			TableCellRenderer renderer = table.getCellRenderer(row, column);
 			Component component = renderer.getTableCellRendererComponent(table, value, true, true, row, column);
 			return component;
-			
-			
 		}
 		
 	}
