@@ -57,6 +57,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.beans.base64code.StringCodeObject;
 import fi.beans.mainframe.MainFrame;
+import fi.beans.stringutils.StringUtils;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.ResultScore;
 import fi.dwo.client.domain.ResultScoreIF;
@@ -118,8 +119,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		t.printStackTrace();
 		throw new RuntimeException(t);
 	}
-	
-	
+		
 	public static void showLogs(Sco sco, SchoolClass schoolClass) {
 		JFrame frame = new JFrame();
 		frame.getContentPane().add(new ResultLogger(sco, schoolClass));
@@ -210,7 +210,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		TableUtil.setJTableSizes(table);
 		TableColumnModel columnModel = table.getColumnModel();
 		int sum = 0;
-			for(int i = 0; i < table.getColumnCount(); i++)
+		for(int i = 0; i < table.getColumnCount(); i++)
 		{
 				TableColumn column = columnModel.getColumn(i);
 			int width = column.getPreferredWidth();
@@ -314,30 +314,159 @@ public class  ResultLogger extends JPanel implements ActionListener {
 			int result = chooser.showSaveDialog(this);
 			if(result == JFileChooser.APPROVE_OPTION)
 			{
-				File f = chooser.getSelectedFile();
-				try {
-					PrintWriter out = new PrintWriter(new FileWriter(f));
-					int len = model.getRowCount();
-					int width = model.getColumnCount();
-					for(int i = 0; i < len; i++)
-					{
-						for(int j = 0; j < width; j++)
-						{
-							if(j!=0) out.print(TAB);
-							Object value = model.getValueAt(i, j);
-							if(value == null)
-								value = "";
-							if(value!=null && value instanceof Hashtable)
-							{	value = ((Hashtable)value).get(logModeKey);
-							}
-							out.print(value);
-						}
-						out.println();
-					}
-					out.close();
-				} catch (IOException e1) {
-					alert(e1);
-				}
+				if(logModeKey.equals(LOGKEY_ATTEMPTS)) {
+			        File f = chooser.getSelectedFile();
+                    try {
+                        PrintWriter out = new PrintWriter(new FileWriter(f));
+                        int len = model.getRowCount();
+                        int width = model.getColumnCount();
+                        for(int i = 0; i < len; i++) {
+                        	for(int j = 0; j < 33 &&i==0; j++) {
+                                if(j==0){
+                                	out.print("Naam");
+                                	out.print(TAB);
+                                }
+                                else if(j==1){
+                                	out.print("LogID");
+                                	out.print(TAB);
+                                }
+                                else if(j==2){
+                                	out.print("Answer");
+                                	out.print(TAB);
+                                }
+                                else if(j==3){
+                                	out.print("Correct");
+                                	out.print(TAB);
+                                }
+                                else if(j==4){
+                                	out.print("Errors");
+                                	out.print(TAB);
+                                }
+                                else if(j==5){
+                                	out.print("Att. Answer");
+                                	out.print(TAB);
+                                }
+                                else if(j==6){
+                                	out.print("Att. StepNr");
+                                	out.print(TAB);
+                                }
+                                else if(j==7){
+                                	out.print("Att. Correct");
+                                	out.print(TAB);
+                                }
+                                else if(j==8){
+                                	out.print("Att. Score");
+                                	out.print(TAB);
+                                }
+                                else if(j==9){
+                                	out.print("Att. Date");
+                                	out.print(TAB);
+                                }
+                                else if(j==10){
+                                	out.print("Att. Feedback");
+                                	out.print(TAB);
+                                }
+                                //else {
+                                //	out.print("Attempt " + (j-4));
+	                            //	out.print(TAB);
+	                            //}
+                                
+                            }
+                        	out.println();
+                        	out.println();
+                        	
+                        	Object value = model.getValueAt(i, 0);
+                            if(value == null) value = "";
+                            out.println(value);
+                            out.print("");
+                            out.print(TAB);
+                            
+                            
+                            for(int j = 1; j < width; j++) {
+                                TableColumnModel columnModel = table.getColumnModel();
+                                value = columnModel.getColumn(j).getHeaderValue();
+                                out.print(value);
+                                out.print(TAB);
+                                
+                                value = model.getValueAt(i, j);
+                                if(value!=null && value instanceof Hashtable) { 
+	                                
+                                	String answer = (String)((Hashtable)value).get(LOGKEY_ANSWER);
+	                                if(answer == null) answer = "";
+	                                out.print(answer);
+                                    out.print(TAB);
+                                    
+                                    Integer score = (Integer)((Hashtable)value).get(LOGKEY_SCORE);
+	                                if(score == null) score = new Integer(0);
+	                                
+	                                Integer maxScore = (Integer)((Hashtable)value).get(LOGKEY_MAXSCORE);
+	                                if(maxScore == null) maxScore = new Integer(0);
+	                                
+	                                boolean correct = score.intValue()>0 && score.intValue()==maxScore.intValue();
+	                                out.print(correct);
+                                    out.print(TAB);
+                                    
+                                    Integer errors = (Integer)((Hashtable)value).get(LOGKEY_ERRORCOUNT);
+	                                if(errors == null) errors = new Integer(0);
+	                                out.print(errors);
+	                                out.print(TAB);
+                                }
+                                
+                                if(value!=null && value instanceof Hashtable) { 
+	                                value = ((Hashtable)value).get(logModeKey);
+                                }
+                                if(value == null) value = new Vector();
+                                Vector v = (Vector)value;
+                                for(int k = 0; k < v.size(); k++) {
+                                    String s = (String)v.get(k);
+                                    s = s.replace('\n', ' ');
+                                    String[] strings = StringUtils.split(s, ";");
+                                    for(int m = 0; m < strings.length; m++) {
+                                    	out.print(strings[m]);
+                                        out.print(TAB);
+                                    }
+                                    out.println();
+                                    for(int m = 0; m < 5; m++) {
+                                    	out.print(TAB);
+                                    }
+                                }
+                                out.println();
+                                out.print("");
+                                out.print(TAB);
+                            }
+                            out.println();
+                        }
+                        out.close();
+                    } 
+                    catch (IOException e1) {
+                        alert(e1);
+                    }
+			    }
+			    else {
+			        File f = chooser.getSelectedFile();
+	                try {
+	                    PrintWriter out = new PrintWriter(new FileWriter(f));
+	                    int len = model.getRowCount();
+	                    int width = model.getColumnCount();
+	                    for(int i = 0; i < len; i++) {
+	                        for(int j = 0; j < width; j++) {
+	                            if(j!=0) out.print(TAB);
+	                            Object value = model.getValueAt(i, j);
+	                            if(value == null)
+	                                value = "";
+	                            if(value!=null && value instanceof Hashtable) { 
+	                                value = ((Hashtable)value).get(logModeKey);
+	                            }
+	                            out.print(value);
+	                        }
+	                        out.println();
+	                    }
+	                    out.close();
+	                } 
+	                catch (IOException e1) {
+	                    alert(e1);
+	                }
+			    }
 			}			
 		}
 	}
@@ -562,7 +691,6 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		private ResultScore domain;
 		private ResultsModel model;
 		
-
 		public LogEditor() {
 			super();
 		}
