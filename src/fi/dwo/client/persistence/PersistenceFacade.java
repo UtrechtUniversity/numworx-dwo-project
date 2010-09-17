@@ -1341,8 +1341,16 @@ public class PersistenceFacade {
         DbAccessIF dbAccess = DbAccessCreator.instance();
         try {
             try {
-                return dbAccess.changeSco(sco.getID(), sco.getScoName(), sco
-                        .getDescription(), sco.getLaunchdataString());
+            	if(sco.isDataChanged())
+            	{	final boolean result = dbAccess.changeSco(sco.getID(), sco.getScoName(), sco
+					        .getDescription(), sco.getLaunchdataString());
+            		sco.setDataChanged(false);
+					return result;
+            	} else
+            	{
+            		return dbAccess.changeSco(sco.getID(), sco.getScoName(), sco.getDescription());
+            	}
+            	
             } catch (IOException e) {
                 throw new ScoException(ScoException.EX_IO);
             } catch (XmlRpcException e) {

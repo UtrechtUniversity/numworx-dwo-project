@@ -405,6 +405,7 @@ public interface DbAccessIF {
 			throws IOException, XmlRpcException, SQLException, DwoXmlRpcException;
 
     public boolean changeSco(int scoID, String name, String description, String launchdata)  throws  DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+    public boolean changeSco(int scoID, String name, String description)  throws  DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
     public boolean changeScoSequenceNr(int scoID, int sequencenr, int scoID2, int sequencenr2) throws SQLException,DwoXmlRpcException, IOException, XmlRpcException; 
 

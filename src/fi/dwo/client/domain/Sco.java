@@ -62,7 +62,15 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
     
     private ScoPanel sc;
 
-	private boolean initialized;
+	private boolean initialized, dataChanged;
+
+	public boolean isDataChanged() {
+		return dataChanged;
+	}
+
+	public void setDataChanged(boolean dataChanged) {
+		this.dataChanged = dataChanged;
+	}
 
 	public static final String NORMAL = "normal";
 	public static final String REVIEW = "review";
@@ -650,6 +658,13 @@ System.err.println("sum = ["+result+"]");
      * @param launchdata The launchdata for the sco.
      */
     public void setLaunchdata(Hashtable launchdata) {
+    	if(!isDataChanged())
+    	{
+    		if(this.launchdata == null)
+    			setDataChanged(launchdata != null);
+    		else
+    			setDataChanged( !this.launchdata.equals(launchdata) );
+    	}
         this.launchdata = launchdata;
     }
 

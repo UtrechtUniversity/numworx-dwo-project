@@ -42,7 +42,10 @@ public class ScoMapper extends XmlRpcMapper {
 		        	ht = (Hashtable) v.firstElement();
 		        	String ld = ht.get("launchdata").toString();
 		        	if(ld.length()>0)
+		        	{
 		        		setLaunchdata((Hashtable) StringCodeObject.decodeStringToObject(ld));
+		        		setDataChanged(false);
+		        	}
 		        }
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -171,7 +174,8 @@ public class ScoMapper extends XmlRpcMapper {
         final Object object = data.get("launchdata");
 		if(object != null && !object.equals("")) {
             s.setLaunchdata((Hashtable)new StringCodeObject((String) object).toObject());
-        }
+            s.setDataChanged(false);
+		}
         return s;
     }
 

@@ -99,6 +99,7 @@ public class CenterPanel extends JPanel implements CourseContainer {
 		//sp.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
         sp.setViewportBorder(null);
         sp.setBorder(null);
+        sp.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
         //spe.add(sp);
         spe = sp; // alles is nu jpanel
         centermainSub.add(spe);
