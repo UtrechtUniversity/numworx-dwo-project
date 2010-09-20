@@ -196,6 +196,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
         	|| currentUser.getID()==24073	//peterb_mw
         	|| currentUser.getID()==54220	//peterb_nwk
         	|| currentUser.getID()==13584 	//peterb_mbo
+        	|| currentUser.getID()==43757 	//dyw Cygnus Gymnasium (David Dijkman)
         	|| currentUser.getID()==63490) 	//scormadmin De Amersfoortse Berg (Guido van der Waal)
         		DwoHelper.setScormExportLoggedIn(true);
         else DwoHelper.setScormExportLoggedIn(false);
