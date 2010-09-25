@@ -190,7 +190,17 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
             JLabel label = new JLabel(MessageFormat.format(s, arguments));
             label.setFont(GuiConstants.SCO_TEXT);
 			label.setAlignmentY(0.24f);
-            this.add(label);
+			
+			Box vbox = Box.createVerticalBox();
+			vbox.setAlignmentX(0);
+			vbox.setAlignmentY(0);
+			vbox.add(label);
+			
+			vbox.add(Box.createVerticalStrut(20));
+			
+			RegisterClassListButton registerClassListButton = new RegisterClassListButton(schoolClass);
+	        if(DwoHelper.isApplication())vbox.add(registerClassListButton);
+	        add(vbox);
             
         } else {
 
