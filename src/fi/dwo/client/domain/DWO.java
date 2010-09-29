@@ -188,28 +188,35 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
     		currentUser = PersistenceFacade.instance().login(username);
     	else
     		currentUser = PersistenceFacade.instance().login(username, password);
-        if(currentUser instanceof Admin) 
-        		DwoHelper.setAdminLoggedIn(true);
-        else DwoHelper.setAdminLoggedIn(false);
-        if(currentUser.getID()==4 		//peterb
-        	|| currentUser.getID()==8691 	//peterb_gr
-        	|| currentUser.getID()==24073	//peterb_mw
-        	|| currentUser.getID()==54220	//peterb_nwk
-        	|| currentUser.getID()==13584 	//peterb_mbo
-        	|| currentUser.getID()==55530 	//calvijncollege (Ron Wisse)
-        	|| currentUser.getID()==43757 	//dyw Cygnus Gymnasium (David Dijkman)
-        	|| currentUser.getID()==63490) 	//scormadmin De Amersfoortse Berg (Guido van der Waal)
-        		DwoHelper.setScormExportLoggedIn(true);
-        else DwoHelper.setScormExportLoggedIn(false);
-        if(	currentUser.getID()==4 		//peterb
-        		|| currentUser.getID()==8691 	//peterb_gr
-        		|| currentUser.getID()==24073	//peterb_mw
-        		|| currentUser.getID()==54220	//peterb_nwk
-        		|| currentUser.getID()==13584 	//peterb_mbo 
-        		|| currentUser.getID()==55549) 	//exportgr
-        		//|| currentUser.getID()==22194) 	//harmh
-        	DwoHelper.setAppletExportLoggedIn(true);
-        else DwoHelper.setAppletExportLoggedIn(false);
+        DwoHelper.setAdminLoggedIn(currentUser instanceof Admin);
+//        if(
+//        	currentUser.hasRight(User.SCORM_EXPORT_RIGHT)	
+//        	||	currentUser.getID()==4 		//peterb
+//        	|| currentUser.getID()==8691 	//peterb_gr
+//        	|| currentUser.getID()==24073	//peterb_mw
+//        	|| currentUser.getID()==54220	//peterb_nwk
+//        	|| currentUser.getID()==13584 	//peterb_mbo
+//        	|| currentUser.getID()==55530 	//calvijncollege (Ron Wisse)
+//        	|| currentUser.getID()==43757 	//dyw Cygnus Gymnasium (David Dijkman)
+//        	|| currentUser.getID()==63490) 	//scormadmin De Amersfoortse Berg (Guido van der Waal)
+//        		DwoHelper.setScormExportLoggedIn(true);
+//        else DwoHelper.setScormExportLoggedIn(false);
+// vervanging voor bovenstaande        
+		DwoHelper.setScormExportLoggedIn(currentUser.hasRight(User.SCORM_EXPORT_RIGHT));
+        
+//        if(	
+//        		currentUser.hasRight(User.APPLET_EXPORT_RIGHT)        		
+//        		|| currentUser.getID()==4 		//peterb
+//        		|| currentUser.getID()==8691 	//peterb_gr
+//        		|| currentUser.getID()==24073	//peterb_mw
+//        		|| currentUser.getID()==54220	//peterb_nwk
+//        		|| currentUser.getID()==13584 	//peterb_mbo 
+//        		|| currentUser.getID()==55549) 	//exportgr
+//        		//|| currentUser.getID()==22194) 	//harmh
+//        	DwoHelper.setAppletExportLoggedIn(true);
+//        else DwoHelper.setAppletExportLoggedIn(false);
+// vervanging voor bovenstaande        
+		DwoHelper.setAppletExportLoggedIn(currentUser.hasRight(User.APPLET_EXPORT_RIGHT));
         
         if(testViewKeys!=null)
         {	SchoolClass sc = currentUser.getInClass();

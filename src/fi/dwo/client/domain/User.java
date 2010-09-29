@@ -30,6 +30,17 @@ public class User implements UserGroup {
 
     private School school;
 
+    /** 
+     * Geeft het recht op  SCORM export 
+     */
+    public static final char SCORM_EXPORT_RIGHT = 's';
+    /**
+     * Geeft het recht op Applet export
+     */
+    public static final char APPLET_EXPORT_RIGHT = 'a';
+
+    private String rights = "";
+    
     /**
      * Creates a new User object.
      *  
@@ -335,4 +346,30 @@ public class User implements UserGroup {
     {
         return _readonly;
     }
+    
+    /**
+     * Geeft het recht op: Scormexport, AppletExport, etc.
+     * @param right
+     * @return
+     */
+    public boolean hasRight(char right)
+    {
+    	return rights.indexOf(right)>=0;
+    }
+
+	/**
+	 * @return the rights
+	 */
+	public String getRights() {
+		return rights;
+	}
+
+	/**
+	 * @param rights the rights to set
+	 */
+	public void setRights(String rights) {
+		this.rights = rights;
+	}
+    
+    
 }
