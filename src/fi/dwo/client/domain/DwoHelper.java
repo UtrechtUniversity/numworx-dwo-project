@@ -46,7 +46,7 @@ public final class DwoHelper {
     
     public static boolean umpc, contact;
     
-    public static boolean scormExportLoggedIn, appletExportLoggedIn, adminLoggedIn;
+    private static boolean scormExportLoggedIn, appletExportLoggedIn, adminLoggedIn;
 
     /**
      * Returns the current AppletUtil.

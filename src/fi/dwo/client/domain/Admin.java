@@ -19,6 +19,13 @@ public class Admin extends User {
 
     }
 
+	/** Een admin mag alles.
+	 * @see fi.dwo.client.domain.User#hasRight(char)
+	 */
+	public boolean hasRight(char right) {
+		return true;
+	}
+
     
 
 }

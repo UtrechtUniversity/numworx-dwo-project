@@ -141,7 +141,7 @@ public class UserMapper extends XmlRpcMapper {
         u.setMiddleName((String) data.get("middlename"));
         u.setUserID(((Integer) data.get("userID")).intValue());
         u.setUsername((String) data.get("username"));
-        u.setRights( (String) data.get("rights"));
+        u.setRights( (String)data.get("rights") + data.get("schoolRights"));
         /* Maybe we've got some information about the school */
         School s = (School) MapperCreator.instance(School.class)
                 .getObjectFromReturn(data);

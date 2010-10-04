@@ -99,7 +99,7 @@ public class DwoProfileMapper extends XmlRpcMapper {
         dp.setName((String) data.get("dwoProfileName"));
         dp.setDescription((String) data.get("dwoProfileDescription"));
         dp.setText((String) data.get("dwoProfileText"));
-        
+        dp.setRights((String)data.get("dwoProfileRights"));
         return dp;
     }
 

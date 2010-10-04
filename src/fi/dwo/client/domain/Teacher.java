@@ -75,5 +75,14 @@ public class Teacher extends User {
         }
         classList = sc;
     }
+    /**
+     * Geeft het recht op: Scormexport, AppletExport, etc.
+     * @param right
+     * @return
+     */
+    public boolean hasRight(char right)
+    {
+    	return getRights().indexOf(right)>=0;
+    }
 
 }

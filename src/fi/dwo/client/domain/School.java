@@ -24,6 +24,7 @@ public class School {
     private String image;
     
     private boolean export;
+    private String rights = "";
 
     /**
      * Creates a new School object.
@@ -200,4 +201,25 @@ public class School {
 	public boolean isExport() {
 		return export;
 	}
+
+	/**
+	 * @return the rights
+	 */
+	public String getRights() {
+		return rights;
+	}
+
+	/**
+	 * @param rights the rights to set
+	 */
+	public void setRights(String rights) {
+		if(rights == null) rights = "";
+		this.rights = rights;
+	}
+	
+    public boolean hasRight(char right)
+    {
+    	return rights.indexOf(right)>=0;
+    }
+
 }

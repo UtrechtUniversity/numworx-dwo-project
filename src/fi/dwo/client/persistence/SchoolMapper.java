@@ -211,7 +211,7 @@ public class SchoolMapper extends XmlRpcMapper {
         //}
 
         s.setExport(Boolean.TRUE.equals(data.get("export")));
-        
+        s.setRights((String)data.get("schoolRights"));
         return s;
     }
 

@@ -17,7 +17,7 @@ public class DwoProfile {
     private String description;
     private String text;
     private String name;
-
+    private String rights = "";
     public DwoProfile() {
 
     }
@@ -81,5 +81,24 @@ public class DwoProfile {
     public void setName(String name) {
         this.name = name;
     }
+
+	/**
+	 * @return the rights
+	 */
+	public String getRights() {
+		return rights;
+	}
+
+	/**
+	 * @param rights the rights to set
+	 */
+	public void setRights(String rights) {
+		if(rights == null) rights = "";
+		this.rights = rights;
+	}
     
+    public boolean hasRight(char right)
+    {
+    	return rights.indexOf(right)>=0;
+    }
 }

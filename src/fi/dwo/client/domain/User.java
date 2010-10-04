@@ -347,15 +347,6 @@ public class User implements UserGroup {
         return _readonly;
     }
     
-    /**
-     * Geeft het recht op: Scormexport, AppletExport, etc.
-     * @param right
-     * @return
-     */
-    public boolean hasRight(char right)
-    {
-    	return rights.indexOf(right)>=0;
-    }
 
 	/**
 	 * @return the rights
@@ -368,8 +359,16 @@ public class User implements UserGroup {
 	 * @param rights the rights to set
 	 */
 	public void setRights(String rights) {
+		if(rights == null) rights = "";
 		this.rights = rights;
 	}
     
-    
+	/** Een gast/leerling mag niets.
+	 *  Docenten mogen meer.
+	 * @see fi.dwo.client.domain.Teacher#hasRight(char)
+	 */
+	public boolean hasRight(char right) {
+		return false;
+	}
+
 }
