@@ -12,11 +12,13 @@ import java.util.EventObject;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.Box;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.event.CellEditorListener;
@@ -227,11 +229,27 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel, Compa
                 if (u != docent) {
 					final String title = TextMapper.getText(TextMapper.GUIS_DELETE_STUDENT);
 					final String text = MessageFormat.format(TextMapper.getText(TextMapper.GUIS_MSG_DELETE_STUDENT), new Object[] { u.getName() });
-					if (JOptionPane.showConfirmDialog(UserManagementPanel.this, text
-					       + "?", title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+					Box box = Box.createVerticalBox();
+					box.add(new JLabel(text + "?"));
+					JRadioButton delRadio = new JRadioButton("Verwijder alleen van school", true);
+					JRadioButton rmRadio  = new JRadioButton("Verwijder alle gebruikersgegevens", false);
+					ButtonGroup group = new ButtonGroup();
+					group.add(delRadio);
+					group.add(rmRadio);
+					box.add(delRadio);
+					box.add(rmRadio);
+					if (JOptionPane.showConfirmDialog(UserManagementPanel.this, box,
+					       title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 						u.setSchool(docent.getSchool());
-					    PersistenceFacade.instance().deleteUserFromSchool(u);
-					    //center.loadMenu();
+						if(delRadio.isSelected())
+							PersistenceFacade.instance().deleteUserFromSchool(u);
+					    if(rmRadio.isSelected())
+							try {
+								PersistenceFacade.instance().deleteUser(u);
+							} catch (RegisterException e) {
+					        	JOptionPane.showMessageDialog(UserManagementPanel.this, e.getMessage());
+							}
+						//center.loadMenu();
 					    model.deleteRow(row);
 					       
 					}
