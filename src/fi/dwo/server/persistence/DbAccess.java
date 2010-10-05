@@ -119,7 +119,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         + "FROM tblUser LEFT JOIN tblClass ON tblUser.classID = tblClass.classID "
         + "WHERE (username = ?) ";
 
-    private final static String QRY_GET_USER_DATA = "SELECT tblUser.*, tblGroup.*, tblSchool.schoolID, tblSchool.schoolName, tblSchool.schoollogin, tblSchool.image, tblSchool.export "
+    private final static String QRY_GET_USER_DATA = "SELECT tblUser.*, tblGroup.*, tblSchool.schoolID, tblSchool.schoolName, tblSchool.schoollogin, tblSchool.image, tblSchool.export, tblSchool.schoolRights "
             + "FROM tblUser, tblSchoolGroup, tblGroup, tblSchool "
             + "WHERE (tblUser.schoolGroupID = tblSchoolGroup.schoolGroupID) "
             + "AND   (tblSchoolGroup.groupID = tblGroup.groupID) "
