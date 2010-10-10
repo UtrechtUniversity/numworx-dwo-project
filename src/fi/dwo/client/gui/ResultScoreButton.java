@@ -79,7 +79,7 @@ public class ResultScoreButton extends JPanel implements
             this.setBackground(new Color(red, green, blue));
 
             if (domain.isDeepest()) {
-                LinkedLabel ll = new LinkedLabel(((int) score) + " %");
+                LinkedLabel ll = new LinkedLabel(((int)Math.round(score)) + " %");
                 ll.addActionListener(this);
                 ll.setMouseoverColor(Color.black);
                 String[] arguments = new String[2];
@@ -92,7 +92,7 @@ public class ResultScoreButton extends JPanel implements
                 l = ll;
                 setBackground(new Color(230,230,230));
             } else {
-                l = new JLabel(((int) score) + " %");
+                l = new JLabel(((int) Math.round(score)) + " %");
                 setBackground(new Color(230,230,230));
                 //addMouseListener(this);
                            }
