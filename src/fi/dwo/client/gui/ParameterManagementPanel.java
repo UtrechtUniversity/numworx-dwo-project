@@ -792,7 +792,12 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 	    	printManifest(pw);
 	    	pw.flush();
 	    	out.closeEntry();
-	    	
+// TODO zipEntry metadata.xml 
+	    	out.putNextEntry(new ZipEntry("metadata.xml"));
+	    	printMetadata(pw);
+	    	pw.flush();
+	    	out.closeEntry();
+// end...	    	
 	        out.close();
 	    } 
 	    catch (IOException e) 
@@ -800,6 +805,40 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 	       
 	}
 	
+	/**
+	 * print metadata volgens LOM.
+	 * @param pw
+	 */
+	private void printMetadata(PrintWriter pw) {
+		pw.println("<?xml version='1.0' ?>");
+		pw.println("<lom>");
+		String title = sco.getScoName();
+		String description = sco.getDescription();
+		String auteur = "Peter Boon"; // currentuser...
+		String datum = new java.util.Date().toString(); // formateren!
+		String uri = "MANIFEST-9ECDE6EE-4D8C-0E0A-E9B1-A1C808BC2ECD";
+		String lang = getLocale().getLanguage();
+		// print metadata: 
+		pw.println("<general>");
+		// titel
+		pw.println("<title><langstring xml:lang='" + lang + "' >"+title+"</langstring></title>");
+		// URI
+		pw.println("<catalogentry>"
+ 		+	"<catalog>URI</catalog>"
+ 		+	"<entry><langstring xml:lang='x-none'>" + uri + "</langstring>"
+ 		+	"</entry>"
+ 		+   "</catalogentry>");
+		// lang
+		pw.println("<language>" + lang + "</language>");
+		// description ok
+		pw.println("<description><langstring xml:lang='" + lang + "' >" + description + "</langstring></description>");
+		pw.println("</general>");	
+		// TODO auteur/creator
+		// TODO datum/version
+		// TODEcopyright
+		pw.println("</lom>");
+	}
+
 	public void readZip(String zipName)
 	{	try 
 		{	ZipFile zipFile = new ZipFile(zipName);
