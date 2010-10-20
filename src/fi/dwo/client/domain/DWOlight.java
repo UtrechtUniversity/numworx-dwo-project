@@ -912,4 +912,8 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 		public void setWelcomePanel() {
 		}
 
+		public String LMSCommit(Sco sco, String param) {
+			return PersistenceFacade.instance().LMSCommit(sco, getUser(), param);
+		}
+
 }
