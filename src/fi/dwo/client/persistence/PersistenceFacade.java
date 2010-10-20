@@ -271,6 +271,13 @@ public class PersistenceFacade {
 
     }
 
+    
+    public String LMSCommit(Sco sco, User user, String dummy)
+    {
+    	
+    	return "";
+    }
+    
     /**
      * Returns all the objects of the specified class.<br>
      * e.g. if the class is fi.dwo.client.domain.Course,

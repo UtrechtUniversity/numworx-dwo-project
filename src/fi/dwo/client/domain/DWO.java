@@ -216,7 +216,10 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 //        	DwoHelper.setAppletExportLoggedIn(true);
 //        else DwoHelper.setAppletExportLoggedIn(false);
 // vervanging voor bovenstaande        
-		DwoHelper.setAppletExportLoggedIn(currentUser.hasRight(User.APPLET_EXPORT_RIGHT));
+		DwoHelper.setAppletExportLoggedIn(currentUser.hasRight(User.APPLET_EXPORT_RIGHT)
+// en het profiel moet het toestaan dat het mag.
+				&&dwoProfile.hasRight(User.APPLET_EXPORT_RIGHT)
+		);
         
         if(testViewKeys!=null)
         {	SchoolClass sc = currentUser.getInClass();
@@ -1554,7 +1557,14 @@ private static boolean isValidEmail(String email) {
         else return null;
     }
 
-    public String LMSGetLastError() {
+    
+    
+    public String LMSCommit(Sco sco, String param) {
+		// TODO Auto-generated method stub
+		return PersistenceFacade.instance().LMSCommit(sco, getUser(), param);
+	}
+
+	public String LMSGetLastError() {
     	if(currentSco != null)
         {   return currentSco.LMSGetLastError();
         } 

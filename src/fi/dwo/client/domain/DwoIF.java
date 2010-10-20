@@ -481,4 +481,6 @@ public interface DwoIF {
 	public School editSchool(int schoolID, String schoolName,
 			String schoolLogin, SchoolPasswdMap schoolPasswdMap) throws SchoolException;
 
+	public String LMSCommit(Sco sco, String param);
+
 }

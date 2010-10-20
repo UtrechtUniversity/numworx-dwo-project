@@ -345,7 +345,7 @@ System.err.println("sum = ["+result+"]");
      *  
      */
     public String LMSCommit(String iParam) {
-        return null;
+        return dwo.LMSCommit(this, iParam);
     }
 
     /**
