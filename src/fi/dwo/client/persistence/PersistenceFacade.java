@@ -142,6 +142,16 @@ public class PersistenceFacade {
 
     }
 
+    private String mapDataModel(String element)
+    {
+    	for(int i = 0; i < scormDatabaseLink.length; i++)
+    	{
+    		if (scormDatabaseLink[i][0].equals(element))
+    			return scormDatabaseLink[i][1];
+    	}
+    	return element;
+    }
+    
     /**
      * Gets a value saved for a SCO and a user.
      * @param sco The SCO wherefrom the value must be returned.
@@ -154,16 +164,9 @@ public class PersistenceFacade {
             throws PersistenceException {
         if (user != null) {
             try {
-                int i;
-                String result = "";
-                for (i = 0; i < scormDatabaseLink.length; i++) {
-                    if (scormDatabaseLink[i][0].equals(iDataModelElement)) {
-                        result = DbAccessCreator.instance().LMSGetValue(
+                String result = DbAccessCreator.instance().LMSGetValue(
                                 sco.getScoID(), user.getUserID(),
-                                scormDatabaseLink[i][1]);
-                        break;
-                    }
-                }
+                                mapDataModel(iDataModelElement));
                 return result;
             } catch (IOException e) {
                 throw new PersistenceException(PersistenceException.EX_IO);
@@ -206,8 +209,7 @@ public class PersistenceFacade {
 
                 }
                 String result = true + "";
-                for (i = 0; i < scormDatabaseLink.length; i++) {
-                    if (scormDatabaseLink[i][0].equals(iDataModelElement)) {
+                
                         if (iValue == null) {
                             iValue = "";
                         }
@@ -215,7 +217,7 @@ public class PersistenceFacade {
                         String random = Long.toHexString(Double.doubleToRawLongBits(Math.random()));
                         try { 
                         	result = DbAccessCreator.instance().LMSSetValue(
-                        		sco.getScoID(), user.getUserID(), scormDatabaseLink[i][1], iValue, random);
+                        		sco.getScoID(), user.getUserID(), mapDataModel(iDataModelElement), iValue, random);
                         
                         	if( result.equals(random))
                         	{	return "true"; // all's well
@@ -233,10 +235,7 @@ public class PersistenceFacade {
                         }
                         result = DbAccessCreator.instance().LMSSetValue(
                                 sco.getScoID(), user.getUserID(),
-                                scormDatabaseLink[i][1], iValue);
-                        break;
-                    }
-                }
+                                mapDataModel(iDataModelElement), iValue);
                 return result;
             } catch (IOException e) {
                 try {
