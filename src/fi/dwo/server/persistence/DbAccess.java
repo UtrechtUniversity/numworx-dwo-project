@@ -21,6 +21,7 @@ import java.util.Vector;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.beans.jdbc.DbConnect;
+import fi.beans.scorm2xml.Scorm2Xml;
 import fi.dwo.client.domain.SchoolGroup;
 import fi.dwo.client.persistence.DbAccessIF;
 
@@ -1321,6 +1322,16 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      */
     public String LMSGetValue(int scoID, int userID, String iDataModelElement)
             throws IOException, XmlRpcException, SQLException {
+    	if(iDataModelElement.startsWith("cmi."))
+    	{
+    		// botte interface naar Xml2Scorm, no caching 
+    		String xmlStr = LMSGetValue(scoID, userID, "cocd");
+    		Scorm2Xml xml = new Scorm2Xml(String.valueOf(xmlStr));
+    		return xml.getValue(iDataModelElement);
+    	}
+    	
+    	
+    	
         String[] arguments = { iDataModelElement };
         String query = MessageFormat.format(QRY_GET_STUDENT_SCO, arguments);
 
@@ -1356,8 +1367,19 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      *      java.lang.String)
      */
     public String LMSSetValue(int scoID, int userID, String iDataModelElement,
-            String iValue) throws SQLException {
-        try {
+            String iValue) throws SQLException, IOException, XmlRpcException {
+    	
+    	if(iDataModelElement.startsWith("cmi."))
+    	{
+    		// eerste botte implementatie
+    		String xmlStr = LMSGetValue(scoID, userID, "cocd");
+    		Scorm2Xml xml = new Scorm2Xml(String.valueOf(xmlStr));
+    		xml.setValue(iDataModelElement, iValue);
+    		iDataModelElement = "cocd";
+    		iValue = xml.toString();
+    	}
+
+    	try {
 			String[] arguments = { "studentSco" };
 			String query = MessageFormat.format(QRY_GET_STUDENT_SCO, arguments);
 
@@ -1418,7 +1440,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     }
     
     public String LMSSetValue(int scoID, int userID, String iDataModelElement,
-            String iValue, String random) throws SQLException {
+            String iValue, String random) throws SQLException, IOException, XmlRpcException {
     	LMSSetValue(scoID, userID, iDataModelElement, iValue);
     	return random;
     }
