@@ -50,6 +50,7 @@ Class-Path: algebrapijlenoefenen.jar
  inderoos.jar 
  geogebra.jar 
  normaleverdeling.jar 
+ binomverdeling.jar 
  tinyplayerapplet.jar 
  jl020.jar 
  geogebra_properties.jar 
