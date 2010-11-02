@@ -188,6 +188,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
     		currentUser = PersistenceFacade.instance().login(username);
     	else
     		currentUser = PersistenceFacade.instance().login(username, password);
+
         DwoHelper.setAdminLoggedIn(currentUser instanceof Admin);
 //        if(
 //        	currentUser.hasRight(User.SCORM_EXPORT_RIGHT)	
@@ -203,6 +204,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 //        else DwoHelper.setScormExportLoggedIn(false);
 // vervanging voor bovenstaande        
 		DwoHelper.setScormExportLoggedIn(currentUser.hasRight(User.SCORM_EXPORT_RIGHT));
+
         
 //        if(	
 //        		currentUser.hasRight(User.APPLET_EXPORT_RIGHT)        		
@@ -211,6 +213,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 //        		|| currentUser.getID()==24073	//peterb_mw
 //        		|| currentUser.getID()==54220	//peterb_nwk
 //        		|| currentUser.getID()==13584 	//peterb_mbo 
+//				|| currentUser.getID()==69706	// HIE_MW Henk hietbrink voor MW
 //        		|| currentUser.getID()==55549) 	//exportgr
 //        		//|| currentUser.getID()==22194) 	//harmh
 //        	DwoHelper.setAppletExportLoggedIn(true);
