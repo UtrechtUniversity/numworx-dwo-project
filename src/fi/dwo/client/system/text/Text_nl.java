@@ -67,7 +67,7 @@ public class Text_nl extends ListResourceBundle {
 
          { TextMapper.GUIR_SCHOOLLOGIN, "Schoollogin"},
          { TextMapper.GUIR_SCHOOLGROUP, "Ik ben"}, 
-         { TextMapper.GUIR_SCHOOLPASSWORD, "Wachtwoord"},
+         { TextMapper.GUIR_SCHOOLPASSWORD, "Sleutelcode"},
          
          { TextMapper.GUIR_BTN_REGISTER, "Aanmelden"}, 
          { TextMapper.GUIR_BTN_RESET, "Alles Wissen"},
@@ -80,7 +80,7 @@ public class Text_nl extends ListResourceBundle {
          { TextMapper.GUIR_OPT_TEACHER, "Docent"},
          { TextMapper.GUIR_OPT_ADMIN, "Administrator"},
          { TextMapper.GUIR_OPT_SCHOOLCODE, "Sleutelcode"},
-         { TextMapper.GUIR_OPT_SCHOOLADMIN, "Schooladministratie" },
+         { TextMapper.GUIR_OPT_SCHOOLADMIN, "Schooladmin" },
          { TextMapper.GUIR_ERR_REGISTER, "Fout bij het Aanmelden" },
          
          { TextMapper.GUIR_MSG_REGISTERED, "U bent succesvol geregistreerd" },
