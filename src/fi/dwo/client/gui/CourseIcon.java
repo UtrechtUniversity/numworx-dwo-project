@@ -7,33 +7,25 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.MediaTracker;
-import java.awt.Panel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.Vector;
 
-import javax.print.attribute.standard.JobHoldUntil;
+import javax.swing.AbstractButton;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JEditorPane;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
+import javax.swing.plaf.basic.BasicButtonUI;
 
-import fi.beans.tooltip.ToolTipIF;
-import fi.beans.tooltip.ToolTipManager;
-import fi.beans.tekstobjects.TekstArea;
 import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.DwoHelper;
 
 /**
  * This class is a panel witch shows a icon of the course.
@@ -48,6 +40,14 @@ public class CourseIcon extends JButton implements CourseIconIF {
     private Image courseLogo;
     
     private Color textColor;
+
+    public String getUIClassID() {
+		return "CourseIconUI";
+	}
+
+	public void updateUI() {
+		setUI(new CourseIconUI());
+	}
     
     /**
      * Creates a new CourseIcon. This indicates an image of the course and the
@@ -63,7 +63,6 @@ public class CourseIcon extends JButton implements CourseIconIF {
         this.setContentAreaFilled(false);
         this.setFocusPainted(false);
         this.course = course;
-        this.setSize(120, 120);
         courseLogo = course.getCourseLogo();
         MediaTracker tr = new MediaTracker(this);
         tr.addImage(courseLogo, 0);
@@ -76,17 +75,7 @@ public class CourseIcon extends JButton implements CourseIconIF {
 				return 60;
 			} } ;
 
-        textColor = Color.black;
-        FontMetrics fm = getFontMetrics(GuiConstants.NORMAL_TEXT);
-        int length = fm.stringWidth(course.getName());
         
-        if(length < courseLogo.getWidth(this)) {
-            length = courseLogo.getWidth(this);
-        }
-        //this.setSize(length, courseLogo.getHeight(this) + fm.getHeight() + 30);
-        //this.setToolTip(course.getDescription());
-        
-        //textArea = new JLabel();
         setIcon(icon);
         setVerticalTextPosition(JLabel.BOTTOM);
         setHorizontalTextPosition(JLabel.CENTER);
@@ -94,28 +83,10 @@ public class CourseIcon extends JButton implements CourseIconIF {
         setHorizontalAlignment(JLabel.CENTER);
 // Font Okay?
         setFont(new Font("SansSerif", Font.PLAIN, 13));
-		setText("<html><center>"+ course.getName() + "</center></html>");
+		setText(course.getName());
+		setSize(getPreferredSize());
     }
 
-    /**
-     * Paints the CourseIcon and the CourseName.
-     * 
-     * @param g The graphics context to use for painting.
-     */
-    public void paintx(Graphics g) {
-        /* We must paint the components for correct mouse behaviour */
-        super.paint(g);
-        FontMetrics fm = getFontMetrics(GuiConstants.NORMAL_TEXT);
-        int length = fm.stringWidth(course.getName());
-
-        g.setColor(textColor);
-        int pos = this.getSize().height - fm.getHeight() - 5;
-//        g.drawString(course.getName(), (this.getSize().width / 2)
-//                - (length / 2), pos);
-        //g.drawImage(courseLogo, (this.getSize().width / 2)
-        //        - (courseLogo.getWidth(this) / 2), pos - 15 - courseLogo.getHeight(this), null);
-		g.drawImage(courseLogo, this.getSize().width / 2 - courseLogo.getWidth(this) / 2 , 0, null);
-    }
 
     /**
      * Returns the current Course.
@@ -142,27 +113,18 @@ public class CourseIcon extends JButton implements CourseIconIF {
 			setCursor(Cursor.getDefaultCursor());
 		}
 	}
-
-// Waar is deze voor nodig?        
-//    public void setFont(Font f) {
-//        super.setFont(f);
-//        if(course == null)
-//        	return;
-//        FontMetrics fm = getFontMetrics(GuiConstants.NORMAL_TEXT);
-//        int length = fm.stringWidth(course.getName());
-//        
-//        if(length < courseLogo.getWidth(this)) {
-//            length = courseLogo.getWidth(this);
-//        }
-//        this.setSize(length, courseLogo.getHeight(this) + fm.getHeight() + 15);
-//    }
-    
-    
+        
     public Dimension getMinimumSize() {
         return new Dimension(120,120);
     }
+
     public Dimension getPreferredSize() {
-        return this.getSize();
+        Dimension result = super.getPreferredSize();
+        if(result.width < 120)
+        	result.width = 120;
+//        if(result.height < 120)
+//        	result.height = 120;
+        return getMinimumSize();
     }
     
     /**
@@ -173,7 +135,7 @@ public class CourseIcon extends JButton implements CourseIconIF {
     public void setToolTip(String toolTip) {
         setToolTipText(toolTip);
     }
-
+   
     /**
      * Returns the tooltip of this component.
      * @return The tooltip of this component. 
@@ -191,4 +153,180 @@ public class CourseIcon extends JButton implements CourseIconIF {
     public Component getComponent() {
         return this;
     }
+}
+
+class CourseIconUI extends BasicButtonUI {
+
+	public void paint(Graphics g, JComponent c) {
+		// TODO Auto-generated method stub
+		super.paint(g, c);
+	}
+
+	protected void paintText(Graphics g, AbstractButton b, Rectangle textRect,
+			String text) {
+
+		g.setColor(b.getForeground());
+		g.setFont(b.getFont());
+		FontMetrics fm = g.getFontMetrics();
+		text = b.getText().trim(); // originele text, anders lange text... (met ellipsis)
+		int width = fm.stringWidth(text);
+		if(width <= textRect.width)
+		{
+// easy case
+			int y = textRect.y + fm.getAscent(); // naar baseline.
+			int x = textRect.x + (textRect.width-width)/2; // center...
+			g.drawString(text, x, y);
+		} else {
+// uneasy case
+			int y = textRect.y + fm.getAscent();
+			int x = textRect.x;
+			char[] data = strip(text.toCharArray());
+			int offset = 0;
+			int length = 0;
+			int lastlength = data.length;
+			do {
+			do {
+				
+				while(length + offset < data.length && !Character.isWhitespace(data[length+offset]))
+				{
+					length ++;
+				}
+				width = fm.charsWidth(data, offset, length);
+				if(width > textRect.width)
+				{
+					length = lastlength;
+					break;
+				}
+				lastlength = length;
+				x = textRect.x + (textRect.width-width)/2;
+				while(length + offset < data.length && Character.isWhitespace(data[length+offset]))
+				{
+					length ++;
+				}
+				
+			} while( offset + length < data.length);
+			g.drawChars(data, offset, length, x, y);
+			y += fm.getHeight();
+			offset += length;
+			while ( offset < data.length && Character.isWhitespace(data[offset]))
+				offset ++;
+			length = 0;
+			} while( offset < data.length);
+		}
+	}
+
+	private static char[] strip(char[] data) {
+		boolean space = false;
+		for (int i = 1; i < data.length; i++) {
+			boolean sp = Character.isWhitespace(data[i]);
+			if(sp && space)
+			{
+				char[] ndata = new char[data.length - 1];
+				System.arraycopy(data, 0, ndata, 0, i);
+				System.arraycopy(data, i+1, ndata, i, ndata.length-i);
+				data = ndata;
+				i--;
+			}
+			space = sp;
+		}
+		return data;
+	}
+
+	public CourseIconUI() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public void installUI(JComponent c) {
+        installDefaults((AbstractButton) c);
+        installListeners((AbstractButton) c);
+        installKeyboardActions((AbstractButton) c);
+	}
+
+	public Dimension getPreferredSize(JComponent c) {
+		return getPreferredButtonSize((JButton)c, ((JButton) c).getIconTextGap());
+	}
+	
+	public static Dimension getPreferredButtonSize(AbstractButton b, int textIconGap)
+	    {
+	        if(b.getComponentCount() > 0) {
+	            return null;
+	        }
+
+	        Icon icon = (Icon) b.getIcon();
+	        String text = b.getText();
+
+	        Font font = b.getFont();
+	        FontMetrics fm = b.getFontMetrics(font);
+	          
+	        Rectangle iconR = new Rectangle();
+	        Rectangle textR = new Rectangle();
+	        Rectangle viewR = new Rectangle(120, 120);
+
+	        SwingUtilities.layoutCompoundLabel(
+	            b, fm, text, icon,
+	            b.getVerticalAlignment(), b.getHorizontalAlignment(),
+	            b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
+	            viewR, iconR, textR, (text == null ? 0 : textIconGap)
+	        );
+
+	        fixTextR(fm, text, textR); // fixit
+	        
+	        /* The preferred size of the button is the size of 
+	         * the text and icon rectangles plus the buttons insets.
+	         */
+
+	        Rectangle r = iconR.union(textR);
+
+	        Insets insets = b.getInsets();
+	        r.width += insets.left + insets.right;
+	        r.height += insets.top + insets.bottom;
+
+	        return r.getSize();
+	    }
+
+	private static void fixTextR(FontMetrics fm, String text, Rectangle textRect) {
+		int width = fm.stringWidth(text);
+		if(width <= textRect.width)
+		{
+// easy case
+			return;
+		} else {
+// uneasy case
+			int y = textRect.y + fm.getAscent();
+			char[] data = strip(text.toCharArray());
+			int offset = 0;
+			int length = 0;
+			int lastlength = data.length;
+			do {
+			do {
+				
+				while(length + offset < data.length && !Character.isWhitespace(data[length+offset]))
+				{
+					length ++;
+				}
+				width = fm.charsWidth(data, offset, length);
+				if(width > textRect.width)
+				{
+					length = lastlength;
+					break;
+				}
+				lastlength = length;
+				while(length + offset < data.length && Character.isWhitespace(data[length+offset]))
+				{
+					length ++;
+				}
+				
+			} while( offset + length < data.length);
+			textRect.height = Math.max(textRect.height, y + fm.getDescent()- textRect.y);
+			y += fm.getHeight();
+			offset += length;
+			while ( offset < data.length && Character.isWhitespace(data[offset]))
+				offset ++;
+			length = 0;
+			} while( offset < data.length);
+		}	
+		
+	}
+
+	
 }
