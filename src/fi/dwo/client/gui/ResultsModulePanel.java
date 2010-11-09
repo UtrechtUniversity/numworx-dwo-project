@@ -4,25 +4,18 @@
 package fi.dwo.client.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.MediaTracker;
-import java.awt.Color;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.text.MessageFormat;
-import java.util.EventObject;
-import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.swing.AbstractCellEditor;
@@ -32,13 +25,8 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
@@ -47,16 +35,14 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-//import org.jdesktop.swingx.JXLabel;
-
+import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.LessonGroup;
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.ResultScore;
 import fi.dwo.client.domain.ResultScoreIF;
 import fi.dwo.client.domain.ResultsModuleIF;
 import fi.dwo.client.domain.SchoolClass;
+import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.domain.UserGroup;
 import fi.dwo.client.domain.UserResultList;
@@ -413,7 +399,8 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
                 			time = " (in " + (totalTime/1000) + " sec)";
                 		else 
                 			time = " (in " + (totalTime/60000) + " min)";
-                		setText("<html><b>"+getText()+"</b>" + time+"</html>");
+                		//setText("<html><b>"+getText()+"</b>" + time+"</html>");
+                		setText(getText() + time);
                 	}
                 	
                 	setToolTipText(s);
