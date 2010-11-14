@@ -89,7 +89,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 		
 		if((s != null) && (!s.trim().equals(""))) 
 		{
-			if(s.substring(0,6).equals("<html>"))
+			if(s.length()>5 && s.substring(0,6).equals("<html>"))
 			{	htmlMode=true;
 				courseDescriptionHTML = new JLabel(s);
 				add(courseDescriptionHTML);
