@@ -146,7 +146,7 @@ public abstract class GuiConstants {
 			GUI_IMAGE_SCO = "resources/UU-brx-sco.png";
 			GUI_IMAGE_COURSE = "resources/UU-brx-course.png";
 		} else /**/
-		if(profile==1 || profile==23 || profile==33 || profile==34 || profile==43 || profile==44 || profile==46 || profile==47 || profile==52)
+		if(profile==1 || profile==23 || profile==33 || profile==34 || profile==43 || profile==44 || profile==46 || profile==47 || profile==52 || profile==54)
 		{	MAIN_BACKGROUND = new Color(255,255,255);
 		   	CELL_BACKGROUND = new Color(255,255,255);
 			FI_LOGO_LOCATION = "resources/fi.gif";
