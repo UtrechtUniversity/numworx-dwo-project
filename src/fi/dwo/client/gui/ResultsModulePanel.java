@@ -26,6 +26,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -34,6 +35,11 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+import javax.swing.text.StyledDocument;
 
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DwoHelper;
@@ -325,27 +331,64 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 				return component;
 			
 			}
-			button.setText(((JLabel) component).getText()); // ons kent ons!
+			button.setText(((JTextPane) component).getText()); // ons kent ons!
 			button.setBackground(component.getBackground());
 			return button;
 		}
 		
 	}
 	
+	public static class TextPaneRenderer extends JTextPane implements TableCellRenderer {
+
+		TextPaneRenderer() {
+			super();
+			setFont(GuiConstants.NORMAL_TEXT);
+			setEditable(false);
+		}
+
+		public Component getTableCellRendererComponent(JTable table,
+				Object value, boolean selected, boolean hasFocus, int row,
+				int column) {
+			if(selected)
+				setBackground(table.getSelectionBackground());
+			else
+				setBackground(table.getBackground());
+			setCell(value);
+			return this;
+		}
+
+		protected void setCell(Object value) {
+			setText(value.toString());
+		}
+		
+	}
+	
+	
+	
 	static final Float ZERO = new Float(0);
 	
-	public class FloatRenderer extends JLabel implements TableCellRenderer {
+	public class FloatRenderer extends TextPaneRenderer {
 
+		private StyledDocument document;
+		private Style defaultStyle;
+		private Style boldStyle;
+		private Style centerStyle;
+		
 		public FloatRenderer() {
 			super();
 			setOpaque(true);
-			setHorizontalAlignment(SwingConstants.CENTER);
-
+			document = getStyledDocument();
+			defaultStyle = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
+			StyleConstants.setFontFamily(defaultStyle, GuiConstants.NORMAL_TEXT.getFamily());
+			defaultStyle = document.addStyle("normal", defaultStyle);
+			boldStyle = document.addStyle("bold", defaultStyle);
+			centerStyle = document.addStyle("center", defaultStyle);
+			StyleConstants.setBold(boldStyle, true);
+			StyleConstants.setAlignment(centerStyle, StyleConstants.ALIGN_CENTER);
 		}
 		public Component getTableCellRendererComponent(JTable table,
 				Object value, boolean selected, boolean hasFocus, int row, int col) {
 			
-			setFont(GuiConstants.NORMAL_TEXT);
 			if(ZERO.equals(value))
 			{
 				setText("");
@@ -400,16 +443,34 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
                 		else 
                 			time = " (in " + (totalTime/60000) + " min)";
                 		//setText("<html><b>"+getText()+"</b>" + time+"</html>");
-                		setText(getText() + time);
+                		setStyledText(getText() , time);
+                	} else {
+                		setStyledText("", getText());
                 	}
                 	
                 	setToolTipText(s);
                 } else 
+                {
                 	setToolTipText(null);
+            		setStyledText("", getText());
+               	
+                }
 			}
 			return this;
 		}
 	
+		public void setStyledText(String bold, String normal)
+		{
+	        try {
+	        	document.remove(0, document.getLength());
+	        	document.insertString(0, normal, defaultStyle);
+				document.insertString(0, bold, boldStyle);
+				document.setParagraphAttributes(0, document.getLength(),centerStyle, false);
+			} catch (BadLocationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public class ClassEditor extends AbstractCellEditor implements ActionListener, TableCellEditor
@@ -501,7 +562,6 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 			if(head)
 			{
 				setOpaque(true);
-				JTableHeader header = table.getTableHeader();
 				setForeground(table.getForeground());
 				setBackground(new Color(230,230,230));
 				if(value instanceof UserGroup)
@@ -564,8 +624,6 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 	
 	private ResultsModuleIF domain;
 
-    private CenterPanel center;
-
     private JButton selectCoursesButton, copyButton;
 
     private JLabel label;
@@ -574,8 +632,6 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 
     private LessonGroup currentLessonGroup;
     
-    private final static int MAX_NAME_LENGTH = 13;
-
     /**
      * Creates a new ResultsModulePanel. It shows the resultscores of a group of
      * users and a group of lessons.
@@ -824,7 +880,8 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 				
      		} ;
     		table.setDefaultRenderer(Float.class, new FloatRenderer());
-    		table.setDefaultEditor(Float.class, new FloatEditor());
+    		//table.setDefaultRenderer(Float.class, new TextPaneRenderer());
+     		table.setDefaultEditor(Float.class, new FloatEditor());
     		table.setBackground(GuiConstants.MAIN_BACKGROUND);
     		table.getTableHeader().setBackground(table.getBackground());
     		table.getTableHeader().setReorderingAllowed(false);
