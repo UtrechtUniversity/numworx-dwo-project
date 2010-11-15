@@ -20,7 +20,10 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DateFormat;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.Random;
 import java.util.jar.JarEntry;
@@ -35,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -384,7 +388,9 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 	            }    
             }
         } else if(e.getSource() == exportScormButton) {
+// even uit in productie, aan bij testen
         	save();
+        // save2004();
         } else if(e.getSource() == importScormButton) {
 	    	open();
         } else if(e.getSource() == exportAppletButton) {
@@ -415,6 +421,84 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 		}
 	}
 	
+	ScormChooser scormChooser;
+	public void save2004()
+	{
+		if(scormChooser == null)
+		{
+			scormChooser = new ScormChooser();
+			//scormChooser.scorm2004.setEnabled(false);
+		}
+		int result = scormChooser.showSaveDialog(this);
+		if(result == JFileChooser.APPROVE_OPTION)
+		{
+			File file = scormChooser.getSelectedFile();
+			boolean is2004 = scormChooser.isScorm2004();
+			String naam = file.getName();
+			if(naam.lastIndexOf(".")>-1)naam = naam.substring(0,naam.indexOf("."));
+			scormTitel = naam;
+			if(is2004)
+				createScorm2004(file);
+			else
+				createZip(file.getAbsoluteFile().getParentFile().getAbsolutePath() + "/" + naam);
+		}		
+	}
+	
+	static class ScormParameters {
+// SCO parameters
+		static final int SCO_TITLE = 0;
+		static final int SCO_CLASS = 1;
+		static final int SCO_JAR   = 2;
+		static final int SCO_LAUNCH_DATA = 3;		
+		static final int SCO_ID = 4;
+		static final int SCO_DESCRIPTION = 5;
+// USER parameters
+		static final int USER_FIRSTNAME = 6;
+		static final int USER_LASTNAME = 7;
+		static final int USER_EMAIL = 8;
+// VERSION
+		static final int VERSION = 9;
+		
+		private static final int PLENGTH = 10;
+		private Object[] parameters = new Object[PLENGTH];
+		
+		public void setSco(Sco sco)
+		{
+			parameters[SCO_TITLE] = sco.getScoName();
+			parameters[SCO_DESCRIPTION] = sco.getDescription();
+			Class applet = sco.getApplet().getClass();
+			String name;
+			parameters[SCO_CLASS] = name = applet.getName();
+			parameters[SCO_JAR] = name.substring( name.indexOf('.', 3), name.lastIndexOf('.'));
+			parameters[SCO_ID] = String.valueOf(sco.getID());
+		}
+		public void setUser(User u)
+		{
+			parameters[USER_FIRSTNAME] = u.getFirstname();
+			parameters[USER_LASTNAME] = (u.getMiddleName() + " " + u.getLastName()).trim();
+			parameters[USER_EMAIL] = u.getEmail();
+		}
+		
+		private static final DateFormat FMT = new SimpleDateFormat("DDmmYYYY");
+		public ScormParameters()
+		{
+			Date now = new Date();
+			parameters[VERSION] = FMT.format(now);
+		}
+		
+		
+		
+		
+	}
+	
+	
+	private void createScorm2004(File file)
+	{
+	
+		
+		
+		
+	}
 	public void saveApplet()
 	{	String directory,naam;
 		saveDial.show();
