@@ -17,7 +17,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import sun.awt.VerticalBagLayout;
 
 public class HeaderPanel extends JLabel
 {
