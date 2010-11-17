@@ -1,0 +1,24 @@
+<html>
+	<head>
+		<title>{0}</title>
+	</head>
+	<body
+	
+	>
+	<p>
+		<applet
+			code="{1}"
+			codebase="http://www.fi.uu.nl/javaclasses/"
+			archive="/dwo/jars/{2}"
+			mayscript
+			width="800"
+			height="600"
+		>
+			<param name="language" value="{11}" >
+			<param name="API" value="fi.beans.scorm.JSScormAPI_1184_11" >
+			<param name="launchData" value="{3}" >
+			<param name="bgcolor" value="{12}" >			
+		</applet>
+	<p>
+	</body>
+</html>

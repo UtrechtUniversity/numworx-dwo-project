@@ -33,7 +33,8 @@ public class MapperCreator {
             { "UserResultList", "UserResultListMapper" },
             { "AppletConfig", "AppletConfigMapper" },
             { "DwoProfile", "DwoProfileMapper" },
-            };
+            { "AppletData", "AppletDataMapper" },
+           };
 
     /**
      * The mappers for external classes. e.g. The Applet-class is not in the DOMAIN_PACKAGE

@@ -49,7 +49,8 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
     private int appletID;
 
     private Applet applet;
-
+    private AppletData appletData;
+    
     protected Hashtable launchdata; // subclass implements lazyness
 
     public DwoIF dwo;
@@ -154,6 +155,20 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
         
     }
 
+    public AppletData getAppletData()
+    {
+    	if(appletData == null)
+    	{
+    		try {
+				appletData = (AppletData)PersistenceFacade.instance().get(appletID, AppletData.class);
+			} catch (PersistenceException e) {
+				e.printStackTrace();
+			}
+    	}
+    	return appletData;
+    }
+    
+    
     /**
      * Returs the name representing the LessonGroup object.
      * 

@@ -20,6 +20,7 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.SecureRandom;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
@@ -44,6 +45,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import fi.beans.appletutil.AppletUtil;
 import fi.beans.base64code.StringCodeObject;
 import fi.beans.licman.LicMan;
 import fi.beans.licman.LicenseException;
@@ -390,7 +392,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         } else if(e.getSource() == exportScormButton) {
 // even uit in productie, aan bij testen
         	save();
-        // save2004();
+        	//save2004();
         } else if(e.getSource() == importScormButton) {
 	    	open();
         } else if(e.getSource() == exportAppletButton) {
@@ -444,7 +446,31 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 		}		
 	}
 	
-	static class ScormParameters {
+	class ScormParameters {
+
+		private Random rn = new Random();
+
+	    private int rand(int lo, int hi) {
+	        int n = hi - lo + 1;
+	        int i = rn.nextInt() % n;
+	        if (i < 0)
+	            i = -i;
+	        return lo + i;
+	    }
+
+	    private String randomstring(int lo, int hi) {
+	        int n = rand(lo, hi);
+	        char b[] = new char[n];
+	        for (int i = 0; i < n; i++)
+	            b[i] = (char) rand('a', 'z');
+	        return new String(b);
+	    }
+
+	    private String randomstring() {
+	        return randomstring(10, 20);
+	    }
+
+		
 // SCO parameters
 		static final int SCO_TITLE = 0;
 		static final int SCO_CLASS = 1;
@@ -458,19 +484,39 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 		static final int USER_EMAIL = 8;
 // VERSION
 		static final int VERSION = 9;
-		
-		private static final int PLENGTH = 10;
+		static final int UUID = 10;
+		static final int LANG = 11;
+		static final int BGCOLOR = 12;
+		private static final int PLENGTH = 13;
 		private Object[] parameters = new Object[PLENGTH];
 		
 		public void setSco(Sco sco)
 		{
 			parameters[SCO_TITLE] = sco.getScoName();
 			parameters[SCO_DESCRIPTION] = sco.getDescription();
-			Class applet = sco.getApplet().getClass();
-			String name;
-			parameters[SCO_CLASS] = name = applet.getName();
-			parameters[SCO_JAR] = name.substring( name.indexOf('.', 3), name.lastIndexOf('.'));
+			parameters[SCO_CLASS] = sco.getAppletData().getClassName();
+			parameters[SCO_JAR] = sco.getAppletData().getJarName();
 			parameters[SCO_ID] = String.valueOf(sco.getID());
+			Hashtable launchData = null;
+			if(editMode) launchData = editComponent.getLaunchData();
+			else launchData = sco.getLaunchdata();
+			Class applet = sco.getApplet().getClass();
+			
+	// licentie manager, via een parameter
+			String licentie = "null";
+			try { 
+				DWO dwo = (DWO) DwoHelper.getApplet();
+				User u = dwo.getUser();
+				licentie = LicMan.getLicense(u.getSchool().getSchoolID(), dwo.getDwoProfile().getID(), applet);
+				launchData.put(LicMan.LICENSE_KEY, licentie);
+			} catch (LicenseException e)
+			{
+				// TODO iets beters dan printstacktrace
+				e.printStackTrace();
+			}
+			parameters[SCO_LAUNCH_DATA] = StringCodeObject.encodeObjectToString(launchData);
+			launchData.remove(LicMan.LICENSE_KEY);
+
 		}
 		public void setUser(User u)
 		{
@@ -479,22 +525,106 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 			parameters[USER_EMAIL] = u.getEmail();
 		}
 		
-		private static final DateFormat FMT = new SimpleDateFormat("DDmmYYYY");
+		private final DateFormat FMT = new SimpleDateFormat("ddMMyyyy");
+		private static final String UTF8 = "UTF-8";
 		public ScormParameters()
 		{
 			Date now = new Date();
 			parameters[VERSION] = FMT.format(now);
+			parameters[UUID] = randomstring();
+			parameters[LANG] = TextMapper.getLanguage();
+			parameters[BGCOLOR] =  "#" + Integer.toHexString(GuiConstants.MAIN_BACKGROUND.getRGB()).substring(2);
 		}
 		
+		public void copy(BufferedReader in, PrintWriter out) throws IOException
+		{
+			String line;
+			while( (line = in.readLine()) != null) 
+			{
+				out.println(MessageFormat.format(line, parameters));
+			}
+			out.flush();
+			in.close();
+		}
 		
+		public void copy(Reader in, Writer out) throws IOException
+		{
+			BufferedReader bin; 
+			PrintWriter pout;
+			if( in instanceof BufferedReader)
+				bin = (BufferedReader) in;
+			else
+				bin = new BufferedReader(in);
+			if( out instanceof PrintWriter)
+				pout = (PrintWriter) out;
+			else
+				pout = new PrintWriter(out);
+			copy(bin, pout);
+		}
 		
+		public void copy(InputStream in, OutputStream out) throws IOException
+		{
+			copy(new InputStreamReader(in, UTF8), new OutputStreamWriter(out, UTF8));
+		}
+		byte[] buf = new byte[1024];
+
+		public void rawCopy(InputStream in, OutputStream out) throws IOException {
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+            in.close();
+		}
 		
 	}
 	
 	
 	private void createScorm2004(File file)
 	{
-	
+		try {
+			ZipOutputStream out = new ZipOutputStream(new FileOutputStream(file));
+
+			AppletUtil au = DwoHelper.au;
+			
+			ScormParameters runner = new ScormParameters();
+			runner.setSco(sco);
+			runner.setUser( ((DWO) DwoHelper.applet).getUser());
+			
+// manifest
+			out.putNextEntry(new ZipEntry("imsmanifest.xml"));
+			runner.copy(au.getStream("resources/imsmanifest2004.txt"), out);
+			out.closeEntry();
+// metadata
+			out.putNextEntry(new ZipEntry("metadata.xml"));
+			runner.copy(au.getStream("resources/metadata.txt"), out);
+			out.closeEntry();
+// sco
+			out.putNextEntry(new ZipEntry("sco.html"));
+			runner.copy(au.getStream("resources/sco.txt"), out);
+			out.closeEntry();
+		
+// copies.....
+			// TODO
+	        String HTML_SOURCE = "http://www.fi.uu.nl/dwo/scorm/course/cp/";
+	        String[] scormFileNames = {
+	        		"adlcp_v1p3.xsd"
+	        		};
+	        
+	        for (int i=0; i<scormFileNames.length; i++) 
+	        {	String htmlSourceString = HTML_SOURCE + scormFileNames[i];
+	        	URL htmlSource = new URL(htmlSourceString);
+	        	URLConnection connection = htmlSource.openConnection();
+	        	InputStream in =  connection.getInputStream();
+	        	out.putNextEntry(new ZipEntry(scormFileNames[i]));
+	        	runner.rawCopy(in, out);
+	        	out.closeEntry();
+	        }
+		
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		
 		
