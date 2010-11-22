@@ -338,33 +338,6 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 		
 	}
 	
-	public static class TextPaneRenderer extends JTextPane implements TableCellRenderer {
-
-		TextPaneRenderer() {
-			super();
-			setFont(GuiConstants.NORMAL_TEXT);
-			setEditable(false);
-		}
-
-		public Component getTableCellRendererComponent(JTable table,
-				Object value, boolean selected, boolean hasFocus, int row,
-				int column) {
-			if(selected)
-				setBackground(table.getSelectionBackground());
-			else
-				setBackground(table.getBackground());
-			setCell(value);
-			return this;
-		}
-
-		protected void setCell(Object value) {
-			setText(value.toString());
-		}
-		
-	}
-	
-	
-	
 	static final Float ZERO = new Float(0);
 	
 	public class FloatRenderer extends TextPaneRenderer {
