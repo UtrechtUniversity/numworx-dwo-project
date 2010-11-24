@@ -51,6 +51,10 @@ Class-Path: algebrapijlenoefenen.jar
  geogebra.jar 
  normaleverdeling.jar 
  binomverdeling.jar 
+ tekenveelvlakopdr.jar 
+ geodefull.jar 
+ verknippen.jar 
+ fabriek.jar 
  tinyplayerapplet.jar 
  jl020.jar 
  geogebra_properties.jar 
