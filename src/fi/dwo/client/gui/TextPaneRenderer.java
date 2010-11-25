@@ -29,7 +29,7 @@ public class TextPaneRenderer extends JTextPane implements TableCellRenderer {
 	}
 
 	protected void setCell(Object value) {
-		setText(value.toString());
+		setText(value == null ? " ": value.toString());
 	}
 	
 }
