@@ -600,14 +600,26 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 			out.closeEntry();
 // sco
 			out.putNextEntry(new ZipEntry("sco.html"));
+// TODO sco.txt is profiel afhankelijk!
 			runner.copy(au.getStream("resources/sco.txt"), out);
 			out.closeEntry();
 		
 // copies.....
-			// TODO
+			// TODO meer xsd's?
 	        String HTML_SOURCE = "http://www.fi.uu.nl/dwo/scorm/course/cp/";
 	        String[] scormFileNames = {
-	        		"adlcp_v1p3.xsd"
+	        		"adlcp_v1p3.xsd",
+	        		"imscp_v1p1.xsd",
+	        		"imsmd_v1p2p4.xsd",
+	        		"sco/script/FiSco2004Script.js",
+	        		"sco/Image1.png",
+	        		"sco/Image2.png",
+	        		"sco/Image3.png",
+	        		"sco/Image4.png",
+	        		"sco/Image5.png",
+	        		"sco/Image6.png",
+	        		"sco/Image7.png",
+	        		"sco/Image8.png"
 	        		};
 	        
 	        for (int i=0; i<scormFileNames.length; i++) 

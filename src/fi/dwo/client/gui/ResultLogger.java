@@ -439,6 +439,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if(BUTTON_REFRESH == e.getActionCommand()){
 			requestLog();
+			requestCMIData();
 			resizeTable();
 		}
 		else if(e.getActionCommand() == SAVE)

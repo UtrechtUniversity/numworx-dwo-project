@@ -43,6 +43,16 @@
 			adlcp:scormType="sco"
 		>
 			<file href="sco.html" />
+			<file href="sco/script/FiSco2004Script.js" />
+			<file href="sco/Image1.png" />
+			<file href="sco/Image2.png" />
+			<file href="sco/Image3.png" />
+			<file href="sco/Image4.png" />
+			<file href="sco/Image5.png" />
+			<file href="sco/Image6.png" />
+			<file href="sco/Image7.png" />
+			<file href="sco/Image8.png" />
+			<file href="http://www.fi.uu.nl/dwo/jars/{2}" />
 		</resource>
 	</resources>			
 </manifest>
