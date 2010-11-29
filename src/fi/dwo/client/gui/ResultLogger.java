@@ -3,7 +3,6 @@ package fi.dwo.client.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Component;
@@ -14,8 +13,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -32,14 +29,10 @@ import java.util.TreeSet;
 import java.util.Map.Entry;
 
 import javax.swing.AbstractCellEditor;
-import javax.swing.AbstractListModel;
 import javax.swing.Box;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -47,13 +40,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.JViewport;
-import javax.swing.MutableComboBoxModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.ListDataListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -61,28 +52,17 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
-import org.apache.xmlrpc.applet.XmlRpcException;
-
 import fi.beans.base64code.StringCodeObject;
-import fi.beans.mainframe.MainFrame;
+import fi.beans.mathkit.MathKit;
 import fi.beans.scorm2xml.Scorm2Xml;
 import fi.beans.stringutils.StringUtils;
-import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.ResultScore;
-import fi.dwo.client.domain.ResultScoreIF;
-import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.SchoolClass;
-import fi.dwo.client.domain.SchoolGroup;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.User;
-import fi.dwo.client.domain.UserResultList;
-import fi.dwo.client.gui.ResultsModulePanel.ImageEditor;
 import fi.dwo.client.gui.ResultsModulePanel.ResultsModel;
-import fi.dwo.client.persistence.MapperCreator;
-import fi.dwo.client.persistence.MapperIF;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.PersistenceException;
-import fi.dwo.client.system.TextMapper;
 
 public class  ResultLogger extends JPanel implements ActionListener {
 
@@ -165,12 +145,15 @@ public class  ResultLogger extends JPanel implements ActionListener {
 	}
 	
 	boolean fuse;
-	void setOldMode() {
+	synchronized void setOldMode() {
 		if(!fuse)
 		{
 			tabpane.remove(1);
 			tabpane.remove(1);
 			tabpane.remove(1);
+			LogTable over = table[0];
+			table = new LogTable[1];
+			table[0] = over;
 			fuse = true;		// one shot
 		}
 	}
@@ -236,7 +219,14 @@ public class  ResultLogger extends JPanel implements ActionListener {
 					//resizeTable();
 					int y = scrollPane[index].getViewport().getViewPosition().y;
 					leerlingView.setViewPosition(new Point(0,y));
+					leerlingTable.setRowHeight(getTable(index).getRowHeight());
 				}			
+			}
+
+			private JTable getTable(int index) {
+				if(index < table.length)
+					return table[index];
+				return cmiTable;
 			}
 		};
 		tabpane.addChangeListener(l);
@@ -247,6 +237,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		leerlingTable.setFont(GuiConstants.NORMAL_TEXT);
 		cmiModel = new DefaultTableModel(1,1);
 		cmiTable = new JTable(cmiModel);
+		cmiTable.setDefaultRenderer(Object.class, new CMIRenderer());
 		JPanel pane2 = new JPanel(new BorderLayout());
 		pane2.add(cmiTable.getTableHeader(), BorderLayout.NORTH);
 		pane2.add(cmiTable, BorderLayout.CENTER);
@@ -699,13 +690,53 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		}
 		
 		public TableCellEditor getCellEditor(int row, int column) {
-			if(column>0)
+			if(column>=0)
 				return editor;
 			return super.getCellEditor(row, column);
 		}
 	}
 	
-	
+	public static class CMIRenderer implements TableCellRenderer
+	{
+		
+		JLabel defaultPane;
+		JTextPane   mathPane;
+		CMIRenderer() {
+			super();
+			defaultPane = new JLabel();
+			//defaultPane.setEditable(false);
+			defaultPane.setOpaque(true);
+			mathPane = new JTextPane();
+			mathPane.setEditable(false);
+			mathPane.setEditorKit(new MathKit());
+		}
+
+		protected Component setCell(Object value) {
+			if(String.valueOf(value).startsWith("<math"))
+			{
+				value = "<html><p>" + value + "</p></html>";
+				mathPane.setText(value.toString());
+				return mathPane;
+			} else {
+				defaultPane.setText(value == null ? " " : value.toString() );
+				return defaultPane;
+			}
+			
+		}
+
+		public Component getTableCellRendererComponent(JTable table,
+				Object value, boolean isSelected, boolean hasFocus, int row,
+				int column) {
+			Component result = setCell(value);
+			result.setFont(table.getFont());
+			if(isSelected)
+				result.setBackground(table.getSelectionBackground());
+			else
+				result.setBackground(table.getBackground());
+			return result;
+		}
+		
+	}
 	
 	public class LogRenderer extends JLabel implements TableCellRenderer {
 
