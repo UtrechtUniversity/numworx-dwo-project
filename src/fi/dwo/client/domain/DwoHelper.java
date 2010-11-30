@@ -20,7 +20,6 @@ import javax.swing.JOptionPane;
 
 import netscape.javascript.JSObject;
 
-import fi.dwo.client.gui.GuiCreator;
 import fi.dwo.client.gui.MainPanel;
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.mainframe.MainFrame;
@@ -34,13 +33,13 @@ import fi.beans.mainframe.MainFrame;
  */
 public final class DwoHelper {
 
-    public static AppletUtil au;
+    private static AppletUtil au;
     
     private static Hashtable loadedImages;
     
     private static String key;
 
-    public static Applet applet;
+    private static Applet applet;
     
     private static boolean isApplication = true; // default als je setApplet niet aanroept.
     

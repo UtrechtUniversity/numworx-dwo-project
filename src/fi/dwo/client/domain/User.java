@@ -38,7 +38,11 @@ public class User implements UserGroup {
      * Geeft het recht op Applet export
      */
     public static final char APPLET_EXPORT_RIGHT = 'a';
-
+    /**
+     * geeft recht op administratie van algemene modules
+     */
+    public static final char PROFILE_ADMIN_RIGHT = 'p';
+    
     private String rights = "";
     
     /**

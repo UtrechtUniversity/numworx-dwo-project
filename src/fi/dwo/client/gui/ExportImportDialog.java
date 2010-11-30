@@ -994,7 +994,7 @@ System.out.println("persistCourses " + course.getName());
 			}});
 		AppletUtil au = new AppletUtil(dwo);
 		DwoHelper.setAu(au);
-		DwoHelper.applet = dwo;
+		DwoHelper.setApplet(dwo);
 		dwo.setSize(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
 		new GuiCreator(dwo);
 		User user = PersistenceFacade.instance().login("peterb");

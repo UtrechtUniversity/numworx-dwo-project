@@ -1175,6 +1175,12 @@ public class PersistenceFacade {
 	            Vector v;
 	            v = DbAccessCreator.instance().getEditableCourses(
 	                    teacher.getSchool().getSchoolID());
+	            if(user.hasRight(User.PROFILE_ADMIN_RIGHT))
+	            {
+	            	Vector v2 = DbAccessCreator.instance().getEditableCoursesAdmin();
+	            	v.addAll(v2);
+	            }
+	            
 	            MapperIF mapper = MapperCreator.instance(Course.class);
 	            return (Course[]) mapper.getObjectFromReturn(v);
 	        } catch (IOException e) {

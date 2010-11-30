@@ -5,6 +5,8 @@ package fi.dwo.client.domain;
 
 import java.util.Arrays;
 
+import fi.dwo.client.gui.GuiCreator;
+
 /**
  * This class is responsible for the Teacher data. It extends <code>User</code>, 
  * so the main functionality is definied in <code>User</code>.
@@ -82,7 +84,26 @@ public class Teacher extends User {
      */
     public boolean hasRight(char right)
     {
-    	return getRights().indexOf(right)>=0;
+    	String  id;
+    	//id = "[" + GuiCreator.instance().getDWO().getDwoProfile().getID() + "]";
+    	id = "[" + ((DwoIF)DwoHelper.getApplet()).getDwoProfile().getID() + "]";
+    	
+    	String rights = getRights();
+    	int index = rights.indexOf(id);
+    	if(index < 0)
+    	{
+    		id = "[]";
+    		index = rights.indexOf(id);
+    		if(index < 0)
+    		{
+    			//return false;
+    			id=""; 
+    			index = 0;
+    		}
+    	}
+    	int end = rights.indexOf('[', index + id.length());
+    	if(end < 0) end = rights.length();
+    	return rights.substring(index, end).indexOf(right)>=0;
     }
 
 }

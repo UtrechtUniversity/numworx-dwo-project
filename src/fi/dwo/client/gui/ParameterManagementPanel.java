@@ -584,11 +584,11 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 		try {
 			ZipOutputStream out = new ZipOutputStream(new FileOutputStream(file));
 
-			AppletUtil au = DwoHelper.au;
+			AppletUtil au = DwoHelper.getAu();
 			
 			ScormParameters runner = new ScormParameters();
 			runner.setSco(sco);
-			runner.setUser( ((DWO) DwoHelper.applet).getUser());
+			runner.setUser(GuiCreator.instance().getUser());
 			
 // manifest
 			out.putNextEntry(new ZipEntry("imsmanifest.xml"));
@@ -715,8 +715,8 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 // licentie manager, via een parameter
 		String licentie = "null";
 		try { 
-			DWO dwo = (DWO) DwoHelper.getApplet();
-			User u = dwo.getUser();
+			DWO dwo = GuiCreator.instance().getDWO();
+			User u = GuiCreator.instance().getUser();
 			licentie = LicMan.getLicense(u.getSchool().getSchoolID(), dwo.getDwoProfile().getID(), applet);
 			launchData.put(LicMan.LICENSE_KEY, licentie);
 		} catch (LicenseException e)
