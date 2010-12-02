@@ -41,6 +41,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
+import javax.swing.JToolTip;
 import javax.swing.JViewport;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
@@ -53,6 +54,8 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 import fi.beans.base64code.StringCodeObject;
+import fi.beans.mathkit.JMathPane;
+import fi.beans.mathkit.JMathToolTip;
 import fi.beans.mathkit.MathKit;
 import fi.beans.scorm2xml.Scorm2Xml;
 import fi.beans.stringutils.StringUtils;
@@ -358,29 +361,28 @@ public class  ResultLogger extends JPanel implements ActionListener {
 			cmiModel.setRowCount(leerlingen.length+1);
 			
 			SortedSet set = new TreeSet();
-			cmiKeys .clear();
-			JTable table = cmiTable;
-
-			List keys = cmiKeys;
-			DefaultTableModel model = cmiModel;
-			
+			cmiKeys.clear();
 			Map[] data = new Map[leerlingen.length];
 			for(int i = 0; i < leerlingen.length; i++) {
 				User leerling = leerlingen[i];
 				Properties CMIData = getCMIData(leerling, sco);
-				Map strings = CMIData;
-				data[i] = strings;
-				if(strings == null)	continue;
-				set.addAll(strings.keySet());
+				data[i] = CMIData;
+				if(CMIData == null)	continue;
+				set.addAll(CMIData.keySet());
+// deze is twijfelachtig.....			
+				if(CMIData.containsKey("cmi.interactions.0.id"))
+				{
+					setAttempts(CMIData, i+1);
+				}
+				
 			}
 			
-			keys.addAll(set);
-			model.setColumnCount(keys.size());
+			cmiKeys.addAll(set);
+			cmiModel.setColumnCount(cmiKeys.size());
 			
-				JTable tablei = table;
-				TableColumnModel columnModel = tablei.getColumnModel();
-				for (int i = 0; i < keys.size(); i++) {	
-					columnModel.getColumn(i).setHeaderValue(keys.get(i));
+				TableColumnModel columnModel = cmiTable.getColumnModel();
+				for (int i = 0; i < cmiKeys.size(); i++) {	
+					columnModel.getColumn(i).setHeaderValue(cmiKeys.get(i));
 				}
 			
 			
@@ -392,15 +394,15 @@ public class  ResultLogger extends JPanel implements ActionListener {
 					continue;
 				Iterator iterator;
 				iterator = strings.entrySet().iterator();
-				for (int j = 0; j < keys.size(); j++) {
-					model.setValueAt(null, i1, j);
+				for (int j = 0; j < cmiKeys.size(); j++) {
+					cmiModel.setValueAt(null, i1, j);
 				}
 				while (iterator.hasNext()) {
 					Entry object = (Entry) iterator.next();
 					Object key = object.getKey();
 					Object value = object.getValue();
 					int index = cmiKeys.indexOf(key);
-					model.setValueAt(value, i1, index);
+					cmiModel.setValueAt(value, i1, index);
 				}
 			}
 		} catch (Exception e1) {
@@ -412,6 +414,24 @@ public class  ResultLogger extends JPanel implements ActionListener {
 	
 	
 	
+	private void setAttempts(Properties data, int i) {
+		for(int j = 0; true; j++)
+		{
+			String prefix = "cmi.interactions." + j + ".";
+			String key = data.getProperty(prefix + "id");
+			if(key == null)
+				break;
+			int z = keys.indexOf(key);
+			Map map = (Map) model.getValueAt(i, z);
+			List v = (List)map.get(LOGKEY_ATTEMPTS);
+			if(v == null){
+				v = new Vector();
+				map.put(LOGKEY_ATTEMPTS, v);
+			}
+			v.add(data.getProperty(prefix + "learner_response")+ ";");
+		}
+	}
+
 	private Properties getCMIData(User u, Sco s) throws PersistenceException {
 		final PersistenceFacade instance = PersistenceFacade.instance();
 		String r = instance.LMSGetValue(s, u, Scorm2Xml.COCD);
@@ -674,6 +694,10 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		private LogRenderer renderer = new LogRenderer();
 		private LogEditor editor = new LogEditor();
 		
+		public JToolTip createToolTip() {
+			return new JMathToolTip();
+		}
+
 		public LogTable(TableModel model) {	
 			super(model);
 		}
@@ -701,15 +725,14 @@ public class  ResultLogger extends JPanel implements ActionListener {
 	{
 		
 		JLabel defaultPane;
-		JTextPane   mathPane;
+		JMathPane   mathPane;
 		CMIRenderer() {
 			super();
 			defaultPane = new JLabel();
 			//defaultPane.setEditable(false);
 			defaultPane.setOpaque(true);
-			mathPane = new JTextPane();
+			mathPane = new JMathPane();
 			mathPane.setEditable(false);
-			mathPane.setEditorKit(new MathKit());
 		}
 
 		protected Component setCell(Object value) {
@@ -839,12 +862,12 @@ public class  ResultLogger extends JPanel implements ActionListener {
 				        	setText(answer);
 				        	if(hasAttempts)
 				        	{
-						    	String text = "<html>";
+						    	String text = "<html><p>";
 								for(int i=0 ; i<attempts.size() ; i++)
 								{	String newText = (String)attempts.elementAt(i);
 									text = text + newText.substring(0, newText.indexOf(";")) + "<BR>";
 								}
-								text = text + "</html>";
+								text = text + "<p></html>";
 								setToolTipText(text);
 				        	}
 				        	
