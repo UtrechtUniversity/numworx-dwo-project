@@ -765,11 +765,11 @@ public class  ResultLogger extends JPanel implements ActionListener {
 	public class LogRenderer extends JLabel implements TableCellRenderer {
 
 		private String logModeKey = "logScore";
-		
+		private JMathPane mathpane = new JMathPane();
 		public LogRenderer() {
 			super();
 			setOpaque(true);
-			setHorizontalAlignment(SwingConstants.CENTER); //TODO zie FloatRenderer
+			setHorizontalAlignment(CENTER);
 
 		}
 		
@@ -865,12 +865,19 @@ public class  ResultLogger extends JPanel implements ActionListener {
 						    	String text = "<html><p>";
 								for(int i=0 ; i<attempts.size() ; i++)
 								{	String newText = (String)attempts.elementAt(i);
-									text = text + newText.substring(0, newText.indexOf(";")) + "<BR>";
+									text = text + newText.substring(0, newText.indexOf(";")) + "<br>";
 								}
 								text = text + "<p></html>";
 								setToolTipText(text);
 				        	}
-				        	
+				  // override <math stuff      	
+				        	if(answer.startsWith("<math"))
+				        	{
+				        		mathpane.setText("<html><p style='text-align: center'>"+ answer + "</p></html>");
+				        		mathpane.setToolTipText(getToolTipText());
+				        		mathpane.setBackground(getBackground());
+				        		return mathpane;
+				        	}
 				        }
 			        }
 			        if(logModeKey == LOGKEY_ERRORCOUNT && hasErrorCount) {
