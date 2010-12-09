@@ -73,12 +73,11 @@ public class ScormChooser extends JFileChooser  {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		Frame dummy = new Frame("dummy");
 		dummy.show();
 		ScormChooser chooser = new ScormChooser();
-		JDialog dialog = chooser.createDialog(dummy);
-		dialog.show();
+		chooser.showSaveDialog(dummy);
+		
 		System.out.println(chooser.getSelectedFile());
 		System.out.println(chooser.isScorm2004());
 		System.exit(0);
@@ -96,7 +95,7 @@ class ScormFilter extends FileFilter
 {
 
 	public boolean accept(File f) {
-		return f.getName().toLowerCase().endsWith(".zip");
+		return f.isDirectory() || f.getName().toLowerCase().endsWith(".zip");
 	}
 
 	public String getDescription() {

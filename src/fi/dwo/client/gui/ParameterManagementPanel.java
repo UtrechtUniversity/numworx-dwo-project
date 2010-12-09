@@ -505,9 +505,8 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 	// licentie manager, via een parameter
 			String licentie = "null";
 			try { 
-				DWO dwo = (DWO) DwoHelper.getApplet();
-				User u = dwo.getUser();
-				licentie = LicMan.getLicense(u.getSchool().getSchoolID(), dwo.getDwoProfile().getID(), applet);
+				User u = GuiCreator.instance().getUser();
+				licentie = LicMan.getLicense(u.getSchool().getSchoolID(), sco.getCourse().getDwoProfile(), applet);
 				launchData.put(LicMan.LICENSE_KEY, licentie);
 			} catch (LicenseException e)
 			{
@@ -719,9 +718,8 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 // licentie manager, via een parameter
 		String licentie = "null";
 		try { 
-			DWO dwo = GuiCreator.instance().getDWO();
 			User u = GuiCreator.instance().getUser();
-			licentie = LicMan.getLicense(u.getSchool().getSchoolID(), dwo.getDwoProfile().getID(), applet);
+			licentie = LicMan.getLicense(u.getSchool().getSchoolID(), sco.getCourse().getDwoProfile(), applet);
 			launchData.put(LicMan.LICENSE_KEY, licentie);
 		} catch (LicenseException e)
 		{

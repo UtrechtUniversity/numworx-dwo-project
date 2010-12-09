@@ -32,7 +32,7 @@
 			height="490"
 		>
 			<param name="language" value="{11}" >
-			<param name="API" value="fi.beans.scorm.JSScormAPI" >
+			<param name="API" value="fi.beans.scorm.JSScormAPI_1484_11" >
 			<param name="launchData" value="{3}" >
 			<param name="bgcolor" value="{12}" >			
 		</applet>
