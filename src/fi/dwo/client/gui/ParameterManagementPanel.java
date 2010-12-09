@@ -599,9 +599,13 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 			runner.copy(au.getStream("resources/metadata.txt"), out);
 			out.closeEntry();
 // sco
-			out.putNextEntry(new ZipEntry("sco.html"));
-// TODO sco.txt is profiel afhankelijk!
-			runner.copy(au.getStream("resources/sco.txt"), out);
+			out.putNextEntry(new ZipEntry("sco/sco.html"));
+// sco.txt is profiel afhankelijk!
+			int profile = sco.getCourse().getDwoProfile();
+			InputStream in = au.getStream("resources/sco-" + profile + ".txt");
+			if(in == null)
+				in = au.getStream("resources/sco.txt");
+			runner.copy(in, out);
 			out.closeEntry();
 		
 // copies.....
@@ -626,7 +630,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 	        {	String htmlSourceString = HTML_SOURCE + scormFileNames[i];
 	        	URL htmlSource = new URL(htmlSourceString);
 	        	URLConnection connection = htmlSource.openConnection();
-	        	InputStream in =  connection.getInputStream();
+	        	in =  connection.getInputStream();
 	        	out.putNextEntry(new ZipEntry(scormFileNames[i]));
 	        	runner.rawCopy(in, out);
 	        	out.closeEntry();

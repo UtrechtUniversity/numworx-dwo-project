@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<title>{0}</title>
-		<script type="text/javascript" src="sco/script/FiSco2004Script.js"></script>
+		<script type="text/javascript" src="script/FiSco2004Script.js"></script>
 		<script>
 			var exitPageStatus;
 		

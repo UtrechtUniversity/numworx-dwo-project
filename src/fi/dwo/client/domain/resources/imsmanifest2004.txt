@@ -39,10 +39,10 @@
 		<resource
 			identifier="RES-{10}"
 			type="webcontent"
-			href="sco.html"
+			href="sco/sco.html"
 			adlcp:scormType="sco"
 		>
-			<file href="sco.html" />
+			<file href="sco/sco.html" />
 			<file href="sco/script/FiSco2004Script.js" />
 			<file href="sco/Image1.png" />
 			<file href="sco/Image2.png" />
