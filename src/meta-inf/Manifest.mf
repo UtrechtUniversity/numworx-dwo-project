@@ -54,8 +54,10 @@ Class-Path: algebrapijlenoefenen.jar
  tekenveelvlakopdr.jar 
  geodefull.jar 
  blocks.jar 
+ getallenblokjes.jar 
  verknippen.jar 
  fabriek.jar 
+ kikker.jar 
  tinyplayerapplet.jar 
  jl020.jar 
  geogebra_properties.jar 
