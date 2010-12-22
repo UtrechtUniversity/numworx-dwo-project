@@ -391,8 +391,8 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             }
         } else if(e.getSource() == exportScormButton) {
 // even uit in productie, aan bij testen
-        	save();
-        	//save2004();
+        	//save();
+        	save2004();
         } else if(e.getSource() == importScormButton) {
 	    	open();
         } else if(e.getSource() == exportAppletButton) {

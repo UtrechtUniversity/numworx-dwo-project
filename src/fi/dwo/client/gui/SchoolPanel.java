@@ -23,6 +23,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -93,6 +94,11 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
         	            model.deleteRow(row);
                     }   
                 }
+			} else if (value == usersImage)
+			{
+				School sc = model.school[row];
+				JDialog rightsDialog = new RightsDialog(SchoolPanel.this, sc);
+				rightsDialog.show();
 			}
 			fireEditingStopped();
 		}

@@ -12,7 +12,7 @@ import fi.dwo.client.system.TextMapper;
  * @author M.J.B. Kupers
  *  
  */
-public class User implements UserGroup {
+public class User implements UserGroup, Comparable {
 
     private int userID;
 
@@ -373,6 +373,20 @@ public class User implements UserGroup {
 	 */
 	public boolean hasRight(char right) {
 		return false;
+	}
+
+	/**
+	 * Compare 2 users
+	 * @param o1 user 1
+	 * @param o2 user 2
+	 * @return -1/0/+1
+	 */
+	public int compareTo(Object o2) {
+		User u2 = (User)o2;
+		int r = getName().compareToIgnoreCase(u2.getName());
+		if(r == 0)
+			r = getUsername().compareToIgnoreCase(u2.getUsername());
+		return r;
 	}
 
 }

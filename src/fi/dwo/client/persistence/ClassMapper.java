@@ -45,7 +45,7 @@ public class ClassMapper extends XmlRpcMapper {
      */
     public Object getObjectFromReturn(Hashtable data) {
         fi.dwo.client.domain.SchoolClass c = null;
-        if (data.get("classID") == null) { //We don't know enough to make a
+        if (data == null || data.get("classID") == null) { //We don't know enough to make a
                                            // classobject
             return null;
         } else if (data.get("classID") instanceof String) { //If it is a string, it was null

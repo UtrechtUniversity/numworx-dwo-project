@@ -42,7 +42,7 @@ import fi.dwo.client.system.RegisterException;
 import fi.dwo.client.system.SchoolException;
 import fi.dwo.client.system.TextMapper;
 
-public class UserManagementPanel extends JPanel implements CenterSubPanel, Comparator {
+public class UserManagementPanel extends JPanel implements CenterSubPanel {
 
 	static class TeacherDelegate extends Teacher {
 		User u;
@@ -295,7 +295,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel, Compa
 				e.printStackTrace();
 			}
 		}
-		Arrays.sort(userList, this);
+		Arrays.sort(userList);
 		
 		UserModel dm = new UserModel();
 		dm.userList = userList; userList = null;
@@ -359,20 +359,5 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel, Compa
 
 	}
 	
-	/**
-	 * Compare 2 users
-	 * @param o1 user 1
-	 * @param o2 user 2
-	 * @return -1/0/+1
-	 */
-	
-	public int compare(Object o1, Object o2) {
-		User u1 = (User)o1;
-		User u2 = (User)o2;
-		int r = u1.getName().compareToIgnoreCase(u2.getName());
-		if(r == 0)
-			r = u1.getUsername().compareToIgnoreCase(u2.getUsername());
-		return r;
-	}
 
 }

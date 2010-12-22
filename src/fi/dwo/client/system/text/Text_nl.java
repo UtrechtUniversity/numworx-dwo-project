@@ -161,7 +161,7 @@ public class Text_nl extends ListResourceBundle {
 
          { TextMapper.GUIS_TLTP_DELETE_SCHOOL, "School {0} verwijderen"},
          { TextMapper.GUIS_TLTP_EDIT_SCHOOL, "Wijzig Schoolnaam"},
-         { TextMapper.GUIS_TLTP_USERS_SCHOOL, "Leerlingen van {0}"},
+         { TextMapper.GUIS_TLTP_USERS_SCHOOL, "Docenten van {0}"},
          
          { TextMapper.GUIS_ADD_SCHOOL, "School aanmaken"},
          { TextMapper.GUIS_DELETE_SCHOOL, "Verwijder school"},

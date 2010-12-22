@@ -633,7 +633,15 @@ public class  ResultLogger extends JPanel implements ActionListener {
 	                    PrintWriter out = new PrintWriter(new FileWriter(f));
 	                    int len = model.getRowCount();
 	                    int width = model.getColumnCount();
-	                    for(int i = 0; i < len; i++) {
+	                    out.print("Naam");
+                        for(int j = 0; j < width; j++) {
+                            TableColumnModel columnModel = table[0].getColumnModel();
+                            Object value = columnModel.getColumn(j).getHeaderValue();
+                            out.print(TAB);
+                            out.print(value);
+                        }
+                        out.println();
+                        for(int i = 0; i < len; i++) {
 	                    	Object name = leerlingModel.getValueAt(i, 0);
 	                    	out.print(name==null?"":name.toString());
 	                        for(int j = 0; j < width; j++) {
