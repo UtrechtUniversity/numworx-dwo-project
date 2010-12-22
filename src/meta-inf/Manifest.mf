@@ -53,6 +53,7 @@ Class-Path: algebrapijlenoefenen.jar
  binomverdeling.jar 
  tekenveelvlakopdr.jar 
  geodefull.jar 
+ mozarch.jar 
  blocks.jar 
  getallenblokjes.jar 
  verknippen.jar 
