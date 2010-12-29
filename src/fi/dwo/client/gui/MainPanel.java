@@ -203,7 +203,7 @@ public class MainPanel extends JPanel {
 	       	int h = getSize().height;
 	       	int dw = w-800;
 	       	int dh = h-600;
-	       	int rand = 20;
+	       	int rand = 80;
 	       	int strook = 100;
 	       	final int H1 = 130;
 	       	final int H2 = 141;

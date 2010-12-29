@@ -31,7 +31,7 @@ public class HeaderPanel extends JLabel
 	    Font f = GuiConstants.HEADER_TEXT;
 	    final boolean ibg = GuiConstants.GUI_IMAGE_BG;
 		if(ibg)
-	    	f = new Font(f.getName(), f.getStyle(), 26);
+	    	f = new Font(f.getName(), f.getStyle(), 20);
 		setFont(f);
 		origFont = f;
 	    setOpaque(!ibg);

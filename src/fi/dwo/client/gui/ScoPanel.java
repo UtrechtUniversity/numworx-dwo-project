@@ -148,8 +148,8 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
     	Box hbox = Box.createHorizontalBox();
     	String text = sco.getScoName();
     	JLabel l;
-    	if(!scoView)
-    		text = sco.getSequencenr() + ".  " + text;    	
+    	//if(!scoView)
+    		//text = sco.getSequencenr() + ".  " + text;
     	HeaderPanel hp = new HeaderPanel(text, true);
 	    hp.setHorizontalAlignment(SwingConstants.LEFT);
     	hp.setBorder(BorderFactory.createEmptyBorder(0,10,0,0));

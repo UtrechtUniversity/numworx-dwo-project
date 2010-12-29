@@ -85,6 +85,8 @@ public abstract class GuiConstants {
     public static Font HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
     
     public static boolean GUI_IMAGE_BG = false;
+    
+    public static int dwoProfile = 1;
 
     /* Size constants */
     public final static int DWO_WIDTH = 800;
@@ -93,6 +95,10 @@ public abstract class GuiConstants {
 
     public final static int CENTER_HEIGHT = 503;
  
+   public static int getDwoProfile() {
+	   return dwoProfile;
+   }
+    
     /**
      * Zet de huisstijl van een profiel.
      * Alleen profiel 3 (rekenweb) heeft een aparte kleurstelling dan al 
@@ -103,6 +109,7 @@ public abstract class GuiConstants {
      */
 	public static void setDwoProfile(int profile)
 	{
+		dwoProfile = profile;
 //		if(profile==1)
 //		{	MAIN_BACKGROUND = new Color(221, 238, 255);
 //    		CELL_BACKGROUND = new Color(221, 238, 255);
@@ -134,7 +141,7 @@ public abstract class GuiConstants {
 			GUI_IMAGE_WELCOME = "resources/UU-rekenweb-welkom.png";
 			GUI_IMAGE_SCO = "resources/UU-rekenweb-sco.png";
 			GUI_IMAGE_COURSE = "resources/UU-rekenweb-course.png";
-		} else /**/
+		} else 
 		if(profile==45)
 		{	MAIN_BACKGROUND = new Color(255,255,255);
 		   	CELL_BACKGROUND = new Color(255,255,255);
@@ -151,6 +158,7 @@ public abstract class GuiConstants {
 		   	CELL_BACKGROUND = new Color(255,255,255);
 			FI_LOGO_LOCATION = "resources/fi.gif";
 			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
+			HEADER_COLOR = new Color(0,0,0);
 			GUI_IMAGE_BG = true;
 			GUI_IMAGE_WELCOME = "resources/UU-dwo-welkom.png";
 			GUI_IMAGE_SCO = "resources/UU-dwo-sco.png";
@@ -161,6 +169,7 @@ public abstract class GuiConstants {
 		   	CELL_BACKGROUND = new Color(255,255,255);
 			FI_LOGO_LOCATION = "resources/fi.gif";
 			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
+			HEADER_COLOR = new Color(0,0,0);
 			//if(!DwoHelper.isApplication())
 				GUI_IMAGE_BG = true;
 			//else GUI_IMAGE_BG = false;
@@ -173,6 +182,7 @@ public abstract class GuiConstants {
 		   	CELL_BACKGROUND = new Color(255,255,255);
 			FI_LOGO_LOCATION = "resources/fi.gif";
 			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
+			HEADER_COLOR = new Color(0,0,0);
 			GUI_IMAGE_BG = true;
 			GUI_IMAGE_WELCOME = "resources/UU-nkbw-welkom.png";
 			GUI_IMAGE_SCO = "resources/UU-nkbw-sco.png";
@@ -183,6 +193,7 @@ public abstract class GuiConstants {
 		   	CELL_BACKGROUND = new Color(255,255,255);
 			FI_LOGO_LOCATION = "resources/fi.gif";
 			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
+			HEADER_COLOR = new Color(0,0,0);
 			GUI_IMAGE_BG = true;
 			GUI_IMAGE_WELCOME = "resources/zoefi-welkom22.jpg";
 			GUI_IMAGE_SCO = "resources/zoefi-sco.jpg";
@@ -193,6 +204,7 @@ public abstract class GuiConstants {
 		   	CELL_BACKGROUND = new Color(255,255,255);
 			FI_LOGO_LOCATION = "resources/fi.gif";
 			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
+			HEADER_COLOR = new Color(0,0,0);
 			GUI_IMAGE_BG = true;
 			GUI_IMAGE_WELCOME = "resources/UU-mi-welkom.png";
 			GUI_IMAGE_SCO = "resources/UU-mi-sco.png";
@@ -203,26 +215,52 @@ public abstract class GuiConstants {
 		   	CELL_BACKGROUND = new Color(255,255,255);
 			FI_LOGO_LOCATION = "resources/fi.gif";
 			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
+			HEADER_COLOR = new Color(0,0,0);
 			GUI_IMAGE_BG = true;
 			GUI_IMAGE_WELCOME = "resources/UU-mbo-welkom.png";
 			GUI_IMAGE_SCO = "resources/UU-mbo-sco.png";
 			GUI_IMAGE_COURSE = "resources/UU-mbo-course.png";
 		}else
-		if(profile==38 || profile==20  || profile==13 || profile==48)
+		if(profile==38 || profile==13 || profile==20 || profile==48)
 		{	MAIN_BACKGROUND = new Color(255,255,255);
 	    	CELL_BACKGROUND = new Color(255,255,255);
 			FI_LOGO_LOCATION = "resources/fi.gif";
 			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
+			HEADER_COLOR = new Color(0,0,0);
 			GUI_IMAGE_BG = true;
 			GUI_IMAGE_WELCOME = "resources/EPN-welkom.jpg";
 			GUI_IMAGE_SCO = "resources/EPN-sco.png";
 			GUI_IMAGE_COURSE = "resources/EPN-course.png";
 		} else
+		if(profile==57)
+		{	MAIN_BACKGROUND = new Color(255,255,255);
+		   	CELL_BACKGROUND = new Color(255,255,255);
+			FI_LOGO_LOCATION = "resources/fi.gif";
+			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
+			HEADER_COLOR = new Color(0,0,0);
+			GUI_IMAGE_BG = true;
+			GUI_IMAGE_WELCOME = "resources/EPN-welkom.jpg";
+			GUI_IMAGE_SCO = "resources/GR-sco.png";
+			GUI_IMAGE_COURSE = "resources/EPN-course.png";
+		} else
+		if(profile==51 || profile==27)
+		{	MAIN_BACKGROUND = new Color(255,255,255);
+	    	CELL_BACKGROUND = new Color(255,255,255);
+			FI_LOGO_LOCATION = "resources/fi.gif";
+			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 33);
+			HEADER_COLOR = new Color(0,95,169);
+			GUI_IMAGE_BG = true;
+			GUI_IMAGE_WELCOME = "resources/UU-dwo-welkom.png";
+			GUI_IMAGE_SCO = "resources/MW-sco.png";
+			GUI_IMAGE_COURSE = "resources/UU-dwo-course.png";
+		}
+		else
 			if(profile==39)
 			{	MAIN_BACKGROUND = new Color(255,255,255);
 		    	CELL_BACKGROUND = new Color(255,255,255);
 				FI_LOGO_LOCATION = "resources/fi.gif";
 				HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
+				HEADER_COLOR = new Color(0,0,0);
 				GUI_IMAGE_BG = true;
 				GUI_IMAGE_WELCOME = "resources/UU-sk-welkom.png";
 				GUI_IMAGE_SCO = "resources/UU-sk-sco.png";
@@ -233,6 +271,7 @@ public abstract class GuiConstants {
 		    	CELL_BACKGROUND = new Color(255,255,255);
 				FI_LOGO_LOCATION = "resources/fi.gif";
 				HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
+				HEADER_COLOR = new Color(0,0,0);
 				GUI_IMAGE_BG = true;
 				GUI_IMAGE_WELCOME = "resources/UU-ec-welkom.png";
 				GUI_IMAGE_SCO = "resources/UU-ec-sco.png";
@@ -243,6 +282,7 @@ public abstract class GuiConstants {
 			   	CELL_BACKGROUND = new Color(255,255,255);
 				FI_LOGO_LOCATION = "resources/fi.gif";
 				HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
+				HEADER_COLOR = new Color(0,0,0);
 				GUI_IMAGE_BG = true;
 				GUI_IMAGE_WELCOME = "resources/UU-bvsd-welkom.png";
 				GUI_IMAGE_SCO = "resources/UU-bvsd-sco.png";

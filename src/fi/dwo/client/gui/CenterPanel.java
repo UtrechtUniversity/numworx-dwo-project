@@ -187,6 +187,8 @@ public class CenterPanel extends JPanel implements CourseContainer {
     public void loadTotal(CenterSubPanel panel) {
     	if(GuiConstants.GUI_IMAGE_BG) // todo tuning
     		setBorder(BorderFactory.createEmptyBorder(10, 7, 8, 7));
+    	if(GuiConstants.getDwoProfile()==51 || GuiConstants.getDwoProfile()==27)setBorder(BorderFactory.createEmptyBorder(30, 42, 78, 42));
+    	if(GuiConstants.getDwoProfile()==57)setBorder(BorderFactory.createEmptyBorder(10, 42, 62, 42));
     	invalidate();
         if (centerSubPanel != null) {
             if(DwoHelper.umpc) {
