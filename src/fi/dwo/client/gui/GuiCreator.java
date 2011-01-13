@@ -90,6 +90,8 @@ public class GuiCreator {
             	
             	
                 login(dwo.getUser());
+ 
+                //ModuleTreePanel.create(dwo );  
             }
         } catch (LoginException e) {
             throw e;

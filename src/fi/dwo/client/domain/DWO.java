@@ -48,6 +48,7 @@ import fi.dwo.client.gui.CourseIcon;
 //import fi.dwo.client.gui.DwoMessageDialog;
 import fi.dwo.client.gui.GuiConstants;
 import fi.dwo.client.gui.GuiCreator;
+import fi.dwo.client.gui.ModuleTreePanel;
 import fi.dwo.client.gui.ScoLinkedLabel;
 import fi.dwo.client.gui.ScoPanel;
 import fi.dwo.client.persistence.MapperCreator;
@@ -1228,7 +1229,10 @@ private static boolean isValidEmail(String email) {
     {  	currentSco = sco;
     }
 
-    /**
+    
+    	  	
+
+	/**
      * The main method of the class.
      * 
      * @param args

@@ -861,4 +861,8 @@ System.err.println("sum = ["+result+"]");
         
         return 1;
     }
+    
+    public String toString() {
+    	return getScoName();
+    }
 }

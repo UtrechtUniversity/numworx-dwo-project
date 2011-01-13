@@ -24,8 +24,8 @@ public class DbAccessLocal extends DbAccess {
 	public Connection getConnection() throws SQLException {
 		if(c != null && !c.isClosed())
 			return c;
-		c = DriverManager.getConnection("jdbc:mysql://localhost/dwo_tst", "root", "");
-		//c = DriverManager.getConnection("jdbc:mysql://localhost/dwo_tst", "root", "_dwo");
+		//c = DriverManager.getConnection("jdbc:mysql://localhost/dwo_tst", "root", "");
+		c = DriverManager.getConnection("jdbc:mysql://localhost/dwo_tst", "root", "_dwo");
 		return c;
 	}
 

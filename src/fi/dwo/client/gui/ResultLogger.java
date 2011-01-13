@@ -101,13 +101,13 @@ public class  ResultLogger extends JPanel implements ActionListener {
 					LOGKEY_SCORE,
 					LOGKEY_ANSWER,
 					LOGKEY_ERRORCOUNT,
-					LOGKEY_ATTEMPTSCOUNT //,
-					//LOGKEY_ATTEMPTS
+					LOGKEY_ATTEMPTSCOUNT,
+					LOGKEY_ATTEMPTS
 	};
 
 	protected static final String RAWDATA = "RAWDATA";
 	
-	private LogTable[] table = new LogTable[4];
+	private LogTable[] table = new LogTable[LOGKEYS.length];
 	private JTable   cmiTable, leerlingTable;
 	private JViewport leerlingView;
 	//private Map itemScores;
@@ -154,11 +154,18 @@ public class  ResultLogger extends JPanel implements ActionListener {
 			tabpane.remove(1);
 			tabpane.remove(1);
 			tabpane.remove(1);
+			tabpane.remove(1);
 			LogTable over = table[0];
 			table = new LogTable[1];
 			table[0] = over;
 			fuse = true;		// one shot
 		}
+	}
+
+	JTable getTable(int index) {
+		if(index < table.length)
+			return table[index];
+		return cmiTable;
 	}
 	
 	public ResultLogger(Sco sco, SchoolClass schoolClass) {
@@ -174,11 +181,8 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		btn.addActionListener(this);
 		b.add(btn);
 		
-		b.add(Box.createHorizontalStrut(30));
-		
-		
-		b.add(Box.createHorizontalGlue());
-		
+		b.add(Box.createHorizontalStrut(30));		
+		b.add(Box.createHorizontalGlue());		
 		v.add(Box.createVerticalStrut(10));
 		v.add(b);
 		
@@ -226,11 +230,6 @@ public class  ResultLogger extends JPanel implements ActionListener {
 				}			
 			}
 
-			private JTable getTable(int index) {
-				if(index < table.length)
-					return table[index];
-				return cmiTable;
-			}
 		};
 		tabpane.addChangeListener(l);
 		tabpane.validate();
@@ -280,7 +279,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 			TableUtil.setJTableSizes(tablei);
 		}
 		TableUtil.setJTableSizes(cmiTable);
-		leerlingTable.setRowHeight(cmiTable.getRowHeight());
+		leerlingTable.setRowHeight(getTable(0).getRowHeight());
 		leerlingTable.setRowMargin(cmiTable.getRowMargin());
 		cmiTable.setRowHeight(cmiTable.getRowHeight());
 		cmiTable.setRowMargin(cmiTable.getRowMargin());

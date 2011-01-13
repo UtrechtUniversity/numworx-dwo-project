@@ -389,4 +389,8 @@ public class Course implements LessonGroup, Comparable {
 	public boolean isExport() {
 		return export;
 	}
+	
+	public String toString() {
+		return getName();
+	}
 }

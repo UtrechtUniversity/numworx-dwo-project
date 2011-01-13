@@ -222,4 +222,7 @@ public class School {
     	return rights.indexOf(right)>=0;
     }
 
+    public String toString() {
+    	return getName();
+    }
 }
