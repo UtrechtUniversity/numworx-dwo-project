@@ -1697,5 +1697,16 @@ e1.printStackTrace();
 		}
 		return false;
 	}
+
+	public boolean deleteCourseClassData(Course course, SchoolClass sc) {
+		int courseID = course.getID();
+		int classID = sc.getID();
+		try {
+			return DbAccessCreator.instance().deleteCourseDataFromClass(courseID, classID);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		} 
+	}
 	
 }

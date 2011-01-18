@@ -93,14 +93,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
     		if(JOptionPane.OK_OPTION == result)
     		{
     			System.out.println("VERWIJDEREN");
-// TODO HIERO komt 't (naar persistencelayer.
-    			int courseID = course.getID();
-    			int classID = sc.getID();
-    			try {
-					DbAccessCreator.instance().deleteCourseDataFromClass(courseID, classID);
-				} catch (Exception e) {
-					e.printStackTrace();
-				} 
+    			PersistenceFacade.instance().deleteCourseClassData(course, sc);
     			
     			rs.setScore(0.0f);
     		}

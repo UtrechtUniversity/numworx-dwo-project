@@ -41,6 +41,7 @@ import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.SchoolClass;
 import fi.dwo.client.gui.ClassPanel.ClassModel;
 import fi.dwo.client.persistence.DbAccessCreator;
+import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.TextMapper;
 
 /**
@@ -75,7 +76,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                 /* Delete the leerlingdata */
                 if (JOptionPane.showConfirmDialog(SelectCoursesDialog.this, "Wilt u alle resultaten van " + model.getValueAt(row, 1) + " voor " + sc.getName() + " verwijderen"
                         + "?", "Leerlinggegevens verwijderen", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    if (true) {
+                    if (PersistenceFacade.instance().deleteCourseClassData(model.courses[row], sc)) {
                         value = null;
                         ((JButton) e.getSource()).setIcon(null);
                     }
