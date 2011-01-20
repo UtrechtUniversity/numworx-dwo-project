@@ -298,6 +298,11 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         + "SET sconame = ?, " 
         + "description = ? " 
         + "WHERE (scoID = ?) ";
+    private final static String QRY_UPDATE_SCO3 = "UPDATE tblSco "
+        + "SET sconame = ?, " 
+        + "description = ?, " 
+        + "showscore = ?"
+        + "WHERE (scoID = ?) ";
 
     private final static String QRY_UPDATE_SCO_SEQUENCE = "UPDATE tblSco "
             + "SET sequencenr = sequencenr - 1 " + "WHERE (sequencenr > ?) "
@@ -1965,6 +1970,46 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 		return true;
 	}
 	
+	/**
+	 * Shortcut. Geen update van launchdata.
+	 * @see #changeSco(int, String, String, String)
+	 */
+	public boolean changeSco(int scoID, String name, String description, boolean showScore)
+	throws SQLException, DwoXmlRpcException 
+	{
+        PreparedStatement ps;
+        ps = getStatement(QRY_UPDATE_SCO3);
+        ps.setString(1, name);
+        ps.setString(2, description);
+        ps.setBoolean(3, !showScore); // Note: Reverse Logic
+        ps.setInt(4, scoID);
+        
+        try {
+            ps.execute();
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 1062) {
+                /* The course already exists */
+                throw new DwoXmlRpcException(DwoXmlRpcException.EXC_SCO_EXISTS);
+            } else {
+                throw e;
+            }
+        }
+        ps.close();
+		return true;
+	}
+
+	/*
+     * (non-Javadoc)
+     * 
+     * @see fi.dwo.client.persistence.DbAccessIF#changeSco(int,
+     *      java.lang.String, java.lang.String)
+     */
+    public boolean changeSco(int scoID, String name, String description, String launchdata, boolean showScore)
+            throws DwoXmlRpcException, IOException, XmlRpcException,
+            SQLException {
+    	changeSco(scoID, name, description, showScore);
+    	return changeSco(scoID, name, description, launchdata);
+    }
 	
     /*
      * (non-Javadoc)

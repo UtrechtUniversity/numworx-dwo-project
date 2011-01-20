@@ -1355,12 +1355,13 @@ public class PersistenceFacade {
             try {
             	if(sco.isDataChanged())
             	{	final boolean result = dbAccess.changeSco(sco.getID(), sco.getScoName(), sco
-					        .getDescription(), sco.getLaunchdataString());
+					        .getDescription(), sco.getLaunchdataString(), sco.isShowScore());
             		sco.setDataChanged(false);
 					return result;
             	} else
             	{
-            		return dbAccess.changeSco(sco.getID(), sco.getScoName(), sco.getDescription());
+            		return dbAccess.changeSco(sco.getID(), sco.getScoName(), sco.getDescription(), sco.isShowScore()
+            				);
             	}
             	
             } catch (IOException e) {

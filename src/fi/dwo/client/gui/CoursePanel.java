@@ -220,7 +220,8 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
         ScoLinkedLabel l;
         FontMetrics fm;
         for (i = 0; i < course.getScoList().length; i++) {
-            l = new ScoLinkedLabel(course.getScoList()[i]);
+            Sco sco = course.getScoList()[i];
+			l = new ScoLinkedLabel(sco);
             l.setForeground(Color.black);
             l.setFont(GuiConstants.SCO_TEXT);
             fm = l.getFontMetrics(l.getFont());
@@ -230,7 +231,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
             	button.setSize(fm.stringWidth("100 %")+30, l.getSize().height);
             	button.setLocation(ipx - button.getSize().width, nextY-5);
             	((ResultScoreButton)button).setBarMode();
-            	
+            	button.setVisible(sco.isShowScore());
             	this.add(button);
             nextY += l.getSize().height + 3;
         }

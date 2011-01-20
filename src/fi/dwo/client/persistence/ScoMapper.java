@@ -16,7 +16,9 @@ import fi.dwo.client.domain.Sco;
 
 public class ScoMapper extends XmlRpcMapper {
 
-    private static final String TABLENAME = "tblSco";
+    private static final Vector LAZY_SCO_KEYS = new Vector();
+
+	private static final String TABLENAME = "tblSco";
 
     private static final String IDCOL = "scoID";
 
@@ -32,7 +34,7 @@ public class ScoMapper extends XmlRpcMapper {
 			ht.put(getIDCol(), new Integer(getID()));
 //System.out.println("request launchdata for " + getID());
 //new Throwable().printStackTrace();
-			Vector v = new Vector();
+			Vector v = LAZY_SCO_KEYS;
 			v.add("launchdata");
 	        DbAccessIF dbAccess = DbAccessCreator.instance();
 	        try {
@@ -169,7 +171,10 @@ public class ScoMapper extends XmlRpcMapper {
 		        s.setCourse(c);
 		    }
         }
-
+        if(data.containsKey("showscore"))
+        {
+        	s.setShowScore(!Boolean.TRUE.equals(data.get("showscore"))); // Reverse logic, 
+        }
         
         final Object object = data.get("launchdata");
 		if(object != null && !object.equals("")) {
@@ -193,17 +198,20 @@ public class ScoMapper extends XmlRpcMapper {
         return ORDERCOL;
     }
 
+    static {
+    	LAZY_SCO_KEYS.add("courseID");
+    	LAZY_SCO_KEYS.add("appletID");
+    	LAZY_SCO_KEYS.add("description");
+    	LAZY_SCO_KEYS.add("scoID");
+    	LAZY_SCO_KEYS.add("sconame");
+    	LAZY_SCO_KEYS.add("sequencenr");
+    	LAZY_SCO_KEYS.add("showscore");
+    }
+
 	public Object[] get(Hashtable wheredef) throws IOException,
 			XmlRpcException, SQLException {
-		Vector v = new Vector();
-		v.add("courseID");
-		v.add("appletID");
-		v.add("description");
-		v.add("scoID");
-		v.add("sconame");
-		v.add("sequencenr");
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        return getObjectFromReturn(dbAccess.getTable(getTableName(), v, wheredef, getOrderbyCol()));
+		DbAccessIF dbAccess = DbAccessCreator.instance();
+        return getObjectFromReturn(dbAccess.getTable(getTableName(), LAZY_SCO_KEYS, wheredef, getOrderbyCol()));
 
 		//return super.get(wheredef);
 	}

@@ -142,6 +142,7 @@ public class ScoNameDialog //extends Dialog implements ActionListener,
     public static Sco addSco(Component owner, Course course, AppletConfig appletConfig) {
         CourseNameDialog cnd = new CourseNameDialog(owner, TextMapper
                 .getText(TextMapper.GUISDLG_TTL_ADD_SCO), 0, appletConfig.getName(), "",TextMapper.GUISDLG_SCO_NAME, TextMapper.GUISDLG_SCO_DESCRIPTION);
+        cnd.setShowScore(true);
         cnd.show();
         if (cnd.isConfirmed()) {
             System.out.println("voor hij wordt aangemaakt: " + appletConfig.getLaunchdata() + "; " + appletConfig.getAppletID());
@@ -170,12 +171,22 @@ public class ScoNameDialog //extends Dialog implements ActionListener,
         CourseNameDialog cnd = new CourseNameDialog(owner, TextMapper
                 .getText(TextMapper.GUISDLG_TTL_EDIT_SCO), sco.getScoID(), sco.getScoName(),
                 sco.getDescription(), TextMapper.GUISDLG_SCO_NAME, TextMapper.GUISDLG_SCO_DESCRIPTION);
+        cnd.setShowScore(sco.isShowScore());
         cnd.show();
         if (cnd.isConfirmed()) {
             String oldName = sco.getScoName();
             String oldDescription = sco.getDescription();
             sco.setName(cnd.getScoName());
             sco.setDescription(cnd.getScoDescription());
+// keep null as long as possible. TRUE -> NULL if null
+            if(cnd.isShowScore())
+            {
+            	if( sco.getShowScore() != null)
+            		sco.setShowScore(Boolean.TRUE);
+            } else {
+            	sco.setShowScore(Boolean.FALSE);
+            }
+            	
             boolean result = GuiCreator.instance().updateSco(sco);
             if (!result) { //something went wrong. Reset the data and reshow the dialog.
                 sco.setName(oldName);

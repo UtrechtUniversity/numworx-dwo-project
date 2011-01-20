@@ -406,6 +406,9 @@ public interface DbAccessIF {
 
     public boolean changeSco(int scoID, String name, String description, String launchdata)  throws  DwoXmlRpcException, IOException, XmlRpcException, SQLException;
     public boolean changeSco(int scoID, String name, String description)  throws  DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+    public boolean changeSco(int scoID, String name, String description, boolean showScore)  throws  DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+	public boolean changeSco(int id, String scoName, String description,
+			String launchdataString, boolean showScore) throws  DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
     public boolean changeScoSequenceNr(int scoID, int sequencenr, int scoID2, int sequencenr2) throws SQLException,DwoXmlRpcException, IOException, XmlRpcException; 
 
@@ -473,4 +476,5 @@ public interface DbAccessIF {
      */
 	public Vector getResultCount(int profile, int classId)
 	throws SQLException, IOException, XmlRpcException;
+
 }

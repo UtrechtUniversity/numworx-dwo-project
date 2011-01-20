@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -39,11 +40,15 @@ public class CourseNameDialog extends JDialog implements ActionListener {
     private String courseDescription;
     private boolean confirmed;
     
+    
+    
     private JTextField name;
     private JTextArea description;
+    private JCheckBox showScore;
     
     private JButton okButton;
     private JButton cancelButton;
+	private JScrollPane pane;
     
     CourseNameDialog(Component owner, String windowTitle, int courseID, String courseName, String courseDescription, String courseNameLabel, String courseDescriptionLabel) {
         super(DwoHelper.getFrameForComponent(owner), windowTitle, true);
@@ -101,8 +106,8 @@ public class CourseNameDialog extends JDialog implements ActionListener {
 
         /* Coursedescription field */
         description = new JTextArea(courseDescription, 0, 0);//, TextArea.SCROLLBARS_VERTICAL_ONLY);
-        JScrollPane pane = new JScrollPane(description, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        pane.setBounds(150, 53, 200, 100);
+        pane = new JScrollPane(description, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		pane.setBounds(150, 53, 200, 100);
         contentPane.add(pane);
         
         contentPane.setPreferredSize(new Dimension(360, 220));
@@ -228,5 +233,30 @@ public class CourseNameDialog extends JDialog implements ActionListener {
     }
     public String getScoName() {
     	return courseName;
+    }
+    
+    public boolean isShowScore()
+    {
+    	return showScore.isSelected();
+    }
+    
+    public void setShowScore(boolean b)
+    {
+    	if(showScore == null)
+    	{
+    		showScore = new JCheckBox("Leerlingen zien hun score");
+    		Container content = getContentPane();
+    		showScore.setBackground(GuiConstants.MAIN_BACKGROUND);
+    		showScore.setFont(GuiConstants.NORMAL_TEXT);
+    		content.add(showScore);
+    		int h = showScore.getPreferredSize().height;
+    		int th = pane.getHeight();
+    		int tw = pane.getWidth();
+    		int x =  pane.getX();
+    		int y =  pane.getY();
+    		pane.setSize(tw, th-h);
+    		showScore.setBounds(x, y+th-h, tw, h);
+    	}
+    	showScore.setSelected(b);
     }
 }

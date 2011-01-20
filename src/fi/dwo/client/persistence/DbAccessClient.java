@@ -51,7 +51,7 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
     {
         Vector vv = new Vector(2);
         vv.addElement( new Integer(a));
-        vv.addElement( Boolean.valueOf(b));
+        vv.addElement( new Boolean(b));
         Object object = invoke("getCourses", vv);
         return (java.util.Vector)object;
     }
@@ -313,7 +313,7 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
     {
         Vector vv = new Vector(2);
         vv.addElement( new Integer(a));
-        vv.addElement( Boolean.valueOf(b));
+        vv.addElement( new Boolean(b));
         Object object = invoke("deleteClass", vv);
         return ((Boolean)object).booleanValue();
     }
@@ -463,6 +463,29 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
         return ((Boolean)object).booleanValue();
     }
 
+    public boolean changeSco(int a, java.lang.String b, java.lang.String c, boolean d) throws IOException, XmlRpcException
+    {
+        Vector vv = new Vector(4);
+        vv.addElement( new Integer(a));
+        vv.addElement(b);
+        vv.addElement(c);
+        vv.addElement( new Boolean(d));
+        Object object = invoke("changeSco", vv);
+        return ((Boolean)object).booleanValue();
+    }
+
+    public boolean changeSco(int a, java.lang.String b, java.lang.String c, java.lang.String d, boolean e) throws IOException, XmlRpcException
+    {
+        Vector vv = new Vector(5);
+        vv.addElement( new Integer(a));
+        vv.addElement(b);
+        vv.addElement(c);
+        vv.addElement(d);
+        vv.addElement( new Boolean(e));
+        Object object = invoke("changeSco", vv);
+        return ((Boolean)object).booleanValue();
+    }
+
     public boolean changeScoSequenceNr(int a, int b, int c, int d) throws IOException, XmlRpcException
     {
         Vector vv = new Vector(4);
@@ -530,7 +553,7 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
         vv.addElement( new Integer(a));
         vv.addElement(b);
         vv.addElement(c);
-        vv.addElement( Boolean.valueOf(d));
+        vv.addElement( new Boolean(d));
         Object object = invoke("changeCourse", vv);
         return ((Boolean)object).booleanValue();
     }
@@ -539,7 +562,7 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
     {
         Vector vv = new Vector(2);
         vv.addElement( new Integer(a));
-        vv.addElement( Boolean.valueOf(b));
+        vv.addElement( new Boolean(b));
         Object object = invoke("editSchool", vv);
         return ((Boolean)object).booleanValue();
     }

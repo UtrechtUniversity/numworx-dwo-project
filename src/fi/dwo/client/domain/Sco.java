@@ -50,6 +50,7 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
 
     private Applet applet;
     private AppletData appletData;
+    private Boolean showScore;    
     
     protected Hashtable launchdata; // subclass implements lazyness
 
@@ -100,7 +101,23 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
         sc = null;
     }
 
-    /**
+    public boolean isShowScore() {
+		return !Boolean.FALSE.equals(showScore);
+	}
+
+    public Boolean getShowScore() {
+		return showScore;
+	}
+
+	public void setShowScore(boolean showScore) {
+		this.showScore = Boolean.valueOf(showScore);
+	}
+
+	public void setShowScore(Boolean showScore) {
+		this.showScore = showScore;
+	}
+
+	/**
      * Returns a panel representing this sco. The panel contains the applet.
      * 
      * @param dwo The dwo to communicate with.
