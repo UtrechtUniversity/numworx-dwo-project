@@ -1304,7 +1304,7 @@ public class PersistenceFacade {
      * @throws ScoException
      */
     public Sco addSco(Course course, AppletConfig appletConfig, String name,
-            String description) throws ScoException {
+            String description, boolean showScore) throws ScoException {
         DbAccessIF dbAccess = DbAccessCreator.instance();
         try {
             try {
@@ -1315,9 +1315,17 @@ public class PersistenceFacade {
                         max = scos[i].getSequencenr();
                     }
                 }
-                int result = dbAccess.addSco(course.getID(), name, description,
-                        appletConfig.getID(), ++max);
+                int result;
                 Sco sco = new Sco();
+// if true use 'oldschool'
+                if(showScore)
+                	result = dbAccess.addSco(course.getID(), name, description,
+                            appletConfig.getID(), ++max);
+                else
+                {	result = dbAccess.addSco(course.getID(), name, description,
+                        appletConfig.getID(), ++max, false);
+                	sco.setShowScore(Boolean.FALSE);
+                }
                 sco.setScoID(result);
                 sco.setAppletID(appletConfig.getAppletID());
                 sco.setName(name);
@@ -1354,14 +1362,23 @@ public class PersistenceFacade {
         try {
             try {
             	if(sco.isDataChanged())
-            	{	final boolean result = dbAccess.changeSco(sco.getID(), sco.getScoName(), sco
+            	{	boolean result;
+         			if(sco.getShowScore() != null)
+         		            		result = dbAccess.changeSco(sco.getID(), sco.getScoName(), sco
 					        .getDescription(), sco.getLaunchdataString(), sco.isShowScore());
-            		sco.setDataChanged(false);
+         			else
+		            		result = dbAccess.changeSco(sco.getID(), sco.getScoName(), sco
+							        .getDescription(), sco.getLaunchdataString());
+         			
+         			sco.setDataChanged(false);
 					return result;
             	} else
             	{
-            		return dbAccess.changeSco(sco.getID(), sco.getScoName(), sco.getDescription(), sco.isShowScore()
-            				);
+            		if(sco.getShowScore() != null)
+            			return dbAccess.changeSco(sco.getID(), sco.getScoName(), sco.getDescription(), sco.isShowScore());
+            		else
+            			return dbAccess.changeSco(sco.getID(), sco.getScoName(), sco.getDescription());
+            			
             	}
             	
             } catch (IOException e) {

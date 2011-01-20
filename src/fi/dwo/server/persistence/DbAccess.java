@@ -1893,7 +1893,18 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return addSco(courseID, name, description, appletID, launchdata,
 				sequencenr);
     }
-
+    
+    
+    public int addSco(int courseID, String name, String description,
+            int appletConfigID, int sequencenr, boolean showScore) throws DwoXmlRpcException,
+            IOException, XmlRpcException, SQLException {
+    	int result = addSco(courseID, name, description, appletConfigID, sequencenr);
+    	if(!showScore)
+    	{
+    		changeSco(result, name, description, false);
+    	}
+    	return result;
+    }
 	/**
 	 * @param courseID
 	 * @param name

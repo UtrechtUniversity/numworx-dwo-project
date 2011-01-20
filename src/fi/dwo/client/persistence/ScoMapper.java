@@ -13,6 +13,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 import fi.beans.base64code.StringCodeObject;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.Sco;
+import fi.dwo.client.system.PersistenceException;
 
 public class ScoMapper extends XmlRpcMapper {
 
@@ -207,11 +208,22 @@ public class ScoMapper extends XmlRpcMapper {
     	LAZY_SCO_KEYS.add("sequencenr");
     	LAZY_SCO_KEYS.add("showscore");
     }
-
+    public static boolean hasShowScore = true;
+    
 	public Object[] get(Hashtable wheredef) throws IOException,
 			XmlRpcException, SQLException {
 		DbAccessIF dbAccess = DbAccessCreator.instance();
-        return getObjectFromReturn(dbAccess.getTable(getTableName(), LAZY_SCO_KEYS, wheredef, getOrderbyCol()));
+        try {
+			return getObjectFromReturn(dbAccess.getTable(getTableName(), LAZY_SCO_KEYS, wheredef, getOrderbyCol()));
+		} catch (XmlRpcException e) {
+			if(hasShowScore)
+			{
+				hasShowScore = false;
+				LAZY_SCO_KEYS.remove("showscore");
+				return get(wheredef);
+			}
+			throw e;
+		}
 
 		//return super.get(wheredef);
 	}

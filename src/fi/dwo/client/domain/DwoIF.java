@@ -403,9 +403,10 @@ public interface DwoIF {
     @param appletID
     @param name
     @param description
+     * @param showScore 
     @return fi.dwo.client.domain.Sco
      */
-    public Sco addSco(Course course, AppletConfig appletConfig, String name, String description);
+    public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean showScore);
     
     /**
     @param sco

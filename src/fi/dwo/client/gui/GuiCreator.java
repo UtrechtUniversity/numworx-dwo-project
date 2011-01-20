@@ -820,9 +820,10 @@ public class GuiCreator {
      * @param appletID
      * @param name
      * @param description
+     * @param b 
      * @return fi.dwo.client.domain.Sco
      */
-    public Sco addSco(Course course, AppletConfig appletConfig, String name, String description) {
+    public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean b) {
         return null;
     }
 

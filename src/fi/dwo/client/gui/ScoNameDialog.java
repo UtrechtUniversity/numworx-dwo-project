@@ -147,7 +147,7 @@ public class ScoNameDialog //extends Dialog implements ActionListener,
         if (cnd.isConfirmed()) {
             System.out.println("voor hij wordt aangemaakt: " + appletConfig.getLaunchdata() + "; " + appletConfig.getAppletID());
             Sco s = GuiCreator.instance().addSco(course, appletConfig, cnd.getScoName(),
-                    cnd.getScoDescription());
+                    cnd.getScoDescription(), cnd.isShowScore());
             System.out.println("en nu...: " + s.getLaunchdataString());
             s.setCourse(course);
             if(s == null) { //something went wrong, reshow the dialog
@@ -176,6 +176,7 @@ public class ScoNameDialog //extends Dialog implements ActionListener,
         if (cnd.isConfirmed()) {
             String oldName = sco.getScoName();
             String oldDescription = sco.getDescription();
+            Boolean oldShowScore = sco.getShowScore();
             sco.setName(cnd.getScoName());
             sco.setDescription(cnd.getScoDescription());
 // keep null as long as possible. TRUE -> NULL if null
@@ -191,6 +192,7 @@ public class ScoNameDialog //extends Dialog implements ActionListener,
             if (!result) { //something went wrong. Reset the data and reshow the dialog.
                 sco.setName(oldName);
                 sco.setDescription(oldDescription);
+                sco.setShowScore(oldShowScore);
                 result = editSco(sco, owner);
             }
 

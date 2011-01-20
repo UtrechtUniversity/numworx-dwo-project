@@ -201,8 +201,8 @@ public class GuiCreatorAdmin extends GuiCreator {
      * @param description
      * @return fi.dwo.client.domain.Sco
      */
-    public Sco addSco(Course course, AppletConfig appletConfig, String name, String description) {
-        return dwo.addSco(course, appletConfig, name, description);
+    public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean showScore) {
+        return dwo.addSco(course, appletConfig, name, description, showScore);
     }
 
 	/* (non-Javadoc)

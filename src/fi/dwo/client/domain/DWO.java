@@ -1417,9 +1417,9 @@ private static boolean isValidEmail(String email) {
     /* (non-Javadoc)
      * @see fi.dwo.client.domain.DwoIF#addSco(int, java.lang.String, java.lang.String)
      */
-    public Sco addSco(Course course, AppletConfig appletConfig, String name, String description) {
+    public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean showScore) {
         try {
-            return PersistenceFacade.instance().addSco(course, appletConfig, name, description);
+            return PersistenceFacade.instance().addSco(course, appletConfig, name, description, showScore);
         } catch(ScoException e) {
         	JOptionPane.showMessageDialog(this, e.getMessage());
             return null;            

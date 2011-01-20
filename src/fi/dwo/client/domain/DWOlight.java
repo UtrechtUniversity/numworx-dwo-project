@@ -125,7 +125,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	 * @see fi.dwo.client.domain.DwoIF#addSco(fi.dwo.client.domain.Course, fi.dwo.client.domain.AppletConfig, java.lang.String, java.lang.String)
 	 */
 	public Sco addSco(Course course, AppletConfig appletConfig, String name,
-			String description) {
+			String description, boolean showScore) {
 		return null;
 	}
 

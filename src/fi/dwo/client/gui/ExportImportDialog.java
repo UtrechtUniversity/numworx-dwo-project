@@ -217,7 +217,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 				config.setAppletID(aid);
 				config.setAppletConfigID(-sid); // HACK HACK negatief = scoid
 				config.setName(name);
-				Sco news = PersistenceFacade.instance().addSco(course, config, name, description);
+				Sco news = PersistenceFacade.instance().addSco(course, config, name, description, sco.isShowScore());
 // TODO common code?		
 				news.setSequencenr(sco.getSequencenr());
 				Sco[] oldsa = course.getScoList();

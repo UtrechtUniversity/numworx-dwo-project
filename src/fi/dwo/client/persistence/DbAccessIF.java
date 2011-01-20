@@ -404,6 +404,9 @@ public interface DbAccessIF {
 			int appletID, String launchdata, int sequencenr)
 			throws IOException, XmlRpcException, SQLException, DwoXmlRpcException;
 
+    public int addSco(int id, String name, String description, int appletConfigID, int sequencenr,
+			boolean showScore)throws IOException, XmlRpcException, SQLException, DwoXmlRpcException;
+
     public boolean changeSco(int scoID, String name, String description, String launchdata)  throws  DwoXmlRpcException, IOException, XmlRpcException, SQLException;
     public boolean changeSco(int scoID, String name, String description)  throws  DwoXmlRpcException, IOException, XmlRpcException, SQLException;
     public boolean changeSco(int scoID, String name, String description, boolean showScore)  throws  DwoXmlRpcException, IOException, XmlRpcException, SQLException;
@@ -476,5 +479,6 @@ public interface DbAccessIF {
      */
 	public Vector getResultCount(int profile, int classId)
 	throws SQLException, IOException, XmlRpcException;
+
 
 }
