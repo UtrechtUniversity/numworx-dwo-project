@@ -1389,7 +1389,14 @@ private static boolean isValidEmail(String email) {
 	        return null;
 	    }
     }
-
+    
+    /**
+     * Alle aangepaste sco's van een school binnen dit profiel.
+     * TODO als de docent profiel-rechten heeft, wat dan?
+     */
+    public Sco[] getEditableScos() {
+    	return PersistenceFacade.instance().getEditableScos(getUser().getSchool(), getDwoProfile());
+    }
     /* (non-Javadoc)
      * @see fi.dwo.client.domain.DwoIF#addCourse(java.lang.String, java.lang.String)
      */
@@ -1402,6 +1409,7 @@ private static boolean isValidEmail(String email) {
         }
     }
 
+    
     /* (non-Javadoc)
      * @see fi.dwo.client.domain.DwoIF#updateCourse(fi.dwo.client.domain.Course)
      */

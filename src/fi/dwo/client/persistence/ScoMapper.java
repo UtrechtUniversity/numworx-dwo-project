@@ -12,12 +12,13 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.beans.base64code.StringCodeObject;
 import fi.dwo.client.domain.Course;
+import fi.dwo.client.domain.DwoProfile;
+import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.Sco;
-import fi.dwo.client.system.PersistenceException;
 
 public class ScoMapper extends XmlRpcMapper {
 
-    private static final Vector LAZY_SCO_KEYS = new Vector();
+	private static final Vector LAZY_SCO_KEYS = new Vector();
 
 	private static final String TABLENAME = "tblSco";
 
@@ -128,7 +129,22 @@ public class ScoMapper extends XmlRpcMapper {
         if(obj instanceof Course) {
             Course c = (Course) obj;
             ht.put("courseID", new Integer(c.getID()));
+        } else
+        if(obj instanceof Object[])
+        {
+        	Object[] objs = (Object[]) obj;
+        	School school = (School) objs[0];
+        	DwoProfile profile = (DwoProfile) objs[1];        
+    		Hashtable wheredef = new Hashtable();
+    		wheredef.put("schoolID", new Integer(school.getSchoolID()));
+    		wheredef.put("dwoprofileid", new Integer(profile.getID()));
+    		String tableName = "tblsco left join tblcourse on tblsco.courseid = tblcourse.courseid";
+    		String orderBy = "sconame";
+    		Vector data = DbAccessCreator.instance().getTable(tableName, LAZY_SCO_KEYS, wheredef , orderBy);
+    		return getObjectFromReturn(data);	
         }
+        
+        
         return get(ht);
     }
 
@@ -200,9 +216,9 @@ public class ScoMapper extends XmlRpcMapper {
     }
 
     static {
-    	LAZY_SCO_KEYS.add("courseID");
+    	LAZY_SCO_KEYS.add("tblsco.courseID");
     	LAZY_SCO_KEYS.add("appletID");
-    	LAZY_SCO_KEYS.add("description");
+    	LAZY_SCO_KEYS.add("tblsco.description");
     	LAZY_SCO_KEYS.add("scoID");
     	LAZY_SCO_KEYS.add("sconame");
     	LAZY_SCO_KEYS.add("sequencenr");

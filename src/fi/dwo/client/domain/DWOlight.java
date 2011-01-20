@@ -896,13 +896,11 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 
 		public School addSchool(int id, String schoolName, String schoolLogin,
 				SchoolPasswdMap schoolPasswdMap) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		public School editSchool(int schoolID, String schoolName,
 				String schoolLogin, SchoolPasswdMap schoolPasswdMap) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
@@ -914,6 +912,10 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 
 		public String LMSCommit(Sco sco, String param) {
 			return PersistenceFacade.instance().LMSCommit(sco, getUser(), param);
+		}
+
+		public Sco[] getEditableScos() {
+			return null;
 		}
 
 }

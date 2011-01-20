@@ -484,4 +484,6 @@ public interface DwoIF {
 
 	public String LMSCommit(Sco sco, String param);
 
+	public Sco[] getEditableScos();
+
 }

@@ -4,7 +4,6 @@
  */
 package fi.dwo.client.gui;
 
-import java.util.Hashtable;
 import java.util.Vector;
 
 import fi.beans.base64code.StringCodeObject;
@@ -17,6 +16,7 @@ import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.Admin;
 import fi.dwo.client.domain.User;
+import fi.dwo.client.persistence.PersistenceFacade;
 
 /**
  * This class implements Teacher-specific methods of the GuiCreator.
@@ -171,10 +171,16 @@ public class GuiCreatorTeacher extends GuiCreator {
             return null;
         }
     }
-
-    public AppletConfig[] getAppletConfigFromTeacher() {
+ 
+    /** 
+     * Gebruik de andere. 
+     * @deprecated 
+     * 
+     * @return LazyAppletConfig[]
+     */
+    public AppletConfig[] getAppletConfigFromTeacher_oud() {
     	Vector ac = new Vector();
-    	AppletConfig config;
+    	LazyAppletConfig config;
     	Course[] courses = dwo.getEditableCourses();
     	for (int i = 0; i < courses.length; i++) {
 
@@ -182,13 +188,12 @@ public class GuiCreatorTeacher extends GuiCreator {
     		course.loadScos();
 			Sco[] scos = course.getScoList();
 			for (int j = 0; j < scos.length; j++) {
-				LazyAppletConfig lazyconfig = new LazyAppletConfig();
-				config = lazyconfig;
+				config = new LazyAppletConfig();
 				Sco sco = scos[j];
 				String name = sco.getScoName();
 				int    aid  = sco.getAppletID();
 				int    sid  = sco.getScoID();
-				lazyconfig.setSco(sco);
+				config.setSco(sco);
 				config.setAppletID(aid);
 				config.setAppletConfigID(-sid); // HACK HACK negatief = scoid
 				config.setName(name);
@@ -200,10 +205,27 @@ public class GuiCreatorTeacher extends GuiCreator {
     	ac.toArray(result);
     	return result;
     }
-    
-
-    
-    
+  
+    public AppletConfig[] getAppletConfigFromTeacher() {
+    	Vector ac = new Vector();
+    	LazyAppletConfig config;
+    	Sco[] scos = dwo.getEditableScos();
+		for (int j = 0; j < scos.length; j++) {
+			config = new LazyAppletConfig();
+			Sco sco = scos[j];
+			String name = sco.getScoName();
+			int    aid  = sco.getAppletID();
+			int    sid  = sco.getScoID();
+			config.setSco(sco);
+			config.setAppletID(aid);
+			config.setAppletConfigID(-sid); // HACK HACK negatief = scoid
+			config.setName(name);
+			ac.addElement(config);
+		}
+    	AppletConfig[] result = new AppletConfig[ac.size()];
+    	ac.toArray(result);
+    	return result;
+    }
     
     /**
      * @param name

@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import org.apache.xmlrpc.XmlRpc;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.beans.base64code.StringCodeObject;
@@ -20,7 +19,6 @@ import fi.dwo.client.domain.Group;
 import fi.dwo.client.domain.Guest;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.SchoolClass;
-import fi.dwo.client.domain.SchoolPasswdMap;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.Admin;
@@ -44,7 +42,9 @@ import fi.dwo.server.persistence.DwoXmlRpcException;
  *
  */
 public class PersistenceFacade {
-    private static PersistenceFacade _instance;
+    private static final Sco[] EMPTY_SCOS = new Sco[0];
+
+	private static PersistenceFacade _instance;
 
     private static final String[][] scormDatabaseLink = {
             { "cmi.core.score.raw", "score" },
@@ -194,7 +194,6 @@ public class PersistenceFacade {
             String iValue) throws PersistenceException {
         if (user != null && !(user instanceof Guest) ) {
             try {
-                int i;
                 if (iDataModelElement.equals("cmi.core.score.raw")) {
                     double d;
                     try {
@@ -1725,6 +1724,15 @@ e1.printStackTrace();
 			e.printStackTrace();
 			return false;
 		} 
+	}
+
+	public Sco[] getEditableScos(School school, DwoProfile profile) {
+		try {
+			return (Sco[]) MapperCreator.instance(Sco.class).get( new Object[] { school, profile } );
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return EMPTY_SCOS;
 	}
 	
 }
