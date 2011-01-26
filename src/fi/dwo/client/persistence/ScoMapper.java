@@ -138,7 +138,7 @@ public class ScoMapper extends XmlRpcMapper {
     		Hashtable wheredef = new Hashtable();
     		wheredef.put("schoolID", new Integer(school.getSchoolID()));
     		wheredef.put("dwoprofileid", new Integer(profile.getID()));
-    		String tableName = "tblsco left join tblcourse on tblsco.courseid = tblcourse.courseid";
+    		String tableName = "tblSco left join tblCourse on tblSco.courseid = tblCourse.courseid";
     		String orderBy = "sconame";
     		Vector data = DbAccessCreator.instance().getTable(tableName, LAZY_SCO_KEYS, wheredef , orderBy);
     		return getObjectFromReturn(data);	
@@ -216,9 +216,9 @@ public class ScoMapper extends XmlRpcMapper {
     }
 
     static {
-    	LAZY_SCO_KEYS.add("tblsco.courseID");
+    	LAZY_SCO_KEYS.add("tblSco.courseID");
     	LAZY_SCO_KEYS.add("appletID");
-    	LAZY_SCO_KEYS.add("tblsco.description");
+    	LAZY_SCO_KEYS.add("tblSco.description");
     	LAZY_SCO_KEYS.add("scoID");
     	LAZY_SCO_KEYS.add("sconame");
     	LAZY_SCO_KEYS.add("sequencenr");
