@@ -480,5 +480,17 @@ public interface DbAccessIF {
 	public Vector getResultCount(int profile, int classId)
 	throws SQLException, IOException, XmlRpcException;
 
-
+	/**
+	 * Zet de rechten van een gebruiker voor één profiel.
+	 * @param uid user
+	 * @param profileid profiel
+	 * @param rights  "aps" etc.
+	 * @return "asp"
+	 * @throws SQLException
+	 * @throws IOException
+	 * @throws XmlRpcException
+	 */
+	
+	public String setRights(int uid, int profileid, String rights)
+	throws SQLException, IOException, XmlRpcException;
 }

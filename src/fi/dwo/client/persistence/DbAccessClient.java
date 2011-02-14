@@ -648,4 +648,14 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
         return (java.util.Vector)object;
     }
 
+    public java.lang.String setRights(int a, int b, java.lang.String c) throws IOException, XmlRpcException
+    {
+        Vector vv = new Vector(3);
+        vv.addElement( new Integer(a));
+        vv.addElement( new Integer(b));
+        vv.addElement(c);
+        Object object = invoke("setRights", vv);
+        return (java.lang.String)object;
+    }
+
 }

@@ -21,8 +21,8 @@ import fi.dwo.client.system.TextMapper;
 
 public class UserMapper extends XmlRpcMapper {
 
-    private static final String TABLENAME = "tblUser";
-
+    private static final String TABLENAME = "tblUser left join tblSchoolGroup on tblUser.schoolGroupID = tblSchoolGroup.schoolGroupID left join tblGroup on tblSchoolGroup.groupID = tblGroup.groupID left join tblSchool on tblSchoolgroup.schoolID = tblSchool.schoolID";
+	//private static final String TABLENAME = "tbluser";
     private static final String IDCOL = "userID";
     
     private static final String ORDERCOL = "lastname";
@@ -104,7 +104,11 @@ public class UserMapper extends XmlRpcMapper {
             ht.put("classID", new Integer(sc.getID()));
         } else if(obj instanceof SchoolGroup) {
         	SchoolGroup sg = (SchoolGroup) obj;
-        	ht.put("schoolGroupID", new Integer(sg.getSchoolGroupID()));
+        	ht.put("tblSchoolGroup."+"schoolGroupID", new Integer(sg.getSchoolGroupID()));
+        } else if (obj instanceof School)
+        {
+        	School school = (School)obj;
+        	ht.put("tblSchoolGroup.schoolid", new Integer(school.getSchoolID()));
         }
         return super.get(ht);
     }

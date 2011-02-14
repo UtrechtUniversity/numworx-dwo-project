@@ -6,6 +6,8 @@ import java.awt.GraphicsConfiguration;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Vector;
@@ -18,12 +20,15 @@ import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
+import org.apache.xmlrpc.applet.XmlRpcException;
+
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.SchoolGroup;
 import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.UserManagementPanel.TeacherDelegate;
+import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.PersistenceException;
 
@@ -164,7 +169,25 @@ public class RightsDialog extends JDialog implements ActionListener {
 		String cmd = e.getActionCommand();
 		if(cmd == APPLY || cmd == OK)
 		{
-			System.out.println(APPLY);
+			for (int i = 0; i < userList.length; i++) {
+				User user = userList[i];
+				String newrights = "";
+				for(int j =0; j < RIGHTS.length; j++)
+				{
+					if(Boolean.TRUE.equals(table.getValueAt(i, j+1)))
+						newrights += RIGHTS[j];
+					
+				}
+// naar persistencefacade TODO
+				try {
+					user.setRights(
+							DbAccessCreator.instance().setRights(user.getID(), profileID, newrights)
+					);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} 
+			}
 		}
 		if(cmd == OK || cmd == CANCEL)
 		{

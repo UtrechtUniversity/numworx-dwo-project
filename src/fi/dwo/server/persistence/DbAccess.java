@@ -37,7 +37,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         + "ORDER BY `{1}` ";
 
     private final static String QRY_DEFAULT_SELECT_TABLE_WHERE = "SELECT * "
-            + "FROM `{0}` " + "WHERE (1=1) ";
+            + "FROM {0} " + "WHERE (1=1) ";
 
     private final static String QRY_SELECT_COURSES = "SELECT tblCourse.* "
             + "FROM tblUser LEFT JOIN tblSchoolGroup ON tblUser.schoolGroupID = tblSchoolGroup.schoolGroupID, tblCourse "
@@ -85,7 +85,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             + "WHERE (scoID = ?) "
             + "AND   (userID = ?) ";
 
-    private final static String QRY_WHERE_COLUMN = "AND (`{0}` = ?) ";
+    private final static String QRY_WHERE_COLUMN = "AND ({0} = ?) ";
 
     private final static String QRY_CHECK_USERNAME_EXISTS = "SELECT userID "
             + "FROM tblUser " + "WHERE (username = ?)";
@@ -2359,6 +2359,39 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 		}
 	
 		return true;
+	}
+
+	public String setRights(int uid, int profileid, String rights)
+			throws SQLException, IOException, XmlRpcException {
+		String sql = "SELECT rights FROM tblUser where userID = ?";
+		PreparedStatement ps = this.getStatement(sql);
+		ps.setInt(1, uid);
+		Vector v = executeQueryWithResult(ps, 0, 1);
+		String oldrights;
+		if(v.isEmpty())
+			oldrights = "";
+		else
+			oldrights = ((Hashtable) v.firstElement()).get("rights").toString();
+		// split string
+		String pstr = "["+profileid+"]";
+		int start = oldrights.indexOf(pstr);
+		if(start<0)
+		{
+			oldrights = oldrights + pstr;
+			start = oldrights.length();
+		}  else
+		{ 
+			start += pstr.length();
+		}
+		int end = oldrights.indexOf("[", start);
+		if(end < 0) end = oldrights.length();
+		rights = oldrights.substring(0, start) + rights + oldrights.substring(end);
+		sql = "UPDATE tblUser SET rights = ? where userID = ?";
+		ps = getStatement(sql);
+		ps.setString(1, rights);
+		ps.setInt(2, uid);		
+		ps.executeUpdate();
+		return rights;
 	}
 	
 }
