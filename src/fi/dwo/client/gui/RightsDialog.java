@@ -1,5 +1,6 @@
 package fi.dwo.client.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.GraphicsConfiguration;
@@ -15,6 +16,7 @@ import java.util.Vector;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
@@ -91,12 +93,16 @@ public class RightsDialog extends JDialog implements ActionListener {
 		// TODO model column class = Boolean voor 1..3
 		vbox.add(new JScrollPane(table));
 		hbox = Box.createHorizontalBox();
+		
 		JButton btn;
 		btn = new JButton("Toepassen"); btn.addActionListener(this);btn.setActionCommand(APPLY);hbox.add(btn);
 		btn = new JButton("OK"); btn.addActionListener(this);btn.setActionCommand(OK);hbox.add(btn);
 		btn = new JButton("Annuleren"); btn.addActionListener(this);btn.setActionCommand(CANCEL);hbox.add(btn);
+		
 		vbox.add(hbox);
-		setContentPane(vbox);
+		JPanel opaque = new JPanel(new BorderLayout()); // v/h box is transparant.
+		opaque.add(vbox, BorderLayout.CENTER);
+		setContentPane(opaque);
 		pack();	
 	}
 
@@ -129,10 +135,10 @@ public class RightsDialog extends JDialog implements ActionListener {
 		for (int i = 0; i < groups.length; i++) {
 			SchoolGroup schoolGroup = groups[i];
 			try {
-				User[] u = (User[]) PersistenceFacade.instance().get(User.class, schoolGroup);
 				if(schoolGroup.getGroupID()==SchoolGroup.TEACHER ||
 				   schoolGroup.getGroupID()== SchoolGroup.SCHOOLADMIN)
 				{
+					User[] u = (User[]) PersistenceFacade.instance().get(User.class, schoolGroup);
 					merge(u);
 				}
 			} catch (PersistenceException e) {

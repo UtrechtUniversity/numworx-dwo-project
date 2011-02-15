@@ -40,8 +40,6 @@ import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.text.View;
 
-import com.sun.java.swing.SwingUtilities2;
-
 public class VButton extends JButton {
 
 	public int getHeight() {

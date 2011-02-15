@@ -221,8 +221,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 //        else DwoHelper.setAppletExportLoggedIn(false);
 // vervanging voor bovenstaande        
 		DwoHelper.setAppletExportLoggedIn(currentUser.hasRight(User.APPLET_EXPORT_RIGHT)
-// en het profiel moet het toestaan dat het mag.
-				&&dwoProfile.hasRight(User.APPLET_EXPORT_RIGHT)
+// en het profiel moet het toestaan dat het mag. FIXED: hasRight is nu per profiel.
+//				&&dwoProfile.hasRight(User.APPLET_EXPORT_RIGHT)
 		);
         
         if(testViewKeys!=null)

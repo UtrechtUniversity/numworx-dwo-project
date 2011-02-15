@@ -21,7 +21,7 @@ import fi.dwo.client.system.TextMapper;
 
 public class UserMapper extends XmlRpcMapper {
 
-    private static final String TABLENAME = "tblUser left join tblSchoolGroup on tblUser.schoolGroupID = tblSchoolGroup.schoolGroupID left join tblGroup on tblSchoolGroup.groupID = tblGroup.groupID left join tblSchool on tblSchoolgroup.schoolID = tblSchool.schoolID";
+    private static final String TABLENAME = "tblUser left join tblSchoolGroup on tblUser.schoolGroupID = tblSchoolGroup.schoolGroupID left join tblGroup on tblSchoolGroup.groupID = tblGroup.groupID left join tblSchool on tblSchoolGroup.schoolID = tblSchool.schoolID";
 	//private static final String TABLENAME = "tbluser";
     private static final String IDCOL = "userID";
     
