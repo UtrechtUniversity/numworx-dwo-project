@@ -286,6 +286,8 @@ public class Text_en extends ListResourceBundle {
          { TextMapper.GUISDLG_SHOW, "Show"},
          { TextMapper.GUISDLG_ALL, "All"},
          { TextMapper.GUISDLG_MSG_NO_SELECTION, "You haven't selected any Activities"},
+         { TextMapper.GUISDLG_RB_STANDARD_SCOS, "Standard activities"},
+         { TextMapper.GUISDLG_RB_OWN_SCOS, "Own activities"},
 
          { TextMapper.GUIPA_BTN_PREVIEW, "Preview Activity"},
          { TextMapper.GUIPA_BTN_SAVE, "Save"},

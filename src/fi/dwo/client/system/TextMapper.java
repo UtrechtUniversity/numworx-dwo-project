@@ -348,6 +348,8 @@ public abstract class TextMapper {
     public final static String GUISDLG_SHOW = "GUISDLG_SHOW";
     public final static String GUISDLG_ALL = "GUISDLG_ALL";
     public final static String GUISDLG_MSG_NO_SELECTION = "GUISDLG_MSG_NO_SELECTION";
+    public final static String GUISDLG_RB_STANDARD_SCOS = "GUISDLG_RB_STANDARD_SCOS";
+    public final static String GUISDLG_RB_OWN_SCOS = "GUISDLG_RB_OWN_SCOS";
     
     /* Parameter Management panel */
     public final static String GUIPA_BTN_PREVIEW = "GUIPA_BTN_PREVIEW";

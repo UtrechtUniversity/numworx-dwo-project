@@ -273,6 +273,9 @@ public class Text_nl extends ListResourceBundle {
          { TextMapper.GUISDLG_TTL_ADD_SCO, "Nieuwe Activiteit aanmaken"},
          { TextMapper.GUISDLG_TTL_EDIT_SCO, "Activiteit wijzigen"},
          
+         { TextMapper.GUISDLG_RB_STANDARD_SCOS, "Standaard"},
+         { TextMapper.GUISDLG_RB_OWN_SCOS, "Eigen activiteiten"},
+         
          { TextMapper.GUIS_MSG_SCO_DELETE, "Wanneer u deze activiteit wilt verwijderen,\nworden ook de resultaten verwijderd.\n \nWeet u zeker dat u deze activiteit wilt verwijderen?"},
          { TextMapper.GUIS_MSG_TTL_SCO_DELETE, "Activiteit verwijderen"},
          { TextMapper.GUIS_NO_SCOS, "Module {0} bevat geen activiteiten"},
