@@ -49,6 +49,11 @@ Class-Path: algebrapijlenoefenen.jar
  knikkerschuif.jar 
  inderoos.jar 
  geogebra.jar 
+ geogebra_main.jar 
+ geogebra_gui.jar 
+ geogebra_properties.jar 
+ geogebra_export.jar 
+ geogebra_cas.jar 
  normaleverdeling.jar 
  binomverdeling.jar 
  tekenveelvlakopdr.jar 
@@ -59,6 +64,7 @@ Class-Path: algebrapijlenoefenen.jar
  verknippen.jar 
  fabriek.jar 
  kikker.jar 
+ geldapplet.jar 
  tinyplayerapplet.jar 
  jl020.jar 
  geogebra_properties.jar 
