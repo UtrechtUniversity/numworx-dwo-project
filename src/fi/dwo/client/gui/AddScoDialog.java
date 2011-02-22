@@ -260,8 +260,8 @@ public class AddScoDialog extends JDialog implements ActionListener,
         ButtonGroup swap = new ButtonGroup();
         Container contentPane = (Container) getComponent(0);
 // FIXME: i18n
-        final JRadioButton algemeen = new JRadioButton("standaard");
-        final JRadioButton eigen    = new JRadioButton("eigen activiteiten");
+        final JRadioButton algemeen = new JRadioButton(TextMapper.getText(TextMapper.GUISDLG_RB_STANDARD_SCOS));//standaard
+        final JRadioButton eigen    = new JRadioButton(TextMapper.getText(TextMapper.GUISDLG_RB_OWN_SCOS));//eigen activiteiten
         algemeen.setBackground(GuiConstants.MAIN_BACKGROUND);
         eigen.setBackground(GuiConstants.MAIN_BACKGROUND);
         swap.add(algemeen);

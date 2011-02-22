@@ -46,7 +46,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 	private static final int MINWIDTH = 600;
 
 	// if endy + bottom > MINHEIGT -> setBOUNDS(...)
-    private static final int MINHEIGHT = 470, BOTTOM = 20;
+    private static final int MINHEIGHT = (GuiConstants.getDwoProfile()==51 || GuiConstants.getDwoProfile()==27) ? 380 : 470, BOTTOM = 20;
 
 	CourseContainer center;
     private String lessonMode = Sco.NORMAL;
