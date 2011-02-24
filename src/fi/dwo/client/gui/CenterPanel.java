@@ -8,12 +8,17 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
@@ -36,6 +41,14 @@ public class CenterPanel extends JPanel implements CourseContainer {
 
 	private static final Component RAND = Box.createHorizontalStrut(12);
 
+/* Nieuw. Test de iconizer code. 
+ * Rand en Menu samen in één iconized panel, met ergens een iconizer
+ */
+	private static final boolean ICONIZER = false; // Peter, als je wilt uitproberen: true
+	private IconizedPanel ip;
+	private Container window;
+	
+	
 	private final class RequestFocusAST implements Runnable {
 		private final Component c;
 
@@ -88,7 +101,31 @@ public class CenterPanel extends JPanel implements CourseContainer {
 // er is een andere border nodig voor sco's 
          	setBorder(MAIN_BORDER);
         }
-        
+// START INKLAPBAAR MENU 
+         window = centermainSub; // alternatief
+         ip = new IconizedPanel("Menu");
+if(ICONIZER) {
+    	ip.setMaximumSize(new Dimension(150-1, Short.MAX_VALUE));
+    	ip.getIcon().setFont(new Font("Arial", Font.BOLD, 12));
+    	//ip.setMinimumSize(new Dimension(150-1, 100));
+        window = new JPanel(new BorderLayout());
+        ((JComponent) window).setOpaque(false);
+        Box header = Box.createHorizontalBox();
+        header.add(Box.createHorizontalGlue());
+        JButton btn = new JButton("<");
+        btn.setBorderPainted(false);
+        btn.setContentAreaFilled(false);
+        btn.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				ip.setIconized(true);
+				
+			}});
+        header.add(btn);
+        ip.setWindow(window);
+        window.add(header, BorderLayout.NORTH);
+        centermainSub.add(ip);
+}// END       
         loadMenu();
         showMenu = true;
 
@@ -215,7 +252,10 @@ public class CenterPanel extends JPanel implements CourseContainer {
         /* We don't want to see the menu */
         if (showMenu) {
             RAND.setVisible(false);
-            menu.setVisible(false);
+            if(ICONIZER)
+            	ip.setIconized(true);
+            else
+            	menu.setVisible(false);
             centermainSub.invalidate();
         }
 
@@ -306,15 +346,17 @@ public class CenterPanel extends JPanel implements CourseContainer {
      */
     public void loadMenu() {
         if (menu != null) {
-            centermainSub.remove(menu);
+            window.remove(menu); // was centermainSub
         }
 
         menu = GuiCreator.instance().getMenuPanel();
         menu.setCenterPanel(this);
-        centermainSub.add(menu, 0);
+        window.add(menu, 0);
         menu.setMaximumSize(new Dimension(150-1, Short.MAX_VALUE));
         menu.setMinimumSize(new Dimension(150-1, 100));
         menu.setPreferredSize(menu.getMinimumSize());
+        ip.setIconized(false);
+        ip.setVisible(true);
         menu.setVisible(true);
         RAND.setVisible(true);
         centermainSub.invalidate();

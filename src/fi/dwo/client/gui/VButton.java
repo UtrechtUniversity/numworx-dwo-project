@@ -46,6 +46,10 @@ public class VButton extends JButton {
 		return hor ? super.getWidth(): super.getHeight();
 	}
 
+	public Font getFont() { 
+		return super.getFont();
+	}
+	
 	public int getWidth() {
 		return hor ? super.getHeight(): super.getWidth();
 	}
@@ -65,9 +69,6 @@ public class VButton extends JButton {
 
 	    private static ColorModel defaultRGB = ColorModel.getRGBdefault();
 
-	    private double angle;
-	    private double sin;
-	    private double cos;
 	    private double coord[] = new double[2];
 
 	    private int raster[];
@@ -75,10 +76,10 @@ public class VButton extends JButton {
 	    private int srcW, srcH;
 	    private int dstW, dstH;
 
-	    public RotateFilter(double angle) {
-	        this.angle = angle;
-	        sin = Math.sin(angle);
-	        cos = Math.cos(angle);
+	    public RotateFilter() {
+	        //this.angle = angle;
+	        //sin = 1.0; //Math.sin(angle);
+	        //cos = 0.0; //Math.cos(angle);
 	    }
 
 	    public void transform(double x, double y, double[] retcoord) {
@@ -86,8 +87,8 @@ public class VButton extends JButton {
 	        // the transform as if the angle were negated.
 	        // cos(-angle) =  cos(angle)
 	        // sin(-angle) = -sin(angle)
-	        retcoord[0] = cos * x + sin * y;
-	        retcoord[1] = cos * y - sin * x;
+	        retcoord[0] = y;
+	        retcoord[1] = - x;
 	    }
 
 	    public void itransform(double x, double y, double[] retcoord) {
@@ -95,8 +96,8 @@ public class VButton extends JButton {
 	        // the transform as if the angle were negated.  Since inverting
 	        // the transform is also the same as negating the angle, itransform
 	        // is calculated the way you would expect to calculate transform.
-	        retcoord[0] = cos * x - sin * y;
-	        retcoord[1] = cos * y + sin * x;
+	        retcoord[0] =  - y;
+	        retcoord[1] = x;
 	    }
 
 	    public void transformBBox(Rectangle rect) {
@@ -217,7 +218,7 @@ public class VButton extends JButton {
 		size.height = tmp;
 		return size;
 	}
-	static final ImageFilter filter = new RotateFilter(Math.PI/2);
+	static final ImageFilter filter = new RotateFilter();
 
 	boolean hor; 		// Hack, schadow button is horizontal
 	
@@ -260,10 +261,17 @@ public class VButton extends JButton {
 
 		public void paint(Graphics g, JComponent c) {
 			VButton v = (VButton) c;
-			Image img = c.createImage(c.getHeight(), c.getWidth());			
 			boolean h = v.hor;//c.setSize(swap(c.getSize()));
+			if(h)
+			{
+				ui.paint(g,c);
+				return;
+			}
 			v.hor = true;
-			ui.paint(img.getGraphics(), c);
+			Image img = c.createImage(c.getWidth(), c.getHeight());			
+			Graphics graphics = img.getGraphics();
+			graphics.setFont(c.getFont());
+			ui.paint(graphics, c);
 			v.hor = h; // c.setSize(swap(c.getSize()));
 	        ImageProducer producer = new FilteredImageSource(
                     img.getSource(),
@@ -272,6 +280,22 @@ public class VButton extends JButton {
 			g.drawImage(img, 0, 0, null);
 		}
 
+		public void update(Graphics g, JComponent c) {
+			VButton v = (VButton) c;
+			boolean h = v.hor;//c.setSize(swap(c.getSize()));
+			v.hor = true;
+			Image img = c.createImage(c.getWidth(), c.getHeight());			
+			Graphics graphics = img.getGraphics();
+			graphics.setFont(c.getFont());
+			ui.update(graphics, c);
+			v.hor = h; // c.setSize(swap(c.getSize()));
+	        ImageProducer producer = new FilteredImageSource(
+                    img.getSource(),
+                    filter);
+	        img = c.createImage(producer);
+			g.drawImage(img, 0, 0, null);
+
+		}
 
 	}
 
@@ -309,6 +333,7 @@ public class VButton extends JButton {
 	
 	
 	public VButton() {
+		this(new V());
 	}
 
 	public VButton(Icon icon) {
@@ -316,7 +341,7 @@ public class VButton extends JButton {
 	}
 
 	public VButton(String text) {
-		super(text);
+		this(text, new V());
 	}
 
 	public VButton(Action a) {
