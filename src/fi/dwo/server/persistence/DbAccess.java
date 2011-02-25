@@ -27,13 +27,13 @@ import fi.dwo.client.persistence.DbAccessIF;
 
 public class DbAccess extends DbConnect implements DbAccessIF {
     private final static String QRY_DEFAULT_SELECT_ID = "SELECT * "
-            + "FROM `{0}` " + "WHERE `{1}` = ?";
+            + "FROM {0} " + "WHERE `{1}` = ?";
 
     private final static String QRY_DEFAULT_SELECT_TABLE = "SELECT * "
-            + "FROM `{0}` ";
+            + "FROM {0} ";
 
     private final static String QRY_DEFAULT_SELECT_TABLE_ORDER = "SELECT * "
-        + "FROM `{0}` "
+        + "FROM {0} "
         + "ORDER BY `{1}` ";
 
     private final static String QRY_DEFAULT_SELECT_TABLE_WHERE = "SELECT * "
