@@ -45,7 +45,7 @@ public class CenterPanel extends JPanel implements CourseContainer {
  * Rand en Menu samen in één iconized panel, met ergens een iconizer
  */
 	private static final boolean ICONIZER = false; // Peter, als je wilt uitproberen: true
-	private IconizedPanel ip;
+	private IconizedPanel ip, ip2;
 	private Container window;
 	
 	
@@ -107,20 +107,13 @@ public class CenterPanel extends JPanel implements CourseContainer {
 if(ICONIZER) {
     	ip.setMaximumSize(new Dimension(150-1, Short.MAX_VALUE));
     	ip.getIcon().setFont(new Font("Arial", Font.BOLD, 12));
-    	//ip.setMinimumSize(new Dimension(150-1, 100));
         window = new JPanel(new BorderLayout());
         ((JComponent) window).setOpaque(false);
         Box header = Box.createHorizontalBox();
         header.add(Box.createHorizontalGlue());
-        JButton btn = new JButton("<");
+        JButton btn = new JButton(ip.getCloseAction());
         btn.setBorderPainted(false);
         btn.setContentAreaFilled(false);
-        btn.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				ip.setIconized(true);
-				
-			}});
         header.add(btn);
         ip.setWindow(window);
         window.add(header, BorderLayout.NORTH);
@@ -130,6 +123,15 @@ if(ICONIZER) {
         showMenu = true;
 
 		centermainSub.add(RAND);
+if(ICONIZER)		
+{	
+		ModuleTreePanel tree = ModuleTreePanel.newInstance(GuiCreator.instance().dwo);
+		ip2= tree.getIP();
+		ip2.setMaximumSize(new Dimension(150-1, Short.MAX_VALUE));
+	    centermainSub.add(ip2);
+		tree.setCenterPanel(this);
+}
+		
 		
         sp = new JScrollPane();
         //spe = new Panel(new BorderLayout());
@@ -253,7 +255,10 @@ if(ICONIZER) {
         if (showMenu) {
             RAND.setVisible(false);
             if(ICONIZER)
+            {
             	ip.setIconized(true);
+            	ip2.setIconized(true);
+            }
             else
             	menu.setVisible(false);
             centermainSub.invalidate();
@@ -268,7 +273,6 @@ if(ICONIZER) {
         showMenu = false;
         mainPanel.setHeaderPanel(panel.getHeaderPanel());
 //        repaint();
-
     }
 
     /**

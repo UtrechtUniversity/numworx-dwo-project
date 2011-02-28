@@ -9,14 +9,18 @@ import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class IconizedPanel extends JPanel implements ActionListener {
 
+	private final CloseAction CLOSE_ACTION = new CloseAction();
 	private boolean iconized;
 	private JButton icon;
 	private CardLayout layout;
@@ -58,13 +62,7 @@ public class IconizedPanel extends JPanel implements ActionListener {
 		f.setDefaultCloseOperation(f.EXIT_ON_CLOSE);
 		final IconizedPanel ip = new IconizedPanel();
 		ip.setText("terug");
-		JButton b = new JButton("hoopla");
-		b.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-					ip.setIconized(true);
-			}});
-
+		JButton b = new JButton(ip.getCloseAction());
 		ip.add(b);
 		f.getContentPane().setBackground(Color.GREEN);
 		f.getContentPane().add(ip, BorderLayout.WEST);
@@ -124,6 +122,21 @@ public class IconizedPanel extends JPanel implements ActionListener {
 
 	void setWindow(Component window) {
 		add(window);
+	}
+
+	class CloseAction extends AbstractAction {
+
+		public void actionPerformed(ActionEvent e) {
+			setIconized(true);			
+		}
+
+		CloseAction() {
+			super("<"); // super(string, icon ) 
+		}
+	}
+	
+	public Action getCloseAction() {
+		return CLOSE_ACTION;
 	}
 
 }

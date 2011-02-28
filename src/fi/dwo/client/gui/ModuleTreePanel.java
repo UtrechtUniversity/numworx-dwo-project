@@ -1,10 +1,12 @@
 package fi.dwo.client.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.LayoutManager;
 
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -12,6 +14,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -33,6 +37,8 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 	private JMenuBar bar;
 	private DwoIF dwo;
 	private CenterPanel center;
+	private IconizedPanel ip = new IconizedPanel("Modules");
+	
 	
 	public ModuleTreePanel() {
 		super(new BorderLayout());
@@ -50,12 +56,27 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 		bar.add(menu);
 		menu = new JMenu("Bewerk");
 		bar.add(menu);
-		JMenuItem closeBtn = new JMenuItem("<"); // TODO icon..
-		closeBtn.setBorderPainted(false);
-		closeBtn.setContentAreaFilled(false);
+		JMenu closeBtn = new JMenu(ip.getCloseAction()); // TODO icon..
+		//item = new JMenuItem(ip.getCloseAction());
+		//closeBtn.add(item);
+		//closeBtn.setBorderPainted(false);
+		//closeBtn.setContentAreaFilled(false);
+		closeBtn.addMenuListener(new MenuListener() {
+
+			public void menuCanceled(MenuEvent e) {
+			}
+
+			public void menuDeselected(MenuEvent e) {
+			}
+
+			public void menuSelected(MenuEvent e) {
+				ip.getCloseAction().actionPerformed(null);
+				
+			}} );
 		bar.add(Box.createHorizontalGlue());
 		bar.add(closeBtn);
 		add(bar, BorderLayout.NORTH);
+		// 
 		
 	}
 
@@ -73,7 +94,8 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
         if(dwo != null)
         {
         	GuiCreator instance = GuiCreator.instance();
-        	setCenterPanel(instance.getMainPanel().getCenter());
+        	if(instance.getMainPanel()!= null)
+        		setCenterPanel(instance.getMainPanel().getCenter());
 			User u = instance.getUser();
         	School school = u.getSchool();
         	if(school != null)
@@ -117,12 +139,18 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 		create(null);
 	}
 
+	public static ModuleTreePanel newInstance(DwoIF dwo)
+	{
+		ModuleTreePanel panel = new ModuleTreePanel();
+		panel.createModel(dwo);
+		panel.ip.setWindow(panel);
+		return panel;
+	}
+	
 	public static void create(DwoIF dwo)
 	{
 		JFrame frame = new JFrame("modules");
-		ModuleTreePanel panel = new ModuleTreePanel();
-		panel.createModel(dwo);
-		frame.setContentPane(panel);
+		frame.setContentPane(newInstance(dwo).getIP());
 		frame.pack();
 		frame.setVisible(true);
 		
@@ -174,6 +202,10 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
                 }
 			}
 		}
+	}
+
+	public IconizedPanel getIP() {
+		return ip;
 	}
 
 }
