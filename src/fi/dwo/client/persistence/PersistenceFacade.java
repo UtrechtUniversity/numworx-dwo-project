@@ -314,11 +314,11 @@ public class PersistenceFacade {
         try {
             return mapper.get(obj);
         } catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO);
+            throw new PersistenceException(PersistenceException.EX_IO, e);
         } catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC);
+            throw new PersistenceException(PersistenceException.EX_XML_RPC,e);
         } catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB);
+            throw new PersistenceException(PersistenceException.EX_DB, e);
         }
     }
 
@@ -1034,11 +1034,11 @@ public class PersistenceFacade {
             MapperIF mapper = MapperCreator.instance(UserResultList.class);
             return (Vector) (mapper.getObjectFromReturn(v)[0]);
         } catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO);
+            throw new PersistenceException(PersistenceException.EX_IO, e);
         } catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC);
+            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
         } catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB);
+            throw new PersistenceException(PersistenceException.EX_DB, e);
         }
     }
 

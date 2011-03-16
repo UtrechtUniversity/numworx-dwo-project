@@ -4,6 +4,8 @@
  */
 package fi.dwo.client.system;
 
+import org.apache.xmlrpc.applet.XmlRpcException;
+
 /**
  * @author thijsk
  *  
@@ -22,7 +24,12 @@ public class PersistenceException extends Exception {
         super(getMesgFromInt(exception));
     }
 
-    private static String getMesgFromInt(int exception) {
+    public PersistenceException(int exXmlRpc, Exception e) {
+		this(exXmlRpc);
+		initCause(e);
+	}
+
+	private static String getMesgFromInt(int exception) {
         String result = null;
         switch (exception) {
         default:
