@@ -561,7 +561,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
      * @return the current object.
      * @see fi.dwo.client.gui.CenterSubPanel#getComponent()
      */
-    public Component getComponent() {
+    public JComponent getComponent() {
         return this;
     }
 

@@ -18,6 +18,7 @@ import javax.swing.BoxLayout;
 import java.awt.BorderLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -324,7 +325,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
      * @return the current object.
      * @see fi.dwo.client.gui.CenterSubPanel#getComponent()
      */
-    public Component getComponent() {
+    public JComponent getComponent() {
         return this;
     }
 }

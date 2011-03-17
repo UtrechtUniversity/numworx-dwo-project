@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.Scrollable;
@@ -41,17 +42,27 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
     private DwoProfile dwoProfile;
 
     /**
+	 * Creates a new instance of a CourseChoisePanel This panel gives an
+	 * overview of all the available courses to the user.
+	 */
+	public CourseChoisePanel(DwoProfile dwoProfile) {
+		this(dwoProfile, GuiCreator.instance().getCourseList());
+	}
+
+
+	/**
      * Creates a new instance of a CourseChoisePanel This panel gives an
      * overview of all the available courses to the user.
+     * @param courseList TODO
      */
-    public CourseChoisePanel(DwoProfile dwoProfile) {
+    public CourseChoisePanel(DwoProfile dwoProfile, Course[] courseList) {
         super();
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         setLayout(new BorderLayout());
 
         this.dwoProfile = dwoProfile;
         
-        Course[] courses = GuiCreator.instance().getCourseList();
+        Course[] courses = courseList;
 
         //Panel ph;
         //ph = new Panel(null);
@@ -204,7 +215,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
      * @return the current object.
      * @see fi.dwo.client.gui.CenterSubPanel#getComponent()
      */
-    public Component getComponent() {
+    public JComponent getComponent() {
         return this;
     }
 

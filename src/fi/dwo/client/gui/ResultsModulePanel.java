@@ -1164,7 +1164,7 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 	 * @return the current object.
 	 * @see fi.dwo.client.gui.CenterSubPanel#getComponent()
 	 */
-    public Component getComponent() {
+    public JComponent getComponent() {
         return this;
     }
 }

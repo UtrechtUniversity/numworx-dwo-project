@@ -17,6 +17,7 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -249,7 +250,7 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 	public void end() {
 	}
 
-	public Component getComponent() {
+	public JComponent getComponent() {
 		return this;
 	}
 

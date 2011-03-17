@@ -15,6 +15,7 @@ import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -345,7 +346,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 
 	}
 
-	public Component getComponent() {
+	public JComponent getComponent() {
 		return this;
 	}
 

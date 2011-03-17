@@ -11,6 +11,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -37,7 +39,7 @@ import fi.dwo.client.domain.ResultsModuleIF;
  *  
  */
 public class CenterPanel extends JPanel implements CourseContainer {
-    private static final Border MAIN_BORDER = BorderFactory.createEmptyBorder(18, 6, 8, 10);
+    private static Border MAIN_BORDER = BorderFactory.createEmptyBorder(18, 6, 8, 10);
 
 	private static final Component RAND = Box.createHorizontalStrut(12);
 
@@ -46,8 +48,8 @@ public class CenterPanel extends JPanel implements CourseContainer {
  */
 	private static final boolean ICONIZER = false; // Peter, als je wilt uitproberen: true
 	private IconizedPanel ip, ip2;
-	private Container window;
-	
+	private JPanel window;
+	private Border scoBorder = BorderFactory.createEmptyBorder();
 	
 	private final class RequestFocusAST implements Runnable {
 		private final Component c;
@@ -67,7 +69,7 @@ public class CenterPanel extends JPanel implements CourseContainer {
 
     private CenterSubPanel centerSubPanel;
 
-    private Container centermainSub;
+    private JPanel centermainSub;
 
     private JScrollPane sp;
     private boolean showMenu;
@@ -105,10 +107,22 @@ public class CenterPanel extends JPanel implements CourseContainer {
          window = centermainSub; // alternatief
          ip = new IconizedPanel("Menu");
 if(ICONIZER) {
+		MAIN_BORDER = BorderFactory.createEmptyBorder(0, 0, 0, 0);
+     	setBorder(MAIN_BORDER);
+	
     	ip.setMaximumSize(new Dimension(150-1, Short.MAX_VALUE));
     	ip.getIcon().setFont(new Font("Arial", Font.BOLD, 12));
-        window = new JPanel(new BorderLayout());
-        ((JComponent) window).setOpaque(false);
+// FIXME img via dwohelper en guiconstants.
+		Image img = ip.getToolkit().createImage(ip.getClass().getResource("/resources/iconized-bgimage.png"));
+		Insets insets = new Insets(18,6,8,6);
+		Border border = new DWOBorder(img, insets, 0, 1, 1, 80, 490, 500);
+		ip.setIconBorder(border);
+		JPanel panel;
+		window = new JPanel(new BorderLayout());
+        window.setOpaque(false);
+		Image menuimg = ip.getToolkit().createImage(ip.getClass().getResource("/resources/menu-bgimage.png"));
+		Border borderm = new DWOBorder(menuimg, insets, 20, 140, 159, 80, 490, 500);
+		window.setBorder(borderm);
         Box header = Box.createHorizontalBox();
         header.add(Box.createHorizontalGlue());
         JButton btn = new JButton(ip.getCloseAction());
@@ -121,12 +135,16 @@ if(ICONIZER) {
 }// END       
         loadMenu();
         showMenu = true;
-
+if(!ICONIZER)
 		centermainSub.add(RAND);
 if(ICONIZER)		
 {	
 		ModuleTreePanel tree = ModuleTreePanel.newInstance(GuiCreator.instance().dwo);
 		ip2= tree.getIP();
+		ip2.setIconBorder(ip.getIconBorder());
+		Image imgs = getToolkit().createImage(getClass().getResource("/resources/sco-bgimage.png"));
+		scoBorder = new DWOBorder(imgs, new Insets(18,6,8,10), 59, 600, 643, 80, 490, 500);
+		tree.setBorder(scoBorder);
 		ip2.setMaximumSize(new Dimension(150-1, Short.MAX_VALUE));
 	    centermainSub.add(ip2);
 		tree.setCenterPanel(this);
@@ -142,8 +160,11 @@ if(ICONIZER)
         //spe.add(sp);
         spe = sp; // alles is nu jpanel
         centermainSub.add(spe);
-
-        CenterSubPanel csp = GuiCreator.instance().getCourseChoisePanel();
+if(ICONIZER)
+	{   
+		sp.setBorder(scoBorder);
+    }
+		CenterSubPanel csp = GuiCreator.instance().getCourseChoisePanel();
         if(csp instanceof ScoPanel ) {
         	centermainSub.remove(spe);
         	mainPanel.setGuiImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_SCO));
@@ -224,11 +245,12 @@ if(ICONIZER)
      * @see fi.dwo.client.gui.CenterSubPanel
      */
     public void loadTotal(CenterSubPanel panel) {
-    	if(GuiConstants.GUI_IMAGE_BG) // todo tuning
+if(!ICONIZER)
+{    	if(GuiConstants.GUI_IMAGE_BG) // todo tuning
     		setBorder(BorderFactory.createEmptyBorder(10, 7, 8, 7));
     	if(GuiConstants.getDwoProfile()==51 || GuiConstants.getDwoProfile()==27)setBorder(BorderFactory.createEmptyBorder(30, 42, 78, 42));
     	if(GuiConstants.getDwoProfile()==57)setBorder(BorderFactory.createEmptyBorder(0, 28, 54, 30));
-    	invalidate();
+}    	invalidate();
         if (centerSubPanel != null) {
             if(DwoHelper.umpc) {
         	getParent().add(this,0);
@@ -258,6 +280,7 @@ if(ICONIZER)
             {
             	ip.setIconized(true);
             	ip2.setIconized(true);
+            	centerSubPanel.getComponent().setBorder(scoBorder);
             }
             else
             	menu.setVisible(false);

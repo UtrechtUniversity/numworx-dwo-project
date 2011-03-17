@@ -46,7 +46,11 @@ public class IconizedPanel extends JPanel implements ActionListener {
 	{
 		box.setBorder(b);
 	}
-	
+
+	public Border getIconBorder()
+	{
+		return box.getBorder();
+	}
 	
 	public IconizedPanel() {
 		this("");	

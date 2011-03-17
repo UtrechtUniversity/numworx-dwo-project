@@ -23,6 +23,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -354,7 +355,7 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
      * @return the current object.
      * @see fi.dwo.client.gui.CenterSubPanel#getComponent()
      */
-    public Component getComponent() {
+    public JComponent getComponent() {
         return this;
     }
 }

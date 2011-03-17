@@ -3,6 +3,8 @@ package fi.dwo.client.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.LayoutManager;
+import java.util.Enumeration;
+import java.util.Vector;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -21,6 +23,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -32,6 +35,8 @@ import fi.dwo.client.domain.User;
 
 public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 
+	private static final String STANDAARD_DWO_MODULES = "Standaard DWO modules";
+	private static final String ALLE_MODULES = "Alle modules";
 	private JTree tree;
 	private JScrollPane pane;
 	private JMenuBar bar;
@@ -47,35 +52,42 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 		tree.addTreeSelectionListener(this);
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		pane = new JScrollPane(tree);
+		pane.setViewportBorder(null);
+		pane.setBorder(null);
 		add(pane, BorderLayout.CENTER);
+		Box hbox = Box.createHorizontalBox();
 		bar = new JMenuBar();
+		bar.setVisible(false);
+		hbox.add(bar);
 		JMenu menu; JMenuItem item;
 		menu = new JMenu("Bestand");
 		item = new JMenuItem("Import");
 		menu.add(item);
 		bar.add(menu);
-		menu = new JMenu("Bewerk");
+		menu = new JMenu("Bewerken");
 		bar.add(menu);
-		JMenu closeBtn = new JMenu(ip.getCloseAction()); // TODO icon..
+		JButton closeBtn = new JButton(ip.getCloseAction()); // TODO icon..
+		closeBtn.setBorderPainted(false);
+		closeBtn.setContentAreaFilled(false);
 		//item = new JMenuItem(ip.getCloseAction());
 		//closeBtn.add(item);
 		//closeBtn.setBorderPainted(false);
 		//closeBtn.setContentAreaFilled(false);
-		closeBtn.addMenuListener(new MenuListener() {
-
-			public void menuCanceled(MenuEvent e) {
-			}
-
-			public void menuDeselected(MenuEvent e) {
-			}
-
-			public void menuSelected(MenuEvent e) {
-				ip.getCloseAction().actionPerformed(null);
-				
-			}} );
-		bar.add(Box.createHorizontalGlue());
-		bar.add(closeBtn);
-		add(bar, BorderLayout.NORTH);
+//		closeBtn.addMenuListener(new MenuListener() {
+//
+//			public void menuCanceled(MenuEvent e) {
+//			}
+//
+//			public void menuDeselected(MenuEvent e) {
+//			}
+//
+//			public void menuSelected(MenuEvent e) {
+//				ip.getCloseAction().actionPerformed(null);
+//				
+//			}} );
+		hbox.add(Box.createHorizontalGlue());
+		hbox.add(closeBtn);
+		add(hbox, BorderLayout.NORTH);
 		// 
 		
 	}
@@ -87,8 +99,8 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 	
 	private void createModel(DwoIF dwo) {
 		this.dwo = dwo;
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Alle modules");
-        DefaultMutableTreeNode dwonode  = new DefaultMutableTreeNode("Standaard DWO modules");
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(ALLE_MODULES);
+        DefaultMutableTreeNode dwonode  = new DefaultMutableTreeNode(STANDAARD_DWO_MODULES);
         root.add(dwonode);
         DefaultMutableTreeNode schoolnode = null;
         if(dwo != null)
@@ -131,6 +143,32 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 			node.add(new DefaultMutableTreeNode(sco));
 		}	
 	}
+	
+	public void select(Object object)
+	{
+		// search in tree where userObject equals object
+		TreeModel model = tree.getModel();
+		Object root = model.getRoot();
+		select(object, (DefaultMutableTreeNode) root);
+	}
+	
+
+	private boolean select(Object object, DefaultMutableTreeNode node) {
+		Object userObject = node.getUserObject();
+		if(userObject.equals(object))
+		{
+			TreePath path = new TreePath(node.getPath());
+			tree.setSelectionPath(path);
+			return true;
+		}
+		Enumeration e = node.children();
+		while (e.hasMoreElements()) {
+			DefaultMutableTreeNode o = (DefaultMutableTreeNode) e.nextElement();
+			if(select(object, o))
+				return true; // early out.
+		}
+		return false;
+	}
 
 	/**
 	 * @param args
@@ -150,10 +188,11 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 	public static void create(DwoIF dwo)
 	{
 		JFrame frame = new JFrame("modules");
-		frame.setContentPane(newInstance(dwo).getIP());
+		ModuleTreePanel newInstance = newInstance(dwo);
+		frame.setContentPane(newInstance.getIP());
 		frame.pack();
 		frame.setVisible(true);
-		
+		newInstance.select(ALLE_MODULES);
 	
 	}
 	
@@ -191,7 +230,19 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 	            center.loadCenter(cp);
 			} else if (userObject instanceof String) // geen ondescheid tussen alle/school/standaard
 			{
-				center.loadCenter(GuiCreator.instance().getCourseChoisePanel());
+				CenterSubPanel panel;
+				if(userObject == ALLE_MODULES)
+				{				
+					panel = new CourseChoisePanel(dwo.getDwoProfile());
+				} else 
+				{
+					Course[] courses = getCourses(node);
+					panel = new CourseChoisePanel(dwo.getDwoProfile(), courses);
+					
+				}
+				
+				center.loadCenter(panel);
+				
 			} else if (userObject instanceof Sco) 
 			{
 				Sco s = (Sco)userObject;
@@ -204,9 +255,27 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 		}
 	}
 
+	private Course[] getCourses(DefaultMutableTreeNode node) {
+		Vector v = new Vector(node.getChildCount());
+		Enumeration e = node.children();
+		while (e.hasMoreElements()) {
+			DefaultMutableTreeNode object = (DefaultMutableTreeNode) e.nextElement();
+			Object uo = object.getUserObject();
+			if(uo instanceof Course)
+				v.add(uo);
+		}
+		int n = v.size();
+		Course[] result = new Course[n];
+		v.toArray(result);
+		return result;
+	}
+
 	public IconizedPanel getIP() {
 		return ip;
 	}
 
+	public JMenuBar getMenuBar() {
+		return bar;
+	}
 }
 

@@ -6,6 +6,8 @@ package fi.dwo.client.gui;
 import java.awt.Component;
 import java.awt.Container;
 
+import javax.swing.JComponent;
+
 /**
  * This interface is used as the subpanel of the centerpanel.
  * 
@@ -40,5 +42,5 @@ public interface CenterSubPanel {
      * 
      * @return The component to add to the gui.
      */
-    public Component getComponent();
+    public JComponent getComponent();
 }

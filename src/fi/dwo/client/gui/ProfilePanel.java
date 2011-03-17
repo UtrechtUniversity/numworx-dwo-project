@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -668,7 +669,7 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
      * @return the current object.
      * @see fi.dwo.client.gui.CenterSubPanel#getComponent()
      */
-    public Component getComponent() {
+    public JComponent getComponent() {
         return this;
     }
 }

@@ -451,7 +451,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
      * @return the current object.
      * @see fi.dwo.client.gui.CenterSubPanel#getComponent()
      */
-    public Component getComponent() {
+    public JComponent getComponent() {
         return this;
     }
 

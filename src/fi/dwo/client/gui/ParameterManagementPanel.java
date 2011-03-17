@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -227,11 +228,16 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 		        exportScormButton.addActionListener(this);
 		        buttonPanel.add(exportScormButton);
         	}
-	        if(DwoHelper.isAdminLoggedIn() || DwoHelper.isAppletExportLoggedIn() && (sco.getCourse().getDwoProfile()==13 || sco.getCourse().getDwoProfile()==20 || sco.getCourse().getDwoProfile()==27 || sco.getCourse().getDwoProfile()==46 || sco.getCourse().getDwoProfile()==51)) 
+/*
+ * Let op alleen 13,20,27,46 en 51 voor recht 'a' of ADMIN
+ *  (sco.getCourse().getDwoProfile()==13 
+   || sco.getCourse().getDwoProfile()==20 
+   || sco.getCourse().getDwoProfile()==27 
+   || sco.getCourse().getDwoProfile()==46 
+   || sco.getCourse().getDwoProfile()==51)
+*/
+	        if ( DwoHelper.isAppletExportLoggedIn() ) 
 	    	{   exportAppletButton = new JButton("Export Applet");
-		        //fm = cancelButton.getFontMetrics(cancelButton.getFont());
-		        //exportAppletButton.setSize(90, fm.getHeight() + 10);
-		        //exportAppletButton.setLocation(cancelButton.getLocation().x + resetButton.getSize().width + 10, 20);
 		        exportAppletButton.addActionListener(this);
 		        buttonPanel.add(exportAppletButton);
 	    	}
@@ -315,7 +321,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
     /**
      * @return java.awt.Component
      */
-    public Component getComponent() {
+    public JComponent getComponent() {
         return this;
     }
 
