@@ -176,7 +176,17 @@ public final class DwoHelper {
         if(loadedImages.containsKey(image))return (Image)loadedImages.get(image);
         
         Image im = null;
-        URL url = null;
+        URL url = getURL(image);
+        if(url == null)
+        {
+        	return null;
+        }
+        im = applet.getImage(url);
+        return loadImage(image, im);
+    }
+
+	public static URL getURL(String resource) {
+		URL url = null;
         if(isApplication) 
         {	
         	if(applicationBase == null)
@@ -185,7 +195,7 @@ public final class DwoHelper {
 				} catch (MalformedURLException e) {
 				}
 			try {
-				url = new URL(applicationBase, image);
+				url = new URL(applicationBase, resource);
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -194,18 +204,13 @@ public final class DwoHelper {
         }
         else {
         	try {
-	          	url = new URL(applet.getCodeBase(), image);
+	          	url = new URL(applet.getCodeBase(), resource);
 		     } 
 		    catch (MalformedURLException e) {
 		    }/**/
 	    }
-        if(url == null)
-        {
-        	return null;
-        }
-        im = applet.getImage(url);
-        return loadImage(image, im);
-    }
+		return url;
+	}
 
 	/**
 	 * @param image

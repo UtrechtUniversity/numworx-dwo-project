@@ -5,6 +5,11 @@ package fi.dwo.client.gui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Properties;
+import java.util.StringTokenizer;
 
 import fi.dwo.client.domain.DwoHelper;
 
@@ -94,6 +99,7 @@ public abstract class GuiConstants {
     public final static int CENTER_WIDTH = 792;
 
     public final static int CENTER_HEIGHT = 503;
+	private static final String INCLUDE = "include";
  
    public static int getDwoProfile() {
 	   return dwoProfile;
@@ -109,28 +115,21 @@ public abstract class GuiConstants {
      */
 	public static void setDwoProfile(int profile)
 	{
+		Properties prop = getProperties(profile);
+		GUI_IMAGE_BG = getBoolean(prop, "gui_image_bg");
+		HEADER_TEXT  = getFont(prop, "header_text");
+		MAIN_BACKGROUND = getColor(prop, "main_background");
+		CELL_BACKGROUND = getColor(prop, "cell_background");
+		FI_LOGO_LOCATION = getString(prop, "fi_logo_location");
+		WISWEB_LOGO_SMALL_LOCATION = getString(prop, "wisweb_logo_small_location");
+		WISWEB_LOGO_LOCATION = getString(prop, "wisweb_logo_location");
+		HEADER_COLOR = getColor(prop, "header_color");
+	    GUI_IMAGE_WELCOME = getString(prop, "gui_image_welcome");
+	    GUI_IMAGE_SCO = getString(prop, "gui_image_sco");
+	    GUI_IMAGE_COURSE = getString(prop, "gui_image_course");
+
 		dwoProfile = profile;
-//		if(profile==1)
-//		{	MAIN_BACKGROUND = new Color(221, 238, 255);
-//    		CELL_BACKGROUND = new Color(221, 238, 255);
-//			FI_LOGO_LOCATION = "resources/fi.gif";
-//			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
-//		} else
-//		if(profile==2)
-//		{	MAIN_BACKGROUND = new Color(221, 238, 255);
-//    		CELL_BACKGROUND = new Color(221, 238, 255);
-//			FI_LOGO_LOCATION = "resources/fi.gif";
-//			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
-//		} else
-		if(profile==3)
-		{	MAIN_BACKGROUND = new Color(255,255,200);
-    		CELL_BACKGROUND = new Color(255,255,200);
-			FI_LOGO_LOCATION = "resources/rekenweb.png";
-			WISWEB_LOGO_SMALL_LOCATION = FI_LOGO_LOCATION; // Dit is REKENWEB!
-			WISWEB_LOGO_LOCATION = FI_LOGO_LOCATION;
-			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 33);
-			GUI_IMAGE_BG = false;
-		} else
+// profile == 3,1 done.
 		if(profile==49)
 		{	MAIN_BACKGROUND = new Color(255,255,255);
 		   	CELL_BACKGROUND = new Color(255,255,255);
@@ -153,7 +152,8 @@ public abstract class GuiConstants {
 			GUI_IMAGE_SCO = "resources/UU-brx-sco.png";
 			GUI_IMAGE_COURSE = "resources/UU-brx-course.png";
 		} else /**/
-		if(profile==1 || profile==23 || profile==33 || profile==34 || profile==43 || profile==44 || profile==46 || profile==47 || profile==52 || profile==54)
+// done 1, 23
+		if(  profile==33 || profile==34 || profile==43 || profile==44 || profile==46 || profile==47 || profile==52 || profile==54)
 		{	MAIN_BACKGROUND = new Color(255,255,255);
 		   	CELL_BACKGROUND = new Color(255,255,255);
 			FI_LOGO_LOCATION = "resources/fi.gif";
@@ -309,11 +309,80 @@ public abstract class GuiConstants {
 //		} else 
 		{
 // de default als profile != 3
-			MAIN_BACKGROUND = new Color(221, 238, 255);
-    		CELL_BACKGROUND = new Color(221, 238, 255);
-			FI_LOGO_LOCATION = "resources/fi.gif";
-			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
-			GUI_IMAGE_BG = false;
+//			MAIN_BACKGROUND = new Color(221, 238, 255);
+//    		CELL_BACKGROUND = new Color(221, 238, 255);
+//			FI_LOGO_LOCATION = "resources/fi.gif";
+//			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
+//			GUI_IMAGE_BG = false;
 		}
 	}
+
+	private static Properties getProperties(int profile) {
+		Properties result = new Properties();
+		InputStream in = GuiConstants.class.getResourceAsStream("resources/default.properties");
+		try {
+			result.load(in);
+			String resource = "resources/profile-" + profile + ".properties";
+			URL u;
+			u = DwoHelper.getURL(GuiConstants.RESOURCES + resource);
+// testing....
+			//u = GuiConstants.class.getResource("/" + resource);
+			result = getProperties(u, result);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
+ 	
+	private static Properties getProperties(URL resource, Properties base) {
+		Properties result = base;
+		try {
+			InputStream in = resource.openStream();
+			result = new Properties(base);
+			result.load(in);
+			String include = result.getProperty(INCLUDE);
+			if(include != null)
+			{
+				URL u = new URL(resource, include);
+				result = getProperties(u, base);
+				in = resource.openStream();
+				result = new Properties(result);
+				result.load(in);				
+			}
+			
+		} catch (Exception e) {
+		}
+		return result;
+	}
+
+	private static boolean getBoolean(Properties p, String key)
+	{
+		String value = p.getProperty(key);
+		return Boolean.parseBoolean(value);
+	}
+	private static String getString(Properties p, String key)
+	{
+		return p.getProperty(key);
+	}
+	private static Color getColor(Properties p, String key)
+	{
+		String value = getString(p, key);
+		return Color.decode(value);
+	}
+	private static Font getFont(Properties p, String key)
+	{
+		String value = getString(p, key);
+		StringTokenizer st = new StringTokenizer(value);
+		String fontname  = st.nextToken();
+		int    size = Integer.parseInt(st.nextToken());
+		int    style = 0;
+		while(st.hasMoreTokens()) 
+		switch (st.nextToken().charAt(0)) {
+		case 'B': case 'b': style |= Font.BOLD; break;
+		case 'I': case 'i': style |= Font.ITALIC; break;
+		} 
+		return new Font(fontname, style, size);
+	}
+	
 }
