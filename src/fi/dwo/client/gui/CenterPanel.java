@@ -46,7 +46,7 @@ public class CenterPanel extends JPanel implements CourseContainer {
 /* Nieuw. Test de iconizer code. 
  * Rand en Menu samen in één iconized panel, met ergens een iconizer
  */
-	private static final boolean ICONIZER = false; // Peter, als je wilt uitproberen: true
+	private static final boolean ICONIZER = true; // Peter, als je wilt uitproberen: true
 	private IconizedPanel ip, ip2;
 	private JPanel window;
 	private Border scoBorder = BorderFactory.createEmptyBorder();
@@ -113,14 +113,15 @@ if(ICONIZER) {
     	ip.setMaximumSize(new Dimension(150-1, Short.MAX_VALUE));
     	ip.getIcon().setFont(new Font("Arial", Font.BOLD, 12));
 // FIXME img via dwohelper en guiconstants.
-		Image img = ip.getToolkit().createImage(ip.getClass().getResource("/resources/iconized-bgimage.png"));
+		Image img;
+		img = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_BGIMAGE_ICON);
 		Insets insets = new Insets(18,6,8,6);
 		Border border = new DWOBorder(img, insets, 0, 1, 1, 80, 490, 500);
 		ip.setIconBorder(border);
 		JPanel panel;
 		window = new JPanel(new BorderLayout());
         window.setOpaque(false);
-		Image menuimg = ip.getToolkit().createImage(ip.getClass().getResource("/resources/menu-bgimage.png"));
+		Image menuimg = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_BGIMAGE_MENU);
 		Border borderm = new DWOBorder(menuimg, insets, 20, 140, 159, 80, 490, 500);
 		window.setBorder(borderm);
         Box header = Box.createHorizontalBox();
@@ -142,7 +143,7 @@ if(ICONIZER)
 		ModuleTreePanel tree = ModuleTreePanel.newInstance(GuiCreator.instance().dwo);
 		ip2= tree.getIP();
 		ip2.setIconBorder(ip.getIconBorder());
-		Image imgs = getToolkit().createImage(getClass().getResource("/resources/sco-bgimage.png"));
+		Image imgs = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_BGIMAGE_SCO);
 		scoBorder = new DWOBorder(imgs, new Insets(18,6,8,10), 59, 600, 643, 80, 490, 500);
 		tree.setBorder(scoBorder);
 		ip2.setMaximumSize(new Dimension(150-1, Short.MAX_VALUE));

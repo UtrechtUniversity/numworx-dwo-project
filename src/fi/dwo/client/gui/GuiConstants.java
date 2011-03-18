@@ -73,6 +73,11 @@ public abstract class GuiConstants {
     public static String GUI_IMAGE_SCO = "resources/EPN-sco.png";
     public static String GUI_IMAGE_COURSE = "resources/EPN-course.png";
     
+    public static String GUI_BGIMAGE_ICON = "resources/iconized-bgimage.png";
+    public static String GUI_BGIMAGE_MENU = "resources/menu-bgimage.png";
+    public static String GUI_BGIMAGE_SCO  = "resources/sco-bgimage.png";
+    
+    
     public final static String RESOURCES = (DwoHelper.isApplication() ? "" : "/dwo/");
     //public final static String RESOURCES = "";
 
