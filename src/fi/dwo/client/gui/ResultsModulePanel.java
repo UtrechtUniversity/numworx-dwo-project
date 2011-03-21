@@ -1167,4 +1167,9 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
     public JComponent getComponent() {
         return this;
     }
+
+	public Object getUserObject() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

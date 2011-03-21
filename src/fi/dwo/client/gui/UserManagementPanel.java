@@ -359,6 +359,10 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 		center = centerPanel;
 
 	}
+	public Object getUserObject() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 
 }

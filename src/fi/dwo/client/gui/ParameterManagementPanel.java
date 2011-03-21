@@ -1128,6 +1128,11 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 		    return;
 		}
     }
+
+	public Object getUserObject() {
+		// TODO Auto-generated method stub
+		return null;
+	}
   
     
 }

@@ -672,4 +672,9 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
     public JComponent getComponent() {
         return this;
     }
+
+	public Object getUserObject() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

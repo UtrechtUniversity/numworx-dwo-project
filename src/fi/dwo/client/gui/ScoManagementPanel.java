@@ -590,4 +590,11 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 		repaint();
 	}
 
+
+
+	public Object getUserObject() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

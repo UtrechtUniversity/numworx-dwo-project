@@ -35,8 +35,8 @@ import fi.dwo.client.domain.User;
 
 public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 
-	private static final String STANDAARD_DWO_MODULES = "Standaard DWO modules";
-	private static final String ALLE_MODULES = "Alle modules";
+	public static final String STANDAARD_DWO_MODULES = "Standaard DWO modules";
+	public static final String ALLE_MODULES = "Alle modules";
 	private JTree tree;
 	private JScrollPane pane;
 	private JMenuBar bar;
@@ -54,6 +54,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 		pane = new JScrollPane(tree);
 		pane.setViewportBorder(null);
 		pane.setBorder(null);
+		pane.setOpaque(false);
 		add(pane, BorderLayout.CENTER);
 		Box hbox = Box.createHorizontalBox();
 		bar = new JMenuBar();
@@ -146,10 +147,14 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 	
 	public void select(Object object)
 	{
+		if(object == null) // TODO is er wel een null value in de tree?
+			return;
 		// search in tree where userObject equals object
+		pushSelect();
 		TreeModel model = tree.getModel();
 		Object root = model.getRoot();
 		select(object, (DefaultMutableTreeNode) root);
+		popSelect();
 	}
 	
 
@@ -215,6 +220,8 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 	}
 		
 	public void valueChanged(TreeSelectionEvent e) {
+		if(isSelect())
+			return;
 		TreePath path = e.getPath();
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
 		boolean sel = e.isAddedPath();
@@ -237,11 +244,10 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 				} else 
 				{
 					Course[] courses = getCourses(node);
-					panel = new CourseChoisePanel(dwo.getDwoProfile(), courses);
+					panel = new CourseChoisePanel(dwo.getDwoProfile(), courses, userObject);
 					
 				}
-				
-				center.loadCenter(panel);
+				center.loadCenter(panel); // undo side-effect 'select Alle_modules'
 				
 			} else if (userObject instanceof Sco) 
 			{
@@ -254,6 +260,14 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 			}
 		}
 	}
+
+	private boolean isSelect() {
+		return cnt>0;
+	}
+	private int cnt;
+	private void pushSelect() { cnt++; }
+	private void popSelect()  { cnt--; }
+	
 
 	private Course[] getCourses(DefaultMutableTreeNode node) {
 		Vector v = new Vector(node.getChildCount());

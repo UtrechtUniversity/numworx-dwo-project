@@ -379,4 +379,9 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 		center.loadMenu();
 	}
 
+	public Object getUserObject() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

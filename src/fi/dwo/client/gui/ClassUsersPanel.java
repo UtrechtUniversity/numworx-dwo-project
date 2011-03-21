@@ -328,4 +328,11 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
     public JComponent getComponent() {
         return this;
     }
+
+
+
+	public Object getUserObject() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -462,5 +462,11 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         // TODO Auto-generated method stub
         
     }
+
+
+	public Object getUserObject() {
+		// TODO Auto-generated method stub
+		return null;
+	}
     
 }

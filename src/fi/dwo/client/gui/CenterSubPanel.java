@@ -43,4 +43,6 @@ public interface CenterSubPanel {
      * @return The component to add to the gui.
      */
     public JComponent getComponent();
+
+	Object getUserObject();
 }

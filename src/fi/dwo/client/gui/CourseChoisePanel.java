@@ -41,26 +41,33 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
     private Dimension unit = new Dimension(1,1);
     private DwoProfile dwoProfile;
 
+	private Object userObject;
+
     /**
 	 * Creates a new instance of a CourseChoisePanel This panel gives an
 	 * overview of all the available courses to the user.
+	 * FIXME ModuleTreePanel moet worden GuiConstants!
 	 */
 	public CourseChoisePanel(DwoProfile dwoProfile) {
-		this(dwoProfile, GuiCreator.instance().getCourseList());
+		this(dwoProfile, GuiCreator.instance().getCourseList(), ModuleTreePanel.ALLE_MODULES);
 	}
 
+	public Object getUserObject() {
+		return userObject;
+	}
 
 	/**
      * Creates a new instance of a CourseChoisePanel This panel gives an
      * overview of all the available courses to the user.
      * @param courseList TODO
      */
-    public CourseChoisePanel(DwoProfile dwoProfile, Course[] courseList) {
+    public CourseChoisePanel(DwoProfile dwoProfile, Course[] courseList, Object userObject) {
         super();
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         setLayout(new BorderLayout());
 
         this.dwoProfile = dwoProfile;
+        this.userObject = userObject;
         
         Course[] courses = courseList;
 

@@ -16,6 +16,12 @@ import javax.swing.border.AbstractBorder;
  */
 public class DWOBorder extends AbstractBorder {
 
+	public DWOBorder(Image image, Insets insets, int[] r)
+	{
+		this(image, insets, r[0], r[1], r[2], r[3], r[4], r[5]);
+	}
+	
+	
 	public DWOBorder(Image image, Insets insets, int w1, int w2, int w, int h1,
 			int h2, int h) {
 		super();

@@ -5,6 +5,7 @@ package fi.dwo.client.gui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Insets;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -73,9 +74,17 @@ public abstract class GuiConstants {
     public static String GUI_IMAGE_SCO = "resources/EPN-sco.png";
     public static String GUI_IMAGE_COURSE = "resources/EPN-course.png";
     
+    public static boolean GUI_ICONIZED = false;
     public static String GUI_BGIMAGE_ICON = "resources/iconized-bgimage.png";
     public static String GUI_BGIMAGE_MENU = "resources/menu-bgimage.png";
     public static String GUI_BGIMAGE_SCO  = "resources/sco-bgimage.png";
+    public static int[]  GUI_9PATCH_ICON;
+    public static int[]  GUI_9PATCH_MENU;
+    public static int[]  GUI_9PATCH_SCO;
+    public static Insets  GUI_INSETS_ICON;
+    public static Insets  GUI_INSETS_MENU;
+    public static Insets  GUI_INSETS_SCO;
+    
     
     
     public final static String RESOURCES = (DwoHelper.isApplication() ? "" : "/dwo/");
@@ -129,9 +138,21 @@ public abstract class GuiConstants {
 		WISWEB_LOGO_SMALL_LOCATION = getString(prop, "wisweb_logo_small_location");
 		WISWEB_LOGO_LOCATION = getString(prop, "wisweb_logo_location");
 		HEADER_COLOR = getColor(prop, "header_color");
-	    GUI_IMAGE_WELCOME = getString(prop, "gui_image_welcome");
+
+		GUI_IMAGE_WELCOME = getString(prop, "gui_image_welcome");
 	    GUI_IMAGE_SCO = getString(prop, "gui_image_sco");
 	    GUI_IMAGE_COURSE = getString(prop, "gui_image_course");
+	    
+	    GUI_ICONIZED = getBoolean(prop, "gui_iconized");
+	    GUI_BGIMAGE_ICON = getString(prop, "gui_bgimage_icon");
+ 	    GUI_BGIMAGE_MENU = getString(prop, "gui_bgimage_menu");
+	    GUI_BGIMAGE_SCO = getString(prop, "gui_bgimage_sco");
+	    GUI_9PATCH_ICON = getIntegerArray(prop, "gui_9patch_icon");
+	    GUI_9PATCH_MENU = getIntegerArray(prop, "gui_9patch_menu");
+	    GUI_9PATCH_SCO = getIntegerArray(prop, "gui_9patch_sco");
+	    GUI_INSETS_ICON = getInsets(prop, "gui_insets_icon");
+	    GUI_INSETS_MENU = getInsets(prop, "gui_insets_menu");
+	    GUI_INSETS_SCO = getInsets(prop, "gui_insets_sco");
 
 		dwoProfile = profile;
 // profile == 3,1 done.
@@ -322,6 +343,22 @@ public abstract class GuiConstants {
 		}
 	}
 
+	private static Insets getInsets(Properties prop, String key) {
+		int[] data = getIntegerArray(prop, key);
+		return new Insets(data[0], data[1], data[2], data[3]);
+	}
+
+	private static int[] getIntegerArray(Properties prop, String key) {
+		String data = prop.getProperty(key);
+		StringTokenizer st = new StringTokenizer(data);
+		int[] result = new int[st.countTokens()];
+		int i = 0;
+		while (st.hasMoreElements()) {
+			result[i++] = Integer.parseInt(st.nextToken());
+		}
+		return result;
+	}
+
 	private static Properties getProperties(int profile) {
 		Properties result = new Properties();
 		InputStream in = GuiConstants.class.getResourceAsStream("resources/default.properties");
@@ -331,7 +368,7 @@ public abstract class GuiConstants {
 			URL u;
 			u = DwoHelper.getURL(GuiConstants.RESOURCES + resource);
 // testing....
-			//u = GuiConstants.class.getResource("/" + resource);
+			u = GuiConstants.class.getResource("/" + resource);
 			result = getProperties(u, result);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

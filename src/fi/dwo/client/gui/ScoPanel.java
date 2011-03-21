@@ -57,7 +57,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
 
     private CenterPanel center;
 
-    private LinkedLabel mainMenuButton;
+    //private LinkedLabel mainMenuButton;
     private JButton mainMenuImageButton;
     
     private LinkedLabel courseButton;
@@ -374,7 +374,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == mainMenuButton || e.getSource() == mainMenuImageButton) {
+        if (/* e.getSource() == mainMenuButton || */ e.getSource() == mainMenuImageButton) {
             center.loadCenter(GuiCreator.instance().getCourseChoisePanel());
         } else if (e.getSource() == courseButton ) {
             center.loadCenter(GuiCreator.instance().getCoursePanel(sco.getCourse()));
@@ -587,6 +587,10 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
      */
     public Sco getSco() {
         return sco;
+    }
+    
+    public Object getUserObject() {
+    	return getSco();
     }
 
     /**

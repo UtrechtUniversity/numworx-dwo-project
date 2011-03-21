@@ -358,4 +358,9 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
     public JComponent getComponent() {
         return this;
     }
+
+	public Object getUserObject() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -350,4 +350,8 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 		}
 			
 	}
+
+	public Object getUserObject() {
+		return course;
+	}
 }

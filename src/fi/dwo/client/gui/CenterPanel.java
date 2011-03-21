@@ -30,6 +30,7 @@ import javax.swing.border.Border;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.ResultsModuleIF;
+import fi.dwo.client.system.TextMapper;
 
 /**
  * The main-centerpanel.
@@ -46,7 +47,7 @@ public class CenterPanel extends JPanel implements CourseContainer {
 /* Nieuw. Test de iconizer code. 
  * Rand en Menu samen in één iconized panel, met ergens een iconizer
  */
-	private static final boolean ICONIZER = true; // Peter, als je wilt uitproberen: true
+	private static final boolean ICONIZER = GuiConstants.GUI_ICONIZED;
 	private IconizedPanel ip, ip2;
 	private JPanel window;
 	private Border scoBorder = BorderFactory.createEmptyBorder();
@@ -75,6 +76,8 @@ public class CenterPanel extends JPanel implements CourseContainer {
     private boolean showMenu;
     
     private Container spe;
+
+	private ModuleTreePanel tree;
     
     /**
      * Creates a new CenterPanel. Adds a menu to it and loads a new
@@ -112,17 +115,14 @@ if(ICONIZER) {
 	
     	ip.setMaximumSize(new Dimension(150-1, Short.MAX_VALUE));
     	ip.getIcon().setFont(new Font("Arial", Font.BOLD, 12));
-// FIXME img via dwohelper en guiconstants.
 		Image img;
 		img = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_BGIMAGE_ICON);
-		Insets insets = new Insets(18,6,8,6);
-		Border border = new DWOBorder(img, insets, 0, 1, 1, 80, 490, 500);
+		Border border = new DWOBorder(img, GuiConstants.GUI_INSETS_ICON, GuiConstants.GUI_9PATCH_ICON);
 		ip.setIconBorder(border);
-		JPanel panel;
 		window = new JPanel(new BorderLayout());
         window.setOpaque(false);
 		Image menuimg = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_BGIMAGE_MENU);
-		Border borderm = new DWOBorder(menuimg, insets, 20, 140, 159, 80, 490, 500);
+		Border borderm = new DWOBorder(menuimg, GuiConstants.GUI_INSETS_MENU, GuiConstants.GUI_9PATCH_MENU);
 		window.setBorder(borderm);
         Box header = Box.createHorizontalBox();
         header.add(Box.createHorizontalGlue());
@@ -140,11 +140,11 @@ if(!ICONIZER)
 		centermainSub.add(RAND);
 if(ICONIZER)		
 {	
-		ModuleTreePanel tree = ModuleTreePanel.newInstance(GuiCreator.instance().dwo);
+		tree = ModuleTreePanel.newInstance(GuiCreator.instance().dwo);
 		ip2= tree.getIP();
 		ip2.setIconBorder(ip.getIconBorder());
 		Image imgs = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_BGIMAGE_SCO);
-		scoBorder = new DWOBorder(imgs, new Insets(18,6,8,10), 59, 600, 643, 80, 490, 500);
+		scoBorder = new DWOBorder(imgs, GuiConstants.GUI_INSETS_SCO, GuiConstants.GUI_9PATCH_SCO);
 		tree.setBorder(scoBorder);
 		ip2.setMaximumSize(new Dimension(150-1, Short.MAX_VALUE));
 	    centermainSub.add(ip2);
@@ -197,6 +197,13 @@ if(ICONIZER)
      */
     public void loadCenter(CenterSubPanel panel) {
         GuiCreator.instance().setWait();
+        
+        if(tree != null)
+        {
+        	tree.select(panel.getUserObject());
+        }
+        
+        
         if(GuiConstants.GUI_IMAGE_BG)
         	setBorder(MAIN_BORDER);
         if (centerSubPanel != null) {
@@ -251,7 +258,14 @@ if(!ICONIZER)
     		setBorder(BorderFactory.createEmptyBorder(10, 7, 8, 7));
     	if(GuiConstants.getDwoProfile()==51 || GuiConstants.getDwoProfile()==27)setBorder(BorderFactory.createEmptyBorder(30, 42, 78, 42));
     	if(GuiConstants.getDwoProfile()==57)setBorder(BorderFactory.createEmptyBorder(0, 28, 54, 30));
-}    	invalidate();
+}
+	if(tree != null)
+	{
+		tree.select(panel.getUserObject());
+	}
+
+
+invalidate();
         if (centerSubPanel != null) {
             if(DwoHelper.umpc) {
         	getParent().add(this,0);
