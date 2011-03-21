@@ -368,7 +368,7 @@ public abstract class GuiConstants {
 			URL u;
 			u = DwoHelper.getURL(GuiConstants.RESOURCES + resource);
 // testing....
-			u = GuiConstants.class.getResource("/" + resource);
+			//u = GuiConstants.class.getResource("/" + resource);
 			result = getProperties(u, result);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
