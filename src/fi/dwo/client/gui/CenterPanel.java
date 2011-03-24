@@ -419,4 +419,20 @@ invalidate();
 	public ResultsModuleIF getUserResultsModule(Course course) {
 		return GuiCreator.instance().dwo.getUserResultsModule(course);
 	}
+
+// synchronize the ModuleTreePanel
+	public void updateCourse(Course course) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void deleteCourse(Course course) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void addCourse(Course course) {
+		// TODO Auto-generated method stub
+		
+	}
 }

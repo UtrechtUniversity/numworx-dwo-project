@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.Enumeration;
@@ -284,6 +285,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             + "SET name = ?, " + "description = ? " + "WHERE (courseID = ?) ";
     private final static String QRY_UPDATE_COURSE2 = "UPDATE tblCourse "
         + "SET name = ?, description = ?, export = ? WHERE (courseID = ?) ";
+    private final static String QRY_UPDATE_COURSE3 = "UPDATE tblCourse "
+        + "SET name = ?, description = ?, export = ?, schoolID = ? WHERE (courseID = ?) ";
 
     private final static String QRY_ADD_SCO = "INSERT INTO tblSco(courseID, appletID, sconame, description, launchdata, sequencenr) "
             + "VALUES(?, ?, ?, ?, ?, ?) ";
@@ -1800,6 +1803,33 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     	ps.setString(2, description);
     	ps.setBoolean(3, export);
     	ps.setInt(4, courseID);
+		
+		try {
+		    ps.execute();
+		} catch (SQLException e) {
+		    if (e.getErrorCode() == 1062) {
+		        /* The course already exists */
+		        throw new DwoXmlRpcException(
+		                DwoXmlRpcException.EXC_COURSE_EXISTS);
+		    } else {
+		        throw e;
+		    }
+		}
+		return true;
+		}
+
+    public boolean changeCourse(int courseID, String name, String description, boolean export, int schoolID)
+    throws DwoXmlRpcException, SQLException {
+    	PreparedStatement ps;
+    	ps = getStatement(QRY_UPDATE_COURSE3);
+    	ps.setString(1, name);
+    	ps.setString(2, description);
+    	ps.setBoolean(3, export);
+    	if(schoolID == 0)
+    		ps.setNull(4, Types.INTEGER);
+    	else
+    		ps.setInt(4, schoolID);
+    	ps.setInt(5, courseID);
 		
 		try {
 		    ps.execute();

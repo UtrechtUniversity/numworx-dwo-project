@@ -493,4 +493,8 @@ public interface DbAccessIF {
 	
 	public String setRights(int uid, int profileid, String rights)
 	throws SQLException, IOException, XmlRpcException;
+
+	public boolean changeCourse(int id, String name, String description,
+			boolean export, int schoolID)
+	throws  DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 }

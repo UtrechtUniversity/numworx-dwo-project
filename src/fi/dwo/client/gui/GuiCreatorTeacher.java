@@ -233,7 +233,9 @@ public class GuiCreatorTeacher extends GuiCreator {
      * @return fi.dwo.client.domain.Course
      */
     public Course addCourse(String name, String description) {
-        return dwo.addCourse(name, description);
+        Course course = dwo.addCourse(name, description);
+        getMainPanel().getCenter().addCourse(course);
+		return course;
     }
 
     /**
@@ -241,7 +243,10 @@ public class GuiCreatorTeacher extends GuiCreator {
      * @return boolean
      */
     public boolean updateCourse(Course course) {
-        return dwo.updateCourse(course);
+        getMainPanel().getCenter().updateCourse(course);
+    	return dwo.updateCourse(course);
+        // TODO update ModuleTreePanel
+        
     }
 
     /**
@@ -249,6 +254,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      * @return boolean
      */
     public boolean deleteCourse(Course course) {
+    	getMainPanel().getCenter().deleteCourse(course);
         return dwo.deleteCourse(course);
     }
 

@@ -116,6 +116,7 @@ public class GuiCreatorAdmin extends GuiCreator {
      */
     public boolean updateCourse(Course course) {
         return dwo.updateCourse(course);
+        // update ModuleTreePanel
     }
 
     /**

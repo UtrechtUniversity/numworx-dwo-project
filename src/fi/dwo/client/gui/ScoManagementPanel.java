@@ -4,17 +4,11 @@ package fi.dwo.client.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.FileDialog;
 import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Frame;
-import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.MediaTracker;
-import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,13 +36,11 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
@@ -59,8 +51,7 @@ import fi.dwo.client.domain.AppletConfig;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.Sco;
-import fi.dwo.client.gui.SchoolPanel.ImageButtonEditor;
-import fi.dwo.client.gui.SchoolPanel.ImageRenderer;
+import fi.dwo.client.domain.User;
 import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.PersistenceException;
@@ -90,6 +81,8 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     
     private JLabel noScosLabel;
 	private FileDialog saveDial, openDial;
+
+	private JButton publishButton;
 
     /**
      * @param course
@@ -123,7 +116,16 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         addScoButton.setLocation(30, 10);
         top.add(addScoButton);
         top.add(Box.createHorizontalGlue());
+        if(course.getSchoolID()>0 && GuiCreator.instance().dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT))
+        {
+        	publishButton = new JButton("Publiceer");
+        	publishButton.setToolTipText("Verplaats module naar profiel");
+        	publishButton.addActionListener(this);
+        	top.add(publishButton);
+        	top.add(Box.createHorizontalStrut(10));
+        }
         exportCourseButton = new JButton("Backup module");
+        exportCourseButton.setToolTipText("Backup activiteiten van module " + course);
         exportCourseButton.setSize(exportCourseButton.getPreferredSize());
         exportCourseButton.addActionListener(this);
         exportCourseButton.setVisible(false);
@@ -131,7 +133,8 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         if(DwoHelper.isApplication())
         	exportCourseButton.setVisible(true);
         top.add(Box.createHorizontalStrut(10));
-        importScosButton = new JButton("Maak activiteiten vanuit backup");
+        importScosButton = new JButton("Import");
+        importScosButton.setToolTipText("Maak activiteiten vanuit backup");
         importScosButton.setSize(importScosButton.getPreferredSize());
         importScosButton.addActionListener(this);
         importScosButton.setVisible(false);
@@ -186,9 +189,9 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         if(DwoHelper.isApplication())
         {
         	final Frame topFrame = DwoHelper.getFrameForComponent(null);		
-        	saveDial = new FileDialog(topFrame, exportCourseButton.getLabel(), FileDialog.SAVE);
+        	saveDial = new FileDialog(topFrame, exportCourseButton.getToolTipText(), FileDialog.SAVE);
         	saveDial.setDirectory(System.getProperty("user.dir","."));
-        	openDial = new FileDialog(topFrame, importScosButton.getLabel(), FileDialog.LOAD);
+        	openDial = new FileDialog(topFrame, importScosButton.getToolTipText(), FileDialog.LOAD);
         	openDial.setDirectory(System.getProperty("user.dir","."));
         }
     }
@@ -454,14 +457,30 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 	            addScoTable();
             }
 
+        } else if( e.getSource() == publishButton)
+        {
+        	publishCourse();
         }
             
     }
 
-    private void importCourseLogo() throws IOException 
+    private void publishCourse() {
+		if(course.getSchoolID()>0)
+		{
+			course.setSchoolID(0);
+			course.setExport(false); // ik denk dat een gepubliceerde course niet exporteerbaar is!
+			publishButton.setEnabled(false); // gray out
+			GuiCreator.instance().updateCourse(course);
+		}
+		
+	}
+
+
+
+	private void importCourseLogo() throws IOException 
     {
     	String naam; 
-    	openDial.setTitle("Laad Modulelogo");
+    	openDial.setTitle("Laad Modulelogo van " + course);
     	openDial.show();
     	naam = openDial.getFile();
     	if(naam != null)
@@ -502,7 +521,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     
     private void importScos() throws ParserConfigurationException, SAXException, IOException, DwoXmlRpcException, XmlRpcException, SQLException {
     	String naam;
-    	openDial.setTitle(importScosButton.getLabel());
+    	openDial.setTitle(importScosButton.getToolTipText());
 		openDial.show();
 		naam = openDial.getFile();
 		if(naam!=null)
@@ -593,8 +612,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 
 
 	public Object getUserObject() {
-		// TODO Auto-generated method stub
-		return null;
+		return course;
 	}
 
 }
