@@ -47,7 +47,7 @@ public class CenterPanel extends JPanel implements CourseContainer {
 /* Nieuw. Test de iconizer code. 
  * Rand en Menu samen in één iconized panel, met ergens een iconizer
  */
-	private static final boolean ICONIZER = GuiConstants.GUI_ICONIZED;
+	private static final boolean ICONIZER = GuiConstants.GUI_ICONIZED || true;
 	private IconizedPanel ip, ip2;
 	private JPanel window;
 	private Border scoBorder = BorderFactory.createEmptyBorder();
@@ -291,17 +291,13 @@ invalidate();
         /* We don't want to see the menu */
         if (showMenu) {
             RAND.setVisible(false);
-            if(ICONIZER)
-            {
-            	ip.setIconized(true);
-            	ip2.setIconized(true);
-            	centerSubPanel.getComponent().setBorder(scoBorder);
-            }
-            else
-            	menu.setVisible(false);
+            menu.setVisible(false);
             centermainSub.invalidate();
         }
-
+        if(ICONIZER)
+        {
+        	centerSubPanel.getComponent().setBorder(scoBorder);
+        }
         Component c = centerSubPanel.getComponent();
         centermainSub.add(c);
         c.setVisible(true);
