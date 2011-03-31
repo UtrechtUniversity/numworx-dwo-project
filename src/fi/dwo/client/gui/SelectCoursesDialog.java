@@ -29,6 +29,7 @@ import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -67,7 +68,7 @@ class CourseData {
 	public CourseData(Course course) {
 		this.course = course;
 	}
-	Object data;
+	Image data;
 	public String toString() {
 		return String.valueOf(course);
 	}
@@ -105,18 +106,27 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 		public void actionPerformed(ActionEvent e) {
 			if (value == removeImage) {
                 /* Delete the leerlingdata */
-                if (JOptionPane.showConfirmDialog(SelectCoursesDialog.this, "Wilt u alle resultaten van " + model.getValueAt(row, 1) + " voor " + sc.getName() + " verwijderen"
-                        + "?", "Leerlinggegevens verwijderen", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    if (PersistenceFacade.instance().deleteCourseClassData(cd[row].course, sc)) {
+                if (eraseClassData(cd[row].course)) {
                         value = null;
                         ((JButton) e.getSource()).setIcon(null);
-                    }
+                    
                 }
-
     		}
 		}
 	}
 
+    boolean eraseClassData(Course course)
+    {
+    	if (JOptionPane.showConfirmDialog(SelectCoursesDialog.this, "Wilt u alle resultaten van " + course + " voor " + sc.getName() + " verwijderen"
+                + "?", "Leerlinggegevens verwijderen", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            if (PersistenceFacade.instance().deleteCourseClassData(course, sc)) {
+            	return true;
+            }
+        }
+    	return false;
+    }
+    
+    
 	private Course[] selectedCourses;
 
     private JButton okButton;
@@ -198,7 +208,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 				cd[rowIndex].select = aValue;
 				break;
 			case 2:
-				cd[rowIndex].data = aValue;
+				cd[rowIndex].data = (Image) aValue;
 			}
 			fireTableCellUpdated(rowIndex, columnIndex);
 		}
@@ -206,18 +216,32 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     }
     
     class CheckBoxNodeRenderer implements TreeCellRenderer {
-    	  private JCheckBox leafRenderer = new JCheckBox();
-
+    	  JCheckBox leafRenderer = new JCheckBox();
+    	  JButton   eraseBtn = new JButton();
+    	  Box box;
+    	  boolean boksAan;
     	  private DefaultTreeCellRenderer nonLeafRenderer = new DefaultTreeCellRenderer();
 
     	  Color selectionBorderColor, selectionForeground, selectionBackground,
     	      textForeground, textBackground;
 
-    	  protected JCheckBox getLeafRenderer() {
-    	    return leafRenderer;
+    	  protected JComponent getLeafRenderer() {
+    	      if(boksAan)
+    	    	  return box;
+    		  return leafRenderer;
     	  }
 
-    	  public CheckBoxNodeRenderer() {
+    	  public CheckBoxNodeRenderer(boolean b) {
+    		boksAan = b; 
+    		if(b)
+    		{
+    			box = Box.createHorizontalBox();
+    			box.add(leafRenderer);
+    			eraseBtn.setBorderPainted(false);
+    			eraseBtn.setContentAreaFilled(false);
+    			
+    			box.add(eraseBtn);
+    		}
     	    Font fontValue;
     	    fontValue = UIManager.getFont("Tree.font");
     	    if (fontValue != null) {
@@ -249,7 +273,6 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     	          expanded, leaf, row, false);
     	      leafRenderer.setText(stringValue);
     	      leafRenderer.setSelected(false);
-
     	      leafRenderer.setEnabled(tree.isEnabled());
 
     	      if (selected) {
@@ -267,9 +290,14 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     	        	CourseData node = (CourseData) userObject;
     	          leafRenderer.setText(node.toString());
     	          leafRenderer.setSelected(node.isSelected());
+    	          eraseBtn.setVisible(node.data != null);
+    	          if(node.data != null)
+    	          {
+    	        	eraseBtn.setIcon(new ImageIcon(node.data));  
+    	          }
     	        }
     	      }
-    	      returnValue = leafRenderer;
+    	      returnValue = getLeafRenderer();
     	    } else {
     	      returnValue = nonLeafRenderer.getTreeCellRendererComponent(tree,
     	          value, selected, expanded, leaf, row, hasFocus);
@@ -280,7 +308,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
     class CheckBoxNodeEditor extends AbstractCellEditor implements TreeCellEditor {
 
-    	  CheckBoxNodeRenderer renderer = new CheckBoxNodeRenderer();
+    	  CheckBoxNodeRenderer renderer = new CheckBoxNodeRenderer(true);
 
     	  ChangeEvent changeEvent = null;
 
@@ -288,15 +316,36 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
     	  public CheckBoxNodeEditor(JTree tree) {
     	    this.tree = tree;
+      	    	renderer.leafRenderer.addItemListener(itemListener);
+      	    	renderer.eraseBtn.addActionListener(action );
+      	    
     	  }
 
     	  public Object getCellEditorValue() {
-    	    JCheckBox checkbox = renderer.getLeafRenderer();
+    	    JCheckBox checkbox = renderer.leafRenderer;
      	    CourseData checkBoxNode = (CourseData)userObject;
     	       checkBoxNode.select = new Boolean(checkbox.isSelected());
     	    return checkBoxNode;
     	  }
      	  Object userObject;
+
+		private ActionListener action = new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+	     	    CourseData checkBoxNode = (CourseData)userObject;
+	     	    if(eraseClassData(checkBoxNode.course))
+	     	    	checkBoxNode.data = null;
+	     	    itemListener.itemStateChanged(null);
+			}}
+		;
+
+		private ItemListener itemListener = new ItemListener() {
+		  public void itemStateChanged(ItemEvent itemEvent) {
+		    if (stopCellEditing()) {
+		      fireEditingStopped();
+		    }
+		  }
+		};
 
     	  public boolean isCellEditable(EventObject event) {
     	    boolean returnValue = false;
@@ -321,18 +370,6 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
     	    Component editor = renderer.getTreeCellRendererComponent(tree, value,
     	        true, expanded, leaf, row, true);
-
-    	    // editor always selected / focused
-    	    ItemListener itemListener = new ItemListener() {
-    	      public void itemStateChanged(ItemEvent itemEvent) {
-    	        if (stopCellEditing()) {
-    	          fireEditingStopped();
-    	        }
-    	      }
-    	    };
-    	    if (editor instanceof JCheckBox) {
-    	      ((JCheckBox) editor).addItemListener(itemListener);
-    	    }
 
     	    return editor;
     	  }
@@ -415,7 +452,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         			}
                 	treeModel = new DefaultTreeModel(root);
                 	setModel(treeModel);
-                	tree2.setCellRenderer(new CheckBoxNodeRenderer());
+                	tree2.setCellRenderer(new CheckBoxNodeRenderer(true));
                 	tree2.setCellEditor(new CheckBoxNodeEditor(tree2));
                 	tree2.setEditable(true);
         		}
@@ -571,21 +608,21 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         scd.sc = sc;
 // persistencefacade....
         try {
-        	CoursesModel model = (CoursesModel) scd.jTable.getModel();
+        	
         	Vector result = DbAccessCreator.instance().getResultCount(allCourses[0].getDwoProfile(), sc.getID());
         	Enumeration e = result.elements();
-        	while (e.hasMoreElements()) {
+    		CourseData[] cd = scd.cd;
+    			while (e.hasMoreElements()) {
 				Hashtable object = (Hashtable) e.nextElement();
 				int courseID = ((Number)object.get("courseID")).intValue();
-				CourseData[] cd = model.getCD();
 				for (int i = 0; i < cd.length; i++) {
 					Course course = cd[i].course;
 					if(course.getID() == courseID)
-						model.setValueAt(scd.removeImage, i, 2);
+						cd[i].data = scd.removeImage;
 				}
 			}
         
-        } catch(Exception e) {}
+        } catch(Exception e) {e.printStackTrace();}
         
         scd.show();
         return scd.getSelectedCourses();
