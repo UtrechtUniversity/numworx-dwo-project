@@ -26,6 +26,10 @@ public class Admin extends User {
 		return true;
 	}
 
+	public boolean hasIconizer() {
+		return true;
+	}
+
     
 
 }

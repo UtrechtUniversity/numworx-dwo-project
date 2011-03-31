@@ -106,4 +106,8 @@ public class Teacher extends User {
     	return rights.substring(index, end).indexOf(right)>=0;
     }
 
+	public boolean hasIconizer() {
+		return true;
+	}
+
 }

@@ -8,11 +8,15 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
 import java.util.Enumeration;
 import java.util.EventObject;
 import java.util.Hashtable;
@@ -29,21 +33,48 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTree;
+import javax.swing.UIManager;
 import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeCellEditor;
+import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DwoHelper;
+import fi.dwo.client.domain.DwoIF;
+import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.SchoolClass;
+import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.ClassPanel.ClassModel;
 import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.TextMapper;
 
+class CourseData {
+	Course course;
+	Object select;
+	public CourseData(Course course) {
+		this.course = course;
+	}
+	Object data;
+	public String toString() {
+		return String.valueOf(course);
+	}
+	public boolean isSelected() {
+		return Boolean.TRUE.equals(select);
+	}	
+}
 /**
  * This class represents a dialog for selecting courses.
  * 
@@ -76,7 +107,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                 /* Delete the leerlingdata */
                 if (JOptionPane.showConfirmDialog(SelectCoursesDialog.this, "Wilt u alle resultaten van " + model.getValueAt(row, 1) + " voor " + sc.getName() + " verwijderen"
                         + "?", "Leerlinggegevens verwijderen", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    if (PersistenceFacade.instance().deleteCourseClassData(model.courses[row], sc)) {
+                    if (PersistenceFacade.instance().deleteCourseClassData(cd[row].course, sc)) {
                         value = null;
                         ((JButton) e.getSource()).setIcon(null);
                     }
@@ -102,13 +133,17 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
 	private SchoolClass sc;
 
+	CourseData[] cd;
+
+	private ModuleTreePanel tree;
+	private DefaultTreeModel treeModel;
+	
+	
     class CoursesModel extends AbstractTableModel {
 
     	int columnCount = 2;
 
-		Course[] courses;
-    	Object[] select;
-    	Object[] data;
+    	CourseData[] getCD() { return cd; }
     	
 		public int getColumnCount() {
 			return columnCount;
@@ -119,14 +154,14 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 		}
 
 		public int getRowCount() {
-			return courses.length;
+			return cd.length;
 		}
 
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			switch(columnIndex) {
-			case 0: return select[rowIndex];
-			case 1: return courses[rowIndex].getName();
-			case 2: return data[rowIndex];
+			case 0: return cd[rowIndex].select;
+			case 1: return cd[rowIndex].course.getName();
+			case 2: return cd[rowIndex].data;
 			}
 			return null;
 		}
@@ -152,7 +187,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			switch(columnIndex) {
 			case 0: return true;
 			case 1: return false;
-			case 2: return data[rowIndex] != null;
+			case 2: return cd[rowIndex].data != null;
 			}
 			return super.isCellEditable(rowIndex, columnIndex);
 		}
@@ -160,16 +195,148 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 			switch(columnIndex) {
 			case 0:
-				select[rowIndex] = aValue;
+				cd[rowIndex].select = aValue;
 				break;
 			case 2:
-				data[rowIndex] = aValue;
+				cd[rowIndex].data = aValue;
 			}
 			fireTableCellUpdated(rowIndex, columnIndex);
 		}
 		
     }
     
+    class CheckBoxNodeRenderer implements TreeCellRenderer {
+    	  private JCheckBox leafRenderer = new JCheckBox();
+
+    	  private DefaultTreeCellRenderer nonLeafRenderer = new DefaultTreeCellRenderer();
+
+    	  Color selectionBorderColor, selectionForeground, selectionBackground,
+    	      textForeground, textBackground;
+
+    	  protected JCheckBox getLeafRenderer() {
+    	    return leafRenderer;
+    	  }
+
+    	  public CheckBoxNodeRenderer() {
+    	    Font fontValue;
+    	    fontValue = UIManager.getFont("Tree.font");
+    	    if (fontValue != null) {
+    	      leafRenderer.setFont(fontValue);
+    	    }
+    	    Boolean booleanValue = (Boolean) UIManager
+    	        .get("Tree.drawsFocusBorderAroundIcon");
+    	    leafRenderer.setFocusPainted((booleanValue != null)
+    	        && (booleanValue.booleanValue()));
+
+    	    selectionBorderColor = UIManager.getColor("Tree.selectionBorderColor");
+    	    selectionForeground = UIManager.getColor("Tree.selectionForeground");
+    	    selectionBackground = UIManager.getColor("Tree.selectionBackground");
+    	    textForeground = UIManager.getColor("Tree.textForeground");
+    	    textBackground = UIManager.getColor("Tree.textBackground");
+    	    
+    	    leafRenderer.setBorder(BorderFactory.createLineBorder(Color.green));
+    	    
+    	  }
+
+    	  public Component getTreeCellRendererComponent(JTree tree, Object value,
+    	      boolean selected, boolean expanded, boolean leaf, int row,
+    	      boolean hasFocus) {
+
+    	    Component returnValue;
+    	    if (leaf) {
+
+    	      String stringValue = tree.convertValueToText(value, selected,
+    	          expanded, leaf, row, false);
+    	      leafRenderer.setText(stringValue);
+    	      leafRenderer.setSelected(false);
+
+    	      leafRenderer.setEnabled(tree.isEnabled());
+
+    	      if (selected) {
+    	        leafRenderer.setForeground(selectionForeground);
+    	        leafRenderer.setBackground(selectionBackground);
+    	      } else {
+    	        leafRenderer.setForeground(textForeground);
+    	        leafRenderer.setBackground(textBackground);
+    	      }
+
+    	      if ((value != null) && (value instanceof DefaultMutableTreeNode)) {
+    	        Object userObject = ((DefaultMutableTreeNode) value)
+    	            .getUserObject();
+    	        if (userObject instanceof CourseData) {
+    	        	CourseData node = (CourseData) userObject;
+    	          leafRenderer.setText(node.toString());
+    	          leafRenderer.setSelected(node.isSelected());
+    	        }
+    	      }
+    	      returnValue = leafRenderer;
+    	    } else {
+    	      returnValue = nonLeafRenderer.getTreeCellRendererComponent(tree,
+    	          value, selected, expanded, leaf, row, hasFocus);
+    	    }
+    	    return returnValue;
+    	  }
+    	}
+
+    class CheckBoxNodeEditor extends AbstractCellEditor implements TreeCellEditor {
+
+    	  CheckBoxNodeRenderer renderer = new CheckBoxNodeRenderer();
+
+    	  ChangeEvent changeEvent = null;
+
+    	  JTree tree;
+
+    	  public CheckBoxNodeEditor(JTree tree) {
+    	    this.tree = tree;
+    	  }
+
+    	  public Object getCellEditorValue() {
+    	    JCheckBox checkbox = renderer.getLeafRenderer();
+     	    CourseData checkBoxNode = (CourseData)userObject;
+    	       checkBoxNode.select = new Boolean(checkbox.isSelected());
+    	    return checkBoxNode;
+    	  }
+     	  Object userObject;
+
+    	  public boolean isCellEditable(EventObject event) {
+    	    boolean returnValue = false;
+    	    if (event instanceof MouseEvent) {
+    	      MouseEvent mouseEvent = (MouseEvent) event;
+    	      TreePath path = tree.getPathForLocation(mouseEvent.getX(),
+    	          mouseEvent.getY());
+    	      if (path != null) {
+    	        Object node = path.getLastPathComponent();
+    	        if ((node != null) && (node instanceof DefaultMutableTreeNode)) {
+    	          DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;
+    	          userObject = treeNode.getUserObject();
+    	          returnValue = ((treeNode.isLeaf()) && (userObject instanceof CourseData));
+    	        }
+    	      }
+    	    }
+    	    return returnValue;
+    	  }
+
+    	  public Component getTreeCellEditorComponent(JTree tree, Object value,
+    	      boolean selected, boolean expanded, boolean leaf, int row) {
+
+    	    Component editor = renderer.getTreeCellRendererComponent(tree, value,
+    	        true, expanded, leaf, row, true);
+
+    	    // editor always selected / focused
+    	    ItemListener itemListener = new ItemListener() {
+    	      public void itemStateChanged(ItemEvent itemEvent) {
+    	        if (stopCellEditing()) {
+    	          fireEditingStopped();
+    	        }
+    	      }
+    	    };
+    	    if (editor instanceof JCheckBox) {
+    	      ((JCheckBox) editor).addItemListener(itemListener);
+    	    }
+
+    	    return editor;
+    	  }
+    	}
     
     /**
      * Creates a new instance of a SelectCoursesDialog. It shows a overview of
@@ -192,11 +359,11 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         setSize(600, 310);
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
 
-        CoursesModel cm = new CoursesModel();
-        cm.courses = allCourses;
-        cm.data    = new Image[allCourses.length];
-        cm.select  = new Boolean[allCourses.length];
-    	cm.setColumnCount(cnt);
+        cd = new CourseData[allCourses.length];        
+
+        for (int i = 0; i < allCourses.length; i++) {
+			cd[i] = new CourseData(allCourses[i]);
+		}
 
         this.selectedCourses = null;
         
@@ -208,40 +375,85 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         for (int i = 0; i < selectedCourses.length; i++) {
             vSelectedCourses.addElement(selectedCourses[i]);
         }
-
-		TableCellRenderer imageRenderer = new ImageRenderer();
-		TableCellEditor imageEditor = new ImageEditor();
-		jTable = new JTable(cm);
-		TableUtil.setDefaults(jTable, true, imageRenderer, imageEditor);
-        jTable.setRowMargin(2);
-		TableUtil.setJTableSizes(jTable);
-		
-        TableColumn column = jTable.getColumnModel().getColumn(0);
-        int w = column.getPreferredWidth();
-        column.setMaxWidth(w);
-        column.setMinWidth(w);
-        if(cnt > 2)
-        {
-        	column = jTable.getColumnModel().getColumn(2);
-        	w = column.getPreferredWidth();
-            column.setMaxWidth(w);
-            column.setMinWidth(w);
-        }
-        
         for (int i = 0; i < allCourses.length; i++) {
             if (vSelectedCourses.contains(allCourses[i])) {
-                cm.select[i] = Boolean.TRUE;
+                cd[i].select = Boolean.TRUE;
             }
         }
 
-        
-        
-        JScrollPane pane = new JScrollPane(jTable);
-        pane.getViewport().setBackground(getBackground());
-        pane.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-        pane.setOpaque(false);
-        contentPane.add(pane);
-        
+        if(CenterPanel.isIconizer() )
+        {
+        	tree = new ModuleTreePanel() {
+
+        		protected void createModel(DwoIF dwo) {
+        			super.createModel(null);
+        			DefaultMutableTreeNode root, schoolnode, dwonode;
+        			JTree tree2 = this.tree;
+					root = (DefaultMutableTreeNode) tree2.getModel().getRoot();
+        			dwonode = root.getFirstLeaf();
+        			schoolnode = dwonode;
+                	GuiCreator instance = GuiCreator.instance();
+                	if(instance.getMainPanel()!= null)
+                		setCenterPanel(instance.getMainPanel().getCenter());
+        			User u = instance.getUser();
+                	School school = u.getSchool();
+                	if(school != null)
+                	{  	schoolnode = new DefaultMutableTreeNode("Modules " + school);
+                    	root.add(schoolnode);
+                	}
+                	DefaultMutableTreeNode node; 
+                	for (int i = 0; i < cd.length; i++) {
+        				CourseData course = cd[i];
+        				node = new DefaultMutableTreeNode(course);
+        				
+        				if(cd[i].course.getSchoolID() == 0)
+        				{
+        					dwonode.add(node);
+        				} else {
+        					schoolnode.add(node);
+        				}
+        			}
+                	treeModel = new DefaultTreeModel(root);
+                	setModel(treeModel);
+                	tree2.setCellRenderer(new CheckBoxNodeRenderer());
+                	tree2.setCellEditor(new CheckBoxNodeEditor(tree2));
+                	tree2.setEditable(true);
+        		}
+			
+        		protected void createCloseBtn(Box bar) {}
+        		protected void createMenubar(Box bar) {}
+        		public void nodeSelected(DefaultMutableTreeNode node) {
+        		}
+        	};
+			tree.createModel(null);
+	        contentPane.add(tree, BorderLayout.CENTER);
+        } else {
+            CoursesModel cm = new CoursesModel(); 
+            cm.setColumnCount(cnt);
+        	TableCellRenderer imageRenderer = new ImageRenderer();
+        	TableCellEditor imageEditor = new ImageEditor();
+        	jTable = new JTable(cm);
+        	TableUtil.setDefaults(jTable, true, imageRenderer, imageEditor);
+        	jTable.setRowMargin(2);
+        	TableUtil.setJTableSizes(jTable);
+		
+	        TableColumn column = jTable.getColumnModel().getColumn(0);
+	        int w = column.getPreferredWidth();
+	        column.setMaxWidth(w);
+	        column.setMinWidth(w);
+	        if(cnt > 2)
+	        {
+	        	column = jTable.getColumnModel().getColumn(2);
+	        	w = column.getPreferredWidth();
+	            column.setMaxWidth(w);
+	            column.setMinWidth(w);
+	        }
+	        JScrollPane pane = new JScrollPane(jTable);
+	        pane.getViewport().setBackground(getBackground());
+	        pane.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+	        pane.setOpaque(false);
+	        contentPane.add(pane, BorderLayout.CENTER);
+        }
         Box southPane = Box.createHorizontalBox();
         southPane.setBorder(BorderFactory.createEmptyBorder(0,5,5,5));
         contentPane.add(southPane, BorderLayout.SOUTH);
@@ -308,37 +520,40 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == cancelButton) {
         	selectedCourses = null;
-        	this.setVisible(false);
+        	setVisible(false);
         } else if (e.getSource() == okButton) {
             Vector tmpSelected = new Vector();
-            CoursesModel model = (CoursesModel) jTable.getModel();
-            int len = model.getRowCount();
+            int len = cd.length;
             for(int i = 0; i < len; i++ )
             {
-            	if(Boolean.TRUE.equals(model.getValueAt(i, 0)))
-            		tmpSelected.addElement(model.courses[i]);
+            	if(Boolean.TRUE.equals(cd[i].select))
+            		tmpSelected.addElement(cd[i].course);
             }
 
             selectedCourses = new Course[tmpSelected.size()];
             tmpSelected.copyInto(selectedCourses);
-            this.hide();
+            setVisible(false);
 
         } else if (e.getSource() == selectAllButton) {
-            TableModel model = jTable.getModel();
-            int len = model.getRowCount();
-            for(int i = 0; i < len; i++)
-            	model.setValueAt(Boolean.TRUE, i, 0);
-            
+        	select(Boolean.TRUE);      	
         } else if (e.getSource() == deselectAllButton) {
-            TableModel model = jTable.getModel();
-            int len = model.getRowCount();
-            for(int i = 0; i < len; i++)
-            	model.setValueAt(Boolean.FALSE, i, 0);
-            
-            
+            select(Boolean.FALSE);
         }
-
     }
+
+	private void select(Boolean value) {
+		int len = cd.length;
+		for(int i = 0; i < len; i++)
+			cd[i].select = value;
+		if(jTable != null)
+		{
+		    CoursesModel model = (CoursesModel) jTable.getModel();
+		    model.fireTableDataChanged();
+		} else if(treeModel != null)
+		{
+			treeModel.nodeChanged((TreeNode) treeModel.getRoot());
+		}
+	}
 
     /**
      * Returns all the selected courses.
@@ -362,8 +577,9 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         	while (e.hasMoreElements()) {
 				Hashtable object = (Hashtable) e.nextElement();
 				int courseID = ((Number)object.get("courseID")).intValue();
-				for (int i = 0; i < model.courses.length; i++) {
-					Course course = model.courses[i];
+				CourseData[] cd = model.getCD();
+				for (int i = 0; i < cd.length; i++) {
+					Course course = cd[i].course;
 					if(course.getID() == courseID)
 						model.setValueAt(scd.removeImage, i, 2);
 				}

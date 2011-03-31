@@ -23,6 +23,8 @@ public class SchoolClass implements UserGroup, Comparable {
 
     private String className;
 
+	private boolean iconizer = true; // database entry
+
     /**
      * Creates a new SchoolClass object.
      *  
@@ -243,5 +245,9 @@ public class SchoolClass implements UserGroup, Comparable {
     public String getOrderDescTitle() {
         return TextMapper.getText(TextMapper.UG_CLASS_ORDER_DESC);
     }
+
+	public boolean hasIconizer() {
+		return iconizer ;
+	}
 
 }

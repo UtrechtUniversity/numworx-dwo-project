@@ -62,12 +62,11 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 		pane.setOpaque(false);
 		add(pane, BorderLayout.CENTER);
 		Box hbox = Box.createHorizontalBox();
-		createMenubar();
-		hbox.add(bar);
+		createMenubar(hbox);
 		createCloseBtn(hbox);
 	}
 
-	protected void createMenubar() {
+	protected void createMenubar(Box hbox) {
 		bar = new JMenuBar();
 		bar.setVisible(false);
 		JMenu menu; JMenuItem item;
@@ -77,6 +76,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 		bar.add(menu);
 		menu = new JMenu("Bewerken");
 		bar.add(menu);
+		hbox.add(bar);
 	}
 
 	protected void createCloseBtn(Box toolbar) {

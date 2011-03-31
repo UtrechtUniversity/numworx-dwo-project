@@ -389,4 +389,10 @@ public class User implements UserGroup, Comparable {
 		return r;
 	}
 
+	public boolean hasIconizer() {
+		if(inClass != null)
+			return inClass.hasIconizer();
+		return false;
+	}
+
 }
