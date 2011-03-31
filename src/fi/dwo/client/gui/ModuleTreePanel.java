@@ -33,7 +33,11 @@ import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.User;
 
-public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
+interface SelectStrategy {
+	void nodeSelected(DefaultMutableTreeNode node);
+}
+
+public class ModuleTreePanel extends JPanel implements TreeSelectionListener, SelectStrategy {
 
 	public static final String STANDAARD_DWO_MODULES = "Standaard DWO modules";
 	public static final String ALLE_MODULES = "Alle modules";
@@ -47,6 +51,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 	
 	public ModuleTreePanel() {
 		super(new BorderLayout());
+		strategy = this;
 		tree = new JTree();
 		tree.setShowsRootHandles(true);
 		tree.addTreeSelectionListener(this);
@@ -218,16 +223,20 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 		boolean sel = e.isAddedPath();
 		if(sel)
 		{
-			nodeSelected(node);
+			strategy.nodeSelected(node);
 		}
 	}
+	
+	private SelectStrategy strategy;
 
-	protected void nodeSelected(DefaultMutableTreeNode node) {
+	public void nodeSelected(DefaultMutableTreeNode node) {
 		Object value = node.getUserObject();
+		
+		GuiCreator instance = GuiCreator.instance();
 		if(value instanceof Course)
 		{
 			Course c = (Course)value;
-		    CoursePanel cp = (CoursePanel) GuiCreator.instance().getCoursePanel(c);
+		    CoursePanel cp = (CoursePanel) instance.getCoursePanel(c);
 		    cp.setLessonMode(getLessonMode());
 		    center.loadCenter(cp);
 		} else if (value instanceof String) // geen ondescheid tussen alle/school/standaard
@@ -247,14 +256,14 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 		} else if (value instanceof Sco) 
 		{
 			Sco s = (Sco)value;
-		    CenterSubPanel csp = GuiCreator.instance().getScoPanel(s);
+		    CenterSubPanel csp = instance.getScoPanel(s);
 		    if(csp != null) {
 		    	s.setLessonMode(getLessonMode());
 		        center.loadTotal(csp);
 		    }
 		}
 	}
-
+	
 	private boolean isSelect() {
 		return cnt>0;
 	}
@@ -263,7 +272,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 	private void popSelect()  { cnt--; }
 	
 
-	protected Course[] getCourses(DefaultMutableTreeNode node) {
+	protected static Course[] getCourses(DefaultMutableTreeNode node) {
 		Vector v = new Vector(node.getChildCount());
 		Enumeration e = node.children();
 		while (e.hasMoreElements()) {
@@ -284,6 +293,16 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 
 	public JMenuBar getMenuBar() {
 		return bar;
+	}
+
+	SelectStrategy getStrategy() {
+		return strategy;
+	}
+
+	void setStrategy(SelectStrategy strategy) {
+		if(strategy == null)
+			strategy = this;
+		this.strategy = strategy;
 	}
 }
 

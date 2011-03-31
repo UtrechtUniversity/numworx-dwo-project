@@ -153,6 +153,7 @@ public class MenuPanel extends GuestMenuPanel {
         super.actionPerformed(e);
         if (e.getSource() == myProfileButton) {
             center.loadCenter(GuiCreator.instance().getProfilePanel());
+            center.reset();
         }
 
     }

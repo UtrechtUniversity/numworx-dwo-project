@@ -82,10 +82,10 @@ public class Mover extends JComponent  {
 				int curY = e.getY() + zero.y;
 				Dimension size = getParent().getSize();
 				size.width += curX-lastX;
-				size.height += curY-lastY;
+				//size.height += curY-lastY;
 				lastX = curX;
 				lastY = curY;
-System.out.println("change "+ getParent().getSize() + " to " + size);				
+//System.out.println("change "+ getParent().getSize() + " to " + size);				
 				getParent().setSize(size);
 				getParent().setPreferredSize(size);
 				size.height = getParent().getMinimumSize().height;

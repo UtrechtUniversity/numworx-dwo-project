@@ -13,11 +13,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.Border;
+import javax.swing.tree.DefaultMutableTreeNode;
 
+import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.SchoolClass;
+import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.Teacher;
+import fi.dwo.client.domain.User;
 import fi.dwo.client.system.TextMapper;
 
 /**
@@ -26,7 +30,7 @@ import fi.dwo.client.system.TextMapper;
  * @author M.J.B. Kupers
  *  
  */
-public class TeacherMenuPanel extends MenuPanel {
+public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 
     private static final Border TITLE_BORDER = BorderFactory.createEmptyBorder(0, 10, 0, 0);
     private static final Border CLASS_BORDER = BorderFactory.createEmptyBorder(0, 20, 0, 0);
@@ -165,20 +169,25 @@ public class TeacherMenuPanel extends MenuPanel {
         if (e.getSource() instanceof ClassLinkedLabel) {
             GuiCreator.instance().setWait();
             CenterSubPanel cp = GuiCreator.instance().getResultPanel(((ClassLinkedLabel) e.getSource()).getSchoolClass());
+            center.reset();
             center.loadCenter(cp);
             GuiCreator.instance().setReady();
         } else if (e.getSource() == classManagementButton) {
             GuiCreator.instance().setWait();
             CenterSubPanel cp = GuiCreator.instance().getClassPanel();
+            center.reset();
             center.loadCenter(cp);
             GuiCreator.instance().setReady();
        } else if (e.getSource() == courseManagementButton) {
            GuiCreator.instance().setWait();
            CenterSubPanel cp = GuiCreator.instance().getCourseManagementPanel();
            center.loadCenter(cp);
+           center.setStrategy(this);
            GuiCreator.instance().setReady();           
        }
     }
+    
+    
     
     public void hideClassList() {
         classPanel.setVisible(false);
@@ -187,5 +196,28 @@ public class TeacherMenuPanel extends MenuPanel {
     public void showClassList() {
         classPanel.setVisible(true);      
     }
+
+	public void nodeSelected(DefaultMutableTreeNode node) {
+		Object u = node.getUserObject();
+		GuiCreator instance = GuiCreator.instance();
+		if(u instanceof String)
+		{
+			CenterSubPanel cp = instance.getCourseManagementPanel();
+			center.loadCenter(cp);
+		} else
+		if(u instanceof Course)
+		{
+            Course c = (Course) u;
+            if(c.getSchoolID()!= 0 || instance.getUser().hasRight(User.PROFILE_ADMIN_RIGHT)) // allowed?
+            	center.loadCenter(instance.getScoManagementPanel(c));
+		} else 
+		if( u instanceof Sco)
+		{
+			Sco s = (Sco) u;
+			Course c = s.getCourse();
+            if(c.getSchoolID()!= 0 || instance.getUser().hasRight(User.PROFILE_ADMIN_RIGHT)) // allowed?
+            	instance.loadParameterManagementPanel(s);
+		}
+	}
 
 }

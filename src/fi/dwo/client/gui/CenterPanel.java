@@ -29,7 +29,9 @@ import javax.swing.border.Border;
 
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DwoHelper;
+import fi.dwo.client.domain.Guest;
 import fi.dwo.client.domain.ResultsModuleIF;
+import fi.dwo.client.domain.User;
 import fi.dwo.client.system.TextMapper;
 
 /**
@@ -37,17 +39,16 @@ import fi.dwo.client.system.TextMapper;
  * This can be showed with or without menu. If there is a menu (e.g. te course overview) the CenterMainSubPanel is showed.
  * Otherwise (e.g. the panel with the sco), no menu is showed and the hole center is used.
  * @author M.J.B. Kupers
- *  
+ *  TODO major refactoring 
  */
 public class CenterPanel extends JPanel implements CourseContainer {
-    private static Border MAIN_BORDER = BorderFactory.createEmptyBorder(18, 6, 8, 10);
+
+	private static final Border DEFAULT_MAIN_BORDER = BorderFactory.createEmptyBorder(18, 6, 8, 10);
+	private Border MAIN_BORDER = DEFAULT_MAIN_BORDER;
 
 	private static final Component RAND = Box.createHorizontalStrut(12);
-
-/* Nieuw. Test de iconizer code. 
- * Rand en Menu samen in één iconized panel, met ergens een iconizer
- */
-	private static final boolean ICONIZER = GuiConstants.GUI_ICONIZED || true;
+	private boolean iconizer;
+	
 	private IconizedPanel ip, ip2;
 	private JPanel window;
 	private Border scoBorder = BorderFactory.createEmptyBorder();
@@ -87,9 +88,10 @@ public class CenterPanel extends JPanel implements CourseContainer {
      */
     public CenterPanel(MainPanel mp) {
         mainPanel = mp;
+        iconizer = isIconizer();
+        
         this.setBackground(GuiConstants.SUB_BACKGROUND);
         this.setLayout(new BorderLayout());
-        //this.setSize(GuiConstants.CENTER_WIDTH, GuiConstants.CENTER_HEIGHT);
 
         centermainSub = new CenterMainSubPanel(null);
         centermainSub.setLayout(new BoxLayout(centermainSub, BoxLayout.LINE_AXIS));
@@ -109,7 +111,7 @@ public class CenterPanel extends JPanel implements CourseContainer {
 // START INKLAPBAAR MENU 
          window = centermainSub; // alternatief
          ip = new IconizedPanel("Menu");
-if(ICONIZER) {
+if(iconizer) {
 		MAIN_BORDER = BorderFactory.createEmptyBorder(0, 0, 0, 0);
      	setBorder(MAIN_BORDER);
 	
@@ -136,9 +138,9 @@ if(ICONIZER) {
 }// END       
         loadMenu();
         showMenu = true;
-if(!ICONIZER)
+if(!iconizer)
 		centermainSub.add(RAND);
-if(ICONIZER)		
+if(iconizer)		
 {	
 		tree = ModuleTreePanel.newInstance(GuiCreator.instance().dwo);
 		ip2= tree.getIP();
@@ -165,7 +167,7 @@ if(ICONIZER)
         //spe.add(sp);
         spe = sp; // alles is nu jpanel
         centermainSub.add(spe);
-if(ICONIZER)
+if(iconizer)
 	{   
 		sp.setBorder(scoBorder);
     }
@@ -184,7 +186,13 @@ if(ICONIZER)
 
     }
 
-    /**
+    static boolean isIconizer() {
+    	User u = GuiCreator.instance().getUser();
+// in productie 'false'
+    	return (true||GuiConstants.GUI_ICONIZED) && u.hasIconizer();
+    }
+
+	/**
      * Returns the current MainPanel.
      * 
      * @return The current mainpanel
@@ -193,6 +201,11 @@ if(ICONIZER)
         return mainPanel;
     }
 
+    public void reset() {
+    	if(tree != null)
+    		tree.setStrategy(null);
+    }
+    
     /**
      * Loads a panel in the center. The menu is showed on the left side.
      * 
@@ -257,7 +270,7 @@ if(ICONIZER)
      * @see fi.dwo.client.gui.CenterSubPanel
      */
     public void loadTotal(CenterSubPanel panel) {
-if(!ICONIZER)
+if(!iconizer)
 {    	if(GuiConstants.GUI_IMAGE_BG) // todo tuning
     		setBorder(BorderFactory.createEmptyBorder(10, 7, 8, 7));
     	if(GuiConstants.getDwoProfile()==51 || GuiConstants.getDwoProfile()==27)setBorder(BorderFactory.createEmptyBorder(30, 42, 78, 42));
@@ -293,12 +306,12 @@ invalidate();
     	mainPanel.setGuiImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_SCO));
 
         /* We don't want to see the menu */
-        if (showMenu) {
+        if (showMenu && !iconizer) {
             RAND.setVisible(false);
             menu.setVisible(false);
             centermainSub.invalidate();
         }
-        if(ICONIZER)
+        if(iconizer)
         {
         	centerSubPanel.getComponent().setBorder(scoBorder);
         }
@@ -434,5 +447,10 @@ invalidate();
 	public void addCourse(Course course) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public void setStrategy(SelectStrategy selector) {
+		if(tree != null)
+			tree.setStrategy(selector);		
 	}
 }
