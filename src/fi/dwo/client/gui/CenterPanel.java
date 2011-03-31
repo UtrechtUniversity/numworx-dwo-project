@@ -144,10 +144,14 @@ if(ICONIZER)
 		ip2= tree.getIP();
 		ip2.setIconBorder(ip.getIconBorder());
 		Image imgs = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_BGIMAGE_SCO);
+		Insets inset2 = (Insets) GuiConstants.GUI_INSETS_SCO.clone();
 		scoBorder = new DWOBorder(imgs, GuiConstants.GUI_INSETS_SCO, GuiConstants.GUI_9PATCH_SCO);
-		tree.setBorder(scoBorder);
+		tree.add(new Mover(inset2.right), BorderLayout.EAST);
+		inset2.right = 0; 
+		DWOBorder treeBorder = new DWOBorder(imgs, inset2, GuiConstants.GUI_9PATCH_SCO);
+		tree.setBorder(treeBorder);
 		ip2.setMaximumSize(new Dimension(150-1, Short.MAX_VALUE));
-	    centermainSub.add(ip2);
+		centermainSub.add(ip2);
 		tree.setCenterPanel(this);
 }
 		

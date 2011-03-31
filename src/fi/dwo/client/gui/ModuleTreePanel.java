@@ -37,12 +37,12 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 
 	public static final String STANDAARD_DWO_MODULES = "Standaard DWO modules";
 	public static final String ALLE_MODULES = "Alle modules";
-	private JTree tree;
+	protected JTree tree;
 	private JScrollPane pane;
 	private JMenuBar bar;
-	private DwoIF dwo;
+	protected DwoIF dwo;
 	private CenterPanel center;
-	private IconizedPanel ip = new IconizedPanel("Modules");
+	private IconizedPanel ip;
 	
 	
 	public ModuleTreePanel() {
@@ -57,9 +57,14 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 		pane.setOpaque(false);
 		add(pane, BorderLayout.CENTER);
 		Box hbox = Box.createHorizontalBox();
+		createMenubar();
+		hbox.add(bar);
+		createCloseBtn(hbox);
+	}
+
+	protected void createMenubar() {
 		bar = new JMenuBar();
 		bar.setVisible(false);
-		hbox.add(bar);
 		JMenu menu; JMenuItem item;
 		menu = new JMenu("Bestand");
 		item = new JMenuItem("Import");
@@ -67,38 +72,25 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 		bar.add(menu);
 		menu = new JMenu("Bewerken");
 		bar.add(menu);
+	}
+
+	protected void createCloseBtn(Box toolbar) {
+		ip = new IconizedPanel("Modules");
 		JButton closeBtn = new JButton(ip.getCloseAction()); // TODO icon..
 		closeBtn.setBorderPainted(false);
 		closeBtn.setContentAreaFilled(false);
-		//item = new JMenuItem(ip.getCloseAction());
-		//closeBtn.add(item);
-		//closeBtn.setBorderPainted(false);
-		//closeBtn.setContentAreaFilled(false);
-//		closeBtn.addMenuListener(new MenuListener() {
-//
-//			public void menuCanceled(MenuEvent e) {
-//			}
-//
-//			public void menuDeselected(MenuEvent e) {
-//			}
-//
-//			public void menuSelected(MenuEvent e) {
-//				ip.getCloseAction().actionPerformed(null);
-//				
-//			}} );
-		hbox.add(Box.createHorizontalGlue());
-		hbox.add(closeBtn);
-		add(hbox, BorderLayout.NORTH);
-		// 
-		
+		toolbar.add(Box.createHorizontalGlue());
+		toolbar.add(closeBtn);
+		add(toolbar, BorderLayout.NORTH);
+		ip.setWindow(this);
 	}
 
-	private void setModel(TreeModel model)
+	protected void setModel(TreeModel model)
 	{
 		tree.setModel(model);
 	}
 	
-	private void createModel(DwoIF dwo) {
+	protected void createModel(DwoIF dwo) {
 		this.dwo = dwo;
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(ALLE_MODULES);
         DefaultMutableTreeNode dwonode  = new DefaultMutableTreeNode(STANDAARD_DWO_MODULES);
@@ -135,7 +127,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
         setModel(model);
 	}
 	
-	private void insertScos(Course course, DefaultMutableTreeNode node) {
+	protected void insertScos(Course course, DefaultMutableTreeNode node) {
 		course.loadScos();
 		Sco[] scos = course.getScoList();
 		if(scos != null)
@@ -186,7 +178,6 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 	{
 		ModuleTreePanel panel = new ModuleTreePanel();
 		panel.createModel(dwo);
-		panel.ip.setWindow(panel);
 		return panel;
 	}
 	
@@ -227,37 +218,40 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 		boolean sel = e.isAddedPath();
 		if(sel)
 		{
-			Object userObject = node.getUserObject();
-			System.out.println(userObject);
-			if(userObject instanceof Course)
+			nodeSelected(node);
+		}
+	}
+
+	protected void nodeSelected(DefaultMutableTreeNode node) {
+		Object value = node.getUserObject();
+		if(value instanceof Course)
+		{
+			Course c = (Course)value;
+		    CoursePanel cp = (CoursePanel) GuiCreator.instance().getCoursePanel(c);
+		    cp.setLessonMode(getLessonMode());
+		    center.loadCenter(cp);
+		} else if (value instanceof String) // geen ondescheid tussen alle/school/standaard
+		{
+			CenterSubPanel panel;
+			if(value == ALLE_MODULES)
+			{				
+				panel = new CourseChoisePanel(dwo.getDwoProfile());
+			} else 
 			{
-				Course c = (Course)userObject;
-	            CoursePanel cp = (CoursePanel) GuiCreator.instance().getCoursePanel(c);
-	            cp.setLessonMode(getLessonMode());
-	            center.loadCenter(cp);
-			} else if (userObject instanceof String) // geen ondescheid tussen alle/school/standaard
-			{
-				CenterSubPanel panel;
-				if(userObject == ALLE_MODULES)
-				{				
-					panel = new CourseChoisePanel(dwo.getDwoProfile());
-				} else 
-				{
-					Course[] courses = getCourses(node);
-					panel = new CourseChoisePanel(dwo.getDwoProfile(), courses, userObject);
-					
-				}
-				center.loadCenter(panel); // undo side-effect 'select Alle_modules'
+				Course[] courses = getCourses(node);
+				panel = new CourseChoisePanel(dwo.getDwoProfile(), courses, value);
 				
-			} else if (userObject instanceof Sco) 
-			{
-				Sco s = (Sco)userObject;
-                CenterSubPanel csp = GuiCreator.instance().getScoPanel(s);
-                if(csp != null) {
-                	s.setLessonMode(getLessonMode());
-                    center.loadTotal(csp);
-                }
 			}
+			center.loadCenter(panel); // undo side-effect 'select Alle_modules'
+			
+		} else if (value instanceof Sco) 
+		{
+			Sco s = (Sco)value;
+		    CenterSubPanel csp = GuiCreator.instance().getScoPanel(s);
+		    if(csp != null) {
+		    	s.setLessonMode(getLessonMode());
+		        center.loadTotal(csp);
+		    }
 		}
 	}
 
@@ -269,7 +263,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 	private void popSelect()  { cnt--; }
 	
 
-	private Course[] getCourses(DefaultMutableTreeNode node) {
+	protected Course[] getCourses(DefaultMutableTreeNode node) {
 		Vector v = new Vector(node.getChildCount());
 		Enumeration e = node.children();
 		while (e.hasMoreElements()) {

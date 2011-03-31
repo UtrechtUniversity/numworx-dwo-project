@@ -133,13 +133,27 @@ public class IconizedPanel extends JPanel implements ActionListener {
 			return window.getPreferredSize();
 	}
 
+	public Dimension getMinimumSize() {
+		if(isIconized())
+			return box.getPreferredSize();
+		else
+			return super.getMinimumSize();
+	}
+	public Dimension getMaximumSize() {
+		if(isIconized())
+			return box.getMaximumSize();
+		else
+			return super.getMaximumSize();
+	}
+
 	void setIconized(boolean iconized) {
 		this.iconized = iconized;
 		if(iconized)
 		{	layout.first(this);			
 		}
 		else
-			layout.last(this);	
+			layout.last(this);
+		invalidate();
 	}
 
 	Component getWindow() {
