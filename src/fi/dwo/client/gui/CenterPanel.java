@@ -213,7 +213,6 @@ if(iconizer)
      * @see fi.dwo.client.gui.CenterSubPanel
      */
     public void loadCenter(CenterSubPanel panel) {
-        GuiCreator.instance().setWait();
         
         if(tree != null)
         {
@@ -235,6 +234,8 @@ if(iconizer)
                 ((Component) centerSubPanel).setVisible(true);
             }
         }
+
+        GuiCreator.instance().setWait();
 
         centerSubPanel = panel;
         centerSubPanel.setCenterPanel(this);
@@ -435,7 +436,10 @@ invalidate();
 
 // synchronize the ModuleTreePanel
 	public void updateCourse(Course course) {
-		// TODO Auto-generated method stub
+		if(tree != null)
+		{
+			tree.updateNode(course);
+		}
 		
 	}
 

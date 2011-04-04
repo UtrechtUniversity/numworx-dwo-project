@@ -155,21 +155,29 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 	}
 	
 
-	private boolean select(Object object, DefaultMutableTreeNode node) {
-		Object userObject = node.getUserObject();
-		if(userObject.equals(object))
+	private void select(Object object, DefaultMutableTreeNode node) {
+		node = find(object, node);
+		if(node != null)
 		{
 			TreePath path = new TreePath(node.getPath());
 			tree.setSelectionPath(path);
-			return true;
+		}
+	}
+
+	private DefaultMutableTreeNode find(Object object, DefaultMutableTreeNode node) {
+		Object userObject = node.getUserObject();
+		if(userObject.equals(object))
+		{
+			return node;
 		}
 		Enumeration e = node.children();
 		while (e.hasMoreElements()) {
 			DefaultMutableTreeNode o = (DefaultMutableTreeNode) e.nextElement();
-			if(select(object, o))
-				return true; // early out.
+			o = find(object, o);
+			if(o != null)
+				return o; // early out.
 		}
-		return false;
+		return null;
 	}
 
 	/**
@@ -303,6 +311,15 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 		if(strategy == null)
 			strategy = this;
 		this.strategy = strategy;
+	}
+
+	public void updateNode(Course course) {
+		DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+		DefaultMutableTreeNode node = find(course, root);
+		node.removeAllChildren();
+		insertScos(course, node);
+		model.nodeStructureChanged(node);
 	}
 }
 

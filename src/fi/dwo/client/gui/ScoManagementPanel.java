@@ -270,6 +270,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     		if (value == editImage) {
                 if (ScoNameDialog.editSco(s)) {
                     model.fireTableCellUpdated(row, 0);
+                    center.updateCourse(s.getCourse());
                 }
     		} else if (value == removeImage) {
                 /* Delete the course */
@@ -278,6 +279,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
                 if (JOptionPane.showConfirmDialog(ScoManagementPanel.this, message, TextMapper.getText(TextMapper.GUIS_MSG_TTL_SCO_DELETE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     if (GuiCreator.instance().deleteSco(s)) {
                     	model.fireTableRowsDeleted(row, row);
+                    	center.updateCourse(s.getCourse());
                     	if(model.getRowCount()==0)
                     	{
                     		addScoTable();
@@ -290,10 +292,12 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     			Sco s2 = course.getScoList()[row-1];
     			swapSco(s, s2);
     			model.fireTableRowsUpdated(row-1, row);
+    			center.updateCourse(s.getCourse());
     		} else if (value == downImage) {
     			Sco s2 = course.getScoList()[row+1];
     			swapSco(s, s2);
     			model.fireTableRowsUpdated(row, row+1);
+    			center.updateCourse(s.getCourse());
     		}
     		fireEditingStopped();
     	}
@@ -455,6 +459,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 	            tmp[tmp.length - 1] = s;
 	            course.setScoList(tmp);
 	            addScoTable();
+	            center.updateCourse(course);
             }
 
         } else if( e.getSource() == publishButton)
@@ -550,6 +555,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 			zipper.appendCourse(course.getID(), offset, result);
 			course.loadScos();
 			addScoTable();
+			center.updateCourse(course);
 		}
 	}
 

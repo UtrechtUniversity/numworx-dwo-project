@@ -243,10 +243,10 @@ public class GuiCreatorTeacher extends GuiCreator {
      * @return boolean
      */
     public boolean updateCourse(Course course) {
-        getMainPanel().getCenter().updateCourse(course);
-    	return dwo.updateCourse(course);
-        // TODO update ModuleTreePanel
-        
+    	boolean b = dwo.updateCourse(course);
+    	if(b)
+            getMainPanel().getCenter().updateCourse(course);
+		return b;
     }
 
     /**

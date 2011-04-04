@@ -74,7 +74,9 @@ import fi.dwo.server.persistence.DbAccess;
  *
  */
 public class ParameterManagementPanel extends JPanel implements CenterSubPanel, ActionListener {
-    private CenterPanel center;
+    private static final boolean POPUP = false;
+
+	private CenterPanel center;
 
     private ScormEditComponentIF editComponent;
     private Parameter[] parameters;
@@ -111,18 +113,21 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
      */
     public ParameterManagementPanel(Sco sco) {
         super(new BorderLayout());
+        
+// nodig, maar nog niet gezet.
+        setCenterPanel(GuiCreator.instance().getMainPanel().getCenter());
+        center.end(); // idempotent!
         GuiCreator.instance().setWait();
+
         this.sco = sco;
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         JPanel buttonPanel;
 		JPanel mainPanel;  // import van awt componenten
         buttonPanel = new JPanel(new FlowLayout()/*,BorderedPanel.SOUTH*/);
         buttonPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.black));
-       // buttonPanel.setSize(800, 40);
         buttonPanel.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.add(buttonPanel, BorderLayout.NORTH);
         
-        //mainPanel = new Panel(new BorderLayout());
         mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.add(mainPanel, BorderLayout.CENTER);
@@ -142,16 +147,15 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         	editComponent = applet.getEditComponent(launchData);
             this.setSize(800, 620);
             this.setPreferredSize(getSize());
+            this.setMinimumSize(getSize());
+            
             String title = TextMapper.getText(TextMapper.GUIPA_DLG_TTL);
             String[] tmp = {sco.getScoName()};
             title = MessageFormat.format(title, tmp);
             
             editModeDialog = new JDialog(DwoHelper.getFrameForComponent(DwoHelper.getApplet()), title, false);
-            //editModeDialog = new Frame(title);
-            
+           
             editModeDialog.setSize(800, 620);
-            //editModeDialog.setLayout(new BorderLayout());
-            editModeDialog.setContentPane(this);
             
             Dimension parentSize = Toolkit.getDefaultToolkit().getScreenSize();
             Dimension size = editModeDialog.getSize();
@@ -166,65 +170,54 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             }
 
             editModeDialog.setLocation(x, y);
-            //editModeDialog.addWindowListener(this);
             editModeDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        } else {
-            if(applet != null)
-            	parameters = applet.getEditableParameters();
-            else 
-            	parameters = null;
-            if(parameters == null)parameters = new Parameter[0];
-            this.setSize(627, 485);
-            this.setPreferredSize(getPreferredSize());
-            editModeDialog = null;
+            
+            // keuze, embedded of popup
+            	if(!POPUP)
+            	{	
+            		editModeDialog = null;
+            	} else {
+            		editModeDialog.setContentPane(this);
+            	}
+        	} else {
+        		if(applet != null)
+        			parameters = applet.getEditableParameters();
+        		else 
+        			parameters = null;
+        		if(parameters == null)parameters = new Parameter[0];
+        		this.setSize(627, 485);
+        		this.setPreferredSize(getPreferredSize());
+        		editModeDialog = null;
         }
         
         
         FontMetrics fm;
 
         previewButton = new JButton(TextMapper.getText(TextMapper.GUIPA_BTN_PREVIEW));
-        //fm = previewButton.getFontMetrics(previewButton.getFont());
-        //previewButton.setSize(90, fm.getHeight() + 10);
-        //previewButton.setLocation(20, 20);
         previewButton.addActionListener(this);
         buttonPanel.add(previewButton);
         
         if(sco.getAppletID()==12) previewButton.setEnabled(false);// geen preview mogelijk bij popupurlapplet
         
         saveButton = new JButton(TextMapper.getText(TextMapper.GUIPA_BTN_SAVE));
-        //fm = saveButton.getFontMetrics(saveButton.getFont());
-        //saveButton.setSize(90, fm.getHeight() + 10);
-        //saveButton.setLocation(previewButton.getLocation().x + previewButton.getSize().width + 10, 20);
         saveButton.addActionListener(this);
         buttonPanel.add(saveButton);
 
         resetButton = new JButton(TextMapper.getText(TextMapper.GUIPA_BTN_RESET));
-        //fm = resetButton.getFontMetrics(resetButton.getFont());
-        //resetButton.setSize(90, fm.getHeight() + 10);
-        //resetButton.setLocation(saveButton.getLocation().x + saveButton.getSize().width + 10, 20);
         resetButton.addActionListener(this);
         buttonPanel.add(resetButton);
 
         cancelButton = new JButton(TextMapper.getText(TextMapper.GUIPA_BTN_CANCEL));
-        //fm = cancelButton.getFontMetrics(cancelButton.getFont());
-        //cancelButton.setSize(90, fm.getHeight() + 10);
-        //cancelButton.setLocation(resetButton.getLocation().x + resetButton.getSize().width + 10, 20);
         cancelButton.addActionListener(this);
         buttonPanel.add(cancelButton);
-        
+// school 190 264 385 heeft scorm export recht     
         if(DwoHelper.isApplication())
-        {	if(DwoHelper.isAdminLoggedIn() || DwoHelper.isScormExportLoggedIn() || sco.getCourse().getSchoolID()==190  || sco.getCourse().getSchoolID()==264 || sco.getCourse().getSchoolID()==385) 
+        {	if( DwoHelper.isScormExportLoggedIn() ) 
         	{   importScormButton = new JButton("Import Scorm");
-		        //fm = cancelButton.getFontMetrics(cancelButton.getFont());
-		        //importScormButton.setSize(90, fm.getHeight() + 10);
-		        //importScormButton.setLocation(cancelButton.getLocation().x + resetButton.getSize().width + 10, 20);
 		        importScormButton.addActionListener(this);
 		        buttonPanel.add(importScormButton);
 		        
 		        exportScormButton = new JButton("Export Scorm");
-		        //fm = cancelButton.getFontMetrics(cancelButton.getFont());
-		        //exportScormButton.setSize(90, fm.getHeight() + 10);
-		        //exportScormButton.setLocation(cancelButton.getLocation().x + resetButton.getSize().width + 10, 20);
 		        exportScormButton.addActionListener(this);
 		        buttonPanel.add(exportScormButton);
         	}
@@ -258,8 +251,6 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         scrollPanel.setBorder(null);
         scrollPanel.setBackground(GuiConstants.MAIN_BACKGROUND);
         scrollPanel.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
-        //scrollPanel.setSize(633, 455);
-        //scrollPanel.setLocation(-3, -3);
         mainPanel.add(scrollPanel);
         
            
@@ -272,7 +263,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             hulp.setOpaque(false);
             scrollPanel.setViewportView(hulp);//parameterComponent);
         } else {
-            scrollPanel.setSize(editModeDialog.getSize());
+            scrollPanel.setSize(getSize());
             scrollPanel.setViewportView(editComponent.getComponent());
             scrollPanel.validate();
             System.out.println(editComponent.getComponent());
@@ -288,15 +279,26 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         if(parameters != null && parameters.length == 0)scrollPanel.setViewportView(noParamLabel);
         doLayout();
         GuiCreator.instance().setReady();
+        
         if(editMode) {
-            editModeDialog.setVisible(true);
+        	if(POPUP)
+        		editModeDialog.setVisible(true);
+        	else
+        		if(CenterPanel.isIconizer())
+        			center.loadCenter(this);
+        		else
+        			center.loadTotal(this);
         } else {
-            GuiCreator.instance().getMainPanel().getCenter().loadCenter(this);            
+            center.loadCenter(this);            
         }
     }
 
+    boolean done;
     public void end() {
-
+    	if(!done)
+    	{	done = true;
+    		saveSco();
+    	}	
     }
 
     /**
@@ -333,8 +335,11 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
      */
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == cancelButton) {
-            if(editMode) {
-                editComponent.end();
+        	done = true;
+        	if(editMode)
+        		editComponent.end();
+        	
+            if(editMode&&POPUP) {
                 editModeDialog.setVisible(false);
             } else {
                 center.loadCenter(GuiCreator.instance().getScoManagementPanel(sco.getCourse()));
@@ -373,23 +378,10 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             
             
         } else if (e.getSource() == saveButton) {
-            String message;
-            message = TextMapper.getText(TextMapper.GUIPA_MSG_PARAM_SAVE);
-            if (JOptionPane.showConfirmDialog(this, message, TextMapper.getText(TextMapper.GUIPA_MSG_TTL_PARAM_SAVE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                Hashtable tmp;
-	            if(editMode) {
-	                tmp = editComponent.getLaunchData();
-	            } else {
-	                tmp = (Hashtable) sco.getLaunchdata();
-	                ConvertorIF convertor = ConvertorCreator.createConverter(ConvertorCreator.CONV_LAUNCHDATA);
-	                tmp = (Hashtable) convertor.convertHashtable(tmp, parameters);
-	                parameterComponent.addParameters(tmp);
-	                tmp = (Hashtable) convertor.createHashtable(tmp, parameters);
-	            }
-	            sco.setLaunchdata(tmp);
-	            GuiCreator.instance().updateSco(sco);
-	            MapperCreator.instance(Applet.class).removeObject(sco.getAppletID());
-	            if(editMode) {
+        	done = saveSco();
+        	if(done)
+        	{	    
+        		if(editMode&&POPUP) {
 	                editModeDialog.setVisible(false);
 	            } else {
 	                center.loadCenter(GuiCreator.instance().getScoManagementPanel(sco.getCourse()));
@@ -406,6 +398,29 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         }
     }
     	
+    boolean saveSco() {
+    	String message;
+        message = TextMapper.getText(TextMapper.GUIPA_MSG_PARAM_SAVE);
+// Deze tekst is m.i. niet helemaal lekker geformuleerd. Wim
+        if (JOptionPane.showConfirmDialog(this, message, TextMapper.getText(TextMapper.GUIPA_MSG_TTL_PARAM_SAVE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            Hashtable tmp;
+            if(editMode) {
+                tmp = editComponent.getLaunchData();
+            } else {
+                tmp = (Hashtable) sco.getLaunchdata();
+                ConvertorIF convertor = ConvertorCreator.createConverter(ConvertorCreator.CONV_LAUNCHDATA);
+                tmp = (Hashtable) convertor.convertHashtable(tmp, parameters);
+                parameterComponent.addParameters(tmp);
+                tmp = (Hashtable) convertor.createHashtable(tmp, parameters);
+            }
+            sco.setLaunchdata(tmp);
+            GuiCreator.instance().updateSco(sco);
+            MapperCreator.instance(Applet.class).removeObject(sco.getAppletID());
+            return true;
+        }
+        return false;
+    }
+    
 	public void open()
 	{	String directory,naam;
 		openDial.show();

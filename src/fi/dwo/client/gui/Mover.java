@@ -69,22 +69,23 @@ public class Mover extends JComponent  {
 		track(e);
 	}
 
-	private int lastX, lastY;
+	private int lastX, lastY, relX, relY;
 	private void track(MouseEvent e) {
-		Point zero = getLocationOnScreen();
 		switch(e.getID()) {
 		case MouseEvent.MOUSE_PRESSED:
-				lastX = e.getX() + zero.x;
-				lastY = e.getY() + zero.y;
+				relX = e.getX();
+//System.out.println("now " + getParent().getSize()  + ", " + getBounds());
 				break;
 		case MouseEvent.MOUSE_DRAGGED:
-				int curX = e.getX() + zero.x;
-				int curY = e.getY() + zero.y;
 				Dimension size = getParent().getSize();
-				size.width += curX-lastX;
+//System.out.println("voor " + size);
+				int min = getParent().getMinimumSize().width;
+				//size.width += curX-lastX;
+				size.width += e.getX()- relX;
+				//size.width = Math.max(size.width, min);
+//System.out.println("na " + size + ", delta " + (e.getX()) + "-" + relX );
+				
 				//size.height += curY-lastY;
-				lastX = curX;
-				lastY = curY;
 //System.out.println("change "+ getParent().getSize() + " to " + size);				
 				getParent().setSize(size);
 				getParent().setPreferredSize(size);
@@ -94,6 +95,7 @@ public class Mover extends JComponent  {
 				getParent().setMaximumSize(size);
 				getParent().invalidate();
 				getParent().validate();
+//System.out.println("got " + getParent().getSize());
 		}
 		
 	}

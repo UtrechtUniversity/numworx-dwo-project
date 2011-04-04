@@ -1272,7 +1272,7 @@ public class PersistenceFacade {
                 return dbAccess.changeCourse(course.getID(), course.getName(),
                         course.getDescription()
                         , course.isExport()                // FIXME fallback naar 2parameter methode.
-                        , course.getSchoolID()				// TODO fallback!
+                       // , course.getSchoolID()				// TODO fallback!
                 );
             } catch (IOException e) {
                 throw new CourseException(CourseException.EX_IO);
