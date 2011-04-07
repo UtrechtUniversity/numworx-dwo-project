@@ -134,7 +134,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
                         + cancelButton.getSize().width + 5) / 2)
                 + okButton.getSize().width + 5, 163);
         contentPane.add(cancelButton);
-
+        owner = DwoHelper.getApplet(); // centreer t.o.v. dwo applet
         Point p = owner != null ? owner.getLocationOnScreen() : new Point(0, 0);
         Dimension parentSize = owner != null ? owner.getSize()
                 : Toolkit.getDefaultToolkit().getScreenSize();
@@ -142,7 +142,6 @@ public class CourseNameDialog extends JDialog implements ActionListener {
         Dimension mySize = getSize();
         int x = p.x + (parentSize.width - mySize.width) / 2;
         int y = p.y + (parentSize.height - mySize.height) / 2;
-
         setLocation(x, y);
         //this.addWindowListener(this);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
