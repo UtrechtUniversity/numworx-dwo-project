@@ -291,7 +291,7 @@ public class Text_nl extends ListResourceBundle {
          { TextMapper.GUIPA_BTN_PREVIEW, "Preview"},
          { TextMapper.GUIPA_BTN_SAVE, "Opslaan"},
          { TextMapper.GUIPA_BTN_RESET, "Reset"},
-         { TextMapper.GUIPA_BTN_CANCEL, "Annuleren"},
+         { TextMapper.GUIPA_BTN_CANCEL, "Sluiten"},
          
          { TextMapper.GUIPA_SCO_EDIT, "Activiteit bewerken"},
          

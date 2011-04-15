@@ -292,7 +292,7 @@ public class Text_en extends ListResourceBundle {
          { TextMapper.GUIPA_BTN_PREVIEW, "Preview Activity"},
          { TextMapper.GUIPA_BTN_SAVE, "Save"},
          { TextMapper.GUIPA_BTN_RESET, "Reset"},
-         { TextMapper.GUIPA_BTN_CANCEL, "Cancel"},
+         { TextMapper.GUIPA_BTN_CANCEL, "Close"},
          
          { TextMapper.GUIPA_SCO_EDIT, "Edit Activity"},
          

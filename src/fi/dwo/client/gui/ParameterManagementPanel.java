@@ -18,6 +18,8 @@ import java.awt.List;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
@@ -81,8 +83,8 @@ import fi.dwo.server.persistence.DbAccess;
  * @author M.J.B. Kupers
  *
  */
-public class ParameterManagementPanel extends JPanel implements CenterSubPanel, ActionListener {
-    private static final boolean POPUP = false; // FIXME in productie true
+public class ParameterManagementPanel extends JPanel implements CenterSubPanel, ActionListener, WindowListener {
+    private static final boolean POPUP = true; // FIXME in productie true
 
 	private CenterPanel center;
 
@@ -178,7 +180,8 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             }
 
             editModeDialog.setLocation(x, y);
-            editModeDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            editModeDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+            editModeDialog.addWindowListener(this);
             
             // keuze, embedded of popup
             	if(!POPUP)
@@ -215,11 +218,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         resetButton.addActionListener(this);
         buttonPanel.add(resetButton);
 
-        cancelButton = new JButton(
-        		POPUP?
-        		TextMapper.getText(TextMapper.GUIPA_BTN_CANCEL)
-        		:  "Sluiten"
-        		);
+        cancelButton = new JButton(TextMapper.getText(TextMapper.GUIPA_BTN_CANCEL));
         cancelButton.addActionListener(this);
         buttonPanel.add(cancelButton);
 // school 190 264 385 heeft scorm export recht     
@@ -347,8 +346,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
      */
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == cancelButton) {
-        	if(!POPUP) 
-        		saveSco();
+        	saveSco();
         	done = true;
         	if(editMode)
         		editComponent.end();
@@ -393,16 +391,8 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             
         } else if (e.getSource() == saveButton) {
         	done = saveSco();
-        	if(!POPUP)
-        		done = false;
-        	if(done)
-        	{	    
-        		if(editMode&&POPUP) {
-	                editModeDialog.setVisible(false);
-	            } else {
-	                center.loadCenter(GuiCreator.instance().getScoManagementPanel(sco.getCourse()));
-	            }    
-            }
+        	done = false;
+           
         } else if(e.getSource() == exportScormButton) {
 // even uit in productie, aan bij testen
         	//save();
@@ -1217,6 +1207,30 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 
 	public Object getUserObject() {
 		return sco;
+	}
+
+	public void windowActivated(WindowEvent e) {
+	}
+
+	public void windowClosed(WindowEvent e) {
+	}
+
+	public void windowClosing(WindowEvent e) {
+		ActionEvent event = new ActionEvent(cancelButton, ActionEvent.ACTION_PERFORMED, cancelButton.getActionCommand() );
+		actionPerformed(event);
+		e.getWindow().dispose();
+	}
+
+	public void windowDeactivated(WindowEvent e) {
+	}
+
+	public void windowDeiconified(WindowEvent e) {
+	}
+
+	public void windowIconified(WindowEvent e) {
+	}
+
+	public void windowOpened(WindowEvent e) {
 	}
   
     
