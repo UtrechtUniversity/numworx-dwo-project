@@ -14,6 +14,7 @@ import java.awt.FlowLayout;
 import java.awt.FontMetrics;
 import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.List;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,8 +25,13 @@ import java.security.SecureRandom;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Random;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -45,6 +51,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.event.ListSelectionEvent;
 
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.base64code.StringCodeObject;
@@ -58,6 +65,7 @@ import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.persistence.MapperCreator;
+import fi.dwo.client.system.Collections;
 import fi.dwo.client.system.TextMapper;
 import fi.dwo.parameters.domain.ConvertorCreator;
 import fi.dwo.parameters.domain.ConvertorIF;
@@ -74,7 +82,7 @@ import fi.dwo.server.persistence.DbAccess;
  *
  */
 public class ParameterManagementPanel extends JPanel implements CenterSubPanel, ActionListener {
-    private static final boolean POPUP = false;
+    private static final boolean POPUP = false; // FIXME in productie true
 
 	private CenterPanel center;
 
@@ -207,7 +215,11 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         resetButton.addActionListener(this);
         buttonPanel.add(resetButton);
 
-        cancelButton = new JButton(TextMapper.getText(TextMapper.GUIPA_BTN_CANCEL));
+        cancelButton = new JButton(
+        		POPUP?
+        		TextMapper.getText(TextMapper.GUIPA_BTN_CANCEL)
+        		:  "Sluiten"
+        		);
         cancelButton.addActionListener(this);
         buttonPanel.add(cancelButton);
 // school 190 264 385 heeft scorm export recht     
@@ -335,6 +347,8 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
      */
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == cancelButton) {
+        	if(!POPUP) 
+        		saveSco();
         	done = true;
         	if(editMode)
         		editComponent.end();
@@ -379,6 +393,8 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             
         } else if (e.getSource() == saveButton) {
         	done = saveSco();
+        	if(!POPUP)
+        		done = false;
         	if(done)
         	{	    
         		if(editMode&&POPUP) {
@@ -400,19 +416,27 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
     	
     boolean saveSco() {
     	String message;
+        Hashtable tmp;
+        if(editMode) {
+            tmp = editComponent.getLaunchData();
+        } else {
+            tmp = (Hashtable) sco.getLaunchdata();
+            ConvertorIF convertor = ConvertorCreator.createConverter(ConvertorCreator.CONV_LAUNCHDATA);
+            tmp = (Hashtable) convertor.convertHashtable(tmp, parameters);
+            parameterComponent.addParameters(tmp);
+            tmp = (Hashtable) convertor.createHashtable(tmp, parameters);
+        }
+        Hashtable old = sco.getLaunchdata();
+    	old.remove("language");
+    	tmp.remove("language");
+    	
+    	
+    	
         message = TextMapper.getText(TextMapper.GUIPA_MSG_PARAM_SAVE);
 // Deze tekst is m.i. niet helemaal lekker geformuleerd. Wim
-        if (JOptionPane.showConfirmDialog(this, message, TextMapper.getText(TextMapper.GUIPA_MSG_TTL_PARAM_SAVE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            Hashtable tmp;
-            if(editMode) {
-                tmp = editComponent.getLaunchData();
-            } else {
-                tmp = (Hashtable) sco.getLaunchdata();
-                ConvertorIF convertor = ConvertorCreator.createConverter(ConvertorCreator.CONV_LAUNCHDATA);
-                tmp = (Hashtable) convertor.convertHashtable(tmp, parameters);
-                parameterComponent.addParameters(tmp);
-                tmp = (Hashtable) convertor.createHashtable(tmp, parameters);
-            }
+        if (
+        		!(compareMap(tmp, old)) &&
+        		JOptionPane.showConfirmDialog(this, message, TextMapper.getText(TextMapper.GUIPA_MSG_TTL_PARAM_SAVE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             sco.setLaunchdata(tmp);
             GuiCreator.instance().updateSco(sco);
             MapperCreator.instance(Applet.class).removeObject(sco.getAppletID());
@@ -420,6 +444,53 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         }
         return false;
     }
+
+    // map equals map, 
+    // serialized object not not equal others.
+    
+	private boolean compareMap(Map tmp, Map old) {
+		boolean equals = old.equals(tmp); // dit zou genoeg moeten zijn!
+		if(equals) return true;
+		equals = old.size() == tmp.size();
+		if(!equals) return false;
+
+		Iterator iter = old.keySet().iterator();
+    	while (iter.hasNext()) {
+			Object object = (Object) iter.next();
+			Object v1 = old.get(object);
+			Object v2 = tmp.get(object);
+			if(v1.equals(v2))
+			{
+				// all's well
+			} else {
+				if(v1 instanceof String && v2 instanceof String)
+				{
+// base64 differ, objects may be not!
+					Object vv1 = StringCodeObject.decodeStringToObject(v1.toString());
+					Object vv2 = StringCodeObject.decodeStringToObject(v2.toString());				
+					if(vv1 instanceof Map && vv2 instanceof Map)
+					{
+						equals = compareMap((Map)vv1, (Map)vv2);
+					} else 
+					{
+						equals = vv1 != null && vv1.equals(vv2);
+					}
+					if(!equals) 
+						return false;
+				} else
+				if(v2 != null && v1.getClass().isArray() && v2.getClass().isArray())
+				{
+// int[], etc. ????? via Class.getComponentClass() TODO if (! v1.getClass().getComponentClass().isPrimitive() ) ...
+					Object[] vva1 = (Object[]) v1; Object[] vva2 = (Object[]) v2;
+					equals = Arrays.equals(vva1, vva2);
+					if(!equals)
+						return false;
+				} else
+					return false;
+			}
+		}
+    	return true;
+	}
     
 	public void open()
 	{	String directory,naam;

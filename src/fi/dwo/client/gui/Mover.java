@@ -88,11 +88,16 @@ public class Mover extends JComponent  {
 				//size.height += curY-lastY;
 //System.out.println("change "+ getParent().getSize() + " to " + size);				
 				getParent().setSize(size);
-				getParent().setPreferredSize(size);
-				size.height = getParent().getMinimumSize().height;
-				getParent().setMinimumSize(size);
-				size.height = getParent().getMaximumSize().height;
-				getParent().setMaximumSize(size);
+// DONE 1.4 maken!
+				if(getParent() instanceof JComponent)
+				{
+					JComponent swingParent = (JComponent) getParent();
+					swingParent.setPreferredSize(size);
+					size.height = swingParent.getMinimumSize().height;
+					swingParent.setMinimumSize(size);
+					size.height = swingParent.getMaximumSize().height;
+					swingParent.setMaximumSize(size);
+				}
 				getParent().invalidate();
 				getParent().validate();
 //System.out.println("got " + getParent().getSize());

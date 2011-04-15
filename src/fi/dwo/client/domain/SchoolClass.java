@@ -23,7 +23,7 @@ public class SchoolClass implements UserGroup, Comparable {
 
     private String className;
 
-	private boolean iconizer = true; // database entry
+	private boolean iconizer = false; // database entry
 
     /**
      * Creates a new SchoolClass object.

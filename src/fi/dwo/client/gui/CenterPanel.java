@@ -189,7 +189,7 @@ if(iconizer)
     static boolean isIconizer() {
     	User u = GuiCreator.instance().getUser();
 // in productie 'false'
-    	return (true||GuiConstants.GUI_ICONIZED) && u.hasIconizer();
+    	return (false||GuiConstants.GUI_ICONIZED) && u.hasIconizer();
     }
 
 	/**
