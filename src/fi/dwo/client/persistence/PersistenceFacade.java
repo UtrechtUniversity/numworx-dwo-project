@@ -14,6 +14,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 import fi.beans.base64code.StringCodeObject;
 import fi.dwo.client.domain.AppletConfig;
 import fi.dwo.client.domain.Course;
+import fi.dwo.client.domain.CourseSequence;
 import fi.dwo.client.domain.DwoProfile;
 import fi.dwo.client.domain.Group;
 import fi.dwo.client.domain.Guest;
@@ -1733,6 +1734,23 @@ e1.printStackTrace();
 			e.printStackTrace();
 		} 
 		return EMPTY_SCOS;
+	}
+
+	public CourseSequence[] getCourseSequence(User currentUser) {
+		School school = currentUser.getSchool();
+		SchoolClass inClass = currentUser.getInClass();
+		MapperIF instance = MapperCreator.instance(CourseSequence.class);
+		try {
+			if(inClass != null)
+			{
+				return (CourseSequence[]) instance.get(inClass);
+			} 
+			return (CourseSequence[]) instance.get(school);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new CourseSequence[0];
+		} 
 	}
 	
 }

@@ -49,6 +49,7 @@ import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.School;
+import fi.dwo.client.domain.Sco;
 import fi.dwo.client.gui.SchoolPanel.ImageButtonEditor;
 import fi.dwo.client.gui.SchoolPanel.ImageRenderer;
 import fi.dwo.client.gui.SchoolPanel.SchoolModel;
@@ -86,6 +87,12 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
 	private JComponent tablePane;
 
+
+	private Image upImage;
+
+
+	private Image downImage;
+
 	class CourseModel extends AbstractTableModel {
 
 		public Class getColumnClass(int col) {
@@ -95,13 +102,17 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 		}
 
 		public boolean isCellEditable(int row, int col) {
+			if(col == 3) // up
+				return row != 0;
+			if(col == 4) // down
+				return row != getRowCount()-1;
 			if(col >= 1)
 				return true;
 			return super.isCellEditable(row, col);
 		}
 
 		public int getColumnCount() {
-			return 4;
+			return 6;
 		}
 
 		public int getRowCount() {
@@ -116,8 +127,14 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 				return scoImage;
 			case 2:
 				return editImage;
-			case 3:
+			case 5:
 				return removeImage;
+			case 3: if(row != 0)
+						return upImage;
+					break;
+			case 4: 
+				if(row != getRowCount()-1)
+					return downImage;
 			}
 			return null;
 		}
@@ -130,8 +147,12 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 		public Component getTableCellRendererComponent(JTable table,
 				Object value, boolean selected, boolean hasFocus, int row, int col) {
 			Image image = (Image)value;
-			icon.setImage(image);
-			setIcon(icon);
+			if(image != null) {
+				icon.setImage(image);
+				setIcon(icon);
+			} else {
+				setIcon(null);
+			}
 			setHorizontalAlignment(SwingConstants.CENTER);
 			setOpaque(true);
 			Object[] arguments = new Object[]  { table.getValueAt(row, 0) };
@@ -218,6 +239,20 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
                 Course c = courses[row];
                 center.loadCenter(GuiCreator.instance().getScoManagementPanel(c));
 
+    		} else if (value == upImage) {
+    			Course s2 = courses[row-1];
+    			Course s  = courses[row];
+    			courses[row] = s2;
+    			courses[row-1] = s;
+    			model.fireTableRowsUpdated(row-1, row);
+    			//center.updateCourse(s.getCourse());
+    		} else if (value == downImage) {
+    			Course s2 = courses[row+1];
+    			Course s  = courses[row];
+    			courses[row] = s2;
+    			courses[row+1] = s;
+    			model.fireTableRowsUpdated(row, row+1);
+    			//center.updateCourse(s.getCourse());
     		}
     		fireEditingStopped();
     	}
@@ -234,7 +269,9 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     public CourseManagementPanel(Course[] courses) {
         super(new BorderLayout(10,10));
        // System.out.println(java.util.Locale.getDefault());
-        this.courses = courses;
+        upImage = DwoHelper.getResourceImage(GuiConstants.UP_SCO_IMAGE);
+        downImage = DwoHelper.getResourceImage(GuiConstants.DOWN_SCO_IMAGE);
+       this.courses = courses;
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         //this.setSize(620, 485);
         //this.setSize(600, 470);
@@ -276,7 +313,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         if(DwoHelper.isApplication()) 
         	uploadCourseButton.setVisible(true);
         
-        Arrays.sort(courses);
+        //Arrays.sort(courses);
 
         
         noCoursesLabel = new JLabel(TextMapper.getText(TextMapper.GUIC_NO_COURSES));

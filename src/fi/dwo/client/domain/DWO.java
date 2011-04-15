@@ -20,7 +20,9 @@ import java.awt.Toolkit;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.Vector;
@@ -549,14 +551,32 @@ private static boolean isValidEmail(String email) {
     public Course[] getCourses() {
         try {
             courseList = PersistenceFacade.instance().getCourses(currentUser);
-            return selectDwoProfileCourses(courseList);
+            return sequence(selectDwoProfileCourses(courseList));
         } catch (PersistenceException e) {
         	JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
     }
     
-    /**
+    private Course[] sequence(
+				Course[] courses) {
+		CourseSequence[] css = PersistenceFacade.instance().getCourseSequence(currentUser);
+		if(css != null)
+		for(int i = 0; i < css.length; i++)
+		{
+			Course c = css[i].getCourse();
+			for(int j = i+1; j < courses.length; j++)
+				if(courses[j] == c)
+				{
+					Course tmp = courses[i];
+					courses[i] = courses[j];
+					courses[j] = tmp;
+				}
+		}
+		return courses;
+	}
+
+	/**
      * Returns all the courses available for the user. If some courses are
      * available for the users school, they are also returned.
      * 
@@ -1361,29 +1381,9 @@ private static boolean isValidEmail(String email) {
      * @see fi.dwo.client.domain.DwoIF#getEditableCourses()
      */
     public Course[] getEditableCourses() {
-        /*if(currentUser instanceof Teacher) {
-	        try {
-	            courseList = PersistenceFacade.instance().getEditableCourses((Teacher) currentUser);
-	            return courseList;
-	        } catch (PersistenceException e) {
-	            DwoMessageDialog.showMessageDialog(this, e.getMessage());
-	            return null;
-	        }
-        } 
-        else if(currentUser instanceof Admin) {
-	        try {
-	            courseList = PersistenceFacade.instance().getEditableCourses((Admin) currentUser);
-	            return courseList;
-	        } catch (PersistenceException e) {
-	            DwoMessageDialog.showMessageDialog(this, e.getMessage());
-	            return null;
-	        }
-        }else {
-            return null;
-        }*/
         try {
 	        courseList = PersistenceFacade.instance().getEditableCourses(currentUser);
-	        return selectDwoProfileCourses(courseList);
+	        return sequence(selectDwoProfileCourses(courseList));
 	    } catch (PersistenceException e) {
 	    	JOptionPane.showMessageDialog(this, e.getMessage());
 	        return null;
