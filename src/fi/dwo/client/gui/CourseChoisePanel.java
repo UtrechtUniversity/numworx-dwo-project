@@ -8,6 +8,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
@@ -77,6 +78,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
         
         String s = dwoProfile.getText();
         profileTextArea = new JTextArea();
+        profileTextArea.setFont(new Font("SansSerif",Font.PLAIN,13));
         profileTextArea.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         profileTextArea.setLineWrap(true);
         profileTextArea.setEditable(false);
