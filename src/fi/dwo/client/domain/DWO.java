@@ -560,19 +560,19 @@ private static boolean isValidEmail(String email) {
     
     private Course[] sequence(
 				Course[] courses) {
-		CourseSequence[] css = PersistenceFacade.instance().getCourseSequence(currentUser);
-		if(css != null)
-		for(int i = 0; i < css.length; i++)
-		{
-			Course c = css[i].getCourse();
-			for(int j = i+1; j < courses.length; j++)
-				if(courses[j] == c)
-				{
-					Course tmp = courses[i];
-					courses[i] = courses[j];
-					courses[j] = tmp;
-				}
-		}
+//		CourseSequence[] css = PersistenceFacade.instance().getCourseSequence(currentUser);
+//		if(css != null)
+//		for(int i = 0; i < css.length; i++)
+//		{
+//			Course c = css[i].getCourse();
+//			for(int j = i+1; j < courses.length; j++)
+//				if(courses[j] == c)
+//				{
+//					Course tmp = courses[i];
+//					courses[i] = courses[j];
+//					courses[j] = tmp;
+//				}
+//		}
 		return courses;
 	}
 
