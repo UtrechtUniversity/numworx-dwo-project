@@ -16,6 +16,7 @@ import java.io.OutputStream;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,21 +57,31 @@ public abstract class Servlet extends HttpServlet {
     {
 	    
 	    byte[] result;
-	    synchronized (lock)
-        {
-	    	result = xmlrpc.execute (request.getInputStream ());
-	        if(handler instanceof DbConnect)
-	        {
-// disconnect database, if fi design pattern used.          
-                ((DbConnect)handler).close();
-	        }
-        }
+    	ServletInputStream in = request.getInputStream ();
+    	if(lock != null)
+    		synchronized (lock)
+    		{
+    			result = execute(in);
+    		}
+    	else 
+    		result = execute(in);
         response.setContentType ("text/xml");
         response.setContentLength (result.length);
         OutputStream out = response.getOutputStream();
         out.write (result);
         out.flush ();
     }
+
+private byte[] execute(ServletInputStream in) {
+	byte[] result;
+	result = xmlrpc.execute (in);
+	if(handler instanceof DbConnect)
+	{
+// disconnect database, if fi design pattern used.          
+	    ((DbConnect)handler).close();
+	}
+	return result;
+}
 
     protected Servlet() 
     {
@@ -129,5 +140,11 @@ public abstract class Servlet extends HttpServlet {
             this.lock = this;
         else
             this.lock = lock;
+    }
+    
+    // no lock at all
+    protected void unLock()
+    {
+    	this.lock = null;
     }
 }
