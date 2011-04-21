@@ -27,8 +27,8 @@ public class DbAccessLdapServlet extends DbAccessServlet
      * @see DbAccessServlet
      */
     public DbAccessLdapServlet() {
-        super(new DbAccessLdap());
-        //XmlRpc.debug = true;
+        super(new DbAccessProxy());
+        unLock();
     }
 
 }

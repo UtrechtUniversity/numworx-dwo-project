@@ -15,7 +15,9 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import fi.beans.jdbc.DbConnect;
 import fi.beans.xmlrpc.Servlet;
+import fi.dwo.client.persistence.DbAccessIF;
 /**
  * Servlet voor XML-RPC access op de DWO database.
  * Zorgt tevens voor access van de jar files.
@@ -33,7 +35,7 @@ import fi.beans.xmlrpc.Servlet;
  */
 public class DbAccessServlet extends Servlet {
     
-    private static DbAccess dbAccess;
+    private static DbAccessIF dbAccess;
     
    // private static final String JAR_FOLDER = "file:/space/WWW/InfoGroups/dwo/jars/";
     /**
@@ -43,7 +45,7 @@ public class DbAccessServlet extends Servlet {
         super(dbAccess = new DbAccess());
 
     }
-    protected DbAccessServlet(DbAccess myDbAccess)
+    protected DbAccessServlet(DbAccessIF myDbAccess)
     {
         super(dbAccess = myDbAccess);
     }
@@ -108,7 +110,7 @@ public class DbAccessServlet extends Servlet {
     
     public void destroy() {
         log("En weg ben ik...");
-        dbAccess.close();
+        ((DbConnect) dbAccess).close();
         super.destroy();
     }
 }
