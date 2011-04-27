@@ -162,11 +162,12 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	    			break;
 			case 2: setToolTipText(TextMapper.getText(TextMapper.GUIC_TLTP_EDIT_COURSE));
 				break;
-			case 3: String format = TextMapper.getText(TextMapper.GUIC_TLTP_DELETE_COURSE);
+			case 5: String format = TextMapper.getText(TextMapper.GUIC_TLTP_DELETE_COURSE);
 					setToolTipText(MessageFormat.format(format, arguments));
 				break;
 			default:
-				setToolTipText("Message " + col); // TODO ....
+				//setToolTipText("Message " + col); // TODO ....
+				setToolTipText(null);
 			}
 			if(selected)
 			{

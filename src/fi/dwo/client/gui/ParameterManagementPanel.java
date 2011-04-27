@@ -417,8 +417,8 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             tmp = (Hashtable) convertor.createHashtable(tmp, parameters);
         }
         Hashtable old = sco.getLaunchdata();
-    	old.remove("language");
-    	tmp.remove("language");
+    	old.remove("language");old.remove("bgcolor");
+    	tmp.remove("language");tmp.remove("bgcolor");
     	
     	
     	
@@ -427,9 +427,12 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         if (
         		!(compareMap(tmp, old)) &&
         		JOptionPane.showConfirmDialog(this, message, TextMapper.getText(TextMapper.GUIPA_MSG_TTL_PARAM_SAVE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            sco.setLaunchdata(tmp);
-            GuiCreator.instance().updateSco(sco);
+        	final GuiCreator instance = GuiCreator.instance();
+			instance.setWait();
+        	sco.setLaunchdata(tmp);
+            instance.updateSco(sco);
             MapperCreator.instance(Applet.class).removeObject(sco.getAppletID());
+            instance.setReady();
             return true;
         }
         return false;
