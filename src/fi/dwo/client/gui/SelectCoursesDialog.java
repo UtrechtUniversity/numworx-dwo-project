@@ -52,6 +52,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import fi.dwo.client.domain.Course;
+import fi.dwo.client.domain.DWO;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.School;
@@ -593,7 +594,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
             	if(Boolean.TRUE.equals(cd[i].select))
             		tmpSelected.addElement(cd[i].course);
             }
-            if(updown)
+            if(updown && DWO.SEQUENCE)
             {	updown = false;
             	Course[] courses = new Course[cd.length];
             	for (int i = 0; i < courses.length; i++) {
@@ -649,7 +650,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         GuiCreator.instance().dwo.sequence(allCourses, sc);
         
         
-        SelectCoursesDialog scd = new SelectCoursesDialog(parent, title, true, allCourses, selectedCourses, 3+2);
+        SelectCoursesDialog scd = new SelectCoursesDialog(parent, title, true, allCourses, selectedCourses, 3+(DWO.SEQUENCE?2:0));
         scd.sc = sc;
 // persistencefacade....
         try {

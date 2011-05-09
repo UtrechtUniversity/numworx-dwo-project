@@ -105,7 +105,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
 		public boolean isCellEditable(int row, int col) {
 			if(col == 3) // up
-				return row != 0;
+				return row != 0 || !DWO.SEQUENCE;
 			if(col == 4) // down
 				return row != getRowCount()-1;
 			if(col >= 1)
@@ -114,7 +114,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 		}
 
 		public int getColumnCount() {
-			return 6;
+			return DWO.SEQUENCE?6:4;
 		}
 
 		public int getRowCount() {
@@ -129,11 +129,14 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 				return scoImage;
 			case 2:
 				return editImage;
-			case 5:
-				return removeImage;
-			case 3: if(row != 0)
+			case 3: 
+				if(DWO.SEQUENCE)
+				{   if(row != 0)
 						return upImage;
 					break;
+				}
+			case 5:
+				return removeImage;
 			case 4: 
 				if(row != getRowCount()-1)
 					return downImage;
@@ -164,6 +167,11 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	    			break;
 			case 2: setToolTipText(TextMapper.getText(TextMapper.GUIC_TLTP_EDIT_COURSE));
 				break;
+			case 3: if(DWO.SEQUENCE)
+				{
+					setToolTipText(null);
+					break;
+				}
 			case 5: String format = TextMapper.getText(TextMapper.GUIC_TLTP_DELETE_COURSE);
 					setToolTipText(MessageFormat.format(format, arguments));
 				break;
@@ -222,7 +230,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
                 } else {
                     message = TextMapper.getText(TextMapper.GUIC_MSG_COURSE_DELETE_NO_SCO);
                 }
-                if (JOptionPane.showConfirmDialog(CourseManagementPanel.this, message, TextMapper.getText(TextMapper.GUIC_MSG_TTL_COURSE_DELETE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                if (JOptionPane.showConfirmDialog(DwoHelper.getApplet(), message, TextMapper.getText(TextMapper.GUIC_MSG_TTL_COURSE_DELETE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     if (GuiCreator.instance().deleteCourse(c)) {
                         Course[] ac = new Course[courses.length - 1];
             			System.arraycopy(courses, 0, ac, 0, row);
@@ -318,7 +326,8 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         if(DwoHelper.isApplication()) 
         	uploadCourseButton.setVisible(true);
         
-        //Arrays.sort(courses);
+        if(!DWO.SEQUENCE)
+        	Arrays.sort(courses);
 
         
         noCoursesLabel = new JLabel(TextMapper.getText(TextMapper.GUIC_NO_COURSES));
@@ -404,7 +413,8 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
                 System.arraycopy(courses, 0, ac, 0, courses.length);
                 ac[ac.length - 1] = c;
                 courses = ac;
-                Arrays.sort(courses);
+                if(!DWO.SEQUENCE)
+                	Arrays.sort(courses);
                 buildJTable();                
             }
         } else if(src == uploadCourseButton) {
@@ -501,7 +511,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
      * @see fi.dwo.client.gui.CenterSubPanel#end()
      */
     public void end() {
-        if(updown)
+        if(updown && DWO.SEQUENCE)
         {    	
         	updown = false;
         	try {

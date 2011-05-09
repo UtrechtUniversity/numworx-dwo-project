@@ -420,6 +420,8 @@ private static boolean isValidEmail(String email) {
     	"@w2k3.fi.uu.nl",
     	"@soliscom.uu.nl"
     };
+
+	public static final boolean SEQUENCE = false;
     
 	/**
      * Register a user in the system. Als links a user to a school.
@@ -560,6 +562,8 @@ private static boolean isValidEmail(String email) {
     
     private Course[] sequence(
 				Course[] courses) {
+    	if(!SEQUENCE)
+    		return courses;
 		CourseSequence[] css = PersistenceFacade.instance().getCourseSequence(currentUser);
 		return sequence(courses, css);
 	}
@@ -586,6 +590,8 @@ private static boolean isValidEmail(String email) {
     
     public Course[] sequence(
 			Course[] courses, SchoolClass inclass) {
+    	if(!SEQUENCE)
+    		return courses;
     	CourseSequence[] css = PersistenceFacade.instance().getCourseSequence(inclass);
 		return sequence(courses, css);
 }

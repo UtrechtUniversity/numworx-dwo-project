@@ -1245,6 +1245,7 @@ public class PersistenceFacade {
                 c.setName(name);
                 c.setImageUrl(school.getImage());
                 c.setDwoProfile(dwoProfile.getID());
+                c.setSchoolID(school.getSchoolID()); // DEZE IS VERGETEN, WIM 9/5/2011
                 return c;
             } catch (IOException e) {
                 throw new CourseException(CourseException.EX_IO);
@@ -1270,7 +1271,16 @@ public class PersistenceFacade {
      * @return If true, the coursedata was successfully changed. Otherwise, false is returned.
      */
     public boolean updateCourse(Course course) throws CourseException {
+    
+    	
         DbAccessIF dbAccess = DbAccessCreator.instance();
+    	if(course.getSchoolID()==0)
+    	{
+    		try {
+				dbAccess.log("course " + course.getID() + " " + course.getName() + " geen schoolID in updateCourse");
+			} catch (Exception e) {
+			} 
+    	}
         try {
             try {
                 return dbAccess.changeCourse(course.getID(), course.getName(),
