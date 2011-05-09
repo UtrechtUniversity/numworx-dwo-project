@@ -586,12 +586,14 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 				setToolTipText(MessageFormat.format(tooltip, arguments));
 			} else
 				setToolTipText(null);
-				
+			if(row == 0 && column == 0)
+				return empty;
 			
 			return super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
 					row, column);
 		}
 
+		JLabel empty = new JLabel();
 	}
 	
 	
