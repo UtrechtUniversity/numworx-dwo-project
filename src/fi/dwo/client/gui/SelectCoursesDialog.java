@@ -60,6 +60,7 @@ import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.ClassPanel.ClassModel;
 import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
+import fi.dwo.client.system.PersistenceException;
 import fi.dwo.client.system.TextMapper;
 
 class CourseData {
@@ -84,7 +85,10 @@ class CourseData {
  */
 public final class SelectCoursesDialog extends JDialog implements ActionListener {
 
-    public class ImageEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
+    public boolean updown;
+
+
+	public class ImageEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
 
 		private Object value;
 		private int row;
@@ -111,6 +115,18 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                         ((JButton) e.getSource()).setIcon(null);
                     
                 }
+    		} else if(value == upImage)
+    		{
+    			CourseData s2 = cd[row-1];
+    			CourseData s  = cd[row];
+    			cd[row] = s2;
+    			cd[row-1] = s;
+    			model.fireTableRowsUpdated(row-1, row);
+    			updown = true;
+   			
+    		} else if(value == downImage)
+    		{
+    			
     		}
 		}
 	}
@@ -139,7 +155,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
 	private JTable jTable;
 
-	private Image removeImage;
+	private Image removeImage, upImage, downImage;
 
 	private SchoolClass sc;
 
@@ -172,13 +188,17 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			case 0: return cd[rowIndex].select;
 			case 1: return cd[rowIndex].course.getName();
 			case 2: return cd[rowIndex].data;
+			case 3: if(rowIndex != 0) return upImage;
+					break;
+			case 4: if(rowIndex != getRowCount()-1)
+						return downImage;
 			}
 			return null;
 		}
 
 		public Class getColumnClass(int columnIndex) {
-			if(columnIndex == 2)
-				return removeImage.getClass();
+			if(columnIndex >= 2)
+				return Image.class;
 			if(columnIndex != 1)
 				return Boolean.TRUE.getClass();
 			return super.getColumnClass(columnIndex);
@@ -186,6 +206,8 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
 		public String getColumnName(int column) {
 			switch(column) {
+			case 3: 
+			case 4:
 			case 0: return "";
 			case 1: return "Module";
 			case 2: return "Leerlinggegevens aanwezig";
@@ -198,6 +220,8 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			case 0: return true;
 			case 1: return false;
 			case 2: return cd[rowIndex].data != null;
+			case 3: return rowIndex != 0;
+			case 4: return rowIndex != getRowCount()-1;
 			}
 			return super.isCellEditable(rowIndex, columnIndex);
 		}
@@ -395,6 +419,8 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         setBackground(GuiConstants.MAIN_BACKGROUND);
         setSize(600, 310);
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
+        upImage = DwoHelper.getResourceImage(GuiConstants.UP_SCO_IMAGE);
+        downImage = DwoHelper.getResourceImage(GuiConstants.DOWN_SCO_IMAGE);
 
         cd = new CourseData[allCourses.length];        
 
@@ -560,13 +586,28 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         	setVisible(false);
         } else if (e.getSource() == okButton) {
             Vector tmpSelected = new Vector();
+            
             int len = cd.length;
             for(int i = 0; i < len; i++ )
             {
             	if(Boolean.TRUE.equals(cd[i].select))
             		tmpSelected.addElement(cd[i].course);
             }
-
+            if(updown)
+            {	updown = false;
+            	Course[] courses = new Course[cd.length];
+            	for (int i = 0; i < courses.length; i++) {
+					courses[i] = cd[i].course;
+				}
+            	try {
+					PersistenceFacade.instance().setCourseSequence(courses, null, sc);
+				} catch (PersistenceException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+            }
+            
+            
             selectedCourses = new Course[tmpSelected.size()];
             tmpSelected.copyInto(selectedCourses);
             setVisible(false);
@@ -604,7 +645,11 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 	public static Course[] selectCourses(ClassPanel parent,
 			Course[] allCourses, Course[] selectedCourses, SchoolClass sc) {
         String title = TextMapper.getText(TextMapper.GUISC_TITLE);
-        SelectCoursesDialog scd = new SelectCoursesDialog(parent, title, true, allCourses, selectedCourses, 3);
+        allCourses = 
+        GuiCreator.instance().dwo.sequence(allCourses, sc);
+        
+        
+        SelectCoursesDialog scd = new SelectCoursesDialog(parent, title, true, allCourses, selectedCourses, 3+2);
         scd.sc = sc;
 // persistencefacade....
         try {

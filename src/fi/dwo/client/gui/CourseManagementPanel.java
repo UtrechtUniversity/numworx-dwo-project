@@ -46,6 +46,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import fi.dwo.client.domain.Course;
+import fi.dwo.client.domain.DWO;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.School;
@@ -54,6 +55,8 @@ import fi.dwo.client.gui.SchoolPanel.ImageButtonEditor;
 import fi.dwo.client.gui.SchoolPanel.ImageRenderer;
 import fi.dwo.client.gui.SchoolPanel.SchoolModel;
 import fi.dwo.client.persistence.DbAccessCreator;
+import fi.dwo.client.persistence.PersistenceFacade;
+
 import java.util.Collections;
 
 import fi.dwo.client.system.PersistenceException;
@@ -89,9 +92,8 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
 
 	private Image upImage;
-
-
 	private Image downImage;
+	boolean updown;
 
 	class CourseModel extends AbstractTableModel {
 
@@ -246,6 +248,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     			courses[row] = s2;
     			courses[row-1] = s;
     			model.fireTableRowsUpdated(row-1, row);
+    			updown = true;
     			//center.updateCourse(s.getCourse());
     		} else if (value == downImage) {
     			Course s2 = courses[row+1];
@@ -253,6 +256,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     			courses[row] = s2;
     			courses[row+1] = s;
     			model.fireTableRowsUpdated(row, row+1);
+    			updown = true;
     			//center.updateCourse(s.getCourse());
     		}
     		fireEditingStopped();
@@ -497,8 +501,16 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
      * @see fi.dwo.client.gui.CenterSubPanel#end()
      */
     public void end() {
-        // TODO Auto-generated method stub
-        
+        if(updown)
+        {    	
+        	updown = false;
+        	try {
+				PersistenceFacade.instance().setCourseSequence(courses, GuiCreator.instance().dwo.getUser().getSchool(), null);
+			} catch (PersistenceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
     }
 
 

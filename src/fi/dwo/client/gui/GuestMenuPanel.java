@@ -147,6 +147,7 @@ public class GuestMenuPanel extends JPanel implements ActionListener {
         if (e.getSource() == mainMenuButton) {
             //center.loadCenter(new CourseChoisePanel());
         	center.reset();
+        	center.end(); // must be idempotent 
         	center.loadCenter(GuiCreator.instance().getCourseChoisePanel());
         }
     }

@@ -229,7 +229,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     /**
      * Select the SCO scores of one student.
      */
-    private final static String QRY_RESULTS_SINGLE_STUDENT_COURSE = "SELECT tblUser.userID, tblSco.scoID, tblSco.sequencenr,  if(score=0,-1,score) as score, total_time "
+    private final static String QRY_RESULTS_SINGLE_STUDENT_COURSE_MYSQL4 = "SELECT tblUser.userID, tblSco.scoID, tblSco.sequencenr,  if(score=0,-1,score) as score, total_time "
         + "FROM tblUser "
         + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID "
         + "right join tblSco on tblStudentSco.scoID = tblSco.scoID "
@@ -238,7 +238,16 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         + "and (tblCourse.courseID = ?) "
         + "group by tblUser.userID, tblSco.scoID, tblSco.sequencenr "
         + "ORDER BY tblUser.userID, tblSco.sequencenr";
-
+// mysql 5
+    private static String QRY_RESULTS_SINGLE_STUDENT_COURSE = 
+    	"SELECT tblUser.userID, tblSco.scoID, tblSco.sequencenr,  if(score=0,-1,score) as score, total_time "
+    + 	"FROM ( tblSco, tblUser ) left join tblStudentSco on tblStudentSco.userID = tblUser.userID and tblStudentSco.scoID = tblSco.scoID " 
+    +	"where tblUser.userID = ? and tblSco.courseID = ? "
+    +	"order by tblSco.sequencenr";
+    
+    
+    
+    
     private final static String QRY_RESULTS_COURSE = "SELECT tblClass.classID, tblSco.scoID, tblSco.sequencenr, avg(score) as score, count(score) as totaal "
             + "FROM tblClass right join tblUser on tblClass.classID = tblUser.classID "
             + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID "
@@ -1820,29 +1829,43 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
     public boolean changeCourse(int courseID, String name, String description, boolean export, int schoolID)
     throws DwoXmlRpcException, SQLException {
-    	PreparedStatement ps;
-    	ps = getStatement(QRY_UPDATE_COURSE3);
-    	ps.setString(1, name);
-    	ps.setString(2, description);
-    	ps.setBoolean(3, export);
+    	
     	if(schoolID == 0)
-    		ps.setNull(4, Types.INTEGER);
-    	else
-    		ps.setInt(4, schoolID);
-    	ps.setInt(5, courseID);
-		
-		try {
-		    ps.execute();
-		} catch (SQLException e) {
-		    if (e.getErrorCode() == 1062) {
-		        /* The course already exists */
-		        throw new DwoXmlRpcException(
-		                DwoXmlRpcException.EXC_COURSE_EXISTS);
-		    } else {
-		        throw e;
-		    }
-		}
-		return true;
+    	{
+    		log("Course id " + courseID + " " + name + " dreigt te worden gepubliceerd" );
+    	} else 
+    		log("Course id " + courseID + " " + name + " changed, schoolid = " + schoolID);
+    	
+    	if(true)
+    	{
+    		return changeCourse(courseID, name, description, export);
+    	} 
+
+    	return false;
+    	
+//    	PreparedStatement ps;
+//    	ps = getStatement(QRY_UPDATE_COURSE3);
+//    	ps.setString(1, name);
+//    	ps.setString(2, description);
+//    	ps.setBoolean(3, export);
+//    	if(schoolID == 0)
+//    		ps.setNull(4, Types.INTEGER);
+//    	else
+//    		ps.setInt(4, schoolID);
+//    	ps.setInt(5, courseID);
+//		
+//		try {
+//		    ps.execute();
+//		} catch (SQLException e) {
+//		    if (e.getErrorCode() == 1062) {
+//		        /* The course already exists */
+//		        throw new DwoXmlRpcException(
+//		                DwoXmlRpcException.EXC_COURSE_EXISTS);
+//		    } else {
+//		        throw e;
+//		    }
+//		}
+//		return true;
 		}
 
     /*
@@ -2422,6 +2445,41 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 		ps.setInt(2, uid);		
 		ps.executeUpdate();
 		return rights;
+	}
+
+	public void setCourseSequence(Vector vector, int schoolID, int classID,
+			int parent, int profileID) throws SQLException {
+		Connection c = getConnection();
+		boolean auto = c.getAutoCommit();
+		try { 
+			c.setAutoCommit(false);
+			PreparedStatement ps;
+			ps = getStatement("DELETE FROM tblCourseSequence WHERE schoolID=? AND classID=? AND parent=? and profileID=?");
+			ps.setInt(1, schoolID);
+			ps.setInt(2,classID);
+			ps.setInt(3,parent);
+			ps.setInt(4,profileID);
+			ps.executeUpdate();
+			ps.close();
+			ps = getStatement("INSERT INTO tblCourseSequence(courseID, schoolID, classID, parent, profileID, sequencenr) VALUES(?,?,?,?,?,?)");
+			int len = vector.size();
+			for(int i = 0; i < len; i++)
+			{
+				ps.setObject(1, vector.get(i));
+				ps.setInt(2, schoolID);
+				ps.setInt(3, classID);
+				ps.setInt(4, parent);
+				ps.setInt(5, profileID);
+				ps.setInt(6, i);
+				ps.executeUpdate();	
+			}
+			c.commit();
+		} finally {
+			c.rollback();
+			c.setAutoCommit(auto);
+		}
+		
+		
 	}
 	
 }

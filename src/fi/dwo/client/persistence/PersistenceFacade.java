@@ -15,6 +15,8 @@ import fi.beans.base64code.StringCodeObject;
 import fi.dwo.client.domain.AppletConfig;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseSequence;
+import fi.dwo.client.domain.DwoHelper;
+import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.DwoProfile;
 import fi.dwo.client.domain.Group;
 import fi.dwo.client.domain.Guest;
@@ -33,6 +35,7 @@ import fi.dwo.client.system.MD5;
 import fi.dwo.client.system.PersistenceException;
 import fi.dwo.client.system.RegisterException;
 import fi.dwo.client.system.ScoException;
+import fi.dwo.server.persistence.DbAccess;
 import fi.dwo.server.persistence.DwoXmlRpcException;
 
 /**
@@ -1751,6 +1754,39 @@ e1.printStackTrace();
 			e.printStackTrace();
 			return new CourseSequence[0];
 		} 
+	}
+	
+	public CourseSequence[] getCourseSequence(SchoolClass forClass)
+	{
+		try {
+			MapperIF instance = MapperCreator.instance(CourseSequence.class);
+			return (CourseSequence[]) instance.get(forClass);
+		} catch (Exception e) {
+			return new CourseSequence[0];
+		}		
+	}
+	
+	public void setCourseSequence(Course[] courses, School school, SchoolClass forClass) throws PersistenceException
+	{
+		Vector vector = new Vector(courses.length);
+		for (int i = 0; i < courses.length; i++) {
+			vector.add(new Integer(courses[i].getID()));
+		}
+		int schoolID = 0;
+		int classID = 0;
+		int parent = 0;
+		int profileID = ((DwoIF)DwoHelper.getApplet()).getDwoProfile().getID();
+		if(school != null) schoolID = school.getSchoolID();
+		if(forClass != null) classID = forClass.getID();
+		MapperIF instance = MapperCreator.instance(CourseSequence.class);
+		instance.removeAllObjects();
+		DbAccess access = (DbAccess) DbAccessCreator.instance();
+		try {
+			access.setCourseSequence(vector, schoolID, classID, parent, profileID);
+		} catch (SQLException e) {
+			throw new PersistenceException(PersistenceException.EX_DB, e);
+		}
+		
 	}
 	
 }

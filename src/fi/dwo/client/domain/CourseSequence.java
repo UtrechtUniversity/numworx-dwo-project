@@ -14,7 +14,8 @@ public class CourseSequence implements Comparable {
 	private School school;
 	private SchoolClass schoolClass;
 	private int parent; // TODO... 
-
+	private int profileID;
+	
 	public int compareTo(Object o) {
 		CourseSequence cs = (CourseSequence) o;
 		int a = sequencenr;
@@ -69,6 +70,14 @@ public class CourseSequence implements Comparable {
 
 	public void setParentID(int parent) {
 		this.parent = parent;
+	}
+
+	public int getProfileID() {
+		return profileID;
+	}
+
+	public void setProfileID(int profileID) {
+		this.profileID = profileID;
 	}
 	
 	

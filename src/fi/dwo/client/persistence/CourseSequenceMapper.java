@@ -8,6 +8,8 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseSequence;
+import fi.dwo.client.domain.DwoHelper;
+import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.SchoolClass;
 import fi.dwo.client.system.PersistenceException;
@@ -72,10 +74,17 @@ public class CourseSequenceMapper extends XmlRpcMapper {
 		}
 // TODO CourseMap
 		int parentID = ((Number) data.get("parent")).intValue();
-		cs.setParentID(parentID);	
+		cs.setParentID(parentID);
+		int profileID = ((Number) data.get("profileID")).intValue();
+		cs.setProfileID(profileID);
+	
 		return cs;
 	}
 
+	/**
+	 * get sequencearray. Altijd met het profileID!
+	 */
+	
 	public Object[] get(Object obj) throws IOException, SQLException,
 			XmlRpcException {
         Hashtable ht = new Hashtable();
@@ -86,10 +95,17 @@ public class CourseSequenceMapper extends XmlRpcMapper {
         {
         	School s = (School) obj;
         	ht.put("schoolID", new Integer(s.getSchoolID()));
+        	ht.put("classID", NUL);
         } else if(obj == null)
         {
         	ht.put("schoolID", NUL);
+        	ht.put("classID", NUL);
         }
+// extra...
+        int profileID =
+        ((DwoIF) DwoHelper.getApplet()).getDwoProfile().getID();
+        ht.put("profileID", new Integer(profileID));
+        
         return super.get(ht);
 	}
 
