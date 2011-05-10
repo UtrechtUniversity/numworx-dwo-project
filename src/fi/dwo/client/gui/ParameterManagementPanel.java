@@ -67,7 +67,7 @@ import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.persistence.MapperCreator;
-import fi.dwo.client.system.Collections;
+//import fi.dwo.client.system.Collections;
 import fi.dwo.client.system.TextMapper;
 import fi.dwo.parameters.domain.ConvertorCreator;
 import fi.dwo.parameters.domain.ConvertorIF;
@@ -392,6 +392,9 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         } else if (e.getSource() == saveButton) {
         	done = saveSco();
         	done = false;
+        	if(editMode&&POPUP) {
+                editModeDialog.setVisible(false);
+            }
            
         } else if(e.getSource() == exportScormButton) {
 // even uit in productie, aan bij testen
@@ -425,7 +428,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         message = TextMapper.getText(TextMapper.GUIPA_MSG_PARAM_SAVE);
 // Deze tekst is m.i. niet helemaal lekker geformuleerd. Wim
         if (
-        		!(compareMap(tmp, old)) &&
+        		//!(compareMap(tmp, old)) &&
         		JOptionPane.showConfirmDialog(this, message, TextMapper.getText(TextMapper.GUIPA_MSG_TTL_PARAM_SAVE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
         	final GuiCreator instance = GuiCreator.instance();
 			instance.setWait();

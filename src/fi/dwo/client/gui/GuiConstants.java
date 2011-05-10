@@ -290,6 +290,9 @@ public abstract class GuiConstants {
 			GUI_IMAGE_WELCOME = "resources/MW-welkom.png";
 			GUI_IMAGE_SCO = "resources/MW-tf-sco.png";
 			GUI_IMAGE_COURSE = "resources/MW-tf-course.png";
+			//GUI_BGIMAGE_ICON = "resources/MW-iconized-bgimage.png";
+		    //GUI_BGIMAGE_MENU = "resources/MW-menu-bgimage.png";
+		    //GUI_BGIMAGE_SCO  = "resources/MW-sco-bgimage.png";
 		}
 		else
 			if(profile==39 || profile==58)

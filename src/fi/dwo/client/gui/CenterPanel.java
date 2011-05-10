@@ -274,7 +274,7 @@ if(iconizer)
 if(!iconizer)
 {    	if(GuiConstants.GUI_IMAGE_BG) // todo tuning
     		setBorder(BorderFactory.createEmptyBorder(10, 7, 8, 7));
-    	if(GuiConstants.getDwoProfile()==51 || GuiConstants.getDwoProfile()==27)setBorder(BorderFactory.createEmptyBorder(30, 42, 78, 42));
+    	if(GuiConstants.getDwoProfile()==51 || GuiConstants.getDwoProfile()==27)setBorder(BorderFactory.createEmptyBorder(14, 28, 76, 30));
     	if(GuiConstants.getDwoProfile()==57)setBorder(BorderFactory.createEmptyBorder(0, 28, 54, 30));
 }
 	if(tree != null)
