@@ -64,6 +64,7 @@ Class-Path: algebrapijlenoefenen.jar
  verknippen.jar 
  fabriek.jar 
  kikker.jar 
+ toverboek.jar 
  geldapplet.jar 
  tinyplayerapplet.jar 
  jl020.jar 
