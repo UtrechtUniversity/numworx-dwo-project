@@ -1003,10 +1003,10 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 		String[] arguments = {scoName, className, jarName, language, bgcolor, launchDataString};
 		
 		try {	
-			URL htmlSource = new URL("http://www.fi.uu.nl/dwo/scorm/applet/applet.htm");
-			if(sco.getCourse().getDwoProfile()==13)htmlSource = new URL("http://www.fi.uu.nl/dwo/scorm/applet/appletGR.htm");
-			if(sco.getCourse().getDwoProfile()==27 || sco.getCourse().getDwoProfile()==51)htmlSource = new URL("http://www.fi.uu.nl/dwo/scorm/applet/appletMW.htm");
-			if(sco.getCourse().getDwoProfile()==46)htmlSource = new URL("http://www.fi.uu.nl/dwo/scorm/applet/appletNWK.htm");
+			URL htmlSource = new URL("http://webcluster.fi.uu.nl/dwo/scorm/applet/applet.htm");
+			if(sco.getCourse().getDwoProfile()==13)htmlSource = new URL("http://webcluster.fi.uu.nl/dwo/scorm/applet/appletGR.htm");
+			if(sco.getCourse().getDwoProfile()==27 || sco.getCourse().getDwoProfile()==51)htmlSource = new URL("http://webcluster.fi.uu.nl/dwo/scorm/applet/appletMW.htm");
+			if(sco.getCourse().getDwoProfile()==46)htmlSource = new URL("http://webcluster.fi.uu.nl/dwo/scorm/applet/appletNWK.htm");
 	        URLConnection connection = htmlSource.openConnection();
 	        BufferedReader in = null;
 	        try {
