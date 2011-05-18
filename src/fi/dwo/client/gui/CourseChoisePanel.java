@@ -24,6 +24,7 @@ import javax.swing.SwingConstants;
 
 
 import fi.dwo.client.domain.Course;
+import fi.dwo.client.domain.Descriptor;
 import fi.dwo.client.domain.DwoProfile;
 import fi.dwo.client.system.TextMapper;
 
@@ -40,7 +41,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
     
     private JTextArea profileTextArea;
     private Dimension unit = new Dimension(1,1);
-    private DwoProfile dwoProfile;
+    private Descriptor dwoProfile;
 
 	private Object userObject;
 
@@ -62,7 +63,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
      * overview of all the available courses to the user.
      * @param courseList TODO
      */
-    public CourseChoisePanel(DwoProfile dwoProfile, Course[] courseList, Object userObject) {
+    public CourseChoisePanel(Descriptor dwoProfile, Course[] courseList, Object userObject) {
         super();
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         setLayout(new BorderLayout());
@@ -177,7 +178,12 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
      */
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof CourseIcon) {
-            CenterSubPanel cp = GuiCreator.instance().getCoursePanel(((CourseIcon) e.getSource()).getCourse());
+            CenterSubPanel cp;
+            Course course = ((CourseIcon) e.getSource()).getCourse();
+            if(course.isWithChildren())
+            	cp = GuiCreator.instance().getCourseChoisePanel(course);
+            else
+            	cp = GuiCreator.instance().getCoursePanel(course);
             center.loadCenter(cp);
         }
     }
@@ -192,9 +198,9 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
 
     
     /**
-     * Returns a Panel that can functionate as a header panel.
+     * Returns a Panel that can function as a header panel.
      * 
-     * @return A panel that can functionate as a header panel.
+     * @return A panel that can function as a header panel.
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
     public Component getHeaderPanel() {
@@ -202,8 +208,8 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
 
         p = new HeaderPanel(TextMapper.getText(TextMapper.GUIM_MAIN_MENU));
         String s = dwoProfile.getText();
-        if(s != null && s.trim().length()>0)
-        	p = new HeaderPanel(dwoProfile.getDescription(), true);
+        if(s != null && s.trim().length()>0 || dwoProfile instanceof Course)
+        	p = new HeaderPanel(dwoProfile.getHeader(), true); // wim: Wat wordt hier bedoeld?
         return p;
     }
 

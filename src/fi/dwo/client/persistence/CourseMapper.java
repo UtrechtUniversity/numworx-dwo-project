@@ -84,6 +84,11 @@ public class CourseMapper extends XmlRpcMapper {
     public Object[] get(Object obj) throws IOException, SQLException,
             XmlRpcException {
         Hashtable ht = new Hashtable();
+        if(obj instanceof Course)
+        {
+        	Course course = (Course)obj;
+        	ht.put("parentID", new Integer(course.getID()));
+        } else
         if(obj instanceof SchoolClass) {
             SchoolClass sc = (SchoolClass) obj;
             ht.put("classID", new Integer(sc.getID()));
@@ -113,7 +118,7 @@ public class CourseMapper extends XmlRpcMapper {
     protected String getTableName() {
         return TABLENAME;
     }
-
+    static final Integer EEN = new Integer(1);
     /*
      * (non-Javadoc)
      * 
@@ -130,12 +135,28 @@ public class CourseMapper extends XmlRpcMapper {
         try{
         	c.setSchoolID(((Integer) data.get("schoolID")).intValue());
         }
+ 
         catch(Exception e){}
+        try{
+        	c.setParentID(((Integer) data.get("parentID")).intValue());
+        }
+        catch(Exception e){}
+
+        
         try { c.setImageData((byte[]) data.get("imageData"));
         } catch(Exception e){};
         
         c.setExport(Boolean.TRUE.equals(data.get("export")));
-        
+        Object w = data.get("withChildren");
+        if(Boolean.TRUE.equals(w) || EEN.equals(w) )
+        {
+        	try {
+				c.setChildren((Course[])get(c));
+			} catch (Exception e) {
+				c.setChildren(Course.NO_CHILDREN);
+			} 
+        } else 
+        	c.setChildren(null);
         return c;
     }
 

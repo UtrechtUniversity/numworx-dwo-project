@@ -9,6 +9,7 @@ import java.util.Vector;
 import fi.beans.base64code.StringCodeObject;
 import fi.dwo.client.domain.AppletConfig;
 import fi.dwo.client.domain.Course;
+import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.DWO;
 import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.SchoolClass;
@@ -166,11 +167,17 @@ public class GuiCreatorTeacher extends GuiCreator {
     public CenterSubPanel getCourseManagementPanel() {
         Course[] editableCourses = dwo.getEditableCourses();
         if(editableCourses != null) {
-            return new CourseManagementPanel(editableCourses);
+            return new CourseManagementPanel(editableCourses, ModuleTreePanel.SCHOOL_MODULES);
         } else {
             return null;
         }
     }
+    public CenterSubPanel getCourseManagementPanel(CourseMap map)
+    {
+    	return new CourseManagementPanel(map);
+    }
+    
+    
  
     /** 
      * Gebruik de andere. 
@@ -232,8 +239,8 @@ public class GuiCreatorTeacher extends GuiCreator {
      * @param description
      * @return fi.dwo.client.domain.Course
      */
-    public Course addCourse(String name, String description) {
-        Course course = dwo.addCourse(name, description);
+    public Course addCourse(String name, String description, Course parent, boolean isMap) {
+        Course course = dwo.addCourse(name, description, parent, isMap);
         getMainPanel().getCenter().addCourse(course);
 		return course;
     }

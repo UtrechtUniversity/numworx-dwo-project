@@ -46,6 +46,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import fi.dwo.client.domain.Course;
+import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.DWO;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
@@ -70,11 +71,21 @@ import fi.dwo.server.form.DWOFile;
  * @author M.J.B. Kupers
  *
  */
-public class CourseManagementPanel extends JPanel implements CenterSubPanel, ActionListener {
-    private CenterPanel center;
+public class CourseManagementPanel extends JPanel implements CenterSubPanel, ActionListener, CourseMap {
+     CourseManagementPanel(CourseMap map) {
+		this(map.getChildren(), map);
+		this.map = map;
+	}
+
+     CourseManagementPanel(Course[] courses)
+     {
+    	 this(courses, (Object)ModuleTreePanel.SCHOOL_MODULES);
+     }
+
+	private CenterPanel center;
 
 
-    private JButton addCourseButton, uploadCourseButton, shareCourseButton;
+    private JButton addCourseButton, uploadCourseButton, shareCourseButton, addMapButton;
 
     private Image removeImage, editImage, scoImage;
     
@@ -83,7 +94,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     private JLabel noCoursesLabel;
 
 	private FileDialog openDial;
-
+	CourseMap  map = this;
 
 	private JTable jTable;
 
@@ -94,6 +105,9 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	private Image upImage;
 	private Image downImage;
 	boolean updown;
+
+
+	private Object userObject;
 
 	class CourseModel extends AbstractTableModel {
 
@@ -232,11 +246,10 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
                 }
                 if (JOptionPane.showConfirmDialog(DwoHelper.getApplet(), message, TextMapper.getText(TextMapper.GUIC_MSG_TTL_COURSE_DELETE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     if (GuiCreator.instance().deleteCourse(c)) {
-                        Course[] ac = new Course[courses.length - 1];
-            			System.arraycopy(courses, 0, ac, 0, row);
-            			System.arraycopy(courses, row+1, ac, row, ac.length-row);
-                        courses = ac;
+                        map.removeChild(row);
+                        setChildren(map.getChildren());
                         model.fireTableRowsDeleted(row,row);
+                        center.updateMap(map);
                     }
                 }
                 if(courses.length == 0) {
@@ -248,7 +261,10 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     		} else if (value == scoImage) {
                 /* Show the scos of the course */
                 Course c = courses[row];
-                center.loadCenter(GuiCreator.instance().getScoManagementPanel(c));
+                if(!c.isWithChildren())
+                	center.loadCenter(GuiCreator.instance().getScoManagementPanel(c));
+                else 
+                	center.loadCenter(GuiCreator.instance().getCourseManagementPanel(c));
 
     		} else if (value == upImage) {
     			Course s2 = courses[row-1];
@@ -257,7 +273,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     			courses[row-1] = s;
     			model.fireTableRowsUpdated(row-1, row);
     			updown = true;
-    			//center.updateCourse(s.getCourse());
+    			center.updateMap(map);
     		} else if (value == downImage) {
     			Course s2 = courses[row+1];
     			Course s  = courses[row];
@@ -279,8 +295,9 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	/**
      * @param courses
      */
-    public CourseManagementPanel(Course[] courses) {
+    public CourseManagementPanel(Course[] courses, Object userObject) {
         super(new BorderLayout(10,10));
+        this.userObject = userObject;
        // System.out.println(java.util.Locale.getDefault());
         upImage = DwoHelper.getResourceImage(GuiConstants.UP_SCO_IMAGE);
         downImage = DwoHelper.getResourceImage(GuiConstants.DOWN_SCO_IMAGE);
@@ -307,6 +324,13 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         addCourseButton.addActionListener(this);
         //addCourseButton.setLocation(30, 10);
         header.add(addCourseButton);
+        
+        if(GuiConstants.GUI_ICONIZED)
+        {
+        	addMapButton = new JButton("Nieuwe Map");
+        	addMapButton.addActionListener(this);
+        	header.add(addMapButton);
+        }
         header.add(Box.createHorizontalGlue());
         
         
@@ -406,16 +430,18 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     public void actionPerformed(ActionEvent e) {
     	Object src = e.getSource();
             
+    	if(src == addMapButton)
+    	{
+    		Course c = CourseNameDialog.addMap(this, getParentCourse());
+    		if(c != null)
+    		{	
+    			addChildToMap(c);                
+    		}
+    	}
         if(src == addCourseButton) {
-        	Course c = CourseNameDialog.addCourse(this);
+        	Course c = CourseNameDialog.addCourse(this, TextMapper.getText(TextMapper.GUICDLG_TTL_ADD_COURSE), getParentCourse(), false);
         	if(c != null) {
-                Course[] ac = new Course[courses.length + 1];
-                System.arraycopy(courses, 0, ac, 0, courses.length);
-                ac[ac.length - 1] = c;
-                courses = ac;
-                if(!DWO.SEQUENCE)
-                	Arrays.sort(courses);
-                buildJTable();                
+                addChildToMap(c);            
             }
         } else if(src == uploadCourseButton) {
         	try {
@@ -439,6 +465,25 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         }
             
     }
+
+
+	private Course getParentCourse() {
+		if(map.getUserObject() instanceof Course)
+			return (Course) map.getUserObject();
+		return null;
+	}
+
+
+	protected void addChildToMap(Course c) {
+		map.addChild(c);
+		courses = map.getChildren();
+		if(!DWO.SEQUENCE)
+		{	Arrays.sort(courses);
+			map.setChildren(courses);
+		}
+		buildJTable();
+		center.updateMap(map);
+	}
 
     private void upload() throws Exception {
     	String naam;
@@ -525,7 +570,33 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
 
 	public Object getUserObject() {
-		return ModuleTreePanel.ALLE_MODULES;
+		return (map == this) ? userObject : map.getUserObject();
+	}
+
+
+	public void addChild(Course c) {
+        Course[] ac = new Course[courses.length + 1];
+        System.arraycopy(courses, 0, ac, 0, courses.length);
+        ac[ac.length - 1] = c;
+        courses = ac;
+	}
+
+
+	public Course[] getChildren() {
+		return courses;
+	}
+
+
+	public void setChildren(Course[] courses) {
+		// ons kent ons!
+	}
+
+
+	public void removeChild(int row) {
+		Course[] ac = new Course[courses.length - 1];
+		System.arraycopy(courses, 0, ac, 0, row);
+		System.arraycopy(courses, row+1, ac, row, ac.length-row);
+		courses = ac;
 	}
     
 }

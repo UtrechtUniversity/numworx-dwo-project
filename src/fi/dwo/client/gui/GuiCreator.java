@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import fi.dwo.client.domain.AppletConfig;
 import fi.dwo.client.domain.ContactDocent;
 import fi.dwo.client.domain.Course;
+import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.DWO;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
@@ -716,9 +717,11 @@ public class GuiCreator {
     /**
      * @param name
      * @param description
+     * @param isMap 
+     * @param parent 
      * @return fi.dwo.client.domain.Course
      */
-    public Course addCourse(String name, String description) {
+    public Course addCourse(String name, String description, Course parent, boolean isMap) {
         return null;
     }
 
@@ -855,6 +858,14 @@ public class GuiCreator {
 	public CenterSubPanel getClassAdminPanel() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public CenterSubPanel getCourseManagementPanel(CourseMap c) {
+		return getCourseManagementPanel();
+	}
+
+	public CenterSubPanel getCourseChoisePanel(Course c) {		
+		return new CourseChoisePanel(c, c.getChildren(), c);
 	}
 
 }

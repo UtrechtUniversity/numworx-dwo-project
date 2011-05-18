@@ -391,7 +391,7 @@ public interface DwoIF {
     @return fi.dwo.client.domain.Course
      * @throws CourseException
      */
-    public Course addCourse(String name, String description);
+    public Course addCourse(String name, String description, Course parent, boolean isMap);
     
     /**
     @param course

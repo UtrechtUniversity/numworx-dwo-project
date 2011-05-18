@@ -147,18 +147,31 @@ public class CourseNameDialog extends JDialog implements ActionListener {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
      }
     
+    /**
+     * @deprecated met PARENT
+     * @return
+     */
     public static Course addCourse() {
-        return addCourse(null);
+        return addCourse(null, TextMapper.getText(TextMapper.GUICDLG_TTL_ADD_COURSE), null, false);
     }
 
     /**
+	 * @return fi.dwo.client.domain.Course
+	 */
+	public static Course addCourse(Component owner, Course parent) {
+		return addCourse(owner, TextMapper.getText(TextMapper.GUICDLG_TTL_ADD_COURSE), parent, false);
+	}
+
+	/**
+     * @param title TODO
+	 * @param parent 
      * @return fi.dwo.client.domain.Course
      */
-    public static Course addCourse(Component owner) {
-        CourseNameDialog cnd = new CourseNameDialog(owner, TextMapper.getText(TextMapper.GUICDLG_TTL_ADD_COURSE), 0, "", "", TextMapper.GUICDLG_COURSE_NAME, TextMapper.GUICDLG_COURSE_DESCRIPTION);
+    public static Course addCourse(Component owner, String title, Course parent, boolean isMap) {
+        CourseNameDialog cnd = new CourseNameDialog(owner, title, 0, "", "", TextMapper.GUICDLG_COURSE_NAME, TextMapper.GUICDLG_COURSE_DESCRIPTION);
         cnd.show();
         if(cnd.isConfirmed()) {
-            Course c = GuiCreator.instance().addCourse(cnd.getCourseName(), cnd.getCourseDescription());
+            Course c = GuiCreator.instance().addCourse(cnd.getCourseName(), cnd.getCourseDescription(), parent, isMap);
             return c;
         } else { //action canceled
             return null;
@@ -258,4 +271,12 @@ public class CourseNameDialog extends JDialog implements ActionListener {
     	}
     	showScore.setSelected(b);
     }
+
+	public static Course addMap(Component owner, Course parent) {
+		// TODO Auto-generated method stub
+		Course c = addCourse(owner, "Nieuwe Modulemap", parent, true);
+		if(c != null)
+			c.setChildren(Course.NO_CHILDREN);
+		return c;
+	}
 }

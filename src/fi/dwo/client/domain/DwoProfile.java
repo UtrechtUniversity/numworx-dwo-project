@@ -11,7 +11,7 @@ package fi.dwo.client.domain;
  * @author M.J.B. Kupers
  *
  */
-public class DwoProfile {
+public class DwoProfile implements Descriptor {
 
     private int dwoProfileID;
     private String description;
@@ -31,6 +31,7 @@ public class DwoProfile {
 
     /**
      * @return Returns the description.
+     * @deprecated gebruik {@link #getHeader()}
      */
     public String getDescription() {
         return description;
@@ -93,12 +94,14 @@ public class DwoProfile {
 	 * @param rights the rights to set
 	 */
 	public void setRights(String rights) {
-		if(rights == null) rights = "";
-		this.rights = rights;
 	}
     
     public boolean hasRight(char right)
     {
-    	return rights.indexOf(right)>=0;
+    	return false;
     }
+
+	public String getHeader() {
+		return getDescription();
+	}
 }

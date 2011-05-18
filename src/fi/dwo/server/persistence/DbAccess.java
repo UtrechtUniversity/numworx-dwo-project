@@ -44,7 +44,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             + "FROM tblUser LEFT JOIN tblSchoolGroup ON tblUser.schoolGroupID = tblSchoolGroup.schoolGroupID, tblCourse "
             + "WHERE ((tblSchoolGroup.schoolID = tblCourse.schoolID) "
             + "OR     (isnull(tblCourse.schoolID))) " + "AND   (userID = ?) "
-            + "AND   (notVisible <= ?) " + "ORDER BY name ";
+            + "AND   (notVisible <= ?)  AND parentID = 0 " + "ORDER BY name ";
 
     private final static String QRY_SELECT_COURSES_GUEST = "SELECT tblCourse.* "
             + "FROM tblCourse "
@@ -71,7 +71,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
     private final static String QRY_SELECT_COURSES_EDITABLE = "SELECT tblCourse.* "
             + "FROM tblCourse "
-            + "WHERE (tblCourse.schoolID = ?) "
+            + "WHERE (tblCourse.schoolID = ?) and (parentID = 0)"
             + "ORDER BY name ";
 
     private final static String QRY_GET_STUDENT_SCO = "SELECT `{0}` "
@@ -284,8 +284,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
     private final static String QRY_JAR_COUNT_JARS = "SELECT count(*) as number FROM tblApplet ";
 
-    private final static String QRY_ADD_COURSE = "INSERT INTO tblCourse(schoolID, name, description, image, dwoProfileID) "
-            + "VALUES(?, ?, ?, ?, ?) ";
+    private final static String QRY_ADD_COURSE = "INSERT INTO tblCourse(schoolID, name, description, image, dwoProfileID, parentID, withChildren) "
+            + "VALUES(?, ?, ?, ?, ?, ?, ?) ";
             
     private final static String QRY_ADD_COURSE_BASIC = "INSERT INTO tblCourse(name, description, image, dwoProfileID) "
             + "VALUES(?, ?, ?, ?) ";
@@ -1720,13 +1720,20 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return executeQueryWithResult(ps);
     }
 
+    
+    public int addCourse(int schoolID, String name, String description, int dwoProfile) throws DwoXmlRpcException, SQLException
+    {
+    	return addCourse(schoolID, name, description, dwoProfile, 0, false);
+    }
+    
+    
     /*
      * (non-Javadoc)
      * 
      * @see fi.dwo.client.persistence.DbAccessIF#addCourse(java.lang.String,
      *      java.lang.String)
      */
-    public int addCourse(int schoolID, String name, String description, int dwoProfile)
+    public int addCourse(int schoolID, String name, String description, int dwoProfile, int parentID, boolean isMap)
             throws DwoXmlRpcException, SQLException {
         Hashtable schoolData = getRecord("tblSchool", "schoolID", schoolID);
         log("DbAccess.addCourse" + schoolData);
@@ -1752,6 +1759,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 	        ps.setString(3, description);
 	        ps.setString(4, image);
 	        ps.setInt(5, dwoProfile);
+	        ps.setInt(6, parentID);
+	        ps.setBoolean(7, isMap);
 		}
         
 

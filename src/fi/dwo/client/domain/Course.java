@@ -28,7 +28,7 @@ import fi.dwo.client.system.TextMapper;
  * This class is responsible for the Course data.
  * @author M.J.B. Kupers
  */
-public class Course implements LessonGroup, Comparable {
+public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
     private int courseID;
 
     private String name;
@@ -48,7 +48,9 @@ public class Course implements LessonGroup, Comparable {
     
     private int schoolID;
     private boolean export;
-
+    private Course  children[];
+    private int parentID;
+    
     /**
      * Creates a new Course object
      *  
@@ -56,6 +58,17 @@ public class Course implements LessonGroup, Comparable {
     public Course() {
     }
 
+    public Course(Course parent, Course[] children)
+    {
+    	this.parentID = parent.getID();
+    	this.children = children;
+    }
+    
+    public Course(Course parent)
+    {
+    	this(parent, null);
+    }
+    
     /**
      * Returns the description of the course.
      * 
@@ -393,4 +406,85 @@ public class Course implements LessonGroup, Comparable {
 	public String toString() {
 		return getName();
 	}
+
+
+	public int getParentID() {
+		return parentID;
+	}
+
+	public void setParentID(int parentID) {
+		this.parentID = parentID;
+	}
+
+
+	public static final Course[] NO_CHILDREN = new Course[0];
+	
+	public Course[] getChildren() {
+		return children;
+	}
+
+	public void setChildren(Course[] children) {
+		this.children = children;
+	}
+
+	public void addChild(Course child)
+	{
+		child.setParentID(getID());
+		if(children == null)
+		{
+			children = new Course[] { child };
+		} else {
+			int length = children.length;
+			Course[] n = new Course[length+1];
+			System.arraycopy(children, 0, n, 0, length);
+			n[length]=child;
+			children = n;
+		}
+	}
+	
+	public void removeChild(int index)
+	{
+		int length = children.length;
+		children[index].setParentID(0);
+		Course[] n = new Course[length-1];
+		System.arraycopy(children, 0, n, 0, index);
+		System.arraycopy(children, index+1, n, index, length-1-index);
+	}
+	
+	public void removeChild(Course child)
+	{
+		for (int i = 0; i < children.length; i++) {
+			if(children[i] == child)
+			{
+				removeChild(i);
+				break;
+			}
+		}
+	}
+
+	public boolean isWithChildren() {
+		return children != null;
+	}
+
+	public Object getUserObject() {
+		return this;
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 * @see fi.dwo.client.domain.Descriptor#getText()
+	 */
+	public String getText() {
+		return getDescription();
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see fi.dwo.client.domain.Descriptor#getHeader()
+	 */
+	public String getHeader() {
+		return getName();
+	}
+
 }

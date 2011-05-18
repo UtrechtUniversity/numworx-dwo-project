@@ -49,6 +49,7 @@ import org.xml.sax.SAXException;
 
 import fi.dwo.client.domain.AppletConfig;
 import fi.dwo.client.domain.Course;
+import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.User;
@@ -265,7 +266,19 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
             Sco s = course.getScoList()[row];
     		if (value == courseImage) {
                 /* Show the Course Panel */
-                center.loadCenter(GuiCreator.instance().getCourseManagementPanel());
+    			int id = course.getParentID();
+    			if(id != 0)
+    			{
+    				CourseMap map;
+					try {
+						map = (CourseMap) PersistenceFacade.instance().get(id, Course.class);
+	    				center.loadCenter(GuiCreator.instance().getCourseManagementPanel(map));
+					} catch (PersistenceException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+    			} else
+    				center.loadCenter(GuiCreator.instance().getCourseManagementPanel());
     		} else
     		if (value == editImage) {
                 if (ScoNameDialog.editSco(s)) {

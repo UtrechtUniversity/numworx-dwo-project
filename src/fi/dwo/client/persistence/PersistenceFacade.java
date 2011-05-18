@@ -27,6 +27,7 @@ import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.Admin;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.domain.UserResultList;
+import fi.dwo.client.gui.GuiConstants;
 import fi.dwo.client.system.ClassException;
 import fi.dwo.client.system.SchoolException;
 import fi.dwo.client.system.CourseException;
@@ -1178,7 +1179,7 @@ public class PersistenceFacade {
 	            Vector v;
 	            v = DbAccessCreator.instance().getEditableCourses(
 	                    teacher.getSchool().getSchoolID());
-	            if(user.hasRight(User.PROFILE_ADMIN_RIGHT))
+	            if(user.hasRight(User.PROFILE_ADMIN_RIGHT) && !GuiConstants.GUI_ICONIZED)
 	            {
 	            	Vector v2 = DbAccessCreator.instance().getEditableCoursesAdmin();
 	            	v.addAll(v2);
@@ -1232,13 +1233,14 @@ public class PersistenceFacade {
      * @return The new course. If an exception occurs, null is returned.
      * @throws CourseException
      */
-    public Course addCourse(School school, String name, String description, DwoProfile dwoProfile)
+    public Course addCourse(School school, String name, String description, DwoProfile dwoProfile, Course parent, boolean withChildren)
             throws CourseException {
         DbAccessIF dbAccess = DbAccessCreator.instance();
         try {
             try {
-                int result = dbAccess.addCourse(school.getSchoolID(), name,
-                        description, dwoProfile.getID());
+                int parentID = parent==null?0:parent.getID();
+				int result = dbAccess.addCourse(school.getSchoolID(), name,
+                        description, dwoProfile.getID(), parentID, withChildren);
                 Course c = new Course();
                 c.setCourseID(result);
                 c.setDescription(description);
@@ -1246,6 +1248,8 @@ public class PersistenceFacade {
                 c.setImageUrl(school.getImage());
                 c.setDwoProfile(dwoProfile.getID());
                 c.setSchoolID(school.getSchoolID()); // DEZE IS VERGETEN, WIM 9/5/2011
+                c.setParentID(parentID);
+                if(withChildren) c.setChildren(Course.NO_CHILDREN);
                 return c;
             } catch (IOException e) {
                 throw new CourseException(CourseException.EX_IO);
@@ -1797,6 +1801,11 @@ e1.printStackTrace();
 			throw new PersistenceException(PersistenceException.EX_DB, e);
 		}
 		
+	}
+
+	public Course addCourse(School s, String name, String description,
+			DwoProfile profile) throws CourseException {
+		return addCourse(s, name, description, profile, null, false);
 	}
 	
 }

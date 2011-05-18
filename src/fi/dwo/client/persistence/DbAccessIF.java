@@ -392,6 +392,7 @@ public interface DbAccessIF {
      */
     public boolean log(String s) throws IOException, XmlRpcException;
     
+    public int addCourse(int schoolID, String name, String description, int dwoProfile, int parentID, boolean withChildren) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
     public int addCourse(int schoolID, String name, String description, int dwoProfile) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
     public boolean changeCourse(int courseID, String name, String description)  throws  DwoXmlRpcException, IOException, XmlRpcException, SQLException;

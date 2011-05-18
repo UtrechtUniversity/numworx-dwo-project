@@ -116,7 +116,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#addCourse(java.lang.String, java.lang.String)
 	 */
-	public Course addCourse(String name, String description) {
+	public Course addCourse(String name, String description, Course parent, boolean isMap) {
 		return null;
 	}
 

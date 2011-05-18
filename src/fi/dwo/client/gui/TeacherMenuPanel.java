@@ -16,6 +16,7 @@ import javax.swing.border.Border;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import fi.dwo.client.domain.Course;
+import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.SchoolClass;
@@ -197,19 +198,29 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
         classPanel.setVisible(true);      
     }
 
-	public void nodeSelected(DefaultMutableTreeNode node) {
+	public void nodeSelected(CourseMap node) {
 		Object u = node.getUserObject();
 		GuiCreator instance = GuiCreator.instance();
 		if(u instanceof String)
 		{
-			CenterSubPanel cp = instance.getCourseManagementPanel();
+			if(u == ModuleTreePanel.ALLE_MODULES)
+				return;
+			if(u == ModuleTreePanel.STANDAARD_DWO_MODULES && ! instance.getUser().hasRight(User.PROFILE_ADMIN_RIGHT))
+				return;
+			CenterSubPanel cp = new CourseManagementPanel(node.getChildren(), u);
 			center.loadCenter(cp);
 		} else
 		if(u instanceof Course)
 		{
             Course c = (Course) u;
             if(c.getSchoolID()!= 0 || instance.getUser().hasRight(User.PROFILE_ADMIN_RIGHT)) // allowed?
-            	center.loadCenter(instance.getScoManagementPanel(c));
+            {
+            	if(c.isWithChildren())
+            	{
+            		center.loadCenter(instance.getCourseManagementPanel(c));
+            	} else
+            		center.loadCenter(instance.getScoManagementPanel(c));
+            }
 		} else 
 		if( u instanceof Sco)
 		{

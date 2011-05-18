@@ -95,7 +95,7 @@ public class GuiCreatorAdmin extends GuiCreator {
     public CenterSubPanel getCourseManagementPanel() {
         Course[] editableCourses = dwo.getEditableCourses();
         if(editableCourses != null) {
-            return new CourseManagementPanel(editableCourses);
+            return new CourseManagementPanel(editableCourses, ModuleTreePanel.STANDAARD_DWO_MODULES);
         } else {
             return null;
         }
@@ -106,8 +106,8 @@ public class GuiCreatorAdmin extends GuiCreator {
      * @param description
      * @return fi.dwo.client.domain.Course
      */
-    public Course addCourse(String name, String description) {
-        return dwo.addCourse(name, description);
+    public Course addCourse(String name, String description, Course parent, boolean isMap) {
+        return dwo.addCourse(name, description, parent, isMap);
     }
 
     /**

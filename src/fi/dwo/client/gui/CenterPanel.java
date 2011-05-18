@@ -28,6 +28,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
 import fi.dwo.client.domain.Course;
+import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.Guest;
 import fi.dwo.client.domain.ResultsModuleIF;
@@ -456,5 +457,11 @@ invalidate();
 	public void setStrategy(SelectStrategy selector) {
 		if(tree != null)
 			tree.setStrategy(selector);		
+	}
+
+	public void updateMap(CourseMap map) {
+		if(tree != null)
+			tree.updateNodeMap(map);
+		
 	}
 }

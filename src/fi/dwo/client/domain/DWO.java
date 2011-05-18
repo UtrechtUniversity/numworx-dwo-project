@@ -1420,9 +1420,9 @@ private static boolean isValidEmail(String email) {
     /* (non-Javadoc)
      * @see fi.dwo.client.domain.DwoIF#addCourse(java.lang.String, java.lang.String)
      */
-    public Course addCourse(String name, String description) {
+    public Course addCourse(String name, String description, Course parent, boolean isMap) {
         try {
-            return PersistenceFacade.instance().addCourse(currentUser.getSchool(), name, description, dwoProfile);
+            return PersistenceFacade.instance().addCourse(currentUser.getSchool(), name, description, dwoProfile, parent, isMap);
         } catch(CourseException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;            

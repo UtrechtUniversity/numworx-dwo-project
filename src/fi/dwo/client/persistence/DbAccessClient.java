@@ -1,9 +1,12 @@
 // Generated code, do not edit
 package fi.dwo.client.persistence;
 
+import java.sql.SQLException;
 import java.util.Vector;
 import java.net.URL;
 import fi.beans.xmlrpc.Client;
+import fi.dwo.server.persistence.DwoXmlRpcException;
+
 import org.apache.xmlrpc.applet.XmlRpcException;
 import java.io.IOException;
 
@@ -669,5 +672,13 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
         Object object = invoke("changeCourse", vv);
         return ((Boolean)object).booleanValue();
     }
+
+	public int addCourse(int schoolID, String name, String description,
+			int dwoProfile, int parentID, boolean withChildren)
+			throws DwoXmlRpcException, IOException, XmlRpcException,
+			SQLException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
 }

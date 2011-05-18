@@ -2,11 +2,14 @@ package fi.dwo.client.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Image;
 import java.awt.LayoutManager;
 import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.swing.Box;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -21,6 +24,7 @@ import javax.swing.event.MenuListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
@@ -28,25 +32,107 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import fi.dwo.client.domain.Course;
+import fi.dwo.client.domain.CourseMap;
+import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.User;
 
 interface SelectStrategy {
-	void nodeSelected(DefaultMutableTreeNode node);
+	void nodeSelected(CourseMap node);
 }
 
 public class ModuleTreePanel extends JPanel implements TreeSelectionListener, SelectStrategy {
 
 	public static final String STANDAARD_DWO_MODULES = "Standaard DWO modules";
 	public static final String ALLE_MODULES = "Alle modules";
+	public static String SCHOOL_MODULES = null;
 	protected JTree tree;
 	private JScrollPane pane;
 	private JMenuBar bar;
 	protected DwoIF dwo;
 	private CenterPanel center;
 	private IconizedPanel ip;
+	
+	class TreeMap implements CourseMap
+	{
+		TreeMap(DefaultMutableTreeNode node) {
+			super();
+			this.node = node;
+		}
+
+		DefaultMutableTreeNode node;
+
+		public Object getUserObject() {
+			return node.getUserObject();
+		}
+
+		public void addChild(Course c) {
+		}
+
+		public void removeChild(int i) {
+		}
+
+		public Course[] getChildren() {
+			return getCourses(node);
+		}
+
+		public void setChildren(Course[] courses) {
+			// TODO Auto-generated method stub
+			
+		}
+
+	}
+	
+	class TreeCellRenderer extends DefaultTreeCellRenderer
+	{
+		Icon bookIcon; 
+		boolean isCourse, isMap;
+		private TreeCellRenderer() {
+			super();
+			Image book = DwoHelper.getResourceImage("resources/book.png");
+			bookIcon = new ImageIcon(book);
+		}
+
+		public Icon getOpenIcon() {
+			if(isCourse)
+				return bookIcon;
+			return super.getOpenIcon();
+		}
+
+		public Icon getClosedIcon() {
+			if(isCourse)
+				return bookIcon;
+			return super.getClosedIcon();
+		}
+
+		public Icon getLeafIcon() {
+			if(isCourse)
+				return bookIcon;
+			if(isMap)
+				return getClosedIcon();
+			return super.getLeafIcon();
+		}
+
+		public Component getTreeCellRendererComponent(JTree tree, Object value,
+				boolean sel, boolean expanded, boolean leaf, int row,
+				boolean hasFocus) {
+// bookicon als het een course is
+			isCourse =
+				value instanceof DefaultMutableTreeNode &&
+				((DefaultMutableTreeNode) value).getUserObject() instanceof Course &&
+				!((Course) ((DefaultMutableTreeNode) value).getUserObject()).isWithChildren();
+			isMap = value instanceof DefaultMutableTreeNode &&
+				((DefaultMutableTreeNode) value).getUserObject() instanceof Sco;
+// geen leaficon als het een lege map is
+			isMap = leaf && !isMap;
+			
+			return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf,
+					row, hasFocus);
+		}
+		
+	}
 	
 	
 	public ModuleTreePanel() {
@@ -64,6 +150,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 		Box hbox = Box.createHorizontalBox();
 		createMenubar(hbox);
 		createCloseBtn(hbox);
+		tree.setCellRenderer(new TreeCellRenderer());
 	}
 
 	protected void createMenubar(Box hbox) {
@@ -109,7 +196,9 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 			User u = instance.getUser();
         	School school = u.getSchool();
         	if(school != null)
-        	{  	schoolnode = new DefaultMutableTreeNode("Modules " + school);
+        	{  	
+        		SCHOOL_MODULES = "Modules " + school;
+        		schoolnode = new DefaultMutableTreeNode(SCHOOL_MODULES);
             	root.add(schoolnode);
         	}
         	Course[] courses = instance.getCourseList();
@@ -117,6 +206,10 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
         	for (int i = 0; i < courses.length; i++) {
 				Course course = courses[i];
 				node = new DefaultMutableTreeNode(course);
+				if(course.isWithChildren())
+				{
+					appendCourseMap(course, node);
+				}
 				insertScos(course, node);
 				if(course.getSchoolID() == 0)
 				{
@@ -231,31 +324,42 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 		boolean sel = e.isAddedPath();
 		if(sel)
 		{
-			strategy.nodeSelected(node);
+			Object o = node.getUserObject();
+			if(o instanceof CourseMap)
+			{
+				strategy.nodeSelected((CourseMap) o);
+			} else
+				strategy.nodeSelected(new TreeMap(node));
 		}
 	}
 	
 	private SelectStrategy strategy;
 
-	public void nodeSelected(DefaultMutableTreeNode node) {
+	public void nodeSelected(CourseMap node) {
 		Object value = node.getUserObject();
+		CenterSubPanel panel;
 		
 		GuiCreator instance = GuiCreator.instance();
 		if(value instanceof Course)
 		{
 			Course c = (Course)value;
-		    CoursePanel cp = (CoursePanel) instance.getCoursePanel(c);
-		    cp.setLessonMode(getLessonMode());
-		    center.loadCenter(cp);
+			if(c.isWithChildren())
+			{
+				panel = new CourseChoisePanel(c, c.getChildren(), c);
+				center.loadCenter(panel);
+			} else {
+				CoursePanel cp = (CoursePanel) instance.getCoursePanel(c);
+				cp.setLessonMode(getLessonMode());
+				center.loadCenter(cp);
+			}
 		} else if (value instanceof String) // geen ondescheid tussen alle/school/standaard
 		{
-			CenterSubPanel panel;
 			if(value == ALLE_MODULES)
 			{				
 				panel = new CourseChoisePanel(dwo.getDwoProfile());
 			} else 
 			{
-				Course[] courses = getCourses(node);
+				Course[] courses = node.getChildren();
 				panel = new CourseChoisePanel(dwo.getDwoProfile(), courses, value);
 				
 			}
@@ -320,6 +424,29 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 		node.removeAllChildren();
 		insertScos(course, node);
 		model.nodeStructureChanged(node);
+	}
+
+	public void updateNodeMap(CourseMap map) {
+		DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+		DefaultMutableTreeNode node = find(map.getUserObject(), root);
+		node.removeAllChildren();
+    	appendCourseMap(map, node);
+    	model.nodeStructureChanged(node);
+	}
+
+	public void appendCourseMap(CourseMap map, DefaultMutableTreeNode node) {
+		Course[] courses = map.getChildren();
+    	DefaultMutableTreeNode child; 
+    	for (int i = 0; i < courses.length; i++) {
+			Course course = courses[i];
+			child = new DefaultMutableTreeNode(course);
+			node.add(child);
+			if(course.isWithChildren())
+				appendCourseMap(course, node);
+			else
+				insertScos(course, child);
+    	}
 	}
 }
 
