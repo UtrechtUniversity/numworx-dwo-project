@@ -239,7 +239,7 @@ public class Text_nl extends ListResourceBundle {
          
          { TextMapper.LG_SCO_NAME , "Activ. {0}"},
          
-         { TextMapper.GUIC_ADD_COURSE, "Nieuwe Module aanmaken"},
+         { TextMapper.GUIC_ADD_COURSE, "Nieuwe Module"}, // zonder 'aanmaken'
          { TextMapper.GUIC_COURSE_MANAGEMENT, "Modules beheren"},
 
          { TextMapper.GUIC_TLTP_DELETE_COURSE, "Module \"{0}\" verwijderen"},

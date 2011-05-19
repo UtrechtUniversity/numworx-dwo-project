@@ -52,6 +52,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import fi.dwo.client.domain.Course;
+import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.DWO;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
@@ -77,6 +78,8 @@ class CourseData {
 	public boolean isSelected() {
 		return Boolean.TRUE.equals(select);
 	}	
+	CourseData[] children;
+	
 }
 /**
  * This class represents a dialog for selecting courses.
@@ -435,7 +438,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
          * Create a Vector with all the selected courses. We can now easily
          * check if a course is selected
          */
-        Vector vSelectedCourses = new Vector(selectedCourses.length);
+        final Vector vSelectedCourses = new Vector(selectedCourses.length);
         for (int i = 0; i < selectedCourses.length; i++) {
             vSelectedCourses.addElement(selectedCourses[i]);
         }
@@ -476,6 +479,9 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         				} else {
         					schoolnode.add(node);
         				}
+        				appendCourseData(course, node, vSelectedCourses);
+        				
+        				
         			}
                 	treeModel = new DefaultTreeModel(root);
                 	setModel(treeModel);
@@ -588,12 +594,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         } else if (e.getSource() == okButton) {
             Vector tmpSelected = new Vector();
             
-            int len = cd.length;
-            for(int i = 0; i < len; i++ )
-            {
-            	if(Boolean.TRUE.equals(cd[i].select))
-            		tmpSelected.addElement(cd[i].course);
-            }
+            addSelected(tmpSelected, cd);
             if(updown && DWO.SEQUENCE)
             {	updown = false;
             	Course[] courses = new Course[cd.length];
@@ -620,10 +621,20 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         }
     }
 
+	private void addSelected(Vector vector, CourseData[] cds) {
+		int len = cds.length;
+		for(int i = 0; i < len; i++ )
+		{
+			CourseData children[] = cds[i].children;
+			if(children == null && Boolean.TRUE.equals(cds[i].select))
+				vector.addElement(cds[i].course);
+			if(children != null)
+				addSelected(vector, children);
+		}
+	}
+
 	private void select(Boolean value) {
-		int len = cd.length;
-		for(int i = 0; i < len; i++)
-			cd[i].select = value;
+		selectCD(value, cd);
 		if(jTable != null)
 		{
 		    CoursesModel model = (CoursesModel) jTable.getModel();
@@ -631,6 +642,17 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 		} else if(treeModel != null)
 		{
 			treeModel.nodeChanged((TreeNode) treeModel.getRoot());
+		}
+	}
+
+	private void selectCD(Boolean value, CourseData[] cds) {
+		int len = cds.length;
+		for(int i = 0; i < len; i++)
+		{	
+			cds[i].select = value;
+			CourseData[] children = cds[i].children;
+			if(children!=null)
+				selectCD(value, children);
 		}
 	}
 
@@ -658,20 +680,50 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         	Vector result = DbAccessCreator.instance().getResultCount(allCourses[0].getDwoProfile(), sc.getID());
         	Enumeration e = result.elements();
     		CourseData[] cd = scd.cd;
-    			while (e.hasMoreElements()) {
+    		while (e.hasMoreElements()) {
 				Hashtable object = (Hashtable) e.nextElement();
 				int courseID = ((Number)object.get("courseID")).intValue();
-				for (int i = 0; i < cd.length; i++) {
-					Course course = cd[i].course;
-					if(course.getID() == courseID)
-						cd[i].data = scd.removeImage;
-				}
+				scd.setResults(courseID, cd);
 			}
         
         } catch(Exception e) {e.printStackTrace();}
         
         scd.show();
         return scd.getSelectedCourses();
+	}
+
+	
+	private boolean setResults(int courseID, CourseData[] cd) {
+		for (int i = 0; i < cd.length; i++) {
+			Course course = cd[i].course;
+			if(course.getID() == courseID)
+			{	cd[i].data = removeImage;
+				return true;
+			}
+			if(cd[i].children!=null)
+				if(setResults(courseID, cd[i].children))
+					return true;
+		}
+		return false;
+	}
+	
+	public void appendCourseData(CourseData data, DefaultMutableTreeNode node, Vector vector) {
+		Course map = data.course;
+		if(map.isWithChildren())
+		{		
+			Course[] courses = map.getChildren();
+			data.children = new CourseData[courses.length];
+	    	DefaultMutableTreeNode child; 
+	    	for (int i = 0; i < courses.length; i++) {
+				Course course = courses[i];
+				CourseData coursedata = new CourseData(course);
+				data.children[i] = coursedata;
+				coursedata.select = Boolean.valueOf(vector.contains(course));
+				child = new DefaultMutableTreeNode(coursedata);
+				node.add(child);
+				appendCourseData(coursedata, child, vector);
+	    	}
+		}
 	}
 
 }
