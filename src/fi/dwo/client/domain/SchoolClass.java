@@ -45,16 +45,12 @@ public class SchoolClass implements UserGroup, Comparable {
         return courses;
     }
 
+    
+    
+    
     public void saveSelectedCourses(Course[] allCourses,
             Course[] selectedCourses) {
-        for (int i = 0; i < allCourses.length; i++) {
-            try {
-                PersistenceFacade.instance().deSelectCoursesForClass(getID(),
-                        allCourses[i].getID());
-            } catch (PersistenceException e) {
-            	JOptionPane.showMessageDialog(null, e.getMessage());
-            }
-        }
+        deselectAllCourses(allCourses);
         for (int i = 0; i < selectedCourses.length; i++) {
             try {
                 PersistenceFacade.instance().selectCoursesForClass(getID(),
@@ -64,6 +60,21 @@ public class SchoolClass implements UserGroup, Comparable {
             }
         }
     }
+
+	public void deselectAllCourses(Course[] allCourses) {
+		for (int i = 0; i < allCourses.length; i++) {
+            Course course = allCourses[i];
+            if(course.isWithChildren())
+            	deselectAllCourses(course.getChildren());
+            try {
+				PersistenceFacade.instance().deSelectCoursesForClass(getID(),
+                        course.getID());
+            } catch (PersistenceException e) {
+            	JOptionPane.showMessageDialog(null, e.getMessage());
+            }
+            
+        }
+	}
 
     ////peter
 

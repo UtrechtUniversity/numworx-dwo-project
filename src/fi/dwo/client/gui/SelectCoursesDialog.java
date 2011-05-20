@@ -295,6 +295,13 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     	      boolean hasFocus) {
 
     	    Component returnValue;
+    	    if(leaf && value instanceof DefaultMutableTreeNode)
+    	    {
+    	    	Object userdata = ((DefaultMutableTreeNode) value).getUserObject();
+    	    	if(userdata instanceof CourseData)
+    	    		leaf =  ! ((CourseData)userdata).course.isWithChildren();
+    	    	expanded = false;
+    	    }
     	    if (leaf) {
 
     	      String stringValue = tree.convertValueToText(value, selected,
