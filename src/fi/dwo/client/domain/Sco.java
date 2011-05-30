@@ -7,6 +7,8 @@ import java.applet.Applet;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -712,9 +714,17 @@ System.err.println("sum = ["+result+"]");
 				applet.stop();
 				applet.destroy();
 			} catch (RuntimeException e) {
+				// Dialog: interne fout, sco niet goed afgesloten, mogelijk verlies van gegevens.
+				
+				
 				e.printStackTrace();
 				try {
-					DbAccessCreator.instance().log("Sco " + scoID + " exception in Sco.end: "+e.toString());
+					DbAccessCreator.instance().log(user.getID() + " Sco " + scoID + " exception in Sco.end: "+e.toString());
+					StringWriter w = new StringWriter();
+					PrintWriter pw = new PrintWriter(w);
+					e.printStackTrace(pw);
+					DbAccessCreator.instance().log(w.toString());
+				
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				} catch (XmlRpcException e1) {
