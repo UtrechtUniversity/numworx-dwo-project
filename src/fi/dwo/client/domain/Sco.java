@@ -708,7 +708,7 @@ System.err.println("sum = ["+result+"]");
      * Indicates that the applet must save the data.
      *  
      */
-    public void end() {
+    public synchronized void end() {
         if (applet != null) {
             try {
 				applet.stop();
@@ -719,7 +719,7 @@ System.err.println("sum = ["+result+"]");
 				
 				e.printStackTrace();
 				try {
-					DbAccessCreator.instance().log(user.getID() + " Sco " + scoID + " exception in Sco.end: "+e.toString());
+					DbAccessCreator.instance().log(user.getID() + " Sco " + scoID +"," + applet + " exception in Sco.end: "+e.toString());
 					StringWriter w = new StringWriter();
 					PrintWriter pw = new PrintWriter(w);
 					e.printStackTrace(pw);
