@@ -174,7 +174,10 @@ public class GuiCreatorTeacher extends GuiCreator {
     }
     public CenterSubPanel getCourseManagementPanel(CourseMap map)
     {
-    	return new CourseManagementPanel(map);
+ // constructor cannot sort, we do!
+    	CourseManagementPanel panel = new CourseManagementPanel(dwo.sequence(map.getChildren()), map);
+    	panel.map = map;
+		return panel;
     }
     
     
@@ -300,8 +303,8 @@ public class GuiCreatorTeacher extends GuiCreator {
     /**
      * @return fi.dwo.client.domain.DWO
      */
-    public DWO getDWO() {
-        return null;
+    public DwoIF getDWO() {
+        return dwo;
     }
 
     /**

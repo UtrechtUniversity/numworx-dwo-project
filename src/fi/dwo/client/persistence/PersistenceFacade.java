@@ -36,7 +36,6 @@ import fi.dwo.client.system.MD5;
 import fi.dwo.client.system.PersistenceException;
 import fi.dwo.client.system.RegisterException;
 import fi.dwo.client.system.ScoException;
-import fi.dwo.server.persistence.DbAccess;
 import fi.dwo.server.persistence.DwoXmlRpcException;
 
 /**
@@ -1782,22 +1781,35 @@ e1.printStackTrace();
 	
 	public void setCourseSequence(Course[] courses, School school, SchoolClass forClass) throws PersistenceException
 	{
+		if(courses.length==0)
+			return;
 		Vector vector = new Vector(courses.length);
 		for (int i = 0; i < courses.length; i++) {
 			vector.add(new Integer(courses[i].getID()));
 		}
 		int schoolID = 0;
 		int classID = 0;
+		DbAccessIF access = DbAccessCreator.instance();
+		
 		int parent = 0;
+		if(forClass == null)  // selected courses are flat
+		{
+			parent = courses[0].getParentID();
+			if(parent != courses[courses.length-1].getParentID())
+				try {
+					access.log("Sequence error " + school);
+				} catch (Exception e) {
+				}
+		
+		}
 		int profileID = ((DwoIF)DwoHelper.getApplet()).getDwoProfile().getID();
 		if(school != null) schoolID = school.getSchoolID();
 		if(forClass != null) classID = forClass.getID();
 		MapperIF instance = MapperCreator.instance(CourseSequence.class);
 		instance.removeAllObjects();
-		DbAccess access = (DbAccess) DbAccessCreator.instance();
 		try {
 			access.setCourseSequence(vector, schoolID, classID, parent, profileID);
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			throw new PersistenceException(PersistenceException.EX_DB, e);
 		}
 		

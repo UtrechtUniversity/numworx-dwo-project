@@ -430,7 +430,11 @@ public class DbAccessProxy extends DbConnect implements DbAccessIF {
 			SQLException {
 		return getDelegate().addCourse(schoolID, name, description, dwoProfile, parentID, withChildren);
 	}
-	
-	
+
+	public void setCourseSequence(Vector vector, int schoolID, int classID,
+			int parent, int profileID) throws DwoXmlRpcException, IOException,
+			XmlRpcException, SQLException {
+		getDelegate().setCourseSequence(vector, schoolID, classID, parent, profileID);
+	}
 	
 }

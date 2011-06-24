@@ -186,7 +186,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 		this.dwo = dwo;
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(ALLE_MODULES);
         DefaultMutableTreeNode dwonode  = new DefaultMutableTreeNode(STANDAARD_DWO_MODULES);
-        root.add(dwonode);
+        root.add(dwonode);        
         DefaultMutableTreeNode schoolnode = null;
         if(dwo != null)
         {
@@ -202,6 +202,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
             	root.add(schoolnode);
         	}
         	Course[] courses = instance.getCourseList();
+        	sort(courses);
         	DefaultMutableTreeNode node; 
         	for (int i = 0; i < courses.length; i++) {
 				Course course = courses[i];
@@ -225,6 +226,19 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
         setModel(model);
 	}
 	
+	private void sort(Course[] courses) {
+		for (int i = 0; i < courses.length; i++) {
+			Course course = courses[i];
+			if(course.isWithChildren())
+			{
+				Course[] children = course.getChildren();
+				course.setChildren(dwo.sequence(children));
+				sort(children);
+			}
+		}
+		
+	}
+
 	protected void insertScos(Course course, DefaultMutableTreeNode node) {
 		course.loadScos();
 		Sco[] scos = course.getScoList();
@@ -345,7 +359,8 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 			Course c = (Course)value;
 			if(c.isWithChildren())
 			{
-				panel = new CourseChoisePanel(c, c.getChildren(), c);
+				Course[] children = c.getChildren();
+				panel = new CourseChoisePanel(c, children, c);
 				center.loadCenter(panel);
 			} else {
 				CoursePanel cp = (CoursePanel) instance.getCoursePanel(c);

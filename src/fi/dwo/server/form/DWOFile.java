@@ -82,7 +82,7 @@ public class DWOFile {
 	 */
 	public Hashtable inputIMSManifest(InputStream input)
 			throws ParserConfigurationException, SAXException, IOException {
-// slecht één versie, 
+// slecht Ã©Ã©n versie, 
 		for(int i = 0; i < prefix.length; i++)
 		{
 			if(prefix[i]!= input.read())

@@ -73,7 +73,6 @@ import fi.dwo.parameters.domain.ConvertorCreator;
 import fi.dwo.parameters.domain.ConvertorIF;
 import fi.dwo.parameters.gui.MainParameterComponent;
 import fi.dwo.parameters.gui.ParameterComponent;
-import fi.dwo.server.persistence.DbAccess;
 
 /**
  * This class is a panel for editing the parameters of a SCO.

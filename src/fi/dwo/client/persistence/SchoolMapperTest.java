@@ -16,7 +16,7 @@ import junit.framework.TestCase;
 public class SchoolMapperTest extends TestCase {
 
 	public static void main(String[] args) {
-		junit.swingui.TestRunner.run(SchoolMapperTest.class);
+		junit.textui.TestRunner.run(SchoolMapperTest.class);
 	}
 
 	/*

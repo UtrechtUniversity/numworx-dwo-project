@@ -218,8 +218,10 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
         } 
         if(courseLogo == null)
         {
-            /* Add empty course logo */
-            courseLogo = DwoHelper.getResourceImage(GuiConstants.EMPTY_COURSE_IMAGE);
+            if(isWithChildren())
+            	courseLogo = DwoHelper.getResourceImage(GuiConstants.EMPTY_COURSE_MAP);
+            else
+            	courseLogo = DwoHelper.getResourceImage(GuiConstants.EMPTY_COURSE_IMAGE);
         }
         return courseLogo;
     }

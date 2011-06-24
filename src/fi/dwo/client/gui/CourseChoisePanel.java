@@ -71,7 +71,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
         this.dwoProfile = dwoProfile;
         this.userObject = userObject;
         
-        Course[] courses = courseList;
+        Course[] courses = GuiCreator.instance().dwo.sequence(courseList);
 
         //Panel ph;
         //ph = new Panel(null);

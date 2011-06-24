@@ -15,7 +15,7 @@ public class DeleteSchoolTest extends TestCase {
 	DbAccess dba;
 	
 	public static void main(String[] args) {
-		junit.swingui.TestRunner.run(DeleteSchoolTest.class);
+		junit.textui.TestRunner.run(DeleteSchoolTest.class);
 	}
 
 	protected void setUp() throws Exception {

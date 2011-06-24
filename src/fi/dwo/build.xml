@@ -35,7 +35,25 @@
 
 	<import file="${drive}${common.build}" />
 
-	
+	<target name='include.extra.jar' >
+    	<jar destfile="${packagename.jar}" update="true" index="true">   	
+    	 <manifest>
+    		<attribute name="Main-Class" value="${main-class}"/>
+    	 	<attribute name="Class-Path" value="algebrapijlenoefenen.jar functiesraden.jar  haakjessommen_opp.jar 
+    	 		 haakjessommen_tab.jar  haakjessommen_ontb.jar  heks.jar  herleiden.jar euclides.jar
+    	 		 kwadverg.jar  linverg.jar  nabouwenaanzichten.jar   oppervlaktealgebra.jar 
+    	 		 popupurlapplet.jar  vermtabel.jar  waarmakers.jar  getallenlijn.jar  bordjes.jar 
+    	 		 wiskopdr.jar  algebrapijlenopdr.jar  aanzichtenraden.jar  vlakkenkleuren.jar 
+    	 		 profielendraaien.jar  bordjesopdr.jar  spot_problems_dwo.jar  oppervlakte_dwo.jar 
+    	 		 algebrapijlen.jar  geomalgebra.jar  geomalgebraopdr.jar  geomalgebra1d.jar 
+    	 		 tekenveelvlakopdr.jar  doorziendwo.jar  grkijken1.jar  grkijken2.jar vergroten.jar
+    	 		 mysql-connector-java-3.0.16-ga-bin.jar tinyplayerapplet.jar jl020.jar" />
+    	</manifest>
+    	<indexjars>
+    		<fileset dir="${jar}" includes="*.jar" />
+    	</indexjars>
+    	</jar>		
+	</target>
     <!-- ================================= 
           target: jar              
          ================================= -->
@@ -55,24 +73,7 @@
     		<arg line='-script "${toolfiles}\jshrink_all.txt"'/>
     		<sysproperty key="user.dir" file="${toolfiles}" />
     	</java>
-    	
-    	<jar destfile="${packagename.jar}" update="true" index="true">   	
-    	 <manifest>
-    		<attribute name="Main-Class" value="${main-class}"/>
-    	 	<attribute name="Class-Path" value="algebrapijlenoefenen.jar functiesraden.jar  haakjessommen_opp.jar 
-    	 		 haakjessommen_tab.jar  haakjessommen_ontb.jar  heks.jar  herleiden.jar euclides.jar
-    	 		 kwadverg.jar  linverg.jar  nabouwenaanzichten.jar   oppervlaktealgebra.jar 
-    	 		 popupurlapplet.jar  vermtabel.jar  waarmakers.jar  getallenlijn.jar  bordjes.jar 
-    	 		 wiskopdr.jar  algebrapijlenopdr.jar  aanzichtenraden.jar  vlakkenkleuren.jar 
-    	 		 profielendraaien.jar  bordjesopdr.jar  spot_problems_dwo.jar  oppervlakte_dwo.jar 
-    	 		 algebrapijlen.jar  geomalgebra.jar  geomalgebraopdr.jar  geomalgebra1d.jar 
-    	 		 tekenveelvlakopdr.jar  doorziendwo.jar  grkijken1.jar  grkijken2.jar vergroten.jar
-    	 		 mysql-connector-java-3.0.16-ga-bin.jar tinyplayerapplet.jar jl020.jar" />
-    	</manifest>
-    	<indexjars>
-    		<fileset dir="${jar}" includes="*.jar" />
-    	</indexjars>
-    	</jar>	
+		<antcall target='include.extra.jar' />
     </target>
 
 	

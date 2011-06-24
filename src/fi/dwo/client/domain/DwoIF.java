@@ -487,5 +487,6 @@ public interface DwoIF {
 	public Sco[] getEditableScos();
 
 	public Course[] sequence(Course[] courses, SchoolClass sc);
+	public Course[] sequence(Course[] courses);
 
 }

@@ -560,7 +560,7 @@ private static boolean isValidEmail(String email) {
         }
     }
     
-    private Course[] sequence(
+    public Course[] sequence(
 				Course[] courses) {
     	if(!SEQUENCE)
     		return courses;

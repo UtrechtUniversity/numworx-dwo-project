@@ -160,13 +160,6 @@ public class GuiCreatorAdmin extends GuiCreator {
     }
 
     /**
-     * @return fi.dwo.client.domain.DWO
-     */
-    public DWO getDWO() {
-        return null;
-    }
-
-    /**
      * @return fi.dwo.client.domain.AppletConfig[]
      */
     public AppletConfig[] getAppletConfig() {

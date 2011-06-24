@@ -919,8 +919,11 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 		}
 
 		public Course[] sequence(Course[] allCourses, SchoolClass sc) {
-			// TODO Auto-generated method stub
 			return allCourses;
 		}
-
+		
+		public Course[] sequence(Course[] c)
+		{
+			return c;
+		}
 }

@@ -775,7 +775,7 @@ public class GuiCreator {
     /**
      * @return fi.dwo.client.domain.DWO
      */
-    public DWO getDWO() {
+    public DwoIF getDWO() {
     	if(dwo instanceof DWO)
     		return (DWO)dwo;
         return null;

@@ -1,12 +1,9 @@
 // Generated code, do not edit
 package fi.dwo.client.persistence;
 
-import java.sql.SQLException;
 import java.util.Vector;
 import java.net.URL;
 import fi.beans.xmlrpc.Client;
-import fi.dwo.server.persistence.DwoXmlRpcException;
-
 import org.apache.xmlrpc.applet.XmlRpcException;
 import java.io.IOException;
 
@@ -54,7 +51,7 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
     {
         Vector vv = new Vector(2);
         vv.addElement( new Integer(a));
-        vv.addElement( new Boolean(b));
+        vv.addElement( Boolean.valueOf(b));
         Object object = invoke("getCourses", vv);
         return (java.util.Vector)object;
     }
@@ -316,7 +313,7 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
     {
         Vector vv = new Vector(2);
         vv.addElement( new Integer(a));
-        vv.addElement( new Boolean(b));
+        vv.addElement( Boolean.valueOf(b));
         Object object = invoke("deleteClass", vv);
         return ((Boolean)object).booleanValue();
     }
@@ -391,6 +388,19 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
         return ((Boolean)object).booleanValue();
     }
 
+    public int addCourse(int a, java.lang.String b, java.lang.String c, int d, int e, boolean f) throws IOException, XmlRpcException
+    {
+        Vector vv = new Vector(6);
+        vv.addElement( new Integer(a));
+        vv.addElement(b);
+        vv.addElement(c);
+        vv.addElement( new Integer(d));
+        vv.addElement( new Integer(e));
+        vv.addElement( Boolean.valueOf(f));
+        Object object = invoke("addCourse", vv);
+        return ((Number)object).intValue();
+    }
+
     public int addCourse(int a, java.lang.String b, java.lang.String c, int d) throws IOException, XmlRpcException
     {
         Vector vv = new Vector(4);
@@ -453,7 +463,7 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
         vv.addElement(c);
         vv.addElement( new Integer(d));
         vv.addElement( new Integer(e));
-        vv.addElement( new Boolean(f));
+        vv.addElement( Boolean.valueOf(f));
         Object object = invoke("addSco", vv);
         return ((Number)object).intValue();
     }
@@ -485,7 +495,7 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
         vv.addElement( new Integer(a));
         vv.addElement(b);
         vv.addElement(c);
-        vv.addElement( new Boolean(d));
+        vv.addElement( Boolean.valueOf(d));
         Object object = invoke("changeSco", vv);
         return ((Boolean)object).booleanValue();
     }
@@ -497,7 +507,7 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
         vv.addElement(b);
         vv.addElement(c);
         vv.addElement(d);
-        vv.addElement( new Boolean(e));
+        vv.addElement( Boolean.valueOf(e));
         Object object = invoke("changeSco", vv);
         return ((Boolean)object).booleanValue();
     }
@@ -569,7 +579,7 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
         vv.addElement( new Integer(a));
         vv.addElement(b);
         vv.addElement(c);
-        vv.addElement( new Boolean(d));
+        vv.addElement( Boolean.valueOf(d));
         Object object = invoke("changeCourse", vv);
         return ((Boolean)object).booleanValue();
     }
@@ -578,7 +588,7 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
     {
         Vector vv = new Vector(2);
         vv.addElement( new Integer(a));
-        vv.addElement( new Boolean(b));
+        vv.addElement( Boolean.valueOf(b));
         Object object = invoke("editSchool", vv);
         return ((Boolean)object).booleanValue();
     }
@@ -667,18 +677,21 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
         vv.addElement( new Integer(a));
         vv.addElement(b);
         vv.addElement(c);
-        vv.addElement( new Boolean(d));
+        vv.addElement( Boolean.valueOf(d));
         vv.addElement( new Integer(e));
         Object object = invoke("changeCourse", vv);
         return ((Boolean)object).booleanValue();
     }
 
-	public int addCourse(int schoolID, String name, String description,
-			int dwoProfile, int parentID, boolean withChildren)
-			throws DwoXmlRpcException, IOException, XmlRpcException,
-			SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    public void setCourseSequence(java.util.Vector a, int b, int c, int d, int e) throws IOException, XmlRpcException
+    {
+        Vector vv = new Vector(5);
+        vv.addElement(a);
+        vv.addElement( new Integer(b));
+        vv.addElement( new Integer(c));
+        vv.addElement( new Integer(d));
+        vv.addElement( new Integer(e));
+        Object object = invoke("setCourseSequence", vv);
+    }
 
 }
