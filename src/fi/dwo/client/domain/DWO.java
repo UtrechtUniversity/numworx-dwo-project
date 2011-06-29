@@ -105,6 +105,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 	private int scoViewNr;
 	
 	private Hashtable testViewKeys;
+	
+	private Hashtable schoolAccessKeys;
 
 	private String languageOveride;
 	
@@ -238,6 +240,28 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
         	if(testViewKeys.containsKey(""+classNumber)) testNumberString = (String)testViewKeys.get(""+classNumber);
         	else return false;
         	scoViewNr = Integer.parseInt(testNumberString);
+        }
+        
+        if(schoolAccessKeys!=null)
+        {	School s = currentUser.getSchool();
+        	if(s==null) 
+        	{	JOptionPane.showMessageDialog(this, "deze account is niet met een school verbonden");
+        		return false;
+        	}
+        	int schoolNumber = s.getSchoolID();
+        	String accessNumberString = "false";
+        	if(schoolAccessKeys.containsKey(""+schoolNumber)) 
+        	{	accessNumberString = (String)schoolAccessKeys.get(""+schoolNumber);
+        		if(accessNumberString.equals("true"))return true;
+        		else  
+	        	{	JOptionPane.showMessageDialog(this, "gebruikers van deze school hebben hier geen toegang");
+	        		return false;
+	        	}
+        	}
+        	else 
+        	{	JOptionPane.showMessageDialog(this, "gebruikers van deze school hebben hier geen toegang");
+	    		return false;
+	    	}
         }
         
         return currentUser != null;
@@ -1017,6 +1041,39 @@ private static boolean isValidEmail(String email) {
 	        {	testViewKeys = null;
 	        	e.printStackTrace();
 	        }
+	    }
+        
+        boolean limitedSchoolAccess = false;
+        String limitedSchoolAccessString = getParameter("limitedSchoolAccess");
+        if(limitedSchoolAccessString!=null && limitedSchoolAccessString.equals("true")) {
+        	limitedSchoolAccess = true;
+        }
+        
+        if(limitedSchoolAccess)
+        {
+        	String schoolAccessPropertiesString = getParameter("schoolAccessProperties");
+                        
+        	Properties schoolAccessProperties = null;
+        
+	        try
+	        {	URL url = new URL(getDocumentBase(), schoolAccessPropertiesString);
+	        	InputStream in = url.openStream();
+	        	schoolAccessProperties = new Properties();
+	        	schoolAccessProperties.load(in);
+	        	
+	        	schoolAccessKeys = new Hashtable();
+				int number = Integer.parseInt(schoolAccessProperties.getProperty("number"));
+				for (int i = 1; i<number+1; i++)
+				{
+					String schoolNumber = schoolAccessProperties.getProperty("school." + i);
+					String access = schoolAccessProperties.getProperty("access." + i);
+					schoolAccessKeys.put(schoolNumber, access);
+				}
+	        }
+	        catch(Exception e)
+	        {	schoolAccessKeys = null;
+	        	e.printStackTrace();
+	        }
 	       
 	        
 			
@@ -1107,10 +1164,6 @@ private static boolean isValidEmail(String email) {
         	}
         }
         
-        
-        
-        	
-        
 // Hier wordt A-Select in DWO actief
         currentUser = getInitialUser();
         if (currentUser != null) // Dit is de enige plaats waar op null
@@ -1121,7 +1174,7 @@ private static boolean isValidEmail(String email) {
         }
 // einde
         
-        panel = gc.getWelcomePanel(testView);
+        panel = gc.getWelcomePanel(testView || limitedSchoolAccess);
         panel.setVisible(false);
         panel.setSize(this.getSize());
         panel.setLocation(0, 0);
@@ -1133,7 +1186,7 @@ private static boolean isValidEmail(String email) {
     
     public void setWelcomePanel()
     {
-    	setPanel(GuiCreator.instance().getWelcomePanel(testViewKeys!=null));
+    	setPanel(GuiCreator.instance().getWelcomePanel(testViewKeys!=null || schoolAccessKeys!=null));
     }
     
     public int getCourseViewNr() {
