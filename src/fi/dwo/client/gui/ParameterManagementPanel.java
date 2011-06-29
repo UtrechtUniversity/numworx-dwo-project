@@ -83,7 +83,7 @@ import fi.dwo.parameters.gui.ParameterComponent;
  *
  */
 public class ParameterManagementPanel extends JPanel implements CenterSubPanel, ActionListener, WindowListener {
-    private static final boolean POPUP = true; // FIXME in productie true
+    private static final boolean POPUP = false; // FIXME in productie true
 
 	private CenterPanel center;
 
@@ -1003,7 +1003,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 		
 		try {	
 			URL htmlSource = new URL("http://webcluster.fi.uu.nl/dwo/scorm/applet/applet.htm");
-			if(sco.getCourse().getDwoProfile()==13)htmlSource = new URL("http://webcluster.fi.uu.nl/dwo/scorm/applet/appletGR.htm");
+			if(sco.getCourse().getDwoProfile()==13 || sco.getCourse().getDwoProfile()==57)htmlSource = new URL("http://webcluster.fi.uu.nl/dwo/scorm/applet/appletGR.htm");
 			if(sco.getCourse().getDwoProfile()==27 || sco.getCourse().getDwoProfile()==51)htmlSource = new URL("http://webcluster.fi.uu.nl/dwo/scorm/applet/appletMW.htm");
 			if(sco.getCourse().getDwoProfile()==46)htmlSource = new URL("http://webcluster.fi.uu.nl/dwo/scorm/applet/appletNWK.htm");
 	        URLConnection connection = htmlSource.openConnection();
