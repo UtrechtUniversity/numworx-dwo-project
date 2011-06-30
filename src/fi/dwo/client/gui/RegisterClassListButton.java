@@ -76,7 +76,7 @@ public class RegisterClassListButton extends JButton implements ActionListener
 	    
 	    
 		bottomPanel = new JPanel();
-        bottomPanel.add(importClipboardButton);
+		if(DwoHelper.isApplication())bottomPanel.add(importClipboardButton);
         bottomPanel.add(makeAccountsButton);
         bottomPanel.add(addRowButton);
 		

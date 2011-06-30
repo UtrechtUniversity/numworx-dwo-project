@@ -66,6 +66,8 @@ Class-Path: algebrapijlenoefenen.jar
  kikker.jar 
  toverboek.jar 
  geldapplet.jar 
+ kunstvloer.jar 
+ omtrekapplet.jar 
  tinyplayerapplet.jar 
  jl020.jar 
  geogebra_properties.jar 

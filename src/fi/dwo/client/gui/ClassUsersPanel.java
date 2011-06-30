@@ -200,7 +200,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 			vbox.add(Box.createVerticalStrut(20));
 			
 			RegisterClassListButton registerClassListButton = new RegisterClassListButton(schoolClass);
-	        if(DwoHelper.isApplication())vbox.add(registerClassListButton);
+	        vbox.add(registerClassListButton);
 	        add(vbox);
             
         } else {

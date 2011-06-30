@@ -110,6 +110,11 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 
 	private String languageOveride;
 	
+	private String limitedSchoolAccessString;
+	
+	private String schoolAccessPropertiesString;
+		
+	
 	
     /**
      * Creates a new DWO object.
@@ -168,9 +173,16 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
             	dwoProfileID = Integer.parseInt(args[o]);
            	}catch(NumberFormatException e){}
            	if (args.length>2+o && args[1+o] != null && args[2+o]!= null) {
+           		limitedSchoolAccessString = args[1+o];
+           		schoolAccessPropertiesString = args[2+o];
+           		o += 2;
+           	}
+           	if (args.length>2+o && args[1+o] != null && args[2+o]!= null) {
            		userName = args[1+o];
            		passWord = args[2+o];
+           		o += 2;
            	}
+           	
         }
         
     }
@@ -964,6 +976,10 @@ private static boolean isValidEmail(String email) {
      * Initialises the applet.
      */
     public void init() {
+    	DwoHelper.setAu(new AppletUtil(this));
+        DwoHelper.setApplet(this);
+        
+    	
     	// override van swing properties... 
     	// TODO dit ook testen in een applet omgeving!
     	UIDefaults defaults;
@@ -1010,6 +1026,7 @@ private static boolean isValidEmail(String email) {
         if(umpcString!=null && umpcString.equals("true")) {
         	umpc = true;
         }
+        DwoHelper.setUmpc(umpc);
         
         boolean testView = false;
         String testViewString = getParameter("testView");
@@ -1044,14 +1061,14 @@ private static boolean isValidEmail(String email) {
 	    }
         
         boolean limitedSchoolAccess = false;
-        String limitedSchoolAccessString = getParameter("limitedSchoolAccess");
+        if(!DwoHelper.isApplication())limitedSchoolAccessString = getParameter("limitedSchoolAccess");
         if(limitedSchoolAccessString!=null && limitedSchoolAccessString.equals("true")) {
         	limitedSchoolAccess = true;
         }
         
         if(limitedSchoolAccess)
         {
-        	String schoolAccessPropertiesString = getParameter("schoolAccessProperties");
+        	if(!DwoHelper.isApplication())schoolAccessPropertiesString = getParameter("schoolAccessProperties");
                         
         	Properties schoolAccessProperties = null;
         
@@ -1085,9 +1102,7 @@ private static boolean isValidEmail(String email) {
 //            key = "";
 //        }
 //        DwoHelper.setKey(key);
-        DwoHelper.setAu(new AppletUtil(this));
-        DwoHelper.setApplet(this);
-        DwoHelper.setUmpc(umpc);
+        
         
         if(!DwoHelper.isApplication()) {
         	dwoProfileID = 1; 
