@@ -5,6 +5,7 @@ package fi.dwo.client.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -325,13 +326,15 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         //addCourseButton.setLocation(30, 10);
         header.add(addCourseButton);
         
-        if(GuiConstants.GUI_ICONIZED)
+        if(CenterPanel.isIconizer())
         {
         	addMapButton = new JButton("Nieuwe Map");
         	addMapButton.addActionListener(this);
+        	header.add(Box.createHorizontalStrut(4));
         	header.add(addMapButton);
         }
-        header.add(Box.createHorizontalGlue());
+
+        header.add(new Box.Filler(new Dimension(4,0), new Dimension(4,0), new Dimension(Short.MAX_VALUE,0)));
         
         
         shareCourseButton = new JButton("Modules delen");

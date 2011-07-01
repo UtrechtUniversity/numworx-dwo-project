@@ -479,11 +479,41 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 				} else
 				if(v2 != null && v1.getClass().isArray() && v2.getClass().isArray())
 				{
+					Class c1 = v1.getClass();
+					Class c2 = v2.getClass();
 // int[], etc. ????? via Class.getComponentClass() TODO if (! v1.getClass().getComponentClass().isPrimitive() ) ...
-					Object[] vva1 = (Object[]) v1; Object[] vva2 = (Object[]) v2;
-					equals = Arrays.equals(vva1, vva2);
-					if(!equals)
+					if( !c1.getComponentType().isPrimitive() && !c2.getComponentType().isPrimitive())
+					{
+						Object[] vva1 = (Object[]) v1; Object[] vva2 = (Object[]) v2;					
+						equals = Arrays.equals(vva1, vva2);
+						if(equals || vva1.length != vva2.length)
+							return equals;
+						// unequal, why
+						for (int i = 0; i < vva2.length; i++) {
+							Object o1 = vva1[i]; Object o2 = vva2[i];
+							if( o1 instanceof Map && o2 instanceof Map ) 
+							{	if( ! compareMap((Map)o1, (Map)o2))
+									return false;
+							} else 
+								if( ! (o1 != null) && ! o1.equals(o2))
+									return false;
+								if( o1 == null && o2 != null)
+									return false;
+						}
+						return true;
+					} else {
+// er zijn 7 types: byte, char, short, int, long, float, double
+						if(v1 instanceof byte[] && v2 instanceof byte[] )
+						{
+							return Arrays.equals( (byte[])v1, (byte[])v2);
+						}
+						if(v1 instanceof int[] && v2 instanceof int[] )
+						{
+							return Arrays.equals( (byte[])v1, (byte[])v2);
+						}
+						// to difficult...
 						return false;
+					}
 				} else
 					return false;
 			}

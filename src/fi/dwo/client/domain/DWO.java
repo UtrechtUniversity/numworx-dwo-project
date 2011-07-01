@@ -14,6 +14,7 @@ import java.awt.Cursor;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Panel;
 import java.awt.Toolkit;
@@ -27,12 +28,17 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.JApplet;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
 import javax.swing.plaf.ColorUIResource;
 
 import fi.beans.appletutil.AppletUtil;
@@ -48,6 +54,7 @@ import fi.dwo.VERSION;
 import fi.dwo.client.gui.CenterSubPanel;
 import fi.dwo.client.gui.CourseIcon;
 //import fi.dwo.client.gui.DwoMessageDialog;
+import fi.dwo.client.gui.DWOBorder;
 import fi.dwo.client.gui.GuiConstants;
 import fi.dwo.client.gui.GuiCreator;
 import fi.dwo.client.gui.ModuleTreePanel;
@@ -1401,15 +1408,39 @@ private static boolean isValidEmail(String email) {
         setWait(TextMapper.getText(TextMapper.GUI_WAIT_A_MOMENT));
     }
 
-    private JLabel waitLabel = new JLabel();
+    private JLabel waitLabel = new JLabel("Even geduld");
 
     private void initWaitLabel() 
     {
     	waitLabel.setFont(GuiConstants.HEADER_TEXT);
+    	
+    	waitLabel.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     	waitLabel.setHorizontalAlignment(JLabel.CENTER);
     	waitLabel.setVerticalAlignment(JLabel.CENTER);
         waitLabel.setBackground(GuiConstants.MAIN_BACKGROUND);
     	waitLabel.setOpaque(true);
+    	waitLabel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+//    	{
+//    		Image img;
+//    		img = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_BGIMAGE_MENU);
+//    		Border border = new DWOBorder(img, GuiConstants.GUI_INSETS_MENU, GuiConstants.GUI_9PATCH_MENU);
+//    		waitLabel.setBorder(border);   		
+//    	}
+    	
+    	waitLabel.setVisible(true);
+// Center....  	
+    	Box panel = Box.createHorizontalBox();
+    	panel.setOpaque(false);
+    	panel.add(Box.createGlue());
+    	panel.add(waitLabel);
+    	panel.add(Box.createGlue());
+    	Box xbox = Box.createVerticalBox();
+    	xbox.add(Box.createGlue());
+    	xbox.add(panel);
+    	xbox.add(Box.createGlue());
+    	setGlassPane(xbox);
+    	xbox.setVisible(true);
+    	waitLabel.setVisible(false);
     	
     }
     /**
@@ -1422,11 +1453,8 @@ private static boolean isValidEmail(String email) {
         if(nestedWait == 0) {
 	        setCursor(new Cursor(Cursor.WAIT_CURSOR));
 	        this.waitText = waitText;
-	        if (panel != null) {
-	            panel.setVisible(false);
-	        }
 	        waitLabel.setText(waitText);
-	        setContentPane(waitLabel);
+	        waitLabel.setVisible(true);
 	        validate();
 	        if(this.getGraphics()!=null) paint(this.getGraphics());
         }
@@ -1441,9 +1469,8 @@ private static boolean isValidEmail(String email) {
      */
     public void setReady() {
         if(nestedWait == 1) {
+            waitLabel.setVisible(false);
 	        if (panel != null) {
-	        	panel.setVisible(true);
-	            setContentPane(panel);
 	            panel.requestFocus();
 	        }
 	        setCursor(new Cursor(Cursor.DEFAULT_CURSOR));

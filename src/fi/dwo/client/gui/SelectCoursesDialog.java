@@ -463,6 +463,30 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         			super.createModel(null);
         			DefaultMutableTreeNode root, schoolnode, dwonode;
         			JTree tree2 = this.tree;
+//tree2.setDragEnabled(true);
+//DropTargetListener listener = new DropTargetListener() {
+//
+//	public void dragEnter(DropTargetDragEvent dtde) {
+//		//System.out.println("enter "+ dtde);		
+//	}
+//
+//	public void dragExit(DropTargetEvent dte) {
+//		System.out.println("exit "+ dte);
+//	}
+//
+//	public void dragOver(DropTargetDragEvent dtde) {
+//		//System.out.println("over " + dtde);
+//	}
+//
+//	public void drop(DropTargetDropEvent dtde) {
+//		System.out.println("drop " + dtde);
+//	}
+//
+//	public void dropActionChanged(DropTargetDragEvent dtde) {
+//		System.out.println(dtde);
+//	}};
+//DropTarget dt = new DropTarget(tree2, DnDConstants.ACTION_MOVE, listener);
+//tree2.setDropTarget(dt);
 					root = (DefaultMutableTreeNode) tree2.getModel().getRoot();
         			dwonode = root.getFirstLeaf();
         			schoolnode = dwonode;
@@ -499,7 +523,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			
         		protected void createCloseBtn(Box bar) {}
         		protected void createMenubar(Box bar) {}
-        		public void nodeSelected(DefaultMutableTreeNode node) {
+        		public void nodeSelected(CourseMap node) {
         		}
         	};
 			tree.createModel(null);
