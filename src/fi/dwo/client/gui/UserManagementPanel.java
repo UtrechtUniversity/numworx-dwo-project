@@ -43,7 +43,7 @@ import fi.dwo.client.system.RegisterException;
 import fi.dwo.client.system.SchoolException;
 import fi.dwo.client.system.TextMapper;
 
-public class UserManagementPanel extends JPanel implements CenterSubPanel {
+public class UserManagementPanel extends JPanel implements CenterSubPanel, ActionListener {
 
 	static class TeacherDelegate extends Teacher {
 		User u;
@@ -264,7 +264,9 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 	private DwoIF dwo;
 	private ContactDocent docent;
 	private User[] userList;
-
+	private RegisterClassListButton addDocentBtn;
+	private SchoolGroup[] groups;
+	private UserModel dm;
 	
 	public UserManagementPanel(DwoIF dwo) {
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
@@ -276,7 +278,29 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 		this.dwo = dwo;
 		docent = (ContactDocent) dwo.getUser();
 		School school = docent.getSchool();
-		SchoolGroup[] groups = school.getSchoolGroupList();
+		groups = school.getSchoolGroupList();
+		getUserList();
+		
+		dm = new UserModel();
+		dm.userList = userList; userList = null;
+		dm.editImage = editImage;
+		dm.removeImage = removeImage;
+		dm.teacherImage = teacherImage;
+		dm.userImage = userImage;
+		JTable table = new JTable(dm);
+    	TableUtil.setDefaults(table, true, new ImageRenderer(), new ImageButtonEditor());
+
+    	TableUtil.setJTableSizes(table);
+    	Box b = Box.createVerticalBox();
+    	b.add(table.getTableHeader());
+    	b.add(table);
+		addDocentBtn = new RegisterClassListButton();
+		b.add(addDocentBtn);
+		addDocentBtn.addActionListener(this);
+		add(b);
+		
+	}
+	private void getUserList() {
 		userList = new User[0];
 		for (int i = 0; i < groups.length; i++) {
 			SchoolGroup schoolGroup = groups[i];
@@ -297,23 +321,6 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 			}
 		}
 		Arrays.sort(userList);
-		
-		UserModel dm = new UserModel();
-		dm.userList = userList; userList = null;
-		dm.editImage = editImage;
-		dm.removeImage = removeImage;
-		dm.teacherImage = teacherImage;
-		dm.userImage = userImage;
-		JTable table = new JTable(dm);
-    	TableUtil.setDefaults(table, true, new ImageRenderer(), new ImageButtonEditor());
-
-    	TableUtil.setJTableSizes(table);
-    	Box b = Box.createVerticalBox();
-    	b.add(table.getTableHeader());
-    	b.add(table);
-		
-		add(b);
-		
 	}
     /**
      * Delete user! 
@@ -362,6 +369,12 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 	public Object getUserObject() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	public void actionPerformed(ActionEvent e) {
+		System.out.println(e);
+		getUserList();
+		dm.userList = userList; userList = null;
+		dm.fireTableDataChanged();
 	}
 	
 

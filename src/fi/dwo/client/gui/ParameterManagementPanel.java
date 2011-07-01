@@ -8,6 +8,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.FlowLayout;
@@ -98,7 +99,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
     private JButton previewButton;
     private JButton saveButton;
     private JButton resetButton;
-    private JButton cancelButton;
+    private JButton closeButton;
     private JButton importScormButton;
     private JButton exportScormButton;
     private JButton exportAppletButton;
@@ -217,9 +218,9 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         resetButton.addActionListener(this);
         buttonPanel.add(resetButton);
 
-        cancelButton = new JButton(TextMapper.getText(TextMapper.GUIPA_BTN_CANCEL));
-        cancelButton.addActionListener(this);
-        buttonPanel.add(cancelButton);
+        closeButton = new JButton(TextMapper.getText(TextMapper.GUIPA_BTN_CANCEL));
+        closeButton.addActionListener(this);
+        buttonPanel.add(closeButton);
 // school 190 264 385 heeft scorm export recht     
         if(DwoHelper.isApplication())
         {	if( DwoHelper.isScormExportLoggedIn() ) 
@@ -344,8 +345,10 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == cancelButton) {
-        	saveSco();
+        if(e.getSource() == closeButton) {
+        	int x = saveSco();
+        	if(x == JOptionPane.CLOSED_OPTION || x == JOptionPane.CANCEL_OPTION)
+        		return;
         	done = true;
         	if(editMode)
         		editComponent.end();
@@ -389,11 +392,11 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             
             
         } else if (e.getSource() == saveButton) {
-        	done = saveSco();
+        	int x = saveSco();
         	done = false;
-        	if(editMode&&POPUP) {
-                editModeDialog.setVisible(false);
-            }
+//        	if(editMode&&POPUP) {
+//                editModeDialog.setVisible(false);
+//            }
            
         } else if(e.getSource() == exportScormButton) {
 // even uit in productie, aan bij testen
@@ -406,7 +409,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         }
     }
     	
-    boolean saveSco() {
+    private int saveSco() {
     	String message;
         Hashtable tmp;
         if(editMode) {
@@ -425,19 +428,20 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
     	
     	
         message = TextMapper.getText(TextMapper.GUIPA_MSG_PARAM_SAVE);
+        int result;
 // Deze tekst is m.i. niet helemaal lekker geformuleerd. Wim
         if (
         		//!(compareMap(tmp, old)) &&
-        		JOptionPane.showConfirmDialog(this, message, TextMapper.getText(TextMapper.GUIPA_MSG_TTL_PARAM_SAVE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        		(result = JOptionPane.showConfirmDialog(this, message, TextMapper.getText(TextMapper.GUIPA_MSG_TTL_PARAM_SAVE), JOptionPane.YES_NO_OPTION)) == JOptionPane.YES_OPTION) {
         	final GuiCreator instance = GuiCreator.instance();
-			instance.setWait();
+			instance.setWait();setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         	sco.setLaunchdata(tmp);
             instance.updateSco(sco);
             MapperCreator.instance(Applet.class).removeObject(sco.getAppletID());
-            instance.setReady();
-            return true;
+            instance.setReady();setCursor(Cursor.getDefaultCursor());
+            return JOptionPane.YES_OPTION;
         }
-        return false;
+        return result; // NO, CANCEL, CLOSED
     }
 
     // map equals map, 
@@ -1221,9 +1225,10 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 	}
 
 	public void windowClosing(WindowEvent e) {
-		ActionEvent event = new ActionEvent(cancelButton, ActionEvent.ACTION_PERFORMED, cancelButton.getActionCommand() );
+		ActionEvent event = new ActionEvent(closeButton, ActionEvent.ACTION_PERFORMED, closeButton.getActionCommand() );
 		actionPerformed(event);
-		e.getWindow().dispose();
+		if(!e.getWindow().isShowing())
+			e.getWindow().dispose();
 	}
 
 	public void windowDeactivated(WindowEvent e) {

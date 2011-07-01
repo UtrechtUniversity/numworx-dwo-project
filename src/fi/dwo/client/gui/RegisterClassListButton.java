@@ -17,7 +17,9 @@ import fi.beans.stringutils.*;
 
 public class RegisterClassListButton extends JButton implements ActionListener
 {
-	JFrame frame;
+	JDialog frame;
+	JPanel  content;
+	boolean modal;
 	
 	DefaultTableModel addTableModel;
 	JTable addTable;
@@ -40,16 +42,35 @@ public class RegisterClassListButton extends JButton implements ActionListener
     		TextMapper.getText(TextMapper.GUIR_EMAIL)};
     
 	Object[][] rowData = {{ "","","","","",""}};
+
+	private int sg;
 	
-	
-	
+	/**
+	 * Register nieuwe leerlingen. Zet ze meteen in een klas
+	 * @param schoolClass
+	 */
 	public RegisterClassListButton(SchoolClass schoolClass)
 	{
 		super("Voeg nieuwe accounts toe");
-		addActionListener(this);
-		
 		this.schoolClass = schoolClass;
-		
+		this.sg = SchoolGroup.STUDENT;
+		initialize();
+    }
+	
+	/**
+	 * Register nieuwe docenten.
+	 */
+	public RegisterClassListButton()
+	{
+		super("Voeg nieuwe docenten toe");
+		this.sg = SchoolGroup.TEACHER;
+		this.schoolClass = null;
+		this.modal = true;
+		initialize();
+	}
+
+	private void initialize() {
+		addActionListener(this);
 		try
 		{	systemClipboard = getToolkit().getSystemClipboard ();
 		}
@@ -70,6 +91,7 @@ public class RegisterClassListButton extends JButton implements ActionListener
 	    addTableModel.setDataVector(rowData, columnNames);
 	     
 	    addTable = new JTable(addTableModel);
+	    addTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 	    addTable.setPreferredScrollableViewportSize(new Dimension(800, 400));
 	    //addTable.setFillsViewportHeight(true);
 	    JScrollPane scrollPane = new JScrollPane(addTable);
@@ -80,15 +102,13 @@ public class RegisterClassListButton extends JButton implements ActionListener
         bottomPanel.add(makeAccountsButton);
         bottomPanel.add(addRowButton);
 		
-        frame = new JFrame();
+        content = new JPanel(new BorderLayout());
         //frame.setPreferredSize(new Dimension(800,400));
 		
-        frame.getContentPane().setLayout(new BorderLayout());
-        //frame.getContentPane().add(addTable.getTableHeader(), BorderLayout.NORTH);
-        frame.getContentPane().add(scrollPane);
-        frame.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
-
-    }
+        //content.add(addTable.getTableHeader(), BorderLayout.NORTH);
+        content.add(scrollPane, BorderLayout.CENTER);
+        content.add(bottomPanel, BorderLayout.SOUTH);
+	}
 	
 	public boolean pasteFromSystemClipboard()
     {	if(systemClipboard==null)return false;
@@ -122,13 +142,29 @@ public class RegisterClassListButton extends JButton implements ActionListener
 		 else return false;
     }
 	
+	private static final String CLOSING = "closing";
+	class OnClose extends WindowAdapter {
+
+		public void windowClosing(WindowEvent e) {
+			ActionEvent ae = new ActionEvent(frame, ActionEvent.ACTION_PERFORMED, CLOSING);
+			fireActionPerformed(ae);
+		}
+	}
+	
+	
 	public void actionPerformed(ActionEvent e)
 	{
+		if(CLOSING.equals(e.getActionCommand()))
+			return;
+		
 		if(e.getSource().equals(this))
-		{	addTable = new JTable(addTableModel);
+		{
+			frame = new JDialog(JOptionPane.getFrameForComponent(this), getText(), modal);
+			frame.addWindowListener(new OnClose());
+			frame.setDefaultCloseOperation(frame.DISPOSE_ON_CLOSE);
+			frame.setContentPane(content);
 			frame.pack();
         	frame.setVisible(true);
-        	
 		}
 		if(e.getSource().equals(addRowButton))
 		{	Object[] row = {"","","","","",""};
@@ -152,25 +188,26 @@ public class RegisterClassListButton extends JButton implements ActionListener
         		String password = (String)addTableModel.getValueAt(i, 4);
         		String email = (String)addTableModel.getValueAt(i, 5);
         		String schoollogin = GuiCreator.instance().getUser().getSchool().getSchoolLogin();
-        		String schoolpassword = GuiCreator.instance().getUser().getSchool().getPasswd(1);
+        		String schoolpassword = GuiCreator.instance().getUser().getSchool().getPasswd(sg);
         		
         		Group g = new Group();
-        		g.setGroupID(1);
+        		g.setGroupID(sg);
 	    	
         		boolean gemaakt;
 	        	try {
 	                GuiCreator.instance().dwo.register(username, password, password, firstname, middlename, lastname, email, schoollogin, g, schoolpassword);
 	                gemaakt = true;
 	        	} catch (RegisterException exc) {
-	                JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+	                JOptionPane.showMessageDialog(frame, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
 	                gemaakt = false;
 	        	}
-	        	if(gemaakt) {
+	        	// zet in de class
+	        	if(gemaakt && schoolClass != null) {
 		            try {
 		            	User newUser = PersistenceFacade.instance().login(username, password);
 		            	PersistenceFacade.instance().changeAccount(newUser, password, password, firstname, middlename, lastname, email, schoolClass);
 		            }	catch (Exception exc) {
-			                JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+			                JOptionPane.showMessageDialog(frame, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
 		            }
 	        	}
 	            
