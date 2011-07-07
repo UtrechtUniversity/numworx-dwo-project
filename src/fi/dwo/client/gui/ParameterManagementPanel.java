@@ -84,7 +84,7 @@ import fi.dwo.parameters.gui.ParameterComponent;
  *
  */
 public class ParameterManagementPanel extends JPanel implements CenterSubPanel, ActionListener, WindowListener {
-    private static final boolean POPUP = false; // FIXME in productie true
+    private static final boolean POPUP = true; // FIXME in productie true
 
 	private CenterPanel center;
 
@@ -435,16 +435,23 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         		(result = JOptionPane.showConfirmDialog(this, message, TextMapper.getText(TextMapper.GUIPA_MSG_TTL_PARAM_SAVE), JOptionPane.YES_NO_OPTION)) == JOptionPane.YES_OPTION) {
         	final GuiCreator instance = GuiCreator.instance();
 			instance.setWait();setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        	sco.setLaunchdata(tmp);
+			sco.setLaunchdata(tmp);
             instance.updateSco(sco);
             MapperCreator.instance(Applet.class).removeObject(sco.getAppletID());
             instance.setReady();setCursor(Cursor.getDefaultCursor());
             return JOptionPane.YES_OPTION;
         }
+        forcepaint();
         return result; // NO, CANCEL, CLOSED
     }
 
-    // map equals map, 
+    private void forcepaint() {
+    	Component c = this;
+		Graphics g = c.getGraphics();
+		if(g != null) c.paint(g);
+	}
+
+	// map equals map, 
     // serialized object not not equal others.
     
 	private boolean compareMap(Map tmp, Map old) {
