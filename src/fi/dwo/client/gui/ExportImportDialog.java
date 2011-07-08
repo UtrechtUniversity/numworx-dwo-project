@@ -9,6 +9,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Frame;
@@ -435,6 +436,21 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		HashMap  dirty = new HashMap();
 		Course[] courses;
 		
+		private void copyInto(Course[] courses, Vector v)
+		{
+	        for(int i=0 ; i<courses.length; i++){
+	        	Course course = courses[i];
+				if(course.getDwoProfile() == profileID && course.getSchoolID()== user.getSchool().getSchoolID()) 
+				{
+		        	if(course.isWithChildren())
+		        		copyInto(course.getChildren(), v);
+		        	else
+		        		v.addElement(course);
+				}
+			}
+		}
+		
+		
 		public ExportModuleModel(User user) throws PersistenceException {
 
 			courses = PersistenceFacade.instance().getCourses(user);
@@ -442,11 +458,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 				courses = new Course[0];
 // filter only courses within profile.
 			Vector v = new Vector();
-	        for(int i=0 ; i<courses.length; i++){
-	        	Course course = courses[i];
-				if(course.getDwoProfile() == profileID && course.getSchoolID()== user.getSchool().getSchoolID()) 
-	        			v.addElement(course);
-			}
+			copyInto(courses, v);
 			courses = new Course[v.size()];
 			v.toArray(courses);
 
@@ -641,25 +653,38 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		ieEnabler();
 		
 		getContentPane().add(pane);
-		exportModuleModel = new ExportModuleModel(user);
+
+		JComponent exportModules; 
+		if(CenterPanel.isIconizer() && false)
+		{
+// Dit werkt niet!	Geen idee waarom niet		
+			ModuleTreePanel mtp = new ModuleTreePanel();
+			mtp.createModel(GuiCreator.instance().dwo);
+			exportModules = mtp;
+			mtp.setPreferredSize(new Dimension(200,100));
+			mtp.setMinimumSize(mtp.getPreferredSize());
+		} else {
+			exportModuleModel = new ExportModuleModel(user);
+			JTable exportModuleTable = new JTable(exportModuleModel);
+			TableUtil.setJTableSizes(exportModuleTable);
+			TableColumn kolom = 
+				exportModuleTable.getColumnModel().getColumn(0);
+				int prefWidth = kolom.getPreferredWidth();
+				kolom.setMaxWidth(prefWidth);
+				kolom.setMinWidth(prefWidth);
+				kolom.setPreferredWidth(prefWidth);
+				exportModules = new JScrollPane(exportModuleTable);
+			
+		}
 		School[] schools = (School[]) PersistenceFacade.instance().get(School.class, Boolean.TRUE);
 		final ExportSchoolModel exportSchoolModel = new ExportSchoolModel(schools);
-		JTable exportModuleTable = new JTable(exportModuleModel);
 		JTable exportSchoolTable = new JTable(exportSchoolModel);
 		TableUtil.setJTableSizes(exportSchoolTable);
-		TableUtil.setJTableSizes(exportModuleTable);
 		TableColumn kolom = 
 		exportSchoolTable.getColumnModel().getColumn(0);
 		int prefWidth = kolom.getPreferredWidth();
 		kolom.setMaxWidth(prefWidth);
 		kolom.setMinWidth(prefWidth);
-		kolom = 
-		exportModuleTable.getColumnModel().getColumn(0);
-		kolom.setMaxWidth(prefWidth);
-		kolom.setMinWidth(prefWidth);
-		kolom.setPreferredWidth(prefWidth);
-		
-		JScrollPane exportModules = new JScrollPane(exportModuleTable);
 		JScrollPane exportSchools = new JScrollPane(exportSchoolTable);
 		Box exportSplit  = Box.createHorizontalBox();
 		exportSplit.add(exportModules);
