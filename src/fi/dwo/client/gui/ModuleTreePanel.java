@@ -17,6 +17,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.event.MenuEvent;
@@ -41,6 +42,7 @@ import fi.dwo.client.domain.User;
 
 interface SelectStrategy {
 	void nodeSelected(CourseMap node);
+	JPopupMenu nodeAction(CourseMap node);
 }
 
 public class ModuleTreePanel extends JPanel implements TreeSelectionListener, SelectStrategy {
@@ -426,9 +428,16 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 		return strategy;
 	}
 
+	ModuleTreePopup mtp = new ModuleTreePopup(this);
+	
 	void setStrategy(SelectStrategy strategy) {
+		tree.removeMouseListener(mtp);
 		if(strategy == null)
-			strategy = this;
+		{	strategy = this;
+		} else
+		{	mtp.setPopup(strategy);
+			tree.addMouseListener(mtp);
+		}
 		this.strategy = strategy;
 	}
 
@@ -462,6 +471,11 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 			else
 				insertScos(course, child);
     	}
+	}
+
+
+	public JPopupMenu nodeAction(CourseMap node) {
+		return null;
 	}
 }
 

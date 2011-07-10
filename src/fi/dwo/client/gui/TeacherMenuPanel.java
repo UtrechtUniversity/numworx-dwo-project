@@ -10,7 +10,9 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -229,6 +231,24 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
             if(c.getSchoolID()!= 0 || instance.getUser().hasRight(User.PROFILE_ADMIN_RIGHT)) // allowed?
             	instance.loadParameterManagementPanel(s);
 		}
+	}
+
+	public JPopupMenu getPopup() {
+		JPopupMenu m = new JPopupMenu();
+		JMenuItem item;
+		item = new JMenuItem("cut");
+		item.addActionListener(this);
+		m.add(item);
+		return m;
+	}
+
+	public JPopupMenu nodeAction(CourseMap node) {
+//		Object u = node.getUserObject();
+//		if(u instanceof Course || u instanceof Sco)
+//			return getPopup();
+//		else
+			return null;
+		
 	}
 
 }
