@@ -1439,9 +1439,7 @@ private static boolean isValidEmail(String email) {
     	xbox.add(panel);
     	xbox.add(Box.createGlue());
     	setGlassPane(xbox);
-    	xbox.setVisible(true);
-    	waitLabel.setVisible(false);
-    	
+    	xbox.setVisible(false);    	
     }
     /**
      * Shows a wait cursor and the specified wait message to indicate that the
@@ -1451,10 +1449,10 @@ private static boolean isValidEmail(String email) {
      */
     public void setWait(String waitText) {
         if(nestedWait == 0) {
-	        setCursor(new Cursor(Cursor.WAIT_CURSOR));
+	        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 	        this.waitText = waitText;
 	        waitLabel.setText(waitText);
-	        waitLabel.setVisible(true);
+	        getGlassPane().setVisible(true);
 	        validate();
 	        if(this.getGraphics()!=null) paint(this.getGraphics());
         }
@@ -1469,11 +1467,11 @@ private static boolean isValidEmail(String email) {
      */
     public void setReady() {
         if(nestedWait == 1) {
-            waitLabel.setVisible(false);
+        	getGlassPane().setVisible(false);
 	        if (panel != null) {
 	            panel.requestFocus();
 	        }
-	        setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+	        setCursor(Cursor.getDefaultCursor());
         }
         nestedWait--;
     }
