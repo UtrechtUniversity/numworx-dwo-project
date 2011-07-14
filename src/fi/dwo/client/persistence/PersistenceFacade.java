@@ -1237,8 +1237,9 @@ public class PersistenceFacade {
         DbAccessIF dbAccess = DbAccessCreator.instance();
         try {
             try {
-                int parentID = parent==null?0:parent.getID();
-				int result = dbAccess.addCourse(school.getSchoolID(), name,
+                int parentID = parent==null ? 0 : parent.getID();
+				int schoolID = parent==null ? school.getSchoolID() : parent.getSchoolID();
+				int result = dbAccess.addCourse(schoolID, name,
                         description, dwoProfile.getID(), parentID, withChildren);
                 Course c = new Course();
                 c.setCourseID(result);
@@ -1246,7 +1247,7 @@ public class PersistenceFacade {
                 c.setName(name);
                 c.setImageUrl(school.getImage());
                 c.setDwoProfile(dwoProfile.getID());
-                c.setSchoolID(school.getSchoolID()); // DEZE IS VERGETEN, WIM 9/5/2011
+                c.setSchoolID(schoolID); // DEZE IS VERGETEN, WIM 9/5/2011
                 c.setParentID(parentID);
                 if(withChildren) c.setChildren(Course.NO_CHILDREN);
                 return c;
@@ -1289,7 +1290,7 @@ public class PersistenceFacade {
                 return dbAccess.changeCourse(course.getID(), course.getName(),
                         course.getDescription()
                         , course.isExport()                // FIXME fallback naar 2parameter methode.
-                       // , course.getSchoolID()				// TODO fallback!
+                        , course.getSchoolID()			   // TODO fallback!
                 );
             } catch (IOException e) {
                 throw new CourseException(CourseException.EX_IO);

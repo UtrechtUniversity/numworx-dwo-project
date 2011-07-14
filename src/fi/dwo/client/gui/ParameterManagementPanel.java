@@ -428,10 +428,10 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
     	
     	
         message = TextMapper.getText(TextMapper.GUIPA_MSG_PARAM_SAVE);
-        int result;
+        int result = JOptionPane.NO_OPTION;
 // Deze tekst is m.i. niet helemaal lekker geformuleerd. Wim
         if (
-        		//!(compareMap(tmp, old)) &&
+        		!(compareMap(tmp, old)) &&
         		(result = JOptionPane.showConfirmDialog(this, message, TextMapper.getText(TextMapper.GUIPA_MSG_TTL_PARAM_SAVE), JOptionPane.YES_NO_OPTION)) == JOptionPane.YES_OPTION) {
         	final GuiCreator instance = GuiCreator.instance();
 			instance.setWait();setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -456,76 +456,77 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
     
 	private boolean compareMap(Map tmp, Map old) {
 		boolean equals = old.equals(tmp); // dit zou genoeg moeten zijn!
-		if(equals) return true;
-		equals = old.size() == tmp.size();
-		if(!equals) return false;
-
-		Iterator iter = old.keySet().iterator();
-    	while (iter.hasNext()) {
-			Object object = (Object) iter.next();
-			Object v1 = old.get(object);
-			Object v2 = tmp.get(object);
-			if(v1.equals(v2))
-			{
-				// all's well
-			} else {
-				if(v1 instanceof String && v2 instanceof String)
-				{
-// base64 differ, objects may be not!
-					Object vv1 = StringCodeObject.decodeStringToObject(v1.toString());
-					Object vv2 = StringCodeObject.decodeStringToObject(v2.toString());				
-					if(vv1 instanceof Map && vv2 instanceof Map)
-					{
-						equals = compareMap((Map)vv1, (Map)vv2);
-					} else 
-					{
-						equals = vv1 != null && vv1.equals(vv2);
-					}
-					if(!equals) 
-						return false;
-				} else
-				if(v2 != null && v1.getClass().isArray() && v2.getClass().isArray())
-				{
-					Class c1 = v1.getClass();
-					Class c2 = v2.getClass();
-// int[], etc. ????? via Class.getComponentClass() TODO if (! v1.getClass().getComponentClass().isPrimitive() ) ...
-					if( !c1.getComponentType().isPrimitive() && !c2.getComponentType().isPrimitive())
-					{
-						Object[] vva1 = (Object[]) v1; Object[] vva2 = (Object[]) v2;					
-						equals = Arrays.equals(vva1, vva2);
-						if(equals || vva1.length != vva2.length)
-							return equals;
-						// unequal, why
-						for (int i = 0; i < vva2.length; i++) {
-							Object o1 = vva1[i]; Object o2 = vva2[i];
-							if( o1 instanceof Map && o2 instanceof Map ) 
-							{	if( ! compareMap((Map)o1, (Map)o2))
-									return false;
-							} else 
-								if( ! (o1 != null) && ! o1.equals(o2))
-									return false;
-								if( o1 == null && o2 != null)
-									return false;
-						}
-						return true;
-					} else {
-// er zijn 7 types: byte, char, short, int, long, float, double
-						if(v1 instanceof byte[] && v2 instanceof byte[] )
-						{
-							return Arrays.equals( (byte[])v1, (byte[])v2);
-						}
-						if(v1 instanceof int[] && v2 instanceof int[] )
-						{
-							return Arrays.equals( (byte[])v1, (byte[])v2);
-						}
-						// to difficult...
-						return false;
-					}
-				} else
-					return false;
-			}
-		}
-    	return true;
+		return equals;
+//		if(equals) return true;
+//		equals = old.size() == tmp.size();
+//		if(!equals) return false;
+//
+//		Iterator iter = old.keySet().iterator();
+//    	while (iter.hasNext()) {
+//			Object object = (Object) iter.next();
+//			Object v1 = old.get(object);
+//			Object v2 = tmp.get(object);
+//			if(v1.equals(v2))
+//			{
+//				// all's well
+//			} else {
+//				if(v1 instanceof String && v2 instanceof String)
+//				{
+//// base64 differ, objects may be not!
+//					Object vv1 = StringCodeObject.decodeStringToObject(v1.toString());
+//					Object vv2 = StringCodeObject.decodeStringToObject(v2.toString());				
+//					if(vv1 instanceof Map && vv2 instanceof Map)
+//					{
+//						equals = compareMap((Map)vv1, (Map)vv2);
+//					} else 
+//					{
+//						equals = vv1 != null && vv1.equals(vv2);
+//					}
+//					if(!equals) 
+//						return false;
+//				} else
+//				if(v2 != null && v1.getClass().isArray() && v2.getClass().isArray())
+//				{
+//					Class c1 = v1.getClass();
+//					Class c2 = v2.getClass();
+//// int[], etc. ????? via Class.getComponentClass() TODO if (! v1.getClass().getComponentClass().isPrimitive() ) ...
+//					if( !c1.getComponentType().isPrimitive() && !c2.getComponentType().isPrimitive())
+//					{
+//						Object[] vva1 = (Object[]) v1; Object[] vva2 = (Object[]) v2;					
+//						equals = Arrays.equals(vva1, vva2);
+//						if(equals || vva1.length != vva2.length)
+//							return equals;
+//						// unequal, why
+//						for (int i = 0; i < vva2.length; i++) {
+//							Object o1 = vva1[i]; Object o2 = vva2[i];
+//							if( o1 instanceof Map && o2 instanceof Map ) 
+//							{	if( ! compareMap((Map)o1, (Map)o2))
+//									return false;
+//							} else 
+//								if( ! (o1 != null) && ! o1.equals(o2))
+//									return false;
+//								if( o1 == null && o2 != null)
+//									return false;
+//						}
+//						return true;
+//					} else {
+//// er zijn 7 types: byte, char, short, int, long, float, double
+//						if(v1 instanceof byte[] && v2 instanceof byte[] )
+//						{
+//							return Arrays.equals( (byte[])v1, (byte[])v2);
+//						}
+//						if(v1 instanceof int[] && v2 instanceof int[] )
+//						{
+//							return Arrays.equals( (byte[])v1, (byte[])v2);
+//						}
+//						// to difficult...
+//						return false;
+//					}
+//				} else
+//					return false;
+//			}
+//		}
+//    	return true;
 	}
     
 	public void open()

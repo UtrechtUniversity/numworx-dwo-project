@@ -151,7 +151,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
      * @deprecated met PARENT
      * @return
      */
-    public static Course addCourse() {
+    private static Course addCourse() {
         return addCourse(null, TextMapper.getText(TextMapper.GUICDLG_TTL_ADD_COURSE), null, false);
     }
 

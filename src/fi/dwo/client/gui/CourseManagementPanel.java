@@ -73,7 +73,10 @@ import fi.dwo.server.form.DWOFile;
  *
  */
 public class CourseManagementPanel extends JPanel implements CenterSubPanel, ActionListener, CourseMap {
-     CourseManagementPanel(CourseMap map) {
+     private static final Course STANDAARD_MODULE_PARENT = new Course();
+
+
+	CourseManagementPanel(CourseMap map) {
 		this(map.getChildren(), map);
 		this.map = map;
 	}
@@ -471,6 +474,8 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
 
 	private Course getParentCourse() {
+		if(map.getUserObject() == ModuleTreePanel.STANDAARD_DWO_MODULES)
+			return STANDAARD_MODULE_PARENT;
 		if(map.getUserObject() instanceof Course)
 			return (Course) map.getUserObject();
 		return null;
