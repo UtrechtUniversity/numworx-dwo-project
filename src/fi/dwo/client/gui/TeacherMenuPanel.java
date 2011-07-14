@@ -5,6 +5,7 @@ package fi.dwo.client.gui;
 
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -17,6 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import fi.dwo.client.domain.AppletConfig;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.DwoHelper;
@@ -233,21 +235,109 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 		}
 	}
 
-	public JPopupMenu getPopup() {
+	
+	private Object clipboard;
+	private String cmd;
+	
+	class CutCopyAction implements ActionListener 
+	{
+		Object object;
+
+		public void actionPerformed(ActionEvent e) {
+			clipboard = object;
+			cmd = e.getActionCommand();
+		}
+
+		CutCopyAction(Object object) {
+			this.object = object;
+		}
+	}
+	
+	class PasteAction implements ActionListener 
+	{
+		Object object;
+
+		public void actionPerformed(ActionEvent e) {
+			System.out.println( cmd  + " " + clipboard + " into " + object);
+			if("cut".equals(cmd))
+			{
+				if(clipboard instanceof Course)
+				{
+					Course course = (Course)clipboard;
+					if( object instanceof String ) // toplevel
+					{
+						course.setParentID(0);
+						if(object.equals(ModuleTreePanel.STANDAARD_DWO_MODULES))
+							course.setSchoolID(0);
+						else // School Modules.
+							course.setSchoolID(GuiCreator.instance().getUser().getSchool().getSchoolID());
+					} else if( object instanceof Course)
+					{
+						Course map = (Course)object;
+						if(map.isWithChildren())
+						{
+							course.setParentID(map.getID());
+							course.setSchoolID(map.getSchoolID());
+						} else
+							return;
+					}
+					GuiCreator.instance().updateCourse(course);
+					//cmd = "copy"; // 2x paste wordt altijd copy
+				}
+			} else if("copy".equals(cmd))
+			{
+				if(clipboard instanceof Sco && object instanceof Course)
+				{
+					Course course = (Course)object;
+					if(course.isWithChildren())
+						return;
+					Sco sco = (Sco)clipboard;
+					// copy eigen activiteiten
+					AppletConfig config = GuiCreator.instance().getAppletConfigFromSco(sco);
+					GuiCreator.instance().addSco(course, config, config.getName(), sco.getDescription(), sco.isShowScore());
+				}
+			}
+			
+			
+		}
+
+		PasteAction(Object object) {
+			this.object = object;
+		}
+	}
+	
+	public JPopupMenu getPopup(Object object) {
 		JPopupMenu m = new JPopupMenu();
 		JMenuItem item;
-		item = new JMenuItem("cut");
-		item.addActionListener(this);
-		m.add(item);
+		if(object instanceof Course || object instanceof Sco)
+		{
+			ActionListener listener = new CutCopyAction(object);
+			item = new JMenuItem("cut"); item.addActionListener(listener);m.add(item);
+			item = new JMenuItem("copy"); item.addActionListener(listener);m.add(item);
+		}
+		if(clipboard != null) {
+			boolean acceptable = true;
+			if(object == ModuleTreePanel.ALLE_MODULES)
+				acceptable = false;
+			else if(object == ModuleTreePanel.STANDAARD_DWO_MODULES)
+				acceptable = clipboard instanceof Course && GuiCreator.instance().getUser().hasRight(User.PROFILE_ADMIN_RIGHT);
+			else if(clipboard instanceof Sco)
+				acceptable = object instanceof Course &&  !((Course)object).isWithChildren();
+			else if (object instanceof Course)
+				acceptable = ((Course)object).isWithChildren();
+			if(acceptable)
+			{	item = new JMenuItem("paste");
+			    item.addActionListener(new PasteAction(object));
+			    m.add(item);
+			}	
+		}
 		return m;
 	}
 
 	public JPopupMenu nodeAction(CourseMap node) {
-//		Object u = node.getUserObject();
-//		if(u instanceof Course || u instanceof Sco)
-//			return getPopup();
-//		else
-			return null;
+		if(false)
+			return getPopup(node.getUserObject());
+		return null;
 		
 	}
 

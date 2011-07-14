@@ -34,9 +34,12 @@ public class ModuleTreePopup extends MouseAdapter  {
 	}
 
 	private void popupTrigger(MouseEvent e) {
-		
+		e.consume();
 		JTree tree = (JTree) e.getSource();
-		path = tree.getSelectionPath();
+// which one?		
+		//path = tree.getSelectionPath();
+		path = tree.getClosestPathForLocation(e.getX(), e.getY());
+		
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
 		Object o = node.getUserObject();
 		if(o instanceof CourseMap)

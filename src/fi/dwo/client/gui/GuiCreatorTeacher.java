@@ -218,24 +218,29 @@ public class GuiCreatorTeacher extends GuiCreator {
   
     public AppletConfig[] getAppletConfigFromTeacher() {
     	Vector ac = new Vector();
-    	LazyAppletConfig config;
     	Sco[] scos = dwo.getEditableScos();
 		for (int j = 0; j < scos.length; j++) {
-			config = new LazyAppletConfig();
 			Sco sco = scos[j];
-			String name = sco.getScoName();
-			int    aid  = sco.getAppletID();
-			int    sid  = sco.getScoID();
-			config.setSco(sco);
-			config.setAppletID(aid);
-			config.setAppletConfigID(-sid); // HACK HACK negatief = scoid
-			config.setName(name);
+	    	AppletConfig config = getAppletConfigFromSco(sco);
 			ac.addElement(config);
 		}
     	AppletConfig[] result = new AppletConfig[ac.size()];
     	ac.toArray(result);
     	return result;
     }
+
+	public AppletConfig getAppletConfigFromSco(Sco sco) {
+		LazyAppletConfig config;
+		config = new LazyAppletConfig();
+		String name = sco.getScoName();
+		int    aid  = sco.getAppletID();
+		int    sid  = sco.getScoID();
+		config.setSco(sco);
+		config.setAppletID(aid);
+		config.setAppletConfigID(-sid); // HACK HACK negatief = scoid
+		config.setName(name);
+		return config;
+	}
     
     /**
      * @param name

@@ -868,4 +868,8 @@ public class GuiCreator {
 		return new CourseChoisePanel(c, c.getChildren(), c);
 	}
 
+	public AppletConfig getAppletConfigFromSco(Sco sco) {
+		return null;
+	}
+
 }
