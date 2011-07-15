@@ -195,13 +195,14 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
         	GuiCreator instance = GuiCreator.instance();
         	if(instance.getMainPanel()!= null)
         		setCenterPanel(instance.getMainPanel().getCenter());
-			User u = instance.getUser();
+			User u = dwo.getUser();
         	School school = u.getSchool();
         	if(school != null)
         	{  	
         		SCHOOL_MODULES = "Modules " + school;
         		schoolnode = new DefaultMutableTreeNode(SCHOOL_MODULES);
-            	root.add(schoolnode);
+        		if(dwo.getUser().hasRight(User.MODIFY_MODULES_RIGHT)) // TODO is dit de bedoeling?
+        			root.add(schoolnode);
         	}
         	Course[] courses = instance.getCourseList();
         	sort(courses);

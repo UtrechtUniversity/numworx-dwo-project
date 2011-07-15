@@ -1348,6 +1348,7 @@ public class PersistenceFacade {
                 sco.setName(name);
                 sco.setDescription(description);
                 sco.setSequencenr(max);
+                sco.setCourse(course);
                 sco.setLaunchdata((Hashtable)new StringCodeObject((String) appletConfig.getLaunchdata()).toObject());
                 return sco;
             } catch (IOException e) {

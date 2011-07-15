@@ -4,9 +4,9 @@
 package fi.dwo.client.gui;
 
 import java.awt.Component;
-import java.awt.Container;
 
 import javax.swing.JComponent;
+import javax.swing.event.ChangeListener;
 
 /**
  * This interface is used as the subpanel of the centerpanel.
@@ -14,7 +14,7 @@ import javax.swing.JComponent;
  * @author M.J.B. Kupers
  *  
  */
-public interface CenterSubPanel {
+public interface CenterSubPanel extends ChangeListener {
 
     /**
      * Called when this panel is closes. Can be used to save session-data, for

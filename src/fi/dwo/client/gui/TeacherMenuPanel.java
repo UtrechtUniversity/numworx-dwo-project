@@ -58,9 +58,8 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
         classManagementButton.addActionListener(this);
         this.add(classManagementButton);
         /* Als dwo in Deeplink mode, geen coursemanagement */
-        if(dwo.getCourseViewNr()>0)
+        if(dwo.getCourseViewNr()>0 || !dwo.getUser().hasRight(User.MODIFY_MODULES_RIGHT))
         	return;
-        
         createGap();
         /* Add CourseManagement Button */
         courseManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_COURSE_MANAGEMENT));
@@ -312,8 +311,10 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 		if(object instanceof Course || object instanceof Sco)
 		{
 			ActionListener listener = new CutCopyAction(object);
-			item = new JMenuItem("cut"); item.addActionListener(listener);m.add(item);
-			item = new JMenuItem("copy"); item.addActionListener(listener);m.add(item);
+			if(object instanceof Course && ((Course) object).getParentID()==0)
+			{item = new JMenuItem("cut"); item.addActionListener(listener);m.add(item);}
+			if(object instanceof Sco)
+			{item = new JMenuItem("copy"); item.addActionListener(listener);m.add(item);}
 		}
 		if(clipboard != null) {
 			boolean acceptable = true;
@@ -324,7 +325,7 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 			else if(clipboard instanceof Sco)
 				acceptable = object instanceof Course &&  !((Course)object).isWithChildren();
 			else if (object instanceof Course)
-				acceptable = ((Course)object).isWithChildren();
+				acceptable = ((Course)object).isWithChildren() && false;
 			if(acceptable)
 			{	item = new JMenuItem("paste");
 			    item.addActionListener(new PasteAction(object));
@@ -335,9 +336,10 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 	}
 
 	public JPopupMenu nodeAction(CourseMap node) {
-		if(false)
+		if(GuiCreator.instance().getUser().hasRight(User.MODIFY_MODULES_RIGHT))
 			return getPopup(node.getUserObject());
-		return null;
+		else
+			return null;
 		
 	}
 

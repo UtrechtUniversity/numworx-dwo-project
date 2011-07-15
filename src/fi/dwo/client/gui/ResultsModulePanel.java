@@ -28,6 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
@@ -1173,5 +1174,10 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 	public Object getUserObject() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void stateChanged(ChangeEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

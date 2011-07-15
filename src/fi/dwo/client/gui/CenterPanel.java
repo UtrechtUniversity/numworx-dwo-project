@@ -26,6 +26,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
+import javax.swing.event.ChangeEvent;
 
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseMap;
@@ -440,6 +441,7 @@ invalidate();
 		if(tree != null)
 		{
 			tree.updateNode(course);
+			centerSubPanel.stateChanged(new ChangeEvent(course));
 		}
 		
 	}

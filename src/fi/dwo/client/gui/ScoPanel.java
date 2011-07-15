@@ -31,6 +31,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
 
 import fi.beans.scorm.SCORM12APIInterface;
 import fi.beans.scorm.ScormAppletIF;
@@ -602,4 +603,9 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
     public JComponent getComponent() {
         return this;
     }
+
+	public void stateChanged(ChangeEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -41,6 +41,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -605,6 +606,11 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 		System.arraycopy(courses, 0, ac, 0, row);
 		System.arraycopy(courses, row+1, ac, row, ac.length-row);
 		courses = ac;
+	}
+
+	public void stateChanged(ChangeEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
     
 }

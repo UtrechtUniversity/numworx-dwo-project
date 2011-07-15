@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JFrame;
 import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
@@ -182,7 +183,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
         
         
         schoolClass = c;
-        
+        Box vbox = Box.createVerticalBox();
         User[] users = c.getStudents();
         if(users.length == 0) {
             String[] arguments = new String[1];
@@ -192,16 +193,13 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
             label.setFont(GuiConstants.SCO_TEXT);
 			label.setAlignmentY(0.24f);
 			
-			Box vbox = Box.createVerticalBox();
 			vbox.setAlignmentX(0);
 			vbox.setAlignmentY(0);
 			vbox.add(label);
 			
 			vbox.add(Box.createVerticalStrut(20));
-			
-			RegisterClassListButton registerClassListButton = new RegisterClassListButton(schoolClass);
-	        vbox.add(registerClassListButton);
 	        add(vbox);
+			
             
         } else {
 
@@ -230,7 +228,6 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 	        TableUtil.setDefaults(table, true, new ImageRenderer(), new ImageButtonEditor());
 	        TableUtil.setJTableSizes(table);
 			TableUtil.setBorder(table);
-			Box vbox = Box.createVerticalBox();
 			vbox.setAlignmentX(0);
 			vbox.setAlignmentY(0);
 			Dimension size = table.getPreferredSize();
@@ -242,14 +239,11 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 			vbox.add(table);
 			add(vbox);
 	        add(Box.createHorizontalGlue());
-	        
-	       
-	        
-	        RegisterClassListButton registerClassListButton = new RegisterClassListButton(schoolClass);
-	        vbox.add(registerClassListButton);
-	        
-	       
         }
+		RegisterClassListButton registerClassListButton = new RegisterClassListButton(schoolClass);
+
+		if(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT))
+			vbox.add(registerClassListButton);
         
     }
     
@@ -334,5 +328,12 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 	public Object getUserObject() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+
+	public void stateChanged(ChangeEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

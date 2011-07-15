@@ -22,6 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
 
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.Group;
@@ -437,7 +438,7 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
                 groupChoice.setSelectedItem(user.getInClass().getName());
             }
             groupChoice.setBounds(160, 53, 120, 20);
-            groupChoice.setEnabled(!user.isReadonly());
+            groupChoice.setEnabled(!user.isReadonly() && user.hasRight(User.CHANGE_CLASS_RIGHT));
             p.add(groupChoice);
         }
 
@@ -491,7 +492,7 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
 
         changeButton.addActionListener(this);
         resetButton.addActionListener(this);
-        if(!user.isReadonly() && user.canLogout())
+        if(!user.isReadonly() && user.canLogout() && user.hasRight(User.CHANGE_CLASS_RIGHT))
             deleteButton.addActionListener(this);
         else 
             deleteButton.setVisible(false);
@@ -676,5 +677,10 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
 	public Object getUserObject() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void stateChanged(ChangeEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

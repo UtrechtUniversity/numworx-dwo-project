@@ -12,13 +12,22 @@ import fi.dwo.client.domain.User;
 
 class UserModel extends AbstractTableModel {
 
+	UserModel() {
+		if(!GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT))
+			cols = 4;
+	}
+	
+	private int cols = 5;
 	User[] userList;
     Image removeImage, editImage, userImage, teacherImage;
 
 	public int getColumnCount() {
-		return 5;
+		return cols;
 	}
 
+	
+	
+	
 	public void deleteRow(int row) {
 		User[] nu = new User[userList.length-1];
 		System.arraycopy(userList, 0, nu, 0, row);

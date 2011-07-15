@@ -54,6 +54,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 
 import fi.beans.appletutil.AppletUtil;
@@ -1279,6 +1280,11 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 	}
 
 	public void windowOpened(WindowEvent e) {
+	}
+
+	public void stateChanged(ChangeEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
   
     

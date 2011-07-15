@@ -38,6 +38,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -283,7 +284,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     		if (value == editImage) {
                 if (ScoNameDialog.editSco(s)) {
                     model.fireTableCellUpdated(row, 0);
-                    center.updateCourse(s.getCourse());
+                    noUpdateCourse();
                 }
     		} else if (value == removeImage) {
                 /* Delete the course */
@@ -292,7 +293,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
                 if (JOptionPane.showConfirmDialog(ScoManagementPanel.this, message, TextMapper.getText(TextMapper.GUIS_MSG_TTL_SCO_DELETE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     if (GuiCreator.instance().deleteSco(s)) {
                     	model.fireTableRowsDeleted(row, row);
-                    	center.updateCourse(s.getCourse());
+                    	noUpdateCourse();
                     	if(model.getRowCount()==0)
                     	{
                     		addScoTable();
@@ -305,12 +306,12 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     			Sco s2 = course.getScoList()[row-1];
     			swapSco(s, s2);
     			model.fireTableRowsUpdated(row-1, row);
-    			center.updateCourse(s.getCourse());
+    			noUpdateCourse();
     		} else if (value == downImage) {
     			Sco s2 = course.getScoList()[row+1];
     			swapSco(s, s2);
     			model.fireTableRowsUpdated(row, row+1);
-    			center.updateCourse(s.getCourse());
+    			noUpdateCourse();
     		}
     		fireEditingStopped();
     	}
@@ -471,7 +472,6 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 	            System.arraycopy(as, 0, tmp, 0, as.length);
 	            tmp[tmp.length - 1] = s;
 	            course.setScoList(tmp);
-	            addScoTable();
 	            center.updateCourse(course);
             }
 
@@ -488,7 +488,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 			course.setSchoolID(0);
 			course.setExport(false); // ik denk dat een gepubliceerde course niet exporteerbaar is!
 			publishButton.setEnabled(false); // gray out
-			GuiCreator.instance().updateCourse(course);
+			noUpdateCourse();
 		}
 		
 	}
@@ -567,7 +567,6 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 			}
 			zipper.appendCourse(course.getID(), offset, result);
 			course.loadScos();
-			addScoTable();
 			center.updateCourse(course);
 		}
 	}
@@ -628,10 +627,21 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 		repaint();
 	}
 
-
-
 	public Object getUserObject() {
 		return course;
+	}
+
+	private boolean ok = true;
+	public void stateChanged(ChangeEvent e) {
+		//System.out.println("ChangeEvent " + e);
+		if(ok && course == e.getSource())
+			addScoTable();
+	}
+
+	private void noUpdateCourse() {
+		ok = false;
+		center.updateCourse(course);
+		ok = true;
 	}
 
 }

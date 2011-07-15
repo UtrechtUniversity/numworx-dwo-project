@@ -278,7 +278,10 @@ public class GuiCreatorTeacher extends GuiCreator {
      * @return boolean
      */
     public boolean deleteSco(Sco sco) {
-        return dwo.deleteSco(sco);
+    	Course c = sco.getCourse();
+        boolean b = dwo.deleteSco(sco);
+        getMainPanel().getCenter().updateCourse(c);
+		return b;
     }
 
     /**
@@ -342,7 +345,10 @@ public class GuiCreatorTeacher extends GuiCreator {
      * @return fi.dwo.client.domain.Sco
      */
     public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean showScore) {
-        return dwo.addSco(course, appletConfig, name, description, showScore);
+        Sco result = dwo.addSco(course, appletConfig, name, description, showScore);
+        if(result != null) 
+        	getMainPanel().getCenter().updateCourse(course);
+		return result;
     }
 
     /**

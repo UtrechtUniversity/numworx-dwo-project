@@ -113,7 +113,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 	
 	private Hashtable testViewKeys;
 	
-	private Hashtable schoolAccessKeys;
+	private Properties schoolAccessKeys;
 
 	private String languageOveride;
 	
@@ -214,39 +214,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
     		currentUser = PersistenceFacade.instance().login(username, password);
 
         DwoHelper.setAdminLoggedIn(currentUser instanceof Admin);
-//        if(
-//        	currentUser.hasRight(User.SCORM_EXPORT_RIGHT)	
-//        	||	currentUser.getID()==4 		//peterb
-//        	|| currentUser.getID()==8691 	//peterb_gr
-//        	|| currentUser.getID()==24073	//peterb_mw
-//        	|| currentUser.getID()==54220	//peterb_nwk
-//        	|| currentUser.getID()==13584 	//peterb_mbo
-//        	|| currentUser.getID()==55530 	//calvijncollege (Ron Wisse)
-//        	|| currentUser.getID()==43757 	//dyw Cygnus Gymnasium (David Dijkman)
-//        	|| currentUser.getID()==63490) 	//scormadmin De Amersfoortse Berg (Guido van der Waal)
-//        		DwoHelper.setScormExportLoggedIn(true);
-//        else DwoHelper.setScormExportLoggedIn(false);
-// vervanging voor bovenstaande        
 		DwoHelper.setScormExportLoggedIn(currentUser.hasRight(User.SCORM_EXPORT_RIGHT));
-
-        
-//        if(	
-//        		currentUser.hasRight(User.APPLET_EXPORT_RIGHT)        		
-//        		|| currentUser.getID()==4 		//peterb
-//        		|| currentUser.getID()==8691 	//peterb_gr
-//        		|| currentUser.getID()==24073	//peterb_mw
-//        		|| currentUser.getID()==54220	//peterb_nwk
-//        		|| currentUser.getID()==13584 	//peterb_mbo 
-//				|| currentUser.getID()==69706	// HIE_MW Henk hietbrink voor MW
-//        		|| currentUser.getID()==55549) 	//exportgr
-//        		//|| currentUser.getID()==22194) 	//harmh
-//        	DwoHelper.setAppletExportLoggedIn(true);
-//        else DwoHelper.setAppletExportLoggedIn(false);
-// vervanging voor bovenstaande        
-		DwoHelper.setAppletExportLoggedIn(currentUser.hasRight(User.APPLET_EXPORT_RIGHT)
-// en het profiel moet het toestaan dat het mag. FIXED: hasRight is nu per profiel.
-//				&&dwoProfile.hasRight(User.APPLET_EXPORT_RIGHT)
-		);
+		DwoHelper.setAppletExportLoggedIn(currentUser.hasRight(User.APPLET_EXPORT_RIGHT));
         
         if(testViewKeys!=null)
         {	SchoolClass sc = currentUser.getInClass();
@@ -268,19 +237,23 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
         		return false;
         	}
         	int schoolNumber = s.getSchoolID();
-        	String accessNumberString = "false";
-        	if(schoolAccessKeys.containsKey(""+schoolNumber)) 
-        	{	accessNumberString = (String)schoolAccessKeys.get(""+schoolNumber);
-        		if(accessNumberString.equals("true"))return true;
-        		else  
-	        	{	JOptionPane.showMessageDialog(this, "gebruikers van deze school hebben hier geen toegang");
-	        		return false;
-	        	}
+        	String accessNumberString = schoolAccessKeys.getProperty(String.valueOf(schoolNumber));
+        	if(!"true" .equals(accessNumberString))
+	        {	JOptionPane.showMessageDialog(this, "gebruikers van deze school hebben hier geen toegang");
+	        	return false;
+	        }
+        	String rights = schoolAccessKeys.getProperty("rights." + schoolNumber);
+        	if(rights != null)
+        		currentUser.setRights(rights);
+        	else {
+        		currentUser.addRight(User.CHANGE_CLASS_RIGHT); 		// for students/teachers
+            	currentUser.addRight(User.MODIFY_MODULES_RIGHT);	// for teachers	
         	}
-        	else 
-        	{	JOptionPane.showMessageDialog(this, "gebruikers van deze school hebben hier geen toegang");
-	    		return false;
-	    	}
+        	
+        } else if(currentUser != null )
+        {
+        	currentUser.addRight(User.CHANGE_CLASS_RIGHT); 		// for students/teachers
+        	currentUser.addRight(User.MODIFY_MODULES_RIGHT);	// for teachers	
         }
         
         return currentUser != null;
@@ -1085,13 +1058,16 @@ private static boolean isValidEmail(String email) {
 	        	schoolAccessProperties = new Properties();
 	        	schoolAccessProperties.load(in);
 	        	
-	        	schoolAccessKeys = new Hashtable();
+	        	schoolAccessKeys = new Properties();
 				int number = Integer.parseInt(schoolAccessProperties.getProperty("number"));
 				for (int i = 1; i<number+1; i++)
 				{
 					String schoolNumber = schoolAccessProperties.getProperty("school." + i);
 					String access = schoolAccessProperties.getProperty("access." + i);
+					String rights = schoolAccessProperties.getProperty("rights." + i);
 					schoolAccessKeys.put(schoolNumber, access);
+					if(rights != null)
+						schoolAccessKeys.put("rights." + schoolNumber, rights);
 				}
 	        }
 	        catch(Exception e)

@@ -21,6 +21,7 @@ import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.event.ChangeEvent;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -382,6 +383,11 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 	public Object getUserObject() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void stateChanged(ChangeEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

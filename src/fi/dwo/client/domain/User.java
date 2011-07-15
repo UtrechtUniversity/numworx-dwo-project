@@ -43,6 +43,16 @@ public class User implements UserGroup, Comparable {
      */
     public static final char PROFILE_ADMIN_RIGHT = 'p';
     
+    /**
+     * geeft recht om van klas te veranderen. Dit is een leerlingrecht
+     */
+    public static final char CHANGE_CLASS_RIGHT = 'c';
+    /**
+     * geeft recht om modules aan te passen.
+     */
+    public static final char MODIFY_MODULES_RIGHT = 'm';
+    
+    
     private String rights = "";
     
     /**
@@ -372,6 +382,9 @@ public class User implements UserGroup, Comparable {
 	 * @see fi.dwo.client.domain.Teacher#hasRight(char)
 	 */
 	public boolean hasRight(char right) {
+		switch(right) {
+		case CHANGE_CLASS_RIGHT: return rights.contains(String.valueOf(CHANGE_CLASS_RIGHT));
+		}
 		return false;
 	}
 
@@ -393,6 +406,31 @@ public class User implements UserGroup, Comparable {
 		if(inClass != null)
 			return inClass.hasIconizer();
 		return false;
+	}
+
+	public void addRight(char right) {
+		if(hasRight(right))
+			return;
+    	String  id;
+    	id = "[" + ((DwoIF)DwoHelper.getApplet()).getDwoProfile().getID() + "]";
+    	
+    	String rights = getRights();
+    	int index = rights.indexOf(id);
+    	if(index < 0)
+    	{
+    		id = "[]";
+    		index = rights.indexOf(id);
+    		if(index < 0)
+    		{
+    			//return false;
+    			id=""; 
+    			index = 0;
+    		}
+    	}
+    	int end = rights.indexOf('[', index + id.length());
+    	if(end < 0) end = rights.length();
+    	rights = rights.substring(0,end) + right + rights.substring(end);
+    	setRights(rights);
 	}
 
 }

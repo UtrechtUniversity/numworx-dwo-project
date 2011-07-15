@@ -23,6 +23,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
 
 import fi.dwo.client.domain.ContactDocent;
@@ -375,6 +376,10 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel, Actio
 		getUserList();
 		dm.userList = userList; userList = null;
 		dm.fireTableDataChanged();
+	}
+	public void stateChanged(ChangeEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 

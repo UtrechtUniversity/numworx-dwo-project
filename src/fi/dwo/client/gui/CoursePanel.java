@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
+import javax.swing.event.ChangeEvent;
 
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DwoHelper;
@@ -353,5 +354,10 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 
 	public Object getUserObject() {
 		return course;
+	}
+
+	public void stateChanged(ChangeEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

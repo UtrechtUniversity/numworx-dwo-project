@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
 
 
 import fi.dwo.client.domain.Course;
@@ -261,5 +262,10 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
 		{	return unit.height; // 1 line
 		} else 
 			return unit.width;
+	}
+
+	public void stateChanged(ChangeEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

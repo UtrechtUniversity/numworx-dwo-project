@@ -29,6 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -37,6 +38,7 @@ import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.SchoolClass;
 import fi.dwo.client.domain.Teacher;
+import fi.dwo.client.domain.User;
 import fi.dwo.client.system.ClassException;
 import fi.dwo.client.system.TextMapper;
 
@@ -53,17 +55,26 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
 
     private Image removeImage, editImage, usersImage, assignImage;
 
+    
+    private static final int ASSIGN_COL = 3;
+    private static final int REMOVE_COL = 4;
+    
+    
     class ClassModel extends AbstractTableModel {
 
+    	int cols = 5;
+    	
     	SchoolClass[] classes;
     	
 		public ClassModel(SchoolClass[] classes) {
 			super();
 			this.classes = classes;
+			if(! GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT))
+				cols = 4;
 		}
 
 		public int getColumnCount() {
-			return 5;
+			return cols;
 		}
 
 		public int getRowCount() {
@@ -78,9 +89,9 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
 				return usersImage;
 			case 2:
 				return editImage;
-			case 3:
+			case REMOVE_COL:
 				return removeImage;
-			case 4:
+			case ASSIGN_COL:
 				return assignImage;
 			}
 			return null;
@@ -93,6 +104,8 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
 		}
 
 		public boolean isCellEditable(int row, int col) {
+			if(col == REMOVE_COL)
+				return GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT);
 			return col > 0;
 		}
 
@@ -124,10 +137,10 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
 	    			break;
 			case 2: setToolTipText(TextMapper.getText(TextMapper.GUIC_TLTP_EDIT_CLASS));
 				break;
-			case 3: String format = TextMapper.getText(TextMapper.GUIC_TLTP_DELETE_CLASS);
+			case REMOVE_COL: String format = TextMapper.getText(TextMapper.GUIC_TLTP_DELETE_CLASS);
 					setToolTipText(MessageFormat.format(format, arguments));
 				break;
-			case 4: format = TextMapper.getText(TextMapper.GUIC_TLTP_ASSIGN_CLASS);
+			case ASSIGN_COL: format = TextMapper.getText(TextMapper.GUIC_TLTP_ASSIGN_CLASS);
 					setToolTipText(MessageFormat.format(format, arguments));
 				break;
 			default:
@@ -269,7 +282,7 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
         addClassButton.setSize(addClassButton.getPreferredSize());
         addClassButton.addActionListener(this);
         //addClassButton.setLocation(30, 10);
-        //addClassButton.setVisible(false);
+        addClassButton.setVisible(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT));
         Box header = Box.createHorizontalBox();
         header.add(addClassButton);
         header.add(Box.createHorizontalGlue());
@@ -343,5 +356,11 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
 	public Object getUserObject() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	public void stateChanged(ChangeEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
