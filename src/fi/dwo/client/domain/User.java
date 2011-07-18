@@ -383,7 +383,7 @@ public class User implements UserGroup, Comparable {
 	 */
 	public boolean hasRight(char right) {
 		switch(right) {
-		case CHANGE_CLASS_RIGHT: return rights.contains(String.valueOf(CHANGE_CLASS_RIGHT));
+		case CHANGE_CLASS_RIGHT: return rights.indexOf(CHANGE_CLASS_RIGHT)>=0;
 		}
 		return false;
 	}
