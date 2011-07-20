@@ -1883,7 +1883,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     		boolean export, int schoolID, int parentID)
     throws DwoXmlRpcException, SQLException {
     	PreparedStatement ps;
-    	ps = getStatement(QRY_UPDATE_COURSE3);
+    	ps = getStatement(QRY_UPDATE_COURSE4);
     	ps.setString(1, name);
     	ps.setString(2, description);
     	ps.setBoolean(3, export);
@@ -1914,8 +1914,19 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      */
     public boolean deleteCourse(int courseID) throws DwoXmlRpcException,
             IOException, XmlRpcException, SQLException {
-        Hashtable wheredef = new Hashtable();
-        wheredef.put("courseID", new Integer(courseID));
+    	Hashtable wheredef = new Hashtable();
+    	wheredef.put("parentID", new Integer(courseID));
+    	Vector children = getTable("tblCourse", wheredef);
+    	/* delete the children, recurse */
+    	Iterator iter = children.iterator();
+    	while (iter.hasNext()) {
+			Hashtable course = (Hashtable) iter.next();
+			int id = ((Number) course.get("courseID")).intValue();
+			deleteCourse(id);
+    	}
+    	
+    	wheredef.clear();
+    	wheredef.put("courseID", new Integer(courseID));
         Vector scos = getTable("tblSco", wheredef);
         String[] arguments = new String[2];
 

@@ -217,7 +217,7 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 				return;
 			if(u == ModuleTreePanel.STANDAARD_DWO_MODULES && ! dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT))
 				return;
-			CenterSubPanel cp = new CourseManagementPanel(node.getChildren(), u);
+			CenterSubPanel cp = new CourseManagementPanel(node);
 			center.loadCenter(cp);
 		} else
 		if(u instanceof Course)
@@ -297,6 +297,7 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 					name = CourseManagementPanel.replaceDuplicate(name, map.getChildNames());
 					if( object instanceof String ) // toplevel
 					{
+						removeChild(oldmap, course);
 						course.setParentID(0);
 						course.setName(name);
 						if(object.equals(ModuleTreePanel.STANDAARD_DWO_MODULES))
@@ -308,9 +309,11 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 						Course map = (Course)object;
 						if(map.isWithChildren())
 						{
-							course.setParentID(map.getID());
 							course.setSchoolID(map.getSchoolID());
 							course.setName(name);
+							removeChild(oldmap, course);
+							map.addChild(course);
+							
 						} else
 							return;
 					}
@@ -336,6 +339,17 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 			}
 			
 			
+		}
+
+		private void removeChild(CourseMap oldmap, Course course) {
+			Course[] children = oldmap.getChildren();
+			for (int i = 0; i < children.length; i++) {
+				if(children[i] == course)
+				{
+					oldmap.removeChild(i);
+					break;
+				}
+			}
 		}
 
 		private CourseMap getParentMap(Course course) {

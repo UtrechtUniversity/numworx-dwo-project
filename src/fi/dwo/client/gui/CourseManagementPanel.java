@@ -78,7 +78,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
 
 	CourseManagementPanel(CourseMap map) {
-		this(map.getChildren(), map);
+		this(map.getChildren(), map.getUserObject());
 		this.map = map;
 	}
 
@@ -242,9 +242,9 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     		{
                 /* Delete the course */
                 Course c = courses[row];
-                c.loadScos();
                 String message;
-                if(c.getScoList().length > 0) {
+                boolean b = hasScos(c);
+				if(b) {
                     message = TextMapper.getText(TextMapper.GUIC_MSG_COURSE_DELETE);
                 } else {
                     message = TextMapper.getText(TextMapper.GUIC_MSG_COURSE_DELETE_NO_SCO);
@@ -290,6 +290,21 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     		}
     		fireEditingStopped();
     	}
+
+    	// scolist.lenght > 0 maar dan recursief
+		private boolean hasScos(Course c) {
+			if(c.isWithChildren())
+			{
+				Course[] children = c.getChildren();
+				for (int i = 0; i < children.length; i++) {
+					if(hasScos(children[i]))
+							return true;
+				}
+			}
+			c.loadScos();
+			boolean b = c.getScoList().length > 0;
+			return b;
+		}
 
 }
 
@@ -597,7 +612,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
 
 	public void setChildren(Course[] courses) {
-		// ons kent ons!
+		this.courses = courses;
 	}
 
 
@@ -619,6 +634,8 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 		if(ok && e.getSource() == getUserObject())
 		{
 			System.out.println("UPDATE " + e);
+			courses = map.getChildren();
+			buildJTable();
 		}
 		
 	}

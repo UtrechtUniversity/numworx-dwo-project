@@ -466,6 +466,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
 		Course[] n = new Course[length-1];
 		System.arraycopy(children, 0, n, 0, index);
 		System.arraycopy(children, index+1, n, index, length-1-index);
+		children = n;
 	}
 	
 	public void removeChild(Course child)

@@ -98,6 +98,7 @@ public class CourseMapper extends XmlRpcMapper {
         {
         	School s = (School) obj;
         	ht.put("schoolID", new Integer(s.getSchoolID()));
+        	ht.put("parentID", new Integer(0));
             int profileID = ((DwoIF) DwoHelper.getApplet()).getDwoProfile().getID();
             ht.put("dwoProfileID", new Integer(profileID));
         }

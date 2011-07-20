@@ -404,6 +404,11 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 			{
 				strategy.nodeSelected((CourseMap) o);
 			} else
+			if(o == SCHOOL_MODULES)
+				strategy.nodeSelected(SCHOOL_MAP);
+			else if(o == STANDAARD_DWO_MODULES)
+				strategy.nodeSelected(STANDAARD_DWO_MAP);
+			else
 				strategy.nodeSelected(new TreeMap(node));
 		}
 	}
@@ -526,7 +531,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 			child = new DefaultMutableTreeNode(course);
 			node.add(child);
 			if(course.isWithChildren())
-				appendCourseMap(course, node);
+				appendCourseMap(course, child);
 			else
 				insertScos(course, child);
     	}
