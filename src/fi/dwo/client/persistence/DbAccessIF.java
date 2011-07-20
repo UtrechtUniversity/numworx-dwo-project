@@ -499,6 +499,10 @@ public interface DbAccessIF {
 			boolean export, int schoolID)
 	throws  DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
+	public boolean changeCourse(int id, String name, String description,
+			boolean export, int schoolID, int parentID)
+	throws  DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+
 	public void setCourseSequence(Vector vector, int schoolID, int classID,
 			int parent, int profileID)
 	throws  DwoXmlRpcException, IOException, XmlRpcException, SQLException;

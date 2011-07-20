@@ -21,6 +21,9 @@ import fi.dwo.client.persistence.PersistenceFacade;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import fi.dwo.client.system.PersistenceException;
 import fi.dwo.client.system.TextMapper;
 
@@ -50,6 +53,15 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
     private boolean export;
     private Course  children[];
     private int parentID;
+    private boolean newParent;
+    
+    public boolean parentChanged() {
+    	return newParent;
+    }
+    
+    public void resetParent() {
+    	newParent = false;
+    }
     
     /**
      * Creates a new Course object
@@ -409,13 +421,16 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
 		return getName();
 	}
 
-
 	public int getParentID() {
 		return parentID;
 	}
 
 	public void setParentID(int parentID) {
-		this.parentID = parentID;
+		if(parentID != this.parentID)
+		{
+			this.parentID = parentID;
+			newParent = true;
+		}
 	}
 
 
@@ -489,4 +504,34 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
 		return getName();
 	}
 
+	public Set getScoNames() {
+		if(isWithChildren())
+			return null;
+		Sco[] scoList = getScoList();
+		int offset = scoList.length;
+		Set names = new HashSet();
+		for (int i = 0; i < offset; i++) {
+			String name = scoList[i].getScoName();
+			names.add(name);
+		}
+		return names;
+	}
+	
+	public Set getChildNames() {
+		Course[] children = getChildren();
+		if(children == null)
+			return null;
+		int offset = children.length;
+		Set names = new HashSet();
+		for(int i = 0; i < offset; i++)
+		{
+			String name = children[i].getName();
+			names.add(name);
+		}
+		return names;
+	}
+	
+	
+	
+	
 }

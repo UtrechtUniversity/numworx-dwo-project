@@ -10,6 +10,8 @@ import java.util.Hashtable;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.dwo.client.domain.Course;
+import fi.dwo.client.domain.DwoHelper;
+import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.SchoolClass;
 
@@ -96,6 +98,8 @@ public class CourseMapper extends XmlRpcMapper {
         {
         	School s = (School) obj;
         	ht.put("schoolID", new Integer(s.getSchoolID()));
+            int profileID = ((DwoIF) DwoHelper.getApplet()).getDwoProfile().getID();
+            ht.put("dwoProfileID", new Integer(profileID));
         }
         return super.get(ht);
     }
@@ -141,7 +145,7 @@ public class CourseMapper extends XmlRpcMapper {
         	c.setParentID(((Integer) data.get("parentID")).intValue());
         }
         catch(Exception e){}
-
+        c.resetParent();
         
         try { c.setImageData((byte[]) data.get("imageData"));
         } catch(Exception e){};

@@ -1,5 +1,7 @@
 package fi.dwo.client.domain;
 
+import java.util.Set;
+
 public interface CourseMap {
 
 	void addChild(Course c);
@@ -8,6 +10,6 @@ public interface CourseMap {
 
 	void setChildren(Course[] courses);
 	Object getUserObject();
-	
+	Set getChildNames();
 
 }

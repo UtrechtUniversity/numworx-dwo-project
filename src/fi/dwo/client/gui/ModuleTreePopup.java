@@ -42,6 +42,12 @@ public class ModuleTreePopup extends MouseAdapter  {
 		
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
 		Object o = node.getUserObject();
+		if(o == ModuleTreePanel.SCHOOL_MODULES)
+			popup = strategy.nodeAction( ModuleTreePanel.SCHOOL_MAP);
+		else
+		if(o == ModuleTreePanel.STANDAARD_DWO_MODULES)
+			popup = strategy.nodeAction(ModuleTreePanel.STANDAARD_DWO_MAP);
+		else
 		if(o instanceof CourseMap)
 		{
 			popup = strategy.nodeAction((CourseMap) o);

@@ -424,6 +424,12 @@ public class DbAccessProxy extends DbConnect implements DbAccessIF {
 		return getDelegate().changeCourse(id, name, description, export, schoolID);
 	}
 
+	public boolean changeCourse(int id, String name, String description,
+			boolean export, int schoolID, int parentID) throws DwoXmlRpcException,
+			IOException, XmlRpcException, SQLException {
+		return getDelegate().changeCourse(id, name, description, export, schoolID, parentID);
+	}
+
 	public int addCourse(int schoolID, String name, String description,
 			int dwoProfile, int parentID, boolean withChildren)
 			throws DwoXmlRpcException, IOException, XmlRpcException,

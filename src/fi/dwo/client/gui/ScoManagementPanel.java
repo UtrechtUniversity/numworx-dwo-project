@@ -549,13 +549,8 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 			FileInputStream input = new FileInputStream(file);
 			DWOFile zipper = new DWOFile(DbAccessCreator.instance());
 			Hashtable result = zipper.inputIMSManifest(input);
-			Sco[] scoList = course.getScoList();
-			int offset = scoList.length;
-			Set names = new HashSet();
-			for (int i = 0; i < offset; i++) {
-				String name = scoList[i].getScoName();
-				names.add(name);
-			}
+			Set names = course.getScoNames();
+			int offset = names.size();
 			Vector scos = (Vector)result.get("sco");
 			Enumeration elements = scos.elements();
 			while (elements.hasMoreElements()) {
@@ -567,7 +562,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 			}
 			zipper.appendCourse(course.getID(), offset, result);
 			course.loadScos();
-			center.updateCourse(course);
+			noUpdateCourse();
 		}
 	}
 

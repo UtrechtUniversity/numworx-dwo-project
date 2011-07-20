@@ -254,7 +254,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
                         map.removeChild(row);
                         setChildren(map.getChildren());
                         model.fireTableRowsDeleted(row,row);
-                        center.updateMap(map);
+                        noUpdate();
                     }
                 }
                 if(courses.length == 0) {
@@ -278,7 +278,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     			courses[row-1] = s;
     			model.fireTableRowsUpdated(row-1, row);
     			updown = true;
-    			center.updateMap(map);
+    			noUpdate();
     		} else if (value == downImage) {
     			Course s2 = courses[row+1];
     			Course s  = courses[row];
@@ -286,7 +286,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     			courses[row+1] = s;
     			model.fireTableRowsUpdated(row, row+1);
     			updown = true;
-    			//center.updateCourse(s.getCourse());
+    			noUpdate();
     		}
     		fireEditingStopped();
     	}
@@ -491,7 +491,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 			map.setChildren(courses);
 		}
 		buildJTable();
-		center.updateMap(map);
+		noUpdate();
 	}
 
     private void upload() throws Exception {
@@ -608,9 +608,27 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 		courses = ac;
 	}
 
+	boolean ok = true;
+	private void noUpdate() {
+		ok = false;
+		center.updateMap(map);
+		ok = true;
+	}
+	
 	public void stateChanged(ChangeEvent e) {
-		// TODO Auto-generated method stub
+		if(ok && e.getSource() == getUserObject())
+		{
+			System.out.println("UPDATE " + e);
+		}
 		
+	}
+
+	public Set getChildNames() {
+		HashSet names = new HashSet();
+		for (int i = 0; i < courses.length; i++) {
+			names.add(courses[i].getName());			
+		}
+		return names;
 	}
     
 }

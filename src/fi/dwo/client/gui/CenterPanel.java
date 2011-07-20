@@ -191,7 +191,7 @@ if(iconizer)
     static boolean isIconizer() {
     	User u = GuiCreator.instance().getUser();
 // in productie 'false'
-    	return (false||GuiConstants.GUI_ICONIZED) && u.hasIconizer();
+    	return (true||GuiConstants.GUI_ICONIZED) && u.hasIconizer();
     }
 
 	/**
@@ -440,7 +440,10 @@ invalidate();
 	public void updateCourse(Course course) {
 		if(tree != null)
 		{
-			tree.updateNode(course);
+			if(course.isWithChildren())
+					tree.updateNodeMap(course);
+			else
+				tree.updateNode(course);
 			centerSubPanel.stateChanged(new ChangeEvent(course));
 		}
 		
@@ -463,7 +466,10 @@ invalidate();
 
 	public void updateMap(CourseMap map) {
 		if(tree != null)
+		{
 			tree.updateNodeMap(map);
+			centerSubPanel.stateChanged(new ChangeEvent(map.getUserObject()));
+		}
 		
 	}
 }

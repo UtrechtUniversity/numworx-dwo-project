@@ -1249,6 +1249,7 @@ public class PersistenceFacade {
                 c.setDwoProfile(dwoProfile.getID());
                 c.setSchoolID(schoolID); // DEZE IS VERGETEN, WIM 9/5/2011
                 c.setParentID(parentID);
+                c.resetParent();
                 if(withChildren) c.setChildren(Course.NO_CHILDREN);
                 return c;
             } catch (IOException e) {
@@ -1287,6 +1288,18 @@ public class PersistenceFacade {
     	}
         try {
             try {
+            	if(course.parentChanged())
+            	{
+            		boolean result =
+            			dbAccess.changeCourse(course.getID(), course.getName(), 
+            					course.getDescription(),
+            					course.isExport(),
+            					course.getSchoolID(), 
+            					course.getParentID());
+            		if(result) course.resetParent();
+            		return result;
+            	}
+            	
                 return dbAccess.changeCourse(course.getID(), course.getName(),
                         course.getDescription()
                         , course.isExport()                // FIXME fallback naar 2parameter methode.
