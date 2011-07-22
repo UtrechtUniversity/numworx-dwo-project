@@ -388,12 +388,13 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 			{item = new JMenuItem("copy"); item.addActionListener(listener);m.add(item);}
 		}
 		if(clipboard != null) {
+			Object uo = clipboard.getUserObject();
 			boolean acceptable = true;
 			if(object == ModuleTreePanel.ALLE_MODULES)
 				acceptable = false;
 			else if(object == ModuleTreePanel.STANDAARD_DWO_MODULES)
-				acceptable = clipboard instanceof Course && dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT);
-			else if(clipboard instanceof Sco)
+				acceptable = uo instanceof Course && dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT);
+			else if(uo instanceof Sco)
 				acceptable = object instanceof Course &&  !((Course)object).isWithChildren();
 			else if (object instanceof Course)
 				acceptable = ((Course)object).isWithChildren();
