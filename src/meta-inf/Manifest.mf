@@ -68,6 +68,8 @@ Class-Path: algebrapijlenoefenen.jar
  geldapplet.jar 
  kunstvloer.jar 
  omtrekapplet.jar 
+ statistiek.jar 
+ verdelen.jar 
  tinyplayerapplet.jar 
  jl020.jar 
  geogebra_properties.jar 

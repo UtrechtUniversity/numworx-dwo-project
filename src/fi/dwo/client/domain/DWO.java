@@ -1393,7 +1393,7 @@ private static boolean isValidEmail(String email) {
     	waitLabel.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     	waitLabel.setHorizontalAlignment(JLabel.CENTER);
     	waitLabel.setVerticalAlignment(JLabel.CENTER);
-        waitLabel.setBackground(GuiConstants.MAIN_BACKGROUND);
+    	waitLabel.setBackground(new Color(218,238,249));//GuiConstants.MAIN_BACKGROUND);
     	waitLabel.setOpaque(true);
     	waitLabel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 //    	{
@@ -1427,7 +1427,7 @@ private static boolean isValidEmail(String email) {
         if(nestedWait == 0) {
 	        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 	        this.waitText = waitText;
-	        waitLabel.setText(waitText);
+	        waitLabel.setText(" "+waitText+" ");
 	        getGlassPane().setVisible(true);
 	        validate();
 	        if(this.getGraphics()!=null) paint(this.getGraphics());

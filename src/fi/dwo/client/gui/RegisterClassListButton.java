@@ -51,7 +51,7 @@ public class RegisterClassListButton extends JButton implements ActionListener
 	 */
 	public RegisterClassListButton(SchoolClass schoolClass)
 	{
-		super("Voeg nieuwe accounts toe");
+		super("Voeg nieuwe leerlingen toe");
 		this.schoolClass = schoolClass;
 		this.sg = SchoolGroup.STUDENT;
 		initialize();
