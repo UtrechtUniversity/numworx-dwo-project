@@ -475,7 +475,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                 	School school = u.getSchool();
                 	if(school != null)
                 	{  	schoolnode = new DefaultMutableTreeNode("Modules " + school);
-                		if(dwo.getUser().hasRight(User.MODIFY_MODULES_RIGHT))
+                		if(u.hasRight(User.MODIFY_MODULES_RIGHT))
                 			root.add(schoolnode);
                 	}
                 	DefaultMutableTreeNode node; 
