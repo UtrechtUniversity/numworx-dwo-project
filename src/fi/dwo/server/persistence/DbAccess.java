@@ -65,7 +65,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
 	private final static String QRY_SELECT_COURSES_EDITABLE_ADMIN = "SELECT tblCourse.* "
             + "FROM tblCourse "
-            + "WHERE (isnull(tblCourse.schoolID)) "
+            + "WHERE (isnull(tblCourse.schoolID)) and (tblCourse.parentID = 0)"
             + "ORDER BY name ";
     ////peter
 
@@ -287,8 +287,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     private final static String QRY_ADD_COURSE = "INSERT INTO tblCourse(schoolID, name, description, image, dwoProfileID, parentID, withChildren) "
             + "VALUES(?, ?, ?, ?, ?, ?, ?) ";
             
-    private final static String QRY_ADD_COURSE_BASIC = "INSERT INTO tblCourse(name, description, image, dwoProfileID) "
-            + "VALUES(?, ?, ?, ?) ";
+    private final static String QRY_ADD_COURSE_BASIC = "INSERT INTO tblCourse(name, description, image, dwoProfileID, parentID, withChildren) "
+            + "VALUES(?, ?, ?, ?, ?, ?) ";
 
     private final static String QRY_UPDATE_COURSE = "UPDATE tblCourse "
             + "SET name = ?, " + "description = ? " + "WHERE (courseID = ?) ";
@@ -1753,6 +1753,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 	        ps.setString(2, description);
 	        ps.setString(3, image);
 	        ps.setInt(4, dwoProfile);
+	        ps.setInt(5, parentID);
+	        ps.setBoolean(6, isMap);
         }
 		else {
 	        ps = getStatement(QRY_ADD_COURSE);

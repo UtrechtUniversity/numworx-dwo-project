@@ -459,7 +459,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     		{	
     			addChildToMap(c);                
     		}
-    	}
+    	} else
         if(src == addCourseButton) {
         	Course c = CourseNameDialog.addCourse(this, TextMapper.getText(TextMapper.GUICDLG_TTL_ADD_COURSE), getParentCourse(), false);
         	if(c != null) {
