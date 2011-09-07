@@ -7,8 +7,11 @@ import java.awt.Image;
 
 import javax.swing.table.AbstractTableModel;
 
+import fi.dwo.client.domain.SchoolClass;
 import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.User;
+import fi.dwo.client.persistence.PersistenceFacade;
+import fi.dwo.client.system.RegisterException;
 
 class UserModel extends AbstractTableModel {
 
@@ -17,7 +20,7 @@ class UserModel extends AbstractTableModel {
 			cols = 4;
 	}
 	
-	private int cols = 5;
+	private int cols = 6;
 	User[] userList;
     Image removeImage, editImage, userImage, teacherImage;
 
@@ -52,11 +55,15 @@ class UserModel extends AbstractTableModel {
 				return editImage;
 		case 4:
 				return removeImage;
+		case 5: 
+				return userList[rowIndex].getInClass();
 		}
 		return null;
 	}
 
 	public Class getColumnClass(int col) {
+		if(col == 5)
+			return SchoolClass.class;
 		if(col > 1)
 			return Image.class;
 		return super.getColumnClass(col);
@@ -69,11 +76,40 @@ class UserModel extends AbstractTableModel {
 		case 2: return "Login als";
 		case 3: return "Wachtwoord";
 		case 4: return "Verwijder";
+		case 5: return "In klas";
 		}
 		return "";
 	}
 	public boolean isCellEditable(int row, int col) {
-		return col >= 2;
+		boolean b = col >= 2;
+		if(b && col == 5)
+		{
+			return ! (userList[row] instanceof Teacher);
+		}
+		return b;
+	}
+
+
+
+
+	public void setValueAt(Object aValue, int row, int col) {
+		User user = userList[row];
+		if(col == 5 && aValue != user.getInClass())
+		{
+			System.out.println("change user " + row + " to " + aValue);
+			SchoolClass c = (SchoolClass) aValue;
+			// TODO persist....
+			try {
+				PersistenceFacade.instance().changeAccount(user, null, null, user.getFirstname(), user.getMiddleName(), user.getLastName(), user.getEmail(), c);
+				user.setInClass(c);
+				fireTableCellUpdated(row, col);
+			} catch (RegisterException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return;
+		}
+		super.setValueAt(aValue, row, col);
 	}
 
 }

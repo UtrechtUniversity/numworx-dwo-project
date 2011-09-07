@@ -723,17 +723,20 @@ public class DbAccess extends DbConnect implements DbAccessIF {
                     DwoXmlRpcException.EXC_WRONG_USERNAME_PASSWORD);
         } else {
             PreparedStatement ps = getStatement(QRY_UPDATE_USER_CLASS);
-            ps.setInt(1, classID);
+            if(classID != 0)
+            	ps.setInt(1, classID);
+            else
+            	ps.setNull(1, Types.INTEGER);
             ps.setInt(2, userID);
 
-            ps.execute();
+            ps.executeUpdate();
             ps.close();
 
-            changeAccount(userID, password, newPassword, firstname, middlename,
+            return changeAccount(userID, password, newPassword, firstname, middlename,
                     lastname, email);
 
         }
-        return true;
+        //return true;
     }
 
     /**

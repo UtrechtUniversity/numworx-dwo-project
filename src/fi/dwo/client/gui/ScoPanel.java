@@ -24,6 +24,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
+import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -91,8 +92,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
         applet.setVisible(false);
         applet.setSize(this.getSize().width-10, this.getSize().height);
         applet.setLocation(5, 5);
-        this.add(applet);
-        applet.setVisible(true);
+        addApplet();
         
         if(DwoHelper.umpc) {
 	        closeButton = new JButton("X");
@@ -102,6 +102,16 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
         }
         if(sco.getCourse()!=null) courseView = ((CoursePanel)sco.getCourse().getCoursePanel()).getCourseView();
     }
+
+	private void addApplet() {
+		if(applet instanceof JApplet)
+		{
+			JApplet japplet = (JApplet) applet;
+			this.add(japplet.getRootPane());
+		} else
+			this.add(applet);
+        applet.setVisible(true);
+	}
     
     public void setScoView(boolean b) {
     	scoView = b;

@@ -16,6 +16,8 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import java.awt.BorderLayout;
+
+import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -32,6 +34,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
 import fi.dwo.client.domain.DwoHelper;
+import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.SchoolClass;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.persistence.MapperCreator;
@@ -226,14 +229,23 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 
 	        //JTable table = new JTable(new ClassUsersModel());
 	        TableUtil.setDefaults(table, true, new ImageRenderer(), new ImageButtonEditor());
-	        TableUtil.setJTableSizes(table);
+			School school = dm.userList[0].getSchool();
+			SchoolClassTableRenderer renderer = new SchoolClassTableRenderer(school);
+			table.setDefaultRenderer(SchoolClass.class, new SchoolClassTableRenderer(renderer.getItems()));
+	    	table.setDefaultEditor(SchoolClass.class, new DefaultCellEditor(renderer));
+
 			TableUtil.setBorder(table);
-			vbox.setAlignmentX(0);
+	    	TableUtil.setJTableSizes(table);
+			
+
+			
+			//vbox.setAlignmentX(0);
 			vbox.setAlignmentY(0);
 			Dimension size = table.getPreferredSize();
-			if(size.width < 602)
-				size.width = 602;
-			table.setMaximumSize(size);
+//			table.setMinimumSize(size);
+//			if(size.width < 702)
+//				size.width = 702;
+//			table.setMaximumSize(size);
 	        JTableHeader tableHeader = table.getTableHeader();
 			vbox.add(tableHeader);
 			vbox.add(table);

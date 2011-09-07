@@ -2,6 +2,7 @@ package fi.dwo.client.gui;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,12 +10,17 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.EventObject;
+import java.util.Iterator;
+import java.util.Vector;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -24,7 +30,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 
 import fi.dwo.client.domain.ContactDocent;
 import fi.dwo.client.domain.DwoHelper;
@@ -290,7 +298,10 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel, Actio
 		dm.userImage = userImage;
 		JTable table = new JTable(dm);
     	TableUtil.setDefaults(table, true, new ImageRenderer(), new ImageButtonEditor());
-
+    	
+		SchoolClassTableRenderer renderer = new SchoolClassTableRenderer(school);
+		table.setDefaultRenderer(SchoolClass.class, new SchoolClassTableRenderer(renderer.getItems()));
+    	table.setDefaultEditor(SchoolClass.class, new DefaultCellEditor(renderer));
     	TableUtil.setJTableSizes(table);
     	Box b = Box.createVerticalBox();
     	b.add(table.getTableHeader());
@@ -383,4 +394,65 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel, Actio
 	}
 	
 
+}
+
+
+class SchoolClassTableRenderer extends JComboBox implements TableCellRenderer
+{
+	private final DefaultTableCellRenderer NULL = new DefaultTableCellRenderer();
+	private Vector items;
+	
+	public Component getTableCellRendererComponent(JTable table, Object value,
+			boolean isSelected, boolean hasFocus, int row, int column) {
+		Component component = NULL.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+		if(!table.getModel().isCellEditable(row, column)) {
+			return component;
+		}
+		setForeground(NULL.getForeground());
+		setBackground(NULL.getBackground());
+		setBorder(NULL.getBorder());
+		setFont(NULL.getFont());
+		
+		setSelectedItem(value);
+		
+		return this;
+	}
+
+	SchoolClassTableRenderer(Vector items) {
+		super(items);
+		this.items = items;
+		
+	}
+	
+	Vector getItems() {
+		return items;
+	}
+	
+	SchoolClassTableRenderer(School school) {
+		this(toVector(school));
+	}
+
+	SchoolClassTableRenderer(User user) {
+		this(toVector(user));
+	}
+
+	private static Vector toVector(School school) {
+	   	SchoolClass[] classes = school.getClassList();
+	   	return toVector(classes);
+	}
+	
+	private static Vector toVector(User teacher) {
+		return toVector(teacher.getSchool());
+	}
+	
+	private static Vector toVector(SchoolClass[] classes) {
+		Vector v = new Vector();
+    	v.add(null);
+     	for (int i = 0; i < classes.length; i++) {
+			v.add(classes[i]);
+		}
+    	return v;
+	}
+	
+	
 }

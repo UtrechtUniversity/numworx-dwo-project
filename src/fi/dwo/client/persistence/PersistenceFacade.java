@@ -701,9 +701,9 @@ public class PersistenceFacade {
         DbAccessIF dbAccess = DbAccessCreator.instance();
         try {
             try {
-                return dbAccess.changeAccount(user.getUserID(), password,
-                        newPassword, firstname, middlename, lastname, email, c
-                                .getID());
+                int classid = c==null?0:c.getID();
+				return dbAccess.changeAccount(user.getUserID(), password,
+                        newPassword, firstname, middlename, lastname, email, classid);
             } catch (IOException e) {
             	e.printStackTrace();
                 throw new RegisterException(RegisterException.EX_IO);

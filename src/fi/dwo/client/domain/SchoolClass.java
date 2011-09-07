@@ -261,4 +261,8 @@ public class SchoolClass implements UserGroup, Comparable {
 		return iconizer ;
 	}
 
+	public String toString() {
+		return getName();
+	}
+	
 }
