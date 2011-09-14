@@ -647,5 +647,9 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 		}
 		return names;
 	}
+
+	public CourseMap getParentMap() {
+		return map.getParentMap();
+	}
     
 }

@@ -9,8 +9,10 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -44,7 +46,111 @@ import fi.dwo.client.system.TextMapper;
  */
 public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 
-    private static final Border TITLE_BORDER = BorderFactory.createEmptyBorder(0, 10, 0, 0);
+    class DeleteAction extends AbstractAction {
+
+		private CourseMap map;
+		private CourseMap parent;
+		Course course;
+		int row = 0;
+		Sco sco;
+		
+		public DeleteAction(CourseMap map) {
+			super("Verwijderen");
+			this.map = map;
+			Object o = map.getUserObject();
+			if(o instanceof Sco)
+			{	sco = (Sco) o;
+				parent = sco.getCourse();
+			}
+			else if(o instanceof Course)
+			{
+				course = (Course) o;
+				parent = map.getParentMap();
+				Course[] courses = map.getChildren();
+				for (row = 0; row < courses.length; row++) {
+					if(courses[row] == course)
+						break;
+				}
+			}
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			if(course != null) 
+			{
+                if (GuiCreator.instance().deleteCourse(course)) {
+                    parent.removeChild(row);
+                 }
+
+			} else if (sco != null)
+			{
+				GuiCreator.instance().deleteSco(sco);
+			}
+			center.updateMap(parent);
+		}
+
+	}
+
+	class NewAction extends AbstractAction {
+
+		private final Course STANDARD_MAP = new Course();
+		private CourseMap map;
+		boolean ismap, submap;
+		Course course;
+		
+		
+		public NewAction(CourseMap map, boolean submap) {
+			super();
+			this.map = map;
+			this.submap = submap;
+			if(map instanceof Course)
+			{ course = (Course) map.getUserObject();
+			  ismap = course.isWithChildren();
+			} else
+			if (map == ModuleTreePanel.SCHOOL_MAP)
+			{
+				course = null;
+				ismap = true;
+			} else {
+				course = STANDARD_MAP;
+				ismap = true;
+			}
+			
+			if(submap)
+				putValue(NAME, "Nieuwe Map");
+			else if(ismap)
+				putValue(NAME, "Nieuwe Module");
+			else 
+				putValue(NAME, "Nieuwe Activiteit");
+		}
+
+		public void actionPerformed(ActionEvent e) {
+
+			if(submap)
+			{
+				Course child = CourseNameDialog.addMap(TeacherMenuPanel.this, course);
+				if(child != null) 
+				{
+					map.addChild(child);
+					center.updateMap(map);
+				}
+			}
+			else if(ismap)
+			{
+				Course child = CourseNameDialog.addCourse(TeacherMenuPanel.this, course);
+				if(child != null)
+				{
+					map.addChild(child);
+					center.updateMap(map);
+				}
+			}
+			else
+				AddScoDialog.addSco(TeacherMenuPanel.this, course);
+
+		}
+
+	}
+
+	private static final Border TITLE_BORDER = BorderFactory.createEmptyBorder(0, 10, 0, 0);
     private static final Border CLASS_BORDER = BorderFactory.createEmptyBorder(0, 20, 0, 0);
 	private JButton classManagementButton;
     
@@ -129,44 +235,7 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 	        this.add(classPanel);
 	        classPanel.setVisible(true);
 		}
-		/*if(GuiCreator.instance().getUser() instanceof Admin){
-	        Admin t = (Admin) GuiCreator.instance().getUser();
-	        if ((t.getClasses() != null) && (t.getClasses().length != 0)) {
-	            l = new Label(TextMapper.getText(TextMapper.GUIMNU_CLASS_RESULTS)
-	                    + ":");
-	            l.setFont(GuiConstants.NORMAL_TEXT);
-	            fm = l.getFontMetrics(l.getFont());
-	            l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-	            l.setLocation(10, 10);
-	            l.setVisible(false);
-	            classPanel.add(l);
-	            l.setVisible(true);
-	
-	            SchoolClass[] classes = t.getClasses();
-	            classLinkedList = new ClassLinkedLabel[classes.length];
-	            ClassLinkedLabel cll;
-	
-	
-	            for (int i = 0; i < classes.length; i++) {
-	                cll = new ClassLinkedLabel(classes[i]);
-	                cll.addActionListener(this);
-	                classLinkedList[i] = cll;
-	                cll.setFont(GuiConstants.NORMAL_TEXT);
-	                fm = cll.getFontMetrics(cll.getFont());
-	                cll.setSize(fm.stringWidth(cll.getText()) + 10, fm.getHeight());
-	                cll.setLocation(20, 26 + i * (cll.getSize().height + 3));
-	                cll.setVisible(false);
-	                classPanel.add(cll);
-	                cll.setVisible(true);
-	            }
-	
-	            classPanel.setSize(this.getSize().width - 1, 26 + classes.length * (l.getSize().height + 3));
-	        }
-	        classPanel.setVisible(false);
-	        this.add(classPanel);
-	        classPanel.setVisible(true);
-		}*/
-    }
+   }
 
     /**
      * Invoked when an action occurs.
@@ -379,6 +448,13 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 		Object object = map.getUserObject();
 		JPopupMenu m = new JPopupMenu();
 		JMenuItem item;
+		if(object instanceof Course) 
+		{
+			if( ((Course)object).isWithChildren())
+					m.add(new JMenuItem(new NewAction(map, true)));
+			item = new JMenuItem(new NewAction(map, false));
+			m.add(item);
+		}
 		if(object instanceof Course || object instanceof Sco)
 		{
 			ActionListener listener = new CutCopyAction(map);
@@ -403,6 +479,10 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 			    item.addActionListener(new PasteAction(map));
 			    m.add(item);
 			}	
+		}
+		if(object instanceof Course || object instanceof Sco)
+		{
+			m.add(new JMenuItem(new DeleteAction(map)));
 		}
 		return m;
 	}

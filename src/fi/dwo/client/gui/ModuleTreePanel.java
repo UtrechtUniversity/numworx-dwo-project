@@ -80,6 +80,10 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 			}
 			return (Course[]) list.toArray(new Course[list.size()]);
 		}
+		
+		public CourseMap getParent() {
+			return null;
+		}
 	}
 	
 	class TopMap extends TreeMap {
@@ -102,12 +106,17 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 			}
 			return result;
 		}
+
+		public CourseMap getParent() {
+			return null;
+		}
 		
 	}
 	
 	
 	class TreeMap implements CourseMap
 	{
+		
 		TreeMap(DefaultMutableTreeNode node) {
 			super();
 			this.node = node;
@@ -139,6 +148,10 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 				names.add(courses[i].getName());
 			}
 			return names;
+		}
+
+		public CourseMap getParentMap() {
+			return null;
 		}
 
 	}
@@ -276,7 +289,9 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 				if(course.getSchoolID() == 0)
 				{
 					dwonode.add(node);
+					course.setParentMap(STANDAARD_DWO_MAP);
 				} else {
+					course.setParentMap(SCHOOL_MAP);
 					schoolnode.add(node);
 				}
 			}
@@ -528,6 +543,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
     	DefaultMutableTreeNode child; 
     	for (int i = 0; i < courses.length; i++) {
 			Course course = courses[i];
+			course.setParentMap(map);
 			child = new DefaultMutableTreeNode(course);
 			node.add(child);
 			if(course.isWithChildren())
