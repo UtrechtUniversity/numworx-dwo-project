@@ -11,5 +11,6 @@ public interface CourseMap {
 	void setChildren(Course[] courses);
 	Object getUserObject();
 	Set getChildNames();
+	CourseMap getParentMap();
 
 }

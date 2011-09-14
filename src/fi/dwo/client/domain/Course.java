@@ -205,6 +205,8 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
     
     
     private Image courseLogo;
+
+	private CourseMap parentMap;
     /**
      * Logo van deze course.
      * Op de grens tussen gui en domain.
@@ -530,6 +532,14 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
 			names.add(name);
 		}
 		return names;
+	}
+
+	public CourseMap getParentMap() {
+		return parentMap;
+	}
+
+	public void setParentMap(CourseMap parentMap) {
+		this.parentMap = parentMap;
 	}
 	
 	
