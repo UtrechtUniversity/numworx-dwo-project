@@ -506,4 +506,7 @@ public interface DbAccessIF {
 	public void setCourseSequence(Vector vector, int schoolID, int classID,
 			int parent, int profileID)
 	throws  DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+
+	public void moveSco(int scoId, int courseId, int sequencenr)
+	throws  DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 }

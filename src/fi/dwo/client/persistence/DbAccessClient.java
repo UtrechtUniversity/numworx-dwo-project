@@ -707,4 +707,13 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
         Object object = invoke("setCourseSequence", vv);
     }
 
+    public void moveSco(int a, int b, int c) throws IOException, XmlRpcException
+    {
+        Vector vv = new Vector(3);
+        vv.addElement( new Integer(a));
+        vv.addElement( new Integer(b));
+        vv.addElement( new Integer(c));
+        Object object = invoke("moveSco", vv);
+    }
+
 }

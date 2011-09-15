@@ -220,7 +220,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 				config.setName(name);
 				Sco news = PersistenceFacade.instance().addSco(course, config, name, description, sco.isShowScore());
 // TODO common code?		
-				news.setSequencenr(sco.getSequencenr());
+				news.setSequencenr(sco.getSequencenr()); // TODO noop?
 				Sco[] oldsa = course.getScoList();
 				Sco[] newsa = new Sco[oldsa.length+1];
 				System.arraycopy(oldsa, 0, newsa, 0, oldsa.length);

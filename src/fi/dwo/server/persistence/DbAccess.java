@@ -2181,7 +2181,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     /**
      * Update het sequencenr van een sco. Niet gecombineerd met changeSco, 
      * omdat er geen bijeffect is dat de studenten hun data verliezen.
-     * Voor een swap zijn twee sco's nodig. Daarom hier meteen twee voor de prijs van ��n!
+     * Voor een swap zijn twee sco's nodig. Daarom hier meteen twee voor de prijs van één!
      * @param scoID 
      * @param sequencenr nieuw sequence
      * nummer voor scoID, bij swap oude van scoID2
@@ -2535,6 +2535,33 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 		}
 		
 		
+	}
+
+	public void moveSco(int scoId, int courseId, int sequencenr)
+			throws DwoXmlRpcException, IOException, XmlRpcException,
+			SQLException {
+		Connection c = getConnection();
+		boolean auto = c.getAutoCommit();
+		try { 
+			c.setAutoCommit(false);
+			PreparedStatement ps;
+/*
+	get old courseId/sequencenr
+	if courseid = oldcourseid 
+		seqnr updaten van alle sco's van deze course:
+			als newseqnr > oldseqnr dan seqnr aflagen tussen (old..new]
+			als newseqnr < oldseqnr dan seqnr ophogen tussen [new..old)
+	else
+		seqnr aflagen als seqnr > oldseqnr bij oldcourse
+		seqnr ophogen als seqnr >= newseqnr bij newcourse
+		
+		set (courseid, seqnr) in sco
+*/			
+			c.commit();
+		} finally {
+			c.rollback();
+			c.setAutoCommit(auto);
+		}
 	}
 	
 }

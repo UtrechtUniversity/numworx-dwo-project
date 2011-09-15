@@ -198,6 +198,7 @@ public class ScoMapper extends XmlRpcMapper {
             s.setLaunchdata((Hashtable)new StringCodeObject((String) object).toObject());
             s.setDataChanged(false);
 		}
+		s.setCourseChanged(false);
         return s;
     }
 

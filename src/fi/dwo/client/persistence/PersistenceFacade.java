@@ -1363,6 +1363,7 @@ public class PersistenceFacade {
                 sco.setSequencenr(max);
                 sco.setCourse(course);
                 sco.setLaunchdata((Hashtable)new StringCodeObject((String) appletConfig.getLaunchdata()).toObject());
+                sco.setCourseChanged(false);
                 return sco;
             } catch (IOException e) {
                 throw new ScoException(ScoException.EX_IO);
@@ -1392,6 +1393,14 @@ public class PersistenceFacade {
         DbAccessIF dbAccess = DbAccessCreator.instance();
         try {
             try {
+            	if(sco.isCourseChanged())
+            	{
+            		System.err.println(sco + " moved TODO");
+            		dbAccess.moveSco(sco.getID(), sco.getCourse().getID(), sco.getSequencenr());
+            		sco.setCourseChanged(false);
+            	}
+            	
+            	
             	if(sco.isDataChanged())
             	{	boolean result;
          			if(sco.getShowScore() != null)
@@ -1456,6 +1465,8 @@ public class PersistenceFacade {
 					scos[nr1-1] = sco2;
 					sco1.setSequencenr(nr2);
 					sco2.setSequencenr(nr1);
+					sco1.setCourseChanged(false);
+					sco1.setCourseChanged(false);
 				}
 			} catch (DwoXmlRpcException e) {
 				throw (ScoException) getException(e,e.code);
@@ -1537,6 +1548,7 @@ public class PersistenceFacade {
                             if (scos[i].getSequencenr() > sco.getSequencenr()) {
                                 scos[i]
                                         .setSequencenr(scos[i].getSequencenr() - 1);
+                                scos[i].setCourseChanged(false);
                             }
                             tmp[i + div] = scos[i];
                         } else {

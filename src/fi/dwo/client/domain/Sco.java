@@ -61,6 +61,7 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
     private User user;
 
     private Course course;
+    private boolean courseChanged;
     
     private int sequencenr;
     
@@ -74,6 +75,14 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
 
 	public void setDataChanged(boolean dataChanged) {
 		this.dataChanged = dataChanged;
+	}
+
+	public boolean isCourseChanged() {
+		return courseChanged;
+	}
+
+	public void setCourseChanged(boolean courseChanged) {
+		this.courseChanged = courseChanged;
 	}
 
 	public static final String NORMAL = "normal";
@@ -807,6 +816,10 @@ System.err.println("sum = ["+result+"]");
      * @param course The new course of the sco.
      */
     public void setCourse(Course course) {
+    	if(!isCourseChanged())
+    	{
+    		setCourseChanged(this.course != course);
+    	}
         this.course = course;
     }
 
@@ -859,6 +872,10 @@ System.err.println("sum = ["+result+"]");
      * @param sequencenr The sequencenumber to set.
      */
     public void setSequencenr(int sequencenr) {
+    	if(!isCourseChanged())
+    	{
+    		setCourseChanged(this.sequencenr != sequencenr);
+    	}
         this.sequencenr = sequencenr;
     }
 

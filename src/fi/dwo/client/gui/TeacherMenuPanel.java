@@ -66,7 +66,7 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 			{
 				course = (Course) o;
 				parent = map.getParentMap();
-				Course[] courses = map.getChildren();
+				Course[] courses = parent.getChildren();
 				for (row = 0; row < courses.length; row++) {
 					if(courses[row] == course)
 						break;
@@ -75,6 +75,12 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 		}
 
 		public void actionPerformed(ActionEvent e) {
+// verwijder clipboard als die wordt verwijdert
+			if (clipboard == map)
+			{	clipboard = null;
+				cmd = null;
+			}
+	
 			if(course != null) 
 			{
                 if (GuiCreator.instance().deleteCourse(course)) {
@@ -124,7 +130,7 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-
+// FIXME werkt niet goed, als updateMap werkt op een toplevel map.
 			if(submap)
 			{
 				Course child = CourseNameDialog.addMap(TeacherMenuPanel.this, course);
@@ -341,55 +347,14 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 			{
 				if(clip instanceof Course)
 				{
-					Course course = (Course)clip;
-					CourseMap oldmap = getParentMap(course);
-					if(oldmap.getUserObject() == object) // cut/paste in zelfde map?
+					cutCourse((Course)clip, object, instance);
+				} else if(clip instanceof Sco && object instanceof Course)
+				{
+					Course course = (Course) object;
+					Sco sco = (Sco)clip;
+					if(course.isWithChildren() || sco.getCourse() == course)
 						return;
-					int id = course.getID();
-					if(object instanceof Course)
-					{
-						Course p = (Course)object;
-						int pid = p.getParentID();
-						while(pid != 0)
-						{
-							if(pid == id)
-								return;			// course move into course
-							try {
-								pid = ((Course) PersistenceFacade.instance().get(pid, Course.class)).getParentID();
-							} catch (PersistenceException e1) {
-								e1.printStackTrace();
-								return; 
-							}
-						}
-					}
-					String name = course.getName();
-					name = CourseManagementPanel.replaceDuplicate(name, map.getChildNames());
-					if( object instanceof String ) // toplevel
-					{
-						removeChild(oldmap, course);
-						course.setParentID(0);
-						course.setName(name);
-						if(object.equals(ModuleTreePanel.STANDAARD_DWO_MODULES))
-							course.setSchoolID(0);
-						else // School Modules.
-							course.setSchoolID(dwo.getUser().getSchool().getSchoolID());
-					} else if( object instanceof Course)
-					{
-						Course map = (Course)object;
-						if(map.isWithChildren())
-						{
-							course.setSchoolID(map.getSchoolID());
-							course.setName(name);
-							removeChild(oldmap, course);
-							map.addChild(course);
-							
-						} else
-							return;
-					}
-					instance.updateCourse(course);
-					instance.getMainPanel().getCenter().updateMap(map);
-					instance.getMainPanel().getCenter().updateMap(oldmap);
-					//cmd = "copy"; // 2x paste wordt altijd copy
+					cutSco( sco, course, instance);
 				}
 			} else if("copy".equals(cmd))
 			{
@@ -408,6 +373,68 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 			}
 			
 			
+		}
+
+		private void cutSco(Sco sco, Course course, GuiCreator instance) {
+			if(course.getScoList() == null) course.loadScos();
+			sco.setSequencenr(course.getScoList().length); // to the end.
+			Course old = sco.getCourse();
+			sco.setCourse(course);
+			instance.updateSco(sco);
+			old.loadScos(); course.loadScos(); // refresh sco's (zonder dbaccess mogelijk?)
+			center.updateCourse(old);
+			center.updateCourse(course);			
+		}
+
+		private void cutCourse(Course course, Object object, GuiCreator instance) {
+			CourseMap oldmap = getParentMap(course);
+			if(oldmap.getUserObject() == object) // cut/paste in zelfde map?
+				return;
+			int id = course.getID();
+			if(object instanceof Course)
+			{
+				Course p = (Course)object;
+				int pid = p.getParentID();
+				while(pid != 0)
+				{
+					if(pid == id)
+						return;			// course move into course
+					try {
+						pid = ((Course) PersistenceFacade.instance().get(pid, Course.class)).getParentID();
+					} catch (PersistenceException e1) {
+						e1.printStackTrace();
+						return; 
+					}
+				}
+			}
+			String name = course.getName();
+			name = CourseManagementPanel.replaceDuplicate(name, map.getChildNames());
+			if( object instanceof String ) // toplevel
+			{
+				removeChild(oldmap, course);
+				course.setParentID(0);
+				course.setName(name);
+				if(object.equals(ModuleTreePanel.STANDAARD_DWO_MODULES))
+					course.setSchoolID(0);
+				else // School Modules.
+					course.setSchoolID(dwo.getUser().getSchool().getSchoolID());
+			} else if( object instanceof Course)
+			{
+				Course map = (Course)object;
+				if(map.isWithChildren())
+				{
+					course.setSchoolID(map.getSchoolID());
+					course.setName(name);
+					removeChild(oldmap, course);
+					map.addChild(course);
+					
+				} else
+					return;
+			}
+			instance.updateCourse(course);
+			center.updateMap(map);
+			center.updateMap(oldmap);
+			//cmd = "copy"; // 2x paste wordt altijd copy
 		}
 
 		private void removeChild(CourseMap oldmap, Course course) {
@@ -448,6 +475,20 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 		Object object = map.getUserObject();
 		JPopupMenu m = new JPopupMenu();
 		JMenuItem item;
+		if(object == ModuleTreePanel.SCHOOL_MODULES)
+		{
+			m.add(new JMenuItem(new NewAction(map, true)));
+			m.add(new JMenuItem(new NewAction(map, false)));	
+		} else if (object == ModuleTreePanel.STANDAARD_DWO_MODULES)
+		{
+			if( dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT))
+			{
+				m.add(new JMenuItem(new NewAction(map, true)));
+				m.add(new JMenuItem(new NewAction(map, false)));				
+			}
+		}
+		
+		
 		if(object instanceof Course) 
 		{
 			if( ((Course)object).isWithChildren())
@@ -458,7 +499,7 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 		if(object instanceof Course || object instanceof Sco)
 		{
 			ActionListener listener = new CutCopyAction(map);
-			if(object instanceof Course)
+			//if(object instanceof Course||object instanceof Sco)
 			{item = new JMenuItem("cut"); item.addActionListener(listener);m.add(item);}
 			if(object instanceof Sco)
 			{item = new JMenuItem("copy"); item.addActionListener(listener);m.add(item);}
