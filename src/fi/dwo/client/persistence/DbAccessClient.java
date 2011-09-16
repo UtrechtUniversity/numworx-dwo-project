@@ -707,13 +707,15 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
         Object object = invoke("setCourseSequence", vv);
     }
 
-    public void moveSco(int a, int b, int c) throws IOException, XmlRpcException
+    public boolean moveSco(int a, int b, int c, java.lang.String d) throws IOException, XmlRpcException
     {
-        Vector vv = new Vector(3);
+        Vector vv = new Vector(4);
         vv.addElement( new Integer(a));
         vv.addElement( new Integer(b));
         vv.addElement( new Integer(c));
+        vv.addElement(d);
         Object object = invoke("moveSco", vv);
+        return ((Boolean)object).booleanValue();
     }
 
 }

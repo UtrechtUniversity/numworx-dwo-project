@@ -1395,12 +1395,9 @@ public class PersistenceFacade {
             try {
             	if(sco.isCourseChanged())
             	{
-            		System.err.println(sco + " moved TODO");
-            		dbAccess.moveSco(sco.getID(), sco.getCourse().getID(), sco.getSequencenr());
+            		dbAccess.moveSco(sco.getID(), sco.getCourse().getID(), sco.getSequencenr(), sco.getScoName());
             		sco.setCourseChanged(false);
             	}
-            	
-            	
             	if(sco.isDataChanged())
             	{	boolean result;
          			if(sco.getShowScore() != null)

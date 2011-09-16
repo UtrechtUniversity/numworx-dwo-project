@@ -352,9 +352,16 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 				{
 					Course course = (Course) object;
 					Sco sco = (Sco)clip;
-					if(course.isWithChildren() || sco.getCourse() == course)
+					if (course.isWithChildren() ||
+						  sco.getCourse() == course && sco.getSequencenr()==course.getScoList().length)
 						return;
 					cutSco( sco, course, instance);
+				} else if(clip instanceof Sco && object instanceof Sco)
+				{
+					Sco before = (Sco)object;
+					Sco sco = (Sco) clip;
+					if(sco.getID() != before.getID())
+						cutSco(sco, before, instance);
 				}
 			} else if("copy".equals(cmd))
 			{
@@ -377,13 +384,29 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 
 		private void cutSco(Sco sco, Course course, GuiCreator instance) {
 			if(course.getScoList() == null) course.loadScos();
-			sco.setSequencenr(course.getScoList().length); // to the end.
+			sco.setSequencenr(course.getScoList().length+1); // to the end.
+			cutSco_1(sco, course, instance);			
+		}
+
+		private void cutSco_1(Sco sco, Course course, GuiCreator instance) {
 			Course old = sco.getCourse();
 			sco.setCourse(course);
+			if(old.getID() != course.getID())
+			{
+				String name = sco.getScoName();
+				name = CourseManagementPanel.replaceDuplicate(name, course.getScoNames());
+				sco.setName(name);
+			}
 			instance.updateSco(sco);
-			old.loadScos(); course.loadScos(); // refresh sco's (zonder dbaccess mogelijk?)
+//			old.loadScos(); course.loadScos(); // refresh sco's (zonder dbaccess mogelijk?)
 			center.updateCourse(old);
-			center.updateCourse(course);			
+			center.updateCourse(course);
+		}
+
+		private void cutSco(Sco sco, Sco before, GuiCreator instance) {
+			Course course = before.getCourse();
+			sco.setSequencenr(before.getSequencenr()); // before that sco.
+			cutSco_1(sco, course,instance);
 		}
 
 		private void cutCourse(Course course, Object object, GuiCreator instance) {
@@ -512,7 +535,7 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 			else if(object == ModuleTreePanel.STANDAARD_DWO_MODULES)
 				acceptable = uo instanceof Course && dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT);
 			else if(uo instanceof Sco)
-				acceptable = object instanceof Course &&  !((Course)object).isWithChildren();
+				acceptable = object instanceof Sco || object instanceof Course &&  !((Course)object).isWithChildren();
 			else if (object instanceof Course)
 				acceptable = ((Course)object).isWithChildren();
 			if(acceptable)

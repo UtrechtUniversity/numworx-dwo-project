@@ -239,9 +239,13 @@
 			<fileset dir='${src}' includes="${fullpackagename}/**/*.java"  />
 			<xmlrpcc />
 		</doclet>
+		<antcall target="refresh.eclipse"/>
 	</target>
 
-	
+	<target name="refresh.eclipse" depends='init' if='eclipse.running' >
+		<echo>Refreshing eclipse</echo>
+		<eclipse.refreshLocal resource="${ant.project.name}/." depth="infinite"/>
+	</target>
 	
 	
 	

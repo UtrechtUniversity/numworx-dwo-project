@@ -36,7 +36,7 @@ public class ScoMapper extends XmlRpcMapper {
 			ht.put(getIDCol(), new Integer(getID()));
 //System.out.println("request launchdata for " + getID());
 //new Throwable().printStackTrace();
-			Vector v = LAZY_SCO_KEYS;
+			Vector v = new Vector();
 			v.add("launchdata");
 	        DbAccessIF dbAccess = DbAccessCreator.instance();
 	        try {
@@ -198,6 +198,13 @@ public class ScoMapper extends XmlRpcMapper {
             s.setLaunchdata((Hashtable)new StringCodeObject((String) object).toObject());
             s.setDataChanged(false);
 		}
+// FIXME als s instanceof Lazy, set launchdata null anders meteen ophalen.
+/*		else 
+ * 		{ s.setLaunchdata stale...
+ * 		}		
+ */
+		
+		
 		s.setCourseChanged(false);
         return s;
     }

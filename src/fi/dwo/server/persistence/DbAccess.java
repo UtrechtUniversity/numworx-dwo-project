@@ -2536,11 +2536,16 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 		
 		
 	}
-
-	public void moveSco(int scoId, int courseId, int sequencenr)
+/*
+ * TODO eventueel een nieuwe naam meegeven, ivm clashes. 
+ * (non-Javadoc)
+ * @see fi.dwo.client.persistence.DbAccessIF#moveSco(int, int, int, String)
+ */
+	public boolean moveSco(int scoID, int courseID, int sequencenr, String name)
 			throws DwoXmlRpcException, IOException, XmlRpcException,
 			SQLException {
 		Connection c = getConnection();
+		boolean result = false;
 		boolean auto = c.getAutoCommit();
 		try { 
 			c.setAutoCommit(false);
@@ -2556,12 +2561,57 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 		seqnr ophogen als seqnr >= newseqnr bij newcourse
 		
 		set (courseid, seqnr) in sco
-*/			
+*/
+			ps = getStatement("SELECT courseID, sequencenr from tblSco where scoID = ?");
+			ps.setInt(1, scoID);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next())
+			{
+				int oldCourseID = rs.getInt(1);
+				int oldSequencenr = rs.getInt(2);
+				rs.close();
+				ps.close();
+				if(courseID == oldCourseID)
+				{
+					// gelijk.....
+					if(sequencenr > oldSequencenr)
+					{
+						ps = getStatement("UPDATE tblSco SET sequencenr = sequencenr -1 WHERE courseID = ? AND sequencenr > ? AND sequencenr <= ?");
+					} else {
+						ps = getStatement("UPDATE tblSco SET sequencenr = sequencenr + 1 WHERE courseID = ? AND sequencenr < ? AND sequencenr >= ?");
+					}
+					ps.setInt(1, courseID);
+					ps.setInt(2, oldSequencenr);
+					ps.setInt(3, sequencenr);
+					ps.executeUpdate(); ps.close();
+				} else {
+					// ongelijk
+					ps = getStatement("UPDATE tblSco SET sequencenr = sequencenr - 1 WHERE courseID = ? AND sequencenr > ?");
+					ps.setInt(1, oldCourseID);
+					ps.setInt(2, oldSequencenr);
+					ps.executeUpdate(); ps.close();
+					ps = getStatement("UPDATE tblSco SET sequencenr = sequencenr + 1 WHERE courseID = ? AND sequencenr >= ?");
+					ps.setInt(1, courseID);
+					ps.setInt(2, sequencenr);
+					ps.executeUpdate(); ps.close();
+				}
+				ps = getStatement("UPDATE tblSco SET courseID = ?, sequencenr = ?, sconame = ? where scoID = ?");
+				ps.setInt(1, courseID);
+				ps.setInt(2, sequencenr);
+				ps.setString(3, name);
+				ps.setInt(4, scoID);
+				ps.executeUpdate();
+				result = true;
+			} else {
+				rs.close();
+			}
+			ps.close();
 			c.commit();
 		} finally {
 			c.rollback();
 			c.setAutoCommit(auto);
 		}
+		return result;
 	}
 	
 }

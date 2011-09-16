@@ -443,10 +443,10 @@ public class DbAccessProxy extends DbConnect implements DbAccessIF {
 		getDelegate().setCourseSequence(vector, schoolID, classID, parent, profileID);
 	}
 
-	public void moveSco(int scoId, int courseId, int sequencenr)
+	public boolean moveSco(int scoId, int courseId, int sequencenr, String name)
 			throws DwoXmlRpcException, IOException, XmlRpcException,
 			SQLException {
-		getDelegate().moveSco(scoId, courseId, sequencenr);
+		return getDelegate().moveSco(scoId, courseId, sequencenr, name);
 	}
 	
 }
