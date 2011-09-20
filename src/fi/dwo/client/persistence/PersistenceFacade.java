@@ -1251,6 +1251,9 @@ public class PersistenceFacade {
                 c.setParentID(parentID);
                 c.resetParent();
                 if(withChildren) c.setChildren(Course.NO_CHILDREN);
+                else c.setScoList(Course.NO_SCOS);
+                MapperIF map = MapperCreator.instance(Course.class);
+                map.put(result, c);
                 return c;
             } catch (IOException e) {
                 throw new CourseException(CourseException.EX_IO);

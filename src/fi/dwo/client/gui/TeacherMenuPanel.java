@@ -337,17 +337,18 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 	class PasteAction implements ActionListener 
 	{
 		CourseMap map;
+		private GuiCreator instance;
 
 		public void actionPerformed(ActionEvent e) {
 			Object object = map.getUserObject();
 			Object clip = clipboard.getUserObject();
 			System.out.println( cmd  + " " + clip + " into " + object);
-			GuiCreator instance = GuiCreator.instance();
+			instance = GuiCreator.instance();
 			if("cut".equals(cmd))
 			{
 				if(clip instanceof Course)
 				{
-					cutCourse((Course)clip, object, instance);
+					cutCourse((Course)clip, object);
 				} else if(clip instanceof Sco && object instanceof Course)
 				{
 					Course course = (Course) object;
@@ -355,13 +356,13 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 					if (course.isWithChildren() ||
 						  sco.getCourse() == course && sco.getSequencenr()==course.getScoList().length)
 						return;
-					cutSco( sco, course, instance);
+					cutSco( sco, course);
 				} else if(clip instanceof Sco && object instanceof Sco)
 				{
 					Sco before = (Sco)object;
 					Sco sco = (Sco) clip;
 					if(sco.getID() != before.getID())
-						cutSco(sco, before, instance);
+						cutSco(sco, before);
 				}
 			} else if("copy".equals(cmd))
 			{
@@ -372,23 +373,97 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 						return;
 					Sco sco = (Sco)clip;
 					// copy eigen activiteiten
-					AppletConfig config = instance.getAppletConfigFromSco(sco);
-					String name = config.getName();
-					name = CourseManagementPanel.replaceDuplicate(name, course.getScoNames());
-					instance.addSco(course, config, name, sco.getDescription(), sco.isShowScore());
+					copySco(course, sco);
+				} else
+				if(clip instanceof Course && object instanceof String)
+				{
+					copyCourseTop( (Course) clip, object == ModuleTreePanel.STANDAARD_DWO_MODULES);
+				} else if(clip instanceof Course && object instanceof Course)
+				{
+					Course source = (Course) clip;
+					Course dest   = (Course) object;
+					if(!dest.isWithChildren())
+						return;
+					if(dest.getSchoolID() == 0 && !hasRight()) return;
+					// TODO check copy parent into child.
+					copyCourseMap(dest, source);
 				}
+				
+			}
+		}
+		private void copySco(Course course, Sco sco) {
+			AppletConfig config = instance.getAppletConfigFromSco(sco);
+			String name = config.getName();
+			name = CourseManagementPanel.replaceDuplicate(name, course.getScoNames());
+			instance.addSco(course, config, name, sco.getDescription(), sco.isShowScore());
+		}
+/**
+ * 
+ * @param course
+ * @param b true if standaard modules.
+ */
+		private void copyCourseTop(Course course, boolean b) {
+			CourseMap oldmap = getParentMap(course);
+			if(oldmap.getUserObject() == map.getUserObject()) // copy/paste in zelfde map?
+				return;
+			if(b && !hasRight())
+				return;
+			String name = course.getName();
+			name = CourseManagementPanel.replaceDuplicate(name, map.getChildNames());
+			boolean isMap = course.isWithChildren();
+			Course parent = b?new Course():null;
+			String description = course.getDescription();
+			Course c = instance.addCourse(name, description, parent, isMap);
+			map.addChild(c);
+			center.updateMap(map);
+			if(isMap) {
+				copyCourseMap(c, course.getChildren());
+			} else {
+				copySco(c, course);
 			}
 			
+			// recurse copyCourseMap, copySco
+		}
+private boolean hasRight() {
+	return GuiCreator.instance().getUser().hasRight(User.PROFILE_ADMIN_RIGHT);
+}
+
+		private void copyCourseMap(Course c, Course[] children) {
+			for (int i = 0; i < children.length; i++) {
+				copyCourseMap(c, children[i]);
+			}
+		}
+		
+		private void copyCourseMap(Course dest, Course course) {
+			String name = course.getName();
+			name = CourseManagementPanel.replaceDuplicate(name, dest.getChildNames());
+			boolean isMap = course.isWithChildren();
+			String description = course.getDescription();
+			Course c = instance.addCourse(name, description, dest, isMap);
+			map.addChild(c);
+			center.updateMap(map);
+			if(isMap) {
+				copyCourseMap(c, course.getChildren());
+			} else {
+				copySco(c, course);
+			}
+				
 			
 		}
-
-		private void cutSco(Sco sco, Course course, GuiCreator instance) {
+		private void copySco(Course dest, Course course) {
+			Sco[] list = course.getScoList();
+			for (int i = 0; i < list.length; i++) {
+				copySco(dest, list[i]);
+			}
+	
+}
+		private void cutSco(Sco sco, Course course) {
 			if(course.getScoList() == null) course.loadScos();
 			sco.setSequencenr(course.getScoList().length+1); // to the end.
-			cutSco_1(sco, course, instance);			
+			cutSco_1(sco, course);			
 		}
 
-		private void cutSco_1(Sco sco, Course course, GuiCreator instance) {
+		private void cutSco_1(Sco sco, Course course) {
 			Course old = sco.getCourse();
 			sco.setCourse(course);
 			if(old.getID() != course.getID())
@@ -403,13 +478,13 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 			center.updateCourse(course);
 		}
 
-		private void cutSco(Sco sco, Sco before, GuiCreator instance) {
+		private void cutSco(Sco sco, Sco before) {
 			Course course = before.getCourse();
 			sco.setSequencenr(before.getSequencenr()); // before that sco.
-			cutSco_1(sco, course,instance);
+			cutSco_1(sco, course);
 		}
 
-		private void cutCourse(Course course, Object object, GuiCreator instance) {
+		private void cutCourse(Course course, Object object) {
 			CourseMap oldmap = getParentMap(course);
 			if(oldmap.getUserObject() == object) // cut/paste in zelfde map?
 				return;
@@ -524,7 +599,7 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 			ActionListener listener = new CutCopyAction(map);
 			//if(object instanceof Course||object instanceof Sco)
 			{item = new JMenuItem("cut"); item.addActionListener(listener);m.add(item);}
-			if(object instanceof Sco)
+			//if(object instanceof Sco)
 			{item = new JMenuItem("copy"); item.addActionListener(listener);m.add(item);}
 		}
 		if(clipboard != null) {

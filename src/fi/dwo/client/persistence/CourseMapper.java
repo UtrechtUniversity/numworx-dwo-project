@@ -31,13 +31,15 @@ public class CourseMapper extends XmlRpcMapper {
     }
 
     /**
+     * Put a new object into the cache...
+     * NOT into the DATABASE
      * @param oid
      * @param obj
 
      */
     public void put(int oid, Object obj) throws IOException, SQLException,
             XmlRpcException {
-        System.err.println("CourseMapper.put() Not yet implemented!");
+        objects.put(new Integer(oid), obj);
     }
 
     /**

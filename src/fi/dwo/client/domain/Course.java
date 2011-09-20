@@ -437,6 +437,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
 
 
 	public static final Course[] NO_CHILDREN = new Course[0];
+	public static final Sco[] NO_SCOS = new Sco[0];
 	
 	public Course[] getChildren() {
 		return children;
