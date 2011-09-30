@@ -347,7 +347,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         
         if(CenterPanel.isIconizer())
         {
-        	addMapButton = new JButton("Nieuwe Map");
+        	addMapButton = new JButton(TextMapper.getText(TextMapper.GUIC_ADD_MAP));
         	addMapButton.addActionListener(this);
         	header.add(Box.createHorizontalStrut(4));
         	header.add(addMapButton);
@@ -636,8 +636,14 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 			System.out.println("UPDATE " + e);
 			courses = map.getChildren();
 			buildJTable();
+		} else
+		if(ok && e.getSource() instanceof CourseMap && ((CourseMap) e.getSource()).getUserObject() == getUserObject())
+		{
+			System.out.println("UPDATE " + e);
+			courses = ((CourseMap) e.getSource()).getChildren();
+			buildJTable();
 		}
-		
+
 	}
 
 	public Set getChildNames() {

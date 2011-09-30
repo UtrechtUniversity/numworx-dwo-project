@@ -240,6 +240,8 @@ public class Text_nl extends ListResourceBundle {
          { TextMapper.LG_SCO_NAME , "Activ. {0}"},
          
          { TextMapper.GUIC_ADD_COURSE, "Nieuwe Module"}, // zonder 'aanmaken'
+         { TextMapper.GUIC_ADD_MAP, "Nieuwe Map"}, // zonder 'aanmaken'
+         
          { TextMapper.GUIC_COURSE_MANAGEMENT, "Modules beheren"},
 
          { TextMapper.GUIC_TLTP_DELETE_COURSE, "Module \"{0}\" verwijderen"},
@@ -302,7 +304,12 @@ public class Text_nl extends ListResourceBundle {
          { TextMapper.GUIPA_MSG_PARAM_SAVE, "Wilt u deze instellingen opslaan?\n\nWanneer u deze nieuwe instellingen opslaat,\ndan worden de resultaten van de oude opdrachten verwijderd."},
          { TextMapper.GUIPA_MSG_TTL_PARAM_SAVE, "Instellingen opslaan"},
          
-         { TextMapper.GUIPA_PARAMS_OF_SCO, "Parameters ({0})"}
+         { TextMapper.GUIPA_PARAMS_OF_SCO, "Parameters ({0})"},
+         
+         { "cut", "Knippen" },
+         { "copy" , "Kopiëren" },
+         { "paste", "Plakken"},
+         
 };
 
  public Text_nl() {

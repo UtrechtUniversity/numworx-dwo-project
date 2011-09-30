@@ -298,6 +298,7 @@ public abstract class TextMapper {
     
     /* Course Management Panel */
     public final static String GUIC_ADD_COURSE = "GUIC_ADD_COURSE";
+    public final static String GUIC_ADD_MAP = "GUIC_ADD_MAP";
     public final static String GUIC_COURSE_MANAGEMENT = "GUIC_COURSE_MANAGEMENT";
     
 

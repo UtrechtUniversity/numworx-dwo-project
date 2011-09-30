@@ -303,7 +303,12 @@ public class Text_en extends ListResourceBundle {
          { TextMapper.GUIPA_MSG_PARAM_SAVE, "If you save this new configuration,\nthe result of the older items will be removed\n \nAre you sure you want to save this configuration?"},
          { TextMapper.GUIPA_MSG_TTL_PARAM_SAVE, "Save configuration"},
          
-         { TextMapper.GUIPA_PARAMS_OF_SCO, "Parameters ({0})"}
+         { TextMapper.GUIPA_PARAMS_OF_SCO, "Parameters ({0})"},
+         
+         { "cut", "Cut" },
+         { "copy" , "Copy" },
+         { "paste", "Paste"},
+
 };
 
  public Text_en() {
