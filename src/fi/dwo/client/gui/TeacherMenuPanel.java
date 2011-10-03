@@ -98,6 +98,8 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 			} else if (sco != null)
 			{
 				GuiCreator.instance().deleteSco(sco);
+				center.updateCourse((Course) parent);
+				return;
 			}
 			center.updateMap(parent);
 		}

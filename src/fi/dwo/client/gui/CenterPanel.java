@@ -441,12 +441,11 @@ invalidate();
 		if(tree != null)
 		{
 			if(course.isWithChildren())
-					tree.updateNodeMap(course);
+				tree.updateNodeMap(course);
 			else
 				tree.updateNode(course);
-			centerSubPanel.stateChanged(new ChangeEvent(course));
 		}
-		
+		centerSubPanel.stateChanged(new ChangeEvent(course));
 	}
 
 	public void deleteCourse(Course course) {

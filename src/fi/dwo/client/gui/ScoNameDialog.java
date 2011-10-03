@@ -132,9 +132,9 @@ public class ScoNameDialog //extends Dialog implements ActionListener,
 //        pack();
 //    }
 
-    public static Sco addSco(Course course, AppletConfig appletConfig) {
-        return addSco(null, course, appletConfig);
-    }
+//    public static Sco addSco(Course course, AppletConfig appletConfig) {
+//        return addSco(null, course, appletConfig);
+//    }
 
     /**
      * @return fi.dwo.client.domain.Sco
@@ -148,11 +148,11 @@ public class ScoNameDialog //extends Dialog implements ActionListener,
             System.out.println("voor hij wordt aangemaakt: " + appletConfig.getLaunchdata() + "; " + appletConfig.getAppletID());
             Sco s = GuiCreator.instance().addSco(course, appletConfig, cnd.getScoName(),
                     cnd.getScoDescription(), cnd.isShowScore());
-            System.out.println("en nu...: " + s.getLaunchdataString());
-            s.setCourse(course);
             if(s == null) { //something went wrong, reshow the dialog
                 s = addSco(owner, course, appletConfig);
             }
+            System.out.println("en nu...: " + s.getLaunchdataString());
+            s.setCourse(course);
             return s;
         } else { //action canceled
             return null;

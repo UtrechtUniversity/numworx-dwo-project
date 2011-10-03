@@ -466,6 +466,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
             	s = AddScoDialog.addSco(this, course);
             }
             if(s != null) {
+// FIXME addSco kan de sco al in de lijst gezet hebben....
 	            Sco[] as = course.getScoList();
 	            /* Create a larger array and add the item */
 	            Sco[] tmp = new Sco[as.length + 1];
