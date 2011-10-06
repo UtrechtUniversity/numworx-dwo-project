@@ -383,11 +383,17 @@ public class GuiCreator {
         	try {
 	        	viewSco = (Sco)PersistenceFacade.instance().get(dwo.getScoViewNr(),Sco.class);
 	        }
-	        catch (Exception exc) {}
-	        if(viewSco!=null) dwo.setCurrentSco(viewSco);
-	        viewSco.setLessonMode(Sco.NORMAL);
-        	csp = getScoPanel(viewSco);
-        	((ScoPanel)csp).setScoView(true);
+	        catch (Exception exc) {
+	        	exc.printStackTrace();
+	        }
+	        if(viewSco!=null){
+	        	dwo.setCurrentSco(viewSco);
+		        viewSco.setLessonMode(Sco.NORMAL);
+	        	csp = getScoPanel(viewSco);
+	        	((ScoPanel)csp).setScoView(true);
+	        } else {
+	        	System.out.println("ScoNr " + dwo.getScoViewNr() + " niet gevonden");
+	        }
         }
         else if(dwo.getCourseViewNr()>0) {
         	Course viewCourse = null;
