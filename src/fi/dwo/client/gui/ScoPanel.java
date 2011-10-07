@@ -5,6 +5,7 @@ package fi.dwo.client.gui;
 
 import java.applet.Applet;
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -29,6 +30,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
@@ -71,13 +73,17 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
     
     private boolean courseView;
 
+	private CardLayout layout;
+
     /**
      * Creates a new ScoPanel with an applet of the specified sco.
      * 
      * @param sco The sco wherefrom the applet must be showed.
      */
     public ScoPanel(Sco sco) {
-        super(new GridLayout(1,1));
+        super(null);
+        layout = new CardLayout();
+        setLayout(layout);
         this.sco = sco;
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setOpaque(!GuiConstants.GUI_IMAGE_BG);
@@ -104,24 +110,32 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
     }
 
 	private void addApplet() {
+        applet.setVisible(true);
 		if(applet instanceof JApplet)
 		{
 			JApplet japplet = (JApplet) applet;
-			this.add(japplet.getRootPane());
+			JRootPane root = japplet.getRootPane();
+			root.setBounds(japplet.getBounds());
+			this.add(root, "rootpane");
+			this.add(japplet, "applet" );
+			layout.show(this, "rootpane");
 		} else
-			this.add(applet);
-        applet.setVisible(true);
+			this.add(applet, "applet");
 	}
     
     public void setScoView(boolean b) {
     	scoView = b;
     }
     
+    /**
+     * Initialiseer applet. applet moet een parent en stub hebben!
+     */
     public void init() {
 		sco.LMSInitialize("");
 		try {
 			applet.init();
 			applet.start();
+			validate();
 		} catch (RuntimeException e) {
 			// TODO Applet is niet gestart!
 			e.printStackTrace();
