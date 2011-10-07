@@ -99,9 +99,21 @@ public final class DwoHelper {
      * @param applet The applet to set.
      */
     public static void setApplet(Applet applet) {
+// Voor Peter: in comment zetten
+    	if (DwoHelper.applet != null)
+    	{
+    		JOptionPane.showMessageDialog(applet, "Er is al een DWO!");
+    		throw new RuntimeException("Er is al een DWO"); // TODO mooier maken?
+    	}
+// Einde
         DwoHelper.applet = applet;
         if(applet.getParent() instanceof MainFrame) isApplication = true;
         else isApplication = false;
+    }
+    
+    public static void clrApplet(Applet applet) {
+    	if( applet == DwoHelper.applet)
+    		DwoHelper.applet = null;
     }
     
     public static boolean isApplication()

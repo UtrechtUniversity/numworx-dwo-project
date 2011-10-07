@@ -21,6 +21,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -35,6 +38,8 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
+
+import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.beans.scorm.SCORM12APIInterface;
 import fi.beans.scorm.ScormAppletIF;
@@ -138,7 +143,20 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
 			validate();
 		} catch (RuntimeException e) {
 			// TODO Applet is niet gestart!
+			// Dialog: interne fout, sco niet goed geïnitialiseerd.
 			e.printStackTrace();
+			try {
+				DbAccessCreator.instance().log(GuiCreator.instance().getUser().getID() + " Sco " + sco.getID() +"," + applet + " exception in ScoPanel.init: "+e.toString());
+				StringWriter w = new StringWriter();
+				PrintWriter pw = new PrintWriter(w);
+				e.printStackTrace(pw);
+				DbAccessCreator.instance().log(w.toString());
+			
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			} catch (XmlRpcException e1) {
+				e1.printStackTrace();
+			}
 		}
     }
 

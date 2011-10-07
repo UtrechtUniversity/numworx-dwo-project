@@ -456,10 +456,16 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 		return false;
 	}
 
+	public void destroy()
+	{
+		DwoHelper.clrApplet(this);
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.applet.Applet#init()
 	 */
 	public void init() {
+        DwoHelper.setApplet(this);
 		setSize(789,492);
         String lang = getParameter("language");
         if ((lang != null) && (!lang.equals(""))) {
@@ -499,7 +505,6 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
         }
         DwoHelper.setKey(key);
         DwoHelper.setAu(new AppletUtil(this));
-        DwoHelper.setApplet(this);
         DwoHelper.setUmpc(umpc);
         
         if(!DwoHelper.isApplication()) {

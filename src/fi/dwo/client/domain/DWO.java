@@ -956,8 +956,9 @@ private static boolean isValidEmail(String email) {
      * Initialises the applet.
      */
     public void init() {
+// This order
+    	DwoHelper.setApplet(this);
     	DwoHelper.setAu(new AppletUtil(this));
-        DwoHelper.setApplet(this);
         
     	
     	// override van swing properties... 
@@ -1316,13 +1317,14 @@ private static boolean isValidEmail(String email) {
     	this.setReady();
     }
     
+    public void destroy() {
+     	DwoHelper.clrApplet(this);
+    }
+    
     public void setCurrentSco(Sco sco)
     {  	currentSco = sco;
     }
-
     
-    	  	
-
 	/**
      * The main method of the class.
      * 
