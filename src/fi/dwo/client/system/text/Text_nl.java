@@ -256,7 +256,7 @@ public class Text_nl extends ListResourceBundle {
          
          { TextMapper.GUIC_NO_COURSES, "Geen modules aanwezig"}, 
          
-         { TextMapper.GUIC_MSG_COURSE_DELETE, "Deze module bevat nog SCO`s. \nWanneer u deze module verwijdert, zullen de SCO`s \nen de resultaten van deze SCO`s verwijderd worden.\n \nWeet u zeker dat u deze module wilt verwijderen?"},
+         { TextMapper.GUIC_MSG_COURSE_DELETE, "Deze module bevat nog activiteiten. \nWanneer u deze module verwijdert, zullen de activiteiten \nen de resultaten van deze activiteiten verwijderd worden.\n \nWeet u zeker dat u deze module wilt verwijderen?"},
          { TextMapper.GUIC_MSG_COURSE_DELETE_NO_SCO, "Weet u zeker dat u deze module wilt verwijderen?"},
          { TextMapper.GUIC_MSG_TTL_COURSE_DELETE, "Module verwijderen"},
 
