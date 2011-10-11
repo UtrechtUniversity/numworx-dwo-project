@@ -1151,10 +1151,11 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ResultSet rs = ps.executeQuery();
         ResultSetMetaData rsMeta = rs.getMetaData();
         String colName;
-        Hashtable h = null;
-
+        Hashtable h;
+        h = new Hashtable();	// NEVER RETURN NULL WIM, XMLRPC errors expected
+// if not found, return empty map        
         if (!isEmpty(rs)) {
-            h = new Hashtable();
+            //h = new Hashtable();
             for (int i = 1; i <= rsMeta.getColumnCount(); i++) {
                 colName = rsMeta.getColumnName(i);
                 h.put(colName, clearNull(rs.getObject(colName)));
@@ -1607,6 +1608,11 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return true;
     }
     
+    /**
+     * Maak userID de Teacher van classID.
+     * @param classID een klas
+     * @param userID  een docent
+     */
     public boolean reassignClass(int classID, int userID)
     throws SQLException {
     	PreparedStatement ps = getStatement(QRY_UPDATE_CLASS_USER);

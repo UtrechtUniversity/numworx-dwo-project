@@ -26,6 +26,7 @@ public class UserMapper extends XmlRpcMapper {
     private static final String IDCOL = "userID";
     
     private static final String ORDERCOL = "lastname";
+	private static final Object NUL = new Integer(0);
 
     /**
 
@@ -153,11 +154,17 @@ public class UserMapper extends XmlRpcMapper {
             u.setSchool(s);
         }
 
-        if(!data.get("classID").equals("")) {
-            SchoolClass c = (SchoolClass) MapperCreator.instance(SchoolClass.class).get(((Integer) data.get("classID")).intValue());
-		    if (c != null) {
-		        u.setInClass(c);
-		    }
+        Object classID = data.get("classID");
+		if(!classID.equals("") && !NUL.equals(classID) ) {
+            try {
+				SchoolClass c = (SchoolClass) MapperCreator.instance(SchoolClass.class).get(((Integer) data.get("classID")).intValue());
+				if (c != null) {
+				    u.setInClass(c);
+				}
+			} catch (Exception e) {
+				System.err.println("User: " + data);
+				e.printStackTrace();
+			}
         }
         
         if(u instanceof Teacher) {
