@@ -18,7 +18,9 @@ import fi.dwo.server.persistence.DwoXmlRpcException;
  * @xmlrpc.generate
  */
 public interface DbAccessIF {
-    
+
+	// LET OP: void/null returns en null parameters zijn niet gesupport!
+	
     public static String ERROR_CLASS = "__ERROR_CLASS__";
     public static String ERROR_CODE = "__ERROR_CODE__";
     
@@ -503,7 +505,7 @@ public interface DbAccessIF {
 			boolean export, int schoolID, int parentID)
 	throws  DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
-	public void setCourseSequence(Vector vector, int schoolID, int classID,
+	public boolean setCourseSequence(Vector vector, int schoolID, int classID,
 			int parent, int profileID)
 	throws  DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 

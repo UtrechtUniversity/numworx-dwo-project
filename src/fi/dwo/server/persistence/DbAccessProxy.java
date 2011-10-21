@@ -437,10 +437,10 @@ public class DbAccessProxy extends DbConnect implements DbAccessIF {
 		return getDelegate().addCourse(schoolID, name, description, dwoProfile, parentID, withChildren);
 	}
 
-	public void setCourseSequence(Vector vector, int schoolID, int classID,
+	public boolean setCourseSequence(Vector vector, int schoolID, int classID,
 			int parent, int profileID) throws DwoXmlRpcException, IOException,
 			XmlRpcException, SQLException {
-		getDelegate().setCourseSequence(vector, schoolID, classID, parent, profileID);
+		return getDelegate().setCourseSequence(vector, schoolID, classID, parent, profileID);
 	}
 
 	public boolean moveSco(int scoId, int courseId, int sequencenr, String name)

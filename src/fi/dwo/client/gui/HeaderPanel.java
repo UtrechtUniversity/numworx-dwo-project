@@ -1,5 +1,6 @@
 package fi.dwo.client.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -13,35 +14,53 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 
-public class HeaderPanel extends JLabel
+public class HeaderPanel extends JPanel
 {
 	
 	private JLabel label;
+	private JComponent buttonBox;
 	private boolean scalable;
 	private boolean scale;
 	private Font origFont;
 	private static final int MARGIN = 40;
 	public HeaderPanel(String string) {
-		super(string.trim()); 
+		super(new BorderLayout());
+		label = new JLabel(string.trim());
+		add(label, BorderLayout.CENTER);
+		
 	    Font f = GuiConstants.HEADER_TEXT;
 	    final boolean ibg = GuiConstants.GUI_IMAGE_BG;
-		if(ibg)
+	    if(ibg)
 	    	f = new Font(f.getName(), f.getStyle(), 20);
-		setFont(f);
+		label.setFont(f);
 		origFont = f;
 	    setOpaque(!ibg);
-	    setHorizontalAlignment(ibg?SwingConstants.LEFT : SwingConstants.CENTER);
-	    setVerticalAlignment(ibg?SwingConstants.BOTTOM: SwingConstants.CENTER);
+	    label.setHorizontalAlignment(ibg?SwingConstants.LEFT : SwingConstants.CENTER);
+	    label.setVerticalAlignment(ibg?SwingConstants.BOTTOM: SwingConstants.CENTER);
 	    setBackground(GuiConstants.MAIN_BACKGROUND);
 	    setForeground(GuiConstants.HEADER_COLOR);
 	    if (!ibg)
 	    	setBorder(MainPanel.createNBorder());
-	    
+	    setButtonBox( createButtonBox() );
+	}
+
+	protected JComponent createButtonBox() {
+		Box box = Box.createHorizontalBox();
+//		box.add(new JButton("Stop bewerken"));
+//		box.add(Box.createHorizontalStrut(4));
+//		box.add(new JButton("Opslaan"));
+//		box.add(Box.createHorizontalStrut(5));
+//		box.add(new JButton("Preview"));
+		box.setBorder(BorderFactory.createEmptyBorder(38, 0, 0, 0));
+		return box;
+//		return null;
 	}
 
 	Dimension lastdim = new Dimension();
@@ -55,8 +74,8 @@ public class HeaderPanel extends JLabel
 	public HeaderPanel(String description, boolean b) {
 		this(description);
 		this.scalable = b;
+	    setButtonBox( createButtonBox() );
 		scale();
-		
 	}
 
 
@@ -120,19 +139,19 @@ public class HeaderPanel extends JLabel
 	{
 		if(scale)
 		{
-			int width = getWidth();
-			int height = getHeight();
-			Insets inset = getInsets();
-			width -= inset.left + inset.right;
-			height -= inset.top + inset.bottom;
+			int width = label.getWidth();
+			int height = label.getHeight();
+//			Insets inset = getInsets();
+//			width -= inset.left + inset.right;
+//			height -= inset.top + inset.bottom;
 			width -= MARGIN;
-			Icon icon = getIcon();
+			Icon icon = label.getIcon();
 			if(icon != null)
 			{
-				width -= getIconTextGap();
+				width -= label.getIconTextGap();
 				width -= icon.getIconWidth();
 			}
-			String text = getText();
+			String text = label.getText();
 			Font f = origFont;
 			while(g.getFontMetrics(f).stringWidth(text) > width || g.getFontMetrics(f).getHeight() > height)
 			{
@@ -142,6 +161,49 @@ public class HeaderPanel extends JLabel
 			scale = false;
 		}
 		super.paint(g);
+	}
+
+	/**
+	 * @return the buttonBox
+	 */
+	JComponent getButtonBox() {
+		return buttonBox;
+	}
+
+	/**
+	 * @param box the buttonBox to set
+	 */
+	void setButtonBox(JComponent box) {
+		if(buttonBox != null)
+			remove(buttonBox);
+		buttonBox = box;
+		if(buttonBox != null)
+			add(buttonBox, BorderLayout.EAST);
+		invalidate();
+	}
+
+	/**
+	 * @param alignment
+	 * @see javax.swing.JLabel#setHorizontalAlignment(int)
+	 */
+	public void setHorizontalAlignment(int alignment) {
+		label.setHorizontalAlignment(alignment);
+	}
+
+	/**
+	 * @param icon
+	 * @see javax.swing.JLabel#setIcon(javax.swing.Icon)
+	 */
+	public void setIcon(Icon icon) {
+		label.setIcon(icon);
+	}
+
+	/**
+	 * @param iconTextGap
+	 * @see javax.swing.JLabel#setIconTextGap(int)
+	 */
+	public void setIconTextGap(int iconTextGap) {
+		label.setIconTextGap(iconTextGap);
 	}
 	
 	

@@ -182,15 +182,15 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             + "SET classID = null " + "WHERE userID = ? ";
 
     private final static String QRY_RESULTS_ALL = "SELECT tblClass.classID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
-// mysql5 en mysql4
-    	+ "FROM (tblClass, tblCourse)  left join  tblUser on tblUser.classId =  tblClass.classId "
-    	+ "left join tblSco  on tblSco.courseId =  tblCourse.courseId "
-    	+ "left join  tblStudentSco on tblStudentSco.userid =   tblUser.userId and tblStudentSco.scoId =   tblSco.scoId "
+// mysql5 en mysql4 (NOG TESTEN!)
+//    	+ "FROM (tblClass, tblCourse)  left join  tblUser on tblUser.classId =  tblClass.classId "
+//    	+ "left join tblSco  on tblSco.courseId =  tblCourse.courseId "
+//    	+ "left join  tblStudentSco on tblStudentSco.userid =   tblUser.userId and tblStudentSco.scoId =   tblSco.scoId "
 // myysql4 only  	
-//    	+ "FROM tblClass right join tblUser on tblClass.classID = tblUser.classID "
-//            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID "
-//            + "right join tblSco on tblStudentSco.scoID = tblSco.scoID "
-//            + "left join tblCourse on tblSco.courseID = tblCourse.courseID "
+    	+ "FROM tblClass right join tblUser on tblClass.classID = tblUser.classID "
+            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID "
+            + "right join tblSco on tblStudentSco.scoID = tblSco.scoID "
+            + "left join tblCourse on tblSco.courseID = tblCourse.courseID "
 
     	    + "where (tblCourse.courseID in ({0})) "
             + "and   (tblClass.userID = ?) "
@@ -2514,7 +2514,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 		return rights;
 	}
 
-	public void setCourseSequence(Vector vector, int schoolID, int classID,
+	public boolean setCourseSequence(Vector vector, int schoolID, int classID,
 			int parent, int profileID) throws SQLException {
 		Connection c = getConnection();
 		boolean auto = c.getAutoCommit();
@@ -2545,8 +2545,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 			c.rollback();
 			c.setAutoCommit(auto);
 		}
-		
-		
+		return true;
 	}
 /*
  * TODO eventueel een nieuwe naam meegeven, ivm clashes. 
