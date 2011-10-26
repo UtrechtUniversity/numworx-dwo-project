@@ -101,7 +101,9 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
         setPreferredSize(new Dimension(1,1)); // Applet volgt de maat der dingen
         applet = sco.getApplet();
         applet.setVisible(false);
-        applet.setSize(this.getSize().width-10, this.getSize().height);
+//        applet.setSize(this.getSize().width-10, this.getSize().height); FIXME
+// Er verschijnt een wit vlak ter grootte van de applet. Maak de applet size 0x0, vlak ook weg! 
+        applet.setSize(0,0); 
         applet.setLocation(5, 5);
         addApplet();
         

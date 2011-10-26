@@ -211,22 +211,34 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         + "group by tblCourse.courseID ";
 
     private final static String QRY_RESULTS_CLASS = "SELECT tblUser.userID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
-            + "FROM tblClass right join tblUser on tblClass.classID = tblUser.classID "
-            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID "
-            + "right join tblSco on tblStudentSco.scoID = tblSco.scoID "
-            + "left join tblCourse on tblSco.courseID = tblCourse.courseID "
-            + "where (tblClass.classID = ?) "
+            + "FROM (tblUser, tblCourse) "
+            + "join tblClass on tblClass.classID = tblUser.classID "
+            + "join tblSco on tblSco.courseID = tblCourse.courseID "
+            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID and tblStudentSco.scoId = tblSco.scoId "
+
+//            + "FROM tblClass right join tblUser on tblClass.classID = tblUser.classID "
+//            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID "
+//            + "right join tblSco on tblStudentSco.scoID = tblSco.scoID "
+//            + "left join tblCourse on tblSco.courseID = tblCourse.courseID "        
+            
+            + "where (tblUser.classID = ?) "
             + "and (tblCourse.courseID in ({0})) "
             + "and   (tblClass.userID = ?) "
             + "group by tblUser.userID, tblCourse.courseID "
             + "ORDER BY tblUser.userID";
 
     private final static String QRY_RESULTS_STUDENT_COURSE = "SELECT tblUser.userID, tblSco.scoID, tblSco.sequencenr,  if(score=0,-1,score) as score, total_time "
-            + "FROM tblClass right join tblUser on tblClass.classID = tblUser.classID "
-            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID "
-            + "right join tblSco on tblStudentSco.scoID = tblSco.scoID "
-            + "left join tblCourse on tblSco.courseID = tblCourse.courseID "
-            + "where (tblClass.classID = ?) "
+            + "FROM (tblUser, tblSco)  join tblClass on tblClass.classID = tblUser.classID "
+            + "join tblCourse on tblSco.courseID = tblCourse.courseID "
+            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID and tblStudentSco.scoId = tblSco.scoId "
+ 
+//            + "FROM tblClass right join tblUser on tblClass.classID = tblUser.classID "
+//            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID "
+//            + "right join tblSco on tblStudentSco.scoID = tblSco.scoID "
+//            + "left join tblCourse on tblSco.courseID = tblCourse.courseID "
+
+            
+            + "where (tblUser.classID = ?) "
             + "and (tblCourse.courseID = ?) "
             + "and   (tblClass.userID = ?) "
             + "group by tblUser.userID, tblSco.scoID, tblSco.sequencenr "
@@ -616,7 +628,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
         Hashtable result = executeQueryWithRecord(ps);
 
-        if (result == null) {
+        if (result == null|| result.isEmpty()) {
             throw new DwoXmlRpcException(DwoXmlRpcException.EXC_UNKNOWN_USER);
         } else {
             Object tmp = result.get("schoolGroupID");
@@ -1416,7 +1428,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 			ps.setInt(1, scoID);
 			ps.setInt(2, userID);
 
-			Hashtable ht = executeQueryWithRecord(ps);
+			Hashtable ht = executeQueryWithRecord(ps); // Never returns null, emtpy instead!
 			log("DbAccess.LMSSetValue("
 			        + scoID + ", " + userID + ", " + iDataModelElement + ", "
 			        + iValue + ")");
@@ -1425,7 +1437,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 			            + userID);
 			}
 			ps.close();
-			if (ht == null) {
+			if (ht == null || ht.isEmpty()) {
 			    ps = getStatement(QRY_ADD_EMPTY_STUDENT_SCO);
 			    ps.setInt(1, scoID);
 			    ps.setInt(2, userID);

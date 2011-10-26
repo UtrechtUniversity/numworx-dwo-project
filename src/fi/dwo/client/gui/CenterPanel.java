@@ -319,7 +319,7 @@ invalidate();
         	centerSubPanel.getComponent().setBorder(scoBorder);
         }
         Component c = centerSubPanel.getComponent();
-        centermainSub.add(c);
+        centermainSub.add(c); // FIXME hier gebeurt het met een  FLITS 
         c.setVisible(true);
         SwingUtilities.invokeLater(new RequestFocusAST(c));
         c.invalidate();

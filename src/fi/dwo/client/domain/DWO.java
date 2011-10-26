@@ -30,6 +30,7 @@ import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.DebugGraphics;
 import javax.swing.JApplet;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -1300,6 +1301,11 @@ private static boolean isValidEmail(String email) {
         MapperCreator.instance(Applet.class).removeObject(sco.getAppletID());
     }
 
+    public void start() {
+     	this.getRootPane().setDoubleBuffered(true);
+    }
+    
+    
     /**
      * Stops the current applet. Indicates at the current course that the applet
      * will be stopped.
