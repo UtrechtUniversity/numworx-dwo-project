@@ -248,7 +248,7 @@ public class PersistenceFacade {
 
                 }
 
-                throw new PersistenceException(PersistenceException.EX_IO);
+                throw new PersistenceException(PersistenceException.EX_IO,e);
             } catch (XmlRpcException e) {
                 try {
                     DbAccessCreator.instance().log(e.getMessage());
@@ -256,7 +256,7 @@ public class PersistenceFacade {
 
                 }
 
-                throw new PersistenceException(PersistenceException.EX_XML_RPC);
+                throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
             } catch (SQLException e) {
                 try {
                     DbAccessCreator.instance().log(e.getMessage());
@@ -265,7 +265,7 @@ public class PersistenceFacade {
 
                 }
 
-                throw new PersistenceException(PersistenceException.EX_DB);
+                throw new PersistenceException(PersistenceException.EX_DB, e);
             }
         } else {
             return true + "";
@@ -612,25 +612,25 @@ public class PersistenceFacade {
                         username, password));
             } catch (IOException e) {
                 e.printStackTrace();
-                throw new LoginException(LoginException.EX_IO);
+                throw new LoginException(LoginException.EX_IO, e);
             } catch (XmlRpcException e) {
                 if (e.code != 0) {
                     //e.printStackTrace();
                     throw (LoginException) getException(e, e.code);
                 } else {
                     e.printStackTrace();
-                    throw new LoginException(LoginException.EX_XML_RPC);
+                    throw new LoginException(LoginException.EX_XML_RPC, e);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
-                throw new LoginException(LoginException.EX_DB);
+                throw new LoginException(LoginException.EX_DB, e);
             } catch (DwoXmlRpcException e) {
                 e.printStackTrace();
                 throw (LoginException) getException(e, e.code);
             }
         } catch (PersistenceException e) {
             e.printStackTrace();
-            throw new LoginException(LoginException.EX_UNKNOWN_ERROR);
+            throw new LoginException(LoginException.EX_UNKNOWN_ERROR, e);
         }
     }
 
@@ -1646,11 +1646,11 @@ e1.printStackTrace();
                 return new Vector();
             }
         } catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO);
+            throw new PersistenceException(PersistenceException.EX_IO, e);
         } catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC);
+            throw new PersistenceException(PersistenceException.EX_XML_RPC,e);
         } catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB);
+            throw new PersistenceException(PersistenceException.EX_DB,e);
         }
 	}
 	/**

@@ -23,7 +23,18 @@ public class LoginException extends Exception {
 
     }
 
-    private static String getMesgFromInt(int exception) {
+    public LoginException(int error, Throwable e) {
+		this(error);
+		initCause(e);
+	}
+
+    public String getMessage() { 
+		if(getCause() == null)
+			return super.getMessage();
+		return super.getMessage() + "\n" + getCause().getMessage();
+	}
+
+	private static String getMesgFromInt(int exception) {
         String result = null;
         switch (exception) {
         case LE_UNKNOWN_USER:

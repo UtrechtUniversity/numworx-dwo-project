@@ -54,6 +54,7 @@ import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.Sco;
+import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.SchoolPanel.ImageButtonEditor;
 import fi.dwo.client.gui.SchoolPanel.ImageRenderer;
 import fi.dwo.client.gui.SchoolPanel.SchoolModel;
@@ -532,9 +533,19 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 			result.put("name", title);
 
 			final DwoIF dwo = GuiCreator.instance().dwo;
-			zipper.addCourse(result, dwo.getDwoProfile().getID(), dwo.getUser().getSchool().getSchoolID());
+			int schoolID = dwo.getUser().getSchool().getSchoolID();
+			int id = 0;
+			Course parentCourse = getParentCourse();
+			if( parentCourse != null)
+			{
+				id = parentCourse.getID();
+				schoolID = parentCourse.getSchoolID(); // takeover schoolid van parentcourse
+			}
+			if(schoolID != 0 || dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT))
+				zipper.addCourse(result, dwo.getDwoProfile().getID(), schoolID, id);
 			courses = dwo.getEditableCourses();
 			buildJTable();
+			noUpdate();
 		}
 	}
 

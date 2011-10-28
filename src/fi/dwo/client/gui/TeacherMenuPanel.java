@@ -452,6 +452,11 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 			boolean isMap = course.isWithChildren();
 			String description = course.getDescription();
 			Course c = instance.addCourse(name, description, dest, isMap);
+			if(c == null)
+			{
+				System.err.println("copyCourseMap failed: "+course + ", " + dest + ", " + isMap);
+				return;
+			}
 			map.addChild(c);
 			center.updateMap(map);
 			if(isMap) {

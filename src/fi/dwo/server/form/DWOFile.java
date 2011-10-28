@@ -59,6 +59,7 @@ public class DWOFile {
 	 * @param course
 	 * @param dwoProfile
 	 * @param schoolID
+	 * @param parent 
 	 * @return
 	 * @throws DwoXmlRpcException
 	 * @throws SQLException
@@ -66,10 +67,10 @@ public class DWOFile {
 	 * @throws XmlRpcException
 	 * @see fi.dwo.server.form.ManifestFile#addCourse(java.util.Hashtable, int, int)
 	 */
-	public int addCourse(Hashtable course, int dwoProfile, int schoolID)
+	public int addCourse(Hashtable course, int dwoProfile, int schoolID, int parent)
 			throws DwoXmlRpcException, SQLException, IOException,
 			XmlRpcException {
-		return m.addCourse(course, dwoProfile, schoolID);
+		return m.addCourse(course, dwoProfile, schoolID, parent);
 	}
 
 	/**

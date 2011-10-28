@@ -254,13 +254,13 @@ class ManifestFile {
 		return result;
 	}
 	
-	int addCourse(Hashtable course, int dwoProfile, int schoolID) throws DwoXmlRpcException, SQLException, IOException, XmlRpcException
+	int addCourse(Hashtable course, int dwoProfile, int schoolID, int parent) throws DwoXmlRpcException, SQLException, IOException, XmlRpcException
 	{
 		String name;
 		String description;
 		name = (String) course.get(COURSE_TITLE);
 		description = (String) course.get(DESCRIPTION);
-		int courseID = dbAccess.addCourse(schoolID, notnull(name), notnull(description), dwoProfile);
+		int courseID = dbAccess.addCourse(schoolID, notnull(name), notnull(description), dwoProfile, parent, false);
 		appendCourse(courseID, 0, course);
 		return courseID;
 	}
@@ -278,7 +278,6 @@ class ManifestFile {
 			String launchdata = (String) sco.get(LAUNCHDATA);
 			dbAccess.addSco(courseID, notnull(name), notnull(description), appletID, notnull(launchdata), sequencenr+offset);
 		}
-	
 	}
 	
 	private static String notnull(String s)
