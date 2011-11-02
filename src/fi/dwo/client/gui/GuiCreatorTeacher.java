@@ -4,7 +4,14 @@
  */
 package fi.dwo.client.gui;
 
+import java.awt.event.ActionEvent;
 import java.util.Vector;
+
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 
 import fi.beans.base64code.StringCodeObject;
 import fi.dwo.client.domain.AppletConfig;
@@ -361,5 +368,128 @@ public class GuiCreatorTeacher extends GuiCreator {
 	public boolean swapSco(Sco sco1, Sco sco2) {
 		return dwo.swapSco(sco1, sco2);
 	}
+
+	static class NullStrategy implements SelectStrategy {
+
+		public void nodeSelected(CourseMap node) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public JPopupMenu nodeAction(CourseMap node) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+	}
+	
+	class CourseManagementAction extends AbstractAction {
+
+		private Object userObject;
+
+		public CourseManagementAction(CourseChoisePanel courseChoisePanel) {
+			super("Bewerken");
+			userObject = courseChoisePanel.getUserObject();
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			setWait();
+			CenterSubPanel cp;
+			if(userObject instanceof CourseMap)
+			{
+				cp = getCourseManagementPanel((CourseMap) userObject);
+			}
+			else 
+			{ // van de goede soort....
+				// TODO of STANDAARD MAP....
+				cp = getCourseManagementPanel(ModuleTreePanel.SCHOOL_MAP);
+			}
+			CenterPanel center = getMainPanel().getCenter();
+	        center.setStrategy(new NullStrategy());
+	        center.loadCenter(cp);
+	        setReady();           
+		}
+
+		public void nodeSelected(CourseMap node) {			
+		}
+
+		public JPopupMenu nodeAction(CourseMap node) {
+			return null;
+		}
+		
+	}
+	
+	class ScoManagementAction extends AbstractAction {
+
+		private Course course;
+
+		public ScoManagementAction(CoursePanel coursePanel) {
+			super("Bewerken");
+			course = coursePanel.course;
+		}
+
+		public void actionPerformed(ActionEvent arg0) {
+			setWait();
+			CenterSubPanel cp;
+			cp = getScoManagementPanel(course);
+			CenterPanel center = getMainPanel().getCenter();
+	        center.setStrategy(new NullStrategy());
+	        center.loadCenter(cp);
+	        setReady();           
+		}
+		
+	}
+	
+	class ScoParameterAction extends AbstractAction {
+
+		private Sco sco;
+
+		public ScoParameterAction(ScoPanel scoPanel) {
+			super("Bewerken");
+			sco = scoPanel.getSco();
+		}
+
+		public void actionPerformed(ActionEvent arg0) {
+			ParameterManagementPanel.POPUP = false; // FIXME.....
+			loadParameterManagementPanel(sco);
+			CenterPanel center = getMainPanel().getCenter();
+	        center.setStrategy(new NullStrategy());
+	        setReady();           
+		}
+		
+	}
+	
+	public JComponent getButtonBox(CourseChoisePanel courseChoisePanel) {
+			Object userObject = courseChoisePanel.getUserObject();
+			if(userObject == ModuleTreePanel.ALLE_MODULES)
+				return null;
+// DWO profiel manager hier wel	
+			if(userObject == ModuleTreePanel.STANDAARD_DWO_MODULES)
+				return null;
+			if(userObject instanceof Course && ((Course)userObject).getSchoolID() == 0)
+				return null;			
+			return fx(new JButton(new CourseManagementAction(courseChoisePanel)));
+	}
+
+	private JComponent fx(JComponent b) { 
+		JPanel jp = new JPanel();
+		jp.setOpaque(false);
+		jp.setDoubleBuffered(false);
+		jp.add(b);
+		return jp;
+	}
+	
+	public JComponent getButtonBox(CoursePanel coursePanel) {
+		if(coursePanel.course.getSchoolID() == 0)
+			return null;
+		return fx(new JButton(new ScoManagementAction(coursePanel)));
+	}
    
+	public JComponent getButtonBox(ScoPanel scoPanel) {
+		if(scoPanel.getSco().getCourse().getSchoolID() == 0)
+			return null;
+		return fx(new JButton(new ScoParameterAction(scoPanel)));
+	}
+	
+	
 }

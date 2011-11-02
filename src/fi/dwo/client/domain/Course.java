@@ -164,6 +164,8 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
      * @param description The description to set.
      */
     public void setDescription(String description) {
+    	if(this.description == null || !this.description.equals(description))
+    		coursePanel = null;
         this.description = description;
     }
 

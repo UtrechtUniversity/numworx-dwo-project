@@ -53,7 +53,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 	CourseContainer center;
     private String lessonMode = Sco.NORMAL;
 
-    private Course course;
+    Course course;
     
     private JLabel scoListHeader;
     
@@ -169,7 +169,8 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
     }
     
     public void setCourseView(boolean b) {
-    	courseView = b;
+    	// if(b) then deeplink, geen beheerknop?
+     	courseView = b;
     }
     
     public boolean getCourseView() {
@@ -284,6 +285,8 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
             Border gapBorder = BorderFactory.createEmptyBorder(0, 10, 0, 0);
             hp.setBorder(BorderFactory.createCompoundBorder(oldBorder, gapBorder));
     	}
+    	if(!getCourseView())
+    		hp.setButtonBox(GuiCreator.instance().getButtonBox(this));
     	return hp; 
     }
 

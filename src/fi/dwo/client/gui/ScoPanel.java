@@ -255,7 +255,13 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
         
         jp.add(hp, BorderLayout.CENTER);
         jp.add(hbox, BorderLayout.NORTH);
-    	if(!GuiConstants.GUI_IMAGE_BG)
+        if(!scoView && !courseView) // deeplink
+        { 
+        	JComponent buttonBox = GuiCreator.instance().getButtonBox(this);
+        	if(buttonBox != null)
+        		hp.setButtonBox(buttonBox);
+        }
+        if(!GuiConstants.GUI_IMAGE_BG)
     		jp.setBorder(MainPanel.createNBorder()); // n shape border ....
     	jp.setSize(469, 70); // FIXME
     	jp.setMaximumSize(new Dimension(Short.MAX_VALUE, 70));

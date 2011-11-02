@@ -471,4 +471,14 @@ invalidate();
 		}
 		
 	}
+	
+	public void select(Object object)
+	{
+		if(tree != null)
+		{
+			tree.select(object);
+			tree.toSelectedNode();
+		}
+	}
+	
 }

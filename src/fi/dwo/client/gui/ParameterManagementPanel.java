@@ -46,6 +46,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -85,7 +86,7 @@ import fi.dwo.parameters.gui.ParameterComponent;
  *
  */
 public class ParameterManagementPanel extends JPanel implements CenterSubPanel, ActionListener, WindowListener {
-    private static final boolean POPUP = true; // FIXME in productie true
+    static boolean POPUP = true; // FIXME in productie true
 
 	private CenterPanel center;
 
@@ -320,7 +321,13 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
     public Component getHeaderPanel() {
-    	return new HeaderPanel(TextMapper.getText(TextMapper.GUIPA_SCO_EDIT));
+    	HeaderPanel hp = new HeaderPanel(TextMapper.getText(TextMapper.GUIPA_SCO_EDIT));
+    	Box box = Box.createHorizontalBox();
+    	box.add(new JButton("Stop bewerken"));
+    	box.add(new JButton("Opslaan"));
+    	box.add(new JButton("Preview"));
+		hp.setButtonBox(box);
+		return hp;
     }
 
     /**

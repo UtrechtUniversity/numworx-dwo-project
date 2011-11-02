@@ -363,13 +363,6 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 		return null;
 	}
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		create(null);
-	}
-
 	public static ModuleTreePanel newInstance(DwoIF dwo)
 	{
 		ModuleTreePanel panel = new ModuleTreePanel();
@@ -414,17 +407,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 		boolean sel = e.isAddedPath();
 		if(sel)
 		{
-			Object o = node.getUserObject();
-			if(o instanceof CourseMap)
-			{
-				strategy.nodeSelected((CourseMap) o);
-			} else
-			if(o == SCHOOL_MODULES)
-				strategy.nodeSelected(SCHOOL_MAP);
-			else if(o == STANDAARD_DWO_MODULES)
-				strategy.nodeSelected(STANDAARD_DWO_MAP);
-			else
-				strategy.nodeSelected(new TreeMap(node));
+			callStrategy(node);
 		}
 	}
 	
@@ -556,6 +539,26 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 
 	public JPopupMenu nodeAction(CourseMap node) {
 		return null;
+	}
+
+	public void toSelectedNode() {
+		TreePath path = tree.getSelectionPath();
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+		callStrategy(node);
+	}
+
+	private void callStrategy(DefaultMutableTreeNode node) {
+		Object o = node.getUserObject();
+		if(o instanceof CourseMap)
+		{
+			strategy.nodeSelected((CourseMap) o);
+		} else
+		if(o == SCHOOL_MODULES)
+			strategy.nodeSelected(SCHOOL_MAP);
+		else if(o == STANDAARD_DWO_MODULES)
+			strategy.nodeSelected(STANDAARD_DWO_MAP);
+		else
+			strategy.nodeSelected(new TreeMap(node));
 	}
 }
 

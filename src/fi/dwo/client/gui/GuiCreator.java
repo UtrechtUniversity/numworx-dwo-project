@@ -5,6 +5,7 @@ package fi.dwo.client.gui;
 
 import java.awt.Container;
 
+import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
 import fi.dwo.client.domain.AppletConfig;
@@ -875,6 +876,18 @@ public class GuiCreator {
 	}
 
 	public AppletConfig getAppletConfigFromSco(Sco sco) {
+		return null;
+	}
+
+	public JComponent getButtonBox(CourseChoisePanel courseChoisePanel) {
+		return null;
+	}
+
+	public JComponent getButtonBox(CoursePanel coursePanel) {
+		return null;
+	}
+
+	public JComponent getButtonBox(ScoPanel scoPanel) {
 		return null;
 	}
 

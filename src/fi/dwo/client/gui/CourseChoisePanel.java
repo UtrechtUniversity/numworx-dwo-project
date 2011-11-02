@@ -205,12 +205,16 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
     public Component getHeaderPanel() {
-        Container p; //  = new BorderedPanel(null); 
+        HeaderPanel p; //  = new BorderedPanel(null); 
 
         p = new HeaderPanel(TextMapper.getText(TextMapper.GUIM_MAIN_MENU));
         String s = dwoProfile.getText();
         if(s != null && s.trim().length()>0 || dwoProfile instanceof Course)
         	p = new HeaderPanel(dwoProfile.getHeader(), true); // wim: Wat wordt hier bedoeld?
+        
+        p.setButtonBox(GuiCreator.instance().getButtonBox(this));
+        
+        
         return p;
     }
 

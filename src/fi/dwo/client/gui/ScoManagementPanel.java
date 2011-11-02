@@ -3,6 +3,7 @@
 package fi.dwo.client.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.FileDialog;
@@ -37,6 +38,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.AbstractTableModel;
@@ -154,7 +156,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 		panel.setOpaque(false);
 		cpanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		cpanel.setOpaque(false);
-		panel.add(cpanel, BorderLayout.CENTER);
+		panel.add(cpanel, BorderLayout.SOUTH);
         add(panel, BorderLayout.CENTER);
         //if(false && DwoHelper.isApplication())
         if(DwoHelper.isApplication())
@@ -176,6 +178,12 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         courseLogoButton.setSize(courseLogoButton.getPreferredSize());
         Box hulp = Box.createVerticalBox();
         hulp.add(courseLogoButton);
+        
+        pane = new JTextArea();
+        pane.setText(course.getDescription());
+        pane.setBorder(BorderFactory.createLineBorder(Color.black));
+        panel.add(pane, BorderLayout.CENTER);
+        
         hulp.add(Box.createVerticalGlue());
         this.add(hulp, BorderLayout.EAST);
         arguments = new String[1];
@@ -202,6 +210,8 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     JTable jtbl;
 
 	private JPanel cpanel;
+
+	private JButton stopBtn;
 	public class ImageRenderer extends JLabel implements TableCellRenderer {
 
 		private ImageIcon icon = new ImageIcon();
@@ -411,7 +421,11 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     }
 
     public Component getHeaderPanel() {
-    	return new HeaderPanel(TextMapper.getText(TextMapper.GUIS_SCO_MANAGEMENT));
+    	HeaderPanel hp = new HeaderPanel(TextMapper.getText(TextMapper.GUIS_SCO_MANAGEMENT));
+    	stopBtn = new JButton("Stop bewerken");
+    	stopBtn.addActionListener(this);
+    	hp.setButtonBox(stopBtn);
+    	return hp;
     }
 
 
@@ -422,7 +436,18 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
      * @param e The ActionEvent.
      */
     public void actionPerformed(ActionEvent e) {
-    	if(e.getSource() == courseLogoButton)
+    	
+    	
+    	
+    	Object src = e.getSource();
+    	if(src == stopBtn)
+    	{
+    		end();
+    		center.setStrategy(null);
+    		center.select(course);
+    	}
+
+		if(src == courseLogoButton)
     	{
     		try {
 				importCourseLogo();
@@ -431,7 +456,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 			}
 			return;
     	}
-      	if(e.getSource() == exportCourseButton)
+      	if(src == exportCourseButton)
     	{
     		try {
 				export();
@@ -440,7 +465,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 				e1.printStackTrace();
 			}
     		return;
-    	} else if(e.getSource() == importScosButton)
+    	} else if(src == importScosButton)
     	{
     		try { 
     			importScos();
@@ -448,7 +473,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     			e2.printStackTrace();			
     		}
     	}
-        if(e.getSource() == addScoButton) {
+        if(src == addScoButton) {
         	Sco s = null;
         	
         	// speciaal voor de SAG en REV: er kan maar 1 soort appletConfig gebruikt worden, nl WiskOpdr
@@ -476,7 +501,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 	            center.updateCourse(course);
             }
 
-        } else if( e.getSource() == publishButton)
+        } else if( src == publishButton)
         {
         	publishCourse();
         }
@@ -602,8 +627,11 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
      * @see fi.dwo.client.gui.CenterSubPanel#end()
      */
     public void end() {
-        // TODO Auto-generated method stub
-        
+        if(!pane.getText().equals(course.getDescription()))
+        {
+        	course.setDescription(pane.getText());
+        	GuiCreator.instance().updateCourse(course);
+        }
     }
 
 
@@ -628,6 +656,8 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 	}
 
 	private boolean ok = true;
+
+	private JTextArea pane;
 	public void stateChanged(ChangeEvent e) {
 		//System.out.println("ChangeEvent " + e);
 		if(ok && course == e.getSource())

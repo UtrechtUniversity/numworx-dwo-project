@@ -442,7 +442,12 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
      */
     
     public Component getHeaderPanel() {
-    	return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_COURSE_MANAGEMENT));
+    	HeaderPanel hp = new HeaderPanel(TextMapper.getText(TextMapper.GUIC_COURSE_MANAGEMENT));
+    	stopBtn = new JButton("Stop bewerken");
+    	stopBtn.setActionCommand("stop");
+    	stopBtn.addActionListener(this);
+    	hp.setButtonBox(stopBtn);
+		return hp;
     }
 
     /**
@@ -453,6 +458,11 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     public void actionPerformed(ActionEvent e) {
     	Object src = e.getSource();
             
+    	if(src == stopBtn)
+    	{
+    		center.setStrategy(null);
+    		center.select(map.getUserObject());
+    	}
     	if(src == addMapButton)
     	{
     		Course c = CourseNameDialog.addMap(this, getParentCourse());
@@ -635,6 +645,9 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	}
 
 	boolean ok = true;
+
+
+	private JButton stopBtn;
 	private void noUpdate() {
 		ok = false;
 		center.updateMap(map);
