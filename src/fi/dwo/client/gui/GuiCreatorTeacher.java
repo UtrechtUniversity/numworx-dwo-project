@@ -8,8 +8,10 @@ import java.awt.event.ActionEvent;
 import java.util.Vector;
 
 import javax.swing.AbstractAction;
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
@@ -35,7 +37,24 @@ import fi.dwo.client.persistence.PersistenceFacade;
  */
 public class GuiCreatorTeacher extends GuiCreator {
 
-    public static final class LazyAppletConfig extends AppletConfig {
+    public class PreviewAction extends AbstractAction {
+
+		private ScoPanel scoPanel;
+
+		public PreviewAction(ScoPanel scoPanel) {
+			super("stop preview");
+			this.scoPanel = scoPanel;
+		}
+
+		public void actionPerformed(ActionEvent _) {
+			scoPanel.getSco().setLaunchdata(scoPanel.tmp.tmp);
+			scoPanel.getSco().setDataChanged(false);
+			getMainPanel().getCenter().loadCenter(scoPanel.tmp);
+		}
+
+	}
+
+	public static final class LazyAppletConfig extends AppletConfig {
 		private Sco sco;
 
 		/* (non-Javadoc)
@@ -409,13 +428,6 @@ public class GuiCreatorTeacher extends GuiCreator {
 	        center.loadCenter(cp);
 	        setReady();           
 		}
-
-		public void nodeSelected(CourseMap node) {			
-		}
-
-		public JPopupMenu nodeAction(CourseMap node) {
-			return null;
-		}
 		
 	}
 	
@@ -488,6 +500,13 @@ public class GuiCreatorTeacher extends GuiCreator {
 	public JComponent getButtonBox(ScoPanel scoPanel) {
 		if(scoPanel.getSco().getCourse().getSchoolID() == 0)
 			return null;
+		if(scoPanel.getSco().getLessonMode() == Sco.BROWSE)
+		{
+			Box box = Box.createHorizontalBox();
+			box.add(new JLabel("PREVIEW"));
+			box.add(new JButton(new PreviewAction(scoPanel)));
+			return fx(box);
+		}
 		return fx(new JButton(new ScoParameterAction(scoPanel)));
 	}
 	

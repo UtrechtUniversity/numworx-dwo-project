@@ -22,8 +22,10 @@ import javax.swing.JTextArea;
 import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
+import javax.swing.text.JTextComponent;
 
 
+import fi.beans.mathkit.JMathPane;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.Descriptor;
 import fi.dwo.client.domain.DwoProfile;
@@ -40,7 +42,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
 
     private int NR_COLUMNS = 4;
     
-    private JTextArea profileTextArea;
+    private JTextComponent profileTextArea;
     private Dimension unit = new Dimension(1,1);
     private Descriptor dwoProfile;
 
@@ -79,15 +81,21 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
         
         
         String s = dwoProfile.getText();
-        profileTextArea = new JTextArea();
+        if(s.startsWith("<html>"))
+        {
+        	profileTextArea = new JMathPane();
+        } else {
+        	JTextArea area = new JTextArea();
+            area.setLineWrap(true);
+            area.setWrapStyleWord(true);
+            area.setColumns(20);
+        	profileTextArea = area;
+        }
         profileTextArea.setFont(new Font("SansSerif",Font.PLAIN,13));
         profileTextArea.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        profileTextArea.setLineWrap(true);
         profileTextArea.setEditable(false);
-        profileTextArea.setWrapStyleWord(true);
         profileTextArea.setBounds(20,20,600,110);
         profileTextArea.setOpaque(false);
-        profileTextArea.setColumns(20);
         profileTextArea.setText(s);
         
         

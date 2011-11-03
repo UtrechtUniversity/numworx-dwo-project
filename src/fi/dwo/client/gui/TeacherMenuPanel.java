@@ -187,7 +187,7 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
         classManagementButton.addActionListener(this);
         this.add(classManagementButton);
         /* Als dwo in Deeplink mode, geen coursemanagement */
-        if(dwo.getCourseViewNr()>0 || !dwo.getUser().hasRight(User.MODIFY_MODULES_RIGHT))
+        if(dwo.getCourseViewNr()>0 || !dwo.getUser().hasRight(User.MODIFY_MODULES_RIGHT)/* || CenterPanel.isIconizer()*/)
         	return;
         createGap();
         /* Add CourseManagement Button */
@@ -262,26 +262,33 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
+        Object src = e.getSource();
+		GuiCreator instance = GuiCreator.instance();
+        if(src == mainMenuButton)
+        {
+        	instance.getMainPanel().getCenter().select(ModuleTreePanel.ALLE_MODULES);
+        	return;
+        }
         super.actionPerformed(e);
 
-        if (e.getSource() instanceof ClassLinkedLabel) {
-            GuiCreator.instance().setWait();
-            CenterSubPanel cp = GuiCreator.instance().getResultPanel(((ClassLinkedLabel) e.getSource()).getSchoolClass());
+		if (src instanceof ClassLinkedLabel) {
+            instance.setWait();
+            CenterSubPanel cp = instance.getResultPanel(((ClassLinkedLabel) src).getSchoolClass());
             center.reset();
             center.loadCenter(cp);
-            GuiCreator.instance().setReady();
-        } else if (e.getSource() == classManagementButton) {
-            GuiCreator.instance().setWait();
-            CenterSubPanel cp = GuiCreator.instance().getClassPanel();
+            instance.setReady();
+        } else if (src == classManagementButton) {
+            instance.setWait();
+            CenterSubPanel cp = instance.getClassPanel();
             center.reset();
             center.loadCenter(cp);
-            GuiCreator.instance().setReady();
-       } else if (e.getSource() == courseManagementButton) {
-           GuiCreator.instance().setWait();
-           CenterSubPanel cp = GuiCreator.instance().getCourseManagementPanel();
+            instance.setReady();
+       } else if (src == courseManagementButton) {
+           instance.setWait();
+           CenterSubPanel cp = instance.getCourseManagementPanel();
            center.loadCenter(cp);
            center.setStrategy(this);
-           GuiCreator.instance().setReady();           
+           instance.setReady();           
        }
     }
     

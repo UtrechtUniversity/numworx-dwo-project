@@ -41,6 +41,7 @@ import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.Sco;
+import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.persistence.MapperCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
@@ -226,13 +227,21 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 
 	protected void createMenubar(Box hbox) {
 		bar = new JMenuBar();
-		bar.setVisible(false);
+		bar.setOpaque(false);
+		bar.setVisible(GuiCreator.instance().getUser().hasRight(User.MODIFY_MODULES_RIGHT));
 		JMenu menu; JMenuItem item;
 		menu = new JMenu("Bestand");
-		item = new JMenuItem("Import");
-		menu.add(item);
+		item = new JMenuItem("Nieuwe map");menu.add(item);
+		item = new JMenuItem("Nieuwe module");menu.add(item);
+		item = new JMenuItem("Nieuwe activiteit");menu.add(item);
+		item = new JMenuItem("Import module");menu.add(item);
+		item = new JMenuItem("Backup module");menu.add(item);
 		bar.add(menu);
 		menu = new JMenu("Bewerken");
+		item = new JMenuItem("cut");menu.add(item);
+		item = new JMenuItem("copy");menu.add(item);
+		item = new JMenuItem("paste");menu.add(item);
+		item = new JMenuItem("delete");menu.add(item);
 		bar.add(menu);
 		hbox.add(bar);
 	}

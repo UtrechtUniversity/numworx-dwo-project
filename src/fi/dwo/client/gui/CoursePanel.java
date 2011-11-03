@@ -26,6 +26,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
+import javax.swing.text.JTextComponent;
 
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DwoHelper;
@@ -35,6 +36,7 @@ import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.UserResultList;
 import fi.dwo.client.system.TextMapper;
 
+import fi.beans.mathkit.JMathPane;
 import fi.beans.tekstobjects.TekstArea;
 
 /**
@@ -58,7 +60,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
     private JLabel scoListHeader;
     
     private JTextArea courseDescription;
-    private JLabel courseDescriptionHTML;
+    private JTextComponent courseDescriptionHTML;
 
     private JButton showResultsButton;
     
@@ -93,7 +95,9 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 		{
 			if(s.length()>5 && s.substring(0,6).equals("<html>"))
 			{	htmlMode=true;
-				courseDescriptionHTML = new JLabel(s);
+				courseDescriptionHTML = new JMathPane(); // was JLABEL
+				courseDescriptionHTML.setText(s);
+				courseDescriptionHTML.setEditable(false);
 				add(courseDescriptionHTML);
 				courseDescriptionHTML.setFont(new Font("SansSerif", Font.PLAIN, 13));
 				courseDescriptionHTML.setOpaque(false);

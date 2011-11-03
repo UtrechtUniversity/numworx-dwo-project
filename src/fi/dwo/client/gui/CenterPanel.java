@@ -478,6 +478,12 @@ invalidate();
 		{
 			tree.select(object);
 			tree.toSelectedNode();
+		} else {
+// TODO check all cases of select...
+			if(object == ModuleTreePanel.ALLE_MODULES)
+				loadCenter(GuiCreator.instance().getCourseChoisePanel());
+			else if(object instanceof Course)
+				loadCenter(GuiCreator.instance().getCoursePanel((Course) object));
 		}
 	}
 	

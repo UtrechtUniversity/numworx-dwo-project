@@ -3,6 +3,7 @@
 package fi.dwo.client.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -29,6 +30,7 @@ import java.util.Hashtable;
 import java.util.Set;
 import java.util.Vector;
 
+import javax.swing.AbstractButton;
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -40,12 +42,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.text.JTextComponent;
 
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseMap;
@@ -114,6 +118,9 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
 
 	private Object userObject;
+
+
+	private JTextComponent area;
 
 	class CourseModel extends AbstractTableModel {
 
@@ -329,7 +336,15 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         //this.setPreferredSize(getSize());
         tablePane = new JPanel(new FlowLayout(FlowLayout.LEFT));
         tablePane.setOpaque(false);
-        add(tablePane, BorderLayout.CENTER);
+        add(tablePane, BorderLayout.SOUTH);
+        if(userObject instanceof Course)
+        {	area = new JTextArea();
+        	area.setText(((Course) userObject).getText());
+        	area.setBorder(BorderFactory.createLineBorder(Color.black));
+        	add(area, BorderLayout.CENTER);
+        }
+        
+        
         setBorder(BorderFactory.createEmptyBorder(10,30,5,10));
         Box header = Box.createHorizontalBox();
         add(header, BorderLayout.NORTH);
@@ -461,6 +476,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     	if(src == stopBtn)
     	{
     		center.setStrategy(null);
+    		end();
     		center.select(map.getUserObject());
     	}
     	if(src == addMapButton)
@@ -610,6 +626,12 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+        } else if(area != null && userObject instanceof Course)
+        {
+        	Course course = (Course) userObject;
+        	if(!area.getText().equals(course.getText()))
+        		course.setDescription(area.getText());
+        		GuiCreator.instance().updateCourse(course);
         }
     }
 

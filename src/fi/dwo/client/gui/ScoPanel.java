@@ -24,6 +24,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Hashtable;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -79,6 +80,8 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
     private boolean courseView;
 
 	private CardLayout layout;
+
+	ParameterManagementPanel tmp;
 
     /**
      * Creates a new ScoPanel with an applet of the specified sco.
@@ -426,9 +429,11 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
      */
     public void actionPerformed(ActionEvent e) {
         if (/* e.getSource() == mainMenuButton || */ e.getSource() == mainMenuImageButton) {
-            center.loadCenter(GuiCreator.instance().getCourseChoisePanel());
+         //   center.loadCenter(GuiCreator.instance().getCourseChoisePanel());
+        	center.select(ModuleTreePanel.ALLE_MODULES);
         } else if (e.getSource() == courseButton ) {
-            center.loadCenter(GuiCreator.instance().getCoursePanel(sco.getCourse()));
+            //center.loadCenter(GuiCreator.instance().getCoursePanel(sco.getCourse()));
+        	center.select(sco.getCourse());
         } 
         // aanpassing umpc
         else if (DwoHelper.umpc && e.getSource() == closeButton) {

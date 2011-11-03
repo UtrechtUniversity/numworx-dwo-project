@@ -98,10 +98,10 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
     
     private Sco sco;
     
-    private JButton previewButton;
-    private JButton saveButton;
+    private JButton previewButton, previewBtn;
+    private JButton saveButton, saveBtn;
     private JButton resetButton;
-    private JButton closeButton;
+    private JButton closeButton,stopBtn;
     private JButton importScormButton;
     private JButton exportScormButton;
     private JButton exportAppletButton;
@@ -307,6 +307,8 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
     }
 
     boolean done;
+
+	Hashtable tmp;
     public void end() {
     	if(!done)
     	{	done = true;
@@ -323,10 +325,14 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
     public Component getHeaderPanel() {
     	HeaderPanel hp = new HeaderPanel(TextMapper.getText(TextMapper.GUIPA_SCO_EDIT));
     	Box box = Box.createHorizontalBox();
-    	box.add(new JButton("Stop bewerken"));
-    	box.add(new JButton("Opslaan"));
-    	box.add(new JButton("Preview"));
+    	box.add(stopBtn = new JButton("Stop bewerken"));
+    	box.add(saveBtn = new JButton("Opslaan"));
+    	box.add(previewBtn = new JButton("Preview"));
 		hp.setButtonBox(box);
+		
+		stopBtn.addActionListener(this);
+		previewBtn.addActionListener(this);
+		saveBtn.addActionListener(this);
 		return hp;
     }
 
@@ -353,7 +359,34 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == closeButton) {
+        Object src = e.getSource();
+        if(src == stopBtn)
+        {
+        	int x = saveSco();
+        	if(x == JOptionPane.CLOSED_OPTION || x == JOptionPane.CANCEL_OPTION)
+        		return;
+        	done = true;
+        	if(editMode)
+        		editComponent.end();
+        	center.setStrategy(null);
+        	center.select(sco);
+        	return;
+        }
+        if(src == previewBtn) {
+        	Hashtable tmp = getNewLaunchdata();
+        	this.tmp = sco.getLaunchdata(); //????
+        	done = true;
+        	sco.setLaunchdata(tmp);
+        	ScoPanel sp = GuiCreator.instance().previewSco(sco);
+        	sp.tmp = this;
+        	center.loadCenter(sp);
+        	return;
+        }
+        
+        
+        
+        
+		if(src == closeButton) {
         	int x = saveSco();
         	if(x == JOptionPane.CLOSED_OPTION || x == JOptionPane.CANCEL_OPTION)
         		return;
@@ -366,24 +399,15 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             } else {
                 center.loadCenter(GuiCreator.instance().getScoManagementPanel(sco.getCourse()));
             }
-        } else if(e.getSource() == resetButton) {
+        } else if(src == resetButton) {
             if(editMode) {
                 editComponent.reset();
             } else {
                 parameterComponent.reset();
             }
-        } else if(e.getSource() == previewButton) {
+        } else if(src == previewButton) {
             Hashtable tmp, old;
-            if(editMode) {
-                tmp = editComponent.getLaunchData();
-            } else {
-                tmp = (Hashtable) sco.getLaunchdata();
-                ConvertorIF convertor = ConvertorCreator.createConverter(ConvertorCreator.CONV_LAUNCHDATA);
-                tmp = (Hashtable) convertor.convertHashtable(tmp, parameters);
-                
-                parameterComponent.addParameters(tmp);
-                tmp = (Hashtable) convertor.createHashtable(tmp, parameters);
-            }
+            tmp = getNewLaunchdata();
             old = sco.getLaunchdata();
             sco.setLaunchdata(tmp);
             ScoPanel sp = GuiCreator.instance().previewSco(sco);
@@ -399,36 +423,43 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             sco.setLaunchdata(old);
             
             
-        } else if (e.getSource() == saveButton) {
+        } else if (src == saveButton||src == saveBtn) {
         	int x = saveSco();
         	done = false;
 //        	if(editMode&&POPUP) {
 //                editModeDialog.setVisible(false);
 //            }
            
-        } else if(e.getSource() == exportScormButton) {
+        } else if(src == exportScormButton) {
 // even uit in productie, aan bij testen
         	//save();
         	save2004();
-        } else if(e.getSource() == importScormButton) {
+        } else if(src == importScormButton) {
 	    	open();
-        } else if(e.getSource() == exportAppletButton) {
+        } else if(src == exportAppletButton) {
         	saveApplet();
         }
     }
+
+	private Hashtable getNewLaunchdata() {
+		Hashtable tmp;
+		if(editMode) {
+		    tmp = editComponent.getLaunchData();
+		} else {
+		    tmp = (Hashtable) sco.getLaunchdata();
+		    ConvertorIF convertor = ConvertorCreator.createConverter(ConvertorCreator.CONV_LAUNCHDATA);
+		    tmp = (Hashtable) convertor.convertHashtable(tmp, parameters);
+		    
+		    parameterComponent.addParameters(tmp);
+		    tmp = (Hashtable) convertor.createHashtable(tmp, parameters);
+		}
+		return tmp;
+	}
     	
     private int saveSco() {
     	String message;
         Hashtable tmp;
-        if(editMode) {
-            tmp = editComponent.getLaunchData();
-        } else {
-            tmp = (Hashtable) sco.getLaunchdata();
-            ConvertorIF convertor = ConvertorCreator.createConverter(ConvertorCreator.CONV_LAUNCHDATA);
-            tmp = (Hashtable) convertor.convertHashtable(tmp, parameters);
-            parameterComponent.addParameters(tmp);
-            tmp = (Hashtable) convertor.createHashtable(tmp, parameters);
-        }
+        tmp = getNewLaunchdata();
         Hashtable old = sco.getLaunchdata();
     	old.remove("language");old.remove("bgcolor");
     	tmp.remove("language");tmp.remove("bgcolor");
