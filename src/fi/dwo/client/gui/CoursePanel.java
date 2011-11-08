@@ -350,7 +350,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 	/**
 	 * @param lessonMode the lessonMode to set
 	 */
-	void setLessonMode(String lessonMode) {
+	public void setLessonMode(String lessonMode) {
 		this.lessonMode = lessonMode;
 		if (showResultsButton != null)
 		{

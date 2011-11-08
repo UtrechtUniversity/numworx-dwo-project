@@ -20,7 +20,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.event.MenuEvent;
@@ -43,16 +42,17 @@ import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.User;
+import fi.dwo.client.gui.action.CutCopyAction;
+import fi.dwo.client.gui.action.DeleteAction;
+import fi.dwo.client.gui.action.NewAction;
+import fi.dwo.client.gui.action.PasteAction;
+import fi.dwo.client.gui.action.TeacherStrategy;
 import fi.dwo.client.persistence.MapperCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.PersistenceException;
+import fi.dwo.client.system.TextMapper;
 
-interface SelectStrategy {
-	void nodeSelected(CourseMap node);
-	JPopupMenu nodeAction(CourseMap node);
-}
-
-public class ModuleTreePanel extends JPanel implements TreeSelectionListener, SelectStrategy {
+public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 
 	public static final String STANDAARD_DWO_MODULES = "Standaard DWO modules";
 	public static final String ALLE_MODULES = "Alle modules";
@@ -209,11 +209,12 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 	
 	public ModuleTreePanel() {
 		super(new BorderLayout());
-		strategy = this;
+		strategy = delegate;
 		tree = new JTree();
 		tree.setShowsRootHandles(true);
 		tree.addTreeSelectionListener(this);
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		tree.addMouseListener(mtp);
 		pane = new JScrollPane(tree);
 		pane.setViewportBorder(null);
 		pane.setBorder(null);
@@ -231,17 +232,31 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 		bar.setVisible(GuiCreator.instance().getUser().hasRight(User.MODIFY_MODULES_RIGHT));
 		JMenu menu; JMenuItem item;
 		menu = new JMenu("Bestand");
-		item = new JMenuItem("Nieuwe map");menu.add(item);
-		item = new JMenuItem("Nieuwe module");menu.add(item);
-		item = new JMenuItem("Nieuwe activiteit");menu.add(item);
-		item = new JMenuItem("Import module");menu.add(item);
-		item = new JMenuItem("Backup module");menu.add(item);
+		item = new JMenuItem("Nieuwe map");menu.add(item);item.setAction(new NewAction(true, true));
+		item = new JMenuItem("Nieuwe module/activiteit");menu.add(item);item.setAction(new NewAction(false, false));
+		if(DwoHelper.isApplication())
+		{  	
+			menu.addSeparator();
+			item = new JMenuItem("Import module");menu.add(item);
+			item = new JMenuItem("Backup module");menu.add(item);
+			menu.addSeparator();
+			item = new JMenuItem("Import activiteit"); menu.add(item);
+			item = new JMenuItem("Backup activiteit"); menu.add(item);
+			item = new JMenuItem("Export Applet");
+		}
 		bar.add(menu);
 		menu = new JMenu("Bewerken");
-		item = new JMenuItem("cut");menu.add(item);
-		item = new JMenuItem("copy");menu.add(item);
-		item = new JMenuItem("paste");menu.add(item);
-		item = new JMenuItem("delete");menu.add(item);
+		item = new JMenuItem("cut");menu.add(item);item.setAction(new CutCopyAction(true));item.setText(TextMapper.getText("cut"));
+		item = new JMenuItem("copy");menu.add(item);item.setAction(new CutCopyAction(false));item.setText(TextMapper.getText("copy"));
+		item = new JMenuItem("paste");menu.add(item);item.setAction(new PasteAction());
+		menu.addSeparator();
+		item = new JMenuItem("delete");menu.add(item);item.setAction(new DeleteAction());
+// op dit moment is er nog geen user bekend.
+//		if (dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT))
+//		{
+//			menu.addSeparator();
+//			item = new JMenuItem("publiceer");menu.add(item); // cut en paste in standaard modules.
+//		}
 		bar.add(menu);
 		hbox.add(bar);
 	}
@@ -399,14 +414,6 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
         center = centerPanel;
     }
 
-    String lessonMode = Sco.NORMAL;
-	String getLessonMode() {
-		return lessonMode;
-	}
-
-	void setLessonMode(String lessonMode) {
-		this.lessonMode = lessonMode;
-	}
 		
 	public void valueChanged(TreeSelectionEvent e) {
 		if(isSelect())
@@ -422,47 +429,6 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 	
 	private SelectStrategy strategy;
 
-	public void nodeSelected(CourseMap node) {
-		Object value = node.getUserObject();
-		CenterSubPanel panel;
-		
-		GuiCreator instance = GuiCreator.instance();
-		if(value instanceof Course)
-		{
-			Course c = (Course)value;
-			if(c.isWithChildren())
-			{
-				Course[] children = c.getChildren();
-				panel = new CourseChoisePanel(c, children, c);
-				center.loadCenter(panel);
-			} else {
-				CoursePanel cp = (CoursePanel) instance.getCoursePanel(c);
-				cp.setLessonMode(getLessonMode());
-				center.loadCenter(cp);
-			}
-		} else if (value instanceof String) // geen ondescheid tussen alle/school/standaard
-		{
-			if(value == ALLE_MODULES)
-			{				
-				panel = new CourseChoisePanel(dwo.getDwoProfile());
-			} else 
-			{
-				Course[] courses = node.getChildren();
-				panel = new CourseChoisePanel(dwo.getDwoProfile(), courses, value);
-				
-			}
-			center.loadCenter(panel); // undo side-effect 'select Alle_modules'
-			
-		} else if (value instanceof Sco) 
-		{
-			Sco s = (Sco)value;
-		    CenterSubPanel csp = instance.getScoPanel(s);
-		    if(csp != null) {
-		    	s.setLessonMode(getLessonMode());
-		        center.loadTotal(csp);
-		    }
-		}
-	}
 	
 	private boolean isSelect() {
 		return cnt>0;
@@ -499,16 +465,14 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
 		return strategy;
 	}
 
+	TeacherStrategy delegate = new TeacherStrategy(); // this order!
 	ModuleTreePopup mtp = new ModuleTreePopup(this);
 	
 	void setStrategy(SelectStrategy strategy) {
-		tree.removeMouseListener(mtp);
 		if(strategy == null)
-		{	strategy = this;
-		} else
-		{	mtp.setPopup(strategy);
-			tree.addMouseListener(mtp);
-		}
+		{	strategy = delegate;
+		} 
+		mtp.setPopup(strategy);
 		this.strategy = strategy;
 	}
 
@@ -545,10 +509,6 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener, Se
     	}
 	}
 
-
-	public JPopupMenu nodeAction(CourseMap node) {
-		return null;
-	}
 
 	public void toSelectedNode() {
 		TreePath path = tree.getSelectionPath();

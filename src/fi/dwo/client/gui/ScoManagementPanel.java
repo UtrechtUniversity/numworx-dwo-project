@@ -44,6 +44,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
@@ -134,7 +135,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         exportCourseButton.addActionListener(this);
         exportCourseButton.setVisible(false);
         top.add(exportCourseButton);
-        if(DwoHelper.isApplication())
+        if(DwoHelper.isApplication() && !CenterPanel.isIconizer()) // TODO verplaatsen naar menu van tree
         	exportCourseButton.setVisible(true);
         top.add(Box.createHorizontalStrut(10));
         importScosButton = new JButton("Import");
@@ -160,7 +161,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         add(panel, BorderLayout.CENTER);
         //if(false && DwoHelper.isApplication())
         if(DwoHelper.isApplication())
-        {	importScosButton.setVisible(true);
+        {	importScosButton.setVisible(true && !CenterPanel.isIconizer()); // TODO verplaatsen naar Tree Menu
             courseLogoButton.addActionListener(this);
             courseLogoButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             courseLogoButton.setBorderPainted(true);
@@ -214,7 +215,13 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 	private JButton stopBtn;
 	public class ImageRenderer extends JLabel implements TableCellRenderer {
 
+		ImageRenderer(boolean iconizer) {
+			super();
+			this.iconizer = iconizer;
+		}
+
 		private ImageIcon icon = new ImageIcon();
+		private boolean iconizer;
 
 		public Component getTableCellRendererComponent(JTable table,
 				Object value, boolean selected, boolean hasFocus, int row, int col) {
@@ -228,6 +235,12 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 			setHorizontalAlignment(SwingConstants.CENTER);
 			setOpaque(true);
 			Object[] arguments = new Object[]  { table.getValueAt(row, 0) };
+
+			if(iconizer && col > 0)
+				col++;
+			if(iconizer && col > 2)
+				col++;
+
 			switch(col) {
 			case 1:	String s = TextMapper.getText(TextMapper.GUIS_TLTP_COURSE_SCO);
 	    			setToolTipText(MessageFormat.format(s, arguments));
@@ -256,7 +269,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 	TableCellEditor, ActionListener {
 
     	Object value;
-    	ScoModel model;
+    	AbstractTableModel model;
     	int row;
 
     	public Component getTableCellEditorComponent(JTable table, Object value,
@@ -265,7 +278,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     		JButton button = new JButton(new ImageIcon((Image)value));
     		button.addActionListener(this);
     		this.row = row;
-    		model = (ScoModel) table.getModel();
+    		model = (AbstractTableModel) table.getModel();
     		return button;
     	}
 
@@ -328,6 +341,49 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 
 }
 
+    class ScoModelForTree extends AbstractTableModel {
+	
+    	public int getColumnCount() {
+			return 5;
+		}
+
+		public int getRowCount() {
+			return course.getScoList().length;
+		}
+
+		public Class getColumnClass(int col) {
+			if(col > 0)
+				return Image.class;
+			return super.getColumnClass(col);
+		}
+
+		public boolean isCellEditable(int row, int col) {
+			if(col == 2)
+				return row != 0;
+			if(col == 3)
+				return row != getRowCount()-1;
+			return true;
+		}
+
+		public Object getValueAt(int row, int col) {
+			switch(col)
+			{
+			case 0: return course.getScoList()[row].getScoName();
+			case 1: return editImage;
+			case 2: if(row != 0)
+						return upImage;
+					break;
+			case 3: if(row != getRowCount()-1)
+						return downImage;
+					break;
+			case 4: return removeImage;
+			}
+			return null;
+		}
+    	
+    }
+    
+    
     class ScoModel extends AbstractTableModel {
 
 		public int getColumnCount() {
@@ -394,8 +450,11 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
             noScosLabel.setVisible(false);            
             label.setVisible(true);
         }
-        JTable table = new JTable(new ScoModel());
-    	TableUtil.setDefaults(table, false, new ImageRenderer(), new ImageButtonEditor());
+        TableModel model = new ScoModel();
+        if(CenterPanel.isIconizer())
+        	model = new ScoModelForTree();
+		JTable table = new JTable(model);
+    	TableUtil.setDefaults(table, false, new ImageRenderer(CenterPanel.isIconizer()), new ImageButtonEditor());
 
     	TableUtil.setJTableSizes(table);
     	//table.setSize(table.getPreferredSize());

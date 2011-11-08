@@ -8,12 +8,12 @@ import java.awt.event.ActionEvent;
 import java.util.Vector;
 
 import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 
 import fi.beans.base64code.StringCodeObject;
 import fi.dwo.client.domain.AppletConfig;
@@ -26,6 +26,7 @@ import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.Admin;
 import fi.dwo.client.domain.User;
+import fi.dwo.client.gui.action.NullStrategy;
 import fi.dwo.client.persistence.PersistenceFacade;
 
 /**
@@ -37,7 +38,7 @@ import fi.dwo.client.persistence.PersistenceFacade;
  */
 public class GuiCreatorTeacher extends GuiCreator {
 
-    public class PreviewAction extends AbstractAction {
+    static public class PreviewAction extends AbstractAction {
 
 		private ScoPanel scoPanel;
 
@@ -49,7 +50,7 @@ public class GuiCreatorTeacher extends GuiCreator {
 		public void actionPerformed(ActionEvent _) {
 			scoPanel.getSco().setLaunchdata(scoPanel.tmp.tmp);
 			scoPanel.getSco().setDataChanged(false);
-			getMainPanel().getCenter().loadCenter(scoPanel.tmp);
+			GuiCreator.instance().getMainPanel().getCenter().loadCenter(scoPanel.tmp);
 		}
 
 	}
@@ -388,20 +389,6 @@ public class GuiCreatorTeacher extends GuiCreator {
 		return dwo.swapSco(sco1, sco2);
 	}
 
-	static class NullStrategy implements SelectStrategy {
-
-		public void nodeSelected(CourseMap node) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		public JPopupMenu nodeAction(CourseMap node) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		
-	}
-	
 	class CourseManagementAction extends AbstractAction {
 
 		private Object userObject;
@@ -484,11 +471,11 @@ public class GuiCreatorTeacher extends GuiCreator {
 	}
 
 	private JComponent fx(JComponent b) { 
-		JPanel jp = new JPanel();
-		jp.setOpaque(false);
-		jp.setDoubleBuffered(false);
-		jp.add(b);
-		return jp;
+		Box box = Box.createVerticalBox();
+		box.add(Box.createGlue());
+		box.add(b);
+		box.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0)); // Meten!
+		return box;
 	}
 	
 	public JComponent getButtonBox(CoursePanel coursePanel) {

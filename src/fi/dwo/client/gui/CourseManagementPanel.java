@@ -580,7 +580,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	 * @param names
 	 * @return
 	 */
-	static String replaceDuplicate(String title, Set names) {
+	public static String replaceDuplicate(String title, Set names) {
 		boolean again;
 		do {
 			again = names.contains(title);

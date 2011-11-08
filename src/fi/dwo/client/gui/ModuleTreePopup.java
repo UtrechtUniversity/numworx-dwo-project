@@ -24,6 +24,7 @@ public class ModuleTreePopup extends MouseAdapter  {
 	
 	public ModuleTreePopup(ModuleTreePanel p) {
 		panel = p;
+		strategy = p.delegate;
 	}
 
 
