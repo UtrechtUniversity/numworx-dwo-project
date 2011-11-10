@@ -187,13 +187,14 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
      */
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof CourseIcon) {
-            CenterSubPanel cp;
             Course course = ((CourseIcon) e.getSource()).getCourse();
-            if(course.isWithChildren())
-            	cp = GuiCreator.instance().getCourseChoisePanel(course);
-            else
-            	cp = GuiCreator.instance().getCoursePanel(course);
-            center.loadCenter(cp);
+//            CenterSubPanel cp;
+//            if(course.isWithChildren())
+//            	cp = GuiCreator.instance().getCourseChoisePanel(course);
+//            else
+//            	cp = GuiCreator.instance().getCoursePanel(course);
+//            center.loadCenter(cp);
+            center.select(course);
         }
     }
 

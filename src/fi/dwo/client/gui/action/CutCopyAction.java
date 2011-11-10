@@ -27,7 +27,7 @@ public class CutCopyAction extends GuiAction
 	}
 
 	void setMap(CourseMap map) {
-		if(map.getUserObject()instanceof String)
+		if(map == null || map.getUserObject()instanceof String)
 			setEnabled(false);
 		else
 			setEnabled(!cut || canModify(map));

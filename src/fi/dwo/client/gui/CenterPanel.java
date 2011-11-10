@@ -483,7 +483,15 @@ invalidate();
 			if(object == ModuleTreePanel.ALLE_MODULES)
 				loadCenter(GuiCreator.instance().getCourseChoisePanel());
 			else if(object instanceof Course)
-				loadCenter(GuiCreator.instance().getCoursePanel((Course) object));
+			{
+				Course course = (Course)object;
+				CenterSubPanel cp;
+	            if(course.isWithChildren())
+	            	cp = GuiCreator.instance().getCourseChoisePanel(course);
+	            else
+	            	cp = GuiCreator.instance().getCoursePanel(course);
+	            loadCenter(cp);				
+			}
 		}
 	}
 	

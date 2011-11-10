@@ -5,6 +5,7 @@ package fi.dwo.client.gui;
 
 import java.awt.Container;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
@@ -888,6 +889,10 @@ public class GuiCreator {
 	}
 
 	public JComponent getButtonBox(ScoPanel scoPanel) {
+		return null;
+	}
+
+	public JComponent fx(JComponent stopBtn) {
 		return null;
 	}
 

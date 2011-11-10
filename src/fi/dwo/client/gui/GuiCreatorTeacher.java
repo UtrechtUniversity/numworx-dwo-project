@@ -470,11 +470,11 @@ public class GuiCreatorTeacher extends GuiCreator {
 			return fx(new JButton(new CourseManagementAction(courseChoisePanel)));
 	}
 
-	private JComponent fx(JComponent b) { 
+	public JComponent fx(JComponent b) { 
 		Box box = Box.createVerticalBox();
 		box.add(Box.createGlue());
 		box.add(b);
-		box.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0)); // Meten!
+		box.setBorder(BorderFactory.createEmptyBorder(0, 0, 3, 0)); // Meten!
 		return box;
 	}
 	

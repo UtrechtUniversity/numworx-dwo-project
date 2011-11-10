@@ -62,6 +62,7 @@ import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.SchoolPanel.ImageButtonEditor;
 import fi.dwo.client.gui.SchoolPanel.ImageRenderer;
 import fi.dwo.client.gui.SchoolPanel.SchoolModel;
+import fi.dwo.client.gui.action.ImportModuleAction;
 import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
 
@@ -122,6 +123,49 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
 	private JTextComponent area;
 
+	class CourseModelForTree extends AbstractTableModel {
+
+		public Class getColumnClass(int col) {
+			if(col >= 1)
+				return Image.class;
+			return super.getColumnClass(col);
+		}
+
+		public int getColumnCount() {
+			return 5; // naam, info, up, down, X
+		}
+
+		public int getRowCount() {
+			return courses.length;
+		}
+
+		public boolean isCellEditable(int row, int col) {
+			if(col == 2) // up
+				return row != 0;
+			if(col == 3) // down
+				return row != getRowCount()-1;
+			if(col >= 1)
+				return true;
+			return super.isCellEditable(row, col);
+		}
+
+		public Object getValueAt(int row, int col) {
+			switch(col) {
+			case 0: return courses[row].getName();
+			case 1: return editImage;
+			case 2: if(row == 0) return null;
+					return upImage;
+			case 3: if(row == getRowCount()-1) return null;
+					return downImage;
+			case 4: return removeImage;
+			}
+			return null;
+		}
+		
+	}
+	
+	
+	
 	class CourseModel extends AbstractTableModel {
 
 		public Class getColumnClass(int col) {
@@ -221,7 +265,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	TableCellEditor, ActionListener {
 
     	Object value;
-    	CourseModel model;
+    	AbstractTableModel model;
     	int row;
 
     	public Component getTableCellEditorComponent(JTable table, Object value,
@@ -230,7 +274,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     		JButton button = new JButton(new ImageIcon((Image)value));
     		button.addActionListener(this);
     		this.row = row;
-    		model = (CourseModel) table.getModel();
+    		model = (AbstractTableModel) table.getModel();
     		return button;
     	}
 
@@ -379,7 +423,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         	header.add(Box.createHorizontalStrut(10));
         
         
-        uploadCourseButton = new JButton("Restore module backup"); // TODO TextMapper
+        uploadCourseButton = new JButton(new ImportModuleAction(this)); // TODO TextMapper
         //uploadCourseButton.setSize(uploadCourseButton.getPreferredSize());
         uploadCourseButton.addActionListener(this);
         //uploadCourseButton.setLocation(200+addCourseButton.getWidth()+10, 10);
@@ -419,7 +463,9 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
             tablePane.remove(noCoursesLabel);
         }
 
-    	CourseModel tm = new CourseModel();
+    	AbstractTableModel tm = new CourseModel();
+    	if(CenterPanel.isIconizer())
+    		tm = new CourseModelForTree();
     	jTable = new JTable(tm);
     	jTable.setTableHeader(null);
     	//jScrollPane = new JScrollPane(jTable);
@@ -461,7 +507,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     	stopBtn = new JButton("Stop bewerken");
     	stopBtn.setActionCommand("stop");
     	stopBtn.addActionListener(this);
-    	hp.setButtonBox(stopBtn);
+    	hp.setButtonBox(GuiCreator.instance().fx(stopBtn));
 		return hp;
     }
 
@@ -493,12 +539,12 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
                 addChildToMap(c);            
             }
         } else if(src == uploadCourseButton) {
-        	try {
-				upload();
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+//        	try {
+//				upload();
+//			} catch (Exception e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
         } else if(src == shareCourseButton) {
         	
     		ExportImportDialog dialog;
@@ -536,44 +582,6 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 		noUpdate();
 	}
 
-    private void upload() throws Exception {
-    	String naam;
-		openDial.show();
-		naam = openDial.getFile();
-		if(naam!=null)
-		{	
-			File dir = new File(openDial.getDirectory());
-			File file = new File(dir, naam);
-			FileInputStream input = new FileInputStream(file);
-			DWOFile zipper = new DWOFile(DbAccessCreator.instance());
-			Hashtable result = zipper.inputIMSManifest(input);
-
-// TODO deze code verplaatsen naar DWOFile?
-// of ?copieren? naar ScoManagementPanel.
-			Set  names = new HashSet();
-			for (int i = 0; i < courses.length; i++) {
-				names.add(courses[i].getName());
-			}
-			String title = (String)result.get("name");
-			title = replaceDuplicate(title, names);
-			result.put("name", title);
-
-			final DwoIF dwo = GuiCreator.instance().dwo;
-			int schoolID = dwo.getUser().getSchool().getSchoolID();
-			int id = 0;
-			Course parentCourse = getParentCourse();
-			if( parentCourse != null)
-			{
-				id = parentCourse.getID();
-				schoolID = parentCourse.getSchoolID(); // takeover schoolid van parentcourse
-			}
-			if(schoolID != 0 || dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT))
-				zipper.addCourse(result, dwo.getDwoProfile().getID(), schoolID, id);
-			courses = dwo.getEditableCourses();
-			buildJTable();
-			noUpdate();
-		}
-	}
 
 	/**
 	 * @param title
@@ -702,6 +710,10 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
 	public CourseMap getParentMap() {
 		return map.getParentMap();
+	}
+
+	public CourseMap getMap() {
+		return map;
 	}
     
 }

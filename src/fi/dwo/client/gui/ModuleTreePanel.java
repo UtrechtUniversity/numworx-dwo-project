@@ -42,8 +42,10 @@ import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.User;
+import fi.dwo.client.gui.action.BackupModuleAction;
 import fi.dwo.client.gui.action.CutCopyAction;
 import fi.dwo.client.gui.action.DeleteAction;
+import fi.dwo.client.gui.action.ImportModuleAction;
 import fi.dwo.client.gui.action.NewAction;
 import fi.dwo.client.gui.action.PasteAction;
 import fi.dwo.client.gui.action.TeacherStrategy;
@@ -237,12 +239,12 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		if(DwoHelper.isApplication())
 		{  	
 			menu.addSeparator();
-			item = new JMenuItem("Import module");menu.add(item);
-			item = new JMenuItem("Backup module");menu.add(item);
+			item = new JMenuItem("Import module");menu.add(item);item.setAction(new ImportModuleAction());
+			item = new JMenuItem("Backup module");menu.add(item);item.setAction(new BackupModuleAction());
 			menu.addSeparator();
 			item = new JMenuItem("Import activiteit"); menu.add(item);
 			item = new JMenuItem("Backup activiteit"); menu.add(item);
-			item = new JMenuItem("Export Applet");
+			item = new JMenuItem("Export Applet");	   menu.add(item);
 		}
 		bar.add(menu);
 		menu = new JMenu("Bewerken");

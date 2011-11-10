@@ -57,6 +57,8 @@ import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.User;
+import fi.dwo.client.gui.action.BackupModuleAction;
+import fi.dwo.client.gui.action.ImportModuleAction;
 import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.PersistenceException;
@@ -129,17 +131,15 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         	top.add(publishButton);
         	top.add(Box.createHorizontalStrut(10));
         }
-        exportCourseButton = new JButton("Backup module");
-        exportCourseButton.setToolTipText("Backup activiteiten van module " + course);
+        exportCourseButton = new JButton(new BackupModuleAction(course));
         exportCourseButton.setSize(exportCourseButton.getPreferredSize());
-        exportCourseButton.addActionListener(this);
+        //exportCourseButton.addActionListener(this);
         exportCourseButton.setVisible(false);
         top.add(exportCourseButton);
-        if(DwoHelper.isApplication() && !CenterPanel.isIconizer()) // TODO verplaatsen naar menu van tree
+        if(DwoHelper.isApplication() )// && !CenterPanel.isIconizer()) // TODO verplaatsen naar menu van tree
         	exportCourseButton.setVisible(true);
         top.add(Box.createHorizontalStrut(10));
-        importScosButton = new JButton("Import");
-        importScosButton.setToolTipText("Maak activiteiten vanuit backup");
+        importScosButton = new JButton(new ImportModuleAction(course));
         importScosButton.setSize(importScosButton.getPreferredSize());
         importScosButton.addActionListener(this);
         importScosButton.setVisible(false);
@@ -161,7 +161,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         add(panel, BorderLayout.CENTER);
         //if(false && DwoHelper.isApplication())
         if(DwoHelper.isApplication())
-        {	importScosButton.setVisible(true && !CenterPanel.isIconizer()); // TODO verplaatsen naar Tree Menu
+        {	importScosButton.setVisible(true );// && !CenterPanel.isIconizer()); // TODO verplaatsen naar Tree Menu
             courseLogoButton.addActionListener(this);
             courseLogoButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             courseLogoButton.setBorderPainted(true);
@@ -483,7 +483,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     	HeaderPanel hp = new HeaderPanel(TextMapper.getText(TextMapper.GUIS_SCO_MANAGEMENT));
     	stopBtn = new JButton("Stop bewerken");
     	stopBtn.addActionListener(this);
-    	hp.setButtonBox(stopBtn);
+    	hp.setButtonBox(GuiCreator.instance().fx(stopBtn));
     	return hp;
     }
 
@@ -517,20 +517,14 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     	}
       	if(src == exportCourseButton)
     	{
-    		try {
-				export();
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
     		return;
     	} else if(src == importScosButton)
     	{
-    		try { 
-    			importScos();
-    		} catch (Exception e2) {
-    			e2.printStackTrace();			
-    		}
+//    		try { 
+//    			importScos();
+//    		} catch (Exception e2) {
+//    			e2.printStackTrace();			
+//    		}
     	}
         if(src == addScoButton) {
         	Sco s = null;
@@ -622,50 +616,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     }
     
     
-    private void importScos() throws ParserConfigurationException, SAXException, IOException, DwoXmlRpcException, XmlRpcException, SQLException {
-    	String naam;
-    	openDial.setTitle(importScosButton.getToolTipText());
-		openDial.show();
-		naam = openDial.getFile();
-		if(naam!=null)
-		{	
-			File dir = new File(openDial.getDirectory());
-			File file = new File(dir, naam);
-			FileInputStream input = new FileInputStream(file);
-			DWOFile zipper = new DWOFile(DbAccessCreator.instance());
-			Hashtable result = zipper.inputIMSManifest(input);
-			Set names = course.getScoNames();
-			int offset = names.size();
-			Vector scos = (Vector)result.get("sco");
-			Enumeration elements = scos.elements();
-			while (elements.hasMoreElements()) {
-				Hashtable sco = (Hashtable) elements.nextElement();
-				String title = (String) sco.get("sconame");
-				title = CourseManagementPanel.replaceDuplicate(title, names);
-				names.add(title);
-				sco.put("sconame", title);
-			}
-			zipper.appendCourse(course.getID(), offset, result);
-			course.loadScos();
-			noUpdateCourse();
-		}
-	}
 
-	private void export() throws ParserConfigurationException, TransformerException, SQLException, IOException, XmlRpcException {
-    	String naam;
-    	
-		saveDial.show();
-		naam = saveDial.getFile();
-		if(naam!=null)
-		{	
-			File dir = new File(saveDial.getDirectory());
-			File file = new File(dir, naam);
-			FileOutputStream out = new FileOutputStream(file);
-			DWOFile zipper = new DWOFile(DbAccessCreator.instance());
-			zipper.createIMSManifest(course.getID(), -1, out);
-			
-		}
-	}
 
 	private void swapSco(Sco s1, Sco s2) {
     	if (GuiCreator.instance().swapSco(s1, s2))
