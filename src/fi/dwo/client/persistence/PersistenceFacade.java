@@ -28,6 +28,7 @@ import fi.dwo.client.domain.Admin;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.domain.UserResultList;
 import fi.dwo.client.gui.GuiConstants;
+import fi.dwo.client.persistence.cache.StoreCreator;
 import fi.dwo.client.system.ClassException;
 import fi.dwo.client.system.SchoolException;
 import fi.dwo.client.system.CourseException;
@@ -167,18 +168,10 @@ public class PersistenceFacade {
     public String LMSGetValue(Sco sco, User user, String iDataModelElement)
             throws PersistenceException {
         if (user != null) {
-            try {
-                String result = DbAccessCreator.instance().LMSGetValue(
-                                sco.getScoID(), user.getUserID(),
-                                mapDataModel(iDataModelElement));
-                return result;
-            } catch (IOException e) {
-                throw new PersistenceException(PersistenceException.EX_IO);
-            } catch (XmlRpcException e) {
-                throw new PersistenceException(PersistenceException.EX_XML_RPC);
-            } catch (SQLException e) {
-                throw new PersistenceException(PersistenceException.EX_DB);
-            }
+        	int uid = user.getUserID();
+        	int scoid = sco.getScoID();
+        	String key = mapDataModel(iDataModelElement);
+        	return StoreCreator.instance().getValue(uid, scoid, key);
         } else {
             return "";
         }
@@ -197,76 +190,29 @@ public class PersistenceFacade {
     public String LMSSetValue(Sco sco, User user, String iDataModelElement,
             String iValue) throws PersistenceException {
         if (user != null && !(user instanceof Guest) ) {
-            try {
-                if (iDataModelElement.equals("cmi.core.score.raw")) {
-                    double d;
-                    try {
-                        d = Double.valueOf(iValue).doubleValue();
-                    } catch (NumberFormatException ex) {
-                        d = 0;
-                    }
-                    if (Double.isNaN(d)) {
-                        d = 0;
-                    }
-                    iValue = Double.toString(d);
-
-                }
-                String result = true + "";
-                
-                        if (iValue == null) {
-                            iValue = "";
-                        }
-                        if(!noRandom) {
-                        String random = Long.toHexString(Double.doubleToRawLongBits(Math.random()));
-                        try { 
-                        	result = DbAccessCreator.instance().LMSSetValue(
-                        		sco.getScoID(), user.getUserID(), mapDataModel(iDataModelElement), iValue, random);
-                        
-                        	if( result.equals(random))
-                        	{	return "true"; // all's well
-                        	}
-                        	result = "LMSSetValue " + iDataModelElement + ": " + result + " <> " + random;
-                        	DbAccessCreator.instance().log(result);
-                        	throw new PersistenceException(PersistenceException.EX_DB);
-                        } catch(XmlRpcException e )
-                        { 
-                        	e.printStackTrace();
-                        	if(!e.getMessage().startsWith(NoSuchMethodException.class.getName()))
-                        		throw e;
-                        	noRandom = true; 
-                        }
-                        }
-                        result = DbAccessCreator.instance().LMSSetValue(
-                                sco.getScoID(), user.getUserID(),
-                                mapDataModel(iDataModelElement), iValue);
-                return result;
-            } catch (IOException e) {
-                try {
-                    DbAccessCreator.instance().log(e.getMessage());
-                    //	                DbAccessCreator.instance().log(e.getStackTrace().toString());
-                } catch (Exception e2) {
-
-                }
-
-                throw new PersistenceException(PersistenceException.EX_IO,e);
-            } catch (XmlRpcException e) {
-                try {
-                    DbAccessCreator.instance().log(e.getMessage());
-                } catch (Exception e2) {
-
-                }
-
-                throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-            } catch (SQLException e) {
-                try {
-                    DbAccessCreator.instance().log(e.getMessage());
-                    //	                DbAccessCreator.instance().log(e.getStackTrace().toString());
-                } catch (Exception e2) {
-
-                }
-
-                throw new PersistenceException(PersistenceException.EX_DB, e);
-            }
+            if (iDataModelElement.equals("cmi.core.score.raw")) {
+			    double d;
+			    try {
+			        d = Double.valueOf(iValue).doubleValue();
+			    } catch (NumberFormatException ex) {
+			        d = 0;
+			    }
+			    if (Double.isNaN(d)) {
+			        d = 0;
+			    }
+			    iValue = Double.toString(d);
+			}
+			String result = true + "";
+      
+			if (iValue == null) {
+			    iValue = "";
+			}
+			
+			int uid = user.getUserID();
+			int scoid = sco.getScoID();
+			String key = mapDataModel(iDataModelElement);
+			result = StoreCreator.instance().setValue(uid, scoid, key, iValue);
+			return result;
         } else {
             return true + "";
         }
@@ -276,8 +222,13 @@ public class PersistenceFacade {
     
     public String LMSCommit(Sco sco, User user, String dummy)
     {
-    	
-    	return "";
+    	try {
+			return StoreCreator.instance().commit(user.getUserID(), sco.getScoID(), dummy);
+		} catch (PersistenceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "false";
     }
     
     /**

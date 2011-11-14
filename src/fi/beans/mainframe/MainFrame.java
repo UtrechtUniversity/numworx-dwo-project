@@ -25,13 +25,16 @@ public class MainFrame extends Frame   implements WindowListener, AppletStub, Ap
         
 	public void windowClosing(WindowEvent e)
 	{	applet.stop();
+		applet.destroy();
 		dispose();
 		System.exit(0);
 	}
 	public void windowOpened(WindowEvent e){}
 	public void windowIconified(WindowEvent e){doLayout();}
 	public void windowDeiconified(WindowEvent e){doLayout();}
-	public void windowClosed(WindowEvent e){}
+	public void windowClosed(WindowEvent e){
+		
+	}
 	public void windowActivated(WindowEvent e){}
 	public void windowDeactivated(WindowEvent e){}
     

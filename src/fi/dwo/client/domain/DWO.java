@@ -63,6 +63,7 @@ import fi.dwo.client.gui.ScoLinkedLabel;
 import fi.dwo.client.gui.ScoPanel;
 import fi.dwo.client.persistence.MapperCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
+import fi.dwo.client.persistence.cache.StoreCreator;
 import fi.dwo.client.system.ClassException;
 import fi.dwo.client.system.SchoolException;
 import fi.dwo.client.system.CourseException;
@@ -1320,6 +1321,7 @@ private static boolean isValidEmail(String email) {
         	currentSco.end();
         }
         logoff();
+        StoreCreator.destroy();
     	this.setReady();
     }
     
@@ -1672,7 +1674,6 @@ private static boolean isValidEmail(String email) {
     
     
     public String LMSCommit(Sco sco, String param) {
-		// TODO Auto-generated method stub
 		return PersistenceFacade.instance().LMSCommit(sco, getUser(), param);
 	}
 
