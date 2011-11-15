@@ -10,10 +10,32 @@ import java.awt.event.*;
 
 public class MainFrame extends Frame   implements WindowListener, AppletStub, AppletContext
 {
-    private Applet applet;
+    // Check that we are on Mac OS X.  This is crucial to loading and using the OSXAdapter class.
+    public static boolean MAC_OS_X = (System.getProperty("os.name").toLowerCase().startsWith("mac os x"));
+    // Generic registration with the Mac OS X application menu
+    // Checks the platform, then attempts to register with the Apple EAWT
+    // See OSXAdapter.java to see how this is done without directly referencing any Apple APIs
+    private void registerForMacOSXEvents() {
+        if (MAC_OS_X) {
+            try {
+                // Generate and register the OSXAdapter, passing it a hash of all the methods we wish to
+                // use as delegates for various com.apple.eawt.ApplicationListener methods
+                OSXAdapter.setQuitHandler(this, getClass().getDeclaredMethod("quit", (Class[])null));
+               // OSXAdapter.setAboutHandler(this, getClass().getDeclaredMethod("about", (Class[])null));
+               // OSXAdapter.setPreferencesHandler(this, getClass().getDeclaredMethod("preferences", (Class[])null));
+               // OSXAdapter.setFileHandler(this, getClass().getDeclaredMethod("loadImageFile", new Class[] { String.class }));
+            } catch (Exception e) {
+            }
+        }
+    }
+
+	
+	private Applet applet;
 
     public MainFrame( Applet applet, int width, int height )
 	{	this.applet = applet;
+
+		registerForMacOSXEvents();
 		addWindowListener(this);
 		applet.setStub( this );
 		setLayout( new BorderLayout() );
@@ -24,7 +46,12 @@ public class MainFrame extends Frame   implements WindowListener, AppletStub, Ap
 	}
         
 	public void windowClosing(WindowEvent e)
-	{	applet.stop();
+	{	
+		quit();
+	}
+
+	void quit() {
+		applet.stop();
 		applet.destroy();
 		dispose();
 		System.exit(0);
