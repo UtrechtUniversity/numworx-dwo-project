@@ -5,7 +5,12 @@ package fi.dwo.client.persistence;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
+import java.util.Vector;
+import java.util.WeakHashMap;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
@@ -22,6 +27,10 @@ public class CourseMapper extends XmlRpcMapper {
     private static final String IDCOL = "courseID";
 
     private static final String ORDERCOL = "name";
+
+	private static Map cachemap = new HashMap(); // not weak
+
+	private Object key;
 
     /**
 
@@ -40,6 +49,7 @@ public class CourseMapper extends XmlRpcMapper {
     public void put(int oid, Object obj) throws IOException, SQLException,
             XmlRpcException {
         objects.put(new Integer(oid), obj);
+        cachemap.clear();
     }
 
     /**
@@ -104,9 +114,94 @@ public class CourseMapper extends XmlRpcMapper {
             int profileID = ((DwoIF) DwoHelper.getApplet()).getDwoProfile().getID();
             ht.put("dwoProfileID", new Integer(profileID));
         }
-        return super.get(ht);
+        return cached(ht); // was super.get(ht);
     }
-    ////peter
+
+    
+    
+    
+    
+/**
+ * @param ht
+ * @return
+ * @throws IOException
+ * @throws XmlRpcException
+ * @throws SQLException
+ */
+private Object[] cached(Hashtable ht) throws IOException, XmlRpcException,
+		SQLException {
+	Object[] result;
+	Vector v;
+	v = (Vector) cachemap.get(ht);
+// easy found in cache, return objects
+	if(v != null)
+	{
+		//System.out.println("Found in cache " + ht);
+		return super.getObjectFromReturn(v);
+	}
+	System.out.println("cache miss for " + ht);
+// not found in cache, perhaps school+parentid=0
+	Object parent = ht.remove("parentID");
+	DbAccessIF dbAccess = DbAccessCreator.instance();
+	if(parent != null)
+	{
+// ht contains a parent + school or single parent.
+		if(!ht.isEmpty())
+		{
+// get all courses from a school
+			v = (Vector)cachemap.get(ht);
+			if(v == null)
+			{	v = dbAccess.getTable(getTableName(), ht, getOrderbyCol());
+				cachemap.put(ht, v);
+			}
+// v is all courses from school, filter parent = 0, fill cachemap with parent != 0
+			v = filterParent(v, (Integer)parent);
+// put parent back, v is filtered
+			ht.put("parentID", parent);
+		}
+		else 
+		{
+// not from cache, get with parent from database.
+			ht.put("parentID", parent);
+			v = dbAccess.getTable(getTableName(), ht, getOrderbyCol());
+		}
+	} else
+// not in cache, no parent, use database
+		v = dbAccess.getTable(getTableName(), ht, getOrderbyCol());
+	
+System.out.println("put " + v.size() + " for  " + ht);
+	cachemap.put(ht, v);
+	return super.getObjectFromReturn(v);
+}
+
+	private Vector filterParent(Vector result, Integer parent) {
+	Vector v = new Vector();
+	Enumeration en = result.elements();
+	while (en.hasMoreElements()) {
+		Hashtable ht = (Hashtable) en.nextElement();
+		Object hp = ht.get("parentID");
+		if(parent.equals(hp))
+			v.add(ht);
+		else
+		{
+// this is the tricky part!!!!!
+// prepare cache with other parents.
+			Hashtable htt = new Hashtable();
+			htt.put("parentID", hp);
+			Vector v2 = (Vector) cachemap.get(htt);
+			if(v2 == null)
+			{
+				v2 = new Vector(); cachemap.put(htt, v2);
+			}
+			v2.remove(ht); // v2 is a sorted set? FIXME a real SET?
+			v2.add(ht);
+		}
+	}
+	
+	return v;
+}
+
+	////peter
 
     /*
      * (non-Javadoc)
@@ -179,4 +274,31 @@ public class CourseMapper extends XmlRpcMapper {
     protected String getOrderbyCol() {
         return ORDERCOL;
     }
+
+	/* (non-Javadoc)
+	 * @see fi.dwo.client.persistence.XmlRpcMapper#removeAllObjects()
+	 */
+	public void removeAllObjects() {
+System.out.println("cachemap clear");
+		cachemap.clear();
+		super.removeAllObjects();
+	}
+
+	/* (non-Javadoc)
+	 * @see fi.dwo.client.persistence.XmlRpcMapper#removeObject(int)
+	 */
+	public void removeObject(int key) {
+System.out.println("cachemap clear");
+		cachemap.clear();
+		super.removeObject(key);
+	}
+
+	/* (non-Javadoc)
+	 * @see fi.dwo.client.persistence.XmlRpcMapper#getObjectFromReturn(java.util.Vector)
+	 */
+	public Object[] getObjectFromReturn(Vector data) throws IOException,
+			SQLException, XmlRpcException {
+		cachemap.put(key, data);
+		return super.getObjectFromReturn(data);
+	}
 }

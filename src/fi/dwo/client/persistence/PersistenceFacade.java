@@ -6,6 +6,8 @@ package fi.dwo.client.persistence;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -288,12 +290,18 @@ public class PersistenceFacade {
      */
     public Course[] getCourses(User user) throws PersistenceException {
         try {
+            MapperIF mapper = MapperCreator.instance(Course.class);
             Vector v;
             if (user == null) {
                 v = DbAccessCreator.instance().getCourses(-1);
             } else {
                 if (user instanceof Teacher) {
-                    v = DbAccessCreator.instance().getCourses(user.getUserID());
+      //              v = DbAccessCreator.instance().getCourses(user.getUserID());
+                	Object[] schoolCourses = mapper.get(user.getSchool());
+                	Object[] dwoCourses     = mapper.getObjectFromReturn(DbAccessCreator.instance().getCourses(-1));
+      // caching side effect.
+                	MapperCreator.instance(Sco.class).get(new Object[] { user.getSchool(), ((DwoIF) DwoHelper.getApplet()).getDwoProfile()} );
+                	return combine(dwoCourses, schoolCourses);
                 } else {
                     SchoolClass schoolClass = user.getInClass();
                     if (schoolClass == null) {
@@ -304,7 +312,6 @@ public class PersistenceFacade {
                     }
                 }
             }
-            MapperIF mapper = MapperCreator.instance(Course.class);
             return (Course[]) mapper.getObjectFromReturn(v);
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -322,7 +329,21 @@ public class PersistenceFacade {
 
     }
     
-    /**
+    private Course[] combine(Object[] dwoCourses, Object[] schoolCourses) {
+    	Course[] courses = new Course[dwoCourses.length + schoolCourses.length];
+    	System.arraycopy(dwoCourses, 0, courses, 0, dwoCourses.length);
+    	System.arraycopy(schoolCourses, 0, courses, dwoCourses.length, schoolCourses.length);
+    	Arrays.sort(courses, new Comparator() {
+
+			public int compare(Object o1, Object o2) {
+				Course c1 = (Course)o1;
+				Course c2 = (Course)o2;
+				return c1.getName().compareTo(c2.getName());
+			}});
+    	return courses;
+	}
+
+	/**
      * Returns all the courses that are selected for the specified class.
      * A teacher could select some courses for a schoolclass.
      * @param schoolClass The user to select courses from.
@@ -1242,6 +1263,7 @@ public class PersistenceFacade {
     	}
         try {
             try {
+        		MapperCreator.instance(Course.class).removeObject(course.getID());
             	if(course.parentChanged())
             	{
             		boolean result =
@@ -1318,6 +1340,7 @@ public class PersistenceFacade {
                 sco.setCourse(course);
                 sco.setLaunchdata((Hashtable)new StringCodeObject((String) appletConfig.getLaunchdata()).toObject());
                 sco.setCourseChanged(false);
+                MapperCreator.instance(Sco.class).put(result, sco);
                 return sco;
             } catch (IOException e) {
                 throw new ScoException(ScoException.EX_IO);
