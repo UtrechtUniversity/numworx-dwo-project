@@ -9,8 +9,8 @@ public class StoreCreator {
 	public static synchronized IStore instance() {
 		if(_instance == null)
 		{
-			//_instance = new NoCache(DbAccessCreator.instance());
-			_instance = new CachingStore(DbAccessCreator.instance());
+			_instance = new NoCache(DbAccessCreator.instance());
+			//_instance = new CachingStore(DbAccessCreator.instance());
 		}
 		return _instance;
 	}

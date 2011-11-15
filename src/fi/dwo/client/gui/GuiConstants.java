@@ -12,6 +12,7 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import fi.dwo.client.domain.DWO;
 import fi.dwo.client.domain.DwoHelper;
 
 /**
@@ -144,7 +145,7 @@ public abstract class GuiConstants {
 	    GUI_IMAGE_SCO = getString(prop, "gui_image_sco");
 	    GUI_IMAGE_COURSE = getString(prop, "gui_image_course");
 	    
-	    GUI_ICONIZED = true||getBoolean(prop, "gui_iconized");
+	    GUI_ICONIZED = getBoolean(prop, "gui_iconized");
 	    GUI_BGIMAGE_ICON = getString(prop, "gui_bgimage_icon");
  	    GUI_BGIMAGE_MENU = getString(prop, "gui_bgimage_menu");
 	    GUI_BGIMAGE_SCO = getString(prop, "gui_bgimage_sco");
@@ -154,6 +155,7 @@ public abstract class GuiConstants {
 	    GUI_INSETS_ICON = getInsets(prop, "gui_insets_icon");
 	    GUI_INSETS_MENU = getInsets(prop, "gui_insets_menu");
 	    GUI_INSETS_SCO = getInsets(prop, "gui_insets_sco");
+	    DWO.SEQUENCE = getBoolean(prop, "sequence_module"); //was verdwenen.
 
 		dwoProfile = profile;
 // profile == 3,1 done.

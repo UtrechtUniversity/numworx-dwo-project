@@ -84,7 +84,7 @@ public class ScormChooser extends JFileChooser  {
 	}
 
 
-	boolean isScorm2004() {
+	public boolean isScorm2004() {
 		return scorm2004.isSelected();
 	}
 

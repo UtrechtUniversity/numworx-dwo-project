@@ -46,8 +46,11 @@ import fi.dwo.client.gui.action.BackupModuleAction;
 import fi.dwo.client.gui.action.CutCopyAction;
 import fi.dwo.client.gui.action.DeleteAction;
 import fi.dwo.client.gui.action.ImportModuleAction;
+import fi.dwo.client.gui.action.ImportScorm;
 import fi.dwo.client.gui.action.NewAction;
 import fi.dwo.client.gui.action.PasteAction;
+import fi.dwo.client.gui.action.Save2004Action;
+import fi.dwo.client.gui.action.SaveAppletAction;
 import fi.dwo.client.gui.action.TeacherStrategy;
 import fi.dwo.client.persistence.MapperCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
@@ -241,10 +244,17 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 			menu.addSeparator();
 			item = new JMenuItem("Import module");menu.add(item);item.setAction(new ImportModuleAction());
 			item = new JMenuItem("Backup module");menu.add(item);item.setAction(new BackupModuleAction());
-			menu.addSeparator();
-			item = new JMenuItem("Import activiteit"); menu.add(item);
-			item = new JMenuItem("Backup activiteit"); menu.add(item);
-			item = new JMenuItem("Export Applet");	   menu.add(item);
+			if( DwoHelper.isScormExportLoggedIn() || DwoHelper.isAppletExportLoggedIn())
+				menu.addSeparator();
+			if( DwoHelper.isScormExportLoggedIn() )
+			{
+				item = new JMenuItem("Import activiteit"); menu.add(item);item.setAction(new ImportScorm());
+				item = new JMenuItem("Backup activiteit"); menu.add(item);item.setAction(new Save2004Action());
+			}
+			 if (DwoHelper.isAppletExportLoggedIn())
+			{
+				item = new JMenuItem("Export Applet");menu.add(item);item.setAction(new SaveAppletAction()); 
+			}
 		}
 		bar.add(menu);
 		menu = new JMenu("Bewerken");

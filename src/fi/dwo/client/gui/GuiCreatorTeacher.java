@@ -449,7 +449,6 @@ public class GuiCreatorTeacher extends GuiCreator {
 		}
 
 		public void actionPerformed(ActionEvent arg0) {
-			ParameterManagementPanel.POPUP = false; // FIXME.....
 			loadParameterManagementPanel(sco);
 			CenterPanel center = getMainPanel().getCenter();
 	        center.setStrategy(new NullStrategy());

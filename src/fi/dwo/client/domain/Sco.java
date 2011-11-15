@@ -39,9 +39,11 @@ import fi.dwo.client.gui.GuiConstants;
  * @author M.J.B. Kupers
  *  
  */
-public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Comparable {
+public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Comparable, ScoEditor {
     private static final DecimalFormatSymbols US_DECIMAL_FORMAT_SYMBOLS = new DecimalFormatSymbols(Locale.US);
 
+    private ScoEditor editor = this;
+    
 	private int scoID;
 
     private String name;
@@ -909,4 +911,18 @@ System.err.println("sum = ["+result+"]");
     public String toString() {
     	return getScoName();
     }
+
+	public Hashtable getEditLaunchdata() {
+		return editor.getLaunchdata();
+	}
+
+	public void setEditor(ScoEditor editor) {
+		if(editor == null)
+			editor = this;
+		this.editor = editor;
+	}
+
+	public void setEditLaunchdata(Hashtable params) {
+		editor.setLaunchdata(params);
+	}
 }
