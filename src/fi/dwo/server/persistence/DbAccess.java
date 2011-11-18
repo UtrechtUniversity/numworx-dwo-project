@@ -25,6 +25,7 @@ import fi.beans.jdbc.DbConnect;
 import fi.beans.scorm2xml.Scorm2Xml;
 import fi.dwo.client.domain.SchoolGroup;
 import fi.dwo.client.persistence.DbAccessIF;
+import fi.dwo.client.persistence.PersistenceFacade;
 
 public class DbAccess extends DbConnect implements DbAccessIF {
     private final static String QRY_DEFAULT_SELECT_ID = "SELECT * "
@@ -50,6 +51,11 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             + "FROM tblCourse "
             + "WHERE (isnull(tblCourse.schoolID)) "
             + "ORDER BY name ";
+
+    private final static String QRY_SELECT_COURSES_PROFILE_GUEST = "SELECT tblCourse.* "
+        + "FROM tblCourse "
+        + "WHERE (isnull(tblCourse.schoolID)) and dwoProfileID = ? "
+        + "ORDER BY name ";
 
     ////peter
     private final static String QRY_SELECT_COURSES_CLASS = "SELECT tblCourse.* "
@@ -1332,6 +1338,12 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         PreparedStatement ps;
         if (userID < 0) {
             /* User is a guest */
+        	if(userID < PersistenceFacade.PROFILEOFFSET)
+        	{
+        		ps = getStatement(QRY_SELECT_COURSES_PROFILE_GUEST);
+        		ps.setInt(1, PersistenceFacade.PROFILEOFFSET-userID);
+        	} else
+        		
             ps = getStatement(QRY_SELECT_COURSES_GUEST);
         } else {
             ps = getStatement(QRY_SELECT_COURSES);

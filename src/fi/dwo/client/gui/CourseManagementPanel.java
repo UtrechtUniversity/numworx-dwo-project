@@ -638,8 +638,9 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         {
         	Course course = (Course) userObject;
         	if(!area.getText().equals(course.getText()))
-        		course.setDescription(area.getText());
+        	{	course.setDescription(area.getText());
         		GuiCreator.instance().updateCourse(course);
+        	}
         }
     }
 

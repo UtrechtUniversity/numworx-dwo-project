@@ -470,6 +470,8 @@ public class GuiCreatorTeacher extends GuiCreator {
 	}
 
 	public JComponent fx(JComponent b) { 
+		if(!CenterPanel.isIconizer())
+			return null;
 		Box box = Box.createVerticalBox();
 		box.add(Box.createGlue());
 		box.add(b);

@@ -64,6 +64,8 @@ public class PersistenceFacade {
             { "core.total_time", "total_time" }
     };
 
+	public static final int PROFILEOFFSET = -1234;
+
     /**
      *  
      */
@@ -292,20 +294,21 @@ public class PersistenceFacade {
         try {
             MapperIF mapper = MapperCreator.instance(Course.class);
             Vector v;
+            int guestID = PROFILEOFFSET-((DwoIF) DwoHelper.getApplet()).getDwoProfile().getID();
             if (user == null) {
-                v = DbAccessCreator.instance().getCourses(-1);
+				v = DbAccessCreator.instance().getCourses(guestID);
             } else {
                 if (user instanceof Teacher) {
       //              v = DbAccessCreator.instance().getCourses(user.getUserID());
                 	Object[] schoolCourses = mapper.get(user.getSchool());
-                	Object[] dwoCourses     = mapper.getObjectFromReturn(DbAccessCreator.instance().getCourses(-1));
+                	Object[] dwoCourses     = mapper.getObjectFromReturn(DbAccessCreator.instance().getCourses(guestID));
       // caching side effect.
                 	MapperCreator.instance(Sco.class).get(new Object[] { user.getSchool(), ((DwoIF) DwoHelper.getApplet()).getDwoProfile()} );
                 	return combine(dwoCourses, schoolCourses);
                 } else {
                     SchoolClass schoolClass = user.getInClass();
                     if (schoolClass == null) {
-                        v = DbAccessCreator.instance().getCourses(-1);
+                        v = DbAccessCreator.instance().getCourses(guestID);
                     } else {
                         v = DbAccessCreator.instance().getCoursesForClass(
                                 schoolClass.getID());

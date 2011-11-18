@@ -179,6 +179,7 @@ System.out.println("put " + v.size() + " for  " + ht);
 	Enumeration en = result.elements();
 	while (en.hasMoreElements()) {
 		Hashtable ht = (Hashtable) en.nextElement();
+		System.out.println("HT: " + ht);
 		Object hp = ht.get("parentID");
 		if(parent.equals(hp))
 			v.add(ht);
@@ -191,10 +192,21 @@ System.out.println("put " + v.size() + " for  " + ht);
 			Vector v2 = (Vector) cachemap.get(htt);
 			if(v2 == null)
 			{
+				System.out.println("priming for p-" + hp);
 				v2 = new Vector(); cachemap.put(htt, v2);
 			}
 			v2.remove(ht); // v2 is a sorted set? FIXME a real SET?
 			v2.add(ht);
+		}
+		Object wc = ht.get("withChildren");
+		if(Boolean.TRUE.equals(wc))
+		{
+			Object id = ht.get("courseID");
+			System.out.println("priming for i-" + id);
+			Hashtable htt = new Hashtable();
+			htt.put("parentID", id);
+			if(!cachemap.containsKey(htt))
+				cachemap.put(htt, new Vector());
 		}
 	}
 	
@@ -279,7 +291,7 @@ System.out.println("put " + v.size() + " for  " + ht);
 	 * @see fi.dwo.client.persistence.XmlRpcMapper#removeAllObjects()
 	 */
 	public void removeAllObjects() {
-System.out.println("cachemap clear");
+System.out.println("cachemap clear all");
 		cachemap.clear();
 		super.removeAllObjects();
 	}
@@ -288,7 +300,7 @@ System.out.println("cachemap clear");
 	 * @see fi.dwo.client.persistence.XmlRpcMapper#removeObject(int)
 	 */
 	public void removeObject(int key) {
-System.out.println("cachemap clear");
+System.out.println("cachemap clear key");
 		cachemap.clear();
 		super.removeObject(key);
 	}
