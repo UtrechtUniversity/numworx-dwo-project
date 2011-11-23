@@ -31,7 +31,8 @@ public class HeaderPanel extends JPanel
 	private Font origFont;
 	private static final int MARGIN = 40;
 	public HeaderPanel(String string) {
-		super(new BorderLayout());
+		super(null);
+		setLayout(new MyBoxLayout(this, BoxLayout.LINE_AXIS));
 		label = new JLabel(string.trim());
 		add(label, BorderLayout.CENTER);
 		
