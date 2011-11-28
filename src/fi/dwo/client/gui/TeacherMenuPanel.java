@@ -68,7 +68,7 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
         classManagementButton.addActionListener(this);
         this.add(classManagementButton);
         /* Als dwo in Deeplink mode, geen coursemanagement */
-        if(dwo.getCourseViewNr()>0 || !dwo.getUser().hasRight(User.MODIFY_MODULES_RIGHT)/* || CenterPanel.isIconizer()*/)
+        if(dwo.getCourseViewNr()>0 || !dwo.getUser().hasRight(User.MODIFY_MODULES_RIGHT) || CenterPanel.isIconizer())
         	return;
         createGap();
         /* Add CourseManagement Button */
