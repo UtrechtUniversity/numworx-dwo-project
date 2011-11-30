@@ -1,25 +1,17 @@
 package fi.dwo.client.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.GridLayout;
-import java.awt.Insets;
 import java.awt.Rectangle;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-
 
 public class HeaderPanel extends JPanel
 {
@@ -34,22 +26,27 @@ public class HeaderPanel extends JPanel
 		super(null);
 		setLayout(new MyBoxLayout(this, BoxLayout.LINE_AXIS));
 		label = new JLabel(string.trim());
-		add(label, BorderLayout.CENTER);
+		add(label);
 		
 	    Font f = GuiConstants.HEADER_TEXT;
 	    final boolean ibg = GuiConstants.GUI_IMAGE_BG;
 	    if(ibg)
 	    	f = new Font(f.getName(), f.getStyle(), 20);
 		label.setFont(f);
+		label.setBorder(BorderFactory.createEmptyBorder(0,0,0,20));
+		label.setAlignmentY(BOTTOM_ALIGNMENT);
 		origFont = f;
 	    setOpaque(!ibg);
-	    label.setHorizontalAlignment(ibg?SwingConstants.LEFT : SwingConstants.CENTER);
-	    label.setVerticalAlignment(ibg?SwingConstants.BOTTOM: SwingConstants.CENTER);
+	    label.setHorizontalAlignment(ibg?JLabel.LEFT : JLabel.CENTER);
+	    label.setVerticalAlignment(ibg?JLabel.BOTTOM: JLabel.CENTER);
 	    setBackground(GuiConstants.MAIN_BACKGROUND);
 	    setForeground(GuiConstants.HEADER_COLOR);
 	    if (!ibg)
 	    	setBorder(MainPanel.createNBorder());
+	    else
+	    	setBorder(BorderFactory.createEmptyBorder(0,0,1,0));
 	    setButtonBox( createButtonBox() );
+	    //add(Box.createHorizontalGlue());
 	}
 
 	protected JComponent createButtonBox() {
@@ -179,7 +176,11 @@ public class HeaderPanel extends JPanel
 			remove(buttonBox);
 		buttonBox = box;
 		if(buttonBox != null)
-			add(buttonBox, BorderLayout.EAST);
+		{
+			add(buttonBox,1);
+			buttonBox.setAlignmentY(BOTTOM_ALIGNMENT);
+			buttonBox.setMaximumSize(buttonBox.getPreferredSize());
+		}
 		invalidate();
 	}
 

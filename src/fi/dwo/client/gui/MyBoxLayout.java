@@ -28,7 +28,7 @@ public class MyBoxLayout extends BoxLayout implements LayoutManager {
 			c.setBounds(Math.max(size.width-pref.width,10), c.getY(), pref.width, c.getHeight());
 			int x = c.getX();
 			c = components[0];
-			c.setSize(x, c.getHeight());
+			c.setSize(x-c.getX(), c.getHeight());
 		}
 		
 	}

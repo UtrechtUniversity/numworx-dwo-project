@@ -322,12 +322,6 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
     	box.add(saveBtn = new JButton("Opslaan"));    	
     	box.add(Box.createHorizontalStrut(10));
     	box.add(previewBtn = new JButton("Preview"));
-    	
-    	stopBtn.setAlignmentY(BOTTOM_ALIGNMENT);
-    	previewBtn.setAlignmentY(BOTTOM_ALIGNMENT);
-    	saveBtn.setAlignmentY(BOTTOM_ALIGNMENT);
-
-    	
     	//box.setBorder(BorderFactory.createLineBorder(Color.red));
 		hp.setButtonBox(GuiCreator.instance().fx(box));
 		
