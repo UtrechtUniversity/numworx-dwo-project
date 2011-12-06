@@ -34,6 +34,7 @@ import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.Guest;
 import fi.dwo.client.domain.ResultsModuleIF;
 import fi.dwo.client.domain.User;
+import fi.dwo.client.gui.action.NullStrategy;
 import fi.dwo.client.system.TextMapper;
 
 /**
@@ -459,8 +460,11 @@ invalidate();
 	}
 
 	public void setStrategy(SelectStrategy selector) {
-		if(tree != null)
-			tree.setStrategy(selector);		
+		if(tree != null){
+			tree.setStrategy(selector);	
+			if(selector instanceof NullStrategy)tree.setEnabled(false);
+			else tree.setEnabled(true);
+		}
 	}
 
 	public void updateMap(CourseMap map) {
