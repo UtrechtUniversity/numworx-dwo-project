@@ -419,18 +419,20 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         shareCourseButton = new JButton("Modules delen");
         shareCourseButton.addActionListener(this);
         header.add(shareCourseButton);
-        if(DwoHelper.isApplication())
+        
+        if(DwoHelper.isApplication()){
         	header.add(Box.createHorizontalStrut(10));
         
         
-        uploadCourseButton = new JButton(new ImportModuleAction(this)); // TODO TextMapper
-        //uploadCourseButton.setSize(uploadCourseButton.getPreferredSize());
-        uploadCourseButton.addActionListener(this);
-        //uploadCourseButton.setLocation(200+addCourseButton.getWidth()+10, 10);
-        uploadCourseButton.setVisible(false);
-        header.add(uploadCourseButton);
-        if(DwoHelper.isApplication()) 
-        	uploadCourseButton.setVisible(true);
+	        uploadCourseButton = new JButton(new ImportModuleAction(this)); // TODO TextMapper
+	        //uploadCourseButton.setSize(uploadCourseButton.getPreferredSize());
+	        uploadCourseButton.addActionListener(this);
+	        //uploadCourseButton.setLocation(200+addCourseButton.getWidth()+10, 10);
+	        uploadCourseButton.setVisible(false);
+	        header.add(uploadCourseButton);
+	        if(DwoHelper.isApplication()) 
+	        	uploadCourseButton.setVisible(true);
+        }
         
         if(!DWO.SEQUENCE)
         	Arrays.sort(courses);
