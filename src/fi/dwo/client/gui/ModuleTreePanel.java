@@ -289,6 +289,12 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		tree.setModel(model);
 	}
 	
+	public void setEnabled(boolean b){
+		tree.setEnabled(b);
+		bar.getMenu(0).setEnabled(b);
+		bar.getMenu(1).setEnabled(b);
+	}
+	
 	protected void createModel(DwoIF dwo) {
 		this.dwo = dwo;
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(ALLE_MODULES);
