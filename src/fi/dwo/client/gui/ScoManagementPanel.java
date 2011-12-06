@@ -131,6 +131,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         	top.add(publishButton);
         	top.add(Box.createHorizontalStrut(10));
         }
+        if(DwoHelper.isApplication() ){
         exportCourseButton = new JButton(new BackupModuleAction(course));
         exportCourseButton.setSize(exportCourseButton.getPreferredSize());
         //exportCourseButton.addActionListener(this);
@@ -138,6 +139,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         top.add(exportCourseButton);
         if(DwoHelper.isApplication() )// && !CenterPanel.isIconizer()) // TODO verplaatsen naar menu van tree
         	exportCourseButton.setVisible(true);
+        
         top.add(Box.createHorizontalStrut(10));
         importScosButton = new JButton(new ImportModuleAction(course));
         importScosButton.setSize(importScosButton.getPreferredSize());
@@ -145,6 +147,8 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         importScosButton.setVisible(false);
         top.add(importScosButton);
         //top.add(Box.createHorizontalStrut(10));
+        
+        }
         courseLogoButton = new JButton(new ImageIcon(logo));
         courseLogoButton.setBorderPainted(false);
 // TODO Mac?
