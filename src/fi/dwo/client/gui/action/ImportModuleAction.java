@@ -34,11 +34,18 @@ public class ImportModuleAction extends GuiAction {
 
 	private CourseMap course;
 	private FileDialog openDial;
-	private String dir = System.getProperty("user.dir",".");
+	private String dir;
+	{
+		if (DwoHelper.isApplication())
+			dir = System.getProperty("user.dir",".");
+		else
+			dir = ".";
+	}
 
 	public ImportModuleAction() {
 		super("Import");
 		putValue(LONG_DESCRIPTION, "Maak activiteiten vanuit backup");
+		setEnabled(DwoHelper.isApplication());  // disable in geval van applet.
 	}
 
 	public ImportModuleAction(Course course) {

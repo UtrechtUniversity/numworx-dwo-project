@@ -155,8 +155,7 @@ public class ScoMapper extends XmlRpcMapper {
     		{	data = DbAccessCreator.instance().getTable(tableName, LAZY_SCO_KEYS, wheredef , orderBy);
     			cachemap.put(wheredef, data);
     		}
-// resultaat is void...
-    		else return null; // Wij spelen heel erg 'false' 
+    		else return getObjectFromReturn(data);
     		return fillcache(getObjectFromReturn(data));	
         }
         return cached(ht);
