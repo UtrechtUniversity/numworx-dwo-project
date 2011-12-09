@@ -50,6 +50,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.text.JTextComponent;
+import javax.swing.tree.DefaultTreeCellRenderer;
 
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseMap;
@@ -126,13 +127,15 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	class CourseModelForTree extends AbstractTableModel {
 
 		public Class getColumnClass(int col) {
-			if(col >= 1)
+			if(col == 0)
+				return Boolean.class;
+			if(col >= 2)
 				return Image.class;
 			return super.getColumnClass(col);
 		}
 
 		public int getColumnCount() {
-			return 5; // naam, info, up, down, X
+			return 6; // icon, naam, info, up, down, X
 		}
 
 		public int getRowCount() {
@@ -140,24 +143,26 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 		}
 
 		public boolean isCellEditable(int row, int col) {
-			if(col == 2) // up
+			if(col == 3) // up
 				return row != 0;
-			if(col == 3) // down
+			if(col == 4) // down
 				return row != getRowCount()-1;
-			if(col >= 1)
+			if(col >= 2)
 				return true;
 			return super.isCellEditable(row, col);
 		}
 
 		public Object getValueAt(int row, int col) {
 			switch(col) {
-			case 0: return courses[row].getName();
-			case 1: return editImage;
-			case 2: if(row == 0) return null;
+			case 1: return courses[row].getName();
+			case 2: return editImage;
+			case 3: if(row == 0) return null;
 					return upImage;
-			case 3: if(row == getRowCount()-1) return null;
+			case 4: if(row == getRowCount()-1) return null;
 					return downImage;
-			case 4: return removeImage;
+			case 5: return removeImage;
+			
+			case 0: return Boolean.valueOf(courses[row].isWithChildren());
 			}
 			return null;
 		}
@@ -216,6 +221,41 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 		}
 		
 	}
+	
+	public class BooleanRenderer extends DefaultTreeCellRenderer implements TableCellRenderer {
+
+		
+		
+		private Dimension preferredSize;
+
+		public Component getTableCellRendererComponent(JTable table,
+				Object value, boolean isSelected, boolean hasFocus, int row,
+				int column) {
+			if(Boolean.TRUE.equals(value))
+				setIcon(getOpenIcon());
+			else
+				setIcon(getLeafIcon());
+			return this;
+		}
+
+		public BooleanRenderer() {
+			super();
+			Image book = DwoHelper.getResourceImage("resources/book.png");
+			setLeafIcon(new ImageIcon(book));
+			
+			setIcon(getLeafIcon());
+			Dimension leaf = getPreferredSize();
+			setIcon(getOpenIcon());
+			Dimension open = getPreferredSize();
+			
+			int w = Math.max(leaf.width, open.width);
+			int h = Math.max(leaf.height, open.height);
+			preferredSize = new Dimension(w,h);
+			setPreferredSize(preferredSize);
+		}
+		
+	}
+	
 	public class ImageRenderer extends JLabel implements TableCellRenderer {
 
 		private ImageIcon icon = new ImageIcon();
@@ -472,7 +512,8 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     	jTable.setTableHeader(null);
     	//jScrollPane = new JScrollPane(jTable);
     	TableUtil.setDefaults(jTable, false, new ImageRenderer(), new ImageButtonEditor());
-   	
+    	if(CenterPanel.isIconizer())
+    		jTable.setDefaultRenderer(Boolean.class, new BooleanRenderer());
     	TableUtil.setJTableSizes(jTable);
        	//TableUtil.setBorder(jScrollPane);
        	TableUtil.setBorder(jTable);

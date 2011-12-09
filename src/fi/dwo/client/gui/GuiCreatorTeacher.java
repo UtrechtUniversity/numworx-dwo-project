@@ -4,6 +4,8 @@
  */
 package fi.dwo.client.gui;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.util.Vector;
 
@@ -77,11 +79,14 @@ public class GuiCreatorTeacher extends GuiCreator {
 		}
 	}
 
+	boolean noAdmin;
+	
 	/**
      * @param dwo
      */
     public GuiCreatorTeacher(DwoIF dwo) {
         super(dwo);
+        noAdmin = ! dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT);
     }
 
     /**
@@ -407,8 +412,11 @@ public class GuiCreatorTeacher extends GuiCreator {
 			}
 			else 
 			{ // van de goede soort....
-				// TODO of STANDAARD MAP....
-				cp = getCourseManagementPanel(ModuleTreePanel.SCHOOL_MAP);
+	// TODO of STANDAARD MAP....
+				if(userObject == ModuleTreePanel.STANDAARD_DWO_MODULES)
+					cp = getCourseManagementPanel(ModuleTreePanel.STANDAARD_DWO_MAP);
+				else
+					cp = getCourseManagementPanel(ModuleTreePanel.SCHOOL_MAP);
 			}
 			CenterPanel center = getMainPanel().getCenter();
 	        center.setStrategy(new NullStrategy());
@@ -462,10 +470,12 @@ public class GuiCreatorTeacher extends GuiCreator {
 			if(userObject == ModuleTreePanel.ALLE_MODULES)
 				return null;
 // DWO profiel manager hier wel	
-			if(userObject == ModuleTreePanel.STANDAARD_DWO_MODULES)
-				return null;
-			if(userObject instanceof Course && ((Course)userObject).getSchoolID() == 0)
-				return null;			
+			if(noAdmin)
+			{   if(userObject == ModuleTreePanel.STANDAARD_DWO_MODULES)
+				   return null;
+			    if(userObject instanceof Course && ((Course)userObject).getSchoolID() == 0)
+				   return null;
+			}
 			return fx(new JButton(new CourseManagementAction(courseChoisePanel)));
 	}
 
@@ -480,18 +490,23 @@ public class GuiCreatorTeacher extends GuiCreator {
 	}
 	
 	public JComponent getButtonBox(CoursePanel coursePanel) {
-		if(coursePanel.course.getSchoolID() == 0)
+		if(noAdmin && coursePanel.course.getSchoolID() == 0)
 			return null;
 		return fx(new JButton(new ScoManagementAction(coursePanel)));
 	}
    
 	public JComponent getButtonBox(ScoPanel scoPanel) {
-		if(scoPanel.getSco().getCourse().getSchoolID() == 0)
+		if(noAdmin && scoPanel.getSco().getCourse().getSchoolID() == 0)
 			return null;
 		if(scoPanel.getSco().getLessonMode() == Sco.BROWSE)
 		{
 			Box box = Box.createHorizontalBox();
-			box.add(new JLabel("PREVIEW"));
+			JLabel lab = new JLabel("PREVIEW");
+			lab.setVerticalAlignment(JLabel.BOTTOM);
+			lab.setForeground(Color.red);
+			lab.setFont(new Font("SansSerif", Font.BOLD, 20));
+			box.add(lab);
+			box.add(Box.createHorizontalStrut(10));
 			box.add(new JButton(new PreviewAction(scoPanel)));
 			return fx(box);
 		}

@@ -439,7 +439,7 @@ private static boolean isValidEmail(String email) {
     	"@soliscom.uu.nl"
     };
 
-	public static boolean SEQUENCE = false;
+	public static boolean SEQUENCE = true;
     
 	/**
      * Register a user in the system. Als links a user to a school.
