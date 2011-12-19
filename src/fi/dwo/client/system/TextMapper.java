@@ -367,6 +367,16 @@ public abstract class TextMapper {
     
     public final static String GUIPA_MSG_PARAM_SAVE = "GUIPA_MSG_PARAM_SAVE";
     public final static String GUIPA_MSG_TTL_PARAM_SAVE = "GUIPA_MSG_TTL_PARAM_SAVE";
+
+	public static final String GUIC_COURSE_SHARE = "GUIC_COURSE_SHARE";
+
+	public static final String GUIS_SHOW_SCORE = "GUIS_SHOW_SCORE";
+
+	public static final String GUIA_INSERT_SCOS = "GUIA_INSERT_SCOS";
+
+	public static final String GUIH_STOP_EDIT = "GUIH_STOP_EDIT";
+
+	public static final String GUIH_EDIT = "GUIH_EDIT";
     
     private static ResourceBundle rb;
 

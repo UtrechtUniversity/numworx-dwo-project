@@ -317,9 +317,9 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
     public Component getHeaderPanel() {
     	HeaderPanel hp = new HeaderPanel(TextMapper.getText(TextMapper.GUIPA_SCO_EDIT));
     	Box box = Box.createHorizontalBox();
-    	box.add(stopBtn = new JButton("Stop bewerken"));
+    	box.add(stopBtn = new JButton(TextMapper.getText(TextMapper.GUIH_STOP_EDIT)));
     	box.add(Box.createHorizontalStrut(10));
-    	box.add(saveBtn = new JButton("Opslaan"));    	
+    	box.add(saveBtn = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_SAVE)));    	
     	box.add(Box.createHorizontalStrut(10));
     	box.add(previewBtn = new JButton("Preview"));
     	//box.setBorder(BorderFactory.createLineBorder(Color.red));

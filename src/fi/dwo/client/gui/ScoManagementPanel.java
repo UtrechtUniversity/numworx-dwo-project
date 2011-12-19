@@ -485,7 +485,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 
     public Component getHeaderPanel() {
     	HeaderPanel hp = new HeaderPanel(TextMapper.getText(TextMapper.GUIS_SCO_MANAGEMENT));
-    	stopBtn = new JButton("Stop bewerken");
+    	stopBtn = new JButton(TextMapper.getText(TextMapper.GUIH_STOP_EDIT));
     	stopBtn.addActionListener(this);
     	hp.setButtonBox(GuiCreator.instance().fx(stopBtn));
     	return hp;

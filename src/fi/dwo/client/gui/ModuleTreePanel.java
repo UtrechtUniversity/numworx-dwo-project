@@ -59,8 +59,8 @@ import fi.dwo.client.system.TextMapper;
 
 public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 
-	public static final String STANDAARD_DWO_MODULES = "Standaard DWO modules";
-	public static final String ALLE_MODULES = "Alle modules";
+	public static final String STANDAARD_DWO_MODULES = TextMapper.getText("Standaard DWO modules");
+	public static final String ALLE_MODULES = TextMapper.getText("Alle modules");
 	public static String SCHOOL_MODULES = null;
 	public static CourseMap STANDAARD_DWO_MAP;
 	public static CourseMap SCHOOL_MAP;
@@ -236,7 +236,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		bar.setOpaque(false);
 		bar.setVisible(GuiCreator.instance().getUser().hasRight(User.MODIFY_MODULES_RIGHT));
 		JMenu menu; JMenuItem item;
-		menu = new JMenu("Bestand");
+		menu = new JMenu(TextMapper.getText("file"));
 		item = new JMenuItem("Nieuwe map");menu.add(item);item.setAction(new NewAction(true, true));
 		item = new JMenuItem("Nieuwe module/activiteit");menu.add(item);item.setAction(new NewAction(false, false));
 		if(DwoHelper.isApplication())
@@ -257,7 +257,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 			}
 		}
 		bar.add(menu);
-		menu = new JMenu("Bewerken");
+		menu = new JMenu(TextMapper.getText("edit"));
 		item = new JMenuItem("cut");menu.add(item);item.setAction(new CutCopyAction(true));item.setText(TextMapper.getText("cut"));
 		item = new JMenuItem("copy");menu.add(item);item.setAction(new CutCopyAction(false));item.setText(TextMapper.getText("copy"));
 		item = new JMenuItem("paste");menu.add(item);item.setAction(new PasteAction());

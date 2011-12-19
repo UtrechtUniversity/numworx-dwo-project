@@ -59,7 +59,7 @@ public class DeleteAction extends GuiAction  {
 			} else 
 			{
 				setEnabled(false);
-				putValue(NAME, "Verwijderen");
+				putValue(NAME, TextMapper.getText("delete"));
 			}
 			
 		}

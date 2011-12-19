@@ -259,6 +259,7 @@ public class Text_nl extends ListResourceBundle {
          { TextMapper.GUIC_MSG_COURSE_DELETE, "Deze module bevat nog activiteiten. \nWanneer u deze module verwijdert, zullen de activiteiten \nen de resultaten van deze activiteiten verwijderd worden.\n \nWeet u zeker dat u deze module wilt verwijderen?"},
          { TextMapper.GUIC_MSG_COURSE_DELETE_NO_SCO, "Weet u zeker dat u deze module wilt verwijderen?"},
          { TextMapper.GUIC_MSG_TTL_COURSE_DELETE, "Module verwijderen"},
+         { TextMapper.GUIC_COURSE_SHARE, "Modules delen" },
 
          { TextMapper.GUIS_ADD_SCO, "Nieuwe Activiteit aanmaken"},
          { TextMapper.GUIS_LBL_SCO_OF_COURSE, "Activiteiten van Module \"{0}\""},
@@ -281,6 +282,7 @@ public class Text_nl extends ListResourceBundle {
          { TextMapper.GUIS_MSG_SCO_DELETE, "Wanneer u deze activiteit wilt verwijderen,\nworden ook de resultaten verwijderd.\n \nWeet u zeker dat u deze activiteit wilt verwijderen?"},
          { TextMapper.GUIS_MSG_TTL_SCO_DELETE, "Activiteit verwijderen"},
          { TextMapper.GUIS_NO_SCOS, "Module {0} bevat geen activiteiten"},
+         { TextMapper.GUIS_SHOW_SCORE, "Leerlingen zien hun score"},
          
          { TextMapper.GUISDLG_BTN_ADD_SCO, "Toevoegen"},
          { TextMapper.GUISDLG_BTN_PREVIEW_SCO, "Bekijk Activiteit"},
@@ -309,7 +311,17 @@ public class Text_nl extends ListResourceBundle {
          { "cut", "Knippen" },
          { "copy" , "Kopiëren" },
          { "paste", "Plakken"},
+         { "delete", "Verwijderen" },
+         { "edit", "Bewerken"},
+         { "file", "Bestand" },
          
+         { TextMapper.GUIA_INSERT_SCOS, "Maak activiteiten vanuit backup"},
+         { TextMapper.GUIH_STOP_EDIT, "Stop bewerken" },
+         { TextMapper.GUIH_EDIT, "Bewerken"},
+         
+         
+         { "Alle modules", "Alle modules"},
+         { "Standaard DWO modules", "Standaard DWO modules"},
 };
 
  public Text_nl() {

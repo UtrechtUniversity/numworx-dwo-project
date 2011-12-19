@@ -51,11 +51,6 @@ public class HeaderPanel extends JPanel
 
 	protected JComponent createButtonBox() {
 		Box box = Box.createHorizontalBox();
-//		box.add(new JButton("Stop bewerken"));
-//		box.add(Box.createHorizontalStrut(4));
-//		box.add(new JButton("Opslaan"));
-//		box.add(Box.createHorizontalStrut(5));
-//		box.add(new JButton("Preview"));
 		box.setBorder(BorderFactory.createEmptyBorder(38, 0, 0, 0));
 		return box;
 //		return null;

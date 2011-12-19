@@ -30,6 +30,7 @@ import fi.dwo.client.domain.Admin;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.action.NullStrategy;
 import fi.dwo.client.persistence.PersistenceFacade;
+import fi.dwo.client.system.TextMapper;
 
 /**
  * This class implements Teacher-specific methods of the GuiCreator.
@@ -399,7 +400,7 @@ public class GuiCreatorTeacher extends GuiCreator {
 		private Object userObject;
 
 		public CourseManagementAction(CourseChoisePanel courseChoisePanel) {
-			super("Bewerken");
+			super(TextMapper.getText(TextMapper.GUIH_EDIT));
 			userObject = courseChoisePanel.getUserObject();
 		}
 
@@ -431,7 +432,7 @@ public class GuiCreatorTeacher extends GuiCreator {
 		private Course course;
 
 		public ScoManagementAction(CoursePanel coursePanel) {
-			super("Bewerken");
+			super(TextMapper.getText(TextMapper.GUIH_EDIT));
 			course = coursePanel.course;
 		}
 
@@ -452,7 +453,7 @@ public class GuiCreatorTeacher extends GuiCreator {
 		private Sco sco;
 
 		public ScoParameterAction(ScoPanel scoPanel) {
-			super("Bewerken");
+			super(TextMapper.getText(TextMapper.GUIH_EDIT));
 			sco = scoPanel.getSco();
 		}
 

@@ -456,7 +456,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         header.add(new Box.Filler(new Dimension(4,0), new Dimension(4,0), new Dimension(Short.MAX_VALUE,0)));
         
         
-        shareCourseButton = new JButton("Modules delen");
+        shareCourseButton = new JButton(TextMapper.getText(TextMapper.GUIC_COURSE_SHARE));
         shareCourseButton.addActionListener(this);
         header.add(shareCourseButton);
         
@@ -547,7 +547,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     
     public Component getHeaderPanel() {
     	HeaderPanel hp = new HeaderPanel(TextMapper.getText(TextMapper.GUIC_COURSE_MANAGEMENT));
-    	stopBtn = new JButton("Stop bewerken");
+    	stopBtn = new JButton(TextMapper.getText(TextMapper.GUIH_STOP_EDIT));
     	stopBtn.setActionCommand("stop");
     	stopBtn.addActionListener(this);
     	hp.setButtonBox(GuiCreator.instance().fx(stopBtn));

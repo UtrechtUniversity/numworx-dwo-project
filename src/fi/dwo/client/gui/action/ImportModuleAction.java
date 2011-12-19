@@ -27,6 +27,7 @@ import fi.dwo.client.gui.CourseManagementPanel;
 import fi.dwo.client.gui.GuiCreator;
 import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.MapperCreator;
+import fi.dwo.client.system.TextMapper;
 import fi.dwo.server.form.DWOFile;
 import fi.dwo.server.persistence.DwoXmlRpcException;
 
@@ -44,7 +45,7 @@ public class ImportModuleAction extends GuiAction {
 
 	public ImportModuleAction() {
 		super("Import");
-		putValue(LONG_DESCRIPTION, "Maak activiteiten vanuit backup");
+		putValue(LONG_DESCRIPTION, TextMapper.getText(TextMapper.GUIA_INSERT_SCOS));
 		setEnabled(DwoHelper.isApplication());  // disable in geval van applet.
 	}
 

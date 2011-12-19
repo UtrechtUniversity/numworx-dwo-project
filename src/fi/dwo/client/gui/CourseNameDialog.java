@@ -256,7 +256,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
     {
     	if(showScore == null)
     	{
-    		showScore = new JCheckBox("Leerlingen zien hun score");
+    		showScore = new JCheckBox(TextMapper.getText(TextMapper.GUIS_SHOW_SCORE));
     		Container content = getContentPane();
     		showScore.setBackground(GuiConstants.MAIN_BACKGROUND);
     		showScore.setFont(GuiConstants.NORMAL_TEXT);

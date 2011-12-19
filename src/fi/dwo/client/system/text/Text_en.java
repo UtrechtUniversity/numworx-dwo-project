@@ -242,6 +242,7 @@ public class Text_en extends ListResourceBundle {
          { TextMapper.LG_SCO_NAME , "Activity {0}"},
 
          { TextMapper.GUIC_ADD_COURSE, "Add new module"},
+         { TextMapper.GUIC_ADD_MAP, "Add new map" },
          { TextMapper.GUIC_COURSE_MANAGEMENT, "Module management"},
 
          { TextMapper.GUIC_TLTP_DELETE_COURSE, "Delete module {0}"},
@@ -255,6 +256,7 @@ public class Text_en extends ListResourceBundle {
          { TextMapper.GUICDLG_TTL_EDIT_COURSE, "Edit module"},
 
          { TextMapper.GUIC_NO_COURSES, "There are no modules to show"},
+         { TextMapper.GUIC_COURSE_SHARE, "Share modules" },
 
          { TextMapper.GUIC_MSG_COURSE_DELETE, "There are Activities present. \nWhen you delete the module \nen the results of the Activities will also be deleted.\n \nAre you sure you want to delete the module?"},
          { TextMapper.GUIC_MSG_COURSE_DELETE_NO_SCO, "Are you sure you want to delete the module?"},
@@ -263,6 +265,8 @@ public class Text_en extends ListResourceBundle {
          { TextMapper.GUIS_ADD_SCO, "Add new Activity"},
          { TextMapper.GUIS_LBL_SCO_OF_COURSE, "Activities of module {0}"},
          { TextMapper.GUIS_SCO_MANAGEMENT, "Activity management"},
+         { TextMapper.GUIS_SHOW_SCORE, "Students see their result"},
+
 
          { TextMapper.GUIS_TLTP_DELETE_SCO, "Delete Activity {0}"},
          { TextMapper.GUIS_TLTP_EDIT_SCO, "Edit name Activity"},
@@ -308,6 +312,19 @@ public class Text_en extends ListResourceBundle {
          { "cut", "Cut" },
          { "copy" , "Copy" },
          { "paste", "Paste"},
+         { "delete", "Delete" },
+         { "edit", "Edit" },
+         { "file", "File" },
+
+         { TextMapper.GUIA_INSERT_SCOS, "Insert activities from backup"},
+         { TextMapper.GUIH_STOP_EDIT, "Stop editing" },
+         { TextMapper.GUIH_EDIT, "Edit" },
+         
+         { "Alle modules", "All modules"},
+         { "Standaard DWO modules", "Standard DME modules"},
+
+
+         
 
 };
 
