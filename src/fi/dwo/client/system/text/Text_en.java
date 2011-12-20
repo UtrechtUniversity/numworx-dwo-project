@@ -250,10 +250,13 @@ public class Text_en extends ListResourceBundle {
          { TextMapper.GUIC_TLTP_SCO_COURSE, "Activity management"},
 
          { TextMapper.GUICDLG_COURSE_NAME, "Module name"},
-         { TextMapper.GUICDLG_COURSE_DESCRIPTION, "Module description"},
+         { TextMapper.GUICDLG_MAP_NAME, "Map name" },
+
+         { TextMapper.GUICDLG_COURSE_DESCRIPTION, "Description"},
 
          { TextMapper.GUICDLG_TTL_ADD_COURSE, "Add new module"},
          { TextMapper.GUICDLG_TTL_EDIT_COURSE, "Edit module"},
+         { TextMapper.GUIC_TLTP_EDIT_MAP, "Edit map" },
 
          { TextMapper.GUIC_NO_COURSES, "There are no modules to show"},
          { TextMapper.GUIC_COURSE_SHARE, "Share modules" },
@@ -323,6 +326,7 @@ public class Text_en extends ListResourceBundle {
          { "Alle modules", "All modules"},
          { "Standaard DWO modules", "Standard DME modules"},
 
+         { "Nieuwe Modulemap", "New Modulemap" },
 
          
 

@@ -246,10 +246,12 @@ public class Text_nl extends ListResourceBundle {
 
          { TextMapper.GUIC_TLTP_DELETE_COURSE, "Module \"{0}\" verwijderen"},
          { TextMapper.GUIC_TLTP_EDIT_COURSE, "Wijzig module"},
+         { TextMapper.GUIC_TLTP_EDIT_MAP, "Wijzig map"},
          { TextMapper.GUIC_TLTP_SCO_COURSE, "Activiteiten beheren"},
 
          { TextMapper.GUICDLG_COURSE_NAME, "Module naam"},
-         { TextMapper.GUICDLG_COURSE_DESCRIPTION, "Module beschrijving"},
+         { TextMapper.GUICDLG_MAP_NAME, "Map naam" },
+         { TextMapper.GUICDLG_COURSE_DESCRIPTION, "Beschrijving"},
 
          { TextMapper.GUICDLG_TTL_ADD_COURSE, "Nieuwe module aanmaken"},
          { TextMapper.GUICDLG_TTL_EDIT_COURSE, "Module wijzigen"},
@@ -322,6 +324,8 @@ public class Text_nl extends ListResourceBundle {
          
          { "Alle modules", "Alle modules"},
          { "Standaard DWO modules", "Standaard DWO modules"},
+         
+         { "Nieuwe Modulemap", "Nieuwe Modulemap" },
 };
 
  public Text_nl() {

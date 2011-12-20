@@ -506,7 +506,6 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     	if(src == stopBtn)
     	{
     		end();
-    		center.setStrategy(null);
     		center.select(course);
     	}
 
@@ -646,6 +645,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         	course.setDescription(pane.getText());
         	GuiCreator.instance().updateCourse(course);
         }
+		center.setStrategy(null);
     }
 
 

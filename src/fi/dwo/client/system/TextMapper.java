@@ -377,6 +377,10 @@ public abstract class TextMapper {
 	public static final String GUIH_STOP_EDIT = "GUIH_STOP_EDIT";
 
 	public static final String GUIH_EDIT = "GUIH_EDIT";
+
+	public static final String GUICDLG_MAP_NAME = "GUICDLG_MAP_NAME";
+
+	public static final String GUIC_TLTP_EDIT_MAP = "GUIC_TLTP_EDIT_MAP";
     
     private static ResourceBundle rb;
 

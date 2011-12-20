@@ -276,7 +276,9 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 			case 1:	String s = TextMapper.getText(TextMapper.GUIC_TLTP_SCO_COURSE);
 	    			setToolTipText(MessageFormat.format(s, arguments));
 	    			break;
-			case 2: setToolTipText(TextMapper.getText(TextMapper.GUIC_TLTP_EDIT_COURSE));
+			case 2: 
+				// TODO isWithChildren?
+				setToolTipText(TextMapper.getText(TextMapper.GUIC_TLTP_EDIT_COURSE));
 				break;
 			case 3: if(DWO.SEQUENCE)
 				{
@@ -564,7 +566,6 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
             
     	if(src == stopBtn)
     	{
-    		center.setStrategy(null);
     		end();
     		center.select(map.getUserObject());
     	}
@@ -668,6 +669,8 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
      * @see fi.dwo.client.gui.CenterSubPanel#end()
      */
     public void end() {
+		center.setStrategy(null);
+
         if(updown && DWO.SEQUENCE)
         {    	
         	updown = false;

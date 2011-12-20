@@ -168,7 +168,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
      * @return fi.dwo.client.domain.Course
      */
     public static Course addCourse(Component owner, String title, Course parent, boolean isMap) {
-        CourseNameDialog cnd = new CourseNameDialog(owner, title, 0, "", "", TextMapper.GUICDLG_COURSE_NAME, TextMapper.GUICDLG_COURSE_DESCRIPTION);
+        CourseNameDialog cnd = new CourseNameDialog(owner, title, 0, "", "", isMap?TextMapper.GUICDLG_MAP_NAME:TextMapper.GUICDLG_COURSE_NAME, TextMapper.GUICDLG_COURSE_DESCRIPTION);
         cnd.show();
         if(cnd.isConfirmed()) {
             Course c = GuiCreator.instance().addCourse(cnd.getCourseName(), cnd.getCourseDescription(), parent, isMap);
@@ -187,7 +187,14 @@ public class CourseNameDialog extends JDialog implements ActionListener {
      * @return boolean
      */
     public static boolean editCourse(Course course, Component owner) {
-        CourseNameDialog cnd = new CourseNameDialog(owner, TextMapper.getText(TextMapper.GUICDLG_TTL_EDIT_COURSE), course.getID(), course.getName(), course.getDescription(), TextMapper.GUICDLG_COURSE_NAME, TextMapper.GUICDLG_COURSE_DESCRIPTION);
+        String id = TextMapper.GUICDLG_COURSE_NAME;
+		String tit = TextMapper.GUICDLG_TTL_EDIT_COURSE;
+        if(course.isWithChildren())
+        {
+        	tit = TextMapper.GUIC_TLTP_EDIT_MAP;
+        	id = TextMapper.GUICDLG_MAP_NAME;
+        }
+		CourseNameDialog cnd = new CourseNameDialog(owner, TextMapper.getText(tit), course.getID(), course.getName(), course.getDescription(), id, TextMapper.GUICDLG_COURSE_DESCRIPTION);
         cnd.show();
         if(cnd.isConfirmed()) {
             String oldName = course.getName();
@@ -274,7 +281,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
 
 	public static Course addMap(Component owner, Course parent) {
 		// TODO Auto-generated method stub
-		Course c = addCourse(owner, "Nieuwe Modulemap", parent, true);
+		Course c = addCourse(owner, TextMapper.getText("Nieuwe Modulemap"), parent, true);
 		if(c != null)
 			c.setChildren(Course.NO_CHILDREN);
 		return c;
