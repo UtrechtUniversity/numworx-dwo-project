@@ -75,7 +75,7 @@ public class DeleteAction extends GuiAction  {
 	
 			if(course != null) 
 			{
-                if (instance.deleteCourse(course)) {
+                if (instance().deleteCourse(course)) {
                 	Clipboard.setSelection(null);
                     parent.removeChild(row);
                     
@@ -83,7 +83,7 @@ public class DeleteAction extends GuiAction  {
 
 			} else if (sco != null)
 			{
-				instance.deleteSco(sco);
+				instance().deleteSco(sco);
 				Clipboard.setSelection(null);
 				getCenter().updateCourse((Course) parent);
 				return;

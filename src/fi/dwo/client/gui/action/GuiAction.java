@@ -18,25 +18,21 @@ import fi.dwo.client.gui.ModuleTreePanel;
 abstract class GuiAction extends AbstractAction implements PropertyChangeListener {
 
 	private CenterPanel center;
-	GuiCreator instance;
-	boolean hasAdminRight;
+	final boolean hasAdminRight() {
+		return instance().getUser().hasRight(User.PROFILE_ADMIN_RIGHT);
+	}
+	
+	final GuiCreator instance() { 
+		return GuiCreator.instance();
+	}
 	
 	GuiAction() {
 		super();
-		initialize();
 	}
-
-	private void initialize() {
-		instance = GuiCreator.instance();
-		hasAdminRight = instance.getUser().hasRight(User.PROFILE_ADMIN_RIGHT);
-	}
-
-
-	
 	
 	public CenterPanel getCenter() {
 		if(center == null)
-			center = instance.getMainPanel().getCenter();
+			center = instance().getMainPanel().getCenter();
 		return center;
 	}
 
@@ -49,30 +45,29 @@ abstract class GuiAction extends AbstractAction implements PropertyChangeListene
 		if(map == null) return false;
 		if(map instanceof Course)
 		{
-			if(hasAdminRight)
+			if(hasAdminRight())
 				return true;
 			Course course = (Course)map;
 			int id =  course.getSchoolID();
-			User user = instance.getUser();
+			User user = instance().getUser();
 			School school = user.getSchool();
 			int ID = school.getSchoolID();
 			return id == ID;// course.getSchoolID() == instance.getUser().getSchool().getSchoolID();
 		} else if(map.getUserObject() instanceof Sco)
 		{
-			if(hasAdminRight)
+			if(hasAdminRight())
 				return true;
 			Course course = ((Sco) map.getUserObject()).getCourse();
-			return course.getSchoolID() == instance.getUser().getSchool().getSchoolID();
+			return course.getSchoolID() == instance().getUser().getSchool().getSchoolID();
 		}
 		if(map.getUserObject() == ModuleTreePanel.ALLE_MODULES)
 			return false;
-		return hasAdminRight || map.getUserObject() == ModuleTreePanel.SCHOOL_MODULES;
+		return hasAdminRight() || map.getUserObject() == ModuleTreePanel.SCHOOL_MODULES;
 	}
 	
 	
 	GuiAction(String text) {
 		super(text);
-		initialize();
 	}
 
 	public void propertyChange(PropertyChangeEvent evt) {

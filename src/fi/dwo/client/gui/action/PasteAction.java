@@ -31,7 +31,6 @@ public class PasteAction extends GuiAction
 			Object object = map.getUserObject();
 			Object clip = Clipboard.getClipboard().getUserObject();
 			System.out.println( Clipboard.cmd  + " " + clip + " into " + object);
-			instance = GuiCreator.instance();
 
 			if("cut".equals(Clipboard.cmd))
 			{
@@ -73,7 +72,7 @@ public class PasteAction extends GuiAction
 					Course dest   = (Course) object;
 					if(!dest.isWithChildren())
 						return;
-					if(dest.getSchoolID() == 0 && hasAdminRight) return;
+					if(dest.getSchoolID() == 0 && hasAdminRight()) return;
 					// TODO check copy parent into child.
 					copyCourseMap(dest, source);
 				}
@@ -81,10 +80,10 @@ public class PasteAction extends GuiAction
 			}
 		}
 		private void copySco(Course course, Sco sco) {
-			AppletConfig config = instance.getAppletConfigFromSco(sco);
+			AppletConfig config = instance().getAppletConfigFromSco(sco);
 			String name = config.getName();
 			name = CourseManagementPanel.replaceDuplicate(name, course.getScoNames());
-			instance.addSco(course, config, name, sco.getDescription(), sco.isShowScore());
+			instance().addSco(course, config, name, sco.getDescription(), sco.isShowScore());
 		}
 /**
  * 
@@ -95,14 +94,14 @@ public class PasteAction extends GuiAction
 			CourseMap oldmap = getParentMap(course);
 			if(oldmap.getUserObject() == map.getUserObject()) // copy/paste in zelfde map?
 				return;
-			if(b && !hasAdminRight)
+			if(b && !hasAdminRight())
 				return;
 			String name = course.getName();
 			name = CourseManagementPanel.replaceDuplicate(name, map.getChildNames());
 			boolean isMap = course.isWithChildren();
 			Course parent = b?new Course():null;
 			String description = course.getDescription();
-			Course c = instance.addCourse(name, description, parent, isMap);
+			Course c = instance().addCourse(name, description, parent, isMap);
 			map.addChild(c);
 			getCenter().updateMap(map);
 			if(isMap) {
@@ -126,7 +125,7 @@ public class PasteAction extends GuiAction
 			name = CourseManagementPanel.replaceDuplicate(name, dest.getChildNames());
 			boolean isMap = course.isWithChildren();
 			String description = course.getDescription();
-			Course c = instance.addCourse(name, description, dest, isMap);
+			Course c = instance().addCourse(name, description, dest, isMap);
 			if(c == null)
 			{
 				System.err.println("copyCourseMap failed: "+course + ", " + dest + ", " + isMap);
@@ -164,7 +163,7 @@ public class PasteAction extends GuiAction
 				name = CourseManagementPanel.replaceDuplicate(name, course.getScoNames());
 				sco.setName(name);
 			}
-			instance.updateSco(sco);
+			instance().updateSco(sco);
 //			old.loadScos(); course.loadScos(); // refresh sco's (zonder dbaccess mogelijk?)
 			getCenter().updateCourse(old);
 			getCenter().updateCourse(course);
@@ -207,7 +206,7 @@ public class PasteAction extends GuiAction
 				if(object.equals(ModuleTreePanel.STANDAARD_DWO_MODULES))
 					course.setSchoolID(0);
 				else // School Modules.
-					course.setSchoolID(instance.getUser().getSchool().getSchoolID());
+					course.setSchoolID(instance().getUser().getSchool().getSchoolID());
 			} else if( object instanceof Course)
 			{
 				Course map = (Course)object;
@@ -221,7 +220,7 @@ public class PasteAction extends GuiAction
 				} else
 					return;
 			}
-			instance.updateCourse(course);
+			instance().updateCourse(course);
 			getCenter().updateMap(map);
 			getCenter().updateMap(oldmap);
 			//cmd = "copy"; // 2x paste wordt altijd copy
