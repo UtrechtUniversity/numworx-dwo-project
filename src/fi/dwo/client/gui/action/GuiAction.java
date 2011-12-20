@@ -8,6 +8,7 @@ import javax.swing.AbstractAction;
 
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseMap;
+import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.CenterPanel;
@@ -51,7 +52,11 @@ abstract class GuiAction extends AbstractAction implements PropertyChangeListene
 			if(hasAdminRight)
 				return true;
 			Course course = (Course)map;
-			return course.getSchoolID() == instance.getUser().getSchool().getSchoolID();
+			int id =  course.getSchoolID();
+			User user = instance.getUser();
+			School school = user.getSchool();
+			int ID = school.getSchoolID();
+			return id == ID;// course.getSchoolID() == instance.getUser().getSchool().getSchoolID();
 		} else if(map.getUserObject() instanceof Sco)
 		{
 			if(hasAdminRight)
