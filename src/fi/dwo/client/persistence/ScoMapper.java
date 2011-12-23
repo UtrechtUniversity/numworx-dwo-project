@@ -327,7 +327,7 @@ public class ScoMapper extends XmlRpcMapper {
 	 */
 	public void removeObject(int key) {
 		cachemap.clear();
-		super.removeObject(key);
+		//super.removeObject(key);
 	}
 	
 	

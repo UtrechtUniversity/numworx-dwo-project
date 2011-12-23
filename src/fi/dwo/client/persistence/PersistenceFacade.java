@@ -1375,6 +1375,7 @@ public class PersistenceFacade {
             try {
             	if(sco.isCourseChanged())
             	{
+            		MapperCreator.instance(Sco.class).removeObject(sco.getID());
             		dbAccess.moveSco(sco.getID(), sco.getCourse().getID(), sco.getSequencenr(), sco.getScoName());
             		sco.setCourseChanged(false);
             	}
