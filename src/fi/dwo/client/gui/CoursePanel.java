@@ -140,19 +140,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 		ip.setLocation(this.getSize().width - ip.getSize().width - 50, startY);
         if(!htmlMode)add(ip);
 
-        int nextY = startY;
-        int i;
-        for (i = 0; i < course.getScoList().length; i++) {
-            l = new ScoLinkedLabel(course.getScoList()[i]);
-            l.setForeground(Color.black);
-            l.setFont(GuiConstants.SCO_TEXT);
-            fm = l.getFontMetrics(l.getFont());
-            l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-            l.setLocation(30, nextY);
-            l.addActionListener(this);
-            this.add(l);
-            nextY += l.getSize().height + 3;
-        }
+        int nextY = addScoLinkedLabels();
         
         /* If the user is a teacher, show a button to go to the results */
         if(GuiCreator.instance().getUser() instanceof Teacher) {
@@ -171,6 +159,28 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
         
         setPreferredSize(getSize());
     }
+
+	/**
+	 * @return
+	 */
+	private int addScoLinkedLabels() {
+		ScoLinkedLabel l;
+		FontMetrics fm;
+		int nextY = startY;
+        int i;
+        for (i = 0; i < course.getScoList().length; i++) {
+            l = new ScoLinkedLabel(course.getScoList()[i]);
+            l.setForeground(Color.black);
+            l.setFont(GuiConstants.SCO_TEXT);
+            fm = l.getFontMetrics(l.getFont());
+            l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
+            l.setLocation(30, nextY);
+            l.addActionListener(this);
+            this.add(l);
+            nextY += l.getSize().height + 3;
+        }
+		return nextY;
+	}
     
     public void setCourseView(boolean b) {
     	// if(b) then deeplink, geen beheerknop?
@@ -203,6 +213,17 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 				remove(comp);
 		}
     }
+    private void removeScos() {
+    	Component[] components = getComponents();
+    	for (int i = 0; i < components.length; i++) {
+			Component comp = components[i];
+			if(comp instanceof ScoLinkedLabel) {
+				((ScoLinkedLabel) comp).removeActionListener(this);
+				remove(comp);
+			}
+		}
+    }
+    
     
     /**
      * Refresh the sco view. Update the buttons width scores.
@@ -364,7 +385,19 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 	}
 
 	public void stateChanged(ChangeEvent e) {
-		// TODO Auto-generated method stub
+		if (e.getSource() == course)
+		{
+			System.err.println("refresh course");
+			removeButtons();
+			removeScos();
+			int nexty = addScoLinkedLabels();
+			if(showResultsButton != null)
+			{
+				showResultsButton.setLocation(30, nexty+20);
+			}
+			refresh();
+			repaint();
+		}
 		
 	}
 }

@@ -290,6 +290,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
     public void setScoList(Sco[] scoList) {
         this.scoList = scoList;
         Arrays.sort(this.scoList);
+        coursePanel = null;
     }
 
     /**
@@ -384,6 +385,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
     public void loadScos() {
         try {
             scoList = (Sco[]) PersistenceFacade.instance().get(Sco.class, this);
+            coursePanel = null;
         } catch (PersistenceException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }        
