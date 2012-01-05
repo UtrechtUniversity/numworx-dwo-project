@@ -41,6 +41,7 @@ public class HeaderPanel extends JPanel
 	    label.setVerticalAlignment(ibg?JLabel.BOTTOM: JLabel.CENTER);
 	    setBackground(GuiConstants.MAIN_BACKGROUND);
 	    setForeground(GuiConstants.HEADER_COLOR);
+	    label.setForeground(getForeground()); // overerf color
 	    if (!ibg)
 	    	setBorder(MainPanel.createNBorder());
 	    else
@@ -146,7 +147,7 @@ public class HeaderPanel extends JPanel
 			}
 			String text = label.getText();
 			Font f = origFont;
-			while(g.getFontMetrics(f).stringWidth(text) > width || g.getFontMetrics(f).getHeight() > height)
+			while(f.getSize() > 8 && (g.getFontMetrics(f).stringWidth(text) > width || g.getFontMetrics(f).getHeight() > height))
 			{
 				f = new Font(f.getName(), f.getStyle(), f.getSize()-1);
 			}
