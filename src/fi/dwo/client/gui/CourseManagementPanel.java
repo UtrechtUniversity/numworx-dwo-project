@@ -417,17 +417,20 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         downImage = DwoHelper.getResourceImage(GuiConstants.DOWN_SCO_IMAGE);
        this.courses = courses;
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setOpaque(false);
+        add(panel, BorderLayout.CENTER);
         //this.setSize(620, 485);
         //this.setSize(600, 470);
         //this.setPreferredSize(getSize());
         tablePane = new JPanel(new FlowLayout(FlowLayout.LEFT));
         tablePane.setOpaque(false);
-        add(tablePane, BorderLayout.SOUTH);
+        panel.add(tablePane, BorderLayout.CENTER);
         if(userObject instanceof Course)
         {	area = new JTextArea();
         	area.setText(((Course) userObject).getText());
         	area.setBorder(BorderFactory.createLineBorder(Color.black));
-        	add(area, BorderLayout.CENTER);
+        	panel.add(area, BorderLayout.NORTH);
         }
         
         

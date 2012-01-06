@@ -1,7 +1,9 @@
 package fi.dwo.client.persistence.cache;
 
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import fi.dwo.client.persistence.DbAccessIF;
@@ -18,8 +20,12 @@ public class CachingStore implements IStore, Runnable {
 	public synchronized Bucket getWork() throws InterruptedException {
 		if(iterator != null)
 		{
-			if(iterator.hasNext())
-				return (Bucket) iterator.next();
+			try {
+				if(iterator.hasNext())
+					return (Bucket) iterator.next();
+			} catch (Exception e) { // expect ConcurrentModificationException
+				e.printStackTrace();
+			}
 		}
 		
 		while(work.isEmpty())
@@ -31,7 +37,10 @@ public class CachingStore implements IStore, Runnable {
 		Bucket next = (Bucket) iterator.next();
 		return next;
 	}
-	
+	/**
+	 * FIXME synchronisatie probleem met iterator.
+	 * @param b
+	 */
 	public synchronized void putWork(Bucket b) {
 		work.put(b,b);
 		notifyAll();
@@ -44,6 +53,7 @@ public class CachingStore implements IStore, Runnable {
 			try {
 				b = getWork();
 				delegate.setValue(b.getUid(), b.getScoid(), b.getKey(), b.getValue());
+				/// sleep(1000)
 				iterator_remove();
 			} catch (InterruptedException e) {
 				clr();
@@ -132,7 +142,7 @@ public class CachingStore implements IStore, Runnable {
 
 	CachingStore(DbAccessIF dba) {
 		delegate = new NoCache(dba);
-		work = new HashMap();
+		work = new LinkedHashMap();
 		worker = new Thread(this);
 		worker.start();
 	}

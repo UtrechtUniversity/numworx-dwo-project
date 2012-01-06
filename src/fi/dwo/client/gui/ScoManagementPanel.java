@@ -187,8 +187,11 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         pane = new JTextArea();
         pane.setText(course.getDescription());
         pane.setBorder(BorderFactory.createLineBorder(Color.black));
-        panel.add(pane, BorderLayout.CENTER);
-        
+        JPanel panel1 = new JPanel(new BorderLayout());
+        panel1.setOpaque(false);
+        panel.add(panel1, BorderLayout.CENTER);
+        panel1.add(pane, BorderLayout.NORTH);
+        panel1.add(cpanel, BorderLayout.CENTER);
         hulp.add(Box.createVerticalGlue());
         this.add(hulp, BorderLayout.EAST);
         arguments = new String[1];
