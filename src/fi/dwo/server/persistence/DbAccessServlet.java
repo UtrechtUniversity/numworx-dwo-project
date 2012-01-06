@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -15,9 +17,9 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-//import com.jamonapi.Monitor;
-//import com.jamonapi.MonitorFactory;
-//import com.jamonapi.proxy.MonProxyFactory;
+import com.jamonapi.Monitor;
+import com.jamonapi.MonitorFactory;
+import com.jamonapi.proxy.MonProxyFactory;
 
 import fi.beans.jdbc.DbConnect;
 import fi.beans.xmlrpc.Servlet;
@@ -59,9 +61,25 @@ public class DbAccessServlet extends Servlet {
         log("Initializatie");
         if("true".equals(getInitParameter("local")))
         {
-        	dbAccess = new DbAccessLocal();
-//        	dbAccess = (DbAccessIF) MonProxyFactory.monitor(dbAccess);
-        	setHandler(dbAccess);
+        	dbAccess = new DbAccessLocal() {
+        		
+        		private Connection mine, his;
+				public void close() {
+					mine = null; his = null;
+					super.close();
+				}
+
+				public Connection getConnection() throws SQLException {
+					Connection c = super.getConnection();
+					if(c != his || mine == null) 
+					{	
+						his = c;
+						mine = MonProxyFactory.monitor(c);
+					} 
+					return mine;
+				} };
+				
+        	setHandler(MonProxyFactory.monitor(dbAccess));
         }
         
     }
@@ -122,9 +140,9 @@ public class DbAccessServlet extends Servlet {
         super.destroy();
     }
     
-	/* Variant met monitoring from www.jamon.com
-	 * @see javax.servlet.http.HttpServlet#service(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
+//	/** Variant met monitoring from www.jamon.com, kan ook buiten om, via de jamon servlet-filter.
+//	 * @see javax.servlet.http.HttpServlet#service(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+//	 */
 //	protected void service(HttpServletRequest arg0, HttpServletResponse arg1)
 //			throws ServletException, IOException {
 //		Monitor x = MonitorFactory.startPrimary("DWO service");
