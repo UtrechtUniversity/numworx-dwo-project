@@ -46,5 +46,6 @@
 	<classpathentry kind="lib" path="/_base/codebase/jars/balansfruitapplet.jar"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/vergroten.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/jamon-2.73.jar"/>
 	<classpathentry kind="output" path="output/classes"/>
 </classpath>

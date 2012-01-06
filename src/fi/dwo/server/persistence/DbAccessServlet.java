@@ -15,6 +15,10 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+//import com.jamonapi.Monitor;
+//import com.jamonapi.MonitorFactory;
+//import com.jamonapi.proxy.MonProxyFactory;
+
 import fi.beans.jdbc.DbConnect;
 import fi.beans.xmlrpc.Servlet;
 import fi.dwo.client.persistence.DbAccessIF;
@@ -54,7 +58,11 @@ public class DbAccessServlet extends Servlet {
         super.init(arg0);
         log("Initializatie");
         if("true".equals(getInitParameter("local")))
-        	setHandler(dbAccess = new DbAccessLocal());
+        {
+        	dbAccess = new DbAccessLocal();
+//        	dbAccess = (DbAccessIF) MonProxyFactory.monitor(dbAccess);
+        	setHandler(dbAccess);
+        }
         
     }
     
@@ -113,4 +121,20 @@ public class DbAccessServlet extends Servlet {
         ((DbConnect) dbAccess).close();
         super.destroy();
     }
+    
+	/* Variant met monitoring from www.jamon.com
+	 * @see javax.servlet.http.HttpServlet#service(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
+//	protected void service(HttpServletRequest arg0, HttpServletResponse arg1)
+//			throws ServletException, IOException {
+//		Monitor x = MonitorFactory.startPrimary("DWO service");
+//		
+//		try { 
+//			super.service(arg0, arg1);
+//		} finally {
+//			x.stop();
+//		}
+//		
+//	}
+
 }
