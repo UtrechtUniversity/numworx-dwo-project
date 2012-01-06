@@ -112,7 +112,7 @@ public class ImportScorm extends GuiAction {
 
 
 	void setMap(CourseMap map) {
-		setEnabled( map instanceof Sco);
+		setEnabled( map.getUserObject() instanceof Sco);
 	}
 
 }

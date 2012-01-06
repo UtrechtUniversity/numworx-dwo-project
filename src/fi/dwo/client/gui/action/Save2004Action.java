@@ -22,6 +22,7 @@ import fi.beans.appletutil.AppletUtil;
 import fi.beans.base64code.StringCodeObject;
 import fi.beans.licman.LicMan;
 import fi.beans.licman.LicenseException;
+import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.User;
@@ -34,29 +35,31 @@ import fi.dwo.client.system.TextMapper;
 public class Save2004Action extends GuiAction {
 
 	public void actionPerformed(ActionEvent e) {
-		if(sco == null)
+		if(sco0 == null)
 		{
-			if(Clipboard.getSelection() instanceof Sco)
+			CourseMap selection = Clipboard.getSelection();
+			if(selection != null && selection.getUserObject() instanceof Sco)
 			{
-				save2004( (Sco) Clipboard.getSelection());
+				save2004( (Sco) selection.getUserObject());
 			}
 			return;
 		}
-		save2004(sco);
+		save2004(sco0);
 
 	}
 	
 	public Save2004Action() {
 		super("Export SCO");
 		Clipboard.addPropertyChangeListener("selection", this);
+		setEnabled(false);
 	}
 
 	public Save2004Action(Sco sco) {
 		super("Export SCO");
-		this.sco = sco;
+		this.sco0 = sco;
 	}
 
-	private Sco sco; // in constructor
+	private Sco sco, sco0; // in constructor
 	
     ScormChooser scormChooser;
 	
@@ -67,6 +70,8 @@ public class Save2004Action extends GuiAction {
 			scormChooser = new ScormChooser();
 			//scormChooser.scorm2004.setEnabled(false);
 		}
+		this.sco = sco; // design error: sco is een parameter, geen field!  
+		
 		int result = scormChooser.showSaveDialog(GuiCreator.instance().getMainPanel());
 		if(result == JFileChooser.APPROVE_OPTION)
 		{
@@ -206,7 +211,7 @@ public class Save2004Action extends GuiAction {
 	public void printScormHTML(PrintWriter out)
 	{	
 		Hashtable launchData = sco.getEditLaunchdata();
-		if(launchData != null)
+		if(launchData == null)
 			launchData = sco.getLaunchdata();
 		Class applet = sco.getApplet().getClass();
 		String className = applet.getName();
@@ -363,5 +368,10 @@ public class Save2004Action extends GuiAction {
 		
 		
 	}
+	
+	void setMap(CourseMap map) {
+		setEnabled( map.getUserObject() instanceof Sco);
+	}
+
 
 }
