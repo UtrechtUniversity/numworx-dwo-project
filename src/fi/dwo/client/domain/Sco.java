@@ -40,7 +40,9 @@ import fi.dwo.client.gui.GuiConstants;
  *  
  */
 public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Comparable, ScoEditor {
-    private static final DecimalFormatSymbols US_DECIMAL_FORMAT_SYMBOLS = new DecimalFormatSymbols(Locale.US);
+    private static final char REVIEWABLE = 'r';
+
+	private static final DecimalFormatSymbols US_DECIMAL_FORMAT_SYMBOLS = new DecimalFormatSymbols(Locale.US);
 
     private ScoEditor editor = this;
     
@@ -365,10 +367,36 @@ System.err.println("sum = ["+result+"]");
     		// TODO set error op 'readonly' variable
     		return "false";
     	}
-        return dwo.LMSSetValue(this, iDataModelElement, iValue);
+    	if(NORMAL.equals(lessonMode))
+    		return dwo.LMSSetValue(this, user, iDataModelElement, iValue);
+
+    	if(REVIEW.equals(lessonMode))
+    	{
+    		
+    		boolean ok = getReviewable(iDataModelElement);
+    		if(ok)
+    		{
+        		System.out.println("Review.LMSSetValue(" + iDataModelElement  + ") for " + user.getName());
+    			return dwo.LMSSetValue(this, user, iDataModelElement, iValue);
+    		}
+    	}
+    	// browse....
+    	return "false";
     }
 
-    /**
+    
+    private String features;
+    private boolean getReviewable(String element) {
+    	if ("cmi.core.session_time".equals(element)) // not reviewable!
+    		return false;
+		if(features == null)
+		{	features = getAppletData().getFeatures();
+			if(features == null) features = "";
+		}
+		return features.indexOf(REVIEWABLE)>=0;
+	}
+
+	/**
      * This call ensures to the SCO that the data sent, via an
      * <code>LMSSetValue()</code> call, will be persisted by the LMS upon
      * completion of the LMSCommit().
@@ -752,6 +780,7 @@ System.err.println("sum = ["+result+"]");
     public void endWithoutSaving() {
         if (applet != null) {
             try {
+            	applet.stop(); // dit bepaalt wel of niet saven van sco's 
 				applet.destroy();
 			} catch (RuntimeException e) {
 				e.printStackTrace();

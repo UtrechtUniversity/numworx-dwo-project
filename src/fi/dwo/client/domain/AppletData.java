@@ -11,6 +11,7 @@ public class AppletData {
 	private String appletName;
 	private String className;
 	private String jarName;
+	private String features;
 
 	public int getId() {
 		return id;
@@ -35,6 +36,18 @@ public class AppletData {
 	}
 	public void setJarName(String jarName) {
 		this.jarName = jarName;
+	}
+	/**
+	 * @return the features
+	 */
+	public String getFeatures() {
+		return features;
+	}
+	/**
+	 * @param features the features to set
+	 */
+	public void setFeatures(String features) {
+		this.features = features;
 	}
 	
 }

@@ -876,9 +876,9 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	     *         was unsuccessful</li>
 	     *         </ul>
 	     */
-	    public String LMSSetValue(Sco sco, String iDataModelElement, String iValue) {
+	    public String LMSSetValue(Sco sco, User user, String iDataModelElement, String iValue) {
 	        try {
-	            return PersistenceFacade.instance().LMSSetValue(sco, currentUser, iDataModelElement, iValue);
+	            return PersistenceFacade.instance().LMSSetValue(sco, user, iDataModelElement, iValue);
 	        } catch (PersistenceException e) {
 	        	JOptionPane.showMessageDialog(this, e.getMessage());
 	            return Boolean.FALSE.toString();

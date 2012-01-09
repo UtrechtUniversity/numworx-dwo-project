@@ -474,7 +474,7 @@ public interface DwoIF {
 
 	public String LMSGetValue(Sco sco, User user, String dataModelElement);
 
-	public String LMSSetValue(Sco sco, String dataModelElement, String value);
+	public String LMSSetValue(Sco sco, User user, String dataModelElement, String value);
 
 	public School addSchool(int id, String schoolName, String schoolLogin,
 			SchoolPasswdMap schoolPasswdMap) throws SchoolException;

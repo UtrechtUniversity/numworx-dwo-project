@@ -134,6 +134,12 @@ public class ResultScore implements ResultScoreIF {
      */
     public void showResult() {
         userResultList.showResult(this);
+        // update score... werkt niet, want showResults is asynchroon.
+//        if(lessonGroup instanceof Sco && userGroup instanceof User)
+//        {
+//        	String s = GuiCreator.instance().getDWO().LMSGetValue((Sco)lessonGroup, (User)userGroup, "cmi.core.score.raw");
+//        	setScore(Float.parseFloat(s));
+//        }
     }
 
 	/**

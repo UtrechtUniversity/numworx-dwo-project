@@ -39,6 +39,7 @@ public class AppletDataMapper extends XmlRpcMapper {
 		applet.setAppletName((String)data.get("appletName"));
 		applet.setClassName( (String)data.get(ORDERCOL));
 		applet.setJarName((String)data.get("jarname"));
+		applet.setFeatures((String)data.get("features"));
 		return applet;
 	}
 
