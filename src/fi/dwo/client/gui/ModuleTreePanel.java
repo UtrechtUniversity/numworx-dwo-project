@@ -314,8 +314,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
         		SCHOOL_MODULES = "Modules " + school;
         		schoolnode = new DefaultMutableTreeNode(SCHOOL_MODULES);
         		SCHOOL_MAP = new TopMap(schoolnode, school);
-        		if(dwo.getUser().hasRight(User.MODIFY_MODULES_RIGHT)) // TODO is dit de bedoeling?
-        			root.add(schoolnode);
+        		root.add(schoolnode);
         	}
         	Course[] courses = instance.getCourseList();
         	sort(courses);
