@@ -288,7 +288,8 @@ public final class DwoHelper {
     }
     
     public static void setCookie(String name, String value)
-    { 	try {
+    { 	if(isApplication())return;
+    	try {
     		JSObject.getWindow (applet).eval ("document.cookie ='" + name + "=" + value +"';");
    	    }
     	catch (Exception ex) {
@@ -296,7 +297,7 @@ public final class DwoHelper {
     }
     
     public static void deleteCookie(String name)
-    {
+    {	if(isApplication())return;
     	try {
     		JSObject.getWindow (applet).eval ("document.cookie ='" + name + "=dummy" + "';");
    	    }
