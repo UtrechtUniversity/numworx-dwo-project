@@ -4,5 +4,6 @@ public interface Descriptor {
 
 	String getText();
 	String getHeader();
+	Course[] getChildren();
 
 }

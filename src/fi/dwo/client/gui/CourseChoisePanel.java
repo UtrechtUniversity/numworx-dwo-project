@@ -27,6 +27,7 @@ import javax.swing.text.JTextComponent;
 
 import fi.beans.mathkit.JMathPane;
 import fi.dwo.client.domain.Course;
+import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.Descriptor;
 import fi.dwo.client.domain.DwoProfile;
 import fi.dwo.client.system.TextMapper;
@@ -74,7 +75,11 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
         this.dwoProfile = dwoProfile;
         this.userObject = userObject;
         
-        Course[] courses = GuiCreator.instance().dwo.sequence(courseList);
+        initialize(dwoProfile, courseList);
+    }
+
+	private void initialize(Descriptor dwoProfile, Course[] courseList) {
+		Course[] courses = GuiCreator.instance().dwo.sequence(courseList);
 
         //Panel ph;
         //ph = new Panel(null);
@@ -170,7 +175,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
         unit.width = maxWidth/2;
         unit.height = maxHeight/4;
         setMinimumSize(pref);
-    }
+	}
     
   
    public void paint(Graphics g)
@@ -278,7 +283,22 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
 	}
 
 	public void stateChanged(ChangeEvent e) {
-		// TODO Auto-generated method stub
+		Object source = e.getSource();
+		if(source instanceof CourseMap)
+			source = ((CourseMap) source).getUserObject();
+		if(source == userObject||userObject == ModuleTreePanel.ALLE_MODULES)
+		{
+			System.out.println("stateChanged(" + e + ")");
+			removeAll();
+			setPreferredSize(null);
+			setMinimumSize(null);
+			invalidate();
+			initialize(dwoProfile, dwoProfile.getChildren());
+			validate();
+			repaint();
+		}
+		
+		
 		
 	}
 }

@@ -2,6 +2,8 @@
 
 package fi.dwo.client.domain;
 
+import fi.dwo.client.gui.GuiCreator;
+
 /**
  * This class is responsible for containing the data of the AppletConfig.<br>
  * <br>
@@ -103,5 +105,13 @@ public class DwoProfile implements Descriptor {
 
 	public String getHeader() {
 		return getDescription();
+	}
+
+	/**
+	 * get Courses.
+	 * Note: layer inconsistency: domain/gui
+	 */
+	public Course[] getChildren() {
+		return GuiCreator.instance().getCourseList();
 	}
 }

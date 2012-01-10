@@ -7,6 +7,7 @@ import javax.swing.JPopupMenu;
 
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseMap;
+import fi.dwo.client.domain.Descriptor;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.CenterPanel;
@@ -119,6 +120,41 @@ public class TeacherStrategy implements SelectStrategy{
 		this.lessonMode = lessonMode;
 	}
 
+	static class Bridge implements Descriptor {
+
+		Bridge(Descriptor profile, CourseMap parent) {
+			super();
+			this.profile = profile;
+			this.parent = parent;
+		}
+		Descriptor profile;
+		CourseMap  parent;
+
+		/**
+		 * @return
+		 * @see fi.dwo.client.domain.Descriptor#getText()
+		 */
+		public String getText() {
+			return profile.getText();
+		}
+		/**
+		 * @return
+		 * @see fi.dwo.client.domain.Descriptor#getHeader()
+		 */
+		public String getHeader() {
+			return profile.getHeader();
+		}
+		/**
+		 * @return
+		 * @see fi.dwo.client.domain.CourseMap#getChildren()
+		 */
+		public Course[] getChildren() {
+			return parent.getChildren();
+		}
+		
+	}
+	
+	
 	public void nodeSelected(CourseMap node) {
 		Clipboard.setSelection(node);
 		Object value = node.getUserObject();
@@ -147,7 +183,7 @@ public class TeacherStrategy implements SelectStrategy{
 			} else 
 			{
 				Course[] courses = node.getChildren();
-				panel = new CourseChoisePanel(instance.getDWO().getDwoProfile(), courses, value);
+				panel = new CourseChoisePanel(new Bridge(instance.getDWO().getDwoProfile(), node), courses, value);
 				
 			}
 			center.loadCenter(panel); // undo side-effect 'select Alle_modules'

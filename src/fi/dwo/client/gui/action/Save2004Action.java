@@ -370,7 +370,10 @@ public class Save2004Action extends GuiAction {
 	}
 	
 	void setMap(CourseMap map) {
-		setEnabled( map.getUserObject() instanceof Sco);
+		if(map != null)
+			setEnabled( map.getUserObject() instanceof Sco);
+		else
+			setEnabled(false);
 	}
 
 
