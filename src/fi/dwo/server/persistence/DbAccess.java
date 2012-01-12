@@ -2198,18 +2198,19 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         }
         
         ps.close();
-
-        String[] arguments = new String[2];
-
-        arguments[0] = "tblStudentSco";
-        arguments[1] = "scoID";
-
-        /* Delete results of sco's */
-        String statement = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
-        ps = getStatement(statement);
-        ps.setInt(1, scoID);
-        ps.execute();
-        ps.close();
+        if(true) {
+	        String[] arguments = new String[2];
+	
+	        arguments[0] = "tblStudentSco";
+	        arguments[1] = "scoID";
+	
+	        /* Delete results of sco's */
+	        String statement = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
+	        ps = getStatement(statement);
+	        ps.setInt(1, scoID);
+	        ps.execute();
+	        ps.close();
+        }
         return true;
     }
 

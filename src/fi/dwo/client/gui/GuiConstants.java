@@ -87,7 +87,7 @@ public abstract class GuiConstants {
     public static Insets  GUI_INSETS_MENU;
     public static Insets  GUI_INSETS_SCO;
     
-    
+    public static boolean GUI_SCOUPDATE_UNSAFE;
     
     public final static String RESOURCES = (DwoHelper.isApplication() ? "" : "/dwo/");
     //public final static String RESOURCES = "";
@@ -156,7 +156,7 @@ public abstract class GuiConstants {
 	    GUI_INSETS_MENU = getInsets(prop, "gui_insets_menu");
 	    GUI_INSETS_SCO = getInsets(prop, "gui_insets_sco");
 	    DWO.SEQUENCE = getBoolean(prop, "sequence_module") || GUI_ICONIZED;
-
+	    GUI_SCOUPDATE_UNSAFE = getBoolean(prop, "scoupdate_unsafe");
 		dwoProfile = profile;
 // profile == 3,1 done.
 		if(profile==49)

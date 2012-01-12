@@ -80,7 +80,7 @@ public class GuiCreatorTeacher extends GuiCreator {
 		}
 	}
 
-	boolean noAdmin;
+	private boolean noAdmin, readOnly;
 	
 	/**
      * @param dwo
@@ -88,6 +88,7 @@ public class GuiCreatorTeacher extends GuiCreator {
     public GuiCreatorTeacher(DwoIF dwo) {
         super(dwo);
         noAdmin = ! dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT);
+        readOnly =  ! dwo.getUser().hasRight(User.MODIFY_MODULES_RIGHT);
     }
 
     /**
@@ -481,7 +482,7 @@ public class GuiCreatorTeacher extends GuiCreator {
 	}
 
 	public JComponent fx(JComponent b) { 
-		if(!CenterPanel.isIconizer())
+		if(!CenterPanel.isIconizer() || readOnly)
 			return null;
 		Box box = Box.createVerticalBox();
 		box.add(Box.createGlue());

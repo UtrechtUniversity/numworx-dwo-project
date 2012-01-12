@@ -462,7 +462,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 // Deze tekst is m.i. niet helemaal lekker geformuleerd. Wim
         if (
         		!(compareMap(tmp, old)) &&
-        		(result = JOptionPane.showConfirmDialog(this, message, TextMapper.getText(TextMapper.GUIPA_MSG_TTL_PARAM_SAVE), JOptionPane.YES_NO_OPTION)) == JOptionPane.YES_OPTION) {
+        		((result = confirm(message)) == JOptionPane.YES_OPTION || result == JOptionPane.CANCEL_OPTION)) {
         	final GuiCreator instance = GuiCreator.instance();
 			instance.setWait();setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			sco.setLaunchdata(tmp);
@@ -474,6 +474,17 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         forcepaint();
         return result; // NO, CANCEL, CLOSED
     }
+
+	/**
+	 * @param message
+	 * @return
+	 */
+	private int confirm(String message) {
+		if(!GuiConstants.GUI_SCOUPDATE_UNSAFE)
+			return JOptionPane.showConfirmDialog(this, message, TextMapper.getText(TextMapper.GUIPA_MSG_TTL_PARAM_SAVE), JOptionPane.YES_NO_OPTION);
+		Object[] options = new Object[] { "Ja", "Nee", "Wel opslaan, niet verwijderen" };
+		return JOptionPane.showOptionDialog(this, message, TextMapper.getText(TextMapper.GUIPA_MSG_TTL_PARAM_SAVE), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options , null);
+	}
 
     private void forcepaint() {
     	Component c = this;
