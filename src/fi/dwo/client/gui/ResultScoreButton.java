@@ -16,20 +16,25 @@ import java.text.MessageFormat;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 
 import fi.beans.tooltip.ToolTipIF;
 import fi.beans.tooltip.ToolTipManager;
 import fi.dwo.client.domain.ResultScoreIF;
+import fi.dwo.client.domain.Sco;
+import fi.dwo.client.domain.User;
 import fi.dwo.client.system.TextMapper;
 
 /**
  * Shows a panel with the color representing the score. It also shows the score.
  */
 public class ResultScoreButton extends JPanel implements
-        /*MouseListener,*/ ActionListener, ToolTipIF {
+        ActionListener {
     private float score;
 
     private ResultScoreIF domain;
@@ -87,7 +92,7 @@ public class ResultScoreButton extends JPanel implements
                 arguments[1] = domain.getLessonGroup().getToolTip();
                 String s = TextMapper.getText(TextMapper.GUIRS_TLTP_RESULT_SCORE_BUTTON);
                 s = MessageFormat.format(s, arguments);
-                this.setToolTip(s);
+                this.setToolTipText(s);
                 ll.setToolTipText(s);
                 l = ll;
                 setBackground(new Color(230,230,230));
@@ -164,79 +169,16 @@ public class ResultScoreButton extends JPanel implements
      */
     public void actionPerformed(ActionEvent e) {
         if(active)domain.showResult();
-    }
-
-    /**
-     * Invoked when the mouse has been clicked on the CourseIcon. The result is
-     * showed.
-     * 
-     * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
-     */
-    public void mouseClicked(MouseEvent arg0) {
-    	if(active)domain.showResult();
-    }
-
-    /**
-     * Invoked when the mouse enters the CourseIcon. If the current ResultScore
-     * is the deepest, a Hand Cursor is showed.
-     * 
-     * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
-     */
-    public void mouseEntered(MouseEvent arg0) {
-        if (active && domain.isDeepest()) {
-            setCursor(new Cursor(Cursor.HAND_CURSOR));
-            repaint();
+        else if (false)
+        {
+        	Sco sco = (Sco) domain.getLessonGroup();
+        	User user = (User) domain.getUserGroup();
+			String scoName = sco.getScoName();
+			JTextPane content = new JTextPane();
+			String cocd = GuiCreator.instance().dwo.LMSGetValue(sco, user, "cocd");
+			content.setText(cocd);
+        	JOptionPane.showMessageDialog(this, content,  scoName, JOptionPane.INFORMATION_MESSAGE);
         }
-    }
-
-    /**
-     * Invoked when the mouse exits the CourseIcon. The Default Cursor is
-     * showed.
-     * 
-     * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
-     */
-    public void mouseExited(MouseEvent arg0) {
-        if (active && domain.isDeepest()) {
-            setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-            repaint();
-        }
-
-    }
-
-    /**
-     * Invoked when a mouse button has been pressed on the ResultScoreButton.
-     * 
-     * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
-     */
-    public void mousePressed(MouseEvent arg0) {
-    }
-
-    /**
-     * Invoked when a mouse button has been released on a component.
-     * 
-     * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
-     */
-    public void mouseReleased(MouseEvent arg0) {
-    }
-
-    /**
-     * Sets the tooltip of this component.
-     * @param toolTip The tooltip to set.
-     * @see fi.beans.tooltip.ToolTipIF#setToolTip(java.lang.String)
-     */
-    public void setToolTip(String toolTip) {
-        this.toolTip = toolTip;
-        //ToolTipManager.registerComponent(this);
-        setToolTipText(toolTip);
-    }
-
-    /**
-     * Returns the tooltip of this component.
-     * @return The tooltip of this component. 
-     * @see fi.beans.tooltip.ToolTipIF#getToolTip()
-     */
-    public String getToolTip() {
-        return toolTip;
     }
 
     /**
