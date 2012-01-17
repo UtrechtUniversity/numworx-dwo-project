@@ -14,6 +14,7 @@ import java.awt.event.MouseListener;
 import java.text.MessageFormat;
 
 import javax.swing.AbstractButton;
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -23,6 +24,15 @@ import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
+import org.jfree.chart.plot.SpiderWebPlot;
+import org.jfree.chart.title.TextTitle;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
+
+import fi.beans.scorm2xml.Scorm2Xml;
 import fi.beans.tooltip.ToolTipIF;
 import fi.beans.tooltip.ToolTipManager;
 import fi.dwo.client.domain.ResultScoreIF;
@@ -161,6 +171,36 @@ public class ResultScoreButton extends JPanel implements
     	active = false;
     }
 
+	private DefaultCategoryDataset addDataset(Scorm2Xml xml, String series, DefaultCategoryDataset set) {
+		int count = Integer.parseInt(xml.getValue("cmi.objectives._count"));
+        for(int i = 0; i < count; i++) {
+        	String id = xml.getValue("cmi.objectives."+i+".id");
+        	String raw = xml.getValue("cmi.objectives."+i+".score.raw");
+        	double score = Double.parseDouble(raw); // een percentage... tenzij score.max != 100
+        	set.addValue(score, series, id);
+        }
+        return set;
+	}
+    /**
+     * Creates a sample chart.
+     *
+     * @param dataset  the dataset.
+     *
+     * @return The chart.
+     */
+    private JFreeChart createChart(CategoryDataset dataset) {
+        SpiderWebPlot plot = new SpiderWebPlot(dataset);
+       // plot.setStartAngle(54);
+      //  plot.setInteriorGap(0.40);
+        plot.setToolTipGenerator(new StandardCategoryToolTipGenerator());
+        JFreeChart chart = new JFreeChart("title",
+                GuiConstants.NORMAL_TEXT, plot, false);
+        //chart.setBackgroundPaint(getBackground());
+        //ChartUtilities.applyCurrentTheme(chart);
+        return chart;
+    }
+
+    
     /**
      * Invoked when an action occurs.
      * 
@@ -169,14 +209,23 @@ public class ResultScoreButton extends JPanel implements
      */
     public void actionPerformed(ActionEvent e) {
         if(active)domain.showResult();
-        else if (false)
+        else if (true)
         {
         	Sco sco = (Sco) domain.getLessonGroup();
         	User user = (User) domain.getUserGroup();
 			String scoName = sco.getScoName();
-			JTextPane content = new JTextPane();
+			Box content = Box.createVerticalBox();
 			String cocd = GuiCreator.instance().dwo.LMSGetValue(sco, user, "cocd");
-			content.setText(cocd);
+			content.add(new JLabel("Score " + score));
+			Scorm2Xml xml = new Scorm2Xml(cocd);
+			String time = "Total time " + xml.getValue("cmi.core.total_time");
+			content.add(new JLabel(time));
+			DefaultCategoryDataset set = addDataset(xml, user.getName(), new DefaultCategoryDataset());
+			set.addValue(score, user.getName(), "score");
+			JFreeChart chart = createChart(set);
+			ChartPanel panel = new ChartPanel(chart, false, false, false, false, true);
+
+			content.add(panel);
         	JOptionPane.showMessageDialog(this, content,  scoName, JOptionPane.INFORMATION_MESSAGE);
         }
     }

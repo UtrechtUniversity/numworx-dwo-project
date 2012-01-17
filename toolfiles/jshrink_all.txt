@@ -1,9 +1,9 @@
--classpath %JAVA_HOME%\jre\lib\rt.jar
-..\output\classes\fi
-..\output\classes\org
-..\output\classes\hplb
-..\output\classes\uk
-..\output\classes\META-INF
+-classpath %JAVA_HOME%/jre/lib/rt.jar
+../output/classes/fi
+../output/classes/org
+../output/classes/hplb
+../output/classes/uk
+../output/classes/META-INF
 -keepInterface fi.?
 -keepInterface org.?
 -keepInterface hplb.?
@@ -27,5 +27,5 @@
 -delete fi/dwo/server/persistence/DbAccessLdapServletTest.class
 -delete fi/dwo/server/persistence/DwoWebPageServlet.class
 -delete fi/beans/xmlrpc/Servlet.class
--o ..\output\jar\dwo.jar
+-o ../output/jar/dwo.jar
 

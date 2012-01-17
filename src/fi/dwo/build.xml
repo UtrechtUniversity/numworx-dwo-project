@@ -70,7 +70,7 @@
     	<property name="tools" location="../../tools" />
     	<java jar="${tools}/jshrink.exe" fork="true"
     		dir='${toolfiles}' >
-    		<arg line='-script "${toolfiles}\jshrink_all.txt"'/>
+    		<arg line='-script "${toolfiles}/jshrink_all.txt"'/>
     		<sysproperty key="user.dir" file="${toolfiles}" />
     	</java>
 		<antcall target='include.extra.jar' />
