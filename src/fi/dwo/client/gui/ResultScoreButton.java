@@ -193,7 +193,7 @@ public class ResultScoreButton extends JPanel implements
        // plot.setStartAngle(54);
       //  plot.setInteriorGap(0.40);
         plot.setToolTipGenerator(new StandardCategoryToolTipGenerator());
-        JFreeChart chart = new JFreeChart("title",
+        JFreeChart chart = new JFreeChart("Objectives",
                 GuiConstants.NORMAL_TEXT, plot, false);
         //chart.setBackgroundPaint(getBackground());
         //ChartUtilities.applyCurrentTheme(chart);
@@ -209,14 +209,16 @@ public class ResultScoreButton extends JPanel implements
      */
     public void actionPerformed(ActionEvent e) {
         if(active)domain.showResult();
-        else if (true)
+        else if (true) // TODO parameter voor testing.... false is productie!
         {
+        	if(score == 0)
+        		return;
         	Sco sco = (Sco) domain.getLessonGroup();
         	User user = (User) domain.getUserGroup();
 			String scoName = sco.getScoName();
 			Box content = Box.createVerticalBox();
 			String cocd = GuiCreator.instance().dwo.LMSGetValue(sco, user, "cocd");
-			content.add(new JLabel("Score " + score));
+			content.add(new JLabel("Score " + Math.max(score,0)));
 			Scorm2Xml xml = new Scorm2Xml(cocd);
 			String time = "Total time " + xml.getValue("cmi.core.total_time");
 			content.add(new JLabel(time));
