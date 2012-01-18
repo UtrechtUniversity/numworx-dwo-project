@@ -22,6 +22,7 @@ public class Text_en extends ListResourceBundle {
 
          { TextMapper.EX_UNKNOWN_ERROR, "An internal error occured" },
          { TextMapper.EXR_USER_EXISTS, "The specified username already exists" },
+         { TextMapper.EXR_USER_EXISTS2, "The username {0} already exists" },
          { TextMapper.EXR_WRONG_SECOND_PASSWORD, "The specified passwords are different" },
          { TextMapper.EXR_WRONG_USERNAME_PASSWORD, "An user with the specified username and password was not found" },
          { TextMapper.EXR_UNKNOWN_SCHOOLGROUP, "Unknown school/group/password combination" },

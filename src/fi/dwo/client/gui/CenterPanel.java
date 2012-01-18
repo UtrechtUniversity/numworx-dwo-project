@@ -33,6 +33,7 @@ import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.Guest;
 import fi.dwo.client.domain.ResultsModuleIF;
+import fi.dwo.client.domain.SchoolClass;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.action.NullStrategy;
 import fi.dwo.client.system.TextMapper;
@@ -497,6 +498,10 @@ invalidate();
 	            loadCenter(cp);				
 			}
 		}
+	}
+
+	public void updateClass(SchoolClass schoolClass) {
+		centerSubPanel.stateChanged(new ChangeEvent(schoolClass));
 	}
 	
 }

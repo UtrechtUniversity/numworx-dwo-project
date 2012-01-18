@@ -486,25 +486,21 @@ public class PersistenceFacade {
         password = password == null ? "" : MD5.getHashString(password);
         DbAccessIF dbAccess = DbAccessCreator.instance();
         try {
-            try {
-                return dbAccess.register(username, password, firstname,
-                        middlename, lastname, email);
-            } catch (IOException e) {
-                throw new RegisterException(RegisterException.EX_IO);
-            } catch (XmlRpcException e) {
-                if (e.code != 0) {
-                    throw (RegisterException) getException(e, e.code);
-                } else {
-                    throw new RegisterException(RegisterException.EX_XML_RPC);
-                }
-            } catch (SQLException e) {
-                throw new RegisterException(RegisterException.EX_DB);
-            } catch (DwoXmlRpcException e) {
-                throw (RegisterException) getException(e, e.code);
-            }
-        } catch (PersistenceException e) {
-            throw new RegisterException(RegisterException.EX_UNKNOWN_ERROR);
-        }
+		    return dbAccess.register(username, password, firstname,
+		            middlename, lastname, email);
+		} catch (IOException e) {
+		    throw new RegisterException(RegisterException.EX_IO);
+		} catch (XmlRpcException e) {
+		    if (e.code != 0) {
+		        throw  new RegisterException( e.code, username);
+		    } else {
+		        throw new RegisterException(RegisterException.EX_XML_RPC);
+		    }
+		} catch (SQLException e) {
+		    throw new RegisterException(RegisterException.EX_DB);
+		} catch (DwoXmlRpcException e) {
+		    throw new RegisterException(e.code, username);
+		}
     }
 
     /**
@@ -534,26 +530,22 @@ public class PersistenceFacade {
         password = MD5.getHashString(password);
         DbAccessIF dbAccess = DbAccessCreator.instance();
         try {
-            try {
-                return dbAccess.register(username, password, firstname,
-                        middlename, lastname, email, schoolLogin, group
-                                .getGroupID(), groupPassword);
-            } catch (IOException e) {
-                throw new RegisterException(RegisterException.EX_IO);
-            } catch (XmlRpcException e) {
-                if (e.code != 0) {
-                    throw (RegisterException) getException(e, e.code);
-                } else {
-                    throw new RegisterException(RegisterException.EX_XML_RPC);
-                }
-            } catch (SQLException e) {
-                throw new RegisterException(RegisterException.EX_DB);
-            } catch (DwoXmlRpcException e) {
-                throw (RegisterException) getException(e, e.code);
-            }
-        } catch (PersistenceException e) {
-            throw new RegisterException(RegisterException.EX_UNKNOWN_ERROR);
-        }
+		    return dbAccess.register(username, password, firstname,
+		            middlename, lastname, email, schoolLogin, group
+		                    .getGroupID(), groupPassword);
+		} catch (IOException e) {
+		    throw new RegisterException(RegisterException.EX_IO);
+		} catch (XmlRpcException e) {
+		    if (e.code != 0) {
+		        throw new RegisterException(e.code, username);
+		    } else {
+		        throw new RegisterException(RegisterException.EX_XML_RPC);
+		    }
+		} catch (SQLException e) {
+		    throw new RegisterException(RegisterException.EX_DB);
+		} catch (DwoXmlRpcException e) {
+		    throw new RegisterException(e.code, username);
+		}
     }
 
     /**
@@ -909,7 +901,6 @@ public class PersistenceFacade {
                     PersistenceException.EX_UNKNOWN_ERROR);
         }
     }
-
     /**
      * Deletes a user out of the database.
      * @param user The user to delete.

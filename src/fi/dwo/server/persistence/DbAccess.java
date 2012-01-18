@@ -2198,7 +2198,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         }
         
         ps.close();
-        if(true) {
+        if(true) { // TODO parameter voor Sietske c.s.
 	        String[] arguments = new String[2];
 	
 	        arguments[0] = "tblStudentSco";

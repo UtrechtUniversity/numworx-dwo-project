@@ -7,6 +7,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.*;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
 import javax.swing.table.*;
 
 import fi.dwo.client.domain.*;
@@ -48,6 +49,7 @@ public class RegisterClassListButton extends JButton implements ActionListener
 	/**
 	 * Register nieuwe leerlingen. Zet ze meteen in een klas
 	 * @param schoolClass
+	 * @param p 
 	 */
 	public RegisterClassListButton(SchoolClass schoolClass)
 	{
@@ -178,7 +180,7 @@ public class RegisterClassListButton extends JButton implements ActionListener
 		}
 		
         if(e.getSource().equals(makeAccountsButton))
-		{	
+		{	boolean error = false;
         	for(int i=0 ; i<addTableModel.getRowCount() ; i++)
 	    	{
         		String firstname = (String)addTableModel.getValueAt(i, 0);
@@ -200,18 +202,34 @@ public class RegisterClassListButton extends JButton implements ActionListener
 	        	} catch (RegisterException exc) {
 	                JOptionPane.showMessageDialog(frame, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
 	                gemaakt = false;
+	                error = true;
 	        	}
 	        	// zet in de class
 	        	if(gemaakt && schoolClass != null) {
 		            try {
 		            	User newUser = PersistenceFacade.instance().login(username, password);
 		            	PersistenceFacade.instance().changeAccount(newUser, password, password, firstname, middlename, lastname, email, schoolClass);
+		            	if(addTableModel.getRowCount() > 1)
+		            	{
+		            		addTableModel.removeRow(i);i--;
+		            	}
+		            	else {
+		            		int len = addTableModel.getColumnCount();
+		            		for(int col = 0 ; col < len ; col ++) addTableModel.setValueAt("", i, col);
+		            	}
+		            
 		            }	catch (Exception exc) {
+		            		error = true;
 			                JOptionPane.showMessageDialog(frame, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
 		            }
 	        	}
 	            
 	    	}
-		}
+        	GuiCreator.instance().getMainPanel().getCenter().updateClass(schoolClass);
+        	if (!error && frame.isModal())
+        	{  //System.out.println("frame hide");
+        		frame.hide();
+        	}
+ 		}
 	}
 }

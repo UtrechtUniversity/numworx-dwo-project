@@ -40,6 +40,7 @@ public abstract class TextMapper {
 
     /* Register Exception Messages */
     public final static String EXR_USER_EXISTS = "EXR_USER_EXISTS";
+    public final static String EXR_USER_EXISTS2 = "EXR_USER_EXISTS {0}";
 
     public final static String EXR_WRONG_USERNAME_PASSWORD = "EXR_WRONG_USERNAME_PASSWORD";
 

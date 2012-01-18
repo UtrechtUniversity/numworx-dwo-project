@@ -5,7 +5,6 @@ package fi.dwo.client.gui;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FontMetrics;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
@@ -15,7 +14,6 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import java.awt.BorderLayout;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
@@ -25,10 +23,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.JFrame;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -40,7 +36,6 @@ import fi.dwo.client.domain.User;
 import fi.dwo.client.persistence.MapperCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.LoginException;
-import fi.dwo.client.system.RegisterException;
 import fi.dwo.client.system.TextMapper;
 
 /**
@@ -93,11 +88,13 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 		}
 
 	}
-    public class ImageButtonEditor extends AbstractCellEditor implements
+
+	UserModel model;
+
+	class ImageButtonEditor extends AbstractCellEditor implements
 	TableCellEditor, ActionListener {
 
     	Object value;
-    	UserModel model;
     	int row;
 
     	public Component getTableCellEditorComponent(JTable table, Object value,
@@ -106,7 +103,6 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
     		JButton button = new JButton(new ImageIcon((Image)value));
     		button.addActionListener(this);
     		this.row = row;
-    		model = (UserModel) table.getModel();
     		return button;
     	}
 
@@ -151,6 +147,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
             	schoolClass.disconnect(u);
              	model.deleteRow(row);
 	            if(model.getRowCount() == 0) {
+	            	// TODO dit is niet goed. createLabel(vbox) o.i.d.
 	                //tbl.setVisible(false);
 	                arguments = new String[1];
 	                arguments[0] = schoolClass.getName();
@@ -206,51 +203,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
             
         } else {
 
-	        removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_STUDENT_IMAGE);
-	        userImage = DwoHelper.getResourceImage("resources/student.png" );
-	        editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_SCO_IMAGE);
-	        
-	        MediaTracker tr = new MediaTracker(this);
-	        tr.addImage(removeImage, 0);
-	        tr.addImage(userImage, 0);
-	        tr.addImage(editImage, 0);
-	        try {
-	            tr.waitForAll();
-	        } catch (Exception e) {
-	        }
-	        
-			UserModel dm = new UserModel();
-			dm.userList = users; users = null;
-			dm.editImage = editImage;
-			dm.removeImage = removeImage;
-			dm.teacherImage = userImage;
-			dm.userImage = userImage;
-			JTable table = new JTable(dm);
-
-	        //JTable table = new JTable(new ClassUsersModel());
-	        TableUtil.setDefaults(table, true, new ImageRenderer(), new ImageButtonEditor());
-			School school = dm.userList[0].getSchool();
-			SchoolClassTableRenderer renderer = new SchoolClassTableRenderer(school);
-			table.setDefaultRenderer(SchoolClass.class, new SchoolClassTableRenderer(renderer.getItems()));
-	    	table.setDefaultEditor(SchoolClass.class, new DefaultCellEditor(renderer));
-
-			TableUtil.setBorder(table);
-	    	TableUtil.setJTableSizes(table);
-			
-
-			
-			//vbox.setAlignmentX(0);
-			vbox.setAlignmentY(0);
-			Dimension size = table.getPreferredSize();
-//			table.setMinimumSize(size);
-//			if(size.width < 702)
-//				size.width = 702;
-//			table.setMaximumSize(size);
-	        JTableHeader tableHeader = table.getTableHeader();
-			vbox.add(tableHeader);
-			vbox.add(table);
-			add(vbox);
-	        add(Box.createHorizontalGlue());
+	        createJTable(vbox, users);
         }
 		RegisterClassListButton registerClassListButton = new RegisterClassListButton(schoolClass);
 
@@ -258,6 +211,61 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 			vbox.add(registerClassListButton);
         
     }
+
+
+
+	/**
+	 * @param vbox
+	 * @param users
+	 */
+	private void createJTable(Box vbox, User[] users) {
+		removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_STUDENT_IMAGE);
+		userImage = DwoHelper.getResourceImage("resources/student.png" );
+		editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_SCO_IMAGE);
+		
+		MediaTracker tr = new MediaTracker(this);
+		tr.addImage(removeImage, 0);
+		tr.addImage(userImage, 0);
+		tr.addImage(editImage, 0);
+		try {
+		    tr.waitForAll();
+		} catch (Exception e) {
+		}
+		
+		UserModel dm = new UserModel();
+		model = dm;
+		dm.userList = users; users = null;
+		dm.editImage = editImage;
+		dm.removeImage = removeImage;
+		dm.teacherImage = userImage;
+		dm.userImage = userImage;
+		JTable table = new JTable(dm);
+
+		//JTable table = new JTable(new ClassUsersModel());
+		TableUtil.setDefaults(table, true, new ImageRenderer(), new ImageButtonEditor());
+		School school = dm.userList[0].getSchool();
+		SchoolClassTableRenderer renderer = new SchoolClassTableRenderer(school);
+		table.setDefaultRenderer(SchoolClass.class, new SchoolClassTableRenderer(renderer.getItems()));
+		table.setDefaultEditor(SchoolClass.class, new DefaultCellEditor(renderer));
+
+		TableUtil.setBorder(table);
+		TableUtil.setJTableSizes(table);
+		
+
+		
+		//vbox.setAlignmentX(0);
+		vbox.setAlignmentY(0);
+		Dimension size = table.getPreferredSize();
+//			table.setMinimumSize(size);
+//			if(size.width < 702)
+//				size.width = 702;
+//			table.setMaximumSize(size);
+		JTableHeader tableHeader = table.getTableHeader();
+		vbox.add(tableHeader);
+		vbox.add(table);
+		add(vbox);
+		add(Box.createHorizontalGlue());
+	}
     
     
 
@@ -335,17 +343,30 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
         return this;
     }
 
-
-
 	public Object getUserObject() {
-		// TODO Auto-generated method stub
-		return null;
+		return schoolClass;
 	}
 
-
-
 	public void stateChanged(ChangeEvent e) {
-		// TODO Auto-generated method stub
+		if(getUserObject() == e.getSource()) 
+		{
+			if(model != null) {
+				model.userList = schoolClass.getStudents();
+				model.fireTableDataChanged();
+			} else {
+				if(schoolClass.getStudents() .length > 0)
+				{
+					Box box = (Box)getComponent(0);
+					int last = box.getComponentCount()-1;
+					Component button = box.getComponent(last);
+					box.removeAll();
+					createJTable(box, schoolClass.getStudents());
+					box.add(button);
+					invalidate();
+				}
+			}
+			repaint();
+		}
 		
 	}
 }

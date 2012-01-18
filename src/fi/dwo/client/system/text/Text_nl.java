@@ -22,6 +22,8 @@ public class Text_nl extends ListResourceBundle {
 
          { TextMapper.EX_UNKNOWN_ERROR, "Er is een interne fout opgetreden" },
          { TextMapper.EXR_USER_EXISTS, "De opgegeven gebruikersnaam bestaat al" },
+         { TextMapper.EXR_USER_EXISTS2, "De gebruikersnaam {0} bestaat al" },
+         
          { TextMapper.EXR_WRONG_SECOND_PASSWORD, "De opgegeven wachtwoorden komen niet overeen" },
          { TextMapper.EXR_WRONG_USERNAME_PASSWORD, "Geen gebruiker gevonden met opgegeven gebruikersnaam en wachtwoord" },
          { TextMapper.EXR_UNKNOWN_SCHOOLGROUP, "Onbekende school/groep/wachtwoord combinatie" },

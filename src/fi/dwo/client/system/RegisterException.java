@@ -56,13 +56,18 @@ public class RegisterException extends Exception {
         case (RE_WRONG_FORMAT):
             result = TextMapper.getText(TextMapper.EXR_WRONG_FORMAT);
     		result = MessageFormat.format(result, arguments);
+    		break;
+        case RE_USER_EXISTS:
+        	result = TextMapper.getText(TextMapper.EXR_USER_EXISTS2);
+        	result = MessageFormat.format(result, arguments);
+        	break;
         case (RE_WRONG_EMAILFORMAT):
             result = TextMapper.getText(TextMapper.EXR_WRONG_EMAILFORMAT);
     		result = MessageFormat.format(result, arguments);
         break;
         
         default:
-            result = TextMapper.getText(TextMapper.EX_UNKNOWN_ERROR);
+            result = getMesgFromInt(exception);
             break;
         }
 
