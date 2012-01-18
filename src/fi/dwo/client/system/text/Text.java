@@ -3,12 +3,16 @@
 
 package fi.dwo.client.system.text;
 
-public class Text extends Text_nl {
+import java.util.Enumeration;
+import java.util.ResourceBundle;
 
-    /**
+public class Text extends ResourceBundle {
 
-     */
-    public Text() {
+	public Enumeration getKeys() {
+		return null;
+	}
 
-    }
+	protected Object handleGetObject(String key) {
+		return key;
+	}
 }
