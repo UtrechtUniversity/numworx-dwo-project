@@ -52,7 +52,7 @@ import fi.dwo.client.system.RegisterException;
 import fi.dwo.client.system.SchoolException;
 import fi.dwo.client.system.TextMapper;
 
-public class UserManagementPanel extends JPanel implements CenterSubPanel, ActionListener {
+public class UserManagementPanel extends JPanel implements CenterSubPanel {
 
 	static class TeacherDelegate extends Teacher {
 		User u;
@@ -260,8 +260,9 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel, Actio
 					        	JOptionPane.showMessageDialog(UserManagementPanel.this, e.getMessage());
 							}
 						//center.loadMenu();
-					    model.deleteRow(row);
-					       
+						fireEditingCanceled();
+						model.deleteRow(row);
+					    return;
 					}
 				}
 			}
@@ -308,7 +309,6 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel, Actio
     	b.add(table);
 		addDocentBtn = new RegisterClassListButton();
 		b.add(addDocentBtn);
-		addDocentBtn.addActionListener(this);
 		add(b);
 		
 	}
@@ -379,18 +379,17 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel, Actio
 
 	}
 	public Object getUserObject() {
-		// TODO Auto-generated method stub
-		return null;
+		return docent.getSchool();
 	}
-	public void actionPerformed(ActionEvent e) {
-		System.out.println(e);
-		getUserList();
-		dm.userList = userList; userList = null;
-		dm.fireTableDataChanged();
-	}
+	
 	public void stateChanged(ChangeEvent e) {
-		// TODO Auto-generated method stub
-		
+		if(e.getSource() instanceof School || e.getSource() instanceof SchoolClass)
+		{
+			getUserList();
+			dm.userList = userList; userList = null;
+			dm.fireTableDataChanged();
+			repaint();
+		}
 	}
 	
 

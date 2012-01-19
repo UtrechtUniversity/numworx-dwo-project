@@ -209,27 +209,41 @@ public class RegisterClassListButton extends JButton implements ActionListener
 		            try {
 		            	User newUser = PersistenceFacade.instance().login(username, password);
 		            	PersistenceFacade.instance().changeAccount(newUser, password, password, firstname, middlename, lastname, email, schoolClass);
-		            	if(addTableModel.getRowCount() > 1)
-		            	{
-		            		addTableModel.removeRow(i);i--;
-		            	}
-		            	else {
-		            		int len = addTableModel.getColumnCount();
-		            		for(int col = 0 ; col < len ; col ++) addTableModel.setValueAt("", i, col);
-		            	}
+		            	i = reduceTable(i);
 		            
 		            }	catch (Exception exc) {
 		            		error = true;
 			                JOptionPane.showMessageDialog(frame, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
 		            }
+	        	} else if (gemaakt) {
+	            	i = reduceTable(i);
 	        	}
 	            
 	    	}
-        	GuiCreator.instance().getMainPanel().getCenter().updateClass(schoolClass);
+        	if(schoolClass != null)
+        		GuiCreator.instance().getMainPanel().getCenter().updateClass(schoolClass);
+        	else
+        		GuiCreator.instance().getMainPanel().getCenter().updateSchool(GuiCreator.instance().getUser().getSchool());
         	if (!error && frame.isModal())
         	{  //System.out.println("frame hide");
         		frame.hide();
         	}
  		}
+	}
+
+	/**
+	 * @param i
+	 * @return
+	 */
+	private int reduceTable(int i) {
+		if(addTableModel.getRowCount() > 1)
+		{
+			addTableModel.removeRow(i);i--;
+		}
+		else {
+			int len = addTableModel.getColumnCount();
+			for(int col = 0 ; col < len ; col ++) addTableModel.setValueAt("", i, col);
+		}
+		return i;
 	}
 }
