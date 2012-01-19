@@ -114,7 +114,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
 			            ScoPanel sp = sco.getScoPanel(dwo, user);
 			            dwo.setReady();
 			            if(sp != null) {
-			                ScoDialog.showScoDialog(dwo, sp, user);
+			                ScoDialog.showScoDialog(dwo, sp, user, user.getInClass());
 			            }
 					}
 				};

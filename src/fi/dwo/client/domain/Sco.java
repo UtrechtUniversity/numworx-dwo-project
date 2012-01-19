@@ -40,7 +40,7 @@ import fi.dwo.client.gui.GuiConstants;
  *  
  */
 public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Comparable, ScoEditor {
-    private static final char REVIEWABLE = 'r';
+	private static final char REVIEWABLE = 'r';
 
 	private static final DecimalFormatSymbols US_DECIMAL_FORMAT_SYMBOLS = new DecimalFormatSymbols(Locale.US);
 
@@ -94,7 +94,12 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
 	public static final String BROWSE = "browse";
 	public static final String LESSON_MODE = "cmi.core.lesson_mode";
 	public static final String LAUNCH_DATA = "cmi.launch_data";
+	public static final String LESSON_LOCATION = "cmi.core.lesson_location";
+    public static final String SESSION_TIME = "cmi.core.session_time";
+
 	private String  lessonMode = NORMAL;
+
+	private String lessonLocation;
 	
 
     public String getLessonMode() {
@@ -103,6 +108,7 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
 
 	public void setLessonMode(String lessonMode) {
 		this.lessonMode = lessonMode;
+		lessonLocation = null;
 	}
 
 	/**
@@ -172,6 +178,7 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
     private void loadApplet() {
         try {
             Applet lastApplet = applet;
+            lessonLocation = null;
             if(applet == null) {
                 applet = (Applet) PersistenceFacade.instance().get(appletID, Applet.class);
             }
@@ -254,7 +261,7 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
     public String LMSInitialize(String iParam) {
     	initialized = true;
     	if(NORMAL.equals(getLessonMode()))
-    		LMSSetValue("cmi.core.session_time", "00:00:00");
+    		LMSSetValue(SESSION_TIME, "00:00:00");
         return true + "";
     }
 
@@ -286,7 +293,7 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
     		if(NORMAL.equals(getLessonMode()))
     		{	    		
 	    		String total_time = LMSGetValue("cmi.core.total_time");
-	    		String session_time = LMSGetValue("cmi.core.session_time");
+	    		String session_time = LMSGetValue(SESSION_TIME);
 	    		try {
 System.err.println("total = ["+total_time+"] session =[" + session_time + "]");
 					if(null == total_time || "".equals(total_time))
@@ -342,10 +349,18 @@ System.err.println("sum = ["+result+"]");
     		return value;
     		
     	}
+    	if(LESSON_LOCATION.equals(iDataModelElement))
+    		return getLessonLocation();
         return dwo.LMSGetValue(this, user, iDataModelElement);
     }
 
-    /**
+    private String getLessonLocation() {
+    	if(REVIEW.equals(lessonMode) && lessonLocation != null)
+    		return lessonLocation;
+		return dwo.LMSGetValue(this, user, LESSON_LOCATION);
+	}
+
+	/**
      * Sets the user-specific value for the iDataModelElement.
      * 
      * @param iDataModelElement The dataModelElement to set.
@@ -378,6 +393,10 @@ System.err.println("sum = ["+result+"]");
     		{
         		System.out.println("Review.LMSSetValue(" + iDataModelElement  + ") for " + user.getName());
     			return dwo.LMSSetValue(this, user, iDataModelElement, iValue);
+    		} else if(LESSON_LOCATION.equals(iDataModelElement))
+    		{
+    			lessonLocation = iValue;
+    			return "true";
     		}
     	}
     	// browse....
@@ -387,7 +406,9 @@ System.err.println("sum = ["+result+"]");
     
     private String features;
     private boolean getReviewable(String element) {
-    	if ("cmi.core.session_time".equals(element)) // not reviewable!
+    	if (SESSION_TIME.equals(element)) // not reviewable!
+    		return false;
+    	if (LESSON_LOCATION.equals(element))		// special case. 
     		return false;
 		if(features == null)
 		{	features = getAppletData().getFeatures();
@@ -953,5 +974,9 @@ System.err.println("sum = ["+result+"]");
 
 	public void setEditLaunchdata(Hashtable params) {
 		editor.setLaunchdata(params);
+	}
+
+	public void setUser(User u) {
+		user = u;	
 	}
 }

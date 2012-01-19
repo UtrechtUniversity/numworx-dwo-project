@@ -13,19 +13,27 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.text.MessageFormat;
 
+import javax.swing.AbstractListModel;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 
 import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.UserGroup;
+import fi.dwo.client.domain.SchoolClass;
+import fi.dwo.client.domain.User;
 import fi.dwo.client.system.TextMapper;
 
 /**
@@ -36,7 +44,35 @@ import fi.dwo.client.system.TextMapper;
  */
 public class ScoDialog extends JDialog implements ActionListener, WindowListener {
 
-    private ScoPanel scoPanel;
+    public static class ClassModel extends AbstractListModel implements ComboBoxModel {
+
+		private User[] students;
+		private Object user;
+
+		public ClassModel(SchoolClass s, User u) {
+			students = s.getStudents();
+			user = u;
+		}
+
+		public Object getElementAt(int i) {
+			return students[i];
+		}
+
+		public int getSize() {
+			return students.length;
+		}
+
+		public Object getSelectedItem() {
+			return user;
+		}
+
+		public void setSelectedItem(Object u) {
+			user = u;
+		}
+
+	}
+
+	private ScoPanel scoPanel;
 
     private JButton closeButton;
 
@@ -49,8 +85,14 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
      * @param sp The ScoPanel witch contains the data of the sco to show.
      */
     public ScoDialog(Component owner, String windowTitle, String title, boolean modal, ScoPanel sp) {
+    	this(owner, windowTitle, createTitleBox(title), modal, sp);
+    }
+    
+    public ScoDialog(Component owner, String windowTitle, Component hbox, boolean modal, ScoPanel sp) {
+    	
+    	
+    	
         super(DwoHelper.getFrameForComponent(owner), windowTitle, modal);
-        Box hbox;
         JPanel contentPane = new JPanel(new BorderLayout(0, 5));
         contentPane.setBorder(BorderFactory.createEmptyBorder(0,0,5,0));
         setContentPane(contentPane);
@@ -58,28 +100,14 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         contentPane.setBackground(GuiConstants.MAIN_BACKGROUND);
         closeButton = new JButton(TextMapper.getText(TextMapper.BTN_CLOSE));
 
-        FontMetrics fm = closeButton.getFontMetrics(closeButton.getFont());
         closeButton.setSize(closeButton.getPreferredSize());
         closeButton.addActionListener(this);
 
        // this.pack();
         Insets insets = contentPane.getInsets();
 
-        JLabel l = new JLabel(title);
-        l.setFont(GuiConstants.RED_TEXT);
-        fm = l.getFontMetrics(l.getFont());
-        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-        l.setLocation(insets.left + 10, insets.top);
-        l.setVisible(false);        
-        hbox = Box.createHorizontalBox();
-        hbox.add(Box.createRigidArea(new Dimension(10, fm.getHeight())));
-        hbox.add(l);
         contentPane.add(hbox, BorderLayout.NORTH);
-        l.setVisible(true);
 
-        scoPanel.setLocation(insets.left, l.getSize().height
-                + l.getLocation().y + 5);
-//        scoPanel.setVisible(true);
         scoPanel.setVisible(false);
         scoPanel.setPreferredSize(scoPanel.getSize());
         contentPane.add(scoPanel, BorderLayout.CENTER);
@@ -88,17 +116,13 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         closeButton.setLocation(insets.left + 10, scoPanel.getSize().height
                 + scoPanel.getLocation().y + 10);
         closeButton.setVisible(false);
-        hbox = Box.createHorizontalBox();
-        hbox.add(Box.createHorizontalStrut(10));
-        hbox.add(closeButton);
-        hbox.add(Box.createHorizontalGlue());
-        contentPane.add(hbox, BorderLayout.SOUTH);
+        Box hbox1 = Box.createHorizontalBox();
+        hbox1.add(Box.createHorizontalStrut(10));
+        hbox1.add(closeButton);
+        hbox1.add(Box.createHorizontalGlue());
+        contentPane.add(hbox1, BorderLayout.SOUTH);
         closeButton.setVisible(true);
 
-//        contentPane.setSize(scoPanel.getSize().width + insets.left + insets.right, closeButton.getSize().height
-//                + closeButton.getLocation().y + insets.bottom + 10);
-//        // set location to center of parent
-//        contentPane.setPreferredSize(contentPane.getSize());
         pack();
         int x = 0;
         int y = 0;
@@ -122,6 +146,17 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         this.addWindowListener(this);
     }
 
+	private static Box createTitleBox(String title) {
+		Box hbox;
+        JLabel l = new JLabel(title);
+        l.setFont(GuiConstants.RED_TEXT);
+        FontMetrics fm = l.getFontMetrics(l.getFont());
+        hbox = Box.createHorizontalBox();
+        hbox.add(Box.createRigidArea(new Dimension(10, fm.getHeight())));
+        hbox.add(l);
+		return hbox;
+	}
+
     /**
      * Shows a dialog to show a result of a sco and user.
      * 
@@ -129,12 +164,51 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
      * @param sp The ScoPanel witch contains the data of the sco to show.
      * @param ug The usergroup, witch is used for the title.
      */
-    public static void showScoDialog(Component parent, ScoPanel sp, UserGroup ug) {
+    public static void showScoDialog(Component parent, ScoPanel sp, User ug) {
         String[] arguments = { sp.getSco().getScoName(), ug.getName() };
         String title = MessageFormat.format(TextMapper.getText(TextMapper.UG_RESULTS_OF_STUDENT), arguments);
         ScoDialog sd = new ScoDialog(parent, TextMapper.getText(TextMapper.GUIRS_RESULTS), title, true, sp);
         sd.show();
     }
+    
+    public static void showScoDialog(Component parent, final ScoPanel sp, final User u, final SchoolClass s) {
+    	String[] arguments = { sp.getSco().getScoName(), "" };
+    	String title = MessageFormat.format(TextMapper.getText(TextMapper.UG_RESULTS_OF_STUDENT), arguments);
+    	Box hbox = createTitleBox(title);
+    	JComboBox combo = new JComboBox();
+    	ComboBoxModel model = new ClassModel(s, u);
+		combo.setModel(model);
+		combo.setRenderer(new DefaultListCellRenderer() {
+
+			/* (non-Javadoc)
+			 * @see javax.swing.DefaultListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
+			 */
+			public Component getListCellRendererComponent(JList list,
+					Object u, int arg2, boolean arg3, boolean arg4) {
+				// TODO Auto-generated method stub
+				u = ((User) u).getName();
+				return super.getListCellRendererComponent(list, u, arg2, arg3, arg4);
+			}});
+		combo.addItemListener(new ItemListener() {
+
+			public void itemStateChanged(ItemEvent event) {
+				User u = (User) event.getItem();
+				switch (event.getStateChange()) {
+				case ItemEvent.DESELECTED:
+						sp.getSco().getApplet().stop();
+						break;
+				case ItemEvent.SELECTED:
+						sp.getSco().setUser(u);
+						sp.getSco().getApplet().start();
+						sp.repaint();
+						break;
+				}
+			}});
+    	hbox.add(combo);
+        ScoDialog sd = new ScoDialog(parent, TextMapper.getText(TextMapper.GUIRS_RESULTS), hbox, true, sp);
+        sd.show();
+    }
+    
     
     public static void showScoPreview(Component parent, ScoPanel sp) {
         ScoDialog sd = new ScoDialog(parent, sp.getSco().getScoName(), "", true, sp);
