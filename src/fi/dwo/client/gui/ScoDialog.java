@@ -6,6 +6,7 @@ package fi.dwo.client.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Insets;
@@ -24,12 +25,18 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultSingleSelectionModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.ListSelectionModel;
+import javax.swing.SingleSelectionModel;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.SchoolClass;
@@ -175,10 +182,10 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
     	String[] arguments = { sp.getSco().getScoName(), "" };
     	String title = MessageFormat.format(TextMapper.getText(TextMapper.UG_RESULTS_OF_STUDENT), arguments);
     	Box hbox = createTitleBox(title);
-    	JComboBox combo = new JComboBox();
-    	ComboBoxModel model = new ClassModel(s, u);
+    	final JComboBox combo = new JComboBox();
+    	final ComboBoxModel model = new ClassModel(s, u);
 		combo.setModel(model);
-		combo.setRenderer(new DefaultListCellRenderer() {
+		DefaultListCellRenderer renderer = new DefaultListCellRenderer() {
 
 			/* (non-Javadoc)
 			 * @see javax.swing.DefaultListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
@@ -188,8 +195,10 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 				// TODO Auto-generated method stub
 				u = ((User) u).getName();
 				return super.getListCellRendererComponent(list, u, arg2, arg3, arg4);
-			}});
-		combo.addItemListener(new ItemListener() {
+			}};
+		combo.setRenderer(renderer);
+        final JList list = new JList(model);
+		final ItemListener itemListener = new ItemListener() {
 
 			public void itemStateChanged(ItemEvent event) {
 				User u = (User) event.getItem();
@@ -199,13 +208,42 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 						break;
 				case ItemEvent.SELECTED:
 						sp.getSco().setUser(u);
+						System.out.println(u.getName());
 						sp.getSco().getApplet().start();
 						sp.repaint();
+						list.setSelectedValue(u, false);
 						break;
 				}
-			}});
+			}};
+		combo.addItemListener(itemListener);
     	hbox.add(combo);
         ScoDialog sd = new ScoDialog(parent, TextMapper.getText(TextMapper.GUIRS_RESULTS), hbox, true, sp);
+        
+        final Container content = sd.getContentPane();
+        IconizedPanel panel = new IconizedPanel("Leerlingen");
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list.setCellRenderer(renderer);
+        list.setSelectedValue(u, true);
+        list.addListSelectionListener(new ListSelectionListener() {
+
+			public void valueChanged(ListSelectionEvent event) {
+				if(!event.getValueIsAdjusting())
+				{
+					int //index = event.getLastIndex();
+					index = list.getSelectedIndex();
+					combo.setSelectedIndex(index);
+					combo.repaint();
+				}
+				
+			}});
+        Box vbox = Box.createVerticalBox();
+        JButton btn = new JButton(panel.getCloseAction());
+        btn.setBorderPainted(false);
+		vbox.add(btn);
+        vbox.add(list);
+        panel.add(vbox);
+        content.add(panel, BorderLayout.WEST);
+        content.invalidate();
         sd.show();
     }
     
