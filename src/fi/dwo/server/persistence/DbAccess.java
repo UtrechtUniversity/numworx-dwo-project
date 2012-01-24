@@ -2502,7 +2502,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 			scos = new Vector();
 			while (rs.next())
 			{
-				int sco = rs.getInt(0);
+				int sco = rs.getInt(1);
 				scos.add(new Integer(sco));
 			}
 			rs.close();
@@ -2514,7 +2514,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 			users = new Vector();
 			while( rs.next())
 			{
-				int user = rs.getInt(0);
+				int user = rs.getInt(1);
 				users.add(new Integer(user));
 			}
 			rs.close();
