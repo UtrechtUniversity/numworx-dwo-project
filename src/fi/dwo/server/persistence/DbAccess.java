@@ -2490,17 +2490,64 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 	{
 		Connection c = getConnection();
 		try {
-			c.setAutoCommit(false);
-			c.commit();
-			String sql = "DELETE FROM tblStudentSco where scoID in (select scoID from tblSco where courseID = ?) and userID in (select userID from tblUser where classID = ?)";
-			PreparedStatement ps = c.prepareStatement(sql);
+			String sql;
+			PreparedStatement ps;
+			ResultSet rs;
+			Vector scos, users;
+			
+			sql = "select scoID from tblSco where courseID = ?";
+			ps = c.prepareStatement(sql);
 			ps.setInt(1, courseID);
-			ps.setInt(2, classID);
-			int n = ps.executeUpdate();
+			rs = ps.executeQuery();
+			scos = new Vector();
+			while (rs.next())
+			{
+				int sco = rs.getInt(0);
+				scos.add(new Integer(sco));
+			}
+			rs.close();
+			ps.close();
+			sql = "select userID from tblUser where classID = ?";
+			ps = c.prepareStatement(sql);
+			ps.setInt(1, classID);
+			rs = ps.executeQuery();
+			users = new Vector();
+			while( rs.next())
+			{
+				int user = rs.getInt(0);
+				users.add(new Integer(user));
+			}
+			rs.close();
+			ps.close();
+			int n = 0;
+			sql = "delete from tblStudentSco where scoID = ? and userID = ?";
+			ps = c.prepareStatement(sql);
+			Enumeration sco, user;
+			sco = scos.elements();
+			while (sco.hasMoreElements()) {
+				Object s = sco.nextElement();
+				user = users.elements();
+				while (user.hasMoreElements()) {
+					Object u = user.nextElement();
+					ps.setObject(1, s);
+					ps.setObject(2, u);
+					n += ps.executeUpdate();
+				}
+			}
+			ps.close();
 			log("course " + courseID + " class " + classID + " deleted: " + n);
 			
-			c.commit();
-			ps.close();
+//			c.setAutoCommit(false);
+//			c.commit();
+//			String sql = "DELETE FROM tblStudentSco where scoID in (select scoID from tblSco where courseID = ?) and userID in (select userID from tblUser where classID = ?)";
+//			PreparedStatement ps = c.prepareStatement(sql);
+//			ps.setInt(1, courseID);
+//			ps.setInt(2, classID);
+//			int n = ps.executeUpdate();
+//			log("course " + courseID + " class " + classID + " deleted: " + n);
+//			
+//			c.commit();
+//			ps.close();
 			
 			
 		} finally {
