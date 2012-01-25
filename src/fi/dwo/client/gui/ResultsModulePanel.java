@@ -42,14 +42,6 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.SpiderWebPlot;
-import org.jfree.chart.title.TextTitle;
-import org.jfree.data.category.DefaultCategoryDataset;
 
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DwoHelper;
@@ -958,34 +950,34 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
     		//jtbl.setSize(pref);
     		
     		
-    		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-    		int cols = columnModel.getColumnCount();
-    		int rows = table.getRowCount();
-			for(int j = 2; j < rows; j++) {
-				String row = String.valueOf(table.getValueAt(j,0));
-				for(int i = 1; i < cols; i++) {
-					String col = columnModel.getColumn(i).getHeaderValue().toString();
-    				Number value = (Number) table.getValueAt( j,i);
-    				System.out.println(col + " " + row + " :" + value);
-    				if(value != null && value.doubleValue()>0.0)
-    					dataset.addValue(value.doubleValue(), row, col);
-    				else dataset.addValue(0,row,col);
-    			}
-    		}
-    		String comment = lg.getTitle();
-// TODO: Wat is hier de beste grafiek. Ik denk stacked
-    		
-    		JFreeChart chart = ChartFactory.createStackedBarChart3D("", comment, "score", dataset, PlotOrientation.HORIZONTAL, true, true, false);
-			//JFreeChart chart = ChartFactory.createBarChart("", comment, "score", dataset, PlotOrientation.HORIZONTAL, true, true, true);
-//            SpiderWebPlot plot = new SpiderWebPlot(dataset);
-//            plot.setStartAngle(54);
-//            plot.setInteriorGap(0.40);
-//            plot.setToolTipGenerator(new StandardCategoryToolTipGenerator());
-//            JFreeChart chart = new JFreeChart(null, GuiConstants.NORMAL_TEXT, plot, true);
-	            //chart.setBackgroundPaint(getBackground());
-	            //ChartUtilities.applyCurrentTheme(chart);
-            ChartPanel chartPanel = new ChartPanel(chart, false, false, false, false, true);
-    		jtbl.add(chartPanel, BorderLayout.SOUTH);
+//    		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+//    		int cols = columnModel.getColumnCount();
+//    		int rows = table.getRowCount();
+//			for(int j = 2; j < rows; j++) {
+//				String row = String.valueOf(table.getValueAt(j,0));
+//				for(int i = 1; i < cols; i++) {
+//					String col = columnModel.getColumn(i).getHeaderValue().toString();
+//    				Number value = (Number) table.getValueAt( j,i);
+//    				System.out.println(col + " " + row + " :" + value);
+//    				if(value != null && value.doubleValue()>0.0)
+//    					dataset.addValue(value.doubleValue(), row, col);
+//    				else dataset.addValue(0,row,col);
+//    			}
+//    		}
+//    		String comment = lg.getTitle();
+//// TODO: Wat is hier de beste grafiek. Ik denk stacked
+//    		
+//    		JFreeChart chart = ChartFactory.createStackedBarChart3D("", comment, "score", dataset, PlotOrientation.HORIZONTAL, true, true, false);
+//			//JFreeChart chart = ChartFactory.createBarChart("", comment, "score", dataset, PlotOrientation.HORIZONTAL, true, true, true);
+////            SpiderWebPlot plot = new SpiderWebPlot(dataset);
+////            plot.setStartAngle(54);
+////            plot.setInteriorGap(0.40);
+////            plot.setToolTipGenerator(new StandardCategoryToolTipGenerator());
+////            JFreeChart chart = new JFreeChart(null, GuiConstants.NORMAL_TEXT, plot, true);
+//	            //chart.setBackgroundPaint(getBackground());
+//	            //ChartUtilities.applyCurrentTheme(chart);
+//            ChartPanel chartPanel = new ChartPanel(chart, false, false, false, false, true);
+//    		jtbl.add(chartPanel, BorderLayout.SOUTH);
     		
     		
     		
