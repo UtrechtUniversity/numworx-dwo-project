@@ -5,6 +5,7 @@
 package fi.dwo.client.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -14,16 +15,23 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.text.MessageFormat;
+import java.util.EventObject;
+import java.util.List;
+import java.util.Map;
 
+import javax.swing.AbstractCellEditor;
 import javax.swing.AbstractListModel;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ComboBoxModel;
+import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultSingleSelectionModel;
 import javax.swing.JButton;
@@ -32,14 +40,23 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SingleSelectionModel;
+import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableColumn;
 
+import fi.beans.scorm.PartialScoreIF;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.SchoolClass;
+import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.system.TextMapper;
 
@@ -55,16 +72,25 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 
 		private User[] students;
 		private Object user;
+		private Sco sco;
 
-		public ClassModel(SchoolClass s, User u) {
+		public ClassModel(SchoolClass s, User u, Sco sco) {
 			students = s.getStudents();
 			user = u;
+			this.sco = sco;
 		}
 
 		public Object getElementAt(int i) {
 			return students[i];
 		}
 
+		public List getScoreList(int i) {
+			User u = students[i];
+			sco.setUser(u);
+			return sco.getPartialScoreIF().getScoreMapList(sco);
+		}
+		
+		
 		public int getSize() {
 			return students.length;
 		}
@@ -183,7 +209,8 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
     	String title = MessageFormat.format(TextMapper.getText(TextMapper.UG_RESULTS_OF_STUDENT), arguments);
     	Box hbox = createTitleBox(title);
     	final JComboBox combo = new JComboBox();
-    	final ComboBoxModel model = new ClassModel(s, u);
+    	final ClassModel model = new ClassModel(s, u, sp.getSco());
+		final JTable table = new JTable(new Model(model));
 		combo.setModel(model);
 		DefaultListCellRenderer renderer = new DefaultListCellRenderer() {
 
@@ -197,7 +224,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 				return super.getListCellRendererComponent(list, u, arg2, arg3, arg4);
 			}};
 		combo.setRenderer(renderer);
-        final JList list = new JList(model);
+       // final JList list = new JList(model);
 		final ItemListener itemListener = new ItemListener() {
 
 			public void itemStateChanged(ItemEvent event) {
@@ -208,10 +235,11 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 						break;
 				case ItemEvent.SELECTED:
 						sp.getSco().setUser(u);
-						System.out.println(u.getName());
 						sp.getSco().getApplet().start();
 						sp.repaint();
-						list.setSelectedValue(u, false);
+						//list.setSelectedValue(u, false);
+						int i = combo.getSelectedIndex();
+						table.setRowSelectionInterval(i, i);
 						break;
 				}
 			}};
@@ -220,33 +248,178 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         ScoDialog sd = new ScoDialog(parent, TextMapper.getText(TextMapper.GUIRS_RESULTS), hbox, true, sp);
         
         final Container content = sd.getContentPane();
-        IconizedPanel panel = new IconizedPanel("Leerlingen");
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        list.setCellRenderer(renderer);
-        list.setSelectedValue(u, true);
-        list.addListSelectionListener(new ListSelectionListener() {
-
-			public void valueChanged(ListSelectionEvent event) {
-				if(!event.getValueIsAdjusting())
-				{
-					int //index = event.getLastIndex();
-					index = list.getSelectedIndex();
-					combo.setSelectedIndex(index);
-					combo.repaint();
-				}
-				
-			}});
-        Box vbox = Box.createVerticalBox();
+        final IconizedPanel panel = new IconizedPanel("Leerlingen");
+panel.setOpaque(true);
+panel.setBackground(Color.green);
+//		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+//        list.setCellRenderer(renderer);
+//        list.setSelectedValue(u, true);
+//        list.addListSelectionListener(new ListSelectionListener() {
+//
+//			public void valueChanged(ListSelectionEvent event) {
+//				if(!event.getValueIsAdjusting())
+//				{
+//					int //index = event.getLastIndex();
+//					index = list.getSelectedIndex();
+//					combo.setSelectedIndex(index);
+//					combo.repaint();
+//				}
+//				
+//			}});
+        JPanel vbox = new JPanel(new BorderLayout()); vbox.setBackground(Color.blue);
         JButton btn = new JButton(panel.getCloseAction());
         btn.setBorderPainted(false);
-		vbox.add(btn);
-        vbox.add(list);
+		vbox.add(btn, BorderLayout.NORTH);
+		vbox.add(new Mover(), BorderLayout.EAST);
+		TableUtil.setJTableSizes(table);
+		int cols = table.getColumnCount();
+		for(int i = 0; i<cols; i++ ) {
+			TableColumn column = table.getColumnModel().getColumn(i);
+			int pref = column.getPreferredWidth();
+			column.setMaxWidth(pref);
+			column.setMinWidth(pref);
+		}
+		table.setTableHeader(null);
+		table.setMaximumSize(table.getPreferredSize());
+		table.setMinimumSize(table.getPreferredSize());
+		JPanel x = new JPanel(null);
+		x.add(table);
+		x.setMaximumSize(table.getPreferredSize());
+		x.setMinimumSize(table.getMinimumSize());
+		x.setPreferredSize(table.getPreferredSize());
+		table.setSize(table.getPreferredSize());
+		table.setLocation(0,0);
+		table.setDefaultRenderer(Integer.class, new IntegerRenderer());
+	    table.setDefaultEditor(Integer.class, new IntegerEditor(combo));
+//        vbox.add(list);
+		vbox.add(new JScrollPane(x, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS), BorderLayout.CENTER);
         panel.add(vbox);
+        vbox.addComponentListener(new ComponentAdapter() {
+
+			public void componentResized(ComponentEvent event) {
+				System.out.println(event);
+			}} );
         content.add(panel, BorderLayout.WEST);
         content.invalidate();
         sd.show();
     }
     
+    
+    static class IntegerRenderer extends DefaultTableCellRenderer {
+    	
+		/* (non-Javadoc)
+		 * @see javax.swing.table.DefaultTableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
+		 */
+		public Component getTableCellRendererComponent(JTable arg0,
+				Object value, boolean arg2, boolean arg3, int arg4, int arg5) {
+			int max = 100;
+			if(value != null )
+			{
+				if(((Number) value).intValue() >= max/2)
+					setBackground(Color.green);
+				else
+					setBackground(Color.RED);
+
+				
+			}
+			else 
+				setBackground(Color.white);
+			return super.getTableCellRendererComponent(arg0, value, arg2, arg3, arg4, arg5);
+		}	
+    }
+    
+    static class IntegerEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
+
+    	IntegerEditor(JComboBox combo) {
+			super();
+			this.combo = combo;
+			button = new JButton();
+			button.setBorderPainted(false);
+			button.addActionListener(this);
+		}
+
+		Object value;
+    	JButton button;
+    	JComboBox combo;
+    	int n;
+		public void actionPerformed(ActionEvent arg0) {
+			combo.setSelectedIndex(n);
+			fireEditingCanceled();
+		}
+
+		public Object getCellEditorValue() {
+			return value;
+		}
+
+		public Component getTableCellEditorComponent(JTable table, Object value,
+				boolean isSelected, int n, int col) {
+			this.value = value;
+			this.n = n;
+			int v = ((Number) value).intValue();
+			button.setBackground(Color.RED);
+			button.setText(value.toString());
+			
+			return button;
+		}
+
+    }
+    
+    static class Model extends AbstractTableModel {
+    	
+    	List[] lists;
+    	
+    	private List getScoreList(int i) {
+    		if(lists[i] == null)
+    			lists[i] = model.getScoreList(i);
+    		return lists[i];
+    	}
+    	
+    	Model(ClassModel model) {
+			super();
+			this.model = model;
+			lists = new List[getRowCount()];
+		}
+
+    	
+		/* (non-Javadoc)
+		 * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
+		 */
+		public Class getColumnClass(int col) {
+			if(col > 0) return Integer.class;
+			return super.getColumnClass(col);
+		}
+
+
+		/* (non-Javadoc)
+		 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
+		 */
+		public boolean isCellEditable(int row, int col) {
+			if(col > 0)
+				return true;
+			return super.isCellEditable(row, col);
+		}
+
+
+		private ClassModel model;
+		public int getColumnCount() {
+			return getScoreList(0).size()+1;
+		}
+
+		public int getRowCount() {
+			return model.getSize();
+		}
+
+		public Object getValueAt(int row, int col) {
+			if(col == 0)
+				return ((User) model.getElementAt(row)).getName();
+			try {
+				return new Integer(((Map) getScoreList(row).get(col-1)).get(PartialScoreIF.SCORE_RAW).toString());
+			} catch (NumberFormatException e) {
+				return null;
+			}
+		}
+    	
+    }
     
     public static void showScoPreview(Component parent, ScoPanel sp) {
         ScoDialog sd = new ScoDialog(parent, sp.getSco().getScoName(), "", true, sp);

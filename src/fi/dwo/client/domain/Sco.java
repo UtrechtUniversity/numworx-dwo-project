@@ -23,6 +23,7 @@ import javax.swing.JOptionPane;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.beans.base64code.StringCodeObject;
+import fi.beans.scorm.PartialScoreIF;
 import fi.beans.scorm.SCORM12APIInterface;
 //import fi.dwo.client.gui.DwoMessageDialog;
 import fi.dwo.client.gui.ScoPanel;
@@ -207,6 +208,12 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
     	return appletData;
     }
     
+    public PartialScoreIF getPartialScoreIF() {
+    	loadApplet();
+    	if(applet instanceof PartialScoreIF)
+    		return (PartialScoreIF) applet;
+    	return new DefaultPartialScore();
+    }
     
     /**
      * Returs the name representing the LessonGroup object.
