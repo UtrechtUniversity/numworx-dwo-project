@@ -417,7 +417,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 				return ((User) model.getElementAt(row)).getName();
 			try {
 				return new Integer(((Map) getScoreList(row).get(col-1)).get(PartialScoreIF.SCORE_RAW).toString());
-			} catch (NumberFormatException e) {
+			} catch (Exception e) {
 				return null;
 			}
 		}
