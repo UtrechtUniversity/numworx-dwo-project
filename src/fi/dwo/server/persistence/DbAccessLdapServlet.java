@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
+import org.apache.xmlrpc.XmlRpc;
+
 import com.jamonapi.proxy.MonProxyFactory;
 
 import fi.dwo.client.persistence.DbAccessIF;
@@ -72,11 +74,14 @@ public class DbAccessLdapServlet extends DbAccessServlet
         {
         	setHandler(MonProxyFactory.monitor(new MonitoringProxy()));
         }
-        
+        int maxthreads = 200;
+        String param = getInitParameter("xmlrpc.maxthreads");
+        if(param != null )
+        	maxthreads = Integer.parseInt(param);
+        XmlRpc.setMaxThreads(maxthreads);
     }
 
 	public void destroy() {
-		// TODO Auto-generated method stub
 		//super.destroy();
 	}
 
