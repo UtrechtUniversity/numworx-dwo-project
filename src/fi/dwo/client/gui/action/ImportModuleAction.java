@@ -57,7 +57,7 @@ public class ImportModuleAction extends GuiAction {
 
 	public ImportModuleAction(CourseManagementPanel courseManagementPanel) {
 		this();
-		this.course = courseManagementPanel.getMap();
+		this.course = courseManagementPanel.getMap(); // werkt niet!!!
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -183,6 +183,14 @@ public class ImportModuleAction extends GuiAction {
 			}
 			getCenter().updateMap(map);
 		}
+	}
+
+	public CourseMap getCourse() {
+		return course;
+	}
+
+	public void setCourse(CourseMap course) {
+		this.course = course;
 	}
 
 	

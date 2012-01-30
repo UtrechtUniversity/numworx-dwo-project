@@ -86,7 +86,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
 	CourseManagementPanel(CourseMap map) {
 		this(map.getChildren(), map.getUserObject());
-		this.map = map;
+		setMap(map);
 	}
 
      CourseManagementPanel(Course[] courses)
@@ -106,7 +106,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     private JLabel noCoursesLabel;
 
 	private FileDialog openDial;
-	CourseMap  map = this;
+	private CourseMap  map = this;
 
 	private JTable jTable;
 
@@ -469,7 +469,8 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         	header.add(Box.createHorizontalStrut(10));
         
         
-	        uploadCourseButton = new JButton(new ImportModuleAction(this)); // TODO TextMapper
+	        importAction = new ImportModuleAction(this);
+			uploadCourseButton = new JButton(importAction); // TODO TextMapper
 	        //uploadCourseButton.setSize(uploadCourseButton.getPreferredSize());
 	        uploadCourseButton.addActionListener(this);
 	        //uploadCourseButton.setLocation(200+addCourseButton.getWidth()+10, 10);
@@ -732,6 +733,9 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
 
 	private JButton stopBtn;
+
+
+	private ImportModuleAction importAction;
 	private void noUpdate() {
 		ok = false;
 		center.updateMap(map);
@@ -768,6 +772,11 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
 	public CourseMap getMap() {
 		return map;
+	}
+
+	public void setMap(CourseMap map) {
+		this.map = map;
+		importAction.setCourse(map);
 	}
     
 }
