@@ -473,8 +473,8 @@ invalidate();
 		if(tree != null)
 		{
 			tree.updateNodeMap(map);
-			centerSubPanel.stateChanged(new ChangeEvent(map));
 		}
+		centerSubPanel.stateChanged(new ChangeEvent(map));
 		
 	}
 	

@@ -271,7 +271,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 			}
 			setHorizontalAlignment(SwingConstants.CENTER);
 			setOpaque(true);
-			Object[] arguments = new Object[]  { table.getValueAt(row, 0) };
+			Object[] arguments = new Object[]  { courses[row].getName() };
 			switch(col) {
 			case 1:	String s = TextMapper.getText(TextMapper.GUIC_TLTP_SCO_COURSE);
 	    			setToolTipText(MessageFormat.format(s, arguments));
@@ -704,6 +704,10 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         System.arraycopy(courses, 0, ac, 0, courses.length);
         ac[ac.length - 1] = c;
         courses = ac;
+		if(!DWO.SEQUENCE)
+		{	Arrays.sort(courses);
+		}
+
 	}
 
 

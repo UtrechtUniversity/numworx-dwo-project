@@ -64,6 +64,16 @@ public class DeleteAction extends GuiAction  {
 			
 		}
 
+		private void newSelection(Object o)
+		{
+			CourseMap selection = Clipboard.getSelection();
+			if(selection == null) 
+				return;
+			if(selection.getUserObject() == o)
+				getCenter().select(parent);
+		}
+		
+		
 		public void actionPerformed(ActionEvent e) {
 			if(map == null)
 				setMap(Clipboard.getSelection());
@@ -76,16 +86,15 @@ public class DeleteAction extends GuiAction  {
 			if(course != null) 
 			{
                 if (instance().deleteCourse(course)) {
-                	Clipboard.setSelection(null);
                     parent.removeChild(row);
-                    
+                	newSelection(course); // TODO if selection=course then select(parent)                    
                  }
 
 			} else if (sco != null)
 			{
 				instance().deleteSco(sco);
-				Clipboard.setSelection(null);
 				getCenter().updateCourse((Course) parent);
+				newSelection(sco); // TODO if selection=sco then select(parent)
 				return;
 			}
 			getCenter().updateMap(parent);

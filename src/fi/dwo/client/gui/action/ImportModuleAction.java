@@ -27,6 +27,7 @@ import fi.dwo.client.gui.CourseManagementPanel;
 import fi.dwo.client.gui.GuiCreator;
 import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.MapperCreator;
+import fi.dwo.client.persistence.MapperIF;
 import fi.dwo.client.system.TextMapper;
 import fi.dwo.server.form.DWOFile;
 import fi.dwo.server.persistence.DwoXmlRpcException;
@@ -158,10 +159,7 @@ public class ImportModuleAction extends GuiAction {
 
 // TODO deze code verplaatsen naar DWOFile?
 // of ?copieren? naar ScoManagementPanel.
-			Set  names = new HashSet();
-			for (int i = 0; i < courses.length; i++) {
-				names.add(courses[i].getName());
-			}
+			Set names = map.getChildNames();
 			String title = (String)result.get("name");
 			title = CourseManagementPanel.replaceDuplicate(title, names);
 			result.put("name", title);
@@ -178,7 +176,10 @@ public class ImportModuleAction extends GuiAction {
 			}
 			if(schoolID != 0 || dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT))
 			{	id = zipper.addCourse(result, dwo.getDwoProfile().getID(), schoolID, id);
-				map.addChild((Course) MapperCreator.instance(Course.class).get(id)); //????
+				MapperIF mapper = MapperCreator.instance(Course.class);
+				Course c = (Course) mapper.get(id);
+				mapper.put(id, c);
+				map.addChild(c);
 			}
 			getCenter().updateMap(map);
 		}
