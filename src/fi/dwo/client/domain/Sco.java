@@ -362,6 +362,10 @@ System.err.println("sum = ["+result+"]");
     }
 
     private String getLessonLocation() {
+    	if(REVIEW.equals(lessonMode) && locationOverride != null) {
+    		lessonLocation = locationOverride;
+    		locationOverride = null;
+    	}
     	if(REVIEW.equals(lessonMode) && lessonLocation != null)
     		return lessonLocation;
 		return dwo.LMSGetValue(this, user, LESSON_LOCATION);
@@ -412,6 +416,8 @@ System.err.println("sum = ["+result+"]");
 
     
     private String features;
+
+	private String locationOverride;
     private boolean getReviewable(String element) {
     	if (SESSION_TIME.equals(element)) // not reviewable!
     		return false;
@@ -985,5 +991,10 @@ System.err.println("sum = ["+result+"]");
 
 	public void setUser(User u) {
 		user = u;	
+	}
+
+	public void setLocationOverride(String loc) {
+		this.locationOverride = loc;
+		
 	}
 }

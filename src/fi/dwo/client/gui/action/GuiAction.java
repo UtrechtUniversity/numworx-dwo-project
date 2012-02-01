@@ -15,7 +15,7 @@ import fi.dwo.client.gui.CenterPanel;
 import fi.dwo.client.gui.GuiCreator;
 import fi.dwo.client.gui.ModuleTreePanel;
 
-abstract class GuiAction extends AbstractAction implements PropertyChangeListener {
+abstract public class GuiAction extends AbstractAction implements PropertyChangeListener {
 
 	private CenterPanel center;
 	final boolean hasAdminRight() {
@@ -66,7 +66,7 @@ abstract class GuiAction extends AbstractAction implements PropertyChangeListene
 	}
 	
 	
-	GuiAction(String text) {
+	public GuiAction(String text) {
 		super(text);
 	}
 

@@ -209,7 +209,7 @@ public class ResultScoreButton extends JPanel implements
      */
     public void actionPerformed(ActionEvent e) {
         if(active)domain.showResult();
-        else if (true) // TODO parameter voor testing.... false is productie!
+        else if (false) // TODO parameter voor testing.... false is productie!
         {
         	if(score == 0)
         		return;

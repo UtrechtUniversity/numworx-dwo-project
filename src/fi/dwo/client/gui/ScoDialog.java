@@ -192,7 +192,8 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
     	Box hbox = createTitleBox(title);
     	final JComboBox combo = new JComboBox();
     	final ClassModel model = new ClassModel(s, u, sp.getSco());
-		final JTable table = new JTable(new Model(model));
+		Model tableModel = new Model(model);
+		final JTable table = new JTable(tableModel);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		combo.setModel(model);
 		table.setRowSelectionInterval(combo.getSelectedIndex(), combo.getSelectedIndex());
@@ -247,7 +248,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         JButton btn = new JButton(panel.getCloseAction());
         btn.setBorderPainted(false);
 		vbox.add(btn, BorderLayout.NORTH);
-		vbox.add(new Mover(), BorderLayout.EAST);
+		vbox.add(new Mover(3), BorderLayout.EAST);
 		TableUtil.setJTableSizes(table);
 		int cols = table.getColumnCount();
 		for(int i = 0; i<cols; i++ ) {
@@ -267,7 +268,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		table.setSize(table.getPreferredSize());
 		table.setLocation(0,0);
 		table.setDefaultRenderer(Integer.class, new IntegerRenderer());
-	    table.setDefaultEditor(Integer.class, new IntegerEditor(combo));
+	    table.setDefaultEditor(Integer.class, new IntegerEditor(combo, tableModel, sp.getSco()));
 	    table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
 			public void valueChanged(ListSelectionEvent e) {
@@ -280,7 +281,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 				
 			}});
 	    
-		vbox.add(new JScrollPane(x, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS), BorderLayout.CENTER);
+		vbox.add(new JScrollPane(x, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
 		vbox.setSize(table.getSize());
         panel.add(vbox);
         vbox.addComponentListener(new ComponentAdapter() {
@@ -298,8 +299,15 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         sd.show();
     }
     
+    // GR: Goed: new Color(142,190,67);
+    // GR: Fout: Color.white
+    // GR: Noscore lightGray
     
     static class IntegerRenderer extends DefaultTableCellRenderer {
+    	
+    	private Color goedColor = new Color(0,150,0);
+    	private Color foutColor = new Color(255,150,150);
+    	private Color noScoreColor = Color.lightGray;
     	
 		/* (non-Javadoc)
 		 * @see javax.swing.table.DefaultTableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
@@ -314,22 +322,36 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 				String m = (String) ((Map) model.getScoreList(row).get(column-1)).get(PartialScoreIF.SCORE_MAX);
 				if(m != null && !"".equals(m))
 					max = Integer.parseInt(m);
-				if(((Number) value).intValue() >= max/2)
-					setBackground(Color.green);
-				else
-					setBackground(Color.RED);
+				Color bg = calcColor( ((Number)value).floatValue(), max);
+				
+				setBackground(bg);
 			}
 			else 
 				setBackground(Color.white);
 			return super.getTableCellRendererComponent(table, value, false, hasFocus, row, column);
+		}
+
+		private Color calcColor(float floatValue, int max) {
+			if(max == 0)
+				return noScoreColor;
+			
+			float g = floatValue/max;
+			float f = 1 - g;
+			
+			int red = Math.round(goedColor.getRed() * g + foutColor.getRed() * f);
+			int gr = Math.round(goedColor.getGreen() * g + foutColor.getGreen() * f);
+			int bl = Math.round(goedColor.getBlue() * g + foutColor.getBlue() * f);
+			return new Color(red, gr, bl);
 		}	
     }
     
     static class IntegerEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
 
-    	IntegerEditor(JComboBox combo) {
+    	IntegerEditor(JComboBox combo, Model tableModel, Sco sco) {
 			super();
 			this.combo = combo;
+			this.model = tableModel;
+			this.sco = sco;
 			button = new JButton();
 			button.setBorderPainted(false);
 			button.addActionListener(this);
@@ -339,8 +361,13 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		Object value;
     	JButton button;
     	JComboBox combo;
-    	int n;
+    	Model model;
+    	Sco sco;
+    	int n,page;
 		public void actionPerformed(ActionEvent arg0) {
+			String loc = (String) ((Map) model.getScoreList(n).get(page)).get(PartialScoreIF.LOCATION);
+			if(loc != null)
+				sco.setLocationOverride(loc);
 			combo.setSelectedIndex(n);
 			combo.repaint();
 			fireEditingCanceled();
@@ -354,6 +381,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 				boolean isSelected, int n, int col) {
 			this.value = value;
 			this.n = n;
+			this.page = col-1;
 			if(value == null)
 			{
 				button.setText("");

@@ -15,6 +15,7 @@ import fi.dwo.client.gui.CenterSubPanel;
 import fi.dwo.client.gui.CourseChoisePanel;
 import fi.dwo.client.gui.CoursePanel;
 import fi.dwo.client.gui.GuiCreator;
+import fi.dwo.client.gui.GuiCreatorTeacher;
 import fi.dwo.client.gui.ModuleTreePanel;
 import fi.dwo.client.gui.SelectStrategy;
 import fi.dwo.client.system.TextMapper;
@@ -97,8 +98,22 @@ public class TeacherStrategy implements SelectStrategy{
 			    m.add(item);
 			}	
 		}
+		if(object == ModuleTreePanel.SCHOOL_MODULES 
+			||	(update && object instanceof Course && ((Course) object).isWithChildren())
+			||  (hasAdminRight && object == ModuleTreePanel.STANDAARD_DWO_MODULES)
+		) {
+			m.add(new JMenuItem(new GuiCreatorTeacher.CourseManagementAction(map)));
+		} else if(update && object instanceof Course && !((Course)object).isWithChildren())
+		{
+			m.add(new JMenuItem(new GuiCreatorTeacher.ScoManagementAction((Course)object)));
+		} else if(update && object instanceof Sco) 
+		{
+			m.add(new JMenuItem(new GuiCreatorTeacher.ScoParameterAction((Sco)object)));
+		}
+	
 		if(update && (object instanceof Course || object instanceof Sco))
 		{
+			m.add(new JMenuItem(new RenameAction(map)));
 			m.add(new JMenuItem(new DeleteAction(map)));
 		}
 		return m;

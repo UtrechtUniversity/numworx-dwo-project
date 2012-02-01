@@ -28,6 +28,7 @@ import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.Admin;
 import fi.dwo.client.domain.User;
+import fi.dwo.client.gui.action.GuiAction;
 import fi.dwo.client.gui.action.NullStrategy;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.TextMapper;
@@ -396,7 +397,7 @@ public class GuiCreatorTeacher extends GuiCreator {
 		return dwo.swapSco(sco1, sco2);
 	}
 
-	class CourseManagementAction extends AbstractAction {
+	public static class CourseManagementAction extends GuiAction {
 
 		private Object userObject;
 
@@ -405,30 +406,35 @@ public class GuiCreatorTeacher extends GuiCreator {
 			userObject = courseChoisePanel.getUserObject();
 		}
 
+		public CourseManagementAction(CourseMap map) {
+			super(TextMapper.getText(TextMapper.GUIH_EDIT));
+			userObject = map.getUserObject();
+		}
+		
 		public void actionPerformed(ActionEvent e) {
-			setWait();
+			instance().setWait();
 			CenterSubPanel cp;
 			if(userObject instanceof CourseMap)
 			{
-				cp = getCourseManagementPanel((CourseMap) userObject);
+				cp = instance().getCourseManagementPanel((CourseMap) userObject);
 			}
 			else 
 			{ // van de goede soort....
 	// TODO of STANDAARD MAP....
 				if(userObject == ModuleTreePanel.STANDAARD_DWO_MODULES)
-					cp = getCourseManagementPanel(ModuleTreePanel.STANDAARD_DWO_MAP);
+					cp = instance().getCourseManagementPanel(ModuleTreePanel.STANDAARD_DWO_MAP);
 				else
-					cp = getCourseManagementPanel(ModuleTreePanel.SCHOOL_MAP);
+					cp = instance().getCourseManagementPanel(ModuleTreePanel.SCHOOL_MAP);
 			}
-			CenterPanel center = getMainPanel().getCenter();
+			CenterPanel center = getCenter();
 	        center.setStrategy(new NullStrategy());
 	        center.loadCenter(cp);
-	        setReady();           
+	        instance().setReady();           
 		}
 		
 	}
 	
-	class ScoManagementAction extends AbstractAction {
+	public static class ScoManagementAction extends GuiAction {
 
 		private Course course;
 
@@ -436,33 +442,41 @@ public class GuiCreatorTeacher extends GuiCreator {
 			super(TextMapper.getText(TextMapper.GUIH_EDIT));
 			course = coursePanel.course;
 		}
+		
+		public ScoManagementAction(Course course) {
+			super(TextMapper.getText(TextMapper.GUIH_EDIT));
+			this.course = course;
+		}
 
 		public void actionPerformed(ActionEvent arg0) {
-			setWait();
+			instance().setWait();
 			CenterSubPanel cp;
-			cp = getScoManagementPanel(course);
-			CenterPanel center = getMainPanel().getCenter();
+			cp = instance().getScoManagementPanel(course);
+			CenterPanel center = getCenter();
 	        center.setStrategy(new NullStrategy());
 	        center.loadCenter(cp);
-	        setReady();           
+	        instance().setReady();           
 		}
 		
 	}
 	
-	class ScoParameterAction extends AbstractAction {
+	public static class ScoParameterAction extends GuiAction {
 
 		private Sco sco;
 
 		public ScoParameterAction(ScoPanel scoPanel) {
+			this(scoPanel.getSco());
+		}
+		public ScoParameterAction(Sco sco) {
 			super(TextMapper.getText(TextMapper.GUIH_EDIT));
-			sco = scoPanel.getSco();
+			this.sco = sco;
 		}
 
 		public void actionPerformed(ActionEvent arg0) {
-			loadParameterManagementPanel(sco);
-			CenterPanel center = getMainPanel().getCenter();
+			instance().loadParameterManagementPanel(sco);
+			CenterPanel center = getCenter();
 	        center.setStrategy(new NullStrategy());
-	        setReady();           
+	        instance().setReady();           
 		}
 		
 	}

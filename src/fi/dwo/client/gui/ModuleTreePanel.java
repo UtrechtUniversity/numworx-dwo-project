@@ -49,6 +49,7 @@ import fi.dwo.client.gui.action.ImportModuleAction;
 import fi.dwo.client.gui.action.ImportScorm;
 import fi.dwo.client.gui.action.NewAction;
 import fi.dwo.client.gui.action.PasteAction;
+import fi.dwo.client.gui.action.RenameAction;
 import fi.dwo.client.gui.action.Save2004Action;
 import fi.dwo.client.gui.action.SaveAppletAction;
 import fi.dwo.client.gui.action.TeacherStrategy;
@@ -261,6 +262,8 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		item = new JMenuItem("cut");menu.add(item);item.setAction(new CutCopyAction(true));item.setText(TextMapper.getText("cut"));
 		item = new JMenuItem("copy");menu.add(item);item.setAction(new CutCopyAction(false));item.setText(TextMapper.getText("copy"));
 		item = new JMenuItem("paste");menu.add(item);item.setAction(new PasteAction());
+		menu.addSeparator();
+		item = new JMenuItem(new RenameAction());menu.add(item);
 		menu.addSeparator();
 		item = new JMenuItem("delete");menu.add(item);item.setAction(new DeleteAction());
 // op dit moment is er nog geen user bekend.

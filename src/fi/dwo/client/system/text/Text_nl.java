@@ -318,6 +318,7 @@ public class Text_nl extends ListResourceBundle {
          { "delete", "Verwijderen" },
          { "edit", "Bewerken"},
          { "file", "Bestand" },
+         { "rename", "Wijzigen" },
          
          { TextMapper.GUIA_INSERT_SCOS, "Maak activiteiten vanuit backup"},
          { TextMapper.GUIH_STOP_EDIT, "Stop bewerken" },
