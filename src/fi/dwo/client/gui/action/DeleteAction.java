@@ -52,7 +52,10 @@ public class DeleteAction extends GuiAction  {
 					if(courses[row] == course)
 						break;
 				}
-				String format = TextMapper.getText(TextMapper.GUIC_TLTP_DELETE_COURSE);
+				String format = 
+					course.isWithChildren()?
+					TextMapper.getText(TextMapper.GUIC_TLTP_DELETE_MAP):
+					TextMapper.getText(TextMapper.GUIC_TLTP_DELETE_COURSE);
 				Object[] arguments = { o.toString() };
 				putValue(NAME, MessageFormat.format(format, arguments));
 				setEnabled(true);

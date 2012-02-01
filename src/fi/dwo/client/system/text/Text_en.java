@@ -247,6 +247,7 @@ public class Text_en extends ListResourceBundle {
          { TextMapper.GUIC_COURSE_MANAGEMENT, "Module management"},
 
          { TextMapper.GUIC_TLTP_DELETE_COURSE, "Delete module {0}"},
+         { TextMapper.GUIC_TLTP_DELETE_MAP, "Delete folder {0}"},
          { TextMapper.GUIC_TLTP_EDIT_COURSE, "Edit module"},
          { TextMapper.GUIC_TLTP_SCO_COURSE, "Activity management"},
 

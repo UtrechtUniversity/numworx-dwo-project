@@ -304,6 +304,7 @@ public abstract class TextMapper {
     
 
     public final static String GUIC_TLTP_DELETE_COURSE = "GUIC_TLTP_DELETE_COURSE";
+    public final static String GUIC_TLTP_DELETE_MAP = "GUIC_TLTP_DELETE_MAP";
     public final static String GUIC_TLTP_EDIT_COURSE = "GUIC_TLTP_EDIT_COURSE";
     public final static String GUIC_TLTP_SCO_COURSE = "GUIC_TLTP_SCO_COURSE";
 

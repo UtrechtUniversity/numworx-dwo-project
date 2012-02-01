@@ -247,6 +247,7 @@ public class Text_nl extends ListResourceBundle {
          { TextMapper.GUIC_COURSE_MANAGEMENT, "Modules beheren"},
 
          { TextMapper.GUIC_TLTP_DELETE_COURSE, "Module \"{0}\" verwijderen"},
+         { TextMapper.GUIC_TLTP_DELETE_MAP, "Map \"{0}\" verwijderen"},
          { TextMapper.GUIC_TLTP_EDIT_COURSE, "Wijzig module"},
          { TextMapper.GUIC_TLTP_EDIT_MAP, "Wijzig map"},
          { TextMapper.GUIC_TLTP_SCO_COURSE, "Activiteiten beheren"},
