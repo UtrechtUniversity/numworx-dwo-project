@@ -105,12 +105,12 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
     
     public ScoDialog(Component owner, String windowTitle, Component hbox, boolean modal, ScoPanel sp) {
     	
+    	super(DwoHelper.getFrameForComponent(owner), windowTitle, modal);
+        
+    	JPanel contentPane = new JPanel(new BorderLayout(0, 5));
     	
-    	
-        super(DwoHelper.getFrameForComponent(owner), windowTitle, modal);
-        JPanel contentPane = new JPanel(new BorderLayout(0, 5));
         contentPane.setBorder(BorderFactory.createEmptyBorder(0,0,5,0));
-        setContentPane(contentPane);
+        //setContentPane(contentPane);
         scoPanel = sp;
         contentPane.setBackground(GuiConstants.MAIN_BACKGROUND);
         closeButton = new JButton(TextMapper.getText(TextMapper.BTN_CLOSE));
@@ -138,7 +138,15 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         contentPane.add(hbox1, BorderLayout.SOUTH);
         closeButton.setVisible(true);
 
+        JPanel basisPanel = new JPanel(new BorderLayout(0, 5));
+        basisPanel.setBackground(new Color(200,227,255));
+        setContentPane(basisPanel);
+        basisPanel.add(contentPane, BorderLayout.CENTER);
+        
         pack();
+        
+        
+        
         int x = 0;
         int y = 0;
 
@@ -233,6 +241,8 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         
         final Container content = sd.getContentPane();
         final IconizedPanel panel = new IconizedPanel("Leerlingen");
+        panel.setBackground(new Color(200,227,255));
+        
 //panel.setOpaque(true);
 //panel.setBackground(Color.green);
         JPanel vbox = new JPanel(new BorderLayout())
@@ -265,6 +275,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		x.setMaximumSize(table.getPreferredSize());
 		x.setMinimumSize(table.getMinimumSize());
 		x.setPreferredSize(table.getPreferredSize());
+		x.setBackground(new Color(200,227,255));
 		table.setSize(table.getPreferredSize());
 		table.setLocation(0,0);
 		table.setDefaultRenderer(Integer.class, new IntegerRenderer());
@@ -281,6 +292,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 				
 			}});
 	    
+
 		vbox.add(new JScrollPane(x, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
 		vbox.setSize(table.getSize());
         panel.add(vbox);
@@ -295,6 +307,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 				content.validate();
 			}} );
         content.add(panel, BorderLayout.WEST);
+        panel.setIconized(true);
         content.invalidate();
         sd.show();
     }
@@ -305,8 +318,8 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
     
     static class IntegerRenderer extends DefaultTableCellRenderer {
     	
-    	private Color goedColor = new Color(0,150,0);
-    	private Color foutColor = new Color(255,150,150);
+    	private Color goedColor = new Color(0,255,0);
+    	private Color foutColor = new Color(255,0,0);
     	private Color noScoreColor = Color.lightGray;
     	
 		/* (non-Javadoc)
@@ -338,10 +351,23 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 			float g = floatValue/max;
 			float f = 1 - g;
 			
-			int red = Math.round(goedColor.getRed() * g + foutColor.getRed() * f);
-			int gr = Math.round(goedColor.getGreen() * g + foutColor.getGreen() * f);
-			int bl = Math.round(goedColor.getBlue() * g + foutColor.getBlue() * f);
-			return new Color(red, gr, bl);
+			//int red = Math.round(goedColor.getRed() * g + foutColor.getRed() * f);
+			//int gr = Math.round(goedColor.getGreen() * g + foutColor.getGreen() * f);
+			//int bl = Math.round(goedColor.getBlue() * g + foutColor.getBlue() * f);
+			
+			int red = 255;
+			int gr = 255;
+			if (g < 0.5) {
+				gr = (int) (gr * (2*g));
+            } else {
+                red = (int) (red * (2*f));
+            }
+			
+			red = Math.min(255,red);
+			gr = Math.min(255,gr);
+			red = Math.max(0,red);
+			gr = Math.max(0,gr);
+			return new Color(red, gr, 0);
 		}	
     }
     
