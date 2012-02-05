@@ -776,7 +776,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
 	public void setMap(CourseMap map) {
 		this.map = map;
-		importAction.setCourse(map);
+		if(importAction!=null)importAction.setCourse(map);
 	}
     
 }
