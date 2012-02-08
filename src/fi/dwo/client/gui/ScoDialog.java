@@ -21,6 +21,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.text.MessageFormat;
 import java.util.EventObject;
 import java.util.List;
@@ -68,7 +70,7 @@ import fi.dwo.client.system.TextMapper;
  * @author M.J.B. Kupers
  *  
  */
-public class ScoDialog extends JDialog implements ActionListener, WindowListener {
+public class ScoDialog extends JDialog implements ActionListener, WindowListener, PropertyChangeListener {
 
     public static class ClassModel extends DefaultComboBoxModel {
 
@@ -91,6 +93,8 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 
     private JButton closeButton;
 
+	private JTable table;
+
     /**
      * Creates a new instance of a ScoDialog. It shows the sco, made by an user.
      * 
@@ -102,6 +106,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
     public ScoDialog(Component owner, String windowTitle, String title, boolean modal, ScoPanel sp) {
     	this(owner, windowTitle, createTitleBox(title), modal, sp);
     }
+    
     
     public ScoDialog(Component owner, String windowTitle, Component hbox, boolean modal, ScoPanel sp) {
     	
@@ -200,11 +205,11 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
     	Box hbox = createTitleBox(title);
     	final JComboBox combo = new JComboBox();
     	final ClassModel model = new ClassModel(s, u, sp.getSco());
-		Model tableModel = new Model(model);
+		Model tableModel = new Model(model, s.getName());
 		final JTable table = new JTable(tableModel);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		combo.setModel(model);
-		table.setRowSelectionInterval(combo.getSelectedIndex(), combo.getSelectedIndex());
+		table.setRowSelectionInterval(combo.getSelectedIndex()+1, combo.getSelectedIndex()+1);
 		DefaultListCellRenderer renderer = new DefaultListCellRenderer() {
 
 			/* (non-Javadoc)
@@ -212,7 +217,6 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 			 */
 			public Component getListCellRendererComponent(JList list,
 					Object u, int arg2, boolean arg3, boolean arg4) {
-				// TODO Auto-generated method stub
 				u = ((User) u).getName();
 				return super.getListCellRendererComponent(list, u, arg2, arg3, arg4);
 			}};
@@ -230,7 +234,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 						sp.getSco().getApplet().start();
 						sp.repaint();
 						//list.setSelectedValue(u, false);
-						int i = combo.getSelectedIndex();
+						int i = combo.getSelectedIndex()+1;
 						table.setRowSelectionInterval(i, i);
 						break;
 				}
@@ -238,7 +242,8 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		combo.addItemListener(itemListener);
     	hbox.add(combo);
         ScoDialog sd = new ScoDialog(parent, TextMapper.getText(TextMapper.GUIRS_RESULTS), hbox, true, sp);
-        
+        sd.table = table;
+        sp.getSco().addPropertyChangeListener(Sco.LESSON_LOCATION, sd);
         final Container content = sd.getContentPane();
         final IconizedPanel panel = new IconizedPanel("Leerlingen");
         panel.setBackground(new Color(200,227,255));
@@ -267,34 +272,30 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 			column.setMaxWidth(pref);
 			column.setMinWidth(pref);
 		}
-		table.setTableHeader(null);
+		//table.setTableHeader(null);
 		table.setMaximumSize(table.getPreferredSize());
 		table.setMinimumSize(table.getPreferredSize());
-		JPanel x = new JPanel(null);
-		x.add(table);
-		x.setMaximumSize(table.getPreferredSize());
-		x.setMinimumSize(table.getMinimumSize());
-		x.setPreferredSize(table.getPreferredSize());
-		x.setBackground(new Color(200,227,255));
-		table.setSize(table.getPreferredSize());
-		table.setLocation(0,0);
-		table.setDefaultRenderer(Integer.class, new IntegerRenderer());
+		JPanel x = new JPanel(new BorderLayout());
+		x.add(table, BorderLayout.CENTER);
+		x.add(table.getTableHeader(), BorderLayout.NORTH);
+		
+		table.setDefaultRenderer(Integer.class, new IntegerRenderer(sp.getSco()));
 	    table.setDefaultEditor(Integer.class, new IntegerEditor(combo, tableModel, sp.getSco()));
 	    table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
 			public void valueChanged(ListSelectionEvent e) {
 				if(!e.getValueIsAdjusting())
 				{
-					int i = table.getSelectedRow();
+					int i = table.getSelectedRow()-1;
 					if(i >= 0)
 						combo.setSelectedIndex(i);
 				}
 				
 			}});
 	    
-
-		vbox.add(new JScrollPane(x, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
-		vbox.setSize(table.getSize());
+		//vbox.add(new JScrollPane(x, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
+		vbox.add(x, BorderLayout.CENTER);
+		//vbox.setSize(table.getSize());
         panel.add(vbox);
         vbox.addComponentListener(new ComponentAdapter() {
 
@@ -316,32 +317,43 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
     // GR: Fout: Color.white
     // GR: Noscore lightGray
     
-    static class IntegerRenderer extends DefaultTableCellRenderer {
+    static class IntegerRenderer extends DefaultTableCellRenderer  {
     	
-    	private Color goedColor = new Color(0,255,0);
-    	private Color foutColor = new Color(255,0,0);
     	private Color noScoreColor = Color.lightGray;
+    	private Sco sco;
     	
+		public IntegerRenderer(Sco sco) {
+			this.sco = sco;
+		}
+
 		/* (non-Javadoc)
 		 * @see javax.swing.table.DefaultTableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
 		 */
 		public Component getTableCellRendererComponent(JTable table,
 				Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 			int max = 100;
-			Model model = (Model) table.getModel();
+// focus as column selector
+			try {
+				hasFocus = column == 1+Integer.parseInt(sco.LMSGetValue(Sco.LESSON_LOCATION)); // selected column...
+			} catch (NumberFormatException e) {
+				hasFocus = false;
+			}
 			
-			if(value != null )
+			super.getTableCellRendererComponent(table, value, false, hasFocus, row, column);
+// patch background
+			if(value != null && row > 0)
 			{
+				row --;
+				Model model = (Model) table.getModel();
 				String m = (String) ((Map) model.getScoreList(row).get(column-1)).get(PartialScoreIF.SCORE_MAX);
 				if(m != null && !"".equals(m))
 					max = Integer.parseInt(m);
-				Color bg = calcColor( ((Number)value).floatValue(), max);
-				
+				Color bg = calcColor( ((Number)value).floatValue(), max);				
 				setBackground(bg);
 			}
 			else 
-				setBackground(Color.white);
-			return super.getTableCellRendererComponent(table, value, false, hasFocus, row, column);
+				setBackground(Color.white);			
+			return this;
 		}
 
 		private Color calcColor(float floatValue, int max) {
@@ -368,7 +380,8 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 			red = Math.max(0,red);
 			gr = Math.max(0,gr);
 			return new Color(red, gr, 0);
-		}	
+		}
+
     }
     
     static class IntegerEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
@@ -390,10 +403,13 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
     	Model model;
     	Sco sco;
     	int n,page;
+		private JTable table;
 		public void actionPerformed(ActionEvent arg0) {
 			String loc = (String) ((Map) model.getScoreList(n).get(page)).get(PartialScoreIF.LOCATION);
 			if(loc != null)
-				sco.setLocationOverride(loc);
+			{	sco.setLocationOverride(loc);
+				table.repaint();
+			}
 			combo.setSelectedIndex(n);
 			combo.repaint();
 			fireEditingCanceled();
@@ -406,8 +422,9 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		public Component getTableCellEditorComponent(JTable table, Object value,
 				boolean isSelected, int n, int col) {
 			this.value = value;
-			this.n = n;
+			this.n = n-1;
 			this.page = col-1;
+			this.table = table;
 			if(value == null)
 			{
 				button.setText("");
@@ -418,25 +435,24 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 			button.setBackground(Color.gray);
 			return button;
 		}
-
     }
     
     static class Model extends AbstractTableModel {
     	
     	List[] lists;
-    	
+    	String klas = "klas";
     	private List getScoreList(int i) {
     		if(lists[i] == null)
     			lists[i] = model.getScoreList(i);
     		return lists[i];
     	}
     	
-    	Model(ClassModel model) {
+    	Model(ClassModel model, String klas) {
 			super();
 			this.model = model;
-			lists = new List[getRowCount()];
-		}
-
+			lists = new List[model.getSize()];
+			this.klas = klas;
+    	}
     	
 		/* (non-Javadoc)
 		 * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
@@ -451,7 +467,8 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
 		 */
 		public boolean isCellEditable(int row, int col) {
-			if(col > 0)
+			
+			if(col > 0 && row > 0 )
 				return true;
 			return super.isCellEditable(row, col);
 		}
@@ -463,10 +480,22 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		}
 
 		public int getRowCount() {
-			return model.getSize();
+			return model.getSize()+1;
 		}
 
 		public Object getValueAt(int row, int col) {
+			if(row == 0)
+			{
+				if(col == 0) return "max";
+				try {
+					return new Integer( ((Map) getScoreList(row).get(col-1)).get(PartialScoreIF.SCORE_MAX).toString());
+				} catch (Exception e) {
+					return null;
+				}
+			}
+			row --;
+			
+			
 			if(col == 0)
 				return ((User) model.getElementAt(row)).getName();
 			try {
@@ -474,6 +503,12 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 			} catch (Exception e) {
 				return null;
 			}
+		}
+
+		public String getColumnName(int column) {
+			if(column == 0)
+				return klas;
+			return Integer.toString(column);
 		}
     	
     }
@@ -491,9 +526,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
      */
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == closeButton) {
-            setVisible(false);
-            scoPanel.getSco().endWithoutSaving();
-            dispose();
+            windowClosing(null);
         }
     }
 
@@ -520,6 +553,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
      */
     public void windowClosing(WindowEvent e) {
         setVisible(false);
+        scoPanel.getSco().removePropertyChangeListener(Sco.LESSON_LOCATION, this);
         scoPanel.getSco().endWithoutSaving();
         dispose();
     }
@@ -555,5 +589,10 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
      */
     public void windowOpened(WindowEvent e) {
     }
+
+
+	public void propertyChange(PropertyChangeEvent evt) {
+		table.repaint();
+	}
     
 }

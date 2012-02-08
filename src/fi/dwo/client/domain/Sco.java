@@ -6,6 +6,8 @@ package fi.dwo.client.domain;
 import java.applet.Applet;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -46,7 +48,31 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
 	private static final DecimalFormatSymbols US_DECIMAL_FORMAT_SYMBOLS = new DecimalFormatSymbols(Locale.US);
 
     private ScoEditor editor = this;
+    private PropertyChangeSupport bean = new PropertyChangeSupport(this);
     
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		bean.addPropertyChangeListener(listener);
+	}
+
+	public void addPropertyChangeListener(String propertyName,
+			PropertyChangeListener listener) {
+		bean.addPropertyChangeListener(propertyName, listener);
+	}
+
+	private void firePropertyChange(String propertyName, Object oldValue,
+			Object newValue) {
+		bean.firePropertyChange(propertyName, oldValue, newValue);
+	}
+
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		bean.removePropertyChangeListener(listener);
+	}
+
+	public void removePropertyChangeListener(String propertyName,
+			PropertyChangeListener listener) {
+		bean.removePropertyChangeListener(propertyName, listener);
+	}
+
 	private int scoID;
 
     private String name;
@@ -402,11 +428,12 @@ System.err.println("sum = ["+result+"]");
     		boolean ok = getReviewable(iDataModelElement);
     		if(ok)
     		{
-        		System.out.println("Review.LMSSetValue(" + iDataModelElement  + ") for " + user.getName());
     			return dwo.LMSSetValue(this, user, iDataModelElement, iValue);
     		} else if(LESSON_LOCATION.equals(iDataModelElement))
     		{
+    			String last = lessonLocation;
     			lessonLocation = iValue;
+    			firePropertyChange(LESSON_LOCATION, last, lessonLocation);
     			return "true";
     		}
     	}
