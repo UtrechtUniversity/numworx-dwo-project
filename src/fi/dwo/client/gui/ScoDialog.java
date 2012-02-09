@@ -10,6 +10,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -125,10 +126,12 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 
        // this.pack();
         Insets insets = contentPane.getInsets();
-
+        
+        contentPane.setOpaque(false);
         contentPane.add(hbox, BorderLayout.NORTH);
-
-        scoPanel.setVisible(false);
+        
+        scoPanel.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
+		scoPanel.setVisible(false);
         scoPanel.setPreferredSize(scoPanel.getSize());
         contentPane.add(scoPanel, BorderLayout.CENTER);
         scoPanel.setVisible(true);
@@ -137,15 +140,19 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
                 + scoPanel.getLocation().y + 10);
         closeButton.setVisible(false);
         Box hbox1 = Box.createHorizontalBox();
+        //hbox1.setOpaque(false);
         hbox1.add(Box.createHorizontalStrut(10));
         hbox1.add(closeButton);
         hbox1.add(Box.createHorizontalGlue());
         contentPane.add(hbox1, BorderLayout.SOUTH);
         closeButton.setVisible(true);
 
+        
+		
         JPanel basisPanel = new JPanel(new BorderLayout(0, 5));
         basisPanel.setBackground(new Color(200,227,255));
-        setContentPane(basisPanel);
+        basisPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+		setContentPane(basisPanel);
         basisPanel.add(contentPane, BorderLayout.CENTER);
         
         pack();
@@ -207,6 +214,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
     	final ClassModel model = new ClassModel(s, u, sp.getSco());
 		Model tableModel = new Model(model, s.getName());
 		final JTable table = new JTable(tableModel);
+		table.setOpaque(false);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		combo.setModel(model);
 		table.setRowSelectionInterval(combo.getSelectedIndex()+1, combo.getSelectedIndex()+1);
@@ -241,6 +249,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 			}};
 		combo.addItemListener(itemListener);
     	hbox.add(combo);
+    	//hbox.setOpaque(false);
         ScoDialog sd = new ScoDialog(parent, TextMapper.getText(TextMapper.GUIRS_RESULTS), hbox, true, sp);
         sd.table = table;
         sp.getSco().addPropertyChangeListener(Sco.LESSON_LOCATION, sd);
@@ -262,8 +271,9 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 //vbox.setBackground(Color.blue);vbox.setOpaque(true);
         JButton btn = new JButton(panel.getCloseAction());
         btn.setBorderPainted(false);
+        btn.setContentAreaFilled(false);
 		vbox.add(btn, BorderLayout.NORTH);
-		vbox.add(new Mover(3), BorderLayout.EAST);
+		vbox.add(new Mover(6), BorderLayout.EAST);
 		TableUtil.setJTableSizes(table);
 		int cols = table.getColumnCount();
 		for(int i = 0; i<cols; i++ ) {
@@ -276,6 +286,8 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		table.setMaximumSize(table.getPreferredSize());
 		table.setMinimumSize(table.getPreferredSize());
 		JPanel x = new JPanel(new BorderLayout());
+		x.setOpaque(false);
+		//x.setBackground(new Color(200,227,255));
 		x.add(table, BorderLayout.CENTER);
 		x.add(table.getTableHeader(), BorderLayout.NORTH);
 		
@@ -334,12 +346,13 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 			int max = 100;
 // focus as column selector
 			try {
-				hasFocus = column == 1+Integer.parseInt(sco.LMSGetValue(Sco.LESSON_LOCATION)); // selected column...
+				String s = sco.LMSGetValue(Sco.LESSON_LOCATION);
+				hasFocus = column == 1+Integer.parseInt(s); // selected column...
 			} catch (NumberFormatException e) {
 				hasFocus = false;
 			}
 			
-			super.getTableCellRendererComponent(table, value, false, hasFocus, row, column);
+			super.getTableCellRendererComponent(table, value, false, hasFocus && isSelected, row, column); // hasFocus even niet gebruikt...
 // patch background
 			if(value != null && row > 0)
 			{
@@ -348,7 +361,8 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 				String m = (String) ((Map) model.getScoreList(row).get(column-1)).get(PartialScoreIF.SCORE_MAX);
 				if(m != null && !"".equals(m))
 					max = Integer.parseInt(m);
-				Color bg = calcColor( ((Number)value).floatValue(), max);				
+				Color bg = calcColor( ((Number)value).floatValue(), max);
+				if(!hasFocus && !isSelected)bg = bg.darker();
 				setBackground(bg);
 			}
 			else 
