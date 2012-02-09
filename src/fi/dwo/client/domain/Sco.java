@@ -394,7 +394,7 @@ System.err.println("sum = ["+result+"]");
     	}
     	if(REVIEW.equals(lessonMode) && lessonLocation != null)
     		return lessonLocation;
-		return dwo.LMSGetValue(this, user, LESSON_LOCATION);
+		return "";//dwo.LMSGetValue(this, user, LESSON_LOCATION);
 	}
 
 	/**
@@ -445,6 +445,7 @@ System.err.println("sum = ["+result+"]");
     private String features;
 
 	private String locationOverride;
+
     private boolean getReviewable(String element) {
     	if (SESSION_TIME.equals(element)) // not reviewable!
     		return false;
@@ -454,7 +455,10 @@ System.err.println("sum = ["+result+"]");
 		{	features = getAppletData().getFeatures();
 			if(features == null) features = "";
 		}
+		System.out.println("Reviewable: "+
+				(features.indexOf(REVIEWABLE)>=0));
 		return features.indexOf(REVIEWABLE)>=0;
+		
 	}
 
 	/**
