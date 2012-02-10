@@ -14,8 +14,8 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
@@ -27,7 +27,7 @@ public class IconizedPanel extends JPanel implements ActionListener {
 	private JButton icon;
 	private CardLayout layout;
 	private Box box;
-	private Component window;
+	private JComponent window;
 	
 	public IconizedPanel(String text) {
 		super(new CardLayout());
@@ -60,7 +60,7 @@ public class IconizedPanel extends JPanel implements ActionListener {
 	{
 		if(window != null)
 			remove(window);
-		window = c;
+		window = (JComponent) c;
 		add(c, "window");
 		layout.last(this);
 		return c;
@@ -129,8 +129,9 @@ public class IconizedPanel extends JPanel implements ActionListener {
 	public Dimension getPreferredSize() {
 		if(isIconized())
 			return box.getPreferredSize();
-		else
+		else {
 			return window.getPreferredSize();
+		}
 	}
 
 	public Dimension getMinimumSize() {
@@ -145,22 +146,32 @@ public class IconizedPanel extends JPanel implements ActionListener {
 		else
 			return super.getMaximumSize();
 	}
-
+	private Dimension size; 
 	void setIconized(boolean iconized) {
+		if(this.iconized== iconized)
+			return;
 		this.iconized = iconized;
-		if(iconized)
-		{	layout.first(this);			
+		if(iconized)			
+		{
+			size = window.getSize();
+			layout.first(this);			
 		}
-		else
+		else {
 			layout.last(this);
+			setSize(size);
+			window.setSize(size);
+			window.setPreferredSize(size);
+			window.setMinimumSize(size);
+			window.setMaximumSize(size);
+		}
 		invalidate();
 	}
 
-	Component getWindow() {
+	JComponent getWindow() {
 		return window;
 	}
 
-	void setWindow(Component window) {
+	void setWindow(JComponent window) {
 		add(window);
 	}
 

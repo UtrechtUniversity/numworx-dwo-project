@@ -210,7 +210,8 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
     	String[] arguments = { sp.getSco().getScoName(), "" };
     	String title = MessageFormat.format(TextMapper.getText(TextMapper.UG_RESULTS_OF_STUDENT), arguments);
     	Box hbox = createTitleBox(title);
-    	final JComboBox combo = new JComboBox();
+    	final JComboBox combo = new JComboBox(); // TODO wegwerken.....
+    	final JLabel    userLabel = new JLabel(u.getName());
     	final ClassModel model = new ClassModel(s, u, sp.getSco());
 		Model tableModel = new Model(model, s.getName());
 		final JTable table = new JTable(tableModel);
@@ -218,17 +219,6 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		combo.setModel(model);
 		table.setRowSelectionInterval(combo.getSelectedIndex()+1, combo.getSelectedIndex()+1);
-		DefaultListCellRenderer renderer = new DefaultListCellRenderer() {
-
-			/* (non-Javadoc)
-			 * @see javax.swing.DefaultListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
-			 */
-			public Component getListCellRendererComponent(JList list,
-					Object u, int arg2, boolean arg3, boolean arg4) {
-				u = ((User) u).getName();
-				return super.getListCellRendererComponent(list, u, arg2, arg3, arg4);
-			}};
-		combo.setRenderer(renderer);
 		final ItemListener itemListener = new ItemListener() {
 
 			public void itemStateChanged(ItemEvent event) {
@@ -239,6 +229,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 						break;
 				case ItemEvent.SELECTED:
 						sp.getSco().setUser(u);
+						userLabel.setText(u.getName());
 						sp.getSco().getApplet().start();
 						sp.repaint();
 						//list.setSelectedValue(u, false);
@@ -248,8 +239,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 				}
 			}};
 		combo.addItemListener(itemListener);
-    	hbox.add(combo);
-    	//hbox.setOpaque(false);
+		hbox.add(userLabel);
         ScoDialog sd = new ScoDialog(parent, TextMapper.getText(TextMapper.GUIRS_RESULTS), hbox, true, sp);
         sd.table = table;
         sp.getSco().addPropertyChangeListener(Sco.LESSON_LOCATION, sd);
@@ -257,18 +247,8 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         final IconizedPanel panel = new IconizedPanel("Leerlingen");
         panel.setBackground(new Color(200,227,255));
         
-//panel.setOpaque(true);
-//panel.setBackground(Color.green);
-        JPanel vbox = new JPanel(new BorderLayout())
-//        { 
-//        	public Dimension getPreferredSize() { 
-//        		super.getPreferredSize();
-//        		return getSize();
-//        	}
-//        }
-        ; 
+        JPanel vbox = new JPanel(new BorderLayout()); 
         vbox.setOpaque(false);
-//vbox.setBackground(Color.blue);vbox.setOpaque(true);
         JButton btn = new JButton(panel.getCloseAction());
         btn.setBorderPainted(false);
         btn.setContentAreaFilled(false);
@@ -282,14 +262,13 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 			column.setMaxWidth(pref);
 			column.setMinWidth(pref);
 		}
-		//table.setTableHeader(null);
 		table.setMaximumSize(table.getPreferredSize());
 		table.setMinimumSize(table.getPreferredSize());
 		JPanel x = new JPanel(new BorderLayout());
 		x.setOpaque(false);
-		//x.setBackground(new Color(200,227,255));
 		x.add(table, BorderLayout.CENTER);
 		x.add(table.getTableHeader(), BorderLayout.NORTH);
+		table.getTableHeader().setOpaque(false);
 		
 		table.setDefaultRenderer(Integer.class, new IntegerRenderer(sp.getSco()));
 	    table.setDefaultEditor(Integer.class, new IntegerEditor(combo, tableModel, sp.getSco()));
@@ -305,21 +284,22 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 				
 			}});
 	    
-		//vbox.add(new JScrollPane(x, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
-		vbox.add(x, BorderLayout.CENTER);
-		//vbox.setSize(table.getSize());
-        panel.add(vbox);
+		JScrollPane comp = new JScrollPane(x);
+		comp.setOpaque(false);
+		comp.getViewport().setOpaque(false);
+		vbox.add(comp, BorderLayout.CENTER);
+        panel.setWindow(vbox);
+		comp.setBorder(null);
+		comp.setViewportBorder(null);
         vbox.addComponentListener(new ComponentAdapter() {
 
 			public void componentResized(ComponentEvent event) {
-				//JComponent c = (JComponent) event.getSource();
-				//c.setPreferredSize(c.getSize());
-				panel.invalidate();
-				panel.setSize(panel.getPreferredSize());
-				
 				content.validate();
+				content.repaint();
 			}} );
         content.add(panel, BorderLayout.WEST);
+// start met correcte sizes.
+        panel.getWindow().setSize(panel.getWindow().getPreferredSize());
         panel.setIconized(true);
         content.invalidate();
         sd.show();
@@ -425,7 +405,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 				table.repaint();
 			}
 			combo.setSelectedIndex(n);
-			combo.repaint();
+			//combo.repaint();
 			fireEditingCanceled();
 		}
 
