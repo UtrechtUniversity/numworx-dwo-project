@@ -62,6 +62,7 @@ public class PasteAction extends GuiAction
 					Sco sco = (Sco)clip;
 					// copy eigen activiteiten
 					copySco(course, sco);
+					getCenter().updateCourse(course);
 				} else
 				if(clip instanceof Course && object instanceof String)
 				{
