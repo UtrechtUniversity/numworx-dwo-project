@@ -933,7 +933,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		        }
 		        else if(value instanceof String) {
 		            setText((String)value);
-		            setOldMode(); // support of old-style logging
+		            //setOldMode(); // support of old-style logging
 		        }
 				
 			}

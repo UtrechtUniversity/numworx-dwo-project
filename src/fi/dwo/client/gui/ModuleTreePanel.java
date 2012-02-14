@@ -7,6 +7,8 @@ import java.awt.LayoutManager;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -22,6 +24,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.JTree.DynamicUtilTreeNode;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -298,6 +301,38 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		bar.getMenu(1).setEnabled(b);
 	}
 	
+	class LazyMutableTreeNode extends DynamicUtilTreeNode {
+		private Course course;
+		public LazyMutableTreeNode(Course course) {
+			super(course, Course.NO_CHILDREN);
+			this.course = course;
+			cachemap.put(course, this);
+		}
+		protected void loadChildren() {
+			if(course.isWithChildren()) 
+			{   Course[] courses;
+				childValue = courses = dwo.sequence(course.getChildren());
+				loadedChildren = true;
+				for (int i = 0; i < courses.length; i++) {
+					courses[i].setParentMap(course); // FIXME rare plek voor deze link leggen?
+					insert(new LazyMutableTreeNode(courses[i]), i);
+				}
+			} else {
+				if(course.getScoList()==null)
+					course.loadScos();
+				childValue = course.getScoList();
+				super.loadChildren();
+			}
+		}
+		public void removeAllChildren() {
+			super.removeAllChildren();
+			loadedChildren = false;
+		}
+		
+		
+	}
+	
+	
 	protected void createModel(DwoIF dwo) {
 		this.dwo = dwo;
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(ALLE_MODULES);
@@ -324,12 +359,12 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
         	DefaultMutableTreeNode node; 
         	for (int i = 0; i < courses.length; i++) {
 				Course course = courses[i];
-				node = new DefaultMutableTreeNode(course);
-				if(course.isWithChildren())
-				{
-					appendCourseMap(course, node);
-				}
-				insertScos(course, node);
+				node = new LazyMutableTreeNode(course);
+//				if(course.isWithChildren())
+//				{
+//					appendCourseMap(course, node);
+//				}
+//				insertScos(course, node);
 				if(course.getSchoolID() == 0)
 				{
 					dwonode.add(node);
@@ -373,6 +408,9 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 	{
 		if(object == null) // TODO is er wel een null value in de tree?
 			return;
+		TreePath path = tree.getSelectionPath();
+		if( path != null && ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject() == object) 
+			return;
 		// search in tree where userObject equals object
 		pushSelect();
 		TreeModel model = tree.getModel();
@@ -391,18 +429,31 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		}
 	}
 
+	
+	private Map cachemap = new IdentityHashMap();
+	
+	
 	private DefaultMutableTreeNode find(Object object, DefaultMutableTreeNode node) {
 		Object userObject = node.getUserObject();
 		if(userObject.equals(object))
 		{
 			return node;
 		}
-		Enumeration e = node.children();
+		DefaultMutableTreeNode o = (DefaultMutableTreeNode) cachemap.get(object);
+		if(o != null)
+			return o;		
+		Enumeration e = node.breadthFirstEnumeration();
 		while (e.hasMoreElements()) {
-			DefaultMutableTreeNode o = (DefaultMutableTreeNode) e.nextElement();
-			o = find(object, o);
-			if(o != null)
-				return o; // early out.
+			o = (DefaultMutableTreeNode) e.nextElement();
+			cachemap.put(o.getUserObject(), o);
+			//o = find(object, o);
+			if( object.equals(o.getUserObject()))
+			{
+				cachemap.put(object, o);
+				return o;
+			}
+			//if(o != null)
+			//	return o; // early out.
 		}
 		return null;
 	}
@@ -501,7 +552,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
 		DefaultMutableTreeNode node = find(course, root);
 		node.removeAllChildren();
-		insertScos(course, node);
+		if(!(node instanceof LazyMutableTreeNode)) insertScos(course, node);
 		model.nodeStructureChanged(node);
 	}
 
@@ -510,22 +561,22 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
 		DefaultMutableTreeNode node = find(map.getUserObject(), root);
 		node.removeAllChildren();
-    	appendCourseMap(map, node);
+		if(!(node instanceof LazyMutableTreeNode)) appendCourseMap(map, node);
     	model.nodeStructureChanged(node);
 	}
 
-	public void appendCourseMap(CourseMap map, DefaultMutableTreeNode node) {
+	private void appendCourseMap(CourseMap map, DefaultMutableTreeNode node) {
 		Course[] courses = map.getChildren();
     	DefaultMutableTreeNode child; 
     	for (int i = 0; i < courses.length; i++) {
 			Course course = courses[i];
 			course.setParentMap(map);
-			child = new DefaultMutableTreeNode(course);
+			child = new LazyMutableTreeNode(course);
 			node.add(child);
-			if(course.isWithChildren())
-				appendCourseMap(course, child);
-			else
-				insertScos(course, child);
+//			if(course.isWithChildren())
+//				appendCourseMap(course, child);
+//			else
+//				insertScos(course, child);
     	}
 	}
 

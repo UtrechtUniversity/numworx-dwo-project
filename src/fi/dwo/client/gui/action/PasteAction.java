@@ -74,7 +74,7 @@ public class PasteAction extends GuiAction
 						return;
 					if(dest.getSchoolID() == 0 && hasAdminRight()) return;
 					// TODO check copy parent into child.
-					copyCourseMap(dest, source);
+					copyCourseMap(dest, source, map);
 				}
 				
 			}
@@ -83,7 +83,15 @@ public class PasteAction extends GuiAction
 			AppletConfig config = instance().getAppletConfigFromSco(sco);
 			String name = config.getName();
 			name = CourseManagementPanel.replaceDuplicate(name, course.getScoNames());
-			instance().addSco(course, config, name, sco.getDescription(), sco.isShowScore());
+			Sco s = instance().getDWO().addSco(course, config, name, sco.getDescription(), sco.isShowScore());
+// FIXME DIT IS NIET GOED, MOET NAAR addSco van de DWO
+// is een kopie van ScoMananagementPanel
+			Sco[] as = course.getScoList();
+            /* Create a larger array and add the item */
+            Sco[] tmp = new Sco[as.length + 1];
+            System.arraycopy(as, 0, tmp, 0, as.length);
+            tmp[tmp.length - 1] = s;
+            course.setScoList(tmp);
 		}
 /**
  * 
@@ -120,7 +128,7 @@ public class PasteAction extends GuiAction
 			}
 		}
 		
-		private void copyCourseMap(Course dest, Course course) {
+		private Course copyCourseMap(Course dest, Course course) {
 			String name = course.getName();
 			name = CourseManagementPanel.replaceDuplicate(name, dest.getChildNames());
 			boolean isMap = course.isWithChildren();
@@ -129,20 +137,31 @@ public class PasteAction extends GuiAction
 			if(c == null)
 			{
 				System.err.println("copyCourseMap failed: "+course + ", " + dest + ", " + isMap);
-				return;
+				return null;
 			}
-			map.addChild(c);
-			getCenter().updateMap(map);
+			dest.addChild(c);
 			if(isMap) {
 				copyCourseMap(c, course.getChildren());
 			} else {
 				copySco(c, course);
 			}
-				
+			return c;
 			
 		}
+		
+		private void copyCourseMap(Course dest, Course course, CourseMap map) {
+			Course c = copyCourseMap(dest, course);
+			getCenter().updateMap(map);
+
+		}
+		
 		private void copySco(Course dest, Course course) {
 			Sco[] list = course.getScoList();
+			if(list == null)
+			{	course.loadScos();
+				if(null == (list = course.getScoList()))
+						return;
+			}
 			for (int i = 0; i < list.length; i++) {
 				copySco(dest, list[i]);
 			}
