@@ -5,9 +5,11 @@ import java.awt.Component;
 import java.awt.Image;
 import java.awt.LayoutManager;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
@@ -32,6 +34,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -81,48 +84,72 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 			super(node);
 		}
 		
-		public Course[] getChildren() {
-			Course[] result = dwo.getCourses();
-			ArrayList list = new ArrayList(result.length);
-			for (int i = 0; i < result.length; i++) {
-				Course c = result[i];
-				if(c.getSchoolID()==0) list.add(c);
+//		public Course[] getChildren() {
+//			Course[] result = dwo.getCourses();
+//			ArrayList list = new ArrayList(result.length);
+//			for (int i = 0; i < result.length; i++) {
+//				Course c = result[i];
+//				if(c.getSchoolID()==0) list.add(c);
+//			}
+//			return (Course[]) list.toArray(new Course[list.size()]);
+//		}
+
+		public Course[] getChildrenFetch() {
+			ArrayList v = new ArrayList();
+			Enumeration children = node.children();
+			while (children.hasMoreElements()) {
+				DefaultMutableTreeNode object = (DefaultMutableTreeNode) children.nextElement();
+				v.add(object.getUserObject());
 			}
-			return (Course[]) list.toArray(new Course[list.size()]);
+			return (Course[])v.toArray(Course.NO_CHILDREN);
 		}
 		
+		private Course[] children;
+		public Course[] getChildren() {
+			if(children == null)
+				children = getChildrenFetch();
+			return children;
+		}
+		
+		public void setChildren(Course[] children) {
+			this.children = children;
+		}
+
+		/* (non-Javadoc)
+		 * @see fi.dwo.client.gui.ModuleTreePanel.TreeMap#addChild(fi.dwo.client.domain.Course)
+		 */
+		public void addChild(Course child) {
+			child.setParentID(0);
+			if(children == null)
+			{
+				children = new Course[] { child };
+			} else {
+				int length = children.length;
+				Course[] n = new Course[length+1];
+				System.arraycopy(children, 0, n, 0, length);
+				n[length]=child;
+				children = n;
+			}
+			
+		}
+
+		/* (non-Javadoc)
+		 * @see fi.dwo.client.gui.ModuleTreePanel.TreeMap#removeChild(int)
+		 */
+		public void removeChild(int index) {
+			int length = children.length;
+			children[index].setParentID(0);
+			Course[] n = new Course[length-1];
+			System.arraycopy(children, 0, n, 0, index);
+			System.arraycopy(children, index+1, n, index, length-1-index);
+			children = n;
+		}
+
 		public CourseMap getParent() {
 			return null;
 		}
 	}
-	
-	class TopMap extends TreeMap {
-		School school;
 		
-		TopMap(DefaultMutableTreeNode node, School school)
-		{	
-			super(node);
-			this.school = school;
-		}
-
-		public Course[] getChildren() {
-			Course[] result;
-			try {
-				result = (Course[]) PersistenceFacade.instance().get(Course.class, school);
-				result = dwo.sequence(result);
-			} catch (PersistenceException e) {
-				e.printStackTrace();
-				result = new Course[0];
-			}
-			return result;
-		}
-
-		public CourseMap getParent() {
-			return null;
-		}
-		
-	}
-	
 	
 	class TreeMap implements CourseMap
 	{
@@ -311,7 +338,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		protected void loadChildren() {
 			if(course.isWithChildren()) 
 			{   Course[] courses;
-				childValue = courses = dwo.sequence(course.getChildren());
+				childValue = courses = course.getChildren();
 				loadedChildren = true;
 				for (int i = 0; i < courses.length; i++) {
 					courses[i].setParentMap(course); // FIXME rare plek voor deze link leggen?
@@ -351,7 +378,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
         	{  	
         		SCHOOL_MODULES = "Modules " + school;
         		schoolnode = new DefaultMutableTreeNode(SCHOOL_MODULES);
-        		SCHOOL_MAP = new TopMap(schoolnode, school);
+        		SCHOOL_MAP = new StandaardMap(schoolnode);
         		root.add(schoolnode);
         	}
         	Course[] courses = instance.getCourseList();
@@ -382,15 +409,15 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 	}
 	
 	private void sort(Course[] courses) {
-		for (int i = 0; i < courses.length; i++) {
-			Course course = courses[i];
-			if(course.isWithChildren())
-			{
-				Course[] children = course.getChildren();
-				course.setChildren(dwo.sequence(children));
-				sort(children);
-			}
-		}
+//		for (int i = 0; i < courses.length; i++) {
+//			Course course = courses[i];
+//			if(course.isWithChildren())
+//			{
+//				Course[] children = course.getChildren();
+//				course.setChildren(dwo.sequence(children));
+//				sort(children);
+//			}
+//		}
 		
 	}
 

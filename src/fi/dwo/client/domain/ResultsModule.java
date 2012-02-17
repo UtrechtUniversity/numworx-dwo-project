@@ -92,7 +92,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
     		JOptionPane.showConfirmDialog(DwoHelper.getFrameForComponent(dwo), message, "Verwijderen", JOptionPane.OK_CANCEL_OPTION);
     		if(JOptionPane.OK_OPTION == result)
     		{
-    			System.out.println("VERWIJDEREN");
+    			//System.out.println("VERWIJDEREN");
     			PersistenceFacade.instance().deleteCourseClassData(course, sc);
     			
     			rs.setScore(0.0f);

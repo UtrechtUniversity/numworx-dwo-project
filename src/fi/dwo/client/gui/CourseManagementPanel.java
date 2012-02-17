@@ -370,6 +370,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     			Course s  = courses[row];
     			courses[row] = s2;
     			courses[row-1] = s;
+    			map.setChildren(courses);
     			model.fireTableRowsUpdated(row-1, row);
     			updown = true;
     			noUpdate();
@@ -378,6 +379,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     			Course s  = courses[row];
     			courses[row] = s2;
     			courses[row+1] = s;
+    			map.setChildren(courses);
     			model.fireTableRowsUpdated(row, row+1);
     			updown = true;
     			noUpdate();
@@ -745,13 +747,13 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	public void stateChanged(ChangeEvent e) {
 		if(ok && e.getSource() == getUserObject())
 		{
-			System.out.println("UPDATE " + e);
+			//System.out.println("UPDATE " + e);
 			courses = map.getChildren();
 			buildJTable();
 		} else
 		if(ok && e.getSource() instanceof CourseMap && ((CourseMap) e.getSource()).getUserObject() == getUserObject())
 		{
-			System.out.println("UPDATE " + e);
+			//System.out.println("UPDATE " + e);
 			courses = ((CourseMap) e.getSource()).getChildren();
 			buildJTable();
 		}

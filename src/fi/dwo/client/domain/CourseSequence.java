@@ -9,7 +9,7 @@ package fi.dwo.client.domain;
  */
 public class CourseSequence implements Comparable {
 	private int courseSequenceID;
-	private Course course;
+	private int courseID;
 	private int sequencenr;
 	private School school;
 	private SchoolClass schoolClass;
@@ -27,8 +27,8 @@ public class CourseSequence implements Comparable {
 		return courseSequenceID;
 	}
 
-	public Course getCourse() {
-		return course;
+	public int getCourseID() {
+		return courseID;
 	}
 
 	public int getSequencenr() {
@@ -47,8 +47,8 @@ public class CourseSequence implements Comparable {
 		this.courseSequenceID = courseSequenceID;
 	}
 
-	public void setCourse(Course course) {
-		this.course = course;
+	public void setCourseID(int course) {
+		this.courseID = course;
 	}
 
 	public void setSequencenr(int sequencenr) {

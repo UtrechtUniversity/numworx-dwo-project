@@ -29,7 +29,7 @@ public class Clipboard {
 	public static void setSelection(CourseMap selection) {
 		CourseMap old = Clipboard.selection;
 		Clipboard.selection = selection;
-		System.out.println("set selection from " + old + " to " + selection);
+		//System.out.println("set selection from " + old + " to " + selection);
 		support.firePropertyChange("selection", old, selection);
 	}
 

@@ -9,6 +9,7 @@ import javax.swing.AbstractAction;
 import fi.dwo.client.domain.AppletConfig;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseMap;
+import fi.dwo.client.domain.DWO;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.CenterPanel;
@@ -30,7 +31,7 @@ public class PasteAction extends GuiAction
 				return;
 			Object object = map.getUserObject();
 			Object clip = Clipboard.getClipboard().getUserObject();
-			System.out.println( Clipboard.cmd  + " " + clip + " into " + object);
+			//System.out.println( Clipboard.cmd  + " " + clip + " into " + object);
 
 			if("cut".equals(Clipboard.cmd))
 			{
@@ -112,12 +113,12 @@ public class PasteAction extends GuiAction
 			String description = course.getDescription();
 			Course c = instance().addCourse(name, description, parent, isMap);
 			map.addChild(c);
-			getCenter().updateMap(map);
 			if(isMap) {
 				copyCourseMap(c, course.getChildren());
 			} else {
 				copySco(c, course);
 			}
+			getCenter().updateMap(map);
 			
 			// recurse copyCourseMap, copySco
 		}
@@ -127,6 +128,13 @@ public class PasteAction extends GuiAction
 			for (int i = 0; i < children.length; i++) {
 				copyCourseMap(c, children[i]);
 			}
+// save ordering 
+			if(DWO.SEQUENCE)
+			try {
+				PersistenceFacade.instance().setCourseSequence(c.getChildren(), User.getCurrentUser().getSchool(), null);
+			} catch (PersistenceException e) {
+			}
+			
 		}
 		
 		private Course copyCourseMap(Course dest, Course course) {

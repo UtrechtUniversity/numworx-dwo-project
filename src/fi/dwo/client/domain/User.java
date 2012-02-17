@@ -327,6 +327,8 @@ public class User implements UserGroup, Comparable {
 // single value, for once and for all.
     private boolean _logout = true;
     private boolean _readonly = false;
+
+	private static User currentUser;
 /**
  * Kan deze gebruiker wel uitloggen?
  * @return logout flag
@@ -431,6 +433,14 @@ public class User implements UserGroup, Comparable {
     	if(end < 0) end = rights.length();
     	rights = rights.substring(0,end) + right + rights.substring(end);
     	setRights(rights);
+	}
+
+	public static void setCurrentUser(User currentUser) {
+		User.currentUser = currentUser;
+	}
+
+	public static User getCurrentUser() {
+		return currentUser;
 	}
 
 }

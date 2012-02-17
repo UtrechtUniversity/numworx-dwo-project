@@ -288,7 +288,7 @@ public class ScoMapper extends XmlRpcMapper {
     		return result;
     	}
     	result = get(ht);
-    	System.out.println("cache miss for " + ht + " size " + result.length);
+    	//System.out.println("cache miss for " + ht + " size " + result.length);
     	cachemap.put(ht, result);
     	return result;
 }

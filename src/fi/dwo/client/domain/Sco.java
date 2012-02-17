@@ -455,8 +455,7 @@ System.err.println("sum = ["+result+"]");
 		{	features = getAppletData().getFeatures();
 			if(features == null) features = "";
 		}
-		System.out.println("Reviewable: "+
-				(features.indexOf(REVIEWABLE)>=0));
+		//System.out.println("Reviewable: "+(features.indexOf(REVIEWABLE)>=0));
 		return features.indexOf(REVIEWABLE)>=0;
 		
 	}

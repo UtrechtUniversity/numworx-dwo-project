@@ -30,6 +30,7 @@ import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.Descriptor;
 import fi.dwo.client.domain.DwoProfile;
+import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.TextMapper;
 
 /**
@@ -79,7 +80,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
     }
 
 	private void initialize(Descriptor dwoProfile, Course[] courseList) {
-		Course[] courses = GuiCreator.instance().dwo.sequence(courseList);
+		Course[] courses = courseList;
 
         //Panel ph;
         //ph = new Panel(null);
@@ -288,7 +289,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
 			source = ((CourseMap) source).getUserObject();
 		if(source == userObject||userObject == ModuleTreePanel.ALLE_MODULES)
 		{
-			System.out.println("stateChanged(" + e + ")");
+			//System.out.println("stateChanged(" + e + ")");
 			removeAll();
 			setPreferredSize(null);
 			setMinimumSize(null);

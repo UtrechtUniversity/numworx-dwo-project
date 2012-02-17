@@ -2,7 +2,9 @@ package fi.dwo.client.persistence;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
@@ -22,6 +24,9 @@ public class CourseSequenceMapper extends XmlRpcMapper {
 	private static final String TABLENAME = "tblCourseSequence";
 	private static final Integer NUL = new Integer(0);
 
+	private Map cache = new HashMap();
+	
+	
 	protected Object[] createArray(int size) {
 		return new CourseSequence[size];
 	}
@@ -44,13 +49,8 @@ public class CourseSequenceMapper extends XmlRpcMapper {
 		int courseSequenceID = ((Number) data.get(IDCOL)).intValue();
 		cs.setID(courseSequenceID);
 		int courseID = ((Number) data.get("courseID")).intValue();
-		Course course;
-		try {
-			course = (Course) MapperCreator.instance(Course.class).get(courseID);
-		} catch (Exception e) {
-			return null;
-		} 
-		cs.setCourse(course);
+		
+		cs.setCourseID(courseID);
 		int sequencenr = ((Number) data.get("sequencenr")).intValue();
 		cs.setSequencenr(sequencenr);
 // optional parts
@@ -106,7 +106,17 @@ public class CourseSequenceMapper extends XmlRpcMapper {
         ((DwoIF) DwoHelper.getApplet()).getDwoProfile().getID();
         ht.put("profileID", new Integer(profileID));
         
-        return super.get(ht);
+        return cached(ht);
+	}
+
+	private Object[] cached(Hashtable ht) throws IOException, XmlRpcException, SQLException {
+		Object result = cache.get(ht);
+		if(result == null)
+		{
+			result = super.get(ht);
+			cache.put(ht, result);
+		}
+		return (Object[]) result;
 	}
 
 	public Object getObjectFromReturn(Hashtable data) throws IOException,
@@ -126,6 +136,17 @@ public class CourseSequenceMapper extends XmlRpcMapper {
             objects.put(new Integer(c.getID()), c);
         }
         return c;
+	}
+
+	
+	
+	
+	/* (non-Javadoc)
+	 * @see fi.dwo.client.persistence.XmlRpcMapper#removeAllObjects()
+	 */
+	public void removeAllObjects() {
+		cache.clear();
+		super.removeAllObjects();
 	}
 
 	public void put(int oid, Object obj) throws IOException, SQLException,

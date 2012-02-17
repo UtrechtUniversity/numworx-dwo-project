@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.WeakHashMap;
@@ -52,6 +54,34 @@ public class CourseMapper extends XmlRpcMapper {
         cachemap.clear();
     }
 
+    
+    class LazyCourse extends Course {
+    	private boolean loaded;
+    	
+    	public void setChildren(Course[] children) {
+    		loaded = children != NO_CHILDREN;
+    		super.setChildren(children);
+    	}
+
+		/* (non-Javadoc)
+		 * @see fi.dwo.client.domain.Course#getChildren()
+		 */
+		public Course[] getChildren() {
+			if(!loaded)
+			{
+				try {
+					setChildren(PersistenceFacade.instance().sequence((Course[]) get(this)));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			return super.getChildren();
+		}
+    	    	
+    }
+    
+    
     /**
      * @param data
      * @return Object
@@ -66,7 +96,7 @@ public class CourseMapper extends XmlRpcMapper {
                                                                 // the course?
             c = (Course) objects.get(data.get("courseID"));
         } else {
-            c = new Course();
+            c = new LazyCourse();
         }
         c = (Course) update(c, data);
         if(!objects.containsKey(new Integer(c.getID()))) {
@@ -121,6 +151,33 @@ public class CourseMapper extends XmlRpcMapper {
     
     
     
+/* (non-Javadoc)
+	 * @see fi.dwo.client.persistence.XmlRpcMapper#get(int)
+	 */
+	public Object get(int oid) throws IOException, XmlRpcException,
+			SQLException {
+		Integer Oid = new Integer(oid);
+		Object result = objects.get(Oid);
+		if(result != null)
+			return result;
+		// TODO find course in cache.....
+		System.out.println("request Course " + oid);
+		Iterator v = cachemap.values().iterator();
+		while (v.hasNext()) {
+			Vector vv = (Vector) v.next();
+			Iterator vvv = vv.iterator();
+			while (vvv.hasNext()) {
+				Hashtable map = (Hashtable) vvv.next();
+				if (Oid.equals( map.get(IDCOL)))
+				{
+					return getObjectFromReturn(map);
+				}
+			}
+			
+		}
+		return super.get(oid);
+	}
+
 /**
  * @param ht
  * @return
@@ -139,7 +196,7 @@ private Object[] cached(Hashtable ht) throws IOException, XmlRpcException,
 		//System.out.println("Found in cache " + ht);
 		return super.getObjectFromReturn(v);
 	}
-	System.out.println("cache miss for " + ht);
+	//System.out.println("cache miss for " + ht);
 // not found in cache, perhaps school+parentid=0
 	Object parent = ht.remove("parentID");
 	DbAccessIF dbAccess = DbAccessCreator.instance();
@@ -169,7 +226,7 @@ private Object[] cached(Hashtable ht) throws IOException, XmlRpcException,
 // not in cache, no parent, use database
 		v = dbAccess.getTable(getTableName(), ht, getOrderbyCol());
 	
-System.out.println("put " + v.size() + " for  " + ht);
+//System.out.println("put " + v.size() + " for  " + ht);
 	cachemap.put(ht, v);
 	return super.getObjectFromReturn(v);
 }
@@ -179,7 +236,7 @@ System.out.println("put " + v.size() + " for  " + ht);
 	Enumeration en = result.elements();
 	while (en.hasMoreElements()) {
 		Hashtable ht = (Hashtable) en.nextElement();
-		System.out.println("HT: " + ht);
+		//System.out.println("HT: " + ht);
 		Object hp = ht.get("parentID");
 		if(parent.equals(hp))
 			v.add(ht);
@@ -192,7 +249,7 @@ System.out.println("put " + v.size() + " for  " + ht);
 			Vector v2 = (Vector) cachemap.get(htt);
 			if(v2 == null)
 			{
-				System.out.println("priming for p-" + hp);
+				//System.out.println("priming for p-" + hp);
 				v2 = new Vector(); cachemap.put(htt, v2);
 			}
 			v2.remove(ht); // v2 is a sorted set? FIXME a real SET?
@@ -202,7 +259,7 @@ System.out.println("put " + v.size() + " for  " + ht);
 		if(Boolean.TRUE.equals(wc))
 		{
 			Object id = ht.get("courseID");
-			System.out.println("priming for i-" + id);
+			//System.out.println("priming for i-" + id);
 			Hashtable htt = new Hashtable();
 			htt.put("parentID", id);
 			if(!cachemap.containsKey(htt))
@@ -264,8 +321,12 @@ System.out.println("put " + v.size() + " for  " + ht);
         Object w = data.get("withChildren");
         if(Boolean.TRUE.equals(w) || EEN.equals(w) )
         {
-        	try {
-				c.setChildren((Course[])get(c));
+        	if(c instanceof LazyCourse)
+        	{
+        		c.setChildren(Course.NO_CHILDREN);
+        	} else
+         	try {
+				c.setChildren(PersistenceFacade.instance().sequence((Course[])get(c))); // Not Lazy, .... jammer dan.
 			} catch (Exception e) {
 				c.setChildren(Course.NO_CHILDREN);
 			} 
@@ -291,7 +352,7 @@ System.out.println("put " + v.size() + " for  " + ht);
 	 * @see fi.dwo.client.persistence.XmlRpcMapper#removeAllObjects()
 	 */
 	public void removeAllObjects() {
-System.out.println("cachemap clear all");
+//System.out.println("cachemap clear all");
 		cachemap.clear();
 		super.removeAllObjects();
 	}
@@ -300,7 +361,7 @@ System.out.println("cachemap clear all");
 	 * @see fi.dwo.client.persistence.XmlRpcMapper#removeObject(int)
 	 */
 	public void removeObject(int key) {
-System.out.println("cachemap clear key");
+//System.out.println("cachemap clear key");
 		cachemap.clear();
 		super.removeObject(key);
 	}

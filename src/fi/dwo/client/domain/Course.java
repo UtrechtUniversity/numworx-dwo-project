@@ -454,6 +454,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
 	public void addChild(Course child)
 	{
 		child.setParentID(getID());
+		Course[] children = getChildren();
 		if(children == null)
 		{
 			children = new Course[] { child };
@@ -464,6 +465,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
 			n[length]=child;
 			children = n;
 		}
+		setChildren(children);
 	}
 	
 	public void removeChild(int index)
@@ -478,6 +480,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
 	
 	public void removeChild(Course child)
 	{
+		Course[] children = getChildren();
 		for (int i = 0; i < children.length; i++) {
 			if(children[i] == child)
 			{

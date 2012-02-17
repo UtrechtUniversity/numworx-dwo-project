@@ -89,8 +89,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 
     private Course courseList[];
 
-    private User currentUser;
-
     private ResultsModule resultsModule;
 
     private Container panel;
@@ -211,16 +209,16 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
     public boolean login(String username, String password)
             throws LoginException {
     	if(password == null)
-    		currentUser = PersistenceFacade.instance().login(username);
+    		User.setCurrentUser(PersistenceFacade.instance().login(username));
     	else
-    		currentUser = PersistenceFacade.instance().login(username, password);
+    		User.setCurrentUser(PersistenceFacade.instance().login(username, password));
 
-        DwoHelper.setAdminLoggedIn(currentUser instanceof Admin);
-		DwoHelper.setScormExportLoggedIn(currentUser.hasRight(User.SCORM_EXPORT_RIGHT));
-		DwoHelper.setAppletExportLoggedIn(currentUser.hasRight(User.APPLET_EXPORT_RIGHT));
+        DwoHelper.setAdminLoggedIn(User.getCurrentUser() instanceof Admin);
+		DwoHelper.setScormExportLoggedIn(User.getCurrentUser().hasRight(User.SCORM_EXPORT_RIGHT));
+		DwoHelper.setAppletExportLoggedIn(User.getCurrentUser().hasRight(User.APPLET_EXPORT_RIGHT));
         
         if(testViewKeys!=null)
-        {	SchoolClass sc = currentUser.getInClass();
+        {	SchoolClass sc = User.getCurrentUser().getInClass();
         	if(sc==null) 
         	{	JOptionPane.showMessageDialog(this, "leerling heeft geen klas");
         		return false;
@@ -233,7 +231,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
         }
         
         if(schoolAccessKeys!=null)
-        {	School s = currentUser.getSchool();
+        {	School s = User.getCurrentUser().getSchool();
         	if(s==null) 
         	{	JOptionPane.showMessageDialog(this, "deze account is niet met een school verbonden");
         		return false;
@@ -246,19 +244,19 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 	        }
         	String rights = schoolAccessKeys.getProperty("rights." + schoolNumber);
         	if(rights != null)
-        		currentUser.setRights(rights);
+        		User.getCurrentUser().setRights(rights);
         	else {
-        		currentUser.addRight(User.CHANGE_CLASS_RIGHT); 		// for students/teachers
-            	currentUser.addRight(User.MODIFY_MODULES_RIGHT);	// for teachers	
+        		User.getCurrentUser().addRight(User.CHANGE_CLASS_RIGHT); 		// for students/teachers
+            	User.getCurrentUser().addRight(User.MODIFY_MODULES_RIGHT);	// for teachers	
         	}
         	
-        } else if(currentUser != null )
+        } else if(User.getCurrentUser() != null )
         {
-        	currentUser.addRight(User.CHANGE_CLASS_RIGHT); 		// for students/teachers
-        	currentUser.addRight(User.MODIFY_MODULES_RIGHT);	// for teachers	
+        	User.getCurrentUser().addRight(User.CHANGE_CLASS_RIGHT); 		// for students/teachers
+        	User.getCurrentUser().addRight(User.MODIFY_MODULES_RIGHT);	// for teachers	
         }
         
-        return currentUser != null;
+        return User.getCurrentUser() != null;
     }
 
     /**
@@ -273,7 +271,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
      *  
      */
     public boolean login() throws LoginException {
-        currentUser = Guest.instance();
+        User.setCurrentUser(Guest.instance());
         
         /*Object[] args = new Object[5];
         args[0] = "http://www.fi.uu.nl/wisweb/scorm/scos/nabouwenaanzichten/NabouwenAanzichten1.htm";
@@ -546,7 +544,7 @@ private static boolean isValidEmail(String email) {
      *  
      */
     public User getUser() {
-        return currentUser;
+        return User.getCurrentUser();
     }
     
     private Course[] selectDwoProfileCourses(Course[] completeList){
@@ -570,48 +568,21 @@ private static boolean isValidEmail(String email) {
      */
     public Course[] getCourses() {
         try {
-            courseList = PersistenceFacade.instance().getCourses(currentUser);
-            return sequence(selectDwoProfileCourses(courseList));
+            courseList = PersistenceFacade.instance().getCourses(User.getCurrentUser());
+            return PersistenceFacade.instance().sequence(selectDwoProfileCourses(courseList));
         } catch (PersistenceException e) {
         	JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
     }
     
-    public Course[] sequence(
-				Course[] courses) {
-    	if(!SEQUENCE)
-    		return courses;
-		CourseSequence[] css = PersistenceFacade.instance().getCourseSequence(currentUser);
-		return sequence(courses, css);
-	}
-
-	private Course[] sequence(Course[] courses, CourseSequence[] css) {
-		int start = 0;
-		if(css != null)
-		for(int i = 0; i < css.length; i++)
-		{
-			Course c = css[i].getCourse();
-			for(int j = start; j < courses.length; j++)
-				if(courses[j] == c)
-				{
-					Course tmp = courses[start];
-					courses[start] = courses[j];
-					courses[j] = tmp;
-					start++;
-					break;
-				}
-		}
-		return courses;
-	}
-
-    
-    public Course[] sequence(
+       
+	public Course[] sequence(
 			Course[] courses, SchoolClass inclass) {
     	if(!SEQUENCE)
     		return courses;
     	CourseSequence[] css = PersistenceFacade.instance().getCourseSequence(inclass);
-		return sequence(courses, css);
+		return PersistenceFacade.instance().sequence(courses, css);
 }
 
 	/**
@@ -640,7 +611,7 @@ private static boolean isValidEmail(String email) {
      *  
      */
     public void logoff() {
-        currentUser = null;
+        User.setCurrentUser(null);
         currentCourse = null;
         courseList = null;
         resultsModule = null;
@@ -672,7 +643,7 @@ private static boolean isValidEmail(String email) {
      */
     public CenterSubPanel loadSco(Sco sco) {
         if(currentCourse!=null) currentCourse.setCurrentSco(sco);
-        return sco.getScoPanel(this, currentUser);
+        return sco.getScoPanel(this, User.getCurrentUser());
     }
 
     /**
@@ -703,7 +674,7 @@ private static boolean isValidEmail(String email) {
         if (!newPassword.equals(reNewPassword)) {
             throw new RegisterException(RegisterException.RE_WRONG_SECOND_PASSWORD);
         } else {
-            PersistenceFacade.instance().changeAccount(currentUser, password, newPassword, firstName, middleName, lastName, email, c);
+            PersistenceFacade.instance().changeAccount(User.getCurrentUser(), password, newPassword, firstName, middleName, lastName, email, c);
         }
 
     }
@@ -754,8 +725,8 @@ private static boolean isValidEmail(String email) {
         if (!newPassword.equals(reNewPassword)) {
             throw new RegisterException(RegisterException.RE_WRONG_SECOND_PASSWORD);
         } else {
-            PersistenceFacade.instance().addToSchool(currentUser, schoolLogin, group, groupPassword);
-            PersistenceFacade.instance().changeAccount(currentUser, password, newPassword, firstName, middleName, lastName, email);
+            PersistenceFacade.instance().addToSchool(User.getCurrentUser(), schoolLogin, group, groupPassword);
+            PersistenceFacade.instance().changeAccount(User.getCurrentUser(), password, newPassword, firstName, middleName, lastName, email);
         }
 
     }
@@ -786,7 +757,7 @@ private static boolean isValidEmail(String email) {
         if (!newPassword.equals(reNewPassword)) {
             throw new RegisterException(RegisterException.RE_WRONG_SECOND_PASSWORD);
         } else {
-            PersistenceFacade.instance().changeAccount(currentUser, password, newPassword, firstName, middleName, lastName, email);
+            PersistenceFacade.instance().changeAccount(User.getCurrentUser(), password, newPassword, firstName, middleName, lastName, email);
         }
 
     }
@@ -838,12 +809,12 @@ private static boolean isValidEmail(String email) {
      *  
      */
     public boolean addClass(String className) throws ClassException {
-        if (currentUser instanceof Teacher) {
-            SchoolClass sc = PersistenceFacade.instance().addClass((Teacher) currentUser, className);
-            ((Teacher) currentUser).addClass(sc);
+        if (User.getCurrentUser() instanceof Teacher) {
+            SchoolClass sc = PersistenceFacade.instance().addClass((Teacher) User.getCurrentUser(), className);
+            ((Teacher) User.getCurrentUser()).addClass(sc);
             
-            if(currentUser.getSchool() != null) {
-                currentUser.getSchool().addClass(sc);
+            if(User.getCurrentUser().getSchool() != null) {
+                User.getCurrentUser().getSchool().addClass(sc);
             }
         }
         return false;
@@ -855,7 +826,7 @@ private static boolean isValidEmail(String email) {
      */
     public void deleteUser() {
         try {
-            PersistenceFacade.instance().deleteUser(currentUser);
+            PersistenceFacade.instance().deleteUser(User.getCurrentUser());
         } catch (RegisterException e) {
         	JOptionPane.showMessageDialog(this, e.getMessage());
         }
@@ -885,11 +856,11 @@ private static boolean isValidEmail(String email) {
         }
 
         if (returnvalue) {
-            if (currentUser instanceof Teacher) {
-                ((Teacher) currentUser).deleteClass(c);
+            if (User.getCurrentUser() instanceof Teacher) {
+                ((Teacher) User.getCurrentUser()).deleteClass(c);
             }
-            if(currentUser.getSchool() != null) {
-                currentUser.getSchool().deleteClass(c);
+            if(User.getCurrentUser().getSchool() != null) {
+                User.getCurrentUser().getSchool().deleteClass(c);
             }
         }
 
@@ -926,7 +897,7 @@ private static boolean isValidEmail(String email) {
      */
     public ResultsModuleIF getResultsModule(SchoolClass schoolClass) {
         if (resultsModule == null) {
-            resultsModule = new ResultsModule(new Course[0], (Teacher) currentUser, this);
+            resultsModule = new ResultsModule(new Course[0], (Teacher) User.getCurrentUser(), this);
         }
         
         resultsModule.reset();
@@ -943,7 +914,7 @@ private static boolean isValidEmail(String email) {
      */
     public ResultsModuleIF getResultsModule(Course[] courses, boolean showSco) {
         if (resultsModule == null) {
-            resultsModule = new ResultsModule(new Course[0], (Teacher) currentUser, this);
+            resultsModule = new ResultsModule(new Course[0], (Teacher) User.getCurrentUser(), this);
         }
         
         resultsModule.reset();
@@ -1166,11 +1137,11 @@ private static boolean isValidEmail(String email) {
         }
         
 // Hier wordt A-Select in DWO actief
-        currentUser = getInitialUser();
-        if (currentUser != null) // Dit is de enige plaats waar op null
+        User.setCurrentUser(getInitialUser());
+        if (User.getCurrentUser() != null) // Dit is de enige plaats waar op null
                                  // getest mag worden!
         {
-            gc.login(currentUser);
+            gc.login(User.getCurrentUser());
             return;
         }
 // einde
@@ -1250,9 +1221,9 @@ private static boolean isValidEmail(String email) {
      */
     public String LMSGetValue(Sco sco, User user, String iDataModelElement) {
         if(iDataModelElement.equals(SCORM12APIInterface.USER_GROUP)) {
-            if(currentUser == null || currentUser instanceof Guest) {
+            if(User.getCurrentUser() == null || User.getCurrentUser() instanceof Guest) {
                 return SCORM12APIInterface.UG_GUEST;
-            } else if(currentUser instanceof Teacher) {
+            } else if(User.getCurrentUser() instanceof Teacher) {
                 return SCORM12APIInterface.UG_TEACHER;
             } else {
                 return SCORM12APIInterface.UG_STUDENT;
@@ -1469,8 +1440,8 @@ private static boolean isValidEmail(String email) {
      * @see fi.dwo.client.domain.DwoIF#clearCurrentUserData()
      */
     public void clearCurrentUserData() {
-        MapperCreator.instance(User.class).removeObject(currentUser.getUserID());
-        currentUser = null;
+        MapperCreator.instance(User.class).removeObject(User.getCurrentUser().getUserID());
+        User.setCurrentUser(null);
         currentCourse = null;
         courseList = null;
         resultsModule = null;        
@@ -1481,8 +1452,8 @@ private static boolean isValidEmail(String email) {
      */
     public Course[] getEditableCourses() {
         try {
-	        courseList = PersistenceFacade.instance().getEditableCourses(currentUser);
-	        return sequence(selectDwoProfileCourses(courseList));
+	        courseList = PersistenceFacade.instance().getEditableCourses(User.getCurrentUser());
+	        return PersistenceFacade.instance().sequence(selectDwoProfileCourses(courseList));
 	    } catch (PersistenceException e) {
 	    	JOptionPane.showMessageDialog(this, e.getMessage());
 	        return null;
@@ -1501,7 +1472,7 @@ private static boolean isValidEmail(String email) {
      */
     public Course addCourse(String name, String description, Course parent, boolean isMap) {
         try {
-            return PersistenceFacade.instance().addCourse(currentUser.getSchool(), name, description, dwoProfile, parent, isMap);
+            return PersistenceFacade.instance().addCourse(User.getCurrentUser().getSchool(), name, description, dwoProfile, parent, isMap);
         } catch(CourseException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;            
@@ -1937,9 +1908,9 @@ System.out.println(school.getSchoolLogin() + " " + group.getName() + " " + schoo
 	}
 
 	public ResultsModuleIF getUserResultsModule(Course course) {
-		if(currentUser instanceof Guest)
+		if(User.getCurrentUser() instanceof Guest)
 			return null;
-        return new UserResultsModule(course, currentUser, this);
+        return new UserResultsModule(course, User.getCurrentUser(), this);
 	}
 
 	/* (non-Javadoc)

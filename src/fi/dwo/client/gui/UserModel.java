@@ -96,7 +96,7 @@ class UserModel extends AbstractTableModel {
 		User user = userList[row];
 		if(col == 5 && aValue != user.getInClass())
 		{
-			System.out.println("change user " + row + " to " + aValue);
+			//System.out.println("change user " + row + " to " + aValue);
 			SchoolClass c = (SchoolClass) aValue;
 			// TODO persist....
 			try {

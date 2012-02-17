@@ -145,13 +145,13 @@ public class ScoNameDialog //extends Dialog implements ActionListener,
         cnd.setShowScore(true);
         cnd.show();
         if (cnd.isConfirmed()) {
-            System.out.println("voor hij wordt aangemaakt: " + appletConfig.getLaunchdata() + "; " + appletConfig.getAppletID());
+            //System.out.println("voor hij wordt aangemaakt: " + appletConfig.getLaunchdata() + "; " + appletConfig.getAppletID());
             Sco s = GuiCreator.instance().addSco(course, appletConfig, cnd.getScoName(),
                     cnd.getScoDescription(), cnd.isShowScore());
             if(s == null) { //something went wrong, reshow the dialog
                 s = addSco(owner, course, appletConfig);
             }
-            System.out.println("en nu...: " + s.getLaunchdataString());
+            //System.out.println("en nu...: " + s.getLaunchdataString());
             s.setCourse(course);
             return s;
         } else { //action canceled

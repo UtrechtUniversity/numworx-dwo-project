@@ -210,7 +210,7 @@ public class GuiCreatorTeacher extends GuiCreator {
     public CenterSubPanel getCourseManagementPanel(CourseMap map)
     {
  // constructor cannot sort, we do!
-    	CourseManagementPanel panel = new CourseManagementPanel(dwo.sequence(map.getChildren()), map);
+    	CourseManagementPanel panel = new CourseManagementPanel(map.getChildren(), map);
     	panel.setMap(map);
 		return panel;
     }

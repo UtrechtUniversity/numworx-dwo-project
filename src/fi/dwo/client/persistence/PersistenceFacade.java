@@ -17,6 +17,7 @@ import fi.beans.base64code.StringCodeObject;
 import fi.dwo.client.domain.AppletConfig;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseSequence;
+import fi.dwo.client.domain.DWO;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.DwoProfile;
@@ -294,7 +295,8 @@ public class PersistenceFacade {
         try {
             MapperIF mapper = MapperCreator.instance(Course.class);
             Vector v;
-            int guestID = PROFILEOFFSET-((DwoIF) DwoHelper.getApplet()).getDwoProfile().getID();
+            int profileId = ((DwoIF) DwoHelper.getApplet()).getDwoProfile().getID();
+			int guestID = PROFILEOFFSET-profileId;
             if (user == null) {
 				v = DbAccessCreator.instance().getCourses(guestID);
             } else {
@@ -1814,6 +1816,37 @@ e1.printStackTrace();
 	public Course addCourse(School s, String name, String description,
 			DwoProfile profile) throws CourseException {
 		return addCourse(s, name, description, profile, null, false);
+	}
+
+	public Course[] sequence(Course[] courses)
+	{
+	   	if(!DWO.SEQUENCE)
+			return courses;
+	   	return sequence(courses, User.getCurrentUser());
+	}
+	
+    public Course[] sequence(Course[] courses, User currentUser) {
+ 		CourseSequence[] css = getCourseSequence(currentUser);
+		return sequence(courses, css);
+	}
+
+	public Course[] sequence(Course[] courses, CourseSequence[] css) {
+		int start = 0;
+		if(css != null)
+		for(int i = 0; i < css.length; i++)
+		{
+			int c = css[i].getCourseID();
+			for(int j = start; j < courses.length; j++)
+				if(courses[j].getID() == c)
+				{
+					Course tmp = courses[start];
+					courses[start] = courses[j];
+					courses[j] = tmp;
+					start++;
+					break;
+				}
+		}
+		return courses;
 	}
 	
 }
