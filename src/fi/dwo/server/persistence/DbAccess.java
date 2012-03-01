@@ -49,12 +49,12 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
     private final static String QRY_SELECT_COURSES_GUEST = "SELECT tblCourse.* "
             + "FROM tblCourse "
-            + "WHERE (isnull(tblCourse.schoolID)) "
+            + "WHERE (isnull(tblCourse.schoolID)) and parentID = 0 "
             + "ORDER BY name ";
 
     private final static String QRY_SELECT_COURSES_PROFILE_GUEST = "SELECT tblCourse.* "
         + "FROM tblCourse "
-        + "WHERE (isnull(tblCourse.schoolID)) and dwoProfileID = ? "
+        + "WHERE (isnull(tblCourse.schoolID)) and dwoProfileID = ? and parentID = 0 "
         + "ORDER BY name ";
 
     ////peter
