@@ -116,6 +116,7 @@ public abstract class GuiConstants {
 
     public final static int CENTER_HEIGHT = 503;
 	private static final String INCLUDE = "include";
+	public static final String SEARCH_IMAGE = "resources/vergrootglas.gif";
  
    public static int getDwoProfile() {
 	   return dwoProfile;

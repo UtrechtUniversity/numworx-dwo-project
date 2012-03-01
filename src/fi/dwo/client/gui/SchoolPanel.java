@@ -12,6 +12,7 @@ import java.awt.FontMetrics;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.MediaTracker;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
@@ -30,6 +31,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.AbstractTableModel;
@@ -218,6 +220,10 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
     
     private Image removeImage, editImage, usersImage, assignImage;
 
+	private JTextField zoekField;
+
+	private JButton zoekBtn;
+
     /**
      * Creates a new SchoolPanel witch shows a list of schools.
      * 
@@ -236,7 +242,7 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
         editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_CLASS_IMAGE);
         usersImage = DwoHelper.getResourceImage(GuiConstants.USERS_CLASS_IMAGE);
         assignImage = DwoHelper.getResourceImage(GuiConstants.ASSIGN_CLASS_IMAGE);
-        
+        Image searchImage = DwoHelper.getResourceImage(GuiConstants.SEARCH_IMAGE);
 
         int w; 
         addSchoolButton = new JButton(TextMapper.getText(TextMapper.GUIS_ADD_SCHOOL));
@@ -253,6 +259,23 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
         copyButton.addActionListener(this);
         //copyButton.setLocation(30 + w + 10, 10);
         header.add(copyButton);
+        
+        header.add(Box.createHorizontalStrut(30));
+        zoekField = new JTextField();
+        zoekField.setToolTipText("Zoek school");
+        zoekField.addActionListener(this);
+        zoekField.setColumns(8);
+        zoekField.setMaximumSize(zoekField.getPreferredSize());
+        header.add(zoekField);
+        zoekBtn = new JButton(new ImageIcon(searchImage));
+        zoekBtn.setBorderPainted(false);
+        zoekBtn.setContentAreaFilled(false);
+        zoekBtn.addActionListener(this);
+        header.add(zoekBtn);
+        
+        
+        
+        
         header.add(Box.createHorizontalGlue());
         add(header);
         add(Box.createVerticalStrut(5));
@@ -275,8 +298,8 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
     		remove(jtbl);
     		jtbl = null;
     	}
-    	JTable table = new JTable();
-    	
+    	table = new JTable();
+    	zoekPos = -1;
     	table.setModel(new SchoolModel(GuiCreator.instance().getSchool()));
     	TableUtil.setDefaults(table, true, new ImageRenderer(), new ImageButtonEditor());
 // de volgende regel heeft geen effect.
@@ -333,12 +356,17 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
      * @param e The ActionEvent.
      */
     public void actionPerformed(ActionEvent e) {
-    	if ( e.getSource() == copyButton)
+    	Object source = e.getSource();
+    	if( zoekField == source || zoekBtn == source ) {
+    		zoek(zoekField.getText().trim().toLowerCase());
+    		return;
+    	}   	
+    	if ( source == copyButton)
     	{
     		ClipboardExport.instance().export(GuiCreator.instance().getSchool());
     		return;
     	}
-        if(e.getSource() == addSchoolButton) {
+        if(source == addSchoolButton) {
             try {
             	School s = AddSchoolDialog.addSchool(center);
             	if(s != null) {
@@ -350,7 +378,47 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
         }
     }
 
-    /**
+    private int zoekPos = -1;
+
+	private JTable table;
+	private boolean zoek(String text, int  i) {
+		String data = table.getValueAt(i, 0) + " " + table.getValueAt(i, 1);
+		return data.toLowerCase().indexOf(text)>=0;
+	}
+    private void zoek(String text) {
+    	TableModel model = table.getModel();
+    	int size = model.getRowCount();
+		if(text.length() > 0 )
+		{
+			for( int i = zoekPos + 1; i < size; i ++ ) {
+				if( zoek( text, i) )
+				{
+					select(i);
+					return;
+				}
+			}
+			for( int i = 0; i < size && i <= zoekPos; i ++ ) {
+				if( zoek( text, i) )
+				{
+					select(i);
+					return;
+				}
+			}
+			
+			
+			
+		}
+		
+	}
+
+	private void select(int row) {
+		table.setRowSelectionInterval(row, row);
+		Rectangle rect = table.getCellRect(row, 0, true);
+		table.scrollRectToVisible(new Rectangle(rect));
+		zoekPos = row;
+	}
+
+	/**
      * Returns the current object, as the object to add to a gui.
      * 
      * @return the current object.

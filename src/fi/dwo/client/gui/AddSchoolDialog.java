@@ -17,7 +17,10 @@ import java.awt.event.WindowListener;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.Vector;
+import java.util.Map.Entry;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -123,16 +126,25 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         	if(v == null)
         		schoolNameField = new JTextField();
         	else {
-                schoolNameField = new JComboBox(); 
-        		Enumeration enumeration = v.keys();
-        		while (enumeration.hasMoreElements()) {
-        			Object element = enumeration.nextElement();
-        			schoolIdVector.addElement(new Integer(element.toString()));
-        			((JComboBox)schoolNameField).addItem(v.get(element).toString());
+        		TreeMap reversemap = new TreeMap();
+        		Iterator iter = v.entrySet().iterator();
+        		while (iter.hasNext()) {
+					Entry object = (Entry) iter.next();
+					reversemap.put(object.getValue(), object.getKey());
+				}
+        		JComboBox combo;
+                schoolNameField = combo = new JComboBox(); 
+        		Iterator enumeration = reversemap.keySet().iterator();
+        		while (enumeration.hasNext()) {
+        			Object element = enumeration.next();
+        			schoolIdVector.addElement(new Integer(reversemap.get(element).toString()));
+        			combo.addItem(element.toString());
         		}
         	}
         }
-        schoolNameField.setBounds(150, 28, 300, 20);
+        
+        int w = Math.max(300, schoolNameField.getPreferredSize().width);
+		schoolNameField.setBounds(150, 28, w, 20);
         schoolNameField.setVisible(false);
         form.add(schoolNameField);
         schoolNameField.setVisible(true);
@@ -170,8 +182,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         	}
         }
         
-        this.setSize(460, 280);
-
+        //this.setSize(460, 280);
         Box okbox = Box.createHorizontalBox();
         okbox.add(Box.createHorizontalGlue());
         /* Register button */
@@ -208,7 +219,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         contentPane.add(form, BorderLayout.CENTER);
         contentPane.add(okbox, BorderLayout.SOUTH);
         pack();
-        setSize(460, getHeight());
+        //setSize(460, getHeight());
         Point p = owner != null ? owner.getLocationOnScreen() : new Point(0, 0);
         Dimension parentSize = owner != null ? owner.getSize() : Toolkit
                 .getDefaultToolkit().getScreenSize();
