@@ -120,7 +120,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		 */
 		public void addChild(Course child) {
 			child.setParentID(0);
-			if(children == null)
+			if(getChildren() == null)
 			{
 				children = new Course[] { child };
 			} else {

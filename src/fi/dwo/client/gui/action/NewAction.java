@@ -82,8 +82,8 @@ public class NewAction extends GuiAction {
 		
 		
 		public void actionPerformed(ActionEvent e) {
-			if(map == null)
-				map = Clipboard.getSelection();
+//			if(map == null)
+//				map = Clipboard.getSelection(); // FIXME en course dan?
 			if(map == null)
 				return;
 // FIXME werkt niet goed, als updateMap werkt op een toplevel map.
