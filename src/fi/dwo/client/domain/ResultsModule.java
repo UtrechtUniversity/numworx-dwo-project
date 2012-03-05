@@ -106,16 +106,18 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
             final Sco sco = (Sco) rs.getLessonGroup();
             final User user = (User) rs.getUserGroup();
             boolean htmlSco = sco.getApplet().getClass().getName().equals("fi.popupurlapplet.PopUpURLApplet");
-	        if(!htmlSco) {
-	        dwo.setWait();
+	        if(!htmlSco && !sco.getLessonMode().equals(Sco.REVIEW)) {
+	        	sco.setLessonMode(Sco.REVIEW);
+	        	dwo.setWait();
 	            Thread thread = new Thread() {	
 	                public void run() {	
-	                	sco.setLessonMode(Sco.REVIEW);
+	                	
 			            ScoPanel sp = sco.getScoPanel(dwo, user);
 			            dwo.setReady();
 			            if(sp != null) {
 			                ScoDialog.showScoDialog(dwo, sp, user, user.getInClass());
 			            }
+			            sco.setLessonMode(Sco.NORMAL);
 					}
 				};
 	            thread.start();/**/
