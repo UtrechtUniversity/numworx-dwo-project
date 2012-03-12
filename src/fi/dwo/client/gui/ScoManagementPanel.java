@@ -59,6 +59,7 @@ import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.action.BackupModuleAction;
 import fi.dwo.client.gui.action.ImportModuleAction;
+import fi.dwo.client.gui.action.NewAction;
 import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.PersistenceException;
@@ -119,7 +120,8 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         addScoButton = new JButton(TextMapper
                 .getText(TextMapper.GUIS_ADD_SCO));
         addScoButton.setSize(addScoButton.getPreferredSize());
-        addScoButton.addActionListener(this);
+        //addScoButton.addActionListener(this);
+        addScoButton.addActionListener(new NewAction(course, false));
         addScoButton.setLocation(30, 10);
         top.add(addScoButton);
         top.add(Box.createHorizontalGlue());

@@ -3,14 +3,20 @@ package fi.dwo.client.gui.action;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.JOptionPane;
 
+import fi.dwo.client.domain.AppletConfig;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.DwoHelper;
+import fi.dwo.client.domain.Sco;
 import fi.dwo.client.gui.AddScoDialog;
 import fi.dwo.client.gui.CenterPanel;
 import fi.dwo.client.gui.CourseNameDialog;
 import fi.dwo.client.gui.ModuleTreePanel;
+import fi.dwo.client.gui.ScoNameDialog;
+import fi.dwo.client.persistence.PersistenceFacade;
+import fi.dwo.client.system.PersistenceException;
 import fi.dwo.client.system.TextMapper;
 
 public class NewAction extends GuiAction {
@@ -106,7 +112,31 @@ public class NewAction extends GuiAction {
 				}
 			}
 			else
-				AddScoDialog.addSco(DwoHelper.getApplet(), course);
+			{	Sco s = null;
+				if(course.getScoList() == null)
+					course.loadScos();
+// speciaal voor de SAG en REV: er kan maar 1 soort appletConfig gebruikt worden, nl WiskOpdr
+	        	if(course.getDwoProfile()==15 ) {
+	        		try {
+	        		AppletConfig ac = (AppletConfig)(PersistenceFacade.instance().get(55,AppletConfig.class));
+	        		s = ScoNameDialog.addSco(DwoHelper.getApplet(), course, ac);
+		        	} catch (PersistenceException ex) {
+		                JOptionPane.showMessageDialog(DwoHelper.getApplet(), ex.getMessage());
+	  	            }
+	            } else {
+	            	s = AddScoDialog.addSco(DwoHelper.getApplet(), course);
+	            }
+	        	if(s != null) {
+// FIXME addSco kan de sco al in de lijst gezet hebben....
+		            Sco[] as = course.getScoList();
+		            /* Create a larger array and add the item */
+		            Sco[] tmp = new Sco[as.length + 1];
+		            System.arraycopy(as, 0, tmp, 0, as.length);
+		            tmp[tmp.length - 1] = s;
+		            course.setScoList(tmp);
+		            getCenter().updateCourse(course);
+	            }
+			}
 
 		}
 
