@@ -213,12 +213,20 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
     	else
     		User.setCurrentUser(PersistenceFacade.instance().login(username, password));
 
-        DwoHelper.setAdminLoggedIn(User.getCurrentUser() instanceof Admin);
-		DwoHelper.setScormExportLoggedIn(User.getCurrentUser().hasRight(User.SCORM_EXPORT_RIGHT));
-		DwoHelper.setAppletExportLoggedIn(User.getCurrentUser().hasRight(User.APPLET_EXPORT_RIGHT));
+        return setExtraRights(User.getCurrentUser());
+    }
+
+	/**
+	 * @param currentUser
+	 * @return
+	 */
+	private boolean setExtraRights(final User currentUser) {
+		DwoHelper.setAdminLoggedIn(currentUser instanceof Admin);
+		DwoHelper.setScormExportLoggedIn(currentUser.hasRight(User.SCORM_EXPORT_RIGHT));
+		DwoHelper.setAppletExportLoggedIn(currentUser.hasRight(User.APPLET_EXPORT_RIGHT));
         
         if(testViewKeys!=null)
-        {	SchoolClass sc = User.getCurrentUser().getInClass();
+        {	SchoolClass sc = currentUser.getInClass();
         	if(sc==null) 
         	{	JOptionPane.showMessageDialog(this, "leerling heeft geen klas");
         		return false;
@@ -231,7 +239,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
         }
         
         if(schoolAccessKeys!=null)
-        {	School s = User.getCurrentUser().getSchool();
+        {	School s = currentUser.getSchool();
         	if(s==null) 
         	{	JOptionPane.showMessageDialog(this, "deze account is niet met een school verbonden");
         		return false;
@@ -244,20 +252,20 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 	        }
         	String rights = schoolAccessKeys.getProperty("rights." + schoolNumber);
         	if(rights != null)
-        		User.getCurrentUser().setRights(rights);
+        		currentUser.setRights(rights);
         	else {
-        		User.getCurrentUser().addRight(User.CHANGE_CLASS_RIGHT); 		// for students/teachers
-            	User.getCurrentUser().addRight(User.MODIFY_MODULES_RIGHT);	// for teachers	
+        		currentUser.addRight(User.CHANGE_CLASS_RIGHT); 		// for students/teachers
+            	currentUser.addRight(User.MODIFY_MODULES_RIGHT);	// for teachers	
         	}
         	
-        } else if(User.getCurrentUser() != null )
+        } else if(currentUser != null )
         {
-        	User.getCurrentUser().addRight(User.CHANGE_CLASS_RIGHT); 		// for students/teachers
-        	User.getCurrentUser().addRight(User.MODIFY_MODULES_RIGHT);	// for teachers	
+        	currentUser.addRight(User.CHANGE_CLASS_RIGHT); 		// for students/teachers
+        	currentUser.addRight(User.MODIFY_MODULES_RIGHT);	// for teachers	
         }
         
-        return User.getCurrentUser() != null;
-    }
+        return currentUser != null;
+	}
 
     /**
      * Login as guest.
@@ -1751,7 +1759,8 @@ private static boolean isValidEmail(String email) {
          
          u.setLogout(false); // op verzoek van Peter          									  // een eigen account.
          u.setReadonly(false); // voor de klas keuze
-         return u;
+         if(setExtraRights(u))
+        	 return u;
      } catch (LoginException e)
      {   String msg = TextMapper.getText(TextMapper.EXL_UNKNOWN_USER);
          if( msg.equals(e.getMessage()) )
@@ -1782,7 +1791,9 @@ private static boolean isValidEmail(String email) {
                  } else { 
                      u = Guest.instance(); // fi-ers en uu-ers.
                  }
-                 return u;
+                 
+                 if(setExtraRights(u))
+                	 return u;
              } catch (RegisterException e1)
              { e1.printStackTrace();
              } catch (LoginException e2)
