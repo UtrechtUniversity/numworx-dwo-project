@@ -11,10 +11,12 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/WiskOpdr"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/dwo.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/wiskopdr.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/javaclasses.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.6.0_20">
 		<attributes>
 			<attribute name="owner.project.facets" value="jst.java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

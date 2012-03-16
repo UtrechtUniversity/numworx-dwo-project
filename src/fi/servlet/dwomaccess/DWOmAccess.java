@@ -4,10 +4,7 @@ import java.applet.Applet;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
 import java.applet.AudioClip;
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -17,14 +14,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.JFrame;
@@ -32,22 +30,49 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import fi.beans.scorm.SCORM12APIInterface;
+import fi.beans.xmlrpc.Servlet;
 import fi.dwo.client.domain.Sco;
-import fi.dwo.client.persistence.DbAccessClient;
 import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.DbAccessIF;
 import fi.dwo.client.persistence.ScoMapper;
 import fi.dwo.server.persistence.DbAccess;
 import fi.wiskopdr.WiskOpdr;
 
-public class DWOmAccess extends HttpServlet implements AppletStub, AppletContext {
+public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF {
+
+	public class Stub implements AppletStub {
+
+		private Hashtable parameters;
+		public Stub(Hashtable parameters) {
+			this.parameters = parameters;
+		}
+		public String getParameter(String name) {
+			return (String)parameters.get(name);
+		}
+		
+		public boolean isActive() {
+			return true;
+		}
+		public void appletResize(int width, int height) {
+		}
+		public AppletContext getAppletContext() {
+			return DWOmAccess.this;
+		}
+		public URL getCodeBase() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		public URL getDocumentBase() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+
+	}
 
 	private static final String PNG = "png";
 	private DbAccessIF access;
 	
-	private int scoid = 19240;
-	private int userid = 70016;
-	private Hashtable parameters;
 	
 	
 	
@@ -102,6 +127,7 @@ public class DWOmAccess extends HttpServlet implements AppletStub, AppletContext
 		Sco sco = (Sco) mapper.get(scoid);
 		return sco.getLaunchdata();
 	}
+
 	
     private static final String[][] scormDatabaseLink = {
         { "cmi.core.score.raw", "score" },
@@ -121,18 +147,21 @@ public class DWOmAccess extends HttpServlet implements AppletStub, AppletContext
 		}
 	}
 
-	private static final Object LOCATION = "cmi.core.lesson_location";
-	private static final Object LESSON_MODE = "cmi.core.lesson_mode";
-    
+	static final Object LOCATION = "cmi.core.lesson_location";
+	static final Object LESSON_MODE = "cmi.core.lesson_mode";
+	static final Object LAUNCH_DATA = "cmi.launch_data";
+
     
     
 	class ScormDecorator extends JPanel implements SCORM12APIInterface 
 	{
 
-
-		public ScormDecorator(Component comp) {
+		int scoid, userid;
+		public ScormDecorator(Component comp, int scoid, int userid) {
 			super(new GridLayout(1,1));
 			add(comp);
+			this.scoid = scoid;
+			this.userid= userid;
 		}
 
 
@@ -165,12 +194,20 @@ public class DWOmAccess extends HttpServlet implements AppletStub, AppletContext
 				return "review";
 			if(LOCATION.equals(key))
 				return "1";
+			if(LAUNCH_DATA.equals(key))
+				return getLauchDataString();
 			String result = "";
 			key = keymap.getProperty(key, key);
 			result = access.LMSGetValue(scoid, userid, key);
 			return result;
 		}
 
+		public String getLauchDataString()
+		{
+			ScoMapper mapper = new ScoMapper();
+			Sco sco = (Sco) mapper.get(scoid);
+			return sco.getLaunchdataString();
+		}
 
 		public String LMSInitialize(String arg0) {
 			return "";
@@ -185,24 +222,25 @@ public class DWOmAccess extends HttpServlet implements AppletStub, AppletContext
 	
 	protected void doImage(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		 	int scoid = 19240;
+		 	int userid = 70016;
+			int width = 800;
+			int height = 600;
+		 	Hashtable parameters;
 	
 			resp.setContentType("image/png");
 			JFrame frame = new JFrame(); // HEADLESS FRAME
 			frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-			//frame.setLayout(null);
-			frame.setSize(600,400);
-			//frame.setVisible(true);
+			frame.setSize(width,height);
 			frame.addNotify();
 			WiskOpdr wiskopdr = new WiskOpdr();
-			frame.setContentPane(new ScormDecorator(wiskopdr));
+			frame.setContentPane(new ScormDecorator(wiskopdr, scoid, userid));
 			
 			parameters = getLauchData(scoid);
 			
-			wiskopdr.setStub(this);
-			wiskopdr.setSize(800,600); // Wat is de juists maat???
+			wiskopdr.setStub(new Stub(parameters));
+			wiskopdr.setSize(width,height); // Wat is de juists maat???
 			wiskopdr.init();
-			//Dimension pref = wiskopdr.getPreferredSize();
-			//wiskopdr.setSize(pref);
 			wiskopdr.validate();
 			wiskopdr.doLayout();
 			wiskopdr.start();
@@ -216,76 +254,6 @@ public class DWOmAccess extends HttpServlet implements AppletStub, AppletContext
 			
 	}
 
-	public void appletResize(int width, int height) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public AppletContext getAppletContext() {
-		return this;
-	}
-
-	public URL getCodeBase() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public URL getDocumentBase() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public String getParameter(String name) {
-		return (String)parameters.get(name);
-	}
-	
-	public boolean isActive() {
-		return true;
-	}
-
-	public Applet getApplet(String name) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Enumeration<Applet> getApplets() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public AudioClip getAudioClip(URL url) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Image getImage(URL url) {
-		return null;
-	}
-
-	public InputStream getStream(String key) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Iterator<String> getStreamKeys() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void setStream(String key, InputStream stream) throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void showDocument(URL url) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void showDocument(URL url, String target) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	public void showStatus(String status) {
 		log(status);
@@ -298,6 +266,57 @@ public class DWOmAccess extends HttpServlet implements AppletStub, AppletContext
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		doImage(req, resp);
+	}
+
+	// AppletContext Dummies
+	
+	public Applet getApplet(String name) {
+		return null;
+	}
+
+	public Enumeration<Applet> getApplets() {
+		return null;
+	}
+
+	public AudioClip getAudioClip(URL url) {
+		return null;
+	}
+
+	public Image getImage(URL url) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public InputStream getStream(String key) {
+		return null;
+	}
+
+	public Iterator<String> getStreamKeys() {
+		return null;
+	}
+
+	public void setStream(String key, InputStream stream) throws IOException {
+	}
+
+	public void showDocument(URL url) {
+	}
+
+	public void showDocument(URL url, String target) {
+	}
+
+	@SuppressWarnings("unchecked")
+	public Vector getScoreMapList(int sco, int user) throws Exception {
+		WiskOpdr wiskopdr = new WiskOpdr();
+		ScormDecorator api = new ScormDecorator(wiskopdr, sco, user);
+		List list = wiskopdr.getScoreMapList(api);
+// convert to vector of hashtable
+		Vector result = new Vector(list.size());
+		Iterator iter = list.iterator();
+		while (iter.hasNext()) {
+			Map map = (Map) iter.next();
+			result.add(new Hashtable<Object,Object>(map));
+		}
+		return result;
 	}
 	
 	
