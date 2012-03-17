@@ -8,7 +8,9 @@ import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageProducer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -66,32 +68,15 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 			// TODO Auto-generated method stub
 			return null;
 		}
-
-
 	}
 
 	private static final String PNG = "png";
 	private DbAccessIF access;
-	
-	
-	
-	
-	public DWOmAccess() {
-		super();
-//		Object t = new com.eteks.awt.PJAToolkit();
-//		System.setProperty("awt.toolkit", t.getClass().getName());
-//		Object e = new com.eteks.java2d.PJAGraphicsEnvironment();
-//		System.setProperty("java.awt.graphicsenv", e.getClass().getName());
-//		System.setProperty("java.awt.fonts", "C:/Program Files/Java/jdk1.6.0_20/jre/lib/fonts");
-	}
-	
+		
 	public void init()
 	{
 		//access = new DbAccess();
 		access = DbAccessCreator.instance();	
-		
-//		Hashtable t = access.login("r.vanalten", "");
-//		userid = ((Number) t.get("userID")).intValue();
 	}
 	
 	public void sendImage(BufferedImage image, OutputStream out)
@@ -147,7 +132,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		}
 	}
 
-	static final Object LOCATION = "cmi.core.lesson_location";
+	static final Object LESSON_LOCATION = "cmi.core.lesson_location";
 	static final Object LESSON_MODE = "cmi.core.lesson_mode";
 	static final Object LAUNCH_DATA = "cmi.launch_data";
 
@@ -156,12 +141,14 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	class ScormDecorator extends JPanel implements SCORM12APIInterface 
 	{
 
-		int scoid, userid;
-		public ScormDecorator(Component comp, int scoid, int userid) {
+		private int scoid, userid;
+		private String location;
+		public ScormDecorator(Component comp, int scoid, int userid, String location) {
 			super(new GridLayout(1,1));
 			add(comp);
 			this.scoid = scoid;
 			this.userid= userid;
+			this.location = location;
 		}
 
 
@@ -192,8 +179,8 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		public String LMSGetValue(String key) {
 			if(LESSON_MODE.equals(key))
 				return "review";
-			if(LOCATION.equals(key))
-				return "1";
+			if(LESSON_LOCATION.equals(key))
+				return location;
 			if(LAUNCH_DATA.equals(key))
 				return getLauchDataString();
 			String result = "";
@@ -220,38 +207,74 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		
 	}
 	
+	final static String SCOID = "s";
+	final static String USERID = "u";
+	final static String LOCATION = "l";
+	final static String WIDTH = "w";
+	final static String HEIGHT = "h";
+	
+	
+	
 	protected void doImage(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		 	int scoid = 19240;
-		 	int userid = 70016;
-			int width = 800;
-			int height = 600;
-		 	Hashtable parameters;
-	
-			resp.setContentType("image/png");
-			JFrame frame = new JFrame(); // HEADLESS FRAME
-			frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-			frame.setSize(width,height);
-			frame.addNotify();
-			WiskOpdr wiskopdr = new WiskOpdr();
-			frame.setContentPane(new ScormDecorator(wiskopdr, scoid, userid));
-			
-			parameters = getLauchData(scoid);
-			
-			wiskopdr.setStub(new Stub(parameters));
-			wiskopdr.setSize(width,height); // Wat is de juists maat???
-			wiskopdr.init();
-			wiskopdr.validate();
-			wiskopdr.doLayout();
-			wiskopdr.start();
-			BufferedImage f = createImage(wiskopdr.getContentPane());
-			OutputStream out = resp.getOutputStream();
-			sendImage(f, out);
-			
-			wiskopdr.stop();
-			wiskopdr.destroy();
-			frame.dispose(); // on close ....
-			
+
+		int scoid = 19240;
+	 	int userid = 70016;
+		int width = 800;
+		int height = 600;
+		String location = "0";
+		String param;
+		
+		param = req.getParameter(SCOID);
+		if(notEmpty(param))
+			scoid = Integer.parseInt(param);
+		param = req.getParameter(USERID);
+		if(notEmpty(param))
+			userid = Integer.parseInt(param);
+		param = req.getParameter(LOCATION);
+		if(param != null)
+			location = param;
+		param = req.getParameter(HEIGHT);
+		if(notEmpty(param))
+			height = Integer.parseInt(param);
+		param = req.getParameter(WIDTH);
+		if(notEmpty(param))
+			width = Integer.parseInt(param);
+
+		Hashtable parameters;
+
+		resp.setContentType("image/png");
+		JFrame frame = new JFrame(); // HEADLESS FRAME
+		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		frame.setSize(width,height);
+		frame.addNotify();
+		WiskOpdr wiskopdr = new WiskOpdr();
+		frame.setContentPane(new ScormDecorator(wiskopdr, scoid, userid, location));
+		
+		parameters = getLauchData(scoid);
+		
+		wiskopdr.setStub(new Stub(parameters));
+		wiskopdr.setSize(width,height); // Wat is de juists maat???
+		wiskopdr.init();
+		wiskopdr.validate();
+		wiskopdr.doLayout();
+		wiskopdr.start();
+		BufferedImage f = createImage(wiskopdr.getContentPane());
+		OutputStream out = resp.getOutputStream();
+		sendImage(f, out);
+		
+		wiskopdr.stop();
+		wiskopdr.destroy();
+		frame.dispose(); // on close ....
+		
+	}
+
+	/**
+	 * @param param
+	 * @return
+	 */
+	private static boolean notEmpty(String param) {
+		return param != null && param.length()!= 0;
 	}
 
 
@@ -278,13 +301,22 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		return null;
 	}
 
-	public AudioClip getAudioClip(URL url) {
-		return null;
-	}
-
-	public Image getImage(URL url) {
-		// TODO Auto-generated method stub
-		return null;
+    // AppletContext methodes
+    public AudioClip getAudioClip( URL url )
+    {
+    	return java.applet.Applet.newAudioClip(url);
+    }
+    
+    public Image getImage( URL url )
+    {	
+    	try
+		{	
+		    return Toolkit.getDefaultToolkit().createImage( url );
+		}
+		catch ( Exception e )
+		{
+			return null;
+		}
 	}
 
 	public InputStream getStream(String key) {
@@ -307,7 +339,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	@SuppressWarnings("unchecked")
 	public Vector getScoreMapList(int sco, int user) throws Exception {
 		WiskOpdr wiskopdr = new WiskOpdr();
-		ScormDecorator api = new ScormDecorator(wiskopdr, sco, user);
+		ScormDecorator api = new ScormDecorator(wiskopdr, sco, user, "");
 		List list = wiskopdr.getScoreMapList(api);
 // convert to vector of hashtable
 		Vector result = new Vector(list.size());
