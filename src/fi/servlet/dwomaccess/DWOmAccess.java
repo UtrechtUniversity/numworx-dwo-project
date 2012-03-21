@@ -39,8 +39,24 @@ import fi.dwo.client.persistence.DbAccessIF;
 import fi.dwo.client.persistence.ScoMapper;
 import fi.dwo.server.persistence.DbAccess;
 import fi.wiskopdr.WiskOpdr;
-
+/**
+ * Servlet voor het achterhalen van de deelscores en screenshots. 
+ * Methoden:
+ * <ul>
+ * <li>getScoreMapList - XMLRPC interface naar de methode met de zelfde naam in WiskOpdr
+ * <li>doImage - screenshot van wiskopdr
+ * </ul>
+ * @author velth101
+ *
+ */
 public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1809226772104746936L;
+
+
 
 	public class Stub implements AppletStub {
 
@@ -207,14 +223,50 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		
 	}
 	
+	/**
+	 * Parameter voor doImage. 
+	 */
 	final static String SCOID = "s";
+	/**
+	 * Parameter voor doImage. 
+	 */
 	final static String USERID = "u";
+	/**
+	 * Parameter voor doImage. 
+	 */
 	final static String LOCATION = "l";
+	/**
+	 * Parameter voor doImage. 
+	 */
 	final static String WIDTH = "w";
+	/**
+	 * Parameter voor doImage. 
+	 */
 	final static String HEIGHT = "h";
 	
 	
-	
+	/**
+	 * Genereer een screenshot van WiskOpdr via het HTTP protocol.
+	 * Aanroep:<br>
+	 * http://..../image.png?s=<i>scoid</i>&u=<i>userid</i>&l=<i>location</i>&w=<i>width</i>&h=<i>height</i>
+	 * <p>Parameters: 
+	 * <dl>
+	 * <dt>scoid
+	 * <dd>nummer van sco
+	 * <dt>userid
+	 * <dd>id van gebruiker
+	 * <dt>location
+	 * <dd>identificatie van pagina, zoals verkregen via @{link {@link #getScoreMapList(int, int)}. Default "0"
+	 * <dt>width
+	 * <dd>breedte van de screenshot, default "800"
+	 * <dt>height
+	 * <dd>hoogte van de screenshot, default "600"
+	 * </dl>
+	 * @param req http request
+	 * @param resp een PNG image.
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	protected void doImage(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
