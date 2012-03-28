@@ -243,7 +243,10 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	 * Parameter voor doImage. 
 	 */
 	final static String HEIGHT = "h";
-	
+	/**
+	 * Parameter voor doImage.
+	 */
+	final static String APPLET = "a";
 	
 	/**
 	 * Genereer een screenshot van WiskOpdr via het HTTP protocol.
@@ -260,7 +263,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	 * <dt>width
 	 * <dd>breedte van de screenshot, default "800"
 	 * <dt>height
-	 * <dd>hoogte van de screenshot, default "600"
+	 * <dd>hoogte van de screenshot, default "500"
 	 * </dl>
 	 * @param req http request
 	 * @param resp een PNG image.
@@ -273,8 +276,9 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		int scoid = 19240;
 	 	int userid = 70016;
 		int width = 800;
-		int height = 600;
+		int height = 500;
 		String location = "0";
+		boolean full = false;
 		String param;
 		
 		param = req.getParameter(SCOID);
@@ -292,7 +296,9 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		param = req.getParameter(WIDTH);
 		if(notEmpty(param))
 			width = Integer.parseInt(param);
-
+		param = req.getParameter(APPLET);
+		if(notEmpty(param))
+			full = true;
 		Hashtable parameters;
 
 		resp.setContentType("image/png");
@@ -311,7 +317,11 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		wiskopdr.validate();
 		wiskopdr.doLayout();
 		wiskopdr.start();
-		BufferedImage f = createImage(wiskopdr.getContentPane());
+		BufferedImage f;
+		if(full)
+			f = createImage(wiskopdr.getContentPane());
+		else
+			f = createImage(wiskopdr.getContentPage());
 		OutputStream out = resp.getOutputStream();
 		sendImage(f, out);
 		
