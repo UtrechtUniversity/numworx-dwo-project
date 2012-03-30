@@ -189,14 +189,14 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
     private final static String QRY_RESULTS_ALL = "SELECT tblClass.classID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
 // mysql5 en mysql4 (NOG TESTEN!)
-//    	+ "FROM (tblClass, tblCourse)  left join  tblUser on tblUser.classId =  tblClass.classId "
-//    	+ "left join tblSco  on tblSco.courseId =  tblCourse.courseId "
-//    	+ "left join  tblStudentSco on tblStudentSco.userid =   tblUser.userId and tblStudentSco.scoId =   tblSco.scoId "
+    	+ "FROM (tblClass, tblCourse) join  tblUser on tblUser.classId =  tblClass.classId "
+    	+ "left join tblSco  on tblSco.courseId =  tblCourse.courseId "
+    	+ "left join  tblStudentSco on tblStudentSco.userid =   tblUser.userId and tblStudentSco.scoId =   tblSco.scoId "
 // mysql4 only  	
-    		+ "FROM tblClass right join tblUser on tblClass.classID = tblUser.classID "
-            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID "
-            + "right join tblSco on tblStudentSco.scoID = tblSco.scoID "
-            + "left join tblCourse on tblSco.courseID = tblCourse.courseID "
+//    		+ "FROM tblClass right join tblUser on tblClass.classID = tblUser.classID "
+//            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID "
+//            + "right join tblSco on tblStudentSco.scoID = tblSco.scoID "
+//            + "left join tblCourse on tblSco.courseID = tblCourse.courseID "
 
     	    + "where (tblCourse.courseID in ({0})) "
             + "and   (tblClass.userID = ?) "
@@ -207,6 +207,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     /**
      * results of selected courses from a single user.
      */
+// TODO voor mysql5
+// FIXME deze wordt waarschijnlijk nooit gebruikt!
     private final static String QRY_RESULTS_SINGLE = "SELECT tblUser.userID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
         + "FROM tblUser  "
         + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID "
@@ -215,18 +217,20 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         + "where (tblCourse.courseID in ({0})) "
         + "and   (tblUser.userID = ?) "
         + "group by tblCourse.courseID ";
-
+    
+// dit is de grote boosdoener, die duurt heel lang.
+    
     private final static String QRY_RESULTS_CLASS = "SELECT tblUser.userID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
 // mysql4 en mysql5
-//    	`	  + "FROM (tblUser, tblCourse) "
-//            + "join tblClass on tblClass.classID = tblUser.classID "
-//            + "join tblSco on tblSco.courseID = tblCourse.courseID "
-//            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID and tblStudentSco.scoId = tblSco.scoId "
+      	    + "FROM (tblUser, tblCourse) "
+            + "join tblClass on tblClass.classID = tblUser.classID "
+            + "join tblSco on tblSco.courseID = tblCourse.courseID "
+            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID and tblStudentSco.scoId = tblSco.scoId "
 // mysql4
-            + "FROM tblClass right join tblUser on tblClass.classID = tblUser.classID "
-            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID "
-            + "right join tblSco on tblStudentSco.scoID = tblSco.scoID "
-            + "left join tblCourse on tblSco.courseID = tblCourse.courseID "        
+//            + "FROM tblClass right join tblUser on tblClass.classID = tblUser.classID "
+//            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID "
+//            + "right join tblSco on tblStudentSco.scoID = tblSco.scoID "
+//            + "left join tblCourse on tblSco.courseID = tblCourse.courseID "        
             
             + "where (tblUser.classID = ?) "
             + "and (tblCourse.courseID in ({0})) "
@@ -236,20 +240,20 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
     private final static String QRY_RESULTS_STUDENT_COURSE = "SELECT tblUser.userID, tblSco.scoID, tblSco.sequencenr,  if(score=0,-1,score) as score, total_time "
 // mysql4 en mysql5
-//    		+ "FROM (tblUser, tblSco)  join tblClass on tblClass.classID = tblUser.classID "
-//            + "join tblCourse on tblSco.courseID = tblCourse.courseID "
-//            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID and tblStudentSco.scoId = tblSco.scoId "
+    		+ "FROM (tblUser, tblSco)  join tblClass on tblClass.classID = tblUser.classID "
+            + "join tblCourse on tblSco.courseID = tblCourse.courseID "
+            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID and tblStudentSco.scoId = tblSco.scoId "
 // mysql4
-            + "FROM tblClass right join tblUser on tblClass.classID = tblUser.classID "
-            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID "
-            + "right join tblSco on tblStudentSco.scoID = tblSco.scoID "
-            + "left join tblCourse on tblSco.courseID = tblCourse.courseID "
+//            + "FROM tblClass right join tblUser on tblClass.classID = tblUser.classID "
+//            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID "
+//            + "right join tblSco on tblStudentSco.scoID = tblSco.scoID "
+//            + "left join tblCourse on tblSco.courseID = tblCourse.courseID "
 
             
             + "where (tblUser.classID = ?) "
             + "and (tblCourse.courseID = ?) "
             + "and   (tblClass.userID = ?) "
-            + "group by tblUser.userID, tblSco.scoID, tblSco.sequencenr "
+//???            + "group by tblUser.userID, tblSco.scoID, tblSco.sequencenr "
             + "ORDER BY tblUser.userID, tblSco.sequencenr";
 
     /**
@@ -273,16 +277,20 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     
     
     
-    
+// FIXME omzetten naar mysql5    
     private final static String QRY_RESULTS_COURSE = "SELECT tblClass.classID, tblSco.scoID, tblSco.sequencenr, avg(score) as score, count(score) as totaal "
-            + "FROM tblClass right join tblUser on tblClass.classID = tblUser.classID "
-            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID "
-            + "right join tblSco on tblStudentSco.scoID = tblSco.scoID "
-            + "left join tblCourse on tblSco.courseID = tblCourse.courseID "
-            + "where  (tblCourse.courseID = ?) "
+// mysql 4
+//    		+ "FROM tblClass right join tblUser on tblClass.classID = tblUser.classID "
+//            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID "
+//            + "right join tblSco on tblStudentSco.scoID = tblSco.scoID "
+//            + "left join tblCourse on tblSco.courseID = tblCourse.courseID "
+// mysql 4&5
+            + "FROM (tblClass, tblSco) join tblUser on tblClass.classID = tblUser.classID "
+            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID and tblStudentSco.scoID = tblSco.scoID "
+            
+            + "where  (tblSco.courseID = ?) "
             + "and   (tblClass.userID = ?) "
-            + "group by tblClass.classID, tblSco.scoID, tblSco.sequencenr "
-            + "having tblClass.classID is not null "
+            + "group by tblClass.classID, tblSco.scoID "
             + "ORDER BY tblClass.classID, tblSco.sequencenr";
 
     private final static String QRY_UPDATE_CLASS_NAME = "UPDATE tblClass "

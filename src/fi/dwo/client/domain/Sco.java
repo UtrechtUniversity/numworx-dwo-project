@@ -238,7 +238,7 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
     	loadApplet();
     	if(applet instanceof PartialScoreIF)
     		return (PartialScoreIF) applet;
-    	return new DefaultPartialScore();
+    	return new DefaultPartialScore(applet);
     }
     
     /**

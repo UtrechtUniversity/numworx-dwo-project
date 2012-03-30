@@ -1,5 +1,6 @@
 package fi.dwo.client.domain;
 
+import java.awt.Component;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,8 @@ import fi.beans.scorm.PartialScoreIF;
 import fi.beans.scorm.SCORM12APIInterface;
 
 public class DefaultPartialScore implements PartialScoreIF {
+
+	private Component applet;
 
 	public List getScoreMapList(SCORM12APIInterface api) {
 		HashMap result = new HashMap();
@@ -20,4 +23,12 @@ public class DefaultPartialScore implements PartialScoreIF {
 		return Collections.singletonList(result);
 	}
 
+	public Component getContentPage() {
+		return applet;
+	}
+
+	public DefaultPartialScore(Component applet) {
+		super();
+		this.applet = applet;
+	}
 }
