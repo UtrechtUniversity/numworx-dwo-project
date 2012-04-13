@@ -27,6 +27,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.JApplet;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
@@ -38,7 +39,6 @@ import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.DbAccessIF;
 import fi.dwo.client.persistence.ScoMapper;
 import fi.dwo.server.persistence.DbAccess;
-import fi.wiskopdr.WiskOpdr;
 /**
  * Servlet voor het achterhalen van de deelscores en screenshots. 
  * Methoden:
@@ -262,6 +262,9 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	
 	
 	
+	
+	
+	
 	/**
 	 * Genereer een screenshot van WiskOpdr via het HTTP protocol.
 	 * Aanroep:<br>
@@ -329,7 +332,10 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		frame.setSize(width,height);
 		frame.addNotify();
-		WiskOpdr wiskopdr = new WiskOpdr();
+		Applet wiskopdr = null;//new WiskOpdr();
+		wiskopdr = createApplet(scoid); 
+		if(wiskopdr == null)
+			return;
 		frame.setContentPane(new ScormDecorator(wiskopdr, scoid, userid, location));
 		
 		parameters = getLauchData(scoid);
@@ -344,9 +350,9 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		wiskopdr.start();
 		BufferedImage f;
 		if(full)
-			f = createImage(wiskopdr.getContentPane());
+			f = createImage(wiskopdr);
 		else
-			f = createImage(wiskopdr.getContentPage());
+			f = createImage(((fi.beans.scorm.PartialScoreIF) wiskopdr).getContentPage());
 		OutputStream out = resp.getOutputStream();
 		sendImage(f, out);
 		
@@ -354,6 +360,22 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		wiskopdr.destroy();
 		frame.dispose(); // on close ....
 		
+	}
+
+	/**
+	 * Laad applet die bij sco hoort.
+	 * @param scoid
+	 * @return the applet.
+	 */
+	private Applet createApplet(int scoid) {
+		String name = "fi.wiskopdr.WiskOpdr";
+		Loader loader = Loader.create("wiskopdr.jar");
+		try {
+			return (Applet) loader.loadClass(name).newInstance();
+		} catch (Exception e) {
+			log("loading of " + name, e);
+			return null;
+		}
 	}
 
 	/**
@@ -425,9 +447,9 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 
 	@SuppressWarnings("unchecked")
 	public Vector getScoreMapList(int sco, int user) throws Exception {
-		WiskOpdr wiskopdr = new WiskOpdr();
+		Applet wiskopdr = createApplet(sco);
 		ScormDecorator api = new ScormDecorator(wiskopdr, sco, user, "");
-		List list = wiskopdr.getScoreMapList(api);
+		List list = ((fi.beans.scorm.PartialScoreIF) wiskopdr).getScoreMapList(api);
 // convert to vector of hashtable
 		Vector result = new Vector(list.size());
 		Iterator iter = list.iterator();
