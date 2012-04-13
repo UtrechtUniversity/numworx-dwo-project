@@ -63,7 +63,14 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		private Hashtable parameters;
 		public Stub(Hashtable parameters) {
 			this.parameters = parameters;
+// FIXME background color is white, testen!
+			parameters.put("bgcolor", "#FFFFFF");
+// fixme language
+			parameters.put("language", "en"); // parameter....
 		}
+		
+		
+		
 		public String getParameter(String name) {
 			return (String)parameters.get(name);
 		}
