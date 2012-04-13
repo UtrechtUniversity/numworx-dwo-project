@@ -63,10 +63,6 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		private Hashtable parameters;
 		public Stub(Hashtable parameters) {
 			this.parameters = parameters;
-// FIXME background color is white, testen!
-			parameters.put("bgcolor", "#FFFFFF");
-// fixme language
-			parameters.put("language", "en"); // parameter....
 		}
 		
 		
@@ -256,6 +252,17 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	final static String APPLET = "a";
 	
 	/**
+	 * standaard paramater: taal.
+	 */
+	final static String LANGUAGE = "language";
+	/**
+	 * standaard parameter: achtergrondkleur
+	 */
+	final static String BGCOLOR  = "bgcolor";
+	
+	
+	
+	/**
 	 * Genereer een screenshot van WiskOpdr via het HTTP protocol.
 	 * Aanroep:<br>
 	 * http://..../image.png?s=<i>scoid</i>&u=<i>userid</i>&l=<i>location</i>&w=<i>width</i>&h=<i>height</i>
@@ -285,6 +292,8 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		int width = 800;
 		int height = 500;
 		String location = "0";
+		String language = "nl";
+		String bgcolor = "#FFFFFF";
 		boolean full = false;
 		String param;
 		
@@ -306,6 +315,13 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		param = req.getParameter(APPLET);
 		if(notEmpty(param))
 			full = true;
+		param = req.getParameter(LANGUAGE);
+		if(notEmpty(param))
+			language = param;
+		param = req.getParameter(BGCOLOR);
+		if(notEmpty(param))
+			bgcolor = param;		
+		log("bcolor = " + bgcolor);
 		Hashtable parameters;
 
 		resp.setContentType("image/png");
@@ -317,7 +333,9 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		frame.setContentPane(new ScormDecorator(wiskopdr, scoid, userid, location));
 		
 		parameters = getLauchData(scoid);
-		
+// standaard parameters: background color is white, language = nl
+		parameters.put("bgcolor", bgcolor);
+		parameters.put("language", language);
 		wiskopdr.setStub(new Stub(parameters));
 		wiskopdr.setSize(width,height); // Wat is de juists maat???
 		wiskopdr.init();
