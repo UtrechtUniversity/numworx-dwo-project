@@ -54,6 +54,12 @@ Class-Path: algebrapijlenoefenen.jar
  geogebra_properties.jar 
  geogebra_export.jar 
  geogebra_cas.jar 
+ geogebra3.jar 
+ geogebra3_main.jar 
+ geogebra3_gui.jar 
+ geogebra3_properties.jar 
+ geogebra3_export.jar 
+ geogebra3_cas.jar 
  normaleverdeling.jar 
  binomverdeling.jar 
  tekenveelvlakopdr.jar 
@@ -69,8 +75,14 @@ Class-Path: algebrapijlenoefenen.jar
  kunstvloer.jar 
  omtrekapplet.jar 
  statistiek.jar 
+ tegels.jar 
  verdelen.jar 
+ algebraexpressies.jar 
+ oppervlaktealgebra.jar 
+ blokkenprogramma.jar 
+ figuursnijden.jar 
  tinyplayerapplet.jar 
+ grafiek3dtest.jar 
  jl020.jar 
  geogebra_properties.jar 
  mysql-connector-java-3.0.16-ga-bin.jar 
