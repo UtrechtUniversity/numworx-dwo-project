@@ -754,7 +754,7 @@ System.err.println("sum = ["+result+"]");
      */
     public String getParameter(String name) {
     	if(name.equals("deployVariantDWO") && (GuiConstants.getDwoProfile()==51 || GuiConstants.getDwoProfile()==27)) return "MW";
-    	if(name.equals("deployVariantDWO") && (GuiConstants.getDwoProfile()==57)) return "GR";
+    	if(name.equals("deployVariantDWO") && (GuiConstants.getDwoProfile()==57 || GuiConstants.getDwoProfile()==65)) return "GR";
         if(name.equals("language")) return TextMapper.getLanguage();
         if(name.equals("bgcolor")) 
         {	int red = GuiConstants.MAIN_BACKGROUND.getRed();
