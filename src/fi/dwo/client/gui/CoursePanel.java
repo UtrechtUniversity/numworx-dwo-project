@@ -70,6 +70,8 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 
 	private int startY;
 
+	private boolean scoLoading;
+	    
 	
     /**
      * Creates a new Course Panel. The CoursePanel shows an overview of all the
@@ -320,10 +322,11 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
      * 
      * @param e The ActionEvent.
      */
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() instanceof ScoLinkedLabel) {
-            Sco sco = ((ScoLinkedLabel) e.getSource()).getSco();
-            GuiCreator.instance().setWait();
+   public void actionPerformed(ActionEvent e) {
+        if (e.getSource() instanceof ScoLinkedLabel && !scoLoading) {
+        	scoLoading = true;
+        	Sco sco = ((ScoLinkedLabel) e.getSource()).getSco();
+            if(!scoLoading)GuiCreator.instance().setWait();
             final Sco s = sco;
             Thread thread = new Thread() {	
 
@@ -334,15 +337,15 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
                         center.loadTotal(csp);
                     }
                     GuiCreator.instance().setReady();
+                    scoLoading = false;
 				}
 			};
             thread.start();/**/
+            
         } else if (e.getSource() == showResultsButton) {
             CenterSubPanel cp = GuiCreator.instance().getResultPanel(course);
             center.loadCenter(cp);
         }
-        
-
     }
 
     /**
