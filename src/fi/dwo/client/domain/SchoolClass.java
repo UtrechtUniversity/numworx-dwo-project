@@ -4,6 +4,7 @@
 package fi.dwo.client.domain;
 
 import java.text.MessageFormat;
+import java.util.Date;
 
 import javax.swing.JOptionPane;
 
@@ -26,6 +27,13 @@ public class SchoolClass implements UserGroup, Comparable {
 	private boolean iconizer = false; // database entry
 
     /**
+	 * @param iconizer the iconizer to set
+	 */
+	public void setIconizer(boolean iconizer) {
+		this.iconizer = iconizer;
+	}
+
+	/**
      * Creates a new SchoolClass object.
      *  
      */
@@ -53,8 +61,17 @@ public class SchoolClass implements UserGroup, Comparable {
         deselectAllCourses(allCourses);
         for (int i = 0; i < selectedCourses.length; i++) {
             try {
-                PersistenceFacade.instance().selectCoursesForClass(getID(),
-                        selectedCourses[i].getID());
+                Date tot = null;
+				Date van = null;
+				int type = 0;
+				ClassCourse link = selectedCourses[i].link;
+				if(link != null) {
+					van = link.getNotBefore();
+					tot = link.getNotAfter();
+					type = link.getType();
+				}
+				PersistenceFacade.instance().selectCoursesForClass(getID(),
+                        selectedCourses[i].getID(), type, van, tot);
             } catch (PersistenceException e) {
             	JOptionPane.showMessageDialog(null, e.getMessage());
             }

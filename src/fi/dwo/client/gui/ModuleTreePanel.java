@@ -42,6 +42,7 @@ import javax.swing.tree.TreeSelectionModel;
 
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseMap;
+import fi.dwo.client.domain.Descriptor;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.School;
@@ -68,15 +69,85 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 
 	public static final String STANDAARD_DWO_MODULES = TextMapper.getText("Standaard DWO modules");
 	public static final String ALLE_MODULES = TextMapper.getText("Alle modules");
+
+	private boolean isPossible(Object o) {
+		return 
+			o instanceof Course ||
+			o instanceof String ||
+			o instanceof Sco;
+	}
+	
 	public static String SCHOOL_MODULES = null;
 	public static CourseMap STANDAARD_DWO_MAP;
 	public static CourseMap SCHOOL_MAP;
+	public static TopMap TOP_LEVEL = new TopMap();
 	protected JTree tree;
 	private JScrollPane pane;
 	private JMenuBar bar;
 	protected DwoIF dwo;
 	private CenterPanel center;
 	private IconizedPanel ip;
+	
+	static class TopMap implements CourseMap, Descriptor {
+		
+		Descriptor delegate;
+		
+
+		/**
+		 * @return
+		 * @see fi.dwo.client.domain.Descriptor#getText()
+		 */
+		public String getText() {
+			return delegate.getText();
+		}
+
+		/**
+		 * @return
+		 * @see fi.dwo.client.domain.Descriptor#getHeader()
+		 */
+		public String getHeader() {
+			return delegate.getHeader();
+		}
+
+		public void addChild(Course c) {
+		}
+
+		public void removeChild(int i) {
+		}
+
+		public Course[] getChildren() {
+			Course[] c1, c2, c3;
+			c1 = STANDAARD_DWO_MAP.getChildren();
+			c2 = SCHOOL_MAP.getChildren();
+			c3 = new Course[c1.length + c2.length];
+			System.arraycopy(c1, 0, c3, 0, c1.length);
+			System.arraycopy(c2, 0, c3, c1.length, c2.length);
+			Arrays.sort(c3);
+			return c3;		
+		}
+
+		public void setChildren(Course[] courses) {
+		}
+
+		public Object getUserObject() {
+			return ALLE_MODULES;
+		}
+
+		public Set getChildNames() {
+			Set s = SCHOOL_MAP.getChildNames();
+			s.addAll(STANDAARD_DWO_MAP.getChildNames());
+			return s;
+		}
+
+		public CourseMap getParentMap() {
+			return null;
+		}
+		
+	}
+	
+	
+	
+	
 	
 	class StandaardMap extends TreeMap {
 
@@ -335,6 +406,10 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 			this.course = course;
 			cachemap.put(course, this);
 		}
+		
+		void setLoaded() {
+			loadedChildren = true;
+		}
 		protected void loadChildren() {
 			if(course.isWithChildren()) 
 			{   Course[] courses;
@@ -365,6 +440,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(ALLE_MODULES);
         DefaultMutableTreeNode dwonode  = new DefaultMutableTreeNode(STANDAARD_DWO_MODULES);
         STANDAARD_DWO_MAP = new StandaardMap(dwonode);
+        TOP_LEVEL.delegate = dwo.getDwoProfile();
         root.add(dwonode);        
         DefaultMutableTreeNode schoolnode = null;
         if(dwo != null)
@@ -397,8 +473,26 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 					dwonode.add(node);
 					course.setParentMap(STANDAARD_DWO_MAP);
 				} else {
-					course.setParentMap(SCHOOL_MAP);
-					schoolnode.add(node);
+					if(course.getParentID() != 0)
+					{
+						try {
+							Course parent = (Course) PersistenceFacade.instance().get(course.getParentID(), Course.class);
+							course.setParentMap(parent);
+							DefaultMutableTreeNode find = find(parent, schoolnode);
+							if(find == null)
+								find = schoolnode;
+							if(find instanceof LazyMutableTreeNode)
+								((LazyMutableTreeNode) find).setLoaded();
+							find.add(node);
+						} catch (PersistenceException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+					} else {
+						course.setParentMap(SCHOOL_MAP);
+						schoolnode.add(node);
+					}
 				}
 			}
         	
@@ -409,16 +503,25 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 	}
 	
 	private void sort(Course[] courses) {
-//		for (int i = 0; i < courses.length; i++) {
-//			Course course = courses[i];
-//			if(course.isWithChildren())
-//			{
-//				Course[] children = course.getChildren();
-//				course.setChildren(dwo.sequence(children));
-//				sort(children);
-//			}
-//		}
-		
+		// topology sort.
+ 
+		boolean again;
+		do { again = false;
+			more:
+			for (int i = 0; i < courses.length; ) {
+				Course c = courses[i];
+				if (c.getParentID() != 0)
+				for (int j = i+1; j < courses.length; j++ ) {
+					if(c.getParentID() == courses[j].getID() ) {
+						System.arraycopy(courses, i+1, courses, i, j-i);
+						courses[j] = c;
+						again = true;
+						continue more;
+					}
+				}
+				i++;
+			}
+		} while(again);
 	}
 
 	protected void insertScos(Course course, DefaultMutableTreeNode node) {
@@ -468,7 +571,9 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		}
 		DefaultMutableTreeNode o = (DefaultMutableTreeNode) cachemap.get(object);
 		if(o != null)
-			return o;		
+			return o;	
+		if(!isPossible(object))
+			return null;
 		Enumeration e = node.breadthFirstEnumeration();
 		while (e.hasMoreElements()) {
 			o = (DefaultMutableTreeNode) e.nextElement();
@@ -624,8 +729,8 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 			strategy.nodeSelected(SCHOOL_MAP);
 		else if(o == STANDAARD_DWO_MODULES)
 			strategy.nodeSelected(STANDAARD_DWO_MAP);
-		else
-			strategy.nodeSelected(new TreeMap(node));
+		else // ALLE MODULES
+			strategy.nodeSelected(TOP_LEVEL);
 	}
 }
 

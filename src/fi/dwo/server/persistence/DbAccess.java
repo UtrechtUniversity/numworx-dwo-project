@@ -58,13 +58,24 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         + "ORDER BY name ";
 
     ////peter
-    private final static String QRY_SELECT_COURSES_CLASS = "SELECT tblCourse.* "
+    private final static String QRY_SELECT_COURSES_CLASS = "SELECT tblCourse.*, tblClassCourse.* "
             + "FROM tblCourse,tblClassCourse "
             + "WHERE (tblCourse.CourseID = tblClassCourse.CourseID) "
             + "AND (tblClassCourse.ClassID = ?) " + "ORDER BY name ";
 
+    private final static String QRY_SELECT_COURSES_CLASS_NOMAP = "SELECT tblCourse.*, tblClassCourse.* "
+        + "FROM tblCourse,tblClassCourse "
+        + "WHERE (tblCourse.CourseID = tblClassCourse.CourseID) "
+        + "AND (tblCourse.withChildren = 0) "
+        + "AND (tblClassCourse.ClassID = ?) " + "ORDER BY name ";
+    
+
     private final static String QRY_INSERT_CLASS_COURSE = "INSERT INTO tblClassCourse(classID, courseID) "
             + "VALUES(?, ?) ";
+
+    private final static String QRY_INSERT_CLASS_COURSE2 = "INSERT INTO tblClassCourse(classID, courseID, type, notBefore, notAfter) "
+        + "VALUES(?,?,?,?,?) ";
+
 
     private final static String QRY_DELETE_CLASS_COURSE = "DELETE FROM tblClassCourse "
             + "WHERE (classID = ?) " + "AND (courseID = ?) ";
@@ -295,6 +306,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
     private final static String QRY_UPDATE_CLASS_NAME = "UPDATE tblClass "
             + "SET class = ? " + "WHERE (classID = ?) ";
+    private final static String QRY_UPDATE_CLASS_NAME2 = "UPDATE tblClass "
+        + "SET class = ?, iconizer = ? " + "WHERE (classID = ?) ";
      
     private final static String QRY_UPDATE_CLASS_USER = "UPDATE tblClass "
     		+ "SET userID = ? WHERE (classID = ?)";
@@ -1287,16 +1300,48 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     ////peter
     public Vector getCoursesForClass(int classID) throws IOException,
             XmlRpcException, SQLException {
-        close(); //for lazy connection
+        close(); //for lazy connection        
         PreparedStatement ps;
+        ps = getStatement("Select iconizer from tblClass where classID = ?");
+        ps.setInt(1, classID);
+        ResultSet r = ps.executeQuery();
+        if(r.next() && r.getBoolean(1))
         {
-            ps = getStatement(QRY_SELECT_COURSES_CLASS);
-            ps.setInt(1, classID);
+        	r.close();
+        	ps = getStatement(QRY_SELECT_COURSES_CLASS);
+        } else        
+        {	r.close();
+            ps = getStatement(QRY_SELECT_COURSES_CLASS_NOMAP); // geen mappen in het resultaat
         }
-
+        ps.setInt(1, classID);
         return executeQueryWithResult(ps);
     }
 
+	public boolean selectCoursesForClass(int classID, int courseID, int type,
+			Date van, Date tot) throws IOException, XmlRpcException,
+			SQLException {
+        close(); //for lazy connection
+        PreparedStatement ps;
+        {
+            ps = getStatement(QRY_INSERT_CLASS_COURSE2);
+            ps.setInt(1, classID);
+            ps.setInt(2, courseID);
+            ps.setInt(3, type);
+            if(van.getTime() == 0L)
+            	ps.setNull(4, Types.TIMESTAMP);
+            else
+            	ps.setTimestamp(4, new java.sql.Timestamp(van.getTime()));
+            if(tot.getTime() == 0L) 
+            	ps.setNull(5, Types.TIMESTAMP);
+            else
+            	ps.setTimestamp(5, new java.sql.Timestamp(tot.getTime()));
+        }
+        ps.execute();
+        return true;
+	}
+
+    
+    
     public boolean selectCoursesForClass(int classID, int courseID)
             throws IOException, XmlRpcException, SQLException {
         close(); //for lazy connection
@@ -1643,10 +1688,30 @@ public class DbAccess extends DbConnect implements DbAccessIF {
                 throw e;
             }
         }
-        ps.execute();
-
         return true;
     }
+    
+    public boolean renameClass(int classID, String newName, boolean iconizer) throws SQLException, DwoXmlRpcException {
+        PreparedStatement ps = getStatement(QRY_UPDATE_CLASS_NAME2);
+        ps.setString(1, newName);
+        ps.setBoolean(2, iconizer);
+        ps.setInt(3, classID);
+        try {
+            ps.execute();
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 1062) {
+                /* The class already exists */
+                throw new DwoXmlRpcException(
+                        DwoXmlRpcException.EXC_CLASS_EXISTS);
+            } else {
+                throw e;
+            }
+        }
+        return true;
+    	
+    }
+    
+    
     
     /**
      * Maak userID de Teacher van classID.
@@ -2708,5 +2773,6 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 		}
 		return result;
 	}
+
 	
 }

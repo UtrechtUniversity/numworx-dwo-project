@@ -1352,10 +1352,11 @@ private static boolean isValidEmail(String email) {
      * @see fi.dwo.client.domain.DwoIF#renameClass(fi.dwo.client.domain.SchoolClass,
      *      java.lang.String)
      */
-    public boolean renameClass(SchoolClass schoolClass, String newName) {
+    public boolean renameClass(SchoolClass schoolClass, String newName, boolean iconizer) {
         try {
-            PersistenceFacade.instance().renameClass(schoolClass, newName);
+            PersistenceFacade.instance().renameClass(schoolClass, newName, iconizer);
             schoolClass.setClassName(newName);
+            schoolClass.setIconizer(iconizer);
             return true;
         } catch (ClassException e) {
         	JOptionPane.showMessageDialog(this, e.getMessage());

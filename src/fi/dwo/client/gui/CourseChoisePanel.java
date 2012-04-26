@@ -55,10 +55,21 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
 	 * overview of all the available courses to the user.
 	 * FIXME ModuleTreePanel moet worden GuiConstants!
 	 */
-	public CourseChoisePanel(DwoProfile dwoProfile) {
+	private CourseChoisePanel(DwoProfile dwoProfile) {
 		this(dwoProfile, GuiCreator.instance().getCourseList(), ModuleTreePanel.ALLE_MODULES);
 	}
 
+	public CourseChoisePanel(Descriptor descriptor, Object userObject) {
+		this(descriptor, descriptor.getChildren(), userObject);
+	}
+	
+	public static CourseChoisePanel newInstance() {
+		if(CenterPanel.isIconizer())
+			return new CourseChoisePanel(ModuleTreePanel.TOP_LEVEL, ModuleTreePanel.ALLE_MODULES);
+		return new CourseChoisePanel(GuiCreator.instance().dwo.getDwoProfile(), ModuleTreePanel.ALLE_MODULES);
+	}
+	
+	
 	public Object getUserObject() {
 		return userObject;
 	}

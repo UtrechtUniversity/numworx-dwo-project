@@ -400,7 +400,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#renameClass(fi.dwo.client.domain.SchoolClass, java.lang.String)
 	 */
-	public boolean renameClass(SchoolClass schoolClass, String newName) {
+	public boolean renameClass(SchoolClass schoolClass, String newName, boolean iconizer) {
 		return false;
 	}
 

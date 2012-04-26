@@ -182,8 +182,7 @@ public class TeacherStrategy implements SelectStrategy{
 			Course c = (Course)value;
 			if(c.isWithChildren())
 			{
-				Course[] children = c.getChildren();
-				panel = new CourseChoisePanel(c, children, c);
+				panel = new CourseChoisePanel(c, c);
 				center.loadCenter(panel);
 			} else {
 				CoursePanel cp = (CoursePanel) instance.getCoursePanel(c);
@@ -194,11 +193,10 @@ public class TeacherStrategy implements SelectStrategy{
 		{
 			if(value == ModuleTreePanel.ALLE_MODULES)
 			{				
-				panel = new CourseChoisePanel(instance.getDWO().getDwoProfile());
+				panel = CourseChoisePanel.newInstance();
 			} else 
 			{
-				Course[] courses = node.getChildren();
-				panel = new CourseChoisePanel(new Bridge(instance.getDWO().getDwoProfile(), node), courses, value);
+				panel = new CourseChoisePanel(new Bridge(instance.getDWO().getDwoProfile(), node), value);
 				
 			}
 			center.loadCenter(panel); // undo side-effect 'select Alle_modules'

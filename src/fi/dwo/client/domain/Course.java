@@ -55,6 +55,9 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
     private int parentID;
     private boolean newParent;
     
+    public ClassCourse link; // optional backlink to classCourse, not unique!
+    
+    
     public boolean parentChanged() {
     	return newParent;
     }

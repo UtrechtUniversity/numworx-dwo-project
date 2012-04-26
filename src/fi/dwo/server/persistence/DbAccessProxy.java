@@ -3,6 +3,7 @@ package fi.dwo.server.persistence;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -110,8 +111,14 @@ public class DbAccessProxy extends DbConnect implements DbAccessIF {
 	public boolean renameClass(int classID, String newName)
 			throws DwoXmlRpcException, IOException, XmlRpcException,
 			SQLException {
-		return getDelegate().renameClass(classID, newName);
+		return getDelegate().renameClass(classID, newName, false);
 	}
+	
+	public boolean renameClass(int classID, String newName, boolean iconizer)
+	throws DwoXmlRpcException, IOException, XmlRpcException,
+	SQLException {
+		return getDelegate().renameClass(classID, newName, iconizer);
+}
 
 	public boolean reassignClass(int classID, int newTeacher)
 			throws IOException, SQLException, XmlRpcException,
@@ -447,6 +454,12 @@ public class DbAccessProxy extends DbConnect implements DbAccessIF {
 			throws DwoXmlRpcException, IOException, XmlRpcException,
 			SQLException {
 		return getDelegate().moveSco(scoId, courseId, sequencenr, name);
+	}
+
+	public boolean selectCoursesForClass(int classID, int courseID, int type,
+			Date van, Date tot) throws IOException, XmlRpcException,
+			SQLException {
+		return getDelegate().selectCoursesForClass(classID, courseID, type, van, tot);
 	}
 	
 }

@@ -342,10 +342,11 @@ public interface DwoIF {
      * 
      * @param schoolClass The class to rename.
      * @param newName The new name for the class.
+     * @param iconizer 
      * @return If the class is successfully renamed it returns true. Otherwise
      *         it returns false.
      */
-    public boolean renameClass(SchoolClass schoolClass, String newName);
+    public boolean renameClass(SchoolClass schoolClass, String newName, boolean iconizer);
 
     /**
      * Shows the user that he must wait for a while with the dafault wait

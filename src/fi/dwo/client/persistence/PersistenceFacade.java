@@ -8,7 +8,9 @@ import java.lang.reflect.Constructor;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
@@ -314,6 +316,7 @@ public class PersistenceFacade {
                     } else {
                         v = DbAccessCreator.instance().getCoursesForClass(
                                 schoolClass.getID());
+                        v = clipBeforeAfter(v);
                     }
                 }
             }
@@ -334,7 +337,33 @@ public class PersistenceFacade {
 
     }
     
-    private Course[] combine(Object[] dwoCourses, Object[] schoolCourses) {
+    private Vector clipBeforeAfter(Vector v) {
+		Iterator iter = v.iterator();
+		long now = System.currentTimeMillis();
+		while (iter.hasNext()) {
+			Hashtable ht = (Hashtable) iter.next();
+			Object o = ht.get("notBefore");
+			if(o instanceof Date)
+			{
+				if(now < ((Date)o).getTime())
+				{
+					iter.remove();
+					continue;
+				}
+			}
+			o = ht.get("notAfter");
+			if(o instanceof Date) {
+				if(now > ((Date)o).getTime())
+				{
+					iter.remove();
+					continue;
+				}
+			}
+		}
+		return v;
+	}
+
+	private Course[] combine(Object[] dwoCourses, Object[] schoolCourses) {
     	Course[] courses = new Course[dwoCourses.length + schoolCourses.length];
     	System.arraycopy(dwoCourses, 0, courses, 0, dwoCourses.length);
     	System.arraycopy(schoolCourses, 0, courses, dwoCourses.length, schoolCourses.length);
@@ -411,16 +440,23 @@ public class PersistenceFacade {
 
     }
 
+    public final static Date DATE_NULL = new Date(0);
+    
     /**
      * Select a course for a schoolclass.
      * @param classID The class to select the course.
      * @param courseID The course to select.
+     * @param tot 
+     * @param van 
+     * @param type 
      * @throws PersistenceException
      */
-    public void selectCoursesForClass(int classID, int courseID)
+    public void selectCoursesForClass(int classID, int courseID, int type, Date van, Date tot)
             throws PersistenceException {
+    	if(van == null) van = DATE_NULL;
+    	if(tot == null) tot = DATE_NULL;
         try {
-            DbAccessCreator.instance().selectCoursesForClass(classID, courseID);
+            DbAccessCreator.instance().selectCoursesForClass(classID, courseID, type, van, tot);
         } catch (IOException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
@@ -1106,14 +1142,15 @@ public class PersistenceFacade {
      * Renames the name of the schoolclass in the database.
      * @param schoolClass The class to rename.
      * @param newName The new name of the class.
+     * @param iconizer 
      * @throws ClassException
      */
-    public void renameClass(SchoolClass schoolClass, String newName)
+    public void renameClass(SchoolClass schoolClass, String newName, boolean iconizer)
             throws ClassException {
         DbAccessIF dbAccess = DbAccessCreator.instance();
         try {
             try {
-                dbAccess.renameClass(schoolClass.getID(), newName);
+                dbAccess.renameClass(schoolClass.getID(), newName, iconizer);
             } catch (IOException e) {
                 throw new ClassException(ClassException.EX_IO);
             } catch (XmlRpcException e) {

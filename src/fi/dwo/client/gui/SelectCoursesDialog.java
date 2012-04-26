@@ -17,6 +17,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.EventObject;
 import java.util.Hashtable;
@@ -32,6 +34,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTree;
@@ -51,6 +54,7 @@ import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import fi.dwo.client.domain.ClassCourse;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.DWO;
@@ -60,6 +64,7 @@ import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.SchoolClass;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.ClassPanel.ClassModel;
+import fi.dwo.client.gui.action.TeacherStrategy;
 import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.PersistenceException;
@@ -68,8 +73,15 @@ import fi.dwo.client.system.TextMapper;
 class CourseData {
 	Course course;
 	Object select;
+	Date van, tot;
+	
 	public CourseData(Course course) {
 		this.course = course;
+		if(course.link != null)
+		{
+			van = course.link.getNotBefore();
+			tot = course.link.getNotAfter();
+		}
 	}
 	Image data;
 	public String toString() {
@@ -79,6 +91,7 @@ class CourseData {
 		return Boolean.TRUE.equals(select);
 	}	
 	CourseData[] children;
+	public int type;	
 	
 }
 /**
@@ -89,7 +102,7 @@ class CourseData {
  */
 public final class SelectCoursesDialog extends JDialog implements ActionListener {
 
-    public boolean updown;
+    public boolean updown, vantot;
 
 
 	public class ImageEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
@@ -167,9 +180,8 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
 	private ModuleTreePanel tree;
 	private DefaultTreeModel treeModel;
-	
-	
-    class CoursesModel extends AbstractTableModel {
+
+	class CoursesModel extends AbstractTableModel {
 
     	int columnCount = 2;
 
@@ -246,6 +258,8 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     class CheckBoxNodeRenderer implements TreeCellRenderer {
     	  JCheckBox leafRenderer = new JCheckBox();
     	  JButton   eraseBtn = new JButton();
+    	  JButton 	vanBtn = new JButton();
+    	  JButton	totBtn = new JButton();
     	  Box box;
     	  boolean boksAan;
     	  private DefaultTreeCellRenderer nonLeafRenderer = new DefaultTreeCellRenderer();
@@ -269,6 +283,10 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     			eraseBtn.setContentAreaFilled(false);
     			
     			box.add(eraseBtn);
+    			if(vantot)
+    			{ 	box.add(vanBtn);
+    				box.add(totBtn);
+    			}
     		}
     	    Font fontValue;
     	    fontValue = UIManager.getFont("Tree.font");
@@ -279,7 +297,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     	        .get("Tree.drawsFocusBorderAroundIcon");
     	    leafRenderer.setFocusPainted((booleanValue != null)
     	        && (booleanValue.booleanValue()));
-
+    	    leafRenderer.setContentAreaFilled(true);
     	    selectionBorderColor = UIManager.getColor("Tree.selectionBorderColor");
     	    selectionForeground = UIManager.getColor("Tree.selectionForeground");
     	    selectionBackground = UIManager.getColor("Tree.selectionBackground");
@@ -287,6 +305,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     	    textBackground = UIManager.getColor("Tree.textBackground");
     	    
     	    leafRenderer.setBorder(BorderFactory.createLineBorder(Color.green));
+    	    selectionForeground = Color.blue;
     	    
     	  }
 
@@ -331,7 +350,17 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     	          if(node.data != null)
     	          {
     	        	eraseBtn.setIcon(new ImageIcon(node.data));  
-    	          }
+    	          } 	          
+    	          if(node.van != null) {
+    	        	  vanBtn.setText(DATE_TIME.format(node.van));
+    	          } else 
+    	        	  vanBtn.setText("");
+    	          if(node.tot != null) {
+    	        	  totBtn.setText(DATE_TIME.format(node.tot));
+    	          } else 
+    	        	  totBtn.setText("");
+    	          
+    	          
     	        }
     	      }
     	      returnValue = getLeafRenderer();
@@ -343,9 +372,11 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     	  }
     	}
 
+	static final DateFormat DATE_TIME = DateFormat.getDateTimeInstance();
     class CheckBoxNodeEditor extends AbstractCellEditor implements TreeCellEditor {
 
-    	  CheckBoxNodeRenderer renderer = new CheckBoxNodeRenderer(true);
+
+		CheckBoxNodeRenderer renderer = new CheckBoxNodeRenderer(true);
 
     	  ChangeEvent changeEvent = null;
 
@@ -354,7 +385,8 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     	  public CheckBoxNodeEditor(JTree tree) {
     	    this.tree = tree;
       	    	renderer.leafRenderer.addItemListener(itemListener);
-      	    	renderer.eraseBtn.addActionListener(action );
+      	    	renderer.eraseBtn.addActionListener(eraseAction );
+      	    	renderer.vanBtn.addActionListener(vanAction);
       	    
     	  }
 
@@ -366,7 +398,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     	  }
      	  Object userObject;
 
-		private ActionListener action = new ActionListener() {
+		private ActionListener eraseAction = new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 	     	    CourseData checkBoxNode = (CourseData)userObject;
@@ -375,6 +407,16 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 	     	    itemListener.itemStateChanged(null);
 			}}
 		;
+		
+		private ActionListener vanAction = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+	     	    CourseData checkBoxNode = (CourseData)userObject;
+	     	    checkBoxNode.van = changeDate(checkBoxNode.course, checkBoxNode.van);
+	     	    itemListener.itemStateChanged(null);
+				
+			}
+		};
+		
 
 		private ItemListener itemListener = new ItemListener() {
 		  public void itemStateChanged(ItemEvent itemEvent) {
@@ -402,7 +444,25 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     	    return returnValue;
     	  }
 
-    	  public Component getTreeCellEditorComponent(JTree tree, Object value,
+    	  protected Date changeDate(Course course, Date van) {
+    		Date orig = van;
+    		if(van == null) 
+    			van = new Date();
+    		String out = 
+			JOptionPane.showInputDialog("Geef tijdstip", DATE_TIME.format(van));
+    		System.out.println(out);
+    		if(out == null) return orig;
+    		if(out.equals("")) return null;
+    		try {
+				return DATE_TIME.parse(out);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return orig;
+		}
+
+		public Component getTreeCellEditorComponent(JTree tree, Object value,
     	      boolean selected, boolean expanded, boolean leaf, int row) {
 
     	    Component editor = renderer.getTreeCellRendererComponent(tree, value,
@@ -425,6 +485,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     private SelectCoursesDialog(Component owner, String title, boolean modal,
             Course[] allCourses, Course[] selectedCourses, int cnt) {
         super(DwoHelper.getFrameForComponent(owner), title, modal);
+        vantot = cnt != 2;
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
@@ -459,10 +520,21 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
         if(CenterPanel.isIconizer() )
         {
+        	
+        	CourseMap schoolMap = ModuleTreePanel.SCHOOL_MAP;
+        	CourseMap dwoMap = ModuleTreePanel.STANDAARD_DWO_MAP;
         	tree = new ModuleTreePanel() {
 
         		protected void createModel(DwoIF dwo) {
         			super.createModel(null);
+        			setStrategy(new SelectStrategy() {
+
+						public void nodeSelected(CourseMap node) {
+						}
+
+						public JPopupMenu nodeAction(CourseMap node) {
+							return null;
+						}});
         			DefaultMutableTreeNode root, schoolnode, dwonode;
         			JTree tree2 = this.tree;
 					root = (DefaultMutableTreeNode) tree2.getModel().getRoot();
@@ -502,10 +574,11 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			
         		protected void createCloseBtn(Box bar) {}
         		protected void createMenubar(Box bar) {}
-        		public void nodeSelected(CourseMap node) {
-        		}
         	};
 			tree.createModel(null);
+			// restore.... FIXME HACK HACK HACK, WIM!
+        	ModuleTreePanel.SCHOOL_MAP = schoolMap;
+        	ModuleTreePanel.STANDAARD_DWO_MAP = dwoMap;
 	        contentPane.add(tree, BorderLayout.CENTER);
         } else {
             CoursesModel cm = new CoursesModel(); 
@@ -637,9 +710,47 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 		{
 			CourseData children[] = cds[i].children;
 			if(children == null && Boolean.TRUE.equals(cds[i].select))
-				vector.addElement(cds[i].course);
+			{
+				Course course = cds[i].course;
+				if(sc != null) {
+					ClassCourse link = course.link = new ClassCourse();
+					link.setCourseID(course.getID());
+					link.setClassID(sc.getID());
+					link.setNotAfter(cds[i].tot);
+					link.setNotBefore(cds[i].van);
+					link.setType(cds[i].type);
+				}
+				vector.addElement(course);
+				addParent(vector, course);
+			}
 			if(children != null)
 				addSelected(vector, children);
+		}
+	}
+
+	private void addParent(Vector vector, Course course) {
+		CourseMap pa = course.getParentMap();
+		if(pa instanceof Course) {
+			addParentInsert(vector, pa);
+		} else {
+			int parentID = course.getParentID();
+			if(parentID != 0) {
+				try {
+					pa = (Course) PersistenceFacade.instance().get(parentID, Course.class);
+					addParentInsert(vector, pa);
+				} catch (PersistenceException e) {
+					// should not happen
+				}				
+			}
+		}
+		
+	}
+
+	private void addParentInsert(Vector vector, CourseMap pa) {
+		if(! vector.contains(pa))
+		{
+			vector.addElement(pa);
+			addParent(vector, (Course)pa);
 		}
 	}
 

@@ -128,11 +128,12 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
         return (java.util.Vector)object;
     }
 
-    public boolean renameClass(int a, java.lang.String b) throws IOException, XmlRpcException
+    public boolean renameClass(int a, java.lang.String b, boolean c) throws IOException, XmlRpcException
     {
-        Vector vv = new Vector(2);
+        Vector vv = new Vector(3);
         vv.addElement( new Integer(a));
         vv.addElement(b);
+        vv.addElement(Boolean.valueOf(c));
         Object object = invoke("renameClass", vv);
         return ((Boolean)object).booleanValue();
     }
@@ -716,6 +717,18 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
         vv.addElement( new Integer(c));
         vv.addElement(d);
         Object object = invoke("moveSco", vv);
+        return ((Boolean)object).booleanValue();
+    }
+
+    public boolean selectCoursesForClass(int a, int b, int c, java.util.Date d, java.util.Date e) throws IOException, XmlRpcException
+    {
+        Vector vv = new Vector(5);
+        vv.addElement( new Integer(a));
+        vv.addElement( new Integer(b));
+        vv.addElement( new Integer(c));
+        vv.addElement(d);
+        vv.addElement(e);
+        Object object = invoke("selectCoursesForClass", vv);
         return ((Boolean)object).booleanValue();
     }
 

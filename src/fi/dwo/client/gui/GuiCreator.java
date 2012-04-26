@@ -407,7 +407,7 @@ public class GuiCreator {
         	csp = getCoursePanel(viewCourse);
         	((CoursePanel)csp).setCourseView(true);
         }
-        else  csp = new CourseChoisePanel(dwo.getDwoProfile());
+        else  csp = CourseChoisePanel.newInstance();
         dwo.setReady();
         return csp;
     }
@@ -708,11 +708,12 @@ public class GuiCreator {
      *            The class to rename.
      * @param newName
      *            The new name for the class.
+     * @param iconizer 
      * @return If the class is successfully renamed it returns true. Otherwise
      *         it returns false.
      */
-    public boolean renameClass(SchoolClass schoolClass, String newName) {
-        return dwo.renameClass(schoolClass, newName);
+    public boolean renameClass(SchoolClass schoolClass, String newName, boolean iconizer) {
+        return dwo.renameClass(schoolClass, newName, iconizer);
     }
 
     /**

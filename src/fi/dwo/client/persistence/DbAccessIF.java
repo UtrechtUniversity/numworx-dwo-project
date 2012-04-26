@@ -5,6 +5,7 @@ package fi.dwo.client.persistence;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -161,6 +162,7 @@ public interface DbAccessIF {
      * Give a class a new name.
      * @param classID
      * @param newName
+     * @param iconizer 
      * @return
      * @throws DwoXmlRpcException
      * @throws IOException
@@ -168,7 +170,7 @@ public interface DbAccessIF {
      * @throws SQLException
      */
     
-    public boolean renameClass(int classID, String newName) throws DwoXmlRpcException, IOException, XmlRpcException,
+    public boolean renameClass(int classID, String newName, boolean iconizer) throws DwoXmlRpcException, IOException, XmlRpcException,
     SQLException;
 
     /**
@@ -511,4 +513,8 @@ public interface DbAccessIF {
 
 	public boolean moveSco(int scoId, int courseId, int sequencenr, String name)
 	throws  DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+
+	public boolean selectCoursesForClass(int classID, int courseID, int type,
+			Date van, Date tot)
+	throws IOException, XmlRpcException, SQLException;
 }

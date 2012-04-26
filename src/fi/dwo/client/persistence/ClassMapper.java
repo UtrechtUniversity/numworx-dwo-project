@@ -113,7 +113,7 @@ public class ClassMapper extends XmlRpcMapper {
         fi.dwo.client.domain.SchoolClass c = (SchoolClass) obj;
         c.setClassID(((Integer) data.get("classID")).intValue());
         c.setClassName((String) data.get("class"));
-
+        c.setIconizer(Boolean.TRUE.equals(data.get("iconizer")));
         return c;
     }
 

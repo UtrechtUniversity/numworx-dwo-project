@@ -16,6 +16,7 @@ import java.util.WeakHashMap;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
+import fi.dwo.client.domain.ClassCourse;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
@@ -332,6 +333,17 @@ private Object[] cached(Hashtable ht) throws IOException, XmlRpcException,
 			} 
         } else 
         	c.setChildren(null);
+        if(data.containsKey("ClassCourseID"))
+        {
+        	try {
+				c.link = (ClassCourse) MapperCreator.instance(ClassCourse.class).getObjectFromReturn(data);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+        } else 
+        	c.link = null; // FIXME is dit correct?
+        
         return c;
     }
 

@@ -22,6 +22,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -180,8 +181,14 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
     	public void actionPerformed(ActionEvent event) {
             SchoolClass sc = model.classes[row];
     		if (value == editImage) {
-                String newName = JOptionPane.showInputDialog(ClassPanel.this, TextMapper.getText(TextMapper.GUIC_MSG_RENAME_CLASS));
-                if ((newName != null) && (!newName.equals("")) && GuiCreator.instance().renameClass(sc, newName)) {
+    			Box box = Box.createVerticalBox();
+    			JLabel l1 = new JLabel(TextMapper.getText(TextMapper.GUIC_MSG_RENAME_CLASS));
+    			JCheckBox check = new JCheckBox("boomstructuur?");
+    			check.setSelected(sc.hasIconizer());
+    			box.add(check);
+    			box.add(l1);
+                String newName = JOptionPane.showInputDialog(ClassPanel.this, box, sc.getName());
+                if ((newName != null) && (!newName.equals("")) && GuiCreator.instance().renameClass(sc, newName, check.isSelected())) {
                     center.loadMenu();
                     model.fireTableCellUpdated(row, 0);
                 }                
