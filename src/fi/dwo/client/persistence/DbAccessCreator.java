@@ -42,7 +42,7 @@ public class DbAccessCreator {
         	URL server; 
            if(DwoHelper.isApplication()) { 
         	   //Bij testen van lokale dbAcces, TODO in comment bij productie!
-        	   if(true) dbAccess = new DbAccessLocal(); else
+        	   //if(true) dbAccess = new DbAccessLocal(); else
         	   //if(true) dbAccess = new DbAccessLdap(); else
         	   //if(true)try{dbAccess=new DbAccessClient(new URL("http://localhost:8888/dwoapp"));}catch(MalformedURLException e1){e1.printStackTrace();}else
         	   try {

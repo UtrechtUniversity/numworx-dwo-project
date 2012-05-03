@@ -456,7 +456,7 @@ public class PersistenceFacade {
     	if(van == null) van = DATE_NULL;
     	if(tot == null) tot = DATE_NULL;
         try {
-            DbAccessCreator.instance().selectCoursesForClass(classID, courseID, type, van, tot);
+            DbAccessCreator.instance().selectCoursesForClass(classID, courseID/*, type, van, tot*/);
         } catch (IOException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
@@ -1150,7 +1150,7 @@ public class PersistenceFacade {
         DbAccessIF dbAccess = DbAccessCreator.instance();
         try {
             try {
-                dbAccess.renameClass(schoolClass.getID(), newName, iconizer);
+                dbAccess.renameClass(schoolClass.getID(), newName /*, iconizer*/);
             } catch (IOException e) {
                 throw new ClassException(ClassException.EX_IO);
             } catch (XmlRpcException e) {

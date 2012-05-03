@@ -440,11 +440,11 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(ALLE_MODULES);
         DefaultMutableTreeNode dwonode  = new DefaultMutableTreeNode(STANDAARD_DWO_MODULES);
         STANDAARD_DWO_MAP = new StandaardMap(dwonode);
-        TOP_LEVEL.delegate = dwo.getDwoProfile();
         root.add(dwonode);        
         DefaultMutableTreeNode schoolnode = null;
         if(dwo != null)
         {
+            TOP_LEVEL.delegate = dwo.getDwoProfile();
         	GuiCreator instance = GuiCreator.instance();
         	if(instance.getMainPanel()!= null)
         		setCenterPanel(instance.getMainPanel().getCenter());
