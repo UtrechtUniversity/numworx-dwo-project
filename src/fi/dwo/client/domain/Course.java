@@ -292,7 +292,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
      */
     public void setScoList(Sco[] scoList) {
         this.scoList = scoList;
-        Arrays.sort(this.scoList);
+        if(scoList != null) Arrays.sort(this.scoList);
         coursePanel = null;
     }
 

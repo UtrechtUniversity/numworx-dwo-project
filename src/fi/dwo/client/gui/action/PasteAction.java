@@ -31,7 +31,7 @@ public class PasteAction extends GuiAction
 				return;
 			Object object = map.getUserObject();
 			Object clip = Clipboard.getClipboard().getUserObject();
-			//System.out.println( Clipboard.cmd  + " " + clip + " into " + object);
+			System.out.println( Clipboard.cmd  + " " + clip + " into " + object);
 
 			if("cut".equals(Clipboard.cmd))
 			{
@@ -193,6 +193,7 @@ public class PasteAction extends GuiAction
 			}
 			instance().updateSco(sco);
 //			old.loadScos(); course.loadScos(); // refresh sco's (zonder dbaccess mogelijk?)
+			old.setScoList(null); course.setScoList(null);
 			getCenter().updateCourse(old);
 			getCenter().updateCourse(course);
 		}
