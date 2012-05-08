@@ -10,7 +10,6 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageProducer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,7 +26,6 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.JApplet;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
@@ -95,7 +93,8 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	public void init()
 	{
 		//access = new DbAccess();
-		access = DbAccessCreator.instance();	
+		access = DbAccessCreator.instance();
+		log("inited...");
 	}
 	
 	public void sendImage(BufferedImage image, OutputStream out)
@@ -362,16 +361,31 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		
 	}
 
+	private Class<Applet> lastClass;
+	private String lastName;
 	/**
 	 * Laad applet die bij sco hoort.
+	 * Caching last class d.m.v. lastClass/lastName.
 	 * @param scoid
 	 * @return the applet.
-	 */
-	private Applet createApplet(int scoid) {
-		String name = "fi.wiskopdr.WiskOpdr";
+	 */	
+	@SuppressWarnings("unchecked")
+	private synchronized Applet createApplet(int scoid) {
+		String name = "fi.wiskopdr.WiskOpdr"; // uitzoeken
+		if (lastClass != null && name.equals(lastName)) 
+			try {
+				log("use " + lastClass  + " for " + name);
+				return lastClass.newInstance();
+			} catch (Exception e1) {
+				log("newInstance of " + name, e1);
+				e1.printStackTrace();
+			}		
 		Loader loader = Loader.create("wiskopdr.jar");
 		try {
-			return (Applet) loader.loadClass(name).newInstance();
+			Class<?> clazz =  loader.loadClass(name);
+			lastClass = (Class<Applet>) clazz;
+			lastName = name;
+			return lastClass.newInstance();
 		} catch (Exception e) {
 			log("loading of " + name, e);
 			return null;
