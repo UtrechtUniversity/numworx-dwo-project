@@ -14,6 +14,9 @@ import fi.dwo.client.system.TextMapper;
  */
 public class User implements UserGroup, Comparable {
 
+	
+	public static boolean DEFAULT_ICONIZER = false; // profile property
+	
     private int userID;
 
     private String username;
@@ -407,7 +410,7 @@ public class User implements UserGroup, Comparable {
 	public boolean hasIconizer() {
 		if(inClass != null)
 			return inClass.hasIconizer();
-		return false;
+		return DEFAULT_ICONIZER;
 	}
 
 	public void addRight(char right) {

@@ -387,7 +387,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
       	    	renderer.leafRenderer.addItemListener(itemListener);
       	    	renderer.eraseBtn.addActionListener(eraseAction );
       	    	renderer.vanBtn.addActionListener(vanAction);
-      	    
+      	    	renderer.totBtn.addActionListener(totAction);      	    
     	  }
 
     	  public Object getCellEditorValue() {
@@ -412,8 +412,14 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			public void actionPerformed(ActionEvent e) {
 	     	    CourseData checkBoxNode = (CourseData)userObject;
 	     	    checkBoxNode.van = changeDate(checkBoxNode.course, checkBoxNode.van);
+	     	    itemListener.itemStateChanged(null);				
+			}
+		};
+		private ActionListener totAction = new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+	     	    CourseData checkBoxNode = (CourseData)userObject;
+	     	    checkBoxNode.tot = changeDate(checkBoxNode.course, checkBoxNode.tot);
 	     	    itemListener.itemStateChanged(null);
-				
 			}
 		};
 		
@@ -450,13 +456,11 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     			van = new Date();
     		String out = 
 			JOptionPane.showInputDialog("Geef tijdstip", DATE_TIME.format(van));
-    		System.out.println(out);
     		if(out == null) return orig;
     		if(out.equals("")) return null;
     		try {
 				return DATE_TIME.parse(out);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return orig;
