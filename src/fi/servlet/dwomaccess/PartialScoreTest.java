@@ -41,6 +41,16 @@ public class PartialScoreTest extends TestCase {
 		doGetLaunchData();
 	}
 	
+	public void doLaunchData(String u) throws Exception {
+		URL url = new URL(u + "?s=" + sco);
+		InputStream in = url.openStream();
+		launchdata(in);
+	}
+	
+	public void testDoLaunchData() throws Exception {
+		doLaunchData("http://localhost:8080/DWOmAccess/getLaunchData");
+	}
+	
 	public void testRemote() throws Exception {
 		URL url = new URL("http://delta.fi.uu.nl/DWOmAccess/partialScore");
 		getter = new PartialScoreClient(url );
@@ -58,10 +68,15 @@ public class PartialScoreTest extends TestCase {
 		String result = getter.getLaunchData(sco);
 		assertNotNull(result);
 		InputStream reader = new ByteArrayInputStream(result.getBytes());
+		launchdata(reader);
+	}
+
+
+	private void launchdata(InputStream reader) {
 		XMLDecoder decoder = new XMLDecoder(reader);
 		Hashtable r = (Hashtable) decoder.readObject();
 		assertEquals(20, r.size());
-		System.out.println(result);
+		System.out.println(r);
 	}
 	
 	

@@ -435,7 +435,25 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		doImage(req, resp);
+		String command = req.getServletPath();
+		if(command.endsWith("image.png"))
+			doImage(req, resp);
+		else if(command.endsWith("getLaunchData"))
+			doLaunchData(req,resp);
+	}
+
+	private void doLaunchData(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		String s = req.getParameter("s");
+		String result = "";
+		try {
+			int sco = Integer.parseInt(s);
+			result = getLaunchData(sco);
+		} catch (Exception e) {
+			log("doLaunchData", e);
+		}
+		resp.setContentType("text/xml");
+		resp.setCharacterEncoding("UTF-8");
+		resp.getWriter().write(result);
 	}
 
 	// AppletContext Dummies

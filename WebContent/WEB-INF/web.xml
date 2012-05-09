@@ -18,7 +18,10 @@
 	<servlet-name>image.png</servlet-name>
 	<url-pattern>/partialScore</url-pattern>
   </servlet-mapping>
-  
+  <servlet-mapping>
+	<servlet-name>image.png</servlet-name>
+	<url-pattern>/getLaunchData</url-pattern>
+  </servlet-mapping>  
   <!-- Default page to serve -->
 	<welcome-file-list>
     <welcome-file>index.html</welcome-file>
