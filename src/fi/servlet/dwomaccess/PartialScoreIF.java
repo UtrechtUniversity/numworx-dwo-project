@@ -1,5 +1,6 @@
 package fi.servlet.dwomaccess;
 
+import java.util.Hashtable;
 import java.util.Vector;
 
 /**
@@ -18,4 +19,7 @@ public interface PartialScoreIF {
 	 * @throws Exception xml-rcp exception
 	 */
 	Vector getScoreMapList(int sco, int user) throws Exception;
+	
+	String getLaunchData(int sco) throws Exception;
+	
 }

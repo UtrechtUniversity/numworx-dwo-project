@@ -22,4 +22,12 @@ public class PartialScoreClient extends Client implements fi.servlet.dwomaccess.
         return (java.util.Vector)object;
     }
 
+    public java.lang.String getLaunchData(int a) throws IOException, XmlRpcException
+    {
+        Vector vv = new Vector(1);
+        vv.addElement( new Integer(a));
+        Object object = invoke("getLaunchData", vv);
+        return (java.lang.String)object;
+    }
+
 }

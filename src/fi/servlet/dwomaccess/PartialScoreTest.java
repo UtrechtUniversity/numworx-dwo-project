@@ -1,6 +1,13 @@
 package fi.servlet.dwomaccess;
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import junit.framework.TestCase;
@@ -31,14 +38,31 @@ public class PartialScoreTest extends TestCase {
 		URL url = new URL("http://localhost:8080/DWOmAccess/partialScore");
 		getter = new PartialScoreClient(url );
 		doGetScoreMapList();
+		doGetLaunchData();
 	}
 	
 	public void testRemote() throws Exception {
-		URL url = new URL("http://ws.fi.uu.nl/DWOmAccess/partialScore");
+		URL url = new URL("http://delta.fi.uu.nl/DWOmAccess/partialScore");
 		getter = new PartialScoreClient(url );
 		doGetScoreMapList();
+		doGetLaunchData();
 	}
 	
+	public void testGetLaunchData() throws Exception {
+		getter = new DWOmAccess();
+		doGetLaunchData();
+	}
+
+
+	private void doGetLaunchData() throws Exception {
+		String result = getter.getLaunchData(sco);
+		assertNotNull(result);
+		InputStream reader = new ByteArrayInputStream(result.getBytes());
+		XMLDecoder decoder = new XMLDecoder(reader);
+		Hashtable r = (Hashtable) decoder.readObject();
+		assertEquals(20, r.size());
+		System.out.println(result);
+	}
 	
 	
 }

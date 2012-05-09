@@ -5,15 +5,21 @@ import java.applet.AppletContext;
 import java.applet.AppletStub;
 import java.applet.AudioClip;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.beans.XMLEncoder;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.net.URL;
+import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -30,6 +36,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import org.apache.xmlrpc.applet.XmlRpcException;
+
+import fi.beans.base64code.StringCodeObject;
 import fi.beans.scorm.SCORM12APIInterface;
 import fi.beans.xmlrpc.Servlet;
 import fi.dwo.client.domain.Sco;
@@ -94,7 +103,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	{
 		//access = new DbAccess();
 		access = DbAccessCreator.instance();
-		log("inited...");
+		//log("inited...");
 	}
 	
 	public void sendImage(BufferedImage image, OutputStream out)
@@ -124,7 +133,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		return bufferedImage;
 	}
 	
-	public Hashtable getLauchData( int scoid )
+	private Hashtable getLaunchData_int( int scoid ) throws IOException, XmlRpcException, SQLException
 	{
 		ScoMapper mapper = new ScoMapper();
 		Sco sco = (Sco) mapper.get(scoid);
@@ -200,14 +209,23 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 			if(LESSON_LOCATION.equals(key))
 				return location;
 			if(LAUNCH_DATA.equals(key))
-				return getLauchDataString();
+				try {
+					return getLauchDataString();
+				} catch (Exception e) {
+					e.printStackTrace();
+					return "";
+				} 
 			String result = "";
 			key = keymap.getProperty(key, key);
-			result = access.LMSGetValue(scoid, userid, key);
+			try {
+				result = access.LMSGetValue(scoid, userid, key);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} 
 			return result;
 		}
 
-		public String getLauchDataString()
+		public String getLauchDataString() throws IOException, XmlRpcException, SQLException
 		{
 			ScoMapper mapper = new ScoMapper();
 			Sco sco = (Sco) mapper.get(scoid);
@@ -337,7 +355,13 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 			return;
 		frame.setContentPane(new ScormDecorator(wiskopdr, scoid, userid, location));
 		
-		parameters = getLauchData(scoid);
+		try {
+			parameters = getLaunchData_int(scoid);
+		} catch (XmlRpcException e) {
+			throw new IOException(e.getMessage());
+		} catch (SQLException e) {
+			throw new IOException(e.getMessage());
+		}
 // standaard parameters: background color is white, language = nl
 		parameters.put("bgcolor", bgcolor);
 		parameters.put("language", language);
@@ -473,7 +497,67 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		}
 		return result;
 	}
-	
+
+	public String getLaunchData(int scoID) throws Exception {
+		Hashtable map = getLaunchData_int(scoID);
+		transform(map);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		XMLEncoder encoder = new XMLEncoder(out);
+		encoder.writeObject(map);
+		encoder.close();
+		out.close();
+		return new String(out.toByteArray(), "UTF-8");
+	}
+
+	private void transform(Map map) {
+		Iterator iter = map.entrySet().iterator();
+		while (iter.hasNext()) {
+			Map.Entry entry = (Map.Entry) iter.next();
+			Object value = entry.getValue();
+			if(value instanceof String && value.toString().startsWith("H4sIA")) {
+				value = StringCodeObject.decodeStringToObject(value.toString());
+				if(value != null)
+				{	
+					entry.setValue(value);
+				}
+			}
+
+			if(value instanceof Map) {
+				transform((Map) value);
+			}
+
+//			if(value instanceof Font) {
+//				value = value.toString();
+//				entry.setValue(value);
+//			}
+//			if(value instanceof java.awt.Color) {
+//				value = value.toString();
+//				entry.setValue(value);
+//			}
+// arraytypes TODO List.
+			else if (value instanceof Object[]) {
+				Object[] array = (Object[])value;
+				entry.setValue(transform(array));
+			} 
+			
+				
+				
+		}
+		
+	}
+
+	private Object transform(Object[] array) {
+		for (int i = 0; i < array.length; i++) {
+			Object value = array[i];
+			if(value instanceof Map) 
+				transform( (Map) value);
+			if(value instanceof Object[]) 
+				value = transform((Object[])value);
+			array[i] = value;
+		}
+		return array;
+	}
+
 	
 	
 }
