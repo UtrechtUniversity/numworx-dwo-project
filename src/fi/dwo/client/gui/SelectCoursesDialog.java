@@ -18,10 +18,14 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.text.DateFormat;
+import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.EventObject;
 import java.util.Hashtable;
+import java.util.Locale;
 import java.util.Vector;
 
 import javax.swing.AbstractButton;
@@ -33,14 +37,18 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTree;
+import javax.swing.SpinnerDateModel;
 import javax.swing.UIManager;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -53,6 +61,9 @@ import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+
+import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JSpinnerDateEditor;
 
 import fi.dwo.client.domain.ClassCourse;
 import fi.dwo.client.domain.Course;
@@ -258,8 +269,8 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     class CheckBoxNodeRenderer implements TreeCellRenderer {
     	  JCheckBox leafRenderer = new JCheckBox();
     	  JButton   eraseBtn = new JButton();
-    	  JButton 	vanBtn = new JButton();
-    	  JButton	totBtn = new JButton();
+    	  JButton 	vanBtn = new JButton("_________________");
+    	  JButton	totBtn = new JButton("_________________");
     	  Box box;
     	  boolean boksAan;
     	  private DefaultTreeCellRenderer nonLeafRenderer = new DefaultTreeCellRenderer();
@@ -286,6 +297,12 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     			if(vantot)
     			{ 	box.add(vanBtn);
     				box.add(totBtn);
+        	        DateFormatSymbols newFormatSymbols =  new DateFormatSymbols(DwoHelper.getApplet().getLocale());
+    				DATE_TIME.setDateFormatSymbols(newFormatSymbols);
+    				vanBtn.setPreferredSize(vanBtn.getPreferredSize()); // fixed size.
+    				vanBtn.setMinimumSize(vanBtn.getPreferredSize());
+    				vanBtn.setMaximumSize(vanBtn.getPreferredSize());
+    				totBtn.setPreferredSize(totBtn.getPreferredSize());
     			}
     		}
     	    Font fontValue;
@@ -353,12 +370,12 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     	          } 	          
     	          if(node.van != null) {
     	        	  vanBtn.setText(DATE_TIME.format(node.van));
-    	          } else 
-    	        	  vanBtn.setText("");
+    	          } else //          "HH:mm dd-MMM-yyyy"
+    	        	  vanBtn.setText("_________________");
     	          if(node.tot != null) {
     	        	  totBtn.setText(DATE_TIME.format(node.tot));
     	          } else 
-    	        	  totBtn.setText("");
+    	        	  totBtn.setText("                 ");
     	          
     	          
     	        }
@@ -372,7 +389,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     	  }
     	}
 
-	static final DateFormat DATE_TIME = DateFormat.getDateTimeInstance();
+	static final SimpleDateFormat DATE_TIME = new SimpleDateFormat("HH:mm dd-MMM-yyyy");
     class CheckBoxNodeEditor extends AbstractCellEditor implements TreeCellEditor {
 
 
@@ -454,15 +471,48 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     		Date orig = van;
     		if(van == null) 
     			van = new Date();
-    		String out = 
-			JOptionPane.showInputDialog("Geef tijdstip", DATE_TIME.format(van));
-    		if(out == null) return orig;
-    		if(out.equals("")) return null;
-    		try {
-				return DATE_TIME.parse(out);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+    		Locale locale = DwoHelper.getApplet().getLocale();
+    		Box message = Box.createHorizontalBox();
+    		final Date datum = van;
+    		SpinnerDateModel model = new SpinnerDateModel();
+    		model.setValue(van);
+    		model.setCalendarField(Calendar.HOUR_OF_DAY);
+			final JSpinner timeChooser = new JSpinner(model);
+
+    		JSpinner.DateEditor editor = new JSpinner.DateEditor(timeChooser, "HH:mm");
+    		editor.getFormat().setDateFormatSymbols(new DateFormatSymbols(locale));
+    		timeChooser.setEditor(editor);    		
+    		message.add(new JLabel("tijd:"));
+    		message.add(timeChooser);
+    		JSpinnerDateEditor dateEditor = new JSpinnerDateEditor();
+    		dateEditor.setLocale(locale);
+			JDateChooser dayChooser = new JDateChooser(null, van, null,
+    				dateEditor);
+    		
+			dayChooser.setLocale(locale);
+    		message.add(new JLabel(" dag: "));
+    		message.add(dayChooser);
+    		int r = JOptionPane.showConfirmDialog(DwoHelper.getApplet(), message, "Geef tijdstip", JOptionPane.YES_NO_CANCEL_OPTION);
+    		if(r == JOptionPane.YES_OPTION) {
+    			van = dayChooser.getDate();
+    			Date t = (Date) timeChooser.getValue();
+    			van.setMinutes(t.getMinutes());
+    			van.setHours(t.getHours());
+    			orig = van;
+    			System.out.println(van);
+    		} else if (r == JOptionPane.NO_OPTION) {
+    			orig = null;
+    		}
+//    		String out = 
+//			JOptionPane.showInputDialog("Geef tijdstip", DATE_TIME.format(van));
+//    		if(out == null) return orig;
+//    		if(out.equals("")) return null;
+//    		try {
+//				return DATE_TIME.parse(out);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+
 			return orig;
 		}
 
@@ -489,7 +539,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     private SelectCoursesDialog(Component owner, String title, boolean modal,
             Course[] allCourses, Course[] selectedCourses, int cnt) {
         super(DwoHelper.getFrameForComponent(owner), title, modal);
-//        vantot = cnt != 2;
+        vantot = cnt != 2;
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
