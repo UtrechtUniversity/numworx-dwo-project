@@ -42,7 +42,7 @@ import fi.beans.xmlrpc.Servlet;
  */
 public class DwoWebPageServlet extends Servlet {
 
-    private String HTML_SOURCE = "file:/space/WWW/InfoGroups/dwo/dwo.html";
+    private String HTML_SOURCE = "file:/home/projects/fisme-sites/www/dwo/dwo.html";
 
     //private String SERVLET = "/servlet/fi.dwo.server.persistence.DbAccessServlet";
 

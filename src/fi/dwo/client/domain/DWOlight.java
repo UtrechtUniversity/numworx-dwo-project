@@ -472,6 +472,11 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
             TextMapper.setLanguage(lang);
             fi.dwo.parameters.system.TextMapper.setLanguage(lang);
         }
+        boolean cookies = false; 
+        String cookiesString = getParameter("cookies");
+        if(cookiesString!=null && cookiesString.equals("true")) {
+        	cookies = true;
+        }
         
         boolean guestUser = false; // Wim: teruggezet
         String guestUserString = getParameter("guestUser");
@@ -548,7 +553,20 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	        	JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
 	        }
         }
-        
+        else if(cookies)
+        {	userName = DwoHelper.getCookie("dwoUserName");
+        	passWord = DwoHelper.getCookie("dwoPassWord");
+        	if(userName!=null && passWord!=null) {
+	        	try {
+		        	GuiCreator.instance().login(userName, passWord);
+		            return;
+	        	}
+	        	catch(Exception ex)
+	        	{	        		
+	        	}
+        	}
+        }
+
 // Hier wordt A-Select in DWO actief
         currentUser = getInitialUser();
         if (currentUser != null) // Dit is de enige plaats waar op null

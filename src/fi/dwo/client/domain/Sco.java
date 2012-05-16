@@ -123,6 +123,9 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
 	public static final String LAUNCH_DATA = "cmi.launch_data";
 	public static final String LESSON_LOCATION = "cmi.core.lesson_location";
     public static final String SESSION_TIME = "cmi.core.session_time";
+    public static final String CREDIT  = "credit";
+    public static final String NO_CREDIT = "no-credit";
+    public static final String CREDIT_STATUS = "cmi.core.credit";
 
 	private String  lessonMode = NORMAL;
 
@@ -384,10 +387,26 @@ System.err.println("sum = ["+result+"]");
     	}
     	if(LESSON_LOCATION.equals(iDataModelElement))
     		return getLessonLocation();
+    	if(CREDIT_STATUS.equals(iDataModelElement))
+    		return getCreditStatus();
         return dwo.LMSGetValue(this, user, iDataModelElement);
     }
 
-    private String getLessonLocation() {
+    /**
+     * Bepaal cmi.core.credit. Is gelijk aan is een assesment of niet.
+     * @return credit/no-credit
+     */
+    public String getCreditStatus() {
+		Course c = getCourse();
+		if ( c != null ) {
+			ClassCourse link = c.link;
+			if(link != null && link.getType() == ClassCourse.ASSESMENT)
+				return CREDIT;
+		}
+		return NO_CREDIT;
+	}
+
+	private String getLessonLocation() {
     	if(REVIEW.equals(lessonMode) && locationOverride != null) {
     		lessonLocation = locationOverride;
     		locationOverride = null;

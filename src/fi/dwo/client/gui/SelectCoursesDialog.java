@@ -74,8 +74,6 @@ import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.SchoolClass;
 import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.ClassPanel.ClassModel;
-import fi.dwo.client.gui.action.TeacherStrategy;
 import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.PersistenceException;
@@ -92,6 +90,7 @@ class CourseData {
 		{
 			van = course.link.getNotBefore();
 			tot = course.link.getNotAfter();
+			type = course.link.getType();
 		}
 	}
 	Image data;
@@ -482,7 +481,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     		JSpinner.DateEditor editor = new JSpinner.DateEditor(timeChooser, "HH:mm");
     		editor.getFormat().setDateFormatSymbols(new DateFormatSymbols(locale));
     		timeChooser.setEditor(editor);    		
-    		message.add(new JLabel("tijd:"));
+    		message.add(new JLabel("tijd: "));
     		message.add(timeChooser);
     		JSpinnerDateEditor dateEditor = new JSpinnerDateEditor();
     		dateEditor.setLocale(locale);
@@ -499,19 +498,9 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     			van.setMinutes(t.getMinutes());
     			van.setHours(t.getHours());
     			orig = van;
-    			System.out.println(van);
-    		} else if (r == JOptionPane.NO_OPTION) {
+     		} else if (r == JOptionPane.NO_OPTION) {
     			orig = null;
     		}
-//    		String out = 
-//			JOptionPane.showInputDialog("Geef tijdstip", DATE_TIME.format(van));
-//    		if(out == null) return orig;
-//    		if(out.equals("")) return null;
-//    		try {
-//				return DATE_TIME.parse(out);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
 
 			return orig;
 		}
@@ -539,7 +528,8 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     private SelectCoursesDialog(Component owner, String title, boolean modal,
             Course[] allCourses, Course[] selectedCourses, int cnt) {
         super(DwoHelper.getFrameForComponent(owner), title, modal);
-        vantot = cnt != 2;
+// nog even uit bij productie.
+        //vantot = cnt != 2;
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
