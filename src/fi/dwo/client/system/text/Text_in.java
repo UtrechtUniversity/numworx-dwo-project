@@ -7,7 +7,7 @@ import java.util.ListResourceBundle;
 
 import fi.dwo.client.system.TextMapper;
 
-public class Text_id extends ListResourceBundle {
+public class Text_in extends ListResourceBundle {
  private final Object[][] contents = {
          { TextMapper.USER_GUEST, "Tamu"},
          { TextMapper.BTN_LOGIN, "Masuk" },
@@ -335,7 +335,7 @@ public class Text_id extends ListResourceBundle {
 
 };
 
- public Text_id() {
+ public Text_in() {
 
  }
 
