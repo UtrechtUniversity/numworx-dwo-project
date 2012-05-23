@@ -725,6 +725,13 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		{
 			strategy.nodeSelected((CourseMap) o);
 		} else
+// vergeten?
+		if( o instanceof Sco)
+		{
+			strategy.nodeSelected(new TreeMap(node));
+		} else
+			
+			
 		if(o == SCHOOL_MODULES)
 			strategy.nodeSelected(SCHOOL_MAP);
 		else if(o == STANDAARD_DWO_MODULES)
