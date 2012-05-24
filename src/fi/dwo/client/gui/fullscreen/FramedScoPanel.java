@@ -1,4 +1,4 @@
-package fi.dwo.client.gui;
+package fi.dwo.client.gui.fullscreen;
 
 import java.awt.Component;
 import java.awt.Frame;
@@ -10,10 +10,13 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 
 import fi.dwo.client.domain.Sco;
+import fi.dwo.client.gui.CenterPanel;
+import fi.dwo.client.gui.CenterSubPanel;
 
 public class FramedScoPanel extends JPanel implements CenterSubPanel, ActionListener {
 
@@ -58,13 +61,17 @@ public class FramedScoPanel extends JPanel implements CenterSubPanel, ActionList
 
 	public void actionPerformed(ActionEvent e) {
 		//btn.setEnabled(false); // one shot?
-		Frame f = JOptionPane.getFrameForComponent((Component) e.getSource());
-		JDialog d = new JDialog(f, true);
-		d.setContentPane(csp.getComponent());
-		d.setSize(800,600);
-		d.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		d.show();
-		center.select(sco.getCourse());
+		final Frame f = JOptionPane.getFrameForComponent((Component) e.getSource());		
+		final JComponent component = csp.getComponent();
+		component.setSize(getSize());
+		component.setLocation(getLocationOnScreen());
+		SwingUtilities.invokeLater(
+		new Runnable() {
+			public void run() {
+				FullScreenDWO.showInFrame(f, component);
+				center.select(sco.getCourse());
+			}
+		});
 	}
 
 }

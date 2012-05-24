@@ -169,6 +169,8 @@ public interface DbAccessIF {
      * @throws XmlRpcException
      * @throws SQLException
      */
+    public boolean renameClass(int classID, String newName, boolean iconizer) throws DwoXmlRpcException, IOException, XmlRpcException,
+    SQLException;
     
     public boolean renameClass(int classID, String newName /*, boolean iconizer*/) throws DwoXmlRpcException, IOException, XmlRpcException,
     SQLException;
@@ -514,7 +516,7 @@ public interface DbAccessIF {
 	public boolean moveSco(int scoId, int courseId, int sequencenr, String name)
 	throws  DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
-//	public boolean selectCoursesForClass(int classID, int courseID, int type,
-//			Date van, Date tot)
-//	throws IOException, XmlRpcException, SQLException;
+	public boolean selectCoursesForClass(int classID, int courseID, int type,
+			Date van, Date tot)
+	throws IOException, XmlRpcException, SQLException;
 }

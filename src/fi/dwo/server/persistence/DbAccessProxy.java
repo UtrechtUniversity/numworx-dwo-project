@@ -114,11 +114,11 @@ public class DbAccessProxy extends DbConnect implements DbAccessIF {
 		return getDelegate().renameClass(classID, newName);
 	}
 	
-//	public boolean renameClass(int classID, String newName, boolean iconizer)
-//	throws DwoXmlRpcException, IOException, XmlRpcException,
-//	SQLException {
-//		return getDelegate().renameClass(classID, newName, iconizer);
-//	}
+	public boolean renameClass(int classID, String newName, boolean iconizer)
+	throws DwoXmlRpcException, IOException, XmlRpcException,
+	SQLException {
+		return getDelegate().renameClass(classID, newName, iconizer);
+	}
 
 	public boolean reassignClass(int classID, int newTeacher)
 			throws IOException, SQLException, XmlRpcException,
@@ -456,10 +456,10 @@ public class DbAccessProxy extends DbConnect implements DbAccessIF {
 		return getDelegate().moveSco(scoId, courseId, sequencenr, name);
 	}
 
-//	public boolean selectCoursesForClass(int classID, int courseID, int type,
-//			Date van, Date tot) throws IOException, XmlRpcException,
-//			SQLException {
-//		return getDelegate().selectCoursesForClass(classID, courseID, type, van, tot);
-//	}
+	public boolean selectCoursesForClass(int classID, int courseID, int type,
+			Date van, Date tot) throws IOException, XmlRpcException,
+			SQLException {
+		return getDelegate().selectCoursesForClass(classID, courseID, type, van, tot);
+	}
 	
 }

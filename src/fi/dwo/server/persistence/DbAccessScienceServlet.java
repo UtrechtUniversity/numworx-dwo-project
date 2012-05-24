@@ -9,7 +9,6 @@ public class DbAccessScienceServlet extends DbAccessServlet {
 
 	DbAccessScienceServlet() {
 		super(new DbAccessScience());
-		// TODO Auto-generated constructor stub
 	}
 
 	/* (non-Javadoc)

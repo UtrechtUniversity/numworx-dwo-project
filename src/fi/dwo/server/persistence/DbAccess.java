@@ -1677,7 +1677,12 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         PreparedStatement ps = getStatement(QRY_UPDATE_CLASS_NAME);
         ps.setString(1, newName);
         ps.setInt(2, classID);
-        try {
+        return renameCommon(ps);
+    }
+
+	private boolean renameCommon(PreparedStatement ps)
+			throws DwoXmlRpcException, SQLException {
+		try {
             ps.execute();
         } catch (SQLException e) {
             if (e.getErrorCode() == 1062) {
@@ -1689,25 +1694,14 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             }
         }
         return true;
-    }
+	}
     
     public boolean renameClass(int classID, String newName, boolean iconizer) throws SQLException, DwoXmlRpcException {
         PreparedStatement ps = getStatement(QRY_UPDATE_CLASS_NAME2);
         ps.setString(1, newName);
         ps.setBoolean(2, iconizer);
         ps.setInt(3, classID);
-        try {
-            ps.execute();
-        } catch (SQLException e) {
-            if (e.getErrorCode() == 1062) {
-                /* The class already exists */
-                throw new DwoXmlRpcException(
-                        DwoXmlRpcException.EXC_CLASS_EXISTS);
-            } else {
-                throw e;
-            }
-        }
-        return true;
+        return renameCommon(ps);
     	
     }
     

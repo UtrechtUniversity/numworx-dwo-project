@@ -185,7 +185,8 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
     			JLabel l1 = new JLabel(TextMapper.getText(TextMapper.GUIC_MSG_RENAME_CLASS));
     			JCheckBox check = new JCheckBox("boomstructuur?");
     			check.setSelected(sc.hasIconizer());
-    			//box.add(check);
+    			if(CenterPanel.isIconizer())
+    				box.add(check);
     			box.add(l1);
                 String newName = JOptionPane.showInputDialog(ClassPanel.this, box, sc.getName());
                 if ((newName != null) && (!newName.equals("")) && GuiCreator.instance().renameClass(sc, newName, check.isSelected())) {
@@ -210,7 +211,6 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
                 Course[] allCourses = GuiCreator.instance().getCourseList();
                 Course[] selectedCourses = SelectCoursesDialog.selectCourses(ClassPanel.this,GuiCreator.instance().getCourseList(),sc.getSelectedSchoolCourses(), sc );
                 if(selectedCourses!=null)sc.saveSelectedCourses(allCourses,selectedCourses);
-
     		}
     		fireEditingStopped();
     	}

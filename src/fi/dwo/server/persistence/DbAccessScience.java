@@ -11,6 +11,7 @@ import java.sql.SQLException;
 public class DbAccessScience extends DbAccess {
 
 	public DbAccessScience() {
+		System.out.println("mysql.science.uu.nl");
 	}
 
 	private Connection c;
@@ -31,7 +32,7 @@ public class DbAccessScience extends DbAccess {
 	public Connection getConnection() throws SQLException {
 		if(c != null && !c.isClosed())
 			return c;
-		c = DriverManager.getConnection("jdbc:mysql://mysql.science.uu.nl/fisme_dwo", "dwo", "_dwo");
+		c = DriverManager.getConnection("jdbc:mysql://mysql.science.uu.nl/fisme_dwo", "fisme_dwo", "_fisme_dwo");
 		return c;
 	}
 

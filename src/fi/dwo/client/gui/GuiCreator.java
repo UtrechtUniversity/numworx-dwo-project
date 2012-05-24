@@ -25,6 +25,7 @@ import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.Admin;
 import fi.dwo.client.domain.User;
+import fi.dwo.client.gui.fullscreen.FramedScoPanel;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.ClassException;
 import fi.dwo.client.system.SchoolException;
@@ -426,6 +427,7 @@ public class GuiCreator {
         CenterSubPanel csp = dwo.loadSco(sco);
         if(sco.getCreditStatus() == Sco.CREDIT)
         {
+            dwo.setReady();
         	return new FramedScoPanel(csp, sco);
         }
         dwo.setReady();
