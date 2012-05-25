@@ -18,6 +18,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 import fi.beans.base64code.StringCodeObject;
 import fi.dwo.client.domain.AppletConfig;
 import fi.dwo.client.domain.Course;
+import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.CourseSequence;
 import fi.dwo.client.domain.DWO;
 import fi.dwo.client.domain.DwoHelper;
@@ -316,7 +317,12 @@ public class PersistenceFacade {
                     } else {
                         v = DbAccessCreator.instance().getCoursesForClass(
                                 schoolClass.getID());
+                        
                         v = clipBeforeAfter(v);
+                        Course[] courses = (Course[]) mapper.getObjectFromReturn(v);
+// FIXME hier maken we de caching effecten ongedaan.
+                        undoCachingEffect(courses);
+						return courses;
                     }
                 }
             }
@@ -337,7 +343,38 @@ public class PersistenceFacade {
 
     }
     
-    private Vector clipBeforeAfter(Vector v) {
+    /**
+     * Als no_chilren, maar loaded wordt dan true
+     */
+	private static final Course[] NO_CHILDREN_LOADED = new Course[0];
+	/**
+	 * vul de children van de courses. Daarmee wordt een 'loadchildren' hopelijk niet aangeroepen.
+	 */
+    private void undoCachingEffect(Course[] courses) {
+    	MapperIF mapper = MapperCreator.instance(Course.class);
+    	sequence(courses);
+    	for (int i = 0; i < courses.length; i++) {
+			Course c = courses[i];
+			if(c.isWithChildren())
+				c.setChildren(NO_CHILDREN_LOADED);
+		}
+		for (int i = 0; i < courses.length; i++) {
+			Course c = courses[i];
+			if(c.getParentID() != 0)
+			{
+				CourseMap parent = c.getParentMap();
+				if(parent == null)
+					try {
+						parent = (CourseMap) mapper.get(c.getParentID()); // deze komt toch uit de cache?
+					} catch (Exception e) {
+						continue;
+					} 				
+				parent.addChild(c);	// als dit werkt, zou dat mooi zijn!
+			}
+		}
+	}
+
+	private Vector clipBeforeAfter(Vector v) {
 		Iterator iter = v.iterator();
 		long now = System.currentTimeMillis();
 		while (iter.hasNext()) {

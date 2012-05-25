@@ -67,6 +67,7 @@ public class FullScreenDWO extends JDialog implements ChangeListener, ActionList
 		frame.setContentPane(component);
 		frame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		frame.addInternalFrameListener(this);
+		frame.setDoubleBuffered(true);
 		content.add(frame);
 		frame.show();
 		
@@ -88,7 +89,7 @@ public class FullScreenDWO extends JDialog implements ChangeListener, ActionList
 				if(w != null)
 				{	Container c = w.getParent();
 					Frame mainFrame = JOptionPane.getFrameForComponent(DwoHelper.getApplet());
-					if( w == mainFrame || c == this || c == mainFrame)
+					if( w == mainFrame || c == this || c == mainFrame || c == null)
 					{
 
 						WindowListener[] listeners = w.getWindowListeners();
