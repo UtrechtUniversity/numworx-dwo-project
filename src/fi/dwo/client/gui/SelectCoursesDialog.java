@@ -552,7 +552,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
             Course[] allCourses, Course[] selectedCourses, int cnt) {
         super(DwoHelper.getFrameForComponent(owner), title, modal);
 // nog even uit bij productie.
-        //vantot = cnt != 2;
+        vantot = cnt != 2;
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());

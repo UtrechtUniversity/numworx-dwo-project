@@ -342,8 +342,12 @@ private Object[] cached(Hashtable ht) throws IOException, XmlRpcException,
 				e.printStackTrace();
 			} 
         } else 
-        	c.link = null; // FIXME is dit correct?
-        
+        {	if(c.link != null)
+        	{
+        		System.err.println("erase link for " + c);
+        	}
+        	//c.link = null; // FIXME is dit correct?
+        }
         return c;
     }
 

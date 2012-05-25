@@ -60,7 +60,7 @@ public class FramedScoPanel extends JPanel implements CenterSubPanel, ActionList
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		//btn.setEnabled(false); // one shot?
+		btn.setEnabled(false); // one shot?
 		final Frame f = JOptionPane.getFrameForComponent((Component) e.getSource());		
 		final JComponent component = csp.getComponent();
 		component.setSize(getSize());

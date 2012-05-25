@@ -422,6 +422,12 @@ public class PersistenceFacade {
                 v = DbAccessCreator.instance().getCoursesForClass(
                         schoolClass.getID());
             }
+// geen mappen hier teruggeven! alleen modules
+            for (Iterator iterator = v.iterator(); iterator.hasNext();) {
+				Hashtable map = (Hashtable) iterator.next();
+				if(Boolean.TRUE.equals(map.get("withChildren"))) // FIXME CONSTANT
+					iterator.remove();
+			}
             MapperIF mapper = MapperCreator.instance(Course.class);
             return (Course[]) mapper.getObjectFromReturn(v);
         } catch (IOException e) {

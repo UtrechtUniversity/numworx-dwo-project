@@ -8,6 +8,7 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -89,7 +90,14 @@ public class FullScreenDWO extends JDialog implements ChangeListener, ActionList
 					Frame mainFrame = JOptionPane.getFrameForComponent(DwoHelper.getApplet());
 					if( w == mainFrame || c == this || c == mainFrame)
 					{
-						
+
+						WindowListener[] listeners = w.getWindowListeners();
+						if(listeners != null) {
+							for (int i = 0; i < listeners.length; i++) {
+								if(listeners[i] instanceof WindowLogger)
+									return;
+							}
+						}
 						// monitor w for deactivate events met NULL als opposite. 
 						w.addWindowListener(new WindowLogger(this));
 						
