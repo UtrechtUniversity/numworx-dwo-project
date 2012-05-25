@@ -35,6 +35,7 @@ import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -74,6 +75,8 @@ import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.SchoolClass;
 import fi.dwo.client.domain.User;
+import fi.dwo.client.gui.ClassPanel.ClassModel;
+import fi.dwo.client.gui.action.TeacherStrategy;
 import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.PersistenceException;
@@ -270,6 +273,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     	  JButton   eraseBtn = new JButton();
     	  JButton 	vanBtn = new JButton("_________________");
     	  JButton	totBtn = new JButton("_________________");
+    	  JComboBox typeBtn = new JComboBox(new Object[] { "normaal", "toets" });
     	  Box box;
     	  boolean boksAan;
     	  private DefaultTreeCellRenderer nonLeafRenderer = new DefaultTreeCellRenderer();
@@ -296,12 +300,16 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     			if(vantot)
     			{ 	box.add(vanBtn);
     				box.add(totBtn);
+    				box.add(typeBtn);
         	        DateFormatSymbols newFormatSymbols =  new DateFormatSymbols(DwoHelper.getApplet().getLocale());
     				DATE_TIME.setDateFormatSymbols(newFormatSymbols);
     				vanBtn.setPreferredSize(vanBtn.getPreferredSize()); // fixed size.
     				vanBtn.setMinimumSize(vanBtn.getPreferredSize());
     				vanBtn.setMaximumSize(vanBtn.getPreferredSize());
     				totBtn.setPreferredSize(totBtn.getPreferredSize());
+    				totBtn.setMaximumSize(totBtn.getPreferredSize());
+    				totBtn.setMinimumSize(totBtn.getPreferredSize());
+    				
     			}
     		}
     	    Font fontValue;
@@ -370,12 +378,12 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     	          if(node.van != null) {
     	        	  vanBtn.setText(DATE_TIME.format(node.van));
     	          } else //          "HH:mm dd-MMM-yyyy"
-    	        	  vanBtn.setText("_________________");
+    	        	  vanBtn.setText("  :     -   -    ");
     	          if(node.tot != null) {
     	        	  totBtn.setText(DATE_TIME.format(node.tot));
     	          } else 
-    	        	  totBtn.setText("                 ");
-    	          
+    	        	  totBtn.setText("  :     -   -    ");
+    	          typeBtn.setSelectedIndex(node.type);
     	          
     	        }
     	      }
@@ -398,12 +406,26 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
     	  JTree tree;
 
+		private ItemListener typeAction = new ItemListener() {
+
+			public void itemStateChanged(ItemEvent event) {
+				System.out.println(event);
+				if(event.getStateChange() == event.SELECTED)
+				{
+		     	    CourseData checkBoxNode = (CourseData)userObject;
+		     	    checkBoxNode.type = renderer.typeBtn.getSelectedIndex();
+				}
+			}
+			
+		};
+
     	  public CheckBoxNodeEditor(JTree tree) {
     	    this.tree = tree;
       	    	renderer.leafRenderer.addItemListener(itemListener);
       	    	renderer.eraseBtn.addActionListener(eraseAction );
       	    	renderer.vanBtn.addActionListener(vanAction);
-      	    	renderer.totBtn.addActionListener(totAction);      	    
+      	    	renderer.totBtn.addActionListener(totAction);
+      	    	renderer.typeBtn.addItemListener(typeAction);
     	  }
 
     	  public Object getCellEditorValue() {
@@ -427,14 +449,14 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 		private ActionListener vanAction = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 	     	    CourseData checkBoxNode = (CourseData)userObject;
-	     	    checkBoxNode.van = changeDate(checkBoxNode.course, checkBoxNode.van);
+	     	    checkBoxNode.van = changeDate("vanaf", checkBoxNode.van);
 	     	    itemListener.itemStateChanged(null);				
 			}
 		};
 		private ActionListener totAction = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 	     	    CourseData checkBoxNode = (CourseData)userObject;
-	     	    checkBoxNode.tot = changeDate(checkBoxNode.course, checkBoxNode.tot);
+	     	    checkBoxNode.tot = changeDate("tot", checkBoxNode.tot);
 	     	    itemListener.itemStateChanged(null);
 			}
 		};
@@ -466,7 +488,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     	    return returnValue;
     	  }
 
-    	  protected Date changeDate(Course course, Date van) {
+    	  protected Date changeDate(String hoe, Date van) {
     		Date orig = van;
     		if(van == null) 
     			van = new Date();
@@ -481,7 +503,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     		JSpinner.DateEditor editor = new JSpinner.DateEditor(timeChooser, "HH:mm");
     		editor.getFormat().setDateFormatSymbols(new DateFormatSymbols(locale));
     		timeChooser.setEditor(editor);    		
-    		message.add(new JLabel("tijd: "));
+    		message.add(new JLabel("tijd:"));
     		message.add(timeChooser);
     		JSpinnerDateEditor dateEditor = new JSpinnerDateEditor();
     		dateEditor.setLocale(locale);
@@ -489,16 +511,17 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     				dateEditor);
     		
 			dayChooser.setLocale(locale);
+			dayChooser.setDateFormatString("dd-MM-yyyy"); // bug in locale van spinnerdateeditor
     		message.add(new JLabel(" dag: "));
     		message.add(dayChooser);
-    		int r = JOptionPane.showConfirmDialog(DwoHelper.getApplet(), message, "Geef tijdstip", JOptionPane.YES_NO_CANCEL_OPTION);
+    		int r = JOptionPane.showConfirmDialog(DwoHelper.getApplet(), message, "Geef tijdstip " + hoe, JOptionPane.YES_NO_CANCEL_OPTION);
     		if(r == JOptionPane.YES_OPTION) {
     			van = dayChooser.getDate();
     			Date t = (Date) timeChooser.getValue();
     			van.setMinutes(t.getMinutes());
     			van.setHours(t.getHours());
     			orig = van;
-     		} else if (r == JOptionPane.NO_OPTION) {
+    		} else if (r == JOptionPane.NO_OPTION) {
     			orig = null;
     		}
 

@@ -57,6 +57,7 @@ import fi.beans.base64code.StringCodeObject;
 import fi.beans.mathkit.JMathPane;
 import fi.beans.mathkit.JMathToolTip;
 import fi.beans.mathkit.MathKit;
+import fi.beans.scorm.PartialScoreIF;
 import fi.beans.scorm2xml.Scorm2Xml;
 import fi.beans.stringutils.StringUtils;
 import fi.dwo.client.domain.ResultScore;
@@ -105,15 +106,15 @@ public class  ResultLogger extends JPanel implements ActionListener {
 					LOGKEY_ATTEMPTS
 	};
 
-	protected static final String RAWDATA = "RAWDATA";
+	protected static final String RAWDATA = "RAWDATA", PARTIAL="PARTIAL";
 	
 	private LogTable[] table = new LogTable[LOGKEYS.length];
-	private JTable   cmiTable, leerlingTable;
+	private JTable   cmiTable, leerlingTable, partialTable;
 	private JViewport leerlingView;
 	//private Map itemScores;
 	//private Map logAnswers;
 	//private Map logScores;
-	private DefaultTableModel model, cmiModel, leerlingModel;
+	private DefaultTableModel model, cmiModel, leerlingModel, partialModel;
 	private User[] leerlingen;
 	
 	private Sco sco;
@@ -187,7 +188,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		v.add(b);
 		
 		model = new DefaultTableModel(1, 1);
-		scrollPane = new JScrollPane[table.length+1];
+		scrollPane = new JScrollPane[table.length+2];
 		ChangeListener changeListener = new ChangeListener() {
 
 			public void stateChanged(ChangeEvent e) {
@@ -220,8 +221,10 @@ public class  ResultLogger extends JPanel implements ActionListener {
 				int index = tabpane.getSelectedIndex();
 				if(index < table.length)
 					logModeKey = table[index].logModeKey;
-				else
+				else if(index == table.length)
 					logModeKey = RAWDATA;
+				else 
+					logModeKey = PARTIAL;
 				if(index < scrollPane.length) {
 					//resizeTable();
 					int y = scrollPane[index].getViewport().getViewPosition().y;
@@ -246,6 +249,18 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		scrollPane[table.length] = new JScrollPane(pane2,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane[table.length].getViewport().addChangeListener(changeListener);
 		tabpane.add(scrollPane[table.length], "log data");
+		partialModel = new DefaultTableModel(1,1);
+		partialTable = new JTable(partialModel);
+		pane2 = new JPanel(new BorderLayout());
+		pane2.add(partialTable.getTableHeader(), BorderLayout.NORTH);
+		pane2.add(partialTable, BorderLayout.CENTER);
+		scrollPane[table.length+1] = new JScrollPane(pane2,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollPane[table.length+1].getViewport().addChangeListener(changeListener);
+		tabpane.add(scrollPane[table.length+1], "deel-scores");
+		
+		
+		
+		
 		split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		split.setDividerLocation(100);
 		Box vbox = Box.createVerticalBox();
@@ -266,9 +281,63 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		
 		requestLog();
 		requestCMIData();
+		requestPartialScore();
 		resizeTable();
 	}
 	
+	private void requestPartialScore() {
+		leerlingen = schoolClass.getStudents();
+		Arrays.sort(leerlingen, USER_COMPARATOR);
+		partialModel.setRowCount(leerlingen.length+1);
+		SortedSet pages = new TreeSet();
+		Map[] lists = new Map[leerlingen.length];
+		sco.dwo = GuiCreator.instance().getDWO();
+		for(int i = 0; i < leerlingen.length; i++) {
+			User u = leerlingen[i];
+			sco.setUser(u);
+			List list = sco.getPartialScoreIF().getScoreMapList(sco);
+			lists[i] = new HashMap();
+			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+				Map object = (Map) iterator.next();
+				Object page = object.get(PartialScoreIF.LOCATION);
+				pages.add(page);
+				lists[i].put(page, object);
+			}
+		}
+		sco.setUser(User.getCurrentUser());
+		partialModel.setColumnCount(pages.size()*2);
+		for (int i = 0; i < leerlingen.length; i++) {
+			int j = 0;
+			for (Iterator iterator = pages.iterator(); iterator.hasNext();j+=2) {
+				Object object = iterator.next();
+				Map map = (Map)lists[i].get(object);
+				if(map == null)
+					continue;
+				
+				partialModel.setValueAt(map.get(PartialScoreIF.SCORE_RAW), i+1, j);
+				Object o = map.get(PartialScoreIF.SCORE_MAX);
+				if(o != null) {
+					partialModel.setValueAt(o, 0, j);
+				}
+				o = map.get(PartialScoreIF.DESCRIPTION);
+				if(o != null) {
+					partialModel.setValueAt(o, 0, j+1);
+				}
+				o = map.get(PartialScoreIF.SESSION_TIME);
+				partialModel.setValueAt(o, i+1, j+1);
+			}
+			
+		}
+		TableColumnModel columnModel = partialTable.getColumnModel();
+		int j = 0;
+		for (Iterator iterator = pages.iterator(); iterator.hasNext();j+=2) {
+			Object object = iterator.next();
+			columnModel.getColumn(j).setHeaderValue(object + " score");
+			columnModel.getColumn(j+1).setHeaderValue("tijdsduur");
+		}
+		
+	}
+
 	public void resizeTable()
 	{
 		//if(true)return;
@@ -279,6 +348,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 			TableUtil.setJTableSizes(tablei);
 		}
 		TableUtil.setJTableSizes(cmiTable);
+		TableUtil.setJTableSizes(partialTable);
 		leerlingTable.setRowHeight(getTable(0).getRowHeight());
 		leerlingTable.setRowMargin(cmiTable.getRowMargin());
 		cmiTable.setRowHeight(cmiTable.getRowHeight());
@@ -459,6 +529,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		if(BUTTON_REFRESH == e.getActionCommand()){
 			requestLog();
 			requestCMIData();
+			requestPartialScore();
 			resizeTable();
 		}
 		else if(e.getActionCommand() == SAVE)
@@ -468,36 +539,11 @@ public class  ResultLogger extends JPanel implements ActionListener {
 			if(result == JFileChooser.APPROVE_OPTION)
 			{
 		        File f = chooser.getSelectedFile();
-				if(logModeKey.equals(RAWDATA))
+		        if(logModeKey.equals(PARTIAL))
+		        	saveTable(f, partialTable);
+		        else if(logModeKey.equals(RAWDATA))
 				{
-					try {
-                        PrintWriter out = new PrintWriter(new FileWriter(f));
-                        int len = cmiModel.getRowCount();
-                        int width = cmiModel.getColumnCount();
-                        out.print(leerlingTable.getColumnModel().getColumn(0).getHeaderValue());
-                        for(int j = 0; j<width ; j++)
-                        {
-                        	out.print(TAB);
-                        	out.print(cmiTable.getColumnModel().getColumn(j).getHeaderValue());
-                        }
-                        out.println();
-                        for(int i = 0; i < len; i++) {
-	                    	Object name = leerlingModel.getValueAt(i, 0);
-	                    	out.print(name==null?"":name.toString());
-	                        for(int j = 0; j < width; j++) {
-	                            out.print(TAB);
-	                            Object value = cmiModel.getValueAt(i, j);
-	                            if(value == null)
-	                                value = "";
-	                            out.print(value);
-	                        }
-	                        out.println();
-	                    }
-	                    out.close();
-					} catch(Exception ex)
-					{
-						
-					}
+					saveTable(f, cmiTable);
 					
 				} else	
 				if(logModeKey.equals(LOGKEY_ATTEMPTS)) {
@@ -662,6 +708,38 @@ public class  ResultLogger extends JPanel implements ActionListener {
 	                }
 			    }
 			}			
+		}
+	}
+
+	private void saveTable(File f, JTable table) {
+		TableModel m = table.getModel();
+		try {
+		    PrintWriter out = new PrintWriter(new FileWriter(f));
+			int len = m.getRowCount();
+		    int width = m.getColumnCount();
+		    out.print(leerlingTable.getColumnModel().getColumn(0).getHeaderValue());
+		    for(int j = 0; j<width ; j++)
+		    {
+		    	out.print(TAB);
+		    	out.print(table.getColumnModel().getColumn(j).getHeaderValue());
+		    }
+		    out.println();
+		    for(int i = 0; i < len; i++) {
+		    	Object name = leerlingModel.getValueAt(i, 0);
+		    	out.print(name==null?"":name.toString());
+		        for(int j = 0; j < width; j++) {
+		            out.print(TAB);
+		            Object value = m.getValueAt(i, j);
+		            if(value == null)
+		                value = "";
+		            out.print(value);
+		        }
+		        out.println();
+		    }
+		    out.close();
+		} catch(Exception ex)
+		{
+			
 		}
 	}
 

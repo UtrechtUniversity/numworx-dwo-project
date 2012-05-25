@@ -58,7 +58,7 @@ public class CenterPanel extends JPanel implements CourseContainer {
 	private JPanel window;
 	private Border scoBorder = BorderFactory.createEmptyBorder();
 	
-	private final class RequestFocusAST implements Runnable {
+	private final static class RequestFocusAST implements Runnable {
 		private final Component c;
 
 		private RequestFocusAST(Component c) {

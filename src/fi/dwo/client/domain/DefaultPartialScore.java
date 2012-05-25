@@ -18,8 +18,11 @@ public class DefaultPartialScore implements PartialScoreIF {
 		result.put(SCORE_RAW, raw);
 		String max = api.LMSGetValue("cmi.core.score.max");
 		if(null == max || "".equals(max)) max = "100";
+		result.put(SCORE_MAX, max);
 		result.put(DESCRIPTION, "resultaat");
 		result.put(LOCATION, "");
+		String time = api.LMSGetValue("cmi.core.session_time");
+		result.put(SESSION_TIME, time);
 		return Collections.singletonList(result);
 	}
 
