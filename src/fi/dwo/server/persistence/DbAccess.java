@@ -11,6 +11,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.text.MessageFormat;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -249,6 +251,25 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             + "group by tblUser.userID, tblCourse.courseID "
             + "ORDER BY tblUser.userID";
 
+    private final static String QRY_RESULTS_CLASS_COURSE = "SELECT tblUser.userID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
+    		+ "FROM (tblUser, tblCourse) "
+            + "join tblClass on tblClass.classID = tblUser.classID "
+            + "join tblSco on tblSco.courseID = tblCourse.courseID "
+            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID and tblStudentSco.scoId = tblSco.scoId "
+// mysql4
+//            + "FROM tblClass right join tblUser on tblClass.classID = tblUser.classID "
+//            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID "
+//            + "right join tblSco on tblStudentSco.scoID = tblSco.scoID "
+//            + "left join tblCourse on tblSco.courseID = tblCourse.courseID "        
+            
+            + "where (tblUser.classID = ?) "
+            + "and (tblCourse.courseID = ?) "
+            + "group by tblUser.userID, tblCourse.courseID "
+            + "ORDER BY tblUser.userID";
+    
+    
+    
+    
     private final static String QRY_RESULTS_STUDENT_COURSE = "SELECT tblUser.userID, tblSco.scoID, tblSco.sequencenr,  if(score=0,-1,score) as score, total_time "
 // mysql4 en mysql5
     		+ "FROM (tblUser, tblSco)  join tblClass on tblClass.classID = tblUser.classID "
@@ -1586,7 +1607,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * 
      * @see fi.dwo.client.persistence.DbAccessIF#getResults(int[], int)
      */
-    public Vector getResults(Vector courses, int classID, int userID)
+    public Vector getResults_slow(Vector courses, int classID, int userID)
             throws IOException, XmlRpcException, SQLException {
         int i;
         String courseString = "";
@@ -1611,6 +1632,45 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         }
     }
 
+    private Vector get1Results(PreparedStatement ps, Object courseID, int classID) throws SQLException {
+    	ps.setInt(1, classID);
+    	ps.setObject(2, courseID);
+    	return executeQueryWithResult(ps);
+    }
+    
+	static final Comparator comparator = new Comparator() {
+		// sort on userID, courseID
+					public int compare(Object arg0, Object arg1) {
+						Hashtable h0 = (Hashtable) arg0;
+						Hashtable h1 = (Hashtable) arg1;
+						Integer i0 = (Integer) h0.get("userID");
+						Integer i1 = (Integer) h1.get("userID");
+						int r =  i0.compareTo(i1);
+						if(r == 0) {
+							i0 = (Integer) h0.get("courseID");
+							i1 = (Integer) h1.get("courseID");
+							r = i0.compareTo(i1);
+						}
+						return r;
+					}};
+
+	public Vector getResults(Vector courses, int classID, int teacherID) 
+    	throws SQLException {
+    	if(courses.isEmpty())
+    		return new Vector();
+    	Iterator iterator = courses.iterator();
+    	PreparedStatement ps = getStatement(QRY_RESULTS_CLASS_COURSE);
+    	Vector all = get1Results(ps, iterator.next(), classID);
+    	while (iterator.hasNext()) {
+			Object courseID = iterator.next();
+			all.addAll(get1Results(ps, courseID, classID));
+		}
+    	ps.close();
+		Collections.sort(all, comparator);
+    	return all;
+    }
+    
+    
     public Vector getResultCount(int profileID, int classID) throws SQLException
     {
     	String query = "SELECT  c.courseID, count(sco.scoid) "+
