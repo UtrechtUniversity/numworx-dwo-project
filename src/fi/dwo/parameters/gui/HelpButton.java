@@ -23,7 +23,7 @@ import fi.beans.tooltip.ToolTipIF;
 import fi.beans.tooltip.ToolTipManager;
 import fi.dwo.parameters.system.TextMapper;
 
-public class HelpButton extends JButton implements ToolTipIF, MouseListener, ActionListener {
+public class HelpButton extends JButton implements  MouseListener, ActionListener {
 
     private String toolTip;
     

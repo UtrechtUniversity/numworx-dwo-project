@@ -14,7 +14,6 @@ import fi.beans.fidentity.Fidentity;
 import fi.beans.jvmchecker.JVMChecker;
 import fi.beans.mainframe.MainFrame;
 import fi.beans.scorm.SCORM12APIInterface;
-import fi.beans.tooltip.ToolTipManager;
 import fi.dwo.client.gui.CenterPanel;
 import fi.dwo.client.gui.CenterSubPanel;
 //import fi.dwo.client.gui.DwoMessageDialog;
@@ -465,7 +464,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	 * @see java.applet.Applet#init()
 	 */
 	public void init() {
-        DwoHelper.setApplet(this);
+        if( !DwoHelper.setApplet(this)) return;
 		setSize(789,492);
         String lang = getParameter("language");
         if ((lang != null) && (!lang.equals(""))) {
@@ -504,11 +503,6 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
         	umpc = true;
         }
         
-        String key = getParameter("key");
-        if(key == null) {
-            key = "";
-        }
-        DwoHelper.setKey(key);
         DwoHelper.setAu(new AppletUtil(this));
         DwoHelper.setUmpc(umpc);
         
@@ -529,8 +523,8 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 		} catch (PersistenceException e) {
 		}
 		GuiConstants.setDwoProfile(dwoProfileID);
-		
-        new ToolTipManager(this);
+		GuiConstants.GUI_ICONIZED = false;
+		User.DEFAULT_ICONIZER = false;
         GuiCreator gc = new GuiCreator(this);
         try {
 			PersistenceFacade.instance().reConnect();
@@ -586,6 +580,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
      * will be stopped.
      */
     public void stop() {
+    	if(this != DwoHelper.getApplet()) return;
     	this.setWait();
         super.stop();
         if (currentCourse != null) {

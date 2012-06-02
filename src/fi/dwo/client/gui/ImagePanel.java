@@ -20,7 +20,7 @@ import fi.beans.tooltip.ToolTipManager;
  * @author M.J.B. Kupers
  *  
  */
-public class ImagePanel extends JLabel implements ToolTipIF {
+public class ImagePanel extends JLabel {
     private Image image;
     private String toolTip;
 

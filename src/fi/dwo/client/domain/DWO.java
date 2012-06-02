@@ -938,7 +938,7 @@ private static boolean isValidEmail(String email) {
      */
     public void init() {
 // This order
-    	DwoHelper.setApplet(this);
+    	if(!DwoHelper.setApplet(this)) return;
     	DwoHelper.setAu(new AppletUtil(this));
         
     	
@@ -1291,6 +1291,9 @@ private static boolean isValidEmail(String email) {
      * will be stopped.
      */
     public void stop() {
+    	if(DwoHelper.getApplet() != this)
+    		return;
+
     	this.setWait();
         super.stop();
         if (currentCourse != null) {

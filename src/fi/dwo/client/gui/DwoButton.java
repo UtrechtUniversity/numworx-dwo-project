@@ -29,7 +29,7 @@ import fi.beans.tooltip.ToolTipManager;
  * @author M.J.B. Kupers
  * @deprecated gebruik JButton
  */
-public class DwoButton extends BorderedPanel implements MouseListener, FocusListener, KeyListener, ToolTipIF {
+public class DwoButton extends BorderedPanel implements MouseListener, FocusListener, KeyListener {
     private Vector actionListeners = new Vector();
     private boolean isMouseOver = false;
     
@@ -317,7 +317,6 @@ public class DwoButton extends BorderedPanel implements MouseListener, FocusList
      */
     public void setToolTip(String toolTip) {
         this.toolTip = toolTip;
-        ToolTipManager.registerComponent(this);
     }
 
     /**

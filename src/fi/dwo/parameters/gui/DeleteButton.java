@@ -23,7 +23,7 @@ import fi.beans.tooltip.ToolTipIF;
 import fi.beans.tooltip.ToolTipManager;
 import fi.dwo.parameters.system.TextMapper;
 
-public class DeleteButton extends JButton implements ToolTipIF, MouseListener {
+public class DeleteButton extends JButton implements MouseListener {
 
     private String toolTip;
     
