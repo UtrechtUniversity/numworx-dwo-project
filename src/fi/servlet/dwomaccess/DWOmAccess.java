@@ -452,6 +452,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 			log("doLaunchData", e);
 		}
 		resp.setContentType("text/xml");
+		resp.setHeader("Access-Control-Allow-Origin" ,"*");
 		resp.setCharacterEncoding("UTF-8");
 		resp.getWriter().write(result);
 	}
@@ -557,9 +558,6 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 				Object[] array = (Object[])value;
 				entry.setValue(transform(array));
 			} 
-			
-				
-				
 		}
 		
 	}
@@ -574,6 +572,22 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 			array[i] = value;
 		}
 		return array;
+	}
+
+	/* (non-Javadoc)
+	 * @see javax.servlet.http.HttpServlet#doOptions(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
+
+	protected void doOptions(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		/*
+		 * Access-Control-Allow-Origin: http://foo.example
+		 * Access-Control-Allow-Methods: POST, GET, OPTIONS
+		 */
+		resp.setHeader("Access-Control-Allow-Origin", "*");
+		resp.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+		resp.setContentType("text/plain");
+		resp.getOutputStream().close();
 	}
 
 	
