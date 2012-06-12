@@ -317,8 +317,10 @@ public class PersistenceFacade {
                     } else {
                         v = DbAccessCreator.instance().getCoursesForClass(
                                 schoolClass.getID());
-                        
-                        v = clipBeforeAfter(v);
+// FIXME aanzetten als clipBeforeAfter weer in gebruik wordt genomen.
+// Het XML-RPC protocol doet niet aan TIMEZONES 
+// dat betekent dat date(0) niet werkt voor 'notAfter'
+                        //v = clipBeforeAfter(v);
                         Course[] courses = (Course[]) mapper.getObjectFromReturn(v);
 // FIXME hier maken we de caching effecten ongedaan.
                         undoCachingEffect(courses);
