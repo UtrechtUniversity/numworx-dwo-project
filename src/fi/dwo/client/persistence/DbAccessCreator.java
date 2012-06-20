@@ -46,6 +46,7 @@ public class DbAccessCreator {
         	   //if(true) dbAccess = new DbAccessLdap(); else
         	   //if(true) dbAccess = new fi.dwo.server.persistence.DbAccessScience();else
         	   //if(true)try{dbAccess=new DbAccessClient(new URL("http://localhost:8888/dwoapp"));}catch(MalformedURLException e1){e1.printStackTrace();}else
+        	   //if(true)try{dbAccess=new DbAccessClient(new URL("http://dwo.fi.uu.nl/dwo/dbaccess"));}catch(MalformedURLException e1){e1.printStackTrace();}else
         	   try {
         		   server = new URL(new URL("http://www.fisme.uu.nl/") , SERVLET);
         		   //server = new URL(new URL("http://dwo.fi.uu.nl/") , SERVLET);
