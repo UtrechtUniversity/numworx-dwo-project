@@ -1338,6 +1338,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return executeQueryWithResult(ps);
     }
 
+    final static private long DATE_OFFSET = 36L*3600L*1000L; // 36 uur. 
+    
 	public boolean selectCoursesForClass(int classID, int courseID, int type,
 			Date van, Date tot) throws IOException, XmlRpcException,
 			SQLException {
@@ -1348,11 +1350,11 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             ps.setInt(1, classID);
             ps.setInt(2, courseID);
             ps.setInt(3, type);
-            if(van.getTime() == 0L)
+            if(van.getTime() <= DATE_OFFSET)
             	ps.setNull(4, Types.TIMESTAMP);
             else
             	ps.setTimestamp(4, new java.sql.Timestamp(van.getTime()));
-            if(tot.getTime() == 0L) 
+            if(tot.getTime() <= DATE_OFFSET) 
             	ps.setNull(5, Types.TIMESTAMP);
             else
             	ps.setTimestamp(5, new java.sql.Timestamp(tot.getTime()));
