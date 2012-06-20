@@ -345,6 +345,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
      */
     public boolean login() throws LoginException {
         currentUser = Guest.instance();
+        User.setCurrentUser(currentUser);
         return true;
     }
 
@@ -354,6 +355,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	public boolean login(String username, String password)
 			throws LoginException {
         currentUser = PersistenceFacade.instance().login(username, password);
+        User.setCurrentUser(currentUser);
 		return currentUser != null;
 	}
 

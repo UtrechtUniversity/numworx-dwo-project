@@ -82,18 +82,14 @@ public class RegisterPanel extends JPanel implements ActionListener {
         /* Add FI logo */
         Image fiLogo;
         fiLogo = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.FI_LOGO_LOCATION);
-        MediaTracker tr = new MediaTracker(this);
-        tr.addImage(fiLogo, 0);
-        try {
-            tr.waitForAll();
-        } catch (Exception e) {
-        }
-        ;
-        ImagePanel ip = new ImagePanel(fiLogo);
-        ip.setLocation(getSize().width / 2 - 130, 50);
-        this.add(ip);
-        if(GuiConstants.GUI_IMAGE_BG) remove(ip);
-
+        if(fiLogo == null)
+        	fiLogo = DwoHelper.getResourceImage(GuiConstants.FI_LOGO_LOCATION);
+    
+    	ImagePanel ip = new ImagePanel(fiLogo);
+    	ip.setLocation(getSize().width / 2 - 130, 50);
+    	this.add(ip);
+    	if(GuiConstants.GUI_IMAGE_BG) remove(ip);
+    
         /* Register Label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_REGISTER));
         l.setFont(GuiConstants.HEADER_TEXT);

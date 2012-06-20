@@ -175,7 +175,7 @@ public class PersistenceFacade {
      */
     public String LMSGetValue(Sco sco, User user, String iDataModelElement)
             throws PersistenceException {
-        if (user != null) {
+        if (user != null && !(user instanceof Guest)) {
         	int uid = user.getUserID();
         	int scoid = sco.getScoID();
         	String key = mapDataModel(iDataModelElement);
