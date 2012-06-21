@@ -46,6 +46,7 @@ import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.DbAccessIF;
 import fi.dwo.client.persistence.ScoMapper;
 import fi.dwo.server.persistence.DbAccess;
+import fi.dwo.server.persistence.DbAccessLdap;
 /**
  * Servlet voor het achterhalen van de deelscores en screenshots. 
  * Methoden:
@@ -101,8 +102,8 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		
 	public void init()
 	{
-		//access = new DbAccess();
-		access = DbAccessCreator.instance();
+		access = new DbAccessLdap();
+		//access = DbAccessCreator.instance();
 		//log("inited...");
 	}
 	

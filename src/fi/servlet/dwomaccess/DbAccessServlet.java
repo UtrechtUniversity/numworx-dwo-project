@@ -1,0 +1,47 @@
+package fi.servlet.dwomaccess;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import fi.beans.xmlrpc.Servlet;
+import fi.dwo.server.persistence.DbAccessLdap;
+
+public class DbAccessServlet extends Servlet {
+
+	public DbAccessServlet() {
+		super(new DbAccessLdap());
+	}
+
+	/* (non-Javadoc)
+	 * @see javax.servlet.http.HttpServlet#doOptions(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
+
+	protected void doOptions(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		/*
+		 * Access-Control-Allow-Origin: http://foo.example
+		 * Access-Control-Allow-Methods: POST, GET, OPTIONS
+		 * Access-Control-Allow-Headers: Origin, content-type
+		 */
+		resp.setHeader("Access-Control-Allow-Origin", "*");
+		resp.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+		resp.setHeader("Access-Control-Expose-Headers", "content-type");
+		resp.setHeader("Access-Control-Allow-Headers", "origin, content-type");
+
+		resp.setContentType("text/plain");
+		resp.getOutputStream().close();
+	}
+
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		if("POST".equals(req.getMethod()))
+			resp.setHeader("Access-Control-Allow-Origin", "*");
+			resp.setHeader("Access-Control-Expose-Headers", "content-type");
+		super.service(req, resp);
+	}
+
+}
