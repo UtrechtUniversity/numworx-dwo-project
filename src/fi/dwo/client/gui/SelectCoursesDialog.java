@@ -614,9 +614,10 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                 	School school = u.getSchool();
                 	if(school != null)
                 	{  	schoolnode = new DefaultMutableTreeNode("Modules " + school);
-                		if(u.hasRight(User.MODIFY_MODULES_RIGHT))
-                			root.add(schoolnode);
+//                		if(u.hasRight(User.MODIFY_MODULES_RIGHT))
+//                			root.add(schoolnode); // of alleen als leeg...
                 	}
+                	boolean needSchoolnode = false;
                 	DefaultMutableTreeNode node; 
                 	for (int i = 0; i < cd.length; i++) {
         				CourseData course = cd[i];
@@ -627,11 +628,13 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         					dwonode.add(node);
         				} else {
         					schoolnode.add(node);
+        					needSchoolnode = true;
         				}
         				appendCourseData(course, node, vSelectedCourses);
-        				
-        				
-        			}
+                	}
+// FIX, altijd schoolnode toevoegen als nodig, ook zonder MODIFY_MODULES recht
+                	if(needSchoolnode && schoolnode != dwonode)
+                		root.add(schoolnode);	
                 	treeModel = new DefaultTreeModel(root);
                 	setModel(treeModel);
                 	tree2.setCellRenderer(new CheckBoxNodeRenderer(true));
