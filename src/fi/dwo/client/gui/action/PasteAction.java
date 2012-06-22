@@ -236,6 +236,7 @@ public class PasteAction extends GuiAction
 					course.setSchoolID(0);
 				else // School Modules.
 					course.setSchoolID(instance().getUser().getSchool().getSchoolID());
+				map.addChild(course);
 			} else if( object instanceof Course)
 			{
 				Course map = (Course)object;

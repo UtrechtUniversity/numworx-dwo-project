@@ -25,6 +25,7 @@ import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.CourseManagementPanel;
 import fi.dwo.client.gui.GuiCreator;
+import fi.dwo.client.gui.ModuleTreePanel;
 import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.MapperCreator;
 import fi.dwo.client.persistence.MapperIF;
@@ -166,6 +167,8 @@ public class ImportModuleAction extends GuiAction {
 
 			final DwoIF dwo = GuiCreator.instance().getDWO();
 			int schoolID = dwo.getUser().getSchool().getSchoolID();
+			if(course.getUserObject() == ModuleTreePanel.STANDAARD_DWO_MODULES)
+				schoolID = 0; // import in standaard map 
 			int id = 0;
 			Course parentCourse = null;
 			if(map instanceof Course) parentCourse = (Course) map;

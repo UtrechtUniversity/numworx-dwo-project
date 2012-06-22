@@ -235,7 +235,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
 
         p = new HeaderPanel(TextMapper.getText(TextMapper.GUIM_MAIN_MENU));
         String s = dwoProfile.getText();
-        if(s != null && s.trim().length()>0 || dwoProfile instanceof Course)
+        if(s != null && s.trim().length()>0 || dwoProfile instanceof Course || CenterPanel.isIconizer())
         	p = new HeaderPanel(dwoProfile.getHeader(), true); // wim: Wat wordt hier bedoeld?
         
         p.setButtonBox(GuiCreator.instance().getButtonBox(this));

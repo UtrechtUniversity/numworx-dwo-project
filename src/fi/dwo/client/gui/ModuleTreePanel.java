@@ -45,6 +45,7 @@ import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.Descriptor;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
+import fi.dwo.client.domain.DwoProfile;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.Teacher;
@@ -67,7 +68,14 @@ import fi.dwo.client.system.TextMapper;
 
 public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 
-	public static final String STANDAARD_DWO_MODULES = TextMapper.getText("Standaard DWO modules");
+	public static final String STANDAARD_DWO_MODULES;
+	static {
+		String standaard = TextMapper.getText("Standaard DWO modules");
+		DwoProfile profile = GuiCreator.instance().getDWO().getDwoProfile();
+		if(profile.getID() != 1) // TODO overleg met Peter nodig.
+			standaard = profile.getHeader();
+		STANDAARD_DWO_MODULES = standaard;
+	}
 	public static final String ALLE_MODULES = TextMapper.getText("Alle modules");
 
 	private boolean isPossible(Object o) {
@@ -106,7 +114,9 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		 * @see fi.dwo.client.domain.Descriptor#getHeader()
 		 */
 		public String getHeader() {
-			return delegate.getHeader();
+			return ALLE_MODULES;
+			
+			//delegate.getHeader();
 		}
 
 		public void addChild(Course c) {
@@ -437,6 +447,8 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 	
 	protected void createModel(DwoIF dwo) {
 		this.dwo = dwo;
+		
+		
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(ALLE_MODULES);
         DefaultMutableTreeNode dwonode  = new DefaultMutableTreeNode(STANDAARD_DWO_MODULES);
         STANDAARD_DWO_MAP = new StandaardMap(dwonode);

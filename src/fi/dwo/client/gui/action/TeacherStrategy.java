@@ -157,7 +157,7 @@ public class TeacherStrategy implements SelectStrategy{
 		 * @see fi.dwo.client.domain.Descriptor#getHeader()
 		 */
 		public String getHeader() {
-			return profile.getHeader();
+			return parent.getUserObject().toString(); // profile.getHeader();
 		}
 		/**
 		 * @return

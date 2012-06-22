@@ -2056,6 +2056,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     public boolean changeCourse(int courseID, String name, String description, 
     		boolean export, int schoolID, int parentID)
     throws DwoXmlRpcException, SQLException {
+// TODO als course schoolID verandert EN withChildren = true, dan ook kinderen updaten van school!!!!!!
     	PreparedStatement ps;
     	ps = getStatement(QRY_UPDATE_COURSE4);
     	ps.setString(1, name);
