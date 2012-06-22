@@ -289,6 +289,7 @@ public class PersistenceFacade {
     /**
      * Returns all the courses for the specified user.
      * A teacher could select some courses for a schoolclass.
+     * A student sees active selected courses from his schoolclass.
      * @param user The user to select courses from.
      * @return The courses for the specified user.
      * @throws PersistenceException If a database or xml-rpc exception occurs.
@@ -309,7 +310,7 @@ public class PersistenceFacade {
                 	Object[] dwoCourses     = mapper.getObjectFromReturn(DbAccessCreator.instance().getCourses(guestID));
       // caching side effect. UNDO, we doen nu lazy....
                 	//MapperCreator.instance(Sco.class).get(new Object[] { user.getSchool(), ((DwoIF) DwoHelper.getApplet()).getDwoProfile()} );
-                	return combine(dwoCourses, schoolCourses);
+                	return combineCourse(dwoCourses, schoolCourses);
                 } else {
                     SchoolClass schoolClass = user.getInClass();
                     if (schoolClass == null) {
@@ -320,7 +321,7 @@ public class PersistenceFacade {
 // FIXME aanzetten als clipBeforeAfter weer in gebruik wordt genomen.
 // Het XML-RPC protocol doet niet aan TIMEZONES 
 // dat betekent dat date(0) niet werkt voor 'notAfter'
-                        //v = clipBeforeAfter(v);
+                        v = clipBeforeAfter(v);
                         Course[] courses = (Course[]) mapper.getObjectFromReturn(v);
 // FIXME hier maken we de caching effecten ongedaan.
                         undoCachingEffect(courses);
@@ -402,10 +403,15 @@ public class PersistenceFacade {
 		return v;
 	}
 
-	private Course[] combine(Object[] dwoCourses, Object[] schoolCourses) {
-    	Course[] courses = new Course[dwoCourses.length + schoolCourses.length];
-    	System.arraycopy(dwoCourses, 0, courses, 0, dwoCourses.length);
-    	System.arraycopy(schoolCourses, 0, courses, dwoCourses.length, schoolCourses.length);
+	
+	/**
+	 * Plak twee courses aan elkaar. Sorteer op naam. (a la mysql order by name) 
+	 * @param dwoCourses
+	 * @param schoolCourses
+	 * @return
+	 */
+	private Course[] combineCourse(Object[] dwoCourses, Object[] schoolCourses) {
+    	Course[] courses = (Course[]) combine_(dwoCourses, schoolCourses);
     	Arrays.sort(courses, new Comparator() {
 
 			public int compare(Object o1, Object o2) {
@@ -415,6 +421,21 @@ public class PersistenceFacade {
 			}});
     	return courses;
 	}
+	
+	/**
+	 * Plak twee arrays aan elkaar. 
+	 * @param een
+	 * @param twee
+	 * @return
+	 */
+	private Object[] combine_(Object[] een, Object[] twee) {
+		Class c = een.getClass().getComponentType();		
+		Object[] result = (Object[]) java.lang.reflect.Array.newInstance(c, een.length + twee.length);
+    	System.arraycopy(een, 0, result, 0, een.length);
+    	System.arraycopy(twee, 0, result, een.length, twee.length);
+		return result;
+	}
+	
 
 	/**
      * Returns all the courses that are selected for the specified class.
@@ -449,6 +470,7 @@ public class PersistenceFacade {
 
     /**
      * returns the selected courses for the specified schoolclass.
+     * folders are removed
      * @param schoolClass The schoolclass wherefrom the courses must selected.
      * @return The courses selected for the specified schoolclass.
      * @throws PersistenceException
@@ -1841,7 +1863,10 @@ e1.printStackTrace();
 			{
 				return (CourseSequence[]) instance.get(inClass);
 			} 
-			return (CourseSequence[]) instance.get(school);
+			CourseSequence[] standaard = (CourseSequence[]) instance.get(null);
+			if ( school != null )
+				return (CourseSequence[])combine_(standaard, instance.get(school));
+			return standaard;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

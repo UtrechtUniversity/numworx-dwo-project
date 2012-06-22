@@ -547,9 +547,9 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     }
 
     /**
-     * Returns a Panel that can functionate as a header panel.
+     * Returns a Panel that can function as a header panel.
      * 
-     * @return A panel that can functionate as a header panel.
+     * @return A panel that can function as a header panel.
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
     
@@ -681,7 +681,12 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         {    	
         	updown = false;
         	try {
-				PersistenceFacade.instance().setCourseSequence(courses, GuiCreator.instance().dwo.getUser().getSchool(), null);
+        		
+				School school = User.getCurrentUser().getSchool();
+// een profile admin mag de standaard modules sorteren, maar de school is dan wel null				
+				if(userObject== ModuleTreePanel.STANDAARD_DWO_MAP)
+					school = null;
+				PersistenceFacade.instance().setCourseSequence(courses, school, null);
 			} catch (PersistenceException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

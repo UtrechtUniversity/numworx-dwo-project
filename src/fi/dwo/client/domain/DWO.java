@@ -556,6 +556,7 @@ private static boolean isValidEmail(String email) {
     }
     
     private Course[] selectDwoProfileCourses(Course[] completeList){
+    	if(completeList == null) return null;
     	Vector v = new Vector();
         for(int i=0 ; i<courseList.length; i++){
         	if(completeList[i].getDwoProfile() == dwoProfile.getID()) v.addElement(completeList[i]);
@@ -596,11 +597,11 @@ private static boolean isValidEmail(String email) {
 	/**
      * Returns all the courses available for the user. If some courses are
      * available for the users school, they are also returned.
-     * 
+     * @deprecated not used?
      * @return An array of all the courses for the current user.
      *  
      */
-    public Course[] getCourses(SchoolClass schoolClass) {
+    private Course[] getCourses(SchoolClass schoolClass) {
         try {
             courseList = PersistenceFacade.instance().getCourses(schoolClass);
             return selectDwoProfileCourses(courseList);
@@ -609,6 +610,14 @@ private static boolean isValidEmail(String email) {
             return null;
         }
     }
+    
+    // courses no folders, no timelimits. profile restricted.
+    public Course[] getSelectedCourses(SchoolClass schoolClass) {
+    	Course[] courses;
+    	courses = schoolClass.getSelectedSchoolCourses();
+    	return selectDwoProfileCourses(courses);
+    }
+    
     
     public DwoProfile getDwoProfile()
     {	return dwoProfile;
@@ -909,7 +918,7 @@ private static boolean isValidEmail(String email) {
         }
         
         resultsModule.reset();
-        resultsModule.selectCourses(getCourses(schoolClass), false);
+        resultsModule.selectCourses(getSelectedCourses(schoolClass), false);
         resultsModule.zoomIn(schoolClass);
         return resultsModule;        
     }
