@@ -40,7 +40,7 @@ public class DeleteAction extends GuiAction  {
 				String format = TextMapper.getText(TextMapper.GUIS_TLTP_DELETE_SCO);
 				Object[] arguments = { sco.toString() };
 				putValue(NAME, MessageFormat.format(format, arguments));
-				setEnabled(true);
+				setEnabled(canModify(map));
 			}
 			else if(o instanceof Course)
 			{
@@ -58,7 +58,7 @@ public class DeleteAction extends GuiAction  {
 					TextMapper.getText(TextMapper.GUIC_TLTP_DELETE_COURSE);
 				Object[] arguments = { o.toString() };
 				putValue(NAME, MessageFormat.format(format, arguments));
-				setEnabled(true);
+				setEnabled(canModify(map));
 			} else 
 			{
 				setEnabled(false);
