@@ -1115,12 +1115,14 @@ private static boolean isValidEmail(String email) {
             if(userName!=null && "".equals(userName)) {
             	userName = null;
             }
+            else if(userName!=null)this.userName = userName;
         }
         if(passWord==null) {
         	String passWord = getParameter("passWord");
             if(passWord!=null && "".equals(passWord)) {
             	passWord = null;
             }
+            else if(passWord!=null)this.passWord = passWord;
         }
         
         if(userName!=null && passWord!=null) {

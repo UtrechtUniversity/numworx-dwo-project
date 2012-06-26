@@ -84,5 +84,6 @@ Class-Path: algebrapijlenoefenen.jar
  tinyplayerapplet.jar 
  grafiek3dtest.jar 
  jl020.jar 
+ calendar.jar 
  geogebra_properties.jar 
  mysql-connector-java-3.0.16-ga-bin.jar 

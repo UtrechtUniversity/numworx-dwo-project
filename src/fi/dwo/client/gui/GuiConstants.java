@@ -103,7 +103,7 @@ public abstract class GuiConstants {
 
     public final static Font SMALL_TEXT = new Font("SansSerif", Font.BOLD, 10);
 
-    public final static int DWO_HEIGHT = 600;
+    public final static int DWO_HEIGHT = 700;
     public static Font HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
     
     public static boolean GUI_IMAGE_BG = false;
@@ -111,7 +111,7 @@ public abstract class GuiConstants {
     public static int dwoProfile = 1;
 
     /* Size constants */
-    public final static int DWO_WIDTH = 800;
+    public final static int DWO_WIDTH = 1024;
 
     public final static int CENTER_WIDTH = 792;
 
@@ -265,7 +265,7 @@ public abstract class GuiConstants {
 			GUI_IMAGE_SCO = "resources/EPN-sco.png";
 			GUI_IMAGE_COURSE = "resources/EPN-course.png";
 		} else
-		if(profile==57)
+		/*if(profile==57)
 		{	MAIN_BACKGROUND = new Color(255,255,255);
 		   	CELL_BACKGROUND = new Color(255,255,255);
 			FI_LOGO_LOCATION = "resources/fi.gif";
@@ -275,7 +275,7 @@ public abstract class GuiConstants {
 			GUI_IMAGE_WELCOME = "resources/EPN-welkom.jpg";
 			GUI_IMAGE_SCO = "resources/GR-sco.png";
 			GUI_IMAGE_COURSE = "resources/EPN-course.png";
-		} else
+		} else*/
 		if(profile==51 || profile==27)
 		{	MAIN_BACKGROUND = new Color(255,255,255);
 	    	CELL_BACKGROUND = new Color(255,255,255);
@@ -363,7 +363,8 @@ public abstract class GuiConstants {
 		InputStream in = GuiConstants.class.getResourceAsStream("resources/default.properties");
 		try {
 			result.load(in);
-			String resource = "resources/profile-" + profile + ".properties";
+			String testExtension = "test";
+			String resource = "resources/profile-" + profile + testExtension + ".properties";
 			URL u;
 			u = DwoHelper.getURL(GuiConstants.RESOURCES + resource);
 // testing....

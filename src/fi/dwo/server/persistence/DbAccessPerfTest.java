@@ -8,11 +8,11 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 
-import com.clarkware.junitperf.LoadTest;
-import com.clarkware.junitperf.RandomTimer;
-import com.clarkware.junitperf.TimedTest;
-import com.clarkware.junitperf.Timer;
-import com.jamonapi.proxy.MonProxyFactory;
+//import com.clarkware.junitperf.LoadTest;
+//import com.clarkware.junitperf.RandomTimer;
+//import com.clarkware.junitperf.TimedTest;
+//import com.clarkware.junitperf.Timer;
+//import com.jamonapi.proxy.MonProxyFactory;
 
 import fi.dwo.client.persistence.DbAccessClient;
 import fi.dwo.client.persistence.DbAccessCreator;
@@ -74,7 +74,7 @@ public class DbAccessPerfTest extends TestCase {
 //		}
 	}
 
-	public static Test suite() { 
+	/*public static Test suite() { 
 		Test test = new DbAccessPerfTest("testGetResults");
 		Test timed = new TimedTest(test, 100);
 		Timer timer = new RandomTimer(2,10);
@@ -84,6 +84,6 @@ public class DbAccessPerfTest extends TestCase {
 		suite.addTest(timed);
 		suite.addTest(loaded);
 		return suite;
-	}
+	}*/
 	
 }
