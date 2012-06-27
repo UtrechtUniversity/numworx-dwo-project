@@ -50,8 +50,9 @@ public class WelcomePanel extends JPanel implements ActionListener {
 
     private JButton registerButton;
 
-	private FIButton fiButton;
-    
+	FIButton fiButton;
+    JPanel dialog;
+	
 	/**
 	 * Layout manager voor de fiButton. 
 	 * Hou de fiButton in de rechtsbovenhoek.
@@ -67,6 +68,8 @@ public class WelcomePanel extends JPanel implements ActionListener {
 			super.componentResized(e);
 			int width = getWidth();
 			fiButton.setLocation(width-fiButton.getWidth(),fiButton.getY());
+// extra: move dialogbox  horizontal
+			dialog.setLocation(width / 2 - dialog.getWidth() / 2, dialog.getY());
 		}
     	
     }
@@ -88,13 +91,17 @@ public class WelcomePanel extends JPanel implements ActionListener {
         this.setPreferredSize(getSize());
         this.setOpaque(true);
         
+        dialog = new JPanel(null);
+        dialog.setOpaque(false);
+        dialog.setBounds(getWidth()/2-200, 0, 400, getHeight());
+        this.add(dialog);
         fiButton = new FIButton("DWO",new String[]
 			{	"versie-info: " + fi.dwo.VERSION.VERSION,
 				"auteur: Peter Boon",
 				"programmeur: M.J.B. Kupers,",
 				"Wim van Velthoven",
 				"Freudenthal Instituut",
-				"www.fi.uu.nl",
+				"www.fisme.science.uu.nl",
 				""
 			});
 		fiButton.setBounds(GuiConstants.DWO_WIDTH-30,0,20,30);
@@ -110,11 +117,9 @@ public class WelcomePanel extends JPanel implements ActionListener {
         fiLogo = DwoHelper.getResourceImage(GuiConstants.WISWEB_LOGO_LOCATION);
         
         ImagePanel ip = new ImagePanel(fiLogo);
-        ip.setLocation(getSize().width / 2 - ip.getSize().width / 2, 440);
-        ip.setVisible(false);
-        this.add(ip);
-        if(GuiConstants.GUI_IMAGE_BG) remove(ip);
-        ip.setVisible(true);
+        ip.setLocation(dialog.getWidth() / 2 - ip.getWidth() / 2, 440);
+        dialog.add(ip);
+        if(GuiConstants.GUI_IMAGE_BG) dialog.remove(ip);
 
         /* Warning Label */
         /*l = new Label("Helaas zijn er problemen met de DWO. Wordt aan gewerkt.");
@@ -132,31 +137,25 @@ public class WelcomePanel extends JPanel implements ActionListener {
         l.setFont(new Font("SansSerif", Font.BOLD, 26));
         l.setForeground(new Color(3,65,123));
         fm = l.getFontMetrics(l.getFont());
-        l.setBounds(getSize().width / 2 - fm.stringWidth(l.getText())/2, 520, fm.stringWidth(l.getText())+5, fm.getHeight());
-        l.setVisible(false);
-        this.add(l);
-        if(GuiConstants.GUI_IMAGE_BG) remove(l);
-        l.setVisible(true);
+        l.setBounds(dialog.getWidth() / 2 - fm.stringWidth(l.getText())/2, 520, fm.stringWidth(l.getText())+5, fm.getHeight());
+        dialog.add(l);
+        if(GuiConstants.GUI_IMAGE_BG) dialog.remove(l);
         
         l = new JLabel(TextMapper.getText(TextMapper.GUIM_DWO_SHORT));
         l.setFont(GuiConstants.HEADER_TEXT);
         l.setForeground(new Color(3,65,123));
         fm = l.getFontMetrics(l.getFont());
-        l.setBounds(getSize().width / 2 - fm.stringWidth(l.getText())/2, 20, fm.stringWidth(l.getText())+5, fm.getHeight());
-        l.setVisible(false);
-        this.add(l);
-        if(GuiConstants.GUI_IMAGE_BG) remove(l);
-        l.setVisible(true);
+        l.setBounds(dialog.getWidth() / 2 - fm.stringWidth(l.getText())/2, 20, fm.stringWidth(l.getText())+5, fm.getHeight());
+        dialog.add(l);
+        if(GuiConstants.GUI_IMAGE_BG) dialog.remove(l);
         
         l = new JLabel(TextMapper.getText(TextMapper.GUIM_DWO_FULL));
         l.setFont(new Font("SansSerif", Font.BOLD, 26));
         fm = l.getFontMetrics(l.getFont());
         l.setForeground(new Color(3,65,123));
-        l.setBounds(getSize().width / 2 - fm.stringWidth(l.getText())/2, 65, fm.stringWidth(l.getText())+5, fm.getHeight());
-        l.setVisible(false);
-        this.add(l);
-        if(GuiConstants.GUI_IMAGE_BG) remove(l);
-        l.setVisible(true);
+        l.setBounds(dialog.getWidth() / 2 - fm.stringWidth(l.getText())/2, 65, fm.stringWidth(l.getText())+5, fm.getHeight());
+        dialog.add(l);
+        if(GuiConstants.GUI_IMAGE_BG) dialog.remove(l);
 
         /* Add Login-panel */
         p = new JPanel(null);
@@ -164,10 +163,8 @@ public class WelcomePanel extends JPanel implements ActionListener {
         p.setBorder(BorderFactory.createLineBorder(new Color(52,90,126)));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         //p.setBorderColor(new Color(52,90,126));
-        p.setBounds(getSize().width / 2 - 130, 110, 260, 115);
-        p.setVisible(false);
-        this.add(p);
-        p.setVisible(true);
+        p.setBounds(dialog.getWidth() / 2 - 130, 110, 260, 115);
+        dialog.add(p);
 
         /* Inlogdata label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIW_LOGINDATA) + ":");
@@ -175,9 +172,7 @@ public class WelcomePanel extends JPanel implements ActionListener {
         l.setFont(GuiConstants.RED_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
-        l.setVisible(false);
         p.add(l);
-        l.setVisible(true);
 
         /* Username label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIW_USERNAME) + ":");
@@ -186,17 +181,13 @@ public class WelcomePanel extends JPanel implements ActionListener {
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 30);
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-        l.setVisible(false);
         p.add(l);
-        l.setVisible(true);
 
         /* Username field */
         loginname = new JTextField();
         loginname.setBounds(130, 28, 120, 20);
         loginname.addActionListener(this);
-        loginname.setVisible(false);
         p.add(loginname);
-        loginname.setVisible(true);
 
         /* Password label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIW_PASSWORD) + ":");
@@ -205,18 +196,14 @@ public class WelcomePanel extends JPanel implements ActionListener {
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 55);
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-        l.setVisible(false);
         p.add(l);
-        l.setVisible(true);
 
         /* Password field */
         password = new JPasswordField();
         password.setBounds(130, 53, 120, 20);
         password.setEchoChar('*');
         password.addActionListener(this);
-        password.setVisible(false);
         p.add(password);
-        password.setVisible(true);
 
         /* Login button */
         loginButton = new JButton(TextMapper.getText(TextMapper.GUIW_BTN_LOGIN));//, GuiConstants.SUB_BACKGROUND);
@@ -224,9 +211,7 @@ public class WelcomePanel extends JPanel implements ActionListener {
         loginButton.setSize(loginButton.getPreferredSize());
         loginButton.setLocation((p.getSize().width / 2)
                 - (loginButton.getSize().width / 2), 80);
-        loginButton.setVisible(false);
         p.add(loginButton);
-        loginButton.setVisible(true);
 
         loginButton.addActionListener(this);
         
@@ -235,11 +220,9 @@ public class WelcomePanel extends JPanel implements ActionListener {
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(new Color(52,90,126)));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(getSize().width / 2 - 130, 235, 260, 85);
+        p.setBounds(dialog.getWidth() / 2 - 130, 235, 260, 85);
         //p.setBorderColor(new Color(52,90,126));
-        p.setVisible(false);
-        this.add(p);
-        p.setVisible(true);
+        dialog.add(p);
 
         /* Guestlogin label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIW_GUESTLOGIN) + ":");
@@ -247,9 +230,7 @@ public class WelcomePanel extends JPanel implements ActionListener {
         l.setFont(GuiConstants.RED_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
-        l.setVisible(false);
         p.add(l);
-        l.setVisible(true);
 
         /* GuestLogin button */
         guestButton = new JButton(TextMapper.getText(TextMapper.GUIW_BTN_GUESTLOGIN));//, GuiConstants.SUB_BACKGROUND);
@@ -257,9 +238,7 @@ public class WelcomePanel extends JPanel implements ActionListener {
         guestButton.setSize(guestButton.getPreferredSize());
         guestButton.setLocation((p.getSize().width / 2)
                 - (guestButton.getSize().width / 2), 27);
-        guestButton.setVisible(false);
         p.add(guestButton);
-        guestButton.setVisible(true);
 
         /* GuestLogin message */
         l = new JLabel(TextMapper.getText(TextMapper.GUIW_MSG_WORK_NOT_SAVE));
@@ -267,19 +246,15 @@ public class WelcomePanel extends JPanel implements ActionListener {
         fm = l.getFontMetrics(l.getFont());
         l.setSize(fm.stringWidth(l.getText()), fm.getHeight());
         l.setLocation((p.getSize().width / 2) - (l.getSize().width / 2), 60);
-        l.setVisible(false);
         p.add(l);
-        l.setVisible(true);
 
         /* Add Register-panel */
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(new Color(52,90,126)));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(getSize().width / 2 - 130, 330, 260, 85);
+        p.setBounds(dialog.getWidth() / 2 - 130, 330, 260, 85);
         //p.setBorderColor(new Color(52,90,126));
-        p.setVisible(false);
-        this.add(p);
-        p.setVisible(true);
+        dialog.add(p);
 
         /* Register label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIW_REGISTER) + ":");
@@ -287,9 +262,7 @@ public class WelcomePanel extends JPanel implements ActionListener {
         l.setFont(GuiConstants.RED_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
-        l.setVisible(false);
         p.add(l);
-        l.setVisible(true);
 
         /* Register button */
         registerButton = new JButton(TextMapper.getText(TextMapper.GUIW_BTN_REGISTER));//, GuiConstants.SUB_BACKGROUND);
@@ -297,9 +270,7 @@ public class WelcomePanel extends JPanel implements ActionListener {
         registerButton.setSize(registerButton.getPreferredSize());
         registerButton.setLocation((p.getSize().width / 2)
                 - (registerButton.getSize().width / 2), 27);
-        registerButton.setVisible(false);
         p.add(registerButton);
-        registerButton.setVisible(true);
 
         /* Register message */
         l = new JLabel(TextMapper.getText(TextMapper.GUIW_MSG_REGISTER_NEW));
@@ -307,10 +278,7 @@ public class WelcomePanel extends JPanel implements ActionListener {
         fm = l.getFontMetrics(l.getFont());
         l.setSize(fm.stringWidth(l.getText()), fm.getHeight());
         l.setLocation((p.getSize().width / 2) - (l.getSize().width / 2), 60);
-        l.setVisible(false);
         p.add(l);
-        l.setVisible(true);
-
         
         guestButton.addActionListener(this);
         registerButton.addActionListener(this);
