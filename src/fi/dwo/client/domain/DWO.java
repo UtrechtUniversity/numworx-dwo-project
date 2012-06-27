@@ -558,7 +558,7 @@ private static boolean isValidEmail(String email) {
     private Course[] selectDwoProfileCourses(Course[] completeList){
     	if(completeList == null) return null;
     	Vector v = new Vector();
-        for(int i=0 ; i<courseList.length; i++){
+        for(int i=0 ; i<completeList.length; i++){
         	if(completeList[i].getDwoProfile() == dwoProfile.getID()) v.addElement(completeList[i]);
 		}
 		Course[] selectedCourses = new Course[v.size()];
