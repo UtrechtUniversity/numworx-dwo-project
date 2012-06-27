@@ -103,7 +103,7 @@ public abstract class GuiConstants {
 
     public final static Font SMALL_TEXT = new Font("SansSerif", Font.BOLD, 10);
 
-    public final static int DWO_HEIGHT = 700;
+    public final static int DWO_HEIGHT = 800;
     public static Font HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
     
     public static boolean GUI_IMAGE_BG = false;
@@ -111,13 +111,16 @@ public abstract class GuiConstants {
     public static int dwoProfile = 1;
 
     /* Size constants */
-    public final static int DWO_WIDTH = 1024;
+    public final static int DWO_WIDTH = 1280;
 
     public final static int CENTER_WIDTH = 792;
 
     public final static int CENTER_HEIGHT = 503;
 	private static final String INCLUDE = "include";
 	public static final String SEARCH_IMAGE = "resources/vergrootglas.gif";
+	public static String DEPLOY_VARIANT = "";
+	
+	
  
    public static int getDwoProfile() {
 	   return dwoProfile;
@@ -131,9 +134,9 @@ public abstract class GuiConstants {
      * de if(...) { }  code weer activeren.
      * @param profile
      */
-	public static void setDwoProfile(int profile)
+	public static void setDwoProfile(int profile, String ext)
 	{
-		Properties prop = getProperties(profile);
+		Properties prop = getProperties(profile, ext);
 		GUI_IMAGE_BG = getBoolean(prop, "gui_image_bg");
 		HEADER_TEXT  = getFont(prop, "header_text");
 		MAIN_BACKGROUND = getColor(prop, "main_background");
@@ -160,7 +163,14 @@ public abstract class GuiConstants {
 	    GUI_INSETS_SCO = getInsets(prop, "gui_insets_sco");
 	    DWO.SEQUENCE = getBoolean(prop, "sequence_module") || GUI_ICONIZED;
 	    GUI_SCOUPDATE_UNSAFE = getBoolean(prop, "scoupdate_unsafe");
-		dwoProfile = profile;
+	    DEPLOY_VARIANT = getString(prop, "deployVariant");
+// TODO deze code opnemen in profile.properties:
+// 51, 27
+	    if((profile==51 || profile==27)) DEPLOY_VARIANT = "MW";
+// 57, 65, 64
+	    if((profile==57 || profile==65 || profile==64)) DEPLOY_VARIANT =  "GR";
+	    
+	    dwoProfile = profile;	    
 // profile == 3,1 done.
 		if(profile==49)
 		{	MAIN_BACKGROUND = new Color(255,255,255);
@@ -357,13 +367,13 @@ public abstract class GuiConstants {
 		}
 		return result;
 	}
-
-	private static Properties getProperties(int profile) {
+	
+	private static Properties getProperties(int profile, String testExtension) {
+		if(testExtension == null) testExtension = "";
 		Properties result = new Properties();
 		InputStream in = GuiConstants.class.getResourceAsStream("resources/default.properties");
 		try {
 			result.load(in);
-			String testExtension = "test";
 			String resource = "resources/profile-" + profile + testExtension + ".properties";
 			URL u;
 			u = DwoHelper.getURL(GuiConstants.RESOURCES + resource);

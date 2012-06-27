@@ -167,7 +167,7 @@ public class ImportModuleAction extends GuiAction {
 
 			final DwoIF dwo = GuiCreator.instance().getDWO();
 			int schoolID = dwo.getUser().getSchool().getSchoolID();
-			if(course.getUserObject() == ModuleTreePanel.STANDAARD_DWO_MODULES)
+			if(map.getUserObject() == ModuleTreePanel.STANDAARD_DWO_MODULES)
 				schoolID = 0; // import in standaard map 
 			int id = 0;
 			Course parentCourse = null;

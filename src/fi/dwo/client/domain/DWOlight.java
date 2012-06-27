@@ -524,7 +524,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 			dwoProfile = (DwoProfile)PersistenceFacade.instance().get(dwoProfileID,DwoProfile.class);
 		} catch (PersistenceException e) {
 		}
-		GuiConstants.setDwoProfile(dwoProfileID);
+		GuiConstants.setDwoProfile(dwoProfileID, null);
 		GuiConstants.GUI_ICONIZED = false;
 		User.DEFAULT_ICONIZER = false;
         GuiCreator gc = new GuiCreator(this);

@@ -82,7 +82,9 @@ import fi.dwo.client.system.TextMapper;
  */
 public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 
-    private Course currentCourse;
+    private static final String PROFILE_EXTENSION = "profileExtension";
+
+	private Course currentCourse;
     
     //alleen nodig indien scoViewNr>0
     private Sco currentSco;
@@ -115,7 +117,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 	
 	private Properties schoolAccessKeys;
 
-	private String languageOveride;
+	private String languageOveride, extensionOverride;
 	
 	private String limitedSchoolAccessString;
 	
@@ -149,7 +151,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
         while(args != null && args.length > 1+o &&
         		args[0].length()>1 &&
         		'-' == args[o].charAt(0) &&
-        		"rls".indexOf(args[0].charAt(1))>=0
+        		"rlsx".indexOf(args[0].charAt(1))>=0
         )
         {	
         	// allow update van SERVLET
@@ -174,6 +176,12 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
         	languageOveride=args[o+1];
         	o += 2;
         }
+        if(args.length>1+o && "-x".equals(args[o]))
+        {
+        	extensionOverride=args[o+1];
+        	o += 2;
+        }
+
         }
         if (args != null && args.length>o && args[o] != null) {
             try	{
@@ -1094,7 +1102,7 @@ private static boolean isValidEmail(String email) {
 			dwoProfile = (DwoProfile)PersistenceFacade.instance().get(dwoProfileID,DwoProfile.class);
 		} catch (PersistenceException e) {
 		}
-		GuiConstants.setDwoProfile(dwoProfileID);
+		GuiConstants.setDwoProfile(dwoProfileID, getParameter(PROFILE_EXTENSION));
         initWaitLabel(); // wim: GuiConstants nu actief en correct!
         
 		
@@ -1945,6 +1953,8 @@ System.out.println(school.getSchoolLogin() + " " + group.getName() + " " + schoo
 	public String getParameter(String name) {
 		if("language".equals(name)&& languageOveride != null)
 			return languageOveride;
+		if(PROFILE_EXTENSION.equals(name)&& extensionOverride != null)
+			return extensionOverride;
 			
 		return super.getParameter(name);
 	}
