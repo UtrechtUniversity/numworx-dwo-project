@@ -35,6 +35,7 @@ import fi.dwo.client.domain.Guest;
 import fi.dwo.client.domain.ResultsModuleIF;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.SchoolClass;
+import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.action.NullStrategy;
 import fi.dwo.client.system.TextMapper;
@@ -497,6 +498,9 @@ invalidate();
 	            else
 	            	cp = GuiCreator.instance().getCoursePanel(course);
 	            loadCenter(cp);				
+			} else if(object instanceof Sco) {
+				Sco sco = (Sco) object;
+				loadTotal(sco.getScoPanel(GuiCreator.instance().getDWO(), GuiCreator.instance().getUser()));
 			}
 		}
 	}

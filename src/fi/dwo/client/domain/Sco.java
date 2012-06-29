@@ -21,6 +21,7 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
@@ -28,6 +29,7 @@ import fi.beans.base64code.StringCodeObject;
 import fi.beans.scorm.PartialScoreIF;
 import fi.beans.scorm.SCORM12APIInterface;
 //import fi.dwo.client.gui.DwoMessageDialog;
+import fi.dwo.client.gui.GuiCreator;
 import fi.dwo.client.gui.ScoPanel;
 import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.MapperCreator;
@@ -126,6 +128,7 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
     public static final String CREDIT  = "credit";
     public static final String NO_CREDIT = "no-credit";
     public static final String CREDIT_STATUS = "cmi.core.credit";
+    public static final String DWO_GOTO_SCONR = "dwo.goto.sconr"; // writeonly.
 
 	private String  lessonMode = NORMAL;
 
@@ -438,6 +441,40 @@ System.err.println("sum = ["+result+"]");
     		// TODO set error op 'readonly' variable
     		return "false";
     	}
+    	
+    	if( DWO_GOTO_SCONR.equals (iDataModelElement)) {
+    		if(NORMAL.equals(lessonMode))
+	    		try {
+	    			Sco[] list = course.getScoList();
+	    			int sconr;
+	    			for(sconr = 0; sconr < list.length; sconr++ ) {
+	    				if(list[sconr].getScoName().startsWith(iValue)) {
+	    					break; // found by prefix ? equals? 
+	    				}
+	    			}
+	    			if(sconr == list.length) // not found, try numeric
+	    				sconr = Integer.parseInt(iValue)-1; // 1..length
+	    			final Object sco = sconr < 0 ? (Object)course : (Object)(course.getScoList()[sconr]); // array out of bounce?
+	    			if(sco == this)
+	    				return "false"; // no jump, no stop/start.
+	    			SwingUtilities.invokeLater(new Runnable() {
+						public void run() {
+							if(sc.isShowing()) {
+								// setlessonmode nodig? TODO uitzoeken
+								GuiCreator.instance().getMainPanel().getCenter().select(sco);
+							}
+						}
+	    			});
+	    			return "true";
+	    		} catch (Exception e) {
+	    			//e.printStackTrace();
+	    			
+	    		}
+    		return "false";
+    	}
+    	
+    	
+    	
     	if(NORMAL.equals(lessonMode))
     		return dwo.LMSSetValue(this, user, iDataModelElement, iValue);
 
