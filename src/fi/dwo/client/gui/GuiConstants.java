@@ -171,8 +171,8 @@ public abstract class GuiConstants {
 	    if((profile==57 || profile==65 || profile==64)) DEPLOY_VARIANT =  "GR";
 	    
 	    dwoProfile = profile;	    
-// profile == 3,1 done.
-		if(profile==49)
+// profile == 3,1, done.
+		/*if(profile==49)
 		{	MAIN_BACKGROUND = new Color(255,255,255);
 		   	CELL_BACKGROUND = new Color(255,255,255);
 			FI_LOGO_LOCATION = "resources/fi.gif";
@@ -182,8 +182,8 @@ public abstract class GuiConstants {
 			GUI_IMAGE_WELCOME = "resources/UU-rekenweb-welkom.png";
 			GUI_IMAGE_SCO = "resources/UU-rekenweb-sco.png";
 			GUI_IMAGE_COURSE = "resources/UU-rekenweb-course.png";
-		} else 
-		if(profile==45)
+		} else */
+		/*if(profile==45)
 		{	MAIN_BACKGROUND = new Color(255,255,255);
 		   	CELL_BACKGROUND = new Color(255,255,255);
 			FI_LOGO_LOCATION = "resources/fi.gif";
@@ -193,10 +193,10 @@ public abstract class GuiConstants {
 			GUI_IMAGE_WELCOME = "resources/UU-brx-welkom.png";
 			GUI_IMAGE_SCO = "resources/UU-brx-sco.png";
 			GUI_IMAGE_COURSE = "resources/UU-brx-course.png";
-		} else /**/
+		} else */
 // done 1, 23, 34, 33, 44, 43, 46, 47, 52, 54
 			
-		if(profile==59)
+		/*if(profile==59)
 		{	MAIN_BACKGROUND = new Color(255,255,255);
 		   	CELL_BACKGROUND = new Color(255,255,255);
 			FI_LOGO_LOCATION = "resources/fi.gif";
@@ -206,7 +206,7 @@ public abstract class GuiConstants {
 			GUI_IMAGE_WELCOME = "resources/UU-jcu-welkom.png";
 			GUI_IMAGE_SCO = "resources/UU-jcu-sco.png";
 			GUI_IMAGE_COURSE = "resources/UU-jcu-course.png";
-		} else	
+		} else	*/
 		if(profile==5 || profile==56)
 		{	MAIN_BACKGROUND = new Color(255,255,255);
 		   	CELL_BACKGROUND = new Color(255,255,255);
