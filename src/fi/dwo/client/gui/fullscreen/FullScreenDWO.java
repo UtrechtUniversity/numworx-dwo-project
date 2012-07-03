@@ -1,22 +1,30 @@
 package fi.dwo.client.gui.fullscreen;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.beans.PropertyVetoException;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
 import javax.swing.JDialog;
 import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.Timer;
@@ -26,6 +34,8 @@ import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 
 import fi.dwo.client.domain.DwoHelper;
+import fi.dwo.client.gui.BackgroundPanel;
+import fi.dwo.client.gui.GuiConstants;
 
 public class FullScreenDWO extends JDialog implements ChangeListener, ActionListener, InternalFrameListener {
 
@@ -34,6 +44,7 @@ public class FullScreenDWO extends JDialog implements ChangeListener, ActionList
 	private JDesktopPane content;
 	private boolean fuse, fuse2;
 	private Timer   timer;
+	private JButton button;
 	
 	
 	
@@ -60,11 +71,31 @@ public class FullScreenDWO extends JDialog implements ChangeListener, ActionList
 		frame.setBounds(10, 20, 300, 400);
 		frame.setContentPane(box);
 		content.add(frame);
-		frame.show();
+		frame.show(); // FIXME in commentaar bij productie
+		try {
+			frame.setIcon(true);
+		} catch (PropertyVetoException e) {
+		}
 
 		frame = new JInternalFrame("Activiteit", true, true, true, true);
 		frame.setBounds(component.getBounds()); // initiele maten.....
-		frame.setContentPane(component);
+		Insets insets = frame.getInsets();
+		frame.setSize(frame.getWidth() + 10 + insets.left + insets.right, insets.top + insets.bottom + frame.getHeight() + 100); // marge
+		BackgroundPanel p = new BackgroundPanel(new BorderLayout());
+		//p.setOpaque(false);
+	  	p.setGuiImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_SCO));
+	  	p.add(component, BorderLayout.CENTER);
+	  	p.setBorder(BorderFactory.createEmptyBorder(0, 5, 10, 5)); // met die 0 kan ik de knop laten zakken
+	  	JPanel pp = new JPanel(false);
+	  	pp.setOpaque(false);
+	  	pp.add(button = new JButton("Afsluiten en inleveren"));
+	  	button.addActionListener(this);
+	  	pp.setPreferredSize(new Dimension(300, 90));
+	  	pp.setMaximumSize(new Dimension(6000,90));
+	  	p.add(pp);
+		
+		
+		frame.setContentPane(p);
 		frame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		frame.addInternalFrameListener(this);
 		frame.setDoubleBuffered(true);
@@ -120,7 +151,24 @@ public class FullScreenDWO extends JDialog implements ChangeListener, ActionList
 				Timer t = timer = new Timer(10000, this);
 				t.setRepeats(false);
 				t.start();
-				int r = JOptionPane.showInternalConfirmDialog(content, "Weet je dat wel zeker", CONFIRM_TITLE, JOptionPane.YES_NO_OPTION);
+				
+				Box vbox = Box.createVerticalBox();
+				vbox.add(new JLabel("Weet je dat wel zeker"));
+				final JProgressBar bar = new JProgressBar();
+				new Timer(1000, new ActionListener() {
+					
+					public void actionPerformed(ActionEvent e) {
+						bar.setValue(Math.max(bar.getValue()-1, 0));
+						if(bar.getValue() == 0) {
+							((Timer) e.getSource()).stop();
+						}
+					}
+				}).start();
+				bar.setMaximum(10);
+				bar.setValue(10);
+				vbox.add(bar);
+				
+				int r = JOptionPane.showInternalConfirmDialog(content, vbox, CONFIRM_TITLE, JOptionPane.YES_NO_OPTION);
 				t.stop();
 				timer = null;
 				log.append(", result = "+ r + "\n");
@@ -144,8 +192,7 @@ public class FullScreenDWO extends JDialog implements ChangeListener, ActionList
 		
 	}
 	
-
-	static void showInFrame(Frame f, JComponent content) {
+	static FullScreenDWO showInFrame(Frame f, JComponent content) {
 		FullScreenDWO frame = new FullScreenDWO(f);
 		frame.initialize(content);
 		
@@ -157,7 +204,7 @@ public class FullScreenDWO extends JDialog implements ChangeListener, ActionList
 		
 		frame.setSize(frame.getToolkit().getScreenSize());
 		frame.validate();
-		frame.setVisible(true);
+		return frame;
 	}
 
 	public void actionPerformed(ActionEvent event) {
@@ -170,8 +217,9 @@ public class FullScreenDWO extends JDialog implements ChangeListener, ActionList
 			}
 			return;
 		}
-		
-        setVisible(false);        
+		if(event.getSource() != button || weetJeHetZeker())
+		{	internalFrameClosed(null);        
+		}
 	}
 
 	public void internalFrameActivated(InternalFrameEvent e) {
@@ -182,11 +230,15 @@ public class FullScreenDWO extends JDialog implements ChangeListener, ActionList
 		fuse = true;
 	}
 
-	public void internalFrameClosing(InternalFrameEvent e) {
+	private boolean weetJeHetZeker() {
 		int r = JOptionPane.showInternalConfirmDialog(content, "Weet je dat wel zeker", CONFIRM_TITLE, JOptionPane.YES_NO_OPTION);
-		if(r == JOptionPane.YES_OPTION)
-		{	setVisible(false);
-			fuse = true;
+		return r == JOptionPane.YES_OPTION;
+	}
+	
+	
+	public void internalFrameClosing(InternalFrameEvent e) {
+		if(weetJeHetZeker())
+		{	internalFrameClosed(null);
 		} else {
 			e.getInternalFrame().show();
 		}
@@ -202,6 +254,13 @@ public class FullScreenDWO extends JDialog implements ChangeListener, ActionList
 	}
 
 	public void internalFrameOpened(InternalFrameEvent e) {
+	}
+
+	public void tearDown() {
+		fuse = fuse2 = true;
+		if(timer != null ) { timer.stop(); timer = null; }
+		JOptionPane.showInternalMessageDialog(content, "De toets wordt afgesloten en ingeleverd");
+		setVisible(false);
 	}
 	
 	
