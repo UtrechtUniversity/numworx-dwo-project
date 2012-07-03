@@ -58,6 +58,7 @@ import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.action.BackupModuleAction;
+import fi.dwo.client.gui.action.DeleteAction;
 import fi.dwo.client.gui.action.ImportModuleAction;
 import fi.dwo.client.gui.action.NewAction;
 import fi.dwo.client.persistence.DbAccessCreator;
@@ -319,19 +320,16 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
                     noUpdateCourse();
                 }
     		} else if (value == removeImage) {
-                /* Delete the course */
-                String message;
-                message = TextMapper.getText(TextMapper.GUIS_MSG_SCO_DELETE);
-                if (JOptionPane.showConfirmDialog(ScoManagementPanel.this, message, TextMapper.getText(TextMapper.GUIS_MSG_TTL_SCO_DELETE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    if (GuiCreator.instance().deleteSco(s)) {
-                    	model.fireTableRowsDeleted(row, row);
-                    	noUpdateCourse();
-                    	if(model.getRowCount()==0)
-                    	{
-                    		addScoTable();
-                    	}
-                    }
+                /* Delete the Sco */               
+                if (DeleteAction.deleteSco(s)) {
+                	model.fireTableRowsDeleted(row, row);
+                	noUpdateCourse();
+                	if(model.getRowCount()==0)
+                	{
+                		addScoTable();
+                	}
                 }
+                
     		} else if (value == parametersImage) {
     			GuiCreator.instance().loadParameterManagementPanel(s);
     		} else if (value == upImage) {

@@ -22,7 +22,7 @@ abstract public class GuiAction extends AbstractAction implements PropertyChange
 		return instance().getUser().hasRight(User.PROFILE_ADMIN_RIGHT);
 	}
 	
-	final GuiCreator instance() { 
+	final static GuiCreator instance() { 
 		return GuiCreator.instance();
 	}
 	

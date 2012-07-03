@@ -6,11 +6,14 @@ import java.beans.PropertyChangeListener;
 import java.text.MessageFormat;
 
 import javax.swing.AbstractAction;
+import javax.swing.JOptionPane;
 
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseMap;
+import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.gui.GuiCreator;
+import fi.dwo.client.gui.ScoManagementPanel;
 import fi.dwo.client.system.TextMapper;
 
 public class DeleteAction extends GuiAction  {
@@ -37,6 +40,7 @@ public class DeleteAction extends GuiAction  {
 			if(o instanceof Sco)
 			{	sco = (Sco) o;
 				parent = sco.getCourse();
+				course = null;
 				String format = TextMapper.getText(TextMapper.GUIS_TLTP_DELETE_SCO);
 				Object[] arguments = { sco.toString() };
 				putValue(NAME, MessageFormat.format(format, arguments));
@@ -44,8 +48,8 @@ public class DeleteAction extends GuiAction  {
 			}
 			else if(o instanceof Course)
 			{
-				
 				course = (Course) o;
+				sco = null;
 				parent = map.getParentMap();
 				Course[] courses = parent.getChildren();
 				for (row = 0; row < courses.length; row++) {
@@ -79,7 +83,12 @@ public class DeleteAction extends GuiAction  {
 		
 		public void actionPerformed(ActionEvent e) {
 			if(map == null)
+			{
 				setMap(Clipboard.getSelection());
+				map = null;
+				Clipboard.cmd = null;
+				Clipboard.setClipboard(null);
+			} else
 // verwijder clipboard als die wordt verwijdert
 			if (Clipboard.getClipboard() == map)
 			{	Clipboard.setClipboard(null);
@@ -88,19 +97,62 @@ public class DeleteAction extends GuiAction  {
 	
 			if(course != null) 
 			{
-                if (instance().deleteCourse(course)) {
+                if (deleteCourse(course)) {
                     parent.removeChild(row);
                 	newSelection(course); // TODO if selection=course then select(parent)                    
                  }
 
 			} else if (sco != null)
 			{
-				instance().deleteSco(sco);
-				getCenter().updateCourse((Course) parent);
-				newSelection(sco); // TODO if selection=sco then select(parent)
+				if ( deleteSco(sco) ) {
+					getCenter().updateCourse((Course) parent);
+					newSelection(sco); // TODO if selection=sco then select(parent)
+				}
 				return;
 			}
 			getCenter().updateMap(parent);
 		}
 
+		public static boolean deleteCourse(Course c) {
+            String message;
+            boolean b = hasScos(c);
+			if(b) {
+                message = TextMapper.getText(TextMapper.GUIC_MSG_COURSE_DELETE);
+            } else {
+                message = TextMapper.getText(TextMapper.GUIC_MSG_COURSE_DELETE_NO_SCO);
+            }
+            if (JOptionPane.showConfirmDialog(DwoHelper.getApplet(), message, TextMapper.getText(TextMapper.GUIC_MSG_TTL_COURSE_DELETE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                if (instance().deleteCourse(c)) {
+                	return true;
+                }
+            }
+			return false;
+		}
+
+    	// scolist.lenght > 0 maar dan recursief
+		private static boolean hasScos(Course c) {
+			if(c.isWithChildren())
+			{
+				Course[] children = c.getChildren();
+				for (int i = 0; i < children.length; i++) {
+					if(hasScos(children[i]))
+							return true;
+				}
+			}
+			c.loadScos();
+			boolean b = c.getScoList().length > 0;
+			return b;
+		}
+		
+		public static boolean deleteSco(Sco s) {
+            String message;
+            message = TextMapper.getText(TextMapper.GUIS_MSG_SCO_DELETE);
+            if (JOptionPane.showConfirmDialog(DwoHelper.getApplet(), message, TextMapper.getText(TextMapper.GUIS_MSG_TTL_SCO_DELETE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                if (instance().deleteSco(s)) {
+                	return true;
+                }
+            }
+            return false;
+		}
+		
 	}

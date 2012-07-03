@@ -63,6 +63,7 @@ import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.SchoolPanel.ImageButtonEditor;
 import fi.dwo.client.gui.SchoolPanel.ImageRenderer;
 import fi.dwo.client.gui.SchoolPanel.SchoolModel;
+import fi.dwo.client.gui.action.DeleteAction;
 import fi.dwo.client.gui.action.ImportModuleAction;
 import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
@@ -336,20 +337,11 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     		{
                 /* Delete the course */
                 Course c = courses[row];
-                String message;
-                boolean b = hasScos(c);
-				if(b) {
-                    message = TextMapper.getText(TextMapper.GUIC_MSG_COURSE_DELETE);
-                } else {
-                    message = TextMapper.getText(TextMapper.GUIC_MSG_COURSE_DELETE_NO_SCO);
-                }
-                if (JOptionPane.showConfirmDialog(DwoHelper.getApplet(), message, TextMapper.getText(TextMapper.GUIC_MSG_TTL_COURSE_DELETE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    if (GuiCreator.instance().deleteCourse(c)) {
-                        map.removeChild(row);
-                        setChildren(map.getChildren());
-                        model.fireTableRowsDeleted(row,row);
-                        noUpdate();
-                    }
+                if(DeleteAction.deleteCourse(c)) {
+            		map.removeChild(row);
+                    setChildren(map.getChildren());
+                    model.fireTableRowsDeleted(row,row);
+                    noUpdate();  
                 }
                 if(courses.length == 0) {
                     noCoursesLabel.setVisible(true);
@@ -387,26 +379,8 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     		fireEditingStopped();
     	}
 
-    	// scolist.lenght > 0 maar dan recursief
-		private boolean hasScos(Course c) {
-			if(c.isWithChildren())
-			{
-				Course[] children = c.getChildren();
-				for (int i = 0; i < children.length; i++) {
-					if(hasScos(children[i]))
-							return true;
-				}
-			}
-			c.loadScos();
-			boolean b = c.getScoList().length > 0;
-			return b;
-		}
 
 }
-
-	
-	
-	
 	
 	/**
      * @param courses
