@@ -32,6 +32,7 @@ import javax.swing.AbstractButton;
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -51,6 +52,7 @@ import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -219,22 +221,32 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			case 2: return cd[rowIndex].data;
 			case 3: if(rowIndex != 0) return upImage;
 					break;
-			case 4: if(rowIndex != getRowCount()-1)
-						return downImage;
+			case 4: if(rowIndex != getRowCount()-1) return downImage;
+					break;
+			case 5: return OBJECT_TYPE[ cd[rowIndex].type ];
+			case 6: return cd[rowIndex].van;
+			case 7: return cd[rowIndex].tot;
 			}
 			return null;
 		}
 
 		public Class getColumnClass(int columnIndex) {
-			if(columnIndex >= 2)
+			if(columnIndex >= 2 && columnIndex <= 4)
 				return Image.class;
-			if(columnIndex != 1)
-				return Boolean.TRUE.getClass();
+			if(columnIndex == 0)
+				return Boolean.class;
+			if(columnIndex >= 6 && columnIndex <= 7) {
+				return Date.class;
+			}
 			return super.getColumnClass(columnIndex);
 		}
 
 		public String getColumnName(int column) {
 			switch(column) {
+			case 5: return "soort";
+			case 6: return "vanaf";
+			case 7: return "tot aan";
+			
 			case 3: 
 			case 4:
 			case 0: return "";
@@ -246,6 +258,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
 			switch(columnIndex) {
+			case 5: case 6: case 7:
 			case 0: return true;
 			case 1: return false;
 			case 2: return cd[rowIndex].data != null;
@@ -259,21 +272,81 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			switch(columnIndex) {
 			case 0:
 				cd[rowIndex].select = aValue;
+				fireTableRowsUpdated(rowIndex, rowIndex); // effect op col 5,6,7
 				break;
 			case 2:
 				cd[rowIndex].data = (Image) aValue;
+				break;
+			case 5: if (OBJECT_TYPE[1].equals(aValue))
+						cd[rowIndex].type = 1;
+					else
+						cd[rowIndex].type = 0;
+				break;
+			case 6: cd[rowIndex].van = (Date) aValue;
+				break;
+			case 7: cd[rowIndex].tot = (Date) aValue;
+			
 			}
 			fireTableCellUpdated(rowIndex, columnIndex);
 		}
 		
     }
+	
+	class DateCellRenderer extends DefaultTableCellRenderer
+	{
+
+		/* (non-Javadoc)
+		 * @see javax.swing.table.DefaultTableCellRenderer#setValue(java.lang.Object)
+		 */
+		protected void setValue(Object value) {
+			if(value != null) 
+			{
+				value = DATE_TIME.format(value);
+			} else 
+				value = "  :     -   -    ";
+			super.setValue(value);
+		}
+
+		/* (non-Javadoc)
+		 * @see javax.swing.table.DefaultTableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
+		 */
+		public Component getTableCellRendererComponent(JTable table,
+				Object value, boolean arg2, boolean arg3, int row, int col) {
+			// TODO Auto-generated method stub
+			super.getTableCellRendererComponent(table, value, arg2, arg3, row, col);
+			if( ! Boolean.TRUE .equals (table.getValueAt(row, 0)) )
+					setText("");
+			return this;
+		}
+		
+	}
+	
+	static class TypeCellEditor extends DefaultCellEditor {
+
+		public TypeCellEditor(JComboBox box) {
+			super(box);
+		}
+		
+		private static JComboBox createComboBox() {
+			JComboBox box = new JComboBox(OBJECT_TYPE);
+			return box;
+		}
+
+		public TypeCellEditor() {
+			this(createComboBox());
+		}
+		
+		
+	}
+	
     
+	static final Object[] OBJECT_TYPE = new Object[] { "normaal", "afgeschermd" };
     class CheckBoxNodeRenderer implements TreeCellRenderer {
-    	  JCheckBox leafRenderer = new JCheckBox();
+		JCheckBox leafRenderer = new JCheckBox();
     	  JButton   eraseBtn = new JButton();
     	  JButton 	vanBtn = new JButton("_________________");
     	  JButton	totBtn = new JButton("_________________");
-    	  JComboBox typeBtn = new JComboBox(new Object[] { "normaal", "toets" });
+    	  JComboBox typeBtn = new JComboBox(OBJECT_TYPE);
     	  Box box;
     	  boolean boksAan;
     	  private DefaultTreeCellRenderer nonLeafRenderer = new DefaultTreeCellRenderer();
@@ -585,7 +658,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
             }
         }
 
-        if(CenterPanel.isIconizer() )
+        if(CenterPanel.isIconizer() && false)
         {
         	
         	CourseMap schoolMap = ModuleTreePanel.SCHOOL_MAP;
@@ -656,6 +729,8 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         	TableCellRenderer imageRenderer = new ImageRenderer();
         	TableCellEditor imageEditor = new ImageEditor();
         	jTable = new JTable(cm);
+        	jTable.setDefaultRenderer(Date.class, new DateCellRenderer());
+        	jTable.getColumnModel().getColumn(5).setCellEditor(new TypeCellEditor());
         	TableUtil.setDefaults(jTable, true, imageRenderer, imageEditor);
         	jTable.setRowMargin(2);
         	TableUtil.setJTableSizes(jTable);
@@ -861,9 +936,9 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         String title = TextMapper.getText(TextMapper.GUISC_TITLE);
         allCourses = 
         GuiCreator.instance().dwo.sequence(allCourses, sc);
+        int cnt = 8; // 2 voor select course voor resultaat. 3+2+3 voor selectcourse voor klas.
         
-        
-        SelectCoursesDialog scd = new SelectCoursesDialog(parent, title, true, allCourses, selectedCourses, 3+(DWO.SEQUENCE?2:0));
+        SelectCoursesDialog scd = new SelectCoursesDialog(parent, title, true, allCourses, selectedCourses, cnt);
         scd.sc = sc;
 // persistencefacade....
         try {
