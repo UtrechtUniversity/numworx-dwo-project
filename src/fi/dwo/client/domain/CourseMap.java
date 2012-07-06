@@ -6,9 +6,9 @@ public interface CourseMap {
 
 	void addChild(Course c);
 	void removeChild(int i);
-	Course[] getChildren();
+	CourseMap[] getChildren();
 
-	void setChildren(Course[] courses);
+	void setChildren(CourseMap[] courses);
 	Object getUserObject();
 	Set getChildNames();
 	CourseMap getParentMap();

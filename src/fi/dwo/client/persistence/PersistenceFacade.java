@@ -1884,13 +1884,13 @@ e1.printStackTrace();
 		}		
 	}
 	
-	public void setCourseSequence(Course[] courses, School school, SchoolClass forClass) throws PersistenceException
+	public void setCourseSequence(CourseMap[] courses, School school, SchoolClass forClass) throws PersistenceException
 	{
 		if(courses.length==0)
 			return;
 		Vector vector = new Vector(courses.length);
 		for (int i = 0; i < courses.length; i++) {
-			vector.add(new Integer(courses[i].getID()));
+			vector.add(new Integer(((Course) courses[i]).getID()));
 		}
 		int schoolID = 0;
 		int classID = 0;
@@ -1899,8 +1899,8 @@ e1.printStackTrace();
 		int parent = 0;
 		if(forClass == null)  // selected courses are flat
 		{
-			parent = courses[0].getParentID();
-			if(parent != courses[courses.length-1].getParentID())
+			parent = ((Course) courses[0]).getParentID();
+			if(parent != ((Course) courses[courses.length-1]).getParentID())
 				try {
 					access.log("Sequence error " + school);
 				} catch (Exception e) {

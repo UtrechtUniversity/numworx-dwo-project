@@ -163,7 +163,7 @@ public class TeacherStrategy implements SelectStrategy{
 		 * @return
 		 * @see fi.dwo.client.domain.CourseMap#getChildren()
 		 */
-		public Course[] getChildren() {
+		public CourseMap[] getChildren() {
 			return parent.getChildren();
 		}
 		

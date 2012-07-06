@@ -148,7 +148,7 @@ public class ImportModuleAction extends GuiAction {
     	openDial.setTitle("Restore module backup");
 		openDial.show();
 		naam = openDial.getFile();
-		Course courses[] = map.getChildren();
+		//CourseMap courses[] = map.getChildren();
 		if(naam!=null)
 		{	
 			File dir = new File(openDial.getDirectory());

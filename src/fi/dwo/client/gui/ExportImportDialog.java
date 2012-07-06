@@ -69,6 +69,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 import fi.beans.appletutil.AppletUtil;
 import fi.dwo.client.domain.AppletConfig;
 import fi.dwo.client.domain.Course;
+import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.DWO;
 import fi.dwo.client.domain.DWOlight;
 import fi.dwo.client.domain.DwoHelper;
@@ -436,10 +437,10 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		HashMap  dirty = new HashMap();
 		Course[] courses;
 		
-		private void copyInto(Course[] courses, Vector v)
+		private void copyInto(CourseMap[] courseMaps, Vector v)
 		{
-	        for(int i=0 ; i<courses.length; i++){
-	        	Course course = courses[i];
+	        for(int i=0 ; i<courseMaps.length; i++){
+	        	Course course = (Course) courseMaps[i];
 				if(course.getDwoProfile() == profileID && course.getSchoolID()== user.getSchool().getSchoolID()) 
 				{
 		        	if(course.isWithChildren())

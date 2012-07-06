@@ -3,6 +3,7 @@
 
 package fi.dwo.client.domain;
 
+import java.awt.Component;
 import java.awt.Image;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -51,7 +52,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
     
     private int schoolID;
     private boolean export;
-    private Course  children[];
+    private CourseMap[]  children;
     private int parentID;
     private boolean newParent;
     
@@ -443,21 +444,21 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
 	}
 
 
-	public static final Course[] NO_CHILDREN = new Course[0];
+	public static final CourseMap[] NO_CHILDREN = new CourseMap[0];
 	public static final Sco[] NO_SCOS = new Sco[0];
 	
-	public Course[] getChildren() {
+	public CourseMap[] getChildren() {
 		return children;
 	}
 
-	public void setChildren(Course[] children) {
+	public void setChildren(CourseMap[] children) {
 		this.children = children;
 	}
 
 	public void addChild(Course child)
 	{
 		child.setParentID(getID());
-		Course[] children = getChildren();
+		CourseMap[] children = getChildren();
 		if(children == null)
 		{
 			children = new Course[] { child };
@@ -474,7 +475,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
 	public void removeChild(int index)
 	{
 		int length = children.length;
-		children[index].setParentID(0);
+		((Course) children[index]).setParentID(0);
 		Course[] n = new Course[length-1];
 		System.arraycopy(children, 0, n, 0, index);
 		System.arraycopy(children, index+1, n, index, length-1-index);
@@ -483,7 +484,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
 	
 	public void removeChild(Course child)
 	{
-		Course[] children = getChildren();
+		CourseMap[] children = getChildren();
 		for (int i = 0; i < children.length; i++) {
 			if(children[i] == child)
 			{
@@ -532,14 +533,14 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
 	}
 	
 	public Set getChildNames() {
-		Course[] children = getChildren();
+		CourseMap[] children = getChildren();
 		if(children == null)
 			return null;
 		int offset = children.length;
 		Set names = new HashSet();
 		for(int i = 0; i < offset; i++)
 		{
-			String name = children[i].getName();
+			String name = children[i].toString();
 			names.add(name);
 		}
 		return names;

@@ -51,7 +51,7 @@ public class DeleteAction extends GuiAction  {
 				course = (Course) o;
 				sco = null;
 				parent = map.getParentMap();
-				Course[] courses = parent.getChildren();
+				CourseMap[] courses = parent.getChildren();
 				for (row = 0; row < courses.length; row++) {
 					if(courses[row] == course)
 						break;
@@ -133,9 +133,9 @@ public class DeleteAction extends GuiAction  {
 		private static boolean hasScos(Course c) {
 			if(c.isWithChildren())
 			{
-				Course[] children = c.getChildren();
+				CourseMap[] children = c.getChildren();
 				for (int i = 0; i < children.length; i++) {
-					if(hasScos(children[i]))
+					if(hasScos((Course) children[i]))
 							return true;
 				}
 			}

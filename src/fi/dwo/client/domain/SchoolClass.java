@@ -78,9 +78,9 @@ public class SchoolClass implements UserGroup, Comparable {
         }
     }
 
-	public void deselectAllCourses(Course[] allCourses) {
+	public void deselectAllCourses(CourseMap[] allCourses) {
 		for (int i = 0; i < allCourses.length; i++) {
-            Course course = allCourses[i];
+            Course course = (Course) allCourses[i];
             if(course.isWithChildren())
             	deselectAllCourses(course.getChildren());
             try {

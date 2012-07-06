@@ -125,8 +125,8 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		public void removeChild(int i) {
 		}
 
-		public Course[] getChildren() {
-			Course[] c1, c2, c3;
+		public CourseMap[] getChildren() {
+			CourseMap[] c1, c2, c3;
 			c1 = STANDAARD_DWO_MAP.getChildren();
 			c2 = SCHOOL_MAP.getChildren();
 			c3 = new Course[c1.length + c2.length];
@@ -136,7 +136,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 			return c3;		
 		}
 
-		public void setChildren(Course[] courses) {
+		public void setChildren(CourseMap[] courses) {
 		}
 
 		public Object getUserObject() {
@@ -165,6 +165,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 			super(node);
 		}
 		
+		
 //		public Course[] getChildren() {
 //			Course[] result = dwo.getCourses();
 //			ArrayList list = new ArrayList(result.length);
@@ -175,18 +176,18 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 //			return (Course[]) list.toArray(new Course[list.size()]);
 //		}
 
-		public Course[] getChildrenFetch() {
+		public CourseMap[] getChildrenFetch() {
 			ArrayList v = new ArrayList();
 			Enumeration children = node.children();
 			while (children.hasMoreElements()) {
 				DefaultMutableTreeNode object = (DefaultMutableTreeNode) children.nextElement();
 				v.add(object.getUserObject());
 			}
-			return (Course[])v.toArray(Course.NO_CHILDREN);
+			return (CourseMap[])v.toArray(Course.NO_CHILDREN);
 		}
 		
-		private Course[] children;
-		public Course[] getChildren() {
+		private CourseMap[] children;
+		public CourseMap[] getChildren() {
 			if(children == null)
 				children = getChildrenFetch();
 			return children;
@@ -219,7 +220,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		 */
 		public void removeChild(int index) {
 			int length = children.length;
-			children[index].setParentID(0);
+			((Course) children[index]).setParentID(0);
 			Course[] n = new Course[length-1];
 			System.arraycopy(children, 0, n, 0, index);
 			System.arraycopy(children, index+1, n, index, length-1-index);
@@ -234,16 +235,21 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 	
 	class TreeMap implements CourseMap
 	{
-		
+		private Object userObject;
 		TreeMap(DefaultMutableTreeNode node) {
 			super();
 			this.node = node;
+			userObject = node.getUserObject();
+		}
+
+		public String toString() {
+			return userObject.toString();
 		}
 
 		DefaultMutableTreeNode node;
 
 		public Object getUserObject() {
-			return node.getUserObject();
+			return userObject;
 		}
 
 		public void addChild(Course c) {
@@ -252,18 +258,18 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		public void removeChild(int i) {
 		}
 
-		public Course[] getChildren() {
+		public CourseMap[] getChildren() {
 			return getCourses(node);
 		}
 
-		public void setChildren(Course[] courses) {
+		public void setChildren(CourseMap[] courses) {
 		}
 
 		public Set getChildNames() {
 			HashSet names = new HashSet();
-			Course[] courses = getChildren();
+			CourseMap[] courses = getChildren();
 			for (int i = 0; i < courses.length; i++) {
-				names.add(courses[i].getName());
+				names.add(courses[i].toString());
 			}
 			return names;
 		}
@@ -278,7 +284,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 	{
 		Icon bookIcon; 
 		boolean isCourse, isMap;
-		private TreeCellRenderer() {
+		TreeCellRenderer() {
 			super();
 			Image book = DwoHelper.getResourceImage("resources/book.png");
 			bookIcon = new ImageIcon(book);
@@ -422,12 +428,12 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		}
 		protected void loadChildren() {
 			if(course.isWithChildren()) 
-			{   Course[] courses;
+			{   CourseMap[] courses;
 				childValue = courses = course.getChildren();
 				loadedChildren = true;
 				for (int i = 0; i < courses.length; i++) {
-					courses[i].setParentMap(course); // FIXME rare plek voor deze link leggen?
-					insert(new LazyMutableTreeNode(courses[i]), i);
+					((Course) courses[i]).setParentMap(course); // FIXME rare plek voor deze link leggen?
+					insert(new LazyMutableTreeNode((Course) courses[i]), i);
 				}
 			} else {
 				if(course.getScoList()==null)
@@ -710,10 +716,10 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 	}
 
 	private void appendCourseMap(CourseMap map, DefaultMutableTreeNode node) {
-		Course[] courses = map.getChildren();
+		CourseMap[] courses = map.getChildren();
     	DefaultMutableTreeNode child; 
     	for (int i = 0; i < courses.length; i++) {
-			Course course = courses[i];
+			Course course = (Course) courses[i];
 			course.setParentMap(map);
 			child = new LazyMutableTreeNode(course);
 			node.add(child);
@@ -744,7 +750,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		} else
 			
 			
-		if(o == SCHOOL_MODULES)
+		if(o .equals( SCHOOL_MODULES) )
 			strategy.nodeSelected(SCHOOL_MAP);
 		else if(o == STANDAARD_DWO_MODULES)
 			strategy.nodeSelected(STANDAARD_DWO_MAP);

@@ -124,9 +124,9 @@ public class PasteAction extends GuiAction
 		}
 
 
-		private void copyCourseMap(Course c, Course[] children) {
+		private void copyCourseMap(Course c, CourseMap[] children) {
 			for (int i = 0; i < children.length; i++) {
-				copyCourseMap(c, children[i]);
+				copyCourseMap(c, (Course)children[i]);
 			}
 // save ordering 
 			if(DWO.SEQUENCE)
@@ -257,7 +257,7 @@ public class PasteAction extends GuiAction
 		}
 
 		private void removeChild(CourseMap oldmap, Course course) {
-			Course[] children = oldmap.getChildren();
+			CourseMap[] children = oldmap.getChildren();
 			for (int i = 0; i < children.length; i++) {
 				if(children[i] == course)
 				{

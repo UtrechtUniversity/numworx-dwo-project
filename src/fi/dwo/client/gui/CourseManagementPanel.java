@@ -90,7 +90,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 		setMap(map);
 	}
 
-     CourseManagementPanel(Course[] courses)
+     CourseManagementPanel(CourseMap[] courses)
      {
     	 this(courses, (Object)ModuleTreePanel.SCHOOL_MODULES);
      }
@@ -102,7 +102,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
     private Image removeImage, editImage, scoImage;
     
-    private Course[] courses;
+    private CourseMap[] courses;
 
     private JLabel noCoursesLabel;
 
@@ -154,8 +154,9 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 		}
 
 		public Object getValueAt(int row, int col) {
+			Course course = (Course) courses[row];
 			switch(col) {
-			case 1: return courses[row].getName();
+			case 1: return course.getName();
 			case 2: return editImage;
 			case 3: if(row == 0) return null;
 					return upImage;
@@ -163,7 +164,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 					return downImage;
 			case 5: return removeImage;
 			
-			case 0: return Boolean.valueOf(courses[row].isWithChildren());
+			case 0: return Boolean.valueOf(course.isWithChildren());
 			}
 			return null;
 		}
@@ -201,7 +202,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 		public Object getValueAt(int row, int col) {
 			switch(col) {
 			case 0:
-				return courses[row].getName();
+				return courses[row].toString();
 			case 1:
 				return scoImage;
 			case 2:
@@ -272,7 +273,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 			}
 			setHorizontalAlignment(SwingConstants.CENTER);
 			setOpaque(true);
-			Object[] arguments = new Object[]  { courses[row].getName() };
+			Object[] arguments = new Object[]  { courses[row].toString() };
 			switch(col) {
 			case 1:	String s = TextMapper.getText(TextMapper.GUIC_TLTP_SCO_COURSE);
 	    			setToolTipText(MessageFormat.format(s, arguments));
@@ -328,7 +329,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     	public void actionPerformed(ActionEvent event) {
     		if(value == editImage)
     		{
-                Course c = courses[row];
+                Course c = (Course) courses[row];
                 if (CourseNameDialog.editCourse(c)) {
                     model.fireTableCellUpdated(row,0);
                 }
@@ -336,7 +337,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     		} else if (value == removeImage)
     		{
                 /* Delete the course */
-                Course c = courses[row];
+                Course c = (Course) courses[row];
                 if(DeleteAction.deleteCourse(c)) {
             		map.removeChild(row);
                     setChildren(map.getChildren());
@@ -351,15 +352,15 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     		
     		} else if (value == scoImage) {
                 /* Show the scos of the course */
-                Course c = courses[row];
+                Course c = (Course) courses[row];
                 if(!c.isWithChildren())
                 	center.loadCenter(GuiCreator.instance().getScoManagementPanel(c));
                 else 
                 	center.loadCenter(GuiCreator.instance().getCourseManagementPanel(c));
 
     		} else if (value == upImage) {
-    			Course s2 = courses[row-1];
-    			Course s  = courses[row];
+    			CourseMap s2 = courses[row-1];
+    			CourseMap s  = courses[row];
     			courses[row] = s2;
     			courses[row-1] = s;
     			map.setChildren(courses);
@@ -367,8 +368,8 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     			updown = true;
     			noUpdate();
     		} else if (value == downImage) {
-    			Course s2 = courses[row+1];
-    			Course s  = courses[row];
+    			CourseMap s2 = courses[row+1];
+    			CourseMap s  = courses[row];
     			courses[row] = s2;
     			courses[row+1] = s;
     			map.setChildren(courses);
@@ -385,7 +386,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	/**
      * @param courses
      */
-    public CourseManagementPanel(Course[] courses, Object userObject) {
+    public CourseManagementPanel(CourseMap[] courses, Object userObject) {
         super(new BorderLayout(10,10));
         this.userObject = userObject;
        // System.out.println(java.util.Locale.getDefault());
@@ -693,12 +694,12 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	}
 
 
-	public Course[] getChildren() {
+	public CourseMap[] getChildren() {
 		return courses;
 	}
 
 
-	public void setChildren(Course[] courses) {
+	public void setChildren(CourseMap[] courses) {
 		this.courses = courses;
 	}
 
@@ -742,7 +743,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	public Set getChildNames() {
 		HashSet names = new HashSet();
 		for (int i = 0; i < courses.length; i++) {
-			names.add(courses[i].getName());			
+			names.add(courses[i].toString());			
 		}
 		return names;
 	}

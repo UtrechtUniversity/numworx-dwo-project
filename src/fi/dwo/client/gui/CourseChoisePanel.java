@@ -79,7 +79,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
      * overview of all the available courses to the user.
      * @param courseList TODO
      */
-    public CourseChoisePanel(Descriptor dwoProfile, Course[] courseList, Object userObject) {
+    public CourseChoisePanel(Descriptor dwoProfile, CourseMap[] courseList, Object userObject) {
         super();
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         setLayout(new BorderLayout());
@@ -90,8 +90,8 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
         initialize(dwoProfile, courseList);
     }
 
-	private void initialize(Descriptor dwoProfile, Course[] courseList) {
-		Course[] courses = courseList;
+	private void initialize(Descriptor dwoProfile, CourseMap[] courseList) {
+		CourseMap[] courses = courseList;
 
         //Panel ph;
         //ph = new Panel(null);
@@ -154,7 +154,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
             p = new JPanel(new FlowLayout());
             p.setOpaque(false);
             p.setDoubleBuffered(false);
-            courseIcon = new CourseIcon(courses[i]);
+            courseIcon = new CourseIcon((Course) courses[i]);
             courseIcon.addActionListener(this);
             if(courseIcon.getSize().width > maxWidth) {
                 maxWidth = courseIcon.getSize().width; 

@@ -9,6 +9,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -26,6 +27,7 @@ import java.util.Enumeration;
 import java.util.EventObject;
 import java.util.Hashtable;
 import java.util.Locale;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.AbstractButton;
@@ -33,6 +35,7 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.DefaultCellEditor;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -44,6 +47,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.SpinnerDateModel;
@@ -77,20 +81,20 @@ import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.SchoolClass;
 import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.ClassPanel.ClassModel;
-import fi.dwo.client.gui.action.TeacherStrategy;
 import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.PersistenceException;
 import fi.dwo.client.system.TextMapper;
 
-class CourseData {
+class CourseData implements CourseMap {
 	Course course;
 	Object select;
 	Date van, tot;
 	
 	public CourseData(Course course) {
 		this.course = course;
+		if(!course.isWithChildren())
+			select = Boolean.FALSE;
 		if(course.link != null)
 		{
 			van = course.link.getNotBefore();
@@ -106,7 +110,26 @@ class CourseData {
 		return Boolean.TRUE.equals(select);
 	}	
 	CourseData[] children;
-	public int type;	
+	public int type;
+
+	public void addChild(Course c) {
+	}
+	public Set getChildNames() {
+		return null;
+	}
+	public CourseMap[] getChildren() {
+		return children;
+	}
+	public CourseMap getParentMap() {
+		return null;
+	}
+	public Object getUserObject() {
+		return  course;
+	}
+	public void removeChild(int i) {
+	}
+	public void setChildren(CourseMap[] courses) {
+	}	
 	
 }
 /**
@@ -117,7 +140,95 @@ class CourseData {
  */
 public final class SelectCoursesDialog extends JDialog implements ActionListener {
 
-    public boolean updown, vantot;
+	class EnhancedIcon implements Icon {
+		private Icon icon;
+		private Color color = Color.red;
+		Font font = new Font("Arial", Font.BOLD, 20);
+		public int getIconHeight() {
+			return icon.getIconHeight();
+		}
+
+		public int getIconWidth() {
+			return icon.getIconWidth();
+		}
+
+		public void paintIcon(Component c, Graphics g, int x, int y) {
+			icon.paintIcon(c, g, x, y);
+			g.setColor(color);
+			Font f = g.getFont();
+			g.setFont(font);
+			g.drawString("*", x+3, y+getIconHeight());
+			g.setFont(f);
+		}
+
+		public EnhancedIcon(Icon icon, Color color) {
+			super();
+			this.icon = icon;
+			this.color = color;
+		}
+		
+	}
+	
+    public class SelectCellRenderer extends DefaultTreeCellRenderer implements
+			TreeCellRenderer {
+
+    	CourseData cd;
+    	
+    	Icon greenIcon = new EnhancedIcon(getDefaultLeafIcon(), Color.green);
+    	Icon redIcon = new EnhancedIcon(getDefaultLeafIcon(), Color.green);
+    	
+		public Icon getClosedIcon() {
+			return super.getClosedIcon();
+		}
+
+		public Icon getLeafIcon() {
+			if(cd != null && cd.isSelected())
+				return greenIcon; // selected
+			if(cd != null && cd.data != null) 
+				return redIcon;	 // met data.
+			return super.getLeafIcon();
+		}
+
+
+
+		public Icon getOpenIcon() {
+			if(cd != null && cd.isSelected())
+				return greenIcon;
+			return super.getOpenIcon();
+		}
+
+
+
+		public Component getTreeCellRendererComponent(JTree tree, Object value,
+				boolean sel, boolean expanded, boolean leaf, int row,
+				boolean hasFocus) {
+			
+			cd = null;
+			
+			if(value instanceof DefaultMutableTreeNode)
+			{
+				Object o = ((DefaultMutableTreeNode) value).getUserObject();
+				if(o instanceof CourseData) {
+					cd = (CourseData)o;		
+				}
+			}
+			
+			
+			
+			return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf,
+					row, hasFocus);
+		}
+
+    	
+    	
+    	
+	}
+
+
+
+
+
+	public boolean updown, vantot;
 
 
 	public class ImageEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
@@ -140,6 +251,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 		}
 
 		public void actionPerformed(ActionEvent e) {
+			CourseData[] cd = model.getCD();
 			if (value == removeImage) {
                 /* Delete the leerlingdata */
                 if (eraseClassData(cd[row].course)) {
@@ -158,6 +270,12 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
    			
     		} else if(value == downImage)
     		{
+    			CourseData s2 = cd[row+1];
+    			CourseData s  = cd[row];
+    			cd[row] = s2;
+    			cd[row+1] = s;
+    			model.fireTableRowsUpdated(row, row+1);
+    			updown = true;
     			
     		}
 		}
@@ -199,9 +317,22 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 	class CoursesModel extends AbstractTableModel {
 
     	int columnCount = 2;
-
-    	CourseData[] getCD() { return cd; }
+    	CourseData[] cd;
     	
+    	CoursesModel() {
+    		this.cd = SelectCoursesDialog.this.cd;
+    	}
+    	
+    	CoursesModel(CourseData[] cd) {
+    		this.cd = cd;
+    	}
+    	
+    	
+    	CourseData[] getCD() { return cd; }
+    	void setCD(CourseData[] cd) {
+    		this.cd = cd;
+    		fireTableDataChanged();
+    	}
 		public int getColumnCount() {
 			return columnCount;
 		}
@@ -216,7 +347,10 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			switch(columnIndex) {
-			case 0: return cd[rowIndex].select;
+			case 0: 
+					if(cd[rowIndex].course.isWithChildren())
+						return null; // no choice!
+					return cd[rowIndex].select;
 			case 1: return cd[rowIndex].course.getName();
 			case 2: return cd[rowIndex].data;
 			case 3: if(rowIndex != 0) return upImage;
@@ -259,7 +393,8 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
 			switch(columnIndex) {
 			case 5: case 6: case 7:
-			case 0: return true;
+				return cd[rowIndex].isSelected();
+			case 0: return !cd[rowIndex].course.isWithChildren();
 			case 1: return false;
 			case 2: return cd[rowIndex].data != null;
 			case 3: return rowIndex != 0;
@@ -292,6 +427,42 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 		
     }
 	
+	private static String date2String(Object value) {
+		if(value != null) 
+		{
+			return DATE_TIME.format(value);
+		} else 
+			return "  :     -   -    ";
+	}
+
+	static class BooleanRenderer extends JCheckBox implements TableCellRenderer {
+		private JLabel label;
+
+		public BooleanRenderer() {
+			super();
+			setHorizontalAlignment(JLabel.CENTER);
+			label = new JLabel();
+			label.setIcon(UIManager.getIcon("Tree.openIcon")); // of closedIcon
+		}
+
+		public Component getTableCellRendererComponent(JTable table,
+				Object value, boolean isSelected, boolean hasFocus, int row,
+				int column) {
+			if (isSelected) {
+				setForeground(table.getSelectionForeground());
+				super.setBackground(table.getSelectionBackground());
+			} else {
+				setForeground(table.getForeground());
+				setBackground(table.getBackground());
+			}
+			if (value == null)
+				return label;
+
+			setSelected(((Boolean) value).booleanValue());
+			return this;
+		}
+	    }
+
 	class DateCellRenderer extends DefaultTableCellRenderer
 	{
 
@@ -299,21 +470,17 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 		 * @see javax.swing.table.DefaultTableCellRenderer#setValue(java.lang.Object)
 		 */
 		protected void setValue(Object value) {
-			if(value != null) 
-			{
-				value = DATE_TIME.format(value);
-			} else 
-				value = "  :     -   -    ";
+			value = date2String(value);
 			super.setValue(value);
 		}
+
 
 		/* (non-Javadoc)
 		 * @see javax.swing.table.DefaultTableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
 		 */
 		public Component getTableCellRendererComponent(JTable table,
-				Object value, boolean arg2, boolean arg3, int row, int col) {
-			// TODO Auto-generated method stub
-			super.getTableCellRendererComponent(table, value, arg2, arg3, row, col);
+				Object value, boolean select, boolean focus, int row, int col) {
+			super.getTableCellRendererComponent(table, value, select, focus, row, col);
 			if( ! Boolean.TRUE .equals (table.getValueAt(row, 0)) )
 					setText("");
 			return this;
@@ -334,10 +501,47 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
 		public TypeCellEditor() {
 			this(createComboBox());
+		}		
+	}
+	
+	static class DateCellEditor extends AbstractCellEditor implements TableCellEditor, ActionListener
+	{
+
+		private Date value;
+		private JButton btn;
+		private String wat;
+		
+		public DateCellEditor() {
+			super();
+			btn = new JButton();
+			btn.setBorderPainted(false);
+			btn.setContentAreaFilled(false);
+			btn.addActionListener(this);
+		}
+
+		public Component getTableCellEditorComponent(JTable table,
+				Object value, boolean isSelected, int row, int column) {
+			this.value = (Date)value;
+			wat = ""; // of via constructor?
+			if(column == 6) wat = "vanaf";
+			if(column == 7) wat = "tot";
+			btn.setText(date2String(value));
+			return btn;
+		}
+
+		public Object getCellEditorValue() {
+			return value;
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			value = changeDate(wat, value);
+			fireEditingStopped();
 		}
 		
-		
 	}
+	
+	
+	
 	
     
 	static final Object[] OBJECT_TYPE = new Object[] { "normaal", "afgeschermd" };
@@ -469,6 +673,51 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     	  }
     	}
 
+    
+	  static Date changeDate(String hoe, Date van) {
+  		Date orig = van;
+  		if(van == null) 
+  			van = new Date();
+  		Locale locale = DwoHelper.getApplet().getLocale();
+  		Box message = Box.createHorizontalBox();
+  		final Date datum = van;
+  		SpinnerDateModel model = new SpinnerDateModel();
+  		model.setValue(van);
+  		model.setCalendarField(Calendar.HOUR_OF_DAY);
+			final JSpinner timeChooser = new JSpinner(model);
+
+  		JSpinner.DateEditor editor = new JSpinner.DateEditor(timeChooser, "HH:mm");
+  		editor.getFormat().setDateFormatSymbols(new DateFormatSymbols(locale));
+  		timeChooser.setEditor(editor);    		
+  		message.add(new JLabel("tijd:"));
+  		message.add(timeChooser);
+  		JSpinnerDateEditor dateEditor = new JSpinnerDateEditor();
+  		dateEditor.setLocale(locale);
+			JDateChooser dayChooser = new JDateChooser(null, van, null,
+  				dateEditor);
+  		
+			dayChooser.setLocale(locale);
+			dayChooser.setDateFormatString("dd-MM-yyyy"); // bug in locale van spinnerdateeditor
+  		message.add(new JLabel(" dag: "));
+  		message.add(dayChooser);
+  		int r = JOptionPane.showConfirmDialog(DwoHelper.getApplet(), message, "Geef tijdstip " + hoe, JOptionPane.YES_NO_CANCEL_OPTION);
+  		if(r == JOptionPane.YES_OPTION) {
+  			van = dayChooser.getDate();
+  			Date t = (Date) timeChooser.getValue();
+  			van.setMinutes(t.getMinutes());
+  			van.setHours(t.getHours());
+  			orig = van;
+  		} else if (r == JOptionPane.NO_OPTION) {
+  			orig = null;
+  		}
+
+			return orig;
+		}
+
+    
+    
+    
+    
 	static final SimpleDateFormat DATE_TIME = new SimpleDateFormat("HH:mm dd-MMM-yyyy");
     class CheckBoxNodeEditor extends AbstractCellEditor implements TreeCellEditor {
 
@@ -561,45 +810,6 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     	    return returnValue;
     	  }
 
-    	  protected Date changeDate(String hoe, Date van) {
-    		Date orig = van;
-    		if(van == null) 
-    			van = new Date();
-    		Locale locale = DwoHelper.getApplet().getLocale();
-    		Box message = Box.createHorizontalBox();
-    		final Date datum = van;
-    		SpinnerDateModel model = new SpinnerDateModel();
-    		model.setValue(van);
-    		model.setCalendarField(Calendar.HOUR_OF_DAY);
-			final JSpinner timeChooser = new JSpinner(model);
-
-    		JSpinner.DateEditor editor = new JSpinner.DateEditor(timeChooser, "HH:mm");
-    		editor.getFormat().setDateFormatSymbols(new DateFormatSymbols(locale));
-    		timeChooser.setEditor(editor);    		
-    		message.add(new JLabel("tijd:"));
-    		message.add(timeChooser);
-    		JSpinnerDateEditor dateEditor = new JSpinnerDateEditor();
-    		dateEditor.setLocale(locale);
-			JDateChooser dayChooser = new JDateChooser(null, van, null,
-    				dateEditor);
-    		
-			dayChooser.setLocale(locale);
-			dayChooser.setDateFormatString("dd-MM-yyyy"); // bug in locale van spinnerdateeditor
-    		message.add(new JLabel(" dag: "));
-    		message.add(dayChooser);
-    		int r = JOptionPane.showConfirmDialog(DwoHelper.getApplet(), message, "Geef tijdstip " + hoe, JOptionPane.YES_NO_CANCEL_OPTION);
-    		if(r == JOptionPane.YES_OPTION) {
-    			van = dayChooser.getDate();
-    			Date t = (Date) timeChooser.getValue();
-    			van.setMinutes(t.getMinutes());
-    			van.setHours(t.getHours());
-    			orig = van;
-    		} else if (r == JOptionPane.NO_OPTION) {
-    			orig = null;
-    		}
-
-			return orig;
-		}
 
 		public Component getTreeCellEditorComponent(JTree tree, Object value,
     	      boolean selected, boolean expanded, boolean leaf, int row) {
@@ -625,7 +835,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
             Course[] allCourses, Course[] selectedCourses, int cnt) {
         super(DwoHelper.getFrameForComponent(owner), title, modal);
 // nog even uit bij productie.
-        vantot = cnt != 2;
+        //vantot = cnt != 2;
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
@@ -658,27 +868,47 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
             }
         }
 
-        if(CenterPanel.isIconizer() && false)
+        if(CenterPanel.isIconizer())
         {
         	
-        	CourseMap schoolMap = ModuleTreePanel.SCHOOL_MAP;
-        	CourseMap dwoMap = ModuleTreePanel.STANDAARD_DWO_MAP;
         	tree = new ModuleTreePanel() {
 
         		protected void createModel(DwoIF dwo) {
-        			super.createModel(null);
+//        			super.createModel(null);
+        			
+        			
+        	        DefaultMutableTreeNode root = new DefaultMutableTreeNode(ALLE_MODULES);
+        	        DefaultMutableTreeNode dwonode  = new DefaultMutableTreeNode(STANDAARD_DWO_MODULES);
+        	        final StandaardMap standaard_map = new StandaardMap(dwonode);
+        	        dwonode.setUserObject(standaard_map);
+        	        root.add(dwonode);        
+        	        DefaultMutableTreeNode schoolnode = null;
+        	        DefaultTreeModel model = new DefaultTreeModel(root);
+        	        setModel(model);
+
         			setStrategy(new SelectStrategy() {
 
 						public void nodeSelected(CourseMap node) {
+							CourseData[] children;
+								CourseMap[] courses = node.getChildren();
+								if(courses == null)
+									children = new CourseData[0]; // op een verkeerde course.
+								else if(courses instanceof CourseData[])
+									children  = (CourseData[]) courses;
+								else if(courses.length > 0 && courses[0] instanceof CourseData) 
+								{
+									children = new CourseData[courses.length];
+									System.arraycopy(courses, 0, children, 0, children.length);
+								} else
+									children = cd;
+							((CoursesModel) jTable.getModel()).setCD(children);
 						}
 
 						public JPopupMenu nodeAction(CourseMap node) {
 							return null;
 						}});
-        			DefaultMutableTreeNode root, schoolnode, dwonode;
-        			JTree tree2 = this.tree;
-					root = (DefaultMutableTreeNode) tree2.getModel().getRoot();
-        			dwonode = root.getFirstLeaf();
+// TODO moet een eigen renderer worden!
+        			tree.setCellRenderer(new SelectCellRenderer());
         			schoolnode = dwonode;
                 	GuiCreator instance = GuiCreator.instance();
                 	if(instance.getMainPanel()!= null)
@@ -707,45 +937,43 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                 	}
 // FIX, altijd schoolnode toevoegen als nodig, ook zonder MODIFY_MODULES recht
                 	if(needSchoolnode && schoolnode != dwonode)
-                		root.add(schoolnode);	
+                	{
+                		root.add(schoolnode);
+                		schoolnode.setUserObject(new StandaardMap(schoolnode));
+                	}
                 	treeModel = new DefaultTreeModel(root);
+                	root.setUserObject(new StandaardMap(root)); // deze wil niet....
                 	setModel(treeModel);
-                	tree2.setCellRenderer(new CheckBoxNodeRenderer(true));
-                	tree2.setCellEditor(new CheckBoxNodeEditor(tree2));
-                	tree2.setEditable(true);
+                	//tree2.setCellRenderer(new CheckBoxNodeRenderer(true));
+                	//tree2.setCellEditor(new CheckBoxNodeEditor(tree2));
+                	//tree2.setEditable(true);
         		}
 			
         		protected void createCloseBtn(Box bar) {}
         		protected void createMenubar(Box bar) {}
         	};
 			tree.createModel(null);
-			// restore.... FIXME HACK HACK HACK, WIM!
-        	ModuleTreePanel.SCHOOL_MAP = schoolMap;
-        	ModuleTreePanel.STANDAARD_DWO_MAP = dwoMap;
-	        contentPane.add(tree, BorderLayout.CENTER);
+			
+        	JSplitPane split = new JSplitPane();
+        	JScrollPane comp = new JScrollPane(tree);
+        	comp.setMinimumSize(new Dimension(200,40));
+			split.setLeftComponent(comp);
+        	split.setDividerLocation(0.30);
+        	
+        	DefaultMutableTreeNode r = (DefaultMutableTreeNode) treeModel.getRoot();
+        	// selecteer root!
+        	
+        	CoursesModel cm = new CoursesModel();
+            cm.setColumnCount(cnt);
+            jTable = new JTable(cm);
+            initializeJTable(cnt);
+            split.setRightComponent(new JScrollPane(jTable));
+	        contentPane.add(split, BorderLayout.CENTER);
         } else {
             CoursesModel cm = new CoursesModel(); 
             cm.setColumnCount(cnt);
-        	TableCellRenderer imageRenderer = new ImageRenderer();
-        	TableCellEditor imageEditor = new ImageEditor();
         	jTable = new JTable(cm);
-        	jTable.setDefaultRenderer(Date.class, new DateCellRenderer());
-        	jTable.getColumnModel().getColumn(5).setCellEditor(new TypeCellEditor());
-        	TableUtil.setDefaults(jTable, true, imageRenderer, imageEditor);
-        	jTable.setRowMargin(2);
-        	TableUtil.setJTableSizes(jTable);
-		
-	        TableColumn column = jTable.getColumnModel().getColumn(0);
-	        int w = column.getPreferredWidth();
-	        column.setMaxWidth(w);
-	        column.setMinWidth(w);
-	        if(cnt > 2)
-	        {
-	        	column = jTable.getColumnModel().getColumn(2);
-	        	w = column.getPreferredWidth();
-	            column.setMaxWidth(w);
-	            column.setMinWidth(w);
-	        }
+        	initializeJTable(cnt);
 	        JScrollPane pane = new JScrollPane(jTable);
 	        pane.getViewport().setBackground(getBackground());
 	        pane.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
@@ -792,6 +1020,31 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
         setLocation(x, y);
     }
+
+	private void initializeJTable(int cnt) {
+		TableCellRenderer imageRenderer = new ImageRenderer();
+		TableCellEditor imageEditor = new ImageEditor();
+		jTable.setDefaultRenderer(Date.class, new DateCellRenderer());
+		jTable.setDefaultRenderer(Boolean.class, new BooleanRenderer());
+		jTable.setDefaultEditor(Date.class, new DateCellEditor());
+		if(cnt > 5)
+			jTable.getColumnModel().getColumn(5).setCellEditor(new TypeCellEditor());
+		TableUtil.setDefaults(jTable, true, imageRenderer, imageEditor);
+		jTable.setRowMargin(2);
+		TableUtil.setJTableSizes(jTable);
+
+		TableColumn column = jTable.getColumnModel().getColumn(0);
+		int w = column.getPreferredWidth();
+		column.setMaxWidth(w);
+		column.setMinWidth(w);
+		if(cnt > 2)
+		{
+			column = jTable.getColumnModel().getColumn(2);
+			w = column.getPreferredWidth();
+		    column.setMaxWidth(w);
+		    column.setMinWidth(w);
+		}
+	}
 
     /**
      * Shows the SelectCoursesDialog and returns the selected courses.
@@ -936,8 +1189,9 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         String title = TextMapper.getText(TextMapper.GUISC_TITLE);
         allCourses = 
         GuiCreator.instance().dwo.sequence(allCourses, sc);
-        int cnt = 8; // 2 voor select course voor resultaat. 3+2+3 voor selectcourse voor klas.
-        
+        int cnt = 3; // 2 voor select course voor resultaat. 3+2+3 voor selectcourse voor klas.
+        if(DWO.SEQUENCE)
+        	cnt += 2;
         SelectCoursesDialog scd = new SelectCoursesDialog(parent, title, true, allCourses, selectedCourses, cnt);
         scd.sc = sc;
 // persistencefacade....
@@ -977,11 +1231,11 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 		Course map = data.course;
 		if(map.isWithChildren())
 		{		
-			Course[] courses = map.getChildren();
+			CourseMap[] courses = map.getChildren();
 			data.children = new CourseData[courses.length];
 	    	DefaultMutableTreeNode child; 
 	    	for (int i = 0; i < courses.length; i++) {
-				Course course = courses[i];
+				Course course = (Course) courses[i];
 				CourseData coursedata = new CourseData(course);
 				data.children[i] = coursedata;
 				coursedata.select = Boolean.valueOf(vector.contains(course));

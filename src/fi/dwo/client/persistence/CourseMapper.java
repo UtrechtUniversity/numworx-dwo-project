@@ -18,6 +18,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.dwo.client.domain.ClassCourse;
 import fi.dwo.client.domain.Course;
+import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.School;
@@ -67,7 +68,7 @@ public class CourseMapper extends XmlRpcMapper {
 		/* (non-Javadoc)
 		 * @see fi.dwo.client.domain.Course#getChildren()
 		 */
-		public Course[] getChildren() {
+		public CourseMap[] getChildren() {
 			if(!loaded)
 			{
 				try {

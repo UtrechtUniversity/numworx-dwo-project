@@ -111,7 +111,7 @@ public class DwoProfile implements Descriptor {
 	 * get Courses.
 	 * Note: layer inconsistency: domain/gui
 	 */
-	public Course[] getChildren() {
+	public CourseMap[] getChildren() {
 		return GuiCreator.instance().getCourseList();
 	}
 }
