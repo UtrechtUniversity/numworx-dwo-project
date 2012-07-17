@@ -60,7 +60,7 @@ public class CourseMapper extends XmlRpcMapper {
     class LazyCourse extends Course {
     	private boolean loaded;
     	
-    	public void setChildren(Course[] children) {
+    	public void setChildren(CourseMap[] children) {
     		loaded = children != NO_CHILDREN;
     		super.setChildren(children);
     	}

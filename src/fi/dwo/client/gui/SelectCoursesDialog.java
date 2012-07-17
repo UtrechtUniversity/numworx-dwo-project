@@ -106,7 +106,15 @@ class CourseData implements CourseMap {
 	public String toString() {
 		return String.valueOf(course);
 	}
+	
 	public boolean isSelected() {
+		if(course.isWithChildren()) {
+			for(int i = 0; i < children.length; i++) {
+				if(children[i].isSelected())
+					return true;
+			}
+			return false;
+		}		
 		return Boolean.TRUE.equals(select);
 	}	
 	CourseData[] children;
@@ -144,6 +152,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 		private Icon icon;
 		private Color color = Color.red;
 		Font font = new Font("Arial", Font.BOLD, 20);
+		private String str;
 		public int getIconHeight() {
 			return icon.getIconHeight();
 		}
@@ -157,14 +166,15 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			g.setColor(color);
 			Font f = g.getFont();
 			g.setFont(font);
-			g.drawString("*", x+3, y+getIconHeight());
+			g.drawString(str, x+3, y+getIconHeight());
 			g.setFont(f);
 		}
 
-		public EnhancedIcon(Icon icon, Color color) {
+		public EnhancedIcon(Icon icon, Color color, String str) {
 			super();
 			this.icon = icon;
 			this.color = color;
+			this.str = str;
 		}
 		
 	}
@@ -174,18 +184,21 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
     	CourseData cd;
     	
-    	Icon greenIcon = new EnhancedIcon(getDefaultLeafIcon(), Color.green);
-    	Icon redIcon = new EnhancedIcon(getDefaultLeafIcon(), Color.green);
+    	Icon selectedLeafIcon = new EnhancedIcon(getDefaultLeafIcon(), Color.black, "√");
+    	Icon selectedOpenIcon = new EnhancedIcon(getDefaultOpenIcon(), Color.black, "/");
+    	Icon dataLeafIcon = new EnhancedIcon(getDefaultLeafIcon(), Color.red, "×");
     	
 		public Icon getClosedIcon() {
+			if(cd != null && cd.isSelected())
+				return selectedOpenIcon;
 			return super.getClosedIcon();
 		}
 
 		public Icon getLeafIcon() {
 			if(cd != null && cd.isSelected())
-				return greenIcon; // selected
+				return selectedLeafIcon;
 			if(cd != null && cd.data != null) 
-				return redIcon;	 // met data.
+				return dataLeafIcon;	 // met data.
 			return super.getLeafIcon();
 		}
 
@@ -193,7 +206,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
 		public Icon getOpenIcon() {
 			if(cd != null && cd.isSelected())
-				return greenIcon;
+				return selectedOpenIcon;
 			return super.getOpenIcon();
 		}
 
@@ -304,7 +317,8 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     private JButton deselectAllButton;
 
 	private JTable jTable;
-
+	private JTree  jTree;
+	
 	private Image removeImage, upImage, downImage;
 
 	private SchoolClass sc;
@@ -357,7 +371,10 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 					break;
 			case 4: if(rowIndex != getRowCount()-1) return downImage;
 					break;
-			case 5: return OBJECT_TYPE[ cd[rowIndex].type ];
+			case 5: 
+				if(cd[rowIndex].course.isWithChildren())
+					return null; // no choice!
+				return OBJECT_TYPE[ cd[rowIndex].type ];
 			case 6: return cd[rowIndex].van;
 			case 7: return cd[rowIndex].tot;
 			}
@@ -393,7 +410,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
 			switch(columnIndex) {
 			case 5: case 6: case 7:
-				return cd[rowIndex].isSelected();
+				return Boolean.TRUE.equals( cd[rowIndex].select );
 			case 0: return !cd[rowIndex].course.isWithChildren();
 			case 1: return false;
 			case 2: return cd[rowIndex].data != null;
@@ -408,9 +425,13 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			case 0:
 				cd[rowIndex].select = aValue;
 				fireTableRowsUpdated(rowIndex, rowIndex); // effect op col 5,6,7
+				if(jTree != null)
+					jTree.repaint();
 				break;
 			case 2:
 				cd[rowIndex].data = (Image) aValue;
+				if(jTree != null)
+					jTree.repaint();
 				break;
 			case 5: if (OBJECT_TYPE[1].equals(aValue))
 						cd[rowIndex].type = 1;
@@ -719,7 +740,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     
     
 	static final SimpleDateFormat DATE_TIME = new SimpleDateFormat("HH:mm dd-MMM-yyyy");
-    class CheckBoxNodeEditor extends AbstractCellEditor implements TreeCellEditor {
+    private class CheckBoxNodeEditor extends AbstractCellEditor implements TreeCellEditor {
 
 
 		CheckBoxNodeRenderer renderer = new CheckBoxNodeRenderer(true);
@@ -841,7 +862,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         contentPane.setLayout(new BorderLayout());
         contentPane.setBackground(GuiConstants.MAIN_BACKGROUND);
         setBackground(GuiConstants.MAIN_BACKGROUND);
-        setSize(600, 310);
+        setSize(cnt == 2 ? 600 : 800, 310);
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
         upImage = DwoHelper.getResourceImage(GuiConstants.UP_SCO_IMAGE);
         downImage = DwoHelper.getResourceImage(GuiConstants.DOWN_SCO_IMAGE);
@@ -892,7 +913,12 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 							CourseData[] children;
 								CourseMap[] courses = node.getChildren();
 								if(courses == null)
+								{
 									children = new CourseData[0]; // op een verkeerde course.
+									if(node instanceof CourseData) {
+										children = new CourseData[] { (CourseData) node } ;
+									}
+								}
 								else if(courses instanceof CourseData[])
 									children  = (CourseData[]) courses;
 								else if(courses.length > 0 && courses[0] instanceof CourseData) 
@@ -955,10 +981,11 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			tree.createModel(null);
 			
         	JSplitPane split = new JSplitPane();
-        	JScrollPane comp = new JScrollPane(tree);
-        	comp.setMinimumSize(new Dimension(200,40));
-			split.setLeftComponent(comp);
-        	split.setDividerLocation(0.30);
+        	JScrollPane comp; // = new JScrollPane(tree);
+        	jTree = tree.tree;
+        	tree.setMinimumSize(new Dimension(200,40));
+			split.setLeftComponent(tree);
+        	split.setDividerLocation(0.20);
         	
         	DefaultMutableTreeNode r = (DefaultMutableTreeNode) treeModel.getRoot();
         	// selecteer root!
@@ -1191,7 +1218,11 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         GuiCreator.instance().dwo.sequence(allCourses, sc);
         int cnt = 3; // 2 voor select course voor resultaat. 3+2+3 voor selectcourse voor klas.
         if(DWO.SEQUENCE)
+        {
         	cnt += 2;
+        	if( CenterPanel.isIconizer())
+        		cnt += 3; // VAN en TOT en AFGESCHERMD
+        }
         SelectCoursesDialog scd = new SelectCoursesDialog(parent, title, true, allCourses, selectedCourses, cnt);
         scd.sc = sc;
 // persistencefacade....
