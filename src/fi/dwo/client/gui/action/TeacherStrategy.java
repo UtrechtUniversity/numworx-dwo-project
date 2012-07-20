@@ -96,6 +96,10 @@ public class TeacherStrategy implements SelectStrategy{
 			if(acceptable)
 			{	item = new JMenuItem(new PasteAction(map));
 			    m.add(item);
+			    if(object instanceof Sco && uo instanceof Sco) {
+			    	item = new JMenuItem(new MergeAction(map));
+			    	if (item.isEnabled()) m.add(item);
+			    }
 			}	
 		}
 		if(object == ModuleTreePanel.SCHOOL_MODULES 

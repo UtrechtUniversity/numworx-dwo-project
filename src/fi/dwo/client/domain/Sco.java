@@ -46,6 +46,7 @@ import fi.dwo.client.gui.GuiConstants;
  */
 public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Comparable, ScoEditor {
 	private static final char REVIEWABLE = 'r';
+	private static final char MERGABLE = 'm';
 
 	private static final DecimalFormatSymbols US_DECIMAL_FORMAT_SYMBOLS = new DecimalFormatSymbols(Locale.US);
 
@@ -516,6 +517,19 @@ System.err.println("sum = ["+result+"]");
 		
 	}
 
+    public boolean isMergable(Sco other) {
+    	if(other.getAppletID() != getAppletID())
+    		return false;
+		if(features == null)
+		{	features = getAppletData().getFeatures();
+			if(features == null) features = "";
+		}
+		return features.indexOf(MERGABLE)>=0;
+    	
+    }
+    
+    
+    
 	/**
      * This call ensures to the SCO that the data sent, via an
      * <code>LMSSetValue()</code> call, will be persisted by the LMS upon
@@ -863,6 +877,10 @@ System.err.println("sum = ["+result+"]");
         this.launchdata = launchdata;
     }
 
+    public void setLaunchdataString(String ld) {
+    	setLaunchdata((Hashtable) StringCodeObject.decodeStringToObject(ld));
+    }
+    
     /**
      * Indicates that the applet must save the data.
      *  
