@@ -196,10 +196,10 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
 		public Icon getLeafIcon() {
 			if(cd != null && cd.isSelected())
-				return selectedLeafIcon;
+				return selectedOpenIcon;
 			if(cd != null && cd.data != null) 
 				return dataLeafIcon;	 // met data.
-			return super.getLeafIcon();
+			return super.getDefaultOpenIcon();
 		}
 
 
@@ -241,7 +241,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
 
 
-	public boolean updown, vantot;
+	public boolean vantot;
 
 
 	public class ImageEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
@@ -272,24 +272,6 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                         ((JButton) e.getSource()).setIcon(null);
                     
                 }
-    		} else if(value == upImage)
-    		{
-    			CourseData s2 = cd[row-1];
-    			CourseData s  = cd[row];
-    			cd[row] = s2;
-    			cd[row-1] = s;
-    			model.fireTableRowsUpdated(row-1, row);
-    			updown = true;
-   			
-    		} else if(value == downImage)
-    		{
-    			CourseData s2 = cd[row+1];
-    			CourseData s  = cd[row];
-    			cd[row] = s2;
-    			cd[row+1] = s;
-    			model.fireTableRowsUpdated(row, row+1);
-    			updown = true;
-    			
     		}
 		}
 	}
@@ -319,7 +301,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 	private JTable jTable;
 	private JTree  jTree;
 	
-	private Image removeImage, upImage, downImage;
+	private Image removeImage;
 
 	private SchoolClass sc;
 
@@ -367,26 +349,23 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 					return cd[rowIndex].select;
 			case 1: return cd[rowIndex].course.getName();
 			case 2: return cd[rowIndex].data;
-			case 3: if(rowIndex != 0) return upImage;
-					break;
-			case 4: if(rowIndex != getRowCount()-1) return downImage;
-					break;
-			case 5: 
+			
+			case 3: 
 				if(cd[rowIndex].course.isWithChildren())
 					return null; // no choice!
 				return OBJECT_TYPE[ cd[rowIndex].type ];
-			case 6: return cd[rowIndex].van;
-			case 7: return cd[rowIndex].tot;
+			case 4: return cd[rowIndex].van;
+			case 5: return cd[rowIndex].tot;
 			}
 			return null;
 		}
 
 		public Class getColumnClass(int columnIndex) {
-			if(columnIndex >= 2 && columnIndex <= 4)
+			if(columnIndex == 2 )
 				return Image.class;
 			if(columnIndex == 0)
 				return Boolean.class;
-			if(columnIndex >= 6 && columnIndex <= 7) {
+			if(columnIndex >= 4 && columnIndex <= 5) {
 				return Date.class;
 			}
 			return super.getColumnClass(columnIndex);
@@ -394,28 +373,23 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
 		public String getColumnName(int column) {
 			switch(column) {
-			case 5: return "soort";
-			case 6: return "vanaf";
-			case 7: return "tot aan";
-			
-			case 3: 
-			case 4:
+			case 3: return "soort";
+			case 4: return "vanaf";
+			case 5: return "tot aan";
 			case 0: return "";
 			case 1: return "Module";
-			case 2: return "Leerlinggegevens aanwezig";
+			case 2: return "Ll ggvns";
 			}
 			return super.getColumnName(column);
 		}
 
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
 			switch(columnIndex) {
-			case 5: case 6: case 7:
+			case 3: case 4: case 5:
 				return Boolean.TRUE.equals( cd[rowIndex].select );
 			case 0: return !cd[rowIndex].course.isWithChildren();
 			case 1: return false;
 			case 2: return cd[rowIndex].data != null;
-			case 3: return rowIndex != 0;
-			case 4: return rowIndex != getRowCount()-1;
 			}
 			return super.isCellEditable(rowIndex, columnIndex);
 		}
@@ -433,14 +407,14 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 				if(jTree != null)
 					jTree.repaint();
 				break;
-			case 5: if (OBJECT_TYPE[1].equals(aValue))
+			case 3: if (OBJECT_TYPE[1].equals(aValue))
 						cd[rowIndex].type = 1;
 					else
 						cd[rowIndex].type = 0;
 				break;
-			case 6: cd[rowIndex].van = (Date) aValue;
+			case 4: cd[rowIndex].van = (Date) aValue;
 				break;
-			case 7: cd[rowIndex].tot = (Date) aValue;
+			case 5: cd[rowIndex].tot = (Date) aValue;
 			
 			}
 			fireTableCellUpdated(rowIndex, columnIndex);
@@ -544,8 +518,8 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 				Object value, boolean isSelected, int row, int column) {
 			this.value = (Date)value;
 			wat = ""; // of via constructor?
-			if(column == 6) wat = "vanaf";
-			if(column == 7) wat = "tot";
+			if(column == 4) wat = "vanaf";
+			if(column == 5) wat = "tot";
 			btn.setText(date2String(value));
 			return btn;
 		}
@@ -740,107 +714,6 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     
     
 	static final SimpleDateFormat DATE_TIME = new SimpleDateFormat("HH:mm dd-MMM-yyyy");
-    private class CheckBoxNodeEditor extends AbstractCellEditor implements TreeCellEditor {
-
-
-		CheckBoxNodeRenderer renderer = new CheckBoxNodeRenderer(true);
-
-    	  ChangeEvent changeEvent = null;
-
-    	  JTree tree;
-
-		private ItemListener typeAction = new ItemListener() {
-
-			public void itemStateChanged(ItemEvent event) {
-				System.out.println(event);
-				if(event.getStateChange() == event.SELECTED)
-				{
-		     	    CourseData checkBoxNode = (CourseData)userObject;
-		     	    checkBoxNode.type = renderer.typeBtn.getSelectedIndex();
-				}
-			}
-			
-		};
-
-    	  public CheckBoxNodeEditor(JTree tree) {
-    	    this.tree = tree;
-      	    	renderer.leafRenderer.addItemListener(itemListener);
-      	    	renderer.eraseBtn.addActionListener(eraseAction );
-      	    	renderer.vanBtn.addActionListener(vanAction);
-      	    	renderer.totBtn.addActionListener(totAction);
-      	    	renderer.typeBtn.addItemListener(typeAction);
-    	  }
-
-    	  public Object getCellEditorValue() {
-    	    JCheckBox checkbox = renderer.leafRenderer;
-     	    CourseData checkBoxNode = (CourseData)userObject;
-    	       checkBoxNode.select = new Boolean(checkbox.isSelected());
-    	    return checkBoxNode;
-    	  }
-     	  Object userObject;
-
-		private ActionListener eraseAction = new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-	     	    CourseData checkBoxNode = (CourseData)userObject;
-	     	    if(eraseClassData(checkBoxNode.course))
-	     	    	checkBoxNode.data = null;
-	     	    itemListener.itemStateChanged(null);
-			}}
-		;
-		
-		private ActionListener vanAction = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-	     	    CourseData checkBoxNode = (CourseData)userObject;
-	     	    checkBoxNode.van = changeDate("vanaf", checkBoxNode.van);
-	     	    itemListener.itemStateChanged(null);				
-			}
-		};
-		private ActionListener totAction = new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-	     	    CourseData checkBoxNode = (CourseData)userObject;
-	     	    checkBoxNode.tot = changeDate("tot", checkBoxNode.tot);
-	     	    itemListener.itemStateChanged(null);
-			}
-		};
-		
-
-		private ItemListener itemListener = new ItemListener() {
-		  public void itemStateChanged(ItemEvent itemEvent) {
-		    if (stopCellEditing()) {
-		      fireEditingStopped();
-		    }
-		  }
-		};
-
-    	  public boolean isCellEditable(EventObject event) {
-    	    boolean returnValue = false;
-    	    if (event instanceof MouseEvent) {
-    	      MouseEvent mouseEvent = (MouseEvent) event;
-    	      TreePath path = tree.getPathForLocation(mouseEvent.getX(),
-    	          mouseEvent.getY());
-    	      if (path != null) {
-    	        Object node = path.getLastPathComponent();
-    	        if ((node != null) && (node instanceof DefaultMutableTreeNode)) {
-    	          DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;
-    	          userObject = treeNode.getUserObject();
-    	          returnValue = ((treeNode.isLeaf()) && (userObject instanceof CourseData));
-    	        }
-    	      }
-    	    }
-    	    return returnValue;
-    	  }
-
-
-		public Component getTreeCellEditorComponent(JTree tree, Object value,
-    	      boolean selected, boolean expanded, boolean leaf, int row) {
-
-    	    Component editor = renderer.getTreeCellRendererComponent(tree, value,
-    	        true, expanded, leaf, row, true);
-
-    	    return editor;
-    	  }
-    	}
     
     /**
      * Creates a new instance of a SelectCoursesDialog. It shows a overview of
@@ -864,8 +737,6 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         setBackground(GuiConstants.MAIN_BACKGROUND);
         setSize(cnt == 2 ? 600 : 800, 310);
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
-        upImage = DwoHelper.getResourceImage(GuiConstants.UP_SCO_IMAGE);
-        downImage = DwoHelper.getResourceImage(GuiConstants.DOWN_SCO_IMAGE);
 
         cd = new CourseData[allCourses.length];        
 
@@ -927,7 +798,17 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 									System.arraycopy(courses, 0, children, 0, children.length);
 								} else
 									children = cd;
+							children = reduce(children);
 							((CoursesModel) jTable.getModel()).setCD(children);
+						}
+// filter alle mappen eruit.
+						private CourseData[] reduce(CourseData[] children) {
+							Vector v = new Vector();
+							for (int i = 0; i < children.length; i++) {
+								if ( !children[i].course.isWithChildren() )
+									v.add(children[i]);
+							}
+							return (CourseData[]) v.toArray(new CourseData[v.size()]);
 						}
 
 						public JPopupMenu nodeAction(CourseMap node) {
@@ -1103,20 +984,6 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
             Vector tmpSelected = new Vector();
             
             addSelected(tmpSelected, cd);
-            if(updown && DWO.SEQUENCE)
-            {	updown = false;
-            	Course[] courses = new Course[cd.length];
-            	for (int i = 0; i < courses.length; i++) {
-					courses[i] = cd[i].course;
-				}
-            	try {
-					PersistenceFacade.instance().setCourseSequence(courses, null, sc);
-				} catch (PersistenceException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-            }
-            
             
             selectedCourses = new Course[tmpSelected.size()];
             tmpSelected.copyInto(selectedCourses);
@@ -1216,13 +1083,10 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         String title = TextMapper.getText(TextMapper.GUISC_TITLE);
         allCourses = 
         GuiCreator.instance().dwo.sequence(allCourses, sc);
-        int cnt = 3; // 2 voor select course voor resultaat. 3+2+3 voor selectcourse voor klas.
-        if(DWO.SEQUENCE)
-        {
-        	cnt += 2;
-        	if( CenterPanel.isIconizer())
-        		cnt += 3; // VAN en TOT en AFGESCHERMD
-        }
+        int cnt = 3; // 2 voor select course voor resultaat. 3+3 voor selectcourse voor klas.       
+    	if( CenterPanel.isIconizer())
+    		cnt += 3; // VAN en TOT en AFGESCHERMD
+    
         SelectCoursesDialog scd = new SelectCoursesDialog(parent, title, true, allCourses, selectedCourses, cnt);
         scd.sc = sc;
 // persistencefacade....
@@ -1271,7 +1135,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 				data.children[i] = coursedata;
 				coursedata.select = Boolean.valueOf(vector.contains(course));
 				child = new DefaultMutableTreeNode(coursedata);
-				node.add(child);
+				if(coursedata.course.isWithChildren()) node.add(child);
 				appendCourseData(coursedata, child, vector);
 	    	}
 		}
