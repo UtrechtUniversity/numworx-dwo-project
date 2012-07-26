@@ -37,6 +37,7 @@ import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.SchoolClass;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.User;
+import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.gui.action.NullStrategy;
 import fi.dwo.client.system.TextMapper;
 
@@ -148,7 +149,13 @@ if(!iconizer)
 		centermainSub.add(RAND);
 if(iconizer)		
 {	
-		tree = ModuleTreePanel.newInstance(GuiCreator.instance().dwo);
+
+		if(User.getCurrentUser() instanceof Teacher)
+			tree = ModuleTreePanel.newInstance(GuiCreator.instance().dwo);
+		else 
+			tree = ModuleTreePanel.newStudentInstance(GuiCreator.instance().getDWO());
+		
+		
 		ip2= tree.getIP();
 		ip2.setIconBorder(ip.getIconBorder());
 		Image imgs = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_BGIMAGE_SCO);

@@ -88,7 +88,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 	public static String SCHOOL_MODULES = null;
 	public static CourseMap STANDAARD_DWO_MAP;
 	public static CourseMap SCHOOL_MAP;
-	public static TopMap TOP_LEVEL = new TopMap();
+	public static TopMap TOP_LEVEL;
 	protected JTree tree;
 	private JScrollPane pane;
 	private JMenuBar bar;
@@ -100,6 +100,10 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		
 		Descriptor delegate;
 		
+		public TopMap(Descriptor delegate) {
+			super();
+			this.delegate = delegate;
+		}
 
 		/**
 		 * @return
@@ -115,8 +119,6 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		 */
 		public String getHeader() {
 			return ALLE_MODULES;
-			
-			//delegate.getHeader();
 		}
 
 		public void addChild(Course c) {
@@ -151,12 +153,36 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 
 		public CourseMap getParentMap() {
 			return null;
-		}
-		
+		}		
 	}
 	
-	
-	
+	static class StudentTopMap extends TopMap { 
+		CourseMap map;
+		
+		public String getHeader() { 
+			return delegate.getHeader();
+		}
+		
+		public CourseMap[] getChildren() { 
+			return map.getChildren();
+		}
+		public Object getUserObject() { 
+			return map.getUserObject();	
+		}
+		public Set getChildNames() {
+			return map.getChildNames();
+		}
+		
+		public StudentTopMap( Course course ) {
+			super(course);
+			map = course;
+		}
+
+		public StudentTopMap(CourseMap map, Descriptor delegate) {
+			super(delegate);
+			this.map = map;
+		}
+	}
 	
 	
 	class StandaardMap extends TreeMap {
@@ -462,7 +488,6 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
         DefaultMutableTreeNode schoolnode = null;
         if(dwo != null)
         {
-            TOP_LEVEL.delegate = dwo.getDwoProfile();
         	GuiCreator instance = GuiCreator.instance();
         	if(instance.getMainPanel()!= null)
         		setCenterPanel(instance.getMainPanel().getCenter());
@@ -516,10 +541,24 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
         	
         }
         
+        root = prune(root);
+        
+        
+        
+        
         DefaultTreeModel model = new DefaultTreeModel(root);
         setModel(model);
 	}
-	
+	/**
+	 * Shorten root. Template pattern. Hier een dummy.
+	 * @param root
+	 * @return root
+	 */
+	protected DefaultMutableTreeNode prune(DefaultMutableTreeNode root) {
+		TOP_LEVEL = new TopMap(dwo.getDwoProfile());
+		return root;
+	}
+
 	private void sort(Course[] courses) {
 		// topology sort.
  
@@ -614,6 +653,48 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		panel.createModel(dwo);
 		return panel;
 	}
+	
+	public static ModuleTreePanel newStudentInstance(DwoIF dwo) 
+	{
+		ModuleTreePanel panel = new ModuleTreePanel() {
+/*
+ * Hier een aanpassing, voor leerlingen/gasten wordt de tree afgeknot tot het punt 
+ * waar hij uitwaaiert.
+ */
+			protected DefaultMutableTreeNode prune(DefaultMutableTreeNode root) {
+				MutableTreeNode dwonode = (MutableTreeNode) root.getFirstChild();
+				if(dwonode.getChildCount() == 0)
+					root.remove(dwonode);
+				MutableTreeNode schoolnode = (MutableTreeNode) root.getLastChild();
+				if(schoolnode.getChildCount() == 0) 
+					root.remove(schoolnode);
+				
+				while ( root.getChildCount() == 1) {
+					
+					DefaultMutableTreeNode child = (DefaultMutableTreeNode) root.getFirstChild();
+// alleen MAPPEN mogen root worden
+					if ( child.getUserObject() instanceof Course && 
+							!((Course) child.getUserObject()).isWithChildren()) 
+						break;
+					root = child;
+				}
+// zet TOP_LEVEL als startpunt voor "Module Overzicht"			
+				if( root.getUserObject() instanceof Course ) {
+					TOP_LEVEL = new StudentTopMap((Course) root.getUserObject());
+				} else 
+					TOP_LEVEL = new TopMap( dwo.getDwoProfile());  // TODO wat als root=schoolnode of dwonode? en ADMIN
+				return root;
+			}
+
+			
+			
+		};
+		panel.createModel(dwo);
+		return panel;
+		
+	}
+	
+	
 	
 	public static void create(DwoIF dwo)
 	{
