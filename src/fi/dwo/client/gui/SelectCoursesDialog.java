@@ -117,6 +117,20 @@ class CourseData implements CourseMap {
 		}		
 		return Boolean.TRUE.equals(select);
 	}	
+	
+	public boolean isWithData() {
+		if(course.isWithChildren()) {
+			for(int i = 0; i < children.length; i++) {
+				if(children[i].isWithData())
+					return true;
+			}
+			return false;
+		}
+		return null != data;
+	}
+	
+	
+	
 	CourseData[] children;
 	public int type;
 
@@ -148,6 +162,8 @@ class CourseData implements CourseMap {
  */
 public final class SelectCoursesDialog extends JDialog implements ActionListener {
 
+	public static final int COURSE_TYPE = 3;
+	
 	class EnhancedIcon implements Icon {
 		private Icon icon;
 		private Color color = Color.red;
@@ -187,6 +203,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     	Icon selectedLeafIcon = new EnhancedIcon(getDefaultLeafIcon(), Color.black, "√");
     	Icon selectedOpenIcon = new EnhancedIcon(getDefaultOpenIcon(), Color.black, "/");
     	Icon dataLeafIcon = new EnhancedIcon(getDefaultLeafIcon(), Color.red, "×");
+    	Icon dataOpenIcon = new EnhancedIcon(getDefaultOpenIcon(), Color.red, "/");
     	
 		public Icon getClosedIcon() {
 			if(cd != null && cd.isSelected())
@@ -198,7 +215,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			if(cd != null && cd.isSelected())
 				return selectedOpenIcon;
 			if(cd != null && cd.data != null) 
-				return dataLeafIcon;	 // met data.
+				return dataOpenIcon;	 // met data.
 			return super.getDefaultOpenIcon();
 		}
 
@@ -350,7 +367,9 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			case 1: return cd[rowIndex].course.getName();
 			case 2: return cd[rowIndex].data;
 			
-			case 3: 
+			case COURSE_TYPE: 
+				if(Boolean.FALSE.equals(cd[rowIndex].select))
+					return null; // no choice
 				if(cd[rowIndex].course.isWithChildren())
 					return null; // no choice!
 				return OBJECT_TYPE[ cd[rowIndex].type ];
@@ -373,7 +392,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
 		public String getColumnName(int column) {
 			switch(column) {
-			case 3: return "soort";
+			case COURSE_TYPE: return "soort";
 			case 4: return "vanaf";
 			case 5: return "tot aan";
 			case 0: return "";
@@ -385,7 +404,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
 			switch(columnIndex) {
-			case 3: case 4: case 5:
+			case COURSE_TYPE: case 4: case 5:
 				return Boolean.TRUE.equals( cd[rowIndex].select );
 			case 0: return !cd[rowIndex].course.isWithChildren();
 			case 1: return false;
@@ -398,7 +417,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			switch(columnIndex) {
 			case 0:
 				cd[rowIndex].select = aValue;
-				fireTableRowsUpdated(rowIndex, rowIndex); // effect op col 5,6,7
+				fireTableRowsUpdated(rowIndex, rowIndex); // effect op col COURSE_TYPE,4,5
 				if(jTree != null)
 					jTree.repaint();
 				break;
@@ -407,7 +426,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 				if(jTree != null)
 					jTree.repaint();
 				break;
-			case 3: if (OBJECT_TYPE[1].equals(aValue))
+			case COURSE_TYPE: if (OBJECT_TYPE[1].equals(aValue))
 						cd[rowIndex].type = 1;
 					else
 						cd[rowIndex].type = 0;
@@ -843,14 +862,39 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         				appendCourseData(course, node, vSelectedCourses);
                 	}
 // FIX, altijd schoolnode toevoegen als nodig, ook zonder MODIFY_MODULES recht
+                	StandaardMap schoolmap = standaard_map;
                 	if(needSchoolnode && schoolnode != dwonode)
                 	{
                 		root.add(schoolnode);
-                		schoolnode.setUserObject(new StandaardMap(schoolnode));
+                		schoolnode.setUserObject(schoolmap = new StandaardMap(schoolnode));
                 	}
                 	treeModel = new DefaultTreeModel(root);
-                	root.setUserObject(new StandaardMap(root)); // deze wil niet....
+                	StandaardMap rootMap = new StandaardMap(root);
+                	rootMap.getChildren();
+					root.setUserObject(rootMap); // deze wil niet....
                 	setModel(treeModel);
+                	
+                	standaard_map.getChildren(); // fetch all children now!
+                	int i = 0;
+                	while (i < dwonode.getChildCount()) {
+                		TreeNode n = dwonode.getChildAt(i);
+                		if( ((CourseData)((DefaultMutableTreeNode) n).getUserObject()).course.isWithChildren()) 
+                			i++;
+                		else
+                			dwonode.remove(i);
+                	}
+                	if(standaard_map != schoolmap) {
+                		schoolmap.getChildren();
+// COPY!, TODO make method
+                		i = 0;
+                    	while (i < schoolnode.getChildCount()) {
+                    		TreeNode n = schoolnode.getChildAt(i);
+                    		if( ((CourseData)((DefaultMutableTreeNode) n).getUserObject()).course.isWithChildren()) 
+                    			i++;
+                    		else
+                    			schoolnode.remove(i);
+                    	}
+                	}
                 	//tree2.setCellRenderer(new CheckBoxNodeRenderer(true));
                 	//tree2.setCellEditor(new CheckBoxNodeEditor(tree2));
                 	//tree2.setEditable(true);
@@ -875,6 +919,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
             cm.setColumnCount(cnt);
             jTable = new JTable(cm);
             initializeJTable(cnt);
+            tree.getStrategy().nodeSelected((CourseMap) r.getUserObject());
             split.setRightComponent(new JScrollPane(jTable));
 	        contentPane.add(split, BorderLayout.CENTER);
         } else {
@@ -935,8 +980,8 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 		jTable.setDefaultRenderer(Date.class, new DateCellRenderer());
 		jTable.setDefaultRenderer(Boolean.class, new BooleanRenderer());
 		jTable.setDefaultEditor(Date.class, new DateCellEditor());
-		if(cnt > 5)
-			jTable.getColumnModel().getColumn(5).setCellEditor(new TypeCellEditor());
+		if(cnt > COURSE_TYPE)
+			jTable.getColumnModel().getColumn(COURSE_TYPE).setCellEditor(new TypeCellEditor());
 		TableUtil.setDefaults(jTable, true, imageRenderer, imageEditor);
 		jTable.setRowMargin(2);
 		TableUtil.setJTableSizes(jTable);
