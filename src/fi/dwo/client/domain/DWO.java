@@ -4,9 +4,11 @@
 package fi.dwo.client.domain;
 
 import java.applet.Applet;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.FocusTraversalPolicy;
 import java.awt.Frame;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -18,6 +20,7 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Panel;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -123,6 +126,71 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 	
 	private String schoolAccessPropertiesString;
 		
+	FocusTraversalPolicy delegate;
+
+	/**
+	 * Java 7 throws exceptions, catch them. 
+	 * Deze "catch" policy catch ze en doet een default actie. 
+	 *  
+	 */
+	final private FocusTraversalPolicy CATCH_POLICY = new FocusTraversalPolicy() {
+
+		public Component getComponentAfter(Container focusCycleRoot,
+				Component aComponent) {
+			try {
+				return delegate.getComponentAfter(focusCycleRoot, aComponent);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return getFirstComponent(focusCycleRoot);  // don't crash
+		}
+
+		public Component getComponentBefore(Container focusCycleRoot,
+				Component aComponent) {
+			try {
+				return delegate.getComponentBefore(focusCycleRoot, aComponent);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return getLastComponent(focusCycleRoot);
+		}
+
+		public Component getDefaultComponent(Container focusCycleRoot) {
+			try {
+				return delegate.getDefaultComponent(focusCycleRoot);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		public Component getFirstComponent(Container focusCycleRoot) {
+			try {
+				return delegate.getFirstComponent(focusCycleRoot);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		public Component getInitialComponent(Window window) {
+			try {
+				return delegate.getInitialComponent(window);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return super.getInitialComponent(window);
+		}
+
+		public Component getLastComponent(Container focusCycleRoot) {
+			try {
+				return delegate.getLastComponent(focusCycleRoot);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	};
 	
 	
     /**
@@ -957,7 +1025,8 @@ private static boolean isValidEmail(String email) {
 // This order
     	if(!DwoHelper.setApplet(this)) return;
     	DwoHelper.setAu(new AppletUtil(this));
-        
+    	delegate = getFocusTraversalPolicy();
+        if(delegate != null) setFocusTraversalPolicy(CATCH_POLICY);
     	
     	// override van swing properties... 
     	// TODO dit ook testen in een applet omgeving!

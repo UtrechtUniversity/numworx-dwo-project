@@ -200,30 +200,24 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
     	CourseData cd;
     	
-    	Icon selectedLeafIcon = new EnhancedIcon(getDefaultLeafIcon(), Color.black, "√");
-    	Icon selectedOpenIcon = new EnhancedIcon(getDefaultOpenIcon(), Color.black, "/");
-    	Icon dataLeafIcon = new EnhancedIcon(getDefaultLeafIcon(), Color.red, "×");
-    	Icon dataOpenIcon = new EnhancedIcon(getDefaultOpenIcon(), Color.red, "/");
+    	//private Icon selectedLeafIcon = new EnhancedIcon(getDefaultLeafIcon(), Color.black, "√");
+    	private Icon selectedOpenIcon = new EnhancedIcon(getDefaultOpenIcon(), Color.black, "/");
+    	//private Icon dataLeafIcon = new EnhancedIcon(getDefaultLeafIcon(), Color.red, "×");
+    	private Icon dataOpenIcon = new EnhancedIcon(getDefaultOpenIcon(), Color.red, "/");
     	
 		public Icon getClosedIcon() {
-			if(cd != null && cd.isSelected())
-				return selectedOpenIcon;
-			return super.getClosedIcon();
+			return getOpenIcon();
 		}
 
 		public Icon getLeafIcon() {
-			if(cd != null && cd.isSelected())
-				return selectedOpenIcon;
-			if(cd != null && cd.data != null) 
-				return dataOpenIcon;	 // met data.
-			return super.getDefaultOpenIcon();
+			return getOpenIcon(); // er zijn alleen maar mappen
 		}
-
-
 
 		public Icon getOpenIcon() {
 			if(cd != null && cd.isSelected())
 				return selectedOpenIcon;
+			if(cd != null && cd.isWithData()) 
+				return dataOpenIcon;	 // met data.
 			return super.getOpenIcon();
 		}
 
