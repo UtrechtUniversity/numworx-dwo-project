@@ -1363,7 +1363,7 @@ public class PersistenceFacade {
     	}
         try {
             try {
-        		MapperCreator.instance(Course.class).removeObject(course.getID());
+        		MapperCreator.instance(Course.class).put(course.getID(), course); // clear 1 level cache, keep 2nd level cache!!!!
             	if(course.parentChanged())
             	{
             		boolean result =
