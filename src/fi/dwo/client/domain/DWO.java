@@ -621,10 +621,10 @@ private static boolean isValidEmail(String email) {
 
     /**
      * Returns the current user who is logged in. If the user is logged in as a
-     * guest, NULL is returned.
+     * guest, Guest.instance is returned.
      * 
      * @return the current user who is logged in. If the user is logged in as a
-     *         guest, NULL is returned.
+     *         guest, Guest.instance is returned.
      *  
      */
     public User getUser() {
@@ -661,13 +661,15 @@ private static boolean isValidEmail(String email) {
         }
     }
     
-       
+    /**
+     * Sorteer course op class (is nu school).
+     * @deprecated er is geen class meer, altijd school   
+     */
 	public Course[] sequence(
 			Course[] courses, SchoolClass inclass) {
     	if(!SEQUENCE)
     		return courses;
-    	CourseSequence[] css = PersistenceFacade.instance().getCourseSequence(inclass);
-		return PersistenceFacade.instance().sequence(courses, css);
+		return PersistenceFacade.instance().sequence(courses);
 }
 
 	/**

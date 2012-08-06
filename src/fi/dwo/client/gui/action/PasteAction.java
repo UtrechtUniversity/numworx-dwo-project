@@ -131,7 +131,7 @@ public class PasteAction extends GuiAction
 // save ordering 
 			if(DWO.SEQUENCE)
 			try {
-				PersistenceFacade.instance().setCourseSequence(c.getChildren(), User.getCurrentUser().getSchool(), null);
+				PersistenceFacade.instance().setCourseSequence(c.getChildren(), User.getCurrentUser().getSchool());
 			} catch (PersistenceException e) {
 			}
 			

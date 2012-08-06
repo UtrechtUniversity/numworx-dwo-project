@@ -1856,13 +1856,8 @@ e1.printStackTrace();
 
 	public CourseSequence[] getCourseSequence(User currentUser) {
 		School school = currentUser.getSchool();
-		SchoolClass inClass = currentUser.getInClass();
 		MapperIF instance = MapperCreator.instance(CourseSequence.class);
 		try {
-			if(inClass != null)
-			{
-				return (CourseSequence[]) instance.get(inClass);
-			} 
 			CourseSequence[] standaard = (CourseSequence[]) instance.get(null);
 			if ( school != null )
 				return (CourseSequence[])combine_(standaard, instance.get(school));
@@ -1874,17 +1869,8 @@ e1.printStackTrace();
 		} 
 	}
 	
-	public CourseSequence[] getCourseSequence(SchoolClass forClass)
-	{
-		try {
-			MapperIF instance = MapperCreator.instance(CourseSequence.class);
-			return (CourseSequence[]) instance.get(forClass);
-		} catch (Exception e) {
-			return new CourseSequence[0];
-		}		
-	}
 	
-	public void setCourseSequence(CourseMap[] courses, School school, SchoolClass forClass) throws PersistenceException
+	public void setCourseSequence(CourseMap[] courses, School school) throws PersistenceException
 	{
 		if(courses.length==0)
 			return;
@@ -1897,7 +1883,7 @@ e1.printStackTrace();
 		DbAccessIF access = DbAccessCreator.instance();
 		
 		int parent = 0;
-		if(forClass == null)  // selected courses are flat
+		// selected courses are flat
 		{
 			parent = ((Course) courses[0]).getParentID();
 			if(parent != ((Course) courses[courses.length-1]).getParentID())
@@ -1909,7 +1895,6 @@ e1.printStackTrace();
 		}
 		int profileID = ((DwoIF)DwoHelper.getApplet()).getDwoProfile().getID();
 		if(school != null) schoolID = school.getSchoolID();
-		if(forClass != null) classID = forClass.getID();
 		MapperIF instance = MapperCreator.instance(CourseSequence.class);
 		instance.removeAllObjects();
 		try {
