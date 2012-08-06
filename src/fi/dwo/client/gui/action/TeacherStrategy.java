@@ -8,6 +8,7 @@ import javax.swing.JPopupMenu;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.Descriptor;
+import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.CenterPanel;
@@ -24,7 +25,9 @@ public class TeacherStrategy implements SelectStrategy{
 
 	public TeacherStrategy() {
 		hasAdminRight = getUser().hasRight(User.PROFILE_ADMIN_RIGHT);
-		schoolID = getUser().getSchool().getSchoolID();
+		School school = getUser().getSchool();
+		if(school != null) schoolID = school.getSchoolID();
+		// TODO else // Admin / Guest
 	}
 
 	private User getUser() {
