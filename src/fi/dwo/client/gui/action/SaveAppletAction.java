@@ -100,7 +100,7 @@ public class SaveAppletAction extends GuiAction {
 		
 		try {	
 			URL htmlSource = new URL("http://webcluster.fi.uu.nl/dwo/scorm/applet/applet.htm");
-			if(sco.getCourse().getDwoProfile()==13 || sco.getCourse().getDwoProfile()==57)htmlSource = new URL("http://webcluster.fi.uu.nl/dwo/scorm/applet/appletGR.htm");
+			if(sco.getCourse().getDwoProfile()==13 || sco.getCourse().getDwoProfile()==57 || sco.getCourse().getDwoProfile()==65)htmlSource = new URL("http://webcluster.fi.uu.nl/dwo/scorm/applet/appletGR.htm");
 			if(sco.getCourse().getDwoProfile()==27 || sco.getCourse().getDwoProfile()==51)htmlSource = new URL("http://webcluster.fi.uu.nl/dwo/scorm/applet/appletMW.htm");
 			if(sco.getCourse().getDwoProfile()==46)htmlSource = new URL("http://webcluster.fi.uu.nl/dwo/scorm/applet/appletNWK.htm");
 
