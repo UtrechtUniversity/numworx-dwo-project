@@ -91,7 +91,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     private JLabel noScosLabel;
 	private FileDialog saveDial, openDial;
 
-	private JButton publishButton;
+	//private JButton publishButton;
 
     /**
      * @param course
@@ -126,14 +126,14 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         addScoButton.setLocation(30, 10);
         top.add(addScoButton);
         top.add(Box.createHorizontalGlue());
-        if(course.getSchoolID()>0 && GuiCreator.instance().dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT))
+        /*if(course.getSchoolID()>0 && GuiCreator.instance().dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT))
         {
         	publishButton = new JButton("Publiceer");
         	publishButton.setToolTipText("Verplaats module naar profiel");
         	publishButton.addActionListener(this);
         	top.add(publishButton);
         	top.add(Box.createHorizontalStrut(10));
-        }
+        }*/
         if(DwoHelper.isApplication() ){
         exportCourseButton = new JButton(new BackupModuleAction(course));
         exportCourseButton.setSize(exportCourseButton.getPreferredSize());
@@ -560,14 +560,14 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 	            center.updateCourse(course);
             }
 
-        } else if( src == publishButton)
-        {
-        	publishCourse();
-        }
+        } //else if( src == publishButton)
+        //{
+        //	publishCourse();
+        //}
             
     }
 
-    private void publishCourse() {
+    /*private void publishCourse() {
 		if(course.getSchoolID()>0)
 		{
 			course.setSchoolID(0);
@@ -575,8 +575,8 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 			publishButton.setEnabled(false); // gray out
 			noUpdateCourse();
 		}
-		
-	}
+	
+	}*/
 
 
 
