@@ -114,6 +114,18 @@ public class Text_nl extends ListResourceBundle {
          { TextMapper.GUIMNU_MSG_ADD_CLASS_TITLE, "Nieuwe klas aanmaken"},
          { TextMapper.GUIMNU_MSG_ADD_SCHOOL, "Geef de naam van de nieuwe school"},   
          { TextMapper.GUIMNU_MSG_ADD_SCHOOL_TITLE, "Nieuwe school aanmaken"},
+         { TextMapper.GUIMNU_USERS_SCHOOL, "Gebruikers school"},
+         { TextMapper.GUIMNU_CLASSES_SCHOOL, "Klassen school"},
+         { TextMapper.GUIMNU_FEATURES_SCHOOLADMIN, "Opties Schooladmin"},
+         
+         { TextMapper.GUIUMP_MANAGE_USERS, "Gebruikers beheren"},
+         { TextMapper.GUIUMP_REMOVE_FROM_SCHOOL, "Verwijder alleen van school"},
+         { TextMapper.GUIUMP_REMOVE_COMPLETE, "Verwijder alle gebruikersgegevens"},
+         { TextMapper.GUIUMP_ADD_STUDENTS, "Voeg nieuwe leerlingen toe"},
+         { TextMapper.GUIUMP_ADD_TEACHERS, "Voeg nieuwe docenten toe"},
+         { TextMapper.GUIUMP_IMPORT_CLIPBOARD, "Importeer vanaf clipboard"},
+         { TextMapper.GUIUMP_MAKE_ACCOUNTS, "Maak account"},
+         { TextMapper.GUIUMP_EXTRA_ROW, "Extra Rij"},
          
          { TextMapper.GUICO_HEADER, "Modules"}, 
          { TextMapper.GUICO_SCO_LIST_TITLE, "Activiteiten"},

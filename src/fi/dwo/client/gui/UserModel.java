@@ -71,12 +71,12 @@ class UserModel extends AbstractTableModel {
 
 	public String getColumnName(int col) {
 		switch(col) {
-		case 1: return "Gebruikersnaam";
-		case 0: return "Naam";
-		case 2: return "Login als";
-		case 3: return "Wachtwoord";
-		case 4: return "Verwijder";
-		case 5: return "In klas";
+		case 1: return "Username";
+		case 0: return "Name";
+		case 2: return "Login as";
+		case 3: return "Password";
+		case 4: return "Remove";
+		case 5: return "In class";
 		}
 		return "";
 	}

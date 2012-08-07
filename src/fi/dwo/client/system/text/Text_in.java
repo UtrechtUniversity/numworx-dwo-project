@@ -113,6 +113,18 @@ public class Text_in extends ListResourceBundle {
             { TextMapper.GUIMNU_MSG_ADD_CLASS_TITLE, "Tambahkan kelas baru" },
             { TextMapper.GUIMNU_MSG_ADD_SCHOOL, "Nama dari sekolah baru"},   
          	{ TextMapper.GUIMNU_MSG_ADD_SCHOOL_TITLE, "Tambahkan sekolah baru"},
+         	{ TextMapper.GUIMNU_USERS_SCHOOL, "School users"},
+            { TextMapper.GUIMNU_CLASSES_SCHOOL, "School classes"},
+            { TextMapper.GUIMNU_FEATURES_SCHOOLADMIN, "Features schooladmin"},
+            
+            { TextMapper.GUIUMP_MANAGE_USERS, "Manage users"},
+            { TextMapper.GUIUMP_REMOVE_FROM_SCHOOL, "Remove only from school"},
+            { TextMapper.GUIUMP_REMOVE_COMPLETE, "Remove complete account"},
+            { TextMapper.GUIUMP_ADD_STUDENTS, "Add new students"},
+            { TextMapper.GUIUMP_ADD_TEACHERS, "Add new teachers"},
+            { TextMapper.GUIUMP_IMPORT_CLIPBOARD, "Import from clipboard"},
+            { TextMapper.GUIUMP_MAKE_ACCOUNTS, "Make accounts"},
+            { TextMapper.GUIUMP_EXTRA_ROW, "Additional row"},
 
          	{ TextMapper.GUICO_HEADER, "Modul"},
          	{ TextMapper.GUICO_SCO_LIST_TITLE, "Aktivitas"},

@@ -159,6 +159,19 @@ public abstract class TextMapper {
     public final static String GUIMNU_MSG_ADD_SCHOOL = "GUIMNU_MSG_ADD_SCHOOL";   
     public final static String GUIMNU_MSG_ADD_SCHOOL_TITLE = "GUIMNU_MSG_ADD_SCHOOL_TITLE";
     
+    public final static String GUIMNU_USERS_SCHOOL = "GUIMNU_USERS_SCHOOL";
+    public final static String GUIMNU_CLASSES_SCHOOL = "GUIMNU_CLASSES_SCHOOL";
+    public final static String GUIMNU_FEATURES_SCHOOLADMIN = "GUIMNU_FEATURES_SCHOOLADMIN";
+    
+    /* User Management Panel */
+    public final static String GUIUMP_MANAGE_USERS = "GUIUMP_MANAGE_USERS";
+    public final static String GUIUMP_REMOVE_FROM_SCHOOL = "GUIUMP_REMOVE_FROM_SCHOOL";
+    public final static String GUIUMP_REMOVE_COMPLETE = "GUIUMP_REMOVE_COMPLETE";
+    public final static String GUIUMP_ADD_STUDENTS = "GUIUMP_ADD_STUDENTS";
+    public final static String GUIUMP_ADD_TEACHERS = "GUIUMP_ADD_TEACHERS";
+    public final static String GUIUMP_IMPORT_CLIPBOARD = "GUIUMP_IMPORT_CLIPBOARD";
+    public final static String GUIUMP_MAKE_ACCOUNTS = "GUIUMP_MAKE_ACCOUNTS";
+    public final static String GUIUMP_EXTRA_ROW = "GUIUMP_EXTRA_ROW";
     
     /* Course Panel */
     public final static String GUICO_HEADER = "GUICO_HEADER";

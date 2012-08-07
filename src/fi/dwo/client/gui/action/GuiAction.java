@@ -42,6 +42,8 @@ abstract public class GuiAction extends AbstractAction implements PropertyChange
 
 	boolean canModify(CourseMap map)
 	{
+		if(instance().getUser().getSchool()==null)return false;
+		
 		if(map == null) return false;
 		if(map instanceof Course)
 		{

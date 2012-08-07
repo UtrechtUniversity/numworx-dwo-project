@@ -241,8 +241,8 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 					final String text = MessageFormat.format(TextMapper.getText(TextMapper.GUIS_MSG_DELETE_STUDENT), new Object[] { u.getName() });
 					Box box = Box.createVerticalBox();
 					box.add(new JLabel(text + "?"));
-					JRadioButton delRadio = new JRadioButton("Verwijder alleen van school", true);
-					JRadioButton rmRadio  = new JRadioButton("Verwijder alle gebruikersgegevens", false);
+					JRadioButton delRadio = new JRadioButton(TextMapper.getText(TextMapper.GUIUMP_REMOVE_FROM_SCHOOL), true);
+					JRadioButton rmRadio  = new JRadioButton(TextMapper.getText(TextMapper.GUIUMP_REMOVE_COMPLETE), false);
 					ButtonGroup group = new ButtonGroup();
 					group.add(delRadio);
 					group.add(rmRadio);
@@ -371,7 +371,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 
 	public Component getHeaderPanel() {
 		// TODO Auto-generated method stub
-		return new HeaderPanel("Gebruikers beheren");
+		return new HeaderPanel(TextMapper.getText(TextMapper.GUIUMP_MANAGE_USERS));
 	}
 
 	public void setCenterPanel(CenterPanel centerPanel) {

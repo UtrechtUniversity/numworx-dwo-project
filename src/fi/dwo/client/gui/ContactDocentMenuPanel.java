@@ -10,6 +10,7 @@ import javax.swing.table.AbstractTableModel;
 import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.GuestMenuPanel.MenuPanelButton;
+import fi.dwo.client.system.TextMapper;
 
 public class ContactDocentMenuPanel extends TeacherMenuPanel {
 
@@ -27,13 +28,13 @@ public class ContactDocentMenuPanel extends TeacherMenuPanel {
 	protected void createMenuButtons() {
 		super.createMenuButtons();
 		add(Box.createVerticalStrut(20));
-		add(new JLabel("Opties Schooladmin"));
+		add(new JLabel(TextMapper.getText(TextMapper.GUIMNU_FEATURES_SCHOOLADMIN)));
 		createGap();
-		this.userManagementButton = new MenuPanelButton("Gebruikers school");
+		this.userManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_USERS_SCHOOL));
 		userManagementButton.addActionListener(this);
 		add(userManagementButton);
 		createGap();
-		klasKeuzeButton = new MenuPanelButton("Klassen school");
+		klasKeuzeButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_CLASSES_SCHOOL));
 		klasKeuzeButton.addActionListener(this);
 		add(klasKeuzeButton);
 	}

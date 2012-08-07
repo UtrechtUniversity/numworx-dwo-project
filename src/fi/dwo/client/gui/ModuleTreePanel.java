@@ -130,6 +130,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		public CourseMap[] getChildren() {
 			CourseMap[] c1, c2, c3;
 			c1 = STANDAARD_DWO_MAP.getChildren();
+			if(SCHOOL_MAP==null)return c1;
 			c2 = SCHOOL_MAP.getChildren();
 			c3 = new Course[c1.length + c2.length];
 			System.arraycopy(c1, 0, c3, 0, c1.length);

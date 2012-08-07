@@ -356,7 +356,7 @@ public class AddScoDialog extends JDialog implements ActionListener,
      */
     public static Sco addSco(Component owner, Course course) {
         AppletConfig[] ac = GuiCreator.instance().getAppletConfig();
-        AppletConfig[] acT = GuiCreator.instance().getAppletConfigFromTeacher();
+        AppletConfig[] acT = null;//GuiCreator.instance().getAppletConfigFromTeacher();
         if((ac == null) || (ac.length == 0)) {
             JOptionPane.showMessageDialog(owner, TextMapper.getText(TextMapper.GUISDLG_MSG_NO_APPLETS));
             return null;

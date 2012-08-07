@@ -53,7 +53,7 @@ public class RegisterClassListButton extends JButton implements ActionListener
 	 */
 	public RegisterClassListButton(SchoolClass schoolClass)
 	{
-		super("Voeg nieuwe leerlingen toe");
+		super(TextMapper.getText(TextMapper.GUIUMP_ADD_STUDENTS));
 		this.schoolClass = schoolClass;
 		this.sg = SchoolGroup.STUDENT;
 		initialize();
@@ -64,7 +64,7 @@ public class RegisterClassListButton extends JButton implements ActionListener
 	 */
 	public RegisterClassListButton()
 	{
-		super("Voeg nieuwe docenten toe");
+		super(TextMapper.getText(TextMapper.GUIUMP_ADD_TEACHERS));
 		this.sg = SchoolGroup.TEACHER;
 		this.schoolClass = null;
 		this.modal = true;
@@ -80,13 +80,13 @@ public class RegisterClassListButton extends JButton implements ActionListener
 		{	systemClipboard = null;
 		}
 		
-		importClipboardButton = new JButton("Import from clipboard");
+		importClipboardButton = new JButton(TextMapper.getText(TextMapper.GUIUMP_IMPORT_CLIPBOARD));
 		importClipboardButton.addActionListener(this);
 		
-	    makeAccountsButton = new JButton("Maak accounts");
+	    makeAccountsButton = new JButton(TextMapper.getText(TextMapper.GUIUMP_MAKE_ACCOUNTS));
 	    makeAccountsButton.addActionListener(this);
 	    
-	    addRowButton = new JButton("Extra rij");
+	    addRowButton = new JButton(TextMapper.getText(TextMapper.GUIUMP_EXTRA_ROW));
 	    addRowButton.addActionListener(this);
 	    
 	    addTableModel = new DefaultTableModel();
