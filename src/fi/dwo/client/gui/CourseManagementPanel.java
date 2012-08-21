@@ -36,6 +36,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -74,6 +75,9 @@ import fi.dwo.client.system.PersistenceException;
 import fi.dwo.client.system.SchoolException;
 import fi.dwo.client.system.TextMapper;
 import fi.dwo.server.form.DWOFile;
+
+import fi.wiskopdr.WiskOpdr;
+import fi.wiskopdr.WiskOpdrEditPanel;
 
 /**
  * This class is a panel containing a list of courses to edit, delete or add.
@@ -124,6 +128,10 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
 
 	private JTextComponent area;
+	private WiskOpdrEditPanel wiskOpdrEditPanel;
+	
+	private JCheckBox editorCB;
+	private Box editorBox = Box.createVerticalBox();
 
 	class CourseModelForTree extends AbstractTableModel {
 
@@ -404,11 +412,50 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         tablePane.setOpaque(false);
         panel.add(tablePane, BorderLayout.CENTER);
         if(userObject instanceof Course)
-        {	area = new JTextArea();
+        {	
+        	editorCB = new JCheckBox("Editor");
+            editorCB.addActionListener(this);
+            editorBox.add(editorCB);
+            if(((Course) userObject).getText().startsWith("H4sIAAAAAA"))
+            {	editorCB.setSelected(true);
+            	wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(((Course) userObject).getText());
+            	wiskOpdrEditPanel.setPreferredSize(new Dimension(700,300));
+            	editorBox.add(wiskOpdrEditPanel);
+            }
+            else
+            {	area = new JTextArea();
+	            area.setText(((Course) userObject).getText());
+	            area.setBorder(BorderFactory.createLineBorder(Color.black));
+            	editorBox.add(area);
+            }
+            panel.add(editorBox, BorderLayout.NORTH);
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+            /*
+        	area = new JTextArea();
         	area.setText(((Course) userObject).getText());
         	area.setBorder(BorderFactory.createLineBorder(Color.black));
         	panel.add(area, BorderLayout.NORTH);
-        }
+        	
+        	
+        	JPanel p = new JPanel();
+        	p.setOpaque(false);
+        	p.setLayout(null);
+        	p.setPreferredSize(new Dimension(700,300));
+        	
+        	wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(((Course) userObject).getText());
+        	wiskOpdrEditPanel.setPreferredSize(new Dimension(700,300));
+        	p.add(wiskOpdrEditPanel);
+        	panel.add(p, BorderLayout.NORTH);
+        	*/
+       }
         
         
         setBorder(BorderFactory.createEmptyBorder(10,30,5,10));
@@ -545,6 +592,28 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     public void actionPerformed(ActionEvent e) {
     	Object src = e.getSource();
             
+    	if(src == editorCB)
+    	{	if(editorCB.isSelected())
+    		{	if(wiskOpdrEditPanel==null)
+    			{	wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel("");
+            		wiskOpdrEditPanel.setPreferredSize(new Dimension(700,300));
+            		editorBox.add(wiskOpdrEditPanel);
+    			}
+    			wiskOpdrEditPanel.setVisible(true);
+    			area.setVisible(false);
+    		}
+    		else if(wiskOpdrEditPanel!=null)
+    		{	if(area==null)
+				{	area = new JTextArea();
+					area.setText("");
+					area.setBorder(BorderFactory.createLineBorder(Color.black));
+		        	editorBox.add(area);
+				}
+    			wiskOpdrEditPanel.setVisible(false);
+    			area.setVisible(true);
+    		}
+    	}
+    	
     	if(src == stopBtn)
     	{
     		end();
@@ -666,13 +735,17 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-        } else if(area != null && userObject instanceof Course)
-        {
-        	Course course = (Course) userObject;
-        	if(!area.getText().equals(course.getText()))
-        	{	course.setDescription(area.getText());
-        		GuiCreator.instance().updateCourse(course);
-        	}
+        } 
+        else if(userObject instanceof Course)
+        {	Course course = (Course) userObject;
+        	if(editorCB.isSelected() &&  !wiskOpdrEditPanel.getText().equals(course.getText()))
+            {	course.setDescription(wiskOpdrEditPanel.getText());
+    	    	GuiCreator.instance().updateCourse(course);
+    	    }
+        	else if(!editorCB.isSelected() && area!=null && !area.getText().equals(course.getText()))
+            {	course.setDescription(area.getText());
+            	GuiCreator.instance().updateCourse(course);
+            }
         }
     }
 

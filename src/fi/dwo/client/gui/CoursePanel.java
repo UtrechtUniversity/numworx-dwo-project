@@ -6,6 +6,7 @@ package fi.dwo.client.gui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -39,6 +40,9 @@ import fi.dwo.client.system.TextMapper;
 import fi.beans.mathkit.JMathPane;
 import fi.beans.tekstobjects.TekstArea;
 
+import fi.wiskopdr.WiskOpdr;
+import fi.wiskopdr.WiskOpdrPanel;
+
 /**
  * This class is a panel witch shows a list of all the SCO's in the specified Course.
  * @author M.J.B. Kupers
@@ -60,6 +64,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
     private JLabel scoListHeader;
     
     private JTextArea courseDescription;
+    private WiskOpdrPanel wiskOpdrPanel;
     private JTextComponent courseDescriptionHTML;
 
     private JButton showResultsButton;
@@ -95,7 +100,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 		
 		if((s != null) && (!s.trim().equals(""))) 
 		{
-			if(s.length()>5 && s.substring(0,6).equals("<html>"))
+			if(s.startsWith("<html>"))
 			{	htmlMode=true;
 				courseDescriptionHTML = new JMathPane(); // was JLABEL
 				courseDescriptionHTML.setText(s);
@@ -106,6 +111,14 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 				courseDescriptionHTML.setBounds(20,startY,550,110);
 				courseDescriptionHTML.setSize(courseDescriptionHTML.getPreferredSize());
 				startY += courseDescriptionHTML.getHeight() + 10;
+			}
+			else if(s.startsWith("H4sIAAAAAA"))
+			{
+				wiskOpdrPanel = WiskOpdr.getWiskOpdrPanel(s) ;
+				wiskOpdrPanel.setLocation(20,startY);
+				if(!DwoHelper.isApplication())wiskOpdrPanel.setJSObjectOwner(DwoHelper.getApplet());
+	        	add(wiskOpdrPanel);
+	        	startY += wiskOpdrPanel.getHeight() + 10;
 			}
 			else
 			{	add(courseDescription);
@@ -120,6 +133,8 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 				startY += courseDescription.getHeight() + 10;
 			}
 		}
+		
+		
 
         scoListHeader = new JLabel(TextMapper.getText(TextMapper.GUICO_SCO_LIST_TITLE));
         scoListHeader.setFont(GuiConstants.SCO_HEADER_TEXT);

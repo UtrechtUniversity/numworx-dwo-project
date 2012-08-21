@@ -6,6 +6,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.FlowLayout;
 import java.awt.Frame;
@@ -38,6 +39,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JCheckBox;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
@@ -68,6 +70,9 @@ import fi.dwo.client.system.TextMapper;
 import fi.dwo.server.form.DWOFile;
 import fi.dwo.server.persistence.DwoXmlRpcException;
 
+import fi.wiskopdr.WiskOpdr;
+import fi.wiskopdr.WiskOpdrEditPanel;
+
 /**
  * This class is a panel containing a list of SCO's to edit, delete or add.
  * It is used for SCO-management.
@@ -90,6 +95,9 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     
     private JLabel noScosLabel;
 	private FileDialog saveDial, openDial;
+	
+	private JCheckBox editorCB;
+	private Box editorBox = Box.createVerticalBox();
 
 	//private JButton publishButton;
 
@@ -186,14 +194,28 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         courseLogoButton.setSize(courseLogoButton.getPreferredSize());
         Box hulp = Box.createVerticalBox();
         hulp.add(courseLogoButton);
-        
-        pane = new JTextArea();
-        pane.setText(course.getDescription());
-        pane.setBorder(BorderFactory.createLineBorder(Color.black));
+       
         JPanel panel1 = new JPanel(new BorderLayout());
         panel1.setOpaque(false);
         panel.add(panel1, BorderLayout.CENTER);
-        panel1.add(pane, BorderLayout.NORTH);
+        
+        editorCB = new JCheckBox("Editor");
+        editorCB.addActionListener(this);
+        editorBox.add(editorCB);
+        if(course.getDescription().startsWith("H4sIAAAAAA"))
+        {	editorCB.setSelected(true);
+        	wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription());
+        	wiskOpdrEditPanel.setPreferredSize(new Dimension(700,300));
+        	editorBox.add(wiskOpdrEditPanel);
+        }
+        else
+        {	pane = new JTextArea();
+        	pane.setText(course.getDescription());
+        	pane.setBorder(BorderFactory.createLineBorder(Color.black));
+        	editorBox.add(pane);
+        }
+        panel1.add(editorBox, BorderLayout.NORTH);
+        
         panel1.add(cpanel, BorderLayout.CENTER);
         hulp.add(Box.createVerticalGlue());
         this.add(hulp, BorderLayout.EAST);
@@ -506,6 +528,28 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     	
     	
     	Object src = e.getSource();
+    	if(src == editorCB)
+    	{	if(editorCB.isSelected())
+    		{	if(wiskOpdrEditPanel==null)
+    			{	wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription());
+            		wiskOpdrEditPanel.setPreferredSize(new Dimension(700,300));
+            		editorBox.add(wiskOpdrEditPanel);
+    			}
+    			wiskOpdrEditPanel.setVisible(true);
+    			pane.setVisible(false);
+    		}
+    		else if(wiskOpdrEditPanel!=null)
+    		{	if(pane==null)
+				{	pane = new JTextArea();
+		        	pane.setText("");
+		        	pane.setBorder(BorderFactory.createLineBorder(Color.black));
+		        	editorBox.add(pane);
+				}
+    			wiskOpdrEditPanel.setVisible(false);
+    			pane.setVisible(true);
+    		}
+    	}
+    	
     	if(src == stopBtn)
     	{
     		end();
@@ -643,11 +687,15 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
      * @see fi.dwo.client.gui.CenterSubPanel#end()
      */
     public void end() {
-        if(!pane.getText().equals(course.getDescription()))
-        {
-        	course.setDescription(pane.getText());
+    	if(editorCB.isSelected() &&  !wiskOpdrEditPanel.getText().equals(course.getDescription()))
+        {	course.setDescription(wiskOpdrEditPanel.getText());
+	    	GuiCreator.instance().updateCourse(course);
+	    }
+    	else if(!editorCB.isSelected() && pane!=null && !pane.getText().equals(course.getDescription()))
+        {	course.setDescription(pane.getText());
         	GuiCreator.instance().updateCourse(course);
         }
+        
 		center.setStrategy(null);
     }
 
@@ -675,6 +723,8 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 	private boolean ok = true;
 
 	private JTextArea pane;
+	private WiskOpdrEditPanel wiskOpdrEditPanel;
+	
 	public void stateChanged(ChangeEvent e) {
 		//System.out.println("ChangeEvent " + e);
 		if(ok && course == e.getSource())

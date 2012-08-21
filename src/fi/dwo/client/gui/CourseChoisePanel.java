@@ -11,6 +11,7 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,9 +30,12 @@ import fi.beans.mathkit.JMathPane;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.Descriptor;
+import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoProfile;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.TextMapper;
+import fi.wiskopdr.WiskOpdr;
+import fi.wiskopdr.WiskOpdrPanel;
 
 /**
  * This class is a panel where the user gets a overview of the different courses.
@@ -45,6 +49,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
     private int NR_COLUMNS = 4;
     
     private JTextComponent profileTextArea;
+    private WiskOpdrPanel wiskOpdrPanel;
     private Dimension unit = new Dimension(1,1);
     private Descriptor dwoProfile;
 
@@ -98,30 +103,42 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
         
         
         String s = dwoProfile.getText();
-        if(s.startsWith("<html>"))
-        {
-        	profileTextArea = new JMathPane();
-        } else {
-        	JTextArea area = new JTextArea();
-            area.setLineWrap(true);
-            area.setWrapStyleWord(true);
-            area.setColumns(20);
-        	profileTextArea = area;
-        }
-        profileTextArea.setFont(new Font("SansSerif",Font.PLAIN,13));
-        profileTextArea.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        profileTextArea.setEditable(false);
-        profileTextArea.setBounds(20,20,600,110);
-        profileTextArea.setOpaque(false);
-        profileTextArea.setText(s);
         
-        
-        //profileTextArea.resize();
-		if((s != null) && (!s.trim().equals(""))) 
-		{	add(profileTextArea, BorderLayout.NORTH);
-			//ph.setBounds(0,0,600, profileTextArea.getSize().height+40);
-			//add(ph,BorderLayout.NORTH);
+        if((s != null) && (!s.trim().equals(""))){
+        	if(s.startsWith("<html>")) {	
+        		profileTextArea = new JMathPane();
+            } 
+            else if(s.startsWith("H4sIAAAAAA")) {
+            	wiskOpdrPanel = WiskOpdr.getWiskOpdrPanel(s);
+            	if(!DwoHelper.isApplication())wiskOpdrPanel.setJSObjectOwner(DwoHelper.getApplet());
+                wiskOpdrPanel.setLocation(20,20);
+                JPanel wrapPanel = new JPanel();
+                wrapPanel.setOpaque(false);
+                wrapPanel.setLayout(null);
+                wrapPanel.setPreferredSize(new Dimension(wiskOpdrPanel.getWidth()+40,(wiskOpdrPanel.getHeight()+40)));
+                wrapPanel.add(wiskOpdrPanel);
+                add(wrapPanel, BorderLayout.NORTH);
+            }
+            else {	
+            	JTextArea area = new JTextArea();
+                area.setLineWrap(true);
+                area.setWrapStyleWord(true);
+                area.setColumns(20);
+            	profileTextArea = area;
+            }
+        	
+        	if(profileTextArea!=null) {
+	            profileTextArea.setFont(new Font("SansSerif",Font.PLAIN,13));
+	            profileTextArea.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+	            profileTextArea.setEditable(false);
+	            profileTextArea.setBounds(20,20,600,110);
+	            profileTextArea.setOpaque(false);
+	            profileTextArea.setText(s);
+	            add(profileTextArea, BorderLayout.NORTH);
+        	}
+        	
 		}
+        
 		//ph.setBounds(0,0,200, profileTextArea.getSize().height+40);
         //profileTextArea.setMinimumSize(new Dimension(100, 100));
         //profileTextArea.setPreferredSize(profileTextArea.getMinimumSize());
@@ -169,11 +186,19 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
         }
 
         if (courseIcon != null) {
-            if((maxWidth * NR_COLUMNS) < 600) {
-	            this.setSize(600, maxHeight * gl.getRows() + profileTextArea.getSize().height);                
-            } else {
+        	int descriptionHeight = 0;
+        	if(profileTextArea!=null)
+        		descriptionHeight = profileTextArea.getSize().height;
+        	else if(wiskOpdrPanel!=null)
+        		descriptionHeight = wiskOpdrPanel.getSize().height;
+        	
+        	if((maxWidth * NR_COLUMNS) < 600) {
+            	
+	            this.setSize(600, maxHeight * gl.getRows() + descriptionHeight);                
+            } 
+            else {
 	            this.setSize(maxWidth * NR_COLUMNS, maxHeight
-	                    * gl.getRows() + profileTextArea.getSize().height);
+	                    * gl.getRows() + descriptionHeight);
             }
         }
         //profileTextArea.invalidate();

@@ -36,6 +36,7 @@ import javax.swing.event.InternalFrameListener;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.gui.BackgroundPanel;
 import fi.dwo.client.gui.GuiConstants;
+import fi.wiskopdr.WiskOpdr;
 
 public class FullScreenDWO extends JDialog implements ChangeListener, ActionListener, InternalFrameListener {
 
@@ -71,20 +72,27 @@ public class FullScreenDWO extends JDialog implements ChangeListener, ActionList
 		frame.setBounds(10, 20, 300, 400);
 		frame.setContentPane(box);
 		content.add(frame);
-		frame.show(); // FIXME in commentaar bij productie
+		//frame.show(); // FIXME in commentaar bij productie
 		try {
 			frame.setIcon(true);
 		} catch (PropertyVetoException e) {
 		}
 
 		frame = new JInternalFrame("Activiteit", true, true, true, true);
+		
+		//hier is de juiste maat van de activiteit nodig (zonder scrollbalken!!)
+		// nu even hard
+		component.setBounds(20,110,1024,700);
 		frame.setBounds(component.getBounds()); // initiele maten.....
 		Insets insets = frame.getInsets();
-		frame.setSize(frame.getWidth() + 10 + insets.left + insets.right, insets.top + insets.bottom + frame.getHeight() + 100); // marge
-		BackgroundPanel p = new BackgroundPanel(new BorderLayout());
+		frame.setSize(frame.getWidth() + 10 + insets.left + insets.right+30, insets.top + insets.bottom + frame.getHeight() + 140); // marge
+		
+		//Snelle fix: alles absoluut gepositioneerd. later beter maken
+		BackgroundPanel p = new BackgroundPanel(null);
+		
 		//p.setOpaque(false);
 	  	p.setGuiImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_SCO));
-	  	p.add(component, BorderLayout.CENTER);
+	  	p.add(component);
 	  	p.setBorder(BorderFactory.createEmptyBorder(0, 5, 10, 5)); // met die 0 kan ik de knop laten zakken
 	  	JPanel pp = new JPanel(false);
 	  	pp.setOpaque(false);
@@ -92,6 +100,7 @@ public class FullScreenDWO extends JDialog implements ChangeListener, ActionList
 	  	button.addActionListener(this);
 	  	pp.setPreferredSize(new Dimension(300, 90));
 	  	pp.setMaximumSize(new Dimension(6000,90));
+	  	pp.setBounds(400,55,300,50);
 	  	p.add(pp);
 		
 		
@@ -104,6 +113,9 @@ public class FullScreenDWO extends JDialog implements ChangeListener, ActionList
 		
 		
 		setContentPane(content);
+		
+		Dimension screenSize = DwoHelper.getApplet().getToolkit().getScreenSize();
+		frame.setLocation((int)screenSize.getWidth()/2-frame.getWidth()/2, (int)screenSize.getHeight()/2-frame.getHeight()/2);
 		pack();		
 	}
 
