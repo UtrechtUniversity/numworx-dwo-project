@@ -730,6 +730,11 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 // een profile admin mag de standaard modules sorteren, maar de school is dan wel null				
 				if(userObject== ModuleTreePanel.STANDAARD_DWO_MAP)
 					school = null;
+				if(userObject instanceof Course)
+				{
+					if( ((Course) userObject).getSchoolID() == 0)
+						school = null;
+				}
 				PersistenceFacade.instance().setCourseSequence(courses, school);
 			} catch (PersistenceException e) {
 				// TODO Auto-generated catch block

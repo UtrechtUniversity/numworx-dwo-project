@@ -515,8 +515,24 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 //				insertScos(course, node);
 				if(course.getSchoolID() == 0)
 				{
-					dwonode.add(node);
-					course.setParentMap(STANDAARD_DWO_MAP);
+					if(course.getParentID() != 0)
+					{
+						try {
+							Course parent = (Course) PersistenceFacade.instance().get(course.getParentID(), Course.class);
+							course.setParentMap(parent);
+							DefaultMutableTreeNode find = find(parent, dwonode);
+							if(find == null)
+								find = dwonode;
+							if(find instanceof LazyMutableTreeNode)
+								((LazyMutableTreeNode) find).setLoaded();
+							find.add(node);
+						} catch( PersistenceException e) {
+							e.printStackTrace();
+						}
+					} else {					
+						dwonode.add(node);
+						course.setParentMap(STANDAARD_DWO_MAP);
+					}
 				} else {
 					if(course.getParentID() != 0)
 					{
