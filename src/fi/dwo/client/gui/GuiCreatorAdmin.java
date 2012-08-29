@@ -4,6 +4,15 @@
  */
 package fi.dwo.client.gui;
 
+import java.awt.Color;
+import java.awt.Font;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+
 import fi.dwo.client.domain.AppletConfig;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.School;
@@ -13,6 +22,9 @@ import fi.dwo.client.domain.SchoolClass;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.Admin;
 import fi.dwo.client.domain.User;
+import fi.dwo.client.gui.action.CourseManagementAction;
+import fi.dwo.client.gui.action.ScoManagementAction;
+import fi.dwo.client.gui.action.ScoParameterAction;
 
 /**
  * This class implements Admin-specific methods of the GuiCreator.
@@ -217,4 +229,43 @@ public class GuiCreatorAdmin extends GuiCreator {
 		return dwo.swapSco(sco1, sco2);
 	}
 
+	public JComponent getButtonBox(CourseChoisePanel courseChoisePanel) {
+		Object userObject = courseChoisePanel.getUserObject();
+		if(userObject == ModuleTreePanel.ALLE_MODULES)
+			return null;
+		return fx(new JButton(new CourseManagementAction(courseChoisePanel)));
+	}
+
+	public JComponent fx(JComponent b) { 
+		if(!CenterPanel.isIconizer() )
+			return null;
+		Box box = Box.createVerticalBox();
+		box.add(Box.createGlue());
+		box.add(b);
+		box.setBorder(BorderFactory.createEmptyBorder(0, 0, 3, 0)); // Meten!
+		return box;
+	}
+
+	public JComponent getButtonBox(CoursePanel coursePanel) {
+		return fx(new JButton(new ScoManagementAction(coursePanel)));
+	}
+	
+	public JComponent getButtonBox(ScoPanel scoPanel) {
+		if(scoPanel.getSco().getLessonMode() == Sco.BROWSE)
+		{
+			Box box = Box.createHorizontalBox();
+			JLabel lab = new JLabel("PREVIEW");
+			lab.setVerticalAlignment(JLabel.BOTTOM);
+			lab.setForeground(Color.red);
+			lab.setFont(new Font("SansSerif", Font.BOLD, 20));
+			box.add(lab);
+			box.add(Box.createHorizontalStrut(10));
+			box.add(new JButton(new PreviewAction(scoPanel)));
+			return fx(box);
+		}
+		return fx(new JButton(new ScoParameterAction(scoPanel)));
+	}
+	
+
+	
 }

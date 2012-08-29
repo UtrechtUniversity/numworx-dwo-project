@@ -6,10 +6,8 @@ package fi.dwo.client.gui;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
 import java.util.Vector;
 
-import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -28,10 +26,10 @@ import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.Admin;
 import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.action.GuiAction;
-import fi.dwo.client.gui.action.NullStrategy;
+import fi.dwo.client.gui.action.CourseManagementAction;
+import fi.dwo.client.gui.action.ScoManagementAction;
+import fi.dwo.client.gui.action.ScoParameterAction;
 import fi.dwo.client.persistence.PersistenceFacade;
-import fi.dwo.client.system.TextMapper;
 
 /**
  * This class implements Teacher-specific methods of the GuiCreator.
@@ -42,24 +40,7 @@ import fi.dwo.client.system.TextMapper;
  */
 public class GuiCreatorTeacher extends GuiCreator {
 
-    static public class PreviewAction extends AbstractAction {
-
-		private ScoPanel scoPanel;
-
-		public PreviewAction(ScoPanel scoPanel) {
-			super("stop preview");
-			this.scoPanel = scoPanel;
-		}
-
-		public void actionPerformed(ActionEvent _) {
-			scoPanel.getSco().setLaunchdata(scoPanel.tmp.tmp);
-			scoPanel.getSco().setDataChanged(false);
-			GuiCreator.instance().getMainPanel().getCenter().loadCenter(scoPanel.tmp);
-		}
-
-	}
-
-	public static final class LazyAppletConfig extends AppletConfig {
+    public static final class LazyAppletConfig extends AppletConfig {
 		private Sco sco;
 
 		/* (non-Javadoc)
@@ -397,90 +378,6 @@ public class GuiCreatorTeacher extends GuiCreator {
 		return dwo.swapSco(sco1, sco2);
 	}
 
-	public static class CourseManagementAction extends GuiAction {
-
-		private Object userObject;
-
-		public CourseManagementAction(CourseChoisePanel courseChoisePanel) {
-			super(TextMapper.getText(TextMapper.GUIH_EDIT));
-			userObject = courseChoisePanel.getUserObject();
-		}
-
-		public CourseManagementAction(CourseMap map) {
-			super(TextMapper.getText(TextMapper.GUIH_EDIT));
-			userObject = map.getUserObject();
-		}
-		
-		public void actionPerformed(ActionEvent e) {
-			instance().setWait();
-			CenterSubPanel cp;
-			if(userObject instanceof CourseMap)
-			{
-				cp = instance().getCourseManagementPanel((CourseMap) userObject);
-			}
-			else 
-			{ // van de goede soort....
-	// TODO of STANDAARD MAP....
-				if(userObject == ModuleTreePanel.STANDAARD_DWO_MODULES)
-					cp = instance().getCourseManagementPanel(ModuleTreePanel.STANDAARD_DWO_MAP);
-				else
-					cp = instance().getCourseManagementPanel(ModuleTreePanel.SCHOOL_MAP);
-			}
-			CenterPanel center = getCenter();
-	        center.setStrategy(new NullStrategy());
-	        center.loadCenter(cp);
-	        instance().setReady();           
-		}
-		
-	}
-	
-	public static class ScoManagementAction extends GuiAction {
-
-		private Course course;
-
-		public ScoManagementAction(CoursePanel coursePanel) {
-			super(TextMapper.getText(TextMapper.GUIH_EDIT));
-			course = coursePanel.course;
-		}
-		
-		public ScoManagementAction(Course course) {
-			super(TextMapper.getText(TextMapper.GUIH_EDIT));
-			this.course = course;
-		}
-
-		public void actionPerformed(ActionEvent arg0) {
-			instance().setWait();
-			CenterSubPanel cp;
-			cp = instance().getScoManagementPanel(course);
-			CenterPanel center = getCenter();
-	        center.setStrategy(new NullStrategy());
-	        center.loadCenter(cp);
-	        instance().setReady();           
-		}
-		
-	}
-	
-	public static class ScoParameterAction extends GuiAction {
-
-		private Sco sco;
-
-		public ScoParameterAction(ScoPanel scoPanel) {
-			this(scoPanel.getSco());
-		}
-		public ScoParameterAction(Sco sco) {
-			super(TextMapper.getText(TextMapper.GUIH_EDIT));
-			this.sco = sco;
-		}
-
-		public void actionPerformed(ActionEvent arg0) {
-			instance().loadParameterManagementPanel(sco);
-			CenterPanel center = getCenter();
-	        center.setStrategy(new NullStrategy());
-	        instance().setReady();           
-		}
-		
-	}
-	
 	public JComponent getButtonBox(CourseChoisePanel courseChoisePanel) {
 			Object userObject = courseChoisePanel.getUserObject();
 			if(userObject == ModuleTreePanel.ALLE_MODULES)
@@ -506,7 +403,7 @@ public class GuiCreatorTeacher extends GuiCreator {
 	}
 	
 	public JComponent getButtonBox(CoursePanel coursePanel) {
-		if(noAdmin && coursePanel.course.getSchoolID() == 0)
+		if(noAdmin && coursePanel.getCourse().getSchoolID() == 0)
 			return null;
 		return fx(new JButton(new ScoManagementAction(coursePanel)));
 	}

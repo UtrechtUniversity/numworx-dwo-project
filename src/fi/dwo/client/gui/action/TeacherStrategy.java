@@ -16,7 +16,6 @@ import fi.dwo.client.gui.CenterSubPanel;
 import fi.dwo.client.gui.CourseChoisePanel;
 import fi.dwo.client.gui.CoursePanel;
 import fi.dwo.client.gui.GuiCreator;
-import fi.dwo.client.gui.GuiCreatorTeacher;
 import fi.dwo.client.gui.ModuleTreePanel;
 import fi.dwo.client.gui.SelectStrategy;
 import fi.dwo.client.system.TextMapper;
@@ -109,13 +108,13 @@ public class TeacherStrategy implements SelectStrategy{
 			||	(update && object instanceof Course && ((Course) object).isWithChildren())
 			||  (hasAdminRight && object == ModuleTreePanel.STANDAARD_DWO_MODULES)
 		) {
-			m.add(new JMenuItem(new GuiCreatorTeacher.CourseManagementAction(map)));
+			m.add(new JMenuItem(new CourseManagementAction(map)));
 		} else if(update && object instanceof Course && !((Course)object).isWithChildren())
 		{
-			m.add(new JMenuItem(new GuiCreatorTeacher.ScoManagementAction((Course)object)));
+			m.add(new JMenuItem(new ScoManagementAction((Course)object)));
 		} else if(update && object instanceof Sco) 
 		{
-			m.add(new JMenuItem(new GuiCreatorTeacher.ScoParameterAction((Sco)object)));
+			m.add(new JMenuItem(new ScoParameterAction((Sco)object)));
 		}
 	
 		if(update && (object instanceof Course || object instanceof Sco))
@@ -196,7 +195,7 @@ public class TeacherStrategy implements SelectStrategy{
 				cp.setLessonMode(getLessonMode());
 				center.loadCenter(cp);
 			}
-		} else if (value instanceof String) // geen ondescheid tussen alle/school/standaard
+		} else if (value instanceof String) // geen onderscheid tussen alle/school/standaard
 		{
 			if(value == ModuleTreePanel.ALLE_MODULES)
 			{				

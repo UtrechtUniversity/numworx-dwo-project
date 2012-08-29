@@ -1507,7 +1507,8 @@ private static boolean isValidEmail(String email) {
      * @see fi.dwo.client.domain.DwoIF#setWait()
      */
     public void setWait(String waitText) {
-        if(nestedWait == 0) {
+        nestedWait++;
+        if(nestedWait == 1) {
 	        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 	        this.waitText = waitText;
 	        waitLabel.setText(" "+waitText+" ");
@@ -1515,7 +1516,6 @@ private static boolean isValidEmail(String email) {
 	        validate();
 	        if(this.getGraphics()!=null) paint(this.getGraphics());
         }
-        nestedWait++;
     }
 
     /**

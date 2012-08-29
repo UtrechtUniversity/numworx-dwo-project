@@ -96,6 +96,17 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 	private CenterPanel center;
 	private IconizedPanel ip;
 	
+	void setWait() {
+		if(dwo != null)
+			dwo.setWait();
+	}
+	void setReady() {
+		if(dwo != null)
+			dwo.setReady();
+	}
+	
+	
+	
 	static class TopMap implements CourseMap, Descriptor {
 		
 		Descriptor delegate;
@@ -455,20 +466,25 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 			loadedChildren = true;
 		}
 		protected void loadChildren() {
-			if(course.isWithChildren()) 
-			{   CourseMap[] courses;
-				childValue = courses = course.getChildren();
-				loadedChildren = true;
-				for (int i = 0; i < courses.length; i++) {
-					((Course) courses[i]).setParentMap(course); // FIXME rare plek voor deze link leggen?
-					insert(new LazyMutableTreeNode((Course) courses[i]), i);
+			setWait(); // zijeffect: recusie!
+			if(!loadedChildren)
+			{
+				if(course.isWithChildren()) 
+				{   CourseMap[] courses;
+					childValue = courses = course.getChildren();
+					loadedChildren = true;
+					for (int i = 0; i < courses.length; i++) {
+						((Course) courses[i]).setParentMap(course); // FIXME rare plek voor deze link leggen?
+						insert(new LazyMutableTreeNode((Course) courses[i]), i);
+					}
+				} else {
+					if(course.getScoList()==null)
+						course.loadScos();
+					childValue = course.getScoList();
+					super.loadChildren();
 				}
-			} else {
-				if(course.getScoList()==null)
-					course.loadScos();
-				childValue = course.getScoList();
-				super.loadChildren();
 			}
+			setReady();
 		}
 		public void removeAllChildren() {
 			super.removeAllChildren();

@@ -59,7 +59,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 	CourseContainer center;
     private String lessonMode = Sco.NORMAL;
 
-    Course course;
+    private Course course;
     
     private JLabel scoListHeader;
     
@@ -417,5 +417,9 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 			repaint();
 		}
 		
+	}
+
+	public Course getCourse() {
+		return course;
 	}
 }
