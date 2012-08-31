@@ -25,6 +25,7 @@ import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.text.JTextComponent;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 
 import fi.beans.mathkit.JMathPane;
@@ -33,6 +34,7 @@ import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.Descriptor;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoProfile;
+import fi.dwo.client.gui.action.TeacherStrategy;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.TextMapper;
 import fi.wiskopdr.WiskOpdr;
@@ -71,7 +73,18 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
 	
 	public static CourseChoisePanel newInstance() {
 		if(CenterPanel.isIconizer())
-			return new CourseChoisePanel(ModuleTreePanel.TOP_LEVEL, ModuleTreePanel.ALLE_MODULES);
+		{
+			
+			ModuleTreePanel tree = GuiCreator.instance().getMainPanel().getCenter().tree;
+			DefaultMutableTreeNode root = tree.getRoot();
+			CourseMap toplevel = tree.toCourseMap(root);
+			if(toplevel instanceof Descriptor) {
+				Descriptor d = (Descriptor) toplevel;
+				return new CourseChoisePanel(d, toplevel.getUserObject());
+			}
+// FIXME structuur niet transparant
+			return new CourseChoisePanel(new TeacherStrategy.Bridge(GuiCreator.instance().getDWO().getDwoProfile(),toplevel), toplevel.getUserObject());
+		}
 		return new CourseChoisePanel(GuiCreator.instance().dwo.getDwoProfile(), ModuleTreePanel.ALLE_MODULES);
 	}
 	
@@ -238,7 +251,9 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
 //            else
 //            	cp = GuiCreator.instance().getCoursePanel(course);
 //            center.loadCenter(cp);
+            GuiCreator.instance().setWait();
             center.select(course);
+            GuiCreator.instance().setReady();
         }
     }
 

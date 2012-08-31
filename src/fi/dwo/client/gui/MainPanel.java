@@ -64,7 +64,7 @@ public class MainPanel extends BackgroundPanel {
 	
     private LoggedInPanel loggedIn;
 
-    private CenterPanel center;
+    CenterPanel center; // FIXME DIT IS NIET GOED!
 
     private Component header;
     

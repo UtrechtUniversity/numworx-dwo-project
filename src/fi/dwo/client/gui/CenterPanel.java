@@ -85,7 +85,7 @@ public class CenterPanel extends JPanel implements CourseContainer {
     
     private Container spe;
 
-	private ModuleTreePanel tree;
+	ModuleTreePanel tree;
     
     /**
      * Creates a new CenterPanel. Adds a menu to it and loads a new
@@ -184,6 +184,10 @@ if(iconizer)
 	{   
 		sp.setBorder(scoBorder);
     }
+// Dit moet eigenlijk "NA" de constructor van mainpanel. mp en guicreator variabelen zijn nog niet gezet.
+		mp.center = this; // FIXME DIT WERKT ZO NIET.
+		GuiCreator.instance().mainPanel = mp; // FIXME IDEM....
+		
 		CenterSubPanel csp = GuiCreator.instance().getCourseChoisePanel();
         if(csp instanceof ScoPanel ) {
         	centermainSub.remove(spe);

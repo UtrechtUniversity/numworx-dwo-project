@@ -141,9 +141,9 @@ public class TeacherStrategy implements SelectStrategy{
 		this.lessonMode = lessonMode;
 	}
 
-	static class Bridge implements Descriptor {
+	public static class Bridge implements Descriptor {
 
-		Bridge(Descriptor profile, CourseMap parent) {
+		public Bridge(Descriptor profile, CourseMap parent) {
 			super();
 			this.profile = profile;
 			this.parent = parent;

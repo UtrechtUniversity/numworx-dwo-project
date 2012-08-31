@@ -43,7 +43,7 @@ public class AdminMenuPanel extends MenuPanel {
 //       schoolManagementButton.setVisible(true);
         createGap();
         /* Add CourseManagement Button */
-        if(dwo.getCourseViewNr()>0 || CenterPanel.isIconizer())
+        if(CenterPanel.isIconizer())
         	return;
         courseManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_COURSE_MANAGEMENT));
 //        fm = courseManagementButton.getFontMetrics(courseManagementButton.getFont());

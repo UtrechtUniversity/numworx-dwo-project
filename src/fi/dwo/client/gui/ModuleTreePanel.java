@@ -2,6 +2,7 @@ package fi.dwo.client.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Image;
 import java.awt.LayoutManager;
 import java.util.ArrayList;
@@ -97,12 +98,14 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 	private IconizedPanel ip;
 	
 	void setWait() {
-		if(dwo != null)
-			dwo.setWait();
+//		if(dwo != null)
+//			dwo.setWait();
+		DwoHelper.getApplet().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 	}
 	void setReady() {
-		if(dwo != null)
-			dwo.setReady();
+//		if(dwo != null)
+//			dwo.setReady();
+		DwoHelper.getApplet().setCursor(Cursor.getDefaultCursor());
 	}
 	
 	
@@ -665,6 +668,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 			return o;	
 		if(!isPossible(object))
 			return null;
+//System.err.println("FIND " + object + " START in " + node);
 		Enumeration e = node.breadthFirstEnumeration();
 		while (e.hasMoreElements()) {
 			o = (DefaultMutableTreeNode) e.nextElement();
@@ -673,11 +677,13 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 			if( object.equals(o.getUserObject()))
 			{
 				cachemap.put(object, o);
+//System.err.println("found " + o);
 				return o;
 			}
 			//if(o != null)
 			//	return o; // early out.
 		}
+//System.err.println("not found");
 		return null;
 	}
 
@@ -821,6 +827,10 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		model.nodeStructureChanged(node);
 	}
 
+	public DefaultMutableTreeNode getRoot() {
+		return (DefaultMutableTreeNode) tree.getModel().getRoot();
+	}
+	
 	public void updateNodeMap(CourseMap map) {
 		DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
@@ -852,25 +862,29 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		callStrategy(node);
 	}
 
-	private void callStrategy(DefaultMutableTreeNode node) {
+	public CourseMap toCourseMap(DefaultMutableTreeNode node) {
 		Object o = node.getUserObject();
 		if(o instanceof CourseMap)
 		{
-			strategy.nodeSelected((CourseMap) o);
+			return ((CourseMap) o);
 		} else
 // vergeten?
 		if( o instanceof Sco)
 		{
-			strategy.nodeSelected(new TreeMap(node));
+			return (new TreeMap(node));
 		} else
 			
-			
 		if(o .equals( SCHOOL_MODULES) )
-			strategy.nodeSelected(SCHOOL_MAP);
+			return (SCHOOL_MAP);
 		else if(o == STANDAARD_DWO_MODULES)
-			strategy.nodeSelected(STANDAARD_DWO_MAP);
-		else // ALLE MODULES
-			strategy.nodeSelected(TOP_LEVEL);
+			return (STANDAARD_DWO_MAP);
+		return TOP_LEVEL;
+	}
+	
+	
+	
+	private void callStrategy(DefaultMutableTreeNode node) {
+		strategy.nodeSelected(toCourseMap(node));
 	}
 }
 

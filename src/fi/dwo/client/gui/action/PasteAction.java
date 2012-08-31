@@ -77,7 +77,14 @@ public class PasteAction extends GuiAction
 					if(dest.getSchoolID() == 0 && !hasAdminRight()) return;
 					// TODO check copy parent into child.
 					copyCourseMap(dest, source, map);
+				} else if(clip instanceof Sco && object instanceof Sco) 
+				{
+					Sco source = (Sco)clip;
+					Sco dest   = (Sco)object;
+					// TODO WAT GAAT HIER GEBEUREN
 				}
+				
+				
 				
 			}
 		}
