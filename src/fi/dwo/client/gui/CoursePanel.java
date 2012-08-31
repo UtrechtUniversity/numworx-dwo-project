@@ -102,7 +102,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 		{
 			if(s.startsWith("<html>"))
 			{	htmlMode=true;
-				courseDescriptionHTML = new JMathPane(); // was JLABEL
+				courseDescriptionHTML = new JMathPane(DwoHelper.getURL(".")); // was JLABEL
 				courseDescriptionHTML.setText(s);
 				courseDescriptionHTML.setEditable(false);
 				add(courseDescriptionHTML);

@@ -6,6 +6,7 @@ package fi.dwo.client.gui;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 
+import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.GuestMenuPanel.MenuPanelButton;
 import fi.dwo.client.system.TextMapper;
 
@@ -42,6 +43,8 @@ public class AdminMenuPanel extends MenuPanel {
 //       schoolManagementButton.setVisible(true);
         createGap();
         /* Add CourseManagement Button */
+        if(dwo.getCourseViewNr()>0 || CenterPanel.isIconizer())
+        	return;
         courseManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_COURSE_MANAGEMENT));
 //        fm = courseManagementButton.getFontMetrics(courseManagementButton.getFont());
 //        courseManagementButton.setSize(this.getSize().width - 20, fm.getHeight() + 10);

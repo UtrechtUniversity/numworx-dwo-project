@@ -15,6 +15,7 @@ import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -106,7 +107,8 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
         
         if((s != null) && (!s.trim().equals(""))){
         	if(s.startsWith("<html>")) {	
-        		profileTextArea = new JMathPane();
+        		URL base = DwoHelper.getURL(".");
+        		profileTextArea = new JMathPane(base);
             } 
             else if(s.startsWith("H4sIAAAAAA")) {
             	wiskOpdrPanel = WiskOpdr.getWiskOpdrPanel(s);
