@@ -82,7 +82,7 @@ public class FullScreenDWO extends JDialog implements ChangeListener, ActionList
 		
 		//hier is de juiste maat van de activiteit nodig (zonder scrollbalken!!)
 		// nu even hard
-		component.setBounds(20,110,1024,700);
+		component.setBounds(20,110,1024,500);
 		frame.setBounds(component.getBounds()); // initiele maten.....
 		Insets insets = frame.getInsets();
 		frame.setSize(frame.getWidth() + 10 + insets.left + insets.right+30, insets.top + insets.bottom + frame.getHeight() + 140); // marge
