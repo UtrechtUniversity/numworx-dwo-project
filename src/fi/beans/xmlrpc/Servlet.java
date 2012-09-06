@@ -1,6 +1,10 @@
 // $Id: Servlet.java,v 1.3 2004/03/16 12:00:43 wim Exp wim $
 package fi.beans.xmlrpc;
 /*
+ * Revision 1.4
+ * handler wordt nu getest op interface DbConnectIF in plaats van
+ * op de class DbConnect
+ * 
  * $Log: Servlet.java,v $
  * Revision 1.3  2004/03/16 12:00:43  wim
  * handler is nu de handler van xmlrpc niet this.
@@ -23,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.xmlrpc.XmlRpcServer;
 
-import fi.beans.jdbc.DbConnect;
+import fi.beans.jdbc.DbConnectIF;
 
 /**
  * Generieke XML-RPC servlet. Voor gebruik bij 
@@ -75,10 +79,10 @@ public abstract class Servlet extends HttpServlet {
 private byte[] execute(ServletInputStream in) {
 	byte[] result;
 	result = xmlrpc.execute (in);
-	if(handler instanceof DbConnect)
+	if(handler instanceof DbConnectIF)
 	{
 // disconnect database, if fi design pattern used.          
-	    ((DbConnect)handler).close();
+	    ((DbConnectIF)handler).close();
 	}
 	return result;
 }

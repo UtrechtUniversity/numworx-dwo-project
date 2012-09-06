@@ -6,16 +6,20 @@
  */
 package fi.dwo.server.persistence;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.xmlrpc.XmlRpc;
 
 import com.jamonapi.proxy.MonProxyFactory;
 
+import fi.beans.jdbc.DbConnectIF;
 import fi.dwo.client.persistence.DbAccessIF;
 
 /**
@@ -38,6 +42,14 @@ public class DbAccessLdapServlet extends DbAccessServlet
         		
         		private Connection mine, his;
 				public void close() {
+					if(mine != null)
+					{
+						try {
+							mine.close();
+						} catch (SQLException e) {
+							log(this + " close " + e);
+						}
+					}
 					mine = null; his = null;
 					super.close();
 				}
@@ -85,4 +97,18 @@ public class DbAccessLdapServlet extends DbAccessServlet
 		//super.destroy();
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.servlet.http.HttpServlet#service(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
+	protected void service(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		try { 
+			super.service(req, resp);
+		} finally { 
+			((DbConnectIF) getHandler()).close();
+		}
+	}
+
+	
+	
 }
