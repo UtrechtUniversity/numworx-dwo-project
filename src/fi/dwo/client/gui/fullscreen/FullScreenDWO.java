@@ -88,11 +88,11 @@ public class FullScreenDWO extends JDialog implements ChangeListener, ActionList
 		frame.setSize(frame.getWidth() + 10 + insets.left + insets.right+30, insets.top + insets.bottom + frame.getHeight() + 140); // marge
 		
 		//Snelle fix: alles absoluut gepositioneerd. later beter maken
-		BackgroundPanel p = new BackgroundPanel(null);
+		BackgroundPanel p = new BackgroundPanel(new BorderLayout());
 		
 		//p.setOpaque(false);
 	  	p.setGuiImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_SCO));
-	  	p.add(component);
+	  	p.add(component, BorderLayout.CENTER);
 	  	p.setBorder(BorderFactory.createEmptyBorder(0, 5, 10, 5)); // met die 0 kan ik de knop laten zakken
 	  	JPanel pp = new JPanel(false);
 	  	pp.setOpaque(false);
@@ -101,8 +101,11 @@ public class FullScreenDWO extends JDialog implements ChangeListener, ActionList
 	  	pp.setPreferredSize(new Dimension(300, 90));
 	  	pp.setMaximumSize(new Dimension(6000,90));
 	  	pp.setBounds(400,55,300,50);
-	  	p.add(pp);
-		
+	  	Box ppp = Box.createHorizontalBox();
+	  	ppp.add(Box.createRigidArea(new Dimension(400,100)));
+	  	ppp.add(pp);
+	  	ppp.add(Box.createHorizontalGlue());
+	  	p.add(ppp,BorderLayout.NORTH);
 		
 		frame.setContentPane(p);
 		frame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);

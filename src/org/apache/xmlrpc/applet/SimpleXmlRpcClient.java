@@ -260,7 +260,30 @@ class XmlRpcSupport extends org.xml.sax.HandlerBase {
 	    OutputStream out = con.getOutputStream ();
 	    out.write (request);
 	    out.flush ();
+	    
+	    
+	    
 	    InputStream in = con.getInputStream ();
+	    int length = con.getContentLength();
+	    System.out.println("length= " + length + " avail=" + in.available());
+	    if(length < 0) {
+	    	length = 102400;
+	    }
+	    byte[] buffer = new byte[length];
+	    int l, pos = 0;
+	    boolean more = true;
+	    do { 
+	    	l = in.read(buffer, pos, buffer.length-pos);
+		    if(l <= 0)
+		    	more = false;
+		    else {
+		    	pos += l;
+		    	System.out.println("read " + l + " total " + pos);
+		    }
+	    } while(more);
+	    in.close();
+	    in = new ByteArrayInputStream(buffer, 0, pos);
+	    
 	    parse (in);
 	    if(debug)System.out.println ("result = "+result);
 	} catch (Exception x) {
