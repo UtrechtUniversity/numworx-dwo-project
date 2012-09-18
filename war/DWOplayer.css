@@ -1,0 +1,42 @@
+/** Add css rules here for your application. */
+html,body{margin:0px; padding:0px;}
+
+body#main {background:white; color:#000;}
+
+/** Example rules used by the template application (remove for your app) */
+
+/*
+div.formula { background: green; width:100px; height: 100px;}
+*/
+div { padding: 0px; }
+canvas {outline: none;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0); 
+  }
+ 
+div.cbg-RP { background-color:#c3d9ff; }
+.keyboardtabs {background:#000;}
+div.keyboard {background:#eee; left:0px; right:0px; border-top:1px solid #777;}
+
+.button {background:#ddd; color:#000; padding:10px; margin:5px;  border: 1px solid #888; border-radius:5px; text-align:center; overflow:hidden;}
+.button:active {background:#e00;}
+div.disabled { background:#b8b8b8; color:#333;}
+div.disabled:active { background:#b8b8b8; }
+
+div.keyboardtabs div {color:white; background:#444; border-radius:0px; padding:2px 5px; margin:5px;}
+div.keyboardtabs div:active {background:#e00;}
+
+div.insert_formule {padding-right:10px; padding-left:10px;}
+div.insert_formule_steps{border-width:1px;}
+div.scrollformule {overflow:scroll; background:blue; width:210px;}
+
+div.numeric {background:#eee;}
+
+div.apply {background:#eee; }
+
+div.tabkeyboard {
+    width: 724px; margin: 0px auto; display: block; background-position: initial initial; background-repeat: initial initial; 
+}
+
+div.listitem { color:#000; }
+
+input[name="userid"] { color:#000; }

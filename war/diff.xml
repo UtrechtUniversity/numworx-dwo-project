@@ -1,0 +1,2484 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<java version="1.5.0_16" class="java.beans.XMLDecoder"> 
+ <object class="java.util.Hashtable"> 
+  <void method="put"> 
+   <string>opdracht_1_1</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>interactiePanelLaunchData</string> 
+     <array class="java.util.Hashtable" length="5"> 
+      <void index="0"> 
+       <object class="java.util.Hashtable"> 
+        <void method="put"> 
+         <string>interactiePanelLaunchState</string> 
+         <object class="java.util.Hashtable"> 
+          <void method="put"> 
+           <string>puntenHerleiding</string> 
+           <int>4</int> 
+          </void> 
+          <void method="put"> 
+           <string>puntenGelijkwaardig</string> 
+           <int>6</int> 
+          </void> 
+          <void method="put"> 
+           <string>exact</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>antwoordString</string> 
+           <string>$ff &apos;(x)=#a*(q+1)x$mq@+b*qx$mq-1@+a*d#@</string> 
+          </void> 
+          <void method="put"> 
+           <string>eindOplossingNodig</string> 
+           <boolean>true</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>bewerkingKnoppen</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>puntenEindOplossing</string> 
+           <int>0</int> 
+          </void> 
+          <void method="put"> 
+           <string>stappen</string> 
+           <boolean>true</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>puntenExact</string> 
+           <int>0</int> 
+          </void> 
+          <void method="put"> 
+           <string>vergelijking</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>soortHerleiding</string> 
+           <int>1</int> 
+          </void> 
+          <void method="put"> 
+           <string>subKnop</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>startString</string> 
+           <string>$f@</string> 
+          </void> 
+          <void method="put"> 
+           <string>herleiding</string> 
+           <boolean>true</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>abcKnop</string> 
+           <boolean>false</boolean> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="put"> 
+         <string>soortInteractiePanel</string> 
+         <int>0</int> 
+        </void> 
+       </object> 
+      </void> 
+     </array> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Bepaal de afgeleide van
+
+$ff(x)=#(ax +b)(x$mq@+d)#@
+
+Ga na of je het antwoord nog kunt herleiden tot een  eenvoudiger of &apos;mooiere&apos; vorm.
+
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst2</string> 
+     <string>
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>a=2..5 ; b= 1..4
+d=1..7
+q=2,3
+
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>grafiekTool</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>hasTitle</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>hasSecondTekst</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>hasAntwoordVak</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>scoreMax</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>Opdracht 1
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>scheidingX</string> 
+     <int>365</int> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>aantalOpdrachten_3</string> 
+   <string>10</string> 
+  </void> 
+  <void method="put"> 
+   <string>aantalOpdrachten_2</string> 
+   <string>10</string> 
+  </void> 
+  <void method="put"> 
+   <string>aantalOpdrachten_1</string> 
+   <string>10</string> 
+  </void> 
+  <void method="put"> 
+   <string>opnieuwMogelijk</string> 
+   <string>false</string> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_3_9</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>a=-5..-2
+p=2,3
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>opgave 9
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(t)=#a*p*t$mp-1@*e$ma*t$mp@@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Bepaal de afgeleide van:
+
+$ff(t)=#e$mat$mp@@#@
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_3_8</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>a=2..5
+p=2,3
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>opgave 8
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(t)=#a*p*t$mp-1@*e$ma*t$mp@@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Bepaal de afgeleide van:
+
+$ff(t)=#e$mat$mp@@#@
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_3_7</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>a=3..7
+b=5*a+1
+p=2..4
+
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>3</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>6</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>4</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>opgave 7
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#$ba*p*x$mp-1@+b$n2*$wa*x$mp@+bx@@@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Bepaal de afgeleide van:
+
+$ff(x)=#$wa*x$mp@+bx @#@
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_3_6</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>a=2..5
+b=5*a+1
+p=2..4
+
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>3</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>6</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>4</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>opgave 6
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#$b-a*p*x$mp-1@$n2*$wb-a*x$mp@@@@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Bepaal de afgeleide van:
+
+$ff(x)=#$wb-a*x$mp@@#@
+
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_3_5</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>a=2..5
+b=5*a-1
+p=2
+
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>3</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>6</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>4</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>opgave 5
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#$b-a*p*x$mp-1@$n2*$wb-a*x$mp@@@@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Bepaal de afgeleide van:
+
+$ff(x)=#$wb-a*x$mp@@#@
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_3_4</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>a=-7..-2,2..7
+b=17-2*a
+p=2..4
+q=2*p-1
+
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>opgave 4
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#a*p*q*x$mp-1@*$ha*x$mp@-b@$mq-1@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Bepaal de afgeleide van:
+
+$ff(x)=#$hax$mp@-b@$mq@#@
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_3_3</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>a=-9..-2,2..5
+b=13-2*a
+p=2,3
+q=2*p-1
+
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>opgave 3
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#a*p*q*x$mp-1@*$ha*x$mp@-b@$mq-1@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Bepaal de afgeleide van:
+
+$ff(x)=#$hax$mp@-b@$mq@#@
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>activiteit_3</string> 
+   <string>kettingregel</string> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_3_2</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>a=-5..-2,2..5
+b=6..17
+p=2,3
+q=2..5
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>opgave 2
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#a*p*q*x$mp-1@*$ha*x$mp@+b@$mq-1@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Bepaal de afgeleide van:
+
+$ff(x)=#$hax$mp@+b@$mq@#@
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>activiteit_2</string> 
+   <string>quotiëntregel</string> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_3_1</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>a=2..5
+b=2*a-1
+p=1
+q=3..5
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>3</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>opgave 1
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#a*q*$ha*x+b@$mq-1@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Bepaal de afgeleide van:
+
+$ff(x)=#$hax+b@$mq@#@
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>activiteit_1</string> 
+   <string>productregel</string> 
+  </void> 
+  <void method="put"> 
+   <string>mode</string> 
+   <string>0</string> 
+  </void> 
+  <void method="put"> 
+   <string>instellingen</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>fontSize</string> 
+     <int>12</int> 
+    </void> 
+    <void method="put"> 
+     <string>woordFormule</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>maalTeken</string> 
+     <boolean>false</boolean> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>language</string> 
+   <string>nl</string> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_2_9</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>c=1..9;a=10*c
+b=2..5;d= b*c+7
+q=2
+p=2,3
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>Opdracht 9
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#$ba*b*p*q*x$mq-1@$n$hd-b*x$mq@@$mp+1@@@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Differentieer (en herleid):
+
+$ff(x)=#$ba$n$hd-bx$mq@@$mp@@@#@
+
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>aantalActiviteiten</string> 
+   <string>3</string> 
+  </void> 
+  <void method="put"> 
+   <string>licenseKey</string> 
+   <string>88e306bd-152d-4ba9-ad82-43854c6880f9</string> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_2_8</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>c=1..9;a=2*c
+b=2..5;d= 2*b-1
+q=1
+p=2..4
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>Opdracht 8
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#$ba*b*p$n$hd-bx@$mp+1@@@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Differentieer (en herleid):
+
+$ff(x)=#$ba$n$hd-bx@$mp@@@#@
+
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>gekoppeldeOpdrachten</string> 
+   <string>false</string> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_2_7</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>a=-5..-2,2..5
+b=-4..-2,2..8
+c= 2..9; d=3..7
+f=2,3
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>Opdracht 7
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#$b(a*f*x$mf-1@-c)(bx-d)-b(ax$mf@-cx)$n(bx-d)$m2@@@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Differentieer (en herleid)
+
+$ff(x)=#$bax$mf@-cx$nbx-d@@#@
+
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_2_6</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>a=2..8
+b=2..5
+c=-2,2,3,4
+d=-3..-1 ,1..7
+f=2,3
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>1</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>Opdracht 6
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#$b(bx+d)(c-a*f*x$mf-1@)-b(cx-ax$mf@)$n(bx+d)$m2@@@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Differentieer (en herleid)
+
+$ff(x)=#$bcx-ax$mf@$nd+bx@@#@
+
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_2_5</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>a=2..5
+b=2..7
+c=-2,-3,2
+d=10..20
+f=2..4.
+
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>Opdracht 5
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#$b(-bx+d)(c+a*f*x$mf-1@)+b(cx+ax$mf@)$n(bx-d)$m2@@@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Differentieer (en herleid)
+
+$ff(x)=#$bcx+ax$mf@$nd-bx@@#@
+
+
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_2_4</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>a=2..5
+b=-4..-2,2..10
+c=-2,-3,2
+d=1..20
+f=2..4.
+
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>Opdracht 4
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#$b(bx-d)(c+a*f*x$mf-1@)-b(cx+ax$mf@)$n(bx-d)$m2@@@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Differentieer (en herleid)
+
+$ff(x)=#$bcx+ax$mf@$nbx-d@@#@
+
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_2_3</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>a=2..5
+b=-4..-2,2..10
+c=-2,-3,2
+d=1..20
+f=2.
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>Opdracht 3
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#$b(bx-d)(c+a*f*x$mf-1@)-b(cx+ax$mf@)$n(bx-d)$m2@@@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Differentieer (en herleid)
+
+$ff(x)=#$bcx+ax$mf@$nbx-d@@#@
+
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_2_2</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>a=2..8
+b=2..5
+c= 2..5
+d=3..7
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>1</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>Opdracht 2
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#$bc*d-a*b$n$hbx-d@$m2@@@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Differentieer (en herleid)
+
+$ff(x)=#$bcx-a$nd-bx@@#@
+
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_2_1</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>a=1..8
+b=2..4
+c=2..5
+d=1..9
+
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>1</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>Opdracht 1
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#$bcd+ab$n$hbx+d@$m2@@@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Differentieer (en herleid):
+
+$ff(x)=#$bcx-a$nbx+d@@#@
+
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>$IMAGE$MAP$</string> 
+   <object class="java.util.Hashtable"/> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_1_10</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>a=2..10
+b=5..9;c=2..5
+p=2..5
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>3</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>Opdracht 10
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#a*px$mp-1@*$wcx-b@+$ba*c/2*x$mp@$n$wc*x-b@@@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Geef de afgeleide van
+
+$ff(x)=#ax$mp@ $wcx-b@#@
+
+Ga na of je het antwoord nog kunt herleiden tot een  eenvoudiger of &apos;mooiere&apos; vorm.
+
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_2_10</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>c=1..9;a=10*c
+b=2..5;d= b*c+7
+q=2..5
+p=2..4
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>Opdracht 10
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#$b-a*b*p*q*x$mq-1@$n$hb*x$mq@+d@$mp+1@@@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Differentieer (en herleid):
+
+$ff(x)=#$ba$n$hbx$mq@+d@$mp@@@#@
+
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_3_10</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>a=-5..-2;
+b=1-3*a
+g=2,3,5
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>opgave 10
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(t)=#a*ln(g)*g$ma*t+b@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Bepaal de afgeleide van:
+
+$ff(t)=#g$mat+b@#@
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_1_9</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>a=2..10
+b=1..5
+p=2..4
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>3</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>Opdracht 9
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#a*px$mp-1@*$wx-b@+$ba/2*x$mp@$n$wx-b@@@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Geef de afgeleide van
+
+$ff(x)=#ax$mp@* $wx-b@#@
+
+Ga na of je het antwoord nog kunt herleiden tot een  eenvoudiger of &apos;mooiere&apos; vorm.
+
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_1_8</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>a=2..10
+b=1..5
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>3</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>Opdracht 8
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#a*$wx-b@+$ba/2*x$n$wx-b@@@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Geef de afgeleide van
+
+$ff(x)=#ax$wx-b@#@
+
+Ga na of je het antwoord nog kunt herleiden tot een  eenvoudiger of &apos;mooiere&apos; vorm.
+
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>bgcolor</string> 
+   <string>#DDEEFF</string> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_1_7</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>g=2..5
+p=2..4
+b=1..17
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>1</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>Opdracht 7
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#ln(g)*g$mx@*(x$mp@+b)+pg$mx@*x$mp-1@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Geef de afgeleide van
+
+$ff(x)=#g#$mx@*(#x$mp@+b#) @
+
+Ga na of je het antwoord nog kunt herleiden tot een  eenvoudiger of &apos;mooiere&apos; vorm.
+
+
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_1_6</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>g=3..6
+p=2..5
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>Opdracht 6
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$f f &apos;(x)=#ln(g)*g$mx@*x$mp@+p*g$mx@*x$mp-1@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Geef de afgeleide van
+
+$ff(x)=#g#$mx@*x$m#p#@@
+
+Ga na of je het antwoord nog kunt herleiden tot een  eenvoudiger of &apos;mooiere&apos; vorm.
+
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_1_5</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>g=2..7
+p=g
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>Opdracht 5
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#ln(g)*g$mx@*x$mp@+p*g$mx@*x$mp-1@#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Geef de afgeleide van
+
+$ff(x)=#g$mx@#*#x$mp@ #@
+
+Ga na of je het antwoord nog kunt herleiden tot een  eenvoudiger of &apos;mooiere&apos; vorm.
+
+
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_1_4</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>a=-5..-2,2..5 ; b=1..9
+c=3..7; d=b+a
+p=3..6; r=1,2
+q=p-r
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>1</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>6</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>4</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>Opdracht 4
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#a*px$mp-1@(cx$mq@-d)+c*q*x$mq-1@(ax$mp@-b)#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Geef de afgeleide van
+
+$ff(x)=#(ax$mp@-b)(cx$mq@-d)#@
+
+Ga na of je het antwoord nog kunt herleiden tot een  eenvoudiger of &apos;mooiere&apos; vorm.
+
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_1_3</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>a=2..5 ; b=1..4
+c=2..5; d=2..9
+p=3..5; q=2..4
+
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>1</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>6</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>4</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>Opdracht 3
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#a*px$mp-1@(cx$mq@-d)+c*qx$mq-1@(ax$mp@+b)#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Geef de afgeleide van
+
+$ff(x)=#(ax$mp@+b)(cx$mq@-d)#@
+
+Ga na of je het antwoord nog kunt herleiden tot een  eenvoudiger of &apos;mooiere&apos; vorm.
+
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>opdracht_1_2</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bewerkingKnoppen</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenExact</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>a=2..5 ; b=1..4
+c=2..5; d=1..9
+p=3..5
+q=2..3
+
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>stappen</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>soortHerleiding</string> 
+     <int>1</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenGelijkwaardig</string> 
+     <int>6</int> 
+    </void> 
+    <void method="put"> 
+     <string>puntenHerleiding</string> 
+     <int>4</int> 
+    </void> 
+    <void method="put"> 
+     <string>exact</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>herleiding</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>Opdracht 2
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>eindOplossingNodig</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>puntenEindOplossing</string> 
+     <int>10</int> 
+    </void> 
+    <void method="put"> 
+     <string>vergelijking</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>startString</string> 
+     <string>$f@</string> 
+    </void> 
+    <void method="put"> 
+     <string>antwoordString</string> 
+     <string>$ff &apos;(x)=#a*px$mp-1@(cx$mq@+d)+c*qx$mq-1@(ax$mp@-b)#@</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Geef de afgeleide van
+
+$ff(x)=#(ax$mp@-b)(cx$mq@+d)#@
+
+Ga na of je het antwoord nog kunt herleiden tot een  eenvoudiger of &apos;mooiere&apos; vorm.
+
+
+</string> 
+    </void> 
+   </object> 
+  </void> 
+ </object> 
+</java> 

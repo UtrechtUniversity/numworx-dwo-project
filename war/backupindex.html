@@ -1,0 +1,47 @@
+<!doctype html>
+
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link type="text/css" rel="stylesheet" href="DWOplayer.css">
+    <title>Web Application Starter Project</title>
+
+    <script type="text/javascript" language="javascript">
+    var input;
+    window.onload = function()
+    {
+    	input = document.getElementById("testtouch");
+    	
+    	input.value = "test";
+    	
+    	var canvas = document.getElementById("canvastest");
+    	
+    	canvas.addEventListener('touchstart', touchStart, false);
+    	canvas.addEventListener('touchmove', touchMove, false);
+    	canvas.addEventListener('touchend', touchEnd, false);
+    }
+    
+    function touchStart(event)
+    {
+    	event.preventDefault();
+    	input.value = "Touch start";
+    }
+    function touchMove(event)
+    {
+    	event.preventDefault();
+    	var x = event.touches[0].clientX;
+    	var y = event.touches[0].clientY;
+    	input.value = "Touch move"+x+" "+y;
+    }
+    function touchEnd(event)
+    {
+    	event.preventDefault();
+    	input.value = "Touch end";
+    }
+    </script>
+  </head>
+  <body id="main">
+	<canvas id="canvastest" width="600" height="200" style="background:#0f0;"></canvas>
+    <input type="text" id="testtouch"/>
+  </body>
+</html>

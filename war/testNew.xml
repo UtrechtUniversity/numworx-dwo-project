@@ -1,0 +1,2368 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<java version="1.6.0_31" class="java.beans.XMLDecoder"> 
+ <object class="java.util.Hashtable"> 
+  <void method="put"> 
+   <string>opdracht_1_1</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>interactiePanelLaunchData</string> 
+     <array class="java.util.Hashtable" length="6"> 
+      <void index="0"> 
+       <object class="java.util.Hashtable"> 
+        <void method="put"> 
+         <string>interactiePanelLaunchState</string> 
+         <object class="java.util.Hashtable"> 
+          <void method="put"> 
+           <string>puntenHerleiding</string> 
+           <int>0</int> 
+          </void> 
+          <void method="put"> 
+           <string>puntenGelijkwaardig</string> 
+           <int>10</int> 
+          </void> 
+          <void method="put"> 
+           <string>exact</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>antwoordString</string> 
+           <string>$f@</string> 
+          </void> 
+          <void method="put"> 
+           <string>eindOplossingNodig</string> 
+           <boolean>true</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>bewerkingKnoppen</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>puntenEindOplossing</string> 
+           <int>0</int> 
+          </void> 
+          <void method="put"> 
+           <string>stappen</string> 
+           <boolean>true</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>puntenExact</string> 
+           <int>0</int> 
+          </void> 
+          <void method="put"> 
+           <string>vergelijking</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>soortHerleiding</string> 
+           <int>1</int> 
+          </void> 
+          <void method="put"> 
+           <string>subKnop</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>startString</string> 
+           <string>$f@</string> 
+          </void> 
+          <void method="put"> 
+           <string>herleiding</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>abcKnop</string> 
+           <boolean>false</boolean> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="put"> 
+         <string>soortInteractiePanel</string> 
+         <int>0</int> 
+        </void> 
+       </object> 
+      </void> 
+      <void index="5"> 
+       <object class="java.util.Hashtable"> 
+        <void method="put"> 
+         <string>locationX</string> 
+         <int>0</int> 
+        </void> 
+        <void method="put"> 
+         <string>volledigeBreedte</string> 
+         <boolean>false</boolean> 
+        </void> 
+        <void method="put"> 
+         <string>hoogte</string> 
+         <int>389</int> 
+        </void> 
+        <void method="put"> 
+         <string>popupImageString</string> 
+         <string></string> 
+        </void> 
+        <void method="put"> 
+         <string>breedte</string> 
+         <int>691</int> 
+        </void> 
+        <void method="put"> 
+         <string>popup</string> 
+         <boolean>false</boolean> 
+        </void> 
+        <void method="put"> 
+         <string>setNr</string> 
+         <int>3</int> 
+        </void> 
+        <void method="put"> 
+         <string>interactiePanelLaunchState</string> 
+         <object class="java.util.Hashtable"> 
+          <void method="put"> 
+           <string>interactiePanelLaunchData</string> 
+           <array class="java.util.Hashtable" length="4"> 
+            <void index="0"> 
+             <object class="java.util.Hashtable"> 
+              <void method="put"> 
+               <string>locationX</string> 
+               <int>0</int> 
+              </void> 
+              <void method="put"> 
+               <string>hoogte</string> 
+               <int>23</int> 
+              </void> 
+              <void method="put"> 
+               <string>volledigeBreedte</string> 
+               <boolean>true</boolean> 
+              </void> 
+              <void method="put"> 
+               <string>popupImageString</string> 
+               <string></string> 
+              </void> 
+              <void method="put"> 
+               <string>breedte</string> 
+               <int>228</int> 
+              </void> 
+              <void method="put"> 
+               <string>interactiePanelLaunchState</string> 
+               <object class="java.util.Hashtable"> 
+                <void method="put"> 
+                 <string>interactiePanelLaunchData</string> 
+                 <array class="java.util.Hashtable" length="0"/> 
+                </void> 
+                <void method="put"> 
+                 <string>randZichtbaar</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>randDikte</string> 
+                 <int>1</int> 
+                </void> 
+                <void method="put"> 
+                 <string>checkExpressieString</string> 
+                 <string>$f0@</string> 
+                </void> 
+                <void method="put"> 
+                 <string>ronding</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>randColor</string> 
+                 <object class="java.awt.Color"> 
+                  <int>128</int> 
+                  <int>128</int> 
+                  <int>128</int> 
+                  <int>255</int> 
+                 </object> 
+                </void> 
+                <void method="put"> 
+                 <string>fgColor</string> 
+                 <object class="java.awt.Color"> 
+                  <int>0</int> 
+                  <int>43</int> 
+                  <int>85</int> 
+                  <int>255</int> 
+                 </object> 
+                </void> 
+                <void method="put"> 
+                 <string>ipId</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>aftrekPopup</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>hoogtes</string> 
+                 <array class="double" length="1"> 
+                  <void index="0"> 
+                   <double>23.0</double> 
+                  </void> 
+                 </array> 
+                </void> 
+                <void method="put"> 
+                 <string>interlinie</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>centerV</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>anderFont</string> 
+                 <boolean>true</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>cellSpaceRow</string> 
+                 <int>2</int> 
+                </void> 
+                <void method="put"> 
+                 <string>font</string> 
+                 <object class="java.awt.Font"> 
+                  <string>SansSerif.bolditalic</string> 
+                  <int>3</int> 
+                  <int>18</int> 
+                 </object> 
+                </void> 
+                <void method="put"> 
+                 <string>pasAanH</string> 
+                 <boolean>true</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>zichtbaarNaNakijken</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>balansVergCom</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>tableBorders</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>sleepbaar</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>selectable</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>pasAanB</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>puntenAftrekPopup</string> 
+                 <int>5</int> 
+                </void> 
+                <void method="put"> 
+                 <string>scoreMax</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>hoek</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>teksten</string> 
+                 <array class="[Ljava.lang.String;" length="1"> 
+                  <void index="0"> 
+                   <array class="java.lang.String" length="1"> 
+                    <void index="0"> 
+                     <string>Opdracht 1
+</string> 
+                    </void> 
+                   </array> 
+                  </void> 
+                 </array> 
+                </void> 
+                <void method="put"> 
+                 <string>sleepdoel</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>cellMarge</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>bovenMarge</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>cellSpaceColumn</string> 
+                 <int>2</int> 
+                </void> 
+                <void method="put"> 
+                 <string>centerH</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>bgColorZichtbaar</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>sleepHandle</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>locationY</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>colorSelection</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>breedtes</string> 
+                 <array class="double" length="1"> 
+                  <void index="0"> 
+                   <double>228.0</double> 
+                  </void> 
+                 </array> 
+                </void> 
+                <void method="put"> 
+                 <string>locationX</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>bgColor</string> 
+                 <object class="java.awt.Color"> 
+                  <int>238</int> 
+                  <int>238</int> 
+                  <int>238</int> 
+                  <int>255</int> 
+                 </object> 
+                </void> 
+                <void method="put"> 
+                 <string>zwevend</string> 
+                 <boolean>false</boolean> 
+                </void> 
+               </object> 
+              </void> 
+              <void method="put"> 
+               <string>setNr</string> 
+               <int>3</int> 
+              </void> 
+              <void method="put"> 
+               <string>popup</string> 
+               <boolean>false</boolean> 
+              </void> 
+              <void method="put"> 
+               <string>soortInteractiePanel</string> 
+               <int>9</int> 
+              </void> 
+              <void method="put"> 
+               <string>locationY</string> 
+               <int>0</int> 
+              </void> 
+             </object> 
+            </void> 
+            <void index="1"> 
+             <object class="java.util.Hashtable"> 
+              <void method="put"> 
+               <string>locationX</string> 
+               <int>0</int> 
+              </void> 
+              <void method="put"> 
+               <string>hoogte</string> 
+               <int>60</int> 
+              </void> 
+              <void method="put"> 
+               <string>volledigeBreedte</string> 
+               <boolean>true</boolean> 
+              </void> 
+              <void method="put"> 
+               <string>popupImageString</string> 
+               <string></string> 
+              </void> 
+              <void method="put"> 
+               <string>breedte</string> 
+               <int>228</int> 
+              </void> 
+              <void method="put"> 
+               <string>interactiePanelLaunchState</string> 
+               <object class="java.util.Hashtable"> 
+                <void method="put"> 
+                 <string>interactiePanelLaunchData</string> 
+                 <array class="java.util.Hashtable" length="1"> 
+                  <void index="0"> 
+                   <object class="java.util.Hashtable"> 
+                    <void method="put"> 
+                     <string>locationX</string> 
+                     <int>120</int> 
+                    </void> 
+                    <void method="put"> 
+                     <string>volledigeBreedte</string> 
+                     <boolean>false</boolean> 
+                    </void> 
+                    <void method="put"> 
+                     <string>hoogte</string> 
+                     <int>19</int> 
+                    </void> 
+                    <void method="put"> 
+                     <string>popupImageString</string> 
+                     <string></string> 
+                    </void> 
+                    <void method="put"> 
+                     <string>breedte</string> 
+                     <int>50</int> 
+                    </void> 
+                    <void method="put"> 
+                     <string>popup</string> 
+                     <boolean>false</boolean> 
+                    </void> 
+                    <void method="put"> 
+                     <string>setNr</string> 
+                     <int>3</int> 
+                    </void> 
+                    <void method="put"> 
+                     <string>interactiePanelLaunchState</string> 
+                     <object class="java.util.Hashtable"> 
+                      <void method="put"> 
+                       <string>interactiePanelLaunchData</string> 
+                       <array class="java.util.Hashtable" length="0"/> 
+                      </void> 
+                      <void method="put"> 
+                       <string>randZichtbaar</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>randDikte</string> 
+                       <int>1</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>checkExpressieString</string> 
+                       <string>$f0@</string> 
+                      </void> 
+                      <void method="put"> 
+                       <string>ronding</string> 
+                       <int>0</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>randColor</string> 
+                       <object id="Color0" class="java.awt.Color"> 
+                        <int>128</int> 
+                        <int>128</int> 
+                        <int>128</int> 
+                        <int>255</int> 
+                       </object> 
+                      </void> 
+                      <void method="put"> 
+                       <string>fgColor</string> 
+                       <object class="java.awt.Color"> 
+                        <int>0</int> 
+                        <int>0</int> 
+                        <int>0</int> 
+                        <int>255</int> 
+                       </object> 
+                      </void> 
+                      <void method="put"> 
+                       <string>ipId</string> 
+                       <int>0</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>aftrekPopup</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>hoogtes</string> 
+                       <array class="double" length="1"> 
+                        <void index="0"> 
+                         <double>19.0</double> 
+                        </void> 
+                       </array> 
+                      </void> 
+                      <void method="put"> 
+                       <string>interlinie</string> 
+                       <int>0</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>centerV</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>anderFont</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>cellSpaceRow</string> 
+                       <int>2</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>font</string> 
+                       <object class="java.awt.Font"> 
+                        <string>SansSerif.plain</string> 
+                        <int>0</int> 
+                        <int>14</int> 
+                       </object> 
+                      </void> 
+                      <void method="put"> 
+                       <string>pasAanH</string> 
+                       <boolean>true</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>zichtbaarNaNakijken</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>balansVergCom</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>tableBorders</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>sleepbaar</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>selectable</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>pasAanB</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>puntenAftrekPopup</string> 
+                       <int>5</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>scoreMax</string> 
+                       <int>0</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>hoek</string> 
+                       <int>0</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>teksten</string> 
+                       <array class="[Ljava.lang.String;" length="1"> 
+                        <void index="0"> 
+                         <array class="java.lang.String" length="1"> 
+                          <void index="0"> 
+                           <string>geel
+</string> 
+                          </void> 
+                         </array> 
+                        </void> 
+                       </array> 
+                      </void> 
+                      <void method="put"> 
+                       <string>sleepdoel</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>cellMarge</string> 
+                       <int>0</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>bovenMarge</string> 
+                       <int>0</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>cellSpaceColumn</string> 
+                       <int>2</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>centerH</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>bgColorZichtbaar</string> 
+                       <boolean>true</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>sleepHandle</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>locationY</string> 
+                       <int>0</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>colorSelection</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>breedtes</string> 
+                       <array class="double" length="1"> 
+                        <void index="0"> 
+                         <double>50.0</double> 
+                        </void> 
+                       </array> 
+                      </void> 
+                      <void method="put"> 
+                       <string>locationX</string> 
+                       <int>120</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>bgColor</string> 
+                       <object class="java.awt.Color"> 
+                        <int>255</int> 
+                        <int>255</int> 
+                        <int>180</int> 
+                        <int>255</int> 
+                       </object> 
+                      </void> 
+                      <void method="put"> 
+                       <string>zwevend</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                     </object> 
+                    </void> 
+                    <void method="put"> 
+                     <string>soortInteractiePanel</string> 
+                     <int>9</int> 
+                    </void> 
+                    <void method="put"> 
+                     <string>locationY</string> 
+                     <int>0</int> 
+                    </void> 
+                   </object> 
+                  </void> 
+                 </array> 
+                </void> 
+                <void method="put"> 
+                 <string>randZichtbaar</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>randDikte</string> 
+                 <int>1</int> 
+                </void> 
+                <void method="put"> 
+                 <string>checkExpressieString</string> 
+                 <string>$f0@</string> 
+                </void> 
+                <void method="put"> 
+                 <string>ronding</string> 
+                 <int>16</int> 
+                </void> 
+                <void method="put"> 
+                 <string>randColor</string> 
+                 <object class="java.awt.Color"> 
+                  <int>128</int> 
+                  <int>128</int> 
+                  <int>128</int> 
+                  <int>255</int> 
+                 </object> 
+                </void> 
+                <void method="put"> 
+                 <string>fgColor</string> 
+                 <object class="java.awt.Color"> 
+                  <int>0</int> 
+                  <int>0</int> 
+                  <int>0</int> 
+                  <int>255</int> 
+                 </object> 
+                </void> 
+                <void method="put"> 
+                 <string>ipId</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>aftrekPopup</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>hoogtes</string> 
+                 <array class="double" length="1"> 
+                  <void index="0"> 
+                   <double>60.0</double> 
+                  </void> 
+                 </array> 
+                </void> 
+                <void method="put"> 
+                 <string>interlinie</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>centerV</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>anderFont</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>cellSpaceRow</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>font</string> 
+                 <object class="java.awt.Font"> 
+                  <string>SansSerif.plain</string> 
+                  <int>0</int> 
+                  <int>14</int> 
+                 </object> 
+                </void> 
+                <void method="put"> 
+                 <string>pasAanH</string> 
+                 <boolean>true</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>zichtbaarNaNakijken</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>balansVergCom</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>tableBorders</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>sleepbaar</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>selectable</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>pasAanB</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>puntenAftrekPopup</string> 
+                 <int>5</int> 
+                </void> 
+                <void method="put"> 
+                 <string>scoreMax</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>hoek</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>teksten</string> 
+                 <array class="[Ljava.lang.String;" length="1"> 
+                  <void index="0"> 
+                   <array class="java.lang.String" length="1"> 
+                    <void index="0"> 
+                     <string>tekst 1 en nog $f$wx@@meer tekst en nog meer tekst $V@
+</string> 
+                    </void> 
+                   </array> 
+                  </void> 
+                 </array> 
+                </void> 
+                <void method="put"> 
+                 <string>sleepdoel</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>cellMarge</string> 
+                 <int>10</int> 
+                </void> 
+                <void method="put"> 
+                 <string>bovenMarge</string> 
+                 <int>8</int> 
+                </void> 
+                <void method="put"> 
+                 <string>cellSpaceColumn</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>centerH</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>bgColorZichtbaar</string> 
+                 <boolean>true</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>sleepHandle</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>locationY</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>colorSelection</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>breedtes</string> 
+                 <array class="double" length="1"> 
+                  <void index="0"> 
+                   <double>228.0</double> 
+                  </void> 
+                 </array> 
+                </void> 
+                <void method="put"> 
+                 <string>locationX</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>bgColor</string> 
+                 <object class="java.awt.Color"> 
+                  <int>208</int> 
+                  <int>228</int> 
+                  <int>255</int> 
+                  <int>255</int> 
+                 </object> 
+                </void> 
+                <void method="put"> 
+                 <string>zwevend</string> 
+                 <boolean>false</boolean> 
+                </void> 
+               </object> 
+              </void> 
+              <void method="put"> 
+               <string>setNr</string> 
+               <int>3</int> 
+              </void> 
+              <void method="put"> 
+               <string>popup</string> 
+               <boolean>false</boolean> 
+              </void> 
+              <void method="put"> 
+               <string>soortInteractiePanel</string> 
+               <int>9</int> 
+              </void> 
+              <void method="put"> 
+               <string>locationY</string> 
+               <int>0</int> 
+              </void> 
+             </object> 
+            </void> 
+            <void index="2"> 
+             <object class="java.util.Hashtable"> 
+              <void method="put"> 
+               <string>locationX</string> 
+               <int>0</int> 
+              </void> 
+              <void method="put"> 
+               <string>hoogte</string> 
+               <int>173</int> 
+              </void> 
+              <void method="put"> 
+               <string>volledigeBreedte</string> 
+               <boolean>true</boolean> 
+              </void> 
+              <void method="put"> 
+               <string>popupImageString</string> 
+               <string></string> 
+              </void> 
+              <void method="put"> 
+               <string>breedte</string> 
+               <int>228</int> 
+              </void> 
+              <void method="put"> 
+               <string>interactiePanelLaunchState</string> 
+               <object class="java.util.Hashtable"> 
+                <void method="put"> 
+                 <string>interactiePanelLaunchData</string> 
+                 <array class="java.util.Hashtable" length="2"> 
+                  <void index="0"> 
+                   <object class="java.util.Hashtable"> 
+                    <void method="put"> 
+                     <string>locationX</string> 
+                     <int>38</int> 
+                    </void> 
+                    <void method="put"> 
+                     <string>hoogte</string> 
+                     <int>19</int> 
+                    </void> 
+                    <void method="put"> 
+                     <string>volledigeBreedte</string> 
+                     <boolean>false</boolean> 
+                    </void> 
+                    <void method="put"> 
+                     <string>popupImageString</string> 
+                     <string></string> 
+                    </void> 
+                    <void method="put"> 
+                     <string>breedte</string> 
+                     <int>37</int> 
+                    </void> 
+                    <void method="put"> 
+                     <string>interactiePanelLaunchState</string> 
+                     <object class="java.util.Hashtable"> 
+                      <void method="put"> 
+                       <string>interactiePanelLaunchData</string> 
+                       <array class="java.util.Hashtable" length="0"/> 
+                      </void> 
+                      <void method="put"> 
+                       <string>randZichtbaar</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>randDikte</string> 
+                       <int>1</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>checkExpressieString</string> 
+                       <string>$f0@</string> 
+                      </void> 
+                      <void method="put"> 
+                       <string>ronding</string> 
+                       <int>0</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>randColor</string> 
+                       <object class="java.awt.Color"> 
+                        <int>128</int> 
+                        <int>128</int> 
+                        <int>128</int> 
+                        <int>255</int> 
+                       </object> 
+                      </void> 
+                      <void method="put"> 
+                       <string>fgColor</string> 
+                       <object class="java.awt.Color"> 
+                        <int>0</int> 
+                        <int>0</int> 
+                        <int>0</int> 
+                        <int>255</int> 
+                       </object> 
+                      </void> 
+                      <void method="put"> 
+                       <string>ipId</string> 
+                       <int>0</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>aftrekPopup</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>hoogtes</string> 
+                       <array class="double" length="1"> 
+                        <void index="0"> 
+                         <double>19.0</double> 
+                        </void> 
+                       </array> 
+                      </void> 
+                      <void method="put"> 
+                       <string>interlinie</string> 
+                       <int>0</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>centerV</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>anderFont</string> 
+                       <boolean>true</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>cellSpaceRow</string> 
+                       <int>2</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>font</string> 
+                       <object class="java.awt.Font"> 
+                        <string>SansSerif.bolditalic</string> 
+                        <int>3</int> 
+                        <int>14</int> 
+                       </object> 
+                      </void> 
+                      <void method="put"> 
+                       <string>pasAanH</string> 
+                       <boolean>true</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>zichtbaarNaNakijken</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>balansVergCom</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>tableBorders</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>sleepbaar</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>selectable</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>pasAanB</string> 
+                       <boolean>true</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>puntenAftrekPopup</string> 
+                       <int>5</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>scoreMax</string> 
+                       <int>0</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>hoek</string> 
+                       <int>0</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>teksten</string> 
+                       <array class="[Ljava.lang.String;" length="1"> 
+                        <void index="0"> 
+                         <array class="java.lang.String" length="1"> 
+                          <void index="0"> 
+                           <string>tekst
+</string> 
+                          </void> 
+                         </array> 
+                        </void> 
+                       </array> 
+                      </void> 
+                      <void method="put"> 
+                       <string>sleepdoel</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>cellMarge</string> 
+                       <int>0</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>bovenMarge</string> 
+                       <int>0</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>cellSpaceColumn</string> 
+                       <int>2</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>centerH</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>bgColorZichtbaar</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>sleepHandle</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>locationY</string> 
+                       <int>14</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>colorSelection</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>breedtes</string> 
+                       <array class="double" length="1"> 
+                        <void index="0"> 
+                         <double>37.0</double> 
+                        </void> 
+                       </array> 
+                      </void> 
+                      <void method="put"> 
+                       <string>locationX</string> 
+                       <int>38</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>bgColor</string> 
+                       <object class="java.awt.Color"> 
+                        <int>208</int> 
+                        <int>228</int> 
+                        <int>255</int> 
+                        <int>255</int> 
+                       </object> 
+                      </void> 
+                      <void method="put"> 
+                       <string>zwevend</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                     </object> 
+                    </void> 
+                    <void method="put"> 
+                     <string>setNr</string> 
+                     <int>3</int> 
+                    </void> 
+                    <void method="put"> 
+                     <string>popup</string> 
+                     <boolean>false</boolean> 
+                    </void> 
+                    <void method="put"> 
+                     <string>soortInteractiePanel</string> 
+                     <int>9</int> 
+                    </void> 
+                    <void method="put"> 
+                     <string>locationY</string> 
+                     <int>14</int> 
+                    </void> 
+                   </object> 
+                  </void> 
+                  <void index="1"> 
+                   <object class="java.util.Hashtable"> 
+                    <void method="put"> 
+                     <string>soortInteractiePanel</string> 
+                     <int>2</int> 
+                    </void> 
+                    <void method="put"> 
+                     <string>volledigeBreedte</string> 
+                     <boolean>false</boolean> 
+                    </void> 
+                    <void method="put"> 
+                     <string>popupImageString</string> 
+                     <string></string> 
+                    </void> 
+                    <void method="put"> 
+                     <string>breedte</string> 
+                     <int>50</int> 
+                    </void> 
+                    <void method="put"> 
+                     <string>popup</string> 
+                     <boolean>false</boolean> 
+                    </void> 
+                    <void method="put"> 
+                     <string>hoogte</string> 
+                     <int>31</int> 
+                    </void> 
+                    <void method="put"> 
+                     <string>locationY</string> 
+                     <int>0</int> 
+                    </void> 
+                    <void method="put"> 
+                     <string>locationX</string> 
+                     <int>0</int> 
+                    </void> 
+                    <void method="put"> 
+                     <string>studentEditor</string> 
+                     <boolean>false</boolean> 
+                    </void> 
+                    <void method="put"> 
+                     <string>interactiePanelLaunchState</string> 
+                     <object class="java.util.Hashtable"> 
+                      <void method="put"> 
+                       <string>teltMee</string> 
+                       <boolean>true</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>answerModels</string> 
+                       <array class="java.util.Hashtable" length="1"> 
+                        <void index="0"> 
+                         <object class="java.util.Hashtable"> 
+                          <void method="put"> 
+                           <string>goedHalfFout</string> 
+                           <int>0</int> 
+                          </void> 
+                          <void method="put"> 
+                           <string>exact</string> 
+                           <boolean>true</boolean> 
+                          </void> 
+                          <void method="put"> 
+                           <string>soortHerleiding</string> 
+                           <int>0</int> 
+                          </void> 
+                          <void method="put"> 
+                           <string>herleiding</string> 
+                           <boolean>false</boolean> 
+                          </void> 
+                          <void method="put"> 
+                           <string>antwoordString</string> 
+                           <string>$f3x@</string> 
+                          </void> 
+                          <void method="put"> 
+                           <string>puntenFeedback</string> 
+                           <int>0</int> 
+                          </void> 
+                          <void method="put"> 
+                           <string>vormString</string> 
+                           <string>$f@</string> 
+                          </void> 
+                          <void method="put"> 
+                           <string>gelijkwaardig</string> 
+                           <boolean>true</boolean> 
+                          </void> 
+                          <void method="put"> 
+                           <string>feedback</string> 
+                           <string>
+</string> 
+                          </void> 
+                         </object> 
+                        </void> 
+                       </array> 
+                      </void> 
+                      <void method="put"> 
+                       <string>tips</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>rmKnop</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>exact</string> 
+                       <boolean>true</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>subKnopExtra</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>uitw</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>herleiding</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>hasFeedback</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>eqTestValueMin</string> 
+                       <double>0.0</double> 
+                      </void> 
+                      <void method="put"> 
+                       <string>antwoordString</string> 
+                       <string>$f3x@</string> 
+                      </void> 
+                      <void method="put"> 
+                       <string>vormString</string> 
+                       <string>$f@</string> 
+                      </void> 
+                      <void method="put"> 
+                       <string>eigenOpdr</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>boxMetRand</string> 
+                       <boolean>true</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>soortHerleiding</string> 
+                       <int>0</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>formuleToolBijFocus</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>scoreMax</string> 
+                       <int>10</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>logID</string> 
+                       <string>0</string> 
+                      </void> 
+                      <void method="put"> 
+                       <string>puntenHerleiding</string> 
+                       <int>0</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>stappen</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>check</string> 
+                       <boolean>true</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>puntenGelijkwaardig</string> 
+                       <int>0</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>puntenExact</string> 
+                       <int>10</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>eqTestValueMax</string> 
+                       <double>5.0</double> 
+                      </void> 
+                      <void method="put"> 
+                       <string>startString</string> 
+                       <string>$f@</string> 
+                      </void> 
+                      <void method="put"> 
+                       <string>aantalDecRm</string> 
+                       <int>10</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>subKnop</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>logOption</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                     </object> 
+                    </void> 
+                    <void method="put"> 
+                     <string>setNr</string> 
+                     <int>0</int> 
+                    </void> 
+                   </object> 
+                  </void> 
+                 </array> 
+                </void> 
+                <void method="put"> 
+                 <string>randZichtbaar</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>randDikte</string> 
+                 <int>1</int> 
+                </void> 
+                <void method="put"> 
+                 <string>checkExpressieString</string> 
+                 <string>$f0@</string> 
+                </void> 
+                <void method="put"> 
+                 <string>ronding</string> 
+                 <int>16</int> 
+                </void> 
+                <void method="put"> 
+                 <string>randColor</string> 
+                 <object class="java.awt.Color"> 
+                  <int>128</int> 
+                  <int>128</int> 
+                  <int>128</int> 
+                  <int>255</int> 
+                 </object> 
+                </void> 
+                <void method="put"> 
+                 <string>fgColor</string> 
+                 <object class="java.awt.Color"> 
+                  <int>0</int> 
+                  <int>0</int> 
+                  <int>0</int> 
+                  <int>255</int> 
+                 </object> 
+                </void> 
+                <void method="put"> 
+                 <string>ipId</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>aftrekPopup</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>hoogtes</string> 
+                 <array class="double" length="1"> 
+                  <void index="0"> 
+                   <double>173.0</double> 
+                  </void> 
+                 </array> 
+                </void> 
+                <void method="put"> 
+                 <string>interlinie</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>centerV</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>anderFont</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>cellSpaceRow</string> 
+                 <int>2</int> 
+                </void> 
+                <void method="put"> 
+                 <string>font</string> 
+                 <object class="java.awt.Font"> 
+                  <string>SansSerif.plain</string> 
+                  <int>0</int> 
+                  <int>14</int> 
+                 </object> 
+                </void> 
+                <void method="put"> 
+                 <string>pasAanH</string> 
+                 <boolean>true</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>zichtbaarNaNakijken</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>balansVergCom</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>tableBorders</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>sleepbaar</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>selectable</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>pasAanB</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>puntenAftrekPopup</string> 
+                 <int>5</int> 
+                </void> 
+                <void method="put"> 
+                 <string>scoreMax</string> 
+                 <int>10</int> 
+                </void> 
+                <void method="put"> 
+                 <string>hoek</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>teksten</string> 
+                 <array class="[Ljava.lang.String;" length="1"> 
+                  <void index="0"> 
+                   <array class="java.lang.String" length="1"> 
+                    <void index="0"> 
+                     <string>tekst 1 en nog
+meer $V@ en  $ff(x)=$b1$nx+y$m2@@@@nog meer tekst en nog meergfdgfd $V@ f tekst en nog meer tekst en nog meer tekst en nog meer tekst 
+</string> 
+                    </void> 
+                   </array> 
+                  </void> 
+                 </array> 
+                </void> 
+                <void method="put"> 
+                 <string>sleepdoel</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>cellMarge</string> 
+                 <int>10</int> 
+                </void> 
+                <void method="put"> 
+                 <string>bovenMarge</string> 
+                 <int>8</int> 
+                </void> 
+                <void method="put"> 
+                 <string>cellSpaceColumn</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>centerH</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>bgColorZichtbaar</string> 
+                 <boolean>true</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>sleepHandle</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>locationY</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>colorSelection</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>breedtes</string> 
+                 <array class="double" length="1"> 
+                  <void index="0"> 
+                   <double>228.0</double> 
+                  </void> 
+                 </array> 
+                </void> 
+                <void method="put"> 
+                 <string>locationX</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>bgColor</string> 
+                 <object class="java.awt.Color"> 
+                  <int>208</int> 
+                  <int>228</int> 
+                  <int>255</int> 
+                  <int>255</int> 
+                 </object> 
+                </void> 
+                <void method="put"> 
+                 <string>zwevend</string> 
+                 <boolean>false</boolean> 
+                </void> 
+               </object> 
+              </void> 
+              <void method="put"> 
+               <string>setNr</string> 
+               <int>3</int> 
+              </void> 
+              <void method="put"> 
+               <string>popup</string> 
+               <boolean>false</boolean> 
+              </void> 
+              <void method="put"> 
+               <string>soortInteractiePanel</string> 
+               <int>9</int> 
+              </void> 
+              <void method="put"> 
+               <string>locationY</string> 
+               <int>0</int> 
+              </void> 
+             </object> 
+            </void> 
+            <void index="3"> 
+             <object class="java.util.Hashtable"> 
+              <void method="put"> 
+               <string>locationX</string> 
+               <int>0</int> 
+              </void> 
+              <void method="put"> 
+               <string>hoogte</string> 
+               <int>366</int> 
+              </void> 
+              <void method="put"> 
+               <string>volledigeBreedte</string> 
+               <boolean>true</boolean> 
+              </void> 
+              <void method="put"> 
+               <string>popupImageString</string> 
+               <string></string> 
+              </void> 
+              <void method="put"> 
+               <string>breedte</string> 
+               <int>438</int> 
+              </void> 
+              <void method="put"> 
+               <string>interactiePanelLaunchState</string> 
+               <object class="java.util.Hashtable"> 
+                <void method="put"> 
+                 <string>interactiePanelLaunchData</string> 
+                 <array class="java.util.Hashtable" length="1"> 
+                  <void index="0"> 
+                   <object class="java.util.Hashtable"> 
+                    <void method="put"> 
+                     <string>soortInteractiePanel</string> 
+                     <int>0</int> 
+                    </void> 
+                    <void method="put"> 
+                     <string>volledigeBreedte</string> 
+                     <boolean>false</boolean> 
+                    </void> 
+                    <void method="put"> 
+                     <string>popupImageString</string> 
+                     <string></string> 
+                    </void> 
+                    <void method="put"> 
+                     <string>breedte</string> 
+                     <int>421</int> 
+                    </void> 
+                    <void method="put"> 
+                     <string>popup</string> 
+                     <boolean>false</boolean> 
+                    </void> 
+                    <void method="put"> 
+                     <string>hoogte</string> 
+                     <int>350</int> 
+                    </void> 
+                    <void method="put"> 
+                     <string>locationY</string> 
+                     <int>0</int> 
+                    </void> 
+                    <void method="put"> 
+                     <string>locationX</string> 
+                     <int>0</int> 
+                    </void> 
+                    <void method="put"> 
+                     <string>studentEditor</string> 
+                     <boolean>false</boolean> 
+                    </void> 
+                    <void method="put"> 
+                     <string>interactiePanelLaunchState</string> 
+                     <object class="java.util.Hashtable"> 
+                      <void method="put"> 
+                       <string>teltMee</string> 
+                       <boolean>true</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>answerModels</string> 
+                       <array class="java.util.Hashtable" length="1"> 
+                        <void index="0"> 
+                         <object class="java.util.Hashtable"> 
+                          <void method="put"> 
+                           <string>goedHalfFout</string> 
+                           <int>0</int> 
+                          </void> 
+                          <void method="put"> 
+                           <string>exact</string> 
+                           <boolean>true</boolean> 
+                          </void> 
+                          <void method="put"> 
+                           <string>soortHerleiding</string> 
+                           <int>0</int> 
+                          </void> 
+                          <void method="put"> 
+                           <string>herleiding</string> 
+                           <boolean>false</boolean> 
+                          </void> 
+                          <void method="put"> 
+                           <string>antwoordString</string> 
+                           <string>$f3x@</string> 
+                          </void> 
+                          <void method="put"> 
+                           <string>puntenFeedback</string> 
+                           <int>0</int> 
+                          </void> 
+                          <void method="put"> 
+                           <string>vormString</string> 
+                           <string>$f@</string> 
+                          </void> 
+                          <void method="put"> 
+                           <string>gelijkwaardig</string> 
+                           <boolean>true</boolean> 
+                          </void> 
+                          <void method="put"> 
+                           <string>feedback</string> 
+                           <string>
+</string> 
+                          </void> 
+                         </object> 
+                        </void> 
+                       </array> 
+                      </void> 
+                      <void method="put"> 
+                       <string>tips</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>rmKnop</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>exact</string> 
+                       <boolean>true</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>subKnopExtra</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>uitw</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>herleiding</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>hasFeedback</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>eqTestValueMin</string> 
+                       <double>0.0</double> 
+                      </void> 
+                      <void method="put"> 
+                       <string>antwoordString</string> 
+                       <string>$f3x@</string> 
+                      </void> 
+                      <void method="put"> 
+                       <string>vormString</string> 
+                       <string>$f@</string> 
+                      </void> 
+                      <void method="put"> 
+                       <string>eigenOpdr</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>boxMetRand</string> 
+                       <boolean>true</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>soortHerleiding</string> 
+                       <int>0</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>formuleToolBijFocus</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>scoreMax</string> 
+                       <int>10</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>logID</string> 
+                       <string>0</string> 
+                      </void> 
+                      <void method="put"> 
+                       <string>puntenHerleiding</string> 
+                       <int>0</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>stappen</string> 
+                       <boolean>true</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>check</string> 
+                       <boolean>true</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>puntenGelijkwaardig</string> 
+                       <int>0</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>puntenExact</string> 
+                       <int>10</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>eqTestValueMax</string> 
+                       <double>5.0</double> 
+                      </void> 
+                      <void method="put"> 
+                       <string>startString</string> 
+                       <string>$fx+x+x@</string> 
+                      </void> 
+                      <void method="put"> 
+                       <string>aantalDecRm</string> 
+                       <int>10</int> 
+                      </void> 
+                      <void method="put"> 
+                       <string>subKnop</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                      <void method="put"> 
+                       <string>logOption</string> 
+                       <boolean>false</boolean> 
+                      </void> 
+                     </object> 
+                    </void> 
+                    <void method="put"> 
+                     <string>setNr</string> 
+                     <int>0</int> 
+                    </void> 
+                   </object> 
+                  </void> 
+                 </array> 
+                </void> 
+                <void method="put"> 
+                 <string>randZichtbaar</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>randDikte</string> 
+                 <int>1</int> 
+                </void> 
+                <void method="put"> 
+                 <string>checkExpressieString</string> 
+                 <string>$f0@</string> 
+                </void> 
+                <void method="put"> 
+                 <string>ronding</string> 
+                 <int>16</int> 
+                </void> 
+                <void method="put"> 
+                 <string>randColor</string> 
+                 <object idref="Color0"/> 
+                </void> 
+                <void method="put"> 
+                 <string>fgColor</string> 
+                 <object class="java.awt.Color"> 
+                  <int>0</int> 
+                  <int>0</int> 
+                  <int>0</int> 
+                  <int>255</int> 
+                 </object> 
+                </void> 
+                <void method="put"> 
+                 <string>ipId</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>aftrekPopup</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>hoogtes</string> 
+                 <array class="double" length="1"> 
+                  <void index="0"> 
+                   <double>366.0</double> 
+                  </void> 
+                 </array> 
+                </void> 
+                <void method="put"> 
+                 <string>interlinie</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>centerV</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>anderFont</string> 
+                 <boolean>true</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>cellSpaceRow</string> 
+                 <int>2</int> 
+                </void> 
+                <void method="put"> 
+                 <string>font</string> 
+                 <object class="java.awt.Font"> 
+                  <string>SansSerif.bold</string> 
+                  <int>1</int> 
+                  <int>14</int> 
+                 </object> 
+                </void> 
+                <void method="put"> 
+                 <string>pasAanH</string> 
+                 <boolean>true</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>zichtbaarNaNakijken</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>balansVergCom</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>tableBorders</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>sleepbaar</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>selectable</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>pasAanB</string> 
+                 <boolean>true</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>puntenAftrekPopup</string> 
+                 <int>5</int> 
+                </void> 
+                <void method="put"> 
+                 <string>scoreMax</string> 
+                 <int>10</int> 
+                </void> 
+                <void method="put"> 
+                 <string>hoek</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>teksten</string> 
+                 <array class="[Ljava.lang.String;" length="1"> 
+                  <void index="0"> 
+                   <array class="java.lang.String" length="1"> 
+                    <void index="0"> 
+                     <string>$V@
+</string> 
+                    </void> 
+                   </array> 
+                  </void> 
+                 </array> 
+                </void> 
+                <void method="put"> 
+                 <string>sleepdoel</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>cellMarge</string> 
+                 <int>8</int> 
+                </void> 
+                <void method="put"> 
+                 <string>bovenMarge</string> 
+                 <int>8</int> 
+                </void> 
+                <void method="put"> 
+                 <string>cellSpaceColumn</string> 
+                 <int>2</int> 
+                </void> 
+                <void method="put"> 
+                 <string>centerH</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>bgColorZichtbaar</string> 
+                 <boolean>true</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>sleepHandle</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>locationY</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>colorSelection</string> 
+                 <boolean>false</boolean> 
+                </void> 
+                <void method="put"> 
+                 <string>breedtes</string> 
+                 <array class="double" length="1"> 
+                  <void index="0"> 
+                   <double>438.0</double> 
+                  </void> 
+                 </array> 
+                </void> 
+                <void method="put"> 
+                 <string>locationX</string> 
+                 <int>0</int> 
+                </void> 
+                <void method="put"> 
+                 <string>bgColor</string> 
+                 <object class="java.awt.Color"> 
+                  <int>208</int> 
+                  <int>228</int> 
+                  <int>255</int> 
+                  <int>255</int> 
+                 </object> 
+                </void> 
+                <void method="put"> 
+                 <string>zwevend</string> 
+                 <boolean>false</boolean> 
+                </void> 
+               </object> 
+              </void> 
+              <void method="put"> 
+               <string>setNr</string> 
+               <int>3</int> 
+              </void> 
+              <void method="put"> 
+               <string>popup</string> 
+               <boolean>false</boolean> 
+              </void> 
+              <void method="put"> 
+               <string>soortInteractiePanel</string> 
+               <int>9</int> 
+              </void> 
+              <void method="put"> 
+               <string>locationY</string> 
+               <int>0</int> 
+              </void> 
+             </object> 
+            </void> 
+           </array> 
+          </void> 
+          <void method="put"> 
+           <string>randZichtbaar</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>randDikte</string> 
+           <int>1</int> 
+          </void> 
+          <void method="put"> 
+           <string>checkExpressieString</string> 
+           <string>$f0@</string> 
+          </void> 
+          <void method="put"> 
+           <string>ronding</string> 
+           <int>0</int> 
+          </void> 
+          <void method="put"> 
+           <string>randColor</string> 
+           <object class="java.awt.Color"> 
+            <int>128</int> 
+            <int>128</int> 
+            <int>128</int> 
+            <int>255</int> 
+           </object> 
+          </void> 
+          <void method="put"> 
+           <string>fgColor</string> 
+           <object class="java.awt.Color"> 
+            <int>0</int> 
+            <int>0</int> 
+            <int>0</int> 
+            <int>255</int> 
+           </object> 
+          </void> 
+          <void method="put"> 
+           <string>ipId</string> 
+           <int>0</int> 
+          </void> 
+          <void method="put"> 
+           <string>aftrekPopup</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>hoogtes</string> 
+           <array class="double" length="1"> 
+            <void index="0"> 
+             <double>389.0</double> 
+            </void> 
+           </array> 
+          </void> 
+          <void method="put"> 
+           <string>interlinie</string> 
+           <int>0</int> 
+          </void> 
+          <void method="put"> 
+           <string>centerV</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>anderFont</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>cellSpaceRow</string> 
+           <int>2</int> 
+          </void> 
+          <void method="put"> 
+           <string>font</string> 
+           <object class="java.awt.Font"> 
+            <string>SansSerif.plain</string> 
+            <int>0</int> 
+            <int>14</int> 
+           </object> 
+          </void> 
+          <void method="put"> 
+           <string>pasAanH</string> 
+           <boolean>true</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>zichtbaarNaNakijken</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>balansVergCom</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>tableBorders</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>sleepbaar</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>selectable</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>pasAanB</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>puntenAftrekPopup</string> 
+           <int>5</int> 
+          </void> 
+          <void method="put"> 
+           <string>scoreMax</string> 
+           <int>20</int> 
+          </void> 
+          <void method="put"> 
+           <string>hoek</string> 
+           <int>0</int> 
+          </void> 
+          <void method="put"> 
+           <string>teksten</string> 
+           <array class="[Ljava.lang.String;" length="1"> 
+            <void index="0"> 
+             <array class="java.lang.String" length="2"> 
+              <void index="0"> 
+               <string>$V@
+
+$V@
+
+uioujhjkh $ff(x)=$b1$n$b1$n2@@x+y$m2@@@@
+
+$V@
+</string> 
+              </void> 
+              <void index="1"> 
+               <string>$V@
+
+</string> 
+              </void> 
+             </array> 
+            </void> 
+           </array> 
+          </void> 
+          <void method="put"> 
+           <string>sleepdoel</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>cellMarge</string> 
+           <int>0</int> 
+          </void> 
+          <void method="put"> 
+           <string>bovenMarge</string> 
+           <int>0</int> 
+          </void> 
+          <void method="put"> 
+           <string>cellSpaceColumn</string> 
+           <int>20</int> 
+          </void> 
+          <void method="put"> 
+           <string>centerH</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>bgColorZichtbaar</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>sleepHandle</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>locationY</string> 
+           <int>0</int> 
+          </void> 
+          <void method="put"> 
+           <string>colorSelection</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>breedtes</string> 
+           <array class="double" length="2"> 
+            <void index="0"> 
+             <double>227.6822325429614</double> 
+            </void> 
+            <void index="1"> 
+             <double>443.3177674570386</double> 
+            </void> 
+           </array> 
+          </void> 
+          <void method="put"> 
+           <string>locationX</string> 
+           <int>0</int> 
+          </void> 
+          <void method="put"> 
+           <string>bgColor</string> 
+           <object class="java.awt.Color"> 
+            <int>238</int> 
+            <int>238</int> 
+            <int>238</int> 
+            <int>255</int> 
+           </object> 
+          </void> 
+          <void method="put"> 
+           <string>zwevend</string> 
+           <boolean>false</boolean> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="put"> 
+         <string>soortInteractiePanel</string> 
+         <int>9</int> 
+        </void> 
+        <void method="put"> 
+         <string>locationY</string> 
+         <int>0</int> 
+        </void> 
+       </object> 
+      </void> 
+     </array> 
+    </void> 
+    <void method="put"> 
+     <string>scheidingX</string> 
+     <int>780</int> 
+    </void> 
+    <void method="put"> 
+     <string>hasSecondTekst</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>hasAntwoordVak</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>Titel
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>scoreMax</string> 
+     <int>20</int> 
+    </void> 
+    <void method="put"> 
+     <string>eindX</string> 
+     <int>770</int> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>$V@
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>tekst2</string> 
+     <string>
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>grafiekTool</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>hasTitle</string> 
+     <boolean>false</boolean> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>activiteit_1</string> 
+   <string>Onderdeel 1</string> 
+  </void> 
+  <void method="put"> 
+   <string>aantalActiviteiten</string> 
+   <string>1</string> 
+  </void> 
+  <void method="put"> 
+   <string>$IMAGE$MAP$</string> 
+   <object class="java.util.Hashtable"/> 
+  </void> 
+  <void method="put"> 
+   <string>language</string> 
+   <string>nl</string> 
+  </void> 
+  <void method="put"> 
+   <string>aantalOpdrachten_1</string> 
+   <string>1</string> 
+  </void> 
+  <void method="put"> 
+   <string>mode</string> 
+   <string>0</string> 
+  </void> 
+  <void method="put"> 
+   <string>opnieuwMogelijk</string> 
+   <string>false</string> 
+  </void> 
+  <void method="put"> 
+   <string>gekoppeldeOpdrachten</string> 
+   <string>false</string> 
+  </void> 
+  <void method="put"> 
+   <string>instellingen</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>globalParam</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>checkPerOpdracht</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>vorigeKnopZichtbaar</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>maalTeken</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>tweeHoofdletterVar</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>hoekGraden</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>formTimes</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>condPerc</string> 
+     <int>100</int> 
+    </void> 
+    <void method="put"> 
+     <string>opnieuw</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>woordFormule</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>zelftoetsGeenCorr</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>volgendeKnopZichtbaar</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>significantie</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>margeBoven</string> 
+     <int>15</int> 
+    </void> 
+    <void method="put"> 
+     <string>fToets</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>margeRechts</string> 
+     <int>15</int> 
+    </void> 
+    <void method="put"> 
+     <string>bolletjesZichtbaar</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>abcDeelOpdr</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>itemOpnieuw</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>fontName</string> 
+     <string>SansSerif</string> 
+    </void> 
+    <void method="put"> 
+     <string>timeLimit</string> 
+     <int>60</int> 
+    </void> 
+    <void method="put"> 
+     <string>pagina</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>timer</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>margeLinks</string> 
+     <int>18</int> 
+    </void> 
+    <void method="put"> 
+     <string>fontSize</string> 
+     <int>14</int> 
+    </void> 
+    <void method="put"> 
+     <string>condNav</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>margeOnder</string> 
+     <int>15</int> 
+    </void> 
+    <void method="put"> 
+     <string>navigatieSize</string> 
+     <int>12</int> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>bgcolor</string> 
+   <string>#FFFFFF</string> 
+  </void> 
+ </object> 
+</java> 

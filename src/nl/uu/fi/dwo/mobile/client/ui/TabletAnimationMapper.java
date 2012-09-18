@@ -1,0 +1,34 @@
+package nl.uu.fi.dwo.mobile.client.ui;
+
+import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.ProfilePlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
+
+import com.google.gwt.place.shared.Place;
+import com.googlecode.mgwt.mvp.client.Animation;
+import com.googlecode.mgwt.mvp.client.AnimationMapper;
+
+/**
+ * Defines animations between places
+ * 
+ * @author Danny Hendrix
+ * 
+ */
+public class TabletAnimationMapper implements AnimationMapper
+{
+	@Override
+	public Animation getAnimation(Place oldPlace, Place newPlace)
+	{
+		if (oldPlace instanceof ViewModulePlace && newPlace instanceof SelectModulePlace)
+			return Animation.SLIDE_REVERSE;
+		if (oldPlace instanceof SelectModulePlace && newPlace instanceof ProfilePlace)
+			return Animation.SLIDE_REVERSE;
+		if (oldPlace instanceof SelectModulePlace && newPlace instanceof LoginPlace)
+			return Animation.SLIDE_REVERSE;
+		if (oldPlace instanceof ProfilePlace && newPlace instanceof LoginPlace)
+			return Animation.SLIDE_REVERSE;
+		return Animation.SLIDE;
+	}
+
+}

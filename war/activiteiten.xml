@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<activiteiten>
+    <activiteit>
+        <name>nieuw</name>
+        <file>testNew.xml</file>
+    </activiteit>
+    
+    <activiteit>
+        <name>Optellen</name>
+        <file>test.xml</file>
+    </activiteit>
+    
+    <activiteit>
+        <name>Vergelijking oplossen</name>
+        <file>test2.xml</file>
+    </activiteit>
+    
+    <activiteit>
+        <name>tekstvakplus</name>
+        <file>test9.xml</file>
+    </activiteit>
+    
+    <activiteit>
+        <name>Delen</name>
+        <file>test4.xml</file>
+    </activiteit>
+    
+    <activiteit>
+        <name>Formulevak met stappen</name>
+        <file>test7.xml</file>
+    </activiteit>
+    
+    <activiteit>
+        <name>TekstVakPanel</name>
+        <file>test8.xml</file>
+    </activiteit>
+    
+    <activiteit>
+        <name>Differentieren</name>
+        <file>diff.xml</file>
+    </activiteit>
+    
+    
+    <activiteit>
+        <name>Differentieren Live</name>
+        <file>http://delta.fi.uu.nl/DWOmAccess/getLaunchData?s=1781</file>
+    </activiteit>
+
+    
+</activiteiten>

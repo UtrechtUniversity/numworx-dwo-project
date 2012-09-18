@@ -1,0 +1,130 @@
+package nl.uu.fi.dwo.mobile.client.ui.formuleobjects.vakken;
+
+import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleElement;
+import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleElementWithChildren;
+import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleFontChanges;
+
+/**
+ * 
+ * @author Danny Hendrix
+ * 
+ */
+public class Breukvak extends FormuleElementWithChildren
+{
+	public Breukvak(FormuleElement holder)
+	{
+		super(holder);
+
+		FormuleFontChanges changes = new FormuleFontChanges();
+		changes.setSmallText(FormuleFontChanges.FALSE);
+		this.setFontChanges(changes);
+
+		this.createChildren(2);
+
+		//new formuleRegel
+
+		setSize(3 * fm.getAscent() / 4, 5 * fm.getAscent() / 2 + 2 * fm.getDescent());
+
+		getChild(0).setPosition(fm.getAscent() / 3, 0);
+		getChild(1).setPosition(fm.getAscent() / 3, 6 * fm.getAscent() / 4 + fm.getDescent());
+
+		this.setAsHoogte(getChild(0).height - fm.getAscent() / 8);
+		this.setChanged(true);
+	}
+
+	@Override
+	public void paintObject()
+	{
+		if (getChild(0).isNumber() && getChild(1).isNumber())
+		{
+			getChild(0).setSmallText(true);
+			getChild(1).setSmallText(true);
+		}
+		else
+		{
+			getChild(0).setSmallText(false);
+			getChild(1).setSmallText(false);
+		}
+		this.getChild(1).paint();
+		this.getChild(0).paint();
+
+		width = 2*fm.getAscent()/3 + ((getChild(1).width > getChild(0).width) ? getChild(1).width : getChild(0).width);
+		height = getChild(1).height + getChild(0).height + 2 * fm.getDescent();
+		getChild(0).y = 0;
+		getChild(1).y = getChild(0).height + 2 * fm.getDescent();
+
+		if (getChild(0).width > getChild(1).width)
+		{
+			getChild(1).x = getChild(0).width / 2 - getChild(1).width / 2 + fm.getAscent() / 3;
+			getChild(0).x = fm.getAscent() / 3;
+		}
+		else
+		{
+			getChild(0).x = getChild(1).width / 2 - getChild(0).width / 2 + fm.getAscent() / 3;
+			getChild(1).x = fm.getAscent() / 3;
+		}
+
+		this.setAsHoogte(getChild(0).height + fm.getAscent() / 8);
+		//this.setAsHoogte(this.height / 2);
+
+		this.setSize(width, height);
+
+		if (this.isSelected())
+		{
+			ctx.setFillStyle(DWOplayer.getResource("SelectionColor"));
+			ctx.fillRect(0, 0, this.width, this.height);
+		}
+
+		ctx.setStrokeStyle("#000");
+		ctx.setFillStyle("#000");
+		//}
+
+		ctx.setLineWidth(fm.getStrokeWidth());
+
+		this.drawline(ctx, fm.getAscent() / 3, getChild(0).height + fm.getAscent() / 8, this.width - (fm.getAscent() / 3), getChild(0).height + fm.getAscent() / 8);
+
+		this.getChild(1).draw(ctx);
+		this.getChild(0).draw(ctx);
+
+		this.drawCursor();
+	}
+
+	@Override
+	@Deprecated
+	public FormuleElement setCurrentElementAt(int x, int y)
+	{
+		//ignore if the formule is not editable
+		if (holder instanceof FormuleEditor == false)
+			return null;
+		FormuleEditor holder = (FormuleEditor) this.holder;
+		//check if one of the children is pressed
+		if (x > fm.getAscent() / 2 && x < this.width - fm.getAscent() / 2)
+			if (y > getChild(1).height + 2 * fm.getDescent())
+				return getChild(0).setCurrentElementAt(x - getChild(0).x, y - getChild(0).y);
+			else
+				return getChild(1).setCurrentElementAt(x - getChild(1).x, y - getChild(1).y);
+		holder.setCurrentElement(this);
+		return this;
+	}
+
+	@Override
+	public FormuleElement getCurrentOnNew()
+	{
+		//the current element with a new instance is the first child
+		return this.getChild(0);
+	}
+
+	@Override
+	public FormuleElement getCurrentOnNewOnSelection()
+	{
+		return getChild(1);
+	}
+
+	@Override
+	public String toString()
+	{
+		return "$b" + getChild(0).toString() + "$n" + getChild(1).toString() + "@@";
+	}
+}
