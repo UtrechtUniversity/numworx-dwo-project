@@ -4,6 +4,7 @@ import java.beans.XMLEncoder;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -73,6 +74,9 @@ public class PartialScoreTest extends TestCase {
 		String result = getter.getLaunchData(sco);
 		assertNotNull(result);
 		System.out.println(result);
+		FileWriter fw = new FileWriter("iconan.xml");
+		fw.write(result);
+		fw.close();
 		InputStream reader = new ByteArrayInputStream(result.getBytes());
 		XMLDecoder decoder = new XMLDecoder(reader);
 		Hashtable r = (Hashtable) decoder.readObject();
