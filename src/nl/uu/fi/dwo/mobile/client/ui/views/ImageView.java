@@ -1,0 +1,51 @@
+package nl.uu.fi.dwo.mobile.client.ui.views;
+
+import java.util.Map;
+
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Widget;
+
+public class ImageView
+{
+
+	private String naam;
+	private static Map<String, Object> map;
+
+	public ImageView(String naam)
+	{
+		this.naam = naam;
+	}
+
+	public Widget getImage()
+	{
+		// TODO "data:image/png;base64,XXXXXXXxXXXX==" (dataurl) imgae/png of image/gif is noodzakelijk, uitbreiding in iconan nodig.
+
+		String data = (String) map.get(naam);
+		if (data.isEmpty())
+		{
+			String url = (String) map.get(naam + "/u");
+			if (url.startsWith("/"))
+				url = "http://www.fisme.science.uu.nl" + url; // IS DIT ALTIJD GOED?
+			return new Image(url);
+		}
+		else
+		{
+			String url = (String) map.get(naam + "/f"); // is het png,gif,jpg
+			url = url.substring(url.length() - 3, url.length());
+			data = "data:image/" + url + ";base64," + data;
+			Image im = new Image(data);
+			return im;
+		}
+	}
+
+	public Map<String, Object> getMap()
+	{
+		return map;
+	}
+
+	public static void setMap(Map<String, Object> map)
+	{
+		ImageView.map = map;
+	}
+
+}

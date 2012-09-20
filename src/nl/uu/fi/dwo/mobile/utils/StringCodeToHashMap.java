@@ -2,13 +2,11 @@ package nl.uu.fi.dwo.mobile.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-//import java.awt.Font;
 
 import com.google.gwt.xml.client.Document;
-import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.Element;
+import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
-import com.google.gwt.canvas.dom.client.CssColor;
 
 /**
  * 
@@ -43,84 +41,108 @@ public class StringCodeToHashMap
 				Node secondChild = voidChildren.get(1);
 				String secondName = secondChild.getNodeName();
 				//sets a string as value
+				String keyName = firstChild.getFirstChild().getNodeValue();
 				if (secondName.equalsIgnoreCase("string"))
 				{
 					if (secondChild.getFirstChild() != null)
-						result.put(firstChild.getFirstChild().getNodeValue(), secondChild.getFirstChild().getNodeValue());
+						result.put(keyName, secondChild.getFirstChild().getNodeValue());
 
 					else
-						result.put(firstChild.getFirstChild().getNodeValue(), "");
+						result.put(keyName, "");
 				}
-				
+
 				//creates another hashmap and sets it as a value
 				else if (secondName.equalsIgnoreCase("object"))
-				{	
+				{
 					//waarom werkt dit niet:
 					//if (secondChild.getAttributes().getNamedItem("class")!=null && (secondChild.getAttributes().getNamedItem("class").toString()).equals("java.awt.Color"))
 					//	if (secondChild.getAttributes().getNamedItem("class")!=null && secondChild.toString().indexOf('\n')>-1 && "<object class=\"java.awt.Color\">".equals(secondChild.toString().substring(0,secondChild.toString().indexOf('\n')).trim()))
-					if("java.awt.Color".equals(((Element)secondChild).getAttribute("class")))
-					{	ArrayList<Node> childs = getElementList(secondChild.getChildNodes());
+					final Element secondElement = (Element) secondChild;
+					final String className = secondElement.getAttribute("class");
+					if ("java.awt.Color".equals(className))
+					{
+						ArrayList<Node> childs = getElementList(secondChild.getChildNodes());
 						int red = Integer.parseInt(childs.get(0).getFirstChild().getNodeValue());
 						int green = Integer.parseInt(childs.get(1).getFirstChild().getNodeValue());
 						int blue = Integer.parseInt(childs.get(2).getFirstChild().getNodeValue());
 						//CssColor color = CssColor.make(red, green, blue);
 						//result.put(firstChild.getFirstChild().getNodeValue(), color);
-						result.put(firstChild.getFirstChild().getNodeValue()+"_red", red);
-						result.put(firstChild.getFirstChild().getNodeValue()+"_green", green);
-						result.put(firstChild.getFirstChild().getNodeValue()+"_blue", blue);
+						result.put(keyName + "_red", red);
+						result.put(keyName + "_green", green);
+						result.put(keyName + "_blue", blue);
 					}
 					//waarom werkt dit niet:
 					//else if (secondChild.getAttributes().getNamedItem("class")!=null && (secondChild.getAttributes().getNamedItem("class").toString()).equals("java.awt.Font"))
 					//	else if (secondChild.getAttributes().getNamedItem("class")!=null && secondChild.toString().indexOf('\n')>-1 && "<object class=\"java.awt.Font\">".equals(secondChild.toString().substring(0,secondChild.toString().indexOf('\n')).trim()))
-					else if("java.awt.Font".equals(((Element)secondChild).getAttribute("class")))
-					{	ArrayList<Node> childs = getElementList(secondChild.getChildNodes());
+					else if ("java.awt.Font".equals(className))
+					{
+						ArrayList<Node> childs = getElementList(secondChild.getChildNodes());
 						String fontName = childs.get(0).getFirstChild().getNodeValue();
 						int fontStyle = Integer.parseInt(childs.get(1).getFirstChild().getNodeValue());
 						int fontSize = Integer.parseInt(childs.get(2).getFirstChild().getNodeValue());
 						//Font font = new Font("SansSerif", fontStyle, fontSize);
-						result.put(firstChild.getFirstChild().getNodeValue()+"_size", fontSize);
-						result.put(firstChild.getFirstChild().getNodeValue()+"_style", fontStyle);
+						result.put(keyName + "_size", fontSize);
+						result.put(keyName + "_style", fontStyle);
 					}
-					else result.put(firstChild.getFirstChild().getNodeValue(), convertNodeToHashMap(secondChild));
+					else if ("fi.servlet.dwomaccess.ByteArray".equals(className))
+					{
+						ArrayList<Node> childs = getElementList(secondChild.getChildNodes());
+						Node node2 = childs.get(0);
+						if (!node2.hasChildNodes())
+							result.put(keyName, "");
+						else
+						{
+							final String nodeValue = node2.getFirstChild().getNodeValue();
+							result.put(keyName, nodeValue);
+						}
+					}
+					else if ("java.net.URI".equals(className))
+					{
+						ArrayList<Node> childs = getElementList(secondChild.getChildNodes());
+						final String nodeValue = childs.get(0).getFirstChild().getNodeValue();
+						result.put(keyName, new String(nodeValue)); // TODO een of ander marker...
+					}
+					else
+						result.put(keyName, convertNodeToHashMap(secondChild)); // FIXME controle op java.util.Hashtable
 				}
 				//sets an int as value
 				else if (secondName.equalsIgnoreCase("int"))
 				{
 					if (secondChild.getFirstChild() != null)
-						result.put(firstChild.getFirstChild().getNodeValue(), Integer.parseInt(secondChild.getFirstChild().getNodeValue()));
+						result.put(keyName, Integer.parseInt(secondChild.getFirstChild().getNodeValue()));
 
 					else
-						result.put(firstChild.getFirstChild().getNodeValue(), 0);
+						result.put(keyName, 0);
 				}
 				//sets an double as value
 				else if (secondName.equalsIgnoreCase("double"))
 				{
 					if (secondChild.getFirstChild() != null)
-						result.put(firstChild.getFirstChild().getNodeValue(), Double.parseDouble(secondChild.getFirstChild().getNodeValue()));
+						result.put(keyName, Double.parseDouble(secondChild.getFirstChild().getNodeValue()));
 
 					else
-						result.put(firstChild.getFirstChild().getNodeValue(), 0);
+						result.put(keyName, 0);
 				}
-				
+
 				//sets a boolean as value
 				else if (secondName.equalsIgnoreCase("boolean"))
 				{
 					if (secondChild.getFirstChild() != null)
 					{
 						if (secondChild.getFirstChild().getNodeValue().equalsIgnoreCase("true"))
-							result.put(firstChild.getFirstChild().getNodeValue(), true);
+							result.put(keyName, true);
 						else
-							result.put(firstChild.getFirstChild().getNodeValue(), false);
+							result.put(keyName, false);
 					}
 					else
-						result.put(firstChild.getFirstChild().getNodeValue(), true);
+						result.put(keyName, true);
 
 				}
 				//sets an arraylist as value
 				else if (secondName.equalsIgnoreCase("array"))
-					result.put(firstChild.getFirstChild().getNodeValue(), convertNodeToArray(secondChild));
+					result.put(keyName, convertNodeToArray(secondChild));
 			}
-			
+
 		}
 		return result;
 	}
@@ -128,12 +150,28 @@ public class StringCodeToHashMap
 	public ArrayList<Node> getElementList(NodeList list)
 	{
 		ArrayList<Node> elements = new ArrayList<Node>();
-		for (int i = 0; i < list.getLength(); i++)
+		final int length = list.getLength();
+		for (int i = 0; i < length; i++)
 		{
-			Node currentNode = list.item(i);
-			if (!currentNode.getNodeName().equalsIgnoreCase("#text"))
+			try
 			{
-				elements.add(currentNode);
+				Node currentNode = list.item(i);
+				if (currentNode == null)
+				{
+					System.err.println(currentNode);
+				}
+				else if (currentNode.getNodeName() == null)
+				{
+					System.err.println(currentNode);
+				}
+				else if (!currentNode.getNodeName().equalsIgnoreCase("#text"))
+				{
+					elements.add(currentNode);
+				}
+			}
+			catch (RuntimeException re)
+			{
+				throw re;
 			}
 		}
 
@@ -155,7 +193,7 @@ public class StringCodeToHashMap
 			{
 				result.add(convertNodeToHashMap(child));
 			}
-			
+
 			else if (child.getNodeName().equalsIgnoreCase("string"))
 			{
 				result.add(child.getFirstChild().getNodeValue());
