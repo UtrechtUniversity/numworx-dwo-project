@@ -2,7 +2,11 @@ package fi.servlet.dwomaccess;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
@@ -15,7 +19,8 @@ import junit.framework.TestCase;
 
 public class PartialScoreTest extends TestCase {
 
-	private static final int sco = 19240;
+	private static final String ICONAN = "$IMAGE$MAP$";
+	private int sco = 19240;
 	private static final int user = 70016;
 	PartialScoreIF getter;
 
@@ -62,9 +67,31 @@ public class PartialScoreTest extends TestCase {
 		getter = new DWOmAccess();
 		doGetLaunchData();
 	}
+	public void testGetLaunchDataIconan() throws Exception {
+		getter = new DWOmAccess();
+		sco = 42736;
+		String result = getter.getLaunchData(sco);
+		assertNotNull(result);
+		System.out.println(result);
+		InputStream reader = new ByteArrayInputStream(result.getBytes());
+		XMLDecoder decoder = new XMLDecoder(reader);
+		Hashtable r = (Hashtable) decoder.readObject();
+		System.out.println(r);
+		assertNotNull(r.get(ICONAN));
+		Object o = r.get(ICONAN);
+		ByteArrayOutputStream bos;
+		ObjectOutputStream dos = new ObjectOutputStream(bos = new ByteArrayOutputStream());
+		dos.writeObject(o);
+		dos.close();
+		ObjectInputStream dis = new ObjectInputStream(new ByteArrayInputStream(bos.toByteArray()));
+		Object o2 = dis.readObject();
+		assertEquals("iconan stuff", o, o2);
+		
+	}
 
 
 	private void doGetLaunchData() throws Exception {
+		
 		String result = getter.getLaunchData(sco);
 		assertNotNull(result);
 		InputStream reader = new ByteArrayInputStream(result.getBytes());

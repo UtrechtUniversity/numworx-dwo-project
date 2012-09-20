@@ -523,6 +523,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		transform(map);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		XMLEncoder encoder = new XMLEncoder(out);
+		ByteArray.installDelegate(encoder);
 		encoder.writeObject(map);
 		encoder.close();
 		out.close();
@@ -545,6 +546,11 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 			if(value instanceof Map) {
 				transform((Map) value);
 			}
+			else if(value instanceof byte[]) {
+				ByteArray ba = ByteArray.newInstance((byte[]) value);
+				entry.setValue(ba);
+			}
+			
 
 //			if(value instanceof Font) {
 //				value = value.toString();
