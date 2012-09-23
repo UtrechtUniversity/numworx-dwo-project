@@ -265,6 +265,7 @@ class XmlRpcSupport extends org.xml.sax.HandlerBase {
 	    
 	    InputStream in = con.getInputStream ();
 	    int length = con.getContentLength();
+	    /*
 	    if(length > 256) {
 		    byte[] buffer = new byte[length];
 
@@ -285,7 +286,7 @@ class XmlRpcSupport extends org.xml.sax.HandlerBase {
 //		    } while(more);
 //		    in.close();
 //		    in = new ByteArrayInputStream(buffer, 0, pos);
-	    }
+	    }*/
 	    parse (in);
 	    if(debug)System.out.println ("result = "+result);
 	} catch (Exception x) {
