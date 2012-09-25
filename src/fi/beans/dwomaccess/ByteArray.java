@@ -1,4 +1,4 @@
-package fi.servlet.dwomaccess;
+package fi.beans.dwomaccess;
 
 import java.beans.DefaultPersistenceDelegate;
 import java.beans.Encoder;
@@ -27,7 +27,7 @@ public class ByteArray implements Serializable {
 	
 	public ByteArray() {}
 	
-	static ByteArray newInstance(byte[] bytes) {
+	static public ByteArray newInstance(byte[] bytes) {
 		return new ByteArray(bytes);
 	}
 	
