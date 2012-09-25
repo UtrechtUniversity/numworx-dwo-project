@@ -102,7 +102,6 @@ public class PartialScoreTest extends TestCase {
 		launchdata(reader);
 	}
 
-
 	private void launchdata(InputStream reader) {
 		XMLDecoder decoder = new XMLDecoder(reader);
 		Hashtable r = (Hashtable) decoder.readObject();

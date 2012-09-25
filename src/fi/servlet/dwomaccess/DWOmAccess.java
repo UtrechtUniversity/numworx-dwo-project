@@ -30,6 +30,7 @@ import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.JFrame;
@@ -447,17 +448,21 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 
 	private void doLaunchData(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		String s = req.getParameter("s");
-		String result = "";
-		try {
-			int sco = Integer.parseInt(s);
-			result = getLaunchData(sco);
-		} catch (Exception e) {
-			log("doLaunchData", e);
-		}
 		resp.setContentType("text/xml");
 		resp.setHeader("Access-Control-Allow-Origin" ,"*");
 		resp.setCharacterEncoding("UTF-8");
-		resp.getWriter().write(result);
+		try {
+			int sco = Integer.parseInt(s);
+			getLaunchData(sco, resp.getOutputStream());
+		} catch (Exception e) {
+			log("doLaunchData", e);
+		}
+	}
+
+	private void getLaunchData(int sco, OutputStream out) {
+		Hashtable map = getLaunchData_int(sco);
+		XmlEncoder.encode(map, out);
+		out.close();
 	}
 
 	// AppletContext Dummies
