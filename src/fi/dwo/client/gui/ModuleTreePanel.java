@@ -668,7 +668,21 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 			return o;	
 		if(!isPossible(object))
 			return null;
-//System.err.println("FIND " + object + " START in " + node);
+		
+		
+		
+		
+System.err.println("FIND " + object + " START in " + node);
+		Object parent = getParent(object);
+		if(parent != null) {
+			DefaultMutableTreeNode parentNode = find(parent, node);
+			if(parentNode != null) {
+System.err.println(" found parent " + parent + " start in " + parentNode);
+				node = parentNode;
+			}
+		}
+
+
 		Enumeration e = node.breadthFirstEnumeration();
 		while (e.hasMoreElements()) {
 			o = (DefaultMutableTreeNode) e.nextElement();
@@ -687,6 +701,28 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		return null;
 	}
 
+	private Object getParent(Object object) {
+		if(object instanceof Course) {
+			Course c = (Course)object;
+			
+			CourseMap parentMap = c.getParentMap();
+			if(parentMap == null) {
+				int id = c.getParentID();
+				try {
+					parentMap = (CourseMap) PersistenceFacade.instance().get(id, Course.class);
+					c.setParentMap(parentMap);
+				} catch (PersistenceException e) {
+				}
+				
+			}
+			return parentMap;
+		}
+		if(object instanceof Sco) {
+			Sco s = (Sco) object;
+			return s.getCourse();
+		}
+		return null;
+	}
 	public static ModuleTreePanel newInstance(DwoIF dwo)
 	{
 		ModuleTreePanel panel = new ModuleTreePanel();
