@@ -733,6 +733,22 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 	public void onModuleLoad()
 	{
 
+		String url = "index.xml";
+
+		String path = Window.Location.getPath();
+		// strip basename
+		int slash = path.lastIndexOf('/');
+		//if (slash >= 0)
+		//	path = path.substring(slash + 1);
+		// strip extension
+		int dot = path.lastIndexOf('.');
+		if (dot > 0)
+		{
+			path = path.substring(0, dot);
+		}
+		if (!path.isEmpty())
+			url = path + ".xml";
+
 		ViewPort viewport = new MGWTSettings.ViewPort();
 		viewport.setTargetDensity(DENSITY.MEDIUM);
 		//viewport.setUserScaleAble(true);//.setMinimumScale(1.0).setMaximumScale(1.0);
@@ -787,7 +803,6 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 		RootPanel.get("main").add(mainPanel);
 
 		RequestBuilder.Method method = RequestBuilder.GET;
-		String url = "iconan.xml";
 		setupModule(url, url);
 
 		//contentPanel.add(kbp);

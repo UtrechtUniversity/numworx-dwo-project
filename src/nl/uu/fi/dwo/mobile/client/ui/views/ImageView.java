@@ -31,8 +31,10 @@ public class ImageView
 		else
 		{
 			String url = (String) map.get(naam + "/f"); // is het png,gif,jpg
-			url = url.substring(url.length() - 3, url.length());
-			data = "data:image/" + url + ";base64," + data;
+			String type = (String) map.get(naam + "/t");
+			if (type == null)
+				type = "image/" + url.substring(url.length() - 3, url.length());
+			data = "data:" + type + ";base64," + data;
 			Image im = new Image(data);
 			return im;
 		}

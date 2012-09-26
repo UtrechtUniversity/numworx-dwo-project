@@ -84,7 +84,7 @@ public class StringCodeToHashMap
 						result.put(keyName + "_size", fontSize);
 						result.put(keyName + "_style", fontStyle);
 					}
-					else if ("fi.servlet.dwomaccess.ByteArray".equals(className))
+					else if ("fi.beans.dwomaccess.ByteArray".equals(className))
 					{
 						ArrayList<Node> childs = getElementList(secondChild.getChildNodes());
 						Node node2 = childs.get(0);
