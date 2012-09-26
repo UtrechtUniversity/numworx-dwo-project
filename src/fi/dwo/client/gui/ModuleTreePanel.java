@@ -672,14 +672,28 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		
 		
 		
-System.err.println("FIND " + object + " START in " + node);
+//System.err.println("FIND " + object + " START in " + node);
 		Object parent = getParent(object);
 		if(parent != null) {
 			DefaultMutableTreeNode parentNode = find(parent, node);
 			if(parentNode != null) {
-System.err.println(" found parent " + parent + " start in " + parentNode);
+//System.err.println(" found parent " + parent + " start in " + parentNode);
 				node = parentNode;
+				
+				Enumeration e = node.children();
+				while (e.hasMoreElements()) {
+					o = (DefaultMutableTreeNode) e.nextElement();
+					cachemap.put(o.getUserObject(), o);
+					if(object.equals(o.getUserObject())) 
+					{
+						cachemap.put(object, o);
+//System.err.println("found " + o);
+						return o;				
+					}
+				}				
 			}
+		} else {
+//System.err.println("no parent, slow");
 		}
 
 
