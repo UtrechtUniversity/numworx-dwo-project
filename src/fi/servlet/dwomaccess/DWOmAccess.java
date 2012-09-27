@@ -41,9 +41,7 @@ import javax.swing.WindowConstants;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-import fi.beans.base64code.StringCodeObject;
 import fi.beans.dwomaccess.XmlEncoder;
-import fi.beans.dwomaccess.ByteArray;
 import fi.beans.scorm.SCORM12APIInterface;
 import fi.beans.xmlrpc.Servlet;
 import fi.dwo.client.domain.Sco;
@@ -107,8 +105,8 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		
 	public void init()
 	{
-		access = new DbAccessLdap();
-		//access = DbAccessCreator.instance();
+		//access = new DbAccessLdap();
+		access = DbAccessCreator.instance();
 		//log("inited...");
 	}
 	
@@ -483,9 +481,9 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 			map = getLaunchData_int(sco);
 			XmlEncoder.encode(map, out);
 		} catch (XmlRpcException e) {
-			throw new IOException(e.getMessage(),e);
+			throw new IOException(e.getMessage());
 		} catch (SQLException e) {
-			throw new IOException(e.getMessage(),e);
+			throw new IOException(e.getMessage());
 		}
 		out.close();
 	}
