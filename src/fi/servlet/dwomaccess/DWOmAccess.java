@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.GZIPOutputStream;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
@@ -41,7 +43,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.beans.base64code.StringCodeObject;
 import fi.beans.dwomaccess.XmlEncoder;
-import fi.beans.iconan.ByteArray;
+import fi.beans.dwomaccess.ByteArray;
 import fi.beans.scorm.SCORM12APIInterface;
 import fi.beans.xmlrpc.Servlet;
 import fi.dwo.client.domain.Sco;
@@ -448,20 +450,43 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 
 	private void doLaunchData(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		String s = req.getParameter("s");
+		String encoding = req.getHeader("Accept-Encoding");
+		
 		resp.setContentType("text/xml");
 		resp.setHeader("Access-Control-Allow-Origin" ,"*");
 		resp.setCharacterEncoding("UTF-8");
+		OutputStream out;
+// insert compressor		
+		if( encoding.contains("gzip")) {
+			resp.setHeader("Content-Encoding", "gzip");
+			out = new GZIPOutputStream(resp.getOutputStream());
+		} else if (encoding.contains("deflate")) {
+			resp.setHeader("Content-Encoding", "deflate");
+			out = new DeflaterOutputStream(resp.getOutputStream());
+		} else 
+// no compression
+			out = resp.getOutputStream();
+
 		try {
 			int sco = Integer.parseInt(s);
-			getLaunchData(sco, resp.getOutputStream());
+			getLaunchData(sco, out);
+
 		} catch (Exception e) {
 			log("doLaunchData", e);
+			resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	private void getLaunchData(int sco, OutputStream out) {
-		Hashtable map = getLaunchData_int(sco);
-		XmlEncoder.encode(map, out);
+	private void getLaunchData(int sco, OutputStream out) throws IOException {
+		Hashtable<?,?> map;
+		try {
+			map = getLaunchData_int(sco);
+			XmlEncoder.encode(map, out);
+		} catch (XmlRpcException e) {
+			throw new IOException(e.getMessage(),e);
+		} catch (SQLException e) {
+			throw new IOException(e.getMessage(),e);
+		}
 		out.close();
 	}
 
