@@ -903,4 +903,9 @@ public class GuiCreator {
 		return null;
 	}
 
+	public void unsafeSaveSco(Sco sco) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

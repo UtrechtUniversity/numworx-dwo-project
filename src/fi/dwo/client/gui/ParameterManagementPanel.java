@@ -41,6 +41,7 @@ import java.util.zip.ZipOutputStream;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -67,7 +68,9 @@ import fi.dwo.client.gui.action.ImportScorm;
 import fi.dwo.client.gui.action.Save2004Action;
 import fi.dwo.client.gui.action.SaveAppletAction;
 import fi.dwo.client.persistence.MapperCreator;
+import fi.dwo.client.persistence.PersistenceFacade;
 //import fi.dwo.client.system.Collections;
+import fi.dwo.client.system.ScoException;
 import fi.dwo.client.system.TextMapper;
 import fi.dwo.parameters.domain.ConvertorCreator;
 import fi.dwo.parameters.domain.ConvertorIF;
@@ -96,7 +99,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
     private Sco sco;
     
     private JButton previewButton, previewBtn;
-    private JButton saveButton, saveBtn;
+    private JButton saveButton, saveBtn, unsafeSaveBtn;
     private JButton resetButton;
     private JButton closeButton,stopBtn;
     private JButton importScormButton;
@@ -111,6 +114,24 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
     private ScoDialog scoDialog;
     
 
+    class UnsafeSaveAction extends AbstractAction {
+
+		/*
+		 * Default is ok.
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public void actionPerformed(ActionEvent e) {
+	       	unsafeSaveSco();
+        	done = false;
+		}
+
+		UnsafeSaveAction() {
+			super(TextMapper.getText(TextMapper.GUIP_BTN_UNSAFESAVE));
+		}
+    }
+    
+    
     /**
      * Creates a new ParameterManagementPanel
      * If the sco has an edit-mode, a dialog with the editmode is showed.
@@ -322,6 +343,11 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
     	box.add(saveBtn = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_SAVE)));    	
     	box.add(Box.createHorizontalStrut(10));
     	box.add(previewBtn = new JButton("Preview"));
+    	if(DwoHelper.isAdminLoggedIn()) {
+    		box.add(Box.createHorizontalStrut(30));
+    		box.add(unsafeSaveBtn = new JButton(new UnsafeSaveAction()));
+    		unsafeSaveBtn.setForeground(Color.red);
+    	}
     	//box.setBorder(BorderFactory.createLineBorder(Color.red));
 		hp.setButtonBox(GuiCreator.instance().fx(box));
 		
@@ -474,6 +500,35 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         forcepaint();
         return result; // NO, CANCEL, CLOSED
     }
+    
+    // kopietje van bovenstaande 
+    int unsafeSaveSco() {
+    	String message;
+        Hashtable tmp;
+        tmp = getLaunchdata();
+        Hashtable old = sco.getLaunchdata();
+    	old.remove("language");old.remove("bgcolor");
+    	tmp.remove("language");tmp.remove("bgcolor");
+        message = TextMapper.getText(TextMapper.GUIPA_MSG_PARAM_UNSAFESAVE);
+        int result = JOptionPane.NO_OPTION;
+        if (	!(compareMap(tmp, old)) &&
+        		((result = confirm(message)) == JOptionPane.YES_OPTION || result == JOptionPane.CANCEL_OPTION)) {
+        	final GuiCreator instance = GuiCreator.instance();
+			instance.setWait();setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			sco.setLaunchdata(tmp);
+            instance.unsafeSaveSco(sco);
+            MapperCreator.instance(Applet.class).removeObject(sco.getAppletID());
+            instance.setReady();setCursor(Cursor.getDefaultCursor());
+            return JOptionPane.YES_OPTION;
+        }
+        forcepaint();
+        return result; // NO, CANCEL, CLOSED
+  	
+    	
+    	
+    }
+    
+    
 
 	/**
 	 * @param message

@@ -25,6 +25,8 @@ import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.action.CourseManagementAction;
 import fi.dwo.client.gui.action.ScoManagementAction;
 import fi.dwo.client.gui.action.ScoParameterAction;
+import fi.dwo.client.persistence.PersistenceFacade;
+import fi.dwo.client.system.ScoException;
 
 /**
  * This class implements Admin-specific methods of the GuiCreator.
@@ -264,6 +266,18 @@ public class GuiCreatorAdmin extends GuiCreator {
 			return fx(box);
 		}
 		return fx(new JButton(new ScoParameterAction(scoPanel)));
+	}
+
+	/* (non-Javadoc)
+	 * @see fi.dwo.client.gui.GuiCreator#unsafeSaveSco(fi.dwo.client.domain.Sco)
+	 */
+	public void unsafeSaveSco(Sco sco) {
+		try {
+			PersistenceFacade.instance().unsafeSaveSco(sco);
+		} catch (ScoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 

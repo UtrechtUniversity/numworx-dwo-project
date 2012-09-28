@@ -708,6 +708,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
                     result.putAll(result2);
                 }
             }
+            result.put("timestamp", String.valueOf(System.currentTimeMillis()));
         }
 
         return result;
@@ -2310,7 +2311,13 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     public boolean changeSco(int scoID, String name, String description, String launchdata)
             throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException {
-        PreparedStatement ps;
+    	return changeSco(scoID, name, description, true, launchdata);
+    }
+
+    public boolean changeSco(int scoID, String name, String description, boolean delete, String launchdata)
+    throws DwoXmlRpcException, IOException, XmlRpcException,
+    SQLException {
+    	PreparedStatement ps;
         ps = getStatement(QRY_UPDATE_SCO);
         ps.setString(1, name);
         ps.setString(2, description);
@@ -2329,7 +2336,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         }
         
         ps.close();
-        if(true) { // TODO parameter voor Sietske c.s.
+        if(delete) { // TODO parameter voor Sietske c.s.
 	        String[] arguments = new String[2];
 	
 	        arguments[0] = "tblStudentSco";

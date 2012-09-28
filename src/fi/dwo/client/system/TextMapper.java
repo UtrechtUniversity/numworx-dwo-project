@@ -396,6 +396,10 @@ public abstract class TextMapper {
 	public static final String GUICDLG_MAP_NAME = "GUICDLG_MAP_NAME";
 
 	public static final String GUIC_TLTP_EDIT_MAP = "GUIC_TLTP_EDIT_MAP";
+
+	public static final String GUIPA_MSG_PARAM_UNSAFESAVE = "GUIPA_MSG_PARAM_UNSAFESAVE";
+
+	public static final String GUIP_BTN_UNSAFESAVE = "UNSAFE SAVE";
     
     private static ResourceBundle rb;
 

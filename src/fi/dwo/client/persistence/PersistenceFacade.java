@@ -379,7 +379,7 @@ public class PersistenceFacade {
 
 	private Vector clipBeforeAfter(Vector v) {
 		Iterator iter = v.iterator();
-		long now = System.currentTimeMillis();
+		long now = System.currentTimeMillis() + User.getCurrentUser().getTimeZone();
 		while (iter.hasNext()) {
 			Hashtable ht = (Hashtable) iter.next();
 			Object o = ht.get("notBefore");
@@ -1939,6 +1939,54 @@ e1.printStackTrace();
 				}
 		}
 		return courses;
+	}
+
+	// ALLEEN VOOR ADMINISTRATORS
+	
+	public boolean unsafeSaveSco(Sco sco) throws ScoException {
+        DbAccessIF dbAccess = DbAccessCreator.instance();
+        try {
+            try {
+        		MapperCreator.instance(Sco.class).removeObject(sco.getID());
+            	if(sco.isCourseChanged())
+            	{
+            		dbAccess.moveSco(sco.getID(), sco.getCourse().getID(), sco.getSequencenr(), sco.getScoName());
+            		sco.setCourseChanged(false);
+            	}
+            	if(sco.isDataChanged())
+            	{	boolean result;
+         			
+		            result = dbAccess.changeSco(sco.getID(), sco.getScoName(), sco
+							        .getDescription(),
+							        false, // Daar is het om begonnen...
+							        sco.getLaunchdataString());
+         			sco.setDataChanged(false);
+					return result;
+            	} else
+            	{
+            		if(sco.getShowScore() != null)
+            			return dbAccess.changeSco(sco.getID(), sco.getScoName(), sco.getDescription(), sco.isShowScore());
+            		else
+            			return dbAccess.changeSco(sco.getID(), sco.getScoName(), sco.getDescription());
+            			
+            	}
+            	
+            } catch (IOException e) {
+                throw new ScoException(ScoException.EX_IO);
+            } catch (XmlRpcException e) {
+                if (e.code != 0) {
+                    throw (ScoException) getException(e, e.code);
+                } else {
+                    throw new ScoException(ScoException.EX_XML_RPC);
+                }
+            } catch (SQLException e) {
+                throw new ScoException(ScoException.EX_DB);
+            } catch (DwoXmlRpcException e) {
+                throw (ScoException) getException(e, e.code);
+            }
+        } catch (PersistenceException e) {
+            throw new ScoException(ScoException.EX_UNKNOWN_ERROR);
+        }
 	}
 	
 }

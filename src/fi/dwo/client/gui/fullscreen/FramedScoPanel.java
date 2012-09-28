@@ -18,6 +18,7 @@ import javax.swing.event.ChangeEvent;
 
 import fi.dwo.client.domain.ClassCourse;
 import fi.dwo.client.domain.Sco;
+import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.CenterPanel;
 import fi.dwo.client.gui.CenterSubPanel;
 
@@ -41,7 +42,7 @@ public class FramedScoPanel extends JPanel implements CenterSubPanel, ActionList
 		Date notAfter = link.getNotAfter();
 		if( notAfter != null ) {
 			System.out.println("stop na " + notAfter);
-			long delay = notAfter.getTime() - System.currentTimeMillis();
+			long delay = notAfter.getTime() - System.currentTimeMillis() - User.getCurrentUser().getTimeZone();
 			delay = Math.min( Integer.MAX_VALUE, Math.max(0L, delay));
 			timer = new Timer((int)delay, this);
 			timer.setRepeats(false);

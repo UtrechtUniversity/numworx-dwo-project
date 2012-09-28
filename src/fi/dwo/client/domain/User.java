@@ -4,6 +4,7 @@
 package fi.dwo.client.domain;
 
 import java.text.MessageFormat;
+import java.util.Date;
 
 import fi.dwo.client.system.TextMapper;
 
@@ -32,7 +33,9 @@ public class User implements UserGroup, Comparable {
     private SchoolClass inClass;
 
     private School school;
-
+    
+    private long lastLogin = System.currentTimeMillis();
+    private long timeZone = 0L;
     /** 
      * Geeft het recht op  SCORM export 
      */
@@ -444,6 +447,28 @@ public class User implements UserGroup, Comparable {
 
 	public static User getCurrentUser() {
 		return currentUser;
+	}
+
+	/**
+	 * @return the lastLogin
+	 */
+	public long getLastLogin() {
+		return lastLogin;
+	}
+
+	/**
+	 * @param lastLogin the lastLogin to set
+	 */
+	public void setLastLogin(long lastLogin) {
+		this.lastLogin = lastLogin;
+		timeZone = lastLogin-System.currentTimeMillis();
+	}
+
+	/**
+	 * @return the timeZone
+	 */
+	public long getTimeZone() {
+		return timeZone;
 	}
 
 }

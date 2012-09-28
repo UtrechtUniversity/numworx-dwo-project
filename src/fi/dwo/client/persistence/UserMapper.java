@@ -5,6 +5,7 @@ package fi.dwo.client.persistence;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Hashtable;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
@@ -153,7 +154,11 @@ public class UserMapper extends XmlRpcMapper {
         if (s != null) {
             u.setSchool(s);
         }
-
+        String lastLogin = (String) data.get("timestamp"); // lastLogin is al in gebruik, maar dan een Date
+        try {
+        	u.setLastLogin(Long.parseLong(lastLogin));
+        } catch(Exception e) {}
+        
         Object classID = data.get("classID");
 		if(!classID.equals("") && !NUL.equals(classID) ) {
             try {
