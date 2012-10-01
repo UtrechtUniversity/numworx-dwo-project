@@ -67,6 +67,7 @@ import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.ResultsModulePanel.ResultsModel;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.PersistenceException;
+import fi.dwo.client.system.TextMapper;
 
 public class  ResultLogger extends JPanel implements ActionListener {
 
@@ -142,7 +143,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 	public static void showLogs(Sco sco, SchoolClass schoolClass) {
 		JFrame frame = new JFrame();
 		frame.getContentPane().add(new ResultLogger(sco, schoolClass));
-        frame.setTitle("Overzicht Logs ");
+        frame.setTitle(TextMapper.getText("Overzicht Logs"));
         frame.pack();
         frame.setSize(800,600);
         frame.show();        

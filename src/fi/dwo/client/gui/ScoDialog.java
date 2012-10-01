@@ -244,7 +244,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         sd.table = table;
         sp.getSco().addPropertyChangeListener(Sco.LESSON_LOCATION, sd);
         final Container content = sd.getContentPane();
-        final IconizedPanel panel = new IconizedPanel("Leerlingen");
+        final IconizedPanel panel = new IconizedPanel(TextMapper.getText(TextMapper.GUIS_STUDENTS));
         panel.setBackground(new Color(200,227,255));
         
         JPanel vbox = new JPanel(new BorderLayout()); 

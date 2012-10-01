@@ -20,6 +20,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -289,8 +290,10 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
     boolean eraseClassData(Course course)
     {
-    	if (JOptionPane.showConfirmDialog(SelectCoursesDialog.this, "Wilt u alle resultaten van " + course + " voor " + sc.getName() + " verwijderen"
-                + "?", "Leerlinggegevens verwijderen", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+    	String msg = TextMapper.getText("Wilt u alle resultaten van {0} voor {1} verwijderen?");
+    	msg = MessageFormat.format(msg, new Object[] { course.toString(), sc.getName() });
+    	if (JOptionPane.showConfirmDialog(SelectCoursesDialog.this, msg 
+                , TextMapper.getText("Leerlinggegevens verwijderen"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             if (PersistenceFacade.instance().deleteCourseClassData(course, sc)) {
             	return true;
             }
@@ -386,12 +389,12 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
 		public String getColumnName(int column) {
 			switch(column) {
-			case COURSE_TYPE: return "soort";
-			case 4: return "vanaf";
-			case 5: return "tot aan";
+			case COURSE_TYPE: return TextMapper.getText("soort");
+			case 4: return TextMapper.getText("vanaf");
+			case 5: return TextMapper.getText("tot aan");
 			case 0: return "";
 			case 1: return "Module";
-			case 2: return "Ll ggvns";
+			case 2: return TextMapper.getText("Ll ggvns");
 			}
 			return super.getColumnName(column);
 		}
@@ -531,8 +534,8 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 				Object value, boolean isSelected, int row, int column) {
 			this.value = (Date)value;
 			wat = ""; // of via constructor?
-			if(column == 4) wat = "vanaf";
-			if(column == 5) wat = "tot";
+			if(column == 4) wat = TextMapper.getText("vanaf");
+			if(column == 5) wat = TextMapper.getText("tot");
 			btn.setText(date2String(value));
 			return btn;
 		}
@@ -552,7 +555,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 	
 	
     
-	static final Object[] OBJECT_TYPE = new Object[] { "normaal", "afgeschermd" };
+	static final Object[] OBJECT_TYPE = new Object[] { TextMapper.getText("normaal"), TextMapper.getText("afgeschermd") };
     class CheckBoxNodeRenderer implements TreeCellRenderer {
 		JCheckBox leafRenderer = new JCheckBox();
     	  JButton   eraseBtn = new JButton();
@@ -697,7 +700,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
   		JSpinner.DateEditor editor = new JSpinner.DateEditor(timeChooser, "HH:mm");
   		editor.getFormat().setDateFormatSymbols(new DateFormatSymbols(locale));
   		timeChooser.setEditor(editor);    		
-  		message.add(new JLabel("tijd:"));
+  		message.add(new JLabel(TextMapper.getText("tijd:")));
   		message.add(timeChooser);
   		JSpinnerDateEditor dateEditor = new JSpinnerDateEditor();
   		dateEditor.setLocale(locale);
@@ -706,9 +709,11 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
   		
 			dayChooser.setLocale(locale);
 			dayChooser.setDateFormatString("dd-MM-yyyy"); // bug in locale van spinnerdateeditor
-  		message.add(new JLabel(" dag: "));
+  		message.add(new JLabel(TextMapper.getText(" dag: ")));
   		message.add(dayChooser);
-  		int r = JOptionPane.showConfirmDialog(DwoHelper.getApplet(), message, "Geef tijdstip " + hoe, JOptionPane.YES_NO_CANCEL_OPTION);
+  		String msg = TextMapper.getText("Geef tijdstip {0}");
+  		msg = MessageFormat.format(msg, new Object[] { hoe } );
+  		int r = JOptionPane.showConfirmDialog(DwoHelper.getApplet(), message, msg, JOptionPane.YES_NO_CANCEL_OPTION);
   		if(r == JOptionPane.YES_OPTION) {
   			van = dayChooser.getDate();
   			Date t = (Date) timeChooser.getValue();

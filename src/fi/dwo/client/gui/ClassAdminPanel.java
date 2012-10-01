@@ -117,10 +117,10 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 		public String getColumnName(int column) {
 			switch(column)
 			{
-			case CLASS_NAME: return "Klas";
-			case CLASS_USER: return "Docent";
-			case CLASS_MEMBERS: return "Leerlingen";
-			case CLASS_DELETE: return "Verwijder";
+			case CLASS_NAME: return TextMapper.getText("Klas");
+			case CLASS_USER: return TextMapper.getText("Docent");
+			case CLASS_MEMBERS: return TextMapper.getText(TextMapper.GUIC_STUDENTS);
+			case CLASS_DELETE: return TextMapper.getText("Verwijder");
 
 			}
 			return super.getColumnName(column);
@@ -256,7 +256,7 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 	}
 
 	public Component getHeaderPanel() {
-    	return new HeaderPanel("Klassen toewijzen");
+    	return new HeaderPanel(TextMapper.getText("Klassen toewijzen"));
 	}
 
 	public void setCenterPanel(CenterPanel centerPanel) {

@@ -343,8 +343,28 @@ public class Text_en extends ListResourceBundle {
 
          { "Nieuwe Modulemap", "New Module folder" },
 
-         
-
+         // classadminpanel
+         { "Klassen toewijzen", "Assign classes" },
+         { "Klas", "Class" },
+         { "Docent", "Teacher" },
+         { "Verwijder", "Remove" },
+         // classpanel 
+         { "boomstructuur?", "treeview?" },
+         // select courses dialog
+         { "Leerlinggegevens verwijderen", "Remove studentresults" },
+         { "Wilt u alle resultaten van {0} voor {1} verwijderen?", "Do you wish to remove all result of {0} for {1}?" },
+         { "soort", "kind" },
+         { "vanaf", "from" },
+         { "tot aan", "until" },
+         { "tot", "until" },
+         { "Ll ggvns", "results" },
+         { "normaal", "normal" },
+         { "afgeschermd", "secured" },
+         { "Geef tijdstip {0}", "Set date and time \"{0}\""},
+         { " dag: " , " date: " },
+         { "tijd:", "time:" },
+         // resultLoogger 
+         { "Overzicht Logs", "Overview Logs" },
 };
 
  public Text_en() {

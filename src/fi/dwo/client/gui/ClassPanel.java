@@ -183,7 +183,7 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
     		if (value == editImage) {
     			Box box = Box.createVerticalBox();
     			JLabel l1 = new JLabel(TextMapper.getText(TextMapper.GUIC_MSG_RENAME_CLASS));
-    			JCheckBox check = new JCheckBox("boomstructuur?");
+    			JCheckBox check = new JCheckBox(TextMapper.getText("boomstructuur?"));
     			check.setSelected(sc.hasIconizer());
     			if(CenterPanel.isIconizer())
     				box.add(check);
