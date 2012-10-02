@@ -250,8 +250,7 @@ public class SchoolClass implements UserGroup, Comparable {
     public String getChildTitle() {
         String[] arguments = new String[1];
         arguments[0] = className;
-        String s = TextMapper.getText(TextMapper.UG_CLASS_CHILD);
-        return MessageFormat.format(s, arguments);
+        return TextMapper.format((TextMapper.UG_CLASS_CHILD), arguments);
     }
 
     /**

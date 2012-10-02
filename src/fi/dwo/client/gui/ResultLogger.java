@@ -207,7 +207,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 			scrollPane[i]= new JScrollPane(contentPane,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 			scrollPane[i].getViewport().addChangeListener(changeListener);}
 		
-		btn = new JButton("Bewaar");
+		btn = new JButton(TextMapper.getText(TextMapper.GUIPA_BTN_SAVE));
 		btn.setActionCommand(SAVE);
 		btn.addActionListener(this);
 		
@@ -257,7 +257,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		pane2.add(partialTable, BorderLayout.CENTER);
 		scrollPane[table.length+1] = new JScrollPane(pane2,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane[table.length+1].getViewport().addChangeListener(changeListener);
-		tabpane.add(scrollPane[table.length+1], "deel-scores");
+		tabpane.add(scrollPane[table.length+1], TextMapper.getText("deel-scores"));
 		
 		
 		
@@ -334,7 +334,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		for (Iterator iterator = pages.iterator(); iterator.hasNext();j+=2) {
 			Object object = iterator.next();
 			columnModel.getColumn(j).setHeaderValue(object + " score");
-			columnModel.getColumn(j+1).setHeaderValue("tijdsduur");
+			columnModel.getColumn(j+1).setHeaderValue(TextMapper.getText("tijdsduur"));
 		}
 		
 	}
@@ -392,7 +392,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 				}
 			}
 			TableColumnModel columnModel = leerlingTable.getColumnModel();
-			columnModel.getColumn(0).setHeaderValue("Naam");
+			columnModel.getColumn(0).setHeaderValue(TextMapper.getText(TextMapper.GUIS_STUDENTS));
 			
 			
 			for (int i = 0; i < leerlingen.length; i++) {

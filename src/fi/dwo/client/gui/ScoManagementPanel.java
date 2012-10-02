@@ -184,7 +184,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         
         String[] arguments = new String[1];
         arguments[0] = course.getName();
-        label = new JLabel(MessageFormat.format(TextMapper.getText(TextMapper.GUIS_LBL_SCO_OF_COURSE), arguments));
+        label = new JLabel(TextMapper.format((TextMapper.GUIS_LBL_SCO_OF_COURSE), arguments));
         
         label.setFont(GuiConstants.SCO_TEXT);
         label.setSize(label.getPreferredSize());
@@ -221,8 +221,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         this.add(hulp, BorderLayout.EAST);
         arguments = new String[1];
         arguments[0] = course.getName();
-        String s = TextMapper.getText(TextMapper.GUIS_NO_SCOS);
-        noScosLabel = new JLabel(MessageFormat.format(s, arguments));
+        noScosLabel = new JLabel(TextMapper.format((TextMapper.GUIS_NO_SCOS), arguments));
         noScosLabel.setFont(GuiConstants.SCO_TEXT);
         noScosLabel.setSize(noScosLabel.getPreferredSize());
         noScosLabel.setLocation((this.getSize().width/2) - (noScosLabel.getSize().width/2), 100);
@@ -274,8 +273,8 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 				col++;
 
 			switch(col) {
-			case 1:	String s = TextMapper.getText(TextMapper.GUIS_TLTP_COURSE_SCO);
-	    			setToolTipText(MessageFormat.format(s, arguments));
+			case 1:	
+	    			setToolTipText(TextMapper.format((TextMapper.GUIS_TLTP_COURSE_SCO), arguments));
 	    			break;
 			case 2: setToolTipText(TextMapper.getText(TextMapper.GUIS_TLTP_EDIT_SCO));
 				break;
@@ -626,8 +625,8 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 
 	private void importCourseLogo() throws IOException 
     {
-    	String naam; 
-    	openDial.setTitle("Laad Modulelogo van " + course);
+    	String naam; // FIXME
+    	openDial.setTitle(TextMapper.format(TextMapper.GUIS_LOAD_LOGO , new Object[] { course.toString() }));
     	openDial.show();
     	naam = openDial.getFile();
     	if(naam != null)

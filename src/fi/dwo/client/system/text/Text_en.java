@@ -220,6 +220,7 @@ public class Text_en extends ListResourceBundle {
          { TextMapper.GUIRS_TLTP_ZOOM_ORDER, "Sort on {0}"},
 
          { TextMapper.GUIRS_TLTP_RESULT_SCORE_BUTTON, "Show results of Activity {0} of {1}"},
+         { TextMapper.GUIRSDLG_MSG, "Delete all results of ''{0}'' for {1}?"},
 
          { TextMapper.UG_RESULTS_OF_STUDENT, "Results of Activity {0} of {1}"},
 
@@ -299,7 +300,8 @@ public class Text_en extends ListResourceBundle {
          { TextMapper.GUIS_MSG_SCO_DELETE, "When you delete the Activity \nen the results will also be deleted.\n \nAre you sure you want to delete the Activity?"},
          { TextMapper.GUIS_MSG_TTL_SCO_DELETE, "Delete Activity"},
          { TextMapper.GUIS_NO_SCOS, "There are no Activities in module {0}"},
-
+         { TextMapper.GUIS_LOAD_LOGO, "Load icon of {0}"},
+         
          { TextMapper.GUISDLG_BTN_ADD_SCO, "Add"},
          { TextMapper.GUISDLG_BTN_PREVIEW_SCO, "Preview Activity"},
          { TextMapper.GUISDLG_MSG_SELECT_SCO, "Choose Activity"},
@@ -365,6 +367,10 @@ public class Text_en extends ListResourceBundle {
          { "tijd:", "time:" },
          // resultLoogger 
          { "Overzicht Logs", "Overview Logs" },
+         { "deel-scores", "partial scores" },
+         { "tijdsduur", "duration" },
+         // default partial score
+         { "resultaat", "result" },
 };
 
  public Text_en() {

@@ -290,10 +290,10 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
     boolean eraseClassData(Course course)
     {
-    	String msg = TextMapper.getText("Wilt u alle resultaten van {0} voor {1} verwijderen?");
+    	String msg = TextMapper.getText(TextMapper.GUIRSDLG_MSG);
     	msg = MessageFormat.format(msg, new Object[] { course.toString(), sc.getName() });
     	if (JOptionPane.showConfirmDialog(SelectCoursesDialog.this, msg 
-                , TextMapper.getText("Leerlinggegevens verwijderen"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                , TextMapper.getText("delete"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             if (PersistenceFacade.instance().deleteCourseClassData(course, sc)) {
             	return true;
             }

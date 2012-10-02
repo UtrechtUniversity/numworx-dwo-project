@@ -3,6 +3,7 @@
 
 package fi.dwo.client.system;
 
+import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -400,6 +401,10 @@ public abstract class TextMapper {
 	public static final String GUIPA_MSG_PARAM_UNSAFESAVE = "GUIPA_MSG_PARAM_UNSAFESAVE";
 
 	public static final String GUIP_BTN_UNSAFESAVE = "UNSAFE SAVE";
+
+	public static final String GUIRSDLG_MSG = "GUIRSDLG_MSG";
+
+	public static final String GUIS_LOAD_LOGO = "GUIS_LOAD_LOGO";
     
     private static ResourceBundle rb;
 
@@ -436,6 +441,16 @@ public abstract class TextMapper {
      */
     public static String getText(String text) {
         return getResourceBundle().getString(text);
+    }
+    
+    /**
+     * Shortcut for MessageFormat.format(getText(key), ...);
+     * @param key
+     * @param params
+     * @return
+     */
+    public static String format(String key, Object[] params) {
+    	return MessageFormat.format(getText(key), params);
     }
 
     /**

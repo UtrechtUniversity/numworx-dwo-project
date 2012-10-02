@@ -24,6 +24,7 @@ import javax.swing.JOptionPane;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.dwo.client.system.PersistenceException;
+import fi.dwo.client.system.TextMapper;
 
 /**
  * This class managed the results (zooming, ordering, select courses) who are showed to the teacher.
@@ -86,10 +87,10 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
     		final Course course = (Course) rs.getLessonGroup();
     		String klasnaam = sc.getName();
     		String coursenaam = course.getName();
-    		Object[] params = { coursenaam, klasnaam };
-    		String message = MessageFormat.format("Alle resultaten van ''{0}'' verwijderen voor {1}?", params);
+    		Object[] params = { coursenaam, klasnaam }; // FIXME
+    		String message = TextMapper.format((TextMapper.GUIRSDLG_MSG), params);
     		int result = 
-    		JOptionPane.showConfirmDialog(DwoHelper.getFrameForComponent(dwo), message, "Verwijderen", JOptionPane.OK_CANCEL_OPTION);
+    		JOptionPane.showConfirmDialog(DwoHelper.getFrameForComponent(dwo), message, TextMapper.getText("delete"), JOptionPane.OK_CANCEL_OPTION);
     		if(JOptionPane.OK_OPTION == result)
     		{
     			//System.out.println("VERWIJDEREN");

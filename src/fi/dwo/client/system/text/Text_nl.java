@@ -188,6 +188,8 @@ public class Text_nl extends ListResourceBundle {
          { TextMapper.GUIS_DELETE_STUDENT, "Leerling uit school verwijderen"},
          { TextMapper.GUIS_NO_STUDENTS, "School {0} bevat geen leerlingen"}, 
          
+         { TextMapper.GUIS_LOAD_LOGO, "Laad Modulelogo van {0}"},
+         
          { TextMapper.GUIC_STUDENTS, "Leerlingen"},
          { TextMapper.GUIC_CLASS_MANAGEMENT, "Klassen Beheren"},
 
@@ -217,6 +219,7 @@ public class Text_nl extends ListResourceBundle {
          { TextMapper.GUIRS_TLTP_ZOOM_ORDER, "Sorteren op {0}"},
          
          { TextMapper.GUIRS_TLTP_RESULT_SCORE_BUTTON, "Resultaten van {0} bij \"{1}\""},
+         { TextMapper.GUIRSDLG_MSG, "Alle resultaten van ''{0}'' verwijderen voor {1}?"},
          
          { TextMapper.UG_RESULTS_OF_STUDENT, "Resultaten van de Activiteit \"{0}\" van {1}"},
          

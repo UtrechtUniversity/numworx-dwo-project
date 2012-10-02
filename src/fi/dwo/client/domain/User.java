@@ -271,8 +271,7 @@ public class User implements UserGroup, Comparable {
         } else {
             arguments[0] = "";
         }
-        String s = TextMapper.getText(TextMapper.UG_STUDENTS_OF_CLASS);
-        return MessageFormat.format(s, arguments);
+        return TextMapper.format((TextMapper.UG_STUDENTS_OF_CLASS), arguments);
     }
 
     /**

@@ -355,8 +355,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
     public String getChildTitle() {
         String[] arguments = new String[1];
             arguments[0] = name;
-        String s = TextMapper.getText(TextMapper.LG_COURSE_CHILD);
-        return MessageFormat.format(s, arguments);
+        return TextMapper.format(TextMapper.LG_COURSE_CHILD, arguments);
     }
 
     /**

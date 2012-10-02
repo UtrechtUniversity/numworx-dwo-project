@@ -257,8 +257,7 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
     public String getName() {
         String[] arguments = new String[1];
         arguments[0] = "" + sequencenr;
-	    String s = TextMapper.getText(TextMapper.LG_SCO_NAME);
-	    return MessageFormat.format(s, arguments);
+	    return TextMapper.format((TextMapper.LG_SCO_NAME), arguments);
     }
     
     /**
@@ -966,8 +965,7 @@ System.err.println("sum = ["+result+"]");
         } else {
             arguments[0] = "";
         }
-        String s = TextMapper.getText(TextMapper.LG_SCOS_OF_COURSE);
-        return MessageFormat.format(s, arguments);
+        return TextMapper.format((TextMapper.LG_SCOS_OF_COURSE), arguments);
     }
 
     /**

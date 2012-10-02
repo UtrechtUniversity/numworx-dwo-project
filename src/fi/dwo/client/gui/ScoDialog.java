@@ -201,14 +201,14 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
      */
     public static void showScoDialog(Component parent, ScoPanel sp, User ug) {
         String[] arguments = { sp.getSco().getScoName(), ug.getName() };
-        String title = MessageFormat.format(TextMapper.getText(TextMapper.UG_RESULTS_OF_STUDENT), arguments);
+        String title = TextMapper.format((TextMapper.UG_RESULTS_OF_STUDENT), arguments);
         ScoDialog sd = new ScoDialog(parent, TextMapper.getText(TextMapper.GUIRS_RESULTS), title, true, sp);
         sd.show();
     }
     
     public static void showScoDialog(Component parent, final ScoPanel sp, final User u, final SchoolClass s) {
     	String[] arguments = { sp.getSco().getScoName(), "" };
-    	String title = MessageFormat.format(TextMapper.getText(TextMapper.UG_RESULTS_OF_STUDENT), arguments);
+    	String title = TextMapper.format((TextMapper.UG_RESULTS_OF_STUDENT), arguments);
     	Box hbox = createTitleBox(title);
     	final JComboBox combo = new JComboBox(); // TODO wegwerken.....
     	final JLabel    userLabel = new JLabel(u.getName());

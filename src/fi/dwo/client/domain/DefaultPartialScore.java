@@ -7,6 +7,7 @@ import java.util.List;
 
 import fi.beans.scorm.PartialScoreIF;
 import fi.beans.scorm.SCORM12APIInterface;
+import fi.dwo.client.system.TextMapper;
 
 public class DefaultPartialScore implements PartialScoreIF {
 
@@ -19,7 +20,7 @@ public class DefaultPartialScore implements PartialScoreIF {
 		String max = api.LMSGetValue("cmi.core.score.max");
 		if(null == max || "".equals(max)) max = "100";
 		result.put(SCORE_MAX, max);
-		result.put(DESCRIPTION, "resultaat");
+		result.put(DESCRIPTION, TextMapper.getText("resultaat"));
 		result.put(LOCATION, "");
 		String time = api.LMSGetValue("cmi.core.session_time");
 		result.put(SESSION_TIME, time);
