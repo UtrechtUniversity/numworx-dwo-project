@@ -144,6 +144,52 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 		hp.setCenter(name);
 	}
 
+	public void preSetupModule(final String link, final String url)
+	{
+		RequestBuilder rb = new RequestBuilder(RequestBuilder.GET, link);
+		try
+		{
+			rb.sendRequest(null, new RequestCallback()
+			{
+
+				@Override
+				public void onResponseReceived(Request request, Response response)
+				{
+
+					String link = response.getText(); // another link? 
+					if (response.getStatusCode() > 399)
+						link = "";
+					int i = link.indexOf('\r');
+					if (i >= 0)
+						link = link.substring(0, i);
+					i = link.indexOf('\n');
+					if (i >= 0)
+						link = link.substring(0, i);
+					if (!link.isEmpty())
+					{
+						setupModule(link, link);
+					}
+					else
+					{
+						setupModule(url, url);
+					}
+
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception)
+				{
+					setupModule(url, url);
+
+				}
+			});
+		}
+		catch (RequestException ignore)
+		{
+			setupModule(url, url);
+		}
+	}
+
 	public void clearContentPanel()
 	{
 		contentPanel.clear();
@@ -734,7 +780,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 	{
 
 		String url = "index.xml";
-
+		String link = "index.xmr"; // reference.
 		String path = Window.Location.getPath();
 		// strip basename
 		int slash = path.lastIndexOf('/');
@@ -747,8 +793,10 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 			path = path.substring(0, dot);
 		}
 		if (!path.isEmpty())
+		{
 			url = path + ".xml";
-
+			link = path + ".xmr";
+		}
 		ViewPort viewport = new MGWTSettings.ViewPort();
 		viewport.setTargetDensity(DENSITY.MEDIUM);
 		//viewport.setUserScaleAble(true);//.setMinimumScale(1.0).setMaximumScale(1.0);
@@ -803,7 +851,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 		RootPanel.get("main").add(mainPanel);
 
 		RequestBuilder.Method method = RequestBuilder.GET;
-		setupModule(url, url);
+		preSetupModule(link, url);
 
 		//contentPanel.add(kbp);
 
