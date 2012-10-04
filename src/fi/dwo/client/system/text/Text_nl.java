@@ -346,7 +346,18 @@ public class Text_nl extends ListResourceBundle {
          { "Standaard DWO modules", "Standaard DWO modules"},
          
          { "Nieuwe Modulemap", "Nieuwe Modulemap" },
-};
+         
+         { TextMapper.GUIEID_MSG1, "<html>(1) Selecteer een school<br>" +
+			   "(2) Bekijk eventueel de beschikbaar gestelde modules<br>" +
+			   "(3) Selecteer één of meer modules voor gebruik in de eigen omgeving<br><br>" +
+			   "De geselecteerde modules worden gekopiëerd naar de eigen omgeving<br>"+
+			   "en kunnen gebruikt worden binnen de eigen school." },
+		 { TextMapper.GUIEID_MSG2, "<html>Ik wil meedoen in deze manier van uitwisselen en daarbij zichtbaar worden als school in de lijsten"},
+
+		 { TextMapper.GUIEID_MSG3, "<html>(1) Selecteer een verzameling modules<br>(2) Selecteer een groep scholen<br><br>De geselecteerde modules worden beschikbaar<br>gesteld aan de geselecteerde scholen." },
+		 { TextMapper.GUIEID_MSG4, "Importeer {0}"},
+ 
+ };
 
  public Text_nl() {
 

@@ -86,6 +86,7 @@ import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.persistence.XmlRpcMapper;
 import fi.dwo.client.system.CourseException;
 import fi.dwo.client.system.PersistenceException;
+import fi.dwo.client.system.TextMapper;
 
 /**
  * @author Velth101
@@ -110,7 +111,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 			setModal(true);
 			setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 			Box box = Box.createVerticalBox();
-			setTitle("Kopiëer modules");
+			setTitle(TextMapper.getText("Kopiëer modules"));
 			box.add(bar);
 			box.add(Box.createVerticalStrut(20));
 			box.add(status);
@@ -154,7 +155,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		JProgressBar bar = new JProgressBar();
 		JLabel status  = new JLabel(" ");
 		JLabel status1 = new JLabel(" ");
-		JButton cancel = new JButton("cancel");
+		JButton cancel = new JButton(TextMapper.getText("cancel"));
 		int count;
 		private boolean fuse;
 		public void run() {
@@ -167,7 +168,6 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 					set.add(course.getName());
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -185,10 +185,9 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 						newc = PersistenceFacade.instance().addCourse(s, name, description, profile);
 						newc.setScoList(new Sco[0]);
 					} catch (CourseException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					status.setText("Importeer " + name);
+					status.setText(TextMapper.format(TextMapper.GUIEID_MSG4, new Object[] {name }));
 					status.invalidate();
 					status1.setText("   ");
 					status1.invalidate();
@@ -228,7 +227,6 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 				newsa[oldsa.length] = news;
 				course.setScoList(newsa);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -617,11 +615,11 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		setModal(true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE); // one shot!
 
-		setTitle("Modules delen");
+		setTitle(TextMapper.getText(TextMapper.GUIC_COURSE_SHARE));
 		pane = new JTabbedPane();
 		JPanel exportPanel = new JPanel(new BorderLayout(5,5));
 		JPanel importPanel = new JPanel(new BorderLayout());
-		enableImport = new JCheckBox("<html>Ik wil meedoen in deze manier van uitwisselen en daarbij zichtbaar worden als school in de lijsten");
+		enableImport = new JCheckBox(TextMapper.getText(TextMapper.GUIEID_MSG2));
 // From DATABASE
 		enableImport.setSelected(user.getSchool().isExport());
 // track changes
@@ -645,9 +643,9 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 				
 			} });
 		
-		pane.insertTab("Modules opvragen", null, importPanel, null, 0);
-		pane.insertTab("Modules beschikbaar stellen", null, exportPanel, null, 1);
-		pane.insertTab("Toestaan" , null, enableImport, null, 2);
+		pane.insertTab(TextMapper.getText("Modules opvragen"), null, importPanel, null, 0);
+		pane.insertTab(TextMapper.getText("Modules beschikbaar stellen"), null, exportPanel, null, 1);
+		pane.insertTab(TextMapper.getText("Toestaan") , null, enableImport, null, 2);
 
 // if enableImport is not checked:
 		
@@ -689,19 +687,19 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		JScrollPane exportSchools = new JScrollPane(exportSchoolTable);
 		Box exportSplit  = Box.createHorizontalBox();
 		exportSplit.add(exportModules);
-		JLabel deelLabel = new JLabel("Delen met", new PijlIcon(), JLabel.CENTER);
+		JLabel deelLabel = new JLabel(TextMapper.getText("Delen met"), new PijlIcon(), JLabel.CENTER);
 		deelLabel.setVerticalTextPosition(JLabel.TOP);
 		deelLabel.setHorizontalTextPosition(JLabel.CENTER);
 		exportSplit.add(deelLabel);
 		Box exportSchoolBox = Box.createVerticalBox();
 		exportSchoolBox.add(exportSchools);
-		final JCheckBox exportAlleScholen = new JCheckBox("Alle scholen");
+		final JCheckBox exportAlleScholen = new JCheckBox(TextMapper.getText("Alle scholen"));
 		exportSchoolBox.add(exportAlleScholen);
 		exportSplit.add(exportSchoolBox);
 
 		initializeExportSchoolModels(exportSchoolModel, exportAlleScholen.getModel());
 		
-		JLabel label = new JLabel("<html>(1) Selecteer een verzameling modules<br>(2) Selecteer een groep scholen<br><br>De geselecteerde modules worden beschikbaar<br>gesteld aan de geselecteerde scholen.");
+		JLabel label = new JLabel(TextMapper.getText(TextMapper.GUIEID_MSG3));
 		
 		JPanel p = new JPanel(new FlowLayout(FlowLayout.CENTER)); p.add(label);
 		exportPanel.add(p, BorderLayout.NORTH);
@@ -718,12 +716,12 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 			} });
 		
 		
-		JButton exportCancel = new JButton("annuleer");
+		JButton exportCancel = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));
 		exportCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ExportImportDialog.this.dispose();
 			}});
-		JButton exportApply = new JButton("toepassen");
+		JButton exportApply = new JButton(TextMapper.getText("toepassen"));
 		exportApply.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -737,11 +735,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		buttonBox.add(exportApply);
 // importstuff
 		
-		JLabel header = new JLabel("<html>(1) Selecteer een school<br>" +
-								   "(2) Bekijk eventueel de beschikbaar gestelde modules<br>" +
-								   "(3) Selecteer één of meer modules voor gebruik in de eigen omgeving<br><br>" +
-								   "De geselecteerde modules worden gekopiëerd naar de eigen omgeving<br>"+
-								   "en kunnen gebruikt worden binnen de eigen school.");
+		JLabel header = new JLabel(TextMapper.getText(TextMapper.GUIEID_MSG1));
 		p = new JPanel(new FlowLayout(FlowLayout.CENTER)); p.add(header);
 		importPanel.add(p, BorderLayout.NORTH);
 		importModuleModel = new ImportModuleModel();
@@ -804,7 +798,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		JScrollPane importModules = new JScrollPane(importModuleTable);
 		JScrollPane importSchools = new JScrollPane(importSchoolList);
 // TODO dit is niet goed
-		JLabel view = new JLabel("Scholen");
+		JLabel view = new JLabel(TextMapper.getText("Scholen"));
 		view.setBorder(BorderFactory.createRaisedBevelBorder());
 		view.setHorizontalAlignment(SwingConstants.CENTER);
 		importSchools.setColumnHeaderView(view);
@@ -820,7 +814,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		buttonBox = Box.createHorizontalBox();
 		importPanel.add(buttonBox, BorderLayout.SOUTH);
 		buttonBox.add(Box.createGlue());
-		JButton importOK = new JButton("Kopiëer");
+		JButton importOK = new JButton(TextMapper.getText("copy"));
 		importOK.setActionCommand(COPY);
 		importOK.addActionListener(this);
 		
@@ -850,13 +844,10 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 				}				
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (XmlRpcException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -990,32 +981,25 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		dwo.setStub(new AppletStub() {
 
 			public void appletResize(int arg0, int arg1) {
-				// TODO Auto-generated method stub
-				
 			}
 
 			public AppletContext getAppletContext() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 
 			public URL getCodeBase() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 
 			public URL getDocumentBase() {
-				// TODO Auto-generated method stub
 				return null;
 			}
 
 			public String getParameter(String arg0) {
-				// TODO Auto-generated method stub
 				return null;
 			}
 
 			public boolean isActive() {
-				// TODO Auto-generated method stub
 				return false;
 			}});
 		AppletUtil au = new AppletUtil(dwo);

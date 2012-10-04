@@ -405,6 +405,14 @@ public abstract class TextMapper {
 	public static final String GUIRSDLG_MSG = "GUIRSDLG_MSG";
 
 	public static final String GUIS_LOAD_LOGO = "GUIS_LOAD_LOGO";
+
+	public static final String GUIEID_MSG1 = "GUIEID_MSG1";
+
+	public static final String GUIEID_MSG2 = "GUIEID_MSG2";
+
+	public static final String GUIEID_MSG3 = "GUIEID_MSG3";
+
+	public static final String GUIEID_MSG4 = "GUIEID_MSG4";
     
     private static ResourceBundle rb;
 

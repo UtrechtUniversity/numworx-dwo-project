@@ -371,6 +371,24 @@ public class Text_en extends ListResourceBundle {
          { "tijdsduur", "duration" },
          // default partial score
          { "resultaat", "result" },
+         //importexportdialog
+         {"Kopiëer modules", "Copy modules" }, 
+         {"Toestaan", "Allow" },
+         {"Modules beschikbaar stellen", "Provide modules" },
+         {"Modules opvragen", "Request modules"},
+         {"Delen met","Share with"},
+         {"Alle scholen","All schools"},
+         {"Scholen", "Schools"},
+         {"toepassen", "Apply"},
+         
+         { TextMapper.GUIEID_MSG1, "<html>(1) Select a school<br>" +
+			   "(2) Eventually preview the shown modules<br>" +
+			   "(3) Select one or more modules for use in your own school<br><br>" +
+			   "The selected modules are copied to your own module view<br>"+
+			   "and can be used at your own school." },
+		  { TextMapper.GUIEID_MSG2, "<html>I wish to participate in this way of sharing and become visible as school in the lists"},
+		  { TextMapper.GUIEID_MSG3, "<html>(1) Select modules<br>(2) Select schools<br><br>The selected modules are available<br>to the selected schools." },
+
 };
 
  public Text_en() {
