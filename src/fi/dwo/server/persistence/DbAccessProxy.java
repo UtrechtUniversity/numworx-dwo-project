@@ -467,5 +467,10 @@ public class DbAccessProxy extends DbConnect implements DbAccessIF {
 			SQLException {
 		return getDelegate().selectCoursesForClass(classID, courseID, type, van, tot);
 	}
+
+	public boolean selectCoursesForClass(int id, Vector v) throws IOException,
+			XmlRpcException, SQLException {
+		return getDelegate().selectCoursesForClass(id, v);
+	}
 	
 }

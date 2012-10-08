@@ -521,4 +521,6 @@ public interface DbAccessIF {
 	public boolean selectCoursesForClass(int classID, int courseID, int type,
 			Date van, Date tot)
 	throws IOException, XmlRpcException, SQLException;
+
+	public boolean selectCoursesForClass(int id, Vector v) throws IOException, XmlRpcException, SQLException;
 }

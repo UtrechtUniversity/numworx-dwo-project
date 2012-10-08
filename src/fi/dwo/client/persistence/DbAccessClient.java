@@ -753,4 +753,13 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
         return ((Boolean)object).booleanValue();
     }
 
+    public boolean selectCoursesForClass(int a, java.util.Vector b) throws IOException, XmlRpcException
+    {
+        Vector vv = new Vector(2);
+        vv.addElement( new Integer(a));
+        vv.addElement(b);
+        Object object = invoke("selectCoursesForClass", vv);
+        return ((Boolean)object).booleanValue();
+    }
+
 }

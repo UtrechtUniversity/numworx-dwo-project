@@ -17,6 +17,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.beans.base64code.StringCodeObject;
 import fi.dwo.client.domain.AppletConfig;
+import fi.dwo.client.domain.ClassCourse;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.CourseSequence;
@@ -508,6 +509,8 @@ public class PersistenceFacade {
     }
 
     public final static Date DATE_NULL = new Date(0);
+
+	private static final long DATE_OFFSET = 1000L * 3600L * 24L;
     
     /**
      * Select a course for a schoolclass.
@@ -1987,6 +1990,39 @@ e1.printStackTrace();
         } catch (PersistenceException e) {
             throw new ScoException(ScoException.EX_UNKNOWN_ERROR);
         }
+	}
+
+	public void selectCoursesForClass(SchoolClass schoolClass, ClassCourse[] classCourses) 
+	throws PersistenceException 
+	{
+		Vector v = new Vector(classCourses.length);
+		for (int i = 0; i < classCourses.length; i++) {
+			ClassCourse deze = classCourses[i];
+			Hashtable h = new Hashtable();
+			h.put("courseID", new Integer( deze.getCourseID() ));
+			if(deze.getType() != 0 )
+				h.put("type", new Integer(deze.getType()));
+			if(deze.getNotAfter() != null && deze.getNotAfter().getTime() > DATE_OFFSET) {
+				h.put("notAfter", deze.getNotAfter());
+			}
+			if(deze.getNotBefore() != null && deze.getNotBefore().getTime() > DATE_OFFSET) {
+				h.put("notBefore", deze.getNotBefore());
+			}
+			v.add(h);
+		}
+		
+		try {
+			DbAccessCreator.instance().selectCoursesForClass(schoolClass.getID(), v);
+        } catch (IOException e) {
+            throw new PersistenceException(PersistenceException.EX_IO, e);
+        } catch (XmlRpcException e) {
+            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+        } catch (SQLException e) {
+            throw new PersistenceException(PersistenceException.EX_DB,e);
+        }
+
+		
+		
 	}
 	
 }

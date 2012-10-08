@@ -2839,5 +2839,47 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 		return result;
 	}
 
+	static final Integer DEFAULT_TYPE = new Integer(0); 
+	public boolean selectCoursesForClass(int id, Vector v) throws SQLException {
+		// XXX 
+		Connection c = getConnection();
+		try { 
+			c.setAutoCommit(false);
+			PreparedStatement ps = c.prepareStatement("DELETE FROM tblClassCourse WHERE classID = ?");
+			ps.setInt(1, id);
+			System.out.println(ps.executeUpdate() + " deletes from classcourse " + id);
+			ps.close();
+	        ps = getStatement(QRY_INSERT_CLASS_COURSE2);
+	        ps.setInt(1, id);
+	        for (Iterator iterator = v.iterator(); iterator.hasNext();) {
+				Hashtable map = (Hashtable) iterator.next();
+				Object courseID = map.get("courseID");
+				ps.setObject(2, courseID);
+				Object type = map.get("type");
+				if(type == null) type = DEFAULT_TYPE;
+				ps.setObject(3, type);
+				Date van = (Date) map.get("notBefore");
+				if(van == null || van.getTime() <= DATE_OFFSET) 
+					ps.setNull(4, Types.TIMESTAMP);
+				else
+					ps.setTimestamp(4, new java.sql.Timestamp(van.getTime()));
+				Date tot = (Date) map.get("notAfter");
+				if(tot == null || tot.getTime() <= DATE_OFFSET)
+					ps.setNull(5, Types.TIMESTAMP);
+				else
+					ps.setTimestamp(5, new java.sql.Timestamp(tot.getTime()));
+				ps.executeUpdate();
+			}
+	        ps.close();
+			c.commit();
+		} catch (SQLException s ) {
+			c.rollback();
+			throw s;
+		} finally {
+			c.setAutoCommit(true);
+		}
+		return true;
+	}
+
 	
 }
