@@ -15,23 +15,17 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.EventObject;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Set;
 import java.util.Vector;
 
-import javax.swing.AbstractButton;
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -53,22 +47,16 @@ import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.SpinnerDateModel;
 import javax.swing.UIManager;
-import javax.swing.event.CellEditorListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
 
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JSpinnerDateEditor;
@@ -76,7 +64,6 @@ import com.toedter.calendar.JSpinnerDateEditor;
 import fi.dwo.client.domain.ClassCourse;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.DWO;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.School;
@@ -732,6 +719,8 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     
     
 	static final SimpleDateFormat DATE_TIME = new SimpleDateFormat("HH:mm dd-MMM-yyyy");
+
+	private CoursesModel coursesModel;
     
     /**
      * Creates a new instance of a SelectCoursesDialog. It shows a overview of
@@ -914,15 +903,16 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         	DefaultMutableTreeNode r = (DefaultMutableTreeNode) treeModel.getRoot();
         	// selecteer root!
         	
-        	CoursesModel cm = new CoursesModel();
-            cm.setColumnCount(cnt);
-            jTable = new JTable(cm);
+        	coursesModel = new CoursesModel();
+            coursesModel.setColumnCount(cnt);
+            jTable = new JTable(coursesModel);
             initializeJTable(cnt);
             tree.getStrategy().nodeSelected((CourseMap) r.getUserObject());
             split.setRightComponent(new JScrollPane(jTable));
 	        contentPane.add(split, BorderLayout.CENTER);
         } else {
             CoursesModel cm = new CoursesModel(); 
+            coursesModel = cm;
             cm.setColumnCount(cnt);
         	jTable = new JTable(cm);
         	initializeJTable(cnt);
@@ -1091,12 +1081,17 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 	}
 
 	private void select(Boolean value) {
-		selectCD(value, cd);
+		if(coursesModel != null)
+			selectCD(value, coursesModel.getCD());
+		else 
+			selectCD(value, cd);
+
 		if(jTable != null)
 		{
 		    CoursesModel model = (CoursesModel) jTable.getModel();
 		    model.fireTableDataChanged();
-		} else if(treeModel != null)
+		} 
+		if(treeModel != null)
 		{
 			treeModel.nodeChanged((TreeNode) treeModel.getRoot());
 		}
