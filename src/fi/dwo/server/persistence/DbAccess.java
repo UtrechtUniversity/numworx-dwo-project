@@ -395,9 +395,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     /**
      */
     public DbAccess() {
-        // super(MYSQL, (DEBUG ? "dwo" : "dwo_tst"), "dwo", "_dwo");
-        //        super(MYSQL, "thijsk_tst", "thijsk", "_thijsk");
-        super(MYSQL_SCIENCE_FISME, "dwo");
+        super(MYSQL2_SCIENCE_FISME, "dwo");
         if(DEBUG)
         	log("Dbacces DEBUG aan");
     }

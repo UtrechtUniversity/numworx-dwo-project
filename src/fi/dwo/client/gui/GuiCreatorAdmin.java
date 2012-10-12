@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 
 import fi.dwo.client.domain.AppletConfig;
 import fi.dwo.client.domain.Course;
+import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.DWO;
 import fi.dwo.client.domain.DwoIF;
@@ -280,6 +281,12 @@ public class GuiCreatorAdmin extends GuiCreator {
 		}
 	}
 	
+    public CenterSubPanel getCourseManagementPanel(CourseMap map)
+    {
+    	CourseManagementPanel panel = new CourseManagementPanel(map.getChildren(), map);
+    	panel.setMap(map);
+		return panel;
+    }
 
 	
 }
