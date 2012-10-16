@@ -336,7 +336,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
         	
         } else if(currentUser != null )
         {
-        	currentUser.addRight(User.CHANGE_CLASS_RIGHT); 		// for students/teachers
+        	//currentUser.addRight(User.CHANGE_CLASS_RIGHT); 		// for students/teachers
         	currentUser.addRight(User.MODIFY_MODULES_RIGHT);	// for teachers	
         }
         

@@ -147,12 +147,15 @@ public class UserMapper extends XmlRpcMapper {
         u.setMiddleName((String) data.get("middlename"));
         u.setUserID(((Integer) data.get("userID")).intValue());
         u.setUsername((String) data.get("username"));
-        u.setRights( (String)data.get("rights") + data.get("schoolRights"));
+        u.setRights( (String)data.get("rights") );
         /* Maybe we've got some information about the school */
         School s = (School) MapperCreator.instance(School.class)
                 .getObjectFromReturn(data);
         if (s != null) {
             u.setSchool(s);
+            String rights = s.getRights();
+            for(int i = 0; i < rights.length(); i++)
+            	u.addRight(rights.charAt(i));
         }
         String lastLogin = (String) data.get("timestamp"); // lastLogin is al in gebruik, maar dan een Date
         try {

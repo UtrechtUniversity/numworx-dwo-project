@@ -615,6 +615,15 @@ public class DbAccessClient extends Client implements fi.dwo.client.persistence.
         return ((Boolean)object).booleanValue();
     }
 
+    public boolean editSchoolRights(int a, java.lang.String b) throws IOException, XmlRpcException
+    {
+        Vector vv = new Vector(2);
+        vv.addElement( new Integer(a));
+        vv.addElement(b);
+        Object object = invoke("editSchoolRights", vv);
+        return ((Boolean)object).booleanValue();
+    }
+
     public java.util.Vector getImportCourses(int a, int b, int c) throws IOException, XmlRpcException
     {
         Vector vv = new Vector(3);

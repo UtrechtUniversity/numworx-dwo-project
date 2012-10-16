@@ -388,6 +388,11 @@ public class DbAccessProxy extends DbConnect implements DbAccessIF {
 			XmlRpcException, SQLException {
 		return getDelegate().editSchool(schoolID, export);
 	}
+	
+	public boolean editSchoolRights(int schoolID, String rights) throws IOException,
+		XmlRpcException, SQLException {
+		return getDelegate().editSchoolRights(schoolID, rights);
+	}
 
 	public Vector getImportCourses(int schoolFrom, int schoolTo, int profileID)
 			throws IOException, XmlRpcException, SQLException {

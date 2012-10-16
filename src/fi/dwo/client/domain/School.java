@@ -11,7 +11,9 @@ import java.util.Arrays;
  *  
  */
 public class School {
-    private int schoolID;
+    private static final String DEFAULT_RIGHTS = "" + User.CHANGE_CLASS_RIGHT;
+
+	private int schoolID;
 
     private String name;
     
@@ -24,7 +26,7 @@ public class School {
     private String image;
     
     private boolean export;
-    private String rights = "";
+    private String rights = DEFAULT_RIGHTS;
 
     /**
      * Creates a new School object.
@@ -213,7 +215,7 @@ public class School {
 	 * @param rights the rights to set
 	 */
 	public void setRights(String rights) {
-		if(rights == null) rights = "";
+		if (rights == null || "_".equals(rights) ) rights = DEFAULT_RIGHTS;
 		this.rights = rights;
 	}
 	

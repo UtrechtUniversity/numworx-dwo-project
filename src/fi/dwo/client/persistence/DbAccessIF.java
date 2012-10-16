@@ -451,6 +451,7 @@ public interface DbAccessIF {
 			boolean export) throws IOException, XmlRpcException, SQLException, DwoXmlRpcException;
 
 	public boolean editSchool(int schoolID, boolean export) throws IOException, XmlRpcException, SQLException;
+	public boolean editSchoolRights(int schoolID, String rights) throws IOException, SQLException, XmlRpcException;
 
 	public Vector getImportCourses(int schoolFrom, int schoolTo, int profileID) throws IOException, XmlRpcException, SQLException;
 

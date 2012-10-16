@@ -339,6 +339,9 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     private final static String QRY_UPDATE_SCHOOL2 = "UPDATE tblSchool "
         + "SET export = ? WHERE (schoolID = ?) ";
 
+    private final static String QRY_UPDATE_SCHOOL3 = "UPDATE tblSchool "
+        + "SET schoolRights = ? WHERE (schoolID = ?) ";
+ 
 	private final static String QRY_UPDATE_SCHOOLGROUP_PASSW = "UPDATE tblSchoolGroup "
             + "SET passwd = ? " + "WHERE (schoolGroupID = ?) ";
             
@@ -2568,6 +2571,15 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps.execute();
         ps.close();
         return export;
+	}
+	
+	public boolean editSchoolRights(int schoolID, String rights) throws IOException, SQLException  {
+		PreparedStatement ps = getStatement(QRY_UPDATE_SCHOOL3);
+        ps.setString(1, rights);
+        ps.setInt(2, schoolID);
+        ps.execute();
+        ps.close();
+        return true;
 	}
 
 	public Vector getImportCourses(int schoolFrom, int schoolTo, int profileID)
