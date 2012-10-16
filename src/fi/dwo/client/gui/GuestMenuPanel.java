@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Insets;
 
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -45,6 +46,14 @@ public class GuestMenuPanel extends JPanel implements ActionListener {
 
 		public  MenuPanelButton(String label) {
 			super(label);
+			init();
+		}
+		public  MenuPanelButton(Action action) {
+			super(action);
+			init();
+		}
+
+		private void init() {
 			this.setMargin(new Insets(2,10,2,10));
 			
 // niet instelbaar!

@@ -2024,5 +2024,19 @@ e1.printStackTrace();
 		
 		
 	}
+
+	public void editSchool(School school, String string) throws PersistenceException {
+		try {
+			if(DbAccessCreator.instance().editSchoolRights(school.getSchoolID(), string))
+				school.setRights(string);
+		} catch (IOException e) {
+			throw new PersistenceException(PersistenceException.EX_IO, e);
+		} catch (SQLException e) {
+			throw new PersistenceException(PersistenceException.EX_DB,e);
+		} catch (XmlRpcException e) {
+			throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+		}
+
+	}
 	
 }

@@ -35,6 +35,7 @@ import fi.dwo.client.gui.action.CutCopyAction;
 import fi.dwo.client.gui.action.DeleteAction;
 import fi.dwo.client.gui.action.NewAction;
 import fi.dwo.client.gui.action.PasteAction;
+import fi.dwo.client.gui.action.SchoolConfigAction;
 import fi.dwo.client.gui.action.TeacherStrategy;
 import fi.dwo.client.persistence.MapperCreator;
 import fi.dwo.client.system.TextMapper;
@@ -67,6 +68,12 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
         classManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_CLASS_MANAGEMENT));
         classManagementButton.addActionListener(this);
         this.add(classManagementButton);
+
+        
+        JButton schoolsetup = new MenuPanelButton( new SchoolConfigAction() );
+        createGap();add(schoolsetup);
+
+        
         /* Als dwo in Deeplink mode, geen coursemanagement */
         if(dwo.getCourseViewNr()>0 || !dwo.getUser().hasRight(User.MODIFY_MODULES_RIGHT) || CenterPanel.isIconizer())
         	return;
@@ -75,6 +82,9 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
         courseManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_COURSE_MANAGEMENT));
         courseManagementButton.addActionListener(this);
         add(courseManagementButton);
+        
+        
+        
 	}
 
 	/**

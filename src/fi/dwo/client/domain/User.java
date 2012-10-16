@@ -57,6 +57,11 @@ public class User implements UserGroup, Comparable {
      * geeft recht om modules aan te passen.
      */
     public static final char MODIFY_MODULES_RIGHT = 'm';
+
+    /**
+     * geeft recht om leerlingen in klassen te zetten. Een docentrecht.
+     */
+	public static final char CHANGE_CLASS_RIGHT_TEACHER = CHANGE_CLASS_RIGHT;
     
     
     private String rights = "";
