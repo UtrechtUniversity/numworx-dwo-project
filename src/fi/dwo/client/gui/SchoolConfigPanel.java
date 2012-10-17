@@ -72,7 +72,7 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
 		b = modifyModules.isSelected();
 		if(b) sb.append(User.MODIFY_MODULES_RIGHT);
 
-		school.setRights(sb.toString());
+		// school.setRights(sb.toString()); // testing
 		try {
 			PersistenceFacade.instance().editSchool(school, sb.toString());
 		} catch (PersistenceException e) {

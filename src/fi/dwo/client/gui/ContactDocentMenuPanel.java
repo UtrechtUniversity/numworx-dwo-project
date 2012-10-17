@@ -4,12 +4,14 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 
 import javax.swing.Box;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.table.AbstractTableModel;
 
 import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.GuestMenuPanel.MenuPanelButton;
+import fi.dwo.client.gui.action.SchoolConfigAction;
 import fi.dwo.client.system.TextMapper;
 
 public class ContactDocentMenuPanel extends TeacherMenuPanel {
@@ -37,6 +39,11 @@ public class ContactDocentMenuPanel extends TeacherMenuPanel {
 		klasKeuzeButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_CLASSES_SCHOOL));
 		klasKeuzeButton.addActionListener(this);
 		add(klasKeuzeButton);
+        
+        JButton schoolsetup = new MenuPanelButton( new SchoolConfigAction() );
+        createGap();add(schoolsetup);
+
+
 	}
 
 	/* (non-Javadoc)

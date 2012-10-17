@@ -2577,9 +2577,9 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 		PreparedStatement ps = getStatement(QRY_UPDATE_SCHOOL3);
         ps.setString(1, rights);
         ps.setInt(2, schoolID);
-        ps.execute();
+        int r = ps.executeUpdate();
         ps.close();
-        return true;
+        return r != 0;
 	}
 
 	public Vector getImportCourses(int schoolFrom, int schoolTo, int profileID)
