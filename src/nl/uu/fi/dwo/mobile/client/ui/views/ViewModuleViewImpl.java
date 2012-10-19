@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleFont;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleTeken;
+import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.vakken.Machtvak;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.InteractionView;
@@ -28,6 +29,12 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -37,6 +44,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -67,7 +75,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 {
 	private HashMap<String, Object> launchData, instellingen;
 	private OpdrNav on;
-	private Panel mainPanel;
+	private FocusPanel mainPanel;
 	private TouchPanel contentPanel = null;
 	private ScrollPanel contentScrollPanel = null;
 	private Panel tekst = null;
@@ -809,9 +817,96 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 		//settings.setPreventScrolling(true);
 		MGWT.applySettings(settings);
 
-		mainPanel = new FlowPanel();
+		FlowPanel fp = new FlowPanel();
+		mainPanel = new FocusPanel(fp);
 		mainPanel.setHeight("100%");
 		mainPanel.setWidth("100%");
+		mainPanel.addFocusHandler(new FocusHandler()
+		{
+
+			@Override
+			public void onFocus(FocusEvent event)
+			{
+				System.out.println(event.toDebugString());
+
+			}
+		});
+
+		mainPanel.addKeyDownHandler(new KeyDownHandler()
+		{
+
+			@Override
+			public void onKeyDown(KeyDownEvent event)
+			{
+				if (event.isLeftArrow() && kb != null)
+				{
+					FormuleEditor editor = kb.getEditor();
+					if (editor != null)
+						editor.getCurrentRegel().cursorToLeft();
+				}
+				else if (event.isRightArrow() && kb != null)
+				{
+					FormuleEditor editor = kb.getEditor();
+					if (editor != null)
+						editor.getCurrentRegel().cursorToRight();
+				}
+				else
+					System.out.println(event.toDebugString());
+
+			}
+		});
+
+		mainPanel.addKeyPressHandler(new KeyPressHandler()
+		{
+
+			@Override
+			public void onKeyPress(KeyPressEvent event)
+			{
+				if (kb != null && kb.getEditor() != null)
+				{
+					FormuleEditor editor = kb.getEditor();
+					char ch = event.getCharCode();
+					if (allowed(ch))
+						editor.addElement(new FormuleTeken(editor.getCurrentRegel(), ch));
+					else if (ch == '\b')
+						editor.removeCurrentElement();
+					else if (ch == '\u007F')
+						editor.removeNextElement();
+					else if (ch == '^')
+						editor.addElement(new Machtvak(editor.getCurrentRegel()));
+					else if (ch == '\n' || ch == '\r') // enter?
+					{
+						if (editor instanceof FormuleEditorWithAnswer)
+							((FormuleEditorWithAnswer) editor).check();
+					}
+				}
+
+			}
+
+			private boolean allowed(char ch)
+			{
+				switch (ch)
+				{
+				case ' ':
+				case '+':
+				case '-':
+				case '*':
+				case '/':
+				case '(':
+				case ')':
+				case '<':
+				case '=':
+				case '>':
+				case '.':
+				case ',':
+					return true;
+				default:
+					return Character.isLetterOrDigit(ch);
+				}
+			}
+		});
+
+		mainPanel.setFocus(true);
 
 		hp = new HeaderPanel();
 		//hp.setCenter("Module 1");
@@ -838,12 +933,12 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 
 		contentScrollPanel.setWidget(contentPanel);
 
-		mainPanel.add(contentScrollPanel);
+		fp.add(contentScrollPanel);
 
 		kb = new FormuleKeyboard();
 		Panel kbp = kb.getAsPanel();
 
-		mainPanel.add(kbp);
+		fp.add(kbp);
 
 		//initWidget(mainPanel);
 
