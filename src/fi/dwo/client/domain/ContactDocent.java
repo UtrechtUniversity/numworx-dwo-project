@@ -10,9 +10,15 @@ public class ContactDocent extends Teacher {
 	 * Een schooladmin kan altijd meer dan een docent.
 	 */
 	public boolean hasRight(char right) {
-		if(right == MODIFY_MODULES_RIGHT || right == CHANGE_CLASS_RIGHT)
+		switch(right) {
+		case MODIFY_MODULES_RIGHT: 
+		case CHANGE_CLASS_RIGHT:
+		case CHANGE_CLASS_RIGHT_TEACHER:
 			return true;
-		return super.hasRight(right);
+		default:
+			return super.hasRight(right);
+
+		}
 	}
 
 }

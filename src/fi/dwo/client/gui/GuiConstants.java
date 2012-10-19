@@ -150,8 +150,8 @@ public abstract class GuiConstants {
 	    GUI_IMAGE_SCO = getString(prop, "gui_image_sco");
 	    GUI_IMAGE_COURSE = getString(prop, "gui_image_course");
 	    
-	    GUI_ICONIZED = getBoolean(prop, "gui_iconized") ;//||true;
-	    User.DEFAULT_ICONIZER = getBoolean(prop, "default_iconized") && GUI_ICONIZED;
+	    GUI_ICONIZED = getBoolean(prop, "gui_iconized") ||true;
+	    User.DEFAULT_ICONIZER = getBoolean(prop, "default_iconized") ||true&& GUI_ICONIZED;
 	    GUI_BGIMAGE_ICON = getString(prop, "gui_bgimage_icon");
  	    GUI_BGIMAGE_MENU = getString(prop, "gui_bgimage_menu");
 	    GUI_BGIMAGE_SCO = getString(prop, "gui_bgimage_sco");

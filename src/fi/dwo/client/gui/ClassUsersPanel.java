@@ -207,7 +207,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
         }
 		RegisterClassListButton registerClassListButton = new RegisterClassListButton(schoolClass);
 
-		if(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT))
+		if(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER))
 			vbox.add(registerClassListButton);
         
     }

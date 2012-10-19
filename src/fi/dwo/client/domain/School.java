@@ -11,7 +11,7 @@ import java.util.Arrays;
  *  
  */
 public class School {
-    private static final String DEFAULT_RIGHTS = "" + User.CHANGE_CLASS_RIGHT;
+    private static final String DEFAULT_RIGHTS = "" + User.CHANGE_CLASS_RIGHT + User.CHANGE_CLASS_RIGHT_TEACHER + User.MODIFY_MODULES_RIGHT;
 
 	private int schoolID;
 

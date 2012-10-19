@@ -16,7 +16,7 @@ import fi.dwo.client.system.RegisterException;
 class UserModel extends AbstractTableModel {
 
 	UserModel() {
-		if(!GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT))
+		if(!GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER))
 			cols = 4;
 	}
 	

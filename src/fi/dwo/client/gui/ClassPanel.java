@@ -70,7 +70,7 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
 		public ClassModel(SchoolClass[] classes) {
 			super();
 			this.classes = classes;
-			if(! GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT))
+			if(! GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER))
 				cols = 4;
 		}
 
@@ -106,7 +106,7 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
 
 		public boolean isCellEditable(int row, int col) {
 			if(col == REMOVE_COL)
-				return GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT);
+				return GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER);
 			return col > 0;
 		}
 
@@ -289,7 +289,7 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
         addClassButton.setSize(addClassButton.getPreferredSize());
         addClassButton.addActionListener(this);
         //addClassButton.setLocation(30, 10);
-        addClassButton.setVisible(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT));
+        addClassButton.setVisible(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER));
         Box header = Box.createHorizontalBox();
         header.add(addClassButton);
         header.add(Box.createHorizontalGlue());

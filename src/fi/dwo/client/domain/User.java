@@ -61,7 +61,7 @@ public class User implements UserGroup, Comparable {
     /**
      * geeft recht om leerlingen in klassen te zetten. Een docentrecht.
      */
-	public static final char CHANGE_CLASS_RIGHT_TEACHER = CHANGE_CLASS_RIGHT;
+	public static final char CHANGE_CLASS_RIGHT_TEACHER = 'C';
     
     
     private String rights = "";

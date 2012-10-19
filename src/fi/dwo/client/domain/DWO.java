@@ -326,20 +326,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 	        {	JOptionPane.showMessageDialog(this, "gebruikers van deze school hebben hier geen toegang");
 	        	return false;
 	        }
-        	String rights = schoolAccessKeys.getProperty("rights." + schoolNumber);
-        	if(rights != null)
-        		currentUser.setRights(rights);
-        	else {
-        		currentUser.addRight(User.CHANGE_CLASS_RIGHT); 		// for students/teachers
-            	currentUser.addRight(User.MODIFY_MODULES_RIGHT);	// for teachers	
-        	}
         	
-        } else if(currentUser != null )
-        {
-        	//currentUser.addRight(User.CHANGE_CLASS_RIGHT); 		// for students/teachers
-        	currentUser.addRight(User.MODIFY_MODULES_RIGHT);	// for teachers	
-        }
-        
+        } 
         return currentUser != null;
 	}
 
