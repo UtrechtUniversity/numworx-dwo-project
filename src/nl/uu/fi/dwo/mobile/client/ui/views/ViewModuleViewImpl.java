@@ -24,17 +24,20 @@ import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.DomEvent;
+import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.TouchEndHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -52,6 +55,8 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
+import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
+import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
@@ -73,6 +78,168 @@ import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
  */
 public class ViewModuleViewImpl extends Composite implements ViewModuleView, EntryPoint
 {
+	final class FocusOnTouch implements TouchHandler, TapHandler
+	{
+		@Override
+		public void onTouchStart(TouchStartEvent event)
+		{
+
+		}
+
+		@Override
+		public void onTouchMove(TouchMoveEvent event)
+		{
+		}
+
+		@Override
+		public void onTouchEnd(TouchEndEvent event)
+		{
+			requestFocus();
+		}
+
+		@Override
+		public void onTouchCanceled(TouchCancelEvent event)
+		{
+
+		}
+
+		@Override
+		public void onTap(TapEvent event)
+		{
+			requestFocus();
+
+		}
+	}
+
+	final FocusOnTouch FOCUS_ON_TOUCH = new FocusOnTouch();
+
+	final class KeyHandler implements KeyDownHandler, KeyPressHandler
+	{
+
+		private void backspace(DomEvent<?> event)
+		{
+			kb.getEditor().removeCurrentElement();
+			event.stopPropagation();
+			event.preventDefault();
+		}
+
+		private void enter(DomEvent<?> event)
+		{
+			FormuleEditor editor = kb.getEditor();
+			if (editor instanceof FormuleEditorWithAnswer)
+				((FormuleEditorWithAnswer) editor).check();
+			event.preventDefault();
+			event.stopPropagation();
+		}
+
+		@Override
+		public void onKeyPress(KeyPressEvent event)
+		{
+			if (kb != null && kb.getEditor() != null)
+			{
+				FormuleEditor editor = kb.getEditor();
+				char ch = event.getCharCode();
+				if (allowed(ch))
+				{
+					editor.addElement(new FormuleTeken(editor.getCurrentRegel(), ch));
+					event.preventDefault();
+					event.stopPropagation();
+				}
+				else if (ch == '\b')
+				{
+					backspace(event);
+				}
+				else if (ch == '\u007F')
+				{
+					editor.removeNextElement();
+					event.preventDefault();
+					event.stopPropagation();
+				}
+				else if (ch == '^')
+				{
+					editor.addElement(new Machtvak(editor.getCurrentRegel()));
+					event.preventDefault();
+					event.stopPropagation();
+				}
+				else if (ch == '\n' || ch == '\r') // enter?
+				{
+					enter(event);
+				}
+			}
+
+		}
+
+		private boolean allowed(char ch)
+		{
+			switch (ch)
+			{
+			case ' ':
+			case '+':
+			case '-':
+			case '*':
+			case '/':
+			case '(':
+			case ')':
+			case '<':
+			case '=':
+			case '>':
+			case '.':
+			case ',':
+				return true;
+			default:
+				return Character.isLetterOrDigit(ch);
+			}
+		}
+
+		@Override
+		public void onKeyDown(KeyDownEvent event)
+		{
+			if (event.isLeftArrow() && kb != null)
+			{
+				FormuleEditor editor = kb.getEditor();
+				if (editor != null)
+				{
+					editor.getCurrentRegel().cursorToLeft();
+					event.preventDefault();
+					event.stopPropagation();
+				}
+			}
+			else if (event.isRightArrow() && kb != null)
+			{
+				FormuleEditor editor = kb.getEditor();
+				if (editor != null)
+				{
+					editor.getCurrentRegel().cursorToRight();
+					event.preventDefault();
+					event.stopPropagation();
+				}
+			}
+			else
+			{
+				if (event.getNativeKeyCode() == 8) // FIREFOX GEEN keypress voor BACKSPACE
+				{
+					FormuleEditor editor = kb.getEditor();
+					if (editor != null)
+					{
+						backspace(event);
+						return;
+					}
+				}
+				if (event.getNativeKeyCode() == 13) // FIREFOX GEEN keypress voor ENTER
+				{
+					FormuleEditor editor = kb.getEditor();
+					if (editor != null)
+					{
+						enter(event);
+						return;
+					}
+				}
+				System.out.println(event.toDebugString());
+			}
+
+		}
+	}
+
 	private HashMap<String, Object> launchData, instellingen;
 	private OpdrNav on;
 	private FocusPanel mainPanel;
@@ -684,11 +851,26 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 	private void addFormulePanelListeners(final TouchPanel tp, final FormuleEditor editor)
 	{
 		tp.addTouchHandler(new FormuleEditorTouchHandler(tp, kb, editor));
+		tp.addTapHandler(FOCUS_ON_TOUCH);
+	}
+
+	protected void requestFocus()
+	{
+		System.out.println("requestFocus");
+		mainPanel.setFocus(true);
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() // voor firefox delayed focus.
+		{
+			public void execute()
+			{
+				mainPanel.setFocus(true);
+			}
+		});
 	}
 
 	private void addContentPanelTouchListener(TouchPanel contentPanel)
 	{
 		final HashMap<String, Double> dif = new HashMap<String, Double>();
+		contentPanel.addTapHandler(FOCUS_ON_TOUCH);
 		contentPanel.addTouchHandler(new TouchHandler()
 		{
 
@@ -817,97 +999,17 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 		//settings.setPreventScrolling(true);
 		MGWT.applySettings(settings);
 
-		FlowPanel fp = new FlowPanel();
+		TouchPanel fp = new TouchPanel();
+		fp.addTapHandler(FOCUS_ON_TOUCH);
 		mainPanel = new FocusPanel(fp);
 		mainPanel.setHeight("100%");
 		mainPanel.setWidth("100%");
-		mainPanel.addFocusHandler(new FocusHandler()
-		{
 
-			@Override
-			public void onFocus(FocusEvent event)
-			{
-				System.out.println(event.toDebugString());
+		KeyHandler keyHandler = new KeyHandler();
+		mainPanel.addKeyDownHandler(keyHandler);
+		mainPanel.addKeyPressHandler(keyHandler);
 
-			}
-		});
-
-		mainPanel.addKeyDownHandler(new KeyDownHandler()
-		{
-
-			@Override
-			public void onKeyDown(KeyDownEvent event)
-			{
-				if (event.isLeftArrow() && kb != null)
-				{
-					FormuleEditor editor = kb.getEditor();
-					if (editor != null)
-						editor.getCurrentRegel().cursorToLeft();
-				}
-				else if (event.isRightArrow() && kb != null)
-				{
-					FormuleEditor editor = kb.getEditor();
-					if (editor != null)
-						editor.getCurrentRegel().cursorToRight();
-				}
-				else
-					System.out.println(event.toDebugString());
-
-			}
-		});
-
-		mainPanel.addKeyPressHandler(new KeyPressHandler()
-		{
-
-			@Override
-			public void onKeyPress(KeyPressEvent event)
-			{
-				if (kb != null && kb.getEditor() != null)
-				{
-					FormuleEditor editor = kb.getEditor();
-					char ch = event.getCharCode();
-					if (allowed(ch))
-						editor.addElement(new FormuleTeken(editor.getCurrentRegel(), ch));
-					else if (ch == '\b')
-						editor.removeCurrentElement();
-					else if (ch == '\u007F')
-						editor.removeNextElement();
-					else if (ch == '^')
-						editor.addElement(new Machtvak(editor.getCurrentRegel()));
-					else if (ch == '\n' || ch == '\r') // enter?
-					{
-						if (editor instanceof FormuleEditorWithAnswer)
-							((FormuleEditorWithAnswer) editor).check();
-					}
-				}
-
-			}
-
-			private boolean allowed(char ch)
-			{
-				switch (ch)
-				{
-				case ' ':
-				case '+':
-				case '-':
-				case '*':
-				case '/':
-				case '(':
-				case ')':
-				case '<':
-				case '=':
-				case '>':
-				case '.':
-				case ',':
-					return true;
-				default:
-					return Character.isLetterOrDigit(ch);
-				}
-			}
-		});
-
-		mainPanel.setFocus(true);
-
+		requestFocus();
 		hp = new HeaderPanel();
 		//hp.setCenter("Module 1");
 		Style style = hp.getElement().getStyle();
@@ -937,6 +1039,19 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 
 		kb = new FormuleKeyboard();
 		Panel kbp = kb.getAsPanel();
+
+		TouchEndHandler touchEndHandler = new TouchEndHandler()
+		{
+
+			@Override
+			public void onTouchEnd(com.google.gwt.event.dom.client.TouchEndEvent event)
+			{
+				mainPanel.setFocus(true);
+
+			}
+		};
+		Type<TouchEndHandler> type = com.google.gwt.event.dom.client.TouchEndEvent.getType();
+		kbp.addDomHandler(touchEndHandler, type);
 
 		fp.add(kbp);
 
