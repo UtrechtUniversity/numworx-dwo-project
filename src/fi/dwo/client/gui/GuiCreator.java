@@ -104,15 +104,16 @@ public class GuiCreator {
         }
     }
 /**
- * Toon een waarschuwing.
+ * Toon <b>G</b>een waarschuwing.
  * Fix voor gebruikersnamen die met het fidentity systeem ongeldig worden.
  * @param username gebruikersnaam
+ * @deprecated wordt niet meer gebruikt.
  */
     private void validUsernameCheck(String username) {
-		if(!DWO.isValid(username))
-		{
-			JOptionPane.showMessageDialog(null,'\'' + username + "' is vanaf november 2007 ongeldig!\nRegistreer een nieuwe gebruikersnaam");	
-		}
+//		if(!DWO.isValid(username))
+//		{
+//			JOptionPane.showMessageDialog(null,'\'' + username + "' is vanaf november 2007 ongeldig!\nRegistreer een nieuwe gebruikersnaam");	
+//		}
 	}
 
 	/**
