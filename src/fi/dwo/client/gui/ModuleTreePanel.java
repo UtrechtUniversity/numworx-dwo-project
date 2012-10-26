@@ -596,7 +596,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		return root;
 	}
 
-	private void sort(Course[] courses) {
+	private void sort_fout(Course[] courses) {
 		// topology sort.
  
 		boolean again;
@@ -617,6 +617,57 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 			}
 		} while(again);
 	}
+	
+	// topologie sort maar behoud ordening.
+	private void sort(Course[] courses) {
+		boolean again; 
+		if(courses == null || courses.length <= 1)
+			return;
+		System.err.print(Arrays.asList(courses));
+		do { again = false;
+			more:
+			for (int i = 1; i < courses.length; i++ ) {
+				Course c = courses[i];
+				if(c.getParentID() == 0) { // toplevel
+					int j;
+					for(j = i-1; j >= 0; j--) {
+						if(courses[j].getParentID() == 0) {
+							if(j == i-1)
+								break;
+							// move i to j+1
+							System.arraycopy(courses, j+1, courses, j+2, i-j-1);
+							courses[j+1] = c;
+							//again = true;
+							continue more;
+						}
+					}
+					if(j == -1) {
+						System.arraycopy(courses, 0, courses, 1, i);
+						courses[0] = c;
+						continue more;
+					}
+				} else {
+					int pid = c.getParentID(); int j;
+					for(j = i-1; j>= 0; j--) {
+						if(courses[j].getParentID() == pid || courses[i].getID() == pid) {
+							if(j == i-1) break;
+							// move i to j+1
+							System.arraycopy(courses, j+1, courses, j+2, i-j-1);
+							courses[j+1] = c;
+							continue more;
+						
+						}
+					}
+					if( j == -1) {
+						again = true; // still unsorted? Redo only if parent in i+1..length
+					}
+				}
+			}
+		} while(again);
+		System.err.print(Arrays.asList(courses));
+	}
+	
+	
 
 	protected void insertScos(Course course, DefaultMutableTreeNode node) {
 		course.loadScos();
