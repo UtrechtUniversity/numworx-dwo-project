@@ -11,6 +11,9 @@ import java.awt.MediaTracker;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -31,7 +34,7 @@ import fi.dwo.client.system.TextMapper;
  * @author M.J.B. Kupers
  *  
  */
-public class RegisterPanel extends JPanel implements ActionListener {
+public class RegisterPanel extends ContentPanel implements ActionListener {
     private Group groupList[];
 
     private JTextField username;
@@ -59,6 +62,8 @@ public class RegisterPanel extends JPanel implements ActionListener {
     private JButton backButton;
 
     private JComboBox groupChoice;
+    
+    private JPanel dialog; 
 
     /**
      * Creates a new RegisterPanel. At the registerpanel, a user can register
@@ -72,6 +77,10 @@ public class RegisterPanel extends JPanel implements ActionListener {
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setLayout(null);
         this.setSize(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
+        dialog = new JPanel(null);
+        dialog.setOpaque(false);
+        dialog.setSize(getSize());
+        this.add(dialog); // een extra layer....
         //setPreferredSize(getSize()); // Sinds 1.5
 
         /* Variables used to create items */
@@ -87,23 +96,23 @@ public class RegisterPanel extends JPanel implements ActionListener {
     
     	ImagePanel ip = new ImagePanel(fiLogo);
     	ip.setLocation(getSize().width / 2 - 130, 50);
-    	this.add(ip);
-    	if(GuiConstants.GUI_IMAGE_BG) remove(ip);
+    	dialog.add(ip);
+    	if(GuiConstants.GUI_IMAGE_BG) dialog.remove(ip);
     
         /* Register Label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_REGISTER));
         l.setFont(GuiConstants.HEADER_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setBounds(ip.getLocation().x + ip.getSize().width + 10, 70, fm.stringWidth(l.getText()), fm.getHeight());
-        this.add(l);
-        if(GuiConstants.GUI_IMAGE_BG) remove(l);
+        dialog.add(l);
+        if(GuiConstants.GUI_IMAGE_BG) dialog.remove(l);
 
         /* Add Register-panel */
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(getForeground()));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         p.setBounds(getSize().width / 2 - 155, 140, 310, 105);
-        this.add(p);
+        dialog.add(p);
 
         /* registerinfo label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_REGISTERINFO) + ":");
@@ -177,7 +186,7 @@ public class RegisterPanel extends JPanel implements ActionListener {
         p.setBorder(BorderFactory.createLineBorder(getForeground()));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         p.setBounds(getSize().width / 2 - 155, 244, 310, 130);
-        this.add(p);
+        dialog.add(p);
 
         /* personalinfo label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_PERSONALINFO) + ":");
@@ -263,7 +272,7 @@ public class RegisterPanel extends JPanel implements ActionListener {
         p.setBorder(BorderFactory.createLineBorder(Color.black));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         p.setBounds(getSize().width / 2 - 155, 373, 310, 115);
-        this.add(p);
+        dialog.add(p);
 
         /* schoolinfo label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_SCHOOLINFO) + ":");
@@ -337,7 +346,7 @@ public class RegisterPanel extends JPanel implements ActionListener {
         p.setBorder(BorderFactory.createLineBorder(Color.black));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         p.setBounds(getSize().width / 2 - 155, 487, 310, 35);
-        this.add(p);
+        dialog.add(p);
 
         /* Register button */
         registerButton = new JButton(TextMapper.getText(TextMapper.GUIR_BTN_REGISTER));//, GuiConstants.SUB_BACKGROUND);
@@ -365,13 +374,24 @@ public class RegisterPanel extends JPanel implements ActionListener {
         backButton.setSize(backButton.getPreferredSize());
         backButton.setLocation(getSize().width / 2 - backButton.getSize().width
                 / 2, 530);
-        this.add(backButton);
+        dialog.add(backButton);
 
         registerButton.addActionListener(this);
         resetButton.addActionListener(this);
         backButton.addActionListener(this);
 
         groupChoice.addItemListener(new GroupItemListener(schoolpassword));
+        
+        
+		addComponentListener(new ComponentAdapter(){
+			public void componentResized(ComponentEvent e) {
+				super.componentResized(e);
+				int width = getWidth();
+	// move dialogbox  horizontal
+				dialog.setLocation(width / 2 - dialog.getWidth() / 2, dialog.getY());
+			}
+		}); 
+
     }
 
     /**
@@ -390,10 +410,12 @@ public class RegisterPanel extends JPanel implements ActionListener {
     }
     
     public void paintComponent(Graphics g) {
-    	if(GuiConstants.GUI_IMAGE_BG) {
-	       	Point p = DwoHelper.getComponentLocation(this);
-	       	g.drawImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_WELCOME),0,0,null);
-    	}       
+//    	if(GuiConstants.GUI_IMAGE_BG) {
+//	       	Point p = DwoHelper.getComponentLocation(this);
+//	       	g.drawImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_WELCOME),0,0,null);
+//    	}       
+ 
+    	super.paintComponent(g);
     }
 
     /**
