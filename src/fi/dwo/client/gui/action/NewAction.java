@@ -8,8 +8,11 @@ import javax.swing.JOptionPane;
 import fi.dwo.client.domain.AppletConfig;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseMap;
+import fi.dwo.client.domain.DWO;
 import fi.dwo.client.domain.DwoHelper;
+import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.Sco;
+import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.AddScoDialog;
 import fi.dwo.client.gui.CenterPanel;
 import fi.dwo.client.gui.CourseNameDialog;
@@ -98,8 +101,7 @@ public class NewAction extends GuiAction {
 				Course child = CourseNameDialog.addMap(DwoHelper.getApplet(), course);
 				if(child != null) 
 				{
-					map.addChild(child);
-					getCenter().updateMap(map);
+					addNewCourse(child);
 				}
 			}
 			else if(ismap)
@@ -107,8 +109,7 @@ public class NewAction extends GuiAction {
 				Course child = CourseNameDialog.addCourse(DwoHelper.getApplet(), course);
 				if(child != null)
 				{
-					map.addChild(child);
-					getCenter().updateMap(map);
+					addNewCourse(child);
 				}
 			}
 			else
@@ -140,4 +141,32 @@ public class NewAction extends GuiAction {
 
 		}
 
+		private void addNewCourse(Course child) {
+			map.addChild(child);
+			if(DWO.SEQUENCE) sequenceCourses(map);
+			getCenter().updateMap(map);
+		}
+// DIT IS EEN KOPIE VAN CourseManagementPanel TODO in deze vorm verplaatsen naar de Domain layer = DWO
+		private void sequenceCourses(CourseMap map) {
+        	try {
+        		Object userObject = map.getUserObject();
+        		CourseMap[] courses = map.getChildren();
+        		
+				School school = User.getCurrentUser().getSchool();
+// een profile admin mag de standaard modules sorteren, maar de school is dan wel null				
+				if(userObject== ModuleTreePanel.STANDAARD_DWO_MAP || ModuleTreePanel.STANDAARD_DWO_MODULES == userObject)
+					school = null;
+				if(userObject instanceof Course)
+				{
+					if( ((Course) userObject).getSchoolID() == 0)
+						school = null;
+				}
+				PersistenceFacade.instance().setCourseSequence(courses, school);
+			} catch (PersistenceException e) {
+				e.printStackTrace();
+			}
+
+		}
+		
+		
 	}

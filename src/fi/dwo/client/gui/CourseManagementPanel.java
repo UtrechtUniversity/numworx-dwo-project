@@ -665,13 +665,14 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	}
 
 
-	protected void addChildToMap(Course c) {
+	private void addChildToMap(Course c) {
 		map.addChild(c);
 		courses = map.getChildren();
 		if(!DWO.SEQUENCE)
 		{	Arrays.sort(courses);
 			map.setChildren(courses);
-		}
+		} else
+			updown = true; // sequencing needs an update
 		buildJTable();
 		noUpdate();
 	}

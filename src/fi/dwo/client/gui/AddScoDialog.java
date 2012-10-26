@@ -361,7 +361,7 @@ public class AddScoDialog extends JDialog implements ActionListener,
             JOptionPane.showMessageDialog(owner, TextMapper.getText(TextMapper.GUISDLG_MSG_NO_APPLETS));
             return null;
         } else {
-            String title = TextMapper.getText(TextMapper.GUISDLG_TTL_ADD_SCO);
+            //String title = TextMapper.getText(TextMapper.GUISDLG_TTL_ADD_SCO);
             AddScoDialog asd;
             if(acT == null || acT.length == 0)
                 asd = new AddScoDialog(owner, ac);

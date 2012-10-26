@@ -623,7 +623,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		boolean again; 
 		if(courses == null || courses.length <= 1)
 			return;
-		System.err.print(Arrays.asList(courses));
+		//System.err.println(Arrays.asList(courses));
 		do { again = false;
 			more:
 			for (int i = 1; i < courses.length; i++ ) {
@@ -637,11 +637,10 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 							// move i to j+1
 							System.arraycopy(courses, j+1, courses, j+2, i-j-1);
 							courses[j+1] = c;
-							//again = true;
 							continue more;
 						}
 					}
-					if(j == -1) {
+					if(j == -1) { // move i to 0, no 0's found
 						System.arraycopy(courses, 0, courses, 1, i);
 						courses[0] = c;
 						continue more;
@@ -649,7 +648,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 				} else {
 					int pid = c.getParentID(); int j;
 					for(j = i-1; j>= 0; j--) {
-						if(courses[j].getParentID() == pid || courses[i].getID() == pid) {
+						if(courses[j].getParentID() == pid || courses[j].getID() == pid) {
 							if(j == i-1) break;
 							// move i to j+1
 							System.arraycopy(courses, j+1, courses, j+2, i-j-1);
@@ -664,7 +663,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 				}
 			}
 		} while(again);
-		System.err.print(Arrays.asList(courses));
+		//System.err.println(Arrays.asList(courses));
 	}
 	
 	
