@@ -135,6 +135,8 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 		@Override
 		public void onKeyPress(KeyPressEvent event)
 		{
+			if (event.isAltKeyDown() || event.isControlKeyDown() || event.isMetaKeyDown())
+				return;
 			if (kb != null && kb.getEditor() != null)
 			{
 				FormuleEditor editor = kb.getEditor();
@@ -157,35 +159,26 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 				}
 				else if (ch == '^')
 				{
-					editor.addElement(new Machtvak(editor.getCurrentRegel()));
-					event.preventDefault();
-					event.stopPropagation();
+					macht(event, editor);
 				}
 				else if (ch == '\n' || ch == '\r') // enter?
 				{
 					enter(event);
 				}
+				else
+					Window.alert(event.toDebugString());
 			}
 
 		}
 
 		private boolean allowed(char ch)
 		{
+			if (ch >= ' ' && ch < '\u007F' && ch != '^')
+				return true;
 			switch (ch)
 			{
-			case ' ':
-			case '+':
-			case '-':
-			case '*':
-			case '/':
-			case '(':
-			case ')':
-			case '<':
-			case '=':
-			case '>':
-			case '.':
-			case ',':
-				return true;
+			case '^': // expliciet macht verheffen..
+				return false;
 			default:
 				return Character.isLetterOrDigit(ch);
 			}
@@ -194,49 +187,54 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 		@Override
 		public void onKeyDown(KeyDownEvent event)
 		{
-			if (event.isLeftArrow() && kb != null)
+			if (event.isAltKeyDown() || event.isControlKeyDown() || event.isMetaKeyDown() || kb == null)
+				return;
+			FormuleEditor editor = kb.getEditor();
+			if (editor == null)
+				return;
+
+			if (event.isLeftArrow())
 			{
-				FormuleEditor editor = kb.getEditor();
-				if (editor != null)
-				{
-					editor.getCurrentRegel().cursorToLeft();
-					event.preventDefault();
-					event.stopPropagation();
-				}
+				editor.getCurrentRegel().cursorToLeft();
+				event.preventDefault();
+				event.stopPropagation();
 			}
-			else if (event.isRightArrow() && kb != null)
+			else if (event.isRightArrow())
 			{
-				FormuleEditor editor = kb.getEditor();
-				if (editor != null)
-				{
-					editor.getCurrentRegel().cursorToRight();
-					event.preventDefault();
-					event.stopPropagation();
-				}
+				editor.getCurrentRegel().cursorToRight();
+				event.preventDefault();
+				event.stopPropagation();
 			}
 			else
 			{
-				if (event.getNativeKeyCode() == 8) // FIREFOX GEEN keypress voor BACKSPACE
+				switch (event.getNativeKeyCode())
 				{
-					FormuleEditor editor = kb.getEditor();
-					if (editor != null)
+				case 8: // firefox
+					backspace(event);
+					break;
+				case 13: //firefox
+					enter(event);
+					break;
+				case '6': // shift-6 (asus transformer)
+					if (event.isShiftKeyDown())
 					{
-						backspace(event);
-						return;
+						macht(event, editor);
 					}
+					break;
+				case 16: // shift
+					break;
+				default: // unknown
 				}
-				if (event.getNativeKeyCode() == 13) // FIREFOX GEEN keypress voor ENTER
-				{
-					FormuleEditor editor = kb.getEditor();
-					if (editor != null)
-					{
-						enter(event);
-						return;
-					}
-				}
-				System.out.println(event.toDebugString());
+
 			}
 
+		}
+
+		private void macht(DomEvent<?> event, FormuleEditor editor)
+		{
+			editor.addElement(new Machtvak(editor.getCurrentRegel()));
+			event.preventDefault();
+			event.stopPropagation();
 		}
 	}
 
