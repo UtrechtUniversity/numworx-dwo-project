@@ -165,8 +165,8 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 				{
 					enter(event);
 				}
-				else
-					Window.alert(event.toDebugString());
+				//				else
+				//					Window.alert(event.toDebugString());
 			}
 
 		}
@@ -491,7 +491,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 				Object currentObject = opdrachtObjects.get(i);
 				if (currentObject instanceof InteractionView)
 					((InteractionView) currentObject).setCommunicationRoot(on);
-				System.out.println("" + on.toString());
+				System.out.println(on.toString());
 				if (currentObject instanceof TekstVakPanel)
 				{
 					aantalVakken++;
@@ -581,7 +581,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 				Object currentObject = opdrachtObjects.get(i);
 				if (currentObject instanceof InteractionView)
 					((InteractionView) currentObject).setCommunicationRoot(on);
-				System.out.println("" + on.toString());
+				System.out.println(on.toString());
 				if (currentObject instanceof TekstVakPanel)
 				{
 					aantalVakken++;
@@ -854,7 +854,6 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 
 	protected void requestFocus()
 	{
-		System.out.println("requestFocus");
 		mainPanel.setFocus(true);
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() // voor firefox delayed focus.
 		{
