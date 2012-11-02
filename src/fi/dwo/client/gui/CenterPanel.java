@@ -511,7 +511,10 @@ invalidate();
 	            loadCenter(cp);				
 			} else if(object instanceof Sco) {
 				Sco sco = (Sco) object;
-				loadTotal(sco.getScoPanel(GuiCreator.instance().getDWO(), GuiCreator.instance().getUser()));
+				CenterSubPanel csp;
+				// csp = sco.getScoPanel(GuiCreator.instance().getDWO(), GuiCreator.instance().getUser());
+				csp = GuiCreator.instance().getScoPanel(sco);				
+				loadTotal(csp);
 			}
 		}
 	}

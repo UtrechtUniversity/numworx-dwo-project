@@ -1,6 +1,6 @@
 
 package fi.dwo;
 public interface VERSION {
-	public String VERSION = new String("20121008");
-	public String REVISION= new String("5292:5304");
+	public String VERSION = new String("20121019");
+	public String REVISION= new String("5337:5342M");
 }
