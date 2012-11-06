@@ -32,12 +32,12 @@ import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.DomEvent;
-import com.google.gwt.event.dom.client.DomEvent.Type;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.dom.client.TouchEndHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -491,7 +491,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 				Object currentObject = opdrachtObjects.get(i);
 				if (currentObject instanceof InteractionView)
 					((InteractionView) currentObject).setCommunicationRoot(on);
-				System.out.println(on.toString());
+				System.out.println("" + on.toString());
 				if (currentObject instanceof TekstVakPanel)
 				{
 					aantalVakken++;
@@ -581,7 +581,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 				Object currentObject = opdrachtObjects.get(i);
 				if (currentObject instanceof InteractionView)
 					((InteractionView) currentObject).setCommunicationRoot(on);
-				System.out.println(on.toString());
+				System.out.println("" + on.toString());
 				if (currentObject instanceof TekstVakPanel)
 				{
 					aantalVakken++;
@@ -849,7 +849,6 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 	private void addFormulePanelListeners(final TouchPanel tp, final FormuleEditor editor)
 	{
 		tp.addTouchHandler(new FormuleEditorTouchHandler(tp, kb, editor));
-		tp.addTapHandler(FOCUS_ON_TOUCH);
 	}
 
 	protected void requestFocus()
@@ -867,7 +866,6 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 	private void addContentPanelTouchListener(TouchPanel contentPanel)
 	{
 		final HashMap<String, Double> dif = new HashMap<String, Double>();
-		contentPanel.addTapHandler(FOCUS_ON_TOUCH);
 		contentPanel.addTouchHandler(new TouchHandler()
 		{
 
@@ -996,8 +994,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 		//settings.setPreventScrolling(true);
 		MGWT.applySettings(settings);
 
-		TouchPanel fp = new TouchPanel();
-		fp.addTapHandler(FOCUS_ON_TOUCH);
+		FlowPanel fp = new FlowPanel();
 		mainPanel = new FocusPanel(fp);
 		mainPanel.setHeight("100%");
 		mainPanel.setWidth("100%");
@@ -1006,7 +1003,6 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 		mainPanel.addKeyDownHandler(keyHandler);
 		mainPanel.addKeyPressHandler(keyHandler);
 
-		requestFocus();
 		hp = new HeaderPanel();
 		//hp.setCenter("Module 1");
 		Style style = hp.getElement().getStyle();
@@ -1036,19 +1032,6 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 
 		kb = new FormuleKeyboard();
 		Panel kbp = kb.getAsPanel();
-
-		TouchEndHandler touchEndHandler = new TouchEndHandler()
-		{
-
-			@Override
-			public void onTouchEnd(com.google.gwt.event.dom.client.TouchEndEvent event)
-			{
-				mainPanel.setFocus(true);
-
-			}
-		};
-		Type<TouchEndHandler> type = com.google.gwt.event.dom.client.TouchEndEvent.getType();
-		kbp.addDomHandler(touchEndHandler, type);
 
 		fp.add(kbp);
 
