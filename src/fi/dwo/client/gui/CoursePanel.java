@@ -290,7 +290,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
      */
     public void setCenterPanel(CourseContainer centerPanel) {
         center = centerPanel;
-        center.hideClassList();
+        //center.hideClassList(); obsolete!
         refresh();
     }
 
@@ -373,10 +373,13 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
         return this;
     }
 
+    /**
+     * implements CenterSubPanel, uses {@link #setCenterPanel(CourseContainer)}.
+     * @see CenterSubPanel#setCenterPanel(CenterPanel)
+     */
 	public void setCenterPanel(CenterPanel centerPanel) {
-        center = centerPanel;
-        center.hideClassList();
-        refresh();
+		CourseContainer cc = centerPanel;
+		setCenterPanel(cc); // geen recursie
 	}
 
 	/**
