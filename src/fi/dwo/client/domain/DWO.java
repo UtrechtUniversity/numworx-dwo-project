@@ -1094,6 +1094,7 @@ private static boolean isValidEmail(String email) {
 	        }
 	        catch(Exception e)
 	        {	testViewKeys = null;
+	        	testView = false;
 	        	e.printStackTrace();
 	        }
 	    }
@@ -1130,6 +1131,7 @@ private static boolean isValidEmail(String email) {
 	        }
 	        catch(Exception e)
 	        {	schoolAccessKeys = null;
+	        	limitedSchoolAccess = false;
 	        	e.printStackTrace();
 	        }
 	       
