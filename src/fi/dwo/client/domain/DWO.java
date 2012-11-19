@@ -1693,6 +1693,10 @@ private static boolean isValidEmail(String email) {
         }
         else return null;
     }
+    
+    public String Initialize(String iParam) {
+    	return LMSInitialize(iParam);
+    }
 
     public String LMSFinish(String iParam) {
     	if(currentSco != null)
@@ -1704,6 +1708,10 @@ private static boolean isValidEmail(String email) {
         else return null;
     }
 
+    public String Terminate(String iParam) {
+    	return LMSFinish(iParam);
+    }
+    
     public String LMSGetValue(String iDataModelElement) {
     	if(currentSco != null)
         {   return currentSco.LMSGetValue(iDataModelElement);
@@ -1712,6 +1720,10 @@ private static boolean isValidEmail(String email) {
         {	return currentCourse.getCurrentSco().LMSGetValue(iDataModelElement);
         }
         else return null;
+    }
+    
+    public String GetValue(String iDataModelElement) {
+    	return LMSGetValue(iDataModelElement);
     }
 
     public String LMSSetValue(String iDataModelElement, String iValue) {
@@ -1722,6 +1734,10 @@ private static boolean isValidEmail(String email) {
         {	return currentCourse.getCurrentSco().LMSSetValue(iDataModelElement, iValue);
         }
         else return null;
+    }
+    
+    public String SetValue(String iDataModelElement, String iValue) {
+    	return LMSSetValue(iDataModelElement, iValue);
     }
 
     public String LMSCommit(String iParam) {
@@ -1734,7 +1750,9 @@ private static boolean isValidEmail(String email) {
         else return null;
     }
 
-    
+    public String Commit(String iParam) {
+    	return LMSCommit(iParam);
+    }
     
     public String LMSCommit(Sco sco, String param) {
 		return PersistenceFacade.instance().LMSCommit(sco, getUser(), param);
@@ -1750,6 +1768,10 @@ private static boolean isValidEmail(String email) {
         else return null;
     }
 
+	public String GetLastError() {
+		return LMSGetLastError();
+	}
+
     public String LMSGetErrorString(String iErrorCode) {
     	if(currentSco != null)
         {   return currentSco.LMSGetErrorString(iErrorCode);
@@ -1759,8 +1781,12 @@ private static boolean isValidEmail(String email) {
         }
         else return null;
     }
-
-     public String LMSGetDiagnostic(String iErrorCode) {
+    
+    public String GetErrorString(String iErrorCode) {
+    	return LMSGetErrorString(iErrorCode);
+    }
+ 
+    public String LMSGetDiagnostic(String iErrorCode) {
     	if(currentSco != null)
         {   return currentSco.LMSGetDiagnostic(iErrorCode);
         } 
@@ -1770,6 +1796,10 @@ private static boolean isValidEmail(String email) {
         else return null;
     }
 
+    public String GetDiagnogtic(String iErrorCode) {
+    	return LMSGetDiagnostic(iErrorCode);
+    }
+     
      /**
       * Geef mij een gebruiker buitenom.
       * 
