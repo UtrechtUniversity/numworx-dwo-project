@@ -77,13 +77,12 @@ public final class DwoHelper {
         return applet;
     }
     
-    public static JSObject getJSObject() {
+    public static Object getJSObject() {
     	if(applet == null) return null;    	
     	try {
 			return JSObject.getWindow(applet);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
+			// expect JSException of ClassNotFoundException
 		}
 		return null;
     }

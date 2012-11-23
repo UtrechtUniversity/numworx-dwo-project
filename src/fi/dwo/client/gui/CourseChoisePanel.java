@@ -61,7 +61,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
     private Descriptor dwoProfile;
 
 	private Object userObject;
-	private JSObject jsObject;
+	private Object jsObject;
 
     /**
 	 * Creates a new instance of a CourseChoisePanel This panel gives an
@@ -366,7 +366,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
 		return false;
 	}
 
-	public JSObject getJSObject() {
+	public Object getJSObject() {
 		return jsObject;
 	}
 
@@ -374,7 +374,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
 		return DwoHelper.getApplet().getAppletContext();
 	}
 
-	public void setJSObject(JSObject window) {
+	public void setJSObject(Object window) {
 		jsObject = window;
 		
 	}

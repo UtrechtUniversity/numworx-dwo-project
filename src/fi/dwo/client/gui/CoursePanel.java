@@ -81,7 +81,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 
 	private boolean scoLoading;
 
-	private JSObject jsObject;
+	private Object jsObject;
 	    
 	
     /**
@@ -437,7 +437,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 		return "true".equals(Sco.gotoSco(rest, this, course, this));
 	}
 
-	public JSObject getJSObject() {
+	public Object getJSObject() {
 		if(jsObject == null)
 			setJSObject(DwoHelper.getJSObject());
 		return jsObject;
@@ -447,7 +447,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 		return DwoHelper.getApplet().getAppletContext();
 	}
 
-	public void setJSObject(JSObject window) {
+	public void setJSObject(Object window) {
 		jsObject = window;
 	}
 }
