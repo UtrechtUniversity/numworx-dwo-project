@@ -3,6 +3,7 @@
 
 package fi.dwo.client.gui;
 
+import java.applet.AppletContext;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -27,6 +28,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import netscape.javascript.JSObject;
+
 
 import fi.beans.mathkit.JMathPane;
 import fi.dwo.client.domain.Course;
@@ -39,6 +42,7 @@ import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.TextMapper;
 import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.WiskOpdrPanel;
+import fi.wiskopdr.tekstobjects.LinkIF;
 
 /**
  * This class is a panel where the user gets a overview of the different courses.
@@ -46,7 +50,7 @@ import fi.wiskopdr.WiskOpdrPanel;
  *  
  */
 public class CourseChoisePanel extends JPanel implements ActionListener,
-        CenterSubPanel, Scrollable {
+        CenterSubPanel, Scrollable, LinkIF {
     private CenterPanel center;
 
     private int NR_COLUMNS = 4;
@@ -57,6 +61,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
     private Descriptor dwoProfile;
 
 	private Object userObject;
+	private JSObject jsObject;
 
     /**
 	 * Creates a new instance of a CourseChoisePanel This panel gives an
@@ -125,7 +130,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
             } 
             else if(s.startsWith("H4sIAAAAAA")) {
             	wiskOpdrPanel = WiskOpdr.getWiskOpdrPanel(s);
-            	if(!DwoHelper.isApplication())wiskOpdrPanel.setJSObjectOwner(DwoHelper.getApplet());
+            	wiskOpdrPanel.setJSObjectOwner(this);
                 wiskOpdrPanel.setLocation(20,20);
                 JPanel wrapPanel = new JPanel();
                 wrapPanel.setOpaque(false);
@@ -353,6 +358,24 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
 		}
 		
 		
+		
+	}
+
+	public boolean gotoScoNr(String rest) {
+		System.out.println("GOTO #" + rest);
+		return false;
+	}
+
+	public JSObject getJSObject() {
+		return jsObject;
+	}
+
+	public AppletContext getAppletContext() {
+		return DwoHelper.getApplet().getAppletContext();
+	}
+
+	public void setJSObject(JSObject window) {
+		jsObject = window;
 		
 	}
 }

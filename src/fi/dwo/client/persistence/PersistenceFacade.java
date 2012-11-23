@@ -60,11 +60,14 @@ public class PersistenceFacade {
 
     private static final String[][] scormDatabaseLink = {
             { "cmi.core.score.raw", "score" },
+            { "cmi.score.raw", "score" },
             { "cmi.suspend_data", "suspendData" },
             { "core.score.raw", "score" }, 
             { "suspend_data", "suspendData" },
             { "cmi.core.session_time", "session_time" }, 
             { "cmi.core.total_time", "total_time" },
+         // { "cmi.session_time", "session_time" }, // pas op, wrong format!
+         // { "cmi.total_time", "total_time" },
             { "core.session_time", "session_time" }, 
             { "core.total_time", "total_time" }
     };
@@ -199,7 +202,16 @@ public class PersistenceFacade {
     public String LMSSetValue(Sco sco, User user, String iDataModelElement,
             String iValue) throws PersistenceException {
         if (user != null && !(user instanceof Guest) ) {
-            if (iDataModelElement.equals("cmi.core.score.raw")) {
+			String result = "true";
+      
+			if (iValue == null) {
+			    iValue = "";
+			}
+			
+			int uid = user.getUserID();
+			int scoid = sco.getScoID();
+			String key = mapDataModel(iDataModelElement);
+            if (key.equals("score")) {
 			    double d;
 			    try {
 			        d = Double.valueOf(iValue).doubleValue();
@@ -211,19 +223,11 @@ public class PersistenceFacade {
 			    }
 			    iValue = Double.toString(d);
 			}
-			String result = true + "";
-      
-			if (iValue == null) {
-			    iValue = "";
-			}
-			
-			int uid = user.getUserID();
-			int scoid = sco.getScoID();
-			String key = mapDataModel(iDataModelElement);
+
 			result = StoreCreator.instance().setValue(uid, scoid, key, iValue);
 			return result;
         } else {
-            return true + "";
+            return "true";
         }
 
     }

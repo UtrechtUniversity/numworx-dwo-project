@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE jnlp PUBLIC "-//Sun Microsystems, Inc//DTD JNLP Discriptor 1.1//EN" "http://java.sun.com/dtd/JNLP-1.5.dtd">
-<jnlp spec="1.0+" codebase="http://www.fi.uu.nl/dwo/jnlp" href="dwo.jnlp">
+<jnlp spec="1.0+" codebase="http://ws.fisme.science.uu.nl/dwo/jnlp" href="dwo.jnlp">
 	<information>
 		<title>DWO</title>
 		<vendor>Freudenthal Instituut</vendor>

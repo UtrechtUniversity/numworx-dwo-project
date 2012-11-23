@@ -326,7 +326,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 			int max = 100;
 // focus as column selector
 			try {
-				String s = sco.LMSGetValue(Sco.LESSON_LOCATION);
+				String s = sco.GetValue(Sco.LESSON_LOCATION);
 				hasFocus = column == 1+Integer.parseInt(s); // selected column...
 			} catch (NumberFormatException e) {
 				hasFocus = false;

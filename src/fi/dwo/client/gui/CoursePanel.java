@@ -3,6 +3,7 @@
 
 package fi.dwo.client.gui;
 
+import java.applet.AppletContext;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -29,6 +30,8 @@ import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.text.JTextComponent;
 
+import netscape.javascript.JSObject;
+
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.ResultsModuleIF;
@@ -42,6 +45,7 @@ import fi.beans.tekstobjects.TekstArea;
 
 import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.WiskOpdrPanel;
+import fi.wiskopdr.tekstobjects.LinkIF;
 
 /**
  * This class is a panel witch shows a list of all the SCO's in the specified Course.
@@ -49,7 +53,7 @@ import fi.wiskopdr.WiskOpdrPanel;
  *  
  */
 public class CoursePanel extends JPanel implements CenterSubPanel,
-        ActionListener {
+        ActionListener, LinkIF {
 	
 	private static final int MINWIDTH = 600;
 
@@ -76,6 +80,8 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 	private int startY;
 
 	private boolean scoLoading;
+
+	private JSObject jsObject;
 	    
 	
     /**
@@ -116,7 +122,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 			{
 				wiskOpdrPanel = WiskOpdr.getWiskOpdrPanel(s) ;
 				wiskOpdrPanel.setLocation(20,startY);
-				if(!DwoHelper.isApplication())wiskOpdrPanel.setJSObjectOwner(DwoHelper.getApplet());
+				wiskOpdrPanel.setJSObjectOwner(this);
 	        	add(wiskOpdrPanel);
 	        	startY += wiskOpdrPanel.getHeight() + 10;
 			}
@@ -246,6 +252,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
      * Refresh the sco view. Update the buttons width scores.
      */
     private void refresh() {
+    	if(wiskOpdrPanel != null) wiskOpdrPanel.setJSObjectOwner(this); // GLOBAL EVIL
     	removeButtons();
         //ResultsModuleIF results = GuiCreator.instance().dwo.getUserResultsModule(course);
         ResultsModuleIF results = center.getUserResultsModule(course);
@@ -424,5 +431,23 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 
 	public Course getCourse() {
 		return course;
+	}
+
+	public boolean gotoScoNr(String rest) {
+		return "true".equals(Sco.gotoSco(rest, this, course, this));
+	}
+
+	public JSObject getJSObject() {
+		if(jsObject == null)
+			setJSObject(DwoHelper.getJSObject());
+		return jsObject;
+	}
+
+	public AppletContext getAppletContext() {
+		return DwoHelper.getApplet().getAppletContext();
+	}
+
+	public void setJSObject(JSObject window) {
+		jsObject = window;
 	}
 }

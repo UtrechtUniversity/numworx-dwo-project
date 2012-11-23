@@ -1347,7 +1347,7 @@ private static boolean isValidEmail(String email) {
             return PersistenceFacade.instance().LMSSetValue(sco, user, iDataModelElement, iValue);
         } catch (PersistenceException e) {
         	JOptionPane.showMessageDialog(this, e.getMessage());
-            return false + "";
+            return "false";
         }
 
     }
@@ -1691,7 +1691,7 @@ private static boolean isValidEmail(String email) {
         else if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
         {	return currentCourse.getCurrentSco().LMSInitialize(iParam);
         }
-        else return null;
+        else return "false";
     }
     
     public String Initialize(String iParam) {
@@ -1705,7 +1705,7 @@ private static boolean isValidEmail(String email) {
     	else if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
         {	return currentCourse.getCurrentSco().LMSFinish(iParam);
         }
-        else return null;
+        else return "false";
     }
 
     public String Terminate(String iParam) {
@@ -1719,11 +1719,17 @@ private static boolean isValidEmail(String email) {
     	else if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
         {	return currentCourse.getCurrentSco().LMSGetValue(iDataModelElement);
         }
-        else return null;
+        else return "";
     }
     
     public String GetValue(String iDataModelElement) {
-    	return LMSGetValue(iDataModelElement);
+    	if(currentSco != null)
+        {   return currentSco.GetValue(iDataModelElement);
+        } 
+    	else if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
+        {	return currentCourse.getCurrentSco().GetValue(iDataModelElement);
+        }
+        else return "";
     }
 
     public String LMSSetValue(String iDataModelElement, String iValue) {
@@ -1733,11 +1739,17 @@ private static boolean isValidEmail(String email) {
     	else if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
         {	return currentCourse.getCurrentSco().LMSSetValue(iDataModelElement, iValue);
         }
-        else return null;
+        else return "false";
     }
     
     public String SetValue(String iDataModelElement, String iValue) {
-    	return LMSSetValue(iDataModelElement, iValue);
+    	if(currentSco != null)
+        {   return currentSco.SetValue(iDataModelElement, iValue);
+        } 
+    	else if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
+        {	return currentCourse.getCurrentSco().SetValue(iDataModelElement, iValue);
+        }
+        else return "false";
     }
 
     public String LMSCommit(String iParam) {
@@ -1747,7 +1759,7 @@ private static boolean isValidEmail(String email) {
     	else if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
         {	return currentCourse.getCurrentSco().LMSCommit(iParam);
         }
-        else return null;
+        else return "false";
     }
 
     public String Commit(String iParam) {
@@ -1765,7 +1777,7 @@ private static boolean isValidEmail(String email) {
     	else if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
         {	return currentCourse.getCurrentSco().LMSGetLastError();
         }
-        else return null;
+        else return "101";
     }
 
 	public String GetLastError() {

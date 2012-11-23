@@ -52,7 +52,7 @@
 			<file href="sco/Image6.png" />
 			<file href="sco/Image7.png" />
 			<file href="sco/Image8.png" />
-			<file href="http://www.fi.uu.nl/dwo/jars/{2}" />
+			<file href="http://ws.fisme.science.uu.nl/dwo/jars/{2}" />
 		</resource>
 	</resources>			
 </manifest>

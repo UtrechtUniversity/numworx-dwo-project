@@ -23,7 +23,7 @@ versie-info (b.v de datum)
 auteur(s): xxxx
 programmeur(s) xxxx
 Freudenthal Instituut
-www.fi.uu.nl
+www.fisme.science.uu.nl
 
 Bij een applet in een Frame kan het InfoFrame via een menu worden opgeroepen,
 de menu-aktie moet dan zijn: creeer het InfoFrame en maak het zichtbaar

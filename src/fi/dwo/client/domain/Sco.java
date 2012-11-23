@@ -6,6 +6,7 @@ package fi.dwo.client.domain;
 import java.applet.Applet;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
+import java.awt.Component;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
@@ -28,6 +29,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 import fi.beans.base64code.StringCodeObject;
 import fi.beans.scorm.PartialScoreIF;
 import fi.beans.scorm.SCORM12APIInterface;
+import fi.beans.scorm.ScormAdapter;
 //import fi.dwo.client.gui.DwoMessageDialog;
 import fi.dwo.client.gui.GuiCreator;
 import fi.dwo.client.gui.ScoPanel;
@@ -44,7 +46,7 @@ import fi.dwo.client.gui.GuiConstants;
  * @author M.J.B. Kupers
  *  
  */
-public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Comparable, ScoEditor {
+public class Sco extends ScormAdapter implements LessonGroup, SCORM12APIInterface, AppletStub, Comparable, ScoEditor {
 	private static final char REVIEWABLE = 'r';
 	private static final char MERGABLE = 'm';
 
@@ -122,13 +124,18 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
 	public static final String NORMAL = "normal";
 	public static final String REVIEW = "review";
 	public static final String BROWSE = "browse";
-	public static final String LESSON_MODE = "cmi.core.lesson_mode";
+	private static final String LESSON_MODE = "cmi.mode";
 	public static final String LAUNCH_DATA = "cmi.launch_data";
-	public static final String LESSON_LOCATION = "cmi.core.lesson_location";
-    public static final String SESSION_TIME = "cmi.core.session_time";
+	public static final String LESSON_LOCATION = "cmi.location";
+    private static final String SESSION_TIME = "session_time";
+    private static final String CMI_SESSION_TIME = "cmi." + SESSION_TIME;
+    private static final String TOTAL_TIME = "total_time";
+    private static final String CMI_TOTAL_TIME = "cmi." + TOTAL_TIME;
+
+    private static final String CORE_SESSION_TIME = "cmi.core." + SESSION_TIME;
     public static final String CREDIT  = "credit";
     public static final String NO_CREDIT = "no-credit";
-    public static final String CREDIT_STATUS = "cmi.core.credit";
+    private static final String CREDIT_STATUS = "cmi.credit";
     public static final String DWO_GOTO_SCONR = "dwo.goto.sconr"; // writeonly.
 
 	private String  lessonMode = NORMAL;
@@ -150,6 +157,7 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
      *  
      */
     public Sco() {
+    	super(false);
         dwo = null;
         user = null;
         launchdata = null;
@@ -300,8 +308,8 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
     public String LMSInitialize(String iParam) {
     	initialized = true;
     	if(NORMAL.equals(getLessonMode()))
-    		LMSSetValue(SESSION_TIME, "00:00:00");
-        return true + "";
+    		SetValue(SESSION_TIME, "00:00:00");
+        return ok("true");
     }
 
     /**
@@ -331,8 +339,8 @@ public class Sco implements LessonGroup, SCORM12APIInterface, AppletStub, Compar
     		initialized = false;
     		if(NORMAL.equals(getLessonMode()))
     		{	    		
-	    		String total_time = LMSGetValue("cmi.core.total_time");
-	    		String session_time = LMSGetValue(SESSION_TIME);
+	    		String total_time = GetValue(TOTAL_TIME);
+	    		String session_time = GetValue(SESSION_TIME);
 	    		try {
 System.err.println("total = ["+total_time+"] session =[" + session_time + "]");
 					if(null == total_time || "".equals(total_time))
@@ -355,16 +363,16 @@ System.err.println("total = ["+total_time+"] session =[" + session_time + "]");
 	    			result.append(format.format(m)); result.append(":");
 	    			format.applyPattern("00.##");
 	    			result.append(format.format(sec));
-	    			LMSSetValue("cmi.core.total_time", result.toString());
+	    			SetValue(TOTAL_TIME, result.toString());
 System.err.println("sum = ["+result+"]");
 	    		} catch (Exception e)
 	    		{
 	    			e.printStackTrace();
 	    		}
     		}
-    		return "true";
+    		return ok("true");
     	}
-    	return "false";
+    	return ko("false");
     }
 
     /**
@@ -375,9 +383,9 @@ System.err.println("sum = ["+result+"]");
      * @see fi.beans.scorm.SCORM12APIInterface#LMSGetValue(java.lang.String)
      *  
      */
-    public String LMSGetValue(String iDataModelElement) {
+    public String GetValue(String iDataModelElement) {
     	if(LESSON_MODE.equals(iDataModelElement))
-    		return getLessonMode();
+    		return ok(getLessonMode());
     	if(LAUNCH_DATA.equals(iDataModelElement))
     	{
     		String value;
@@ -385,14 +393,20 @@ System.err.println("sum = ["+result+"]");
     		value = (String)ld.get(LAUNCH_DATA);
     		if(value == null)
     			value = getLaunchdataString();
-    		return value;
+    		return ok(value);
     		
     	}
     	if(LESSON_LOCATION.equals(iDataModelElement))
-    		return getLessonLocation();
+    		return ok(getLessonLocation());
     	if(CREDIT_STATUS.equals(iDataModelElement))
-    		return getCreditStatus();
-        return dwo.LMSGetValue(this, user, iDataModelElement);
+    		return ok(getCreditStatus());
+// session_ en total_time in 1.2 format.
+    	if(CMI_SESSION_TIME.equals(iDataModelElement)||CMI_TOTAL_TIME.equals(iDataModelElement))
+    	{
+    		iDataModelElement = iDataModelElement.substring(4); // skip cmi.
+    		return ok(to2004Time(from1_2Time(dwo.LMSGetValue(this, user, iDataModelElement))));
+    	}
+        return ok(dwo.LMSGetValue(this, user, iDataModelElement));  // null -> 101 else ok()
     }
 
     /**
@@ -435,52 +449,43 @@ System.err.println("sum = ["+result+"]");
      *      java.lang.String)
      *  
      */
-    public String LMSSetValue(String iDataModelElement, String iValue) {
+    public String SetValue(String iDataModelElement, String iValue) {
     	if(LESSON_MODE.equals(iDataModelElement))
     	{
     		// TODO set error op 'readonly' variable
-    		return "false";
+    		return ko("false");
     	}
     	
     	if( DWO_GOTO_SCONR.equals (iDataModelElement)) {
     		if(NORMAL.equals(lessonMode))
 	    		try {
-	    			Sco[] list = course.getScoList();
-	    			int sconr;
-	    			for(sconr = 0; sconr < list.length; sconr++ ) {
-	    				if(list[sconr].getScoName().startsWith(iValue)) {
-	    					break; // found by prefix ? equals? 
-	    				}
-	    			}
-	    			if(sconr == list.length) // not found, try numeric
-	    				sconr = Integer.parseInt(iValue)-1; // 1..length
-	    			final Object sco = sconr < 0 ? (Object)course : (Object)(course.getScoList()[sconr]); // array out of bounce?
-	    			if(sco == this)
-	    				return "false"; // no jump, no stop/start.
-	    			SwingUtilities.invokeLater(new Runnable() {
-						public void run() {
-							if(sc.isShowing()) {
-								// setlessonmode nodig? TODO uitzoeken
-								GuiCreator.instance().getMainPanel().getCenter().select(sco);
-							}
-						}
-	    			});
-	    			return "true";
+	    			return tf(gotoSco(iValue, this, course, sc));
 	    		} catch (Exception e) {
 	    			//e.printStackTrace();
 	    			
 	    		}
-    		return "false";
+    		return ko("false");
     	}
     	
     	
     	
     	if(NORMAL.equals(lessonMode))
-    		return dwo.LMSSetValue(this, user, iDataModelElement, iValue);
+    	{
+			if(CMI_SESSION_TIME.equals(iDataModelElement))
+			{
+				iDataModelElement = SESSION_TIME;
+				iValue = to1_2Time(from2004Time(iValue)); // sessiontime in 1.2 format.
+			}
+//			if(CMI_TOTAL_TIME.equals(iDataModelElement)) // NOT WRITABLE!
+//			{
+//				iDataModelElement = TOTAL_TIME;
+//				iValue = to1_2Time(from2004Time(iValue)); // totaltime in 1.2 format.
+//			}
+    		return tf(dwo.LMSSetValue(this, user, iDataModelElement, iValue));
+    	}
 
     	if(REVIEW.equals(lessonMode))
     	{
-    		
     		boolean ok = getReviewable(iDataModelElement);
     		if(ok)
     		{
@@ -490,12 +495,43 @@ System.err.println("sum = ["+result+"]");
     			String last = lessonLocation;
     			lessonLocation = iValue;
     			firePropertyChange(LESSON_LOCATION, last, lessonLocation);
-    			return "true";
+    			return ok("true");
     		}
     	}
     	// browse....
-    	return "false";
+    	return ko("false");
     }
+
+	/**
+	 * @param iValue
+	 * @param current TODO
+	 * @param course TODO
+	 * @return
+	 * @throws NumberFormatException
+	 */
+	static public String gotoSco(String iValue, Object current, Course course, final Component sc) throws NumberFormatException {
+		Sco[] list = course.getScoList();
+		int sconr;
+		for(sconr = 0; sconr < list.length; sconr++ ) {
+			if(list[sconr].getScoName().startsWith(iValue)) {
+				break; // found by prefix ? equals? 
+			}
+		}
+		if(sconr == list.length) // not found, try numeric
+			sconr = Integer.parseInt(iValue)-1; // 1..length
+		final Object sco = sconr < 0 ? (Object)course : (Object)(course.getScoList()[sconr]); // array out of bounce?
+		if(sco == current)
+			return "false"; // no jump, no stop/start.
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				if(sc.isShowing()) {
+					// setlessonmode nodig? TODO uitzoeken
+					GuiCreator.instance().getMainPanel().getCenter().select(sco);
+				}
+			}
+		});
+		return "true";
+	}
 
     
     private String features;
@@ -503,7 +539,7 @@ System.err.println("sum = ["+result+"]");
 	private String locationOverride;
 
     private boolean getReviewable(String element) {
-    	if (SESSION_TIME.equals(element)) // not reviewable!
+    	if (CMI_SESSION_TIME.equals(element)) // not reviewable!
     		return false;
     	if (LESSON_LOCATION.equals(element))		// special case. 
     		return false;
@@ -551,7 +587,7 @@ System.err.println("sum = ["+result+"]");
      *  
      */
     public String LMSCommit(String iParam) {
-        return dwo.LMSCommit(this, iParam);
+        return tf(dwo.LMSCommit(this, iParam));
     }
 
     /**
@@ -591,8 +627,12 @@ System.err.println("sum = ["+result+"]");
      * @see fi.beans.scorm.SCORM12APIInterface#LMSGetLastError()
      *  
      */
+    private String lastError = "0";
+    private String ok(String ok) { lastError = "0"; return ok; }
+    private String ko(String ko) { lastError = "101"; return ko;}
+    private String tf(String tf) { lastError = "true".equals(tf) ? "0" : "101" ; return tf; }
     public String LMSGetLastError() {
-        return "101";
+        return lastError;
     }
 
     /**
@@ -632,7 +672,7 @@ System.err.println("sum = ["+result+"]");
      *  
      */
     public String LMSGetDiagnostic(String iErrorCode) {
-        return null;
+        return "";
     }
 
     /**

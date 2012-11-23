@@ -37,10 +37,8 @@ public final class DwoHelper {
     
     private static Hashtable loadedImages;
     
-    private static String key;
-
     private static Applet applet;
-    
+     
     private static boolean isApplication = true; // default als je setApplet niet aanroept.
     
     public static boolean umpc, contact;
@@ -64,26 +62,12 @@ public final class DwoHelper {
     public static void setAu(AppletUtil au) {
         DwoHelper.au = au;
     }
-    
-    /**
-     * @deprecated weg ermee
-     * @param key
-     */
-    public static void setKey(String key) {
-        DwoHelper.key = key;
-    }
-    
+        
     public static void setUmpc(boolean b) {
         DwoHelper.umpc = b;
     }
-    /**
-     * @deprecated weg ermee
-     * @return the key
-     */
-    public static String getKey() {
-        return DwoHelper.key;
-    }
 
+    
     /**
      * Returns the current Applet.
      * 
@@ -91,6 +75,17 @@ public final class DwoHelper {
      */
     public static Applet getApplet() {
         return applet;
+    }
+    
+    public static JSObject getJSObject() {
+    	if(applet == null) return null;    	
+    	try {
+			return JSObject.getWindow(applet);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+//			e.printStackTrace();
+		}
+		return null;
     }
 
     /**
@@ -205,7 +200,7 @@ public final class DwoHelper {
         {	
         	if(applicationBase == null)
 				try {
-					applicationBase = new URL("http://www.fi.uu.nl/dwo/");
+					applicationBase = new URL("http://www.fisme.science.uu.nl/dwo/");
 				} catch (MalformedURLException e) {
 				}
 			try {
