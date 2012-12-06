@@ -92,7 +92,7 @@
 				verbose='${true}'
 		>
 			<dname>
-				<param name="CN" value="Peter Boon" />
+				<param name="CN" value="DWO Project" />
 				<param name="OU" value="Freudenthal Instituut" />
 				<param name="O" value="Universiteit Utrecht" />
 				<param name="C" value="NL" />
@@ -173,7 +173,7 @@
 	<!-- - - - - - - - - - - - - - - - - - 
           target: webclasses                      
          - - - - - - - - - - - - - - - - - -->
-    <target name="war" depends="jar" description="maak een dwo.war mbv een geprepareerde home/javaclasses">
+    <target name="war" depends="jar, sign.jars" description="maak een dwo.war mbv een geprepareerde home/javaclasses">
     	<war
     		warfile="output/dwo.war"
     		webxml="WebContent/WEB-INF/web.xml"	 
