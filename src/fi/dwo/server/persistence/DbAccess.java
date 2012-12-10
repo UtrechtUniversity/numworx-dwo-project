@@ -2854,11 +2854,31 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 		// XXX 
 		Connection c = getConnection();
 		try { 
+			PreparedStatement ps;
 			c.setAutoCommit(false);
-			PreparedStatement ps = c.prepareStatement("DELETE FROM tblClassCourse WHERE classID = ?");
-			ps.setInt(1, id);
-			System.out.println(ps.executeUpdate() + " deletes from classcourse " + id);
-			ps.close();
+			if(!v.isEmpty()) {
+				Hashtable map = (Hashtable)v.firstElement();
+				Object profileID = map.get("dwoProfileID");
+				if(profileID == null)
+				{
+					map = getRecord("tblCourse","courseID", ((Number) map.get("courseID")).intValue());
+					profileID = map.get("dwoProfileID");
+				}
+				ps = c.prepareStatement("DELETE FROM tblClassCourse WHERE classID = ? and courseID in (SELECT courseID from tblCourse where dwoProfileID = ?)");
+				ps.setInt(1, id);
+				ps.setObject(2, profileID);
+				int r = ps.executeUpdate();
+				System.out.println(r + " deletes from classcourse " + id + " and " + profileID);
+				ps.close();
+				if(!map.containsKey("courseID"))
+					v.remove(0);
+				
+			} else {
+				ps = c.prepareStatement("DELETE FROM tblClassCourse WHERE classID = ?");
+				ps.setInt(1, id);
+				System.out.println(ps.executeUpdate() + " deletes from classcourse " + id);
+				ps.close();
+			}
 	        ps = getStatement(QRY_INSERT_CLASS_COURSE2);
 	        ps.setInt(1, id);
 	        for (Iterator iterator = v.iterator(); iterator.hasNext();) {
