@@ -83,6 +83,8 @@ Class-Path: algebrapijlenoefenen.jar
  figuursnijden.jar 
  tinyplayerapplet.jar 
  grafiek3dtest.jar 
+ kladje.jar 
+ kansbomen.jar 
  jl020.jar 
  calendar.jar 
  geogebra_properties.jar 
