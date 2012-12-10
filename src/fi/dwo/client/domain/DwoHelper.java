@@ -83,6 +83,8 @@ public final class DwoHelper {
 			return JSObject.getWindow(applet);
 		} catch (Exception e) {
 			// expect JSException of ClassNotFoundException
+		} catch (NoClassDefFoundError e) {
+    		// expect NoClassDefFound ERROR
 		}
 		return null;
     }
