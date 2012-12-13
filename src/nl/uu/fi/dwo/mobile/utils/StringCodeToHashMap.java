@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
+import com.google.gwt.xml.client.NamedNodeMap;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 
@@ -180,46 +181,62 @@ public class StringCodeToHashMap
 
 	public ArrayList<Object> convertNodeToArray(Node node)
 	{
-		ArrayList<Object> result = new ArrayList<Object>();
 		ArrayList<Node> children = new ArrayList<Node>();
 		children = getElementList(node.getChildNodes());
+		NamedNodeMap attributes = node.getAttributes();
+		int len = Integer.parseInt(attributes.getNamedItem("length").getNodeValue());
+		Object defaultValue = null;
+		String type = attributes.getNamedItem("class").getNodeValue();
 
+		if ("int".equals(type))
+			defaultValue = new Integer(0);
+		if ("double".equals(type))
+			defaultValue = new Double(0.0);
+		if ("boolean".equals(type))
+			defaultValue = Boolean.FALSE;
+
+		ArrayList<Object> result = new ArrayList<Object>(len);
+		for (int i = 0; i < len; i++)
+		{
+			result.add(defaultValue);
+		}
 		for (int i = 0; i < children.size(); i++)
 		{
 			Node currentNode = children.get(i);
+			int index = Integer.parseInt(currentNode.getAttributes().getNamedItem("index").getNodeValue());
 			ArrayList<Node> elements = getElementList(currentNode.getChildNodes());
 			Node child = elements.get(0);
 			if (child.getNodeName().equalsIgnoreCase("object"))
 			{
-				result.add(convertNodeToHashMap(child));
+				result.set(index, convertNodeToHashMap(child));
 			}
 
 			else if (child.getNodeName().equalsIgnoreCase("string"))
 			{
-				result.add(child.getFirstChild().getNodeValue());
+				result.set(index, child.getFirstChild().getNodeValue());
 			}
 			else if (child.getNodeName().equalsIgnoreCase("int"))
 			{
-				result.add(Integer.parseInt(child.getFirstChild().getNodeValue()));
+				result.set(index, Integer.parseInt(child.getFirstChild().getNodeValue()));
 			}
 			else if (child.getNodeName().equalsIgnoreCase("double"))
 			{
-				result.add(Double.parseDouble(child.getFirstChild().getNodeValue()));
+				result.set(index, Double.parseDouble(child.getFirstChild().getNodeValue()));
 			}
 			else if (child.getNodeName().equalsIgnoreCase("boolean"))
 			{
 				if (child.getFirstChild().getNodeValue().equalsIgnoreCase("true"))
 				{
-					result.add(true);
+					result.set(index, true);
 				}
 				else
 				{
-					result.add(false);
+					result.set(index, false);
 				}
 			}
 			else if (child.getNodeName().equalsIgnoreCase("array"))
 			{
-				result.add(convertNodeToArray(child));
+				result.set(index, convertNodeToArray(child));
 			}
 
 		}

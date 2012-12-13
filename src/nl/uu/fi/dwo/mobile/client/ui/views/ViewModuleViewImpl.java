@@ -495,7 +495,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 				if (currentObject instanceof TekstVakPanel)
 				{
 					aantalVakken++;
-					Object launchData = opdrachtGegevens.get(aantalVakken);
+					Object launchData = opdrachtGegevens.get(aantalVakken+4); // FIXME Hier ook een +5-1 Wim
 					HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) launchData).get("interactiePanelLaunchState");
 					((TekstVakPanel) currentObject).zetInstellingen(instellingen);
 					((TekstVakPanel) currentObject).setKeyboard(kb);

@@ -74,8 +74,8 @@ public class TekstBuffer
 				}
 				//"vakken"
 				if (identifier.equals("$V"))
-				{
-					Object vak = getVak(vanTeksVakPanel ? aantalVakken - 1 : aantalVakken, opdrachtGegevens);
+				{ // Hier ook de offset 5 was 1 FIXME Wim
+					Object vak = getVak(vanTeksVakPanel ? aantalVakken - 5 : aantalVakken, opdrachtGegevens);
 					result.add(vak);
 					aantalVakken++;
 				}
@@ -187,8 +187,9 @@ public class TekstBuffer
 	{
 		Object result = null;
 		HashMap<String, Object> currentVakGegevens = null;
-		if (opdrachtGegevens.size() > index + 1)
-			currentVakGegevens = (HashMap<String, Object>) opdrachtGegevens.get(index + 1);
+		// ik denk dat het +5 is en niet +1
+		if (opdrachtGegevens.size() > index + 5) // FIXME size() = 6, index = 0 get(0)= null
+			currentVakGegevens = (HashMap<String, Object>) opdrachtGegevens.get(index + 5);
 		int soortVak = (Integer) currentVakGegevens.get("soortInteractiePanel");
 
 		if (soortVak == 0)
