@@ -36,7 +36,8 @@ public class KeyBoardTabPanel
 	private int current = 0;
 	
 	private final TouchButton keyboardButton = new TouchButton(); 
-	private final TouchButton keyboardRemoveButton = new TouchButton(); 
+	private final TouchButton keyboardRemoveButton = new TouchButton();
+	private final TouchButton digitsButton = new TouchButton();
 
 	public KeyBoardTabPanel()
 	{
@@ -58,7 +59,12 @@ public class KeyBoardTabPanel
 		buttonImage.getElement().getStyle().setMargin(5, Unit.PX);
 		keyboardButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 		keyboardButton.add(buttonImage);
-		
+
+		Image digitsImage = new Image("images/resources/digits.png");
+		digitsImage.getElement().getStyle().setMargin(5, Unit.PX);
+		digitsButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+		digitsButton.add(digitsImage);
+
 		Image buttonRemoveImage = new Image("images/resources/keyboardremovebutton.png");
 		buttonRemoveImage.getElement().getStyle().setMargin(5, Unit.PX);
 		keyboardRemoveButton.getElement().getStyle().setDisplay(Display.NONE);
@@ -68,7 +74,9 @@ public class KeyBoardTabPanel
 		{
 			@Override
 			public void onTouchStart(TouchStartEvent event)
-			{	tabs.get(0).getElement().getStyle().setDisplay(Display.BLOCK);
+			{	tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
+				tabs.get(0).getElement().getStyle().setDisplay(Display.BLOCK);
+				current = 0;
 				keyboardRemoveButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 				keyboardButton.getElement().getStyle().setDisplay(Display.NONE);
 				
@@ -78,14 +86,24 @@ public class KeyBoardTabPanel
 		{
 			@Override
 			public void onTouchStart(TouchStartEvent event)
-			{	tabs.get(0).getElement().getStyle().setDisplay(Display.NONE);
+			{	tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
 				keyboardButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 				keyboardRemoveButton.getElement().getStyle().setDisplay(Display.NONE);
 				
 			}
 		});
 		
+		digitsButton.addTouchStartHandler(new TouchStartHandler() {
+
+			@Override
+			public void onTouchStart(TouchStartEvent event) {
+				goTo(FormuleKeyboard.SCRIBBLE);
+				
+			}});
+		
+		
 		staticpanel.add(keyboardButton);
+		staticpanel.add(digitsButton);
 		staticpanel.add(keyboardRemoveButton);
 		
 		//contentpanel.setHeight("300px");
@@ -107,6 +125,7 @@ public class KeyBoardTabPanel
 	public void clearStaticPanel()
 	{	staticpanel.clear();
 		staticpanel.add(keyboardButton);
+		staticpanel.add(digitsButton);
 		staticpanel.add(keyboardRemoveButton);
 	}
 
@@ -165,7 +184,6 @@ public class KeyBoardTabPanel
 
 	public Panel getPanel()
 	{
-
 		return this.main;
 	}
 

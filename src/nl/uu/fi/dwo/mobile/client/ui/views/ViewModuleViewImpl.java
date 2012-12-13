@@ -38,6 +38,8 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -55,8 +57,6 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
-import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
-import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
@@ -78,36 +78,10 @@ import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
  */
 public class ViewModuleViewImpl extends Composite implements ViewModuleView, EntryPoint
 {
-	final class FocusOnTouch implements TouchHandler, TapHandler
+	final class FocusOnTouch implements MouseUpHandler
 	{
-		@Override
-		public void onTouchStart(TouchStartEvent event)
-		{
-
-		}
-
-		@Override
-		public void onTouchMove(TouchMoveEvent event)
-		{
-		}
-
-		@Override
-		public void onTouchEnd(TouchEndEvent event)
-		{
+		public void onMouseUp(MouseUpEvent event) {
 			requestFocus();
-		}
-
-		@Override
-		public void onTouchCanceled(TouchCancelEvent event)
-		{
-
-		}
-
-		@Override
-		public void onTap(TapEvent event)
-		{
-			requestFocus();
-
 		}
 	}
 
@@ -118,16 +92,14 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 
 		private void backspace(DomEvent<?> event)
 		{
-			kb.getEditor().removeCurrentElement();
+			kb.backspace();
 			event.stopPropagation();
 			event.preventDefault();
 		}
 
 		private void enter(DomEvent<?> event)
 		{
-			FormuleEditor editor = kb.getEditor();
-			if (editor instanceof FormuleEditorWithAnswer)
-				((FormuleEditorWithAnswer) editor).check();
+			kb.enter();
 			event.preventDefault();
 			event.stopPropagation();
 		}
@@ -1073,5 +1045,9 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 		}*/
 
 		//
+		
+		requestFocus();
+		mainPanel.addMouseUpHandler(FOCUS_ON_TOUCH);
+		
 	}
 }

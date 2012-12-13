@@ -22,7 +22,7 @@ import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 
 /**
- * Button implementstions for the keyboard
+ * Button implementations for the keyboard
  * 
  * @author Danny Hendrix
  * 
@@ -65,9 +65,9 @@ public abstract class FormuleKeyBoardButtons
 			else if (code.equals("paste") == true)
 				kb.getEditor().insert(FormuleKeyboard.getClipboard());
 			else if (code.equals("backspace"))
-				kb.getEditor().removeCurrentElement();
+				kb.backspace();
 			else if (code.equals("back"))
-				kb.getEditor().removeCurrentElement();
+				kb.backspace();
 			else if (code.equals("delete") || code.equals("del"))
 				kb.getEditor().removeNextElement();
 			else if (code.equals("space"))
@@ -88,10 +88,7 @@ public abstract class FormuleKeyBoardButtons
 			}
 			else if (code.equals("apply") || code.equals("enter"))
 			{
-				FormuleHolder editor = kb.getEditor();
-
-				if (editor instanceof FormuleEditorWithAnswer)
-					((FormuleEditorWithAnswer) editor).check();
+				kb.enter();
 			}
 			else if (code.equals("shift"))
 			{

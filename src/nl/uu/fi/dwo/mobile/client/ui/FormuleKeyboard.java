@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui;
 
 import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleFont;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
@@ -21,6 +22,7 @@ import com.googlecode.mgwt.ui.client.widget.RoundPanel;
  */
 public class FormuleKeyboard
 {
+	static final String SCRIBBLE = "Scribble";
 	private FormuleEditor editor;
 	private KeyBoardTabPanel tp;
 
@@ -61,7 +63,7 @@ public class FormuleKeyboard
 	{
 	{ "haakjes", "breuk", "kwadraat", "macht", "wortel", "ndewortel", "ndelog" },
 	{ "diff", "primitieve", "integraal", "prv", "abs", "subscript", "bin" },
-	{ "limiet0", "limiet1", "limiet2", "\u221e", "±", "\u2248", "\u2260" },
+	{ "limiet0", "limiet1", "limiet2", "\u221e", "ï¿½", "\u2248", "\u2260" },
 	{ "<", "\u2264", "\u2265", ">", "\u2227", "\u2228", "\u2205" },
 	{ "[", "]", "\u3008", "\u3009", "\u2190", "\u2192", "\u2218" },
 	{ "pi", "e", "\u03b1", "\u03b2", "\u03b3", "\u03bc", "\u03c3" }
@@ -148,6 +150,7 @@ public class FormuleKeyboard
 		tp.getPanel().getElement().getStyle().setBackgroundImage("images/resources/footerbgimage.png");
 
 		tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodes, buttonWidths));
+		
 		tp.addTab("ABC", this.getKeyBoard(buttonCodesAbc, buttonWidthsAbc));
 		tp.addTab("ABCShift", this.getKeyBoard(buttonCodesAbcShift, buttonWidthsAbcShift));
 		tp.addTab("Alpha", this.getKeyBoard(buttonCodesAlpha, buttonWidthsAlpha));
@@ -156,6 +159,8 @@ public class FormuleKeyboard
 
 		tp.addTab("Verberg", new SimplePanel());
 
+		tp.addTab(SCRIBBLE, new DigitsPanel(this));
+		
 		tp.hideTabButton("ABCShift");
 		//SliderPanel sp = new SliderPanel(100, this);
 		//tp.getStaticPanel().add(sp.getPanel());
@@ -315,4 +320,18 @@ public class FormuleKeyboard
 	{
 		return editor;
 	}
+	
+	
+	public void enter() {
+		FormuleEditor editor = getEditor();
+		if (editor instanceof FormuleEditorWithAnswer)
+			((FormuleEditorWithAnswer) editor).check();
+	}
+	public void backspace() {
+		getEditor().removeCurrentElement();
+	}
+	
+	
+	
+	
 }
