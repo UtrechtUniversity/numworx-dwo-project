@@ -61,6 +61,7 @@ import fi.dwo.client.gui.CourseIcon;
 import fi.dwo.client.gui.DWOBorder;
 import fi.dwo.client.gui.GuiConstants;
 import fi.dwo.client.gui.GuiCreator;
+import fi.dwo.client.gui.MainPanel;
 import fi.dwo.client.gui.ModuleTreePanel;
 import fi.dwo.client.gui.ScoLinkedLabel;
 import fi.dwo.client.gui.ScoPanel;
@@ -191,6 +192,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 			return null;
 		}
 	};
+
+	private String logoutURL;
 	
 	
     /**
@@ -1027,7 +1030,8 @@ private static boolean isValidEmail(String email) {
     	UIManager.put("ToolTip.background", new ColorUIResource(255, 247, 200));
         
         String lang = getParameter("language");
-        //System.out.println(lang);
+        logoutURL = getParameter("logoutURL");
+        System.out.println(logoutURL);
         if ((lang != null) && (!lang.equals(""))) {
             TextMapper.setLanguage(lang);
             fi.dwo.parameters.system.TextMapper.setLanguage(lang);
@@ -1291,6 +1295,14 @@ private static boolean isValidEmail(String email) {
 	       // panel.setVisible(true);
         }
         this.panel = p;
+        
+        // FIXME dit moet beter, maar hoe?
+        if(logoutURL != null && p instanceof MainPanel) {
+        	((MainPanel) p).setLogoutURL(logoutURL);
+        }
+        
+        
+        
         panel.setVisible(false);
         setContentPane(panel);
         invalidate();

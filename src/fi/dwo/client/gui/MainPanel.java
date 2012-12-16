@@ -27,6 +27,7 @@ import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.domain.DwoProfile;
+import fi.dwo.client.gui.action.LogoutURLAction;
 import fi.dwo.client.system.TextMapper;
 
 /**
@@ -235,5 +236,9 @@ public class MainPanel extends BackgroundPanel {
      */
     public CenterPanel getCenter() {
         return center;
+    }
+    
+    public void setLogoutURL(String u) {
+    	loggedIn.setLogoutAction(new LogoutURLAction(u));
     }
 }
