@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.kladjegwt.client.KladjeGWT;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -239,6 +240,9 @@ public class TekstVakPanel implements InteractionView
 					else if(currentObject instanceof NabouwenAanzichtenGWT)
 					{	aantalVakken++;
 					}
+					else if(currentObject instanceof KladjeGWT)
+					{	aantalVakken++;
+					}
 				}
 				setObjects(opdrachtObjects, tekstVakken[i][j]);
 			}
@@ -339,6 +343,12 @@ public class TekstVakPanel implements InteractionView
 			}
 			else if (currentObject instanceof NabouwenAanzichtenGWT)
 			{	Panel a = ((NabouwenAanzichtenGWT) currentObject).getAsPanel();
+				a.getElement().getStyle().setProperty("display", "inline-block");
+				a.getElement().getStyle().setProperty("verticalAlign", (-font_size*0.45)+"px");
+				destination.add(a);
+			}
+			else if (currentObject instanceof KladjeGWT)
+			{	Panel a = ((KladjeGWT) currentObject).getAsPanel();
 				a.getElement().getStyle().setProperty("display", "inline-block");
 				a.getElement().getStyle().setProperty("verticalAlign", (-font_size*0.45)+"px");
 				destination.add(a);

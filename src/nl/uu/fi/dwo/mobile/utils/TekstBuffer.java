@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAns
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.kladjegwt.client.KladjeGWT;
 
 /**
  * Uses information in the launchdata HashMap to create objects that will be
@@ -215,6 +216,10 @@ public class TekstBuffer
 		else if (soortVak == 9)
 		{
 			result = new TekstVakPanel(currentVakGegevens, randomVarNamen, randomVarWaarden);
+		}
+		else if (soortVak == 41)
+		{
+			result = new KladjeGWT(currentVakGegevens, randomVarNamen, randomVarWaarden);
 		}
 		else
 		{

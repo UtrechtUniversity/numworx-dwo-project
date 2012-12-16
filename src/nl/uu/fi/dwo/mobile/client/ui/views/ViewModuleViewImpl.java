@@ -19,6 +19,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSte
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.InteractionView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.kladjegwt.client.KladjeGWT;
 import nl.uu.fi.dwo.mobile.utils.StringCodeToHashMap;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
@@ -767,6 +768,18 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 
 				destination.add(a);
 			}
+			
+			else if (currentObject instanceof KladjeGWT)
+			{
+				Panel a = ((KladjeGWT) currentObject).getAsPanel();
+				//a.getElement().getStyle().setFloat(Float.LEFT);
+				a.getElement().getStyle().setProperty("display", "inline-block");
+				a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
+				//a.getElement().getStyle().setProperty("position", "relative");
+				//a.getElement().getStyle().setProperty("top", (-font_size*0.1)+"px");
+
+				destination.add(a);
+			}
 			else if (currentObject instanceof TekstVakPanel)
 			{
 				Panel a = ((TekstVakPanel) currentObject).getAsPanel();
@@ -996,10 +1009,13 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 		contentPanel.getElement().getStyle().setProperty("display", "inline-block");
 		contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
 		contentPanel.setWidth("99%");
-		addContentPanelTouchListener(contentPanel);
+		//addContentPanelTouchListener(contentPanel);
 
 		contentScrollPanel.setWidget(contentPanel);
-
+		//contentScrollPanel.setScrollingEnabledX(false);
+		//contentScrollPanel.setScrollingEnabledY(false);
+		
+		
 		fp.add(contentScrollPanel);
 
 		kb = new FormuleKeyboard();
