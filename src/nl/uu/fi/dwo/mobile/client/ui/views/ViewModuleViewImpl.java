@@ -746,7 +746,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 			}
 			else if (currentObject instanceof FormuleEditorWithSteps)
 			{
-				Panel a = ((FormuleEditorWithSteps) currentObject).getAsPanel();
+				Widget a = ((InteractionView) currentObject).getAsWidget();
 				//a.getElement().getStyle().setFloat(Float.LEFT);
 				kb.setEditor(((FormuleEditorWithSteps) currentObject).getEditor());
 				((FormuleEditorWithSteps) currentObject).setKeyboard(kb);
@@ -758,7 +758,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 
 			else if (currentObject instanceof NabouwenAanzichtenGWT)
 			{
-				Panel a = ((NabouwenAanzichtenGWT) currentObject).getAsPanel();
+				Widget a = ((InteractionView) currentObject).getAsWidget();
 				//a.getElement().getStyle().setFloat(Float.LEFT);
 				a.getElement().getStyle().setProperty("display", "inline-block");
 				a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
@@ -770,7 +770,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 
 			else if (currentObject instanceof KladjeGWT)
 			{
-				Panel a = ((KladjeGWT) currentObject).getAsPanel();
+				Widget a = ((InteractionView) currentObject).getAsWidget();
 				//a.getElement().getStyle().setFloat(Float.LEFT);
 				a.getElement().getStyle().setProperty("display", "inline-block");
 				a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
@@ -781,7 +781,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 			}
 			else if (currentObject instanceof TekstVakPanel)
 			{
-				Panel a = ((TekstVakPanel) currentObject).getAsPanel();
+				Widget a = ((InteractionView) currentObject).getAsWidget();
 				//a.getElement().getStyle().setFloat(Float.LEFT);
 				a.getElement().getStyle().setProperty("display", "inline-block");
 				a.getElement().getStyle().setProperty("verticalAlign", "top");

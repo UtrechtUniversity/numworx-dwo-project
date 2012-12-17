@@ -2,25 +2,19 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.HashMap;
 
-import javax.swing.Box;
-
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
+import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleFont;
-import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleEditor;
 
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
-import fi.wiskopdr.AntwoordVakChecker;
-import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.AntwoordFormuleVakChecker;
+import fi.wiskopdr.AntwoordVakChecker;
 import fi.wiskopdr.AntwoordVergelijkingVakChecker;
-import fi.wiskopdr.expressies.Algebra;
-import fi.wiskopdr.expressies.Expressie;
 
 /**
  * Checks inserted formule with the correct answer
@@ -44,15 +38,14 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	//private String[] randomVarNamen = null;
 	//private HashMap randomVarWaarden = null;
 	private AntwoordVakChecker avChecker = null;
-	
 
 	public FormuleEditorWithAnswer(HashMap<String, Object> h, boolean isVergelijkingVak, FormuleEditorWithSteps fe, String[] randomVarNamen, HashMap<String, Object> randomVarWaarden)
 	{
 		super();
-		
+
 		//this.randomVarNamen = randomVarNamen;
 		//this.randomVarWaarden = randomVarWaarden;
-		
+
 		if (fe != null)
 		{
 			this.fe = fe;
@@ -61,22 +54,24 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if (h.get("interactiePanelLaunchState") != null)
 		{
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
-			
-			if(isVergelijkingVak)avChecker = new AntwoordVergelijkingVakChecker(launchState, randomVarNamen, randomVarWaarden);
-			else avChecker = new AntwoordFormuleVakChecker(launchState, randomVarNamen, randomVarWaarden);
-			
+
+			if (isVergelijkingVak)
+				avChecker = new AntwoordVergelijkingVakChecker(launchState, randomVarNamen, randomVarWaarden);
+			else
+				avChecker = new AntwoordFormuleVakChecker(launchState, randomVarNamen, randomVarWaarden);
+
 			checkimg = new Image("images/resources/mw_vinkje_groen.png");
 			checkimg.setVisible(false);
-			checkimg.getElement().getStyle().setProperty("marginLeft","3px");
+			checkimg.getElement().getStyle().setProperty("marginLeft", "3px");
 			sp = new TouchPanel();
-			if(fe==null)
+			if (fe == null)
 			{
 				sp.getElement().getStyle().setProperty("border", "1px solid gray");
 				sp.getElement().getStyle().setProperty("backgroundColor", "#e9e9e9");
 				this.getMainRegel().getCanvas().getElement().getStyle().setProperty("marginTop", "3px");
 				this.getMainRegel().getCanvas().getElement().getStyle().setProperty("marginBottom", "0px");
 			}
-			
+
 			sp.getElement().addClassName("insert_formule");
 			sp.add(this.getMainRegel().getCanvas());
 			sp.add(checkimg);
@@ -84,16 +79,17 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	}
 
 	public void zetInstellingen(HashMap<String, Object> instellingen)
-	{	this.instellingen = instellingen;
+	{
+		this.instellingen = instellingen;
 		setFont(FormuleFont.createFromFontSize((Integer) instellingen.get("fontSize")));
-		
+
 	}
-	
+
 	public Object getFe()
 	{
 		return fe;
 	}
-	
+
 	@Override
 	public void addElement(FormuleElement e)
 	{
@@ -125,48 +121,55 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public void check()
 	{
 		String useranswer = "$f" + this.toString() + "@";
-		HashMap<String,Object> checkResults = avChecker.checkAnswer(useranswer);
-		
-		this.correct = (Boolean)checkResults.get("correct");
-		this.score = (Integer)checkResults.get("score");
-		this.feedback = (String)checkResults.get("feedback");
-		
-		int goedHalfFout = (Integer)checkResults.get("goedHalfFout");
-		
-		System.out.println("userAnswer: "+useranswer);
-		System.out.println("correct: "+correct);
-		System.out.println("score: "+score);
-		System.out.println("goedHalfFout: "+goedHalfFout);
-		System.out.println(" feedback: "+ feedback);
-		
+		HashMap<String, Object> checkResults = avChecker.checkAnswer(useranswer);
+
+		this.correct = (Boolean) checkResults.get("correct");
+		this.score = (Integer) checkResults.get("score");
+		this.feedback = (String) checkResults.get("feedback");
+
+		int goedHalfFout = (Integer) checkResults.get("goedHalfFout");
+
+		System.out.println("userAnswer: " + useranswer);
+		System.out.println("correct: " + correct);
+		System.out.println("score: " + score);
+		System.out.println("goedHalfFout: " + goedHalfFout);
+		System.out.println(" feedback: " + feedback);
+
 		if (goedHalfFout == AntwoordVakChecker.DOOR)
-		{	checkimg.setUrl("images/resources/mw_vinkje_geel.png");
+		{
+			checkimg.setUrl("images/resources/mw_vinkje_geel.png");
 			if (this.fe != null)
-			{	fe.setFeedback(feedback);
+			{
+				fe.setFeedback(feedback);
 				fe.addStep(useranswer);
 			}
 		}
 		else if (goedHalfFout == AntwoordVakChecker.HALF)
-		{	if (this.fe != null) fe.setFeedback(feedback);
+		{
+			if (this.fe != null)
+				fe.setFeedback(feedback);
 			checkimg.setUrl("images/resources/mw_vinkje_geel.png");
 		}
 		else if (goedHalfFout == AntwoordVakChecker.GOED)
-		{	checkimg.setUrl("images/resources/mw_vinkje_groen.png");
+		{
+			checkimg.setUrl("images/resources/mw_vinkje_groen.png");
 			if (this.fe != null)
-			{	fe.setFeedback(feedback);
+			{
+				fe.setFeedback(feedback);
 				fe.lastStep(useranswer);
 			}
 		}
 		else if (goedHalfFout == AntwoordVakChecker.FOUT)
-		{	if (this.fe != null)fe.setAndAddFeedback(feedback);
+		{
+			if (this.fe != null)
+				fe.setAndAddFeedback(feedback);
 			checkimg.setUrl("images/resources/mw_kruisje_rood.png");
 		}
 
 		checkimg.setVisible(true);
-		if (this.fe == null)comRoot.setChanged();
-		
-		
-		
+		if (this.fe == null)
+			comRoot.setChanged();
+
 	}
 
 	@Override
@@ -186,32 +189,42 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	}
 
 	@Override
-	public HashMap<String, Object> getState() 
-	{	
+	public HashMap<String, Object> getState()
+	{
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		h.put("antwoord", this.toString());
 		return h;
 	}
 
 	@Override
-	public void setState(HashMap<String, Object> h) 
-	{	this.insert((String)h.get("antwoord"));
+	public void setState(HashMap<String, Object> h)
+	{
+		this.insert((String) h.get("antwoord"));
 		check();
 	}
 
 	@Override
-	public int getScore() 
-	{	return score;
+	public int getScore()
+	{
+		return score;
 	}
 
 	@Override
-	public boolean isCorrect() 
-	{	return correct;
+	public boolean isCorrect()
+	{
+		return correct;
 	}
 
 	@Override
 	public void setCommunicationRoot(OpdrNav comRoot)
-	{	this.comRoot = comRoot;
+	{
+		this.comRoot = comRoot;
+	}
+
+	@Override
+	public Widget getAsWidget()
+	{
+		return getAsPanel();
 	}
 
 }

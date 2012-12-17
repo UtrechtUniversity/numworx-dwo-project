@@ -8,43 +8,25 @@ import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.InteractionView;
 
 import com.google.gwt.canvas.client.Canvas;
-import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
-import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style.BorderStyle;
-import com.google.gwt.dom.client.Touch;
 import com.google.gwt.dom.client.Style.Unit;
-/*import com.google.gwt.event.dom.client.GestureStartEvent;
- import com.google.gwt.event.dom.client.GestureStartHandler;
- import com.google.gwt.event.dom.client.MouseMoveEvent;
- import com.google.gwt.event.dom.client.MouseMoveHandler;
- import com.google.gwt.event.dom.client.MouseOutEvent;
- import com.google.gwt.event.dom.client.MouseOutHandler;
- import com.google.gwt.event.dom.client.TouchEndEvent;
- import com.google.gwt.event.dom.client.TouchEndHandler;
- import com.google.gwt.event.dom.client.TouchMoveEvent;
- import com.google.gwt.event.dom.client.TouchMoveHandler;*/
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
+import com.googlecode.mgwt.dom.client.event.touch.TouchEndHandler;
 import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
 import com.googlecode.mgwt.dom.client.event.touch.TouchMoveEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchMoveHandler;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
-import com.googlecode.mgwt.dom.client.event.touch.TouchEndHandler;
-
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
-import fi.wiskopdr.AntwoordVakChecker;
-
-public class NabouwenAanzichtenGWT implements InteractionView {
+public class NabouwenAanzichtenGWT implements InteractionView
+{
 	Canvas canvas;
 	int mouseX, mouseY;
 	OpdrNav comRoot;
@@ -52,7 +34,7 @@ public class NabouwenAanzichtenGWT implements InteractionView {
 	static final int refreshRate = 25;
 
 	final CssColor redrawColor = CssColor.make("rgba(255,255,255,0.6)");
-	
+
 	private int breedte = 600;
 	private int hoogte = 250;
 	private HashMap<String, Object> launchState;
@@ -65,20 +47,21 @@ public class NabouwenAanzichtenGWT implements InteractionView {
 	private Viewer3d vWerk = null;
 	private VaktekPanel vaktekPanel = null;
 	private NabouwenAanzichtenChecker naChecker;
-	
+
 	private int goedHalfFout;
 	private int score = 0;
 	private boolean correct = false;
 	private String feedback = "";
-	
+
 	private boolean nagekeken;
 	private boolean ingevuld;
-	
+
 	boolean kijkNaActief = false;
-	
+
 	private KubusRooster startKr;
 
-	public NabouwenAanzichtenGWT(HashMap<String, Object> h,	String[] randomVarNamen, HashMap randomVarWaarden) {
+	public NabouwenAanzichtenGWT(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
+	{
 		this.randomVarNamen = randomVarNamen;
 		this.randomVarWaarden = randomVarWaarden;
 		if (h != null && h.get("breedte") != null)
@@ -87,11 +70,10 @@ public class NabouwenAanzichtenGWT implements InteractionView {
 			hoogte = (Integer) h.get("hoogte");
 		if (h != null && h.get("interactiePanelLaunchState") != null)
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
-		
+
 		panel.getElement().getStyle().setWidth(breedte, Unit.PX);
 		panel.getElement().getStyle().setHeight(hoogte, Unit.PX);
 		panel.getElement().getStyle().setProperty("textAlign", "right");
-		
 
 		int maxAantal = 4;
 		ArrayList<ArrayList<ArrayList<Boolean>>> stateNew = null;
@@ -102,31 +84,36 @@ public class NabouwenAanzichtenGWT implements InteractionView {
 			maxAantal = (Integer) launchState.get("maxAantal");
 
 		boolean[][][] b = new boolean[maxAantal][maxAantal][maxAantal];
-		for (int i = 0; i < maxAantal; i++) {
-			for (int j = 0; j < maxAantal; j++) {
-				for (int k = 0; k < maxAantal; k++) {
+		for (int i = 0; i < maxAantal; i++)
+		{
+			for (int j = 0; j < maxAantal; j++)
+			{
+				for (int k = 0; k < maxAantal; k++)
+				{
 					b[i][j][k] = false;
 				}
 			}
 		}
-		if (stateNew != null) {
+		if (stateNew != null)
+		{
 			b = new boolean[maxAantal][maxAantal][maxAantal];
-			for (int i = 0; i < stateNew.size(); i++) {
-				for (int j = 0; j < stateNew.get(i).size(); j++) {
-					for (int k = 0; k < stateNew.get(i).get(j).size(); k++) {
+			for (int i = 0; i < stateNew.size(); i++)
+			{
+				for (int j = 0; j < stateNew.get(i).size(); j++)
+				{
+					for (int k = 0; k < stateNew.get(i).get(j).size(); k++)
+					{
 						b[i][j][k] = (Boolean) stateNew.get(i).get(j).get(k);
 					}
 				}
 			}
-			
+
 		}
 
 		kijkNaActief = false;
 		if (launchState.containsKey("kijkNaActief"))
 			kijkNaActief = ((Boolean) launchState.get("kijkNaActief")).booleanValue();
-		
-		
-		
+
 		boolean drieAanzichten = false;
 		if (launchState.containsKey("drieAanzichten"))
 			drieAanzichten = ((Boolean) launchState.get("drieAanzichten")).booleanValue();
@@ -134,31 +121,33 @@ public class NabouwenAanzichtenGWT implements InteractionView {
 		if (launchState.containsKey("voorZijAanzicht"))
 			voorZijAanzicht = ((Boolean) launchState.get("voorZijAanzicht")).booleanValue();
 
-		if(drieAanzichten)
-		{	startKr = new KubusRooster(b, 1.5);
+		if (drieAanzichten)
+		{
+			startKr = new KubusRooster(b, 1.5);
 			vaktekPanel = new VaktekPanel(startKr, breedte, hoogte, 3, this);
 			panel.add(vaktekPanel.getPanel());
 		}
-		else if(voorZijAanzicht)
-		{	startKr = new KubusRooster(b, 1.5);
+		else if (voorZijAanzicht)
+		{
+			startKr = new KubusRooster(b, 1.5);
 			vaktekPanel = new VaktekPanel(startKr, breedte, hoogte, 2, this);
 			panel.add(vaktekPanel.getPanel());
 		}
 		else
 		{
 			startKr = new KubusRooster(b, 1);
-			
-			vWerk = new Viewer3d(new KubusRooster(b, 1), 351, -30, breedte, hoogte-(kijkNaActief ? 30 : 0),	this);
+
+			vWerk = new Viewer3d(new KubusRooster(b, 1), 351, -30, breedte, hoogte - (kijkNaActief ? 30 : 0), this);
 			vWerk.zetAfstand(1000);
 			vWerk.zetSchaduw(true);
 			vWerk.zetBeginHoeken(30, -30);
 			vWerk.zetMuisAan(true);
-			
+
 			boolean rotatieVast = false;
 			if (launchState.containsKey("rotatieVast"))
 				rotatieVast = ((Boolean) launchState.get("rotatieVast")).booleanValue();
 			vWerk.zetMuisAan(!rotatieVast);
-			
+
 			double beginHoekX = 30;
 			double beginHoekY = -30;
 			if (launchState.containsKey("beginHoekX"))
@@ -171,22 +160,22 @@ public class NabouwenAanzichtenGWT implements InteractionView {
 			if (launchState.containsKey("nietBouwenSlopen"))
 				nietBouwenSlopen = ((Boolean) launchState.get("nietBouwenSlopen")).booleanValue();
 			vWerk.zetKlikAan(!nietBouwenSlopen);
-			
-			
+
 			vWerk.initContext2d();
 
 			vWerk.draw();
 
 			canvas = vWerk.getCanvas();
-			
+
 			touchPanel.getElement().getStyle().setWidth(breedte, Unit.PX);
-			touchPanel.getElement().getStyle().setHeight(hoogte-(kijkNaActief ? 30 : 0), Unit.PX);
+			touchPanel.getElement().getStyle().setHeight(hoogte - (kijkNaActief ? 30 : 0), Unit.PX);
 			touchPanel.add(canvas);
 			panel.add(touchPanel);
-			
-			if(kijkNaActief)
-			{	naChecker = new NabouwenAanzichtenChecker(launchState, randomVarNamen, randomVarWaarden);
-				
+
+			if (kijkNaActief)
+			{
+				naChecker = new NabouwenAanzichtenChecker(launchState, randomVarNamen, randomVarWaarden);
+
 				Image image = new Image("images/resources/vinkjegrijs.png");
 				nakijkKnop.add(image);
 				addCheckButtonHandler(nakijkKnop);
@@ -196,7 +185,7 @@ public class NabouwenAanzichtenGWT implements InteractionView {
 				nakijkKnop.getElement().getStyle().setBorderColor("gray");
 				nakijkKnop.getElement().getStyle().setBorderColor("gray");
 				nakijkKnop.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
-				nakijkKnop.getElement().getStyle().setBorderWidth(1,Unit.PX);
+				nakijkKnop.getElement().getStyle().setBorderWidth(1, Unit.PX);
 				nakijkKnop.getElement().getStyle().setProperty("display", "inline-block");
 				nakijkKnop.getElement().getStyle().setPaddingTop(3, Unit.PX);
 				nakijkKnop.getElement().getStyle().setPaddingBottom(3, Unit.PX);
@@ -213,12 +202,15 @@ public class NabouwenAanzichtenGWT implements InteractionView {
 			touchPanel.addTouchMoveHandler((TouchMoveHandler) mb);
 		}
 	}
-	
+
 	private void addCheckButtonHandler(final TouchButton tb)
-	{	tb.addTouchHandler(new TouchHandler()
-		{	@Override
+	{
+		tb.addTouchHandler(new TouchHandler()
+		{
+			@Override
 			public void onTouchStart(TouchStartEvent event)
-			{	check();
+			{
+				check();
 			}
 
 			@Override
@@ -237,82 +229,95 @@ public class NabouwenAanzichtenGWT implements InteractionView {
 			}
 		});
 	}
-	
-	private void check(){
-		if(vWerk==null || !ingevuld ||!kijkNaActief)return;
+
+	private void check()
+	{
+		if (vWerk == null || !ingevuld || !kijkNaActief)
+			return;
 		KubusRooster useranswer = vWerk.kr;
-		HashMap<String,Object> checkResults = naChecker.checkAnswer(useranswer);
-		
-		
-		this.correct = (Boolean)checkResults.get("correct");
-		this.score = (Integer)checkResults.get("score");
-		this.feedback = (String)checkResults.get("feedback");
-		this.goedHalfFout = (Integer)checkResults.get("goedHalfFout");
-		
+		HashMap<String, Object> checkResults = naChecker.checkAnswer(useranswer);
+
+		this.correct = (Boolean) checkResults.get("correct");
+		this.score = (Integer) checkResults.get("score");
+		this.feedback = (String) checkResults.get("feedback");
+		this.goedHalfFout = (Integer) checkResults.get("goedHalfFout");
+
 		//System.out.println("userAnswer: "+useranswer);
 		//System.out.println("correct: "+correct);
 		//System.out.println("score: "+score);
 		//System.out.println("goedHalfFout: "+goedHalfFout);
 		//System.out.println(" feedback: "+ feedback);
-		
+
 		if (goedHalfFout == NabouwenAanzichtenChecker.DOOR || goedHalfFout == NabouwenAanzichtenChecker.HALF)
-		{	nakijkKnop.clear();
+		{
+			nakijkKnop.clear();
 			nakijkKnop.add(new Image("images/resources/vinkjegeel.png"));
 		}
-		
+
 		else if (goedHalfFout == NabouwenAanzichtenChecker.GOED)
-		{	nakijkKnop.clear();
+		{
+			nakijkKnop.clear();
 			nakijkKnop.add(new Image("images/resources/vinkje.png"));
 		}
 		else if (goedHalfFout == NabouwenAanzichtenChecker.FOUT)
-		{	nakijkKnop.clear();
+		{
+			nakijkKnop.clear();
 			nakijkKnop.add(new Image("images/resources/vinkjerood.png"));
 		}
 		nagekeken = true;
 		comRoot.setChanged();
-		
-		
+
 	}
 
-	public Panel getAsPanel() {
+	public Panel getAsPanel()
+	{
 		return panel;
 	}
 
-	void zetVeranderd() {
-		if(vWerk==null || !kijkNaActief)return;
+	void zetVeranderd()
+	{
+		if (vWerk == null || !kijkNaActief)
+			return;
 		nakijkKnop.clear();
 		nakijkKnop.add(new Image("images/resources/vinkjegrijs.png"));
 		correct = false;
 		score = 0;
-		if(!startKr.isGelijk(vWerk.kr))ingevuld = true;
-		else ingevuld = false;
+		if (!startKr.isGelijk(vWerk.kr))
+			ingevuld = true;
+		else
+			ingevuld = false;
 		comRoot.setChanged();
 	}
 
-	boolean isBouwen() {
+	boolean isBouwen()
+	{
 		return true;
 	}
 
 	@Override
-	public HashMap<String, Object> getState() {
+	public HashMap<String, Object> getState()
+	{
 		HashMap<String, Object> h = new HashMap<String, Object>();
-		if(vWerk==null) return h;
-		
+		if (vWerk == null)
+			return h;
+
 		check();
 		boolean[][][] stateNew = null;
 		stateNew = vWerk.kr.geefBooleanRooster();
-		
+
 		h.put("stateNew", stateNew);
 		h.put("nagekeken", nagekeken);
 		h.put("ingevuld", ingevuld);
-		
+
 		return h;
 	}
 
 	@Override
-	public void setState(HashMap<String, Object> h) {
-		if(vWerk==null) return;
-		
+	public void setState(HashMap<String, Object> h)
+	{
+		if (vWerk == null)
+			return;
+
 		boolean[][][] stateNew = null;
 
 		if (h.containsKey("nagekeken"))
@@ -322,28 +327,40 @@ public class NabouwenAanzichtenGWT implements InteractionView {
 		if (h.containsKey("stateNew"))
 			stateNew = (boolean[][][]) h.get("stateNew");
 
-		if (stateNew != null) {
+		if (stateNew != null)
+		{
 			vWerk.zetKubusRooster(new KubusRooster(stateNew, 1));
 			vWerk.draw();
 		}
-		if(nagekeken)check();
+		if (nagekeken)
+			check();
 	}
 
 	@Override
-	public int getScore() {
+	public int getScore()
+	{
 		// TODO Auto-generated method stub
 		return score;
 	}
 
 	@Override
-	public boolean isCorrect() {
-		if(!kijkNaActief)return true;
+	public boolean isCorrect()
+	{
+		if (!kijkNaActief)
+			return true;
 		return correct;
 	}
 
 	@Override
-	public void setCommunicationRoot(OpdrNav comRoot) {
+	public void setCommunicationRoot(OpdrNav comRoot)
+	{
 		this.comRoot = comRoot;
 
+	}
+
+	@Override
+	public Widget getAsWidget()
+	{
+		return getAsPanel();
 	}
 }
