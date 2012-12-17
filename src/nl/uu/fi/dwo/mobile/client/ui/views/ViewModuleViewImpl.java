@@ -18,8 +18,8 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAns
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.InteractionView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.kladjegwt.client.KladjeGWT;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT;
 import nl.uu.fi.dwo.mobile.utils.StringCodeToHashMap;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
@@ -33,8 +33,6 @@ import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.DomEvent;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
@@ -81,7 +79,8 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 {
 	final class FocusOnTouch implements MouseUpHandler
 	{
-		public void onMouseUp(MouseUpEvent event) {
+		public void onMouseUp(MouseUpEvent event)
+		{
 			requestFocus();
 		}
 	}
@@ -468,7 +467,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 				if (currentObject instanceof TekstVakPanel)
 				{
 					aantalVakken++;
-					Object launchData = opdrachtGegevens.get(aantalVakken+4); // FIXME Hier ook een +5-1 Wim
+					Object launchData = opdrachtGegevens.get(aantalVakken + 4); // FIXME Hier ook een +5-1 Wim
 					HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) launchData).get("interactiePanelLaunchState");
 					((TekstVakPanel) currentObject).zetInstellingen(instellingen);
 					((TekstVakPanel) currentObject).setKeyboard(kb);
@@ -558,7 +557,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 				if (currentObject instanceof TekstVakPanel)
 				{
 					aantalVakken++;
-					Object launchData = opdrachtGegevens.get(aantalVakken);
+					Object launchData = opdrachtGegevens.get(aantalVakken + 4); // nog een +5 voor het launchdata Wim
 					HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) launchData).get("interactiePanelLaunchState");
 					((TekstVakPanel) currentObject).zetInstellingen(instellingen);
 					((TekstVakPanel) currentObject).setKeyboard(kb);
@@ -768,7 +767,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 
 				destination.add(a);
 			}
-			
+
 			else if (currentObject instanceof KladjeGWT)
 			{
 				Panel a = ((KladjeGWT) currentObject).getAsPanel();
@@ -1014,8 +1013,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 		contentScrollPanel.setWidget(contentPanel);
 		//contentScrollPanel.setScrollingEnabledX(false);
 		//contentScrollPanel.setScrollingEnabledY(false);
-		
-		
+
 		fp.add(contentScrollPanel);
 
 		kb = new FormuleKeyboard();
@@ -1061,9 +1059,9 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 		}*/
 
 		//
-		
+
 		requestFocus();
 		mainPanel.addMouseUpHandler(FOCUS_ON_TOUCH);
-		
+
 	}
 }
