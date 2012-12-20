@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -27,7 +28,7 @@ import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
  * @author Evertson Croes
  * 
  */
-public class OpdrNav
+public class OpdrNav implements OpdrNavIF
 {
 	private ViewModuleViewImpl entry;
 	private ListBox lb_activiteiten;
@@ -38,13 +39,13 @@ public class OpdrNav
 	private int[] aantalOpdrachten;
 	private String[] activiteitNamen;
 	private int maxAantalOpdrachten = 50;
-	
+
 	private HashMap<String, Object>[][] opdrachten;
 	private HashMap<String, Object>[][] states;
 	private int[][] scoresMax;
 	private int[][] scores;
 	private boolean[][] isCorrect;
-	
+
 	private int scoreMax;
 	private int currentOpdracht = 0;
 	private int currentActiviteit = 0;
@@ -96,7 +97,8 @@ public class OpdrNav
 		mainPanel.add(contentPanel);
 
 		lb_activiteiten = new ListBox();
-		if(aantalActiviteiten==1)lb_activiteiten.setVisible(false);
+		if (aantalActiviteiten == 1)
+			lb_activiteiten.setVisible(false);
 		lb_activiteiten.getElement().getStyle().setFloat(Style.Float.LEFT);
 		lb_activiteiten.getElement().getStyle().setMarginRight(10, Unit.PX);
 		lb_activiteiten.addChangeHandler(new ChangeHandler()
@@ -112,7 +114,8 @@ public class OpdrNav
 				setOpdrachten(selectedIndex);
 				entry.clearContentPanel();
 				entry.zetOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
-				if(states[currentActiviteit][currentOpdracht] != null) entry.setState(states[currentActiviteit][currentOpdracht]);
+				if (states[currentActiviteit][currentOpdracht] != null)
+					entry.setState(states[currentActiviteit][currentOpdracht]);
 			}
 		});
 		for (int i = 0; i < aantalActiviteiten; i++)
@@ -129,9 +132,10 @@ public class OpdrNav
 	{
 		return mainPanel;
 	}
-	
+
 	public void setChanged()
-	{	scores[currentActiviteit][currentOpdracht] = entry.getScore();
+	{
+		scores[currentActiviteit][currentOpdracht] = entry.getScore();
 		isCorrect[currentActiviteit][currentOpdracht] = entry.isCorrect();
 		setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht]);
 	}
@@ -171,12 +175,13 @@ public class OpdrNav
 		button.getElement().getStyle().setPaddingTop(5, Unit.PX);
 		button.getElement().getStyle().setPaddingBottom(5, Unit.PX);
 		button.getElement().getStyle().setBackgroundColor("#FFBBBB");
-		if(scoresMax[currentActiviteit][j]==0)button.getElement().getStyle().setBackgroundColor("#909090");
+		if (scoresMax[currentActiviteit][j] == 0)
+			button.getElement().getStyle().setBackgroundColor("#909090");
 		button.getElement().getStyle().setProperty("borderRadius", "20px");
 
 		button.getElement().getStyle().setBorderWidth(1, Unit.PX);
 		button.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
-		button.getElement().getStyle().setBorderColor(CssColor.make(121,127,144).toString());//("#979797");
+		button.getElement().getStyle().setBorderColor(CssColor.make(121, 127, 144).toString());//("#979797");
 
 		button.setText(" " + (j + 1) + " ");
 		if (currentOpdracht == j)
@@ -202,14 +207,16 @@ public class OpdrNav
 				scores[currentActiviteit][currentOpdracht] = entry.getScore();
 				isCorrect[currentActiviteit][currentOpdracht] = entry.isCorrect();
 				setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht]);
-				
+
 				removeButtonCursor(buttons.get(currentOpdracht));
 				currentOpdracht = button_id;
 				setButtonCursor(buttons.get(currentOpdracht));
-				
+
 				entry.clearContentPanel();
-				if(states[currentActiviteit][currentOpdracht]==null)entry.zetOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
-				else entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], states[currentActiviteit][currentOpdracht]);
+				if (states[currentActiviteit][currentOpdracht] == null)
+					entry.zetOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
+				else
+					entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], states[currentActiviteit][currentOpdracht]);
 			}
 
 			@Override
@@ -239,9 +246,10 @@ public class OpdrNav
 	public void setButtonCorrect(TouchButton button, boolean b)
 	{
 		button.getElement().getStyle().setBackgroundColor(b ? "#00BB00" : "#FFBBBB");
-		if(scoresMax[currentActiviteit][currentOpdracht]==0)button.getElement().getStyle().setBackgroundColor("#909090");
+		if (scoresMax[currentActiviteit][currentOpdracht] == 0)
+			button.getElement().getStyle().setBackgroundColor("#909090");
 	}
-	
+
 	public void setButtonCursor(TouchButton button)
 	{
 		//button.getElement().getStyle().setBackgroundColor("#b4b4b4");
@@ -254,7 +262,7 @@ public class OpdrNav
 	{
 		//button.getElement().getStyle().setBackgroundColor("#f0f0f0");
 		button.getElement().getStyle().setBorderWidth(1, Unit.PX);
-		button.getElement().getStyle().setBorderColor(CssColor.make(121,127,144).toString());//("#979797");
+		button.getElement().getStyle().setBorderColor(CssColor.make(121, 127, 144).toString());//("#979797");
 		button.getElement().getStyle().setMarginTop(2, Unit.PX);
 	}
 

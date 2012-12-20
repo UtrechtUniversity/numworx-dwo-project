@@ -31,7 +31,7 @@ public class FormuleKeyboard
 
 	private String[][] buttonCodes =
 	{
-	{ "zoomIn", "zoomOut", "copy", "paste", "del", "back", null, "left","right",null, "apply" },
+	{ "zoomIn", "zoomOut", "copy", "paste", "del", "back", null, "left", "right", null, "apply" },
 	{ "wortel", "macht", "kwadraat", "breuk", "haakjes", "ndewortel", "x", "y", "(", ")", "1", "2", "3", "/" },
 	{ "integraal", "prv", "ndelog", "abs", "subscript", "bin", "a", "b", "k", "e", "pi", "4", "5", "6", "maal" },
 	{ "diff", "limiet0", "limiet1", "limiet2", "\u221e", "primitieve", "p", "q", "t", "<", ">", "7", "8", "9", "min" },
@@ -150,7 +150,7 @@ public class FormuleKeyboard
 		tp.getPanel().getElement().getStyle().setBackgroundImage("images/resources/footerbgimage.png");
 
 		tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodes, buttonWidths));
-		
+
 		tp.addTab("ABC", this.getKeyBoard(buttonCodesAbc, buttonWidthsAbc));
 		tp.addTab("ABCShift", this.getKeyBoard(buttonCodesAbcShift, buttonWidthsAbcShift));
 		tp.addTab("Alpha", this.getKeyBoard(buttonCodesAlpha, buttonWidthsAlpha));
@@ -160,7 +160,7 @@ public class FormuleKeyboard
 		tp.addTab("Verberg", new SimplePanel());
 
 		tp.addTab(SCRIBBLE, new DigitsPanel(this));
-		
+
 		tp.hideTabButton("ABCShift");
 		//SliderPanel sp = new SliderPanel(100, this);
 		//tp.getStaticPanel().add(sp.getPanel());
@@ -208,7 +208,7 @@ public class FormuleKeyboard
 					width += 32;
 					b.setWidth(Math.round(width) + "px");
 					b.setHeight("16px");
-					
+
 					b.getElement().getStyle().setFloat(Style.Float.LEFT);
 					if (b != null)
 						fp2.add(b);
@@ -218,10 +218,11 @@ public class FormuleKeyboard
 				width = (defwidth + 2 * padding) * widths[j][i] - 2 * padding;
 				b.setWidth(Math.round(width) + "px");
 				b.setHeight("16px");
-				if("zoomOut".equals(buttons[j][i]) || "zoomIn".equals(buttons[j][i]))
-				{	b.getElement().getStyle().setWidth(32, Unit.PX);
+				if ("zoomOut".equals(buttons[j][i]) || "zoomIn".equals(buttons[j][i]))
+				{
+					b.getElement().getStyle().setWidth(32, Unit.PX);
 					b.getElement().getStyle().setHeight(32, Unit.PX);
-					b.getElement().getStyle().setPadding(2,Unit.PX);
+					b.getElement().getStyle().setPadding(2, Unit.PX);
 				}
 				if (b != null)
 					fp2.add(b);
@@ -320,18 +321,17 @@ public class FormuleKeyboard
 	{
 		return editor;
 	}
-	
-	
-	public void enter() {
+
+	public void enter()
+	{
 		FormuleEditor editor = getEditor();
 		if (editor instanceof FormuleEditorWithAnswer)
 			((FormuleEditorWithAnswer) editor).check();
 	}
-	public void backspace() {
+
+	public void backspace()
+	{
 		getEditor().removeCurrentElement();
 	}
-	
-	
-	
-	
+
 }

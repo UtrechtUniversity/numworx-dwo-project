@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import nl.uu.fi.dwo.interaction.client.InteractionView;
+import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
@@ -16,7 +18,6 @@ import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleTeken;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.vakken.Machtvak;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.InteractionView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.kladjegwt.client.KladjeGWT;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT;
@@ -211,7 +212,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 	}
 
 	private HashMap<String, Object> launchData, instellingen;
-	private OpdrNav on;
+	private OpdrNavIF on;
 	private FocusPanel mainPanel;
 	private TouchPanel contentPanel = null;
 	private ScrollPanel contentScrollPanel = null;
@@ -399,8 +400,9 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 		contentPanel.getElement().getStyle().setPadding(15, Unit.PX);
 		//FormuleHolder.setDefaultFont(FormuleFont.createFromFontSize(font_size));
 
-		on = new OpdrNav(launchData, this);
-		FlowPanel onp = (FlowPanel) on.getAsPanel();
+		OpdrNav onimpl;
+		on = onimpl = new OpdrNav(launchData, this);
+		FlowPanel onp = (FlowPanel) onimpl.getAsPanel();
 		kb.addNavPanel(onp);
 	}
 
@@ -607,7 +609,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 		contentPanel.add(fews.getAsPanel());
 	}
 
-	public void setCommunicationRoot(OpdrNav comRoot)
+	public void setCommunicationRoot(OpdrNavIF comRoot)
 	{
 		this.on = comRoot;
 	}
@@ -746,7 +748,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 			}
 			else if (currentObject instanceof FormuleEditorWithSteps)
 			{
-				Widget a = ((InteractionView) currentObject).getAsWidget();
+				Widget a = ((InteractionView) currentObject).asWidget();
 				//a.getElement().getStyle().setFloat(Float.LEFT);
 				kb.setEditor(((FormuleEditorWithSteps) currentObject).getEditor());
 				((FormuleEditorWithSteps) currentObject).setKeyboard(kb);
@@ -758,7 +760,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 
 			else if (currentObject instanceof NabouwenAanzichtenGWT)
 			{
-				Widget a = ((InteractionView) currentObject).getAsWidget();
+				Widget a = ((InteractionView) currentObject).asWidget();
 				//a.getElement().getStyle().setFloat(Float.LEFT);
 				a.getElement().getStyle().setProperty("display", "inline-block");
 				a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
@@ -770,7 +772,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 
 			else if (currentObject instanceof KladjeGWT)
 			{
-				Widget a = ((InteractionView) currentObject).getAsWidget();
+				Widget a = ((InteractionView) currentObject).asWidget();
 				//a.getElement().getStyle().setFloat(Float.LEFT);
 				a.getElement().getStyle().setProperty("display", "inline-block");
 				a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
@@ -781,7 +783,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 			}
 			else if (currentObject instanceof TekstVakPanel)
 			{
-				Widget a = ((InteractionView) currentObject).getAsWidget();
+				Widget a = ((InteractionView) currentObject).asWidget();
 				//a.getElement().getStyle().setFloat(Float.LEFT);
 				a.getElement().getStyle().setProperty("display", "inline-block");
 				a.getElement().getStyle().setProperty("verticalAlign", "top");
@@ -837,7 +839,6 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 
 	protected void requestFocus()
 	{
-		mainPanel.setFocus(true);
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() // voor firefox delayed focus.
 		{
 			public void execute()
@@ -910,7 +911,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 		});
 	}
 
-	public OpdrNav getOpdrNav()
+	public OpdrNavIF getOpdrNav()
 	{
 		return on;
 	}
@@ -1061,7 +1062,9 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 		//
 
 		requestFocus();
-		mainPanel.addMouseUpHandler(FOCUS_ON_TOUCH);
+		boolean hastouch = com.google.gwt.event.dom.client.TouchStartEvent.isSupported();
+		if (!hastouch)
+			mainPanel.addMouseUpHandler(FOCUS_ON_TOUCH);
 
 	}
 }

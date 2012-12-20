@@ -3,9 +3,10 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import nl.uu.fi.dwo.interaction.client.InteractionView;
+import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
-import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
 import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleViewer;
@@ -61,7 +62,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	private FlowPanel contentPanel = null;
 	private FlowPanel feedbackPanel = null;
 	private FlowPanel mainPanel = null;
-	private OpdrNav comRoot;
+	private OpdrNavIF comRoot;
 	private TouchButton tb = null;
 	private TouchButton copyButton = null;
 	private int steps = 0;
@@ -719,13 +720,13 @@ public class FormuleEditorWithSteps implements InteractionView
 	}
 
 	@Override
-	public void setCommunicationRoot(OpdrNav comRoot)
+	public void setCommunicationRoot(OpdrNavIF comRoot)
 	{
 		this.comRoot = comRoot;
 	}
 
 	@Override
-	public Widget getAsWidget()
+	public Widget asWidget()
 	{
 		return getAsPanel();
 	}

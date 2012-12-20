@@ -3,9 +3,10 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import nl.uu.fi.dwo.interaction.client.InteractionView;
+import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
-import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleFont;
@@ -32,7 +33,7 @@ public class TekstVakPanel implements InteractionView
 	private int font_size = 12;
 	private int font_style = 0;
 	private FormuleKeyboard kb = null;
-	private OpdrNav comRoot = null;
+	private OpdrNavIF comRoot = null;
 	private int breedte = 600;
 	private int hoogte = 250;
 	private HashMap<String, Object> launchState, instellingen;
@@ -249,7 +250,7 @@ public class TekstVakPanel implements InteractionView
 
 	}
 
-	public void setCommunicationRoot(OpdrNav comRoot)
+	public void setCommunicationRoot(OpdrNavIF comRoot)
 	{
 		this.comRoot = comRoot;
 	}
@@ -407,7 +408,7 @@ public class TekstVakPanel implements InteractionView
 	}
 
 	@Override
-	public Widget getAsWidget()
+	public Widget asWidget()
 	{
 		return getAsPanel();
 	}

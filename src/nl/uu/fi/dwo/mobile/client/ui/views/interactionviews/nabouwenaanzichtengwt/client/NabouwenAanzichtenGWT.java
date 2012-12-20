@@ -3,9 +3,9 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.nabouwenaanzichteng
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
+import nl.uu.fi.dwo.interaction.client.InteractionView;
+import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.InteractionView;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -29,7 +29,7 @@ public class NabouwenAanzichtenGWT implements InteractionView
 {
 	Canvas canvas;
 	int mouseX, mouseY;
-	OpdrNav comRoot;
+	OpdrNavIF comRoot;
 
 	static final int refreshRate = 25;
 
@@ -352,14 +352,14 @@ public class NabouwenAanzichtenGWT implements InteractionView
 	}
 
 	@Override
-	public void setCommunicationRoot(OpdrNav comRoot)
+	public void setCommunicationRoot(OpdrNavIF comRoot)
 	{
 		this.comRoot = comRoot;
 
 	}
 
 	@Override
-	public Widget getAsWidget()
+	public Widget asWidget()
 	{
 		return getAsPanel();
 	}

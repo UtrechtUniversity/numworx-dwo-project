@@ -2,7 +2,8 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.HashMap;
 
-import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
+import nl.uu.fi.dwo.interaction.client.InteractionView;
+import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleFont;
@@ -24,7 +25,7 @@ import fi.wiskopdr.AntwoordVergelijkingVakChecker;
  */
 public class FormuleEditorWithAnswer extends FormuleEditor implements InteractionView
 {
-	OpdrNav comRoot;
+	OpdrNavIF comRoot;
 	TouchPanel sp = null;
 	Image checkimg;
 	private HashMap<String, Object> launchState;
@@ -216,13 +217,13 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	}
 
 	@Override
-	public void setCommunicationRoot(OpdrNav comRoot)
+	public void setCommunicationRoot(OpdrNavIF comRoot)
 	{
 		this.comRoot = comRoot;
 	}
 
 	@Override
-	public Widget getAsWidget()
+	public Widget asWidget()
 	{
 		return getAsPanel();
 	}

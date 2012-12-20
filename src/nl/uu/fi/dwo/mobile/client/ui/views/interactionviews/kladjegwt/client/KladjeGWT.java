@@ -2,8 +2,8 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.kladjegwt.client;
 
 import java.util.HashMap;
 
-import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.InteractionView;
+import nl.uu.fi.dwo.interaction.client.InteractionView;
+import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.core.client.GWT;
@@ -264,7 +264,7 @@ public class KladjeGWT implements InteractionView
 		return panel;
 	}
 
-	public Widget getAsWidget()
+	public Widget asWidget()
 	{
 		return getAsPanel();
 	}
@@ -551,7 +551,7 @@ public class KladjeGWT implements InteractionView
 	}
 
 	@Override
-	public void setCommunicationRoot(OpdrNav comRoot)
+	public void setCommunicationRoot(OpdrNavIF comRoot)
 	{
 		// TODO Auto-generated method stub
 

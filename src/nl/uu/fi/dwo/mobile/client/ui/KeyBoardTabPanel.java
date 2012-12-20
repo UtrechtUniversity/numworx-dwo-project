@@ -2,7 +2,6 @@ package nl.uu.fi.dwo.mobile.client.ui;
 
 import java.util.Vector;
 
-import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
@@ -34,8 +33,8 @@ public class KeyBoardTabPanel
 	private Vector<String> tabkeys = new Vector<String>();
 
 	private int current = 0;
-	
-	private final TouchButton keyboardButton = new TouchButton(); 
+
+	private final TouchButton keyboardButton = new TouchButton();
 	private final TouchButton keyboardRemoveButton = new TouchButton();
 	private final TouchButton digitsButton = new TouchButton();
 
@@ -50,11 +49,10 @@ public class KeyBoardTabPanel
 		//panel.getElement().getStyle().setProperty("margin", "0px auto");
 		main.getElement().getStyle().setPosition(Style.Position.ABSOLUTE);
 		main.getElement().getStyle().setBottom(0, Style.Unit.PX);
-		
 
 		staticpanel.getElement().getStyle().setHeight(44, Style.Unit.PX);
 		staticpanel.getElement().getStyle().setBackgroundImage("url(images/resources/footerbgimage.png)");
-		
+
 		Image buttonImage = new Image("images/resources/keyboardbutton.png");
 		buttonImage.getElement().getStyle().setMargin(5, Unit.PX);
 		keyboardButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
@@ -69,43 +67,47 @@ public class KeyBoardTabPanel
 		buttonRemoveImage.getElement().getStyle().setMargin(5, Unit.PX);
 		keyboardRemoveButton.getElement().getStyle().setDisplay(Display.NONE);
 		keyboardRemoveButton.add(buttonRemoveImage);
-		
+
 		keyboardButton.addTouchStartHandler(new TouchStartHandler()
 		{
 			@Override
 			public void onTouchStart(TouchStartEvent event)
-			{	tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
+			{
+				tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
 				tabs.get(0).getElement().getStyle().setDisplay(Display.BLOCK);
 				current = 0;
 				keyboardRemoveButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 				keyboardButton.getElement().getStyle().setDisplay(Display.NONE);
-				
+
 			}
 		});
 		keyboardRemoveButton.addTouchStartHandler(new TouchStartHandler()
 		{
 			@Override
 			public void onTouchStart(TouchStartEvent event)
-			{	tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
+			{
+				tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
 				keyboardButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 				keyboardRemoveButton.getElement().getStyle().setDisplay(Display.NONE);
-				
+
 			}
 		});
-		
-		digitsButton.addTouchStartHandler(new TouchStartHandler() {
+
+		digitsButton.addTouchStartHandler(new TouchStartHandler()
+		{
 
 			@Override
-			public void onTouchStart(TouchStartEvent event) {
+			public void onTouchStart(TouchStartEvent event)
+			{
 				goTo(FormuleKeyboard.SCRIBBLE);
-				
-			}});
-		
-		
+
+			}
+		});
+
 		staticpanel.add(keyboardButton);
 		staticpanel.add(digitsButton);
 		staticpanel.add(keyboardRemoveButton);
-		
+
 		//contentpanel.setHeight("300px");
 		//tabcontentpanel.getElement().getStyle().setFloat(Style.Float.LEFT);
 		//staticpanel.getElement().getStyle().setFloat(Style.Float.RIGHT);
@@ -121,9 +123,10 @@ public class KeyBoardTabPanel
 
 		main.add(panel);
 	}
-	
+
 	public void clearStaticPanel()
-	{	staticpanel.clear();
+	{
+		staticpanel.clear();
 		staticpanel.add(keyboardButton);
 		staticpanel.add(digitsButton);
 		staticpanel.add(keyboardRemoveButton);
