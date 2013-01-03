@@ -60,9 +60,13 @@ public class LoaderTest extends TestCase {
 
 	
 	public void testCreate2() throws Exception {
-		Loader loader = Loader.create("wiskopdr.jar");
+		Loader loader = Loader.create("dwo.jar");
 		Class<?> geo = loader.loadClass("geogebra.GeoGebra");
-		geo.newInstance();
+		Class<?> g2  = loader.loadClass("v3.geogebra.GeoGebra");
+		Object r = geo.newInstance();
+		Object r2 = g2.newInstance();
+		assertNotNull(r);
+		assertNotNull(r2);
 	}
 	
 	

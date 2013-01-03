@@ -408,7 +408,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 				log("newInstance of " + name, e1);
 				e1.printStackTrace();
 			}		
-		Loader loader = Loader.create("wiskopdr.jar");
+		Loader loader = Loader.create("dwo.jar"); // Helaas, wiskopdr.jar geen goede index.
 		try {
 			Class<?> clazz =  loader.loadClass(name);
 			lastClass = (Class<Applet>) clazz;

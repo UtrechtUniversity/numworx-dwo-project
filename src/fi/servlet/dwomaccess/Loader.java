@@ -8,7 +8,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.TreeSet;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
@@ -23,17 +27,16 @@ public class Loader extends URLClassLoader {
 	}
 
 	static Loader create(String jar) {
-		ArrayList<URL> list = new ArrayList<URL>();
-		
+		Collection<URL> set = new ArrayList<URL>(); // ordered and unique (ordered set?)
 		jar = URL_PREFIX + jar;
 		try {
 			URL u = new URL(jar);
-			addURL(list, u);
+			addURL(set, u);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		ClassLoader parent = Loader.class.getClassLoader(); // TOMCAT classloader
-		return new Loader(list.toArray(new URL[list.size()]), parent);
+		return new Loader(set.toArray(new URL[set.size()]), parent);
 	}
 
 	/**
@@ -41,7 +44,7 @@ public class Loader extends URLClassLoader {
 	 * @param u
 	 * @throws IOURLException
 	 */
-	private static void addURL(ArrayList<URL> list, URL u)
+	private static void addURL(Collection<URL> list, URL u)
 			throws IOException {
 		URL uu = new URL( "jar:" + u + "!/");
 		if(!list.contains(uu))
