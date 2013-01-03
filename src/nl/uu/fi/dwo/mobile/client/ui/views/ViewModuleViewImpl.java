@@ -19,7 +19,7 @@ import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.vakken.Machtvak;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.kladjegwt.client.KladjeGWT;
+//import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.kladjegwt.client.KladjeGWT;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT;
 import nl.uu.fi.dwo.mobile.utils.StringCodeToHashMap;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
@@ -770,7 +770,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 				destination.add(a);
 			}
 
-			else if (currentObject instanceof KladjeGWT)
+			else if (currentObject.getClass().getName().equals("fi.kladjegwt.client.KladjeGWT"))
 			{
 				Widget a = ((InteractionView) currentObject).asWidget();
 				//a.getElement().getStyle().setFloat(Float.LEFT);

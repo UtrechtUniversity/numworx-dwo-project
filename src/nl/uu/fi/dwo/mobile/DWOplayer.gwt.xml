@@ -20,7 +20,7 @@
    <inherits name="com.bouwkamp.gwt.user.User" />
    <inherits name="lx.interaction.DollarOne" />
    <inherits name="nl.uu.fi.dwo.interaction.Interaction" />
-   
+    <inherits name="fi.kladjegwt.KladjeGWT" />
 
 
   <inherits name="com.google.gwt.xml.XML"/> 
