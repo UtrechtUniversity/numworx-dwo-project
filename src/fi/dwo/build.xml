@@ -90,9 +90,12 @@
 				storepass='secret'
 				keystore='${keystore}'
 				verbose='${true}'
+				keyalg='RSA'
+				sigalg='sha1withrsa'
+				keysize='2048'
 		>
 			<dname>
-				<param name="CN" value="DWO Project" />
+				<param name="CN" value="dwo.fisme.science.uu.nl" />
 				<param name="OU" value="Freudenthal Instituut" />
 				<param name="O" value="Universiteit Utrecht" />
 				<param name="C" value="NL" />
@@ -187,7 +190,7 @@
     	</war>
     	
     </target>
-	<property name='catalina.drive' value='U:' />
+	<property name='catalina.drive' value='S:' />
 	<property name="catalina.home" location="${catalina.drive}/Program Files/Apache Software Foundation/Tomcat 5.5"/>
 	<property name="tomcat.user" value="tomcat" />
 	<property name="tomcat.password" value="tomcat"/>

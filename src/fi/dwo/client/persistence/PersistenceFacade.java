@@ -304,7 +304,7 @@ public class PersistenceFacade {
         try {
             MapperIF mapper = MapperCreator.instance(Course.class);
             Vector v;
-            int profileId = ((DwoIF) DwoHelper.getApplet()).getDwoProfile().getID();
+            int profileId = getDwoProfileID();
 			int guestID = PROFILEOFFSET-profileId;
             if (user == null) {
 				v = DbAccessCreator.instance().getCourses(guestID);
@@ -350,6 +350,10 @@ public class PersistenceFacade {
         }
 
     }
+
+	private static int getDwoProfileID() {
+		return ((DwoIF) DwoHelper.getApplet()).getDwoProfile().getID();
+	}
     
     /**
      * Als no_chilren, maar loaded wordt dan true
@@ -1900,7 +1904,7 @@ e1.printStackTrace();
 				}
 		
 		}
-		int profileID = ((DwoIF)DwoHelper.getApplet()).getDwoProfile().getID();
+		int profileID = getDwoProfileID();
 		if(school != null) schoolID = school.getSchoolID();
 		MapperIF instance = MapperCreator.instance(CourseSequence.class);
 		instance.removeAllObjects();
@@ -2014,7 +2018,13 @@ e1.printStackTrace();
 			}
 			v.add(h);
 		}
-		
+// insert dwoProfileID.
+		if(v.isEmpty()) {
+			v.add(new Hashtable());
+		}
+		int id = getDwoProfileID(); // TODO denk aan parameter?
+		((Hashtable) v.firstElement()).put("dwoProfileID", new Integer(id));
+
 		try {
 			DbAccessCreator.instance().selectCoursesForClass(schoolClass.getID(), v);
         } catch (IOException e) {
