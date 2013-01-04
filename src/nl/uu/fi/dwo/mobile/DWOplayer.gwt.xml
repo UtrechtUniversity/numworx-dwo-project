@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <module rename-to='DWOplayer'>
   <!-- Inherit the core Web Toolkit stuff.                        -->
   <inherits name='com.google.gwt.user.User'/>
@@ -21,6 +22,7 @@
    <inherits name="lx.interaction.DollarOne" />
    <inherits name="nl.uu.fi.dwo.interaction.Interaction" />
     <inherits name="fi.kladjegwt.KladjeGWT" />
+    <inherits name="fi.nabouwenaanzichtengwt.NabouwenAanzichtenGWT" />
 
 
   <inherits name="com.google.gwt.xml.XML"/> 

@@ -8,9 +8,10 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT;
+//import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT;
 //import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.kladjegwt.client.KladjeGWT;
 import fi.kladjegwt.client.KladjeGWT;
+import fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT;
 
 /**
  * Uses information in the launchdata HashMap to create objects that will be
