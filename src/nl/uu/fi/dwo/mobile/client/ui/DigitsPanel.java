@@ -6,22 +6,16 @@ import java.util.List;
 import lx.interaction.dollar.Dollar;
 import lx.interaction.dollar.DollarListener;
 import lx.interaction.dollar.Point;
+import lx.interaction.touch.MGWTTouchHandler;
 import lx.interaction.touch.TouchListener;
 import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleTeken;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
-import com.google.gwt.core.client.JsArray;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.TextBox;
-import com.googlecode.mgwt.dom.client.event.touch.JsTouch;
-import com.googlecode.mgwt.dom.client.event.touch.Touch;
-import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
-import com.googlecode.mgwt.dom.client.event.touch.TouchMoveEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchDelegate;
 
 public class DigitsPanel extends HorizontalPanel implements TouchListener, DollarListener
@@ -63,64 +57,7 @@ public class DigitsPanel extends HorizontalPanel implements TouchListener, Dolla
 		canvas.setCoordinateSpaceHeight(height);
 		delegate = new TouchDelegate(canvas);
 
-		TouchHandler handler = new TouchHandler()
-		{
-
-			private int pageX;
-			private int pageY;
-
-			@Override
-			public void onTouchMove(TouchMoveEvent event)
-			{
-				Touch t = event.touches().get(0);
-				pageX = t.getPageX();
-				pageY = t.getPageY();
-				int offsetX = canvas.getAbsoluteLeft();
-				int offsetY = canvas.getAbsoluteTop();
-				pointerDragged(pageX - offsetX, pageY - offsetY); //offsetX, offsetY
-				event.stopPropagation();
-				event.preventDefault();
-			}
-
-			@Override
-			public void onTouchStart(TouchStartEvent event)
-			{
-				Touch t = event.touches().get(0);
-				pageX = t.getPageX();
-				pageY = t.getPageY();
-				int offsetX = canvas.getAbsoluteLeft();
-				int offsetY = canvas.getAbsoluteTop();
-				event.stopPropagation();
-				event.preventDefault();
-				pointerPressed(pageX - offsetX, pageY - offsetY);
-			}
-
-			@Override
-			public void onTouchEnd(TouchEndEvent event)
-			{
-				JsArray<JsTouch> touches = event.touches();
-				if (touches.length() > 0)
-				{
-					Touch t = touches.get(0);
-					pageX = t.getPageX();
-					pageY = t.getPageY();
-				}
-				int offsetX = canvas.getAbsoluteLeft();
-				int offsetY = canvas.getAbsoluteTop();
-				event.stopPropagation();
-				event.preventDefault();
-				pointerReleased(pageX - offsetX, pageY - offsetY);
-			}
-
-			@Override
-			public void onTouchCanceled(TouchCancelEvent event)
-			{
-				event.stopPropagation();
-				event.preventDefault();
-				current.clear();
-				draw();
-			}
-		};
+		TouchHandler handler = new MGWTTouchHandler(this);
 		delegate.addTouchHandler(handler);
 	}
 
