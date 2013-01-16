@@ -15,6 +15,7 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.googlecode.mgwt.dom.client.event.touch.JsTouch;
 import com.googlecode.mgwt.dom.client.event.touch.Touch;
 import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
@@ -97,7 +98,7 @@ public class DigitsPanel extends HorizontalPanel implements TouchListener, Dolla
 			@Override
 			public void onTouchEnd(TouchEndEvent event)
 			{
-				JsArray<Touch> touches = event.touches();
+				JsArray<JsTouch> touches = event.touches();
 				if (touches.length() > 0)
 				{
 					Touch t = touches.get(0);
