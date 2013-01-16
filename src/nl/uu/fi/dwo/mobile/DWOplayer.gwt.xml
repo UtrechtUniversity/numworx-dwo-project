@@ -21,8 +21,8 @@
    <inherits name="com.bouwkamp.gwt.user.User" />
    <inherits name="lx.interaction.DollarOne" />
    <inherits name="nl.uu.fi.dwo.interaction.Interaction" />
-    <inherits name="fi.kladjegwt.KladjeGWT" />
-    <inherits name="fi.nabouwenaanzichtengwt.NabouwenAanzichtenGWT" />
+    <inherits name="fi.kladjegwt.KladjeGWT-DWO" />
+    <inherits name="fi.nabouwenaanzichtengwt.NabouwenAanzichtenGWT-DWO" />
 
 
   <inherits name="com.google.gwt.xml.XML"/> 
