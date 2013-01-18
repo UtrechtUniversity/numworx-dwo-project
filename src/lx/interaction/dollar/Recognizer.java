@@ -1,6 +1,6 @@
 package lx.interaction.dollar;
 
-import java.util.*;
+import java.util.Vector;
 
 public class Recognizer
 {
@@ -14,17 +14,19 @@ public class Recognizer
 	double AngleRange = 45.0;
 	double AnglePrecision = 2.0;
 	public static double Phi = 0.5 * (-1.0 + Math.sqrt(5.0)); // Golden Ratio
-	
+
 	public Point centroid = new Point(0, 0);
 	public Rectangle boundingBox = new Rectangle(0, 0, 0, 0);
-	int bounds[] = { 0, 0, 0, 0 };
-	
-	Vector Templates = new Vector(NumTemplates);
+	int bounds[] =
+	{ 0, 0, 0, 0 };
+
+	Vector<Template> Templates = new Vector<Template>(NumTemplates);
 
 	public static final int GESTURES_DEFAULT = 1;
 	public static final int GESTURES_SIMPLE = 2;
-	public static final int GESTURES_CIRCLES = 3;	
-	
+	public static final int GESTURES_CIRCLES = 3;
+	public static final int GESTURES_DWOPLAYER = 4;
+
 	public Recognizer()
 	{
 		this(GESTURES_SIMPLE);
@@ -32,39 +34,58 @@ public class Recognizer
 
 	public Recognizer(int gestureSet)
 	{
-		switch(gestureSet)
+		switch (gestureSet)
 		{
-			case GESTURES_DEFAULT:
-				loadTemplatesDefault(); break;
+		case GESTURES_DWOPLAYER:
+			loadTemplatesDwoPlayer();
+		case GESTURES_DEFAULT:
+			loadTemplatesDefault();
+			break;
 
-			case GESTURES_SIMPLE:
-				loadTemplatesSimple();	break;
+		case GESTURES_SIMPLE:
+			loadTemplatesSimple();
+			break;
 
-			case GESTURES_CIRCLES:
-				loadTemplatesCircles();	break;
+		case GESTURES_CIRCLES:
+			loadTemplatesCircles();
+			break;
 		}
 	}
-	
+
+	private void loadTemplatesDwoPlayer()
+	{
+		Templates.addElement(loadTemplate("9", ExtraData.sample_9));
+		Templates.addElement(loadTemplate("8", ExtraData.sample_8));
+		Templates.addElement(loadTemplate("7", ExtraData.sample_7));
+		Templates.addElement(loadTemplate("6", ExtraData.sample_6));
+		Templates.addElement(loadTemplate("5", ExtraData.sample_5));
+		Templates.addElement(loadTemplate("4", ExtraData.sample_4));
+		Templates.addElement(loadTemplate("3", ExtraData.sample_3));
+		Templates.addElement(loadTemplate("2", ExtraData.sample_2));
+		Templates.addElement(loadTemplate("1", ExtraData.sample_1));
+		Templates.addElement(loadTemplate("delete", ExtraData.sample_delete));
+	}
+
 	void loadTemplatesDefault()
 	{
-		Templates.addElement(loadTemplate("triangle", TemplateData.trianglePoints));
+		//Templates.addElement(loadTemplate("triangle", TemplateData.trianglePoints));
 		Templates.addElement(loadTemplate("x", TemplateData.xPoints));
-		Templates.addElement(loadTemplate("rectangle CCW", TemplateData.rectanglePointsCCW));
+		//Templates.addElement(loadTemplate("rectangle CCW", TemplateData.rectanglePointsCCW));
 		Templates.addElement(loadTemplate("0", TemplateData.circlePointsCCW));
 		Templates.addElement(loadTemplate("check", TemplateData.checkPoints));
 		Templates.addElement(loadTemplate("^", TemplateData.caretPointsCW));
-		Templates.addElement(loadTemplate("?", TemplateData.questionPoints));
+		//Templates.addElement(loadTemplate("?", TemplateData.questionPoints));
 		Templates.addElement(loadTemplate("arrow", TemplateData.arrowPoints));
-		Templates.addElement(loadTemplate("[", TemplateData.leftSquareBracketPoints));
-		Templates.addElement(loadTemplate("]", TemplateData.rightSquareBracketPoints));
-		Templates.addElement(loadTemplate("v", TemplateData.vPoints));
-		Templates.addElement(loadTemplate("delete", TemplateData.deletePoints));	
-		Templates.addElement(loadTemplate("{", TemplateData.leftCurlyBracePoints));
-		Templates.addElement(loadTemplate("}", TemplateData.rightCurlyBracePoints));
-		Templates.addElement(loadTemplate("star", TemplateData.starPoints));
-		Templates.addElement(loadTemplate("pigTail", TemplateData.pigTailPoints));
+		//Templates.addElement(loadTemplate("[", TemplateData.leftSquareBracketPoints));
+		//Templates.addElement(loadTemplate("]", TemplateData.rightSquareBracketPoints));
+		//Templates.addElement(loadTemplate("v", TemplateData.vPoints));
+		Templates.addElement(loadTemplate("delete", TemplateData.deletePoints));
+		//Templates.addElement(loadTemplate("{", TemplateData.leftCurlyBracePoints));
+		//Templates.addElement(loadTemplate("}", TemplateData.rightCurlyBracePoints));
+		//Templates.addElement(loadTemplate("star", TemplateData.starPoints));
+		//Templates.addElement(loadTemplate("pigTail", TemplateData.pigTailPoints));
 	}
-	
+
 	void loadTemplatesSimple()
 	{
 		Templates.addElement(loadTemplate("circle CCW", TemplateData.circlePointsCCW));
@@ -74,48 +95,47 @@ public class Recognizer
 		Templates.addElement(loadTemplate("caret CCW", TemplateData.caretPointsCCW));
 		Templates.addElement(loadTemplate("caret CW", TemplateData.caretPointsCW));
 	}
-	
 
 	void loadTemplatesCircles()
 	{
 		Templates.addElement(loadTemplate("circle CCW", TemplateData.circlePointsCCW));
 		Templates.addElement(loadTemplate("circle CW", TemplateData.circlePointsCW));
 	}
-	
+
 	Template loadTemplate(String name, int[] array)
 	{
 		return new Template(name, loadArray(array));
 	}
-	
+
 	Vector loadArray(int[] array)
 	{
-		Vector v = new Vector(array.length/2);
-		for (int i = 0; i < array.length; i+= 2)
+		Vector v = new Vector(array.length / 2);
+		for (int i = 0; i < array.length; i += 2)
 		{
-			Point p = new Point(array[i], array[i+1]);
+			Point p = new Point(array[i], array[i + 1]);
 			v.addElement(p);
 		}
-		
-	//	System.out.println(v.size() + " " + array.length);
-	
+
+		//	System.out.println(v.size() + " " + array.length);
+
 		return v;
 	}
-	
+
 	public Result Recognize(Vector points)
 	{
 		points = resample(points);
-	
-		bounds[0] = (int)boundingBox.X;
-		bounds[1] = (int)boundingBox.Y;
-		bounds[2] = (int)boundingBox.X + (int)boundingBox.Width;
-		bounds[3] = (int)boundingBox.Y + (int)boundingBox.Height;
-		
+
+		bounds[0] = (int) boundingBox.X;
+		bounds[1] = (int) boundingBox.Y;
+		bounds[2] = (int) boundingBox.X + (int) boundingBox.Width;
+		bounds[3] = (int) boundingBox.Y + (int) boundingBox.Height;
+
 		int t = 0;
-		
+
 		double b = Double.MAX_VALUE;
 		for (int i = 0; i < Templates.size(); i++)
 		{
-			double d = Utils.DistanceAtBestAngle(points, (Template)Templates.elementAt(i), -AngleRange, AngleRange, AnglePrecision);
+			double d = Utils.DistanceAtBestAngle(points, (Template) Templates.elementAt(i), -AngleRange, AngleRange, AnglePrecision);
 			if (d < b)
 			{
 				b = d;
@@ -123,11 +143,12 @@ public class Recognizer
 			}
 		}
 		double score = 1.0 - (b / HalfDiagonal);
-		return new Result(((Template)Templates.elementAt(t)).Name, score, t);
+		return new Result(((Template) Templates.elementAt(t)).Name, score, t);
 	}
 
-	private Vector resample(Vector points) {
-		points = Utils.Resample(points, NumPoints);		
+	private Vector resample(Vector points)
+	{
+		points = Utils.Resample(points, NumPoints);
 		points = Utils.RotateToZero(points, centroid, boundingBox);
 		points = Utils.ScaleToSquare(points, SquareSize);
 		points = Utils.TranslateToOrigin(points);
@@ -139,20 +160,20 @@ public class Recognizer
 		Templates.addElement(new Template(name, points));
 		return Templates.size();
 	}
-	
+
 	int AddUserTemplate(String name, Vector points)
 	{
 		points = resample(points);
 		return AddTemplate(name, points);
 	}
-	
+
 	int DeleteUserTemplates()
 	{
-		for (int i = Templates.size()-NumTemplates; i > 0; i--)
+		for (int i = Templates.size() - NumTemplates; i > 0; i--)
 		{
-			Templates.removeElementAt(Templates.size()-1);
+			Templates.removeElementAt(Templates.size() - 1);
 		}
-		
+
 		return Templates.size();
 	}
 

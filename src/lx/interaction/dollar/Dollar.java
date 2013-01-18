@@ -18,86 +18,67 @@ package lx.interaction.dollar;
 
 import java.util.Vector;
 
-import java.awt.Graphics;
-
 import lx.interaction.touch.TouchListener;
 
 public class Dollar implements TouchListener
 {
 	protected int x, y;
 	protected int state;
-		
+
 	protected int _key = -1;
-	
-	protected boolean gesture = true; 
-	protected Vector points = new Vector(1000);
-	
+
+	protected boolean gesture = true;
+	protected Vector<Point> points = new Vector<Point>(1000);
+
 	protected Recognizer recognizer;
 	protected Result result = new Result("no gesture", 0, -1);
-	
+
 	protected boolean active = false;
-	
+
 	protected DollarListener listener = null;
 
-	public static final int GESTURES_DEFAULT = 1;
-	public static final int GESTURES_SIMPLE = 2;
-	public static final int GESTURES_CIRCLES = 3;
-	
+	public static final int GESTURES_DEFAULT = Recognizer.GESTURES_DEFAULT;
+	public static final int GESTURES_SIMPLE = Recognizer.GESTURES_SIMPLE;
+	public static final int GESTURES_CIRCLES = Recognizer.GESTURES_CIRCLES;
+	public static final int GESTURES_DWOPLAYER = Recognizer.GESTURES_DWOPLAYER;
+
 	protected int gestureSet;
-	
+
 	public Dollar()
 	{
 		this(GESTURES_SIMPLE);
 	}
-	
+
 	public Dollar(int gestureSet)
 	{
 		this.gestureSet = gestureSet;
 		recognizer = new Recognizer(gestureSet);
 	}
-	
+
 	public void setListener(DollarListener listener)
 	{
 		this.listener = listener;
 	}
-	
-//	public void render(Graphics g) 
-//	{
-//		if (!active)
-//			return;
-//		
-//		Point p1, p2;
-//				
-////		g.setColor(0x999999);
-//		
-//		for (int i = 0; i < points.size()-1; i++)
-//		{
-//			p1 = (Point)points.elementAt(i);
-//			p2 = (Point)points.elementAt(i+1);
-//			g.drawLine((int)p1.X, (int)p1.Y, (int)p2.X, (int)p2.Y);
-//		}		
-//	}
-	
+
 	public void addPoint(int x, int y)
 	{
 		if (!active)
 			return;
-		
+
 		points.addElement(new Point(x, y));
-//		System.out.println(x + " " + y + " " + points.size());
-	}	
-	
+		//		System.out.println(x + " " + y + " " + points.size());
+	}
+
 	public void recognize()
 	{
 		if (!active)
 			return;
-		
+
 		if (points.size() == 0) //the recognizer will crash if we try to process an empty set of points...
 			return;
-		
-		result = recognizer.Recognize(points);		
-//		points.removeAllElements();
-		
+
+		result = recognizer.Recognize(points);
+
 		if (listener != null)
 			listener.dollarDetected(this);
 	}
@@ -106,22 +87,22 @@ public class Dollar implements TouchListener
 	{
 		return recognizer.boundingBox;
 	}
-	
+
 	public int[] getBounds()
 	{
 		return recognizer.bounds;
 	}
-	
+
 	public Point getPosition()
 	{
 		return recognizer.centroid;
 	}
-	
+
 	public String getName()
-	{		
+	{
 		return result.Name;
 	}
-	
+
 	public double getScore()
 	{
 		return result.Score;
@@ -136,27 +117,27 @@ public class Dollar implements TouchListener
 	{
 		active = state;
 	}
-	
+
 	public boolean getActive()
 	{
 		return active;
-	}	
-	
+	}
+
 	public void pointerPressed(int x, int y)
 	{
 		clear();
 	}
-	
+
 	public void pointerReleased(int x, int y)
 	{
 		recognize();
 	}
-	
+
 	public void pointerDragged(int x, int y)
 	{
 		addPoint(x, y);
 	}
-	
+
 	public void clear()
 	{
 		points.removeAllElements();
@@ -165,12 +146,13 @@ public class Dollar implements TouchListener
 		result.Index = -1;
 	}
 
-	public void learn(String name) {
+	public void learn(String name)
+	{
 		recognizer.AddUserTemplate(name, points);
 	}
-	public void forget(String name) {
+
+	public void forget(String name)
+	{
 		// ....
 	}
 }
-
-

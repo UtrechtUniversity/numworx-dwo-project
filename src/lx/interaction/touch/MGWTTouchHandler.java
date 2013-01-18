@@ -4,6 +4,7 @@
 package lx.interaction.touch;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.touch.Touch;
 import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
@@ -16,10 +17,12 @@ public class MGWTTouchHandler implements TouchHandler
 {
 
 	private Touch current;
+	private Widget widget;
 
-	public MGWTTouchHandler(TouchListener l)
+	public MGWTTouchHandler(TouchListener l, Widget widget)
 	{
 		listener = l;
+		this.widget = widget;
 	}
 
 	private Touch getTouch(TouchEvent<?> event)
@@ -46,9 +49,10 @@ public class MGWTTouchHandler implements TouchHandler
 	{
 		if (current != null)
 			return;
-		Element e = event.getRelativeElement();
+		Element e = widget.getElement();
 		Touch touch = getTouch(event);
 		current = touch;
+
 		x = getRelativeX(touch, e);
 		y = getRelativeY(touch, e);
 		listener.pointerPressed(x, y);
@@ -58,12 +62,12 @@ public class MGWTTouchHandler implements TouchHandler
 
 	private int getRelativeY(Touch touch, Element e)
 	{
-		return touch.getPageY() - e.getAbsoluteTop();
+		return touch.getPageY() - (e != null ? e.getAbsoluteTop() : 0);
 	}
 
 	private int getRelativeX(Touch touch, Element e)
 	{
-		return touch.getPageX() - e.getAbsoluteLeft();
+		return touch.getPageX() - (e != null ? e.getAbsoluteLeft() : 0);
 	}
 
 	@Override
@@ -72,7 +76,7 @@ public class MGWTTouchHandler implements TouchHandler
 		Touch touch = getTouch(event);
 		if (touch != null)
 		{
-			Element element = event.getRelativeElement();
+			Element element = widget.getElement();
 			x = getRelativeX(touch, element);
 			y = getRelativeY(touch, element);
 			listener.pointerDragged(x, y);

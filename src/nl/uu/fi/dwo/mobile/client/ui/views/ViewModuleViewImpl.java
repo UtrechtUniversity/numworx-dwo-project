@@ -19,8 +19,6 @@ import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.vakken.Machtvak;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
-//import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.kladjegwt.client.KladjeGWT;
-//import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT;
 import nl.uu.fi.dwo.mobile.utils.StringCodeToHashMap;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
@@ -465,7 +463,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 				Object currentObject = opdrachtObjects.get(i);
 				if (currentObject instanceof InteractionView)
 					((InteractionView) currentObject).setCommunicationRoot(on);
-				System.out.println("" + on.toString());
+				//				System.out.println("" + on.toString());
 				if (currentObject instanceof TekstVakPanel)
 				{
 					aantalVakken++;
@@ -758,35 +756,24 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 				destination.add(a);
 			}
 
-			else if (currentObject.getClass().getName().equals("fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT"))
-			{
-				Widget a = ((InteractionView) currentObject).asWidget();
-				//a.getElement().getStyle().setFloat(Float.LEFT);
-				a.getElement().getStyle().setProperty("display", "inline-block");
-				a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
-				//a.getElement().getStyle().setProperty("position", "relative");
-				//a.getElement().getStyle().setProperty("top", (-font_size*0.1)+"px");
-
-				destination.add(a);
-			}
-
-			else if (currentObject.getClass().getName().equals("fi.kladjegwt.client.KladjeGWT"))
-			{
-				Widget a = ((InteractionView) currentObject).asWidget();
-				//a.getElement().getStyle().setFloat(Float.LEFT);
-				a.getElement().getStyle().setProperty("display", "inline-block");
-				a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
-				//a.getElement().getStyle().setProperty("position", "relative");
-				//a.getElement().getStyle().setProperty("top", (-font_size*0.1)+"px");
-
-				destination.add(a);
-			}
 			else if (currentObject instanceof TekstVakPanel)
 			{
 				Widget a = ((InteractionView) currentObject).asWidget();
 				//a.getElement().getStyle().setFloat(Float.LEFT);
 				a.getElement().getStyle().setProperty("display", "inline-block");
 				a.getElement().getStyle().setProperty("verticalAlign", "top");
+
+				destination.add(a);
+			}
+			// all big interaction views
+			else if (currentObject instanceof InteractionView)
+			{
+				Widget a = ((InteractionView) currentObject).asWidget();
+				//a.getElement().getStyle().setFloat(Float.LEFT);
+				a.getElement().getStyle().setProperty("display", "inline-block");
+				a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
+				//a.getElement().getStyle().setProperty("position", "relative");
+				//a.getElement().getStyle().setProperty("top", (-font_size*0.1)+"px");
 
 				destination.add(a);
 			}

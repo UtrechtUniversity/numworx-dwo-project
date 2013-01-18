@@ -8,8 +8,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
-//import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT;
-//import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.kladjegwt.client.KladjeGWT;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.geogebraview.client.GeogebraView;
 import fi.kladjegwt.client.KladjeGWT;
 import fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT;
 
@@ -193,7 +192,15 @@ public class TekstBuffer
 		// ik denk dat het +5 is en niet +1
 		if (opdrachtGegevens.size() > index + 5) // FIXME size() = 6, index = 0 get(0)= null
 			currentVakGegevens = (HashMap<String, Object>) opdrachtGegevens.get(index + 5);
+		if (currentVakGegevens == null) // FIXME Komt voor in g4test
+			return "";
 		int soortVak = (Integer) currentVakGegevens.get("soortInteractiePanel");
+
+		switch (soortVak)
+		{
+		case 39:
+			return new GeogebraView(currentVakGegevens, randomVarNamen, randomVarWaarden);
+		}
 
 		if (soortVak == 0)
 		{

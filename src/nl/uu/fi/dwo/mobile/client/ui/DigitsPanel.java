@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,9 +22,10 @@ import com.googlecode.mgwt.ui.client.widget.touch.TouchDelegate;
 public class DigitsPanel extends HorizontalPanel implements TouchListener, DollarListener
 {
 
+	private static final Object DELETE = "delete";
 	private Canvas canvas;
 	private TouchDelegate delegate;
-	private Dollar dollar = new Dollar(Dollar.GESTURES_DEFAULT);
+	private Dollar dollar = new Dollar(Dollar.GESTURES_DWOPLAYER);
 	private TextBox box;
 	private int width;
 	private int height;
@@ -57,7 +59,7 @@ public class DigitsPanel extends HorizontalPanel implements TouchListener, Dolla
 		canvas.setCoordinateSpaceHeight(height);
 		delegate = new TouchDelegate(canvas);
 
-		TouchHandler handler = new MGWTTouchHandler(this);
+		TouchHandler handler = new MGWTTouchHandler(this, canvas);
 		delegate.addTouchHandler(handler);
 	}
 
@@ -81,6 +83,9 @@ public class DigitsPanel extends HorizontalPanel implements TouchListener, Dolla
 	public void pointerReleased(int x, int y)
 	{
 		addPoint(x, y);
+
+		dumpPoints();
+
 		try
 		{
 			dollar.pointerReleased(x, y);
@@ -89,6 +94,18 @@ public class DigitsPanel extends HorizontalPanel implements TouchListener, Dolla
 		{
 			box.setText(e.toString());
 		}
+	}
+
+	private void dumpPoints()
+	{
+		final PrintStream out = System.out;
+		for (Point p : current)
+		{
+			out.println("\t" + Math.round(p.X) + ", " + Math.round(p.Y) + ",");
+		}
+		out.println();
+		out.println();
+
 	}
 
 	@Override
@@ -103,6 +120,10 @@ public class DigitsPanel extends HorizontalPanel implements TouchListener, Dolla
 			{
 				char ch = text.charAt(0);
 				editor.addElement(new FormuleTeken(editor.getCurrentRegel(), ch));
+			}
+			else if (DELETE.equals(text))
+			{
+				editor.removeCurrentElement();
 			}
 		}
 	}

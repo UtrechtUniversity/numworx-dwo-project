@@ -11,8 +11,6 @@ import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
-//import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.kladjegwt.client.KladjeGWT;
-//import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -235,7 +233,7 @@ public class TekstVakPanel implements InteractionView
 						((FormuleEditorWithSteps) currentObject).zetInstellingen(instellingen);
 						((FormuleEditorWithSteps) currentObject).setKeyboard(kb);
 					}
-					else if (currentObject.getClass().getName().equals("fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT")) 
+					else if (currentObject.getClass().getName().equals("fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT"))
 					{
 						aantalVakken++;
 					}
@@ -354,14 +352,14 @@ public class TekstVakPanel implements InteractionView
 			}
 			else if (currentObject.getClass().getName().equals("fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT"))
 			{
-				Panel a = (Panel)(((InteractionView) currentObject).asWidget());
+				Panel a = (Panel) (((InteractionView) currentObject).asWidget());
 				a.getElement().getStyle().setProperty("display", "inline-block");
 				a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
 				destination.add(a);
 			}
-			else if (currentObject.getClass().getName().equals("fi.kladjegwt.client.KladjeGWT"))
+			else if (currentObject instanceof InteractionView)
 			{
-				Panel a = (Panel)(((InteractionView) currentObject).asWidget());
+				Widget a = (((InteractionView) currentObject).asWidget());
 				a.getElement().getStyle().setProperty("display", "inline-block");
 				a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
 				destination.add(a);
