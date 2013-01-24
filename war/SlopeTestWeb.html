@@ -39,35 +39,25 @@
 		//===Js code starts here===//
 		var applet = document.ggbApplet;		
 		window.ggbApplet = applet;
-		alert("Ready to start! " + window.viewer );
 		try { 
-			alert(window.install)
 			result = window.install(applet, window.viewer)
-			alert("result = " + result.substring(0,10) + " applet = " + Object.keys(applet));
-			applet.setBase64(result.toString());
 		} catch(err) {
-			alert("ERROR " + err);
+
 		}
 	}
 	
 	function writeGGB() {
-		alert(window.install)
-
-		script =		
-		//	"<script type='text/javascript' language='javascript' src='http://www.geogebra.org/web/4.2/web/web.nocache.js' ><" + "/script>"
-		""
-		article_pre = "<article class='geogebraweb' style=''border: 1px solid black; display:inline-block;' data-param-ggbbase64='"
-		article_post = "'></article>"
-	
+		article_pre = "<article class='geogebraweb' style='border: 1px solid black; display:inline-block;' data-param-ggbbase64='"
+		article_post = "'></article>"	
 		result = window.install(null, window.viewer)
-		alert("result = " + result.substring(0,10) );
-		
-		document.getElementById('hiero').innerHTML =  ( script + article_pre + result + article_post + "...installing...");
+		document.getElementById('hiero').innerHTML =  ( article_pre + result + article_post );
+		web.succeeded = web()
 	}
+	
 	window.setTimeout("writeGGB()",1000);
 </script>
 <div id='hiero'>
-Even geduld aub...
+<article class='geogebraweb' style='border: 1px solid black; display:inline-block;' data-param-ggbbase64=''></article>
 </div>
 
  </body>
