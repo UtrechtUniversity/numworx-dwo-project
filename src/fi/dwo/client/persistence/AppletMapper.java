@@ -54,15 +54,15 @@ public class AppletMapper extends XmlRpcMapper {
 
      */
     public Object getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException  {
-        Applet a = null;
+        Class a = null;
         if (data.get("appletID") == null) { //We don't know enough to make a
                                             // appletObject
             return null;
         } else if (objects.containsKey(data.get("appletID"))) { // Did we know
                                                                 // the applet?
-            a = (Applet) objects.get(data.get("appletID"));
+            a = (Class) objects.get(data.get("appletID"));
         } else {
-            a = (Applet) update(a, data);
+            a = (Class) update(a, data);
         }
         if(!objects.containsKey(data.get("appletID"))) {
            	//objects.put(data.get("appletID"), a);
@@ -105,7 +105,7 @@ public class AppletMapper extends XmlRpcMapper {
      *      java.util.Hashtable)
      */
     protected Object update(Object obj, Hashtable data) throws IOException, SQLException, XmlRpcException  {
-        Applet a = null;
+        Class a = null;
         
         String jarname = (String) data.get("jarname");
         //DbAccessCreator.instance().selectJar(DwoHelper.getKey(), jarname);
@@ -121,18 +121,13 @@ public class AppletMapper extends XmlRpcMapper {
         //{
 	        try {
 	            c = Class.forName((String) data.get("classname"));
-	            a = (Applet)c.newInstance();
+	            a = c;
 	            
 	            
 	        } catch (ClassNotFoundException e1) {
 	            e1.printStackTrace();
 	            throw new XmlRpcException(-1, "Class not found");
-	        } catch (InstantiationException e) {
-	            throw new XmlRpcException(-1, "Class not found");
-	        } catch (IllegalAccessException e) {
-	            throw new XmlRpcException(-1, "Class not found");
 	        }
-	    //}   
 	    
 	   return a;
     }
@@ -141,7 +136,7 @@ public class AppletMapper extends XmlRpcMapper {
      * @see fi.dwo.client.persistence.XmlRpcMapper#createArray(int)
      */
     protected Object[] createArray(int size) {
-        return new Course[size];
+        return new Class[size];
     }
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#getOrderbyCol()
@@ -149,4 +144,18 @@ public class AppletMapper extends XmlRpcMapper {
     protected String getOrderbyCol() {
         return ORDERCOL;
     }
+
+	/* (non-Javadoc)
+	 * @see fi.dwo.client.persistence.XmlRpcMapper#get(int)
+	 */
+	public Object get(int oid) throws IOException, XmlRpcException,
+			SQLException {
+		Object object = super.get(oid);
+		if(object != null)
+			objects.put(new Integer(oid), object);
+		return object;
+	}
+    
+    
+    
 }

@@ -289,9 +289,11 @@ class XmlRpcSupport extends org.xml.sax.HandlerBase {
 	    }*/
 	    parse (in);
 	    if(debug)System.out.println ("result = "+result);
+    } catch (IOException io) {
+    	throw io;
 	} catch (Exception x) {
-	    x.printStackTrace ();
-	    throw new IOException (x.getMessage ());
+	    if(debug) x.printStackTrace ();
+	    throw (IOException)(new IOException (x.getMessage ()).initCause(x));
 	}
 	if (fault) { // generate an XmlRpcException
 	    XmlRpcException exception = null;

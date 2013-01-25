@@ -5,14 +5,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import fi.dwo.client.persistence.DbAccessIF;
 import fi.dwo.client.system.PersistenceException;
 
 public class CachingStore implements IStore, Runnable {
 
+	private static final long MAX_BACKOFF = 2 * 60 * 1000L; // 2 min maximum voor exponential backoff
+	private static final long INI_BACKOFF = 200L; 
 	Thread worker;
-	Map work;
+	Map work, cache;
 	Iterator iterator;
 	IStore delegate;
 	private PersistenceException last;
@@ -23,6 +26,8 @@ public class CachingStore implements IStore, Runnable {
 			try {
 				if(iterator.hasNext())
 					return (Bucket) iterator.next();
+			} catch (ConcurrentModificationException cme) {
+				System.err.println("Expected: " + cme + ", niets aan de hand");
 			} catch (Exception e) { // expect ConcurrentModificationException
 				e.printStackTrace();
 			}
@@ -42,24 +47,40 @@ public class CachingStore implements IStore, Runnable {
 	 * @param b
 	 */
 	public synchronized void putWork(Bucket b) {
+System.out.println("putWork " + b.getKey());
 		work.put(b,b);
+		cache.put(b, b.getValue());
 		notifyAll();
 	}
 	
 	public void run() {
+		long backoff = INI_BACKOFF;
 		while(!Thread.interrupted())
 		{
 			Bucket b = null;
 			try {
 				b = getWork();
+System.out.println("try setValue " + b.getKey());
 				delegate.setValue(b.getUid(), b.getScoid(), b.getKey(), b.getValue());
 				/// sleep(1000)
 				iterator_remove();
+				backoff = INI_BACKOFF;
 			} catch (InterruptedException e) {
-				clr();
-				return;
+				break;
 			} catch (PersistenceException e) {
-				last = e;
+				if(e.getCode() == PersistenceException.EX_IO) {
+					try {
+						Thread.sleep(backoff);
+						backoff = Math.min(MAX_BACKOFF, backoff * 2);
+						iterator = null; // start at head of queue, wel of niet?
+					} catch (InterruptedException e1) {
+						break;
+					}
+					
+				} else {
+					System.out.println(b.getKey() + " exception " + e.getCode());
+					last = e;
+				}
 			}
 		}
 		clr();
@@ -68,6 +89,8 @@ public class CachingStore implements IStore, Runnable {
 	private synchronized void iterator_remove() {
 		try {
 			iterator.remove();
+		} catch (ConcurrentModificationException cme) {
+			iterator = null;
 		} catch (Exception e) {
 			System.err.println(e);
 			iterator = null;
@@ -84,10 +107,24 @@ public class CachingStore implements IStore, Runnable {
 			throws PersistenceException {
 		Bucket b = new Bucket(uid, scoid, key, "");
 		synchronized(this) {
-			b = (Bucket) work.get(b);
-			if(b == null)
-				return delegate.getValue(uid, scoid, key);
-			return b.getValue();
+			Bucket v = (Bucket) work.get(b);
+			if(v == null)
+			{	
+				System.out.println("cache miss " + key + " " + cache.size());
+				String value = (String) cache.get(b);
+				if(value != null) {
+					System.out.println("2nd cache hit " + key);
+					return value;
+				}
+				try {
+					return delegate.getValue(uid, scoid, key);
+				} catch (PersistenceException e) {
+					e.printStackTrace();
+					throw e;
+				}
+			}
+			System.out.println("cache hit " + key);
+			return v.getValue();
 		}
 	}
 
@@ -122,6 +159,7 @@ public class CachingStore implements IStore, Runnable {
 	}
 
 	public void destroy() {
+		cache.clear();
 		try {
 			commit(false);
 		} catch (PersistenceException e) {
@@ -143,6 +181,7 @@ public class CachingStore implements IStore, Runnable {
 	CachingStore(DbAccessIF dba) {
 		delegate = new NoCache(dba);
 		work = new LinkedHashMap();
+		cache = new WeakHashMap();
 		worker = new Thread(this);
 		worker.start();
 	}

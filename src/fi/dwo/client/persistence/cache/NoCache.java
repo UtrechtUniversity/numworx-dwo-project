@@ -40,7 +40,7 @@ public class NoCache implements IStore {
 			{	return "true"; // all's well
 			}
 		} catch (IOException e) {
-			log(e.getMessage());
+			//log(e.getMessage());
             throw new PersistenceException(PersistenceException.EX_IO, e);
         } catch (XmlRpcException e) {
         	log(e.getMessage());

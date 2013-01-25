@@ -194,7 +194,7 @@ public class Sco extends ScormAdapter implements LessonGroup, SCORM12APIInterfac
         this.user = user;
         if(lastUser != this.user || user==null) {
             applet = null;
-            MapperCreator.instance(Applet.class).removeAllObjects();
+            //MapperCreator.instance(Applet.class).removeAllObjects();
             sc = null;
         }
         loadApplet();
@@ -222,7 +222,14 @@ public class Sco extends ScormAdapter implements LessonGroup, SCORM12APIInterfac
             Applet lastApplet = applet;
             lessonLocation = null;
             if(applet == null) {
-                applet = (Applet) PersistenceFacade.instance().get(appletID, Applet.class);
+                Class clazz = (Class)PersistenceFacade.instance().get(appletID, Applet.class);
+				try {
+					applet = (Applet) clazz.newInstance();
+				} catch (InstantiationException e) {
+					throw new PersistenceException(PersistenceException.EX_UNKNOWN_ERROR, e);
+				} catch (IllegalAccessException e) {
+					throw new PersistenceException(PersistenceException.EX_UNKNOWN_ERROR, e);
+				}
             }
             
             /* Some strange bug with java 1.4.2_07 in XP, we can only set the stub once */

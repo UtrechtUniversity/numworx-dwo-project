@@ -1522,13 +1522,13 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 			ps.setInt(2, userID);
 
 			Hashtable ht = executeQueryWithRecord(ps); // Never returns null, emtpy instead!
-			log("DbAccess.LMSSetValue("
-			        + scoID + ", " + userID + ", " + iDataModelElement + ", "
-			        + iValue + ")");
-			if ((iValue == null) || (iValue.equals(""))) {
-			    log("Hij is leeg... " + iDataModelElement + " "
-			            + userID);
-			}
+//			log("DbAccess.LMSSetValue("
+//			        + scoID + ", " + userID + ", " + iDataModelElement + ", "
+//			        + iValue + ")");
+//			if ((iValue == null) || (iValue.equals(""))) {
+//			    log("Hij is leeg... " + iDataModelElement + " "
+//			            + userID);
+//			}
 			ps.close();
 			if (ht == null || ht.isEmpty()) {
 			    ps = getStatement(QRY_ADD_EMPTY_STUDENT_SCO);

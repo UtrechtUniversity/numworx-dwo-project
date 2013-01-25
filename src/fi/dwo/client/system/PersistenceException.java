@@ -22,6 +22,13 @@ public class PersistenceException extends Exception {
 
     public PersistenceException(int exception) {
         super(getMesgFromInt(exception));
+        code = exception;
+    }
+
+    private int code; 
+    
+    public int getCode() { 
+    	return code;
     }
 
     public PersistenceException(int exXmlRpc, Exception e) {

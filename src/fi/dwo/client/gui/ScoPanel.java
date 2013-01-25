@@ -524,12 +524,12 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
      *  
      */
     public String LMSSetValue(String iDataModelElement, String iValue) {
-        try {
-            DbAccessCreator.instance().log("ScoPanel.LMSSetValue(" + iDataModelElement + ", " + iValue + ")");
-        } catch(Exception e2) {
-//            DwoMessageDialog.showMessageDialog(null, e2.getMessage());
-            
-        }        
+//        try {
+//            DbAccessCreator.instance().log("ScoPanel.LMSSetValue(" + iDataModelElement + ", " + iValue + ")");
+//        } catch(Exception e2) {
+////            DwoMessageDialog.showMessageDialog(null, e2.getMessage());
+//            
+//        }        
         return sco.LMSSetValue(iDataModelElement, iValue);
     }
 
