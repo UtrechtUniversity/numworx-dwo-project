@@ -10,6 +10,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSte
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.geogebraview.client.GeogebraView;
 import fi.kladjegwt.client.KladjeGWT;
+import fi.balansfruitgwt.client.BalansFruitGWT;
 import fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT;
 
 /**
@@ -225,6 +226,10 @@ public class TekstBuffer
 		else if (soortVak == 9)
 		{
 			result = new TekstVakPanel(currentVakGegevens, randomVarNamen, randomVarWaarden);
+		}
+		else if(soortVak == 11) 
+		{
+			result = new BalansFruitGWT(currentVakGegevens);
 		}
 		else if (soortVak == 41)
 		{
