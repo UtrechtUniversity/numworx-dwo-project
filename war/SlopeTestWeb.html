@@ -47,7 +47,7 @@
 	}
 	
 	function writeGGB() {
-		article_pre = "<article class='geogebraweb' style='border: 1px solid black; display:inline-block;' data-param-ggbbase64='"
+		article_pre = "<article class='geogebraweb' style='border:0px solid black; display:inline-block; margin: -10px;' data-param-ggbbase64='"
 		article_post = "'></article>"	
 		result = window.install(null, window.viewer)
 		document.getElementById('hiero').innerHTML =  ( article_pre + result + article_post );
