@@ -54,6 +54,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 		if (h.get("interactiePanelLaunchState") != null)
 		{
+			int breedte = ((Integer)h.get("breedte")).intValue();
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
 
 			if (isVergelijkingVak)
@@ -67,6 +68,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			sp = new TouchPanel();
 			if (fe == null)
 			{
+				sp.getElement().getStyle().setProperty("width", breedte+"px");
 				sp.getElement().getStyle().setProperty("border", "1px solid gray");
 				sp.getElement().getStyle().setProperty("backgroundColor", "#e9e9e9");
 				this.getMainRegel().getCanvas().getElement().getStyle().setProperty("marginTop", "3px");
@@ -200,8 +202,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	@Override
 	public void setState(HashMap<String, Object> h)
 	{
-		this.insert((String) h.get("antwoord"));
-		check();
+		String antwoord = (String) h.get("antwoord");
+		if(antwoord!=null && !"".equals(antwoord.trim())) {
+			this.insert(antwoord);
+			check();
+		}
+		
 	}
 
 	@Override
