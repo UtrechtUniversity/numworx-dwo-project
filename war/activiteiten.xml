@@ -43,7 +43,7 @@
     
     <activiteit>
         <name>Differentieren Live</name>
-        <file>http://delta.fi.uu.nl/DWOmAccess/getLaunchData?s=1781</file>
+        <file>http://ws-dev.fisme.science.uu.nl/DWOmAccess/getLaunchData?s=1781</file>
     </activiteit>
 
     
