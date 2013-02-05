@@ -7,6 +7,7 @@ import java.awt.Image;
 import java.awt.LayoutManager;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
@@ -922,11 +923,23 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
 		DefaultMutableTreeNode node = find(course, root);
-		node.removeAllChildren();
+		removeChildrenFromCache(node, cachemap.values());
+		node.removeAllChildren(); 
+		
 		if(!(node instanceof LazyMutableTreeNode)) insertScos(course, node);
 		model.nodeStructureChanged(node);
 	}
 
+	private void removeChildrenFromCache(TreeNode node, Collection values) {
+		int len = node.getChildCount();
+		for(int i = 0; i < len; i ++) {
+			TreeNode child = node.getChildAt(i);
+			boolean b = values.remove(child);
+			if(!child.isLeaf())
+				removeChildrenFromCache(child, values);
+		}
+		
+	}
 	public DefaultMutableTreeNode getRoot() {
 		return (DefaultMutableTreeNode) tree.getModel().getRoot();
 	}
@@ -935,7 +948,9 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
 		DefaultMutableTreeNode node = find(map.getUserObject(), root);
+		removeChildrenFromCache(node, cachemap.values());
 		node.removeAllChildren();
+		
 		if(!(node instanceof LazyMutableTreeNode)) appendCourseMap(map, node);
     	model.nodeStructureChanged(node);
 	}
