@@ -47,7 +47,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             + "FROM tblUser LEFT JOIN tblSchoolGroup ON tblUser.schoolGroupID = tblSchoolGroup.schoolGroupID, tblCourse "
             + "WHERE ((tblSchoolGroup.schoolID = tblCourse.schoolID) "
             + "OR     (isnull(tblCourse.schoolID))) " + "AND   (userID = ?) "
-            + "AND   (notVisible <= ?)  AND parentID = 0 " + "ORDER BY name ";
+            + "AND parentID = 0 " + "ORDER BY name ";
 
     private final static String QRY_SELECT_COURSES_GUEST = "SELECT tblCourse.* "
             + "FROM tblCourse "
@@ -1403,39 +1403,22 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      */
     public Vector getCourses(int userID) throws IOException, XmlRpcException,
             SQLException {
-        return getCourses(userID, false);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see fi.dwo.client.persistence.DbAccessIF#getCourses(int)
-     */
-    public Vector getCourses(int userID, boolean showAll) throws IOException,
-            XmlRpcException, SQLException {
         close(); //for lazy connection
-        PreparedStatement ps;
-        if (userID < 0) {
-            /* User is a guest */
-        	if(userID < PersistenceFacade.PROFILEOFFSET)
-        	{
-        		ps = getStatement(QRY_SELECT_COURSES_PROFILE_GUEST);
-        		ps.setInt(1, PersistenceFacade.PROFILEOFFSET-userID);
-        	} else
-        		
-            ps = getStatement(QRY_SELECT_COURSES_GUEST);
-        } else {
-            ps = getStatement(QRY_SELECT_COURSES);
-            ps.setInt(1, userID);
-            if (showAll) {
-                ps.setInt(2, 1);
-            } else {
-                ps.setInt(2, 0);
-            }
-
-        }
-
-        return executeQueryWithResult(ps);
+		PreparedStatement ps;
+		if (userID < 0) {
+		    /* User is a guest */
+			if(userID < PersistenceFacade.PROFILEOFFSET)
+			{
+				ps = getStatement(QRY_SELECT_COURSES_PROFILE_GUEST);
+				ps.setInt(1, PersistenceFacade.PROFILEOFFSET-userID);
+			} else
+				
+		    ps = getStatement(QRY_SELECT_COURSES_GUEST);
+		} else {
+		    ps = getStatement(QRY_SELECT_COURSES);
+		    ps.setInt(1, userID);
+		}
+		return executeQueryWithResult(ps);
     }
 
     /*

@@ -62,10 +62,10 @@ public class DbAccessProxy extends DbConnect implements DbAccessIF {
 		return getDelegate().getCourses(userID);
 	}
 
-	public Vector getCourses(int userID, boolean showAll) throws IOException,
-			XmlRpcException, SQLException {
-		return getDelegate().getCourses(userID, showAll);
-	}
+//	public Vector getCourses(int userID, boolean showAll) throws IOException,
+//			XmlRpcException, SQLException {
+//		return getDelegate().getCourses(userID, showAll);
+//	}
 
 	public Vector getEditableCoursesAdmin() throws IOException,
 			XmlRpcException, SQLException {
