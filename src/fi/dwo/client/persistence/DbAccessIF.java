@@ -65,18 +65,18 @@ public interface DbAccessIF {
      */
     public Vector getCourses(int userID) throws IOException, XmlRpcException, SQLException;
 
-    /**
-     * Returns all the available course for the specified user.
-     * If showAll is <code>false</code> the invisible courses are not returned.
-     * The invisible courses are the courses who the column <code>notVisible</code> in the database is true.
-     * @param userID The usere wherefor the courses must selected.
-     * @param showAll If <code>false</code> the invisible courses won't be returned.
-     * @return All the (visible) courses for the specified user.
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws SQLException
-     */
-    public Vector getCourses(int userID, boolean showAll) throws IOException, XmlRpcException, SQLException;
+//    /**
+//     * Returns all the available course for the specified user.
+//     * If showAll is <code>false</code> the invisible courses are not returned.
+//     * The invisible courses are the courses who the column <code>notVisible</code> in the database is true.
+//     * @param userID The usere wherefor the courses must selected.
+//     * @param showAll If <code>false</code> the invisible courses won't be returned.
+//     * @return All the (visible) courses for the specified user.
+//     * @throws IOException
+//     * @throws XmlRpcException
+//     * @throws SQLException
+//     */
+//    public Vector getCourses(int userID, boolean showAll) throws IOException, XmlRpcException, SQLException;
 
     /**
      * Returns all the courses which can be edited by a admin.

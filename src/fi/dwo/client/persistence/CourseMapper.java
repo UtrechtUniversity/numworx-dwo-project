@@ -23,6 +23,8 @@ import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.SchoolClass;
+import fi.dwo.client.domain.Teacher;
+import fi.dwo.client.domain.User;
 
 public class CourseMapper extends XmlRpcMapper {
 
@@ -305,6 +307,8 @@ private Object[] cached(Hashtable ht) throws IOException, XmlRpcException,
         c.setDescription((String) data.get("description"));
         c.setImageUrl((String) data.get("image"));
         c.setDwoProfile(((Integer) data.get("dwoProfileID")).intValue());
+        c.setNotVisible(EEN.equals(data.get("notVisible")));  
+        c.setNotVisible(c.isNotVisible() && !(User.getCurrentUser() instanceof Teacher) );
         try{
         	c.setSchoolID(((Integer) data.get("schoolID")).intValue());
         }
