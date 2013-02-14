@@ -47,7 +47,7 @@ public class DbAccessCreator {
         	   //if(true) dbAccess = new DbAccessLocal(); else
         	   //if(true) dbAccess = new DbAccessLdap(); else
            	   //if(true) dbAccess = new DbAccessScience(); else
-           	   if(true) dbAccess = new DbAccessColorado(); else
+           	   //if(true) dbAccess = new DbAccessColorado(); else
         	   //if(true)try{dbAccess=new DbAccessClient(new URL("http://localhost:8888/dwoapp"));}catch(MalformedURLException e1){e1.printStackTrace();}else
         	   //if(true)try{dbAccess=new DbAccessClient(new URL("http://dwo.fi.uu.nl/dwo/dbaccess"));}catch(MalformedURLException e1){e1.printStackTrace();}else
         	   try {
