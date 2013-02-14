@@ -119,7 +119,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 				startY += courseDescriptionHTML.getHeight() + 10;
 			}
 			else if(s.startsWith("H4sIAAAAAA"))
-			{
+			{	htmlMode=true;
 				wiskOpdrPanel = WiskOpdr.getWiskOpdrPanel(s) ;
 				wiskOpdrPanel.setLocation(20,startY);
 				wiskOpdrPanel.setJSObjectOwner(this);
@@ -128,6 +128,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 			}
 			else
 			{	add(courseDescription);
+				htmlMode = course.isNotVisible();
 				courseDescription.setFont(new Font("SansSerif", Font.PLAIN, 13));
 				courseDescription.setOpaque(false);
 				courseDescription.setLineWrap(true);
@@ -147,10 +148,11 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
         fm = scoListHeader.getFontMetrics(scoListHeader.getFont());
         scoListHeader.setSize(fm.stringWidth(scoListHeader.getText()) + 10, fm.getHeight());
         scoListHeader.setLocation(30, startY);
-        add(scoListHeader);
-        
-        startY += scoListHeader.getSize().height + 10;
-        
+        if( ! course.isNotVisible() )
+        {
+        	add(scoListHeader);
+            startY += scoListHeader.getSize().height + 10;
+        }
         Image courseLogo = course.getCourseLogo();
         MediaTracker tr = new MediaTracker(this);
         tr.addImage(courseLogo, 0);
@@ -191,6 +193,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 		FontMetrics fm;
 		int nextY = startY;
         int i;
+        if (!course.isNotVisible())
         for (i = 0; i < course.getScoList().length; i++) {
             l = new ScoLinkedLabel(course.getScoList()[i]);
             l.setForeground(Color.black);
@@ -271,6 +274,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 // TODO dit moet veel beter.....
         ScoLinkedLabel l;
         FontMetrics fm;
+        if(!course.isNotVisible())
         for (i = 0; i < course.getScoList().length; i++) {
             Sco sco = course.getScoList()[i];
 			l = new ScoLinkedLabel(sco);

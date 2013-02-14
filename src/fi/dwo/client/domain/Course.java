@@ -55,6 +55,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
     private CourseMap[]  children;
     private int parentID;
     private boolean newParent;
+    private boolean notVisible;
     
     public ClassCourse link; // optional backlink to classCourse, not unique!
     
@@ -551,6 +552,14 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
 
 	public void setParentMap(CourseMap parentMap) {
 		this.parentMap = parentMap;
+	}
+
+	public boolean isNotVisible() {
+		return notVisible;
+	}
+
+	public void setNotVisible(boolean notVisible) {
+		this.notVisible = notVisible;
 	}
 	
 	

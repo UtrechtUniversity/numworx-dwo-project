@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.4"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/WiskOpdr"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/aanzichtenraden.jar"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/algebrapijlen.jar"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/algebrapijlenoefenen.jar"/>
@@ -35,12 +36,9 @@
 	<classpathentry kind="lib" path="/_base/codebase/jars/vermtabel.jar"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/vlakkenkleuren.jar"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/waarmakers.jar"/>
-	<classpathentry kind="lib" path="/_base/codebase" sourcepath="C:/java/beans"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/mayscript.jar"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/jsdk.jar"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/ldap.jar"/>
-	<classpathentry kind="lib" path="output/jar/wiskopdr.jar"/>
-	<classpathentry kind="lib" path="/_base/codebase/jars/geogebra.jar"/>
 	<classpathentry kind="lib" path="output/jar/euclides.jar"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/anyonrow.jar"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/balansfruitapplet.jar"/>
@@ -49,5 +47,10 @@
 	<classpathentry kind="lib" path="output/jar/jfreechart-1.0.14.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/jamon-2.73.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/_sources/junitperf-1.9.1.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/ggb40/jlatexmath.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/ggb40/jlm_cyrillic.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/ggb40/jlm_greek.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase" sourcepath="C:/java/beans"/>
 	<classpathentry kind="output" path="output/classes"/>
 </classpath>

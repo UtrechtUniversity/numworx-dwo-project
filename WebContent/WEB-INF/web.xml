@@ -57,6 +57,17 @@
       </init-param>
 
    </servlet>
+   
+   <servlet>
+   	<description>DME Colorado</description>
+   	<servlet-name>Colorado</servlet-name>
+   	<servlet-class>fi.dwo.server.persistence.DbAccessColoradoServlet</servlet-class>
+       <init-param>
+         <param-name>local</param-name>
+         <param-value>false</param-value>
+      </init-param>
+   </servlet>
+   
 
   <!--
   To use non XDoclet servlets, create a servlets.xml file that
@@ -70,6 +81,11 @@
       <servlet-name>DbAccess</servlet-name>
       <url-pattern>/dbaccess</url-pattern>
    </servlet-mapping>
+   <servlet-mapping>
+   		<servlet-name>Colorado</servlet-name>
+   		<url-pattern>/colorado</url-pattern>
+   </servlet-mapping>
+   
    <servlet-mapping>
       <servlet-name>DwoWebPage</servlet-name>
       <url-pattern>/dwowebpage</url-pattern>

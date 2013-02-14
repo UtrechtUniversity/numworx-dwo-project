@@ -578,8 +578,8 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 			}
         	
         }
-        
-        root = prune(root);
+        if(!DwoHelper.isAdminLoggedIn())
+        	root = prune(root);
         
         
         
@@ -806,6 +806,8 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 				MutableTreeNode dwonode = (MutableTreeNode) root.getFirstChild();
 				if(dwonode.getChildCount() == 0)
 					root.remove(dwonode);
+				if(root.getChildCount() == 0)
+					return root;
 				MutableTreeNode schoolnode = (MutableTreeNode) root.getLastChild();
 				if(schoolnode.getChildCount() == 0) 
 					root.remove(schoolnode);

@@ -87,8 +87,9 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
 				Descriptor d = (Descriptor) toplevel;
 				return new CourseChoisePanel(d, toplevel.getUserObject());
 			}
+			if(toplevel != null)
 // FIXME structuur niet transparant
-			return new CourseChoisePanel(new TeacherStrategy.Bridge(GuiCreator.instance().getDWO().getDwoProfile(),toplevel), toplevel.getUserObject());
+				return new CourseChoisePanel(new TeacherStrategy.Bridge(GuiCreator.instance().getDWO().getDwoProfile(),toplevel), toplevel.getUserObject());
 		}
 		return new CourseChoisePanel(GuiCreator.instance().dwo.getDwoProfile(), ModuleTreePanel.ALLE_MODULES);
 	}
