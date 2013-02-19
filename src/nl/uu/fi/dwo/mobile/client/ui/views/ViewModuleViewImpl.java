@@ -956,8 +956,12 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 		}
 		ViewPort viewport = new MGWTSettings.ViewPort();
 		viewport.setTargetDensity(DENSITY.MEDIUM);
-		//viewport.setUserScaleAble(true);//.setMinimumScale(1.0).setMaximumScale(1.0);
-		viewport.setWidthToDeviceWidth();
+		viewport.setUserScaleAble(true);
+		//viewport.setMinimumScale(0.2).setInitialScale(1.0).setMaximumScale(5);
+
+		viewport.setMinimumScale(0.15);
+		viewport.setMaximumScale(3.0);
+		//viewport.setWidthToDeviceWidth();
 		//viewport.setHeightToDeviceHeight();
 		MGWTSettings settings = new MGWTSettings();
 		settings.setViewPort(viewport);

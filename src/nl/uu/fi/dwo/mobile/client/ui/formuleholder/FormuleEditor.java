@@ -172,6 +172,12 @@ public class FormuleEditor extends FormuleHolder
 		this.current.clearSelection();
 		this.hasSelection = false;
 	}
+	
+	public void clearAll()
+	{
+		this.current.deleteAll();
+		this.hasSelection = false;
+	}
 
 	public String getSelectionString()
 	{
