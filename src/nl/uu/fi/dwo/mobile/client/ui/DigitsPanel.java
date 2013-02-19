@@ -60,8 +60,6 @@ public class DigitsPanel extends HorizontalPanel
 	public DigitsPanel(FormuleKeyboard formuleKeyboard) {
 		this.kb = formuleKeyboard;
 		
-		//this.width = width;
-		//this.height = height;
 		setSize("100%", "250px");
 		
 		WriteObject.initSamples();
@@ -89,11 +87,6 @@ public class DigitsPanel extends HorizontalPanel
 		twmi.addTouchStartHandler(writePanelCanvas,touchHandler);
 		twmi.addTouchMoveHandler(writePanelCanvas,touchHandler);
 		twmi.addTouchEndHandler(writePanelCanvas,touchHandler);
-		
-		//formuleViewer = new FormuleViewer("$f@");
-		//formulePanel = formuleViewer.getAsPanel();
-		//formulePanel.setWidth(width + "px");
-		//formulePanel.setHeight(200 + "px");
 		
 		TouchButton b = FormuleKeyBoardButtons.getButton("apply", formuleKeyboard);
 		
@@ -469,9 +462,7 @@ public class DigitsPanel extends HorizontalPanel
 				Point p = new Point(eventX,eventY);
 				points.add(p);
 			}
-				//paint();
 				addWriteObject();
-			//}
 		}
 	}
 }
