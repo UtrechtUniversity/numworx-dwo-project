@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
@@ -633,13 +634,13 @@ public class FormuleEditorWithSteps implements InteractionView
 		String antwoordString = "";
 
 		if (h.get("stapNr") != null)
-			stapNr = (Integer) h.get("stapNr");
+			stapNr = ((Number) h.get("stapNr")).intValue();
 		if (h.get("ingevuld") != null)
 			ingevuld = (Boolean) h.get("ingevuld");
 		if (h.get("nagekeken") != null)
 			nagekeken = (Boolean) h.get("nagekeken");
 		if (h.get("formuleVakInhouden") != null)
-			formuleVakInhouden = (String[]) h.get("formuleVakInhouden");
+			formuleVakInhouden = Memento.toStringArray(h.get("formuleVakInhouden"));
 		if (h.get("antwoordString") != null)
 			antwoordString = (String) h.get("antwoordString");
 

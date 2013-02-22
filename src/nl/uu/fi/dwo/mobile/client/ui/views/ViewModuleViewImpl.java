@@ -2,11 +2,15 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.Memento;
+import nl.uu.fi.dwo.mobile.client.sco.SCORM_2004_API;
+import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
@@ -230,6 +234,8 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 	private String[] randomVarNamen = null;
 	private HashMap randomVarWaarden = null;
 
+	private Scorm2004IF api;
+
 	/*public ViewModuleViewImpl()
 	{
 		
@@ -399,7 +405,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 		//FormuleHolder.setDefaultFont(FormuleFont.createFromFontSize(font_size));
 
 		OpdrNav onimpl;
-		on = onimpl = new OpdrNav(launchData, this);
+		on = onimpl = new OpdrNav(launchData, this, new Memento(api));
 		FlowPanel onp = (FlowPanel) onimpl.getAsPanel();
 		kb.addNavPanel(onp);
 	}
@@ -524,7 +530,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 		this.randomVarWaarden = waarden;
 
 		if (state.get("randomVarNamen") != null)
-			this.randomVarNamen = (String[]) state.get("randomVarNamen");
+			this.randomVarNamen = Memento.toStringArray(state.get("randomVarNamen"));
 		if (state.get("randomVarWaarden") != null)
 			this.randomVarWaarden = (HashMap<String, Object>) state.get("randomVarWaarden");
 
@@ -553,7 +559,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 				Object currentObject = opdrachtObjects.get(i);
 				if (currentObject instanceof InteractionView)
 					((InteractionView) currentObject).setCommunicationRoot(on);
-				System.out.println("" + on.toString());
+				System.out.println(on.toString());
 				if (currentObject instanceof TekstVakPanel)
 				{
 					aantalVakken++;
@@ -647,10 +653,10 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 	public void setState(HashMap<String, Object> h)
 	{
 		if (h.get("randomVarNamen") != null)
-			this.randomVarNamen = (String[]) h.get("randomVarNamen");
+			this.randomVarNamen = Memento.toStringArray(h.get("randomVarNamen"));
 		if (h.get("randomVarWaarden") != null)
 			this.randomVarWaarden = (HashMap<String, Object>) h.get("randomVarWaarden");
-		ArrayList<Object> states = (ArrayList<Object>) h.get("interactiePanelStates");
+		List<Object> states = Memento.toArrayList(h.get("interactiePanelStates"));
 		int stateNr = 5;
 		for (int i = 0; i < opdrachtObjects.size(); i++)
 		{
@@ -936,6 +942,8 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 	public void onModuleLoad()
 	{
 
+		api = new SCORM_2004_API();
+		//api = new SCORM_12_API(); // De oude DWO exporteert Scorm1.2 API, maar kan wel Scorm2004 cmi aan.
 		String url = "index.xml";
 		String link = "index.xmr"; // reference.
 		String path = Window.Location.getPath();

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -50,10 +51,12 @@ public class OpdrNav implements OpdrNavIF
 	private int currentOpdracht = 0;
 	private int currentActiviteit = 0;
 	private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
+	private Memento memento;
 
-	public OpdrNav(HashMap<String, Object> launchData, ViewModuleViewImpl ev)
+	public OpdrNav(HashMap<String, Object> launchData, ViewModuleViewImpl ev, Memento memento)
 	{
 		this.entry = ev;
+		this.memento = memento;
 		aantalActiviteiten = Integer.parseInt((String) launchData.get("aantalActiviteiten"));
 		activiteitNamen = new String[aantalActiviteiten];
 		aantalOpdrachten = new int[maxAantalOpdrachten];
@@ -86,7 +89,13 @@ public class OpdrNav implements OpdrNavIF
 			}
 		}
 		entry.setCommunicationRoot(this);
-		entry.zetOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
+		states = memento.getOpdrContStates(states);
+		//setOpdrachten(currentActiviteit); // kan dat nu al? of anders bij setchanged testen op  buttons.get() != null
+		final HashMap<String, Object> state = states[currentActiviteit][currentOpdracht];
+		if (state == null)
+			entry.zetOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
+		else
+			entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], state);
 	}
 
 	public Panel getAsPanel()
@@ -108,6 +117,7 @@ public class OpdrNav implements OpdrNavIF
 				states[currentActiviteit][currentOpdracht] = entry.getState();
 				scores[currentActiviteit][currentOpdracht] = entry.getScore();
 				isCorrect[currentActiviteit][currentOpdracht] = entry.isCorrect();
+				memento.setOpdrContStates(states);
 				int selectedIndex = lb_activiteiten.getSelectedIndex();
 				currentActiviteit = selectedIndex;
 				currentOpdracht = 0;
@@ -137,7 +147,8 @@ public class OpdrNav implements OpdrNavIF
 	{
 		scores[currentActiviteit][currentOpdracht] = entry.getScore();
 		isCorrect[currentActiviteit][currentOpdracht] = entry.isCorrect();
-		setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht]);
+		if (buttons != null && buttons.size() > currentOpdracht)
+			setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht]);
 	}
 
 	private void setOpdrachten(int index)
@@ -157,6 +168,7 @@ public class OpdrNav implements OpdrNavIF
 		for (int j = 0; j < aantalOpdrachten[index]; j++)
 		{
 			setButton(j);
+			setButtonCorrect(buttons.get(j), isCorrect[index][j]);
 		}
 		fp_opdrachten.getElement().getStyle().setFloat(Style.Float.LEFT);
 		contentPanel.add(fp_opdrachten);
@@ -206,6 +218,7 @@ public class OpdrNav implements OpdrNavIF
 				states[currentActiviteit][currentOpdracht] = entry.getState();
 				scores[currentActiviteit][currentOpdracht] = entry.getScore();
 				isCorrect[currentActiviteit][currentOpdracht] = entry.isCorrect();
+				memento.setOpdrContStates(states);
 				setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht]);
 
 				removeButtonCursor(buttons.get(currentOpdracht));

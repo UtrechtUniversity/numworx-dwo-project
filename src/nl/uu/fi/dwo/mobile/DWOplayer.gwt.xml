@@ -17,6 +17,7 @@
   <!-- Specify the app entry point class.                         -->
 
   <inherits name="com.googlecode.mgwt.MGWT"/>
+  <inherits name="com.google.gwt.json.JSON" />
    <inherits name="com.fredhat.gwt.xmlrpc.XMLRPC" />
    <inherits name="com.bouwkamp.gwt.user.User" />
    <inherits name="lx.interaction.DollarOne" />

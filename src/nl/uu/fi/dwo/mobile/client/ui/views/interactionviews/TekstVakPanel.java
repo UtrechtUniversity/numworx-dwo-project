@@ -2,9 +2,11 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleEditor;
@@ -268,7 +270,7 @@ public class TekstVakPanel implements InteractionView
 
 	public void setState(HashMap<String, Object> h)
 	{
-		ArrayList<Object> states = (ArrayList<Object>) h.get("interactiePanelStates");
+		List<Object> states = Memento.toArrayList(h.get("interactiePanelStates"));
 		for (int i = 0; i < interactionViewObjects.size(); i++)
 		{
 			Object currentObject = interactionViewObjects.get(i);
