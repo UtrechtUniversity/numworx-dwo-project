@@ -214,7 +214,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 	}
 
 	private HashMap<String, Object> launchData, instellingen;
-	private OpdrNavIF on;
+	private OpdrNav on;
 	private FocusPanel mainPanel;
 	private TouchPanel contentPanel = null;
 	private ScrollPanel contentScrollPanel = null;
@@ -615,7 +615,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 
 	public void setCommunicationRoot(OpdrNavIF comRoot)
 	{
-		this.on = comRoot;
+		this.on = (OpdrNav) comRoot;
 	}
 
 	public HashMap<String, Object> getState()
@@ -1066,4 +1066,5 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 			mainPanel.addMouseUpHandler(FOCUS_ON_TOUCH);
 
 	}
+
 }

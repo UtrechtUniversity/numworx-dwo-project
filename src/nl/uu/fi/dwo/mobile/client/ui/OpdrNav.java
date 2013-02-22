@@ -29,8 +29,13 @@ import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
  * @author Evertson Croes
  * 
  */
-public class OpdrNav implements OpdrNavIF
+public class OpdrNav implements OpdrNavIF, Runnable
 {
+	public static int OEFENEN = 0;
+	public static int OEFENEN_STRAFPUNTEN = 1;
+	public static int ZELFTOETS = 2;
+	public static int EINDTOETS = 3;
+
 	private ViewModuleViewImpl entry;
 	private ListBox lb_activiteiten;
 	private Panel fp_opdrachten;
@@ -57,6 +62,7 @@ public class OpdrNav implements OpdrNavIF
 	{
 		this.entry = ev;
 		this.memento = memento;
+		memento.setUnload(this);
 		aantalActiviteiten = Integer.parseInt((String) launchData.get("aantalActiviteiten"));
 		activiteitNamen = new String[aantalActiviteiten];
 		aantalOpdrachten = new int[maxAantalOpdrachten];
@@ -114,10 +120,7 @@ public class OpdrNav implements OpdrNavIF
 		{
 			public void onChange(ChangeEvent event)
 			{
-				states[currentActiviteit][currentOpdracht] = entry.getState();
-				scores[currentActiviteit][currentOpdracht] = entry.getScore();
-				isCorrect[currentActiviteit][currentOpdracht] = entry.isCorrect();
-				memento.setOpdrContStates(states);
+				saveCurrentState();
 				int selectedIndex = lb_activiteiten.getSelectedIndex();
 				currentActiviteit = selectedIndex;
 				currentOpdracht = 0;
@@ -215,10 +218,7 @@ public class OpdrNav implements OpdrNavIF
 			@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				states[currentActiviteit][currentOpdracht] = entry.getState();
-				scores[currentActiviteit][currentOpdracht] = entry.getScore();
-				isCorrect[currentActiviteit][currentOpdracht] = entry.isCorrect();
-				memento.setOpdrContStates(states);
+				saveCurrentState();
 				setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht]);
 
 				removeButtonCursor(buttons.get(currentOpdracht));
@@ -277,6 +277,61 @@ public class OpdrNav implements OpdrNavIF
 		button.getElement().getStyle().setBorderWidth(1, Unit.PX);
 		button.getElement().getStyle().setBorderColor(CssColor.make(121, 127, 144).toString());//("#979797");
 		button.getElement().getStyle().setMarginTop(2, Unit.PX);
+	}
+
+	/**
+	 * Berekent de totale score van het applet, en geeft deze terug, geschaald
+	 * naar 100%.
+	 */
+	public double getScore()
+	{
+
+		int mode = EINDTOETS; // TODO wat zijn de modes? Launchdata?
+		int totaalScore = 0;
+		int totaalMax = 0;
+		for (int i = 0; i < aantalActiviteiten; i++)
+		{
+			if (mode == EINDTOETS)
+			{
+				for (int j = 0; j < aantalOpdrachten[i]; j++)
+				{
+					totaalScore += scores[i][j];
+				}
+			}
+			else
+			{ // TODO wat wordt hier bedoeld?
+				//totaalScore += or[i].geefScore() - ((mode == ZELFTOETS) ? (nakijkStraf * (Math.max(0, aantalNakijken[i] - 1))) : 0);
+			}
+			for (int j = 0; j < aantalOpdrachten[i]; j++)
+			{
+				totaalMax += scoresMax[i][j];
+			}
+		}
+		System.out.println("TotaalMax " + totaalMax);
+		System.out.println("TotaalScore " + totaalScore);
+		if (totaalMax == 0)
+			return 0;
+		double doubleScore = Math.round(100.0 * totaalScore / totaalMax);
+		if (Double.isInfinite(doubleScore) || Double.isNaN(doubleScore))
+			doubleScore = 0;
+		return doubleScore;
+	}
+
+	public void run()
+	{
+		saveCurrentState();
+		// TODO save scores.raw
+		memento.setScore(getScore());
+
+	}
+
+	void saveCurrentState()
+	{
+		states[currentActiviteit][currentOpdracht] = entry.getState();
+		scores[currentActiviteit][currentOpdracht] = entry.getScore();
+		isCorrect[currentActiviteit][currentOpdracht] = entry.isCorrect();
+		memento.setOpdrContStates(states);
+
 	}
 
 }

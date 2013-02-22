@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONNull;
@@ -19,6 +21,9 @@ import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.ClosingEvent;
+import com.google.gwt.user.client.Window.ClosingHandler;
 
 /**
  * Class om suspend_data in en uit te pakken. JSON format, Javascript is hier
@@ -27,8 +32,22 @@ import com.google.gwt.resources.client.TextResource;
  * @author velth101
  * 
  */
-public class Memento
+public class Memento implements ClosingHandler, CloseHandler<Window>
 {
+	static Memento _instance;
+
+	static public native void instalOnBeforeUnload() /*-{
+		$wnd.onbeforeunload = @nl.uu.fi.dwo.mobile.client.sco.Memento::unload();
+		$wnd.onunload = @nl.uu.fi.dwo.mobile.client.sco.Memento::unload();
+	}-*/;
+
+	static void unload()
+	{
+		//Window.alert("unload");
+		if (_instance != null)
+			_instance.close();
+	}
+
 	private static final String OPDR_CONT_STATES = "opdrContStates";
 	private static final String ONS_STATE = "onsState";
 	private static final String SUSPEND_DATA = "cmi.suspendData";
@@ -53,11 +72,14 @@ public class Memento
 	private String scoreRaw;
 	private Date startDate = new Date();
 
-	private Integer score;
+	private Number score;
 
 	public Memento(Scorm2004IF api)
 	{
 		this.api = api;
+		_instance = this;
+		Window.addWindowClosingHandler(this);
+		Window.addCloseHandler(this);
 		initialize();
 		String value;
 		//value = TESTVALUE;
@@ -77,6 +99,8 @@ public class Memento
 			suspendData = new JSONObject();
 			suspendData.put(ONS_STATE, onsState);
 		}
+
+		instalOnBeforeUnload();
 	}
 
 	private String getValue(String key)
@@ -104,18 +128,18 @@ public class Memento
 		}
 	}
 
-	public int getScore()
+	public double getScore()
 	{
 		if (score == null)
 		{
-			score = new Integer(scoreRaw);
+			score = new Double(scoreRaw);
 		}
-		return score.intValue();
+		return score.doubleValue();
 	}
 
-	public void setScore(int score)
+	public void setScore(double score)
 	{
-		this.score = new Integer(score);
+		this.score = score;
 		scoreRaw = this.score.toString();
 		setValue(SCORE_RAW, scoreRaw);
 	}
@@ -154,14 +178,19 @@ public class Memento
 		flush();
 	}
 
-	private JSONObject toJSONObject(Map<String, Object> value)
+	private JSONValue toJSONObject(Map<String, Object> value)
 	{
-		JSONObject result = new JSONObject();
-		for (Map.Entry<String, Object> entry : value.entrySet())
+		if (value != null)
 		{
-			result.put(entry.getKey(), toJSONValue(entry.getValue()));
+			JSONObject result = new JSONObject();
+			for (Map.Entry<String, Object> entry : value.entrySet())
+			{
+				result.put(entry.getKey(), toJSONValue(entry.getValue()));
+			}
+			return result;
 		}
-		return result;
+		else
+			return JSONNull.getInstance();
 	}
 
 	private JSONValue toJSONValue(Object value)
@@ -303,6 +332,10 @@ public class Memento
 
 	public void close()
 	{
+		if (this != _instance)
+			return;
+		_instance = null;
+		runner.run();
 		Date stopDate = new Date();
 		long millis = stopDate.getTime() - startDate.getTime();
 		setValue(SESSION_TIME, format(millis));
@@ -310,6 +343,7 @@ public class Memento
 		try
 		{
 			api.Terminate();
+			api = null;
 		}
 		catch (Exception e)
 		{
@@ -346,6 +380,33 @@ public class Memento
 			return Arrays.asList(objects);
 		}
 		return null;
+	}
+
+	private Runnable runner = new Runnable()
+	{
+
+		@Override
+		public void run()
+		{
+		}
+	};
+
+	public void setUnload(Runnable opdrNav)
+	{
+		runner = opdrNav;
+
+	}
+
+	@Override
+	public void onClose(CloseEvent<Window> event)
+	{
+		close();
+	}
+
+	@Override
+	public void onWindowClosing(ClosingEvent event)
+	{
+		close();
 	}
 
 }
