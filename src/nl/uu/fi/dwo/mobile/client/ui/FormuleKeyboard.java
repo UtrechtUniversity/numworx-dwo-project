@@ -14,17 +14,22 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.googlecode.mgwt.ui.client.widget.RoundPanel;
 
+import fi.writemathgwt.client.Rectangle;
+import fi.writemathgwt.client.WritePanel;
+import fi.writemathgwt.client.WritePanelHolder;
+
 /**
  * Keyboard layout
  * 
  * @author Danny Hendrix
  * 
  */
-public class FormuleKeyboard
+public class FormuleKeyboard implements WritePanelHolder
 {
 	static final String SCRIBBLE = "Scribble";
 	private FormuleEditor editor;
 	private KeyBoardTabPanel tp;
+	private WritePanel writePanel;
 
 	private static String clipboard = "";
 	private static int zoomed = 0;
@@ -159,7 +164,13 @@ public class FormuleKeyboard
 
 		tp.addTab("Verberg", new SimplePanel());
 
-		tp.addTab(SCRIBBLE, new DigitsPanel(this));
+		writePanel = new WritePanel(this);
+		TouchButton b = FormuleKeyBoardButtons.getButton("apply", this);
+		b.setWidth("30px");
+		b.setHeight("16px");
+		writePanel.add(b);
+		
+		tp.addTab(SCRIBBLE, writePanel);
 
 		tp.hideTabButton("ABCShift");
 		//SliderPanel sp = new SliderPanel(100, this);
@@ -167,6 +178,14 @@ public class FormuleKeyboard
 		tp.apply();
 
 		return tp.getPanel();
+	}
+	
+	public void writePanelChanged() 
+	{
+		String text = writePanel.parseFormule();
+		
+		editor.clearAll();
+		editor.insert(text);
 	}
 
 	public void addNavPanel(Panel opdrnav)
