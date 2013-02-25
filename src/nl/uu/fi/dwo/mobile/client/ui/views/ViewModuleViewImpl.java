@@ -658,7 +658,7 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 			this.randomVarWaarden = (HashMap<String, Object>) h.get("randomVarWaarden");
 		List<Object> states = Memento.toArrayList(h.get("interactiePanelStates"));
 		int stateNr = 5;
-		for (int i = 0; i < opdrachtObjects.size(); i++)
+		for (int i = 0; states != null && i < opdrachtObjects.size(); i++)
 		{
 			Object currentObject = opdrachtObjects.get(i);
 			if (currentObject instanceof InteractionView)

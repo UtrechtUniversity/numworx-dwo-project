@@ -19,13 +19,12 @@
   <inherits name="com.googlecode.mgwt.MGWT"/>
   <inherits name="com.google.gwt.json.JSON" />
    <inherits name="com.fredhat.gwt.xmlrpc.XMLRPC" />
-   <inherits name="com.bouwkamp.gwt.user.User" />
-   <inherits name="lx.interaction.DollarOne" />
    <inherits name="nl.uu.fi.dwo.interaction.Interaction" />
+   <inherits name="fi.writemathgwt.WriteMathGWT-DWO" />
+   
    <inherits name="fi.kladjegwt.KladjeGWT-DWO" />
    <inherits name="fi.nabouwenaanzichtengwt.NabouwenAanzichtenGWT-DWO" />
    <inherits name="fi.balansfruitgwt.BalansFruitGWT-DWO" />
-   <inherits name="fi.writemathgwt.WriteMathGWT-DWO" />
    <inherits name='nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.geogebraview.GeogebraViewDWO' />
      
 

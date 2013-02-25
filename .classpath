@@ -9,5 +9,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/geogebraView"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/KladjeGWT"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NabouwenAanzichtenGWT"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/BalansFruitGWT"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/WriteMathGWT"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

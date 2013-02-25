@@ -50,9 +50,9 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 
 	private static final String OPDR_CONT_STATES = "opdrContStates";
 	private static final String ONS_STATE = "onsState";
-	private static final String SUSPEND_DATA = "cmi.suspendData";
+	private static final String SUSPEND_DATA = "cmi.suspend_data";
 	private static final String SCORE_RAW = "cmi.score.raw";
-	private static final String SESSION_TIME = "cmi.sessiontime";
+	private static final String SESSION_TIME = "cmi.session_time";
 
 	interface Resources extends ClientBundle
 	{
@@ -82,8 +82,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		Window.addCloseHandler(this);
 		initialize();
 		String value;
-		//value = TESTVALUE;
 		value = getValue(SUSPEND_DATA);
+		//value = TESTVALUE;
 		scoreRaw = getValue(SCORE_RAW);
 		try
 		{
@@ -274,18 +274,18 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 
 	private HashMap<String, Object> fromJSONObject(JSONObject object)
 	{
-		HashMap<String, Object> result = new HashMap<String, Object>();
 		if (object != null)
 		{
+			HashMap<String, Object> result = new HashMap<String, Object>();
 			Set<String> keys = object.keySet();
 			for (String key : keys)
 			{
 				JSONValue value = object.get(key);
 				result.put(key, fromJSONValue(value));
 			}
-
+			return result;
 		}
-		return result;
+		return null;
 	}
 
 	private Object[] fromJSONArray(JSONArray array)
