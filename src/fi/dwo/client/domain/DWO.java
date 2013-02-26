@@ -1820,7 +1820,7 @@ private static boolean isValidEmail(String email) {
         else return null;
     }
 
-    public String GetDiagnogtic(String iErrorCode) {
+    public String GetDiagnostic(String iErrorCode) {
     	return LMSGetDiagnostic(iErrorCode);
     }
      
