@@ -80,6 +80,9 @@ import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
  */
 public class ViewModuleViewImpl extends Composite implements ViewModuleView, EntryPoint
 {
+	private static final String RANDOM_VAR_WAARDEN = "RandomVarWaarden";
+	private static final String RANDOM_VAR_NAMEN = "RandomVarNamen";
+
 	final class FocusOnTouch implements MouseUpHandler
 	{
 		public void onMouseUp(MouseUpEvent event)
@@ -529,10 +532,10 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 		this.randomVarNamen = varnamen;
 		this.randomVarWaarden = waarden;
 
-		if (state.get("randomVarNamen") != null)
-			this.randomVarNamen = Memento.toStringArray(state.get("randomVarNamen"));
-		if (state.get("randomVarWaarden") != null)
-			this.randomVarWaarden = (HashMap<String, Object>) state.get("randomVarWaarden");
+		if (state.get(RANDOM_VAR_NAMEN) != null)
+			this.randomVarNamen = Memento.toStringArray(state.get(RANDOM_VAR_NAMEN));
+		if (state.get(RANDOM_VAR_WAARDEN) != null)
+			this.randomVarWaarden = (HashMap<String, Object>) state.get(RANDOM_VAR_WAARDEN);
 
 		opdrachtObjects = new ArrayList<Object>();
 		ArrayList<Object> opdrachtGegevens = (ArrayList<Object>) opdracht.get("interactiePanelLaunchData");
@@ -645,17 +648,17 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 			}
 		}
 		h.put("interactiePanelStates", states);
-		h.put("randomVarNamen", randomVarNamen);
-		h.put("randomVarWaarden", randomVarWaarden);
+		h.put(RANDOM_VAR_NAMEN, randomVarNamen);
+		h.put(RANDOM_VAR_WAARDEN, randomVarWaarden);
 		return h;
 	}
 
 	public void setState(HashMap<String, Object> h)
 	{
-		if (h.get("randomVarNamen") != null)
-			this.randomVarNamen = Memento.toStringArray(h.get("randomVarNamen"));
-		if (h.get("randomVarWaarden") != null)
-			this.randomVarWaarden = (HashMap<String, Object>) h.get("randomVarWaarden");
+		if (h.get(RANDOM_VAR_NAMEN) != null)
+			this.randomVarNamen = Memento.toStringArray(h.get(RANDOM_VAR_NAMEN));
+		if (h.get(RANDOM_VAR_WAARDEN) != null)
+			this.randomVarWaarden = (HashMap<String, Object>) h.get(RANDOM_VAR_WAARDEN);
 		List<Object> states = Memento.toArrayList(h.get("interactiePanelStates"));
 		int stateNr = 5;
 		for (int i = 0; states != null && i < opdrachtObjects.size(); i++)

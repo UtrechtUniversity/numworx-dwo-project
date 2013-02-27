@@ -25,6 +25,7 @@ import fi.wiskopdr.AntwoordVergelijkingVakChecker;
  */
 public class FormuleEditorWithAnswer extends FormuleEditor implements InteractionView
 {
+	private static final String ANTWOORD_STRING = "antwoordString";
 	OpdrNavIF comRoot;
 	TouchPanel sp = null;
 	Image checkimg;
@@ -54,7 +55,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 		if (h.get("interactiePanelLaunchState") != null)
 		{
-			int breedte = ((Integer)h.get("breedte")).intValue();
+			int breedte = ((Integer) h.get("breedte")).intValue();
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
 
 			if (isVergelijkingVak)
@@ -68,7 +69,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			sp = new TouchPanel();
 			if (fe == null)
 			{
-				sp.getElement().getStyle().setProperty("width", breedte+"px");
+				sp.getElement().getStyle().setProperty("width", breedte + "px");
 				sp.getElement().getStyle().setProperty("border", "1px solid gray");
 				sp.getElement().getStyle().setProperty("backgroundColor", "#e9e9e9");
 				this.getMainRegel().getCanvas().getElement().getStyle().setProperty("marginTop", "3px");
@@ -195,19 +196,25 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public HashMap<String, Object> getState()
 	{
 		HashMap<String, Object> h = new HashMap<String, Object>();
-		h.put("antwoord", this.toString());
+		h.put(ANTWOORD_STRING, "$f" + this.toString() + "@");
 		return h;
 	}
 
 	@Override
 	public void setState(HashMap<String, Object> h)
 	{
-		String antwoord = (String) h.get("antwoord");
-		if(antwoord!=null && !"".equals(antwoord.trim())) {
+		String antwoord = (String) h.get(ANTWOORD_STRING);
+		if (antwoord != null && !"".equals(antwoord.trim()))
+		{
+			if (antwoord.startsWith("$f"))
+			{
+				antwoord = antwoord.substring(2, antwoord.length() - 1);
+			}
+
 			this.insert(antwoord);
 			check();
 		}
-		
+
 	}
 
 	@Override
