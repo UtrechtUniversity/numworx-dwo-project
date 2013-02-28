@@ -6,6 +6,8 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ProfileView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ProfileViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleViewImpl;
+import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
+import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 
@@ -28,10 +30,11 @@ public class ClientFactoryImpl implements ClientFactory
 	private SelectModuleViewImpl selectModuleView;
 	private LoginViewImpl loginView;
 	private ProfileViewImpl profileView;
+	private TreeModuleView treeModuleView;
 
 	public ClientFactoryImpl()
 	{
-		entryView = new ViewModuleViewImpl();
+		entryView = new ViewModuleViewImpl().initialize();
 	}
 
 	@Override
@@ -74,6 +77,14 @@ public class ClientFactoryImpl implements ClientFactory
 		if (profileView == null)
 			profileView = new ProfileViewImpl();
 		return profileView;
+	}
+
+	@Override
+	public TreeModuleView getTreeModuleView()
+	{
+		if (treeModuleView == null)
+			this.treeModuleView = new TreeModuleViewImpl();
+		return this.treeModuleView;
 	}
 
 }

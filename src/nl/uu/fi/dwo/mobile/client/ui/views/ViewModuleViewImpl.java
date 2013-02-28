@@ -49,7 +49,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -78,7 +77,7 @@ import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
  * @author Danny Hendrix, Evertson Croes
  * 
  */
-public class ViewModuleViewImpl extends Composite implements ViewModuleView, EntryPoint
+public class ViewModuleViewImpl implements ViewModuleView, EntryPoint
 {
 	private static final String RANDOM_VAR_WAARDEN = "RandomVarWaarden";
 	private static final String RANDOM_VAR_NAMEN = "RandomVarNamen";
@@ -941,12 +940,63 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 		}
 	}
 
+	public ViewModuleViewImpl initialize()
+	{
+		api = new SCORM_2004_API();
+		//api = new SCORM_12_API(); // De oude DWO exporteert Scorm1.2 API, maar kan wel Scorm2004 cmi aan.
+
+		FlowPanel fp = new FlowPanel();
+		mainPanel = new FocusPanel(fp);
+		mainPanel.setHeight("100%");
+		mainPanel.setWidth("100%");
+
+		KeyHandler keyHandler = new KeyHandler();
+		mainPanel.addKeyDownHandler(keyHandler);
+		mainPanel.addKeyPressHandler(keyHandler);
+
+		hp = new HeaderPanel();
+		hp.setCenter("Module 1");
+		Style style = hp.getElement().getStyle();
+
+		hb = new HeaderButton();
+		hb.setBackButton(true);
+		hb.setText("Home");
+
+		hp.setLeftWidget(hb);
+
+		fp.add(hp);
+
+		contentScrollPanel = new ScrollPanel();
+		contentScrollPanel.setWidth("100%");
+		contentScrollPanel.setHeight("100%");
+		contentScrollPanel.getElement().getStyle().setOverflow(Overflow.AUTO);
+
+		contentPanel = new TouchPanel();
+		contentPanel.getElement().getStyle().setProperty("display", "inline-block");
+		contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
+		contentPanel.setWidth("99%");
+		//addContentPanelTouchListener(contentPanel);
+
+		contentScrollPanel.setWidget(contentPanel);
+		//contentScrollPanel.setScrollingEnabledX(false);
+		//contentScrollPanel.setScrollingEnabledY(false);
+
+		fp.add(contentScrollPanel);
+
+		kb = new FormuleKeyboard();
+		Panel kbp = kb.getAsPanel();
+
+		fp.add(kbp);
+
+		//initWidget(mainPanel);
+		return this;
+
+	}
+
 	@Override
 	public void onModuleLoad()
 	{
-
-		api = new SCORM_2004_API();
-		//api = new SCORM_12_API(); // De oude DWO exporteert Scorm1.2 API, maar kan wel Scorm2004 cmi aan.
+		initialize();
 		String url = "index.xml";
 		String link = "index.xmr"; // reference.
 		String path = Window.Location.getPath();
@@ -981,53 +1031,8 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 		//settings.setPreventScrolling(true);
 		MGWT.applySettings(settings);
 
-		FlowPanel fp = new FlowPanel();
-		mainPanel = new FocusPanel(fp);
-		mainPanel.setHeight("100%");
-		mainPanel.setWidth("100%");
-
-		KeyHandler keyHandler = new KeyHandler();
-		mainPanel.addKeyDownHandler(keyHandler);
-		mainPanel.addKeyPressHandler(keyHandler);
-
-		hp = new HeaderPanel();
-		//hp.setCenter("Module 1");
-		Style style = hp.getElement().getStyle();
-
-		hb = new HeaderButton();
-		hb.setBackButton(true);
-		hb.setText("Home");
-
-		hp.setLeftWidget(hb);
-
-		//mainPanel.add(hp);
-
-		contentScrollPanel = new ScrollPanel();
-		contentScrollPanel.setWidth("100%");
-		contentScrollPanel.setHeight("100%");
-		contentScrollPanel.getElement().getStyle().setOverflow(Overflow.AUTO);
-
-		contentPanel = new TouchPanel();
-		contentPanel.getElement().getStyle().setProperty("display", "inline-block");
-		contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
-		contentPanel.setWidth("99%");
-		//addContentPanelTouchListener(contentPanel);
-
-		contentScrollPanel.setWidget(contentPanel);
-		//contentScrollPanel.setScrollingEnabledX(false);
-		//contentScrollPanel.setScrollingEnabledY(false);
-
-		fp.add(contentScrollPanel);
-
-		kb = new FormuleKeyboard();
-		Panel kbp = kb.getAsPanel();
-
-		fp.add(kbp);
-
-		//initWidget(mainPanel);
-
 		//RootPanel.get("viewholder").add(new Label("titel"));
-		RootPanel.get("main").add(mainPanel);
+		RootPanel.get("main").add(this);
 
 		RequestBuilder.Method method = RequestBuilder.GET;
 		preSetupModule(link, url);
@@ -1068,6 +1073,12 @@ public class ViewModuleViewImpl extends Composite implements ViewModuleView, Ent
 		if (!hastouch)
 			mainPanel.addMouseUpHandler(FOCUS_ON_TOUCH);
 
+	}
+
+	@Override
+	public Widget asWidget()
+	{
+		return mainPanel;
 	}
 
 }

@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.xml.client.Node;
 
@@ -11,15 +13,24 @@ import com.google.gwt.xml.client.Node;
  */
 public class SelectModuleItem
 {
+	public enum Type
+	{
+		SCO, MODULE, FOLDER, ROOT
+	}
+
 	private String name;
 	private String file;
 	private int id;
+
+	private Type type = Type.ROOT;
+	private List<SelectModuleItem> children;
 
 	public SelectModuleItem(int id, String name, String file)
 	{
 		this.id = id;
 		this.name = name;
 		this.file = file;
+		this.type = Type.SCO;
 	}
 
 	public SelectModuleItem(int id, Node node)
@@ -66,5 +77,25 @@ public class SelectModuleItem
 	public void setID(int id)
 	{
 		this.id = id;
+	}
+
+	public Type getType()
+	{
+		return type;
+	}
+
+	public void setType(Type type)
+	{
+		this.type = type;
+	}
+
+	public List<SelectModuleItem> getChildren()
+	{
+		return children;
+	}
+
+	public void setChildren(List<SelectModuleItem> children)
+	{
+		this.children = children;
 	}
 }

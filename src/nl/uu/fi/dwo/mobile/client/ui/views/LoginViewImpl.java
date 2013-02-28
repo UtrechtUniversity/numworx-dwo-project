@@ -4,13 +4,14 @@ import java.util.Map;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.places.ProfilePlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
 import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Image;
@@ -133,7 +134,9 @@ public class LoginViewImpl implements LoginView
 			@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				DWOplayer.clientfactory.getPlaceController().goTo(new SelectModulePlace("Select Module"));
+				Place newPlace; // place = new SelectModulePlace("Select Module");
+				newPlace = new TreeModulePlace();
+				DWOplayer.clientfactory.getPlaceController().goTo(newPlace);
 			}
 		});
 
@@ -146,7 +149,7 @@ public class LoginViewImpl implements LoginView
 
 		//String server = "http://delta.fi.uu.nl/DWOmAccess/partialScore";
 		//String server = "http://127.0.0.1/dwologin.php";
-		String server = "http://www.dannyhendrix.com/stuff/dwo/dwologin.php";
+		String server = "http://ws-dev.fisme.science.uu.nl/DWOmAccess/dbaccess";
 		XmlRpcClient client = new XmlRpcClient(server);
 		String method = "login";
 		Object[] params =

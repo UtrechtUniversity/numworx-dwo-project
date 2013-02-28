@@ -1,7 +1,6 @@
 package nl.uu.fi.dwo.mobile;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import nl.uu.fi.dwo.mobile.client.ui.AppPlaceHistoryMapper;
@@ -10,7 +9,6 @@ import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
 import nl.uu.fi.dwo.mobile.client.ui.TabletActivityMapper;
 import nl.uu.fi.dwo.mobile.client.ui.TabletAnimationMapper;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -35,7 +33,7 @@ import fi.wiskopdr.text.Text_nl;
  */
 public class DWOplayer implements EntryPoint
 {
-	private Place defaultPlace = new SelectModulePlace("select");
+	private Place defaultPlace = new LoginPlace(); // new SelectModulePlace("select");
 	//private Place defaultPlace = new SelectModulePlace("Home");
 	private static HashMap<String, String> resources = new HashMap<String, String>();
 	//public static Locale language = new Locale ("nl", "");

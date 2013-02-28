@@ -7,12 +7,12 @@ import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 
-import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
+import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 
 /**
  * Display module activity
@@ -20,7 +20,7 @@ import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
  * @author Danny Hendrix
  * 
  */
-public class ViewModuleActivity extends AbstractActivity
+public class ViewModuleActivity extends MGWTAbstractActivity
 {
 	private ClientFactory clientFactory;
 
@@ -34,7 +34,7 @@ public class ViewModuleActivity extends AbstractActivity
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
 		ViewModuleView view = clientFactory.getEntryView();
-		panel.setWidget(view.asWidget());
+		panel.setWidget(view);
 
 		Place place = clientFactory.getPlaceController().getWhere();
 
@@ -46,8 +46,7 @@ public class ViewModuleActivity extends AbstractActivity
 			SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);
 
 			view.setupModule(item.getName(), item.getFile());
-
-			view.getBackButton().addTapHandler(new TapHandler()
+			addHandlerRegistration(view.getBackButton().addTapHandler(new TapHandler()
 			{
 
 				@Override
@@ -56,7 +55,7 @@ public class ViewModuleActivity extends AbstractActivity
 					clientFactory.getPlaceController().goTo(new SelectModulePlace("Selecteer module"));
 
 				}
-			});
+			}));
 		}
 	}
 }

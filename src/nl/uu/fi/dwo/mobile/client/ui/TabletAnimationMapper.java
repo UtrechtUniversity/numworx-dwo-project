@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ProfilePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 
 import com.google.gwt.place.shared.Place;
@@ -22,12 +23,20 @@ public class TabletAnimationMapper implements AnimationMapper
 	{
 		if (oldPlace instanceof ViewModulePlace && newPlace instanceof SelectModulePlace)
 			return Animation.SLIDE_REVERSE;
+		if (oldPlace instanceof ViewModulePlace && newPlace instanceof TreeModulePlace)
+			return Animation.SLIDE_REVERSE;
 		if (oldPlace instanceof SelectModulePlace && newPlace instanceof ProfilePlace)
 			return Animation.SLIDE_REVERSE;
 		if (oldPlace instanceof SelectModulePlace && newPlace instanceof LoginPlace)
 			return Animation.SLIDE_REVERSE;
 		if (oldPlace instanceof ProfilePlace && newPlace instanceof LoginPlace)
 			return Animation.SLIDE_REVERSE;
+		if (oldPlace instanceof TreeModulePlace && newPlace instanceof LoginPlace)
+			return Animation.SLIDE_REVERSE;
+		if (oldPlace instanceof TreeModulePlace && newPlace instanceof ProfilePlace)
+			return Animation.SLIDE_REVERSE;
+		if (oldPlace instanceof TreeModulePlace && newPlace instanceof TreeModulePlace)
+			return null;
 		return Animation.SLIDE;
 	}
 

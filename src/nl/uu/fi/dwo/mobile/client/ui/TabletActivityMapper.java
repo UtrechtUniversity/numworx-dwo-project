@@ -3,10 +3,12 @@ package nl.uu.fi.dwo.mobile.client.ui;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LoginActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ProfileActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.SelectModuleActivity;
+import nl.uu.fi.dwo.mobile.client.ui.activities.TreeModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ViewModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ProfilePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 
 import com.google.gwt.activity.shared.Activity;
@@ -22,11 +24,13 @@ import com.google.gwt.place.shared.Place;
 public class TabletActivityMapper implements ActivityMapper
 {
 	private ClientFactory clientFactory;
+	private TreeModuleActivity treeModuleActivity;
 
 	public TabletActivityMapper(ClientFactory cf)
 	{
 		super();
 		this.clientFactory = cf;
+		treeModuleActivity = new TreeModuleActivity(clientFactory);
 	}
 
 	@Override
@@ -40,6 +44,11 @@ public class TabletActivityMapper implements ActivityMapper
 			return new LoginActivity(clientFactory);
 		if (place instanceof ProfilePlace)
 			return new ProfileActivity(clientFactory);
+		if (place instanceof TreeModulePlace)
+		{
+			treeModuleActivity = new TreeModuleActivity(clientFactory); // Anders geen activity reset action
+			return treeModuleActivity;
+		}
 		return null;
 	}
 

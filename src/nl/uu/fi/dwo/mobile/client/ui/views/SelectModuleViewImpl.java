@@ -70,7 +70,7 @@ public class SelectModuleViewImpl implements SelectModuleView
 		header.setLeftWidget(backbutton);
 
 		RequestBuilder.Method method = RequestBuilder.GET;
-		String url = "activiteiten.xmx";
+		String url = "activiteiten.xml";
 		RequestBuilder rb = new RequestBuilder(method, url);
 		try
 		{

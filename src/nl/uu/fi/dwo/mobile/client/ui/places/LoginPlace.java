@@ -12,6 +12,11 @@ public class LoginPlace extends Place
 		this.token = token;
 	}
 
+	public LoginPlace()
+	{
+		this("login"); // default token.
+	}
+
 	public String getToken()
 	{
 		return this.token;
