@@ -1364,14 +1364,14 @@ private static boolean isValidEmail(String email) {
 
     }
 
-    /**
-     * Indicate that a sco has been ended, so the data can be cleared.
-     * 
-     * @param sco The sco that is ended.
-     */
-    public void endSco(Sco sco) {
-        MapperCreator.instance(Applet.class).removeObject(sco.getAppletID());
-    }
+//    /**
+//     * Indicate that a sco has been ended, so the data can be cleared.
+//     * 
+//     * @param sco The sco that is ended.
+//     */
+//    public void endSco(Sco sco) {
+//        //MapperCreator.instance(Applet.class).removeObject(sco.getAppletID());
+//    }
 
     public void start() {
      	this.getRootPane().setDoubleBuffered(true);

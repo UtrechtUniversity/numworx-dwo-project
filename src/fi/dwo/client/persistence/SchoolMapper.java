@@ -5,6 +5,7 @@ package fi.dwo.client.persistence;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Hashtable;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
@@ -212,6 +213,8 @@ public class SchoolMapper extends XmlRpcMapper {
 
         s.setExport(Boolean.TRUE.equals(data.get("export")));
         s.setRights((String)data.get("schoolRights"));
+        Object expire = data.get("expire");
+        if(expire instanceof Date) s.setExpire((Date)expire);
         return s;
     }
 

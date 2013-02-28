@@ -4,6 +4,8 @@
 package fi.dwo.client.gui;
 
 import java.awt.Container;
+import java.text.MessageFormat;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -91,7 +93,7 @@ public class GuiCreator {
         	if (dwo.login(username, password)) {
 // HOOK: check if username is valide volgens de nieuwe regels.
             	validUsernameCheck(username);
-            	
+            	validLicenceCheck(dwo.getUser());
             	
                 login(dwo.getUser());
  
@@ -116,6 +118,21 @@ public class GuiCreator {
 //		}
 	}
 
+    private void validLicenceCheck(User u) {
+    	School s = u.getSchool();
+    	if(s != null)
+    	{
+    		Date expire = s.getExpire();
+    		if( expire != null && expire.getTime() < System.currentTimeMillis())
+    		{
+    			String message = "Het abonnement voor ''{0}'' is verlopen!\nEr kunnen geen nieuwe abonnees meer worden toegevoegd.\nRaadpleeg uw administratie.";
+    			message = MessageFormat.format(message, new Object[] { s.getName() });
+    			JOptionPane.showMessageDialog(DwoHelper.getFrameForComponent(null), message);
+    		}
+    	}
+    }
+    
+    
 	/**
      * @param u
      */

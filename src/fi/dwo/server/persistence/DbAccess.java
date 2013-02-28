@@ -124,7 +124,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     private final static String QRY_INSERT_SCHOOLGROUP = "INSERT INTO tblSchoolGroup(groupID, schoolID, passwd) "
             + "VALUES (?, ?, ?)";
 
-    private final static String QRY_CHECK_SCHOOLGROUP = "SELECT schoolGroupID "
+    private final static String QRY_CHECK_SCHOOLGROUP = "SELECT schoolGroupID, expire, tblSchoolGroup.schoolID "
             + "FROM tblSchoolGroup, tblSchool "
             + "WHERE (tblSchoolGroup.schoolID = tblSchool.schoolID) "
             + "AND   (schoollogin = ?) " + "AND   (groupID = ?) "
@@ -140,7 +140,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         + "FROM tblUser LEFT JOIN tblClass ON tblUser.classID = tblClass.classID "
         + "WHERE (username = ?) ";
 
-    private final static String QRY_GET_USER_DATA = "SELECT tblUser.*, tblGroup.*, tblSchool.schoolID, tblSchool.schoolName, tblSchool.schoollogin, tblSchool.image, tblSchool.export, tblSchool.schoolRights "
+    private final static String QRY_GET_USER_DATA = "SELECT tblUser.*, tblGroup.*, tblSchool.schoolID, tblSchool.schoolName, tblSchool.schoollogin, tblSchool.image, tblSchool.export, tblSchool.schoolRights, tblSchool.expire "
             + "FROM tblUser, tblSchoolGroup, tblGroup, tblSchool "
             + "WHERE (tblUser.schoolGroupID = tblSchoolGroup.schoolGroupID) "
             + "AND   (tblSchoolGroup.groupID = tblGroup.groupID) "
@@ -587,11 +587,18 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         int schoolGroupID = -1;
         if (!isEmpty(rs)) {
             schoolGroupID = rs.getInt(1);
+            if(checkValidLicence(rs.getDate(2), rs.getInt(3)))
+            	return -1;
         }
         rs.close();
         return schoolGroupID;
 
     }
+
+    protected boolean checkValidLicence(Date date, int int1) {
+		if(date == null) return false;
+		return date.getTime() < System.currentTimeMillis();
+	}
 
     /**
      * @param username

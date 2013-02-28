@@ -4,6 +4,7 @@
 package fi.dwo.client.domain;
 
 import java.util.Arrays;
+import java.util.Date;
 
 /**
  * This class is responsible for the School data.
@@ -27,6 +28,8 @@ public class School {
     
     private boolean export;
     private String rights = DEFAULT_RIGHTS;
+
+	private Date expire;
 
     /**
      * Creates a new School object.
@@ -227,4 +230,13 @@ public class School {
     public String toString() {
     	return getName();
     }
+
+	public void setExpire(Date expire) {
+		this.expire = expire;
+	}
+	
+	public Date getExpire() {
+		return expire;
+	}
+	
 }

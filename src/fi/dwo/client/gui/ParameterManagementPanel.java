@@ -493,7 +493,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 			instance.setWait();setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			sco.setLaunchdata(tmp);
             instance.updateSco(sco);
-            MapperCreator.instance(Applet.class).removeObject(sco.getAppletID());
+            //MapperCreator.instance(Applet.class).removeObject(sco.getAppletID());
             instance.setReady();setCursor(Cursor.getDefaultCursor());
             return JOptionPane.YES_OPTION;
         }
@@ -517,7 +517,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 			instance.setWait();setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			sco.setLaunchdata(tmp);
             instance.unsafeSaveSco(sco);
-            MapperCreator.instance(Applet.class).removeObject(sco.getAppletID());
+            //MapperCreator.instance(Applet.class).removeObject(sco.getAppletID());
             instance.setReady();setCursor(Cursor.getDefaultCursor());
             return JOptionPane.YES_OPTION;
         }
