@@ -43,8 +43,6 @@
 	<classpathentry kind="lib" path="/_base/codebase/jars/anyonrow.jar"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/balansfruitapplet.jar"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/vergroten.jar"/>
-	<classpathentry kind="lib" path="output/jar/jcommon-1.0.17.jar"/>
-	<classpathentry kind="lib" path="output/jar/jfreechart-1.0.14.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/jamon-2.73.jar"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/_sources/junitperf-1.9.1.jar"/>
