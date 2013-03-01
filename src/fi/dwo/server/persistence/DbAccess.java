@@ -444,7 +444,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         String query = MessageFormat
                 .format(QRY_DEFAULT_SELECT_TABLE_ORDER, arguments);
 
-        log("DbAccess.getTable " + query);
+        //log("DbAccess.getTable " + query);
         return executeQueryWithResult(query);
     }
     /**
@@ -1348,7 +1348,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return executeQueryWithResult(ps);
     }
 
-    final static private long DATE_OFFSET = 36L*3600L*1000L; // 36 uur. 
+    protected final static long DATE_OFFSET = 36L*3600L*1000L; // 36 uur. 
     
 	public boolean selectCoursesForClass(int classID, int courseID, int type,
 			Date van, Date tot) throws IOException, XmlRpcException,
@@ -2899,6 +2899,18 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 			c.setAutoCommit(true);
 		}
 		return true;
+	}
+
+	public boolean setExpireDate(int schoolID, Date date) throws IOException,
+			XmlRpcException, SQLException {
+		PreparedStatement ps = getStatement("UPDATE tblSchool SET expire = ? WHERE (schoolID = ?) LIMIT 1");
+		if(date == null || date.getTime() < DATE_OFFSET)
+			ps.setNull(1, Types.DATE);
+		else
+			ps.setDate(1, new java.sql.Date(date.getTime()));
+		ps.setInt(2, schoolID);
+		int x = ps.executeUpdate();
+		return x > 0;
 	}
 
 	

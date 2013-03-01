@@ -524,4 +524,6 @@ public interface DbAccessIF {
 	throws IOException, XmlRpcException, SQLException;
 
 	public boolean selectCoursesForClass(int id, Vector v) throws IOException, XmlRpcException, SQLException;
+
+	public boolean setExpireDate(int schoolID, Date date)throws IOException, XmlRpcException, SQLException;
 }

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -429,18 +430,21 @@ private Hashtable restrict(Hashtable user) {
 		if(intValue <= 1)
 			return user;
 		
-//		if ( isNoDWOSchool(intValue))
-//		{
+		if ( isNoDWOSchool(intValue))
+		{
+			user.put("expire", new java.sql.Date(DATE_OFFSET)); // TODO juiste waarde mogelijk?
 //			user.remove("schoolID");
 //			user.remove("groupname");
 //			user.put("classID", "");
-//		}
+		} else
+			user.remove("expire"); // no restrictions...
 		return user;
 	}
 
 //TODO 1 call met 3, 7, 1, 8?
 private boolean isNoDWOSchool(int intValue) {
-	return !manager.isSchoolOK(intValue, 3) && !manager.isSchoolOK(intValue, 1)&& !manager.isSchoolOK(intValue, 7);
+	return !manager.isSchoolOK(intValue, 0); // alle codes...
+	//return !manager.isSchoolOK(intValue, 3) && !manager.isSchoolOK(intValue, 1)&& !manager.isSchoolOK(intValue, 7);
 }
 
 /**
@@ -523,6 +527,14 @@ public boolean disconnectFromClass(int uid) throws SQLException {
 	boolean result = super.disconnectFromClass(uid);
 	manager.addUserToClass(getUser(uid), 0);
 	return result;
+}
+
+/* (non-Javadoc)
+ * @see fi.dwo.server.persistence.DbAccess#setExpireDate(int, java.util.Date)
+ */
+public boolean setExpireDate(int schoolID, Date date) throws IOException,
+		org.apache.xmlrpc.applet.XmlRpcException, SQLException {
+	return false;
 }
 
 

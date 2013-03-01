@@ -38,6 +38,9 @@
 	<classpathentry kind="lib" path="/_base/codebase/jars/waarmakers.jar"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/mayscript.jar"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/jsdk.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/ggb40/jlatexmath.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/ggb40/jlm_greek.jar"/>
+	<classpathentry kind="lib" path="/_base/codebase/jars/ggb40/jlm_cyrillic.jar"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/ldap.jar"/>
 	<classpathentry kind="lib" path="output/jar/euclides.jar"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/anyonrow.jar"/>
@@ -46,9 +49,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/jamon-2.73.jar"/>
 	<classpathentry kind="lib" path="/_base/codebase/jars/_sources/junitperf-1.9.1.jar"/>
-	<classpathentry kind="lib" path="/_base/codebase/jars/ggb40/jlatexmath.jar"/>
-	<classpathentry kind="lib" path="/_base/codebase/jars/ggb40/jlm_cyrillic.jar"/>
-	<classpathentry kind="lib" path="/_base/codebase/jars/ggb40/jlm_greek.jar"/>
 	<classpathentry kind="lib" path="/_base/codebase" sourcepath="C:/java/beans"/>
 	<classpathentry kind="output" path="output/classes"/>
 </classpath>

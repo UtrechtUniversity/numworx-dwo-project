@@ -215,6 +215,7 @@ public class SchoolMapper extends XmlRpcMapper {
         s.setRights((String)data.get("schoolRights"));
         Object expire = data.get("expire");
         if(expire instanceof Date) s.setExpire((Date)expire);
+        else s.setExpire(null);
         return s;
     }
 

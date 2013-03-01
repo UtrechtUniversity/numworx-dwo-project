@@ -608,25 +608,27 @@ public class GuiCreator {
     
     /**
      * Shows a dialog to edit a school.
+     * @param date 
      * 
      * @return edited School 
      *  
      */
-    public School editSchool(int schoolID, String schoolName, String schoolLogin, SchoolPasswdMap schoolPasswdMap)  throws SchoolException {
-        return dwo.editSchool(schoolID, schoolName, schoolLogin, schoolPasswdMap);
+    public School editSchool(int schoolID, String schoolName, String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date)  throws SchoolException {
+        return dwo.editSchool(schoolID, schoolName, schoolLogin, schoolPasswdMap, date);
     }
     
     /**
      * Shows a dialog to add a school and adds the school.
      * @param id 
+     * @param date 
      * @param schooladminPasswd 
      * 
      * @return boolean Indicates if the school is added, or the operation is
      *         canceled.
      *  
      */
-    public School addSchool(int id, String schoolName, String schoolLogin, SchoolPasswdMap schoolPasswdMap)  throws SchoolException {
-        return dwo.addSchool(id, schoolName, schoolLogin, schoolPasswdMap);
+    public School addSchool(int id, String schoolName, String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date)  throws SchoolException {
+        return dwo.addSchool(id, schoolName, schoolLogin, schoolPasswdMap, date);
     }
 
     /**

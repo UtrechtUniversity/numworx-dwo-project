@@ -29,6 +29,7 @@ import fi.dwo.client.domain.Group;
 import fi.dwo.client.domain.Guest;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.SchoolClass;
+import fi.dwo.client.domain.SchoolPasswdMap;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.Admin;
@@ -2051,6 +2052,41 @@ e1.printStackTrace();
 			throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
 		}
 
+	}
+
+	public School editSchool(int schoolID, String schoolName,
+			String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date) throws SchoolException {
+		// TODO Auto-generated method stub
+		School school = editSchool(schoolID, schoolName, schoolLogin, schoolPasswdMap);
+		setExpireDate(schoolID, date, school);
+		return school;
+	}
+
+	private void setExpireDate(int schoolID, Date date, School school) {
+		try {
+			Date date0 = date;
+			if(date == null) {
+				date0 = DATE_NULL;
+			}
+			if (DbAccessCreator.instance().setExpireDate(schoolID, date0))
+				school.setExpire(date);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (XmlRpcException e) {
+			System.err.println(e); // no such method?
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public School addSchool(int id, String schoolName, String schoolLogin,
+			SchoolPasswdMap schoolPasswdMap, Date date) throws SchoolException {
+		School school = addSchool(id, schoolName, schoolLogin, schoolPasswdMap);
+		if(date != null)
+			setExpireDate(school.getSchoolID(), date, school);
+		return school;
 	}
 	
 }

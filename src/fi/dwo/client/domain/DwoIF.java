@@ -5,6 +5,7 @@ package fi.dwo.client.domain;
 
 import java.awt.Container;
 import java.awt.Panel;
+import java.util.Date;
 
 import fi.dwo.client.gui.CenterSubPanel;
 import fi.dwo.client.gui.ScoPanel;
@@ -478,10 +479,10 @@ public interface DwoIF {
 	public String LMSSetValue(Sco sco, User user, String dataModelElement, String value);
 
 	public School addSchool(int id, String schoolName, String schoolLogin,
-			SchoolPasswdMap schoolPasswdMap) throws SchoolException;
+			SchoolPasswdMap schoolPasswdMap, Date date) throws SchoolException;
 
 	public School editSchool(int schoolID, String schoolName,
-			String schoolLogin, SchoolPasswdMap schoolPasswdMap) throws SchoolException;
+			String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date) throws SchoolException;
 
 	public String LMSCommit(Sco sco, String param);
 

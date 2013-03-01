@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
@@ -2087,12 +2088,12 @@ System.out.println(school.getSchoolLogin() + " " + group.getName() + " " + schoo
      *  
      */
 	public School addSchool(int id, String schoolName, String schoolLogin,
-			SchoolPasswdMap schoolPasswdMap) throws SchoolException {
+			SchoolPasswdMap schoolPasswdMap, Date date) throws SchoolException {
 		
 //    	String studentPassw = schoolPasswdMap.getPasswd(SchoolGroup.STUDENT);
 //		String teacherPassw = schoolPasswdMap.getPasswd(SchoolGroup.TEACHER);
 //		return PersistenceFacade.instance().addSchool(id, schoolName, schoolLogin, studentPassw, teacherPassw);
-		return PersistenceFacade.instance().addSchool(id, schoolName, schoolLogin, schoolPasswdMap);
+		return PersistenceFacade.instance().addSchool(id, schoolName, schoolLogin, schoolPasswdMap, date);
 	}	
 	/**
      * Edit a school to the database. 
@@ -2108,11 +2109,11 @@ System.out.println(school.getSchoolLogin() + " " + group.getName() + " " + schoo
      */
 
 	public School editSchool(int schoolID, String schoolName,
-			String schoolLogin, SchoolPasswdMap schoolPasswdMap) throws SchoolException {
+			String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date) throws SchoolException {
 //		String studentPassw = schoolPasswdMap.getPasswd(SchoolGroup.STUDENT);
 //		String teacherPassw = schoolPasswdMap.getPasswd(SchoolGroup.TEACHER);		
 //		return PersistenceFacade.instance().editSchool(schoolID, schoolName, schoolLogin, studentPassw, teacherPassw);
-		return PersistenceFacade.instance().editSchool(schoolID, schoolName, schoolLogin, schoolPasswdMap);
+		return PersistenceFacade.instance().editSchool(schoolID, schoolName, schoolLogin, schoolPasswdMap, date);
 	}
 	
 }

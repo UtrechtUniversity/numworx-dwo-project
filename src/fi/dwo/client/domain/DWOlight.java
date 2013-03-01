@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.Panel;
+import java.util.Date;
 
 import javax.swing.JOptionPane;
 
@@ -915,12 +916,12 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 		}
 
 		public School addSchool(int id, String schoolName, String schoolLogin,
-				SchoolPasswdMap schoolPasswdMap) {
+				SchoolPasswdMap schoolPasswdMap, Date date) {
 			return null;
 		}
 
 		public School editSchool(int schoolID, String schoolName,
-				String schoolLogin, SchoolPasswdMap schoolPasswdMap) {
+				String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date) {
 			return null;
 		}
 

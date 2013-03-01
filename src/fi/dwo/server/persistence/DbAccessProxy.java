@@ -477,5 +477,11 @@ public class DbAccessProxy extends DbConnect implements DbAccessIF {
 			XmlRpcException, SQLException {
 		return getDelegate().selectCoursesForClass(id, v);
 	}
+
+	public boolean setExpireDate(int schoolID, Date date) throws IOException,
+			XmlRpcException, SQLException {
+		// TODO Auto-generated method stub
+		return getDelegate().setExpireDate(schoolID, date);
+	}
 	
 }

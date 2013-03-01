@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -31,6 +32,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Spring;
 import javax.swing.SpringLayout;
+
+import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JSpinnerDateEditor;
 
 
 import fi.dwo.client.domain.DwoHelper;
@@ -85,7 +89,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
     private JButton cancelButton;
 
     public AddSchoolDialog(Component owner, String windowTitle, String schoolName, String schoolLogin,
-            SchoolPasswdMap spm) {
+            SchoolPasswdMap spm, Date expire) {
         super(DwoHelper.getFrameForComponent(owner),
                 windowTitle, true);
         Container contentPane = getContentPane();
@@ -114,20 +118,19 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         l.setVisible(true);
 
         /* schoolName field */
-        if(!"".equals(schoolName)) {
+        Hashtable fidentitySchools = PersistenceFacade.instance().getFidentitySchools();
+		if(!"".equals(schoolName)) {
         	JTextField tf = new JTextField(schoolName);
-        	tf.setEditable(PersistenceFacade.instance().getFidentitySchools()==null);
+        	tf.setEditable(fidentitySchools==null);
         	schoolNameField = tf;
         } else {
         	schoolIdVector.clear();
         	schoolIdVector.addElement(ZERO);
-        	Hashtable v = 
-        	PersistenceFacade.instance().getFidentitySchools();
-        	if(v == null)
+        	if(fidentitySchools == null)
         		schoolNameField = new JTextField();
         	else {
         		TreeMap reversemap = new TreeMap();
-        		Iterator iter = v.entrySet().iterator();
+        		Iterator iter = fidentitySchools.entrySet().iterator();
         		while (iter.hasNext()) {
 					Entry object = (Entry) iter.next();
 					reversemap.put(object.getValue(), object.getKey());
@@ -181,6 +184,15 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
                 form.add(passwdField[groupId]);
         	}
         }
+        
+        l = new JLabel("Expire");
+        l.setFont(GuiConstants.NORMAL_TEXT);
+        form.add(l);
+        JSpinnerDateEditor dateEditor = new JSpinnerDateEditor(); // zie ook selectcoursesdialog
+        dateField = new JDateChooser(null, expire, null, dateEditor);
+        dateField.setEnabled(fidentitySchools == null);
+        form.add(dateField);
+        
         
         //this.setSize(460, 280);
         Box okbox = Box.createHorizontalBox();
@@ -239,10 +251,10 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
      * @return fi.dwo.client.domain.Sco
      */
     public static School addSchool(Component owner)  throws SchoolException {
-        AddSchoolDialog asd = new AddSchoolDialog(owner, "Nieuwe school", "", "", new SchoolPasswdMap());
+        AddSchoolDialog asd = new AddSchoolDialog(owner, "Nieuwe school", "", "", new SchoolPasswdMap(), null);
         asd.show();
         if (asd.isConfirmed()) {
-            School s = GuiCreator.instance().addSchool(asd.getSchoolId(), asd.getSchoolName(), asd.getSchoolLogin(), asd.getSchoolPasswdMap());
+            School s = GuiCreator.instance().addSchool(asd.getSchoolId(), asd.getSchoolName(), asd.getSchoolLogin(), asd.getSchoolPasswdMap(), asd.dateField.getDate());
             if(s == null) { //something went wrong, reshow the dialog
                 s = addSchool(owner);
             }
@@ -263,11 +275,12 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         String sn = school.getName();
         String sl = school.getSchoolLogin();
         SchoolPasswdMap spm = new SchoolPasswdMap(school);
+        Date  expire = school.getExpire();
                 
-        AddSchoolDialog asd = new AddSchoolDialog(owner, "Schoolgegevens wijzigen", sn, sl, spm);
+        AddSchoolDialog asd = new AddSchoolDialog(owner, "Schoolgegevens wijzigen", sn, sl, spm, expire);
         asd.show();
         if (asd.isConfirmed()) {
-            School s = GuiCreator.instance().editSchool(school.getSchoolID(), asd.getSchoolName(), asd.getSchoolLogin(), asd.getSchoolPasswdMap());
+            School s = GuiCreator.instance().editSchool(school.getSchoolID(), asd.getSchoolName(), asd.getSchoolLogin(), asd.getSchoolPasswdMap(),asd.dateField.getDate());
             if(s == null) { //something went wrong, reshow the dialog
                 s = editSchool(owner, school);
             }
@@ -407,6 +420,8 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
     }
 
     private Vector schoolIdVector = new Vector();
+
+	private JDateChooser dateField;
     
     private int getSchoolId() { 
     	if(schoolNameField instanceof JComboBox)
