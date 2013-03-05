@@ -17,4 +17,8 @@ public interface SelectModuleView extends IsWidget
 	public void render(List<SelectModuleItem> items);
 
 	public HasCellSelectedHandler getList();
+
+	public void render(SelectModuleItem item);
+
+	public List<SelectModuleItem> getItems();
 }

@@ -17,6 +17,10 @@ public class SelectModulePlace extends Place
 		this.token = token;
 	}
 
+	public SelectModulePlace(int id) {
+		this(Integer.toString(id));
+	}
+
 	public String getToken()
 	{
 		return this.token;

@@ -1,6 +1,9 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleCell;
@@ -15,6 +18,7 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
@@ -35,9 +39,39 @@ import com.googlecode.mgwt.ui.client.widget.celllist.HasCellSelectedHandler;
  */
 public class SelectModuleViewImpl implements SelectModuleView
 {
+	class GetScosCallback implements AsyncCallback<List<Map<String,Object>>> {
+
+		private SelectModuleItem parent;
+		
+		public GetScosCallback(SelectModuleItem item) {
+			parent = item;
+		}
+
+		@Override
+		public void onFailure(Throwable caught) {
+			Window.alert(caught.toString());
+		}
+
+		@Override
+		public void onSuccess(List<Map<String,Object>> result) {
+			ArrayList<SelectModuleItem> items = new ArrayList<SelectModuleItem>(result.size());
+			for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
+				Map<String, Object> map = (Map<String, Object>) iterator.next();
+				SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.SCO);
+				item.setParent(parent);
+				items.add(item);
+				SelectModuleItemHolder.insert(item);
+			}
+			parent.setChildren(items);
+			render(items);
+		}
+		
+	};
+
 	private LayoutPanel main;
 	private CellList<SelectModuleItem> list;
 	private HeaderButton backbutton;
+	private List<SelectModuleItem> items;
 
 	public SelectModuleViewImpl()
 	{
@@ -69,46 +103,46 @@ public class SelectModuleViewImpl implements SelectModuleView
 
 		header.setLeftWidget(backbutton);
 
-		RequestBuilder.Method method = RequestBuilder.GET;
-		String url = "activiteiten.xml";
-		RequestBuilder rb = new RequestBuilder(method, url);
-		try
-		{
-			rb.sendRequest(null, new RequestCallback()
-			{
-
-				@Override
-				public void onResponseReceived(Request request, Response response)
-				{
-					String responseText = response.getText();
-					if (!responseText.isEmpty())
-					{
-						Document dom = XMLParser.parse(responseText);
-						Node main = dom.getElementsByTagName("activiteiten").item(0);
-						NodeList children = main.getChildNodes();
-						int j = 0;
-						for (int i = 0; i < children.getLength(); i++)
-						{
-							if (children.item(i).hasChildNodes() == true)
-								SelectModuleItemHolder.insert(j++, children.item(i));
-						}
-					}
-					//list = new CellList<SelectModuleItem>(new SelectModuleCell());
-					list.render(SelectModuleItemHolder.getItems());
-				}
-
-				@Override
-				public void onError(Request request, Throwable exception)
-				{
-					Window.alert("error loading activiteiten.xml");
-				}
-			});
-
-		}
-		catch (RequestException e)
-		{
-			Window.alert("error loading activiteiten.xml");
-		}
+//		RequestBuilder.Method method = RequestBuilder.GET;
+//		String url = "activiteiten.xml";
+//		RequestBuilder rb = new RequestBuilder(method, url);
+//		try
+//		{
+//			rb.sendRequest(null, new RequestCallback()
+//			{
+//
+//				@Override
+//				public void onResponseReceived(Request request, Response response)
+//				{
+//					String responseText = response.getText();
+//					if (!responseText.isEmpty())
+//					{
+//						Document dom = XMLParser.parse(responseText);
+//						Node main = dom.getElementsByTagName("activiteiten").item(0);
+//						NodeList children = main.getChildNodes();
+//						int j = 0;
+//						for (int i = 0; i < children.getLength(); i++)
+//						{
+//							if (children.item(i).hasChildNodes() == true)
+//								SelectModuleItemHolder.insert(j++, children.item(i));
+//						}
+//					}
+//					//list = new CellList<SelectModuleItem>(new SelectModuleCell());
+//					list.render(SelectModuleItemHolder.getItems());
+//				}
+//
+//				@Override
+//				public void onError(Request request, Throwable exception)
+//				{
+//					Window.alert("error loading activiteiten.xml");
+//				}
+//			});
+//
+//		}
+//		catch (RequestException e)
+//		{
+//			Window.alert("error loading activiteiten.xml");
+//		}
 
 		list = new CellList<SelectModuleItem>(new SelectModuleCell());
 		main.add(list);
@@ -127,6 +161,7 @@ public class SelectModuleViewImpl implements SelectModuleView
 			backbutton.setText("Profiel");
 		else
 			backbutton.setText("Login");
+		this.items = items;
 		list.render(items);
 	}
 
@@ -134,6 +169,24 @@ public class SelectModuleViewImpl implements SelectModuleView
 	public HasCellSelectedHandler getList()
 	{
 		return list;
+	}
+
+	@Override
+	public void render(final SelectModuleItem item) {
+		GetScosCallback getScosCallback;
+		if(item.getChildren() != null)
+			render(item.getChildren());
+		else
+		{
+			getScosCallback = new GetScosCallback(item);
+			DWOplayer.clientfactory.getRPCHandler().getScos(item.getID(), getScosCallback);
+		}
+	}
+
+	@Override
+	public List<SelectModuleItem> getItems() {
+		// TODO Auto-generated method stub
+		return items;
 	}
 
 }

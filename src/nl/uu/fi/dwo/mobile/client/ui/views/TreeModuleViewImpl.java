@@ -1,16 +1,27 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.place.shared.Place;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
@@ -30,7 +41,9 @@ public class TreeModuleViewImpl extends Composite implements TreeModuleView, Sel
 	private VerticalPanel main;
 	private SplitLayoutPanel split;
 	private SimplePanel container;
+	private VerticalPanel children;
 	private Tree tree;
+	private HashMap<SelectModuleItem, TreeItem> inverseMap = new HashMap<SelectModuleItem, TreeItem>();
 
 	public TreeModuleViewImpl()
 	{
@@ -54,7 +67,9 @@ public class TreeModuleViewImpl extends Composite implements TreeModuleView, Sel
 		tree.addSelectionHandler(this);
 		split.addWest(tree, 200);
 		container = new SimplePanel();
-		split.add(container);
+		children = new VerticalPanel();
+		split.add(children);
+		children.add(container);
 		main.add(split);
 		initWidget(main);
 	}
@@ -67,6 +82,7 @@ public class TreeModuleViewImpl extends Composite implements TreeModuleView, Sel
 		if (model != currentModel)
 		{
 			tree.removeItems();
+			inverseMap.clear();
 			model = currentModel;
 			initTree();
 		}
@@ -75,35 +91,142 @@ public class TreeModuleViewImpl extends Composite implements TreeModuleView, Sel
 
 	private void initTree()
 	{
-		TreeItem last = null;
 		for (SelectModuleItem item : model)
 		{
 			TreeItem treeItem = new TreeItem(new SafeHtmlBuilder().appendEscaped(item.getName()).toSafeHtml());
 			treeItem.setUserObject(item);
-			Widget x = treeItem.getWidget();
-			if (last == null)
-			{
-				tree.addItem(treeItem);
-				if (tree.getItemCount() > 3)
-					last = treeItem;
-			}
-			else
-			{
-				last.addItem(treeItem);
-				if (last.getChildCount() > 3)
-					last = treeItem;
-			}
+			inverseMap.put(item, treeItem);
+			tree.addItem(treeItem);
+			if(item.getChildren() != null)
+				initTree(item.getChildren(), treeItem);
 		}
+	}
 
+	private void initTree(List<SelectModuleItem> model, TreeItem tree) {
+		for (SelectModuleItem item : model)
+		{
+			TreeItem treeItem = new TreeItem(new SafeHtmlBuilder().appendEscaped(item.getName()).toSafeHtml());
+			treeItem.setUserObject(item);
+			inverseMap.put(item, treeItem);
+			tree.addItem(treeItem);
+			if(item.getChildren() != null)
+				initTree(item.getChildren(), treeItem);
+		}
 	}
 
 	@Override
 	public void selectModule(SelectModuleItem item)
 	{
+		children.clear(); children.add(container);
 		if (item != null)
-			container.setWidget(new Label("contents of " + item.getName()));
+		{
+			String description = item.getDescription();
+			if(description != null)
+			{
+				if(description.startsWith("<html>"))
+					container.setWidget(new HTML(description));
+				else
+				{
+					container.setWidget(new Label(description));
+				}
+			} else
+				
+				container.setWidget(new Label(item.getName()));
+			if(item.getType() == SelectModuleItem.Type.FOLDER)
+			{
+				if(item.getChildren() == null)
+					loadChildren(item);
+				else
+					addChildren(item.getChildren());
+			} else if(item.getType() == SelectModuleItem.Type.MODULE)
+			{	if(item.getChildren() == null)
+					loadScos(item);
+				else
+					addChildren(item.getChildren());
+			}	
+			
+		}
 		else
 			container.setWidget(new Label("EMPTY"));
+	}
+
+	class GetChildrenCourses implements AsyncCallback<List<Map<String,Object>>> {
+
+		private SelectModuleItem parent;
+		
+		public GetChildrenCourses(SelectModuleItem item) {
+			parent = item;
+		}
+
+		@Override
+		public void onFailure(Throwable caught) {
+			Window.alert(caught.toString());
+		}
+
+		@Override
+		public void onSuccess(List<Map<String,Object>> result) {
+			ArrayList<SelectModuleItem> items = new ArrayList<SelectModuleItem>(result.size());
+			for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
+				Map<String, Object> map = (Map<String, Object>) iterator.next();
+				SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.MODULE);
+				item.setParent(parent);
+				SelectModuleItemHolder.insert(item);
+				items.add(item);
+			}
+			parent.setChildren(items);
+			addChildren(items);
+			initTree(items, inverseMap.get(parent));
+		}
+		
+	};
+
+	class GetChildrenScos implements AsyncCallback<List<Map<String,Object>>> {
+
+		private SelectModuleItem parent;
+		
+		public GetChildrenScos(SelectModuleItem item) {
+			parent = item;
+		}
+
+		@Override
+		public void onFailure(Throwable caught) {
+			Window.alert(caught.toString());
+		}
+
+		@Override
+		public void onSuccess(List<Map<String,Object>> result) {
+			ArrayList<SelectModuleItem> items = new ArrayList<SelectModuleItem>(result.size());
+			for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
+				Map<String, Object> map = (Map<String, Object>) iterator.next();
+				SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.SCO);
+				item.setParent(parent);
+				items.add(item);
+				SelectModuleItemHolder.insert(item);
+			}
+			parent.setChildren(items);
+			addChildren(items);
+			initTree(items, inverseMap.get(parent));
+		}
+		
+	};
+	
+	
+	private void loadChildren(final SelectModuleItem item) {
+		GetChildrenCourses getCoursesCallback = new GetChildrenCourses(item);
+		DWOplayer.clientfactory.getRPCHandler().getCourses(item.getID(), getCoursesCallback);
+	}
+	
+	private void loadScos(final SelectModuleItem item) {
+		GetChildrenScos getScosCallback = new GetChildrenScos(item);
+		DWOplayer.clientfactory.getRPCHandler().getScos(item.getID(), getScosCallback);
+	}
+
+	private void addChildren(List<SelectModuleItem> list) {
+		for (Iterator<SelectModuleItem> iterator = list.iterator(); iterator.hasNext();) {
+			SelectModuleItem item = (SelectModuleItem) iterator.next();
+			this.children.add(new Label(item.getName()));
+		}
+		
 	}
 
 	@Override
@@ -117,8 +240,26 @@ public class TreeModuleViewImpl extends Composite implements TreeModuleView, Sel
 	{
 		TreeItem item = event.getSelectedItem();
 		SelectModuleItem o = (SelectModuleItem) item.getUserObject();
-		GWT.log(o.toString());
-		//selectModule(o); // push o on the stack...
-		DWOplayer.clientfactory.getPlaceController().goTo(new TreeModulePlace(o.getID()));
+		onSelection(o);
+	}
+
+	void onSelection(SelectModuleItem o) {
+		Place place;
+		switch(o.getType()) {
+		default:
+		case ROOT:
+			place = new TreeModulePlace("0");
+			break;
+		case SCO:
+			place = new ViewModulePlace(o.getID());
+			break;
+		case FOLDER:
+			place = new TreeModulePlace(o.getID());
+			break;
+		case MODULE:
+			place = new SelectModulePlace(o.getID());
+		}
+
+		DWOplayer.clientfactory.getPlaceController().goTo(place);
 	}
 }

@@ -17,6 +17,10 @@ public class ViewModulePlace extends Place
 		this.token = token;
 	}
 
+	public ViewModulePlace(int id) {
+		this(Integer.toString(id));
+	}
+
 	public String getToken()
 	{
 		return this.token;

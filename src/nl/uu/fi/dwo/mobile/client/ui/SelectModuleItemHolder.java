@@ -15,7 +15,7 @@ import com.google.gwt.xml.client.Node;
 public class SelectModuleItemHolder
 {
 	private static List<SelectModuleItem> list;
-	private static HashMap<Integer, SelectModuleItem> map;
+	private static HashMap<Integer, SelectModuleItem> map, scos;
 
 	private static void init()
 	{
@@ -23,6 +23,7 @@ public class SelectModuleItemHolder
 			return;
 		list = new ArrayList<SelectModuleItem>();
 		map = new HashMap<Integer, SelectModuleItem>();
+		scos = new HashMap<Integer, SelectModuleItem>();
 
 		/*
 				insert(0, "test1", "test.xml");
@@ -49,6 +50,17 @@ public class SelectModuleItemHolder
 		map.put(id, item);
 		list.add(item);
 	}
+	
+	public static void insert(SelectModuleItem item) {
+		init();
+		switch(item.getType()) {
+		case SCO: scos.put(item.getID(), item);
+				break;
+		default:
+			map.put(item.getID(), item);
+			if(item.getParent() == null) list.add(item);
+		}
+	}
 
 	public static List<SelectModuleItem> getItems()
 	{
@@ -60,5 +72,9 @@ public class SelectModuleItemHolder
 	{
 		init();
 		return map.get(id);
+	}
+
+	public static SelectModuleItem getScoByID(int id) {
+		return scos.get(id);
 	}
 }

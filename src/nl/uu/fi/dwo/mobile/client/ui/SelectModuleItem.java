@@ -1,6 +1,9 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
 import java.util.List;
+import java.util.Map;
+
+import nl.uu.fi.dwo.mobile.DWOplayer;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.xml.client.Node;
@@ -13,6 +16,9 @@ import com.google.gwt.xml.client.Node;
  */
 public class SelectModuleItem
 {
+	
+	public static final String PREFIX = DWOplayer.PREFIX;
+	
 	public enum Type
 	{
 		SCO, MODULE, FOLDER, ROOT
@@ -20,10 +26,12 @@ public class SelectModuleItem
 
 	private String name;
 	private String file;
+	private String description;
 	private int id;
 
 	private Type type = Type.ROOT;
 	private List<SelectModuleItem> children;
+	private SelectModuleItem parent;
 
 	public SelectModuleItem(int id, String name, String file)
 	{
@@ -33,6 +41,33 @@ public class SelectModuleItem
 		this.type = Type.SCO;
 	}
 
+	public SelectModuleItem(Map<String,Object> map, Type type)
+	{
+		switch(type) {
+		case MODULE:
+			if(Boolean.TRUE.equals(map.get("withChildren")))
+				this.type = Type.FOLDER;
+			else
+				this.type = Type.MODULE;
+			this.name = map.get("name").toString();
+			this.id   = ((Integer) map.get("courseID")).intValue();
+			this.description = (String) map.get("description");
+			break;
+		case SCO:
+			this.type = type;
+			this.name = map.get("sconame").toString();
+			this.description = (String) map.get("description");
+			this.id = ((Integer) map.get("scoID")).intValue();
+			this.file = PREFIX + this.id;
+		break;
+// more to follow....			
+			
+			
+		}
+	}
+	
+	
+	
 	public SelectModuleItem(int id, Node node)
 	{
 		this.id = id;
@@ -97,5 +132,21 @@ public class SelectModuleItem
 	public void setChildren(List<SelectModuleItem> children)
 	{
 		this.children = children;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public SelectModuleItem getParent() {
+		return parent;
+	}
+
+	public void setParent(SelectModuleItem parent) {
+		this.parent = parent;
 	}
 }

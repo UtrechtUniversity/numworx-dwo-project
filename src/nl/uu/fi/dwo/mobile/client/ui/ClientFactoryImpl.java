@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.ProfileView;
@@ -31,6 +32,7 @@ public class ClientFactoryImpl implements ClientFactory
 	private LoginViewImpl loginView;
 	private ProfileViewImpl profileView;
 	private TreeModuleView treeModuleView;
+	private RPCHandler handler;
 
 	public ClientFactoryImpl()
 	{
@@ -85,6 +87,13 @@ public class ClientFactoryImpl implements ClientFactory
 		if (treeModuleView == null)
 			this.treeModuleView = new TreeModuleViewImpl();
 		return this.treeModuleView;
+	}
+
+	@Override
+	public RPCHandler getRPCHandler() {
+		if(this.handler == null)
+			this.handler = new RPCHandler();
+		return this.handler;
 	}
 
 }

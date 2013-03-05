@@ -34,7 +34,7 @@ public class TreeModuleActivity extends MGWTAbstractActivity
 	public TreeModuleActivity(ClientFactory clientFactory)
 	{
 		this.clientFactory = clientFactory;
-		getItems();
+		//getItems();
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ProfileView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
@@ -30,4 +31,6 @@ public interface ClientFactory
 	ProfileView getProfileView();
 
 	TreeModuleView getTreeModuleView();
+	
+	RPCHandler getRPCHandler();
 }

@@ -33,13 +33,15 @@ import fi.wiskopdr.text.Text_nl;
  */
 public class DWOplayer implements EntryPoint
 {
+	public static final String PREFIX = "http://ws-dev.fisme.science.uu.nl/DWOmAccess/getLaunchData?s=";
+	
 	private Place defaultPlace = new LoginPlace(); // new SelectModulePlace("select");
 	//private Place defaultPlace = new SelectModulePlace("Home");
 	private static HashMap<String, String> resources = new HashMap<String, String>();
 	//public static Locale language = new Locale ("nl", "");
 	public static Text_nl rb = new Text_nl();
 
-	public static Map<Object, Object> profiledata = null;
+	public static Map<String, Object> profiledata = null;
 	public static ClientFactory clientfactory;
 
 	/**
