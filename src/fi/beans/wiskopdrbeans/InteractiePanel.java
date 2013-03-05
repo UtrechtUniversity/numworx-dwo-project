@@ -33,7 +33,7 @@ public interface InteractiePanel
 	
 	public int getScore();
 	
-	public int[] getScoreObjectives();
+	public int[][] getScoreObjectives();
 	
 	public int getScoreMax();
 	
