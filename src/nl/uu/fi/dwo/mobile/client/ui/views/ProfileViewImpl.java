@@ -1,18 +1,10 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
-import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
@@ -27,29 +19,6 @@ import com.googlecode.mgwt.ui.client.widget.WidgetList;
 
 public class ProfileViewImpl implements ProfileView
 {
-	
-	private static final AsyncCallback<List<Map<String,Object>>> GETCOURSES_CALLBACK = new AsyncCallback<List<Map<String,Object>>>() {
-
-		@Override
-		public void onFailure(Throwable caught) {
-			Window.alert(caught.toString());
-		}
-
-		@Override
-		public void onSuccess(List<Map<String,Object>> result) {
-			SelectModuleItemHolder.getItems().clear(); // FIXME hier leegmaken of elders?
-			for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
-				Map<String, Object> map = (Map<String, Object>) iterator.next();
-				SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.MODULE);
-				SelectModuleItemHolder.insert(item);
-			}
-			
-			DWOplayer.clientfactory.getPlaceController().goTo(new TreeModulePlace("0"));
-		}
-		
-	};
-	
-	
 	
 	private LayoutPanel main;
 	private Label school;
@@ -115,7 +84,7 @@ public class ProfileViewImpl implements ProfileView
 			@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				DWOplayer.clientfactory.getRPCHandler().getCourses(DWOplayer.profiledata, GETCOURSES_CALLBACK);
+				DWOplayer.gotoCourses();
 			}
 		});
 

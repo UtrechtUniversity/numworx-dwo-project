@@ -1081,4 +1081,12 @@ public class ViewModuleViewImpl implements ViewModuleView, EntryPoint
 		return mainPanel;
 	}
 
+	public Scorm2004IF getApi() {
+		return api;
+	}
+
+	public void setApi(Scorm2004IF api) {
+		this.api = api;
+	}
+
 }

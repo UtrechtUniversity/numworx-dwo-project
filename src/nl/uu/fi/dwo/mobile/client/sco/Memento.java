@@ -83,7 +83,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		initialize();
 		String value;
 		value = getValue(SUSPEND_DATA);
-		value = TESTVALUE;
+		//value = TESTVALUE;
 		scoreRaw = getValue(SCORE_RAW);
 		try
 		{

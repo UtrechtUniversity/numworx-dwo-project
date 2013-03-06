@@ -77,4 +77,12 @@ public class SelectModuleItemHolder
 	public static SelectModuleItem getScoByID(int id) {
 		return scos.get(id);
 	}
+
+	public static void clear() {
+		init();
+		list.clear();
+		map.clear();
+		scos.clear();
+		
+	}
 }

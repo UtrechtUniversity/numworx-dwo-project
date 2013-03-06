@@ -17,6 +17,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
@@ -78,7 +79,7 @@ public class SelectModuleViewImpl implements SelectModuleView
 		main = new LayoutPanel();
 
 		HeaderPanel header = new HeaderPanel();
-		header.setCenter("Selecteer module");
+		header.setCenter("Selecteer activiteit");
 		main.add(header);
 
 		backbutton = new HeaderButton();
@@ -94,10 +95,11 @@ public class SelectModuleViewImpl implements SelectModuleView
 			@Override
 			public void onTap(TapEvent event)
 			{
-				if (DWOplayer.profiledata != null)
-					DWOplayer.clientfactory.getPlaceController().goTo(new ProfilePlace("Profile"));
-				else
-					DWOplayer.clientfactory.getPlaceController().goTo(new LoginPlace("Login"));
+//				if (DWOplayer.profiledata != null)
+//					DWOplayer.clientfactory.getPlaceController().goTo(new ProfilePlace("Profile"));
+//				else
+//					DWOplayer.clientfactory.getPlaceController().goTo(new LoginPlace("Login"));
+				History.back();
 			}
 		});
 

@@ -1,5 +1,8 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
+import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
+import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
+
 import com.google.gwt.user.client.ui.IsWidget;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 
@@ -14,5 +17,7 @@ public interface ViewModuleView extends IsWidget
 	void setupModule(String name, String file);
 
 	public HeaderButton getBackButton();
+
+	void setApi(Scorm2004IF scorm_guest);
 
 }

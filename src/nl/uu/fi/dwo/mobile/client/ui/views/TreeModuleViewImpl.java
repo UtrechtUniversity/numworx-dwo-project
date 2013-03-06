@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleCell;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
@@ -29,21 +30,27 @@ import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.googlecode.mgwt.ui.client.widget.CellList;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
+import com.googlecode.mgwt.ui.client.widget.LayoutPanel;
+import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedEvent;
+import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedHandler;
 
-public class TreeModuleViewImpl extends Composite implements TreeModuleView, SelectionHandler<TreeItem>
+public class TreeModuleViewImpl extends Composite implements TreeModuleView, SelectionHandler<TreeItem>, CellSelectedHandler
 {
 
 	private HeaderButton backButton;
 	private HeaderPanel headerPanel;
 	private List<SelectModuleItem> model;
-	private VerticalPanel main;
+	private LayoutPanel main;
 	private SplitLayoutPanel split;
 	private SimplePanel container;
 	private VerticalPanel children;
+	private CellList<SelectModuleItem> cells;
 	private Tree tree;
 	private HashMap<SelectModuleItem, TreeItem> inverseMap = new HashMap<SelectModuleItem, TreeItem>();
+	private List<SelectModuleItem> cellItems;
 
 	public TreeModuleViewImpl()
 	{
@@ -54,11 +61,11 @@ public class TreeModuleViewImpl extends Composite implements TreeModuleView, Sel
 		headerPanel.setLeftWidget(backButton);
 		headerPanel.setCenter("Modules");
 
-		main = new VerticalPanel();
+		main = new LayoutPanel();
 		main.add(headerPanel);
 
-		main.setHeight("100%");
-		main.setWidth("100%");
+		//main.setHeight("100%");
+		//main.setWidth("100%");
 
 		split = new SplitLayoutPanel();
 		split.setWidth("100%");
@@ -70,6 +77,9 @@ public class TreeModuleViewImpl extends Composite implements TreeModuleView, Sel
 		children = new VerticalPanel();
 		split.add(children);
 		children.add(container);
+		cells = new CellList<SelectModuleItem>(new SelectModuleCell());
+		cells.addCellSelectedHandler(this);
+		children.add(cells);
 		main.add(split);
 		initWidget(main);
 	}
@@ -117,9 +127,12 @@ public class TreeModuleViewImpl extends Composite implements TreeModuleView, Sel
 	@Override
 	public void selectModule(SelectModuleItem item)
 	{
-		children.clear(); children.add(container);
+//		cells.removeFromParent();
+//		cells = new CellList<SelectModuleItem>(new SelectModuleCell());
+//		children.add(cells);
 		if (item != null)
 		{
+			headerPanel.setCenter(item.getName());
 			String description = item.getDescription();
 			if(description != null)
 			{
@@ -130,8 +143,7 @@ public class TreeModuleViewImpl extends Composite implements TreeModuleView, Sel
 					container.setWidget(new Label(description));
 				}
 			} else
-				
-				container.setWidget(new Label(item.getName()));
+				container.setWidget(new Label(""));
 			if(item.getType() == SelectModuleItem.Type.FOLDER)
 			{
 				if(item.getChildren() == null)
@@ -147,7 +159,10 @@ public class TreeModuleViewImpl extends Composite implements TreeModuleView, Sel
 			
 		}
 		else
-			container.setWidget(new Label("EMPTY"));
+		{
+			container.setWidget(new Label("DWO standaard modules")); // Uit het profiel halen!
+			addChildren(model);
+		}
 	}
 
 	class GetChildrenCourses implements AsyncCallback<List<Map<String,Object>>> {
@@ -222,11 +237,8 @@ public class TreeModuleViewImpl extends Composite implements TreeModuleView, Sel
 	}
 
 	private void addChildren(List<SelectModuleItem> list) {
-		for (Iterator<SelectModuleItem> iterator = list.iterator(); iterator.hasNext();) {
-			SelectModuleItem item = (SelectModuleItem) iterator.next();
-			this.children.add(new Label(item.getName()));
-		}
-		
+		this.cellItems = list;
+		cells.render(list);
 	}
 
 	@Override
@@ -253,13 +265,20 @@ public class TreeModuleViewImpl extends Composite implements TreeModuleView, Sel
 		case SCO:
 			place = new ViewModulePlace(o.getID());
 			break;
+		case MODULE:
+			place = new SelectModulePlace(o.getID());
+			break;
 		case FOLDER:
 			place = new TreeModulePlace(o.getID());
 			break;
-		case MODULE:
-			place = new SelectModulePlace(o.getID());
 		}
 
 		DWOplayer.clientfactory.getPlaceController().goTo(place);
+	}
+
+	@Override
+	public void onCellSelected(CellSelectedEvent event) {
+		int index = event.getIndex();
+		onSelection(cellItems.get(index));
 	}
 }

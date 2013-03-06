@@ -159,9 +159,7 @@ public class LoginViewImpl implements LoginView
 			@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				Place newPlace; // place = new SelectModulePlace("Select Module");
-				newPlace = new TreeModulePlace();
-				DWOplayer.clientfactory.getPlaceController().goTo(newPlace);
+				DWOplayer.gotoCourses();
 			}
 		});
 
