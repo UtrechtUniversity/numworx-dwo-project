@@ -52,7 +52,6 @@ import fi.beans.fidentity.CheckEmail;
 import fi.beans.fidentity.Fidentity;
 import fi.beans.mainframe.MainFrame;
 import fi.beans.scorm.SCORM12APIInterface;
-import fi.beans.tooltip.ToolTipManager;
 import fi.beans.jvmchecker.JVMChecker;
 
 import fi.dwo.VERSION;
@@ -1056,14 +1055,14 @@ private static boolean isValidEmail(String email) {
         		scoViewNr = Integer.parseInt(scoViewNrString);
             }catch(Exception e){}
         }
-        
+//scoViewNr = 58010;       
         String courseViewNrString = getParameter("courseViewNr");
         if(courseViewNrString!=null && (!courseViewNrString.equals(""))) {
         	try	{
         		courseViewNr = Integer.parseInt(courseViewNrString);
             }catch(Exception e){}
         }
-        
+//courseViewNr = 13916;
         boolean umpc = false;
         String umpcString = getParameter("umpc");
         if(umpcString!=null && umpcString.equals("true")) {
@@ -1169,10 +1168,13 @@ private static boolean isValidEmail(String email) {
 		} catch (PersistenceException e) {
 		}
 		GuiConstants.setDwoProfile(dwoProfileID, getParameter(PROFILE_EXTENSION));
-        initWaitLabel(); // wim: GuiConstants nu actief en correct!
+// Hier fixen we nog de iconizer 
+		GuiConstants.fixIconizer(scoViewNr, courseViewNr);
+		
+		initWaitLabel(); // wim: GuiConstants nu actief en correct!
         
 		
-        /* ToolTipManager ttm = */ new ToolTipManager(this);
+        /* ToolTipManager ttm =  new ToolTipManager(this); Wim: wordt niet meer gebruikt, alleen swing */
         GuiCreator gc = new GuiCreator(this);
         try {
 			PersistenceFacade.instance().reConnect();

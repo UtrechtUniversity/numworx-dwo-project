@@ -66,6 +66,7 @@ import fi.dwo.client.gui.SchoolPanel.ImageRenderer;
 import fi.dwo.client.gui.SchoolPanel.SchoolModel;
 import fi.dwo.client.gui.action.DeleteAction;
 import fi.dwo.client.gui.action.ImportModuleAction;
+import fi.dwo.client.gui.action.ShareCourseAction;
 import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
 
@@ -484,9 +485,8 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
         header.add(new Box.Filler(new Dimension(4,0), new Dimension(4,0), new Dimension(Short.MAX_VALUE,0)));
         
-        
-        shareCourseButton = new JButton(TextMapper.getText(TextMapper.GUIC_COURSE_SHARE));
-        shareCourseButton.addActionListener(this);
+        shareAction = new ShareCourseAction(this);
+        shareCourseButton = new JButton(shareAction);
         header.add(shareCourseButton);
         
         if(DwoHelper.isApplication()){
@@ -639,19 +639,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 //				// TODO Auto-generated catch block
 //				e1.printStackTrace();
 //			}
-        } else if(src == shareCourseButton) {
-        	
-    		ExportImportDialog dialog;
-			try {
-				dialog = new ExportImportDialog(DwoHelper.getFrameForComponent(this), GuiCreator.instance().getUser(), GuiCreator.instance().dwo.getDwoProfile());
-				dialog.setVisible(true);
-			} catch (PersistenceException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}		
-    		
-
-        }
+        } 
             
     }
 
@@ -797,6 +785,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
 
 	private ImportModuleAction importAction;
+	private ShareCourseAction  shareAction;
 	private void noUpdate() {
 		ok = false;
 		center.updateMap(map);
@@ -838,6 +827,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	public void setMap(CourseMap map) {
 		this.map = map;
 		if(importAction!=null)importAction.setCourse(map);
+		if(shareAction != null) shareAction.setMap(map);
 	}
     
 }

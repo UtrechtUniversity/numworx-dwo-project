@@ -31,6 +31,7 @@ import javax.swing.event.ChangeEvent;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.DwoHelper;
+import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.Guest;
 import fi.dwo.client.domain.ResultsModuleIF;
 import fi.dwo.client.domain.School;
@@ -189,16 +190,19 @@ if(iconizer)
 		GuiCreator.instance().mainPanel = mp; // FIXME IDEM....
 		
 		CenterSubPanel csp = GuiCreator.instance().getCourseChoisePanel();
-        if(csp instanceof ScoPanel ) {
-        	centermainSub.remove(spe);
-        	mainPanel.setGuiImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_SCO));
-        	loadTotal(csp);
-        }
-        else if(csp instanceof CoursePanel ) {
-        	menu.hideMainButton();
-        	mainPanel.setGuiImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE));
-        	loadCenter(csp);
-        }
+		
+		if(GuiConstants.DEEP_LINK)
+			loadTotal(csp);
+//		else
+//        if(csp instanceof ScoPanel ) {
+//        	//centermainSub.remove(spe);
+//        	loadTotal(csp);
+//        }
+//        else if(csp instanceof CoursePanel ) {
+//        	menu.hideMainButton();
+//        	//loadCenter(csp);
+//        	loadTotal(csp);
+//        }
         else loadCenter(csp);
 
     }
@@ -206,7 +210,7 @@ if(iconizer)
     static boolean isIconizer() {
     	User u = GuiCreator.instance().getUser();
 // in productie 'false'
-    	return (false||GuiConstants.GUI_ICONIZED) && u.hasIconizer();
+    	return (GuiConstants.GUI_ICONIZED) && u.hasIconizer();
     }
 
 	/**
@@ -508,7 +512,12 @@ invalidate();
 	            	cp = GuiCreator.instance().getCourseChoisePanel(course);
 	            else
 	            	cp = GuiCreator.instance().getCoursePanel(course);
-	            loadCenter(cp);				
+	            DwoIF dwo = GuiCreator.instance().dwo;
+// Deeplink modus
+	            if(GuiConstants.DEEP_LINK)
+	            	loadTotal(cp);
+	            else
+	            	loadCenter(cp);				
 			} else if(object instanceof Sco) {
 				Sco sco = (Sco) object;
 				CenterSubPanel csp;

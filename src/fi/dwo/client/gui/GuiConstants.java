@@ -119,6 +119,7 @@ public abstract class GuiConstants {
 	private static final String INCLUDE = "include";
 	public static final String SEARCH_IMAGE = "resources/vergrootglas.gif";
 	public static String DEPLOY_VARIANT = "";
+	public static boolean DEEP_LINK;
 	
 	
  
@@ -150,8 +151,8 @@ public abstract class GuiConstants {
 	    GUI_IMAGE_SCO = getString(prop, "gui_image_sco");
 	    GUI_IMAGE_COURSE = getString(prop, "gui_image_course");
 	    
-	    GUI_ICONIZED = getBoolean(prop, "gui_iconized") ||true;
-	    User.DEFAULT_ICONIZER = getBoolean(prop, "default_iconized") ||true&& GUI_ICONIZED;
+	    GUI_ICONIZED = getBoolean(prop, "gui_iconized");
+	    User.DEFAULT_ICONIZER = getBoolean(prop, "default_iconized") && GUI_ICONIZED;
 	    GUI_BGIMAGE_ICON = getString(prop, "gui_bgimage_icon");
  	    GUI_BGIMAGE_MENU = getString(prop, "gui_bgimage_menu");
 	    GUI_BGIMAGE_SCO = getString(prop, "gui_bgimage_sco");
@@ -171,42 +172,6 @@ public abstract class GuiConstants {
 	    if((profile==57 || profile==65 || profile==64)) DEPLOY_VARIANT =  "GR";
 	    
 	    dwoProfile = profile;	    
-// profile == 3,1, done.
-		/*if(profile==49)
-		{	MAIN_BACKGROUND = new Color(255,255,255);
-		   	CELL_BACKGROUND = new Color(255,255,255);
-			FI_LOGO_LOCATION = "resources/fi.gif";
-			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
-			HEADER_COLOR = new Color(211,222,250);
-			GUI_IMAGE_BG = true;
-			GUI_IMAGE_WELCOME = "resources/UU-rekenweb-welkom.png";
-			GUI_IMAGE_SCO = "resources/UU-rekenweb-sco.png";
-			GUI_IMAGE_COURSE = "resources/UU-rekenweb-course.png";
-		} else */
-		/*if(profile==45)
-		{	MAIN_BACKGROUND = new Color(255,255,255);
-		   	CELL_BACKGROUND = new Color(255,255,255);
-			FI_LOGO_LOCATION = "resources/fi.gif";
-			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
-			HEADER_COLOR = new Color(211,222,250);
-			GUI_IMAGE_BG = true;
-			GUI_IMAGE_WELCOME = "resources/UU-brx-welkom.png";
-			GUI_IMAGE_SCO = "resources/UU-brx-sco.png";
-			GUI_IMAGE_COURSE = "resources/UU-brx-course.png";
-		} else */
-// done 1, 23, 34, 33, 44, 43, 46, 47, 52, 54
-			
-		/*if(profile==59)
-		{	MAIN_BACKGROUND = new Color(255,255,255);
-		   	CELL_BACKGROUND = new Color(255,255,255);
-			FI_LOGO_LOCATION = "resources/fi.gif";
-			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
-			HEADER_COLOR = new Color(0,0,0);
-			GUI_IMAGE_BG = true;
-			GUI_IMAGE_WELCOME = "resources/UU-jcu-welkom.png";
-			GUI_IMAGE_SCO = "resources/UU-jcu-sco.png";
-			GUI_IMAGE_COURSE = "resources/UU-jcu-course.png";
-		} else	*/
 		if(profile==5 || profile==56)
 		{	MAIN_BACKGROUND = new Color(255,255,255);
 		   	CELL_BACKGROUND = new Color(255,255,255);
@@ -275,17 +240,6 @@ public abstract class GuiConstants {
 			GUI_IMAGE_SCO = "resources/EPN-sco.png";
 			GUI_IMAGE_COURSE = "resources/EPN-course.png";
 		} else
-		/*if(profile==57)
-		{	MAIN_BACKGROUND = new Color(255,255,255);
-		   	CELL_BACKGROUND = new Color(255,255,255);
-			FI_LOGO_LOCATION = "resources/fi.gif";
-			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
-			HEADER_COLOR = new Color(0,0,0);
-			GUI_IMAGE_BG = true;
-			GUI_IMAGE_WELCOME = "resources/EPN-welkom.jpg";
-			GUI_IMAGE_SCO = "resources/GR-sco.png";
-			GUI_IMAGE_COURSE = "resources/EPN-course.png";
-		} else*/
 		if(profile==51 || profile==27)
 		{	MAIN_BACKGROUND = new Color(255,255,255);
 	    	CELL_BACKGROUND = new Color(255,255,255);
@@ -333,22 +287,8 @@ public abstract class GuiConstants {
 				GUI_IMAGE_WELCOME = "resources/UU-bvsd-welkom.png";
 				GUI_IMAGE_SCO = "resources/UU-bvsd-sco.png";
 				GUI_IMAGE_COURSE = "resources/UU-bvsd-course.png";
-			} else
-			
-				
-//		if(profile==4)
-//		{	MAIN_BACKGROUND = new Color(221, 238, 255);
-//    		CELL_BACKGROUND = new Color(221, 238, 255);
-//			FI_LOGO_LOCATION = "resources/fi.gif";
-//			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
-//		} else 
+			} else							
 		{
-// de default als profile != 3
-//			MAIN_BACKGROUND = new Color(221, 238, 255);
-//    		CELL_BACKGROUND = new Color(221, 238, 255);
-//			FI_LOGO_LOCATION = "resources/fi.gif";
-//			HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
-//			GUI_IMAGE_BG = false;
 		}
 	}
 
@@ -436,6 +376,23 @@ public abstract class GuiConstants {
 		case 'I': case 'i': style |= Font.ITALIC; break;
 		} 
 		return new Font(fontname, style, size);
+	}
+
+	/**
+	 * Als we te maken hebben met een deeplink, staat de iconizer uit.
+	 * XXX nog meer?
+	 * @param scoViewNr
+	 * @param courseViewNr
+	 */
+	public static void fixIconizer(int scoViewNr,
+			int courseViewNr) {
+		if(scoViewNr != 0 || courseViewNr != 0)
+		{
+			GUI_ICONIZED = false;
+			User.DEFAULT_ICONIZER = false;
+			DEEP_LINK = true;
+		}
+		
 	}
 	
 }

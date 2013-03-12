@@ -162,7 +162,11 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 			School s = user.getSchool();
 			HashSet set = new HashSet();
 			try {
-				Course[] courses = (Course[]) MapperCreator.instance(Course.class).get(s);
+				Course[] courses;
+				if(map == null)
+					courses = (Course[]) MapperCreator.instance(Course.class).get(s);
+				else 
+					courses = (Course[]) MapperCreator.instance(Course.class).get(map);
 				for (int i = 0; i < courses.length; i++) {
 					Course course = courses[i];
 					set.add(course.getName());
@@ -182,7 +186,11 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 					String description = c.getDescription();
 					name = CourseManagementPanel.replaceDuplicate(name, set);
 					try {
-						newc = PersistenceFacade.instance().addCourse(s, name, description, profile);
+						newc = PersistenceFacade.instance().addCourse(s, name, description, profile, map, false);
+						if(map != null)
+							map.addChild(newc);
+						else
+							ModuleTreePanel.SCHOOL_MAP.addChild(newc);
 						newc.setScoList(new Sco[0]);
 					} catch (CourseException e) {
 						e.printStackTrace();
@@ -602,6 +610,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 	private JPanel previewPanel;
 	private Component coursePanel;
 	private ExportModuleModel exportModuleModel;
+	private Course map;
 
 	/**
 	 * @throws HeadlessException
@@ -1030,6 +1039,10 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 	}
 
 	public void showClassList() {
+	}
+
+	public void setMap(CourseMap map) {
+		this.map = map instanceof Course ? (Course)map : null;
 	}
 
 }
