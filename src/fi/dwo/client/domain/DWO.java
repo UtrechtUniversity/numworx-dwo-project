@@ -701,7 +701,7 @@ private static boolean isValidEmail(String email) {
         currentCourse = null;
         courseList = null;
         resultsModule = null;
-        MapperCreator.instance(Applet.class).removeAllObjects();
+        // MapperCreator.instance(Applet.class).removeAllObjects();
         MapperCreator.instance(Sco.class).removeAllObjects();
         MapperCreator.instance(Course.class).removeAllObjects();
     }
