@@ -34,6 +34,8 @@ import fi.dwo.client.system.TextMapper;
 
 public class Save2004Action extends GuiAction {
 
+	private static final String WWWURL = "http://www.fisme.science.uu.nl";
+
 	public void actionPerformed(ActionEvent e) {
 		if(sco0 == null)
 		{
@@ -93,7 +95,7 @@ public class Save2004Action extends GuiAction {
 	    {   String outFilename = zipName + ".zip";
 	        ZipOutputStream out = new ZipOutputStream(new FileOutputStream(outFilename));
 	        
-	        String HTML_SOURCE = "http://www.fi.uu.nl/dwo/scorm/course/cp/";
+	        String HTML_SOURCE = WWWURL + "/dwo/scorm/course/cp/";
 	        String[] scormFileNames = {
 	        		"adlcp_rootv1p2.xsd",
 	        		"ims_xml.xsd",
@@ -175,7 +177,7 @@ public class Save2004Action extends GuiAction {
 		pw.println("</general>");	
 		// TODO auteur/creator
 		// TODO datum/version
-		// TODEcopyright
+		// TODO copyright
 		pw.println("</lom>");
 	}
 	public void printManifest(PrintWriter out)
@@ -184,7 +186,7 @@ public class Save2004Action extends GuiAction {
 		String[] arguments = {scoName};
 		
 		try {	
-			URL htmlSource = new URL("http://www.fi.uu.nl/dwo/scorm/course/cp/imsmanifest.txt");
+			URL htmlSource = new URL(WWWURL + "/dwo/scorm/course/cp/imsmanifest.txt");
 	        URLConnection connection = htmlSource.openConnection();
 	        BufferedReader in = null;
 	        try {
@@ -237,9 +239,9 @@ public class Save2004Action extends GuiAction {
 		String[] arguments = {scoName, className, jarName, language, bgcolor, launchDataString, licentie};
 		
 		try {	
-			URL htmlSource = new URL("http://www.fi.uu.nl/dwo/scorm/course/cp/sco/Sco.htm");
-			if(sco.getCourse().getDwoProfile()==1)htmlSource = new URL("http://www.fi.uu.nl/dwo/scorm/course/cp/sco/ScoN.htm");
-			if(sco.getCourse().getDwoProfile()==22)htmlSource = new URL("http://www.fi.uu.nl/dwo/scorm/course/cp/sco/ScoRev.htm");
+			URL htmlSource = new URL(WWWURL + "/dwo/scorm/course/cp/sco/Sco.htm");
+			if(sco.getCourse().getDwoProfile()==1)htmlSource = new URL(WWWURL + "/dwo/scorm/course/cp/sco/ScoN.htm");
+			if(sco.getCourse().getDwoProfile()==22)htmlSource = new URL(WWWURL + "/dwo/scorm/course/cp/sco/ScoRev.htm");
 	        URLConnection connection = htmlSource.openConnection();
 	        BufferedReader in = null;
 	        try {
@@ -285,7 +287,7 @@ public class Save2004Action extends GuiAction {
 		out.println("<APPLET");
 		out.println("	id		= \"wiskopdr\"");
 		out.println("	name	= \"wiskopdr\"");
-		out.println("	codebase = \"http://www.fi.uu.nl/javaclasses/\"");
+		out.println("	codebase = \WWWURL + "/javaclasses/\"");
 		out.println("	code	= \"" + className + "\"");
 		out.println("	archive	= \"jars/" + jarName + ".jar\"");
 		out.println("	width	= \"770\"");
@@ -333,7 +335,7 @@ public class Save2004Action extends GuiAction {
 		
 // copies.....
 			// TODO meer xsd's?
-	        String HTML_SOURCE = "http://www.fi.uu.nl/dwo/scorm/course/cp/";
+	        String HTML_SOURCE = WWWURL + "/dwo/scorm/course/cp/";
 	        String[] scormFileNames = {
 	        		"adlcp_v1p3.xsd",
 	        		"imscp_v1p1.xsd",

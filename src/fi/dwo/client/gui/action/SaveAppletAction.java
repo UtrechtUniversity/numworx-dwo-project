@@ -99,10 +99,10 @@ public class SaveAppletAction extends GuiAction {
 		String[] arguments = {scoName, className, jarName, language, bgcolor, launchDataString};
 		
 		try {	
-			URL htmlSource = new URL("http://webcluster.fi.uu.nl/dwo/scorm/applet/applet.htm");
-			if(sco.getCourse().getDwoProfile()==13 || sco.getCourse().getDwoProfile()==57 || sco.getCourse().getDwoProfile()==65)htmlSource = new URL("http://webcluster.fi.uu.nl/dwo/scorm/applet/appletGR.htm");
-			if(sco.getCourse().getDwoProfile()==27 || sco.getCourse().getDwoProfile()==51)htmlSource = new URL("http://webcluster.fi.uu.nl/dwo/scorm/applet/appletMW.htm");
-			if(sco.getCourse().getDwoProfile()==46)htmlSource = new URL("http://webcluster.fi.uu.nl/dwo/scorm/applet/appletNWK.htm");
+			URL htmlSource = new URL("http://www.fisme.science.uu.nl/dwo/scorm/applet/applet.htm");
+			if(sco.getCourse().getDwoProfile()==13 || sco.getCourse().getDwoProfile()==57 || sco.getCourse().getDwoProfile()==65)htmlSource = new URL("http://wwww.fisme.science.uu.nl/dwo/scorm/applet/appletGR.htm");
+			if(sco.getCourse().getDwoProfile()==27 || sco.getCourse().getDwoProfile()==51)htmlSource = new URL("http://www.fisme.science.uu.nl/dwo/scorm/applet/appletMW.htm");
+			if(sco.getCourse().getDwoProfile()==46)htmlSource = new URL("http://www.fisme.science.uu.nl/dwo/scorm/applet/appletNWK.htm");
 
 			URLConnection connection = htmlSource.openConnection();
 	        BufferedReader in = null;
