@@ -82,6 +82,7 @@
          - - - - - - - - - - - - - - - - - -->
     <target name="keystore">
             <property name="keystore" value="output/keys.keystore"/>
+	        <property name="pboon.keystore" value="pboon.keystore"/>
     </target>
 
 	<target name='make.keys' depends='keystore' description="Genereer certificaat en sleutel">
@@ -114,7 +115,20 @@
 			<fileset dir='${jar}' includes='*.jar' />
 		</signjar>
 	</target>
-	
+<!-- storepass minstens 6 tekens --> 
+	<target name="sign.pboon.jars" depends='keystore' description="Onderteken jars - productie" >
+		<signjar
+			alias='pboon'
+			verbose='true'
+			lazy='true'
+			storepass='passww'
+			keypass='passw'
+			keystore='${pboon.keystore}'
+		>
+			<fileset dir='${jar}' includes='*.jar' />
+		</signjar>
+	</target>
+ 	
 	<target name='jnlp' depends='init' description='Genereeer JNLP file' >
 		<taskdef 
 			classpath="${javaclasses}/jars/_sources/orangevolt-ant-tasks-1.3.5.jar"
