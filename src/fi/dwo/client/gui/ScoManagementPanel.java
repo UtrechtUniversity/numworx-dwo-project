@@ -142,13 +142,13 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         	top.add(publishButton);
         	top.add(Box.createHorizontalStrut(10));
         }*/
-        if(DwoHelper.isApplication() ){
+        if(DwoHelper.isSecure() ){
         exportCourseButton = new JButton(new BackupModuleAction(course));
         exportCourseButton.setSize(exportCourseButton.getPreferredSize());
         //exportCourseButton.addActionListener(this);
         exportCourseButton.setVisible(false);
         top.add(exportCourseButton);
-        if(DwoHelper.isApplication() )// && !CenterPanel.isIconizer()) // TODO verplaatsen naar menu van tree
+        if(DwoHelper.isSecure() )// && !CenterPanel.isIconizer()) // TODO verplaatsen naar menu van tree
         	exportCourseButton.setVisible(true);
         
         top.add(Box.createHorizontalStrut(10));
@@ -175,7 +175,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 		panel.add(cpanel, BorderLayout.SOUTH);
         add(panel, BorderLayout.CENTER);
         //if(false && DwoHelper.isApplication())
-        if(DwoHelper.isApplication())
+        if(DwoHelper.isSecure())
         {	importScosButton.setVisible(true );// && !CenterPanel.isIconizer()); // TODO verplaatsen naar Tree Menu
             courseLogoButton.addActionListener(this);
             courseLogoButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -228,7 +228,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         
         
         addScoTable();
-        if(DwoHelper.isApplication())
+        if(DwoHelper.isSecure())
         {
         	final Frame topFrame = DwoHelper.getFrameForComponent(null);		
         	saveDial = new FileDialog(topFrame, exportCourseButton.getToolTipText(), FileDialog.SAVE);

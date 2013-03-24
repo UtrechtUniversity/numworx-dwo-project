@@ -37,7 +37,7 @@ public class BackupModuleAction extends GuiAction {
 	
 	public BackupModuleAction() {
 		super("Backup module");
-		setEnabled(DwoHelper.isApplication());
+		setEnabled(DwoHelper.isSecure());
 		if( isEnabled() ) dir = System.getProperty("user.dir", ".");
 		tip = "Backup module";
 	}

@@ -244,7 +244,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         closeButton.addActionListener(this);
         buttonPanel.add(closeButton);
 // school 190 264 385 heeft scorm export recht     
-        if(DwoHelper.isApplication())
+        if(DwoHelper.isSecure())
         {	if( DwoHelper.isScormExportLoggedIn() ) 
         	{   importScormButton = new JButton(new ImportScorm(sco));
 		        buttonPanel.add(importScormButton);

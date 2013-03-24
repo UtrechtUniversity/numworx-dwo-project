@@ -39,7 +39,7 @@ public class ImportModuleAction extends GuiAction {
 	private FileDialog openDial;
 	private String dir;
 	{
-		if (DwoHelper.isApplication())
+		if (DwoHelper.isSecure())
 			dir = System.getProperty("user.dir",".");
 		else
 			dir = ".";
@@ -48,7 +48,7 @@ public class ImportModuleAction extends GuiAction {
 	public ImportModuleAction() {
 		super("Import");
 		putValue(LONG_DESCRIPTION, TextMapper.getText(TextMapper.GUIA_INSERT_SCOS));
-		setEnabled(DwoHelper.isApplication());  // disable in geval van applet.
+		setEnabled(DwoHelper.isSecure());  // disable in geval van applet.
 	}
 
 	public ImportModuleAction(Course course) {

@@ -489,7 +489,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         shareCourseButton = new JButton(shareAction);
         header.add(shareCourseButton);
         
-        if(DwoHelper.isApplication()){
+        if(DwoHelper.isSecure()){
         	header.add(Box.createHorizontalStrut(10));
         
         
@@ -500,7 +500,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	        //uploadCourseButton.setLocation(200+addCourseButton.getWidth()+10, 10);
 	        uploadCourseButton.setVisible(false);
 	        header.add(uploadCourseButton);
-	        if(DwoHelper.isApplication()) 
+	        if(DwoHelper.isSecure()) 
 	        	uploadCourseButton.setVisible(true);
         }
         
@@ -515,7 +515,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         //this.add(noCoursesLabel);
         buildJTable();
 
-        if(DwoHelper.isApplication()) {
+        if(DwoHelper.isSecure()) {
         	final Frame topFrame = DwoHelper.getFrameForComponent(null);
         	openDial = new FileDialog(topFrame, uploadCourseButton.getLabel(), FileDialog.LOAD);
         	openDial.setDirectory(System.getProperty("user.dir","."));

@@ -20,8 +20,8 @@
 	<dirname property="ant.dir" file="${ant.file}"  />
 	<property file="${ant.dir}/build.properties"/>
 
-	<property name='dosdrive' value='N:' />
-	<property name='java.resources' value='/home/java/resources' />
+	<property name='dosdrive' value='C:' />
+	<property name='java.resources' value='/java/resources' />
 	<property name='common.build' value='${java.resources}/ant/common-build.xml' />
 	<condition property='dos' value='dos' >
 	   	<os family='dos' />
@@ -115,20 +115,74 @@
 			<fileset dir='${jar}' includes='*.jar' />
 		</signjar>
 	</target>
+	
+	<macrodef name="repack-and-sign">
+	    <sequential>
+	            <echo message="Repacking libs in @{rootdir}"/>
+	        <apply executable="pack200" parallel="false">
+	            <arg value="--repack"/>
+	            <fileset dir="${jar}" includes="*.jar" />
+	        </apply>
+
+	        <echo message="Signing libs in @{rootdir}"/>
+	    	<signjar
+	    		alias='pboon'
+	    		verbose='true'
+	    		lazy='true'
+	    		storepass='passww'
+	    		keypass='passw'
+	    		keystore='${pboon.keystore}'
+	    	>
+	    		<fileset dir='${jar}' includes='*.jar' />
+	    	</signjar>
+	    	
+	    	<apply executable="pack200" parallel="false" >
+	    	        
+	    	        <targetfile/>
+	    	        <srcfile/>
+	    	        <fileset dir="${jar}" includes="*.jar" />
+	    	    <mapper type="glob" from="*" to="*.pack.gz" />
+	    	    </apply>
+	    		
+	     </sequential>
+	</macrodef>
+	
 <!-- storepass minstens 6 tekens --> 
 	<target name="sign.pboon.jars" depends='keystore' description="Onderteken jars - productie" >
-		<signjar
-			alias='pboon'
-			verbose='true'
-			lazy='true'
-			storepass='passww'
-			keypass='passw'
-			keystore='${pboon.keystore}'
-		>
-			<fileset dir='${jar}' includes='*.jar' />
-		</signjar>
+		<sequential>
+			            <echo message="Repacking libs in @{rootdir}"/>
+			        <apply executable="pack200" parallel="false">
+			            <arg value="--repack"/>
+			            <fileset dir="${jar}" includes="*.jar" />
+			        </apply>
+
+			        <echo message="Signing libs in @{rootdir}"/>
+			    	<signjar
+			    		alias='pboon'
+			    		verbose='true'
+			    		lazy='false'
+			    		storepass='passww'
+			    		keypass='passw'
+			    		keystore='${pboon.keystore}'
+			    	>
+			    		<fileset dir='${jar}' includes='*.jar' />
+			    	</signjar>
+			    	
+			     </sequential>
 	</target>
- 	
+	
+	<target name="pack200">
+	<apply executable="pack200" parallel="false" dest="${jar}/pack">
+	        <arg value="--modification-time=latest"/>
+	        <arg value="--deflate-hint=true"/>
+	        <arg value="--segment-limit=-1"/>
+	        <targetfile/>
+	        <srcfile/>
+	        <fileset dir="${jar}" includes="*.jar" />
+	    <mapper type="glob" from="*" to="*.pack.gz" />
+	    </apply>
+	</target>
+	
 	<target name='jnlp' depends='init' description='Genereeer JNLP file' >
 		<taskdef 
 			classpath="${javaclasses}/jars/_sources/orangevolt-ant-tasks-1.3.5.jar"
