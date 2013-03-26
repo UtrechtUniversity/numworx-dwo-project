@@ -41,10 +41,13 @@ import javax.swing.WindowConstants;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
+import fi.beans.base64code.StringCodeObject;
 import fi.beans.dwomaccess.XmlEncoder;
 import fi.beans.scorm.SCORM12APIInterface;
 import fi.beans.xmlrpc.Servlet;
+import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.Sco;
+import fi.dwo.client.persistence.CourseMapper;
 import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.DbAccessIF;
 import fi.dwo.client.persistence.ScoMapper;
@@ -142,6 +145,16 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		ScoMapper mapper = new ScoMapper();
 		Sco sco = (Sco) mapper.get(scoid);
 		return sco.getLaunchdata();
+	}
+	
+	@SuppressWarnings("unchecked")
+	private Hashtable getCourseDescription_int( int courseid) throws IOException, XmlRpcException, SQLException
+	{
+		CourseMapper mapper = new CourseMapper();
+		Course course = (Course) mapper.get(courseid);
+		String description = course.getDescription();
+		Hashtable map = (Hashtable) StringCodeObject.decodeStringToObject(description);
+		return map;
 	}
 
 	
@@ -444,12 +457,43 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 			doImage(req, resp);
 		else if(command.endsWith("getLaunchData"))
 			doLaunchData(req,resp);
+		else if(command.endsWith("getCourseDescription"))
+			doCourseDescription(req,resp);
+	}
+
+	void doCourseDescription(HttpServletRequest req,
+			HttpServletResponse resp) throws IOException {
+		String c = req.getParameter("c");
+		OutputStream out = getOutputStream(req, resp);
+		try {
+			int course = Integer.parseInt(c);
+			getCourseDescription(course, out);
+
+		} catch (Exception e) {
+			log("doLaunchData", e);
+			resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		
+		
 	}
 
 	private void doLaunchData(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		String s = req.getParameter("s");
-		String encoding = req.getHeader("Accept-Encoding");
-		
+		OutputStream out = getOutputStream(req, resp);
+
+		try {
+			int sco = Integer.parseInt(s);
+			getLaunchData(sco, out);
+
+		} catch (Exception e) {
+			log("doLaunchData", e);
+			resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	private OutputStream getOutputStream(HttpServletRequest req,
+			HttpServletResponse resp) throws IOException {
+		String encoding = req.getHeader("Accept-Encoding");		
 		resp.setContentType("text/xml");
 		resp.setHeader("Access-Control-Allow-Origin" ,"*");
 		resp.setCharacterEncoding("UTF-8");
@@ -464,15 +508,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		} else 
 // no compression
 			out = resp.getOutputStream();
-
-		try {
-			int sco = Integer.parseInt(s);
-			getLaunchData(sco, out);
-
-		} catch (Exception e) {
-			log("doLaunchData", e);
-			resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
+		return out;
 	}
 
 	private void getLaunchData(int sco, OutputStream out) throws IOException {
@@ -488,6 +524,21 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		out.close();
 	}
 
+	void getCourseDescription(int course, OutputStream out) throws IOException {
+		Hashtable<?,?> map;
+		try {
+			map = getCourseDescription_int(course);
+			if(map != null)
+				XmlEncoder.encode(map, out);
+		} catch (XmlRpcException e) {
+			throw new IOException(e.getMessage());
+		} catch (SQLException e) {
+			throw new IOException(e.getMessage());
+		}
+		out.close();
+	}
+	
+	
 	// AppletContext Dummies
 	
 	public Applet getApplet(String name) {

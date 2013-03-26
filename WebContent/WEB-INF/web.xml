@@ -28,6 +28,10 @@
 	<url-pattern>/getLaunchData</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
+	<servlet-name>image.png</servlet-name>
+	<url-pattern>/getCourseDescription</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
   	<servlet-name>dbaccess</servlet-name>
   	<url-pattern>/dbaccess</url-pattern>
   </servlet-mapping>
