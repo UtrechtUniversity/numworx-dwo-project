@@ -1,6 +1,8 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
 
+import java.util.Map;
+
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
@@ -25,6 +27,7 @@ public class ProfileViewImpl implements ProfileView
 	private Label username;
 	private Label name;
 	private Label userid;
+	private Label schoolKlas;
 
 	
 	
@@ -73,6 +76,9 @@ public class ProfileViewImpl implements ProfileView
 		school = new Label("School");
 		school.getElement().addClassName("listitem");
 		list.add(school);
+		schoolKlas = new Label("Klas");
+		schoolKlas.getElement().addClassName("listitem");
+		list.add(schoolKlas);
 
 		Button submitbutton = new Button();
 		submitbutton.setText("Selecteer module");
@@ -100,15 +106,17 @@ public class ProfileViewImpl implements ProfileView
 	@Override
 	public void setupModule()
 	{
-		String user_name = DWOplayer.profiledata.get("firstname").toString();
-		if (DWOplayer.profiledata.get("middlename").toString().equals("") == false)
-			user_name += " " + DWOplayer.profiledata.get("middlename").toString();
-		user_name += " " + DWOplayer.profiledata.get("lastname").toString();
+		final Map<String, Object> profiledata = DWOplayer.profiledata;
+		String user_name = profiledata.get("firstname").toString();
+		if (profiledata.get("middlename").toString().equals("") == false)
+			user_name += " " + profiledata.get("middlename").toString();
+		user_name += " " + profiledata.get("lastname").toString();
 
 		name.setText("Naam: " + user_name);
-		username.setText("Gebruikersnaam: " + DWOplayer.profiledata.get("username").toString());
-		userid.setText("GebruikersID: " + DWOplayer.profiledata.get("userID").toString());
-		school.setText("School: " + DWOplayer.profiledata.get("schoolName").toString());
+		username.setText("Gebruikersnaam: " + profiledata.get("username"));
+		userid.setText("GebruikersID: " + profiledata.get("userID"));
+		school.setText("School: " + profiledata.get("schoolName"));
+		schoolKlas.setText("Klas: " + profiledata.get("class"));
 	}
 
 }

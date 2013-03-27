@@ -81,6 +81,7 @@ public class ViewModuleViewImpl implements ViewModuleView, EntryPoint
 {
 	private static final String RANDOM_VAR_WAARDEN = "RandomVarWaarden";
 	private static final String RANDOM_VAR_NAMEN = "RandomVarNamen";
+	private boolean standalone = false;
 
 	final class FocusOnTouch implements MouseUpHandler
 	{
@@ -964,7 +965,7 @@ public class ViewModuleViewImpl implements ViewModuleView, EntryPoint
 
 		hp.setLeftWidget(hb);
 
-		fp.add(hp);
+		if(!standalone) fp.add(hp);
 
 		contentScrollPanel = new ScrollPanel();
 		contentScrollPanel.setWidth("100%");
@@ -996,6 +997,7 @@ public class ViewModuleViewImpl implements ViewModuleView, EntryPoint
 	@Override
 	public void onModuleLoad()
 	{
+		standalone = true;
 		initialize();
 		String url = "index.xml";
 		String link = "index.xmr"; // reference.

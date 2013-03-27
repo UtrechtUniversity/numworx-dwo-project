@@ -50,8 +50,28 @@ public class RPCHandler {
 		XmlRpcRequest<T> request = new XmlRpcRequest<T>(client, method, params, getCoursesCallback);
 
 		request.execute();
-
-		
+	}
+	
+	public <T> void getCoursesSchool(Map<String, Object> userData, AsyncCallback<T> getCoursesCallback) {
+		String method = "getTable";
+		HashMap<String,Object> g = new HashMap<String,Object>();
+		g.put("parentID", 0);
+		Object schoolID = userData.get("schoolID");
+		g.put("schoolID", schoolID);
+		g.put("dwoProfileID", getDwoProfile());
+		Object[] params = {"tblCourse", g, "name" };
+		XmlRpcClient client = new XmlRpcClient(server);
+		XmlRpcRequest<T> request = new XmlRpcRequest<T>(client, method, params, getCoursesCallback);
+		request.execute();
+	}
+	
+	public <T> void getCoursesClass(Map<String,Object> userData, AsyncCallback<T> getCoursesCallback) {
+		String method = "getCoursesForClass";
+		Object classid = userData.get("classID");
+		Object[] params = { classid };
+		XmlRpcClient client = new XmlRpcClient(server);
+		XmlRpcRequest<T> request = new XmlRpcRequest<T>(client, method, params, getCoursesCallback);
+		request.execute();
 	}
 
 	private int getDwoProfile() {

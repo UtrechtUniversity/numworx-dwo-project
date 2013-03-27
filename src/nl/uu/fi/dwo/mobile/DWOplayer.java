@@ -47,23 +47,26 @@ public class DWOplayer implements EntryPoint
 	
 	private Place defaultPlace = new LoginPlace(); // new SelectModulePlace("select");
 
+	public static int count;
 	public static final AsyncCallback<List<Map<String,Object>>> GETCOURSES_CALLBACK = new AsyncCallback<List<Map<String,Object>>>() {
 	
+		
 		@Override
 		public void onFailure(Throwable caught) {
 			Window.alert(caught.toString());
+			count--;
 		}
 	
 		@Override
 		public void onSuccess(List<Map<String,Object>> result) {
-			SelectModuleItemHolder.clear(); // FIXME hier leegmaken of elders?
+			
 			for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
 				Map<String, Object> map = (Map<String, Object>) iterator.next();
 				SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.MODULE);
 				SelectModuleItemHolder.insert(item);
 			}
-			
-			clientfactory.getPlaceController().goTo(new TreeModulePlace("0"));
+			if(--count <= 0)
+				clientfactory.getPlaceController().goTo(new TreeModulePlace("0"));
 		}
 		
 	};
@@ -150,12 +153,28 @@ public class DWOplayer implements EntryPoint
 	}
 
 	public static void gotoCourses() {
+		SelectModuleItemHolder.clear(); // hier leegmaken of elders?
+		count = 1;
 		if(profiledata == null)
 			clientfactory.getEntryView().setApi(api = new SCORM_guest());
 		else
 		{	int userID = ((Integer) profiledata.get("userID")).intValue();
 			clientfactory.getEntryView().setApi(api = new SCORM_DWOmAccess(userID));
+			if(!"".equals(profiledata.get("classID")))
+			{
+				clientfactory.getRPCHandler().getCoursesClass(profiledata, GETCOURSES_CALLBACK);
+				return;
+			}
+			if(!"".equals(profiledata.get("schoolID")))
+			{
+				count = 2;
+				clientfactory.getRPCHandler().getCoursesSchool(profiledata, GETCOURSES_CALLBACK);
+			}
+		
 		}
+		
+		
 		clientfactory.getRPCHandler().getCourses(profiledata, GETCOURSES_CALLBACK);
+		
 	}
 }
