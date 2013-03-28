@@ -15,6 +15,7 @@ import javax.xml.transform.TransformerException;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.dwo.client.domain.Course;
+import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.server.form.DWOFile;
@@ -27,7 +28,10 @@ public class BackupModuleAction extends GuiAction {
 	private String dir;
 	
 	public BackupModuleAction(Course course) {
-		this();
+		super("Backup module");
+		setEnabled(DwoHelper.isSecure());
+		if( isEnabled() ) dir = System.getProperty("user.dir", ".");
+		tip = "Backup module";
 		this.course = course;
 		tip = "Backup activiteiten van module " + course;
 		putValue(Action.LONG_DESCRIPTION, tip);
@@ -40,6 +44,8 @@ public class BackupModuleAction extends GuiAction {
 		setEnabled(DwoHelper.isSecure());
 		if( isEnabled() ) dir = System.getProperty("user.dir", ".");
 		tip = "Backup module";
+		Clipboard.addPropertyChangeListener("selection", this);
+		setEnabled(false);
 	}
 
 	public void actionPerformed(ActionEvent evt) {
@@ -73,6 +79,16 @@ public class BackupModuleAction extends GuiAction {
 			DWOFile zipper = new DWOFile(DbAccessCreator.instance());
 			zipper.createIMSManifest(course.getID(), -1, out);
 		}
+	}
+
+	void setMap(CourseMap map) {
+		super.setMap(map);
+		boolean enabled = false;
+		if( DwoHelper.isSecure() && map instanceof Course) {
+			Course course = (Course)map;
+			enabled = !course.isWithChildren();
+		}
+		setEnabled(enabled);
 	}
 
 	

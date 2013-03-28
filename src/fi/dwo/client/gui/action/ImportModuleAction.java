@@ -22,6 +22,7 @@ import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
+import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.CourseManagementPanel;
 import fi.dwo.client.gui.GuiCreator;
@@ -49,10 +50,14 @@ public class ImportModuleAction extends GuiAction {
 		super("Import");
 		putValue(LONG_DESCRIPTION, TextMapper.getText(TextMapper.GUIA_INSERT_SCOS));
 		setEnabled(DwoHelper.isSecure());  // disable in geval van applet.
+		Clipboard.addPropertyChangeListener("selection", this);
+		setEnabled(false);
 	}
 
 	public ImportModuleAction(Course course) {
-		this();
+		super("Import");
+		putValue(LONG_DESCRIPTION, TextMapper.getText(TextMapper.GUIA_INSERT_SCOS));
+		setEnabled(DwoHelper.isSecure());  // disable in geval van applet.
 		this.course = course;
 	}
 
@@ -196,7 +201,10 @@ public class ImportModuleAction extends GuiAction {
 		this.course = course;
 	}
 
-	
+	void setMap(CourseMap map) {
+		setEnabled (DwoHelper.isSecure() && canModify(map) && !(map.getUserObject() instanceof Sco));
+	}
+
 	
 	
 }
