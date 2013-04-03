@@ -4,7 +4,6 @@ import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleRegel;
 
 import com.google.gwt.user.client.ui.Panel;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 /**
  * Alows modification of a formula
@@ -125,7 +124,7 @@ public class FormuleEditor extends FormuleHolder
 	public Panel getAsPanel()
 	{
 		//FocusPanel sp = new FocusPanel();
-		TouchPanel sp = new TouchPanel();
+		nl.uu.fi.dwo.interaction.client.touch.TouchPanel sp = new nl.uu.fi.dwo.interaction.client.touch.TouchPanel();
 		sp.getElement().addClassName("insert_formule");
 		sp.add(this.getMainRegel().getCanvas());
 		return sp;

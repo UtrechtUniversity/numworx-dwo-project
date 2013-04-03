@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
 import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleFont;
@@ -11,7 +12,6 @@ import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleFont;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import fi.wiskopdr.AntwoordFormuleVakChecker;
 import fi.wiskopdr.AntwoordVakChecker;

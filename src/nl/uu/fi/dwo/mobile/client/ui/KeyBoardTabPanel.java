@@ -2,6 +2,9 @@ package nl.uu.fi.dwo.mobile.client.ui;
 
 import java.util.Vector;
 
+import nl.uu.fi.dwo.interaction.client.touch.TouchStartEvent;
+import nl.uu.fi.dwo.interaction.client.touch.TouchStartHandler;
+
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
@@ -9,8 +12,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 
 /**
  * Tabs between different keyboard layouts

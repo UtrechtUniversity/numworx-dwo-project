@@ -2,14 +2,13 @@ package nl.uu.fi.dwo.mobile.client.ui;
 
 import java.util.HashMap;
 
+import nl.uu.fi.dwo.interaction.client.touch.TouchCancelEvent;
+import nl.uu.fi.dwo.interaction.client.touch.TouchEndEvent;
+import nl.uu.fi.dwo.interaction.client.touch.TouchHandler;
+import nl.uu.fi.dwo.interaction.client.touch.TouchMoveEvent;
+import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
+import nl.uu.fi.dwo.interaction.client.touch.TouchStartEvent;
 import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleEditor;
-
-import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
-import com.googlecode.mgwt.dom.client.event.touch.TouchMoveEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 /**
  * 

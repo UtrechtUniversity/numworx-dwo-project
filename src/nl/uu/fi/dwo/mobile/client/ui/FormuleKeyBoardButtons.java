@@ -3,6 +3,8 @@ package nl.uu.fi.dwo.mobile.client.ui;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import nl.uu.fi.dwo.interaction.client.touch.TouchStartEvent;
+import nl.uu.fi.dwo.interaction.client.touch.TouchStartHandler;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleTeken;
@@ -18,8 +20,6 @@ import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Image;
-import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 
 /**
  * Button implementations for the keyboard

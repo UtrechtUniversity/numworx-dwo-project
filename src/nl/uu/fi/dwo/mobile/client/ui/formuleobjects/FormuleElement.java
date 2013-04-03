@@ -1,12 +1,12 @@
 package nl.uu.fi.dwo.mobile.client.ui.formuleobjects;
 
+import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
 import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleHolder;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.user.client.ui.Panel;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 /**
  * Base element of a formula
