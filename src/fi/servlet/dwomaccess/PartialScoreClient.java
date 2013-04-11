@@ -30,4 +30,12 @@ public class PartialScoreClient extends Client implements fi.servlet.dwomaccess.
         return (java.lang.String)object;
     }
 
+    public java.lang.String getCourseDescription(int a) throws IOException, XmlRpcException
+    {
+        Vector vv = new Vector(1);
+        vv.addElement( new Integer(a));
+        Object object = invoke("getCourseDescription", vv);
+        return (java.lang.String)object;
+    }
+
 }

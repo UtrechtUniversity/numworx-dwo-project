@@ -14,6 +14,10 @@
   	<servlet-name>dbaccess</servlet-name>
   	<servlet-class>fi.servlet.dwomaccess.DbAccessServlet</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>scormaccess</servlet-name>
+  	<servlet-class>fi.servlet.dwomaccess.ScormAccess</servlet-class>
+  </servlet>
   
   <servlet-mapping>
 	<servlet-name>image.png</servlet-name>
@@ -35,6 +39,11 @@
   	<servlet-name>dbaccess</servlet-name>
   	<url-pattern>/dbaccess</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>scormaccess</servlet-name>
+    <url-pattern>/scormaccess</url-pattern>
+  </servlet-mapping>
+  
   
   <!-- Default page to serve -->
 	<welcome-file-list>

@@ -21,5 +21,7 @@ public interface PartialScoreIF {
 	Vector getScoreMapList(int sco, int user) throws Exception;
 	
 	String getLaunchData(int sco) throws Exception;
+
+	String getCourseDescription(int course) throws Exception;
 	
 }

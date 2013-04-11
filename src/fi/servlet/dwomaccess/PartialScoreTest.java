@@ -13,6 +13,7 @@ import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Vector;
 
 import junit.framework.TestCase;
@@ -45,6 +46,7 @@ public class PartialScoreTest extends TestCase {
 		getter = new PartialScoreClient(url );
 		doGetScoreMapList();
 		doGetLaunchData();
+		doGetCourseDescription();
 	}
 	
 	public void doLaunchData(String u) throws Exception {
@@ -57,8 +59,13 @@ public class PartialScoreTest extends TestCase {
 		doLaunchData("http://localhost:8080/DWOmAccess/getLaunchData");
 	}
 	
+	public void testGetScoreMapList2() throws Exception {
+		// FIXME Wat als het geen WiskOpdr Is, fallback naar default-partial-score-impl?
+		getter = new DWOmAccess(); ((DWOmAccess) getter).init();
+		getter.getScoreMapList(73236, 143678);
+	}
 	public void testRemote() throws Exception {
-		URL url = new URL("http://delta.fi.uu.nl/DWOmAccess/partialScore");
+		URL url = new URL("http://ws-dev.fisme.science.uu.nl/DWOmAccess/partialScore");
 		getter = new PartialScoreClient(url );
 		doGetScoreMapList();
 		doGetLaunchData();
@@ -109,5 +116,19 @@ public class PartialScoreTest extends TestCase {
 		System.out.println(r);
 	}
 	
-	
+	private void doGetCourseDescription() throws Exception {
+		int course = 25630; // FIXME juiste nummer
+		String result = getter.getCourseDescription(course);
+		assertNotNull(result);
+		InputStream reader = new ByteArrayInputStream(result.getBytes());
+		XMLDecoder decoder = new XMLDecoder(reader);
+		Map obj = (Map) decoder.readObject();
+		System.out.println(obj);
+		assertFalse(obj.isEmpty());
+	}
+		
+	public void testGetCourseDescription_local() throws Exception {
+		getter = new DWOmAccess(); ((DWOmAccess) getter).init();
+		doGetCourseDescription();
+	}
 }

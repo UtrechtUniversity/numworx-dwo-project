@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
+import java.util.Map.Entry;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -65,6 +66,7 @@ import fi.dwo.server.persistence.DbAccessLdap;
  */
 public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF {
 
+	private static final String UTF_8 = "UTF-8";
 	/**
 	 * 
 	 */
@@ -470,7 +472,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 			getCourseDescription(course, out);
 
 		} catch (Exception e) {
-			log("doLaunchData", e);
+			log("doCourseDescription", e);
 			resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		
@@ -496,13 +498,13 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		String encoding = req.getHeader("Accept-Encoding");		
 		resp.setContentType("text/xml");
 		resp.setHeader("Access-Control-Allow-Origin" ,"*");
-		resp.setCharacterEncoding("UTF-8");
+		resp.setCharacterEncoding(UTF_8);
 		OutputStream out;
 // insert compressor		
-		if( encoding.contains("gzip")) {
+		if( encoding != null && encoding.contains("gzip")) {
 			resp.setHeader("Content-Encoding", "gzip");
 			out = new GZIPOutputStream(resp.getOutputStream());
-		} else if (encoding.contains("deflate")) {
+		} else if (encoding != null && encoding.contains("deflate")) {
 			resp.setHeader("Content-Encoding", "deflate");
 			out = new DeflaterOutputStream(resp.getOutputStream());
 		} else 
@@ -594,6 +596,10 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		Iterator iter = list.iterator();
 		while (iter.hasNext()) {
 			Map map = (Map) iter.next();
+			for(Object item: map.entrySet())
+			{ Entry entry = (Entry) item;
+			  if(entry.getValue() == null) entry.setValue("");
+			}
 			result.add(new Hashtable<Object,Object>(map));
 		}
 		return result;
@@ -604,10 +610,20 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		XmlEncoder.encode(map, out);
 		out.close();
-		return new String(out.toByteArray(), "UTF-8");
+		return new String(out.toByteArray(), UTF_8);
 	}
 
 
+	public String getCourseDescription(int courseID) throws Exception {
+		Hashtable map = getCourseDescription_int(courseID);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		XmlEncoder.encode(map, out);
+		out.close();
+		return new String(out.toByteArray(), UTF_8);
+	}
+	
+	
+	
 	/* (non-Javadoc)
 	 * @see javax.servlet.http.HttpServlet#doOptions(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
