@@ -83,7 +83,7 @@ public class CourseIcon extends JButton implements CourseIconIF {
         setHorizontalAlignment(JLabel.CENTER);
 // Font Okay?
         setFont(new Font("SansSerif", Font.PLAIN, 13));
-		setText(course.getName());
+		setText(course.getName().trim());
 		setSize(getPreferredSize());
     }
 
