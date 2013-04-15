@@ -84,6 +84,7 @@ Class-Path: algebrapijlenoefenen.jar
  tinyplayerapplet.jar 
  grafiek3dtest.jar 
  kladje.jar 
+ formstruct.jar 
  kansbomen.jar 
  jl020.jar 
  calendar.jar 
