@@ -334,4 +334,9 @@ public class OpdrNav implements OpdrNavIF, Runnable
 
 	}
 
+	public void close() {
+		memento.close();
+		memento = null;
+	}
+
 }

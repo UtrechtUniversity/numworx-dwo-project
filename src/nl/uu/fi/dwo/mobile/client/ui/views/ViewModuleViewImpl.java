@@ -1091,4 +1091,9 @@ public class ViewModuleViewImpl implements ViewModuleView, EntryPoint
 		this.api = api;
 	}
 
+	@Override
+	public void close() {
+		on.close();
+	}
+
 }

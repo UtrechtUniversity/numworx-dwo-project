@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.sco;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
 public class SCORM_guest implements Scorm2004IF {
 
 	@Override
@@ -34,5 +36,6 @@ public class SCORM_guest implements Scorm2004IF {
 
 	public void setScoID(int scoID) {
 	}
-
+	
+	public void Initialize(final AsyncCallback<Void> callback) { if(callback!=null) callback.onSuccess(null); }
 }

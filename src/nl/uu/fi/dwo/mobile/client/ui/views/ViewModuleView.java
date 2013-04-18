@@ -20,4 +20,6 @@ public interface ViewModuleView extends IsWidget
 
 	void setApi(Scorm2004IF scorm_guest);
 
+	void close();
+
 }

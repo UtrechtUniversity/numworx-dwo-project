@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
@@ -10,6 +11,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
@@ -34,7 +36,7 @@ public class ViewModuleActivity extends MGWTAbstractActivity
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
-		ViewModuleView view = clientFactory.getEntryView();
+		final ViewModuleView view = clientFactory.getEntryView();
 		panel.setWidget(view);
 
 		Place place = clientFactory.getPlaceController().getWhere();
@@ -42,17 +44,29 @@ public class ViewModuleActivity extends MGWTAbstractActivity
 		if (place instanceof ViewModulePlace)
 		{
 			ViewModulePlace selectedModulePlace = (ViewModulePlace) place;
-			int id = Integer.parseInt(selectedModulePlace.getToken());
+			final int id = Integer.parseInt(selectedModulePlace.getToken());
+			final SelectModuleItem item = SelectModuleItemHolder.getScoByID(id);
+			DWOplayer.api.setScoID(id);
+			AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 
-			SelectModuleItem item = SelectModuleItemHolder.getScoByID(id);
+				@Override
+				public void onFailure(Throwable caught) {
+					view.setupModule(item.getName(), item.getFile());
+				}
 
-			view.setupModule(item.getName(), item.getFile());
+				@Override
+				public void onSuccess(Void result) {
+					view.setupModule(item.getName(), item.getFile());
+				}
+			};
+			DWOplayer.api.Initialize(callback);
 			addHandlerRegistration(view.getBackButton().addTapHandler(new TapHandler()
 			{
 
 				@Override
 				public void onTap(TapEvent event)
 				{
+					view.close();
 					History.back();
 				}
 			}));

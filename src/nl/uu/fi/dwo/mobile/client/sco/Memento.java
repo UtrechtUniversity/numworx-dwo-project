@@ -53,6 +53,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	private static final String SUSPEND_DATA = "cmi.suspend_data";
 	private static final String SCORE_RAW = "cmi.score.raw";
 	private static final String SESSION_TIME = "cmi.session_time";
+	private static final String TOTAL_TIME = "cmi.total_time";
 
 	interface Resources extends ClientBundle
 	{
@@ -338,7 +339,10 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		runner.run();
 		Date stopDate = new Date();
 		long millis = stopDate.getTime() - startDate.getTime();
+		String totalStr = getValue(TOTAL_TIME);
+		long total = parse(totalStr);
 		setValue(SESSION_TIME, format(millis));
+		setValue(TOTAL_TIME, format(total+millis));
 		flush();
 		try
 		{
@@ -350,9 +354,86 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		}
 	}
 
+	private long parse(String totalStr) {
+		return from2004Time(totalStr);
+	}
+
+	
+	public long from2004Time(String str) {
+		
+		  // Only gross syntax check is performed here
+		  // Months calculated by approximation based on average number
+		  // of days over 4 years (365*4+1), not counting the extra days
+		  // in leap years. If a reference date was available,
+		  // the calculation could be more precise, but becomes complex,
+		  // since the exact result depends on where the reference date
+		  // falls within the period (e.g. beginning, end or ???)
+		  // 1 year ~ (365*4+1)/4*60*60*24*100 = 3155760000 centiseconds
+		  // 1 month ~ (365*4+1)/48*60*60*24*100 = 262980000 centiseconds
+		  // 1 day = 8640000 centiseconds
+		  // 1 hour = 360000 centiseconds
+		  // 1 minute = 6000 centiseconds
+		  float aV[] = new float[6];
+		  boolean bErr = false;
+		  boolean bTFound = false;
+		  if (str.indexOf("P") != 0) bErr = true;
+		  if (!bErr)
+		  {
+		    String[] aT = new String[] {"Y","M","D","H","M","S"};
+		    int p=0, i=0;
+		    str = str.substring(1); //get past the P
+		    for (i = 0 ; i < aT.length; i++)
+		    {
+		      if (str.indexOf("T") == 0)
+		      {
+		        str = str.substring(1);
+		        i = Math.max(i,3);
+		        bTFound = true;
+		      }
+		      p = str.indexOf(aT[i]);
+		      //alert("Checking for " + aT[i] + "\nstr = " + str);
+		      if (p > -1)
+		      {
+		        // Is this a M before or after T?
+		        if ((i == 1) && (str.indexOf("T") > -1) && (str.indexOf("T") < p)) continue;
+		        if (aT[i] == "S")
+		        {
+		          aV[i] = Float.parseFloat(str.substring(0,p));
+		        }
+		        else
+		        {
+		          aV[i] = Integer.parseInt(str.substring(0,p));
+		        }
+		        if (Float.isNaN(aV[i]))
+		        {
+		          bErr = true;
+		          break;
+		        }
+		        else if ((i > 2) && (!bTFound))
+		        {
+		          bErr = true;
+		          break;
+		        }
+		        str = str.substring(p+1);
+		      }
+		    }
+		    if ((!bErr) && (str.length() != 0)) bErr = true;
+		    //alert(aV.toString())
+		  }
+		  if (bErr)
+		  {
+		    //alert("Bad format: " + str)
+		    return 0;
+		  }
+		  return Math.round(aV[0]*31557600000L + aV[1]*2629800000L
+		    + aV[2]*86400000 + aV[3]*3600000 + aV[4]*60000
+		    + Math.round(aV[5]*1000)
+		    );
+		}
+
 	private String format(long millis)
 	{
-		return "PT" + millis / 1000.0 + "S";
+		return "PT" + (millis / 1000.0F) + "S";
 	}
 
 	public static String[] toStringArray(Object object)
