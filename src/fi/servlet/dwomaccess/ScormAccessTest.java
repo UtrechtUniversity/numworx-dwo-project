@@ -27,7 +27,8 @@ public class ScormAccessTest extends TestCase {
 
 	public void testInitialize() throws Exception {
 		Hashtable result = access.Initialize(user, sco);
-		assertEquals(1, result.size());
+		assertEquals(3, result.size());
+		System.out.println(result);
 	}
 
 	public void testRemote() throws Exception {

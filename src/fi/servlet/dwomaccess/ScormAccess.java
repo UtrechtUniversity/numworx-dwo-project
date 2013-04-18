@@ -1,18 +1,23 @@
 package fi.servlet.dwomaccess;
 
 import java.io.IOException;
-import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
+import java.util.TimeZone;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import fi.beans.scorm.ScormAdapter;
 import fi.beans.xmlrpc.Servlet;
 import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.DbAccessIF;
@@ -25,8 +30,30 @@ public class ScormAccess extends Servlet implements ScormAccessIF {
 	private static final long serialVersionUID = 1L;
 
 	static private String[] KEYS = { 
-		"cmi.suspend_data", 
+		"cmi.suspend_data",
+		"cmi.score.raw",
+		"cmi.total_time",
 	};
+	
+	static private final Properties CONVERT = new Properties();
+	static private final CmiConvert CMI = new CmiConvert(); // utility class
+
+	private static final String SESSION_TIME = "session_time";
+	private static final String CMI_SESSION_TIME = "cmi." + SESSION_TIME;
+	private static final String TOTAL_TIME = "total_time";
+	private static final String CMI_TOTAL_TIME = "cmi." + TOTAL_TIME;
+	
+	static {
+		CONVERT.put("cmi.suspend_data", "suspendData");
+		CONVERT.put("cmi.score.raw", "score");
+		CONVERT.put(CMI_SESSION_TIME, SESSION_TIME);
+		CONVERT.put(CMI_TOTAL_TIME, TOTAL_TIME);
+	}
+
+	static private String c(String key) {
+		return CONVERT.getProperty(key, key);
+	}
+	
 	
 	DbAccessIF access = DbAccessCreator.instance();
 	
@@ -36,7 +63,15 @@ public class ScormAccess extends Servlet implements ScormAccessIF {
 		Set entryset = map.entrySet();
 		for (Iterator iterator = entryset.iterator(); iterator.hasNext();) {
 			Map.Entry entry = (Map.Entry) iterator.next();
-			access.LMSSetValue(scoID, userID, entry.getKey().toString(), entry.getValue().toString());
+
+			String iDataModelElement = c(entry.getKey().toString());
+			String iValue = entry.getValue().toString();
+			if(SESSION_TIME.equals(iDataModelElement) || TOTAL_TIME.equals(iDataModelElement))
+			{
+				iValue = CMI.to1_2Timex(CMI.from2004Time(iValue)); // sessiontime in 1.2 format.
+			}
+			
+			access.LMSSetValue(scoID, userID, iDataModelElement, iValue);
 		}
 		return true;
 	}
@@ -46,7 +81,11 @@ public class ScormAccess extends Servlet implements ScormAccessIF {
 		Hashtable map = new Hashtable();
 		for (int i = 0; i < KEYS.length; i++) {
 			String key = KEYS[i];
-			map.put(key, access.LMSGetValue(scoID, userID, key));
+			String value = access.LMSGetValue(scoID, userID, c(key));
+			if(CMI_TOTAL_TIME.equals(key))
+				value = CMI.to2004Timex(CMI.from1_2Timex(value));
+			if(value.length()>0)
+				map.put(key, value);
 		}
 		return map;
 	}
@@ -85,15 +124,45 @@ public class ScormAccess extends Servlet implements ScormAccessIF {
 	}
 		
 	private void logHeaders(HttpServletRequest req) {
-		Enumeration e = req.getHeaderNames();
+		Enumeration<?> e = req.getHeaderNames();
 		while (e.hasMoreElements()) {
 			String key = (String) e.nextElement();
-			Enumeration values = req.getHeaders(key);
+			Enumeration<?> values = req.getHeaders(key);
 			while (values.hasMoreElements()) {
-				Object object = (Object) values.nextElement();
+				Object object = values.nextElement();
 				log (key + ": " + object);
 			}
 		}
 	}
 	
+	static class CmiConvert extends ScormAdapter {
+
+		protected CmiConvert() {
+			super(true);
+		}
+
+		@Override
+		public String GetValue(String cmiElement) {
+			return null;
+		}
+
+		@Override
+		public String SetValue(String key, String value) {
+			return null;
+		}
+	
+		protected long from1_2Timex(String str) {
+			return super.from1_2Time(str);
+		}
+
+		protected String to1_2Timex(long time) {
+			return super.to1_2Time(time);
+		}
+
+		protected String to2004Timex(long time) {
+			return super.to2004Time(time);
+		}
+		
+		
+	}
 }
