@@ -267,6 +267,7 @@ public abstract class TextMapper {
     public final static String GUIRS_RESULTS = "GUIRS_RESULTS";
     public final static String GUIRS_NO_RESULTS = "GUIRS_NO_RESULTS";
     public final static String GUIRS_BTN_SELECT_COURSES = "GUIRS_BTN_SELECT_COURSES";
+    public final static String GUIRS_BTN_COPY_TO_CLIPBOARD = "GUIRS_BTN_COPY_TO_CLIPBOARD";
 
     public final static String GUIRS_TLTP_SELECT_COURSES = "GUIRS_TLTP_SELECT_COURSES"; 
 

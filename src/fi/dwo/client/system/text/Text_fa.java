@@ -214,6 +214,7 @@ public class Text_fa extends ListResourceBundle {
          { TextMapper.GUIRS_RESULTS, "Results"},
          { TextMapper.GUIRS_NO_RESULTS, "There are no results"},
          { TextMapper.GUIRS_BTN_SELECT_COURSES, "Select Modules"},
+         { TextMapper.GUIRS_BTN_COPY_TO_CLIPBOARD, "Copy to Clipboard"},
 
          { TextMapper.GUIRS_TLTP_SELECT_COURSES, "Select a module"},
 

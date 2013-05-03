@@ -212,6 +212,7 @@ public class Text_nl extends ListResourceBundle {
          { TextMapper.GUIRS_RESULTS, "Resultaten"},
          { TextMapper.GUIRS_NO_RESULTS, "Geen resultaten om weer te geven"},
          { TextMapper.GUIRS_BTN_SELECT_COURSES, "Selecteer Modules"},
+         { TextMapper.GUIRS_BTN_COPY_TO_CLIPBOARD, "Kopiëer naar klembord"},
          
          { TextMapper.GUIRS_TLTP_SELECT_COURSES, "Kies hier de modules waarvan u de resultaten wilt bekijken"},
 

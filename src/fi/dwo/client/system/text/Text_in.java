@@ -213,6 +213,7 @@ public class Text_in extends ListResourceBundle {
          { TextMapper.GUIRS_RESULTS, "Hasil"},
          { TextMapper.GUIRS_NO_RESULTS, "Tidak ada hasil"},
          { TextMapper.GUIRS_BTN_SELECT_COURSES, "Pilih modul"},
+         { TextMapper.GUIRS_BTN_COPY_TO_CLIPBOARD, "Copy to Clipboard"},
 
          { TextMapper.GUIRS_TLTP_SELECT_COURSES, "Pilih sebuah modul"},
 
