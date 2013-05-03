@@ -647,7 +647,7 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
         buttonPanel.add(selectCoursesButton);
         selectCoursesButton.setVisible(true);
 
-        copyButton = new JButton(/*FIXME "Copy"*/ TextMapper.getText("copy") );
+        copyButton = new JButton(/*FIXME "Copy"*/ TextMapper.getText(TextMapper.GUIRS_BTN_COPY_TO_CLIPBOARD ));
         copyButton.setSize(copyButton.getPreferredSize());
         copyButton.addActionListener(this);
         copyButton.setLocation(x - copyButton.getSize().width - 20, 3);
