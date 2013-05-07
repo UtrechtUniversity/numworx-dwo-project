@@ -50,10 +50,14 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 
 	private static final String OPDR_CONT_STATES = "opdrContStates";
 	private static final String ONS_STATE = "onsState";
-	private static final String SUSPEND_DATA = "cmi.suspend_data";
-	private static final String SCORE_RAW = "cmi.score.raw";
+	static final String SUSPEND_DATA = "cmi.suspend_data";
+	static final String SCORE_RAW = "cmi.score.raw";
+	static final String COMPLETION_STATUS = "cmi.completion_status";
 	private static final String SESSION_TIME = "cmi.session_time";
 	private static final String TOTAL_TIME = "cmi.total_time";
+	
+	static final String COMPLETE = "completed";
+	static final String INCOMPLETE = "incomplete";
 
 	interface Resources extends ClientBundle
 	{
@@ -488,6 +492,34 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	public void onWindowClosing(ClosingEvent event)
 	{
 		close();
+	}
+
+	public void setCurrentActiviteit(int currentActiviteit) {
+		onsState.put("activiteitNr", new JSONNumber(currentActiviteit));
+		
+	}
+	public void setCurrentOpdracht(int currentOpdracht) {
+		onsState.put("opdrachtNr", new JSONNumber(currentOpdracht));
+	}
+	
+	public int getCurrentOpdracht() {
+		try {
+			return (int) onsState.get("opdrachtNr").isNumber().doubleValue();
+		} catch(Exception e) {
+			return 0;
+		}
+	}
+	
+	public int getCurrentActiviteit() {
+		try {
+			return (int) onsState.get("activiteitNr").isNumber().doubleValue();
+		} catch (Exception e) {
+			return 0;
+		}
+	}
+	
+	public void setCompletion(boolean complete) {
+		api.SetValue(COMPLETION_STATUS, complete?COMPLETE:INCOMPLETE);
 	}
 
 }

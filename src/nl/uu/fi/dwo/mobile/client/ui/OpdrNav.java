@@ -95,7 +95,11 @@ public class OpdrNav implements OpdrNavIF, Runnable
 			}
 		}
 		entry.setCommunicationRoot(this);
+		
 		states = memento.getOpdrContStates(states);
+		currentActiviteit = memento.getCurrentActiviteit();
+		currentOpdracht = memento.getCurrentOpdracht();
+		
 		//setOpdrachten(currentActiviteit); // kan dat nu al? of anders bij setchanged testen op  buttons.get() != null
 		final HashMap<String, Object> state = states[currentActiviteit][currentOpdracht];
 		if (state == null)
@@ -330,8 +334,9 @@ public class OpdrNav implements OpdrNavIF, Runnable
 		states[currentActiviteit][currentOpdracht] = entry.getState();
 		scores[currentActiviteit][currentOpdracht] = entry.getScore();
 		isCorrect[currentActiviteit][currentOpdracht] = entry.isCorrect();
+		memento.setCurrentActiviteit(currentActiviteit);
+		memento.setCurrentOpdracht(currentOpdracht);
 		memento.setOpdrContStates(states);
-
 	}
 
 	public void close() {

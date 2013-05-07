@@ -196,7 +196,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public HashMap<String, Object> getState()
 	{
 		HashMap<String, Object> h = new HashMap<String, Object>();
-		h.put(ANTWOORD_STRING, "$f" + this.toString() + "@");
+		String[] formuleVakInhouden = {"$f" + this.toString() + "@" } ;
+		h.put("formuleVakInhouden", formuleVakInhouden);
+		h.put(ANTWOORD_STRING, formuleVakInhouden[0]);
 		return h;
 	}
 

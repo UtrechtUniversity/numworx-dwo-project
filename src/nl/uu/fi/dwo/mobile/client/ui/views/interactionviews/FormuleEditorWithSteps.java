@@ -607,9 +607,9 @@ public class FormuleEditorWithSteps implements InteractionView
 		for (int i = 0; i < steps + 1; i++)
 		{
 			if (viewers.size() > i && viewers.get(i) != null)
-				formuleVakInhouden[i] = (viewers.get(i)).toString();
+				formuleVakInhouden[i] = "$f" + (viewers.get(i)).toString() + "@" ;
 			else
-				formuleVakInhouden[i] = "";
+				formuleVakInhouden[i] = "$f@";
 		}
 		antwoordString = editor.toString();
 		ingevuld = this.ingevuld;
@@ -640,7 +640,13 @@ public class FormuleEditorWithSteps implements InteractionView
 		if (h.get("nagekeken") != null)
 			nagekeken = (Boolean) h.get("nagekeken");
 		if (h.get("formuleVakInhouden") != null)
+		{
 			formuleVakInhouden = Memento.toStringArray(h.get("formuleVakInhouden"));
+			for (int i = 0; i < formuleVakInhouden.length; i++) {
+				if(formuleVakInhouden[i].startsWith("$f"))
+					formuleVakInhouden[i] = formuleVakInhouden[i].substring(2, formuleVakInhouden[i].length()-1);
+			}
+		}
 		if (h.get("antwoordString") != null)
 			antwoordString = (String) h.get("antwoordString");
 

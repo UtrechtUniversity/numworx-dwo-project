@@ -457,11 +457,11 @@ public class FormuleParser
 			s = s.substring(0, n) + ")" + s.substring(n + 1);
 			n = s.indexOf("@");
 		}
-		n = s.indexOf("·");
+		n = s.indexOf("ï¿½");
 		while (n > -1)
 		{
 			s = s.substring(0, n) + "*" + s.substring(n + 1);
-			n = s.indexOf("·");
+			n = s.indexOf("ï¿½");
 		}
 		n = s.indexOf("\u00d7");
 		while (n > -1)
@@ -2329,7 +2329,7 @@ public class FormuleParser
 			{
 				for (int j = 0; j < varnamen.length; j++)
 				{
-					int value = ((Integer) waarden.get(varnamen[j])).intValue();
+					int value = ((Number) waarden.get(varnamen[j])).intValue();
 					e = e.substitueer(value, varnamen[j]);
 				}
 				e = Algebra.herleidMild(e, breukenGemengd);
