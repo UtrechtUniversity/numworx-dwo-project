@@ -141,7 +141,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 			try {
 				return delegate.getComponentAfter(focusCycleRoot, aComponent);
 			} catch (Exception e) {
-				e.printStackTrace();
+				recover(e);
 			}
 			return getFirstComponent(focusCycleRoot);  // don't crash
 		}
@@ -151,7 +151,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 			try {
 				return delegate.getComponentBefore(focusCycleRoot, aComponent);
 			} catch (Exception e) {
-				e.printStackTrace();
+				recover(e);
 			}
 			return getLastComponent(focusCycleRoot);
 		}
@@ -160,7 +160,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 			try {
 				return delegate.getDefaultComponent(focusCycleRoot);
 			} catch (Exception e) {
-				e.printStackTrace();
+				recover(e);
 			}
 			return null;
 		}
@@ -169,7 +169,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 			try {
 				return delegate.getFirstComponent(focusCycleRoot);
 			} catch (Exception e) {
-				e.printStackTrace();
+				recover(e);
 			}
 			return null;
 		}
@@ -178,7 +178,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 			try {
 				return delegate.getInitialComponent(window);
 			} catch (Exception e) {
-				e.printStackTrace();
+				recover(e);
 			}
 			return super.getInitialComponent(window);
 		}
@@ -187,9 +187,13 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 			try {
 				return delegate.getLastComponent(focusCycleRoot);
 			} catch (Exception e) {
-				e.printStackTrace();
+				recover(e);
 			}
 			return null;
+		}
+
+		private void recover(Exception e) {
+			System.err.println("recovered: " + e);
 		}
 	};
 
@@ -315,6 +319,9 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
         	if(testViewKeys.containsKey(""+classNumber)) testNumberString = (String)testViewKeys.get(""+classNumber);
         	else return false;
         	scoViewNr = Integer.parseInt(testNumberString);
+// Hier fixen we nog de iconizer voor deeplink OPNIEUW! FIXME netter?
+    		GuiConstants.fixIconizer(scoViewNr, courseViewNr);
+
         }
         
         if(schoolAccessKeys!=null)
