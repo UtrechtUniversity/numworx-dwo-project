@@ -59,15 +59,6 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	static final String COMPLETE = "completed";
 	static final String INCOMPLETE = "incomplete";
 
-	interface Resources extends ClientBundle
-	{
-		Resources INSTANCE = GWT.create(Resources.class);
-
-		@Source("data.txt")
-		TextResource data();
-	}
-
-	static String TESTVALUE = Resources.INSTANCE.data().getText();
 	private Scorm2004IF api;
 
 	private JSONObject suspendData;
@@ -322,9 +313,9 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 
 	public void flush()
 	{
-		System.out.println("START SUSPENDDATA-----------");
-		System.out.println(suspendData.toString());
-		System.out.println("END SUSPENDDATA-----------");
+//		System.out.println("START SUSPENDDATA-----------");
+//		System.out.println(suspendData.toString());
+//		System.out.println("END SUSPENDDATA-----------");
 		setValue(SUSPEND_DATA, suspendData.toString());
 		try
 		{
@@ -347,7 +338,6 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		long total = parse(totalStr);
 		setValue(SESSION_TIME, format(millis));
 		setValue(TOTAL_TIME, format(total+millis));
-		flush();
 		try
 		{
 			api.Terminate();

@@ -169,8 +169,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				fe.setAndAddFeedback(feedback);
 			checkimg.setUrl("images/resources/mw_kruisje_rood.png");
 		}
-
-		checkimg.setVisible(true);
+		
+		checkimg.setVisible(goedHalfFout != AntwoordVakChecker.GEEN); // Wim: Hier verscheen het vinkje als goedhalfFout GEEN is
 		if (this.fe == null)
 			comRoot.setChanged();
 

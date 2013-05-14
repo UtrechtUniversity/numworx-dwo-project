@@ -68,7 +68,7 @@ public class AssetAPI implements Scorm2004IF {
 	}
 
 	@Override
-	public String Terminate() {		// TODO Auto-generated method stub
+	public String Terminate() {
 		return "";
 	}
 

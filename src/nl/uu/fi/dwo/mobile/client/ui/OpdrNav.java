@@ -324,9 +324,6 @@ public class OpdrNav implements OpdrNavIF, Runnable
 	public void run()
 	{
 		saveCurrentState();
-		// TODO save scores.raw
-		memento.setScore(getScore());
-
 	}
 
 	void saveCurrentState()
@@ -336,7 +333,28 @@ public class OpdrNav implements OpdrNavIF, Runnable
 		isCorrect[currentActiviteit][currentOpdracht] = entry.isCorrect();
 		memento.setCurrentActiviteit(currentActiviteit);
 		memento.setCurrentOpdracht(currentOpdracht);
+		memento.setScore(getScore());
+		memento.setCompletion(suspendDataCompleted(currentActiviteit, currentOpdracht));
 		memento.setOpdrContStates(states);
+	}
+
+	/**
+	 * Is er state bij alle andere opdrachten van deze activiteit? Behalve de opgegeven opdrNr, die heeft zeker state!
+	 * @param actNr
+	 * @param opdrNr
+	 * @return true bij state
+	 */
+	private boolean suspendDataCompleted(int actNr,	int opdrNr) {
+		HashMap<String, Object>[] actState = states[actNr];
+		if(actState == null)
+			return false;
+		int aantal = aantalOpdrachten[actNr];
+		for(int j = 0; j < aantal; j++ )
+		{
+			if(j != opdrNr && actState[j] == null)
+				return false;
+		}
+		return true;
 	}
 
 	public void close() {

@@ -34,26 +34,26 @@ var assetAPI = {
 
 function SetInitialized(GUID, Initialized)
 {	
-	alert("Initialized "+GUID);
+	//alert("Initialized "+GUID);
 	return assetAPI.SetInitialized(GUID, Initialized);
 }
 function SetScore(GUID, Score)
-{	alert("SetScore "+Score);
+{	//alert("SetScore "+Score);
 	return assetAPI.SetScore(GUID, Score);
 }
 function SetAssetData(GUID, Data)
-{	alert("SetAssetData "+Data);
+{	//alert("SetAssetData ");
 	state = Data;
 	return assetAPI.SetAssetData(GUID, Data);
 }
 function GetAssetData(GUID)
 {	
-	alert("LoadAssetData");
+	//alert("LoadAssetData");
 	return assetAPI.GetAssetData(GUID);
 }
 
 // Missing?
 function SetCompleted(GUID, Completed)
-{	alert("SetCompleted (dummy) "+Completed);
+{	//alert("SetCompleted (dummy) "+Completed);
 	return "";
 }
