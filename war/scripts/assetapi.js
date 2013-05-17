@@ -1,31 +1,43 @@
 // =========================================================
 // AssetAPI class
 //  5-4-2009
+// 17-5-2013 breek recursie als parent.assetAPI == this
 var state = '';
 var assetAPI = {
 	// asset API redirect to parent
 	SetInitialized : function(GUID, Initialized) {
-		return parent.assetAPI.SetInitialized(GUID, Initialized)
+		if(this != parent.assetAPI)
+			return parent.assetAPI.SetInitialized(GUID, Initialized)
+		else return "";
 	},
 	SetException : function(GUID, Fatal, ErrNum, Details) {
+		if(this != parent.assetAPI)
 		parent.assetAPI.SetException(GUID, Fatal, ErrNum, Details);
 	},
 	GetUserId : function() {
-		return parent.assetAPI.GetUserId();		
+		if(this != parent.assetAPI)
+			return parent.assetAPI.GetUserId();		
+		else return "student";
 	},
 	GetAssetData : function(GUID) {
 		//alert('GetAssetData');
-		return parent.assetAPI.GetAssetData(GUID);
+		if(this != parent.assetAPI)
+			return parent.assetAPI.GetAssetData(GUID);
+		else return "";
 	},
 	SetAssetData : function(GUID, Value) {
-		parent.assetAPI.SetAssetData(GUID, Value);
+		if(this != parent.assetAPI)
+			parent.assetAPI.SetAssetData(GUID, Value);
 	},
 	GetScore : function(GUID) {
 	     //alert('GetScore');
-		return parent.assetAPI.GetScore(GUID);
+		if(this != parent.assetAPI)
+			return parent.assetAPI.GetScore(GUID);
+		else return "";
 	},
 	SetScore : function(GUID, Score) {
-		parent.assetAPI.SetScore(GUID, Score);
+		if(this != parent.assetAPI)
+			parent.assetAPI.SetScore(GUID, Score);
 	},
 	GetResource : function(GUID, Resource) {
 		return "../" + parent.assetAPI.GetResource(GUID,Resource);
