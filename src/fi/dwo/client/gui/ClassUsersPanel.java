@@ -15,13 +15,17 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 
+import javax.swing.AbstractAction;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
@@ -29,6 +33,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
+import fi.dwo.client.domain.ContactDocent;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.SchoolClass;
@@ -36,6 +41,7 @@ import fi.dwo.client.domain.User;
 import fi.dwo.client.persistence.MapperCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.LoginException;
+import fi.dwo.client.system.RegisterException;
 import fi.dwo.client.system.TextMapper;
 
 /**
@@ -91,6 +97,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 
 	UserModel model;
 
+
 	class ImageButtonEditor extends AbstractCellEditor implements
 	TableCellEditor, ActionListener {
 
@@ -143,30 +150,95 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
             if (JOptionPane.showConfirmDialog(ClassUsersPanel.this, msg
                     + "?", TextMapper.getText(TextMapper.GUIC_DELETE_STUDENT), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             	
-            	u.setInClass(null);
-            	schoolClass.disconnect(u);
-             	model.deleteRow(row);
-	            if(model.getRowCount() == 0) {
-	            	// TODO dit is niet goed. createLabel(vbox) o.i.d.
-	                //tbl.setVisible(false);
-	                arguments = new String[1];
-	                arguments[0] = schoolClass.getName();
-	                String s = TextMapper.getText(TextMapper.GUIC_NO_STUDENTS);
-	                JLabel label = new JLabel(MessageFormat.format(s, arguments));
-	                label.setFont(GuiConstants.SCO_TEXT);
-	                label.setAlignmentY(0.24f);
-	                ClassUsersPanel.this.removeAll();
-	                ClassUsersPanel.this.add(label);
-	                ClassUsersPanel.this.repaint();
-	            }
+            	removeUserFromClass(u, row);
 	        }
         } 
     	fireEditingStopped();
     }
 
+
 }
 
-    
+	void removeUserFromClass(User u, int row) {
+		String[] arguments;
+		u.setInClass(null);
+		schoolClass.disconnect(u);
+		model.deleteRow(row);
+		if(model.getRowCount() == 0) {
+			// TODO dit is niet goed. createLabel(vbox) o.i.d.
+		    //tbl.setVisible(false);
+		    arguments = new String[1];
+		    arguments[0] = schoolClass.getName();
+		    String s = TextMapper.getText(TextMapper.GUIC_NO_STUDENTS);
+		    JLabel label = new JLabel(MessageFormat.format(s, arguments));
+		    label.setFont(GuiConstants.SCO_TEXT);
+		    label.setAlignmentY(0.24f);
+		    ClassUsersPanel.this.removeAll();
+		    ClassUsersPanel.this.add(label);
+		    ClassUsersPanel.this.repaint();
+		}
+	}
+	
+	class RemoveAllUsers extends AbstractAction {
+
+		public void actionPerformed(ActionEvent e) {
+			Component source = (Component) e.getSource();
+			int how = NOT;
+			final String text = MessageFormat.format(TextMapper.getText(TextMapper.GUIS_MSG_DELETE_STUDENT), new Object[] { "leerlingen ook" });
+
+			Box box = Box.createVerticalBox();
+			box.add(new JLabel(text + "?"));
+// nadenken over de default, Henk wil 'rmRadio' : De school is eigenaar van de leerlinggegevens inclusief dwo-account
+			JRadioButton noRadio  = new JRadioButton("Nee", true);
+			JRadioButton delRadio = new JRadioButton(TextMapper.getText(TextMapper.GUIUMP_REMOVE_FROM_SCHOOL), false);
+			JRadioButton rmRadio  = new JRadioButton(TextMapper.getText(TextMapper.GUIUMP_REMOVE_COMPLETE), false);
+			ButtonGroup group = new ButtonGroup();
+			group.add(noRadio);
+			group.add(delRadio);
+			group.add(rmRadio);
+			box.add(noRadio);
+			box.add(delRadio);
+			box.add(rmRadio);
+
+			String title = "Wil je alle leerlingen uit " + schoolClass.getName() + " verwijderen?";
+			if (JOptionPane.showConfirmDialog(source, box, title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				if(delRadio.isSelected()) how = FROM_SCHOOL;
+				else if(rmRadio.isSelected()) how = FROM_DWO;
+				
+				removeAllUsersFromClass(how);
+			}
+			
+		}
+
+		public RemoveAllUsers(String name, Icon icon) {
+			super(name, icon);
+		}
+		
+	}
+	
+	
+	private static final int NOT = 0, FROM_SCHOOL = 1, FROM_DWO = 2;
+	void removeAllUsersFromClass(int how) {
+		while(model.getRowCount() != 0) {
+			User u = model.userList[0];
+			removeUserFromClass(u, 0);
+			switch(how) {
+			case FROM_SCHOOL: // remove from school
+				PersistenceFacade.instance().deleteUserFromSchool(u);
+				break;
+			case FROM_DWO: // remove compleet...
+				try {
+					PersistenceFacade.instance().deleteUser(u);
+				} catch (RegisterException e) {
+					JOptionPane.showMessageDialog(ClassUsersPanel.this, e.getMessage());
+				}
+				break;
+			}
+		}
+		
+	}
+	
+
     /**
      * Creates a new ClassUsersPanel witch shows the students of the class.
      * 
@@ -206,9 +278,19 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 	        createJTable(vbox, users);
         }
 		RegisterClassListButton registerClassListButton = new RegisterClassListButton(schoolClass);
+		JButton removeStudentsButton;
 
-		if(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER))
-			vbox.add(registerClassListButton);
+		User user = GuiCreator.instance().getUser();
+		if(user.hasRight(User.CHANGE_CLASS_RIGHT_TEACHER))
+		{	Box hbox = Box.createHorizontalBox();
+			hbox.add(registerClassListButton);
+			if(true || user instanceof ContactDocent)
+			{ 	hbox.add(Box.createHorizontalStrut(10));
+				removeStudentsButton = new JButton(new RemoveAllUsers("alle leerlingen", new ImageIcon(removeImage)));
+				hbox.add(removeStudentsButton);
+			}
+			vbox.add(hbox);
+		}
         
     }
 

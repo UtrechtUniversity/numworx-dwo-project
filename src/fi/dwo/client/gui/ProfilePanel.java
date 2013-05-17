@@ -492,7 +492,12 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
 
         changeButton.addActionListener(this);
         resetButton.addActionListener(this);
-        if(!user.isReadonly() && user.canLogout() && user.hasRight(User.CHANGE_CLASS_RIGHT))
+        // delete user alleen als:
+        // user is read/write
+        // user kan uitloggen
+        // user heeft geen school (nieuw (17/5/13)
+        // user mag van klas veranderen.
+        if(!user.isReadonly() && user.canLogout() && ( user.hasRight(User.CHANGE_CLASS_RIGHT) || user.getSchool() == null ) )
             deleteButton.addActionListener(this);
         else 
             deleteButton.setVisible(false);
