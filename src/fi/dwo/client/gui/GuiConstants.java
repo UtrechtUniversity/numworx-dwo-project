@@ -35,7 +35,7 @@ public abstract class GuiConstants {
     public static String WISWEB_LOGO_LOCATION = "resources/wisweb.gif";
     public static String WISWEB_LOGO_SMALL_LOCATION = "resources/wiswebklein.gif";
 
-    public final static String EMPTY_COURSE_IMAGE = "resources/course_basis.gif";
+    public final static String EMPTY_COURSE_IMAGE = "resources/course_basis.png";
     public final static String EMPTY_COURSE_MAP = "resources/map.png";
 
     public final static String REMOVE_STUDENT_IMAGE = "resources/delete.gif";
