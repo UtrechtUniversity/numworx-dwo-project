@@ -44,7 +44,7 @@ public class Text_fa extends ListResourceBundle {
          { TextMapper.GUIW_WELCOME, "خوش آمدید" },
          { TextMapper.GUIW_GUESTLOGIN, "ورود مهمان به سیستم" },
          { TextMapper.GUIW_REGISTER, "ثبت نام" },
-         { TextMapper.GUIW_MSG_WORK_NOT_SAVE, "کارهایتان ذخیره نشد" },
+         { TextMapper.GUIW_MSG_WORK_NOT_SAVE, "کارهای شما ذخیره نخواهد شد" },
          { TextMapper.GUIW_MSG_REGISTER_NEW, "ثبت نام عضو جدید" },
          { TextMapper.GUIW_BTN_GUESTLOGIN, "ورود مهمان به سیستم" },
          { TextMapper.GUIW_BTN_LOGIN, "ورود به سیستم" },

@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+Trusted-Only: true
 Main-Class: fi.dwo.client.domain.DWO
 Class-Path: algebrapijlenoefenen.jar 
  functiesraden.jar 
