@@ -426,5 +426,8 @@ public class GuiCreatorTeacher extends GuiCreator {
 		return fx(new JButton(new ScoParameterAction(scoPanel)));
 	}
 	
-	
+	public void updateLogo(Course c) { 
+		if( dwo.updateLogo(c) )
+			;
+	}
 }

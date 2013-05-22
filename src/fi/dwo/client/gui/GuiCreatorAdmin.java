@@ -134,6 +134,11 @@ public class GuiCreatorAdmin extends GuiCreator {
         // update ModuleTreePanel
     }
 
+    public void updateLogo(Course c) { 
+		if( dwo.updateLogo(c) )
+			;
+	}
+
     /**
      * @param course
      * @return boolean

@@ -947,4 +947,9 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 		{
 			return c;
 		}
+
+		public boolean updateLogo(Course c) {
+			// TODO Auto-generated method stub
+			return false;
+		}
 }

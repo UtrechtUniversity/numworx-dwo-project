@@ -2124,5 +2124,9 @@ System.out.println(school.getSchoolLogin() + " " + group.getName() + " " + schoo
 //		return PersistenceFacade.instance().editSchool(schoolID, schoolName, schoolLogin, studentPassw, teacherPassw);
 		return PersistenceFacade.instance().editSchool(schoolID, schoolName, schoolLogin, schoolPasswdMap, date);
 	}
+
+	public boolean updateLogo(Course c) {
+		return PersistenceFacade.instance().updateLogo(c);
+	}
 	
 }

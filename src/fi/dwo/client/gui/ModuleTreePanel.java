@@ -419,8 +419,10 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		}
 		bar.add(menu);
 		menu = new JMenu(TextMapper.getText("edit"));
-		item = new JMenuItem("cut");menu.add(item);item.setAction(new CutCopyAction(true));item.setText(TextMapper.getText("cut"));
-		item = new JMenuItem("copy");menu.add(item);item.setAction(new CutCopyAction(false));item.setText(TextMapper.getText("copy"));
+		item = new JMenuItem();menu.add(item);item.setAction(new CutCopyAction(true));item.setText(TextMapper.getText("cut"));
+		item.setActionCommand("cut");
+		item = new JMenuItem();menu.add(item);item.setAction(new CutCopyAction(false));item.setText(TextMapper.getText("copy"));
+		item.setActionCommand("copy");
 		item = new JMenuItem("paste");menu.add(item);item.setAction(new PasteAction());
 		menu.addSeparator();
 		item = new JMenuItem(new RenameAction());menu.add(item);

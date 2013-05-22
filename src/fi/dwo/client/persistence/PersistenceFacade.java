@@ -3,8 +3,11 @@
 
 package fi.dwo.client.persistence;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -2087,6 +2090,39 @@ e1.printStackTrace();
 		if(date != null)
 			setExpireDate(school.getSchoolID(), date, school);
 		return school;
+	}
+
+	public boolean updateLogo(Course c) {
+		
+		try {
+			if(c.getImageData() != null)
+				DbAccessCreator.instance().setLogo(c.getID(), c.getImageData());
+			else if(c.getImageUrl() != null) 
+			{
+				// TODO er is geen update by reference.
+				String imu = GuiConstants.RESOURCES + c.getImageUrl();
+				URL u = DwoHelper.getURL(imu);
+				InputStream in = u.openStream();
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				int len;
+				byte[] data = new byte[1024];
+				do { 
+					len = in.read(data);
+					if(len > 0) bos.write(data, 0, len);
+				} while (len > 0);
+				bos.close();
+				DbAccessCreator.instance().setLogo(c.getID(), bos.toByteArray());
+				in.close();
+			}	
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (XmlRpcException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 }

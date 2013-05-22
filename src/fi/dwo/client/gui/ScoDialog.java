@@ -345,7 +345,11 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 				if(!hasFocus && !isSelected)bg = bg.darker();
 				setBackground(bg);
 			}
-			else 
+			else if( row > 0 ) {
+				Color bg = Color.lightGray; // OK of nog te donker?
+				if(!hasFocus && !isSelected)bg = bg.darker();
+				setBackground(bg);
+			} else
 				setBackground(Color.white);			
 			return this;
 		}

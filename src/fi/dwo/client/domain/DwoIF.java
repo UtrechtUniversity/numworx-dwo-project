@@ -490,4 +490,6 @@ public interface DwoIF {
 
 	public Course[] sequence(Course[] courses, SchoolClass sc);
 
+	public boolean updateLogo(Course c);
+
 }

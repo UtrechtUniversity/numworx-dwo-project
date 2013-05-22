@@ -928,4 +928,9 @@ public class GuiCreator {
 		
 	}
 
+	public void updateLogo(Course c) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

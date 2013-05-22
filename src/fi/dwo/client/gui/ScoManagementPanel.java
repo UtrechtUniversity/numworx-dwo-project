@@ -651,7 +651,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     		output.close();
     		byte[] data = output.toByteArray();
     		reduced = Toolkit.getDefaultToolkit().createImage(data);
-    		
+    		course.setImageData(data);
     		course.setCourseLogo(reduced);
     		courseLogoButton.setIcon(new ImageIcon(reduced));
 // TODO omzetten in PersistenceFacade!
