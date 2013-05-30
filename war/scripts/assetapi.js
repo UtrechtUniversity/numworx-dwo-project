@@ -56,12 +56,18 @@ function SetScore(GUID, Score)
 function SetAssetData(GUID, Data)
 {	//alert("SetAssetData ");
 	state = Data;
+	Data = LZString.compress(Data);
+	//alert("SetAssetData: size of compressed sample is: " + Data.length + " was " + state.length);
+	
 	return assetAPI.SetAssetData(GUID, Data);
 }
 function GetAssetData(GUID)
 {	
+	state = assetAPI.GetAssetData(GUID);
+	if(state.length > 0)
+		state = LZString.decompress(state);
 	//alert("LoadAssetData");
-	return assetAPI.GetAssetData(GUID);
+	return state;
 }
 
 // Missing?
