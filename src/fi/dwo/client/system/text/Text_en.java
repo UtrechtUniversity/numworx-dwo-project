@@ -85,7 +85,7 @@ public class Text_en extends ListResourceBundle {
             
             { TextMapper.GUIR_ERR_REGISTER, "An error has occured" },
 
-            { TextMapper.GUIR_MSG_REGISTERED, "You are successfully registerd"},
+            { TextMapper.GUIR_MSG_REGISTERED, "You are successfully registered"},
 
             { TextMapper.GUIM_DWO_FULL, "Digital Mathematics Environment" },
             { TextMapper.GUIM_DWO_SHORT, "DME" },
@@ -160,10 +160,10 @@ public class Text_en extends ListResourceBundle {
 
             { TextMapper.GUIP_OPT_SELECT_GROUP, "Make a choice" },
 
-            { TextMapper.GUIP_CONFIRM_REMOVE_USER, "Are you sure that you want to delete you're account" },
+            { TextMapper.GUIP_CONFIRM_REMOVE_USER, "Are you sure that you want to delete your account" },
             { TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE, "Delete Account" },
 
-            { TextMapper.GUIP_MSG_PROFILE_CHANGED, "You`re account is successfully changed"},
+            { TextMapper.GUIP_MSG_PROFILE_CHANGED, "Your account is successfully changed"},
 
             { TextMapper.GUIPT_SCHOOL, "School" },
             { TextMapper.GUIPT_TEACHER_FROM_CLASS, "Teacher of class" },
