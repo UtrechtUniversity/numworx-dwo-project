@@ -4,5 +4,11 @@ import com.google.gwt.user.client.ui.IsWidget;
 
 public interface LoginView extends IsWidget
 {
-	void setupModule();
+	interface Presenter {
+		void login();
+		void login(String username, String password);
+	}
+	
+	
+	void setupModule(Presenter presenter);
 }

@@ -87,7 +87,7 @@ public class TreeModuleViewImpl extends Composite implements TreeModuleView, Sel
 	@Override
 	public void render(List<SelectModuleItem> currentModel)
 	{
-		if (currentModel.isEmpty())
+		if (currentModel.isEmpty() )
 			return;
 		if (model != currentModel)
 		{

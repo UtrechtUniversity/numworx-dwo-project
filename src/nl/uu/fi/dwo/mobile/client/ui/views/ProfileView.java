@@ -4,5 +4,10 @@ import com.google.gwt.user.client.ui.IsWidget;
 
 public interface ProfileView extends IsWidget
 {
-	void setupModule();
+	interface Presenter {
+		void logout();
+		void gotoCourses();
+	}
+	
+	void setupModule(Presenter presenter);
 }

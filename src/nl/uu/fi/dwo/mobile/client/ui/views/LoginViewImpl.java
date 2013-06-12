@@ -21,6 +21,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
+import com.googlecode.mgwt.dom.client.event.touch.TouchEndHandler;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 import com.googlecode.mgwt.ui.client.widget.Button;
@@ -29,9 +31,10 @@ import com.googlecode.mgwt.ui.client.widget.LayoutPanel;
 import com.googlecode.mgwt.ui.client.widget.MPasswordTextBox;
 import com.googlecode.mgwt.ui.client.widget.MTextBox;
 
-public class LoginViewImpl implements LoginView
+public class LoginViewImpl implements LoginView, LoginView.Presenter
 {
 	private LayoutPanel main;
+	private Presenter presenter = this ;
 	private static final AsyncCallback<Map<String, Object>> LOGIN_CALLBACK = new AsyncCallback<Map<String, Object>>()
 	{
 
@@ -42,7 +45,7 @@ public class LoginViewImpl implements LoginView
 			if (caught.getMessage().contains("LoginException"))
 				Window.alert("Gebruikersnaam/wachtwoord combinatie niet juist");
 			else
-				Window.alert("Unable to loggin");
+				Window.alert("Unable to login");
 
 		}
 
@@ -138,13 +141,13 @@ public class LoginViewImpl implements LoginView
 		submitbutton.setText("Login");
 		submitbutton.setWidth("276px");
 		submitbutton.getElement().getStyle().setProperty("margin", "30px auto");
-		submitbutton.addTouchStartHandler(new TouchStartHandler()
+		submitbutton.addTouchEndHandler(new TouchEndHandler()
 		{
 
 			@Override
-			public void onTouchStart(TouchStartEvent event)
+			public void onTouchEnd(TouchEndEvent event)
 			{
-				login(username.getText(), passwd.getText());
+				presenter.login(username.getText(), passwd.getText());
 			}
 		});
 
@@ -162,13 +165,13 @@ public class LoginViewImpl implements LoginView
 		gastbutton.setText("Login als gast");
 		gastbutton.setWidth("276px");
 		gastbutton.getElement().getStyle().setProperty("margin", "30px auto");
-		gastbutton.addTouchStartHandler(new TouchStartHandler()
+		gastbutton.addTouchEndHandler(new TouchEndHandler()
 		{
 
 			@Override
-			public void onTouchStart(TouchStartEvent event)
+			public void onTouchEnd(TouchEndEvent event)
 			{
-				DWOplayer.gotoCourses();
+				presenter.login();
 			}
 		});
 
@@ -189,11 +192,16 @@ public class LoginViewImpl implements LoginView
 		
 	}
 
-	private void login(String name, String password)
+	public void login(String name, String password)
 	{
 		RPCHandler handler = DWOplayer.clientfactory.getRPCHandler();
 		handler.login(name, password, LOGIN_CALLBACK);
 	}
+	
+	public void login() {
+		DWOplayer.gotoCourses();
+	}
+	
 
 	@Override
 	public Widget asWidget()
@@ -201,9 +209,8 @@ public class LoginViewImpl implements LoginView
 		return main;
 	}
 
-	@Override
-	public void setupModule()
+	public void setupModule(Presenter presenter)
 	{
-
+		this.presenter = presenter;
 	}
 }

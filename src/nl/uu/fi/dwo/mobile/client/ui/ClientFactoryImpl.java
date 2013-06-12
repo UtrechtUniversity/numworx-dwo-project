@@ -36,7 +36,7 @@ public class ClientFactoryImpl implements ClientFactory
 
 	public ClientFactoryImpl()
 	{
-		entryView = new ViewModuleViewImpl().initialize();
+		
 	}
 
 	@Override
@@ -54,6 +54,9 @@ public class ClientFactoryImpl implements ClientFactory
 	@Override
 	public ViewModuleView getEntryView()
 	{
+		if(entryView == null)
+			entryView = new ViewModuleViewImpl().initialize();
+		
 		return entryView;
 	}
 
