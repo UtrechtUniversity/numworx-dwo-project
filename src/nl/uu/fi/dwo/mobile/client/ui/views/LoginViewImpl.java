@@ -154,14 +154,6 @@ public class LoginViewImpl implements LoginView, LoginView.Presenter
 		first.add(submitbutton);
 
 		Button gastbutton = new Button();
-//		gastbutton.addDomHandler(new com.google.gwt.event.dom.client.TouchStartHandler() {
-//
-//			@Override
-//			public void onTouchStart(
-//					com.google.gwt.event.dom.client.TouchStartEvent event) {
-//				DWOplayer.gotoCourses(); 
-//				
-//			}}, com.google.gwt.event.dom.client.TouchStartEvent.getType());
 		gastbutton.setText("Login als gast");
 		gastbutton.setWidth("276px");
 		gastbutton.getElement().getStyle().setProperty("margin", "30px auto");
@@ -177,18 +169,6 @@ public class LoginViewImpl implements LoginView, LoginView.Presenter
 
 		first.add(gastbutton);
 		
-//		TouchButton tb  = new TouchButton(); tb.setText("TOUCHBUTTON");
-//		
-//		nl.uu.fi.dwo.interaction.client.touch.TouchStartHandler listener = new nl.uu.fi.dwo.interaction.client.touch.TouchStartHandler() {
-//
-//			@Override
-//			public void onTouchStart(
-//					nl.uu.fi.dwo.interaction.client.touch.TouchStartEvent event) {
-//				login(username.getText(), passwd.getText());
-//				
-//			}};
-//		tb.addTouchStartHandler(listener );
-//		first.add(tb);
 		
 	}
 

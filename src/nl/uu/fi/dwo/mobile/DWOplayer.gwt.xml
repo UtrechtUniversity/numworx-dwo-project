@@ -17,6 +17,7 @@
   <!-- Specify the app entry point class.                         -->
 
   <inherits name="com.googlecode.mgwt.MGWT"/>
+
   <inherits name="com.google.gwt.json.JSON" />
    <inherits name="com.fredhat.gwt.xmlrpc.XMLRPC" />
    <inherits name="nl.uu.fi.dwo.interaction.Interaction" />
@@ -31,7 +32,7 @@
   <inherits name="com.google.gwt.xml.XML"/> 
    <inherits name="com.google.gwt.http.HTTP"/> 
   <inherits name="fi.wiskopdr"/>
-    
+   
 <!--<set-property name="user.agent" value="gecko1_8" /> -->
 
   
@@ -39,9 +40,13 @@
 <!--  <entry-point class='nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl'/> -->
 <!--  --><entry-point class='nl.uu.fi.dwo.mobile.touchtest.Touchtest' /> 
 
+
+	<entry-point class='nl.uu.fi.dwo.mobile.touchtest.Touchtest' />
+	
   <!-- Specify the paths for translatable code                    -->
   <source path='client'/>
   <source path='shared'/>
+  <source path='touchtest' />
   
    <!-- Use ClientFactoryImpl by default -->
     <replace-with class="nl.uu.fi.dwo.ui.ClientFactoryImpl">

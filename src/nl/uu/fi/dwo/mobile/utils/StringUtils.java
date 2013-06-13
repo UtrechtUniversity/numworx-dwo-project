@@ -234,10 +234,10 @@ public class StringUtils {
 
     private static String randomstring(int lo, int hi) {
         int n = rand(lo, hi);
-        byte b[] = new byte[n];
+        char b[] = new char[n];
         for (int i = 0; i < n; i++)
-            b[i] = (byte) rand('a', 'z');
-        return new String(b, 0);
+            b[i] = (char) rand('a', 'z');
+        return new String(b);
     }
 
     public static String randomstring() {

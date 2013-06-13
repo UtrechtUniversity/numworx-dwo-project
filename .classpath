@@ -4,12 +4,12 @@
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/geogebraView"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/KladjeGWT"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NabouwenAanzichtenGWT"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/BalansFruitGWT"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/WriteMathGWT"/>
 	<classpathentry kind="lib" path="lib/mgwt-1.1.2.jar"/>
+	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
