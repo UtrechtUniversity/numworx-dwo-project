@@ -37,11 +37,9 @@
 
   
 <!--  <entry-point class='nl.uu.fi.dwo.mobile.DWOplayer'/> -->
-<!--  <entry-point class='nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl'/> -->
-<!--  --><entry-point class='nl.uu.fi.dwo.mobile.touchtest.Touchtest' /> 
+<!--  --><entry-point class='nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl'/> 
+<!--  <entry-point class='nl.uu.fi.dwo.mobile.touchtest.Touchtest' /> --> 
 
-
-	<entry-point class='nl.uu.fi.dwo.mobile.touchtest.Touchtest' />
 	
   <!-- Specify the paths for translatable code                    -->
   <source path='client'/>
