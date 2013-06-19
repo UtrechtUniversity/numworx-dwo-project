@@ -944,9 +944,9 @@ public class ViewModuleViewImpl implements ViewModuleView, EntryPoint
 
 	public ViewModuleViewImpl initialize()
 	{
-		//api = new SCORM_2004_API();
+		api = new SCORM_2004_API();
 		//api = new SCORM_12_API(); // De oude DWO exporteert Scorm1.2 API, maar kan wel Scorm2004 cmi aan.
-		api = new AssetAPI();
+		//api = new AssetAPI();
 		FlowPanel fp = new FlowPanel();
 		mainPanel = new FocusPanel(fp);
 		mainPanel.setHeight("100%");
