@@ -14,11 +14,16 @@ import com.googlecode.mgwt.ui.client.widget.celllist.HasCellSelectedHandler;
  */
 public interface SelectModuleView extends IsWidget
 {
+	interface Presenter {
+		void selectItem(SelectModuleItem item);
+		void back();
+	}
+	
 	public void render(List<SelectModuleItem> items);
-
-	public HasCellSelectedHandler getList();
-
 	public void render(SelectModuleItem item);
 
 	public List<SelectModuleItem> getItems();
+	
+	void setPresenter(Presenter presenter);
+	void setDescription(SelectModuleItem item);
 }

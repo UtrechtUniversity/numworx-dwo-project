@@ -9,9 +9,11 @@ import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
+import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView.Presenter;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedEvent;
@@ -23,7 +25,7 @@ import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedHandler;
  * @author Danny Hendrix
  * 
  */
-public class SelectModuleActivity extends MGWTAbstractActivity
+public class SelectModuleActivity extends MGWTAbstractActivity implements Presenter
 {
 	ClientFactory clientFactory;
 	private List<SelectModuleItem> currentModel;
@@ -47,18 +49,22 @@ public class SelectModuleActivity extends MGWTAbstractActivity
 			view.render(currentModel);
 		else
 			view.render(item);
-		
-		addHandlerRegistration(view.getList().addCellSelectedHandler(new CellSelectedHandler()
-		{
-
-			@Override
-			public void onCellSelected(CellSelectedEvent event)
-			{
-				clientFactory.getPlaceController().goTo(new ViewModulePlace(view.getItems().get(event.getIndex()).getID()));
-			}
-		}));
+		view.setPresenter(this);
 
 		panel.setWidget(view);
+	}
+
+	public void selectItem(int item) {
+		clientFactory.getPlaceController().goTo(new ViewModulePlace(item));
+	}
+	public void selectItem(SelectModuleItem item) 
+	{
+		selectItem(item.getID());
+	}
+
+	@Override
+	public void back() {
+		History.back();
 	}
 
 }

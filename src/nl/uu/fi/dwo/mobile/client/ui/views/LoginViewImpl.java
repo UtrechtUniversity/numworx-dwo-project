@@ -15,12 +15,16 @@ import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.HandlerRegistration;
+import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
+import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchEndHandler;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
@@ -58,6 +62,12 @@ public class LoginViewImpl implements LoginView, LoginView.Presenter
 
 	};
 
+	HandlerRegistration submit, gast, g2;
+	private Button gastbutton;
+	private Button submitbutton;
+	private MTextBox username;
+	private MPasswordTextBox passwd;
+	
 	public LoginViewImpl()
 	{
 		main = new LayoutPanel();
@@ -98,7 +108,7 @@ public class LoginViewImpl implements LoginView, LoginView.Presenter
 		main.add(first);
 
 		usernamelabel.getElement().addClassName("listitem");
-		final MTextBox username = new MTextBox();
+		username = new MTextBox();
 		username.getElement().getFirstChildElement().getStyle().setColor("#000");
 		username.getElement().getStyle().setBackgroundColor("#eee");
 		username.getElement().getFirstChildElement().getStyle().setProperty("background", "none");
@@ -121,7 +131,7 @@ public class LoginViewImpl implements LoginView, LoginView.Presenter
 
 		first.add(pwlabel);
 		pwlabel.getElement().addClassName("listitem");
-		final MPasswordTextBox passwd = new MPasswordTextBox();
+		passwd = new MPasswordTextBox();
 		passwd.setName("passwd");
 		passwd.getElement().getFirstChildElement().getStyle().setColor("#000");
 		passwd.getElement().getStyle().setBackgroundColor("#eee");
@@ -137,39 +147,59 @@ public class LoginViewImpl implements LoginView, LoginView.Presenter
 
 		first.add(passwd);
 
-		Button submitbutton = new Button();
+		submitbutton = new Button();
 		submitbutton.setText("Login");
 		submitbutton.setWidth("276px");
 		submitbutton.getElement().getStyle().setProperty("margin", "30px auto");
-		submitbutton.addTouchEndHandler(new TouchEndHandler()
+
+		first.add(submitbutton);
+
+		gastbutton = new Button() 
+		{
+			@Override
+			public void fireEvent(GwtEvent<?> event) {
+				final String string = event.toDebugString();
+				GWT.log(string);
+				if(string.endsWith("DownEvent:")) {
+					GWT.log("break");
+				}
+				super.fireEvent(event);
+			}}
+		;
+		gastbutton.setText("Login als gast");
+		gastbutton.setWidth("276px");
+		gastbutton.getElement().getStyle().setProperty("margin", "30px auto");
+
+		first.add(gastbutton);
+		
+//		g2 = gastbutton.addTouchStartHandler(new TouchStartHandler() {
+//			
+//			@Override
+//			public void onTouchStart(TouchStartEvent event) {
+//				GWT.log("touch start");
+//			}
+//		});
+	}
+
+	private void start() {
+		submit = submitbutton.addTapHandler(new TapHandler()
 		{
 
 			@Override
-			public void onTouchEnd(TouchEndEvent event)
+			public void onTap(TapEvent event)
 			{
 				presenter.login(username.getText(), passwd.getText());
 			}
 		});
-
-		first.add(submitbutton);
-
-		Button gastbutton = new Button();
-		gastbutton.setText("Login als gast");
-		gastbutton.setWidth("276px");
-		gastbutton.getElement().getStyle().setProperty("margin", "30px auto");
-		gastbutton.addTouchEndHandler(new TouchEndHandler()
+		gast = gastbutton.addTapHandler(new TapHandler()
 		{
 
 			@Override
-			public void onTouchEnd(TouchEndEvent event)
+			public void onTap(TapEvent event)
 			{
 				presenter.login();
 			}
 		});
-
-		first.add(gastbutton);
-		
-		
 	}
 
 	public void login(String name, String password)
@@ -191,6 +221,13 @@ public class LoginViewImpl implements LoginView, LoginView.Presenter
 
 	public void setupModule(Presenter presenter)
 	{
+		stop();
 		this.presenter = presenter;
+		if(presenter != null) start();
+	}
+
+	private void stop() {
+		if(submit != null) submit.removeHandler(); submit=null;
+		if(gast != null) gast.removeHandler(); gast = null;
 	}
 }

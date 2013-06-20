@@ -9,11 +9,16 @@ import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 
 public interface TreeModuleView extends IsWidget
 {
-
+	interface Presenter {
+		void back();
+		void selectItem(SelectModuleItem object);
+	}
+	
+	
 	void render(List<SelectModuleItem> currentModel);
 
 	void selectModule(SelectModuleItem item);
 
-	HeaderButton getBackButton();
+	void setPresenter(Presenter presenter);
 
 }

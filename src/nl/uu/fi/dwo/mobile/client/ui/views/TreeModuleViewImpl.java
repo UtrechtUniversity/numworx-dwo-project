@@ -10,18 +10,12 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleCell;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
-import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.place.shared.Place;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -30,6 +24,8 @@ import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
+import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.ui.client.widget.CellList;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
@@ -37,7 +33,7 @@ import com.googlecode.mgwt.ui.client.widget.LayoutPanel;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedEvent;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedHandler;
 
-public class TreeModuleViewImpl extends Composite implements TreeModuleView, SelectionHandler<TreeItem>, CellSelectedHandler
+public class TreeModuleViewImpl implements TreeModuleView, SelectionHandler<TreeItem>, CellSelectedHandler
 {
 
 	private HeaderButton backButton;
@@ -51,6 +47,7 @@ public class TreeModuleViewImpl extends Composite implements TreeModuleView, Sel
 	private Tree tree;
 	private HashMap<SelectModuleItem, TreeItem> inverseMap = new HashMap<SelectModuleItem, TreeItem>();
 	private List<SelectModuleItem> cellItems;
+	protected Presenter presenter;
 
 	public TreeModuleViewImpl()
 	{
@@ -81,7 +78,17 @@ public class TreeModuleViewImpl extends Composite implements TreeModuleView, Sel
 		cells.addCellSelectedHandler(this);
 		children.add(cells);
 		main.add(split);
-		initWidget(main);
+		
+		backButton.addTapHandler(new TapHandler()
+		{
+
+			@Override
+			public void onTap(TapEvent event)
+			{
+				presenter.back();
+			}
+		});
+
 	}
 
 	@Override
@@ -127,9 +134,6 @@ public class TreeModuleViewImpl extends Composite implements TreeModuleView, Sel
 	@Override
 	public void selectModule(SelectModuleItem item)
 	{
-//		cells.removeFromParent();
-//		cells = new CellList<SelectModuleItem>(new SelectModuleCell());
-//		children.add(cells);
 		if (item != null)
 		{
 			headerPanel.setCenter(item.getName());
@@ -242,12 +246,6 @@ public class TreeModuleViewImpl extends Composite implements TreeModuleView, Sel
 	}
 
 	@Override
-	public HeaderButton getBackButton()
-	{
-		return backButton;
-	}
-
-	@Override
 	public void onSelection(SelectionEvent<TreeItem> event)
 	{
 		TreeItem item = event.getSelectedItem();
@@ -255,30 +253,24 @@ public class TreeModuleViewImpl extends Composite implements TreeModuleView, Sel
 		onSelection(o);
 	}
 
-	void onSelection(SelectModuleItem o) {
-		Place place;
-		switch(o.getType()) {
-		default:
-		case ROOT:
-			place = new TreeModulePlace("0");
-			break;
-		case SCO:
-			place = new ViewModulePlace(o.getID());
-			break;
-		case MODULE:
-			place = new SelectModulePlace(o.getID());
-			break;
-		case FOLDER:
-			place = new TreeModulePlace(o.getID());
-			break;
-		}
 
-		DWOplayer.clientfactory.getPlaceController().goTo(place);
+	private void onSelection(SelectModuleItem o) {
+		presenter.selectItem(o);
 	}
 
 	@Override
 	public void onCellSelected(CellSelectedEvent event) {
 		int index = event.getIndex();
 		onSelection(cellItems.get(index));
+	}
+
+	@Override
+	public void setPresenter(Presenter presenter) {
+		this.presenter = presenter;
+	}
+
+	@Override
+	public Widget asWidget() {
+		return main;
 	}
 }

@@ -9,28 +9,23 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleCell;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
-import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.ProfilePlace;
 
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.xml.client.Document;
-import com.google.gwt.xml.client.Node;
-import com.google.gwt.xml.client.NodeList;
-import com.google.gwt.xml.client.XMLParser;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.ui.client.widget.CellList;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.googlecode.mgwt.ui.client.widget.LayoutPanel;
+import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedEvent;
+import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedHandler;
 import com.googlecode.mgwt.ui.client.widget.celllist.HasCellSelectedHandler;
 
 /**
@@ -38,8 +33,11 @@ import com.googlecode.mgwt.ui.client.widget.celllist.HasCellSelectedHandler;
  * @author Danny Hendrix
  * 
  */
-public class SelectModuleViewImpl implements SelectModuleView
+public class SelectModuleViewImpl implements SelectModuleView, SelectModuleView.Presenter
 {
+	
+	Presenter presenter = this;
+	
 	class GetScosCallback implements AsyncCallback<List<Map<String,Object>>> {
 
 		private SelectModuleItem parent;
@@ -73,82 +71,60 @@ public class SelectModuleViewImpl implements SelectModuleView
 	private CellList<SelectModuleItem> list;
 	private HeaderButton backbutton;
 	private List<SelectModuleItem> items;
+	private HeaderPanel header;
+	private SimplePanel description;
 
 	public SelectModuleViewImpl()
 	{
 		main = new LayoutPanel();
 
-		HeaderPanel header = new HeaderPanel();
+		header = new HeaderPanel();
 		header.setCenter("Selecteer activiteit");
 		main.add(header);
 
 		backbutton = new HeaderButton();
 		backbutton.setBackButton(true);
-		if (DWOplayer.profiledata != null)
-			backbutton.setText("Profiel");
-		else
-			backbutton.setText("Login");
+		backbutton.setText("Terug");
+		header.setLeftWidget(backbutton);
+		
+		description = new SimplePanel();
+		main.add(description);
+		
+		list = new CellList<SelectModuleItem>(new SelectModuleCell());
+		main.add(list);
+	}
 
-		backbutton.addTapHandler(new TapHandler()
+	HandlerRegistration back,sel;
+
+	public void start() {
+		back = backbutton.addTapHandler(new TapHandler()
 		{
 
 			@Override
 			public void onTap(TapEvent event)
 			{
-//				if (DWOplayer.profiledata != null)
-//					DWOplayer.clientfactory.getPlaceController().goTo(new ProfilePlace("Profile"));
-//				else
-//					DWOplayer.clientfactory.getPlaceController().goTo(new LoginPlace("Login"));
-				History.back();
+				presenter.back();
 			}
 		});
+		
+		sel = list.addCellSelectedHandler(new CellSelectedHandler()
+		{
 
-		header.setLeftWidget(backbutton);
-
-//		RequestBuilder.Method method = RequestBuilder.GET;
-//		String url = "activiteiten.xml";
-//		RequestBuilder rb = new RequestBuilder(method, url);
-//		try
-//		{
-//			rb.sendRequest(null, new RequestCallback()
-//			{
-//
-//				@Override
-//				public void onResponseReceived(Request request, Response response)
-//				{
-//					String responseText = response.getText();
-//					if (!responseText.isEmpty())
-//					{
-//						Document dom = XMLParser.parse(responseText);
-//						Node main = dom.getElementsByTagName("activiteiten").item(0);
-//						NodeList children = main.getChildNodes();
-//						int j = 0;
-//						for (int i = 0; i < children.getLength(); i++)
-//						{
-//							if (children.item(i).hasChildNodes() == true)
-//								SelectModuleItemHolder.insert(j++, children.item(i));
-//						}
-//					}
-//					//list = new CellList<SelectModuleItem>(new SelectModuleCell());
-//					list.render(SelectModuleItemHolder.getItems());
-//				}
-//
-//				@Override
-//				public void onError(Request request, Throwable exception)
-//				{
-//					Window.alert("error loading activiteiten.xml");
-//				}
-//			});
-//
-//		}
-//		catch (RequestException e)
-//		{
-//			Window.alert("error loading activiteiten.xml");
-//		}
-
-		list = new CellList<SelectModuleItem>(new SelectModuleCell());
-		main.add(list);
+			@Override
+			public void onCellSelected(CellSelectedEvent event)
+			{
+				final SelectModuleItem id = getItems().get(event.getIndex());
+				presenter.selectItem(id);
+			}
+		});
 	}
+	
+	public void stop() {
+		if(back != null) back.removeHandler(); back = null;
+		if(sel != null)  sel.removeHandler(); sel = null;
+		presenter = this;
+	}
+	
 
 	@Override
 	public Widget asWidget()
@@ -159,16 +135,11 @@ public class SelectModuleViewImpl implements SelectModuleView
 	@Override
 	public void render(List<SelectModuleItem> items)
 	{
-		if (DWOplayer.profiledata != null)
-			backbutton.setText("Profiel");
-		else
-			backbutton.setText("Login");
 		this.items = items;
 		list.render(items);
 	}
 
-	@Override
-	public HasCellSelectedHandler getList()
+	private HasCellSelectedHandler getList()
 	{
 		return list;
 	}
@@ -187,8 +158,42 @@ public class SelectModuleViewImpl implements SelectModuleView
 
 	@Override
 	public List<SelectModuleItem> getItems() {
-		// TODO Auto-generated method stub
 		return items;
 	}
 
+
+	@Override
+	public void back() {
+		History.back();
+	}
+
+	@Override
+	public void setPresenter(Presenter presenter) {
+		stop();
+		this.presenter = presenter;
+		if(presenter != null) start();
+	}
+
+	@Override
+	public void selectItem(SelectModuleItem item) {
+	}
+
+	@Override
+	public void setDescription(SelectModuleItem item) {
+		header.setCenter(item.getName());
+		String description = item.getDescription();
+		if(description != null)
+		{
+			if(description.startsWith("<html>"))
+				this.description.setWidget(new HTML(description));
+			else
+			{
+				this.description.setWidget(new Label(description));
+			}
+		} else
+			this.description.setWidget(new Label(""));
+
+
+	}
+	
 }

@@ -137,7 +137,7 @@ public class Variable
 			for (int j = leftBorder; j <= rightBorder; j++)
 			{
 				values.addElement(new Integer(j));
-				System.out.println("getallen: " + j);
+				//System.out.println("getallen: " + j);
 			}
 		}
 	}
