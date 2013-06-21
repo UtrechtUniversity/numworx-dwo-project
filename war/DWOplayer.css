@@ -40,3 +40,17 @@ div.tabkeyboard {
 div.listitem { color:#000; }
 
 input[name="userid"] { color:#000; }
+
+iframe {
+	border: 0px;
+	border-top: 0px solid #000;
+	border-bottom: 0px solid #000;
+	border-right: 0px solid #000;
+	border-left: 0px solid #000;
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+	border-right-width: 0px;
+	border-left-width: 0px;
+}
+
+
