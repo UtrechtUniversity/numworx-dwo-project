@@ -11,7 +11,6 @@ import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
-import nl.uu.fi.dwo.mobile.touchtest.SelectModuleTest;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
