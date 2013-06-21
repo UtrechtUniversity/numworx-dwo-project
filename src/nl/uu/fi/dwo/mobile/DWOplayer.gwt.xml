@@ -25,7 +25,7 @@
    
    <inherits name="fi.kladjegwt.KladjeGWT-DWO" />
    <inherits name="fi.nabouwenaanzichtengwt.NabouwenAanzichtenGWT-DWO" />
-   <inherits name="fi.balansfruitgwt.BalansFruitGWT-DWO" />
+<!--    <inherits name="fi.balansfruitgwt.BalansFruitGWT-DWO" /> --> 
    <inherits name='nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.geogebraview.GeogebraViewDWO' />
      
 
@@ -37,8 +37,8 @@
 
   
 <!--  <entry-point class='nl.uu.fi.dwo.mobile.DWOplayer'/> -->
-<!--  --><entry-point class='nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl'/> 
-<!--  <entry-point class='nl.uu.fi.dwo.mobile.touchtest.Touchtest' /> --> 
+<!-- --> <entry-point class='nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl'/> 
+<!--  <entry-point class='nl.uu.fi.dwo.mobile.touchtest.Touchtest' /> -->
 
 	
   <!-- Specify the paths for translatable code                    -->

@@ -17,6 +17,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.AssetAPI;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_2004_API;
+import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
@@ -944,9 +945,10 @@ public class ViewModuleViewImpl implements ViewModuleView, EntryPoint
 
 	public ViewModuleViewImpl initialize()
 	{
-		api = new SCORM_2004_API();
+		//api = new SCORM_2004_API();
 		//api = new SCORM_12_API(); // De oude DWO exporteert Scorm1.2 API, maar kan wel Scorm2004 cmi aan.
 		//api = new AssetAPI();
+		api = new SCORM_guest();
 		FlowPanel fp = new FlowPanel();
 		mainPanel = new FocusPanel(fp);
 		mainPanel.setHeight("100%");

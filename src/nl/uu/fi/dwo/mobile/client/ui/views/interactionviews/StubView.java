@@ -34,6 +34,9 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	private HashMap innerMap;
 	private OpdrNavIF comRoot = this;
 	private HashMap randomVars;
+	private String pendingState;
+	private int width;
+	private int height;
 
 	public StubView(String html, HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
@@ -46,6 +49,8 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		randomVars = randomVarWaarden;
 		
 		frame = new Frame(html);
+		frame.setStylePrimaryName(".gwt-StubView");
+		frame.addStyleDependentName("borderless");
 		Object width = launchData.get("breedte");
 		if (width == null)
 			width = "400";
@@ -53,6 +58,8 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		if (height == null)
 			height = "400";
 		frame.setSize(width + "px", height + "px");
+		this.width = Integer.parseInt(width.toString());
+		this.height = Integer.parseInt(height.toString());
 		frame.addLoadHandler(this);
 		setWidget(frame);
 	}
@@ -71,7 +78,13 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	@Override
 	public void setState(HashMap<String, Object> h) {
 		JSONValue object = JSONUtilities.toJSONObject(h);
-		setState(innerView, object.toString());
+		if(innerView != null)
+		{
+			setState(innerView, object.toString());
+			pendingState = null;
+		}
+		else 
+			pendingState = object.toString();
 	}
 
 	@Override
@@ -113,36 +126,24 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		try {
 			HashMap<String, Object> inits = new HashMap<String,Object>();			
 			inits.putAll(randomVars);
-			init(inner, JSONUtilities.toJSONObject(innerMap).toString(), 
+			init(inner, width, height, JSONUtilities.toJSONObject(innerMap).toString(), 
 					JSONUtilities.toJSONObject(inits).isObject().getJavaScriptObject()); // FIXME ook toString?
-			} catch(Exception e) {
-				GWT.log("init", e);
-		}
 
-// VANAF HIER TESTEN
-		final int score = getScore();
-		GWT.log("score is " + score);
-		try {
-			HashMap<String, Object> o = getState();
-			GWT.log("state " + o);			
-			setState(o);
-		} catch (Exception e) {
-			GWT.log("state", e);
+			if(pendingState != null) {
+				setState(inner, pendingState);
+				pendingState = null;
+			} 
+		} catch(Exception e) {
+			GWT.log("init", e);
 		}
 		
-		try {
-			final boolean correct = isCorrect();
-			GWT.log("correct " + correct);
-		} catch (Exception e) {
-			GWT.log("correct", e);
-		}
-		
+				
 	}
 	
 	
-	private native void init(Object inner, String launchdata,
+	private native void init(Object inner, int width, int height, String launchdata,
 			JavaScriptObject randomVars) /*-{ 
-				inner.init(launchdata, randomVars);
+				inner.init(width, height, launchdata, randomVars);
 			}-*/;
 
 	@Override

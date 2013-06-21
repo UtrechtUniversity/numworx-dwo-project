@@ -8,5 +8,5 @@ public interface InteractionStub extends InteractionView {
 	 * @param launchData
 	 * @param values map met randomvariabelen
 	 */
-	public void init(Map<String, Object> launchData, Map<String, Number> values);
+	public void init(int width, int height, Map<String, Object> launchData, Map<String, Number> values);
 }

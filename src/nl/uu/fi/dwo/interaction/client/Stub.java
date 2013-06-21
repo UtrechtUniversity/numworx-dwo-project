@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
@@ -29,7 +30,7 @@ public class Stub implements OpdrNavIF {
 		view.setState(result);
 	}
 	
-	private void init(String launchdata, JavaScriptObject randomValues) {
+	private void init(int width, int height, String launchdata, JavaScriptObject randomValues) {
 		Map<String, Number> numbers = new HashMap<String,Number>();
 		Map<String,Object> result;
 
@@ -44,7 +45,7 @@ public class Stub implements OpdrNavIF {
 
 		result  = JSONUtilities.fromJSONObject(JSONParser.parseLenient(launchdata).isObject());
 		
-		view.init(result, numbers);
+		view.init(width, height, result, numbers);
 		view.setCommunicationRoot(this);
 	}
 	
@@ -63,8 +64,8 @@ public class Stub implements OpdrNavIF {
 			isCorrect: function() {
 				return this.stub.@nl.uu.fi.dwo.interaction.client.Stub::view.@nl.uu.fi.dwo.interaction.client.InteractionView::isCorrect()();
 			},
-			init: function(launchdata,values) {
-				this.stub.@nl.uu.fi.dwo.interaction.client.Stub::init(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(launchdata,values);
+			init: function(width, height, launchdata,values) {
+				this.stub.@nl.uu.fi.dwo.interaction.client.Stub::init(IILjava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(width, height,launchdata,values);
 			}
 		};
 		$wnd.inner.stub = o;
@@ -75,7 +76,11 @@ public class Stub implements OpdrNavIF {
 	
 	public static void publish(InteractionStub view) 
 	{
-		publish0(new Stub(view));
+		try { 
+			publish0(new Stub(view));
+		} catch(Exception e) {
+			GWT.log("publish", e);
+		}
 	}
 
 	@Override

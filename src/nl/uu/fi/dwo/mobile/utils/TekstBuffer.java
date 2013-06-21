@@ -7,10 +7,10 @@ import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.geogebraview.client.GeogebraView;
 import fi.kladjegwt.client.KladjeGWT;
-import fi.balansfruitgwt.client.BalansFruitGWT;
 import fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT;
 
 /**
@@ -229,7 +229,8 @@ public class TekstBuffer
 		}
 		else if(soortVak == 11) 
 		{
-			result = new BalansFruitGWT(currentVakGegevens);
+			result = //new BalansFruitGWT(currentVakGegevens);
+					new StubView("BalansFruitGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		}
 		else if (soortVak == 41)
 		{
