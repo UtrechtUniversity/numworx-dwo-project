@@ -141,7 +141,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	}
 	
 	
-	private native void init(Object inner, int width, int height, String launchdata,
+	private static native void init(Object inner, int width, int height, String launchdata,
 			JavaScriptObject randomVars) /*-{ 
 				inner.init(width, height, launchdata, randomVars);
 			}-*/;
