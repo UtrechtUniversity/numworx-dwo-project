@@ -143,6 +143,7 @@ public class TreeModuleViewImpl implements TreeModuleView, SelectionHandler<Tree
 	@Override
 	public void selectModule(SelectModuleItem item)
 	{
+		// TODO iets met tree.ensureSelectedItemVisible() na setselectedItem(item)
 		if (item != null)
 		{
 			headerPanel.setCenter(item.getName());
