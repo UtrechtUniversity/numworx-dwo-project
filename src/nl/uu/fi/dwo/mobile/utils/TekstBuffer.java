@@ -11,7 +11,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.geogebraview.client.GeogebraView;
 import fi.kladjegwt.client.KladjeGWT;
-import fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT;
+//import fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT;
 
 /**
  * Uses information in the launchdata HashMap to create objects that will be
