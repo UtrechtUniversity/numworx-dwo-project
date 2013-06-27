@@ -35,11 +35,8 @@ import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 public class DummyTreeModuleActivity extends MGWTAbstractActivity implements Presenter
 {
 
-	private static final SelectModuleItem ROOT = new SelectModuleItem(null, SelectModuleItem.Type.ROOT);
-	static {
-		ROOT.setName("Modules");
-		ROOT.setDescription("blabla blabla");
-	}
+	private static final SelectModuleItem ROOT = SelectModuleItem.ROOT;
+
 	ClientFactory clientFactory;
 	private SelectModuleView view;
 

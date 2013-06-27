@@ -24,7 +24,7 @@ public class SelectModuleItemHolder
 		list = new ArrayList<SelectModuleItem>();
 		map = new HashMap<Integer, SelectModuleItem>();
 		scos = new HashMap<Integer, SelectModuleItem>();
-
+		
 		/*
 				insert(0, "test1", "test.xml");
 				insert(1, "test2", "test2.xml");
@@ -81,7 +81,7 @@ public class SelectModuleItemHolder
 	public static void clear() {
 		init();
 		list.clear();
-		map.clear();
+		map.clear(); map.put(0,  SelectModuleItem.ROOT);
 		scos.clear();
 		
 	}

@@ -24,6 +24,7 @@ import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.googlecode.mgwt.dom.client.event.tap.HasTapHandlers;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.ui.client.widget.CellList;
@@ -67,6 +68,7 @@ public class TreeModuleViewImpl implements TreeModuleView, SelectionHandler<Tree
 		split = new SplitLayoutPanel();
 		split.setWidth("100%");
 		split.setHeight("99%");
+		split.setVisible(true);
 		tree = new Tree();
 		tree.addSelectionHandler(this);
 		split.addWest(tree, 200);
@@ -79,7 +81,7 @@ public class TreeModuleViewImpl implements TreeModuleView, SelectionHandler<Tree
 		children.add(cells);
 		main.add(split);
 		
-		backButton.addTapHandler(new TapHandler()
+		getBackBtn().addTapHandler(new TapHandler()
 		{
 
 			@Override
@@ -89,6 +91,13 @@ public class TreeModuleViewImpl implements TreeModuleView, SelectionHandler<Tree
 			}
 		});
 
+	}
+
+	/**
+	 * @return
+	 */
+	public HasTapHandlers getBackBtn() {
+		return backButton;
 	}
 
 	@Override
@@ -159,7 +168,10 @@ public class TreeModuleViewImpl implements TreeModuleView, SelectionHandler<Tree
 					loadScos(item);
 				else
 					addChildren(item.getChildren());
-			}	
+			} else if(item.getType() == SelectModuleItem.Type.ROOT )
+			{
+				addChildren(model);
+			}
 			
 		}
 		else

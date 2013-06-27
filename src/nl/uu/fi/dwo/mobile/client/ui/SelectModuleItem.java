@@ -24,6 +24,13 @@ public class SelectModuleItem
 		SCO, MODULE, FOLDER, ROOT
 	}
 
+	public static final SelectModuleItem ROOT = new SelectModuleItem(null, SelectModuleItem.Type.ROOT);
+	static {
+		ROOT.setName("Standaard DWO Modules");
+		ROOT.setDescription("<html><body><b>DWO-modules</b><br>In de DWO is veel oefenmateriaal beschikbaar.  Naast dit oefenmateriaal zijn er ook diverse volledige lessen en lessenseries beschikbaar, die kunnen worden gebruikt als aanvulling op of zelfs vervanging van het reguliere boek. In de etalage kunt u een indruk krijgen van de mogelijkheden die de DWO biedt voor de wiskundeles.</body></html>");
+	}
+	
+	
 	private String name;
 	private String file;
 	private String description;

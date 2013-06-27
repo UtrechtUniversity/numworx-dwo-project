@@ -87,23 +87,22 @@ public class Touchtest implements EntryPoint {
 	public LoginView mainView;
 	public Place    defaultPlace = new LoginPlace(); 
 
-	public class MyActivity extends MGWTAbstractActivity implements LoginView.Presenter {
+	public class MyActivity extends MGWTAbstractActivity  {
 
 		@Override
 		public void start(AcceptsOneWidget panel, EventBus eventBus) {
-			mainView.setupModule(this);
+			mainView.setupModule();
 			panel.setWidget(mainView);
 
 		}
 
-		@Override
-		public void login() {
+		private void login() {
 			Window.alert("login");
 			
 		}
 
-		@Override
-		public void login(String username, String password) {
+
+		private void login(String username, String password) {
 			Window.alert("login " + username );
 			DWOplayer.profiledata = new HashMap();
 			DWOplayer.profiledata.put("firstname", username);
@@ -125,12 +124,12 @@ public class Touchtest implements EntryPoint {
 				return new ProfileActivity(clientFactory);
 			else if (place instanceof TreeModulePlace)
 			{
-				//TreeModuleActivity treeModuleActivity = new TreeModuleActivity(clientFactory);
-				DummyTreeModuleActivity treeModuleActivity = new DummyTreeModuleActivity(clientFactory);
+				TreeModuleActivity treeModuleActivity = new TreeModuleActivity(clientFactory);
+				//DummyTreeModuleActivity treeModuleActivity = new DummyTreeModuleActivity(clientFactory);
 				return treeModuleActivity;
 			}
-//			else if (place instanceof SelectModulePlace)
-//				return new SelectModuleActivity(clientFactory);
+			else if (place instanceof SelectModulePlace)
+				return new SelectModuleActivity(clientFactory);
 					
 			return null;
 		}

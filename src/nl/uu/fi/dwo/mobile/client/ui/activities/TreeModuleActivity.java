@@ -57,7 +57,6 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements Presente
 			int id = Integer.parseInt(selectedModulePlace.getToken());
 
 			SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);
-
 			view.selectModule(item);
 			view.setPresenter(this);
 		}

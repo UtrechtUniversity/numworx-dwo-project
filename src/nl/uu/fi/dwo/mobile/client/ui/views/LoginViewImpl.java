@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import com.googlecode.mgwt.dom.client.event.tap.HasTapHandlers;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
@@ -35,34 +36,10 @@ import com.googlecode.mgwt.ui.client.widget.LayoutPanel;
 import com.googlecode.mgwt.ui.client.widget.MPasswordTextBox;
 import com.googlecode.mgwt.ui.client.widget.MTextBox;
 
-public class LoginViewImpl implements LoginView, LoginView.Presenter
+public class LoginViewImpl implements LoginView
 {
 	private LayoutPanel main;
-	private Presenter presenter = this ;
-	private static final AsyncCallback<Map<String, Object>> LOGIN_CALLBACK = new AsyncCallback<Map<String, Object>>()
-	{
 
-		@Override
-		public void onFailure(Throwable caught)
-		{
-			GWT.log("login failure", caught);
-			if (caught.getMessage().contains("LoginException"))
-				Window.alert("Gebruikersnaam/wachtwoord combinatie niet juist");
-			else
-				Window.alert("Unable to login");
-
-		}
-
-		@Override
-		public void onSuccess(Map<String, Object> result)
-		{
-			DWOplayer.profiledata = result;
-			DWOplayer.clientfactory.getPlaceController().goTo(new ProfilePlace("Profile"));
-		}
-
-	};
-
-	HandlerRegistration submit, gast, g2;
 	private Button gastbutton;
 	private Button submitbutton;
 	private MTextBox username;
@@ -154,63 +131,15 @@ public class LoginViewImpl implements LoginView, LoginView.Presenter
 
 		first.add(submitbutton);
 
-		gastbutton = new Button() 
-		{
-			@Override
-			public void fireEvent(GwtEvent<?> event) {
-				final String string = event.toDebugString();
-				GWT.log(string);
-				if(string.endsWith("DownEvent:")) {
-					GWT.log("break");
-				}
-				super.fireEvent(event);
-			}}
-		;
+		gastbutton = new Button();
 		gastbutton.setText("Login als gast");
 		gastbutton.setWidth("276px");
 		gastbutton.getElement().getStyle().setProperty("margin", "30px auto");
 
 		first.add(gastbutton);
-		
-//		g2 = gastbutton.addTouchStartHandler(new TouchStartHandler() {
-//			
-//			@Override
-//			public void onTouchStart(TouchStartEvent event) {
-//				GWT.log("touch start");
-//			}
-//		});
 	}
 
-	private void start() {
-		submit = submitbutton.addTapHandler(new TapHandler()
-		{
 
-			@Override
-			public void onTap(TapEvent event)
-			{
-				presenter.login(username.getText(), passwd.getText());
-			}
-		});
-		gast = gastbutton.addTapHandler(new TapHandler()
-		{
-
-			@Override
-			public void onTap(TapEvent event)
-			{
-				presenter.login();
-			}
-		});
-	}
-
-	public void login(String name, String password)
-	{
-		RPCHandler handler = DWOplayer.clientfactory.getRPCHandler();
-		handler.login(name, password, LOGIN_CALLBACK);
-	}
-	
-	public void login() {
-		DWOplayer.gotoCourses();
-	}
 	
 
 	@Override
@@ -219,15 +148,31 @@ public class LoginViewImpl implements LoginView, LoginView.Presenter
 		return main;
 	}
 
-	public void setupModule(Presenter presenter)
+	public void setupModule()
 	{
-		stop();
-		this.presenter = presenter;
-		if(presenter != null) start();
 	}
 
-	private void stop() {
-		if(submit != null) submit.removeHandler(); submit=null;
-		if(gast != null) gast.removeHandler(); gast = null;
+	/**
+	 * @return
+	 */
+	public String getUsername() {
+		return username.getText();
+	}
+
+	/**
+	 * @return
+	 */
+	public String getPassword() {
+		return passwd.getText();
+	}
+
+	@Override
+	public HasTapHandlers getLoginBtn() {
+		return submitbutton;
+	}
+
+	@Override
+	public HasTapHandlers getGuestBtn() {
+		return gastbutton;
 	}
 }

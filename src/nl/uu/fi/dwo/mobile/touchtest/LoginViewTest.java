@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.touchtest;
 
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import com.googlecode.mgwt.dom.client.event.tap.HasTapHandlers;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 import com.googlecode.mgwt.ui.client.widget.Button;
@@ -48,9 +49,35 @@ public class LoginViewTest implements LoginView {
 
 
 	@Override
-	public void setupModule(Presenter presenter) {
+	public void setupModule() {
+	}
+
+
+	@Override
+	public String getUsername() {
 		// TODO Auto-generated method stub
-		
+		return null;
+	}
+
+
+	@Override
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public HasTapHandlers getLoginBtn() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public HasTapHandlers getGuestBtn() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	
