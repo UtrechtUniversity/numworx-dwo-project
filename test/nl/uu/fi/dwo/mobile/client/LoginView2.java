@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.mobile.client;
 
-import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 
 import com.google.gwt.dom.client.Style;
@@ -9,8 +8,7 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
+import com.googlecode.mgwt.dom.client.event.tap.HasTapHandlers;
 import com.googlecode.mgwt.ui.client.widget.Button;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.googlecode.mgwt.ui.client.widget.LayoutPanel;
@@ -130,9 +128,27 @@ public class LoginView2 implements LoginView {
 	}
 
 	@Override
-	public void setupModule(Presenter presenter) {
+	public String getUsername() {
 		// TODO Auto-generated method stub
-		
+		return null;
+	}
+
+	@Override
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HasTapHandlers getLoginBtn() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HasTapHandlers getGuestBtn() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	
