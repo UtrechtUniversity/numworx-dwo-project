@@ -247,6 +247,19 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
     public ClassUsersPanel(SchoolClass c) {
         super(null);
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
+// initialisatie images
+		removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_STUDENT_IMAGE);
+		userImage = DwoHelper.getResourceImage("resources/student.png" );
+		editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_SCO_IMAGE);
+		
+		MediaTracker tr = new MediaTracker(this);
+		tr.addImage(removeImage, 0);
+		tr.addImage(userImage, 0);
+		tr.addImage(editImage, 0);
+		try {
+		    tr.waitForAll();
+		} catch (Exception e) {
+		}
         
         
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
@@ -301,18 +314,6 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 	 * @param users
 	 */
 	private void createJTable(Box vbox, User[] users) {
-		removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_STUDENT_IMAGE);
-		userImage = DwoHelper.getResourceImage("resources/student.png" );
-		editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_SCO_IMAGE);
-		
-		MediaTracker tr = new MediaTracker(this);
-		tr.addImage(removeImage, 0);
-		tr.addImage(userImage, 0);
-		tr.addImage(editImage, 0);
-		try {
-		    tr.waitForAll();
-		} catch (Exception e) {
-		}
 		
 		UserModel dm = new UserModel();
 		model = dm;
