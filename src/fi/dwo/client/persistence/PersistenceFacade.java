@@ -1493,13 +1493,17 @@ public class PersistenceFacade {
             	}
             	if(sco.isDataChanged())
             	{	boolean result;
-         			if(sco.getShowScore() != null)
-         		            		result = dbAccess.changeSco(sco.getID(), sco.getScoName(), sco
-					        .getDescription(), sco.getLaunchdataString(), sco.isShowScore());
-         			else
-		            		result = dbAccess.changeSco(sco.getID(), sco.getScoName(), sco
-							        .getDescription(), sco.getLaunchdataString());
-         			
+            	
+            		result = StoreCreator.instance().changeSco(sco.getID(), sco.getScoName(), sco
+					        .getDescription(), true, sco.getLaunchdataString(), sco.getShowScore());
+            	
+//         			if(sco.getShowScore() != null)
+//         		            		result = dbAccess.changeSco(sco.getID(), sco.getScoName(), sco
+//					        .getDescription(), sco.getLaunchdataString(), sco.isShowScore());
+//         			else
+//		            		result = dbAccess.changeSco(sco.getID(), sco.getScoName(), sco
+//							        .getDescription(), sco.getLaunchdataString());
+//         			
          			sco.setDataChanged(false);
 					return result;
             	} else
@@ -1971,10 +1975,10 @@ e1.printStackTrace();
             	if(sco.isDataChanged())
             	{	boolean result;
          			
-		            result = dbAccess.changeSco(sco.getID(), sco.getScoName(), sco
+		            result = StoreCreator.instance().changeSco(sco.getID(), sco.getScoName(), sco
 							        .getDescription(),
 							        false, // Daar is het om begonnen...
-							        sco.getLaunchdataString());
+							        sco.getLaunchdataString(), null);
          			sco.setDataChanged(false);
 					return result;
             	} else

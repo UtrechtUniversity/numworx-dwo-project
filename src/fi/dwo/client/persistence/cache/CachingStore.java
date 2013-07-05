@@ -1,5 +1,7 @@
 package fi.dwo.client.persistence.cache;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -7,8 +9,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import org.apache.xmlrpc.applet.XmlRpcException;
+
 import fi.dwo.client.persistence.DbAccessIF;
 import fi.dwo.client.system.PersistenceException;
+import fi.dwo.server.persistence.DwoXmlRpcException;
 
 public class CachingStore implements IStore, Runnable {
 
@@ -184,6 +189,32 @@ System.out.println("try setValue " + b.getKey());
 		cache = new WeakHashMap();
 		worker = new Thread(this);
 		worker.start();
+	}
+	public synchronized boolean changeSco(int scoid, String scoName, String description,
+			boolean delete, String launchdataString, Boolean showScore)
+			throws DwoXmlRpcException, IOException, XmlRpcException,
+			SQLException {
+		Iterator inter;
+		if(delete) {		
+			inter = work.keySet().iterator();
+			while (inter.hasNext()) {
+				Bucket entry = (Bucket) inter.next();
+				if(entry.getScoid() == scoid)
+				{	inter.remove();
+					cache.remove(entry);
+				}
+			}
+		}
+		try {
+			commit(false);
+		} catch (PersistenceException e) {
+			e.printStackTrace(); // should not happen
+		}
+		inter = cache.keySet().iterator();
+		while(inter.hasNext())
+			if(((Bucket) inter.next()).getScoid() == scoid )
+				inter.remove();
+		return delegate.changeSco(scoid, scoName, description, delete, launchdataString, showScore);
 	}
 	
 }

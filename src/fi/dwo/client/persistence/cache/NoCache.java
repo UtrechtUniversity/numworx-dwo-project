@@ -7,6 +7,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.dwo.client.persistence.DbAccessIF;
 import fi.dwo.client.system.PersistenceException;
+import fi.dwo.server.persistence.DwoXmlRpcException;
 
 public class NoCache implements IStore {
 
@@ -68,6 +69,22 @@ public class NoCache implements IStore {
 	}
 
 	public void destroy() {
+	}
+
+	public boolean changeSco(int scoid, String scoName, String description,
+			boolean delete, String launchdataString, Boolean showScore) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
+		if(delete)
+		{
+			if(null != showScore)
+				return dbAccess.changeSco(scoid, scoName, description, launchdataString, showScore.booleanValue());
+			else
+				return dbAccess.changeSco(scoid, scoName, description, launchdataString);
+		} else {
+			boolean result = dbAccess.changeSco(scoid, scoName, description, false, launchdataString);
+			if(result && null != showScore) // heel onwaarschijnlijk?
+				dbAccess.changeSco(scoid, scoName, description, showScore.booleanValue());
+			return result;
+		}
 	}
 
 }
