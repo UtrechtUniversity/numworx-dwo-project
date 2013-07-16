@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.json.client.JSONArray;
@@ -49,6 +50,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		randomVars = randomVarWaarden;
 		
 		frame = new Frame(html);
+		frame.getElement().getStyle().setOverflow(Overflow.HIDDEN);
 		frame.setStylePrimaryName(".gwt-StubView");
 		frame.addStyleDependentName("borderless");
 		Object width = launchData.get("breedte");
