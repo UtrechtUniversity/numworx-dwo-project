@@ -243,6 +243,10 @@ public class TekstVakPanel implements InteractionView
 					{
 						aantalVakken++;
 					}
+					else if (currentObject instanceof StubView)
+					{
+						aantalVakken++;
+					}
 				}
 				setObjects(opdrachtObjects, tekstVakken[i][j]);
 			}
