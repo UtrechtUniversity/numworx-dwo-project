@@ -3,6 +3,7 @@ package fi.dwo.client.system;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -14,26 +15,31 @@ import java.util.jar.Manifest;
 
 public class Loader extends URLClassLoader {
 
-	private static String urlPrefix = "http://www.fisme.science.uu.nl/dwo/jars/";
-
+	private static URL urlPrefix;
+	static {
+		// set default directory for jars
+		setPrefix("http://www.fisme.science.uu.nl/dwo/jars/");
+	}
+	
 	/**
+	 * Set jar directory.
 	 * @param prefix to set
 	 */
 	public static void setPrefix(String prefix) {
-		urlPrefix = prefix;
+		try {
+			urlPrefix = new URL(prefix);
+		} catch (MalformedURLException _) {
+		}
 	}
 
-	//	"http://www.fisme.uu.nl/dwo/jars/";
 	private Loader(URL[] array, ClassLoader parent) {
 		super(array, parent);
 	}
 
 	public static Loader create(String jar) {
-		ArrayList list = new ArrayList();
-		
-		jar = urlPrefix + jar;
+		ArrayList list = new ArrayList();		
 		try {
-			URL u = new URL(jar);
+			URL u = new URL(urlPrefix, jar);
 			addURL(list, u);
 		} catch (IOException e) {
 			e.printStackTrace();

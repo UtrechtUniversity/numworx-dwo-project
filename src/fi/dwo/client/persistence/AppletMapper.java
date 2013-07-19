@@ -26,7 +26,9 @@ import fi.dwo.client.system.Loader;
  */
 public class AppletMapper extends XmlRpcMapper {
 
-    private static final String TABLENAME = "tblApplet";
+    private static final char CLASSLOADER = 'c';
+
+	private static final String TABLENAME = "tblApplet";
 
     private static final String IDCOL = "appletID";
 
@@ -109,16 +111,18 @@ public class AppletMapper extends XmlRpcMapper {
         Class a = null;
         String jarname = (String) data.get("jarname");
         String className = (String) data.get("classname");
-        
         try {
 			a = Class.forName(className);
         } catch (ClassNotFoundException e1) {
+            String features = (String) data.get("features");
+        	if(features != null && features.indexOf(CLASSLOADER)>=0)
         	try {
 				a = Loader.create(jarname).loadClass(className);
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-	            throw new XmlRpcException(-1, "Class not found");
+				return a;
+        	} catch (ClassNotFoundException e) {
 			}
+			e1.printStackTrace();
+            throw new XmlRpcException(-1, "Class not found");
         }
 	    
 	   return a;
