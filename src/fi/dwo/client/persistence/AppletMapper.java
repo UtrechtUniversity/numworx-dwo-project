@@ -17,6 +17,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DwoHelper;
+import fi.dwo.client.system.Loader;
 
 
 /**
@@ -106,28 +107,19 @@ public class AppletMapper extends XmlRpcMapper {
      */
     protected Object update(Object obj, Hashtable data) throws IOException, SQLException, XmlRpcException  {
         Class a = null;
-        
         String jarname = (String) data.get("jarname");
-        //DbAccessCreator.instance().selectJar(DwoHelper.getKey(), jarname);
+        String className = (String) data.get("classname");
         
-        
-        
-        Class c;
-        
-        //if(((String) data.get("classname")).equals("fi.oppervlakte_dwo.Oppervlakte_dwo"))
-        //{	a = new fi.oppervlakte_dwo.Oppervlakte_dwo();
-        //}
-        //else
-        //{
-	        try {
-	            c = Class.forName((String) data.get("classname"));
-	            a = c;
-	            
-	            
-	        } catch (ClassNotFoundException e1) {
-	            e1.printStackTrace();
+        try {
+			a = Class.forName(className);
+        } catch (ClassNotFoundException e1) {
+        	try {
+				a = Loader.create(jarname).loadClass(className);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
 	            throw new XmlRpcException(-1, "Class not found");
-	        }
+			}
+        }
 	    
 	   return a;
     }
