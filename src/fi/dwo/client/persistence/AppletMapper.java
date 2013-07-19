@@ -115,11 +115,12 @@ public class AppletMapper extends XmlRpcMapper {
 			a = Class.forName(className);
         } catch (ClassNotFoundException e1) {
             String features = (String) data.get("features");
-        	if(features != null && features.indexOf(CLASSLOADER)>=0)
+        	if(DwoHelper.isSecure() && features != null && features.indexOf(CLASSLOADER)>=0)
         	try {
 				a = Loader.create(jarname).loadClass(className);
 				return a;
         	} catch (ClassNotFoundException e) {
+        		e1 = e;
 			}
 			e1.printStackTrace();
             throw new XmlRpcException(-1, "Class not found");
