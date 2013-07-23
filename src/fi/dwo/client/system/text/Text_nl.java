@@ -357,7 +357,16 @@ public class Text_nl extends ListResourceBundle {
 
 		 { TextMapper.GUIEID_MSG3, "<html>(1) Selecteer een verzameling modules<br>(2) Selecteer een groep scholen<br><br>De geselecteerde modules worden beschikbaar<br>gesteld aan de geselecteerde scholen." },
 		 { TextMapper.GUIEID_MSG4, "Importeer {0}"},
- 
+		 
+		 { "leerlingen ook", "leerlingen ook"},
+		 { TextMapper.GUIUMP_REMOVE_CLASS, "Wil je alle leerlingen uit {0} verwijderen?" },
+		 { TextMapper.GUIUMP_ALL_STUDENTS, "alle leerlingen" },
+		 { TextMapper.GUIC_SETTINGS, "Instellingen {0}" },
+		 { TextMapper.GUIH_SETTINGS, "Instellingen school" },
+		 { TextMapper.GUIC_SETTINGS_STUDENT, "Leerlingen kunnen zelf hun klas kiezen"},
+		 { TextMapper.GUIC_SETTINGS_TEACHER, "Docenten kiezen de leerlingen van hun klas"},
+		 { TextMapper.GUIC_SETTINGS_MODULE, "Docenten kunnen modules aanpassen"},
+		 
  };
 
  public Text_nl() {

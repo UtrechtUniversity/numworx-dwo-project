@@ -388,10 +388,20 @@ public class Text_en extends ListResourceBundle {
 			   "(3) Select one or more modules for use in your own school<br><br>" +
 			   "The selected modules are copied to your own module view<br>"+
 			   "and can be used at your own school." },
-		  { TextMapper.GUIEID_MSG2, "<html>I wish to participate in this way of sharing and become visible as school in the lists"},
-		  { TextMapper.GUIEID_MSG3, "<html>(1) Select modules<br>(2) Select schools<br><br>The selected modules are available<br>to the selected schools." },
+	     { TextMapper.GUIEID_MSG2, "<html>I wish to participate in this way of sharing and become visible as school in the lists"},
+		 { TextMapper.GUIEID_MSG3, "<html>(1) Select modules<br>(2) Select schools<br><br>The selected modules are available<br>to the selected schools." },
 
-};
+		 { "leerlingen ook", "students too"},
+		 { TextMapper.GUIUMP_REMOVE_CLASS, "Remove all students from {0}?" },
+		 { TextMapper.GUIUMP_ALL_STUDENTS, "all students" },
+		 { TextMapper.GUIC_SETTINGS, "Configuration of {0}" },
+		 { TextMapper.GUIH_SETTINGS, "School configuration" },
+			
+		 { TextMapper.GUIC_SETTINGS_STUDENT, "Students choose their own class"},
+		 { TextMapper.GUIC_SETTINGS_TEACHER, "Teachers choose the class of their students"},
+		 { TextMapper.GUIC_SETTINGS_MODULE, "Teachers are allowed to change modules"},
+ 
+ };
 
  public Text_en() {
 

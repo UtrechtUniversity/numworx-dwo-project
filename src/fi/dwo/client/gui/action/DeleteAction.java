@@ -30,7 +30,7 @@ public class DeleteAction extends GuiAction  {
 		}
 		
 		public DeleteAction(CourseMap map) {
-			super("Delete");
+			super(""); // setmap vult opschrift
 			setMap(map);
 		}
 

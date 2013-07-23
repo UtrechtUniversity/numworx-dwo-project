@@ -184,12 +184,12 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 		public void actionPerformed(ActionEvent e) {
 			Component source = (Component) e.getSource();
 			int how = NOT;
-			final String text = MessageFormat.format(TextMapper.getText(TextMapper.GUIS_MSG_DELETE_STUDENT), new Object[] { "leerlingen ook" });
+			final String text = TextMapper.format((TextMapper.GUIS_MSG_DELETE_STUDENT), new Object[] { TextMapper.getText("leerlingen ook") });
 
 			Box box = Box.createVerticalBox();
 			box.add(new JLabel(text + "?"));
 // nadenken over de default, Henk wil 'rmRadio' : De school is eigenaar van de leerlinggegevens inclusief dwo-account
-			JRadioButton noRadio  = new JRadioButton("Nee", true);
+			JRadioButton noRadio  = new JRadioButton(TextMapper.getText(TextMapper.BTN_NO), true);
 			JRadioButton delRadio = new JRadioButton(TextMapper.getText(TextMapper.GUIUMP_REMOVE_FROM_SCHOOL), false);
 			JRadioButton rmRadio  = new JRadioButton(TextMapper.getText(TextMapper.GUIUMP_REMOVE_COMPLETE), false);
 			ButtonGroup group = new ButtonGroup();
@@ -200,7 +200,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 			box.add(delRadio);
 			box.add(rmRadio);
 
-			String title = "Wil je alle leerlingen uit " + schoolClass.getName() + " verwijderen?";
+			String title = TextMapper.format(TextMapper.GUIUMP_REMOVE_CLASS, new Object[] {schoolClass.getName()});
 			if (JOptionPane.showConfirmDialog(source, box, title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 				if(delRadio.isSelected()) how = FROM_SCHOOL;
 				else if(rmRadio.isSelected()) how = FROM_DWO;
@@ -273,8 +273,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
         if(users.length == 0) {
             String[] arguments = new String[1];
             arguments[0] = c.getName();
-            String s = TextMapper.getText(TextMapper.GUIC_NO_STUDENTS);
-            JLabel label = new JLabel(MessageFormat.format(s, arguments));
+            JLabel label = new JLabel(TextMapper.format(TextMapper.GUIC_NO_STUDENTS, arguments));
             label.setFont(GuiConstants.SCO_TEXT);
 			label.setAlignmentY(0.24f);
 			
@@ -299,7 +298,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 			hbox.add(registerClassListButton);
 			if(true || user instanceof ContactDocent)
 			{ 	hbox.add(Box.createHorizontalStrut(10));
-				removeStudentsButton = new JButton(new RemoveAllUsers("alle leerlingen", new ImageIcon(removeImage)));
+				removeStudentsButton = new JButton(new RemoveAllUsers(TextMapper.getText(TextMapper.GUIUMP_ALL_STUDENTS), new ImageIcon(removeImage)));
 				hbox.add(removeStudentsButton);
 			}
 			vbox.add(hbox);

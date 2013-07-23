@@ -583,9 +583,8 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 			
 			if(column==0)
 			{
-				Object[] arguments = { "leerlingen " + value };
-				String tooltip = TextMapper.getText(TextMapper.GUIRS_TLTP_ZOOM);
-				setToolTipText(MessageFormat.format(tooltip, arguments));
+				Object[] arguments = { TextMapper.format(TextMapper.UG_CLASS_CHILD, new Object[] {value}) };
+				setToolTipText(TextMapper.format(TextMapper.GUIRS_TLTP_ZOOM, arguments));
 			} else
 				setToolTipText(null);
 			if(row == 0 && column == 0)

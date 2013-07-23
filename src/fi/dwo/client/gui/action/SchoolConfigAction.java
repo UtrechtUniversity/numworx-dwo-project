@@ -10,6 +10,7 @@ import fi.dwo.client.gui.CenterPanel;
 import fi.dwo.client.gui.GuiCreator;
 import fi.dwo.client.gui.MainPanel;
 import fi.dwo.client.gui.SchoolConfigPanel;
+import fi.dwo.client.system.TextMapper;
 
 public class SchoolConfigAction extends AbstractAction {
 
@@ -21,7 +22,7 @@ public class SchoolConfigAction extends AbstractAction {
 	}
 
 	public SchoolConfigAction() {
-		super("Instellingen school");
+		super(TextMapper.getText(TextMapper.GUIH_SETTINGS));
 	}
 
 

@@ -414,6 +414,17 @@ public abstract class TextMapper {
 	public static final String GUIEID_MSG3 = "GUIEID_MSG3";
 
 	public static final String GUIEID_MSG4 = "GUIEID_MSG4";
+	
+	public static final String GUIUMP_REMOVE_CLASS = "GUIUMP_REMOVE_CLASS";
+	public static final String GUIUMP_ALL_STUDENTS = "GUIUMP_ALL_STUDENTS";
+	
+	public static final String GUIC_SETTINGS = "GUIC_SETTINGS";
+	public static final String GUIH_SETTINGS = "GUIH_SETTINGS";
+	
+	public static final String GUIC_SETTINGS_STUDENT = "GUIC_SETTINGS_STUDENT";
+	public static final String GUIC_SETTINGS_TEACHER = "GUIC_SETTINGS_TEACHER";
+	public static final String GUIC_SETTINGS_MODULE = "GUIC_SETTINGS_MODULE";
+	
     
     private static ResourceBundle rb;
 
@@ -461,7 +472,7 @@ public abstract class TextMapper {
     public static String format(String key, Object[] params) {
     	return MessageFormat.format(getText(key), params);
     }
-
+    
     /**
      * @return Returns the language.
      */

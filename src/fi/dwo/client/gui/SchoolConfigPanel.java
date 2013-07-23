@@ -29,7 +29,7 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
 		setOpaque(false);
 		BoxLayout layout = new BoxLayout(this, BoxLayout.PAGE_AXIS);
 		setLayout(layout);
-		JLabel title = new JLabel("Instellingen " + school.toString());
+		JLabel title = new JLabel(TextMapper.format(TextMapper.GUIC_SETTINGS, new Object[] {school.toString()}));
 		add(title);
 		
 // insert checkboxes.		
@@ -38,9 +38,9 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
 		modifyModules = new JCheckBox(); add(modifyModules);
 		
 // opschriften		
-		changeClassStudent.setText("Leerlingen kunnen zelf hun klas kiezen");
-		changeClassTeacher.setText("Docenten kiezen de leerlingen van hun klas");
-		modifyModules.setText("Docenten kunnen modules aanpassen");
+		changeClassStudent.setText(TextMapper.getText(TextMapper.GUIC_SETTINGS_STUDENT));
+		changeClassTeacher.setText(TextMapper.getText(TextMapper.GUIC_SETTINGS_TEACHER));
+		modifyModules.setText(TextMapper.getText(TextMapper.GUIC_SETTINGS_MODULE));
 		changeClassStudent.setBackground(GuiConstants.CELL_BACKGROUND);
 		changeClassTeacher.setBackground(GuiConstants.CELL_BACKGROUND);
 		modifyModules.setBackground(GuiConstants.CELL_BACKGROUND);
@@ -86,7 +86,7 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
 	}
 
 	public Component getHeaderPanel() {
-		String opschrift = TextMapper.getText("Instellingen school");
+		String opschrift = TextMapper.getText(TextMapper.GUIH_SETTINGS);
 		return new HeaderPanel(opschrift);
 	}
 
