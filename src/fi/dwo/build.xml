@@ -20,8 +20,8 @@
 	<dirname property="ant.dir" file="${ant.file}"  />
 	<property file="${ant.dir}/build.properties"/>
 
-	<property name='dosdrive' value='C:' />
-	<property name='java.resources' value='/java/resources' />
+	<property name='dosdrive' value='N:' />
+	<property name='java.resources' value='/home/java/resources' />
 	<property name='common.build' value='${java.resources}/ant/common-build.xml' />
 	<condition property='dos' value='dos' >
 	   	<os family='dos' />
@@ -160,7 +160,7 @@
 			    	<signjar
 			    		alias='pboon'
 			    		verbose='true'
-			    		lazy='true'
+			    		lazy='false'
 			    		storepass='passww'
 			    		keypass='passw'
 			    		keystore='${pboon.keystore}'
