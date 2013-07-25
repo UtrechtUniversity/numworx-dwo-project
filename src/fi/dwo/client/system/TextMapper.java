@@ -424,6 +424,8 @@ public abstract class TextMapper {
 	public static final String GUIC_SETTINGS_STUDENT = "GUIC_SETTINGS_STUDENT";
 	public static final String GUIC_SETTINGS_TEACHER = "GUIC_SETTINGS_TEACHER";
 	public static final String GUIC_SETTINGS_MODULE = "GUIC_SETTINGS_MODULE";
+
+	public static final String GUICDLG_LICENCE = "GUICDLG_LICENCE";
 	
     
     private static ResourceBundle rb;

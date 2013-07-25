@@ -400,7 +400,9 @@ public class Text_en extends ListResourceBundle {
 		 { TextMapper.GUIC_SETTINGS_STUDENT, "Students choose their own class"},
 		 { TextMapper.GUIC_SETTINGS_TEACHER, "Teachers choose the class of their students"},
 		 { TextMapper.GUIC_SETTINGS_MODULE, "Teachers are allowed to change modules"},
- 
+ // google translate...
+		 { TextMapper.GUICDLG_LICENCE, "The subscription for ''{0}'' has expired!\nNew subscribers can no longer be added.\nRefer to the contact person for the DME subscription at school." },
+
  };
 
  public Text_en() {

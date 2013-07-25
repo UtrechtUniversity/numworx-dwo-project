@@ -367,6 +367,7 @@ public class Text_nl extends ListResourceBundle {
 		 { TextMapper.GUIC_SETTINGS_TEACHER, "Docenten kiezen de leerlingen van hun klas"},
 		 { TextMapper.GUIC_SETTINGS_MODULE, "Docenten kunnen modules aanpassen"},
 		 
+		 { TextMapper.GUICDLG_LICENCE, "Het abonnement voor ''{0}'' is verlopen!\nEr kunnen geen nieuwe abonnees meer worden toegevoegd.\nRaadpleeg de contactpersoon voor het DWO-abonnement op school." },
  };
 
  public Text_nl() {
