@@ -2,16 +2,19 @@
 
 package fi.dwo.client.gui;
 
+import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.FontMetrics;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.MessageFormat;
+import java.util.Map;
 
 import javax.swing.AbstractButton;
 import javax.swing.Box;
@@ -21,12 +24,15 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 
+import fi.beans.scorm.PartialScoreIF;
 import fi.beans.scorm2xml.Scorm2Xml;
 import fi.beans.tooltip.ToolTipIF;
 import fi.beans.tooltip.ToolTipManager;
+import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.ResultScoreIF;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.User;
@@ -201,8 +207,25 @@ public class ResultScoreButton extends JPanel implements
      */
     public void actionPerformed(ActionEvent e) {
         if(active)domain.showResult();
-        else if (false) // TODO parameter voor testing.... false is productie!
+        else if (true) // TODO parameter voor testing.... false is productie!
         {
+        	if(score != 0)
+        	try {
+				Sco sco = (Sco) domain.getLessonGroup();
+				PartialScoreIF ps = sco.getPartialScoreIF();
+				Map map = ps.getScoreObjectivesMap(sco);
+				if(map != null) {
+					JDialog d = new JDialog(DwoHelper.getFrameForComponent(null), "Deelscores");
+					d.setContentPane(new JScrollPane(new fi.wiskopdr.ScoresObjectivesPanel(map)));
+					d.pack();
+					d.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					d.show();
+				}
+			} catch (Throwable e1) {
+				e1.printStackTrace();
+			}
+        	
+        	
 //        	if(score == 0)
 //        		return;
 //        	Sco sco = (Sco) domain.getLessonGroup();
