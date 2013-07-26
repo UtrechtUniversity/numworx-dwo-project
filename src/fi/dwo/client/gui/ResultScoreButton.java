@@ -212,6 +212,7 @@ public class ResultScoreButton extends JPanel implements
         	if(score != 0)
         	try {
 				Sco sco = (Sco) domain.getLessonGroup();
+				sco.getScoPanel(GuiCreator.instance().getDWO(), GuiCreator.instance().getUser());
 				PartialScoreIF ps = sco.getPartialScoreIF();
 				Map map = ps.getScoreObjectivesMap(sco);
 				if(map != null) {
