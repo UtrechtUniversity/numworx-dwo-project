@@ -2,9 +2,11 @@ package nl.uu.fi.dwo.mobile.client.ui.activities;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.utils.MD5;
 
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
@@ -65,18 +67,43 @@ public class RPCHandler {
 		request.execute();
 	}
 	
-	public <T> void getCoursesClass(Map<String,Object> userData, AsyncCallback<T> getCoursesCallback) {
+	public <T> void getCoursesClass(Map<String,Object> userData, AsyncCallback<List<Map<String,Object>>> getCoursesCallback) {
 		String method = "getCoursesForClass";
 		Object classid = userData.get("classID");
 		Object[] params = { classid };
 		XmlRpcClient client = new XmlRpcClient(server);
-		XmlRpcRequest<T> request = new XmlRpcRequest<T>(client, method, params, getCoursesCallback);
+		XmlRpcRequest<List<Map<String,Object>>> request = new XmlRpcRequest<List<Map<String,Object>>>(client, method, params, filterProfile(getCoursesCallback));
 		request.execute();
 	}
 
-	private int getDwoProfile() {
-		// TODO Auto-generated method stub
-		return 1;
+	
+	private  AsyncCallback<List<Map<String,Object>>> filterProfile(final AsyncCallback<List<Map<String,Object>>> callback) {
+		return new AsyncCallback<List<Map<String,Object>>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				callback.onFailure(caught);
+				
+			}
+
+			@Override
+			public void onSuccess(List<Map<String, Object>> result) {
+				Iterator<Map<String, Object>> i = result.iterator();
+				while (i.hasNext()) {
+					Map<java.lang.String, java.lang.Object> map = (Map<java.lang.String, java.lang.Object>) i
+							.next();
+					final Integer dwoProfile = getDwoProfile();
+					if(! map.get("dwoProfileID").equals( dwoProfile))
+						i.remove();
+				}
+				callback.onSuccess(result);
+			}
+			
+		};
+	}
+	
+	private final int getDwoProfile() {
+		return DWOplayer.PROFILE_ID;
 	}
 
 	public <T> void getCourses(int id, AsyncCallback<T> getCoursesCallback) {
@@ -99,4 +126,13 @@ public class RPCHandler {
 		request.execute();
 	}
 
+	public <T> void getDwoProfile(AsyncCallback<T> getProfileCallback) {
+		String method = "getRecord";
+		Object[] params = { "tblDwoProfile", "dwoProfileID", getDwoProfile() };
+		XmlRpcClient client = new XmlRpcClient(server);
+		XmlRpcRequest<T> request = new XmlRpcRequest<T>(client, method, params, getProfileCallback);
+		request.execute();
+	}
+	
+	
 }

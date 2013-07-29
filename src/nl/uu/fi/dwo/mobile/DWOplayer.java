@@ -44,6 +44,7 @@ import fi.wiskopdr.text.Text_nl;
 public class DWOplayer implements EntryPoint
 {
 	public static final String PREFIX = "http://ws-dev.fisme.science.uu.nl/DWOmAccess/getLaunchData?s=";
+	public static final int PROFILE_ID = 5;
 	
 	private Place defaultPlace = new LoginPlace(); // new SelectModulePlace("select");
 
@@ -86,6 +87,25 @@ public class DWOplayer implements EntryPoint
 	{
 		setupResources();
 		setupDWOPlayer();
+		initProfile();
+	}
+
+	private void initProfile() {
+		AsyncCallback<Map<String,Object>> getProfileCallback = new AsyncCallback<Map<String,Object>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {				
+			}
+
+			@Override
+			public void onSuccess(Map<String, Object> result) {
+				SelectModuleItem r = SelectModuleItem.ROOT;
+				r.setName(result.get("dwoProfileDescription").toString());
+				r.setDescription(result.get("dwoProfileText").toString());
+				
+			}};
+		clientfactory.getRPCHandler().getDwoProfile(getProfileCallback );
+		
 	}
 
 	//Sets up the GWT and MGWT settings needed to run the application

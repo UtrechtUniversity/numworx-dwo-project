@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -254,6 +255,8 @@ public class TreeModuleViewImpl implements TreeModuleView, SelectionHandler<Tree
 	}
 
 	private void addChildren(List<SelectModuleItem> list) {
+		if(list == null)
+			list = Collections.emptyList();
 		this.cellItems = list;
 		cells.render(list);
 	}
