@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.net.URL;
+import java.net.URLConnection;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -2101,21 +2102,26 @@ e1.printStackTrace();
 		try {
 			if(c.getImageData() != null)
 				DbAccessCreator.instance().setLogo(c.getID(), c.getImageData());
-			else if(c.getImageUrl() != null) 
+			else if(c.getImageUrl() != null && c.getImageUrl().length() > 0 ) 
 			{
-				// TODO er is geen update by reference.
+// TODO er is geen update by reference.
 				String imu = GuiConstants.RESOURCES + c.getImageUrl();
 				URL u = DwoHelper.getURL(imu);
-				InputStream in = u.openStream();
-				ByteArrayOutputStream bos = new ByteArrayOutputStream();
-				int len;
-				byte[] data = new byte[1024];
-				do { 
-					len = in.read(data);
-					if(len > 0) bos.write(data, 0, len);
-				} while (len > 0);
-				bos.close();
-				DbAccessCreator.instance().setLogo(c.getID(), bos.toByteArray());
+				URLConnection connection = u.openConnection();
+				InputStream in = connection.getInputStream();
+// Check image contentType
+				if(connection.getContentType().startsWith("image/"))
+				{	
+					ByteArrayOutputStream bos = new ByteArrayOutputStream();
+					int len;
+					byte[] data = new byte[1024];
+					do { 
+						len = in.read(data);
+						if(len > 0) bos.write(data, 0, len);
+					} while (len > 0);
+					bos.close();
+					DbAccessCreator.instance().setLogo(c.getID(), bos.toByteArray());
+				}
 				in.close();
 			}	
 			return true;

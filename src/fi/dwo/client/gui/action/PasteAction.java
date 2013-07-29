@@ -155,7 +155,8 @@ public class PasteAction extends GuiAction
 				System.err.println("copyCourseMap failed: "+course + ", " + dest + ", " + isMap);
 				return null;
 			}
-			if(course.getImageData() != null || course.getImageUrl() != null)				
+// Wim: getImageUrl is "" 
+			if(course.getImageData() != null || course.getImageUrl() != null && course.getImageUrl().length() > 0)				
 			{
 				c.setImageData(course.getImageData());
 				c.setImageUrl(course.getImageUrl());
