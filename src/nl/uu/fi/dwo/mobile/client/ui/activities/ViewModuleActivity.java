@@ -26,6 +26,7 @@ import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 public class ViewModuleActivity extends MGWTAbstractActivity
 {
 	private ClientFactory clientFactory;
+	private ViewModuleView view;
 
 	public ViewModuleActivity(ClientFactory clientFactory)
 	{
@@ -36,7 +37,7 @@ public class ViewModuleActivity extends MGWTAbstractActivity
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
-		final ViewModuleView view = clientFactory.getEntryView();
+		view = clientFactory.getEntryView();
 		panel.setWidget(view);
 
 		Place place = clientFactory.getPlaceController().getWhere();
@@ -66,10 +67,17 @@ public class ViewModuleActivity extends MGWTAbstractActivity
 				@Override
 				public void onTap(TapEvent event)
 				{
-					view.close();
+					//view.close();
 					History.back();
 				}
 			}));
 		}
 	}
+
+	@Override
+	public void onStop() {
+		view.close();
+		super.onStop();
+	}
+	
 }
