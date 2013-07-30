@@ -10,7 +10,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSte
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.geogebraview.client.GeogebraView;
-import fi.kladjegwt.client.KladjeGWT;
+//import fi.kladjegwt.client.KladjeGWT;
 //import fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT;
 
 /**
@@ -235,7 +235,8 @@ public class TekstBuffer
 		}
 		else if (soortVak == 41)
 		{
-			result = new KladjeGWT(currentVakGegevens, randomVarNamen, randomVarWaarden);
+			result = //new KladjeGWT(currentVakGegevens, randomVarNamen, randomVarWaarden);
+					new StubView("KladjeGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		}
 		else
 		{
