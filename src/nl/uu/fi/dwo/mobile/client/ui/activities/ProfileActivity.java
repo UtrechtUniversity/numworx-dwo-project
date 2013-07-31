@@ -7,9 +7,11 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ProfileView;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
+import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
+import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 
-public class ProfileActivity extends MGWTAbstractActivity implements ProfileView.Presenter
+public class ProfileActivity extends MGWTAbstractActivity
 {
 	ClientFactory clientFactory;
 
@@ -22,19 +24,39 @@ public class ProfileActivity extends MGWTAbstractActivity implements ProfileView
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
 		ProfileView view = clientFactory.getProfileView();
+		addHandlerRegistration(
+		view.getLogoutBtn().addTapHandler(new TapHandler()
+		{
 
-		view.setupModule(this);
+			@Override
+			public void onTap(TapEvent event)
+			{
+				logout();
+			}
+		}));
+		addHandlerRegistration(
+		view.getSubmitBtn().addTapHandler(new TapHandler()
+		{
+
+			@Override
+			public void onTap(TapEvent event)
+			{
+				gotoCourses();
+			}
+		}));
+		
+		view.setupModule();
 
 		panel.setWidget(view);
 	}
 
-	@Override
-	public void logout() {
+
+	private void logout() {
 		DWOplayer.profiledata = null;
 		clientFactory.getPlaceController().goTo(new LoginPlace());
 	}
 
-	@Override
+
 	public void gotoCourses() {
 		DWOplayer.gotoCourses();
 	}

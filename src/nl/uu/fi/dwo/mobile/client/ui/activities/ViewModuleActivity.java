@@ -67,7 +67,6 @@ public class ViewModuleActivity extends MGWTAbstractActivity
 				@Override
 				public void onTap(TapEvent event)
 				{
-					//view.close();
 					History.back();
 				}
 			}));

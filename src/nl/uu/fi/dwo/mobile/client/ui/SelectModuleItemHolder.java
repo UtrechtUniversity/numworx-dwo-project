@@ -83,6 +83,11 @@ public class SelectModuleItemHolder
 		list.clear();
 		map.clear(); map.put(0,  SelectModuleItem.ROOT);
 		scos.clear();
-		
+	}
+	
+	public static void destroy() {
+		list = null;
+		map = null;
+		scos = null;
 	}
 }

@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LoginActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ProfileActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.SelectModuleActivity;
@@ -24,30 +25,39 @@ import com.google.gwt.place.shared.Place;
 public class TabletActivityMapper implements ActivityMapper
 {
 	private ClientFactory clientFactory;
-	private TreeModuleActivity treeModuleActivity;
-
 	public TabletActivityMapper(ClientFactory cf)
 	{
-		super();
 		this.clientFactory = cf;
-		treeModuleActivity = new TreeModuleActivity(clientFactory);
 	}
 
 	@Override
 	public Activity getActivity(Place place)
 	{
 		if (place instanceof SelectModulePlace)
-			return new SelectModuleActivity(clientFactory);
+		{
+			SelectModulePlace tmp = (SelectModulePlace) place;
+			int id = Integer.parseInt(tmp.getToken());
+			SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);			
+			return new SelectModuleActivity(clientFactory, item);
+		}
 		if (place instanceof ViewModulePlace)
 			return new ViewModuleActivity(clientFactory);
 		if (place instanceof LoginPlace)
 			return new LoginActivity(clientFactory);
 		if (place instanceof ProfilePlace)
+		{
+			if(DWOplayer.profiledata == null)
+				return new LoginActivity(clientFactory);
 			return new ProfileActivity(clientFactory);
+		}
 		if (place instanceof TreeModulePlace)
 		{
-			treeModuleActivity = new TreeModuleActivity(clientFactory); // Anders geen activity reset action
-			return treeModuleActivity;
+			TreeModulePlace tmp = (TreeModulePlace) place;
+			int id = Integer.parseInt(tmp.getToken());
+			SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);
+			if(item == null)
+				return new LoginActivity(clientFactory);
+			return new TreeModuleActivity(clientFactory, item); // Anders geen activity reset action;
 		}
 		return null;
 	}

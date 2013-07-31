@@ -10,8 +10,9 @@ import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
-import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView.Presenter;
 
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
@@ -22,6 +23,7 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
@@ -29,38 +31,36 @@ import com.google.gwt.xml.client.XMLParser;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
+import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedEvent;
+import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedHandler;
 
-public class TreeModuleActivity extends MGWTAbstractActivity implements Presenter
+public class TreeModuleActivity extends MGWTAbstractActivity implements SelectionHandler<TreeItem>, CellSelectedHandler, TapHandler
 {
 
 	ClientFactory clientFactory;
+	private List<SelectModuleItem> currentModel;
+	private TreeModuleView view;
+	private SelectModuleItem item;
 
-	public TreeModuleActivity(ClientFactory clientFactory)
+	public TreeModuleActivity(ClientFactory clientFactory, SelectModuleItem i)
 	{
 		this.clientFactory = clientFactory;
-		//getItems();
+		this.item = i;
 	}
 
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
-		TreeModuleView view = clientFactory.getTreeModuleView();
+		view = clientFactory.getTreeModuleView();
 		panel.setWidget(view);
-		List<SelectModuleItem> currentModel = SelectModuleItemHolder.getItems();
+		currentModel = SelectModuleItemHolder.getItems();
 
 		view.render(currentModel);
-		Place place = clientFactory.getPlaceController().getWhere();
-
-		if (place instanceof TreeModulePlace)
-		{
-			TreeModulePlace selectedModulePlace = (TreeModulePlace) place;
-			int id = Integer.parseInt(selectedModulePlace.getToken());
-
-			SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);
-			view.selectModule(item);
-			view.setPresenter(this);
-		}
-
+		
+		addHandlerRegistration(view.getBackBtn().addTapHandler(this));		
+		addHandlerRegistration(view.getTree().addSelectionHandler(this));
+		addHandlerRegistration(view.getCells().addCellSelectedHandler(this));
+		view.selectModule(item);
 	}
 
 	private void getItems()
@@ -108,13 +108,8 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements Presente
 
 	}
 
-	@Override
-	public void back() {
-		History.back();
-	}
 
-	@Override
-	public void selectItem(SelectModuleItem o) {
+	private void selectItem(SelectModuleItem o) {
 		Place place;
 		switch(o.getType()) {
 		default:
@@ -132,6 +127,25 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements Presente
 			break;
 		}
 		clientFactory.getPlaceController().goTo(place);
+	}
+
+	@Override
+	public void onSelection(SelectionEvent<TreeItem> event)
+	{
+		TreeItem item = event.getSelectedItem();
+		SelectModuleItem o = (SelectModuleItem) item.getUserObject();
+		selectItem(o);
+	}
+
+	@Override
+	public void onCellSelected(CellSelectedEvent event) {
+		int index = event.getIndex();
+		selectItem(view.getCellItems().get(index));
+	}
+
+	@Override
+	public void onTap(TapEvent event) {
+		History.back();
 	}
 
 }

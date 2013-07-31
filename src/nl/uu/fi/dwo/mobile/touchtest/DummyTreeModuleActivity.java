@@ -13,8 +13,6 @@ import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
-import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView.Presenter;
-
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
@@ -32,7 +30,7 @@ import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
 import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 
-public class DummyTreeModuleActivity extends MGWTAbstractActivity implements Presenter
+public class DummyTreeModuleActivity extends MGWTAbstractActivity
 {
 
 	private static final SelectModuleItem ROOT = SelectModuleItem.ROOT;
@@ -73,7 +71,7 @@ public class DummyTreeModuleActivity extends MGWTAbstractActivity implements Pre
 				view.setDescription(ROOT);
 			}
 			
-			view.setPresenter(this);
+			
 		}
 
 	}
@@ -159,7 +157,7 @@ public class DummyTreeModuleActivity extends MGWTAbstractActivity implements Pre
 
 	}
 
-	@Override
+
 	public void back() {
 		History.back();
 	}
@@ -184,11 +182,6 @@ public class DummyTreeModuleActivity extends MGWTAbstractActivity implements Pre
 		clientFactory.getPlaceController().goTo(place);
 	}
 
-	@Override
-	public void onStop() {
-		view.setPresenter(null);
-		super.onStop();
-	}
 
 
 }

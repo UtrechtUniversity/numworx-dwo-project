@@ -9,7 +9,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAns
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.geogebraview.client.GeogebraView;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.GeogebraView;
 //import fi.kladjegwt.client.KladjeGWT;
 //import fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT;
 
@@ -97,7 +97,7 @@ public class TekstBuffer
 				}
 				//Not supported
 				else
-				{
+				{	i = i + endIndex; // skip item
 					result.add("");
 				}
 

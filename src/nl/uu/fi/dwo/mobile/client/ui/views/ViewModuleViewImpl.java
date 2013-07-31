@@ -19,26 +19,20 @@ import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_2004_API;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
-import nl.uu.fi.dwo.mobile.client.ui.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
 import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleEditor;
-import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleViewer;
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleFont;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleTeken;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.vakken.Machtvak;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
-import nl.uu.fi.dwo.mobile.utils.StringCodeToHashMap;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Overflow;
@@ -55,17 +49,13 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.xml.client.Document;
-import com.google.gwt.xml.client.XMLParser;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
@@ -79,7 +69,7 @@ import com.googlecode.mgwt.ui.client.widget.ScrollPanel;
  * @author Danny Hendrix, Evertson Croes
  * 
  */
-public class ViewModuleViewImpl implements ViewModuleView, EntryPoint
+public class ViewModuleViewImpl extends XMLView implements ViewModuleView, EntryPoint
 {
 	private static final String RANDOM_VAR_WAARDEN = "RandomVarWaarden";
 	private static final String RANDOM_VAR_NAMEN = "RandomVarNamen";
@@ -218,26 +208,17 @@ public class ViewModuleViewImpl implements ViewModuleView, EntryPoint
 		}
 	}
 
-	private HashMap<String, Object> launchData, instellingen;
 	private OpdrNav on;
 	private FocusPanel mainPanel;
-	private TouchPanel contentPanel = null;
+	TouchPanel contentPanel = null;
 	private ScrollPanel contentScrollPanel = null;
 	private Panel tekst = null;
-	private int font_size = 12;
 	private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
-	private FormuleKeyboard kb = null;
 	private double zoom = 1;
 
 	private Panel kbp = null;
 	private HeaderButton hb;
 	private HeaderPanel hp;
-
-	private ArrayList<Object> opdrachtObjects;
-	private boolean newVersion = true;
-
-	private String[] randomVarNamen = null;
-	private HashMap randomVarWaarden = null;
 
 	private Scorm2004IF api;
 
@@ -350,60 +331,13 @@ public class ViewModuleViewImpl implements ViewModuleView, EntryPoint
 		contentPanel.clear();
 	}
 
-	public void loadXML(String xmlPath)
-	{
-		RequestBuilder.Method method = RequestBuilder.GET;
-		String url = xmlPath;
-		RequestBuilder rb = new RequestBuilder(method, url);
-		try
-		{
-			rb.sendRequest(null, new RequestCallback()
-			{
-
-				@Override
-				public void onResponseReceived(Request request, Response response)
-				{
-					String responseText = response.getText();
-					if (!responseText.isEmpty())
-					{
-						for (int i = 0; i < buttons.size(); i++)
-							contentPanel.remove(buttons.get(i));
-						Document dom = XMLParser.parse(responseText);
-						StringCodeToHashMap sc = new StringCodeToHashMap();
-						launchData = sc.decodeStringToHashMap(dom);
-						setupView(launchData);
-					}
-
-				}
-
-				@Override
-				public void onError(Request request, Throwable exception)
-				{
-					Window.alert("error");
-				}
-			});
-
-		}
-		catch (RequestException e)
-		{
-			RootPanel.get().add(new Label("cannot load xml: " + e.getMessage()));
-		}
-	}
-
 	public void setupView(HashMap<String, Object> launchData)
 	{
+		for (int i = 0; i < buttons.size(); i++)
+			contentPanel.remove(buttons.get(i));
 
-		this.launchData = launchData;
+		super.setupView(launchData);
 
-		if (launchData.get("instellingen") != null)
-			instellingen = (HashMap<String, Object>) launchData.get("instellingen");
-		if (instellingen.get("fontSize") != null)
-			font_size = (Integer) instellingen.get("fontSize");
-		Object imagemap = launchData.get("$IMAGE$MAP$");
-		ImageView.setMap((Map<String, Object>) imagemap);
-
-		boolean maalTeken = (Boolean) instellingen.get("maalTeken");
-		FormuleTeken.zetMaalTeken(maalTeken);
 
 		contentPanel.getElement().getStyle().setFontSize(font_size, Unit.PX);
 		contentPanel.getElement().getStyle().setPadding(15, Unit.PX);
@@ -704,118 +638,6 @@ public class ViewModuleViewImpl implements ViewModuleView, EntryPoint
 		return correct;
 	}
 
-	//Puts objects on screen
-	public void setObjects(ArrayList<Object> opdrachtObjects, Panel destination)
-	{
-
-		for (int i = 0; i < opdrachtObjects.size(); i++)
-		{
-
-			Object currentObject = opdrachtObjects.get(i);
-			if (currentObject instanceof String)
-			{
-				Element element = DOM.createSpan();
-				element.setInnerHTML((String) currentObject);
-				//element.getElement().getStyle().setFloat(Float.LEFT);
-				destination.getElement().appendChild(element);
-
-				if (opdrachtObjects.size() > i + 1 && opdrachtObjects.get(i + 1) instanceof String)
-					destination.getElement().appendChild(DOM.createElement("br"));
-				//destination.add(new HTML((String) currentObject));
-				//destination.getElement().setInnerHTML(destination.getElement().getInnerHTML() + ((String) currentObject));
-				//element.setInnerHTML((String) currentObject);
-				//element.getElement().getStyle().setPaddingBottom(5, Unit.PX);
-				//element.getElement().getStyle().setPaddingTop(5, Unit.PX);
-
-			}
-			else if (currentObject instanceof FormuleEditorWithAnswer)
-			{
-				((FormuleEditorWithAnswer) currentObject).setFont(FormuleFont.createFromFontSize(font_size));
-				int asHoogte = ((FormuleEditorWithAnswer) currentObject).getMainRegel().getAsHoogte();
-				int hoogte = ((FormuleEditorWithAnswer) currentObject).getMainRegel().getHeight();
-				Panel a = getPanelElement((FormuleEditorWithAnswer) currentObject);
-				//((FormuleEditorWithAnswer) currentObject).getMainRegel().getCanvas().getElement().getStyle().setMarginBottom(-3, Unit.PX);
-				//a.getElement().getStyle().setMarginBottom(-4, Unit.PX);
-				a.getElement().getStyle().setProperty("display", "inline-block");
-				a.getElement().getStyle().setProperty("position", "relative");
-				a.getElement().getStyle().setProperty("top", (hoogte - asHoogte - Math.rint(font_size * 0.33) - 2) + "px");
-				kb.setEditor((FormuleEditorWithAnswer) currentObject);
-				destination.add(a);
-			}
-			else if (currentObject instanceof FormuleViewer)
-			{
-				((FormuleViewer) currentObject).setFont(FormuleFont.createFromFontSize(font_size));
-				int asHoogte = ((FormuleViewer) currentObject).getMainRegel().getAsHoogte();
-				int hoogte = ((FormuleViewer) currentObject).getMainRegel().getHeight();
-				Panel a = ((FormuleViewer) currentObject).getAsPanel();
-				a.getElement().getStyle().setProperty("display", "inline-block");
-				a.getElement().getStyle().setProperty("position", "relative");
-				a.getElement().getStyle().setProperty("top", (hoogte - asHoogte - Math.rint(font_size * 0.33)) + "px");
-
-				destination.add(a);
-
-			}
-			else if (currentObject instanceof FormuleEditorWithSteps)
-			{
-				Widget a = ((InteractionView) currentObject).asWidget();
-				//a.getElement().getStyle().setFloat(Float.LEFT);
-				kb.setEditor(((FormuleEditorWithSteps) currentObject).getEditor());
-				((FormuleEditorWithSteps) currentObject).setKeyboard(kb);
-				a.getElement().getStyle().setProperty("display", "inline-block");
-				a.getElement().getStyle().setProperty("verticalAlign", "top");
-
-				destination.add(a);
-			}
-
-			else if (currentObject instanceof TekstVakPanel)
-			{
-				Widget a = ((InteractionView) currentObject).asWidget();
-				//a.getElement().getStyle().setFloat(Float.LEFT);
-				a.getElement().getStyle().setProperty("display", "inline-block");
-				a.getElement().getStyle().setProperty("verticalAlign", "top");
-
-				destination.add(a);
-			}
-			// all big interaction views
-			else if (currentObject instanceof InteractionView)
-			{
-				Widget a = ((InteractionView) currentObject).asWidget();
-				//a.getElement().getStyle().setFloat(Float.LEFT);
-				a.getElement().getStyle().setProperty("display", "inline-block");
-				a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
-				//a.getElement().getStyle().setProperty("position", "relative");
-				//a.getElement().getStyle().setProperty("top", (-font_size*0.1)+"px");
-
-				destination.add(a);
-			}
-			else if (currentObject instanceof ImageView)
-			{
-				ImageView iv = (ImageView) currentObject;
-				Widget w = iv.getImage();
-				destination.add(w);
-			}
-
-		}
-
-	}
-
-	public Panel getPanelElement(final FormuleEditor editor)
-	{
-		FlowPanel fp = new FlowPanel();
-		editor.paint();
-
-		final Panel p = editor.getAsPanel();
-
-		if (p instanceof TouchPanel)
-		{
-			TouchPanel tp = (TouchPanel) p;
-			this.addFormulePanelListeners(tp, editor);
-		}
-
-		fp.add(p);
-		return p;
-	}
-
 	private Panel getFormuleKeyboard(FormuleEditor editor)
 	{
 		if (kb == null)
@@ -828,11 +650,6 @@ public class ViewModuleViewImpl implements ViewModuleView, EntryPoint
 		kbp.getElement().getStyle().setLeft(0, Style.Unit.PX);
 
 		return kbp;
-	}
-
-	private void addFormulePanelListeners(final TouchPanel tp, final FormuleEditor editor)
-	{
-		tp.addTouchHandler(new FormuleEditorTouchHandler(tp, kb, editor));
 	}
 
 	protected void requestFocus()

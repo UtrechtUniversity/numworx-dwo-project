@@ -18,7 +18,7 @@ public class ImageView
 
 	public Widget getImage()
 	{
-		// TODO "data:image/png;base64,XXXXXXXxXXXX==" (dataurl) imgae/png of image/gif is noodzakelijk, uitbreiding in iconan nodig.
+		// TODO "data:image/png;base64,XXXXXXXxXXXX==" (dataurl) image/png of image/gif is noodzakelijk, uitbreiding in iconan nodig.
 
 		String data = (String) map.get(naam);
 		if (data.isEmpty())

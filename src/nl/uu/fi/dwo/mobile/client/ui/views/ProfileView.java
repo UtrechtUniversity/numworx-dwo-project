@@ -1,13 +1,11 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import com.googlecode.mgwt.dom.client.event.tap.HasTapHandlers;
 
 public interface ProfileView extends IsWidget
 {
-	interface Presenter {
-		void logout();
-		void gotoCourses();
-	}
-	
-	void setupModule(Presenter presenter);
+	HasTapHandlers getLogoutBtn();
+	HasTapHandlers getSubmitBtn();
+	void setupModule();
 }

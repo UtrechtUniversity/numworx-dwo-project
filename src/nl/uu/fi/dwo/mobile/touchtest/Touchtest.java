@@ -123,13 +123,13 @@ public class Touchtest implements EntryPoint {
 			else if(place instanceof ProfilePlace)
 				return new ProfileActivity(clientFactory);
 			else if (place instanceof TreeModulePlace)
-			{
-				TreeModuleActivity treeModuleActivity = new TreeModuleActivity(clientFactory);
+			{ // FIXME get item from holder
+				TreeModuleActivity treeModuleActivity = new TreeModuleActivity(clientFactory, null);
 				//DummyTreeModuleActivity treeModuleActivity = new DummyTreeModuleActivity(clientFactory);
 				return treeModuleActivity;
 			}
 			else if (place instanceof SelectModulePlace)
-				return new SelectModuleActivity(clientFactory);
+				return new SelectModuleActivity(clientFactory, null);
 					
 			return null;
 		}

@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import com.googlecode.mgwt.dom.client.event.tap.HasTapHandlers;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.ui.client.widget.CellList;
@@ -33,10 +34,8 @@ import com.googlecode.mgwt.ui.client.widget.celllist.HasCellSelectedHandler;
  * @author Danny Hendrix
  * 
  */
-public class SelectModuleViewImpl implements SelectModuleView, SelectModuleView.Presenter
+public class SelectModuleViewImpl implements SelectModuleView
 {
-	
-	Presenter presenter = this;
 	
 	class GetScosCallback implements AsyncCallback<List<Map<String,Object>>> {
 
@@ -74,6 +73,10 @@ public class SelectModuleViewImpl implements SelectModuleView, SelectModuleView.
 	private HeaderPanel header;
 	private SimplePanel description;
 
+	public HasTapHandlers getBackBtn() {
+		return backbutton;
+	}
+	
 	public SelectModuleViewImpl()
 	{
 		main = new LayoutPanel();
@@ -95,37 +98,7 @@ public class SelectModuleViewImpl implements SelectModuleView, SelectModuleView.
 	}
 
 	HandlerRegistration back,sel;
-
-	public void start() {
-		back = backbutton.addTapHandler(new TapHandler()
-		{
-
-			@Override
-			public void onTap(TapEvent event)
-			{
-				presenter.back();
-			}
-		});
-		
-		sel = list.addCellSelectedHandler(new CellSelectedHandler()
-		{
-
-			@Override
-			public void onCellSelected(CellSelectedEvent event)
-			{
-				final SelectModuleItem id = getItems().get(event.getIndex());
-				presenter.selectItem(id);
-			}
-		});
-	}
 	
-	public void stop() {
-		if(back != null) back.removeHandler(); back = null;
-		if(sel != null)  sel.removeHandler(); sel = null;
-		presenter = this;
-	}
-	
-
 	@Override
 	public Widget asWidget()
 	{
@@ -139,7 +112,7 @@ public class SelectModuleViewImpl implements SelectModuleView, SelectModuleView.
 		list.render(items);
 	}
 
-	private HasCellSelectedHandler getList()
+	public HasCellSelectedHandler getList()
 	{
 		return list;
 	}
@@ -161,29 +134,16 @@ public class SelectModuleViewImpl implements SelectModuleView, SelectModuleView.
 		return items;
 	}
 
-
-	@Override
-	public void back() {
-		History.back();
-	}
-
-	@Override
-	public void setPresenter(Presenter presenter) {
-		stop();
-		this.presenter = presenter;
-		if(presenter != null) start();
-	}
-
-	@Override
-	public void selectItem(SelectModuleItem item) {
-	}
-
 	@Override
 	public void setDescription(SelectModuleItem item) {
 		header.setCenter(item.getName());
 		String description = item.getDescription();
 		if(description != null)
 		{
+			if(description.startsWith(DescriptionView.GZIPPREFIX))
+			{
+				this.description.setWidget(new DescriptionViewImpl(item.getID()));
+			} else
 			if(description.startsWith("<html>"))
 				this.description.setWidget(new HTML(description));
 			else

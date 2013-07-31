@@ -9,12 +9,13 @@ import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
-import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView.Presenter;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
+import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedEvent;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedHandler;
@@ -25,14 +26,16 @@ import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedHandler;
  * @author Danny Hendrix
  * 
  */
-public class SelectModuleActivity extends MGWTAbstractActivity implements Presenter
+public class SelectModuleActivity extends MGWTAbstractActivity
 {
 	ClientFactory clientFactory;
 	private List<SelectModuleItem> currentModel;
+	private SelectModuleItem item;
 
-	public SelectModuleActivity(ClientFactory clientFactory)
+	public SelectModuleActivity(ClientFactory clientFactory, SelectModuleItem item)
 	{
 		this.clientFactory = clientFactory;
+		this.item = item;
 	}
 
 	@Override
@@ -41,30 +44,38 @@ public class SelectModuleActivity extends MGWTAbstractActivity implements Presen
 		final SelectModuleView view = clientFactory.getHomeView();
 
 		currentModel = SelectModuleItemHolder.getItems();
-		Place place = clientFactory.getPlaceController().getWhere();
-		SelectModulePlace selectedModulePlace = (SelectModulePlace) place;
-		int id = Integer.parseInt(selectedModulePlace.getToken());
-		SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);
 		if(item == null)
+		{
 			view.render(currentModel);
+			view.setDescription(SelectModuleItem.ROOT);
+		}
 		else
+		{
 			view.render(item);
-		view.setPresenter(this);
+			view.setDescription(item);
+		}
+
+		addHandlerRegistration(view.getBackBtn().addTapHandler(new TapHandler()
+		{
+
+			@Override
+			public void onTap(TapEvent event)
+			{
+				History.back();
+			}
+		}));
+		addHandlerRegistration(view.getList().addCellSelectedHandler(new CellSelectedHandler()
+		{
+
+			@Override
+			public void onCellSelected(CellSelectedEvent event)
+			{
+				final SelectModuleItem id = view.getItems().get(event.getIndex());
+				clientFactory.getPlaceController().goTo(new ViewModulePlace(id.getID()));
+			}
+		}));
 
 		panel.setWidget(view);
-	}
-
-	public void selectItem(int item) {
-		clientFactory.getPlaceController().goTo(new ViewModulePlace(item));
-	}
-	public void selectItem(SelectModuleItem item) 
-	{
-		selectItem(item.getID());
-	}
-
-	@Override
-	public void back() {
-		History.back();
 	}
 
 }

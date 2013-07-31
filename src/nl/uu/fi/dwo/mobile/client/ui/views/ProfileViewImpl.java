@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import com.googlecode.mgwt.dom.client.event.tap.HasTapHandlers;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
@@ -21,7 +22,7 @@ import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.googlecode.mgwt.ui.client.widget.LayoutPanel;
 import com.googlecode.mgwt.ui.client.widget.WidgetList;
 
-public class ProfileViewImpl implements ProfileView, ProfileView.Presenter
+public class ProfileViewImpl implements ProfileView
 {
 	
 	private LayoutPanel main;
@@ -30,10 +31,16 @@ public class ProfileViewImpl implements ProfileView, ProfileView.Presenter
 	private Label name;
 	private Label userid;
 	private Label schoolKlas;
-	private Presenter presenter;
+	private HeaderButton logoutBtn;
+	private Button submitBtn;
 
+	public HasTapHandlers getLogoutBtn() {
+		return logoutBtn;
+	}
 	
-	
+	public HasTapHandlers getSubmitBtn() {
+		return submitBtn;
+	}
 	
 	public ProfileViewImpl()
 	{
@@ -43,21 +50,12 @@ public class ProfileViewImpl implements ProfileView, ProfileView.Presenter
 		header.setCenter("Login");
 		main.add(header);
 
-		HeaderButton hb = new HeaderButton();
-		hb.setBackButton(true);
-		hb.setText("Logout");
+		logoutBtn = new HeaderButton();
+		logoutBtn.setBackButton(true);
+		logoutBtn.setText("Logout");
 
-		hb.addTapHandler(new TapHandler()
-		{
 
-			@Override
-			public void onTap(TapEvent event)
-			{
-				presenter.logout();
-			}
-		});
-
-		header.setLeftWidget(hb);
+		header.setLeftWidget(logoutBtn);
 
 		//create details list
 		WidgetList list = new WidgetList();
@@ -82,21 +80,11 @@ public class ProfileViewImpl implements ProfileView, ProfileView.Presenter
 		schoolKlas.getElement().addClassName("listitem");
 		list.add(schoolKlas);
 
-		Button submitbutton = new Button();
-		submitbutton.setText("Selecteer module");
-		submitbutton.setWidth("300px");
-		submitbutton.getElement().getStyle().setProperty("margin", "auto");
-		submitbutton.addTouchEndHandler(new TouchEndHandler()
-		{
-
-			@Override
-			public void onTouchEnd(TouchEndEvent event)
-			{
-				presenter.gotoCourses();
-			}
-		});
-
-		list.add(submitbutton);
+		submitBtn = new Button();
+		submitBtn.setText("Selecteer module");
+		submitBtn.setWidth("300px");
+		submitBtn.getElement().getStyle().setProperty("margin", "auto");
+		list.add(submitBtn);
 	}
 
 	@Override
@@ -106,11 +94,8 @@ public class ProfileViewImpl implements ProfileView, ProfileView.Presenter
 	}
 
 	@Override
-	public void setupModule(Presenter presenter)
+	public void setupModule()
 	{
-		if(presenter == null)
-			presenter = this;
-		this.presenter = presenter;
 		final Map<String, Object> profiledata = DWOplayer.profiledata;
 		String user_name = profiledata.get("firstname").toString();
 		if (profiledata.get("middlename").toString().equals("") == false)
@@ -122,15 +107,6 @@ public class ProfileViewImpl implements ProfileView, ProfileView.Presenter
 		userid.setText("GebruikersID: " + profiledata.get("userID"));
 		school.setText("School: " + profiledata.get("schoolName"));
 		schoolKlas.setText("Klas: " + profiledata.get("class"));
-	}
-
-	public void logout() {
-		DWOplayer.profiledata = null;
-		DWOplayer.clientfactory.getPlaceController().goTo(new LoginPlace("Login"));
-	}
-
-	public void gotoCourses() {
-		DWOplayer.gotoCourses();
 	}
 
 }

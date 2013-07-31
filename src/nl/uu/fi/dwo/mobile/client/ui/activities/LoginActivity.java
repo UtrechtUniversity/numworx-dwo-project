@@ -4,6 +4,7 @@ import java.util.Map;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.ProfilePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 
@@ -43,8 +44,8 @@ public class LoginActivity extends MGWTAbstractActivity
 
 	
 	
-	private ClientFactory clientFactory;
-	private LoginView view;
+	ClientFactory clientFactory;
+	LoginView view;
 
 	public LoginActivity(ClientFactory clientFactory)
 	{
@@ -54,6 +55,7 @@ public class LoginActivity extends MGWTAbstractActivity
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
+		SelectModuleItemHolder.destroy();
 		view = clientFactory.getLoginView();
 		
 		addHandlerRegistration(view.getLoginBtn().addTapHandler(new TapHandler()
@@ -62,7 +64,7 @@ public class LoginActivity extends MGWTAbstractActivity
 			@Override
 			public void onTap(TapEvent event)
 			{
-				login(view.getUsername(), view.getPassword());
+				clientFactory.getRPCHandler().login(view.getUsername(), view.getPassword(), LOGIN_CALLBACK);
 			}
 		}));
 		addHandlerRegistration(view.getGuestBtn().addTapHandler(new TapHandler()
@@ -71,19 +73,10 @@ public class LoginActivity extends MGWTAbstractActivity
 			@Override
 			public void onTap(TapEvent event)
 			{
-				login();
+				DWOplayer.gotoCourses();
 			}
 		}));
 		panel.setWidget(view);
-	}
-	public void login(String name, String password)
-	{
-		RPCHandler handler = clientFactory.getRPCHandler();
-		handler.login(name, password, LOGIN_CALLBACK);
-	}
-
-	public void login() {
-		DWOplayer.gotoCourses();
 	}
 
 }

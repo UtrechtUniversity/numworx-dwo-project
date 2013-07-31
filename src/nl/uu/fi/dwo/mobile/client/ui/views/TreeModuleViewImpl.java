@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleCell;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 
+import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -25,6 +26,7 @@ import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.SetSelectionModel;
 import com.googlecode.mgwt.dom.client.event.tap.HasTapHandlers;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
@@ -34,8 +36,9 @@ import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.googlecode.mgwt.ui.client.widget.LayoutPanel;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedEvent;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedHandler;
+import com.googlecode.mgwt.ui.client.widget.celllist.HasCellSelectedHandler;
 
-public class TreeModuleViewImpl implements TreeModuleView, SelectionHandler<TreeItem>, CellSelectedHandler
+public class TreeModuleViewImpl implements TreeModuleView 
 {
 
 	private HeaderButton backButton;
@@ -49,7 +52,7 @@ public class TreeModuleViewImpl implements TreeModuleView, SelectionHandler<Tree
 	private Tree tree;
 	private HashMap<SelectModuleItem, TreeItem> inverseMap = new HashMap<SelectModuleItem, TreeItem>();
 	private List<SelectModuleItem> cellItems;
-	protected Presenter presenter;
+	
 
 	public TreeModuleViewImpl()
 	{
@@ -71,26 +74,15 @@ public class TreeModuleViewImpl implements TreeModuleView, SelectionHandler<Tree
 		split.setHeight("99%");
 		split.setVisible(true);
 		tree = new Tree();
-		tree.addSelectionHandler(this);
 		split.addWest(tree, 200);
 		container = new SimplePanel();
 		children = new VerticalPanel();
 		split.add(children);
 		children.add(container);
 		cells = new CellList<SelectModuleItem>(new SelectModuleCell());
-		cells.addCellSelectedHandler(this);
 		children.add(cells);
 		main.add(split);
 		
-		getBackBtn().addTapHandler(new TapHandler()
-		{
-
-			@Override
-			public void onTap(TapEvent event)
-			{
-				presenter.back();
-			}
-		});
 
 	}
 
@@ -151,6 +143,10 @@ public class TreeModuleViewImpl implements TreeModuleView, SelectionHandler<Tree
 			String description = item.getDescription();
 			if(description != null)
 			{
+				if(description.startsWith(DescriptionView.GZIPPREFIX))
+				{
+					container.setWidget(new DescriptionViewImpl(item.getID()));
+				} else
 				if(description.startsWith("<html>"))
 					container.setWidget(new HTML(description));
 				else
@@ -174,7 +170,13 @@ public class TreeModuleViewImpl implements TreeModuleView, SelectionHandler<Tree
 			{
 				addChildren(model);
 			}
-			
+			TreeItem node = inverseMap.get(item);
+			tree.setSelectedItem(null, false);
+			if(node != null) {
+				
+				tree.setSelectedItem(node, false);
+				tree.ensureSelectedItemVisible();
+			}
 		}
 		else
 		{
@@ -261,32 +263,24 @@ public class TreeModuleViewImpl implements TreeModuleView, SelectionHandler<Tree
 		cells.render(list);
 	}
 
-	@Override
-	public void onSelection(SelectionEvent<TreeItem> event)
-	{
-		TreeItem item = event.getSelectedItem();
-		SelectModuleItem o = (SelectModuleItem) item.getUserObject();
-		onSelection(o);
-	}
 
-
-	private void onSelection(SelectModuleItem o) {
-		presenter.selectItem(o);
-	}
-
-	@Override
-	public void onCellSelected(CellSelectedEvent event) {
-		int index = event.getIndex();
-		onSelection(cellItems.get(index));
-	}
-
-	@Override
-	public void setPresenter(Presenter presenter) {
-		this.presenter = presenter;
-	}
 
 	@Override
 	public Widget asWidget() {
 		return main;
+	}
+
+	@Override
+	public HasSelectionHandlers<TreeItem> getTree() {
+		return tree;
+	}
+
+	@Override
+	public HasCellSelectedHandler getCells() {
+		return cells;
+	}
+
+	public List<SelectModuleItem> getCellItems() {
+		return cellItems;
 	}
 }
