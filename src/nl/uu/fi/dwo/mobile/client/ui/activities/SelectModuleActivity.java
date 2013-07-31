@@ -44,7 +44,7 @@ public class SelectModuleActivity extends MGWTAbstractActivity
 		final SelectModuleView view = clientFactory.getHomeView();
 
 		currentModel = SelectModuleItemHolder.getItems();
-		if(item == null)
+		if(item == null || item == SelectModuleItem.ROOT)
 		{
 			view.render(currentModel);
 			view.setDescription(SelectModuleItem.ROOT);

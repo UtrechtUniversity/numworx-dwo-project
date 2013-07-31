@@ -57,7 +57,7 @@ public class ProfileActivity extends MGWTAbstractActivity
 	}
 
 
-	public void gotoCourses() {
+	private void gotoCourses() {
 		DWOplayer.gotoCourses();
 	}
 

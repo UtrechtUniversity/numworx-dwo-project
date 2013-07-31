@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -16,6 +17,7 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.TabletActivityMapper;
 import nl.uu.fi.dwo.mobile.client.ui.TabletAnimationMapper;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -49,30 +51,124 @@ public class DWOplayer implements EntryPoint
 	private Place defaultPlace = new LoginPlace(); // new SelectModulePlace("select");
 
 	public static int count;
-	public static final AsyncCallback<List<Map<String,Object>>> GETCOURSES_CALLBACK = new AsyncCallback<List<Map<String,Object>>>() {
 	
-		
+	static void goTree() {
+		if(--count <= 0)
+			clientfactory.getPlaceController().goTo(new TreeModulePlace("0"));		
+	}
+
+	static void goFlat() {
+		if(--count <= 0)
+			clientfactory.getPlaceController().goTo(new SelectModulePlace("0"));		
+	}
+	
+	public static final AsyncCallback<List<Map<String,Object>>> GETCOURSES_CALLBACK_CLASS_FLAT = new AsyncCallback<List<Map<String,Object>>>(){
+
 		@Override
 		public void onFailure(Throwable caught) {
 			Window.alert(caught.toString());
-			count--;
-		}
-	
-		@Override
-		public void onSuccess(List<Map<String,Object>> result) {
+			goFlat();
 			
-			for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
-				Map<String, Object> map = (Map<String, Object>) iterator.next();
-				SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.MODULE);
-				SelectModuleItemHolder.insert(item);
-			}
-			if(--count <= 0)
-				clientfactory.getPlaceController().goTo(new TreeModulePlace("0"));
+		}
+
+		@Override
+		public void onSuccess(List<Map<String, Object>> result) {
+			insertFlat(result);
+			goFlat();
 		}
 		
 	};
+
+	public static final AsyncCallback<List<Map<String,Object>>> GETCOURSES_CALLBACK = 
+			new AsyncCallback<List<Map<String,Object>>>() {
+		@Override
+		public void onFailure(Throwable caught) {
+			Window.alert(caught.toString());
+			goTree();
+		}	
+		@Override
+		public void onSuccess(List<Map<String,Object>> result) {	
+			insertFlat(result);
+			goTree();
+		}		
+	};	
 	//private Place defaultPlace = new SelectModulePlace("Home");
 	private static HashMap<String, String> resources = new HashMap<String, String>();
+
+	public static final AsyncCallback<List<Map<String,Object>>>
+	GETCOURSES_CALLBACK_CLASS_TREE = new AsyncCallback<List<Map<String,Object>>>(){
+
+		@Override
+		public void onFailure(Throwable caught) {
+			Window.alert(caught.toString());
+			goTree();
+		}
+
+		@Override
+		public void onSuccess(List<Map<String, Object>> result) {
+			sort(result);
+			insertTree(result);
+			goTree();
+		}
+		
+		private int getParentID(Map<String,Object> course) {
+			try {
+				return ((Number) course.get("parentID")).intValue();
+			} catch (Exception e) {
+				return 0;
+			}
+		}
+		
+		private int getID(Map<String, Object> course) {
+			try {
+				return ((Number) course.get("courseID")).intValue();
+			} catch (Exception e) {
+				return 0;
+			}
+		}
+		private void sort(List<Map<String,Object>> courses) {
+			boolean again;
+			if(courses == null || courses.isEmpty())
+				return;
+			do {
+				again = false;
+				more:
+				for(int i = 0; i < courses.size(); i++ ) {
+					Map<String,Object> course = courses.get(i);
+					if( getParentID(course) == 0) {
+						int j;
+						for(j = i-1; j >= 0; j--) {
+							if(getParentID(courses.get(j))==0) {
+								if(j == i-1)
+									break;
+								courses.add(j+1, courses.remove(i));
+								continue more;
+							}
+						}
+						if(j == -1) {
+							courses.add(0, courses.remove(i));
+							continue more;
+						}
+					} else {
+						int pid = getParentID(course); int j;
+						for(j = i-1; j>=0; j--) {
+							if(getParentID(courses.get(j))==pid || getID(courses.get(j)) == pid) {
+								if(j == i-1) break;
+								courses.add(j+1, courses.remove(i));
+								continue more;
+							}
+						}
+						if(j == -1) {
+							again = true;
+						}
+					}
+				}
+			} while(again);
+		}
+		
+	};
+
+	
 	//public static Locale language = new Locale ("nl", "");
 	public static Text_nl rb = new Text_nl();
 
@@ -175,6 +271,7 @@ public class DWOplayer implements EntryPoint
 	public static void gotoCourses() {
 		SelectModuleItemHolder.clear(); // hier leegmaken of elders?
 		count = 1;
+		AsyncCallback<List<Map<String, Object>>> callback = GETCOURSES_CALLBACK;
 		if(profiledata == null)
 			clientfactory.getEntryView().setApi(api = new SCORM_guest());
 		else
@@ -182,19 +279,56 @@ public class DWOplayer implements EntryPoint
 			clientfactory.getEntryView().setApi(api = new SCORM_DWOmAccess(userID));
 			if(!"".equals(profiledata.get("classID")))
 			{
-				clientfactory.getRPCHandler().getCoursesClass(profiledata, GETCOURSES_CALLBACK);
+				boolean iconizer = Boolean.TRUE.equals(profiledata.get("iconizer"));
+				if(iconizer)
+					callback = GETCOURSES_CALLBACK_CLASS_TREE;
+				else
+					callback = GETCOURSES_CALLBACK_CLASS_FLAT;
+				clientfactory.getRPCHandler().getCoursesClass(profiledata, callback);
 				return;
 			}
 			if(!"".equals(profiledata.get("schoolID")))
 			{
 				count = 2;
-				clientfactory.getRPCHandler().getCoursesSchool(profiledata, GETCOURSES_CALLBACK);
+				clientfactory.getRPCHandler().getCoursesSchool(profiledata, callback);
 			}
 		
 		}
 		
 		
-		clientfactory.getRPCHandler().getCourses(profiledata, GETCOURSES_CALLBACK);
+		clientfactory.getRPCHandler().getCourses(profiledata, callback);
 		
+	}
+
+	/**
+	 * @param result
+	 */
+	public static void insertFlat(List<Map<String, Object>> result) {
+		for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
+			Map<String, Object> map = iterator.next();
+			SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.MODULE);
+			SelectModuleItemHolder.insert(item);
+		}
+	}
+	public static void insertTree(List<Map<String,Object>> result) {
+		for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
+			Map<String, Object> map = iterator.next();
+			SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.MODULE);
+			Integer parentID = (Integer) map.get("parentID");
+			if(parentID != null && parentID.intValue()> 0 )
+			{
+				SelectModuleItem parent = SelectModuleItemHolder.getItemByID(parentID);
+				if( parent != null)
+				{
+					List<SelectModuleItem> children = parent.getChildren();
+					if(children == null)
+						parent.setChildren(children = new ArrayList<SelectModuleItem>());
+					children.add(item);
+					item.setParent(parent);
+				} 
+			} 
+			SelectModuleItemHolder.insert(item);
+			
+		}
 	}
 }
