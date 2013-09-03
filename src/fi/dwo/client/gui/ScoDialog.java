@@ -59,6 +59,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 
 import fi.beans.scorm.PartialScoreIF;
+import fi.beans.scorm.SCORM12APIInterface;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.SchoolClass;
 import fi.dwo.client.domain.Sco;
@@ -73,7 +74,71 @@ import fi.dwo.client.system.TextMapper;
  */
 public class ScoDialog extends JDialog implements ActionListener, WindowListener, PropertyChangeListener {
 
-    public static class ClassModel extends DefaultComboBoxModel {
+	/**
+	 * Decorator om Sco voor losse User.
+	 * FIXME losse API met USER en Sco. Extra class tussen Sco en ScormAdapter?
+	 * @author wim
+	 *
+	 */
+    public static class API implements SCORM12APIInterface {
+
+		private Sco sco;
+		private User u;
+
+		public API(Sco sco, User u) {
+			this.sco = sco;
+			this.u = u;
+		}
+
+		public String LMSInitialize(String iParam) {
+			return "false";
+		}
+
+		public String LMSFinish(String iParam) {
+			return "false";
+		}
+		
+		// TODO betere implementatie
+		public String LMSGetValue(String iDataModelElement) {
+			User old = sco.getUser();
+			try {
+				sco.setUser(u);
+				return sco.LMSGetValue(iDataModelElement);
+			} finally {
+				sco.setUser(old);
+			}
+		}
+
+		// TODO Betere implementatie
+		public String LMSSetValue(String iDataModelElement, String iValue) {
+			User old = sco.getUser();
+			try {
+				sco.setUser(u);
+				return sco.LMSSetValue(iDataModelElement, iValue);
+			} finally {
+				sco.setUser(old);
+			}
+		}
+
+		public String LMSCommit(String iParam) {
+			return sco.LMSCommit(iParam); // We weten dat deze implementatie user onafhankelijk is.
+		}
+
+		public String LMSGetLastError() {
+			return "";
+		}
+
+		public String LMSGetErrorString(String iErrorCode) {
+			return "";
+		}
+
+		public String LMSGetDiagnostic(String iErrorCode) {
+			return "";
+		}
+
+	}
+
+	public static class ClassModel extends DefaultComboBoxModel {
 
 		private Sco sco;
 
@@ -84,9 +149,8 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		}
 
 		public List getScoreList(int i) {
-			User u = (User) getElementAt(i);
-			sco.setUser(u);
-			return sco.getPartialScoreIF().getScoreMapList(sco);
+				User u = (User) getElementAt(i);
+				return sco.getPartialScoreIF().getScoreMapList(new API(sco, u));
 		}
 	}
 
@@ -225,6 +289,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 				User u = (User) event.getItem();
 				switch (event.getStateChange()) {
 				case ItemEvent.DESELECTED:
+						sp.getSco().setUser(u);
 						sp.getSco().getApplet().stop();
 						break;
 				case ItemEvent.SELECTED:

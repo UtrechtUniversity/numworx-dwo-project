@@ -1146,4 +1146,8 @@ System.err.println("sum = ["+result+"]");
 		this.locationOverride = loc;
 		
 	}
+
+	public User getUser() {
+		return this.user;
+	}
 }
