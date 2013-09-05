@@ -124,7 +124,7 @@ public class Sco extends ScormAdapter implements LessonGroup, SCORM12APIInterfac
 	public static final String NORMAL = "normal";
 	public static final String REVIEW = "review";
 	public static final String BROWSE = "browse";
-	private static final String LESSON_MODE = "cmi.mode";
+	public static final String LESSON_MODE = "cmi.mode";
 	public static final String LAUNCH_DATA = "cmi.launch_data";
 	public static final String LESSON_LOCATION = "cmi.location";
     private static final String SESSION_TIME = "session_time";
@@ -136,9 +136,19 @@ public class Sco extends ScormAdapter implements LessonGroup, SCORM12APIInterfac
     public static final String CREDIT  = "credit";
     public static final String NO_CREDIT = "no-credit";
     private static final String CREDIT_STATUS = "cmi.credit";
-    public static final String DWO_GOTO_SCONR = "dwo.goto.sconr"; // writeonly.
-
-	private String  lessonMode = NORMAL;
+    public static final String DWO_GOTO_SCONR = "dwo.goto.sconr"; // writeonly
+    
+    private static String defaultLessonMode = NORMAL; // new String(BROWSE)
+    
+    public static void setDefaultLessonMode(String mode) {
+    	if(BROWSE.equals(mode))
+    		mode = new String(BROWSE);
+    	else
+    		mode = NORMAL;
+    	defaultLessonMode = mode;
+    }
+    
+	private String  lessonMode = defaultLessonMode;
 
 	private String lessonLocation;
 	
@@ -148,6 +158,8 @@ public class Sco extends ScormAdapter implements LessonGroup, SCORM12APIInterfac
 	}
 
 	public void setLessonMode(String lessonMode) {
+		if(NORMAL.equals(lessonMode))
+			lessonMode = defaultLessonMode;
 		this.lessonMode = lessonMode;
 		lessonLocation = null;
 	}

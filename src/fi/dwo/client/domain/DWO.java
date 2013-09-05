@@ -226,9 +226,15 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
         while(args != null && args.length > 1+o &&
         		args[0].length()>1 &&
         		'-' == args[o].charAt(0) &&
-        		"rlsx".indexOf(args[0].charAt(1))>=0
+        		"rlsxb".indexOf(args[0].charAt(1))>=0
         )
         {	
+        if("-b".equals(args[o]))
+        {
+        	Sco.setDefaultLessonMode(Sco.BROWSE);
+        	o += 1;
+        }
+        	
         	// allow update van SERVLET
         if("-s".equals(args[o]))
         {
@@ -1036,7 +1042,12 @@ private static boolean isValidEmail(String email) {
 // standaard Tooltip geel
     	UIManager.put("ToolTip.background", new ColorUIResource(255, 247, 200));
         
-        String lang = getParameter("language");
+    	{
+    		String mode = getParameter(Sco.LESSON_MODE);
+    		if(mode != null) Sco.setDefaultLessonMode(mode);
+    	}
+    	
+    	String lang = getParameter("language");
         logoutURL = getParameter("logoutURL");
         System.out.println(logoutURL);
         if ((lang != null) && (!lang.equals(""))) {

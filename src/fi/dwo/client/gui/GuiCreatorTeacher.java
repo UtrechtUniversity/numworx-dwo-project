@@ -411,7 +411,8 @@ public class GuiCreatorTeacher extends GuiCreator {
 	public JComponent getButtonBox(ScoPanel scoPanel) {
 		if(noAdmin && scoPanel.getSco().getCourse().getSchoolID() == 0)
 			return null;
-		if(scoPanel.getSco().getLessonMode() == Sco.BROWSE)
+		String lessonMode = scoPanel.getSco().getLessonMode();
+		if(Sco.BROWSE.equals(lessonMode))
 		{
 			Box box = Box.createHorizontalBox();
 			JLabel lab = new JLabel("PREVIEW");
@@ -420,7 +421,12 @@ public class GuiCreatorTeacher extends GuiCreator {
 			lab.setFont(new Font("SansSerif", Font.BOLD, 20));
 			box.add(lab);
 			box.add(Box.createHorizontalStrut(10));
-			box.add(new JButton(new PreviewAction(scoPanel)));
+			if(Sco.BROWSE == lessonMode) // FIXME SUBTIEL verschil 
+			{ 
+				box.add(new JButton(new PreviewAction(scoPanel)));
+			} else {
+				box.add(new JButton(new ScoParameterAction(scoPanel)));
+			}
 			return fx(box);
 		}
 		return fx(new JButton(new ScoParameterAction(scoPanel)));
