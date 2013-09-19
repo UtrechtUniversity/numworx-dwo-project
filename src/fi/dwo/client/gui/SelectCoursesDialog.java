@@ -952,7 +952,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         // set location to center of parent
         int x = 0;
         int y = 0;
-
+        owner = DwoHelper.getApplet();
         Point p = owner != null ? owner.getLocation() : new Point(0, 0);
         Dimension parentSize = owner != null ? owner.getSize()
                 : Toolkit.getDefaultToolkit().getScreenSize();
