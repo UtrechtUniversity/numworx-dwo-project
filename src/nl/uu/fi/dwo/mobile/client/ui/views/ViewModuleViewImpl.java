@@ -266,6 +266,13 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		 
 	}*/
 
+	public ViewModuleViewImpl(boolean b) {
+		standalone = b;
+	}
+	
+	public ViewModuleViewImpl() {
+	}
+
 	public HeaderButton getBackButton()
 	{
 		return hb;

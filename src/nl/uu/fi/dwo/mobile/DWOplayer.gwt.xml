@@ -36,10 +36,11 @@
 <!--<set-property name="user.agent" value="gecko1_8" /> -->
 
   
-<!--  --> <entry-point class='nl.uu.fi.dwo.mobile.DWOplayer'/>
+<!--   <entry-point class='nl.uu.fi.dwo.mobile.DWOplayer'/>-->
+<!--  --> <entry-point class='nl.uu.fi.dwo.mobile.WiskOpdrPlayer'/>-->
 <!--  <entry-point class='nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl'/> -->
 <!--  <entry-point class='nl.uu.fi.dwo.mobile.touchtest.Touchtest' />--> 
-<!--  	<entry-point class='nl.uu.fi.dwo.mobile.client.ui.views.DescriptionViewImpl'  /> -->
+<!--  <entry-point class='nl.uu.fi.dwo.mobile.client.ui.views.DescriptionViewImpl'  /> -->
 	
   <!-- Specify the paths for translatable code                    -->
   <source path='client'/>
@@ -50,6 +51,13 @@
     <replace-with class="nl.uu.fi.dwo.ui.ClientFactoryImpl">
     <when-type-is class="nl.uu.fi.dwo.ui.ClientFactory"/>
     </replace-with>
+
+<!-- Welke scorm wil je hebben? Scorm2004, LTI?, QTI? Noordhoff API, DWO-Scorm-1.2, etc... -->    
+    <replace-with class="nl.uu.fi.dwo.mobile.client.sco.SCORM_guest">
+    	<when-type-is class="nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF"/>
+    </replace-with>
+    
+    
 <source ></source>
 
 
