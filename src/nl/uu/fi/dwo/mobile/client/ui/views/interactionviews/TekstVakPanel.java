@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -84,8 +85,13 @@ public class TekstVakPanel implements InteractionView
 
 		if (launchState != null && launchState.get("breedtes") != null)
 			breedtes = (ArrayList<Object>) launchState.get("breedtes");
+		else
+			breedtes = new ArrayList<Object>(Arrays.asList(600.0));
 		if (launchState != null && launchState.get("hoogtes") != null)
 			hoogtes = (ArrayList<Object>) launchState.get("hoogtes");
+		else
+			hoogtes = new ArrayList<Object>(Arrays.asList(250.0));
+		
 		if (launchState != null && launchState.get("cellSpaceColumn") != null)
 			cellSpaceColumn = (Integer) launchState.get("cellSpaceColumn");
 		if (launchState != null && launchState.get("cellSpaceRow") != null)

@@ -68,11 +68,14 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 
 	@Override
 	public HashMap<String, Object> getState() {
-		String jso = getState(innerView);
-		if(jso != null)
+		if(innerView != null)
 		{
-			JSONObject js = JSONParser.parseLenient(jso).isObject();
-			return JSONUtilities.fromJSONObject(js);
+			String jso = getState(innerView);
+			if(jso != null)
+			{
+				JSONObject js = JSONParser.parseLenient(jso).isObject();
+				return JSONUtilities.fromJSONObject(js);
+			}
 		}
 		return null;
 	}
@@ -91,7 +94,9 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 
 	@Override
 	public int getScore() {
-		return getScore(innerView);
+		if(innerView != null)
+			return getScore(innerView);
+		return 0;
 	}
 
 	private native static int getScore(Object inner) /*-{

@@ -194,7 +194,8 @@ public class TekstBuffer
 		if (opdrachtGegevens.size() > index + 5) // FIXME size() = 6, index = 0 get(0)= null
 			currentVakGegevens = (HashMap<String, Object>) opdrachtGegevens.get(index + 5);
 		if (currentVakGegevens == null) // FIXME Komt voor in g4test
-			return "";
+			return new TekstVakPanel(null, randomVarNamen, randomVarWaarden); // was ""
+		
 		int soortVak = (Integer) currentVakGegevens.get("soortInteractiePanel");
 
 		switch (soortVak)

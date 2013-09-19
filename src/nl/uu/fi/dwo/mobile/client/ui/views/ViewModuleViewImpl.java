@@ -413,10 +413,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				{
 					aantalVakken++;
 					Object launchData = opdrachtGegevens.get(aantalVakken + 4); // FIXME Hier ook een +5-1 Wim
-					HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) launchData).get("interactiePanelLaunchState");
 					((TekstVakPanel) currentObject).zetInstellingen(instellingen);
 					((TekstVakPanel) currentObject).setKeyboard(kb);
-					((TekstVakPanel) currentObject).zetOpdracht(launchState);
+					if(launchData != null)
+					{  HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) launchData).get("interactiePanelLaunchState");
+						((TekstVakPanel) currentObject).zetOpdracht(launchState);
+					}
 				}
 			}
 			setObjects(opdrachtObjects, contentPanel);
