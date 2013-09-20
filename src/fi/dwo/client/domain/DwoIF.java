@@ -474,9 +474,9 @@ public interface DwoIF {
 
 	public ResultsModuleIF getUserResultsModule(Course course);
 
-	public String LMSGetValue(Sco sco, User user, String dataModelElement);
+	public String LMSGetValue(ScoBase scoBase, User user, String dataModelElement);
 
-	public String LMSSetValue(Sco sco, User user, String dataModelElement, String value);
+	public String LMSSetValue(ScoBase scoBase, User user, String dataModelElement, String value);
 
 	public School addSchool(int id, String schoolName, String schoolLogin,
 			SchoolPasswdMap schoolPasswdMap, Date date) throws SchoolException;
@@ -484,7 +484,7 @@ public interface DwoIF {
 	public School editSchool(int schoolID, String schoolName,
 			String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date) throws SchoolException;
 
-	public String LMSCommit(Sco sco, String param);
+	public String LMSCommit(ScoBase scoBase, String param);
 
 	public Sco[] getEditableScos();
 

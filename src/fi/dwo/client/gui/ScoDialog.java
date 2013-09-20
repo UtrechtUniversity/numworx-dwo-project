@@ -63,6 +63,7 @@ import fi.beans.scorm.SCORM12APIInterface;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.SchoolClass;
 import fi.dwo.client.domain.Sco;
+import fi.dwo.client.domain.ScoBase;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.system.TextMapper;
 
@@ -80,14 +81,20 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 	 * @author wim
 	 *
 	 */
-    public static class API implements SCORM12APIInterface {
+    public static class API extends ScoBase implements SCORM12APIInterface {
 
-		private Sco sco;
-		private User u;
+
+		private String creditStatus;
 
 		public API(Sco sco, User u) {
-			this.sco = sco;
-			this.u = u;
+			super(false);
+			this.features = sco.features;
+			this.creditStatus = sco.getCreditStatus();
+			this.dwo = sco.dwo;
+			setLaunchdata(sco.getLaunchdata());
+			setScoID(sco.getScoID());
+			setUser(u);
+			setLessonMode(REVIEW);
 		}
 
 		public String LMSInitialize(String iParam) {
@@ -97,45 +104,28 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		public String LMSFinish(String iParam) {
 			return "false";
 		}
+
+		/* (non-Javadoc)
+		 * @see fi.dwo.client.domain.ScoBase#getCreditStatus()
+		 */
+		public String getCreditStatus() {
+			return creditStatus;
+		}
+
+		/* (non-Javadoc)
+		 * @see fi.beans.scorm.ScormAdapter#LMSGetValue(java.lang.String)
+		 */
+		public String LMSGetValue(String key) {
+			return super.LMSGetValue(key);
+		}
+
+		/* (non-Javadoc)
+		 * @see fi.beans.scorm.ScormAdapter#LMSSetValue(java.lang.String, java.lang.String)
+		 */
+		public String LMSSetValue(String key, String value) {
+			return super.LMSSetValue(key, value);
+		}
 		
-		// TODO betere implementatie
-		public String LMSGetValue(String iDataModelElement) {
-			User old = sco.getUser();
-			try {
-				sco.setUser(u);
-				return sco.LMSGetValue(iDataModelElement);
-			} finally {
-				sco.setUser(old);
-			}
-		}
-
-		// TODO Betere implementatie
-		public String LMSSetValue(String iDataModelElement, String iValue) {
-			User old = sco.getUser();
-			try {
-				sco.setUser(u);
-				return sco.LMSSetValue(iDataModelElement, iValue);
-			} finally {
-				sco.setUser(old);
-			}
-		}
-
-		public String LMSCommit(String iParam) {
-			return sco.LMSCommit(iParam); // We weten dat deze implementatie user onafhankelijk is.
-		}
-
-		public String LMSGetLastError() {
-			return "";
-		}
-
-		public String LMSGetErrorString(String iErrorCode) {
-			return "";
-		}
-
-		public String LMSGetDiagnostic(String iErrorCode) {
-			return "";
-		}
-
 	}
 
 	public static class ClassModel extends DefaultComboBoxModel {

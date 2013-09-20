@@ -35,6 +35,7 @@ import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.SchoolClass;
 import fi.dwo.client.domain.SchoolPasswdMap;
 import fi.dwo.client.domain.Sco;
+import fi.dwo.client.domain.ScoBase;
 import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.Admin;
 import fi.dwo.client.domain.User;
@@ -182,7 +183,7 @@ public class PersistenceFacade {
      * @return The value for the iDataModelElement.
      * @throws PersistenceException If a database exception, or XML-RPC exception occurres.
      */
-    public String LMSGetValue(Sco sco, User user, String iDataModelElement)
+    public String LMSGetValue(ScoBase sco, User user, String iDataModelElement)
             throws PersistenceException {
         if (user != null && !(user instanceof Guest)) {
         	int uid = user.getUserID();
@@ -204,7 +205,7 @@ public class PersistenceFacade {
      * @return "true" or "false"
      * @throws PersistenceException
      */
-    public String LMSSetValue(Sco sco, User user, String iDataModelElement,
+    public String LMSSetValue(ScoBase sco, User user, String iDataModelElement,
             String iValue) throws PersistenceException {
         if (user != null && !(user instanceof Guest) ) {
 			String result = "true";
@@ -238,7 +239,7 @@ public class PersistenceFacade {
     }
 
     
-    public String LMSCommit(Sco sco, User user, String dummy)
+    public String LMSCommit(ScoBase sco, User user, String dummy)
     {
     	try {
 			return StoreCreator.instance().commit(user.getUserID(), sco.getScoID(), dummy);

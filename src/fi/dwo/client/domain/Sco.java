@@ -14,11 +14,9 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.Hashtable;
-import java.util.Locale;
 import java.util.StringTokenizer;
 
 import javax.swing.JOptionPane;
@@ -26,7 +24,6 @@ import javax.swing.SwingUtilities;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-import fi.beans.base64code.StringCodeObject;
 import fi.beans.scorm.PartialScoreIF;
 import fi.beans.scorm.SCORM12APIInterface;
 import fi.beans.scorm.ScormAdapter;
@@ -46,13 +43,8 @@ import fi.dwo.client.gui.GuiConstants;
  * @author M.J.B. Kupers
  *  
  */
-public class Sco extends ScormAdapter implements LessonGroup, SCORM12APIInterface, AppletStub, Comparable, ScoEditor {
-	private static final char REVIEWABLE = 'r';
-	private static final char MERGABLE = 'm';
-
-	private static final DecimalFormatSymbols US_DECIMAL_FORMAT_SYMBOLS = new DecimalFormatSymbols(Locale.US);
-
-    private ScoEditor editor = this;
+public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, AppletStub, Comparable, ScoEditor {
+	private ScoEditor editor = this;
     private PropertyChangeSupport bean = new PropertyChangeSupport(this);
     
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -64,7 +56,7 @@ public class Sco extends ScormAdapter implements LessonGroup, SCORM12APIInterfac
 		bean.addPropertyChangeListener(propertyName, listener);
 	}
 
-	private void firePropertyChange(String propertyName, Object oldValue,
+	void firePropertyChange(String propertyName, Object oldValue,
 			Object newValue) {
 		bean.firePropertyChange(propertyName, oldValue, newValue);
 	}
@@ -78,69 +70,18 @@ public class Sco extends ScormAdapter implements LessonGroup, SCORM12APIInterfac
 		bean.removePropertyChangeListener(propertyName, listener);
 	}
 
-	private int scoID;
-
-    private String name;
+	private String name;
 
     private String description;
 
-    private int appletID;
-
     private Applet applet;
-    private AppletData appletData;
     private Boolean showScore;    
-    
-    protected Hashtable launchdata; // subclass implements lazyness
-
-    public DwoIF dwo;
-
-    private User user;
-
-    private Course course;
-    private boolean courseChanged;
     
     private int sequencenr;
     
-    private ScoPanel sc;
+    private boolean initialized;
 
-	private boolean initialized, dataChanged;
-
-	public boolean isDataChanged() {
-		return dataChanged;
-	}
-
-	public void setDataChanged(boolean dataChanged) {
-		this.dataChanged = dataChanged;
-	}
-
-	public boolean isCourseChanged() {
-		return courseChanged;
-	}
-
-	public void setCourseChanged(boolean courseChanged) {
-		this.courseChanged = courseChanged;
-	}
-
-	public static final String NORMAL = "normal";
-	public static final String REVIEW = "review";
-	public static final String BROWSE = "browse";
-	public static final String LESSON_MODE = "cmi.mode";
-	public static final String LAUNCH_DATA = "cmi.launch_data";
-	public static final String LESSON_LOCATION = "cmi.location";
-    private static final String SESSION_TIME = "session_time";
-    private static final String CMI_SESSION_TIME = "cmi." + SESSION_TIME;
-    private static final String TOTAL_TIME = "total_time";
-    private static final String CMI_TOTAL_TIME = "cmi." + TOTAL_TIME;
-
-    private static final String CORE_SESSION_TIME = "cmi.core." + SESSION_TIME;
-    public static final String CREDIT  = "credit";
-    public static final String NO_CREDIT = "no-credit";
-    private static final String CREDIT_STATUS = "cmi.credit";
-    public static final String DWO_GOTO_SCONR = "dwo.goto.sconr"; // writeonly
-    
-    private static String defaultLessonMode = NORMAL; // new String(BROWSE)
-    
-    public static void setDefaultLessonMode(String mode) {
+	public static void setDefaultLessonMode(String mode) {
     	if(BROWSE.equals(mode))
     		mode = new String(BROWSE);
     	else
@@ -148,22 +89,6 @@ public class Sco extends ScormAdapter implements LessonGroup, SCORM12APIInterfac
     	defaultLessonMode = mode;
     }
     
-	private String  lessonMode = defaultLessonMode;
-
-	private String lessonLocation;
-	
-
-    public String getLessonMode() {
-		return lessonMode;
-	}
-
-	public void setLessonMode(String lessonMode) {
-		if(NORMAL.equals(lessonMode))
-			lessonMode = defaultLessonMode;
-		this.lessonMode = lessonMode;
-		lessonLocation = null;
-	}
-
 	/**
      * Creates a new Sco object.
      *  
@@ -255,19 +180,6 @@ public class Sco extends ScormAdapter implements LessonGroup, SCORM12APIInterfac
         
     }
 
-    public AppletData getAppletData()
-    {
-    	if(appletData == null)
-    	{
-    		try {
-				appletData = (AppletData)PersistenceFacade.instance().get(appletID, AppletData.class);
-			} catch (PersistenceException e) {
-				e.printStackTrace();
-			}
-    	}
-    	return appletData;
-    }
-    
     public PartialScoreIF getPartialScoreIF() {
     	loadApplet();
     	if(applet instanceof PartialScoreIF)
@@ -293,16 +205,6 @@ public class Sco extends ScormAdapter implements LessonGroup, SCORM12APIInterfac
      */
     public String getScoName() {
         return name;
-    }
-
-    /**
-     * Returns the unique-identifier for the LessonGroup object.
-     * 
-     * @return The unique-identifier for the LessonGroup object.
-     *  
-     */
-    public int getID() {
-        return scoID;
     }
 
     /**
@@ -395,133 +297,6 @@ System.err.println("sum = ["+result+"]");
     }
 
     /**
-     * Returns the user-specific value for the iDataModelElement.
-     * 
-     * @param iDataModelElement The name of the parameter.
-     * @return The user-specific value for the iDataModelElement.
-     * @see fi.beans.scorm.SCORM12APIInterface#LMSGetValue(java.lang.String)
-     *  
-     */
-    public String GetValue(String iDataModelElement) {
-    	if(LESSON_MODE.equals(iDataModelElement))
-    		return ok(getLessonMode());
-    	if(LAUNCH_DATA.equals(iDataModelElement))
-    	{
-    		String value;
-    		Hashtable ld = getLaunchdata();
-    		value = (String)ld.get(LAUNCH_DATA);
-    		if(value == null)
-    			value = getLaunchdataString();
-    		return ok(value);
-    		
-    	}
-    	if(LESSON_LOCATION.equals(iDataModelElement))
-    		return ok(getLessonLocation());
-    	if(CREDIT_STATUS.equals(iDataModelElement))
-    		return ok(getCreditStatus());
-// session_ en total_time in 1.2 format.
-    	if(CMI_SESSION_TIME.equals(iDataModelElement)||CMI_TOTAL_TIME.equals(iDataModelElement))
-    	{
-    		iDataModelElement = iDataModelElement.substring(4); // skip cmi.
-    		return ok(to2004Time(from1_2Time(dwo.LMSGetValue(this, user, iDataModelElement))));
-    	}
-        return ok(dwo.LMSGetValue(this, user, iDataModelElement));  // null -> 101 else ok()
-    }
-
-    /**
-     * Bepaal cmi.core.credit. Is gelijk aan is een assesment of niet.
-     * @return credit/no-credit
-     */
-    public String getCreditStatus() {
-		Course c = getCourse();
-		if ( c != null ) {
-			ClassCourse link = c.link;
-			if(link != null && link.getType() == ClassCourse.ASSESMENT)
-				return CREDIT;
-		}
-		return NO_CREDIT;
-	}
-
-	private String getLessonLocation() {
-    	if(REVIEW.equals(lessonMode) && locationOverride != null) {
-    		lessonLocation = locationOverride;
-    		locationOverride = null;
-    	}
-    	if(REVIEW.equals(lessonMode) && lessonLocation != null)
-    		return lessonLocation;
-		return "";//dwo.LMSGetValue(this, user, LESSON_LOCATION);
-	}
-
-	/**
-     * Sets the user-specific value for the iDataModelElement.
-     * 
-     * @param iDataModelElement The dataModelElement to set.
-     * @param iValue The value to set.
-     * @return String representing a boolean
-     *         <ul>
-     *         <li><code>true</code> result indicates that the LMSSetValue()
-     *         was successful</li>
-     *         <li><code>false</code> result indicates that the LMSSetValue()
-     *         was unsuccessful</li>
-     *         </ul>
-     * @see fi.beans.scorm.SCORM12APIInterface#LMSSetValue(java.lang.String,
-     *      java.lang.String)
-     *  
-     */
-    public String SetValue(String iDataModelElement, String iValue) {
-    	if(LESSON_MODE.equals(iDataModelElement))
-    	{
-    		// TODO set error op 'readonly' variable
-    		return ko("false");
-    	}
-    	
-    	if( DWO_GOTO_SCONR.equals (iDataModelElement)) {
-    		if(NORMAL.equals(lessonMode))
-	    		try {
-	    			return tf(gotoSco(iValue, this, course, sc));
-	    		} catch (Exception e) {
-	    			//e.printStackTrace();
-	    			
-	    		}
-    		return ko("false");
-    	}
-    	
-    	
-    	
-    	if(NORMAL.equals(lessonMode))
-    	{
-			if(CMI_SESSION_TIME.equals(iDataModelElement))
-			{
-				iDataModelElement = SESSION_TIME;
-				iValue = to1_2Time(from2004Time(iValue)); // sessiontime in 1.2 format.
-			}
-//			if(CMI_TOTAL_TIME.equals(iDataModelElement)) // NOT WRITABLE!
-//			{
-//				iDataModelElement = TOTAL_TIME;
-//				iValue = to1_2Time(from2004Time(iValue)); // totaltime in 1.2 format.
-//			}
-    		return tf(dwo.LMSSetValue(this, user, iDataModelElement, iValue));
-    	}
-
-    	if(REVIEW.equals(lessonMode))
-    	{
-    		boolean ok = getReviewable(iDataModelElement);
-    		if(ok)
-    		{
-    			return dwo.LMSSetValue(this, user, iDataModelElement, iValue);
-    		} else if(LESSON_LOCATION.equals(iDataModelElement))
-    		{
-    			String last = lessonLocation;
-    			lessonLocation = iValue;
-    			firePropertyChange(LESSON_LOCATION, last, lessonLocation);
-    			return ok("true");
-    		}
-    	}
-    	// browse....
-    	return ko("false");
-    }
-
-	/**
 	 * @param iValue
 	 * @param current TODO
 	 * @param course TODO
@@ -553,24 +328,6 @@ System.err.println("sum = ["+result+"]");
 	}
 
     
-    private String features;
-
-	private String locationOverride;
-
-    private boolean getReviewable(String element) {
-    	if (CMI_SESSION_TIME.equals(element)) // not reviewable!
-    		return false;
-    	if (LESSON_LOCATION.equals(element))		// special case. 
-    		return false;
-		if(features == null)
-		{	features = getAppletData().getFeatures();
-			if(features == null) features = "";
-		}
-		//System.out.println("Reviewable: "+(features.indexOf(REVIEWABLE)>=0));
-		return features.indexOf(REVIEWABLE)>=0;
-		
-	}
-
     public boolean isMergable(Sco other) {
     	if(other.getAppletID() != getAppletID())
     		return false;
@@ -585,116 +342,6 @@ System.err.println("sum = ["+result+"]");
     
     
 	/**
-     * This call ensures to the SCO that the data sent, via an
-     * <code>LMSSetValue()</code> call, will be persisted by the LMS upon
-     * completion of the LMSCommit().
-     * 
-     * @param iParam An empty string must be passed for conformance to this
-     *            standard. Values other than "" are reserved for future
-     *            extensions.
-     * @return String representing a boolean
-     *         <ul>
-     *         <li><code>true</code> result indicates that the LMSCommit("")
-     *         was successful</li>
-     *         <li><code>false</code> result indicates that the LMSCommit("")
-     *         was unsuccessful</li>
-     *         </ul>
-     *         If a return value of <code>false</code> is returned, then this
-     *         signifies to the SCO that the LMS is in an unknown state and that
-     *         any additional API calls may or may not be processed by the LMS.
-     * @see fi.beans.scorm.SCORM12APIInterface#LMSCommit(java.lang.String)
-     *  
-     */
-    public String LMSCommit(String iParam) {
-        return tf(dwo.LMSCommit(this, iParam));
-    }
-
-    /**
-     * The SCO must have a way of assessing whether or not any given API call
-     * was successful, and if it was not successful, what went wrong. This
-     * method returns an error status code resulting from the previous API call.
-     * Each time an API method is called (with the exception of this one,
-     * <code>LMSGetErrorString</code>, and <code>LMSGetDiagnostic</code>--
-     * the error methods), the error code is reset. The SCO may call the error
-     * methods any number of times to retrieve the error code, and the code
-     * cannot change until the next API call is made.
-     * 
-     * @return The return values are Strings that can be converted to integer
-     *         numbers that identify errors falling into the following
-     *         categories:
-     *         <ul>
-     *         <li>100's General errors</li>
-     *         <li>200's Syntax errors</li>
-     *         <li>300's LMS errors</li>
-     *         <li>400's Data model errors</li>
-     *         </ul>
-     *         The following codes are available for error messages:
-     *         <ul>
-     *         <li>0 No error</li>
-     *         <li>101 General exception</li>
-     *         <li>201 Invalid argument error</li>
-     *         <li>202 Element cannot have children</li>
-     *         <li>203 Element not an array - cannot have count</li>
-     *         <li>301 Not initialized</li>
-     *         <li>401 Not implemented error</li>
-     *         <li>402 Invalid set value, element is a keyword</li>
-     *         <li>403 Element is read only</li>
-     *         <li>404 Element is write only</li>
-     *         <li>405 Incorrect Data Type</li>
-     *         </ul>
-     *         Additional codes TBD
-     * @see fi.beans.scorm.SCORM12APIInterface#LMSGetLastError()
-     *  
-     */
-    private String lastError = "0";
-    private String ok(String ok) { lastError = "0"; return ok; }
-    private String ko(String ko) { lastError = "101"; return ko;}
-    private String tf(String tf) { lastError = "true".equals(tf) ? "0" : "101" ; return tf; }
-    public String LMSGetLastError() {
-        return lastError;
-    }
-
-    /**
-     * This method enables the content to obtain a textual description of the
-     * error represented by the error code number.
-     * 
-     * @param iErrorCode An integer number representing an error code.
-     * 
-     * @return A string that represents the verbal description of an error.
-     * @return java.lang.String
-     * @see fi.beans.scorm.SCORM12APIInterface#LMSGetErrorString(java.lang.String)
-     *  
-     */
-    public String LMSGetErrorString(String iErrorCode) {
-        return "";
-    }
-
-    /**
-     * This method enables vendor-specific error descriptions to be developed
-     * and accessed by the content. These would normally provide additional
-     * detail regarding the error.
-     * 
-     * @param iErrorCode The parameter may take one of two forms.
-     *            <ul>
-     *            <li>An integer number representing an error code. This
-     *            requests additional information on the listed error code.
-     *            </li>
-     * 
-     * <li>"". An empty string. This requests additional information on the
-     * last error that occurred.</li>
-     * </ul>
-     * 
-     * @return The return value is a string that represents any vendor-desired
-     *         additional information relating to either the requested error or
-     *         the last error.
-     * @see fi.beans.scorm.SCORM12APIInterface#LMSGetDiagnostic(java.lang.String)
-     *  
-     */
-    public String LMSGetDiagnostic(String iErrorCode) {
-        return "";
-    }
-
-    /**
      * Returns the applet of the sco.
      * 
      * @return The applet of the sco.
@@ -749,24 +396,6 @@ System.err.println("sum = ["+result+"]");
      */
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    /**
-     * Returns the unique-identifier of the sco.
-     * 
-     * @return The unique-identifier of the sco.
-     */
-    public int getScoID() {
-        return scoID;
-    }
-
-    /**
-     * Sets the unique-identifier of the sco.
-     * 
-     * @param scoID The unique-identifier of the sco.
-     */
-    public void setScoID(int scoID) {
-        this.scoID = scoID;
     }
 
     /**
@@ -902,44 +531,6 @@ System.err.println("sum = ["+result+"]");
     }
 
     /**
-     * Returns the launchdata for the sco.
-     * 
-     * @return The launchdata for the sco.
-     */
-    public Hashtable getLaunchdata() {
-        if(launchdata == null) { //No data specified we must have an empty hashtable
-            launchdata = new Hashtable();
-        }
-        return launchdata;
-    }
-    
-    public String getLaunchdataString() {
-        Hashtable ld = getLaunchdata();
-        return (new StringCodeObject(ld)).toString();
-        
-    }
-
-    /**
-     * Sets the launchdata for the sco.
-     * 
-     * @param launchdata The launchdata for the sco.
-     */
-    public void setLaunchdata(Hashtable launchdata) {
-    	if(!isDataChanged())
-    	{
-    		if(this.launchdata == null)
-    			setDataChanged(launchdata != null);
-    		else
-    			setDataChanged( !this.launchdata.equals(launchdata) );
-    	}
-        this.launchdata = launchdata;
-    }
-
-    public void setLaunchdataString(String ld) {
-    	setLaunchdata((Hashtable) StringCodeObject.decodeStringToObject(ld));
-    }
-    
-    /**
      * Indicates that the applet must save the data.
      *  
      */
@@ -1025,28 +616,6 @@ System.err.println("sum = ["+result+"]");
             arguments[0] = "";
         }
         return TextMapper.format((TextMapper.LG_SCOS_OF_COURSE), arguments);
-    }
-
-    /**
-     * Returns the course of the sco.
-     * 
-     * @return The course of the sco.
-     */
-    public Course getCourse() {
-        return course;
-    }
-
-    /**
-     * Sets the course of the sco.
-     * 
-     * @param course The new course of the sco.
-     */
-    public void setCourse(Course course) {
-    	if(!isCourseChanged())
-    	{
-    		setCourseChanged(this.course != course);
-    	}
-        this.course = course;
     }
 
     /**
@@ -1150,16 +719,8 @@ System.err.println("sum = ["+result+"]");
 		editor.setLaunchdata(params);
 	}
 
-	public void setUser(User u) {
-		user = u;	
-	}
-
 	public void setLocationOverride(String loc) {
 		this.locationOverride = loc;
 		
-	}
-
-	public User getUser() {
-		return this.user;
 	}
 }

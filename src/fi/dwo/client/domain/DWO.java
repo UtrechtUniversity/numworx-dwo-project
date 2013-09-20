@@ -1340,7 +1340,7 @@ private static boolean isValidEmail(String email) {
      * @param iDataModelElement The parameter to ask for.
      * @return The value representing for the specified sco, user and parameter.
      */
-    public String LMSGetValue(Sco sco, User user, String iDataModelElement) {
+    public String LMSGetValue(ScoBase sco, User user, String iDataModelElement) {
         if(iDataModelElement.equals(SCORM12APIInterface.USER_GROUP)) {
             if(User.getCurrentUser() == null || User.getCurrentUser() instanceof Guest) {
                 return SCORM12APIInterface.UG_GUEST;
@@ -1375,7 +1375,7 @@ private static boolean isValidEmail(String email) {
      *         was unsuccessful</li>
      *         </ul>
      */
-    public String LMSSetValue(Sco sco, User user, String iDataModelElement, String iValue) {
+    public String LMSSetValue(ScoBase sco, User user, String iDataModelElement, String iValue) {
         try {
             return PersistenceFacade.instance().LMSSetValue(sco, user, iDataModelElement, iValue);
         } catch (PersistenceException e) {
@@ -1799,7 +1799,7 @@ private static boolean isValidEmail(String email) {
     	return LMSCommit(iParam);
     }
     
-    public String LMSCommit(Sco sco, String param) {
+    public String LMSCommit(ScoBase sco, String param) {
 		return PersistenceFacade.instance().LMSCommit(sco, getUser(), param);
 	}
 
