@@ -150,7 +150,9 @@ public class FormuleKeyboard implements WritePanelHolder
 	{
 		GWT.log(" Create kb panel");
 		if (tp != null)
+		{	tp.setEnabled(false);
 			return tp.getPanel();
+		}
 		tp = new KeyBoardTabPanel();
 		tp.getPanel().getElement().getStyle().setBackgroundImage("images/resources/footerbgimage.png");
 
@@ -326,14 +328,18 @@ public class FormuleKeyboard implements WritePanelHolder
 	{
 		if (this.editor == editor)
 			return;
+		tp.setEnabled(editor != null);
 		if (this.editor != null)
 		{
 			//reset zoom
 			this.editor.setFont(this.editor.getDefaultFont());
 			this.editor.setCurrentElementRepaint(null);
-		}
+		} 
 		this.editor = editor;
-		this.setEditorZoomed();
+		if(editor != null) 
+			this.setEditorZoomed();
+		else
+			tp.hideKeyboard();
 	}
 
 	public FormuleEditor getEditor()

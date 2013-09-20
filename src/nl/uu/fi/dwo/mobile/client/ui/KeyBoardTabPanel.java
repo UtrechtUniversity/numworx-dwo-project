@@ -39,6 +39,16 @@ public class KeyBoardTabPanel
 	private final TouchButton keyboardRemoveButton = new TouchButton();
 	private final TouchButton digitsButton = new TouchButton();
 
+	private boolean enabled = false;
+	
+	boolean isEnabled() {
+		return enabled;
+	}
+
+	void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
 	public KeyBoardTabPanel()
 	{
 
@@ -74,12 +84,13 @@ public class KeyBoardTabPanel
 			@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
-				tabs.get(0).getElement().getStyle().setDisplay(Display.BLOCK);
-				current = 0;
-				keyboardRemoveButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-				keyboardButton.getElement().getStyle().setDisplay(Display.NONE);
-
+				if(enabled) {
+					tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
+					tabs.get(0).getElement().getStyle().setDisplay(Display.BLOCK);
+					current = 0;
+					keyboardRemoveButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+					keyboardButton.getElement().getStyle().setDisplay(Display.NONE);
+				}
 			}
 		});
 		keyboardRemoveButton.addTouchStartHandler(new TouchStartHandler()
@@ -87,9 +98,7 @@ public class KeyBoardTabPanel
 			@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
-				keyboardButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-				keyboardRemoveButton.getElement().getStyle().setDisplay(Display.NONE);
+				hideKeyboard();
 
 			}
 		});
@@ -100,7 +109,8 @@ public class KeyBoardTabPanel
 			@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				goTo(FormuleKeyboard.SCRIBBLE);
+				if(enabled)
+					goTo(FormuleKeyboard.SCRIBBLE);
 
 			}
 		});
@@ -194,5 +204,14 @@ public class KeyBoardTabPanel
 	public Panel getStaticPanel()
 	{
 		return this.staticpanel;
+	}
+
+	/**
+	 * 
+	 */
+	void hideKeyboard() {
+		tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
+		keyboardButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+		keyboardRemoveButton.getElement().getStyle().setDisplay(Display.NONE);
 	}
 }
