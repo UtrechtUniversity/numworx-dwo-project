@@ -343,8 +343,64 @@ public class Text_in extends ListResourceBundle {
          { "Standaard DWO modules", "Modul Standar DME"},
 
          { "Nieuwe Modulemap", "Folder modul baru" },
-
+// 18 sep toegevoegd
+         // classadminpanel
+         { "Klassen toewijzen", "Assign classes" },
+         { "Klas", "Class" },
+         { "Docent", "Teacher" },
+         { "Verwijder", "Remove" },
+         // classpanel 
+         { "boomstructuur?", "treeview?" },
+         // select courses dialog
+         { "Leerlinggegevens verwijderen", "Remove studentresults" },
+         { "Wilt u alle resultaten van {0} voor {1} verwijderen?", "Do you wish to remove all result of {0} for {1}?" },
+         { "soort", "kind" },
+         { "vanaf", "from" },
+         { "tot aan", "until" },
+         { "tot", "until" },
+         { "Ll ggvns", "results" },
+         { "normaal", "normal" },
+         { "afgeschermd", "secured" },
+         { "Geef tijdstip {0}", "Set date and time \"{0}\""},
+         { " dag: " , " date: " },
+         { "tijd:", "time:" },
+         // resultLoogger 
+         { "Overzicht Logs", "Overview Logs" },
+         { "deel-scores", "partial scores" },
+         { "tijdsduur", "duration" },
+         // default partial score
+         { "resultaat", "result" },
+         //importexportdialog
+         {"Kopiëer modules", "Copy modules" }, 
+         {"Toestaan", "Allow" },
+         {"Modules beschikbaar stellen", "Provide modules" },
+         {"Modules opvragen", "Request modules"},
+         {"Delen met","Share with"},
+         {"Alle scholen","All schools"},
+         {"Scholen", "Schools"},
+         {"toepassen", "Apply"},
          
+         { TextMapper.GUIEID_MSG1, "<html>(1) Select a school<br>" +
+			   "(2) Eventually preview the shown modules<br>" +
+			   "(3) Select one or more modules for use in your own school<br><br>" +
+			   "The selected modules are copied to your own module view<br>"+
+			   "and can be used at your own school." },
+	     { TextMapper.GUIEID_MSG2, "<html>I wish to participate in this way of sharing and become visible as school in the lists"},
+		 { TextMapper.GUIEID_MSG3, "<html>(1) Select modules<br>(2) Select schools<br><br>The selected modules are available<br>to the selected schools." },
+
+		 { "leerlingen ook", "students too"},
+		 { TextMapper.GUIUMP_REMOVE_CLASS, "Remove all students from {0}?" },
+		 { TextMapper.GUIUMP_ALL_STUDENTS, "all students" },
+		 { TextMapper.GUIC_SETTINGS, "Configuration of {0}" },
+		 { TextMapper.GUIH_SETTINGS, "School configuration" },
+			
+		 { TextMapper.GUIC_SETTINGS_STUDENT, "Students choose their own class"},
+		 { TextMapper.GUIC_SETTINGS_TEACHER, "Teachers choose the class of their students"},
+		 { TextMapper.GUIC_SETTINGS_MODULE, "Teachers are allowed to change modules"},
+ // google translate...
+		 { TextMapper.GUICDLG_LICENCE, "The subscription for ''{0}'' has expired!\nNew subscribers can no longer be added.\nRefer to the contact person for the DME subscription at school." },
+
+
 
 };
 
