@@ -59,18 +59,40 @@ public class GeogebraView implements InteractionView, LoadHandler
 
 	public GeogebraView init(HashMap<String, Object> launchData)
 	{
-
+		Map<String, Object> geogebraParams = new HashMap<String,Object>();
 		Map ggbMap = (Map) launchData.get("interactiePanelLaunchState");
-		final Object object = ggbMap.get("ggbFile");
-		ggb = object != null ? object.toString() : null;
+		Object object = ggbMap.get("ggbFile");
+		ggb = object != null ? object.toString() : "";
+		object = ggbMap.get("geogebraParams");
+		if( object instanceof Map)
+		{
+			@SuppressWarnings("unchecked")
+			Map<String,Object> map = (Map<String,Object>)object;
+			geogebraParams.putAll(map);
+		}
+		
 		frame = new Frame("SlopeTestWeb.html");
-		Object width = launchData.get("breedte");
-		if (width == null)
-			width = "400";
-		Object height = launchData.get("hoogte");
-		if (height == null)
-			height = "400";
+		
+		ggb = "data-param-ggbbase64='" + ggb + "'";
+		StringBuilder params = new StringBuilder();
+		for(Map.Entry<String, Object> entry: geogebraParams.entrySet())
+		{
+			params.append( "data-param-" + entry.getKey() + "='" + entry.getValue() + "' ");
+		}
+		params.append(ggb);
+		ggb = params.toString();
+		int width = 400;
+		Object w = launchData.get("breedte");
+		if (w != null)
+			width = Integer.parseInt(w.toString());
+		int height = 400;
+		Object h = launchData.get("hoogte");
+		if (h != null)
+			height = Integer.parseInt(h.toString());
 		frame.setSize(width + "px", height + "px");
+		height -= 80;
+		width  -= 20;
+		ggb += " data-param-width='" + width + "' data-param-height='" + height + "'"; // geeft een scrollbar
 		frame.addLoadHandler(this);
 		mainPanel.setWidget(frame);
 		return this;

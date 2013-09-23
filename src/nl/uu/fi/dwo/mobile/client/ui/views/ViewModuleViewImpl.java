@@ -33,6 +33,7 @@ import nl.uu.fi.dwo.mobile.utils.VariableCollection;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Overflow;
@@ -774,10 +775,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	public ViewModuleViewImpl initialize()
 	{
-		//api = new SCORM_2004_API();
-		//api = new SCORM_12_API(); // De oude DWO exporteert Scorm1.2 API, maar kan wel Scorm2004 cmi aan.
-		//api = new AssetAPI();
-		api = new SCORM_guest();
+		api = GWT.create(Scorm2004IF.class);
 		FlowPanel fp = new FlowPanel();
 		mainPanel = new FocusPanel(fp);
 		mainPanel.setHeight("100%");
@@ -925,7 +923,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	@Override
 	public void close() {
-		on.close();
+		if(on != null)
+			on.close();
 	}
 
 }

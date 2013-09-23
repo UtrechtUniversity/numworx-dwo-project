@@ -194,8 +194,8 @@ public class TekstBuffer
 		if (opdrachtGegevens.size() > index + 5) // FIXME size() = 6, index = 0 get(0)= null
 			currentVakGegevens = (HashMap<String, Object>) opdrachtGegevens.get(index + 5);
 		if (currentVakGegevens == null) // FIXME Komt voor in g4test
-			return new TekstVakPanel(null, randomVarNamen, randomVarWaarden); // was ""
-		
+			//return new TekstVakPanel(null, randomVarNamen, randomVarWaarden); // was ""
+			return "";
 		int soortVak = (Integer) currentVakGegevens.get("soortInteractiePanel");
 
 		switch (soortVak)
@@ -236,8 +236,8 @@ public class TekstBuffer
 		}
 		else if (soortVak == 41)
 		{
-			result = //new KladjeGWT(currentVakGegevens, randomVarNamen, randomVarWaarden);
-					new StubView("KladjeGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			result = new fi.kladjegwt.client.KladjeGWT(currentVakGegevens, randomVarNamen, randomVarWaarden);
+					//new StubView("KladjeGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		}
 		else
 		{

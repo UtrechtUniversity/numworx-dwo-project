@@ -9,12 +9,17 @@ public class TouchEndEvent extends com.google.gwt.event.dom.client.TouchEndEvent
 
 	public TouchEndEvent(MouseUpEvent event) {
 		this.event = event;
+		setNativeEvent(event.getNativeEvent());
 	}
 	public TouchEndEvent(com.google.gwt.event.dom.client.TouchEndEvent event) {
 		this.event = event;
 	}
 	public Object getSource() {
 		return event.getSource();
+	}
+	@Override
+	public void preventDefault() {
+		event.preventDefault();
 	}
 
 }
