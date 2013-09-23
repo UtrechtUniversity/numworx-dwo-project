@@ -31,7 +31,7 @@
   <!-- you can leave the body empty if you want  -->
   <!-- to create a completely dynamic UI.        -->
   <!--                                           -->
-  <body>
+  <body style="margin: 0; overflow: hidden" >
 <script type='text/javascript' language='javascript' src='http://www.geogebra.org/web/4.2/web/web.nocache.js' ></script>	  
 <script type="text/javascript">
 
@@ -47,8 +47,8 @@
 	}
 	
 	function writeGGB() {
-		article_pre = "<article class='geogebraweb' style='border:0px solid black; display:inline-block; margin: -10px;' data-param-ggbbase64='"
-		article_post = "'></article>"	
+		article_pre = "<article class='geogebraweb' style='border:0px solid black; display:inline-block; margin: 0px;' "
+		article_post = "></article>"	
 		result = window.install(null, window.viewer)
 		document.getElementById('hiero').innerHTML =  ( article_pre + result + article_post );
 		web.succeeded = web()
