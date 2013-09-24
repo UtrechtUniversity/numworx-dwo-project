@@ -80,6 +80,19 @@ public class Bucket {
 	public String getKey() {
 		return key;
 	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return "Bucket [uid=" + uid + ", scoid=" + scoid + ", key=" + key
+				+ ", value=" + trim(value) + "]";
+	}
+	String trim(String v) {
+		if(v == null)
+			return null;
+		if(v.length() < 10) return v;
+		return v.substring(0,9) + "... (" + v.length() + ")";
+	}
 	
 	
 	

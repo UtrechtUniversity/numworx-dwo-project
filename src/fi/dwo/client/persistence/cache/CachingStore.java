@@ -52,7 +52,7 @@ public class CachingStore implements IStore, Runnable {
 	 * @param b
 	 */
 	public synchronized void putWork(Bucket b) {
-System.out.println("putWork " + b.getKey());
+System.out.println("putWork " + b);
 		work.put(b,b);
 		cache.put(b, b.getValue());
 		notifyAll();
@@ -65,7 +65,7 @@ System.out.println("putWork " + b.getKey());
 			Bucket b = null;
 			try {
 				b = getWork();
-System.out.println("try setValue " + b.getKey());
+System.out.println("try setValue " + b);
 				delegate.setValue(b.getUid(), b.getScoid(), b.getKey(), b.getValue());
 				/// sleep(1000)
 				iterator_remove();
@@ -115,10 +115,10 @@ System.out.println("try setValue " + b.getKey());
 			Bucket v = (Bucket) work.get(b);
 			if(v == null)
 			{	
-				System.out.println("cache miss " + key + " " + cache.size());
+				System.out.println("cache miss " + b + " " + cache.size());
 				String value = (String) cache.get(b);
 				if(value != null) {
-					System.out.println("2nd cache hit " + key);
+					System.out.println("2nd cache hit " + b.trim(value));
 					return value;
 				}
 				try {
@@ -128,7 +128,7 @@ System.out.println("try setValue " + b.getKey());
 					throw e;
 				}
 			}
-			System.out.println("cache hit " + key);
+			System.out.println("cache hit " + v);
 			return v.getValue();
 		}
 	}
