@@ -10,6 +10,8 @@ import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
+import java.util.Arrays;
+
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -286,7 +288,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 			
             
         } else {
-
+        	Arrays.sort(users);
 	        createJTable(vbox, users);
         }
 		RegisterClassListButton registerClassListButton = new RegisterClassListButton(schoolClass);

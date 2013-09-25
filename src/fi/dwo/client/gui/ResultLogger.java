@@ -288,7 +288,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 	
 	private void requestPartialScore() {
 		leerlingen = schoolClass.getStudents();
-		Arrays.sort(leerlingen, USER_COMPARATOR);
+		Arrays.sort(leerlingen);
 		partialModel.setRowCount(leerlingen.length+1);
 		SortedSet pages = new TreeSet();
 		Map[] lists = new Map[leerlingen.length];
@@ -361,7 +361,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		try {
 			leerlingen = schoolClass.getStudents();
-			Arrays.sort(leerlingen, USER_COMPARATOR);
+			Arrays.sort(leerlingen);
 			model.setRowCount(leerlingen.length+1);
 			leerlingModel.setRowCount(leerlingen.length+1);
 			//model.setValueAt("Naam", 0, 0);
@@ -427,7 +427,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		try {
 			leerlingen = schoolClass.getStudents();
-			Arrays.sort(leerlingen, USER_COMPARATOR);
+			Arrays.sort(leerlingen);
 			cmiModel.setRowCount(leerlingen.length+1);
 			
 			SortedSet set = new TreeSet();

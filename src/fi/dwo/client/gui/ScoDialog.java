@@ -25,6 +25,7 @@ import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.EventObject;
 import java.util.List;
 import java.util.Map;
@@ -133,9 +134,14 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		private Sco sco;
 
 		public ClassModel(SchoolClass s, User u, Sco sco) {
-			super(s.getStudents());
+			super(sorted(s.getStudents()));
 			this.sco = sco;
 			setSelectedItem(u);
+		}
+
+		private static User[] sorted(User[] students) {
+			Arrays.sort(students);
+			return students;
 		}
 
 		public List getScoreList(int i) {

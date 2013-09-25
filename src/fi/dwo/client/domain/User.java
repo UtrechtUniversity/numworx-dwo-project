@@ -408,7 +408,10 @@ public class User implements UserGroup, Comparable {
 	 */
 	public int compareTo(Object o2) {
 		User u2 = (User)o2;
-		int r = getName().compareToIgnoreCase(u2.getName());
+		int r;
+		r = getLastName().compareToIgnoreCase(u2.getLastName());
+		if(r == 0)
+		r = getName().compareToIgnoreCase(u2.getName());
 		if(r == 0)
 			r = getUsername().compareToIgnoreCase(u2.getUsername());
 		return r;
