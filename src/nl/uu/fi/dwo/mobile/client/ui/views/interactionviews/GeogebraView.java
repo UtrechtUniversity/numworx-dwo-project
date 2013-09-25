@@ -72,6 +72,9 @@ public class GeogebraView implements InteractionView, LoadHandler
 		}
 		
 		frame = new Frame("SlopeTestWeb.html");
+		frame.setStylePrimaryName(".gwt-StubView");
+		frame.addStyleDependentName("borderless");
+
 		
 		ggb = "data-param-ggbbase64='" + ggb + "'";
 		StringBuilder params = new StringBuilder();
@@ -90,8 +93,8 @@ public class GeogebraView implements InteractionView, LoadHandler
 		if (h != null)
 			height = Integer.parseInt(h.toString());
 		frame.setSize(width + "px", height + "px");
-		height -= 80;
-		width  -= 20;
+		height -= 57 + 2; // toolbar aftrekken?
+		width  -= 2;  // 1 pixel border
 		ggb += " data-param-width='" + width + "' data-param-height='" + height + "'"; // geeft een scrollbar
 		frame.addLoadHandler(this);
 		mainPanel.setWidget(frame);

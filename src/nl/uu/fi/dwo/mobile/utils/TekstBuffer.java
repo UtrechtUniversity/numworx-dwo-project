@@ -56,7 +56,8 @@ public class TekstBuffer
 				tekst = (String) (teksten.get(row)).get(column);
 			vanTeksVakPanel = true;
 		}
-
+		if(tekst==null) tekst = "";
+		
 		ArrayList<Object> opdrachtGegevens = (ArrayList<Object>) opdracht.get("interactiePanelLaunchData");
 
 		int lastIndex = 0;
@@ -193,9 +194,11 @@ public class TekstBuffer
 		// ik denk dat het +5 is en niet +1
 		if (opdrachtGegevens.size() > index + 5) // FIXME size() = 6, index = 0 get(0)= null
 			currentVakGegevens = (HashMap<String, Object>) opdrachtGegevens.get(index + 5);
-		if (currentVakGegevens == null) // FIXME Komt voor in g4test
-			//return new TekstVakPanel(null, randomVarNamen, randomVarWaarden); // was ""
-			return "";
+		else
+			return ""; // 1 gegeven, 2 $V
+		if (currentVakGegevens == null) // FIXME Komt voor in kladje
+			return new TekstVakPanel(null, randomVarNamen, randomVarWaarden); // was ""
+
 		int soortVak = (Integer) currentVakGegevens.get("soortInteractiePanel");
 
 		switch (soortVak)
