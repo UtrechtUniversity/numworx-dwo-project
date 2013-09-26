@@ -2135,5 +2135,10 @@ e1.printStackTrace();
 		}
 		return false;
 	}
+
+	public User loginViaSAML(String samlUserID, String samlOrgID) throws LoginException {
+		//return login("project_wim");
+		throw new LoginException(LoginException.LE_UNKNOWN_USER);
+	}
 	
 }

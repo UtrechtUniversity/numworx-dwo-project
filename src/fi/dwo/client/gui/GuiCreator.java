@@ -6,6 +6,7 @@ package fi.dwo.client.gui;
 import java.awt.Container;
 import java.text.MessageFormat;
 import java.util.Date;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -335,6 +336,11 @@ public class GuiCreator {
     
     public WelcomePanel getWelcomePanel(boolean loginOnly) {
         return new WelcomePanel(loginOnly);
+
+    }
+
+    public WelcomePanel getWelcomePanel(boolean loginOnly, Map samlData) {
+        return new WelcomePanel(loginOnly, samlData);
 
     }
 
@@ -929,6 +935,11 @@ public class GuiCreator {
 	}
 
 	public void updateLogo(Course c) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void linkViaSAML() {
 		// TODO Auto-generated method stub
 		
 	}

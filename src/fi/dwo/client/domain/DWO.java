@@ -26,6 +26,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
@@ -1248,7 +1249,9 @@ private static boolean isValidEmail(String email) {
 	        	}
         	}
         }
-        
+// Inloggen met ENTREE/OpenID (SAML)
+        User.setCurrentUser(getSASLUser());
+        if(User.getCurrentUser() == null)
 // Hier wordt A-Select in DWO actief
         User.setCurrentUser(getInitialUser());
         if (User.getCurrentUser() != null) // Dit is de enige plaats waar op null
@@ -1259,7 +1262,7 @@ private static boolean isValidEmail(String email) {
         }
 // einde
         
-        panel = gc.getWelcomePanel(testView || limitedSchoolAccess);
+        panel = gc.getWelcomePanel(testView || limitedSchoolAccess, samlData);
         panel.setVisible(false);
         panel.setSize(this.getSize());
         panel.setLocation(0, 0);
@@ -1845,6 +1848,43 @@ private static boolean isValidEmail(String email) {
     	return LMSGetDiagnostic(iErrorCode);
     }
      
+    HashMap samlData;
+/*
+ * Beste Wim uit SURFnet Instelling,
+ * je gebruikersid: c31d3bbc5b214528b90a0c72ce0240da11588d60@uu.nl,
+ * je schoolid: SURFIN
+ * @return
+ */
+    private User getSASLUser() {
+    	String samlUserID = DwoHelper.getCookie("dwoSAMLUserID");
+    	String samlOrgID = DwoHelper.getCookie("dwoSAMLOrganizationID");
+		String samlOrg = DwoHelper.getCookie("dwoSAMLOrganization");
+    	if(false)
+    	{
+    		samlUserID = "c31d3bbc5b214528b90a0c72ce0240da11588d60@uu.nl";
+    		samlOrgID = "SURFIN";
+    		samlOrg   = "SURFnet Instelling";
+    		System.out.println(samlUserID);
+    		System.out.println(samlOrgID);
+    		System.out.println(samlOrg);
+    	}
+
+    	if(samlUserID != null && samlOrgID != null)
+    	{
+    		try {
+				User u = PersistenceFacade.instance().loginViaSAML(samlUserID, samlOrgID);
+				return u;
+			} catch (LoginException e) {
+			}
+    		samlData = new HashMap();
+    		samlData.put("dwoSAMLUSerID", samlUserID);
+    		samlData.put("dwoSAMLOrganizationID", samlOrgID);
+			samlData.put("dwoSAMLOrganization", samlOrg);
+    	}
+    	return null;
+    }
+    
+    
      /**
       * Geef mij een gebruiker buitenom.
       * 

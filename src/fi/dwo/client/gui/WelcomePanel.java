@@ -15,9 +15,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -29,6 +31,7 @@ import fi.dwo.client.system.LoginException;
 import fi.dwo.client.system.TextMapper;
 
 import fi.beans.copyright.FIButton;
+import fi.beans.minitbeans.minitool.GuiObservable;
 
 /**
  * This class represents the panel that is been showed when you start the
@@ -51,6 +54,8 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
 
 	FIButton fiButton;
     JPanel dialog;
+
+	private JCheckBox linkcheck;
 	
 	/**
 	 * Layout manager voor de fiButton. 
@@ -80,9 +85,14 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
      */
     
     public WelcomePanel() {
-    	this(false);
+    	this(false, null);
     }
-    public WelcomePanel(boolean loginOnly) {
+    public WelcomePanel(boolean loginOnly)
+    {
+    	this(loginOnly, null);
+    }
+    
+    public WelcomePanel(boolean loginOnly, Map linkdata) {
     	super(null, true);
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setLayout(null);
@@ -204,12 +214,27 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         password.addActionListener(this);
         p.add(password);
 
+        /* linkdata */
+        Object org = null;
+        int h = 0;
+        if(linkdata != null && null != ( org = linkdata.get("dwoSAMLOrganization")))
+        {
+        	linkcheck = new JCheckBox("Inloggen via '" + org + '\'');
+        	linkcheck.setBackground(p.getBackground());
+        	linkcheck.setFont(GuiConstants.NORMAL_TEXT);
+        	p.add(linkcheck);
+        	h = linkcheck.getPreferredSize().height;
+        	p.setSize(p.getWidth(), h + p.getHeight());
+        	linkcheck.setBounds(7, 75, 250, 20);
+        }
+        
+        
         /* Login button */
         loginButton = new JButton(TextMapper.getText(TextMapper.GUIW_BTN_LOGIN));//, GuiConstants.SUB_BACKGROUND);
         fm = loginButton.getFontMetrics(loginButton.getFont());
         loginButton.setSize(loginButton.getPreferredSize());
         loginButton.setLocation((p.getSize().width / 2)
-                - (loginButton.getSize().width / 2), 80);
+                - (loginButton.getSize().width / 2), p.getHeight()-35);
         p.add(loginButton);
 
         loginButton.addActionListener(this);
@@ -219,7 +244,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(new Color(52,90,126)));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(dialog.getWidth() / 2 - 130, 235, 260, 85);
+        p.setBounds(dialog.getWidth() / 2 - 130, 235+h, 260, 85);
         //p.setBorderColor(new Color(52,90,126));
         dialog.add(p);
 
@@ -251,7 +276,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(new Color(52,90,126)));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(dialog.getWidth() / 2 - 130, 330, 260, 85);
+        p.setBounds(dialog.getWidth() / 2 - 130, 330+h, 260, 85);
         //p.setBorderColor(new Color(52,90,126));
         dialog.add(p);
 
@@ -297,6 +322,8 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
                 GuiCreator.instance().login(loginname.getText(), password.getText());
                 DwoHelper.setCookie("dwoUserName", loginname.getText());
                 DwoHelper.setCookie("dwoPassWord", password.getText());
+                if(linkcheck != null && linkcheck.isSelected())
+                	GuiCreator.instance().linkViaSAML();
             } catch (LoginException exc) {
                 JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
             }
