@@ -41,23 +41,29 @@ abstract class Exporter {
     {
     	ExportBuffer sb = createExportBuffer();
     	ResultScore[] resultScore = userResults[0].getResultScore();
-    	String[] line = new String[resultScore.length+1];
+    	String[] line = new String[resultScore.length+2];
     	line[0] = "";
+    	line[1] = "";
+    	if(resultScore.length>0)
+    	{
+    		line[1] = resultScore[0].getUserGroup().getTitle();
+    	}
     	for (int i = 0; i < resultScore.length; i++) {
 			ResultScore score = resultScore[i];
-			line[i+1] = score.getLessonGroup().getName();	
+			line[i+2] = score.getLessonGroup().getName();	
 		}
     	sb.exportHeader(line);
     	for (int i = 0; i < userResults.length; i++) {
 			UserResultList results = userResults[i];
 			resultScore = results.getResultScore();
-			line[0] = resultScore[0].getUserGroup().getName();
+			line[1] = resultScore[1].getUserGroup().getName();
+			line[0] = resultScore[0].getUserGroup().getUsername();
 			for (int j = 0; j < resultScore.length; j++) {
 				ResultScore score = resultScore[j];
 				if(score.getScore() == 0)
-					line[j+1] = "";
+					line[j+2] = "";
 				else
-					line[j+1] = Integer.toString(Math.round(Math.max(0,score.getScore())));
+					line[j+2] = Integer.toString(Math.round(Math.max(0,score.getScore())));
 			}
 			sb.export(line);
 		}

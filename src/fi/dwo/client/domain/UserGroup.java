@@ -90,4 +90,6 @@ public interface UserGroup {
      * @return A title represents the Descending Order item.
      */
     public String getOrderDescTitle();
+
+	public String getUsername();
 }

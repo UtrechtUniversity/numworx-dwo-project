@@ -301,5 +301,9 @@ public class SchoolClass implements UserGroup, Comparable {
 	public String toString() {
 		return getName();
 	}
+
+	public String getUsername() {
+		return "";
+	}
 	
 }

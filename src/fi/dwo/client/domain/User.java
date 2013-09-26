@@ -478,4 +478,7 @@ public class User implements UserGroup, Comparable {
 		return timeZone;
 	}
 
+	public String toString() {
+		return getName();
+	}
 }

@@ -71,8 +71,6 @@ import fi.dwo.client.system.TextMapper;
 
 public class  ResultLogger extends JPanel implements ActionListener {
 
-	private static final UserComparator USER_COMPARATOR = new UserComparator();
-
 	private static final long serialVersionUID = 1L;
 	private static final String SAVE = "bewaar";
 	private static final String SUSPEND_DATA = "cmi.suspend_data";
@@ -144,6 +142,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		JFrame frame = new JFrame();
 		frame.getContentPane().add(new ResultLogger(sco, schoolClass));
         frame.setTitle(TextMapper.getText("Overzicht Logs"));
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.pack();
         frame.setSize(800,600);
         frame.show();        
@@ -290,13 +289,26 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		leerlingen = schoolClass.getStudents();
 		Arrays.sort(leerlingen);
 		partialModel.setRowCount(leerlingen.length+1);
-		SortedSet pages = new TreeSet();
+		SortedSet pages = new TreeSet(new Comparator() {
+
+			public int compare(Object o1, Object o2) { // if it looks like a duck, sort like a duck
+				Comparable s1 = o1.toString();
+				Comparable s2 = o2.toString();
+				try {
+					s1 = new Long(s1.toString());
+					s2 = new Long(s2.toString());
+				} catch (RuntimeException re) {
+					s1 = o1.toString();
+					s2 = o2.toString();
+				}
+				return s1.compareTo(s2);
+			}});
 		Map[] lists = new Map[leerlingen.length];
 		sco.dwo = GuiCreator.instance().getDWO();
 		for(int i = 0; i < leerlingen.length; i++) {
 			User u = leerlingen[i];
-			sco.setUser(u);
-			List list = sco.getPartialScoreIF().getScoreMapList(sco);
+			//sco.setUser(u);
+			List list = sco.getPartialScoreIF().getScoreMapList(new ScoDialog.API(sco, u));
 			lists[i] = new HashMap();
 			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
 				Map object = (Map) iterator.next();
@@ -398,7 +410,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 			for (int i = 0; i < leerlingen.length; i++) {
 				User leerling = leerlingen[i];
 				int i1 = i+1;
-				leerlingModel.setValueAt(leerling.getName(), i1, 0);
+				leerlingModel.setValueAt(leerling, i1, 0);
 				Map strings = data[i];
 				if(strings == null)
 					continue;
@@ -552,8 +564,9 @@ public class  ResultLogger extends JPanel implements ActionListener {
                         PrintWriter out = new PrintWriter(new FileWriter(f));
                         int len = model.getRowCount();
                         int width = model.getColumnCount();
-                        for(int i = 0; i < len; i++) {
-                        	for(int j = 0; j < 33 &&i==0; j++) {
+                        out.print(TAB);
+                        for(int i = 1; i < len; i++) {
+                        	for(int j = 0; j < 33 &&i==1; j++) {
                                 if(j==0){
                                 	out.print("Naam");
                                 	out.print(TAB);
@@ -606,10 +619,10 @@ public class  ResultLogger extends JPanel implements ActionListener {
                             }
                         	out.println();
                         	out.println();
-                        	
-                        	Object value = leerlingModel.getValueAt(i, 0);
-                            if(value == null) value = "";
-                            out.println(value);
+	                    	Object value = leerlingModel.getValueAt(i, 0);
+                        	out.print(value instanceof User ? ((User) value).getUsername() : "");
+                        	out.print(TAB);
+	                    	out.print(value==null?"":value.toString());
                             out.print("");
                             out.print(TAB);
                             
@@ -665,6 +678,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
                                 out.println();
                                 out.print("");
                                 out.print(TAB);
+                                out.print(TAB);
                             }
                             out.println();
                         }
@@ -679,6 +693,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 	                    PrintWriter out = new PrintWriter(new FileWriter(f));
 	                    int len = model.getRowCount();
 	                    int width = model.getColumnCount();
+	                    out.print(TAB);
 	                    out.print("Naam");
                         for(int j = 0; j < width; j++) {
                             TableColumnModel columnModel = table[0].getColumnModel();
@@ -689,6 +704,8 @@ public class  ResultLogger extends JPanel implements ActionListener {
                         out.println();
                         for(int i = 0; i < len; i++) {
 	                    	Object name = leerlingModel.getValueAt(i, 0);
+                        	out.print(name instanceof User ? ((User) name).getUsername() : "");
+                        	out.print(TAB);
 	                    	out.print(name==null?"":name.toString());
 	                        for(int j = 0; j < width; j++) {
 	                            out.print(TAB);
@@ -718,6 +735,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		    PrintWriter out = new PrintWriter(new FileWriter(f));
 			int len = m.getRowCount();
 		    int width = m.getColumnCount();
+		    out.print(TAB);
 		    out.print(leerlingTable.getColumnModel().getColumn(0).getHeaderValue());
 		    for(int j = 0; j<width ; j++)
 		    {
@@ -727,6 +745,8 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		    out.println();
 		    for(int i = 0; i < len; i++) {
 		    	Object name = leerlingModel.getValueAt(i, 0);
+		    	out.print(name instanceof User ? ((User) name).getUsername():"");
+		    	out.print(TAB);
 		    	out.print(name==null?"":name.toString());
 		        for(int j = 0; j < width; j++) {
 		            out.print(TAB);
@@ -762,16 +782,6 @@ public class  ResultLogger extends JPanel implements ActionListener {
 
 	private String getSuspendData(User u, Sco s) throws PersistenceException {
 		return PersistenceFacade.instance().LMSGetValue(s, u, SUSPEND_DATA);
-	}
-
-	static class UserComparator implements Comparator {
-
-		public int compare(Object o1, Object o2) {
-			User l1 = (User)o1;
-			User l2 = (User)o2;			
-			return l1.getUsername().compareTo(l2.getUsername());
-		}
-
 	}
 	
 	public class LogTable extends JTable {
