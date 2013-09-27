@@ -22,8 +22,10 @@ import java.awt.Panel;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -1035,6 +1037,7 @@ private static boolean isValidEmail(String email) {
     public void init() {
 // This order
     	if(!DwoHelper.setApplet(this)) return;
+    	System.out.println("Starting DWO r" + VERSION.REVISION);
     	DwoHelper.setAu(new AppletUtil(this));
     	delegate = getFocusTraversalPolicy();
         if(delegate != null) setFocusTraversalPolicy(CATCH_POLICY);
@@ -1450,7 +1453,6 @@ private static boolean isValidEmail(String email) {
     	//lookAndFeel = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
     	//lookAndFeel = UIManager.getSystemLookAndFeelClassName();
     	//UIManager.setLookAndFeel(lookAndFeel);
-    	System.out.println("Starting DWO r" + VERSION.REVISION);
     	int width = GuiConstants.DWO_WIDTH;
         int height = GuiConstants.DWO_HEIGHT;
         DWO dwo = new DWO(args);
@@ -1853,6 +1855,16 @@ private static boolean isValidEmail(String email) {
     }
      
     HashMap samlData;
+    
+    private static String getDecodedCookie(String cookie) {
+		String value = DwoHelper.getCookie(cookie);
+    	try {
+			if(value != null) value = URLDecoder.decode(value, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+		}
+		return value;
+    }
+    
 /*
  * Beste Wim uit SURFnet Instelling,
  * je gebruikersid: c31d3bbc5b214528b90a0c72ce0240da11588d60@uu.nl,
@@ -1860,18 +1872,15 @@ private static boolean isValidEmail(String email) {
  * @return
  */
     private User getSAMLUser() {
-    	String samlUserID = DwoHelper.getCookie(DWO_SAML_USER_ID);
-    	String samlOrgID = DwoHelper.getCookie(DWO_SAML_ORGANIZATION_ID);
-		String samlOrg = DwoHelper.getCookie("dwoSAMLOrganization");
-    	if(false)
-    	{
-    		samlUserID = "c31d3bbc5b214528b90a0c72ce0240da11588d60@uu.nl";
-    		samlOrgID = "SURFIN";
-    		samlOrg   = "SURFnet Instelling";
-    		System.out.println(samlUserID);
-    		System.out.println(samlOrgID);
-    		System.out.println(samlOrg);
-    	}
+    	String samlUserID = getDecodedCookie(DWO_SAML_USER_ID);
+    	String samlOrgID = getDecodedCookie(DWO_SAML_ORGANIZATION_ID);
+		String samlOrg = getDecodedCookie("dwoSAMLOrganization");
+//    	if(false)
+//    	{
+//    		samlUserID = "c31d3bbc5b214528b90a0c72ce0240da11588d60@uu.nl";
+//    		samlOrgID = "SURFIN";
+//    		samlOrg   = "SURFnet Instelling";
+//    	}
 
     	if(samlUserID != null && samlOrgID != null)
     	{
@@ -1879,7 +1888,7 @@ private static boolean isValidEmail(String email) {
 				User u = PersistenceFacade.instance().loginViaSAML(samlUserID, samlOrgID);
 				return u;
 			} catch (LoginException e) {
-			}
+			} 
     		samlData = new HashMap();
     		samlData.put(DWO_SAML_USER_ID, samlUserID);
     		samlData.put(DWO_SAML_ORGANIZATION_ID, samlOrgID);
