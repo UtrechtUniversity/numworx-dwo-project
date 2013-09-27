@@ -87,7 +87,11 @@ import fi.dwo.client.system.TextMapper;
  */
 public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 
-    private static final String PROFILE_EXTENSION = "profileExtension";
+    private static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
+
+	private static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
+
+	private static final String PROFILE_EXTENSION = "profileExtension";
 
 	private Course currentCourse;
     
@@ -1050,7 +1054,7 @@ private static boolean isValidEmail(String email) {
     	
     	String lang = getParameter("language");
         logoutURL = getParameter("logoutURL");
-        System.out.println(logoutURL);
+        //System.out.println(logoutURL);
         if ((lang != null) && (!lang.equals(""))) {
             TextMapper.setLanguage(lang);
             fi.dwo.parameters.system.TextMapper.setLanguage(lang);
@@ -1250,7 +1254,7 @@ private static boolean isValidEmail(String email) {
         	}
         }
 // Inloggen met ENTREE/OpenID (SAML)
-        User.setCurrentUser(getSASLUser());
+        User.setCurrentUser(getSAMLUser());
         if(User.getCurrentUser() == null)
 // Hier wordt A-Select in DWO actief
         User.setCurrentUser(getInitialUser());
@@ -1855,9 +1859,9 @@ private static boolean isValidEmail(String email) {
  * je schoolid: SURFIN
  * @return
  */
-    private User getSASLUser() {
-    	String samlUserID = DwoHelper.getCookie("dwoSAMLUserID");
-    	String samlOrgID = DwoHelper.getCookie("dwoSAMLOrganizationID");
+    private User getSAMLUser() {
+    	String samlUserID = DwoHelper.getCookie(DWO_SAML_USER_ID);
+    	String samlOrgID = DwoHelper.getCookie(DWO_SAML_ORGANIZATION_ID);
 		String samlOrg = DwoHelper.getCookie("dwoSAMLOrganization");
     	if(false)
     	{
@@ -1877,13 +1881,18 @@ private static boolean isValidEmail(String email) {
 			} catch (LoginException e) {
 			}
     		samlData = new HashMap();
-    		samlData.put("dwoSAMLUSerID", samlUserID);
-    		samlData.put("dwoSAMLOrganizationID", samlOrgID);
+    		samlData.put(DWO_SAML_USER_ID, samlUserID);
+    		samlData.put(DWO_SAML_ORGANIZATION_ID, samlOrgID);
 			samlData.put("dwoSAMLOrganization", samlOrg);
     	}
     	return null;
     }
     
+    public void linkViaSAML() {
+    	PersistenceFacade.instance().linkViaSAML(getUser(), samlData.get(DWO_SAML_USER_ID).toString(), 
+    														samlData.get(DWO_SAML_ORGANIZATION_ID).toString());
+    	
+    }
     
      /**
       * Geef mij een gebruiker buitenom.

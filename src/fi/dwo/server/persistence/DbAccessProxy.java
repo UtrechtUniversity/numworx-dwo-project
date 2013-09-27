@@ -483,5 +483,16 @@ public class DbAccessProxy extends DbConnect implements DbAccessIF {
 		// TODO Auto-generated method stub
 		return getDelegate().setExpireDate(schoolID, date);
 	}
+
+	public Hashtable login_saml(String a, String b) throws DwoXmlRpcException,
+			IOException, XmlRpcException, SQLException {
+		return getDelegate().login_saml(a, b);
+
+	}
+
+	public boolean link_saml(String userid, String orgid, int id)
+			throws IOException, XmlRpcException, SQLException {
+		return getDelegate().link_saml(userid, orgid, id);
+	}
 	
 }

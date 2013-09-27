@@ -684,8 +684,12 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         PreparedStatement ps = getStatement( noPw?QRY_LOGIN_NO_PASSWD:QRY_LOGIN);
         ps.setString(1, username);
         if(!noPw) ps.setString(2, password);
+        return login_tail(ps);
+    }
 
-        Hashtable result = executeQueryWithRecord(ps);
+	private Hashtable login_tail(PreparedStatement ps) throws SQLException,
+			DwoXmlRpcException {
+		Hashtable result = executeQueryWithRecord(ps);
 
         if (result == null|| result.isEmpty()) {
             throw new DwoXmlRpcException(DwoXmlRpcException.EXC_UNKNOWN_USER);
@@ -706,12 +710,12 @@ public class DbAccess extends DbConnect implements DbAccessIF {
                 ps.setInt(1, ((Integer) result.get("userID")).intValue());
                 Hashtable result2 = executeQueryWithRecord(ps);
                 if (result2 != null) {
-                    Object key;
-                    for (Enumeration keys = result2.keys(); keys
-                            .hasMoreElements();) {
-                        key = keys.nextElement();
-                        result.put(key, result2.get(key));
-                    }
+//                    Object key;   // FIXME lijkt dubbel?
+//                    for (Enumeration keys = result2.keys(); keys
+//                            .hasMoreElements();) {
+//                        key = keys.nextElement();
+//                        result.put(key, result2.get(key));
+//                    }
 
                     result.putAll(result2);
                 }
@@ -720,7 +724,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         }
 
         return result;
-    }
+	}
 
     /**
      * @param userID
@@ -1126,24 +1130,28 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      *  
      */
     public boolean deleteUser(int userID) throws SQLException {
-        String[] arguments = { "tblStudentSco", "userID" };
+// Student suspend_data
+    	String[] arguments = { "tblStudentSco", "userID" };
         String query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
-
         PreparedStatement ps = getStatement(query);
         ps.setInt(1, userID);
-
         ps.execute();
         ps.close();
-
-        String[] arguments2 = { "tblUser", "userID" };
-        query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments2);
-
+// Link aan SAML
+        arguments[0] = "tblSamlUser";
+        query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
         ps = getStatement(query);
         ps.setInt(1, userID);
-
         ps.execute();
         ps.close();
-
+// Student zelf        
+        arguments[0] =  "tblUser";
+        query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
+        ps = getStatement(query);
+        ps.setInt(1, userID);
+        ps.execute();
+        ps.close();
+        
         return true;
     }
 
@@ -2913,5 +2921,32 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 		return x > 0;
 	}
 
+	public Hashtable login_saml(String userid, String orgid) throws DwoXmlRpcException,
+			IOException, XmlRpcException, SQLException {
+        close(); //for lazy connection
+        String QRY_LOGIN_SAML = "SELECT * "
+            + "FROM tblSamlUser LEFT JOIN tblUser ON tblSamlUser.userID = tblUser.userID LEFT JOIN tblClass ON tblUser.classID = tblClass.classID "
+            + "WHERE (samluserid = ?) " + "AND   (samlorgid = ?) ";
+		PreparedStatement ps = getStatement(QRY_LOGIN_SAML);
+        ps.setString(1, userid);
+        ps.setString(2, orgid);
+        return login_tail(ps);
+	}
+
+	public boolean link_saml(String userid, String orgid, int id)
+    throws SQLException
+    {
+		String INSERT_SAML_USER = "INSERT INTO tblSamlUser(samluserid, samlorgid, userID) VALUE(?,?,?)";
+		PreparedStatement ps = getStatement(INSERT_SAML_USER);
+		try {
+			ps.setString(1, userid);
+			ps.setString(2, orgid);
+			ps.setInt(3, id);
+			ps.execute();
+		} finally {
+			ps.close();
+		}
+		return true;
+    }
 	
 }

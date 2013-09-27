@@ -18,7 +18,7 @@ import fi.dwo.server.persistence.DwoXmlRpcException;
  * @author M.J.B. Kupers
  * @xmlrpc.generate
  */
-public interface DbAccessIF {
+public interface DbAccessIF extends DbAccessLogin {
 
 	// LET OP: void/null returns en null parameters zijn niet gesupport!
 	
@@ -526,4 +526,12 @@ public interface DbAccessIF {
 	public boolean selectCoursesForClass(int id, Vector v) throws IOException, XmlRpcException, SQLException;
 
 	public boolean setExpireDate(int schoolID, Date date)throws IOException, XmlRpcException, SQLException;
+
+	public Hashtable login_saml(String a, String b)
+    throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+
+	public boolean link_saml(String userid, String orgid, int id)
+    throws IOException, XmlRpcException, SQLException;
+
+
 }

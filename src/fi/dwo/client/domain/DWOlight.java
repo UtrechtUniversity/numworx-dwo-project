@@ -911,8 +911,6 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 		}
 
 		public void setCurrentSco(Sco sco) {
-			// TODO Auto-generated method stub
-			
 		}
 
 		public School addSchool(int id, String schoolName, String schoolLogin,
@@ -949,7 +947,9 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 		}
 
 		public boolean updateLogo(Course c) {
-			// TODO Auto-generated method stub
 			return false;
+		}
+
+		public void linkViaSAML() {
 		}
 }

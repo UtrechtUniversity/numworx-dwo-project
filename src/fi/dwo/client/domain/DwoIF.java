@@ -492,4 +492,6 @@ public interface DwoIF {
 
 	public boolean updateLogo(Course c);
 
+	public void linkViaSAML();
+
 }

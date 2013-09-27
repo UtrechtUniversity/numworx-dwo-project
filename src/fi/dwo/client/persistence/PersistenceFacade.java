@@ -682,7 +682,7 @@ public class PersistenceFacade {
      */
     public User login(String username, String password) throws LoginException {
         password = MD5.getHashString(password);
-        return login_intern(username, password);
+        return login_intern(username, password, DbAccessCreator.instance());
     }
 
     /**
@@ -691,9 +691,8 @@ public class PersistenceFacade {
      * @return user/null?
      * @throws LoginException
      */
-    private User login_intern(String username, String password) throws LoginException
+    private User login_intern(String username, String password, DbAccessLogin dbAccess) throws LoginException
     {
-        DbAccessIF dbAccess = DbAccessCreator.instance();
         try {
             try {
                 MapperIF mapper = MapperCreator.instance(User.class);
@@ -1672,9 +1671,20 @@ public class PersistenceFacade {
         }
     }
 
+    private static final DbAccessLogin LOGIN_SAML = new DbAccessLogin() {
+
+			public Hashtable login(String a, String b) throws IOException,
+					SQLException, XmlRpcException, DwoXmlRpcException {
+				return DbAccessCreator.instance().login_saml(a, b);
+			}
+    	
+    };
+    
+    
+    
     public User login(String username) throws LoginException
     {
-        return login_intern(username, "");
+        return login_intern(username, "", DbAccessCreator.instance());
     }
 
 	public boolean deleteSchool(School sc) throws SchoolException {
@@ -2137,8 +2147,17 @@ e1.printStackTrace();
 	}
 
 	public User loginViaSAML(String samlUserID, String samlOrgID) throws LoginException {
-		//return login("project_wim");
-		throw new LoginException(LoginException.LE_UNKNOWN_USER);
+		return login_intern(samlUserID, samlOrgID, LOGIN_SAML);
+	}
+
+	public void linkViaSAML(User user, String userid, String orgid) {
+		try {
+			DbAccessCreator.instance().link_saml(userid, orgid, user.getID());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
 	}
 	
 }

@@ -940,7 +940,7 @@ public class GuiCreator {
 	}
 
 	public void linkViaSAML() {
-		// TODO Auto-generated method stub
+		dwo.linkViaSAML();
 		
 	}
 
