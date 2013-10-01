@@ -23,6 +23,7 @@ import com.jamonapi.proxy.MonProxyFactory;
 
 import fi.beans.jdbc.DbConnect;
 import fi.beans.xmlrpc.Servlet;
+import fi.dwo.VERSION;
 import fi.dwo.client.persistence.DbAccessIF;
 /**
  * Servlet voor XML-RPC access op de DWO database.
@@ -58,7 +59,7 @@ public class DbAccessServlet extends Servlet {
     
     public void init(ServletConfig arg0) throws ServletException {
         super.init(arg0);
-        log("Initializatie");
+        log("Initializatie r" + VERSION.REVISION);
         if("true".equals(getInitParameter("local")))
         {
         	dbAccess = new DbAccessLocal() {

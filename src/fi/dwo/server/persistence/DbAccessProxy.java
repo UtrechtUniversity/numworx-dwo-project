@@ -163,7 +163,12 @@ public class DbAccessProxy extends DbConnect implements DbAccessIF {
 	public Hashtable login(String username, String password)
 			throws DwoXmlRpcException, IOException, XmlRpcException,
 			SQLException {
-		return getDelegate().login(username, password);
+		try {
+			return getDelegate().login(username, password);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage(),e);
+		}
 	}
 
 	public Hashtable addToSchool(int userID, String schoolLogin, int groupID,
