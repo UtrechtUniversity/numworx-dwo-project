@@ -104,6 +104,9 @@ public class DbAccessLdapServlet extends DbAccessServlet
 			throws ServletException, IOException {
 		try { 
 			super.service(req, resp);
+		} catch (RuntimeException re) {
+			log("runtime exception " + re, re);
+			throw re;
 		} finally { 
 			((DbConnectIF) getHandler()).close();
 		}
