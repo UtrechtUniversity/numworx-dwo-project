@@ -11,6 +11,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.beans.jdbc.DbConnect;
 import fi.dwo.client.persistence.DbAccessIF;
+import fi.dwo.client.system.LoginException;
 
 public class DbAccessProxy extends DbConnect implements DbAccessIF {
 
@@ -165,9 +166,17 @@ public class DbAccessProxy extends DbConnect implements DbAccessIF {
 			SQLException {
 		try {
 			return getDelegate().login(username, password);
+		} catch (DwoXmlRpcException go)
+		{ if (go.code != LoginException.LE_UNKNOWN_USER) 
+				go.printStackTrace(); // Expected
+		  throw go; 
+		} catch (XmlRpcException go)     { go.printStackTrace(); throw go;
+		} catch (IOException go)         { go.printStackTrace(); throw go;
+		} catch (SQLException go)        { go.printStackTrace(); throw go;
+		} catch (RuntimeException go)    { go.printStackTrace(); throw go;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException(e.getMessage(),e);
+			throw new RuntimeException(e.getMessage(),e); // wrap unexpected exception
 		}
 	}
 

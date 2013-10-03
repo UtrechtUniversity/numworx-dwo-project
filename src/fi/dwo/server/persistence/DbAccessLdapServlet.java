@@ -84,8 +84,8 @@ public class DbAccessLdapServlet extends DbAccessServlet
     	super.init(config);
         if(!"false".equals(getInitParameter("monitor")))
         {
-        	//setHandler(MonProxyFactory.monitor(new MonitoringProxy()));
-        	log("no monitoring");
+        	setHandler(MonProxyFactory.monitor(new MonitoringProxy()));
+        	log("monitoring");
         }
         int maxthreads = 200;
         String param = getInitParameter("xmlrpc.maxthreads");
