@@ -30,6 +30,7 @@ import java.util.EventObject;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.AbstractAction;
 import javax.swing.AbstractCellEditor;
 import javax.swing.AbstractListModel;
 import javax.swing.BorderFactory;
@@ -39,6 +40,7 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultSingleSelectionModel;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -75,6 +77,26 @@ import fi.dwo.client.system.TextMapper;
  *  
  */
 public class ScoDialog extends JDialog implements ActionListener, WindowListener, PropertyChangeListener {
+
+	static class CopyClipboardAction extends AbstractAction {
+
+		private ClassModel model;
+
+		public CopyClipboardAction(ClassModel model) {
+			this(TextMapper.getText(TextMapper.GUIRS_BTN_COPY_TO_CLIPBOARD ));
+			this.model = model;
+		}
+
+		public CopyClipboardAction(String name) {
+			super(name);
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			ClipboardExport.instance().export(model);
+
+		}
+
+	}
 
 	/**
 	 * Decorator om Sco voor losse User.
@@ -145,8 +167,12 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		}
 
 		public List getScoreList(int i) {
-				User u = (User) getElementAt(i);
+				User u = getUser(i);
 				return sco.getPartialScoreIF().getScoreMapList(new API(sco, u));
+		}
+
+		public User getUser(int i) {
+			return (User) getElementAt(i);
 		}
 	}
 
@@ -349,6 +375,10 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		comp.setOpaque(false);
 		comp.getViewport().setOpaque(false);
 		vbox.add(comp, BorderLayout.CENTER);
+		Component copybtn = new JButton(new CopyClipboardAction(model));
+		JPanel p = new JPanel(false);p.setOpaque(false);
+		p.add(copybtn);
+		vbox.add(p, BorderLayout.SOUTH);
         panel.setWindow(vbox);
 		comp.setBorder(null);
 		comp.setViewportBorder(null);

@@ -1,8 +1,13 @@
 package fi.dwo.client.gui;
 
+import java.util.List;
+import java.util.Map;
+
+import fi.beans.scorm.PartialScoreIF;
 import fi.dwo.client.domain.ResultScore;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.SchoolGroup;
+import fi.dwo.client.domain.User;
 import fi.dwo.client.domain.UserResultList;
 
 abstract class Exporter {
@@ -69,5 +74,30 @@ abstract class Exporter {
 		}
     	sb.export();
     }
+
+	public void export(ScoDialog.ClassModel model) {
+		ExportBuffer sb = createExportBuffer();
+		int len = model.getSize();
+		for (int i = 0; i< len; i++ ) {
+			User u = model.getUser(i);
+			List l = model.getScoreList(i);
+			String[] line = new String[ l.size() + 2];
+			if(i == 0) {
+				line[0] = "";
+				line[1] = "max";
+				for(int j = 0; j < l.size(); j++ ) {
+					line[j+2] = ((Map) l.get(j)).get(PartialScoreIF.SCORE_MAX).toString();
+				}
+				sb.export(line);
+			}
+			line[0] = u.getUsername();
+			line[1] = u.getName();
+			for(int j = 0; j < l.size(); j++ ) {
+				line[j+2] = ((Map) l.get(j)).get(PartialScoreIF.SCORE_RAW).toString();
+			}
+			sb.export(line);
+		}
+		sb.export();
+	}
 
 }
