@@ -31,7 +31,6 @@ import fi.dwo.client.system.LoginException;
 import fi.dwo.client.system.TextMapper;
 
 import fi.beans.copyright.FIButton;
-import fi.beans.minitbeans.minitool.GuiObservable;
 
 /**
  * This class represents the panel that is been showed when you start the
