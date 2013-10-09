@@ -34,6 +34,25 @@ import fi.dwo.client.persistence.DbAccessIF;
 public class DbAccessLdapServlet extends DbAccessServlet
 {
 
+	static class Wrapper extends DbAccessProxy {
+
+		protected DbAccessIF getDelegate() {
+			return wrap;
+		}
+
+		DbAccessIF wrap;
+		DbConnectIF connector;
+		
+		Wrapper( Object object) {
+			wrap = (DbAccessIF) object;
+			connector = (DbConnectIF) object;
+		}
+
+		public void close() {
+			connector.close();
+		}
+	}
+	
 	static class MonitoringProxy extends DbAccessProxy {
 
 		protected DbAccessIF createDelegate() {
@@ -84,8 +103,10 @@ public class DbAccessLdapServlet extends DbAccessServlet
     	super.init(config);
         if(!"false".equals(getInitParameter("monitor")))
         {
-        	setHandler(MonProxyFactory.monitor(new MonitoringProxy()));
+        	setHandler(/*new Wrapper*/(MonProxyFactory.monitor(new MonitoringProxy())));
         	log("monitoring");
+        } else {
+        	log("no monitoring");
         }
         int maxthreads = 200;
         String param = getInitParameter("xmlrpc.maxthreads");

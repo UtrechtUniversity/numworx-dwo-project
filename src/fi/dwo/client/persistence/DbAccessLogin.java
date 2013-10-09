@@ -10,9 +10,10 @@ import fi.dwo.server.persistence.DwoXmlRpcException;
 
 /**
  * functor pattern.
+ * Moet public zijn, anders kan de jamon monitoring software er niet bij.
  * Kan geoptimaliseerd worden als DbAccessIF extends DBAccessLogin
  */
-interface DbAccessLogin {
-	Hashtable login(String a, String b)
+public interface DbAccessLogin {
+	public Hashtable login(String a, String b)
 	throws IOException, SQLException, XmlRpcException, DwoXmlRpcException;
 }

@@ -390,8 +390,6 @@ public class DbAccessLdap extends DbAccess
 				System.err.println("Error in catch");
 				e1.printStackTrace();
 			}
-			System.err.println("Error in login");
-			e.printStackTrace();
 			throw e;
 		}
 	}
