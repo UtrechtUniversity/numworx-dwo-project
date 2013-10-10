@@ -61,7 +61,7 @@ abstract class Exporter {
     	for (int i = 0; i < userResults.length; i++) {
 			UserResultList results = userResults[i];
 			resultScore = results.getResultScore();
-			line[1] = resultScore[1].getUserGroup().getName();
+			line[1] = resultScore[0].getUserGroup().getName();
 			line[0] = resultScore[0].getUserGroup().getUsername();
 			for (int j = 0; j < resultScore.length; j++) {
 				ResultScore score = resultScore[j];
