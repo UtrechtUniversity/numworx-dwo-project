@@ -26,7 +26,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 
 	}
 
-	private ViewModuleView view;
+	private ViewModuleViewImpl view;
 
 	@Override
 	public void onModuleLoad() {
@@ -63,9 +63,35 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 	public void onValueChange(ValueChangeEvent<String> event) {
 		if (!(event instanceof InitialValueChangeEvent))
 			view.close();
-		String target = DWOplayer.PREFIX + event.getValue();
-		GWT.log(event.getValue());
-		view.setupModule(event.getValue(), target);
+		String value = event.getValue();
+		String target = DWOplayer.PREFIX + value;
+		GWT.log(value);
+		if(value == null || value.equals(""))
+			setupOldView();
+		else
+			view.setupModule(value, target);
 	}
 
+	private void setupOldView() {
+		String url = "index.xml";
+		String link = "index.xmr"; // reference.
+		String path = Window.Location.getPath();
+		// strip basename
+		int slash = path.lastIndexOf('/');
+		//if (slash >= 0)
+		//	path = path.substring(slash + 1);
+		// strip extension
+		int dot = path.lastIndexOf('.');
+		if (dot > 0)
+		{
+			path = path.substring(0, dot);
+		}
+		if (!path.isEmpty())
+		{
+			url = path + ".xml";
+			link = path + ".xmr";
+		}
+		view.preSetupModule(link, url);
+	}
+	
 }
