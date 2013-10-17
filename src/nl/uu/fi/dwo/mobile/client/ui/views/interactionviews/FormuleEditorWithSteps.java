@@ -161,6 +161,7 @@ public class FormuleEditorWithSteps implements InteractionView
 			prefixViewer.getElement().getStyle().setProperty("clear", "both");
 			prefixViewer.getElement().getStyle().setMarginLeft(23, Unit.PX);
 		}
+		
 	}
 
 	public void zetInstellingen(HashMap<String, Object> instellingen)
@@ -264,7 +265,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		editor = addNewEditor(stepPanel);
 		contentPanel.add(stepPanel);
 		stepPanels.add(stepPanel);
-
+		
 		sp.getElement().setScrollTop(sp.getElement().getScrollHeight());
 	}
 
@@ -510,7 +511,8 @@ public class FormuleEditorWithSteps implements InteractionView
 		TouchPanel tp = (TouchPanel) editor.getAsPanel();
 		tp.getElement().getStyle().setProperty("display", "inline-block");
 		editor.setCurrent(0, 0);
-		kb.setEditor(editor);
+		if(kb!=null)
+			kb.setEditor(editor);
 		if (hasPrefix)
 			p.add(prefixViewer);
 		p.add(tp);

@@ -2,6 +2,11 @@ package nl.uu.fi.dwo.mobile.client.ui;
 
 import java.util.HashMap;
 
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.TouchEvent;
+import com.google.gwt.user.client.Window;
+
 import nl.uu.fi.dwo.interaction.client.touch.TouchCancelEvent;
 import nl.uu.fi.dwo.interaction.client.touch.TouchEndEvent;
 import nl.uu.fi.dwo.interaction.client.touch.TouchHandler;
@@ -24,6 +29,8 @@ public class FormuleEditorTouchHandler implements TouchHandler
 
 	public FormuleEditorTouchHandler(TouchPanel tp, FormuleKeyboard kb, FormuleEditor editor)
 	{
+		//tp.getElement().getStyle().setBorderWidth(1, Unit.PX);
+		//tp.getElement().getStyle().setBorderColor("#ff0000");
 		this.tp = tp;
 		this.kb = kb;
 		this.editor = editor;
@@ -35,14 +42,18 @@ public class FormuleEditorTouchHandler implements TouchHandler
 	{
 
 		//NOTE: this is important for android otherwise the move method may not be triggered properly
-		event.preventDefault();
-		event.stopPropagation();
+		if(TouchStartEvent.isSupported())
+		{
+			event.preventDefault();
+			event.stopPropagation();
+		}
 
 		try
 		{
 			kb.setEditor(editor);
 			int x = event.touches().get(0).getPageX() - editor.getCanvas().getAbsoluteLeft();
 			int y = event.touches().get(0).getPageY() - editor.getCanvas().getAbsoluteTop();
+			if(!TouchStartEvent.isSupported()) y+=8;// vraag me niet waarom dit nodig is
 
 			editor.clearSelection();
 			editor.startSelection(x, y);
@@ -60,12 +71,16 @@ public class FormuleEditorTouchHandler implements TouchHandler
 	public void onTouchMove(TouchMoveEvent event)
 	{
 		//NOTE: this is important for android otherwise the move method may not be triggered properly
-		event.preventDefault();
-		event.stopPropagation();
+		//if(TouchStartEvent.isSupported())
+		{
+			event.preventDefault();
+			event.stopPropagation();
+		}
 		try
 		{
 			int x = event.touches().get(0).getPageX() - editor.getCanvas().getAbsoluteLeft();
 			int y = event.touches().get(0).getPageY() - editor.getCanvas().getAbsoluteTop();
+			if(!TouchStartEvent.isSupported()) y+=8; // vraag me niet waarom dit nodig is
 			editor.endSelection(x, y);
 
 		}
@@ -79,7 +94,12 @@ public class FormuleEditorTouchHandler implements TouchHandler
 	@Override
 	public void onTouchEnd(TouchEndEvent event)
 	{
-		event.preventDefault();
+		if(TouchStartEvent.isSupported())
+		{
+			event.preventDefault();
+			event.stopPropagation();
+		}
+		
 	}
 
 	@Override

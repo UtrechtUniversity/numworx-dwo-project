@@ -47,7 +47,7 @@ public class NdeWortelVak extends FormuleElementWithChildren
 
 		if (this.isSelected())
 		{
-			ctx.setFillStyle(DWOplayer.getResource("SelectionColor"));
+			ctx.setFillStyle("#aaf");
 			ctx.fillRect(0, 0, this.width, this.height);
 		}
 

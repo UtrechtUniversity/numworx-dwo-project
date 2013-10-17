@@ -39,6 +39,7 @@ import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.DomEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
@@ -95,6 +96,13 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			event.stopPropagation();
 			event.preventDefault();
 		}
+		
+		private void delete(DomEvent<?> event)
+		{
+			kb.delete();
+			event.stopPropagation();
+			event.preventDefault();
+		}
 
 		private void enter(DomEvent<?> event)
 		{
@@ -121,6 +129,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				else if (ch == '\b')
 				{
 					backspace(event);
+				}
+				else if (ch == KeyCodes.KEY_DELETE)
+				{
+					delete(event);
 				}
 				else if (ch == '\u007F')
 				{
@@ -182,6 +194,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				{
 				case 8: // firefox
 					backspace(event);
+					break;
+				case KeyCodes.KEY_DELETE: // firefox
+					delete(event);
 					break;
 				case 13: //firefox
 					enter(event);

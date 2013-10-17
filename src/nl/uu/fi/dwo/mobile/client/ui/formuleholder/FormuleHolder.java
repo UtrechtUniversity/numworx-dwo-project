@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.formuleholder;
 
+import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleFont;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleRegel;
 
@@ -73,8 +74,17 @@ public class FormuleHolder
 	{
 		//FocusPanel sp = new FocusPanel();
 		sp = new FlowPanel();
-		sp.add(this.main.getCanvas());
+		TouchPanel tp = new TouchPanel();
+		tp.add(this.main.getCanvas());
+		sp.add(tp);
 		return sp;
+	}
+	
+	public TouchPanel getTouchPanel()
+	{
+		TouchPanel tp = new TouchPanel();
+		tp.add(this.main.getCanvas());
+		return tp;
 	}
 
 	public Panel getPanel()

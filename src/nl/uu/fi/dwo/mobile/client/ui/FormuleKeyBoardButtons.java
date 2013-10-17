@@ -46,6 +46,12 @@ public abstract class FormuleKeyBoardButtons
 		@Override
 		public void onTouchStart(TouchStartEvent event)
 		{
+			if(TouchStartEvent.isSupported())
+			{
+				event.preventDefault();
+				event.stopPropagation();
+			}
+			
 			if (code.equals("wortel") == true)
 				kb.getEditor().addElement(new WortelVak(kb.getEditor().getCurrentRegel()));
 			else if (code.equals("breuk") == true)

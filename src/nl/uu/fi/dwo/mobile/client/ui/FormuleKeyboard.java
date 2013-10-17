@@ -359,4 +359,8 @@ public class FormuleKeyboard implements WritePanelHolder
 		getEditor().removeCurrentElement();
 	}
 
+	public void delete()
+	{
+		getEditor().removeNextElement();
+	}
 }

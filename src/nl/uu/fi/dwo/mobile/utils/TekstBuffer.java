@@ -241,6 +241,7 @@ public class TekstBuffer
 		{
 			result = //new fi.kladjegwt.client.KladjeGWT(currentVakGegevens, randomVarNamen, randomVarWaarden);
 					new StubView("KladjeGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			//result = new StubView("KladjeGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		}
 		else
 		{

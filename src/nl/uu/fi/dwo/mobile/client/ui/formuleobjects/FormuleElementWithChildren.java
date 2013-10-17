@@ -163,6 +163,14 @@ public abstract class FormuleElementWithChildren extends FormuleElement
 			}
 		}
 	}
+	
+	/*public void setSelected(boolean b)
+	{
+		for (int i = 0; i < this.children.size(); i++)
+			//for (int i = this.selectionStart; i <= this.selectionEnd; i++)
+			this.children.get(i).setSelected(b);
+		this.setChanged(true);
+	}*/
 
 	public FormuleRegel selection(int selectionStartX, int selectionStartY, int selectionEndX, int selectionEndY)
 	{

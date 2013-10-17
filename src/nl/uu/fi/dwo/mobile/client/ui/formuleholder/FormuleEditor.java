@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.formuleholder;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleRegel;
 
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Panel;
 
 /**
@@ -146,15 +147,21 @@ public class FormuleEditor extends FormuleHolder
 		//swap?
 		int selectionStartX = this.selectionStartX;
 		int selectionStartY = this.selectionStartY;
-		//if (selectionStartX == selectionEndX)
-		//return;
+		//if (Math.abs(selectionStartX - selectionEndX)<4 && Math.abs(selectionStartY - selectionEndY)<4)
+		//{	clearSelection();
+		//	this.paint();
+		//	return;
+		//}
 
 		if (selectionEndX < selectionStartX)
 		{
 			int temp = selectionStartX;
 			selectionStartX = selectionEndX;
 			selectionEndX = temp;
-			temp = selectionStartY;
+		}
+		if (selectionEndY < selectionStartY)
+		{
+			int temp = selectionStartY;
 			selectionStartY = selectionEndY;
 			selectionEndY = temp;
 		}

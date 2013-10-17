@@ -22,7 +22,7 @@ public abstract class FormuleElement
 	public int width;
 
 	private boolean changed = false;
-	private boolean selected = false;
+	protected boolean selected = false;
 
 	//font is the FomruleFont set from method, fm a copy (if changes) of font with the changes applied
 	protected FormuleFont fm;

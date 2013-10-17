@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleFont;
 
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
@@ -71,9 +72,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			{
 				sp.getElement().getStyle().setProperty("width", breedte + "px");
 				sp.getElement().getStyle().setProperty("border", "1px solid gray");
+				sp.getElement().getStyle().setPaddingTop(3, Style.Unit.PX);
 				sp.getElement().getStyle().setProperty("backgroundColor", "#e9e9e9");
-				this.getMainRegel().getCanvas().getElement().getStyle().setProperty("marginTop", "3px");
-				this.getMainRegel().getCanvas().getElement().getStyle().setProperty("marginBottom", "0px");
+				//this.getMainRegel().getCanvas().getElement().getStyle().setProperty("marginTop", "3px");
+				//this.getMainRegel().getCanvas().getElement().getStyle().setProperty("marginBottom", "0px");
 			}
 
 			sp.getElement().addClassName("insert_formule");
