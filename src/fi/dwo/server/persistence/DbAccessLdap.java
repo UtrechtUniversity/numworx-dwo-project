@@ -349,7 +349,7 @@ public class DbAccessLdap extends DbAccess
 				{
 					if(manager.verifyMD5(username, password)) // TODO wat als het een school account betreft.
 					{
-						if(!usernameExists(username))
+						if(!usernameExists(username) && fidentity != null)
 						{
 							String lastname = fidentity.getSurName();
 							String email = fidentity.getEmailAddress();
@@ -454,7 +454,10 @@ private boolean isNoDWOSchool(int intValue) {
 	private Fidentity updateLogin(String uid)
 	{
 		try { 
-			return manager.getFidentity(uid);
+			Fidentity fidentity = manager.getFidentity(uid);
+			if(fidentity == null)
+				throw new RuntimeException(manager.getLastError(), manager.getLastException());
+			return fidentity;
 		} catch (Throwable t)
 		{
 			System.err.println("Error in updateLogin " + uid);
