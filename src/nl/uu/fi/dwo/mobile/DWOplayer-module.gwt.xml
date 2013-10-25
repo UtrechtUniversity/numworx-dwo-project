@@ -16,7 +16,7 @@
 
   <!-- Specify the app entry point class.                         -->
 
-  <inherits name="com.googlecode.mgwt.MGWT"/>
+  <inherits name="com.googlecode.mgwt.MGWTMin"/>
    <inherits name="com.fredhat.gwt.xmlrpc.XMLRPC" />
    <inherits name="com.bouwkamp.gwt.user.User" />
    <inherits name="nl.uu.fi.dwo.interaction.Interaction" />

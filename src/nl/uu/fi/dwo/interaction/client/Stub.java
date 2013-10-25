@@ -3,18 +3,18 @@ package nl.uu.fi.dwo.interaction.client;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
 
 
 public class Stub implements OpdrNavIF {
 	
 	private InteractionStub view;
-	
+	private static Logger logger = Logger.getLogger("Stub");
 	private Stub(InteractionStub view) {
 		this.view = view;
 	}
@@ -45,8 +45,12 @@ public class Stub implements OpdrNavIF {
 
 		result  = JSONUtilities.fromJSONObject(JSONParser.parseLenient(launchdata).isObject());
 		
-		view.init(width, height, result, numbers);
-		view.setCommunicationRoot(this);
+		try {
+			view.init(width, height, result, numbers);
+			view.setCommunicationRoot(this);
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "init: " + e.getMessage(), e);
+		}
 	}
 	
 	
@@ -79,7 +83,7 @@ public class Stub implements OpdrNavIF {
 		try { 
 			publish0(new Stub(view));
 		} catch(Exception e) {
-			GWT.log("publish", e);
+			logger.log(Level.SEVERE, "publish", e);
 		}
 	}
 

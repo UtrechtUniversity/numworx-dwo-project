@@ -3,7 +3,7 @@
 <module rename-to='DWOplayer'>
   <!-- Inherit the core Web Toolkit stuff.                        -->
   <inherits name='com.google.gwt.user.User'/>
-
+  <inherits name='com.googlecode.mgwt.storage.Storage' />
   <!-- Inherit the default GWT style sheet.  You can change       -->
   <!-- the theme of your GWT application by uncommenting          -->
   <!-- any one of the following lines.                            -->
@@ -16,14 +16,14 @@
 
   <!-- Specify the app entry point class.                         -->
 
-  <inherits name="com.googlecode.mgwt.MGWT"/>
+  <inherits name="com.googlecode.mgwt.MGWTMin"/>
 
   <inherits name="com.google.gwt.json.JSON" />
    <inherits name="com.fredhat.gwt.xmlrpc.XMLRPC" />
    <inherits name="nl.uu.fi.dwo.interaction.Interaction" />
    <inherits name="fi.writemathgwt.WriteMathGWT-DWO" />
    
-<!--  <inherits name="fi.kladjegwt.KladjeGWT-DWO" /> -->
+<!-- --> <inherits name="fi.kladjegwt.KladjeGWT-DWO" /> 
 <!--  <inherits name="fi.nabouwenaanzichtengwt.NabouwenAanzichtenGWT-DWO" /> -->
 <!--  <inherits name="fi.balansfruitgwt.BalansFruitGWT-DWO" /> --> 
 <!--  <inherits name='nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.geogebraview.GeogebraViewDWO' /> -->
@@ -53,7 +53,7 @@
     </replace-with>
 
 <!-- Welke scorm wil je hebben? Scorm2004, LTI?, QTI? Noordhoff API, DWO-Scorm-1.2, etc... -->    
-    <replace-with class="nl.uu.fi.dwo.mobile.client.sco.SCORM_guest">
+    <replace-with class="nl.uu.fi.dwo.mobile.client.sco.LocalStorage">
     	<when-type-is class="nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF"/>
     </replace-with>
     

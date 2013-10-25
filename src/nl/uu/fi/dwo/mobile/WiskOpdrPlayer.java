@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile;
 
+import java.util.logging.Logger;
+
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
@@ -25,7 +27,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 		}
 
 	}
-
+	private static Logger logger = Logger.getLogger("WiskOpdrPlayer");
 	private ViewModuleViewImpl view;
 
 	@Override
@@ -36,12 +38,11 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 		view = new ViewModuleViewImpl(true).initialize();
 
 		Scorm2004IF api = GWT.create(Scorm2004IF.class);
-
 		view.setApi(api);
 		
 		RootPanel.get().add(view);
 		History.addValueChangeHandler(this);
-		String target = History.getToken();
+		String target = History.getToken();		
 		ValueChangeEvent<String> event = new InitialValueChangeEvent(target);
 		onValueChange(event);
 	}
@@ -65,7 +66,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 			view.close();
 		String value = event.getValue();
 		String target = DWOplayer.PREFIX + value;
-		GWT.log(value);
+		logger.info(value);
 		if(value == null || value.equals(""))
 			setupOldView();
 		else
