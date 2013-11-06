@@ -23,7 +23,7 @@
    <inherits name="nl.uu.fi.dwo.interaction.Interaction" />
    <inherits name="fi.writemathgwt.WriteMathGWT-DWO" />
    
-<!-- --> <inherits name="fi.kladjegwt.KladjeGWT-DWO" /> 
+<!--  <inherits name="fi.kladjegwt.KladjeGWT-DWO" /> -->
 <!--  <inherits name="fi.nabouwenaanzichtengwt.NabouwenAanzichtenGWT-DWO" /> -->
 <!--  <inherits name="fi.balansfruitgwt.BalansFruitGWT-DWO" /> --> 
 <!--  <inherits name='nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.geogebraview.GeogebraViewDWO' /> -->
@@ -53,7 +53,7 @@
     </replace-with>
 
 <!-- Welke scorm wil je hebben? Scorm2004, LTI?, QTI? Noordhoff API, DWO-Scorm-1.2, etc... -->    
-    <replace-with class="nl.uu.fi.dwo.mobile.client.sco.LocalStorage">
+    <replace-with class="nl.uu.fi.dwo.mobile.client.sco.SCORM_guest">
     	<when-type-is class="nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF"/>
     </replace-with>
     
