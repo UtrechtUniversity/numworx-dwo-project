@@ -513,7 +513,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		return out;
 	}
 
-	private void getLaunchData(int sco, OutputStream out) throws IOException {
+	void getLaunchData(int sco, OutputStream out) throws IOException {
 		Hashtable<?,?> map;
 		try {
 			map = getLaunchData_int(sco);
