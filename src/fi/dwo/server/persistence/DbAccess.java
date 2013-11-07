@@ -804,6 +804,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             throw new DwoXmlRpcException(
                     DwoXmlRpcException.EXC_WRONG_USERNAME_PASSWORD);
         } else {
+// Changes account TODO nieuwe klas wordt altijd gezet 
             PreparedStatement ps = getStatement(QRY_UPDATE_USER_CLASS);
             if(classID != 0)
             	ps.setInt(1, classID);

@@ -17,11 +17,14 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.xmlrpc.XmlRpc;
+
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 import com.jamonapi.proxy.MonProxyFactory;
 
 import fi.beans.jdbc.DbConnect;
+import fi.beans.jdbc.DbConnectIF;
 import fi.beans.xmlrpc.Servlet;
 import fi.dwo.VERSION;
 import fi.dwo.client.persistence.DbAccessIF;
@@ -42,6 +45,15 @@ import fi.dwo.client.persistence.DbAccessIF;
  */
 public class DbAccessServlet extends Servlet {
     
+	static class MyProxy extends DbAccessProxy {
+
+		protected DbAccessIF createDelegate() {
+			return new DbAccess();
+		}
+		
+	}
+	
+	
     private static DbAccessIF dbAccess;
     
    // private static final String JAR_FOLDER = "file:/space/WWW/InfoGroups/dwo/jars/";
@@ -49,7 +61,7 @@ public class DbAccessServlet extends Servlet {
 
      */
     public DbAccessServlet() {
-        super(dbAccess = new DbAccess());
+        super(dbAccess = new MyProxy());
 
     }
     protected DbAccessServlet(DbAccessIF myDbAccess)
@@ -60,6 +72,13 @@ public class DbAccessServlet extends Servlet {
     public void init(ServletConfig arg0) throws ServletException {
         super.init(arg0);
         log("Initializatie r" + VERSION.REVISION);
+ 
+        int maxthreads = 200;
+        String param = getInitParameter("xmlrpc.maxthreads");
+        if(param != null )
+        	maxthreads = Integer.parseInt(param);
+        XmlRpc.setMaxThreads(maxthreads);
+
         if("true".equals(getInitParameter("local")))
         {
         	dbAccess = new DbAccessLocal() {
@@ -134,10 +153,21 @@ public class DbAccessServlet extends Servlet {
 //        }
 //    }
     
-    
+	protected void service(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		try { 
+			super.service(req, resp);
+		} catch (RuntimeException re) {
+			log("runtime exception " + re, re);
+			throw re;
+		} finally { 
+			((DbConnectIF) getHandler()).close();
+		}
+	}
+
     public void destroy() {
         log("En weg ben ik...");
-        ((DbConnect) dbAccess).close();
+        ((DbConnectIF) dbAccess).close();
         super.destroy();
     }
     

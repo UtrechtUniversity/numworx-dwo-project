@@ -21,7 +21,10 @@ public class Mover extends JComponent  {
 	public Mover() {
 		this(10);
 	}
-
+	/**
+	 * Minimum X position
+	 */
+	private int minX = 0;
 
 
 	public Mover(int width) {
@@ -52,7 +55,7 @@ public class Mover extends JComponent  {
 		menu.setOpaque(true);
 		menu.setBackground(Color.green);
 		menu.setPreferredSize(new Dimension(30,200));
-		
+		left.setMinimumSize(new Dimension(10, 0));
 		left.add(menu, BorderLayout.CENTER);
 		left.add(mover, BorderLayout.EAST);
 		box.add(left);
@@ -79,10 +82,13 @@ public class Mover extends JComponent  {
 		case MouseEvent.MOUSE_DRAGGED:
 				Dimension size = getParent().getSize();
 //System.out.println("voor " + size);
-				int min = getParent().getMinimumSize().width;
+				int min;
+//				min = getParent().getMinimumSize().width;
+// System.out.println(min);
+				min = minX + getWidth();
 				//size.width += curX-lastX;
 				size.width += e.getX()- relX;
-				//size.width = Math.max(size.width, min);
+				size.width = Math.max(size.width, min);
 //System.out.println("na " + size + ", delta " + (e.getX()) + "-" + relX );
 				
 				//size.height += curY-lastY;
