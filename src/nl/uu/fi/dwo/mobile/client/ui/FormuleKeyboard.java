@@ -1,5 +1,8 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
@@ -148,7 +151,7 @@ public class FormuleKeyboard implements WritePanelHolder
 
 	public Panel getAsPanel()
 	{
-		GWT.log(" Create kb panel");
+		Logger.getLogger("FormuleKeyboard").log(Level.INFO," Create kb panel");
 		if (tp != null)
 		{	tp.setEnabled(false);
 			return tp.getPanel();

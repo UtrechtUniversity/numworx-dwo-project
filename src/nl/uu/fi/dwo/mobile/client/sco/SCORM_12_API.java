@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.sco;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
 public class SCORM_12_API implements Scorm2004IF {
 
 	public native String Commit() /*-{
@@ -27,4 +29,6 @@ public class SCORM_12_API implements Scorm2004IF {
 	public native String Terminate() /*-{
 		return $wnd.doLMSFinish()
 	}-*/;
+	
+	public void Initialize(final AsyncCallback<Void> callback) { if(callback!=null) callback.onSuccess(null); }
 }

@@ -3,6 +3,8 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
@@ -141,7 +143,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 				pendingState = null;
 			} 
 		} catch(Exception e) {
-			GWT.log("init", e);
+			Logger.getLogger("StubView").log(Level.SEVERE,"init", e);
 		}
 		
 				

@@ -203,7 +203,7 @@ public class TekstBuffer
 
 		switch (soortVak)
 		{
-		case 39:
+		case 39: case 10: // geogebra3
 			return new GeogebraView(currentVakGegevens, randomVarNamen, randomVarWaarden);
 		}
 

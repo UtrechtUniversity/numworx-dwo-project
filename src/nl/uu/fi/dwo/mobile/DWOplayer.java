@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWOmAccess;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
@@ -265,7 +267,7 @@ public class DWOplayer implements EntryPoint
 	//Used for debugging
 	public static void log(String log)
 	{
-		System.out.println(log);
+		Logger.getLogger("DWOplayer").log(Level.INFO,log);
 	}
 
 	public static void gotoCourses() {

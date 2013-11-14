@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.mobile.client.ui;
 
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
 
@@ -88,7 +90,7 @@ public class SelectModuleItem
 				this.file = curr.getChildNodes().toString();
 
 		}
-		GWT.log(this.name + " " + this.file);
+		Logger.getLogger("SelectModuleItem").log(Level.INFO,this.name + " " + this.file);
 	}
 
 	public String getName()

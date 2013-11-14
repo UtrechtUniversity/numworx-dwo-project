@@ -3,6 +3,8 @@
  */
 package nl.uu.fi.dwo.mobile.client.sco;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
 /**
  * @author peterboon
  *
@@ -10,11 +12,11 @@ package nl.uu.fi.dwo.mobile.client.sco;
 public class TriforkAPI implements Scorm2004IF {
 
 	private native void setResponse(String data) /*-{
-		CES.setResponse(data);
+		$wnd.CES.setResponse(data);
 	}-*/;
 	
 	private native String getResponse() /*-{
-		return CES.getResponse();
+		return $wnd.CES.getResponse();
 	}-*/;
 	
 	/**
@@ -57,4 +59,5 @@ public class TriforkAPI implements Scorm2004IF {
 		return "";
 	}
 
+	public void Initialize(final AsyncCallback<Void> callback) { if(callback!=null) callback.onSuccess(null); }
 }

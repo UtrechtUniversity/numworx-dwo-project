@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.sco;
 
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 
 public class AssetAPI implements Scorm2004IF {
@@ -77,5 +78,6 @@ public class AssetAPI implements Scorm2004IF {
 		SetInitialize(guid, Boolean.TRUE);
 		return "";
 	}
-
+	
+	public void Initialize(final AsyncCallback<Void> callback) { if(callback!=null) callback.onSuccess(null); }
 }

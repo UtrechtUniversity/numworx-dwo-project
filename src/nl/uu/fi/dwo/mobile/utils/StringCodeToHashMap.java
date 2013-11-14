@@ -2,7 +2,11 @@ package nl.uu.fi.dwo.mobile.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.NamedNodeMap;
@@ -16,6 +20,8 @@ import com.google.gwt.xml.client.NodeList;
  */
 public class StringCodeToHashMap
 {
+	private static Logger logger = Logger.getLogger("StringCodeToHashMap");
+	
 	public HashMap<String, Object> decodeStringToHashMap(Document dom)
 	{
 		HashMap<String, Object> result = new HashMap<String, Object>();
@@ -27,7 +33,7 @@ public class StringCodeToHashMap
 	public HashMap<String, Object> convertNodeToHashMap(Node node)
 	{
 		HashMap<String, Object> result = new HashMap<String, Object>();
-		//Extracts all nodes that are elements and puts them in an array. 
+try { 		//Extracts all nodes that are elements and puts them in an array. 
 		ArrayList<Node> children = getElementList(node.getChildNodes());
 		for (int i = 0; i < children.size(); i++)
 		{
@@ -103,8 +109,16 @@ public class StringCodeToHashMap
 						final String nodeValue = childs.get(0).getFirstChild().getNodeValue();
 						result.put(keyName, new String(nodeValue)); // TODO een of ander marker...
 					}
+					else if ("java.util.Vector".equals(className))
+					{
+						ArrayList<Node> childs = getElementList(secondChild.getChildNodes());
+						result.put(keyName, convertNodeToList(childs));
+					}
 					else
+					{
+						logger.log(Level.INFO,className);
 						result.put(keyName, convertNodeToHashMap(secondChild)); // FIXME controle op java.util.Hashtable
+					}
 				}
 				//sets an int as value
 				else if (secondName.equalsIgnoreCase("int"))
@@ -145,7 +159,27 @@ public class StringCodeToHashMap
 			}
 
 		}
+} catch( Exception e) {
+		logger.log(Level.SEVERE, e.toString(), e);
+}
 		return result;
+	}
+
+	private Object convertNodeToList(ArrayList<Node> childs) {
+		ArrayList<Object> result = new ArrayList<Object>();
+		for (Iterator<Node> iterator = childs.iterator(); iterator.hasNext();) {
+			Node object = iterator.next();
+			object = object.getChildNodes().item(1); // skip whitespace.
+			result.add(convertNodeToObject(object));
+		}
+		return result;
+	}
+
+	private Object convertNodeToObject(Node object) {
+		String name = object.getNodeName();
+		if("array".equals(name))
+			return convertNodeToArray(object);
+		return object;
 	}
 
 	public ArrayList<Node> getElementList(NodeList list)
@@ -194,6 +228,8 @@ public class StringCodeToHashMap
 			defaultValue = new Double(0.0);
 		if ("boolean".equals(type))
 			defaultValue = Boolean.FALSE;
+		if ("short".equals(type))
+			defaultValue = Short.valueOf((short) 0);
 
 		ArrayList<Object> result = new ArrayList<Object>(len);
 		for (int i = 0; i < len; i++)
@@ -237,6 +273,9 @@ public class StringCodeToHashMap
 			else if (child.getNodeName().equalsIgnoreCase("array"))
 			{
 				result.set(index, convertNodeToArray(child));
+			} else if (child.getNodeName().equalsIgnoreCase("short")) 
+			{
+				result.set(index,  Short.parseShort(child.getFirstChild().getNodeValue()));
 			}
 
 		}

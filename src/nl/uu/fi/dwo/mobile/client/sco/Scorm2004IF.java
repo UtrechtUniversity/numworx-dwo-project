@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.sco;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
 public interface Scorm2004IF {
 
 	String Commit();
@@ -14,4 +16,6 @@ public interface Scorm2004IF {
 	
 	String Initialize();
 
+// Bootstrap method, 
+	public void Initialize(final AsyncCallback<Void> callback);
 }

@@ -25,6 +25,8 @@ public class GeogebraView implements InteractionView, LoadHandler
 	private Frame frame;
 	private Button btn;
 	private String ggb;
+	private boolean bewaarOptie, nakijken, correct,check;
+	private int score, scoreMax;
 
 	public native static Object getGgbWindow(Element frame) /*-{
 		return frame.contentWindow;
@@ -70,6 +72,12 @@ public class GeogebraView implements InteractionView, LoadHandler
 			Map<String,Object> map = (Map<String,Object>)object;
 			geogebraParams.putAll(map);
 		}
+		bewaarOptie = Boolean.TRUE.equals( ggbMap.get("bewaarOptie"));
+		nakijken    = Boolean.TRUE.equals( ggbMap.get("nakijken"));
+		check       = !Boolean.FALSE.equals(ggbMap.get("check")); // default is true
+		object      = ggbMap.get("scoreMax");
+		if(object instanceof Number) scoreMax = ((Number) object).intValue();
+		
 		
 		frame = new Frame("SlopeTestWeb.html");
 		frame.setStylePrimaryName(".gwt-StubView");
@@ -105,24 +113,42 @@ public class GeogebraView implements InteractionView, LoadHandler
 	@Override
 	public HashMap<String, Object> getState()
 	{
-		return null;
+		HashMap map = new HashMap();
+		if(bewaarOptie && ggbApplet != null) {
+			map.put("state", getXML(ggbApplet));
+		}
+		return map;
 	}
+
+	private static native String getXML(Object ggb)
+	/*-{
+		return ggb.getXML();
+	}-*/;
+	
+	private static native String setXML(Object ggb, String xml)
+	/*-{
+		ggb.setXML(xml);
+	}-*/;
 
 	@Override
 	public void setState(HashMap<String, Object> h)
 	{
-
+		if(h == null) return;
+		String xml = (String) h.get("state");
+		if(bewaarOptie && xml != null && ggbApplet != null) setXML(ggbApplet, xml);
 	}
 
 	@Override
 	public int getScore()
 	{
-		return 0;
+		return score;
 	}
 
 	@Override
 	public boolean isCorrect()
 	{
+		if(nakijken)
+			return correct;
 		return true;
 	}
 

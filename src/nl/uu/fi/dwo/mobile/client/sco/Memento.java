@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 
@@ -109,7 +111,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		}
 		catch (Exception e)
 		{
-			GWT.log("getValue", e);
+			Logger.getLogger("Memento").log(Level.SEVERE,"getValue", e);
 			return "";
 		}
 	}
@@ -122,7 +124,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		}
 		catch (Exception e)
 		{
-			GWT.log("initialize Scorm API", e);
+			Logger.getLogger("Memento").log(Level.SEVERE, "initialize Scorm API", e);
 		}
 	}
 
@@ -150,7 +152,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		}
 		catch (Exception e)
 		{
-			GWT.log("setValue", e);
+			Logger.getLogger("Memento").log(Level.SEVERE,"setValue", e);
 		}
 	}
 

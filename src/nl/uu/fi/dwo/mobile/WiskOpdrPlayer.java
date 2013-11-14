@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
@@ -10,9 +11,14 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.logging.client.HasWidgetsLogHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
@@ -34,17 +40,29 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 	public void onModuleLoad() {
 	
 		MGWTsetup();
-
+		VerticalPanel customLogArea = new VerticalPanel();
+		Logger.getLogger("").addHandler(new HasWidgetsLogHandler(customLogArea));
 		view = new ViewModuleViewImpl(true).initialize();
-
-		Scorm2004IF api = GWT.create(Scorm2004IF.class);
-		view.setApi(api);
-		
+		Scorm2004IF api = view.getApi();
 		RootPanel.get().add(view);
+		RootPanel.get().add(customLogArea);
 		History.addValueChangeHandler(this);
-		String target = History.getToken();		
-		ValueChangeEvent<String> event = new InitialValueChangeEvent(target);
-		onValueChange(event);
+		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				logger.log(Level.SEVERE, "api.initialize()", caught);
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				String target = History.getToken();		
+				ValueChangeEvent<String> event = new InitialValueChangeEvent(target);
+				onValueChange(event);
+			}
+			
+		};
+		api.Initialize(callback); // need some async bootstrapping.	
 	}
 
 	private void MGWTsetup() {

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.5.1//EN" "http://google-web-toolkit.googlecode.com/svn/tags/2.5.1/distro-source/core/src/gwt-module.dtd">
+<module rename-to="Trifork" >
+	<inherits name="com.google.gwt.user.User" />
+	<inherits name="nl.uu.fi.dwo.mobile.DWOplayer-module" />
+
+	<set-property name="user.agent" value="safari" />
+	<entry-point class='nl.uu.fi.dwo.mobile.WiskOpdrPlayer'/>
+	
+	<replace-with class="nl.uu.fi.dwo.mobile.client.sco.TriforkAPI">
+    	<when-type-is class="nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF"/>
+    </replace-with>
+	
+</module>
