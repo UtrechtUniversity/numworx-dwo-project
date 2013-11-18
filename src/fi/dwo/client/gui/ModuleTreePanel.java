@@ -581,9 +581,9 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
         	
         }
         if(!DwoHelper.isAdminLoggedIn())
-        	root = prune(root);
-        
-        
+        {	root = prune(root);
+        	root.setParent(null);
+        }
         
         
         DefaultTreeModel model = new DefaultTreeModel(root);
@@ -701,7 +701,8 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		node = find(object, node);
 		if(node != null)
 		{
-			TreePath path = new TreePath(node.getPath());
+			TreeNode[] paths = node.getPath();
+			TreePath path = new TreePath(paths); // Dit gaat fout bij studenten, als de tree gepruned is.
 			tree.setSelectionPath(path);
 		}
 	}
