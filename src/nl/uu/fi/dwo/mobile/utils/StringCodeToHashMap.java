@@ -22,14 +22,20 @@ public class StringCodeToHashMap
 {
 	private static Logger logger = Logger.getLogger("StringCodeToHashMap");
 	
+	
+	private HashMap<String,Element> refs = new HashMap<String,Element>();
+	
 	public HashMap<String, Object> decodeStringToHashMap(Document dom)
 	{
-		HashMap<String, Object> result = new HashMap<String, Object>();
+		refs.clear();
+		HashMap<String, Object> result;
 		Node main = dom.getElementsByTagName("object").item(0);
 		result = convertNodeToHashMap(main);
 		return result;
 	}
 
+	
+	
 	public HashMap<String, Object> convertNodeToHashMap(Node node)
 	{
 		HashMap<String, Object> result = new HashMap<String, Object>();
@@ -64,8 +70,19 @@ try { 		//Extracts all nodes that are elements and puts them in an array.
 					//waarom werkt dit niet:
 					//if (secondChild.getAttributes().getNamedItem("class")!=null && (secondChild.getAttributes().getNamedItem("class").toString()).equals("java.awt.Color"))
 					//	if (secondChild.getAttributes().getNamedItem("class")!=null && secondChild.toString().indexOf('\n')>-1 && "<object class=\"java.awt.Color\">".equals(secondChild.toString().substring(0,secondChild.toString().indexOf('\n')).trim()))
-					final Element secondElement = (Element) secondChild;
-					final String className = secondElement.getAttribute("class");
+					Element secondElement = (Element) secondChild;
+					String className = secondElement.getAttribute("class");
+					if(className == null) {
+						logger.severe(secondElement + " without class");
+						//className = "java.lang.Object";
+						String ref = secondElement.getAttribute("idref");
+						logger.info("insert reference " + ref);
+						secondChild = secondElement = refs.get(ref);
+						className = secondElement.getAttribute("class");
+					} else {
+						String id = secondElement.getAttribute("id");
+						if(id != null) refs.put(id, secondElement);
+					}
 					if ("java.awt.Color".equals(className))
 					{
 						ArrayList<Node> childs = getElementList(secondChild.getChildNodes());
@@ -116,7 +133,7 @@ try { 		//Extracts all nodes that are elements and puts them in an array.
 					}
 					else
 					{
-						logger.log(Level.INFO,className);
+						logger.log(Level.INFO,"className = " + String.valueOf(className));
 						result.put(keyName, convertNodeToHashMap(secondChild)); // FIXME controle op java.util.Hashtable
 					}
 				}

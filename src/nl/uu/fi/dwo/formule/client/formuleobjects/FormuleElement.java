@@ -1,8 +1,8 @@
-package nl.uu.fi.dwo.mobile.client.ui.formuleobjects;
+package nl.uu.fi.dwo.formule.client.formuleobjects;
 
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
-import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleEditor;
-import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleHolder;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;

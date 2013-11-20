@@ -2,12 +2,12 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.HashMap;
 
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
-import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleEditor;
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleElement;
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleFont;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Image;
@@ -91,11 +91,16 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 	}
 
-	public Object getFe()
-	{
-		return fe;
-	}
+//	public Object getFe()
+//	{
+//		return fe;
+//	}
 
+	// !(holder instanceof FormuleEditorWithAnswer && ((FormuleEditorWithAnswer)holder).getFe()==null)
+	public boolean isInputNeeded() {
+		return fe != null;
+	}
+	
 	@Override
 	public void addElement(FormuleElement e)
 	{

@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.mobile.client.ui.formuleobjects;
+package nl.uu.fi.dwo.formule.client.formuleobjects;
 
 import java.util.Vector;
 

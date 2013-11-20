@@ -1,8 +1,8 @@
-package nl.uu.fi.dwo.mobile.client.ui.formuleholder;
+package nl.uu.fi.dwo.formule.client.formuleholder;
 
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleFont;
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
 import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleFont;
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleRegel;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.core.client.GWT;
@@ -95,5 +95,13 @@ public class FormuleHolder
 	public Canvas getCanvas()
 	{
 		return this.main.getCanvas();
+	}
+	
+	/**
+	 * if true, draw an empty [], if needed.
+	 * @return
+	 */
+	public boolean isInputNeeded() {
+		return true;
 	}
 }

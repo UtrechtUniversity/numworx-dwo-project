@@ -1,11 +1,11 @@
-package nl.uu.fi.dwo.mobile.client.ui.formuleobjects;
+package nl.uu.fi.dwo.formule.client.formuleobjects;
 
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.vakken.Breukvak;
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.vakken.Haakjesvak;
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.vakken.IntegraalVak;
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.vakken.Machtvak;
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.vakken.NdeWortelVak;
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.vakken.WortelVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Breukvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Haakjesvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.IntegraalVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Machtvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeWortelVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.WortelVak;
 
 /**
  * Covert string to formule objects

@@ -3,18 +3,17 @@ package nl.uu.fi.dwo.mobile.client.ui;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleTeken;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Breukvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Haakjesvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.IntegraalVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Kwadraatvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Machtvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeWortelVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.WortelVak;
 import nl.uu.fi.dwo.interaction.client.touch.TouchStartEvent;
 import nl.uu.fi.dwo.interaction.client.touch.TouchStartHandler;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
-import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleHolder;
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleTeken;
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.vakken.Breukvak;
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.vakken.Haakjesvak;
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.vakken.IntegraalVak;
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.vakken.Kwadraatvak;
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.vakken.Machtvak;
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.vakken.NdeWortelVak;
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.vakken.WortelVak;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;

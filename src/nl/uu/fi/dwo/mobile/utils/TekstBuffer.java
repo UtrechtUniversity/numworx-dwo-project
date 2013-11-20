@@ -3,7 +3,7 @@ package nl.uu.fi.dwo.mobile.utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleViewer;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;

@@ -3,8 +3,8 @@ package nl.uu.fi.dwo.mobile.client.ui;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleEditor;
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleFont;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 
 import com.google.gwt.core.client.GWT;

@@ -1,13 +1,11 @@
-package nl.uu.fi.dwo.mobile.client.ui.formuleobjects;
+package nl.uu.fi.dwo.formule.client.formuleobjects;
 
 import java.util.Vector;
 
-import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleEditor;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
-import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleHolder;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.Panel;
 
 /**
  * Formula line
@@ -257,7 +255,7 @@ public class FormuleRegel extends FormuleElement
 				ctx.fillRect(0, 0, width, height);
 			}
 
-		if (this.children.size() == 0 && !(holder instanceof FormuleEditorWithAnswer && ((FormuleEditorWithAnswer)holder).getFe()==null))
+		if (this.children.size() == 0 && holder.isInputNeeded())
 		{
 			//draw square if line is empty
 			ctx.setStrokeStyle("#888");

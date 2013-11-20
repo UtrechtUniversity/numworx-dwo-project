@@ -1,10 +1,10 @@
-package nl.uu.fi.dwo.mobile.client.ui.formuleobjects.vakken;
+package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleFont;
 import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleEditor;
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleElement;
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleElementWithChildren;
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleFont;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.mobile.client.ui.formuleobjects;
+package nl.uu.fi.dwo.formule.client.formuleobjects;
 
 /**
  * Because gwt does not have font metrics we use this to make the conversion

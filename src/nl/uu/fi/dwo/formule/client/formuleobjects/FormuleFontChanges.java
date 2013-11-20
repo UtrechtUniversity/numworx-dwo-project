@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.mobile.client.ui.formuleobjects;
+package nl.uu.fi.dwo.formule.client.formuleobjects;
 
 /**
  * This class keeps track of changes made to the font (for instance if we have a

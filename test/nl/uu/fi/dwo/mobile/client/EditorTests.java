@@ -1,7 +1,8 @@
 package nl.uu.fi.dwo.mobile.client;
 
-import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleEditor;
-import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleViewer;
+
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 
 import org.junit.Test;
 

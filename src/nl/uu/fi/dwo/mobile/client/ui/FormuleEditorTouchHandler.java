@@ -7,13 +7,13 @@ import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.TouchEvent;
 import com.google.gwt.user.client.Window;
 
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.interaction.client.touch.TouchCancelEvent;
 import nl.uu.fi.dwo.interaction.client.touch.TouchEndEvent;
 import nl.uu.fi.dwo.interaction.client.touch.TouchHandler;
 import nl.uu.fi.dwo.interaction.client.touch.TouchMoveEvent;
 import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
 import nl.uu.fi.dwo.interaction.client.touch.TouchStartEvent;
-import nl.uu.fi.dwo.mobile.client.ui.formuleholder.FormuleEditor;
 
 /**
  * 

@@ -1,6 +1,6 @@
 package nl.uu.fi.dwo.mobile.client;
 
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleFont;
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleFont;
 
 import org.junit.Test;
 

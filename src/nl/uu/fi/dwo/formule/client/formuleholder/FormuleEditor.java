@@ -1,9 +1,8 @@
-package nl.uu.fi.dwo.mobile.client.ui.formuleholder;
+package nl.uu.fi.dwo.formule.client.formuleholder;
 
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleElement;
-import nl.uu.fi.dwo.mobile.client.ui.formuleobjects.FormuleRegel;
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
 
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Panel;
 
 /**

@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.mobile.client.ui.formuleholder;
+package nl.uu.fi.dwo.formule.client.formuleholder;
 
 import java.util.HashMap;
 
