@@ -54,6 +54,7 @@ public class TekstVakPanel implements InteractionView
 	CssColor bgColor = CssColor.make(255, 255, 255);
 	CssColor fgColor = CssColor.make(0, 0, 0);
 	CssColor randColor = CssColor.make(150, 150, 150);
+	private boolean popup;
 
 	public TekstVakPanel(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
@@ -420,6 +421,8 @@ public class TekstVakPanel implements InteractionView
 	@Override
 	public Widget asWidget()
 	{
+		if(popup)
+			return new PopupButton(getAsPanel()).asWidget();
 		return getAsPanel();
 	}
 }

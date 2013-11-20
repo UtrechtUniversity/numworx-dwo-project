@@ -205,6 +205,8 @@ public class TekstBuffer
 		{
 		case 39: case 10: // geogebra3
 			return new GeogebraView(currentVakGegevens, randomVarNamen, randomVarWaarden);
+		case 45: // GraphTool
+			return new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden);
 		}
 
 		if (soortVak == 0)

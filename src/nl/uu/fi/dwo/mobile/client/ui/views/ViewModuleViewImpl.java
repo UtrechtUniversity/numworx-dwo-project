@@ -524,7 +524,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				Object currentObject = opdrachtObjects.get(i);
 				if (currentObject instanceof InteractionView)
 					((InteractionView) currentObject).setCommunicationRoot(on);
-				System.out.println(on.toString());
 				if (currentObject instanceof TekstVakPanel)
 				{
 					aantalVakken++;

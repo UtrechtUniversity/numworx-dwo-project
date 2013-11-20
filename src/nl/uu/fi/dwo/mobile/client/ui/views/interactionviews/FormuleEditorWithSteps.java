@@ -86,6 +86,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	private boolean hasFeedback;
 
 	private boolean isVergelijkingVak = false;
+	private boolean popup = false;
 
 	public FormuleEditorWithSteps(HashMap<String, Object> h, boolean isVergelijkingVak, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
@@ -99,6 +100,8 @@ public class FormuleEditorWithSteps implements InteractionView
 			breedte = (Integer) h.get("breedte");
 		if (h.get("hoogte") != null)
 			hoogte = (Integer) h.get("hoogte");
+		popup = Boolean.TRUE.equals( h.get("popup"));
+		
 		if (h.get("interactiePanelLaunchState") != null)
 		{
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
@@ -737,6 +740,8 @@ public class FormuleEditorWithSteps implements InteractionView
 	@Override
 	public Widget asWidget()
 	{
+		if(popup)
+			return new PopupButton(getAsPanel()).asWidget();
 		return getAsPanel();
 	}
 }

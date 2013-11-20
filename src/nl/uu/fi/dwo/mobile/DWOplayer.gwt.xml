@@ -26,7 +26,7 @@
 <!--  <inherits name="fi.kladjegwt.KladjeGWT-DWO" /> -->
 <!--  <inherits name="fi.nabouwenaanzichtengwt.NabouwenAanzichtenGWT-DWO" /> -->
 <!--  <inherits name="fi.balansfruitgwt.BalansFruitGWT-DWO" /> --> 
-<!--  <inherits name='nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.geogebraview.GeogebraViewDWO' /> -->
+<inherits name="fi.graphtoolgwt.GraphToolGWT-DWO" />
      
 
   <inherits name="com.google.gwt.xml.XML"/> 
