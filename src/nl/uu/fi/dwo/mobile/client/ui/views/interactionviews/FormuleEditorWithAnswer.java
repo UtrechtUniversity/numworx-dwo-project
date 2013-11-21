@@ -8,6 +8,7 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
+import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Image;
@@ -41,7 +42,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	//private String[] randomVarNamen = null;
 	//private HashMap randomVarWaarden = null;
 	private AntwoordVakChecker avChecker = null;
-
+	private PopupFacade facade;
+	
 	public FormuleEditorWithAnswer(HashMap<String, Object> h, boolean isVergelijkingVak, FormuleEditorWithSteps fe, String[] randomVarNamen, HashMap<String, Object> randomVarWaarden)
 	{
 		super();
@@ -53,7 +55,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		{
 			this.fe = fe;
 		}
-
+		facade = new PopupFacade(h);
 		if (h.get("interactiePanelLaunchState") != null)
 		{
 			int breedte = ((Integer) h.get("breedte")).intValue();
@@ -247,7 +249,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	@Override
 	public Widget asWidget()
 	{
-		return getAsPanel();
+		return facade.wrap(getAsPanel());
 	}
 
 }

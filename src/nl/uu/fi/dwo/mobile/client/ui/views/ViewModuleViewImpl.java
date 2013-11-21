@@ -27,6 +27,7 @@ import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
+import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
 
@@ -352,6 +353,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	public void clearContentPanel()
 	{
 		contentPanel.clear();
+		PopupFacade.hide();	
 		kb.setEditor(null);
 	}
 
@@ -939,6 +941,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	public void close() {
 		if(on != null)
 			on.close();
+		PopupFacade.removeAll();
 	}
 
 }

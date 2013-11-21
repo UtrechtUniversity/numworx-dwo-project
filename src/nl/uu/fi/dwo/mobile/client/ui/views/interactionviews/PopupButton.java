@@ -22,7 +22,11 @@ public class PopupButton extends Composite implements ClickHandler {
 	DialogBox box;
 	
 	public PopupButton(IsWidget content) {
-		Image img = new Image("images/resources/appletknop.gif");
+		this(content, new Image("images/resources/appletknop.gif"));
+	}
+
+	public PopupButton(IsWidget content, Image image) {
+		Image img = image;
 		btn = new PushButton(img);
 		btn.addClickHandler(this);
 		this.content = content;
@@ -46,6 +50,10 @@ public class PopupButton extends Composite implements ClickHandler {
 			box.setWidget(p);
 		}	
 		box.show();		
+	}
+
+	public void hide() {
+		if(box != null) box.hide();
 	}
 
 

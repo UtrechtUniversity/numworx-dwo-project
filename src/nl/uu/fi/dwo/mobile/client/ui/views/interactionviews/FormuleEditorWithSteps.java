@@ -18,6 +18,7 @@ import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
+import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
@@ -86,7 +87,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	private boolean hasFeedback;
 
 	private boolean isVergelijkingVak = false;
-	private boolean popup = false;
+	private PopupFacade facade;
 
 	public FormuleEditorWithSteps(HashMap<String, Object> h, boolean isVergelijkingVak, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
@@ -100,7 +101,8 @@ public class FormuleEditorWithSteps implements InteractionView
 			breedte = (Integer) h.get("breedte");
 		if (h.get("hoogte") != null)
 			hoogte = (Integer) h.get("hoogte");
-		popup = Boolean.TRUE.equals( h.get("popup"));
+
+		facade = new PopupFacade(h);
 		
 		if (h.get("interactiePanelLaunchState") != null)
 		{
@@ -740,8 +742,6 @@ public class FormuleEditorWithSteps implements InteractionView
 	@Override
 	public Widget asWidget()
 	{
-		if(popup)
-			return new PopupButton(getAsPanel()).asWidget();
-		return getAsPanel();
+		return facade.wrap(getAsPanel());
 	}
 }

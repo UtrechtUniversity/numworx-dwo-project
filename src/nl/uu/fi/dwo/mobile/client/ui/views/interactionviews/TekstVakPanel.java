@@ -15,6 +15,7 @@ import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
+import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -60,6 +61,7 @@ public class TekstVakPanel implements InteractionView
 	{
 		this.randomVarNamen = randomVarNamen;
 		this.randomVarWaarden = randomVarWaarden;
+		facade = new PopupFacade(h);
 		if (h != null && h.get("breedte") != null)
 			breedte = (Integer) h.get("breedte");
 		if (h != null && h.get("hoogte") != null)
@@ -418,11 +420,10 @@ public class TekstVakPanel implements InteractionView
 		tp.addTouchHandler(new FormuleEditorTouchHandler(tp, kb, editor));
 	}
 
+	private PopupFacade facade;
 	@Override
 	public Widget asWidget()
 	{
-		if(popup)
-			return new PopupButton(getAsPanel()).asWidget();
-		return getAsPanel();
+		return facade.wrap(getAsPanel());
 	}
 }

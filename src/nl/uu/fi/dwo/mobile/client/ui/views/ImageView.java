@@ -3,9 +3,10 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 import java.util.Map;
 
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ImageView
+public class ImageView implements IsWidget
 {
 
 	private String naam;
@@ -16,7 +17,7 @@ public class ImageView
 		this.naam = naam;
 	}
 
-	public Widget getImage()
+	public Image getImage()
 	{
 		// TODO "data:image/png;base64,XXXXXXXxXXXX==" (dataurl) image/png of image/gif is noodzakelijk, uitbreiding in iconan nodig.
 
@@ -40,7 +41,7 @@ public class ImageView
 		}
 	}
 
-	public Map<String, Object> getMap()
+	public static Map<String, Object> getMap()
 	{
 		return map;
 	}
@@ -48,6 +49,11 @@ public class ImageView
 	public static void setMap(Map<String, Object> map)
 	{
 		ImageView.map = map;
+	}
+
+	@Override
+	public Widget asWidget() {
+		return getImage();
 	}
 
 }

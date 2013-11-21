@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -40,6 +41,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	private String pendingState;
 	private int width;
 	private int height;
+	private PopupFacade facade;
 
 	public StubView(String html, HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
@@ -50,7 +52,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			String[] randomVarNamen, HashMap randomVarWaarden) {
 		innerMap = (HashMap) launchData.get("interactiePanelLaunchState");
 		randomVars = randomVarWaarden;
-		
+		facade = new PopupFacade(launchData);
 		frame = new Frame(html);
 		frame.getElement().getStyle().setOverflow(Overflow.HIDDEN);
 		frame.setStylePrimaryName(".gwt-StubView");
@@ -185,7 +187,9 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	public void setChanged() {
 	}
 
-
+	public Widget asWidget() {
+		return facade.wrap(super.asWidget());
+	}
 	
 	
 }

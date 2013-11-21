@@ -5,6 +5,7 @@ import java.util.Map;
 
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
@@ -27,7 +28,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 	private String ggb;
 	private boolean bewaarOptie, nakijken, correct,check;
 	private int score, scoreMax;
-
+	private PopupFacade facade;
 	public native static Object getGgbWindow(Element frame) /*-{
 		return frame.contentWindow;
 	}-*/;
@@ -61,6 +62,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 
 	public GeogebraView init(HashMap<String, Object> launchData)
 	{
+		facade = new PopupFacade(launchData);
 		Map<String, Object> geogebraParams = new HashMap<String,Object>();
 		Map ggbMap = (Map) launchData.get("interactiePanelLaunchState");
 		Object object = ggbMap.get("ggbFile");
@@ -160,7 +162,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 	@Override
 	public Widget asWidget()
 	{
-		return mainPanel;
+		return facade.wrap(mainPanel);
 	}
 
 	@Override
