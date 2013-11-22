@@ -1,0 +1,1011 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<java version="1.6.0_41" class="java.beans.XMLDecoder"> 
+ <object class="java.util.Hashtable"> 
+  <void method="put"> 
+   <string>opdracht_1_1</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>hasTitle</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>interactiePanelLaunchData</string> 
+     <array class="java.util.Hashtable" length="6"> 
+      <void index="5"> 
+       <object class="java.util.Hashtable"> 
+        <void method="put"> 
+         <string>soortInteractiePanel</string> 
+         <int>45</int> 
+        </void> 
+        <void method="put"> 
+         <string>volledigeBreedte</string> 
+         <boolean>false</boolean> 
+        </void> 
+        <void method="put"> 
+         <string>popupImageString</string> 
+         <string></string> 
+        </void> 
+        <void method="put"> 
+         <string>breedte</string> 
+         <int>270</int> 
+        </void> 
+        <void method="put"> 
+         <string>popup</string> 
+         <boolean>false</boolean> 
+        </void> 
+        <void method="put"> 
+         <string>hoogte</string> 
+         <int>300</int> 
+        </void> 
+        <void method="put"> 
+         <string>locationY</string> 
+         <int>0</int> 
+        </void> 
+        <void method="put"> 
+         <string>locationX</string> 
+         <int>0</int> 
+        </void> 
+        <void method="put"> 
+         <string>studentEditor</string> 
+         <boolean>false</boolean> 
+        </void> 
+        <void method="put"> 
+         <string>interactiePanelLaunchState</string> 
+         <object class="java.util.Hashtable"> 
+          <void method="put"> 
+           <string>typeOpdracht</string> 
+           <int>0</int> 
+          </void> 
+          <void method="put"> 
+           <string>roosterZichtbaar</string> 
+           <boolean>true</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>grafiekKleuren</string> 
+           <boolean>true</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>activeIndex</string> 
+           <int>1</int> 
+          </void> 
+          <void method="put"> 
+           <string>tabelBeginX</string> 
+           <double>-2.0</double> 
+          </void> 
+          <void method="put"> 
+           <string>grafiekYAsNaam</string> 
+           <string>y</string> 
+          </void> 
+          <void method="put"> 
+           <string>nagekeken</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>grafiekXAsNaam</string> 
+           <string>x</string> 
+          </void> 
+          <void method="put"> 
+           <string>beginy</string> 
+           <double>96.0</double> 
+          </void> 
+          <void method="put"> 
+           <string>beginx</string> 
+           <double>112.0</double> 
+          </void> 
+          <void method="put"> 
+           <string>docentTabelSchaalFactorX</string> 
+           <double>1.0</double> 
+          </void> 
+          <void method="put"> 
+           <string>domeinInstelbaar</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>xPositief</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>defaultIpWidth</string> 
+           <int>270</int> 
+          </void> 
+          <void method="put"> 
+           <string>leerlingGrafiek</string> 
+           <array class="boolean" length="3"/> 
+          </void> 
+          <void method="put"> 
+           <string>connectMode</string> 
+           <int>0</int> 
+          </void> 
+          <void method="put"> 
+           <string>ingevuld</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>dragOptie</string> 
+           <boolean>true</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>formeleFuncties</string> 
+           <boolean>true</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>tekenComponentAan</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>yAsNaam</string> 
+           <string>y</string> 
+          </void> 
+          <void method="put"> 
+           <string>docentIsEn</string> 
+           <array class="boolean" length="9"> 
+            <void index="0"> 
+             <boolean>true</boolean> 
+            </void> 
+            <void index="1"> 
+             <boolean>true</boolean> 
+            </void> 
+            <void index="2"> 
+             <boolean>true</boolean> 
+            </void> 
+            <void index="3"> 
+             <boolean>true</boolean> 
+            </void> 
+            <void index="4"> 
+             <boolean>true</boolean> 
+            </void> 
+            <void index="5"> 
+             <boolean>true</boolean> 
+            </void> 
+            <void index="6"> 
+             <boolean>true</boolean> 
+            </void> 
+            <void index="7"> 
+             <boolean>true</boolean> 
+            </void> 
+            <void index="8"> 
+             <boolean>true</boolean> 
+            </void> 
+           </array> 
+          </void> 
+          <void method="put"> 
+           <string>xAsNaam</string> 
+           <string>x</string> 
+          </void> 
+          <void method="put"> 
+           <string>minimumPunten</string> 
+           <array class="int" length="3"> 
+            <void index="0"> 
+             <int>5</int> 
+            </void> 
+            <void index="1"> 
+             <int>5</int> 
+            </void> 
+            <void index="2"> 
+             <int>5</int> 
+            </void> 
+           </array> 
+          </void> 
+          <void method="put"> 
+           <string>tekenGrafiekNauwkeurigheid</string> 
+           <int>5</int> 
+          </void> 
+          <void method="put"> 
+           <string>docentGraphPoints</string> 
+           <object class="java.util.Vector"/> 
+          </void> 
+          <void method="put"> 
+           <string>beginyDocent</string> 
+           <double>96.0</double> 
+          </void> 
+          <void method="put"> 
+           <string>beginxDocent</string> 
+           <double>112.0</double> 
+          </void> 
+          <void method="put"> 
+           <string>traceOptie</string> 
+           <boolean>true</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>schaalY</string> 
+           <boolean>true</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>schaalX</string> 
+           <boolean>true</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>piLijnenZichtbaar</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>zoomOptie</string> 
+           <boolean>true</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>graphPoints</string> 
+           <object class="java.util.Vector"/> 
+          </void> 
+          <void method="put"> 
+           <string>isEn</string> 
+           <array class="boolean" length="9"> 
+            <void index="0"> 
+             <boolean>true</boolean> 
+            </void> 
+            <void index="1"> 
+             <boolean>true</boolean> 
+            </void> 
+            <void index="2"> 
+             <boolean>true</boolean> 
+            </void> 
+            <void index="3"> 
+             <boolean>true</boolean> 
+            </void> 
+            <void index="4"> 
+             <boolean>true</boolean> 
+            </void> 
+            <void index="5"> 
+             <boolean>true</boolean> 
+            </void> 
+            <void index="6"> 
+             <boolean>true</boolean> 
+            </void> 
+            <void index="7"> 
+             <boolean>true</boolean> 
+            </void> 
+            <void index="8"> 
+             <boolean>true</boolean> 
+            </void> 
+           </array> 
+          </void> 
+          <void method="put"> 
+           <string>nauwkeurigheid</string> 
+           <array class="int" length="3"> 
+            <void index="0"> 
+             <int>5</int> 
+            </void> 
+            <void index="1"> 
+             <int>5</int> 
+            </void> 
+            <void index="2"> 
+             <int>5</int> 
+            </void> 
+           </array> 
+          </void> 
+          <void method="put"> 
+           <string>yVarEditable</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>beginwaarde</string> 
+           <int>-6</int> 
+          </void> 
+          <void method="put"> 
+           <string>yPositief</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>docentDomeinen</string> 
+           <array class="[D" length="9"> 
+            <void index="0"> 
+             <array class="double" length="2"> 
+              <void index="0"> 
+               <double>-Infinity</double> 
+              </void> 
+              <void index="1"> 
+               <double>Infinity</double> 
+              </void> 
+             </array> 
+            </void> 
+            <void index="1"> 
+             <array class="double" length="2"> 
+              <void index="0"> 
+               <double>-Infinity</double> 
+              </void> 
+              <void index="1"> 
+               <double>Infinity</double> 
+              </void> 
+             </array> 
+            </void> 
+            <void index="2"> 
+             <array class="double" length="2"> 
+              <void index="0"> 
+               <double>-Infinity</double> 
+              </void> 
+              <void index="1"> 
+               <double>Infinity</double> 
+              </void> 
+             </array> 
+            </void> 
+            <void index="3"> 
+             <array class="double" length="2"> 
+              <void index="0"> 
+               <double>-Infinity</double> 
+              </void> 
+              <void index="1"> 
+               <double>Infinity</double> 
+              </void> 
+             </array> 
+            </void> 
+            <void index="4"> 
+             <array class="double" length="2"> 
+              <void index="0"> 
+               <double>-Infinity</double> 
+              </void> 
+              <void index="1"> 
+               <double>Infinity</double> 
+              </void> 
+             </array> 
+            </void> 
+            <void index="5"> 
+             <array class="double" length="2"> 
+              <void index="0"> 
+               <double>-Infinity</double> 
+              </void> 
+              <void index="1"> 
+               <double>Infinity</double> 
+              </void> 
+             </array> 
+            </void> 
+            <void index="6"> 
+             <array class="double" length="2"> 
+              <void index="0"> 
+               <double>-Infinity</double> 
+              </void> 
+              <void index="1"> 
+               <double>Infinity</double> 
+              </void> 
+             </array> 
+            </void> 
+            <void index="7"> 
+             <array class="double" length="2"> 
+              <void index="0"> 
+               <double>-Infinity</double> 
+              </void> 
+              <void index="1"> 
+               <double>Infinity</double> 
+              </void> 
+             </array> 
+            </void> 
+            <void index="8"> 
+             <array class="double" length="2"> 
+              <void index="0"> 
+               <double>-Infinity</double> 
+              </void> 
+              <void index="1"> 
+               <double>Infinity</double> 
+              </void> 
+             </array> 
+            </void> 
+           </array> 
+          </void> 
+          <void method="put"> 
+           <string>docentGeselecteerd</string> 
+           <array class="boolean" length="9"> 
+            <void index="0"> 
+             <boolean>true</boolean> 
+            </void> 
+           </array> 
+          </void> 
+          <void method="put"> 
+           <string>xVarEditable</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>roosterGrof</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>defaultIpHeight</string> 
+           <int>300</int> 
+          </void> 
+          <void method="put"> 
+           <string>tabelComponentAan</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>docentExpressieStrings</string> 
+           <array class="java.lang.String" length="9"> 
+            <void index="0"> 
+             <string>$ff(x)=@</string> 
+            </void> 
+            <void index="1"> 
+             <string>$f@</string> 
+            </void> 
+            <void index="2"> 
+             <string>$f@</string> 
+            </void> 
+            <void index="3"> 
+             <string>$f@</string> 
+            </void> 
+            <void index="4"> 
+             <string>$f@</string> 
+            </void> 
+            <void index="5"> 
+             <string>$f@</string> 
+            </void> 
+            <void index="6"> 
+             <string>$f@</string> 
+            </void> 
+            <void index="7"> 
+             <string>$f@</string> 
+            </void> 
+            <void index="8"> 
+             <string>$f@</string> 
+            </void> 
+           </array> 
+          </void> 
+          <void method="put"> 
+           <string>selectnummer</string> 
+           <int>1005</int> 
+          </void> 
+          <void method="put"> 
+           <string>tabelAlsTekenTool</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>domeinControleren</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>docentDomeinStrings</string> 
+           <array class="[Ljava.lang.String;" length="9"> 
+            <void index="0"> 
+             <array class="java.lang.String" length="2"> 
+              <void index="0"> 
+               <string>$f-Infinity@</string> 
+              </void> 
+              <void index="1"> 
+               <string>$fInfinity@</string> 
+              </void> 
+             </array> 
+            </void> 
+            <void index="1"> 
+             <array class="java.lang.String" length="2"> 
+              <void index="0"> 
+               <string>$f-Infinity@</string> 
+              </void> 
+              <void index="1"> 
+               <string>$fInfinity@</string> 
+              </void> 
+             </array> 
+            </void> 
+            <void index="2"> 
+             <array class="java.lang.String" length="2"> 
+              <void index="0"> 
+               <string>$f-Infinity@</string> 
+              </void> 
+              <void index="1"> 
+               <string>$fInfinity@</string> 
+              </void> 
+             </array> 
+            </void> 
+            <void index="3"> 
+             <array class="java.lang.String" length="2"> 
+              <void index="0"> 
+               <string>$f-Infinity@</string> 
+              </void> 
+              <void index="1"> 
+               <string>$fInfinity@</string> 
+              </void> 
+             </array> 
+            </void> 
+            <void index="4"> 
+             <array class="java.lang.String" length="2"> 
+              <void index="0"> 
+               <string>$f-Infinity@</string> 
+              </void> 
+              <void index="1"> 
+               <string>$fInfinity@</string> 
+              </void> 
+             </array> 
+            </void> 
+            <void index="5"> 
+             <array class="java.lang.String" length="2"> 
+              <void index="0"> 
+               <string>$f-Infinity@</string> 
+              </void> 
+              <void index="1"> 
+               <string>$fInfinity@</string> 
+              </void> 
+             </array> 
+            </void> 
+            <void index="6"> 
+             <array class="java.lang.String" length="2"> 
+              <void index="0"> 
+               <string>$f-Infinity@</string> 
+              </void> 
+              <void index="1"> 
+               <string>$fInfinity@</string> 
+              </void> 
+             </array> 
+            </void> 
+            <void index="7"> 
+             <array class="java.lang.String" length="2"> 
+              <void index="0"> 
+               <string>$f-Infinity@</string> 
+              </void> 
+              <void index="1"> 
+               <string>$fInfinity@</string> 
+              </void> 
+             </array> 
+            </void> 
+            <void index="8"> 
+             <array class="java.lang.String" length="2"> 
+              <void index="0"> 
+               <string>$f-Infinity@</string> 
+              </void> 
+              <void index="1"> 
+               <string>$fInfinity@</string> 
+              </void> 
+             </array> 
+            </void> 
+           </array> 
+          </void> 
+          <void method="put"> 
+           <string>krommeMetExtrapolatie</string> 
+           <boolean>true</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>xAsLog</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>docentFunctieStrings</string> 
+           <array class="java.lang.String" length="9"> 
+            <void index="0"> 
+             <string>$f@</string> 
+            </void> 
+            <void index="1"> 
+             <string>$f@</string> 
+            </void> 
+            <void index="2"> 
+             <string>$f@</string> 
+            </void> 
+            <void index="3"> 
+             <string>$f@</string> 
+            </void> 
+            <void index="4"> 
+             <string>$f@</string> 
+            </void> 
+            <void index="5"> 
+             <string>$f@</string> 
+            </void> 
+            <void index="6"> 
+             <string>$f@</string> 
+            </void> 
+            <void index="7"> 
+             <string>$f@</string> 
+            </void> 
+            <void index="8"> 
+             <string>$f@</string> 
+            </void> 
+           </array> 
+          </void> 
+          <void method="put"> 
+           <string>roosterY</string> 
+           <boolean>true</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>assenZichtbaar</string> 
+           <boolean>true</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>roosterX</string> 
+           <boolean>true</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>yAsLog</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>expressieStrings</string> 
+           <array class="java.lang.String" length="9"> 
+            <void index="0"> 
+             <string>$ff(x)=-x/2 +3@</string> 
+            </void> 
+            <void index="1"> 
+             <string>$f@</string> 
+            </void> 
+            <void index="2"> 
+             <string>$f@</string> 
+            </void> 
+            <void index="3"> 
+             <string>$f@</string> 
+            </void> 
+            <void index="4"> 
+             <string>$f@</string> 
+            </void> 
+            <void index="5"> 
+             <string>$f@</string> 
+            </void> 
+            <void index="6"> 
+             <string>$f@</string> 
+            </void> 
+            <void index="7"> 
+             <string>$f@</string> 
+            </void> 
+            <void index="8"> 
+             <string>$f@</string> 
+            </void> 
+           </array> 
+          </void> 
+          <void method="put"> 
+           <string>domeinStrings</string> 
+           <array class="[Ljava.lang.String;" length="9"> 
+            <void index="0"> 
+             <array class="java.lang.String" length="2"> 
+              <void index="0"> 
+               <string>$f-Infinity@</string> 
+              </void> 
+              <void index="1"> 
+               <string>$fInfinity@</string> 
+              </void> 
+             </array> 
+            </void> 
+            <void index="1"> 
+             <array class="java.lang.String" length="2"> 
+              <void index="0"> 
+               <string>$f-Infinity@</string> 
+              </void> 
+              <void index="1"> 
+               <string>$fInfinity@</string> 
+              </void> 
+             </array> 
+            </void> 
+            <void index="2"> 
+             <array class="java.lang.String" length="2"> 
+              <void index="0"> 
+               <string>$f-Infinity@</string> 
+              </void> 
+              <void index="1"> 
+               <string>$fInfinity@</string> 
+              </void> 
+             </array> 
+            </void> 
+            <void index="3"> 
+             <array class="java.lang.String" length="2"> 
+              <void index="0"> 
+               <string>$f-Infinity@</string> 
+              </void> 
+              <void index="1"> 
+               <string>$fInfinity@</string> 
+              </void> 
+             </array> 
+            </void> 
+            <void index="4"> 
+             <array class="java.lang.String" length="2"> 
+              <void index="0"> 
+               <string>$f-Infinity@</string> 
+              </void> 
+              <void index="1"> 
+               <string>$fInfinity@</string> 
+              </void> 
+             </array> 
+            </void> 
+            <void index="5"> 
+             <array class="java.lang.String" length="2"> 
+              <void index="0"> 
+               <string>$f-Infinity@</string> 
+              </void> 
+              <void index="1"> 
+               <string>$fInfinity@</string> 
+              </void> 
+             </array> 
+            </void> 
+            <void index="6"> 
+             <array class="java.lang.String" length="2"> 
+              <void index="0"> 
+               <string>$f-Infinity@</string> 
+              </void> 
+              <void index="1"> 
+               <string>$fInfinity@</string> 
+              </void> 
+             </array> 
+            </void> 
+            <void index="7"> 
+             <array class="java.lang.String" length="2"> 
+              <void index="0"> 
+               <string>$f-Infinity@</string> 
+              </void> 
+              <void index="1"> 
+               <string>$fInfinity@</string> 
+              </void> 
+             </array> 
+            </void> 
+            <void index="8"> 
+             <array class="java.lang.String" length="2"> 
+              <void index="0"> 
+               <string>$f-Infinity@</string> 
+              </void> 
+              <void index="1"> 
+               <string>$fInfinity@</string> 
+              </void> 
+             </array> 
+            </void> 
+           </array> 
+          </void> 
+          <void method="put"> 
+           <string>scoreMax</string> 
+           <int>0</int> 
+          </void> 
+          <void method="put"> 
+           <string>tabelFirstIndexVisible</string> 
+           <array class="int" length="3"/> 
+          </void> 
+          <void method="put"> 
+           <string>snapToGridPoints</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>docentSchaalFactorY</string> 
+           <double>1.0</double> 
+          </void> 
+          <void method="put"> 
+           <string>tabelSchaalFactorX</string> 
+           <double>1.0</double> 
+          </void> 
+          <void method="put"> 
+           <string>docentSchaalFactorX</string> 
+           <double>1.0</double> 
+          </void> 
+          <void method="put"> 
+           <string>docentTabelFirstIndexVisible</string> 
+           <array class="int" length="3"/> 
+          </void> 
+          <void method="put"> 
+           <string>geselecteerd</string> 
+           <array class="boolean" length="9"> 
+            <void index="0"> 
+             <boolean>true</boolean> 
+            </void> 
+           </array> 
+          </void> 
+          <void method="put"> 
+           <string>zoomInTabel</string> 
+           <boolean>true</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>krommeZonderExtrapolatie</string> 
+           <boolean>true</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>formuleComponentAan</string> 
+           <boolean>false</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>leerlingZietTabel</string> 
+           <boolean>true</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>schaalFactorY</string> 
+           <double>1.0</double> 
+          </void> 
+          <void method="put"> 
+           <string>docentTabelBeginX</string> 
+           <double>-2.0</double> 
+          </void> 
+          <void method="put"> 
+           <string>tracexD</string> 
+           <double>-2.0</double> 
+          </void> 
+          <void method="put"> 
+           <string>schaalFactorX</string> 
+           <double>1.0</double> 
+          </void> 
+          <void method="put"> 
+           <string>schaalZichtbaar</string> 
+           <boolean>true</boolean> 
+          </void> 
+          <void method="put"> 
+           <string>maxScores</string> 
+           <array class="int" length="9"/> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="put"> 
+         <string>setNr</string> 
+         <int>1</int> 
+        </void> 
+       </object> 
+      </void> 
+     </array> 
+    </void> 
+    <void method="put"> 
+     <string>tekst2</string> 
+     <string>
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>titel</string> 
+     <string>Problem 1
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>scheidingX</string> 
+     <int>783</int> 
+    </void> 
+    <void method="put"> 
+     <string>hasAntwoordVak</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>tekst</string> 
+     <string>Met de graphtool
+$V@
+</string> 
+    </void> 
+    <void method="put"> 
+     <string>scoreMax</string> 
+     <int>0</int> 
+    </void> 
+    <void method="put"> 
+     <string>eindX</string> 
+     <int>770</int> 
+    </void> 
+    <void method="put"> 
+     <string>randVarString</string> 
+     <string>
+</string> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>$IMAGE$MAP$</string> 
+   <object class="java.util.Hashtable"/> 
+  </void> 
+  <void method="put"> 
+   <string>instellingen</string> 
+   <object class="java.util.Hashtable"> 
+    <void method="put"> 
+     <string>bolletjesZichtbaar</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>volgendeKnopZichtbaar</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>fToets</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>eerderGeenCorr</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>voortgang</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>margeOnder</string> 
+     <int>15</int> 
+    </void> 
+    <void method="put"> 
+     <string>tweeHoofdletterVar</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>zelftoetsGeenCorr</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>fontName</string> 
+     <string>SansSerif</string> 
+    </void> 
+    <void method="put"> 
+     <string>woordFormule</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>timer</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>margeRechts</string> 
+     <int>15</int> 
+    </void> 
+    <void method="put"> 
+     <string>hasObjectives</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>navigatieSize</string> 
+     <int>12</int> 
+    </void> 
+    <void method="put"> 
+     <string>timeLimit</string> 
+     <int>60</int> 
+    </void> 
+    <void method="put"> 
+     <string>margeBoven</string> 
+     <int>15</int> 
+    </void> 
+    <void method="put"> 
+     <string>condNav</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>pagina</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>abcDeelOpdr</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>margeLinks</string> 
+     <int>18</int> 
+    </void> 
+    <void method="put"> 
+     <string>formTimes</string> 
+     <boolean>true</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>vorigeKnopZichtbaar</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>itemOpnieuw</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>significantie</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>opnieuw</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>checkPerOpdracht</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>hoekGraden</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>condPerc</string> 
+     <int>100</int> 
+    </void> 
+    <void method="put"> 
+     <string>maalTeken</string> 
+     <boolean>false</boolean> 
+    </void> 
+    <void method="put"> 
+     <string>fontSize</string> 
+     <int>12</int> 
+    </void> 
+    <void method="put"> 
+     <string>globalParam</string> 
+     <boolean>false</boolean> 
+    </void> 
+   </object> 
+  </void> 
+  <void method="put"> 
+   <string>gekoppeldeOpdrachten</string> 
+   <string>false</string> 
+  </void> 
+  <void method="put"> 
+   <string>activiteit_1</string> 
+   <string>problems</string> 
+  </void> 
+  <void method="put"> 
+   <string>aantalOpdrachten_1</string> 
+   <string>1</string> 
+  </void> 
+  <void method="put"> 
+   <string>opnieuwMogelijk</string> 
+   <string>false</string> 
+  </void> 
+  <void method="put"> 
+   <string>mode</string> 
+   <string>0</string> 
+  </void> 
+  <void method="put"> 
+   <string>aantalActiviteiten</string> 
+   <string>1</string> 
+  </void> 
+ </object> 
+</java> 

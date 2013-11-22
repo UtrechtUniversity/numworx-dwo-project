@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
@@ -28,6 +29,7 @@ import fi.wiskopdr.AntwoordVergelijkingVakChecker;
 public class FormuleEditorWithAnswer extends FormuleEditor implements InteractionView
 {
 	private static final String ANTWOORD_STRING = "antwoordString";
+	private final static Logger logger = Logger.getLogger("FormuleEditorWithAnswer");
 	OpdrNavIF comRoot;
 	TouchPanel sp = null;
 	Image checkimg;
@@ -142,11 +144,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 		int goedHalfFout = (Integer) checkResults.get("goedHalfFout");
 
-		System.out.println("userAnswer: " + useranswer);
-		System.out.println("correct: " + correct);
-		System.out.println("score: " + score);
-		System.out.println("goedHalfFout: " + goedHalfFout);
-		System.out.println(" feedback: " + feedback);
+		logger.fine("userAnswer: " + useranswer);
+		logger.finer("correct: " + correct);
+		logger.finer("score: " + score);
+		logger.finer("goedHalfFout: " + goedHalfFout);
+		logger.finer("feedback: " + feedback);
 
 		if (goedHalfFout == AntwoordVakChecker.DOOR)
 		{

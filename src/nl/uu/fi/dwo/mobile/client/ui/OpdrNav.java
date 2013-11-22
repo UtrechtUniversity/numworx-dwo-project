@@ -150,7 +150,7 @@ public class OpdrNav implements OpdrNavIF, Runnable
 		return mainPanel;
 	}
 
-	public void setChanged()
+	public void setChanged() // FIXME Trifork: hier safepoint?
 	{
 		scores[currentActiviteit][currentOpdracht] = entry.getScore();
 		isCorrect[currentActiviteit][currentOpdracht] = entry.isCorrect();
