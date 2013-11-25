@@ -156,6 +156,7 @@ public class OpdrNav implements OpdrNavIF, Runnable
 		isCorrect[currentActiviteit][currentOpdracht] = entry.isCorrect();
 		if (buttons != null && buttons.size() > currentOpdracht)
 			setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht]);
+		saveCurrentState();
 	}
 
 	private void setOpdrachten(int index)
@@ -311,8 +312,8 @@ public class OpdrNav implements OpdrNavIF, Runnable
 				totaalMax += scoresMax[i][j];
 			}
 		}
-		System.out.println("TotaalMax " + totaalMax);
-		System.out.println("TotaalScore " + totaalScore);
+		//System.out.println("TotaalMax " + totaalMax);
+		//System.out.println("TotaalScore " + totaalScore);
 		if (totaalMax == 0)
 			return 0;
 		double doubleScore = Math.round(100.0 * totaalScore / totaalMax);

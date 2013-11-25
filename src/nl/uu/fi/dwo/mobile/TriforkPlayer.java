@@ -17,6 +17,7 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -32,13 +33,19 @@ public class TriforkPlayer implements EntryPoint {
 
 	@Override
 	public void onModuleLoad() {
-	
+		VerticalPanel customLogArea = null;
+//try {
+		if( LogConfiguration.loggingIsEnabled())
+		{	customLogArea = new VerticalPanel();
+			Logger.getLogger("").addHandler(new HasWidgetsLogHandler(customLogArea));
+		}
+		logger.severe(getTarget());
+		
 		MGWTsetup();
 		view = new ViewModuleViewImpl(true).initialize();
 		RootPanel.get().add(view);
-		if( LogConfiguration.loggingIsEnabled())
-		{	VerticalPanel customLogArea = new VerticalPanel();
-			Logger.getLogger("").addHandler(new HasWidgetsLogHandler(customLogArea));
+
+		if( LogConfiguration.loggingIsEnabled()) {
 			RootPanel.get().add(customLogArea);
 		}
 		Scorm2004IF api = view.getApi();
@@ -57,7 +64,14 @@ public class TriforkPlayer implements EntryPoint {
 			
 		};
 		api.Initialize(callback); // need some async bootstrapping.	
-	}
+//} catch(Throwable error) {
+//		RootPanel.get().add(new Label(error.toString()));
+//		if(customLogArea != null) {
+//			RootPanel.get().add(customLogArea);
+//		}
+//}
+
+}
 
 	private static native String getTarget()/*-{
 		return $wnd.launchData

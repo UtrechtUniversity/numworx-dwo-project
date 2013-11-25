@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
@@ -47,6 +48,7 @@ abstract class XMLView {
 	protected ArrayList<Object> opdrachtObjects;
 	protected boolean newVersion = true;
 	protected FormuleKeyboard kb = null;
+	private static Logger logger = Logger.getLogger("XMLView");
 
 	protected void setupView(HashMap<String, Object> launchData)
 	{
@@ -81,6 +83,12 @@ abstract class XMLView {
 					if (!responseText.isEmpty())
 					{
 						Document dom = XMLParser.parse(responseText);
+//						if(dom == null) 
+//						{
+//							logger.severe("Status: " + response.getStatusCode() + " " + response.getStatusText());
+//							logger.severe(response.getHeadersAsString());
+//							logger.severe("Unparsable: " + responseText);
+//						}
 						StringCodeToHashMap sc = new StringCodeToHashMap();
 						launchData = sc.decodeStringToHashMap(dom);
 						setupView(launchData);

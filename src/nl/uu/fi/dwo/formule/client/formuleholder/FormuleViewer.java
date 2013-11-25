@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.formule.client.formuleholder;
 
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -19,6 +20,7 @@ import fi.wiskopdr.expressies.Expressie;
  */
 public class FormuleViewer extends FormuleHolder
 {
+	private static Logger logger = Logger.getLogger("FormuleViewer");
 	public static final int NONE = 0;
 	public static final int ALMOSTCORRECT = 1;
 	public static final int CORRECT = 2;
@@ -54,7 +56,7 @@ public class FormuleViewer extends FormuleHolder
 			currentFormule = "$f" + currentFormule + "@";
 		try
 		{
-			System.out.println("currentFormule: "+currentFormule);
+			logger.info("currentFormule: "+currentFormule);
 			currentFormule = FormuleParser.randomizeString(currentFormule, randomVarNamen, randomVarWaarden);
 		}
 		catch (Exception e)

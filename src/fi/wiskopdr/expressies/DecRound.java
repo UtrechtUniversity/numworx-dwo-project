@@ -16,10 +16,10 @@ public class DecRound extends Expressie
 	public double geefWaarde()
 	{	double d = 0;
 		d = kind1.geefWaarde()*1.000000000000001;
-		System.out.println("qqq "+d);
+		//System.out.println("qqq "+d);
 		//if(kind1.geefWaarde()<0) d = kind1.geefWaarde()-0.000000000000001;
 		//else d = kind1.geefWaarde()+0.000000000000001;
-		System.out.println("ppp "+Math.rint(d*Math.pow(10, kind2.geefWaarde()))/Math.pow(10, kind2.geefWaarde()));
+		//System.out.println("ppp "+Math.rint(d*Math.pow(10, kind2.geefWaarde()))/Math.pow(10, kind2.geefWaarde()));
 		double w = Math.rint(d*Math.pow(10, kind2.geefWaarde()))/Math.pow(10, kind2.geefWaarde());
 		if(w>1000000000)w = d*Math.pow(10, kind2.geefWaarde())/Math.pow(10, kind2.geefWaarde());
 		if(kind2.geefWaarde() < 0) w = Math.rint(w);

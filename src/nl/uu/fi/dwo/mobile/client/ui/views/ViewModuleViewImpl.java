@@ -199,6 +199,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				case KeyCodes.KEY_DELETE: // firefox
 					delete(event);
 					break;
+// In chrome: zowel keydown als keypres op 'enter' 
 				case 13: //firefox
 					enter(event);
 					break;

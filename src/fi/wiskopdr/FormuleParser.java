@@ -1,6 +1,7 @@
 package fi.wiskopdr;
 
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import fi.wiskopdr.expressies.AantalSign;
@@ -54,6 +55,7 @@ import fi.wiskopdr.expressies.Wortel;
 
 public class FormuleParser
 {
+	private static Logger logger = Logger.getLogger("FormuleParser");
 	private static boolean woordFormule = false;
 	private static boolean tweeHoofdletterVariabele = false;
 
@@ -2340,9 +2342,7 @@ public class FormuleParser
 				sNieuw = s;
 			}
 		}
-
-		System.out.println(formString);
-		System.out.println(sNieuw);
+		logger.info(formString + " : " + sNieuw);
 		return sNieuw;
 	}
 

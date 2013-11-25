@@ -475,14 +475,14 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		this.goedHalfFout = goedHalfFout;
 		this.puntenFeedback = puntenFeedback;
 		
-		System.out.println("antwoordString: "+antwoordString);
+		//System.out.println("antwoordString: "+antwoordString);
         try         
         {   antwoordString = FormuleParser.randomizeString(antwoordString,randomVarNamen,randomVarWaarden);
         }
         catch(Exception e)
         {   antwoordString = "$f???@";
         }
-        System.out.println("antwoordString na randomizing: "+antwoordString);
+        //System.out.println("antwoordString na randomizing: "+antwoordString);
         
         try         
         {   vormString = FormuleParser.randomizeString(vormString,randomVarNamen,randomVarWaarden);

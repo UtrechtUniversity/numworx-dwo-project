@@ -435,7 +435,7 @@ public class FormuleEditorWithSteps implements InteractionView
 				startString = startString.substring(0, startString.length() - 1) + "=@";
 
 			hasStartString = true;
-			System.out.println("prefix+startstring: " + prefix.substring(2, prefix.length() - 1) + startString.substring(2, startString.length() - 1));
+			//System.out.println("prefix+startstring: " + prefix.substring(2, prefix.length() - 1) + startString.substring(2, startString.length() - 1));
 
 			//System.out.println("waarden: "+randomVarWaarden);
 			//System.out.println("randvarnamen: "+randomVarNamen[0]);

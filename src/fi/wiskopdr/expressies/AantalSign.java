@@ -40,7 +40,7 @@ public class AantalSign extends Expressie
 		else if (kind1 instanceof Vermenigvuldiging && kind1.kind1 instanceof BasisExpressie && kind1.kind2 instanceof Macht && kind1.kind2.kind1.geefWaarde() == 10)
 		{
 			String s = kind1.kind1.toString();
-			System.out.println("kind1.kind1" + s);
+			//System.out.println("kind1.kind1" + s);
 			//if(s.indexOf('$')>-1) s = s.substring(0,s.indexOf('$'));
 			s = s.replace(".", "");
 			s = s.replace(",", "");
