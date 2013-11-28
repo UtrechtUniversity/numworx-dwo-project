@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.formule.client.formuleholder;
 
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleFont;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
 import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
@@ -23,11 +24,17 @@ public class FormuleHolder
 	private static FormuleFont defaultfont = FormuleFont.createFromFontSize(18);
 	private FlowPanel sp = null;
 
+	protected boolean hasSelection = false;
+
+	protected int selectionStartX = -1;
+
+	protected int selectionStartY = 0;
+
 	public FormuleHolder()
 	{
 		//main regel
 		FormuleRegel regel = new FormuleRegel(this);
-		GWT.log("Font size:" + defaultfont.getFontStyle());
+		//GWT.log("Font size:" + defaultfont.getFontStyle());
 		main = regel;
 		//font = defaultfont;
 	}
@@ -103,5 +110,45 @@ public class FormuleHolder
 	 */
 	public boolean isInputNeeded() {
 		return true;
+	}
+
+	public void clearSelection() {
+	}
+
+	public void endSelection(int x, int y) {		
+	}
+	
+	public void requestFocus(FormuleKeyboardIF kb) {
+		kb.setEditor(null);
+	}
+
+	/**
+	 * Selection
+	 */
+	public void startSelection(int x, int y) {
+		this.selectionStartX = x;
+		this.selectionStartY = y;
+	}
+
+	public FormuleRegel getCurrentRegel() {
+		return getMainRegel();
+	}
+
+	public void setCurrentElement(FormuleElement element) {
+		// FIXME ?
+		System.out.println("set current element " + element);
+	}
+
+	public void setCurrentRegel(FormuleRegel formuleRegel) {		
+	}
+
+	public String getSelectionString() {
+		if(hasSelection())
+			return getCurrentRegel().getSelectionString();
+		return "";
+	}
+
+	public boolean hasSelection() {
+		return this.hasSelection;
 	}
 }

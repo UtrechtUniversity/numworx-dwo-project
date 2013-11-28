@@ -34,7 +34,7 @@ public class TriforkPlayer implements EntryPoint {
 	@Override
 	public void onModuleLoad() {
 		VerticalPanel customLogArea = null;
-//try {
+try {
 		if( LogConfiguration.loggingIsEnabled())
 		{	customLogArea = new VerticalPanel();
 			Logger.getLogger("").addHandler(new HasWidgetsLogHandler(customLogArea));
@@ -44,10 +44,10 @@ public class TriforkPlayer implements EntryPoint {
 		MGWTsetup();
 		view = new ViewModuleViewImpl(true).initialize();
 		RootPanel.get().add(view);
-
 		if( LogConfiguration.loggingIsEnabled()) {
 			RootPanel.get().add(customLogArea);
 		}
+
 		Scorm2004IF api = view.getApi();
 		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 
@@ -64,12 +64,12 @@ public class TriforkPlayer implements EntryPoint {
 			
 		};
 		api.Initialize(callback); // need some async bootstrapping.	
-//} catch(Throwable error) {
-//		RootPanel.get().add(new Label(error.toString()));
-//		if(customLogArea != null) {
-//			RootPanel.get().add(customLogArea);
-//		}
-//}
+} catch(Throwable error) {
+		RootPanel.get().add(new Label(error.toString()));
+		if(customLogArea != null) {
+			RootPanel.get().add(customLogArea);
+		}
+}
 
 }
 

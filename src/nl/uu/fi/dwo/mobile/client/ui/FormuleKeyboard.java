@@ -4,6 +4,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleKeyboardIF;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleFont;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 
@@ -27,7 +29,7 @@ import fi.writemathgwt.client.WritePanelHolder;
  * @author Danny Hendrix
  * 
  */
-public class FormuleKeyboard implements WritePanelHolder
+public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 {
 	static final String SCRIBBLE = "Scribble";
 	private FormuleEditor editor;
@@ -260,7 +262,7 @@ public class FormuleKeyboard implements WritePanelHolder
 		return fp;
 	}
 
-	public static Panel getSelectionMenu(FormuleEditor editor, int x, int y)
+	public static Panel getSelectionMenu(FormuleHolder editor, int x, int y)
 	{
 		RoundPanel fp = new RoundPanel();
 
@@ -352,7 +354,7 @@ public class FormuleKeyboard implements WritePanelHolder
 
 	public void enter()
 	{
-		FormuleEditor editor = getEditor();
+		FormuleHolder editor = getEditor();
 		if (editor instanceof FormuleEditorWithAnswer)
 			((FormuleEditorWithAnswer) editor).check();
 	}

@@ -17,11 +17,6 @@ public class FormuleEditor extends FormuleHolder
 	private FormuleRegel current = null;
 	private FormuleElement currentElement = null;
 
-	private int selectionStartX = -1;
-	private int selectionStartY = 0;
-
-	private boolean hasSelection = false;
-
 	public FormuleEditor()
 	{
 		super();
@@ -130,17 +125,6 @@ public class FormuleEditor extends FormuleHolder
 		return sp;
 	}
 
-	/**
-	 * Selection
-	 */
-	public void startSelection(int x, int y)
-	{
-		this.selectionStartX = x;
-		this.selectionStartY = y;
-		//this.selectionDragStart = this.currentPosition;
-		//DWOplayer.log("Start selection : " )
-	}
-
 	public void endSelection(int selectionEndX, int selectionEndY)
 	{
 		//swap?
@@ -184,21 +168,14 @@ public class FormuleEditor extends FormuleHolder
 		this.hasSelection = false;
 	}
 
-	public String getSelectionString()
-	{
-		if (this.hasSelection() == false)
-			return "";
-		return current.getSelectionString();
-	}
-
 	public void deleteSelection()
 	{
 		this.current.deleteSelection();
 		this.hasSelection = false;
 	}
 
-	public boolean hasSelection()
-	{
-		return this.hasSelection;
+	public void requestFocus(FormuleKeyboardIF kb) {
+		kb.setEditor(this);
 	}
+
 }

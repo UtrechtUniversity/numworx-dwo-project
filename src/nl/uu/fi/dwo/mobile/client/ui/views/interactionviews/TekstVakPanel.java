@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
@@ -395,7 +395,7 @@ public class TekstVakPanel implements InteractionView
 		}
 	}
 
-	public Panel getPanelElement(final FormuleEditor editor)
+	public Panel getPanelElement(final FormuleHolder editor)
 	{
 		FlowPanel fp = new FlowPanel();
 		editor.paint();
@@ -415,7 +415,7 @@ public class TekstVakPanel implements InteractionView
 		return mainPanel;
 	}
 
-	private void addFormulePanelListeners(final TouchPanel tp, final FormuleEditor editor)
+	private void addFormulePanelListeners(final TouchPanel tp, final FormuleHolder editor)
 	{
 		tp.addTouchHandler(new FormuleEditorTouchHandler(tp, kb, editor));
 	}

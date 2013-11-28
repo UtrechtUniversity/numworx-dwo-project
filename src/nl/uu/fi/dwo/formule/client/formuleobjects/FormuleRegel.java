@@ -150,7 +150,7 @@ public class FormuleRegel extends FormuleElement
 		//ignore if the formule is not editable
 		if (holder instanceof FormuleEditor == false)
 			return null;
-		FormuleEditor holder = (FormuleEditor) this.holder;
+		FormuleHolder holder = (FormuleHolder) this.holder;
 		if (x < 0)
 		{
 			this.currentPosition = -1;
@@ -248,7 +248,7 @@ public class FormuleRegel extends FormuleElement
 
 		//ignore if the formule is not editable
 		if (holder instanceof FormuleEditor)
-			if (((FormuleEditor) holder).getCurrentRegel() == this && this.parent != null)
+			if (((FormuleHolder) holder).getCurrentRegel() == this && this.parent != null)
 			{
 				//draw background
 				ctx.setFillStyle("#eee");
@@ -445,7 +445,7 @@ public class FormuleRegel extends FormuleElement
 	{
 		//ignore if the formule is not editable
 		if (holder instanceof FormuleEditor)
-			((FormuleEditor) this.holder).setCurrentRegel(this);
+			((FormuleHolder) this.holder).setCurrentRegel(this);
 		return this;
 	}
 
@@ -460,7 +460,7 @@ public class FormuleRegel extends FormuleElement
 		//ignore if the formule is not editable
 		if (holder instanceof FormuleEditor == false)
 			return;
-		FormuleEditor holder = (FormuleEditor) this.holder;
+		FormuleHolder holder = (FormuleHolder) this.holder;
 		this.current = current;
 		if (current == true)
 			holder.setCurrentRegel(this);
@@ -527,7 +527,7 @@ public class FormuleRegel extends FormuleElement
 	
 	public void cursorToRight()
 	{	if(this.currentPosition < this.children.size() - 1 && holder instanceof FormuleEditor)
-		{	FormuleEditor holder = (FormuleEditor) this.holder;
+		{	FormuleHolder holder = (FormuleHolder) this.holder;
 			FormuleElement fe = getElementAt(currentPosition+1);
 			if(fe instanceof FormuleElementWithChildren)
 			{	FormuleElementWithChildren fewc = (FormuleElementWithChildren)fe;
@@ -547,7 +547,7 @@ public class FormuleRegel extends FormuleElement
 			holder.paint();
 		}
 		else if(!(this.parent==null) && !this.parent.equals(holder) && this.currentPosition == this.children.size() - 1 && holder instanceof FormuleEditor)
-		{	FormuleEditor holder = (FormuleEditor) this.holder;
+		{	FormuleHolder holder = (FormuleHolder) this.holder;
 			FormuleRegel parentRegel = null;
 			FormuleElementWithChildren parent = (FormuleElementWithChildren)this.parent;
 			int index = parent.children.indexOf(this);
@@ -572,7 +572,7 @@ public class FormuleRegel extends FormuleElement
 	
 	public void cursorToLeft()
 	{	if(this.currentPosition > - 1 && holder instanceof FormuleEditor)
-		{	FormuleEditor holder = (FormuleEditor) this.holder;
+		{	FormuleHolder holder = (FormuleHolder) this.holder;
 		
 			FormuleElement fe = getElementAt(currentPosition);
 			if(fe instanceof FormuleElementWithChildren)
@@ -598,7 +598,7 @@ public class FormuleRegel extends FormuleElement
 			holder.paint();
 		}
 		else if(!(this.parent==null) && !this.parent.equals(holder) && this.currentPosition == - 1 && holder instanceof FormuleEditor)
-		{	FormuleEditor holder = (FormuleEditor) this.holder;
+		{	FormuleHolder holder = (FormuleHolder) this.holder;
 			FormuleRegel parentRegel = null;
 			FormuleElementWithChildren parent = (FormuleElementWithChildren)this.parent;
 			int index = parent.children.indexOf(this);
@@ -784,7 +784,7 @@ public class FormuleRegel extends FormuleElement
 					insert(ne);
 					s = s.substring(eind);
 					if (holder instanceof FormuleEditor)
-						((FormuleEditor) holder).setCurrentElement(ne);
+						((FormuleHolder) holder).setCurrentElement(ne);
 					continue;
 				}
 			}
@@ -792,7 +792,7 @@ public class FormuleRegel extends FormuleElement
 			{
 				FormuleTeken t = new FormuleTeken(this, s.charAt(0));
 				if (holder instanceof FormuleEditor)
-					((FormuleEditor) holder).setCurrentElement(t);
+					((FormuleHolder) holder).setCurrentElement(t);
 				this.insert(t);
 				s = s.substring(1);
 			}
@@ -819,7 +819,7 @@ public class FormuleRegel extends FormuleElement
 		//ignore if the formule is not editable
 		if (holder instanceof FormuleEditor == false)
 			return;
-		FormuleEditor holder = (FormuleEditor) this.holder;
+		FormuleHolder holder = (FormuleHolder) this.holder;
 		if (x < 0)
 		{
 			GWT.log("out of bound < 0 " + x);
@@ -942,7 +942,7 @@ public class FormuleRegel extends FormuleElement
 		//ignore if the formule is not editable
 		if (holder instanceof FormuleEditor == false)
 			return;
-		FormuleEditor holder = (FormuleEditor) this.holder;
+		FormuleHolder holder = (FormuleHolder) this.holder;
 		if (this.selectionStart == -1)
 			return;
 
@@ -1075,14 +1075,14 @@ public class FormuleRegel extends FormuleElement
 			firstElement = -1;
 		this.selectionStart = firstElement;
 		this.currentPosition = lastElement;
-		if (((FormuleEditor) holder).getCurrentRegel() != this)
-			((FormuleEditor) holder).getCurrentRegel().clearSelection();
+		if ( holder .getCurrentRegel() != this)
+			holder.getCurrentRegel().clearSelection();
 
 		if (lastElement != -1)
-			((FormuleEditor) holder).setCurrentElement(this.children.elementAt(lastElement));
+			holder.setCurrentElement(this.children.elementAt(lastElement));
 		else
-			((FormuleEditor) holder).setCurrentElement(this);
-		((FormuleEditor) holder).setCurrentRegel(this);
+			holder.setCurrentElement(this);
+		holder.setCurrentRegel(this);
 		/*
 				selectioncords[0] = selectionStartX;
 				selectioncords[1] = selectionStartY;

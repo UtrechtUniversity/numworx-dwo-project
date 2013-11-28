@@ -53,7 +53,7 @@ public abstract class FormuleElement
 	{
 		if (holder instanceof FormuleEditor)
 		{
-			FormuleEditor editor = (FormuleEditor) holder;
+			FormuleHolder editor = (FormuleHolder) holder;
 			if (editor.getCurrentRegel() != null)
 			{
 				initWithParent(editor.getCurrentRegel());
@@ -283,7 +283,7 @@ public abstract class FormuleElement
 	public FormuleElement setCurrentElementAt(int x, int y)
 	{
 		if (holder instanceof FormuleEditor)
-			((FormuleEditor) holder).setCurrentElement(this);
+			((FormuleHolder) holder).setCurrentElement(this);
 		return this;
 	}
 

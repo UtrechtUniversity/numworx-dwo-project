@@ -2,8 +2,10 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
@@ -88,6 +90,8 @@ public class FormuleEditorWithSteps implements InteractionView
 
 	private boolean isVergelijkingVak = false;
 	private PopupFacade facade;
+	
+	private boolean bordjesMethode; // TODO implement this
 
 	public FormuleEditorWithSteps(HashMap<String, Object> h, boolean isVergelijkingVak, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
@@ -117,6 +121,8 @@ public class FormuleEditorWithSteps implements InteractionView
 				antwoordString = (String) launchState.get("antwoordString");
 			if (launchState.get("scoreMax") != null)
 				scoreMax = (Integer) launchState.get("scoreMax");
+			bordjesMethode = Boolean.TRUE.equals( launchState.get("bordjesMethode"));
+			
 		}
 		else
 		{
@@ -247,7 +253,6 @@ public class FormuleEditorWithSteps implements InteractionView
 		//System.out.println(" useranswer2: "+ useranswer);
 		FormuleViewer fv = new FormuleViewer(prefix.substring(2, prefix.length() - 1) + useranswer.substring(2, useranswer.length() - 1));
 		//System.out.println(" useranswer3: "+ useranswer);
-
 		fv.showResult(fv.ALMOSTCORRECT);
 		if (latest_answer_viewer != null && !(hasStartString && steps == 1))
 			latest_answer_viewer.showResult(fv.NONE);
@@ -256,6 +261,8 @@ public class FormuleEditorWithSteps implements InteractionView
 		Panel p = fv.getAsPanel();
 		p.getElement().getStyle().setProperty("display", "inline");
 		current.add(p);
+		if(bordjesMethode)
+			addFormulePanelListeners((TouchPanel) p, fv); 
 
 		FlowPanel stepPanel = new FlowPanel();
 		layoutStepPanel(stepPanel);
@@ -447,7 +454,10 @@ public class FormuleEditorWithSteps implements InteractionView
 			pnl.getElement().getStyle().setProperty("display", "inline-block");
 			pnl.getElement().getStyle().setProperty("clear", "both");
 			stepPanel.add(pnl);
-
+			if(bordjesMethode){
+				Logger.getLogger("FormuleEditorWithStep").info("bordjesmethode");
+				addFormulePanelListeners((TouchPanel) pnl, f);
+			}
 			highLight(stepPanel, false);
 			contentPanel.add(stepPanel);
 			stepPanels.add(stepPanel);
@@ -593,7 +603,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		});
 	}
 
-	private void addFormulePanelListeners(final TouchPanel tp, final FormuleEditor editor)
+	private void addFormulePanelListeners(final TouchPanel tp, final FormuleHolder editor)
 	{
 		tp.addTouchHandler(new FormuleEditorTouchHandler(tp, kb, editor));
 	}

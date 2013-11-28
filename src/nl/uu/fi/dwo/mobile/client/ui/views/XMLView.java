@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleFont;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleTeken;
@@ -80,18 +80,20 @@ abstract class XMLView {
 				public void onResponseReceived(Request request, Response response)
 				{
 					String responseText = response.getText();
+					logger.severe("Status: " + response.getStatusCode() + " " + response.getStatusText());
+					logger.severe(response.getHeadersAsString());
+					logger.severe("Unparsable: " + responseText.substring(0, Math.min(300, responseText.length()) ));
 					if (!responseText.isEmpty())
 					{
 						Document dom = XMLParser.parse(responseText);
 //						if(dom == null) 
 //						{
-//							logger.severe("Status: " + response.getStatusCode() + " " + response.getStatusText());
-//							logger.severe(response.getHeadersAsString());
-//							logger.severe("Unparsable: " + responseText);
 //						}
 						StringCodeToHashMap sc = new StringCodeToHashMap();
 						launchData = sc.decodeStringToHashMap(dom);
 						setupView(launchData);
+					} else {
+						logger.severe("response empty");
 					}
 	
 				}
@@ -203,7 +205,7 @@ abstract class XMLView {
 	
 	}
 
-	public Panel getPanelElement(final FormuleEditor editor) {
+	public Panel getPanelElement(final FormuleHolder editor) {
 		FlowPanel fp = new FlowPanel();
 		editor.paint();
 	
@@ -219,7 +221,7 @@ abstract class XMLView {
 		return p;
 	}
 
-	private void addFormulePanelListeners(final TouchPanel tp, final FormuleEditor editor) {
+	private void addFormulePanelListeners(final TouchPanel tp, final FormuleHolder editor) {
 		tp.addTouchHandler(new FormuleEditorTouchHandler(tp, kb, editor));
 	}
 }

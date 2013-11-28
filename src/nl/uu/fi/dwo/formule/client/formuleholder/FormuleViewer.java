@@ -3,6 +3,9 @@ package nl.uu.fi.dwo.formule.client.formuleholder;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
+import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
+
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -39,7 +42,7 @@ public class FormuleViewer extends FormuleHolder
 		this.getMainRegel().insert(currentFormule);
 		this.paint();
 
-		sp = new FlowPanel();
+		sp = new TouchPanel();
 		checkimg = new Image("images/resources/goedkrul.gif");
 		checkimg.getElement().getStyle().setMarginRight(10, Unit.PX);
 		checkimg.setVisible(false);
@@ -142,4 +145,44 @@ public class FormuleViewer extends FormuleHolder
 
 		return sp;
 	}
+
+	@Override
+	public void clearSelection() {
+		if(hasSelection)
+		{
+			getMainRegel().clearSelection();
+			hasSelection = false;
+		}
+	}
+
+	public void endSelection(int selectionEndX, int selectionEndY)
+	{
+		//swap?
+		int selectionStartX = this.selectionStartX;
+		int selectionStartY = this.selectionStartY;
+		//if (Math.abs(selectionStartX - selectionEndX)<4 && Math.abs(selectionStartY - selectionEndY)<4)
+		//{	clearSelection();
+		//	this.paint();
+		//	return;
+		//}
+
+		if (selectionEndX < selectionStartX)
+		{
+			int temp = selectionStartX;
+			selectionStartX = selectionEndX;
+			selectionEndX = temp;
+		}
+		if (selectionEndY < selectionStartY)
+		{
+			int temp = selectionStartY;
+			selectionStartY = selectionEndY;
+			selectionEndY = temp;
+		}
+
+		FormuleRegel l = this.getMainRegel().selection(selectionStartX, selectionStartY, selectionEndX, selectionEndY);
+		hasSelection = l.hasSelection();
+		this.paint();
+	}
+	
+	
 }

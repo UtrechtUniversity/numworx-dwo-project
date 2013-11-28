@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 
 import com.google.gwt.canvas.dom.client.Context2d.TextAlign;
 import com.google.gwt.canvas.dom.client.Context2d.TextBaseline;
@@ -330,7 +331,7 @@ public class FormuleTeken extends FormuleElement
 		//ignore if the formule is not editable
 		if (holder instanceof FormuleEditor == false)
 			return null;
-		FormuleEditor holder = (FormuleEditor) this.holder;
+		FormuleHolder holder = (FormuleHolder) this.holder;
 
 		if (x < this.width / 2)
 			return null;

@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleFont;
@@ -72,7 +73,7 @@ public class WortelVak extends FormuleElementWithChildren
 		//ignore if the formule is not editable
 		if (holder instanceof FormuleEditor == false)
 			return null;
-		FormuleEditor holder = (FormuleEditor) this.holder;
+		FormuleHolder holder = (FormuleHolder) this.holder;
 		if (x > getChild().x && x < getChild().x + getChild().width)
 			return getChild().setCurrentElementAt(x - getChild().x, y - getChild().y);
 		if (x <= getChild().x)

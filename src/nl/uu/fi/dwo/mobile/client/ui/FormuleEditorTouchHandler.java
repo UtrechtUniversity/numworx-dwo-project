@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.TouchEvent;
 import com.google.gwt.user.client.Window;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.touch.TouchCancelEvent;
 import nl.uu.fi.dwo.interaction.client.touch.TouchEndEvent;
 import nl.uu.fi.dwo.interaction.client.touch.TouchHandler;
@@ -23,11 +24,11 @@ import nl.uu.fi.dwo.interaction.client.touch.TouchStartEvent;
 public class FormuleEditorTouchHandler implements TouchHandler
 {
 	private FormuleKeyboard kb = null;
-	private FormuleEditor editor = null;
+	private FormuleHolder editor = null;
 	private TouchPanel tp = null;
 	final HashMap<String, Double> dif = new HashMap<String, Double>();
 
-	public FormuleEditorTouchHandler(TouchPanel tp, FormuleKeyboard kb, FormuleEditor editor)
+	public FormuleEditorTouchHandler(TouchPanel tp, FormuleKeyboard kb, FormuleHolder editor)
 	{
 		//tp.getElement().getStyle().setBorderWidth(1, Unit.PX);
 		//tp.getElement().getStyle().setBorderColor("#ff0000");
@@ -50,7 +51,7 @@ public class FormuleEditorTouchHandler implements TouchHandler
 
 		try
 		{
-			kb.setEditor(editor);
+			editor.requestFocus(kb); // in plaats van: kb.setEditor(editor);
 			int x = event.touches().get(0).getPageX() - editor.getCanvas().getAbsoluteLeft();
 			int y = event.touches().get(0).getPageY() - editor.getCanvas().getAbsoluteTop();
 			if(!TouchStartEvent.isSupported()) y+=8;// vraag me niet waarom dit nodig is
@@ -99,7 +100,7 @@ public class FormuleEditorTouchHandler implements TouchHandler
 			event.preventDefault();
 			event.stopPropagation();
 		}
-		
+		System.out.println("selection is " + editor.getSelectionString());
 	}
 
 	@Override
