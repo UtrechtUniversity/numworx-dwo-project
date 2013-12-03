@@ -138,6 +138,7 @@ public class FormuleTeken extends FormuleElement
 		{	setFont(fm);
 			this.setupCTXState();
 			ctx.fillText(teken, this.width / 2, this.height);
+			ctx.beginPath();ctx.rect(0, 0, width, height);ctx.stroke();
 		}
 
 		// g.drawString(teken,x,y+fm.getAscent());

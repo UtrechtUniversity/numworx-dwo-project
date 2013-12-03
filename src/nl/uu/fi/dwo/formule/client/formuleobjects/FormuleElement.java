@@ -378,8 +378,8 @@ public abstract class FormuleElement
 	}
 
 	/**
-	 * This should return trhe element that will be the current element. In the
-	 * "wortelvak" we have a child elemnt. When the object is created set the
+	 * This should return the element that will be the current element. In the
+	 * "wortelvak" we have a child element. When the object is created set the
 	 * current item to the child item.
 	 * 
 	 * @return

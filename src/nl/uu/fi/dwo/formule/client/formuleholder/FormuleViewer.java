@@ -32,6 +32,7 @@ public class FormuleViewer extends FormuleHolder
 	private int showResult = NONE;
 
 	FlowPanel sp = null;
+	FormuleRegel current;
 	Image checkimg;
 
 	public FormuleViewer(String formule)
@@ -48,6 +49,7 @@ public class FormuleViewer extends FormuleHolder
 		checkimg.setVisible(false);
 		sp.add(checkimg);
 		sp.add(this.getMainRegel().getCanvas());
+		setCurrentRegel(getMainRegel());
 		
 	}
 
@@ -79,6 +81,7 @@ public class FormuleViewer extends FormuleHolder
 		checkimg.setVisible(false);
 		sp.add(this.getMainRegel().getCanvas());
 		sp.add(checkimg);
+		setCurrentRegel(getMainRegel());
 	}
 
 	public void showResult(int type)
@@ -148,9 +151,9 @@ public class FormuleViewer extends FormuleHolder
 
 	@Override
 	public void clearSelection() {
-		if(hasSelection)
+		if(hasSelection())
 		{
-			getMainRegel().clearSelection();
+			current.clearSelection();
 			hasSelection = false;
 		}
 	}
@@ -181,7 +184,18 @@ public class FormuleViewer extends FormuleHolder
 
 		FormuleRegel l = this.getMainRegel().selection(selectionStartX, selectionStartY, selectionEndX, selectionEndY);
 		hasSelection = l.hasSelection();
+		setCurrentRegel(l);
 		this.paint();
+	}
+
+	@Override
+	public FormuleRegel getCurrentRegel() {
+		return current;
+	}
+
+	@Override
+	public void setCurrentRegel(FormuleRegel formuleRegel) {
+		current = formuleRegel;
 	}
 	
 	

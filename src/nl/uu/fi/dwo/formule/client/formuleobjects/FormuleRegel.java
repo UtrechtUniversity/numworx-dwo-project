@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects;
 
 import java.util.Vector;
+import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
@@ -16,6 +17,7 @@ import com.google.gwt.core.client.GWT;
 public class FormuleRegel extends FormuleElement
 {
 	protected Vector<FormuleElement> children = new Vector<FormuleElement>();
+	static private Logger logger = Logger.getLogger("FormuleRegel");
 
 	private int nextx = 0;
 	private int nexty = 0;
@@ -906,8 +908,8 @@ public class FormuleRegel extends FormuleElement
 
 	public void clearSelection()
 	{
-		if (this.selectionStart == -1)
-			return;
+//		if (this.selectionStart == -1)
+//			return;
 		for (int i = 0; i < this.children.size(); i++)
 			//for (int i = this.selectionStart; i <= this.selectionEnd; i++)
 			this.children.get(i).setSelected(false);
@@ -1005,7 +1007,7 @@ public class FormuleRegel extends FormuleElement
 			return null;
 		int lastElement = this.currentPosition;
 		int firstElement = this.currentPosition;
-
+		logger.finer( this + " entering selection  "  + selectionStartX + " " +  selectionStartY + " " +  selectionEndX + " " + selectionEndY);
 		boolean selectionfound = false;
 
 		//loop through children and set/unset selection
@@ -1035,7 +1037,7 @@ public class FormuleRegel extends FormuleElement
 						lastElement--;
 						firstElement--;
 					}
-					if (Math.abs(selectionEndX - selectionStartX)<4 && Math.abs(selectionEndY - selectionStartY)<4)
+					if (Math.abs(selectionEndX - selectionStartX)<1 && Math.abs(selectionEndY - selectionStartY)<1) // alleen selectie als hokje > 0x0
 						firstElement = -1;
 					else
 						el.setSelected(true);
@@ -1067,7 +1069,10 @@ public class FormuleRegel extends FormuleElement
 			}
 		}
 		if (ret != null)
+		{
+			logger.finer("exiting selection " + ret + " " + ret.getSelectionString());
 			return ret;
+		}
 		//if(selection == false)
 		//this.selectionStart = -1;
 		//else
@@ -1075,7 +1080,7 @@ public class FormuleRegel extends FormuleElement
 			firstElement = -1;
 		this.selectionStart = firstElement;
 		this.currentPosition = lastElement;
-		if ( holder .getCurrentRegel() != this)
+		if ( holder.getCurrentRegel() != this)
 			holder.getCurrentRegel().clearSelection();
 
 		if (lastElement != -1)
@@ -1090,6 +1095,7 @@ public class FormuleRegel extends FormuleElement
 				selectioncords[3] = selectionEndY;
 				setChanged(true);
 		*/
+		logger.finer("exiting selection2 " + this + " " + this.getSelectionString()  + " " + selectionStart + " " + currentPosition);
 		return this;
 	}
 

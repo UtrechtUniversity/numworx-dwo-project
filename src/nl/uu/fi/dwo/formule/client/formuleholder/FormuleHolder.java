@@ -135,8 +135,6 @@ public class FormuleHolder
 	}
 
 	public void setCurrentElement(FormuleElement element) {
-		// FIXME ?
-		System.out.println("set current element " + element);
 	}
 
 	public void setCurrentRegel(FormuleRegel formuleRegel) {		

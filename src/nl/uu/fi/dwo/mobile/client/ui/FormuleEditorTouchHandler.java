@@ -1,6 +1,8 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -27,7 +29,8 @@ public class FormuleEditorTouchHandler implements TouchHandler
 	private FormuleHolder editor = null;
 	private TouchPanel tp = null;
 	final HashMap<String, Double> dif = new HashMap<String, Double>();
-
+	int x,y;
+	
 	public FormuleEditorTouchHandler(TouchPanel tp, FormuleKeyboard kb, FormuleHolder editor)
 	{
 		//tp.getElement().getStyle().setBorderWidth(1, Unit.PX);
@@ -42,12 +45,8 @@ public class FormuleEditorTouchHandler implements TouchHandler
 	public void onTouchStart(TouchStartEvent event)
 	{
 
-		//NOTE: this is important for android otherwise the move method may not be triggered properly
-		if(TouchStartEvent.isSupported())
-		{
-			event.preventDefault();
-			event.stopPropagation();
-		}
+		event.preventDefault();
+		event.stopPropagation();
 
 		try
 		{
@@ -59,11 +58,14 @@ public class FormuleEditorTouchHandler implements TouchHandler
 			editor.clearSelection();
 			editor.startSelection(x, y);
 			editor.endSelection(x, y);
+			this.x = x;
+			this.y = y;
 
 		}
 		catch (Exception e)
 		{
 			//Window.alert("Error: " + e.getMessage());
+			Logger.getLogger("FormuleEditorTouchHandler").log(Level.SEVERE, "onTouchStart: " + e, e);
 		}
 
 	}
@@ -83,6 +85,7 @@ public class FormuleEditorTouchHandler implements TouchHandler
 			int y = event.touches().get(0).getPageY() - editor.getCanvas().getAbsoluteTop();
 			if(!TouchStartEvent.isSupported()) y+=8; // vraag me niet waarom dit nodig is
 			editor.endSelection(x, y);
+			this.x = x; this.y = y;
 
 		}
 		catch (Exception e)
@@ -95,12 +98,10 @@ public class FormuleEditorTouchHandler implements TouchHandler
 	@Override
 	public void onTouchEnd(TouchEndEvent event)
 	{
-		if(TouchStartEvent.isSupported())
-		{
 			event.preventDefault();
 			event.stopPropagation();
-		}
-		System.out.println("selection is " + editor.getSelectionString());
+			editor.endSelection(x, y);
+			Logger.getLogger("FormuleEditorTouchHandler").info("selection is " + editor.getSelectionString());
 	}
 
 	@Override
