@@ -197,6 +197,10 @@ public class FormuleViewer extends FormuleHolder
 	public void setCurrentRegel(FormuleRegel formuleRegel) {
 		current = formuleRegel;
 	}
+
+	@Override
+	public void requestFocus(FormuleKeyboardIF kb) {
+	}
 	
 	
 }

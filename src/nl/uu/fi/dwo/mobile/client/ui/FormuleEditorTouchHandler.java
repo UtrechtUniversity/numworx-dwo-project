@@ -25,8 +25,8 @@ import nl.uu.fi.dwo.interaction.client.touch.TouchStartEvent;
  */
 public class FormuleEditorTouchHandler implements TouchHandler
 {
-	private FormuleKeyboard kb = null;
-	private FormuleHolder editor = null;
+	protected FormuleKeyboard kb = null;
+	protected FormuleHolder editor = null;
 	private TouchPanel tp = null;
 	final HashMap<String, Double> dif = new HashMap<String, Double>();
 	int x,y;
@@ -100,8 +100,8 @@ public class FormuleEditorTouchHandler implements TouchHandler
 	{
 			event.preventDefault();
 			event.stopPropagation();
-			editor.endSelection(x, y);
-			Logger.getLogger("FormuleEditorTouchHandler").info("selection is " + editor.getSelectionString());
+			//editor.endSelection(x, y);
+			//Logger.getLogger("FormuleEditorTouchHandler").info("selection is " + editor.getSelectionString());
 	}
 
 	@Override

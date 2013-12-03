@@ -275,6 +275,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		if (hasPrefix)
 			stepPanel.add(prefixViewer);
 		editor = addNewEditor(stepPanel);
+		editor.requestFocus(kb);
 		contentPanel.add(stepPanel);
 		stepPanels.add(stepPanel);
 		
@@ -603,9 +604,38 @@ public class FormuleEditorWithSteps implements InteractionView
 		});
 	}
 
+	
+	class BordjesTouchHandler extends FormuleEditorTouchHandler {
+
+		public BordjesTouchHandler(TouchPanel tp, FormuleKeyboard kb,
+				FormuleHolder editor) {
+			super(tp, kb, editor);
+		}
+
+		@Override
+		public void onTouchEnd(TouchEndEvent event) {
+			super.onTouchEnd(event);
+			if(bordjesMethode)
+			{ 
+				FormuleEditor ed = FormuleEditorWithSteps.this.editor;
+				if(ed != null && editor != ed && editor.hasSelection()) {
+					String select = editor.getSelectionString();
+					if(select != null && select.length()>0)
+					{	ed.clearAll();
+						ed.insert(select);
+						ed.insert("=");
+						editor.clearSelection();
+						editor.paint();
+					}
+				}
+			}
+		}
+	}
+	
+	
 	private void addFormulePanelListeners(final TouchPanel tp, final FormuleHolder editor)
 	{
-		tp.addTouchHandler(new FormuleEditorTouchHandler(tp, kb, editor));
+		tp.addTouchHandler(new BordjesTouchHandler(tp, kb, editor));
 	}
 
 	@Override

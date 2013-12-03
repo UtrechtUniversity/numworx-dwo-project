@@ -76,7 +76,7 @@ public class KeyBoardTabPanel
 
 		Image buttonRemoveImage = new Image("images/resources/keyboardremovebutton.png");
 		buttonRemoveImage.getElement().getStyle().setMargin(5, Unit.PX);
-		keyboardRemoveButton.getElement().getStyle().setDisplay(Display.NONE);
+		keyboardRemoveButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 		keyboardRemoveButton.add(buttonRemoveImage);
 
 		keyboardButton.addTouchStartHandler(new TouchStartHandler()
@@ -88,8 +88,8 @@ public class KeyBoardTabPanel
 					tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
 					tabs.get(0).getElement().getStyle().setDisplay(Display.BLOCK);
 					current = 0;
-					keyboardRemoveButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-					keyboardButton.getElement().getStyle().setDisplay(Display.NONE);
+					//keyboardRemoveButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+					//keyboardButton.getElement().getStyle().setDisplay(Display.NONE);
 				}
 			}
 		});
@@ -211,7 +211,7 @@ public class KeyBoardTabPanel
 	 */
 	void hideKeyboard() {
 		tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
-		keyboardButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-		keyboardRemoveButton.getElement().getStyle().setDisplay(Display.NONE);
+		//keyboardButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+		//keyboardRemoveButton.getElement().getStyle().setDisplay(Display.NONE);
 	}
 }
