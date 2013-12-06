@@ -9,7 +9,7 @@
     	voeg aan het begin nog een ../ toe als het gaat om servlet, demo of bean
     	het path vanaf de basedir is dan immers 1 subFolder langer
  -->
-<project name='dwo_formule' basedir='../../../../../..' default='jar' >
+<project name='dwo_wiskopdr' basedir='../../' default='jar' >
 
 	<description>
 	Auteur: Wim
@@ -36,8 +36,6 @@
 		<os family='unix' />
 	</condition>
 
-
-	
 	<!--
 		Include sources en module.
 	-->
@@ -71,7 +69,6 @@
 		</jar>
 		<antcall target='include.extra.jar' />
 	</target>
-
 	<import file="${drive}${common.build}" />
 
 </project>

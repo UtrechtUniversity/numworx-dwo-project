@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
-import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleTeken;
-import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Machtvak;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.touch.TouchCancelEvent;
@@ -32,21 +30,11 @@ import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.DomEvent;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -78,153 +66,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private static final String RANDOM_VAR_NAMEN = "RandomVarNamen";
 	private boolean standalone = false;
 
-	final class FocusOnTouch implements MouseUpHandler
-	{
-		public void onMouseUp(MouseUpEvent event)
-		{
-			requestFocus();
-		}
-	}
-
-	final FocusOnTouch FOCUS_ON_TOUCH = new FocusOnTouch();
-
-	final class KeyHandler implements KeyDownHandler, KeyPressHandler
-	{
-
-		private void backspace(DomEvent<?> event)
-		{
-			kb.backspace();
-			event.stopPropagation();
-			event.preventDefault();
-		}
-		
-		private void delete(DomEvent<?> event)
-		{
-			kb.delete();
-			event.stopPropagation();
-			event.preventDefault();
-		}
-
-		private void enter(DomEvent<?> event)
-		{
-			kb.enter();
-			event.preventDefault();
-			event.stopPropagation();
-		}
-
-		@Override
-		public void onKeyPress(KeyPressEvent event)
-		{
-			if (event.isAltKeyDown() || event.isControlKeyDown() || event.isMetaKeyDown())
-				return;
-			if (kb != null && kb.getEditor() != null)
-			{
-				FormuleEditor editor = kb.getEditor();
-				char ch = event.getCharCode();
-				if (allowed(ch))
-				{
-					editor.addElement(new FormuleTeken(editor.getCurrentRegel(), ch));
-					event.preventDefault();
-					event.stopPropagation();
-				}
-				else if (ch == '\b')
-				{
-					backspace(event);
-				}
-				else if (ch == KeyCodes.KEY_DELETE)
-				{
-					delete(event);
-				}
-				else if (ch == '\u007F')
-				{
-					editor.removeNextElement();
-					event.preventDefault();
-					event.stopPropagation();
-				}
-				else if (ch == '^')
-				{
-					macht(event, editor);
-				}
-				else if (ch == '\n' || ch == '\r') // enter?
-				{
-					enter(event);
-				}
-				//				else
-				//					Window.alert(event.toDebugString());
-			}
-
-		}
-
-		private boolean allowed(char ch)
-		{
-			if (ch >= ' ' && ch < '\u007F' && ch != '^')
-				return true;
-			switch (ch)
-			{
-			case '^': // expliciet macht verheffen..
-				return false;
-			default:
-				return Character.isLetterOrDigit(ch);
-			}
-		}
-
-		@Override
-		public void onKeyDown(KeyDownEvent event)
-		{
-			if (event.isAltKeyDown() || event.isControlKeyDown() || event.isMetaKeyDown() || kb == null)
-				return;
-			FormuleEditor editor = kb.getEditor();
-			if (editor == null)
-				return;
-
-			if (event.isLeftArrow())
-			{
-				editor.getCurrentRegel().cursorToLeft();
-				event.preventDefault();
-				event.stopPropagation();
-			}
-			else if (event.isRightArrow())
-			{
-				editor.getCurrentRegel().cursorToRight();
-				event.preventDefault();
-				event.stopPropagation();
-			}
-			else
-			{
-				switch (event.getNativeKeyCode())
-				{
-				case 8: // firefox
-					backspace(event);
-					break;
-				case KeyCodes.KEY_DELETE: // firefox
-					delete(event);
-					break;
-// In chrome: zowel keydown als keypres op 'enter' 
-				case 13: //firefox
-					enter(event);
-					break;
-				case '6': // shift-6 (asus transformer)
-					if (event.isShiftKeyDown())
-					{
-						macht(event, editor);
-					}
-					break;
-				case 16: // shift
-					break;
-				default: // unknown
-				}
-
-			}
-
-		}
-
-		private void macht(DomEvent<?> event, FormuleEditor editor)
-		{
-			editor.addElement(new Machtvak(editor.getCurrentRegel()));
-			event.preventDefault();
-			event.stopPropagation();
-		}
-	}
+	FocusOnTouch FOCUS_ON_TOUCH;
 
 	private OpdrNav on;
 	private FocusPanel mainPanel;
@@ -682,16 +524,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		return kbp;
 	}
 
-	protected void requestFocus()
-	{
-		Scheduler.get().scheduleDeferred(new ScheduledCommand() // voor firefox delayed focus.
-		{
-			public void execute()
-			{
-				mainPanel.setFocus(true);
-			}
-		});
-	}
 
 	private void addContentPanelTouchListener(TouchPanel contentPanel)
 	{
@@ -795,10 +627,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		api = GWT.create(Scorm2004IF.class);
 		FlowPanel fp = new FlowPanel();
 		mainPanel = new FocusPanel(fp);
+		FOCUS_ON_TOUCH = new FocusOnTouch(mainPanel);
 		mainPanel.setHeight("100%");
 		mainPanel.setWidth("100%");
 
-		KeyHandler keyHandler = new KeyHandler();
+		kb = new FormuleKeyboard();
+		KeyHandler keyHandler = new KeyHandler(kb);
 		mainPanel.addKeyDownHandler(keyHandler);
 		mainPanel.addKeyPressHandler(keyHandler);
 
@@ -831,7 +665,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 		fp.add(contentScrollPanel);
 
-		kb = new FormuleKeyboard();
 		Panel kbp = kb.getAsPanel();
 
 		fp.add(kbp);
@@ -917,7 +750,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 		//
 
-		requestFocus();
+		FOCUS_ON_TOUCH.requestFocus();
 		boolean hastouch = com.google.gwt.event.dom.client.TouchStartEvent.isSupported();
 		if (!hastouch)
 			mainPanel.addMouseUpHandler(FOCUS_ON_TOUCH);
