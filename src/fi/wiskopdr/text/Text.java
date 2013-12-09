@@ -1,0 +1,13 @@
+package fi.wiskopdr.text;
+
+import com.google.gwt.i18n.client.ConstantsWithLookup;
+
+public class Text {
+	public static TextIF rb = new Text_nl(); // GWT.create(TextConstants.class)
+}
+
+// This is the GWT way:
+interface TextConstants extends ConstantsWithLookup, TextIF {
+	@DefaultStringValue("of")
+	String ofLabel();
+}

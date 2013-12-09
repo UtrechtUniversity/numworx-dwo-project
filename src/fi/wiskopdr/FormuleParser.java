@@ -3,7 +3,6 @@ package fi.wiskopdr;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
-import nl.uu.fi.dwo.mobile.DWOplayer;
 import fi.wiskopdr.expressies.AantalSign;
 import fi.wiskopdr.expressies.Abs;
 import fi.wiskopdr.expressies.Aftrekking;
@@ -52,6 +51,8 @@ import fi.wiskopdr.expressies.Vergelijking;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
 import fi.wiskopdr.expressies.Vermenigvuldiging;
 import fi.wiskopdr.expressies.Wortel;
+import fi.wiskopdr.text.Text;
+import fi.wiskopdr.text.Text_nl;
 
 public class FormuleParser
 {
@@ -59,6 +60,8 @@ public class FormuleParser
 	private static boolean woordFormule = false;
 	private static boolean tweeHoofdletterVariabele = false;
 
+	private static String ofLabel = Text.rb.getString("ofLabel"); // FIXME GWT i18n hier nodig!
+	
 	public FormuleParser()
 	{
 	}
@@ -90,7 +93,7 @@ public class FormuleParser
 			s = s.substring(2, s.length() - 1);
 			if (s.length() == 0)
 				return null;
-			String[] vergelijkingStrings = s.split(DWOplayer.rb.getString("ofLabel"));
+			String[] vergelijkingStrings = s.split(ofLabel);
 			//StringUtils.split(s,WiskOpdr.rb.getString("ofLabel"));
 			Vergelijking[] vergelijkingen = new Vergelijking[vergelijkingStrings.length];
 
@@ -2344,6 +2347,10 @@ public class FormuleParser
 		}
 		logger.info(formString + " : " + sNieuw);
 		return sNieuw;
+	}
+
+	public static void setOfLabel(String ofLabel) {
+		FormuleParser.ofLabel = ofLabel;
 	}
 
 }

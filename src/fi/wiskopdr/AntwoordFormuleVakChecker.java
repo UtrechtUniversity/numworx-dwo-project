@@ -1,15 +1,8 @@
 package fi.wiskopdr;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.MissingResourceException;
-import java.awt.event.*;
-
-import javax.swing.JButton;
-import javax.swing.JLayeredPane;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 //import fi.beans.ideas.IdeasIF;
 //import fi.beans.ideas.RuleIF;
@@ -17,12 +10,9 @@ import javax.swing.JPanel;
 //import fi.wiskopdr.formuleobjects.*;
 //import fi.wiskopdr.tekstobjects.TekstArea;
 import fi.wiskopdr.expressies.*;
+import fi.wiskopdr.text.Text;
 //import fi.wiskopdr.WiskOpdr;
 
-//import fi.beans.wiskopdrbeans.InteractieEditPanel;
-//import fi.beans.wiskopdrbeans.InteractiePanel;
-//import fi.beans.wnwidgets.NWButtonUI;
-import nl.uu.fi.dwo.mobile.DWOplayer;
 
 
 public class AntwoordFormuleVakChecker implements AntwoordVakChecker
@@ -383,7 +373,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		FormuleParser p = new FormuleParser();
 		for(int i=0 ; i<antwoordStrings.length; i++) 
 		{	if(antwoordStrings[i]!=null)
-			{	String[] antwoordDelen = antwoordStrings[i].split("±");//"ï¿½");
+			{	String[] antwoordDelen = antwoordStrings[i].split("ï¿½");//"ï¿½");
 				if(antwoordDelen.length>1)
 				{
 					String antwoordStr = "$f" + antwoordDelen[0] + "@";
@@ -555,7 +545,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 	public void evaluate()
 	{	if(syntaxFout)
 		{	goedHalfFout = FOUT;
-			feedback = DWOplayer.rb.getString("feedbackTekst14");
+			feedback = Text.rb.getString("feedbackTekst14");
 			return;
 		}
 		else if(leeg)
@@ -830,14 +820,14 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 	{
 		//System.out.println(s);
 		//s = StringUtils.replaceStr(s,"?",WiskOpdr.rb.getString("ofLabel"));
-		s = s.replaceAll("\u2228",DWOplayer.rb.getString("ofLabel"));
+		s = s.replaceAll("\u2228",Text.rb.getString("ofLabel"));
         if(s.equals("false"))s = "x=geen";
         return s;
 	}
 	
 	public String vertaalNaarIdeasExpressie(String s)
 	{
-		s = s.replaceAll(DWOplayer.rb.getString("ofLabel"),"\u2228");
+		s = s.replaceAll(Text.rb.getString("ofLabel"),"\u2228");
 		s = s.replaceAll(" ", "");
 		if(s.equals("geenoplossingen"))s = "false";
         return s;
@@ -866,7 +856,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		else if (s.equals("notequiv"))
 			return "onbekende fout";
 		else try {
-			s = DWOplayer.rb.getString(s);
+			s = Text.rb.getString(s);
 		}
 		catch(MissingResourceException e) {
 		}
