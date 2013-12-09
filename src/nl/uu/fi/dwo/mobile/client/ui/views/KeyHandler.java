@@ -1,9 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
-import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
-import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleTeken;
-import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Machtvak;
-import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
+import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
+import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -14,8 +12,8 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 
 final class KeyHandler implements KeyDownHandler, KeyPressHandler
 	{
-		private FormuleKeyboard kb;
-		public KeyHandler(FormuleKeyboard kb) {
+		private FormuleKeyboardIF kb;
+		public KeyHandler(FormuleKeyboardIF kb) {
 			super();
 			this.kb = kb;
 		}
@@ -48,11 +46,11 @@ final class KeyHandler implements KeyDownHandler, KeyPressHandler
 				return;
 			if (kb != null && kb.getEditor() != null)
 			{
-				FormuleEditor editor = kb.getEditor();
+				FormuleEditorIF editor = kb.getEditor();
 				char ch = event.getCharCode();
 				if (allowed(ch))
 				{
-					editor.addElement(new FormuleTeken(editor.getCurrentRegel(), ch));
+					editor.insert( ch);
 					event.preventDefault();
 					event.stopPropagation();
 				}
@@ -102,19 +100,19 @@ final class KeyHandler implements KeyDownHandler, KeyPressHandler
 		{
 			if (event.isAltKeyDown() || event.isControlKeyDown() || event.isMetaKeyDown() || kb == null)
 				return;
-			FormuleEditor editor = kb.getEditor();
+			FormuleEditorIF editor = kb.getEditor();
 			if (editor == null)
 				return;
 
 			if (event.isLeftArrow())
 			{
-				editor.getCurrentRegel().cursorToLeft();
+				editor.cursorToLeft();
 				event.preventDefault();
 				event.stopPropagation();
 			}
 			else if (event.isRightArrow())
 			{
-				editor.getCurrentRegel().cursorToRight();
+				editor.cursorToRight();
 				event.preventDefault();
 				event.stopPropagation();
 			}
@@ -147,9 +145,9 @@ final class KeyHandler implements KeyDownHandler, KeyPressHandler
 
 		}
 
-		private void macht(DomEvent<?> event, FormuleEditor editor)
+		private void macht(DomEvent<?> event, FormuleEditorIF editor)
 		{
-			editor.addElement(new Machtvak(editor.getCurrentRegel()));
+			editor.macht();
 			event.preventDefault();
 			event.stopPropagation();
 		}

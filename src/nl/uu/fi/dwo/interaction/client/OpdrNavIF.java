@@ -4,5 +4,5 @@ public interface OpdrNavIF
 {
 
 	void setChanged();
-
+	FormuleKeyboardIF getKeyboard();
 }

@@ -2,6 +2,16 @@ package nl.uu.fi.dwo.formule.client.formuleholder;
 
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleTeken;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Breukvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Haakjesvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.IntegraalVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Kwadraatvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Machtvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeWortelVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.WortelVak;
+import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
+import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 
 import com.google.gwt.user.client.ui.Panel;
 
@@ -11,12 +21,15 @@ import com.google.gwt.user.client.ui.Panel;
  * @author Danny Hendrix
  * 
  */
-public class FormuleEditor extends FormuleHolder
+public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 {
 	//selector
 	private FormuleRegel current = null;
 	private FormuleElement currentElement = null;
 
+	public void enter() {}
+	
+	
 	public FormuleEditor()
 	{
 		super();
@@ -110,6 +123,10 @@ public class FormuleEditor extends FormuleHolder
 		//currentElement.repaint();
 		this.paint();
 	}
+	
+	public void setCurrentElementRepaint() {
+		setCurrentElementRepaint(null);
+	}
 
 	public void setCurrentFormuleTeken(FormuleRegel e)
 	{
@@ -175,7 +192,68 @@ public class FormuleEditor extends FormuleHolder
 	}
 
 	public void requestFocus(FormuleKeyboardIF kb) {
-		kb.setEditor(this);
+		if(kb!=null)
+			kb.setEditor(this);
+	}
+
+
+	@Override
+	public void cursorToLeft() {
+		getCurrentRegel().cursorToLeft();	
+	}
+
+
+	@Override
+	public void cursorToRight() {
+		getCurrentRegel().cursorToRight();
+	}
+
+
+	@Override
+	public void insert(char charAt) {
+		addElement(new FormuleTeken(getCurrentRegel(), charAt));
+	}
+
+
+	@Override
+	public void macht() {
+		addElement(new Machtvak(getCurrentRegel()));
+	}
+
+
+	@Override
+	public void wortel() {
+		addElement(new WortelVak(getCurrentRegel()));		
+	}
+
+
+	@Override
+	public void breuk() {
+		addElement(new Breukvak(getCurrentRegel()));
+	}
+
+
+	@Override
+	public void kwadraat() {
+		addElement(new Kwadraatvak(getCurrentRegel()));	
+	}
+
+
+	@Override
+	public void ndewortel() {
+		addElement(new NdeWortelVak(getCurrentRegel()));	
+	}
+
+
+	@Override
+	public void haakjes() {
+		addElement(new Haakjesvak(getCurrentRegel()));
+	}
+
+
+	@Override
+	public void integraal() {
+		addElement(new IntegraalVak(getCurrentRegel()));
 	}
 
 }

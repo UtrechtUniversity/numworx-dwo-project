@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Kwadraatvak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Machtvak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeWortelVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.WortelVak;
+import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.touch.TouchStartEvent;
 import nl.uu.fi.dwo.interaction.client.touch.TouchStartHandler;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
@@ -51,45 +52,43 @@ public abstract class FormuleKeyBoardButtons
 				event.stopPropagation();
 			}
 			
+			final FormuleEditorIF editor = kb.getEditor();
 			if (code.equals("wortel") == true)
-				kb.getEditor().addElement(new WortelVak(kb.getEditor().getCurrentRegel()));
+				editor.wortel();
 			else if (code.equals("breuk") == true)
-				kb.getEditor().addElement(new Breukvak(kb.getEditor().getCurrentRegel()));
+				editor.breuk();
 			else if (code.equals("macht") == true)
-				kb.getEditor().addElement(new Machtvak(kb.getEditor().getCurrentRegel()));
+				editor.macht();
 			else if (code.equals("kwadraat") == true)
-				kb.getEditor().addElement(new Kwadraatvak(kb.getEditor().getCurrentRegel()));
+				editor.kwadraat();
 			else if (code.equals("ndewortel") == true)
-				kb.getEditor().addElement(new NdeWortelVak(kb.getEditor().getCurrentRegel()));
+				editor.ndewortel();
 			else if (code.equals("haakjes") == true)
-				kb.getEditor().addElement(new Haakjesvak(kb.getEditor().getCurrentRegel()));
+				editor.haakjes();
 			else if (code.equals("integraal") == true)
-				kb.getEditor().addElement(new IntegraalVak(kb.getEditor().getCurrentRegel()));
+				editor.integraal();
 			else if (code.equals("copy") == true)
-				FormuleKeyboard.setClipboard(kb.getEditor().getSelectionString());
+				FormuleKeyboard.setClipboard(editor.getSelectionString());
 			else if (code.equals("paste") == true)
-				kb.getEditor().insert(FormuleKeyboard.getClipboard());
+				editor.insert(FormuleKeyboard.getClipboard());
 			else if (code.equals("backspace"))
 				kb.backspace();
 			else if (code.equals("back"))
 				kb.backspace();
 			else if (code.equals("delete") || code.equals("del"))
-				kb.getEditor().removeNextElement();
+				editor.removeNextElement();
 			else if (code.equals("space"))
-				kb.getEditor().addElement(new FormuleTeken(kb.getEditor().getCurrentRegel(), ' '));
+				editor.insert( ' ');
 			else if (code.equals("min"))
-				kb.getEditor().addElement(new FormuleTeken(kb.getEditor().getCurrentRegel(), '-'));
+				editor.insert('-');
 			else if (code.equals("plus"))
-				kb.getEditor().addElement(new FormuleTeken(kb.getEditor().getCurrentRegel(), '+'));
+				editor.insert('+');
 			else if (code.equals("maal"))
-				kb.getEditor().addElement(new FormuleTeken(kb.getEditor().getCurrentRegel(), '*'));
+				editor.insert('*');
 			else if (code.equals("pi"))
-				kb.getEditor().addElement(new FormuleTeken(kb.getEditor().getCurrentRegel(), '\u03C0'));
+				editor.insert('\u03C0');
 			else if (code.equals("of"))
-			{	kb.getEditor().addElement(new FormuleTeken(kb.getEditor().getCurrentRegel(), ' '));
-				kb.getEditor().addElement(new FormuleTeken(kb.getEditor().getCurrentRegel(), 'o'));
-				kb.getEditor().addElement(new FormuleTeken(kb.getEditor().getCurrentRegel(), 'f'));
-				kb.getEditor().addElement(new FormuleTeken(kb.getEditor().getCurrentRegel(), ' '));
+			{	editor.insert(" of ");
 			}
 			else if (code.equals("apply") || code.equals("enter"))
 			{
@@ -113,14 +112,14 @@ public abstract class FormuleKeyBoardButtons
 			}
 			else if (code.equals("right"))
 			{
-				kb.getEditor().getCurrentRegel().cursorToRight();
+				editor.cursorToRight();
 			}
 			else if (code.equals("left"))
 			{
-				kb.getEditor().getCurrentRegel().cursorToLeft();
+				editor.cursorToLeft();
 			}
 			else if (code.length() == 1)
-				kb.getEditor().addElement(new FormuleTeken(kb.getEditor().getCurrentRegel(), code.charAt(0)));
+				editor.insert(code.charAt(0));
 		}
 	}
 

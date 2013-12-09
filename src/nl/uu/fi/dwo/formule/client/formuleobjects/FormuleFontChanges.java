@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects;
 
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
+
 /**
  * This class keeps track of changes made to the font (for instance if we have a
  * "breukvak" the children have smaller text, to keep the text smaller when the

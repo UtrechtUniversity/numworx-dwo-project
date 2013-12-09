@@ -2,7 +2,7 @@ package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
-import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleFont;
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
 
 import com.google.gwt.user.client.Window;
 

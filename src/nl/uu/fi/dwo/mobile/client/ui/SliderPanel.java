@@ -1,6 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
-import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleFont;
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.touch.TouchCancelEvent;
 import nl.uu.fi.dwo.interaction.client.touch.TouchEndEvent;
 import nl.uu.fi.dwo.interaction.client.touch.TouchHandler;

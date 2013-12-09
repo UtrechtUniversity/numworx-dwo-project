@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.touch.TouchCancelEvent;
 import nl.uu.fi.dwo.interaction.client.touch.TouchEndEvent;
@@ -13,6 +14,7 @@ import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 
 import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.dev.js.EvalFunctionsAtTopScope;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Display;
@@ -361,6 +363,11 @@ public class OpdrNav implements OpdrNavIF, Runnable
 	public void close() {
 		memento.close();
 		memento = null;
+	}
+
+	@Override
+	public FormuleKeyboardIF getKeyboard() {
+		return entry.getKeyboard();
 	}
 
 }

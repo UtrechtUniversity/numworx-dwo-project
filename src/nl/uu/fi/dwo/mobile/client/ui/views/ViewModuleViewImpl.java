@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.touch.TouchCancelEvent;
@@ -776,6 +777,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		if(on != null)
 			on.close();
 		PopupFacade.removeAll();
+	}
+
+	public FormuleKeyboard getKeyboard() {
+		return kb;
 	}
 
 }

@@ -1,8 +1,9 @@
 package nl.uu.fi.dwo.formule.client.formuleholder;
 
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
-import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleFont;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
+import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
 
 import com.google.gwt.canvas.client.Canvas;

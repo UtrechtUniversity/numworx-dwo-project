@@ -5,8 +5,9 @@ import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
-import nl.uu.fi.dwo.formule.client.formuleholder.FormuleKeyboardIF;
-import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleFont;
+import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
+import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 
 import com.google.gwt.core.client.GWT;
@@ -32,7 +33,7 @@ import fi.writemathgwt.client.WritePanelHolder;
 public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 {
 	static final String SCRIBBLE = "Scribble";
-	private FormuleEditor editor;
+	private FormuleEditorIF editor;
 	private KeyBoardTabPanel tp;
 	private WritePanel writePanel;
 
@@ -329,7 +330,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 		getEditor().setFont(FormuleFont.createFromFontSize(value));
 	}
 
-	public void setEditor(FormuleEditor editor)
+	public void setEditor(FormuleEditorIF editor)
 	{
 		if (this.editor == editor)
 			return;
@@ -338,7 +339,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 		{
 			//reset zoom
 			this.editor.setFont(this.editor.getDefaultFont());
-			this.editor.setCurrentElementRepaint(null);
+			this.editor.setCurrentElementRepaint();
 		} 
 		this.editor = editor;
 		if(editor != null) 
@@ -347,16 +348,16 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 			tp.hideKeyboard();
 	}
 
-	public FormuleEditor getEditor()
+	public FormuleEditorIF getEditor()
 	{
 		return editor;
 	}
 
 	public void enter()
 	{
-		FormuleHolder editor = getEditor();
-		if (editor instanceof FormuleEditorWithAnswer)
-			((FormuleEditorWithAnswer) editor).check();
+		FormuleEditorIF editor = getEditor();
+		if (editor != null)
+			editor.enter();
 	}
 
 	public void backspace()

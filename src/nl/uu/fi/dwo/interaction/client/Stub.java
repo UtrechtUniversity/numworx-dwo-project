@@ -95,6 +95,11 @@ public class Stub implements OpdrNavIF {
 	private static native void setChanged0() /*-{
 		$wnd.setChanged($wnd.outer);
 	}-*/;
+
+	@Override
+	public FormuleKeyboardIF getKeyboard() {
+		return null;
+	}
 	
 	
 	

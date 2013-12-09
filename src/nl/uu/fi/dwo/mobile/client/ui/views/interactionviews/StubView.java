@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
@@ -189,6 +190,13 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 
 	public Widget asWidget() {
 		return facade.wrap(super.asWidget());
+	}
+
+	@Override
+	public FormuleKeyboardIF getKeyboard() {
+		if(comRoot!=this)
+			return comRoot.getKeyboard();
+		return null;
 	}
 	
 	

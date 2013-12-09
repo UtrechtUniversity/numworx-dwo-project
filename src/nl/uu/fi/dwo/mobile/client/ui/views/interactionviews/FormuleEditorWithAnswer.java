@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
-import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleFont;
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
@@ -133,7 +133,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		checkimg.setVisible(false);
 	}
 
-	public void check()
+	@Override 
+	public void enter() {
+		check();
+	}
+	
+	void check()
 	{
 		String useranswer = "$f" + this.toString() + "@";
 		HashMap<String, Object> checkResults = avChecker.checkAnswer(useranswer);

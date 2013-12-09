@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.formule.client.formuleobjects;
 
 import java.util.Vector;
 
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
+
 /**
  * Base element that contains one or more FormuleRegels (wortelvak, breukvak
  * etc..)
