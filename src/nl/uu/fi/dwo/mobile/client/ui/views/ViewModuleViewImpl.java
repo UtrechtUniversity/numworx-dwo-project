@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.interaction.client.touch.TouchCancelEvent;
 import nl.uu.fi.dwo.interaction.client.touch.TouchEndEvent;
 import nl.uu.fi.dwo.interaction.client.touch.TouchHandler;
@@ -66,8 +68,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private static final String RANDOM_VAR_WAARDEN = "RandomVarWaarden";
 	private static final String RANDOM_VAR_NAMEN = "RandomVarNamen";
 	private boolean standalone = false;
-
-	FocusOnTouch FOCUS_ON_TOUCH;
 
 	private OpdrNav on;
 	private FocusPanel mainPanel;
@@ -419,8 +419,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		contentPanel.add(tekst);
 		FormuleEditorWithSteps fews = new FormuleEditorWithSteps(opdracht, false, tb.getVarNamen(), tb.getVarWaarden());
 
-		kb.setEditor(fews.getEditor());
-		fews.setKeyboard(kb);
+		fews.getEditor().requestFocus();
+		
 
 		contentPanel.add(fews.getAsPanel());
 	}
@@ -627,16 +627,15 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	{
 		api = GWT.create(Scorm2004IF.class);
 		FlowPanel fp = new FlowPanel();
-		mainPanel = new FocusPanel(fp);
-		FOCUS_ON_TOUCH = new FocusOnTouch(mainPanel);
+		mainPanel = FocusOnTouch.wrap(fp);
+		
 		mainPanel.setHeight("100%");
 		mainPanel.setWidth("100%");
 
 		kb = new FormuleKeyboard();
-		KeyHandler keyHandler = new KeyHandler(kb);
-		mainPanel.addKeyDownHandler(keyHandler);
-		mainPanel.addKeyPressHandler(keyHandler);
-
+		FocusOnTouch.installKeyboard(kb);
+		FormuleHolder.installKeyboard(kb);
+		
 		hp = new HeaderPanel();
 		hp.setCenter("Module 1");
 		Style style = hp.getElement().getStyle();
@@ -751,10 +750,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 		//
 
-		FOCUS_ON_TOUCH.requestFocus();
-		boolean hastouch = com.google.gwt.event.dom.client.TouchStartEvent.isSupported();
-		if (!hastouch)
-			mainPanel.addMouseUpHandler(FOCUS_ON_TOUCH);
+		FocusOnTouch.requestFocus(mainPanel);
 
 	}
 

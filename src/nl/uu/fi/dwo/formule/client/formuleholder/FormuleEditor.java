@@ -191,7 +191,7 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 		this.hasSelection = false;
 	}
 
-	public void requestFocus(FormuleKeyboardIF kb) {
+	public void requestFocus() {
 		if(kb!=null)
 			kb.setEditor(this);
 	}

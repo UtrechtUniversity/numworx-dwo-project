@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
@@ -17,7 +18,6 @@ import nl.uu.fi.dwo.interaction.client.touch.TouchMoveEvent;
 import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
 import nl.uu.fi.dwo.interaction.client.touch.TouchStartEvent;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
-import nl.uu.fi.dwo.mobile.client.ui.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
@@ -61,7 +61,6 @@ public class FormuleEditorWithSteps implements InteractionView
 	private FormuleEditorWithAnswer editor = null;
 	private Widget prefixViewer;
 	private FormuleViewer latest_answer_viewer;
-	private FormuleKeyboard kb = null;
 	private ScrollPanel sp = null;
 	private FlowPanel contentPanel = null;
 	private FlowPanel feedbackPanel = null;
@@ -275,7 +274,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		if (hasPrefix)
 			stepPanel.add(prefixViewer);
 		editor = addNewEditor(stepPanel);
-		editor.requestFocus(kb);
+		editor.requestFocus();
 		contentPanel.add(stepPanel);
 		stepPanels.add(stepPanel);
 		
@@ -373,11 +372,6 @@ public class FormuleEditorWithSteps implements InteractionView
 		feedbackPanel.getElement().getStyle().setPadding(10, Unit.PX);
 		if (hasFeedback)
 			contentPanel.add(feedbackPanel);
-	}
-
-	public void setKeyboard(FormuleKeyboard kb)
-	{
-		this.kb = kb;
 	}
 
 	public Panel getAsPanel()
@@ -527,8 +521,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		TouchPanel tp = (TouchPanel) editor.getAsPanel();
 		tp.getElement().getStyle().setProperty("display", "inline-block");
 		editor.setCurrent(0, 0);
-		if(kb!=null)
-			kb.setEditor(editor);
+		editor.requestFocus();
 		if (hasPrefix)
 			p.add(prefixViewer);
 		p.add(tp);
@@ -607,9 +600,8 @@ public class FormuleEditorWithSteps implements InteractionView
 	
 	class BordjesTouchHandler extends FormuleEditorTouchHandler {
 
-		public BordjesTouchHandler(TouchPanel tp, FormuleKeyboard kb,
-				FormuleHolder editor) {
-			super(tp, kb, editor);
+		BordjesTouchHandler(FormuleHolder editor) {
+			super(editor);
 		}
 
 		@Override
@@ -635,7 +627,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	
 	private void addFormulePanelListeners(final TouchPanel tp, final FormuleHolder editor)
 	{
-		tp.addTouchHandler(new BordjesTouchHandler(tp, kb, editor));
+		tp.addTouchHandler(new BordjesTouchHandler(editor));
 	}
 
 	@Override

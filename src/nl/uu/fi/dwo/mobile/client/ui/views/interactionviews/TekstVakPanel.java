@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
@@ -12,7 +13,6 @@ import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
-import nl.uu.fi.dwo.mobile.client.ui.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
@@ -242,7 +242,6 @@ public class TekstVakPanel implements InteractionView
 					{
 						aantalVakken++;
 						((FormuleEditorWithSteps) currentObject).zetInstellingen(instellingen);
-						((FormuleEditorWithSteps) currentObject).setKeyboard(kb);
 					}
 					else if (currentObject.getClass().getName().equals("fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT"))
 					{
@@ -357,9 +356,8 @@ public class TekstVakPanel implements InteractionView
 			}
 			else if (currentObject instanceof FormuleEditorWithSteps)
 			{
-				((FormuleEditorWithSteps) currentObject).setKeyboard(kb);
 				Panel a = ((FormuleEditorWithSteps) currentObject).getAsPanel();
-				kb.setEditor(((FormuleEditorWithSteps) currentObject).getEditor());
+				((FormuleEditorWithSteps) currentObject).getEditor().requestFocus();
 
 				a.getElement().getStyle().setProperty("display", "inline-block");
 				a.getElement().getStyle().setProperty("verticalAlign", "top");
@@ -417,7 +415,7 @@ public class TekstVakPanel implements InteractionView
 
 	private void addFormulePanelListeners(final TouchPanel tp, final FormuleHolder editor)
 	{
-		tp.addTouchHandler(new FormuleEditorTouchHandler(tp, kb, editor));
+		tp.addTouchHandler(new FormuleEditorTouchHandler(editor));
 	}
 
 	private PopupFacade facade;

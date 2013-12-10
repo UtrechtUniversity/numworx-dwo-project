@@ -19,10 +19,15 @@ import com.google.gwt.user.client.ui.Panel;
  */
 public class FormuleHolder
 {
+	public static void installKeyboard(FormuleKeyboardIF keyb) {
+		kb = keyb;
+	}
+	
 	private FormuleRegel main = null;
 
 	private FormuleFont font = FormuleFont.createFromFontSize(18);
 	private static FormuleFont defaultfont = FormuleFont.createFromFontSize(18);
+	protected static FormuleKeyboardIF kb;
 	private FlowPanel sp = null;
 
 	protected boolean hasSelection = false;
@@ -119,7 +124,7 @@ public class FormuleHolder
 	public void endSelection(int x, int y) {		
 	}
 	
-	public void requestFocus(FormuleKeyboardIF kb) {
+	public void requestFocus() {
 		kb.setEditor(null);
 	}
 

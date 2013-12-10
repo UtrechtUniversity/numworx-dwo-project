@@ -200,7 +200,7 @@ public class FormuleViewer extends FormuleHolder
 	}
 
 	@Override
-	public void requestFocus(FormuleKeyboardIF kb) {
+	public void requestFocus() {
 	}
 	
 	
