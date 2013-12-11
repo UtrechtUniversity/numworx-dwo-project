@@ -6,6 +6,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
@@ -32,7 +34,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class StubView extends SimplePanel implements InteractionView, LoadHandler, OpdrNavIF {
+public class StubView extends SimplePanel implements InteractionView, LoadHandler, OpdrNavIF, FormuleEditorIF {
 
 	private Frame frame;
 	private Object innerView;
@@ -43,6 +45,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	private int width;
 	private int height;
 	private PopupFacade facade;
+	private FormuleFont defaultFont = FormuleFont.createFromFontSize(18);
 
 	public StubView(String html, HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
@@ -181,9 +184,19 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		wnd.setChanged = function(viewer) {
 			viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::comRoot.@nl.uu.fi.dwo.interaction.client.OpdrNavIF::setChanged()();
 		}
+	
+		wnd.setFocus = function(b, viewer) {
+			viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::setFocus(Z)(b)
+		}
+		
 		return wnd.inner;
 	}-*/;
 
+	public void setFocus(boolean b) {
+		comRoot.getKeyboard().setEditor( b ? this : null);
+	}
+	
+	
 	@Override
 	public void setChanged() {
 	}
@@ -197,6 +210,115 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		if(comRoot!=this)
 			return comRoot.getKeyboard();
 		return null;
+	}
+
+	@Override
+	public void clearAll() {
+		if(innerView != null)
+			clearAll(innerView);
+	}
+
+	private static native void clearAll(Object inner)/*-{
+		inner.clearAll();
+	}-*/;
+
+	@Override
+	public void insert(String text) {
+		if(innerView != null)
+			insert(text, innerView);		
+	}
+	
+	private static native void insert(String text, Object inner) /*-{
+		inner.insert(text);
+	}-*/;
+	
+
+	@Override
+	public FormuleFont getDefaultFont() {
+		return defaultFont;
+	}
+
+	@Override
+	public void setFont(FormuleFont font) {
+	}
+
+	@Override
+	public void setCurrentElementRepaint() {
+	}
+
+	@Override
+	public void enter() {
+		if(innerView != null)
+			enter(innerView);
+	}
+	private static native void enter(Object inner) /*-{
+		inner.enter();
+	}-*/;
+	
+	
+	@Override
+	public void removeCurrentElement() {
+		backspace(innerView);
+	}
+	private static native void backspace(Object inner) /*-{
+		inner.backspace();
+	}-*/;
+	
+	@Override
+	public void removeNextElement() {
+	}
+
+	@Override
+	public void cursorToLeft() {
+	}
+
+	@Override
+	public void cursorToRight() {
+	}
+
+	@Override
+	public void insert(char charAt) {
+		insert(String.valueOf(charAt));
+	}
+
+	@Override
+	public String getSelectionString() {
+		return "";
+	}
+
+	@Override
+	public void macht() {
+		insert("$m@"); // TODO evenzo voor de rest...
+	}
+
+	@Override
+	public void wortel() {
+		insert("$w@");
+	}
+
+	@Override
+	public void breuk() {
+		insert("$b$n@@");
+	}
+
+	@Override
+	public void kwadraat() {
+		insert("$m2@");
+	}
+
+	@Override
+	public void ndewortel() {
+		insert("$W$n@@");
+	}
+
+	@Override
+	public void haakjes() {
+		insert("$h@");
+	}
+
+	@Override
+	public void integraal() {
+		insert("$i$n$k$l@@@@");
 	}
 	
 	
