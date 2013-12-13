@@ -1,10 +1,14 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects;
 
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.AftrekVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Breukvak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Haakjesvak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.IntegraalVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Machtvak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeWortelVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.OptelVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PowerVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.VermenigvuldigingVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.WortelVak;
 
 /**
@@ -21,27 +25,27 @@ public class FormuleDecoder
 
 	public static FormuleElement getElementFromCharacter(char ch1, FormuleElement holder)
 	{
-		/*
+		
 		if(ch1=='o')
-		{	return new OptelVak(formuleVak);
+		{	return new OptelVak(holder);
 		}
 		else if(ch1=='a')
-		{	return new AftrekVak(formuleVak);
+		{	return new AftrekVak(holder);
 		}
 		else if(ch1=='v')
-		{	return new VermenigvuldigingVak(formuleVak);
+		{	return new VermenigvuldigingVak(holder);
 		}
-		else */if (ch1 == 'b')
+		else if (ch1 == 'b')
 		{
 			return new Breukvak(holder);
 			//bv.vulVak(s.substring(2, eind));
 			//regel.addElement(bv);
 			//insert(bv);
 			//s = s.substring(eind);
-		}/*
+		}
 			else if(ch1=='p')
-			{	return new PowerVak(formuleVak);
-			}*/
+			{	return new PowerVak(holder);
+			}
 		else if (ch1 == 'w')
 		{
 			return new WortelVak(holder);

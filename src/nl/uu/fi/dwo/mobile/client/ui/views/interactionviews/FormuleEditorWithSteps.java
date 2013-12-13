@@ -36,6 +36,8 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import fi.wiskopdr.FormuleParser;
+import fi.wiskopdr.expressies.Expressie;
+import fi.wiskopdr.expressies.VergelijkingMeerv;
 
 /**
  * Used for showing formula's that can be solved in steps.
@@ -433,6 +435,15 @@ public class FormuleEditorWithSteps implements InteractionView
 
 		if (!startString.equals("$f@") && steps == 0)
 		{
+			if(bordjesMethode) {
+				// convert to stringStrikt.
+				VergelijkingMeerv e = FormuleParser.parseVergelijking(startString);
+				startString = "$f"+ e.toStringStrikt() + "@";
+			}
+			
+			
+			
+			
 			if (!isVergelijkingVak && !hasPrefix && (startString.charAt(startString.length() - 2)) != '=')
 				startString = startString.substring(0, startString.length() - 1) + "=@";
 
