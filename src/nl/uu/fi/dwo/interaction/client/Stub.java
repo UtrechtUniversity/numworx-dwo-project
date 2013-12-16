@@ -77,9 +77,18 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 			},
 			clearAll: function() {
 				this.stub.@nl.uu.fi.dwo.interaction.client.Stub::clearAll()();
-			}
+			},
 			insert: function(string) {
 				this.stub.@nl.uu.fi.dwo.interaction.client.Stub::insert(Ljava/lang/String;)(string);
+			},
+			cursorToRight: function() {
+				this.stub.@nl.uu.fi.dwo.interaction.client.Stub::cursorToRight()();
+			},
+			cursorToLeft: function() {
+				this.stub.@nl.uu.fi.dwo.interaction.client.Stub::cursorToLeft()();
+			},
+			getSelectionString: function() {
+				return this.stub.@nl.uu.fi.dwo.interaction.client.Stub::getSelectionString()();
 			}
 			
 		};
@@ -91,16 +100,22 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	
 	public static void publish(InteractionStub view) 
 	{
+		final Stub stub = new Stub(view);
 		try { 
-			publish0(new Stub(view));
+			publish0(stub);
 		} catch(Exception e) {
 			logger.log(Level.SEVERE, "publish", e);
+			view.setCommunicationRoot(stub);
 		}
 	}
 
 	@Override
 	public void setChanged() {
-		setChanged0();
+		try {
+			setChanged0();
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "setChanged", e);
+		}
 	}
 	
 	private static native void setChanged0() /*-{
@@ -115,7 +130,11 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	@Override
 	public void setEditor(FormuleEditorIF formuleEditor) {
 		editor = formuleEditor;
-		setFocus0(formuleEditor != null);
+		try {
+			setFocus0(formuleEditor != null);
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "setEditor", e);
+		}
 	}
 
 	private static native void setFocus0(boolean b)
