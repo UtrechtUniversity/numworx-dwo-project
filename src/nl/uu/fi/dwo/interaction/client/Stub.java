@@ -89,7 +89,14 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 			},
 			getSelectionString: function() {
 				return this.stub.@nl.uu.fi.dwo.interaction.client.Stub::getSelectionString()();
-			}
+			},
+			removeNextElement: function() {
+				this.stub.@nl.uu.fi.dwo.interaction.client.Stub::delete()();
+			},
+			backspace: function() {
+				this.stub.@nl.uu.fi.dwo.interaction.client.Stub::backspace()();
+			},
+			
 			
 		};
 		$wnd.inner.stub = o;

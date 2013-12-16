@@ -15,6 +15,7 @@ public class PowerVak extends FormuleElementWithChildren {
 	}
 	public void paintObject() {
 // at 0,0
+		int superscript; 
 		FormuleRegel b = getChild(0);
 		b.paint();
 		int width =  b.width;
@@ -24,10 +25,13 @@ public class PowerVak extends FormuleElementWithChildren {
 		p.setSmallText(true);
 		p.setPosition(width, 0);
 		p.paint();
-		width += getChild(1).width;
-		height = Math.max(height, getChild(1).height);		
+		width += p.width;	
+
+		superscript = p.height - 2 * p.getFont().getAscent() / 3 - p.getFont().getDescent();
+		height += superscript;
+		b.setPosition(0, superscript);
+		setAsHoogte(b.getAsHoogte()+superscript);
 		setSize(width, height);
-		setAsHoogte(b.getAsHoogte());
 		
 		if (this.isSelected())
 		{

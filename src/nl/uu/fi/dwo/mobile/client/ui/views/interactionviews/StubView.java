@@ -266,15 +266,28 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	
 	@Override
 	public void removeNextElement() {
+		removeNextElement(innerView);
 	}
+	
+	private static native void removeNextElement(Object inner) /*-{
+		inner.removeNextElement();
+	}-*/;
 
 	@Override
 	public void cursorToLeft() {
+		cursorToLeft(innerView);
 	}
+	private static native void cursorToLeft(Object inner) /*-{
+		inner.cursorToLeft();
+	}-*/;
 
 	@Override
 	public void cursorToRight() {
+		cursorToRight(innerView);
 	}
+	private static native void cursorToRight(Object inner) /*-{
+		inner.cursorToRight();
+	}-*/;
 
 	@Override
 	public void insert(char charAt) {

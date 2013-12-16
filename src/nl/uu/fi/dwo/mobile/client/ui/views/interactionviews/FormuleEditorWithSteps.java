@@ -252,6 +252,12 @@ public class FormuleEditorWithSteps implements InteractionView
 		if (!isVergelijkingVak && !hasPrefix && (useranswer.charAt(useranswer.length() - 2)) != '=')
 			useranswer = useranswer.substring(0, useranswer.length() - 1) + "=@";
 		//System.out.println(" useranswer2: "+ useranswer);
+// bordjes methode parse string to strikt.
+		if(bordjesMethode) {
+			// convert to stringStrikt.
+			VergelijkingMeerv e = FormuleParser.parseVergelijking(useranswer);
+			useranswer = "$f"+ e.toStringStrikt() + "@";
+		}
 		FormuleViewer fv = new FormuleViewer(prefix.substring(2, prefix.length() - 1) + useranswer.substring(2, useranswer.length() - 1));
 		//System.out.println(" useranswer3: "+ useranswer);
 		fv.showResult(fv.ALMOSTCORRECT);
