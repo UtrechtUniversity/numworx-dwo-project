@@ -134,5 +134,23 @@ public class RPCHandler {
 		request.execute();
 	}
 	
+	public <T> void getClasses(int userID, AsyncCallback<T> getClassesCallback) {
+		HashMap<String, Object> g = new HashMap<String,Object>();
+		g.put("userID", userID);
+		String method = "getTable";
+		Object[] params = {"tblClass", g, "class"};
+		XmlRpcClient client = new XmlRpcClient(server);
+		XmlRpcRequest<T> request = new XmlRpcRequest<T>(client, method, params, getClassesCallback);
+		request.execute();
+	}
 	
+	public <T> void getStudents(int classID, AsyncCallback<T> getStudentsCallback) {
+		HashMap<String, Object> g = new HashMap<String,Object>();
+		g.put("classID", classID);
+		String method = "getTable";
+		Object[] params = {"tblUser", g, "username"};
+		XmlRpcClient client = new XmlRpcClient(server);
+		XmlRpcRequest<T> request = new XmlRpcRequest<T>(client, method, params, getStudentsCallback);
+		request.execute();
+	}
 }
