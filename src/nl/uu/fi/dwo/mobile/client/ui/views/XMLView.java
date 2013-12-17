@@ -38,7 +38,7 @@ import com.google.gwt.xml.client.XMLParser;
  * @author wim
  *
  */
-abstract class XMLView {
+public abstract class XMLView {
 
 	protected HashMap<String, Object> launchData;
 	protected HashMap<String, Object> instellingen;
@@ -67,7 +67,7 @@ abstract class XMLView {
 
 	}
 
-	void loadXML(String xmlPath) {
+	protected void loadXML(String xmlPath) {
 		RequestBuilder.Method method = RequestBuilder.GET;
 		String url = xmlPath;
 		RequestBuilder rb = new RequestBuilder(method, url);
