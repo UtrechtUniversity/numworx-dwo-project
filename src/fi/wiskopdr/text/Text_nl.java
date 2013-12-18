@@ -117,10 +117,10 @@ public class Text_nl implements TextIF
 
 	{ "herleidingKeuze_0", "Geen" },
 	{ "herleidingKeuze_1", "Veelterm herleid zonder haakjes" },
-	{ "herleidingKeuze_2", "Als ��n macht" },
+	{ "herleidingKeuze_2", "Als één macht" },
 	{ "herleidingKeuze_3", "Zonder gebroken of negatieve exponenten" },
-	{ "herleidingKeuze_4", "Als ��n breuk" },
-	{ "herleidingKeuze_5", "Als ��n log" },
+	{ "herleidingKeuze_4", "Als één breuk" },
+	{ "herleidingKeuze_5", "Als één log" },
 	{ "herleidingKeuze_6", "Met alleen enkelvoudige log's (bv log(x)+log(3))" },
 
 	{ "feedbackTekst01", "Deze stap bevat correcte en niet correcte onderdelen. Verwijder of vervang de delen die niet correct zijn." },
@@ -142,7 +142,7 @@ public class Text_nl implements TextIF
 	{ "feedbackTekst17", "Deze vergelijking heeft niet de gevraagde vorm" },
 
 	{ "xVarMessage1", "De onafhankelijk variabele is altijd\n" + "een letter.\n " + "In het geval er met woordformules\n" + " wordt gewerkt, is het eerste teken\n" + "van de woordvariabele altijd een letter." },
-	{ "xVarMessage2", "De onafhankelijk variabele kan uit\n" + "slechts ��n letter bestaan.\n" + "Alleen als de optie \"woordformule\" \n" + "is geselecteerd, dan kan de onafhankelijke\n" + "variabele uit meer letters bestaan." },
+	{ "xVarMessage2", "De onafhankelijk variabele kan uit\n" + "slechts één letter bestaan.\n" + "Alleen als de optie \"woordformule\" \n" + "is geselecteerd, dan kan de onafhankelijke\n" + "variabele uit meer letters bestaan." },
 	{ "xVarMessage3", "De letter e is gereserveerd als teken \n" + "voor het grondtal van de natuurlijke.\n" + "logaritme.\n" + "Deze letter kan dus niet gebruikt worden\n" + "als naam voor de onafhankelijke variabele." },
 	{ "xVarMessage4a", "De tekst:  \"" },
 	{ "xVarMessage4b", "\" is gereserveerd voor\n" + "de betreffende wiskundige functie en mag dus\n" + "niet gebruikt worden in de naam van de variabele" },

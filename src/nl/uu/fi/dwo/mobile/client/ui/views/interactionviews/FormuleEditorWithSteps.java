@@ -92,7 +92,8 @@ public class FormuleEditorWithSteps implements InteractionView
 	private boolean isVergelijkingVak = false;
 	private PopupFacade facade;
 	
-	private boolean bordjesMethode; // TODO implement this
+	private boolean bordjesMethode;
+	private boolean linStrategieVersie; // TODO implement this
 
 	public FormuleEditorWithSteps(HashMap<String, Object> h, boolean isVergelijkingVak, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
@@ -123,7 +124,7 @@ public class FormuleEditorWithSteps implements InteractionView
 			if (launchState.get("scoreMax") != null)
 				scoreMax = (Integer) launchState.get("scoreMax");
 			bordjesMethode = Boolean.TRUE.equals( launchState.get("bordjesMethode"));
-			
+			linStrategieVersie = Boolean.TRUE.equals(launchState.get("linStrategieVersie"));
 		}
 		else
 		{
@@ -633,7 +634,7 @@ public class FormuleEditorWithSteps implements InteractionView
 					{	ed.clearAll();
 						ed.insert(select);
 						ed.insert("=");
-						editor.clearSelection();
+						//editor.clearSelection();
 						editor.paint();
 					}
 				}
