@@ -44,6 +44,11 @@ try { 		//Extracts all nodes that are elements and puts them in an array.
 		for (int i = 0; i < children.size(); i++)
 		{
 			Node currentNode = children.get(i);
+			if(currentNode == null)
+			{
+				logger.severe("node " + i + "/" + children.size() + " is null");
+				continue;
+			}
 			String nodeName = currentNode.getNodeName();
 			if (nodeName.equalsIgnoreCase("void"))
 			{
@@ -210,11 +215,11 @@ try { 		//Extracts all nodes that are elements and puts them in an array.
 				Node currentNode = list.item(i);
 				if (currentNode == null)
 				{
-					System.err.println(currentNode);
+					logger.severe ("getElementList " + i + " is null");
 				}
 				else if (currentNode.getNodeName() == null)
 				{
-					System.err.println(currentNode);
+					logger.info("node " + i + " "  + currentNode + " null name");
 				}
 				else if (!currentNode.getNodeName().equalsIgnoreCase("#text"))
 				{
@@ -223,7 +228,7 @@ try { 		//Extracts all nodes that are elements and puts them in an array.
 			}
 			catch (RuntimeException re)
 			{
-				throw re;
+				logger.log(Level.SEVERE, "getElementList", re);
 			}
 		}
 

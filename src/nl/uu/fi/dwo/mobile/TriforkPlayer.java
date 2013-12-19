@@ -43,10 +43,11 @@ try {
 		
 		MGWTsetup();
 		view = new ViewModuleViewImpl(true).initialize();
-		RootPanel.get().add(view);
+		//RootPanel.get().add(view);
 		if( LogConfiguration.loggingIsEnabled()) {
 			RootPanel.get().add(customLogArea);
 		}
+		RootPanel.get().add(view);
 
 		Scorm2004IF api = view.getApi();
 		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
@@ -68,6 +69,7 @@ try {
 		RootPanel.get().add(new Label(error.toString()));
 		if(customLogArea != null) {
 			RootPanel.get().add(customLogArea);
+			logger.log(Level.SEVERE, "on module load", error);
 		}
 }
 
