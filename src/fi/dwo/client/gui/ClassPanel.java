@@ -180,7 +180,8 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
 
     	public void actionPerformed(ActionEvent event) {
             SchoolClass sc = model.classes[row];
-    		if (value == editImage) {
+    		final GuiCreator instance = GuiCreator.instance();
+			if (value == editImage) {
     			Box box = Box.createVerticalBox();
     			JLabel l1 = new JLabel(TextMapper.getText(TextMapper.GUIC_MSG_RENAME_CLASS));
     			JCheckBox check = new JCheckBox(TextMapper.getText("boomstructuur?"));
@@ -189,7 +190,7 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
     				box.add(check);
     			box.add(l1);
                 String newName = JOptionPane.showInputDialog(ClassPanel.this, box, sc.getName());
-                if ((newName != null) && (!newName.equals("")) && GuiCreator.instance().renameClass(sc, newName, check.isSelected())) {
+                if ((newName != null) && (!newName.equals("")) && instance.renameClass(sc, newName, check.isSelected())) {
                     center.loadMenu();
                     model.fireTableCellUpdated(row, 0);
                 }                
@@ -198,18 +199,25 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
                 /* Delete the course */
                 if (JOptionPane.showConfirmDialog(ClassPanel.this, TextMapper.getText(TextMapper.GUIC_MSG_DELETE_CLASS)
                         + "?", TextMapper.getText(TextMapper.GUIC_DELETE_CLASS), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    if (GuiCreator.instance().deleteClass(sc)) {
+                    if (instance.deleteClass(sc)) {
                         center.loadMenu();
         	            model.removeRow(row);
                     }
                 }
 
     		} else if (value == usersImage) {
-                center.loadCenter(GuiCreator.instance().getClassUsersPanel(sc));
+                center.loadCenter(instance.getClassUsersPanel(sc));
     		} else if (value == assignImage) {
+    			instance.getDWO().setWait();
+    			long t = System.currentTimeMillis();
                 //setData(domain.selectCourses(SelectCoursesDialog.selectCourses(this, domain.getAllCourses(), domain.getSelectedCourse()), true));
-                Course[] allCourses = GuiCreator.instance().getCourseList();
-                Course[] selectedCourses = SelectCoursesDialog.selectCourses(ClassPanel.this,allCourses,sc.getSelectedSchoolCourses(), sc );
+    			Course[] allCourses = instance.getCourseList();
+    			System.out.println("getCourselist " + (System.currentTimeMillis()-t));
+    			t = System.currentTimeMillis();
+                Course[] selectedSchoolCourses = sc.getSelectedSchoolCourses();
+    			System.out.println("getSelected list " + (System.currentTimeMillis()-t));
+    			instance.getDWO().setReady();
+				Course[] selectedCourses = SelectCoursesDialog.selectCourses(ClassPanel.this, allCourses, selectedSchoolCourses, sc );
                 if(selectedCourses!=null)sc.saveSelectedCourses(allCourses,selectedCourses);
     		}
     		fireEditingStopped();

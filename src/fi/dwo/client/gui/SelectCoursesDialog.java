@@ -47,6 +47,7 @@ import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.SpinnerDateModel;
 import javax.swing.UIManager;
+import javax.swing.JTree.DynamicUtilTreeNode;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
@@ -96,7 +97,7 @@ class CourseData implements CourseMap {
 	}
 	
 	public boolean isSelected() {
-		if(course.isWithChildren()) {
+		if(course.isWithChildren() && children != null ) {
 			for(int i = 0; i < children.length; i++) {
 				if(children[i].isSelected())
 					return true;
@@ -107,7 +108,7 @@ class CourseData implements CourseMap {
 	}	
 	
 	public boolean isWithData() {
-		if(course.isWithChildren()) {
+		if(course.isWithChildren() && children != null ) {
 			for(int i = 0; i < children.length; i++) {
 				if(children[i].isWithData())
 					return true;
@@ -714,6 +715,55 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			return orig;
 		}
 
+		class LazyMutableTreeNode_2 extends DynamicUtilTreeNode {
+			private CourseData data;
+			private Vector vector = new Vector();
+			public LazyMutableTreeNode_2(CourseData courseData, Vector v) {
+				super(courseData, Course.NO_CHILDREN);
+				this.data = courseData;
+				vector = v;
+			}
+			
+			void setLoaded() {
+				loadedChildren = true;
+			}
+			protected void loadChildren() {
+				//setWait(); // zijeffect: recusie!
+				if(!loadedChildren)
+				{
+					Course map = data.course;
+					Vector nodes = new Vector();
+					if(map.isWithChildren()) 
+					{   CourseMap[] courses;
+						childValue = courses = map.getChildren();
+						data.children = new CourseData[courses.length];
+						loadedChildren = true;
+						for (int i = 0; i < courses.length; i++) {
+							Course course = (Course) courses[i];
+							CourseData coursedata = new CourseData(course);
+							data.children[i] = coursedata;
+							coursedata.select = Boolean.valueOf(vector.contains(course));
+							LazyMutableTreeNode_2 child = new LazyMutableTreeNode_2(coursedata,vector);
+							if(coursedata.course.isWithChildren())
+							{
+								this.add(child);
+								appendCourseData(coursedata, child, vector);
+							}
+						}
+					} else { 						
+					   childValue = nodes;
+					   super.loadChildren();
+					}
+				}
+				//setReady();
+			}
+			public void removeAllChildren() {
+				super.removeAllChildren();
+				loadedChildren = false;
+			}
+			
+			
+		}
     
     
     
@@ -838,7 +888,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                 	DefaultMutableTreeNode node; 
                 	for (int i = 0; i < cd.length; i++) {
         				CourseData course = cd[i];
-        				node = new DefaultMutableTreeNode(course);
+        				node = new LazyMutableTreeNode_2(course, vSelectedCourses);
         				
         				if(cd[i].course.getSchoolID() == 0)
         				{
@@ -847,7 +897,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         					schoolnode.add(node);
         					needSchoolnode = true;
         				}
-        				appendCourseData(course, node, vSelectedCourses);
+        				//appendCourseData(course, node, vSelectedCourses);
                 	}
 // FIX, altijd schoolnode toevoegen als nodig, ook zonder MODIFY_MODULES recht
                 	StandaardMap schoolmap = standaard_map;
@@ -1118,31 +1168,38 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     }
 
 	public static Course[] selectCourses(ClassPanel parent,
-			Course[] allCourses, Course[] selectedCourses, SchoolClass sc) {
+			Course[] allCourses, Course[] selectedCourses, final SchoolClass sc) {
         String title = TextMapper.getText(TextMapper.GUISC_TITLE);
         allCourses = 
         GuiCreator.instance().dwo.sequence(allCourses, sc);
         int cnt = 3; // 2 voor select course voor resultaat. 3+3 voor selectcourse voor klas.       
     	if( CenterPanel.isIconizer())
     		cnt += 3; // VAN en TOT en AFGESCHERMD
-    
-        SelectCoursesDialog scd = new SelectCoursesDialog(parent, title, true, allCourses, selectedCourses, cnt);
+        final SelectCoursesDialog scd = new SelectCoursesDialog(parent, title, true, allCourses, selectedCourses, cnt);
         scd.sc = sc;
-// persistencefacade....
-        try {
-        	
-        	Vector result = DbAccessCreator.instance().getResultCount(allCourses[0].getDwoProfile(), sc.getID());
-        	Enumeration e = result.elements();
-    		CourseData[] cd = scd.cd;
-    		while (e.hasMoreElements()) {
+		final int dwoProfile = allCourses[0].getDwoProfile();
+		
+new Thread() {
+	public void run() {
+		// persistencefacade....'
+		try {
+			Vector result = DbAccessCreator.instance().getResultCount(
+					dwoProfile, sc.getID());
+			Enumeration e = result.elements();
+			CourseData[] cd = scd.cd;
+			while (e.hasMoreElements()) {
 				Hashtable object = (Hashtable) e.nextElement();
 				int courseID = ((Number)object.get("courseID")).intValue();
 				scd.setResults(courseID, cd);
+				scd.coursesModel.fireTableDataChanged();
 			}
-        
-        } catch(Exception e) {e.printStackTrace();}
-        
-        scd.show();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}.start();
+		scd.show();
         return scd.getSelectedCourses();
 	}
 
@@ -1173,9 +1230,9 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 				CourseData coursedata = new CourseData(course);
 				data.children[i] = coursedata;
 				coursedata.select = Boolean.valueOf(vector.contains(course));
-				child = new DefaultMutableTreeNode(coursedata);
-				if(coursedata.course.isWithChildren()) node.add(child);
-				appendCourseData(coursedata, child, vector);
+				//child = new LazyMutableTreeNode_2(coursedata, vector);
+				//if(coursedata.course.isWithChildren()) node.add(child);
+				//appendCourseData(coursedata, child, vector);
 	    	}
 		}
 	}

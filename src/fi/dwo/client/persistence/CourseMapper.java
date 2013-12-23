@@ -349,7 +349,7 @@ private Object[] cached(Hashtable ht) throws IOException, XmlRpcException,
         } else 
         {	if(c.link != null)
         	{
-        		System.err.println("erase link for " + c);
+        		//System.err.println("erase link for " + c);
         	}
         	//c.link = null; // FIXME is dit correct?
         }
