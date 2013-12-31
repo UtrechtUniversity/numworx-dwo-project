@@ -1,9 +1,12 @@
 Manifest-Version: 1.0
 Trusted-Only: true
 Permissions: all-permissions
-Codebase: * 
+Codebase: *.science.uu.nl *.fi.uu.nl dme.colorado.edu dwoapp.appspot.com *.dwo.nl
+Application-Name: DWO
+Caller-Allowable-Codebase: *.science.uu.nl *.fi.uu.nl dme.colorado.edu dwoapp.appspot.com *.dwo.nl
 Main-Class: fi.dwo.client.domain.DWO
 Class-Path: algebrapijlenoefenen.jar 
+ algebrapijlenopdr.jar 
  functiesraden.jar 
  haakjessommen_opp.jar 
  haakjessommen_tab.jar 
@@ -17,10 +20,10 @@ Class-Path: algebrapijlenoefenen.jar
  popupurlapplet.jar 
  vermtabel.jar 
  waarmakers.jar 
+ waarmakersdwo.jar 
  getallenlijn.jar 
  bordjes.jar 
  wiskopdr.jar 
- algebrapijlenopdr.jar 
  aanzichtenraden.jar 
  vlakkenkleuren.jar 
  profielendraaien.jar 
@@ -57,6 +60,11 @@ Class-Path: algebrapijlenoefenen.jar
  geogebra_properties.jar 
  geogebra_export.jar 
  geogebra_cas.jar 
+ geogebra_algos.jar 
+ geogebra_javascript.jar 
+ jlm_greek.jar 
+ jlm_cyrillic.jar 
+ jlatexmath.jar 
  geogebra3.jar 
  geogebra3_main.jar 
  geogebra3_gui.jar 
@@ -90,6 +98,8 @@ Class-Path: algebrapijlenoefenen.jar
  formstruct.jar 
  kansbomen.jar 
  calculatordwo.jar 
+ graphtool.jar 
+ draaibank.jar 
  jl020.jar 
  calendar.jar 
  geogebra_properties.jar 

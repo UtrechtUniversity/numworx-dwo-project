@@ -26,5 +26,5 @@
 -delete fi/dwo/server/persistence/DbAccessLdapServlet.class
 -delete fi/dwo/server/persistence/DbAccessLdapServletTest.class
 -delete fi/dwo/server/persistence/DwoWebPageServlet.class
--o ../output/jar/dwo.jar
+-o ../output/jar/dwo-test.jar
 

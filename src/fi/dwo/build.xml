@@ -20,8 +20,8 @@
 	<dirname property="ant.dir" file="${ant.file}"  />
 	<property file="${ant.dir}/build.properties"/>
 
-	<property name='dosdrive' value='N:' />
-	<property name='java.resources' value='/home/java/resources' />
+	<property name='dosdrive' value='C:' />
+	<property name='java.resources' value='/java/resources' />
 	<property name='common.build' value='${java.resources}/ant/common-build.xml' />
 	<condition property='dos' value='dos' >
 	   	<os family='dos' />
@@ -171,6 +171,29 @@
 			     </sequential>
 	</target>
 	
+	<target name="sign.pboon.jars.wisweb" depends='keystore' description="Onderteken jars - productie" >
+			<sequential>
+				            <echo message="Repacking libs in @{rootdir}"/>
+				        <apply executable="pack200" parallel="false">
+				            <arg value="--repack"/>
+				            <fileset dir="${jar}/wisweb" includes="*.jar" />
+				        </apply>
+
+				        <echo message="Signing libs in @{rootdir}"/>
+				    	<signjar
+				    		alias='pboon'
+				    		verbose='true'
+				    		lazy='false'
+				    		storepass='passww'
+				    		keypass='passw'
+				    		keystore='${pboon.keystore}'
+				    	>
+				    		<fileset dir='${jar}/wisweb' includes='*.jar' />
+				    	</signjar>
+				    	
+				     </sequential>
+		</target>
+	
 	<target name="pack200">
 	<apply executable="pack200" parallel="false" dest="${jar}/pack">
 	        <arg value="--modification-time=latest"/>
@@ -182,6 +205,18 @@
 	    <mapper type="glob" from="*" to="*.pack.gz" />
 	    </apply>
 	</target>
+	
+	<target name="pack200.wisweb">
+		<apply executable="pack200" parallel="false" dest="${jar}/wisweb/pack">
+		        <arg value="--modification-time=latest"/>
+		        <arg value="--deflate-hint=true"/>
+		        <arg value="--segment-limit=-1"/>
+		        <targetfile/>
+		        <srcfile/>
+		        <fileset dir="${jar}/wisweb" includes="*.jar" />
+		    <mapper type="glob" from="*" to="*.pack.gz" />
+		    </apply>
+		</target>
 	
 	<target name='jnlp' depends='init' description='Genereeer JNLP file' >
 		<taskdef 
