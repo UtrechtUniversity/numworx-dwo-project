@@ -24,7 +24,7 @@ import fi.dwo.client.system.RegisterException;
  */
 public interface DwoIF {
 
-    /**
+    /** 
      * Sets the current panel of the applet.
      * 
      * @param p The panel to set.

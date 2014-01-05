@@ -1,10 +1,29 @@
--classpath %JAVA_HOME%\jre\lib\rt\jar
--manifestMain
-
+-classpath %JAVA_HOME%/jre/lib/rt.jar
+../output/classes/fi
+../output/classes/org
+../output/classes/hplb
+../output/classes/uk
+../output/classes/META-INF
 -keepInterface fi.?
 -keepInterface org.?
 -keepInterface hplb.?
 -keepInterface uk.?
--keepInterface javax.?
--o ..\output\jar\dwo.jar
-
+-delete fi/beans/fidentity/build.xml
+-delete fi/dwo/build.xml
+-delete fi/dwo/build.properties
+-delete fi/dwo/test.htm
+-delete fi/beans/fidentity/AllTests.class
+-delete fi/beans/fidentity/NovellLdapTest.class
+-delete fi/beans/fidentity/PhpAccessTest.class
+-delete fi/beans/fidentity/db/DbAccess.class
+-delete fi/beans/fidentity/db/DbAccessTest.class
+-delete fi/dwo/client/gui/ClipboardExportTest.class
+-delete fi/dwo/client/persistence/SchoolMapperTest.class
+-delete fi/dwo/server/persistence/DbAccessTest.class
+-delete fi/dwo/server/persistence/DbAccessLdapTest.class
+-delete fi/dwo/server/persistence/DeleteSchoolTest.class
+-delete fi/dwo/server/persistence/DbAccessServlet.class
+-delete fi/dwo/server/persistence/DbAccessLdapServlet.class
+-delete fi/dwo/server/persistence/DbAccessLdapServletTest.class
+-delete fi/dwo/server/persistence/DwoWebPageServlet.class
+-o ../output/jar/dwo.jar

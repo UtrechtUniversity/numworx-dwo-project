@@ -28,7 +28,7 @@ import fi.beans.scorm.ScormString;
 import fi.beans.scorm.ScormText;
 import fi.beans.scorm.ScormTree;
 import fi.beans.scorm.TreeParameter;
-import fi.beans.tooltip.ToolTipManager;
+//import fi.beans.tooltip.ToolTipManager;
 import fi.dwo.client.gui.AutoScrollPanel;
 import fi.dwo.client.gui.GuiConstants;
 import fi.dwo.parameters.gui.MainParameterComponent;
@@ -379,7 +379,7 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
         
         this.setSize(800, 600);
         this.setLayout(null);
-        ToolTipManager ttm = new ToolTipManager(this);
+       // ToolTipManager ttm = new ToolTipManager(this);
                 
         
         Hashtable ht = new Hashtable();
