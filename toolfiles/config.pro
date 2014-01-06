@@ -1,5 +1,5 @@
 -injars ..\output\classes (!resources/**)
--outjars ..\output\jar\dwo.jar
+-outjars ..\output\jar\dwo.jar (!fi/dwo/server/**)
 -injars ..\..\WiskOpdr\output\classes
 -outjars ..\output\jar\wiskopdr.jar
 -injars ..\..\GraphTool\output\classes
@@ -60,6 +60,11 @@
 }
 
 -keep class fi.beans.*.* {
+    <fields>;
+    <methods>;
+}
+
+-keep class fi.dwo.server.*.*{
     <fields>;
     <methods>;
 }
