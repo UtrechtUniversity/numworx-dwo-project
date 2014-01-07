@@ -1,5 +1,5 @@
 -injars ..\output\classes (!resources/**)
--outjars ..\output\jar\dwo.jar (!fi/dwo/server/**)
+-outjars ..\output\jar\dwo.jar (!fi/dwo/server/persistence/DbAccess*.class)
 -injars ..\..\WiskOpdr\output\classes
 -outjars ..\output\jar\wiskopdr.jar
 -injars ..\..\GraphTool\output\classes
@@ -55,6 +55,11 @@
 }
 
 -keep class fi.wiskopdr.tekstobjects.LinkIF{
+    <fields>;
+    <methods>;
+}
+
+-keep class fi.wiskopdr.tekstobjects.TekstArea{
     <fields>;
     <methods>;
 }
