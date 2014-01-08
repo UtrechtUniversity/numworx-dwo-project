@@ -47,7 +47,6 @@ import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.SpinnerDateModel;
 import javax.swing.UIManager;
-import javax.swing.JTree.DynamicUtilTreeNode;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
@@ -97,7 +96,7 @@ class CourseData implements CourseMap {
 	}
 	
 	public boolean isSelected() {
-		if(course.isWithChildren() && children != null ) {
+		if(course.isWithChildren()) {
 			for(int i = 0; i < children.length; i++) {
 				if(children[i].isSelected())
 					return true;
@@ -108,7 +107,7 @@ class CourseData implements CourseMap {
 	}	
 	
 	public boolean isWithData() {
-		if(course.isWithChildren() && children != null ) {
+		if(course.isWithChildren()) {
 			for(int i = 0; i < children.length; i++) {
 				if(children[i].isWithData())
 					return true;
@@ -715,55 +714,6 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			return orig;
 		}
 
-		class LazyMutableTreeNode_2 extends DynamicUtilTreeNode {
-			private CourseData data;
-			private Vector vector = new Vector();
-			public LazyMutableTreeNode_2(CourseData courseData, Vector v) {
-				super(courseData, Course.NO_CHILDREN);
-				this.data = courseData;
-				vector = v;
-			}
-			
-			void setLoaded() {
-				loadedChildren = true;
-			}
-			protected void loadChildren() {
-				//setWait(); // zijeffect: recusie!
-				if(!loadedChildren)
-				{
-					Course map = data.course;
-					Vector nodes = new Vector();
-					if(map.isWithChildren()) 
-					{   CourseMap[] courses;
-						childValue = courses = map.getChildren();
-						data.children = new CourseData[courses.length];
-						loadedChildren = true;
-						for (int i = 0; i < courses.length; i++) {
-							Course course = (Course) courses[i];
-							CourseData coursedata = new CourseData(course);
-							data.children[i] = coursedata;
-							coursedata.select = Boolean.valueOf(vector.contains(course));
-							LazyMutableTreeNode_2 child = new LazyMutableTreeNode_2(coursedata,vector);
-							if(coursedata.course.isWithChildren())
-							{
-								this.add(child);
-								appendCourseData(coursedata, child, vector);
-							}
-						}
-					} else { 						
-					   childValue = nodes;
-					   super.loadChildren();
-					}
-				}
-				//setReady();
-			}
-			public void removeAllChildren() {
-				super.removeAllChildren();
-				loadedChildren = false;
-			}
-			
-			
-		}
     
     
     
@@ -888,7 +838,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                 	DefaultMutableTreeNode node; 
                 	for (int i = 0; i < cd.length; i++) {
         				CourseData course = cd[i];
-        				node = new LazyMutableTreeNode_2(course, vSelectedCourses);
+        				node = new DefaultMutableTreeNode(course);
         				
         				if(cd[i].course.getSchoolID() == 0)
         				{
@@ -897,7 +847,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         					schoolnode.add(node);
         					needSchoolnode = true;
         				}
-        				//appendCourseData(course, node, vSelectedCourses);
+        				appendCourseData(course, node, vSelectedCourses);
                 	}
 // FIX, altijd schoolnode toevoegen als nodig, ook zonder MODIFY_MODULES recht
                 	StandaardMap schoolmap = standaard_map;
@@ -1230,9 +1180,9 @@ new Thread() {
 				CourseData coursedata = new CourseData(course);
 				data.children[i] = coursedata;
 				coursedata.select = Boolean.valueOf(vector.contains(course));
-				//child = new LazyMutableTreeNode_2(coursedata, vector);
-				//if(coursedata.course.isWithChildren()) node.add(child);
-				//appendCourseData(coursedata, child, vector);
+				child = new DefaultMutableTreeNode(coursedata);
+				if(coursedata.course.isWithChildren()) node.add(child);
+				appendCourseData(coursedata, child, vector);
 	    	}
 		}
 	}
