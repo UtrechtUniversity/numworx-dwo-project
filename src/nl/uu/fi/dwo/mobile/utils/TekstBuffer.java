@@ -212,6 +212,10 @@ public class TekstBuffer
 //							currentVakGegevens,
 //							new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)
 //					);
+			
+		case 15: return new StubView("DoorzienGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+		case 20: return new StubView("GeomAlgGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+		case 5 : return new StubView("AlgebraPijlenHWT", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		}
 
 		if (soortVak == 0)
@@ -247,7 +251,7 @@ public class TekstBuffer
 		else if (soortVak == 41)
 		{
 			result = //new fi.kladjegwt.client.KladjeGWT(currentVakGegevens, randomVarNamen, randomVarWaarden);
-					new StubView("KladjeGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+					new StubView("KladjeHWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//result = new StubView("KladjeGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		}
 		else
