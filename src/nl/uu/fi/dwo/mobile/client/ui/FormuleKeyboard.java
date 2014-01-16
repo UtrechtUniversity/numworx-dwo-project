@@ -15,6 +15,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.TouchEvent;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -33,6 +34,7 @@ import fi.writemathgwt.client.WritePanelHolder;
 public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 {
 	static final String SCRIBBLE = "Scribble";
+	static final boolean hasKeyboard  = ! TouchEvent.isSupported();
 	private FormuleEditorIF editor;
 	private KeyBoardTabPanel tp;
 	private WritePanel writePanel;
@@ -162,11 +164,14 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 		tp = new KeyBoardTabPanel();
 		tp.getPanel().getElement().getStyle().setBackgroundImage("images/resources/footerbgimage.png");
 
-		tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodes, buttonWidths));
+		if(hasKeyboard)
+			tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodesGR, buttonWidthsGR));
+		else
+			tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodes, buttonWidths));
 
-		tp.addTab("ABC", this.getKeyBoard(buttonCodesAbc, buttonWidthsAbc));
-		tp.addTab("ABCShift", this.getKeyBoard(buttonCodesAbcShift, buttonWidthsAbcShift));
-		tp.addTab("Alpha", this.getKeyBoard(buttonCodesAlpha, buttonWidthsAlpha));
+		//tp.addTab("ABC", this.getKeyBoard(buttonCodesAbc, buttonWidthsAbc));
+	    //tp.addTab("ABCShift", this.getKeyBoard(buttonCodesAbcShift, buttonWidthsAbcShift));
+		//tp.addTab("Alpha", this.getKeyBoard(buttonCodesAlpha, buttonWidthsAlpha));
 		//tp.addTab("GR", this.getKeyBoard(buttonCodesGR, buttonWidthsGR));
 		//tp.addTab("MW", this.getKeyBoard(buttonCodesMW, buttonWidthsMW));
 
@@ -178,9 +183,10 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 		b.setHeight("16px");
 		writePanel.add(b);
 		
-		tp.addTab(SCRIBBLE, writePanel);
+		if (!hasKeyboard)
+			tp.addTab(SCRIBBLE, writePanel);
 
-		tp.hideTabButton("ABCShift");
+		//tp.hideTabButton("ABCShift");
 		//SliderPanel sp = new SliderPanel(100, this);
 		//tp.getStaticPanel().add(sp.getPanel());
 		tp.apply();

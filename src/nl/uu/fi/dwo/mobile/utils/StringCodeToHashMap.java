@@ -59,7 +59,8 @@ try { 		//Extracts all nodes that are elements and puts them in an array.
 				Node secondChild = voidChildren.get(1);
 				String secondName = secondChild.getNodeName();
 				//sets a string as value
-				String keyName = firstChild.getFirstChild().getNodeValue();
+				Node keyNode = firstChild.getFirstChild();
+				String keyName = keyNode != null ? keyNode.getNodeValue() : "";
 				if (secondName.equalsIgnoreCase("string"))
 				{
 					if (secondChild.getFirstChild() != null)
@@ -267,37 +268,40 @@ try { 		//Extracts all nodes that are elements and puts them in an array.
 			if (child.getNodeName().equalsIgnoreCase("object"))
 			{
 				result.set(index, convertNodeToHashMap(child));
-			}
-
-			else if (child.getNodeName().equalsIgnoreCase("string"))
-			{
-				result.set(index, child.getFirstChild().getNodeValue());
-			}
-			else if (child.getNodeName().equalsIgnoreCase("int"))
-			{
-				result.set(index, Integer.parseInt(child.getFirstChild().getNodeValue()));
-			}
-			else if (child.getNodeName().equalsIgnoreCase("double"))
-			{
-				result.set(index, Double.parseDouble(child.getFirstChild().getNodeValue()));
-			}
-			else if (child.getNodeName().equalsIgnoreCase("boolean"))
-			{
-				if (child.getFirstChild().getNodeValue().equalsIgnoreCase("true"))
-				{
-					result.set(index, true);
+			} else {
+				Node firstChild = child.getFirstChild();
+				if (child.getNodeName().equalsIgnoreCase("string"))
+				{   if(firstChild != null)
+						result.set(index, firstChild.getNodeValue());
+					else
+						result.set(index, "");
 				}
-				else
+				else if (child.getNodeName().equalsIgnoreCase("int"))
 				{
-					result.set(index, false);
+					result.set(index, Integer.parseInt(firstChild.getNodeValue()));
 				}
-			}
-			else if (child.getNodeName().equalsIgnoreCase("array"))
-			{
-				result.set(index, convertNodeToArray(child));
-			} else if (child.getNodeName().equalsIgnoreCase("short")) 
-			{
-				result.set(index,  Short.parseShort(child.getFirstChild().getNodeValue()));
+				else if (child.getNodeName().equalsIgnoreCase("double"))
+				{
+					result.set(index, Double.parseDouble(firstChild.getNodeValue()));
+				}
+				else if (child.getNodeName().equalsIgnoreCase("boolean"))
+				{
+					if (firstChild.getNodeValue().equalsIgnoreCase("true"))
+					{
+						result.set(index, true);
+					}
+					else
+					{
+						result.set(index, false);
+					}
+				}
+				else if (child.getNodeName().equalsIgnoreCase("array"))
+				{
+					result.set(index, convertNodeToArray(child));
+				} else if (child.getNodeName().equalsIgnoreCase("short")) 
+				{
+					result.set(index,  Short.parseShort(firstChild.getNodeValue()));
+				}
 			}
 
 		}

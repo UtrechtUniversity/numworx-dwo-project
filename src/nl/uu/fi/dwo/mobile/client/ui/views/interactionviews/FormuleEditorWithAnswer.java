@@ -58,6 +58,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			this.fe = fe;
 		}
 		facade = new PopupFacade(h);
+		sp = new TouchPanel();
 		if (h.get("interactiePanelLaunchState") != null)
 		{
 			int breedte = ((Integer) h.get("breedte")).intValue();
@@ -71,7 +72,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			checkimg = new Image("images/resources/mw_vinkje_groen.png");
 			checkimg.setVisible(false);
 			checkimg.getElement().getStyle().setProperty("marginLeft", "3px");
-			sp = new TouchPanel();
 			if (fe == null)
 			{
 				sp.getElement().getStyle().setProperty("width", breedte + "px");

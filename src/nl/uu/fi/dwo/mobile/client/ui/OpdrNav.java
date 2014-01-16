@@ -87,7 +87,12 @@ public class OpdrNav implements OpdrNavIF, Runnable
 		{
 			for (int j = 0; j < aantalOpdrachten[i]; j++)
 			{
-				opdrachten[i][j] = (HashMap<String, Object>) launchData.get("opdracht_" + (i + 1) + "_" + (j + 1));
+				Object object = launchData.get("opdracht_" + (i + 1) + "_" + (j + 1));
+				if(! (object instanceof HashMap)){
+					object = new HashMap(); // XXX Wat is de minimum hashmap hier? 
+					java.util.logging.Logger.getLogger("OpdrNav").severe("Opdracht " + (j+1)  + " geen map ");
+				}
+				opdrachten[i][j] = (HashMap<String, Object>) object;
 				HashMap<String, Object> ht = opdrachten[i][j];
 				if (ht != null && ht.containsKey("scoreMax"))
 					scoresMax[i][j] = ((Integer) ht.get("scoreMax")).intValue();

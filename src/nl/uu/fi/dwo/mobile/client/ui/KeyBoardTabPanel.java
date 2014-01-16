@@ -69,10 +69,12 @@ public class KeyBoardTabPanel
 		keyboardButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 		keyboardButton.add(buttonImage);
 
-		Image digitsImage = new Image("images/resources/digits.png");
-		digitsImage.getElement().getStyle().setMargin(5, Unit.PX);
-		digitsButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-		digitsButton.add(digitsImage);
+		if(! FormuleKeyboard.hasKeyboard) {
+			Image digitsImage = new Image("images/resources/digits.png");
+			digitsImage.getElement().getStyle().setMargin(5, Unit.PX);
+			digitsButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+			digitsButton.add(digitsImage);
+		}
 
 		Image buttonRemoveImage = new Image("images/resources/keyboardremovebutton.png");
 		buttonRemoveImage.getElement().getStyle().setMargin(5, Unit.PX);
@@ -103,6 +105,7 @@ public class KeyBoardTabPanel
 			}
 		});
 
+		if(! FormuleKeyboard.hasKeyboard)
 		digitsButton.addTouchStartHandler(new TouchStartHandler()
 		{
 
@@ -116,7 +119,7 @@ public class KeyBoardTabPanel
 		});
 
 		staticpanel.add(keyboardButton);
-		staticpanel.add(digitsButton);
+		if(! FormuleKeyboard.hasKeyboard) staticpanel.add(digitsButton);
 		staticpanel.add(keyboardRemoveButton);
 
 		//contentpanel.setHeight("300px");
@@ -139,7 +142,7 @@ public class KeyBoardTabPanel
 	{
 		staticpanel.clear();
 		staticpanel.add(keyboardButton);
-		staticpanel.add(digitsButton);
+		if(! FormuleKeyboard.hasKeyboard) staticpanel.add(digitsButton);
 		staticpanel.add(keyboardRemoveButton);
 	}
 

@@ -24,10 +24,13 @@
    <inherits name="nl.uu.fi.dwo.formule.Formule" />
    <inherits name="fi.writemathgwt.WriteMathGWT-DWO" />
    
-<!--  <inherits name="fi.kladjegwt.KladjeGWT-DWO" /> -->
+<!--  <inherits name="fi.balansfruitgwt.BalansFruitGWT-DWO" /> -->
+<!-- --> <inherits name="fi.algebrapijlenhwt.AlgebraPijlenHWT-DWO" />
+<!-- --> <inherits name="fi.doorziengwt.DoorzienGWT-DWO" />
+<!-- --> <inherits name="fi.geomalggwt.GeomAlgGWT-DWO" />
+<!-- --> <inherits name="fi.graphtoolgwt.GraphToolGWT-DWO" />
+<!-- --> <inherits name="fi.kladjehwt.KladjeHWT-DWO" />
 <!--  <inherits name="fi.nabouwenaanzichtengwt.NabouwenAanzichtenGWT-DWO" /> -->
-<!--  <inherits name="fi.balansfruitgwt.BalansFruitGWT-DWO" /> --> 
-<inherits name="fi.graphtoolgwt.GraphToolGWT-DWO" />
      
 
   <inherits name="com.google.gwt.xml.XML"/> 

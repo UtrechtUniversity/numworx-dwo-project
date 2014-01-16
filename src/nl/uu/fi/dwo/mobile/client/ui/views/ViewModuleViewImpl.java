@@ -223,6 +223,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	{
 		String randVarString = "";
 		randVarString = (String) opdracht.get("randVarString");
+		if(randVarString == null) randVarString = "";
 		VariableCollection vc = new VariableCollection();
 		boolean wellSet = vc.setVariables(randVarString);
 
@@ -256,11 +257,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		opdrachtObjects = new ArrayList<Object>();
 		ArrayList<Object> opdrachtGegevens = (ArrayList<Object>) opdracht.get("interactiePanelLaunchData");
 		TekstBuffer tb = new TekstBuffer(varnamen, waarden);
-		newVersion = !(Boolean) opdracht.get("hasAntwoordVak");
+		newVersion = Boolean.FALSE.equals( opdracht.get("hasAntwoordVak") );
 		//New editor version
 		if (opdrachtGegevens != null || newVersion)
 		{
-			if ((Boolean) opdracht.get("hasTitle"))
+			if (Boolean.TRUE.equals( opdracht.get("hasTitle")))
 			{
 				SimplePanel title = new SimplePanel();
 				title.getElement().setInnerHTML((String) opdracht.get("titel") + "<br />");
@@ -308,8 +309,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	public void zetOpdrachtPlusState(HashMap<String, Object> opdracht, HashMap<String, Object> state)
 	{
-		String randVarString = "";
+		String randVarString;
 		randVarString = (String) opdracht.get("randVarString");
+		if(randVarString == null ) randVarString = "";
 		VariableCollection vc = new VariableCollection();
 		boolean wellSet = vc.setVariables(randVarString);
 
@@ -404,7 +406,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	{
 		//ArrayList<Object> opdrachtObjects;
 		tekst = new FlowPanel();
-		tekst.getElement().getStyle().setWidth((Integer) opdracht.get("scheidingX") / 8, Unit.PCT);
+		Object object = opdracht.get("scheidingX");
+		if(object == null ) object = new Integer ( 0 );
+		tekst.getElement().getStyle().setWidth((Integer) object / 8, Unit.PCT);
 		tekst.getElement().getStyle().setFloat(Float.LEFT);
 		tekst.getElement().getStyle().setPadding(5, Unit.PX);
 		SimplePanel title = new SimplePanel();
@@ -419,7 +423,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		contentPanel.add(tekst);
 		FormuleEditorWithSteps fews = new FormuleEditorWithSteps(opdracht, false, tb.getVarNamen(), tb.getVarWaarden());
 
-		fews.getEditor().requestFocus();
+		//fews.getEditor().requestFocus();
 		
 
 		contentPanel.add(fews.getAsPanel());
@@ -511,19 +515,19 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		return correct;
 	}
 
-	private Panel getFormuleKeyboard(FormuleEditor editor)
-	{
-		if (kb == null)
-			kb = new FormuleKeyboard();
-		kb.setEditor(editor);
-		Panel kbp = kb.getAsPanel();
-
-		kbp.getElement().getStyle().setPosition(Style.Position.ABSOLUTE);
-		kbp.getElement().getStyle().setBottom(0, Style.Unit.PX);
-		kbp.getElement().getStyle().setLeft(0, Style.Unit.PX);
-
-		return kbp;
-	}
+//	private Panel getFormuleKeyboard(FormuleEditor editor)
+//	{
+//		if (kb == null)
+//			kb = new FormuleKeyboard();
+//		kb.setEditor(editor);
+//		Panel kbp = kb.getAsPanel();
+//
+//		kbp.getElement().getStyle().setPosition(Style.Position.ABSOLUTE);
+//		kbp.getElement().getStyle().setBottom(0, Style.Unit.PX);
+//		kbp.getElement().getStyle().setLeft(0, Style.Unit.PX);
+//
+//		return kbp;
+//	}
 
 
 	private void addContentPanelTouchListener(TouchPanel contentPanel)

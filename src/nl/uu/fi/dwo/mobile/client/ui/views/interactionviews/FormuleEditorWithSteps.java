@@ -48,8 +48,8 @@ import fi.wiskopdr.expressies.VergelijkingMeerv;
 public class FormuleEditorWithSteps implements InteractionView
 {
 
-	private String startString = "";
-	private String antwoordString = null;
+	private String startString = "$f@";
+	private String antwoordString = "$f@";
 	private String prefix = "$f@";
 	private boolean hasPrefix = false;
 	boolean hasStartString = false;
@@ -184,7 +184,7 @@ public class FormuleEditorWithSteps implements InteractionView
 
 	public String extractStartString(HashMap<String, Object> h)
 	{
-		String result = "";
+		String result = "$f@";
 		String answer = "";
 
 		if (h.get("antwoordString") != null)
@@ -442,7 +442,7 @@ public class FormuleEditorWithSteps implements InteractionView
 
 		if (!startString.equals("$f@") && steps == 0)
 		{
-			if(bordjesMethode) {
+			if(bordjesMethode && isVergelijkingVak) {
 				// convert to stringStrikt.
 				VergelijkingMeerv e = FormuleParser.parseVergelijking(startString);
 				startString = "$f"+ e.toStringStrikt() + "@";
