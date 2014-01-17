@@ -25,6 +25,7 @@ public class DWOmAccessTest extends TestCase {
 		OutputStream out = new FileOutputStream("test.xml");
 		access.getLaunchData(sco, out);
 		out.close();
+		// TODO verity no base64 strings in text.xml.
 	}
 
 }
