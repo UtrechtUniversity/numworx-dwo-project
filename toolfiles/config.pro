@@ -4,6 +4,9 @@
 -outjars ..\output\jar\wiskopdr.jar
 -injars ..\..\GraphTool\output\classes
 -outjars ..\output\jar\graphtool.jar
+#-injars ..\..\Vergroten\output\classes
+#-injars ..\..\Vergroten\lib\classes (fi/beans/faqmaker/InstanceInfoLoader.class)
+#-outjars ..\output\jar\vergroten.jar
 
 
 -libraryjars <java.home>\lib\rt.jar
@@ -35,7 +38,7 @@
 -libraryjars ..\output\jar\jlm_cyrillic.jar
 -libraryjars ..\output\jar\jlm_greek.jar
 
--target 1.7
+-target 1.6
 
 -forceprocessing
 
@@ -54,12 +57,27 @@
     <methods>;
 }
 
+#-keep class fi.vergroten.text.* {
+#    <fields>;
+#    <methods>;
+#}
+
+-keep class fi.graphtool.text.* {
+    <fields>;
+    <methods>;
+}
+
 -keep class fi.wiskopdr.tekstobjects.LinkIF{
     <fields>;
     <methods>;
 }
 
 -keep class fi.wiskopdr.tekstobjects.TekstArea{
+    <fields>;
+    <methods>;
+}
+
+-keep class fi.wiskopdr.RealPoint{
     <fields>;
     <methods>;
 }
@@ -152,6 +170,11 @@
     <fields>;
     <methods>;
 }
+
+#-keep class fi.vergroten.**{
+#    <fields>;
+#    <methods>;
+#}
 
 
 -keep,allowshrinking class org.**
