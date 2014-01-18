@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Trusted-Only: true
 Permissions: all-permissions
-Codebase: *.science.uu.nl *.fi.uu.nl dme.colorado.edu dwoapp.appspot.com *.dwo.nl
+Codebase: *.science.uu.nl *.fi.uu.nl dme.colorado.edu *.appspot.com *.dwo.nl
 Application-Name: DWO
 Caller-Allowable-Codebase: *.science.uu.nl *.fi.uu.nl dme.colorado.edu dwoapp.appspot.com *.dwo.nl
 Main-Class: fi.dwo.client.domain.DWO
@@ -48,7 +48,6 @@ Class-Path: algebrapijlenoefenen.jar
  flitsbeeld_brx.jar 
  tafel.jar 
  vangen.jar 
- vergroten.jar 
  javalogoweb.jar 
  plofsomdwo.jar 
  makkekeersom.jar 
@@ -79,6 +78,7 @@ Class-Path: algebrapijlenoefenen.jar
  blocks.jar 
  getallenblokjes.jar 
  verknippen.jar 
+ vergroten.jar 
  fabriek.jar 
  kikker.jar 
  toverboek.jar 
