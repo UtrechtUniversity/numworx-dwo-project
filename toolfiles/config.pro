@@ -57,10 +57,6 @@
     <methods>;
 }
 
-#-keep class fi.vergroten.text.* {
-#    <fields>;
-#    <methods>;
-#}
 
 -keep class fi.graphtool.text.* {
     <fields>;
@@ -89,6 +85,10 @@
 
 -keep class fi.dwo.server.*.*{
     <fields>;
+    <methods>;
+}
+
+-keep class fi.dwo.parameters.**{
     <methods>;
 }
 
@@ -170,11 +170,6 @@
     <fields>;
     <methods>;
 }
-
-#-keep class fi.vergroten.**{
-#    <fields>;
-#    <methods>;
-#}
 
 
 -keep,allowshrinking class org.**
