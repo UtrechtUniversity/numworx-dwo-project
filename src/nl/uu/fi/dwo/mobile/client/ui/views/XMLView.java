@@ -80,9 +80,9 @@ public abstract class XMLView {
 				public void onResponseReceived(Request request, Response response)
 				{
 					String responseText = response.getText();
-					logger.severe("Status: " + response.getStatusCode() + " " + response.getStatusText());
-					logger.severe(response.getHeadersAsString());
-					logger.severe("Unparsable: " + responseText.substring(0, Math.min(300, responseText.length()) ));
+					logger.info("Status: " + response.getStatusCode() + " " + response.getStatusText());
+					logger.info(response.getHeadersAsString());
+					logger.info("Data: " + responseText.substring(0, Math.min(300, responseText.length()) ));
 					if (!responseText.isEmpty())
 					{
 						Document dom = XMLParser.parse(responseText);

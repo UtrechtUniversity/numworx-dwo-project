@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.formule.client.formuleobjects;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
+import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
 import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
 
 import com.google.gwt.canvas.client.Canvas;
@@ -25,7 +26,7 @@ public abstract class FormuleElement
 	private boolean changed = false;
 	protected boolean selected = false;
 
-	//font is the FomruleFont set from method, fm a copy (if changes) of font with the changes applied
+	//font is the FormuleFont set from method, fm a copy (if changes) of font with the changes applied
 	protected FormuleFont fm;
 	private FormuleFont font;
 	private FormuleFontChanges fontchanges;

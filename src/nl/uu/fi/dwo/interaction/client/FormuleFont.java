@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.interaction.client;
 
-import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleFontChanges;
 
 /**
  * Because gwt does not have font metrics we use this to make the conversion

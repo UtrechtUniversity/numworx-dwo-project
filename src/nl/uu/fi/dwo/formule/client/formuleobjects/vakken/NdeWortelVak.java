@@ -4,8 +4,8 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
-import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleFontChanges;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
+import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
 
 /**
  * 

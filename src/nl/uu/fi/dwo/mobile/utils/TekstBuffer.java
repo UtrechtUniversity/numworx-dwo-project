@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
@@ -201,6 +202,10 @@ public class TekstBuffer
 
 		int soortVak = (Integer) currentVakGegevens.get("soortInteractiePanel");
 
+// Een eerste pesterij: gooi currentVakGegevens door JSONUtilities heen.
+//		currentVakGegevens = JSONUtilities.fromJSONObject( JSONUtilities.toJSONObject(currentVakGegevens).isObject());
+		
+		
 		switch (soortVak)
 		{
 		case 39: case 10: // geogebra3
@@ -214,14 +219,14 @@ public class TekstBuffer
 //					);
 			
 		case 15: 
-			//return new StubView("DoorzienGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
-		    return new PopupFacade( currentVakGegevens, new fi.doorziengwt.client.DoorzienGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
+			return new StubView("DoorzienGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+		    //return new PopupFacade( currentVakGegevens, new fi.doorziengwt.client.DoorzienGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 20: 
 			//return new StubView("GeomAlgGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			return new PopupFacade( currentVakGegevens, new fi.geomalggwt.client.GeomAlgGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 5 :
-			//return new StubView("AlgebraPijlenHWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
-			return new PopupFacade( currentVakGegevens, new fi.algebrapijlenhwt.client.AlgebraPijlenHWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
+			return new StubView("AlgebraPijlenHWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			//return new PopupFacade( currentVakGegevens, new fi.algebrapijlenhwt.client.AlgebraPijlenHWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		}
 
 		if (soortVak == 0)

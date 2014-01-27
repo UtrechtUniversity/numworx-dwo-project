@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.PopupButton;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
 
 public class PopupFacade implements InteractionView {
 
@@ -55,7 +56,16 @@ public class PopupFacade implements InteractionView {
 	
 	public Widget wrap(Widget container) {
 		if(popup) {
-			PopupButton btn = new PopupButton(container, getImage());
+			PopupButton btn = new PopupButton(container, getImage(), null);
+			list.add(btn);
+			return btn;
+		}
+		return container;
+	}
+	
+	public Widget wrap(StubView container) {
+		if(popup) {
+			PopupButton btn = new PopupButton(container.getWidget(), getImage(), container);
 			list.add(btn);
 			return btn;
 		}

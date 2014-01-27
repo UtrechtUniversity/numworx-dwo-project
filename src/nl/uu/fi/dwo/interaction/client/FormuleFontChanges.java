@@ -1,6 +1,5 @@
-package nl.uu.fi.dwo.formule.client.formuleobjects;
+package nl.uu.fi.dwo.interaction.client;
 
-import nl.uu.fi.dwo.interaction.client.FormuleFont;
 
 /**
  * This class keeps track of changes made to the font (for instance if we have a

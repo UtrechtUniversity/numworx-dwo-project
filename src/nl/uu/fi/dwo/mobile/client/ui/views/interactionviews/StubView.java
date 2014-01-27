@@ -85,6 +85,11 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 				return JSONUtilities.fromJSONObject(js);
 			}
 		}
+		if(pendingState != null)
+		{
+			JSONObject js = JSONParser.parseLenient(pendingState).isObject();
+			return JSONUtilities.fromJSONObject(js);
+		}
 		return null;
 	}
 
@@ -95,6 +100,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		{
 			setState(innerView, object.toString());
 			pendingState = null;
+			pendingState = object.toString(); // reset komt mogelijk na
 		}
 		else 
 			pendingState = object.toString();
@@ -202,7 +208,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	}
 
 	public Widget asWidget() {
-		return facade.wrap(super.asWidget());
+		return facade.wrap(this);
 	}
 
 	@Override

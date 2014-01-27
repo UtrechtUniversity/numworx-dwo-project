@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
 import java.util.Vector;
+import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.interaction.client.touch.TouchStartEvent;
 import nl.uu.fi.dwo.interaction.client.touch.TouchStartHandler;
@@ -152,6 +153,7 @@ public class KeyBoardTabPanel
 		sp.getElement().getStyle().setProperty("clear", "both");
 		tabpanel.add(sp);
 	}
+	static final Logger logger = Logger.getLogger("KeyboardTabPanel");
 
 	public void addTab(String buttonText, Panel p)
 	{
@@ -159,7 +161,9 @@ public class KeyBoardTabPanel
 		button.setText(buttonText);
 		this.tabs.add(p);
 		this.tabbuttons.add(button);
+		logger.info("addTab " + buttonText + " before " + tabkeys);
 		this.tabkeys.add(buttonText);
+		logger.info("addTab " + buttonText + " added to " + tabkeys);
 
 		this.tabpanel.add(this.tabbuttons.lastElement());
 		this.tabcontentpanel.add(this.tabs.lastElement());
@@ -183,7 +187,12 @@ public class KeyBoardTabPanel
 	public void hideTabButton(String panel)
 	{
 		int index = this.tabkeys.indexOf(panel);
-		tabbuttons.get(index).getElement().getStyle().setDisplay(Display.NONE);
+		if(index >= 0 && index < tabkeys.size())
+			tabbuttons.get(index).getElement().getStyle().setDisplay(Display.NONE);
+		else 
+		{
+			logger.severe(" indexOf " + panel + " from " + tabkeys + " is " + index);
+		}
 	}
 
 	public void goTo(String panel)

@@ -2,8 +2,8 @@ package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
-import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleFontChanges;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
+import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
 
 /**
  * Macht vak

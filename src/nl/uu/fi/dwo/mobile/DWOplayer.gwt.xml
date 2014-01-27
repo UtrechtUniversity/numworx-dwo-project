@@ -60,10 +60,9 @@
     <replace-with class="nl.uu.fi.dwo.mobile.client.sco.SCORM_guest">
     	<when-type-is class="nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF"/>
     </replace-with>
-    
+<!-- Logging TRUE/FALSE FINEST/.../SEVERE -->   
     <set-property name="gwt.logging.logLevel" value="FINEST"/>
-<source ></source>
-
+    <set-property name="gwt.logging.enabled" value="FALSE"/>
 
 <inherits name="com.google.gwt.activity.Activity" />
 </module>
