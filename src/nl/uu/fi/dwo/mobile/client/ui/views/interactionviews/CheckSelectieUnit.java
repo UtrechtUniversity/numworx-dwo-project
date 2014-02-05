@@ -1,0 +1,667 @@
+package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Vector;
+
+import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.touch.client.Point;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
+
+import fi.wiskopdr.FormuleParser;
+import fi.wiskopdr.expressies.BasisExpressie;
+import fi.wiskopdr.expressies.Expressie;
+import fi.wiskopdr.expressies.VergelijkingMeerv;
+import fi.wiskopdr.text.Text_nl;
+import nl.uu.fi.dwo.interaction.client.InteractionStub;
+import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.Stub;
+
+public class CheckSelectieUnit implements EntryPoint, InteractionStub
+{
+	public static Text_nl rb = new Text_nl();
+	static final String holderId = "dockholder";
+	
+	private HashMap<String, Object> launchState; 
+	String[] randomVarNamen = null;
+	HashMap randomVarWaarden = null;
+	
+	private LayoutPanel basisPanel;
+	int breedte = 110;
+	int hoogte = 24; 	
+	
+	private int mode;
+	    
+    private boolean ingevuld;
+    private boolean nagekeken;
+    
+    private boolean correct;
+    private boolean fout;
+    
+    private int attemptsCount;
+	private Vector attempts;
+    
+    private Point[] randomizedPositions;
+    private boolean positionsRandomized;
+    
+    private boolean multiSelections;
+    private boolean randomizePositions;
+    private boolean checkFormule;
+    private String[] formuleStrings = null;
+    
+    private int score;
+    private int errorCount;
+    private int scoreMax=10;
+    
+	static int GOED = 1;
+	static int FOUT = 0;
+	static int HALF = 2;
+	static int GEEN = 3;
+	
+	private PushButton checkButton;
+	private TekstVakPanel[] ipList; //was: InteractiePanel; weet niet zeker of TekstVakPanel de juiste vervanging is.
+	
+	private boolean[] juisteSelecties;
+	
+	//private TekstVakPanel parent;
+	
+	//AntwoordKeuzeVakGWTClientBundle antwoordKeuzeVakGWTClientBundle; 
+	//static AntwoordKeuzeVakGWTCssResource antwoordKeuzeVakCss;
+	//ImageResource goedKrulResource, goedKrulHalfResource, foutKruisResource;//
+	Image goedKrulImage, foutKruisImage; //goedKrulHalfImage
+	
+	
+	private boolean logOption;
+	private String logID;
+	
+	private boolean[][] logObjectives;
+	
+	private boolean check;
+	private boolean teltMee;
+	
+
+	public void randomizePositions()
+	{
+		Vector v = new Vector();
+		randomizedPositions = new Point[juisteSelecties.length];
+		for(int i=0 ; i<ipList.length ; i++)
+		{	if(!(ipList[i] instanceof TekstVakPanel) || !((TekstVakPanel)ipList[i]).isZwevend())return;
+			v.addElement(((TekstVakPanel)ipList[i]).geefLocatie());
+		}
+		for(int i=0 ; i<ipList.length ; i++)
+		{	int r = (int)((ipList.length-i)*Math.random());
+			Point p = (Point)(v.elementAt(r));
+			if(!positionsRandomized) randomizedPositions[i] = p;
+			((TekstVakPanel)ipList[i]).zetLocatie(p.getX(), p.getY());
+			v.removeElementAt(r);
+		}
+		positionsRandomized = true;
+		//(((TekstInteractiePanelVak)((Component)ipList[0]).getParent()).getTekstVak()).layoutTekst();
+	}	
+	
+	/*
+	public void zetParent(TekstVakPanel parent)
+	{
+		this.parent = parent;
+	}
+	
+	public TekstVakPanel getParent()
+	{
+		return parent;
+	}
+	*/
+	
+	public void kijkNa()
+    {
+    	kijkNa(true);
+    }
+    
+    public void kijkNa(boolean show)
+    {
+       // if(huidigIC!=null) huidigIC.setVisible(false);
+        
+        boolean juist = true;
+        ingevuld = false;
+        
+        correct = false;
+        fout = true;
+        score = 0;
+        
+        if(checkFormule)
+        {
+        	if(formuleStrings!=null)
+        	{
+        		
+        		VergelijkingMeerv[] v = new VergelijkingMeerv[formuleStrings.length];
+        		for(int h=0 ; h<formuleStrings.length ; h++)
+		        {
+        			boolean stapJuist = true;
+        			v[h] = FormuleParser.parseVergelijking(formuleStrings[h]);
+        			if(v[h]==null)
+        			{	juist = false;
+        				break;
+        			}
+        			
+        			//ipList = new TekstVakPanel[juisteSelecties.length];
+        	        for(int i=0 ; i<ipList.length ; i++)
+        	        {   //ipList[i] = parent.zoekTekstVakPanel(i+1);
+        	        	//ipList[i] = ((TekstInteractiePanelVak)getParent()).zoekInteractiePanel(i+1);
+        	        	Expressie e = ((TekstVakPanel)ipList[i]).isIpSelected() ? ((TekstVakPanel)ipList[i]).geefObjectWaarde() : new BasisExpressie(0);
+    	        		if(e!=null) 
+    	        		{	v[h] = v[h].substitueer(e, "V?("+(i+1)+")");
+    	        		}
+    	        		else 
+    	        		{	stapJuist = false;
+    	        			break;
+    	        		}
+        	        	ingevuld = ingevuld || ((TekstVakPanel)ipList[i]).isIpSelected();
+        	        }
+        			
+        			
+        			
+        			//System.out.println(v[h].toString());
+        			stapJuist = v[h].isOplossing(new BasisExpressie(1.212131415),"q");
+        			juist = juist && stapJuist;
+        			if(!juist) break;
+		        }
+        	}
+        	else juist = false;
+        	
+        }
+        else
+        {   //ipList = new TekstVakPanel[juisteSelecties.length];
+	        for(int i=0 ; i<ipList.length ; i++)
+	        {   //ipList[i] = parent.zoekTekstVakPanel(i+1);
+	            if(ipList[i] != null)
+	            {	juist = juist && ((TekstVakPanel)ipList[i]).isIpSelected() == juisteSelecties[i];
+	            	ingevuld = ingevuld || ((TekstVakPanel)ipList[i]).isIpSelected();
+	            }
+	        }
+        }
+        
+        if(juist)
+        {   goedKrulImage.setVisible(true);
+            correct = true;
+            fout = false;
+            score = scoreMax;
+        }
+        else 
+        {   foutKruisImage.setVisible(true);
+            correct = false;
+            fout = true;
+            score = 0;
+        }
+        //if(show && check)huidigIC.setVisible(true);
+        
+        System.out.println("kijkna Show="+show);
+        
+        //if(ingevuld && show)produceAction("changed");
+    }
+    
+    public void kijkNa(int stapNr)
+    { 	kijkNa();
+    }
+		
+		
+	@Override
+	public Widget asWidget() {
+		return basisPanel;
+	}
+
+	@Override
+	public HashMap<String, Object> getState() {
+		Point[] randomizedPositions = null; //gaat dit goed?
+	    boolean ingevuld = false;
+	    boolean nagekeken = false;
+	    Vector attempts = new Vector();
+	    int attemptsCount = 0;
+		int errorCount = 0;
+		
+	    
+	    randomizedPositions = this.randomizedPositions;
+	    ingevuld = this.ingevuld;
+	    nagekeken = this.nagekeken;
+	    attempts = this.attempts;
+	    attemptsCount = this.attemptsCount;
+	    errorCount = this.errorCount;
+
+	    //if(!("MW".equals(WiskOpdr.deployVariant) || "GR".equals(WiskOpdr.deployVariant))) 
+	    kijkNa(false);
+		if(logOption)
+		{	
+	    	HashMap logMap = new HashMap<String, Object>();
+			
+	    	String logString = "";
+			String[] options = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","X","Y","Z"};
+			for(int i=0 ; i<ipList.length ; i++)
+	        {   //ipList[i] = parent.zoekTekstVakPanel(i+1);
+	            if(((TekstVakPanel)ipList[i]).isIpSelected() && i<options.length) logString = logString + options[i];
+	        }
+			logMap.put("logAnswer", logString);
+			logMap.put("logScore", new Integer(score));
+			logMap.put("logMaxScore", new Integer(scoreMax));
+			logMap.put("logErrorCount", new Integer(errorCount));
+			logMap.put("logAttemptsCount", new Integer(attemptsCount));
+			logMap.put("logAttempts", attempts);
+			
+			//WiskOpdr.setLog(logID, logMap);
+		}
+         
+	    HashMap<String, Object> h = new HashMap<String, Object>();
+        if(randomizedPositions!=null) h.put("randomizedPositions", randomizedPositions);
+        h.put("ingevuld", new Boolean(ingevuld));
+        h.put("nagekeken", new Boolean(nagekeken));
+        h.put("attempts", attempts);
+        h.put("attemptsCount", new Integer(attemptsCount));
+        h.put("errorCount", new Integer(errorCount));
+        return h;
+	}
+
+	@Override
+	public void setState(HashMap<String, Object> h) {
+		Point[] randomizedPositions = null;
+	    boolean ingevuld = false;
+	    boolean nagekeken = false;
+	    Vector attempts = new Vector();
+	    int attemptsCount = 0;
+		int errorCount = 0;
+        
+	    if(h.get("randomizedPositions") instanceof ArrayList) 
+	    {	ArrayList<Point> randomizedPositionsList = (ArrayList<Point>)h.get("randomizedPositions");
+	    	randomizedPositions = new Point[randomizedPositionsList.size()];
+	    	for(int i = 0; i < randomizedPositionsList.size(); i++)
+	    		randomizedPositions[i] = randomizedPositionsList.get(i);
+	    }
+	    if(h.get("ingevuld") != null) 
+	    	ingevuld = ((Boolean)h.get("ingevuld")).booleanValue();
+	    if(h.get("nagekeken") != null) 
+	    	nagekeken = ((Boolean)h.get("nagekeken")).booleanValue();
+	    if(h.get("attempts") != null)
+	    	attempts = (Vector)h.get("attempts");
+	    if(h.get("attemptsCount") != null) 
+	    	attemptsCount = ((Number)h.get("attemptsCount")).intValue();
+	    if(h.get("errorCount") != null) 
+	    	errorCount = ((Number)h.get("errorCount")).intValue();
+        
+        this.randomizedPositions = randomizedPositions;
+        this.ingevuld = ingevuld;
+        this.nagekeken = nagekeken;
+        this.attempts = attempts;
+        this.attemptsCount = attemptsCount;
+	    this.errorCount = errorCount;
+        
+        if(randomizePositions) 
+        {   for(int i=0 ; i<ipList.length ; i++)
+	        {   
+	        	Point p = randomizedPositions[i];
+	            ((TekstVakPanel)ipList[i]).zetLocatie(p.getX(), p.getY());
+	        }
+	        //(((TekstInteractiePanelVak)((Component)ipList[0]).getParent()).getTekstVak()).layoutTekst();
+        }
+        
+        if(ingevuld && (mode==0 || nagekeken)){
+        	kijkNa();
+        }
+	}
+	
+	public void setAttempt()
+	{
+		String goedFout = "";
+		if(goedKrulImage.isVisible())
+			goedFout = "goed";
+		//else if(goedKrulHalfImage.isVisible())
+		//	goedFout = "half";
+		else if(foutKruisImage.isVisible())
+			goedFout = "fout";
+		
+		String logString = "";
+		String[] options = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","X","Y","Z"};
+		for(int i=0 ; i<ipList.length ; i++)
+        {   //ipList[i] = parent.zoekTekstVakPanel(i+1);
+            if(ipList[i] != null && ((TekstVakPanel)ipList[i]).isIpSelected() && i<options.length) 
+            	logString = logString + options[i];
+        }
+		
+		String s = logString;
+		s = s + "   ;   ";
+		s = s + goedFout;
+		s = s + "   ;   ";
+		s = s + "score = " + score;
+		s = s + "   ;   ";
+		s = s + new Date().toString();
+		
+
+		attempts.addElement(s);
+		System.out.println(s);
+	}
+	
+	public void wis()
+	{
+		//ipList = null;
+		juisteSelecties = null;
+		
+	    goedKrulImage.setVisible(false);
+	    //goedKrulHalfImage.setVisible(false);
+	    foutKruisImage.setVisible(false);
+		
+	    correct = false;
+	    score = 0;
+	    errorCount = 0;
+	    attemptsCount = 0;
+	    nagekeken = false;
+	    ingevuld = false;
+	    
+	    attempts = new Vector();
+	}
+
+	@Override
+	public int getScore() {
+		if (!teltMee)
+			return 0;
+		return score;
+	}
+	
+	public int[][] getScoreObjectives()
+	{
+		if (logObjectives == null)
+			return null;
+		int[][] scoreObjectives = new int[logObjectives.length][];
+		for (int i = 0; i < logObjectives.length; i++)
+			scoreObjectives[i] = new int[logObjectives[i].length];
+		for (int i = 0; i < logObjectives.length; i++)
+			for (int j = 0; j < logObjectives[i].length; j++)
+			{
+				if (logObjectives[i][j])
+					scoreObjectives[i][j] = score;
+			}
+		return scoreObjectives;
+	}
+
+	public int getScoreMax()
+	{
+		if (!teltMee)
+			return 0;
+		return scoreMax;
+	}
+
+	public boolean isCorrect()
+	{
+		if (!teltMee)
+			return true;
+		return correct;
+	}
+
+	public boolean isFout()
+	{
+		if (!teltMee)
+			return false;
+		return fout;
+	}
+
+	public void zetMode(int mode)
+	{
+		this.mode = mode;
+		checkButton.setVisible(mode==0 || mode==1);
+	}
+
+	public void zetNagekeken(boolean b)
+	{
+		if (ingevuld)
+			nagekeken = b;
+	}
+
+	public void stop()
+	{
+		kijkNa();
+		
+	}
+
+	public void start()
+	{
+	}
+
+	public void destroy()
+	{
+	}
+
+	public void opnieuw()
+	{
+		positionsRandomized = false;
+    	if(randomizePositions) randomizePositions();
+    	score = 0;
+		correct = false;
+	}
+
+		@Override
+	public void setCommunicationRoot(OpdrNavIF comRoot) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public CheckSelectieUnit(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden, TekstVakPanel[] ipList)
+	{
+		
+		if (h != null && h.get("breedte") != null)
+			breedte = (Integer) h.get("breedte");
+		if (h != null && h.get("hoogte") != null)
+			hoogte = (Integer) h.get("hoogte");
+		if (h != null && h.get("interactiePanelLaunchState") != null)
+			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
+		
+		//this.parent = parent;
+		
+		init(breedte, hoogte, launchState, randomVarWaarden);
+		this.ipList = ipList;
+		
+		initialize(h, randomVarNamen, randomVarWaarden);
+	}
+
+	@Override
+	public void init(int width, int height, Map<String, Object> launchData,
+			Map<String, Number> values) {
+		breedte = width;
+		hoogte = height;
+		//this.randomVarWaarden = randomValues;
+
+		if (launchData != null)
+		{
+			if(launchData.get("juisteSelecties") instanceof ArrayList)
+			{
+				ArrayList<Boolean> juisteSelectiesList = (ArrayList<Boolean>) launchData.get("juisteSelecties");
+				juisteSelecties = new boolean[juisteSelectiesList.size()];
+				for(int i = 0; i < juisteSelectiesList.size(); i++)
+					juisteSelecties[i] = juisteSelectiesList.get(i);
+			}
+			if(launchData.get("scoreMax") != null) 
+				scoreMax = ((Number)launchData.get("scoreMax")).intValue();
+		    if(launchData.get("randomizePositions") != null) 
+		    	randomizePositions = ((Boolean)launchData.get("randomizePositions")).booleanValue();
+		    if(launchData.get("multiSelections") != null) 
+		    	multiSelections = ((Boolean)launchData.get("multiSelections")).booleanValue();
+		    if(launchData.get("logOption") != null) 
+		    	logOption = ((Boolean)launchData.get("logOption")).booleanValue();
+			if(launchData.get("logID") != null) 
+				logID = (String)launchData.get("logID");
+			if(launchData.get("check") != null) 
+				check = ((Boolean)launchData.get("check")).booleanValue();
+			if(launchData.get("teltMee") != null) 
+				teltMee = ((Boolean)launchData.get("teltMee")).booleanValue();
+			if(launchData.get("checkFormule") != null) 
+				checkFormule = ((Boolean)launchData.get("checkFormule")).booleanValue();
+			
+			if(launchData.get("formuleStrings") instanceof ArrayList)
+			{	ArrayList<String> formuleStringsList = (ArrayList<String>) launchData.get("formuleStrings");
+				formuleStrings = new String[formuleStringsList.size()];
+				for(int i = 0; i < formuleStringsList.size(); i++)
+					formuleStrings[i] = formuleStringsList.get(i);
+			}
+			if(launchData.get("logObjectives") instanceof ArrayList)
+			{	ArrayList<ArrayList<Boolean>> logObjectivesList = (ArrayList<ArrayList<Boolean>>) launchData.get("logObjectives");
+				logObjectives = new boolean[logObjectivesList.size()][];
+				for(int i = 0; i < logObjectivesList.size(); i++)
+				{	logObjectives[i] = new boolean[logObjectivesList.get(i).size()];
+					for(int j = 0; j < logObjectivesList.get(i).size(); j++)
+						logObjectives[i][j] = logObjectivesList.get(i).get(j);
+				}
+			}
+			
+			
+			
+			
+			//AntwoordKeuzeVak (om te spieken): 
+			/*
+			if (launchData.get("keuzeMogelijkheden") instanceof ArrayList)
+			{
+				ArrayList<String> keuzeMogelijkhedenList = (ArrayList<String>) launchData.get("keuzeMogelijkheden");
+				keuzeMogelijkheden = new String[keuzeMogelijkhedenList.size()];
+				for(int i = 0; i < keuzeMogelijkhedenList.size(); i++)
+					keuzeMogelijkheden[i] = keuzeMogelijkhedenList.get(i);
+			}
+			//if (launchData.get("keuzeMogelijkheden") != null)
+			//	keuzeMogelijkheden = (String[]) launchData.get("keuzeMogelijkheden");
+			if (launchData.get("antwoordString") != null)
+				antwoordString = (String) launchData.get("antwoordString");
+			if (launchData.get("scoreMax") != null)
+				scoreMax = ((Integer) launchData.get("scoreMax")).intValue();
+			if(launchData.get("answerModels") instanceof ArrayList)
+			{	ArrayList<HashMap> answerModelsList = (ArrayList<HashMap>) launchData.get("answerModels");
+				answerModels = new HashMap[answerModelsList.size()];
+				for(int i = 0; i < answerModelsList.size(); i++)
+					answerModels[i] = answerModelsList.get(i);
+			}
+			
+			//if (launchData.get("answerModels") != null)
+			//	answerModels = (HashMap<String, Object>[]) launchData.get("answerModels");
+			if (launchData.get("hasFeedback") != null)
+				hasFeedback = ((Boolean) launchData.get("hasFeedback")).booleanValue();
+			if (launchData.get("check") != null)
+				check = ((Boolean) launchData.get("check")).booleanValue();
+			if (launchData.get("teltMee") != null)
+				teltMee = ((Boolean) launchData.get("teltMee")).booleanValue();
+			if (launchData.get("logOption") != null)
+				logOption = ((Boolean) launchData.get("logOption")).booleanValue();
+			if (launchData.get("logID") != null)
+				logID = (String) launchData.get("logID");
+			if(launchData.get("logObjectives") instanceof ArrayList)
+			{	ArrayList<ArrayList<Boolean>> logObjectivesList = (ArrayList<ArrayList<Boolean>>) launchData.get("logObjectives");
+				logObjectives = new boolean[logObjectivesList.size()][];
+				for(int i = 0; i < logObjectivesList.size(); i++)
+				{	logObjectives[i] = new boolean[logObjectivesList.get(i).size()];
+					for(int j = 0; j < logObjectivesList.get(i).size(); j++)
+						logObjectives[i][j] = logObjectivesList.get(i).get(j);
+				}
+			}
+			
+			//if (launchData.get("logObjectives") != null)
+			//	logObjectives = (boolean[][]) launchData.get("logObjectives");
+			 * */
+			 
+			
+		}
+	}
+	
+	private void initialize(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
+	{
+		//getImages();
+		
+		attempts = new Vector();
+		
+		basisPanel = new LayoutPanel();
+		basisPanel.setSize("" + breedte + "px", "" + hoogte + "px");
+		
+		checkButton = new PushButton(rb.getString("klaarKnopLabel"));//"Klaar" erop zetten: klaarKnopLabel in fi.wiskopdr.text.Text_nl.
+		basisPanel.add(checkButton);
+		basisPanel.setWidgetLeftWidth(checkButton, 0, Style.Unit.PX, breedte - 20, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(checkButton, 0, Style.Unit.PX, 20, Style.Unit.PX);
+		checkButton.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent e)
+			{
+				kijkNa();
+	        	if(fout) errorCount++;
+	        	attemptsCount++;
+				setAttempt();
+			}
+		});
+		
+		goedKrulImage = new Image("images/resources/goedkrul_en.gif");
+		foutKruisImage = new Image("images/resources/foutkruis.gif");
+		
+		basisPanel.add(goedKrulImage);
+		basisPanel.add(foutKruisImage);
+		basisPanel.setWidgetLeftWidth(goedKrulImage, breedte - 20, Style.Unit.PX, 20, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(goedKrulImage, 0, Style.Unit.PX, hoogte, Style.Unit.PX);
+		basisPanel.setWidgetLeftWidth(foutKruisImage, breedte - 20, Style.Unit.PX, 20, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(foutKruisImage, 0, Style.Unit.PX, hoogte, Style.Unit.PX);
+		goedKrulImage.setVisible(false);
+		foutKruisImage.setVisible(false);
+		
+				
+		for(int i=0 ; formuleStrings!=null && i<formuleStrings.length ; i++)
+        {	try{
+				formuleStrings[i] = FormuleParser.randomizeString(formuleStrings[i], randomVarNamen, randomVarWaarden);
+	    	}
+	    	catch(Exception e){	}
+        }
+		
+		//ipList = new TekstVakPanel[juisteSelecties.length];
+        for(int i=0 ; i<ipList.length ; i++)
+        {   //Widget panel = basisPanel.getParent();
+        	//ipList[i] = parent.zoekTekstVakPanel(i+1);
+            if(ipList[i] != null)
+            {	ipList[i].getAsPanel().addDomHandler(new ClickHandler(){
+	    			public void onClick(ClickEvent e){
+	    				for(int i = 0; i < ipList.length; i++)
+	    				{	if(e.getSource() == ipList[i].getAsPanel())
+	    				
+	    					{	goedKrulImage.setVisible(false);
+	    						//goedKrulHalfImage.setVisible(false);
+	    						foutKruisImage.setVisible(false);
+	    						correct = false;
+	    						score = 0;
+	    						
+	    						if(!multiSelections)
+	    						{
+	    							for(int j = 0; j < ipList.length; j++)
+	    								if(i != j)
+	    									ipList[j].setSelected(false);
+	    						}
+	    						break;
+	    					}
+	    				}
+	    			}
+	    		}, ClickEvent.getType());
+            }
+        }
+        
+        if(randomizePositions && !positionsRandomized) randomizePositions();
+		
+		//juiste antwoord nog instellen?
+		
+	}
+
+	@Override //nodig?
+	public void onModuleLoad() {
+		HashMap<String, Object> h = new HashMap<String, Object>();
+		h.put("breedte", (Integer)breedte);
+		h.put("hoogte", (Integer)hoogte);
+		Widget kbp = null;
+
+		initialize(h, null, null);
+		
+		RootPanel.get(holderId).add(basisPanel);
+		RootPanel.get(holderId).addStyleName("root");
+		
+		Stub.publish(this);
+	}
+
+}

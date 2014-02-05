@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
@@ -24,11 +25,23 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.FontStyle;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.VerticalAlign;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.touch.client.Point;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
+import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
+
+import fi.wiskopdr.FormuleParser;
+import fi.wiskopdr.expressies.Aftrekking;
+import fi.wiskopdr.expressies.Expressie;
+import fi.wiskopdr.expressies.Vergelijking;
+import fi.wiskopdr.expressies.VergelijkingMeerv;
 
 public class TekstVakPanel implements InteractionView
 {
@@ -39,7 +52,9 @@ public class TekstVakPanel implements InteractionView
 	private int breedte = 600;
 	private int hoogte = 250;
 	private HashMap<String, Object> launchState, instellingen;
+	private LayoutPanel mainPanel2 = null;
 	private Grid mainPanel = null;
+	private FlowPanel randPanel = null;
 	private FlowPanel[][] tekstVakken = null;
 	String[] randomVarNamen = null;
 	HashMap<String, Object> randomVarWaarden = null;
@@ -55,7 +70,18 @@ public class TekstVakPanel implements InteractionView
 	CssColor bgColor = CssColor.make(255, 255, 255);
 	CssColor fgColor = CssColor.make(0, 0, 0);
 	CssColor randColor = CssColor.make(150, 150, 150);
+	CssColor selectionColor = CssColor.make(255, 128, 0);
+	CssColor grijs = CssColor.make(128, 128, 128);
+	int randDikte = 0;
 	private boolean popup;
+	
+	private boolean selectable;
+	private boolean selected;
+	private String checkExpressieString = "$f1@";
+	private boolean defaultBijNull;
+	private int ipId = 0;
+	private boolean colorSelection;
+	
 
 	public TekstVakPanel(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
@@ -72,7 +98,9 @@ public class TekstVakPanel implements InteractionView
 		System.out.println("launchState: " + launchState);
 		boolean bgColorZichtbaar = false;
 		boolean randZichtbaar = false;
-		int randDikte = 0;
+		boolean tableBorders = false;
+		boolean centerV = false;
+		boolean centerH = false;
 
 		int bgColor_red = 255;
 		int bgColor_green = 255;
@@ -133,47 +161,120 @@ public class TekstVakPanel implements InteractionView
 			font_size = (Integer) launchState.get("font_size");
 		if (launchState != null && launchState.get("font_style") != null)
 			font_style = (Integer) launchState.get("font_style");
-
+		if (launchState != null && launchState.get("selectable") != null)
+			selectable = ((Boolean) launchState.get("selectable")).booleanValue(); //misschien niet nodig.
+		if (launchState != null && launchState.get("checkExpressieString") != null)
+			checkExpressieString = (String) launchState.get("checkExpressieString");
+		if (launchState != null && launchState.get("defaultBijNull") != null)
+			defaultBijNull = ((Boolean) launchState.get("defaultBijNull")).booleanValue();
+		if (launchState != null && launchState.get("ipId") != null)
+			ipId = ((Number) launchState.get("ipId")).intValue();
+		if (launchState != null && launchState.get("colorSelection") != null)
+			colorSelection = ((Boolean) launchState.get("colorSelection")).booleanValue();
+		if (launchState != null && launchState.get("tableBorders") != null)
+			tableBorders = ((Boolean) launchState.get("tableBorders")).booleanValue();
+		if (launchState != null && launchState.get("centerV") != null)
+			centerV = ((Boolean) launchState.get("centerV")).booleanValue();
+		if (launchState != null && launchState.get("centerH") != null)
+			centerH = ((Boolean) launchState.get("centerH")).booleanValue();
+		
 		bgColor = CssColor.make(bgColor_red, bgColor_green, bgColor_blue);
 		fgColor = CssColor.make(fgColor_red, fgColor_green, fgColor_blue);
 		randColor = CssColor.make(randColor_red, randColor_green, randColor_blue);
-		randDikte = randZichtbaar ? randDikte : 0;
+		randDikte = randZichtbaar ? randDikte : 0; 
 
+		mainPanel2 = new LayoutPanel();
+		mainPanel2.setSize(breedte + "px", hoogte + "px");
+		mainPanel2.addDomHandler(new ClickHandler(){
+			public void onClick(ClickEvent e){
+				if(!selectable)
+					return;
+				
+				selected = !selected;
+				setSelected(selected);
+			}
+		}, ClickEvent.getType());
+		
+		randPanel = new FlowPanel();
+		if(bgColorZichtbaar)
+			randPanel.getElement().getStyle().setBackgroundColor(bgColor.toString());
+		randPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
+		randPanel.getElement().getStyle().setBorderColor(randColor.toString());
+		randPanel.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
+		randPanel.getElement().getStyle().setProperty("borderRadius", (ronding / 2) + "px");
+		
+		//tabelranden ook regelen in het randPanel? 
+		//Waar komen de randen te staan? Aan de linkerkanten van de nieuwe kolommen? Nee, midden tussen (maar afgerond naar rechts/beneden)
+		
 		mainPanel = new Grid(hoogtes.size(), breedtes.size());
+		
 		mainPanel.getElement().getStyle().setProperty("borderSpacing", "" + cellSpaceColumn + "px " + cellSpaceRow + "px");
+		
 		if (breedtes.size() > 1)
 			mainPanel.getElement().getStyle().setProperty("margin", "" + (-cellSpaceRow) + "px " + (-cellSpaceColumn) + "px");
+		
 		mainPanel.getElement().getStyle().setBorderStyle(BorderStyle.DASHED);
 		mainPanel.getElement().getStyle().setBorderColor("gray");
 		mainPanel.getElement().getStyle().setBorderWidth(0, Unit.PX);
-
+		
+		//tabelranden hier regelen?
+		
+		
 		tekstVakken = new FlowPanel[hoogtes.size()][breedtes.size()];
 		for (int i = 0; i < hoogtes.size(); i++)
 		{
 			for (int j = 0; j < breedtes.size(); j++)
 			{
 				tekstVakken[i][j] = new FlowPanel();
-				if (bgColorZichtbaar)
-					tekstVakken[i][j].getElement().getStyle().setBackgroundColor(bgColor.toString());
+				//if (bgColorZichtbaar)
+				//	tekstVakken[i][j].getElement().getStyle().setBackgroundColor(bgColor.toString());
 				tekstVakken[i][j].getElement().getStyle().setColor(fgColor.toString());
 				tekstVakken[i][j].getElement().getStyle().setFontSize(font_size, Unit.PX);
 				tekstVakken[i][j].getElement().getStyle().setProperty("lineHeight", "1.2");
 				tekstVakken[i][j].getElement().getStyle().setFontStyle(font_style == 2 || font_style == 3 ? FontStyle.ITALIC : FontStyle.NORMAL);
 				tekstVakken[i][j].getElement().getStyle().setFontWeight(font_style == 1 || font_style == 3 ? Style.FontWeight.BOLD : Style.FontWeight.NORMAL);
+				
+				tekstVakken[i][j].getElement().getStyle().setProperty("margin", "" + cellMarge + "px " + bovenMarge + "px");
+				
+				
+				tekstVakken[i][j].getElement().getStyle().setWidth((Double) breedtes.get(j) - 2 * cellMarge, Unit.PX);
+				tekstVakken[i][j].getElement().getStyle().setHeight((Double) hoogtes.get(i) - 2 * bovenMarge, Unit.PX);
+				
+				/*
 				tekstVakken[i][j].getElement().getStyle().setPaddingTop(bovenMarge - randDikte, Unit.PX);
 				tekstVakken[i][j].getElement().getStyle().setPaddingBottom(bovenMarge - randDikte, Unit.PX);
 				tekstVakken[i][j].getElement().getStyle().setPaddingLeft(cellMarge - randDikte, Unit.PX);
 				tekstVakken[i][j].getElement().getStyle().setPaddingRight(cellMarge - randDikte, Unit.PX);
 				tekstVakken[i][j].getElement().getStyle().setWidth((Double) breedtes.get(j) - 2 * cellMarge, Unit.PX);
 				tekstVakken[i][j].getElement().getStyle().setHeight((Double) hoogtes.get(i) - 2 * bovenMarge, Unit.PX);
-				tekstVakken[i][j].getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
-				tekstVakken[i][j].getElement().getStyle().setBorderColor(randColor.toString());
-				tekstVakken[i][j].getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
+				*/
+				
+				//tekstVakken[i][j].getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
+				//tekstVakken[i][j].getElement().getStyle().setBorderColor(randColor.toString());
+				//tekstVakken[i][j].getElement().getStyle().setBorderWidth(tableBorders ? 1 : 0, Unit.PX);
 				tekstVakken[i][j].getElement().getStyle().setProperty("borderRadius", (ronding / 2) + "px");
 
+				if(centerV)
+					tekstVakken[i][j].getElement().getStyle().setVerticalAlign(VerticalAlign.MIDDLE);
+				//bovenstaande doet niet wat ik wil.
+				//if(centerH)
+				//	tekstVakken[i][j].getElement().getStyle()..setHorizontalAlign();
+				
 				mainPanel.setWidget(i, j, tekstVakken[i][j]);
 			}
 		}
+		mainPanel2.add(randPanel);
+		mainPanel2.setWidgetLeftWidth(randPanel, 0, Style.Unit.PX, breedte, Style.Unit.PX);
+		mainPanel2.setWidgetTopHeight(randPanel, 0, Style.Unit.PX, hoogte, Style.Unit.PX);
+		
+		
+		mainPanel2.add(mainPanel);
+		mainPanel2.setWidgetLeftWidth(mainPanel, 0, Style.Unit.PX, breedte, Style.Unit.PX);
+		mainPanel2.setWidgetTopHeight(mainPanel, 0, Style.Unit.PX, hoogte, Style.Unit.PX);
+		
+		
+		//mainPanel.setSize((breedte - 2 * randDikte) + "px", (hoogte - 2 * randDikte) + "px");
+		
 	}
 
 	public void setTableBounds()
@@ -192,8 +293,8 @@ public class TekstVakPanel implements InteractionView
 	public void zetInstellingen(HashMap<String, Object> instellingen)
 	{
 		this.instellingen = instellingen;
-		font_size = (Integer) instellingen.get("fontSize");
-
+		if(instellingen.get("fontSize") != null)
+			font_size = (Integer) instellingen.get("fontSize");
 	}
 
 	public void setKeyboard(FormuleKeyboard kb)
@@ -207,7 +308,7 @@ public class TekstVakPanel implements InteractionView
 		ArrayList<Object> opdrachtObjects = new ArrayList<Object>();
 		ArrayList<Object> opdrachtGegevens = (ArrayList<Object>) interactiePanelLaunchState.get("interactiePanelLaunchData");
 
-		TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden);
+		TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden, this);
 		int aantalVakken = 0;
 		for (int i = 0; i < hoogtes.size(); i++)
 		{
@@ -219,7 +320,7 @@ public class TekstVakPanel implements InteractionView
 				{
 					Object currentObject = opdrachtObjects.get(k);
 					if (currentObject instanceof InteractionView)
-					{
+					{ 	
 						((InteractionView) currentObject).setCommunicationRoot(comRoot);
 						interactionViewObjects.add(currentObject);
 					}
@@ -277,6 +378,7 @@ public class TekstVakPanel implements InteractionView
 			states.add(((InteractionView) currentObject).getState());
 		}
 		h.put("interactiePanelStates", states);
+		h.put("selected", new Boolean(selected));
 		return h;
 	}
 
@@ -289,6 +391,9 @@ public class TekstVakPanel implements InteractionView
 			HashMap<String, Object> state = (HashMap<String, Object>) states.get(i);
 			((InteractionView) currentObject).setState(state);
 		}
+		if(h.containsKey("selected"))
+			selected = ((Boolean) h.get("selected")).booleanValue();
+		setSelected(selected);
 	}
 
 	public int getScore()
@@ -410,7 +515,7 @@ public class TekstVakPanel implements InteractionView
 
 	public Panel getAsPanel()
 	{
-		return mainPanel;
+		return mainPanel2;
 	}
 
 	private void addFormulePanelListeners(final TouchPanel tp, final FormuleHolder editor)
@@ -424,4 +529,192 @@ public class TekstVakPanel implements InteractionView
 	{
 		return facade.wrap(getAsPanel());
 	}
+	
+	public boolean isZwevend()
+	{
+		if(instellingen.get("zwevend") != null)
+			return ((Boolean) instellingen.get("zwevend")).booleanValue();
+		else
+			return false;
+	}
+	
+	public Point geefLocatie()
+	{
+		double locationX = 0;
+		double locationY = 0;
+		if(instellingen.get("locationX") != null)
+			locationX = ((Number)instellingen.get("locationX")).doubleValue();
+		if(instellingen.get("locationY") != null)
+			locationY = ((Number)instellingen.get("locationY")).doubleValue();
+		return new Point(locationX, locationY);
+	}
+	
+	public void zetLocatie(double x, double y) //moeten dit doubles worden?
+	{
+		instellingen.put("locationX", new Double(x));
+		instellingen.put("locationY", new Double(y));
+	}
+	
+	
+	public void setSelected(boolean b)
+	{ 
+		selected = b;
+		if (selected)
+		{
+			if (colorSelection)
+			{	
+				randPanel.getElement().getStyle().setBorderColor(selectionColor.toString());
+				randPanel.getElement().getStyle().setOpacity(0.4); //checken of dit goed gaat zo..
+				randPanel.getElement().getStyle().setBorderWidth(400, Unit.PX);
+				//setBorder(selectionColor, 400);
+			}
+			else
+			{	randPanel.getElement().getStyle().setBorderColor(grijs.toString());
+				randPanel.getElement().getStyle().setBorderWidth(5, Unit.PX);
+			}
+		
+			//mainPanel.getElement().getStyle().setBorderColor("gray");
+			//mainPanel.getElement().getStyle().setBorderWidth(0, Unit.PX);
+
+			//tekstVakken[i][j].getElement().getStyle().setBackgroundColor(bgColor.toString());
+		
+		}
+		else
+		{
+			randPanel.getElement().getStyle().setBorderColor(randColor.toString());
+			randPanel.getElement().getStyle().setOpacity(1);
+			randPanel.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
+			//setBorder(randColor, randZichtbaar ? randDikte : 0);
+
+		}
+		
+		
+	}
+	
+	
+	public Vector geefInteractiePanels()
+	{
+		Vector v = new Vector();
+		for (int i = 0; i < hoogtes.size(); i++)
+		{
+			for (int j = 0; j < breedtes.size(); j++)
+			{
+				for(int k = 0; k < tekstVakken[i][j].getWidgetCount(); k++)
+					if(tekstVakken[i][j].getWidget(k) != null)
+						v.add(tekstVakken[i][j].getWidget(k));
+				
+				//tekstVakken[i][j].geefInteractiePanels(v); //hier wil ik eigenlijk die opdrachtObjects gebruiken die we al eerder zagen..
+			}
+		}
+		return v;
+	}
+	
+	public int getIpId()
+	{
+		return ipId;
+	}
+	
+	public String getIpExpString()
+	{
+		for(int i = 0; i < interactionViewObjects.size(); i++)
+		{	Object object = interactionViewObjects.get(i);
+			if(object instanceof FormuleEditorWithAnswer)
+			{	// waarde uitzoeken en returnen
+				
+			}
+		}
+			//Als er een formulevak inzit: expressie uit formulevak geven
+			//Als er een vergelijkingsvak inzit: 
+			/*
+			String string = null;
+			FormuleVak fv = ((SimpelAntwoordVergelijkingVak) ip).geefFormuleVak();
+			if (fv != null)
+			{
+				string = fv.toString();
+				VergelijkingMeerv vgm = FormuleParser.parseVergelijking(string);
+				Vergelijking vg = null;
+				if (vgm != null)
+					vg = vgm.geefVergelijking(0);
+				Expressie e = null;
+				if (vg != null)
+					e = new Aftrekking(vg.geefExpLinks(), vg.geefExpRechts());
+				if (e != null)
+					return "$f" + e.toString() + "@";
+			}
+			*/
+			
+			
+			/* Uit oude TekstVakPanel: veel interfaces en types die niet meer worden gebruikt
+			try{
+				
+			}
+			InteractiePanelContainerIF ipc = (InteractiePanelContainerIF) v.elementAt(0);
+			if (ipc instanceof TekstVakPanel)
+			{
+				InteractiePanel ip = ((TekstInteractiePanelVak) ipc).getInteractiePanel();
+				if (ip instanceof SimpelAntwoordFormuleVak)
+				{
+					FormuleVak fv = ((SimpelAntwoordFormuleVak) ip).geefFormuleVak();
+					if (fv != null)
+						return fv.toString();
+				}
+				if (ip instanceof SimpelAntwoordVergelijkingVak)
+				{
+					String string = null;
+					FormuleVak fv = ((SimpelAntwoordVergelijkingVak) ip).geefFormuleVak();
+					if (fv != null)
+					{
+						string = fv.toString();
+						VergelijkingMeerv vgm = FormuleParser.parseVergelijking(string);
+						Vergelijking vg = null;
+						if (vgm != null)
+							vg = vgm.geefVergelijking(0);
+						Expressie e = null;
+						if (vg != null)
+							e = new Aftrekking(vg.geefExpLinks(), vg.geefExpRechts());
+						if (e != null)
+							return "$f" + e.toString() + "@";
+					}
+				}
+			} */
+		
+		return checkExpressieString;
+	}
+
+	public boolean isIpSelected()
+	{
+		return selected;
+	}
+	
+	public Expressie geefObjectWaarde()
+	{
+		Expressie waarde = FormuleParser.geefExpressie(getIpExpString());
+		if("$f@".equals(getIpExpString()) && defaultBijNull)
+			waarde = FormuleParser.geefExpressie(checkExpressieString);
+		return waarde;
+	}
+	
+	public TekstVakPanel zoekTekstVakPanel(int id)
+	{
+		for(int i = 0; i < interactionViewObjects.size(); i++)
+		{
+			if(interactionViewObjects.get(i) instanceof TekstVakPanel)
+			{	TekstVakPanel panel = (TekstVakPanel) interactionViewObjects.get(i);
+				if(id == panel.ipId)
+					return panel;
+			}
+		}
+		return null;
+	}
+
+	/*
+	public void onClick(ClickEvent event) {
+		if(!selectable)
+			return;
+		
+		selected = !selected;
+		setSelected(selected);
+			
+	}
+	*/
 }

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckSelectieUnit;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
@@ -26,12 +27,22 @@ public class TekstBuffer
 	String[] randomVarNamen;
 	HashMap<String, Object> randomVarWaarden;
 	int aantalVakken = 0;
+	TekstVakPanel parent = null;
 
 	public TekstBuffer(String[] randomVarNamen, HashMap randomVarWaarden)
 	{
 		this.randomVarNamen = randomVarNamen;
 		this.randomVarWaarden = randomVarWaarden;
 		aantalVakken = 0;
+	}
+	
+	
+	public TekstBuffer(String[] randomVarNamen, HashMap randomVarWaarden, TekstVakPanel parent)
+	{
+		this.randomVarNamen = randomVarNamen;
+		this.randomVarWaarden = randomVarWaarden;
+		aantalVakken = 0;
+		this.parent = parent;
 	}
 
 	public TekstBuffer()
@@ -80,7 +91,7 @@ public class TekstBuffer
 				//"vakken"
 				if (identifier.equals("$V"))
 				{ // Hier ook de offset 5 was 1 FIXME Wim
-					Object vak = getVak(vanTeksVakPanel ? aantalVakken - 5 : aantalVakken, opdrachtGegevens);
+					Object vak = getVak(vanTeksVakPanel ? aantalVakken - 5 : aantalVakken, opdrachtGegevens, result); //toegevoegd tbv checkSelectieUnit
 					result.add(vak);
 					aantalVakken++;
 				}
@@ -188,7 +199,7 @@ public class TekstBuffer
 		return result;
 	}
 
-	private Object getVak(int index, ArrayList<Object> opdrachtGegevens)
+	private Object getVak(int index, ArrayList<Object> opdrachtGegevens, ArrayList<Object> objectenLijst)
 	{
 		Object result = null;
 		HashMap<String, Object> currentVakGegevens = null;
@@ -212,18 +223,18 @@ public class TekstBuffer
 			return new GeogebraView(currentVakGegevens, randomVarNamen, randomVarWaarden);
 		case 45: // GraphTool
 			return 
-					new StubView("GraphToolGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
-//					new PopupFacade( 
-//							currentVakGegevens,
-//							new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)
-//					);
+					//new StubView("GraphToolGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+					new PopupFacade( 
+							currentVakGegevens,
+							new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)
+					);
 			
 		case 15: 
 			return new StubView("DoorzienGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		    //return new PopupFacade( currentVakGegevens, new fi.doorziengwt.client.DoorzienGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 20: 
-			//return new StubView("GeomAlgGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
-			return new PopupFacade( currentVakGegevens, new fi.geomalggwt.client.GeomAlgGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
+			return new StubView("GeomAlgGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			//return new PopupFacade( currentVakGegevens, new fi.geomalggwt.client.GeomAlgGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 5 :
 			return new StubView("AlgebraPijlenHWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//return new PopupFacade( currentVakGegevens, new fi.algebrapijlenhwt.client.AlgebraPijlenHWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
@@ -259,10 +270,36 @@ public class TekstBuffer
 			result = //new BalansFruitGWT(currentVakGegevens);
 					new StubView("BalansFruitGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		}
+		else if(soortVak == 12)
+		{	TekstVakPanel[] ipList1 = new TekstVakPanel[objectenLijst.size()];
+			int hoogsteId = 0;
+			for(int i = 0; i < objectenLijst.size(); i++)
+				if(objectenLijst.get(i) instanceof TekstVakPanel)
+				{	int id = ((TekstVakPanel) objectenLijst.get(i)).getIpId();
+					if(id > 0)
+					{	ipList1[id] = (TekstVakPanel) objectenLijst.get(i);
+						if(id > hoogsteId)
+							hoogsteId = id;
+					}
+				}
+			TekstVakPanel[] ipList2 = new TekstVakPanel[hoogsteId];
+			for(int i = 0; i < ipList2.length; i++)
+				ipList2[i] = ipList1[i+1];
+			result = new PopupFacade(currentVakGegevens, new CheckSelectieUnit(currentVakGegevens, randomVarNamen,randomVarWaarden, ipList2));
+			
+		}
+		else if(soortVak == 14) 
+		{
+			result = //new StubView("AntwoordKeuzeVakGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+					new PopupFacade(currentVakGegevens,
+							new fi.antwoordkeuzevakgwt.client.AntwoordKeuzeVakGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)
+					);
+		}
+		
 		else if (soortVak == 41)
 		{
-			result =new fi.kladjehwt.client.KladjeHWT(currentVakGegevens, randomVarNamen, randomVarWaarden);
-			//result = new StubView("KladjeHWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			//result =new fi.kladjehwt.client.KladjeHWT(currentVakGegevens, randomVarNamen, randomVarWaarden);
+			result = new StubView("KladjeHWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		}
 		else
 		{
