@@ -10,6 +10,8 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.touch.client.Point;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
@@ -27,7 +29,7 @@ import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.Stub;
 
-public class CheckSelectieUnit implements EntryPoint, InteractionStub
+public class CheckSelectieUnit implements InteractionStub
 {
 	public static Text_nl rb = new Text_nl();
 	static final String holderId = "dockholder";
@@ -95,14 +97,14 @@ public class CheckSelectieUnit implements EntryPoint, InteractionStub
 		Vector v = new Vector();
 		randomizedPositions = new Point[juisteSelecties.length];
 		for(int i=0 ; i<ipList.length ; i++)
-		{	if(!(ipList[i] instanceof TekstVakPanel) || !((TekstVakPanel)ipList[i]).isZwevend())return;
-			v.addElement(((TekstVakPanel)ipList[i]).geefLocatie());
+		{	if(!(ipList[i] instanceof TekstVakPanel) || !ipList[i].isZwevend())return;
+			v.addElement(ipList[i].geefLocatie());
 		}
 		for(int i=0 ; i<ipList.length ; i++)
 		{	int r = (int)((ipList.length-i)*Math.random());
 			Point p = (Point)(v.elementAt(r));
 			if(!positionsRandomized) randomizedPositions[i] = p;
-			((TekstVakPanel)ipList[i]).zetLocatie(p.getX(), p.getY());
+			ipList[i].zetLocatie(p.getX(), p.getY());
 			v.removeElementAt(r);
 		}
 		positionsRandomized = true;
@@ -156,7 +158,7 @@ public class CheckSelectieUnit implements EntryPoint, InteractionStub
         	        for(int i=0 ; i<ipList.length ; i++)
         	        {   //ipList[i] = parent.zoekTekstVakPanel(i+1);
         	        	//ipList[i] = ((TekstInteractiePanelVak)getParent()).zoekInteractiePanel(i+1);
-        	        	Expressie e = ((TekstVakPanel)ipList[i]).isIpSelected() ? ((TekstVakPanel)ipList[i]).geefObjectWaarde() : new BasisExpressie(0);
+        	        	Expressie e = ipList[i].isIpSelected() ? ipList[i].geefObjectWaarde() : new BasisExpressie(0);
     	        		if(e!=null) 
     	        		{	v[h] = v[h].substitueer(e, "V?("+(i+1)+")");
     	        		}
@@ -164,7 +166,7 @@ public class CheckSelectieUnit implements EntryPoint, InteractionStub
     	        		{	stapJuist = false;
     	        			break;
     	        		}
-        	        	ingevuld = ingevuld || ((TekstVakPanel)ipList[i]).isIpSelected();
+        	        	ingevuld = ingevuld || ipList[i].isIpSelected();
         	        }
         			
         			
@@ -183,8 +185,8 @@ public class CheckSelectieUnit implements EntryPoint, InteractionStub
 	        for(int i=0 ; i<ipList.length ; i++)
 	        {   //ipList[i] = parent.zoekTekstVakPanel(i+1);
 	            if(ipList[i] != null)
-	            {	juist = juist && ((TekstVakPanel)ipList[i]).isIpSelected() == juisteSelecties[i];
-	            	ingevuld = ingevuld || ((TekstVakPanel)ipList[i]).isIpSelected();
+	            {	juist = juist && ipList[i].isIpSelected() == juisteSelecties[i];
+	            	ingevuld = ingevuld || ipList[i].isIpSelected();
 	            }
 	        }
         }
@@ -220,15 +222,25 @@ public class CheckSelectieUnit implements EntryPoint, InteractionStub
 
 	@Override
 	public HashMap<String, Object> getState() {
-		Point[] randomizedPositions = null; //gaat dit goed?
-	    boolean ingevuld = false;
+		//Point[] randomizedPositions = null; //gaat dit goed?
+	    ArrayList<Integer> randomizedPositionsX = null;
+	    ArrayList<Integer> randomizedPositionsY = null;
+		if(randomizedPositions != null)
+	    {	randomizedPositionsX = new ArrayList<Integer>(); //hoe gaat dit met backwards compatibility? + samenhang gewone dwo?
+	    	randomizedPositionsY = new ArrayList<Integer>();
+	    	for(int i = 0; i < randomizedPositions.length; i++)
+		    {	randomizedPositionsX.add((int) randomizedPositions[i].getX());
+		    	randomizedPositionsY.add((int) randomizedPositions[i].getY());
+		    }
+	    }
+		
+		boolean ingevuld = false;
 	    boolean nagekeken = false;
 	    Vector attempts = new Vector();
 	    int attemptsCount = 0;
 		int errorCount = 0;
 		
-	    
-	    randomizedPositions = this.randomizedPositions;
+		//randomizedPositions = this.randomizedPositions;
 	    ingevuld = this.ingevuld;
 	    nagekeken = this.nagekeken;
 	    attempts = this.attempts;
@@ -245,7 +257,7 @@ public class CheckSelectieUnit implements EntryPoint, InteractionStub
 			String[] options = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","X","Y","Z"};
 			for(int i=0 ; i<ipList.length ; i++)
 	        {   //ipList[i] = parent.zoekTekstVakPanel(i+1);
-	            if(((TekstVakPanel)ipList[i]).isIpSelected() && i<options.length) logString = logString + options[i];
+	            if(ipList[i].isIpSelected() && i<options.length) logString = logString + options[i];
 	        }
 			logMap.put("logAnswer", logString);
 			logMap.put("logScore", new Integer(score));
@@ -258,7 +270,10 @@ public class CheckSelectieUnit implements EntryPoint, InteractionStub
 		}
          
 	    HashMap<String, Object> h = new HashMap<String, Object>();
-        if(randomizedPositions!=null) h.put("randomizedPositions", randomizedPositions);
+        if(randomizedPositionsX != null) 
+        	h.put("randomizedPositionsX", randomizedPositionsX);
+        if(randomizedPositionsY != null) h.put("randomizedPositionsY", randomizedPositionsY);
+        
         h.put("ingevuld", new Boolean(ingevuld));
         h.put("nagekeken", new Boolean(nagekeken));
         h.put("attempts", attempts);
@@ -276,11 +291,18 @@ public class CheckSelectieUnit implements EntryPoint, InteractionStub
 	    int attemptsCount = 0;
 		int errorCount = 0;
         
-	    if(h.get("randomizedPositions") instanceof ArrayList) 
+		if(h.get("randomizedPositions") instanceof ArrayList) 
 	    {	ArrayList<Point> randomizedPositionsList = (ArrayList<Point>)h.get("randomizedPositions");
 	    	randomizedPositions = new Point[randomizedPositionsList.size()];
 	    	for(int i = 0; i < randomizedPositionsList.size(); i++)
 	    		randomizedPositions[i] = randomizedPositionsList.get(i);
+	    }
+	    else if(h.get("randomizedPositionsX") instanceof ArrayList)
+	    {	ArrayList<Integer> randomizedPositionsXList = (ArrayList<Integer>) h.get("randomizedPositionsX");
+	    	ArrayList<Integer> randomizedPositionsYList = (ArrayList<Integer>) h.get("randomizedPositionsY");
+	    	randomizedPositions = new Point[randomizedPositionsXList.size()];
+	    	for(int i = 0; i < randomizedPositionsXList.size(); i++)
+	    		randomizedPositions[i] = new Point(randomizedPositionsXList.get(i), randomizedPositionsYList.get(i));
 	    }
 	    if(h.get("ingevuld") != null) 
 	    	ingevuld = ((Boolean)h.get("ingevuld")).booleanValue();
@@ -304,7 +326,7 @@ public class CheckSelectieUnit implements EntryPoint, InteractionStub
         {   for(int i=0 ; i<ipList.length ; i++)
 	        {   
 	        	Point p = randomizedPositions[i];
-	            ((TekstVakPanel)ipList[i]).zetLocatie(p.getX(), p.getY());
+	            ipList[i].zetLocatie(p.getX(), p.getY()); //niet meer nodig.
 	        }
 	        //(((TekstInteractiePanelVak)((Component)ipList[0]).getParent()).getTekstVak()).layoutTekst();
         }
@@ -328,7 +350,7 @@ public class CheckSelectieUnit implements EntryPoint, InteractionStub
 		String[] options = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","X","Y","Z"};
 		for(int i=0 ; i<ipList.length ; i++)
         {   //ipList[i] = parent.zoekTekstVakPanel(i+1);
-            if(ipList[i] != null && ((TekstVakPanel)ipList[i]).isIpSelected() && i<options.length) 
+            if(ipList[i] != null && ipList[i].isIpSelected() && i<options.length) 
             	logString = logString + options[i];
         }
 		
@@ -514,79 +536,23 @@ public class CheckSelectieUnit implements EntryPoint, InteractionStub
 						logObjectives[i][j] = logObjectivesList.get(i).get(j);
 				}
 			}
-			
-			
-			
-			
-			//AntwoordKeuzeVak (om te spieken): 
-			/*
-			if (launchData.get("keuzeMogelijkheden") instanceof ArrayList)
-			{
-				ArrayList<String> keuzeMogelijkhedenList = (ArrayList<String>) launchData.get("keuzeMogelijkheden");
-				keuzeMogelijkheden = new String[keuzeMogelijkhedenList.size()];
-				for(int i = 0; i < keuzeMogelijkhedenList.size(); i++)
-					keuzeMogelijkheden[i] = keuzeMogelijkhedenList.get(i);
-			}
-			//if (launchData.get("keuzeMogelijkheden") != null)
-			//	keuzeMogelijkheden = (String[]) launchData.get("keuzeMogelijkheden");
-			if (launchData.get("antwoordString") != null)
-				antwoordString = (String) launchData.get("antwoordString");
-			if (launchData.get("scoreMax") != null)
-				scoreMax = ((Integer) launchData.get("scoreMax")).intValue();
-			if(launchData.get("answerModels") instanceof ArrayList)
-			{	ArrayList<HashMap> answerModelsList = (ArrayList<HashMap>) launchData.get("answerModels");
-				answerModels = new HashMap[answerModelsList.size()];
-				for(int i = 0; i < answerModelsList.size(); i++)
-					answerModels[i] = answerModelsList.get(i);
-			}
-			
-			//if (launchData.get("answerModels") != null)
-			//	answerModels = (HashMap<String, Object>[]) launchData.get("answerModels");
-			if (launchData.get("hasFeedback") != null)
-				hasFeedback = ((Boolean) launchData.get("hasFeedback")).booleanValue();
-			if (launchData.get("check") != null)
-				check = ((Boolean) launchData.get("check")).booleanValue();
-			if (launchData.get("teltMee") != null)
-				teltMee = ((Boolean) launchData.get("teltMee")).booleanValue();
-			if (launchData.get("logOption") != null)
-				logOption = ((Boolean) launchData.get("logOption")).booleanValue();
-			if (launchData.get("logID") != null)
-				logID = (String) launchData.get("logID");
-			if(launchData.get("logObjectives") instanceof ArrayList)
-			{	ArrayList<ArrayList<Boolean>> logObjectivesList = (ArrayList<ArrayList<Boolean>>) launchData.get("logObjectives");
-				logObjectives = new boolean[logObjectivesList.size()][];
-				for(int i = 0; i < logObjectivesList.size(); i++)
-				{	logObjectives[i] = new boolean[logObjectivesList.get(i).size()];
-					for(int j = 0; j < logObjectivesList.get(i).size(); j++)
-						logObjectives[i][j] = logObjectivesList.get(i).get(j);
-				}
-			}
-			
-			//if (launchData.get("logObjectives") != null)
-			//	logObjectives = (boolean[][]) launchData.get("logObjectives");
-			 * */
-			 
-			
 		}
 	}
 	
 	private void initialize(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
-		//getImages();
-		
 		attempts = new Vector();
 		
 		basisPanel = new LayoutPanel();
 		basisPanel.setSize("" + breedte + "px", "" + hoogte + "px");
 		
-		checkButton = new PushButton(rb.getString("klaarKnopLabel"));//"Klaar" erop zetten: klaarKnopLabel in fi.wiskopdr.text.Text_nl.
+		checkButton = new PushButton(rb.getString("klaarKnopLabel"));
 		basisPanel.add(checkButton);
 		basisPanel.setWidgetLeftWidth(checkButton, 0, Style.Unit.PX, breedte - 20, Style.Unit.PX);
 		basisPanel.setWidgetTopHeight(checkButton, 0, Style.Unit.PX, 20, Style.Unit.PX);
 		checkButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
-			{
-				kijkNa();
+			{	kijkNa();
 	        	if(fout) errorCount++;
 	        	attemptsCount++;
 				setAttempt();
@@ -618,12 +584,13 @@ public class CheckSelectieUnit implements EntryPoint, InteractionStub
         {   //Widget panel = basisPanel.getParent();
         	//ipList[i] = parent.zoekTekstVakPanel(i+1);
             if(ipList[i] != null)
-            {	ipList[i].getAsPanel().addDomHandler(new ClickHandler(){
-	    			public void onClick(ClickEvent e){
+            {	ipList[i].getAsPanel().addDomHandler(new MouseDownHandler(){
+	    			public void onMouseDown(MouseDownEvent e){
 	    				for(int i = 0; i < ipList.length; i++)
 	    				{	if(e.getSource() == ipList[i].getAsPanel())
 	    				
-	    					{	goedKrulImage.setVisible(false);
+	    					{	
+	    						goedKrulImage.setVisible(false);
 	    						//goedKrulHalfImage.setVisible(false);
 	    						foutKruisImage.setVisible(false);
 	    						correct = false;
@@ -639,16 +606,15 @@ public class CheckSelectieUnit implements EntryPoint, InteractionStub
 	    					}
 	    				}
 	    			}
-	    		}, ClickEvent.getType());
+	    		}, MouseDownEvent.getType());
             }
         }
         
         if(randomizePositions && !positionsRandomized) randomizePositions();
 		
-		//juiste antwoord nog instellen?
-		
 	}
 
+	/*
 	@Override //nodig?
 	public void onModuleLoad() {
 		HashMap<String, Object> h = new HashMap<String, Object>();
@@ -663,5 +629,6 @@ public class CheckSelectieUnit implements EntryPoint, InteractionStub
 		
 		Stub.publish(this);
 	}
+	*/
 
 }

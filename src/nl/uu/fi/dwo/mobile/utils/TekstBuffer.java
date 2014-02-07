@@ -7,6 +7,7 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckSelectieUnit;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckSleepUnit;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
@@ -27,7 +28,7 @@ public class TekstBuffer
 	String[] randomVarNamen;
 	HashMap<String, Object> randomVarWaarden;
 	int aantalVakken = 0;
-	TekstVakPanel parent = null;
+	//TekstVakPanel parent = null;
 
 	public TekstBuffer(String[] randomVarNamen, HashMap randomVarWaarden)
 	{
@@ -36,7 +37,7 @@ public class TekstBuffer
 		aantalVakken = 0;
 	}
 	
-	
+	/*
 	public TekstBuffer(String[] randomVarNamen, HashMap randomVarWaarden, TekstVakPanel parent)
 	{
 		this.randomVarNamen = randomVarNamen;
@@ -44,6 +45,7 @@ public class TekstBuffer
 		aantalVakken = 0;
 		this.parent = parent;
 	}
+	*/
 
 	public TekstBuffer()
 	{
@@ -293,6 +295,34 @@ public class TekstBuffer
 		{
 			result = new StubView("AntwoordKeuzeVakGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 					// new PopupFacade(currentVakGegevens,new fi.antwoordkeuzevakgwt.client.AntwoordKeuzeVakGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
+		}
+		else if(soortVak == 16)
+		{	TekstVakPanel[] ipListSleep1 = new TekstVakPanel[objectenLijst.size()];
+			TekstVakPanel[] ipListDoel1 = new TekstVakPanel[objectenLijst.size()];
+			int hoogsteId = 0;
+			int laagsteId = 0;
+			for (int i = 0; i < objectenLijst.size(); i++)
+				if(objectenLijst.get(i) instanceof TekstVakPanel)
+				{	int id = ((TekstVakPanel) objectenLijst.get(i)).getIpId();
+					if(id > 0)
+					{	ipListSleep1[id] = (TekstVakPanel) objectenLijst.get(i);
+						if(id > hoogsteId)
+							hoogsteId = id;
+					}
+					else if (id < 0)
+					{	ipListDoel1[-id] = (TekstVakPanel) objectenLijst.get(i);
+						if (id < laagsteId)
+							laagsteId = id;
+						
+					}
+				}
+			TekstVakPanel[] ipListSleep2 = new TekstVakPanel[hoogsteId]; // checken of de lengte van de twee lijsten verschillend mag zijn. Anders max nemen.
+			for(int i = 0; i < ipListSleep2.length; i++)
+				ipListSleep2[i] = ipListSleep1[i+1];
+			TekstVakPanel[] ipListDoel2 = new TekstVakPanel[-laagsteId];
+			for(int i = 0; i < ipListDoel2.length; i++)
+				ipListDoel2[i] = ipListDoel1[i+1];
+			result = new PopupFacade(currentVakGegevens, new CheckSleepUnit(currentVakGegevens, randomVarNamen,randomVarWaarden, ipListSleep2, ipListDoel2));
 		}
 		
 		else if (soortVak == 41)
