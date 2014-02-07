@@ -30,6 +30,7 @@
 <!-- --> <inherits name="fi.geomalggwt.GeomAlgGWT-DWO" />
 <!-- --> <inherits name="fi.graphtoolgwt.GraphToolGWT-DWO" />
 <!-- --> <inherits name="fi.kladjehwt.KladjeHWT-DWO" />
+<!-- --> <inherits name="fi.antwoordkeuzevakgwt.AntwoordKeuzeVakGWT-DWO" />
 <!--  <inherits name="fi.nabouwenaanzichtengwt.NabouwenAanzichtenGWT-DWO" /> -->
      
 

@@ -213,8 +213,6 @@ public class TekstBuffer
 
 		int soortVak = (Integer) currentVakGegevens.get("soortInteractiePanel");
 
-// Een eerste pesterij: gooi currentVakGegevens door JSONUtilities heen.
-//		currentVakGegevens = JSONUtilities.fromJSONObject( JSONUtilities.toJSONObject(currentVakGegevens).isObject());
 		
 		
 		switch (soortVak)
@@ -233,6 +231,9 @@ public class TekstBuffer
 			return new StubView("DoorzienGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		    //return new PopupFacade( currentVakGegevens, new fi.doorziengwt.client.DoorzienGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 20: 
+// Een eerste pesterij: gooi currentVakGegevens door JSONUtilities heen.
+			//currentVakGegevens = JSONUtilities.fromJSONObject( JSONUtilities.toJSONObject(currentVakGegevens).isObject());
+
 			return new StubView("GeomAlgGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//return new PopupFacade( currentVakGegevens, new fi.geomalggwt.client.GeomAlgGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 5 :
@@ -290,15 +291,13 @@ public class TekstBuffer
 		}
 		else if(soortVak == 14) 
 		{
-			result = //new StubView("AntwoordKeuzeVakGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
-					new PopupFacade(currentVakGegevens,
-							new fi.antwoordkeuzevakgwt.client.AntwoordKeuzeVakGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)
-					);
+			result = new StubView("AntwoordKeuzeVakGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+					// new PopupFacade(currentVakGegevens,new fi.antwoordkeuzevakgwt.client.AntwoordKeuzeVakGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		}
 		
 		else if (soortVak == 41)
 		{
-			//result =new fi.kladjehwt.client.KladjeHWT(currentVakGegevens, randomVarNamen, randomVarWaarden);
+			//result = new PopupFacade(currentVakGegevens, new fi.kladjehwt.client.KladjeHWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 			result = new StubView("KladjeHWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		}
 		else

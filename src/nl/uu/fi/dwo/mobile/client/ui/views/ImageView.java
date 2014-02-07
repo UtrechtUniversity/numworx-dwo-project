@@ -32,6 +32,7 @@ public class ImageView implements IsWidget
 		else
 		{
 			String url = (String) map.get(naam + "/f"); // is het png,gif,jpg
+			if(url == null) url = "x.gif";
 			String type = (String) map.get(naam + "/t");
 			if (type == null)
 				type = "image/" + url.substring(url.length() - 3, url.length());
