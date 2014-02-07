@@ -38,7 +38,13 @@ public class StringCodeToHashMap
 	
 	public HashMap<String, Object> convertNodeToHashMap(Node node)
 	{
+// FIXME netjes maken met null tests.		
 		HashMap<String, Object> result = new HashMap<String, Object>();
+		try {
+			String id = node.getAttributes().getNamedItem("id").getNodeValue();
+			refs.put(id, (Element) node);
+		} catch(Exception _) {}
+		
 try { 		//Extracts all nodes that are elements and puts them in an array. 
 		ArrayList<Node> children = getElementList(node.getChildNodes());
 		for (int i = 0; i < children.size(); i++)
@@ -132,7 +138,7 @@ try { 		//Extracts all nodes that are elements and puts them in an array.
 						final String nodeValue = childs.get(0).getFirstChild().getNodeValue();
 						result.put(keyName, new String(nodeValue)); // TODO een of ander marker...
 					}
-					else if ("java.util.Vector".equals(className))
+					else if ("java.util.Vector".equals(className) || "java.util.ArrayList".equals(className))
 					{
 						ArrayList<Node> childs = getElementList(secondChild.getChildNodes());
 						result.put(keyName, convertNodeToList(childs));
@@ -199,9 +205,39 @@ try { 		//Extracts all nodes that are elements and puts them in an array.
 	}
 
 	private Object convertNodeToObject(Node object) {
+		if(object == null)
+		{
+			logger.severe("convertNodeToObject(null)");
+			return null;
+		}
 		String name = object.getNodeName();
 		if("array".equals(name))
 			return convertNodeToArray(object);
+		if("object".equals(name))
+		{
+			String ref = ((Element) object).getAttribute("idref");
+			if(ref != null) {
+				logger.info("insert reference " + ref);
+				return convertNodeToObject(refs.get(ref));
+			}
+			String className = ((Element) object).getAttribute("class");
+			if("java.util.Hashtable".equals(className))
+				return convertNodeToHashMap(object);
+			return null; // FIXME
+		}
+		if("boolean".equals(name))
+		{
+			return Boolean.valueOf(object.getFirstChild().getNodeValue());
+		}
+		if("int".equals(name))
+		{		
+			return Integer.valueOf(object.getFirstChild().getNodeValue());
+		}
+		if("string".equals(name))
+		{
+			return object.getFirstChild().getNodeValue();
+		}
+// TODO more datastructures, see convertNodeToHashMap...
 		return object;
 	}
 
