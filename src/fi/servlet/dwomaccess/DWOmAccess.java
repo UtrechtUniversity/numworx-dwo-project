@@ -4,6 +4,7 @@ import java.applet.Applet;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
 import java.applet.AudioClip;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -16,11 +17,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.lang.reflect.Array;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -41,8 +45,13 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
+import org.json.simple.JSONAware;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONStreamAware;
 
 import fi.beans.base64code.StringCodeObject;
+import fi.beans.dwomaccess.ByteArray;
+import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.dwomaccess.XmlEncoder;
 import fi.beans.scorm.SCORM12APIInterface;
 import fi.beans.xmlrpc.Servlet;
@@ -461,6 +470,8 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 			doLaunchData(req,resp);
 		else if(command.endsWith("getCourseDescription"))
 			doCourseDescription(req,resp);
+		else if(command.endsWith("getJSONLaunchData"))
+			doJSONLaunchData(req, resp);
 	}
 
 	void doCourseDescription(HttpServletRequest req,
@@ -491,6 +502,27 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 			log("doLaunchData", e);
 			resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
+	}
+	
+	private void doJSONLaunchData(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		String s = req.getParameter("s");
+		Writer out = getWriter(req, resp);
+		try {
+			int sco = Integer.parseInt(s);
+			getJSONLaunchData(sco, out);
+		} catch (Exception e) {
+			log("doLaunchData", e);
+			resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		
+	}
+	
+
+	private Writer getWriter(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		resp.setContentType("application/json");
+		resp.setHeader("Access-Control-Allow-Origin" ,"*");
+		resp.setCharacterEncoding(UTF_8);
+		return resp.getWriter();
 	}
 
 	private OutputStream getOutputStream(HttpServletRequest req,
@@ -525,6 +557,21 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		}
 		out.close();
 	}
+	
+	void getJSONLaunchData(int sco, Writer out) throws IOException {
+		Hashtable<?,?> map;
+		try {
+			map = getLaunchData_int(sco);
+			JSONEncoder.encode(map, out);
+		} catch (XmlRpcException e) {
+			throw new IOException(e.getMessage());
+		} catch (SQLException e) {
+			throw new IOException(e.getMessage());
+		}
+		out.close();
+	}
+	
+
 
 	void getCourseDescription(int course, OutputStream out) throws IOException {
 		Hashtable<?,?> map;

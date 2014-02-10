@@ -1,6 +1,10 @@
 package fi.servlet.dwomaccess;
 
 import java.io.IOException;
+import java.io.StringWriter;
+
+import org.json.simple.JSONValue;
+import org.json.simple.parser.JSONParser;
 
 import junit.framework.TestCase;
 
@@ -22,4 +26,11 @@ public class XMLEncoderTest extends TestCase {
 		access.getLaunchData(sco, System.out);
 	}
 
+	public void testJSON()  throws IOException {
+		int sco = 67842;
+		StringWriter out = new StringWriter();
+		access.getJSONLaunchData(sco, out);
+		Object r = JSONValue.parse(out.toString());
+		assertNotNull(r);
+	}
 }

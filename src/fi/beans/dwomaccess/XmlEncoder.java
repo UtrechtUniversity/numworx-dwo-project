@@ -33,7 +33,7 @@ public class XmlEncoder {
 		encoder.close();
 	}
 
-	private static void transform(Map map) {
+	public static void transform(Map map) {
 		Iterator iter = map.entrySet().iterator();
 		while (iter.hasNext()) {
 			Map.Entry entry = (Map.Entry) iter.next();
