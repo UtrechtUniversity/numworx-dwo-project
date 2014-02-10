@@ -113,7 +113,7 @@ try { 		//Extracts all nodes that are elements and puts them in an array.
 					else if ("java.awt.Font".equals(className))
 					{
 						ArrayList<Node> childs = getElementList(secondChild.getChildNodes());
-						String fontName = childs.get(0).getFirstChild().getNodeValue();
+						String  Name = childs.get(0).getFirstChild().getNodeValue();
 						int fontStyle = Integer.parseInt(childs.get(1).getFirstChild().getNodeValue());
 						int fontSize = Integer.parseInt(childs.get(2).getFirstChild().getNodeValue());
 						//Font font = new Font("SansSerif", fontStyle, fontSize);
@@ -223,6 +223,7 @@ try { 		//Extracts all nodes that are elements and puts them in an array.
 			String className = ((Element) object).getAttribute("class");
 			if("java.util.Hashtable".equals(className))
 				return convertNodeToHashMap(object);
+			logger.severe("unsupported " + className);
 			return null; // FIXME
 		}
 		if("boolean".equals(name))
