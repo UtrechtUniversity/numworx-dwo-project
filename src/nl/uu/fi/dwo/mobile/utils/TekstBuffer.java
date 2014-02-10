@@ -2,9 +2,11 @@ package nl.uu.fi.dwo.mobile.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckSelectieUnit;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckSleepUnit;
@@ -65,14 +67,14 @@ public class TekstBuffer
 		String tekst = (String) opdracht.get("tekst");
 		if (tekst == null)
 		{
-			ArrayList<ArrayList<Object>> teksten = (ArrayList<ArrayList<Object>>) (opdracht.get("teksten"));
+			List<Object> teksten = Memento.toArrayList( (opdracht.get("teksten")) );
 			if (teksten != null)
-				tekst = (String) (teksten.get(row)).get(column);
+				tekst = (String) (Memento.toArrayList(teksten.get(row))).get(column);
 			vanTeksVakPanel = true;
 		}
 		if(tekst==null) tekst = "";
 		
-		ArrayList<Object> opdrachtGegevens = (ArrayList<Object>) opdracht.get("interactiePanelLaunchData");
+		List<Object> opdrachtGegevens = Memento.toArrayList( opdracht.get("interactiePanelLaunchData") );
 
 		int lastIndex = 0;
 
@@ -201,7 +203,7 @@ public class TekstBuffer
 		return result;
 	}
 
-	private Object getVak(int index, ArrayList<Object> opdrachtGegevens, ArrayList<Object> objectenLijst)
+	private Object getVak(int index, List<Object> opdrachtGegevens, List<Object> objectenLijst)
 	{
 		Object result = null;
 		HashMap<String, Object> currentVakGegevens = null;
@@ -213,7 +215,7 @@ public class TekstBuffer
 		if (currentVakGegevens == null) // FIXME Komt voor in kladje
 			return new TekstVakPanel(null, randomVarNamen, randomVarWaarden); // was ""
 
-		int soortVak = (Integer) currentVakGegevens.get("soortInteractiePanel");
+		int soortVak = ((Number) currentVakGegevens.get("soortInteractiePanel")).intValue();
 
 		
 		

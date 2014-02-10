@@ -2,7 +2,10 @@ package fi.wiskopdr;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.MissingResourceException;
+
+import nl.uu.fi.dwo.mobile.client.sco.Memento;
 
 //import fi.beans.ideas.IdeasIF;
 //import fi.beans.ideas.RuleIF;
@@ -126,17 +129,17 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		if(afvCheckerModel.containsKey("antwoordString")) antwoordString = (String)afvCheckerModel.get("antwoordString");
 		if(afvCheckerModel.containsKey("herleiding")) herleiding = ((Boolean)afvCheckerModel.get("herleiding")).booleanValue();
 		if(afvCheckerModel.containsKey("exact")) exact = ((Boolean)afvCheckerModel.get("exact")).booleanValue();
-		if(afvCheckerModel.containsKey("soortHerleiding")) soortHerleiding = ((Integer)afvCheckerModel.get("soortHerleiding")).intValue();
-		if(afvCheckerModel.containsKey("puntenGelijkwaardig")) puntenGelijkwaardig = ((Integer)afvCheckerModel.get("puntenGelijkwaardig")).intValue();
-		if(afvCheckerModel.containsKey("puntenHerleiding")) puntenHerleiding = ((Integer)afvCheckerModel.get("puntenHerleiding")).intValue();
-		if(afvCheckerModel.containsKey("puntenExact")) puntenExact = ((Integer)afvCheckerModel.get("puntenExact")).intValue();
-		if(afvCheckerModel.containsKey("answerModels")) answerModels = (ArrayList<HashMap<String,Object>>)afvCheckerModel.get("answerModels");
+		if(afvCheckerModel.containsKey("soortHerleiding")) soortHerleiding = ((Number)afvCheckerModel.get("soortHerleiding")).intValue();
+		if(afvCheckerModel.containsKey("puntenGelijkwaardig")) puntenGelijkwaardig = ((Number)afvCheckerModel.get("puntenGelijkwaardig")).intValue();
+		if(afvCheckerModel.containsKey("puntenHerleiding")) puntenHerleiding = ((Number)afvCheckerModel.get("puntenHerleiding")).intValue();
+		if(afvCheckerModel.containsKey("puntenExact")) puntenExact = ((Number)afvCheckerModel.get("puntenExact")).intValue();
+		if(afvCheckerModel.containsKey("answerModels")) answerModels = (ArrayList<HashMap<String,Object>>)new ArrayList(Memento.toArrayList(afvCheckerModel.get("answerModels")));
 		if(afvCheckerModel.containsKey("hasFeedback")) hasFeedback = ((Boolean)afvCheckerModel.get("hasFeedback")).booleanValue();
 		if(afvCheckerModel.containsKey("vormString")) vormString = (String)afvCheckerModel.get("vormString");
-		if(afvCheckerModel.containsKey("eqTestValueMin")) eqTestValueMin = ((Double)afvCheckerModel.get("eqTestValueMin")).doubleValue();
-		if(afvCheckerModel.containsKey("eqTestValueMax")) eqTestValueMax = ((Double)afvCheckerModel.get("eqTestValueMax")).doubleValue();
-		if(afvCheckerModel.containsKey("aantalDecRm")) aantalDecRm = ((Integer)afvCheckerModel.get("aantalDecRm")).intValue();
-		if(afvCheckerModel.containsKey("scoreMax")) scoreMax = ((Integer)afvCheckerModel.get("scoreMax")).intValue();
+		if(afvCheckerModel.containsKey("eqTestValueMin")) eqTestValueMin = ((Number)afvCheckerModel.get("eqTestValueMin")).doubleValue();
+		if(afvCheckerModel.containsKey("eqTestValueMax")) eqTestValueMax = ((Number)afvCheckerModel.get("eqTestValueMax")).doubleValue();
+		if(afvCheckerModel.containsKey("aantalDecRm")) aantalDecRm = ((Number)afvCheckerModel.get("aantalDecRm")).intValue();
+		if(afvCheckerModel.containsKey("scoreMax")) scoreMax = ((Number)afvCheckerModel.get("scoreMax")).intValue();
 		if(afvCheckerModel.containsKey("tips")) tips = ((Boolean)afvCheckerModel.get("tips")).booleanValue();
 		if(tips){
 			if(afvCheckerModel.containsKey("ideasInstellingen")) ideasInstellingen = (HashMap<String,Object>)afvCheckerModel.get("ideasInstellingen");

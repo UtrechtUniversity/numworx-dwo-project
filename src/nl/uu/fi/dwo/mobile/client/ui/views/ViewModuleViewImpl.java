@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.interaction.client.touch.TouchCancelEvent;
@@ -29,6 +31,7 @@ import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
+import nl.uu.fi.dwo.mobile.utils.StringCodeToHashMap;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
 
@@ -43,13 +46,18 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.xml.client.Document;
+import com.google.gwt.xml.client.XMLParser;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
@@ -67,6 +75,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 {
 	private static final String RANDOM_VAR_WAARDEN = "RandomVarWaarden";
 	private static final String RANDOM_VAR_NAMEN = "RandomVarNamen";
+	private static Logger logger = Logger.getLogger("ViewModuleViewImpl");
 	private boolean standalone = false;
 
 	private OpdrNav on;
@@ -143,9 +152,55 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	public void setupModule(String name, String file)
 	{
 		contentPanel.clear();
-		loadXML(file);
-		//loadTest();
+		if(DWOplayer.JSON) loadJSON(file); else loadXML(file);
 		hp.setCenter(name);
+	}
+
+	private void loadJSON(String file) {
+		 {
+			RequestBuilder.Method method = RequestBuilder.GET;
+			String url = file;
+			RequestBuilder rb = new RequestBuilder(method, url);
+			try
+			{
+				rb.sendRequest(null, new RequestCallback()
+				{
+		
+					@Override
+					public void onResponseReceived(Request request, Response response)
+					{
+						String responseText = response.getText();
+						logger.info("Status: " + response.getStatusCode() + " " + response.getStatusText());
+						logger.info(response.getHeadersAsString());
+						logger.info("Data: " + responseText.substring(0, Math.min(300, responseText.length()) ));
+						if (!responseText.isEmpty())
+						{
+							JSONValue dom = JSONParser.parseStrict(responseText);
+//							if(dom == null) 
+//							{
+//							}
+							
+							launchData = JSONUtilities.fromJSONObject(dom.isObject());
+							setupView(launchData);
+						} else {
+							logger.severe("response empty");
+						}
+		
+					}
+		
+					@Override
+					public void onError(Request request, Throwable exception)
+					{
+						Window.alert("error");
+					}
+				});
+		
+			}
+			catch (RequestException e)
+			{
+				RootPanel.get().add(new Label("cannot load xml: " + e.getMessage()));
+			}
+		}
 	}
 
 	public void preSetupModule(final String link, final String url)
@@ -255,7 +310,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		this.randomVarWaarden = waarden;
 
 		opdrachtObjects = new ArrayList<Object>();
-		ArrayList<Object> opdrachtGegevens = (ArrayList<Object>) opdracht.get("interactiePanelLaunchData");
+		List<Object> opdrachtGegevens = Memento.toArrayList( opdracht.get("interactiePanelLaunchData") );
 		TekstBuffer tb = new TekstBuffer(varnamen, waarden);
 		newVersion = Boolean.FALSE.equals( opdracht.get("hasAntwoordVak") );
 		//New editor version

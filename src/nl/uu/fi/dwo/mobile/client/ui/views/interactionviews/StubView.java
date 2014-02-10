@@ -61,15 +61,15 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		frame.getElement().getStyle().setOverflow(Overflow.HIDDEN);
 		frame.setStylePrimaryName(".gwt-StubView");
 		frame.addStyleDependentName("borderless");
-		Object width = launchData.get("breedte");
+		Number width = ((Number)launchData.get("breedte"));
 		if (width == null)
-			width = "400";
-		Object height = launchData.get("hoogte");
+			width = 400;
+		Number height = (Number) launchData.get("hoogte");
 		if (height == null)
-			height = "400";
+			height = 400;
 		frame.setSize(width + "px", height + "px");
-		this.width = Integer.parseInt(width.toString());
-		this.height = Integer.parseInt(height.toString());
+		this.width = width.intValue();
+		this.height = height.intValue();
 		frame.addLoadHandler(this);
 		setWidget(frame);
 	}

@@ -59,7 +59,7 @@ public abstract class XMLView {
 		if (launchData.get("instellingen") != null)
 			instellingen = (HashMap<String, Object>) launchData.get("instellingen");
 		if (instellingen.get("fontSize") != null)
-			font_size = (Integer) instellingen.get("fontSize");
+			font_size = ((Number) instellingen.get("fontSize")).intValue();
 
 		boolean maalTeken = (Boolean) instellingen.get("maalTeken");
 		FormuleTeken.zetMaalTeken(maalTeken);

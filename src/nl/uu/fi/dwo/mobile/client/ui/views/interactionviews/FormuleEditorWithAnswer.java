@@ -61,7 +61,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		sp = new TouchPanel();
 		if (h.get("interactiePanelLaunchState") != null)
 		{
-			int breedte = ((Integer) h.get("breedte")).intValue();
+			int breedte = ((Number) h.get("breedte")).intValue();
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
 
 			if (isVergelijkingVak)
@@ -91,7 +91,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public void zetInstellingen(HashMap<String, Object> instellingen)
 	{
 		this.instellingen = instellingen;
-		setFont(FormuleFont.createFromFontSize((Integer) instellingen.get("fontSize")));
+		setFont(FormuleFont.createFromFontSize(((Number) instellingen.get("fontSize")).intValue()));
 
 	}
 

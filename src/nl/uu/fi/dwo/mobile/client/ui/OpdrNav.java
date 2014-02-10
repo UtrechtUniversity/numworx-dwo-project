@@ -95,7 +95,7 @@ public class OpdrNav implements OpdrNavIF, Runnable
 				opdrachten[i][j] = (HashMap<String, Object>) object;
 				HashMap<String, Object> ht = opdrachten[i][j];
 				if (ht != null && ht.containsKey("scoreMax"))
-					scoresMax[i][j] = ((Integer) ht.get("scoreMax")).intValue();
+					scoresMax[i][j] = ((Number) ht.get("scoreMax")).intValue();
 				else
 					scoresMax[i][j] = 10;
 				scoreMax += scoresMax[i][j];

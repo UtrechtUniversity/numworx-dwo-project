@@ -83,8 +83,8 @@ public class TekstVakPanel implements InteractionView
 
 	ArrayList<Object> interactionViewObjects = new ArrayList<Object>();
 
-	ArrayList<Object> breedtes = null;
-	ArrayList<Object> hoogtes = null;
+	List<Object> breedtes = null;
+	List<Object> hoogtes = null;
 	int cellSpaceColumn = 0;
 	int cellSpaceRow = 0;
 	int cellMarge = 0;
@@ -127,9 +127,9 @@ public class TekstVakPanel implements InteractionView
 		this.randomVarWaarden = randomVarWaarden;
 		facade = new PopupFacade(h);
 		if (h != null && h.get("breedte") != null)
-			breedte = (Integer) h.get("breedte");
+			breedte = ((Number) h.get("breedte")).intValue();
 		if (h != null && h.get("hoogte") != null)
-			hoogte = (Integer) h.get("hoogte");
+			hoogte = ((Number) h.get("hoogte")).intValue();
 		if (h != null && h.get("interactiePanelLaunchState") != null)
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
 
@@ -153,52 +153,52 @@ public class TekstVakPanel implements InteractionView
 		int ronding = 0;
 
 		if (launchState != null && launchState.get("breedtes") != null)
-			breedtes = (ArrayList<Object>) launchState.get("breedtes");
+			breedtes = Memento.toArrayList( launchState.get("breedtes") );
 		else
 			breedtes = new ArrayList<Object>(Arrays.asList(600.0));
 		if (launchState != null && launchState.get("hoogtes") != null)
-			hoogtes = (ArrayList<Object>) launchState.get("hoogtes");
+			hoogtes = Memento.toArrayList( launchState.get("hoogtes") );
 		else
 			hoogtes = new ArrayList<Object>(Arrays.asList(250.0));
 		
 		if (launchState != null && launchState.get("cellSpaceColumn") != null)
-			cellSpaceColumn = (Integer) launchState.get("cellSpaceColumn");
+			cellSpaceColumn = ((Number) launchState.get("cellSpaceColumn")).intValue();
 		if (launchState != null && launchState.get("cellSpaceRow") != null)
-			cellSpaceRow = (Integer) launchState.get("cellSpaceRow");
+			cellSpaceRow = ((Number) launchState.get("cellSpaceRow")).intValue();
 		if (launchState != null && launchState.get("cellMarge") != null)
-			cellMarge = (Integer) launchState.get("cellMarge");
+			cellMarge = ((Number) launchState.get("cellMarge")).intValue();
 		if (launchState != null && launchState.get("bovenMarge") != null)
-			bovenMarge = (Integer) launchState.get("bovenMarge");
+			bovenMarge = ((Number) launchState.get("bovenMarge")).intValue();
 		if (launchState != null && launchState.get("ronding") != null)
-			ronding = (Integer) launchState.get("ronding");
+			ronding = ((Number) launchState.get("ronding")).intValue();
 		if (launchState != null && launchState.get("bgColorZichtbaar") != null)
 			bgColorZichtbaar = (Boolean) launchState.get("bgColorZichtbaar");
 		if (launchState != null && launchState.get("bgColor_red") != null)
-			bgColor_red = (Integer) launchState.get("bgColor_red");
+			bgColor_red = ((Number) launchState.get("bgColor_red")).intValue();
 		if (launchState != null && launchState.get("bgColor_green") != null)
-			bgColor_green = (Integer) launchState.get("bgColor_green");
+			bgColor_green = ((Number) launchState.get("bgColor_green")).intValue();
 		if (launchState != null && launchState.get("bgColor_blue") != null)
-			bgColor_blue = (Integer) launchState.get("bgColor_blue");
+			bgColor_blue = ((Number) launchState.get("bgColor_blue")).intValue();
 		if (launchState != null && launchState.get("fgColor_red") != null)
-			fgColor_red = (Integer) launchState.get("fgColor_red");
+			fgColor_red = ((Number) launchState.get("fgColor_red")).intValue();
 		if (launchState != null && launchState.get("fgColor_green") != null)
-			fgColor_green = (Integer) launchState.get("fgColor_green");
+			fgColor_green = ((Number) launchState.get("fgColor_green")).intValue();
 		if (launchState != null && launchState.get("fgColor_blue") != null)
-			fgColor_blue = (Integer) launchState.get("fgColor_blue");
+			fgColor_blue = ((Number) launchState.get("fgColor_blue")).intValue();
 		if (launchState != null && launchState.get("randZichtbaar") != null)
 			randZichtbaar = (Boolean) launchState.get("randZichtbaar");
 		if (launchState != null && launchState.get("randColor_red") != null)
-			randColor_red = (Integer) launchState.get("randColor_red");
+			randColor_red = ((Number) launchState.get("randColor_red")).intValue();
 		if (launchState != null && launchState.get("randColor_green") != null)
-			randColor_green = (Integer) launchState.get("randColor_green");
+			randColor_green = ((Number) launchState.get("randColor_green")).intValue();
 		if (launchState != null && launchState.get("randColor_blue") != null)
-			randColor_blue = (Integer) launchState.get("randColor_blue");
+			randColor_blue = ((Number) launchState.get("randColor_blue")).intValue();
 		if (launchState != null && launchState.get("randDikte") != null)
-			randDikte = (Integer) launchState.get("randDikte");
+			randDikte = ((Number) launchState.get("randDikte")).intValue();
 		if (launchState != null && launchState.get("font_size") != null)
-			font_size = (Integer) launchState.get("font_size");
+			font_size = ((Number) launchState.get("font_size")).intValue();
 		if (launchState != null && launchState.get("font_style") != null)
-			font_style = (Integer) launchState.get("font_style");
+			font_style = ((Number) launchState.get("font_style")).intValue();
 		if (launchState != null && launchState.get("selectable") != null)
 			selectable = ((Boolean) launchState.get("selectable")).booleanValue(); 
 		if (launchState != null && launchState.get("sleepbaar") != null)
@@ -224,9 +224,9 @@ public class TekstVakPanel implements InteractionView
 		if (launchState != null && launchState.get("zwevend") != null)
 			zwevend = ((Boolean) launchState.get("zwevend")).booleanValue();
 		if (launchState != null && launchState.get("locationX") != null)
-			locationX = ((Integer) launchState.get("locationX")).intValue();
+			locationX = ((Number) launchState.get("locationX")).intValue();
 		if (launchState != null && launchState.get("locationY") != null)
-			locationY = ((Integer) launchState.get("locationY")).intValue();
+			locationY = ((Number) launchState.get("locationY")).intValue();
 		
 		bgColor = CssColor.make(bgColor_red, bgColor_green, bgColor_blue);
 		fgColor = CssColor.make(fgColor_red, fgColor_green, fgColor_blue);
@@ -347,7 +347,7 @@ public class TekstVakPanel implements InteractionView
 	{
 		this.instellingen = instellingen;
 		if(instellingen.get("fontSize") != null)
-			font_size = (Integer) instellingen.get("fontSize");
+			font_size = ((Number) instellingen.get("fontSize")).intValue();
 	}
 
 	public void setKeyboard(FormuleKeyboard kb)
@@ -359,7 +359,7 @@ public class TekstVakPanel implements InteractionView
 	{
 		String randVarString = "";
 		ArrayList<Object> opdrachtObjects = new ArrayList<Object>();
-		ArrayList<Object> opdrachtGegevens = (ArrayList<Object>) interactiePanelLaunchState.get("interactiePanelLaunchData");
+		List<Object> opdrachtGegevens = Memento.toArrayList( interactiePanelLaunchState.get("interactiePanelLaunchData") );
 
 		TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden);
 		int aantalVakken = 0;

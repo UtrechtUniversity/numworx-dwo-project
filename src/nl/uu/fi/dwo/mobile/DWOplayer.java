@@ -47,7 +47,8 @@ import fi.wiskopdr.text.Text_nl;
  */
 public class DWOplayer implements EntryPoint
 {
-	public static final String PREFIX = "http://ws-dev.fisme.science.uu.nl/DWOmAccess/getLaunchData?s=";
+	public static final boolean JSON = true;
+	public static final String PREFIX = "http://ws-dev.fisme.science.uu.nl/DWOmAccess/get" + (JSON?"JSON":"") + "LaunchData?s=";
 	public static final int PROFILE_ID = 77;
 	
 	private Place defaultPlace = new LoginPlace(); // new SelectModulePlace("select");
