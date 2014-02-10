@@ -241,7 +241,7 @@ public class Text_nl implements TextIF
 	{ "statistiekIpLabel", "[test] Statistische representaties" },
 	{ "stroomdiagrammenIpLabel", "[test] Stroomdiagrammen Nieuw" },
 	{ "tegelsIpLabel", "Tegels" },
-	{ "checkWaardeUnitLabel", "[test] CheckWaardeUnit" },
+	{ "checkWaardeUnitLabel", "[test] CheckValueUnit" },
 	{ "omtrekAppletIpLabel", "PO Omtrek applet" },
 	{ "algebraExpressiesIpLabel", "[test] Algebra expressies" },
 	{ "oppervlakteAlgebraIpLabel", "[test] Oppervlakte-algebra" },

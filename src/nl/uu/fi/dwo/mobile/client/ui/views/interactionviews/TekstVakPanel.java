@@ -24,6 +24,7 @@ import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.FontStyle;
@@ -284,8 +285,6 @@ public class TekstVakPanel implements InteractionView
 				tekstVakken[i][j].getElement().getStyle().setFontWeight(font_style == 1 || font_style == 3 ? Style.FontWeight.BOLD : Style.FontWeight.NORMAL);
 				
 				tekstVakken[i][j].getElement().getStyle().setProperty("margin", "" + cellMarge + "px " + bovenMarge + "px");
-				
-				
 				tekstVakken[i][j].getElement().getStyle().setWidth(tekstVakBreedte, Unit.PX); //nog nodig?
 				tekstVakken[i][j].getElement().getStyle().setHeight(tekstVakHoogte, Unit.PX); //nog nodig?
 				
@@ -302,9 +301,11 @@ public class TekstVakPanel implements InteractionView
 				//tekstVakken[i][j].getElement().getStyle().setBorderColor(randColor.toString());
 				//tekstVakken[i][j].getElement().getStyle().setBorderWidth(tableBorders ? 1 : 0, Unit.PX);
 				tekstVakken[i][j].getElement().getStyle().setProperty("borderRadius", (ronding / 2) + "px");
-
+				if(centerH)
+					tekstVakken[i][j].getElement().getStyle().setTextAlign(TextAlign.CENTER);
+				//if(centerV)
+					//tekstVakken[i][j].getElement().getStyle().setVerticalAlign(VerticalAlign.MIDDLE);
 				tekstHulsVakken[i][j].add(tekstVakken[i][j]);
-				//zou hele vak moeten vullen, checken of setWidgetLeftRight nodig is. 
 				mainPanel.setWidget(i, j, tekstHulsVakken[i][j]);
 			}
 		}
@@ -985,11 +986,34 @@ public class TekstVakPanel implements InteractionView
 		*/
 		
 		boolean juist = false;
+		
+		for(int i = 0; i < interactionViewObjects.size(); i++)
+		{	Object object = interactionViewObjects.get(i);
+			if(object instanceof FormuleEditorWithAnswer)
+			{	FormuleEditorWithAnswer object2 = (FormuleEditorWithAnswer) object;
+				object2.check();//nodig? Ja, maar ik wil eigenlijk het kruisje/krulletje niet weergeven in het vakje. 
+				juist = object2.isCorrect();
+				
+				/*
+				FormuleRegel fr = ((FormuleEditorWithAnswer) object).getCurrentRegel();
+				if (fr != null)
+				{
+					String string = fr.toString();
+					return "$f" + string + "@";
+				}
+				*/
+			}
+		}
+		
+		
+		/*
+		
 		Vector v = geefInteractiePanels();
+		System.out.println("size van v: " + v.size());
 		if (v.size() > 0)
 		{
 			if(v.elementAt(0) instanceof FormuleEditor)
-			{
+			{	System.out.println("instance of FormuleEditor");
 				FormuleEditor ip = (FormuleEditor) v.elementAt(0);
 				if (ip instanceof FormuleEditorWithAnswer)
 				{	FormuleEditorWithAnswer ip2 = (FormuleEditorWithAnswer) ip;
@@ -1010,10 +1034,12 @@ public class TekstVakPanel implements InteractionView
 					juist = ((FormuleEditorWithAnswer) ip).isCorrect(); //was: isCorrectStrikt; moet ik dat nog maken?
 				}
 			}
-			*/
+			
 		}
+	*/
 		return juist;
 	}
+
 	
 	public Expressie geefObjectWaarde()
 	{
@@ -1034,6 +1060,11 @@ public class TekstVakPanel implements InteractionView
 			}
 		}
 		return null;
+	}
+	
+	public boolean objectNullWaarde()
+	{
+		return "".equals(getIpExpString()) || "$f@".equals(getIpExpString());
 	}
 
 	/*

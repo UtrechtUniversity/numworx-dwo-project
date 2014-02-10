@@ -41,6 +41,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private boolean correct = false;
 	private String feedback = "";
 	private int scoreMax = 0;
+	private boolean check = true;
 	//private String[] randomVarNamen = null;
 	//private HashMap randomVarWaarden = null;
 	private AntwoordVakChecker avChecker = null;
@@ -69,6 +70,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			else
 				avChecker = new AntwoordFormuleVakChecker(launchState, randomVarNamen, randomVarWaarden);
 
+			if(launchState != null && launchState.get("check") != null)
+			{	System.out.println("check wordt uit launchstate gehaald");
+				check = ((Boolean)launchState.get("check")).booleanValue();
+			}
 			checkimg = new Image("images/resources/mw_vinkje_groen.png");
 			checkimg.setVisible(false);
 			checkimg.getElement().getStyle().setProperty("marginLeft", "3px");
@@ -138,6 +143,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		check();
 	}
 	
+	
 	void check()
 	{
 		String useranswer = "$f" + this.toString() + "@";
@@ -186,11 +192,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			checkimg.setUrl("images/resources/mw_kruisje_rood.png");
 		}
 		
-		checkimg.setVisible(goedHalfFout != AntwoordVakChecker.GEEN); // Wim: Hier verscheen het vinkje als goedhalfFout GEEN is
+		checkimg.setVisible(check && goedHalfFout != AntwoordVakChecker.GEEN); // Wim: Hier verscheen het vinkje als goedhalfFout GEEN is
 		if (this.fe == null)
 			comRoot.setChanged();
 
 	}
+	
 
 	@Override
 	public Panel getAsPanel()
