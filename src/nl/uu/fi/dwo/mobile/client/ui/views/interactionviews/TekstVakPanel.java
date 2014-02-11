@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
@@ -122,6 +123,20 @@ public class TekstVakPanel implements InteractionView
 	private int locationX, locationY;
 	private int startX, startY;
 
+	
+	static CssColor getColor(Map<String,Object> map, String key, int r, int g, int b) {
+		Map colorMap = (Map)map.get(key);
+		if(map != null) {
+			r = ((Number)colorMap.get("red")).intValue();
+			g = ((Number)colorMap.get("green")).intValue();
+			b = ((Number)colorMap.get("blue")).intValue();
+		}
+		return CssColor.make(r, g, b);
+	}
+	
+	
+	
+	
 	public TekstVakPanel(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
 		this.randomVarNamen = randomVarNamen;
@@ -200,6 +215,15 @@ public class TekstVakPanel implements InteractionView
 			font_size = ((Number) launchState.get("font_size")).intValue();
 		if (launchState != null && launchState.get("font_style") != null)
 			font_style = ((Number) launchState.get("font_style")).intValue();
+		
+		if(launchState != null && launchState.containsKey("font")) {
+			Map m = (Map) launchState.get("font");
+			font_size = ((Number) m.get("size")).intValue();
+			font_style = ((Number) m.get("style")).intValue();
+		}
+		
+		
+		
 		if (launchState != null && launchState.get("selectable") != null)
 			selectable = ((Boolean) launchState.get("selectable")).booleanValue(); 
 		if (launchState != null && launchState.get("sleepbaar") != null)
@@ -229,9 +253,9 @@ public class TekstVakPanel implements InteractionView
 		if (launchState != null && launchState.get("locationY") != null)
 			locationY = ((Number) launchState.get("locationY")).intValue();
 		
-		bgColor = CssColor.make(bgColor_red, bgColor_green, bgColor_blue);
-		fgColor = CssColor.make(fgColor_red, fgColor_green, fgColor_blue);
-		randColor = CssColor.make(randColor_red, randColor_green, randColor_blue);
+		bgColor = getColor(launchState, "bgColor", bgColor_red, bgColor_green, bgColor_blue);
+		fgColor = getColor(launchState, "fgColor",fgColor_red, fgColor_green, fgColor_blue);
+		randColor = getColor(launchState, "randColor",randColor_red, randColor_green, randColor_blue);
 		randDikte = randZichtbaar ? randDikte : 0; 
 
 		mainPanel2 = new LayoutPanel();
