@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.io.IOException;
 import java.io.Writer;
+import java.net.URI;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
@@ -86,6 +87,14 @@ public class JSONEncoder {
 			r.put("@value", u.toExternalForm());
 			return r;
 		} 
+		if(value instanceof URI) {
+			URI u = (URI)value;
+			Map<String,Object> r = new HashMap<String, Object>();
+			r.put("@type", "java:URI");
+			r.put("@value", u.toString());
+			return r;
+			
+		}
 // leftovers
 		return Collections.singletonMap("@type", "javaclass:" + value.getClass().getName());
 	}
