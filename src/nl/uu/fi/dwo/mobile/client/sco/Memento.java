@@ -403,6 +403,13 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 			System.arraycopy(objects, 0, strings, 0, objects.length); // assume object array contains Strings
 			return strings;
 		}
+		if( object instanceof Collection) {
+			Collection c = (Collection) object;
+			String[] strings = new String[c.size()];
+			c.toArray(strings);
+			return strings;
+		}
+		
 		return null;
 	}
 
