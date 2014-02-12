@@ -1165,6 +1165,7 @@ public class PersistenceFacade {
      */
     public Vector getUserResults(Course course,
             User user) throws PersistenceException {
+    	StoreCreator.instance().commit(user.getUserID(), 0, "");
         try {
             Vector v = DbAccessCreator.instance().getUserResults(course.getID(),
                      user.getUserID());
