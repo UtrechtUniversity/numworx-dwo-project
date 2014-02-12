@@ -304,13 +304,13 @@ public class TekstVakPanel implements InteractionView
 				//	tekstVakken[i][j].getElement().getStyle().setBackgroundColor(bgColor.toString());
 				tekstVakken[i][j].getElement().getStyle().setColor(fgColor.toString());
 				tekstVakken[i][j].getElement().getStyle().setFontSize(font_size, Unit.PX);
-				tekstVakken[i][j].getElement().getStyle().setProperty("lineHeight", "1.2");
+				tekstVakken[i][j].getElement().getStyle().setProperty("lineHeight", "1.2"); //hier iets met interlinie doen?
 				tekstVakken[i][j].getElement().getStyle().setFontStyle(font_style == 2 || font_style == 3 ? FontStyle.ITALIC : FontStyle.NORMAL);
 				tekstVakken[i][j].getElement().getStyle().setFontWeight(font_style == 1 || font_style == 3 ? Style.FontWeight.BOLD : Style.FontWeight.NORMAL);
 				
 				tekstVakken[i][j].getElement().getStyle().setProperty("margin", "" + cellMarge + "px " + bovenMarge + "px");
-				tekstVakken[i][j].getElement().getStyle().setWidth(tekstVakBreedte, Unit.PX); //nog nodig?
-				tekstVakken[i][j].getElement().getStyle().setHeight(tekstVakHoogte, Unit.PX); //nog nodig?
+				//tekstVakken[i][j].getElement().getStyle().setWidth(tekstVakBreedte, Unit.PX); //nog nodig?
+				//tekstVakken[i][j].getElement().getStyle().setHeight(tekstVakHoogte, Unit.PX); //nog nodig?
 				
 				/*
 				tekstVakken[i][j].getElement().getStyle().setPaddingTop(bovenMarge - randDikte, Unit.PX);
@@ -329,6 +329,8 @@ public class TekstVakPanel implements InteractionView
 					tekstVakken[i][j].getElement().getStyle().setTextAlign(TextAlign.CENTER);
 				//if(centerV)
 					//tekstVakken[i][j].getElement().getStyle().setVerticalAlign(VerticalAlign.MIDDLE);
+				if(centerV)
+					tekstVakken[i][j].getElement().getStyle().setVerticalAlign(VerticalAlign.BASELINE);
 				tekstHulsVakken[i][j].add(tekstVakken[i][j]);
 				mainPanel.setWidget(i, j, tekstHulsVakken[i][j]);
 			}

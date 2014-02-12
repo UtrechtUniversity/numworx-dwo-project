@@ -548,9 +548,9 @@ public class CheckSleepUnit implements InteractionStub{
 	{
 		
 		if (h != null && h.get("breedte") != null)
-			breedte = (Integer) h.get("breedte");
+			breedte = ((Number) h.get("breedte")).intValue();
 		if (h != null && h.get("hoogte") != null)
-			hoogte = (Integer) h.get("hoogte");
+			hoogte = ((Number) h.get("hoogte")).intValue();
 		if (h != null && h.get("interactiePanelLaunchState") != null)
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
 		

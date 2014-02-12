@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -28,6 +29,7 @@ import fi.wiskopdr.text.Text_nl;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.Stub;
+import nl.uu.fi.dwo.mobile.client.sco.Memento;
 
 public class CheckSelectieUnit implements InteractionStub
 {
@@ -223,7 +225,8 @@ public class CheckSelectieUnit implements InteractionStub
 	@Override
 	public HashMap<String, Object> getState() {
 		//Point[] randomizedPositions = null; //gaat dit goed?
-	    ArrayList<Integer> randomizedPositionsX = null;
+		/*
+		ArrayList<Integer> randomizedPositionsX = null;
 	    ArrayList<Integer> randomizedPositionsY = null;
 		if(randomizedPositions != null)
 	    {	randomizedPositionsX = new ArrayList<Integer>(); //hoe gaat dit met backwards compatibility? + samenhang gewone dwo?
@@ -232,7 +235,20 @@ public class CheckSelectieUnit implements InteractionStub
 		    {	randomizedPositionsX.add((int) randomizedPositions[i].getX());
 		    	randomizedPositionsY.add((int) randomizedPositions[i].getY());
 		    }
-	    }
+	    }*/
+		
+		Object[] randomizedPositionsX = null;
+		Object[] randomizedPositionsY = null;
+		if(randomizedPositions != null)
+		{	randomizedPositionsX = new Object[randomizedPositions.length];
+			randomizedPositionsY = new Object[randomizedPositions.length];
+			for(int i = 0; i < randomizedPositions.length; i++)
+			{
+				randomizedPositionsX[i] = (int) randomizedPositions[i].getX();
+				randomizedPositionsY[i] = (int) randomizedPositions[i].getY();
+			}
+		}
+		
 		
 		boolean ingevuld = false;
 	    boolean nagekeken = false;
@@ -272,7 +288,8 @@ public class CheckSelectieUnit implements InteractionStub
 	    HashMap<String, Object> h = new HashMap<String, Object>();
         if(randomizedPositionsX != null) 
         	h.put("randomizedPositionsX", randomizedPositionsX);
-        if(randomizedPositionsY != null) h.put("randomizedPositionsY", randomizedPositionsY);
+        if(randomizedPositionsY != null) 
+        	h.put("randomizedPositionsY", randomizedPositionsY);
         
         h.put("ingevuld", new Boolean(ingevuld));
         h.put("nagekeken", new Boolean(nagekeken));
@@ -291,18 +308,22 @@ public class CheckSelectieUnit implements InteractionStub
 	    int attemptsCount = 0;
 		int errorCount = 0;
         
-		if(h.get("randomizedPositions") instanceof ArrayList) 
-	    {	ArrayList<Point> randomizedPositionsList = (ArrayList<Point>)h.get("randomizedPositions");
-	    	randomizedPositions = new Point[randomizedPositionsList.size()];
+		if(h.get("randomizedPositions") != null) 
+	    {	//ArrayList<Point> randomizedPositionsList = (ArrayList<Point>)h.get("randomizedPositions");
+			List<Object> randomizedPositionsList = Memento.toArrayList(h.get("randomizedPositions"));
+			randomizedPositions = new Point[randomizedPositionsList.size()];
 	    	for(int i = 0; i < randomizedPositionsList.size(); i++)
-	    		randomizedPositions[i] = randomizedPositionsList.get(i);
+	    		randomizedPositions[i] = (Point) randomizedPositionsList.get(i);
 	    }
-	    else if(h.get("randomizedPositionsX") instanceof ArrayList)
-	    {	ArrayList<Integer> randomizedPositionsXList = (ArrayList<Integer>) h.get("randomizedPositionsX");
-	    	ArrayList<Integer> randomizedPositionsYList = (ArrayList<Integer>) h.get("randomizedPositionsY");
+	    else if(h.get("randomizedPositionsX") != null)
+	    {	//ArrayList<Integer> randomizedPositionsXList = (ArrayList<Integer>) h.get("randomizedPositionsX");
+	    	//ArrayList<Integer> randomizedPositionsYList = (ArrayList<Integer>) h.get("randomizedPositionsY");
+	    	List<Object> randomizedPositionsXList = Memento.toArrayList(h.get("randomizedPositionsX"));
+	    	List<Object> randomizedPositionsYList = Memento.toArrayList(h.get("randomizedPositionsY"));
 	    	randomizedPositions = new Point[randomizedPositionsXList.size()];
 	    	for(int i = 0; i < randomizedPositionsXList.size(); i++)
-	    		randomizedPositions[i] = new Point(randomizedPositionsXList.get(i), randomizedPositionsYList.get(i));
+	    		randomizedPositions[i] = new Point(((Integer)randomizedPositionsXList.get(i)).intValue(), 
+	    				((Integer)randomizedPositionsYList.get(i)).intValue());
 	    }
 	    if(h.get("ingevuld") != null) 
 	    	ingevuld = ((Boolean)h.get("ingevuld")).booleanValue();
@@ -474,9 +495,9 @@ public class CheckSelectieUnit implements InteractionStub
 	{
 		
 		if (h != null && h.get("breedte") != null)
-			breedte = (Integer) h.get("breedte");
+			breedte = ((Number) h.get("breedte")).intValue();
 		if (h != null && h.get("hoogte") != null)
-			hoogte = (Integer) h.get("hoogte");
+			hoogte = ((Number) h.get("hoogte")).intValue();
 		if (h != null && h.get("interactiePanelLaunchState") != null)
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
 		
@@ -497,12 +518,20 @@ public class CheckSelectieUnit implements InteractionStub
 
 		if (launchData != null)
 		{
+			/*
 			if(launchData.get("juisteSelecties") instanceof ArrayList)
 			{
 				ArrayList<Boolean> juisteSelectiesList = (ArrayList<Boolean>) launchData.get("juisteSelecties");
 				juisteSelecties = new boolean[juisteSelectiesList.size()];
 				for(int i = 0; i < juisteSelectiesList.size(); i++)
 					juisteSelecties[i] = juisteSelectiesList.get(i);
+			}
+			*/
+			if(launchData.get("juisteSelecties") != null)
+			{	List<Object> juisteSelectiesList = Memento.toArrayList(launchData.get("juisteSelecties"));
+				juisteSelecties = new boolean[juisteSelectiesList.size()];
+				for(int i = 0; i < juisteSelectiesList.size(); i++)
+					juisteSelecties[i] = ((Boolean) juisteSelectiesList.get(i)).booleanValue();
 			}
 			if(launchData.get("scoreMax") != null) 
 				scoreMax = ((Number)launchData.get("scoreMax")).intValue();
@@ -521,19 +550,17 @@ public class CheckSelectieUnit implements InteractionStub
 			if(launchData.get("checkFormule") != null) 
 				checkFormule = ((Boolean)launchData.get("checkFormule")).booleanValue();
 			
-			if(launchData.get("formuleStrings") instanceof ArrayList)
-			{	ArrayList<String> formuleStringsList = (ArrayList<String>) launchData.get("formuleStrings");
-				formuleStrings = new String[formuleStringsList.size()];
-				for(int i = 0; i < formuleStringsList.size(); i++)
-					formuleStrings[i] = formuleStringsList.get(i);
+			if (launchData.get("formuleStrings") != null) {
+				formuleStrings = Memento.toStringArray(launchData.get("formuleStrings"));
 			}
-			if(launchData.get("logObjectives") instanceof ArrayList)
-			{	ArrayList<ArrayList<Boolean>> logObjectivesList = (ArrayList<ArrayList<Boolean>>) launchData.get("logObjectives");
+			if(launchData.get("logObjectives") != null)
+			{	List<Object> logObjectivesList = Memento.toArrayList( launchData.get("logObjectives") );
 				logObjectives = new boolean[logObjectivesList.size()][];
 				for(int i = 0; i < logObjectivesList.size(); i++)
-				{	logObjectives[i] = new boolean[logObjectivesList.get(i).size()];
-					for(int j = 0; j < logObjectivesList.get(i).size(); j++)
-						logObjectives[i][j] = logObjectivesList.get(i).get(j);
+				{	List<Object> list = Memento.toArrayList(logObjectivesList.get(i));
+					logObjectives[i] = new boolean[list.size()];
+					for(int j = 0; j < list.size(); j++)
+						logObjectives[i][j] = ((Boolean)(list.get(j))).booleanValue() ;
 				}
 			}
 		}
