@@ -171,6 +171,8 @@
 			     </sequential>
 	</target>
 	
+	
+	
 	<target name="sign.pboon.jars.wisweb" depends='keystore' description="Onderteken jars - productie" >
 			<sequential>
 				            <echo message="Repacking libs in @{rootdir}"/>
@@ -207,7 +209,7 @@
 	</target>
 	
 	<target name="pack200.wisweb">
-		<apply executable="pack200" parallel="false" dest="${jar}/wisweb/pack">
+		<apply executable="pack200" parallel="false" dest="${jar}/wisweb">
 		        <arg value="--modification-time=latest"/>
 		        <arg value="--deflate-hint=true"/>
 		        <arg value="--segment-limit=-1"/>

@@ -82,7 +82,6 @@
 	<classpathentry kind="lib" path="output/jar/toverboek.jar"/>
 	<classpathentry kind="lib" path="output/jar/vangen.jar"/>
 	<classpathentry kind="lib" path="output/jar/verdelen.jar"/>
-	<classpathentry kind="lib" path="output/jar/vergroten.jar"/>
 	<classpathentry kind="lib" path="output/jar/verknippen.jar"/>
 	<classpathentry kind="lib" path="output/jar/vermtabel.jar"/>
 	<classpathentry kind="lib" path="output/jar/vlakkenkleuren.jar"/>
@@ -103,5 +102,6 @@
 	<classpathentry kind="lib" path="lib/mysql-connector-java-3.0.16-ga-bin.jar"/>
 	<classpathentry kind="lib" path="lib/wiskopdr.jar"/>
 	<classpathentry kind="lib" path="lib/graphtool.jar"/>
+	<classpathentry kind="lib" path="output/jar/vergroten.jar"/>
 	<classpathentry kind="output" path="output/classes"/>
 </classpath>

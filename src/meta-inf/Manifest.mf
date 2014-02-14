@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Trusted-Only: true
 Permissions: all-permissions
-Codebase: *.science.uu.nl *.fi.uu.nl dme.colorado.edu *.appspot.com *.dwo.nl
+Codebase: *.uu.nl *.fi.uu.nl dme.colorado.edu *.appspot.com *.dwo.nl
 Application-Name: DWO
-Caller-Allowable-Codebase: *.science.uu.nl *.fi.uu.nl dme.colorado.edu dwoapp.appspot.com *.dwo.nl
+Caller-Allowable-Codebase: *.uu.nl *.fi.uu.nl dme.colorado.edu *.appspot.com *.dwo.nl
 Main-Class: fi.dwo.client.domain.DWO
 Class-Path: algebrapijlenoefenen.jar 
  algebrapijlenopdr.jar 

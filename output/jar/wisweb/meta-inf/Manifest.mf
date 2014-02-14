@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Permissions: sandbox
+Codebase: *.science.uu.nl *.fi.uu.nl dme.colorado.edu *.appspot.com *.dwo.nl *.noordhoff.nl *.schoolwise.nl *.epn.nl
+Application-Name: Blokkendoos
+Caller-Allowable-Codebase: *.science.uu.nl *.fi.uu.nl dme.colorado.edu dwoapp.appspot.com *.dwo.nl *.noordhoff.nl *.schoolwise.nl *.epn.nl
