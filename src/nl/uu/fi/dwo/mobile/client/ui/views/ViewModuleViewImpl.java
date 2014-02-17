@@ -403,7 +403,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			this.randomVarWaarden = (HashMap<String, Object>) state.get(RANDOM_VAR_WAARDEN);
 
 		opdrachtObjects = new ArrayList<Object>();
-		ArrayList<Object> opdrachtGegevens = (ArrayList<Object>) opdracht.get("interactiePanelLaunchData");
+		//ArrayList<Object> opdrachtGegevens = (ArrayList<Object>) opdracht.get("interactiePanelLaunchData");
+		//poging Sietske:
+		Object[] opdrachtGegevens = (Object[]) opdracht.get("interactiePanelLaunchData");
+		
+		
+		
 		TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden);
 		newVersion = !(Boolean) opdracht.get("hasAntwoordVak");
 		//New editor version
@@ -430,7 +435,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				if (currentObject instanceof TekstVakPanel)
 				{
 					aantalVakken++;
-					Object launchData = opdrachtGegevens.get(aantalVakken + 4); // nog een +5 voor het launchdata Wim
+					//Object launchData = opdrachtGegevens.get(aantalVakken + 4); // nog een +5 voor het launchdata Wim
+					Object launchData = opdrachtGegevens[aantalVakken + 4];
 					((TekstVakPanel) currentObject).zetInstellingen(instellingen);
 					((TekstVakPanel) currentObject).setKeyboard(kb);
 					if (launchData != null)
@@ -443,9 +449,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 		else if (!newVersion)
 		{ //Old editor version 
-			if (opdrachtGegevens != null && opdrachtGegevens.size() == 1)
+			if (opdrachtGegevens != null && opdrachtGegevens.length == 1)//opdrachtGegevens.size() == 1)
 			{
-				HashMap<String, Object> ips = (HashMap<String, Object>) opdrachtGegevens.get(0);
+				//HashMap<String, Object> ips = (HashMap<String, Object>) opdrachtGegevens.get(0);
+				HashMap<String, Object> ips = (HashMap<String, Object>) opdrachtGegevens[0];
 				HashMap<String, Object> interactiePanelLaunchState = (HashMap<String, Object>) ips.get("interactiePanelLaunchState");
 				opdracht.put("antwoordString", interactiePanelLaunchState.get("antwoordString"));
 			}
