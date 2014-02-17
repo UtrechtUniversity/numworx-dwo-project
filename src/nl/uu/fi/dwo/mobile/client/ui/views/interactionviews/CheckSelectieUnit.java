@@ -1,6 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
-import java.util.ArrayList;
+//import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -229,7 +229,7 @@ public class CheckSelectieUnit implements InteractionStub
 		ArrayList<Integer> randomizedPositionsX = null;
 	    ArrayList<Integer> randomizedPositionsY = null;
 		if(randomizedPositions != null)
-	    {	randomizedPositionsX = new ArrayList<Integer>(); //hoe gaat dit met backwards compatibility? + samenhang gewone dwo?
+	    {	randomizedPositionsX = new ArrayList<Integer>(); 
 	    	randomizedPositionsY = new ArrayList<Integer>();
 	    	for(int i = 0; i < randomizedPositions.length; i++)
 		    {	randomizedPositionsX.add((int) randomizedPositions[i].getX());

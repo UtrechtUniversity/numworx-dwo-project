@@ -1,13 +1,15 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
-import java.util.ArrayList;
+//import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.utils.StringUtils;
 
 import com.google.gwt.dom.client.Style;
@@ -84,9 +86,9 @@ public class CheckValueUnit implements InteractionStub{
 	{
 		
 		if (h != null && h.get("breedte") != null)
-			breedte = (Integer) h.get("breedte");
+			breedte = ((Number) h.get("breedte")).intValue();
 		if (h != null && h.get("hoogte") != null)
-			hoogte = (Integer) h.get("hoogte");
+			hoogte = ((Number) h.get("hoogte")).intValue();
 		if (h != null && h.get("interactiePanelLaunchState") != null)
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
 		
@@ -126,19 +128,17 @@ public class CheckValueUnit implements InteractionStub{
 			if(launchData.get("view") != null)
 				view = ((Boolean) launchData.get("view")).booleanValue();
 			
-			if(launchData.get("formuleStrings") instanceof ArrayList)
-			{	ArrayList<String> formuleStringsList = (ArrayList<String>) launchData.get("formuleStrings");
-				formuleStrings = new String[formuleStringsList.size()];
-				for(int i = 0; i < formuleStringsList.size(); i++)
-					formuleStrings[i] = formuleStringsList.get(i);
+			if(launchData.get("formuleStrings") != null)
+			{	formuleStrings = Memento.toStringArray(launchData.get("formuleStrings"));
 			}
-			if(launchData.get("logObjectives") instanceof ArrayList)
-			{	ArrayList<ArrayList<Boolean>> logObjectivesList = (ArrayList<ArrayList<Boolean>>) launchData.get("logObjectives");
+			if(launchData.get("logObjectives") != null)
+			{	List<Object> logObjectivesList = Memento.toArrayList( launchData.get("logObjectives") );
 				logObjectives = new boolean[logObjectivesList.size()][];
 				for(int i = 0; i < logObjectivesList.size(); i++)
-				{	logObjectives[i] = new boolean[logObjectivesList.get(i).size()];
-					for(int j = 0; j < logObjectivesList.get(i).size(); j++)
-						logObjectives[i][j] = logObjectivesList.get(i).get(j);
+				{	List<Object> list = Memento.toArrayList(logObjectivesList.get(i));
+					logObjectives[i] = new boolean[list.size()];
+					for(int j = 0; j < list.size(); j++)
+						logObjectives[i][j] = ((Boolean)(list.get(j))).booleanValue() ;
 				}
 			}
 		}
