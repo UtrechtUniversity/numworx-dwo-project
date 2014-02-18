@@ -264,6 +264,10 @@ public class TekstVakPanel implements InteractionView
 		mainPanel2.addDomHandler(mouseHandler, MouseDownEvent.getType());
 		mainPanel2.addDomHandler(mouseHandler, MouseMoveEvent.getType());
 		mainPanel2.addDomHandler(mouseHandler, MouseUpEvent.getType());
+		TouchHandler touchHandler = new TouchHandler();
+		mainPanel2.addDomHandler(touchHandler, TouchStartEvent.getType());
+		mainPanel2.addDomHandler(touchHandler, TouchMoveEvent.getType());
+		mainPanel2.addDomHandler(touchHandler, TouchEndEvent.getType());
 		
 		randPanel = new FlowPanel();
 		if(bgColorZichtbaar)
@@ -1157,6 +1161,8 @@ public class TekstVakPanel implements InteractionView
 		 * In de gewone wiskOpdr komt het panel dat op dat moment gesleept wordt altijd boven de andere panels te liggen.
 		 * Dat is wel mooi; je hebt hem immers als het ware opgetild en legt hem ergens anders weer neer. Dan is het tweede
 		 * probleem hierboven ook opgelost. Misschien kun je ze gewoon uit hun parent halen en weer toevoegen. 
+		 * 
+		 * Volgens mij heb ik de laatste alinea hierboven intussen geimplementeerd; checken...
 		 */
 		
 	}

@@ -19,6 +19,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.touch.client.Point;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
@@ -703,6 +705,23 @@ public class CheckSleepUnit implements InteractionStub{
 		    			}
 		    		}
 		    	}, MouseDownEvent.getType());
+	            ipListSleep[i].getAsPanel().addDomHandler(new TouchStartHandler(){
+		    		public void onTouchStart(TouchStartEvent e){
+		    			for(int i = 0; i < aantalSleepObjects; i++)
+		    			{	if(e.getSource() == ipListSleep[i].getAsPanel())
+		    				{	goedKrulImage.setVisible(false);
+    							foutKruisImage.setVisible(false);
+    							correct = false;
+    							score = 0;
+    							ingevuld = true;
+    							for(int j = 0; j < ipListSleep.length; j++)
+    								ipListSleep[j].wisGoedFout();
+		    					
+		    					break;
+		    				}
+		    			}
+		    		}
+		    	}, TouchStartEvent.getType());
             }
         }
         

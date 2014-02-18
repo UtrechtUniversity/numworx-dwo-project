@@ -13,6 +13,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.touch.client.Point;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
@@ -634,6 +636,29 @@ public class CheckSelectieUnit implements InteractionStub
 	    				}
 	    			}
 	    		}, MouseDownEvent.getType());
+	            ipList[i].getAsPanel().addDomHandler(new TouchStartHandler(){
+	    			public void onTouchStart(TouchStartEvent e){
+	    				for(int i = 0; i < ipList.length; i++)
+	    				{	if(e.getSource() == ipList[i].getAsPanel())
+	    				
+	    					{	
+	    						goedKrulImage.setVisible(false);
+	    						//goedKrulHalfImage.setVisible(false);
+	    						foutKruisImage.setVisible(false);
+	    						correct = false;
+	    						score = 0;
+	    						
+	    						if(!multiSelections)
+	    						{
+	    							for(int j = 0; j < ipList.length; j++)
+	    								if(i != j)
+	    									ipList[j].setSelected(false);
+	    						}
+	    						break;
+	    					}
+	    				}
+	    			}
+	    		}, TouchStartEvent.getType());
             }
         }
         
