@@ -1,7 +1,5 @@
 package nl.uu.fi.dwo.mobile.client.sco;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -392,38 +390,20 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		return "PT" + (millis / 1000.0F) + "S";
 	}
 
+	/**
+	 * @deprecated Use {@link JSONUtilities#toStringArray(Object)} instead
+	 */
 	public static String[] toStringArray(Object object)
 	{
-		if (object instanceof String[] || object == null)
-			return (String[]) object;
-		if (object instanceof Object[])
-		{
-			Object[] objects = (Object[]) object;
-			String[] strings = new String[objects.length];
-			System.arraycopy(objects, 0, strings, 0, objects.length); // assume object array contains Strings
-			return strings;
-		}
-		if( object instanceof Collection) {
-			Collection c = (Collection) object;
-			String[] strings = new String[c.size()];
-			c.toArray(strings);
-			return strings;
-		}
-		
-		return null;
+		return JSONUtilities.toStringArray(object);
 	}
 
-	@SuppressWarnings("unchecked")
+	/**
+	 * @deprecated Use {@link JSONUtilities#toArrayList(Object)} instead
+	 */
 	public static List<Object> toArrayList(Object object)
 	{
-		if (object instanceof List || object == null)
-			return (List<Object>) object;
-		if (object instanceof Object[])
-		{
-			Object[] objects = (Object[]) object;
-			return Arrays.asList(objects);
-		}
-		return null;
+		return JSONUtilities.toArrayList(object);
 	}
 
 	private Runnable runner = new Runnable()

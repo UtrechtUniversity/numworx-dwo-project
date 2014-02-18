@@ -1,7 +1,9 @@
 package nl.uu.fi.dwo.interaction.client;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -151,6 +153,42 @@ public class JSONUtilities {
 		else
 			// if(value.isNull())
 			return null;
+	}
+
+
+	@SuppressWarnings("unchecked")
+	public static List<Object> toArrayList(Object object)
+	{
+		if (object instanceof List || object == null)
+			return (List<Object>) object;
+		if (object instanceof Object[])
+		{
+			Object[] objects = (Object[]) object;
+			return Arrays.asList(objects);
+		}
+		return null;
+	}
+
+
+	public static String[] toStringArray(Object object)
+	{
+		if (object instanceof String[] || object == null)
+			return (String[]) object;
+		if (object instanceof Object[])
+		{
+			Object[] objects = (Object[]) object;
+			String[] strings = new String[objects.length];
+			System.arraycopy(objects, 0, strings, 0, objects.length); // assume object array contains Strings
+			return strings;
+		}
+		if( object instanceof Collection) {
+			Collection c = (Collection) object;
+			String[] strings = new String[c.size()];
+			c.toArray(strings);
+			return strings;
+		}
+		
+		return null;
 	}
 
 }
