@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.Vector;
 
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
-import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.utils.StringUtils;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -130,7 +130,6 @@ public class CheckSleepUnit implements InteractionStub{
 	
 	@Override
 	public HashMap<String, Object> getState() {
-		//Point[] randomizedPositions = null; //gaat dit goed?
 		Object[] randomizedPositionsX = null;
 		Object[] randomizedPositionsY = null;
 		if(randomizedPositions != null)
@@ -149,8 +148,7 @@ public class CheckSleepUnit implements InteractionStub{
 	    int attemptsCount = 0;
 		int errorCount = 0;
 		
-		//randomizedPositions = this.randomizedPositions;
-	    ingevuld = this.ingevuld;
+		ingevuld = this.ingevuld;
 	    nagekeken = this.nagekeken;
 	    attempts = this.attempts;
 	    attemptsCount = this.attemptsCount;
@@ -170,7 +168,6 @@ public class CheckSleepUnit implements InteractionStub{
 			logMap.put("logAttemptsCount", new Integer(attemptsCount));
 			logMap.put("logAttempts", attempts);
 			
-			//WiskOpdr.setLog(logID, logMap);
 		}
          
 	    HashMap<String, Object> h = new HashMap<String, Object>();
@@ -198,14 +195,14 @@ public class CheckSleepUnit implements InteractionStub{
 		int errorCount = 0;
         
 		if(h.get("randomizedPositions") != null) 
-	    {	List<Object> randomizedPositionsList = Memento.toArrayList(h.get("randomizedPositions"));
+	    {	List<Object> randomizedPositionsList = JSONUtilities.toArrayList(h.get("randomizedPositions"));
 			randomizedPositions = new Point[randomizedPositionsList.size()];
 			for(int i = 0; i < randomizedPositionsList.size(); i++)
 				randomizedPositions[i] = (Point) randomizedPositionsList.get(i);
 		}
 	    else if(h.get("randomizedPositionsX") != null)
-	    {	List<Object> randomizedPositionsXList = Memento.toArrayList(h.get("randomizedPositionsX"));
-    		List<Object> randomizedPositionsYList = Memento.toArrayList(h.get("randomizedPositionsY"));
+	    {	List<Object> randomizedPositionsXList = JSONUtilities.toArrayList(h.get("randomizedPositionsX"));
+    		List<Object> randomizedPositionsYList = JSONUtilities.toArrayList(h.get("randomizedPositionsY"));
     		randomizedPositions = new Point[randomizedPositionsXList.size()];
     		for(int i = 0; i < randomizedPositionsXList.size(); i++)
     			randomizedPositions[i] = new Point(((Integer)randomizedPositionsXList.get(i)).intValue(), 
@@ -235,8 +232,7 @@ public class CheckSleepUnit implements InteractionStub{
 	        	Point p = randomizedPositions[i];
 	            ipListSleep[i].setStartSleep((int)p.getX(), (int)p.getY()); //niet meer nodig.
 	        }
-	        //(((TekstInteractiePanelVak)((Component)ipList[0]).getParent()).getTekstVak()).layoutTekst();
-        }
+	    }
         
         if(ingevuld && (mode==0 || nagekeken)){
         	kijkNa();
@@ -263,7 +259,6 @@ public class CheckSleepUnit implements InteractionStub{
 		
 
 		attempts.addElement(s);
-		//System.out.println(s);
 	}
 	
 	public void wis()
@@ -327,7 +322,6 @@ public class CheckSleepUnit implements InteractionStub{
     public void stop()
     {
         kijkNa();
-        //if(ingevuld) produceAction("changed");
     }
     
     public void start(){}
@@ -353,28 +347,22 @@ public class CheckSleepUnit implements InteractionStub{
         
     	boolean juist = true;
         answer = "";
-        //ingevuld = true;
-        
+                
         correct = false;
         fout = true;
         score = 0;
         
         
         Point[] doelPosities = new Point[aantalDoelObjects];
-        //ipListDoel = new TekstVakPanel[aantalDoelObjects];
         for(int i=0 ; i < aantalDoelObjects; i++)
-        {   //ipListDoel[i] = ((TekstInteractiePanelVak)getParent()).zoekInteractiePanel(-(i+1));
-            doelPosities[i] = ipListDoel[i].geefLocatie();
+        {   doelPosities[i] = ipListDoel[i].geefLocatie();
         }
         
         Point[] posities = new Point[aantalSleepObjects];
-        //ipListSleep = new TekstVakPanel[aantalSleepObjects];
         TekstVakPanel[] sleepObjecten = new TekstVakPanel[aantalSleepObjects];
         
         for(int i=0 ; i<aantalSleepObjects ; i++)
-        {   //ipListSleep[i] = ((TekstInteractiePanelVak)getParent()).zoekInteractiePanel(i+1);
-            //ipListSleep[i].addActionListener(this);
-            posities[i] = ipListSleep[i].geefLocatie();
+        {   posities[i] = ipListSleep[i].geefLocatie();
             sleepObjecten[i] = ipListSleep[i];
         }
         
@@ -420,7 +408,6 @@ public class CheckSleepUnit implements InteractionStub{
     	        		}
     	        	}
         			
-        			//System.out.println(v[h].toString());
         			stapJuist = v[h].isOplossing(new BasisExpressie(1.212131415),"q");
         			juist = juist && stapJuist;
         			if(!juist && !hasLocationStrings) 
@@ -449,7 +436,7 @@ public class CheckSleepUnit implements InteractionStub{
 	        		}
 		        }
 	        	juist = v.isOplossing(new BasisExpressie(1.212131415),"q");
-	        	//System.out.println(v.toString());
+	        	
         	}
         	// construeer antwoord (brxxx)
 			for(int i=0 ; i<aantalDoelObjects ; i++)
@@ -460,8 +447,7 @@ public class CheckSleepUnit implements InteractionStub{
         		{	answer = answer + e.toString();
         		}
 	        }
-			//System.out.println(answer);
-        }
+		}
         else
         {
         	for(int i=0 ; i<aantalSleepObjects ; i++)
@@ -472,7 +458,6 @@ public class CheckSleepUnit implements InteractionStub{
 	        {   int dx = (int) Math.abs(posities[i].getX() - doelPosities[i].getX());
 	        	int dy = (int) Math.abs(posities[i].getY() - doelPosities[i].getY());
 	        	
-	        	//if(dx*dx + dy*dy > acceptedMarge*acceptedMarge) 
 	        	if(dx > acceptedMarge || dy > acceptedMarge) 
 	        	{	stapJuist = false;
 	        		juist = juist && stapJuist;
@@ -488,7 +473,6 @@ public class CheckSleepUnit implements InteractionStub{
 	    	            {
 	    	        		dx = (int) Math.abs(posities[i].getX() - doelPosities[j].getX());
 	    		        	dy = (int) Math.abs(posities[i].getY() - doelPosities[j].getY());
-	    		        	//if(dx*dx + dy*dy > acceptedMarge*acceptedMarge) 
 	    		        	if(dx < acceptedMarge && dy < acceptedMarge) 
 	    		        	{	ipListSleep[i].zetGoedFout(false);
 	    		        		break;
@@ -504,7 +488,6 @@ public class CheckSleepUnit implements InteractionStub{
 	            {
 	        		int dx = (int) Math.abs(posities[i].getX() - doelPosities[j].getX());
 		        	int dy = (int) Math.abs(posities[i].getY() - doelPosities[j].getY());
-		        	//if(dx*dx + dy*dy > acceptedMarge*acceptedMarge) 
 		        	if(dx < acceptedMarge && dy < acceptedMarge) 
 		        	{	stapJuist = false;
 		        		answer = answer + j + "-" + i + ",";
@@ -519,14 +502,12 @@ public class CheckSleepUnit implements InteractionStub{
         }
         
         if(juist)
-        {   //goedKrulImage.setVisible(true);
-        	correct = true;
+        {   correct = true;
             fout = false;
             score = scoreMax;
         }
         else 
-        {   //foutKruisImage.setVisible(true);
-        	correct = false;
+        {   correct = false;
             fout = true;
             score = 0;
         }
@@ -537,7 +518,6 @@ public class CheckSleepUnit implements InteractionStub{
         		foutKruisImage.setVisible(true);
         }
         
-        //if(show)produceAction("changed");
     }
     
     public void kijkNa(int stapNr)
@@ -561,8 +541,6 @@ public class CheckSleepUnit implements InteractionStub{
 		if (h != null && h.get("interactiePanelLaunchState") != null)
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
 		
-		//this.parent = parent;
-		
 		this.ipListSleep = ipListSleep;
 		this.ipListDoel = ipListDoel;
 		init(breedte, hoogte, launchState, randomVarWaarden);
@@ -575,19 +553,9 @@ public class CheckSleepUnit implements InteractionStub{
 			Map<String, Number> values) {
 		breedte = width;
 		hoogte = height;
-		//this.randomVarWaarden = randomValues;
-
+		
 		if (launchData != null)
 		{
-			/*
-			if(launchData.get("juisteSelecties") instanceof ArrayList)
-			{
-				ArrayList<Boolean> juisteSelectiesList = (ArrayList<Boolean>) launchData.get("juisteSelecties");
-				juisteSelecties = new boolean[juisteSelectiesList.size()];
-				for(int i = 0; i < juisteSelectiesList.size(); i++)
-					juisteSelecties[i] = juisteSelectiesList.get(i);
-			}
-			*/
 			if(launchData.get("scoreMax") != null) 
 				scoreMax = ((Number)launchData.get("scoreMax")).intValue();
 		    if(launchData.get("randomizePositions") != null) 
@@ -620,13 +588,13 @@ public class CheckSleepUnit implements InteractionStub{
 				verzamelDoel = ((Boolean) launchData.get("verzamelDoel")).booleanValue();
 				
 			if(launchData.get("formuleStrings") != null)
-			{	formuleStrings = Memento.toStringArray(launchData.get("formuleStrings"));
+			{	formuleStrings = JSONUtilities.toStringArray(launchData.get("formuleStrings"));
 			}
 			if(launchData.get("logObjectives") != null)
-			{	List<Object> logObjectivesList = Memento.toArrayList( launchData.get("logObjectives") );
+			{	List<Object> logObjectivesList = JSONUtilities.toArrayList( launchData.get("logObjectives") );
 				logObjectives = new boolean[logObjectivesList.size()][];
 				for(int i = 0; i < logObjectivesList.size(); i++)
-				{	List<Object> list = Memento.toArrayList(logObjectivesList.get(i));
+				{	List<Object> list = JSONUtilities.toArrayList(logObjectivesList.get(i));
 					logObjectives[i] = new boolean[list.size()];
 					for(int j = 0; j < list.size(); j++)
 						logObjectives[i][j] = ((Boolean)(list.get(j))).booleanValue() ;
@@ -648,7 +616,8 @@ public class CheckSleepUnit implements InteractionStub{
 		basisPanel.setWidgetTopHeight(checkButton, 0, Style.Unit.PX, 20, Style.Unit.PX);
 		checkButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
-			{	kijkNa();
+			{	e.stopPropagation();
+				kijkNa();
 	        	if(fout) errorCount++;
 	        	attemptsCount++;
 				setAttempt();
@@ -690,42 +659,33 @@ public class CheckSleepUnit implements InteractionStub{
 	            	ipListSleep[i].setStartSleep();
 	            ipListSleep[i].getAsPanel().addDomHandler(new MouseDownHandler(){
 		    		public void onMouseDown(MouseDownEvent e){
-		    			for(int i = 0; i < aantalSleepObjects; i++)
-		    			{	if(e.getSource() == ipListSleep[i].getAsPanel())
-		    				{	goedKrulImage.setVisible(false);
-    							foutKruisImage.setVisible(false);
-    							correct = false;
-    							score = 0;
-    							ingevuld = true;
-    							for(int j = 0; j < ipListSleep.length; j++)
-    								ipListSleep[j].wisGoedFout();
-		    					
-		    					break;
-		    				}
-		    			}
+		    			
+		    			clickAction();
+		    			
 		    		}
 		    	}, MouseDownEvent.getType());
 	            ipListSleep[i].getAsPanel().addDomHandler(new TouchStartHandler(){
 		    		public void onTouchStart(TouchStartEvent e){
-		    			for(int i = 0; i < aantalSleepObjects; i++)
-		    			{	if(e.getSource() == ipListSleep[i].getAsPanel())
-		    				{	goedKrulImage.setVisible(false);
-    							foutKruisImage.setVisible(false);
-    							correct = false;
-    							score = 0;
-    							ingevuld = true;
-    							for(int j = 0; j < ipListSleep.length; j++)
-    								ipListSleep[j].wisGoedFout();
-		    					
-		    					break;
-		    				}
-		    			}
+		    			clickAction();
+		    			
 		    		}
 		    	}, TouchStartEvent.getType());
             }
         }
         
         if(randomizePositions && !positionsRandomized) randomizePositions();
+		
+	}
+	
+	public void clickAction()
+	{
+		goedKrulImage.setVisible(false);
+		foutKruisImage.setVisible(false);
+		correct = false;
+		score = 0;
+		ingevuld = true;
+		for(int j = 0; j < ipListSleep.length; j++)
+			ipListSleep[j].wisGoedFout();
 		
 	}
 }

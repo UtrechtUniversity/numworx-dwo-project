@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.Vector;
 
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
-import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.utils.StringUtils;
 
 import com.google.gwt.dom.client.Style;
@@ -129,13 +129,13 @@ public class CheckValueUnit implements InteractionStub{
 				view = ((Boolean) launchData.get("view")).booleanValue();
 			
 			if(launchData.get("formuleStrings") != null)
-			{	formuleStrings = Memento.toStringArray(launchData.get("formuleStrings"));
+			{	formuleStrings = JSONUtilities.toStringArray(launchData.get("formuleStrings"));
 			}
 			if(launchData.get("logObjectives") != null)
-			{	List<Object> logObjectivesList = Memento.toArrayList( launchData.get("logObjectives") );
+			{	List<Object> logObjectivesList = JSONUtilities.toArrayList( launchData.get("logObjectives") );
 				logObjectives = new boolean[logObjectivesList.size()][];
 				for(int i = 0; i < logObjectivesList.size(); i++)
-				{	List<Object> list = Memento.toArrayList(logObjectivesList.get(i));
+				{	List<Object> list = JSONUtilities.toArrayList(logObjectivesList.get(i));
 					logObjectives[i] = new boolean[list.size()];
 					for(int j = 0; j < list.size(); j++)
 						logObjectives[i][j] = ((Boolean)(list.get(j))).booleanValue() ;
@@ -157,7 +157,8 @@ public class CheckValueUnit implements InteractionStub{
 		basisPanel.setWidgetTopHeight(checkButton, 0, Style.Unit.PX, 20, Style.Unit.PX);
 		checkButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
-			{	kijkNa();
+			{	e.stopPropagation();
+				kijkNa();
 	        	if(fout) errorCount++;
 	        	attemptsCount++;
 				setAttempt();

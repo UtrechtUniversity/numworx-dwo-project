@@ -356,7 +356,6 @@ public class TekstVakPanel implements InteractionView
 		}
 		
 		
-		//mainPanel.setSize((breedte - 2 * randDikte) + "px", (hoogte - 2 * randDikte) + "px");
 		
 	}
 
@@ -441,7 +440,6 @@ public class TekstVakPanel implements InteractionView
 						aantalVakken++;
 					}
 				}
-				//setObjects(opdrachtObjects, tekstVakken[i][j]);
 				setObjects(opdrachtObjects, i, j);
 			}
 		}
@@ -516,7 +514,6 @@ public class TekstVakPanel implements InteractionView
 		return correct;
 	}
 
-	//public void setObjects(ArrayList<Object> opdrachtObjects, Panel destination)
 	public void setObjects(ArrayList<Object> opdrachtObjects, int rij, int kolom)
 	{	Panel destination = tekstVakken[rij][kolom];
 		for (int i = 0; i < opdrachtObjects.size(); i++)
@@ -658,7 +655,7 @@ public class TekstVakPanel implements InteractionView
 	
 	
 	
-	public void zetLocatie(double x, double y) //moeten dit doubles worden?
+	public void zetLocatie(double x, double y) 
 	{
 		locationX = (int) x;
 		locationY = (int) y;
@@ -730,19 +727,15 @@ public class TekstVakPanel implements InteractionView
 			if (colorSelection)
 			{	
 				randPanel.getElement().getStyle().setBorderColor(selectionColor.toString());
-				randPanel.getElement().getStyle().setOpacity(0.4); //checken of dit goed gaat zo..
+				randPanel.getElement().getStyle().setOpacity(0.4); 
 				randPanel.getElement().getStyle().setBorderWidth(400, Unit.PX);
-				//setBorder(selectionColor, 400);
 			}
 			else
 			{	randPanel.getElement().getStyle().setBorderColor(grijs.toString());
 				randPanel.getElement().getStyle().setBorderWidth(5, Unit.PX);
 			}
 		
-			//mainPanel.getElement().getStyle().setBorderColor("gray");
-			//mainPanel.getElement().getStyle().setBorderWidth(0, Unit.PX);
-
-			//tekstVakken[i][j].getElement().getStyle().setBackgroundColor(bgColor.toString());
+			
 		
 		}
 		else
@@ -750,7 +743,7 @@ public class TekstVakPanel implements InteractionView
 			randPanel.getElement().getStyle().setBorderColor(randColor.toString());
 			randPanel.getElement().getStyle().setOpacity(1);
 			randPanel.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
-			//setBorder(randColor, randZichtbaar ? randDikte : 0);
+			
 
 		}
 		
@@ -772,10 +765,7 @@ public class TekstVakPanel implements InteractionView
 					if(tekstHulsVakken[i][j].getWidget(k) != null)
 						v.add(tekstHulsVakken[i][j].getWidget(k));
 				
-				//hier moet iets met de tekstVakHulzen... Dit wordt nog wel een beetje ingewikkeld.
 				
-				
-				//tekstVakken[i][j].geefInteractiePanels(v); //hier wil ik eigenlijk die opdrachtObjects gebruiken die we al eerder zagen..
 			}
 		}
 		return v;
@@ -783,7 +773,6 @@ public class TekstVakPanel implements InteractionView
 	
 	public void zetGoedFout(boolean b)
 	{
-		//zetTransparant(false);
 		if (b)
 		{
 			randPanel.getElement().getStyle().setBorderColor(CssColor.make(50, 225, 50).toString());
@@ -798,12 +787,6 @@ public class TekstVakPanel implements InteractionView
 
 	public void wisGoedFout()
 	{
-		//zetTransparant(!bgColorZichtbaar);
-		/*
-		if (randZichtbaar)
-			setBorder(Color.gray);
-		repaint();
-		*/
 		randPanel.getElement().getStyle().setBorderColor(randColor.toString());
 		randPanel.getElement().getStyle().setOpacity(1);
 		randPanel.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
@@ -852,8 +835,6 @@ public class TekstVakPanel implements InteractionView
 		return breedte;
 	}
 	
-	//misschien ook setters bij bovenstaande nodig.
-	
 	public String getIpExpString()
 	{
 		for(int i = 0; i < interactionViewObjects.size(); i++)
@@ -889,39 +870,7 @@ public class TekstVakPanel implements InteractionView
 			*/
 			
 			
-			/* Uit oude TekstVakPanel: veel interfaces en types die niet meer worden gebruikt
-			try{
-				
-			}
-			InteractiePanelContainerIF ipc = (InteractiePanelContainerIF) v.elementAt(0);
-			if (ipc instanceof TekstVakPanel)
-			{
-				InteractiePanel ip = ((TekstInteractiePanelVak) ipc).getInteractiePanel();
-				if (ip instanceof SimpelAntwoordFormuleVak)
-				{
-					FormuleVak fv = ((SimpelAntwoordFormuleVak) ip).geefFormuleVak();
-					if (fv != null)
-						return fv.toString();
-				}
-				if (ip instanceof SimpelAntwoordVergelijkingVak)
-				{
-					String string = null;
-					FormuleVak fv = ((SimpelAntwoordVergelijkingVak) ip).geefFormuleVak();
-					if (fv != null)
-					{
-						string = fv.toString();
-						VergelijkingMeerv vgm = FormuleParser.parseVergelijking(string);
-						Vergelijking vg = null;
-						if (vgm != null)
-							vg = vgm.geefVergelijking(0);
-						Expressie e = null;
-						if (vg != null)
-							e = new Aftrekking(vg.geefExpLinks(), vg.geefExpRechts());
-						if (e != null)
-							return "$f" + e.toString() + "@";
-					}
-				}
-			} */
+			
 		
 		return checkExpressieString;
 	}
@@ -940,7 +889,6 @@ public class TekstVakPanel implements InteractionView
 				int dx = (int) Math.abs(geefLocatie().getX() - sleepObjecten[i].geefLocatie().getX());
 				int dy = (int) Math.abs(geefLocatie().getY() - sleepObjecten[i].geefLocatie().getY());
 				int marge = sleepObjecten[i].geefSleepdoelMarge();
-				//if(dx*dx+dy*dy < Math.min(1, marge*marge));
 				if (dx < Math.min(1, marge) && dy < Math.min(1, marge))
 				{
 					bevat = true;
@@ -961,7 +909,6 @@ public class TekstVakPanel implements InteractionView
 				int dx = (int) Math.abs(geefLocatie().getX() - sleepObjecten[i].geefLocatie().getX());
 				int dy = (int) Math.abs(geefLocatie().getY() - sleepObjecten[i].geefLocatie().getY());
 				int marge = sleepObjecten[i].geefSleepdoelMarge();
-				//if(dx*dx+dy*dy < Math.min(1, marge*marge))
 				if (dx < Math.min(1, marge) && dy < Math.min(1, marge))
 				{
 					waarde = FormuleParser.geefExpressie(sleepObjecten[i].getIpExpString());
@@ -984,7 +931,7 @@ public class TekstVakPanel implements InteractionView
 				int b = sleepObjecten[i].breedte;
 				int h = sleepObjecten[i].hoogte;
 				boolean binnen = x >= 0 && y >= 0 && x + b <= breedte && y + h <= hoogte;
-						//this.contains(x, y) && this.contains(x + b, y + h);
+						
 				if (binnen)
 				{
 					waarde = new Optelling(waarde, FormuleParser.geefExpressie(sleepObjecten[i].getIpExpString()));
@@ -996,77 +943,17 @@ public class TekstVakPanel implements InteractionView
 
 	public boolean ipObjectIsCorrect()
 	{
-		/*
-		boolean juist = false;
-		Vector v = geefInteractiePanels();
-		if (v.size() > 0)
-		{
-			InteractiePanelContainerIF ipc = (InteractiePanelContainerIF) v.elementAt(0);
-			if (ipc instanceof TekstInteractiePanelVak)
-			{
-				InteractiePanel ip = ((TekstInteractiePanelVak) ipc).getInteractiePanel();
-				if (ip instanceof SimpelAntwoordFormuleVak)
-				{
-					ip.kijkNa();
-					juist = ((SimpelAntwoordFormuleVak) ip).isCorrectStrikt();
-				}
-			}
-		}
-		return juist;
-		*/
-		
 		boolean juist = false;
 		
 		for(int i = 0; i < interactionViewObjects.size(); i++)
 		{	Object object = interactionViewObjects.get(i);
 			if(object instanceof FormuleEditorWithAnswer)
 			{	FormuleEditorWithAnswer object2 = (FormuleEditorWithAnswer) object;
-				object2.check();//nodig? Ja, maar ik wil eigenlijk het kruisje/krulletje niet weergeven in het vakje. 
+				object2.check();
 				juist = object2.isCorrect();
-				
-				/*
-				FormuleRegel fr = ((FormuleEditorWithAnswer) object).getCurrentRegel();
-				if (fr != null)
-				{
-					String string = fr.toString();
-					return "$f" + string + "@";
-				}
-				*/
 			}
 		}
 		
-		
-		/*
-		
-		Vector v = geefInteractiePanels();
-		System.out.println("size van v: " + v.size());
-		if (v.size() > 0)
-		{
-			if(v.elementAt(0) instanceof FormuleEditor)
-			{	System.out.println("instance of FormuleEditor");
-				FormuleEditor ip = (FormuleEditor) v.elementAt(0);
-				if (ip instanceof FormuleEditorWithAnswer)
-				{	FormuleEditorWithAnswer ip2 = (FormuleEditorWithAnswer) ip;
-					ip2.check();
-					juist = ((FormuleEditorWithAnswer) ip2).isCorrect(); //was: isCorrectStrikt; moet ik dat nog maken?
-				}
-			}
-			
-			/*
-				InteractionView ip = (InteractionView) v.elementAt(0);
-			InteractiePanelContainerIF ipc = (InteractiePanelContainerIF) v.elementAt(0);
-			if (ipc instanceof TekstInteractiePanelVak)
-			{
-				InteractiePanel ip = ((TekstInteractiePanelVak) ipc).getInteractiePanel();
-				if (ip instanceof FormuleEditorWithAnswer)
-				{
-					ip.kijkNa();
-					juist = ((FormuleEditorWithAnswer) ip).isCorrect(); //was: isCorrectStrikt; moet ik dat nog maken?
-				}
-			}
-			
-		}
-	*/
 		return juist;
 	}
 
@@ -1097,16 +984,6 @@ public class TekstVakPanel implements InteractionView
 		return "".equals(getIpExpString()) || "$f@".equals(getIpExpString());
 	}
 
-	/*
-	public void onClick(ClickEvent event) {
-		if(!selectable)
-			return;
-		
-		selected = !selected;
-		setSelected(selected);
-			
-	}
-	*/
 	
 	public void mouseDownTouchStartAction(int eventX, int eventY)
 	{
@@ -1119,7 +996,6 @@ public class TekstVakPanel implements InteractionView
 		
 		if(!sleepbaar)
 		{
-			//hier zorgen dat de pagina wordt versleept?
 			return;
 		}
 		
@@ -1129,11 +1005,6 @@ public class TekstVakPanel implements InteractionView
 	
 	public void mouseMoveTouchMoveAction(int eventX, int eventY)
 	{
-		if(!sleepbaar)
-		{	//hier zorgen dat de pagina wordt versleept?
-			return;
-		}
-		
 		locationX = eventX - startX;
 		locationY = eventY - startY;
 		
@@ -1148,22 +1019,7 @@ public class TekstVakPanel implements InteractionView
 			parent.setWidgetLeftWidth(this.asWidget(), locationX, Style.Unit.PX, breedte, Style.Unit.PX);
 			parent.setWidgetTopHeight(this.asWidget(), locationY, Style.Unit.PX, hoogte, Style.Unit.PX);
 		}
-		/* Nog zorgen voor het volgende:
-		 * Ofwel zorgen dat alles snel genoeg is, zodat de muis niet uit het paneltje kan verdwijnen;
-		 * ofwel zorgen dat het paneltje toch nog beweegt als de muis eruit is bewogen (met mouseDown nog aan).
-		 * Dus misschien eerst checken of er ergens nog een mouseDown is, en dan pas stopPropagation; als 
-		 * ergens mouseDown is, de mouseMoved doorgeven aan dat panel. Maar ik weet niet of en hoe dat kan.
-		 * 
-		 * Verder: zorgen dat het panel blijft bewegen als hij achter een ander panel langs beweegt.
-		 * 
-		 * En: zorgen dat hij niet het veld uit kan. Nu stopt hij nog iets te ver van de rand.. (heeft dat met randdikte te maken?)
-		 * 
-		 * In de gewone wiskOpdr komt het panel dat op dat moment gesleept wordt altijd boven de andere panels te liggen.
-		 * Dat is wel mooi; je hebt hem immers als het ware opgetild en legt hem ergens anders weer neer. Dan is het tweede
-		 * probleem hierboven ook opgelost. Misschien kun je ze gewoon uit hun parent halen en weer toevoegen. 
-		 * 
-		 * Volgens mij heb ik de laatste alinea hierboven intussen geimplementeerd; checken...
-		 */
+		
 		
 	}
 	
@@ -1182,15 +1038,11 @@ public class TekstVakPanel implements InteractionView
 
 			if(sleepSnap) 
 			{
-				//Point[] doelPosities = ((TekstVakPanel)interactiePanel).geefSleepDoelPosities();
-				//int marge = ((TekstVakPanel)interactiePanel).geefSleepdoelMarge();
-				//boolean snap = ((TekstVakPanel)interactiePanel).geefSleepSnap();
 				if(doelPosities != null) 
 				{	boolean snapped = false;
 					for(int i=0 ; i<doelPosities.length ; i++)
 					{	int dx = (int) Math.abs(locationX - doelPosities[i].getX());
 						int dy = (int) Math.abs(locationY - doelPosities[i].getY());
-						//if(snap && dx*dx+dy*dy < marge*marge)
 						if(sleepSnap && dx < sleepdoelMarge && dy < sleepdoelMarge) 
 						{	locationX = (int) doelPosities[i].getX();
 							locationY = (int) doelPosities[i].getY();
@@ -1224,9 +1076,6 @@ public class TekstVakPanel implements InteractionView
 			int eventX = e.getClientX();
 			int eventY = e.getClientY();
 			
-			//int eventX = e.getX();
-			//int eventY = e.getY();
-			
 			mouseDown = true;
 			
 			mouseDownTouchStartAction(eventX, eventY);
@@ -1235,7 +1084,6 @@ public class TekstVakPanel implements InteractionView
 		
 		public void onMouseMove(MouseMoveEvent e)	
 		{
-			//e.preventDefault();
 			
 			// prevent scrolling
 			if(sleepbaar && sleepHandle && (e.getX() > 20 || e.getY() > 20) )
@@ -1251,16 +1099,13 @@ public class TekstVakPanel implements InteractionView
 			int eventX = e.getClientX();
 			int eventY = e.getClientY();
 			
-			//int eventX = e.getX();
-			//int eventY = e.getY();
-
-			mouseMoveTouchMoveAction(eventX, eventY);
+			if(sleepbaar)
+				mouseMoveTouchMoveAction(eventX, eventY);
 			
 		} // onMouseMove
 		
 		public void onMouseUp(MouseUpEvent e)	
-		{	//e.preventDefault();
-			
+		{	
 			// prevent scrolling
 			if(sleepbaar && sleepHandle && (e.getX() > 20 || e.getY() > 20) )
 			{	mouseDown = false;
@@ -1274,9 +1119,6 @@ public class TekstVakPanel implements InteractionView
 			int eventX = e.getClientX();
 			int eventY = e.getClientY();
 			
-			//int eventX = e.getX();
-			//int eventY = e.getY();
-			
 			mouseUpTouchEndAction(eventX,eventY);
 
 		}
@@ -1288,72 +1130,67 @@ public class TekstVakPanel implements InteractionView
 		
 		public void onTouchStart(TouchStartEvent e)
 		{
-			e.preventDefault();
 			e.stopPropagation();
 			
-			if (e.getTouches().length() > 0)
-			{
-				Touch touch = e.getTouches().get(0);
-				
-				int eventX = touch.getPageX() - getAsPanel().getAbsoluteLeft();
-				int eventY = touch.getPageY() - getAsPanel().getAbsoluteTop();				
-				
-				//lastStartX = eventX; 
-				//lastStartY = eventY;
-				//lastMoveX = -1000;
-				//lastMoveY = -1000;
-				
-				mouseDownTouchStartAction(eventX, eventY);
-				
-		    }
-			e.preventDefault();
-			e.stopPropagation();
+			if(e.getTouches().length() == 0)
+			{	return;
+			}
+			
+			Touch touch = e.getTouches().get(0);
+			
+			if(sleepbaar && sleepHandle && (touch.getPageX() - getAsPanel().getAbsoluteLeft() > 20 || 
+					touch.getPageY() - getAsPanel().getAbsoluteTop() > 20))
+			{	e.preventDefault();
+				return;
+			}
+			
+			
+			int eventX = touch.getClientX();
+			int eventY = touch.getClientY();
+			mouseDownTouchStartAction(eventX, eventY);
+			
+			
 		}
 		public void onTouchMove(TouchMoveEvent e)
 		{
 			
-			e.preventDefault();
 			e.stopPropagation();
 			
-			if (e.getTouches().length() > 0)
-			{
-				Touch touch = e.getTouches().get(0);
-				
-			    int eventX = touch.getPageX() - getAsPanel().getAbsoluteLeft();
-				int eventY = touch.getPageY() - getAsPanel().getAbsoluteTop();				
-			    
-				//lastMoveX = eventX; 
-				//lastMoveY = eventY;
-				
+			if(e.getTouches().length() == 0)
+				return;
+			
+			Touch touch = e.getTouches().get(0);
+			
+			if(sleepbaar && sleepHandle && (touch.getPageX() - getAsPanel().getAbsoluteLeft() > 20 || 
+					touch.getPageY() - getAsPanel().getAbsoluteTop() > 20))
+			{	e.preventDefault();
+				return;
+			}
+		
+			int eventX = touch.getClientX();
+			int eventY = touch.getClientY();
+			
+			if(sleepbaar)
+			{	e.preventDefault();
 				mouseMoveTouchMoveAction(eventX, eventY);
+			}
 				
-		    }
-			e.preventDefault();
-			e.stopPropagation();
-			
 		}
 		public void onTouchEnd(TouchEndEvent e)
 		{
+			e.stopPropagation();
+			if(sleepbaar || selectable)
+				e.preventDefault();
 			
-			int eventX = 0;
-			int eventY = 0;
-		
-			/*
-			if (lastMoveX <= -999)
-			{
-				eventX = lastStartX;
-				eventY = lastStartY;
+			if(sleepbaar && sleepHandle)
+			{	e.preventDefault();
+				return;
 			}
-			else
-			{
-				eventX = lastMoveX;
-				eventY = lastMoveY;
-			}
-			*/
-			    
-			mouseUpTouchEndAction(eventX,eventY);
-				
-		    
+			int eventX = locationX + startX;
+			int eventY = locationY + startY;
+			mouseUpTouchEndAction(eventX, eventY);
+			
+			  
 		}
 
 	}

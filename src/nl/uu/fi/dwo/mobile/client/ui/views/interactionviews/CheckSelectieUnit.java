@@ -29,9 +29,9 @@ import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
 import fi.wiskopdr.text.Text_nl;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.Stub;
-import nl.uu.fi.dwo.mobile.client.sco.Memento;
 
 public class CheckSelectieUnit implements InteractionStub
 {
@@ -75,15 +75,9 @@ public class CheckSelectieUnit implements InteractionStub
 	static int GEEN = 3;
 	
 	private PushButton checkButton;
-	private TekstVakPanel[] ipList; //was: InteractiePanel; weet niet zeker of TekstVakPanel de juiste vervanging is.
-	
+	private TekstVakPanel[] ipList; 
 	private boolean[] juisteSelecties;
 	
-	//private TekstVakPanel parent;
-	
-	//AntwoordKeuzeVakGWTClientBundle antwoordKeuzeVakGWTClientBundle; 
-	//static AntwoordKeuzeVakGWTCssResource antwoordKeuzeVakCss;
-	//ImageResource goedKrulResource, goedKrulHalfResource, foutKruisResource;//
 	Image goedKrulImage, foutKruisImage; //goedKrulHalfImage
 	
 	
@@ -112,20 +106,7 @@ public class CheckSelectieUnit implements InteractionStub
 			v.removeElementAt(r);
 		}
 		positionsRandomized = true;
-		//(((TekstInteractiePanelVak)((Component)ipList[0]).getParent()).getTekstVak()).layoutTekst();
 	}	
-	
-	/*
-	public void zetParent(TekstVakPanel parent)
-	{
-		this.parent = parent;
-	}
-	
-	public TekstVakPanel getParent()
-	{
-		return parent;
-	}
-	*/
 	
 	public void kijkNa()
     {
@@ -134,8 +115,6 @@ public class CheckSelectieUnit implements InteractionStub
     
     public void kijkNa(boolean show)
     {
-       // if(huidigIC!=null) huidigIC.setVisible(false);
-        
         boolean juist = true;
         ingevuld = false;
         
@@ -158,11 +137,8 @@ public class CheckSelectieUnit implements InteractionStub
         				break;
         			}
         			
-        			//ipList = new TekstVakPanel[juisteSelecties.length];
-        	        for(int i=0 ; i<ipList.length ; i++)
-        	        {   //ipList[i] = parent.zoekTekstVakPanel(i+1);
-        	        	//ipList[i] = ((TekstInteractiePanelVak)getParent()).zoekInteractiePanel(i+1);
-        	        	Expressie e = ipList[i].isIpSelected() ? ipList[i].geefObjectWaarde() : new BasisExpressie(0);
+        			for(int i=0 ; i<ipList.length ; i++)
+        	        {   Expressie e = ipList[i].isIpSelected() ? ipList[i].geefObjectWaarde() : new BasisExpressie(0);
     	        		if(e!=null) 
     	        		{	v[h] = v[h].substitueer(e, "V?("+(i+1)+")");
     	        		}
@@ -173,9 +149,6 @@ public class CheckSelectieUnit implements InteractionStub
         	        	ingevuld = ingevuld || ipList[i].isIpSelected();
         	        }
         			
-        			
-        			
-        			//System.out.println(v[h].toString());
         			stapJuist = v[h].isOplossing(new BasisExpressie(1.212131415),"q");
         			juist = juist && stapJuist;
         			if(!juist) break;
@@ -185,10 +158,8 @@ public class CheckSelectieUnit implements InteractionStub
         	
         }
         else
-        {   //ipList = new TekstVakPanel[juisteSelecties.length];
-	        for(int i=0 ; i<ipList.length ; i++)
-	        {   //ipList[i] = parent.zoekTekstVakPanel(i+1);
-	            if(ipList[i] != null)
+        {   for(int i=0 ; i<ipList.length ; i++)
+	        {   if(ipList[i] != null)
 	            {	juist = juist && ipList[i].isIpSelected() == juisteSelecties[i];
 	            	ingevuld = ingevuld || ipList[i].isIpSelected();
 	            }
@@ -207,12 +178,7 @@ public class CheckSelectieUnit implements InteractionStub
             fout = true;
             score = 0;
         }
-        //if(show && check)huidigIC.setVisible(true);
-        
-        System.out.println("kijkna Show="+show);
-        
-        //if(ingevuld && show)produceAction("changed");
-    }
+        }
     
     public void kijkNa(int stapNr)
     { 	kijkNa();
@@ -226,18 +192,6 @@ public class CheckSelectieUnit implements InteractionStub
 
 	@Override
 	public HashMap<String, Object> getState() {
-		//Point[] randomizedPositions = null; //gaat dit goed?
-		/*
-		ArrayList<Integer> randomizedPositionsX = null;
-	    ArrayList<Integer> randomizedPositionsY = null;
-		if(randomizedPositions != null)
-	    {	randomizedPositionsX = new ArrayList<Integer>(); 
-	    	randomizedPositionsY = new ArrayList<Integer>();
-	    	for(int i = 0; i < randomizedPositions.length; i++)
-		    {	randomizedPositionsX.add((int) randomizedPositions[i].getX());
-		    	randomizedPositionsY.add((int) randomizedPositions[i].getY());
-		    }
-	    }*/
 		
 		Object[] randomizedPositionsX = null;
 		Object[] randomizedPositionsY = null;
@@ -258,14 +212,12 @@ public class CheckSelectieUnit implements InteractionStub
 	    int attemptsCount = 0;
 		int errorCount = 0;
 		
-		//randomizedPositions = this.randomizedPositions;
-	    ingevuld = this.ingevuld;
+		ingevuld = this.ingevuld;
 	    nagekeken = this.nagekeken;
 	    attempts = this.attempts;
 	    attemptsCount = this.attemptsCount;
 	    errorCount = this.errorCount;
 
-	    //if(!("MW".equals(WiskOpdr.deployVariant) || "GR".equals(WiskOpdr.deployVariant))) 
 	    kijkNa(false);
 		if(logOption)
 		{	
@@ -274,8 +226,7 @@ public class CheckSelectieUnit implements InteractionStub
 	    	String logString = "";
 			String[] options = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","X","Y","Z"};
 			for(int i=0 ; i<ipList.length ; i++)
-	        {   //ipList[i] = parent.zoekTekstVakPanel(i+1);
-	            if(ipList[i].isIpSelected() && i<options.length) logString = logString + options[i];
+	        {   if(ipList[i].isIpSelected() && i<options.length) logString = logString + options[i];
 	        }
 			logMap.put("logAnswer", logString);
 			logMap.put("logScore", new Integer(score));
@@ -311,17 +262,14 @@ public class CheckSelectieUnit implements InteractionStub
 		int errorCount = 0;
         
 		if(h.get("randomizedPositions") != null) 
-	    {	//ArrayList<Point> randomizedPositionsList = (ArrayList<Point>)h.get("randomizedPositions");
-			List<Object> randomizedPositionsList = Memento.toArrayList(h.get("randomizedPositions"));
+	    {	List<Object> randomizedPositionsList = JSONUtilities.toArrayList(h.get("randomizedPositions"));
 			randomizedPositions = new Point[randomizedPositionsList.size()];
 	    	for(int i = 0; i < randomizedPositionsList.size(); i++)
 	    		randomizedPositions[i] = (Point) randomizedPositionsList.get(i);
 	    }
 	    else if(h.get("randomizedPositionsX") != null)
-	    {	//ArrayList<Integer> randomizedPositionsXList = (ArrayList<Integer>) h.get("randomizedPositionsX");
-	    	//ArrayList<Integer> randomizedPositionsYList = (ArrayList<Integer>) h.get("randomizedPositionsY");
-	    	List<Object> randomizedPositionsXList = Memento.toArrayList(h.get("randomizedPositionsX"));
-	    	List<Object> randomizedPositionsYList = Memento.toArrayList(h.get("randomizedPositionsY"));
+	    {	List<Object> randomizedPositionsXList = JSONUtilities.toArrayList(h.get("randomizedPositionsX"));
+	    	List<Object> randomizedPositionsYList = JSONUtilities.toArrayList(h.get("randomizedPositionsY"));
 	    	randomizedPositions = new Point[randomizedPositionsXList.size()];
 	    	for(int i = 0; i < randomizedPositionsXList.size(); i++)
 	    		randomizedPositions[i] = new Point(((Integer)randomizedPositionsXList.get(i)).intValue(), 
@@ -530,7 +478,7 @@ public class CheckSelectieUnit implements InteractionStub
 			}
 			*/
 			if(launchData.get("juisteSelecties") != null)
-			{	List<Object> juisteSelectiesList = Memento.toArrayList(launchData.get("juisteSelecties"));
+			{	List<Object> juisteSelectiesList = JSONUtilities.toArrayList(launchData.get("juisteSelecties"));
 				juisteSelecties = new boolean[juisteSelectiesList.size()];
 				for(int i = 0; i < juisteSelectiesList.size(); i++)
 					juisteSelecties[i] = ((Boolean) juisteSelectiesList.get(i)).booleanValue();
@@ -553,13 +501,13 @@ public class CheckSelectieUnit implements InteractionStub
 				checkFormule = ((Boolean)launchData.get("checkFormule")).booleanValue();
 			
 			if (launchData.get("formuleStrings") != null) {
-				formuleStrings = Memento.toStringArray(launchData.get("formuleStrings"));
+				formuleStrings = JSONUtilities.toStringArray(launchData.get("formuleStrings"));
 			}
 			if(launchData.get("logObjectives") != null)
-			{	List<Object> logObjectivesList = Memento.toArrayList( launchData.get("logObjectives") );
+			{	List<Object> logObjectivesList = JSONUtilities.toArrayList( launchData.get("logObjectives") );
 				logObjectives = new boolean[logObjectivesList.size()][];
 				for(int i = 0; i < logObjectivesList.size(); i++)
-				{	List<Object> list = Memento.toArrayList(logObjectivesList.get(i));
+				{	List<Object> list = JSONUtilities.toArrayList(logObjectivesList.get(i));
 					logObjectives[i] = new boolean[list.size()];
 					for(int j = 0; j < list.size(); j++)
 						logObjectives[i][j] = ((Boolean)(list.get(j))).booleanValue() ;
@@ -581,7 +529,8 @@ public class CheckSelectieUnit implements InteractionStub
 		basisPanel.setWidgetTopHeight(checkButton, 0, Style.Unit.PX, 20, Style.Unit.PX);
 		checkButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
-			{	kijkNa();
+			{	e.stopPropagation();
+				kijkNa();
 	        	if(fout) errorCount++;
 	        	attemptsCount++;
 				setAttempt();
@@ -618,7 +567,8 @@ public class CheckSelectieUnit implements InteractionStub
 	    				for(int i = 0; i < ipList.length; i++)
 	    				{	if(e.getSource() == ipList[i].getAsPanel())
 	    				
-	    					{	
+	    					{	selectClickAction(i);
+	    						/*
 	    						goedKrulImage.setVisible(false);
 	    						//goedKrulHalfImage.setVisible(false);
 	    						foutKruisImage.setVisible(false);
@@ -631,6 +581,7 @@ public class CheckSelectieUnit implements InteractionStub
 	    								if(i != j)
 	    									ipList[j].setSelected(false);
 	    						}
+	    						*/
 	    						break;
 	    					}
 	    				}
@@ -640,8 +591,8 @@ public class CheckSelectieUnit implements InteractionStub
 	    			public void onTouchStart(TouchStartEvent e){
 	    				for(int i = 0; i < ipList.length; i++)
 	    				{	if(e.getSource() == ipList[i].getAsPanel())
-	    				
-	    					{	
+	    					{	selectClickAction(i);
+	    						/*	
 	    						goedKrulImage.setVisible(false);
 	    						//goedKrulHalfImage.setVisible(false);
 	    						foutKruisImage.setVisible(false);
@@ -654,6 +605,7 @@ public class CheckSelectieUnit implements InteractionStub
 	    								if(i != j)
 	    									ipList[j].setSelected(false);
 	    						}
+	    						*/
 	    						break;
 	    					}
 	    				}
@@ -666,6 +618,21 @@ public class CheckSelectieUnit implements InteractionStub
 		
 	}
 
+	public void selectClickAction(int i)
+	{
+		goedKrulImage.setVisible(false);
+		//goedKrulHalfImage.setVisible(false);
+		foutKruisImage.setVisible(false);
+		correct = false;
+		score = 0;
+		
+		if(!multiSelections)
+		{
+			for(int j = 0; j < ipList.length; j++)
+				if(i != j)
+					ipList[j].setSelected(false);
+		}
+	}
 	/*
 	@Override //nodig?
 	public void onModuleLoad() {
