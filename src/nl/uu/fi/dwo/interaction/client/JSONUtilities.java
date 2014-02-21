@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMapImpl;
+
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONNull;
@@ -168,7 +171,16 @@ public class JSONUtilities {
 		}
 		return null;
 	}
-
+	
+	public static int toInt(Object object) {
+		if( object instanceof Number)
+			return ((Number)object).intValue();
+		throw new NullPointerException();
+	}
+	
+	public static ObjectMap wrapMap(Map<String, ? > map) {
+		return new ObjectMapImpl(map);
+	}
 
 	public static String[] toStringArray(Object object)
 	{
