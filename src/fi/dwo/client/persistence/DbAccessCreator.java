@@ -23,7 +23,7 @@ public class DbAccessCreator {
      */
 	
     
-    public static String SERVLET = "/servlet/fi.dwo.server.persistence.DbAccessLdapServlet";
+    public static String SERVLET = "/servlet/fi.dwo.server.persistence.DbAccessServlet";
     //public static String SERVLET = "/dwo/dbaccess";
 	
 	// Let op, bovenstaande switch is nodig voor de dwoserver (bij start.jar)
