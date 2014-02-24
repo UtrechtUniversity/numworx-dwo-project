@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.formule.client.formuleobjects;
 
 import java.util.Vector;
 
+import com.google.gwt.canvas.dom.client.CssColor;
+
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 
 /**
@@ -89,6 +91,16 @@ public abstract class FormuleElementWithChildren extends FormuleElement
 		//GWT.log(fm.getFontStyle() + " = new old: " + getChild().getFont().getFontStyle());
 		for (int i = 0; i < this.getChildrenSize(); i++)
 			getChild(i).setFont(fm);
+		return true;
+	}
+	
+	public boolean setColor(CssColor c)
+	{
+		if(super.setColor(c) == false)
+			return false;
+		color = c;
+		for(int i = 0; i < this.getChildrenSize(); i++)
+			getChild(i).setColor(c);
 		return true;
 	}
 

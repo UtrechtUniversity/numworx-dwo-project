@@ -8,6 +8,7 @@ import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.user.client.ui.Panel;
 
 /**
@@ -22,6 +23,8 @@ public abstract class FormuleElement
 	protected Context2d ctx;
 	public int height;
 	public int width;
+	
+	protected CssColor color;
 
 	private boolean changed = false;
 	protected boolean selected = false;
@@ -65,6 +68,7 @@ public abstract class FormuleElement
 		this.holder = holder;
 
 		this.font = holder.getFont();
+		this.color = holder.getColor();
 		init();
 	}
 
@@ -79,6 +83,7 @@ public abstract class FormuleElement
 		this.parent = parent;
 
 		this.font = parent.getFont();
+		this.color = parent.getColor();
 		init();
 	}
 
@@ -87,10 +92,12 @@ public abstract class FormuleElement
 		canvas = Canvas.createIfSupported();
 		ctx = canvas.getContext2d();
 		this.fm = font;
+		//this.color = color;
+		//System.out.println("this.color = CssColor.make(0, 0, 0)");
 	}
 
 	/**
-	 * Is this element a number (used in formuleRegel to defins fontsize)
+	 * Is this element a number (used in formuleRegel to define fontsize)
 	 */
 	public boolean isNumber()
 	{
@@ -186,6 +193,22 @@ public abstract class FormuleElement
 		this.canvas.setCoordinateSpaceWidth(w);
 
 		this.setChanged(true);
+	}
+	
+	public boolean setColor(CssColor c)
+	{
+		if(color == null || color != c)
+		{	color = c;
+			this.setChanged(true);
+			return(true);
+		}
+		
+		return(false);
+	}
+	
+	public CssColor getColor()
+	{
+		return color;
 	}
 
 	/**
@@ -310,6 +333,7 @@ public abstract class FormuleElement
 	 * @param x
 	 * @param y
 	 */
+	
 	public void draw(Context2d ctx, int x, int y)
 	{
 		ctx.drawImage(this.canvas.getCanvasElement(), x, y);
@@ -319,6 +343,7 @@ public abstract class FormuleElement
 	{
 		ctx.drawImage(this.canvas.getCanvasElement(), this.x, this.y);
 	}
+	
 
 	/**
 	 * Draw line

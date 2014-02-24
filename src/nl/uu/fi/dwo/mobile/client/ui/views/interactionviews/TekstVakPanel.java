@@ -508,7 +508,6 @@ public class TekstVakPanel implements InteractionView
 					}
 				}
 				setObjects(opdrachtObjects, i, j);
-				//zetVerticaalGecentreerd();
 			}
 		}
 
@@ -600,6 +599,7 @@ public class TekstVakPanel implements InteractionView
 			else if (currentObject instanceof FormuleEditorWithAnswer)
 			{
 				((FormuleEditorWithAnswer) currentObject).setFont(FormuleFont.createFromFontSize(font_size));
+				((FormuleEditorWithAnswer) currentObject).setColor(fgColor);
 				int asHoogte = ((FormuleEditorWithAnswer) currentObject).getMainRegel().getAsHoogte();
 				int hoogte = ((FormuleEditorWithAnswer) currentObject).getMainRegel().getHeight();
 
@@ -615,7 +615,10 @@ public class TekstVakPanel implements InteractionView
 			}
 			else if (currentObject instanceof FormuleViewer)
 			{
-				((FormuleViewer) currentObject).setFont(FormuleFont.createFromFontSize(font_size));
+				FormuleFont f = FormuleFont.createFromFontSize(font_size);
+				f.setBold(font_style == 1 || font_style == 3);
+				((FormuleViewer) currentObject).setFont(f);
+				((FormuleViewer) currentObject).setColor(fgColor);
 				int asHoogte = ((FormuleViewer) currentObject).getMainRegel().getAsHoogte();
 				int hoogte = ((FormuleViewer) currentObject).getMainRegel().getHeight();
 				Panel a = ((FormuleViewer) currentObject).getAsPanel();

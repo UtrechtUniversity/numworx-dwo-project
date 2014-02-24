@@ -8,6 +8,7 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
 
+import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
 
 /**
@@ -35,6 +36,7 @@ public class FormuleRegel extends FormuleElement
 
 	//TODO: implement non editable lines
 	private boolean editable = true;
+	//private CssColor color = CssColor.make(0, 0, 0);
 
 	//how many children are numbers?
 	private int nonNumberChildern = 0;
@@ -489,6 +491,19 @@ public class FormuleRegel extends FormuleElement
 			this.children.get(i).setFont(fm);
 
 		return true;
+	}
+	
+	public boolean setColor(CssColor c)
+	{	if(super.setColor(c) == false)
+			return false;
+	
+		color = c; 
+		if(this.children.size() == 0)
+			return true;
+		for(int i = 0; i < this.children.size(); i++)
+			this.children.get(i).setColor(c);
+		return true;
+		
 	}
 
 	@Override

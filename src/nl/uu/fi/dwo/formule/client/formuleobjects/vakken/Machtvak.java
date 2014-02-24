@@ -60,6 +60,10 @@ public class Machtvak extends FormuleElementWithChildren
 			ctx.fillRect(0, 0, this.width, this.height);
 		}
 
+		ctx.setStrokeStyle(color);
+		ctx.setFillStyle(color);
+		
+		
 		this.getChild().draw(ctx);
 
 		this.drawCursor();

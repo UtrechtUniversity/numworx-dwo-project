@@ -6,6 +6,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleFont;
 
 import com.google.gwt.canvas.dom.client.Context2d.TextAlign;
 import com.google.gwt.canvas.dom.client.Context2d.TextBaseline;
+import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.canvas.dom.client.TextMetrics;
 
 /**
@@ -111,8 +112,11 @@ public class FormuleTeken extends FormuleElement
 		//g.setColor(Color.white);
 		else
 		{
-			ctx.setStrokeStyle("#000");
-			ctx.setFillStyle("#000");
+			//ctx.setStrokeStyle("#000");
+			//ctx.setFillStyle("#000");
+			ctx.setFillStyle(color);
+			ctx.setStrokeStyle(color);
+			
 		}
 		// g.setColor(fgColor);
 
@@ -250,6 +254,18 @@ public class FormuleTeken extends FormuleElement
 		this.setSize((int) m.getWidth()+1, fm.getHeight());
 		
 		return true;
+	}
+	
+	public boolean setColor(CssColor c)
+	{	
+		if(super.setColor(c) == false)
+			return false;
+		
+		color = c;
+		//ctx.setFillStyle(c);
+		//ctx.setStrokeStyle(c);
+		return true;
+		
 	}
 
 	private void drawKeer()

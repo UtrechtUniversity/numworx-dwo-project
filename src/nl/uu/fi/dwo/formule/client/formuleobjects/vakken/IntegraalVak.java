@@ -25,7 +25,7 @@ public class IntegraalVak extends FormuleElementWithChildren
 		getChild(1).setFontChanges(changes);
 		getChild(2).setFontChanges(changes);
 
-		getChild(3).insert("x");
+		//getChild(3).insert("x");
 	}
 
 	public void paintObject()
@@ -44,6 +44,9 @@ public class IntegraalVak extends FormuleElementWithChildren
 		int th = getChild(0).height + tb;
 		int ashoogte = this.getAsHoogte();
 
+		ctx.setStrokeStyle(color);
+		ctx.setFillStyle(color);
+		
 		ctx.beginPath();
 		ctx.arc(tx + (asc / 3) + (asc / 3 / 2), ty + asc / 6, asc / 3 / 2, 0, Math.PI, true);
 		ctx.arc(tx + (asc / 3 / 2), ty + th - asc / 6, asc / 3 / 2, 0, Math.PI, false);

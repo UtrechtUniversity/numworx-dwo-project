@@ -2,12 +2,17 @@ package nl.uu.fi.dwo.formule.client.formuleobjects;
 
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.AftrekVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Breukvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.DiffVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Haakjesvak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.IntegraalVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.LimietVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Machtvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeLogVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeWortelVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.OptelVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PowerVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PrimitieveVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.SigmaVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.VermenigvuldigingVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.WortelVak;
 
@@ -54,23 +59,21 @@ public class FormuleDecoder
 		{
 			return new NdeWortelVak(holder);
 		}
-		/*
-			else if(ch1=='L')
-			{	return new NdeLogVak(formuleVak);
-			}
-			else if(ch1=='d')
-			{	return new DiffVak(formuleVak);
-			}
-			else if(ch1=='P')
-			{	return new PrimitieveVak(formuleVak);
-			}
-			else if(ch1=='T')
-			{	return new LimietVak(formuleVak);
-			}
-			else if(ch1=='S')
-			{   return new SigmaVak(formuleVak);
-			}
-			*/
+		else if(ch1=='L')
+		{	return new NdeLogVak(holder);
+		}
+		else if(ch1=='d')
+		{	return new DiffVak(holder);
+		}
+		else if(ch1=='P')
+		{	return new PrimitieveVak(holder);
+		}
+		else if(ch1=='T')
+		{	return new LimietVak(holder);
+		}
+		else if(ch1=='S')
+		{   return new SigmaVak(holder);
+		}
 		else if (ch1 == 'i')
 		{
 			return new IntegraalVak(holder);

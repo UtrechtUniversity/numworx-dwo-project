@@ -48,8 +48,11 @@ public class WortelVak extends FormuleElementWithChildren
 			ctx.fillRect(0, 0, this.width, this.height);
 		}
 
-		ctx.setStrokeStyle("#000");
-		ctx.setFillStyle("#000");
+		//ctx.setStrokeStyle("#000");
+		//ctx.setFillStyle("#000");
+		ctx.setStrokeStyle(color);
+		ctx.setFillStyle(color);
+		
 
 		ctx.setLineWidth(fm.getStrokeWidth());
 

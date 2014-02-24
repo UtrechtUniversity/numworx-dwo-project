@@ -7,6 +7,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
 
 import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
@@ -29,6 +30,8 @@ public class FormuleHolder
 	private static FormuleFont defaultfont = FormuleFont.createFromFontSize(18);
 	protected static FormuleKeyboardIF kb;
 	private FlowPanel sp = null;
+	
+	private CssColor color = CssColor.make(0, 0, 0);
 
 	protected boolean hasSelection = false;
 
@@ -70,11 +73,24 @@ public class FormuleHolder
 	{
 		return defaultfont;
 	}
+	
+	public CssColor getColor()
+	{
+		return this.color;
+	}
+			
 
 	public void setFont(FormuleFont fm)
 	{
 		this.font = fm;
 		this.getMainRegel().setFont(this.font);
+		this.paint();
+	}
+	
+	public void setColor(CssColor c)
+	{
+		this.color = c;
+		this.getMainRegel().setColor(c);
 		this.paint();
 	}
 	

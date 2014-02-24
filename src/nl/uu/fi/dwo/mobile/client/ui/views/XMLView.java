@@ -18,6 +18,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSte
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.utils.StringCodeToHashMap;
 
+import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
@@ -151,6 +152,7 @@ public abstract class XMLView {
 			else if (currentObject instanceof FormuleViewer)
 			{
 				((FormuleViewer) currentObject).setFont(FormuleFont.createFromFontSize(font_size));
+				((FormuleViewer) currentObject).setColor(CssColor.make(0, 0, 0));
 				int asHoogte = ((FormuleViewer) currentObject).getMainRegel().getAsHoogte();
 				int hoogte = ((FormuleViewer) currentObject).getMainRegel().getHeight();
 				Panel a = ((FormuleViewer) currentObject).getAsPanel();
