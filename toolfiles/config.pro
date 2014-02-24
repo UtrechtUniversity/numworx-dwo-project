@@ -4,9 +4,8 @@
 -outjars ..\output\jar\wiskopdr.jar
 -injars ..\..\GraphTool\output\classes
 -outjars ..\output\jar\graphtool.jar
-#-injars ..\..\Vergroten\output\classes
-#-injars ..\..\Vergroten\lib\classes (fi/beans/faqmaker/InstanceInfoLoader.class)
-#-outjars ..\output\jar\vergroten.jar
+-injars ..\..\BalansFruitApplet\output\classes
+-outjars ..\output\jar\balansfruitapplet.jar
 
 
 -libraryjars <java.home>\lib\rt.jar
@@ -167,6 +166,11 @@
 }
 
 -keep class fi.graphtool.GraphTool{
+    <fields>;
+    <methods>;
+}
+
+-keep class fi.balansfruit.BalansFruitApplet{
     <fields>;
     <methods>;
 }
