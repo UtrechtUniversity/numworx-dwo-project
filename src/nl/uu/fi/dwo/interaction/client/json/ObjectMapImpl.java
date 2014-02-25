@@ -94,6 +94,73 @@ public class ObjectMapImpl implements ObjectMap {
 		List array = toArrayList(get(key));
 		return array;
 	}
+
+	@Override
+	public double getDouble(String key) {
+		Object n = get(key);
+		if(n != null)
+			return ((Number)n).doubleValue();
+		return Double.NaN;
+	}
+
+	@Override
+	public String getString(String key) {
+		return (String) get(key);
+	}
+
+	@Override
+	public List<Double> getDoubleList(String key) {
+		List<Double> result = new ArrayList<Double>();
+		List<?> values = toArrayList(get(key));
+		for (Object object : values) {
+			if(object != null)
+				result.add( toDouble(object) );
+			else
+				result.add(null);
+		}
+		return result;
+	}
+
+	private Double toDouble(Object object) {
+		if(object instanceof Double)
+			return (Double) object;
+		return null;
+	}
+
+	@Override
+	public double[] getDoubleArray(String key) {
+		List<Double> dd = getDoubleList(key);
+		double[] result = new double[dd.size()];
+		for (int i = 0; i < result.length; i++) {
+			result[i] = dd.get(i).doubleValue();
+		}
+		return result;
+	}
+
+	@Override
+	public int[] getIntArray(String key) {
+		List<Integer> dd = getIntegerList(key);
+		int[] result = new int[dd.size()];
+		for (int i = 0; i < result.length; i++) {
+			result[i] = dd.get(i).intValue();
+		}
+		return result;
+	}
+
+	@Override
+	public String[] getStringArray(String key) {
+		return toStringArray(get(key));
+	}
+
+	@Override
+	public boolean[] getBooleanArray(String key) {
+		List<Boolean> dd = getBooleanList(key);
+		boolean[] result = new boolean[dd.size()];
+		for (int i = 0; i < result.length; i++) {
+			result[i] = dd.get(i).booleanValue();
+		}
+		return result;
+	}
 	
 	
 }

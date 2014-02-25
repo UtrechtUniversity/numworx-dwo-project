@@ -81,11 +81,24 @@ public class JSONUtilities {
 		{
 			return toJSONArray((int[]) value);
 		}
+		if (value instanceof double[]) 
+		{
+			return toJSONArray((double[]) value);
+		}
 		throw new IllegalArgumentException("unsupported class " + value.getClass());
 		//return null;
 	}
 
 	private static JSONValue toJSONArray(int[] objects) {
+		JSONArray array = new JSONArray();
+		for (int i = 0; i < objects.length; i++)
+		{
+			array.set(i, new JSONNumber(objects[i]));
+		}
+		return array;
+	}
+
+	private static JSONValue toJSONArray(double[] objects) {
 		JSONArray array = new JSONArray();
 		for (int i = 0; i < objects.length; i++)
 		{

@@ -12,13 +12,23 @@ public interface ObjectMap {
 // specialized getters
 	
 	int getInt(String key);
+	double getDouble(String key);
 	boolean getBoolean(String key);
+	String  getString(String key);
+	
 	Map<String,Object> getMap(String key);
 
 	List<String> getStringList(String key);
 	List<Integer> getIntegerList(String key);
 	List<Boolean> getBooleanList(String key);
+	List<Double>  getDoubleList(String key);
 	
 	List<Map<String,Object>> getMapList(String key);
+	
+	double[] getDoubleArray(String key);
+	int[] getIntArray(String key);
+	String[] getStringArray(String key);
+	boolean[] getBooleanArray(String key);
+	
 	
 }
