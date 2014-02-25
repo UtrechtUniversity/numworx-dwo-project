@@ -310,7 +310,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		this.randomVarWaarden = waarden;
 
 		opdrachtObjects = new ArrayList<Object>();
-		List<Object> opdrachtGegevens = Memento.toArrayList( opdracht.get("interactiePanelLaunchData") );
+		List<Object> opdrachtGegevens = JSONUtilities.toArrayList( opdracht.get("interactiePanelLaunchData") );
 		TekstBuffer tb = new TekstBuffer(varnamen, waarden);
 		newVersion = Boolean.FALSE.equals( opdracht.get("hasAntwoordVak") );
 		//New editor version
@@ -398,17 +398,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		this.randomVarWaarden = waarden;
 
 		if (state.get(RANDOM_VAR_NAMEN) != null)
-			this.randomVarNamen = Memento.toStringArray(state.get(RANDOM_VAR_NAMEN));
+			this.randomVarNamen = JSONUtilities.toStringArray(state.get(RANDOM_VAR_NAMEN));
 		if (state.get(RANDOM_VAR_WAARDEN) != null)
 			this.randomVarWaarden = (HashMap<String, Object>) state.get(RANDOM_VAR_WAARDEN);
 
 		opdrachtObjects = new ArrayList<Object>();
-		//ArrayList<Object> opdrachtGegevens = (ArrayList<Object>) opdracht.get("interactiePanelLaunchData");
-		//poging Sietske:
-		Object[] opdrachtGegevens = (Object[]) opdracht.get("interactiePanelLaunchData");
-		
-		
-		
+		List<Object> opdrachtGegevens = JSONUtilities.toArrayList( opdracht.get("interactiePanelLaunchData") );
 		TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden);
 		newVersion = !(Boolean) opdracht.get("hasAntwoordVak");
 		//New editor version
@@ -435,8 +430,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				if (currentObject instanceof TekstVakPanel)
 				{
 					aantalVakken++;
-					//Object launchData = opdrachtGegevens.get(aantalVakken + 4); // nog een +5 voor het launchdata Wim
-					Object launchData = opdrachtGegevens[aantalVakken + 4];
+					Object launchData = opdrachtGegevens.get(aantalVakken + 4); // nog een +5 voor het launchdata Wim
 					((TekstVakPanel) currentObject).zetInstellingen(instellingen);
 					((TekstVakPanel) currentObject).setKeyboard(kb);
 					if (launchData != null)
@@ -449,10 +443,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 		else if (!newVersion)
 		{ //Old editor version 
-			if (opdrachtGegevens != null && opdrachtGegevens.length == 1)//opdrachtGegevens.size() == 1)
+			if (opdrachtGegevens != null && opdrachtGegevens.size() == 1)
 			{
-				//HashMap<String, Object> ips = (HashMap<String, Object>) opdrachtGegevens.get(0);
-				HashMap<String, Object> ips = (HashMap<String, Object>) opdrachtGegevens[0];
+				HashMap<String, Object> ips = (HashMap<String, Object>) opdrachtGegevens.get(0);
 				HashMap<String, Object> interactiePanelLaunchState = (HashMap<String, Object>) ips.get("interactiePanelLaunchState");
 				opdracht.put("antwoordString", interactiePanelLaunchState.get("antwoordString"));
 			}
@@ -531,10 +524,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	public void setState(HashMap<String, Object> h)
 	{
 		if (h.get(RANDOM_VAR_NAMEN) != null)
-			this.randomVarNamen = Memento.toStringArray(h.get(RANDOM_VAR_NAMEN));
+			this.randomVarNamen = JSONUtilities.toStringArray(h.get(RANDOM_VAR_NAMEN));
 		if (h.get(RANDOM_VAR_WAARDEN) != null)
 			this.randomVarWaarden = (HashMap<String, Object>) h.get(RANDOM_VAR_WAARDEN);
-		List<Object> states = Memento.toArrayList(h.get("interactiePanelStates"));
+		List<Object> states = JSONUtilities.toArrayList(h.get("interactiePanelStates"));
 		int stateNr = 5;
 		for (int i = 0; states != null && i < opdrachtObjects.size(); i++)
 		{

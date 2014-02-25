@@ -10,6 +10,7 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.touch.TouchCancelEvent;
 import nl.uu.fi.dwo.interaction.client.touch.TouchEndEvent;
@@ -17,7 +18,6 @@ import nl.uu.fi.dwo.interaction.client.touch.TouchHandler;
 import nl.uu.fi.dwo.interaction.client.touch.TouchMoveEvent;
 import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
 import nl.uu.fi.dwo.interaction.client.touch.TouchStartEvent;
-import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
@@ -104,9 +104,9 @@ public class FormuleEditorWithSteps implements InteractionView
 		if (h != null)
 			this.h = h;
 		if (h.get("breedte") != null)
-			breedte = (Integer) h.get("breedte");
+			breedte = ((Number) h.get("breedte")).intValue();
 		if (h.get("hoogte") != null)
-			hoogte = (Integer) h.get("hoogte");
+			hoogte = ((Number) h.get("hoogte")).intValue();
 
 		facade = new PopupFacade(h);
 		
@@ -122,7 +122,7 @@ public class FormuleEditorWithSteps implements InteractionView
 			if (launchState.get("antwoordString") != null)
 				antwoordString = (String) launchState.get("antwoordString");
 			if (launchState.get("scoreMax") != null)
-				scoreMax = (Integer) launchState.get("scoreMax");
+				scoreMax = ((Number) launchState.get("scoreMax")).intValue();
 			bordjesMethode = Boolean.TRUE.equals( launchState.get("bordjesMethode"));
 			linStrategieVersie = Boolean.TRUE.equals(launchState.get("linStrategieVersie"));
 		}
@@ -698,7 +698,7 @@ public class FormuleEditorWithSteps implements InteractionView
 			nagekeken = (Boolean) h.get("nagekeken");
 		if (h.get("formuleVakInhouden") != null)
 		{
-			formuleVakInhouden = Memento.toStringArray(h.get("formuleVakInhouden"));
+			formuleVakInhouden = JSONUtilities.toStringArray(h.get("formuleVakInhouden"));
 			for (int i = 0; i < formuleVakInhouden.length; i++) {
 				if(formuleVakInhouden[i].startsWith("$f"))
 					formuleVakInhouden[i] = formuleVakInhouden[i].substring(2, formuleVakInhouden[i].length()-1);

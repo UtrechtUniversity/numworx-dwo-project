@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.MissingResourceException;
 
-import nl.uu.fi.dwo.mobile.client.sco.Memento;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 
 //import fi.beans.ideas.IdeasIF;
 //import fi.beans.ideas.RuleIF;
@@ -133,7 +133,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		if(afvCheckerModel.containsKey("puntenGelijkwaardig")) puntenGelijkwaardig = ((Number)afvCheckerModel.get("puntenGelijkwaardig")).intValue();
 		if(afvCheckerModel.containsKey("puntenHerleiding")) puntenHerleiding = ((Number)afvCheckerModel.get("puntenHerleiding")).intValue();
 		if(afvCheckerModel.containsKey("puntenExact")) puntenExact = ((Number)afvCheckerModel.get("puntenExact")).intValue();
-		if(afvCheckerModel.containsKey("answerModels")) answerModels = (ArrayList<HashMap<String,Object>>)new ArrayList(Memento.toArrayList(afvCheckerModel.get("answerModels")));
+		if(afvCheckerModel.containsKey("answerModels")) answerModels = (ArrayList<HashMap<String,Object>>)new ArrayList(JSONUtilities.toArrayList(afvCheckerModel.get("answerModels")));
 		if(afvCheckerModel.containsKey("hasFeedback")) hasFeedback = ((Boolean)afvCheckerModel.get("hasFeedback")).booleanValue();
 		if(afvCheckerModel.containsKey("vormString")) vormString = (String)afvCheckerModel.get("vormString");
 		if(afvCheckerModel.containsKey("eqTestValueMin")) eqTestValueMin = ((Number)afvCheckerModel.get("eqTestValueMin")).doubleValue();

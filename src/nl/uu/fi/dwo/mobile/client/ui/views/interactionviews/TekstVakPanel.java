@@ -17,7 +17,6 @@ import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
-import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
@@ -455,7 +454,7 @@ public class TekstVakPanel implements InteractionView
 	{
 		String randVarString = "";
 		ArrayList<Object> opdrachtObjects = new ArrayList<Object>();
-		List<Object> opdrachtGegevens = Memento.toArrayList( interactiePanelLaunchState.get("interactiePanelLaunchData") );
+		List<Object> opdrachtGegevens = JSONUtilities.toArrayList( interactiePanelLaunchState.get("interactiePanelLaunchData") );
 
 		TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden);
 		int aantalVakken = 0;
@@ -538,7 +537,7 @@ public class TekstVakPanel implements InteractionView
 
 	public void setState(HashMap<String, Object> h)
 	{
-		List<Object> states = Memento.toArrayList(h.get("interactiePanelStates"));
+		List<Object> states = JSONUtilities.toArrayList(h.get("interactiePanelStates"));
 		for (int i = 0; i < interactionViewObjects.size(); i++)
 		{
 			Object currentObject = interactionViewObjects.get(i);

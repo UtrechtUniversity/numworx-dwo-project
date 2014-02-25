@@ -65,7 +65,8 @@ public class GeogebraView implements InteractionView, LoadHandler
 		facade = new PopupFacade(launchData);
 		Map<String, Object> geogebraParams = new HashMap<String,Object>();
 		Map ggbMap = (Map) launchData.get("interactiePanelLaunchState");
-		Object object = ggbMap.get("ggbFile");
+		Object object = ggbMap.get("ggbFile"); // java:ByteArray struct
+		if(object instanceof Map) object = ((HashMap<String, Object>) object).get("string");
 		ggb = object != null ? object.toString() : "";
 		object = ggbMap.get("geogebraParams");
 		if( object instanceof Map)
@@ -97,11 +98,11 @@ public class GeogebraView implements InteractionView, LoadHandler
 		int width = 400;
 		Object w = launchData.get("breedte");
 		if (w != null)
-			width = Integer.parseInt(w.toString());
+			width = (int)Double.parseDouble(w.toString());
 		int height = 400;
 		Object h = launchData.get("hoogte");
 		if (h != null)
-			height = Integer.parseInt(h.toString());
+			height = (int)Double.parseDouble(h.toString());
 		frame.setSize(width + "px", height + "px");
 		height -= 57 + 2; // toolbar aftrekken?
 		width  -= 2;  // 1 pixel border

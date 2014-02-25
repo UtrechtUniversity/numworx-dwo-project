@@ -6,7 +6,6 @@ import java.util.List;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
-import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckSelectieUnit;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckSleepUnit;
@@ -68,14 +67,14 @@ public class TekstBuffer
 		String tekst = (String) opdracht.get("tekst");
 		if (tekst == null)
 		{
-			List<Object> teksten = Memento.toArrayList( (opdracht.get("teksten")) );
+			List<Object> teksten = JSONUtilities.toArrayList( (opdracht.get("teksten")) );
 			if (teksten != null)
-				tekst = (String) (Memento.toArrayList(teksten.get(row))).get(column);
+				tekst = (String) (JSONUtilities.toArrayList(teksten.get(row))).get(column);
 			vanTeksVakPanel = true;
 		}
 		if(tekst==null) tekst = "";
 		
-		List<Object> opdrachtGegevens = Memento.toArrayList( opdracht.get("interactiePanelLaunchData") );
+		List<Object> opdrachtGegevens = JSONUtilities.toArrayList( opdracht.get("interactiePanelLaunchData") );
 
 		int lastIndex = 0;
 

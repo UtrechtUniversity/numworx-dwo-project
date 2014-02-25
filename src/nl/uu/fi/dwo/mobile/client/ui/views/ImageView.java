@@ -21,7 +21,11 @@ public class ImageView implements IsWidget
 	{
 		// TODO "data:image/png;base64,XXXXXXXxXXXX==" (dataurl) image/png of image/gif is noodzakelijk, uitbreiding in iconan nodig.
 
-		String data = (String) map.get(naam);
+		Object object = map.get(naam);
+		if(object instanceof Map) { // ByteArray
+			object = ((Map) object).get("string");
+		}
+		String data = (String) object;
 		if (data.isEmpty())
 		{
 			String url = (String) map.get(naam + "/u");
@@ -31,7 +35,11 @@ public class ImageView implements IsWidget
 		}
 		else
 		{
-			String url = (String) map.get(naam + "/f"); // is het png,gif,jpg
+			object = map.get(naam + "/f");
+			if(object instanceof Map) { // URI
+				object = ((Map<String, Object>) object).get("@value");
+			}
+			String url = (String) object; // is het png,gif,jpg
 			if(url == null) url = "x.gif";
 			String type = (String) map.get(naam + "/t");
 			if (type == null)
