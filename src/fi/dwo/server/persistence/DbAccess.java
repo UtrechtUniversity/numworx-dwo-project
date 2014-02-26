@@ -97,8 +97,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             + "FROM tblStudentSco " + "WHERE (scoID = ?) "
             + "AND   (userID = ?) ";
 
-    private final static String QRY_ADD_EMPTY_STUDENT_SCO = "INSERT INTO tblStudentSco(scoID, userID, createDate, score) "
-            + "VALUES(?, ?, CURDATE(), 0) ";
+    private final static String QRY_ADD_EMPTY_STUDENT_SCO = "INSERT INTO tblStudentSco(scoID, userID, createDate, score, suspendData) "
+            + "VALUES(?, ?, CURDATE(), 0, '') ";
 
     private final static String QRY_UPDATE_STUDENT_SCO = "UPDATE tblStudentSco "
             + "SET `{0}` = ?, createDate = CURDATE() "
