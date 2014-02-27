@@ -54,8 +54,12 @@ public class ObjectMapImpl implements ObjectMap {
 
 	@Override
 	public List<Integer> getIntegerList(String key) {
-		List<Integer> result = new ArrayList<Integer>();
 		List<?> values = toArrayList(get(key));
+		return toIntegerList(values);
+	}
+
+	static List<Integer> toIntegerList(List<?> values) {
+		List<Integer> result = new ArrayList<Integer>();
 		for (Object object : values) {
 			if(object != null)
 				result.add( toInt(object) );
@@ -78,7 +82,7 @@ public class ObjectMapImpl implements ObjectMap {
 		return result;
 	}
 
-	private Boolean toBoolean(Object object) {
+	static Boolean toBoolean(Object object) {
 		if(object instanceof Boolean)
 			return (Boolean) object;
 		return Boolean.FALSE;
@@ -110,8 +114,8 @@ public class ObjectMapImpl implements ObjectMap {
 
 	@Override
 	public List<Double> getDoubleList(String key) {
-		List<Double> result = new ArrayList<Double>();
 		List<?> values = toArrayList(get(key));
+		List<Double> result = new ArrayList<Double>();
 		for (Object object : values) {
 			if(object != null)
 				result.add( toDouble(object) );
@@ -121,14 +125,19 @@ public class ObjectMapImpl implements ObjectMap {
 		return result;
 	}
 
-	private Double toDouble(Object object) {
+	static Double toDouble(Object object) {
 		if(object instanceof Double)
 			return (Double) object;
+		if(object instanceof Number)
+			return ((Number) object).doubleValue();
 		return null;
 	}
 
 	@Override
 	public double[] getDoubleArray(String key) {
+		Object o = get(key);
+		if(o instanceof double[] || o == null)
+			return (double[])o;
 		List<Double> dd = getDoubleList(key);
 		double[] result = new double[dd.size()];
 		for (int i = 0; i < result.length; i++) {
@@ -139,6 +148,9 @@ public class ObjectMapImpl implements ObjectMap {
 
 	@Override
 	public int[] getIntArray(String key) {
+		Object o = get(key);
+		if(o instanceof int[] || o == null )
+			return (int[]) o;
 		List<Integer> dd = getIntegerList(key);
 		int[] result = new int[dd.size()];
 		for (int i = 0; i < result.length; i++) {
@@ -154,12 +166,30 @@ public class ObjectMapImpl implements ObjectMap {
 
 	@Override
 	public boolean[] getBooleanArray(String key) {
+		Object o = get(key);
+		if( o instanceof boolean[] || o == null) 
+			return (boolean[])o;		
 		List<Boolean> dd = getBooleanList(key);
 		boolean[] result = new boolean[dd.size()];
 		for (int i = 0; i < result.length; i++) {
 			result[i] = dd.get(i).booleanValue();
 		}
 		return result;
+	}
+
+	@Override
+	public List<Object> getList(String key) {
+		return toArrayList(get(key));
+	}
+
+	@Override
+	public ObjectMap getObjectMap(String key) {
+		return wrapMap(getMap(key));
+	}
+
+	@Override
+	public ObjectList getObjectList(String key) {
+		return wrapList(getList(key));
 	}
 	
 	

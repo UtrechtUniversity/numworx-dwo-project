@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
+import nl.uu.fi.dwo.interaction.client.json.ObjectListImpl;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMapImpl;
 
@@ -182,6 +184,7 @@ public class JSONUtilities {
 			Object[] objects = (Object[]) object;
 			return Arrays.asList(objects);
 		}
+// FIXME fout voor primitive[] moet dan een List<Primitieve> komen.
 		return null;
 	}
 	
@@ -192,7 +195,13 @@ public class JSONUtilities {
 	}
 	
 	public static ObjectMap wrapMap(Map<String, ? > map) {
+		if(map == null) return null;
 		return new ObjectMapImpl(map);
+	}
+	
+	public static ObjectList wrapList(List<?> list) {
+		if( list == null) return null;
+		return new ObjectListImpl(list);
 	}
 
 	public static String[] toStringArray(Object object)

@@ -17,6 +17,10 @@ public interface ObjectMap {
 	String  getString(String key);
 	
 	Map<String,Object> getMap(String key);
+	List<Object> getList(String key);
+	
+	ObjectMap getObjectMap(String key);
+	ObjectList getObjectList(String key);
 
 	List<String> getStringList(String key);
 	List<Integer> getIntegerList(String key);
