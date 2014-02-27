@@ -195,11 +195,13 @@ public class JSONUtilities {
 	}
 	
 	public static ObjectMap wrapMap(Map<String, ? > map) {
+		if(map instanceof ObjectMap) return (ObjectMap) map;
 		if(map == null) return null;
 		return new ObjectMapImpl(map);
 	}
 	
 	public static ObjectList wrapList(List<?> list) {
+		if( list instanceof ObjectList) return (ObjectList) list;
 		if( list == null) return null;
 		return new ObjectListImpl(list);
 	}

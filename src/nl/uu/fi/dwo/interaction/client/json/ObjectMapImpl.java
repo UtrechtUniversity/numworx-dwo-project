@@ -2,33 +2,39 @@ package nl.uu.fi.dwo.interaction.client.json;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import static nl.uu.fi.dwo.interaction.client.JSONUtilities.*;
 
-public class ObjectMapImpl implements ObjectMap {
+public class ObjectMapImpl extends HashMap<String, Object> implements ObjectMap {
 
-	private Map<String,? extends Object> map;
+	private final Map<String,? extends Object> map;
 
 	public int size() {
+		if(map == null) return super.size();
 		return map.size();
 	}
 
 	public boolean isEmpty() {
+		if(map == null) return super.isEmpty();
 		return map.isEmpty();
 	}
 
 	public boolean containsKey(String key) {
+		if(map == null) return super.containsKey(key);
 		return map.containsKey(key);
 	}
 
 	public Object get(String key){
+		if(map == null) return super.get(key);
 		return map.get(key);
 	}
 
 	public Set<String> keySet() {
+		if(map == null) return super.keySet();
 		return map.keySet();
 	}
 
