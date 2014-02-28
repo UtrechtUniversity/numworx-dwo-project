@@ -27,7 +27,7 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	
 	private void setState(String jso) {
 		JSONObject js = JSONParser.parseLenient(jso).isObject();
-		HashMap<String,Object> result = JSONUtilities.fromJSONObject(js);
+		HashMap<String,Object> result = JSONUtilities.wrapMap(js);
 		view.setState(result);
 	}
 	
@@ -44,7 +44,7 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 			numbers.put(key, values.get(key).isNumber().doubleValue());
 		}
 
-		result  = JSONUtilities.fromJSONObject(JSONParser.parseLenient(launchdata).isObject());
+		result  = JSONUtilities.wrapMap(JSONParser.parseLenient(launchdata).isObject());
 		
 		try {
 			view.init(width, height, result, numbers);

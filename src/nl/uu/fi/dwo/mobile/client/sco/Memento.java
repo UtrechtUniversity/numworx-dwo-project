@@ -264,7 +264,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 			for (int j = 0; j < oo.length; j++)
 			{
 				JSONValue value = array.get(j);
-				oo[j] = value == null ? null : JSONUtilities.fromJSONObject(value.isObject());
+				oo[j] = value == null ? null : JSONUtilities.wrapMap(value.isObject());
 			}
 		}
 		return o;

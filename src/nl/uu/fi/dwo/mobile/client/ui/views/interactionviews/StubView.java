@@ -82,13 +82,14 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			if(jso != null)
 			{
 				JSONObject js = JSONParser.parseLenient(jso).isObject();
-				return JSONUtilities.fromJSONObject(js);
+				//return JSONUtilities.fromJSONObject(js);
+				return JSONUtilities.wrapMap(js);
 			}
 		}
 		if(pendingState != null)
 		{
 			JSONObject js = JSONParser.parseLenient(pendingState).isObject();
-			return JSONUtilities.fromJSONObject(js);
+			return JSONUtilities.wrapMap(js);
 		}
 		return null;
 	}
