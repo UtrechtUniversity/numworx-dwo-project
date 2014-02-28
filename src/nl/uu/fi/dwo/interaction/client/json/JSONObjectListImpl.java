@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.interaction.client.json;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,14 @@ public class JSONObjectListImpl extends ArrayList<Object> implements ObjectList 
 
 	private JSONArray list;
 
+	public JSONArray unwrap() {
+		return list;
+	}
+	
+	public String toString() {
+		return list.toString();
+	}
+	
 	public JSONObjectListImpl(JSONArray o) {
 		this.list = o;
 	}
@@ -26,7 +35,7 @@ public class JSONObjectListImpl extends ArrayList<Object> implements ObjectList 
 	
 	public Object get(int key) {
 		JSONValue v = get0(key);
-		return v;
+		return JSONObjectMapImpl.toObject(v);
 	}
 	
 	private JSONValue get0(int key) {
@@ -80,50 +89,48 @@ public class JSONObjectListImpl extends ArrayList<Object> implements ObjectList 
 
 	@Override
 	public List<String> getStringList(int key) {
-		// TODO Auto-generated method stub
-		return null;
+		return Arrays.asList(getStringArray(key));
 	}
 
 	@Override
 	public List<Integer> getIntegerList(int key) {
-		// TODO Auto-generated method stub
-		return null;
+		return JSONObjectMapImpl.toIntegerList(get0(key).isArray());
 	}
 
 	@Override
 	public List<Boolean> getBooleanList(int key) {
-		// TODO Auto-generated method stub
-		return null;
+		JSONArray array = get0(key).isArray();		
+		return JSONObjectMapImpl.toBooleanList(array);
 	}
 
 	@Override
 	public List<Double> getDoubleList(int key) {
-		// TODO Auto-generated method stub
-		return null;
+		JSONArray array = get0(key).isArray();		
+		return JSONObjectMapImpl.toDoubleList(array);
 	}
 
 	@Override
 	public double[] getDoubleArray(int key) {
-		// TODO Auto-generated method stub
-		return null;
+		JSONArray array = get0(key).isArray();		
+		return JSONObjectMapImpl.toDoubleArray(array);
 	}
 
 	@Override
 	public int[] getIntArray(int key) {
-		// TODO Auto-generated method stub
-		return null;
+		JSONArray array = get0(key).isArray();		
+		return JSONObjectMapImpl.toIntArray(array);
 	}
 
 	@Override
 	public String[] getStringArray(int key) {
-		// TODO Auto-generated method stub
-		return null;
+		JSONArray array = get0(key).isArray();
+		return JSONObjectMapImpl.toStringArray(array);
 	}
 
 	@Override
 	public boolean[] getBooleanArray(int key) {
-		// TODO Auto-generated method stub
-		return null;
+		JSONArray array = get0(key).isArray();		
+		return JSONObjectMapImpl.toBooleanArray(array);
 	}
 
 }

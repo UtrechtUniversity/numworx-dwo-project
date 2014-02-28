@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.interaction.client.json;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -13,8 +14,15 @@ public class JSONObjectMapImpl extends HashMap<String, Object> implements Object
 	
 	private final JSONObject object;
 	
+	public JSONObject unwrap() {
+		return object;
+	}
 	
-
+	public String toString() {
+		return object.toString();
+	}
+	
+	
 	public JSONObjectMapImpl(JSONObject object) {
 		super();
 		this.object = object;
@@ -25,13 +33,53 @@ public class JSONObjectMapImpl extends HashMap<String, Object> implements Object
 		return object.containsKey(key);
 	}
 
+	public boolean containsKey(Object key) {
+		if(key instanceof String)
+			return containsKey( (String) key);
+		return false;
+	}
+
 	private JSONValue get0(String key) {
 		return object.get(key);
 	}
 	
 	@Override
 	public Object get(String key) {
-		return get0(key);
+		JSONValue value = get0(key);
+		return toObject(value);
+	}
+
+	static Object toObject(JSONValue value) {
+		if(value == null)
+			return null;
+		if(value.isObject() != null)
+			return new JSONObjectMapImpl(value.isObject());
+		if(value.isNumber() != null)
+			return Double.valueOf(value.isNumber().doubleValue());
+		if(value.isBoolean() != null)
+			return Boolean.valueOf(value.isBoolean().booleanValue());
+		if(value.isString() != null)
+			return value.isString().stringValue();
+		if(value.isArray() != null) 
+			return toObjectArray(value.isArray());
+		if(value.isNull() != null) 
+			return null;
+		return value;
+	}
+
+	static Object[] toObjectArray(JSONArray array) {
+		Object[] result = new Object[array.size()];
+		for (int i = 0; i < result.length; i++) {
+			result[i] = toObject(array.get(i));
+		}
+		return result;
+	}
+
+	@Override
+	public Object get(Object key) {
+		if(key instanceof String)
+			return get((String)key);
+		return null;
 	}
 
 	@Override
@@ -85,43 +133,111 @@ public class JSONObjectMapImpl extends HashMap<String, Object> implements Object
 
 	@Override
 	public List<Integer> getIntegerList(String key) {
-		// TODO Auto-generated method stub
-		return null;
+		JSONArray array = get0(key).isArray();		
+		return toIntegerList(array);
+	}
+
+	static List<Integer> toIntegerList(JSONArray array) {
+		int size = array.size();
+		ArrayList<Integer> result = new ArrayList<Integer>(size);
+		for(int i = 0; i < size; i++ ) {
+			result.add((int) array.get(i).isNumber().doubleValue());
+		}
+		return result;
+	}
+
+	static List<Double> toDoubleList(JSONArray array) {
+		int size = array.size();
+		ArrayList<Double> result = new ArrayList<Double>(size);
+		for(int i = 0; i < size; i++ ) {
+			result.add( array.get(i).isNumber().doubleValue());
+		}
+		return result;
+	}
+
+	static double[] toDoubleArray(JSONArray array) {
+		int size = array.size();
+		double[] result = new double[size];
+		for(int i = 0; i < size; i++ ) {
+			result[i] = array.get(i).isNumber().doubleValue();
+		}
+		return result;
+	}
+
+	static boolean[] toBooleanArray(JSONArray array) {
+		int size = array.size();
+		boolean[] result = new boolean[size];
+		for(int i = 0; i < size; i++ ) {
+			result[i] = array.get(i).isBoolean().booleanValue();
+		}
+		return result;
+	}
+
+	static int[] toIntArray(JSONArray array) {
+		int size = array.size();
+		int[] result = new int[size];
+		for(int i = 0; i < size; i++ ) {
+			result[i] = (int) array.get(i).isNumber().doubleValue();
+		}
+		return result;
+	}
+
+	static List<Boolean> toBooleanList(JSONArray array) {
+		int size = array.size();
+		ArrayList<Boolean> result = new ArrayList<Boolean>(size);
+		for(int i = 0; i < size; i++ ) {
+			result.add(array.get(i).isBoolean().booleanValue());
+		}
+		return result;
 	}
 
 	@Override
 	public List<Boolean> getBooleanList(String key) {
-		// TODO Auto-generated method stub
-		return null;
+		JSONArray array = get0(key).isArray();		
+		return toBooleanList(array);
 	}
 
 	@Override
 	public List<Double> getDoubleList(String key) {
-		// TODO Auto-generated method stub
-		return null;
+		JSONArray array = get0(key).isArray();		
+		return toDoubleList(array);
+	}
+
+	static List<Map<String,Object>> toMapList(JSONArray array) {
+		int size = array.size();
+		ArrayList<Map<String,Object>> result = new ArrayList<Map<String,Object>>(size);
+		for(int i = 0; i < size; i++ ) {
+			JSONObject o = array.get(i).isObject();
+			result.add(o== null ? null : new JSONObjectMapImpl(o));
+		}
+		return result;
 	}
 
 	@Override
 	public List<Map<String, Object>> getMapList(String key) {
-		// TODO Auto-generated method stub
-		return null;
+		JSONArray array = get0(key).isArray();		
+		return toMapList(array);
 	}
 
 	@Override
 	public double[] getDoubleArray(String key) {
-		// TODO Auto-generated method stub
-		return null;
+		JSONArray array = get0(key).isArray();		
+		return toDoubleArray(array);
 	}
 
 	@Override
 	public int[] getIntArray(String key) {
-		// TODO Auto-generated method stub
-		return null;
+		JSONArray array = get0(key).isArray();
+		return toIntArray(array);
 	}
 
 	@Override
 	public String[] getStringArray(String key) {
 		JSONArray array = get0(key).isArray();
+		return toStringArray(array);
+	}
+
+	static String[] toStringArray(JSONArray array) {
 		String[] result = new String[array.size()];
 		for (int i = 0; i < result.length; i++) {
 			result[i] = array.get(i).isString().stringValue();
@@ -131,8 +247,8 @@ public class JSONObjectMapImpl extends HashMap<String, Object> implements Object
 
 	@Override
 	public boolean[] getBooleanArray(String key) {
-		// TODO Auto-generated method stub
-		return null;
+		JSONArray array = get0(key).isArray();
+		return toBooleanArray(array);
 	}
 
 }

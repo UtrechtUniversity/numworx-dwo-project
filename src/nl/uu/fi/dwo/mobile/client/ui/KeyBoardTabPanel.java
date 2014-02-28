@@ -161,9 +161,9 @@ public class KeyBoardTabPanel
 		button.setText(buttonText);
 		this.tabs.add(p);
 		this.tabbuttons.add(button);
-		logger.info("addTab " + buttonText + " before " + tabkeys);
+		//logger.info("addTab " + buttonText + " before " + tabkeys);
 		this.tabkeys.add(buttonText);
-		logger.info("addTab " + buttonText + " added to " + tabkeys);
+		//logger.info("addTab " + buttonText + " added to " + tabkeys);
 
 		this.tabpanel.add(this.tabbuttons.lastElement());
 		this.tabcontentpanel.add(this.tabs.lastElement());

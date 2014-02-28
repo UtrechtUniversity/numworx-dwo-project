@@ -27,10 +27,24 @@ public class ObjectMapImpl extends HashMap<String, Object> implements ObjectMap 
 		if(map == null) return super.containsKey(key);
 		return map.containsKey(key);
 	}
+	
+	public boolean containsKey(Object key) {
+		if(key instanceof String)
+			return containsKey( (String) key);
+		return false;
+	}
 
 	public Object get(String key){
 		if(map == null) return super.get(key);
 		return map.get(key);
+	}
+
+
+	@Override
+	public Object get(Object key) {
+		if(key instanceof String)
+			return get((String)key);
+		return null;
 	}
 
 	public Set<String> keySet() {

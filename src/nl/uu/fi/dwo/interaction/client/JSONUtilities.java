@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import nl.uu.fi.dwo.interaction.client.json.JSONObjectListImpl;
+import nl.uu.fi.dwo.interaction.client.json.JSONObjectMapImpl;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectListImpl;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
@@ -33,6 +35,10 @@ public class JSONUtilities {
 	{
 		if (value != null)
 		{
+			if(value instanceof JSONObjectMapImpl)
+				return ((JSONObjectMapImpl) value).unwrap();
+			
+			
 			JSONObject result = new JSONObject();
 			for (Map.Entry<String, Object> entry : value.entrySet())
 			{
@@ -48,6 +54,10 @@ public class JSONUtilities {
 	{
 		if (value instanceof JSONValue)
 			return (JSONValue) value;
+
+		if (value instanceof JSONObjectListImpl)
+			return ((JSONObjectListImpl) value).unwrap();
+
 		if (value instanceof Number)
 		{
 			return new JSONNumber(((Number) value).doubleValue());
@@ -200,6 +210,11 @@ public class JSONUtilities {
 		return new ObjectMapImpl(map);
 	}
 	
+
+	public static JSONObjectMapImpl wrapMap(JSONObject object) {
+		return new JSONObjectMapImpl(object);
+	}
+	
 	public static ObjectList wrapList(List<?> list) {
 		if( list instanceof ObjectList) return (ObjectList) list;
 		if( list == null) return null;
@@ -226,5 +241,7 @@ public class JSONUtilities {
 		
 		return null;
 	}
+	
+	
 
 }

@@ -171,8 +171,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 					{
 						String responseText = response.getText();
 						logger.info("Status: " + response.getStatusCode() + " " + response.getStatusText());
-						logger.info(response.getHeadersAsString());
-						logger.info("Data: " + responseText.substring(0, Math.min(300, responseText.length()) ));
+						//logger.info(response.getHeadersAsString());
+						//logger.info("Data: " + responseText.substring(0, Math.min(300, responseText.length()) ));
 						if (!responseText.isEmpty())
 						{
 							JSONValue dom = JSONParser.parseStrict(responseText);
@@ -180,7 +180,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 //							{
 //							}
 							
-							launchData = JSONUtilities.fromJSONObject(dom.isObject());
+							//launchData = JSONUtilities.fromJSONObject(dom.isObject());
+							launchData = JSONUtilities.wrapMap(dom.isObject());
 							setupView(launchData);
 						} else {
 							logger.severe("response empty");
