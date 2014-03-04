@@ -199,13 +199,19 @@ public class FormuleFont
 
 	public void setSizeRelativeTo(int relativeSize)
 	{
-		int size = this.fontSize / 100 * relativeSize;
+		System.out.println("fontSize voor: " + fontSize);
+		int size = (int) (this.fontSize * relativeSize / 100) + 4;
+		
+		System.out.println("size in setSizeRelativeTo: " + size);
+		
 		this.ascent = size - 2;
 		this.descent = Math.round(this.ascent / 12);
 		this.ascent = this.ascent - this.descent;
 		this.leading = 2;
 		this.height = this.ascent + this.descent;
 		this.fontSize = this.height - this.leading;
+		
+		System.out.println("fontSize na: " + fontSize);
 	}
 
 	public boolean isSmallText()

@@ -47,16 +47,31 @@ public class IntegraalVak extends FormuleElementWithChildren
 		ctx.setStrokeStyle(color);
 		ctx.setFillStyle(color);
 		
+		
+		//g.drawArc(tx+asc/3,ty,asc/3,asc/3,0,180);
+        //g.drawArc(tx,ty+th-asc/3,asc/3,asc/3,180,180);
+        //g.drawLine(tx+asc/3,ty+asc/6,tx+asc/3,ty+th-asc/6);
+        //g.drawString("d",tx+asc+k1w+asc/5-2,ashoogte+(asc-1)/2+1);//(int)Math.rint(4.0*asc/8));
+		
+        /*
 		ctx.beginPath();
 		ctx.arc(tx + (asc / 3) + (asc / 3 / 2), ty + asc / 6, asc / 3 / 2, 0, Math.PI, true);
 		ctx.arc(tx + (asc / 3 / 2), ty + th - asc / 6, asc / 3 / 2, 0, Math.PI, false);
 		ctx.stroke();
-
-		ctx.setTextAlign(TextAlign.CENTER);
+*/
+		ctx.beginPath();
+        ctx.arc(tx + asc/2, ty + asc/6,  asc/6, 0, Math.PI, true);
+        ctx.lineTo(tx + asc/3, ty + th - asc/6);
+        ctx.arc(tx + asc/6, ty + th - asc/6, asc/6, 0, Math.PI, false);
+        ctx.stroke();
+        
+        //ctx.setTextAlign(TextAlign.CENTER);
 		ctx.setTextBaseline(TextBaseline.BOTTOM);
+		fm.setItalic(false);
 		ctx.setFont(fm.getFontStyle());
 		ctx.fillText("d", tx + asc + getChild(0).width + asc / 5 - 2, ashoogte + (asc - 1) / 2 + 1);
-
+		fm.setItalic(true);
+		
 		this.getChild(0).draw(ctx);
 		this.getChild(1).draw(ctx);
 		this.getChild(2).draw(ctx);
@@ -82,7 +97,7 @@ public class IntegraalVak extends FormuleElementWithChildren
 
 		int k4w = getChild(3).width;
 		int k4a = getChild(3).getAsHoogte();
-
+		
 		int tx = Math.max(1, k2w - asc / 2);
 		int ty = k3h + 1;
 		int tb = 2 * asc / 3;
@@ -96,7 +111,7 @@ public class IntegraalVak extends FormuleElementWithChildren
 
 		int ashoogte = k1y + k1a;
 
-		int k4x = k1x + k1w + tb - 2;
+		int k4x = k1x + k1w + tb;// - 2;
 		int k4y = ashoogte - k4a;
 
 		int k2x = 1;

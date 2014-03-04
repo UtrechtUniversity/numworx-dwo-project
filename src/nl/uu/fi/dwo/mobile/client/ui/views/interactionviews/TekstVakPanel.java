@@ -227,7 +227,7 @@ public class TekstVakPanel implements InteractionView
 		if(launchState != null && launchState.containsKey("font")) {
 			Map m = (Map) launchState.get("font");
 			font_size = ((Number) m.get("size")).intValue();
-			font_style = ((Number) m.get("style")).intValue();
+			font_style = ((Number) m.get("style")).intValue();			
 		}
 		
 		
@@ -323,15 +323,15 @@ public class TekstVakPanel implements InteractionView
 		}
 		
 		mainPanel = new Grid(hoogtes.size(), breedtes.size());
-		
+		//mainPanel.getElement().getStyle().setBackgroundColor(CssColor.make(255, 255, 0).toString());
 		mainPanel.getElement().getStyle().setProperty("borderSpacing", "" + cellSpaceColumn + "px " + cellSpaceRow + "px");
 		
 		if (breedtes.size() > 1)
 			mainPanel.getElement().getStyle().setProperty("margin", "" + (-cellSpaceRow) + "px " + (-cellSpaceColumn) + "px");
 		
-		mainPanel.getElement().getStyle().setBorderStyle(BorderStyle.DASHED);
-		mainPanel.getElement().getStyle().setBorderColor("gray");
-		mainPanel.getElement().getStyle().setBorderWidth(0, Unit.PX);
+		//mainPanel.getElement().getStyle().setBorderStyle(BorderStyle.DASHED);
+		//mainPanel.getElement().getStyle().setBorderColor("gray");
+		//mainPanel.getElement().getStyle().setBorderWidth(0, Unit.PX);
 		
 		tekstHulsVakken = new LayoutPanel[hoogtes.size()][breedtes.size()];
 		tekstVakken = new FlowPanel[hoogtes.size()][breedtes.size()];
@@ -342,9 +342,12 @@ public class TekstVakPanel implements InteractionView
 				double tekstVakHoogte = (Double) hoogtes.get(i) - 2 * bovenMarge;
 				
 				tekstHulsVakken[i][j] = new LayoutPanel();
+				//tekstHulsVakken[i][j].getElement().getStyle().setBackgroundColor(CssColor.make(255, 0, 0).toString());
 				//tekstHulsVakken[i][j].setSize(tekstVakBreedte + "px", tekstVakHoogte + "px");
 				tekstHulsVakken[i][j].setSize(breedtes.get(j) + "px", hoogtes.get(i) + "px");
 				tekstVakken[i][j] = new FlowPanel();
+				//tekstVakken[i][j].getElement().getStyle().setBackgroundColor(CssColor.make(0, 255, 0).toString());
+				
 				//if (bgColorZichtbaar)
 				//	tekstVakken[i][j].getElement().getStyle().setBackgroundColor(bgColor.toString());
 				tekstVakken[i][j].getElement().getStyle().setColor(fgColor.toString());
@@ -379,10 +382,12 @@ public class TekstVakPanel implements InteractionView
 					tekstVakken[i][j].getElement().getStyle().setTextAlign(TextAlign.CENTER);
 				//if(centerV)
 					//tekstVakken[i][j].getElement().getStyle().setVerticalAlign(VerticalAlign.MIDDLE);
-				if(centerV)
-					tekstVakken[i][j].getElement().getStyle().setVerticalAlign(VerticalAlign.BASELINE);
+				//if(centerV)
+				//	tekstVakken[i][j].getElement().getStyle().setVerticalAlign(VerticalAlign.BASELINE);
 				tekstVakken[i][j].setWidth(tekstVakBreedte + "px");
 				VerticalPanel vPanel = new VerticalPanel();
+				//vPanel.getElement().getStyle().setBackgroundColor(CssColor.make(0, 0, 255).toString());
+				
 				if(centerV)
 					vPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 				vPanel.getElement().getStyle().setProperty("margin", "" + cellMarge + "px " + bovenMarge + "px");
@@ -441,8 +446,8 @@ public class TekstVakPanel implements InteractionView
 	public void zetInstellingen(HashMap<String, Object> instellingen)
 	{
 		this.instellingen = instellingen;
-		if(instellingen.get("fontSize") != null)
-			font_size = ((Number) instellingen.get("fontSize")).intValue();
+		//if(instellingen.get("fontSize") != null)
+		//	font_size = ((Number) instellingen.get("fontSize")).intValue();
 	}
 
 	public void setKeyboard(FormuleKeyboard kb)

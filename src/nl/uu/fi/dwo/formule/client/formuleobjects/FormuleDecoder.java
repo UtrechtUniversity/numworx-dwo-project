@@ -48,9 +48,9 @@ public class FormuleDecoder
 			//insert(bv);
 			//s = s.substring(eind);
 		}
-			else if(ch1=='p')
-			{	return new PowerVak(holder);
-			}
+		else if(ch1=='p')
+		{	return new PowerVak(holder);
+		}
 		else if (ch1 == 'w')
 		{
 			return new WortelVak(holder);

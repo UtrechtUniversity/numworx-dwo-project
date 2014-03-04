@@ -161,7 +161,10 @@ public class ObjectMapImpl extends HashMap<String, Object> implements ObjectMap 
 		List<Double> dd = getDoubleList(key);
 		double[] result = new double[dd.size()];
 		for (int i = 0; i < result.length; i++) {
-			result[i] = dd.get(i).doubleValue();
+			try{
+				result[i] = dd.get(i).doubleValue();
+			}
+			catch(Exception e){}	
 		}
 		return result;
 	}

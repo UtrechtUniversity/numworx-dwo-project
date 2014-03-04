@@ -25,7 +25,7 @@ public class NdeLogVak extends FormuleElementWithChildren
 		//ctx.setTextAlign(TextAlign.CENTER);
 		//ctx.setTextBaseline(TextBaseline.BOTTOM);
 		//ctx.setFont(fm.getFontStyle());
-		
+		//System.out.println("this.getFontChanges.toString()" + this.font.toString());
 		int fStr = (int) Math.round(ctx.measureText("log").getWidth());
 		
 		setSize(4 * fm.getAscent() / 3, 5 * fm.getAscent() / 4 + fm.getDescent());
@@ -35,7 +35,7 @@ public class NdeLogVak extends FormuleElementWithChildren
         
 		//getChild(0).setPosition(5 * fm.getAscent() / 7 + 5, fm.getAscent() / 4);
 		//getChild(0).setPosition(getChild(1).width + fStr + 3*fm.getAscent()/4, getChild(1).height/2);
-		getChild(0).setPosition(getChild(1).width + fStr + fm.getAscent()/3, getChild(1).height/2);
+		getChild(0).setPosition(getChild(1).width + fStr + fm.getAscent()/3, fm.getAscent() / 4);// getChild(1).height/2);
         getChild(1).setPosition(fm.getAscent()/3, getAsHoogte()-(this.getChild(1).height/2 + fm.getAscent()/2));
         
         /*
@@ -68,9 +68,12 @@ public class NdeLogVak extends FormuleElementWithChildren
 		
 		int fStr = (int) Math.round(ctx.measureText("log").getWidth());
 		setSize(2*fm.getAscent()/3+getChild(1).width + fStr + getChild(0).width + fm.getAscent()/2, getChild(1).height/2 + getChild(0).height);
-		setAsHoogte(getChild(0).getAsHoogte() + fm.getAscent() / 4);
+		setAsHoogte(getChild(0).getAsHoogte() + getChild(1).getHeight()/2);
 
-		if (this.isSelected())
+		getChild(0).setPosition(getChild(1).width + fStr + 3*fm.getAscent()/4, getChild(1).height/2);
+        getChild(1).setPosition(fm.getAscent()/3, getAsHoogte()-(this.getChild(1).height/2 + fm.getAscent()/2));
+        
+        if (this.isSelected())
 		{
 			ctx.setFillStyle("#aaf");
 			ctx.fillRect(0, 0, this.width, this.height);
@@ -96,6 +99,7 @@ public class NdeLogVak extends FormuleElementWithChildren
 		ctx.setTextBaseline(TextBaseline.BOTTOM);
 		ctx.setFont(fm.getFontStyle());
 		ctx.fillText("log", 5 + getChild(1).width, getAsHoogte() + fm.getAscent()/2 + fm.getAscent()/12);
+		
 		int hoogte = getChild(0).height;
 		int breedte = width;
 		int h =3*fm.getAscent()/2;
@@ -159,7 +163,6 @@ public class NdeLogVak extends FormuleElementWithChildren
 	{
 		if (super.setFont(fm) == false)
 			return false;
-		//getChild().setPosition(5 * fm.getAscent() / 7 - 1, fm.getAscent() / 4);
 		return true;
 	}
 

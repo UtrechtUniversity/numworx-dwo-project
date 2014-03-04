@@ -19,7 +19,7 @@ public class DiffVak extends FormuleElementWithChildren
 		super(editor, 2);
 	
 		//this.paint();
-		this.setChanged(true);
+		//this.setChanged(true);
 		//this.setAsHoogte(3 * fm.getAscent() / 4);
 	
 		//setSize(4 * fm.getAscent() / 3, 5 * fm.getAscent() / 4 + fm.getDescent());
@@ -31,25 +31,17 @@ public class DiffVak extends FormuleElementWithChildren
         height = Math.max(getChild(0).height, 2*(fm.getAscent()+fm.getDescent())+fm.getAscent()/4);
         if(diffBreuk) width = fm.getAscent()/8+getChild(0).width+fm.getAscent()/3+fm.getAscent()/4;
         getChild(0).setPosition(fm.getAscent()/8 + fm.getAscent() + fm.getAscent()/3 + 1, (height - getChild(0).height)/2 - 1);
-        //k1x = asc/8+asc+asc/3+1;
-        //k1y = (height-k1h)/2-1;
         if(diffBreuk) 
         {	getChild(0).setPosition(fm.getAscent()/2 -1, 0);
         
-        	//k1x = asc/2-1;
-           // k1y = 0;
         }
         getChild(1).setPosition(fm.getAscent()/8 + fm.getAscent()/2 - 2, 
         		(height - (2*(fm.getAscent() + fm.getDescent()) + fm.getAscent()/4))/2 + fm.getAscent() + fm.getDescent() + fm.getAscent()/8);
-        //k2x = asc/8+asc/2-2;
-        //k2y = (height-(2*(asc+desc)+asc/4))/2+asc+desc+asc/8;
         
         setAsHoogte(getChild(1).y - fm.getAscent()/8 - 2);
         if(diffBreuk)
         	setAsHoogte(getChild(0).height - fm.getAscent()/8 - 1);
-        //ashoogte = k2y- fm.getAscent()/8-2;//k1a + k1y;
-        //if(diffBreuk) ashoogte = kind1.getSize().height - fm.getAscent()/8-1;
-    	
+        
         
         setSize(width, height);
         //kind1.setLocation(k1x,k1y);
@@ -73,9 +65,37 @@ public class DiffVak extends FormuleElementWithChildren
 	@Override
 	public void paintObject()
 	{
+		
 		this.getChild(0).paint();
 		this.getChild(1).paint();
 	
+		diffBreuk = getChild(0).toString().length()==1 && Character.isLetter(getChild(0).toString().charAt(0));
+        double asc = fm.getAscent();
+		double desc = fm.getDescent();
+		width = (int) (asc/8+asc+asc/3+getChild(0).width+asc/3+asc/4);
+        height = (int) (Math.max(getChild(0).height, 2*(asc+desc)+asc/4));
+        if(diffBreuk) width = (int) (asc/8+getChild(0).width+asc/3+asc/4);
+        int k1x = (int) (asc/8+asc+asc/3+1);
+        int k1y = (height-getChild(0).height)/2;//-1;
+        if(diffBreuk) 
+        {	k1x = (int) (asc/2);
+        	k1y = -1;//0;
+        }
+        int k2x = (int) (asc/8+asc/2 - 1);//-2;
+        int k2y = (int) ((height-(2*(asc+desc)+asc/4))/2+asc+desc+asc/8 -1);
+        
+        setAsHoogte(getChild(1).y - fm.getAscent()/8 - 2);
+        //ashoogte = k2y- fm.getAscent()/8-2;//k1a + k1y;
+        if(diffBreuk) 
+        	setAsHoogte(getChild(0).height - fm.getAscent()/8-1);
+    	
+        
+        setSize(width, height);
+        getChild(0).setPosition(k1x, k1y);
+        getChild(1).setPosition(k2x, k2y);
+        //kind1.setLocation(k1x,k1y);
+        //kind2.setLocation(k2x,k2y);
+		
 		//setSize(5 * fm.getAscent() / 6 + getChild(0).width + 5, fm.getAscent() / 4 + getChild(0).height);
 		//setAsHoogte(getChild(0).getAsHoogte() + fm.getAscent() / 4);
 	
@@ -93,12 +113,17 @@ public class DiffVak extends FormuleElementWithChildren
 		
 		String dString = "d";
 		ctx.setTextBaseline(TextBaseline.BOTTOM);
+		fm.setItalic(false);
 		ctx.setFont(fm.getFontStyle());
 		
-		this.drawline(ctx, fm.getAscent()/8,(height-(2*fm.getAscent()+2*fm.getDescent()+fm.getAscent()/4))/2+fm.getAscent()+fm.getDescent(),fm.getAscent()/8+fm.getAscent(),(height-(2*fm.getAscent()+2*fm.getDescent()+fm.getAscent()/4))/2+fm.getAscent()+fm.getDescent());
+		ctx.beginPath();
+		ctx.moveTo(fm.getAscent()/8, (height-(2*fm.getAscent()+2*fm.getDescent()+fm.getAscent()/4))/2+fm.getAscent()+fm.getDescent());
+		ctx.lineTo(fm.getAscent()/8+fm.getAscent(),(height-(2*fm.getAscent()+2*fm.getDescent()+fm.getAscent()/4))/2+fm.getAscent()+fm.getDescent());
+		ctx.stroke();
+		//this.drawline(ctx, fm.getAscent()/8,(height-(2*fm.getAscent()+2*fm.getDescent()+fm.getAscent()/4))/2+fm.getAscent()+fm.getDescent(),fm.getAscent()/8+fm.getAscent(),(height-(2*fm.getAscent()+2*fm.getDescent()+fm.getAscent()/4))/2+fm.getAscent()+fm.getDescent());
 		ctx.fillText(dString, fm.getAscent()/8+ (diffBreuk?0:fm.getAscent()/4),(height-(2*fm.getAscent()+2*fm.getDescent()+fm.getAscent()/4))/2+fm.getAscent());
 		ctx.fillText(dString, fm.getAscent()/8, height-fm.getDescent()-(height-(2*fm.getAscent()+2*fm.getDescent()+fm.getAscent()/4))/2-fm.getAscent()/6);
-		
+		fm.setItalic(true);
 		
 		int hoogte = getChild(0).height;
 		int breedte = width;

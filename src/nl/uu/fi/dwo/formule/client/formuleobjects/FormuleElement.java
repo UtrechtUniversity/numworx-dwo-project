@@ -222,10 +222,8 @@ public abstract class FormuleElement
 	}
 
 	public boolean setFont(FormuleFont fm)
-	{
-		if (this.font == null || fm.toString() != this.font.toString() || fontchangesapplied == false)
-		{
-			fontchangesapplied = true;
+	{	if (this.font == null || fm.toString() != this.font.toString() || fm.toString() != this.fm.toString() || fontchangesapplied == false)
+		{	fontchangesapplied = true;
 			this.setChanged(true);
 			this.font = fm;
 			if (this.fontchanges != null)

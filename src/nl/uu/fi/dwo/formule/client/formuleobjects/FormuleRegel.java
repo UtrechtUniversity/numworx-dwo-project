@@ -98,13 +98,15 @@ public class FormuleRegel extends FormuleElement
 
 		FormuleFontChanges fc;
 		if ((fc = this.getFontChanges()) == null)
-			fc = new FormuleFontChanges();
-
+		{	fc = new FormuleFontChanges();
+		}
+		
 		if (smalltext == true)
 			fc.setSmallText(FormuleFontChanges.TRUE);
 		else
 			fc.setSmallText(FormuleFontChanges.FALSE);
 
+		
 		this.setFontChanges(fc);
 	}
 
