@@ -43,8 +43,9 @@ public class FormuleTeken extends FormuleElement
 		/*
 		 * else if(tk=='2') { teken = null; }
 		 */
-		else if (tk == 'z')
-			teken = null;
+		//Sietske: onderstaande weggecommentarieerd, want hierdoor nam een z in formules niet de juiste kleur aan.
+		//else if (tk == 'z')
+		//	teken = null;
 		//TODO:removed this?
 		//else if (tk == 'y')
 		//teken = null;

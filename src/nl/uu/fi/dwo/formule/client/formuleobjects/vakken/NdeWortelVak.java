@@ -60,10 +60,19 @@ public class NdeWortelVak extends FormuleElementWithChildren
 
 		ctx.setLineWidth(fm.getStrokeWidth());
 
-		this.drawline(ctx, 5, 2 * height / 3, fm.getAscent() / 3 + 5, height);
-		this.drawline(ctx, 6, 2 * height / 3, fm.getAscent() / 3 + 6, height);
-		this.drawline(ctx, fm.getAscent() / 3 + 5, height, 2 * fm.getAscent() / 3 + 4, fm.getAscent() / 8);
-		this.drawline(ctx, 2 * fm.getAscent() / 3 + 5, fm.getAscent() / 8, width + 5, fm.getAscent() / 8);
+		ctx.beginPath();
+		ctx.moveTo(6, 2 * height / 3);
+		ctx.lineTo(fm.getAscent() / 3 + 6, height);
+		ctx.moveTo(5, 2 * height / 3);
+		ctx.lineTo(fm.getAscent() / 3 + 5, height);
+		ctx.lineTo(2 * fm.getAscent() / 3 + 4, fm.getAscent() / 8);
+		ctx.moveTo(2 * fm.getAscent() / 3 + 5, fm.getAscent() / 8);
+		ctx.lineTo(width + 5, fm.getAscent() / 8);
+		
+		//this.drawline(ctx, 5, 2 * height / 3, fm.getAscent() / 3 + 5, height);
+		//this.drawline(ctx, 6, 2 * height / 3, fm.getAscent() / 3 + 6, height);
+		//this.drawline(ctx, fm.getAscent() / 3 + 5, height, 2 * fm.getAscent() / 3 + 4, fm.getAscent() / 8);
+		//this.drawline(ctx, 2 * fm.getAscent() / 3 + 5, fm.getAscent() / 8, width + 5, fm.getAscent() / 8);
 
 		this.getChild(0).draw(ctx);
 		this.getChild(1).draw(ctx);

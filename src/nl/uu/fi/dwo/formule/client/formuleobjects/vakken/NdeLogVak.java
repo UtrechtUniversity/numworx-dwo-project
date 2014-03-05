@@ -114,6 +114,26 @@ public class NdeLogVak extends FormuleElementWithChildren
 		int locy = getChild(1).height/2;
 		//if(WiskOpdr.language.toString().equals("en"))locy = 0;
 		
+		ctx.beginPath();
+		ctx.moveTo(locx+c+b, locy+d);
+		ctx.lineTo(locx+c+b-bb, locy+d+bb);
+		ctx.lineTo(locx+c, locy+d+hh-b);
+		ctx.lineTo(locx+c, locy+hoogte-hh+b-d);
+		ctx.lineTo(locx+c+b-bb, locy+hoogte-bb-d);
+		ctx.lineTo(locx+c+b, locy+hoogte-d);
+		ctx.stroke();
+		
+		ctx.beginPath();
+		ctx.moveTo(breedte-b-1-c, locy+d);
+		ctx.lineTo(breedte-b+bb-1-c, locy+d+bb);
+		ctx.lineTo(breedte-1-c, locy+d+hh-b);
+		ctx.lineTo(breedte-1-c, locy+hoogte-hh+b-d);
+		ctx.lineTo(breedte-b+bb-1-c, locy+hoogte-bb-d);
+		ctx.lineTo(breedte-b-1-c, locy+hoogte-d);
+		ctx.stroke();
+		
+		
+		/*
 		this.drawline(ctx, locx+c+b, locy+d, locx+c+b-bb, locy+d+bb);
 		this.drawline(ctx, locx+c+b-bb, locy+d+bb, locx+c, locy+d+hh-b);
 		this.drawline(ctx, locx+c, locy+d+hh-b, locx+c, locy+hoogte-hh+b-d);		
@@ -125,7 +145,7 @@ public class NdeLogVak extends FormuleElementWithChildren
 		this.drawline(ctx, breedte-1-c, locy+d+hh-b, breedte-1-c, locy+hoogte-hh+b-d);		
 		this.drawline(ctx, breedte-b+bb-1-c, locy+hoogte-bb-d, breedte-1-c, locy+hoogte-hh+b-d);
 		this.drawline(ctx, breedte-b-1-c, locy+hoogte-d, breedte-b+bb-1-c, locy+hoogte-bb-d);
-		
+		*/
 		
 		this.getChild(0).draw(ctx);
 		this.getChild(1).draw(ctx);

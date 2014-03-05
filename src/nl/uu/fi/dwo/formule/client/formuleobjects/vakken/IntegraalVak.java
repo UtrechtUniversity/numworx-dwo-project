@@ -34,7 +34,7 @@ public class IntegraalVak extends FormuleElementWithChildren
 		this.getChild(1).paint();
 		this.getChild(2).paint();
 		this.getChild(3).paint();
-		initSize();
+		zetMaat();
 
 		int asc = fm.getAscent();
 
@@ -82,7 +82,7 @@ public class IntegraalVak extends FormuleElementWithChildren
 		this.drawCursor();
 	}
 
-	public void initSize()
+	public void zetMaat()
 	{
 		int asc = fm.getAscent();
 

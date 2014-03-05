@@ -85,7 +85,11 @@ public class Breukvak extends FormuleElementWithChildren
 
 		ctx.setLineWidth(fm.getStrokeWidth());
 
-		this.drawline(ctx, fm.getAscent() / 3, getChild(0).height + fm.getAscent() / 8, this.width - (fm.getAscent() / 3), getChild(0).height + fm.getAscent() / 8);
+		ctx.beginPath();
+		ctx.moveTo(fm.getAscent() / 3, getChild(0).height + fm.getAscent() / 8);
+		ctx.lineTo(this.width - (fm.getAscent() / 3), getChild(0).height + fm.getAscent() / 8);
+		ctx.stroke();
+		//this.drawline(ctx, fm.getAscent() / 3, getChild(0).height + fm.getAscent() / 8, this.width - (fm.getAscent() / 3), getChild(0).height + fm.getAscent() / 8);
 
 		this.getChild(1).draw(ctx);
 		this.getChild(0).draw(ctx);

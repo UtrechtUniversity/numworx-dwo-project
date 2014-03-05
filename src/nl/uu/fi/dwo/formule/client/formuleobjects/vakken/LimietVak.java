@@ -28,7 +28,7 @@ public class LimietVak extends FormuleElementWithChildren{
 		this.getChild(1).paint();
 		this.getChild(2).paint();
 		//this.getChild(3).paint();
-		maakMaat();
+		zetMaat();
 		
 		ctx.setStrokeStyle(color);
 		ctx.setFillStyle(color);
@@ -45,25 +45,46 @@ public class LimietVak extends FormuleElementWithChildren{
 			int pijlY = getChild(2).y + getChild(2).getAsHoogte() + getChild(1).getFont().getAscent()/4;
 			int pijlW = 3*fm.getAscent()/8;
 			
-			this.drawline(ctx, pijlX,pijlY,pijlX+pijlW,pijlY);
-			this.drawline(ctx, pijlX+pijlW-2,pijlY-2,pijlX+pijlW,pijlY);
-			this.drawline(ctx, pijlX+pijlW-2,pijlY+2,pijlX+pijlW,pijlY);
+			ctx.beginPath();
+			ctx.moveTo(pijlX, pijlY);
+			ctx.lineTo(pijlX + pijlW, pijlY);
+			ctx.lineTo(pijlX + pijlW - 2, pijlY - 2);
+			ctx.moveTo(pijlX + pijlW, pijlY);
+			ctx.lineTo(pijlX + pijlW - 2, pijlY + 2);
+			ctx.stroke();
+			//this.drawline(ctx, pijlX,pijlY,pijlX+pijlW,pijlY);
+			//this.drawline(ctx, pijlX+pijlW-2,pijlY-2,pijlX+pijlW,pijlY);
+			//this.drawline(ctx, pijlX+pijlW-2,pijlY+2,pijlX+pijlW,pijlY);
 		}
 		if(getChild(3)!=null && getChild(3).toString().equals("1"))
 		{	int pijlX = 6*fm.getAscent()/8;
 			int pijlY = getChild(2).y + getChild(2).getAsHoogte()+getChild(1).getFont().getAscent()/4-fm.getAscent()/3;
 			int pijlH = 4*fm.getAscent()/8;
-			this.drawline(ctx, pijlX,pijlY,pijlX,pijlY+pijlH);
-			this.drawline(ctx, pijlX-2,pijlY+pijlH-2,pijlX,pijlY+pijlH);
-			this.drawline(ctx, pijlX+2,pijlY+pijlH-2,pijlX,pijlY+pijlH);
+			ctx.beginPath();
+			ctx.moveTo(pijlX,  pijlY);
+			ctx.lineTo(pijlX, pijlY + pijlH);
+			ctx.lineTo(pijlX - 2, pijlY + pijlH - 2);
+			ctx.moveTo(pijlX, pijlY + pijlH);
+			ctx.lineTo(pijlX + 2, pijlY + pijlH - 2);
+			
+			//this.drawline(ctx, pijlX,pijlY,pijlX,pijlY+pijlH);
+			//this.drawline(ctx, pijlX-2,pijlY+pijlH-2,pijlX,pijlY+pijlH);
+			//this.drawline(ctx, pijlX+2,pijlY+pijlH-2,pijlX,pijlY+pijlH);
 		}
 		if(getChild(3)!=null && getChild(3).toString().equals("2"))
 		{	int pijlX = 6*fm.getAscent()/8;
 			int pijlY = getChild(2).y + getChild(2).getAsHoogte()+getChild(1).getFont().getAscent()/4-fm.getAscent()/3;
 			int pijlH = 4*fm.getAscent()/8;
-			this.drawline(ctx, pijlX,pijlY,pijlX,pijlY+pijlH);
-			this.drawline(ctx, pijlX-2,pijlY+2,pijlX,pijlY);
-			this.drawline(ctx, pijlX+2,pijlY+2,pijlX,pijlY);
+			ctx.beginPath();
+			ctx.moveTo(pijlX, pijlY + pijlH);
+			ctx.lineTo(pijlX, pijlY);
+			ctx.lineTo(pijlX - 2, pijlY + 2);
+			ctx.moveTo(pijlX, pijlY);
+			ctx.lineTo(pijlX + 2, pijlY + 2);
+			
+			//this.drawline(ctx, pijlX,pijlY,pijlX,pijlY+pijlH);
+			//this.drawline(ctx, pijlX-2,pijlY+2,pijlX,pijlY);
+			//this.drawline(ctx, pijlX+2,pijlY+2,pijlX,pijlY);
 		}
 		
 		this.getChild(0).draw(ctx);
@@ -74,7 +95,7 @@ public class LimietVak extends FormuleElementWithChildren{
 		this.drawCursor();
 	}
 	
-	private void maakMaat()
+	private void zetMaat()
 	{	
 		setAsHoogte(getChild(0).getAsHoogte()); 
 		

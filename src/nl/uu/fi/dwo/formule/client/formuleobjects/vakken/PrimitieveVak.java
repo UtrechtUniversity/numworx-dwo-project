@@ -19,7 +19,7 @@ public class PrimitieveVak extends FormuleElementWithChildren
 	{
 		this.getChild(0).paint();
 		this.getChild(1).paint();
-		initSize();
+		zetMaat();
 
 		int asc = fm.getAscent();
 
@@ -54,7 +54,7 @@ public class PrimitieveVak extends FormuleElementWithChildren
 		this.drawCursor();
 	}
 
-	public void initSize()
+	public void zetMaat()
 	{
 		//int asc = fm.getAscent();
 		int tx = 1;

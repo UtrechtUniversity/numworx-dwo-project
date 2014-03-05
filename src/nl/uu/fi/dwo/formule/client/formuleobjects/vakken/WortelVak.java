@@ -56,7 +56,11 @@ public class WortelVak extends FormuleElementWithChildren
 
 		ctx.setLineWidth(fm.getStrokeWidth());
 
-		this.drawline(ctx, 0, 2 * height / 3, fm.getAscent() / 3, height);
+		ctx.beginPath();
+		ctx.moveTo(0, 2 * height / 3);
+		ctx.lineTo(fm.getAscent() / 3, height);
+		ctx.stroke();
+		//this.drawline(ctx, 0, 2 * height / 3, fm.getAscent() / 3, height);
 
 		ctx.beginPath();
 		ctx.moveTo(1, 2 * height / 3);

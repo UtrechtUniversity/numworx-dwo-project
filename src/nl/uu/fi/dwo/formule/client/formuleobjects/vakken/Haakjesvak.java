@@ -47,8 +47,6 @@ public class Haakjesvak extends FormuleElementWithChildren
 			setSize(5 * fm.getAscent() / 6 + getChild().width, fm.getAscent() / 6 + getChild().height);
 			//this.setSize(width, height);
 
-			int hoogte = height;
-			int breedte = width;
 			int h = 3 * fm.getAscent() / 2;
 			int hh = h / 2;
 			int b = h / 6;
@@ -69,6 +67,24 @@ public class Haakjesvak extends FormuleElementWithChildren
 			ctx.setFillStyle(color);
 			ctx.setLineWidth(fm.getStrokeWidth());
 
+			ctx.beginPath();
+			ctx.moveTo(c+b, d);
+			ctx.lineTo(c+b-bb, d+bb);
+			ctx.lineTo(c, d+hh-b);
+			ctx.lineTo(c, height - hh + b - d);
+			ctx.lineTo(c+b-bb, height-bb-d);
+			ctx.lineTo(c+b, height-d);
+			ctx.stroke();
+			
+			ctx.beginPath();
+			ctx.moveTo(width-b-1-c, d);
+			ctx.lineTo(width-1-c, d+hh-b);
+			ctx.lineTo(width-1-c, height-hh+b-d);
+			ctx.lineTo(width-b+bb-1-c, height-bb-d);
+			ctx.lineTo(width-b-1-c, height-d);
+			ctx.stroke();
+			
+			/*
 			drawline(ctx, c + b, d, c + b - bb, d + bb);
 			drawline(ctx, c + b - bb, d + bb, c, d + hh - b);
 			drawline(ctx, c, d + hh - b, c, hoogte - hh + b - d);
@@ -80,6 +96,7 @@ public class Haakjesvak extends FormuleElementWithChildren
 			drawline(ctx, breedte - 1 - c, d + hh - b, breedte - 1 - c, hoogte - hh + b - d);
 			drawline(ctx, breedte - b + bb - 1 - c, hoogte - bb - d, breedte - 1 - c, hoogte - hh + b - d);
 			drawline(ctx, breedte - b - 1 - c, hoogte - d, breedte - b + bb - 1 - c, hoogte - bb - d);
+			*/
 
 			this.getChild().draw(ctx);
 
