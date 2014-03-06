@@ -41,4 +41,22 @@ public class XMLEncoderTest extends TestCase {
 		Object r = JSONValue.parse(out.toString());
 		assertNotNull(r);
 	}
+	
+	public void testJSON3()  throws IOException {
+		int sco = 111753;
+		StringWriter out = new StringWriter();
+		access.getJSONLaunchData(sco, out);
+//		assertFalse(out.toString().contains("javaclass"));
+		Object r = JSONValue.parse(out.toString());
+		assertNotNull(r);
+	}
+	public void testJSON4()  throws IOException {
+		int sco = 53507;
+		StringWriter out = new StringWriter();
+		access.getJSONLaunchData(sco, out);
+//		assertFalse(out.toString().contains("javaclass"));
+		Object r = JSONValue.parse(out.toString());
+		assertNotNull(r);
+	}
+
 }
