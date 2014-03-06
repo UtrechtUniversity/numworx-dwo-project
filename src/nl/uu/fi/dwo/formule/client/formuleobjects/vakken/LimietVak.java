@@ -95,6 +95,11 @@ public class LimietVak extends FormuleElementWithChildren{
 		this.drawCursor();
 	}
 	
+	public void zetRichting(int richting)
+	{	getChild(3).deleteAll();;
+		getChild(3).insert(""+richting);
+	}
+	
 	private void zetMaat()
 	{	
 		setAsHoogte(getChild(0).getAsHoogte()); 

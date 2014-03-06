@@ -340,6 +340,65 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	public void integraal() {
 		insert("$i$n$k$l@@@@");
 	}
-	
+
+	@Override
+	public void prv() {
+		insert("$q$n$k$l@@@@");
+	}
+
+	@Override
+	public void ndelog() {
+		insert("$L$n@@");
+	}
+
+	@Override
+	public void abs() {
+		insert("$r@");
+	}
+
+	@Override
+	public void subscript() {
+		insert("$s@");
+	}
+
+	@Override
+	public void bin() {
+		insert("$y$n@@");
+	}
+
+	@Override
+	public void diff() {
+		insert("$d$n@@");
+	}
+
+	@Override
+	public void limiet0() {
+		insert("$T$n$k$l@@@@");
+	}
+
+	@Override
+	public void limiet1() {
+		insert("$T$n$k$l@@@@");
+	}
+
+	@Override
+	public void limiet2() {
+		insert("$T$n$k$l@@@@");
+	}
+
+	@Override
+	public void primitieve() {
+		insert("$P$n@@");
+	}
+
+	@Override
+	public void conjug() {
+		insert("$c@");
+	}
+
+	@Override
+	public void sigma() {
+		insert("$S$n$k$l@@@@");
+	}
 	
 }

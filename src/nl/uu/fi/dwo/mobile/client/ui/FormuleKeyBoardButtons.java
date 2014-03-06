@@ -67,6 +67,30 @@ public abstract class FormuleKeyBoardButtons
 				editor.haakjes();
 			else if (code.equals("integraal") == true)
 				editor.integraal();
+			else if (code.equals("prv") == true)
+				editor.prv();
+			else if (code.equals("ndelog") == true)
+				editor.ndelog();
+			else if (code.equals("abs") == true)
+				editor.abs();
+			else if (code.equals("subscript") == true)
+				editor.subscript();
+			else if (code.equals("bin") == true)
+				editor.bin();
+			else if (code.equals("diff") == true)
+				editor.diff();
+			else if (code.equals("limiet0") == true)
+				editor.limiet0();
+			else if (code.equals("limiet1") == true)
+				editor.limiet1();
+			else if (code.equals("limiet2") == true)
+				editor.limiet2();
+			else if (code.equals("primitieve") == true)
+				editor.primitieve();
+			else if (code.equals("conjug") == true)
+				editor.conjug();
+			else if (code.equals("sigma") == true)
+				editor.sigma();
 			else if (code.equals("copy") == true)
 				FormuleKeyboard.setClipboard(editor.getSelectionString());
 			else if (code.equals("paste") == true)
@@ -185,7 +209,8 @@ public abstract class FormuleKeyBoardButtons
 		ButtonListener listener = new ButtonListener(key, kb);
 		TouchButton b;
 		String[] diabledItems =
-		{ "integraal", "prv", "ndelog", "abs", "subscript", "bin", "diff", "limiet0", "limiet1", "limiet2", "primitieve", "conjug", "sigma", "diff_partial" };
+		//{ "integraal", "prv", "ndelog", "abs", "subscript", "bin", "diff", "limiet0", "limiet1", "limiet2", "primitieve", "conjug", "sigma", "diff_partial" };
+			{ "diff_partial" };
 		ArrayList<String> disabled = new ArrayList<String>();
 		java.util.Collections.addAll(disabled, diabledItems);
 

@@ -39,5 +39,30 @@ public interface FormuleEditorIF {
 	void haakjes();
 
 	void integraal();
-
+	
+	void prv();
+	
+	void ndelog();
+	
+	void abs();
+	
+	void subscript();
+	
+	void bin();
+	
+	void diff();
+	
+	void limiet0();
+	
+	void limiet1();
+	
+	void limiet2();
+	
+	void primitieve();
+	
+	void conjug();
+	
+	void sigma();
+	
+	
 }

@@ -3,12 +3,22 @@ package nl.uu.fi.dwo.formule.client.formuleholder;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleTeken;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.AbsVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.BinVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Breukvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.ConjugVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.DiffVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Haakjesvak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.IntegraalVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Kwadraatvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.LimietVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Machtvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeLogVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeWortelVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PrimitieveVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PrvVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.SigmaVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.SubscriptVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.WortelVak;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
@@ -256,4 +266,83 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 		addElement(new IntegraalVak(getCurrentRegel()));
 	}
 
+
+	@Override
+	public void prv() {
+		addElement(new PrvVak(getCurrentRegel()));
+	}
+
+
+	@Override
+	public void ndelog() {
+		addElement(new NdeLogVak(getCurrentRegel()));
+	}
+
+
+	@Override
+	public void abs() {
+		addElement(new AbsVak(getCurrentRegel()));
+	}
+
+
+	@Override
+	public void subscript() {
+		addElement(new SubscriptVak(getCurrentRegel()));
+	}
+
+
+	@Override
+	public void bin() {
+		addElement(new BinVak(getCurrentRegel()));
+	}
+
+
+	@Override
+	public void diff() {
+		addElement(new DiffVak(getCurrentRegel()));
+	}
+
+
+	@Override
+	public void limiet0() {
+		LimietVak vak = new LimietVak(getCurrentRegel());
+		vak.zetRichting(0);
+		addElement(vak);
+	}
+
+
+	@Override
+	public void limiet1() {
+		LimietVak vak = new LimietVak(getCurrentRegel());
+		vak.zetRichting(1);
+		addElement(vak);
+	}
+
+
+	@Override
+	public void limiet2() {
+		LimietVak vak = new LimietVak(getCurrentRegel());
+		vak.zetRichting(2);
+		addElement(vak);
+	}
+
+
+	@Override
+	public void primitieve() {
+		addElement(new PrimitieveVak(getCurrentRegel()));
+	}
+
+
+	@Override
+	public void conjug() {
+		addElement(new ConjugVak(getCurrentRegel()));
+	}
+
+
+	@Override
+	public void sigma() {
+		addElement(new SigmaVak(getCurrentRegel()));
+	}
+
+	
 }

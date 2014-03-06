@@ -16,6 +16,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
@@ -134,12 +135,18 @@ public class TekstVakPanel implements InteractionView
 
 	
 	static CssColor getColor(Map<String,Object> map, String key, int r, int g, int b) {
-		Map colorMap = (Map)map.get(key);
-		if(map != null) {
-			r = ((Number)colorMap.get("red")).intValue();
-			g = ((Number)colorMap.get("green")).intValue();
-			b = ((Number)colorMap.get("blue")).intValue();
+		Map colorMap0 = (Map)map.get(key);
+		ObjectMap colorMap = JSONUtilities.wrapMap(colorMap0);
+		if(colorMap != null) {
+			r = colorMap.getInt("red");
+					//((Number)colorMap.get("red")).intValue();
+			g = colorMap.getInt("green");
+					//((Number)colorMap.get("green")).intValue();
+			b = colorMap.getInt("blue");
+					//((Number)colorMap.get("blue")).intValue();
 		}
+		
+		
 		return CssColor.make(r, g, b);
 	}
 	
