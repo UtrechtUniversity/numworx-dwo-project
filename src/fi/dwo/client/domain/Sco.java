@@ -305,7 +305,12 @@ System.err.println("sum = ["+result+"]");
 	 */
 	static public String gotoSco(String iValue, Object current, Course course, final Component sc) throws NumberFormatException {
 		Sco[] list = course.getScoList();
-		int sconr;
+		int sconr = list.length;
+// XXX Sietske wil eerst op nummer daarna pas op titel
+		try { 
+			sconr = Integer.parseInt(iValue)-1;
+		} catch(Exception _) {}
+		if(sconr < -1 || sconr >= list.length)
 		for(sconr = 0; sconr < list.length; sconr++ ) {
 			if(list[sconr].getScoName().startsWith(iValue)) {
 				break; // found by prefix ? equals? 
