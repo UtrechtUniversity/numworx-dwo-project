@@ -159,10 +159,18 @@ public class ObjectMapImpl extends HashMap<String, Object> implements ObjectMap 
 		if(o instanceof double[] || o == null)
 			return (double[])o;
 		List<Double> dd = getDoubleList(key);
+		return toDoubleArray(dd);
+	}
+
+	static double[] toDoubleArray(List<? extends Number> dd) {
 		double[] result = new double[dd.size()];
 		for (int i = 0; i < result.length; i++) {
 			try{
-				result[i] = dd.get(i).doubleValue();
+				Number number = dd.get(i);
+				if(number != null)
+					result[i] = number.doubleValue();
+				else
+					result[i] = Double.NaN;
 			}
 			catch(Exception e){}	
 		}

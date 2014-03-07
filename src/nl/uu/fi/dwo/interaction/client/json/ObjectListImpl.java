@@ -97,11 +97,7 @@ public class ObjectListImpl implements ObjectList {
 		if(o instanceof double[] || o == null)
 			return (double[])o;
 		List<Double> dd = getDoubleList(key);
-		double[] result = new double[dd.size()];
-		for (int i = 0; i < result.length; i++) {
-			result[i] = dd.get(i).doubleValue();
-		}
-		return result;
+		return ObjectMapImpl.toDoubleArray(dd);
 	}
 
 	@Override
