@@ -10,6 +10,7 @@ import java.util.Set;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 
 public class JSONObjectMapImpl extends HashMap<String, Object> implements ObjectMap {
@@ -246,7 +247,9 @@ public class JSONObjectMapImpl extends HashMap<String, Object> implements Object
 	static String[] toStringArray(JSONArray array) {
 		String[] result = new String[array.size()];
 		for (int i = 0; i < result.length; i++) {
-			result[i] = array.get(i).isString().stringValue();
+			JSONString string = array.get(i).isString();
+			if(string != null)
+				result[i] = string.stringValue();
 		}
 		return result;
 	}
