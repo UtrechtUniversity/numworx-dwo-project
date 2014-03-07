@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONNumber;
@@ -254,6 +255,11 @@ public class JSONObjectMapImpl extends HashMap<String, Object> implements Object
 	public boolean[] getBooleanArray(String key) {
 		JSONArray array = get0(key).isArray();
 		return toBooleanArray(array);
+	}
+
+	@Override
+	public Set<String> keySet() {
+		return object.keySet();
 	}
 
 }
