@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 
@@ -159,7 +160,11 @@ public class JSONObjectMapImpl extends HashMap<String, Object> implements Object
 		int size = array.size();
 		double[] result = new double[size];
 		for(int i = 0; i < size; i++ ) {
-			result[i] = array.get(i).isNumber().doubleValue();
+			JSONNumber number = array.get(i).isNumber();
+			if(number != null)
+				result[i] = number.doubleValue();
+			else
+				result[i] = Double.NaN;
 		}
 		return result;
 	}
