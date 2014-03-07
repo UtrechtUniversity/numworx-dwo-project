@@ -66,6 +66,7 @@ public class LimietVak extends FormuleElementWithChildren{
 			ctx.lineTo(pijlX - 2, pijlY + pijlH - 2);
 			ctx.moveTo(pijlX, pijlY + pijlH);
 			ctx.lineTo(pijlX + 2, pijlY + pijlH - 2);
+			ctx.stroke();
 			
 			//this.drawline(ctx, pijlX,pijlY,pijlX,pijlY+pijlH);
 			//this.drawline(ctx, pijlX-2,pijlY+pijlH-2,pijlX,pijlY+pijlH);
@@ -81,6 +82,7 @@ public class LimietVak extends FormuleElementWithChildren{
 			ctx.lineTo(pijlX - 2, pijlY + 2);
 			ctx.moveTo(pijlX, pijlY);
 			ctx.lineTo(pijlX + 2, pijlY + 2);
+			ctx.stroke();
 			
 			//this.drawline(ctx, pijlX,pijlY,pijlX,pijlY+pijlH);
 			//this.drawline(ctx, pijlX-2,pijlY+2,pijlX,pijlY);
@@ -103,9 +105,9 @@ public class LimietVak extends FormuleElementWithChildren{
 	private void zetMaat()
 	{	
 		setAsHoogte(getChild(0).getAsHoogte()); 
-		
+		//System.out.println("getChild(0): " + getChild(0).toString());
 		//boolean breuk = kind1!=null && kind1.getComponentCount()>0 && (kind1.getComponent(0) instanceof BreukVak);
-		boolean breuk = getChild(0)!=null && (getChild(0).getElementAt(0) instanceof Breukvak);
+		boolean breuk = getChild(0)!=null && getChild(0).toString().length() > 0 && getChild(0).getElementAt(0) instanceof Breukvak;
 		int corr = breuk ? fm.getAscent()/3 : 0;
 		
 		getChild(2).x = getChild(1).width + 3 * fm.getAscent() / 4;
