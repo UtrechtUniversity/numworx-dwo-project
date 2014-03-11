@@ -19,6 +19,7 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
+import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
@@ -397,7 +398,7 @@ public class TekstVakPanel implements InteractionView
 				
 				if(centerV)
 					vPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-				vPanel.getElement().getStyle().setProperty("margin", "" + cellMarge + "px " + bovenMarge + "px");
+				vPanel.getElement().getStyle().setProperty("margin", "" + bovenMarge + "px " + cellMarge + "px");
 				
 				/*
 				//Handig voor bekijken positionering
@@ -658,6 +659,15 @@ public class TekstVakPanel implements InteractionView
 				Widget a = (((InteractionView) currentObject).asWidget());
 				a.getElement().getStyle().setProperty("display", "inline-block");
 				a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
+				if(currentObject instanceof TekstVakPanel)
+				{
+					int h = ((TekstVakPanel)currentObject).hoogte;
+					int tekstGrootte = ((TekstVakPanel) currentObject).font_size;
+					a.getElement().getStyle().setProperty("verticalAlign", (tekstGrootte - h + 1) + "px");
+				}
+				//a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
+				//a.getElement().getStyle().setProperty("verticalAlign", "text-top");
+				//a.getElement().getStyle().setProperty("verticalAlign", "2px");
 				//destination.add(a);
 				if(currentObject instanceof TekstVakPanel && ((TekstVakPanel) currentObject).isZwevend())
 				{	tekstHulsVakken[rij][kolom].add(a);
@@ -685,6 +695,13 @@ public class TekstVakPanel implements InteractionView
 				Widget w = iv.getImage();
 				destination.add(w);
 			}
+			else if (currentObject instanceof AnchorView)
+			{
+				AnchorView av = (AnchorView) currentObject;
+				Widget w = av.asWidget();
+				destination.add(w);
+			}
+			
 		}
 	}
 	
