@@ -4,8 +4,6 @@ import java.util.Vector;
 
 import fi.wiskopdr.text.Text;
 
-import nl.uu.fi.dwo.mobile.DWOplayer;
-
 public class Vergelijking
 {
 	Expressie kind1;
