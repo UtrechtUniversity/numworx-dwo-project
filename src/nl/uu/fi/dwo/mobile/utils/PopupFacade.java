@@ -37,7 +37,8 @@ public class PopupFacade implements InteractionView {
 	
 	public PopupFacade(HashMap<String, Object> h)
 	{
-		popup = Boolean.TRUE.equals(h.get("popup"));
+		if(h == null) return;
+		popup =  Boolean.TRUE.equals(h.get("popup"));
 		Object value = h.get("setNr");
 		if(value == null)
 			setNr = 0;

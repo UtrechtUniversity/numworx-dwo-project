@@ -213,7 +213,7 @@ public class TekstBuffer
 		else
 			return ""; // 1 gegeven, 2 $V
 		if (currentVakGegevens == null) // FIXME Komt voor in kladje
-			return new TekstVakPanel(null, randomVarNamen, randomVarWaarden); // was ""
+			return new TekstVakPanel(new HashMap(), randomVarNamen, randomVarWaarden); // was ""
 
 		int soortVak = ((Number) currentVakGegevens.get("soortInteractiePanel")).intValue();
 

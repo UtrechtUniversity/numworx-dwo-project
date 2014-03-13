@@ -136,7 +136,7 @@ public class TekstVakPanel implements InteractionView
 
 	
 	static CssColor getColor(Map<String,Object> map, String key, int r, int g, int b) {
-		Map colorMap0 = (Map)map.get(key);
+		Map colorMap0 = map != null  ? (Map)map.get(key) : null ;
 		ObjectMap colorMap = JSONUtilities.wrapMap(colorMap0);
 		if(colorMap != null) {
 			r = colorMap.getInt("red");
@@ -146,8 +146,6 @@ public class TekstVakPanel implements InteractionView
 			b = colorMap.getInt("blue");
 					//((Number)colorMap.get("blue")).intValue();
 		}
-		
-		
 		return CssColor.make(r, g, b);
 	}
 	

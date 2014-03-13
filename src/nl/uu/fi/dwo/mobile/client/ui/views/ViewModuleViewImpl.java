@@ -171,17 +171,24 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 					{
 						String responseText = response.getText();
 						logger.info("Status: " + response.getStatusCode() + " " + response.getStatusText());
-						//logger.info(response.getHeadersAsString());
-						//logger.info("Data: " + responseText.substring(0, Math.min(300, responseText.length()) ));
+						logger.info(response.getHeadersAsString());
+						logger.info("Data: " + responseText.substring(0, Math.min(30, responseText.length()) ));
 						if (!responseText.isEmpty())
 						{
-							JSONValue dom = JSONParser.parseStrict(responseText);
-//							if(dom == null) 
-//							{
-//							}
+							//  FIXME voor huub: 
+							if(responseText.startsWith("<"))
+							{		
+								Document dom = XMLParser.parse(responseText);
+								StringCodeToHashMap sc = new StringCodeToHashMap();
+								launchData = sc.decodeStringToHashMap(dom);
+
+							} else
+							{
+								JSONValue dom = JSONParser.parseStrict(responseText);
+								//launchData = JSONUtilities.fromJSONObject(dom.isObject());
+								launchData = JSONUtilities.wrapMap(dom.isObject());
+							}
 							
-							//launchData = JSONUtilities.fromJSONObject(dom.isObject());
-							launchData = JSONUtilities.wrapMap(dom.isObject());
 							setupView(launchData);
 						} else {
 							logger.severe("response empty");
