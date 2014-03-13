@@ -2198,4 +2198,16 @@ System.out.println(school.getSchoolLogin() + " " + group.getName() + " " + schoo
 		return PersistenceFacade.instance().updateLogo(c);
 	}
 	
+	public String selectSco(String scoid) {
+		int id = Integer.parseInt(scoid); // In dwo-appengine id = scoid
+		try {
+			Sco sco = (Sco) PersistenceFacade.instance().get(id, Sco.class);
+			GuiCreator.instance().getMainPanel().getCenter().select(sco);
+			return "true";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "false";
+		}
+	}
+	
 }
