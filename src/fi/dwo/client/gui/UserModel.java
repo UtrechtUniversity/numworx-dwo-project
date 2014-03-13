@@ -12,6 +12,7 @@ import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.RegisterException;
+import fi.dwo.client.system.TextMapper;
 
 class UserModel extends AbstractTableModel {
 
@@ -71,12 +72,12 @@ class UserModel extends AbstractTableModel {
 
 	public String getColumnName(int col) {
 		switch(col) {
-		case 1: return "Username";
-		case 0: return "Name";
-		case 2: return "Login as";
-		case 3: return "Password";
-		case 4: return "Remove";
-		case 5: return "In class";
+		case 1: return TextMapper.getText("Username");
+		case 0: return TextMapper.getText("Name");
+		case 2: return TextMapper.getText("Login as");
+		case 3: return TextMapper.getText("Password");
+		case 4: return TextMapper.getText("Remove");
+		case 5: return TextMapper.getText("In class");
 		}
 		return "";
 	}

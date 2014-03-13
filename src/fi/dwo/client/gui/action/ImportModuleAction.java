@@ -47,7 +47,7 @@ public class ImportModuleAction extends GuiAction {
 	}
 
 	public ImportModuleAction() {
-		super("Import");
+		super(TextMapper.getText("Import"));
 		putValue(LONG_DESCRIPTION, TextMapper.getText(TextMapper.GUIA_INSERT_SCOS));
 		setEnabled(DwoHelper.isSecure());  // disable in geval van applet.
 		Clipboard.addPropertyChangeListener("selection", this);
@@ -55,7 +55,7 @@ public class ImportModuleAction extends GuiAction {
 	}
 
 	public ImportModuleAction(Course course) {
-		super("Import");
+		super(TextMapper.getText("Import"));
 		putValue(LONG_DESCRIPTION, TextMapper.getText(TextMapper.GUIA_INSERT_SCOS));
 		setEnabled(DwoHelper.isSecure());  // disable in geval van applet.
 		this.course = course;

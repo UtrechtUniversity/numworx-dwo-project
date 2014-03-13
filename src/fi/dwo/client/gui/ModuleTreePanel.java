@@ -439,7 +439,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 	}
 
 	protected void createCloseBtn(Box toolbar) {
-		ip = new IconizedPanel("Modules");
+		ip = new IconizedPanel(TextMapper.getText(TextMapper.GUIMNU_MAIN_MENU));
 		JButton closeBtn = new JButton(ip.getCloseAction()); // TODO icon..
 		closeBtn.setBorderPainted(false);
 		closeBtn.setContentAreaFilled(false);

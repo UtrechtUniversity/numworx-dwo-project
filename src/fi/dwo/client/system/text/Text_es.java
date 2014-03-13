@@ -26,7 +26,8 @@ public class Text_es extends ListResourceBundle {
          { TextMapper.EXR_WRONG_SECOND_PASSWORD, "Las contraseñas proporcionadas no coinciden" },
          { TextMapper.EXR_WRONG_USERNAME_PASSWORD, "No se ha encontrado un usuario con este nombre y contraseña de usuario" },
          { TextMapper.EXR_UNKNOWN_SCHOOLGROUP, "Combinación de Institución / grupo / contraseña desconocida" },
-         { TextMapper.EXR_MANDATORY, "{0} de {1} se han completado. Este es un campo obligatorio"},
+         { TextMapper.EXR_MANDATORY, "El campo ''{0}'' no está completo." },
+        	// "{0} de {1} se han completado. Este es un campo obligatorio"},
          { TextMapper.EXR_WRONG_FORMAT, "{0} de {1} contiene caracteres no aceptados" },
          { TextMapper.EXR_WRONG_EMAILFORMAT, "{0} de {1} es incorrecto" },
          { TextMapper.EXC_CLASS_EXISTS, "Esta clase ya existe" },
@@ -62,9 +63,9 @@ public class Text_es extends ListResourceBundle {
 		 { TextMapper.GUIR_RE_PASSWORD, "Confirma tu contraseña" },
 
 		 { TextMapper.GUIR_FIRSTNAME, "Nombre" },
-		 { TextMapper.GUIR_MIDDLENAME, "Primer apellido" },
-		 { TextMapper.GUIR_LASTNAME, "Segundo apellido" },
-		 { TextMapper.GUIR_EMAIL, "Dirección de correo electrónico" },
+		 { TextMapper.GUIR_MIDDLENAME, "Prefijo" },
+		 { TextMapper.GUIR_LASTNAME, "Apellido" },
+		 { TextMapper.GUIR_EMAIL, "Correo electrónico" },
 
 		 { TextMapper.GUIR_SCHOOLLOGIN, "Nombre del centro educativo " },
 		 { TextMapper.GUIR_SCHOOLGROUP, "Yo soy" },
@@ -140,9 +141,9 @@ public class Text_es extends ListResourceBundle {
             { TextMapper.GUIP_RE_PASSWORD, "Confirmar contraseña" },
 
             { TextMapper.GUIP_FIRSTNAME, "Nombre" },
-            { TextMapper.GUIP_MIDDLENAME, "Primer apellido" },
-            { TextMapper.GUIP_LASTNAME, "Segundo apellido" },
-            { TextMapper.GUIP_EMAIL, "Dirección de correo electrónico" },
+            { TextMapper.GUIP_MIDDLENAME, "Prefijo" },
+            { TextMapper.GUIP_LASTNAME, "Apellido" },
+            { TextMapper.GUIP_EMAIL, "Correo electrónico" },
 
             { TextMapper.GUIP_SCHOOLLOGIN, "Nombre del centro educativo " },
             { TextMapper.GUIP_SCHOOLGROUP, "Yo soy" },
@@ -192,7 +193,7 @@ public class Text_es extends ListResourceBundle {
 
          { TextMapper.GUIC_TLTP_DELETE_CLASS, "Borrar clase {0} "},
          { TextMapper.GUIC_TLTP_EDIT_CLASS, "Editar el nombre de la clase"},
-         { TextMapper.GUIC_TLTP_USERS_CLASS, "Estudiantes en la clase{0}"},
+         { TextMapper.GUIC_TLTP_USERS_CLASS, "Estudiantes en la clase {0}"},
 
          ////peter
          { TextMapper.GUIC_TLTP_ASSIGN_CLASS, "Asignar módulos a la clase {0}"},
@@ -255,8 +256,8 @@ public class Text_es extends ListResourceBundle {
 
          { TextMapper.LG_SCO_NAME , "Actividad {0}"},
 
-         { TextMapper.GUIC_ADD_COURSE, "Añadir nuevo módulo"},
-         { TextMapper.GUIC_ADD_MAP, "Agregar una nueva carpeta" },
+         { TextMapper.GUIC_ADD_COURSE, "Añadir un nuevo módulo"},
+         { TextMapper.GUIC_ADD_MAP, "Añadir una nueva carpeta" },
          { TextMapper.GUIC_COURSE_MANAGEMENT, "Gestión del módulo"},
 
          { TextMapper.GUIC_TLTP_DELETE_COURSE, "Borrar módulo {0}"},
@@ -328,13 +329,18 @@ public class Text_es extends ListResourceBundle {
          
          { TextMapper.GUIPA_PARAMS_OF_SCO, "Parámetros ({0})"},
          
-         { "cortar", "Cortar" },
-         { "copiar" , "Copiar" },
-         { "pegar", "Pegar"},
-         { "borrar", "Borrar" },
-         { "editar", "Editar" },
-         { "archivo", "Archivo" },
-         { "renombrar", "Renombrar" },
+         { "Menu", "Menú" },
+         { "cut", "Cortar" },
+         { "copy" , "Copiar" },
+         { "paste", "Pegar"},
+         { "delete", "Eliminar" },
+         { "edit", "Editar" },
+         { "file", "Archivo" },
+         { "rename", "Cambiar el nombre" },
+         
+         { "Import", "Importar" },
+         { "Backup module", "Copia de seguridad del módulo" },
+
 
          { TextMapper.GUIA_INSERT_SCOS, "Insertar actividades de la copia de seguridad"},
          { TextMapper.GUIH_STOP_EDIT, "Detener la edición" },
@@ -391,6 +397,23 @@ public class Text_es extends ListResourceBundle {
 		  { TextMapper.GUIEID_MSG2, "<html>Deseo participar, compartir y hacerme visible como centro educativo en esta lista"},
 		  { TextMapper.GUIEID_MSG3, "<html>(1) Selecciona los módulos<br>(2) Selecciona el centro educativo<br><br>Los módulos seleccionados están disponibles<br>para los centros educativos seleccionados." },
 
+		  { "leerlingen ook", "los alumnos"},
+		  { TextMapper.GUIUMP_REMOVE_CLASS, "Eliminar todos los estudiantes de la clase" },
+		  { TextMapper.GUIUMP_ALL_STUDENTS, "Eliminar todos los estudiantes" },
+		  { TextMapper.GUIH_SETTINGS	,"Configuración escolar"},
+		  { TextMapper.GUIC_SETTINGS, "Configuración del centro educativo"},
+		  { TextMapper.GUIC_SETTINGS_STUDENT, "Los estudiantes escogen su clase"},
+		  { TextMapper.GUIC_SETTINGS_TEACHER, "Los profesores pueden escoger la clase para sus alumnos"},
+		  { TextMapper.GUIC_SETTINGS_MODULE, "Los profesores pueden modificar los módulos"},
+
+		  {"Name", "Nombre"},
+		  {"Username", "Usuario"},
+		  {"Login as", "Registrado como"},
+		  {"Password", "Contraseña"},
+		  {"Remove", "Eliminar"},
+		  {"In class", "En clase"},
+		  { "Module", "Módulo" },
+		  
 };
 
  public Text_es() {

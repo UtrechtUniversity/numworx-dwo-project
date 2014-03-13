@@ -380,7 +380,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			case 4: return TextMapper.getText("vanaf");
 			case 5: return TextMapper.getText("tot aan");
 			case 0: return "";
-			case 1: return "Module";
+			case 1: return TextMapper.getText("Module");
 			case 2: return TextMapper.getText("Ll ggvns");
 			}
 			return super.getColumnName(column);

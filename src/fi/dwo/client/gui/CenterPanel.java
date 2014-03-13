@@ -118,7 +118,7 @@ public class CenterPanel extends JPanel implements CourseContainer {
         }
 // START INKLAPBAAR MENU 
          window = centermainSub; // alternatief
-         ip = new IconizedPanel("Menu");
+         ip = new IconizedPanel(TextMapper.getText("Menu"));
 if(iconizer) {
 		MAIN_BORDER = BorderFactory.createEmptyBorder(0, 0, 0, 0);
      	setBorder(MAIN_BORDER);

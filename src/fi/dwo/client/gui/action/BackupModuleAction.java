@@ -18,6 +18,7 @@ import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.persistence.DbAccessCreator;
+import fi.dwo.client.system.TextMapper;
 import fi.dwo.server.form.DWOFile;
 
 public class BackupModuleAction extends GuiAction {
@@ -28,22 +29,22 @@ public class BackupModuleAction extends GuiAction {
 	private String dir;
 	
 	public BackupModuleAction(Course course) {
-		super("Backup module");
+		super(TextMapper.getText("Backup module"));
 		setEnabled(DwoHelper.isSecure());
 		if( isEnabled() ) dir = System.getProperty("user.dir", ".");
-		tip = "Backup module";
+		tip = TextMapper.getText("Backup module");
 		this.course = course;
-		tip = "Backup activiteiten van module " + course;
+		tip = "Backup activiteiten van module " + course;  // TODO vertalen
 		putValue(Action.LONG_DESCRIPTION, tip);
 	}
 
 	private Course course;
 	
 	public BackupModuleAction() {
-		super("Backup module");
+		super(TextMapper.getText("Backup module"));
 		setEnabled(DwoHelper.isSecure());
 		if( isEnabled() ) dir = System.getProperty("user.dir", ".");
-		tip = "Backup module";
+		tip = TextMapper.getText("Backup module");
 		Clipboard.addPropertyChangeListener("selection", this);
 		setEnabled(false);
 	}
@@ -52,7 +53,7 @@ public class BackupModuleAction extends GuiAction {
 		try {
 			if(course == null && Clipboard.getSelection() instanceof Course)
 			{
-				tip = "Backup activiteiten van module " + Clipboard.getSelection();
+				tip = "Backup activiteiten van module " + Clipboard.getSelection(); // TODO vertalen
 				export( (Course)Clipboard.getSelection());
 			}
 			else if(course != null)

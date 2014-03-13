@@ -401,7 +401,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 
 		public String getColumnName(int column) {
 			switch(column) {
-			case 1:  return "Module";
+			case 1:  return TextMapper.getText("Module");
 			case 0: 
 			case 2:  return "";
 			}
@@ -499,7 +499,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 			case 0:
 				return "";
 			case 1:
-				return "Module";
+				return TextMapper.getText("Module");
 			}
 			return super.getColumnName(column);
 		}
