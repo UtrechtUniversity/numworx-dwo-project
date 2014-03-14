@@ -414,6 +414,9 @@ public class Text_es extends ListResourceBundle {
 		  {"In class", "En clase"},
 		  { "Module", "Módulo" },
 		  
+	      { TextMapper.DWOAPPLET_EXISTS, "¡There is already a DME!"},
+
+		  
 };
 
  public Text_es() {

@@ -41,6 +41,7 @@ public class CourseManagementAction extends GuiAction {
 		}
 		CenterPanel center = getCenter();
         center.setStrategy(new NullStrategy());
+        center.getMenu().setEditing(true);
         center.loadCenter(cp);
         GuiCreatorTeacher.instance().setReady();           
 	}

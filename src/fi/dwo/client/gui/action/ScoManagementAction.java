@@ -29,6 +29,7 @@ public class ScoManagementAction extends GuiAction {
 		cp = GuiCreatorTeacher.instance().getScoManagementPanel(course);
 		CenterPanel center = getCenter();
         center.setStrategy(new NullStrategy());
+        center.getMenu().setEditing(true);
         center.loadCenter(cp);
         GuiCreatorTeacher.instance().setReady();           
 	}

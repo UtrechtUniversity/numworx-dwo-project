@@ -23,6 +23,7 @@ public class ScoParameterAction extends GuiAction {
 	public void actionPerformed(ActionEvent arg0) {
 		GuiCreatorTeacher.instance().loadParameterManagementPanel(sco);
 		CenterPanel center = getCenter();
+		center.getMenu().setEditing(true);
         center.setStrategy(new NullStrategy());
         GuiCreatorTeacher.instance().setReady();           
 	}

@@ -327,6 +327,8 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
     		saveSco();
     	}	
     	sco.setEditor(null);
+    	center.getMenu().setEditing(false);
+    	
     }
 
     /**
@@ -390,6 +392,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         	if(editMode)
         		editComponent.end();
         	center.setStrategy(null);
+        	center.getMenu().setEditing(false);
         	center.select(sco);
         	return;
         }
@@ -488,7 +491,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 // Deze tekst is m.i. niet helemaal lekker geformuleerd. Wim
         if (
         		!(compareMap(tmp, old)) &&
-        		((result = confirm(message)) == JOptionPane.YES_OPTION || result == JOptionPane.CANCEL_OPTION)) {
+        		((result = confirm(message)) == JOptionPane.YES_OPTION || result == 3)) {
         	final GuiCreator instance = GuiCreator.instance();
 			instance.setWait();setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			sco.setLaunchdata(tmp);
@@ -536,8 +539,8 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 	 */
 	private int confirm(String message) {
 		if(!GuiConstants.GUI_SCOUPDATE_UNSAFE)
-			return JOptionPane.showConfirmDialog(this, message, TextMapper.getText(TextMapper.GUIPA_MSG_TTL_PARAM_SAVE), JOptionPane.YES_NO_OPTION);
-		Object[] options = new Object[] { "Ja", "Nee", "Wel opslaan, niet verwijderen" };
+			return JOptionPane.showConfirmDialog(this, message, TextMapper.getText(TextMapper.GUIPA_MSG_TTL_PARAM_SAVE), JOptionPane.YES_NO_CANCEL_OPTION);
+		Object[] options = new Object[] { "Ja", "Nee", "Cancel", "Wel opslaan, niet verwijderen" };
 		return JOptionPane.showOptionDialog(this, message, TextMapper.getText(TextMapper.GUIPA_MSG_TTL_PARAM_SAVE), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options , null);
 	}
 

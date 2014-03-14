@@ -389,6 +389,8 @@ public class Text_fa extends ListResourceBundle {
 			   "and can be used at your own school." },
 		  { TextMapper.GUIEID_MSG2, "<html>I wish to participate in this way of sharing and become visible as school in the lists"},
 		  { TextMapper.GUIEID_MSG3, "<html>(1) Select modules<br>(2) Select schools<br><br>The selected modules are available<br>to the selected schools." },
+		
+		  { TextMapper.DWOAPPLET_EXISTS, "There is already a DME!"},
 
 };
 

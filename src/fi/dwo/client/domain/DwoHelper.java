@@ -21,6 +21,7 @@ import javax.swing.JOptionPane;
 import netscape.javascript.JSObject;
 
 import fi.dwo.client.gui.MainPanel;
+import fi.dwo.client.system.TextMapper;
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.mainframe.MainFrame;
 
@@ -98,8 +99,7 @@ public final class DwoHelper {
 // Voor Peter: in comment zetten
     	if (DwoHelper.applet != null)
     	{
-    		JOptionPane.showMessageDialog(applet, "Er is al een DWO!");
-    		//throw new RuntimeException("Er is al een DWO"); // TODO mooier maken?
+    		JOptionPane.showMessageDialog(applet, TextMapper.getText(TextMapper.DWOAPPLET_EXISTS));
     		return false;
     	}
 // Einde

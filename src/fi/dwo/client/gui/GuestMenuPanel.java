@@ -182,6 +182,10 @@ public class GuestMenuPanel extends JPanel implements ActionListener {
     	mainMenuButton.setVisible(false);
     	invalidate();
     }
+
+    public void setEditing(boolean b) {
+    	
+    }
     
 
 }

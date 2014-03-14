@@ -7,8 +7,11 @@ import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.SQLException;
 
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.Icon;
@@ -25,6 +28,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseMap;
+import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.SchoolClass;
 import fi.dwo.client.domain.Sco;
@@ -64,6 +68,7 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 	protected void createMenuButtons() {
 		super.createMenuButtons();
 		createGap();
+		
         /* Add ClassManagement button */
         classManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_CLASS_MANAGEMENT));
         classManagementButton.addActionListener(this);
@@ -103,7 +108,11 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 
         createRuler();
         Box classBox = Box.createVerticalBox();
-        classPanel = new JScrollPane(classBox);
+        classPanel = new JScrollPane(classBox)  { public void setVisible(boolean b) { 
+        	
+        	super.setVisible(b);
+        	
+        } } ;
         classPanel.setDoubleBuffered(false);
         classPanel.setOpaque(false);
         classPanel.getViewport().setOpaque(false);
@@ -147,6 +156,8 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent e) {
+    	if(!isEnabled()) return;
+    	
         Object src = e.getSource();
 		GuiCreator instance = GuiCreator.instance();
         if(src == mainMenuButton)
@@ -180,10 +191,12 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
     
     
     public void hideClassList() {
+    	if(isEnabled())
         classPanel.setVisible(false);
     }
     
     public void showClassList() {
+    	if(isEnabled())
         classPanel.setVisible(true);      
     }
 
@@ -227,6 +240,21 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 
 	public JPopupMenu nodeAction(CourseMap node) {
 			return delegate.nodeAction(node);
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see fi.dwo.client.gui.GuestMenuPanel#setEditing(boolean)
+	 */
+	@Override
+	public void setEditing(boolean b) {
+		boolean enabled = !b;
+		setEnabled(enabled);
+		for(int i= 0; i < getComponentCount(); i++) {
+			getComponent(i).setEnabled(enabled);
+		}
+		classPanel.setVisible(!b);
+		//repaint();
 		
 	}
 

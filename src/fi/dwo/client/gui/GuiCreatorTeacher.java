@@ -30,6 +30,7 @@ import fi.dwo.client.gui.action.CourseManagementAction;
 import fi.dwo.client.gui.action.ScoManagementAction;
 import fi.dwo.client.gui.action.ScoParameterAction;
 import fi.dwo.client.persistence.PersistenceFacade;
+import fi.dwo.client.system.TextMapper;
 
 /**
  * This class implements Teacher-specific methods of the GuiCreator.
@@ -415,7 +416,7 @@ public class GuiCreatorTeacher extends GuiCreator {
 		if(Sco.BROWSE.equals(lessonMode))
 		{
 			Box box = Box.createHorizontalBox();
-			JLabel lab = new JLabel("PREVIEW");
+			JLabel lab = new JLabel(TextMapper.getText("PREVIEW"));
 			lab.setVerticalAlignment(JLabel.BOTTOM);
 			lab.setForeground(Color.red);
 			lab.setFont(new Font("SansSerif", Font.BOLD, 20));

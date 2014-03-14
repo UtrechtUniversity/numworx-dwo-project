@@ -400,6 +400,7 @@ public class Text_in extends ListResourceBundle {
  // google translate...
 		 { TextMapper.GUICDLG_LICENCE, "The subscription for ''{0}'' has expired!\nNew subscribers can no longer be added.\nRefer to the contact person for the DME subscription at school." },
 
+		 { TextMapper.DWOAPPLET_EXISTS, "There is already a DME!"},
 
 
 };

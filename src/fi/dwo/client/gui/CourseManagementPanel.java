@@ -709,6 +709,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
      */
     public void end() {
 		center.setStrategy(null);
+		center.getMenu().setEditing(false);
 
         if(updown && DWO.SEQUENCE)
         {    	

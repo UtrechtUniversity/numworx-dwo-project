@@ -694,7 +694,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         {	course.setDescription(pane.getText());
         	GuiCreator.instance().updateCourse(course);
         }
-        
+        center.getMenu().setEditing(false);
 		center.setStrategy(null);
     }
 

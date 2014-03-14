@@ -427,7 +427,7 @@ public abstract class TextMapper {
 
 	public static final String GUICDLG_LICENCE = "GUICDLG_LICENCE";
 	
-    
+    public static final String DWOAPPLET_EXISTS = "DWOAPPLET_EXISTS";
     private static ResourceBundle rb;
 
     private static String language;
