@@ -2210,4 +2210,14 @@ System.out.println(school.getSchoolLogin() + " " + group.getName() + " " + schoo
 		}
 	}
 	
+	private static final String SELECT = "select:";
+	public String interpret(String command) {
+		if( command .startsWith(SELECT))
+			return selectSco( command.substring(SELECT.length()));
+		
+		return "false";
+	}
+	
+	
+	
 }
