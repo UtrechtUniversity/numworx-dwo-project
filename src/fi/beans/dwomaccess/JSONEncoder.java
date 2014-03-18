@@ -1,7 +1,7 @@
 package fi.beans.dwomaccess;
 
-import java.awt.Color;
-import java.awt.Font;
+//import java.awt.Color;
+//import java.awt.Font;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.URI;
