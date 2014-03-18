@@ -246,7 +246,6 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.gui.GuestMenuPanel#setEditing(boolean)
 	 */
-	@Override
 	public void setEditing(boolean b) {
 		boolean enabled = !b;
 		setEnabled(enabled);
