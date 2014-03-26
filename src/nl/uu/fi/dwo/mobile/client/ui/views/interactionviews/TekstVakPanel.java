@@ -104,7 +104,7 @@ public class TekstVakPanel implements InteractionView
 	CssColor grijs = CssColor.make(128, 128, 128);
 	int randDikte = 0;
 	private boolean popup;
-	private boolean tableBorders;
+	//private boolean tableBorders;
 	private LayoutPanel[] horizontalBorders;
 	private LayoutPanel[] verticalBorders;
 	//private Canvas tabelRandenCanvas;
@@ -331,8 +331,9 @@ public class TekstVakPanel implements InteractionView
 		mainPanel = new Grid(hoogtes.size(), breedtes.size());
 		//mainPanel.getElement().getStyle().setBackgroundColor(CssColor.make(255, 255, 0).toString());
 		mainPanel.getElement().getStyle().setProperty("borderSpacing", "" + cellSpaceColumn + "px " + cellSpaceRow + "px");
+		//mainPanel.getElement().getStyle().setProperty("borderSpacing", cellSpaceRow + "px" + cellSpaceColumn + "px");
 		
-		if (breedtes.size() > 1)
+		//if (breedtes.size() > 1)
 			mainPanel.getElement().getStyle().setProperty("margin", "" + (-cellSpaceRow) + "px " + (-cellSpaceColumn) + "px");
 		
 		//mainPanel.getElement().getStyle().setBorderStyle(BorderStyle.DASHED);
@@ -346,6 +347,7 @@ public class TekstVakPanel implements InteractionView
 			for (int j = 0; j < breedtes.size(); j++)
 			{	double tekstVakBreedte = (Double) breedtes.get(j) - 2 * cellMarge;
 				double tekstVakHoogte = (Double) hoogtes.get(i) - 2 * bovenMarge;
+				
 				
 				tekstHulsVakken[i][j] = new LayoutPanel();
 				//tekstHulsVakken[i][j].getElement().getStyle().setBackgroundColor(CssColor.make(255, 0, 0).toString());
@@ -394,9 +396,9 @@ public class TekstVakPanel implements InteractionView
 				VerticalPanel vPanel = new VerticalPanel();
 				//vPanel.getElement().getStyle().setBackgroundColor(CssColor.make(0, 0, 255).toString());
 				
+				vPanel.getElement().getStyle().setProperty("margin", "" + bovenMarge + "px " + cellMarge + "px");
 				if(centerV)
 					vPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-				vPanel.getElement().getStyle().setProperty("margin", "" + bovenMarge + "px " + cellMarge + "px");
 				
 				/*
 				//Handig voor bekijken positionering
@@ -409,6 +411,8 @@ public class TekstVakPanel implements InteractionView
 				vPanel.setSize(tekstVakBreedte + "px", tekstVakHoogte + "px");
 				//tekstHulsVakken[i][j].add(tekstVakken[i][j]);
 				tekstHulsVakken[i][j].add(vPanel);
+				
+				
 				//tekstHulsVakken[i][j].setWidgetLeftRight(vPanel, )
 				//tekstHulsVakken[i][j].setWidgetTopBottom(tekstVakken[i][j], (tekstHulsVakken[i][j].getOffsetHeight() - tekstVakken[i][j].getOffsetHeight())/2, Style.Unit.PX,
 				//		(tekstHulsVakken[i][j].getOffsetHeight() - tekstVakken[i][j].getOffsetHeight())/2, Style.Unit.PX);
@@ -443,7 +447,7 @@ public class TekstVakPanel implements InteractionView
 		{
 			for (int j = 0; j < breedtes.size(); j++)
 			{
-				tekstVakken[i][j].setSize("" + (int) Math.round((Double) breedtes.get(j)) + "px", "" + (int) Math.round((Double) hoogtes.get(i)) + "px");
+				tekstVakken[i][j].setSize("" + (int) (Math.round((Double) breedtes.get(j)) - - 2 * cellMarge)  + "px", "" + (int) Math.round((Double) hoogtes.get(i)) + "px");
 				tekstHulsVakken[i][j].setSize("" + (int) Math.round((Double) breedtes.get(j)) + "px", "" + (int) Math.round((Double) hoogtes.get(i)) + "px");
 			}
 		}
@@ -656,7 +660,7 @@ public class TekstVakPanel implements InteractionView
 			{		
 				Widget a = (((InteractionView) currentObject).asWidget());
 				a.getElement().getStyle().setProperty("display", "inline-block");
-				a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
+				//a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
 				if(currentObject instanceof TekstVakPanel)
 				{
 					int h = ((TekstVakPanel)currentObject).hoogte;

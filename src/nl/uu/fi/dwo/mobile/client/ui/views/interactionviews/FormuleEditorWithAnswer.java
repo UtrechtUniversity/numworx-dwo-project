@@ -79,10 +79,14 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			checkimg.getElement().getStyle().setProperty("marginLeft", "3px");
 			if (fe == null)
 			{
-				sp.getElement().getStyle().setProperty("width", breedte + "px");
+				sp.getElement().getStyle().setProperty("width", (breedte - 9) + "px");
 				sp.getElement().getStyle().setProperty("border", "1px solid gray");
-				sp.getElement().getStyle().setPaddingTop(3, Style.Unit.PX);
-				sp.getElement().getStyle().setProperty("backgroundColor", "#e9e9e9");
+				//(Weggehaald Sietske) sp.getElement().getStyle().setPaddingTop(3, Style.Unit.PX);
+				sp.getElement().getStyle().setMarginTop(3, Style.Unit.PX);
+				sp.getElement().getStyle().setPaddingLeft(3, Style.Unit.PX);
+				sp.getElement().getStyle().setPaddingRight(3, Style.Unit.PX);
+				//(Weggehaald Sietske) sp.getElement().getStyle().setProperty("backgroundColor", "#e9e9e9");
+				sp.getElement().getStyle().setProperty("backgroundColor", "white");
 				//this.getMainRegel().getCanvas().getElement().getStyle().setProperty("marginTop", "3px");
 				//this.getMainRegel().getCanvas().getElement().getStyle().setProperty("marginBottom", "0px");
 			}
