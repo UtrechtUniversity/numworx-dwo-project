@@ -9,7 +9,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
-
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.Composite;
@@ -19,6 +18,8 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.BorderStyle;
 
 public class PopupButton extends Composite implements ClickHandler {
 
@@ -39,6 +40,8 @@ public class PopupButton extends Composite implements ClickHandler {
 	public PopupButton(IsWidget content, Image image, InteractionView view) {
 		Image img = image;
 		btn = new PushButton(img);
+		btn.getElement().getStyle().setPadding(0, Style.Unit.PX);
+		btn.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
 		btn.addClickHandler(this);
 		this.content = content;
 		this.view = view;
