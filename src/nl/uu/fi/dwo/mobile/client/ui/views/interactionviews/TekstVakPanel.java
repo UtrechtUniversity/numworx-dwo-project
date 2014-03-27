@@ -661,7 +661,7 @@ public class TekstVakPanel implements InteractionView
 				Widget a = (((InteractionView) currentObject).asWidget());
 				a.getElement().getStyle().setProperty("display", "inline-block");
 				//a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
-				if(currentObject instanceof TekstVakPanel)
+				if(currentObject instanceof TekstVakPanel && !(a instanceof PopupButton))
 				{
 					int h = ((TekstVakPanel)currentObject).hoogte;
 					int tekstGrootte = ((TekstVakPanel) currentObject).font_size;
