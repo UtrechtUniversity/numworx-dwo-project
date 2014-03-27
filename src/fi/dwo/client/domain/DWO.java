@@ -532,6 +532,8 @@ private static boolean isValidEmail(String email) {
     	"@soliscom.uu.nl"
     };
 
+	private static final String LEARNER_ID = "cmi.learner_id";
+
 	public static boolean SEQUENCE = true;
     
 	/**
@@ -1351,6 +1353,11 @@ private static boolean isValidEmail(String email) {
      * @return The value representing for the specified sco, user and parameter.
      */
     public String LMSGetValue(ScoBase sco, User user, String iDataModelElement) {
+    	if(LEARNER_ID.equals(iDataModelElement))
+    	{
+    		return getUser().getUsername();
+    	}
+    	
         if(iDataModelElement.equals(SCORM12APIInterface.USER_GROUP)) {
             if(User.getCurrentUser() == null || User.getCurrentUser() instanceof Guest) {
                 return SCORM12APIInterface.UG_GUEST;
