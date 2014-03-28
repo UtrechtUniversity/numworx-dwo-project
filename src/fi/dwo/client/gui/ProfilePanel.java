@@ -216,7 +216,8 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
         p.add(l);
 
         /* Middlename label */
-        l = new JLabel(TextMapper.getText(TextMapper.GUIP_MIDDLENAME) + ":");
+        String middleNameLabel = TextMapper.getText(TextMapper.GUIP_MIDDLENAME);
+		l = new JLabel(middleNameLabel + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -230,26 +231,32 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
         middlename.setBounds(160, 53, 120, 20);
         middlename.setEditable(!user.isReadonly());
         p.add(middlename);
+// skip middlename for languages that do not support it.
+        boolean visible = user.getMiddleName().length()>0 || middleNameLabel.length()>0;
+        middlename.setVisible(visible);
+        l.setVisible(visible);
+        int v = visible?0:25;
+        
 
         /* Lastname label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIP_LASTNAME) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
-        l.setLocation(10, 80);
+        l.setLocation(10, 80-v);
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
         p.add(l);
 
         /* Lastname field */
         lastname = new JTextField();
         lastname.setText(user.getLastName());
-        lastname.setBounds(160, 78, 120, 20);
+        lastname.setBounds(160, 78-v, 120, 20);
         lastname.setEditable(!user.isReadonly());
         p.add(lastname);
 
         /* Lastname mandatory label */
         l = createMandatoryLabel();
-        l.setLocation(285, 78);
+        l.setLocation(285, 78-v);
         p.add(l);
 
         /* Email label */
@@ -257,20 +264,20 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
-        l.setLocation(10, 105);
+        l.setLocation(10, 105-v);
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
         p.add(l);
 
         /* Email field */
         email = new JTextField();
         email.setText(user.getEmail());
-        email.setBounds(160, 103, 120, 20);
+        email.setBounds(160, 103-v, 120, 20);
         email.setEditable(!user.isReadonly());
         p.add(email);
 
         /* Email mandatory label */
         l = createMandatoryLabel();
-        l.setLocation(285, 103);
+        l.setLocation(285, 103-v);
         p.add(l);
         Container c = p;
 // readonly users are unable to set school stuff.

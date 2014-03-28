@@ -63,7 +63,7 @@ public class Text_es extends ListResourceBundle {
 		 { TextMapper.GUIR_RE_PASSWORD, "Confirma tu contraseña" },
 
 		 { TextMapper.GUIR_FIRSTNAME, "Nombre" },
-		 { TextMapper.GUIR_MIDDLENAME, "Prefijo" },
+		 { TextMapper.GUIR_MIDDLENAME, "" },
 		 { TextMapper.GUIR_LASTNAME, "Apellido" },
 		 { TextMapper.GUIR_EMAIL, "Correo electrónico" },
 
@@ -141,7 +141,7 @@ public class Text_es extends ListResourceBundle {
             { TextMapper.GUIP_RE_PASSWORD, "Confirmar contraseña" },
 
             { TextMapper.GUIP_FIRSTNAME, "Nombre" },
-            { TextMapper.GUIP_MIDDLENAME, "Prefijo" },
+            { TextMapper.GUIP_MIDDLENAME, "" },
             { TextMapper.GUIP_LASTNAME, "Apellido" },
             { TextMapper.GUIP_EMAIL, "Correo electrónico" },
 

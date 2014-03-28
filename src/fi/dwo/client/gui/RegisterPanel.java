@@ -216,36 +216,42 @@ public class RegisterPanel extends ContentPanel implements ActionListener {
         p.add(l);
 
         /* Middlename label */
-        l = new JLabel(TextMapper.getText(TextMapper.GUIR_MIDDLENAME) + ":");
+        String middleNameLabel = TextMapper.getText(TextMapper.GUIR_MIDDLENAME);
+		l = new JLabel(middleNameLabel + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 55);
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
         p.add(l);
-
+        
         /* Middlename field */
         middlename = new JTextField();
         middlename.setBounds(160, 53, 120, 20);
         p.add(middlename);
-
+// if no middlename, skip it.        
+        boolean visible = middleNameLabel.length()>0;
+        l.setVisible(visible);
+        middlename.setVisible(visible);
+        int v = visible?0:25;
+        
         /* Lastname label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_LASTNAME) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
-        l.setLocation(10, 80);
+        l.setLocation(10, 80-v);
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
         p.add(l);
 
         /* Lastname field */
         lastname = new JTextField();
-        lastname.setBounds(160, 78, 120, 20);
+        lastname.setBounds(160, 78-v, 120, 20);
         p.add(lastname);
 
         /* Lastname mandatory label */
         l = createMandatoryLabel();
-        l.setLocation(285, 78);
+        l.setLocation(285, 78-v);
         p.add(l);
 
         /* Email label */
@@ -253,18 +259,18 @@ public class RegisterPanel extends ContentPanel implements ActionListener {
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
-        l.setLocation(10, 105);
+        l.setLocation(10, 105-v);
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
         p.add(l);
 
         /* Email field */
         email = new JTextField();
-        email.setBounds(160, 103, 120, 20);
+        email.setBounds(160, 103-v, 120, 20);
         p.add(email);
 
         /* Email mandatory label */
         l = createMandatoryLabel();
-        l.setLocation(285, 103);
+        l.setLocation(285, 103-v);
         p.add(l);
 
         /* Add School-panel */

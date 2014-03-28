@@ -34,6 +34,7 @@ public class RegisterClassListButton extends JButton implements ActionListener
     
     private Clipboard systemClipboard;
     
+    
     Object[] columnNames = {
     		TextMapper.getText(TextMapper.GUIR_FIRSTNAME),
     		TextMapper.getText(TextMapper.GUIR_MIDDLENAME),
@@ -72,6 +73,20 @@ public class RegisterClassListButton extends JButton implements ActionListener
 	}
 
 	private void initialize() {
+// for languages without middlename
+		if( columnNames[1].toString().length()==0)
+		{
+			Object[] old = columnNames;
+			columnNames = new Object[5];
+			columnNames[0] = old[0];
+			System.arraycopy(old, 2, columnNames, 1, 4);
+			rowData = new Object[][] {{"","","","",""}};
+		}
+		
+		
+		
+		
+		
 		addActionListener(this);
 		try
 		{	systemClipboard = getToolkit().getSystemClipboard ();
@@ -130,7 +145,7 @@ public class RegisterClassListButton extends JButton implements ActionListener
 		 		String[] rowStrings = tempString.split("\n"); // was: StringUtils.split(tempString, "\n");
 		 		String[][] celStrings = new String[rowStrings.length][];
 		 		for(int i=0 ; i<rowStrings.length ; i++)
-		    	{	celStrings[i] = rowStrings[i].split("\t", 6); // was: StringUtils.split(rowStrings[i], "\t");
+		    	{	celStrings[i] = rowStrings[i].split("\t", columnNames.length); // was: StringUtils.split(rowStrings[i], "\t");
 		 			//System.out.println(rowStrings[i]);
 		    	}
 		    	addTableModel.setDataVector(celStrings, columnNames);
@@ -169,7 +184,10 @@ public class RegisterClassListButton extends JButton implements ActionListener
         	frame.setVisible(true);
 		}
 		if(e.getSource().equals(addRowButton))
-		{	Object[] row = {"","","","","",""};
+		{	Object[] row = new Object[columnNames.length];
+			for (int i = 0; i < row.length; i++) {
+				row[i] = "";
+			}
 			addTableModel.addRow(row);
 			frame.pack();
 		}
@@ -183,12 +201,19 @@ public class RegisterClassListButton extends JButton implements ActionListener
 		{	boolean error = false;
         	for(int i=0 ; i<addTableModel.getRowCount() ; i++)
 	    	{
+        		int v = 6 - columnNames.length;
+        		
+        		
         		String firstname = (String)addTableModel.getValueAt(i, 0);
-        		String middlename = (String)addTableModel.getValueAt(i, 1);
-        		String lastname = (String)addTableModel.getValueAt(i, 2);
-        		String username = (String)addTableModel.getValueAt(i, 3);
-        		String password = (String)addTableModel.getValueAt(i, 4);
-        		String email = (String)addTableModel.getValueAt(i, 5);
+        		String middlename = 
+        			v == 0?
+        			(String)addTableModel.getValueAt(i, 1)
+        			: "";
+        		String lastname = (String)addTableModel.getValueAt(i, 2-v);
+        		String username = (String)addTableModel.getValueAt(i, 3-v);
+        		String password = (String)addTableModel.getValueAt(i, 4-v);
+        		String email = (String)addTableModel.getValueAt(i, 5-v);
+
         		String schoollogin = GuiCreator.instance().getUser().getSchool().getSchoolLogin();
         		String schoolpassword = GuiCreator.instance().getUser().getSchool().getPasswd(sg);
         		
