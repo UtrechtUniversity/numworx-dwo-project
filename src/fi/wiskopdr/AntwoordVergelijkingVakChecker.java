@@ -2,6 +2,8 @@ package fi.wiskopdr;
 
 import java.util.*;
 
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 //import fi.beans.ideas.IdeasIF;
 //import fi.beans.ideas.RuleIF;
 //import fi.beans.stringutils.StringUtils;
@@ -179,13 +181,13 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		if (avvCheckerModel.containsKey("stappen"))
 			stappen = ((Boolean) avvCheckerModel.get("stappen")).booleanValue();
 		if (avvCheckerModel.containsKey("puntenGelijkwaardig"))
-			puntenGelijkwaardig = ((Integer) avvCheckerModel.get("puntenGelijkwaardig")).intValue();
+			puntenGelijkwaardig = ((Number) avvCheckerModel.get("puntenGelijkwaardig")).intValue();
 		if (avvCheckerModel.containsKey("puntenExact"))
-			puntenExact = ((Integer) avvCheckerModel.get("puntenExact")).intValue();
+			puntenExact = ((Number) avvCheckerModel.get("puntenExact")).intValue();
 		if (avvCheckerModel.containsKey("puntenVorm"))
-			puntenVorm = ((Integer) avvCheckerModel.get("puntenVorm")).intValue();
+			puntenVorm = ((Number) avvCheckerModel.get("puntenVorm")).intValue();
 		if (avvCheckerModel.containsKey("puntenEindOplossing"))
-			puntenEindOplossing = ((Integer) avvCheckerModel.get("puntenEindOplossing")).intValue();
+			puntenEindOplossing = ((Number) avvCheckerModel.get("puntenEindOplossing")).intValue();
 		if (avvCheckerModel.containsKey("eindOplossingNodig"))
 			eindOplossingNodig = ((Boolean) avvCheckerModel.get("eindOplossingNodig")).booleanValue();
 		if (avvCheckerModel.containsKey("bewerkingKnoppen"))
@@ -254,7 +256,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		if (avvCheckerModel.containsKey("eqTestValueMax"))
 			eqTestValueMax = ((Double) avvCheckerModel.get("eqTestValueMax")).doubleValue();
 		if (avvCheckerModel.containsKey("scoreMax"))
-			scoreMax = ((Integer) avvCheckerModel.get("scoreMax")).intValue();
+			scoreMax = ((Number) avvCheckerModel.get("scoreMax")).intValue();
 		if (avvCheckerModel.containsKey("uitw"))
 			uitw = ((Boolean) avvCheckerModel.get("uitw")).booleanValue();
 		if (avvCheckerModel.containsKey("casAntw"))
@@ -454,10 +456,10 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 			if(h.containsKey("vorm")) vorm = ((Boolean)h.get("vorm")).booleanValue();
 			if(h.containsKey("eindOplossingNodig")) eindOplossingNodig = ((Boolean)h.get("eindOplossingNodig")).booleanValue();
 			if(h.containsKey("exact")) exact = ((Boolean)h.get("exact")).booleanValue();
-			if(h.containsKey("puntenFeedback")) puntenFeedback = ((Integer)h.get("puntenFeedback")).intValue();
+			if(h.containsKey("puntenFeedback")) puntenFeedback = ((Number)h.get("puntenFeedback")).intValue();
 			if(h.containsKey("feedback")) feedback = (String)h.get("feedback");
 			if(h.containsKey("vormString")) vormString = (String)h.get("vormString");
-			if(h.containsKey("goedHalfFout")) goedHalfFout = ((Integer)h.get("goedHalfFout")).intValue();
+			if(h.containsKey("goedHalfFout")) goedHalfFout = ((Number)h.get("goedHalfFout")).intValue();
 			
 		}	
 		exactP = exact;
@@ -511,13 +513,13 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
         if (h.containsKey("diagnose"))
 			diagnose = ((Boolean) h.get("diagnose")).booleanValue();
 		if (h.containsKey("aftrekTip"))
-			aftrekTip = ((Integer) h.get("aftrekTip")).intValue();
+			aftrekTip = ((Number) h.get("aftrekTip")).intValue();
 		if (h.containsKey("aftrekHulp"))
-			aftrekHulp = ((Integer) h.get("aftrekHulp")).intValue();
+			aftrekHulp = ((Number) h.get("aftrekHulp")).intValue();
 		if (h.containsKey("aftrekStap"))
-			aftrekStap = ((Integer) h.get("aftrekStap")).intValue();
+			aftrekStap = ((Number) h.get("aftrekStap")).intValue();
 		if (h.containsKey("aftrekSolve"))
-			aftrekSolve = ((Integer) h.get("aftrekSolve")).intValue();
+			aftrekSolve = ((Number) h.get("aftrekSolve")).intValue();
         
        
 		
