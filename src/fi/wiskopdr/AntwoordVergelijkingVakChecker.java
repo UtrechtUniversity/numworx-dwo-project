@@ -61,7 +61,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 	
 	
 
-	private ArrayList<HashMap<String,Object>> answerModels;
+	private List<Map<String,Object>> answerModels;
 	private String[] randomVarNamen;
 	private HashMap<String,Object> randomVarWaarden;
 	
@@ -104,7 +104,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 	
 	private int ideasPuntenAftrek;
 
-	private HashMap<String,Object> changedTexts = new HashMap<String,Object>();
+	private Map<String,Object> changedTexts = new HashMap<String,Object>();
 
 	private double eqTestValueMin = 0;
 	private double eqTestValueMax = 5;
@@ -124,6 +124,8 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 	
 	public AntwoordVergelijkingVakChecker(HashMap<String,Object> avvCheckerModel, String[] randomVars, HashMap<String,Object> randomValues )
 	{	
+		ObjectMap map = JSONUtilities.wrapMap(avvCheckerModel);
+		
 		randomVarNamen = randomVars;
 		randomVarWaarden = randomValues;
 
@@ -142,13 +144,13 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		boolean abcKnop = false;
 		boolean subKnop = false;
 		boolean subKnopExtra = false;
-		ArrayList<HashMap<String,Object>> answerModels = null;
+		List<Map<String,Object>> answerModels = null;
 		boolean hasFeedback = false;
 		String vormString = "$f@";
 		boolean tips = false;
 		String strategieDomein = "";
 		//int feedbackModus = 0;
-		ArrayList<String> antwoordSubStrings = null;
+		List<String> antwoordSubStrings = null;
 		boolean pijl = true;
 		boolean linStrategieVersie = false;
 		boolean linOefenVersie = false;
@@ -161,8 +163,8 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		boolean tipBijFout = false;
 		boolean feedbackBijFout = false;
 		boolean hulpBijTip = false;
-		HashMap<String,Object> changedTexts = new HashMap<String,Object>();
-		HashMap<String,Object> ideasInstellingen = null;
+		Map<String,Object> changedTexts = new HashMap<String,Object>();
+		Map<String,Object> ideasInstellingen = null;
 		double eqTestValueMin = 0;
 		double eqTestValueMax = 5;
 		int scoreMax = 0;
@@ -170,99 +172,106 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		boolean casAntw = false;
 		boolean boxMetRand = true;
 		
-		if (avvCheckerModel.containsKey("antwoordString"))
-			antwoordString = (String) avvCheckerModel.get("antwoordString");
-		if (avvCheckerModel.containsKey("startString"))
-			startString = (String) avvCheckerModel.get("startString");
-		if (avvCheckerModel.containsKey("vorm"))
-			vorm = ((Boolean) avvCheckerModel.get("vorm")).booleanValue();
-		if (avvCheckerModel.containsKey("exact"))
-			exact = ((Boolean) avvCheckerModel.get("exact")).booleanValue();
-		if (avvCheckerModel.containsKey("stappen"))
-			stappen = ((Boolean) avvCheckerModel.get("stappen")).booleanValue();
-		if (avvCheckerModel.containsKey("puntenGelijkwaardig"))
-			puntenGelijkwaardig = ((Number) avvCheckerModel.get("puntenGelijkwaardig")).intValue();
-		if (avvCheckerModel.containsKey("puntenExact"))
-			puntenExact = ((Number) avvCheckerModel.get("puntenExact")).intValue();
-		if (avvCheckerModel.containsKey("puntenVorm"))
-			puntenVorm = ((Number) avvCheckerModel.get("puntenVorm")).intValue();
-		if (avvCheckerModel.containsKey("puntenEindOplossing"))
-			puntenEindOplossing = ((Number) avvCheckerModel.get("puntenEindOplossing")).intValue();
-		if (avvCheckerModel.containsKey("eindOplossingNodig"))
-			eindOplossingNodig = ((Boolean) avvCheckerModel.get("eindOplossingNodig")).booleanValue();
-		if (avvCheckerModel.containsKey("bewerkingKnoppen"))
-			bewerkingKnoppen = ((Boolean) avvCheckerModel.get("bewerkingKnoppen")).booleanValue();
-		if (avvCheckerModel.containsKey("bewerkingKnoppenExtra"))
-			bewerkingKnoppenExtra = ((Boolean) avvCheckerModel.get("bewerkingKnoppenExtra")).booleanValue();
-		if (avvCheckerModel.containsKey("abcKnop"))
-			abcKnop = ((Boolean) avvCheckerModel.get("abcKnop")).booleanValue();
-		if (avvCheckerModel.containsKey("subKnop"))
-			subKnop = ((Boolean) avvCheckerModel.get("subKnop")).booleanValue();
-		if (avvCheckerModel.containsKey("subKnopExtra"))
-			subKnopExtra = ((Boolean) avvCheckerModel.get("subKnopExtra")).booleanValue();
-		if (avvCheckerModel.containsKey("answerModels"))
-			answerModels = (ArrayList<HashMap<String,Object>>) avvCheckerModel.get("answerModels");
-		if (avvCheckerModel.containsKey("hasFeedback"))
-			hasFeedback = ((Boolean) avvCheckerModel.get("hasFeedback")).booleanValue();
-		if (avvCheckerModel.containsKey("vormString"))
-			vormString = (String) avvCheckerModel.get("vormString");
-		if (avvCheckerModel.containsKey("tips"))
-			tips = ((Boolean) avvCheckerModel.get("tips")).booleanValue();
+		if (map.containsKey("antwoordString"))
+			antwoordString = map.getString("antwoordString");
+		if (map.containsKey("startString"))
+			startString = map.getString("startString");
+		if (map.containsKey("vorm"))
+			vorm = map.getBoolean("vorm");
+		if (map.containsKey("exact"))
+			exact = map.getBoolean("exact");
+		if (map.containsKey("stappen"))
+			stappen = map.getBoolean("stappen");
+		if (map.containsKey("puntenGelijkwaardig"))
+			puntenGelijkwaardig = map.getInt("puntenGelijkwaardig");
+		if (map.containsKey("puntenExact"))
+			puntenExact = map.getInt("puntenExact");
+		if (map.containsKey("puntenVorm"))
+			puntenVorm = map.getInt("puntenVorm");
+		if (map.containsKey("puntenEindOplossing"))
+			puntenEindOplossing = map.getInt("puntenEindOplossing");
+		if (map.containsKey("eindOplossingNodig"))
+			eindOplossingNodig = map.getBoolean("eindOplossingNodig");
+		if (map.containsKey("bewerkingKnoppen"))
+			bewerkingKnoppen = map.getBoolean("bewerkingKnoppen");
+		if (map.containsKey("bewerkingKnoppenExtra"))
+			bewerkingKnoppenExtra = map.getBoolean("bewerkingKnoppenExtra");
+		if (map.containsKey("abcKnop"))
+			abcKnop = map.getBoolean("abcKnop");
+		if (map.containsKey("subKnop"))
+			subKnop = map.getBoolean("subKnop");
+		if (map.containsKey("subKnopExtra"))
+			subKnopExtra = map.getBoolean("subKnopExtra");
+		
+		if(map.containsKey("answerModels"))
+			answerModels = map.getMapList("answerModels");
+		
+		
+		
+		
+		//if (avvCheckerModel.containsKey("answerModels"))
+		//	answerModels = (ArrayList<HashMap<String,Object>>) avvCheckerModel.get("answerModels");
+		if (map.containsKey("hasFeedback"))
+			hasFeedback = map.getBoolean("hasFeedback");
+		if (map.containsKey("vormString"))
+			vormString = map.getString("vormString");
+		if (map.containsKey("tips"))
+			tips = map.getBoolean("tips");
 		if (tips) {
-			if (avvCheckerModel.containsKey("ideasInstellingen"))
-				ideasInstellingen = (HashMap<String,Object>) avvCheckerModel.get("ideasInstellingen");
+			if (map.containsKey("ideasInstellingen"))
+				ideasInstellingen = map.getMap("ideasInstellingen");
 			else { // voor backward comp.
-				if (avvCheckerModel.containsKey("tipOpBalk"))
-					tipOpBalk = ((Boolean) avvCheckerModel.get("tipOpBalk")).booleanValue();
-				if (avvCheckerModel.containsKey("hulpOpBalk"))
-					hulpOpBalk = ((Boolean) avvCheckerModel.get("hulpOpBalk")).booleanValue();
-				if (avvCheckerModel.containsKey("stapOpBalk"))
-					stapOpBalk = ((Boolean) avvCheckerModel.get("stapOpBalk")).booleanValue();
-				if (avvCheckerModel.containsKey("solveOpBalk"))
-					solveOpBalk = ((Boolean) avvCheckerModel.get("solveOpBalk")).booleanValue();
-				if (avvCheckerModel.containsKey("meerTips"))
-					meerTips = ((Boolean) avvCheckerModel.get("meerTips")).booleanValue();
-				if (avvCheckerModel.containsKey("tipBijFout"))
-					tipBijFout = ((Boolean) avvCheckerModel.get("tipBijFout")).booleanValue();
-				if (avvCheckerModel.containsKey("feedbackBijFout"))
-					feedbackBijFout = ((Boolean) avvCheckerModel.get("feedbackBijFout")).booleanValue();
-				if (avvCheckerModel.containsKey("hulpBijTip"))
-					hulpBijTip = ((Boolean) avvCheckerModel.get("hulpBijTip")).booleanValue();
-				if (avvCheckerModel.containsKey("changedTexts"))
-					changedTexts = (HashMap<String,Object>) avvCheckerModel.get("changedTexts");
+				if (map.containsKey("tipOpBalk"))
+					tipOpBalk = map.getBoolean("tipOpBalk");
+				if (map.containsKey("hulpOpBalk"))
+					hulpOpBalk = map.getBoolean("hulpOpBalk");
+				if (map.containsKey("stapOpBalk"))
+					stapOpBalk = map.getBoolean("stapOpBalk");
+				if (map.containsKey("solveOpBalk"))
+					solveOpBalk = map.getBoolean("solveOpBalk");
+				if (map.containsKey("meerTips"))
+					meerTips = map.getBoolean("meerTips");
+				if (map.containsKey("tipBijFout"))
+					tipBijFout = map.getBoolean("tipBijFout");
+				if (map.containsKey("feedbackBijFout"))
+					feedbackBijFout = map.getBoolean("feedbackBijFout");
+				if (map.containsKey("hulpBijTip"))
+					hulpBijTip = map.getBoolean("hulpBijTip");
+				if (map.containsKey("changedTexts"))
+					changedTexts = map.getMap("changedTexts");
 				//Hashtable sod = AntwoordVergelijkingVakEditPanel.strategieOudNieuw;
 				//if (sod.containsKey(strategieDomein))
 				//	strategieDomein = (String) sod.get(strategieDomein);
-				if (avvCheckerModel.containsKey("strategieDomein"))
-					strategieDomein = (String) avvCheckerModel.get("strategieDomein");
+				if (map.containsKey("strategieDomein"))
+					strategieDomein = map.getString("strategieDomein");
 			}
 		}
 
 //		if (avvCheckerModel.containsKey("feedbackModus"))
 //			feedbackModus = ((Integer) avvCheckerModel.get("feedbackModus")).intValue();
-		if (avvCheckerModel.containsKey("antwoordSubStrings"))
-			antwoordSubStrings = (ArrayList<String>) avvCheckerModel.get("antwoordSubStrings");
-		if (avvCheckerModel.containsKey("pijl"))
-			pijl = ((Boolean) avvCheckerModel.get("pijl")).booleanValue();
-		if (avvCheckerModel.containsKey("linStrategieVersie"))
-			linStrategieVersie = ((Boolean) avvCheckerModel.get("linStrategieVersie")).booleanValue();
-		if (avvCheckerModel.containsKey("bordjesMethode"))
-			bordjesMethode = ((Boolean) avvCheckerModel.get("bordjesMethode")).booleanValue();
-		if (avvCheckerModel.containsKey("linOefenVersie"))
-			linOefenVersie = ((Boolean) avvCheckerModel.get("linOefenVersie")).booleanValue();
+		if (map.containsKey("antwoordSubStrings"))
+			antwoordSubStrings = map.getStringList("antwoordSubStrings");
+		if (map.containsKey("pijl"))
+			pijl = map.getBoolean("pijl");
+		if (map.containsKey("linStrategieVersie"))
+			linStrategieVersie = map.getBoolean("linStrategieVersie");
+		if (map.containsKey("bordjesMethode"))
+			bordjesMethode = map.getBoolean("bordjesMethode");
+		if (map.containsKey("linOefenVersie"))
+			linOefenVersie = map.getBoolean("linOefenVersie");
 		
-		if (avvCheckerModel.containsKey("eqTestValueMin"))
-			eqTestValueMin = ((Double) avvCheckerModel.get("eqTestValueMin")).doubleValue();
-		if (avvCheckerModel.containsKey("eqTestValueMax"))
-			eqTestValueMax = ((Double) avvCheckerModel.get("eqTestValueMax")).doubleValue();
-		if (avvCheckerModel.containsKey("scoreMax"))
-			scoreMax = ((Number) avvCheckerModel.get("scoreMax")).intValue();
-		if (avvCheckerModel.containsKey("uitw"))
-			uitw = ((Boolean) avvCheckerModel.get("uitw")).booleanValue();
-		if (avvCheckerModel.containsKey("casAntw"))
-			casAntw = ((Boolean) avvCheckerModel.get("casAntw")).booleanValue();
-		if (avvCheckerModel.containsKey("boxMetRand"))
-			boxMetRand = ((Boolean) avvCheckerModel.get("boxMetRand")).booleanValue();
+		if (map.containsKey("eqTestValueMin"))
+			eqTestValueMin = map.getDouble("eqTestValueMin");
+		if (map.containsKey("eqTestValueMax"))
+			eqTestValueMax = map.getDouble("eqTestValueMax");
+		if (map.containsKey("scoreMax"))
+			scoreMax = map.getInt("scoreMax");
+		if (map.containsKey("uitw"))
+			uitw = map.getBoolean("uitw");
+		if (map.containsKey("casAntw"))
+			casAntw = map.getBoolean("casAntw");
+		if (map.containsKey("boxMetRand"))
+			boxMetRand = map.getBoolean("boxMetRand");
 		
 		this.linStrategieVersie = linStrategieVersie;
 		this.linOefenVersie = linOefenVersie;
@@ -435,7 +444,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 	
 	
 	public void setAnswerModel(int nr)
-	{	HashMap<String,Object> h = answerModels.get(nr);
+	{	Map<String,Object> h = answerModels.get(nr);
 		if(h==null) return;
 	
 		String antwoordString = "$f@";
@@ -449,17 +458,17 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		String vormString = "$f@";
 		int goedHalfFout = 4;
 		
-		
-		if(h!=null) 
-		{	if(h.containsKey("antwoordString")) antwoordString = (String)h.get("antwoordString");
-			if(h.containsKey("gelijkwaardig")) gelijkwaardig = ((Boolean)h.get("gelijkwaardig")).booleanValue();
-			if(h.containsKey("vorm")) vorm = ((Boolean)h.get("vorm")).booleanValue();
-			if(h.containsKey("eindOplossingNodig")) eindOplossingNodig = ((Boolean)h.get("eindOplossingNodig")).booleanValue();
-			if(h.containsKey("exact")) exact = ((Boolean)h.get("exact")).booleanValue();
-			if(h.containsKey("puntenFeedback")) puntenFeedback = ((Number)h.get("puntenFeedback")).intValue();
-			if(h.containsKey("feedback")) feedback = (String)h.get("feedback");
-			if(h.containsKey("vormString")) vormString = (String)h.get("vormString");
-			if(h.containsKey("goedHalfFout")) goedHalfFout = ((Number)h.get("goedHalfFout")).intValue();
+		ObjectMap map = JSONUtilities.wrapMap(h);
+		if(map!=null) 
+		{	if(map.containsKey("antwoordString")) antwoordString = map.getString("antwoordString");
+			if(map.containsKey("gelijkwaardig")) gelijkwaardig = map.getBoolean("gelijkwaardig");
+			if(map.containsKey("vorm")) vorm = map.getBoolean("vorm");
+			if(map.containsKey("eindOplossingNodig")) eindOplossingNodig = map.getBoolean("eindOplossingNodig");
+			if(map.containsKey("exact")) exact = map.getBoolean("exact");
+			if(map.containsKey("puntenFeedback")) puntenFeedback = map.getInt("puntenFeedback");
+			if(map.containsKey("feedback")) feedback = map.getString("feedback");
+			if(map.containsKey("vormString")) vormString = map.getString("vormString");
+			if(map.containsKey("goedHalfFout")) goedHalfFout = map.getInt("goedHalfFout");
 			
 		}	
 		exactP = exact;
@@ -503,23 +512,24 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 	
 	
 	
-	public void setIdeas(HashMap<String,Object> h)
+	public void setIdeas(Map<String,Object> h)
 	{
-		if(h.containsKey("strategieDomein")) strategieDomein = (String)h.get("strategieDomein");
-		if(h.containsKey("meerTips")) meerTips = ((Boolean)h.get("meerTips")).booleanValue();
-        if(h.containsKey("tipBijFout")) tipBijFout = ((Boolean)h.get("tipBijFout")).booleanValue();
-        if(h.containsKey("feedbackBijFout")) feedbackBijFout = ((Boolean)h.get("feedbackBijFout")).booleanValue();
-        if(h.containsKey("hulpBijTip")) hulpBijTip = ((Boolean)h.get("hulpBijTip")).booleanValue();
-        if (h.containsKey("diagnose"))
-			diagnose = ((Boolean) h.get("diagnose")).booleanValue();
-		if (h.containsKey("aftrekTip"))
-			aftrekTip = ((Number) h.get("aftrekTip")).intValue();
-		if (h.containsKey("aftrekHulp"))
-			aftrekHulp = ((Number) h.get("aftrekHulp")).intValue();
-		if (h.containsKey("aftrekStap"))
-			aftrekStap = ((Number) h.get("aftrekStap")).intValue();
-		if (h.containsKey("aftrekSolve"))
-			aftrekSolve = ((Number) h.get("aftrekSolve")).intValue();
+		ObjectMap map = JSONUtilities.wrapMap(h);
+		if(map.containsKey("strategieDomein")) strategieDomein = map.getString("strategieDomein");
+		if(map.containsKey("meerTips")) meerTips = map.getBoolean("meerTips");
+        if(map.containsKey("tipBijFout")) tipBijFout = map.getBoolean("tipBijFout");
+        if(map.containsKey("feedbackBijFout")) feedbackBijFout = map.getBoolean("feedbackBijFout");
+        if(map.containsKey("hulpBijTip")) hulpBijTip = map.getBoolean("hulpBijTip");
+        if (map.containsKey("diagnose"))
+			diagnose = map.getBoolean("diagnose");
+		if (map.containsKey("aftrekTip"))
+			aftrekTip = map.getInt("aftrekTip");
+		if (map.containsKey("aftrekHulp"))
+			aftrekHulp = map.getInt("aftrekHulp");
+		if (map.containsKey("aftrekStap"))
+			aftrekStap = map.getInt("aftrekStap");
+		if (map.containsKey("aftrekSolve"))
+			aftrekSolve = map.getInt("aftrekSolve");
         
        
 		
