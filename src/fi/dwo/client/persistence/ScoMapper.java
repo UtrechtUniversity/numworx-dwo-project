@@ -65,13 +65,13 @@ public class ScoMapper extends XmlRpcMapper {
 		        	if(o instanceof byte[]) {
 		        		InputStream in = new GZIPInputStream(new ByteArrayInputStream((byte[]) o));
 		        		Map<?,?> map = (Map) JSONValue.parse(new InputStreamReader(in, "UTF-8"));
-		        		ht = new Hashtable();
+		        		Hashtable h = new Hashtable();
 		        		for(Map.Entry entry : map.entrySet()) {
 		        			Object key = entry.getKey();
-		        			Object value = JSONValue.toJSONString(entry.getValue());
-		        			ht.put(key, value);
+		        			Object value = entry.getValue().toString();
+		        			h.put(key, value);
 		        		}
-		        		setLaunchdata(ht);
+		        		setLaunchdata(h);
 		        		setDataChanged(false);
 		        	}
 		        	
