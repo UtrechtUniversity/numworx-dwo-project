@@ -1496,9 +1496,17 @@ public class PersistenceFacade {
             	if(sco.isDataChanged())
             	{	boolean result;
             	
-            		result = StoreCreator.instance().changeSco(sco.getID(), sco.getScoName(), sco
-					        .getDescription(), true, sco.getLaunchdataString(), sco.getShowScore());
-            	
+	            	if(sco.hasFeature(Sco.JSON_OUT))
+	            	{	byte[] launchdataBytes = sco.getLaunchdataBytes();
+	            		System.out.println("JSON launchdata " + sco.getID() + " " + launchdataBytes.length + " bytes");
+						result = StoreCreator.instance().changeSco(sco.getID(), sco.getScoName(), sco.getDescription(), 
+						        true, launchdataBytes, sco.getShowScore());
+	            	}
+	            	result = StoreCreator.instance().changeSco(
+            				sco.getID(), sco.getScoName(), sco.getDescription(), 
+					        true, sco.getLaunchdataString(), sco.getShowScore());
+
+            		
 //         			if(sco.getShowScore() != null)
 //         		            		result = dbAccess.changeSco(sco.getID(), sco.getScoName(), sco
 //					        .getDescription(), sco.getLaunchdataString(), sco.isShowScore());

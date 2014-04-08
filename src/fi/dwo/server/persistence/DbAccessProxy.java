@@ -346,6 +346,12 @@ public class DbAccessProxy extends DbConnect implements DbAccessIF {
     SQLException {
     	return getDelegate().changeSco(scoID, name, description, delete, launchdata);
     }
+
+    public boolean changeSco(int scoID, String name, String description, boolean delete, byte[] launchdata, boolean showScore)
+    throws DwoXmlRpcException, IOException, XmlRpcException,
+    SQLException {
+    	return getDelegate().changeSco(scoID, name, description, delete, launchdata, showScore);
+    }
     
 	public boolean changeSco(int id, String scoName, String description,
 			String launchdataString, boolean showScore)

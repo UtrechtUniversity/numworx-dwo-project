@@ -3,7 +3,10 @@
 
 package fi.dwo.client.persistence;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,8 +17,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import java.util.WeakHashMap;
+import java.util.zip.GZIPInputStream;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 import fi.beans.base64code.StringCodeObject;
 import fi.dwo.client.domain.Course;
@@ -46,14 +52,31 @@ public class ScoMapper extends XmlRpcMapper {
 //new Throwable().printStackTrace();
 			Vector v = new Vector();
 			v.add("launchdata");
+			if(hasFeature(JSON_IN))
+				v.add("launchdatabytes");
 	        DbAccessIF dbAccess = DbAccessCreator.instance();
 	        try {
 				v = dbAccess.getTable(getTableName(), v, ht, getOrderbyCol());
 		        if(v.size() != 0)
 		        {
 		        	ht = (Hashtable) v.firstElement();
-		        	String ld = ht.get("launchdata").toString();
-		        	if(ld.length()>0)
+		        	
+		        	Object o = ht.get("launchdatabytes");
+		        	if(o instanceof byte[]) {
+		        		InputStream in = new GZIPInputStream(new ByteArrayInputStream((byte[]) o));
+		        		Map<?,?> map = (Map) JSONValue.parse(new InputStreamReader(in, "UTF-8"));
+		        		ht = new Hashtable();
+		        		for(Map.Entry entry : map.entrySet()) {
+		        			Object key = entry.getKey();
+		        			Object value = JSONValue.toJSONString(entry.getValue());
+		        			ht.put(key, value);
+		        		}
+		        		setLaunchdata(ht);
+		        		setDataChanged(false);
+		        	}
+		        	
+		        	String ld = (String) ht.get("launchdata");
+		        	if(ld != null && ld.length()>0)
 		        	{
 		        		setLaunchdata((Hashtable) StringCodeObject.decodeStringToObject(ld));
 		        		setDataChanged(false);

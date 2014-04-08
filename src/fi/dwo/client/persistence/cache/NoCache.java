@@ -87,4 +87,12 @@ public class NoCache implements IStore {
 		}
 	}
 
+	public boolean changeSco(int scoid, String scoName, String description,
+			boolean delete, byte[] launchdata, Boolean showScore) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
+		if(showScore == null)
+			showScore = Boolean.TRUE;
+		boolean result = dbAccess.changeSco(scoid, scoName, description, delete, launchdata, showScore );
+		return result;
+	}
+
 }

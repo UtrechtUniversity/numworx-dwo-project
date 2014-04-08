@@ -1,10 +1,20 @@
 package fi.dwo.client.domain;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.text.DecimalFormatSymbols;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Locale;
+import java.util.Map;
+import java.util.zip.GZIPOutputStream;
 
 import fi.beans.base64code.StringCodeObject;
+import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.scorm.ScormAdapter;
 import fi.dwo.client.gui.ScoPanel;
 import fi.dwo.client.persistence.PersistenceFacade;
@@ -32,6 +42,9 @@ public abstract class ScoBase extends ScormAdapter {
 	protected static final String CREDIT_STATUS = "cmi.credit";
 	private static final char REVIEWABLE = 'r';
 	protected static final char MERGABLE = 'm';
+	public static final char JSON_OUT = 'J';
+	protected static final char JSON_IN = 'j';
+	
 	protected static final DecimalFormatSymbols US_DECIMAL_FORMAT_SYMBOLS = new DecimalFormatSymbols(Locale.US);
 	public static final String DWO_GOTO_SCONR = "dwo.goto.sconr";
 	public String features;
@@ -406,6 +419,18 @@ public abstract class ScoBase extends ScormAdapter {
 	    
 	}
 
+	public byte[] getLaunchdataBytes() {
+		Map ld = new HashMap(getLaunchdata());
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		try {
+			OutputStream zip = new GZIPOutputStream(bos);
+			Writer out = new OutputStreamWriter(zip, "UTF-8");
+			JSONEncoder.encode(ld, out);
+			out.close();
+		} catch (UnsupportedEncodingException _) {
+		} catch (IOException _) {}
+		return bos.toByteArray();
+	}
 	/**
 	 * Sets the launchdata for the sco.
 	 * 
@@ -446,6 +471,17 @@ public abstract class ScoBase extends ScormAdapter {
 			setCourseChanged(this.course != course);
 		}
 	    this.course = course;
+	}
+
+	public boolean hasFeature(char f) {
+		if(features != null)
+			return features.indexOf(f) >= 0;
+		AppletData data = getAppletData();
+		if(data != null) {
+			features = data.getFeatures();
+			return features != null && features.indexOf(f) >= 0;
+		}
+		return false;
 	}
 
 

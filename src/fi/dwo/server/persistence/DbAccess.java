@@ -3,6 +3,7 @@
 
 package fi.dwo.server.persistence;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -386,7 +387,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     private final static String QRY_UPDATE_SCO3 = "UPDATE tblSco "
         + "SET sconame = ?, " 
         + "description = ?, " 
-        + "showscore = ?"
+        + "showscore = ? "
         + "WHERE (scoID = ?) ";
 
     private final static String QRY_UPDATE_SCO_SEQUENCE = "UPDATE tblSco "
@@ -2336,7 +2337,14 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         }
         
         ps.close();
-        if(delete) { // TODO parameter voor Sietske c.s.
+        deleteSuspendData(scoID, delete);
+        return true;
+    }
+
+	private void deleteSuspendData(int scoID, boolean delete)
+			throws SQLException {
+		PreparedStatement ps;
+		if(delete) { // TODO parameter voor Sietske c.s.
 	        String[] arguments = new String[2];
 	
 	        arguments[0] = "tblStudentSco";
@@ -2349,9 +2357,40 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 	        ps.execute();
 	        ps.close();
         }
-        return true;
+	}
+
+    
+    public boolean changeSco(int scoID, String name, String description, boolean delete, byte[] launchdata, boolean showScore)
+    throws DwoXmlRpcException, IOException, XmlRpcException,
+    SQLException {
+    	changeSco(scoID, name, description, showScore);
+    	PreparedStatement ps;
+    	String query = "UPDATE tblSco "
+                + "SET " 
+                + "launchdatabytes = ? "
+                + "WHERE (scoID = ?) ";
+    	ps = getStatement(query);
+        ps.setObject(1,launchdata);
+        ps.setInt(2, scoID);
+        
+        try {
+            ps.execute();
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 1062) {
+                /* The course already exists */
+                throw new DwoXmlRpcException(DwoXmlRpcException.EXC_SCO_EXISTS);
+            } else {
+                throw e;
+            }
+        }
+        
+        ps.close();
+        deleteSuspendData(scoID, delete);
+    	return true;
     }
 
+    
+    
     static private final String QRY_UPDATE_SCO_SEQUENCENR =
     	"UPDATE tblSco SET sequencenr = ? WHERE (scoID = ?) ";
 

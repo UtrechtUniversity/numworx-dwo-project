@@ -194,6 +194,19 @@ public class CachingStore implements IStore, Runnable {
 			boolean delete, String launchdataString, Boolean showScore)
 			throws DwoXmlRpcException, IOException, XmlRpcException,
 			SQLException {
+		uncache(scoid, delete);
+		return delegate.changeSco(scoid, scoName, description, delete, launchdataString, showScore);
+	}
+
+	public synchronized boolean changeSco(int scoid, String scoName, String description,
+			boolean delete, byte[] launchdata, Boolean showScore)
+			throws DwoXmlRpcException, IOException, XmlRpcException,
+			SQLException {
+		uncache(scoid, delete);
+		return delegate.changeSco(scoid, scoName, description, delete, launchdata, showScore);
+	}
+	
+	private void uncache(int scoid, boolean delete) {
 		Iterator inter;
 		if(delete) {		
 			inter = work.keySet().iterator();
@@ -214,7 +227,6 @@ public class CachingStore implements IStore, Runnable {
 		while(inter.hasNext())
 			if(((Bucket) inter.next()).getScoid() == scoid )
 				inter.remove();
-		return delegate.changeSco(scoid, scoName, description, delete, launchdataString, showScore);
 	}
 	
 }

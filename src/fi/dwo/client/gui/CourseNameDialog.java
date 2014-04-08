@@ -27,6 +27,7 @@ import javax.swing.SwingUtilities;
 
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DwoHelper;
+import fi.dwo.client.gui.action.CopyLabel;
 import fi.dwo.client.system.TextMapper;
 
 /**
@@ -68,6 +69,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
         l = new JLabel("" + courseID);
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
+        l.addMouseListener(new CopyLabel(l.getText()));
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 5);
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
