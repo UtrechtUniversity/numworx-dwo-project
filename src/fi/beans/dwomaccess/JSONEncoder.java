@@ -1,7 +1,7 @@
 package fi.beans.dwomaccess;
 
-//import java.awt.Color;
-//import java.awt.Font;
+import java.awt.Color;
+import java.awt.Font;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.URI;
@@ -16,6 +16,8 @@ import org.json.simple.JSONAware;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONStreamAware;
 
+import fi.beans.base64code.StringCodeObject;
+
 public class JSONEncoder {
 	
 	public static void encode(Map<?, ?> map, Writer out) throws IOException {
@@ -24,7 +26,7 @@ public class JSONEncoder {
 	}
 
 	private static Map mapWalker(Map map) {
-		XmlEncoder.transform(map);
+		transform(map);
 		transformTypes(map);
 		return map;
 	}
@@ -109,5 +111,56 @@ public class JSONEncoder {
 		}
 		
 	}
+	public static void transform(Map map) {
+		Iterator iter = map.entrySet().iterator();
+		while (iter.hasNext()) {
+			Map.Entry entry = (Map.Entry) iter.next();
+			Object value = entry.getValue();
+			if(value instanceof String && value.toString().startsWith("H4sIA")) {
+				value = StringCodeObject.decodeStringToObject(value.toString());
+				if(value != null)
+				{	
+					entry.setValue(value);
+				}
+			}
+
+			if(value instanceof Map) {
+				transform((Map) value);
+			}
+			else if(value instanceof byte[]) {
+				ByteArray ba = ByteArray.newInstance((byte[]) value);
+				entry.setValue(ba);
+			}
+			
+
+//			if(value instanceof Font) {
+//				value = value.toString();
+//				entry.setValue(value);
+//			}
+//			if(value instanceof java.awt.Color) {
+//				value = value.toString();
+//				entry.setValue(value);
+//			}
+// arraytypes TODO List.
+			else if (value instanceof Object[]) {
+				Object[] array = (Object[])value;
+				entry.setValue(transform(array));
+			} 
+		}
+		
+	}
+
+	private static Object transform(Object[] array) {
+		for (int i = 0; i < array.length; i++) {
+			Object value = array[i];
+			if(value instanceof Map) 
+				transform( (Map) value);
+			if(value instanceof Object[]) 
+				value = transform((Object[])value);
+			array[i] = value;
+		}
+		return array;
+	}
+
 
 }
