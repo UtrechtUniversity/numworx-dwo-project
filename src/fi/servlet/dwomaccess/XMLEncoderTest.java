@@ -21,11 +21,6 @@ public class XMLEncoderTest extends TestCase {
 		access.destroy();
 	}
 
-	public void testEncode() throws IOException {
-		int sco = 67842;
-		access.getLaunchData(sco, System.out);
-	}
-
 	public void testJSON()  throws IOException {
 		int sco = 67842;
 		StringWriter out = new StringWriter();

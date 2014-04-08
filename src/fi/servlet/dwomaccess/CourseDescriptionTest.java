@@ -1,5 +1,7 @@
 package fi.servlet.dwomaccess;
 
+import java.io.OutputStreamWriter;
+
 import junit.framework.TestCase;
 
 public class CourseDescriptionTest extends TestCase {
@@ -14,13 +16,13 @@ public class CourseDescriptionTest extends TestCase {
 
 	public void testCourseDescription() throws Exception {
 		int c = _25630;
-		access.getCourseDescription(c, System.out);
+		access.getCourseDescription(c, new OutputStreamWriter(System.out));
 		
 	}
 
 	public void testCourseDescription2() throws Exception {
 		int c = _10451;
-		access.getCourseDescription(c, System.out);
+		access.getCourseDescription(c, new OutputStreamWriter(System.out));
 		
 	}
 }
