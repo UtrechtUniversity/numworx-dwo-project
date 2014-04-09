@@ -257,12 +257,14 @@ public final class DwoHelper {
 	}
 	
 	public static String getCookie()
-    {  	String cookie = null;
+    {  	
+		if(isApplication())return null;
+		String cookie = null;
     	try {
     		cookie =(String)JSObject.getWindow (applet).eval ("document.cookie");
     	    return cookie;
     	}
-    	catch(Exception ex){
+    	catch(Throwable ex){
     		return null;
     	}
     }
@@ -294,7 +296,7 @@ public final class DwoHelper {
     	try {
     		JSObject.getWindow (applet).eval ("document.cookie ='" + name + "=" + value +"';");
    	    }
-    	catch (Exception ex) {
+    	catch (Throwable ex) {
     	}
     }
     
@@ -303,7 +305,7 @@ public final class DwoHelper {
     	try {
     		JSObject.getWindow (applet).eval ("document.cookie ='" + name + "=dummy" + "';");
    	    }
-    	catch (Exception ex) {
+    	catch (Throwable ex) {
     	}
     }
 }

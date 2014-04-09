@@ -281,7 +281,7 @@
 	<!-- - - - - - - - - - - - - - - - - - 
           target: webclasses                      
          - - - - - - - - - - - - - - - - - -->
-    <target name="war" depends="jar, sign.jars" description="maak een dwo.war mbv een geprepareerde home/javaclasses">
+    <target name="war" depends="init" description="maak een dwo.war mbv een geprepareerde home/javaclasses">
     	<war
     		warfile="output/dwo.war"
     		webxml="WebContent/WEB-INF/web.xml"	 
@@ -291,7 +291,7 @@
     		<zipfileset dir="${jar}" includes="*.jar" prefix="jars"/>
     		<zipfileset dir="${src}/resources" prefix="resources"/>
         	<classes dir="${classes}" includes="**/*.class" />
-    		<lib dir="${jar}" includes="*mysql*.jar" />
+    		<lib dir="lib" includes="*mysql*.jar *jamon*.jar" />
     	</war>
     	
     </target>
