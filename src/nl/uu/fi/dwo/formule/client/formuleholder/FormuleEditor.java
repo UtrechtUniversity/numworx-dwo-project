@@ -203,7 +203,10 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 
 	public void requestFocus() {
 		if(kb!=null)
+		{
 			kb.setEditor(this);
+			kb.focus();
+		}
 	}
 
 

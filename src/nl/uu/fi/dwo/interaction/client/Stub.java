@@ -207,4 +207,8 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 		editor.insert(charAt);
 	}
 
+	@Override
+	public void focus() {		
+	}
+
 }

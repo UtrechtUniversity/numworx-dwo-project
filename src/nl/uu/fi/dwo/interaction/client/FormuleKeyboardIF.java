@@ -10,6 +10,8 @@ public interface FormuleKeyboardIF {
 
 	void enter();
 
+	void focus();
+	
 	FormuleEditorIF getEditor();
 
 }

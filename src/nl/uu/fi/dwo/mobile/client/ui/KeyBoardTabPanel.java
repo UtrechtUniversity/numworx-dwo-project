@@ -87,13 +87,7 @@ public class KeyBoardTabPanel
 			@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				if(enabled) {
-					tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
-					tabs.get(0).getElement().getStyle().setDisplay(Display.BLOCK);
-					current = 0;
-					//keyboardRemoveButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-					//keyboardButton.getElement().getStyle().setDisplay(Display.NONE);
-				}
+				showKeyboard();
 			}
 		});
 		keyboardRemoveButton.addTouchStartHandler(new TouchStartHandler()
@@ -225,5 +219,15 @@ public class KeyBoardTabPanel
 		tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
 		//keyboardButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 		//keyboardRemoveButton.getElement().getStyle().setDisplay(Display.NONE);
+	}
+
+	public void showKeyboard() {
+		if(enabled) {
+			tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
+			tabs.get(0).getElement().getStyle().setDisplay(Display.BLOCK);
+			current = 0;
+			//keyboardRemoveButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+			//keyboardButton.getElement().getStyle().setDisplay(Display.NONE);
+		}
 	}
 }

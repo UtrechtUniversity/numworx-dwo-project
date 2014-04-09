@@ -141,7 +141,16 @@ public abstract class FormuleKeyBoardButtons
 			else if (code.equals("left"))
 			{
 				editor.cursorToLeft();
+			} else 
+			if (code.equals (FormuleKeyboard.ΑΒ))
+			{
+				kb.goTo("Alpha");
 			}
+			if (code.equals (FormuleKeyboard._123))
+			{
+				kb.focus();
+			}
+			
 			else if (code.length() == 1)
 				editor.insert(code.charAt(0));
 		}

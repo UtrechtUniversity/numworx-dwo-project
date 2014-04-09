@@ -33,6 +33,8 @@ import fi.writemathgwt.client.WritePanelHolder;
  */
 public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 {
+	static final String _123 = "123";
+	static final String ΑΒ = "\u03b1\u03b2..";
 	static final String SCRIBBLE = "Scribble";
 	static final boolean hasKeyboard  = ! TouchEvent.isSupported();
 	private FormuleEditorIF editor;
@@ -61,7 +63,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	private String[][] buttonCodesGR =
 	{
 	{ "wortel", "macht", "kwadraat", "breuk", "haakjes", "ndewortel", "integraal", "prv", "ndelog", "abs", "subscript", "bin" },
-	{ "diff", "limiet0", "limiet1", "limiet2", "\u221e", "primitieve", "e", "pi", "<", ">", "\u2228", "\u2248", "\u03b1\u03b2.." }
+	{ "diff", "limiet0", "limiet1", "limiet2", "\u221e", "primitieve", "e", "pi", "<", ">", "\u2228", "\u2248", ΑΒ }
 
 	};
 
@@ -120,7 +122,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	{ "\u03b1", "\u03b2", "\u03b3", "\u03b4", "\u03b5", "\u03b6", "\u03b7", "\u03b8", "\u03b9", "\u03ba", "\u03bb", "\u03bc", "\u03bd" },
 	{ "\u03be", "\u03A3", "\u03c0", "\u03c1", "\u03c2", "\u03c3", "\u03c4", "\u03c5", "\u03c6", "\u03c7", "\u03c8", "\u03c9", "\u221e" },
 	{ "\u2264", "\u2265", "\u00b1", "\u2260", "\u00f7", "\u00d7", "\u00b0", "\u2030", "\u2202", "\u2206", "\u2220", "\u2227", "\u2228" },
-	{ "123", "\u2200", "\u2203", "\u2204", "\u2205", "\u00ac", "\u2229", "\u222a", "\u2208", "\u2209", "\u2282", "\u2283", "\u00a9" } //"\u2284"      	},
+	{ _123, "\u2200", "\u2203", "\u2204", "\u2205", "\u00ac", "\u2229", "\u222a", "\u2208", "\u2209", "\u2282", "\u2283", "\u00a9" } //"\u2284"      	},
 
 	};
 
@@ -171,7 +173,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 
 		//tp.addTab("ABC", this.getKeyBoard(buttonCodesAbc, buttonWidthsAbc));
 	    //tp.addTab("ABCShift", this.getKeyBoard(buttonCodesAbcShift, buttonWidthsAbcShift));
-		//tp.addTab("Alpha", this.getKeyBoard(buttonCodesAlpha, buttonWidthsAlpha));
+		tp.addTab("Alpha", this.getKeyBoard(buttonCodesAlpha, buttonWidthsAlpha));
 		//tp.addTab("GR", this.getKeyBoard(buttonCodesGR, buttonWidthsGR));
 		//tp.addTab("MW", this.getKeyBoard(buttonCodesMW, buttonWidthsMW));
 
@@ -374,5 +376,10 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	public void delete()
 	{
 		getEditor().removeNextElement();
+	}
+
+	@Override
+	public void focus() {
+		tp.showKeyboard();
 	}
 }
