@@ -12,6 +12,7 @@ import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.logging.client.HasWidgetsLogHandler;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -38,14 +39,23 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 
 	@Override
 	public void onModuleLoad() {
-	
+		VerticalPanel customLogArea = null;
+		if( LogConfiguration.loggingIsEnabled())	
+		{
+			customLogArea = new VerticalPanel();
+			Logger.getLogger("").addHandler(new HasWidgetsLogHandler(customLogArea));
+			logger.info("start logging");
+		}
+
 		MGWTsetup();
-		VerticalPanel customLogArea = new VerticalPanel();
-		Logger.getLogger("").addHandler(new HasWidgetsLogHandler(customLogArea));
 		view = new ViewModuleViewImpl(true).initialize();
 		Scorm2004IF api = view.getApi();
 		RootPanel.get().add(view);
-		RootPanel.get().add(customLogArea);
+		
+		if( LogConfiguration.loggingIsEnabled())	
+		{
+			RootPanel.get().add(customLogArea);
+		}
 		History.addValueChangeHandler(this);
 		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 
