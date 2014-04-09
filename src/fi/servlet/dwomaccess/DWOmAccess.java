@@ -66,6 +66,7 @@ import fi.dwo.client.persistence.DbAccessIF;
 import fi.dwo.client.persistence.ScoMapper;
 import fi.dwo.server.persistence.DbAccess;
 import fi.dwo.server.persistence.DbAccessLdap;
+import fi.dwo.server.persistence.DbAccessLocal;
 /**
  * Servlet voor het achterhalen van de deelscores en screenshots. 
  * Methoden:
@@ -128,7 +129,9 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 			v = access.getTable(getTableName(), v, wheredef, getOrderbyCol());
 			if(v.size() > 0) {
 				Hashtable h = (Hashtable) v.firstElement();
-				return (byte[]) h.get("launchdatabytes");
+				Object object = h.get("launchdatabytes");
+				if(object instanceof byte[])
+					return (byte[]) object;
 			}
 			return NULL;
 		}
@@ -565,7 +568,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	
 	
 
-	private void copy(InputStream in, OutputStream out) throws IOException {
+	void copy(InputStream in, OutputStream out) throws IOException {
 		byte buf[] = new byte[1024];
 		int len;
 		while( -1 != (len = in.read(buf))) out.write(buf, 0, len);

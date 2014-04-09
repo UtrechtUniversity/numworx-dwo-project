@@ -37,6 +37,10 @@
   </servlet-mapping>
   <servlet-mapping>
 	<servlet-name>image.png</servlet-name>
+	<url-pattern>/getJSONLaunchDataBytes</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+	<servlet-name>image.png</servlet-name>
 	<url-pattern>/getCourseDescription</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
