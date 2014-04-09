@@ -723,7 +723,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		contentPanel = new TouchPanel();
 		contentPanel.getElement().getStyle().setProperty("display", "inline-block");
 		contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
-		contentPanel.setWidth("99%");
+		contentPanel.setWidth("95%"); // hoeveel is 100% - 30px ?
 		//addContentPanelTouchListener(contentPanel);
 
 		contentScrollPanel.setWidget(contentPanel);
