@@ -103,4 +103,3 @@ Class-Path: algebrapijlenoefenen.jar
  jl020.jar 
  calendar.jar 
  geogebra_properties.jar 
- 
