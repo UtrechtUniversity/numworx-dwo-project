@@ -26,6 +26,7 @@ import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.TextAlign;
@@ -59,6 +60,7 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConst
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -72,6 +74,7 @@ import fi.wiskopdr.expressies.VergelijkingMeerv;
 
 public class TekstVakPanel implements InteractionView
 {
+	private static final String KLAPUIT_WIDTH = "30px";
 	private int font_size = 12;
 	private int font_style = 0;
 	private FormuleKeyboard kb = null;
@@ -135,6 +138,8 @@ public class TekstVakPanel implements InteractionView
 	private int locationX, locationY;
 	private int startX, startY;
 
+	private boolean inklapbaar, ingeklapt;
+	private ToggleButton klapUitButton;
 	
 	static CssColor getColor(ObjectMap map, String key, int r, int g, int b) {
 		ObjectMap colorMap = map != null  ? map.getObjectMap(key) : null ;
@@ -266,6 +271,12 @@ public class TekstVakPanel implements InteractionView
 			locationX = launchState.getInt("locationX");
 		if (launchState != null && launchState.containsKey("locationY"))
 			locationY = launchState.getInt("locationY");
+// klap schaats
+		if( launchState != null && launchState.containsKey("inklapbaar"))
+			inklapbaar = launchState.getBoolean("inklapbaar");
+		if( launchState != null && launchState.containsKey("ingeklapt"))
+			ingeklapt = launchState.getBoolean("ingeklapt");
+		
 		
 		bgColor = getColor(launchState, "bgColor", bgColor_red, bgColor_green, bgColor_blue);
 		fgColor = getColor(launchState, "fgColor",fgColor_red, fgColor_green, fgColor_blue);
@@ -436,7 +447,11 @@ public class TekstVakPanel implements InteractionView
 			mainPanel2.setWidgetLeftWidth(ic, 0, Style.Unit.PX, 20, Style.Unit.PX);
 			mainPanel2.setWidgetTopHeight(ic, 0, Style.Unit.PX, 20, Style.Unit.PX);
 		}
-		
+
+		if(inklapbaar)
+		{	initieerKlapUitButton(ingeklapt);
+		}
+
 	}
 	
 	public void setTableBounds()
@@ -1293,6 +1308,31 @@ public class TekstVakPanel implements InteractionView
 			
 			  
 		}
+
+	}
+	
+	void klapUitAction() {
+		if( ingeklapt = ! ingeklapt) {
+			GWT.log("inklappen!");
+			tekstHulsVakken[1][0].setVisible(false);
+		} else {
+			tekstHulsVakken[1][0].setVisible(true);
+			GWT.log("uitklappen");
+		}
+	}
+	
+	private void initieerKlapUitButton (boolean ingeklapt)
+	{
+		klapUitButton = new ToggleButton("\u25BE","\u25B8");
+		klapUitButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				klapUitAction();				
+			}});
+		klapUitButton.setDown(ingeklapt);
+		klapUitButton.setWidth(KLAPUIT_WIDTH);
+		Widget widget = tekstHulsVakken[0][0].getWidget(0);
+// Wat met de positie van widgets
+		tekstHulsVakken[0][0].insert(klapUitButton, 0);
 
 	}
 }
