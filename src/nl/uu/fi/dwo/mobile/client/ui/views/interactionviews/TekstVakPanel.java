@@ -78,7 +78,8 @@ public class TekstVakPanel implements InteractionView
 	private OpdrNavIF comRoot = null;
 	private int breedte = 600;
 	private int hoogte = 250;
-	private HashMap<String, Object> launchState, instellingen;
+	//ObjectMap launchState;
+	private Map<String, Object> instellingen;
 	private LayoutPanel mainPanel2 = null;
 	private Grid mainPanel = null;
 	private LayoutPanel randPanel = null;
@@ -91,8 +92,8 @@ public class TekstVakPanel implements InteractionView
 
 	ArrayList<Object> interactionViewObjects = new ArrayList<Object>();
 
-	List<Object> breedtes = null;
-	List<Object> hoogtes = null;
+	List<? extends Number> breedtes = null;
+	List<? extends Number> hoogtes = null;
 	int cellSpaceColumn = 0;
 	int cellSpaceRow = 0;
 	int cellMarge = 0;
@@ -135,9 +136,8 @@ public class TekstVakPanel implements InteractionView
 	private int startX, startY;
 
 	
-	static CssColor getColor(Map<String,Object> map, String key, int r, int g, int b) {
-		Map colorMap0 = map != null  ? (Map)map.get(key) : null ;
-		ObjectMap colorMap = JSONUtilities.wrapMap(colorMap0);
+	static CssColor getColor(ObjectMap map, String key, int r, int g, int b) {
+		ObjectMap colorMap = map != null  ? map.getObjectMap(key) : null ;
 		if(colorMap != null) {
 			r = colorMap.getInt("red");
 					//((Number)colorMap.get("red")).intValue();
@@ -152,17 +152,19 @@ public class TekstVakPanel implements InteractionView
 	
 	
 	
-	public TekstVakPanel(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
+	public TekstVakPanel(HashMap<String, Object> hh, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
 		this.randomVarNamen = randomVarNamen;
 		this.randomVarWaarden = randomVarWaarden;
-		facade = new PopupFacade(h);
-		if (h != null && h.get("breedte") != null)
-			breedte = ((Number) h.get("breedte")).intValue();
-		if (h != null && h.get("hoogte") != null)
-			hoogte = ((Number) h.get("hoogte")).intValue();
-		if (h != null && h.get("interactiePanelLaunchState") != null)
-			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
+		facade = new PopupFacade(hh);
+		ObjectMap h = JSONUtilities.wrapMap(hh);
+		ObjectMap launchState = null;
+		if (h != null && h.containsKey("breedte") )
+			breedte = h.getInt("breedte");
+		if (h != null && h.containsKey("hoogte"))
+			hoogte = h.getInt("hoogte");
+		if (h != null && h.containsKey("interactiePanelLaunchState"))
+			launchState =  h.getObjectMap("interactiePanelLaunchState");
 
 		System.out.println("launchState: " + launchState);
 		boolean bgColorZichtbaar = false;
@@ -183,89 +185,87 @@ public class TekstVakPanel implements InteractionView
 
 		int ronding = 0;
 
-		if (launchState != null && launchState.get("breedtes") != null)
-			breedtes = JSONUtilities.toArrayList(launchState.get("breedtes") );
+		if (launchState != null && launchState.containsKey("breedtes") )
+			breedtes = launchState.getDoubleList("breedtes");
 		else
-			breedtes = new ArrayList<Object>(Arrays.asList(600.0));
-		if (launchState != null && launchState.get("hoogtes") != null)
-			hoogtes = JSONUtilities.toArrayList( launchState.get("hoogtes") );
+			breedtes = (Arrays.asList(600.0));
+		if (launchState != null && launchState.containsKey("hoogtes") )
+			hoogtes = launchState.getDoubleList("hoogtes") ;
 		else
-			hoogtes = new ArrayList<Object>(Arrays.asList(250.0));
-		if (launchState != null && launchState.get("cellSpaceColumn") != null)
-			cellSpaceColumn = ((Number) launchState.get("cellSpaceColumn")).intValue();
-		if (launchState != null && launchState.get("cellSpaceRow") != null)
-			cellSpaceRow = ((Number) launchState.get("cellSpaceRow")).intValue();
-		if (launchState != null && launchState.get("cellMarge") != null)
-			cellMarge = ((Number) launchState.get("cellMarge")).intValue();
-		if (launchState != null && launchState.get("bovenMarge") != null)
-			bovenMarge = ((Number) launchState.get("bovenMarge")).intValue();
-		if (launchState != null && launchState.get("ronding") != null)
-			ronding = ((Number) launchState.get("ronding")).intValue();
-		if (launchState != null && launchState.get("bgColorZichtbaar") != null)
-			bgColorZichtbaar = (Boolean) launchState.get("bgColorZichtbaar");
-		if (launchState != null && launchState.get("bgColor_red") != null)
-			bgColor_red = ((Number) launchState.get("bgColor_red")).intValue();
-		if (launchState != null && launchState.get("bgColor_green") != null)
-			bgColor_green = ((Number) launchState.get("bgColor_green")).intValue();
-		if (launchState != null && launchState.get("bgColor_blue") != null)
-			bgColor_blue = ((Number) launchState.get("bgColor_blue")).intValue();
-		if (launchState != null && launchState.get("fgColor_red") != null)
-			fgColor_red = ((Number) launchState.get("fgColor_red")).intValue();
-		if (launchState != null && launchState.get("fgColor_green") != null)
-			fgColor_green = ((Number) launchState.get("fgColor_green")).intValue();
-		if (launchState != null && launchState.get("fgColor_blue") != null)
-			fgColor_blue = ((Number) launchState.get("fgColor_blue")).intValue();
-		if (launchState != null && launchState.get("randZichtbaar") != null)
-			randZichtbaar = (Boolean) launchState.get("randZichtbaar");
-		if (launchState != null && launchState.get("randColor_red") != null)
-			randColor_red = ((Number) launchState.get("randColor_red")).intValue();
-		if (launchState != null && launchState.get("randColor_green") != null)
-			randColor_green = ((Number) launchState.get("randColor_green")).intValue();
-		if (launchState != null && launchState.get("randColor_blue") != null)
-			randColor_blue = ((Number) launchState.get("randColor_blue")).intValue();
-		if (launchState != null && launchState.get("randDikte") != null)
-			randDikte = ((Number) launchState.get("randDikte")).intValue();
-		if (launchState != null && launchState.get("font_size") != null)
-			font_size = ((Number) launchState.get("font_size")).intValue();
-		if (launchState != null && launchState.get("font_style") != null)
-			font_style = ((Number) launchState.get("font_style")).intValue();
+			hoogtes = (Arrays.asList(250.0));
+		if (launchState != null && launchState.containsKey("cellSpaceColumn") )
+			cellSpaceColumn = launchState.getInt("cellSpaceColumn");
+		if (launchState != null && launchState.containsKey("cellSpaceRow") )
+			cellSpaceRow = launchState.getInt("cellSpaceRow");
+		if (launchState != null && launchState.containsKey("cellMarge"))
+			cellMarge = launchState.getInt("cellMarge");
+		if (launchState != null && launchState.containsKey("bovenMarge") )
+			bovenMarge = launchState.getInt("bovenMarge");
+		if (launchState != null && launchState.containsKey("ronding"))
+			ronding = launchState.getInt("ronding");
+		if (launchState != null && launchState.containsKey("bgColorZichtbaar") )
+			bgColorZichtbaar = launchState.getBoolean("bgColorZichtbaar");
+		if (launchState != null && launchState.containsKey("bgColor_red") )
+			bgColor_red = launchState.getInt("bgColor_red");
+		if (launchState != null && launchState.containsKey("bgColor_green"))
+			bgColor_green = launchState.getInt("bgColor_green");
+		if (launchState != null && launchState.containsKey("bgColor_blue"))
+			bgColor_blue = launchState.getInt("bgColor_blue");
+		if (launchState != null && launchState.containsKey("fgColor_red"))
+			fgColor_red = launchState.getInt("fgColor_red");
+		if (launchState != null && launchState.containsKey("fgColor_green"))
+			fgColor_green = launchState.getInt("fgColor_green");
+		if (launchState != null && launchState.containsKey("fgColor_blue"))
+			fgColor_blue = launchState.getInt("fgColor_blue");
+		if (launchState != null && launchState.containsKey("randZichtbaar"))
+			randZichtbaar = launchState.getBoolean("randZichtbaar");
+		if (launchState != null && launchState.containsKey("randColor_red"))
+			randColor_red = launchState.getInt("randColor_red");
+		if (launchState != null && launchState.containsKey("randColor_green"))
+			randColor_green = launchState.getInt("randColor_green");
+		if (launchState != null && launchState.containsKey("randColor_blue"))
+			randColor_blue = launchState.getInt("randColor_blue");
+		if (launchState != null && launchState.containsKey("randDikte"))
+			randDikte = launchState.getInt("randDikte");
+		if (launchState != null && launchState.containsKey("font_size"))
+			font_size = launchState.getInt("font_size");
+		if (launchState != null && launchState.containsKey("font_style"))
+			font_style = launchState.getInt("font_style");
 		
 		if(launchState != null && launchState.containsKey("font")) {
-			Map m = (Map) launchState.get("font");
-			font_size = ((Number) m.get("size")).intValue();
-			font_style = ((Number) m.get("style")).intValue();			
+			ObjectMap m = launchState.getObjectMap("font");
+			font_size = m.getInt("size");
+			font_style = m.getInt("style");			
 		}
 		
-		
-		
-		if (launchState != null && launchState.get("selectable") != null)
-			selectable = ((Boolean) launchState.get("selectable")).booleanValue(); 
-		if (launchState != null && launchState.get("sleepbaar") != null)
-			sleepbaar = ((Boolean) launchState.get("sleepbaar")).booleanValue();
-		if (launchState != null && launchState.get("sleepdoel") != null)
-			sleepdoel = ((Boolean) launchState.get("sleepdoel")).booleanValue();
-		if (launchState != null && launchState.get("sleepHandle") != null)
-			sleepHandle = ((Boolean) launchState.get("sleepHandle")).booleanValue();
-		if (launchState != null && launchState.get("checkExpressieString") != null)
-			checkExpressieString = (String) launchState.get("checkExpressieString");
-		if (launchState != null && launchState.get("defaultBijNull") != null)
-			defaultBijNull = ((Boolean) launchState.get("defaultBijNull")).booleanValue();
-		if (launchState != null && launchState.get("ipId") != null)
-			ipId = ((Number) launchState.get("ipId")).intValue();
-		if (launchState != null && launchState.get("colorSelection") != null)
-			colorSelection = ((Boolean) launchState.get("colorSelection")).booleanValue();
-		if (launchState != null && launchState.get("tableBorders") != null)
-			tableBorders = ((Boolean) launchState.get("tableBorders")).booleanValue();
-		if (launchState != null && launchState.get("centerV") != null)
-			centerV = ((Boolean) launchState.get("centerV")).booleanValue();
-		if (launchState != null && launchState.get("centerH") != null)
-			centerH = ((Boolean) launchState.get("centerH")).booleanValue();
-		if (launchState != null && launchState.get("zwevend") != null)
-			zwevend = ((Boolean) launchState.get("zwevend")).booleanValue();
-		if (launchState != null && launchState.get("locationX") != null)
-			locationX = ((Number) launchState.get("locationX")).intValue();
-		if (launchState != null && launchState.get("locationY") != null)
-			locationY = ((Number) launchState.get("locationY")).intValue();
+		if (launchState != null && launchState.containsKey("selectable"))
+			selectable = launchState.getBoolean("selectable"); 
+		if (launchState != null && launchState.containsKey("sleepbaar"))
+			sleepbaar = launchState.getBoolean("sleepbaar");
+		if (launchState != null && launchState.containsKey("sleepdoel"))
+			sleepdoel = launchState.getBoolean("sleepdoel");
+		if (launchState != null && launchState.containsKey("sleepHandle"))
+			sleepHandle = launchState.getBoolean("sleepHandle");
+		if (launchState != null && launchState.containsKey("checkExpressieString"))
+			checkExpressieString = launchState.getString("checkExpressieString");
+		if (launchState != null && launchState.containsKey("defaultBijNull"))
+			defaultBijNull = launchState.getBoolean("defaultBijNull");
+		if (launchState != null && launchState.containsKey("ipId"))
+			ipId = launchState.getInt("ipId");
+		if (launchState != null && launchState.containsKey("colorSelection"))
+			colorSelection = launchState.getBoolean("colorSelection");
+		if (launchState != null && launchState.containsKey("tableBorders"))
+			tableBorders = launchState.getBoolean("tableBorders");
+		if (launchState != null && launchState.containsKey("centerV"))
+			centerV = launchState.getBoolean("centerV");
+		if (launchState != null && launchState.containsKey("centerH"))
+			centerH = launchState.getBoolean("centerH");
+		if (launchState != null && launchState.containsKey("zwevend"))
+			zwevend = launchState.getBoolean("zwevend");
+		if (launchState != null && launchState.containsKey("locationX"))
+			locationX = launchState.getInt("locationX");
+		if (launchState != null && launchState.containsKey("locationY"))
+			locationY = launchState.getInt("locationY");
 		
 		bgColor = getColor(launchState, "bgColor", bgColor_red, bgColor_green, bgColor_blue);
 		fgColor = getColor(launchState, "fgColor",fgColor_red, fgColor_green, fgColor_blue);
@@ -319,7 +319,7 @@ public class TekstVakPanel implements InteractionView
 			verticalBorders[i].setSize(1 + "px", hoogte + "px");
 			verticalBorders[i].getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 			verticalBorders[i].getElement().getStyle().setBorderColor(randColor.toString());
-			breedteCum += ((Number) breedtes.get(i)).intValue() + cellSpaceColumn;
+			breedteCum += breedtes.get(i).intValue() + cellSpaceColumn;
 			randPanel.add(verticalBorders[i]);
 			randPanel.setWidgetLeftWidth(verticalBorders[i], Math.round(breedteCum), Style.Unit.PX, 1, Style.Unit.PX);
 			randPanel.setWidgetTopHeight(verticalBorders[i], 0, Style.Unit.PX, hoogte, Style.Unit.PX);
@@ -345,14 +345,14 @@ public class TekstVakPanel implements InteractionView
 		for (int i = 0; i < hoogtes.size(); i++)
 		{
 			for (int j = 0; j < breedtes.size(); j++)
-			{	double tekstVakBreedte = (Double) breedtes.get(j) - 2 * cellMarge;
-				double tekstVakHoogte = (Double) hoogtes.get(i) - 2 * bovenMarge;
+			{	double tekstVakBreedte =  breedtes.get(j).doubleValue() - 2 * cellMarge;
+				double tekstVakHoogte = hoogtes.get(i).doubleValue() - 2 * bovenMarge;
 				
 				
 				tekstHulsVakken[i][j] = new LayoutPanel();
 				//tekstHulsVakken[i][j].getElement().getStyle().setBackgroundColor(CssColor.make(255, 0, 0).toString());
 				//tekstHulsVakken[i][j].setSize(tekstVakBreedte + "px", tekstVakHoogte + "px");
-				tekstHulsVakken[i][j].setSize(breedtes.get(j) + "px", hoogtes.get(i) + "px");
+				tekstHulsVakken[i][j].setPixelSize(breedtes.get(j).intValue(), hoogtes.get(i).intValue());
 				tekstVakken[i][j] = new FlowPanel();
 				//tekstVakken[i][j].getElement().getStyle().setBackgroundColor(CssColor.make(0, 255, 0).toString());
 				
@@ -408,7 +408,7 @@ public class TekstVakPanel implements InteractionView
 				*/
 				
 				vPanel.add(tekstVakken[i][j]);
-				vPanel.setSize(tekstVakBreedte + "px", tekstVakHoogte + "px");
+				vPanel.setPixelSize((int)tekstVakBreedte, (int)tekstVakHoogte);
 				//tekstHulsVakken[i][j].add(tekstVakken[i][j]);
 				tekstHulsVakken[i][j].add(vPanel);
 				
@@ -447,13 +447,13 @@ public class TekstVakPanel implements InteractionView
 		{
 			for (int j = 0; j < breedtes.size(); j++)
 			{
-				tekstVakken[i][j].setSize("" + (int) (Math.round((Double) breedtes.get(j)) - - 2 * cellMarge)  + "px", "" + (int) Math.round((Double) hoogtes.get(i)) + "px");
-				tekstHulsVakken[i][j].setSize("" + (int) Math.round((Double) breedtes.get(j)) + "px", "" + (int) Math.round((Double) hoogtes.get(i)) + "px");
+				tekstVakken[i][j].setSize("" + (int) (Math.round( breedtes.get(j).doubleValue()) - - 2 * cellMarge)  + "px", "" + (int) Math.round((Double) hoogtes.get(i)) + "px");
+				tekstHulsVakken[i][j].setSize("" + (int) Math.round(breedtes.get(j).doubleValue()) + "px", "" + (int) Math.round((Double) hoogtes.get(i)) + "px");
 			}
 		}
 	}
 
-	public void zetInstellingen(HashMap<String, Object> instellingen)
+	public void zetInstellingen(Map<String, Object> instellingen)
 	{
 		this.instellingen = instellingen;
 		//if(instellingen.get("fontSize") != null)

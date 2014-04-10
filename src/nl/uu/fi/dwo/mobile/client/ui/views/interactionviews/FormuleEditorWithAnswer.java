@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
@@ -36,7 +37,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private HashMap<String, Object> launchState;
 	private FormuleEditorWithSteps fe = null;
 	private boolean strict = true;
-	private HashMap<String, Object> instellingen = null;
+	private Map<String, Object> instellingen = null;
 	private int score = 0;
 	private boolean correct = false;
 	private String feedback = "";
@@ -97,7 +98,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 	}
 
-	public void zetInstellingen(HashMap<String, Object> instellingen)
+	public void zetInstellingen(Map<String, Object> instellingen)
 	{
 		this.instellingen = instellingen;
 		setFont(FormuleFont.createFromFontSize(((Number) instellingen.get("fontSize")).intValue()));

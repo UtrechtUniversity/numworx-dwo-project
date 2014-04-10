@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
@@ -58,7 +59,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	private int breedte = 600;
 	private int hoogte = 250;
 	private HashMap<String, Object> launchState;
-	private HashMap<String, Object> instellingen;
+	private Map<String, Object> instellingen;
 	private ArrayList<FormuleViewer> viewers = new ArrayList<FormuleViewer>();
 	private FormuleEditorWithAnswer editor = null;
 	private Widget prefixViewer;
@@ -177,7 +178,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		
 	}
 
-	public void zetInstellingen(HashMap<String, Object> instellingen)
+	public void zetInstellingen(Map<String, Object> instellingen)
 	{
 		this.instellingen = instellingen;
 	}

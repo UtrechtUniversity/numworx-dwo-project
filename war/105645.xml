@@ -1,440 +1,138 @@
-<?xml version="1.0" encoding="UTF-8"?> 
-<java version="1.6.0_41" class="java.beans.XMLDecoder"> 
- <object class="java.util.Hashtable"> 
-  <void method="put"> 
-   <string>opdracht_1_1</string> 
-   <object class="java.util.Hashtable"> 
-    <void method="put"> 
-     <string>hasTitle</string> 
-     <boolean>false</boolean> 
-    </void> 
-    <void method="put"> 
-     <string>interactiePanelLaunchData</string> 
-     <array class="java.util.Hashtable" length="6"> 
-      <void index="5"> 
-       <object class="java.util.Hashtable"> 
-        <void method="put"> 
-         <string>soortInteractiePanel</string> 
-         <int>2</int> 
-        </void> 
-        <void method="put"> 
-         <string>volledigeBreedte</string> 
-         <boolean>false</boolean> 
-        </void> 
-        <void method="put"> 
-         <string>popupImageString</string> 
-         <string></string> 
-        </void> 
-        <void method="put"> 
-         <string>breedte</string> 
-         <int>50</int> 
-        </void> 
-        <void method="put"> 
-         <string>popup</string> 
-         <boolean>false</boolean> 
-        </void> 
-        <void method="put"> 
-         <string>hoogte</string> 
-         <int>27</int> 
-        </void> 
-        <void method="put"> 
-         <string>locationY</string> 
-         <int>0</int> 
-        </void> 
-        <void method="put"> 
-         <string>locationX</string> 
-         <int>0</int> 
-        </void> 
-        <void method="put"> 
-         <string>studentEditor</string> 
-         <boolean>false</boolean> 
-        </void> 
-        <void method="put"> 
-         <string>interactiePanelLaunchState</string> 
-         <object class="java.util.Hashtable"> 
-          <void method="put"> 
-           <string>stappen</string> 
-           <boolean>false</boolean> 
-          </void> 
-          <void method="put"> 
-           <string>logOption</string> 
-           <boolean>false</boolean> 
-          </void> 
-          <void method="put"> 
-           <string>puntenHerleiding</string> 
-           <int>0</int> 
-          </void> 
-          <void method="put"> 
-           <string>check</string> 
-           <boolean>true</boolean> 
-          </void> 
-          <void method="put"> 
-           <string>scoreMax</string> 
-           <int>15</int> 
-          </void> 
-          <void method="put"> 
-           <string>significant</string> 
-           <boolean>false</boolean> 
-          </void> 
-          <void method="put"> 
-           <string>puntenGelijkwaardig</string> 
-           <int>5</int> 
-          </void> 
-          <void method="put"> 
-           <string>formuleToolBijFocus</string> 
-           <boolean>false</boolean> 
-          </void> 
-          <void method="put"> 
-           <string>eqTestValueMax</string> 
-           <double>5.0</double> 
-          </void> 
-          <void method="put"> 
-           <string>soortHerleiding</string> 
-           <int>0</int> 
-          </void> 
-          <void method="put"> 
-           <string>exact</string> 
-           <boolean>true</boolean> 
-          </void> 
-          <void method="put"> 
-           <string>teltMee</string> 
-           <boolean>true</boolean> 
-          </void> 
-          <void method="put"> 
-           <string>logID</string> 
-           <string>0</string> 
-          </void> 
-          <void method="put"> 
-           <string>answerModels</string> 
-           <array class="java.util.Hashtable" length="1"> 
-            <void index="0"> 
-             <object class="java.util.Hashtable"> 
-              <void method="put"> 
-               <string>exact</string> 
-               <boolean>true</boolean> 
-              </void> 
-              <void method="put"> 
-               <string>puntenFeedback</string> 
-               <int>0</int> 
-              </void> 
-              <void method="put"> 
-               <string>feedback</string> 
-               <string>
-</string> 
-              </void> 
-              <void method="put"> 
-               <string>feedbackHeight</string> 
-               <int>20</int> 
-              </void> 
-              <void method="put"> 
-               <string>significant</string> 
-               <boolean>false</boolean> 
-              </void> 
-              <void method="put"> 
-               <string>gelijkwaardig</string> 
-               <boolean>true</boolean> 
-              </void> 
-              <void method="put"> 
-               <string>antwoordString</string> 
-               <string>$f#a#@</string> 
-              </void> 
-              <void method="put"> 
-               <string>goedHalfFout</string> 
-               <int>0</int> 
-              </void> 
-              <void method="put"> 
-               <string>soortHerleiding</string> 
-               <int>0</int> 
-              </void> 
-              <void method="put"> 
-               <string>vormString</string> 
-               <string>$f@</string> 
-              </void> 
-              <void method="put"> 
-               <string>feedbackWidth</string> 
-               <int>195</int> 
-              </void> 
-              <void method="put"> 
-               <string>herleiding</string> 
-               <boolean>false</boolean> 
-              </void> 
-             </object> 
-            </void> 
-           </array> 
-          </void> 
-          <void method="put"> 
-           <string>startString</string> 
-           <string>$f@</string> 
-          </void> 
-          <void method="put"> 
-           <string>hasFeedback</string> 
-           <boolean>false</boolean> 
-          </void> 
-          <void method="put"> 
-           <string>vormString</string> 
-           <string>$f@</string> 
-          </void> 
-          <void method="put"> 
-           <string>eqTestValueMin</string> 
-           <double>0.0</double> 
-          </void> 
-          <void method="put"> 
-           <string>puntenExact</string> 
-           <int>10</int> 
-          </void> 
-          <void method="put"> 
-           <string>subKnopExtra</string> 
-           <boolean>false</boolean> 
-          </void> 
-          <void method="put"> 
-           <string>rmKnop</string> 
-           <boolean>false</boolean> 
-          </void> 
-          <void method="put"> 
-           <string>feedbackSize</string> 
-           <boolean>false</boolean> 
-          </void> 
-          <void method="put"> 
-           <string>uitw</string> 
-           <boolean>false</boolean> 
-          </void> 
-          <void method="put"> 
-           <string>herleiding</string> 
-           <boolean>false</boolean> 
-          </void> 
-          <void method="put"> 
-           <string>eigenOpdr</string> 
-           <boolean>false</boolean> 
-          </void> 
-          <void method="put"> 
-           <string>antwoordString</string> 
-           <string>$f#a#@</string> 
-          </void> 
-          <void method="put"> 
-           <string>boxMetRand</string> 
-           <boolean>true</boolean> 
-          </void> 
-          <void method="put"> 
-           <string>subKnop</string> 
-           <boolean>false</boolean> 
-          </void> 
-          <void method="put"> 
-           <string>aantalDecRm</string> 
-           <int>10</int> 
-          </void> 
-          <void method="put"> 
-           <string>tips</string> 
-           <boolean>false</boolean> 
-          </void> 
-          <void method="put"> 
-           <string>puntenSignificant</string> 
-           <int>0</int> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="put"> 
-         <string>setNr</string> 
-         <int>0</int> 
-        </void> 
-       </object> 
-      </void> 
-     </array> 
-    </void> 
-    <void method="put"> 
-     <string>tekst2</string> 
-     <string>
-</string> 
-    </void> 
-    <void method="put"> 
-     <string>titel</string> 
-     <string>Problem 1
-</string> 
-    </void> 
-    <void method="put"> 
-     <string>scheidingX</string> 
-     <int>783</int> 
-    </void> 
-    <void method="put"> 
-     <string>hasAntwoordVak</string> 
-     <boolean>false</boolean> 
-    </void> 
-    <void method="put"> 
-     <string>tekst</string> 
-     <string>Vul hier het getal  $f#a#@ in
-$V@
-</string> 
-    </void> 
-    <void method="put"> 
-     <string>scoreMax</string> 
-     <int>15</int> 
-    </void> 
-    <void method="put"> 
-     <string>eindX</string> 
-     <int>770</int> 
-    </void> 
-    <void method="put"> 
-     <string>randVarString</string> 
-     <string>a=1..10
-</string> 
-    </void> 
-   </object> 
-  </void> 
-  <void method="put"> 
-   <string>$IMAGE$MAP$</string> 
-   <object class="java.util.Hashtable"/> 
-  </void> 
-  <void method="put"> 
-   <string>instellingen</string> 
-   <object class="java.util.Hashtable"> 
-    <void method="put"> 
-     <string>bolletjesZichtbaar</string> 
-     <boolean>true</boolean> 
-    </void> 
-    <void method="put"> 
-     <string>volgendeKnopZichtbaar</string> 
-     <boolean>false</boolean> 
-    </void> 
-    <void method="put"> 
-     <string>fToets</string> 
-     <boolean>true</boolean> 
-    </void> 
-    <void method="put"> 
-     <string>eerderGeenCorr</string> 
-     <boolean>false</boolean> 
-    </void> 
-    <void method="put"> 
-     <string>voortgang</string> 
-     <boolean>false</boolean> 
-    </void> 
-    <void method="put"> 
-     <string>margeOnder</string> 
-     <int>15</int> 
-    </void> 
-    <void method="put"> 
-     <string>tweeHoofdletterVar</string> 
-     <boolean>false</boolean> 
-    </void> 
-    <void method="put"> 
-     <string>zelftoetsGeenCorr</string> 
-     <boolean>false</boolean> 
-    </void> 
-    <void method="put"> 
-     <string>fontName</string> 
-     <string>SansSerif</string> 
-    </void> 
-    <void method="put"> 
-     <string>woordFormule</string> 
-     <boolean>false</boolean> 
-    </void> 
-    <void method="put"> 
-     <string>timer</string> 
-     <boolean>false</boolean> 
-    </void> 
-    <void method="put"> 
-     <string>margeRechts</string> 
-     <int>15</int> 
-    </void> 
-    <void method="put"> 
-     <string>hasObjectives</string> 
-     <boolean>false</boolean> 
-    </void> 
-    <void method="put"> 
-     <string>navigatieSize</string> 
-     <int>12</int> 
-    </void> 
-    <void method="put"> 
-     <string>timeLimit</string> 
-     <int>60</int> 
-    </void> 
-    <void method="put"> 
-     <string>margeBoven</string> 
-     <int>15</int> 
-    </void> 
-    <void method="put"> 
-     <string>condNav</string> 
-     <boolean>false</boolean> 
-    </void> 
-    <void method="put"> 
-     <string>pagina</string> 
-     <boolean>false</boolean> 
-    </void> 
-    <void method="put"> 
-     <string>abcDeelOpdr</string> 
-     <boolean>false</boolean> 
-    </void> 
-    <void method="put"> 
-     <string>margeLinks</string> 
-     <int>18</int> 
-    </void> 
-    <void method="put"> 
-     <string>formTimes</string> 
-     <boolean>true</boolean> 
-    </void> 
-    <void method="put"> 
-     <string>vorigeKnopZichtbaar</string> 
-     <boolean>false</boolean> 
-    </void> 
-    <void method="put"> 
-     <string>itemOpnieuw</string> 
-     <boolean>false</boolean> 
-    </void> 
-    <void method="put"> 
-     <string>significantie</string> 
-     <boolean>false</boolean> 
-    </void> 
-    <void method="put"> 
-     <string>opnieuw</string> 
-     <boolean>false</boolean> 
-    </void> 
-    <void method="put"> 
-     <string>checkPerOpdracht</string> 
-     <boolean>false</boolean> 
-    </void> 
-    <void method="put"> 
-     <string>hoekGraden</string> 
-     <boolean>false</boolean> 
-    </void> 
-    <void method="put"> 
-     <string>condPerc</string> 
-     <int>100</int> 
-    </void> 
-    <void method="put"> 
-     <string>maalTeken</string> 
-     <boolean>false</boolean> 
-    </void> 
-    <void method="put"> 
-     <string>fontSize</string> 
-     <int>12</int> 
-    </void> 
-    <void method="put"> 
-     <string>globalParam</string> 
-     <boolean>false</boolean> 
-    </void> 
-   </object> 
-  </void> 
-  <void method="put"> 
-   <string>gekoppeldeOpdrachten</string> 
-   <string>false</string> 
-  </void> 
-  <void method="put"> 
-   <string>activiteit_1</string> 
-   <string>problems</string> 
-  </void> 
-  <void method="put"> 
-   <string>aantalOpdrachten_1</string> 
-   <string>1</string> 
-  </void> 
-  <void method="put"> 
-   <string>opnieuwMogelijk</string> 
-   <string>false</string> 
-  </void> 
-  <void method="put"> 
-   <string>mode</string> 
-   <string>0</string> 
-  </void> 
-  <void method="put"> 
-   <string>aantalActiviteiten</string> 
-   <string>1</string> 
-  </void> 
- </object> 
-</java> 
+{"opdracht_1_1":
+{"hasTitle":false,
+"interactiePanelLaunchData":
+   [null,null,null,null,null,
+     {"soortInteractiePanel":9,
+      "soortInteractiePanelClass":"",
+      "volledigeBreedte":false,
+      "popupImageString":"",
+      "breedte":769,
+      "popup":false,
+      "hoogte":258,
+      "locationY":0,
+      "locationX":0,
+      "interactiePanelLaunchState":
+         {"anderFont":false,
+           "interactiePanelLaunchData":
+               [
+                  {"soortInteractiePanel":9,
+                   "soortInteractiePanelClass":"",
+                    "volledigeBreedte":false,
+                    "popupImageString":"",
+                    "breedte":186,
+                    "popup":false,
+                    "hoogte":21,
+                    "locationY":0,
+                    "locationX":0,
+                    "interactiePanelLaunchState":
+                      {"anderFont":true,
+                       "interactiePanelLaunchData":[],
+                        "cellSpaceColumn":2,
+                        "cellSpaceRow":2,
+                        "balansVergCom":false,
+                        "sleepHandle":false,
+                        "breedtes":[186.0],
+                        "isLink":false,
+                        "puntenAftrekPopup":5,
+                        "scoreMax":0,
+                        "interlinie":0,
+                        "sleepdoel":false,
+                        "centerV":false,
+                        "callOutMargeY1":5,
+                        "callOutMargeY0":15,
+                        "randZichtbaar":false,
+                        "zichtbaarNaNakijken":false,
+                        "bgColorZichtbaar":false,
+                        "defaultBijNull":false,
+                        "tableBorders":false,
+                        "locationY":0,
+                        "locationX":0,
+                        "ronding":0,
+                        "inklapbaar":false,
+                        "vulHoogte":false,
+                        "aftrekPopup":false,
+                        "font":{"style":1,"family":"SansSerif","@type":"java:Font","size":16},
+                        "centerH":false,
+                        "randDikte":1,
+                        "selectable":false,
+                        "checkExpressieString":"$f0@",
+                        "random":false,
+                        "bgColor":{"red":238,"blue":238,"green":238,"@type":"java:Color"},
+                        "randColor":{"red":128,"blue":128,"green":128,"@type":"java:Color"},
+                        "hoogtes":[21.0],
+                        "cellMarge":0,"bovenMarge":0,"callOutPointY":0,"callOutPointX":0,"pasAanH":true,
+                        "callOut":false,"sleepbaar":false,"colorSelection":false,
+                        "ingeklapt":true,
+                        "pasAanB":true,
+                        "fgColor":{"red":0,"blue":0,"green":102,"@type":"java:Color"},
+                        "ipId":0,
+                        "zwevend":false,"hoek":0,"callOutMargeX1":5,
+                        "teksten":[["Uitklapbare tekstvakken\n"]],
+                        "callOutMargeX0":15
+                        },
+                        "setNr":3
+                    },
+                    {"soortInteractiePanel":9,
+                     "soortInteractiePanelClass":"",
+                     "volledigeBreedte":true,
+                     "popupImageString":"",
+                     "breedte":769,"popup":false,"hoogte":221,"locationY":0,"locationX":0,
+                     "interactiePanelLaunchState":
+                       {"anderFont":false,
+                        "interactiePanelLaunchData":
+                         [{"soortInteractiePanel":9,
+                           "soortInteractiePanelClass":"","volledigeBreedte":true,"popupImageString":"",
+                           "breedte":436,"popup":false,"hoogte":221,"locationY":0,"locationX":0,
+                           "interactiePanelLaunchState":
+                             {"anderFont":false,
+                             "interactiePanelLaunchData":
+                              [{"soortInteractiePanel":9,
+                                "soortInteractiePanelClass":"",
+                                "volledigeBreedte":true,"popupImageString":"","breedte":420,"popup":false,
+                                "hoogte":151,"locationY":0,"locationX":0,
+                                "interactiePanelLaunchState":
+                                {"anderFont":false,"interactiePanelLaunchData":
+                                  [{"soortInteractiePanel":9,
+                                    "soortInteractiePanelClass":"",
+                                    "volledigeBreedte":false,"popupImageString":"","breedte":71,"popup":false,
+                                    "hoogte":17,"locationY":0,"locationX":0,
+                                    "interactiePanelLaunchState":
+                                    {"anderFont":true,
+                                     "interactiePanelLaunchData":[],"cellSpaceColumn":2,"cellSpaceRow":2,
+                                     "balansVergCom":false,"sleepHandle":false,
+                                     "breedtes":[71.0],
+                                     "isLink":false,"puntenAftrekPopup":5,"scoreMax":0,"interlinie":0,"sleepdoel":false,
+                                     "centerV":false,"callOutMargeY1":5,"callOutMargeY0":15,"randZichtbaar":false,
+                                     "zichtbaarNaNakijken":false,"bgColorZichtbaar":false,"defaultBijNull":false,
+                                     "tableBorders":false,"locationY":0,"locationX":0,"ronding":0,"inklapbaar":false,
+                                     "vulHoogte":false,"aftrekPopup":false,
+                                     "font":{"style":3,"family":"SansSerif","@type":"java:Font","size":13},
+                                     "centerH":false,"randDikte":1,"selectable":false,
+                                     "checkExpressieString":"$f0@","random":false,
+                                     "bgColor":{"red":255,"blue":255,"green":255,"@type":"java:Color"},
+                                     "randColor":{"red":128,"blue":128,"green":128,"@type":"java:Color"},
+                                     "hoogtes":[17.0],"cellMarge":0,"bovenMarge":0,"callOutPointY":0,"callOutPointX":0,
+                                     "pasAanH":true,"callOut":false,"sleepbaar":false,"colorSelection":false,"ingeklapt":true,
+                                     "pasAanB":true,"fgColor":{"red":0,"blue":0,"green":0,"@type":"java:Color"},
+                                     "ipId":0,"zwevend":false,"hoek":0,"callOutMargeX1":5,
+                                     "teksten":[["Opdracht 1\n"]],"callOutMargeX0":15},"setNr":3
+                                    }]    
+                                ,"cellSpaceColumn":2,"cellSpaceRow":2,"balansVergCom":false,"sleepHandle":false,
+                                "breedtes":[420.0],"isLink":false,"puntenAftrekPopup":5,"scoreMax":0,"interlinie":0,
+                                "sleepdoel":false,"centerV":false,"callOutMargeY1":5,"callOutMargeY0":15,"randZichtbaar":false,
+                                "zichtbaarNaNakijken":false,"bgColorZichtbaar":true,"defaultBijNull":false,"tableBorders":false,
+                                "locationY":0,"locationX":0,"ronding":0,"inklapbaar":true,"vulHoogte":false,"aftrekPopup":false,
+                                "font":{"style":0,"family":"SansSerif","@type":"java:Font","size":12},"centerH":false,
+                                "randDikte":1,"selectable":false,"checkExpressieString":"$f0@","random":false,
+                                "bgColor":{"red":255,"blue":255,"green":255,"@type":"java:Color"},
+                                "randColor":{"red":128,"blue":128,"green":128,"@type":"java:Color"},
+                                "hoogtes":[27.0,122.0],"cellMarge":0,"bovenMarge":5,"callOutPointY":0,"callOutPointX":0,
+                                "pasAanH":true,"callOut":false,"sleepbaar":false,"colorSelection":false,"ingeklapt":false,
+                                "pasAanB":false,"fgColor":{"red":0,"blue":0,"green":0,"@type":"java:Color"},
+                                "ipId":0,"zwevend":false,"hoek":0,"callOutMargeX1":5,
+                                "teksten":[["$V@\n"],
+                                           ["en hier de uitklapper\nEen tekst komt hier vxcxvc vte staan\ndstekst komt hier vxcxvc vte\nfdstekst komt hier vxcxvc vte\nfdtekst komt hier vxcxvc vte\nfdsEen tekst komt hier vxcxvc vte staan\n\n"]],
+                                 "callOutMargeX0":15
+                                 },"setNr":3
+                                },
+                                {"soortInteractiePanel":9,"soortInteractiePanelClass":"","volledigeBreedte":true,"popupImageString":"","breedte":420,"popup":false,"hoogte":27,"locationY":0,"locationX":0,"interactiePanelLaunchState":{"anderFont":false,"interactiePanelLaunchData":[{"soortInteractiePanel":9,"soortInteractiePanelClass":"","volledigeBreedte":false,"popupImageString":"","breedte":71,"popup":false,"hoogte":17,"locationY":0,"locationX":0,"interactiePanelLaunchState":{"anderFont":true,"interactiePanelLaunchData":[],"cellSpaceColumn":2,"cellSpaceRow":2,"balansVergCom":false,"sleepHandle":false,"breedtes":[71.0],"isLink":false,"puntenAftrekPopup":5,"scoreMax":0,"interlinie":0,"sleepdoel":false,"centerV":false,"callOutMargeY1":5,"callOutMargeY0":15,"randZichtbaar":false,"zichtbaarNaNakijken":false,"bgColorZichtbaar":false,"defaultBijNull":false,"tableBorders":false,"locationY":0,"locationX":0,"ronding":0,"inklapbaar":false,"vulHoogte":false,"aftrekPopup":false,"font":{"style":3,"family":"SansSerif","@type":"java:Font","size":13},"centerH":false,"randDikte":1,"selectable":false,"checkExpressieString":"$f0@","random":false,"bgColor":{"red":255,"blue":255,"green":255,"@type":"java:Color"},"randColor":{"red":128,"blue":128,"green":128,"@type":"java:Color"},"hoogtes":[17.0],"cellMarge":0,"bovenMarge":0,"callOutPointY":0,"callOutPointX":0,"pasAanH":true,"callOut":false,"sleepbaar":false,"colorSelection":false,"ingeklapt":true,"pasAanB":true,"fgColor":{"red":0,"blue":0,"green":0,"@type":"java:Color"},"ipId":0,"zwevend":false,"hoek":0,"callOutMargeX1":5,"teksten":[["Opdracht 2\n"]],"callOutMargeX0":15},"setNr":3}],"cellSpaceColumn":2,"cellSpaceRow":2,"balansVergCom":false,"sleepHandle":false,"breedtes":[21.0,397.0],"isLink":false,"puntenAftrekPopup":5,"scoreMax":0,"interlinie":0,"sleepdoel":false,"centerV":false,"callOutMargeY1":5,"callOutMargeY0":15,"randZichtbaar":false,"zichtbaarNaNakijken":false,"bgColorZichtbaar":true,"defaultBijNull":false,"tableBorders":false,"locationY":0,"locationX":0,"ronding":0,"inklapbaar":true,"vulHoogte":false,"aftrekPopup":false,"font":{"style":0,"family":"SansSerif","@type":"java:Font","size":12},"centerH":false,"randDikte":1,"selectable":false,"checkExpressieString":"$f0@","random":false,"bgColor":{"red":255,"blue":255,"green":255,"@type":"java:Color"},"randColor":{"red":128,"blue":128,"green":128,"@type":"java:Color"},"hoogtes":[27.0,-2.0],"cellMarge":0,"bovenMarge":5,"callOutPointY":0,"callOutPointX":0,"pasAanH":true,"callOut":false,"sleepbaar":false,"colorSelection":false,"ingeklapt":true,"pasAanB":false,"fgColor":{"red":0,"blue":0,"green":0,"@type":"java:Color"},"ipId":0,"zwevend":false,"hoek":0,"callOutMargeX1":5,"teksten":[["\n","$V@\n"],["\n","en hier de uitklapper\nEen tekst komt hier vxcxvc vte staan\ndstekst komt hier vxcxvc vte\nfdstekst komt hier vxcxvc vte\nfdtekst komt hier vxcxvc vte\nfdsEen tekst komt hier vxcxvc vte staan\n\n"]],"callOutMargeX0":15},"setNr":3},{"soortInteractiePanel":9,"soortInteractiePanelClass":"","volledigeBreedte":true,"popupImageString":"","breedte":420,"popup":false,"hoogte":27,"locationY":0,"locationX":0,"interactiePanelLaunchState":{"anderFont":false,"interactiePanelLaunchData":[{"soortInteractiePanel":9,"soortInteractiePanelClass":"","volledigeBreedte":false,"popupImageString":"","breedte":71,"popup":false,"hoogte":17,"locationY":0,"locationX":0,"interactiePanelLaunchState":{"anderFont":true,"interactiePanelLaunchData":[],"cellSpaceColumn":2,"cellSpaceRow":2,"balansVergCom":false,"sleepHandle":false,"breedtes":[71.0],"isLink":false,"puntenAftrekPopup":5,"scoreMax":0,"interlinie":0,"sleepdoel":false,"centerV":false,"callOutMargeY1":5,"callOutMargeY0":15,"randZichtbaar":false,"zichtbaarNaNakijken":false,"bgColorZichtbaar":false,"defaultBijNull":false,"tableBorders":false,"locationY":0,"locationX":0,"ronding":0,"inklapbaar":false,"vulHoogte":false,"aftrekPopup":false,"font":{"style":3,"family":"SansSerif","@type":"java:Font","size":13},"centerH":false,"randDikte":1,"selectable":false,"checkExpressieString":"$f0@","random":false,"bgColor":{"red":255,"blue":255,"green":255,"@type":"java:Color"},"randColor":{"red":128,"blue":128,"green":128,"@type":"java:Color"},"hoogtes":[17.0],"cellMarge":0,"bovenMarge":0,"callOutPointY":0,"callOutPointX":0,"pasAanH":true,"callOut":false,"sleepbaar":false,"colorSelection":false,"ingeklapt":true,"pasAanB":true,"fgColor":{"red":0,"blue":0,"green":0,"@type":"java:Color"},"ipId":0,"zwevend":false,"hoek":0,"callOutMargeX1":5,"teksten":[["Opdracht 3\n"]],"callOutMargeX0":15},"setNr":3}],"cellSpaceColumn":2,"cellSpaceRow":2,"balansVergCom":false,"sleepHandle":false,"breedtes":[21.0,397.0],"isLink":false,"puntenAftrekPopup":5,"scoreMax":0,"interlinie":0,"sleepdoel":false,"centerV":false,"callOutMargeY1":5,"callOutMargeY0":15,"randZichtbaar":false,"zichtbaarNaNakijken":false,"bgColorZichtbaar":true,"defaultBijNull":false,"tableBorders":false,"locationY":0,"locationX":0,"ronding":0,"inklapbaar":true,"vulHoogte":false,"aftrekPopup":false,"font":{"style":0,"family":"SansSerif","@type":"java:Font","size":12},"centerH":false,"randDikte":1,"selectable":false,"checkExpressieString":"$f0@","random":false,"bgColor":{"red":255,"blue":255,"green":255,"@type":"java:Color"},"randColor":{"red":128,"blue":128,"green":128,"@type":"java:Color"},"hoogtes":[27.0,-2.0],"cellMarge":0,"bovenMarge":5,"callOutPointY":0,"callOutPointX":0,"pasAanH":true,"callOut":false,"sleepbaar":false,"colorSelection":false,"ingeklapt":true,"pasAanB":false,"fgColor":{"red":0,"blue":0,"green":0,"@type":"java:Color"},"ipId":0,"zwevend":false,"hoek":0,"callOutMargeX1":5,"teksten":[["\n","$V@\n"],["\n","en hier de uitklapper\nEen tekst komt hier vxcxvc vte staan\ndstekst komt hier vxcxvc vte\nfdstekst komt hier vxcxvc vte\nfdtekst komt hier vxcxvc vte\nfdsEen tekst komt hier vxcxvc vte staan\n\n"]],"callOutMargeX0":15},"setNr":3}],"cellSpaceColumn":2,"cellSpaceRow":2,"balansVergCom":false,"sleepHandle":false,"breedtes":[436.0],"isLink":false,"puntenAftrekPopup":5,"scoreMax":0,"interlinie":0,"sleepdoel":false,"centerV":false,"callOutMargeY1":5,"callOutMargeY0":15,"randZichtbaar":true,"zichtbaarNaNakijken":false,"bgColorZichtbaar":false,"defaultBijNull":false,"tableBorders":false,"locationY":0,"locationX":0,"ronding":0,"inklapbaar":false,"vulHoogte":false,"aftrekPopup":false,"font":{"style":0,"family":"SansSerif","@type":"java:Font","size":12},"centerH":false,"randDikte":6,"selectable":false,"checkExpressieString":"$f0@","random":false,"bgColor":{"red":238,"blue":238,"green":238,"@type":"java:Color"},"randColor":{"red":0,"blue":51,"green":102,"@type":"java:Color"},"hoogtes":[221.0],"cellMarge":8,"bovenMarge":8,"callOutPointY":0,"callOutPointX":0,"pasAanH":true,"callOut":false,"sleepbaar":false,"colorSelection":false,"ingeklapt":true,"pasAanB":false,"fgColor":{"red":0,"blue":0,"green":0,"@type":"java:Color"},"ipId":0,"zwevend":false,"hoek":0,"callOutMargeX1":5,"teksten":[["$V@\n$V@\n$V@\n"]],"callOutMargeX0":15},"setNr":3}],"cellSpaceColumn":20,"cellSpaceRow":2,"balansVergCom":false,"sleepHandle":false,"breedtes":[313.0,436.0],"isLink":false,"puntenAftrekPopup":5,"scoreMax":0,"interlinie":0,"sleepdoel":false,"centerV":false,"callOutMargeY1":5,"callOutMargeY0":15,"randZichtbaar":false,"zichtbaarNaNakijken":false,"bgColorZichtbaar":false,"defaultBijNull":false,"tableBorders":false,"locationY":0,"locationX":0,"ronding":0,"inklapbaar":false,"vulHoogte":false,"aftrekPopup":false,"font":{"style":0,"family":"SansSerif","@type":"java:Font","size":12},"centerH":false,"randDikte":1,"selectable":false,"checkExpressieString":"$f0@","random":false,"bgColor":{"red":238,"blue":238,"green":238,"@type":"java:Color"},"randColor":{"red":128,"blue":128,"green":128,"@type":"java:Color"},"hoogtes":[221.0],"cellMarge":0,"bovenMarge":0,"callOutPointY":0,"callOutPointX":0,"pasAanH":true,"callOut":false,"sleepbaar":false,"colorSelection":false,"ingeklapt":true,"pasAanB":false,"fgColor":{"red":0,"blue":0,"green":0,"@type":"java:Color"},"ipId":0,"zwevend":false,"hoek":0,"callOutMargeX1":5,"teksten":[["\nWat er gebeurt bij de optie \"In-\/uitklapbaar\" is dat van dat tekstvak (een tekstvak kan meerdere rijen hebben) de eerste rij getoond wordt in ingeklapte toestand en alle rijen in uitgeklapte toestand.\n\nHet knopje wordt linksboven getoond en de cel op eerste rij (en eerste kolom als er meer kolommen zijn) wordt iets kleiner gemaakt om ruimte te maken voor dit knopje. De tekst op de eerste rij wordt dus naast het knopje gezet\n","$V@\n"]],"callOutMargeX0":15},"setNr":3}],"cellSpaceColumn":2,"cellSpaceRow":2,"balansVergCom":false,"sleepHandle":false,"breedtes":[769.0],"isLink":false,"puntenAftrekPopup":5,"scoreMax":0,"interlinie":0,"sleepdoel":false,"centerV":false,"callOutMargeY1":5,"callOutMargeY0":15,"randZichtbaar":false,"zichtbaarNaNakijken":false,"bgColorZichtbaar":false,"defaultBijNull":false,"tableBorders":false,"locationY":0,"locationX":0,"ronding":0,"inklapbaar":false,"vulHoogte":false,"aftrekPopup":false,"font":{"style":0,"family":"SansSerif","@type":"java:Font","size":12},"centerH":false,"randDikte":1,"selectable":false,"checkExpressieString":"$f0@","random":false,"bgColor":{"red":238,"blue":238,"green":238,"@type":"java:Color"},"randColor":{"red":128,"blue":128,"green":128,"@type":"java:Color"},"hoogtes":[258.0],"cellMarge":0,"bovenMarge":0,"callOutPointY":0,"callOutPointX":0,"pasAanH":true,"callOut":false,"sleepbaar":false,"colorSelection":false,"ingeklapt":true,"pasAanB":false,"fgColor":{"red":0,"blue":0,"green":0,"@type":"java:Color"},"ipId":0,"zwevend":false,"hoek":0,"callOutMargeX1":5,"teksten":[["$V@\n\n$V@\n"]],"callOutMargeX0":15},"setNr":3}],"tekst2":"\n","titel":"Problem 1\n","scheidingX":1095,"hasAntwoordVak":false,"tekst":"$V@\n","scoreMax":0,"eindX":770,"randVarString":"\n"},"$IMAGE$MAP$":{"feedbackAanw\/h":12,"feedbackAanw\/w":15,"feedbackAanw":{"@type":"dwomaccess:ByteArray","string":"R0lGODlhDwAMAIcAAAAAAN3d3eDg4OPj4+bm5unp6ezs7O\/v7\/Ly8gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAAAAP8ALAAAAAAPAAwAQAhRABEIHEiw4ICDBwEAQMhwgIGHEB8qjGjggMUDCjNevFigo8cCCj92FECSpMKSKAUUXEnwokKXADYeEOkx5EcCOHMqzMmzoU+GAYIGVSi0aICAADs="},"feedbackAanw\/f":{"@value":"file:\/\/\/\/soliscom.uu.nl\/uu\/Users\/Tacom103\/My%20Documents\/Desktop\/feedbackAanw.gif","@type":"java:URI"},"feedbackAanw\/t":"image\/gif"},"instellingen":{"bolletjesZichtbaar":true,"volgendeKnopZichtbaar":false,"fToets":true,"eerderGeenCorr":false,"voortgang":false,"margeOnder":15,"tweeHoofdletterVar":false,"zelftoetsGeenCorr":false,"fontName":"SansSerif","woordFormule":false,"timer":false,"margeRechts":15,"hasObjectives":false,"navigatieSize":12,"timeLimit":60,"margeBoven":15,"condNav":false,"pagina":false,"abcDeelOpdr":false,"margeLinks":18,"formTimes":true,"vorigeKnopZichtbaar":false,"itemOpnieuw":false,"significantie":false,"opnieuw":false,"checkPerOpdracht":false,"hoekGraden":false,"condPerc":100,"maalTeken":false,"fontSize":12,"globalParam":false},"gekoppeldeOpdrachten":"false","activiteit_1":"Niveau 1","aantalOpdrachten_1":"1","opnieuwMogelijk":"true","mode":"0","aantalActiviteiten":"1"}
