@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +58,10 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
+import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.InsertPanel;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ToggleButton;
@@ -74,7 +78,7 @@ import fi.wiskopdr.expressies.VergelijkingMeerv;
 
 public class TekstVakPanel implements InteractionView
 {
-	private static final String KLAPUIT_WIDTH = "30px";
+	private static final int KLAPUIT_WIDTH = 20;
 	private int font_size = 12;
 	private int font_style = 0;
 	private FormuleKeyboard kb = null;
@@ -86,7 +90,7 @@ public class TekstVakPanel implements InteractionView
 	private LayoutPanel mainPanel2 = null;
 	private Grid mainPanel = null;
 	private LayoutPanel randPanel = null;
-	private LayoutPanel[][] tekstHulsVakken = null;
+	private HorizontalPanel[][] tekstHulsVakken = null;
 	private FlowPanel[][] tekstVakken = null;
 	String[] randomVarNamen = null;
 	HashMap<String, Object> randomVarWaarden = null;
@@ -95,8 +99,8 @@ public class TekstVakPanel implements InteractionView
 
 	ArrayList<Object> interactionViewObjects = new ArrayList<Object>();
 
-	List<? extends Number> breedtes = null;
-	List<? extends Number> hoogtes = null;
+	List<Double> breedtes = null;
+	List<Double> hoogtes = null;
 	int cellSpaceColumn = 0;
 	int cellSpaceRow = 0;
 	int cellMarge = 0;
@@ -118,6 +122,7 @@ public class TekstVakPanel implements InteractionView
 	private boolean sleepHandle = false;
 	private int sleepdoelMarge = 10;
 	private boolean sleepSnap = false;
+	private boolean pasAanH = false;
 	
 	private boolean selectable;
 	private boolean sleepbaar;
@@ -140,6 +145,7 @@ public class TekstVakPanel implements InteractionView
 
 	private boolean inklapbaar, ingeklapt;
 	private ToggleButton klapUitButton;
+	private TekstVakPanel container;
 	
 	static CssColor getColor(ObjectMap map, String key, int r, int g, int b) {
 		ObjectMap colorMap = map != null  ? map.getObjectMap(key) : null ;
@@ -171,7 +177,11 @@ public class TekstVakPanel implements InteractionView
 		if (h != null && h.containsKey("interactiePanelLaunchState"))
 			launchState =  h.getObjectMap("interactiePanelLaunchState");
 
-		System.out.println("launchState: " + launchState);
+		if(launchState == null)
+		{
+			launchState = JSONUtilities.wrapMap(Collections.<String, Object> emptyMap());
+		}
+		//System.out.println("launchState: " + launchState);
 		boolean bgColorZichtbaar = false;
 		boolean randZichtbaar = false;
 		boolean tableBorders = false;
@@ -190,93 +200,105 @@ public class TekstVakPanel implements InteractionView
 
 		int ronding = 0;
 
-		if (launchState != null && launchState.containsKey("breedtes") )
+		if (launchState.containsKey("breedtes") )
 			breedtes = launchState.getDoubleList("breedtes");
 		else
 			breedtes = (Arrays.asList(600.0));
-		if (launchState != null && launchState.containsKey("hoogtes") )
+		if (launchState.containsKey("hoogtes") )
 			hoogtes = launchState.getDoubleList("hoogtes") ;
 		else
 			hoogtes = (Arrays.asList(250.0));
-		if (launchState != null && launchState.containsKey("cellSpaceColumn") )
+		if (launchState.containsKey("cellSpaceColumn") )
 			cellSpaceColumn = launchState.getInt("cellSpaceColumn");
-		if (launchState != null && launchState.containsKey("cellSpaceRow") )
+		if (launchState.containsKey("cellSpaceRow") )
 			cellSpaceRow = launchState.getInt("cellSpaceRow");
-		if (launchState != null && launchState.containsKey("cellMarge"))
+		if (launchState.containsKey("cellMarge"))
 			cellMarge = launchState.getInt("cellMarge");
-		if (launchState != null && launchState.containsKey("bovenMarge") )
+		if (launchState.containsKey("bovenMarge") )
 			bovenMarge = launchState.getInt("bovenMarge");
-		if (launchState != null && launchState.containsKey("ronding"))
+		if (launchState.containsKey("ronding"))
 			ronding = launchState.getInt("ronding");
-		if (launchState != null && launchState.containsKey("bgColorZichtbaar") )
+		if (launchState.containsKey("bgColorZichtbaar") )
 			bgColorZichtbaar = launchState.getBoolean("bgColorZichtbaar");
-		if (launchState != null && launchState.containsKey("bgColor_red") )
+		if (launchState.containsKey("bgColor_red") )
 			bgColor_red = launchState.getInt("bgColor_red");
-		if (launchState != null && launchState.containsKey("bgColor_green"))
+		if (launchState.containsKey("bgColor_green"))
 			bgColor_green = launchState.getInt("bgColor_green");
-		if (launchState != null && launchState.containsKey("bgColor_blue"))
+		if (launchState.containsKey("bgColor_blue"))
 			bgColor_blue = launchState.getInt("bgColor_blue");
-		if (launchState != null && launchState.containsKey("fgColor_red"))
+		if (launchState.containsKey("fgColor_red"))
 			fgColor_red = launchState.getInt("fgColor_red");
-		if (launchState != null && launchState.containsKey("fgColor_green"))
+		if (launchState.containsKey("fgColor_green"))
 			fgColor_green = launchState.getInt("fgColor_green");
-		if (launchState != null && launchState.containsKey("fgColor_blue"))
+		if (launchState.containsKey("fgColor_blue"))
 			fgColor_blue = launchState.getInt("fgColor_blue");
-		if (launchState != null && launchState.containsKey("randZichtbaar"))
+		if (launchState.containsKey("randZichtbaar"))
 			randZichtbaar = launchState.getBoolean("randZichtbaar");
-		if (launchState != null && launchState.containsKey("randColor_red"))
+		if (launchState.containsKey("randColor_red"))
 			randColor_red = launchState.getInt("randColor_red");
-		if (launchState != null && launchState.containsKey("randColor_green"))
+		if (launchState.containsKey("randColor_green"))
 			randColor_green = launchState.getInt("randColor_green");
-		if (launchState != null && launchState.containsKey("randColor_blue"))
+		if (launchState.containsKey("randColor_blue"))
 			randColor_blue = launchState.getInt("randColor_blue");
-		if (launchState != null && launchState.containsKey("randDikte"))
+		if (launchState.containsKey("randDikte"))
 			randDikte = launchState.getInt("randDikte");
-		if (launchState != null && launchState.containsKey("font_size"))
+		if (launchState.containsKey("font_size"))
 			font_size = launchState.getInt("font_size");
-		if (launchState != null && launchState.containsKey("font_style"))
+		if (launchState.containsKey("font_style"))
 			font_style = launchState.getInt("font_style");
 		
-		if(launchState != null && launchState.containsKey("font")) {
+		if(launchState.containsKey("font")) {
 			ObjectMap m = launchState.getObjectMap("font");
 			font_size = m.getInt("size");
 			font_style = m.getInt("style");			
 		}
 		
-		if (launchState != null && launchState.containsKey("selectable"))
+		if (launchState.containsKey("selectable"))
 			selectable = launchState.getBoolean("selectable"); 
-		if (launchState != null && launchState.containsKey("sleepbaar"))
+		if (launchState.containsKey("sleepbaar"))
 			sleepbaar = launchState.getBoolean("sleepbaar");
-		if (launchState != null && launchState.containsKey("sleepdoel"))
+		if (launchState.containsKey("sleepdoel"))
 			sleepdoel = launchState.getBoolean("sleepdoel");
-		if (launchState != null && launchState.containsKey("sleepHandle"))
+		if (launchState.containsKey("sleepHandle"))
 			sleepHandle = launchState.getBoolean("sleepHandle");
-		if (launchState != null && launchState.containsKey("checkExpressieString"))
+		if (launchState.containsKey("checkExpressieString"))
 			checkExpressieString = launchState.getString("checkExpressieString");
-		if (launchState != null && launchState.containsKey("defaultBijNull"))
+		if (launchState.containsKey("defaultBijNull"))
 			defaultBijNull = launchState.getBoolean("defaultBijNull");
-		if (launchState != null && launchState.containsKey("ipId"))
+		if (launchState.containsKey("ipId"))
 			ipId = launchState.getInt("ipId");
-		if (launchState != null && launchState.containsKey("colorSelection"))
+		if (launchState.containsKey("colorSelection"))
 			colorSelection = launchState.getBoolean("colorSelection");
-		if (launchState != null && launchState.containsKey("tableBorders"))
+		if (launchState.containsKey("tableBorders"))
 			tableBorders = launchState.getBoolean("tableBorders");
-		if (launchState != null && launchState.containsKey("centerV"))
+		if (launchState.containsKey("centerV"))
 			centerV = launchState.getBoolean("centerV");
-		if (launchState != null && launchState.containsKey("centerH"))
+		if (launchState.containsKey("centerH"))
 			centerH = launchState.getBoolean("centerH");
-		if (launchState != null && launchState.containsKey("zwevend"))
+		if (launchState.containsKey("zwevend"))
 			zwevend = launchState.getBoolean("zwevend");
-		if (launchState != null && launchState.containsKey("locationX"))
+		if (launchState.containsKey("locationX"))
 			locationX = launchState.getInt("locationX");
-		if (launchState != null && launchState.containsKey("locationY"))
+		if (launchState.containsKey("locationY"))
 			locationY = launchState.getInt("locationY");
 // klap schaats
-		if( launchState != null && launchState.containsKey("inklapbaar"))
+		if( launchState.containsKey("inklapbaar"))
 			inklapbaar = launchState.getBoolean("inklapbaar");
-		if( launchState != null && launchState.containsKey("ingeklapt"))
+		if( launchState.containsKey("ingeklapt"))
 			ingeklapt = launchState.getBoolean("ingeklapt");
-		
+// launchState never null!
+		if( launchState.containsKey("pasAanH"))
+			pasAanH = launchState.getBoolean("pasAanH");
+
+// FIXME overleg met Peter		
+//		if(ingeklapt) for(int i = 0; i < hoogtes.size(); i++) {
+//			ingeklapt = false;
+//			if(hoogtes.get(i).intValue() < 0)
+//			{
+//				hoogtes.set(i, new Double(100) ); // How to calculate this?
+//				hoogte += 100;
+//			}
+//		}
 		
 		bgColor = getColor(launchState, "bgColor", bgColor_red, bgColor_green, bgColor_blue);
 		fgColor = getColor(launchState, "fgColor",fgColor_red, fgColor_green, fgColor_blue);
@@ -284,7 +306,7 @@ public class TekstVakPanel implements InteractionView
 		randDikte = randZichtbaar ? randDikte : 0; 
 
 		mainPanel2 = new LayoutPanel();
-		mainPanel2.setSize(breedte + "px", hoogte + "px");
+		setCurrentSize(breedte, hoogte);
 		
 		MouseHandler mouseHandler = new MouseHandler();
 		mainPanel2.addDomHandler(mouseHandler, MouseDownEvent.getType());
@@ -313,12 +335,12 @@ public class TekstVakPanel implements InteractionView
 		verticalBorders = new LayoutPanel[breedtes.size() - 1];
 		for (int i = 0; i < hoogtes.size() - 1; i++)
 		{	horizontalBorders[i] = new LayoutPanel();
-			horizontalBorders[i].setSize(breedte + "px", 1 + "px");
+			horizontalBorders[i].setPixelSize(breedte, 1);
 			horizontalBorders[i].getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 			horizontalBorders[i].getElement().getStyle().setBorderColor(randColor.toString());
 			hoogteCum += ((Number) hoogtes.get(i)).intValue() + cellSpaceRow;
 			randPanel.add(horizontalBorders[i]);
-			randPanel.setWidgetLeftWidth(horizontalBorders[i], 0, Style.Unit.PX, breedte, Style.Unit.PX);
+			randPanel.setWidgetLeftRight(horizontalBorders[i], 0, Style.Unit.PX, 0, Style.Unit.PX);
 			randPanel.setWidgetTopHeight(horizontalBorders[i], Math.round(hoogteCum), Style.Unit.PX, 1, Style.Unit.PX);
 			if(!tableBorders)
 				horizontalBorders[i].setVisible(false);
@@ -327,13 +349,13 @@ public class TekstVakPanel implements InteractionView
 		for (int i = 0; i < breedtes.size() - 1; i++)
 		{
 			verticalBorders[i] = new LayoutPanel();
-			verticalBorders[i].setSize(1 + "px", hoogte + "px");
+			verticalBorders[i].setPixelSize(1 , hoogte);
 			verticalBorders[i].getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 			verticalBorders[i].getElement().getStyle().setBorderColor(randColor.toString());
 			breedteCum += breedtes.get(i).intValue() + cellSpaceColumn;
 			randPanel.add(verticalBorders[i]);
 			randPanel.setWidgetLeftWidth(verticalBorders[i], Math.round(breedteCum), Style.Unit.PX, 1, Style.Unit.PX);
-			randPanel.setWidgetTopHeight(verticalBorders[i], 0, Style.Unit.PX, hoogte, Style.Unit.PX);
+			randPanel.setWidgetTopBottom(verticalBorders[i], 0, Style.Unit.PX, 0, Style.Unit.PX);
 			if(!tableBorders)
 				verticalBorders[i].setVisible(false);
 			
@@ -351,7 +373,7 @@ public class TekstVakPanel implements InteractionView
 		//mainPanel.getElement().getStyle().setBorderColor("gray");
 		//mainPanel.getElement().getStyle().setBorderWidth(0, Unit.PX);
 		
-		tekstHulsVakken = new LayoutPanel[hoogtes.size()][breedtes.size()];
+		tekstHulsVakken = new HorizontalPanel[hoogtes.size()][breedtes.size()];
 		tekstVakken = new FlowPanel[hoogtes.size()][breedtes.size()];
 		for (int i = 0; i < hoogtes.size(); i++)
 		{
@@ -360,7 +382,7 @@ public class TekstVakPanel implements InteractionView
 				double tekstVakHoogte = hoogtes.get(i).doubleValue() - 2 * bovenMarge;
 				
 				
-				tekstHulsVakken[i][j] = new LayoutPanel();
+				tekstHulsVakken[i][j] = new HorizontalPanel();
 				//tekstHulsVakken[i][j].getElement().getStyle().setBackgroundColor(CssColor.make(255, 0, 0).toString());
 				//tekstHulsVakken[i][j].setSize(tekstVakBreedte + "px", tekstVakHoogte + "px");
 				tekstHulsVakken[i][j].setPixelSize(breedtes.get(j).intValue(), hoogtes.get(i).intValue());
@@ -419,7 +441,7 @@ public class TekstVakPanel implements InteractionView
 				*/
 				
 				vPanel.add(tekstVakken[i][j]);
-				vPanel.setPixelSize((int)tekstVakBreedte, (int)tekstVakHoogte);
+				//vPanel.setPixelSize((int)tekstVakBreedte, (int)tekstVakHoogte);
 				//tekstHulsVakken[i][j].add(tekstVakken[i][j]);
 				tekstHulsVakken[i][j].add(vPanel);
 				
@@ -433,13 +455,13 @@ public class TekstVakPanel implements InteractionView
 			}
 		}
 		mainPanel2.add(randPanel);
-		mainPanel2.setWidgetLeftWidth(randPanel, 0, Style.Unit.PX, breedte, Style.Unit.PX);
-		mainPanel2.setWidgetTopHeight(randPanel, 0, Style.Unit.PX, hoogte, Style.Unit.PX);
+		mainPanel2.setWidgetLeftRight(randPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+		mainPanel2.setWidgetTopBottom(randPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
 		
 		
 		mainPanel2.add(mainPanel);
-		mainPanel2.setWidgetLeftWidth(mainPanel, 0, Style.Unit.PX, breedte, Style.Unit.PX);
-		mainPanel2.setWidgetTopHeight(mainPanel, 0, Style.Unit.PX, hoogte, Style.Unit.PX);
+		mainPanel2.setWidgetLeftRight(mainPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+		mainPanel2.setWidgetTopBottom(mainPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
 		
 		if(sleepbaar && sleepHandle)
 		{	Image ic = new Image("images/resources/crosshair.gif");
@@ -480,6 +502,46 @@ public class TekstVakPanel implements InteractionView
 		this.kb = kb;
 	}
 
+	public void setContainer(TekstVakPanel container) {
+		this.container = container;
+	}
+	
+	private int width, height;
+	
+	public int getCurrentWidth() {
+		return width;
+	}
+	
+	public int getCurrentHeight() {
+		return height;
+	}
+	
+	public void setCurrentSize(int w, int h) {
+		System.out.println(this + " size " + w + "x" + h);
+		int oldHeight = height;
+		mainPanel2.setPixelSize(w, h);
+		if(w >= 0) width = w;
+		if(h >= 0) height = h;
+		if(container != null)
+			container.doLayout(this, height - oldHeight);
+	}
+	
+	public void doLayout(TekstVakPanel child, int delta) {
+		System.out.println("child dolayout " + child);
+		int h = child.getCurrentHeight();
+		int tekstGrootte = child.font_size;
+		com.google.gwt.user.client.Element element = child.getAsPanel().getElement();
+		String al = element.getStyle().getProperty("verticalAlign");
+		element.getStyle().setProperty("verticalAlign", (tekstGrootte - h + 1) + "px");
+		if(pasAanH)
+		{
+			System.out.println("new size = " + width + "x" + "(" + height + "+ " + delta + ")");
+			//mainPanel2.setPixelSize(width, height += delta);
+						setCurrentSize(-1, height + delta);
+		}
+		
+	}
+	
 	public void zetOpdracht(HashMap<String, Object> interactiePanelLaunchState)
 	{
 		String randVarString = "";
@@ -508,9 +570,11 @@ public class TekstVakPanel implements InteractionView
 						Object launchData = opdrachtGegevens.get(aantalVakken);
 						aantalVakken++;
 						HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) launchData).get("interactiePanelLaunchState");
-						((TekstVakPanel) currentObject).zetInstellingen(instellingen);
-						((TekstVakPanel) currentObject).setKeyboard(kb);
-						((TekstVakPanel) currentObject).zetOpdracht(launchState);
+						TekstVakPanel tekstVakChild = (TekstVakPanel) currentObject;
+						tekstVakChild.zetInstellingen(instellingen);
+						tekstVakChild.setKeyboard(kb);
+						tekstVakChild.zetOpdracht(launchState);
+						tekstVakChild.setContainer(this);
 						
 					}
 					else if (currentObject instanceof FormuleEditorWithAnswer)
@@ -686,15 +750,15 @@ public class TekstVakPanel implements InteractionView
 				//a.getElement().getStyle().setProperty("verticalAlign", "text-top");
 				//a.getElement().getStyle().setProperty("verticalAlign", "2px");
 				//destination.add(a);
-				if(currentObject instanceof TekstVakPanel && ((TekstVakPanel) currentObject).isZwevend())
-				{	tekstHulsVakken[rij][kolom].add(a);
-					tekstHulsVakken[rij][kolom].setWidgetLeftWidth(a, ((TekstVakPanel)currentObject).getLocationX(), Style.Unit.PX, 
-							((TekstVakPanel)currentObject).getBreedte(), Style.Unit.PX);
-					tekstHulsVakken[rij][kolom].setWidgetTopHeight(a, ((TekstVakPanel)currentObject).getLocationY(), Style.Unit.PX, 
-							((TekstVakPanel)currentObject).getHoogte(), Style.Unit.PX);
-					((TekstVakPanel) currentObject).setParent(tekstHulsVakken[rij][kolom]);
-				}
-				else
+//	FIXME       if(currentObject instanceof TekstVakPanel && ((TekstVakPanel) currentObject).isZwevend())
+//				{	tekstHulsVakken[rij][kolom].add(a);
+//					tekstHulsVakken[rij][kolom].setWidgetLeftWidth(a, ((TekstVakPanel)currentObject).getLocationX(), Style.Unit.PX, 
+//							((TekstVakPanel)currentObject).getBreedte(), Style.Unit.PX);
+//					tekstHulsVakken[rij][kolom].setWidgetTopHeight(a, ((TekstVakPanel)currentObject).getLocationY(), Style.Unit.PX, 
+//							((TekstVakPanel)currentObject).getHoogte(), Style.Unit.PX);
+//					((TekstVakPanel) currentObject).setParent(tekstHulsVakken[rij][kolom]);
+//				}
+//				else
 					destination.add(a);
 				
 			}
@@ -1312,12 +1376,36 @@ public class TekstVakPanel implements InteractionView
 	}
 	
 	void klapUitAction() {
+		int delta = hoogte-hoogtes.get(0).intValue();
 		if( ingeklapt = ! ingeklapt) {
 			GWT.log("inklappen!");
-			tekstHulsVakken[1][0].setVisible(false);
-		} else {
-			tekstHulsVakken[1][0].setVisible(true);
-			GWT.log("uitklappen");
+			for(int i = 1; i < tekstHulsVakken.length; i++)
+			{
+				for(int j = 0; j < tekstHulsVakken[i].length; j ++)
+				{
+					tekstHulsVakken[i][j].setVisible(false);
+					//tekstHulsVakken[i][j].setPixelSize(-1, 0);
+				}
+			}
+			setCurrentSize(breedte,  hoogtes.get(0).intValue() );
+		} 
+		else {
+			for(int i = 1; i < tekstHulsVakken.length; i++)
+			{
+				for(int j = 0; j < tekstHulsVakken[i].length; j ++)
+				{
+					tekstHulsVakken[i][j].setVisible(true);
+					int h = hoogtes.get(i).intValue();
+					if(h < 0 ) h =100; // FIXME
+					tekstHulsVakken[i][j].setPixelSize(-1, h);
+				}
+			}
+			GWT.log("uitklappen " + hoogtes.get(1).intValue());
+// FIXME 
+			if(hoogtes.get(1).intValue()< 0) 
+				hoogte = hoogtes.get(0).intValue() + 100;
+			
+			setCurrentSize( breedte, hoogte);
 		}
 	}
 	
@@ -1329,10 +1417,14 @@ public class TekstVakPanel implements InteractionView
 				klapUitAction();				
 			}});
 		klapUitButton.setDown(ingeklapt);
-		klapUitButton.setWidth(KLAPUIT_WIDTH);
-		Widget widget = tekstHulsVakken[0][0].getWidget(0);
+		klapUitButton.setPixelSize(KLAPUIT_WIDTH-4,-1);
+		InsertPanel layoutPanel = tekstHulsVakken[0][0];
+		Widget widget = layoutPanel.getWidget(0);
 // Wat met de positie van widgets
-		tekstHulsVakken[0][0].insert(klapUitButton, 0);
+		layoutPanel.insert(klapUitButton,0);
+		//layoutPanel.setWidgetLeftRight(widget, KLAPUIT_WIDTH, Unit.PX, 0, Unit.PX);
+		//layoutPanel.setWidgetLeftRight(klapUitButton, 0, Unit.PX, breedtes.get(0).intValue()-KLAPUIT_WIDTH, Unit.PX);
+
 
 	}
 }
