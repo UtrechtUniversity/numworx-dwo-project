@@ -90,7 +90,7 @@ public class TekstVakPanel implements InteractionView
 	private LayoutPanel mainPanel2 = null;
 	private Grid mainPanel = null;
 	private LayoutPanel randPanel = null;
-	private HorizontalPanel[][] tekstHulsVakken = null;
+	private LayoutPanel[][] tekstHulsVakken = null;
 	private FlowPanel[][] tekstVakken = null;
 	String[] randomVarNamen = null;
 	HashMap<String, Object> randomVarWaarden = null;
@@ -373,7 +373,7 @@ public class TekstVakPanel implements InteractionView
 		//mainPanel.getElement().getStyle().setBorderColor("gray");
 		//mainPanel.getElement().getStyle().setBorderWidth(0, Unit.PX);
 		
-		tekstHulsVakken = new HorizontalPanel[hoogtes.size()][breedtes.size()];
+		tekstHulsVakken = new LayoutPanel[hoogtes.size()][breedtes.size()];
 		tekstVakken = new FlowPanel[hoogtes.size()][breedtes.size()];
 		for (int i = 0; i < hoogtes.size(); i++)
 		{
@@ -382,7 +382,7 @@ public class TekstVakPanel implements InteractionView
 				double tekstVakHoogte = hoogtes.get(i).doubleValue() - 2 * bovenMarge;
 				
 				
-				tekstHulsVakken[i][j] = new HorizontalPanel();
+				tekstHulsVakken[i][j] = new LayoutPanel();
 				//tekstHulsVakken[i][j].getElement().getStyle().setBackgroundColor(CssColor.make(255, 0, 0).toString());
 				//tekstHulsVakken[i][j].setSize(tekstVakBreedte + "px", tekstVakHoogte + "px");
 				tekstHulsVakken[i][j].setPixelSize(breedtes.get(j).intValue(), hoogtes.get(i).intValue());
@@ -750,15 +750,15 @@ public class TekstVakPanel implements InteractionView
 				//a.getElement().getStyle().setProperty("verticalAlign", "text-top");
 				//a.getElement().getStyle().setProperty("verticalAlign", "2px");
 				//destination.add(a);
-//	FIXME       if(currentObject instanceof TekstVakPanel && ((TekstVakPanel) currentObject).isZwevend())
-//				{	tekstHulsVakken[rij][kolom].add(a);
-//					tekstHulsVakken[rij][kolom].setWidgetLeftWidth(a, ((TekstVakPanel)currentObject).getLocationX(), Style.Unit.PX, 
-//							((TekstVakPanel)currentObject).getBreedte(), Style.Unit.PX);
-//					tekstHulsVakken[rij][kolom].setWidgetTopHeight(a, ((TekstVakPanel)currentObject).getLocationY(), Style.Unit.PX, 
-//							((TekstVakPanel)currentObject).getHoogte(), Style.Unit.PX);
-//					((TekstVakPanel) currentObject).setParent(tekstHulsVakken[rij][kolom]);
-//				}
-//				else
+		       if(currentObject instanceof TekstVakPanel && ((TekstVakPanel) currentObject).isZwevend())
+				{	tekstHulsVakken[rij][kolom].add(a);
+					tekstHulsVakken[rij][kolom].setWidgetLeftWidth(a, ((TekstVakPanel)currentObject).getLocationX(), Style.Unit.PX, 
+							((TekstVakPanel)currentObject).getBreedte(), Style.Unit.PX);
+					tekstHulsVakken[rij][kolom].setWidgetTopHeight(a, ((TekstVakPanel)currentObject).getLocationY(), Style.Unit.PX, 
+							((TekstVakPanel)currentObject).getHoogte(), Style.Unit.PX);
+					((TekstVakPanel) currentObject).setParent(tekstHulsVakken[rij][kolom]);
+				}
+				else
 					destination.add(a);
 				
 			}
@@ -1417,13 +1417,13 @@ public class TekstVakPanel implements InteractionView
 				klapUitAction();				
 			}});
 		klapUitButton.setDown(ingeklapt);
-		klapUitButton.setPixelSize(KLAPUIT_WIDTH-4,-1);
-		InsertPanel layoutPanel = tekstHulsVakken[0][0];
+		klapUitButton.setPixelSize(KLAPUIT_WIDTH,-1);
+		LayoutPanel layoutPanel = tekstHulsVakken[0][0];
 		Widget widget = layoutPanel.getWidget(0);
 // Wat met de positie van widgets
 		layoutPanel.insert(klapUitButton,0);
-		//layoutPanel.setWidgetLeftRight(widget, KLAPUIT_WIDTH, Unit.PX, 0, Unit.PX);
-		//layoutPanel.setWidgetLeftRight(klapUitButton, 0, Unit.PX, breedtes.get(0).intValue()-KLAPUIT_WIDTH, Unit.PX);
+		layoutPanel.setWidgetLeftRight(widget, KLAPUIT_WIDTH, Unit.PX, 0, Unit.PX);
+		layoutPanel.setWidgetLeftWidth(klapUitButton, 0, Unit.PX, KLAPUIT_WIDTH, Unit.PX);
 
 
 	}
