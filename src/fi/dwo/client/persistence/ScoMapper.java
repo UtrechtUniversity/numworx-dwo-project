@@ -64,9 +64,12 @@ public class ScoMapper extends XmlRpcMapper {
 		        	Object o = ht.get("launchdatabytes");
 		        	if(o instanceof byte[]) {
 		        		InputStream in = new GZIPInputStream(new ByteArrayInputStream((byte[]) o));
-		        		Map<?,?> map = (Map) JSONValue.parse(new InputStreamReader(in, "UTF-8"));
+		        		Map map = (Map) JSONValue.parse(new InputStreamReader(in, "UTF-8"));
 		        		Hashtable h = new Hashtable();
-		        		for(Map.Entry entry : map.entrySet()) {
+		        		Set entrySet = map.entrySet();
+						for (Iterator iterator = entrySet.iterator(); iterator
+								.hasNext();) {
+							Map.Entry entry = (Map.Entry) iterator.next();
 		        			Object key = entry.getKey();
 		        			Object value = entry.getValue().toString();
 		        			h.put(key, value);

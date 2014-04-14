@@ -28,51 +28,41 @@ public class CopyLabel extends AbstractAction implements MouseListener, Clipboar
 		this.popup.add(this);
 	}
 
-	@Override
 	public void actionPerformed(ActionEvent e) {
 		Clipboard clip = popup.getToolkit().getSystemClipboard();
 		clip.setContents(this , this);
 	}
 
-	@Override
 	public void mousePressed(MouseEvent e) {
 		if(e.isPopupTrigger())
 			popup.show(e.getComponent(), e.getX(), e.getY());
 	}
 
-	@Override
 	public void mouseReleased(MouseEvent e) {
 		if(e.isPopupTrigger())
 			popup.show(e.getComponent(), e.getX(), e.getY());
 	}
 
-	@Override
 	public void mouseEntered(MouseEvent e) {
 	}
 
-	@Override
 	public void mouseExited(MouseEvent e) {
 	}
 
-	@Override
 	public void mouseClicked(MouseEvent e) {
 	}
 
-	@Override
 	public void lostOwnership(Clipboard clipboard, Transferable contents) {
 	}
 
-	@Override
 	public DataFlavor[] getTransferDataFlavors() {
 		return DATA_FLAVORS;
 	}
 
-	@Override
 	public boolean isDataFlavorSupported(DataFlavor flavor) {
 		return DataFlavor.stringFlavor .equals (flavor);
 	}
 
-	@Override
 	public Object getTransferData(DataFlavor flavor)
 			throws UnsupportedFlavorException, IOException {
 		return text;
