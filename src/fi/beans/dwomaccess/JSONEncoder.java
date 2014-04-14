@@ -20,7 +20,7 @@ import fi.beans.base64code.StringCodeObject;
 
 public class JSONEncoder {
 	
-	public static void encode(Map<?, ?> map, Writer out) throws IOException {
+	public static void encode(Map map, Writer out) throws IOException {
 		map = mapWalker(map);
 		JSONObject.writeJSONString(map, out);
 	}
@@ -58,7 +58,7 @@ public class JSONEncoder {
 // De moeilijke gevallen:		
 		if(value instanceof Color) {
 			Color c = (Color) value;
-			Map<String,Object> r = new HashMap<String,Object>();
+			Map r = new HashMap();
 			r.put("@type", "java:Color");
 			r.put("red", c.getRed());
 			r.put("green", c.getGreen());
@@ -68,7 +68,7 @@ public class JSONEncoder {
 		} 
 		if(value instanceof Font) {
 			Font f = (Font)value;
-			Map<String,Object> r = new HashMap<String,Object>();
+			Map r = new HashMap();
 			r.put("@type", "java:Font");
 			r.put("family", f.getFamily());
 			r.put("style", f.getStyle()); // Number/Name?
@@ -77,21 +77,21 @@ public class JSONEncoder {
 		}
 		if(value instanceof ByteArray ) {
 			ByteArray b = (ByteArray) value;
-			Map<String,Object> r = new HashMap<String,Object>();
+			Map r = new HashMap();
 			r.put("@type", "dwomaccess:ByteArray");
 			r.put("string", b.getString());
 			return r;
 		}
 		if(value instanceof URL) {
 			URL u = (URL)value;
-			Map<String,Object> r = new HashMap<String, Object>();
+			Map r = new HashMap();
 			r.put("@type", "java:URL");
 			r.put("@value", u.toExternalForm());
 			return r;
 		} 
 		if(value instanceof URI) {
 			URI u = (URI)value;
-			Map<String,Object> r = new HashMap<String, Object>();
+			Map r = new HashMap();
 			r.put("@type", "java:URI");
 			r.put("@value", u.toString());
 			return r;

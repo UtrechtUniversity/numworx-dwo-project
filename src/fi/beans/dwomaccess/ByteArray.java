@@ -58,15 +58,6 @@ public class ByteArray implements Serializable {
 		return bytes;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + Arrays.hashCode(bytes);
-		return result;
-	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -88,12 +79,6 @@ public class ByteArray implements Serializable {
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString() {
-		return "ByteArray [bytes=" + Arrays.toString(bytes) + "]";
-	}
 
 	/**
 	 * @param encoder
