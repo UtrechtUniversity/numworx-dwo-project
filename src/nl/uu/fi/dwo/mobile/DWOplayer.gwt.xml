@@ -29,13 +29,13 @@
 <!--  <inherits name="fi.balansfruitgwt.BalansFruitGWT-DWO" /> -->
 
 <!-- --> <inherits name="fi.algebraexprgwt.AlgebraExprGWT-DWO" />
-<!-- --> <inherits name="fi.algebrapijlenhwt.AlgebraPijlenHWT-DWO" />
+<!-- --> <inherits name="fi.algebrapijlengwt.AlgebraPijlenGWT-DWO" />
 <!-- --> <inherits name="fi.doorziengwt.DoorzienGWT-DWO" />
 <!-- --> <inherits name="fi.geomalggwt.GeomAlgGWT-DWO" />
 <!-- --> <inherits name="fi.graphtoolgwt.GraphToolGWT-DWO" />
 <!-- --> <inherits name="fi.kladjehwt.KladjeHWT-DWO" />
 
-<!-- --> <inherits name="fi.antwoordkeuzevakgwt.AntwoordKeuzeVakGWT-DWO" />
+<!-- --> <inherits name="fi.antwoordkeuzevakgwt.AntwoordKeuzeVakGWT-DWO" /> 
 
 <!--  <inherits name="fi.nabouwenaanzichtengwt.NabouwenAanzichtenGWT-DWO" /> -->
      
