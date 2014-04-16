@@ -499,7 +499,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		if(command.endsWith("image.png"))
 			doImage(req, resp);
 		else if(command.endsWith("getLaunchData"))
-			doJSONLaunchData(req,resp);
+			doLaunchData(req,resp);
 		else if(command.endsWith("getCourseDescription"))
 			doCourseDescription(req,resp);
 		else if(command.endsWith("getJSONLaunchData"))
@@ -511,7 +511,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	void doCourseDescription(HttpServletRequest req,
 			HttpServletResponse resp) throws IOException {
 		String c = req.getParameter("c");
-		Writer out = getWriter(req, resp);
+		OutputStream out = getOutputStream(req, resp);
 		try {
 			int course = Integer.parseInt(c);
 			getCourseDescription(course, out);
@@ -525,6 +525,19 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	}
 
 	
+	private void doLaunchData(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		String s = req.getParameter("s");
+		OutputStream out = getOutputStream(req, resp);
+		try {
+			int sco = Integer.parseInt(s);
+			getLaunchData(sco, out);
+		} catch (Exception e) {
+			log("doLaunchData", e);
+			resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		
+	}
+
 	private void doJSONLaunchData(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		String s = req.getParameter("s");
 		Writer out = getWriter(req, resp);
@@ -600,6 +613,19 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 			out = resp.getOutputStream();
 		return out;
 	}
+
+	void getLaunchData(int sco, OutputStream out) throws IOException {
+		Hashtable<?,?> map;
+		try {
+			map = getLaunchData_int(sco);
+			XmlEncoder.encode(map, out);
+		} catch (XmlRpcException e) {
+			throw new IOException(e.getMessage());
+		} catch (SQLException e) {
+			throw new IOException(e.getMessage());
+		}
+		out.close();
+	}
 	
 	void getJSONLaunchData(int sco, Writer out) throws IOException {
 		Hashtable<?,?> map;
@@ -616,12 +642,12 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	
 
 
-	void getCourseDescription(int course, Writer out) throws IOException {
+	void getCourseDescription(int course, OutputStream out) throws IOException {
 		Hashtable<?,?> map;
 		try {
 			map = getCourseDescription_int(course);
 			if(map != null)
-				JSONEncoder.encode(map, out);
+				XmlEncoder.encode(map, out);
 		} catch (XmlRpcException e) {
 			throw new IOException(e.getMessage());
 		} catch (SQLException e) {
@@ -697,19 +723,19 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 
 	public String getLaunchData(int scoID) throws Exception {
 		Hashtable map = getLaunchData_int(scoID);
-		StringWriter out = new StringWriter();
-		JSONEncoder.encode(map, out);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		XmlEncoder.encode(map, out);
 		out.close();
-		return out.toString();
+		return new String(out.toByteArray(), UTF_8);
 	}
 
 
 	public String getCourseDescription(int courseID) throws Exception {
 		Hashtable map = getCourseDescription_int(courseID);
-		StringWriter out = new StringWriter();
-		JSONEncoder.encode(map, out);
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		XmlEncoder.encode(map, out);
 		out.close();
-		return out.toString();
+		return new String(out.toByteArray(), UTF_8);
 	}
 	
 	
@@ -729,5 +755,5 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		resp.setContentType("text/plain");
 		resp.getOutputStream().close();
 	}
-	
+
 }
