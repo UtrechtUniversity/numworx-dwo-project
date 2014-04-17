@@ -351,8 +351,8 @@ public class TekstBuffer
 		}
 		else if (soortVak == 41)
 		{
-			//result = new PopupFacade(currentVakGegevens, new fi.kladjehwt.client.KladjeHWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
-			result = new StubView("KladjeHWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			result = new PopupFacade(currentVakGegevens, new fi.kladjegwt.client.KladjeGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
+			//result = new StubView("KladjeGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		}
 		else
 		{
