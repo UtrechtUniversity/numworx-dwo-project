@@ -75,7 +75,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			{	System.out.println("check wordt uit launchstate gehaald");
 				check = ((Boolean)launchState.get("check")).booleanValue();
 			}
-			checkimg = new Image("images/resources/mw_vinkje_groen.png");
+			checkimg = new Image(FORMULE_BUNDLE.mw_vinkje_groen());
 			checkimg.setVisible(false);
 			checkimg.getElement().getStyle().setProperty("marginLeft", "3px");
 			if (fe == null)
@@ -168,7 +168,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 		if (goedHalfFout == AntwoordVakChecker.DOOR)
 		{
-			checkimg.setUrl("images/resources/mw_vinkje_geel.png");
+			checkimg.setResource(FORMULE_BUNDLE.mw_vinkje_geel());
 			if (this.fe != null)
 			{
 				fe.setFeedback(feedback);
@@ -179,11 +179,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		{
 			if (this.fe != null)
 				fe.setFeedback(feedback);
-			checkimg.setUrl("images/resources/mw_vinkje_geel.png");
+			checkimg.setResource(FORMULE_BUNDLE.mw_vinkje_geel());
 		}
 		else if (goedHalfFout == AntwoordVakChecker.GOED)
 		{
-			checkimg.setUrl("images/resources/mw_vinkje_groen.png");
+			checkimg.setResource(FORMULE_BUNDLE.mw_vinkje_groen());
 			if (this.fe != null)
 			{
 				fe.setFeedback(feedback);
@@ -194,7 +194,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		{
 			if (this.fe != null)
 				fe.setAndAddFeedback(feedback);
-			checkimg.setUrl("images/resources/mw_kruisje_rood.png");
+			checkimg.setResource(FORMULE_BUNDLE.mw_kruisje_rood());
 		}
 		
 		checkimg.setVisible(check && goedHalfFout != AntwoordVakChecker.GEEN); // Wim: Hier verscheen het vinkje als goedhalfFout GEEN is

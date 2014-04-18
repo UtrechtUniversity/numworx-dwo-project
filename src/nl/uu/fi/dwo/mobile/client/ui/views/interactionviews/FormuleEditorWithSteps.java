@@ -19,6 +19,7 @@ import nl.uu.fi.dwo.interaction.client.touch.TouchHandler;
 import nl.uu.fi.dwo.interaction.client.touch.TouchMoveEvent;
 import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
 import nl.uu.fi.dwo.interaction.client.touch.TouchStartEvent;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
@@ -395,7 +396,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		mainPanel.getElement().getStyle().setBorderWidth(boxMetRand ? 1 : 0, Unit.PX);
 		mainPanel.getElement().getStyle().setProperty("lineHeight", "2.0");
 
-		Image buttonImg = new Image("images/resources/pijlterug.gif");
+		Image buttonImg = new Image(DWOplayer.DWO_BUNDLE.pijlterug());
 		buttonImg.getElement().getStyle().setMargin(2, Unit.PX);
 		tb = new TouchButton();
 		tb.add(buttonImg);
@@ -403,7 +404,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		tb.getElement().getStyle().setVisibility(Visibility.HIDDEN);
 		addButtonHandler(tb);
 
-		Image copyButtonImg = new Image("images/resources/pijlcopy.gif");
+		Image copyButtonImg = new Image(DWOplayer.DWO_BUNDLE.pijlcopy());
 		copyButtonImg.getElement().getStyle().setMargin(2, Unit.PX);
 		copyButton = new TouchButton();
 		copyButton.add(copyButtonImg);

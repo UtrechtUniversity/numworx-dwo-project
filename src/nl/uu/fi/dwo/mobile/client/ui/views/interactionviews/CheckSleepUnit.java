@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.utils.StringUtils;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -624,8 +626,8 @@ public class CheckSleepUnit implements InteractionStub{
 			}
 		});
 		
-		goedKrulImage = new Image("images/resources/goedkrul_en.gif");
-		foutKruisImage = new Image("images/resources/foutkruis.gif");
+		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.goedkrul_en());
+		foutKruisImage = new Image(DWOplayer.DWO_BUNDLE.foutkruis());
 		
 		basisPanel.add(goedKrulImage);
 		basisPanel.add(foutKruisImage);

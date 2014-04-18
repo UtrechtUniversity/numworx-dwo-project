@@ -24,6 +24,8 @@ public class FormuleHolder
 		kb = keyb;
 	}
 	
+	public static final FormuleClientBundle FORMULE_BUNDLE = GWT.create(FormuleClientBundle.class);
+	
 	private FormuleRegel main = null;
 
 	private FormuleFont font = FormuleFont.createFromFontSize(18);

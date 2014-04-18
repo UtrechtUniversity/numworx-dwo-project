@@ -19,6 +19,7 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
@@ -78,6 +79,16 @@ import fi.wiskopdr.expressies.VergelijkingMeerv;
 
 public class TekstVakPanel implements InteractionView
 {
+	class TekstVakContext {
+
+		public void doLayout(TekstVakPanel tekstVakPanel, int i) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
+	
 	private static final int KLAPUIT_WIDTH = 20;
 	private int font_size = 12;
 	private int font_style = 0;
@@ -145,7 +156,7 @@ public class TekstVakPanel implements InteractionView
 
 	private boolean inklapbaar, ingeklapt;
 	private ToggleButton klapUitButton;
-	private TekstVakPanel container;
+	private TekstVakContext container;
 	
 	static CssColor getColor(ObjectMap map, String key, int r, int g, int b) {
 		ObjectMap colorMap = map != null  ? map.getObjectMap(key) : null ;
@@ -464,7 +475,7 @@ public class TekstVakPanel implements InteractionView
 		mainPanel2.setWidgetTopBottom(mainPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
 		
 		if(sleepbaar && sleepHandle)
-		{	Image ic = new Image("images/resources/crosshair.gif");
+		{	Image ic = new Image(DWOplayer.DWO_BUNDLE.crosshair());
 			mainPanel2.add(ic);
 			mainPanel2.setWidgetLeftWidth(ic, 0, Style.Unit.PX, 20, Style.Unit.PX);
 			mainPanel2.setWidgetTopHeight(ic, 0, Style.Unit.PX, 20, Style.Unit.PX);
@@ -502,7 +513,7 @@ public class TekstVakPanel implements InteractionView
 		this.kb = kb;
 	}
 
-	public void setContainer(TekstVakPanel container) {
+	public void setContainer(TekstVakContext container) {
 		this.container = container;
 	}
 	
@@ -574,7 +585,7 @@ public class TekstVakPanel implements InteractionView
 						tekstVakChild.zetInstellingen(instellingen);
 						tekstVakChild.setKeyboard(kb);
 						tekstVakChild.zetOpdracht(launchState);
-						tekstVakChild.setContainer(this);
+						tekstVakChild.setContainer(new TekstVakContext());
 						
 					}
 					else if (currentObject instanceof FormuleEditorWithAnswer)

@@ -28,10 +28,12 @@ import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
 import fi.wiskopdr.text.Text_nl;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.Stub;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 
 public class CheckSelectieUnit implements InteractionStub
 {
@@ -537,8 +539,8 @@ public class CheckSelectieUnit implements InteractionStub
 			}
 		});
 		
-		goedKrulImage = new Image("images/resources/goedkrul_en.gif");
-		foutKruisImage = new Image("images/resources/foutkruis.gif");
+		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.goedkrul_en());
+		foutKruisImage = new Image(DWOplayer.DWO_BUNDLE.foutkruis());
 		
 		basisPanel.add(goedKrulImage);
 		basisPanel.add(foutKruisImage);
