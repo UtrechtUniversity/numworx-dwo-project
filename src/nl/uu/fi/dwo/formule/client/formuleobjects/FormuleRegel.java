@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Breukvak;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
 
@@ -286,9 +287,14 @@ public class FormuleRegel extends FormuleElement
 		for (int i = 0; i < this.children.size(); i++)
 		{
 			e = this.children.get(i);
+			//if(e instanceof Breukvak)
+			//	System.out.println("breukVak: " + e.toString());
+			//else
+			//	System.out.println("ander vak: " + e.toString());
 			elx = e.getX();
 			//ely = this.height / 2 - e.getAsHoogte();
 			ely = paintabove - e.getAsHoogte();
+			//System.out.println("tekenHoogte: " + ely);
 			e.draw(this.ctx, elx, ely);
 		}
 
@@ -488,7 +494,7 @@ public class FormuleRegel extends FormuleElement
 		fm = this.getFont();
 		defaultwidth = fm.getAscent() / 2;
 		defaultheight = fm.getHeight();
-		this.setSize(defaultwidth, defaultheight);
+		//this.setSize(defaultwidth, defaultheight);
 		this.setChanged(true);
 		//change all childrens font
 		if (this.children.size() == 0)

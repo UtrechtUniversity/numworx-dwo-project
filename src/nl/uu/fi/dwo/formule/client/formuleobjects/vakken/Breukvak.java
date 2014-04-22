@@ -37,7 +37,6 @@ public class Breukvak extends FormuleElementWithChildren
 	@Override
 	public void paintObject()
 	{
-		System.out.println("paintObject breuk. Hoogte = " + this.height + " en asHoogte = " + this.getAsHoogte());
 		if (getChild(0).isNumber() && getChild(1).isNumber())
 		{
 			getChild(0).setSmallText(true);
@@ -48,9 +47,9 @@ public class Breukvak extends FormuleElementWithChildren
 			getChild(0).setSmallText(false);
 			getChild(1).setSmallText(false);
 		}
-		this.getChild(1).paint();
 		this.getChild(0).paint();
-
+		this.getChild(1).paint();
+		
 		//width = 2*fm.getAscent()/3 + ((getChild(1).width > getChild(0).width) ? getChild(1).width : getChild(0).width);
 		width = fm.getAscent()/4 + Math.max(getChild(0).width, getChild(1).width);
 		//height = getChild(1).height + getChild(0).height + 2 * fm.getDescent();
