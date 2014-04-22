@@ -63,9 +63,12 @@ public class FormuleRegel extends FormuleElement
 		ctx.setFont(fm.getFontStyle());
 		//default when there are no children
 		defaultwidth = fm.getAscent() / 2;
+		//fm.getHeight() is hetzelfde als fm.getAscent() + fm.getDescent() (dat wordt in wiskOpdr gebruikt).
 		defaultheight = fm.getHeight();
 		this.setSize(defaultwidth, defaultheight);
-		this.setAsHoogte(this.height / 2);
+		//this.setAsHoogte(this.height / 2);
+		//In wiskOpdr wordt ashoogte gezet op fm.getAscent()/2.
+		this.setAsHoogte(fm.getAscent() / 2);
 		this.setChanged(true);
 	}
 
@@ -215,8 +218,10 @@ public class FormuleRegel extends FormuleElement
 		this.nexty = 0;
 
 		//painting coordinates
-		int paintabove = height / 2;
-		int paintbelow = height / 2;
+		//int paintabove = height / 2;
+		//int paintbelow = height / 2;
+		int paintabove = fm.getAscent() / 2;
+		int paintbelow = height - fm.getAscent() / 2;
 
 		int paintabove_e = 0;
 		int paintbelow_e = 0;
@@ -485,7 +490,6 @@ public class FormuleRegel extends FormuleElement
 		defaultheight = fm.getHeight();
 		this.setSize(defaultwidth, defaultheight);
 		this.setChanged(true);
-
 		//change all childrens font
 		if (this.children.size() == 0)
 			return true;

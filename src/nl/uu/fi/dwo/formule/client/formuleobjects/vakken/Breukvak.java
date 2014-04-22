@@ -37,6 +37,7 @@ public class Breukvak extends FormuleElementWithChildren
 	@Override
 	public void paintObject()
 	{
+		System.out.println("paintObject breuk. Hoogte = " + this.height + " en asHoogte = " + this.getAsHoogte());
 		if (getChild(0).isNumber() && getChild(1).isNumber())
 		{
 			getChild(0).setSmallText(true);
@@ -50,11 +51,18 @@ public class Breukvak extends FormuleElementWithChildren
 		this.getChild(1).paint();
 		this.getChild(0).paint();
 
-		width = 2*fm.getAscent()/3 + ((getChild(1).width > getChild(0).width) ? getChild(1).width : getChild(0).width);
-		height = getChild(1).height + getChild(0).height + 2 * fm.getDescent();
+		//width = 2*fm.getAscent()/3 + ((getChild(1).width > getChild(0).width) ? getChild(1).width : getChild(0).width);
+		width = fm.getAscent()/4 + Math.max(getChild(0).width, getChild(1).width);
+		//height = getChild(1).height + getChild(0).height + 2 * fm.getDescent();
+		height = getChild(0).height + getChild(1).height + fm.getAscent()/4;
+		
+		this.setSize(width, height);
+		
 		getChild(0).y = 0;
-		getChild(1).y = getChild(0).height + 2 * fm.getDescent();
+		//getChild(1).y = getChild(0).height + 2 * fm.getDescent();
+		getChild(1).y = getChild(0).height + fm.getAscent()/4;
 
+		/*
 		if (getChild(0).width > getChild(1).width)
 		{
 			getChild(1).x = getChild(0).width / 2 - getChild(1).width / 2 + fm.getAscent() / 3;
@@ -65,12 +73,15 @@ public class Breukvak extends FormuleElementWithChildren
 			getChild(0).x = getChild(1).width / 2 - getChild(0).width / 2 + fm.getAscent() / 3;
 			getChild(1).x = fm.getAscent() / 3;
 		}
+		*/
+		getChild(0).x = (width - getChild(0).width)/2;
+		getChild(1).x = (width - getChild(1).width)/2;
 
-		this.setAsHoogte(getChild(0).height + fm.getAscent() / 8);
+		//this.setAsHoogte(getChild(0).height + fm.getAscent() / 8);
+		this.setAsHoogte(getChild(0).height - fm.getAscent() / 8);
 		//this.setAsHoogte(this.height / 2);
 
-		this.setSize(width, height);
-
+		
 		if (this.isSelected())
 		{
 			ctx.setFillStyle("#aaf");
@@ -86,11 +97,15 @@ public class Breukvak extends FormuleElementWithChildren
 		ctx.setLineWidth(fm.getStrokeWidth());
 
 		ctx.beginPath();
-		ctx.moveTo(fm.getAscent() / 3, getChild(0).height + fm.getAscent() / 8);
-		ctx.lineTo(this.width - (fm.getAscent() / 3), getChild(0).height + fm.getAscent() / 8);
+		ctx.moveTo(fm.getAscent() / 8, getChild(0).height + fm.getAscent() / 8);
+		ctx.lineTo(this.width - (fm.getAscent() / 8), getChild(0).height + fm.getAscent() / 8);
 		ctx.stroke();
 		//this.drawline(ctx, fm.getAscent() / 3, getChild(0).height + fm.getAscent() / 8, this.width - (fm.getAscent() / 3), getChild(0).height + fm.getAscent() / 8);
 
+		//g.drawLine(fm.getAscent()/8,kind1.getSize().height + fm.getAscent()/8,getSize().width - fm.getAscent()/8,kind1.getSize().height + fm.getAscent()/8);
+		
+		
+		
 		this.getChild(1).draw(ctx);
 		this.getChild(0).draw(ctx);
 

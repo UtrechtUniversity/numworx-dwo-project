@@ -715,7 +715,8 @@ public class TekstVakPanel implements InteractionView
 				addFormulePanelListeners(tp, ((FormuleEditorWithAnswer) currentObject));
 
 				tp.getElement().getStyle().setProperty("display", "inline-block");
-				tp.getElement().getStyle().setProperty("verticalAlign", "" + (-hoogte + asHoogte + Math.rint(font_size * 0.33)) + "px");
+				tp.getElement().getStyle().setProperty("verticalAlign", "top");
+				tp.getElement().getStyle().setProperty("verticalAlign", "" + (-hoogte + asHoogte + Math.rint(font_size * 0.33) + 1) + "px");
 				kb.setEditor((FormuleEditorWithAnswer) currentObject);
 				destination.add(tp);
 			}
@@ -725,12 +726,16 @@ public class TekstVakPanel implements InteractionView
 				f.setBold(font_style == 1 || font_style == 3);
 				((FormuleViewer) currentObject).setFont(f);
 				((FormuleViewer) currentObject).setColor(fgColor);
+				
 				int asHoogte = ((FormuleViewer) currentObject).getMainRegel().getAsHoogte();
 				int hoogte = ((FormuleViewer) currentObject).getMainRegel().getHeight();
+				System.out.println("asHoogte = " + asHoogte + ", en hoogte = " + hoogte);
 				Panel a = ((FormuleViewer) currentObject).getAsPanel();
 				a.getElement().getStyle().setProperty("display", "inline-block");
 				//Hieronder: gebruik f.getFontSize() ipv font_size omdat fontSize kan zijn aangepast ivm formules in Times Roman.
-				a.getElement().getStyle().setProperty("verticalAlign", "" + (-hoogte + asHoogte + Math.rint(f.getFontSize() * 0.33)) + "px");
+				//a.getElement().getStyle().setProperty("verticalAlign", "" + (-hoogte + asHoogte + Math.rint(f.getFontSize() * 0.33)) + "px");
+				a.getElement().getStyle().setProperty("verticalAlign", "top");
+				a.getElement().getStyle().setProperty("verticalAlign", "" + (asHoogte - hoogte + Math.rint(f.getFontSize() * 0.33) + 1) + "px");
 				destination.add(a);
 			}
 			else if (currentObject instanceof FormuleEditorWithSteps)

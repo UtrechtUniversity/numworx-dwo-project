@@ -26,9 +26,11 @@ public class FormuleFont
 	private int height = ascent + descent;
 	private int fontSize = height - leading;
 
+	private static String defaultFont = "Arial";
+	private static boolean formTimes = false;
 	private String font = "Arial";
 	private boolean bold = false;
-	private boolean italic = false;
+	private boolean italic = true;
 	private boolean smalltext = false;
 
 	public static FormuleFont getDefault()
@@ -39,6 +41,9 @@ public class FormuleFont
 	public static FormuleFont createFromFontSize(int size)
 	{
 		FormuleFont fm = new FormuleFont();
+		fm.font = defaultFont;
+		if(formTimes)
+			size += 2;
 		fm.ascent = size + 2;
 		fm.descent = Math.round(fm.ascent / 12);
 		fm.ascent = fm.ascent - fm.descent;
@@ -68,7 +73,7 @@ public class FormuleFont
 		fm.bold = this.bold;
 		fm.italic = this.italic;
 		fm.smalltext = this.smalltext;
-
+		
 		return fm;
 	}
 
@@ -135,6 +140,20 @@ public class FormuleFont
 	{
 		this.font = font;
 	}
+	
+	public static void zetDefaultFont(String font)
+	{
+		defaultFont = font;
+			
+	}
+	
+	public static void zetFormTimes(boolean formTimes)
+	{
+		FormuleFont.formTimes = formTimes;
+		if(formTimes)
+			defaultFont = "TimesRoman";
+		
+	}	
 
 	public boolean isBold()
 	{
@@ -199,10 +218,7 @@ public class FormuleFont
 
 	public void setSizeRelativeTo(int relativeSize)
 	{
-		System.out.println("fontSize voor: " + fontSize);
 		int size = (int) (this.fontSize * relativeSize / 100) + 4;
-		
-		System.out.println("size in setSizeRelativeTo: " + size);
 		
 		this.ascent = size - 2;
 		this.descent = Math.round(this.ascent / 12);
@@ -211,7 +227,6 @@ public class FormuleFont
 		this.height = this.ascent + this.descent;
 		this.fontSize = this.height - this.leading;
 		
-		System.out.println("fontSize na: " + fontSize);
 	}
 
 	public boolean isSmallText()

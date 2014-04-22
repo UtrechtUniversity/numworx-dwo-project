@@ -30,8 +30,8 @@ public class FormuleTeken extends FormuleElement
 		character = tk;
 		if (tk == '+' || tk == '=' || tk == '<' || tk == '>' || tk == '\u2264' || tk == '\u2265' || tk == '\u2248' || tk == ':')
 			teken = " " + tk + " ";
-		else if(maalteken && (tk == '*' || tk == '\u00d7'))
-			teken = " \u00d7 ";
+		//else if(maalteken && (tk == '*' || tk == '\u00d7'))
+		//	teken = " \u00d7 ";
 		else if (tk == '*')
 			teken = null;
 		else if (tk == '\u00d7')
@@ -72,13 +72,17 @@ public class FormuleTeken extends FormuleElement
 			m = ctx.measureText(" ");
 
 		this.setSize((int) m.getWidth(), fm.getHeight());
-		this.setAsHoogte(this.height / 2);
+		//this.setAsHoogte(this.height / 2);
+		this.setAsHoogte(fm.getAscent() / 2);
+		
 	}
+
 
 	public static void zetMaalTeken(boolean b)
 	{
 		maalteken = b;
 	}
+	
 
 	public int getCorrItalic()
 	{
@@ -123,6 +127,7 @@ public class FormuleTeken extends FormuleElement
 
 		// g.setFont(getFont());
 		ctx.setTextAlign(TextAlign.CENTER);
+		//ctx.setTextBaseline(TextBaseline.HANGING);
 		ctx.setTextBaseline(TextBaseline.BOTTOM);
 		ctx.setFont(fm.getFontStyle());
 	}
@@ -132,13 +137,17 @@ public class FormuleTeken extends FormuleElement
 	{
 		//TODO: set the correct width and x position for custom items like [] and x y z etc
 		//currently all are draw on a canvas. overwrite the draw(ctx,x,y) method to draw straight on the parent canvas
-		this.setAsHoogte(this.height / 2);
+		
+		//wat moet de ashoogte zijn? Gewoon hoogte / 2 is volgens mij niet zo'n goed idee, dan komen - en x heel laag terecht.
+		//this.setAsHoogte(this.height / 2);
+		this.setAsHoogte(fm.getAscent()/2);
+		//this.setAsHoogte(holder.getMainRegel().getAsHoogte());
 		this.setSize(width, height);
 
 		int x = 0;
 		int y = 0;
+		//is dit nodig?
 		x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4;
-
 		//draw single character
 		if (teken != null)
 		{	setFont(fm);
@@ -273,24 +282,42 @@ public class FormuleTeken extends FormuleElement
 	{
 		int x = 0;
 		int y = 0;
-		x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4;
+		//x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4;
 
-		this.width = fm.getAscent();
+		//dit is veel te veel als de keer als punt wordt getekend. Kijken hoe de breedte in wiskOpdr wordt bepaald. 
+		if(maalteken)
+			this.width = fm.getAscent() / 4 + 6 + fm.getAscent()/4;
+		else
+			this.width = fm.getAscent() / 4 + fm.getAscent()/4;
+		//this.width = fm.getAscent();
 
 		this.setSize(width, height);
 		this.setupCTXState();
-		x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4 + 5;
+		//x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4 + 5;
+		//x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4;
 		ctx.setLineWidth(fm.getStrokeWidth());
 
 		if (maalteken)
 		{
-			this.drawline(ctx, x + fm.getAscent() / 4 + 1, y + 5 * fm.getAscent() / 8 - 1, x + fm.getAscent() / 4 + 6, y + 5 * fm.getAscent() / 8 + 4);
-			this.drawline(ctx, x + fm.getAscent() / 4 + 1, y + 5 * fm.getAscent() / 8 + 4, x + fm.getAscent() / 4 + 6, y + 5 * fm.getAscent() / 8 - 1);
+			ctx.beginPath();
+			ctx.moveTo(x + fm.getAscent()/4 + 1, y + 5 * fm.getAscent()/8 - 1);
+			ctx.lineTo(x + fm.getAscent()/4 + 6, y + 5 * fm.getAscent()/8 + 4);
+			ctx.moveTo(x + fm.getAscent()/4 + 1, y + 5 * fm.getAscent()/8 + 4);
+			ctx.lineTo(x + fm.getAscent()/4 + 6, y + 5 * fm.getAscent()/8 - 1);
+			ctx.stroke();
+			//this.drawline(ctx, x + fm.getAscent() / 4 + 1, y + 5 * fm.getAscent() / 8 - 1, x + fm.getAscent() / 4 + 6, y + 5 * fm.getAscent() / 8 + 4);
+			//this.drawline(ctx, x + fm.getAscent() / 4 + 1, y + 5 * fm.getAscent() / 8 + 4, x + fm.getAscent() / 4 + 6, y + 5 * fm.getAscent() / 8 - 1);
 		}
 		else
 		{
-			this.drawline(ctx, x + fm.getAscent() / 4, y + 5 * fm.getAscent() / 8, x + fm.getAscent() / 4 + 2, y + 5 * fm.getAscent() / 8);
-			this.drawline(ctx, x + fm.getAscent() / 4, y + 5 * fm.getAscent() / 8 + 1, x + fm.getAscent() / 4 + 2, y + 5 * fm.getAscent() / 8 + 1);
+			ctx.beginPath();
+			ctx.moveTo(x + fm.getAscent()/4, y + 5 * fm.getAscent()/8);
+			ctx.lineTo(x + fm.getAscent()/4 + 2, y + 5 * fm.getAscent()/8);
+			ctx.moveTo(x + fm.getAscent()/4, y + 5 * fm.getAscent()/8 + 1);
+			ctx.lineTo(x + fm.getAscent()/4 + 2, y + 5 * fm.getAscent()/8 + 1);
+			ctx.stroke();
+			//this.drawline(ctx, x + fm.getAscent() / 4, y + 5 * fm.getAscent() / 8, x + fm.getAscent() / 4 + 2, y + 5 * fm.getAscent() / 8);
+			//this.drawline(ctx, x + fm.getAscent() / 4, y + 5 * fm.getAscent() / 8 + 1, x + fm.getAscent() / 4 + 2, y + 5 * fm.getAscent() / 8 + 1);
 		}
 
 		//g.drawLine(x+fm.getAscent()/4,y+5*fm.getAscent()/8,x+fm.getAscent()/4+1,y+5*fm.getAscent()/8);
@@ -300,20 +327,33 @@ public class FormuleTeken extends FormuleElement
 	private void drawMin()
 	{
 		int x = 0;
-		int y = 0;
-		x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4;
-
-		this.width = fm.getAscent();
+		int y = this.getAsHoogte();
+		//is dit nodig?
+		//x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4;
+//System.out.println("in drawMin: x, was 0, wordt: " + x +" en width is nu nog " + width);
+//fm.getAscent() = fm.getAscent()/4 + fm.getAscent()/2 + fm.getAscent()/4. Maar dat is natuurlijk niet helemaal waar vanwege afronding.
+this.width = fm.getAscent()/4 + fm.getAscent()/2 + fm.getAscent()/4;
+		//System.out.println("width is nu: " + width);
 
 		this.setSize(width, height);
 		this.setupCTXState();
-		x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4;
+		//x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4;
 		ctx.setLineWidth(fm.getStrokeWidth());
-
-		this.drawline(ctx, x + fm.getAscent() / 4, y + 5 * fm.getAscent() / 8, x + fm.getAscent() / 4 + fm.getAscent() / 2, y + 5 * fm.getAscent() / 8);
+		
+		ctx.beginPath();
+		ctx.moveTo(x + fm.getAscent() / 4, y + fm.getAscent() / 5);
+		ctx.lineTo(x + fm.getAscent()/4 + fm.getAscent()/2, y + fm.getAscent() / 5);
+		ctx.stroke();
+		//this.drawline(ctx, x + fm.getAscent() / 4, y + 5 * fm.getAscent() / 8, x + fm.getAscent() / 4 + fm.getAscent() / 2, y + 5 * fm.getAscent() / 8);
 		//TODO:
 		if (getFont().isBold())
-			this.drawline(ctx, x + fm.getAscent() / 4, y + 5 * fm.getAscent() / 8 + 1, x + fm.getAscent() / 4 + fm.getAscent() / 2, y + 5 * fm.getAscent() / 8 + 1);
+		{	ctx.beginPath();
+			ctx.moveTo(x + fm.getAscent() / 4, y + fm.getAscent() / 5 + 1);
+			ctx.lineTo(x + fm.getAscent()/4 + fm.getAscent()/2, y + fm.getAscent() / 5 + 1);
+			ctx.stroke();	
+		
+		//this.drawline(ctx, x + fm.getAscent() / 4, y + 5 * fm.getAscent() / 8 + 1, x + fm.getAscent() / 4 + fm.getAscent() / 2, y + 5 * fm.getAscent() / 8 + 1);
+		}
 	}
 
 	private void drawDubbelePunt()
