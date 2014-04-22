@@ -762,6 +762,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		//fp.add(kbp);
 
 	}
+	
+	public void zetMaat() {
+		contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
+		kb.tp.zetMaat();
+	}
 
 	@Override
 	public void onModuleLoad()

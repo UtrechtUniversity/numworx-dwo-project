@@ -81,9 +81,14 @@ public class TekstVakPanel implements InteractionView
 {
 	class TekstVakContext {
 
+		private int h,w;
+		public TekstVakContext(int h, int w) {
+			this.h = h;
+			this.w = w;
+		}
+
 		public void doLayout(TekstVakPanel tekstVakPanel, int i) {
-			// TODO Auto-generated method stub
-			
+			TekstVakPanel.this.doLayout(tekstVakPanel, i, h, w );
 		}
 		
 	}
@@ -112,6 +117,7 @@ public class TekstVakPanel implements InteractionView
 
 	List<Double> breedtes = null;
 	List<Double> hoogtes = null;
+	List<Double> minHoogtes = null;
 	int cellSpaceColumn = 0;
 	int cellSpaceRow = 0;
 	int cellMarge = 0;
@@ -216,9 +222,10 @@ public class TekstVakPanel implements InteractionView
 		else
 			breedtes = (Arrays.asList(600.0));
 		if (launchState.containsKey("hoogtes") )
-			hoogtes = launchState.getDoubleList("hoogtes") ;
+			hoogtes = launchState.getDoubleList("hoogtes");
 		else
 			hoogtes = (Arrays.asList(250.0));
+		minHoogtes = new ArrayList<Double>(hoogtes);
 		if (launchState.containsKey("cellSpaceColumn") )
 			cellSpaceColumn = launchState.getInt("cellSpaceColumn");
 		if (launchState.containsKey("cellSpaceRow") )
@@ -394,6 +401,9 @@ public class TekstVakPanel implements InteractionView
 				double tekstVakHoogte = hoogtes.get(i).doubleValue() - 2 * bovenMarge;
 				
 				
+				if( tekstVakBreedte < 0) tekstVakBreedte = 0;
+				if( tekstVakHoogte < 0) tekstVakHoogte = 0;
+				
 				tekstHulsVakken[i][j] = new LayoutPanel();
 				//tekstHulsVakken[i][j].getElement().getStyle().setBackgroundColor(CssColor.make(255, 0, 0).toString());
 				//tekstHulsVakken[i][j].setSize(tekstVakBreedte + "px", tekstVakHoogte + "px");
@@ -538,15 +548,25 @@ public class TekstVakPanel implements InteractionView
 			container.doLayout(this, height - oldHeight);
 	}
 	
-	public void doLayout(TekstVakPanel child, int delta) {
-		System.out.println("child dolayout " + child);
-		int h = child.getCurrentHeight();
+	public void doLayout(TekstVakPanel child, int delta, int h, int w) {
+		System.out.println("child dolayout " + child + " pos " + h + " " + w);
+		int cch = child.getCurrentHeight();
 		int tekstGrootte = child.font_size;
 		com.google.gwt.user.client.Element element = child.getAsPanel().getElement();
 		String al = element.getStyle().getProperty("verticalAlign");
-		element.getStyle().setProperty("verticalAlign", (tekstGrootte - h + 1) + "px");
+		element.getStyle().setProperty("verticalAlign", (tekstGrootte - cch + 1) + "px");
 		if(pasAanH)
 		{
+			int cellHoogte = hoogtes.get(h).intValue();
+			int c0 = Math.max(cellHoogte, minHoogtes.get(h).intValue());
+			cellHoogte += delta;
+			hoogtes.set(h, Double.valueOf(cellHoogte));
+			cellHoogte = Math.max(cellHoogte, minHoogtes.get(h).intValue());
+			for(int j = 0; j < breedtes.size(); j ++)
+			{
+				tekstHulsVakken[h][j].setPixelSize(-1, (int) cellHoogte);
+			}
+			delta = cellHoogte - c0;
 			System.out.println("new size = " + width + "x" + "(" + height + "+ " + delta + ")");
 			//mainPanel2.setPixelSize(width, height += delta);
 						setCurrentSize(-1, height + delta);
@@ -586,7 +606,7 @@ public class TekstVakPanel implements InteractionView
 						tekstVakChild.zetInstellingen(instellingen);
 						tekstVakChild.setKeyboard(kb);
 						tekstVakChild.zetOpdracht(launchState);
-						tekstVakChild.setContainer(new TekstVakContext());
+						tekstVakChild.setContainer(new TekstVakContext(i,j));
 						
 					}
 					else if (currentObject instanceof FormuleEditorWithAnswer)
@@ -1415,14 +1435,18 @@ public class TekstVakPanel implements InteractionView
 				{
 					tekstHulsVakken[i][j].setVisible(true);
 					int h = hoogtes.get(i).intValue();
-					if(h < 0 ) h =100; // FIXME
+					if(h <= 0 ) {
+						h =100; // FIXME
+						hoogtes.set(i, Double.valueOf(h));
+					}
+					
 					tekstHulsVakken[i][j].setPixelSize(-1, h);
 				}
 			}
 			GWT.log("uitklappen " + hoogtes.get(1).intValue());
 // FIXME 
-			if(hoogtes.get(1).intValue()< 0) 
-				hoogte = hoogtes.get(0).intValue() + 100;
+			//if(hoogtes.get(1).intValue()<= 0) 
+				hoogte = hoogtes.get(0).intValue() + hoogtes.get(1).intValue();
 			
 			setCurrentSize( breedte, hoogte);
 		}

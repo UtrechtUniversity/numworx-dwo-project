@@ -49,7 +49,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 
 		MGWTsetup();
 		view = new ViewModuleViewImpl(true).initialize();
-			
+		view.zetMaat();
 		
 		Scorm2004IF api = view.getApi();
 		RootPanel.get().add(view);

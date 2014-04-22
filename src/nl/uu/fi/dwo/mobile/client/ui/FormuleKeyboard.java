@@ -38,7 +38,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	static final String SCRIBBLE = "Scribble";
 	static final boolean hasKeyboard  = ! TouchEvent.isSupported();
 	private FormuleEditorIF editor;
-	private KeyBoardTabPanel tp;
+	public KeyBoardTabPanel tp;
 	private WritePanel writePanel;
 
 	private static String clipboard = "";

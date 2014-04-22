@@ -59,8 +59,6 @@ public class KeyBoardTabPanel
 		//panel.getElement().getStyle().setWidth(720, Unit.PX);
 		//panel.getElement().getStyle().setDisplay(Display.BLOCK);
 		//panel.getElement().getStyle().setProperty("margin", "0px auto");
-		//main.getElement().getStyle().setPosition(Style.Position.ABSOLUTE);
-		//main.getElement().getStyle().setBottom(0, Style.Unit.PX);
 
 		staticpanel.getElement().getStyle().setHeight(44, Style.Unit.PX);
 		staticpanel.getElement().getStyle().setBackgroundImage("url(images/resources/footerbgimage.png)");
@@ -131,6 +129,14 @@ public class KeyBoardTabPanel
 		//tabpanel.getElement().getStyle().setBackgroundImage("images/resources/footerbgimage.png");
 
 		main.add(panel);
+	}
+
+	public void zetMaat() {
+		main.getElement().getStyle().setPosition(Style.Position.ABSOLUTE);
+		main.getElement().getStyle().setBottom(0, Style.Unit.PX);
+	}
+
+	public void zetMaatNoordhoff() {
 	}
 
 	public void clearStaticPanel()
