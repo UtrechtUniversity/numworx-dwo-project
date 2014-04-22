@@ -714,10 +714,10 @@ public class TekstVakPanel implements InteractionView
 			Object currentObject = opdrachtObjects.get(i);
 			if (currentObject instanceof String)
 			{
-				
-				currentObject = ((String) currentObject).replaceAll(" ", "&nbsp;");
-				if(i > 0 && opdrachtObjects.get(i - 1) instanceof String)
-					currentObject = ((String) currentObject).replaceFirst("&nbsp;", " ");
+				currentObject = ((String) currentObject).replaceAll("  ", " &nbsp;");
+				currentObject = ((String) currentObject).replaceAll("&nbsp; ", "&nbsp;&nbsp;");
+				//if(i > 0 && opdrachtObjects.get(i - 1) instanceof String)
+				//	currentObject = ((String) currentObject).replaceFirst("&nbsp;", " ");
 				Element element = DOM.createSpan();
 				element.setInnerHTML((String) currentObject);
 				destination.getElement().appendChild(element);
@@ -745,26 +745,24 @@ public class TekstVakPanel implements InteractionView
 				destination.add(tp);
 			}
 			else if (currentObject instanceof FormuleViewer)
-			{	System.out.println("formuleViewer: " + ((FormuleViewer) currentObject).getMainRegel().toString());
+			{	
+				FormuleFont f = FormuleFont.createFromFontSize(font_size);
+				f.setBold(font_style == 1 || font_style == 3);
+				((FormuleViewer) currentObject).setFont(f);
+				((FormuleViewer) currentObject).setColor(fgColor);
+				int asHoogte = ((FormuleViewer) currentObject).getMainRegel().getAsHoogte();
+				int hoogte = ((FormuleViewer) currentObject).getMainRegel().getHeight();
+				//System.out.println("asHoogte = " + asHoogte + ", en hoogte = " + hoogte);
+				Panel a = ((FormuleViewer) currentObject).getAsPanel();
+				a.getElement().getStyle().setProperty("display", "inline-block");
 				
-			FormuleFont f = FormuleFont.createFromFontSize(font_size);
-			f.setBold(font_style == 1 || font_style == 3);
-			((FormuleViewer) currentObject).setFont(f);
-			((FormuleViewer) currentObject).setColor(fgColor);
-			int asHoogte = ((FormuleViewer) currentObject).getMainRegel().getAsHoogte();
-			int hoogte = ((FormuleViewer) currentObject).getMainRegel().getHeight();
-			//System.out.println("asHoogte = " + asHoogte + ", en hoogte = " + hoogte);
-			Panel a = ((FormuleViewer) currentObject).getAsPanel();
-			a.getElement().getStyle().setProperty("display", "inline-block");
-			
-			//deze 2 px zijn overgenomen uit het WiskOpdr TekstFormuleVak, om te zorgen dat formules niet op tekst botsen. 
-			a.getElement().getStyle().setMarginLeft(2, Style.Unit.PX);
-			a.getElement().getStyle().setMarginRight(2, Style.Unit.PX);
-			//Hieronder: gebruik f.getFontSize() ipv font_size omdat fontSize kan zijn aangepast ivm formules in Times Roman.
-			//a.getElement().getStyle().setProperty("verticalAlign", "" + (-hoogte + asHoogte + Math.rint(f.getFontSize() * 0.33)) + "px");
-			a.getElement().getStyle().setProperty("verticalAlign", "top");
-			a.getElement().getStyle().setProperty("verticalAlign", "" + (asHoogte - hoogte + Math.rint(f.getFontSize() * 0.33) + 1) + "px");
-			destination.add(a);
+				//deze 2 px zijn overgenomen uit het WiskOpdr TekstFormuleVak, om te zorgen dat formules niet op tekst botsen. 
+				a.getElement().getStyle().setMarginLeft(2, Style.Unit.PX);
+				a.getElement().getStyle().setMarginRight(2, Style.Unit.PX);
+				//Hieronder: gebruik f.getFontSize() ipv font_size omdat fontSize kan zijn aangepast ivm formules in Times Roman.
+				a.getElement().getStyle().setProperty("verticalAlign", "top");
+				a.getElement().getStyle().setProperty("verticalAlign", "" + (asHoogte - hoogte + Math.rint(f.getFontSize() * 0.33) + 1) + "px");
+				destination.add(a);
 			}
 			else if (currentObject instanceof FormuleEditorWithSteps)
 			{
@@ -791,6 +789,7 @@ public class TekstVakPanel implements InteractionView
 				{
 					int h = ((TekstVakPanel)currentObject).hoogte;
 					int tekstGrootte = ((TekstVakPanel) currentObject).font_size;
+					a.getElement().getStyle().setProperty("verticalAlign", "top");
 					a.getElement().getStyle().setProperty("verticalAlign", (tekstGrootte - h + 1) + "px");
 				}
 				//a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
