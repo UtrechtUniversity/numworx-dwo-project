@@ -59,8 +59,8 @@ public class KeyBoardTabPanel
 		//panel.getElement().getStyle().setWidth(720, Unit.PX);
 		//panel.getElement().getStyle().setDisplay(Display.BLOCK);
 		//panel.getElement().getStyle().setProperty("margin", "0px auto");
-		main.getElement().getStyle().setPosition(Style.Position.ABSOLUTE);
-		main.getElement().getStyle().setBottom(0, Style.Unit.PX);
+		//main.getElement().getStyle().setPosition(Style.Position.ABSOLUTE);
+		//main.getElement().getStyle().setBottom(0, Style.Unit.PX);
 
 		staticpanel.getElement().getStyle().setHeight(44, Style.Unit.PX);
 		staticpanel.getElement().getStyle().setBackgroundImage("url(images/resources/footerbgimage.png)");

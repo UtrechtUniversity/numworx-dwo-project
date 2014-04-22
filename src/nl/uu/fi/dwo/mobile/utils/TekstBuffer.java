@@ -59,22 +59,41 @@ public class TekstBuffer
 		return convertTekst(opdracht, 0, 0);
 	}
 
+	
+	
+	
 	public ArrayList<Object> convertTekst(HashMap<String, Object> opdracht, int row, int column)
 	{
-		ArrayList<Object> result = new ArrayList<Object>();
-		boolean vanTeksVakPanel = false;
-
+		boolean vanTekstVakPanel = false;
 		String tekst = (String) opdracht.get("tekst");
 		if (tekst == null)
 		{
 			List<Object> teksten = JSONUtilities.toArrayList( (opdracht.get("teksten")) );
 			if (teksten != null)
 				tekst = (String) (JSONUtilities.toArrayList(teksten.get(row))).get(column);
-			vanTeksVakPanel = true;
+			vanTekstVakPanel = true;
 		}
+		List<Object> opdrachtGegevens = JSONUtilities.toArrayList( opdracht.get("interactiePanelLaunchData") );
+		
+		return convertTekst(tekst, opdrachtGegevens, vanTekstVakPanel);
+		
+	}
+	
+	
+	
+	
+	//vanTekstVakPanel is standaard false
+	//Methodes convertTekst uit elkaar getrokken op 9-4-2014. Zou niets veranderd moeten hebben aan werking, foutjes voorbehouden.
+	//maar nu kan ik ook aanroepen: convertTekst(tekst, null, false); Dit in eerste instantie vooral tbv antwoordKeuzeVak.
+	
+	public ArrayList<Object> convertTekst(String tekst, List<Object> opdrachtGegevens, boolean vanTekstVakPanel)
+	{
+		ArrayList<Object> result = new ArrayList<Object>();
+		
+
 		if(tekst==null) tekst = "";
 		
-		List<Object> opdrachtGegevens = JSONUtilities.toArrayList( opdracht.get("interactiePanelLaunchData") );
+		
 
 		int lastIndex = 0;
 
@@ -95,20 +114,20 @@ public class TekstBuffer
 				//"vakken"
 				if (identifier.equals("$V"))
 				{ // Hier ook de offset 5 was 1 FIXME Wim
-					Object vak = getVak(vanTeksVakPanel ? aantalVakken - 5 : aantalVakken, opdrachtGegevens, result); //toegevoegd tbv checkSelectieUnit
+					Object vak = getVak(vanTekstVakPanel ? aantalVakken - 5 : aantalVakken, opdrachtGegevens, result); //toegevoegd tbv checkSelectieUnit
 					result.add(vak);
 					aantalVakken++;
 				}
 				//FormuleViewer
 				else if (identifier.equals("$f"))
 				{
-					FormuleViewer fv = getFormuleViewer(opdracht, tekst, i, endIndex);
+					FormuleViewer fv = getFormuleViewer(tekst, i, endIndex);
 					i = i + endIndex;
 					result.add(fv);
 				}
 				else if (identifier.equals("$I"))
 				{
-					ImageView iv = getImageView(opdracht, tekst, i, endIndex);
+					ImageView iv = getImageView(tekst, i, endIndex);
 					i = i + endIndex;
 					result.add(iv);
 				}
@@ -138,20 +157,20 @@ public class TekstBuffer
 		return result;
 	}
 
-	private ImageView getImageView(HashMap<String, Object> opdracht, String tekst, int i, int endIndex)
+	private ImageView getImageView(String tekst, int i, int endIndex)
 	{
 		String naam = tekst.substring(i + 2, i + endIndex);
 
 		return new ImageView(naam);
 	}
 
-	private FormuleViewer getFormuleViewer(HashMap<String, Object> opdracht, String tekst, int i, int endIndex)
+	private FormuleViewer getFormuleViewer(String tekst, int i, int endIndex)
 	{
 		FormuleViewer fv;
 		fv = new FormuleViewer(tekst.substring(i + 2, i + endIndex), randomVarNamen, randomVarWaarden);
 		return fv;
 	}
-
+	
 	private String[] getBreaks(String normalTekst)
 	{
 		normalTekst = normalTekst.replaceAll("\n", "\n ");
@@ -225,27 +244,27 @@ public class TekstBuffer
 			return new GeogebraView(currentVakGegevens, randomVarNamen, randomVarWaarden);
 		case 45: // GraphTool
 			return 
-					//new StubView("GraphToolGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
-					new PopupFacade( 
-							currentVakGegevens,
-							new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)
-					);
+					new StubView("GraphToolGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+					//new PopupFacade( 
+					//	currentVakGegevens,
+					//		new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)
+					//);
 			
 		case 15: 
-			//return new StubView("DoorzienGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
-		    return new PopupFacade( currentVakGegevens, new fi.doorziengwt.client.DoorzienGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
+			return new StubView("DoorzienGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+		    //return new PopupFacade( currentVakGegevens, new fi.doorziengwt.client.DoorzienGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 20: 
 // Een eerste pesterij: gooi currentVakGegevens door JSONUtilities heen.
 			//currentVakGegevens = JSONUtilities.fromJSONObject( JSONUtilities.toJSONObject(currentVakGegevens).isObject());
 
-			//return new StubView("GeomAlgGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
-			return new PopupFacade( currentVakGegevens, new fi.geomalggwt.client.GeomAlgGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
+			return new StubView("GeomAlgGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			//return new PopupFacade( currentVakGegevens, new fi.geomalggwt.client.GeomAlgGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 5 :
 			//return new StubView("AlgebraPijlenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
-			return new PopupFacade( currentVakGegevens, new fi.algebrapijlengwt.client.AlgebraPijlenGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
+			return new StubView("AlgebraPijlenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		case 35 :
-			//return new StubView("AlgebraExprGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
-			return new PopupFacade(currentVakGegevens, new fi.algebraexprgwt.client.AlgebraExprGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
+			return new StubView("AlgebraExprGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			//return new PopupFacade(currentVakGegevens, new fi.algebraexprgwt.client.AlgebraExprGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 
 		
 		}
@@ -330,6 +349,7 @@ public class TekstBuffer
 			TekstVakPanel[] ipListDoel2 = new TekstVakPanel[-laagsteId];
 			for(int i = 0; i < ipListDoel2.length; i++)
 				ipListDoel2[i] = ipListDoel1[i+1];
+			System.out.println("ipListDoel2.length: " + ipListDoel2.length);
 			result = new PopupFacade(currentVakGegevens, new CheckSleepUnit(currentVakGegevens, randomVarNamen,randomVarWaarden, ipListSleep2, ipListDoel2));
 		}
 		else if(soortVak == 33)
@@ -351,8 +371,8 @@ public class TekstBuffer
 		}
 		else if (soortVak == 41)
 		{
-			result = new PopupFacade(currentVakGegevens, new fi.kladjegwt.client.KladjeGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
-			//result = new StubView("KladjeGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			//result = new PopupFacade(currentVakGegevens, new fi.kladjegwt.client.KladjeGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
+			result = new StubView("KladjeGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		}
 		else
 		{

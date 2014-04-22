@@ -41,8 +41,8 @@ public class CheckSelectieUnit implements InteractionStub
 	static final String holderId = "dockholder";
 	
 	private HashMap<String, Object> launchState; 
-	String[] randomVarNamen = null;
-	HashMap randomVarWaarden = null;
+	//String[] randomVarNamen = null;
+	//HashMap randomVarWaarden = null;
 	
 	private LayoutPanel basisPanel;
 	int breedte = 110;

@@ -273,7 +273,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 
 		contentPanel.getElement().getStyle().setFontSize(font_size, Unit.PX);
-		contentPanel.getElement().getStyle().setPadding(15, Unit.PX);
+		contentPanel.getElement().getStyle().setPadding(0, Unit.PX); // XXX was 15 
 		//FormuleHolder.setDefaultFont(FormuleFont.createFromFontSize(font_size));
 
 		OpdrNav onimpl;
@@ -698,6 +698,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		
 		mainPanel.setHeight("100%");
 		mainPanel.setWidth("100%");
+		//fp.setHeight("428px");
+		//fp.setWidth("886px");
 
 		kb = new FormuleKeyboard();
 		FocusOnTouch.installKeyboard(kb);
@@ -722,8 +724,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 		contentPanel = new TouchPanel();
 		contentPanel.getElement().getStyle().setProperty("display", "inline-block");
-		contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
-		contentPanel.setWidth("95%"); // hoeveel is 100% - 30px ?
+		//contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
+		contentPanel.setWidth("100%"); // hoeveel is 100% - 30px ?
 		//addContentPanelTouchListener(contentPanel);
 
 		contentScrollPanel.setWidget(contentPanel);
@@ -733,11 +735,31 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		fp.add(contentScrollPanel);
 
 		Panel kbp = kb.getAsPanel();
-
+		//kbp.setWidth("886px");
 		fp.add(kbp);
 
 		//initWidget(mainPanel);
 		return this;
+
+	}
+	
+	public void zetMaatNoordhoff()
+	{
+		//FlowPanel fp = new FlowPanel();
+		//mainPanel = FocusOnTouch.wrap(fp);
+		mainPanel.setHeight("428px");
+		mainPanel.setWidth("886px");
+		//fp.setHeight("428px");
+		//fp.setWidth("886px");
+		//if(!standalone) fp.add(hp);
+		contentScrollPanel.setWidth("886px");
+		contentScrollPanel.setHeight("428px");
+		//contentScrollPanel.setHeight("100%");
+		//fp.add(contentScrollPanel);
+
+		Panel kbp = kb.getAsPanel();
+		kbp.setWidth("886px");
+		//fp.add(kbp);
 
 	}
 

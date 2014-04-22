@@ -35,7 +35,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 
 	}
 	private static Logger logger = Logger.getLogger("WiskOpdrPlayer");
-	private ViewModuleViewImpl view;
+	protected ViewModuleViewImpl view;
 
 	@Override
 	public void onModuleLoad() {
@@ -49,6 +49,8 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 
 		MGWTsetup();
 		view = new ViewModuleViewImpl(true).initialize();
+			
+		
 		Scorm2004IF api = view.getApi();
 		RootPanel.get().add(view);
 		
@@ -73,9 +75,10 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 			
 		};
 		api.Initialize(callback); // need some async bootstrapping.	
+		
 	}
 
-	private void MGWTsetup() {
+	protected void MGWTsetup() {
 		//MGWT Settings//
 		ViewPort viewport = new MGWTSettings.ViewPort();
 		viewport.setTargetDensity(DENSITY.MEDIUM);

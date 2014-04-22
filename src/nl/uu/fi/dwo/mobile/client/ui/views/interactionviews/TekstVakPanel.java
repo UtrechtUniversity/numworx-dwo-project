@@ -261,7 +261,7 @@ public class TekstVakPanel implements InteractionView
 		if(launchState.containsKey("font")) {
 			ObjectMap m = launchState.getObjectMap("font");
 			font_size = m.getInt("size");
-			font_style = m.getInt("style");			
+			font_style = m.getInt("style");
 		}
 		
 		if (launchState.containsKey("selectable"))
@@ -278,6 +278,7 @@ public class TekstVakPanel implements InteractionView
 			defaultBijNull = launchState.getBoolean("defaultBijNull");
 		if (launchState.containsKey("ipId"))
 			ipId = launchState.getInt("ipId");
+		System.out.println("ipId: " + ipId);
 		if (launchState.containsKey("colorSelection"))
 			colorSelection = launchState.getBoolean("colorSelection");
 		if (launchState.containsKey("tableBorders"))
@@ -407,7 +408,7 @@ public class TekstVakPanel implements InteractionView
 				tekstVakken[i][j].getElement().getStyle().setProperty("lineHeight", "1.2");
 				tekstVakken[i][j].getElement().getStyle().setFontStyle(font_style == 2 || font_style == 3 ? FontStyle.ITALIC : FontStyle.NORMAL);
 				tekstVakken[i][j].getElement().getStyle().setFontWeight(font_style == 1 || font_style == 3 ? Style.FontWeight.BOLD : Style.FontWeight.NORMAL);
-				
+				//System.out.println("font_family: " + font_family);
 				//tekstVakken[i][j].getElement().getStyle().setProperty("margin", "" + cellMarge + "px " + bovenMarge + "px");
 				
 				/*
@@ -452,7 +453,7 @@ public class TekstVakPanel implements InteractionView
 				*/
 				
 				vPanel.add(tekstVakken[i][j]);
-				//vPanel.setPixelSize((int)tekstVakBreedte, (int)tekstVakHoogte);
+				vPanel.setSize(tekstVakBreedte + "px", tekstVakHoogte + "px");
 				//tekstHulsVakken[i][j].add(tekstVakken[i][j]);
 				tekstHulsVakken[i][j].add(vPanel);
 				
@@ -706,6 +707,7 @@ public class TekstVakPanel implements InteractionView
 				((FormuleEditorWithAnswer) currentObject).setColor(fgColor);
 				int asHoogte = ((FormuleEditorWithAnswer) currentObject).getMainRegel().getAsHoogte();
 				int hoogte = ((FormuleEditorWithAnswer) currentObject).getMainRegel().getHeight();
+				//int hoogte = ((FormuleEditorWithAnswer) currentObject).getAsPanel().getOffsetHeight();
 
 				TouchPanel tp = (TouchPanel) ((FormuleEditorWithAnswer) currentObject).getAsPanel();
 				tp.getElement().getStyle().setProperty("display", "inline-block");
@@ -718,7 +720,7 @@ public class TekstVakPanel implements InteractionView
 				destination.add(tp);
 			}
 			else if (currentObject instanceof FormuleViewer)
-			{
+			{	System.out.println("formuleViewer: " + ((FormuleViewer) currentObject).getMainRegel().toString());
 				FormuleFont f = FormuleFont.createFromFontSize(font_size);
 				f.setBold(font_style == 1 || font_style == 3);
 				((FormuleViewer) currentObject).setFont(f);
@@ -727,7 +729,8 @@ public class TekstVakPanel implements InteractionView
 				int hoogte = ((FormuleViewer) currentObject).getMainRegel().getHeight();
 				Panel a = ((FormuleViewer) currentObject).getAsPanel();
 				a.getElement().getStyle().setProperty("display", "inline-block");
-				a.getElement().getStyle().setProperty("verticalAlign", "" + (-hoogte + asHoogte + Math.rint(font_size * 0.33)) + "px");
+				//Hieronder: gebruik f.getFontSize() ipv font_size omdat fontSize kan zijn aangepast ivm formules in Times Roman.
+				a.getElement().getStyle().setProperty("verticalAlign", "" + (-hoogte + asHoogte + Math.rint(f.getFontSize() * 0.33)) + "px");
 				destination.add(a);
 			}
 			else if (currentObject instanceof FormuleEditorWithSteps)

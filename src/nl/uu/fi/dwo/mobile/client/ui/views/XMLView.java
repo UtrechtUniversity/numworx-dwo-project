@@ -64,6 +64,12 @@ public abstract class XMLView {
 
 		boolean maalTeken = (Boolean) instellingen.get("maalTeken");
 		FormuleTeken.zetMaalTeken(maalTeken);
+		
+		String fontName = (String) instellingen.get("fontName");
+		FormuleFont.zetDefaultFont(fontName);
+		
+		boolean formTimes = (Boolean) instellingen.get("formTimes");
+		FormuleFont.zetFormTimes(formTimes);
 
 
 	}

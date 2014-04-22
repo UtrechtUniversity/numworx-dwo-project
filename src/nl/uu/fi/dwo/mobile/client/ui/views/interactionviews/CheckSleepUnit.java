@@ -647,6 +647,7 @@ public class CheckSleepUnit implements InteractionStub{
         }
 		
 		Point[] doelPosities = new Point[aantalDoelObjects];
+		System.out.println("aantalDoelObjects: " + aantalDoelObjects);
         for(int i=0 ; i<aantalDoelObjects ; i++)
         {   doelPosities[i] = ipListDoel[i].geefLocatie();
         }
