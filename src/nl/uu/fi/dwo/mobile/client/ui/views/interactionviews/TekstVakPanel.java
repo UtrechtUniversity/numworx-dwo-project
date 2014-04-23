@@ -463,9 +463,12 @@ public class TekstVakPanel implements InteractionView
 				*/
 				
 				vPanel.add(tekstVakken[i][j]);
-				vPanel.setSize(tekstVakBreedte + "px", tekstVakHoogte + "px");
+				vPanel.setHeight("100%");
+				//vPanel.setSize(tekstVakBreedte + "px", tekstVakHoogte + "px"); // vaste hoogte/breedte vervalt, plak aan de randen vast
 				//tekstHulsVakken[i][j].add(tekstVakken[i][j]);
 				tekstHulsVakken[i][j].add(vPanel);
+				tekstHulsVakken[i][j].setWidgetLeftRight(vPanel, 0, Unit.PX, 0, Unit.PX);
+				tekstHulsVakken[i][j].setWidgetTopBottom(vPanel, 0, Unit.PX, 0, Unit.PX);
 				
 				
 				//tekstHulsVakken[i][j].setWidgetLeftRight(vPanel, )
