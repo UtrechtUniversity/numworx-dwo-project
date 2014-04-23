@@ -33,7 +33,7 @@
 <!-- --> <inherits name="fi.doorziengwt.DoorzienGWT-DWO" />
 <!-- --> <inherits name="fi.geomalggwt.GeomAlgGWT-DWO" />
 <!-- --> <inherits name="fi.graphtoolgwt.GraphToolGWT-DWO" />
-<!-- --> <inherits name="fi.kladjehwt.KladjeGWT-DWO" />
+<!-- --> <inherits name="fi.kladjegwt.KladjeGWT-DWO" />
 
 <!-- --> <inherits name="fi.antwoordkeuzevakgwt.AntwoordKeuzeVakGWT-DWO" /> 
 
