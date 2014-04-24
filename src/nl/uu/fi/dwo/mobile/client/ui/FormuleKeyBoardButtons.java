@@ -150,6 +150,10 @@ public abstract class FormuleKeyBoardButtons
 			{
 				kb.focus();
 			}
+			if( FormuleKeyboard.VVV.equals(code))
+			{
+				kb.tp.hideKeyboard();
+			}
 			
 			else if (code.length() == 1)
 				editor.insert(code.charAt(0));
@@ -207,6 +211,8 @@ public abstract class FormuleKeyBoardButtons
 		buttonImages.put("zoomOut", "images/resources/zoominknop.gif");
 		buttonImages.put("right", "images/resources/pijlrechts.gif");
 		buttonImages.put("left", "images/resources/pijllinks.gif");
+		
+		buttonImages.put(FormuleKeyboard.VVV, "images/resources/keyboardremovebutton.png");
 
 		buttonTexts = new HashMap<String, String>();
 		buttonTexts.put("key", "value");

@@ -19,6 +19,7 @@ import com.google.gwt.event.dom.client.TouchEvent;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.widget.RoundPanel;
 
 import fi.writemathgwt.client.Rectangle;
@@ -33,6 +34,7 @@ import fi.writemathgwt.client.WritePanelHolder;
  */
 public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 {
+	static final String VVV = "VVV";
 	static final String _123 = "123";
 	static final String ΑΒ = "\u03b1\u03b2..";
 	static final String SCRIBBLE = "Scribble";
@@ -229,10 +231,10 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 
 		double width = 0;
 
-		FlowPanel fp = new FlowPanel();
+		FlowPanel fp = new FlowPanel(), fp2 = new FlowPanel();
 		for (int j = 0; j < buttons.length; j++)
 		{
-			FlowPanel fp2 = new FlowPanel();
+			fp2 = new FlowPanel();
 			fp2.getElement().getStyle().setProperty("clear", "both");
 			for (int i = 0; i < buttons[j].length; i++)
 			{
@@ -265,9 +267,12 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 			fp.add(fp2);
 		}
 		SimplePanel sp = new SimplePanel();
-		sp.getElement().getStyle().setProperty("clear", "both");
-
+		sp.getElement().getStyle().setProperty("clear", "both");		
 		fp.add(sp);
+		Widget b = FormuleKeyBoardButtons.getButton(VVV, this);
+		b.setHeight("16px");
+		fp2.add(b);
+		
 		return fp;
 	}
 

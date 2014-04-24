@@ -11,6 +11,8 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleTeken;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
@@ -42,7 +44,7 @@ import com.google.gwt.xml.client.XMLParser;
 public abstract class XMLView {
 
 	protected HashMap<String, Object> launchData;
-	protected HashMap<String, Object> instellingen;
+	protected Map<String, Object> instellingen;
 	protected int font_size = 12;
 	protected String[] randomVarNamen = null;
 	protected HashMap randomVarWaarden = null;
@@ -54,21 +56,23 @@ public abstract class XMLView {
 	protected void setupView(HashMap<String, Object> launchData)
 	{
 		this.launchData = launchData;
-		Object imagemap = launchData.get("$IMAGE$MAP$");
-		ImageView.setMap((Map<String, Object>) imagemap);
+		ObjectMap wrap = JSONUtilities.wrapMap(launchData);
+		Map<String, Object> imagemap = wrap.getMap("$IMAGE$MAP$");
+		ImageView.setMap(imagemap);
 		
-		if (launchData.get("instellingen") != null)
-			instellingen = (HashMap<String, Object>) launchData.get("instellingen");
-		if (instellingen.get("fontSize") != null)
-			font_size = ((Number) instellingen.get("fontSize")).intValue();
+		if (wrap.containsKey("instellingen"))
+			instellingen = wrap.getMap("instellingen");
+		wrap = JSONUtilities.wrapMap(instellingen);
+		if (wrap.containsKey("fontSize") )
+			font_size = wrap.getInt("fontSize");
 
-		boolean maalTeken = (Boolean) instellingen.get("maalTeken");
+		boolean maalTeken =  wrap.getBoolean("maalTeken");
 		FormuleTeken.zetMaalTeken(maalTeken);
 		
-		String fontName = (String) instellingen.get("fontName");
+		String fontName = wrap.getString("fontName");
 		FormuleFont.zetDefaultFont(fontName);
 		
-		boolean formTimes = (Boolean) instellingen.get("formTimes");
+		boolean formTimes = wrap.getBoolean("formTimes");
 		FormuleFont.zetFormTimes(formTimes);
 
 

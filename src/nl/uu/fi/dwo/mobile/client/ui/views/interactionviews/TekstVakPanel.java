@@ -118,6 +118,7 @@ public class TekstVakPanel implements InteractionView
 	List<Double> breedtes = null;
 	List<Double> hoogtes = null;
 	List<Double> minHoogtes = null;
+	List<Double> uitklapHoogtes = null;
 	int cellSpaceColumn = 0;
 	int cellSpaceRow = 0;
 	int cellMarge = 0;
@@ -161,6 +162,7 @@ public class TekstVakPanel implements InteractionView
 	private int startX, startY;
 
 	private boolean inklapbaar, ingeklapt;
+	private String knopImageString1, knopImageString2;
 	private ToggleButton klapUitButton;
 	private TekstVakContext container;
 	
@@ -305,6 +307,12 @@ public class TekstVakPanel implements InteractionView
 			inklapbaar = launchState.getBoolean("inklapbaar");
 		if( launchState.containsKey("ingeklapt"))
 			ingeklapt = launchState.getBoolean("ingeklapt");
+		if( launchState.containsKey("uitklapHoogtes"))
+			uitklapHoogtes = launchState.getDoubleList("uitklapHoogtes");
+		if( launchState.containsKey("knopImageString1"))
+			knopImageString1 = launchState.getString("knopImageString1");
+		if( launchState.containsKey("knopImageString2"))
+			knopImageString2 = launchState.getString("knopImageString2");
 // launchState never null!
 		if( launchState.containsKey("pasAanH"))
 			pasAanH = launchState.getBoolean("pasAanH");
@@ -1439,32 +1447,44 @@ public class TekstVakPanel implements InteractionView
 			setCurrentSize(breedte,  hoogtes.get(0).intValue() );
 		} 
 		else {
+			double hoogte = hoogtes.get(0);
+			
 			for(int i = 1; i < tekstHulsVakken.length; i++)
 			{
+				int h = hoogtes.get(i).intValue();
+				if(h <= 0 ) {
+					if (uitklapHoogtes != null && uitklapHoogtes.size() > i) h = uitklapHoogtes.get(i).intValue();
+					else h = 100;
+					hoogtes.set(i, Double.valueOf(h));
+				}
 				for(int j = 0; j < tekstHulsVakken[i].length; j ++)
 				{
 					tekstHulsVakken[i][j].setVisible(true);
-					int h = hoogtes.get(i).intValue();
-					if(h <= 0 ) {
-						h =100; // FIXME
-						hoogtes.set(i, Double.valueOf(h));
-					}
-					
 					tekstHulsVakken[i][j].setPixelSize(-1, h);
 				}
+				hoogte += hoogtes.get(i);
 			}
-			GWT.log("uitklappen " + hoogtes.get(1).intValue());
-// FIXME 
-			//if(hoogtes.get(1).intValue()<= 0) 
-				hoogte = hoogtes.get(0).intValue() + hoogtes.get(1).intValue();
+			GWT.log("uitklappen " + hoogte);
+			this.hoogte = (int)hoogte;
 			
-			setCurrentSize( breedte, hoogte);
+			setCurrentSize( breedte, this.hoogte);
 		}
 	}
 	
 	private void initieerKlapUitButton (boolean ingeklapt)
 	{
-		klapUitButton = new ToggleButton("\u25BE","\u25B8");
+		Image view1, view2;
+		if(knopImageString1 != null && !knopImageString1.isEmpty()) {
+			view1 = new ImageView(knopImageString1).getImage();
+		} else
+			view1 = new Image(DWOplayer.DWO_BUNDLE.klapuit1());		
+		if(knopImageString2 != null && !knopImageString2.isEmpty()) {
+			view2 = new ImageView(knopImageString2).getImage();
+		} else {
+			view2 = new Image(DWOplayer.DWO_BUNDLE.klapuit2());
+		}
+		
+		klapUitButton = new ToggleButton(view2, view1);
 		klapUitButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				klapUitAction();				
