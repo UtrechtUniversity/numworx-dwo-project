@@ -44,6 +44,8 @@ public class CheckSelectieUnit implements InteractionStub
 	//String[] randomVarNamen = null;
 	//HashMap randomVarWaarden = null;
 	
+	OpdrNavIF comRoot;
+	
 	private LayoutPanel basisPanel;
 	int breedte = 110;
 	int hoogte = 24; 	
@@ -169,18 +171,27 @@ public class CheckSelectieUnit implements InteractionStub
         }
         
         if(juist)
-        {   goedKrulImage.setVisible(true);
+        {   //goedKrulImage.setVisible(true);
             correct = true;
             fout = false;
             score = scoreMax;
         }
         else 
-        {   foutKruisImage.setVisible(true);
+        {   //foutKruisImage.setVisible(true);
             correct = false;
             fout = true;
             score = 0;
         }
+        
+        if(show && check)
+        {	if(correct)
+        		goedKrulImage.setVisible(true);
+        	else
+        		foutKruisImage.setVisible(true);
+        	if (ingevuld)
+        		comRoot.setChanged();
         }
+    }
     
     public void kijkNa(int stapNr)
     { 	kijkNa();
@@ -220,7 +231,7 @@ public class CheckSelectieUnit implements InteractionStub
 	    attemptsCount = this.attemptsCount;
 	    errorCount = this.errorCount;
 
-	    kijkNa(false);
+	    //kijkNa(false);
 		if(logOption)
 		{	
 	    	HashMap logMap = new HashMap<String, Object>();
@@ -439,11 +450,10 @@ public class CheckSelectieUnit implements InteractionStub
 
 		@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
-		// TODO Auto-generated method stub
-		
+		this.comRoot = comRoot;
 	}
 	
-	public CheckSelectieUnit(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden, TekstVakPanel[] ipList)
+	public CheckSelectieUnit(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)//, TekstVakPanel[] ipList)
 	{
 		
 		if (h != null && h.get("breedte") != null)
@@ -456,7 +466,7 @@ public class CheckSelectieUnit implements InteractionStub
 		//this.parent = parent;
 		
 		init(breedte, hoogte, launchState, randomVarWaarden);
-		this.ipList = ipList;
+		//this.ipList = ipList;
 		
 		initialize(h, randomVarNamen, randomVarWaarden);
 	}
@@ -559,31 +569,19 @@ public class CheckSelectieUnit implements InteractionStub
 	    	catch(Exception e){	}
         }
 		
-		//ipList = new TekstVakPanel[juisteSelecties.length];
-        for(int i=0 ; i<ipList.length ; i++)
-        {   //Widget panel = basisPanel.getParent();
-        	//ipList[i] = parent.zoekTekstVakPanel(i+1);
-            if(ipList[i] != null)
+	}
+	
+	public void zetSelectieObjecten(TekstVakPanel[] selectieObjecten)
+	{
+		ipList = selectieObjecten;
+		for(int i=0 ; i<ipList.length ; i++)
+        {   if(ipList[i] != null)
             {	ipList[i].getAsPanel().addDomHandler(new MouseDownHandler(){
 	    			public void onMouseDown(MouseDownEvent e){
 	    				for(int i = 0; i < ipList.length; i++)
 	    				{	if(e.getSource() == ipList[i].getAsPanel())
 	    				
 	    					{	selectClickAction(i);
-	    						/*
-	    						goedKrulImage.setVisible(false);
-	    						//goedKrulHalfImage.setVisible(false);
-	    						foutKruisImage.setVisible(false);
-	    						correct = false;
-	    						score = 0;
-	    						
-	    						if(!multiSelections)
-	    						{
-	    							for(int j = 0; j < ipList.length; j++)
-	    								if(i != j)
-	    									ipList[j].setSelected(false);
-	    						}
-	    						*/
 	    						break;
 	    					}
 	    				}
@@ -594,20 +592,6 @@ public class CheckSelectieUnit implements InteractionStub
 	    				for(int i = 0; i < ipList.length; i++)
 	    				{	if(e.getSource() == ipList[i].getAsPanel())
 	    					{	selectClickAction(i);
-	    						/*	
-	    						goedKrulImage.setVisible(false);
-	    						//goedKrulHalfImage.setVisible(false);
-	    						foutKruisImage.setVisible(false);
-	    						correct = false;
-	    						score = 0;
-	    						
-	    						if(!multiSelections)
-	    						{
-	    							for(int j = 0; j < ipList.length; j++)
-	    								if(i != j)
-	    									ipList[j].setSelected(false);
-	    						}
-	    						*/
 	    						break;
 	    					}
 	    				}
@@ -617,7 +601,11 @@ public class CheckSelectieUnit implements InteractionStub
         }
         
         if(randomizePositions && !positionsRandomized) randomizePositions();
-		
+	}
+	
+	public int getAantalSelectieObjecten()
+	{
+		return juisteSelecties.length;
 	}
 
 	public void selectClickAction(int i)

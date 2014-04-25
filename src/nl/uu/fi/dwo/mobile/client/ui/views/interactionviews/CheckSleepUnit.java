@@ -44,6 +44,8 @@ public class CheckSleepUnit implements InteractionStub{
 	String[] randomVarNamen = null;
 	HashMap randomVarWaarden = null;
 	
+	OpdrNavIF comRoot;
+	
 	private LayoutPanel basisPanel;
 	int breedte = 110;
 	int hoogte = 24; 	
@@ -128,6 +130,8 @@ public class CheckSleepUnit implements InteractionStub{
 	public Widget asWidget() {
 		return basisPanel;
 	}
+	
+	
 
 	
 	@Override
@@ -157,7 +161,7 @@ public class CheckSleepUnit implements InteractionStub{
 	    errorCount = this.errorCount;
 
 	    //if(!("MW".equals(WiskOpdr.deployVariant) || "GR".equals(WiskOpdr.deployVariant))) 
-	    kijkNa(false);
+	    //kijkNa(false);
 		if(logOption)
 		{	
 	    	HashMap logMap = new HashMap<String, Object>();
@@ -513,12 +517,18 @@ public class CheckSleepUnit implements InteractionStub{
             fout = true;
             score = 0;
         }
+        System.out.println("kijkna sleepOpdr: show = " + Boolean.toString(show) + " en check = " + Boolean.toString(check) + " en ingevuld = " + Boolean.toString(ingevuld));
         if(show && check)
         {	if(correct)
         		goedKrulImage.setVisible(true);
         	else
         		foutKruisImage.setVisible(true);
+        	if (ingevuld)
+        		comRoot.setChanged();
         }
+        
+       
+			
         
     }
     
@@ -528,12 +538,11 @@ public class CheckSleepUnit implements InteractionStub{
     
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
-		// TODO Auto-generated method stub
-		
+		this.comRoot = comRoot;
 	}
 	
 	
-    public CheckSleepUnit(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden, TekstVakPanel[] ipListSleep, TekstVakPanel[] ipListDoel)
+    public CheckSleepUnit(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)//, TekstVakPanel[] ipListSleep, TekstVakPanel[] ipListDoel)
 	{
 		
 		if (h != null && h.get("breedte") != null)
@@ -543,8 +552,8 @@ public class CheckSleepUnit implements InteractionStub{
 		if (h != null && h.get("interactiePanelLaunchState") != null)
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
 		
-		this.ipListSleep = ipListSleep;
-		this.ipListDoel = ipListDoel;
+		//this.ipListSleep = ipListSleep;
+		//this.ipListDoel = ipListDoel;
 		init(breedte, hoogte, launchState, randomVarWaarden);
 		
 		initialize(h, randomVarNamen, randomVarWaarden);
@@ -646,8 +655,16 @@ public class CheckSleepUnit implements InteractionStub{
 	    	catch(Exception e){	}
         }
 		
+		
+		
+	}
+	
+	public void zetSleepDoelObjecten(TekstVakPanel[] sleepObjecten, TekstVakPanel[] doelObjecten)
+	{
+		ipListDoel = doelObjecten;
+		ipListSleep = sleepObjecten;
 		Point[] doelPosities = new Point[aantalDoelObjects];
-		System.out.println("aantalDoelObjects: " + aantalDoelObjects);
+		//System.out.println("aantalDoelObjects: " + aantalDoelObjects);
         for(int i=0 ; i<aantalDoelObjects ; i++)
         {   doelPosities[i] = ipListDoel[i].geefLocatie();
         }
@@ -677,7 +694,16 @@ public class CheckSleepUnit implements InteractionStub{
         }
         
         if(randomizePositions && !positionsRandomized) randomizePositions();
-		
+	}
+	
+	public int getAantalSleepObjects()
+	{
+		return aantalSleepObjects;
+	}
+	
+	public int getAantalDoelObjects()
+	{
+		return aantalDoelObjects;
 	}
 	
 	public void clickAction()

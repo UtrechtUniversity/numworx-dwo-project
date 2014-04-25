@@ -35,6 +35,7 @@ public class CheckValueUnit implements InteractionStub{
 
 	public static Text_nl rb = new Text_nl();
 	static final String holderId = "dockholder";
+	OpdrNavIF comRoot;
 	
 	private HashMap<String, Object> launchState; 
 	
@@ -84,7 +85,7 @@ public class CheckValueUnit implements InteractionStub{
 	private String answer = "";
 	private boolean view = false;
 	
-	public CheckValueUnit(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden, TekstVakPanel[] ipValueList)
+	public CheckValueUnit(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)//, TekstVakPanel[] ipValueList)
 	{
 		
 		if (h != null && h.get("breedte") != null)
@@ -187,11 +188,13 @@ public class CheckValueUnit implements InteractionStub{
 	    	catch(Exception e){	}
         }
 		
-		//ipList = new TekstVakPanel[juisteSelecties.length];
-        for(int i=0 ; i<ipValueList.length ; i++)
-        {   //Widget panel = basisPanel.getParent();
-        	//ipList[i] = parent.zoekTekstVakPanel(i+1);
-            if(ipValueList[i] != null)
+	}
+	
+	public void zetWaardeObjecten(TekstVakPanel[] waardeObjecten)
+	{
+		ipValueList = waardeObjecten;
+		 for(int i=0 ; i<ipValueList.length ; i++)
+        {  if(ipValueList[i] != null)
             {	ipValueList[i].getAsPanel().addDomHandler(new MouseDownHandler(){
 	    			public void onMouseDown(MouseDownEvent e){
 	    				for(int i = 0; i < ipValueList.length; i++)
@@ -211,9 +214,13 @@ public class CheckValueUnit implements InteractionStub{
 	    		}, MouseDownEvent.getType());
             }
         }
-        
-		
 	}
+	
+	public int getAantalValueObjects()
+	{
+		return aantalValueObjects;
+	}
+	
 	
 	public void setState(HashMap<String, Object> h)
 	{
@@ -314,8 +321,9 @@ public class CheckValueUnit implements InteractionStub{
 	
 	public void wis()
 	{
-		ipValueList = null;
-		aantalValueObjects = 0;
+		//wanneer wordt wis aangeroepen? ipValueList null maken en aantalvalueObjects op 0 zetten lijkt me niet slim..
+		//ipValueList = null;
+		//aantalValueObjects = 0;
 		
 	    goedKrulImage.setVisible(false);
 	    foutKruisImage.setVisible(false);
@@ -387,8 +395,7 @@ public class CheckValueUnit implements InteractionStub{
     
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
-		// TODO Auto-generated method stub
-		
+		this.comRoot = comRoot;
 	}
 	
 	@Override
@@ -526,7 +533,10 @@ public class CheckValueUnit implements InteractionStub{
         		goedKrulImage.setVisible(true);
         	else
         		foutKruisImage.setVisible(true);
+	        if (ingevuld)
+				comRoot.setChanged();
         }
+			
         
         //if(show || mode==0 || mode==1)produceAction("changed");
     }

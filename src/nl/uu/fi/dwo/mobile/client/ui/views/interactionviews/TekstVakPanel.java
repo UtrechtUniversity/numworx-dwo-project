@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.hamcrest.core.Is;
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
@@ -80,6 +82,7 @@ import fi.wiskopdr.expressies.Optelling;
 import fi.wiskopdr.expressies.Vergelijking;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
 
+
 public class TekstVakPanel implements InteractionView
 {
 	class TekstVakContext {
@@ -108,13 +111,14 @@ public class TekstVakPanel implements InteractionView
 	private LayoutPanel mainPanel2 = null;
 	private Grid mainPanel = null;
 	private LayoutPanel randPanel = null;
-	private LayoutPanel[][] tekstHulsVakken = null;
+	//private LayoutPanel[][] tekstHulsVakken = null;
+	private TekstVakCel[][] tekstHulsVakken = null;
 	private FlowPanel[][] tekstVakken = null;
 	String[] randomVarNamen = null;
 	HashMap<String, Object> randomVarWaarden = null;
 	
-	private LayoutPanel parent = null;
-
+	private TekstVakCel parent = null;
+	
 	ArrayList<Object> interactionViewObjects = new ArrayList<Object>();
 
 	List<Double> breedtes = null;
@@ -402,7 +406,8 @@ public class TekstVakPanel implements InteractionView
 		//mainPanel.getElement().getStyle().setBorderColor("gray");
 		//mainPanel.getElement().getStyle().setBorderWidth(0, Unit.PX);
 		
-		tekstHulsVakken = new LayoutPanel[hoogtes.size()][breedtes.size()];
+		//tekstHulsVakken = new LayoutPanel[hoogtes.size()][breedtes.size()];
+		tekstHulsVakken = new TekstVakCel[hoogtes.size()][breedtes.size()];	
 		tekstVakken = new FlowPanel[hoogtes.size()][breedtes.size()];
 		for (int i = 0; i < hoogtes.size(); i++)
 		{
@@ -414,7 +419,7 @@ public class TekstVakPanel implements InteractionView
 				if( tekstVakBreedte < 0) tekstVakBreedte = 0;
 				if( tekstVakHoogte < 0) tekstVakHoogte = 0;
 				
-				tekstHulsVakken[i][j] = new LayoutPanel();
+				tekstHulsVakken[i][j] = new TekstVakCel(this, i, j);
 				//tekstHulsVakken[i][j].getElement().getStyle().setBackgroundColor(CssColor.make(255, 0, 0).toString());
 				//tekstHulsVakken[i][j].setSize(tekstVakBreedte + "px", tekstVakHoogte + "px");
 				tekstHulsVakken[i][j].setPixelSize(breedtes.get(j).intValue(), hoogtes.get(i).intValue());
@@ -602,14 +607,93 @@ public class TekstVakPanel implements InteractionView
 			for (int j = 0; j < breedtes.size(); j++)
 			{
 				opdrachtObjects = tb.convertTekst(interactiePanelLaunchState, i, j);
-
+				tekstHulsVakken[i][j].zetOpdrachtObjects(opdrachtObjects);
 				for (int k = 0; k < opdrachtObjects.size(); k++)
 				{
 					Object currentObject = opdrachtObjects.get(k);
 					if (currentObject instanceof InteractionView)
-					{ 	
-						((InteractionView) currentObject).setCommunicationRoot(comRoot);
+					{ 	((InteractionView) currentObject).setCommunicationRoot(comRoot);
 						interactionViewObjects.add(currentObject);
+						
+						if(currentObject instanceof CheckValueUnit)
+						{
+							//bepalen waar tekstvakken gezocht moeten worden.
+							ArrayList<Object> lijst = new ArrayList<Object>();
+							if(k == 0 && i == 0 && j==0 && zwevend)
+							{
+								lijst = parent.getOpdrachtObjects();
+								//lijst = nakijkObjecten; //werkt niet; is nog null als je hier komt. 
+								//deze lijst moet zijn: 
+								//alle opdrachtObjects die vóór dit zwevende tekstvak in de cel van het omvattende tekstvak van dit zwevende tekstvak
+								//zijn geplaatst. 
+								//ik heb: this.getParent(). Dat is het tekstHulsVak waar hij in zit. Dat is eigenlijk een tekstvakcel.
+								//je kunt nu met this.getParent().getRij en getKolom en getTekstVakParent uitvinden welk tekstvak het is.
+								//Dat tekstvak (en die specifieke cel) moet dan nog wel zijn info kunnen geven. Dat moet nog... kan ik ook aan de tekstvakcel hangen.
+								//De tekstvakcel kan, nu het een aparte class is, wat makkelijker informatie bewaren.
+							}
+							else if (k == 0)
+								lijst = interactionViewObjects;
+							else
+								lijst = opdrachtObjects;
+							
+							int aantalValueObjects = ((CheckValueUnit) currentObject).getAantalValueObjects();
+							TekstVakPanel[] waardeObjecten = new TekstVakPanel[aantalValueObjects];
+							
+							for(int l = 0; l < aantalValueObjects; l++)
+							{	waardeObjecten[l] = zoekTekstVakPanel(l+1, lijst);
+							
+							}
+							((CheckValueUnit) currentObject).zetWaardeObjecten(waardeObjecten);
+						}
+						else if(currentObject instanceof CheckSelectieUnit)
+						{
+							//bepalen waar tekstvakken gezocht moeten worden.
+							ArrayList<Object> lijst = new ArrayList<Object>();
+							if(k == 0 && i == 0 && j==0)
+							{
+								lijst = parent.getOpdrachtObjects();
+								
+							}
+							else if (k == 0)
+								lijst = interactionViewObjects;
+							else
+								lijst = opdrachtObjects;
+							
+							
+							int aantalSelectieObjecten = ((CheckSelectieUnit) currentObject).getAantalSelectieObjecten();
+							TekstVakPanel[] selectieObjecten = new TekstVakPanel[aantalSelectieObjecten];
+							for(int l = 0; l < aantalSelectieObjecten; l++)
+								selectieObjecten[l] = zoekTekstVakPanel(l+1, lijst);
+							
+							((CheckSelectieUnit) currentObject).zetSelectieObjecten(selectieObjecten);
+						}
+						else if(currentObject instanceof CheckSleepUnit)
+						{	//bepalen waar tekstvakken gezocht moeten worden.
+							ArrayList<Object> lijst = new ArrayList<Object>();
+							if(k == 0 && i == 0 && j==0)
+							{
+								lijst = parent.getOpdrachtObjects();
+								
+							}
+							else if (k == 0)
+								lijst = interactionViewObjects;
+							else
+								lijst = opdrachtObjects;
+							
+							
+							int aantalSleepObjects = ((CheckSleepUnit) currentObject).getAantalSleepObjects();
+							System.out.println("checkSleepUnit: aantalSleepObjects = " + aantalSleepObjects);
+						
+							TekstVakPanel[] sleepObjecten = new TekstVakPanel[aantalSleepObjects];
+							for(int l = 0; l < aantalSleepObjects; l++)
+								sleepObjecten[l] = zoekTekstVakPanel(l+1, lijst);
+							
+							int aantalDoelObjects = ((CheckSleepUnit) currentObject).getAantalDoelObjects();
+							TekstVakPanel[] doelObjecten = new TekstVakPanel[aantalDoelObjects];
+							for(int l = 0; l < aantalDoelObjects; l++)
+								doelObjecten[l] = zoekTekstVakPanel(-(l+1), lijst);
+							((CheckSleepUnit) currentObject).zetSleepDoelObjecten(sleepObjecten, doelObjecten);
+						}
 					}
 
 					if (currentObject instanceof TekstVakPanel)
@@ -618,6 +702,8 @@ public class TekstVakPanel implements InteractionView
 						aantalVakken++;
 						HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) launchData).get("interactiePanelLaunchState");
 						TekstVakPanel tekstVakChild = (TekstVakPanel) currentObject;
+						if(tekstVakChild.isZwevend())
+							tekstVakChild.setParent(tekstHulsVakken[i][j]);
 						tekstVakChild.zetInstellingen(instellingen);
 						tekstVakChild.setKeyboard(kb);
 						tekstVakChild.zetOpdracht(launchState);
@@ -738,7 +824,12 @@ public class TekstVakPanel implements InteractionView
 				destination.getElement().appendChild(element);
 
 				if (opdrachtObjects.size() > i + 1 && opdrachtObjects.get(i + 1) instanceof String)
-					destination.getElement().appendChild(DOM.createElement("br"));
+				{	destination.getElement().appendChild(DOM.createElement("br"));
+					
+				//niet zo: 
+				//destination.getElement().getStyle().setMarginLeft(2, Style.Unit.PX);
+				//want dan krijgt het hele vak een marge van 2; tekstvakken worden dan dus ook 2 px naar rechts geduwd.
+				}
 			}
 			else if (currentObject instanceof FormuleEditorWithAnswer)
 			{
@@ -847,11 +938,11 @@ public class TekstVakPanel implements InteractionView
 		}
 	}
 	
-	public void setParent(LayoutPanel panel)
+	public void setParent(TekstVakCel panel)
 	{
 		parent = panel;
 	}
-
+	
 	public Panel getPanelElement(final FormuleHolder editor)
 	{
 		FlowPanel fp = new FlowPanel();
@@ -1207,8 +1298,31 @@ public class TekstVakPanel implements InteractionView
 		return waarde;
 	}
 	
-	public TekstVakPanel zoekTekstVakPanel(int id)
+	public TekstVakPanel zoekTekstVakPanel(int id, ArrayList<Object> lijst)
 	{
+		//deze methode moet op die hieronder gaan lijken (en dan moet die hieronder weer weg)
+		//interactionViewObjects.size() == 1: De klaar-knop is het enige element in zijn cel.
+		//nee, klopt niet; de interactionViewObjects zouden alles moeten zijn in het gehele tekstvak?
+		//maar dan zou het al moeten werken als de klaar-knop in een andere cel staat... (als die cel maar later komt in de telling..)
+	//	if(interactionViewObjects.size() == 1 && zwevend)
+	//	{
+	//		TekstVakPanel panel =
+	//	}
+		
+		
+		for(int i = 0; i < lijst.size(); i++)
+		{
+			if(lijst.get(i) instanceof TekstVakPanel)
+			{	TekstVakPanel panel = (TekstVakPanel) lijst.get(i);
+				if(id == panel.ipId)
+					return panel;
+			}
+		}
+		return null;
+		
+		
+		
+		/*
 		for(int i = 0; i < interactionViewObjects.size(); i++)
 		{
 			if(interactionViewObjects.get(i) instanceof TekstVakPanel)
@@ -1218,7 +1332,30 @@ public class TekstVakPanel implements InteractionView
 			}
 		}
 		return null;
+		*/
 	}
+	
+	/*
+	public InteractiePanel zoekInteractiePanel(int ID)
+	{	// indien klaarknop niet in hetzelfde tekstvak:
+		if(tekstVak.getParent() instanceof TekstVakPanel && tekstVak.hasOneDeelVak())// 
+		{	TekstVakPanel  tvp = (TekstVakPanel)tekstVak.getParent();
+			//indien in een eigen zwevend tekstvak
+			if(tvp.getParent()instanceof TekstInteractiePanelVak && tvp.isZwevend()) 
+			{	InteractiePanel ip = (((TekstInteractiePanelVak)tvp.getParent()).tekstVak).zoekInteractiePanel(ID);
+				if(ip!=null) return ip;
+			}
+			//indien in een andere cel (kolom/rij) van hetzelfde tekstvakpanel
+			if(tvp.getParent() instanceof TekstInteractiePanelVak) //tvp.isZwevend() && 
+			{	InteractiePanel ip = ((TekstInteractiePanelVak)tvp.getParent()).getInteractiePanel(ID);
+				if(ip!=null) return ip;
+			}
+			 
+		}
+		// indien klaarknop wel in hetzelfde tekstvak
+		return tekstVak.zoekInteractiePanel(ID);
+	}
+	*/
 	
 	public boolean objectNullWaarde()
 	{
