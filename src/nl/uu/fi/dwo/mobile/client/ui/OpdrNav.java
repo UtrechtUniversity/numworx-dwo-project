@@ -31,7 +31,7 @@ import com.google.gwt.user.client.ui.Panel;
  * @author Evertson Croes
  * 
  */
-public class OpdrNav implements OpdrNavIF, Runnable
+public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 {
 	public static int OEFENEN = 0;
 	public static int OEFENEN_STRAFPUNTEN = 1;
@@ -230,18 +230,7 @@ public class OpdrNav implements OpdrNavIF, Runnable
 			@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				saveCurrentState();
-				setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht]);
-
-				removeButtonCursor(buttons.get(currentOpdracht));
-				currentOpdracht = button_id;
-				setButtonCursor(buttons.get(currentOpdracht));
-
-				entry.clearContentPanel();
-				if (states[currentActiviteit][currentOpdracht] == null)
-					entry.zetOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
-				else
-					entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], states[currentActiviteit][currentOpdracht]);
+				gotoOpdracht(button_id, entry.scoreNav);
 			}
 
 			@Override
@@ -373,6 +362,51 @@ public class OpdrNav implements OpdrNavIF, Runnable
 	@Override
 	public FormuleKeyboardIF getKeyboard() {
 		return entry.getKeyboard();
+	}
+
+	public void gotoOpdracht(final int opdracht) {
+		saveCurrentState();
+		setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht]);
+
+		removeButtonCursor(buttons.get(currentOpdracht));
+		currentOpdracht = opdracht;
+		setButtonCursor(buttons.get(currentOpdracht));
+
+		entry.clearContentPanel();
+		if (states[currentActiviteit][currentOpdracht] == null)
+			entry.zetOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
+		else
+			entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], states[currentActiviteit][currentOpdracht]);
+	}
+	
+	public int getCurrentOpdracht() { 
+		return currentOpdracht;	
+	}
+	
+	public int getAantalOpdrachten() {
+		return aantalOpdrachten[currentActiviteit];
+	}
+
+	public int getAantalBeantwoord() {
+		int len = getAantalOpdrachten();
+		int totaal = 0;
+		for(int i = 0; i < len; i++ )
+			if( states[currentActiviteit][i] != null) totaal++;
+		return totaal;
+	}
+
+	@Override
+	public void gotoOpdracht(int i, ScoreNavPanel source) {
+		if(i == currentOpdracht) return;
+		gotoOpdracht(i);
+		if(source != null)
+		{ 	source.setBeantwoord(getAantalBeantwoord());
+			source.setOpdracht(getCurrentOpdracht());
+			source.setTotaalScore((int) getScore()); 
+		}
+		entry.setTitle("Vraag " + (getCurrentOpdracht()+1) + " van " + getAantalOpdrachten());
+		
+		
 	}
 
 }

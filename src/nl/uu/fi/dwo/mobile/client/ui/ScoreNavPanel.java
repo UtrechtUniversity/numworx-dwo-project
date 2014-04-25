@@ -5,12 +5,8 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.Composite;
@@ -22,11 +18,35 @@ import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
+import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
+import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
+import com.googlecode.mgwt.ui.client.widget.Button;
 
 public class ScoreNavPanel extends Composite {
+	
+	interface GotoOpdracht {
+		void gotoOpdracht(int i, ScoreNavPanel source);
+	}
+	
+	GotoOpdracht listener;
+	
+	class TouchHandler implements TapHandler {
+
+		int opdracht;
+
+		public TouchHandler(int opdracht) {
+			super();
+			this.opdracht = opdracht;
+		}
+		@Override
+		public void onTap(TapEvent event) {
+			if( listener != null)
+			{	listener.gotoOpdracht(this.opdracht, ScoreNavPanel.this);
+			}
+		}
+		
+	}
 	
 	public static class SimpleProgressBar extends Composite  {
 
@@ -123,7 +143,7 @@ public class ScoreNavPanel extends Composite {
 	VerticalPanel top;
 	Label beantwoord;
 	Label totaalscore;
-	SimpleProgressBar totaalscoreBar;
+	SimpleProgressBar totaalscoreBar, beantwoordBar;
 	Grid  vragen;
 	int rows = 10;
 	public ScoreNavPanel() {
@@ -156,7 +176,7 @@ public class ScoreNavPanel extends Composite {
 		text = new Label("Totaalscore");
 		grid.setWidget(1, 0, setFontFamily(text));
 		// dummy
-		grid.setWidget(0, 1, new SimpleProgressBar(30));
+		grid.setWidget(0, 1, beantwoordBar = new SimpleProgressBar(30));
 		grid.setWidget(1, 1, totaalscoreBar = new SimpleProgressBar(84));
 
 		text = beantwoord = new Label("10 / 10");
@@ -184,6 +204,8 @@ public class ScoreNavPanel extends Composite {
 		return widget;
 	}
 
+	private Widget[] vraagLabels;
+	private int currentOpdracht;
 	private void createVragen() {
 		vragen.clear(true);
 		vragen.resize(rows, 4);
@@ -193,17 +215,21 @@ public class ScoreNavPanel extends Composite {
 		vragen.getColumnFormatter().setWidth(3, "8px");
 		Label text;
 		int totaal = 0;
+		vraagLabels = new Widget[rows];
 		for(int i = 0; i < rows; i++) {
 			double d = Math.random(); int punt = (int) ( d * 6 );
 			totaal += punt;
 			text = new Label("Vraag " + (i+1)); vragen.setWidget(i, 0, text);
-			if(i == 4-1) text.getElement().getStyle().setFontWeight(FontWeight.BOLD);
+			vraagLabels[i] = text;
+			if(i == currentOpdracht) text.getElement().getStyle().setFontWeight(FontWeight.BOLD);
 			setFontFamily(text);
 			Widget widget = new ProgressBar(5,punt); vragen.setWidget(i, 1, widget); // dummy
 			text = new Label( punt + " punt" + (punt != 1?"en":"")); vragen.setWidget(i,2, text); // dummy
 			setFontFamily(text);
 			text.getElement().getStyle().setFontWeight(FontWeight.BOLD);
-			TouchButton p = new TouchButton();p.setText(">"); vragen.setWidget(i, 3, p);
+			Button p = new Button();p.setText(">"); vragen.setWidget(i, 3, p);
+			p.setStylePrimaryName("vraagButton");
+			p.addTapHandler(new TouchHandler(i));
 		}
 		totaal *= 2;
 		setTotaalScore(totaal);
@@ -214,4 +240,28 @@ public class ScoreNavPanel extends Composite {
 		totaalscore.setText(totaal + " %");
 		totaalscoreBar.setProgress(totaal);
 	}
+	
+	public void setAantalOpdrachten(int aantal) {
+		rows = aantal;
+		createVragen();
+	}
+	
+	public void setBeantwoord(int aantal) {
+		beantwoord.setText( aantal + " / " + rows);
+		beantwoordBar.setProgress(aantal * 100 / rows);
+	}
+	
+	public void setGotoOpdracht(GotoOpdracht listener)
+	{
+		this.listener = listener;
+	}
+
+	public void setOpdracht(int currentOpdracht) {
+		vraagLabels[this.currentOpdracht].getElement().getStyle().setFontWeight(FontWeight.NORMAL);
+		this.currentOpdracht = currentOpdracht;
+		vraagLabels[currentOpdracht].getElement().getStyle().setFontWeight(FontWeight.BOLD);	
+	}
+	
 }
+
+

@@ -282,10 +282,14 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		contentPanel.getElement().getStyle().setPadding(0, Unit.PX); // XXX was 15 
 		//FormuleHolder.setDefaultFont(FormuleFont.createFromFontSize(font_size));
 
-		OpdrNav onimpl;
-		on = onimpl = new OpdrNav(launchData, this, new Memento(api));
-		FlowPanel onp = (FlowPanel) onimpl.getAsPanel();
+		
+		on =  new OpdrNav(launchData, this, new Memento(api));
+		FlowPanel onp = (FlowPanel) on.getAsPanel();
 		kb.addNavPanel(onp);
+		scoreNav.setAantalOpdrachten(on.getAantalOpdrachten());
+		scoreNav.setBeantwoord(on.getAantalBeantwoord());
+		scoreNav.setGotoOpdracht(on);
+		setTitle("Vraag " + (1+on.getCurrentOpdracht()) + " van " + on.getAantalOpdrachten());
 	}
 
 	public void zetOpdracht(HashMap<String, Object> opdracht)
@@ -717,7 +721,26 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		
 		HeaderButton next, prev;
 		next = new HeaderButton(); next.setText("Volgende>");
+		next.addTapHandler(new TapHandler() {
+			
+			@Override
+			public void onTap(TapEvent event) {
+				int cur = on.getCurrentOpdracht() + 1;
+				if(cur >= on.getAantalOpdrachten()) cur = 0;
+				on.gotoOpdracht(cur, scoreNav);
+			}
+		});
 		prev = new HeaderButton(); prev.setText("<Vorige");
+		prev.addTapHandler(new TapHandler() {
+			
+			@Override
+			public void onTap(TapEvent event) {
+				int cur = on.getCurrentOpdracht() - 1;
+				if(cur < 0) cur = on.getAantalOpdrachten()-1;
+				on.gotoOpdracht(cur, scoreNav);
+			}
+		});
+		
 		HorizontalPanel hbox = new HorizontalPanel();
 		hbox.add(prev); hbox.add(next);
 		hp.setRightWidget(hbox);
@@ -768,7 +791,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	
 	
 	static class MyPopup extends PopupPanel {
-	    public MyPopup() {
+	    public MyPopup(Widget w) {
 	        // PopupPanel's constructor takes 'auto-hide' as its boolean parameter.
 	        // If this is set, the panel closes itself automatically when the user
 	        // clicks outside of it.
@@ -776,11 +799,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	        // PopupPanel is a SimplePanel, so you have to set it's widget property to
 	        // whatever you want its contents to be.
-	        setWidget(new ScoreNavPanel());
+	        setWidget(w);
 	      }
 	}
 
-    MyPopup POPUP = new MyPopup();
+	public ScoreNavPanel scoreNav = new ScoreNavPanel();
+    MyPopup POPUP = new MyPopup(scoreNav);
 	
 	protected void popupNavPanel() {
 		 final MyPopup popup = POPUP;
@@ -925,6 +949,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	public FormuleKeyboard getKeyboard() {
 		return kb;
+	}
+
+	public void setTitle(String string) {
+		hp.setCenter(string);
+		
 	}
 
 }
