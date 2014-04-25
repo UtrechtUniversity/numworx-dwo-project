@@ -27,6 +27,7 @@ import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
+import nl.uu.fi.dwo.mobile.client.ui.ScoreNavPanel;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
@@ -51,17 +52,22 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
+import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
+import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
+import com.googlecode.mgwt.ui.client.widget.Button;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.googlecode.mgwt.ui.client.widget.ScrollPanel;
@@ -153,7 +159,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	{
 		contentPanel.clear();
 		if(DWOplayer.JSON) loadJSON(file); else loadXML(file);
-		hp.setCenter(name);
+		//hp.setCenter(name);
 	}
 
 	private void loadJSON(String file) {
@@ -706,16 +712,22 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		FormuleHolder.installKeyboard(kb);
 		
 		hp = new HeaderPanel();
-		hp.setCenter("Module 1");
-		Style style = hp.getElement().getStyle();
-
+		hp.setCenter("Vraag 4 van 10");
+		//Style style = hp.getElement().getStyle();
+		
+		HeaderButton next, prev;
+		next = new HeaderButton(); next.setText("Volgende>");
+		prev = new HeaderButton(); prev.setText("<Vorige");
+		HorizontalPanel hbox = new HorizontalPanel();
+		hbox.add(prev); hbox.add(next);
+		hp.setRightWidget(hbox);
+		
 		hb = new HeaderButton();
-		hb.setBackButton(true);
-		hb.setText("Home");
+		hb.setText(":=");
 
 		hp.setLeftWidget(hb);
 
-		if(!standalone) fp.add(hp);
+		if(!standalone); fp.add(hp);
 
 		contentScrollPanel = new ScrollPanel();
 		contentScrollPanel.setWidth("100%");
@@ -738,11 +750,53 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		//kbp.setWidth("886px");
 		fp.add(kbp);
 
+// POPUP of floating in ????
+		hb.addTapHandler(new TapHandler() {
+
+			@Override
+			public void onTap(TapEvent event) {
+				popupNavPanel();
+				
+			}});
+		
+		
+		
 		//initWidget(mainPanel);
 		return this;
 
 	}
 	
+	
+	static class MyPopup extends PopupPanel {
+	    public MyPopup() {
+	        // PopupPanel's constructor takes 'auto-hide' as its boolean parameter.
+	        // If this is set, the panel closes itself automatically when the user
+	        // clicks outside of it.
+	        super(true);
+
+	        // PopupPanel is a SimplePanel, so you have to set it's widget property to
+	        // whatever you want its contents to be.
+	        setWidget(new ScoreNavPanel());
+	      }
+	}
+
+    MyPopup POPUP = new MyPopup();
+	
+	protected void popupNavPanel() {
+		 final MyPopup popup = POPUP;
+	        popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+	          public void setPosition(int offsetWidth, int offsetHeight) {
+	            int left = (Window.getClientWidth() - offsetWidth) / 3;
+	            int top = (Window.getClientHeight() - offsetHeight) / 3;
+	            left = 0;
+	            top  = hp.getOffsetHeight();
+	            popup.setPopupPosition(left, top);
+	            popup.setPixelSize(offsetWidth, Window.getClientHeight()-top*2);
+	          }
+	        });
+		
+	}
+
 	public void zetMaatNoordhoff()
 	{
 		//FlowPanel fp = new FlowPanel();

@@ -39,6 +39,8 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseEvent;
@@ -54,6 +56,7 @@ import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.touch.client.Point;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
@@ -94,7 +97,6 @@ public class TekstVakPanel implements InteractionView
 	}
 	
 	
-	private static final int KLAPUIT_WIDTH = 20;
 	private int font_size = 12;
 	private int font_style = 0;
 	private FormuleKeyboard kb = null;
@@ -457,7 +459,9 @@ public class TekstVakPanel implements InteractionView
 				//	tekstVakken[i][j].getElement().getStyle().setVerticalAlign(VerticalAlign.BASELINE);
 				tekstVakken[i][j].setWidth(tekstVakBreedte + "px");
 				VerticalPanel vPanel = new VerticalPanel();
-				//vPanel.getElement().getStyle().setBackgroundColor(CssColor.make(0, 0, 255).toString());
+				GWT.log("bgcolor = " + bgColor + " " + bgColorZichtbaar);
+				
+///*TESTING*/		/*if(bgColorZichtbaar)*/ vPanel.getElement().getStyle().setBackgroundColor(bgColor.toString());
 				
 				vPanel.getElement().getStyle().setProperty("margin", "" + bovenMarge + "px " + cellMarge + "px");
 				if(centerV)
@@ -778,7 +782,7 @@ public class TekstVakPanel implements InteractionView
 			else if (currentObject instanceof FormuleEditorWithSteps)
 			{
 				Panel a = ((FormuleEditorWithSteps) currentObject).getAsPanel();
-				((FormuleEditorWithSteps) currentObject).getEditor().requestFocus();
+				//((FormuleEditorWithSteps) currentObject).getEditor().requestFocus();
 
 				a.getElement().getStyle().setProperty("display", "inline-block");
 				a.getElement().getStyle().setProperty("verticalAlign", "top");
@@ -1483,21 +1487,38 @@ public class TekstVakPanel implements InteractionView
 		} else {
 			view2 = new Image(DWOplayer.DWO_BUNDLE.klapuit2());
 		}
-		
+		final Image masterView = ingeklapt ? view2 : view1;
+		masterView.getElement().getStyle().setProperty("verticalAlign", hoogtes.get(0).intValue() + "px");
 		klapUitButton = new ToggleButton(view2, view1);
 		klapUitButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				klapUitAction();				
 			}});
+		
+		klapUitButton.setStylePrimaryName("inklapButton");
+		//klapUitButton.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE)
+		//masterView.getElement().getStyle().setVerticalAlign(VerticalAlign.MIDDLE);
 		klapUitButton.setDown(ingeklapt);
-		klapUitButton.setPixelSize(KLAPUIT_WIDTH,-1);
-		LayoutPanel layoutPanel = tekstHulsVakken[0][0];
-		Widget widget = layoutPanel.getWidget(0);
+// Links of rechts kunnen we aan!
+//		int pos = 0
+		int pos = breedtes.size()-1;
+		final LayoutPanel layoutPanel = tekstHulsVakken[0][pos];
+		final Widget widget = layoutPanel.getWidget(0);
 // Wat met de positie van widgets
 		layoutPanel.insert(klapUitButton,0);
-		layoutPanel.setWidgetLeftRight(widget, KLAPUIT_WIDTH, Unit.PX, 0, Unit.PX);
-		layoutPanel.setWidgetLeftWidth(klapUitButton, 0, Unit.PX, KLAPUIT_WIDTH, Unit.PX);
+		LoadHandler handler = new LoadHandler() {
 
-
+			@Override
+			public void onLoad(LoadEvent event) {
+				int width = masterView.getWidth();
+				klapUitButton.setPixelSize(width, hoogtes.get(0).intValue());
+//				layoutPanel.setWidgetLeftRight(widget, width, Unit.PX, 0, Unit.PX);
+//				layoutPanel.setWidgetLeftWidth(klapUitButton, 0, Unit.PX, width, Unit.PX);
+				layoutPanel.setWidgetLeftRight(widget, 0, Unit.PX, width, Unit.PX);
+				layoutPanel.setWidgetRightWidth(klapUitButton, 0, Unit.PX, width, Unit.PX);
+			}
+		};
+		if (masterView.getWidth() > 0) handler.onLoad(null);
+		else masterView.addLoadHandler(handler);
 	}
 }
