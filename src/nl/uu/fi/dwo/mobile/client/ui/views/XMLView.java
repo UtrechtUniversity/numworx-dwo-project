@@ -177,7 +177,7 @@ public abstract class XMLView {
 			{
 				Widget a = ((InteractionView) currentObject).asWidget();
 				//a.getElement().getStyle().setFloat(Float.LEFT);
-				((FormuleEditorWithSteps) currentObject).getEditor().requestFocus();
+				//((FormuleEditorWithSteps) currentObject).getEditor().requestFocus();
 				a.getElement().getStyle().setProperty("display", "inline-block");
 				a.getElement().getStyle().setProperty("verticalAlign", "top");
 	

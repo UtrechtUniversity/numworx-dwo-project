@@ -541,7 +541,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		TouchPanel tp = (TouchPanel) editor.getAsPanel();
 		tp.getElement().getStyle().setProperty("display", "inline-block");
 		editor.setCurrent(0, 0);
-		editor.requestFocus();
+		//editor.requestFocus();
 		if (hasPrefix)
 			p.add(prefixViewer);
 		p.add(tp);
