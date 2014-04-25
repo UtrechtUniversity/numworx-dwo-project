@@ -266,6 +266,9 @@ public class TekstBuffer
 			return new StubView("AlgebraExprGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//return new PopupFacade(currentVakGegevens, new fi.algebraexprgwt.client.AlgebraExprGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 
+		case 46 :
+			//return new StubView("DraaibankGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return new PopupFacade(currentVakGegevens, new fi.draaibankgwt.client.DraaibankGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		
 		}
 		
@@ -371,8 +374,8 @@ public class TekstBuffer
 		}
 		else if (soortVak == 41)
 		{
-			//result = new PopupFacade(currentVakGegevens, new fi.kladjegwt.client.KladjeGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
-			result = new StubView("KladjeGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			result = new PopupFacade(currentVakGegevens, new fi.kladjegwt.client.KladjeGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
+			//result = new StubView("KladjeGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		}
 		else
 		{
