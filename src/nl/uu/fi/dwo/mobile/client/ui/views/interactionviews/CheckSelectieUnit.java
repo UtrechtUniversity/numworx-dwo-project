@@ -1,14 +1,17 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 //import java.util.ArrayList;
+import java.awt.Component;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -23,6 +26,9 @@ import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+
+
+
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.Expressie;
@@ -34,6 +40,7 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.Stub;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 
 public class CheckSelectieUnit implements InteractionStub
 {
@@ -79,6 +86,7 @@ public class CheckSelectieUnit implements InteractionStub
 	static int GEEN = 3;
 	
 	private PushButton checkButton;
+	private String knopImageString = "";
 	private TekstVakPanel[] ipList; 
 	private boolean[] juisteSelecties;
 	
@@ -92,6 +100,8 @@ public class CheckSelectieUnit implements InteractionStub
 	
 	private boolean check;
 	private boolean teltMee;
+	
+	
 	
 
 	public void randomizePositions()
@@ -477,7 +487,6 @@ public class CheckSelectieUnit implements InteractionStub
 		breedte = width;
 		hoogte = height;
 		//this.randomVarWaarden = randomValues;
-
 		if (launchData != null)
 		{
 			/*
@@ -525,7 +534,11 @@ public class CheckSelectieUnit implements InteractionStub
 						logObjectives[i][j] = ((Boolean)(list.get(j))).booleanValue() ;
 				}
 			}
+			if(launchData.get("knopImageString") != null) 
+				knopImageString = (String)launchData.get("knopImageString");
 		}
+		
+		
 	}
 	
 	private void initialize(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
@@ -535,10 +548,30 @@ public class CheckSelectieUnit implements InteractionStub
 		basisPanel = new LayoutPanel();
 		basisPanel.setSize("" + breedte + "px", "" + hoogte + "px");
 		
-		checkButton = new PushButton(rb.getString("klaarKnopLabel"));
+		int imWidth = breedte - 20;
+		int imHeight = 20;
+		Image knopImage = null;
+		if(knopImageString!=null && !"".equals(knopImageString))
+       	{  	knopImage = new ImageView(knopImageString).getImage();
+			imWidth = knopImage.getWidth();
+			System.out.println("imWidth 1: " + imWidth);
+			imHeight = knopImage.getHeight();
+			if(imWidth == -1) imWidth = 80;
+			System.out.println("imWidth 2: " + imWidth);
+			if(imHeight == -1) imHeight = 20;
+			//checkButton.setSize(imWidth,imHeight);
+			//zetMaat();
+	    }
+		if(knopImage != null)
+		{	checkButton = new PushButton(knopImage);
+			checkButton.getElement().getStyle().setPadding(0, Style.Unit.PX);
+			checkButton.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
+		}
+		else
+			checkButton = new PushButton(rb.getString("klaarKnopLabel"));
 		basisPanel.add(checkButton);
-		basisPanel.setWidgetLeftWidth(checkButton, 0, Style.Unit.PX, breedte - 20, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(checkButton, 0, Style.Unit.PX, 20, Style.Unit.PX);
+		basisPanel.setWidgetLeftWidth(checkButton, 0, Style.Unit.PX, imWidth, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(checkButton, 0, Style.Unit.PX, imHeight, Style.Unit.PX);
 		checkButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
 			{	e.stopPropagation();
@@ -554,9 +587,9 @@ public class CheckSelectieUnit implements InteractionStub
 		
 		basisPanel.add(goedKrulImage);
 		basisPanel.add(foutKruisImage);
-		basisPanel.setWidgetLeftWidth(goedKrulImage, breedte - 20, Style.Unit.PX, 20, Style.Unit.PX);
+		basisPanel.setWidgetLeftWidth(goedKrulImage, imWidth, Style.Unit.PX, 20, Style.Unit.PX);
 		basisPanel.setWidgetTopHeight(goedKrulImage, 0, Style.Unit.PX, hoogte, Style.Unit.PX);
-		basisPanel.setWidgetLeftWidth(foutKruisImage, breedte - 20, Style.Unit.PX, 20, Style.Unit.PX);
+		basisPanel.setWidgetLeftWidth(foutKruisImage, imWidth, Style.Unit.PX, 20, Style.Unit.PX);
 		basisPanel.setWidgetTopHeight(foutKruisImage, 0, Style.Unit.PX, hoogte, Style.Unit.PX);
 		goedKrulImage.setVisible(false);
 		foutKruisImage.setVisible(false);
