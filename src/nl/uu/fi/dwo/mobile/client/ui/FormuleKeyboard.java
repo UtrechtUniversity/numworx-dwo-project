@@ -211,7 +211,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 		opdrnav.getElement().getStyle().setFloat(Style.Float.RIGHT);
 		opdrnav.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 		tp.clearStaticPanel();
-		tp.getStaticPanel().add(opdrnav);
+		//tp.getStaticPanel().add(opdrnav);
 	}
 
 	public void goTo(String panel)

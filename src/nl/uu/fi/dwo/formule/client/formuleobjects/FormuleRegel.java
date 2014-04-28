@@ -1133,4 +1133,9 @@ public class FormuleRegel extends FormuleElement
 	{
 		return this.nonNumberChildern == 0;
 	}
+
+	public void setMinimumWidth(int minW) {
+		this.minW = minW;
+		this.setSize(width,height);
+	}
 }

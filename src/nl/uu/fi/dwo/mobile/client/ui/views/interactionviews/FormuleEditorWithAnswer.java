@@ -80,7 +80,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			checkimg.getElement().getStyle().setProperty("marginLeft", "3px");
 			if (fe == null)
 			{
-				sp.getElement().getStyle().setProperty("width", (breedte - 9) + "px");
+				//sp.getElement().getStyle().setProperty("width", (breedte - 9) + "px");
+				this.getMainRegel().setMinimumWidth(breedte - 9);
 				sp.getElement().getStyle().setProperty("border", "1px solid gray");
 				//(Weggehaald Sietske) sp.getElement().getStyle().setPaddingTop(3, Style.Unit.PX);
 				sp.getElement().getStyle().setMarginTop(3, Style.Unit.PX);

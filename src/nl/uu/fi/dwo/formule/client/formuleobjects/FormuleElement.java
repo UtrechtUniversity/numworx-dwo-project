@@ -183,10 +183,14 @@ public abstract class FormuleElement
 		this.y = y;
 	}
 
+	protected int minW = 0;
 	public void setSize(int w, int h)
 	{
+		
 		width = w;
 		height = h;
+
+		w = Math.max(w, minW);
 
 		//change the canvas dimensions
 		this.canvas.setCoordinateSpaceHeight(h);

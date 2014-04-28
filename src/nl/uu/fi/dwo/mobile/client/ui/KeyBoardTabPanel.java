@@ -60,7 +60,7 @@ public class KeyBoardTabPanel
 		//panel.getElement().getStyle().setDisplay(Display.BLOCK);
 		//panel.getElement().getStyle().setProperty("margin", "0px auto");
 
-		staticpanel.getElement().getStyle().setHeight(44, Style.Unit.PX);
+		staticpanel.getElement().getStyle().setHeight(4, Style.Unit.PX);
 		staticpanel.getElement().getStyle().setBackgroundImage("url(images/resources/footerbgimage.png)");
 
 //		Image buttonImage = new Image("images/resources/keyboardbutton.png");
