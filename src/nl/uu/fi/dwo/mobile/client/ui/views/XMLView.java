@@ -61,20 +61,20 @@ public abstract class XMLView {
 		ImageView.setMap(imagemap);
 		
 		if (wrap.containsKey("instellingen"))
-			instellingen = wrap.getMap("instellingen");
-		wrap = JSONUtilities.wrapMap(instellingen);
-		if (wrap.containsKey("fontSize") )
-			font_size = wrap.getInt("fontSize");
-
-		boolean maalTeken =  wrap.getBoolean("maalTeken");
-		FormuleTeken.zetMaalTeken(maalTeken);
-		
-		String fontName = wrap.getString("fontName");
-		FormuleFont.zetDefaultFont(fontName);
-		
-		boolean formTimes = wrap.getBoolean("formTimes");
-		FormuleFont.zetFormTimes(formTimes);
-
+		{	instellingen = wrap.getMap("instellingen");
+			wrap = JSONUtilities.wrapMap(instellingen);
+			if (wrap.containsKey("fontSize") )
+				font_size = wrap.getInt("fontSize");
+	
+			boolean maalTeken =  wrap.getBoolean("maalTeken");
+			FormuleTeken.zetMaalTeken(maalTeken);
+			
+			String fontName = wrap.getString("fontName");
+			FormuleFont.zetDefaultFont(fontName);
+			
+			boolean formTimes = wrap.getBoolean("formTimes");
+			FormuleFont.zetFormTimes(formTimes);
+		}
 
 	}
 

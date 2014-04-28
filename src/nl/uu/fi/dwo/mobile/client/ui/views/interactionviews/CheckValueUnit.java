@@ -491,7 +491,7 @@ public class CheckValueUnit implements InteractionStub{
     	        		}
     		        }
         			
-        			System.out.println(""+v[h].toString());
+        			System.out.println(v[h]);
         			
         			if(v[h].geefAantal()==1 && (v[h].geefVergelijking(0).geefVergTeken().equals(">") || v[h].geefVergelijking(0).geefVergTeken().equals("<")))
         			{	// een nog zwakke manier om ongelijkheden te checken als de expressies nummeriek zijn en bij een enkelvoudige vergelijking

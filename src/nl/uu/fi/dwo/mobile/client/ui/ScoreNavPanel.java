@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -24,6 +25,8 @@ import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.ui.client.widget.Button;
 
 public class ScoreNavPanel extends Composite {
+	
+	
 	
 	interface GotoOpdracht {
 		void gotoOpdracht(int i, ScoreNavPanel source);
@@ -44,6 +47,7 @@ public class ScoreNavPanel extends Composite {
 			if( listener != null)
 			{	listener.gotoOpdracht(this.opdracht, ScoreNavPanel.this);
 			}
+			if(popup != null) popup.hide();
 		}
 		
 	}
@@ -68,7 +72,7 @@ public class ScoreNavPanel extends Composite {
 
         final private HTML widget = new HTML();
 
-        private int uploadStatus;
+        private int progress;
 
         public SimpleProgressBar(int i) {
                 initWidget(widget);
@@ -76,68 +80,18 @@ public class ScoreNavPanel extends Composite {
         }
 
         public int getProgress() {
-                return uploadStatus;
+                return progress;
         }
 
-        public void setProgress(final int uploadStatus) {
-                this.uploadStatus = uploadStatus;
-                widget.setHTML(statusCellSafeHTMLTemplate.nostatus(uploadStatus));
+        public void setProgress(final int progress) {
+                this.progress = progress;
+                widget.setHTML(statusCellSafeHTMLTemplate.nostatus(progress));
         }
 
 }
 
 	
 	
-	static class ProgressBar extends Grid
-	{
-
-		static CssColor off = CssColor.make(180,180,180);
-		static CssColor on  = CssColor.make(180,180,255);
-		
-		int progress;
-		
-		public ProgressBar() {
-			super();
-			setWidth("100%");
-			setCellPadding(0);
-			setCellSpacing(0);
-		}
-
-		private void initialize() {
-			for(int i = 0; i < getColumnCount(); i++ ) {
-				Widget widget = new ToggleButton(new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen()), new Image(FormuleHolder.FORMULE_BUNDLE.mw_kruisje_rood()));
-				widget.setStylePrimaryName("progressToggle");
-				setWidget(0, i, widget);
-			}
-			setProgress(progress);
-		}
-		public ProgressBar(int columns) {
-			this(columns,0);
-		}
-		public ProgressBar(int columns, int progress) {
-			super(1, columns);
-			this.progress = progress;
-			initialize();
-		}
-
-		public void setProgress(int v) {
-			progress = v;
-			for(int i = 0; i < getColumnCount(); i++ ) {
-				boolean up  = i<v;
-				ToggleButton bn = (ToggleButton) getWidget(0, i);
-				bn.setDown(!up);
-				if (!up && Math.random()>0.8)
-					bn.getDownFace().setImage(new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_geel()));;
-			}
-		}
-
-		public void setMax(int columns) {
-			clear(true);
-			super.resizeColumns(columns);
-			initialize();
-		}
-		
-	}
 	
 
 	VerticalPanel top;
@@ -194,7 +148,12 @@ public class ScoreNavPanel extends Composite {
 		vragen = new Grid(rows,4);
 		vragen.setCellPadding(10);
 		vragen.setCellSpacing(10);
-		createVragen();
+
+		int[] max = new int[rows];
+		for (int i = 0; i < max.length; i++) {
+			max[i] = 10;
+		}
+		createVragen(max);
 		top.add(vragen);
 	}
 
@@ -204,9 +163,14 @@ public class ScoreNavPanel extends Composite {
 		return widget;
 	}
 
-	private Widget[] vraagLabels;
+	private Label[] vraagLabels;
+	private SimpleProgressBar[] vraagBars;
+	private Label[] vraagPunten;
+	private int[] scoreMax;
 	private int currentOpdracht;
-	private void createVragen() {
+	public PopupPanel popup;
+
+	private void createVragen(int[] scoreMax) {
 		vragen.clear(true);
 		vragen.resize(rows, 4);
 		vragen.getColumnFormatter().setWidth(0, "80px");
@@ -215,23 +179,24 @@ public class ScoreNavPanel extends Composite {
 		vragen.getColumnFormatter().setWidth(3, "8px");
 		Label text;
 		int totaal = 0;
-		vraagLabels = new Widget[rows];
+		vraagLabels = new Label[rows];
+		vraagBars = new SimpleProgressBar[rows];
+		vraagPunten = new Label[rows];
+		this.scoreMax = scoreMax;
 		for(int i = 0; i < rows; i++) {
-			double d = Math.random(); int punt = (int) ( d * 6 );
-			totaal += punt;
 			text = new Label("Vraag " + (i+1)); vragen.setWidget(i, 0, text);
 			vraagLabels[i] = text;
 			if(i == currentOpdracht) text.getElement().getStyle().setFontWeight(FontWeight.BOLD);
 			setFontFamily(text);
-			Widget widget = new ProgressBar(5,punt); vragen.setWidget(i, 1, widget); // dummy
-			text = new Label( punt + " punt" + (punt != 1?"en":"")); vragen.setWidget(i,2, text); // dummy
+			Widget widget = vraagBars[i] = new SimpleProgressBar(0); vragen.setWidget(i, 1, widget); // dummy
+			text = vraagPunten[i] = new Label(""); vragen.setWidget(i,2, text); // dummy
 			setFontFamily(text);
 			text.getElement().getStyle().setFontWeight(FontWeight.BOLD);
+// Wat voor button moet hier komen?
 			Button p = new Button();p.setText(">"); vragen.setWidget(i, 3, p);
-			p.setStylePrimaryName("vraagButton");
+			//p.setStylePrimaryName("vraagButton");
 			p.addTapHandler(new TouchHandler(i));
-		}
-		totaal *= 2;
+		};
 		setTotaalScore(totaal);
 		
 	}
@@ -241,9 +206,26 @@ public class ScoreNavPanel extends Composite {
 		totaalscoreBar.setProgress(totaal);
 	}
 	
-	public void setAantalOpdrachten(int aantal) {
+	public void setAantalOpdrachten(int aantal, int[] max) {
 		rows = aantal;
-		createVragen();
+		createVragen(max);
+	}
+	
+	public void setItemScore(int item, int score) {
+		int percent = 100 * score / scoreMax[item];
+		if(score < 0 ) {
+			score = 0;
+			percent = 0;
+		}
+		else if(percent > 100) percent = 100;
+		vraagBars[item].setProgress(percent);
+		vraagPunten[item].setText(score + " punt" + (score != 1?"en":""));
+	}
+	
+	public void setItemScores(int[] scores) {
+		for (int i = 0; i < rows; i++) {
+			if(scoreMax[i] > 0) setItemScore(i, scores[i]);
+		}
 	}
 	
 	public void setBeantwoord(int aantal) {

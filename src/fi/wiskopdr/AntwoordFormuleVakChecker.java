@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.MissingResourceException;
 
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
 //import fi.beans.ideas.IdeasIF;
 //import fi.beans.ideas.RuleIF;
@@ -48,7 +50,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
     
     private String gekozenAntwoordString, gekozenStartString, formuleVakString;
     
-    private ArrayList<HashMap<String,Object>> answerModels;
+    private ObjectList answerModels;
     private String[] randomVarNamen = null;
 	private HashMap<String,Object> randomVarWaarden = null;
 	
@@ -98,11 +100,11 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
     private HashMap changedTexts = new HashMap<String,Object>();
     
 	
-	public AntwoordFormuleVakChecker(HashMap<String,Object> afvCheckerModel, String[] randomVars, HashMap<String,Object> randomValues )
+	public AntwoordFormuleVakChecker(HashMap<String,Object> map, String[] randomVars, HashMap<String,Object> randomValues )
 	{	
 		randomVarNamen = randomVars;
 		randomVarWaarden = randomValues;
-		
+		ObjectMap afvCheckerModel = JSONUtilities.wrapMap(map);
 		//this.antwoordFormuleVak = antwoordFormuleVak;
 		String antwoordString = "$f@";
 		boolean herleiding = false;
@@ -111,7 +113,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		int puntenGelijkwaardig = 10;
 		int puntenHerleiding = 0;
 		int puntenExact = 0;
-		ArrayList<HashMap<String,Object>> answerModels = null;
+		ObjectList answerModels = null;
 		boolean hasFeedback = false;
 		String vormString = "$f@";
 		double eqTestValueMin = 0;
@@ -124,25 +126,25 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
         boolean feedbackBijFout = false;
         boolean hulpBijTip = false;
         HashMap<String,Object> changedTexts = new HashMap<String,Object>();
-        HashMap<String,Object> ideasInstellingen = null;
+        ObjectMap ideasInstellingen = null;
         		
-		if(afvCheckerModel.containsKey("antwoordString")) antwoordString = (String)afvCheckerModel.get("antwoordString");
-		if(afvCheckerModel.containsKey("herleiding")) herleiding = ((Boolean)afvCheckerModel.get("herleiding")).booleanValue();
-		if(afvCheckerModel.containsKey("exact")) exact = ((Boolean)afvCheckerModel.get("exact")).booleanValue();
-		if(afvCheckerModel.containsKey("soortHerleiding")) soortHerleiding = ((Number)afvCheckerModel.get("soortHerleiding")).intValue();
-		if(afvCheckerModel.containsKey("puntenGelijkwaardig")) puntenGelijkwaardig = ((Number)afvCheckerModel.get("puntenGelijkwaardig")).intValue();
-		if(afvCheckerModel.containsKey("puntenHerleiding")) puntenHerleiding = ((Number)afvCheckerModel.get("puntenHerleiding")).intValue();
-		if(afvCheckerModel.containsKey("puntenExact")) puntenExact = ((Number)afvCheckerModel.get("puntenExact")).intValue();
-		if(afvCheckerModel.containsKey("answerModels")) answerModels = (ArrayList<HashMap<String,Object>>)new ArrayList(JSONUtilities.toArrayList(afvCheckerModel.get("answerModels")));
-		if(afvCheckerModel.containsKey("hasFeedback")) hasFeedback = ((Boolean)afvCheckerModel.get("hasFeedback")).booleanValue();
-		if(afvCheckerModel.containsKey("vormString")) vormString = (String)afvCheckerModel.get("vormString");
-		if(afvCheckerModel.containsKey("eqTestValueMin")) eqTestValueMin = ((Number)afvCheckerModel.get("eqTestValueMin")).doubleValue();
-		if(afvCheckerModel.containsKey("eqTestValueMax")) eqTestValueMax = ((Number)afvCheckerModel.get("eqTestValueMax")).doubleValue();
-		if(afvCheckerModel.containsKey("aantalDecRm")) aantalDecRm = ((Number)afvCheckerModel.get("aantalDecRm")).intValue();
-		if(afvCheckerModel.containsKey("scoreMax")) scoreMax = ((Number)afvCheckerModel.get("scoreMax")).intValue();
-		if(afvCheckerModel.containsKey("tips")) tips = ((Boolean)afvCheckerModel.get("tips")).booleanValue();
+		if(afvCheckerModel.containsKey("antwoordString")) antwoordString = afvCheckerModel.getString("antwoordString");
+		if(afvCheckerModel.containsKey("herleiding")) herleiding = afvCheckerModel.getBoolean("herleiding");
+		if(afvCheckerModel.containsKey("exact")) exact = afvCheckerModel.getBoolean("exact");
+		if(afvCheckerModel.containsKey("soortHerleiding")) soortHerleiding = afvCheckerModel.getInt("soortHerleiding");
+		if(afvCheckerModel.containsKey("puntenGelijkwaardig")) puntenGelijkwaardig = afvCheckerModel.getInt("puntenGelijkwaardig");
+		if(afvCheckerModel.containsKey("puntenHerleiding")) puntenHerleiding = afvCheckerModel.getInt("puntenHerleiding");
+		if(afvCheckerModel.containsKey("puntenExact")) puntenExact = afvCheckerModel.getInt("puntenExact");
+		if(afvCheckerModel.containsKey("answerModels")) answerModels = afvCheckerModel.getObjectList("answerModels");
+		if(afvCheckerModel.containsKey("hasFeedback")) hasFeedback = afvCheckerModel.getBoolean("hasFeedback");
+		if(afvCheckerModel.containsKey("vormString")) vormString = afvCheckerModel.getString("vormString");
+		if(afvCheckerModel.containsKey("eqTestValueMin")) eqTestValueMin = afvCheckerModel.getDouble("eqTestValueMin");
+		if(afvCheckerModel.containsKey("eqTestValueMax")) eqTestValueMax = afvCheckerModel.getDouble("eqTestValueMax");
+		if(afvCheckerModel.containsKey("aantalDecRm")) aantalDecRm = afvCheckerModel.getInt("aantalDecRm");
+		if(afvCheckerModel.containsKey("scoreMax")) scoreMax = afvCheckerModel.getInt("scoreMax");
+		if(afvCheckerModel.containsKey("tips")) tips = afvCheckerModel.getBoolean("tips");
 		if(tips){
-			if(afvCheckerModel.containsKey("ideasInstellingen")) ideasInstellingen = (HashMap<String,Object>)afvCheckerModel.get("ideasInstellingen");
+			if(afvCheckerModel.containsKey("ideasInstellingen")) ideasInstellingen = afvCheckerModel.getObjectMap("ideasInstellingen");
 	    }
 		
 		this.herleiding = herleiding;
@@ -241,7 +243,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 	
 	
 	public void setAnswerModel(int nr)
-	{	HashMap<String,Object> h = answerModels.get(nr);
+	{	ObjectMap h = answerModels.getObjectMap(nr);
 		if(h==null) return;
 	
 		String antwoordString = "$f@";
@@ -259,18 +261,18 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		
 		
 		if(h!=null) 
-		{	if(h.containsKey("antwoordString")) antwoordString = (String)h.get("antwoordString");
-			if(h.containsKey("gelijkwaardig")) gelijkwaardig = ((Boolean)h.get("gelijkwaardig")).booleanValue();
-			if(h.containsKey("herleiding")) herleiding = ((Boolean)h.get("herleiding")).booleanValue();
-			if(h.containsKey("exact")) exact = ((Boolean)h.get("exact")).booleanValue();
-			if(h.containsKey("soortHerleiding")) soortHerleiding = ((Integer)h.get("soortHerleiding")).intValue();
-			if(h.containsKey("puntenGelijkwaardig")) puntenGelijkwaardig = ((Integer)h.get("puntenGelijkwaardig")).intValue();
-			if(h.containsKey("puntenHerleiding")) puntenHerleiding = ((Integer)h.get("puntenHerleiding")).intValue();
-			if(h.containsKey("puntenExact")) puntenExact = ((Integer)h.get("puntenExact")).intValue();
-			if(h.containsKey("puntenFeedback")) puntenFeedback = ((Integer)h.get("puntenFeedback")).intValue();
-			if(h.containsKey("feedback")) feedback = (String)h.get("feedback");
-			if(h.containsKey("vormString")) vormString = (String)h.get("vormString");
-			if(h.containsKey("goedHalfFout")) goedHalfFout = ((Integer)h.get("goedHalfFout")).intValue();
+		{	if(h.containsKey("antwoordString")) antwoordString = h.getString("antwoordString");
+			if(h.containsKey("gelijkwaardig")) gelijkwaardig = h.getBoolean("gelijkwaardig");
+			if(h.containsKey("herleiding")) herleiding = h.getBoolean("herleiding");
+			if(h.containsKey("exact")) exact = h.getBoolean("exact");
+			if(h.containsKey("soortHerleiding")) soortHerleiding = h.getInt("soortHerleiding");
+			if(h.containsKey("puntenGelijkwaardig")) puntenGelijkwaardig = h.getInt("puntenGelijkwaardig");
+			if(h.containsKey("puntenHerleiding")) puntenHerleiding = h.getInt("puntenHerleiding");
+			if(h.containsKey("puntenExact")) puntenExact = h.getInt("puntenExact");
+			if(h.containsKey("puntenFeedback")) puntenFeedback = h.getInt("puntenFeedback");
+			if(h.containsKey("feedback")) feedback = h.getString("feedback");
+			if(h.containsKey("vormString")) vormString = h.getString("vormString");
+			if(h.containsKey("goedHalfFout")) goedHalfFout = h.getInt("goedHalfFout");
 			
 		}
 		
@@ -318,23 +320,23 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 	
 	
 	
-	public void setIdeas(HashMap h)
+	public void setIdeas(ObjectMap ideasInstellingen)
 	{
-		if(h.containsKey("strategieDomein")) strategieDomein = (String)h.get("strategieDomein");
-		if(h.containsKey("meerTips")) meerTips = ((Boolean)h.get("meerTips")).booleanValue();
-        if(h.containsKey("tipBijFout")) tipBijFout = ((Boolean)h.get("tipBijFout")).booleanValue();
-        if(h.containsKey("feedbackBijFout")) feedbackBijFout = ((Boolean)h.get("feedbackBijFout")).booleanValue();
-        if(h.containsKey("hulpBijTip")) hulpBijTip = ((Boolean)h.get("hulpBijTip")).booleanValue();
-        if (h.containsKey("diagnose"))
-			diagnose = ((Boolean) h.get("diagnose")).booleanValue();
-		if (h.containsKey("aftrekTip"))
-			aftrekTip = ((Integer) h.get("aftrekTip")).intValue();
-		if (h.containsKey("aftrekHulp"))
-			aftrekHulp = ((Integer) h.get("aftrekHulp")).intValue();
-		if (h.containsKey("aftrekStap"))
-			aftrekStap = ((Integer) h.get("aftrekStap")).intValue();
-		if (h.containsKey("aftrekSolve"))
-			aftrekSolve = ((Integer) h.get("aftrekSolve")).intValue();
+		if(ideasInstellingen.containsKey("strategieDomein")) strategieDomein = ideasInstellingen.getString("strategieDomein");
+		if(ideasInstellingen.containsKey("meerTips")) meerTips = ideasInstellingen.getBoolean("meerTips");
+        if(ideasInstellingen.containsKey("tipBijFout")) tipBijFout = ideasInstellingen.getBoolean("tipBijFout");
+        if(ideasInstellingen.containsKey("feedbackBijFout")) feedbackBijFout = ideasInstellingen.getBoolean("feedbackBijFout");
+        if(ideasInstellingen.containsKey("hulpBijTip")) hulpBijTip = ideasInstellingen.getBoolean("hulpBijTip");
+        if (ideasInstellingen.containsKey("diagnose"))
+			diagnose = ideasInstellingen.getBoolean("diagnose");
+		if (ideasInstellingen.containsKey("aftrekTip"))
+			aftrekTip = ideasInstellingen.getInt("aftrekTip");
+		if (ideasInstellingen.containsKey("aftrekHulp"))
+			aftrekHulp = ideasInstellingen.getInt("aftrekHulp");
+		if (ideasInstellingen.containsKey("aftrekStap"))
+			aftrekStap = ideasInstellingen.getInt("aftrekStap");
+		if (ideasInstellingen.containsKey("aftrekSolve"))
+			aftrekSolve = ideasInstellingen.getInt("aftrekSolve");
         
        
 		

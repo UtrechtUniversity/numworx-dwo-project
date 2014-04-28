@@ -286,8 +286,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		on =  new OpdrNav(launchData, this, new Memento(api));
 		FlowPanel onp = (FlowPanel) on.getAsPanel();
 		kb.addNavPanel(onp);
-		scoreNav.setAantalOpdrachten(on.getAantalOpdrachten());
+		scoreNav.setAantalOpdrachten(on.getAantalOpdrachten(), on.getMaxScores());
 		scoreNav.setBeantwoord(on.getAantalBeantwoord());
+		scoreNav.setItemScores(on.getItemScores());
 		scoreNav.setGotoOpdracht(on);
 		setTitle("Vraag " + (1+on.getCurrentOpdracht()) + " van " + on.getAantalOpdrachten());
 	}
@@ -791,7 +792,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	
 	
 	static class MyPopup extends PopupPanel {
-	    public MyPopup(Widget w) {
+	    public MyPopup(ScoreNavPanel w) {
 	        // PopupPanel's constructor takes 'auto-hide' as its boolean parameter.
 	        // If this is set, the panel closes itself automatically when the user
 	        // clicks outside of it.
@@ -800,6 +801,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	        // PopupPanel is a SimplePanel, so you have to set it's widget property to
 	        // whatever you want its contents to be.
 	        setWidget(w);
+	        w.popup = this;
 	      }
 	}
 

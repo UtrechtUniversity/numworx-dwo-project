@@ -104,7 +104,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			pendingState = object.toString(); // reset komt mogelijk na
 		}
 		else 
-			pendingState = object.toString();
+			pendingState = object.toString(); // XXX NPE!
 	}
 
 	@Override

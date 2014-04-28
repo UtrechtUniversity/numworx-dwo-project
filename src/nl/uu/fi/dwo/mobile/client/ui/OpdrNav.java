@@ -159,7 +159,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 
 	public void setChanged() // FIXME Trifork: hier safepoint?
 	{
-		scores[currentActiviteit][currentOpdracht] = entry.getScore();
+		
 		isCorrect[currentActiviteit][currentOpdracht] = entry.isCorrect();
 		if (buttons != null && buttons.size() > currentOpdracht)
 			setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht]);
@@ -326,7 +326,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 	void saveCurrentState()
 	{
 		states[currentActiviteit][currentOpdracht] = entry.getState();
-		scores[currentActiviteit][currentOpdracht] = entry.getScore();
+		entry.scoreNav.setItemScore(currentOpdracht, 
+				scores[currentActiviteit][currentOpdracht] = entry.getScore()
+		);
 		isCorrect[currentActiviteit][currentOpdracht] = entry.isCorrect();
 		memento.setCurrentActiviteit(currentActiviteit);
 		memento.setCurrentOpdracht(currentOpdracht);
@@ -398,15 +400,25 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 	@Override
 	public void gotoOpdracht(int i, ScoreNavPanel source) {
 		if(i == currentOpdracht) return;
+		int oldOpdr = currentOpdracht;
 		gotoOpdracht(i);
 		if(source != null)
 		{ 	source.setBeantwoord(getAantalBeantwoord());
 			source.setOpdracht(getCurrentOpdracht());
 			source.setTotaalScore((int) getScore()); 
+			source.setItemScore(oldOpdr, getItemScores()[oldOpdr]);
 		}
 		entry.setTitle("Vraag " + (getCurrentOpdracht()+1) + " van " + getAantalOpdrachten());
 		
 		
+	}
+
+	public int[] getMaxScores() {
+		return scoresMax[currentActiviteit];
+	}
+	
+	public int[] getItemScores() {
+		return scores[currentActiviteit];
 	}
 
 }
