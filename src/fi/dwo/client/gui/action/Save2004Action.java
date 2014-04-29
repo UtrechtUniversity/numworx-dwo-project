@@ -24,8 +24,6 @@ import javax.swing.JFileChooser;
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.base64code.StringCodeObject;
 import fi.beans.dwomaccess.JSONEncoder;
-import fi.beans.licman.LicMan;
-import fi.beans.licman.LicenseException;
 import fi.dwo.client.domain.CourseMap;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.Sco;
@@ -291,17 +289,17 @@ public class Save2004Action extends GuiAction {
 		String scoName = sco.getScoName();
 // licentie manager, via een parameter
 		String licentie = "null";
-		try { 
-			User u = GuiCreator.instance().getUser();
-			licentie = LicMan.getLicense(u.getSchool().getSchoolID(), sco.getCourse().getDwoProfile(), applet);
-			launchData.put(LicMan.LICENSE_KEY, licentie);
-		} catch (LicenseException e)
-		{
-			// TODO iets beters dan printstacktrace
-			e.printStackTrace();
-		}
+//		try { 
+//			User u = GuiCreator.instance().getUser();
+//			licentie = LicMan.getLicense(u.getSchool().getSchoolID(), sco.getCourse().getDwoProfile(), applet);
+//			launchData.put(LicMan.LICENSE_KEY, licentie);
+//		} catch (LicenseException e)
+//		{
+//			// TODO iets beters dan printstacktrace
+//			e.printStackTrace();
+//		}
 		String launchDataString = StringCodeObject.encodeObjectToString(launchData);
-		launchData.remove(LicMan.LICENSE_KEY);
+//		launchData.remove(LicMan.LICENSE_KEY);
 		
 		String language = TextMapper.getLanguage();
 		String bgcolor = "#" + Integer.toHexString(GuiConstants.MAIN_BACKGROUND.getRGB()).substring(2);
