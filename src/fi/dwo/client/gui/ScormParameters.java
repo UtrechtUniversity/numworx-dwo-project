@@ -20,8 +20,6 @@ import java.util.Hashtable;
 import java.util.Random;
 
 import fi.beans.base64code.StringCodeObject;
-import fi.beans.licman.LicMan;
-import fi.beans.licman.LicenseException;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.User;
