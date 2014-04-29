@@ -22,6 +22,7 @@ import java.util.Random;
 import fi.beans.base64code.StringCodeObject;
 import fi.beans.licman.LicMan;
 import fi.beans.licman.LicenseException;
+import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.User;
 import fi.dwo.client.system.TextMapper;
@@ -67,9 +68,19 @@ public class ScormParameters {
 		static final int UUID = 10;
 		static final int LANG = 11;
 		static final int BGCOLOR = 12;
-		private static final int PLENGTH = 13;
+		static final int BASE = 13;
+		private static final int PLENGTH = 14;
 		private Object[] parameters = new Object[PLENGTH];
 		
+		public void setBase(String base) {
+			parameters[BASE] = base;
+		}
+
+		public String getBase() {
+			return String.valueOf(parameters[BASE]);
+		}
+		
+				
 		public void setSco(Sco sco)
 		{
 			parameters[SCO_TITLE] = sco.getScoName();
@@ -77,27 +88,31 @@ public class ScormParameters {
 			parameters[SCO_CLASS] = sco.getAppletData().getClassName();
 			parameters[SCO_JAR] = sco.getAppletData().getJarName();
 			parameters[SCO_ID] = String.valueOf(sco.getID());
-			Hashtable launchData = null;
+			launchData = null;
 			Hashtable editLaunchData = sco.getEditLaunchdata();
 			if(editLaunchData != null) launchData = editLaunchData;
 			else launchData = sco.getLaunchdata();
 			Class applet = sco.getApplet().getClass();
 			
 	// licentie manager, via een parameter
-			String licentie = "null";
-			try { 
-				User u = GuiCreator.instance().getUser();
-				licentie = LicMan.getLicense(u.getSchool().getSchoolID(), sco.getCourse().getDwoProfile(), applet);
-				launchData.put(LicMan.LICENSE_KEY, licentie);
-			} catch (LicenseException e)
-			{
+			//String licentie = "null";
+			//try { 
+				//User u = GuiCreator.instance().getUser();
+				//licentie = LicMan.getLicense(u.getSchool().getSchoolID(), sco.getCourse().getDwoProfile(), applet);
+				//launchData.put(LicMan.LICENSE_KEY, licentie);
+			//} catch (LicenseException e)
+			//{
 				// TODO iets beters dan printstacktrace
-				e.printStackTrace();
-			}
+			//	e.printStackTrace();
+			//}
 			parameters[SCO_LAUNCH_DATA] = StringCodeObject.encodeObjectToString(launchData);
-			launchData.remove(LicMan.LICENSE_KEY);
+			//launchData.remove(LicMan.LICENSE_KEY);
 
 		}
+		public Hashtable getLaunchData() {
+			return launchData;
+		}
+
 		public void setUser(User u)
 		{
 			parameters[USER_FIRSTNAME] = u.getFirstname();
@@ -106,7 +121,7 @@ public class ScormParameters {
 		}
 		
 		private final DateFormat FMT = new SimpleDateFormat("ddMMyyyy");
-		private static final String UTF8 = "UTF-8";
+		public static final String UTF8 = "UTF-8";
 		public ScormParameters()
 		{
 			Date now = new Date();
@@ -114,6 +129,7 @@ public class ScormParameters {
 			parameters[UUID] = randomstring();
 			parameters[LANG] = TextMapper.getLanguage();
 			parameters[BGCOLOR] =  "#" + Integer.toHexString(GuiConstants.MAIN_BACKGROUND.getRGB()).substring(2);
+			parameters[BASE] = DwoHelper.getApplet().getDocumentBase();
 		}
 		
 		public void copy(BufferedReader in, PrintWriter out) throws IOException
@@ -147,6 +163,7 @@ public class ScormParameters {
 			copy(new InputStreamReader(in, UTF8), new OutputStreamWriter(out, UTF8));
 		}
 		byte[] buf = new byte[1024];
+		private Hashtable launchData;
 
 		public void rawCopy(InputStream in, OutputStream out) throws IOException {
             int len;

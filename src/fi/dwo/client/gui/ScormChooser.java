@@ -25,7 +25,7 @@ import javax.swing.filechooser.FileFilter;
  */
 public class ScormChooser extends JFileChooser  {
 
-	JRadioButton scorm12, scorm2004;
+	JRadioButton scorm12, scorm2004, html5;
 	
 	
 	
@@ -38,9 +38,11 @@ public class ScormChooser extends JFileChooser  {
 		setDialogType(SAVE_DIALOG);
 		scorm12 = new JRadioButton("Scorm 1.2", true);
 		scorm2004  = new JRadioButton("Scorm 2004");
+		html5 = new JRadioButton("HTML 5");
 		ButtonGroup group = new ButtonGroup();
 		group.add(scorm12);
 		group.add(scorm2004);
+		group.add(html5);
 		addChoosableFileFilter(ScormFilter.FILTER);
 		//setAcceptAllFileFilterUsed(false);
 		
@@ -64,6 +66,7 @@ public class ScormChooser extends JFileChooser  {
 		box.add(keuze);
 		box.add(scorm12);
 		box.add(scorm2004);
+		box.add(html5);
 		box.add(Box.createHorizontalGlue());
 		return box;
 	}
@@ -80,12 +83,17 @@ public class ScormChooser extends JFileChooser  {
 		
 		System.out.println(chooser.getSelectedFile());
 		System.out.println(chooser.isScorm2004());
+		System.out.println(chooser.isHTML5());
 		System.exit(0);
 	}
 
 
 	public boolean isScorm2004() {
 		return scorm2004.isSelected();
+	}
+	
+	public boolean isHTML5() {
+		return html5.isSelected();
 	}
 
 }

@@ -8,11 +8,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -20,6 +23,7 @@ import javax.swing.JFileChooser;
 
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.base64code.StringCodeObject;
+import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.licman.LicMan;
 import fi.beans.licman.LicenseException;
 import fi.dwo.client.domain.CourseMap;
@@ -79,13 +83,79 @@ public class Save2004Action extends GuiAction {
 		{
 			File file = scormChooser.getSelectedFile();
 			boolean is2004 = scormChooser.isScorm2004();
+			boolean ishtml5 = scormChooser.isHTML5();
 			String naam = file.getName();
 			if(naam.lastIndexOf(".")>-1)naam = naam.substring(0,naam.indexOf("."));
-			if(is2004)
+			if(ishtml5)
+				createHtml5(file);
+			else if(is2004)
 				createScorm2004(file);
 			else
 				createZip(file.getAbsoluteFile().getParentFile().getAbsolutePath() + "/" + naam);
 		}		
+	}
+
+	private void createHtml5(File file) {
+		try {
+			ZipOutputStream out = new ZipOutputStream(new FileOutputStream(file));
+
+			AppletUtil au = DwoHelper.getAu();
+			
+			ScormParameters runner = new ScormParameters();
+			runner.setSco(sco);
+			runner.setBase("http://www.staff.science.uu.nl/~velth101/war/");
+			runner.setUser(GuiCreator.instance().getUser());
+			
+// manifest
+			out.putNextEntry(new ZipEntry("imsmanifest.xml"));
+			runner.copy(au.getStream("resources/imsmanifestHtml5.txt"), out);
+			out.closeEntry();
+// metadata
+			out.putNextEntry(new ZipEntry("metadata.xml"));
+			runner.copy(au.getStream("resources/metadata.txt"), out);
+			out.closeEntry();
+// sco
+			out.putNextEntry(new ZipEntry("sco/sco.html"));
+// sco.txt is profiel afhankelijk!
+			int profile = sco.getCourse().getDwoProfile();
+			InputStream in = au.getStream("resources/html5-" + profile + ".txt");
+			if(in == null)
+				in = au.getStream("resources/html5.txt");
+			runner.copy(in, out);
+			out.closeEntry();
+
+			out.putNextEntry(new ZipEntry("sco/sco.xml"));
+			Map ld = new HashMap(runner.getLaunchData());
+			OutputStreamWriter wr = new OutputStreamWriter(out, ScormParameters.UTF8);
+			JSONEncoder.encode(ld, wr);
+			wr.flush();
+			out.closeEntry();			
+// copies.....
+			// TODO meer xsd's?
+	        String HTML_SOURCE = WWWURL + "/dwo/scorm/course/cp/";
+	        String[] scormFileNames = {
+	        		"adlcp_v1p3.xsd",
+	        		"imscp_v1p1.xsd",
+	        		"imsmd_v1p2p4.xsd",
+// sco/plugin?
+	        		};
+	        
+	        for (int i=0; i<scormFileNames.length; i++) 
+	        {	String htmlSourceString = HTML_SOURCE + scormFileNames[i];
+	        	URL htmlSource = new URL(htmlSourceString);
+	        	URLConnection connection = htmlSource.openConnection();
+	        	in =  connection.getInputStream();
+	        	out.putNextEntry(new ZipEntry(scormFileNames[i]));
+	        	runner.rawCopy(in, out);
+	        	out.closeEntry();
+	        }
+		
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	public void createZip(String zipName)
