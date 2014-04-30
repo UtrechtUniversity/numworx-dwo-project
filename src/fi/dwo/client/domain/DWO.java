@@ -533,6 +533,7 @@ private static boolean isValidEmail(String email) {
     };
 
 	private static final String LEARNER_ID = "cmi.learner_id";
+	private static final String LEARNER_NAME = "cmi.learner_name";
 
 	public static boolean SEQUENCE = true;
     
@@ -1356,6 +1357,10 @@ private static boolean isValidEmail(String email) {
     	if(LEARNER_ID.equals(iDataModelElement))
     	{
     		return getUser().getUsername();
+    	}
+    	if(LEARNER_NAME.equals(iDataModelElement))
+    	{
+    		return getUser().getName();
     	}
     	
         if(iDataModelElement.equals(SCORM12APIInterface.USER_GROUP)) {
