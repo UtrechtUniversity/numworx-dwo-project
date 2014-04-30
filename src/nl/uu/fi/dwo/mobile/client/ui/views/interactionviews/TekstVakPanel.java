@@ -226,11 +226,19 @@ public class TekstVakPanel implements InteractionView
 		int ronding = 0;
 
 		if (launchState.containsKey("breedtes") )
+		{
 			breedtes = launchState.getDoubleList("breedtes");
+			if(!breedtes.isEmpty() && breedtes.get(0).intValue() > breedte)
+				breedte = breedtes.get(0).intValue();
+		}
 		else
 			breedtes = (Arrays.asList(600.0));
 		if (launchState.containsKey("hoogtes") )
+		{
 			hoogtes = launchState.getDoubleList("hoogtes");
+			if(!hoogtes.isEmpty() && hoogtes.get(0).intValue() > hoogte)
+				hoogte = hoogtes.get(0).intValue();
+		}
 		else
 			hoogtes = (Arrays.asList(250.0));
 		minHoogtes = new ArrayList<Double>(hoogtes);

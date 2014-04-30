@@ -1,28 +1,31 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.HashMap;
-import java.util.Map;
+import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.DialogBox.Caption;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Touch;
 
-public class PopupButton extends Composite implements ClickHandler {
+public class PopupButton extends Composite implements ClickHandler, PositionCallback, TouchStartHandler, MouseDownHandler {
 
 	ButtonBase btn;
 	IsWidget content;
@@ -44,15 +47,19 @@ public class PopupButton extends Composite implements ClickHandler {
 		btn.getElement().getStyle().setPadding(0, Style.Unit.PX);
 		btn.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
 		btn.addClickHandler(this);
+		btn.addTouchStartHandler(this);
+		btn.addMouseDownHandler(this);
 		this.content = content;
 		this.view = view;
 		initWidget(btn);
 	}
 
+	private int clientX,clientY;
+	private Logger logger = Logger.getLogger("PopupButton");
 	@Override
 	public void onClick(ClickEvent event) {
 		if(box == null) {
-			box = new DialogBox(false,false);
+			box = new DialogBox(false,false);			
 			VerticalPanel p = new VerticalPanel();
 			Button closeBtn = new Button("[x]");
 			closeBtn.addClickHandler(new ClickHandler() {
@@ -69,12 +76,36 @@ public class PopupButton extends Composite implements ClickHandler {
 		}
 		if(!box.isShowing() && view != null && state != null)
 			view.setState(state);
-		box.show();		
+		if(!box.isShowing() )
+				box.setPopupPositionAndShow(this);		
 	}
 
 	public void hide() {
 		if(box != null) box.hide();
 	}
 
+	@Override
+	public void setPosition(int offsetWidth, int offsetHeight) {
+		logger.info("position wordt" + clientX + "," + clientY);
+		logger.info("content = " + content.asWidget().getOffsetHeight());
+		box.setPopupPosition(clientX-5, clientY-5);
+		
+	}
+
+	@Override
+	public void onTouchStart(TouchStartEvent event) {
+		Touch touch = event.getChangedTouches().get(0);
+		clientX = touch.getClientX();
+		clientY = touch.getClientY();
+	}
+
+	@Override
+	public void onMouseDown(MouseDownEvent event) {
+		clientX = event.getClientX();
+		clientY = event.getClientY();
+	}
+
+	
+	
 
 }

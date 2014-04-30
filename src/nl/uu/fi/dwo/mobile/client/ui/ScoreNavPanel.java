@@ -189,6 +189,7 @@ public class ScoreNavPanel extends Composite {
 			if(i == currentOpdracht) text.getElement().getStyle().setFontWeight(FontWeight.BOLD);
 			setFontFamily(text);
 			Widget widget = vraagBars[i] = new SimpleProgressBar(0); vragen.setWidget(i, 1, widget); // dummy
+			widget.setVisible(scoreMax[i] != 0);
 			text = vraagPunten[i] = new Label(""); vragen.setWidget(i,2, text); // dummy
 			setFontFamily(text);
 			text.getElement().getStyle().setFontWeight(FontWeight.BOLD);
@@ -212,9 +213,9 @@ public class ScoreNavPanel extends Composite {
 	}
 	
 	public void setItemScore(int item, int score) {
-		int percent = 100;
-		if(scoreMax[item] > 0)
-			percent = 100 * score / scoreMax[item];
+		if(scoreMax[item] <= 0) return;
+		
+		int percent = 100 * score / scoreMax[item];
 		if(score < 0 ) {
 			score = 0;
 			percent = 0;
@@ -226,13 +227,16 @@ public class ScoreNavPanel extends Composite {
 	
 	public void setItemScores(int[] scores) {
 		for (int i = 0; i < rows; i++) {
-			if(scoreMax[i] > 0) setItemScore(i, scores[i]);
+			setItemScore(i, scores[i]);
 		}
 	}
 	
 	public void setBeantwoord(int aantal) {
-		beantwoord.setText( aantal + " / " + rows);
-		beantwoordBar.setProgress(aantal * 100 / rows);
+		if(rows > 0)
+		{
+			beantwoord.setText( aantal + " / " + rows);
+			beantwoordBar.setProgress(aantal * 100 / rows);
+		}
 	}
 	
 	public void setGotoOpdracht(GotoOpdracht listener)
