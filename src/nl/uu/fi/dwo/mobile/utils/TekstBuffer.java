@@ -7,6 +7,8 @@ import java.util.List;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.AntwoordTekstVak;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckSelectieUnit;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckSleepUnit;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckValueUnit;
@@ -306,25 +308,12 @@ public class TekstBuffer
 		}
 		else if(soortVak == 12)
 		{	
-			/*
-			TekstVakPanel[] ipList1 = new TekstVakPanel[objectenLijst.size()];
-			int hoogsteId = 0;
-			for(int i = 0; i < objectenLijst.size(); i++)
-				if(objectenLijst.get(i) instanceof TekstVakPanel)
-				{	int id = ((TekstVakPanel) objectenLijst.get(i)).getIpId();
-					if(id > 0)
-					{	ipList1[id] = (TekstVakPanel) objectenLijst.get(i);
-						if(id > hoogsteId)
-							hoogsteId = id;
-					}
-				}
-			TekstVakPanel[] ipList2 = new TekstVakPanel[hoogsteId];
-			for(int i = 0; i < ipList2.length; i++)
-				ipList2[i] = ipList1[i+1];
-				*/
-			//result = new PopupFacade(currentVakGegevens, new CheckSelectieUnit(currentVakGegevens, randomVarNamen,randomVarWaarden));//, ipList2));
 			result = new CheckSelectieUnit(currentVakGegevens, randomVarNamen, randomVarWaarden);
 			
+		}
+		else if(soortVak == 49)
+		{
+			result = new CheckButton(currentVakGegevens, randomVarNamen, randomVarWaarden);
 		}
 		else if(soortVak == 14) 
 		{
@@ -333,61 +322,19 @@ public class TekstBuffer
 		}
 		else if(soortVak == 16)
 		{	
-			/*
-			TekstVakPanel[] ipListSleep1 = new TekstVakPanel[objectenLijst.size()];
-			TekstVakPanel[] ipListDoel1 = new TekstVakPanel[objectenLijst.size()];
-			int hoogsteId = 0;
-			int laagsteId = 0;
-			for (int i = 0; i < objectenLijst.size(); i++)
-				if(objectenLijst.get(i) instanceof TekstVakPanel)
-				{	int id = ((TekstVakPanel) objectenLijst.get(i)).getIpId();
-					if(id > 0)
-					{	ipListSleep1[id] = (TekstVakPanel) objectenLijst.get(i);
-						if(id > hoogsteId)
-							hoogsteId = id;
-					}
-					else if (id < 0)
-					{	ipListDoel1[-id] = (TekstVakPanel) objectenLijst.get(i);
-						if (id < laagsteId)
-							laagsteId = id;
-						
-					}
-				}
-			TekstVakPanel[] ipListSleep2 = new TekstVakPanel[hoogsteId]; 
-			for(int i = 0; i < ipListSleep2.length; i++)
-				ipListSleep2[i] = ipListSleep1[i+1];
-			TekstVakPanel[] ipListDoel2 = new TekstVakPanel[-laagsteId];
-			for(int i = 0; i < ipListDoel2.length; i++)
-				ipListDoel2[i] = ipListDoel1[i+1];
-			System.out.println("ipListDoel2.length: " + ipListDoel2.length);
-			*/
-			//result = new PopupFacade(currentVakGegevens, new CheckSleepUnit(currentVakGegevens, randomVarNamen,randomVarWaarden));//, ipListSleep2, ipListDoel2));
 			result = new CheckSleepUnit(currentVakGegevens, randomVarNamen, randomVarWaarden);
 		}
 		else if(soortVak == 33)
-		{	/*
-			TekstVakPanel[] ipValueList1 = new TekstVakPanel[objectenLijst.size()];
-			int hoogsteId = 0;
-			for(int i = 0; i < objectenLijst.size(); i++)
-				if(objectenLijst.get(i) instanceof TekstVakPanel)
-				{	int id = ((TekstVakPanel) objectenLijst.get(i)).getIpId();
-					if(id > 0)
-					{	ipValueList1[id] = (TekstVakPanel) objectenLijst.get(i);
-						if(id > hoogsteId)
-							hoogsteId = id;
-					}
-				}
-			TekstVakPanel[] ipValueList2 = new TekstVakPanel[hoogsteId];
-			for(int i = 0; i < ipValueList2.length; i++)
-				ipValueList2[i] = ipValueList1[i+1];
-			*/	
-			//result = new PopupFacade(currentVakGegevens, new CheckValueUnit(currentVakGegevens, randomVarNamen, randomVarWaarden));//, ipValueList2));
-			result = new CheckValueUnit(currentVakGegevens, randomVarNamen, randomVarWaarden);
+		{	result = new CheckValueUnit(currentVakGegevens, randomVarNamen, randomVarWaarden);
 		}
 		else if (soortVak == 41)
 		{
 			//result = new PopupFacade(currentVakGegevens, new fi.kladjegwt.client.KladjeGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 			result = new StubView("KladjeGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+		}
+		else if (soortVak == 13)
+		{
+			result = new AntwoordTekstVak(currentVakGegevens, randomVarNamen, randomVarWaarden);
 		}
 		else
 		{

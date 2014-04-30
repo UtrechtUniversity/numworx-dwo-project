@@ -129,12 +129,21 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	private native static boolean isCorrect(Object inner) /*-{
 		return inner.isCorrect();
 	}-*/;
+	
+	private native static void kijkNa(Object inner) /*-{
+		return inner.kijkNa();
+	}-*/;
 
 	@Override
 	public boolean isCorrect() {
 		if(innerView != null)
 			return isCorrect(innerView);
 		return false;
+	}
+	
+	public void kijkNa() {
+		if(innerView != null)
+			kijkNa(innerView);
 	}
 
 	@Override

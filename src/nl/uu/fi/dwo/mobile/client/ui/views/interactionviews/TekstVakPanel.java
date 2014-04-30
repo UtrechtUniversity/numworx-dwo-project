@@ -694,6 +694,20 @@ public class TekstVakPanel implements InteractionView
 								doelObjecten[l] = zoekTekstVakPanel(-(l+1), lijst);
 							((CheckSleepUnit) currentObject).zetSleepDoelObjecten(sleepObjecten, doelObjecten);
 						}
+						else if(currentObject instanceof CheckButton)
+						{
+							ArrayList<Object> lijst = new ArrayList<Object>();
+							if(k == 0 && i == 0 && j==0)
+							{
+								lijst = parent.getOpdrachtObjects();
+								
+							}
+							else if (k == 0)
+								lijst = interactionViewObjects;
+							else
+								lijst = opdrachtObjects;
+							((CheckButton) currentObject).zetNakijkObjecten(lijst);
+						}
 					}
 
 					if (currentObject instanceof TekstVakPanel)
@@ -1281,7 +1295,7 @@ public class TekstVakPanel implements InteractionView
 		{	Object object = interactionViewObjects.get(i);
 			if(object instanceof FormuleEditorWithAnswer)
 			{	FormuleEditorWithAnswer object2 = (FormuleEditorWithAnswer) object;
-				object2.check();
+				object2.kijkNa();
 				juist = object2.isCorrect();
 			}
 		}
@@ -1657,5 +1671,14 @@ public class TekstVakPanel implements InteractionView
 		};
 		if (masterView.getWidth() > 0) handler.onLoad(null);
 		else masterView.addLoadHandler(handler);
+	}
+
+
+
+
+	@Override
+	public void kijkNa() {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -659,7 +659,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		boolean nagekeken = false;
 		String antwoordString;
 
-		editor.check();
+		editor.kijkNa();
 
 		stapNr = steps;
 		formuleVakInhouden = new String[steps + 1];
@@ -771,6 +771,11 @@ public class FormuleEditorWithSteps implements InteractionView
 		if (steps > 0 || steps == 0 && !hasStartString)
 			tb.getElement().getStyle().setVisibility(Visibility.VISIBLE);
 
+	}
+	
+	public void kijkNa()
+	{
+		editor.kijkNa();
 	}
 
 	@Override

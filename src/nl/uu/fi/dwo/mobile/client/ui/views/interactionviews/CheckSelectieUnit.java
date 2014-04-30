@@ -29,6 +29,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 
 
+
+
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.Expressie;
@@ -39,6 +41,8 @@ import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.Stub;
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 
@@ -283,31 +287,32 @@ public class CheckSelectieUnit implements InteractionStub
 	    Vector attempts = new Vector();
 	    int attemptsCount = 0;
 		int errorCount = 0;
-        
-		if(h.get("randomizedPositions") != null) 
-	    {	List<Object> randomizedPositionsList = JSONUtilities.toArrayList(h.get("randomizedPositions"));
-			randomizedPositions = new Point[randomizedPositionsList.size()];
-	    	for(int i = 0; i < randomizedPositionsList.size(); i++)
-	    		randomizedPositions[i] = (Point) randomizedPositionsList.get(i);
+        ObjectMap map = JSONUtilities.wrapMap(h);
+		
+		if(map.containsKey("randomizedPositions")) 
+	    {	ObjectList list = map.getObjectList("randomizedPositions");
+	    	randomizedPositions = new Point[list.size()];
+	    	for(int i = 0; i < list.size(); i++)
+	    		randomizedPositions[i] = (Point) list.get(i);
 	    }
-	    else if(h.get("randomizedPositionsX") != null)
-	    {	List<Object> randomizedPositionsXList = JSONUtilities.toArrayList(h.get("randomizedPositionsX"));
-	    	List<Object> randomizedPositionsYList = JSONUtilities.toArrayList(h.get("randomizedPositionsY"));
-	    	randomizedPositions = new Point[randomizedPositionsXList.size()];
-	    	for(int i = 0; i < randomizedPositionsXList.size(); i++)
-	    		randomizedPositions[i] = new Point(((Integer)randomizedPositionsXList.get(i)).intValue(), 
-	    				((Integer)randomizedPositionsYList.get(i)).intValue());
+	    else if(map.containsKey("randomizedPositionsX"))
+	    {	ObjectList listX = map.getObjectList("randomizedPositionsX");
+	    	ObjectList listY = map.getObjectList("randomizedPositionsY");
+	    	randomizedPositions = new Point[listX.size()];
+	    	for(int i = 0; i < listX.size(); i++)
+	    		randomizedPositions[i] = new Point(listX.getInt(i), 
+	    				listY.getInt(i));
 	    }
-	    if(h.get("ingevuld") != null) 
-	    	ingevuld = ((Boolean)h.get("ingevuld")).booleanValue();
-	    if(h.get("nagekeken") != null) 
-	    	nagekeken = ((Boolean)h.get("nagekeken")).booleanValue();
-	    if(h.get("attempts") != null)
+	    if(h.containsKey("ingevuld")) 
+	    	ingevuld = map.getBoolean("ingevuld");
+	    if(h.containsKey("nagekeken")) 
+	    	nagekeken = map.getBoolean("nagekeken");
+	    if(h.containsKey("attempts"))
 	    	attempts = (Vector)h.get("attempts");
-	    if(h.get("attemptsCount") != null) 
-	    	attemptsCount = ((Number)h.get("attemptsCount")).intValue();
-	    if(h.get("errorCount") != null) 
-	    	errorCount = ((Number)h.get("errorCount")).intValue();
+	    if(map.containsKey("attemptsCount")) 
+	    	attemptsCount = map.getInt("attemptsCount");
+	    if(map.containsKey("errorCount")) 
+	    	errorCount = map.getInt("errorCount");
         
         this.randomizedPositions = randomizedPositions;
         this.ingevuld = ingevuld;
@@ -364,7 +369,7 @@ public class CheckSelectieUnit implements InteractionStub
 	public void wis()
 	{
 		//ipList = null;
-		juisteSelecties = null;
+		//juisteSelecties = null;
 		
 	    goedKrulImage.setVisible(false);
 	    //goedKrulHalfImage.setVisible(false);
@@ -466,11 +471,11 @@ public class CheckSelectieUnit implements InteractionStub
 	public CheckSelectieUnit(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)//, TekstVakPanel[] ipList)
 	{
 		
-		if (h != null && h.get("breedte") != null)
+		if (h != null && h.containsKey("breedte"))
 			breedte = ((Number) h.get("breedte")).intValue();
-		if (h != null && h.get("hoogte") != null)
+		if (h != null && h.containsKey("hoogte"))
 			hoogte = ((Number) h.get("hoogte")).intValue();
-		if (h != null && h.get("interactiePanelLaunchState") != null)
+		if (h != null && h.containsKey("interactiePanelLaunchState"))
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
 		
 		//this.parent = parent;
@@ -487,7 +492,8 @@ public class CheckSelectieUnit implements InteractionStub
 		breedte = width;
 		hoogte = height;
 		//this.randomVarWaarden = randomValues;
-		if (launchData != null)
+		ObjectMap map = JSONUtilities.wrapMap(launchData);
+		if (map != null)
 		{
 			/*
 			if(launchData.get("juisteSelecties") instanceof ArrayList)
@@ -498,44 +504,40 @@ public class CheckSelectieUnit implements InteractionStub
 					juisteSelecties[i] = juisteSelectiesList.get(i);
 			}
 			*/
-			if(launchData.get("juisteSelecties") != null)
-			{	List<Object> juisteSelectiesList = JSONUtilities.toArrayList(launchData.get("juisteSelecties"));
-				juisteSelecties = new boolean[juisteSelectiesList.size()];
-				for(int i = 0; i < juisteSelectiesList.size(); i++)
-					juisteSelecties[i] = ((Boolean) juisteSelectiesList.get(i)).booleanValue();
-			}
-			if(launchData.get("scoreMax") != null) 
-				scoreMax = ((Number)launchData.get("scoreMax")).intValue();
-		    if(launchData.get("randomizePositions") != null) 
-		    	randomizePositions = ((Boolean)launchData.get("randomizePositions")).booleanValue();
-		    if(launchData.get("multiSelections") != null) 
-		    	multiSelections = ((Boolean)launchData.get("multiSelections")).booleanValue();
-		    if(launchData.get("logOption") != null) 
-		    	logOption = ((Boolean)launchData.get("logOption")).booleanValue();
-			if(launchData.get("logID") != null) 
-				logID = (String)launchData.get("logID");
-			if(launchData.get("check") != null) 
-				check = ((Boolean)launchData.get("check")).booleanValue();
-			if(launchData.get("teltMee") != null) 
-				teltMee = ((Boolean)launchData.get("teltMee")).booleanValue();
-			if(launchData.get("checkFormule") != null) 
-				checkFormule = ((Boolean)launchData.get("checkFormule")).booleanValue();
+			if(map.containsKey("juisteSelecties"))
+				juisteSelecties = map.getBooleanArray("juisteSelecties");
+			if(map.containsKey("scoreMax")) 
+				scoreMax = map.getInt("scoreMax");
+		    if(map.containsKey("randomizePositions")) 
+		    	randomizePositions = map.getBoolean("randomizePositions");
+		    if(map.containsKey("multiSelections")) 
+		    	multiSelections = map.getBoolean("multiSelections");
+		    if(map.containsKey("logOption")) 
+		    	logOption = map.getBoolean("logOption");
+			if(map.containsKey("logID")) 
+				logID = map.getString("logID");
+			if(map.containsKey("check")) 
+				check = map.getBoolean("check");
+			if(map.containsKey("teltMee")) 
+				teltMee = map.getBoolean("teltMee");
+			if(map.containsKey("checkFormule")) 
+				checkFormule = map.getBoolean("checkFormule");
 			
-			if (launchData.get("formuleStrings") != null) {
-				formuleStrings = JSONUtilities.toStringArray(launchData.get("formuleStrings"));
+			if (map.containsKey("formuleStrings")) {
+				formuleStrings = map.getStringArray("formuleStrings");
 			}
-			if(launchData.get("logObjectives") != null)
-			{	List<Object> logObjectivesList = JSONUtilities.toArrayList( launchData.get("logObjectives") );
+			if(map.containsKey("logObjectives"))
+			{	List<Object> logObjectivesList = JSONUtilities.toArrayList( map.get("logObjectives") );
 				logObjectives = new boolean[logObjectivesList.size()][];
 				for(int i = 0; i < logObjectivesList.size(); i++)
 				{	List<Object> list = JSONUtilities.toArrayList(logObjectivesList.get(i));
 					logObjectives[i] = new boolean[list.size()];
 					for(int j = 0; j < list.size(); j++)
-						logObjectives[i][j] = ((Boolean)(list.get(j))).booleanValue() ;
+						logObjectives[i][j] = ((Boolean) (list.get(j))).booleanValue();
 				}
 			}
-			if(launchData.get("knopImageString") != null) 
-				knopImageString = (String)launchData.get("knopImageString");
+			if(map.containsKey("knopImageString")) 
+				knopImageString = (String)map.get("knopImageString");
 		}
 		
 		

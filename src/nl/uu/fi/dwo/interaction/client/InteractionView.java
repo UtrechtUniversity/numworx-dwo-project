@@ -15,6 +15,8 @@ public interface InteractionView extends IsWidget
 
 	public boolean isCorrect();
 
+	public void kijkNa();
+	
 	public void setCommunicationRoot(OpdrNavIF comRoot);
 
 }

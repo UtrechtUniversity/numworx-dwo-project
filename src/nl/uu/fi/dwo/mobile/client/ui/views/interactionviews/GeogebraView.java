@@ -141,6 +141,11 @@ public class GeogebraView implements InteractionView, LoadHandler
 		if(bewaarOptie && xml != null && ggbApplet != null) setXML(ggbApplet, xml);
 	}
 
+	public void kijkNa()
+	{
+		
+	}
+	
 	@Override
 	public int getScore()
 	{

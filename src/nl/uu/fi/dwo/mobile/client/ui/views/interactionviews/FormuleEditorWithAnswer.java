@@ -146,11 +146,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 	@Override 
 	public void enter() {
-		check();
+		kijkNa();
 	}
 	
 	
-	void check()
+	public void kijkNa()
 	{
 		String useranswer = "$f" + this.toString() + "@";
 		HashMap<String, Object> checkResults = avChecker.checkAnswer(useranswer);
@@ -243,7 +243,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			}
 
 			this.insert(antwoord);
-			check();
+			kijkNa();
 		}
 
 	}

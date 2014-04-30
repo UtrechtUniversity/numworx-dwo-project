@@ -212,7 +212,9 @@ public class ScoreNavPanel extends Composite {
 	}
 	
 	public void setItemScore(int item, int score) {
-		int percent = 100 * score / scoreMax[item];
+		int percent = 100;
+		if(scoreMax[item] > 0)
+			percent = 100 * score / scoreMax[item];
 		if(score < 0 ) {
 			score = 0;
 			percent = 0;
