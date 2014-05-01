@@ -12,6 +12,8 @@ import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -38,7 +40,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 
 	private Frame frame;
 	private Object innerView;
-	private HashMap innerMap;
+	private ObjectMap innerMap;
 	private OpdrNavIF comRoot = this;
 	private HashMap randomVars;
 	private String pendingState;
@@ -49,27 +51,26 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 
 	public StubView(String html, HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
+		html = DWOplayer.PARAMETERS.getStubView() + html;
 		init(html, launchdata, randomVarNamen, randomVarWaarden);
 	}
 	
 	private void init(String html, HashMap<String, Object> launchData,
 			String[] randomVarNamen, HashMap randomVarWaarden) {
-		innerMap = (HashMap) launchData.get("interactiePanelLaunchState");
+		ObjectMap outermap = JSONUtilities.wrapMap(launchData);
+		innerMap = outermap.getObjectMap("interactiePanelLaunchState");
 		randomVars = randomVarWaarden;
 		facade = new PopupFacade(launchData);
 		frame = new Frame(html);
 		frame.getElement().getStyle().setOverflow(Overflow.HIDDEN);
 		frame.setStylePrimaryName(".gwt-StubView");
 		frame.addStyleDependentName("borderless");
-		Number width = ((Number)launchData.get("breedte"));
-		if (width == null)
-			width = 400;
-		Number height = (Number) launchData.get("hoogte");
-		if (height == null)
-			height = 400;
-		frame.setSize(width + "px", height + "px");
-		this.width = width.intValue();
-		this.height = height.intValue();
+		int width = 400; if(outermap.containsKey("breedte")) width = outermap.getInt("breedte");
+		int height =400; if(outermap.containsKey("hoogte")) height = outermap.getInt("hoogte");
+		
+		frame.setPixelSize(width , height );
+		this.width = width;
+		this.height = height;
 		frame.addLoadHandler(this);
 		setWidget(frame);
 	}

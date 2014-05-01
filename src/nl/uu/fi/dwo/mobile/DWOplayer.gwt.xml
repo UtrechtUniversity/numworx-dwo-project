@@ -36,7 +36,7 @@
 <!-- --> <inherits name="fi.kladjegwt.KladjeGWT-DWO" />
 <!-- - -> <inherits name="fi.draaibankgwt.DraaibankGWT-DWO" /> -->
 
-<!-- <inherits name="fi.antwoordkeuzevakgwt.AntwoordKeuzeVakGWT-DWO" /> --> 
+<!-- --> <inherits name="fi.antwoordkeuzevakgwt.AntwoordKeuzeVakGWT-DWO" />  
 
 <!--  <inherits name="fi.nabouwenaanzichtengwt.NabouwenAanzichtenGWT-DWO" /> -->
      
@@ -71,6 +71,12 @@
     <replace-with class="nl.uu.fi.dwo.mobile.client.sco.SCORM_guest">
     	<when-type-is class="nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF"/>
     </replace-with>
+    
+    <replace-with class="nl.uu.fi.dwo.mobile.client.DWOplayerDefaults">
+        <when-type-is class="nl.uu.fi.dwo.mobile.client.DWOplayerParameters" />
+    </replace-with>
+    
+    
 <!-- Logging TRUE/FALSE FINEST/.../SEVERE -->   
     <set-property name="gwt.logging.logLevel" value="FINEST"/>
     <set-property name="gwt.logging.enabled" value="FALSE"/>

@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.mobile.client.DWOplayerClientBundle;
+import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWOmAccess;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.AppPlaceHistoryMapper;
@@ -49,10 +50,12 @@ import fi.wiskopdr.text.Text_nl;
 public class DWOplayer implements EntryPoint
 {
 	public static final boolean JSON = true;
-	public static final String PREFIX = "http://ws-dev.fisme.science.uu.nl/DWOmAccess/get" + (JSON?"JSON":"") + "LaunchData?s=";
 	public static final int PROFILE_ID = 77;
 	
 	public static final DWOplayerClientBundle DWO_BUNDLE = GWT.create(DWOplayerClientBundle.class);
+	public static final DWOplayerParameters PARAMETERS = GWT.create(DWOplayerParameters.class);
+	
+	public static final String PREFIX = PARAMETERS.getLaunchData();
 	
 	private Place defaultPlace = new LoginPlace(); // new SelectModulePlace("select");
 

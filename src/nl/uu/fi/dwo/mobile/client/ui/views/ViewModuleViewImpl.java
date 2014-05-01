@@ -779,10 +779,13 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 			@Override
 			public void onTap(TapEvent event) {
-				popupNavPanel();
+				if(POPUP.isShowing())
+						POPUP.hide();
+				else
+						popupNavPanel();
 				
 			}});
-		
+		POPUP.addAutoHidePartner(hb.getElement());
 		
 		
 		//initWidget(mainPanel);
@@ -797,7 +800,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	        // If this is set, the panel closes itself automatically when the user
 	        // clicks outside of it.
 	        super(true);
-
+	        setGlassEnabled(true);
+	        setAnimationEnabled(true);
 	        // PopupPanel is a SimplePanel, so you have to set it's widget property to
 	        // whatever you want its contents to be.
 	        setWidget(w);

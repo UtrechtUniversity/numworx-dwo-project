@@ -13,6 +13,10 @@ public class ObjectMapImpl extends HashMap<String, Object> implements ObjectMap 
 
 	private final Map<String,? extends Object> map;
 
+	public Map<String,? extends Object> unwrap() {
+		return map;
+	}
+	
 	public int size() {
 		if(map == null) return super.size();
 		return map.size();

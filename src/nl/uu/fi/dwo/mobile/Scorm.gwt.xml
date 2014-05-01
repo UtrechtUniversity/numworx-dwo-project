@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.5.1//EN" "http://google-web-toolkit.googlecode.com/svn/tags/2.5.1/distro-source/core/src/gwt-module.dtd">
-<module rename-to="Trifork" >
+<module rename-to="DWOplayer" >
 
 	<inherits name="com.google.gwt.user.User" />
 	<inherits name="nl.uu.fi.dwo.mobile.DWOplayer-module" />
-	<inherits name="fi.graphtoolgwt.GraphToolGWT-DWO" />
 
-	<set-property name="gwt.logging.enabled" value="TRUE"/>
-	<set-property name="user.agent" value="safari" />
-	<entry-point class='nl.uu.fi.dwo.mobile.TriforkPlayer'/>
+	<set-property name="gwt.logging.enabled" value="FALSE"/>
+	<entry-point class='nl.uu.fi.dwo.mobile.WiskOpdrPlayer'/>
 	
-	<replace-with class="nl.uu.fi.dwo.mobile.client.sco.TriforkAPI">
+	<replace-with class="nl.uu.fi.dwo.mobile.client.sco.SCORM_2004_API">
     	<when-type-is class="nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF"/>
     </replace-with>
  
-	<replace-with class="nl.uu.fi.dwo.mobile.client.DWOplayerDefaults">
+	<replace-with class="nl.uu.fi.dwo.mobile.client.DWOplayerScorm">
         <when-type-is class="nl.uu.fi.dwo.mobile.client.DWOplayerParameters" />
     </replace-with>
  	

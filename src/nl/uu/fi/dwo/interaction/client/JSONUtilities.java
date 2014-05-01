@@ -31,16 +31,15 @@ public class JSONUtilities {
 	private JSONUtilities() {}
 
 
-	public static JSONValue toJSONObject(Map<String, Object> value)
+	public static JSONValue toJSONObject(Map<String, ? extends Object> value)
 	{
 		if (value != null)
 		{
 			if(value instanceof JSONObjectMapImpl)
 				return ((JSONObjectMapImpl) value).unwrap();
 			
-			
 			JSONObject result = new JSONObject();
-			for (Map.Entry<String, Object> entry : value.entrySet())
+			for (Map.Entry<String, ? extends Object> entry : value.entrySet())
 			{
 				result.put(entry.getKey(), toJSONValue(entry.getValue()));
 			}
@@ -240,6 +239,15 @@ public class JSONUtilities {
 		}
 		
 		return null;
+	}
+
+
+	public static Object toJSONObject(ObjectMap innerMap) {
+		if(innerMap instanceof JSONObjectMapImpl)
+			return ((JSONObjectMapImpl) innerMap).unwrap();
+		if(innerMap instanceof ObjectMapImpl) 
+			return toJSONObject( ((ObjectMapImpl) innerMap).unwrap() );
+		return JSONNull.getInstance();
 	}
 	
 	

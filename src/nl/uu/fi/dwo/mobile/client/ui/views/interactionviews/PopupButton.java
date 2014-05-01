@@ -25,7 +25,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Touch;
 
-public class PopupButton extends Composite implements ClickHandler, PositionCallback, TouchStartHandler, MouseDownHandler {
+public class PopupButton extends Composite implements ClickHandler, TouchStartHandler, MouseDownHandler {
 
 	ButtonBase btn;
 	IsWidget content;
@@ -77,19 +77,11 @@ public class PopupButton extends Composite implements ClickHandler, PositionCall
 		if(!box.isShowing() && view != null && state != null)
 			view.setState(state);
 		if(!box.isShowing() )
-				box.setPopupPositionAndShow(this);		
+				box.showRelativeTo(this);		
 	}
 
 	public void hide() {
 		if(box != null) box.hide();
-	}
-
-	@Override
-	public void setPosition(int offsetWidth, int offsetHeight) {
-		logger.info("position wordt" + clientX + "," + clientY);
-		logger.info("content = " + content.asWidget().getOffsetHeight());
-		box.setPopupPosition(clientX-5, clientY-5);
-		
 	}
 
 	@Override

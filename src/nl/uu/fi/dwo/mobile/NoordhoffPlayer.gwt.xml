@@ -7,7 +7,15 @@
 	
 	<entry-point class='nl.uu.fi.dwo.mobile.NoordhoffPlayer'/>
 	
-	 <replace-with class="nl.uu.fi.dwo.mobile.client.sco.SCORM_guest">
+	 <replace-with class="nl.uu.fi.dwo.mobile.client.sco.AssetAPI">
     	<when-type-is class="nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF"/>
     </replace-with>
+
+	 
+	<replace-with class="nl.uu.fi.dwo.mobile.client.DWOplayerNoordhoff">
+        <when-type-is class="nl.uu.fi.dwo.mobile.client.DWOplayerParameters" />
+    </replace-with>
+ 
+	 
+	 
 </module>

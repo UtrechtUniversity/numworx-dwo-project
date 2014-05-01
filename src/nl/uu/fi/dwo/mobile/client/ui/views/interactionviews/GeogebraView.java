@@ -5,6 +5,7 @@ import java.util.Map;
 
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 import com.google.gwt.event.dom.client.LoadEvent;
@@ -82,7 +83,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 		if(object instanceof Number) scoreMax = ((Number) object).intValue();
 		
 		
-		frame = new Frame("SlopeTestWeb.html");
+		frame = new Frame(DWOplayer.PARAMETERS.getStubView() + "SlopeTestWeb.html");
 		frame.setStylePrimaryName(".gwt-StubView");
 		frame.addStyleDependentName("borderless");
 
