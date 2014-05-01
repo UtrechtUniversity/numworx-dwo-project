@@ -39,12 +39,11 @@
 		<resource
 			identifier="RES-{10}"
 			type="webcontent"
-			href="sco/sco.html"
+			href="sco.html"
 			adlcp:scormType="sco"
 		>
-			<file href="sco/sco.html" />
-			<file href="sco/sco.xml" />
-			<file href="http://ws.fisme.science.uu.nl/dwo/jars/{2}" />
+			<file href="sco.html" />
+			<file href="sco.xml" />
 		</resource>
 	</resources>			
 </manifest>

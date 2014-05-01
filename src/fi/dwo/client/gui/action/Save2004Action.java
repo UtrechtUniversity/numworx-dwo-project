@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.MessageFormat;
@@ -72,7 +73,7 @@ public class Save2004Action extends GuiAction {
 		if(scormChooser == null)
 		{
 			scormChooser = new ScormChooser();
-			//scormChooser.scorm2004.setEnabled(false);
+			scormChooser.html5.setEnabled(false);
 		}
 		this.sco = sco; // design error: sco is een parameter, geen field!  
 		
@@ -101,7 +102,8 @@ public class Save2004Action extends GuiAction {
 			
 			ScormParameters runner = new ScormParameters();
 			runner.setSco(sco);
-			runner.setBase("http://www.staff.science.uu.nl/~velth101/war/");
+			String scormURL = "http://www.staff.science.uu.nl/~velth101/war/";
+			runner.setBase(scormURL);
 			runner.setUser(GuiCreator.instance().getUser());
 			
 // manifest
@@ -113,7 +115,7 @@ public class Save2004Action extends GuiAction {
 			runner.copy(au.getStream("resources/metadata.txt"), out);
 			out.closeEntry();
 // sco
-			out.putNextEntry(new ZipEntry("sco/sco.html"));
+			out.putNextEntry(new ZipEntry("sco.html"));
 // sco.txt is profiel afhankelijk!
 			int profile = sco.getCourse().getDwoProfile();
 			InputStream in = au.getStream("resources/html5-" + profile + ".txt");
@@ -122,7 +124,7 @@ public class Save2004Action extends GuiAction {
 			runner.copy(in, out);
 			out.closeEntry();
 
-			out.putNextEntry(new ZipEntry("sco/sco.xml"));
+			out.putNextEntry(new ZipEntry("sco.xml"));
 			Map ld = new HashMap(runner.getLaunchData());
 			OutputStreamWriter wr = new OutputStreamWriter(out, ScormParameters.UTF8);
 			JSONEncoder.encode(ld, wr);
@@ -135,18 +137,21 @@ public class Save2004Action extends GuiAction {
 	        		"adlcp_v1p3.xsd",
 	        		"imscp_v1p1.xsd",
 	        		"imsmd_v1p2p4.xsd",
-// sco/plugin?
-	        		};
+	        };
 	        
-	        for (int i=0; i<scormFileNames.length; i++) 
-	        {	String htmlSourceString = HTML_SOURCE + scormFileNames[i];
-	        	URL htmlSource = new URL(htmlSourceString);
-	        	URLConnection connection = htmlSource.openConnection();
-	        	in =  connection.getInputStream();
-	        	out.putNextEntry(new ZipEntry(scormFileNames[i]));
-	        	runner.rawCopy(in, out);
-	        	out.closeEntry();
-	        }
+	        copyList(out, runner, HTML_SOURCE, scormFileNames);
+	        
+	        String[] viewFileNames = {
+	        		"BalansFruitGWT.html",
+	        		"DoorzienGWT.html",
+	        		"GraphToolGWT.html",
+	        		"KladjeGWT.html",
+	        		"NabouwenAanzichten.html",
+	        		"SlopeTestWeb.html", // FIXME: other name!
+	        		// TODO more html files
+	        };
+	        copyList(out, runner, scormURL, viewFileNames);
+	        
 		
 			out.close();
 		} catch (IOException e) {
@@ -154,6 +159,21 @@ public class Save2004Action extends GuiAction {
 			e.printStackTrace();
 		}
 		
+	}
+
+	private void copyList(ZipOutputStream out, ScormParameters runner,
+			String HTML_SOURCE, String[] scormFileNames)
+			throws MalformedURLException, IOException {
+		InputStream in;
+		for (int i=0; i<scormFileNames.length; i++) 
+		{	String htmlSourceString = HTML_SOURCE + scormFileNames[i];
+			URL htmlSource = new URL(htmlSourceString);
+			URLConnection connection = htmlSource.openConnection();
+			in =  connection.getInputStream();
+			out.putNextEntry(new ZipEntry(scormFileNames[i]));
+			runner.rawCopy(in, out);
+			out.closeEntry();
+		}
 	}
 
 	public void createZip(String zipName)
@@ -419,15 +439,7 @@ public class Save2004Action extends GuiAction {
 	        		"sco/Image8.png"
 	        		};
 	        
-	        for (int i=0; i<scormFileNames.length; i++) 
-	        {	String htmlSourceString = HTML_SOURCE + scormFileNames[i];
-	        	URL htmlSource = new URL(htmlSourceString);
-	        	URLConnection connection = htmlSource.openConnection();
-	        	in =  connection.getInputStream();
-	        	out.putNextEntry(new ZipEntry(scormFileNames[i]));
-	        	runner.rawCopy(in, out);
-	        	out.closeEntry();
-	        }
+	        copyList(out, runner, HTML_SOURCE, scormFileNames);
 		
 			out.close();
 		} catch (IOException e) {

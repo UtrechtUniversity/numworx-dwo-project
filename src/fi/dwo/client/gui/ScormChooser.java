@@ -25,7 +25,7 @@ import javax.swing.filechooser.FileFilter;
  */
 public class ScormChooser extends JFileChooser  {
 
-	JRadioButton scorm12, scorm2004, html5;
+	public JRadioButton scorm12, scorm2004, html5;
 	
 	
 	
@@ -38,7 +38,7 @@ public class ScormChooser extends JFileChooser  {
 		setDialogType(SAVE_DIALOG);
 		scorm12 = new JRadioButton("Scorm 1.2", true);
 		scorm2004  = new JRadioButton("Scorm 2004");
-		html5 = new JRadioButton("HTML 5");
+		html5 = new JRadioButton("HTML5");
 		ButtonGroup group = new ButtonGroup();
 		group.add(scorm12);
 		group.add(scorm2004);
