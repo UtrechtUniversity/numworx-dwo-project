@@ -18,6 +18,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Array;
@@ -138,7 +139,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 		
 	}
 	
-	byte[] NULL = new byte[0];
+	static byte[] NULL = new byte[0];
 
 	private static final String PNG = "png";
 	DbAccessIF access;
@@ -186,8 +187,20 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	
 	byte[] getLaunchDataBytes( int scoid ) throws IOException, XmlRpcException, SQLException 
 	{
-		ExtraScoMapper mapper = new ExtraScoMapper();
-		return mapper.getLaunchDataBytes( scoid );
+		byte[] bytes = extraScoMapper.getLaunchDataBytes( scoid );
+		if(bytes.length == 0)
+		{
+// SLOW.....	
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			GZIPOutputStream zip = new GZIPOutputStream(bos);
+			OutputStreamWriter out = new OutputStreamWriter(zip, UTF_8);
+			@SuppressWarnings("rawtypes")
+			Map map = getLaunchData_int(scoid);
+			JSONEncoder.encode(map, out);
+			out.close();
+			bytes = bos.toByteArray();
+		}
+		return bytes;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -447,6 +460,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 
 	private Class<Applet> lastClass;
 	private String lastName;
+	private final ExtraScoMapper extraScoMapper = new ExtraScoMapper();
 	/**
 	 * Laad applet die bij sco hoort.
 	 * Caching last class d.m.v. lastClass/lastName.
