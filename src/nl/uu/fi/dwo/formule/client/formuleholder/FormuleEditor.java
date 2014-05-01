@@ -226,6 +226,8 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 	public void insert(char charAt) {
 		addElement(new FormuleTeken(getCurrentRegel(), charAt));
 	}
+	
+	
 
 
 	@Override

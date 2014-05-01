@@ -801,4 +801,25 @@ public class FormuleEditorWithSteps implements InteractionView
 	{
 		return facade.wrap(getAsPanel());
 	}
+	
+	@Override
+	public int getAsHoogte() {
+		return viewers.get(0).getAsHoogte();
+		//hier evt ook nog prefixviewers bij. En iets voor als viewers.get(0) niet bestaat?
+	}
+
+	@Override
+	public int getHeight() {
+		return hoogte;
+	}
+
+	@Override
+	public int getWidth() {
+		return breedte;
+	}
+
+	@Override
+	public void setAsHoogte(int ashoogte) {
+		viewers.get(0).setAsHoogte(ashoogte);
+	}
 }

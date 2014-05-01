@@ -1138,4 +1138,10 @@ public class FormuleRegel extends FormuleElement
 		this.minW = minW;
 		this.setSize(width,height);
 	}
+
+	@Override
+	public void setAsHoogte(int ashoogte) {
+		super.setAsHoogte(ashoogte);
+	}
+
 }

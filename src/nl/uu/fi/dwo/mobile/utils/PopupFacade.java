@@ -114,5 +114,25 @@ public class PopupFacade implements InteractionView {
 	public Widget asWidget() {
 		return wrap(delegate.asWidget());
 	}
+
+	@Override
+	public int getAsHoogte() {
+		return asWidget().getOffsetHeight() / 2;
+	}
+
+	@Override
+	public int getHeight() {
+		return asWidget().getOffsetHeight();
+	}
+
+	@Override
+	public int getWidth() {
+		return asWidget().getOffsetWidth();
+	}
+
+	@Override
+	public void setAsHoogte(int ashoogte) {
+		
+	}
 	
 }

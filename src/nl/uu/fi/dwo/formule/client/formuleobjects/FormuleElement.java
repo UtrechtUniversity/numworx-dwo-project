@@ -4,6 +4,7 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
+import nl.uu.fi.dwo.interaction.client.TekstElement;
 import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
 
 import com.google.gwt.canvas.client.Canvas;
@@ -17,7 +18,7 @@ import com.google.gwt.user.client.ui.Panel;
  * @author Danny Hendrix
  * 
  */
-public abstract class FormuleElement
+public abstract class FormuleElement implements TekstElement
 {
 	protected Canvas canvas;
 	protected Context2d ctx;

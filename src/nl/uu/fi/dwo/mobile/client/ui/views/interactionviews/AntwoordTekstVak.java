@@ -703,6 +703,30 @@ public class AntwoordTekstVak implements InteractionStub{
 	public Widget asWidget() {
 		return basisPanel;
 	}
+
+
+	@Override
+	public int getAsHoogte() {
+		return ashoogte;
+	}
+
+
+	@Override
+	public int getHeight() {
+		return hoogte;
+	}
+
+
+	@Override
+	public int getWidth() {
+		return breedte;
+	}
+
+
+	@Override
+	public void setAsHoogte(int ashoogte) {
+		this.ashoogte = ashoogte;
+	}
 	
 	
 }

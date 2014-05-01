@@ -4,6 +4,7 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
+import nl.uu.fi.dwo.interaction.client.TekstElement;
 import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
 
 import com.google.gwt.canvas.client.Canvas;
@@ -18,7 +19,7 @@ import com.google.gwt.user.client.ui.Panel;
  * @author Danny Hendrix
  * 
  */
-public class FormuleHolder
+public class FormuleHolder implements TekstElement
 {
 	public static void installKeyboard(FormuleKeyboardIF keyb) {
 		kb = keyb;
@@ -172,5 +173,25 @@ public class FormuleHolder
 
 	public boolean hasSelection() {
 		return this.hasSelection;
+	}
+
+	@Override
+	public int getAsHoogte() {
+		return main.getAsHoogte();
+	}
+
+	@Override
+	public int getHeight() {
+		return main.height;
+	}
+
+	@Override
+	public int getWidth() {
+		return main.width;
+	}
+
+	@Override
+	public void setAsHoogte(int ashoogte) {
+		main.setAsHoogte(ashoogte);
 	}
 }

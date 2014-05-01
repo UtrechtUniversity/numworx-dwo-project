@@ -410,4 +410,23 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		insert("$S$n$k$l@@@@");
 	}
 	
+	@Override
+	public int getAsHoogte() {
+		return 0;
+	}
+
+	@Override
+	public int getHeight() {
+		return height;
+	}
+
+	@Override
+	public int getWidth() {
+		return width;
+	}
+
+	@Override
+	public void setAsHoogte(int ashoogte) {
+		//this.ashoogte = ashoogte;
+	}
 }

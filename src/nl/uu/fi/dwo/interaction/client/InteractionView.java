@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
-public interface InteractionView extends IsWidget
+public interface InteractionView extends IsWidget, TekstElement
 {
 
 	public HashMap<String, Object> getState();

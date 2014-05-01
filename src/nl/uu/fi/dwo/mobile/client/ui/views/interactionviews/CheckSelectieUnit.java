@@ -59,7 +59,8 @@ public class CheckSelectieUnit implements InteractionStub
 	
 	private LayoutPanel basisPanel;
 	int breedte = 110;
-	int hoogte = 24; 	
+	int hoogte = 24; 
+	int ashoogte = hoogte /2;
 	
 	private int mode;
 	    
@@ -556,14 +557,12 @@ public class CheckSelectieUnit implements InteractionStub
 		if(knopImageString!=null && !"".equals(knopImageString))
        	{  	knopImage = new ImageView(knopImageString).getImage();
 			imWidth = knopImage.getWidth();
-			System.out.println("imWidth 1: " + imWidth);
 			imHeight = knopImage.getHeight();
-			if(imWidth == -1) imWidth = 80;
-			System.out.println("imWidth 2: " + imWidth);
-			if(imHeight == -1) imHeight = 20;
-			//checkButton.setSize(imWidth,imHeight);
-			//zetMaat();
-	    }
+			if(imWidth == -1) 
+				imWidth = 80;
+			if(imHeight == -1) 
+				imHeight = 20;
+		}
 		if(knopImage != null)
 		{	checkButton = new PushButton(knopImage);
 			checkButton.getElement().getStyle().setPadding(0, Style.Unit.PX);
@@ -674,5 +673,25 @@ public class CheckSelectieUnit implements InteractionStub
 		Stub.publish(this);
 	}
 	*/
+
+	@Override
+	public int getAsHoogte() {
+		return ashoogte;
+	}
+
+	@Override
+	public int getHeight() {
+		return hoogte;
+	}
+
+	@Override
+	public int getWidth() {
+		return breedte;
+	}
+
+	@Override
+	public void setAsHoogte(int ashoogte) {
+		this.ashoogte = ashoogte;
+	}
 
 }

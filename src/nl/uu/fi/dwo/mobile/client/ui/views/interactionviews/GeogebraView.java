@@ -188,5 +188,25 @@ public class GeogebraView implements InteractionView, LoadHandler
 	private native static void reset(Object js) /*-{
 		return js.reset();
 	}-*/;
+	
+	@Override
+	public int getAsHoogte() {
+		return 0;
+	}
+
+	@Override
+	public int getHeight() {
+		return mainPanel.getOffsetHeight();
+	}
+
+	@Override
+	public int getWidth() {
+		return mainPanel.getOffsetWidth();
+	}
+
+	@Override
+	public void setAsHoogte(int ashoogte) {
+		//this.ashoogte = ashoogte;
+	}
 
 }

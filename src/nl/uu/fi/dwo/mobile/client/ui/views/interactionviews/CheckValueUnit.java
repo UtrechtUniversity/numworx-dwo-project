@@ -43,7 +43,8 @@ public class CheckValueUnit implements InteractionStub{
 	
 	private LayoutPanel basisPanel;
 	int breedte = 110;
-	int hoogte = 24; 	
+	int hoogte = 24; 
+	int ashoogte = hoogte / 2;
 	
 	private int mode;
     
@@ -569,4 +570,24 @@ public class CheckValueUnit implements InteractionStub{
     public void kijkNa(int stapNr)
     { 	kijkNa();
     }
+    
+    @Override
+	public int getAsHoogte() {
+		return ashoogte;
+	}
+
+	@Override
+	public int getHeight() {
+		return hoogte;
+	}
+
+	@Override
+	public int getWidth() {
+		return breedte;
+	}
+
+	@Override
+	public void setAsHoogte(int ashoogte) {
+		this.ashoogte = ashoogte;
+	}
 }

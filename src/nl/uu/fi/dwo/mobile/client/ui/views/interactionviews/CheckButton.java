@@ -37,6 +37,7 @@ public class CheckButton implements InteractionStub
 	private LayoutPanel basisPanel;
 	int breedte = 110;
 	int hoogte = 24; 
+	int ashoogte = hoogte/2;//nog kijken naar zinnige invulling hiervoor. (En hoe is dit in wiskOpdr gedaan?)
 	
 	private PushButton checkButton;
 	private String knopImageString = "";
@@ -152,5 +153,25 @@ public class CheckButton implements InteractionStub
 	public void kijkNa() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public int getAsHoogte() {
+		return ashoogte;
+	}
+
+	@Override
+	public int getHeight() {
+		return hoogte;
+	}
+
+	@Override
+	public int getWidth() {
+		return breedte;
+	}
+
+	@Override
+	public void setAsHoogte(int ashoogte) {
+		this.ashoogte = ashoogte;
 	}
 }
