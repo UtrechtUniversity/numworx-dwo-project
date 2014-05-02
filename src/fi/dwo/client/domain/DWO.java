@@ -1360,7 +1360,7 @@ private static boolean isValidEmail(String email) {
     	}
     	if(LEARNER_NAME.equals(iDataModelElement))
     	{
-    		return getUser().getName();
+    		return getUser().getStudentName();
     	}
     	
         if(iDataModelElement.equals(SCORM12APIInterface.USER_GROUP)) {

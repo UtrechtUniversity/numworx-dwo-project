@@ -87,6 +87,17 @@ public class User implements UserGroup, Comparable {
             return firstname + " " + middleName + " " + lastName;
         }
     }
+    
+    public String getStudentName() {
+    	// in Scorm 1.2 format
+        if ((middleName == null) || middleName.trim().equals("")) {
+            return lastName.trim() + ", " + firstname.trim();
+        } else {
+            return middleName.trim() + " " + lastName.trim() + ", " + firstname.trim();
+        }
+    	
+    }
+    
 
     /**
      * Returns the unique-identifier for the UserGroup object.
