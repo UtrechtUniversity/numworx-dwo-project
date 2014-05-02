@@ -17,6 +17,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSte
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.GeogebraView;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TextEditor;
 //import fi.kladjegwt.client.KladjeGWT;
 //import fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT;
 
@@ -243,6 +244,10 @@ public class TekstBuffer
 		
 		switch (soortVak)
 		{
+		case 4: 
+			return new PopupFacade(currentVakGegevens, new TextEditor( currentVakGegevens, randomVarNamen, randomVarWaarden ));
+		
+		
 		case 39: case 10: // geogebra3
 			return new GeogebraView(currentVakGegevens, randomVarNamen, randomVarWaarden);
 		case 45: // GraphTool
@@ -317,8 +322,9 @@ public class TekstBuffer
 		}
 		else if(soortVak == 14) 
 		{
-			result = new StubView("AntwoordKeuzeVakGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
-					 //new PopupFacade(currentVakGegevens,new fi.antwoordkeuzevakgwt.client.AntwoordKeuzeVakGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
+// Deze werkt niet als stub.
+			result = //new StubView("AntwoordKeuzeVakGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+					 new PopupFacade(currentVakGegevens,new fi.antwoordkeuzevakgwt.client.AntwoordKeuzeVakGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		}
 		else if(soortVak == 16)
 		{	
