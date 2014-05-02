@@ -18,6 +18,16 @@
   	<servlet-name>scormaccess</servlet-name>
   	<servlet-class>fi.servlet.dwomaccess.ScormAccess</servlet-class>
   </servlet>
+
+  	<servlet>
+      <servlet-name>ProviderServlet</servlet-name>
+      <servlet-class>fi.servlet.lti.ProviderServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+      <servlet-name>ServiceServlet</servlet-name>
+      <servlet-class>fi.servlet.lti.ServiceServlet</servlet-class>
+    </servlet>
   
   <servlet-mapping>
 	<servlet-name>image.png</servlet-name>
@@ -51,6 +61,15 @@
     <servlet-name>scormaccess</servlet-name>
     <url-pattern>/scormaccess</url-pattern>
   </servlet-mapping>
+      <servlet-mapping>
+      <servlet-name>ProviderServlet</servlet-name>
+      <url-pattern>/lti/provider/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+      <servlet-name>ServiceServlet</servlet-name>
+      <url-pattern>/lti/service/*</url-pattern>
+    </servlet-mapping>
   
   
   <!-- Default page to serve -->
