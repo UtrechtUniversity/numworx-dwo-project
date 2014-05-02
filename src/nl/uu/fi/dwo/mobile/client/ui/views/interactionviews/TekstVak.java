@@ -167,14 +167,14 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				((FormuleViewer) currentObject).setColor(fgColor);
 			}
 		}
-		bepaalAshoogte();
-		int verschuiving = hoogte - ashoogte;
+		//bepaalAshoogte();
+		//int verschuiving = hoogte - ashoogte;
 		for(int i = 0; i < opdrachtObjects.size(); i++)
 		{
 			Object currentObject = opdrachtObjects.get(i);
-			int objectVerschuiving = 0;
-			if(currentObject instanceof TekstElement)
-				objectVerschuiving = ((TekstElement) currentObject).getHeight()-((TekstElement) currentObject).getAsHoogte();
+			//int objectVerschuiving = 0;
+			//if(currentObject instanceof TekstElement)
+			//	objectVerschuiving = ((TekstElement) currentObject).getHeight()-((TekstElement) currentObject).getAsHoogte();
 			if(currentObject instanceof String)
 			{
 				currentObject = ((String) currentObject).replaceAll("  ", " &nbsp;");
@@ -182,8 +182,10 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				Element element = DOM.createSpan();
 				element.setInnerHTML((String) currentObject);
 				//element.getStyle().setProperty("verticalAlign", "top");
-				System.out.println("tekst = " + currentObject + ", vertical align tekst: " + (verschuiving - (font_size - tekstAshoogte)));
-				element.getStyle().setProperty("verticalAlign", "" + (verschuiving - (font_size - tekstAshoogte)) + "px");
+				//System.out.println("tekst = " + currentObject + ", vertical align tekst: " + (verschuiving - (font_size - tekstAshoogte)));
+				
+				//deze mag terug als ik per regel kan kijken:
+				//element.getStyle().setProperty("verticalAlign", "" + (verschuiving - (font_size - tekstAshoogte)) + "px");
 				//element.getStyle().setProperty("verticalAlign", "" + 0 + "px");
 				
 				flowVak.getElement().appendChild(element);
@@ -198,20 +200,26 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			}
 			else if (currentObject instanceof FormuleEditorWithAnswer)
 			{
+				int asHoogte = ((FormuleEditorWithAnswer) currentObject).getAsHoogte();
+				int hoogte = ((FormuleEditorWithAnswer) currentObject).getHeight();
+				
 				TouchPanel tp = (TouchPanel) ((FormuleEditorWithAnswer) currentObject).getAsPanel();
 				tp.getElement().getStyle().setProperty("display", "inline-block");
 				parent.getKeyboard().setEditor(((FormuleEditorWithAnswer) currentObject));
 				parent.addFormulePanelListeners(tp, ((FormuleEditorWithAnswer) currentObject));
 
 				tp.getElement().getStyle().setProperty("display", "inline-block");
-				//tp.getElement().getStyle().setProperty("verticalAlign", "top");
-				//tp.getElement().getStyle().setProperty("verticalAlign", "" + (-hoogte + asHoogte + Math.rint(font_size * 0.33) + 1) + "px");
-				tp.getElement().getStyle().setProperty("verticalAlign", "" + (verschuiving - objectVerschuiving) + "px");
+				tp.getElement().getStyle().setProperty("verticalAlign", "top");
+				tp.getElement().getStyle().setProperty("verticalAlign", "" + (-hoogte + asHoogte + Math.rint(font_size * 0.33) + 1) + "px");
+				//deze mag terug als ik per regel kan kijken:
+				//tp.getElement().getStyle().setProperty("verticalAlign", "" + (verschuiving - objectVerschuiving) + "px");
 				parent.getKeyboard().setEditor((FormuleEditorWithAnswer) currentObject);
 				flowVak.add(tp);
 			}
 			else if (currentObject instanceof FormuleViewer)
-			{	
+			{	int asHoogte = ((FormuleViewer) currentObject).getMainRegel().getAsHoogte();
+				int hoogte = ((FormuleViewer) currentObject).getMainRegel().getHeight();
+				
 				Panel a = ((FormuleViewer) currentObject).getAsPanel();
 				a.getElement().getStyle().setProperty("display", "inline-block");
 				
@@ -219,12 +227,15 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				a.getElement().getStyle().setMarginLeft(2, Style.Unit.PX);
 				a.getElement().getStyle().setMarginRight(2, Style.Unit.PX);
 				//Hieronder: gebruik f.getFontSize() ipv font_size omdat fontSize kan zijn aangepast ivm formules in Times Roman.
-				//a.getElement().getStyle().setProperty("verticalAlign", "top");
-				//a.getElement().getStyle().setProperty("verticalAlign", "" + (asHoogte - hoogte + Math.rint(f.getFontSize() * 0.33) + 1) + "px");
-				//a.getElement().getStyle().setProperty("verticalAlign", "" + (ashoogte - ((TekstElement) currentObject).getAsHoogte()) + "px");
+				a.getElement().getStyle().setProperty("verticalAlign", "top");
+				FormuleFont f = FormuleFont.createFromFontSize(font_size);
+				f.setBold(font_style == 1 || font_style == 3);
+				a.getElement().getStyle().setProperty("verticalAlign", "" + (asHoogte - hoogte + Math.rint(f.getFontSize() * 0.33) + 1) + "px");
+				//a.getElement().getStyle().setProperty("verticalAlign", "" + (asHoogte - ((TekstElement) currentObject).getAsHoogte()) + "px");
 				//int vertAlign = ((TekstElement) currentObject).getAsHoogte() - ashoogte;
 				//System.out.println("verticalAlign formuleviewer: " + vertAlign);
-				a.getElement().getStyle().setProperty("verticalAlign", "" + (verschuiving - objectVerschuiving) + "px");
+				//deze mag terug als ik per regel kan kijken:
+				//a.getElement().getStyle().setProperty("verticalAlign", "" + (verschuiving - objectVerschuiving) + "px");
 				flowVak.add(a);
 			}
 			else if (currentObject instanceof FormuleEditorWithSteps)
@@ -232,14 +243,16 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				Panel a = ((FormuleEditorWithSteps) currentObject).getAsPanel();
 				
 				a.getElement().getStyle().setProperty("display", "inline-block");
-				a.getElement().getStyle().setProperty("verticalAlign", "" + (verschuiving - objectVerschuiving) + "px");
+				a.getElement().getStyle().setProperty("verticalAlign", "top");
+				//deze mag terug als ik per regel kan kijken:
+				//a.getElement().getStyle().setProperty("verticalAlign", "" + (verschuiving - objectVerschuiving) + "px");
 				flowVak.add(a);
 			}
 			else if (currentObject.getClass().getName().equals("fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT"))
 			{
 				Panel a = (Panel) (((InteractionView) currentObject).asWidget());
 				a.getElement().getStyle().setProperty("display", "inline-block");
-				//a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
+				a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
 				flowVak.add(a);
 			}
 			else if (currentObject instanceof InteractionView)
@@ -248,8 +261,12 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				a.getElement().getStyle().setProperty("display", "inline-block");
 				if(currentObject instanceof TekstVakPanel && !(a instanceof PopupButton))
 				{
-					a.getElement().getStyle().setProperty("verticalAlign", "" + (verschuiving - objectVerschuiving) + "px");
-					//a.getElement().getStyle().setProperty("verticalAlign", "top");
+					int h = ((TekstVakPanel)currentObject).getHeight();
+					int tekstGrootte = ((TekstVakPanel) currentObject).getFontSize();
+					//deze mag terug als ik pe rregel kan kijken:
+					//a.getElement().getStyle().setProperty("verticalAlign", "" + (verschuiving - objectVerschuiving) + "px");
+					a.getElement().getStyle().setProperty("verticalAlign", "top");
+					a.getElement().getStyle().setProperty("verticalAlign", (tekstGrootte - h + 1) + "px");
 					//a.getElement().getStyle().setProperty("verticalAlign", "" + (((TekstElement) currentObject).getAsHoogte() - ashoogte) + "px");
 				}
 				if(currentObject instanceof TekstVakPanel && ((TekstVakPanel) currentObject).isZwevend())
@@ -280,6 +297,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		}
 	}
 	
+	/*
 	public void bepaalAshoogte()
 	{
 		//int b = 1; Breedte hoef ik volgens mij niet te regelen, omdat ik alles in een flowpanel zet.
@@ -320,6 +338,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		System.out.println("berekende ashoogte: " + ashoogte);
 		
 	}
+	*/
 	
 	
 	public int getAsHoogte()
