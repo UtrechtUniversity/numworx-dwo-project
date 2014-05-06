@@ -73,7 +73,8 @@ public class Save2004Action extends GuiAction {
 		if(scormChooser == null)
 		{
 			scormChooser = new ScormChooser();
-			scormChooser.html5.setEnabled(false);
+			//scormChooser.html5.setEnabled(false);
+			scormChooser.html5.setText("Noordhoff HTML5");
 		}
 		this.sco = sco; // design error: sco is een parameter, geen field!  
 		
@@ -86,7 +87,7 @@ public class Save2004Action extends GuiAction {
 			String naam = file.getName();
 			if(naam.lastIndexOf(".")>-1)naam = naam.substring(0,naam.indexOf("."));
 			if(ishtml5)
-				createHtml5(file);
+				createHtml5(file, "noordhoff");
 			else if(is2004)
 				createScorm2004(file);
 			else
@@ -94,15 +95,15 @@ public class Save2004Action extends GuiAction {
 		}		
 	}
 
-	private void createHtml5(File file) {
+	private void createHtml5(File file, String variant) {
 		try {
 			ZipOutputStream out = new ZipOutputStream(new FileOutputStream(file));
-
 			AppletUtil au = DwoHelper.getAu();
 			
 			ScormParameters runner = new ScormParameters();
 			runner.setSco(sco);
-			String scormURL = "http://www.staff.science.uu.nl/~velth101/war/";
+			String id = Integer.toString(sco.getID());
+			String scormURL = "http://www.fisme.science.uu.nl/dwo/apps/" + variant + "/";
 			runner.setBase(scormURL);
 			runner.setUser(GuiCreator.instance().getUser());
 			
@@ -115,16 +116,16 @@ public class Save2004Action extends GuiAction {
 			runner.copy(au.getStream("resources/metadata.txt"), out);
 			out.closeEntry();
 // sco
-			out.putNextEntry(new ZipEntry("sco.html"));
+			out.putNextEntry(new ZipEntry(id + ".html"));
 // sco.txt is profiel afhankelijk!
 			int profile = sco.getCourse().getDwoProfile();
-			InputStream in = au.getStream("resources/html5-" + profile + ".txt");
+			InputStream in = au.getStream("resources/" + variant  + "-" + profile + ".txt");
 			if(in == null)
-				in = au.getStream("resources/html5.txt");
+				in = au.getStream("resources/"  + variant + ".txt");
 			runner.copy(in, out);
 			out.closeEntry();
 
-			out.putNextEntry(new ZipEntry("sco.xml"));
+			out.putNextEntry(new ZipEntry(id + ".xml"));
 			Map ld = new HashMap(runner.getLaunchData());
 			OutputStreamWriter wr = new OutputStreamWriter(out, ScormParameters.UTF8);
 			JSONEncoder.encode(ld, wr);
@@ -167,12 +168,17 @@ public class Save2004Action extends GuiAction {
 		InputStream in;
 		for (int i=0; i<scormFileNames.length; i++) 
 		{	String htmlSourceString = HTML_SOURCE + scormFileNames[i];
-			URL htmlSource = new URL(htmlSourceString);
-			URLConnection connection = htmlSource.openConnection();
-			in =  connection.getInputStream();
-			out.putNextEntry(new ZipEntry(scormFileNames[i]));
-			runner.rawCopy(in, out);
-			out.closeEntry();
+			try {
+				URL htmlSource = new URL(htmlSourceString);
+				URLConnection connection = htmlSource.openConnection();
+				in =  connection.getInputStream();
+				out.putNextEntry(new ZipEntry(scormFileNames[i]));
+				runner.rawCopy(in, out);
+				out.closeEntry();
+			} catch (Exception e) {
+				System.err.println( "Error in " + htmlSourceString);
+				System.err.println(e);
+			}
 		}
 	}
 

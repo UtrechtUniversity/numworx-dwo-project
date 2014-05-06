@@ -13,7 +13,7 @@
 			<catalog>URI</catalog>
 			<entry>
 				<langstring xml:lang="x-none">
-						urn:freudenthal.nl-{9}-{1}-{10}
+						urn:freudenthal.nl-{9}-{4}-{10}
 				</langstring>
 			</entry>
 		</catalogentry>
@@ -21,9 +21,6 @@
 		<description>
 			<langstring xml:lang="{11}">{5}</langstring>
 		</description>
-		<keyword>
-			<langstring xml:lang="{11}">{1}</langstring>
-		</keyword>
 		<aggregationlevel>
 			<source>
 				<langstring xml:lang="x-none">LOMv1.0</langstring>
