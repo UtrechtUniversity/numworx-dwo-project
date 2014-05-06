@@ -3,23 +3,19 @@ package nl.uu.fi.dwo.mobile.client.ui;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleTeken;
-import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Breukvak;
-import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Haakjesvak;
-import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.IntegraalVak;
-import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Kwadraatvak;
-import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Machtvak;
-import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeWortelVak;
-import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.WortelVak;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
+import nl.uu.fi.dwo.interaction.client.touch.TouchCancelEvent;
+import nl.uu.fi.dwo.interaction.client.touch.TouchEndEvent;
+import nl.uu.fi.dwo.interaction.client.touch.TouchMoveEvent;
 import nl.uu.fi.dwo.interaction.client.touch.TouchStartEvent;
-import nl.uu.fi.dwo.interaction.client.touch.TouchStartHandler;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
+import nl.uu.fi.dwo.interaction.client.touch.TouchHandler;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Image;
+
+import static nl.uu.fi.dwo.mobile.utils.ImageUtils.newImage;
 
 /**
  * Button implementations for the keyboard
@@ -32,7 +28,7 @@ public abstract class FormuleKeyBoardButtons
 	private static HashMap<String, String> buttonImages;
 	private static HashMap<String, String> buttonTexts;
 
-	private static class ButtonListener implements TouchStartHandler
+	private static class ButtonListener implements TouchHandler
 	{
 		private String code;
 		private FormuleKeyboard kb;
@@ -44,13 +40,10 @@ public abstract class FormuleKeyBoardButtons
 		}
 
 		@Override
-		public void onTouchStart(TouchStartEvent event)
+		public void onTouchEnd(TouchEndEvent event)
 		{
-			if(TouchStartEvent.isSupported())
-			{
-				event.preventDefault();
+				//event.preventDefault();
 				event.stopPropagation();
-			}
 			
 			final FormuleEditorIF editor = kb.getEditor();
 			if (code.equals("wortel") == true)
@@ -158,6 +151,24 @@ public abstract class FormuleKeyBoardButtons
 			else if (code.length() == 1)
 				editor.insert(code.charAt(0));
 		}
+
+		@Override
+		public void onTouchStart(TouchStartEvent event) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onTouchMove(TouchMoveEvent event) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onTouchCanceled(TouchCancelEvent event) {
+			// TODO Auto-generated method stub
+			
+		}
 	}
 
 	private static void setUp()
@@ -216,6 +227,9 @@ public abstract class FormuleKeyBoardButtons
 
 		buttonTexts = new HashMap<String, String>();
 		buttonTexts.put("key", "value");
+
+		DWOplayer.PARAMETERS.keyboardSetup();
+		
 	}
 
 	public static TouchButton getButton(String key, FormuleKeyboard kb)
@@ -231,28 +245,28 @@ public abstract class FormuleKeyBoardButtons
 
 		if (buttonImages.containsKey(key) == true){
 			b = getImageButton(buttonImages.get(key));
-			b.getElement().getStyle().setBackgroundImage("url(images/resources/buttongradient.png)");
+			//b.getElement().getStyle().setBackgroundImage("url(images/resources/buttongradient.png)");
 		}
 		else if (buttonTexts.containsKey(key) == true){
 			b = getNewButton(buttonTexts.get(key));
-			b.getElement().getStyle().setBackgroundImage("url(images/resources/buttongradient.png)");
+			//b.getElement().getStyle().setBackgroundImage("url(images/resources/buttongradient.png)");
 		}
 		else
 		{
 			b = getNewButton(key);
 			if (key.length() == 1 && Character.isDigit(key.charAt(0))){
 				b.getElement().addClassName("numeric");
-				b.getElement().getStyle().setBackgroundImage("url(images/resources/numericbuttongradient.png)");
+				//b.getElement().getStyle().setBackgroundImage("url(images/resources/numericbuttongradient.png)");
 			}
-			else b.getElement().getStyle().setBackgroundImage("url(images/resources/buttongradient.png)"); 
+			//else b.getElement().getStyle().setBackgroundImage("url(images/resources/buttongradient.png)"); 
 				
 		}
 		
 		
 		if (disabled.contains(key)){
 			b.getElement().addClassName("disabled");
-			b.getElement().getStyle().setBackgroundImage(null); 
-			b.getElement().getStyle().setBackgroundColor(CssColor.make(160,162,168).toString()); 
+			//b.getElement().getStyle().setBackgroundImage(null); 
+			//b.getElement().getStyle().setBackgroundColor(CssColor.make(160,162,168).toString()); 
 		}
 		if (key == "apply")
 			b.getElement().addClassName("apply");
@@ -260,7 +274,7 @@ public abstract class FormuleKeyBoardButtons
 		if (key.equals("backspace") || key.equals("back"))
 			b.getElement().getStyle().setProperty("textAlign", "right");
 
-		b.addTouchStartHandler(listener);
+		b.addTouchHandler(listener);
 		return b;
 	}
 
@@ -271,21 +285,39 @@ public abstract class FormuleKeyBoardButtons
 		//b.setText(t);
 		b.getElement().setInnerText(t);
 		b.getElement().getStyle().setFloat(Style.Float.LEFT);
-		b.getElement().addClassName("button");
+		b.getElement().addClassName("buttonWN");
 		return b;
 	}
 
 	public static TouchButton getImageButton(String src)
 	{
-		TouchButton b = getNewButton("");
-		Image img = new Image(src);
-		img.setHeight("16px");
+		TouchButton b = new TouchButton();
+		b.getElement().addClassName("buttonWN");
+		b.getElement().getStyle().setFloat(Style.Float.LEFT);
+		Image img = newImage(src);
+		img.setHeight("48px"); // fixed WN size!
 		if("images/resources/zoomuitknop.gif".equals(src) || "images/resources/zoominknop.gif".equals(src))
 		{
 			img.setHeight("32px");
 		
 		}
-		b.getElement().appendChild(img.getElement());
+		b.getElement().appendChild(img.getElement()); // geen b.add(img);
 		return b;
+	}
+
+	public static void setupWN() {
+		// Noordhoff extra's				
+				buttonImages.put(FormuleKeyboard.VVV, "images/resources/hidekeyboard.jpg");
+				buttonImages.put("kwadraat", "images/resources/icon-2.jpg");
+				buttonImages.put("pi", "images/resources/pi.jpg");
+				buttonImages.put("wortel", "images/resources/wortel.jpg");
+				buttonImages.put("macht", "images/resources/icon.jpg");
+				buttonImages.put("breuk", "images/resources/icon-3.jpg");
+				buttonImages.put("ndewortel", "images/resources/wortel2.jpg");
+		//"\u2264", "\u2265", "\u00b1"
+				buttonImages.put("\u2248", "images/resources/ongeveer.jpg");
+				buttonImages.put("\u2264", "images/resources/le.jpg"); // FIXME ONTBREEKT 
+				buttonImages.put("\u2265", "images/resources/__.jpg");
+				buttonImages.put("\u00B1", "images/resources/+-.jpg");
 	}
 }

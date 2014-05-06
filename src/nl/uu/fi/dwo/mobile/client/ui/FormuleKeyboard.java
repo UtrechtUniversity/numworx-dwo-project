@@ -158,6 +158,23 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 
 	};
 
+	
+	private String[][] buttonCodesWN = 
+		{
+			{
+				"macht", "breuk", "wortel", "ndewortel", "pi", "kwadraat", "\u2264", "\u2265", "\u00b1", "\u2248" 
+			}
+		};
+	
+	
+	private double[][] buttonWidthsWN = 
+		{
+			{
+				1,1,1,1,1,1,1,1,1,1
+			}
+		};
+
+	
 	public Panel getAsPanel()
 	{
 		Logger.getLogger("FormuleKeyboard").log(Level.INFO," Create kb panel");
@@ -166,10 +183,10 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 			return tp.getPanel();
 		}
 		tp = new KeyBoardTabPanel();
-		tp.getPanel().getElement().getStyle().setBackgroundImage("images/resources/footerbgimage.png");
+		// FIXME CSS tp.getPanel().getElement().getStyle().setBackgroundImage("images/resources/footerbgimage.png");
 
 		if(hasKeyboard)
-			tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodesGR, buttonWidthsGR));
+			tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodesWN, buttonWidthsWN)); // was GR
 		else
 			tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodes, buttonWidths));
 
@@ -228,7 +245,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	{
 		int defwidth = 16;
 		int padding = 16;
-
+defwidth = 52; padding = 0;
 		double width = 0;
 
 		FlowPanel fp = new FlowPanel(), fp2 = new FlowPanel();
@@ -253,8 +270,8 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 				}
 				TouchButton b = FormuleKeyBoardButtons.getButton(buttons[j][i], this);
 				width = (defwidth + 2 * padding) * widths[j][i] - 2 * padding;
-				b.setWidth(Math.round(width) + "px");
-				b.setHeight("16px");
+				//b.setWidth(Math.round(width) + "px");
+				//b.setHeight("16px");
 				if ("zoomOut".equals(buttons[j][i]) || "zoomIn".equals(buttons[j][i]))
 				{
 					b.getElement().getStyle().setWidth(32, Unit.PX);
@@ -270,7 +287,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 		sp.getElement().getStyle().setProperty("clear", "both");		
 		fp.add(sp);
 		Widget b = FormuleKeyBoardButtons.getButton(VVV, this);
-		b.setHeight("16px");
+		//b.setHeight("16px");
 		fp2.add(b);
 		
 		return fp;

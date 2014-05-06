@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.PopupButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
+import static nl.uu.fi.dwo.mobile.utils.ImageUtils.newImage;
 
 public class PopupFacade implements InteractionView {
 
@@ -84,7 +85,7 @@ public class PopupFacade implements InteractionView {
 	private Image getImage() {
 		if(popupImageString != null && popupImageString.length()>0)
 			return new ImageView(popupImageString).getImage();
-		return new Image(interactiePanelSetNames[setNr]);
+		return newImage(interactiePanelSetNames[setNr]);
 	}
 
 	public HashMap<String, Object> getState() {

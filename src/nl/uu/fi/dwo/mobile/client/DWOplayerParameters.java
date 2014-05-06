@@ -17,5 +17,17 @@ public interface DWOplayerParameters {
 	 * @return prefix
 	 */
 	String getLaunchData();
+	/**
+	 * Locatie van resources.
+	 * @return full resource url
+	 */
+	
+	String getResource(String resource);
+	
+	/**
+	 * 
+	 */
+	void keyboardSetup();
+	
 // More to come....
 }

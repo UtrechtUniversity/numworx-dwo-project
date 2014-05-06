@@ -54,79 +54,17 @@ public class KeyBoardTabPanel
 	{
 
 		contentpanel.add(tabcontentpanel);
-		contentpanel.getElement().getStyle().setBackgroundImage("url(images/resources/keyboardgradientimage-new.png)");
+		//FIXME CSS contentpanel.getElement().getStyle().setBackgroundImage("url(images/resources/keyboardgradientimage-new.png)");
 		tabcontentpanel.getElement().getStyle().setBorderWidth(0, Unit.PX);
-		//panel.getElement().getStyle().setWidth(720, Unit.PX);
-		//panel.getElement().getStyle().setDisplay(Display.BLOCK);
-		//panel.getElement().getStyle().setProperty("margin", "0px auto");
 
 		staticpanel.getElement().getStyle().setHeight(4, Style.Unit.PX);
-		staticpanel.getElement().getStyle().setBackgroundImage("url(images/resources/footerbgimage.png)");
-
-//		Image buttonImage = new Image("images/resources/keyboardbutton.png");
-//		buttonImage.getElement().getStyle().setMargin(5, Unit.PX);
-//		keyboardButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-//		keyboardButton.add(buttonImage);
-
-//		if(! FormuleKeyboard.hasKeyboard) {
-//			Image digitsImage = new Image("images/resources/digits.png");
-//			digitsImage.getElement().getStyle().setMargin(5, Unit.PX);
-//			digitsButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-//			digitsButton.add(digitsImage);
-//		}
-
-//		Image buttonRemoveImage = new Image("images/resources/keyboardremovebutton.png");
-//		buttonRemoveImage.getElement().getStyle().setMargin(5, Unit.PX);
-//		keyboardRemoveButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-//		keyboardRemoveButton.add(buttonRemoveImage);
-
-//		keyboardButton.addTouchStartHandler(new TouchStartHandler()
-//		{
-//			@Override
-//			public void onTouchStart(TouchStartEvent event)
-//			{
-//				showKeyboard();
-//			}
-//		});
-//		keyboardRemoveButton.addTouchStartHandler(new TouchStartHandler()
-//		{
-//			@Override
-//			public void onTouchStart(TouchStartEvent event)
-//			{
-//				hideKeyboard();
-//
-//			}
-//		});
-
-//		if(! FormuleKeyboard.hasKeyboard)
-//		digitsButton.addTouchStartHandler(new TouchStartHandler()
-//		{
-//
-//			@Override
-//			public void onTouchStart(TouchStartEvent event)
-//			{
-//				if(enabled)
-//					goTo(FormuleKeyboard.SCRIBBLE);
-//
-//			}
-//		});
-
-//		staticpanel.add(keyboardButton);
-//		if(! FormuleKeyboard.hasKeyboard) staticpanel.add(digitsButton);
-//		staticpanel.add(keyboardRemoveButton);
-
-		//contentpanel.setHeight("300px");
-		//tabcontentpanel.getElement().getStyle().setFloat(Style.Float.LEFT);
-		//staticpanel.getElement().getStyle().setFloat(Style.Float.RIGHT);
+		//FIXME CSS staticpanel.getElement().getStyle().setBackgroundImage("url(images/resources/footerbgimage.png)");
 
 		tabcontentpanel.getElement().addClassName("tabkeyboard");
 		panel.add(contentpanel);
-		//panel.add(tabpanel);
 		panel.add(staticpanel);
 		main.getElement().addClassName("keyboard");
 		tabpanel.getElement().addClassName("keyboardtabs");
-		//tabpanel.getElement().getStyle().setBackgroundColor(CssColor.make("gray").toString());
-		//tabpanel.getElement().getStyle().setBackgroundImage("images/resources/footerbgimage.png");
 
 		main.add(panel);
 	}
@@ -223,8 +161,6 @@ public class KeyBoardTabPanel
 	 */
 	void hideKeyboard() {
 		tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
-		//keyboardButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-		//keyboardRemoveButton.getElement().getStyle().setDisplay(Display.NONE);
 	}
 
 	public void showKeyboard() {
@@ -232,8 +168,7 @@ public class KeyBoardTabPanel
 			tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
 			tabs.get(0).getElement().getStyle().setDisplay(Display.BLOCK);
 			current = 0;
-			//keyboardRemoveButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-			//keyboardButton.getElement().getStyle().setDisplay(Display.NONE);
+
 		}
 	}
 }
