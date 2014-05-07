@@ -31,10 +31,10 @@
     postProp.setProperty("tool_consumer_instance_guid","lmsng.school.edu");
     postProp.setProperty("tool_consumer_instance_description","University of School (LMSng)");
  
-    postProp.setProperty("launch_presentation_locale","en-US");
+    postProp.setProperty("launch_presentation_locale","nl-NL");
     postProp.setProperty("launch_presentation_document_target","frame");
-    postProp.setProperty("launch_presentation_width","");
-    postProp.setProperty("launch_presentation_height","");
+    postProp.setProperty("launch_presentation_width","800");
+    postProp.setProperty("launch_presentation_height","600");
     postProp.setProperty("launch_presentation_css_url","http://www.staff.science.uu.nl/~velth101/lti/lms.css");
     postProp.setProperty("launch_presentation_return_url","http://www.staff.science.uu.nl/~velth101/lti/lms_return.php");
     
