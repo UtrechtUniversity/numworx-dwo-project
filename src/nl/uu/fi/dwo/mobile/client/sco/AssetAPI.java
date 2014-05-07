@@ -1,10 +1,14 @@
 package nl.uu.fi.dwo.mobile.client.sco;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 
 public class AssetAPI implements Scorm2004IF {
+	private static Logger logger = Logger.getLogger("AssetAPI");
 
 	private static final String DEFAULT_GUID = "017ec54cf2ee4dc5-840256df4139d38a";
 	private String guid;
@@ -43,7 +47,11 @@ public class AssetAPI implements Scorm2004IF {
 	@Override
 	public String GetValue(String name) {
 		if(Memento.SUSPEND_DATA.equals(name))
-			return GetAssetData(guid);
+			try {
+				return GetAssetData(guid);
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, "getValue " + e);
+			}
 		return "";
 	}
 
@@ -54,12 +62,16 @@ public class AssetAPI implements Scorm2004IF {
 
 	@Override
 	public String SetValue(String name, String value) {
-		if(Memento.SCORE_RAW.equals(name))
-			SetScore(guid, toScore(value));
-		else if(Memento.SUSPEND_DATA.equals(name))
-			SetAssetData(guid, value);
-		else if(Memento.COMPLETION_STATUS.equals(name))
-			SetCompleted(guid, Memento.COMPLETE.equals(value));
+		try {
+			if(Memento.SCORE_RAW.equals(name))
+				SetScore(guid, toScore(value));
+			else if(Memento.SUSPEND_DATA.equals(name))
+				SetAssetData(guid, value);
+			else if(Memento.COMPLETION_STATUS.equals(name))
+				SetCompleted(guid, Memento.COMPLETE.equals(value));
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "setValue " + name + " :" + e);
+		}
 		return "";
 	}
 
@@ -75,7 +87,11 @@ public class AssetAPI implements Scorm2004IF {
 
 	@Override
 	public String Initialize() {
-		SetInitialize(guid, Boolean.TRUE);
+		try {
+			SetInitialize(guid, Boolean.TRUE);
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "Initialize:"+e);
+		}
 		return "";
 	}
 	

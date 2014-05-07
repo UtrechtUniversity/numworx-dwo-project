@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client;
 
+import com.google.gwt.core.shared.GWT;
+
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyBoardButtons;
 
 public class DWOplayerNoordhoff extends DWOplayerDefaults implements DWOplayerParameters {
@@ -7,7 +9,8 @@ public class DWOplayerNoordhoff extends DWOplayerDefaults implements DWOplayerPa
 
 	@Override
 	public String getLaunchData() {
-		return super.getLaunchData();
+		if(GWT.isProdMode()) return  null;
+		return  super.getLaunchData();
 	}
 
 	@Override

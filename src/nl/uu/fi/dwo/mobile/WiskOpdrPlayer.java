@@ -46,6 +46,10 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 			Logger.getLogger("").addHandler(new HasWidgetsLogHandler(customLogArea));
 			logger.info("start logging");
 		}
+		if( LogConfiguration.loggingIsEnabled())	
+		{
+			RootPanel.get().add(customLogArea);
+		}
 
 		MGWTsetup();
 		view = new ViewModuleViewImpl(true).initialize();
@@ -54,10 +58,6 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 		Scorm2004IF api = view.getApi();
 		RootPanel.get().add(view);
 		
-		if( LogConfiguration.loggingIsEnabled())	
-		{
-			RootPanel.get().add(customLogArea);
-		}
 		History.addValueChangeHandler(this);
 		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 
@@ -98,16 +98,18 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 		String value = event.getValue();
 		String target = DWOplayer.PREFIX + value;
 		logger.info(value);
-		if(value == null || value.equals(""))
+		if(DWOplayer.PREFIX == null || value == null || value.equals(""))
 			setupOldView();
 		else
 			view.setupModule(value, target);
 	}
 
-	private void setupOldView() {
+	protected void setupOldView() {
 		String url = "index.xml";
 		String link = "index.xmr"; // reference.
 		String path = Window.Location.getPath();
+		while( path.startsWith("//")) // XXX Noordhoff path begint met 1 slash teveel
+			path = path.substring(1);
 		// strip basename
 		int slash = path.lastIndexOf('/');
 		//if (slash >= 0)

@@ -166,6 +166,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		 {
 			RequestBuilder.Method method = RequestBuilder.GET;
 			String url = file;
+			logger.info("request " + method + " " + url);
+			logger.fine("requesting url = " + Window.Location.getHref());
 			RequestBuilder rb = new RequestBuilder(method, url);
 			try
 			{
@@ -219,45 +221,45 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	public void preSetupModule(final String link, final String url)
 	{
-		RequestBuilder rb = new RequestBuilder(RequestBuilder.GET, link);
-		try
-		{
-			rb.sendRequest(null, new RequestCallback()
-			{
-
-				@Override
-				public void onResponseReceived(Request request, Response response)
-				{
-
-					String link = response.getText(); // another link? 
-					if (response.getStatusCode() > 399)
-						link = "";
-					int i = link.indexOf('\r');
-					if (i >= 0)
-						link = link.substring(0, i);
-					i = link.indexOf('\n');
-					if (i >= 0)
-						link = link.substring(0, i);
-					if (!link.isEmpty())
-					{
-						setupModule(link, link);
-					}
-					else
-					{
-						setupModule(url, url);
-					}
-
-				}
-
-				@Override
-				public void onError(Request request, Throwable exception)
-				{
-					setupModule(url, url);
-
-				}
-			});
-		}
-		catch (RequestException ignore)
+//		RequestBuilder rb = new RequestBuilder(RequestBuilder.GET, link);
+//		try
+//		{
+//			rb.sendRequest(null, new RequestCallback()
+//			{
+//
+//				@Override
+//				public void onResponseReceived(Request request, Response response)
+//				{
+//
+//					String link = response.getText(); // another link? 
+//					if (response.getStatusCode() > 399)
+//						link = "";
+//					int i = link.indexOf('\r');
+//					if (i >= 0)
+//						link = link.substring(0, i);
+//					i = link.indexOf('\n');
+//					if (i >= 0)
+//						link = link.substring(0, i);
+//					if (!link.isEmpty())
+//					{
+//						setupModule(link, link);
+//					}
+//					else
+//					{
+//						setupModule(url, url);
+//					}
+//
+//				}
+//
+//				@Override
+//				public void onError(Request request, Throwable exception)
+//				{
+//					setupModule(url, url);
+//
+//				}
+//			});
+//		}
+//		catch (RequestException ignore)
 		{
 			setupModule(url, url);
 		}
@@ -840,7 +842,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		contentScrollPanel.setHeight("428px");
 		//contentScrollPanel.setHeight("100%");
 		//fp.add(contentScrollPanel);
-
+		contentPanel.getElement().getStyle().clearMarginBottom();
 		Panel kbp = kb.getAsPanel();
 		kbp.setWidth("886px");
 		//fp.add(kbp);
