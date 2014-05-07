@@ -252,11 +252,11 @@ public class TekstBuffer
 			return new GeogebraView(currentVakGegevens, randomVarNamen, randomVarWaarden);
 		case 45: // GraphTool
 			return 
-					new StubView("GraphToolGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
-					//new PopupFacade( 
-					//	currentVakGegevens,
-					//		new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)
-					//);
+					//new StubView("GraphToolGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+					new PopupFacade( 
+						currentVakGegevens,
+							new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)
+					);
 			
 		case 15: 
 			return new StubView("DoorzienGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
