@@ -41,6 +41,7 @@ import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.SchoolGroup;
 import fi.dwo.client.domain.SchoolPasswdMap;
+import fi.dwo.client.gui.action.CopyLabel;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.TextMapper;
 import fi.dwo.client.system.SchoolException;
@@ -88,6 +89,10 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
 
     private JButton cancelButton;
 
+    private void addNorth(Component c) {
+    	getContentPane().add(c, BorderLayout.NORTH);
+    }
+    
     public AddSchoolDialog(Component owner, String windowTitle, String schoolName, String schoolLogin,
             SchoolPasswdMap spm, Date expire) {
         super(DwoHelper.getFrameForComponent(owner),
@@ -278,6 +283,12 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         Date  expire = school.getExpire();
                 
         AddSchoolDialog asd = new AddSchoolDialog(owner, "Schoolgegevens wijzigen", sn, sl, spm, expire);
+  
+        String id = String.valueOf(school.getSchoolID());
+        JLabel label = new JLabel(id);
+        label.addMouseListener(new CopyLabel(id));
+        asd.addNorth(label);
+        
         asd.show();
         if (asd.isConfirmed()) {
             School s = GuiCreator.instance().editSchool(school.getSchoolID(), asd.getSchoolName(), asd.getSchoolLogin(), asd.getSchoolPasswdMap(),asd.dateField.getDate());

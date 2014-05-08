@@ -45,7 +45,7 @@
     <!-- ================================= 
           target: jar              
          ================================= -->
-    <target name="jar" depends="compile, resources" description="maak een jar mbv bat file">
+    <target name="proguard_jar" depends="compile, resources" description="maak een jar mbv bat file">
     	<exec
     		executable = "cmd"
     		dir='toolfiles'
@@ -57,33 +57,32 @@
 
     </target>
 
-	
-    <!-- - - - - - - - - - - - - - - - - - 
-          target: keystore                      
-         - - - - - - - - - - - - - - - - - -->
-    <target name="keystore">
-            <property name="keystore" value="output/keys.keystore"/>
-    </target>
+	<!-- in een jar zetten -->
+	<target name='jar' depends='resources, compile, syncjc' unless='jarfile.uptodate' >
+	    <property name='manifest.codebase' value='*.fisme.science.uu.nl' />
+	    <property name='manifest.permissions' value='sandbox' />
+	    <property name='manifest.application-name' value='${ant.project.name}' />
 
-	<target name='make.keys' depends='keystore' description="Genereer certificaat en sleutel">
-		<delete file='${keystore}'/>
-		<genkey alias='signkey'
-				storepass='secret'
-				keystore='${keystore}'
-				verbose='${true}'
-				keyalg='RSA'
-				sigalg='sha1withrsa'
-				keysize='2048'
+	<jar
+			destfile='${packagename.jar}'
+			duplicate='preserve'
 		>
-			<dname>
-				<param name="CN" value="dwo.fisme.science.uu.nl" />
-				<param name="OU" value="Freudenthal Instituut" />
-				<param name="O" value="Universiteit Utrecht" />
-				<param name="C" value="NL" />
-			</dname>
-		</genkey>
+			<fileset dir='${classes}'
+				excludes='META-INF/* resources/*'
+			/>
+			<manifest>
+			    <attribute name="Main-Class" value="${main-class}"/>
+			    <attribute name="Codebase" value="${manifest.codebase}" />
+			    <attribute name="Permissions" value='${manifest.permissions}' />
+			    <attribute name="Application-Name" value='${manifest.application-name}' />        
+			</manifest>
+		</jar>
+		<antcall target='include.extra.jar' />
+		<antcall target='include.manifest' />
+		<!--antcall target='sign.jars' /-->
 	</target>
-		
+
+ 		
 	<target name='jnlp' depends='init' description='Genereeer JNLP file' >
 		<taskdef 
 			classpath="${javaclasses}/jars/_sources/orangevolt-ant-tasks-1.3.5.jar"

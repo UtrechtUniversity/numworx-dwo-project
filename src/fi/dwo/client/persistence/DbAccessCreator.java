@@ -35,6 +35,9 @@ public class DbAccessCreator {
 
     }
 
+    public static void setInstance(DbAccessIF update) {
+    	dbAccess = update;
+    }
     /**
      * @return fi.dwo.client.persistence.DbAccessIF
 
