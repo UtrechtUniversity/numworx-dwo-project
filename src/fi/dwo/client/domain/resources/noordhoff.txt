@@ -8,5 +8,5 @@
     	<script type="text/javascript" language="javascript" src="{13}scripts/assetapi.js"></script>  
     	<script type="text/javascript" language="javascript" src="{13}DWOplayer/DWOplayer.nocache.js"></script>
 	</head>
-	<body></body>
+	<body id='main'></body>
 </html>
