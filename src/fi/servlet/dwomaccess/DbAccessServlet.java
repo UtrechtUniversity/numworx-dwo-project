@@ -7,15 +7,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.jasper.tagplugins.jstl.core.When;
-
 import fi.beans.xmlrpc.Servlet;
-import fi.dwo.server.persistence.DbAccessLdap;
+import fi.dwo.server.persistence.DbAccessLocal;
 
 public class DbAccessServlet extends Servlet {
 
 	public DbAccessServlet() {
-		super(new DbAccessLdap());
+		super(new DbAccessLocal());
 	}
 
 	/* (non-Javadoc)

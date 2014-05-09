@@ -5,13 +5,13 @@
   	String css = request.getParameter("launch_presentation_css_url");
     if(css != null && !css.isEmpty())
     {
-    	//out.print("<link 
+    	%>
+    	<link type="text/css" rel="stylesheet" href="<%=css%>">
+    	<% 
     }
   %>
-
-
 </head>
-<body style="font-family:sans-serif">
+<body>
 
 <%@ page import="javax.servlet.http.HttpServletRequest" %>
 <%@ page import="java.util.Enumeration" %>
@@ -71,11 +71,9 @@
     return;
   }
   OAuthConsumer cons = null;
-
-  if ( "lmsng.school.edu".equals(oauth_consumer_key) ) {
-    cons = new OAuthConsumer("about:blank", "lmsng.school.edu", "secret", null);
-  } else if ( "12345".equals(oauth_consumer_key) ) {
-    cons = new OAuthConsumer("about:blank", "12345", "secret", null);
+  String secret = dbAccess.getSecret(oauth_consumer_key);
+  if ( secret != null ) {
+    cons = new OAuthConsumer("about:blank", oauth_consumer_key, secret, null);
   } else {
     doReturn(request, response, "Key "+oauth_consumer_key+" not found", out);
     return;
