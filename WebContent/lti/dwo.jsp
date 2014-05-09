@@ -54,12 +54,13 @@
 
 <pre>
 <%
-
+/*
   Enumeration en = request.getParameterNames();
   while (en.hasMoreElements()) {
     String paramName = (String) en.nextElement();
     out.println(paramName + " = " + request.getParameter(paramName) );
   }
+*/
 %>
 </pre>
 <%
@@ -107,7 +108,8 @@
  	String height = request.getParameter("launch_presentation_height");
   	if(height == null || height.isEmpty()) height="100%";
   	
-  	
+// 	<param name="SERVLET" value="/servlet/fi.dwo.server.persistence.DbAccessServlet" >
+
   	dbAccess.setCookie(request, response);
 %>
 <applet
@@ -126,7 +128,6 @@
 
 	<param name="language" value="<%=language %>" >
 	<param name="profile" value="<%= profile %>" >
-	<param name="SERVLET" value="http://localhost:8080/DWOmAccess/dbaccess" >
 	<param name='cookies' value='false' >
 	<param name='logoutURL' value="<%=logoutURL %>" >
 </applet>

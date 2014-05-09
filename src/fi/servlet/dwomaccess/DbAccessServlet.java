@@ -13,7 +13,7 @@ import fi.dwo.server.persistence.DbAccessLocal;
 public class DbAccessServlet extends Servlet {
 
 	public DbAccessServlet() {
-		super(new DbAccessLocal());
+		super(new fi.dwo.server.persistence.DbAccess());
 	}
 
 	/* (non-Javadoc)

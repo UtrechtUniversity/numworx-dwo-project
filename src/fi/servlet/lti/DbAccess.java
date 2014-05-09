@@ -24,7 +24,7 @@ public class DbAccess {
 	}
 
 	public DbAccess() {
-		dbaccess = new DbAccessLocal();
+		dbaccess = new fi.dwo.server.persistence.DbAccess();
 		DbAccessCreator.setInstance(dbaccess);
 	}
 	
