@@ -60,4 +60,6 @@ iframe {
 	border-left-width: 0px;
 }
 
-
+.gwt-InlineHTML-cursor {
+	border-left: thin solid red;
+}

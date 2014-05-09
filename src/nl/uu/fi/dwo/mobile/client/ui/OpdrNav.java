@@ -393,7 +393,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		int len = getAantalOpdrachten();
 		int totaal = 0;
 		for(int i = 0; i < len; i++ )
-			if( states[currentActiviteit][i] != null) totaal++;
+			if( states[currentActiviteit][i] != null || scores[currentActiviteit][i]!= 0) totaal++;
 		return totaal;
 	}
 

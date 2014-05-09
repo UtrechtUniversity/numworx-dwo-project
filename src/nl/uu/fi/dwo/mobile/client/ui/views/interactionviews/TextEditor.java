@@ -3,6 +3,8 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 import java.util.HashMap;
 
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.Button;
@@ -12,6 +14,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
@@ -20,6 +23,7 @@ import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
@@ -28,6 +32,21 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
 public class TextEditor extends Composite implements InteractionView, TouchStartHandler, FormuleEditorIF, TapHandler {
+
+	public class FXHandler implements ClickHandler {
+
+		@Override
+		public void onClick(ClickEvent event) {
+			FormuleEditor editor = new FormuleEditor();
+			editor.insert("?");
+			Panel panel = editor.getAsPanel();
+			panel.setWidth("30px");
+			panel.setHeight("30px");
+			panel.getElement().getStyle().setBackgroundColor("#808080");
+			flow.insert(panel, cursor++);
+		}
+
+	}
 
 	private int width;
 	private int height;
@@ -60,17 +79,28 @@ public class TextEditor extends Composite implements InteractionView, TouchStart
 		initWidget(hbox);
 	}
 
+	private Widget cursorWidget;
 	private Widget getContent(ObjectMap launchdata) {
 		TouchPanel touch = new TouchPanel();
 		touch.addTapHandler(this);
 		flow = touch; // XXX voorlopig ok
-		flow.add(new InlineHTML("initial content \u00A0 "));
+		flow.add(setCursorWidget(new InlineHTML(" \u00A0")));
+		
 		return touch;
+	}
+
+	private Widget setCursorWidget(Widget widget) {
+		if(cursorWidget != null)
+			cursorWidget.setStyleDependentName("cursor", false);
+		widget.setStyleDependentName("cursor", true);
+		cursorWidget = widget;
+		return widget;
 	}
 
 	private Widget getMenuBar(ObjectMap launchdata) {
 		FlowPanel menubar = new FlowPanel();
 		Button fx = new Button("f(x)"); menubar.add(fx);
+		fx.addClickHandler(new FXHandler());
 		Button calc = new Button("calc"); menubar.add(calc);
 		Button graph = new Button("gr");  menubar.add(graph);
 		return menubar;
@@ -189,20 +219,28 @@ public class TextEditor extends Composite implements InteractionView, TouchStart
 
 	@Override
 	public void removeNextElement() {
-		flow.remove(cursor);
-		
+		int max = flow.getWidgetCount()-1;
+		if(cursor < max){
+			flow.remove(cursor);
+			setCursorWidget(flow.getWidget(cursor));
+		}
 	}
 
 	@Override
 	public void cursorToLeft() {
-		if(cursor < 0) cursor --;
+		if(cursor > 0){
+			cursor --;
+			setCursorWidget(flow.getWidget(cursor));
+		}
 	}
 
 	@Override
 	public void cursorToRight() {
 		int max = flow.getWidgetCount()-1;
-		if(cursor < max) cursor ++;
- 	}
+		if(cursor < max){
+			cursor ++;
+			setCursorWidget(flow.getWidget(cursor));	}
+		}
 
 	@Override
 	public void insert(char charAt) {

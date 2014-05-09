@@ -33,6 +33,7 @@ import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.dom.client.Style.BorderStyle;
@@ -58,6 +59,7 @@ import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.touch.client.Point;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
@@ -67,6 +69,7 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConst
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.IndexedPanel;
 import com.google.gwt.user.client.ui.InsertPanel;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
@@ -168,6 +171,7 @@ public class TekstVakPanel implements InteractionView
 	private int startX, startY;
 
 	private boolean inklapbaar, ingeklapt;
+	private int inklapKnopPos;
 	private String knopImageString1, knopImageString2;
 	private ToggleButton klapUitButton;
 	private TekstVakContext container;
@@ -318,6 +322,9 @@ public class TekstVakPanel implements InteractionView
 // klap schaats
 		if( launchState.containsKey("inklapbaar"))
 			inklapbaar = launchState.getBoolean("inklapbaar");
+		if( launchState.containsKey("inklapKnopPos"))
+			inklapKnopPos = launchState.getInt("inklapKnopPos");
+		else inklapKnopPos = RIGHT;
 		if( launchState.containsKey("ingeklapt"))
 			ingeklapt = launchState.getBoolean("ingeklapt");
 		if( launchState.containsKey("uitklapHoogtes"))
@@ -1574,9 +1581,14 @@ public class TekstVakPanel implements InteractionView
 		}
 	}
 	
+	private static final int LEFT = 0;
+	private static final int RIGHT = 1;
+	private static final int MIDDLE = 2;
+	
 	private void initieerKlapUitButton (boolean ingeklapt)
 	{
 		Image view1, view2;
+		final int inklapKnopPos = this.inklapKnopPos;
 		if(knopImageString1 != null && !knopImageString1.isEmpty()) {
 			view1 = new ImageView(knopImageString1).getImage();
 		} else
@@ -1598,10 +1610,16 @@ public class TekstVakPanel implements InteractionView
 		//klapUitButton.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE)
 		//masterView.getElement().getStyle().setVerticalAlign(VerticalAlign.MIDDLE);
 		klapUitButton.setDown(ingeklapt);
+		int pos;
 // Links of rechts kunnen we aan!
-//		int pos = 0
-		int pos = breedtes.size()-1;
-		final LayoutPanel layoutPanel = tekstVakken[0][pos];
+		switch(inklapKnopPos) {
+		case LEFT: pos = 0; break;
+		default:
+		case MIDDLE:
+		case RIGHT: pos = pos = breedtes.size()-1;
+		}
+		
+		final TekstVak layoutPanel = tekstVakken[0][pos];
 		final Widget widget = layoutPanel.getWidget(0);
 // Wat met de positie van widgets
 		layoutPanel.insert(klapUitButton,0);
@@ -1611,10 +1629,35 @@ public class TekstVakPanel implements InteractionView
 			public void onLoad(LoadEvent event) {
 				int width = masterView.getWidth();
 				klapUitButton.setPixelSize(width, hoogtes.get(0).intValue());
-//				layoutPanel.setWidgetLeftRight(widget, width, Unit.PX, 0, Unit.PX);
-//				layoutPanel.setWidgetLeftWidth(klapUitButton, 0, Unit.PX, width, Unit.PX);
-				layoutPanel.setWidgetLeftRight(widget, 0, Unit.PX, width, Unit.PX);
-				layoutPanel.setWidgetRightWidth(klapUitButton, 0, Unit.PX, width, Unit.PX);
+				switch(inklapKnopPos) {
+				case LEFT:
+						layoutPanel.setWidgetLeftRight(widget, width, Unit.PX, 0, Unit.PX);
+						layoutPanel.setWidgetLeftWidth(klapUitButton, 0, Unit.PX, width, Unit.PX);
+						break;
+				case MIDDLE: // FIXME werkt nog van geen meter!
+					FlowPanel flow = layoutPanel.getFlowPanel();
+					flow.add(klapUitButton);Style style = klapUitButton.getElement().getStyle();
+					flow.getElement().getStyle().clearWidth();
+					style.setDisplay(Display.INLINE_BLOCK);
+					style.setFloat(Style.Float.RIGHT);
+/*					Widget child = widget;
+					if(widget instanceof VerticalPanel)
+						child = ((VerticalPanel) widget).getWidget(0);
+					
+					if(child instanceof HasWidgets)
+					{
+						layoutPanel.remove(klapUitButton);
+						Style style = klapUitButton.getElement().getStyle();
+						style.setDisplay(Display.INLINE);
+						style.setFloat(Style.Float.RIGHT);
+						((HasWidgets) widget.getParent()).add(klapUitButton);
+					}
+*/					break;
+				case RIGHT:
+				default:
+					layoutPanel.setWidgetLeftRight(widget, 0, Unit.PX, width, Unit.PX);
+					layoutPanel.setWidgetRightWidth(klapUitButton, 0, Unit.PX, width, Unit.PX);
+				}
 			}
 		};
 		if (masterView.getWidth() > 0) handler.onLoad(null);
