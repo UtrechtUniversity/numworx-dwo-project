@@ -705,6 +705,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 	public void check(String expAntwoordString)	
 	{	
 		syntaxFout = false;
+		leeg = false;
 		
 		Expressie antwoord = FormuleParser.geefExpressie(expAntwoordString);
 		
@@ -730,7 +731,8 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 			return;
 		}
 		else if(antwoord==null)
-		{	leeg = true;
+		{
+			leeg = true;
 			return;
 		}
 		

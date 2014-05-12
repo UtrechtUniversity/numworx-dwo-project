@@ -326,13 +326,17 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 	void saveCurrentState()
 	{
 		states[currentActiviteit][currentOpdracht] = entry.getState();
-		entry.scoreNav.setItemScore(currentOpdracht, 
+		ScoreNavPanel source = entry.scoreNav;
+		source.setItemScore(currentOpdracht, 
 				scores[currentActiviteit][currentOpdracht] = entry.getScore()
 		);
+		source.setBeantwoord(getAantalBeantwoord());
 		isCorrect[currentActiviteit][currentOpdracht] = entry.isCorrect();
 		memento.setCurrentActiviteit(currentActiviteit);
 		memento.setCurrentOpdracht(currentOpdracht);
-		memento.setScore(getScore());
+		double score = getScore();
+		memento.setScore(score);
+		source.setTotaalScore((int) score); 
 		memento.setCompletion(suspendDataCompleted(currentActiviteit, currentOpdracht));
 		memento.setOpdrContStates(states);
 	}

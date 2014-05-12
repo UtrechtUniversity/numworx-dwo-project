@@ -1669,7 +1669,10 @@ public class TekstVakPanel implements InteractionView
 
 	@Override
 	public void kijkNa() {
-		// TODO Auto-generated method stub
+		for (Object object : interactionViewObjects) {
+			if(object instanceof InteractionView)
+				((InteractionView) object).kijkNa();
+		}
 		
 	}
 

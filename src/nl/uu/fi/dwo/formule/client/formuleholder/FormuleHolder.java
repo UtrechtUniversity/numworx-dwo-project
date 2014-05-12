@@ -187,7 +187,7 @@ public class FormuleHolder implements TekstElement
 
 	@Override
 	public int getWidth() {
-		return main.width;
+		return main.getWidth();
 	}
 
 	@Override

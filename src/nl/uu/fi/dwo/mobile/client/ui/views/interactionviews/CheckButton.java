@@ -99,16 +99,24 @@ public class CheckButton implements InteractionStub
 		basisPanel.setWidgetLeftWidth(checkButton, 0, Style.Unit.PX, imWidth, Style.Unit.PX);
 		basisPanel.setWidgetTopHeight(checkButton, 0, Style.Unit.PX, imHeight, Style.Unit.PX);
 		checkButton.addClickHandler(new ClickHandler(){
+
 			public void onClick(ClickEvent e)
 			{	e.stopPropagation();
+				fout = false;
 				for (int i = 0; i < lijst.size(); i++)
 				{	Object object = lijst.get(i);
-					if(object instanceof InteractionView)
-						((InteractionView) object).kijkNa();
+					if(object instanceof InteractionView) {
+						InteractionView view = (InteractionView) object;
+						view.kijkNa();
+						//view.zetNagekeken(true); 
+						fout |= !view.isCorrect();
+					}
 				}
 			}
 		});
 	}
+	
+	boolean fout;
 
 	public void zetNakijkObjecten(ArrayList<Object> lijst)
 	{
@@ -136,7 +144,7 @@ public class CheckButton implements InteractionStub
 	@Override
 	public boolean isCorrect() {
 		// TODO Auto-generated method stub
-		return false;
+		return !fout;
 	}
 
 	@Override

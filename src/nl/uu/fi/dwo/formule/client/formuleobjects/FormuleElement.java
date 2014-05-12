@@ -122,7 +122,7 @@ public abstract class FormuleElement implements TekstElement
 
 	public int getWidth()
 	{
-		return width;
+		return canvas.getCoordinateSpaceWidth();
 	}
 
 	public void setWidth(int width)
@@ -199,7 +199,7 @@ public abstract class FormuleElement implements TekstElement
 
 		this.setChanged(true);
 	}
-	
+		
 	public boolean setColor(CssColor c)
 	{
 		if(color == null || color != c)
