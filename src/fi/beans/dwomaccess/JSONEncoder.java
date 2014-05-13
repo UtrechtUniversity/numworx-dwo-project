@@ -21,33 +21,30 @@ import fi.beans.base64code.StringCodeObject;
 public class JSONEncoder {
 	
 	public static void encode(Map map, Writer out) throws IOException {
-		map = mapWalker(map);
+		map = transformMap(map);
 		JSONObject.writeJSONString(map, out);
 	}
 
-	private static Map mapWalker(Map map) {
-		transform(map);
-		transformTypes(map);
-		return map;
-	}
+	private static Object transformTypes(Object value) {
 
-	static Object transformTypes(Object value) {
 		if (value instanceof Collection ) {
 			Collection c = (Collection) value;
 			value = c.toArray();
 		}
+		
 		if(value instanceof Map) {
-			transformTypes((Map) value);
-			return value;
+			return transformMap((Map) value);
 		} 
+
 		if(value instanceof Object[]) {
 			Object[] array = (Object[]) value;
-			Object[] out = new Object[array.length];
-			for (int i = 0; i < array.length; i++) {
-				out[i] = transformTypes(array[i]);
-			}
-			value = out;
+			return transformArray(array);
 		} 
+
+		if( value instanceof byte[]) {
+			value = ByteArray.newInstance((byte[]) value);
+		}
+		
 		if(value == null || value instanceof Number || value instanceof Boolean || value instanceof String || value.getClass().isArray()
 // equivalent of the above.
 				|| value instanceof JSONAware || value instanceof JSONStreamAware
@@ -102,16 +99,8 @@ public class JSONEncoder {
 	}
 	
 	
-	static void transformTypes(Map map) {
-		Iterator iter = map.entrySet().iterator();
-		while (iter.hasNext()) {
-			Map.Entry entry = (Map.Entry) iter.next();
-			Object value = entry.getValue();
-			entry.setValue(transformTypes(value));
-		}
-		
-	}
-	public static void transform(Map map) {
+	private static Map transformMap(Map map) {
+		Map result = map;
 		Iterator iter = map.entrySet().iterator();
 		while (iter.hasNext()) {
 			Map.Entry entry = (Map.Entry) iter.next();
@@ -120,46 +109,79 @@ public class JSONEncoder {
 				value = StringCodeObject.decodeStringToObject(value.toString());
 				if(value != null)
 				{	
-					entry.setValue(value);
+					if(result == map)
+					{ result = new JSONObject(map);
+					}
+					result.put(entry.getKey(),value);
 				}
 			}
 
 			if(value instanceof Map) {
-				transform((Map) value);
+				Map transformed = transformMap((Map) value);
+				if(transformed != value)
+				{
+					if(result == map)
+					{ result = new JSONObject(map);
+					}
+					result.put(entry.getKey(),transformed);
+				}
 			}
 			else if(value instanceof byte[]) {
-				ByteArray ba = ByteArray.newInstance((byte[]) value);
-				entry.setValue(ba);
+				ByteArray transformed = ByteArray.newInstance((byte[]) value);
+				if(result == map)
+				{ result = new JSONObject(map);
+				}
+				result.put(entry.getKey(),transformTypes(transformed));
 			}
 			
 
-//			if(value instanceof Font) {
-//				value = value.toString();
-//				entry.setValue(value);
-//			}
-//			if(value instanceof java.awt.Color) {
-//				value = value.toString();
-//				entry.setValue(value);
-//			}
 // arraytypes TODO List.
 			else if (value instanceof Object[]) {
 				Object[] array = (Object[])value;
-				entry.setValue(transform(array));
-			} 
+				Object transformed = transformArray(array);
+				if(transformed != value)
+				{
+					if(result == map)
+					{ result = new JSONObject(map);
+					}
+					result.put(entry.getKey(),transformed);
+				};
+			} else {
+				Object transformed = transformTypes(value);
+				if(transformed != value)
+				{
+					if(result == map)
+					{ result = new JSONObject(map);
+					}
+					result.put(entry.getKey(),transformed);
+				}
+			
+			}
 		}
-		
+		return result;
 	}
 
-	private static Object transform(Object[] array) {
+	private static Object[] transformArray(Object[] array) {
+		Object[] result = array;
 		for (int i = 0; i < array.length; i++) {
 			Object value = array[i];
 			if(value instanceof Map) 
-				transform( (Map) value);
-			if(value instanceof Object[]) 
-				value = transform((Object[])value);
-			array[i] = value;
+				value = transformMap( (Map) value);
+			else if(value instanceof Object[]) 
+				value = transformArray((Object[])value);
+			else 
+				value = transformTypes(value);
+
+			if(value != array[i])
+			{
+				if(result == array) {
+					result = new Object[array.length];
+					if(i>0)System.arraycopy(array, 0, result, 0, i);
+				}
+			}
+			result[i] = value;
 		}
-		return array;
+		return result;
 	}
 
 
