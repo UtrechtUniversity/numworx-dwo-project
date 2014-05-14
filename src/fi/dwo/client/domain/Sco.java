@@ -525,7 +525,11 @@ System.err.println("sum = ["+result+"]");
         	int colorCode = 256*256*red+256*green+blue;
         	return "#"+ Integer.toHexString(colorCode);
         }
+// Support ScoID
+        if("scoViewNr".equals(name))
+        	return String.valueOf(getScoID());
         Hashtable ld = getLaunchdata();
+
 //        if (ld != null) {							// ld never unequal null
             Object result = ld.get(name);
             if(result != null) {
