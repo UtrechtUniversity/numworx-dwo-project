@@ -107,6 +107,11 @@ public class Haakjesvak extends FormuleElementWithChildren
 			Window.alert(e.getMessage());
 		}
 	}
+	
+	public int getAsHoogte()
+	{
+		return getChild().getAsHoogte() + fm.getAscent() / 12;
+	}
 
 	@Override
 	public boolean setFont(FormuleFont fm)

@@ -804,7 +804,10 @@ public class FormuleEditorWithSteps implements InteractionView
 	
 	@Override
 	public int getAsHoogte() {
-		return viewers.get(0).getAsHoogte();
+		if(viewers != null && viewers.size() > 0)
+			return viewers.get(0).getAsHoogte();
+		else
+			return 0;
 		//hier evt ook nog prefixviewers bij. En iets voor als viewers.get(0) niet bestaat?
 	}
 

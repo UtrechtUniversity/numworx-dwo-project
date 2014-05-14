@@ -8,10 +8,13 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
+import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
@@ -51,6 +54,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public FormuleEditorWithAnswer(HashMap<String, Object> h, boolean isVergelijkingVak, FormuleEditorWithSteps fe, String[] randomVarNamen, HashMap<String, Object> randomVarWaarden)
 	{
 		super();
+		//getMainRegel().setDefaultHeight(24);
 
 		//this.randomVarNamen = randomVarNamen;
 		//this.randomVarWaarden = randomVarWaarden;
@@ -63,7 +67,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		sp = new TouchPanel();
 		if (h.get("interactiePanelLaunchState") != null)
 		{
-			int breedte = ((Number) h.get("breedte")).intValue();
+			ObjectMap map = JSONUtilities.wrapMap(h);
+			int breedte = map.getInt("breedte");
+			//int hoogte = map.getInt("hoogte");
+			//int breedte = ((Number) h.get("breedte")).intValue();
+			//System.out.println("breedte formuleEditorWithAnswer: " + breedte);
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
 
 			if (isVergelijkingVak)
@@ -72,7 +80,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				avChecker = new AntwoordFormuleVakChecker(launchState, randomVarNamen, randomVarWaarden);
 
 			if(launchState != null && launchState.get("check") != null)
-			{	System.out.println("check wordt uit launchstate gehaald");
+			{	//System.out.println("check wordt uit launchstate gehaald");
 				check = ((Boolean)launchState.get("check")).booleanValue();
 			}
 			checkimg = new Image(FORMULE_BUNDLE.mw_vinkje_groen());
@@ -82,11 +90,17 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			{
 				//sp.getElement().getStyle().setProperty("width", (breedte - 9) + "px");
 				this.getMainRegel().setMinimumWidth(breedte - 9);
+				this.getMainRegel().setMinimumHeight(24);
+				//sp.setSize(breedte + "px", hoogte + "px");
+				//sp.getElement().getStyle().setBackgroundColor(CssColor.make(255, 0, 0).toString());
 				sp.getElement().getStyle().setProperty("border", "1px solid gray");
-				//(Weggehaald Sietske) sp.getElement().getStyle().setPaddingTop(3, Style.Unit.PX);
-				sp.getElement().getStyle().setMarginTop(3, Style.Unit.PX);
-				sp.getElement().getStyle().setPaddingLeft(3, Style.Unit.PX);
-				sp.getElement().getStyle().setPaddingRight(3, Style.Unit.PX);
+				
+				sp.getElement().getStyle().setPadding(3, Style.Unit.PX);
+				
+				//sp.getElement().getStyle().setPaddingLeft(3, Style.Unit.PX);
+				//sp.getElement().getStyle().setPaddingRight(3, Style.Unit.PX);
+				//sp.getElement().getStyle().setPaddingTop(3, Style.Unit.PX);
+				//sp.getElement().getStyle().setPaddingBottom(3, Style.Unit.PX);
 				//(Weggehaald Sietske) sp.getElement().getStyle().setProperty("backgroundColor", "#e9e9e9");
 				sp.getElement().getStyle().setProperty("backgroundColor", "white");
 				//this.getMainRegel().getCanvas().getElement().getStyle().setProperty("marginTop", "3px");
@@ -96,12 +110,14 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			sp.getElement().addClassName("insert_formule");
 			sp.add(this.getMainRegel().getCanvas());
 			sp.add(checkimg);
+			
 		}
 	}
 
 	public void zetInstellingen(Map<String, Object> instellingen)
 	{
 		this.instellingen = instellingen;
+		System.out.println("fontSize uit instellingen formuleEditorWithAnswer: " + ((Number) instellingen.get("fontSize")).intValue());
 		setFont(FormuleFont.createFromFontSize(((Number) instellingen.get("fontSize")).intValue()));
 
 	}

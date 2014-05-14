@@ -33,6 +33,7 @@ public class FormuleHolder implements TekstElement
 	private static FormuleFont defaultfont = FormuleFont.createFromFontSize(18);
 	protected static FormuleKeyboardIF kb;
 	private FlowPanel sp = null;
+	private int ashoogte;
 	
 	private CssColor color = CssColor.make(0, 0, 0);
 
@@ -48,6 +49,8 @@ public class FormuleHolder implements TekstElement
 		FormuleRegel regel = new FormuleRegel(this);
 		//GWT.log("Font size:" + defaultfont.getFontStyle());
 		main = regel;
+		ashoogte = main.getAsHoogte();//+(main.getFont().getAscent() - 1)/2 + 1;
+		
 		//font = defaultfont;
 	}
 
@@ -85,9 +88,12 @@ public class FormuleHolder implements TekstElement
 
 	public void setFont(FormuleFont fm)
 	{
+		//System.out.println("formuleHolder setFont: " + fm.toString());
 		this.font = fm;
 		this.getMainRegel().setFont(this.font);
 		this.paint();
+		ashoogte = getMainRegel().getAsHoogte();
+		//System.out.println("ashoogte uit setFont: " + ashoogte);
 	}
 	
 	public void setColor(CssColor c)
@@ -177,11 +183,13 @@ public class FormuleHolder implements TekstElement
 
 	@Override
 	public int getAsHoogte() {
-		return main.getAsHoogte();
+		//return main.getAsHoogte();
+		return ashoogte;
 	}
 
 	@Override
 	public int getHeight() {
+		
 		return main.height;
 	}
 
@@ -192,6 +200,8 @@ public class FormuleHolder implements TekstElement
 
 	@Override
 	public void setAsHoogte(int ashoogte) {
+		this.ashoogte = ashoogte;
 		main.setAsHoogte(ashoogte);
+		//main.setAsHoogte(ashoogte);
 	}
 }

@@ -118,6 +118,12 @@ public class PrvVak extends FormuleElementWithChildren
 		
 	}
 	
+	public int getAsHoogte()
+	{
+		return fm.getAscent()/3 + Math.max(getChild(0).height + 2*fm.getAscent()/3, getChild(1).height + getChild(2).height)/2;
+				
+	}
+	
 	public String toString()
 	{	
 	    return "$q" + getChild(0).toString() + "$n" + getChild(1).toString() + "$k" + getChild(2).toString() + "$l" + getChild(3).toString() + "@@@@";//"$n" + kind3.toString() + 

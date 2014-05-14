@@ -829,6 +829,19 @@ public class FormuleRegel extends FormuleElement
 			}
 		}
 	}
+	
+	public int getAsHoogte()
+	{
+		//ashoogtes children bepalen en het maximum daarvan teruggeven.
+		if (this.children.size() == 0)
+			return super.getAsHoogte();
+		int ashoogte = 0;
+		for (int i = 0; i < this.children.size(); i++)
+		{	if(this.children.get(i).getAsHoogte() > ashoogte)
+				ashoogte = this.children.get(i).getAsHoogte();
+		}
+		return ashoogte;
+	}
 
 	/**
 	 * Selection
@@ -1138,10 +1151,16 @@ public class FormuleRegel extends FormuleElement
 		this.minW = minW;
 		this.setSize(width,height);
 	}
+	
+	public void setMinimumHeight(int minH) {
+		this.minH = minH;
+		this.setSize(width, height);
+	}
 
+	/*
 	@Override
 	public void setAsHoogte(int ashoogte) {
 		super.setAsHoogte(ashoogte);
 	}
-
+*/
 }

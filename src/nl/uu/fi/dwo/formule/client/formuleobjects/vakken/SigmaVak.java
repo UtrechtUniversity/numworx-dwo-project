@@ -107,6 +107,12 @@ public class SigmaVak extends FormuleElementWithChildren{
 		this.getChild(2).setPosition(k3x,k3y);
 		this.getChild(3).setPosition(k4x,k4y);
 	}
+	
+	public int getAsHoogte()
+	{
+		zetMaat();
+		return super.getAsHoogte();
+	}
 
 	public String toString()
 	{	return "$S" + getChild(0).toString() + "$n"+ getChild(1).toString() + "$k" + getChild(2).toString() + "$l" + getChild(3).toString() + "@@@@";

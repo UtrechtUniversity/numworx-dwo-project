@@ -185,14 +185,19 @@ public abstract class FormuleElement implements TekstElement
 	}
 
 	protected int minW = 0;
+	protected int minH = 0;
 	public void setSize(int w, int h)
 	{
 		
-		width = w;
-		height = h;
+		//width = w;
+		//height = h;
 
 		w = Math.max(w, minW);
+		h = Math.max(h, minH);
 
+		width = w;
+		height = h;
+		
 		//change the canvas dimensions
 		this.canvas.setCoordinateSpaceHeight(h);
 		this.canvas.setCoordinateSpaceWidth(w);

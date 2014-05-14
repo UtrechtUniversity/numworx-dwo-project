@@ -56,6 +56,12 @@ public class ConjugVak extends FormuleElementWithChildren
 		setAsHoogte(getChild().getAsHoogte()+2);
 	}
 	
+	public int getAsHoogte()
+	{
+		zetMaat();
+		return super.getAsHoogte();
+	}
+	
 	public String toString()
 	{	return "$c" + getChild().toString() + "@";
 	}

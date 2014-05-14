@@ -72,6 +72,11 @@ public class BinVak extends FormuleElementWithChildren
 		setAsHoogte(-fm.getAscent()/8 + getChild(0).height);
 	}
 	
+	public int getAsHoogte()
+	{
+		return -fm.getAscent()/8 + getChild(0).height;
+	}
+	
 	public String toString()
 	{
 		return "$y" + getChild(0).toString() + "$n"+ getChild(1).toString() + "@@";

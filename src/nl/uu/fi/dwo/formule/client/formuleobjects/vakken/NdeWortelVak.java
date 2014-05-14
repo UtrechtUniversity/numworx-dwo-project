@@ -80,6 +80,11 @@ public class NdeWortelVak extends FormuleElementWithChildren
 		this.drawCursor();
 	}
 
+	public int getAsHoogte()
+	{
+		return getChild(0).getAsHoogte() + fm.getAscent() / 4;
+	}
+	
 	@Override
 	public FormuleElement setCurrentElementAt(int x, int y)
 	{

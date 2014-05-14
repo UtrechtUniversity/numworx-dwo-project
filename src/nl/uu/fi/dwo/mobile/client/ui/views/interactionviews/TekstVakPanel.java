@@ -90,14 +90,14 @@ public class TekstVakPanel implements InteractionView
 {
 	class TekstVakContext {
 
-		private int h,w;
-		public TekstVakContext(int h, int w) {
-			this.h = h;
-			this.w = w;
+		private int rij,kolom;
+		public TekstVakContext(int rij, int kolom) {
+			this.rij = rij;
+			this.kolom = kolom;
 		}
 
 		public void doLayout(TekstVakPanel tekstVakPanel, int i) {
-			TekstVakPanel.this.doLayout(tekstVakPanel, i, h, w );
+			TekstVakPanel.this.doLayout(tekstVakPanel, i, rij, kolom);
 		}
 		
 	}
@@ -252,6 +252,7 @@ public class TekstVakPanel implements InteractionView
 			cellSpaceRow = launchState.getInt("cellSpaceRow");
 		if (launchState.containsKey("cellMarge"))
 			cellMarge = launchState.getInt("cellMarge");
+		
 		if (launchState.containsKey("bovenMarge") )
 			bovenMarge = launchState.getInt("bovenMarge");
 		if (launchState.containsKey("ronding"))
@@ -353,6 +354,7 @@ public class TekstVakPanel implements InteractionView
 		randDikte = randZichtbaar ? randDikte : 0; 
 
 		mainPanel2 = new LayoutPanel();
+		
 		setCurrentSize(breedte, hoogte);
 		
 		MouseHandler mouseHandler = new MouseHandler();
@@ -424,7 +426,8 @@ public class TekstVakPanel implements InteractionView
 				if( tekstVakHoogte < 0) tekstVakHoogte = 0;
 				
 				tekstVakken[i][j] = new TekstVak(this, i, j);
-				tekstVakken[i][j].setPixelSize(breedtes.get(j).intValue(), hoogtes.get(i).intValue());
+				tekstVakken[i][j].setSize(breedtes.get(j).intValue(), hoogtes.get(i).intValue());
+				//tekstVakken[i][j].setPixelSize(breedtes.get(j).intValue(), hoogtes.get(i).intValue());
 				tekstVakken[i][j].setColor(fgColor);
 				tekstVakken[i][j].setFontSize(font_size);
 				tekstVakken[i][j].setFontStyle(font_style);
@@ -453,9 +456,9 @@ public class TekstVakPanel implements InteractionView
 			mainPanel2.setWidgetTopHeight(ic, 0, Style.Unit.PX, 20, Style.Unit.PX);
 		}
 
-		if(inklapbaar)
-		{	initieerKlapUitButton(ingeklapt);
-		}
+//		if(inklapbaar)
+//		{	initieerKlapUitButton(ingeklapt);
+//		}
 
 	}
 	
@@ -514,23 +517,24 @@ public class TekstVakPanel implements InteractionView
 			container.doLayout(this, height - oldHeight);
 	}
 	
-	public void doLayout(TekstVakPanel child, int delta, int h, int w) {
-		System.out.println("child dolayout " + child + " pos " + h + " " + w);
+	public void doLayout(TekstVakPanel child, int delta, int rij, int kolom) {
+		System.out.println("child dolayout " + child + " pos " + rij + " " + kolom + " + delta " + delta);
 		int cch = child.getCurrentHeight();
 		int tekstGrootte = child.font_size;
+		
+		
 		com.google.gwt.user.client.Element element = child.getAsPanel().getElement();
-		String al = element.getStyle().getProperty("verticalAlign");
 		element.getStyle().setProperty("verticalAlign", (tekstGrootte - cch + 1) + "px");
 		if(pasAanH)
 		{
-			int cellHoogte = hoogtes.get(h).intValue();
-			int c0 = Math.max(cellHoogte, minHoogtes.get(h).intValue());
+			int cellHoogte = hoogtes.get(rij).intValue();
+			int c0 = Math.max(cellHoogte, minHoogtes.get(rij).intValue());
 			cellHoogte += delta;
-			hoogtes.set(h, Double.valueOf(cellHoogte));
-			cellHoogte = Math.max(cellHoogte, minHoogtes.get(h).intValue());
+			hoogtes.set(rij, Double.valueOf(cellHoogte));
+			cellHoogte = Math.max(cellHoogte, minHoogtes.get(rij).intValue());
 			for(int j = 0; j < breedtes.size(); j ++)
 			{
-				tekstVakken[h][j].setPixelSize(-1, (int) cellHoogte);
+				tekstVakken[rij][j].setPixelSize(-1, (int) cellHoogte);
 			}
 			delta = cellHoogte - c0;
 			System.out.println("new size = " + width + "x" + "(" + height + "+ " + delta + ")");
@@ -691,6 +695,26 @@ public class TekstVakPanel implements InteractionView
 				//setObjects(opdrachtObjects, i, j);
 				tekstVakken[i][j].setObjects(opdrachtObjects);
 			}
+			//Nu de hele regel gevuld is kunnen de ashoogtes gelijk worden gesteld, zodat de hele rij netjes is uitgelijnd.
+			int asHoogte = 0;
+			for(int j = 0; j < breedtes.size(); j++)
+			{
+				if(tekstVakken[i][j].getAsHoogte() > asHoogte)
+				{
+					
+					asHoogte = tekstVakken[i][j].getAsHoogte();
+					
+				}
+				
+			}
+			for(int j = 0; j < breedtes.size(); j++)
+			{	tekstVakken[i][j].setAshoogte(asHoogte);
+				//tekstVakken[i][j].setRegelHoogte(regelHoogte);
+			}
+		}
+
+		if(inklapbaar)
+		{	initieerKlapUitButton(ingeklapt);
 		}
 
 	}
@@ -763,138 +787,6 @@ public class TekstVakPanel implements InteractionView
 		return correct;
 	}
 
-	
-	/*(Verplaatst naar TekstVak)
-	public void setObjects(ArrayList<Object> opdrachtObjects, int rij, int kolom)
-	{	Panel destination = tekstVakken[rij][kolom].getFlowPanel();
-		for (int i = 0; i < opdrachtObjects.size(); i++)
-		{
-
-			Object currentObject = opdrachtObjects.get(i);
-			if (currentObject instanceof String)
-			{
-				currentObject = ((String) currentObject).replaceAll("  ", " &nbsp;");
-				currentObject = ((String) currentObject).replaceAll("&nbsp; ", "&nbsp;&nbsp;");
-				//if(i > 0 && opdrachtObjects.get(i - 1) instanceof String)
-				//	currentObject = ((String) currentObject).replaceFirst("&nbsp;", " ");
-				Element element = DOM.createSpan();
-				element.setInnerHTML((String) currentObject);
-				destination.getElement().appendChild(element);
-
-				if (opdrachtObjects.size() > i + 1 && opdrachtObjects.get(i + 1) instanceof String)
-				{	destination.getElement().appendChild(DOM.createElement("br"));
-					
-				//niet zo: 
-				//destination.getElement().getStyle().setMarginLeft(2, Style.Unit.PX);
-				//want dan krijgt het hele vak een marge van 2; tekstvakken worden dan dus ook 2 px naar rechts geduwd.
-				}
-			}
-			else if (currentObject instanceof FormuleEditorWithAnswer)
-			{
-				((FormuleEditorWithAnswer) currentObject).setFont(FormuleFont.createFromFontSize(font_size));
-				((FormuleEditorWithAnswer) currentObject).setColor(fgColor);
-				int asHoogte = ((FormuleEditorWithAnswer) currentObject).getMainRegel().getAsHoogte();
-				int hoogte = ((FormuleEditorWithAnswer) currentObject).getMainRegel().getHeight();
-				//int hoogte = ((FormuleEditorWithAnswer) currentObject).getAsPanel().getOffsetHeight();
-
-				TouchPanel tp = (TouchPanel) ((FormuleEditorWithAnswer) currentObject).getAsPanel();
-				tp.getElement().getStyle().setProperty("display", "inline-block");
-				kb.setEditor(((FormuleEditorWithAnswer) currentObject));
-				addFormulePanelListeners(tp, ((FormuleEditorWithAnswer) currentObject));
-
-				tp.getElement().getStyle().setProperty("display", "inline-block");
-				tp.getElement().getStyle().setProperty("verticalAlign", "top");
-				tp.getElement().getStyle().setProperty("verticalAlign", "" + (-hoogte + asHoogte + Math.rint(font_size * 0.33) + 1) + "px");
-				kb.setEditor((FormuleEditorWithAnswer) currentObject);
-				destination.add(tp);
-			}
-			else if (currentObject instanceof FormuleViewer)
-			{	
-				FormuleFont f = FormuleFont.createFromFontSize(font_size);
-				f.setBold(font_style == 1 || font_style == 3);
-				((FormuleViewer) currentObject).setFont(f);
-				((FormuleViewer) currentObject).setColor(fgColor);
-				int asHoogte = ((FormuleViewer) currentObject).getMainRegel().getAsHoogte();
-				int hoogte = ((FormuleViewer) currentObject).getMainRegel().getHeight();
-				//System.out.println("asHoogte = " + asHoogte + ", en hoogte = " + hoogte);
-				Panel a = ((FormuleViewer) currentObject).getAsPanel();
-				a.getElement().getStyle().setProperty("display", "inline-block");
-				
-				//deze 2 px zijn overgenomen uit het WiskOpdr TekstFormuleVak, om te zorgen dat formules niet op tekst botsen. 
-				a.getElement().getStyle().setMarginLeft(2, Style.Unit.PX);
-				a.getElement().getStyle().setMarginRight(2, Style.Unit.PX);
-				//Hieronder: gebruik f.getFontSize() ipv font_size omdat fontSize kan zijn aangepast ivm formules in Times Roman.
-				a.getElement().getStyle().setProperty("verticalAlign", "top");
-				a.getElement().getStyle().setProperty("verticalAlign", "" + (asHoogte - hoogte + Math.rint(f.getFontSize() * 0.33) + 1) + "px");
-				destination.add(a);
-			}
-			else if (currentObject instanceof FormuleEditorWithSteps)
-			{
-				Panel a = ((FormuleEditorWithSteps) currentObject).getAsPanel();
-				//((FormuleEditorWithSteps) currentObject).getEditor().requestFocus();
-
-				a.getElement().getStyle().setProperty("display", "inline-block");
-				a.getElement().getStyle().setProperty("verticalAlign", "top");
-				destination.add(a);
-			}
-			else if (currentObject.getClass().getName().equals("fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT"))
-			{
-				Panel a = (Panel) (((InteractionView) currentObject).asWidget());
-				a.getElement().getStyle().setProperty("display", "inline-block");
-				a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
-				destination.add(a);
-			}
-			else if (currentObject instanceof InteractionView)
-			{		
-				Widget a = (((InteractionView) currentObject).asWidget());
-				a.getElement().getStyle().setProperty("display", "inline-block");
-				//a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
-				if(currentObject instanceof TekstVakPanel && !(a instanceof PopupButton))
-				{
-					int h = ((TekstVakPanel)currentObject).hoogte;
-					int tekstGrootte = ((TekstVakPanel) currentObject).font_size;
-					a.getElement().getStyle().setProperty("verticalAlign", "top");
-					a.getElement().getStyle().setProperty("verticalAlign", (tekstGrootte - h + 1) + "px");
-				}
-				//a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
-				//a.getElement().getStyle().setProperty("verticalAlign", "text-top");
-				//a.getElement().getStyle().setProperty("verticalAlign", "2px");
-				//destination.add(a);
-		       if(currentObject instanceof TekstVakPanel && ((TekstVakPanel) currentObject).isZwevend())
-				{	tekstVakken[rij][kolom].add(a);
-					tekstVakken[rij][kolom].setWidgetLeftWidth(a, ((TekstVakPanel)currentObject).getLocationX(), Style.Unit.PX, 
-							((TekstVakPanel)currentObject).getBreedte(), Style.Unit.PX);
-					tekstVakken[rij][kolom].setWidgetTopHeight(a, ((TekstVakPanel)currentObject).getLocationY(), Style.Unit.PX, 
-							((TekstVakPanel)currentObject).getHoogte(), Style.Unit.PX);
-					((TekstVakPanel) currentObject).setParent(tekstVakken[rij][kolom]);
-				}
-				else
-					destination.add(a);
-				
-			}
-			//Sietske: volgens mij is dit overbodig, want een TekstVakPanel implements InteractionView
-			//en die staat hierboven.
-			else if (currentObject instanceof TekstVakPanel)  
-			{	Panel a = ((TekstVakPanel) currentObject).getAsPanel();
-				a.getElement().getStyle().setProperty("display", "inline-block");
-				a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
-				destination.add(a);
-			}
-			else if (currentObject instanceof ImageView)
-			{
-				ImageView iv = (ImageView) currentObject;
-				Widget w = iv.getImage();
-				destination.add(w);
-			}
-			else if (currentObject instanceof AnchorView)
-			{
-				AnchorView av = (AnchorView) currentObject;
-				Widget w = av.asWidget();
-				destination.add(w);
-			}
-			
-		}
-	}*/
 	
 	public void setParent(TekstVak panel)
 	{
@@ -1048,9 +940,9 @@ public class TekstVakPanel implements InteractionView
 		{
 			for (int j = 0; j < breedtes.size(); j++)
 			{
-				for(int k = 0; k < tekstVakken[i][j].getFlowPanel().getWidgetCount(); k++)
-					if(tekstVakken[i][j].getFlowPanel().getWidget(k) != null)
-						v.add(tekstVakken[i][j].getFlowPanel().getWidget(k));
+				//for(int k = 0; k < tekstVakken[i][j].getFlowPanel().getWidgetCount(); k++)
+				//	if(tekstVakken[i][j].getFlowPanel().getWidget(k) != null)
+				//		v.add(tekstVakken[i][j].getFlowPanel().getWidget(k));
 				for(int k = 0; k < tekstVakken[i][j].getWidgetCount(); k++)
 					if(tekstVakken[i][j].getWidget(k) != null)
 						v.add(tekstVakken[i][j].getWidget(k));
@@ -1304,28 +1196,6 @@ public class TekstVakPanel implements InteractionView
 		*/
 	}
 	
-	/*
-	public InteractiePanel zoekInteractiePanel(int ID)
-	{	// indien klaarknop niet in hetzelfde tekstvak:
-		if(tekstVak.getParent() instanceof TekstVakPanel && tekstVak.hasOneDeelVak())// 
-		{	TekstVakPanel  tvp = (TekstVakPanel)tekstVak.getParent();
-			//indien in een eigen zwevend tekstvak
-			if(tvp.getParent()instanceof TekstInteractiePanelVak && tvp.isZwevend()) 
-			{	InteractiePanel ip = (((TekstInteractiePanelVak)tvp.getParent()).tekstVak).zoekInteractiePanel(ID);
-				if(ip!=null) return ip;
-			}
-			//indien in een andere cel (kolom/rij) van hetzelfde tekstvakpanel
-			if(tvp.getParent() instanceof TekstInteractiePanelVak) //tvp.isZwevend() && 
-			{	InteractiePanel ip = ((TekstInteractiePanelVak)tvp.getParent()).getInteractiePanel(ID);
-				if(ip!=null) return ip;
-			}
-			 
-		}
-		// indien klaarknop wel in hetzelfde tekstvak
-		return tekstVak.zoekInteractiePanel(ID);
-	}
-	*/
-	
 	public boolean objectNullWaarde()
 	{
 		return "".equals(getIpExpString()) || "$f@".equals(getIpExpString());
@@ -1543,8 +1413,11 @@ public class TekstVakPanel implements InteractionView
 	}
 	
 	void klapUitAction() {
+		System.out.println("klapUitAction");
 		int delta = hoogte-hoogtes.get(0).intValue();
+		System.out.println("delta = " + delta);
 		if( ingeklapt = ! ingeklapt) {
+			System.out.println("inklappen!");
 			GWT.log("inklappen!");
 			for(int i = 1; i < tekstVakken.length; i++)
 			{
@@ -1571,6 +1444,7 @@ public class TekstVakPanel implements InteractionView
 				{
 					tekstVakken[i][j].setVisible(true);
 					tekstVakken[i][j].setPixelSize(-1, h);
+					//tekstVakken[i][j].setPixelSize(breedtes.get(j).intValue(), h);
 				}
 				hoogte += hoogtes.get(i);
 			}
@@ -1620,7 +1494,9 @@ public class TekstVakPanel implements InteractionView
 		}
 		
 		final TekstVak layoutPanel = tekstVakken[0][pos];
-		final Widget widget = layoutPanel.getWidget(0);
+		
+		//final Widget widget = layoutPanel.getWidget(0);
+		
 // Wat met de positie van widgets
 		layoutPanel.insert(klapUitButton,0);
 		LoadHandler handler = new LoadHandler() {
@@ -1628,35 +1504,24 @@ public class TekstVakPanel implements InteractionView
 			@Override
 			public void onLoad(LoadEvent event) {
 				int width = masterView.getWidth();
+				int height = masterView.getHeight();
 				klapUitButton.setPixelSize(width, hoogtes.get(0).intValue());
 				switch(inklapKnopPos) {
 				case LEFT:
-						layoutPanel.setWidgetLeftRight(widget, width, Unit.PX, 0, Unit.PX);
+						//layoutPanel.setWidgetLeftRight(widget, width, Unit.PX, 0, Unit.PX);
 						layoutPanel.setWidgetLeftWidth(klapUitButton, 0, Unit.PX, width, Unit.PX);
+						layoutPanel.setWidgetTopHeight(klapUitButton, (hoogtes.get(0).intValue()-height)/2, Unit.PX, height, Unit.PX);
 						break;
 				case MIDDLE: // FIXME werkt nog van geen meter!
-					FlowPanel flow = layoutPanel.getFlowPanel();
-					flow.add(klapUitButton);Style style = klapUitButton.getElement().getStyle();
-					flow.getElement().getStyle().clearWidth();
-					style.setDisplay(Display.INLINE_BLOCK);
-					style.setFloat(Style.Float.RIGHT);
-/*					Widget child = widget;
-					if(widget instanceof VerticalPanel)
-						child = ((VerticalPanel) widget).getWidget(0);
+					layoutPanel.setWidgetLeftWidth(klapUitButton, layoutPanel.getRegelBreedte(), Unit.PX, width, Unit.PX);
+					layoutPanel.setWidgetTopHeight(klapUitButton, (hoogtes.get(0).intValue()-height)/2, Unit.PX, height, Unit.PX);
 					
-					if(child instanceof HasWidgets)
-					{
-						layoutPanel.remove(klapUitButton);
-						Style style = klapUitButton.getElement().getStyle();
-						style.setDisplay(Display.INLINE);
-						style.setFloat(Style.Float.RIGHT);
-						((HasWidgets) widget.getParent()).add(klapUitButton);
-					}
-*/					break;
+					break;
 				case RIGHT:
 				default:
-					layoutPanel.setWidgetLeftRight(widget, 0, Unit.PX, width, Unit.PX);
+					//layoutPanel.setWidgetLeftRight(widget, 0, Unit.PX, width, Unit.PX);
 					layoutPanel.setWidgetRightWidth(klapUitButton, 0, Unit.PX, width, Unit.PX);
+					layoutPanel.setWidgetTopHeight(klapUitButton, (hoogtes.get(0).intValue()-height)/2, Unit.PX, height, Unit.PX);
 				}
 			}
 		};

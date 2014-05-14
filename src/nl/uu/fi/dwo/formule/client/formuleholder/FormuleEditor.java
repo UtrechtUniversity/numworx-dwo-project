@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.SubscriptVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.WortelVak;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
+import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
 
 import com.google.gwt.user.client.ui.Panel;
 
@@ -146,7 +147,8 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 	public Panel getAsPanel()
 	{
 		//FocusPanel sp = new FocusPanel();
-		nl.uu.fi.dwo.interaction.client.touch.TouchPanel sp = new nl.uu.fi.dwo.interaction.client.touch.TouchPanel();
+		//nl.uu.fi.dwo.interaction.client.touch.TouchPanel sp = new nl.uu.fi.dwo.interaction.client.touch.TouchPanel();
+		TouchPanel sp = new TouchPanel();
 		sp.getElement().addClassName("insert_formule");
 		sp.add(this.getMainRegel().getCanvas());
 		return sp;

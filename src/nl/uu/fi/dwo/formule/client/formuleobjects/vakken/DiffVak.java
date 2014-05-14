@@ -62,6 +62,16 @@ public class DiffVak extends FormuleElementWithChildren
 		//getChild(1).setFontChanges(changes);
 	}
 	
+	public int getAsHoogte()
+	{
+		
+		if(diffBreuk)
+        	return getChild(0).height - fm.getAscent()/8 - 1;
+		else
+			return getChild(1).y - fm.getAscent()/8 - 2;
+        
+	}
+	
 	@Override
 	public void paintObject()
 	{

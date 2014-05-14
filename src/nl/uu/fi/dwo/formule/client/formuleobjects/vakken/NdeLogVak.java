@@ -55,6 +55,11 @@ public class NdeLogVak extends FormuleElementWithChildren
 
 		getChild(1).setFontChanges(changes);
 	}
+	
+	public int getAsHoogte()
+	{
+		return getChild(0).getAsHoogte() + getChild(1).height/2;
+	}
 
 	@Override
 	public void paintObject()

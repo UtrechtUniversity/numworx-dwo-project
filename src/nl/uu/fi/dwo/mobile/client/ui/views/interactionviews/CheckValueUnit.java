@@ -15,6 +15,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.utils.StringUtils;
 
+import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -158,18 +159,16 @@ public class CheckValueUnit implements InteractionStub{
 		attempts = new Vector();
 		
 		basisPanel = new LayoutPanel();
-		basisPanel.setSize("" + breedte + "px", "" + hoogte + "px");
+		//basisPanel.setSize("" + breedte + "px", "" + hoogte + "px");
 		
-		int imWidth = breedte - 20;
+		int imWidth = breedte - 30;
 		int imHeight = 20;
 		Image knopImage = null;
 		if(knopImageString!=null && !"".equals(knopImageString))
        	{  	knopImage = new ImageView(knopImageString).getImage();
 			imWidth = knopImage.getWidth();
-			System.out.println("imWidth 1: " + imWidth);
 			imHeight = knopImage.getHeight();
 			if(imWidth == -1) imWidth = 80;
-			System.out.println("imWidth 2: " + imWidth);
 			if(imHeight == -1) imHeight = 20;
 			//checkButton.setSize(imWidth,imHeight);
 			//zetMaat();
@@ -181,6 +180,9 @@ public class CheckValueUnit implements InteractionStub{
 		}
 		else
 			checkButton = new PushButton(rb.getString("klaarKnopLabel"));
+		breedte = imWidth + 30;
+		hoogte = imHeight + 5;
+		basisPanel.setSize("" + breedte + "px", "" + hoogte + "px");
 		basisPanel.add(checkButton);
 		basisPanel.setWidgetLeftWidth(checkButton, 0, Style.Unit.PX, imWidth, Style.Unit.PX);
 		basisPanel.setWidgetTopHeight(checkButton, 0, Style.Unit.PX, imHeight, Style.Unit.PX);
@@ -199,10 +201,10 @@ public class CheckValueUnit implements InteractionStub{
 		
 		basisPanel.add(goedKrulImage);
 		basisPanel.add(foutKruisImage);
-		basisPanel.setWidgetLeftWidth(goedKrulImage, imWidth, Style.Unit.PX, 20, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(goedKrulImage, 0, Style.Unit.PX, hoogte, Style.Unit.PX);
-		basisPanel.setWidgetLeftWidth(foutKruisImage, imWidth, Style.Unit.PX, 20, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(foutKruisImage, 0, Style.Unit.PX, hoogte, Style.Unit.PX);
+		basisPanel.setWidgetLeftWidth(goedKrulImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(goedKrulImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
+		basisPanel.setWidgetLeftWidth(foutKruisImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(foutKruisImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
 		goedKrulImage.setVisible(false);
 		foutKruisImage.setVisible(false);
 		

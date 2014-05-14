@@ -78,8 +78,11 @@ public class PrimitieveVak extends FormuleElementWithChildren
 		getChild(0).setPosition(k1x,k1y);
 		getChild(1).setPosition(k2x,k2y);
 
-		
-		
+	}
+	
+	public int getAsHoogte()
+	{
+		return fm.getAscent()/3 + getChild(0).getAsHoogte();
 	}
 
 	public String toString()

@@ -33,26 +33,7 @@ public class Machtvak extends FormuleElementWithChildren
 	{
 		this.getChild().paint();
 
-		FormuleRegel parentRegel = getRegelParent();
-
-		//previous object in the line
-		FormuleElement prev = parentRegel.getPrevious(this);
-
-		int vgh = parentRegel.getFont().getHeight();
-		int vgah = parentRegel.getFont().getHeight() / 2;
-		if (prev != null)
-		{
-			vgh = prev.getHeight();
-			vgah = prev.getAsHoogte();
-		}
-
-		width = getChild().width;
-
-		height = getChild().height - 2 * fm.getAscent() / 3 - fm.getDescent() + vgh;
-
-		this.setAsHoogte(getChild().height - 2 * fm.getAscent() / 3 - fm.getDescent() + vgah);
-
-		this.setSize(width, height);
+		zetMaat();
 
 		if (this.isSelected())
 		{
@@ -67,6 +48,45 @@ public class Machtvak extends FormuleElementWithChildren
 		this.getChild().draw(ctx);
 
 		this.drawCursor();
+	}
+	
+	public void zetMaat()
+	{
+		FormuleRegel parentRegel = getRegelParent();
+	
+		//previous object in the line
+		FormuleElement prev = parentRegel.getPrevious(this);
+		int vgh = parentRegel.getFont().getHeight();
+		int vgah = parentRegel.getFont().getHeight() / 2;
+		if (prev != null)
+		{
+			vgh = prev.getHeight();
+			vgah = prev.getAsHoogte();
+		}
+	
+		width = getChild().width;
+	
+		height = getChild().height - 2 * fm.getAscent() / 3 - fm.getDescent() + vgh;
+	
+		System.out.println("machtvak maten voor setAsHoogte: getChild().height = " + getChild().height + ", 2*fm.getAscent()/3 + fm.getDescent() = " + (2*fm.getAscent()/3 + fm.getDescent()) + ", vgah = " + vgah);
+		
+		this.setAsHoogte(getChild().height - 2 * fm.getAscent() / 3 - fm.getDescent() + vgah);
+		System.out.println("Machtvak: ashoogte gezet: " + (getChild().height - 2 * fm.getAscent() / 3 - fm.getDescent() + vgah));
+	
+		this.setSize(width, height);
+		
+	}
+	
+	public int getAsHoogte()
+	{	FormuleRegel parentRegel = getRegelParent();
+		FormuleElement prev = parentRegel.getPrevious(this);
+		int vgah = parentRegel.getFont().getAscent() / 2;
+		if (prev != null)
+		{
+			vgah = prev.getAsHoogte();
+		}
+		return getChild().height - 2 * fm.getAscent() / 3 - fm.getDescent() + vgah;
+		
 	}
 
 	@Override

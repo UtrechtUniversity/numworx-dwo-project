@@ -112,6 +112,11 @@ public class Breukvak extends FormuleElementWithChildren
 
 		this.drawCursor();
 	}
+	
+	public int getAsHoogte()
+	{
+		return getChild(0).height + fm.getAscent() / 8;
+	}
 
 	@Override
 	@Deprecated

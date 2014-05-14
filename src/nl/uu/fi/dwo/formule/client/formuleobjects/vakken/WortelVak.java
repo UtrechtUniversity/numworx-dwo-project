@@ -105,6 +105,10 @@ public class WortelVak extends FormuleElementWithChildren
 		getChild().setPosition(5 * fm.getAscent() / 7 - 1, fm.getAscent() / 4);
 		return true;
 	}
+	
+	public int getAsHoogte()
+	{	return getChild().getAsHoogte() + fm.getAscent() / 4;
+	}
 
 	@Override
 	public String toString()

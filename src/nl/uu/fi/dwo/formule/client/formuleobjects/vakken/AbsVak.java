@@ -41,6 +41,11 @@ public class AbsVak extends FormuleElementWithChildren
 		setAsHoogte(getChild().getAsHoogte() + fm.getAscent()/12);
 	}
 	
+	public int getAsHoogte()
+	{
+		return getChild().getAsHoogte() + fm.getAscent()/12;
+	}
+	
 	public String toString()
 	{	return "$r" + getChild().toString() + "@";
 	}

@@ -133,6 +133,11 @@ public class LimietVak extends FormuleElementWithChildren{
 		//kind3.setLocation(k3x,k3y);
 	}
 	
+	public int getAsHoogte()
+	{
+		return getChild(0).getAsHoogte();
+	}
+	
 	
 	public String toString()
 	{

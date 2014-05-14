@@ -269,6 +269,7 @@ public class FormuleTeken extends FormuleElement
 			m = ctx.measureText(" ");
 
 		this.setSize((int) m.getWidth()+1, fm.getHeight());
+		this.setAsHoogte(fm.getAscent()/2);
 		
 		return true;
 	}

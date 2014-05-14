@@ -69,7 +69,7 @@ public class IntegraalVak extends FormuleElementWithChildren
 		ctx.setTextBaseline(TextBaseline.BOTTOM);
 		fm.setItalic(false);
 		ctx.setFont(fm.getFontStyle());
-		ctx.fillText("d", tx + asc + getChild(0).width + asc / 5 - 2, ashoogte + (asc - 1) / 2 + 1);
+		ctx.fillText("d", tx + asc + getChild(0).width + asc / 5 - 2, ashoogte + (asc - 1) / 2 + 2);
 		fm.setItalic(true);
 		
 		this.getChild(0).draw(ctx);
@@ -127,6 +127,11 @@ public class IntegraalVak extends FormuleElementWithChildren
 		getChild(2).setPosition(k3x, k3y);
 		getChild(3).setPosition(k4x, k4y);
 		this.setAsHoogte(ashoogte);
+	}
+	
+	public int getAsHoogte()
+	{
+		return getChild(2).height + 1 + fm.getAscent() / 3 + getChild(0).getAsHoogte();
 	}
 
 	public String toString()

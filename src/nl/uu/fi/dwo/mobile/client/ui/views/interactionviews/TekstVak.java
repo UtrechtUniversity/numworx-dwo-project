@@ -12,6 +12,8 @@ import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 
+import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
@@ -33,18 +35,26 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	private int rij;
 	private int kolom;
 	private ArrayList<Object> opdrachtObjects;
+	private ArrayList<TekstVakPanel> zwevendeTekstVakken = new ArrayList<TekstVakPanel>();
 	private int ashoogte;
-	private int tekstAshoogte;
+	private double tekstVakBreedte;
 	
-	private FlowPanel flowVak;
-	private VerticalPanel vPanel;
+	private boolean centerH = false;
+	private boolean centerV = false;
+	
+	//private FlowPanel flowVak;
+	private TekstRegel[] regelVakken;
+	//private VerticalPanel vPanel;
+	private int aantalRegels;
 	
 	private int cellMarge;
+	private int bovenMarge;
 	
 	private int font_size;
 	private int font_style;
 	private CssColor fgColor;
 	int hoogte = 0;
+	int breedte = 0;
 	
 	
 	public TekstVak(TekstVakPanel parent, int rij, int kolom)
@@ -53,15 +63,21 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		this.parent = parent;
 		this.rij = rij;
 		this.kolom = kolom;
-		flowVak = new FlowPanel();
-		flowVak.getElement().getStyle().setProperty("lineHeight", "1.2");
-		vPanel = new VerticalPanel();
-		vPanel.add(flowVak);
-		vPanel.setHeight("100%");
+		//flowVak = new FlowPanel();
+		//flowVak.getElement().getStyle().setProperty("lineHeight", "1.2");
+		regelVakken = new TekstRegel[500];
+		regelVakken[0] = new TekstRegel(this);
+		regelVakken[1] = new TekstRegel(this);
+		//regelVakken[0].getElement().getStyle().setBackgroundColor(CssColor.make(0, 255, 255).toString());
+		//regelVakken[1].getElement().getStyle().setBackgroundColor(CssColor.make(200, 135, 255).toString());
+		aantalRegels = 1;
+		//vPanel = new VerticalPanel();
+		//vPanel.add(flowVak);
+		//vPanel.setHeight("100%");
 		
-		this.add(vPanel);
-		this.setWidgetLeftRight(vPanel, 0, Unit.PX, 0, Unit.PX);
-		this.setWidgetTopBottom(vPanel, 0, Unit.PX, 0, Unit.PX);
+		//this.add(vPanel);
+		//this.setWidgetLeftRight(vPanel, 0, Unit.PX, 0, Unit.PX);
+		//this.setWidgetTopBottom(vPanel, 0, Unit.PX, 0, Unit.PX);
 	}
 
 	public TekstVakPanel getTekstVakParent()
@@ -90,255 +106,311 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		return opdrachtObjects;
 	}
 	
-	public FlowPanel getFlowPanel()
-	{
-		return flowVak;
-	}
+	//public FlowPanel getFlowPanel()
+	//{
+	//	return flowVak;
+	//}
 	
 	public void setColor(CssColor color)
 	{
 		this.fgColor = color;
-		flowVak.getElement().getStyle().setColor(color.toString());
+		//flowVak.getElement().getStyle().setColor(color.toString());
+		for(int i = 0; i < aantalRegels  + 1; i++)
+			regelVakken[i].getElement().getStyle().setColor(color.toString());
 	}
 	
 	public void setFontSize(int font_size)
 	{
 		this.font_size = font_size;
-		flowVak.getElement().getStyle().setFontSize(font_size, Unit.PX);
-		tekstAshoogte = (font_size  - 2) / 2;
-		//ascent = ;
-		//descent = ;
+		//flowVak.getElement().getStyle().setFontSize(font_size, Unit.PX);
+		for(int i = 0; i < aantalRegels  + 1; i++)
+			regelVakken[i].setFontSize(font_size);
+		
 	}
 	
 	public void setFontStyle(int font_style)
 	{
 		this.font_style = font_style;
-		flowVak.getElement().getStyle().setFontStyle(font_style == 2 || font_style == 3 ? FontStyle.ITALIC : FontStyle.NORMAL);
-		flowVak.getElement().getStyle().setFontWeight(font_style == 1 || font_style == 3 ? Style.FontWeight.BOLD : Style.FontWeight.NORMAL);
+		//flowVak.getElement().getStyle().setFontStyle(font_style == 2 || font_style == 3 ? FontStyle.ITALIC : FontStyle.NORMAL);
+		//flowVak.getElement().getStyle().setFontWeight(font_style == 1 || font_style == 3 ? Style.FontWeight.BOLD : Style.FontWeight.NORMAL);
+	
+		for(int i = 0; i < aantalRegels  + 1; i++)
+		{	regelVakken[i].setFontStyle(font_style);
+		}
 	}
 	
 	public void setRonding(int ronding)
 	{
-		flowVak.getElement().getStyle().setProperty("borderRadius", (ronding / 2) + "px");
+		//flowVak.getElement().getStyle().setProperty("borderRadius", (ronding / 2) + "px");
+		this.getElement().getStyle().setProperty("borderRadius", (ronding / 2) + "px");
 	}
 	
 	public void setCentering(boolean centerH, boolean centerV)
 	{
+		this.centerH = centerH;
+		this.centerV = centerV;
+		
+		/*
 		if(centerH)
-			flowVak.getElement().getStyle().setTextAlign(TextAlign.CENTER);
+		{	flowVak.getElement().getStyle().setTextAlign(TextAlign.CENTER);
+			for(int i = 0; i < aantalRegels  + 1; i++)
+				regelVakken[i].getElement().getStyle().setTextAlign(TextAlign.CENTER);
+		}
 		if(centerV)
 			vPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		*/
 	}
 	
 	public void setTekstVakBreedte(double tekstVakBreedte)
 	{
-		flowVak.setWidth(tekstVakBreedte + "px");
+		this.tekstVakBreedte = tekstVakBreedte;
+		//flowVak.setWidth(tekstVakBreedte + "px");
+		for(int i = 0; i < aantalRegels  + 1; i++)
+			regelVakken[i].setWidth(tekstVakBreedte + "px");
 	}
 	
 	public void setMarges(int bovenMarge, int cellMarge)
 	{
 		this.cellMarge = cellMarge;
-		vPanel.getElement().getStyle().setProperty("margin", "" + bovenMarge + "px " + cellMarge + "px");
+		this.bovenMarge = bovenMarge;
+		tekstVakBreedte = breedte - 2  * cellMarge;//hier stond - 2 bij. Die was ergens goed voor, maar levert ook problemen als het vak zijn breedte aanpast aan de inhoud.
+		if(tekstVakBreedte >= 0)
+		{	//if(hoogte > 0)
+			//	flowVak.setSize(tekstVakBreedte + "px", "" + hoogte + "px");
+			for(int i = 0; i < aantalRegels  + 1; i++)
+				regelVakken[i].setWidth(tekstVakBreedte + "px");
+		}
+		//vPanel.getElement().getStyle().setProperty("margin", "" + (bovenMarge  + 1)  + "px " + cellMarge + "px");
 	}
 	
 	public void setSize(int b, int h)
 	{
-		flowVak.setSize("" + (b - - 2 * cellMarge)  + "px", "" + h + "px");
-		this.setSize("" + b + "px", "" + h + "px");
+		this.breedte = b;
+		this.hoogte = h;
+		tekstVakBreedte = b - 2 * cellMarge;//hier stond - 2 bij. Die was ergens goed voor, maar levert ook problemen als het vak zijn breedte aanpast aan de inhoud.
+		if(tekstVakBreedte >= 0 && h >= 0)
+		{	//flowVak.setSize("" + tekstVakBreedte  + "px", "" + h + "px");
+			for(int i = 0; i < aantalRegels  + 1; i++)
+				regelVakken[i].setWidth(tekstVakBreedte + "px");
+		}
+		if(h > 0)
+			this.setSize("" + b + "px", "" + h + "px");
 	}
 	
 	public void setObjects(ArrayList<Object> opdrachtObjects)
 	{
-		this.opdrachtObjects = opdrachtObjects;//niet per se nodig, want is al gedaan..
-		//eerst fonts in formuleEditors en formuleViewers goed zetten, zodat ashoogtes goed worden berekend.
+		this.opdrachtObjects = opdrachtObjects;
+		
+		aantalRegels = 1;
+		
+		int regelBreedte = 0;
+		//ctx maken om tekst te kunnen meten. 
+		Canvas canvas = Canvas.createIfSupported();
+		Context2d ctx = canvas.getContext2d();
+		String fontTypeString = "";
+		if(font_style == 1)
+			fontTypeString = "bold";
+		else if(font_style == 2)
+			fontTypeString = "italic";
+		else if(font_style == 3)
+			fontTypeString = "bold italic";
+		if(fontTypeString.equals(""))
+			ctx.setFont(font_size + "px sans-serif");
+		else
+			ctx.setFont(fontTypeString + " " + font_size + "px sans-serif");
+		
+		double spatieBreedte = ctx.measureText(" ").getWidth();
+				
+		//Voor alle objecten bepalen op welke regel ze terechtkomen, door breedtes te meten.
 		for(int i = 0; i < opdrachtObjects.size(); i++)
 		{
 			Object currentObject = opdrachtObjects.get(i);
-			if (currentObject instanceof FormuleEditorWithAnswer)
-			{
-				((FormuleEditorWithAnswer) currentObject).setFont(FormuleFont.createFromFontSize(font_size));
-				((FormuleEditorWithAnswer) currentObject).setColor(fgColor);
-			}
-			else if (currentObject instanceof FormuleViewer)
-			{	
-				FormuleFont f = FormuleFont.createFromFontSize(font_size);
-				f.setBold(font_style == 1 || font_style == 3);
-				((FormuleViewer) currentObject).setFont(f);
-				((FormuleViewer) currentObject).setColor(fgColor);
-			}
-		}
-		//bepaalAshoogte();
-		//int verschuiving = hoogte - ashoogte;
-		for(int i = 0; i < opdrachtObjects.size(); i++)
-		{
-			Object currentObject = opdrachtObjects.get(i);
-			//int objectVerschuiving = 0;
-			//if(currentObject instanceof TekstElement)
-			//	objectVerschuiving = ((TekstElement) currentObject).getHeight()-((TekstElement) currentObject).getAsHoogte();
 			if(currentObject instanceof String)
 			{
-				currentObject = ((String) currentObject).replaceAll("  ", " &nbsp;");
-				currentObject = ((String) currentObject).replaceAll("&nbsp; ", "&nbsp;&nbsp;");
-				Element element = DOM.createSpan();
-				element.setInnerHTML((String) currentObject);
-				//element.getStyle().setProperty("verticalAlign", "top");
-				//System.out.println("tekst = " + currentObject + ", vertical align tekst: " + (verschuiving - (font_size - tekstAshoogte)));
+				String s = (String) currentObject;
+				if(i > 0 && opdrachtObjects.get(i - 1) instanceof String && s.length() > 0 && s.startsWith(" "))
+				{
+					s = s.substring(1);
+				}
+				s = s.replaceAll("  ", " &nbsp;");
+				s = s.replaceAll("&nbsp; ", "&nbsp;&nbsp;");
 				
-				//deze mag terug als ik per regel kan kijken:
-				//element.getStyle().setProperty("verticalAlign", "" + (verschuiving - (font_size - tekstAshoogte)) + "px");
-				//element.getStyle().setProperty("verticalAlign", "" + 0 + "px");
+				while(s.contains(" "))
+				{	String sub = s.substring(0, s.indexOf(" ") + 1); 
+					s = s.substring(s.indexOf(" ") + 1); 
+					double width = ctx.measureText(sub.substring(0, sub.length() - 1)).getWidth();
+					//if(regelBreedte == 0)
+					//	regelBreedte = 2;
+					if(regelBreedte == 0 || regelBreedte + width  <= tekstVakBreedte)
+					{
+						regelVakken[aantalRegels - 1].addObject(sub.substring(0, sub.length() - 1));
+						regelBreedte += width;
+						if(regelBreedte == 0 || regelBreedte + spatieBreedte <= tekstVakBreedte)
+						{
+							regelVakken[aantalRegels - 1].addObject(" ");
+							regelBreedte += spatieBreedte;
+						}
+						else if(s.length() > 0)
+						{
+							voegRegelToe();
+							regelBreedte = 0;
+						}
+					}
+					else
+					{
+						voegRegelToe();
+						regelVakken[aantalRegels - 1].addObject(sub.substring(0, sub.length() - 1));
+						regelBreedte = (int) width;
+						if(regelBreedte == 0 || regelBreedte + spatieBreedte <= tekstVakBreedte)
+						{
+							regelVakken[aantalRegels - 1].addObject(" ");
+							regelBreedte += spatieBreedte;
+						}
+						else if(s.length() > 0)
+						{
+							voegRegelToe();
+							regelBreedte = 0;
+						}
+					}
+				}
+				if(s.length() > 0)//nu zitten er in s geen spaties meer. De rest nog proberen te plaatsen.
+				{
+					double width = ctx.measureText(s).getWidth();
+					if(regelBreedte == 0 || regelBreedte + width  <= tekstVakBreedte)
+					{
+						regelVakken[aantalRegels - 1].addObject(s);
+						regelBreedte += width;
+					}	
+					else
+					{
+						voegRegelToe();
+						regelVakken[aantalRegels - 1].addObject(s);
+						regelBreedte = (int) width;
+					}
+				}
+				//nodig om nieuwe regels te krijgen bij enter. De tweede voorwaarde is een (enigszins) kunstmatige oplossing 
+				//om laatste regel (die in wiskopdr niet bestaat) niet te maken, maar anders gaat verticaal centreren niet goed.
 				
-				flowVak.getElement().appendChild(element);
-
-				if (opdrachtObjects.size() > i + 1 && opdrachtObjects.get(i + 1) instanceof String)
-				{	flowVak.getElement().appendChild(DOM.createElement("br"));
-					
-				//niet zo: 
-				//destination.getElement().getStyle().setMarginLeft(2, Style.Unit.PX);
-				//want dan krijgt het hele vak een marge van 2; tekstvakken worden dan dus ook 2 px naar rechts geduwd.
+				
+				if (opdrachtObjects.size() > i + 1 && opdrachtObjects.get(i + 1) instanceof String
+						&& !(opdrachtObjects.size() == i + 2 && opdrachtObjects.get(i + 1).toString().equals(" ")))
+				{	
+					voegRegelToe();
+					regelBreedte = 0;
+						
+				
 				}
 			}
 			else if (currentObject instanceof FormuleEditorWithAnswer)
 			{
-				int asHoogte = ((FormuleEditorWithAnswer) currentObject).getAsHoogte();
-				int hoogte = ((FormuleEditorWithAnswer) currentObject).getHeight();
-				
-				TouchPanel tp = (TouchPanel) ((FormuleEditorWithAnswer) currentObject).getAsPanel();
-				tp.getElement().getStyle().setProperty("display", "inline-block");
-				parent.getKeyboard().setEditor(((FormuleEditorWithAnswer) currentObject));
-				parent.addFormulePanelListeners(tp, ((FormuleEditorWithAnswer) currentObject));
-
-				tp.getElement().getStyle().setProperty("display", "inline-block");
-				tp.getElement().getStyle().setProperty("verticalAlign", "top");
-				tp.getElement().getStyle().setProperty("verticalAlign", "" + (-hoogte + asHoogte + Math.rint(font_size * 0.33) + 1) + "px");
-				//deze mag terug als ik per regel kan kijken:
-				//tp.getElement().getStyle().setProperty("verticalAlign", "" + (verschuiving - objectVerschuiving) + "px");
-				parent.getKeyboard().setEditor((FormuleEditorWithAnswer) currentObject);
-				flowVak.add(tp);
+				((FormuleEditorWithAnswer) currentObject).setFont(FormuleFont.createFromFontSize(font_size));
+				((FormuleEditorWithAnswer) currentObject).setColor(fgColor);
+				if(regelBreedte == 0 || regelBreedte + ((FormuleEditorWithAnswer) currentObject).getWidth() <= tekstVakBreedte)
+				{	regelVakken[aantalRegels - 1].addObject(currentObject);
+					regelBreedte += ((FormuleEditorWithAnswer) currentObject).getWidth();
+				}
+				else
+				{
+					voegRegelToe();
+					regelVakken[aantalRegels - 1].addObject(currentObject);
+					regelBreedte = ((FormuleEditorWithAnswer) currentObject).getWidth();
+				}
 			}
 			else if (currentObject instanceof FormuleViewer)
-			{	int asHoogte = ((FormuleViewer) currentObject).getMainRegel().getAsHoogte();
-				int hoogte = ((FormuleViewer) currentObject).getMainRegel().getHeight();
-				
-				Panel a = ((FormuleViewer) currentObject).getAsPanel();
-				a.getElement().getStyle().setProperty("display", "inline-block");
-				
-				//deze 2 px zijn overgenomen uit het WiskOpdr TekstFormuleVak, om te zorgen dat formules niet op tekst botsen. 
-				a.getElement().getStyle().setMarginLeft(2, Style.Unit.PX);
-				a.getElement().getStyle().setMarginRight(2, Style.Unit.PX);
-				//Hieronder: gebruik f.getFontSize() ipv font_size omdat fontSize kan zijn aangepast ivm formules in Times Roman.
-				a.getElement().getStyle().setProperty("verticalAlign", "top");
-				FormuleFont f = FormuleFont.createFromFontSize(font_size);
+			{	FormuleFont f = FormuleFont.createFromFontSize(font_size);
 				f.setBold(font_style == 1 || font_style == 3);
-				a.getElement().getStyle().setProperty("verticalAlign", "" + (asHoogte - hoogte + Math.rint(f.getFontSize() * 0.33) + 1) + "px");
-				//a.getElement().getStyle().setProperty("verticalAlign", "" + (asHoogte - ((TekstElement) currentObject).getAsHoogte()) + "px");
-				//int vertAlign = ((TekstElement) currentObject).getAsHoogte() - ashoogte;
-				//System.out.println("verticalAlign formuleviewer: " + vertAlign);
-				//deze mag terug als ik per regel kan kijken:
-				//a.getElement().getStyle().setProperty("verticalAlign", "" + (verschuiving - objectVerschuiving) + "px");
-				flowVak.add(a);
-			}
-			else if (currentObject instanceof FormuleEditorWithSteps)
-			{
-				Panel a = ((FormuleEditorWithSteps) currentObject).getAsPanel();
+				((FormuleViewer) currentObject).setFont(f);
+				((FormuleViewer) currentObject).setColor(fgColor);
 				
-				a.getElement().getStyle().setProperty("display", "inline-block");
-				a.getElement().getStyle().setProperty("verticalAlign", "top");
-				//deze mag terug als ik per regel kan kijken:
-				//a.getElement().getStyle().setProperty("verticalAlign", "" + (verschuiving - objectVerschuiving) + "px");
-				flowVak.add(a);
-			}
-			else if (currentObject.getClass().getName().equals("fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT"))
-			{
-				Panel a = (Panel) (((InteractionView) currentObject).asWidget());
-				a.getElement().getStyle().setProperty("display", "inline-block");
-				a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
-				flowVak.add(a);
+				if(regelBreedte == 0 || regelBreedte + ((FormuleViewer) currentObject).getWidth() + 4 <= tekstVakBreedte)
+				{	regelVakken[aantalRegels - 1].addObject(currentObject);
+					regelBreedte += ((FormuleViewer) currentObject).getWidth() + 4;
+				}
+				else
+				{
+					voegRegelToe();
+					regelVakken[aantalRegels - 1].addObject(currentObject);
+					regelBreedte = ((FormuleViewer) currentObject).getWidth() + 4;
+				}
 			}
 			else if (currentObject instanceof InteractionView)
 			{		
-				Widget a = (((InteractionView) currentObject).asWidget());
-				a.getElement().getStyle().setProperty("display", "inline-block");
-				if(currentObject instanceof TekstVakPanel && !(a instanceof PopupButton))
-				{
-					int h = ((TekstVakPanel)currentObject).getHeight();
-					int tekstGrootte = ((TekstVakPanel) currentObject).getFontSize();
-					//deze mag terug als ik pe rregel kan kijken:
-					//a.getElement().getStyle().setProperty("verticalAlign", "" + (verschuiving - objectVerschuiving) + "px");
-					a.getElement().getStyle().setProperty("verticalAlign", "top");
-					a.getElement().getStyle().setProperty("verticalAlign", (tekstGrootte - h + 1) + "px");
-					//a.getElement().getStyle().setProperty("verticalAlign", "" + (((TekstElement) currentObject).getAsHoogte() - ashoogte) + "px");
-				}
 				if(currentObject instanceof TekstVakPanel && ((TekstVakPanel) currentObject).isZwevend())
-				{	this.add(a);
-					this.setWidgetLeftWidth(a, ((TekstVakPanel)currentObject).getLocationX(), Style.Unit.PX, 
-							((TekstVakPanel)currentObject).getBreedte(), Style.Unit.PX);
-					this.setWidgetTopHeight(a, ((TekstVakPanel)currentObject).getLocationY(), Style.Unit.PX, 
-							((TekstVakPanel)currentObject).getHoogte(), Style.Unit.PX);
-					((TekstVakPanel) currentObject).setParent(this);
+				{	zwevendeTekstVakken.add((TekstVakPanel) currentObject);
 				}
 				else
-					flowVak.add(a);
+				{	
+					if(regelBreedte == 0 || regelBreedte + ((InteractionView) currentObject).getWidth() <= tekstVakBreedte)
+					{	regelVakken[aantalRegels - 1].addObject(currentObject);
+						regelBreedte += ((InteractionView) currentObject).getWidth();
+					}
+					else
+					{
+						voegRegelToe();
+						regelVakken[aantalRegels - 1].addObject(currentObject);
+						regelBreedte = ((InteractionView) currentObject).getWidth();
+					}
+				}
 				
 			}
 			else if (currentObject instanceof ImageView)
 			{
 				ImageView iv = (ImageView) currentObject;
 				Widget w = iv.getImage();
-				flowVak.add(w);
+				if(regelBreedte == 0 || regelBreedte + w.getOffsetWidth() <= tekstVakBreedte)
+				{	regelVakken[aantalRegels - 1].addObject(currentObject);
+					regelBreedte += w.getOffsetWidth();
+				}
+				else
+				{
+					voegRegelToe();
+					regelVakken[aantalRegels - 1].addObject(currentObject);
+					regelBreedte = w.getOffsetWidth();
+				}
 			}
 			else if (currentObject instanceof AnchorView)
 			{
 				AnchorView av = (AnchorView) currentObject;
 				Widget w = av.asWidget();
-				flowVak.add(w);
+				if(regelBreedte == 0 || regelBreedte + w.getOffsetWidth() <= tekstVakBreedte)
+				{	regelVakken[aantalRegels - 1].addObject(currentObject);
+					regelBreedte += w.getOffsetWidth();
+				}
+				else
+				{
+					voegRegelToe();
+					regelVakken[aantalRegels - 1].addObject(currentObject);
+					regelBreedte = w.getOffsetWidth();
+				}
 			}
-			
 		}
+		
+		//regelvakken vullen. Zo krijgen ze ook de juiste maten.
+		for(int i = 0; i < aantalRegels; i++)
+		{
+			regelVakken[i].bepaalAshoogte();
+			regelVakken[i].vulRegel();
+		}
+		
+		plaatsRegels();
 	}
 	
-	/*
-	public void bepaalAshoogte()
+	public void voegRegelToe()
 	{
-		//int b = 1; Breedte hoef ik volgens mij niet te regelen, omdat ik alles in een flowpanel zet.
-		int h1 = 0;
-		int h2 = 0;
-		for(int i = 0; i < opdrachtObjects.size(); i++)
-		{
-			Object currentObject = opdrachtObjects.get(i);
-			if(currentObject instanceof TekstElement)
-			{
-				int hoogte = ((TekstElement) currentObject).getHeight();
-				int ash = ((TekstElement) currentObject).getAsHoogte();
-				if(ash > h1)
-					h1 = ash;
-				if(hoogte - ash > h2)
-					h2 = hoogte - ash;
-			}
-			else if(currentObject instanceof String)
-			{
-				int hoogte = font_size - 2;
-				int ash = hoogte / 2;
-				if(ash > h1)
-					h1 = ash;
-				if(hoogte - ash > h2)
-					h2 = hoogte - ash;
-			}
-		}
-		if(opdrachtObjects.size() > 0)
-		{
-			this.hoogte = h1 + h2;
-			ashoogte = h1;
-		}
-		else
-		{
-			this.hoogte = font_size;//eigenlijk: fm.getAscent() + fm.getDescent()
-			ashoogte = (hoogte - 2) / 2; //eigenlijk: fm.getAscent();
-		}
-		System.out.println("berekende ashoogte: " + ashoogte);
+		aantalRegels++;
+		regelVakken[aantalRegels] = new TekstRegel(this);
+		if(tekstVakBreedte >= 0)
+			regelVakken[aantalRegels].setWidth(tekstVakBreedte + "px");
+		regelVakken[aantalRegels].setHeight(font_size + 4 + "px"); //dit is nog een beetje willekeurig...
+		regelVakken[aantalRegels].setFontSize(font_size);
+		regelVakken[aantalRegels].setFontStyle(font_style);
+		//regelVakken[aantalRegels].getElement().getStyle().setBackgroundColor(CssColor.make(20*aantalRegels, 255 - 20 * aantalRegels, 255).toString());
+		regelVakken[aantalRegels].getElement().getStyle().setColor(fgColor.toString());
 		
+		//if(centerH)
+		//	regelVakken[aantalRegels].getElement().getStyle().setTextAlign(TextAlign.CENTER);
+		//flowVak.add(regelVakken[aantalRegels]);
 	}
-	*/
 	
 	
 	public int getAsHoogte()
@@ -349,7 +421,70 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	public void setAshoogte(int ashoogte)
 	{
 		this.ashoogte = ashoogte;
+		regelVakken[0].setAsHoogte(ashoogte);
+		plaatsRegels();
 	}
+	
+	public int getRegelHoogte()
+	{
+		return regelVakken[0].getHeight();
+	}
+	
+	public int getRegelBreedte()
+	{
+		return regelVakken[0].getWidth();
+	}
+	
+	public TekstRegel getRegelVak(int i)
+	{
+		return regelVakken[i];
+	}
+	
+	public void plaatsRegels()
+	{
+		this.clear();
+		//regelVakken toevoegen op juiste posities.
+		int vertPositie = bovenMarge;
+		if(centerV)
+		{
+			int regelHoogtes = 0;
+			for(int j = 0; j < aantalRegels; j++)
+				regelHoogtes += regelVakken[j].getHeight();
+			vertPositie += (hoogte - 2 * bovenMarge - regelHoogtes) / 2;
+		}
+		
+		for(int i = 0; i < aantalRegels; i++)
+		{
+			int horPositie = cellMarge;
+			if(centerH)
+				horPositie += (int) (tekstVakBreedte - regelVakken[i].getWidth())/2;
+			
+			this.add(regelVakken[i]);
+			this.setWidgetLeftWidth(regelVakken[i], horPositie, Style.Unit.PX, regelVakken[i].getWidth(), Style.Unit.PX);
+			this.setWidgetTopHeight(regelVakken[i], vertPositie, Style.Unit.PX, regelVakken[i].getHeight(), Style.Unit.PX);
+			vertPositie += regelVakken[i].getHeight();// + interlinie; nog implementeren
+			//flowVak.add(regelVakken[i]);
+		}
+		
+		//zwevende tekstvakken toevoegen.
+		for(int i = 0; i < zwevendeTekstVakken.size(); i++)
+		{
+			TekstVakPanel panel = ((TekstVakPanel) zwevendeTekstVakken.get(i));
+			Widget a = panel.asWidget();
+			a.getElement().getStyle().setProperty("display", "inline-block");
+			this.add(a);
+			this.setWidgetLeftWidth(a, panel.getLocationX(), Style.Unit.PX, 
+					panel.getBreedte(), Style.Unit.PX);
+			this.setWidgetTopHeight(a, panel.getLocationY(), Style.Unit.PX, 
+					panel.getHoogte(), Style.Unit.PX);
+			panel.setParent(this);
+		}
+		
+		ashoogte = regelVakken[0].getAsHoogte();
+
+	}
+	
+	
 
 	/*
 	@Override

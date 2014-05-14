@@ -91,6 +91,7 @@ public class TekstBuffer
 	
 	public ArrayList<Object> convertTekst(String tekst, List<Object> opdrachtGegevens, boolean vanTekstVakPanel)
 	{
+		
 		ArrayList<Object> result = new ArrayList<Object>();
 		
 
@@ -176,6 +177,8 @@ public class TekstBuffer
 	
 	private String[] getBreaks(String normalTekst)
 	{
+		//if(normalTekst != null && normalTekst.length() > 0 && normalTekst.endsWith("\n"))
+		//	normalTekst = normalTekst.substring(0, normalTekst.length() - 1);
 		normalTekst = normalTekst.replaceAll("\n", "\n ");
 		String[] result = normalTekst.split("\n");
 		return result;
@@ -252,11 +255,11 @@ public class TekstBuffer
 			return new GeogebraView(currentVakGegevens, randomVarNamen, randomVarWaarden);
 		case 45: // GraphTool
 			return 
-					//new StubView("GraphToolGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
-					new PopupFacade( 
-						currentVakGegevens,
-							new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)
-					);
+					new StubView("GraphToolGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+					//new PopupFacade( 
+					//	currentVakGegevens,
+					//		new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)
+					//);
 			
 		case 15: 
 			return new StubView("DoorzienGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
@@ -323,8 +326,8 @@ public class TekstBuffer
 		else if(soortVak == 14) 
 		{
 // Deze werkt niet als stub.
-			result = //new StubView("AntwoordKeuzeVakGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
-					 new PopupFacade(currentVakGegevens,new fi.antwoordkeuzevakgwt.client.AntwoordKeuzeVakGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
+			result = new StubView("AntwoordKeuzeVakGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+					 //new PopupFacade(currentVakGegevens,new fi.antwoordkeuzevakgwt.client.AntwoordKeuzeVakGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		}
 		else if(soortVak == 16)
 		{	
