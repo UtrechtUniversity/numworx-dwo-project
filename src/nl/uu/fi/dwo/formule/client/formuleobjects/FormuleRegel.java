@@ -8,6 +8,7 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Breukvak;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
@@ -22,6 +23,8 @@ public class FormuleRegel extends FormuleElement
 {
 	protected Vector<FormuleElement> children = new Vector<FormuleElement>();
 	static private Logger logger = Logger.getLogger("FormuleRegel");
+	
+	//private FormuleEditorWithAnswer editorParent;
 
 	private int nextx = 0;
 	private int nexty = 0;
@@ -75,6 +78,7 @@ public class FormuleRegel extends FormuleElement
 
 	private void addElement(FormuleElement e)
 	{
+		System.out.println("addElement: " + e.toString());
 		if (this.selectionStart != -1)
 		{
 			this.deleteSelection();
@@ -86,7 +90,10 @@ public class FormuleRegel extends FormuleElement
 			addNonNumberChild();
 		//this should be done in the new child, but just to make sure the changed value is set to true.
 		this.setChanged(true);
+		
 		holder.paint();
+		
+		//resizeEditorWithAnswer();
 		
 		//int asHoogte = holder.getMainRegel().getAsHoogte();
 		//int hoogte = holder.getMainRegel().getHeight();
@@ -402,6 +409,7 @@ public class FormuleRegel extends FormuleElement
 			holder.insert(onRemove);
 
 		this.setChanged(true);
+		//resizeEditorWithAnswer();
 	}
 
 	/**
@@ -457,6 +465,7 @@ public class FormuleRegel extends FormuleElement
 			holder.insert(onRemove);
 
 		this.setChanged(true);
+		//resizeEditorWithAnswer();
 	}
 
 	@Override
@@ -485,6 +494,11 @@ public class FormuleRegel extends FormuleElement
 			holder.setCurrentRegel(this);
 	}
 
+	//public void setEditorParent(FormuleEditorWithAnswer editorParent)
+	//{
+	//	this.editorParent = editorParent;
+	//}
+	
 	@Override
 	public boolean setFont(FormuleFont fm)
 	{
@@ -777,8 +791,7 @@ public class FormuleRegel extends FormuleElement
 	}
 
 	public void insert(String s)
-	{
-		if (s == null)
+	{	if (s == null)
 			return;
 		while (s.length() > 0)
 		{
@@ -828,7 +841,21 @@ public class FormuleRegel extends FormuleElement
 				s = s.substring(1);
 			}
 		}
+		//resizeEditorWithAnswer();
+		
 	}
+	
+	/*
+	public void resizeEditorWithAnswer()
+	{
+		if(editorParent != null)
+			editorParent.resize();
+		
+		holder.setCurrentRegel(this);
+	
+		//probleem: nu is de focus weg uit de editor...
+	}
+	*/
 	
 	public int getAsHoogte()
 	{
@@ -1011,6 +1038,7 @@ public class FormuleRegel extends FormuleElement
 			holder.setCurrentElement(this);
 
 		this.setChanged(true);
+		//resizeEditorWithAnswer();
 	}
 
 	public boolean hasSelection()

@@ -1506,23 +1506,9 @@ public class TekstVakPanel implements InteractionView
 				int width = masterView.getWidth();
 				int height = masterView.getHeight();
 				klapUitButton.setPixelSize(width, hoogtes.get(0).intValue());
-				switch(inklapKnopPos) {
-				case LEFT:
-						//layoutPanel.setWidgetLeftRight(widget, width, Unit.PX, 0, Unit.PX);
-						layoutPanel.setWidgetLeftWidth(klapUitButton, 0, Unit.PX, width, Unit.PX);
-						layoutPanel.setWidgetTopHeight(klapUitButton, (hoogtes.get(0).intValue()-height)/2, Unit.PX, height, Unit.PX);
-						break;
-				case MIDDLE: // FIXME werkt nog van geen meter!
-					layoutPanel.setWidgetLeftWidth(klapUitButton, layoutPanel.getRegelBreedte(), Unit.PX, width, Unit.PX);
-					layoutPanel.setWidgetTopHeight(klapUitButton, (hoogtes.get(0).intValue()-height)/2, Unit.PX, height, Unit.PX);
-					
-					break;
-				case RIGHT:
-				default:
-					//layoutPanel.setWidgetLeftRight(widget, 0, Unit.PX, width, Unit.PX);
-					layoutPanel.setWidgetRightWidth(klapUitButton, 0, Unit.PX, width, Unit.PX);
-					layoutPanel.setWidgetTopHeight(klapUitButton, (hoogtes.get(0).intValue()-height)/2, Unit.PX, height, Unit.PX);
-				}
+				
+				setPositionUitklapButton(layoutPanel, inklapKnopPos, width, height);
+				
 			}
 		};
 		if (masterView.getWidth() > 0) handler.onLoad(null);
@@ -1530,6 +1516,26 @@ public class TekstVakPanel implements InteractionView
 	}
 
 
+	public void setPositionUitklapButton(TekstVak layoutPanel, int inklapKnopPos, int width, int height)
+	{
+		switch(inklapKnopPos) {
+		case LEFT:
+				//layoutPanel.setWidgetLeftRight(widget, width, Unit.PX, 0, Unit.PX);
+				layoutPanel.setWidgetLeftWidth(klapUitButton, 0, Unit.PX, width, Unit.PX);
+				layoutPanel.setWidgetTopHeight(klapUitButton, (hoogtes.get(0).intValue()-height)/2, Unit.PX, height, Unit.PX);
+				break;
+		case MIDDLE: // FIXME werkt nog van geen meter!
+			layoutPanel.setWidgetLeftWidth(klapUitButton, layoutPanel.getRegelBreedte(), Unit.PX, width, Unit.PX);
+			layoutPanel.setWidgetTopHeight(klapUitButton, (hoogtes.get(0).intValue()-height)/2, Unit.PX, height, Unit.PX);
+			
+			break;
+		case RIGHT:
+		default:
+			//layoutPanel.setWidgetLeftRight(widget, 0, Unit.PX, width, Unit.PX);
+			layoutPanel.setWidgetRightWidth(klapUitButton, 0, Unit.PX, width, Unit.PX);
+			layoutPanel.setWidgetTopHeight(klapUitButton, (hoogtes.get(0).intValue()-height)/2, Unit.PX, height, Unit.PX);
+		}
+	}
 
 
 	@Override

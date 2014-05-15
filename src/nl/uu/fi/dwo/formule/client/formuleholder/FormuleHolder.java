@@ -29,8 +29,8 @@ public class FormuleHolder implements TekstElement
 	
 	private FormuleRegel main = null;
 
-	private FormuleFont font = FormuleFont.createFromFontSize(18);
-	private static FormuleFont defaultfont = FormuleFont.createFromFontSize(18);
+	private FormuleFont font = FormuleFont.createFromFontSize(16);
+	private static FormuleFont defaultfont = FormuleFont.createFromFontSize(16);
 	protected static FormuleKeyboardIF kb;
 	private FlowPanel sp = null;
 	private int ashoogte;

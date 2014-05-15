@@ -46,14 +46,19 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private String feedback = "";
 	private int scoreMax = 0;
 	private boolean check = true;
+	private int breedte;
+	private int hoogte;
 	//private String[] randomVarNamen = null;
 	//private HashMap randomVarWaarden = null;
 	private AntwoordVakChecker avChecker = null;
 	private PopupFacade facade;
 	
+	private TekstRegel parentRegel;
+	
 	public FormuleEditorWithAnswer(HashMap<String, Object> h, boolean isVergelijkingVak, FormuleEditorWithSteps fe, String[] randomVarNamen, HashMap<String, Object> randomVarWaarden)
 	{
 		super();
+		//getMainRegel().setEditorParent(this);
 		//getMainRegel().setDefaultHeight(24);
 
 		//this.randomVarNamen = randomVarNamen;
@@ -68,8 +73,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if (h.get("interactiePanelLaunchState") != null)
 		{
 			ObjectMap map = JSONUtilities.wrapMap(h);
-			int breedte = map.getInt("breedte");
-			//int hoogte = map.getInt("hoogte");
+			this.breedte = map.getInt("breedte");
+			//this.hoogte = map.getInt("hoogte");
 			//int breedte = ((Number) h.get("breedte")).intValue();
 			//System.out.println("breedte formuleEditorWithAnswer: " + breedte);
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
@@ -86,28 +91,30 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			checkimg = new Image(FORMULE_BUNDLE.mw_vinkje_groen());
 			checkimg.setVisible(false);
 			checkimg.getElement().getStyle().setProperty("marginLeft", "3px");
+			checkimg.getElement().getStyle().setProperty("verticalAlign", "top");
 			if (fe == null)
 			{
 				//sp.getElement().getStyle().setProperty("width", (breedte - 9) + "px");
-				this.getMainRegel().setMinimumWidth(breedte - 9);
-				this.getMainRegel().setMinimumHeight(24);
-				//sp.setSize(breedte + "px", hoogte + "px");
+				this.getMainRegel().setMinimumWidth(breedte - 20);
+				hoogte = 24;
+				this.getMainRegel().setMinimumHeight(hoogte);
+				sp.setSize(breedte + "px", hoogte + "px");
 				//sp.getElement().getStyle().setBackgroundColor(CssColor.make(255, 0, 0).toString());
 				sp.getElement().getStyle().setProperty("border", "1px solid gray");
 				
-				sp.getElement().getStyle().setPadding(3, Style.Unit.PX);
+				//sp.getElement().getStyle().setPadding(3, Style.Unit.PX);
 				
-				//sp.getElement().getStyle().setPaddingLeft(3, Style.Unit.PX);
-				//sp.getElement().getStyle().setPaddingRight(3, Style.Unit.PX);
-				//sp.getElement().getStyle().setPaddingTop(3, Style.Unit.PX);
-				//sp.getElement().getStyle().setPaddingBottom(3, Style.Unit.PX);
+				sp.getElement().getStyle().setPaddingLeft(1, Style.Unit.PX);
+				sp.getElement().getStyle().setPaddingRight(0, Style.Unit.PX);
+				sp.getElement().getStyle().setPaddingTop(1, Style.Unit.PX);
+				sp.getElement().getStyle().setPaddingBottom(5, Style.Unit.PX);
 				//(Weggehaald Sietske) sp.getElement().getStyle().setProperty("backgroundColor", "#e9e9e9");
 				sp.getElement().getStyle().setProperty("backgroundColor", "white");
 				//this.getMainRegel().getCanvas().getElement().getStyle().setProperty("marginTop", "3px");
 				//this.getMainRegel().getCanvas().getElement().getStyle().setProperty("marginBottom", "0px");
 			}
 
-			sp.getElement().addClassName("insert_formule");
+			//sp.getElement().addClassName("insert_formule");
 			sp.add(this.getMainRegel().getCanvas());
 			sp.add(checkimg);
 			
@@ -117,7 +124,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public void zetInstellingen(Map<String, Object> instellingen)
 	{
 		this.instellingen = instellingen;
-		System.out.println("fontSize uit instellingen formuleEditorWithAnswer: " + ((Number) instellingen.get("fontSize")).intValue());
+		//System.out.println("fontSize uit instellingen formuleEditorWithAnswer: " + ((Number) instellingen.get("fontSize")).intValue());
 		setFont(FormuleFont.createFromFontSize(((Number) instellingen.get("fontSize")).intValue()));
 
 	}
@@ -132,10 +139,16 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		return fe != null;
 	}
 	
+	public void setParentRegel(TekstRegel regel)
+	{
+		parentRegel = regel;
+	}
+	
 	@Override
 	public void addElement(FormuleElement e)
 	{
 		super.addElement(e);
+		resize();
 		checkimg.setVisible(false);
 	}
 
@@ -143,6 +156,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public void removeCurrentElement()
 	{
 		super.removeCurrentElement();
+		resize();
 		checkimg.setVisible(false);
 	}
 
@@ -150,6 +164,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public void removeNextElement()
 	{
 		super.removeNextElement();
+		resize();
 		checkimg.setVisible(false);
 	}
 
@@ -157,6 +172,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public void insert(String text)
 	{
 		super.insert(text);
+		resize();
 		checkimg.setVisible(false);
 	}
 
@@ -215,9 +231,31 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		
 		checkimg.setVisible(check && goedHalfFout != AntwoordVakChecker.GEEN); // Wim: Hier verscheen het vinkje als goedhalfFout GEEN is
+		//sp.setPixelSize(breedte, -1);
 		if (this.fe == null)
 			comRoot.setChanged();
 
+	}
+	
+	public void resize()
+	{
+		System.out.println("resize");
+		breedte = this.getMainRegel().getWidth() + 20;
+		hoogte = this.getMainRegel().getHeight();
+		System.out.println("nieuwe breedte: " + breedte);
+		System.out.println("nieuwe hoogte: " + hoogte);
+		//nog zorgen dat hoogte altijd minimaal 24 is?
+		sp.setSize(breedte + "px", hoogte + "px");
+		if(parentRegel != null)
+			parentRegel.resize();
+		
+		//en dan bestaat resize uit vulRegel en een resize van het omliggende tekstvak (wat dan weer leidt tot een resize van de hele kolom)..
+	}
+	
+	public void setFont(FormuleFont fm)
+	{
+		System.out.println("formuleEditorWithAnswer setFont: " + fm.toString());
+		super.setFont(fm);
 	}
 	
 
@@ -225,6 +263,21 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public Panel getAsPanel()
 	{
 		return sp;
+	}
+	
+	public int getHeight()
+	{
+		return hoogte;
+	}
+	
+	public int getWidth()
+	{
+		return breedte;
+	}
+	
+	public int getAsHoogte()
+	{
+		return this.getMainRegel().getAsHoogte() + 3;
 	}
 
 	public void setStrict(boolean strict)

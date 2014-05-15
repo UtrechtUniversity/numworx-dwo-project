@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
@@ -25,6 +26,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -125,7 +127,6 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		//flowVak.getElement().getStyle().setFontSize(font_size, Unit.PX);
 		for(int i = 0; i < aantalRegels  + 1; i++)
 			regelVakken[i].setFontSize(font_size);
-		
 	}
 	
 	public void setFontStyle(int font_style)
@@ -303,16 +304,18 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			}
 			else if (currentObject instanceof FormuleEditorWithAnswer)
 			{
-				((FormuleEditorWithAnswer) currentObject).setFont(FormuleFont.createFromFontSize(font_size));
-				((FormuleEditorWithAnswer) currentObject).setColor(fgColor);
+				//((FormuleEditorWithAnswer) currentObject).setFont(FormuleFont.createFromFontSize(font_size));
+				//((FormuleEditorWithAnswer) currentObject).setColor(fgColor);
 				if(regelBreedte == 0 || regelBreedte + ((FormuleEditorWithAnswer) currentObject).getWidth() <= tekstVakBreedte)
 				{	regelVakken[aantalRegels - 1].addObject(currentObject);
+					((FormuleEditorWithAnswer) currentObject).setParentRegel(regelVakken[aantalRegels - 1]);
 					regelBreedte += ((FormuleEditorWithAnswer) currentObject).getWidth();
 				}
 				else
 				{
 					voegRegelToe();
 					regelVakken[aantalRegels - 1].addObject(currentObject);
+					//((FormuleEditorWithAnswer) currentObject).setParentRegel(regelVakken[aantalRegels - 1]);
 					regelBreedte = ((FormuleEditorWithAnswer) currentObject).getWidth();
 				}
 			}
@@ -482,6 +485,37 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		
 		ashoogte = regelVakken[0].getAsHoogte();
 
+	}
+	
+	public void resize()
+	{
+		int vertPositie = bovenMarge;
+		if(centerV)
+		{
+			int regelHoogtes = 0;
+			for(int j = 0; j < aantalRegels; j++)
+				regelHoogtes += regelVakken[j].getHeight();
+			vertPositie += (hoogte - 2 * bovenMarge - regelHoogtes) / 2;
+		}
+		
+		//toegevoegde widgets zijn ofwel tekstregels, ofwel zwevende tekstvakken, of een in/uitklapknop
+		//aan posities zwevende tekstvakken hoeft niets te gebeuren.
+		//positie uitklapknop moet ik maar in TekstVakPanel regelen, dat is er hooguit één per tekstvakpanel.
+		for(int i = 0; i < this.getWidgetCount(); i++)
+		{
+			Widget w = this.getWidget(i);
+			if(w instanceof TekstRegel)
+			{
+				int horPositie = cellMarge;
+				if(centerH)
+					horPositie += (int) (tekstVakBreedte - regelVakken[i].getWidth())/2;
+				this.setWidgetLeftWidth(regelVakken[i], horPositie, Style.Unit.PX, regelVakken[i].getWidth(), Style.Unit.PX);
+				this.setWidgetTopHeight(regelVakken[i], vertPositie, Style.Unit.PX, regelVakken[i].getHeight(), Style.Unit.PX);
+				vertPositie += regelVakken[i].getHeight();
+			}
+		}
+		
+		ashoogte = regelVakken[0].getAsHoogte();
 	}
 	
 	

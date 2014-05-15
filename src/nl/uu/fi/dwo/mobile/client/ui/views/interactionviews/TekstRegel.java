@@ -33,6 +33,7 @@ public class TekstRegel extends LayoutPanel
 	private int breedte;
 	private ArrayList<Object> regelObjects;
 	private TekstVak tekstVak;
+
 	
 	private int font_size;
 	private int font_style;
@@ -260,8 +261,11 @@ public class TekstRegel extends LayoutPanel
 				TouchPanel tp = (TouchPanel) ((FormuleEditorWithAnswer) currentObject).getAsPanel();
 				//tp.getElement().getStyle().setBackgroundColor(CssColor.make(255, 0, 0).toString());
 				//tp.getElement().getStyle().setProperty("display", "inline-block");
+				
+				//dit hoeft niet elke keer bij vulRegel te gebeuren, toch?
 				tekstVak.getTekstVakParent().getKeyboard().setEditor(((FormuleEditorWithAnswer) currentObject));
 				tekstVak.getTekstVakParent().addFormulePanelListeners(tp, ((FormuleEditorWithAnswer) currentObject));
+				
 
 				//tp.getElement().getStyle().setProperty("display", "inline-block");
 				//tp.getElement().getStyle().setProperty("verticalAlign", "" + (-hoogte + asHoogte + Math.rint(font_size * 0.33) + 1) + "px");
@@ -345,6 +349,39 @@ public class TekstRegel extends LayoutPanel
 		breedte = horPositie;
 	}
 	
+	public void resize()
+	{
+		bepaalAshoogte();
+		
+		int horPositie = 0;
+		for(int i = 0; i < this.getWidgetCount(); i++)
+		{
+			int objectBreedte = 0;
+			int objectHoogte = 0;
+			int objectVerschuiving = 0;
+			Widget w = this.getWidget(i);
+			if(regelObjects.get(i) instanceof TekstElement)
+			{
+				TekstElement object = (TekstElement) regelObjects.get(i);
+				objectBreedte = object.getWidth();
+				objectHoogte = object.getHeight();
+				objectVerschuiving = ashoogte - object.getAsHoogte();
+			}
+			else 
+			{
+				objectVerschuiving = ashoogte - tekstAshoogte;
+				objectBreedte = w.getOffsetWidth();
+				objectHoogte = fm.getHeight();
+			}
+			this.setWidgetLeftWidth(w, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
+			this.setWidgetTopHeight(w, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
+			horPositie += objectBreedte;
+		}
+		breedte = horPositie;
+		
+		tekstVak.resize();
+	}
+	
 	
 	
 	
@@ -381,20 +418,24 @@ public class TekstRegel extends LayoutPanel
 		}
 		if(regelObjects.size() > 0)
 		{
-			this.hoogte = h1 + h2;
+			if(h1 + h2 > this.hoogte)
+				this.hoogte = h1 + h2;
 			//if(this.hoogte < font_size + 4)
 			//	this.hoogte = font_size + 4;
 			if(this.hoogte < fm.getHeight())
 				this.hoogte = fm.getHeight();
-			ashoogte = h1;
+			if(h1 > ashoogte)
+				ashoogte = h1;
 		}
 		else
 		{
 			//this.hoogte = font_size + 4;//eigenlijk: fm.getAscent() + fm.getDescent()
-			this.hoogte = fm.getHeight();
+			if(fm.getHeight() > this.hoogte)
+				this.hoogte = fm.getHeight();
 			//System.out.println("fm.getHeight: " + fm.getHeight() + " en fm.getAscent() + fm.getDescent(): " + (fm.getAscent() + fm.getDescent()));
 			//ashoogte = (font_size + 2) / 2; //eigenlijk: fm.getAscent();
-			ashoogte = fm.getAscent() / 2;
+			if(fm.getAscent()/2 > ashoogte)
+				ashoogte = fm.getAscent() / 2;
 		}
 		//eigenHoogte = hoogte;
 		//eigenAsHoogte = ashoogte;
