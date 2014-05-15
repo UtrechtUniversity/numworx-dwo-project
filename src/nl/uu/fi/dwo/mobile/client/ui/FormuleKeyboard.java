@@ -38,7 +38,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	static final String _123 = "123";
 	static final String ΑΒ = "\u03b1\u03b2..";
 	static final String SCRIBBLE = "Scribble";
-	static final boolean hasKeyboard  = ! TouchEvent.isSupported();
+	static final boolean hasKeyboard  = false;//! TouchEvent.isSupported();
 	private FormuleEditorIF editor;
 	public KeyBoardTabPanel tp;
 	private WritePanel writePanel;
@@ -245,7 +245,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	{
 		int defwidth = 16;
 		int padding = 16;
-defwidth = 52; padding = 0;
+// NOORDHOFF defwidth = 52; padding = 0;
 		double width = 0;
 
 		FlowPanel fp = new FlowPanel(), fp2 = new FlowPanel();
@@ -270,7 +270,7 @@ defwidth = 52; padding = 0;
 				}
 				TouchButton b = FormuleKeyBoardButtons.getButton(buttons[j][i], this);
 				width = (defwidth + 2 * padding) * widths[j][i] - 2 * padding;
-				//b.setWidth(Math.round(width) + "px");
+				b.setWidth(Math.round(width) + "px"); // alleen DWO niet noordhoff.
 				//b.setHeight("16px");
 				if ("zoomOut".equals(buttons[j][i]) || "zoomIn".equals(buttons[j][i]))
 				{

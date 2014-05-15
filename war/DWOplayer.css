@@ -1,4 +1,3 @@
-/** Add css rules here for your application. */
 html,body{margin:0px; padding:0px;}
 
 body#main {background:white; color:#000;}
@@ -35,7 +34,10 @@ div.insert_formule_steps{border-width:1px;}
 div.scrollformule {overflow:scroll; background:blue; width:210px;}
 
 
-div.numeric {background:#eee;}
+div.kbd-Button-dwo-numeric {
+	background:#eee;
+	background-image: url(images/resources/numericbuttongradient.png);
+}
 
 
 div.apply {background:#eee; }
@@ -77,5 +79,5 @@ iframe {
 /* moet zijn dwo */
 .kbd-Button-dwo { 
 	background-image: url(images/resources/buttongradient.png);
-	heigth: 19px;
+	height: 19px;
 }

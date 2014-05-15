@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.interaction.client.touch.TouchCancelEvent;
 import nl.uu.fi.dwo.interaction.client.touch.TouchEndEvent;
@@ -279,6 +280,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 		super.setupView(launchData);
 
+		ObjectMap wrap = JSONUtilities.wrapMap(instellingen);
+		if(wrap.containsKey("opnieuw"))
+			scoreNav.setOpnieuw(wrap.getBoolean("opnieuw"));
+		if(wrap.containsKey("itemOpnieuw"))
+			scoreNav.setItemOpnieuw(wrap.getBoolean("itemOpnieuw"));
 
 		contentPanel.getElement().getStyle().setFontSize(font_size, Unit.PX);
 		contentPanel.getElement().getStyle().setPadding(0, Unit.PX); // XXX was 15 

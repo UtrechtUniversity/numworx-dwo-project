@@ -255,7 +255,7 @@ public abstract class FormuleKeyBoardButtons
 		{
 			b = getNewButton(key);
 			if (key.length() == 1 && Character.isDigit(key.charAt(0))){
-				b.getElement().addClassName("numeric");
+				b.addStyleDependentName(getDependentName() + "-numeric");
 				//b.getElement().getStyle().setBackgroundImage("url(images/resources/numericbuttongradient.png)");
 			}
 			//else b.getElement().getStyle().setBackgroundImage("url(images/resources/buttongradient.png)"); 

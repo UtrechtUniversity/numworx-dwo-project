@@ -150,7 +150,7 @@ public class ScoreNavPanel extends Composite {
 		hbox.add(grid);
 		Button reloadTotal = new Button(DWOplayer.DWO_BUNDLE.imgbutton());
 		reloadTotal.addTapHandler(new ReloadHandler(-1));
-		hbox.add(reloadTotal);
+		if(opnieuw) hbox.add(reloadTotal);
 		top.add(hbox);
 		text = new Label("Beantwoord");
 		grid.setWidget(0, 0, setFontFamily(text));
@@ -196,15 +196,17 @@ public class ScoreNavPanel extends Composite {
 	private int[] scoreMax;
 	private int currentOpdracht;
 	public PopupPanel popup;
+	private boolean opnieuw;
+	private boolean itemOpnieuw;
 
 	private void createVragen(int[] scoreMax) {
 		vragen.clear(true);
-		vragen.resize(rows, 5);
+		vragen.resize(rows, 4 + (itemOpnieuw?1:0));
 		vragen.getColumnFormatter().setWidth(0, "80px");
 		vragen.getColumnFormatter().setWidth(1, "160px");
 		vragen.getColumnFormatter().setWidth(2, "80px");
 		vragen.getColumnFormatter().setWidth(3, "8px");
-		vragen.getColumnFormatter().setWidth(4, "70px");
+		if(itemOpnieuw) vragen.getColumnFormatter().setWidth(4, "70px");
 		Label text;
 		int totaal = 0;
 		vraagLabels = new Label[rows];
@@ -229,7 +231,8 @@ public class ScoreNavPanel extends Composite {
 			ButtonCss css = DWOplayer.DWO_BUNDLE.imgbutton();
 			Button reload = new Button(css);
 			// FIXME werkt niet: reload.getElement().getStyle().setBackgroundImage(DWOplayer.DWO_BUNDLE.reload().getSafeUri().asString());
-			vragen.setWidget(i, 4, reload);
+			if(itemOpnieuw) 
+				vragen.setWidget(i, 4, reload);
 			reload.addTapHandler(new ReloadHandler(i));
 		};
 		setTotaalScore(totaal);
@@ -282,6 +285,14 @@ public class ScoreNavPanel extends Composite {
 		vraagLabels[this.currentOpdracht].getElement().getStyle().setFontWeight(FontWeight.NORMAL);
 		this.currentOpdracht = currentOpdracht;
 		vraagLabels[currentOpdracht].getElement().getStyle().setFontWeight(FontWeight.BOLD);	
+	}
+
+	public void setOpnieuw(boolean opnieuw) {
+		this.opnieuw = opnieuw;
+	}
+
+	public void setItemOpnieuw(boolean itemOpnieuw) {
+		this.itemOpnieuw = itemOpnieuw;
 	}
 	
 }

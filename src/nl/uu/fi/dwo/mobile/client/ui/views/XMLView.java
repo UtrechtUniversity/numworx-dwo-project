@@ -36,6 +36,8 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
+
+import fi.wiskopdr.FormuleParser;
 /**
  * Common code voor ViewModuleViewImpl en DescriptionViewImpl.
  * @author wim
@@ -74,6 +76,9 @@ public abstract class XMLView {
 			
 			boolean formTimes = wrap.getBoolean("formTimes");
 			FormuleFont.zetFormTimes(formTimes);
+			
+			if(wrap.containsKey("woordFormule"))
+				FormuleParser.zetWoordFormule(wrap.getBoolean("woordFormule"));			
 		}
 
 	}

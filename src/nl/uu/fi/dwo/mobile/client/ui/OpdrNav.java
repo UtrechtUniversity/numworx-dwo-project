@@ -177,10 +177,11 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		
 		boolean correct = entry.isCorrect();
 		isCorrect[currentActiviteit][currentOpdracht] = correct;
-		if(strafpunten != null && mode == OEFENEN_STRAFPUNTEN || !correct)
+		boolean fout = !correct; // FIXME moet zijn entry.isFout();
+		if(strafpunten != null && mode == OEFENEN_STRAFPUNTEN && fout)
 			strafpunten[currentActiviteit][currentOpdracht] += foutStraf;
 		if (buttons != null && buttons.size() > currentOpdracht)
-			setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht]);
+			setButtonCorrect(buttons.get(currentOpdracht), correct);
 		saveCurrentState();
 	}
 
