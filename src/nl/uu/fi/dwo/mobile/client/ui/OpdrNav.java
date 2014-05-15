@@ -37,6 +37,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 	public static int OEFENEN_STRAFPUNTEN = 1;
 	public static int ZELFTOETS = 2;
 	public static int EINDTOETS = 3;
+	
+	private static final int foutStraf = 2;
+	
 
 	private ViewModuleViewImpl entry;
 	private ListBox lb_activiteiten;
@@ -53,6 +56,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 	private int[][] scoresMax;
 	private int[][] scores;
 	private boolean[][] isCorrect;
+	
+	private int mode;
+	private int[][] strafpunten;
 
 	private int scoreMax;
 	private int currentOpdracht = 0;
@@ -67,13 +73,16 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		memento.setUnload(this);
 		aantalActiviteiten = Integer.parseInt((String) launchData.get("aantalActiviteiten"));
 		activiteitNamen = new String[aantalActiviteiten];
-		aantalOpdrachten = new int[maxAantalOpdrachten];
-
+		aantalOpdrachten = new int[aantalActiviteiten];
+		
+		mode = Integer.parseInt((String)launchData.get("mode"));
+		maxAantalOpdrachten = 1;
 		for (int i = 0; i < aantalActiviteiten; i++)
 		{
 			activiteitNamen[i] = (String) launchData.get("activiteit_" + (i + 1));
 			String aantalString = (String) launchData.get("aantalOpdrachten_" + (i + 1));
 			aantalOpdrachten[i] = Integer.parseInt(aantalString);
+			maxAantalOpdrachten = Math.max(maxAantalOpdrachten, aantalOpdrachten[i]);
 		}
 
 		opdrachten = new HashMap[aantalActiviteiten][maxAantalOpdrachten];
@@ -82,6 +91,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		isCorrect = new boolean[aantalActiviteiten][maxAantalOpdrachten];
 		states = new HashMap[aantalActiviteiten][maxAantalOpdrachten];
 		scoreMax = 0;
+		
+		if(mode == OEFENEN_STRAFPUNTEN)
+			strafpunten = new int[aantalActiviteiten][maxAantalOpdrachten];
+		
 
 		for (int i = 0; i < aantalActiviteiten; i++)
 		{
@@ -106,6 +119,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		states = memento.getOpdrContStates(states);
 		currentActiviteit = memento.getCurrentActiviteit();
 		currentOpdracht = memento.getCurrentOpdracht();
+		
+		memento.getStrafpunten(strafpunten);
 		
 		//setOpdrachten(currentActiviteit); // kan dat nu al? of anders bij setchanged testen op  buttons.get() != null
 		final HashMap<String, Object> state = states[currentActiviteit][currentOpdracht];
@@ -160,7 +175,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 	public void setChanged() // FIXME Trifork: hier safepoint?
 	{
 		
-		isCorrect[currentActiviteit][currentOpdracht] = entry.isCorrect();
+		boolean correct = entry.isCorrect();
+		isCorrect[currentActiviteit][currentOpdracht] = correct;
+		if(strafpunten != null && mode == OEFENEN_STRAFPUNTEN || !correct)
+			strafpunten[currentActiviteit][currentOpdracht] += foutStraf;
 		if (buttons != null && buttons.size() > currentOpdracht)
 			setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht]);
 		saveCurrentState();
@@ -327,9 +345,17 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 	{
 		states[currentActiviteit][currentOpdracht] = entry.getState();
 		ScoreNavPanel source = entry.scoreNav;
+		int scoreCorrected = entry.getScore();
+		if(strafpunten != null && mode == OEFENEN_STRAFPUNTEN)
+		{
+			scoreCorrected -= strafpunten[currentActiviteit][currentOpdracht];
+			if( scoreCorrected < 0 ) scoreCorrected = 0; 
+		}
+		
 		source.setItemScore(currentOpdracht, 
-				scores[currentActiviteit][currentOpdracht] = entry.getScore()
+				scores[currentActiviteit][currentOpdracht] = scoreCorrected
 		);
+		
 		source.setBeantwoord(getAantalBeantwoord());
 		isCorrect[currentActiviteit][currentOpdracht] = entry.isCorrect();
 		memento.setCurrentActiviteit(currentActiviteit);
@@ -423,6 +449,39 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 	
 	public int[] getItemScores() {
 		return scores[currentActiviteit];
+	}
+
+	@Override
+	public void reloadOpdracht(int opdracht, ScoreNavPanel source) {
+		saveCurrentState();
+		
+		if(opdracht < 0) {
+			for(opdracht = 0; opdracht < aantalOpdrachten[currentActiviteit]; opdracht ++)
+				clearState(opdracht, source);
+		} else
+			clearState(opdracht,source);
+		source.setBeantwoord(getAantalBeantwoord());
+		source.setTotaalScore((int) getScore()); 
+		
+		setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht]);
+
+		removeButtonCursor(buttons.get(currentOpdracht));
+		setButtonCursor(buttons.get(currentOpdracht));
+
+		entry.clearContentPanel();
+		if (states[currentActiviteit][currentOpdracht] == null)
+			entry.zetOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
+		else
+			entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], states[currentActiviteit][currentOpdracht]);
+	}
+
+	public void clearState(int opdracht, ScoreNavPanel source) {
+		isCorrect[currentActiviteit][opdracht] = false;
+		scores[currentActiviteit][opdracht] = 0;
+		states[currentActiviteit][opdracht] = null;
+		if(strafpunten != null) 
+			strafpunten[currentActiviteit][opdracht] = 0;
+		source.setItemScore(opdracht, 0);
 	}
 
 }

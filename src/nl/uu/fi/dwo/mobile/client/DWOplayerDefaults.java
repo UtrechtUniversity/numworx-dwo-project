@@ -21,4 +21,8 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 	public void keyboardSetup() {
 	}
 
+	@Override
+	public String keyboardStyle() {
+		return "dwo";
+	}
 }

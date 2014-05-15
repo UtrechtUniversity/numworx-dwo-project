@@ -282,20 +282,27 @@ public abstract class FormuleKeyBoardButtons
 	{
 		//Button b = new Button();
 		TouchButton b = new TouchButton();
+		b.setStylePrimaryName("kbd-Button");
 		//b.setText(t);
 		b.getElement().setInnerText(t);
 		b.getElement().getStyle().setFloat(Style.Float.LEFT);
-		b.getElement().addClassName("buttonWN");
+		b.addStyleDependentName(getDependentName());
 		return b;
 	}
 
+	static String getDependentName() {
+		return DWOplayer.PARAMETERS.keyboardStyle();
+	}
+	
+	
 	public static TouchButton getImageButton(String src)
 	{
 		TouchButton b = new TouchButton();
-		b.getElement().addClassName("buttonWN");
+		b.setStylePrimaryName("kbd-Button");
+		b.addStyleDependentName(getDependentName()); // else buttonDWO
 		b.getElement().getStyle().setFloat(Style.Float.LEFT);
 		Image img = newImage(src);
-		img.setHeight("48px"); // fixed WN size!
+		img.addStyleDependentName(getDependentName());
 		if("images/resources/zoomuitknop.gif".equals(src) || "images/resources/zoominknop.gif".equals(src))
 		{
 			img.setHeight("32px");

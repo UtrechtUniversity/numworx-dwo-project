@@ -28,4 +28,10 @@ public class DWOplayerNoordhoff extends DWOplayerDefaults implements DWOplayerPa
 		FormuleKeyBoardButtons.setupWN();
 	}
 
+	@Override
+	public String keyboardStyle() {
+		return "noordhoff";
+	}
+
+	
 }

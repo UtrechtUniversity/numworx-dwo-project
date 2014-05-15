@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleClientBundle;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
@@ -13,6 +14,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Label;
@@ -22,6 +24,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
+import com.googlecode.mgwt.ui.client.theme.base.ButtonCss;
 import com.googlecode.mgwt.ui.client.widget.Button;
 
 public class ScoreNavPanel extends Composite {
@@ -30,6 +33,7 @@ public class ScoreNavPanel extends Composite {
 	
 	interface GotoOpdracht {
 		void gotoOpdracht(int i, ScoreNavPanel source);
+		void reloadOpdracht(int i, ScoreNavPanel source);
 	}
 	
 	GotoOpdracht listener;
@@ -51,6 +55,25 @@ public class ScoreNavPanel extends Composite {
 		}
 		
 	}
+
+	class ReloadHandler implements TapHandler {
+
+		int opdracht;
+
+		public ReloadHandler(int opdracht) {
+			super();
+			this.opdracht = opdracht;
+		}
+		@Override
+		public void onTap(TapEvent event) {
+			if( listener != null)
+			{	listener.reloadOpdracht(this.opdracht, ScoreNavPanel.this);
+			}
+			if(popup != null) popup.hide();
+		}
+		
+	}
+
 	
 	public static class SimpleProgressBar extends Composite  {
 
@@ -123,8 +146,12 @@ public class ScoreNavPanel extends Composite {
 		grid.getColumnFormatter().setWidth(2, "70px");
 		grid.setCellPadding(10);
 		grid.setCellSpacing(10);
-
-		top.add(grid);
+		HorizontalPanel hbox = new HorizontalPanel();
+		hbox.add(grid);
+		Button reloadTotal = new Button(DWOplayer.DWO_BUNDLE.imgbutton());
+		reloadTotal.addTapHandler(new ReloadHandler(-1));
+		hbox.add(reloadTotal);
+		top.add(hbox);
 		text = new Label("Beantwoord");
 		grid.setWidget(0, 0, setFontFamily(text));
 		text = new Label("Totaalscore");
@@ -172,11 +199,12 @@ public class ScoreNavPanel extends Composite {
 
 	private void createVragen(int[] scoreMax) {
 		vragen.clear(true);
-		vragen.resize(rows, 4);
+		vragen.resize(rows, 5);
 		vragen.getColumnFormatter().setWidth(0, "80px");
 		vragen.getColumnFormatter().setWidth(1, "160px");
 		vragen.getColumnFormatter().setWidth(2, "80px");
 		vragen.getColumnFormatter().setWidth(3, "8px");
+		vragen.getColumnFormatter().setWidth(4, "70px");
 		Label text;
 		int totaal = 0;
 		vraagLabels = new Label[rows];
@@ -197,6 +225,12 @@ public class ScoreNavPanel extends Composite {
 			Button p = new Button();p.setText(">"); vragen.setWidget(i, 3, p);
 			//p.setStylePrimaryName("vraagButton");
 			p.addTapHandler(new TouchHandler(i));
+			
+			ButtonCss css = DWOplayer.DWO_BUNDLE.imgbutton();
+			Button reload = new Button(css);
+			// FIXME werkt niet: reload.getElement().getStyle().setBackgroundImage(DWOplayer.DWO_BUNDLE.reload().getSafeUri().asString());
+			vragen.setWidget(i, 4, reload);
+			reload.addTapHandler(new ReloadHandler(i));
 		};
 		setTotaalScore(totaal);
 		

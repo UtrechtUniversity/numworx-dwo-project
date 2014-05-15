@@ -28,6 +28,11 @@ public interface DWOplayerParameters {
 	 * 
 	 */
 	void keyboardSetup();
+	/**
+	 * 
+	 * @return StyleDependentName
+	 */
+	String keyboardStyle();
 	
 // More to come....
 }

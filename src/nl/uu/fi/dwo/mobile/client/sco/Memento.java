@@ -51,6 +51,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	}
 
 	private static final String OPDR_CONT_STATES = "opdrContStates";
+	private static final String STRAFPUNTEN = "strafpunten"; // optional!
 	private static final String ONS_STATE = "onsState";
 	static final String SUSPEND_DATA = "cmi.suspend_data";
 	static final String SCORE_RAW = "cmi.score.raw";
@@ -65,7 +66,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 
 	private JSONObject suspendData;
 	private JSONObject onsState;
-	private JSONArray opdrContStates;
+	private JSONArray opdrContStates, opdrStrafpunten;
 
 	private String scoreRaw;
 	private Date startDate = new Date();
@@ -88,6 +89,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 			suspendData = (JSONObject) JSONParser.parseStrict(value);
 			onsState = (JSONObject) suspendData.get(ONS_STATE);
 			opdrContStates = (JSONArray) onsState.get(OPDR_CONT_STATES);
+			opdrStrafpunten = (JSONArray) onsState.get(STRAFPUNTEN);
 		}
 		catch (Exception e)
 		{
@@ -154,6 +156,76 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		}
 	}
 
+	public void setStrafpunten(int[][] o) {
+		if(o == null) return;
+		for (int i = 0; i < o.length; i++) {
+			int[] oi = o[i];
+			for (int j = 0; j < oi.length; j++) {
+				int punt = oi[j];
+				if(punt != 0) {
+					if ( opdrStrafpunten == null) {
+						opdrStrafpunten = new JSONArray();
+						onsState.put(STRAFPUNTEN, opdrStrafpunten);
+					}
+					if( i <= opdrStrafpunten.size() || isNull(opdrStrafpunten.get(i)) )
+						opdrStrafpunten.set(i, new JSONArray());
+					JSONArray array = opdrStrafpunten.get(i).isArray();
+					array.set(j, new JSONNumber(punt));
+				} else {
+					if(opdrStrafpunten == null 
+							|| opdrStrafpunten.size() <= i 
+							|| isNull(opdrStrafpunten.get(i)))
+						continue;
+					JSONArray array = opdrStrafpunten.get(i).isArray();
+					if(j >= array.size()) continue;
+					array.set(j, new JSONNumber(0));
+				}
+			}
+			
+		}
+	}
+	
+	private boolean isNull(JSONValue jsonValue) {
+		return jsonValue == null | jsonValue.isNull() == JSONNull.getInstance();
+	}
+
+	public void getStrafpunten(int[][] o) {
+		if(o == null) return;
+		if(opdrStrafpunten == null) {
+			for (int i = 0; i < o.length; i++) {
+				int[] oi = o[i];
+				for (int j = 0; j < oi.length; j++) {
+					oi[j] = 0;
+				}
+			}
+		} else {
+			for (int i = 0; i < o.length; i++) {
+				JSONArray array = getArray(i, opdrStrafpunten);
+				int[] oi = o[i];
+				for (int j = 0; j < oi.length; j++) {
+					oi[j] = getInt(array, j);
+				}
+			}
+		}
+	}
+
+	public int getInt(JSONArray array, int j) {
+		if(array == null || j < 0 || j > array.size())
+			return 0;
+		JSONNumber number = array.get(j).isNumber();
+		if(number != null)
+			return (int) number.doubleValue();
+		return 0;
+	}
+
+	public JSONArray getArray(int i, JSONArray array) {
+		if ( array == null || i < 0 || i > array.size())
+			return null;
+		return array.get(i).isArray();
+	}
+	
+	
+	
 	public void setOpdrContStates(HashMap<String, Object>[][] o)
 	{
 

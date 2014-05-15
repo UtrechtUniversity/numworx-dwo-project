@@ -17,8 +17,9 @@ div.cbg-RP { background-color:#c3d9ff; }
 .keyboardtabs {background:#000;}
 div.keyboard {background:#eee; left:0px; right:0px; border-top:1px solid #777;}
 
-.button {background:#ddd; color:#000; padding:10px; margin:5px;  border: 1px solid #888; border-radius:5px; text-align:center; overflow:hidden;}
-.button:active {background:#e00;}
+.kbd-Button-dwo {background:#ddd; color:#000; padding:10px; margin:5px;  border: 1px solid #888; border-radius:5px; text-align:center; overflow:hidden;}
+.kbd-Button-dwo:active {background:#e00;}
+
 div.disabled { background:#b8b8b8; color:#333;}
 div.disabled:active { background:#b8b8b8; }
 
@@ -61,5 +62,20 @@ iframe {
 }
 
 .gwt-InlineHTML-cursor {
-	border-left: thin solid red;
+	border-left: thin solid black;
+}
+
+
+.gwt-Image-noordhoff {
+	height: 48px;
+}
+
+.gwt-Image-dwo {
+	height: 16px;
+}
+
+/* moet zijn dwo */
+.kbd-Button-dwo { 
+	background-image: url(images/resources/buttongradient.png);
+	heigth: 19px;
 }
