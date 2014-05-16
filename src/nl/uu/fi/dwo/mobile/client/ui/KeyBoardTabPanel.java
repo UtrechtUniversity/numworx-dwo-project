@@ -60,7 +60,8 @@ public class KeyBoardTabPanel
 		staticpanel.getElement().getStyle().setHeight(4, Style.Unit.PX);
 		//FIXME CSS staticpanel.getElement().getStyle().setBackgroundImage("url(images/resources/footerbgimage.png)");
 
-		tabcontentpanel.getElement().addClassName("tabkeyboard");
+		tabcontentpanel.setStylePrimaryName("tabkeyboard");
+		tabcontentpanel.addStyleDependentName(FormuleKeyBoardButtons.getDependentName());
 		panel.add(contentpanel);
 		panel.add(staticpanel);
 		main.getElement().addClassName("keyboard");

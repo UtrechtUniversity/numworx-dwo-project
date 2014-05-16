@@ -326,5 +326,44 @@ public abstract class FormuleKeyBoardButtons
 				buttonImages.put("\u2264", "images/resources/le.jpg"); // FIXME ONTBREEKT 
 				buttonImages.put("\u2265", "images/resources/__.jpg");
 				buttonImages.put("\u00B1", "images/resources/+-.jpg");
+				
+				buttonImages.put("back", "images/resources/delete.jpg");
+				buttonImages.put("backspace", "images/resources/delete.jpg");
+				
+				buttonImages.put("0", "images/resources/0.jpg");
+				buttonImages.put("1", "images/resources/1.jpg");
+				buttonImages.put("2", "images/resources/2.jpg");
+				buttonImages.put("3", "images/resources/3.jpg");
+				buttonImages.put("4", "images/resources/4.jpg");
+				buttonImages.put("5", "images/resources/5.jpg");
+				buttonImages.put("6", "images/resources/6.jpg");
+				buttonImages.put("7", "images/resources/7.jpg");
+				buttonImages.put("8", "images/resources/8.jpg");
+				buttonImages.put("9", "images/resources/9.jpg");
+				buttonImages.put("(", "images/resources/(.jpg");
+				buttonImages.put(")", "images/resources/).jpg");
+				buttonImages.put("haakjes", "images/resources/(-).jpg");
+				buttonImages.put("plus", "images/resources/+.jpg");
+				buttonImages.put("min", "images/resources/_.jpg");
+				buttonImages.put("x", "images/resources/x.jpg");
+				buttonImages.put("y", "images/resources/y.jpg");
+				buttonImages.put("maal", "images/resources/vermenigvuldigen.jpg");
+				buttonImages.put("/", "images/resources/delen.jpg");
+				buttonImages.put(",", "images/resources/komma.jpg");
+				buttonImages.put("apply", "images/resources/controleer.jpg");
+				buttonImages.put("enter", "images/resources/enter.jpg");
+				buttonImages.put(FormuleKeyboard.ΑΒ, "images/resources/switch.jpg");
+				buttonImages.put("=", "images/resources/=.jpg");
+				buttonImages.put("<", "images/resources/lt.jpg");
+				buttonImages.put(">", "images/resources/gt.jpg");
+				
+
+
+
+
+
+				
+				
+				
 	}
 }

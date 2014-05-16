@@ -38,7 +38,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	static final String _123 = "123";
 	static final String ΑΒ = "\u03b1\u03b2..";
 	static final String SCRIBBLE = "Scribble";
-	static final boolean hasKeyboard  = false;//! TouchEvent.isSupported();
+	static final boolean hasKeyboard  = false && ! TouchEvent.isSupported();
 	private FormuleEditorIF editor;
 	public KeyBoardTabPanel tp;
 	private WritePanel writePanel;
@@ -54,6 +54,21 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	{ "diff", "limiet0", "limiet1", "limiet2", "\u221e", "primitieve", "p", "q", "t", "<", ">", "7", "8", "9", "min" },
 	{ "conjug", "\u2192", "sigma", "\u3008", "\u3009", "diff_partial", "space", "of", "\u2248", "0", ".", "=", "plus" } };
 
+	private String[][] buttonCodes_geavanceerd =
+		{
+			{ "7", "8", "9", "haakjes", null, "=",   "macht", "wortel",   "ndewortel", "\u00B1", "(",      ")",      null, "apply"     },
+			{ "4", "5", "6", "0",       null, "maal", "/",    "kwadraat", "x",         "\u2248", "<",      ">" ,     null, "back",  ΑΒ },
+			{ "1", "2", "3", ",",       null, "plus", "min",  "breuk",    "y",         "pi",     "\u2264", "\u2265", null, "enter", VVV }
+		};
+	private double[][] buttonWidths_geavanceerd =
+		{
+			{ 1, 1, 1, 1, 0.6, 1,   1, 1, 1, 1, 1, 1, 0.6, 2.153   },
+			{ 1, 1, 1, 1, 0.6, 1,   1, 1, 1, 1, 1, 1, 0.6, 1,    1 },
+			{ 1, 1, 1, 1, 0.6, 1,   1, 1, 1, 1, 1, 1, 0.6, 1,    1 },
+			
+		};
+
+	
 	private double[][] buttonWidths =
 	{
 	{ 1, 1, 1, 1, 2, 2, 1, 1, 1, 2, 2 },
@@ -187,9 +202,13 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 
 		if(hasKeyboard)
 			tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodesWN, buttonWidthsWN)); // was GR
-		else
-			tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodes, buttonWidths));
-
+		else 
+		{
+			if("noordhoff".equals(FormuleKeyBoardButtons.getDependentName()))
+				tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodes_geavanceerd, buttonWidths_geavanceerd));
+			else
+				tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodes, buttonWidths));
+		}
 		//tp.addTab("ABC", this.getKeyBoard(buttonCodesAbc, buttonWidthsAbc));
 	    //tp.addTab("ABCShift", this.getKeyBoard(buttonCodesAbcShift, buttonWidthsAbcShift));
 		tp.addTab("Alpha", this.getKeyBoard(buttonCodesAlpha, buttonWidthsAlpha));
@@ -245,7 +264,9 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	{
 		int defwidth = 16;
 		int padding = 16;
-// NOORDHOFF defwidth = 52; padding = 0;
+// if(NOORDHOFF)
+		if("noordhoff".equals(FormuleKeyBoardButtons.getDependentName()))
+		{ defwidth = 52; padding = 0; }
 		double width = 0;
 
 		FlowPanel fp = new FlowPanel(), fp2 = new FlowPanel();
@@ -259,7 +280,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 				{
 					SimplePanel b = new SimplePanel();
 					width = (defwidth + 2 * (padding)) * widths[j][i] - 2 * padding;
-					width += 32;
+					//width += 32;
 					b.setWidth(Math.round(width) + "px");
 					b.setHeight("16px");
 
@@ -270,7 +291,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 				}
 				TouchButton b = FormuleKeyBoardButtons.getButton(buttons[j][i], this);
 				width = (defwidth + 2 * padding) * widths[j][i] - 2 * padding;
-				b.setWidth(Math.round(width) + "px"); // alleen DWO niet noordhoff.
+				b.setWidth(Math.round(width) + "px"); // alleen DWO niet noordhoff.?????
 				//b.setHeight("16px");
 				if ("zoomOut".equals(buttons[j][i]) || "zoomIn".equals(buttons[j][i]))
 				{
@@ -283,12 +304,6 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 			}
 			fp.add(fp2);
 		}
-		SimplePanel sp = new SimplePanel();
-		sp.getElement().getStyle().setProperty("clear", "both");		
-		fp.add(sp);
-		Widget b = FormuleKeyBoardButtons.getButton(VVV, this);
-		//b.setHeight("16px");
-		fp2.add(b);
 		
 		return fp;
 	}

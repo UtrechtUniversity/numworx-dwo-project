@@ -14,10 +14,14 @@ canvas {outline: none;
  
 div.cbg-RP { background-color:#c3d9ff; }
 .keyboardtabs {background:#000;}
-div.keyboard {background:#eee; left:0px; right:0px; border-top:1px solid #777;}
+div.keyboard {background:#dedede; left:0px; right:0px; }
+
 
 .kbd-Button-dwo {background:#ddd; color:#000; padding:10px; margin:5px;  border: 1px solid #888; border-radius:5px; text-align:center; overflow:hidden;}
 .kbd-Button-dwo:active {background:#e00;}
+
+.kbd-Button-noordhoff {margin:4px; text-align:center; overflow:hidden; height:48px; background-color: white; vertical-align: middle; font-size: 18px; }
+.kbd-Button-noordhoff:active {background:#e00;}
 
 div.disabled { background:#b8b8b8; color:#333;}
 div.disabled:active { background:#b8b8b8; }
@@ -38,13 +42,27 @@ div.kbd-Button-dwo-numeric {
 	background:#eee;
 	background-image: url(images/resources/numericbuttongradient.png);
 }
+div.kbd-Button-noordhoff-numeric {
+	background-color:#64add3;
+	color: white
+}
 
 
 div.apply {background:#eee; }
 
 
+div.tabkeyboard-dwo { 
+	margin: 0px auto;
+	width: 724px;
+}
+
 div.tabkeyboard {
-    width: 724px; margin: 0px auto; display: block; background-position: initial initial; background-repeat: initial initial; 
+      display: block; background-position: initial initial; background-repeat: initial initial; 
+}
+
+div.tabkeyboard-noordhoff {
+    margin:13px 20px;
+    width: 846px;
 }
 
 div.listitem { color:#000; }
