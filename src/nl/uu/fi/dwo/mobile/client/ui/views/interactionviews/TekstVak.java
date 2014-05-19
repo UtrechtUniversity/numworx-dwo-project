@@ -41,6 +41,9 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	private int ashoogte;
 	private double tekstVakBreedte;
 	
+	private boolean pasAanH = false;
+	private boolean pasAanB = false;
+	
 	private boolean centerH = false;
 	private boolean centerV = false;
 	
@@ -145,6 +148,12 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		//flowVak.getElement().getStyle().setProperty("borderRadius", (ronding / 2) + "px");
 		this.getElement().getStyle().setProperty("borderRadius", (ronding / 2) + "px");
 	}
+
+	public void setPasHoogteBreedteAan(boolean pasAanH, boolean pasAanB)
+	{
+		this.pasAanH = pasAanH;
+		this.pasAanB = pasAanB;
+	}
 	
 	public void setCentering(boolean centerH, boolean centerV)
 	{
@@ -192,10 +201,23 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		if(tekstVakBreedte >= 0 && h >= 0)
 		{	//flowVak.setSize("" + tekstVakBreedte  + "px", "" + h + "px");
 			for(int i = 0; i < aantalRegels  + 1; i++)
-				regelVakken[i].setWidth(tekstVakBreedte + "px");
+			{	regelVakken[i].setWidth(tekstVakBreedte + "px");
+				//TODO gaat dit goed met centreren?
+			}
 		}
 		if(h > 0)
 			this.setSize("" + b + "px", "" + h + "px");
+	}
+	
+	public int getInhoudBreedte()
+	{
+		int breedte = 0;
+	
+		for(int i = 0; i < aantalRegels; i++)
+		{	if(regelVakken[i].getWidth() > breedte)
+				breedte = regelVakken[i].getWidth();
+		}
+		return breedte;
 	}
 	
 	public void setObjects(ArrayList<Object> opdrachtObjects)
@@ -395,7 +417,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			regelVakken[i].vulRegel();
 		}
 		
-		plaatsRegels();
+		plaatsRegels(false);
 	}
 	
 	public void voegRegelToe()
@@ -421,11 +443,26 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		return ashoogte;
 	}
 	
+	public void pasHoogteAanInhoudAan()
+	{
+		int regelHoogtes = 0;
+		for(int i = 0; i < aantalRegels; i++)
+		{
+			regelVakken[i].bepaalAshoogte();
+			regelHoogtes += regelVakken[i].getHeight();
+		}
+		ashoogte = regelVakken[0].getAsHoogte();
+		hoogte = 2 * bovenMarge + regelHoogtes;
+		
+	
+		
+	}
+	
 	public void setAshoogte(int ashoogte)
 	{
 		this.ashoogte = ashoogte;
 		regelVakken[0].setAsHoogte(ashoogte);
-		plaatsRegels();
+		plaatsRegels(true);
 	}
 	
 	public int getRegelHoogte()
@@ -443,9 +480,9 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		return regelVakken[i];
 	}
 	
-	public void plaatsRegels()
+	public void plaatsRegels(boolean herplaats)
 	{
-		this.clear();
+		//this.clear();
 		//regelVakken toevoegen op juiste posities.
 		int vertPositie = bovenMarge;
 		if(centerV)
@@ -462,26 +499,31 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			if(centerH)
 				horPositie += (int) (tekstVakBreedte - regelVakken[i].getWidth())/2;
 			
-			this.add(regelVakken[i]);
+			if(!herplaats)
+				this.add(regelVakken[i]);
 			this.setWidgetLeftWidth(regelVakken[i], horPositie, Style.Unit.PX, regelVakken[i].getWidth(), Style.Unit.PX);
 			this.setWidgetTopHeight(regelVakken[i], vertPositie, Style.Unit.PX, regelVakken[i].getHeight(), Style.Unit.PX);
 			vertPositie += regelVakken[i].getHeight();// + interlinie; nog implementeren
 			//flowVak.add(regelVakken[i]);
 		}
 		
-		//zwevende tekstvakken toevoegen.
-		for(int i = 0; i < zwevendeTekstVakken.size(); i++)
+		//zwevende tekstvakken toevoegen. (hoeft alleen eerste keer)
+		if(!herplaats)
 		{
-			TekstVakPanel panel = ((TekstVakPanel) zwevendeTekstVakken.get(i));
-			Widget a = panel.asWidget();
-			a.getElement().getStyle().setProperty("display", "inline-block");
-			this.add(a);
-			this.setWidgetLeftWidth(a, panel.getLocationX(), Style.Unit.PX, 
-					panel.getBreedte(), Style.Unit.PX);
-			this.setWidgetTopHeight(a, panel.getLocationY(), Style.Unit.PX, 
-					panel.getHoogte(), Style.Unit.PX);
-			panel.setParent(this);
+			for(int i = 0; i < zwevendeTekstVakken.size(); i++)
+			{
+				TekstVakPanel panel = ((TekstVakPanel) zwevendeTekstVakken.get(i));
+				Widget a = panel.asWidget();
+				a.getElement().getStyle().setProperty("display", "inline-block");
+				this.add(a);
+				this.setWidgetLeftWidth(a, panel.getLocationX(), Style.Unit.PX, 
+						panel.getBreedte(), Style.Unit.PX);
+				this.setWidgetTopHeight(a, panel.getLocationY(), Style.Unit.PX, 
+						panel.getHoogte(), Style.Unit.PX);
+				panel.setParent(this);
+			}
 		}
+		
 		
 		ashoogte = regelVakken[0].getAsHoogte();
 
@@ -489,6 +531,23 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	
 	public void resize()
 	{
+		if(pasAanB)
+		{
+			tekstVakBreedte = regelVakken[0].getWidth();
+			for(int i = 0; i < aantalRegels; i++)
+				if(regelVakken[i].getWidth() > tekstVakBreedte)
+					tekstVakBreedte = regelVakken[i].getWidth();
+			breedte = (int) tekstVakBreedte + 2 * cellMarge;
+		}
+		if(pasAanH)
+		{
+			int regelHoogtes = 0;
+			for(int j = 0; j < aantalRegels; j++)
+				regelHoogtes += regelVakken[j].getHeight();
+			hoogte = 2 * bovenMarge + regelHoogtes;
+		}
+		setSize(breedte, hoogte); //even kijken of dit niet voor oneindige loop zorgt..
+		
 		int vertPositie = bovenMarge;
 		if(centerV)
 		{
@@ -516,6 +575,8 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		}
 		
 		ashoogte = regelVakken[0].getAsHoogte();
+		
+		parent.resize();
 	}
 	
 	

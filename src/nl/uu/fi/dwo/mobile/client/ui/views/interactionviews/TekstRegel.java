@@ -74,7 +74,7 @@ public class TekstRegel extends LayoutPanel
 		//	System.out.println("hoogte blijft " + hoogte);
 		this.ashoogte = ashoogte;
 		
-		vulRegel();
+		hervulRegel();
 		//hier vulRegel aanroepen? Zodat alles opnieuw neer wordt gezet? Of alleen de juiste hoogtes instellen?
 	}
 	
@@ -165,8 +165,7 @@ public class TekstRegel extends LayoutPanel
 	}
 	
 	public void vulRegel()
-	{
-		this.clear();
+	{	//this.clear();
 		int horPositie = 0;
 		//this.getElement().getStyle().setVerticalAlign(VerticalAlign.TOP);
 		//this.getElement().getStyle().setProperty("verticalAlign", "top");
@@ -321,8 +320,15 @@ public class TekstRegel extends LayoutPanel
 					//a.getElement().getStyle().setProperty("verticalAlign", "" + objectVerschuiving + "px");
 				//}
 				this.add(a);
-				this.setWidgetLeftWidth(a, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
-				this.setWidgetTopHeight(a, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
+				if(!(a instanceof PopupButton))
+				{	this.setWidgetLeftWidth(a, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
+					this.setWidgetTopHeight(a, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
+				}
+				else 
+				{	//TODO: objectBreedte en hoogte nog aanpassen.
+					this.setWidgetLeftWidth(a, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
+					this.setWidgetTopHeight(a, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
+				}
 			}
 			else if (currentObject instanceof ImageView)
 			{
@@ -353,6 +359,13 @@ public class TekstRegel extends LayoutPanel
 	{
 		bepaalAshoogte();
 		
+		hervulRegel();
+		
+		tekstVak.resize();
+	}
+	
+	public void hervulRegel()
+	{
 		int horPositie = 0;
 		for(int i = 0; i < this.getWidgetCount(); i++)
 		{
@@ -367,19 +380,29 @@ public class TekstRegel extends LayoutPanel
 				objectHoogte = object.getHeight();
 				objectVerschuiving = ashoogte - object.getAsHoogte();
 			}
-			else 
+			else
 			{
 				objectVerschuiving = ashoogte - tekstAshoogte;
-				objectBreedte = w.getOffsetWidth();
-				objectHoogte = fm.getHeight();
+				if(regelObjects.get(i) instanceof String)
+				{
+					String s = ((Label) w).getText();
+					objectBreedte = (int) ctx.measureText(s).getWidth();
+					objectHoogte = fm.getHeight();
+				}
+				else if(regelObjects.get(i) instanceof ImageView)
+				{	objectBreedte = w.getOffsetWidth();
+					objectHoogte = w.getOffsetHeight();
+				}
+				else if(regelObjects.get(i) instanceof AnchorView)
+				{	objectBreedte = w.getOffsetWidth();
+					objectHoogte = w.getOffsetHeight();
+				}
 			}
 			this.setWidgetLeftWidth(w, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
 			this.setWidgetTopHeight(w, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
-			horPositie += objectBreedte;
+			horPositie += objectBreedte + 1;
 		}
 		breedte = horPositie;
-		
-		tekstVak.resize();
 	}
 	
 	
@@ -418,23 +441,23 @@ public class TekstRegel extends LayoutPanel
 		}
 		if(regelObjects.size() > 0)
 		{
-			if(h1 + h2 > this.hoogte)
+			//if(h1 + h2 > this.hoogte)
 				this.hoogte = h1 + h2;
 			//if(this.hoogte < font_size + 4)
 			//	this.hoogte = font_size + 4;
 			if(this.hoogte < fm.getHeight())
 				this.hoogte = fm.getHeight();
-			if(h1 > ashoogte)
+			//if(h1 > ashoogte)
 				ashoogte = h1;
 		}
 		else
 		{
 			//this.hoogte = font_size + 4;//eigenlijk: fm.getAscent() + fm.getDescent()
-			if(fm.getHeight() > this.hoogte)
+			//if(fm.getHeight() > this.hoogte)
 				this.hoogte = fm.getHeight();
 			//System.out.println("fm.getHeight: " + fm.getHeight() + " en fm.getAscent() + fm.getDescent(): " + (fm.getAscent() + fm.getDescent()));
 			//ashoogte = (font_size + 2) / 2; //eigenlijk: fm.getAscent();
-			if(fm.getAscent()/2 > ashoogte)
+			//if(fm.getAscent()/2 > ashoogte)
 				ashoogte = fm.getAscent() / 2;
 		}
 		//eigenHoogte = hoogte;

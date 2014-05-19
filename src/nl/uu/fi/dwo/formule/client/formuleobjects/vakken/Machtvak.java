@@ -68,11 +68,9 @@ public class Machtvak extends FormuleElementWithChildren
 	
 		height = getChild().height - 2 * fm.getAscent() / 3 - fm.getDescent() + vgh;
 	
-		System.out.println("machtvak maten voor setAsHoogte: getChild().height = " + getChild().height + ", 2*fm.getAscent()/3 + fm.getDescent() = " + (2*fm.getAscent()/3 + fm.getDescent()) + ", vgah = " + vgah);
 		
 		this.setAsHoogte(getChild().height - 2 * fm.getAscent() / 3 - fm.getDescent() + vgah);
-		System.out.println("Machtvak: ashoogte gezet: " + (getChild().height - 2 * fm.getAscent() / 3 - fm.getDescent() + vgah));
-	
+		
 		this.setSize(width, height);
 		
 	}

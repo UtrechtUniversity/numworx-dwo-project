@@ -19,6 +19,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.TekstElement;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -132,6 +133,7 @@ public class TekstVakPanel implements InteractionView
 	int cellSpaceRow = 0;
 	int cellMarge = 0;
 	int bovenMarge = 0;
+	int ronding = 0;
 	CssColor bgColor = CssColor.make(255, 255, 255);
 	CssColor fgColor = CssColor.make(0, 0, 0);
 	CssColor randColor = CssColor.make(150, 150, 150);
@@ -150,6 +152,7 @@ public class TekstVakPanel implements InteractionView
 	private int sleepdoelMarge = 10;
 	private boolean sleepSnap = false;
 	private boolean pasAanH = false;
+	private boolean pasAanB = false;
 	
 	private boolean selectable;
 	private boolean sleepbaar;
@@ -226,8 +229,6 @@ public class TekstVakPanel implements InteractionView
 		int randColor_red = 0;
 		int randColor_green = 0;
 		int randColor_blue = 0;
-
-		int ronding = 0;
 
 		if (launchState.containsKey("breedtes") )
 		{
@@ -337,6 +338,8 @@ public class TekstVakPanel implements InteractionView
 // launchState never null!
 		if( launchState.containsKey("pasAanH"))
 			pasAanH = launchState.getBoolean("pasAanH");
+		if( launchState.containsKey("pasAanB"))
+			pasAanB = launchState.getBoolean("pasAanB");
 
 // FIXME overleg met Peter		
 //		if(ingeklapt) for(int i = 0; i < hoogtes.size(); i++) {
@@ -366,7 +369,6 @@ public class TekstVakPanel implements InteractionView
 		mainPanel2.addDomHandler(touchHandler, TouchMoveEvent.getType());
 		mainPanel2.addDomHandler(touchHandler, TouchEndEvent.getType());
 		
-		
 		randPanel = new LayoutPanel();
 		if(bgColorZichtbaar)
 			randPanel.getElement().getStyle().setBackgroundColor(bgColor.toString());
@@ -375,40 +377,33 @@ public class TekstVakPanel implements InteractionView
 		randPanel.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
 		randPanel.getElement().getStyle().setProperty("borderRadius", (ronding / 2) + "px");
 		
-		//tabelranden
-		double hoogteCum = -0.5 - cellSpaceRow / 2;
-		double breedteCum = -0.5 - cellSpaceColumn / 2;
-		//if ("GR".equals(WiskOpdr.deployVariant))
-		//	g.setColor(new Color(70, 116, 183));
 		horizontalBorders = new LayoutPanel[hoogtes.size() - 1];
 		verticalBorders = new LayoutPanel[breedtes.size() - 1];
-		for (int i = 0; i < hoogtes.size() - 1; i++)
-		{	horizontalBorders[i] = new LayoutPanel();
-			horizontalBorders[i].setPixelSize(breedte, 1);
+		
+		for(int i = 0; i < hoogtes.size() - 1; i++)
+		{
+			horizontalBorders[i] = new LayoutPanel();
+			//horizontalBorders[i].setPixelSize(breedte, 1);
 			horizontalBorders[i].getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 			horizontalBorders[i].getElement().getStyle().setBorderColor(randColor.toString());
-			hoogteCum += ((Number) hoogtes.get(i)).intValue() + cellSpaceRow;
 			randPanel.add(horizontalBorders[i]);
-			randPanel.setWidgetLeftRight(horizontalBorders[i], 0, Style.Unit.PX, 0, Style.Unit.PX);
-			randPanel.setWidgetTopHeight(horizontalBorders[i], Math.round(hoogteCum), Style.Unit.PX, 1, Style.Unit.PX);
 			if(!tableBorders)
 				horizontalBorders[i].setVisible(false);
-			
 		}
-		for (int i = 0; i < breedtes.size() - 1; i++)
+		for(int i = 0; i < breedtes.size() - 1; i++)
 		{
 			verticalBorders[i] = new LayoutPanel();
-			verticalBorders[i].setPixelSize(1 , hoogte);
+			//verticalBorders[i].setPixelSize(1 , hoogte);
 			verticalBorders[i].getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 			verticalBorders[i].getElement().getStyle().setBorderColor(randColor.toString());
-			breedteCum += breedtes.get(i).intValue() + cellSpaceColumn;
 			randPanel.add(verticalBorders[i]);
-			randPanel.setWidgetLeftWidth(verticalBorders[i], Math.round(breedteCum), Style.Unit.PX, 1, Style.Unit.PX);
-			randPanel.setWidgetTopBottom(verticalBorders[i], 0, Style.Unit.PX, 0, Style.Unit.PX);
 			if(!tableBorders)
 				verticalBorders[i].setVisible(false);
 			
 		}
+		
+		plaatsTabelRanden();
+		
 		
 		mainPanel = new Grid(hoogtes.size(), breedtes.size());
 		mainPanel.getElement().getStyle().setProperty("borderSpacing", "" + cellSpaceColumn + "px " + cellSpaceRow + "px");
@@ -433,6 +428,7 @@ public class TekstVakPanel implements InteractionView
 				tekstVakken[i][j].setFontStyle(font_style);
 				tekstVakken[i][j].setRonding(ronding);
 				tekstVakken[i][j].setCentering(centerH, centerV);
+				tekstVakken[i][j].setPasHoogteBreedteAan(pasAanH, pasAanB);
 				tekstVakken[i][j].setTekstVakBreedte(tekstVakBreedte);
 				tekstVakken[i][j].setMarges(bovenMarge, cellMarge);
 				
@@ -475,6 +471,27 @@ public class TekstVakPanel implements InteractionView
 			}
 		}
 	}
+	
+	public void plaatsTabelRanden()
+	{
+		double hoogteCum = -0.5 - cellSpaceRow / 2;
+		double breedteCum = -0.5 - cellSpaceColumn / 2;
+		
+		for (int i = 0; i < hoogtes.size() - 1; i++)
+		{	hoogteCum += ((Number) hoogtes.get(i)).intValue() + cellSpaceRow;
+			randPanel.setWidgetLeftRight(horizontalBorders[i], 0, Style.Unit.PX, 0, Style.Unit.PX);
+			//randPanel.setWidgetTopHeight(horizontalBorders[i], Math.round(hoogteCum), Style.Unit.PX, 1, Style.Unit.PX);
+			randPanel.setWidgetTopHeight(horizontalBorders[i], (int) hoogteCum, Style.Unit.PX, 1, Style.Unit.PX);
+		}
+		for (int i = 0; i < breedtes.size() - 1; i++)
+		{
+			breedteCum += breedtes.get(i).intValue() + cellSpaceColumn;
+			//randPanel.setWidgetLeftWidth(verticalBorders[i], Math.round(breedteCum), Style.Unit.PX, 1, Style.Unit.PX);
+			randPanel.setWidgetLeftWidth(verticalBorders[i], (int) breedteCum, Style.Unit.PX, 1, Style.Unit.PX);
+			randPanel.setWidgetTopBottom(verticalBorders[i], 0, Style.Unit.PX, 0, Style.Unit.PX);
+			
+		}
+	}
 
 	public void zetInstellingen(Map<String, Object> instellingen)
 	{
@@ -497,29 +514,29 @@ public class TekstVakPanel implements InteractionView
 		this.container = container;
 	}
 	
-	private int width, height;
+	//private int width, height;
 	
-	public int getCurrentWidth() {
-		return width;
-	}
+	//public int getCurrentWidth() {
+	//	return width;
+	//}
 	
-	public int getCurrentHeight() {
-		return height;
-	}
+	//public int getCurrentHeight() {
+	//	return height;
+	//}
 	
 	public void setCurrentSize(int w, int h) {
-		System.out.println(this + " size " + w + "x" + h);
-		int oldHeight = height;
+		//System.out.println(this + " size " + w + "x" + h);
+		int oldHeight = hoogte;
 		mainPanel2.setPixelSize(w, h);
-		if(w >= 0) width = w;
-		if(h >= 0) height = h;
+		if(w >= 0) breedte = w;
+		if(h >= 0) hoogte = h;
 		if(container != null)
-			container.doLayout(this, height - oldHeight);
+			container.doLayout(this, hoogte - oldHeight);
 	}
 	
 	public void doLayout(TekstVakPanel child, int delta, int rij, int kolom) {
-		System.out.println("child dolayout " + child + " pos " + rij + " " + kolom + " + delta " + delta);
-		int cch = child.getCurrentHeight();
+		//System.out.println("child dolayout " + child + " pos " + rij + " " + kolom + " + delta " + delta);
+		int cch = child.getHeight();
 		int tekstGrootte = child.font_size;
 		
 		
@@ -537,9 +554,9 @@ public class TekstVakPanel implements InteractionView
 				tekstVakken[rij][j].setPixelSize(-1, (int) cellHoogte);
 			}
 			delta = cellHoogte - c0;
-			System.out.println("new size = " + width + "x" + "(" + height + "+ " + delta + ")");
+			System.out.println("new size = " + breedte + "x" + "(" + hoogte + "+ " + delta + ")");
 			//mainPanel2.setPixelSize(width, height += delta);
-						setCurrentSize(-1, height + delta);
+						setCurrentSize(-1, hoogte + delta);
 		}
 		
 	}
@@ -928,8 +945,76 @@ public class TekstVakPanel implements InteractionView
 			
 
 		}
+	}
+	
+	public void resize()
+	{
+		//kijken of pasAanH en of pasAanB true zijn; anders moet er niets gebeuren.
+		if(!pasAanH && !pasAanB)
+			return;
+		
+		int[] ashoogtes = new int[hoogtes.size()];
+		int totaleHoogte = hoogte;
+		int totaleBreedte = breedte;
+		
+		if(pasAanH)
+		{	totaleHoogte = 0;
+			for(int i = 0; i < hoogtes.size(); i++)
+			{
+				int h1 = 0;
+				int h2 = 0;
+				for(int j = 0; j < breedtes.size(); j++)
+				{
+					//opnieuw alles plaatsen qua hoogte; zoals het tekstvak het zelf zou doen als hem geen hoogte was opgelegd.
+					tekstVakken[i][j].pasHoogteAanInhoudAan();
+					int hoogte = tekstVakken[i][j].hoogte;
+					int ash = tekstVakken[i][j].getAsHoogte();
+					if(ash > h1)
+						h1 = ash;
+					if(hoogte - ash > h2)
+						h2 = hoogte - ash;
+				}
+				
+				hoogtes.set(i, new Double(h1 + h2));
+				totaleHoogte += h1 + h2 + cellSpaceRow;
+				ashoogtes[i] = h1;
+			}
+			totaleHoogte -= cellSpaceRow;
+		}
 		
 		
+		if(pasAanB)
+		{	
+			totaleBreedte = 0;
+			for(int j = 0; j < breedtes.size(); j++)
+			{	int breedte = 0;
+				for(int i = 0; i < hoogtes.size(); i++)
+				{	//opnieuw alles plaatsen qua breedte, zoals het tekstvak het zelf zou doen als hem geen breedte was opgelegd.
+					//tekstVakken[i][j].
+					
+					if(tekstVakken[i][j].getInhoudBreedte() > breedte)
+						breedte = tekstVakken[i][j].getInhoudBreedte();
+				}
+				breedte += 2 * cellMarge;
+				breedtes.set(j, new Double(breedte));
+				totaleBreedte += breedte + cellSpaceColumn;
+			}
+			totaleBreedte -= cellSpaceColumn;
+		}
+		
+		setCurrentSize(totaleBreedte, totaleHoogte);
+		plaatsTabelRanden();
+		
+		for(int i = 0; i < hoogtes.size(); i++)
+		{	for(int j = 0; j < breedtes.size(); j++)
+			{	tekstVakken[i][j].setSize(breedtes.get(j).intValue(), hoogtes.get(i).intValue());
+				tekstVakken[i][j].setAshoogte(ashoogtes[i]);
+			}
+		}
+				
+		if(parent != null)
+			parent.resize();
+
 	}
 	
 	

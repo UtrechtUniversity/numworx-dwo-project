@@ -78,7 +78,6 @@ public class FormuleRegel extends FormuleElement
 
 	private void addElement(FormuleElement e)
 	{
-		System.out.println("addElement: " + e.toString());
 		if (this.selectionStart != -1)
 		{
 			this.deleteSelection();

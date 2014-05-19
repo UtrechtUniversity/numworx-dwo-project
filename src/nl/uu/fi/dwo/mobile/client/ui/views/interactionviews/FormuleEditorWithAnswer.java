@@ -96,20 +96,26 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			{
 				//sp.getElement().getStyle().setProperty("width", (breedte - 9) + "px");
 				this.getMainRegel().setMinimumWidth(breedte - 20);
-				hoogte = 24;
-				this.getMainRegel().setMinimumHeight(hoogte);
-				sp.setSize(breedte + "px", hoogte + "px");
+				hoogte = 27;
+				this.getMainRegel().setMinimumHeight(hoogte - 6);
+				sp.setSize((breedte) + "px", (hoogte) + "px");
 				//sp.getElement().getStyle().setBackgroundColor(CssColor.make(255, 0, 0).toString());
 				sp.getElement().getStyle().setProperty("border", "1px solid gray");
 				
 				//sp.getElement().getStyle().setPadding(3, Style.Unit.PX);
 				
-				sp.getElement().getStyle().setPaddingLeft(1, Style.Unit.PX);
-				sp.getElement().getStyle().setPaddingRight(0, Style.Unit.PX);
-				sp.getElement().getStyle().setPaddingTop(1, Style.Unit.PX);
-				sp.getElement().getStyle().setPaddingBottom(5, Style.Unit.PX);
+				sp.getElement().getStyle().setMarginLeft(1, Style.Unit.PX);
+				//sp.getElement().getStyle().setMarginRight(1, Style.Unit.PX);
+				sp.getElement().getStyle().setMarginTop(3, Style.Unit.PX);
+				//sp.getElement().getStyle().setMarginBottom(0, Style.Unit.PX);
+				
+				//sp.getElement().getStyle().setPaddingLeft(1, Style.Unit.PX);
+				//sp.getElement().getStyle().setPaddingRight(0, Style.Unit.PX);
+				//sp.getElement().getStyle().setPaddingTop(1, Style.Unit.PX);
+				//sp.getElement().getStyle().setPaddingBottom(5, Style.Unit.PX);
 				//(Weggehaald Sietske) sp.getElement().getStyle().setProperty("backgroundColor", "#e9e9e9");
-				sp.getElement().getStyle().setProperty("backgroundColor", "white");
+				//sp.getElement().getStyle().setProperty("backgroundColor", "white");
+				sp.getElement().getStyle().setProperty("backgroundColor", "yellow");
 				//this.getMainRegel().getCanvas().getElement().getStyle().setProperty("marginTop", "3px");
 				//this.getMainRegel().getCanvas().getElement().getStyle().setProperty("marginBottom", "0px");
 			}
@@ -119,6 +125,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			sp.add(checkimg);
 			
 		}
+		System.out.println("neerzetten formuleEditorWithAnswer. Ashoogte = " + this.getAsHoogte());
 	}
 
 	public void zetInstellingen(Map<String, Object> instellingen)
@@ -239,13 +246,13 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	public void resize()
 	{
-		System.out.println("resize");
+		System.out.println("resize formuleEditorWithAnswer");
 		breedte = this.getMainRegel().getWidth() + 20;
-		hoogte = this.getMainRegel().getHeight();
-		System.out.println("nieuwe breedte: " + breedte);
-		System.out.println("nieuwe hoogte: " + hoogte);
+		hoogte = this.getMainRegel().getHeight() + 6;
+		//System.out.println("nieuwe breedte: " + breedte);
+		//System.out.println("nieuwe hoogte: " + hoogte);
 		//nog zorgen dat hoogte altijd minimaal 24 is?
-		sp.setSize(breedte + "px", hoogte + "px");
+		sp.setSize(breedte + "px", (hoogte) + "px");
 		if(parentRegel != null)
 			parentRegel.resize();
 		
@@ -254,7 +261,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	public void setFont(FormuleFont fm)
 	{
-		System.out.println("formuleEditorWithAnswer setFont: " + fm.toString());
 		super.setFont(fm);
 	}
 	
@@ -277,7 +283,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	public int getAsHoogte()
 	{
-		return this.getMainRegel().getAsHoogte() + 3;
+		System.out.println("getAsHoogte geeft: " + this.getMainRegel().getAsHoogte());
+		return this.getMainRegel().getAsHoogte();
+		
 	}
 
 	public void setStrict(boolean strict)
