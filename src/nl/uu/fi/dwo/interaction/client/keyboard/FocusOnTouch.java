@@ -5,6 +5,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
@@ -183,10 +184,46 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 			case 16: // shift
 				break;
 			default: // unknown
+				int code = event.getNativeKeyCode();
+				if(code == F(1)) {
+					editor.wortel();
+				} else if(code == F(2)) {
+					editor.macht();
+				} else if (code == F(3)) {
+					editor.kwadraat();
+				} else if (code == F(4)) {
+					editor.breuk();
+				} else if (code == F(5)) {
+					editor.haakjes();
+				} else if (code == F(6)) {
+					editor.ndewortel();
+				} else if (code == F(7)) {
+					editor.integraal();
+				} else if (code == F(8)) {
+					editor.primitieve();
+				} else if (code == F(9)) {
+					editor.ndelog();
+				} else if (code == F(10)) {
+					editor.abs();
+				} else if (code == F(11)) {
+					editor.subscript();
+				} else if (code == F(12)) {
+					editor.bin();
+				} else {
+					GWT.log(" code = " + code);
+					return;
+				}
+				event.stopPropagation();
+				event.preventDefault();
 			}
 
 		}
 
+	}
+
+// Browser dependent function. Keycode of Function key	
+	private int F(int i) {
+		return 111 + i;
 	}
 
 	private void macht(DomEvent<?> event, FormuleEditorIF editor)
