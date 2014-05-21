@@ -37,6 +37,8 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	static final String VVV = "VVV";
 	static final String _123 = "123";
 	static final String ΑΒ = "\u03b1\u03b2..";
+	static final String QWERTY = "ABC";
+	static final String qwerty = "abc";
 	static final String SCRIBBLE = "Scribble";
 	static final boolean hasKeyboard  = false && ! TouchEvent.isSupported();
 	private FormuleEditorIF editor;
@@ -57,14 +59,14 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	private String[][] buttonCodes_geavanceerd =
 		{
 			{ "7", "8", "9", "haakjes", null, "=",   "macht", "wortel",   "ndewortel", "\u00B1", "(",      ")",      null, "apply"     },
-			{ "4", "5", "6", "0",       null, "maal", "/",    "kwadraat", "x",         "\u2248", "<",      ">" ,     null, "back",  ΑΒ },
-			{ "1", "2", "3", ",",       null, "plus", "min",  "breuk",    "y",         "pi",     "\u2264", "\u2265", null, "enter", VVV }
+			{ "4", "5", "6", "0",       null, "maal", "/",    "kwadraat", "x",         "\u2248", "<",      ">" ,     null, "back",  QWERTY },
+			{ "1", "2", "3", "komma",   null, "plus", "min",  "breuk",    "y",         "pi",     "\u2264", "\u2265", null, "enter", VVV }
 		};
 	private double[][] buttonWidths_geavanceerd =
 		{
-			{ 1, 1, 1, 1, 0.6, 1,   1, 1, 1, 1, 1, 1, 0.6, 2.153   },
-			{ 1, 1, 1, 1, 0.6, 1,   1, 1, 1, 1, 1, 1, 0.6, 1,    1 },
-			{ 1, 1, 1, 1, 0.6, 1,   1, 1, 1, 1, 1, 1, 0.6, 1,    1 },
+			{ 1, 1, 1, 1, 0.6, 1,   1, 1, 1, 1, 1, 1, 0.65, 2.153   },
+			{ 1, 1, 1, 1, 0.6, 1,   1, 1, 1, 1, 1, 1, 0.65, 1,    1 },
+			{ 1, 1, 1, 1, 0.6, 1,   1, 1, 1, 1, 1, 1, 0.65, 1,    1 },
 			
 		};
 
@@ -123,6 +125,28 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 
 	};
 
+	private String[][] buttonCodes_abc = 
+	{
+		{ "q","w","e","r","t","y","u","i","o","p", null, "apply" },
+		{null,"a","s","d","f","g","h","j","k","l", null, " ",null,"back",_123  },
+		{"shift", "z","x","c","v","b","n","m","!","?", null, "enter", VVV }
+	};
+	private String[][] buttonCodes_ABC = 
+	{
+		{ "Q","W","E","R","T","Y","U","I","O","P",null,          "apply" },
+		{null,"A","S","D","F","G","H","J","K","L",null, " ",null,"back",_123  },
+		{"SHIFT", "Z","X","C","V","B","N","M",",",".", null, "enter", VVV }
+	};
+	
+	private double[][] buttonWidths_abc = 
+	{
+		{ 1,1,1,1,1,1,1,1,1,1,   2.4,       2.15 },
+		{ 0.5,1,1,1,1,1,1,1,1,1,0.7 ,2.02,0.2 , 1,1},
+		{ 1,1,1,1,1,1,1,1,1,1,   2.4,       1,1},
+	};
+	
+	
+	
 	private double[][] buttonWidthsAbc =
 	{
 	{ 1, 1, 1, 1, 2, 2, 5, 2 },
@@ -205,9 +229,15 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 		else 
 		{
 			if("noordhoff".equals(FormuleKeyBoardButtons.getDependentName()))
-				tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodes_geavanceerd, buttonWidths_geavanceerd));
+			{
+				tp.addTab("Toetsenbord", getKeyBoard(buttonCodes_geavanceerd, buttonWidths_geavanceerd));
+				tp.addTab(qwerty,         getKeyBoard(buttonCodes_abc, buttonWidths_abc));
+				tp.addTab(QWERTY,    getKeyBoard(buttonCodes_ABC, buttonWidths_abc));
+			}
 			else
+			{
 				tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodes, buttonWidths));
+			}
 		}
 		//tp.addTab("ABC", this.getKeyBoard(buttonCodesAbc, buttonWidthsAbc));
 	    //tp.addTab("ABCShift", this.getKeyBoard(buttonCodesAbcShift, buttonWidthsAbcShift));

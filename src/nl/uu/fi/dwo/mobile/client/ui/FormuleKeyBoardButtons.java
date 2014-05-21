@@ -98,6 +98,8 @@ public abstract class FormuleKeyBoardButtons
 				editor.insert( ' ');
 			else if (code.equals("min"))
 				editor.insert('-');
+			else if (code.equals("komma"))
+				editor.insert(',');
 			else if (code.equals("plus"))
 				editor.insert('+');
 			else if (code.equals("maal"))
@@ -111,11 +113,11 @@ public abstract class FormuleKeyBoardButtons
 			{
 				kb.enter();
 			}
-			else if (code.equals("shift"))
+			else if (code.toLowerCase().equals("shift"))
 			{
-				String panel = "ABCShift";
+				String panel = FormuleKeyboard.QWERTY;
 				if (kb.isCurrent(panel))
-					kb.goTo("ABC");
+					kb.goTo(FormuleKeyboard.qwerty);
 				else
 					kb.goTo(panel);
 			}
@@ -138,6 +140,10 @@ public abstract class FormuleKeyBoardButtons
 			if (code.equals (FormuleKeyboard.ΑΒ))
 			{
 				kb.goTo("Alpha");
+			}
+			if (code.equals (FormuleKeyboard.QWERTY))
+			{
+				kb.goTo(FormuleKeyboard.qwerty);
 			}
 			if (code.equals (FormuleKeyboard._123))
 			{
@@ -344,21 +350,34 @@ public abstract class FormuleKeyBoardButtons
 				buttonImages.put(")", "images/resources/).jpg");
 				buttonImages.put("haakjes", "images/resources/(-).jpg");
 				buttonImages.put("plus", "images/resources/+.jpg");
-				buttonImages.put("min", "images/resources/_.jpg");
-				buttonImages.put("x", "images/resources/x.jpg");
-				buttonImages.put("y", "images/resources/y.jpg");
+				buttonImages.put("min", "images/resources/min.jpg");
 				buttonImages.put("maal", "images/resources/vermenigvuldigen.jpg");
 				buttonImages.put("/", "images/resources/delen.jpg");
-				buttonImages.put(",", "images/resources/komma.jpg");
+				buttonImages.put("komma", "images/resources/komma.jpg");
 				buttonImages.put("apply", "images/resources/controleer.jpg");
 				buttonImages.put("enter", "images/resources/enter.jpg");
 				buttonImages.put(FormuleKeyboard.ΑΒ, "images/resources/switch.jpg");
+				buttonImages.put(FormuleKeyboard.QWERTY, "images/resources/switch.jpg");
+				buttonImages.put(FormuleKeyboard._123, "images/resources/switch.jpg");
 				buttonImages.put("=", "images/resources/=.jpg");
 				buttonImages.put("<", "images/resources/lt.jpg");
 				buttonImages.put(">", "images/resources/gt.jpg");
-				
+				buttonImages.put("!", "images/resources/!.jpg");
+				buttonImages.put("?", "images/resources/_.jpg");
 
+				buttonImages.put("shift", "images/resources/shift_2.jpg");
+				buttonImages.put("SHIFT", "images/resources/shift_1.jpg");
 
+				for (char i = 'a'; i <= 'z'; i++) {
+					String string = Character.toString(i);
+					buttonImages.put(string, "images/resources/" + string + string + ".jpg");
+				}
+				for (char i = 'A'; i <= 'Z'; i++) {
+					String string = Character.toString(i);
+					buttonImages.put(string, "images/resources/" + string + ".jpg");
+				}
+
+				//buttonTexts.put(" ", "space");
 
 
 
