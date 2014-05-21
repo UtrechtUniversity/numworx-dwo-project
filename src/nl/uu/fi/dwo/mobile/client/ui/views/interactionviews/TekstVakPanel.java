@@ -540,8 +540,8 @@ public class TekstVakPanel implements InteractionView
 		int tekstGrootte = child.font_size;
 		
 		
-		com.google.gwt.user.client.Element element = child.getAsPanel().getElement();
-		element.getStyle().setProperty("verticalAlign", (tekstGrootte - cch + 1) + "px");
+//		com.google.gwt.user.client.Element element = child.getAsPanel().getElement();
+//		element.getStyle().setProperty("verticalAlign", (tekstGrootte - cch + 1) + "px");
 		if(pasAanH)
 		{
 			int cellHoogte = hoogtes.get(rij).intValue();
@@ -557,6 +557,7 @@ public class TekstVakPanel implements InteractionView
 			System.out.println("new size = " + breedte + "x" + "(" + hoogte + "+ " + delta + ")");
 			//mainPanel2.setPixelSize(width, height += delta);
 						setCurrentSize(-1, hoogte + delta);
+			resize();
 		}
 		
 	}
@@ -969,6 +970,11 @@ public class TekstVakPanel implements InteractionView
 					tekstVakken[i][j].pasHoogteAanInhoudAan();
 					int hoogte = tekstVakken[i][j].hoogte;
 					int ash = tekstVakken[i][j].getAsHoogte();
+					if(!tekstVakken[i][j].isVisible())
+					{
+						hoogte = ash = 0;
+					}
+					
 					if(ash > h1)
 						h1 = ash;
 					if(hoogte - ash > h2)
@@ -1007,8 +1013,12 @@ public class TekstVakPanel implements InteractionView
 		
 		for(int i = 0; i < hoogtes.size(); i++)
 		{	for(int j = 0; j < breedtes.size(); j++)
-			{	tekstVakken[i][j].setSize(breedtes.get(j).intValue(), hoogtes.get(i).intValue());
-				tekstVakken[i][j].setAshoogte(ashoogtes[i]);
+			{
+				if(tekstVakken[i][j].isVisible())
+				{
+					tekstVakken[i][j].setSize(breedtes.get(j).intValue(), hoogtes.get(i).intValue());
+					tekstVakken[i][j].setAshoogte(ashoogtes[i]);
+				}
 			}
 		}
 				
@@ -1513,6 +1523,8 @@ public class TekstVakPanel implements InteractionView
 				}
 			}
 			setCurrentSize(breedte,  hoogtes.get(0).intValue() );
+			//this.hoogte = hoogtes.get(0).intValue();
+			if(parent != null) parent.resize();
 		} 
 		else {
 			double hoogte = hoogtes.get(0);
@@ -1529,6 +1541,8 @@ public class TekstVakPanel implements InteractionView
 				{
 					tekstVakken[i][j].setVisible(true);
 					tekstVakken[i][j].setPixelSize(-1, h);
+					tekstVakken[i][j].hoogte = h;
+					tekstVakken[i][j].resize();
 					//tekstVakken[i][j].setPixelSize(breedtes.get(j).intValue(), h);
 				}
 				hoogte += hoogtes.get(i);
