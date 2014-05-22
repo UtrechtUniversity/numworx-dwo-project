@@ -579,6 +579,10 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		
 		parent.resize();
 	}
+
+	public int getAantalRegels() {
+		return aantalRegels;
+	}
 	
 	
 

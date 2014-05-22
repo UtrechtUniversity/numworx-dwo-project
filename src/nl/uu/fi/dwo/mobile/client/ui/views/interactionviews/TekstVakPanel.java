@@ -537,27 +537,32 @@ public class TekstVakPanel implements InteractionView
 	
 	public void doLayout(TekstVakPanel child, int delta, int rij, int kolom) {
 		//System.out.println("child dolayout " + child + " pos " + rij + " " + kolom + " + delta " + delta);
-		int cch = child.getHeight();
-		int tekstGrootte = child.font_size;
+//		int cch = child.getHeight();
+//		int tekstGrootte = child.font_size;
+//
+		TekstVak myVak = tekstVakken[rij][kolom];
+		int n = myVak.getAantalRegels();
+		for(int i = 0; i < n; i++) 
+			myVak.getRegelVak(i).hervulRegel();
 		
 		
 //		com.google.gwt.user.client.Element element = child.getAsPanel().getElement();
 //		element.getStyle().setProperty("verticalAlign", (tekstGrootte - cch + 1) + "px");
 		if(pasAanH)
 		{
-			int cellHoogte = hoogtes.get(rij).intValue();
-			int c0 = Math.max(cellHoogte, minHoogtes.get(rij).intValue());
-			cellHoogte += delta;
-			hoogtes.set(rij, Double.valueOf(cellHoogte));
-			cellHoogte = Math.max(cellHoogte, minHoogtes.get(rij).intValue());
-			for(int j = 0; j < breedtes.size(); j ++)
-			{
-				tekstVakken[rij][j].setPixelSize(-1, (int) cellHoogte);
-			}
-			delta = cellHoogte - c0;
-			System.out.println("new size = " + breedte + "x" + "(" + hoogte + "+ " + delta + ")");
-			//mainPanel2.setPixelSize(width, height += delta);
-						setCurrentSize(-1, hoogte + delta);
+//			int cellHoogte = hoogtes.get(rij).intValue();
+//			int c0 = Math.max(cellHoogte, minHoogtes.get(rij).intValue());
+//			cellHoogte += delta;
+//			hoogtes.set(rij, Double.valueOf(cellHoogte));
+//			cellHoogte = Math.max(cellHoogte, minHoogtes.get(rij).intValue());
+//			for(int j = 0; j < breedtes.size(); j ++)
+//			{
+//				tekstVakken[rij][j].setPixelSize(-1, (int) cellHoogte);
+//			}
+//			delta = cellHoogte - c0;
+//			System.out.println("new size = " + breedte + "x" + "(" + hoogte + "+ " + delta + ")");
+//			//mainPanel2.setPixelSize(width, height += delta);
+//						setCurrentSize(-1, hoogte + delta);
 			resize();
 		}
 		
