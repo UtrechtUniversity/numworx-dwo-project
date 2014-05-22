@@ -48,6 +48,7 @@ public class TekstRegel extends LayoutPanel
 	public TekstRegel(TekstVak tekstVak)
 	{
 		super();
+		setStylePrimaryName("tekstregel");
 		this.tekstVak = tekstVak;
 		this.getElement().getStyle().setProperty("lineHeight", "1.2");
 		regelObjects = new ArrayList<Object>();

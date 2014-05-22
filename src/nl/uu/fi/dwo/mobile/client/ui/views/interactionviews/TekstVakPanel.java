@@ -356,7 +356,8 @@ public class TekstVakPanel implements InteractionView
 		randColor = getColor(launchState, "randColor",randColor_red, randColor_green, randColor_blue);
 		randDikte = randZichtbaar ? randDikte : 0; 
 
-		mainPanel2 = new LayoutPanel();
+		mainPanel2 = new LayoutPanel(); 
+		mainPanel2.setStylePrimaryName("tekstvakpanel");
 		
 		setCurrentSize(breedte, hoogte);
 		

@@ -65,6 +65,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	public TekstVak(TekstVakPanel parent, int rij, int kolom)
 	{
 		super();
+		setStylePrimaryName("tekstvak");
 		this.parent = parent;
 		this.rij = rij;
 		this.kolom = kolom;
