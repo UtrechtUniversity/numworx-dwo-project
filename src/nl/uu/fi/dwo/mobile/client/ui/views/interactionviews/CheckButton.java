@@ -37,7 +37,7 @@ public class CheckButton implements InteractionStub
 	private LayoutPanel basisPanel;
 	int breedte = 110;
 	int hoogte = 24; 
-	int ashoogte = 0;//nog kijken naar zinnige invulling hiervoor. (En hoe is dit in wiskOpdr gedaan?)
+	int ashoogte = 12;//nog kijken naar zinnige invulling hiervoor. (En hoe is dit in wiskOpdr gedaan?)
 	
 	private PushButton checkButton;
 	private String knopImageString = "";

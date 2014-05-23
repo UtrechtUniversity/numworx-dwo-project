@@ -114,8 +114,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				//sp.getElement().getStyle().setPaddingTop(1, Style.Unit.PX);
 				//sp.getElement().getStyle().setPaddingBottom(5, Style.Unit.PX);
 				//(Weggehaald Sietske) sp.getElement().getStyle().setProperty("backgroundColor", "#e9e9e9");
-				//sp.getElement().getStyle().setProperty("backgroundColor", "white");
-				sp.getElement().getStyle().setProperty("backgroundColor", "yellow");
+				sp.getElement().getStyle().setBackgroundColor("white");
+				//sp.getElement().getStyle().setProperty("backgroundColor", "yellow");
 				//this.getMainRegel().getCanvas().getElement().getStyle().setProperty("marginTop", "3px");
 				//this.getMainRegel().getCanvas().getElement().getStyle().setProperty("marginBottom", "0px");
 			}
@@ -284,7 +284,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public int getAsHoogte()
 	{
 		System.out.println("getAsHoogte geeft: " + this.getMainRegel().getAsHoogte());
-		return this.getMainRegel().getAsHoogte();
+		return this.getMainRegel().getAsHoogte() + 6 /* margin top + border + padding top */;
 		
 	}
 

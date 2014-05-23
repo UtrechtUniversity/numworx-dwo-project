@@ -35,7 +35,7 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 		focus.addKeyPressHandler(handler);
 		if (!hastouch)
 		{
-			focus.addMouseUpHandler(handler);
+//			focus.addMouseUpHandler(handler); // XXX WAS focus on touch/mouse up
 		}
 		return focus;
 	}

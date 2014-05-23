@@ -87,7 +87,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	private OpdrNav on;
 	private FocusPanel mainPanel;
-	TouchPanel contentPanel = null;
+	FlowPanel contentPanel = null;
 	private ScrollPanel contentScrollPanel = null;
 	private Panel tekst = null;
 	private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
@@ -360,11 +360,13 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			{
 				Object currentObject = opdrachtObjects.get(i);
 				if (currentObject instanceof InteractionView)
+				{
 					((InteractionView) currentObject).setCommunicationRoot(on);
-				//				System.out.println("" + on.toString());
+					aantalVakken++;
+				}
 				if (currentObject instanceof TekstVakPanel)
 				{
-					aantalVakken++;
+					//aantalVakken++;
 					Object launchData = opdrachtGegevens.get(aantalVakken + 4); // FIXME Hier ook een +5-1 Wim
 					((TekstVakPanel) currentObject).zetInstellingen(instellingen);
 					((TekstVakPanel) currentObject).setKeyboard(kb);
@@ -766,7 +768,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		contentScrollPanel.setHeight("100%");
 		contentScrollPanel.getElement().getStyle().setOverflow(Overflow.AUTO);
 
-		contentPanel = new TouchPanel();
+		contentPanel = new FlowPanel();
 		contentPanel.getElement().getStyle().setProperty("display", "inline-block");
 		//contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
 		contentPanel.setWidth("100%"); // hoeveel is 100% - 30px ?

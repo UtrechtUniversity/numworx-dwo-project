@@ -711,7 +711,7 @@ public class TekstVakPanel implements InteractionView
 					{
 						aantalVakken++;
 					}
-					else if (currentObject instanceof StubView)
+					else if (currentObject instanceof InteractionView)
 					{
 						aantalVakken++;
 					}

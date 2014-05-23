@@ -118,22 +118,34 @@ public class PopupFacade implements InteractionView {
 
 	@Override
 	public int getAsHoogte() {
-		return asWidget().getOffsetHeight() / 2;
+		if(popup) // FIXME wat is de hashoogte van de button?
+			return asWidget().getOffsetHeight() / 2;
+		return delegate.getAsHoogte();
 	}
 
 	@Override
 	public int getHeight() {
-		return asWidget().getOffsetHeight();
+		if(popup) // FIXME hoogte van button?
+			return asWidget().getOffsetHeight();
+		return delegate.getHeight();
 	}
 
 	@Override
 	public int getWidth() {
-		return asWidget().getOffsetWidth();
+		if(popup)
+			return asWidget().getOffsetWidth();
+		return delegate.getWidth();
 	}
 
+	/**
+	 * Als popup dan ashoogte van button en niet van kind.
+	 */
 	@Override
 	public void setAsHoogte(int ashoogte) {
-		
+		if(!popup)
+		{
+			delegate.setAsHoogte(ashoogte);
+		}
 	}
 	
 }
