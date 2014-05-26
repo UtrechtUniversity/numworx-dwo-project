@@ -2,6 +2,8 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.HashMap;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -31,7 +33,32 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
-public class TextEditor extends Composite implements InteractionView, TouchStartHandler, FormuleEditorIF, TapHandler {
+public class TextEditor extends Composite implements InteractionView, TouchStartHandler, FormuleEditorIF {
+	
+	class Tapper implements TapHandler {
+		private FormuleEditorIF deze;
+		private Element target;
+		
+
+		public Tapper(FormuleEditorIF deze, Element target) {
+			this.deze = deze;
+			this.target = target;
+		}
+
+		@Override
+		public void onTap(TapEvent event) {
+			Element targetElement = event.getTargetElement();
+			System.out.println("mgwt.onTap: " + targetElement);
+			if(targetElement == target || targetElement.getParentElement() == target)
+				comRoot.getKeyboard().setEditor(deze);
+				comRoot.getKeyboard().focus();
+			
+		}
+
+	}
+
+	private static final char Σ = 'Σ';
+	private static final char KWADRAAT = '²';
 
 	public class FXHandler implements ClickHandler {
 
@@ -40,14 +67,22 @@ public class TextEditor extends Composite implements InteractionView, TouchStart
 			FormuleEditor editor = new FormuleEditor();
 			editor.insert("?");
 			Panel panel = editor.getAsPanel();
+			comRoot.getKeyboard().setEditor(editor);
+			TouchPanel wrap = new TouchPanel();
+			wrap.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+			wrap.addTapHandler(new Tapper(editor, panel.getElement()));
+			wrap.add(panel);
 			panel.setWidth("30px");
 			panel.setHeight("30px");
 			panel.getElement().getStyle().setBackgroundColor("#808080");
-			flow.insert(panel, cursor++);
+			sb.insert(cursor, '@');
+			flow.insert(wrap, cursor++);
 		}
 
 	}
 
+	StringBuilder sb = new StringBuilder();
+	
 	private int width;
 	private int height;
 	private int asHoogte;
@@ -64,28 +99,39 @@ public class TextEditor extends Composite implements InteractionView, TouchStart
 		ObjectMap launchdata = h.getObjectMap("interactiePanelLaunchState");
 		width = h.getInt("breedte");
 		height = h.getInt("hoogte");
-		
+		int menuheight = 0;
 		VerticalPanel hbox = new VerticalPanel();
 		Widget menubar, content;
 		menubar = getMenuBar(launchdata);
-		menubar.setPixelSize(width, 30);
+		if(menubar != null) {
+			menubar.setPixelSize(width, menuheight=30);
+			hbox.add(menubar);
+		}
 		content = getContent(launchdata);
-		content.setPixelSize(width, height-30);
+		content.setPixelSize(width, height-menuheight);
 		content.getElement().getStyle().setBackgroundColor("#F0F0F0");
-		hbox.add(menubar);
 		hbox.add(content);
 		hbox.getElement().getStyle().setBackgroundColor("#C0C0C0");
 		hbox.setPixelSize(width, height);
 		initWidget(hbox);
 	}
 
+	private void setState(ObjectMap h) {
+		String tekst = h.getString("tekst");
+		if(tekst == null) tekst = "";
+		sb.setLength(0);
+		cursor = 0;
+		flow.clear();
+		flow.add(setCursorWidget(new InlineHTML(" \u00A0")));
+		insert(tekst);
+	}
+
 	private Widget cursorWidget;
 	private Widget getContent(ObjectMap launchdata) {
 		TouchPanel touch = new TouchPanel();
-		touch.addTapHandler(this);
+		touch.addTapHandler(new Tapper(this,touch.getElement()));
 		flow = touch; // XXX voorlopig ok
-		flow.add(setCursorWidget(new InlineHTML(" \u00A0")));
-		
+		setState(launchdata);
 		return touch;
 	}
 
@@ -98,11 +144,20 @@ public class TextEditor extends Composite implements InteractionView, TouchStart
 	}
 
 	private Widget getMenuBar(ObjectMap launchdata) {
+		boolean balkZichtbaar = true;
+		if(launchdata.containsKey("balkZichtbaar")) balkZichtbaar = launchdata.getBoolean("balkZichtbaar");
+		if(!balkZichtbaar) return null;
+		
+		boolean rekentool = true;
+		boolean formuleKnop = true;
+		boolean formuleToolPopup = true;
+		boolean graftool = true;
+		
 		FlowPanel menubar = new FlowPanel();
-		Button fx = new Button("f(x)"); menubar.add(fx);
+		Button fx = new Button("f(x)"); if(formuleKnop) menubar.add(fx);
 		fx.addClickHandler(new FXHandler());
-		Button calc = new Button("calc"); menubar.add(calc);
-		Button graph = new Button("gr");  menubar.add(graph);
+		Button calc = new Button("calc"); if(rekentool) menubar.add(calc);
+		Button graph = new Button("gr");  if(graftool) menubar.add(graph);
 		return menubar;
 	}
 
@@ -135,13 +190,17 @@ public class TextEditor extends Composite implements InteractionView, TouchStart
 	@Override
 	public HashMap<String, Object> getState() {
 		HashMap<String,Object> state = new HashMap<String,Object>();
+		state.put("tekst", getText());
 		return state;
+	}
+
+	private String getText() {
+		return sb.toString();
 	}
 
 	@Override
 	public void setState(HashMap<String, Object> h) {
-		// TODO Auto-generated method stub
-
+		setState( JSONUtilities.wrapMap(h));
 	}
 
 	@Override
@@ -179,13 +238,13 @@ public class TextEditor extends Composite implements InteractionView, TouchStart
 
 	@Override
 	public void insert(String text) {
-		SafeHtml html;
-		SafeHtmlBuilder builder = new SafeHtmlBuilder();
-		builder.appendEscaped(text);
-		html = builder.toSafeHtml();
-		flow.insert(new InlineHTML(html),cursor);		
-		
-		
+		char[] chars = text.toCharArray();
+		for (int i = 0; i < chars.length; i++) {
+			if(chars[i] == '\n')
+				enter();
+			else
+				insert(chars[i]);
+		}
 	}
 
 	@Override
@@ -206,14 +265,16 @@ public class TextEditor extends Composite implements InteractionView, TouchStart
 
 	@Override
 	public void enter() {
+		sb.insert( cursor, '\n');
 		flow.insert(new InlineHTML("<br>"), cursor); cursor++;
-		
 	}
 
 	@Override
 	public void removeCurrentElement() {
 		if(cursor > 0)
-			flow.remove(--cursor);
+		{	flow.remove(--cursor);
+			sb.replace(cursor, cursor+1, "");
+		}
 		
 	}
 
@@ -223,6 +284,7 @@ public class TextEditor extends Composite implements InteractionView, TouchStart
 		if(cursor < max){
 			flow.remove(cursor);
 			setCursorWidget(flow.getWidget(cursor));
+			sb.replace(cursor, cursor+1, "");
 		}
 	}
 
@@ -248,7 +310,8 @@ public class TextEditor extends Composite implements InteractionView, TouchStart
 		SafeHtmlBuilder builder = new SafeHtmlBuilder();
 		builder.append(charAt);
 		html = builder.toSafeHtml();
-		flow.insert(new InlineHTML(html),cursor++);		
+		sb.insert(cursor, charAt);
+		flow.insert(new InlineHTML(html),cursor++);
 	}
 
 	@Override
@@ -270,7 +333,7 @@ public class TextEditor extends Composite implements InteractionView, TouchStart
 
 	@Override
 	public void kwadraat() {
-		flow.insert(new InlineHTML("²"), cursor);cursor++;
+		insert(KWADRAAT);
 	}
 
 	@Override
@@ -279,7 +342,7 @@ public class TextEditor extends Composite implements InteractionView, TouchStart
 
 	@Override
 	public void haakjes() {
-		flow.insert(new InlineHTML("()"), cursor);cursor++;
+		insert('(');insert(')');
 	}
 
 	@Override
@@ -332,12 +395,8 @@ public class TextEditor extends Composite implements InteractionView, TouchStart
 
 	@Override
 	public void sigma() {
-		flow.insert(new InlineHTML("Σ"), cursor);cursor++;
+		insert(Σ);
 	}
 
-	@Override
-	public void onTap(TapEvent event) {
-		comRoot.getKeyboard().setEditor(this);
-	}
 
 }

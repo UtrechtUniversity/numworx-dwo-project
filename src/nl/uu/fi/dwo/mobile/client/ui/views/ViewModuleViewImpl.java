@@ -88,7 +88,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private OpdrNav on;
 	private FocusPanel mainPanel;
 	FlowPanel contentPanel = null;
-	private ScrollPanel contentScrollPanel = null;
+	private SimplePanel contentScrollPanel = null;
 	private Panel tekst = null;
 	private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
 	private double zoom = 1;
@@ -763,20 +763,24 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 		if(!standalone); fp.add(hp);
 
-		contentScrollPanel = new ScrollPanel();
+		contentScrollPanel = new SimplePanel();contentScrollPanel.addStyleName("contentScrollPanel");
 		contentScrollPanel.setWidth("100%");
 		contentScrollPanel.setHeight("100%");
-		contentScrollPanel.getElement().getStyle().setOverflow(Overflow.AUTO);
-
-		contentPanel = new FlowPanel();
+		contentScrollPanel.getElement().getStyle().setOverflowY(Overflow.HIDDEN);
+		contentScrollPanel.getElement().getStyle().setOverflowX(Overflow.HIDDEN);
+//
+		contentPanel = new FlowPanel();contentPanel.setStylePrimaryName("contentPanel");
 		contentPanel.getElement().getStyle().setProperty("display", "inline-block");
 		//contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
 		contentPanel.setWidth("100%"); // hoeveel is 100% - 30px ?
+		contentPanel.setHeight("100%");
 		//addContentPanelTouchListener(contentPanel);
 
 		contentScrollPanel.setWidget(contentPanel);
-		//contentScrollPanel.setScrollingEnabledX(false);
+//		contentScrollPanel.setScrollingEnabledX(false); // XXX IF NOORDHOFF 
 		//contentScrollPanel.setScrollingEnabledY(false);
+		contentPanel.getElement().getStyle().setOverflowY(Overflow.SCROLL);
+		contentPanel.getElement().getStyle().setOverflowX(Overflow.HIDDEN);
 
 		fp.add(contentScrollPanel);
 

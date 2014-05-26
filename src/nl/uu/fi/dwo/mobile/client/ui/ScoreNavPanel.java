@@ -150,6 +150,7 @@ public class ScoreNavPanel extends Composite {
 		hbox.add(grid);
 		Button reloadTotal = new Button(DWOplayer.DWO_BUNDLE.imgbutton());
 		reloadTotal.addTapHandler(new ReloadHandler(-1));
+		reloadTotal.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.reload().getSafeUri().asString() + "')");
 		if(opnieuw) hbox.add(reloadTotal);
 		top.add(hbox);
 		text = new Label("Beantwoord");
@@ -230,7 +231,7 @@ public class ScoreNavPanel extends Composite {
 			
 			ButtonCss css = DWOplayer.DWO_BUNDLE.imgbutton();
 			Button reload = new Button(css);
-			// FIXME werkt niet: reload.getElement().getStyle().setBackgroundImage(DWOplayer.DWO_BUNDLE.reload().getSafeUri().asString());
+			reload.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.reload().getSafeUri().asString() + "')");
 			if(itemOpnieuw) 
 				vragen.setWidget(i, 4, reload);
 			reload.addTapHandler(new ReloadHandler(i));

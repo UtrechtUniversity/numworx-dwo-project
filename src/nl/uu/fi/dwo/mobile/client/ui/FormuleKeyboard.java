@@ -201,7 +201,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	private String[][] buttonCodesWN = 
 		{
 			{
-				"macht", "breuk", "wortel", "ndewortel", "pi", "kwadraat", "\u2264", "\u2265", "\u00b1", "\u2248" 
+				"macht", "breuk", "wortel", "ndewortel", "pi", "kwadraat", "\u2264", "\u2265", "\u00b1", "\u2248", null, VVV 
 			}
 		};
 	
@@ -209,7 +209,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	private double[][] buttonWidthsWN = 
 		{
 			{
-				1,1,1,1,1,1,1,1,1,1
+				1,1,1,1,1,1,1,1,1,1, 3.5, 1
 			}
 		};
 
