@@ -99,13 +99,14 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				this.getMainRegel().setMinimumWidth(breedte - 20);
 				hoogte = 27;
 				this.getMainRegel().setMinimumHeight(hoogte - 6);
-				sp.setSize((breedte) + "px", (hoogte) + "px");
+				sp.setSize((breedte - 3) + "px", (hoogte - 5) + "px");
 				//sp.getElement().getStyle().setBackgroundColor(CssColor.make(255, 0, 0).toString());
 				sp.getElement().getStyle().setProperty("border", "1px solid gray");
 				
 				//sp.getElement().getStyle().setPadding(3, Style.Unit.PX);
 				
 				sp.getElement().getStyle().setMarginLeft(1, Style.Unit.PX);
+				//sp.getElement().getStyle().setMarginRight(1, Style.Unit.PX);
 				//sp.getElement().getStyle().setMarginRight(1, Style.Unit.PX);
 				sp.getElement().getStyle().setMarginTop(3, Style.Unit.PX);
 				//sp.getElement().getStyle().setMarginBottom(0, Style.Unit.PX);
@@ -257,7 +258,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		//System.out.println("nieuwe breedte: " + breedte);
 		//System.out.println("nieuwe hoogte: " + hoogte);
 		//nog zorgen dat hoogte altijd minimaal 24 is?
-		sp.setSize(breedte + "px", (hoogte) + "px");
+		sp.setSize((breedte-3) + "px", (hoogte-5) + "px");
 		if(parentRegel != null)
 			parentRegel.resize();
 		

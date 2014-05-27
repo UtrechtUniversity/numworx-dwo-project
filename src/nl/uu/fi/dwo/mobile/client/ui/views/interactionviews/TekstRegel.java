@@ -280,8 +280,8 @@ public class TekstRegel extends LayoutPanel
 				//a.getElement().getStyle().setProperty("display", "inline-block");
 				
 				//deze 2 px zijn overgenomen uit het WiskOpdr TekstFormuleVak, om te zorgen dat formules niet op tekst botsen. 
-				a.getElement().getStyle().setPaddingLeft(2, Style.Unit.PX);
-				a.getElement().getStyle().setPaddingRight(2, Style.Unit.PX);
+				a.getElement().getStyle().setPaddingLeft(0, Style.Unit.PX);
+				a.getElement().getStyle().setPaddingRight(4, Style.Unit.PX);
 				objectBreedte += 4;
 				FormuleFont f = FormuleFont.createFromFontSize(font_size);
 				f.setBold(font_style == 1 || font_style == 3);
