@@ -148,10 +148,11 @@ public class ScoreNavPanel extends Composite {
 		grid.setCellSpacing(10);
 		HorizontalPanel hbox = new HorizontalPanel();
 		hbox.add(grid);
-		Button reloadTotal = new Button(DWOplayer.DWO_BUNDLE.imgbutton());
+		reloadTotal = new Button(DWOplayer.DWO_BUNDLE.imgbutton());
 		reloadTotal.addTapHandler(new ReloadHandler(-1));
 		reloadTotal.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.reload().getSafeUri().asString() + "')");
-		if(opnieuw) hbox.add(reloadTotal);
+		hbox.add(reloadTotal);
+		reloadTotal.setVisible(false);
 		top.add(hbox);
 		text = new Label("Beantwoord");
 		grid.setWidget(0, 0, setFontFamily(text));
@@ -199,6 +200,7 @@ public class ScoreNavPanel extends Composite {
 	public PopupPanel popup;
 	private boolean opnieuw;
 	private boolean itemOpnieuw;
+	private Button reloadTotal;
 
 	private void createVragen(int[] scoreMax) {
 		vragen.clear(true);
@@ -290,6 +292,8 @@ public class ScoreNavPanel extends Composite {
 
 	public void setOpnieuw(boolean opnieuw) {
 		this.opnieuw = opnieuw;
+		reloadTotal.setVisible(opnieuw);
+		
 	}
 
 	public void setItemOpnieuw(boolean itemOpnieuw) {

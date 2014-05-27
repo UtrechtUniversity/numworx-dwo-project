@@ -70,6 +70,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	private FlowPanel feedbackPanel = null;
 	private FlowPanel mainPanel = null;
 	private OpdrNavIF comRoot;
+	private int mode;
 	private TouchButton tb = null;
 	private TouchButton copyButton = null;
 	private int steps = 0;
@@ -794,6 +795,8 @@ public class FormuleEditorWithSteps implements InteractionView
 	public void setCommunicationRoot(OpdrNavIF comRoot)
 	{
 		this.comRoot = comRoot;
+		mode = comRoot.getMode();
+		editor.zetMode(mode);
 	}
 
 	@Override

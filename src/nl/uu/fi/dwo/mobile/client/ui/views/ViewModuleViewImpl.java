@@ -279,12 +279,23 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			contentPanel.remove(buttons.get(i));
 
 		super.setupView(launchData);
+		int mode = Integer.parseInt((String)launchData.get("mode"));
 
 		ObjectMap wrap = JSONUtilities.wrapMap(instellingen);
+// wanneer verschijnt de opnieuwknop?		
+		boolean opnieuwMogelijk = "true".equals(launchData.get("opnieuwMogelijk"));
+		boolean opnieuw = false;
 		if(wrap.containsKey("opnieuw"))
-			scoreNav.setOpnieuw(wrap.getBoolean("opnieuw"));
+		{	opnieuw = wrap.getBoolean("opnieuw");
+		}
+		scoreNav.setOpnieuw(opnieuw || opnieuwMogelijk);
+
+		
+		
 		if(wrap.containsKey("itemOpnieuw"))
+		{
 			scoreNav.setItemOpnieuw(wrap.getBoolean("itemOpnieuw"));
+		}
 
 		contentPanel.getElement().getStyle().setFontSize(font_size, Unit.PX);
 		contentPanel.getElement().getStyle().setPadding(0, Unit.PX); // XXX was 15 

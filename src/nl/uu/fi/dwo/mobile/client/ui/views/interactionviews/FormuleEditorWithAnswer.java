@@ -52,6 +52,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	//private HashMap randomVarWaarden = null;
 	private AntwoordVakChecker avChecker = null;
 	private PopupFacade facade;
+	private int mode;
 	
 	private TekstRegel parentRegel;
 	
@@ -185,6 +186,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 	@Override 
 	public void enter() {
+		if(mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS)
+		{
+			return; // TODO wat moet hier gebeuren?
+		}
 		kijkNa();
 	}
 	
@@ -341,12 +346,17 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public void setCommunicationRoot(OpdrNavIF comRoot)
 	{
 		this.comRoot = comRoot;
+		zetMode(comRoot.getMode());
 	}
 
 	@Override
 	public Widget asWidget()
 	{
 		return facade.wrap(getAsPanel());
+	}
+
+	public void zetMode(int mode) {
+		this.mode = mode;
 	}
 
 }

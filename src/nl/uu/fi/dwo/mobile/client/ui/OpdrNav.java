@@ -485,4 +485,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		source.setItemScore(opdracht, 0);
 	}
 
+	
+	public int getMode() {
+		return mode;
+	}
 }

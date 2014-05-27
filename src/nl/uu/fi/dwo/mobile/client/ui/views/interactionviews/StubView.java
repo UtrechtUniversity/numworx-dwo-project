@@ -152,6 +152,13 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		this.comRoot = comRoot;
 	}
 
+	/**
+	 * Delegate pattern.
+	 */
+	public int getMode() {
+		return comRoot.getMode();
+	}
+	
 	private void publish(Object inner) {
 		
 		innerView = inner;

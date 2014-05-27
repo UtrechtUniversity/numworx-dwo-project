@@ -211,4 +211,16 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	public void focus() {		
 	}
 
+	private int mode = OEFENEN;
+	
+	@Override
+	public int getMode() {
+		return mode;
+	}
+	
+	// via stub interface!
+	void setMode(int mode) {
+		this.mode = mode;
+	}
+
 }
