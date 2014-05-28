@@ -61,18 +61,19 @@ public class FormuleTeken extends FormuleElement
 			teken = null;
 		else
 			teken = "" + tk;
+		
 
 		selected = false;
 		// setOpaque(false);
 		ctx.setFont(fm.getFontStyle());
 		TextMetrics m;
 		if (this.teken != null)
-			m = ctx.measureText(this.teken);
+		{	m = ctx.measureText(this.teken);
+		}
 		else
-			m = ctx.measureText(" ");
-
+		{	m = ctx.measureText(" ");
+		}
 		this.setSize((int) m.getWidth(), fm.getHeight());
-		//this.setAsHoogte(this.height / 2);
 		this.setAsHoogte(fm.getAscent() / 2);
 		
 	}
@@ -248,18 +249,26 @@ public class FormuleTeken extends FormuleElement
 		this.drawCursor();
 	}
 
+	
+	
 	public boolean setFont(FormuleFont fm)
 	{
 		if (super.setFont(fm) == false)
 			return false;
 		
 		boolean italic = false;
+		//boolean bold = false;
 		if(Character.isLetter(character))
 		{	if(!functieTeken)
-				italic = true;
+			{	italic = true;
+				//bold = true;
+			}
+			
 		}
 		
+		
 		fm.setItalic(italic);
+		//fm.setBold(bold);
 		
 		ctx.setFont(fm.getFontStyle());
 		TextMetrics m;
@@ -268,7 +277,12 @@ public class FormuleTeken extends FormuleElement
 		else
 			m = ctx.measureText(" ");
 
-		this.setSize((int) m.getWidth()+1, fm.getHeight());
+		if(fm.isItalic())
+		{	this.setSize((int) m.getWidth() + 2, fm.getHeight());
+		}
+		else
+		{	this.setSize((int) m.getWidth() + 1, fm.getHeight());
+		}
 		this.setAsHoogte(fm.getAscent()/2);
 		
 		return true;
@@ -324,10 +338,10 @@ public class FormuleTeken extends FormuleElement
 		else
 		{
 			ctx.beginPath();
-			ctx.moveTo(x + fm.getAscent()/4, y + 5 * fm.getAscent()/8);
-			ctx.lineTo(x + fm.getAscent()/4 + 2, y + 5 * fm.getAscent()/8);
-			ctx.moveTo(x + fm.getAscent()/4, y + 5 * fm.getAscent()/8 + 1);
-			ctx.lineTo(x + fm.getAscent()/4 + 2, y + 5 * fm.getAscent()/8 + 1);
+			ctx.moveTo(x + fm.getAscent()/4, y);
+			ctx.lineTo(x + fm.getAscent()/4 + 2, y);
+			ctx.moveTo(x + fm.getAscent()/4, y + 1);
+			ctx.lineTo(x + fm.getAscent()/4 + 2, y + 1);
 			ctx.stroke();
 			//this.drawline(ctx, x + fm.getAscent() / 4, y + 5 * fm.getAscent() / 8, x + fm.getAscent() / 4 + 2, y + 5 * fm.getAscent() / 8);
 			//this.drawline(ctx, x + fm.getAscent() / 4, y + 5 * fm.getAscent() / 8 + 1, x + fm.getAscent() / 4 + 2, y + 5 * fm.getAscent() / 8 + 1);

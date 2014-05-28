@@ -652,8 +652,7 @@ public class TekstVakPanel implements InteractionView
 							
 							
 							int aantalSleepObjects = ((CheckSleepUnit) currentObject).getAantalSleepObjects();
-							System.out.println("checkSleepUnit: aantalSleepObjects = " + aantalSleepObjects);
-						
+							
 							TekstVakPanel[] sleepObjecten = new TekstVakPanel[aantalSleepObjects];
 							for(int l = 0; l < aantalSleepObjects; l++)
 								sleepObjecten[l] = zoekTekstVakPanel(l+1, lijst);
@@ -867,6 +866,12 @@ public class TekstVakPanel implements InteractionView
 		locationX = (int) x;
 		locationY = (int) y;
 		
+		if(parent != null)
+		{	parent.remove(this.asWidget());
+			parent.add(this.asWidget());
+			parent.setWidgetLeftWidth(this.asWidget(), locationX, Style.Unit.PX, breedte, Style.Unit.PX);
+			parent.setWidgetTopHeight(this.asWidget(), locationY, Style.Unit.PX, hoogte, Style.Unit.PX);
+		}
 	}
 	
 	public void setStartSleep(int x, int y)
@@ -1655,7 +1660,7 @@ public class TekstVakPanel implements InteractionView
 
 	@Override
 	public int getAsHoogte() {
-		return tekstVakken[0][0].getAsHoogte();
+		return tekstVakken[0][0].getAsHoogte(); // of + randbreedte oid?
 	}
 
 	@Override

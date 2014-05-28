@@ -13,6 +13,7 @@ import java.util.Vector;
 
 
 
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
@@ -42,6 +43,7 @@ import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.ValueBoxBase.TextAlignment;
 import com.google.gwt.user.client.ui.Widget;
 
 import fi.wiskopdr.FormuleParser;
@@ -198,9 +200,15 @@ public class AntwoordTekstVak implements InteractionStub{
 		
 		basisPanel = new LayoutPanel();
 		basisPanel.setStylePrimaryName("antwoordtekstvak");
-		basisPanel.setPixelSize(breedte, hoogte);
+		basisPanel.setPixelSize(breedte - 2, hoogte - 3);
+		basisPanel.getElement().getStyle().setBackgroundColor(CssColor.make(255, 255, 0).toString());
+		//basisPanel.getElement().getStyle().setProperty("border", "1px solid gray");
 		
 		antwoordTF = new TextBox();
+		antwoordTF.getElement().getStyle().setProperty("border", "1px solid gray");
+		antwoordTF.getElement().getStyle().setPadding(0, Style.Unit.PX);
+		antwoordTF.setWidth((breedte - 4) + "px");
+		//antwoordTF.getElement().getStyle().setMarginRight(5, Style.Unit.PX);
 		antwoordTF.addKeyDownHandler(new KeyDownHandler() {
 			public void onKeyDown(KeyDownEvent event) 
 			{	if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) 
@@ -252,9 +260,9 @@ public class AntwoordTekstVak implements InteractionStub{
 		else
 		{	//basisPanel.setSize(Math.max(minBreedte, antwoordTF.getSize().width + 2), antwoordTF.getSize().height + 4);
 			basisPanel.add(antwoordTF);
-			basisPanel.setWidgetLeftRight(antwoordTF, 1, Style.Unit.PX, 1, Style.Unit.PX);
+			basisPanel.setWidgetLeftRight(antwoordTF, 0, Style.Unit.PX, 0, Style.Unit.PX);
 			basisPanel.setWidgetTopBottom(antwoordTF, 0, Style.Unit.PX, 0, Style.Unit.PX);
-			ashoogte = hoogte /*antwoordTF.getOffsetHeight()*/ - 3;
+			ashoogte = hoogte /2;// /*antwoordTF.getOffsetHeight()*/ - 3;
 		}
 		
 		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen());
@@ -294,8 +302,8 @@ public class AntwoordTekstVak implements InteractionStub{
 		feedbackButton.setVisible(false);
 		//setLayer((Component) feedbackButton, JLayeredPane.PALETTE_LAYER.intValue());
 		basisPanel.add(feedbackButton);
-		basisPanel.setWidgetRightWidth(feedbackButton, 0, Style.Unit.PX, 15, Style.Unit.PX);
-		basisPanel.setWidgetBottomHeight(feedbackButton, 0, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetRightWidth(feedbackButton, 2, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetBottomHeight(feedbackButton, 2, Style.Unit.PX, 15, Style.Unit.PX);
 		
 		
 	}

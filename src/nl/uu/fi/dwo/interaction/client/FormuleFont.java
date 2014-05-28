@@ -50,6 +50,7 @@ public class FormuleFont
 		fm.leading = 2;
 		fm.height = fm.ascent + fm.descent;
 		fm.fontSize = fm.height - fm.leading;
+		
 		return fm;
 	}
 

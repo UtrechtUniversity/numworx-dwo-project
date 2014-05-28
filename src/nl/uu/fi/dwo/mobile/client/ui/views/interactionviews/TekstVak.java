@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.interaction.client.TekstElement;
 import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
+import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
@@ -29,6 +30,8 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+
+import fi.antwoordkeuzevakgwt.client.AntwoordKeuzeVakGWT;
 
 public class TekstVak extends LayoutPanel //implements InteractionView
 {
@@ -377,22 +380,28 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 						regelBreedte = ((InteractionView) currentObject).getWidth();
 					}
 				}
+				if(currentObject instanceof PopupFacade && ((PopupFacade) currentObject).getDelegate() instanceof AntwoordKeuzeVakGWT)
+					{	//System.out.println("instance of antwoordkeuzevak, ashoogte wordt: " + (regelVakken[aantalRegels - 1].getTekstAsHoogte() + 20));
+					((PopupFacade) currentObject).getDelegate().setAsHoogte(regelVakken[aantalRegels - 1].getTekstAsHoogte() + 4);
+				}
+				
 				
 			}
 			else if (currentObject instanceof ImageView)
 			{
 				ImageView iv = (ImageView) currentObject;
-				Widget w = iv.getImage();
-				if(regelBreedte == 0 || regelBreedte + w.getOffsetWidth() <= tekstVakBreedte)
+				//Widget w = iv.getImage();
+				if(regelBreedte == 0 || regelBreedte + iv.getWidth() <= tekstVakBreedte)
 				{	regelVakken[aantalRegels - 1].addObject(currentObject);
-					regelBreedte += w.getOffsetWidth();
+					regelBreedte += iv.getWidth();
 				}
 				else
 				{
 					voegRegelToe();
 					regelVakken[aantalRegels - 1].addObject(currentObject);
-					regelBreedte = w.getOffsetWidth();
+					regelBreedte = iv.getWidth();
 				}
+				iv.setAsHoogte(regelVakken[aantalRegels - 1].getTekstAsHoogte() + 4);
 			}
 			else if (currentObject instanceof AnchorView)
 			{
@@ -428,6 +437,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		if(tekstVakBreedte >= 0)
 			regelVakken[aantalRegels].setWidth(tekstVakBreedte + "px");
 		regelVakken[aantalRegels].setHeight(font_size + 4 + "px"); //dit is nog een beetje willekeurig...
+		//regelVakken[aantalRegels].setHeight(font_size + 5);
 		regelVakken[aantalRegels].setFontSize(font_size);
 		regelVakken[aantalRegels].setFontStyle(font_style);
 		//regelVakken[aantalRegels].getElement().getStyle().setBackgroundColor(CssColor.make(20*aantalRegels, 255 - 20 * aantalRegels, 255).toString());
@@ -454,9 +464,6 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		}
 		ashoogte = regelVakken[0].getAsHoogte();
 		hoogte = 2 * bovenMarge + regelHoogtes;
-		
-	
-		
 	}
 	
 	public void setAshoogte(int ashoogte)
@@ -485,7 +492,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	{
 		//this.clear();
 		//regelVakken toevoegen op juiste posities.
-		int vertPositie = bovenMarge;
+		int vertPositie = bovenMarge - 1;
 		if(centerV)
 		{
 			int regelHoogtes = 0;
@@ -516,6 +523,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				TekstVakPanel panel = ((TekstVakPanel) zwevendeTekstVakken.get(i));
 				Widget a = panel.asWidget();
 				a.getElement().getStyle().setProperty("display", "inline-block");
+				this.remove(a);
 				this.add(a);
 				this.setWidgetLeftWidth(a, panel.getLocationX(), Style.Unit.PX, 
 						panel.getBreedte(), Style.Unit.PX);

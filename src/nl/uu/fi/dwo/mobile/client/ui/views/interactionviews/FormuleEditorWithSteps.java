@@ -389,8 +389,8 @@ public class FormuleEditorWithSteps implements InteractionView
 	public Panel getAsPanel()
 	{
 		mainPanel = new FlowPanel();
-		mainPanel.getElement().getStyle().setWidth(breedte, Unit.PX);
-		mainPanel.getElement().getStyle().setHeight(hoogte, Unit.PX);
+		mainPanel.getElement().getStyle().setWidth(breedte - 2, Unit.PX);//-2 om ook rand zichtbaar te krijgen
+		mainPanel.getElement().getStyle().setHeight(hoogte - 2, Unit.PX);//-2 om ook rand zichtbaar te krijgen
 		mainPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 		mainPanel.getElement().getStyle().setBorderColor("gray");
 		mainPanel.getElement().getStyle().setBackgroundColor(CssColor.make(240, 240, 240).toString());

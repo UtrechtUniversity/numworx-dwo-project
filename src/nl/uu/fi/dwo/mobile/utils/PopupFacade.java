@@ -87,6 +87,11 @@ public class PopupFacade implements InteractionView {
 			return new ImageView(popupImageString).getImage();
 		return newImage(interactiePanelSetNames[setNr]);
 	}
+	
+	public InteractionView getDelegate()
+	{
+		return delegate;
+	}
 
 	public HashMap<String, Object> getState() {
 		return delegate.getState();
