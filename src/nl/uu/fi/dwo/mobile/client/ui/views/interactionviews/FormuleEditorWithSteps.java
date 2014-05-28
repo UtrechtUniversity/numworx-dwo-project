@@ -796,7 +796,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	{
 		this.comRoot = comRoot;
 		mode = comRoot.getMode();
-		editor.zetMode(mode);
+		if(editor != null) editor.zetMode(mode); // FIXME why null? after init?
 	}
 
 	@Override
