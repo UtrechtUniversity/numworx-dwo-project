@@ -390,10 +390,11 @@ public class TekstRegel extends LayoutPanel
 					objectBreedte = (int) ctx.measureText(s).getWidth();
 					objectHoogte = fm.getHeight();
 				}
-				else if(regelObjects.get(i) instanceof ImageView)
-				{	objectBreedte = w.getOffsetWidth();
-					objectHoogte = w.getOffsetHeight();
-				}
+// ImageView is een tekstelement
+//				else if(regelObjects.get(i) instanceof ImageView)
+//				{	objectBreedte = w.getOffsetWidth();
+//					objectHoogte = w.getOffsetHeight();
+//				}
 				else if(regelObjects.get(i) instanceof AnchorView)
 				{	objectBreedte = w.getOffsetWidth();
 					objectHoogte = w.getOffsetHeight();

@@ -175,7 +175,8 @@ public class TekstVakPanel implements InteractionView
 
 	private boolean inklapbaar, ingeklapt;
 	private int inklapKnopPos;
-	private String knopImageString1, knopImageString2;
+	//private String knopImageString1, knopImageString2;
+	private ImageView knopImageView1, knopImageView2;
 	private ToggleButton klapUitButton;
 	private TekstVakContext container;
 	
@@ -332,9 +333,9 @@ public class TekstVakPanel implements InteractionView
 		if( launchState.containsKey("uitklapHoogtes"))
 			uitklapHoogtes = launchState.getDoubleList("uitklapHoogtes");
 		if( launchState.containsKey("knopImageString1"))
-			knopImageString1 = launchState.getString("knopImageString1");
+			knopImageView1 = new ImageView(launchState.getString("knopImageString1"));
 		if( launchState.containsKey("knopImageString2"))
-			knopImageString2 = launchState.getString("knopImageString2");
+			knopImageView2 = new ImageView(launchState.getString("knopImageString2"));
 // launchState never null!
 		if( launchState.containsKey("pasAanH"))
 			pasAanH = launchState.getBoolean("pasAanH");
@@ -1568,12 +1569,12 @@ public class TekstVakPanel implements InteractionView
 	{
 		Image view1, view2;
 		final int inklapKnopPos = this.inklapKnopPos;
-		if(knopImageString1 != null && !knopImageString1.isEmpty()) {
-			view1 = new ImageView(knopImageString1).getImage();
+		if(knopImageView1 != null && knopImageView1.exists()) {
+			view1 = knopImageView1.getImage();
 		} else
 			view1 = new Image(DWOplayer.DWO_BUNDLE.klapuit1());		
-		if(knopImageString2 != null && !knopImageString2.isEmpty()) {
-			view2 = new ImageView(knopImageString2).getImage();
+		if(knopImageView2 != null && knopImageView2.exists()) {
+			view2 = knopImageView2.getImage();
 		} else {
 			view2 = new Image(DWOplayer.DWO_BUNDLE.klapuit2());
 		}

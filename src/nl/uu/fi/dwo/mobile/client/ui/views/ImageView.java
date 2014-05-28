@@ -2,14 +2,17 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.Map;
 
+import nl.uu.fi.dwo.interaction.client.TekstElement;
+
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ImageView implements IsWidget
+public class ImageView implements IsWidget, TekstElement
 {
 
 	private String naam;
+	private int ashoogte;
 	private static Map<String, Object> map;
 
 	public ImageView(String naam)
@@ -17,11 +20,16 @@ public class ImageView implements IsWidget
 		this.naam = naam;
 	}
 
+	public boolean exists() {
+		return map.containsKey(naam);
+	}
+	
 	public Image getImage()
 	{
 		// TODO "data:image/png;base64,XXXXXXXxXXXX==" (dataurl) image/png of image/gif is noodzakelijk, uitbreiding in iconan nodig.
 
 		Object object = map.get(naam);
+		if(object == null) return null;
 		if(object instanceof Map) { // ByteArray
 			object = ((Map) object).get("string");
 		}
@@ -65,4 +73,34 @@ public class ImageView implements IsWidget
 		return getImage();
 	}
 
+	@Override
+	public int getAsHoogte() {
+		return ashoogte;
+	}
+
+	@Override
+	public int getHeight() {
+		Object height = map.get(naam + "/h");
+		if(height instanceof Number)
+			return ((Number) height).intValue();
+		return 0;
+	}
+
+	@Override
+	public int getWidth() {
+		Object width = map.get(naam + "/w");
+		if(width instanceof Number) {
+			return ((Number) width).intValue();
+		}
+		return 0;
+	}
+
+	@Override
+	public void setAsHoogte(int ashoogte) {
+		this.ashoogte = ashoogte;
+		
+	}
+
+	
+	
 }

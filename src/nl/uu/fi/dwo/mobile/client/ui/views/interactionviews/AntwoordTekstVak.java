@@ -31,6 +31,8 @@ import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
@@ -195,7 +197,8 @@ public class AntwoordTekstVak implements InteractionStub{
 		antwoordString = StringUtils.replaceStr(antwoordString, " ", "");
 		
 		basisPanel = new LayoutPanel();
-		basisPanel.setSize("" + breedte + "px", "" + hoogte + "px");
+		basisPanel.setStylePrimaryName("antwoordtekstvak");
+		basisPanel.setPixelSize(breedte, hoogte);
 		
 		antwoordTF = new TextBox();
 		antwoordTF.addKeyDownHandler(new KeyDownHandler() {
@@ -206,6 +209,15 @@ public class AntwoordTekstVak implements InteractionStub{
 		    	}
 			}
 		});
+		
+		antwoordTF.addFocusHandler(new FocusHandler() {
+
+			@Override
+			public void onFocus(FocusEvent event) {
+				comRoot.getKeyboard().setEditor(null);
+				
+			}});
+		
 		
 		//antwoordTF.setBorder(BorderFactory.createLineBorder(new Color(153, 153, 153)));
 		//antwoordTF.setBounds(0, 0, 80, 21);
@@ -241,8 +253,8 @@ public class AntwoordTekstVak implements InteractionStub{
 		{	//basisPanel.setSize(Math.max(minBreedte, antwoordTF.getSize().width + 2), antwoordTF.getSize().height + 4);
 			basisPanel.add(antwoordTF);
 			basisPanel.setWidgetLeftRight(antwoordTF, 1, Style.Unit.PX, 1, Style.Unit.PX);
-			basisPanel.setWidgetTopBottom(antwoordTF, 2, Style.Unit.PX, 2, Style.Unit.PX);
-			ashoogte = antwoordTF.getOffsetHeight() + 3;
+			basisPanel.setWidgetTopBottom(antwoordTF, 0, Style.Unit.PX, 0, Style.Unit.PX);
+			ashoogte = hoogte /*antwoordTF.getOffsetHeight()*/ - 3;
 		}
 		
 		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen());
@@ -713,7 +725,7 @@ public class AntwoordTekstVak implements InteractionStub{
 
 	@Override
 	public int getHeight() {
-		return hoogte;
+		return hoogte; // + randje?
 	}
 
 
