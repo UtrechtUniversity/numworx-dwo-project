@@ -48,6 +48,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private boolean check = true;
 	private int breedte;
 	private int hoogte;
+	private boolean volledigeBreedte;
 	//private String[] randomVarNamen = null;
 	//private HashMap randomVarWaarden = null;
 	private AntwoordVakChecker avChecker = null;
@@ -75,6 +76,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		{
 			ObjectMap map = JSONUtilities.wrapMap(h);
 			this.breedte = map.getInt("breedte");
+			this.volledigeBreedte = map.getBoolean("volledigeBreedte");
+			
 			//this.hoogte = map.getInt("hoogte");
 			//int breedte = ((Number) h.get("breedte")).intValue();
 			//System.out.println("breedte formuleEditorWithAnswer: " + breedte);
@@ -127,7 +130,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			sp.add(checkimg);
 			
 		}
-		System.out.println("neerzetten formuleEditorWithAnswer. Ashoogte = " + this.getAsHoogte());
 	}
 
 	public void zetInstellingen(Map<String, Object> instellingen)
@@ -252,7 +254,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	public void resize()
 	{
-		System.out.println("resize formuleEditorWithAnswer");
 		breedte = this.getMainRegel().getWidth() + 20;
 		hoogte = this.getMainRegel().getHeight() + 6;
 		//System.out.println("nieuwe breedte: " + breedte);
@@ -287,9 +288,14 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		return breedte;
 	}
 	
+	public void zetVolledigeBreedte(int breedte)
+	{
+		if(volledigeBreedte)
+			this.breedte = breedte;
+	}
+	
 	public int getAsHoogte()
 	{
-		System.out.println("getAsHoogte geeft: " + this.getMainRegel().getAsHoogte());
 		return this.getMainRegel().getAsHoogte() + 6 /* margin top + border + padding top */;
 		
 	}

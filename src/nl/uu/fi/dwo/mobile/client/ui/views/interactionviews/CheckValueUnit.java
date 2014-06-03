@@ -182,10 +182,11 @@ public class CheckValueUnit implements InteractionStub{
 			checkButton = new PushButton(rb.getString("klaarKnopLabel"));
 		breedte = imWidth + 30;
 		hoogte = imHeight + 5;
+		ashoogte = hoogte / 2 + 7;
 		basisPanel.setSize("" + breedte + "px", "" + hoogte + "px");
 		basisPanel.add(checkButton);
 		basisPanel.setWidgetLeftWidth(checkButton, 0, Style.Unit.PX, imWidth, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(checkButton, 0, Style.Unit.PX, imHeight, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(checkButton, 5, Style.Unit.PX, imHeight, Style.Unit.PX);
 		checkButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
 			{	e.stopPropagation();
@@ -586,6 +587,9 @@ public class CheckValueUnit implements InteractionStub{
 	@Override
 	public int getWidth() {
 		return breedte;
+	}
+	
+	public void zetVolledigeBreedte(int breedte){
 	}
 
 	@Override

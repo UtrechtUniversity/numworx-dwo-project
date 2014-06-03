@@ -407,7 +407,12 @@ this.width = fm.getAscent()/4 + fm.getAscent()/2 + fm.getAscent()/4;
 
 	public void zetFunctieTeken(boolean b)
 	{
-		//TODO: zetFunctieTeken?
+		functieTeken = b;
+	}
+	
+	public boolean getFunctieTeken()
+	{
+		return functieTeken;
 	}
 
 	@Deprecated

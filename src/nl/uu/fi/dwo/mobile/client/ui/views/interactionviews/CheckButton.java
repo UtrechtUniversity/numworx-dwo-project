@@ -75,6 +75,7 @@ public class CheckButton implements InteractionStub
 	{
 		basisPanel = new LayoutPanel();
 		basisPanel.setSize("" + breedte + "px", "" + hoogte + "px");
+		ashoogte = hoogte / 2;
 		
 		int imWidth = breedte - 20;
 		int imHeight = 20;
@@ -174,6 +175,9 @@ public class CheckButton implements InteractionStub
 	@Override
 	public int getWidth() {
 		return breedte;
+	}
+	
+	public void zetVolledigeBreedte(int breedte){
 	}
 
 	@Override

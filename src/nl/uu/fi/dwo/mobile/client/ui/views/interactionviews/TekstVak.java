@@ -328,7 +328,9 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				
 				}
 			}
-			else if (currentObject instanceof FormuleEditorWithAnswer)
+			else if(currentObject instanceof InteractionView)
+				((InteractionView) currentObject).zetVolledigeBreedte((int) tekstVakBreedte);
+			if (currentObject instanceof FormuleEditorWithAnswer)
 			{
 				//((FormuleEditorWithAnswer) currentObject).setFont(FormuleFont.createFromFontSize(font_size));
 				//((FormuleEditorWithAnswer) currentObject).setColor(fgColor);
@@ -363,13 +365,12 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				}
 			}
 			else if (currentObject instanceof InteractionView)
-			{		
+			{	
 				if(currentObject instanceof TekstVakPanel && ((TekstVakPanel) currentObject).isZwevend())
 				{	zwevendeTekstVakken.add((TekstVakPanel) currentObject);
 				}
 				else
-				{	
-					if(regelBreedte == 0 || regelBreedte + ((InteractionView) currentObject).getWidth() <= tekstVakBreedte)
+				{	if(regelBreedte == 0 || regelBreedte + ((InteractionView) currentObject).getWidth() <= tekstVakBreedte)
 					{	regelVakken[aantalRegels - 1].addObject(currentObject);
 						regelBreedte += ((InteractionView) currentObject).getWidth();
 					}

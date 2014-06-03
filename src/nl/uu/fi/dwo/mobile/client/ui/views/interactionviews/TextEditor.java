@@ -85,6 +85,7 @@ public class TextEditor extends Composite implements InteractionView, TouchStart
 	
 	private int width;
 	private int height;
+	private boolean volledigeBreedte;
 	private int asHoogte;
 	private OpdrNavIF comRoot;
 	private FormuleFont defaultfont = FormuleFont.createFromFontSize(14);
@@ -99,6 +100,7 @@ public class TextEditor extends Composite implements InteractionView, TouchStart
 		ObjectMap launchdata = h.getObjectMap("interactiePanelLaunchState");
 		width = h.getInt("breedte");
 		height = h.getInt("hoogte");
+		volledigeBreedte = h.getBoolean("volledigeBreedte");
 		int menuheight = 0;
 		VerticalPanel hbox = new VerticalPanel();
 		Widget menubar, content;
@@ -173,12 +175,18 @@ public class TextEditor extends Composite implements InteractionView, TouchStart
 
 	@Override
 	public int getHeight() {
-		return width;
+		return height;
 	}
 
 	@Override
 	public int getWidth() {
-		return height;
+		return width;
+	}
+	
+	public void zetVolledigeBreedte(int breedte)
+	{
+		if(volledigeBreedte)
+			this.width = breedte;
 	}
 
 	@Override

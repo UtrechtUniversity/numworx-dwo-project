@@ -258,6 +258,25 @@ public class FormuleRegel extends FormuleElement
 			if (eldrawheight > this.height)
 				this.height = eldrawheight;
 			nextx += e.width;
+			
+			//breedtes aanpassen: formuletekens hebben grotere breedte nodig om zichzelf helemaal te tekenen. 
+			//hier weer een beetje breedte weghalen om te zorgen dat tekens (in woorden bijv) dicht genoeg op elkaar staan.
+			if(i + 1 < this.children.size())
+			{
+				FormuleElement e2 = this.children.get(i + 1);
+				if(e instanceof FormuleTeken && Character.isLetter(((FormuleTeken) e).geefChar()) && !((FormuleTeken) e).getFunctieTeken() &&
+						e2 instanceof FormuleTeken && Character.isLetter(((FormuleTeken) e2).geefChar()) && !((FormuleTeken) e2).getFunctieTeken())
+				{
+					width-= 2;
+					nextx-= 2;
+				}
+				else
+				{
+					width--;
+					nextx--;
+				}
+			}
+			
 		}
 
 		//draw all the childs canvases on this canvas
@@ -695,12 +714,12 @@ public class FormuleRegel extends FormuleElement
 		/**/
 		int caretPos = getCurrentPosition();
 		int nr = caretPos;
-		FormuleTeken ft2, ft3;
+		FormuleTeken ft1, ft2, ft3;
 		//Component cm1;
 		//Component cm2;
 		//Component cm3;
 		//get the previous elements to check if a string is created like pi or sin etc..
-		FormuleElement cm2, cm3;
+		FormuleElement cm1, cm2, cm3;
 
 		//previous element
 		cm3 = fe;//editor.getCurrentRegel().getElementAt(nr - 1);//this.getComponent(nr - 1);
@@ -710,16 +729,14 @@ public class FormuleRegel extends FormuleElement
 		{
 			ft3.zetFunctieTeken(true);
 		}
-		if (nr <= 1)
+		if (nr <= 0)
 			return fe;
-
 		cm2 = this.getElementAt(nr - 1);
 		if (cm2 instanceof FormuleTeken == false)
 			return fe;
 		ft2 = (FormuleTeken) cm2;
 		if (ft2.geefChar() == 'l' && ft3.geefChar() == 'n')
-		{
-			ft2.zetFunctieTeken(true);
+		{	ft2.zetFunctieTeken(true);
 			ft3.zetFunctieTeken(true);
 			return fe;
 		}
@@ -739,53 +756,37 @@ public class FormuleRegel extends FormuleElement
 			//caretPos++;
 			return ft;
 		}
-		//TODO:
-		/*
 		if (ft2.geefChar() == '>' && ft3.geefChar() == '=')
 		{
-			caretPos--;
-			caretX -= getComponent(caretPos).getSize().width;
-			remove(cm3);
-			caretPos--;
-			caretX -= getComponent(caretPos).getSize().width;
-			remove(cm2);
-
-			FormuleTeken ft = new FormuleTeken('\u2265');
-			//ft.zetFunctieTeken(true);
-			add(ft, caretPos);
-			caretX += getComponent(caretPos).getSize().width;
-			caretPos++;
+			removePrevious();
+			removePrevious();
+			FormuleTeken ft = new FormuleTeken(this, '\u2265');
+			addElement(ft);
+			return ft;
 		}
 		if (ft2.geefChar() == '<' && ft3.geefChar() == '=')
 		{
-			caretPos--;
-			caretX -= getComponent(caretPos).getSize().width;
-			remove(cm3);
-			caretPos--;
-			caretX -= getComponent(caretPos).getSize().width;
-			remove(cm2);
-
-			FormuleTeken ft = new FormuleTeken('\u2264');
-			//ft.zetFunctieTeken(true);
-			add(ft, caretPos);
-			caretX += getComponent(caretPos).getSize().width;
-			caretPos++;
+			removePrevious();
+			removePrevious();
+			FormuleTeken ft = new FormuleTeken(this, '\u2264');
+			addElement(ft);
+			return ft;
 		}
-		if (nr > 2)
+		
+		if (nr <= 1)
+			return fe;
+		
+		cm1 = this.getElementAt(nr - 2);
+		if (cm1 instanceof FormuleTeken && cm2 instanceof FormuleTeken)
 		{
-			cm1 = this.getComponent(nr - 3);
-			if (cm1 instanceof FormuleTeken && cm2 instanceof FormuleTeken)
+			ft1 = (FormuleTeken) cm1;
+			if (ft1.geefChar() == 's' && ft2.geefChar() == 'i' && ft3.geefChar() == 'n' || ft1.geefChar() == 'c' && ft2.geefChar() == 'o' && ft3.geefChar() == 's' || ft1.geefChar() == 't' && ft2.geefChar() == 'a' && ft3.geefChar() == 'n' || ft1.geefChar() == 'l' && ft2.geefChar() == 'o' && ft3.geefChar() == 'g')
 			{
-				ft1 = (FormuleTeken) cm1;
-				if (ft1.geefChar() == 's' && ft2.geefChar() == 'i' && ft3.geefChar() == 'n' || ft1.geefChar() == 'c' && ft2.geefChar() == 'o' && ft3.geefChar() == 's' || ft1.geefChar() == 't' && ft2.geefChar() == 'a' && ft3.geefChar() == 'n' || ft1.geefChar() == 'l' && ft2.geefChar() == 'o' && ft3.geefChar() == 'g')
-				{
-					ft1.zetFunctieTeken(true);
-					ft2.zetFunctieTeken(true);
-					ft3.zetFunctieTeken(true);
-				}
+				ft1.zetFunctieTeken(true);
+				ft2.zetFunctieTeken(true);
+				ft3.zetFunctieTeken(true);
 			}
 		}
-		*/
 		return fe;
 	}
 
@@ -833,6 +834,8 @@ public class FormuleRegel extends FormuleElement
 			}
 			else
 			{
+				//hier iets aanpassen om ook woorden te kunnen gaan maken.
+				
 				FormuleTeken t = new FormuleTeken(this, s.charAt(0));
 				if (holder instanceof FormuleEditor)
 					((FormuleHolder) holder).setCurrentElement(t);

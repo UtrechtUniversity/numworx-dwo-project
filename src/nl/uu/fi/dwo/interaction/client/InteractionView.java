@@ -18,5 +18,7 @@ public interface InteractionView extends IsWidget, TekstElement
 	public void kijkNa();
 	
 	public void setCommunicationRoot(OpdrNavIF comRoot);
+	
+	public void zetVolledigeBreedte(int breedte);
 
 }

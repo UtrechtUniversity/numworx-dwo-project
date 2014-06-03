@@ -141,6 +141,14 @@ public class PopupFacade implements InteractionView {
 			return asWidget().getOffsetWidth();
 		return delegate.getWidth();
 	}
+	
+	public void zetVolledigeBreedte(int breedte)
+	{
+		if(!popup)
+		{	delegate.zetVolledigeBreedte(breedte);
+		}
+			
+	}
 
 	/**
 	 * Als popup dan ashoogte van button en niet van kind.

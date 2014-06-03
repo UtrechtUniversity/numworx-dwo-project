@@ -33,6 +33,8 @@ public class TekstBuffer
 	String[] randomVarNamen;
 	HashMap<String, Object> randomVarWaarden;
 	int aantalVakken = 0;
+	int[] volleBreedtes;
+	int huidigeKolom = 0;
 	//TekstVakPanel parent = null;
 
 	public TekstBuffer(String[] randomVarNamen, HashMap randomVarWaarden)
@@ -67,6 +69,7 @@ public class TekstBuffer
 	
 	public ArrayList<Object> convertTekst(HashMap<String, Object> opdracht, int row, int column)
 	{
+		huidigeKolom = column;
 		boolean vanTekstVakPanel = false;
 		String tekst = (String) opdracht.get("tekst");
 		if (tekst == null)
@@ -255,11 +258,11 @@ public class TekstBuffer
 			return new GeogebraView(currentVakGegevens, randomVarNamen, randomVarWaarden);
 		case 45: // GraphTool
 			return 
-					new StubView("GraphToolGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
-					//new PopupFacade( 
-					//	currentVakGegevens,
-					//		new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden)
-					//);
+					//new StubView("GraphToolGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+					new PopupFacade( 
+						currentVakGegevens,
+							new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom])
+					);
 			
 		case 15: 
 			return new StubView("DoorzienGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
@@ -326,8 +329,8 @@ public class TekstBuffer
 		else if(soortVak == 14) 
 		{
 // Deze werkt niet als stub.
-			result = new StubView("AntwoordKeuzeVakGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
-					 //new PopupFacade(currentVakGegevens,new fi.antwoordkeuzevakgwt.client.AntwoordKeuzeVakGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
+			result = //new StubView("AntwoordKeuzeVakGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+					 new PopupFacade(currentVakGegevens,new fi.antwoordkeuzevakgwt.client.AntwoordKeuzeVakGWT(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom]));
 		}
 		else if(soortVak == 16)
 		{	
@@ -361,5 +364,10 @@ public class TekstBuffer
 	public HashMap getVarWaarden()
 	{
 		return randomVarWaarden;
+	}
+	
+	public void zetVolleBreedtes(int[] breedtes)
+	{
+		volleBreedtes = breedtes;
 	}
 }

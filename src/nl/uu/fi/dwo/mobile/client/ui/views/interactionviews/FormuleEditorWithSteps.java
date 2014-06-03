@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.touch.TouchCancelEvent;
 import nl.uu.fi.dwo.interaction.client.touch.TouchEndEvent;
 import nl.uu.fi.dwo.interaction.client.touch.TouchHandler;
@@ -59,6 +60,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	private Boolean exact = false;
 	private int breedte = 600;
 	private int hoogte = 250;
+	private boolean volledigeBreedte = false;
 	private HashMap<String, Object> launchState;
 	private Map<String, Object> instellingen;
 	private ArrayList<FormuleViewer> viewers = new ArrayList<FormuleViewer>();
@@ -106,11 +108,14 @@ public class FormuleEditorWithSteps implements InteractionView
 
 		if (h != null)
 			this.h = h;
-		if (h.get("breedte") != null)
-			breedte = ((Number) h.get("breedte")).intValue();
-		if (h.get("hoogte") != null)
-			hoogte = ((Number) h.get("hoogte")).intValue();
-
+		ObjectMap map = JSONUtilities.wrapMap(h);
+		if(map.containsKey("breedte"))
+			breedte = map.getInt("breedte");
+		if(map.containsKey("hoogte"))
+			hoogte = map.getInt("hoogte");
+		if(map.containsKey("volledigeBreedte"))
+			volledigeBreedte = map.getBoolean("volledigeBreedte");
+		
 		facade = new PopupFacade(h);
 		
 		if (h.get("interactiePanelLaunchState") != null)
@@ -822,6 +827,13 @@ public class FormuleEditorWithSteps implements InteractionView
 	@Override
 	public int getWidth() {
 		return breedte;
+	}
+	
+	//voor aanpassen breedte in geval van volledigeBreedte
+	public void zetVolledigeBreedte(int breedte)
+	{
+		if(volledigeBreedte)
+			this.breedte = breedte;
 	}
 
 	@Override

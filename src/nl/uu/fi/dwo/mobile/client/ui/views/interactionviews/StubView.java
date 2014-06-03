@@ -46,6 +46,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	private String pendingState;
 	private int width;
 	private int height;
+	private boolean volledigeBreedte;
 	private PopupFacade facade;
 	private FormuleFont defaultFont = FormuleFont.createFromFontSize(18);
 
@@ -67,10 +68,12 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		frame.addStyleDependentName("borderless");
 		int width = 400; if(outermap.containsKey("breedte")) width = outermap.getInt("breedte");
 		int height =400; if(outermap.containsKey("hoogte")) height = outermap.getInt("hoogte");
+		boolean volledigeBreedte = false; if(outermap.containsKey("volledigeBreedte")) volledigeBreedte = outermap.getBoolean("volledigeBreedte");
 		
 		frame.setPixelSize(width , height );
 		this.width = width;
 		this.height = height;
+		this.volledigeBreedte = volledigeBreedte;
 		frame.addLoadHandler(this);
 		setWidget(frame);
 	}
@@ -431,6 +434,12 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	@Override
 	public int getWidth() {
 		return width;
+	}
+	
+	public void zetVolledigeBreedte(int breedte)
+	{
+		if(volledigeBreedte)
+			width = breedte;
 	}
 
 	@Override

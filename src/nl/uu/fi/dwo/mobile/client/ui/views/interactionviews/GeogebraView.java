@@ -204,6 +204,10 @@ public class GeogebraView implements InteractionView, LoadHandler
 	public int getWidth() {
 		return mainPanel.getOffsetWidth();
 	}
+	
+	public void zetVolledigeBreedte(int breedte)
+	{
+	}
 
 	@Override
 	public void setAsHoogte(int ashoogte) {

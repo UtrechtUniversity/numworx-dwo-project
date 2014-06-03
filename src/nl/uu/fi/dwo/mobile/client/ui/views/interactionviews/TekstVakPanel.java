@@ -576,6 +576,12 @@ public class TekstVakPanel implements InteractionView
 		List<Object> opdrachtGegevens = JSONUtilities.toArrayList( interactiePanelLaunchState.get("interactiePanelLaunchData") );
 
 		TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden);
+		int[] volleBreedtes = new int[breedtes.size()];
+		for (int j = 0; j < breedtes.size(); j++)
+		{	volleBreedtes[j] =  (int) (breedtes.get(j).doubleValue() - 2 * cellMarge);
+		}
+		tb.zetVolleBreedtes(volleBreedtes);
+		
 		int aantalVakken = 0;
 		for (int i = 0; i < hoogtes.size(); i++)
 		{
@@ -1671,6 +1677,9 @@ public class TekstVakPanel implements InteractionView
 	@Override
 	public int getWidth() {
 		return breedte;
+	}
+	
+	public void zetVolledigeBreedte(int breedte){
 	}
 
 	@Override

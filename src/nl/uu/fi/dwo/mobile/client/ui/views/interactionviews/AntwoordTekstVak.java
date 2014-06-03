@@ -63,6 +63,7 @@ public class AntwoordTekstVak implements InteractionStub{
 	private LayoutPanel basisPanel;
 	int breedte = 110;
 	int hoogte = 24; 	
+	boolean volledigeBreedte = false;
 	
 
 	private boolean ingevuld;
@@ -125,14 +126,17 @@ public class AntwoordTekstVak implements InteractionStub{
 
 	public AntwoordTekstVak(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
-		
-		
-		if (h != null && h.get("breedte") != null)
-			breedte = ((Number) h.get("breedte")).intValue();
-		if (h != null && h.get("hoogte") != null)
-			hoogte = ((Number) h.get("hoogte")).intValue();
-		if (h != null && h.get("interactiePanelLaunchState") != null)
-			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
+		if(h != null)
+		{	ObjectMap map = JSONUtilities.wrapMap(h);
+			if(map.containsKey("breedte"))
+				breedte = map.getInt("breedte");
+			if(map.containsKey("hoogte"))
+				hoogte = map.getInt("hoogte");
+			if(map.containsKey("volledigeBreedte"))
+				volledigeBreedte = map.getBoolean("volledigeBreedte");
+			if(h.containsKey("interactiePanelLaunchState"))
+				launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
+		}
 		
 		this.randomVarNamen = randomVarNamen;
 		this.randomVarWaarden = randomVarWaarden;
@@ -201,13 +205,22 @@ public class AntwoordTekstVak implements InteractionStub{
 		basisPanel = new LayoutPanel();
 		basisPanel.setStylePrimaryName("antwoordtekstvak");
 		basisPanel.setPixelSize(breedte - 2, hoogte - 3);
-		basisPanel.getElement().getStyle().setBackgroundColor(CssColor.make(255, 255, 0).toString());
+		//basisPanel.getElement().getStyle().setProperty("border", "1px solid gray");
+		//basisPanel.getElement().getStyle().setBackgroundColor(CssColor.make(255, 255, 255).toString());
 		//basisPanel.getElement().getStyle().setProperty("border", "1px solid gray");
 		
 		antwoordTF = new TextBox();
 		antwoordTF.getElement().getStyle().setProperty("border", "1px solid gray");
-		antwoordTF.getElement().getStyle().setPadding(0, Style.Unit.PX);
 		antwoordTF.setWidth((breedte - 4) + "px");
+		//antwoordTF.setHeight((hoogte - 5) + "px");
+		
+		antwoordTF.getElement().getStyle().setPaddingLeft(0, Style.Unit.PX);
+		antwoordTF.getElement().getStyle().setPaddingTop(0, Style.Unit.PX);
+		antwoordTF.getElement().getStyle().setPaddingBottom(1, Style.Unit.PX);
+		//antwoordTF.getElement().getStyle().setPaddingBottom(2, Style.Unit.PX);
+		//antwoordTF.getElement().getStyle().setPaddingBottom(0, Style.Unit.PX);
+		antwoordTF.getElement().getStyle().setPaddingRight(0, Style.Unit.PX);
+		
 		//antwoordTF.getElement().getStyle().setMarginRight(5, Style.Unit.PX);
 		antwoordTF.addKeyDownHandler(new KeyDownHandler() {
 			public void onKeyDown(KeyDownEvent event) 
@@ -262,7 +275,7 @@ public class AntwoordTekstVak implements InteractionStub{
 			basisPanel.add(antwoordTF);
 			basisPanel.setWidgetLeftRight(antwoordTF, 0, Style.Unit.PX, 0, Style.Unit.PX);
 			basisPanel.setWidgetTopBottom(antwoordTF, 0, Style.Unit.PX, 0, Style.Unit.PX);
-			ashoogte = hoogte /2;// /*antwoordTF.getOffsetHeight()*/ - 3;
+			ashoogte = Math.round(hoogte /2) - 3;// /*antwoordTF.getOffsetHeight()*/ - 3;
 		}
 		
 		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen());
@@ -727,19 +740,26 @@ public class AntwoordTekstVak implements InteractionStub{
 
 	@Override
 	public int getAsHoogte() {
+		System.out.println("antwoordTekstVak ashoogte: " + ashoogte);
 		return ashoogte;
 	}
 
 
 	@Override
 	public int getHeight() {
-		return hoogte; // + randje?
+		return hoogte; 
 	}
 
 
 	@Override
 	public int getWidth() {
 		return breedte;
+	}
+	
+	public void zetVolledigeBreedte(int breedte)
+	{
+		if(volledigeBreedte)
+			this.breedte = breedte;
 	}
 
 
