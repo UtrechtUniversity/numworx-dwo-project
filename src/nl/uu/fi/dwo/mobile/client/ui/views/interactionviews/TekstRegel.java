@@ -231,8 +231,8 @@ public class TekstRegel extends LayoutPanel
 				//label.getElement().getStyle().setProperty("verticalAlign", objectVerschuiving + "px");
 				//als het eerste element op een regel tekst is, krijgt het een marge van 2. Dat gebeurt in wiskOpdr ook.
 				
-				//if(horPositie == 0)
-				//	horPositie = 2;
+				if(horPositie == 0)
+					horPositie = 2;
 				
 				
 				this.add(label);
@@ -375,6 +375,9 @@ public class TekstRegel extends LayoutPanel
 					String s = ((Label) w).getText();
 					objectBreedte = bepaalStringBreedte(s);
 					objectHoogte = fm.getHeight() + 1;
+					
+					if(horPositie == 0)
+						horPositie = 2;
 				}
 // ImageView is een tekstelement
 //				else if(regelObjects.get(i) instanceof ImageView)

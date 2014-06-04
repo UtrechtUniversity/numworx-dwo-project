@@ -269,6 +269,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public void setFont(FormuleFont fm)
 	{
 		super.setFont(fm);
+		hoogte = this.getMainRegel().getHeight() + 6;
 	}
 	
 

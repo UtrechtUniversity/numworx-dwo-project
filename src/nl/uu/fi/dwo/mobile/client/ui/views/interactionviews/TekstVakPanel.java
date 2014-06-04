@@ -454,9 +454,9 @@ public class TekstVakPanel implements InteractionView
 			mainPanel2.setWidgetTopHeight(ic, 0, Style.Unit.PX, 20, Style.Unit.PX);
 		}
 
-//		if(inklapbaar)
-//		{	initieerKlapUitButton(ingeklapt);
-//		}
+		if(inklapbaar)
+		{	initieerKlapUitButton(ingeklapt);
+		}
 
 	}
 	
@@ -763,8 +763,10 @@ public class TekstVakPanel implements InteractionView
 			Object currentObject = interactionViewObjects.get(i);
 			states.add(((InteractionView) currentObject).getState());
 		}
+		h.put("hoogtes", hoogtes);
 		h.put("interactiePanelStates", states);
 		h.put("selected", new Boolean(selected));
+		h.put("ingeklapt", new Boolean(ingeklapt));
 		if(zwevend)
 		{	h.put("locationX", new Integer(locationX));
 			h.put("locationY", new Integer(locationY));
@@ -774,6 +776,16 @@ public class TekstVakPanel implements InteractionView
 
 	public void setState(HashMap<String, Object> h)
 	{
+		ObjectMap map = JSONUtilities.wrapMap(h);
+		
+		if (map.containsKey("hoogtes") )
+		{
+			hoogtes = map.getDoubleList("hoogtes");
+			if(!hoogtes.isEmpty() && hoogtes.get(0).intValue() > hoogte)
+				hoogte = hoogtes.get(0).intValue();
+		}
+
+		
 		List<Object> states = JSONUtilities.toArrayList(h.get("interactiePanelStates"));
 		for (int i = 0; i < interactionViewObjects.size(); i++)
 		{
@@ -781,18 +793,26 @@ public class TekstVakPanel implements InteractionView
 			HashMap<String, Object> state = (HashMap<String, Object>) states.get(i);
 			((InteractionView) currentObject).setState(state);
 		}
-		if(h.containsKey("selected"))
-			selected = ((Boolean) h.get("selected")).booleanValue();
-		if(h.containsKey("locationX"))
-			locationX = ((Integer) h.get("locationX")).intValue();
-		if(h.containsKey("locationY"))
-			locationY = ((Integer) h.get("locationY")).intValue();
+		if(map.containsKey("selected"))
+			selected = map.getBoolean("selected");
+		if(map.containsKey("ingeklapt"))
+			ingeklapt = map.getBoolean("ingeklapt");
+		if(map.containsKey("locationX"))
+			locationX = map.getInt("locationX");
+		if(map.containsKey("locationY"))
+			locationY = map.getInt("locationY");
 		
 		if(parent != null)
 		{	parent.setWidgetLeftWidth(this.asWidget(), locationX, Style.Unit.PX, breedte, Style.Unit.PX);
 			parent.setWidgetTopHeight(this.asWidget(), locationY, Style.Unit.PX, hoogte, Style.Unit.PX);
 		}
 		setSelected(selected);
+		
+		if(inklapbaar)
+		{	initieerKlapUitButton(ingeklapt);
+		}
+		resize();
+		
 	}
 
 	public int getScore()
@@ -980,6 +1000,8 @@ public class TekstVakPanel implements InteractionView
 		{	totaleHoogte = 0;
 			for(int i = 0; i < hoogtes.size(); i++)
 			{
+				if(i > 0 && inklapbaar && ingeklapt)
+					break;
 				int h1 = 0;
 				int h2 = 0;
 				for(int j = 0; j < breedtes.size(); j++)
@@ -1638,8 +1660,9 @@ public class TekstVakPanel implements InteractionView
 		switch(inklapKnopPos) {
 		case LEFT:
 				//layoutPanel.setWidgetLeftRight(widget, width, Unit.PX, 0, Unit.PX);
-				layoutPanel.setWidgetLeftWidth(klapUitButton, 0, Unit.PX, width, Unit.PX);
+				layoutPanel.setWidgetLeftWidth(klapUitButton, 1, Unit.PX, width, Unit.PX);
 				layoutPanel.setWidgetTopHeight(klapUitButton, (hoogtes.get(0).intValue()-height)/2, Unit.PX, height, Unit.PX);
+				layoutPanel.zetUitklapKnopLinks(width);
 				break;
 		case MIDDLE: // FIXME werkt nog van geen meter!
 			layoutPanel.setWidgetLeftWidth(klapUitButton, layoutPanel.getRegelBreedte(), Unit.PX, width, Unit.PX);
@@ -1649,7 +1672,7 @@ public class TekstVakPanel implements InteractionView
 		case RIGHT:
 		default:
 			//layoutPanel.setWidgetLeftRight(widget, 0, Unit.PX, width, Unit.PX);
-			layoutPanel.setWidgetRightWidth(klapUitButton, 0, Unit.PX, width, Unit.PX);
+			layoutPanel.setWidgetRightWidth(klapUitButton, 1, Unit.PX, width, Unit.PX);
 			layoutPanel.setWidgetTopHeight(klapUitButton, (hoogtes.get(0).intValue()-height)/2, Unit.PX, height, Unit.PX);
 		}
 	}

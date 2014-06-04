@@ -50,7 +50,6 @@ public class FormuleHolder implements TekstElement
 		//GWT.log("Font size:" + defaultfont.getFontStyle());
 		main = regel;
 		ashoogte = main.getAsHoogte();//+(main.getFont().getAscent() - 1)/2 + 1;
-		
 		//font = defaultfont;
 	}
 
@@ -88,12 +87,10 @@ public class FormuleHolder implements TekstElement
 
 	public void setFont(FormuleFont fm)
 	{
-		//System.out.println("formuleHolder setFont: " + fm.toString());
 		this.font = fm;
 		this.getMainRegel().setFont(this.font);
 		this.paint();
 		ashoogte = getMainRegel().getAsHoogte();
-		//System.out.println("ashoogte uit setFont: " + ashoogte);
 	}
 	
 	public void setColor(CssColor c)

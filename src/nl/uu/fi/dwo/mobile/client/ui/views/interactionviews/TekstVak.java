@@ -58,6 +58,9 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	private int cellMarge;
 	private int bovenMarge;
 	
+	//voor als er een uitklapknop links in dit vak staat:
+	private int knopBreedte = 0;
+	
 	private int font_size;
 	private int font_style;
 	private CssColor fgColor;
@@ -187,7 +190,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	{
 		this.cellMarge = cellMarge;
 		this.bovenMarge = bovenMarge;
-		tekstVakBreedte = breedte - 2  * cellMarge;//hier stond - 2 bij. Die was ergens goed voor, maar levert ook problemen als het vak zijn breedte aanpast aan de inhoud.
+		tekstVakBreedte = breedte - 2  * cellMarge - knopBreedte;//hier stond - 2 bij. Die was ergens goed voor, maar levert ook problemen als het vak zijn breedte aanpast aan de inhoud.
 		if(tekstVakBreedte >= 0)
 		{	//if(hoogte > 0)
 			//	flowVak.setSize(tekstVakBreedte + "px", "" + hoogte + "px");
@@ -201,7 +204,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	{
 		this.breedte = b;
 		this.hoogte = h;
-		tekstVakBreedte = b - 2 * cellMarge;//hier stond - 2 bij. Die was ergens goed voor, maar levert ook problemen als het vak zijn breedte aanpast aan de inhoud.
+		tekstVakBreedte = b - 2 * cellMarge - knopBreedte;//hier stond - 2 bij. Die was ergens goed voor, maar levert ook problemen als het vak zijn breedte aanpast aan de inhoud.
 		if(tekstVakBreedte >= 0 && h >= 0)
 		{	//flowVak.setSize("" + tekstVakBreedte  + "px", "" + h + "px");
 			for(int i = 0; i < aantalRegels  + 1; i++)
@@ -266,13 +269,13 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				{	String sub = s.substring(0, s.indexOf(" ") + 1); 
 					s = s.substring(s.indexOf(" ") + 1); 
 					double width = ctx.measureText(sub.substring(0, sub.length() - 1)).getWidth();
-					//if(regelBreedte == 0)
-					//	regelBreedte = 2;
-					if(regelBreedte == 0 || regelBreedte + width  <= tekstVakBreedte)
+					if(regelBreedte == 0)
+						regelBreedte = 2;
+					if(regelBreedte <=2 || regelBreedte + width  <= tekstVakBreedte)
 					{
 						regelVakken[aantalRegels - 1].addObject(sub.substring(0, sub.length() - 1));
 						regelBreedte += width;
-						if(regelBreedte == 0 || regelBreedte + spatieBreedte <= tekstVakBreedte)
+						if(regelBreedte <= 2 || regelBreedte + spatieBreedte <= tekstVakBreedte)
 						{
 							regelVakken[aantalRegels - 1].addObject(" ");
 							regelBreedte += spatieBreedte;
@@ -287,8 +290,8 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 					{
 						voegRegelToe();
 						regelVakken[aantalRegels - 1].addObject(sub.substring(0, sub.length() - 1));
-						regelBreedte = (int) width;
-						if(regelBreedte == 0 || regelBreedte + spatieBreedte <= tekstVakBreedte)
+						regelBreedte = (int) width + 2;
+						if(regelBreedte <= 2 || regelBreedte + spatieBreedte <= tekstVakBreedte)
 						{
 							regelVakken[aantalRegels - 1].addObject(" ");
 							regelBreedte += spatieBreedte;
@@ -303,7 +306,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				if(s.length() > 0)//nu zitten er in s geen spaties meer. De rest nog proberen te plaatsen.
 				{
 					double width = ctx.measureText(s).getWidth();
-					if(regelBreedte == 0 || regelBreedte + width  <= tekstVakBreedte)
+					if(regelBreedte <= 2 || regelBreedte + width  <= tekstVakBreedte)
 					{
 						regelVakken[aantalRegels - 1].addObject(s);
 						regelBreedte += width;
@@ -312,7 +315,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 					{
 						voegRegelToe();
 						regelVakken[aantalRegels - 1].addObject(s);
-						regelBreedte = (int) width;
+						regelBreedte = (int) width + 2;
 					}
 				}
 				//nodig om nieuwe regels te krijgen bij enter. De tweede voorwaarde is een (enigszins) kunstmatige oplossing 
@@ -504,7 +507,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		
 		for(int i = 0; i < aantalRegels; i++)
 		{
-			int horPositie = cellMarge;
+			int horPositie = cellMarge + knopBreedte;
 			if(centerH)
 				horPositie += (int) (tekstVakBreedte - regelVakken[i].getWidth())/2;
 			
@@ -539,6 +542,38 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 
 	}
 	
+	public void zetUitklapKnopLinks(int knopBreedte)
+	{
+		this.knopBreedte = knopBreedte;
+		tekstVakBreedte = this.breedte - 2 * cellMarge - knopBreedte;
+		
+		for(int i = 0; i < this.getWidgetCount(); i++)
+		{
+			Widget w = this.getWidget(i);
+			if(w instanceof TekstRegel)
+			{
+				int horPositie = cellMarge + knopBreedte;
+				if(centerH)
+					horPositie += (int) (tekstVakBreedte - ((TekstRegel) w).getWidth())/2;
+				
+				this.setWidgetLeftWidth((TekstRegel) w, horPositie, Style.Unit.PX, ((TekstRegel) w).getWidth(), Style.Unit.PX);
+				
+				
+				
+				/*
+				int horPositie = cellMarge;
+				if(centerH)
+					horPositie += (int) (tekstVakBreedte - regelVakken[i].getWidth())/2;
+				
+				
+				this.setWidgetLeftWidth(regelVakken[i], horPositie, Style.Unit.PX, regelVakken[i].getWidth(), Style.Unit.PX);
+				this.setWidgetTopHeight(regelVakken[i], vertPositie, Style.Unit.PX, regelVakken[i].getHeight(), Style.Unit.PX);
+				vertPositie += regelVakken[i].getHeight();
+				*/
+			}
+		}
+	}
+	
 	public void resize()
 	{
 		if(pasAanB)
@@ -547,7 +582,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			for(int i = 0; i < aantalRegels; i++)
 				if(regelVakken[i].getWidth() > tekstVakBreedte)
 					tekstVakBreedte = regelVakken[i].getWidth();
-			breedte = (int) tekstVakBreedte + 2 * cellMarge;
+			breedte = (int) tekstVakBreedte + 2 * cellMarge + knopBreedte;
 		}
 		if(pasAanH)
 		{
@@ -556,7 +591,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				regelHoogtes += regelVakken[j].getHeight();
 			hoogte = 2 * bovenMarge + regelHoogtes;
 		}
-		setSize(breedte, hoogte); //even kijken of dit niet voor oneindige loop zorgt..
+		setSize(breedte, hoogte); 
 		
 		int vertPositie = bovenMarge;
 		if(centerV)
@@ -575,12 +610,25 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			Widget w = this.getWidget(i);
 			if(w instanceof TekstRegel)
 			{
+				int horPositie = cellMarge + knopBreedte;
+				if(centerH)
+					horPositie += (int) (tekstVakBreedte - ((TekstRegel) w).getWidth())/2;
+				
+				this.setWidgetLeftWidth((TekstRegel) w, horPositie, Style.Unit.PX, ((TekstRegel) w).getWidth(), Style.Unit.PX);
+				this.setWidgetTopHeight((TekstRegel) w, vertPositie, Style.Unit.PX, ((TekstRegel) w).getHeight(), Style.Unit.PX);
+				vertPositie += ((TekstRegel) w).getHeight();
+				
+				
+				/*
 				int horPositie = cellMarge;
 				if(centerH)
 					horPositie += (int) (tekstVakBreedte - regelVakken[i].getWidth())/2;
+				
+				
 				this.setWidgetLeftWidth(regelVakken[i], horPositie, Style.Unit.PX, regelVakken[i].getWidth(), Style.Unit.PX);
 				this.setWidgetTopHeight(regelVakken[i], vertPositie, Style.Unit.PX, regelVakken[i].getHeight(), Style.Unit.PX);
 				vertPositie += regelVakken[i].getHeight();
+				*/
 			}
 		}
 		

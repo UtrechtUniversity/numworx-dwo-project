@@ -524,6 +524,7 @@ public class FormuleRegel extends FormuleElement
 			return false;
 
 		fm = this.getFont();
+		
 		defaultwidth = fm.getAscent() / 2;
 		defaultheight = fm.getHeight();
 		//this.setSize(defaultwidth, defaultheight);
