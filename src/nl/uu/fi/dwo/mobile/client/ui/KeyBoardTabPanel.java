@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 public class KeyBoardTabPanel
 {
 	private FlowPanel main = new FlowPanel();
-	private FlowPanel panel = new FlowPanel();
+	
 	private FlowPanel contentpanel = new FlowPanel();
 	private FlowPanel tabpanel = new FlowPanel();
 	private FlowPanel tabcontentpanel = new FlowPanel();
@@ -62,12 +62,12 @@ public class KeyBoardTabPanel
 
 		tabcontentpanel.setStylePrimaryName("tabkeyboard");
 		tabcontentpanel.addStyleDependentName(FormuleKeyBoardButtons.getDependentName());
-		panel.add(contentpanel);
-		panel.add(staticpanel);
+		main.add(contentpanel);
+		main.add(staticpanel);
 		main.getElement().addClassName("keyboard");
 		tabpanel.getElement().addClassName("keyboardtabs");
 
-		main.add(panel);
+		//main.add(panel);
 	}
 
 	public void zetMaat() {
@@ -76,6 +76,11 @@ public class KeyBoardTabPanel
 	}
 
 	public void zetMaatNoordhoff() {
+		zetMaat();
+		main.setPixelSize(886, -1);
+		main.getElement().getStyle().setFontSize(0, Style.Unit.PX); // anders main is 1 regel = 13 px
+		staticpanel.setPixelSize(-1, 1);
+		main.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 	}
 
 	public void clearStaticPanel()

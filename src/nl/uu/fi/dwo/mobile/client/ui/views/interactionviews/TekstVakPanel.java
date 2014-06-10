@@ -453,10 +453,10 @@ public class TekstVakPanel implements InteractionView
 			mainPanel2.setWidgetLeftWidth(ic, 0, Style.Unit.PX, 20, Style.Unit.PX);
 			mainPanel2.setWidgetTopHeight(ic, 0, Style.Unit.PX, 20, Style.Unit.PX);
 		}
-
-		if(inklapbaar)
-		{	initieerKlapUitButton(ingeklapt);
-		}
+// pas bij zet opdracht
+//		if(inklapbaar)
+//		{	initieerKlapUitButton(ingeklapt);
+//		}
 
 	}
 	
@@ -777,7 +777,7 @@ public class TekstVakPanel implements InteractionView
 	public void setState(HashMap<String, Object> h)
 	{
 		ObjectMap map = JSONUtilities.wrapMap(h);
-		
+		boolean ingeklapt = this.ingeklapt;
 		if (map.containsKey("hoogtes") )
 		{
 			hoogtes = map.getDoubleList("hoogtes");
@@ -808,8 +808,9 @@ public class TekstVakPanel implements InteractionView
 		}
 		setSelected(selected);
 		
-		if(inklapbaar)
-		{	initieerKlapUitButton(ingeklapt);
+		if(inklapbaar && ( ingeklapt != this.ingeklapt))
+		{	
+			klapUitAction();
 		}
 		resize();
 		
@@ -1629,7 +1630,7 @@ public class TekstVakPanel implements InteractionView
 		case LEFT: pos = 0; break;
 		default:
 		case MIDDLE:
-		case RIGHT: pos = pos = breedtes.size()-1;
+		case RIGHT: pos = breedtes.size()-1;
 		}
 		
 		final TekstVak layoutPanel = tekstVakken[0][pos];

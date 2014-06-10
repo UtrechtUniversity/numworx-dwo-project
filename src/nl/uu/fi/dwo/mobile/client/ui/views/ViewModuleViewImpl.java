@@ -738,7 +738,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		FormuleHolder.installKeyboard(kb);
 		
 		hp = new HeaderPanel();
-		hp.setCenter("Vraag 4 van 10");
+		hp.setCenter("");
 		//Style style = hp.getElement().getStyle();
 		
 		HeaderButton next, prev;
@@ -790,7 +790,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		contentScrollPanel.setWidget(contentPanel);
 //		contentScrollPanel.setScrollingEnabledX(false); // XXX IF NOORDHOFF 
 		//contentScrollPanel.setScrollingEnabledY(false);
-		contentPanel.getElement().getStyle().setOverflowY(Overflow.SCROLL);
+		contentPanel.getElement().getStyle().setOverflowY(Overflow.AUTO);
 		contentPanel.getElement().getStyle().setOverflowX(Overflow.HIDDEN);
 
 		fp.add(contentScrollPanel);
@@ -856,18 +856,21 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	{
 		//FlowPanel fp = new FlowPanel();
 		//mainPanel = FocusOnTouch.wrap(fp);
-		mainPanel.setHeight("428px");
+		mainPanel.setHeight("426px");
 		mainPanel.setWidth("886px");
 		//fp.setHeight("428px");
 		//fp.setWidth("886px");
 		//if(!standalone) fp.add(hp);
-		contentScrollPanel.setWidth("886px");
-		contentScrollPanel.setHeight("428px");
+		contentScrollPanel.setPixelSize(886, 426 - 40 ); // 40 = hoogte headerpanel.
 		//contentScrollPanel.setHeight("100%");
 		//fp.add(contentScrollPanel);
 		contentPanel.getElement().getStyle().clearMarginBottom();
-		Panel kbp = kb.getAsPanel();
-		kbp.setWidth("886px");
+// probeersel!
+//
+		contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
+//		Panel kbp = kb.getAsPanel();
+//		kbp.setWidth("886px");
+		kb.tp.zetMaatNoordhoff();
 		//fp.add(kbp);
 
 	}
