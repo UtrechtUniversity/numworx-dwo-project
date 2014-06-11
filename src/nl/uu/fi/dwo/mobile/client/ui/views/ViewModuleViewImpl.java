@@ -350,6 +350,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		opdrachtObjects = new ArrayList<Object>();
 		List<Object> opdrachtGegevens = JSONUtilities.toArrayList( opdracht.get("interactiePanelLaunchData") );
 		TekstBuffer tb = new TekstBuffer(varnamen, waarden);
+		int[] breedtes = new int[] { 800 };
+		tb.zetVolleBreedtes(breedtes);
 		newVersion = Boolean.FALSE.equals( opdracht.get("hasAntwoordVak") );
 		//New editor version
 		if (opdrachtGegevens != null || newVersion)
@@ -445,6 +447,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		opdrachtObjects = new ArrayList<Object>();
 		List<Object> opdrachtGegevens = JSONUtilities.toArrayList( opdracht.get("interactiePanelLaunchData") );
 		TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden);
+		int[] breedtes = new int[] { 800 };
+		tb.zetVolleBreedtes(breedtes);
 		newVersion = !(Boolean) opdracht.get("hasAntwoordVak");
 		//New editor version
 		if (opdrachtGegevens != null || newVersion)

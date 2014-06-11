@@ -79,7 +79,7 @@ public class KeyBoardTabPanel
 		zetMaat();
 		main.setPixelSize(886, -1);
 		main.getElement().getStyle().setFontSize(0, Style.Unit.PX); // anders main is 1 regel = 13 px
-		staticpanel.setPixelSize(-1, 1);
+		main.remove(staticpanel);
 		main.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 	}
 
