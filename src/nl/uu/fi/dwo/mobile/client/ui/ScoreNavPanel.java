@@ -7,10 +7,12 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.FontWeight;
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -129,7 +131,10 @@ public class ScoreNavPanel extends Composite {
 		VerticalPanel vbox = new VerticalPanel();
 		vbox.add(top);
 		vbox.setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
-		initWidget(vbox);
+		FlowPanel flow = new FlowPanel();
+		flow.add(vbox);
+		flow.getElement().getStyle().setOverflowY(Overflow.AUTO);
+		initWidget(flow);
 	}
 	
 	private void initialize() {
