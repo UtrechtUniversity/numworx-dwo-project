@@ -22,9 +22,9 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.SubscriptVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.WortelVak;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
-import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
 
 import com.google.gwt.user.client.ui.Panel;
+import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 /**
  * Alows modification of a formula

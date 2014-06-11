@@ -4,16 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
-import nl.uu.fi.dwo.interaction.client.touch.TouchCancelEvent;
-import nl.uu.fi.dwo.interaction.client.touch.TouchEndEvent;
-import nl.uu.fi.dwo.interaction.client.touch.TouchMoveEvent;
-import nl.uu.fi.dwo.interaction.client.touch.TouchStartEvent;
-import nl.uu.fi.dwo.interaction.client.touch.TouchHandler;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Image;
+import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
+import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
+import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
+import com.googlecode.mgwt.dom.client.event.touch.TouchMoveEvent;
+import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
+import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import static nl.uu.fi.dwo.mobile.utils.ImageUtils.newImage;
 
@@ -238,11 +239,11 @@ public abstract class FormuleKeyBoardButtons
 		
 	}
 
-	public static TouchButton getButton(String key, FormuleKeyboard kb)
+	public static TouchPanel getButton(String key, FormuleKeyboard kb)
 	{
 		setUp();
 		ButtonListener listener = new ButtonListener(key, kb);
-		TouchButton b;
+		TouchPanel b;
 		String[] diabledItems =
 		//{ "integraal", "prv", "ndelog", "abs", "subscript", "bin", "diff", "limiet0", "limiet1", "limiet2", "primitieve", "conjug", "sigma", "diff_partial" };
 			{ "diff_partial" };
@@ -284,10 +285,10 @@ public abstract class FormuleKeyBoardButtons
 		return b;
 	}
 
-	public static TouchButton getNewButton(String t)
+	public static TouchPanel getNewButton(String t)
 	{
 		//Button b = new Button();
-		TouchButton b = new TouchButton();
+		TouchPanel b = new TouchPanel();
 		b.setStylePrimaryName("kbd-Button");
 		//b.setText(t);
 		b.getElement().setInnerText(t);
@@ -301,9 +302,9 @@ public abstract class FormuleKeyBoardButtons
 	}
 	
 	
-	public static TouchButton getImageButton(String src)
+	public static TouchPanel getImageButton(String src)
 	{
-		TouchButton b = new TouchButton();
+		TouchPanel b = new TouchPanel();
 		b.setStylePrimaryName("kbd-Button");
 		b.addStyleDependentName(getDependentName()); // else buttonDWO
 		b.getElement().getStyle().setFloat(Style.Float.LEFT);

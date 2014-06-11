@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.widget.RoundPanel;
+import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import fi.writemathgwt.client.Rectangle;
 import fi.writemathgwt.client.WritePanel;
@@ -248,7 +249,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 		tp.addTab("Verberg", new SimplePanel());
 
 		writePanel = new WritePanel(this);
-		TouchButton b = FormuleKeyBoardButtons.getButton("apply", this);
+		TouchPanel b = FormuleKeyBoardButtons.getButton("apply", this);
 		b.setWidth("30px");
 		b.setHeight("16px");
 		writePanel.add(b);
@@ -319,7 +320,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 						fp2.add(b);
 					continue;
 				}
-				TouchButton b = FormuleKeyBoardButtons.getButton(buttons[j][i], this);
+				TouchPanel b = FormuleKeyBoardButtons.getButton(buttons[j][i], this);
 				width = (defwidth + 2 * padding) * widths[j][i] - 2 * padding;
 				b.setWidth(Math.round(width) + "px"); // alleen DWO niet noordhoff.?????
 				//b.setHeight("16px");

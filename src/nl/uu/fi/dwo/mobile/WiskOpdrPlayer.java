@@ -39,17 +39,17 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 
 	@Override
 	public void onModuleLoad() {
-		VerticalPanel customLogArea = null;
-		if( LogConfiguration.loggingIsEnabled())	
-		{
-			customLogArea = new VerticalPanel();
-			Logger.getLogger("").addHandler(new HasWidgetsLogHandler(customLogArea));
-			logger.info("start logging");
-		}
-		if( LogConfiguration.loggingIsEnabled())	
-		{
-			RootPanel.get().add(customLogArea);
-		}
+//		VerticalPanel customLogArea = null;
+//		if( LogConfiguration.loggingIsEnabled())	
+//		{
+//			customLogArea = new VerticalPanel();
+//			Logger.getLogger("").addHandler(new HasWidgetsLogHandler(customLogArea));
+//			logger.info("start logging");
+//		}
+//		if( LogConfiguration.loggingIsEnabled())	
+//		{
+//			RootPanel.get().add(customLogArea);
+//		}
 
 		MGWTsetup();
 		view = new ViewModuleViewImpl(true).initialize();

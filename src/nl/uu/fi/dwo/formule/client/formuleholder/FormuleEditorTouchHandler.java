@@ -4,13 +4,16 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
+import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
+import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
+import com.googlecode.mgwt.dom.client.event.touch.TouchMoveEvent;
+//import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
+
+
+import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
+
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
-import nl.uu.fi.dwo.interaction.client.touch.TouchCancelEvent;
-import nl.uu.fi.dwo.interaction.client.touch.TouchEndEvent;
-import nl.uu.fi.dwo.interaction.client.touch.TouchHandler;
-import nl.uu.fi.dwo.interaction.client.touch.TouchMoveEvent;
-import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
-import nl.uu.fi.dwo.interaction.client.touch.TouchStartEvent;
 
 /**
  * 
@@ -34,7 +37,7 @@ public class FormuleEditorTouchHandler implements TouchHandler
 	@Override
 	public void onTouchStart(TouchStartEvent event)
 	{
-		if(TouchStartEvent.isSupported())
+		if(isSupported())
 		{
 			event.preventDefault();
 			event.stopPropagation();
@@ -45,7 +48,7 @@ public class FormuleEditorTouchHandler implements TouchHandler
 			editor.requestFocus();
 			int x = event.touches().get(0).getPageX() - editor.getCanvas().getAbsoluteLeft();
 			int y = event.touches().get(0).getPageY() - editor.getCanvas().getAbsoluteTop();
-			if(!TouchStartEvent.isSupported()) y+=8;// vraag me niet waarom dit nodig is
+			if(!isSupported()) y+=8;// vraag me niet waarom dit nodig is
 
 			editor.clearSelection();
 			editor.startSelection(x, y);
@@ -62,6 +65,10 @@ public class FormuleEditorTouchHandler implements TouchHandler
 
 	}
 
+	private static boolean isSupported() {
+		return com.google.gwt.event.dom.client.TouchStartEvent.isSupported();
+	}
+
 	@Override
 	public void onTouchMove(TouchMoveEvent event)
 	{
@@ -75,7 +82,7 @@ public class FormuleEditorTouchHandler implements TouchHandler
 		{
 			int x = event.touches().get(0).getPageX() - editor.getCanvas().getAbsoluteLeft();
 			int y = event.touches().get(0).getPageY() - editor.getCanvas().getAbsoluteTop();
-			if(!TouchStartEvent.isSupported()) y+=8; // vraag me niet waarom dit nodig is
+			if(!isSupported()) y+=8; // vraag me niet waarom dit nodig is
 			editor.endSelection(x, y);
 			this.x = x; this.y = y;
 
@@ -90,7 +97,7 @@ public class FormuleEditorTouchHandler implements TouchHandler
 	@Override
 	public void onTouchEnd(TouchEndEvent event)
 	{
-		if(TouchStartEvent.isSupported())
+		if(isSupported())
 		{
 			event.preventDefault();
 			event.stopPropagation();

@@ -1,17 +1,17 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
-import nl.uu.fi.dwo.interaction.client.touch.TouchCancelEvent;
-import nl.uu.fi.dwo.interaction.client.touch.TouchEndEvent;
-import nl.uu.fi.dwo.interaction.client.touch.TouchHandler;
-import nl.uu.fi.dwo.interaction.client.touch.TouchMoveEvent;
-import nl.uu.fi.dwo.interaction.client.touch.TouchStartEvent;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
+import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
+import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
+import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
+import com.googlecode.mgwt.dom.client.event.touch.TouchMoveEvent;
+import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 
 /**
  * Allow zooming with a sliding bar

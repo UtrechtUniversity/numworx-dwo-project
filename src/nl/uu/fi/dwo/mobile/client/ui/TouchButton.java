@@ -1,7 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
-import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
-import nl.uu.fi.dwo.interaction.client.touch.TouchStartHandler;
+import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 
 /**

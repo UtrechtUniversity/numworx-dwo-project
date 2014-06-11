@@ -14,12 +14,6 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
-import nl.uu.fi.dwo.interaction.client.touch.TouchCancelEvent;
-import nl.uu.fi.dwo.interaction.client.touch.TouchEndEvent;
-import nl.uu.fi.dwo.interaction.client.touch.TouchHandler;
-import nl.uu.fi.dwo.interaction.client.touch.TouchMoveEvent;
-import nl.uu.fi.dwo.interaction.client.touch.TouchPanel;
-import nl.uu.fi.dwo.interaction.client.touch.TouchStartEvent;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.AssetAPI;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
@@ -64,6 +58,11 @@ import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
+import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
+import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
+import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
+import com.googlecode.mgwt.dom.client.event.touch.TouchMoveEvent;
+import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
@@ -72,6 +71,7 @@ import com.googlecode.mgwt.ui.client.widget.Button;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.googlecode.mgwt.ui.client.widget.ScrollPanel;
+import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 /**
  * 
@@ -638,7 +638,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				if (event.touches().size() == 2)
+				if (event.touches().length() == 2)
 				{
 					event.stopPropagation();
 					double touch1X = event.touches().get(0).getPageX();
@@ -657,7 +657,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				double difx;
 				double dify;
 
-				if (event.touches().size() == 2)
+				if (event.touches().length() == 2)
 				{
 					event.stopPropagation();
 					difx = Math.abs(event.touches().get(0).getPageX() - event.touches().get(1).getPageX());
