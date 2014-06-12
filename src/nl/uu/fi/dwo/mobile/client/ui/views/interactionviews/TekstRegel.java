@@ -211,7 +211,6 @@ public class TekstRegel extends LayoutPanel
 			//System.out.println("vulVak: " + currentObject.toString() + " en objectVerschuiving = " + objectVerschuiving);
 			if(currentObject instanceof String)
 			{
-				System.out.println("vulRegel; string = '" + currentObject.toString() + "'");
 				Label label = new Label(currentObject.toString());
 				label.getElement().getStyle().setFontSize(font_size, Style.Unit.PX);
 				label.getElement().getStyle().setFontStyle(font_style == 2 || font_style == 3 ? FontStyle.ITALIC : FontStyle.NORMAL);
