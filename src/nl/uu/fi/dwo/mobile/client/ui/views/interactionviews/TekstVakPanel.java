@@ -810,6 +810,7 @@ public class TekstVakPanel implements InteractionView
 		
 		if(inklapbaar && ( ingeklapt != this.ingeklapt))
 		{	
+			klapUitButton.setDown(ingeklapt);
 			klapUitAction();
 		}
 		resize();
