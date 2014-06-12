@@ -62,6 +62,11 @@ public class TekstRegel extends LayoutPanel
 		return tekstAshoogte;
 	}
 	
+	public FormuleFont getFont()
+	{
+		return fm;
+	}
+	
 	public void setAsHoogte(int ashoogte)
 	{	//System.out.println("setAsHoogte: " + ashoogte);
 		//eigenAsHoogte = this.ashoogte;
@@ -206,6 +211,7 @@ public class TekstRegel extends LayoutPanel
 			//System.out.println("vulVak: " + currentObject.toString() + " en objectVerschuiving = " + objectVerschuiving);
 			if(currentObject instanceof String)
 			{
+				System.out.println("vulRegel; string = '" + currentObject.toString() + "'");
 				Label label = new Label(currentObject.toString());
 				label.getElement().getStyle().setFontSize(font_size, Style.Unit.PX);
 				label.getElement().getStyle().setFontStyle(font_style == 2 || font_style == 3 ? FontStyle.ITALIC : FontStyle.NORMAL);
@@ -341,9 +347,9 @@ public class TekstRegel extends LayoutPanel
 		int paddingLeft = 0;
 		if(s.startsWith(" "))
 			paddingLeft += ctx.measureText(" ").getWidth();
-		breedte += paddingLeft;
+		//breedte += paddingLeft;
 		//als italic: 1 pixel meer ruimte links en 1 pixel meer ruimte rechts. Juiste padding wordt in vulRegel geregeld.
-		if(font_style == 2 || font_style == 3) 
+		if(font_style == 2 || font_style == 3) //TODO moet dit voor bold tekst ook?
 		{	breedte += 2;
 		}
 		return breedte;
@@ -391,7 +397,7 @@ public class TekstRegel extends LayoutPanel
 			}
 			this.setWidgetLeftWidth(w, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
 			this.setWidgetTopHeight(w, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
-			horPositie += objectBreedte + 1;
+			horPositie += objectBreedte;
 		}
 		breedte = horPositie;
 	}

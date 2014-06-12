@@ -73,7 +73,7 @@ public class FormuleTeken extends FormuleElement
 		else
 		{	m = ctx.measureText(" ");
 		}
-		this.setSize((int) m.getWidth(), fm.getHeight());
+		this.setSize((int) m.getWidth(), fm.getAscent() + fm.getDescent());
 		this.setAsHoogte(fm.getAscent() / 2);
 		
 	}
@@ -278,10 +278,10 @@ public class FormuleTeken extends FormuleElement
 			m = ctx.measureText(" ");
 
 		if(fm.isItalic())
-		{	this.setSize((int) m.getWidth() + 2, fm.getHeight());
+		{	this.setSize((int) m.getWidth() + 2, fm.getAscent() + fm.getDescent());
 		}
 		else
-		{	this.setSize((int) m.getWidth() + 1, fm.getHeight());
+		{	this.setSize((int) m.getWidth() + 1, fm.getAscent() + fm.getDescent());
 		}
 		this.setAsHoogte(fm.getAscent()/2);
 		

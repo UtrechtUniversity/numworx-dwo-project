@@ -160,6 +160,7 @@ public class TekstVakPanel implements InteractionView
 	private String checkExpressieString = "$f1@";
 	private boolean defaultBijNull;
 	private int ipId = 0;
+	private int interlinie = 0;
 	private boolean colorSelection;
 	private boolean zwevend;
 	
@@ -254,7 +255,8 @@ public class TekstVakPanel implements InteractionView
 			cellSpaceRow = launchState.getInt("cellSpaceRow");
 		if (launchState.containsKey("cellMarge"))
 			cellMarge = launchState.getInt("cellMarge");
-		
+		if (launchState.containsKey("interlinie"))
+			interlinie = launchState.getInt("interlinie");
 		if (launchState.containsKey("bovenMarge") )
 			bovenMarge = launchState.getInt("bovenMarge");
 		if (launchState.containsKey("ronding"))
@@ -433,6 +435,7 @@ public class TekstVakPanel implements InteractionView
 				tekstVakken[i][j].setPasHoogteBreedteAan(pasAanH, pasAanB);
 				tekstVakken[i][j].setTekstVakBreedte(tekstVakBreedte);
 				tekstVakken[i][j].setMarges(bovenMarge, cellMarge);
+				tekstVakken[i][j].setInterlinie(interlinie);
 				
 				mainPanel.setWidget(i, j, tekstVakken[i][j]);
 				

@@ -56,6 +56,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	
 	private int cellMarge;
 	private int bovenMarge;
+	private int interlinie = 0;
 	
 	//voor als er een uitklapknop links in dit vak staat:
 	private int knopBreedte = 0;
@@ -197,6 +198,11 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				regelVakken[i].setWidth(tekstVakBreedte + "px");
 		}
 		//vPanel.getElement().getStyle().setProperty("margin", "" + (bovenMarge  + 1)  + "px " + cellMarge + "px");
+	}
+	
+	public void setInterlinie(int interlinie)
+	{
+		this.interlinie = interlinie;
 	}
 	
 	public void setSize(int b, int h)
@@ -465,14 +471,14 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			regelVakken[i].bepaalAshoogte();
 			regelHoogtes += regelVakken[i].getHeight();
 		}
-		ashoogte = regelVakken[0].getAsHoogte();
+		//ashoogte = regelVakken[0].getAsHoogte();
 		hoogte = 2 * bovenMarge + regelHoogtes;
 	}
 	
 	public void setAshoogte(int ashoogte)
 	{
 		this.ashoogte = ashoogte;
-		regelVakken[0].setAsHoogte(ashoogte);
+		//regelVakken[0].setAsHoogte(ashoogte);
 		plaatsRegels(true);
 	}
 	
@@ -493,15 +499,20 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	
 	public void plaatsRegels(boolean herplaats)
 	{
-		//this.clear();
-		//regelVakken toevoegen op juiste posities.
-		int vertPositie = bovenMarge - 1;
+		FormuleFont fm = regelVakken[0].getFont();
+		int regelafstand = fm.getAscent()+fm.getDescent()+interlinie;
+		int regelHoogtes = 0;
+		
+		for(int i=0 ; i<aantalRegels; i++)
+        {   int corr = 0;
+        	if(i>0)corr = Math.max(regelafstand-(regelVakken[i-1].getHeight()-regelVakken[i-1].getAsHoogte()+regelVakken[i].getAsHoogte()), 0);
+		   	regelHoogtes += regelVakken[i].getHeight() + corr;
+        }
+		
+		int vertPositie = bovenMarge + ashoogte - regelVakken[0].getAsHoogte(); //dit is nieuw (de toevoeging van ashoogte hier).
 		if(centerV)
 		{
-			int regelHoogtes = 0;
-			for(int j = 0; j < aantalRegels; j++)
-				regelHoogtes += regelVakken[j].getHeight();
-			vertPositie += (hoogte - 2 * bovenMarge - regelHoogtes) / 2;
+			vertPositie = (hoogte - regelHoogtes) / 2;
 		}
 		
 		for(int i = 0; i < aantalRegels; i++)
@@ -512,9 +523,12 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			
 			if(!herplaats)
 				this.add(regelVakken[i]);
+			int corr = 0;
+			if(i > 0)
+				corr = Math.max(regelafstand-(regelVakken[i-1].getHeight()-regelVakken[i-1].getAsHoogte()+regelVakken[i].getAsHoogte()), 0);
 			this.setWidgetLeftWidth(regelVakken[i], horPositie, Style.Unit.PX, regelVakken[i].getWidth(), Style.Unit.PX);
-			this.setWidgetTopHeight(regelVakken[i], vertPositie, Style.Unit.PX, regelVakken[i].getHeight(), Style.Unit.PX);
-			vertPositie += regelVakken[i].getHeight();// + interlinie; nog implementeren
+			this.setWidgetTopHeight(regelVakken[i], vertPositie + corr, Style.Unit.PX, regelVakken[i].getHeight(), Style.Unit.PX);
+			vertPositie += regelVakken[i].getHeight() + corr;
 			//flowVak.add(regelVakken[i]);
 		}
 		
@@ -528,10 +542,8 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				a.getElement().getStyle().setProperty("display", "inline-block");
 				this.remove(a);
 				this.add(a);
-				this.setWidgetLeftWidth(a, panel.getLocationX(), Style.Unit.PX, 
-						panel.getBreedte(), Style.Unit.PX);
-				this.setWidgetTopHeight(a, panel.getLocationY(), Style.Unit.PX, 
-						panel.getHoogte(), Style.Unit.PX);
+				this.setWidgetLeftWidth(a, panel.getLocationX(), Style.Unit.PX, panel.getBreedte(), Style.Unit.PX);
+				this.setWidgetTopHeight(a, panel.getLocationY(), Style.Unit.PX, panel.getHoogte(), Style.Unit.PX);
 				panel.setParent(this);
 			}
 		}
@@ -539,6 +551,77 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		
 		ashoogte = regelVakken[0].getAsHoogte();
 
+	}
+	
+	
+	
+	public void resize()
+	{
+		if(pasAanB)
+		{
+			tekstVakBreedte = regelVakken[0].getWidth();
+			for(int i = 0; i < aantalRegels; i++)
+				if(regelVakken[i].getWidth() > tekstVakBreedte)
+					tekstVakBreedte = regelVakken[i].getWidth();
+			breedte = (int) tekstVakBreedte + 2 * cellMarge + knopBreedte;
+		}
+		
+		FormuleFont fm = regelVakken[0].getFont();
+		int regelafstand = fm.getAscent()+fm.getDescent()+interlinie;
+		int regelHoogtes = 0;
+		
+		 for(int i=0 ; i<aantalRegels; i++)
+	        {   int corr = 0;
+	        	if(i>0)corr = Math.max(regelafstand-(regelVakken[i-1].getHeight()-regelVakken[i-1].getAsHoogte()+regelVakken[i].getAsHoogte()), 0);
+			   	regelHoogtes += regelVakken[i].getHeight() + corr;
+	        }
+		
+		if(pasAanH)
+		{
+			hoogte = 2 * bovenMarge + regelHoogtes;
+		}
+		setSize(breedte, hoogte); 
+		
+		plaatsRegels(true);
+		
+		
+		
+		/*
+		//toegevoegde widgets zijn ofwel tekstregels, ofwel zwevende tekstvakken, of een in/uitklapknop
+		//aan posities zwevende tekstvakken hoeft niets te gebeuren.
+		//positie uitklapknop moet ik maar in TekstVakPanel regelen, dat is er hooguit één per tekstvakpanel.
+		TekstRegel vorigeTekstRegel = null;
+		for(int i = 0; i < this.getWidgetCount(); i++)
+		{
+			Widget w = this.getWidget(i);
+			if(w instanceof TekstRegel)
+			{
+				int horPositie = cellMarge + knopBreedte;
+				if(centerH)
+					horPositie += (int) (tekstVakBreedte - ((TekstRegel) w).getWidth())/2;
+				
+				if(vorigeTekstRegel == null)
+				{
+					this.setWidgetLeftWidth((TekstRegel) w, horPositie, Style.Unit.PX, ((TekstRegel) w).getWidth(), Style.Unit.PX);
+					this.setWidgetTopHeight((TekstRegel) w, vertPositie, Style.Unit.PX, ((TekstRegel) w).getHeight(), Style.Unit.PX);
+					vertPositie += ((TekstRegel) w).getHeight();
+				}
+				else
+				{
+					int corr = Math.max(regelafstand-(vorigeTekstRegel.getHeight()-vorigeTekstRegel.getAsHoogte()+((TekstRegel) w).getAsHoogte()), 0);
+					this.setWidgetLeftWidth((TekstRegel) w, horPositie, Style.Unit.PX, ((TekstRegel) w).getWidth(), Style.Unit.PX);
+					this.setWidgetTopHeight((TekstRegel) w, vertPositie + corr, Style.Unit.PX, ((TekstRegel) w).getHeight(), Style.Unit.PX);
+					vertPositie += ((TekstRegel) w).getHeight() + corr;
+				}
+				
+				vorigeTekstRegel = (TekstRegel) w;
+			}
+		}
+		
+		ashoogte = regelVakken[0].getAsHoogte();
+		*/
+		
+		parent.resize();
 	}
 	
 	public void zetUitklapKnopLinks(int knopBreedte)
@@ -573,68 +656,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		}
 	}
 	
-	public void resize()
-	{
-		if(pasAanB)
-		{
-			tekstVakBreedte = regelVakken[0].getWidth();
-			for(int i = 0; i < aantalRegels; i++)
-				if(regelVakken[i].getWidth() > tekstVakBreedte)
-					tekstVakBreedte = regelVakken[i].getWidth();
-			breedte = (int) tekstVakBreedte + 2 * cellMarge + knopBreedte;
-		}
-		if(pasAanH)
-		{
-			int regelHoogtes = 0;
-			for(int j = 0; j < aantalRegels; j++)
-				regelHoogtes += regelVakken[j].getHeight();
-			hoogte = 2 * bovenMarge + regelHoogtes;
-		}
-		setSize(breedte, hoogte); 
-		
-		int vertPositie = bovenMarge;
-		if(centerV)
-		{
-			int regelHoogtes = 0;
-			for(int j = 0; j < aantalRegels; j++)
-				regelHoogtes += regelVakken[j].getHeight();
-			vertPositie += (hoogte - 2 * bovenMarge - regelHoogtes) / 2;
-		}
-		
-		//toegevoegde widgets zijn ofwel tekstregels, ofwel zwevende tekstvakken, of een in/uitklapknop
-		//aan posities zwevende tekstvakken hoeft niets te gebeuren.
-		//positie uitklapknop moet ik maar in TekstVakPanel regelen, dat is er hooguit één per tekstvakpanel.
-		for(int i = 0; i < this.getWidgetCount(); i++)
-		{
-			Widget w = this.getWidget(i);
-			if(w instanceof TekstRegel)
-			{
-				int horPositie = cellMarge + knopBreedte;
-				if(centerH)
-					horPositie += (int) (tekstVakBreedte - ((TekstRegel) w).getWidth())/2;
-				
-				this.setWidgetLeftWidth((TekstRegel) w, horPositie, Style.Unit.PX, ((TekstRegel) w).getWidth(), Style.Unit.PX);
-				this.setWidgetTopHeight((TekstRegel) w, vertPositie, Style.Unit.PX, ((TekstRegel) w).getHeight(), Style.Unit.PX);
-				vertPositie += ((TekstRegel) w).getHeight();
-				
-				
-				/*
-				int horPositie = cellMarge;
-				if(centerH)
-					horPositie += (int) (tekstVakBreedte - regelVakken[i].getWidth())/2;
-				
-				
-				this.setWidgetLeftWidth(regelVakken[i], horPositie, Style.Unit.PX, regelVakken[i].getWidth(), Style.Unit.PX);
-				this.setWidgetTopHeight(regelVakken[i], vertPositie, Style.Unit.PX, regelVakken[i].getHeight(), Style.Unit.PX);
-				vertPositie += regelVakken[i].getHeight();
-				*/
-			}
-		}
-		
-		ashoogte = regelVakken[0].getAsHoogte();
-		
-		parent.resize();
-	}
+	
 
 	public int getAantalRegels() {
 		return aantalRegels;
