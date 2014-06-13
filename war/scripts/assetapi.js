@@ -41,6 +41,11 @@ var assetAPI = {
 	},
 	GetResource : function(GUID, Resource) {
 		return "../" + parent.assetAPI.GetResource(GUID,Resource);
+	},
+	SetCompleted : function(GUID, Completed) {
+		if(this != parent.assetAPI)
+			return parent.assetAPI.SetCompleted(GUID, Completed);
+		return "";
 	}
 }
 
@@ -72,6 +77,6 @@ function GetAssetData(GUID)
 
 // Missing?
 function SetCompleted(GUID, Completed)
-{	//alert("SetCompleted (dummy) "+Completed);
-	return "";
+{	//alert("SetCompleted "+Completed);
+	return assetAPI.SetCompleted(GUID,Completed);
 }
