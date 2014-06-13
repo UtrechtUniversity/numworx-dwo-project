@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 
@@ -30,6 +31,7 @@ public class KeyBoardTabPanel
 	private FlowPanel staticpanel = new FlowPanel();
 
 	private Vector<Panel> tabs = new Vector<Panel>();
+	private Vector<Integer> tabHeights = new Vector<Integer>();
 	private Vector<TouchButton> tabbuttons = new Vector<TouchButton>();
 	private Vector<String> tabkeys = new Vector<String>();
 
@@ -59,8 +61,8 @@ public class KeyBoardTabPanel
 		staticpanel.getElement().getStyle().setHeight(4, Style.Unit.PX);
 		//FIXME CSS staticpanel.getElement().getStyle().setBackgroundImage("url(images/resources/footerbgimage.png)");
 
-		tabcontentpanel.setStylePrimaryName("tabkeyboard");
-		tabcontentpanel.addStyleDependentName(FormuleKeyBoardButtons.getDependentName());
+//		tabcontentpanel.setStylePrimaryName("tabkeyboard");
+//		tabcontentpanel.addStyleDependentName(FormuleKeyBoardButtons.getDependentName());
 		main.add(contentpanel);
 		main.add(staticpanel);
 		main.getElement().addClassName("keyboard");
@@ -98,12 +100,27 @@ public class KeyBoardTabPanel
 	}
 	static final Logger logger = Logger.getLogger("KeyboardTabPanel");
 
-	public void addTab(String buttonText, Panel p)
+	Widget scrollPanel; int origHeight = 426 - 40;
+	
+	private void resizeScrollPanel(int size) {
+		if(scrollPanel != null)
+			scrollPanel.setPixelSize(-1, origHeight - size);
+	}
+	public void setScrollPanel(Widget w, int h) {
+		scrollPanel = w;
+		origHeight = h;
+	}
+	
+	public void addTab(String buttonText, Panel p, int height)
 	{
+		p.setStylePrimaryName("tabkeyboard");
+		p.addStyleDependentName(FormuleKeyBoardButtons.getDependentName());
+
 		TouchButton button = new TouchButton();
 		button.setText(buttonText);
 		this.tabs.add(p);
 		this.tabbuttons.add(button);
+		this.tabHeights.add(height);
 		//logger.info("addTab " + buttonText + " before " + tabkeys);
 		this.tabkeys.add(buttonText);
 		//logger.info("addTab " + buttonText + " added to " + tabkeys);
@@ -121,6 +138,7 @@ public class KeyBoardTabPanel
 			{
 				tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
 				tabs.get(index).getElement().getStyle().setDisplay(Display.BLOCK);
+				resizeScrollPanel(tabHeights.get(index));
 				current = index;
 			}
 		});
@@ -143,6 +161,7 @@ public class KeyBoardTabPanel
 		int index = this.tabkeys.indexOf(panel);
 		tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
 		tabs.get(index).getElement().getStyle().setDisplay(Display.BLOCK);
+		resizeScrollPanel(tabHeights.get(index));
 		current = index;
 	}
 
@@ -166,14 +185,21 @@ public class KeyBoardTabPanel
 	 */
 	void hideKeyboard() {
 		tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
+		resizeScrollPanel(0);
 	}
 
 	public void showKeyboard() {
 		if(enabled) {
 			tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
 			tabs.get(0).getElement().getStyle().setDisplay(Display.BLOCK);
+			resizeScrollPanel(tabHeights.get(0));
 			current = 0;
 
 		}
+	}
+	
+	public void showSoftKeyboard() {
+		if (! FormuleKeyboard.hasKeyboard) 
+			showKeyboard();
 	}
 }

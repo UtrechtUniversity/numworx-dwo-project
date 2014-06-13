@@ -37,7 +37,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	OpdrNavIF comRoot;
 	TouchPanel sp = null;
 	Image checkimg;
-	private HashMap<String, Object> launchState;
+	private ObjectMap launchState;
 	private FormuleEditorWithSteps fe = null;
 	private boolean strict = true;
 	private Map<String, Object> instellingen = null;
@@ -72,7 +72,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		facade = new PopupFacade(h);
 		sp = new TouchPanel();
-		if (h.get("interactiePanelLaunchState") != null)
+		if (h.containsKey("interactiePanelLaunchState") )
 		{
 			ObjectMap map = JSONUtilities.wrapMap(h);
 			this.breedte = map.getInt("breedte");
@@ -81,17 +81,21 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			//this.hoogte = map.getInt("hoogte");
 			//int breedte = ((Number) h.get("breedte")).intValue();
 			//System.out.println("breedte formuleEditorWithAnswer: " + breedte);
-			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
+			launchState = map.getObjectMap("interactiePanelLaunchState");
 
 			if (isVergelijkingVak)
-				avChecker = new AntwoordVergelijkingVakChecker(launchState, randomVarNamen, randomVarWaarden);
+				avChecker = new AntwoordVergelijkingVakChecker((HashMap<String, Object>) launchState, randomVarNamen, randomVarWaarden);
 			else
-				avChecker = new AntwoordFormuleVakChecker(launchState, randomVarNamen, randomVarWaarden);
+				avChecker = new AntwoordFormuleVakChecker((HashMap<String, Object>) launchState, randomVarNamen, randomVarWaarden);
 
-			if(launchState != null && launchState.get("check") != null)
+			if(launchState != null && launchState.containsKey("check") )
 			{	//System.out.println("check wordt uit launchstate gehaald");
-				check = ((Boolean)launchState.get("check")).booleanValue();
+				check = launchState.getBoolean("check");
 			}
+			
+			if(launchState != null && launchState.containsKey("formuleToolBijFocus"))
+				setFormuleToolBijFocus(launchState.getBoolean("formuleToolBijFocus"));
+			
 			checkimg = new Image(FORMULE_BUNDLE.mw_vinkje_groen());
 			checkimg.setVisible(false);
 			checkimg.getElement().getStyle().setProperty("marginLeft", "3px");

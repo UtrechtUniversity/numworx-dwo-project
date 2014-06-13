@@ -862,10 +862,13 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		//mainPanel = FocusOnTouch.wrap(fp);
 		mainPanel.setHeight("426px");
 		mainPanel.setWidth("886px");
+		hp.getElement().getStyle().setProperty("background", "white");
+		
 		//fp.setHeight("428px");
 		//fp.setWidth("886px");
 		//if(!standalone) fp.add(hp);
-		contentScrollPanel.setPixelSize(886, 426 - 40 ); // 40 = hoogte headerpanel.
+		final int contentHeight = 426 - 40; // 40 = hoogte headerpanel.
+		contentScrollPanel.setPixelSize(886, contentHeight ); 
 		//contentScrollPanel.setHeight("100%");
 		//fp.add(contentScrollPanel);
 		contentPanel.getElement().getStyle().clearMarginBottom();
@@ -875,6 +878,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 //		Panel kbp = kb.getAsPanel();
 //		kbp.setWidth("886px");
 		kb.tp.zetMaatNoordhoff();
+		kb.tp.setScrollPanel(contentScrollPanel, contentHeight);
 		//fp.add(kbp);
 
 	}

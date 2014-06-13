@@ -25,6 +25,7 @@ public class FormuleEditorTouchHandler implements TouchHandler
 	protected FormuleHolder editor = null;
 	final HashMap<String, Double> dif = new HashMap<String, Double>();
 	int x,y;
+	boolean soft;
 	
 	public FormuleEditorTouchHandler(FormuleHolder editor)
 	{

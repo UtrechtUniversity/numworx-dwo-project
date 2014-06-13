@@ -210,6 +210,10 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	@Override
 	public void focus() {		
 	}
+	
+	@Override
+	public void softFocus() {		
+	}
 
 	private int mode = OEFENEN;
 	

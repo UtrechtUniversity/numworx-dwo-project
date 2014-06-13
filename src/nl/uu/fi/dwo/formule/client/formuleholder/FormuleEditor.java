@@ -207,10 +207,9 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 		if(kb!=null)
 		{
 			kb.setEditor(this);
-			kb.focus();
+			if(isSoft()) kb.softFocus(); else kb.focus();
 		}
 	}
-
 
 	@Override
 	public void cursorToLeft() {

@@ -226,27 +226,27 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 		// FIXME CSS tp.getPanel().getElement().getStyle().setBackgroundImage("images/resources/footerbgimage.png");
 
 		if(hasKeyboard)
-			tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodesWN, buttonWidthsWN)); // was GR
+			tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodesWN, buttonWidthsWN), 69); // was GR
 		else 
 		{
 			if("noordhoff".equals(FormuleKeyBoardButtons.getDependentName()))
 			{
-				tp.addTab("Toetsenbord", getKeyBoard(buttonCodes_geavanceerd, buttonWidths_geavanceerd));
-				tp.addTab(qwerty,         getKeyBoard(buttonCodes_abc, buttonWidths_abc));
-				tp.addTab(QWERTY,    getKeyBoard(buttonCodes_ABC, buttonWidths_abc));
+				tp.addTab("Toetsenbord", getKeyBoard(buttonCodes_geavanceerd, buttonWidths_geavanceerd),181);
+				tp.addTab(qwerty,         getKeyBoard(buttonCodes_abc, buttonWidths_abc),181);
+				tp.addTab(QWERTY,    getKeyBoard(buttonCodes_ABC, buttonWidths_abc),181);
 			}
 			else
 			{
-				tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodes, buttonWidths));
+				tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodes, buttonWidths),69);
 			}
 		}
 		//tp.addTab("ABC", this.getKeyBoard(buttonCodesAbc, buttonWidthsAbc));
 	    //tp.addTab("ABCShift", this.getKeyBoard(buttonCodesAbcShift, buttonWidthsAbcShift));
-		tp.addTab("Alpha", this.getKeyBoard(buttonCodesAlpha, buttonWidthsAlpha));
+		tp.addTab("Alpha", this.getKeyBoard(buttonCodesAlpha, buttonWidthsAlpha),69);
 		//tp.addTab("GR", this.getKeyBoard(buttonCodesGR, buttonWidthsGR));
 		//tp.addTab("MW", this.getKeyBoard(buttonCodesMW, buttonWidthsMW));
 
-		tp.addTab("Verberg", new SimplePanel());
+		//tp.addTab("Verberg", new SimplePanel(),0);
 
 		writePanel = new WritePanel(this);
 		TouchPanel b = FormuleKeyBoardButtons.getButton("apply", this);
@@ -255,7 +255,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 		writePanel.add(b);
 		
 		if (!hasKeyboard)
-			tp.addTab(SCRIBBLE, writePanel);
+			tp.addTab(SCRIBBLE, writePanel, 69);
 
 		//tp.hideTabButton("ABCShift");
 		//SliderPanel sp = new SliderPanel(100, this);
@@ -450,4 +450,10 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	public void focus() {
 		tp.showKeyboard();
 	}
+	
+	@Override
+	public void softFocus() {
+		tp.showSoftKeyboard();
+	}
+
 }

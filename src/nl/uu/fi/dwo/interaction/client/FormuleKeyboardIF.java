@@ -14,4 +14,6 @@ public interface FormuleKeyboardIF {
 	
 	FormuleEditorIF getEditor();
 
+	void softFocus();
+
 }

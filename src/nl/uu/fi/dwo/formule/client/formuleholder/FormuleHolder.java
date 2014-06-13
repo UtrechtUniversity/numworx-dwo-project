@@ -34,6 +34,7 @@ public class FormuleHolder implements TekstElement
 	protected static FormuleKeyboardIF kb;
 	private FlowPanel sp = null;
 	private int ashoogte;
+	private boolean formuleToolBijFocus;
 	
 	private CssColor color = CssColor.make(0, 0, 0);
 
@@ -200,5 +201,17 @@ public class FormuleHolder implements TekstElement
 		this.ashoogte = ashoogte;
 		main.setAsHoogte(ashoogte);
 		//main.setAsHoogte(ashoogte);
+	}
+
+	public boolean isFormuleToolBijFocus() {
+		return formuleToolBijFocus;
+	}
+
+	public boolean isSoft() {
+		return !formuleToolBijFocus;
+	}
+	
+	public void setFormuleToolBijFocus(boolean formuleToolBijFocus) {
+		this.formuleToolBijFocus = formuleToolBijFocus;
 	}
 }
