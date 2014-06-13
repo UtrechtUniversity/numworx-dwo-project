@@ -863,6 +863,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		mainPanel.setHeight("426px");
 		mainPanel.setWidth("886px");
 		hp.getElement().getStyle().setProperty("background", "white");
+		hp.getElement().getStyle().setProperty("color", "black"); // FIXME witte lettes op witte achtergrond!!!
 		
 		//fp.setHeight("428px");
 		//fp.setWidth("886px");

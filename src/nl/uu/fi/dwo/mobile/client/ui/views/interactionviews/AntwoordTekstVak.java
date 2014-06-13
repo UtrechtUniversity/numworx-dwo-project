@@ -52,7 +52,7 @@ import fi.wiskopdr.FormuleParser;
 
 public class AntwoordTekstVak implements InteractionStub{
 
-	private HashMap<String, Object> launchState; 
+	private Map<String, Object> launchState; 
 	OpdrNavIF comRoot;
 	
 	String[] randomVarNamen = null;
@@ -136,7 +136,7 @@ public class AntwoordTekstVak implements InteractionStub{
 			if(map.containsKey("volledigeBreedte"))
 				volledigeBreedte = map.getBoolean("volledigeBreedte");
 			if(h.containsKey("interactiePanelLaunchState"))
-				launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
+				launchState = map.getMap("interactiePanelLaunchState");
 		}
 		
 		this.randomVarNamen = randomVarNamen;
@@ -171,7 +171,10 @@ public class AntwoordTekstVak implements InteractionStub{
 			if (map.containsKey("formuleMode"))
 				formuleMode = map.getBoolean("formuleMode");
 			if (map.containsKey("formuleToolBijFocus"))
+			{
 				formuleToolBijFocus = map.getBoolean("formuleToolBijFocus");
+				
+			}
 			if (map.containsKey("logOption"))
 				logOption = map.getBoolean("logOption");
 			if (map.containsKey("logID"))
@@ -246,6 +249,7 @@ public class AntwoordTekstVak implements InteractionStub{
 		//antwoordTF.addActionListener(this);
 		
 		formuleVak = new FormuleEditor();
+		formuleVak.setFormuleToolBijFocus(formuleToolBijFocus);
 		//formuleVak.setFont(formuleVakFont);
 		//formuleVak.setBorder(false);
 		//formuleVak.addActionListener(this);
