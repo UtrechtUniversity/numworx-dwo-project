@@ -266,14 +266,15 @@ public class FormuleRegel extends FormuleElement
 			//breedtes aanpassen: formuletekens hebben grotere breedte nodig om zichzelf helemaal te tekenen. 
 			//hier weer een beetje breedte weghalen om te zorgen dat tekens (in woorden bijv) dicht genoeg op elkaar staan.
 			//nog kijken of ik hier niet te veel weghaal.
+		
 			if(i + 1 < this.children.size())
 			{
 				FormuleElement e2 = this.children.get(i + 1);
 				if(e instanceof FormuleTeken && Character.isLetter(((FormuleTeken) e).geefChar()) && !((FormuleTeken) e).getFunctieTeken() &&
 						e2 instanceof FormuleTeken && Character.isLetter(((FormuleTeken) e2).geefChar()) && !((FormuleTeken) e2).getFunctieTeken())
 				{
-					width-= 1;
-					nextx-= 1;
+					width-= 2;
+					nextx-= 2;
 				}
 				else
 				{
@@ -281,6 +282,7 @@ public class FormuleRegel extends FormuleElement
 					nextx--;
 				}
 			}
+			
 			
 		}
 

@@ -253,8 +253,11 @@ public class FormuleTeken extends FormuleElement
 	
 	public boolean setFont(FormuleFont fm)
 	{
+		boolean returnWaarde = true;
+		
 		if (super.setFont(fm) == false)
-			return false;
+			returnWaarde = false;
+		
 		
 		boolean italic = false;
 		//boolean bold = false;
@@ -268,6 +271,8 @@ public class FormuleTeken extends FormuleElement
 		
 		
 		fm.setItalic(italic);
+		
+		
 		//fm.setBold(bold);
 		
 		ctx.setFont(fm.getFontStyle());
@@ -285,7 +290,7 @@ public class FormuleTeken extends FormuleElement
 		}
 		this.setAsHoogte(fm.getAscent()/2);
 		
-		return true;
+		return returnWaarde;
 	}
 	
 	public boolean setColor(CssColor c)

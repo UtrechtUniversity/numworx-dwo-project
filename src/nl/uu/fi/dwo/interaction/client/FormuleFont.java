@@ -30,7 +30,8 @@ public class FormuleFont
 	private static boolean formTimes = false;
 	private String font = "Arial";
 	private boolean bold = false;
-	private boolean italic = true;
+	//private boolean italic = true;
+	private boolean italic = false;
 	private boolean smalltext = false;
 
 	public static FormuleFont getDefault()

@@ -745,7 +745,6 @@ public class AntwoordTekstVak implements InteractionStub{
 
 	@Override
 	public int getAsHoogte() {
-		System.out.println("antwoordTekstVak ashoogte: " + ashoogte);
 		return ashoogte;
 	}
 
