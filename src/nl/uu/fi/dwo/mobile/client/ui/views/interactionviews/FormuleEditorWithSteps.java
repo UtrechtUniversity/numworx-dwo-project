@@ -540,6 +540,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	public FormuleEditorWithAnswer addNewEditor(Panel p)
 	{
 		FormuleEditorWithAnswer editor = new FormuleEditorWithAnswer(h, isVergelijkingVak, this, randomVarNamen, randomVarWaarden);
+		editor.setFormuleToolBijFocus(true);
 		if (!hasPrefix)
 			editor.getAsPanel().getElement().getStyle().setMarginLeft(13, Unit.PX);
 		editor.getAsPanel().getElement().getStyle().setMarginTop(5, Unit.PX);

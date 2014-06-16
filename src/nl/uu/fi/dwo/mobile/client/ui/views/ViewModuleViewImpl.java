@@ -741,12 +741,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		FocusOnTouch.installKeyboard(kb);
 		FormuleHolder.installKeyboard(kb);
 		
-		hp = new HeaderPanel();
+		hp = new HeaderPanel(DWOplayer.DWO_BUNDLE.headercss());
 		hp.setCenter("");
 		//Style style = hp.getElement().getStyle();
 		
 		HeaderButton next, prev;
-		next = new HeaderButton(); next.setText("Volgende>");
+		next = new HeaderButton(DWOplayer.DWO_BUNDLE.headercss()); next.setText("Volgende >");
 		next.addTapHandler(new TapHandler() {
 			
 			@Override
@@ -756,7 +756,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				on.gotoOpdracht(cur, scoreNav);
 			}
 		});
-		prev = new HeaderButton(); prev.setText("<Vorige");
+		prev = new HeaderButton(DWOplayer.DWO_BUNDLE.headercss()); prev.setText("< Vorige");
 		prev.addTapHandler(new TapHandler() {
 			
 			@Override
@@ -771,7 +771,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		hbox.add(prev); hbox.add(next);
 		hp.setRightWidget(hbox);
 		
-		hb = new HeaderButton();
+		hb = new HeaderButton(DWOplayer.DWO_BUNDLE.headercss());
 		hb.setText(":=");
 
 		hp.setLeftWidget(hb);
@@ -862,8 +862,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		//mainPanel = FocusOnTouch.wrap(fp);
 		mainPanel.setHeight("426px");
 		mainPanel.setWidth("886px");
-		hp.getElement().getStyle().setProperty("background", "white");
-		hp.getElement().getStyle().setProperty("color", "black"); // FIXME witte lettes op witte achtergrond!!!
 		
 		//fp.setHeight("428px");
 		//fp.setWidth("886px");

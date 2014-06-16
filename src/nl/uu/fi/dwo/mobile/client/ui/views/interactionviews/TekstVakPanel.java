@@ -1642,7 +1642,6 @@ public class TekstVakPanel implements InteractionView
 		//final Widget widget = layoutPanel.getWidget(0);
 		
 // Wat met de positie van widgets
-		layoutPanel.insert(klapUitButton,0);
 		LoadHandler handler = new LoadHandler() {
 
 			@Override
@@ -1655,8 +1654,15 @@ public class TekstVakPanel implements InteractionView
 				
 			}
 		};
-		if (masterView.getWidth() > 0) handler.onLoad(null);
-		else masterView.addLoadHandler(handler);
+		if (masterView.getWidth() > 0)
+		{
+			layoutPanel.insert(klapUitButton,0);
+			handler.onLoad(null);
+		}
+		else 
+		{	masterView.addLoadHandler(handler);
+			layoutPanel.insert(klapUitButton,0);
+		}
 	}
 
 
