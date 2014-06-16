@@ -133,7 +133,7 @@ public class TekstRegel extends LayoutPanel
 		this.getElement().getStyle().setFontSize(font_size, Unit.PX);
 		fm = FormuleFont.createFromFontSize(font_size);
 		//tekstAshoogte = fm.getAscent() / 2;
-		tekstAshoogte = fm.getAscent() / 2;
+		tekstAshoogte = fm.getAscent() / 2 - 1; // - 1 om te zorgen voor goede afstand tot bovenrand tekstvak. Zou ook in marge opgelost kunnen worden, afh van omgang met meerdere regels nu.
 		
 		Canvas canvas = Canvas.createIfSupported();
 		ctx = canvas.getContext2d();
@@ -192,6 +192,10 @@ public class TekstRegel extends LayoutPanel
 			if(currentObject instanceof TekstElement)
 			{	//objectVerschuiving = ((TekstElement) currentObject).getHeight()-((TekstElement) currentObject).getAsHoogte();
 				objectVerschuiving = ashoogte - ((TekstElement) currentObject).getAsHoogte();
+				if(currentObject instanceof FormuleViewer)
+					objectVerschuiving += 1; //+1 om gelijk te houden met gewone tekst.
+				if(currentObject instanceof FormuleEditorWithAnswer)
+					objectVerschuiving -= 1; //weet nog niet of dit de beste oplossing is..
 				objectBreedte = ((TekstElement) currentObject).getWidth();
 				objectHoogte = ((TekstElement) currentObject).getHeight();
 			//System.out.println("Object.toString: " + ((TekstElement) currentObject).toString() + " en objectVerschuiving: " + objectVerschuiving);
@@ -201,7 +205,7 @@ public class TekstRegel extends LayoutPanel
 				//objectVerschuiving = fm.getHeight() - tekstAshoogte;
 				objectVerschuiving = ashoogte - tekstAshoogte;
 				objectBreedte = bepaalStringBreedte(currentObject.toString());
-				objectHoogte = fm.getHeight() + 1;
+				objectHoogte = fm.getAscent() + fm.getDescent();
 			}
 			else
 			{
@@ -211,32 +215,36 @@ public class TekstRegel extends LayoutPanel
 			//System.out.println("vulVak: " + currentObject.toString() + " en objectVerschuiving = " + objectVerschuiving);
 			if(currentObject instanceof String)
 			{
+				//String tekst = currentObject.toString().replaceAll("  ", " &nbsp;");
+				//tekst = tekst.replaceAll("&nbsp; ", "nbsp;&nbsp;");
+				//System.out.println("tekst = " + tekst);		
 				Label label = new Label(currentObject.toString());
+				label.getElement().getStyle().setProperty("whiteSpace", "pre");//om te zorgen dat meerdere spaties niet worden samengetrokken tot één spatie.
 				label.getElement().getStyle().setFontSize(font_size, Style.Unit.PX);
 				label.getElement().getStyle().setFontStyle(font_style == 2 || font_style == 3 ? FontStyle.ITALIC : FontStyle.NORMAL);
 				label.getElement().getStyle().setFontWeight(font_style == 1 || font_style == 3 ? Style.FontWeight.BOLD : Style.FontWeight.NORMAL);
 				label.getElement().getStyle().setPaddingRight(0, Style.Unit.PX);
-				int paddingLeft = 0;
-				if(currentObject.toString().startsWith(" "))
-					paddingLeft += ctx.measureText(" ").getWidth();
+				//int paddingLeft = 0;
+				//if(currentObject.toString().startsWith(" "))
+				//	paddingLeft += ctx.measureText(" ").getWidth();
 				//if(font_style == 2 || font_style == 3)
 				//	paddingLeft += 2;
-				if(font_style == 2 || font_style == 3)
-				{	paddingLeft += 1;
-				}
+				//if(font_style == 2 || font_style == 3)
+				//{	paddingLeft += 1;
+				//}
 					//	objectBreedte += 2;
 				//}
-				label.getElement().getStyle().setPaddingLeft(paddingLeft, Style.Unit.PX);
+				//label.getElement().getStyle().setPaddingLeft(paddingLeft, Style.Unit.PX);
 				//objectBreedte += paddingLeft;
-				if(font_style == 3)
-					objectVerschuiving -= 1;
+				//if(font_style == 3)
+				//	objectVerschuiving -= 1;
 					
 				//label.getElement().getStyle().setProperty("display", "inline-block");
 				//label.getElement().getStyle().setProperty("verticalAlign", "top");
 				//label.getElement().getStyle().setProperty("verticalAlign", objectVerschuiving + "px");
 				//als het eerste element op een regel tekst is, krijgt het een marge van 2. Dat gebeurt in wiskOpdr ook.
 				
-				if(horPositie == 0)
+				if(horPositie == 0 && Character.isLetter(currentObject.toString().charAt(0)))
 					horPositie = 2;
 				
 				
@@ -257,11 +265,14 @@ public class TekstRegel extends LayoutPanel
 				}
 			else if (currentObject instanceof FormuleViewer)
 			{	Panel a = ((FormuleViewer) currentObject).getAsPanel();
-				a.getElement().getStyle().setPaddingLeft(0, Style.Unit.PX);
+				//a.getElement().getStyle().setPaddingLeft(0, Style.Unit.PX);
 				//a.getElement().getStyle().setPaddingRight(4, Style.Unit.PX);
 				//objectBreedte += 4;
-				a.getElement().getStyle().setPaddingRight(2, Style.Unit.PX);
-				objectBreedte += 2;
+				//a.getElement().getStyle().setPaddingLeft(3, Style.Unit.PX);
+				//a.getElement().getStyle().setPaddingRight(2, Style.Unit.PX);
+				horPositie += 1;
+				
+				//objectBreedte += 2;
 				FormuleFont f = FormuleFont.createFromFontSize(font_size);
 				f.setBold(font_style == 1 || font_style == 3);
 				//a.getElement().getStyle().setProperty("verticalAlign", "" + (verschuiving - objectVerschuiving) + "px");
@@ -269,6 +280,7 @@ public class TekstRegel extends LayoutPanel
 				this.add(a);
 				this.setWidgetLeftWidth(a, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
 				this.setWidgetTopHeight(a, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
+				horPositie += 3; //zorgen dat formule aan de rechterkant ook voldoende afstand tot vervolgtekst krijgt.
 			}
 			else if (currentObject instanceof FormuleEditorWithSteps)
 			{
@@ -343,9 +355,9 @@ public class TekstRegel extends LayoutPanel
 	public int bepaalStringBreedte(String s)
 	{
 		int breedte = (int) ctx.measureText(s).getWidth();
-		int paddingLeft = 0;
-		if(s.startsWith(" "))
-			paddingLeft += ctx.measureText(" ").getWidth();
+		//int paddingLeft = 0;
+		//if(s.startsWith(" "))
+		//	paddingLeft += ctx.measureText(" ").getWidth();
 		//breedte += paddingLeft;
 		//als italic: 1 pixel meer ruimte links en 1 pixel meer ruimte rechts. Juiste padding wordt in vulRegel geregeld.
 		if(font_style == 2 || font_style == 3) //TODO moet dit voor bold tekst ook?
@@ -369,8 +381,10 @@ public class TekstRegel extends LayoutPanel
 				objectBreedte = object.getWidth();
 				objectHoogte = object.getHeight();
 				objectVerschuiving = ashoogte - object.getAsHoogte();
-				if(regelObjects.get(i) instanceof FormuleViewer)
-					objectBreedte += 2;
+				if(object instanceof FormuleViewer)
+				{	objectBreedte += 2;
+					objectVerschuiving += 1;
+				}
 			}
 			else
 			{
@@ -379,7 +393,8 @@ public class TekstRegel extends LayoutPanel
 				{
 					String s = ((Label) w).getText();
 					objectBreedte = bepaalStringBreedte(s);
-					objectHoogte = fm.getHeight() + 1;
+					//objectHoogte = fm.getHeight() + 1;//waarom deze +1?
+					objectHoogte = fm.getAscent() + fm.getDescent();
 					
 					if(horPositie == 0)
 						horPositie = 2;

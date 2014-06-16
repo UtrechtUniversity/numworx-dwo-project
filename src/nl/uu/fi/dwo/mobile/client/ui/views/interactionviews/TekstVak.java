@@ -267,8 +267,8 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				{
 					s = s.substring(1);
 				}
-				s = s.replaceAll("  ", " &nbsp;");
-				s = s.replaceAll("&nbsp; ", "&nbsp;&nbsp;");
+				//s = s.replaceAll("  ", " &nbsp;");
+				//s = s.replaceAll("&nbsp; ", "&nbsp;&nbsp;");
 				
 				while(s.contains(" "))
 				{	String sub = s.substring(0, s.indexOf(" ") + 1); 

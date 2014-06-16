@@ -238,6 +238,10 @@ public class FormuleRegel extends FormuleElement
 		for (int i = 0; i < this.children.size(); i++)
 		{
 			FormuleElement e = this.children.get(i);
+			if(i ==0 && e instanceof FormuleTeken && !((FormuleTeken) e).getFunctieTeken() && !e.isNumber())
+			{	nextx += 2;
+				width += 2;
+			}
 			//repaint child (if it has changed)
 			e.paint();
 			width += e.width;
@@ -261,14 +265,15 @@ public class FormuleRegel extends FormuleElement
 			
 			//breedtes aanpassen: formuletekens hebben grotere breedte nodig om zichzelf helemaal te tekenen. 
 			//hier weer een beetje breedte weghalen om te zorgen dat tekens (in woorden bijv) dicht genoeg op elkaar staan.
+			//nog kijken of ik hier niet te veel weghaal.
 			if(i + 1 < this.children.size())
 			{
 				FormuleElement e2 = this.children.get(i + 1);
 				if(e instanceof FormuleTeken && Character.isLetter(((FormuleTeken) e).geefChar()) && !((FormuleTeken) e).getFunctieTeken() &&
 						e2 instanceof FormuleTeken && Character.isLetter(((FormuleTeken) e2).geefChar()) && !((FormuleTeken) e2).getFunctieTeken())
 				{
-					width-= 2;
-					nextx-= 2;
+					width-= 1;
+					nextx-= 1;
 				}
 				else
 				{
