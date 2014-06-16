@@ -231,7 +231,7 @@
 }
 
 .mgwt-DropDownMenu .mgwt-HeaderPanel .mgwt-HeaderPanel-center {
-	color: white;
+	color: black;
 }
 
 .mgwt-DropDownMenu .mgwt-HeaderButton-back .mgwt-HeaderButton-border-content {
@@ -239,7 +239,7 @@
 }
 
 .mgwt-DropDownMenu .mgwt-HeaderButton {
-	color: #ffffff;
+	color: #B1B1B1;
 	text-decoration: none;
 	display: inline-block;
 	/*padding: 4px 10px;*/
