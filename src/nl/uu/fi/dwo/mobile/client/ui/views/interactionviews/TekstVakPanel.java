@@ -804,8 +804,7 @@ public class TekstVakPanel implements InteractionView
 			locationX = map.getInt("locationX");
 		if(map.containsKey("locationY"))
 			locationY = map.getInt("locationY");
-		
-		if(parent != null)
+		if(parent != null && zwevend)
 		{	parent.setWidgetLeftWidth(this.asWidget(), locationX, Style.Unit.PX, breedte, Style.Unit.PX);
 			parent.setWidgetTopHeight(this.asWidget(), locationY, Style.Unit.PX, hoogte, Style.Unit.PX);
 		}
@@ -1553,12 +1552,9 @@ public class TekstVakPanel implements InteractionView
 	}
 	
 	void klapUitAction() {
-		System.out.println("klapUitAction");
 		int delta = hoogte-hoogtes.get(0).intValue();
 		System.out.println("delta = " + delta);
 		if( ingeklapt = ! ingeklapt) {
-			System.out.println("inklappen!");
-			GWT.log("inklappen!");
 			for(int i = 1; i < tekstVakken.length; i++)
 			{
 				for(int j = 0; j < tekstVakken[i].length; j ++)
@@ -1592,7 +1588,6 @@ public class TekstVakPanel implements InteractionView
 				}
 				hoogte += hoogtes.get(i);
 			}
-			GWT.log("uitklappen " + hoogte);
 			this.hoogte = (int)hoogte;
 			
 			setCurrentSize( breedte, this.hoogte);

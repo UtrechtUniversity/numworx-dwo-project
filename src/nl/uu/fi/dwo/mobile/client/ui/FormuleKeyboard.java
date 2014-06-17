@@ -8,6 +8,7 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
+import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 
 import com.google.gwt.core.client.GWT;
@@ -448,11 +449,13 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 
 	@Override
 	public void focus() {
+		FocusOnTouch.focus();
 		tp.showKeyboard();
 	}
 	
 	@Override
 	public void softFocus() {
+		FocusOnTouch.focus();
 		tp.showSoftKeyboard();
 	}
 

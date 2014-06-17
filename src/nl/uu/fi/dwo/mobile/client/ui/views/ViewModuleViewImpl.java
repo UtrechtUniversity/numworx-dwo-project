@@ -963,7 +963,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 		//
 
-		FocusOnTouch.requestFocus(mainPanel);
+		FocusOnTouch.focus();
 
 	}
 
