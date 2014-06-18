@@ -602,18 +602,10 @@ public class TekstVakPanel implements InteractionView
 					{ 	((InteractionView) currentObject).setCommunicationRoot(comRoot);
 						interactionViewObjects.add(currentObject);
 						
+						
 						if(currentObject instanceof CheckValueUnit)
 						{
-							//bepalen waar tekstvakken gezocht moeten worden.
-							ArrayList<Object> lijst = new ArrayList<Object>();
-							if(k == 0 && i == 0 && j==0 && zwevend)
-							{
-								lijst = parent.getOpdrachtObjects();
-							}
-							else if (k == 0)
-								lijst = interactionViewObjects;
-							else
-								lijst = opdrachtObjects;
+							ArrayList<Object> lijst = geefInteractionViews(k, i, j, opdrachtObjects);
 							
 							int aantalValueObjects = ((CheckValueUnit) currentObject).getAantalValueObjects();
 							TekstVakPanel[] waardeObjecten = new TekstVakPanel[aantalValueObjects];
@@ -626,17 +618,7 @@ public class TekstVakPanel implements InteractionView
 						}
 						else if(currentObject instanceof CheckSelectieUnit)
 						{
-							//bepalen waar tekstvakken gezocht moeten worden.
-							ArrayList<Object> lijst = new ArrayList<Object>();
-							if(k == 0 && i == 0 && j==0)
-							{
-								lijst = parent.getOpdrachtObjects();
-								
-							}
-							else if (k == 0)
-								lijst = interactionViewObjects;
-							else
-								lijst = opdrachtObjects;
+							ArrayList<Object> lijst = geefInteractionViews(k, i, j, opdrachtObjects);
 							
 							
 							int aantalSelectieObjecten = ((CheckSelectieUnit) currentObject).getAantalSelectieObjecten();
@@ -647,18 +629,8 @@ public class TekstVakPanel implements InteractionView
 							((CheckSelectieUnit) currentObject).zetSelectieObjecten(selectieObjecten);
 						}
 						else if(currentObject instanceof CheckSleepUnit)
-						{	//bepalen waar tekstvakken gezocht moeten worden.
-							ArrayList<Object> lijst = new ArrayList<Object>();
-							if(k == 0 && i == 0 && j==0)
-							{
-								lijst = parent.getOpdrachtObjects();
-								
-							}
-							else if (k == 0)
-								lijst = interactionViewObjects;
-							else
-								lijst = opdrachtObjects;
-							
+						{	
+							ArrayList<Object> lijst = geefInteractionViews(k, i, j, opdrachtObjects);
 							
 							int aantalSleepObjects = ((CheckSleepUnit) currentObject).getAantalSleepObjects();
 							
@@ -674,16 +646,7 @@ public class TekstVakPanel implements InteractionView
 						}
 						else if(currentObject instanceof CheckButton)
 						{
-							ArrayList<Object> lijst = new ArrayList<Object>();
-							if(k == 0 && i == 0 && j==0)
-							{
-								lijst = parent.getOpdrachtObjects();
-								
-							}
-							else if (k == 0)
-								lijst = interactionViewObjects;
-							else
-								lijst = opdrachtObjects;
+							ArrayList<Object> lijst = geefInteractionViews(k, i, j, opdrachtObjects);
 							((CheckButton) currentObject).zetNakijkObjecten(lijst);
 						}
 					}
@@ -750,6 +713,33 @@ public class TekstVakPanel implements InteractionView
 		{	initieerKlapUitButton(ingeklapt);
 		}
 
+	}
+	
+	public ArrayList<Object> geefInteractionViews(int k, int row, int column, ArrayList<Object> opdrachtObjects)
+	{
+		ArrayList<Object> lijst = new ArrayList<Object>();
+		
+		boolean interactionAanwezig = false;
+		
+		for(int i = 0; i < opdrachtObjects.size(); i++)
+		{
+			Object currentObject = opdrachtObjects.get(i);
+			if(i != k && currentObject instanceof InteractionView)
+			{	interactionAanwezig = true;
+				break;
+			}
+		}
+		
+		if(interactionAanwezig) //in dezelfde cel als de knop zitten andere interactie-objecten. Die geef je terug.
+			lijst = opdrachtObjects;
+		else if(row == 0 && column==0 && zwevend) //geval knop in zwevend tekstvak
+		{
+			lijst = parent.getOpdrachtObjects();
+		}
+		else  //objecten uit hele tekstvakpanel (tot nu toe) geven.
+			lijst = interactionViewObjects;
+		
+		return lijst;
 	}
 
 	public void setCommunicationRoot(OpdrNavIF comRoot)
@@ -1006,6 +996,7 @@ public class TekstVakPanel implements InteractionView
 			{
 				if(i > 0 && inklapbaar && ingeklapt)
 					break;
+				
 				int h1 = 0;
 				int h2 = 0;
 				for(int j = 0; j < breedtes.size(); j++)
@@ -1025,11 +1016,13 @@ public class TekstVakPanel implements InteractionView
 						h2 = hoogte - ash;
 				}
 				
+				
 				hoogtes.set(i, new Double(h1 + h2));
 				totaleHoogte += h1 + h2 + cellSpaceRow;
 				ashoogtes[i] = h1;
 			}
 			totaleHoogte -= cellSpaceRow;
+			
 		}
 		
 		
@@ -1058,7 +1051,7 @@ public class TekstVakPanel implements InteractionView
 		for(int i = 0; i < hoogtes.size(); i++)
 		{	for(int j = 0; j < breedtes.size(); j++)
 			{
-				if(tekstVakken[i][j].isVisible())
+				if(i == 0 || !(inklapbaar && ingeklapt))
 				{
 					tekstVakken[i][j].setSize(breedtes.get(j).intValue(), hoogtes.get(i).intValue());
 					tekstVakken[i][j].setAshoogte(ashoogtes[i]);
@@ -1071,7 +1064,7 @@ public class TekstVakPanel implements InteractionView
 
 	}
 	
-	
+	/*
 	public Vector geefInteractiePanels()
 	{
 		Vector v = new Vector();
@@ -1090,7 +1083,7 @@ public class TekstVakPanel implements InteractionView
 			}
 		}
 		return v;
-	}
+	}*/
 	
 	public void zetGoedFout(boolean b)
 	{

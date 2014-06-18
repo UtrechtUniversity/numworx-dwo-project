@@ -74,10 +74,10 @@ public class CheckButton implements InteractionStub
 	private void initialize(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
 		basisPanel = new LayoutPanel();
-		basisPanel.setSize("" + breedte + "px", "" + hoogte + "px");
-		ashoogte = hoogte / 2;
+		//basisPanel.setSize("" + breedte + "px", "" + hoogte + "px");
+		//ashoogte = hoogte / 2;
 		
-		int imWidth = breedte - 20;
+		int imWidth = breedte;
 		int imHeight = 20;
 		Image knopImage = null;
 		if(knopImageString!=null && !"".equals(knopImageString))
@@ -94,9 +94,14 @@ public class CheckButton implements InteractionStub
 		}
 		else
 			checkButton = new PushButton(rb.getString("klaarKnopLabel"));
+		
+		breedte = imWidth;
+		hoogte = imHeight + 5;
+		ashoogte = hoogte / 2 + 1;
+		basisPanel.setSize("" + breedte + "px", "" + hoogte + "px");
 		basisPanel.add(checkButton);
-		basisPanel.setWidgetLeftWidth(checkButton, 0, Style.Unit.PX, imWidth, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(checkButton, 0, Style.Unit.PX, imHeight, Style.Unit.PX);
+		//basisPanel.setWidgetLeftWidth(checkButton, 0, Style.Unit.PX, imWidth, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(checkButton, 5, Style.Unit.PX, imHeight, Style.Unit.PX);
 		checkButton.addClickHandler(new ClickHandler(){
 
 			public void onClick(ClickEvent e)

@@ -465,11 +465,17 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	
 	public void pasHoogteAanInhoudAan()
 	{
+		FormuleFont fm = regelVakken[0].getFont();
+		int regelafstand = fm.getAscent()+fm.getDescent()+interlinie;
 		int regelHoogtes = 0;
 		for(int i = 0; i < aantalRegels; i++)
 		{
 			regelVakken[i].bepaalAshoogte();
-			regelHoogtes += regelVakken[i].getHeight();
+		
+			int corr = 0;
+        	if(i>0)corr = Math.max(regelafstand-(regelVakken[i-1].getHeight()-regelVakken[i-1].getAsHoogte()+regelVakken[i].getAsHoogte()), 0);
+		   	regelHoogtes += regelVakken[i].getHeight() + corr;
+			
 		}
 		//ashoogte = regelVakken[0].getAsHoogte();
 		hoogte = 2 * bovenMarge + regelHoogtes;

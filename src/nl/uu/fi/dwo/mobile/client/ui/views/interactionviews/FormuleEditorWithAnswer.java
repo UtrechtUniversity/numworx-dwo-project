@@ -106,7 +106,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				this.getMainRegel().setMinimumWidth(breedte - 20);
 				hoogte = 27;
 				this.getMainRegel().setMinimumHeight(hoogte - 6);
-				sp.setSize((breedte - 3) + "px", (hoogte - 5) + "px");
+				
+				//Maat zetten:
+				//breedte - 3: 1 pixel marge links, 1 pixel rand links, 1 pixel rand rechts
+				//hoogte - 6: 2 pixels marge boven, 2 pixels marge onder, 1 pixel rand boven, 1 pixel rand onder.
+				sp.setSize((breedte - 3) + "px", (hoogte - 6) + "px"); 
 				//sp.getElement().getStyle().setBackgroundColor(CssColor.make(255, 0, 0).toString());
 				sp.getElement().getStyle().setProperty("border", "1px solid gray");
 				
@@ -115,7 +119,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				sp.getElement().getStyle().setMarginLeft(1, Style.Unit.PX);
 				//sp.getElement().getStyle().setMarginRight(1, Style.Unit.PX);
 				//sp.getElement().getStyle().setMarginRight(1, Style.Unit.PX);
-				sp.getElement().getStyle().setMarginTop(3, Style.Unit.PX);
+				sp.getElement().getStyle().setMarginTop(2, Style.Unit.PX);
+				sp.getElement().getStyle().setPaddingTop(1, Style.Unit.PX);
 				//sp.getElement().getStyle().setMarginBottom(0, Style.Unit.PX);
 				
 				//sp.getElement().getStyle().setPaddingLeft(1, Style.Unit.PX);
@@ -263,7 +268,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		//System.out.println("nieuwe breedte: " + breedte);
 		//System.out.println("nieuwe hoogte: " + hoogte);
 		//nog zorgen dat hoogte altijd minimaal 24 is?
-		sp.setSize((breedte-3) + "px", (hoogte-5) + "px");
+		sp.setSize((breedte-3) + "px", (hoogte-6) + "px");
 		if(parentRegel != null)
 			parentRegel.resize();
 		
@@ -301,7 +306,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	public int getAsHoogte()
 	{
-		return this.getMainRegel().getAsHoogte() + 6 /* margin top + border + padding top */;
+		return this.getMainRegel().getAsHoogte() + 3 /* margin top + border + padding top */;
 		
 	}
 

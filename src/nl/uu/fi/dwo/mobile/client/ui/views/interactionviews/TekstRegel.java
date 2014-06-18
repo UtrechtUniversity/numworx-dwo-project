@@ -194,8 +194,8 @@ public class TekstRegel extends LayoutPanel
 				objectVerschuiving = ashoogte - ((TekstElement) currentObject).getAsHoogte();
 				if(currentObject instanceof FormuleViewer)
 					objectVerschuiving += 1; //+1 om gelijk te houden met gewone tekst.
-				if(currentObject instanceof FormuleEditorWithAnswer)
-					objectVerschuiving -= 1; //weet nog niet of dit de beste oplossing is..
+				//if(currentObject instanceof FormuleEditorWithAnswer)
+				//	objectVerschuiving -= 1; //weet nog niet of dit de beste oplossing is..
 				objectBreedte = ((TekstElement) currentObject).getWidth();
 				objectHoogte = ((TekstElement) currentObject).getHeight();
 			//System.out.println("Object.toString: " + ((TekstElement) currentObject).toString() + " en objectVerschuiving: " + objectVerschuiving);
@@ -382,7 +382,8 @@ public class TekstRegel extends LayoutPanel
 				objectHoogte = object.getHeight();
 				objectVerschuiving = ashoogte - object.getAsHoogte();
 				if(object instanceof FormuleViewer)
-				{	objectBreedte += 2;
+				{	//objectBreedte += 2;
+					horPositie += 1;
 					objectVerschuiving += 1;
 				}
 			}
@@ -396,7 +397,7 @@ public class TekstRegel extends LayoutPanel
 					//objectHoogte = fm.getHeight() + 1;//waarom deze +1?
 					objectHoogte = fm.getAscent() + fm.getDescent();
 					
-					if(horPositie == 0)
+					if(horPositie == 0 && Character.isLetter(s.charAt(0)))
 						horPositie = 2;
 				}
 // ImageView is een tekstelement
@@ -412,6 +413,8 @@ public class TekstRegel extends LayoutPanel
 			this.setWidgetLeftWidth(w, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
 			this.setWidgetTopHeight(w, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
 			horPositie += objectBreedte;
+			if(regelObjects.get(i) instanceof FormuleViewer)
+				horPositie += 3;
 		}
 		breedte = horPositie;
 	}
