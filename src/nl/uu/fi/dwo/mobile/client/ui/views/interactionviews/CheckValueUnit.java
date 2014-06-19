@@ -165,11 +165,12 @@ public class CheckValueUnit implements InteractionStub{
 		int imHeight = 20;
 		Image knopImage = null;
 		if(knopImageString!=null && !"".equals(knopImageString))
-       	{  	knopImage = new ImageView(knopImageString).getImage();
-			imWidth = knopImage.getWidth();
-			imHeight = knopImage.getHeight();
-			if(imWidth == -1) imWidth = 80;
-			if(imHeight == -1) imHeight = 20;
+       	{  	ImageView imageView = new ImageView(knopImageString);
+       		knopImage = imageView.getImage();
+			imWidth = imageView.getWidth();
+			imHeight = imageView.getHeight();
+			if(imWidth <= 0) imWidth = 80;
+			if(imHeight <= 0) imHeight = 20;
 			//checkButton.setSize(imWidth,imHeight);
 			//zetMaat();
 	    }
@@ -264,7 +265,7 @@ public class CheckValueUnit implements InteractionStub{
 	    if(h.get("nagekeken") != null) 
 	    	nagekeken = ((Boolean)h.get("nagekeken")).booleanValue();
 	    if(h.get("attempts") != null)
-	    	attempts = (Vector)h.get("attempts");
+	    	attempts = new Vector(JSONUtilities.toArrayList(h.get("attempts")));
 	    if(h.get("attemptsCount") != null) 
 	    	attemptsCount = ((Number)h.get("attemptsCount")).intValue();
 	    if(h.get("errorCount") != null) 

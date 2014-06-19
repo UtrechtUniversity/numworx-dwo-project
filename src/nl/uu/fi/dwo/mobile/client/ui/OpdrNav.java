@@ -306,7 +306,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 	public double getScore()
 	{
 
-		int mode = EINDTOETS; // TODO wat zijn de modes? Launchdata?
+		//int mode = EINDTOETS; // TODO wat zijn de modes? Launchdata?
 		int totaalScore = 0;
 		int totaalMax = 0;
 		for (int i = 0; i < aantalActiviteiten; i++)
@@ -321,7 +321,12 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 			else
 			{ // TODO wat wordt hier bedoeld?
 				//totaalScore += or[i].geefScore() - ((mode == ZELFTOETS) ? (nakijkStraf * (Math.max(0, aantalNakijken[i] - 1))) : 0);
-			}
+		// nog geen nakijkstrqf!
+				for (int j = 0; j < aantalOpdrachten[i]; j++)
+				{
+					totaalScore += scores[i][j];
+				}
+		}
 			for (int j = 0; j < aantalOpdrachten[i]; j++)
 			{
 				totaalMax += scoresMax[i][j];

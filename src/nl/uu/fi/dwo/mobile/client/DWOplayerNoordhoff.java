@@ -9,7 +9,7 @@ public class DWOplayerNoordhoff extends DWOplayerDefaults implements DWOplayerPa
 
 	@Override
 	public String getLaunchData() {
-		if(GWT.isProdMode()) return  null;
+		//if(GWT.isProdMode()) return  null;
 		return  super.getLaunchData();
 	}
 

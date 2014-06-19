@@ -13,11 +13,11 @@ public class AssetAPI implements Scorm2004IF {
 	private static final String DEFAULT_GUID = "017ec54cf2ee4dc5-840256df4139d38a";
 	private String guid;
 	
-	private native String SetInitialize(String GUID, Boolean Initialized) /*-{
+	private native String SetInitialize(String GUID, boolean Initialized) /*-{
 		return $wnd.SetInitialized(GUID, Initialized)
 	}-*/;
 
-	private native String SetCompleted(String GUID, Boolean Completed) /*-{
+	private native String SetCompleted(String GUID, boolean Completed) /*-{
 	return $wnd.SetCompleted(GUID, Completed)
 	}-*/;
 
@@ -68,9 +68,14 @@ public class AssetAPI implements Scorm2004IF {
 			else if(Memento.SUSPEND_DATA.equals(name))
 				SetAssetData(guid, value);
 			else if(Memento.COMPLETION_STATUS.equals(name))
-				SetCompleted(guid, Memento.COMPLETE.equals(value));
+			{
+				final boolean equals = Memento.COMPLETE.equals(value);
+				logger.info("setCompleted(" + value  + " ) " + equals);
+				if(equals)
+					SetCompleted(guid, equals);
+			}
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "setValue " + name + " :" + e);
+			logger.severe("setValue " + name + " :" + e);
 		}
 		return "";
 	}
@@ -88,9 +93,9 @@ public class AssetAPI implements Scorm2004IF {
 	@Override
 	public String Initialize() {
 		try {
-			SetInitialize(guid, Boolean.TRUE);
+			SetInitialize(guid, true);
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Initialize:"+e);
+			logger.severe("Initialize:"+e);
 		}
 		return "";
 	}

@@ -306,12 +306,12 @@ public class CheckSelectieUnit implements InteractionStub
 	    		randomizedPositions[i] = new Point(listX.getInt(i), 
 	    				listY.getInt(i));
 	    }
-	    if(h.containsKey("ingevuld")) 
+	    if(map.containsKey("ingevuld")) 
 	    	ingevuld = map.getBoolean("ingevuld");
-	    if(h.containsKey("nagekeken")) 
+	    if(map.containsKey("nagekeken")) 
 	    	nagekeken = map.getBoolean("nagekeken");
-	    if(h.containsKey("attempts"))
-	    	attempts = (Vector)h.get("attempts");
+	    if(map.containsKey("attempts"))
+	    	attempts = new Vector(map.getList("attempts"));
 	    if(map.containsKey("attemptsCount")) 
 	    	attemptsCount = map.getInt("attemptsCount");
 	    if(map.containsKey("errorCount")) 
@@ -530,17 +530,14 @@ public class CheckSelectieUnit implements InteractionStub
 				formuleStrings = map.getStringArray("formuleStrings");
 			}
 			if(map.containsKey("logObjectives"))
-			{	List<Object> logObjectivesList = JSONUtilities.toArrayList( map.get("logObjectives") );
+			{	ObjectList logObjectivesList = ( map.getObjectList("logObjectives") );
 				logObjectives = new boolean[logObjectivesList.size()][];
 				for(int i = 0; i < logObjectivesList.size(); i++)
-				{	List<Object> list = JSONUtilities.toArrayList(logObjectivesList.get(i));
-					logObjectives[i] = new boolean[list.size()];
-					for(int j = 0; j < list.size(); j++)
-						logObjectives[i][j] = ((Boolean) (list.get(j))).booleanValue();
+				{	logObjectives[i] = logObjectivesList.getBooleanArray(i);
 				}
 			}
 			if(map.containsKey("knopImageString")) 
-				knopImageString = (String)map.get("knopImageString");
+				knopImageString = map.getString("knopImageString");
 		}
 		
 		
@@ -557,12 +554,13 @@ public class CheckSelectieUnit implements InteractionStub
 		int imHeight = 20;
 		Image knopImage = null;
 		if(knopImageString!=null && !"".equals(knopImageString))
-       	{  	knopImage = new ImageView(knopImageString).getImage();
-			imWidth = knopImage.getWidth();
-			imHeight = knopImage.getHeight();
-			if(imWidth == -1) 
+       	{  	ImageView imageView = new ImageView(knopImageString);
+       		knopImage = imageView.getImage();
+			imWidth = imageView.getWidth();
+			imHeight = imageView.getHeight();
+			if(imWidth <= 0) 
 				imWidth = 80;
-			if(imHeight == -1) 
+			if(imHeight <= 0) 
 				imHeight = 20;
 		}
 		if(knopImage != null)
@@ -576,7 +574,7 @@ public class CheckSelectieUnit implements InteractionStub
 		breedte = imWidth + 30;
 		hoogte = imHeight + 5;
 		ashoogte = hoogte / 2 + 7;
-		basisPanel.setSize("" + breedte + "px", "" + hoogte + "px");
+		basisPanel.setPixelSize(breedte ,  hoogte );
 		basisPanel.add(checkButton);
 		basisPanel.setWidgetLeftWidth(checkButton, 0, Style.Unit.PX, imWidth, Style.Unit.PX);
 		basisPanel.setWidgetTopHeight(checkButton, 5, Style.Unit.PX, imHeight, Style.Unit.PX);

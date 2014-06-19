@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import java.util.logging.Logger;
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleClientBundle;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -31,6 +33,7 @@ import com.googlecode.mgwt.ui.client.widget.Button;
 
 public class ScoreNavPanel extends Composite {
 	
+	static Logger logger = Logger.getLogger("ScoreNavPanel");
 	
 	
 	interface GotoOpdracht {
@@ -259,7 +262,7 @@ public class ScoreNavPanel extends Composite {
 	
 	public void setItemScore(int item, int score) {
 		if(scoreMax[item] <= 0) return;
-		
+		logger.info("score[" + item + "]=" + score + "/" + scoreMax[item]);
 		int percent = 100 * score / scoreMax[item];
 		if(score < 0 ) {
 			score = 0;

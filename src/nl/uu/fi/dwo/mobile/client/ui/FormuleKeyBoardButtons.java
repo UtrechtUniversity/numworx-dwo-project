@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
+import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -45,7 +46,7 @@ public abstract class FormuleKeyBoardButtons
 		{
 				//event.preventDefault();
 				event.stopPropagation();
-			
+				FocusOnTouch.focus();
 			final FormuleEditorIF editor = kb.getEditor();
 			if (code.equals("wortel") == true)
 				editor.wortel();

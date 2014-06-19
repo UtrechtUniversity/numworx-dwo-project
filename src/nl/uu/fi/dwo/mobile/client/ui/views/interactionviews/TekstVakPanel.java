@@ -1642,6 +1642,16 @@ public class TekstVakPanel implements InteractionView
 				
 			}
 		};
+// preinitialize width/height?
+		if (knopImageView1 != null && knopImageView1.getWidth() > 0 && knopImageView1.getHeight() > 0)
+		{
+			layoutPanel.insert(klapUitButton,0);
+			int width = knopImageView1.getWidth();
+			int height = knopImageView1.getHeight();
+			klapUitButton.setPixelSize(width, hoogtes.get(0).intValue());		
+			setPositionUitklapButton(layoutPanel, inklapKnopPos, width, height);
+		}
+		else 
 		if (masterView.getWidth() > 0)
 		{
 			layoutPanel.insert(klapUitButton,0);

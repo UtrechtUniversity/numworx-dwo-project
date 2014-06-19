@@ -216,15 +216,15 @@ public class CheckSleepUnit implements InteractionStub{
     		List<Object> randomizedPositionsYList = JSONUtilities.toArrayList(h.get("randomizedPositionsY"));
     		randomizedPositions = new Point[randomizedPositionsXList.size()];
     		for(int i = 0; i < randomizedPositionsXList.size(); i++)
-    			randomizedPositions[i] = new Point(((Integer)randomizedPositionsXList.get(i)).intValue(), 
-    				((Integer)randomizedPositionsYList.get(i)).intValue());
+    			randomizedPositions[i] = new Point(((Number)randomizedPositionsXList.get(i)).intValue(), 
+    				((Number)randomizedPositionsYList.get(i)).intValue());
 	    }
 	    if(h.get("ingevuld") != null) 
 	    	ingevuld = ((Boolean)h.get("ingevuld")).booleanValue();
 	    if(h.get("nagekeken") != null) 
 	    	nagekeken = ((Boolean)h.get("nagekeken")).booleanValue();
 	    if(h.get("attempts") != null)
-	    	attempts = (Vector)h.get("attempts");
+	    	attempts = new Vector(JSONUtilities.toArrayList(h.get("attempts")));
 	    if(h.get("attemptsCount") != null) 
 	    	attemptsCount = ((Number)h.get("attemptsCount")).intValue();
 	    if(h.get("errorCount") != null) 
@@ -626,17 +626,19 @@ public class CheckSleepUnit implements InteractionStub{
 		attempts = new Vector();
 		
 		basisPanel = new LayoutPanel();
+		basisPanel.setStylePrimaryName("checksleepunit");
 		//basisPanel.setSize("" + breedte + "px", "" + hoogte + "px");
 		
 		int imWidth = breedte - 30;
 		int imHeight = 20;
 		Image knopImage = null;
 		if(knopImageString!=null && !"".equals(knopImageString))
-       	{  	knopImage = new ImageView(knopImageString).getImage();
-			imWidth = knopImage.getWidth();
-			imHeight = knopImage.getHeight();
-			if(imWidth == -1) imWidth = 80;
-			if(imHeight == -1) imHeight = 20;
+       	{  	ImageView imageView = new ImageView(knopImageString);
+       		knopImage = imageView.getImage();
+			imWidth = imageView.getWidth();
+			imHeight = imageView.getHeight();
+			if(imWidth <= 0) imWidth = 80;
+			if(imHeight <= 0) imHeight = 20;
 			//checkButton.setSize(imWidth,imHeight);
 			//zetMaat();
 	    }

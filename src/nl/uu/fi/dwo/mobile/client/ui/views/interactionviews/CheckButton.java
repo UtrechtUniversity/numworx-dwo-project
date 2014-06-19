@@ -5,11 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.PushButton;
@@ -22,6 +25,7 @@ import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 
@@ -29,8 +33,9 @@ public class CheckButton implements InteractionStub
 {
 	public static Text_nl rb = new Text_nl();
 	static final String holderId = "dockholder";
+	private static Logger logger = Logger.getLogger("CheckButton");
 	
-	private HashMap<String, Object> launchState; 
+	private Map<String, Object> launchState; 
 	
 	OpdrNavIF comRoot;
 	
@@ -47,13 +52,13 @@ public class CheckButton implements InteractionStub
 	
 	public CheckButton(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
-		
-		if (h != null && h.get("breedte") != null)
-			breedte = ((Number) h.get("breedte")).intValue();
-		if (h != null && h.get("hoogte") != null)
-			hoogte = ((Number) h.get("hoogte")).intValue();
-		if (h != null && h.get("interactiePanelLaunchState") != null)
-			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
+		ObjectMap map = JSONUtilities.wrapMap(h);
+		if (h != null && map.containsKey("breedte") )
+			breedte = map.getInt("breedte");
+		if (h != null && map.containsKey("hoogte"))
+			hoogte = map.getInt("hoogte");
+		if (h != null && map.containsKey("interactiePanelLaunchState") )
+			launchState =  map.getMap("interactiePanelLaunchState");
 		
 		init(breedte, hoogte, launchState, randomVarWaarden);
 		
@@ -66,7 +71,7 @@ public class CheckButton implements InteractionStub
 		hoogte = height;
 		if (launchData != null)
 		{
-			if(launchData.get("knopImageString") != null) 
+			if(launchData.containsKey("knopImageString") ) 
 				knopImageString = (String)launchData.get("knopImageString");
 		}
 	}
@@ -74,18 +79,31 @@ public class CheckButton implements InteractionStub
 	private void initialize(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
 		basisPanel = new LayoutPanel();
+		basisPanel.setStylePrimaryName("checkbutton");
 		//basisPanel.setSize("" + breedte + "px", "" + hoogte + "px");
 		//ashoogte = hoogte / 2;
 		
 		int imWidth = breedte;
 		int imHeight = 20;
-		Image knopImage = null;
+		knopImage = null;
 		if(knopImageString!=null && !"".equals(knopImageString))
-       	{  	knopImage = new ImageView(knopImageString).getImage();
-			imWidth = knopImage.getWidth();
-			imHeight = knopImage.getHeight();
-			if(imWidth == -1) imWidth = 80;
-			if(imHeight == -1) imHeight = 20;
+       	{  	ImageView imageView = new ImageView(knopImageString);
+       		knopImage = imageView.getImage();
+			imWidth = imageView.getWidth();
+			imHeight = imageView.getHeight();
+			LoadHandler handler = new LoadHandler() {
+
+				@Override
+				public void onLoad(LoadEvent event) {
+					int width = knopImage.getWidth();
+					int height = knopImage.getHeight();
+					logger.fine("onLoad checkbutton image " + width + "x" + height);
+					basisPanel.setWidgetLeftWidth(checkButton, 0, Style.Unit.PX, width, Style.Unit.PX);
+					basisPanel.setWidgetTopHeight(checkButton, 5, Style.Unit.PX, height, Style.Unit.PX);
+					
+				}
+			};
+			knopImage.addLoadHandler(handler);
 		}
 		if(knopImage != null)
 		{	checkButton = new PushButton(knopImage);
@@ -100,8 +118,14 @@ public class CheckButton implements InteractionStub
 		ashoogte = hoogte / 2 + 1;
 		basisPanel.setSize("" + breedte + "px", "" + hoogte + "px");
 		basisPanel.add(checkButton);
-		//basisPanel.setWidgetLeftWidth(checkButton, 0, Style.Unit.PX, imWidth, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(checkButton, 5, Style.Unit.PX, imHeight, Style.Unit.PX);
+		if(imWidth > 0 && imHeight > 0)
+		{ 
+			logger.fine("checkbutton image loaded " + imWidth + "x" + imHeight);
+			basisPanel.setWidgetLeftWidth(checkButton, 0, Style.Unit.PX, imWidth, Style.Unit.PX);
+			basisPanel.setWidgetTopHeight(checkButton, 5, Style.Unit.PX, imHeight, Style.Unit.PX);
+		} else
+			logger.fine("await checkbutton loaded " + imWidth + " x " + imHeight);
+			
 		checkButton.addClickHandler(new ClickHandler(){
 
 			public void onClick(ClickEvent e)
@@ -121,6 +145,7 @@ public class CheckButton implements InteractionStub
 	}
 	
 	boolean fout;
+	private Image knopImage;
 
 	public void zetNakijkObjecten(ArrayList<Object> lijst)
 	{
