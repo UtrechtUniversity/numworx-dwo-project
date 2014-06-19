@@ -60,6 +60,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public FormuleEditorWithAnswer(HashMap<String, Object> h, boolean isVergelijkingVak, FormuleEditorWithSteps fe, String[] randomVarNamen, HashMap<String, Object> randomVarWaarden)
 	{
 		super();
+		boolean boxMetRand;
+		boxMetRand = true;
 		//getMainRegel().setEditorParent(this);
 		//getMainRegel().setDefaultHeight(24);
 
@@ -88,14 +90,19 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			else
 				avChecker = new AntwoordFormuleVakChecker((HashMap<String, Object>) launchState, randomVarNamen, randomVarWaarden);
 
-			if(launchState != null && launchState.containsKey("check") )
-			{	//System.out.println("check wordt uit launchstate gehaald");
-				check = launchState.getBoolean("check");
+			if(launchState != null) {
+				if(launchState.containsKey("check") )
+				{	//System.out.println("check wordt uit launchstate gehaald");
+					check = launchState.getBoolean("check");
+				}
+			
+				if(launchState.containsKey("formuleToolBijFocus"))
+					setFormuleToolBijFocus(launchState.getBoolean("formuleToolBijFocus"));
+			
+				if(launchState.containsKey("boxMetRand"))
+					boxMetRand = launchState.getBoolean("boxMetRand");
 			}
-			
-			if(launchState != null && launchState.containsKey("formuleToolBijFocus"))
-				setFormuleToolBijFocus(launchState.getBoolean("formuleToolBijFocus"));
-			
+		
 			checkimg = new Image(FORMULE_BUNDLE.mw_vinkje_groen());
 			checkimg.setVisible(false);
 			checkimg.getElement().getStyle().setProperty("marginLeft", "3px");
@@ -112,8 +119,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				//hoogte - 6: 2 pixels marge boven, 2 pixels marge onder, 1 pixel rand boven, 1 pixel rand onder.
 				sp.setSize((breedte - 3) + "px", (hoogte - 6) + "px"); 
 				//sp.getElement().getStyle().setBackgroundColor(CssColor.make(255, 0, 0).toString());
-				sp.getElement().getStyle().setProperty("border", "1px solid gray");
-				
+				if(boxMetRand)
+					sp.getElement().getStyle().setProperty("border", "1px solid gray");
+				else
+					sp.getElement().getStyle().setBorderStyle(Style.BorderStyle.NONE);
 				//sp.getElement().getStyle().setPadding(3, Style.Unit.PX);
 				
 				sp.getElement().getStyle().setMarginLeft(1, Style.Unit.PX);
