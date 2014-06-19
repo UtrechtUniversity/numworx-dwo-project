@@ -15,9 +15,14 @@ import java.util.Vector;
 
 
 
+
+
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
+import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
@@ -50,7 +55,7 @@ import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 import fi.wiskopdr.FormuleParser;
 
 
-public class AntwoordTekstVak implements InteractionStub{
+public class AntwoordTekstVak implements InteractionView{
 
 	private Map<String, Object> launchState; 
 	OpdrNavIF comRoot;
@@ -62,6 +67,7 @@ public class AntwoordTekstVak implements InteractionStub{
 	private boolean boxMetRand;
 	
 	private LayoutPanel basisPanel;
+	private TouchPanel achtergrondPanel;
 	int breedte = 110;
 	int hoogte = 24; 	
 	boolean volledigeBreedte = false;
@@ -120,6 +126,7 @@ public class AntwoordTekstVak implements InteractionStub{
 	//private FormuleVak formuleVak;
 	private int minBreedte;
 	private int ashoogte;
+	private PopupFacade facade;
 
 	private boolean tabletAan;
 	private boolean formuleToolBijFocus;
@@ -138,7 +145,7 @@ public class AntwoordTekstVak implements InteractionStub{
 			if(h.containsKey("interactiePanelLaunchState"))
 				launchState = map.getMap("interactiePanelLaunchState");
 		}
-		
+		facade = new PopupFacade(h);
 		this.randomVarNamen = randomVarNamen;
 		this.randomVarWaarden = randomVarWaarden;
 		init(breedte, hoogte, launchState, randomVarWaarden);
@@ -248,7 +255,17 @@ public class AntwoordTekstVak implements InteractionStub{
 		//antwoordTF.setBounds(0, 0, 80, 21);
 		//antwoordTF.addActionListener(this);
 		
-		formuleVak = new FormuleEditor();
+		formuleVak = new FormuleEditor() {
+
+			@Override
+			public void enter() {
+				if(mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS)
+				{
+					return; 
+				}
+				kijkNa();
+			} } ;
+		//hier toetsenbord aan vastmaken. WIM??
 		formuleVak.setFormuleToolBijFocus(formuleToolBijFocus);
 		//formuleVak.setFont(formuleVakFont);
 		//formuleVak.setBorder(false);
@@ -260,16 +277,17 @@ public class AntwoordTekstVak implements InteractionStub{
 			//TODO: Onderstaande (met formules) werkt nog niet. Ik (Sietske) weet ook niet hoe veel het wordt gebruikt, 
 			//dus ga even met wat anders verder.
 		{	//basisPanel.setSize(Math.max(minBreedte, formuleVak.getSize().width + 24), formuleVak.getSize().height + 8);
-			Panel achtergrondPanel = new TouchPanel();
+			achtergrondPanel = new TouchPanel();
 			achtergrondPanel.getElement().getStyle().setBackgroundColor("white");
 			achtergrondPanel.getElement().getStyle().setProperty("border", "1px solid gray");
 			basisPanel.add(achtergrondPanel);
-			basisPanel.setWidgetLeftRight(achtergrondPanel, 4, Style.Unit.PX, 20, Style.Unit.PX);
-			basisPanel.setWidgetTopBottom(achtergrondPanel, 4, Style.Unit.PX, 4, Style.Unit.PX);
+			basisPanel.setWidgetLeftRight(achtergrondPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+			basisPanel.setWidgetTopBottom(achtergrondPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
 			//basisPanel.setWidgetLeftRight(achtergrondPanel)
 			//Panel panel = formuleVak.getAsPanel();
 			achtergrondPanel.getElement().addClassName("insert_formule");
 			achtergrondPanel.add(formuleVak.getMainRegel().getCanvas());
+			achtergrondPanel.addTouchHandler(new FormuleEditorTouchHandler(formuleVak));
 			//basisPanel.add(formuleVak.getMainRegel().getCanvas());
 			//basisPanel.setWidgetLeftRight(formuleVak.getMainRegel().getCanvas(), 4, Style.Unit.PX, 20, Style.Unit.PX);
 			//basisPanel.setWidgetTopBottom(formuleVak.getMainRegel().getCanvas(), 4, Style.Unit.PX, 4, Style.Unit.PX);
@@ -642,11 +660,15 @@ public class AntwoordTekstVak implements InteractionStub{
 				for (int i = 0; i < juisteAntwoorden.length; i++)
 				{
 					String antw = antwoordTF.getText();
+						
 					if (formuleMode)
 					{
 						antw = formuleVak.toString();
+						antw = "$f" + antw + "@";
 						//antw = antw.substring(2, antw.length()-1);
 					}
+					
+					
 					antw = StringUtils.replaceStr(antw, " ", "");
 					gelijkwaardig = gelijkwaardig || antw.equals(juisteAntwoorden[i]);
 
@@ -678,13 +700,20 @@ public class AntwoordTekstVak implements InteractionStub{
 			gelijkwaardig = false;
 			for (int i = 0; i < juisteAntwoorden.length; i++)
 			{
+				System.out.println("juisteAntwoorden[" + i + "]: " + juisteAntwoorden[i]);
+				
+				
 				String antw = antwoordTF.getText();
 				if (formuleMode)
 				{
 					antw = formuleVak.toString();
+					antw = "$f" + antw + "@";
 					//antw = antw.substring(2, antw.length()-1);
 				}
+				System.out.println("antw voor replace: " + antw);
 				antw = StringUtils.replaceStr(antw, " ", "");
+				System.out.println("antw na replace: " + antw);
+				
 				gelijkwaardig = gelijkwaardig || antw.equals(juisteAntwoorden[i]);
 			}
 		}
@@ -713,6 +742,10 @@ public class AntwoordTekstVak implements InteractionStub{
 	*/
 
 
+	public boolean heeftFormuleInvoer()
+	{
+		return formuleMode;
+	}
 
 	@Override
 	public int getScore() {
@@ -730,16 +763,23 @@ public class AntwoordTekstVak implements InteractionStub{
 	}
 
 
-	@Override
+
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
 		
 	}
 
 
-	@Override
-	public Widget asWidget() {
+	
+	
+	public Panel getAsPanel()
+	{
 		return basisPanel;
+	}
+	
+	public TouchPanel getTouchPanel()
+	{
+		return achtergrondPanel;
 	}
 
 
@@ -770,6 +810,13 @@ public class AntwoordTekstVak implements InteractionStub{
 	@Override
 	public void setAsHoogte(int ashoogte) {
 		this.ashoogte = ashoogte;
+	}
+
+
+	@Override
+	public Widget asWidget()
+	{
+		return facade.wrap(getAsPanel());
 	}
 	
 	

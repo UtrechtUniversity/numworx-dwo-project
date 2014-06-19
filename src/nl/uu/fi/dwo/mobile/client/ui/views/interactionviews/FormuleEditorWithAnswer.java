@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
@@ -146,6 +147,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			//sp.getElement().addClassName("insert_formule");
 			sp.add(this.getMainRegel().getCanvas());
 			sp.add(checkimg);
+			sp.addTouchHandler(new FormuleEditorTouchHandler(this));
 			
 		}
 	}
@@ -209,7 +211,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public void enter() {
 		if(mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS)
 		{
-			return; // TODO wat moet hier gebeuren?
+			return; 
 		}
 		kijkNa();
 	}

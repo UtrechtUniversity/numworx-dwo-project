@@ -252,17 +252,6 @@ public class TekstRegel extends LayoutPanel
 				this.setWidgetLeftWidth(label, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
 				this.setWidgetTopHeight(label, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
 			}
-			else if (currentObject instanceof FormuleEditorWithAnswer)
-			{
-				TouchPanel tp = (TouchPanel) ((FormuleEditorWithAnswer) currentObject).getAsPanel();
-				
-				tekstVak.getTekstVakParent().getKeyboard().setEditor(((FormuleEditorWithAnswer) currentObject));
-				tekstVak.getTekstVakParent().addFormulePanelListeners(tp, ((FormuleEditorWithAnswer) currentObject));
-				
-				this.add(tp);
-				this.setWidgetLeftWidth(tp, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
-				this.setWidgetTopHeight(tp, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
-				}
 			else if (currentObject instanceof FormuleViewer)
 			{	Panel a = ((FormuleViewer) currentObject).getAsPanel();
 				//a.getElement().getStyle().setPaddingLeft(0, Style.Unit.PX);
