@@ -18,9 +18,11 @@ import java.util.Vector;
 
 
 
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
@@ -122,6 +124,7 @@ public class AntwoordTekstVak implements InteractionView{
 	// TODO: Voor in formule-modus:
 	//private Font formuleVakFont = (!WiskOpdr.formTimes) || WiskOpdr.mac || WiskOpdr.zoefi ? WiskOpdr.formuleFont1Mac : WiskOpdr.formuleFont1; //new Font("TimesRoman",Font.PLAIN,16);
 
+	FormuleFont fm;
 	private boolean formuleMode;
 	//private FormuleVak formuleVak;
 	private int minBreedte;
@@ -274,7 +277,6 @@ public class AntwoordTekstVak implements InteractionView{
 		//addMouseListener(this);
 		
 		if (formuleMode) 
-			//TODO: Onderstaande (met formules) werkt nog niet. Ik (Sietske) weet ook niet hoe veel het wordt gebruikt, 
 			//dus ga even met wat anders verder.
 		{	//basisPanel.setSize(Math.max(minBreedte, formuleVak.getSize().width + 24), formuleVak.getSize().height + 8);
 			achtergrondPanel = new TouchPanel();
@@ -282,10 +284,12 @@ public class AntwoordTekstVak implements InteractionView{
 			achtergrondPanel.getElement().getStyle().setProperty("border", "1px solid gray");
 			basisPanel.add(achtergrondPanel);
 			basisPanel.setWidgetLeftRight(achtergrondPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
-			basisPanel.setWidgetTopBottom(achtergrondPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+			basisPanel.setWidgetTopBottom(achtergrondPanel, 2, Style.Unit.PX, 2, Style.Unit.PX);
 			//basisPanel.setWidgetLeftRight(achtergrondPanel)
 			//Panel panel = formuleVak.getAsPanel();
 			achtergrondPanel.getElement().addClassName("insert_formule");
+			achtergrondPanel.getElement().getStyle().setPaddingLeft(3, Style.Unit.PX);
+			achtergrondPanel.getElement().getStyle().setPaddingTop(2, Style.Unit.PX);
 			achtergrondPanel.add(formuleVak.getMainRegel().getCanvas());
 			achtergrondPanel.addTouchHandler(new FormuleEditorTouchHandler(formuleVak));
 			//basisPanel.add(formuleVak.getMainRegel().getCanvas());
@@ -819,5 +823,12 @@ public class AntwoordTekstVak implements InteractionView{
 		return facade.wrap(getAsPanel());
 	}
 	
+	public void setFontSize(int size)
+	{
+		if(formuleMode)
+			formuleVak.setFont(FormuleFont.createFromFontSize(size));
+		else
+			antwoordTF.getElement().getStyle().setFontSize(size, Style.Unit.PX);
+	}
 	
 }

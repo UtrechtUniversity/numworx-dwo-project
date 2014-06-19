@@ -338,6 +338,10 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			}
 			else if(currentObject instanceof InteractionView)
 				((InteractionView) currentObject).zetVolledigeBreedte((int) tekstVakBreedte);
+			if(currentObject instanceof AntwoordTekstVak)
+			{
+				((AntwoordTekstVak) currentObject).setFontSize(font_size);
+			}
 			if (currentObject instanceof FormuleEditorWithAnswer)
 			{
 				//((FormuleEditorWithAnswer) currentObject).setFont(FormuleFont.createFromFontSize(font_size));
