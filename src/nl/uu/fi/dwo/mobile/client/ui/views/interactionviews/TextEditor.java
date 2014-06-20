@@ -32,8 +32,9 @@ import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
-public class TextEditor extends Composite implements InteractionView, TouchStartHandler, FormuleEditorIF {
+public class TextEditor  implements InteractionView, TouchStartHandler, FormuleEditorIF {
 	
 	class Tapper implements TapHandler {
 		private FormuleEditorIF deze;
@@ -109,12 +110,18 @@ public class TextEditor extends Composite implements InteractionView, TouchStart
 			menubar.setPixelSize(width, menuheight=30);
 			hbox.add(menubar);
 		}
+		boolean boxMetRand = true;
+		if(launchdata.containsKey("boxMetRand"))
+				boxMetRand = launchdata.getBoolean("boxMetRand");
+		
 		content = getContent(launchdata);
 		content.setPixelSize(width, height-menuheight);
-		content.getElement().getStyle().setBackgroundColor("#F0F0F0");
+		content.getElement().getStyle().setBackgroundColor("white");
 		hbox.add(content);
 		hbox.getElement().getStyle().setBackgroundColor("#C0C0C0");
 		hbox.setPixelSize(width, height);
+		if(boxMetRand)
+			hbox.getElement().getStyle().setProperty("border", "thin solid black");
 		initWidget(hbox);
 	}
 
@@ -129,6 +136,8 @@ public class TextEditor extends Composite implements InteractionView, TouchStart
 	}
 
 	private Widget cursorWidget;
+	private Widget widget;
+	
 	private Widget getContent(ObjectMap launchdata) {
 		TouchPanel touch = new TouchPanel();
 		touch.addTapHandler(new Tapper(this,touch.getElement()));
@@ -154,6 +163,9 @@ public class TextEditor extends Composite implements InteractionView, TouchStart
 		boolean formuleKnop = true;
 		boolean formuleToolPopup = true;
 		boolean graftool = true;
+		if(launchdata.containsKey("formuleKnop")) formuleKnop = launchdata.getBoolean("formuleKnop");
+		if(launchdata.containsKey("grafTool")) graftool = launchdata.getBoolean("grafTool");
+		if(launchdata.containsKey("rekenTool")) rekentool = launchdata.getBoolean("rekenTool");
 		
 		FlowPanel menubar = new FlowPanel();
 		Button fx = new Button("f(x)"); if(formuleKnop) menubar.add(fx);
@@ -165,22 +177,26 @@ public class TextEditor extends Composite implements InteractionView, TouchStart
 
 	@Override
 	public Widget asWidget() {
-		return this;
+		return widget;
+	}
+
+	private void initWidget(Widget w) {
+		this.widget = w;
 	}
 
 	@Override
 	public int getAsHoogte() {
-		return 0;
+		return (asHoogte);
 	}
 
 	@Override
 	public int getHeight() {
-		return height;
+		return (height);
 	}
 
 	@Override
 	public int getWidth() {
-		return width;
+		return (width);
 	}
 	
 	public void zetVolledigeBreedte(int breedte)

@@ -40,4 +40,12 @@ public interface DWOplayerClientBundle extends ClientBundle {
 	
 	@Source("nl/uu/fi/dwo/mobile/client/resources/header.css")
 	HeaderCss headercss();
+	
+	@Source("nl/uu/fi/dwo/mobile/client/resources/menu-icon.png")
+	ImageResource menuIcon();
+	
+	@Source("nl/uu/fi/dwo/mobile/client/resources/arrow-right-big.png")
+	ImageResource arrowRightBig();
+	
+	
 }

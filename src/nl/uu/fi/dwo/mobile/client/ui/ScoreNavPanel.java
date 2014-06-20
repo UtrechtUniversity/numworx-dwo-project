@@ -235,11 +235,14 @@ public class ScoreNavPanel extends Composite {
 			setFontFamily(text);
 			text.getElement().getStyle().setFontWeight(FontWeight.BOLD);
 // Wat voor button moet hier komen?
-			Button p = new Button();p.setText(">"); vragen.setWidget(i, 3, p);
+			ButtonCss css = DWOplayer.DWO_BUNDLE.imgbutton();
+			Button p = new Button(css);
+			p.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.arrowRightBig().getSafeUri().asString() + "')");
+			
+			vragen.setWidget(i, 3, p);
 			//p.setStylePrimaryName("vraagButton");
 			p.addTapHandler(new TouchHandler(i));
 			
-			ButtonCss css = DWOplayer.DWO_BUNDLE.imgbutton();
 			Button reload = new Button(css);
 			reload.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.reload().getSafeUri().asString() + "')");
 			if(itemOpnieuw) 

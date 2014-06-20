@@ -772,7 +772,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		hp.setRightWidget(hbox);
 		
 		hb = new HeaderButton(DWOplayer.DWO_BUNDLE.headercss());
-		hb.setText(":=");
+		hb.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.menuIcon().getSafeUri().asString() + "')");;
 
 		hp.setLeftWidget(hb);
 
