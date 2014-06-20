@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 import java.util.HashMap;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -23,6 +24,7 @@ import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
+import com.googlecode.mgwt.ui.client.widget.touch.TouchDelegate;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
@@ -69,15 +71,14 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			editor.insert("?");
 			Panel panel = editor.getAsPanel();
 			comRoot.getKeyboard().setEditor(editor);
-			TouchPanel wrap = new TouchPanel();
-			wrap.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+			TouchDelegate wrap = new TouchDelegate(panel);
 			wrap.addTapHandler(new Tapper(editor, panel.getElement()));
-			wrap.add(panel);
 			panel.setWidth("30px");
 			panel.setHeight("30px");
 			panel.getElement().getStyle().setBackgroundColor("#808080");
+			panel.getElement().getStyle().setDisplay(Style.Display.INLINE);
 			sb.insert(cursor, '@');
-			flow.insert(wrap, cursor++);
+			flow.insert(panel, cursor++);
 		}
 
 	}
