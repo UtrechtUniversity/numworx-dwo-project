@@ -58,9 +58,11 @@ public class PopupFacade implements InteractionView {
 	
 	public Widget wrap(Widget container) {
 		if(popup) {
-			PopupButton btn = new PopupButton(container, getImage(), null);
-			list.add(btn);
-			return btn;
+			if(popupBtn==null)
+			{	popupBtn = new PopupButton(container, getImage(), null);
+				list.add(popupBtn);
+			}
+			return popupBtn;
 		}
 		return container;
 	}
@@ -81,6 +83,7 @@ public class PopupFacade implements InteractionView {
 		"images/resources/tekstknop.gif",   // textVakLabel
 		"images/resources/geogebra.gif",    // geogebra
 	};
+	private PopupButton popupBtn;
 	
 	private Image getImage() {
 		if(popupImageString != null && popupImageString.length()>0)
@@ -118,7 +121,7 @@ public class PopupFacade implements InteractionView {
 	}
 
 	public Widget asWidget() {
-		return wrap(delegate.asWidget());
+		return wrap(Widget.asWidgetOrNull(delegate));
 	}
 
 	@Override
@@ -159,6 +162,21 @@ public class PopupFacade implements InteractionView {
 		{
 			delegate.setAsHoogte(ashoogte);
 		}
+	}
+
+	public int wrapHeight(int height) {
+		if(popup) return getHeight();
+		return height;
+	}
+	
+	public int wrapWidth(int width) {
+		if(popup) return getWidth();
+		return width;
+	}
+	
+	public int wrapAsHoogte(int asHoogte) {
+		if(popup) return getAsHoogte();
+		return asHoogte;
 	}
 	
 }

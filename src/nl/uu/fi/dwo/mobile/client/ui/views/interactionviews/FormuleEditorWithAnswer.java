@@ -118,19 +118,23 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				//Maat zetten:
 				//breedte - 3: 1 pixel marge links, 1 pixel rand links, 1 pixel rand rechts
 				//hoogte - 6: 2 pixels marge boven, 2 pixels marge onder, 1 pixel rand boven, 1 pixel rand onder.
-				sp.setSize((breedte - 3) + "px", (hoogte - 6) + "px"); 
+				sp.setPixelSize((breedte - 3) , (hoogte - 6) ); 
 				//sp.getElement().getStyle().setBackgroundColor(CssColor.make(255, 0, 0).toString());
+				Style spStyle = sp.getElement().getStyle();
 				if(boxMetRand)
-					sp.getElement().getStyle().setProperty("border", "1px solid gray");
+					spStyle.setProperty("border", "1px solid gray");
 				else
-					sp.getElement().getStyle().setBorderStyle(Style.BorderStyle.NONE);
+				{
+					spStyle.setBorderStyle(Style.BorderStyle.NONE);
+					spStyle.setProperty("borderBottom", "thin dotted");
+				}
 				//sp.getElement().getStyle().setPadding(3, Style.Unit.PX);
 				
-				sp.getElement().getStyle().setMarginLeft(1, Style.Unit.PX);
+				spStyle.setMarginLeft(1, Style.Unit.PX);
 				//sp.getElement().getStyle().setMarginRight(1, Style.Unit.PX);
 				//sp.getElement().getStyle().setMarginRight(1, Style.Unit.PX);
-				sp.getElement().getStyle().setMarginTop(2, Style.Unit.PX);
-				sp.getElement().getStyle().setPaddingTop(1, Style.Unit.PX);
+				spStyle.setMarginTop(2, Style.Unit.PX);
+				spStyle.setPaddingTop(1, Style.Unit.PX);
 				//sp.getElement().getStyle().setMarginBottom(0, Style.Unit.PX);
 				
 				//sp.getElement().getStyle().setPaddingLeft(1, Style.Unit.PX);
@@ -138,7 +142,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				//sp.getElement().getStyle().setPaddingTop(1, Style.Unit.PX);
 				//sp.getElement().getStyle().setPaddingBottom(5, Style.Unit.PX);
 				//(Weggehaald Sietske) sp.getElement().getStyle().setProperty("backgroundColor", "#e9e9e9");
-				sp.getElement().getStyle().setBackgroundColor("white");
+				spStyle.setBackgroundColor("white");
 				//sp.getElement().getStyle().setProperty("backgroundColor", "yellow");
 				//this.getMainRegel().getCanvas().getElement().getStyle().setProperty("marginTop", "3px");
 				//this.getMainRegel().getCanvas().getElement().getStyle().setProperty("marginBottom", "0px");
@@ -148,7 +152,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			sp.add(this.getMainRegel().getCanvas());
 			sp.add(checkimg);
 			sp.addTouchHandler(new FormuleEditorTouchHandler(this));
-			
 		}
 	}
 
@@ -301,12 +304,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	public int getHeight()
 	{
-		return hoogte;
+		return facade.wrapHeight(hoogte);
 	}
 	
 	public int getWidth()
 	{
-		return breedte;
+		return facade.wrapWidth(breedte);
 	}
 	
 	public void zetVolledigeBreedte(int breedte)
@@ -317,7 +320,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	public int getAsHoogte()
 	{
-		return this.getMainRegel().getAsHoogte() + 3 /* margin top + border + padding top */;
+		return facade.wrapAsHoogte(this.getMainRegel().getAsHoogte() + 3 /* margin top + border + padding top */);
 		
 	}
 

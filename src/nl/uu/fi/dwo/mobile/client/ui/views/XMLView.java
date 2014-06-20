@@ -21,6 +21,7 @@ import nl.uu.fi.dwo.mobile.utils.StringCodeToHashMap;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -152,17 +153,17 @@ public abstract class XMLView {
 			}
 			else if (currentObject instanceof FormuleEditorWithAnswer)
 			{
-				((FormuleEditorWithAnswer) currentObject).setFont(FormuleFont.createFromFontSize(font_size));
-				int asHoogte = ((FormuleEditorWithAnswer) currentObject).getMainRegel().getAsHoogte();
-				int hoogte = ((FormuleEditorWithAnswer) currentObject).getMainRegel().getHeight();
-				Panel a = getPanelElement((FormuleEditorWithAnswer) currentObject);
-				//((FormuleEditorWithAnswer) currentObject).getMainRegel().getCanvas().getElement().getStyle().setMarginBottom(-3, Unit.PX);
-				//a.getElement().getStyle().setMarginBottom(-4, Unit.PX);
-				a.getElement().getStyle().setProperty("display", "inline-block");
-				a.getElement().getStyle().setProperty("position", "relative");
-				a.getElement().getStyle().setProperty("top", (hoogte - asHoogte - Math.rint(font_size * 0.33) - 2) + "px");
-				kb.setEditor((FormuleEditorWithAnswer) currentObject);
-				destination.add(a);
+
+				FormuleEditorWithAnswer formuleEditorWithAnswer = (FormuleEditorWithAnswer) currentObject;
+				formuleEditorWithAnswer.setFont(FormuleFont.createFromFontSize(font_size));
+				Widget asWidget = formuleEditorWithAnswer.asWidget();
+				int asHoogte = formuleEditorWithAnswer.getAsHoogte();
+				int hoogte = formuleEditorWithAnswer.getHeight();
+				Style widgetStyle = asWidget.getElement().getStyle();
+				widgetStyle.setProperty("display", "inline-block");
+				widgetStyle.setProperty("position", "relative");
+				widgetStyle.setProperty("top", (hoogte - asHoogte - Math.rint(font_size * 0.33) - 2) + "px");
+				destination.add(asWidget);
 			}
 			else if (currentObject instanceof FormuleViewer)
 			{
