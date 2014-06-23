@@ -76,9 +76,9 @@ public class FormuleEditorWithSteps implements InteractionView
 	private TouchButton tb = null;
 	private TouchButton copyButton = null;
 	private int steps = 0;
-	private HashMap<String, Object> h = null;
-	private String[] randomVarNamen = null;
-	private HashMap randomVarWaarden = null;
+	protected HashMap<String, Object> h = null;
+	protected String[] randomVarNamen = null;
+	protected HashMap randomVarWaarden = null;
 	private ArrayList<FlowPanel> stepPanels = new ArrayList<FlowPanel>();
 	private FormuleFont font = FormuleFont.createFromFontSize(16);
 
@@ -94,7 +94,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	private boolean nagekeken;
 	private boolean hasFeedback;
 
-	private boolean isVergelijkingVak = false;
+	protected boolean isVergelijkingVak = false;
 	private PopupFacade facade;
 	
 	private boolean bordjesMethode;
@@ -539,7 +539,7 @@ public class FormuleEditorWithSteps implements InteractionView
 
 	public FormuleEditorWithAnswer addNewEditor(Panel p)
 	{
-		FormuleEditorWithAnswer editor = new FormuleEditorWithAnswer(h, isVergelijkingVak, this, randomVarNamen, randomVarWaarden);
+		FormuleEditorWithAnswer editor = editorInstance();
 		editor.setFormuleToolBijFocus(true);
 		if (!hasPrefix)
 			editor.getAsPanel().getElement().getStyle().setMarginLeft(13, Unit.PX);
@@ -554,6 +554,10 @@ public class FormuleEditorWithSteps implements InteractionView
 		p.add(tp);
 		addFormulePanelListeners(tp, editor);
 		return editor;
+	}
+
+	FormuleEditorWithAnswer editorInstance() {
+		return new FormuleEditorWithAnswer(h, isVergelijkingVak, this, randomVarNamen, randomVarWaarden);
 	}
 
 	public void layoutStepPanel(Widget w)

@@ -33,6 +33,60 @@ import fi.wiskopdr.AntwoordVergelijkingVakChecker;
  */
 public class FormuleEditorWithAnswer extends FormuleEditor implements InteractionView
 {
+	
+	class FormuleEditorPopup extends FormuleEditorWithSteps {
+
+		public FormuleEditorPopup(HashMap<String, Object> h,
+				boolean isVergelijkingVak, String[] randomVarNamen,
+				HashMap randomVarWaarden) {
+			super(h, isVergelijkingVak, randomVarNamen, randomVarWaarden);
+		}
+
+		@Override
+		public void kijkNa() {
+			// TODO Auto-generated method stub
+			super.kijkNa();
+			String string = getEditor().toString();
+			transfer(string);
+		}
+
+		void transfer(String string) {
+			logger.fine("userstring = " + string);
+			FormuleEditorWithAnswer other = FormuleEditorWithAnswer.this;
+			other.clearAll();
+			other.insert(string);
+			//other.kijkNa();
+		}
+
+		@Override
+		public void lastStep(String useranswer) {
+			super.lastStep(useranswer);
+			//transfer(useranswer);
+		}
+
+		@Override
+		public void addStep(String useranswer) {
+			super.addStep(useranswer);
+			//transfer(useranswer);
+		}
+
+		@Override
+		FormuleEditorWithAnswer editorInstance() {
+			return new FormuleEditorWithAnswer(h, isVergelijkingVak, this, randomVarNamen, randomVarWaarden)
+			{
+				@Override
+				public void enter() {
+					super.enter();
+					transfer(toString());
+				}
+				
+			};
+		}
+
+		
+	}
+	
+	
 	private static final String ANTWOORD_STRING = "antwoordString";
 	private final static Logger logger = Logger.getLogger("FormuleEditorWithAnswer");
 	OpdrNavIF comRoot;
@@ -55,8 +109,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private AntwoordVakChecker avChecker = null;
 	private PopupFacade facade;
 	private int mode;
+	private boolean vakUitwerking;
 	
 	private TekstRegel parentRegel;
+	private FormuleEditorPopup fews;
 	
 	public FormuleEditorWithAnswer(HashMap<String, Object> h, boolean isVergelijkingVak, FormuleEditorWithSteps fe, String[] randomVarNamen, HashMap<String, Object> randomVarWaarden)
 	{
@@ -93,7 +149,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 			if(launchState != null) {
 				if(launchState.containsKey("check") )
-				{	//System.out.println("check wordt uit launchstate gehaald");
+				{
 					check = launchState.getBoolean("check");
 				}
 			
@@ -102,6 +158,21 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			
 				if(launchState.containsKey("boxMetRand"))
 					boxMetRand = launchState.getBoolean("boxMetRand");
+				if(launchState.containsKey("uitw")) 
+				{
+					vakUitwerking = launchState.getBoolean("uitw");
+					logger.fine("vakuitwerking = " + vakUitwerking);
+					if (vakUitwerking)
+					{
+						HashMap<String, Object> hh = new HashMap<String,Object>();
+						hh.put("volledigeBreedte", Boolean.TRUE);
+						hh.put("breedte", breedte);
+						HashMap ll = new HashMap();
+						hh.put("interactiePanelLaunchState", launchState);
+						
+						fews = new FormuleEditorPopup(hh,isVergelijkingVak,randomVarNamen,randomVarWaarden);
+					}
+				}
 			}
 		
 			checkimg = new Image(FORMULE_BUNDLE.mw_vinkje_groen());
@@ -378,6 +449,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	{
 		this.comRoot = comRoot;
 		zetMode(comRoot.getMode());
+		if(fews != null)
+			fews.setCommunicationRoot(comRoot);
 	}
 
 	@Override
@@ -388,6 +461,14 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 	public void zetMode(int mode) {
 		this.mode = mode;
+	}
+
+	public Object getUitwerking() {
+		if(vakUitwerking)
+		{
+			return fews;
+		}
+		return null;
 	}
 
 }

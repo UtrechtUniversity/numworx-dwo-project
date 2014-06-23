@@ -180,6 +180,7 @@ public class TekstVakPanel implements InteractionView
 	private ImageView knopImageView1, knopImageView2;
 	private ToggleButton klapUitButton;
 	private TekstVakContext container;
+	private Object queuedObject;
 	
 	static CssColor getColor(ObjectMap map, String key, int r, int g, int b) {
 		ObjectMap colorMap = map != null  ? map.getObjectMap(key) : null ;
@@ -591,6 +592,14 @@ public class TekstVakPanel implements InteractionView
 			for (int j = 0; j < breedtes.size(); j++)
 			{
 				opdrachtObjects = tb.convertTekst(interactiePanelLaunchState, i, j);
+				
+				if(queuedObject != null && i == 1 && j == 0)
+				{
+					opdrachtObjects.clear();
+					opdrachtObjects.add(queuedObject);
+					queuedObject = null;
+				}
+				
 				tekstVakken[i][j].zetOpdrachtObjects(opdrachtObjects);
 				
 				//eerst zorgen dat alle opdrachtObjects goed geïnitialiseerd zijn, daarna zet je ze netjes in het tekstvak neer.
@@ -668,7 +677,14 @@ public class TekstVakPanel implements InteractionView
 					else if (currentObject instanceof FormuleEditorWithAnswer)
 					{
 						aantalVakken++;
-						((FormuleEditorWithAnswer) currentObject).zetInstellingen(instellingen);
+						FormuleEditorWithAnswer formuleEditorWithAnswer = (FormuleEditorWithAnswer) currentObject;
+						formuleEditorWithAnswer.zetInstellingen(instellingen);
+						if(i == 0 && j == 0)
+							queuedObject = formuleEditorWithAnswer.getUitwerking();
+					}
+					else if (currentObject instanceof FormuleEditorWithAnswer.FormuleEditorPopup)
+					{
+						((FormuleEditorWithSteps) currentObject).zetInstellingen(instellingen);
 					}
 					else if (currentObject instanceof FormuleEditorWithSteps)
 					{
