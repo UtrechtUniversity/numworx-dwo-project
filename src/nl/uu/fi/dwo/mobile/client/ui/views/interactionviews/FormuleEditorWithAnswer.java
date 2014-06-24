@@ -53,22 +53,22 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		void transfer(String string) {
 			logger.fine("userstring = " + string);
 			FormuleEditorWithAnswer other = FormuleEditorWithAnswer.this;
-			other.clearAll();
+			other.clearMain();
 			other.insert(string);
-			//other.kijkNa();
+			other.enter();
 		}
 
-		@Override
-		public void lastStep(String useranswer) {
-			super.lastStep(useranswer);
-			//transfer(useranswer);
-		}
+//		@Override
+//		public void lastStep(String useranswer) {
+//			super.lastStep(useranswer);
+//			//transfer(useranswer);
+//		}
 
-		@Override
-		public void addStep(String useranswer) {
-			super.addStep(useranswer);
-			//transfer(useranswer);
-		}
+//		@Override
+//		public void addStep(String useranswer) {
+//			super.addStep(useranswer);
+//			//transfer(useranswer);
+//		}
 
 		@Override
 		FormuleEditorWithAnswer editorInstance() {
@@ -224,6 +224,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			sp.add(checkimg);
 			sp.addTouchHandler(new FormuleEditorTouchHandler(this));
 		}
+	}
+
+	void clearMain() {
+		setCurrentElement(getMainRegel());
+		clearAll();
 	}
 
 	public void zetInstellingen(Map<String, Object> instellingen)
