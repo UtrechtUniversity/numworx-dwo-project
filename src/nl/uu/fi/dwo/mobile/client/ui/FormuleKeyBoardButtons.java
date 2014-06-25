@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.user.client.ui.Image;
 import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
@@ -293,7 +294,8 @@ public abstract class FormuleKeyBoardButtons
 		b.setStylePrimaryName("kbd-Button");
 		//b.setText(t);
 		b.getElement().setInnerText(t);
-		b.getElement().getStyle().setFloat(Style.Float.LEFT);
+		//b.getElement().getStyle().setFloat(Style.Float.LEFT);
+		b.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 		b.addStyleDependentName(getDependentName());
 		return b;
 	}
@@ -308,7 +310,8 @@ public abstract class FormuleKeyBoardButtons
 		TouchPanel b = new TouchPanel();
 		b.setStylePrimaryName("kbd-Button");
 		b.addStyleDependentName(getDependentName()); // else buttonDWO
-		b.getElement().getStyle().setFloat(Style.Float.LEFT);
+		//b.getElement().getStyle().setFloat(Style.Float.LEFT);
+		b.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 		Image img = newImage(src);
 		img.addStyleDependentName(getDependentName());
 		if("images/resources/zoomuitknop.gif".equals(src) || "images/resources/zoominknop.gif".equals(src))

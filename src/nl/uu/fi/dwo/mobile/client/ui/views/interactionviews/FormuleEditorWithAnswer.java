@@ -7,11 +7,15 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
+import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.StateLess;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.client.ui.event.CBookEvent;
+import nl.uu.fi.dwo.mobile.client.ui.event.CBookEventListener;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -34,7 +38,7 @@ import fi.wiskopdr.AntwoordVergelijkingVakChecker;
 public class FormuleEditorWithAnswer extends FormuleEditor implements InteractionView
 {
 	
-	class FormuleEditorPopup extends FormuleEditorWithSteps {
+	class FormuleEditorPopup extends FormuleEditorWithSteps implements CBookEventListener, StateLess {
 
 		public FormuleEditorPopup(HashMap<String, Object> h,
 				boolean isVergelijkingVak, String[] randomVarNamen,
@@ -42,13 +46,13 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			super(h, isVergelijkingVak, randomVarNamen, randomVarWaarden);
 		}
 
-		@Override
-		public void kijkNa() {
-			// TODO Auto-generated method stub
-			super.kijkNa();
-			String string = getEditor().toString();
-			transfer(string);
-		}
+//		@Override
+//		public void kijkNa() {
+//			// TODO Auto-generated method stub
+//			super.kijkNa();
+//			String string = getEditor().toString();
+//			transfer(string);
+//		}
 
 		void transfer(String string) {
 			logger.fine("userstring = " + string);
@@ -81,6 +85,25 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				}
 				
 			};
+		}
+
+		@Override
+		public void acceptCBookEvent(CBookEvent event) {
+			if(TekstVakPanel.TVP_KLAPUIT == event.getCommand())
+			{
+				FormuleEditor other = FormuleEditorWithAnswer.this;
+				String useranswer = other.toString();
+				getEditor().clearMain();
+				getEditor().insert(useranswer);
+			}
+			if(TekstVakPanel.TVP_KLAPIN == event.getCommand())
+			{
+				FormuleEditor other = FormuleEditorWithAnswer.this;
+				String useranswer = getEditor().toString();
+				other.clearMain();
+				other.insert(useranswer);
+			
+			}
 		}
 
 		
@@ -224,11 +247,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			sp.add(checkimg);
 			sp.addTouchHandler(new FormuleEditorTouchHandler(this));
 		}
-	}
-
-	void clearMain() {
-		setCurrentElement(getMainRegel());
-		clearAll();
 	}
 
 	public void zetInstellingen(Map<String, Object> instellingen)
@@ -468,9 +486,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		this.mode = mode;
 	}
 
-	public Object getUitwerking() {
+	public Object getUitwerking(TekstVakPanel parent) {
 		if(vakUitwerking)
 		{
+			parent.addCBookEventListener(fews);
 			return fews;
 		}
 		return null;

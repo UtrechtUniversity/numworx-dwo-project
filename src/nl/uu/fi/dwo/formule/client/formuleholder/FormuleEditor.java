@@ -350,5 +350,11 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 		addElement(new SigmaVak(getCurrentRegel()));
 	}
 
+
+	public void clearMain() {
+		setCurrentElement(getMainRegel());
+		clearAll();
+	}
+
 	
 }

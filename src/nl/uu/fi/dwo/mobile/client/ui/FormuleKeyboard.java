@@ -42,7 +42,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	static final String QWERTY = "ABC";
 	static final String qwerty = "abc";
 	static final String SCRIBBLE = "Scribble";
-	static final boolean hasKeyboard  = ! TouchEvent.isSupported();
+	static final boolean hasKeyboard  = false && ! TouchEvent.isSupported();
 	private FormuleEditorIF editor;
 	public KeyBoardTabPanel tp;
 	private WritePanel writePanel;
@@ -305,7 +305,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 		for (int j = 0; j < buttons.length; j++)
 		{
 			fp2 = new FlowPanel();
-			fp2.getElement().getStyle().setProperty("clear", "both");
+			//fp2.getElement().getStyle().setProperty("clear", "both");
 			for (int i = 0; i < buttons[j].length; i++)
 			{
 				if (buttons[j][i] == null)
@@ -316,7 +316,8 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 					b.setWidth(Math.round(width) + "px");
 					b.setHeight("16px");
 
-					b.getElement().getStyle().setFloat(Style.Float.LEFT);
+					//b.getElement().getStyle().setFloat(Style.Float.LEFT);
+					b.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 					if (b != null)
 						fp2.add(b);
 					continue;

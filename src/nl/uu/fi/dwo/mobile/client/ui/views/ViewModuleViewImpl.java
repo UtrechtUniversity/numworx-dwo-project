@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.StateLess;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -537,23 +538,23 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	{
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		int aantalInteractionViews = 5;
-		for (int i = 0; i < opdrachtObjects.size(); i++)
-		{
-			Object currentObject = opdrachtObjects.get(i);
-			if (currentObject instanceof InteractionView)
-			{
-				aantalInteractionViews++;
-			}
-		}
-		ArrayList<Object> states = new ArrayList<Object>(aantalInteractionViews + 5);
+//		for (int i = 0; i < opdrachtObjects.size(); i++)
+//		{
+//			Object currentObject = opdrachtObjects.get(i);
+//			if (currentObject instanceof InteractionView)
+//			{
+//				aantalInteractionViews++;
+//			}
+//		}
+		ArrayList<Object> states = new ArrayList<Object>(opdrachtObjects.size() + 5);
 		for (int i = 0; i < 5; i++)
 			states.add(null);
-		aantalInteractionViews = 5;
+//		aantalInteractionViews = 5;
 
 		for (int i = 0; i < opdrachtObjects.size(); i++)
 		{
 			Object currentObject = opdrachtObjects.get(i);
-			if (currentObject instanceof InteractionView)
+			if (currentObject instanceof InteractionView && ! (currentObject instanceof StateLess) )
 			{
 				states.add(aantalInteractionViews, ((InteractionView) currentObject).getState());
 				aantalInteractionViews++;

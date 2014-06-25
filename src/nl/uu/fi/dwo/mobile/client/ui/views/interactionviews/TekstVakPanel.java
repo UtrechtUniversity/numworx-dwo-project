@@ -19,10 +19,13 @@ import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.StateLess;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
+import nl.uu.fi.dwo.mobile.client.ui.event.CBookEvent;
+import nl.uu.fi.dwo.mobile.client.ui.event.CBookEventListener;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
@@ -76,6 +79,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import fi.wiskopdr.FormuleParser;
@@ -89,6 +93,12 @@ import fi.wiskopdr.expressies.VergelijkingMeerv;
 
 public class TekstVakPanel implements InteractionView
 {
+	public static final String TVP_KLAPUIT = "tvpKlapUit";
+	public static final String TVP_KLAPIN = "tvpKlapIn";
+	
+	private static final CBookEvent KLAPUIT_EVENT = new CBookEvent(TVP_KLAPUIT); 
+	private static final CBookEvent KLAPIN_EVENT = new CBookEvent(TVP_KLAPIN); 
+	
 	class TekstVakContext {
 
 		private int rij,kolom;
@@ -609,7 +619,8 @@ public class TekstVakPanel implements InteractionView
 					Object currentObject = opdrachtObjects.get(k);
 					if (currentObject instanceof InteractionView)
 					{ 	((InteractionView) currentObject).setCommunicationRoot(comRoot);
-						interactionViewObjects.add(currentObject);
+						if(! (currentObject instanceof StateLess))
+							interactionViewObjects.add(currentObject);
 						
 						
 						if(currentObject instanceof CheckValueUnit)
@@ -680,7 +691,7 @@ public class TekstVakPanel implements InteractionView
 						FormuleEditorWithAnswer formuleEditorWithAnswer = (FormuleEditorWithAnswer) currentObject;
 						formuleEditorWithAnswer.zetInstellingen(instellingen);
 						if(i == 0 && j == 0)
-							queuedObject = formuleEditorWithAnswer.getUitwerking();
+							queuedObject = formuleEditorWithAnswer.getUitwerking(this);
 					}
 					else if (currentObject instanceof FormuleEditorWithAnswer.FormuleEditorPopup)
 					{
@@ -1575,6 +1586,7 @@ public class TekstVakPanel implements InteractionView
 			setCurrentSize(breedte,  hoogtes.get(0).intValue() );
 			//this.hoogte = hoogtes.get(0).intValue();
 			if(parent != null) parent.resize();
+			fireEvent(KLAPIN_EVENT);
 		} 
 		else {
 			double hoogte = hoogtes.get(0);
@@ -1600,7 +1612,16 @@ public class TekstVakPanel implements InteractionView
 			this.hoogte = (int)hoogte;
 			
 			setCurrentSize( breedte, this.hoogte);
+			fireEvent(KLAPUIT_EVENT);
 		}
+	}
+
+	public HandlerRegistration addCBookEventListener(CBookEventListener listener) {
+		return CBookEventListener.BUS.addHandlerToSource(CBookEvent.TYPE, this, listener);
+	}
+
+	private void fireEvent(CBookEvent event) {
+		CBookEventListener.BUS.fireEventFromSource(event, this);
 	}
 	
 	private static final int LEFT = 0;
