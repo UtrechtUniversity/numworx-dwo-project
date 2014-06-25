@@ -554,7 +554,10 @@ System.err.println("sum = ["+result+"]");
 				
 				e.printStackTrace();
 				try {
-					DbAccessCreator.instance().log(user.getID() + " Sco " + scoID +"," + applet + " exception in Sco.end: "+e.toString());
+					
+					User localUser = user;
+					if(localUser == null) localUser = dwo.getUser();
+					DbAccessCreator.instance().log(localUser.getID() + " Sco " + scoID +"," + applet + " exception in Sco.end: "+e.toString());
 					StringWriter w = new StringWriter();
 					PrintWriter pw = new PrintWriter(w);
 					e.printStackTrace(pw);
@@ -563,6 +566,8 @@ System.err.println("sum = ["+result+"]");
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				} catch (XmlRpcException e1) {
+					e1.printStackTrace();
+				} catch (RuntimeException e1) {
 					e1.printStackTrace();
 				}
 			}

@@ -38,7 +38,11 @@ public class Guest extends User
          return TextMapper.getText(TextMapper.USER_GUEST);
     }
 
-    /**
+	public String getStudentName() {
+		return getName();
+	}
+
+/**
      * Guest user is locked in.
      */
 /*    public boolean canLogout()

@@ -1356,11 +1356,13 @@ private static boolean isValidEmail(String email) {
     public String LMSGetValue(ScoBase sco, User user, String iDataModelElement) {
     	if(LEARNER_ID.equals(iDataModelElement))
     	{
-    		return getUser().getUsername();
+    		if(user == null) return Guest.instance().getUsername();
+    		return user.getUsername();
     	}
     	if(LEARNER_NAME.equals(iDataModelElement))
     	{
-    		return getUser().getStudentName();
+    		if(user == null) return Guest.instance().getStudentName();
+    		return user.getStudentName();
     	}
     	
         if(iDataModelElement.equals(SCORM12APIInterface.USER_GROUP)) {
