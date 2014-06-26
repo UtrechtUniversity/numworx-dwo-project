@@ -1,11 +1,13 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.activities.FlatModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LoginActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ProfileActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.SelectModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.TreeModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ViewModuleActivity;
+import nl.uu.fi.dwo.mobile.client.ui.places.FlatModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ProfilePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
@@ -39,6 +41,13 @@ public class TabletActivityMapper implements ActivityMapper
 			int id = Integer.parseInt(tmp.getToken());
 			SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);			
 			return new SelectModuleActivity(clientFactory, item);
+		}
+		if (place instanceof FlatModulePlace)
+		{
+			FlatModulePlace tmp = (FlatModulePlace) place;
+			int id = Integer.parseInt(tmp.getToken());
+			SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);			
+			return new FlatModuleActivity(clientFactory, item);
 		}
 		if (place instanceof ViewModulePlace)
 			return new ViewModuleActivity(clientFactory);

@@ -816,6 +816,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				
 			}});
 		POPUP.addAutoHidePartner(hb.getElement());
+
+// FIXME HACK voor DWOplayer zelf		
+		hb = new HeaderButton(); hb.setBackButton(true);hb.setText("Terug");
 		
 		
 		//initWidget(mainPanel);

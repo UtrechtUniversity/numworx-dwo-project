@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.TabletActivityMapper;
 import nl.uu.fi.dwo.mobile.client.ui.TabletAnimationMapper;
+import nl.uu.fi.dwo.mobile.client.ui.places.FlatModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
@@ -68,7 +69,7 @@ public class DWOplayer implements EntryPoint
 
 	static void goFlat() {
 		if(--count <= 0)
-			clientfactory.getPlaceController().goTo(new SelectModulePlace("0"));		
+			clientfactory.getPlaceController().goTo(new FlatModulePlace());		
 	}
 	
 	public static final AsyncCallback<List<Map<String,Object>>> GETCOURSES_CALLBACK_CLASS_FLAT = new AsyncCallback<List<Map<String,Object>>>(){

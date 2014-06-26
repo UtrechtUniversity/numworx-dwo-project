@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import nl.uu.fi.dwo.mobile.client.ui.places.FlatModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ProfilePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
@@ -25,6 +26,10 @@ public class TabletAnimationMapper implements AnimationMapper
 			return Animation.SLIDE_REVERSE;
 		if (oldPlace instanceof ViewModulePlace && newPlace instanceof TreeModulePlace)
 			return Animation.SLIDE_REVERSE;
+		if (oldPlace instanceof SelectModulePlace && newPlace instanceof TreeModulePlace)
+			return Animation.SLIDE_REVERSE;
+		if (oldPlace instanceof SelectModulePlace && newPlace instanceof FlatModulePlace)
+			return Animation.SLIDE_REVERSE;
 		if (oldPlace instanceof SelectModulePlace && newPlace instanceof ProfilePlace)
 			return Animation.SLIDE_REVERSE;
 		if (oldPlace instanceof SelectModulePlace && newPlace instanceof LoginPlace)
@@ -34,6 +39,8 @@ public class TabletAnimationMapper implements AnimationMapper
 		if (oldPlace instanceof TreeModulePlace && newPlace instanceof LoginPlace)
 			return Animation.SLIDE_REVERSE;
 		if (oldPlace instanceof TreeModulePlace && newPlace instanceof ProfilePlace)
+			return Animation.SLIDE_REVERSE;
+		if (oldPlace instanceof FlatModulePlace && newPlace instanceof ProfilePlace)
 			return Animation.SLIDE_REVERSE;
 		if (oldPlace instanceof TreeModulePlace && newPlace instanceof TreeModulePlace)
 			return null;
