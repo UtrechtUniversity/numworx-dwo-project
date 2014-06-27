@@ -308,8 +308,8 @@ public class FormuleTeken extends FormuleElement
 	private void drawKeer()
 	{
 		int x = 0;
-		//int y = 0;
-		int y = this.getAsHoogte();
+		int y = 0;
+		//int y = this.getAsHoogte();
 		//x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4;
 
 		//dit is veel te veel als de keer als punt wordt getekend. Kijken hoe de breedte in wiskOpdr wordt bepaald. 
@@ -332,10 +332,10 @@ public class FormuleTeken extends FormuleElement
 			//ctx.lineTo(x + fm.getAscent()/4 + 6, y + 5 * fm.getAscent()/8 + 4);
 			//ctx.moveTo(x + fm.getAscent()/4 + 1, y + 5 * fm.getAscent()/8 + 4);
 			//ctx.lineTo(x + fm.getAscent()/4 + 6, y + 5 * fm.getAscent()/8 - 1);
-			ctx.moveTo(x + fm.getAscent()/4, y - 1);
-			ctx.lineTo(x + fm.getAscent()/4 + 6, y + 5);
-			ctx.moveTo(x + fm.getAscent()/4, y + 5);
-			ctx.lineTo(x + fm.getAscent()/4 + 6, y - 1);
+			ctx.moveTo(x + fm.getAscent()/4, y + 5 * fm.getAscent() / 8 - 1);
+			ctx.lineTo(x + fm.getAscent()/4 + 6, y + 5 * fm.getAscent() / 8 + 5);
+			ctx.moveTo(x + fm.getAscent()/4, y + 5 * fm.getAscent() / 8 + 5);
+			ctx.lineTo(x + fm.getAscent()/4 + 6, y + 5 * fm.getAscent() / 8 - 1);
 			ctx.stroke();
 			//this.drawline(ctx, x + fm.getAscent() / 4 + 1, y + 5 * fm.getAscent() / 8 - 1, x + fm.getAscent() / 4 + 6, y + 5 * fm.getAscent() / 8 + 4);
 			//this.drawline(ctx, x + fm.getAscent() / 4 + 1, y + 5 * fm.getAscent() / 8 + 4, x + fm.getAscent() / 4 + 6, y + 5 * fm.getAscent() / 8 - 1);
@@ -343,14 +343,17 @@ public class FormuleTeken extends FormuleElement
 		else
 		{
 			ctx.beginPath();
-			ctx.moveTo(x + fm.getAscent()/4, y);
-			ctx.lineTo(x + fm.getAscent()/4 + 2, y);
-			ctx.moveTo(x + fm.getAscent()/4, y + 1);
-			ctx.lineTo(x + fm.getAscent()/4 + 2, y + 1);
+			ctx.moveTo(x + fm.getAscent()/4, y + 5 * fm.getAscent() / 8);
+			ctx.lineTo(x + fm.getAscent()/4 + 2, y + 5 * fm.getAscent() / 8);
+			ctx.moveTo(x + fm.getAscent()/4, y + 5 * fm.getAscent() / 8 + 1);
+			ctx.lineTo(x + fm.getAscent()/4 + 2, y + 5 * fm.getAscent() / 8 + 1);
 			ctx.stroke();
 			//this.drawline(ctx, x + fm.getAscent() / 4, y + 5 * fm.getAscent() / 8, x + fm.getAscent() / 4 + 2, y + 5 * fm.getAscent() / 8);
 			//this.drawline(ctx, x + fm.getAscent() / 4, y + 5 * fm.getAscent() / 8 + 1, x + fm.getAscent() / 4 + 2, y + 5 * fm.getAscent() / 8 + 1);
 		}
+		
+		
+		
 
 		//g.drawLine(x+fm.getAscent()/4,y+5*fm.getAscent()/8,x+fm.getAscent()/4+1,y+5*fm.getAscent()/8);
 		//g.drawLine(x+fm.getAscent()/4,y+5*fm.getAscent()/8+1,x+fm.getAscent()/4+1,y+5*fm.getAscent()/8+1);
