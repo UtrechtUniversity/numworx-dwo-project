@@ -1,6 +1,6 @@
 html,body{margin:0px; padding:0px;}
 
-body#main {background:white; color:#000;}
+body#main {margin:0px; background:white; color:#000;}
 
 /** Example rules used by the template application (remove for your app) */
 
@@ -16,11 +16,20 @@ div.cbg-RP { background-color:#c3d9ff; }
 .keyboardtabs {background:#000;}
 div.keyboard {background:#dedede; left:0px; right:0px; }
 
-
+.kbd-Button { display: inline-block; }
 .kbd-Button-dwo {background:#ddd; color:#000; padding:10px; margin:5px;  border: 1px solid #888; border-radius:5px; text-align:center; overflow:hidden;}
 .kbd-Button-dwo:active {background:#e00;}
 
-.kbd-Button-noordhoff {margin:4px; text-align:center; overflow:hidden; height:48px; background-color: white; vertical-align: middle; font-size: 18px; }
+.kbd-Button-noordhoff { 
+	display: inline-block;
+	margin:4px;
+	text-align:center;
+	overflow:hidden;
+	height:48px;
+	background-color: white;
+	vertical-align: middle;
+	font-size: 18px; 
+}
 .kbd-Button-noordhoff:active {background:#e00;}
 
 div.disabled { background:#b8b8b8; color:#333;}
