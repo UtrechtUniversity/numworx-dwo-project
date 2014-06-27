@@ -78,6 +78,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	//contentPanel is layoutPanel geworden om pijlvakken (met operatoren, abc, substitutie, etc) neer te kunnen zetten.
 	//private FlowPanel contentPanel = null;
 	private FlowPanel feedbackPanel = null;
+	int feedbackPanelHeight = 0;
 	private FlowPanel mainPanel = null;
 	private OpdrNavIF comRoot;
 	private int mode;
@@ -93,6 +94,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	private TouchButton copyButton = null;
 	private TouchButton plusKnop, minKnop, maalKnop, deelKnop, haakjesKnop, herleidKnop, abcKnop, subKnop;
 	private TouchButton ontbindKnop, splitsKnop, wortelBewerkKnop;
+	private boolean abcVisible, subVisible;
 	private int stapNr = 0;
 	protected HashMap<String, Object> h = null;
 	protected String[] randomVarNamen = null;
@@ -151,6 +153,12 @@ public class FormuleEditorWithSteps implements InteractionView
 				antwoordString = (String) launchState.get("antwoordString");
 			if (launchState.get("scoreMax") != null)
 				scoreMax = ((Number) launchState.get("scoreMax")).intValue();
+			if (launchState.containsKey("abcKnop"))
+				abcVisible = ((Boolean) launchState.get("abcKnop")).booleanValue();
+			
+			
+			
+			
 			bordjesMethode = Boolean.TRUE.equals( launchState.get("bordjesMethode"));
 			linStrategieVersie = Boolean.TRUE.equals(launchState.get("linStrategieVersie"));
 		}
@@ -262,7 +270,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		if (hasFeedback)
 		{	contentPanel.add(feedbackPanel);
 			contentPanel.setWidgetLeftRight(feedbackPanel, 5, Style.Unit.PX, 5, Style.Unit.PX);
-			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + fv.getHeight(), Style.Unit.PX, feedbackPanel.getOffsetHeight(), Style.Unit.PX); //TODO: kijken of dit werkt; offsetHeight is mogelijk 0.	contentPanel.add(feedbackPanel);
+			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + fv.getHeight(), Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX); //TODO: kijken of dit werkt; offsetHeight is mogelijk 0.	contentPanel.add(feedbackPanel);
 		}
 		nagekeken = true;
 		correct = true;
@@ -311,14 +319,13 @@ public class FormuleEditorWithSteps implements InteractionView
 		if (hasFeedback)
 		{	contentPanel.add(feedbackPanel);
 			contentPanel.setWidgetLeftRight(feedbackPanel, 5, Style.Unit.PX, 5, Style.Unit.PX);
-			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + fv.getHeight(), Style.Unit.PX, feedbackPanel.getOffsetHeight(), Style.Unit.PX); //TODO: kijken of dit werkt; offsetHeight is mogelijk 0.
+			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + fv.getHeight(), Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX); 
 		}
 
 		if (hasPrefix)
 			stepPanel.add(prefixViewer);
 		editor = addNewEditor(stepPanel);
 		stepPanelY += fv.getHeight() + stapH;
-		System.out.println("in addStep: stepPanelY wordt: " + stepPanelY);
 		contentPanel.add(stepPanel);
 		contentPanel.setWidgetLeftRight(stepPanel, 5, Style.Unit.PX, 5, Style.Unit.PX); 
 		contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
@@ -421,6 +428,8 @@ public class FormuleEditorWithSteps implements InteractionView
 		feedbackPanel.clear();
 		feedbackPanel.getElement().setInnerHTML(feedback);
 		feedbackPanel.getElement().getStyle().setPadding(10, Unit.PX);
+		feedbackPanelHeight = 34;
+		//TODO: hoogte feedbackPanel bepalen.
 	}
 
 	public void setAndAddFeedback(String feedback)
@@ -433,7 +442,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		if (hasFeedback)
 		{	contentPanel.add(feedbackPanel);
 			contentPanel.setWidgetLeftRight(feedbackPanel, 5, Style.Unit.PX, 5, Style.Unit.PX);
-			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + viewers.get(viewers.size() - 1).getHeight(), Style.Unit.PX, feedbackPanel.getOffsetHeight(), Style.Unit.PX); //TODO: kijken of dit werkt; offsetHeight is mogelijk 0.
+			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + viewers.get(viewers.size() - 1).getHeight(), Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX); 
 		}
 	}
 
@@ -471,8 +480,10 @@ public class FormuleEditorWithSteps implements InteractionView
 
 		mainPanel.add(copyButton);
 		mainPanel.add(tb);
+		
 		mainPanel.add(abcKnop);
-
+		abcKnop.setVisible(abcVisible);
+		
 		sp = new ScrollPanel();
 
 		sp.getElement().getStyle().setWidth(breedte - 5, Unit.PX);
@@ -535,7 +546,7 @@ public class FormuleEditorWithSteps implements InteractionView
 			}
 			highLight(stepPanel, false);
 			contentPanel.add(stepPanel);
-			contentPanel.setWidgetLeftRight(stepPanel, 0, Style.Unit.PX, 5, Style.Unit.PX); 
+			contentPanel.setWidgetLeftRight(stepPanel, 5, Style.Unit.PX, 5, Style.Unit.PX); 
 			contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, f.getHeight(), Style.Unit.PX);
 			stepPanels.add(stepPanel);
 
@@ -555,7 +566,6 @@ public class FormuleEditorWithSteps implements InteractionView
 			contentPanel.setWidgetTopHeight(stepPanelNew, stepPanelY, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
 			
 			stepPanels.add(stepPanelNew);
-			//stepPanelY += editor.getHeight() + stapH;
 		}
 		else
 		{
@@ -566,7 +576,6 @@ public class FormuleEditorWithSteps implements InteractionView
 			contentPanel.setWidgetLeftRight(stepPanel, 5, Style.Unit.PX, 5, Style.Unit.PX);
 			contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
 			stepPanels.add(stepPanel);
-			//stepPanelY += editor.getHeight() + stapH;
 		}
 
 		contentPanel.getElement().addClassName("insert_formule_steps");
