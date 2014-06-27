@@ -42,7 +42,9 @@ public class IntegraalVak extends FormuleElementWithChildren
 		int ty = getChild(2).height + 1;
 		int tb = 2 * asc / 3;
 		int th = getChild(0).height + tb;
-		int ashoogte = this.getAsHoogte();
+		//int ashoogte = this.getAsHoogte();
+		int ashoogte = getAsHoogte();
+		System.out.println("integraalvak getAshoogte = " + ashoogte);
 
 		ctx.setStrokeStyle(color);
 		ctx.setFillStyle(color);
@@ -66,10 +68,11 @@ public class IntegraalVak extends FormuleElementWithChildren
         ctx.stroke();
         
         //ctx.setTextAlign(TextAlign.CENTER);
-		ctx.setTextBaseline(TextBaseline.BOTTOM);
+		//ctx.setTextBaseline(TextBaseline.BOTTOM);
 		fm.setItalic(false);
 		ctx.setFont(fm.getFontStyle());
-		ctx.fillText("d", tx + asc + getChild(0).width + asc / 5 - 2, ashoogte + (asc - 1) / 2 + 2);
+		ctx.fillText("d", tx + asc + getChild(0).width + asc / 5 - 2, ashoogte);
+		
 		fm.setItalic(true);
 		
 		this.getChild(0).draw(ctx);
@@ -111,7 +114,7 @@ public class IntegraalVak extends FormuleElementWithChildren
 
 		int ashoogte = k1y + k1a;
 
-		int k4x = k1x + k1w + tb;// - 2;
+		int k4x = k1x + k1w + tb - 2;
 		int k4y = ashoogte - k4a;
 
 		int k2x = 1;
@@ -127,6 +130,7 @@ public class IntegraalVak extends FormuleElementWithChildren
 		getChild(2).setPosition(k3x, k3y);
 		getChild(3).setPosition(k4x, k4y);
 		this.setAsHoogte(ashoogte);
+		System.out.println("setAshoogte: " + ashoogte);
 	}
 	
 	public int getAsHoogte()

@@ -67,8 +67,8 @@ public class NdeLogVak extends FormuleElementWithChildren
 		this.getChild(0).paint();
 		this.getChild(1).paint();
 		//ctx.setFont(fm.getFontStyle());
-		ctx.setTextAlign(TextAlign.CENTER);
-		ctx.setTextBaseline(TextBaseline.BOTTOM);
+		//ctx.setTextAlign(TextAlign.CENTER);
+		//ctx.setTextBaseline(TextBaseline.BOTTOM);
 		ctx.setFont(fm.getFontStyle());
 		
 		int fStr = (int) Math.round(ctx.measureText("log").getWidth());
@@ -76,7 +76,7 @@ public class NdeLogVak extends FormuleElementWithChildren
 		setAsHoogte(getChild(0).getAsHoogte() + getChild(1).getHeight()/2);
 
 		getChild(0).setPosition(getChild(1).width + fStr + 3*fm.getAscent()/4, getChild(1).height/2);
-        getChild(1).setPosition(fm.getAscent()/3, getAsHoogte()-(this.getChild(1).height/2 + fm.getAscent()/2));
+        getChild(1).setPosition(fm.getAscent()/3, getAsHoogte()-(this.getChild(1).height/2 + fm.getAscent()));
         
         if (this.isSelected())
 		{
@@ -101,9 +101,9 @@ public class NdeLogVak extends FormuleElementWithChildren
 		//if(language.toString().equals("en"))g.drawString("log", 3 ,ashoogte + asc/2 + asc/12);
 		//else g.drawString("log", 5+k2w ,ashoogte + asc/2 + asc/12);
 		//ctx.setTextAlign(TextAlign.CENTER);
-		ctx.setTextBaseline(TextBaseline.BOTTOM);
+		//ctx.setTextBaseline(TextBaseline.BOTTOM);
 		ctx.setFont(fm.getFontStyle());
-		ctx.fillText("log", 5 + getChild(1).width, getAsHoogte() + fm.getAscent()/2 + fm.getAscent()/12);
+		ctx.fillText("log", 5 + getChild(1).width, getAsHoogte());// + fm.getAscent()/2 + fm.getAscent()/12);
 		
 		int hoogte = getChild(0).height;
 		int breedte = width;

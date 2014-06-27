@@ -22,11 +22,12 @@ public class FormuleFont
 	//private int fontSize = 16;
 	private int ascent = 0;
 	private int descent = 0;
-	private int leading = 0;
+	//private int leading = 0;
 	private int height = ascent + descent;
-	private int fontSize = height - leading;
+	private int fontSize = height;// - leading;
 
 	private static String defaultFont = "Arial";
+	private static String defaultTekstFont = "Arial";
 	private static boolean formTimes = false;
 	private String font = "Arial";
 	private boolean bold = false;
@@ -36,21 +37,38 @@ public class FormuleFont
 
 	public static FormuleFont getDefault()
 	{
-		return createFromFontSize(12);
+		return createFromFontSize(12, false);
 	}
 
 	public static FormuleFont createFromFontSize(int size)
 	{
+		return createFromFontSize(size, false);
+	}
+	
+	public static FormuleFont createFromFontSize(int size, boolean tekst)
+	{
 		FormuleFont fm = new FormuleFont();
-		fm.font = defaultFont;
-		if(formTimes)
+		if(tekst)
+			fm.font = defaultTekstFont;
+		else
+			fm.font = defaultFont;
+		if(formTimes && !tekst)
 			size += 2;
+		
+		//even proberen..
+		fm.descent = Math.round(size / 4); //mogelijk erg font-specifiek
+		fm.ascent = size + 1;
+		fm.height = fm.descent + fm.ascent;
+		fm.fontSize = size;
+		
+		/*
 		fm.ascent = size + 2;
 		fm.descent = Math.round(fm.ascent / 12);
 		fm.ascent = fm.ascent - fm.descent;
 		fm.leading = 2;
 		fm.height = fm.ascent + fm.descent;
 		fm.fontSize = fm.height - fm.leading;
+		*/
 		
 		return fm;
 	}
@@ -68,7 +86,7 @@ public class FormuleFont
 
 		fm.ascent = this.ascent;
 		fm.descent = this.descent;
-		fm.leading = this.leading;
+		//fm.leading = this.leading;
 		fm.height = this.height;
 		fm.fontSize = this.fontSize;
 		fm.font = this.font;
@@ -128,6 +146,7 @@ public class FormuleFont
 		return descent;
 	}
 
+	
 	public void setDescent(int descent)
 	{
 		this.descent = descent;
@@ -146,6 +165,7 @@ public class FormuleFont
 	public static void zetDefaultFont(String font)
 	{
 		defaultFont = font;
+		defaultTekstFont = font;
 			
 	}
 	
@@ -177,10 +197,11 @@ public class FormuleFont
 		this.italic = italic;
 	}
 
+	/*
 	public int getLeading()
 	{
 		return leading;
-	}
+	}*/
 
 	public int getHeight()
 	{
@@ -198,12 +219,25 @@ public class FormuleFont
 
 	private void setSizes(int size)
 	{
+
+		//fm.descent = Math.round(size / 4); //mogelijk erg font-specifiek
+		//fm.ascent = size + 1;
+		//fm.height = fm.descent + fm.ascent;
+		//fm.fontSize = size;
+		
+		descent = Math.round(size / 4);
+		ascent = size + 1;
+		height = descent + ascent;
+		fontSize = size;
+		
+		/*
 		ascent = size + 2;
 		descent = Math.round(ascent / 12);
 		ascent = ascent - descent;
 		leading = 2;
 		height = ascent + descent;
 		fontSize = height - leading;
+		*/
 	}
 
 	public void setSmallText(boolean smalltext)
@@ -220,6 +254,14 @@ public class FormuleFont
 
 	public void setSizeRelativeTo(int relativeSize)
 	{
+		int size = (int) (this.fontSize * relativeSize / 100);
+		this.ascent = size + 1;
+		this.descent = Math.round(size / 4);
+		this.height = ascent + descent;
+		this.fontSize = size;
+		
+		
+		/*
 		int size = (int) (this.fontSize * relativeSize / 100) + 4;
 		
 		this.ascent = size - 2;
@@ -228,6 +270,7 @@ public class FormuleFont
 		this.leading = 2;
 		this.height = this.ascent + this.descent;
 		this.fontSize = this.height - this.leading;
+		*/
 		
 	}
 

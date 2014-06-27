@@ -42,10 +42,12 @@ public class PrimitieveVak extends FormuleElementWithChildren
         //this.drawline(ctx, tx+asc/3,ty+asc/6,tx+asc/3,ty+th-asc/6);
         
 		//ctx.setTextAlign(TextAlign.CENTER);
-		ctx.setTextBaseline(TextBaseline.BOTTOM);
+		//ctx.setTextBaseline(TextBaseline.BOTTOM);
 		fm.setItalic(false);
 		ctx.setFont(fm.getFontStyle());
-		ctx.fillText("d", tx+asc+getChild(0).width+asc/5-2,getAsHoogte()+(asc-1)/2+1);
+		//ctx.fillText("d", tx+asc+getChild(0).width+asc/5-2,getAsHoogte()+(asc-1)/2+1);
+
+		ctx.fillText("d", tx+asc+getChild(0).width+asc/5-2,getAsHoogte());
 		fm.setItalic(true);
 		
 		this.getChild(0).draw(ctx);
@@ -67,7 +69,7 @@ public class PrimitieveVak extends FormuleElementWithChildren
 		
 		setAsHoogte(k1y + getChild(0).getAsHoogte());
 		
-		int k2x = k1x+ getChild(0).width + tb;// - 2;
+		int k2x = k1x+ getChild(0).width + tb - 2;
 		int k2y = getAsHoogte()- getChild(1).getAsHoogte();
 		
 		width = 1 + tx + getChild(0).width + fm.getAscent() + getChild(1).width + tb;

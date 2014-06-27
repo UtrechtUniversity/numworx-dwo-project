@@ -72,7 +72,8 @@ public class FormuleRegel extends FormuleElement
 		this.setSize(defaultwidth, defaultheight);
 		//this.setAsHoogte(this.height / 2);
 		//In wiskOpdr wordt ashoogte gezet op fm.getAscent()/2.
-		this.setAsHoogte(fm.getAscent() / 2);
+		//this.setAsHoogte(fm.getAscent() / 2);
+		this.setAsHoogte(fm.getAscent()); //maakt ook geen verschil.. ?
 		this.setChanged(true);
 	}
 
@@ -227,9 +228,13 @@ public class FormuleRegel extends FormuleElement
 		//painting coordinates
 		//int paintabove = height / 2;
 		//int paintbelow = height / 2;
-		int paintabove = fm.getAscent() / 2;
-		int paintbelow = height - fm.getAscent() / 2;
+		//int paintabove = fm.getAscent() / 2;
+		//int paintbelow = height - fm.getAscent() / 2;
+		int paintabove = fm.getAscent();
+		int paintbelow = height - fm.getAscent();
+		
 
+		
 		int paintabove_e = 0;
 		int paintbelow_e = 0;
 
@@ -1192,7 +1197,12 @@ public class FormuleRegel extends FormuleElement
 	
 	public void setMinimumHeight(int minH) {
 		this.minH = minH;
-		this.setSize(width, height);
+		int h = height;
+		if(this.children.size() == 0)
+		{	h = minH;
+		
+		}
+		this.setSize(width, h);
 	}
 
 	/*

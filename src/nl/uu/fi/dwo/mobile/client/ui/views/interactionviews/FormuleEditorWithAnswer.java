@@ -158,6 +158,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		{
 			ObjectMap map = JSONUtilities.wrapMap(h);
 			this.breedte = map.getInt("breedte");
+			this.hoogte = map.getInt("hoogte");
 			this.volledigeBreedte = map.getBoolean("volledigeBreedte");
 			
 			//this.hoogte = map.getInt("hoogte");
@@ -202,17 +203,22 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			checkimg.setVisible(false);
 			checkimg.getElement().getStyle().setProperty("marginLeft", "3px");
 			checkimg.getElement().getStyle().setProperty("verticalAlign", "top");
+			
 			if (fe == null)
 			{
 				//sp.getElement().getStyle().setProperty("width", (breedte - 9) + "px");
 				this.getMainRegel().setMinimumWidth(breedte - 20);
-				hoogte = 27;
+				//hoogte = 27;
 				this.getMainRegel().setMinimumHeight(hoogte - 6);
 				
 				//Maat zetten:
 				//breedte - 3: 1 pixel marge links, 1 pixel rand links, 1 pixel rand rechts
 				//hoogte - 6: 2 pixels marge boven, 2 pixels marge onder, 1 pixel rand boven, 1 pixel rand onder.
-				sp.setPixelSize((breedte - 3) , (hoogte - 6) ); 
+
+				//sp.setSize((breedte - 3) + "px", (hoogte - 6) + "px"); 
+
+				//sp.setPixelSize((breedte - 3) , (hoogte - 6) ); 
+
 				//sp.getElement().getStyle().setBackgroundColor(CssColor.make(255, 0, 0).toString());
 				Style spStyle = sp.getElement().getStyle();
 				if(boxMetRand)
@@ -227,8 +233,13 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				spStyle.setMarginLeft(1, Style.Unit.PX);
 				//sp.getElement().getStyle().setMarginRight(1, Style.Unit.PX);
 				//sp.getElement().getStyle().setMarginRight(1, Style.Unit.PX);
-				spStyle.setMarginTop(2, Style.Unit.PX);
-				spStyle.setPaddingTop(1, Style.Unit.PX);
+
+				sp.getElement().getStyle().setMarginTop(2, Style.Unit.PX);
+				sp.getElement().getStyle().setPaddingTop(3, Style.Unit.PX);
+
+				//spStyle.setMarginTop(2, Style.Unit.PX);
+				//spStyle.setPaddingTop(1, Style.Unit.PX);
+
 				//sp.getElement().getStyle().setMarginBottom(0, Style.Unit.PX);
 				
 				//sp.getElement().getStyle().setPaddingLeft(1, Style.Unit.PX);
@@ -373,20 +384,20 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	{
 		breedte = this.getMainRegel().getWidth() + 20;
 		hoogte = this.getMainRegel().getHeight() + 6;
-		//System.out.println("nieuwe breedte: " + breedte);
-		//System.out.println("nieuwe hoogte: " + hoogte);
-		//nog zorgen dat hoogte altijd minimaal 24 is?
-		sp.setSize((breedte-3) + "px", (hoogte-6) + "px");
+		
+		sp.setSize((breedte-3) + "px", (hoogte-8) + "px");
 		if(parentRegel != null)
 			parentRegel.resize();
+		if(fe != null)
+			fe.resize();
 		
-		//en dan bestaat resize uit vulRegel en een resize van het omliggende tekstvak (wat dan weer leidt tot een resize van de hele kolom)..
 	}
 	
 	public void setFont(FormuleFont fm)
 	{
 		super.setFont(fm);
-		hoogte = this.getMainRegel().getHeight() + 6;
+		this.getMainRegel().setMinimumHeight(fm.getHeight() + 3);
+		resize();
 	}
 	
 
@@ -414,7 +425,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	public int getAsHoogte()
 	{
-		return facade.wrapAsHoogte(this.getMainRegel().getAsHoogte() + 3 /* margin top + border + padding top */);
+		return facade.wrapAsHoogte(this.getMainRegel().getAsHoogte() + 5 /* margin top + padding top */);
 		
 	}
 

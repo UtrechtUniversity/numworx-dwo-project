@@ -30,7 +30,8 @@ public class Breukvak extends FormuleElementWithChildren
 		getChild(0).setPosition(fm.getAscent() / 3, 0);
 		getChild(1).setPosition(fm.getAscent() / 3, 6 * fm.getAscent() / 4 + fm.getDescent());
 
-		this.setAsHoogte(getChild(0).height - fm.getAscent() / 8);
+		//this.setAsHoogte(getChild(0).height - fm.getAscent() / 8);
+		this.setAsHoogte(getChild(0).height + 5 * fm.getAscent() / 8);
 		this.setChanged(true);
 	}
 
@@ -76,7 +77,8 @@ public class Breukvak extends FormuleElementWithChildren
 		getChild(0).x = (width - getChild(0).width)/2;
 		getChild(1).x = (width - getChild(1).width)/2;
 
-		this.setAsHoogte(getChild(0).height + fm.getAscent() / 8);
+		//this.setAsHoogte(getChild(0).height + fm.getAscent() / 8);
+		this.setAsHoogte(getChild(0).height + 5*fm.getAscent()/8);//of moet dit dan +5* worden?
 		//this.setAsHoogte(getChild(0).height - fm.getAscent() / 8);
 		//this.setAsHoogte(this.height / 2);
 
@@ -98,8 +100,8 @@ public class Breukvak extends FormuleElementWithChildren
 		ctx.beginPath();
 		//ctx.moveTo(fm.getAscent() / 8, getChild(0).height + fm.getAscent() / 8);
 		//ctx.lineTo(this.width - (fm.getAscent() / 8), getChild(0).height + fm.getAscent() / 8);
-		ctx.moveTo(fm.getAscent() / 8, this.getAsHoogte());
-		ctx.lineTo(this.width - (fm.getAscent() / 8), this.getAsHoogte());
+		ctx.moveTo(fm.getAscent() / 8, this.getAsHoogte() - 7*fm.getAscent() / 16);
+		ctx.lineTo(this.width - (fm.getAscent() / 8), this.getAsHoogte() - 7*fm.getAscent() / 16);
 		ctx.stroke();
 		//this.drawline(ctx, fm.getAscent() / 3, getChild(0).height + fm.getAscent() / 8, this.width - (fm.getAscent() / 3), getChild(0).height + fm.getAscent() / 8);
 
@@ -115,7 +117,8 @@ public class Breukvak extends FormuleElementWithChildren
 	
 	public int getAsHoogte()
 	{
-		return getChild(0).height + fm.getAscent() / 8;
+		return //getChild(0).height + fm.getAscent() / 8;
+				getChild(0).height + 5 * fm.getAscent() / 8;
 	}
 
 	@Override

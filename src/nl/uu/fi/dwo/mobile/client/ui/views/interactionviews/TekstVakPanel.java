@@ -217,6 +217,7 @@ public class TekstVakPanel implements InteractionView
 		ObjectMap launchState = null;
 		if (h != null && h.containsKey("breedte") )
 			breedte = h.getInt("breedte");
+		
 		if (h != null && h.containsKey("hoogte"))
 			hoogte = h.getInt("hoogte");
 		if (h != null && h.containsKey("interactiePanelLaunchState"))
@@ -259,6 +260,7 @@ public class TekstVakPanel implements InteractionView
 		}
 		else
 			hoogtes = (Arrays.asList(250.0));
+		
 		minHoogtes = new ArrayList<Double>(hoogtes);
 		if (launchState.containsKey("cellSpaceColumn") )
 			cellSpaceColumn = launchState.getInt("cellSpaceColumn");
@@ -372,6 +374,7 @@ public class TekstVakPanel implements InteractionView
 
 		mainPanel2 = new LayoutPanel(); 
 		mainPanel2.setStylePrimaryName("tekstvakpanel");
+		
 		
 		setCurrentSize(breedte, hoogte);
 		
@@ -541,7 +544,6 @@ public class TekstVakPanel implements InteractionView
 	//}
 	
 	public void setCurrentSize(int w, int h) {
-		//System.out.println(this + " size " + w + "x" + h);
 		int oldHeight = hoogte;
 		mainPanel2.setPixelSize(w, h);
 		if(w >= 0) breedte = w;
@@ -683,7 +685,6 @@ public class TekstVakPanel implements InteractionView
 						tekstVakChild.setKeyboard(kb);
 						tekstVakChild.zetOpdracht(launchState);
 						tekstVakChild.setContainer(new TekstVakContext(i,j));
-						
 					}
 					else if (currentObject instanceof FormuleEditorWithAnswer)
 					{
@@ -719,6 +720,9 @@ public class TekstVakPanel implements InteractionView
 				tekstVakken[i][j].setObjects(opdrachtObjects);
 			}
 			//Nu de hele regel gevuld is kunnen de ashoogtes gelijk worden gesteld, zodat de hele rij netjes is uitgelijnd.
+			//Dit misschien in resize stoppen; daar moet het eigenlijk toch..
+			
+			/*
 			int asHoogte = 0;
 			for(int j = 0; j < breedtes.size(); j++)
 			{
@@ -734,11 +738,14 @@ public class TekstVakPanel implements InteractionView
 			{	tekstVakken[i][j].setAshoogte(asHoogte);
 				//tekstVakken[i][j].setRegelHoogte(regelHoogte);
 			}
+			*/
 		}
 
 		if(inklapbaar)
 		{	initieerKlapUitButton(ingeklapt);
 		}
+		
+		resize();
 
 	}
 	
@@ -1009,11 +1016,35 @@ public class TekstVakPanel implements InteractionView
 	
 	public void resize()
 	{
-		//kijken of pasAanH en of pasAanB true zijn; anders moet er niets gebeuren.
+		//Allereerst zorgen dat ashoogtes op alle regels over de gehele regel gelijk zijn.
+		
+		for(int i = 0; i < hoogtes.size(); i++)
+		{	int asHoogte = 0;
+			for(int j = 0; j < breedtes.size(); j++)
+			{
+				if(tekstVakken[i][j].getAsHoogte() > asHoogte)
+				{
+					
+					asHoogte = tekstVakken[i][j].getAsHoogte();
+					
+				}
+				
+			}
+			for(int j = 0; j < breedtes.size(); j++)
+			{	tekstVakken[i][j].setAshoogte(asHoogte);
+				//tekstVakken[i][j].setRegelHoogte(regelHoogte);
+			}
+		}
+		
+		//kijken of pasAanH en of pasAanB true zijn; anders zijn we klaar.
 		if(!pasAanH && !pasAanB)
 			return;
 		
 		int[] ashoogtes = new int[hoogtes.size()];
+		for(int i = 0; i < hoogtes.size(); i++) //ashoogtes vullen, voor het geval de hoogte niet wordt aangepast.
+		{
+			ashoogtes[i] = tekstVakken[i][0].getAsHoogte();
+		}
 		int totaleHoogte = hoogte;
 		int totaleBreedte = breedte;
 		
@@ -1572,6 +1603,7 @@ public class TekstVakPanel implements InteractionView
 	}
 	
 	void klapUitAction() {
+		
 		int delta = hoogte-hoogtes.get(0).intValue();
 		System.out.println("delta = " + delta);
 		if( ingeklapt = ! ingeklapt) {
@@ -1753,6 +1785,7 @@ public class TekstVakPanel implements InteractionView
 
 	@Override
 	public void setAsHoogte(int ashoogte) {
+		
 		for(int i = 0; i < breedtes.size(); i++)
 		{
 			tekstVakken[0][i].setAshoogte(ashoogte);

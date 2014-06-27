@@ -19,9 +19,15 @@ import java.util.Vector;
 
 
 
+
+
+
+
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
@@ -133,6 +139,8 @@ public class AntwoordTekstVak implements InteractionView{
 
 	private boolean tabletAan;
 	private boolean formuleToolBijFocus;
+	
+	private TekstRegel parentRegel;
 	
 
 	public AntwoordTekstVak(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
@@ -267,9 +275,62 @@ public class AntwoordTekstVak implements InteractionView{
 					return; 
 				}
 				kijkNa();
-			} } ;
+			}
+
+			@Override
+			public void addElement(FormuleElement e)
+			{
+				super.addElement(e);
+				resize();
+				goedKrulImage.setVisible(false);
+				goedKrulHalfImage.setVisible(false);
+				foutKruisImage.setVisible(false);
+			}
+
+			@Override
+			public void removeCurrentElement()
+			{
+				super.removeCurrentElement();
+				resize();
+				goedKrulImage.setVisible(false);
+				goedKrulHalfImage.setVisible(false);
+				foutKruisImage.setVisible(false);
+			}
+
+			@Override
+			public void removeNextElement()
+			{
+				super.removeNextElement();
+				resize();
+				goedKrulImage.setVisible(false);
+				goedKrulHalfImage.setVisible(false);
+				foutKruisImage.setVisible(false);
+			}
+
+			@Override
+			public void insert(String text)
+			{
+				super.insert(text);
+				resize();
+				goedKrulImage.setVisible(false);
+				goedKrulHalfImage.setVisible(false);
+				foutKruisImage.setVisible(false);
+			}
+
+			@Override
+			public boolean isInputNeeded() {
+				return false;
+			}
+			
+			
+			
+			
+		} ;
 		//hier toetsenbord aan vastmaken. WIM??
 		formuleVak.setFormuleToolBijFocus(formuleToolBijFocus);
+		formuleVak.getMainRegel().setMinimumWidth(breedte - 20);
+		formuleVak.getMainRegel().setMinimumHeight(hoogte - 8);
+		
 		//formuleVak.setFont(formuleVakFont);
 		//formuleVak.setBorder(false);
 		//formuleVak.addActionListener(this);
@@ -284,7 +345,7 @@ public class AntwoordTekstVak implements InteractionView{
 			achtergrondPanel.getElement().getStyle().setProperty("border", "1px solid gray");
 			basisPanel.add(achtergrondPanel);
 			basisPanel.setWidgetLeftRight(achtergrondPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
-			basisPanel.setWidgetTopBottom(achtergrondPanel, 2, Style.Unit.PX, 2, Style.Unit.PX);
+			basisPanel.setWidgetTopBottom(achtergrondPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
 			//basisPanel.setWidgetLeftRight(achtergrondPanel)
 			//Panel panel = formuleVak.getAsPanel();
 			achtergrondPanel.getElement().addClassName("insert_formule");
@@ -295,7 +356,7 @@ public class AntwoordTekstVak implements InteractionView{
 			//basisPanel.add(formuleVak.getMainRegel().getCanvas());
 			//basisPanel.setWidgetLeftRight(formuleVak.getMainRegel().getCanvas(), 4, Style.Unit.PX, 20, Style.Unit.PX);
 			//basisPanel.setWidgetTopBottom(formuleVak.getMainRegel().getCanvas(), 4, Style.Unit.PX, 4, Style.Unit.PX);
-			ashoogte = formuleVak.getMainRegel().getAsHoogte() + 4;
+			ashoogte = formuleVak.getMainRegel().getAsHoogte() + 2;
 		}
 		else
 		{	//basisPanel.setSize(Math.max(minBreedte, antwoordTF.getSize().width + 2), antwoordTF.getSize().height + 4);
@@ -312,12 +373,12 @@ public class AntwoordTekstVak implements InteractionView{
 		basisPanel.add(goedKrulImage);
 		basisPanel.add(goedKrulHalfImage);
 		basisPanel.add(foutKruisImage);
-		basisPanel.setWidgetRightWidth(goedKrulImage, 0, Style.Unit.PX, 20, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(goedKrulImage, 0, Style.Unit.PX, 20, Style.Unit.PX);
-		basisPanel.setWidgetRightWidth(goedKrulHalfImage, 0, Style.Unit.PX, 20, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(goedKrulHalfImage, 0, Style.Unit.PX, 20, Style.Unit.PX);
-		basisPanel.setWidgetRightWidth(foutKruisImage, 0, Style.Unit.PX, 20, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(foutKruisImage, 0, Style.Unit.PX, 20, Style.Unit.PX);
+		basisPanel.setWidgetRightWidth(goedKrulImage, 0, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(goedKrulImage, 0, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetRightWidth(goedKrulHalfImage, 0, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(goedKrulHalfImage, 0, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetRightWidth(foutKruisImage, 0, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(foutKruisImage, 0, Style.Unit.PX, 15, Style.Unit.PX);
 		goedKrulImage.setVisible(false);
 		goedKrulHalfImage.setVisible(false);
 		foutKruisImage.setVisible(false);
@@ -774,7 +835,26 @@ public class AntwoordTekstVak implements InteractionView{
 	}
 
 
+	public void resize()
+	{
+		if(!formuleMode)
+			return;
+		
+		breedte = formuleVak.getMainRegel().getWidth() + 18;
+		hoogte = formuleVak.getMainRegel().getHeight() + 4;
+		//System.out.println("nieuwe breedte: " + breedte);
+		//System.out.println("nieuwe hoogte: " + hoogte);
+		//nog zorgen dat hoogte altijd minimaal 24 is?
+		basisPanel.setSize((breedte) + "px", (hoogte) + "px");
+		ashoogte = formuleVak.getMainRegel().getAsHoogte() + 2;
+		if(parentRegel != null)
+			parentRegel.resize();
+	}
 	
+	public void setParentRegel(TekstRegel regel)
+	{
+		parentRegel = regel;
+	}
 	
 	public Panel getAsPanel()
 	{

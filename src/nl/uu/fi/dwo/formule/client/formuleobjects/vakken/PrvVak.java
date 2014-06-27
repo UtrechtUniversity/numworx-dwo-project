@@ -45,29 +45,19 @@ public class PrvVak extends FormuleElementWithChildren
 		ctx.setFillStyle(color);
 		
 		ctx.beginPath();
-		ctx.moveTo(t1x,t1y+a/3);
-		ctx.lineTo(t1x+t1b,t1y+a/3);
+		ctx.moveTo(t1x + t1b, t1y + a/3);
+		ctx.lineTo(t1x, t1y + a/3);
+		ctx.lineTo(t1x,  t1y + t1h - a/3);
+		ctx.lineTo(t1x + t1b, t1y + t1h - a/3);
 		ctx.stroke();
-		ctx.beginPath();
-		ctx.moveTo(t1x,t1y+a/3);
-		ctx.lineTo(t1x,t1y+t1h-a/3);
-		ctx.stroke();
-		ctx.beginPath();
-		ctx.moveTo(t1x,t1y+t1h-a/3);
-		ctx.lineTo(t1x+t1b,t1y+t1h-a/3);
-		ctx.stroke();
-        
+		
 		ctx.beginPath();
 		ctx.moveTo(t2x,t2y+a/3);
 		ctx.lineTo(t2x+t2b,t2y+a/3);
-		ctx.stroke();
-		ctx.beginPath();
-		ctx.moveTo(t2x+t2b,t2y+a/3);
+		//ctx.moveTo(t2x+t2b,t2y+a/3);
 		ctx.lineTo(t2x+t2b,t2y+t2h-a/3);
-		ctx.stroke();
-		ctx.beginPath();
-		ctx.moveTo(t2x,t2y+t2h-a/3);
-		ctx.lineTo(t2x+t2b,t2y+t2h-a/3);
+		ctx.lineTo(t2x,t2y+t2h-a/3);
+		//ctx.lineTo(t2x+t2b,t2y+t2h-a/3);
 		ctx.stroke();
 		
 		this.getChild(0).draw(ctx);
@@ -101,7 +91,7 @@ public class PrvVak extends FormuleElementWithChildren
 		int k3y = 0;
 		
 		int kx = t1x+t1b;
-		int ky = t1y+t1h/2-getChild(0).getAsHoogte();
+		int ky = t1y+t1h/2-getChild(0).getAsHoogte() + a/2;
 		
 		setAsHoogte(ky + getChild(0).getAsHoogte());
 		
@@ -120,7 +110,7 @@ public class PrvVak extends FormuleElementWithChildren
 	
 	public int getAsHoogte()
 	{
-		return fm.getAscent()/3 + Math.max(getChild(0).height + 2*fm.getAscent()/3, getChild(1).height + getChild(2).height)/2;
+		return fm.getAscent()/3 + fm.getAscent()/2 + Math.max(getChild(0).height + 2*fm.getAscent()/3, getChild(1).height + getChild(2).height)/2;
 				
 	}
 	

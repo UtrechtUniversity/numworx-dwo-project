@@ -27,7 +27,7 @@ public class AbsVak extends FormuleElementWithChildren
 		ctx.stroke();
 		ctx.beginPath();
 		ctx.moveTo(width - 1 - c, d);
-		ctx.lineTo(width - 1- c, height - d);
+		ctx.lineTo(width - 1 - c, height - d);
 		ctx.stroke();
 		
 		this.getChild().draw(ctx);
@@ -37,7 +37,7 @@ public class AbsVak extends FormuleElementWithChildren
 	public void zetMaat()
 	{
 		setSize(5*fm.getAscent()/6 + getChild().width,  getChild().height);
-		getChild().setPosition(5*fm.getAscent()/12,fm.getAscent()/12-1);
+		getChild().setPosition(5*fm.getAscent()/12, fm.getAscent()/12-1);
 		setAsHoogte(getChild().getAsHoogte() + fm.getAscent()/12);
 	}
 	

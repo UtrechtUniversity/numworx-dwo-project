@@ -6,6 +6,7 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
+import nl.uu.fi.dwo.interaction.client.TekstComponent;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 
@@ -19,6 +20,7 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
@@ -30,6 +32,7 @@ public class TekstRegel extends LayoutPanel
 {
 	private int ashoogte;
 	private int tekstAshoogte;
+	private int tekstHoogte;
 	private int hoogte;
 	private int breedte;
 	private ArrayList<Object> regelObjects;
@@ -40,15 +43,16 @@ public class TekstRegel extends LayoutPanel
 	private int font_style;
 	private Context2d ctx;
 	private String fontString;
+	//private fontType = "sans-serif";
 	
 	private FormuleFont fm;
+	private CssColor fgColor = CssColor.make(0, 0, 0);
 	
 	public TekstRegel(TekstVak tekstVak)
 	{
 		super();
 		setStylePrimaryName("tekstregel");
 		this.tekstVak = tekstVak;
-		this.getElement().getStyle().setProperty("lineHeight", "1.2");
 		regelObjects = new ArrayList<Object>();
 	}
 	
@@ -68,19 +72,9 @@ public class TekstRegel extends LayoutPanel
 	}
 	
 	public void setAsHoogte(int ashoogte)
-	{	//System.out.println("setAsHoogte: " + ashoogte);
-		//eigenAsHoogte = this.ashoogte;
-		//eigenHoogte = hoogte;
-	//asVerschuiving = hoogte - this.ashoogte;// - this.ashoogte;
-		
-		//System.out.println("asVerschuiving: " + asVerschuiving);
-		if(ashoogte - this.ashoogte > 0)
-		{	//System.out.println("oude hoogte = " + hoogte);
-			setHeight(hoogte + ashoogte - this.ashoogte);
-			//System.out.println("nieuwe hoogte = " + hoogte);
+	{	if(ashoogte - this.ashoogte > 0)
+		{	setHeight(hoogte + ashoogte - this.ashoogte);
 		}
-		//else
-		//	System.out.println("hoogte blijft " + hoogte);
 		this.ashoogte = ashoogte;
 		
 		hervulRegel();
@@ -100,8 +94,6 @@ public class TekstRegel extends LayoutPanel
 	{
 		this.hoogte = hoogte;
 		this.setHeight(hoogte + "px");
-		//vulRegel();
-		//hier vulRegel aanroepen? Zodat alles opnieuw neer wordt gezet? Of alleen de juiste hoogtes instellen?
 	}
 	
 	public void addObject(Object object)
@@ -129,11 +121,13 @@ public class TekstRegel extends LayoutPanel
 	
 	public void setFontSize(int font_size)
 	{
+		//System.out.println("setFontSize: " + font_size);
 		this.font_size = font_size;
 		this.getElement().getStyle().setFontSize(font_size, Unit.PX);
-		fm = FormuleFont.createFromFontSize(font_size);
-		//tekstAshoogte = fm.getAscent() / 2;
-		tekstAshoogte = fm.getAscent() / 2 - 1; // - 1 om te zorgen voor goede afstand tot bovenrand tekstvak. Zou ook in marge opgelost kunnen worden, afh van omgang met meerdere regels nu.
+		fm = FormuleFont.createFromFontSize(font_size, true);
+		tekstAshoogte = fm.getAscent();//dit is de hoogte van de baseline (de lijn die raakt aan alle onderkanten van de tekst, niet alleen aan de lage uitsteeksels), gezien vanaf de top.
+		tekstHoogte = fm.getAscent() + fm.getDescent();
+		//System.out.println("tekstHoogte = " + tekstHoogte + " en fm.getAscent() = " + fm.getAscent());
 		
 		Canvas canvas = Canvas.createIfSupported();
 		ctx = canvas.getContext2d();
@@ -149,6 +143,8 @@ public class TekstRegel extends LayoutPanel
 		else
 			fontString = fontTypeString + " " + font_size + "px sans-serif";
 		ctx.setFont(fontString);
+		
+		
 	}
 	
 	public void setFontStyle(int font_style)
@@ -161,115 +157,109 @@ public class TekstRegel extends LayoutPanel
 		ctx = canvas.getContext2d();
 		String fontTypeString = "";
 		if(font_style == 1)
-			fontTypeString = "bold";
+		{	fontTypeString = "bold";
+			fm.setBold(true);
+			fm.setItalic(false);
+		}
 		else if(font_style == 2)
-			fontTypeString = "italic";
+		{	fontTypeString = "italic";
+			fm.setItalic(true);
+			fm.setBold(false);
+		}
 		else if(font_style == 3)
-			fontTypeString = "bold italic";
-		if(fontTypeString.equals(""))
-			ctx.setFont(font_size + "px sans-serif");
+		{	fontTypeString = "bold italic";
+			fm.setBold(true);
+			fm.setItalic(true);
+		}
 		else
-			ctx.setFont(fontTypeString + " " + font_size + "px sans-serif");
+		{	fm.setBold(false);
+			fm.setItalic(false);
+		}
+		if(fontTypeString.equals(""))
+		{	ctx.setFont(font_size + "px sans-serif");
+		}
+		else
+		{	ctx.setFont(fontTypeString + " " + font_size + "px sans-serif");
+		}
 	}
 	
 	public void vulRegel()
-	{	//this.clear();
-		int horPositie = 0;
-		//this.getElement().getStyle().setVerticalAlign(VerticalAlign.TOP);
-		//this.getElement().getStyle().setProperty("verticalAlign", "top");
-		//int verschuiving = eigenHoogte - hoogte + ashoogte - eigenAsHoogte;//nu verschuift hij altijd, ook als hij al goed stond...
-		//int verschuiving = 0;
-		
+	{	int horPositie = 0;
+	
 		for(int i = 0; i < regelObjects.size(); i++)
 		{
 			Object currentObject = regelObjects.get(i);
 			int objectVerschuiving = 0;
 			int objectBreedte = 0;
 			int objectHoogte = 0;
-			//if(currentObject instanceof TekstElement)
 				
 		
 			if(currentObject instanceof TekstElement)
 			{	//objectVerschuiving = ((TekstElement) currentObject).getHeight()-((TekstElement) currentObject).getAsHoogte();
 				objectVerschuiving = ashoogte - ((TekstElement) currentObject).getAsHoogte();
-				if(currentObject instanceof FormuleViewer)
-					objectVerschuiving += 1; //+1 om gelijk te houden met gewone tekst.
+				//if(currentObject instanceof FormuleViewer)
+				//	objectVerschuiving += 1; //+1 om gelijk te houden met gewone tekst. Zou niet nodig moeten zijn.
 				//if(currentObject instanceof FormuleEditorWithAnswer)
 				//	objectVerschuiving -= 1; //weet nog niet of dit de beste oplossing is..
 				objectBreedte = ((TekstElement) currentObject).getWidth();
 				objectHoogte = ((TekstElement) currentObject).getHeight();
-			//System.out.println("Object.toString: " + ((TekstElement) currentObject).toString() + " en objectVerschuiving: " + objectVerschuiving);
 			}
 			else if(currentObject instanceof String)
 			{
-				//objectVerschuiving = fm.getHeight() - tekstAshoogte;
 				objectVerschuiving = ashoogte - tekstAshoogte;
-				objectBreedte = bepaalStringBreedte(currentObject.toString());
-				objectHoogte = fm.getAscent() + fm.getDescent();
+				objectBreedte = (int) ctx.measureText(currentObject.toString()).getWidth();
+				objectHoogte = tekstHoogte;
 			}
 			else
 			{
 				objectVerschuiving = ashoogte - tekstAshoogte;
 			}
 			
-			//System.out.println("vulVak: " + currentObject.toString() + " en objectVerschuiving = " + objectVerschuiving);
 			if(currentObject instanceof String)
 			{
-				//String tekst = currentObject.toString().replaceAll("  ", " &nbsp;");
-				//tekst = tekst.replaceAll("&nbsp; ", "nbsp;&nbsp;");
-				//System.out.println("tekst = " + tekst);		
+				
+				TekstComponent tekst = new TekstComponent(fm, currentObject.toString(), objectBreedte, objectHoogte);
+				tekst.setColor(fgColor);
+				tekst.paint();
+				/*
 				Label label = new Label(currentObject.toString());
+				label.getElement().getStyle().setBackgroundColor("red");
 				label.getElement().getStyle().setProperty("whiteSpace", "pre");//om te zorgen dat meerdere spaties niet worden samengetrokken tot één spatie.
 				label.getElement().getStyle().setFontSize(font_size, Style.Unit.PX);
 				label.getElement().getStyle().setFontStyle(font_style == 2 || font_style == 3 ? FontStyle.ITALIC : FontStyle.NORMAL);
 				label.getElement().getStyle().setFontWeight(font_style == 1 || font_style == 3 ? Style.FontWeight.BOLD : Style.FontWeight.NORMAL);
-				label.getElement().getStyle().setPaddingRight(0, Style.Unit.PX);
-				//int paddingLeft = 0;
-				//if(currentObject.toString().startsWith(" "))
-				//	paddingLeft += ctx.measureText(" ").getWidth();
-				//if(font_style == 2 || font_style == 3)
-				//	paddingLeft += 2;
-				//if(font_style == 2 || font_style == 3)
-				//{	paddingLeft += 1;
-				//}
-					//	objectBreedte += 2;
-				//}
-				//label.getElement().getStyle().setPaddingLeft(paddingLeft, Style.Unit.PX);
-				//objectBreedte += paddingLeft;
-				//if(font_style == 3)
-				//	objectVerschuiving -= 1;
-					
-				//label.getElement().getStyle().setProperty("display", "inline-block");
-				//label.getElement().getStyle().setProperty("verticalAlign", "top");
-				//label.getElement().getStyle().setProperty("verticalAlign", objectVerschuiving + "px");
-				//als het eerste element op een regel tekst is, krijgt het een marge van 2. Dat gebeurt in wiskOpdr ook.
+				label.getElement().getStyle().setPaddingRight(0, Style.Unit.PX);//nodig?
+				//label.getElement().getStyle().setProperty("verticalAlignment", "bottom");
+				*/
+				
+				
+				/*
+				stringPanel.add(label);
+				stringPanel.setWidgetLeftRight(label, 0, Style.Unit.PX, 0, Style.Unit.PX);
+				stringPanel.setWidgetBottom(label, 2, Style.Unit.PX, 1, Style.Unit.PX);
+				*/
 				
 				if(horPositie == 0 && Character.isLetter(currentObject.toString().charAt(0)))
 					horPositie = 2;
 				
 				
-				this.add(label);
-				this.setWidgetLeftWidth(label, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
-				this.setWidgetTopHeight(label, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
+//				this.add(label);
+//				this.setWidgetLeftWidth(label, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
+//				this.setWidgetTopHeight(label, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
+				Widget w = tekst.getAsPanel();
+				
+				this.add(w);
+				this.setWidgetLeftWidth(w, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
+				this.setWidgetTopHeight(w, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
 			}
 			else if (currentObject instanceof FormuleViewer)
 			{	Panel a = ((FormuleViewer) currentObject).getAsPanel();
-				//a.getElement().getStyle().setPaddingLeft(0, Style.Unit.PX);
-				//a.getElement().getStyle().setPaddingRight(4, Style.Unit.PX);
-				//objectBreedte += 4;
-				//a.getElement().getStyle().setPaddingLeft(3, Style.Unit.PX);
-				//a.getElement().getStyle().setPaddingRight(2, Style.Unit.PX);
 				horPositie += 1;
 				
-				//objectBreedte += 2;
-				FormuleFont f = FormuleFont.createFromFontSize(font_size);
-				f.setBold(font_style == 1 || font_style == 3);
-				//a.getElement().getStyle().setProperty("verticalAlign", "" + (verschuiving - objectVerschuiving) + "px");
-				//a.getElement().getStyle().setProperty("verticalAlign", "" + objectVerschuiving + "px");
 				this.add(a);
 				this.setWidgetLeftWidth(a, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
 				this.setWidgetTopHeight(a, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
-				horPositie += 3; //zorgen dat formule aan de rechterkant ook voldoende afstand tot vervolgtekst krijgt.
+					horPositie += 3; //zorgen dat formule aan de rechterkant ook voldoende afstand tot vervolgtekst krijgt.
 			}
 			else if (currentObject instanceof FormuleEditorWithSteps)
 			{
@@ -290,12 +280,6 @@ public class TekstRegel extends LayoutPanel
 			else if (currentObject instanceof InteractionView)
 			{		
 				Widget a = (((InteractionView) currentObject).asWidget());
-				//a.getElement().getStyle().setProperty("display", "inline-block");
-				//if(currentObject instanceof TekstVakPanel && !(a instanceof PopupButton))
-				//{
-					//a.getElement().getStyle().setProperty("verticalAlign", "" + (verschuiving - objectVerschuiving) + "px");
-					//a.getElement().getStyle().setProperty("verticalAlign", "" + objectVerschuiving + "px");
-				//}
 				this.add(a);
 				if(!(a instanceof PopupButton))
 				{	this.setWidgetLeftWidth(a, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
@@ -329,7 +313,7 @@ public class TekstRegel extends LayoutPanel
 			}
 			horPositie += objectBreedte;
 		}
-		breedte = horPositie;
+		breedte = horPositie + 1; //zie resize tekstRegel WiskOpdr.
 	}
 	
 	public void resize()
@@ -341,19 +325,6 @@ public class TekstRegel extends LayoutPanel
 		tekstVak.resize();
 	}
 	
-	public int bepaalStringBreedte(String s)
-	{
-		int breedte = (int) ctx.measureText(s).getWidth();
-		//int paddingLeft = 0;
-		//if(s.startsWith(" "))
-		//	paddingLeft += ctx.measureText(" ").getWidth();
-		//breedte += paddingLeft;
-		//als italic: 1 pixel meer ruimte links en 1 pixel meer ruimte rechts. Juiste padding wordt in vulRegel geregeld.
-		if(font_style == 2 || font_style == 3) //TODO moet dit voor bold tekst ook?
-		{	breedte += 2;
-		}
-		return breedte;
-	}
 	
 	public void hervulRegel()
 	{
@@ -371,9 +342,7 @@ public class TekstRegel extends LayoutPanel
 				objectHoogte = object.getHeight();
 				objectVerschuiving = ashoogte - object.getAsHoogte();
 				if(object instanceof FormuleViewer)
-				{	//objectBreedte += 2;
-					horPositie += 1;
-					objectVerschuiving += 1;
+				{	horPositie += 1;
 				}
 			}
 			else
@@ -381,19 +350,13 @@ public class TekstRegel extends LayoutPanel
 				objectVerschuiving = ashoogte - tekstAshoogte;
 				if(regelObjects.get(i) instanceof String)
 				{
-					String s = ((Label) w).getText();
-					objectBreedte = bepaalStringBreedte(s);
-					//objectHoogte = fm.getHeight() + 1;//waarom deze +1?
-					objectHoogte = fm.getAscent() + fm.getDescent();
+					String s = regelObjects.get(i).toString();
+					objectBreedte = (int) ctx.measureText(s).getWidth();
+					objectHoogte = tekstHoogte;
 					
 					if(horPositie == 0 && Character.isLetter(s.charAt(0)))
 						horPositie = 2;
 				}
-// ImageView is een tekstelement
-//				else if(regelObjects.get(i) instanceof ImageView)
-//				{	objectBreedte = w.getOffsetWidth();
-//					objectHoogte = w.getOffsetHeight();
-//				}
 				else if(regelObjects.get(i) instanceof AnchorView)
 				{	objectBreedte = w.getOffsetWidth();
 					objectHoogte = w.getOffsetHeight();
@@ -405,7 +368,7 @@ public class TekstRegel extends LayoutPanel
 			if(regelObjects.get(i) instanceof FormuleViewer)
 				horPositie += 3;
 		}
-		breedte = horPositie;
+		breedte = horPositie  + 1; //zie resize tekstRegel WiskOpdr.
 	}
 	
 	
@@ -429,12 +392,8 @@ public class TekstRegel extends LayoutPanel
 			}
 			else if(currentObject instanceof String)
 			{
-				//int hoogte = font_size + 4;
-				int hoogte = fm.getHeight() + 1;
-				//System.out.println("string: hoogte = " + hoogte);
-				//int ash = (font_size + 2) / 2;
-				//int ash = fm.getHeight() / 2;
-				int ash = fm.getAscent() / 2;
+				int hoogte = tekstHoogte;
+				int ash = tekstAshoogte;
 				if(ash > h1)
 					h1 = ash;
 				if(hoogte - ash > h2)
@@ -443,29 +402,24 @@ public class TekstRegel extends LayoutPanel
 		}
 		if(regelObjects.size() > 0)
 		{
-			//if(h1 + h2 > this.hoogte)
-				this.hoogte = h1 + h2;
-			//if(this.hoogte < font_size + 4)
-			//	this.hoogte = font_size + 4;
-			if(this.hoogte < fm.getHeight() + 1)
-				this.hoogte = fm.getHeight() + 1;
-			//if(h1 > ashoogte)
-				ashoogte = h1;
+			this.hoogte = h1 + h2;
+			if(this.hoogte < tekstHoogte)
+				this.hoogte = tekstHoogte;
+			ashoogte = h1;
 		}
 		else
 		{
-			//this.hoogte = font_size + 4;//eigenlijk: fm.getAscent() + fm.getDescent()
-			//if(fm.getHeight() > this.hoogte)
-				this.hoogte = fm.getHeight() + 1;
-			//System.out.println("fm.getHeight: " + fm.getHeight() + " en fm.getAscent() + fm.getDescent(): " + (fm.getAscent() + fm.getDescent()));
-			//ashoogte = (font_size + 2) / 2; //eigenlijk: fm.getAscent();
-			//if(fm.getAscent()/2 > ashoogte)
-				ashoogte = fm.getAscent() / 2;
+			this.hoogte = tekstHoogte;
+			ashoogte = tekstAshoogte;
 		}
-		//eigenHoogte = hoogte;
-		//eigenAsHoogte = ashoogte;
 		this.setHeight(this.hoogte);
-		//System.out.println("berekende ashoogte: " + ashoogte);
+		
+	}
+	
+	public void setColor(CssColor color)
+	{
+		fgColor = color;
+		this.getElement().getStyle().setColor(color.toString());
 		
 	}
 	

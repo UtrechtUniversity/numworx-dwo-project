@@ -52,8 +52,10 @@ public class ConjugVak extends FormuleElementWithChildren
 	public void zetMaat()
 	{
 		setSize(getChild().width  + 2,  getChild().height+2);
+		//System.out.println("getChild.width: " + getChild().width +" en getChild.height: " + getChild().height);
 		getChild().setPosition(1, 2);
 		setAsHoogte(getChild().getAsHoogte()+2);
+		System.out.println("setAshoogte conjugvak: " + super.getAsHoogte());
 	}
 	
 	public int getAsHoogte()

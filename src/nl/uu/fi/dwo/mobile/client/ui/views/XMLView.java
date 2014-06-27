@@ -74,6 +74,7 @@ public abstract class XMLView {
 			
 			String fontName = wrap.getString("fontName");
 			FormuleFont.zetDefaultFont(fontName);
+			FormuleHolder.setDefaultFont(FormuleFont.createFromFontSize(font_size));
 			
 			boolean formTimes = wrap.getBoolean("formTimes");
 			FormuleFont.zetFormTimes(formTimes);

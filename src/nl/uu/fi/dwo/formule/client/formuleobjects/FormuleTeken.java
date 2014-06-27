@@ -74,7 +74,8 @@ public class FormuleTeken extends FormuleElement
 		{	m = ctx.measureText(" ");
 		}
 		this.setSize((int) m.getWidth(), fm.getAscent() + fm.getDescent());
-		this.setAsHoogte(fm.getAscent() / 2);
+		//this.setAsHoogte(fm.getAscent() / 2);
+		this.setAsHoogte(fm.getAscent());//maakt geen verschil..?
 		
 	}
 
@@ -129,7 +130,7 @@ public class FormuleTeken extends FormuleElement
 		// g.setFont(getFont());
 		ctx.setTextAlign(TextAlign.CENTER);
 		//ctx.setTextBaseline(TextBaseline.HANGING);
-		ctx.setTextBaseline(TextBaseline.BOTTOM);
+		//ctx.setTextBaseline(TextBaseline.BOTTOM);
 		ctx.setFont(fm.getFontStyle());
 	}
 
@@ -144,7 +145,8 @@ public class FormuleTeken extends FormuleElement
 		//this.setAsHoogte(this.height / 2);
 		
 		this.setSize(width, height);
-		this.setAsHoogte(fm.getAscent()/2);
+		//this.setAsHoogte(fm.getAscent()/2);
+		this.setAsHoogte(fm.getAscent());
 		
 		//this.setAsHoogte(holder.getMainRegel().getAsHoogte());
 		
@@ -160,7 +162,7 @@ public class FormuleTeken extends FormuleElement
 		if (teken != null)
 		{	setFont(fm);
 			this.setupCTXState();
-			ctx.fillText(teken, this.width / 2, this.height);
+			ctx.fillText(teken, this.width / 2, this.getAsHoogte());
 			//ctx.beginPath();ctx.rect(0, 0, width, height);ctx.stroke();
 		}
 
@@ -196,7 +198,7 @@ public class FormuleTeken extends FormuleElement
 			this.setSize((int) m.getWidth(), height);
 			ctx.setFont(fm.getFontStyle());
 			ctx.setTextAlign(TextAlign.CENTER);
-			ctx.setTextBaseline(TextBaseline.BOTTOM);
+			//ctx.setTextBaseline(TextBaseline.BOTTOM);
 			ctx.fillText("z", this.width / 2, height);
 			// boolean b = getFont().getSize()==12 &&
 			// (getFont().getName().equals("SansSerif") ||
@@ -260,7 +262,6 @@ public class FormuleTeken extends FormuleElement
 		
 		
 		boolean italic = false;
-		//boolean bold = false;
 		if(Character.isLetter(character))
 		{	if(!functieTeken)
 			{	italic = true;
@@ -268,7 +269,6 @@ public class FormuleTeken extends FormuleElement
 			}
 			
 		}
-		
 		
 		fm.setItalic(italic);
 		
@@ -288,8 +288,8 @@ public class FormuleTeken extends FormuleElement
 		else
 		{	this.setSize((int) m.getWidth() + 1, fm.getAscent() + fm.getDescent());
 		}
-		this.setAsHoogte(fm.getAscent()/2);
-		
+		//this.setAsHoogte(fm.getAscent()/2);
+		this.setAsHoogte(fm.getAscent());
 		return returnWaarde;
 	}
 	
@@ -358,13 +358,19 @@ public class FormuleTeken extends FormuleElement
 
 	private void drawMin()
 	{
+		this.width = fm.getAscent();
+		
+		
+		
+		
 		int x = 0;
-		int y = this.getAsHoogte();
+		//int y = this.getAsHoogte();
+		int y = 0;
 		//is dit nodig?
 		//x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4;
 //System.out.println("in drawMin: x, was 0, wordt: " + x +" en width is nu nog " + width);
 //fm.getAscent() = fm.getAscent()/4 + fm.getAscent()/2 + fm.getAscent()/4. Maar dat is natuurlijk niet helemaal waar vanwege afronding.
-this.width = fm.getAscent()/4 + fm.getAscent()/2 + fm.getAscent()/4;
+//this.width = fm.getAscent()/4 + fm.getAscent()/2 + fm.getAscent()/4;
 		//System.out.println("width is nu: " + width);
 
 		this.setSize(width, height);
@@ -373,15 +379,21 @@ this.width = fm.getAscent()/4 + fm.getAscent()/2 + fm.getAscent()/4;
 		ctx.setLineWidth(fm.getStrokeWidth());
 		
 		ctx.beginPath();
-		ctx.moveTo(x + fm.getAscent() / 4, y);// + fm.getAscent() / 6);
-		ctx.lineTo(x + fm.getAscent()/4 + fm.getAscent()/2, y);// + fm.getAscent() / 6);
+		//ctx.moveTo(x + fm.getAscent() / 4, y);// + fm.getAscent() / 6);
+		//ctx.lineTo(x + fm.getAscent()/4 + fm.getAscent()/2, y);// + fm.getAscent() / 6);
+		
+		ctx.moveTo(x + fm.getAscent() / 4, y + 5 * fm.getAscent()/8);
+		ctx.lineTo(x + fm.getAscent()/4 + fm.getAscent()/2, y + 5 * fm.getAscent()/8);// + fm.getAscent() / 6);
 		ctx.stroke();
 		//this.drawline(ctx, x + fm.getAscent() / 4, y + 5 * fm.getAscent() / 8, x + fm.getAscent() / 4 + fm.getAscent() / 2, y + 5 * fm.getAscent() / 8);
 		//TODO:
 		if (getFont().isBold())
 		{	ctx.beginPath();
-			ctx.moveTo(x + fm.getAscent() / 4, y + 1);// fm.getAscent() / 6 + 1);
-			ctx.lineTo(x + fm.getAscent()/4 + fm.getAscent()/2, y + 1);// + fm.getAscent() / 6 + 1);
+			//ctx.moveTo(x + fm.getAscent() / 4, y + 1);// fm.getAscent() / 6 + 1);
+			//ctx.lineTo(x + fm.getAscent()/4 + fm.getAscent()/2, y + 1);// + fm.getAscent() / 6 + 1);
+			ctx.moveTo(x + fm.getAscent() / 4, y + 5 * fm.getAscent()/8 + 1);
+			ctx.lineTo(x + fm.getAscent()/4 + fm.getAscent()/2, y + 5 * fm.getAscent()/8 + 1);// + fm.getAscent() / 6);
+		
 			ctx.stroke();	
 		
 		//this.drawline(ctx, x + fm.getAscent() / 4, y + 5 * fm.getAscent() / 8 + 1, x + fm.getAscent() / 4 + fm.getAscent() / 2, y + 5 * fm.getAscent() / 8 + 1);
@@ -434,6 +446,7 @@ this.width = fm.getAscent()/4 + fm.getAscent()/2 + fm.getAscent()/4;
 		holder.setCurrentElement(this);
 		return this;
 	}
+
 
 	@Override
 	public boolean isNumber()

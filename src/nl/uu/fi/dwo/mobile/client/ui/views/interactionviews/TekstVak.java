@@ -128,7 +128,8 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		this.fgColor = color;
 		//flowVak.getElement().getStyle().setColor(color.toString());
 		for(int i = 0; i < aantalRegels  + 1; i++)
-			regelVakken[i].getElement().getStyle().setColor(color.toString());
+		{	regelVakken[i].setColor(color);
+		}
 	}
 	
 	public void setFontSize(int font_size)
@@ -341,8 +342,20 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			if(currentObject instanceof AntwoordTekstVak)
 			{
 				((AntwoordTekstVak) currentObject).setFontSize(font_size);
+				if(regelBreedte == 0 || regelBreedte + ((AntwoordTekstVak) currentObject).getWidth() <= tekstVakBreedte)
+				{	regelVakken[aantalRegels - 1].addObject(currentObject);
+					((AntwoordTekstVak) currentObject).setParentRegel(regelVakken[aantalRegels - 1]);
+					regelBreedte += ((AntwoordTekstVak) currentObject).getWidth();
+				}
+				else
+				{
+					voegRegelToe();
+					regelVakken[aantalRegels - 1].addObject(currentObject);
+					((AntwoordTekstVak) currentObject).setParentRegel(regelVakken[aantalRegels - 1]);
+					regelBreedte = ((FormuleEditorWithAnswer) currentObject).getWidth();
+				}
 			}
-			if (currentObject instanceof FormuleEditorWithAnswer)
+			else if (currentObject instanceof FormuleEditorWithAnswer)
 			{
 				//((FormuleEditorWithAnswer) currentObject).setFont(FormuleFont.createFromFontSize(font_size));
 				//((FormuleEditorWithAnswer) currentObject).setColor(fgColor);
@@ -355,7 +368,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				{
 					voegRegelToe();
 					regelVakken[aantalRegels - 1].addObject(currentObject);
-					//((FormuleEditorWithAnswer) currentObject).setParentRegel(regelVakken[aantalRegels - 1]);
+					((FormuleEditorWithAnswer) currentObject).setParentRegel(regelVakken[aantalRegels - 1]);
 					regelBreedte = ((FormuleEditorWithAnswer) currentObject).getWidth();
 				}
 			}
@@ -439,7 +452,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			regelVakken[i].bepaalAshoogte();
 			regelVakken[i].vulRegel();
 		}
-		
+		this.ashoogte = regelVakken[0].getAsHoogte();
 		plaatsRegels(false);
 	}
 	
@@ -464,6 +477,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	
 	public int getAsHoogte()
 	{
+		//System.out.println("tekstvak getAsHoogte: " + ashoogte);
 		return ashoogte;
 	}
 	

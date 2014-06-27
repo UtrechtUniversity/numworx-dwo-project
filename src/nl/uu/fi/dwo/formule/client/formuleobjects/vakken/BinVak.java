@@ -69,12 +69,14 @@ public class BinVak extends FormuleElementWithChildren
 		getChild(0).setPosition(5*fm.getAscent()/12 + (maxWidth-getChild(0).width)/2, fm.getAscent()/12);
 		getChild(1).setPosition(5*fm.getAscent()/12 + (maxWidth-getChild(1).width)/2, fm.getAscent()/6 + getChild(0).height);
 		setSize(5*fm.getAscent()/6 + maxWidth, 3*fm.getAscent()/12 + getChild(0).height + getChild(1).height);
-		setAsHoogte(-fm.getAscent()/8 + getChild(0).height);
+		//setAsHoogte(-fm.getAscent()/8 + getChild(0).height);
+		setAsHoogte(3*fm.getAscent()/8 + getChild(0).height);
 	}
 	
 	public int getAsHoogte()
 	{
-		return -fm.getAscent()/8 + getChild(0).height;
+		return //-fm.getAscent()/8 + getChild(0).height;
+				3*fm.getAscent()/8 + getChild(0).height;
 	}
 	
 	public String toString()
