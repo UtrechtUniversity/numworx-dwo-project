@@ -5,21 +5,19 @@ package fi.dwo.client.domain;
 import fi.dwo.client.gui.GuiCreator;
 
 /**
- * This class is responsible for containing the data of the AppletConfig.<br>
- * <br>
- * An AppletConfig is a configurated applet.<br>
- * An applet could have differend modes. (for example <code>nabouwen</code>). <br>
- * Every mode of the applet is an AppletConfig.
+ * This class is responsible for containing the DWO confituration.
+ * Singleton.
  * @author M.J.B. Kupers
  *
  */
 public class DwoProfile implements Descriptor {
 
+	public static char READONLY = 'r';
     private int dwoProfileID;
     private String description;
     private String text;
     private String name;
-    private String rights = "";
+    private static String rights = "";
     public DwoProfile() {
 
     }
@@ -88,19 +86,20 @@ public class DwoProfile implements Descriptor {
 	/**
 	 * @return the rights
 	 */
-	public String getRights() {
+	public static String getRights() {
 		return rights;
 	}
 
 	/**
 	 * @param rights the rights to set
 	 */
-	public void setRights(String rights) {
+	public static void setRights(String rights) {
+		DwoProfile.rights = rights;
 	}
     
-    public boolean hasRight(char right)
+    public static boolean hasRight(char right)
     {
-    	return false;
+    	return rights.indexOf(right)>=0;
     }
 
 	public String getHeader() {
