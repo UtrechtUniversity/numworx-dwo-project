@@ -309,6 +309,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		scoreNav.setAantalOpdrachten(on.getAantalOpdrachten(), on.getMaxScores());
 		scoreNav.setBeantwoord(on.getAantalBeantwoord());
 		scoreNav.setItemScores(on.getItemScores());
+		scoreNav.setTotaalScore((int)on.getScore());
 		scoreNav.setGotoOpdracht(on);
 		setTitle("Vraag " + (1+on.getCurrentOpdracht()) + " van " + on.getAantalOpdrachten());
 	}
@@ -742,12 +743,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		FocusOnTouch.installKeyboard(kb);
 		FormuleHolder.installKeyboard(kb);
 		
-		hp = new HeaderPanel(DWOplayer.DWO_BUNDLE.headercss());
+		hp = new HeaderPanel(DWOplayer.PARAMETERS.headercss());
 		hp.setCenter("");
 		//Style style = hp.getElement().getStyle();
 		
 		HeaderButton next, prev;
-		next = new HeaderButton(DWOplayer.DWO_BUNDLE.headercss()); next.setText("Volgende >");
+		next = new HeaderButton(DWOplayer.PARAMETERS.headercss()); next.setText("Volgende >");
 		next.addTapHandler(new TapHandler() {
 			
 			@Override
@@ -757,7 +758,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				on.gotoOpdracht(cur, scoreNav);
 			}
 		});
-		prev = new HeaderButton(DWOplayer.DWO_BUNDLE.headercss()); prev.setText("< Vorige");
+		prev = new HeaderButton(DWOplayer.PARAMETERS.headercss()); prev.setText("< Vorige");
 		prev.addTapHandler(new TapHandler() {
 			
 			@Override
@@ -772,8 +773,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		hbox.add(prev); hbox.add(next);
 		hp.setRightWidget(hbox);
 		
-		hb = new HeaderButton(DWOplayer.DWO_BUNDLE.headercss());
-		hb.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.menuIcon().getSafeUri().asString() + "')");;
+		hb = new HeaderButton(DWOplayer.PARAMETERS.headercss());
+		hb.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.menuIcon().getSafeUri().asString() + "')");
 
 		hp.setLeftWidget(hb);
 

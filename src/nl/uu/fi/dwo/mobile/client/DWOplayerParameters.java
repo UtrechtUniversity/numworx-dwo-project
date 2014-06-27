@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client;
 
+import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
+
 /**
  * Module parameters. Waar staat wat.
  * @author velth101
@@ -33,6 +35,9 @@ public interface DWOplayerParameters {
 	 * @return StyleDependentName
 	 */
 	String keyboardStyle();
-	
+	/**
+	 * Header style
+	 */
+	HeaderCss headercss();
 // More to come....
 }

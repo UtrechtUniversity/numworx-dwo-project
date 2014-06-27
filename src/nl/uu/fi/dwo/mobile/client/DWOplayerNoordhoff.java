@@ -1,7 +1,9 @@
 package nl.uu.fi.dwo.mobile.client;
 
 import com.google.gwt.core.shared.GWT;
+import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
 
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyBoardButtons;
 
 public class DWOplayerNoordhoff extends DWOplayerDefaults implements DWOplayerParameters {
@@ -32,6 +34,11 @@ public class DWOplayerNoordhoff extends DWOplayerDefaults implements DWOplayerPa
 	@Override
 	public String keyboardStyle() {
 		return "noordhoff";
+	}
+
+	@Override
+	public HeaderCss headercss() {
+		return  DWOplayer.DWO_BUNDLE.headercss();
 	}
 
 	

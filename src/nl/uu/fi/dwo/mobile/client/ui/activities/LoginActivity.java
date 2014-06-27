@@ -73,6 +73,7 @@ public class LoginActivity extends MGWTAbstractActivity
 			@Override
 			public void onTap(TapEvent event)
 			{
+				DWOplayer.profiledata = null;
 				DWOplayer.gotoCourses();
 			}
 		}));

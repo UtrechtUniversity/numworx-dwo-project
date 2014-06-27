@@ -1,5 +1,8 @@
 package nl.uu.fi.dwo.mobile.client;
 
+import com.googlecode.mgwt.ui.client.MGWTStyle;
+import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
+
 public class DWOplayerDefaults implements DWOplayerParameters {
 
 	@Override
@@ -24,5 +27,10 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 	@Override
 	public String keyboardStyle() {
 		return "dwo";
+	}
+
+	@Override
+	public HeaderCss headercss() {
+		return MGWTStyle.getTheme().getMGWTClientBundle().getHeaderCss();
 	}
 }
