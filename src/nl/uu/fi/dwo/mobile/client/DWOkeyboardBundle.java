@@ -20,5 +20,7 @@ public interface DWOkeyboardBundle extends ClientBundle {
 	@Source("nl/uu/fi/dwo/mobile/client/resources/kb/mw_wortel.gif")
 	ImageResource wortel();
 
+	@Source("nl/uu/fi/dwo/mobile/client/resources/kb/keyboardremovebutton.png")
+	ImageResource VVV();
 	
 }

@@ -442,7 +442,8 @@ public class FormuleEditorWithSteps implements InteractionView
 		if (hasFeedback)
 		{	contentPanel.add(feedbackPanel);
 			contentPanel.setWidgetLeftRight(feedbackPanel, 5, Style.Unit.PX, 5, Style.Unit.PX);
-			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + viewers.get(viewers.size() - 1).getHeight(), Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX); 
+			int height = viewers.isEmpty() ? 23 : viewers.get(viewers.size() - 1).getHeight();
+			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + height, Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX); 
 		}
 	}
 
@@ -870,6 +871,7 @@ public class FormuleEditorWithSteps implements InteractionView
 				stepPanel.add(p);
 				highLight(stepPanel, false);
 			}
+			stepPanel.removeFromParent();
 			contentPanel.add(stepPanel);
 			contentPanel.setWidgetLeftRight(stepPanel, 5, Style.Unit.PX, 5, Style.Unit.PX);
 			contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);

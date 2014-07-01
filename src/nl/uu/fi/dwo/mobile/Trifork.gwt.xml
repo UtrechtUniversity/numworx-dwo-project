@@ -5,8 +5,9 @@
 	<inherits name="com.google.gwt.user.User" />
 	<inherits name="nl.uu.fi.dwo.mobile.DWOplayer-module" />
 	<inherits name="fi.graphtoolgwt.GraphToolGWT-DWO" />
-
-	<set-property name="gwt.logging.enabled" value="TRUE"/>
+	<inherits name="fi.antwoordkeuzevakgwt.AntwoordKeuzeVakGWT-DWO" />
+ 	
+	<set-property name="gwt.logging.enabled" value="FALSE"/>
 	<set-property name="user.agent" value="safari" />
 	<entry-point class='nl.uu.fi.dwo.mobile.TriforkPlayer'/>
 	

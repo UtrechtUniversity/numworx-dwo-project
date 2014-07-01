@@ -10,7 +10,9 @@ public class ImageUtils {
 	
 	
 	public static Image newImage(String resource) {
-		return new Image(DWOplayer.PARAMETERS.getResource(resource));
+		if(resource.startsWith("image"))
+			resource = DWOplayer.PARAMETERS.getResource(resource);
+		return new Image(resource);
 	}
 
 }

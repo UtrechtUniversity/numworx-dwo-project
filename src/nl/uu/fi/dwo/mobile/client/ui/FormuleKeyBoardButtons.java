@@ -190,6 +190,7 @@ public abstract class FormuleKeyBoardButtons
 		buttonImages_put("macht", KB.macht());
 		buttonImages_put("ndewortel", KB.ndewortel());
 		buttonImages_put("wortel", KB.wortel());
+		buttonImages_put(FormuleKeyboard.VVV, KB.VVV());
 	}
 	
 	private static void buttonImages_put(String key, ImageResource resource) {
@@ -211,11 +212,11 @@ public abstract class FormuleKeyBoardButtons
 		{ "conjug", "\u2192", "sigma", "\u3008", "\u3009", "diff_partial", "space", "of", "\u2248", "0", ".", "=", "plus" } };
 		 */
 		buttonImages = new HashMap<String, String>();
-		buttonImages.put("wortel", "images/resources/mw_wortel.gif");
-		buttonImages.put("breuk", "images/resources/mw_breuk.gif");
-		buttonImages.put("macht", "images/resources/mw_macht.gif");
-		buttonImages.put("kwadraat", "images/resources/mw_kwadraat.gif");
-		buttonImages.put("ndewortel", "images/resources/mw_ndewortel.gif");
+		//buttonImages.put("wortel", "images/resources/mw_wortel.gif");
+		//buttonImages.put("breuk", "images/resources/mw_breuk.gif");
+		//buttonImages.put("macht", "images/resources/mw_macht.gif");
+		//buttonImages.put("kwadraat", "images/resources/mw_kwadraat.gif");
+		//buttonImages.put("ndewortel", "images/resources/mw_ndewortel.gif");
 		buttonImages.put("haakjes", "images/resources/mw_haakjes.gif");
 		buttonImages.put("min", "images/resources/mw_min.gif");
 		buttonImages.put("plus", "images/resources/mw_plus.gif");
@@ -248,11 +249,14 @@ public abstract class FormuleKeyBoardButtons
 		buttonImages.put("right", "images/resources/pijlrechts.gif");
 		buttonImages.put("left", "images/resources/pijllinks.gif");
 		
-		buttonImages.put(FormuleKeyboard.VVV, "images/resources/keyboardremovebutton.png");
+		//buttonImages.put(FormuleKeyboard.VVV, "images/resources/keyboardremovebutton.png");
 
 		buttonTexts = new HashMap<String, String>();
-		buttonTexts.put("key", "value");
+		//buttonTexts.put("key", "value");
+		buttonTexts.put("pi", "\u03C0");
 
+		setupBundle();
+		
 		DWOplayer.PARAMETERS.keyboardSetup();
 		
 	}
@@ -399,11 +403,6 @@ public abstract class FormuleKeyBoardButtons
 				}
 
 				//buttonTexts.put(" ", "space");
-
-
-
-				
-				
 				
 	}
 }

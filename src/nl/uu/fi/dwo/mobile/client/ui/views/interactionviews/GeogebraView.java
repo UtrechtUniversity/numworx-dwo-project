@@ -2,9 +2,12 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import nl.uu.fi.dwo.interaction.client.InteractionView;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
@@ -30,6 +33,9 @@ public class GeogebraView implements InteractionView, LoadHandler
 	private boolean bewaarOptie, nakijken, correct,check;
 	private int score, scoreMax;
 	private PopupFacade facade;
+	private int width;
+	private int height;
+	private boolean volledigeBreedte;
 	public native static Object getGgbWindow(Element frame) /*-{
 		return frame.contentWindow;
 	}-*/;
@@ -64,23 +70,27 @@ public class GeogebraView implements InteractionView, LoadHandler
 	public GeogebraView init(HashMap<String, Object> launchData)
 	{
 		facade = new PopupFacade(launchData);
+		ObjectMap json = JSONUtilities.wrapMap(launchData);
 		Map<String, Object> geogebraParams = new HashMap<String,Object>();
-		Map ggbMap = (Map) launchData.get("interactiePanelLaunchState");
-		Object object = ggbMap.get("ggbFile"); // java:ByteArray struct
-		if(object instanceof Map) object = ((HashMap<String, Object>) object).get("string");
-		ggb = object != null ? object.toString() : "";
-		object = ggbMap.get("geogebraParams");
+		ObjectMap ggbMap = json.getObjectMap("interactiePanelLaunchState");
+		ObjectMap object = ggbMap.getObjectMap("ggbFile"); // java:ByteArray struct
+		String string = object.getString("string");
+		ggb = string != null ? string.toString() : "";
+		object = ggbMap.getObjectMap("geogebraParams");
 		if( object instanceof Map)
 		{
 			@SuppressWarnings("unchecked")
-			Map<String,Object> map = (Map<String,Object>)object;
-			geogebraParams.putAll(map);
+			Set<String> keys = ((Map)object).keySet();
+			for(String key: keys) {
+				geogebraParams.put(key, object.get(key));
+			}
+			//geogebraParams.putAll(map);
 		}
-		bewaarOptie = Boolean.TRUE.equals( ggbMap.get("bewaarOptie"));
-		nakijken    = Boolean.TRUE.equals( ggbMap.get("nakijken"));
-		check       = !Boolean.FALSE.equals(ggbMap.get("check")); // default is true
-		object      = ggbMap.get("scoreMax");
-		if(object instanceof Number) scoreMax = ((Number) object).intValue();
+		bewaarOptie = ggbMap.containsKey("bewaarOptie") && ggbMap.getBoolean("bewaarOptie");
+		nakijken    = ggbMap.containsKey("nakijken") &&  ggbMap.getBoolean("nakijken");
+		check       = (!ggbMap.containsKey("check")) || ggbMap.getBoolean("check"); // default is true
+		if(ggbMap.containsKey("scoreMax")) 
+			scoreMax = ggbMap.getInt("scoreMax");
 		
 		
 		frame = new Frame(DWOplayer.PARAMETERS.getStubView() + "SlopeTestWeb.html");
@@ -96,11 +106,11 @@ public class GeogebraView implements InteractionView, LoadHandler
 		}
 		params.append(ggb);
 		ggb = params.toString();
-		int width = 400;
+		width = 400;
 		Object w = launchData.get("breedte");
 		if (w != null)
 			width = (int)Double.parseDouble(w.toString());
-		int height = 400;
+		height = 400;
 		Object h = launchData.get("hoogte");
 		if (h != null)
 			height = (int)Double.parseDouble(h.toString());
@@ -192,21 +202,23 @@ public class GeogebraView implements InteractionView, LoadHandler
 	
 	@Override
 	public int getAsHoogte() {
-		return 0;
+		return facade.wrapAsHoogte(0);
 	}
 
 	@Override
 	public int getHeight() {
-		return mainPanel.getOffsetHeight();
+		return facade.wrapHeight(height);
 	}
 
 	@Override
 	public int getWidth() {
-		return mainPanel.getOffsetWidth();
+		return facade.wrapWidth(width);
 	}
 	
 	public void zetVolledigeBreedte(int breedte)
 	{
+		if(volledigeBreedte)
+			width = breedte;
 	}
 
 	@Override
