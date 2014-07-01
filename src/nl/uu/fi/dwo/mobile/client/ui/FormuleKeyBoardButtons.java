@@ -6,10 +6,13 @@ import java.util.HashMap;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.DWOkeyboardBundle;
 
 import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
@@ -178,6 +181,19 @@ public abstract class FormuleKeyBoardButtons
 			// TODO Auto-generated method stub
 			
 		}
+	}
+
+	private static void setupBundle() {
+		DWOkeyboardBundle KB = GWT.create(DWOkeyboardBundle.class);
+		buttonImages_put("breuk", KB.breuk());
+		buttonImages_put("kwadraat", KB.kwadraat());
+		buttonImages_put("macht", KB.macht());
+		buttonImages_put("ndewortel", KB.ndewortel());
+		buttonImages_put("wortel", KB.wortel());
+	}
+	
+	private static void buttonImages_put(String key, ImageResource resource) {
+		buttonImages.put(key, resource.getSafeUri().asString());
 	}
 
 	private static void setUp()

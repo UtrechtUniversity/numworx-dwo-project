@@ -7,9 +7,6 @@ import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
 
 public interface DWOplayerClientBundle extends ClientBundle {
 
-	@Source("nl/uu/fi/dwo/mobile/client/resources/mw_wortel.gif")
-	ImageResource mv_wortel();
-
 	@Source("nl/uu/fi/dwo/mobile/client/resources/foutkruis.gif")
 	ImageResource foutkruis();
 
