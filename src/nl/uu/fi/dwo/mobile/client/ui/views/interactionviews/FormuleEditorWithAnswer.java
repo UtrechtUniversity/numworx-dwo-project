@@ -229,11 +229,15 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				//sp.getElement().getStyle().setBackgroundColor(CssColor.make(255, 0, 0).toString());
 				Style spStyle = sp.getElement().getStyle();
 				if(boxMetRand)
+				{
+					spStyle.setBackgroundColor("white");
 					spStyle.setProperty("border", "1px solid gray");
+				}
 				else
 				{
 					spStyle.setBorderStyle(Style.BorderStyle.NONE);
 					spStyle.setProperty("borderBottom", "thin dotted");
+					spStyle.setProperty("background", "none");
 				}
 				//sp.getElement().getStyle().setPadding(3, Style.Unit.PX);
 				
@@ -254,7 +258,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				//sp.getElement().getStyle().setPaddingTop(1, Style.Unit.PX);
 				//sp.getElement().getStyle().setPaddingBottom(5, Style.Unit.PX);
 				//(Weggehaald Sietske) sp.getElement().getStyle().setProperty("backgroundColor", "#e9e9e9");
-				spStyle.setBackgroundColor("white");
+				
 				//sp.getElement().getStyle().setProperty("backgroundColor", "yellow");
 				//this.getMainRegel().getCanvas().getElement().getStyle().setProperty("marginTop", "3px");
 				//this.getMainRegel().getCanvas().getElement().getStyle().setProperty("marginBottom", "0px");
@@ -453,7 +457,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if(fews != null)
 		{
 			h = fews.getState();
-			h.put(ANTWOORD_STRING, "$f" + toString() + "@");
+			h.put(ANTWOORD_STRING,  toString() );
 		} else {
 			h = new HashMap<String, Object>();
 			String[] formuleVakInhouden = {"$f" + this.toString() + "@" } ;
