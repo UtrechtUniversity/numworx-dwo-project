@@ -9,6 +9,8 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.logging.client.HasWidgetsLogHandler;
@@ -47,6 +49,10 @@ try {
 		if( LogConfiguration.loggingIsEnabled()) {
 			RootPanel.get().add(customLogArea);
 		}
+		Style style = view.asWidget().getElement().getStyle();
+		style.setMargin(0, Unit.PX);
+		style.setBackgroundColor("white");
+		
 		RootPanel.get().add(view);
 
 		Scorm2004IF api = view.getApi();

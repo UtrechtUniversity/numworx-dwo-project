@@ -458,7 +458,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		mainPanel.getElement().getStyle().setBorderWidth(boxMetRand ? 1 : 0, Unit.PX);
 		mainPanel.getElement().getStyle().setProperty("lineHeight", "2.0");
 
-		Image buttonImg = new Image(DWOplayer.DWO_BUNDLE.pijlterug());
+		Image buttonImg = new Image(DWOplayer.DWO_BUNDLE.pijlterug().getSafeUri());
 		buttonImg.getElement().getStyle().setMargin(2, Unit.PX);
 		tb = new TouchButton();
 		tb.add(buttonImg);
@@ -466,7 +466,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		tb.getElement().getStyle().setVisibility(Visibility.HIDDEN);
 		addButtonHandler(tb);
 
-		Image copyButtonImg = new Image(DWOplayer.DWO_BUNDLE.pijlcopy());
+		Image copyButtonImg = new Image(DWOplayer.DWO_BUNDLE.pijlcopy().getSafeUri());
 		copyButtonImg.getElement().getStyle().setMargin(2, Unit.PX);
 		copyButton = new TouchButton();
 		copyButton.add(copyButtonImg);
@@ -936,7 +936,10 @@ public class FormuleEditorWithSteps implements InteractionView
 	public int getHeight() {
 		return hoogte;
 	}
-
+	protected void setHeight(int h) {
+		hoogte = h;
+	}
+	
 	@Override
 	public int getWidth() {
 		return breedte;

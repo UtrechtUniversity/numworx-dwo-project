@@ -545,7 +545,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			if(centerH)
 				horPositie += (int) (tekstVakBreedte - regelVakken[i].getWidth())/2;
 			
-			if(!herplaats)
+			if(regelVakken[i].getParent() == null)
 				this.add(regelVakken[i]);
 			int corr = 0;
 			if(i > 0)

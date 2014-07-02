@@ -95,6 +95,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				String useranswer = other.toString();
 				getEditor().clearMain();
 				getEditor().insert(useranswer);
+				getEditor().requestFocus();
 			}
 			if(TekstVakPanel.TVP_KLAPIN == event.getCommand())
 			{
@@ -104,6 +105,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				other.insert(useranswer);
 			
 			}
+		}
+
+		void setHeight(double hoogte) {
+			logger.fine("setHeight(" + hoogte + ")");
+			super.setHeight((int)hoogte);
 		}
 
 		
@@ -191,6 +197,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 						HashMap<String, Object> hh = new HashMap<String,Object>();
 						hh.put("volledigeBreedte", Boolean.TRUE);
 						hh.put("breedte", breedte);
+						hh.put("hoogte" , 250); // FIXME wat is hier de goede hoogte?
 						HashMap ll = new HashMap();
 						hh.put("interactiePanelLaunchState", launchState);
 						
@@ -199,7 +206,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				}
 			}
 		
-			checkimg = new Image(FORMULE_BUNDLE.mw_vinkje_groen());
+			checkimg = new Image(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
 			checkimg.setVisible(false);
 			checkimg.getElement().getStyle().setProperty("marginLeft", "3px");
 			checkimg.getElement().getStyle().setProperty("verticalAlign", "top");
@@ -344,7 +351,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 		if (goedHalfFout == AntwoordVakChecker.DOOR)
 		{
-			checkimg.setResource(FORMULE_BUNDLE.mw_vinkje_geel());
+			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri());
 			if (this.fe != null)
 			{
 				fe.setFeedback(feedback);
@@ -355,11 +362,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		{
 			if (this.fe != null)
 				fe.setFeedback(feedback);
-			checkimg.setResource(FORMULE_BUNDLE.mw_vinkje_geel());
+			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri());
 		}
 		else if (goedHalfFout == AntwoordVakChecker.GOED)
 		{
-			checkimg.setResource(FORMULE_BUNDLE.mw_vinkje_groen());
+			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
 			if (this.fe != null)
 			{
 				fe.setFeedback(feedback);
@@ -370,7 +377,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		{
 			if (this.fe != null)
 				fe.setAndAddFeedback(feedback);
-			checkimg.setResource(FORMULE_BUNDLE.mw_kruisje_rood());
+			checkimg.setUrl(FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
 		}
 		
 		checkimg.setVisible(check && goedHalfFout != AntwoordVakChecker.GEEN); // Wim: Hier verscheen het vinkje als goedhalfFout GEEN is
@@ -442,16 +449,28 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	@Override
 	public HashMap<String, Object> getState()
 	{
-		HashMap<String, Object> h = new HashMap<String, Object>();
-		String[] formuleVakInhouden = {"$f" + this.toString() + "@" } ;
-		h.put("formuleVakInhouden", formuleVakInhouden);
-		h.put(ANTWOORD_STRING, formuleVakInhouden[0]);
+		HashMap<String, Object> h;
+		if(fews != null)
+		{
+			h = fews.getState();
+			h.put(ANTWOORD_STRING, "$f" + toString() + "@");
+		} else {
+			h = new HashMap<String, Object>();
+			String[] formuleVakInhouden = {"$f" + this.toString() + "@" } ;
+			h.put("formuleVakInhouden", formuleVakInhouden);
+			h.put(ANTWOORD_STRING, formuleVakInhouden[0]);
+		}
 		return h;
 	}
 
 	@Override
 	public void setState(HashMap<String, Object> h)
 	{
+		if(fews != null)
+		{
+			fews.setState(h);
+		}
+		
 		String antwoord = (String) h.get(ANTWOORD_STRING);
 		if (antwoord != null && !"".equals(antwoord.trim()))
 		{
@@ -500,6 +519,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public Object getUitwerking(TekstVakPanel parent) {
 		if(vakUitwerking)
 		{
+			double hoogte = parent.uitklapHoogtes.get(1); // Marges??????
+			fews.setHeight(hoogte);
 			parent.addCBookEventListener(fews);
 			return fews;
 		}
