@@ -233,7 +233,9 @@ public class AntwoordTekstVak implements InteractionView{
 		
 		antwoordTF = new TextBox();
 		antwoordTF.getElement().getStyle().setProperty("border", "1px solid gray");
+		antwoordTF.getElement().getStyle().setFontSize(12, Style.Unit.PX);
 		antwoordTF.setWidth((breedte - 4) + "px");
+		
 		//antwoordTF.setHeight((hoogte - 5) + "px");
 		
 		antwoordTF.getElement().getStyle().setPaddingLeft(0, Style.Unit.PX);
@@ -363,7 +365,7 @@ public class AntwoordTekstVak implements InteractionView{
 			basisPanel.add(antwoordTF);
 			basisPanel.setWidgetLeftRight(antwoordTF, 0, Style.Unit.PX, 0, Style.Unit.PX);
 			basisPanel.setWidgetTopBottom(antwoordTF, 0, Style.Unit.PX, 0, Style.Unit.PX);
-			ashoogte = Math.round(hoogte /2) - 3;// /*antwoordTF.getOffsetHeight()*/ - 3;
+			ashoogte = Math.round(hoogte) - 5;// /*antwoordTF.getOffsetHeight()*/ - 3;
 		}
 		
 		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen());
@@ -907,8 +909,8 @@ public class AntwoordTekstVak implements InteractionView{
 	{
 		if(formuleMode)
 			formuleVak.setFont(FormuleFont.createFromFontSize(size));
-		else
-			antwoordTF.getElement().getStyle().setFontSize(size, Style.Unit.PX);
+		//else
+		//	antwoordTF.getElement().getStyle().setFontSize(size, Style.Unit.PX);
 	}
 	
 }
