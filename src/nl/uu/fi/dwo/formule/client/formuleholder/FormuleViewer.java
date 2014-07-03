@@ -45,7 +45,7 @@ public class FormuleViewer extends FormuleHolder
 		this.paint();
 
 		sp = new TouchPanel();
-		checkimg = new Image(FORMULE_BUNDLE.goedkrul());
+		checkimg = new Image(FORMULE_BUNDLE.goedkrul().getSafeUri());
 		checkimg.getElement().getStyle().setMarginRight(10, Unit.PX);
 		checkimg.setVisible(false);
 		sp.add(checkimg);
@@ -78,7 +78,7 @@ public class FormuleViewer extends FormuleHolder
 		this.paint();
 
 		sp = new FlowPanel();
-		checkimg = new Image(FORMULE_BUNDLE.goedkrul());
+		checkimg = new Image(FORMULE_BUNDLE.goedkrul().getSafeUri());
 		checkimg.setVisible(false);
 		sp.add(this.getMainRegel().getCanvas());
 		sp.add(checkimg);
@@ -96,15 +96,15 @@ public class FormuleViewer extends FormuleHolder
 			this.getMainRegel().getCanvas().getElement().getStyle().setMarginLeft(23, Unit.PX);
 			break;
 		case ALMOSTCORRECT:
-			checkimg.setResource(FORMULE_BUNDLE.mw_vinkje_geel());
+			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri());
 			this.getMainRegel().getCanvas().getElement().getStyle().setMarginLeft(0, Unit.PX);
 			break;
 		case CORRECT:
-			checkimg.setResource(FORMULE_BUNDLE.mw_vinkje_groen());
+			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
 			this.getMainRegel().getCanvas().getElement().getStyle().setMarginLeft(0, Unit.PX);
 			break;
 		case WRONG:
-			checkimg.setResource(FORMULE_BUNDLE.mw_kruisje_rood());
+			checkimg.setUrl(FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
 			this.getMainRegel().getCanvas().getElement().getStyle().setMarginLeft(0, Unit.PX);
 			break;
 		}

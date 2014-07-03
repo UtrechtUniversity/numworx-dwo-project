@@ -34,11 +34,11 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 	HashMap<String,Object> state;
 	
 	public PopupButton(IsWidget content) {
-		this(content, new Image(DWOplayer.DWO_BUNDLE.appletknop()), null);
+		this(content, new Image(DWOplayer.DWO_BUNDLE.appletknop().getSafeUri()), null);
 	}
 	
 	public PopupButton(StubView view) {
-		this(view.getWidget(),new Image(DWOplayer.DWO_BUNDLE.appletknop()), view);
+		this(view.getWidget(),new Image(DWOplayer.DWO_BUNDLE.appletknop().getSafeUri()), view);
 	}
 
 	public PopupButton(IsWidget content, Image image, InteractionView view) {

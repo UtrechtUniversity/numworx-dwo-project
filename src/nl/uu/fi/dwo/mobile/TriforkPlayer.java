@@ -45,6 +45,7 @@ try {
 		
 		MGWTsetup();
 		view = new ViewModuleViewImpl(true).initialize();
+		view.zetMaat();
 		//RootPanel.get().add(view);
 		if( LogConfiguration.loggingIsEnabled()) {
 			RootPanel.get().add(customLogArea);

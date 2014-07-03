@@ -15,7 +15,7 @@
     	<when-type-is class="nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF"/>
     </replace-with>
  
-	<replace-with class="nl.uu.fi.dwo.mobile.client.DWOplayerDefaults">
+	<replace-with class="nl.uu.fi.dwo.mobile.client.TriforkParameters">
         <when-type-is class="nl.uu.fi.dwo.mobile.client.DWOplayerParameters" />
     </replace-with>
  	

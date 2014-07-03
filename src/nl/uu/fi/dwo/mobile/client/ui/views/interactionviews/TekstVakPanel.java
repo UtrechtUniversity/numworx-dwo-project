@@ -465,7 +465,7 @@ public class TekstVakPanel implements InteractionView
 		mainPanel2.setWidgetTopBottom(mainPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
 		
 		if(sleepbaar && sleepHandle)
-		{	Image ic = new Image(DWOplayer.DWO_BUNDLE.crosshair());
+		{	Image ic = new Image(DWOplayer.DWO_BUNDLE.crosshair().getSafeUri());
 			mainPanel2.add(ic);
 			mainPanel2.setWidgetLeftWidth(ic, 0, Style.Unit.PX, 20, Style.Unit.PX);
 			mainPanel2.setWidgetTopHeight(ic, 0, Style.Unit.PX, 20, Style.Unit.PX);
@@ -1667,11 +1667,11 @@ public class TekstVakPanel implements InteractionView
 		if(knopImageView1 != null && knopImageView1.exists()) {
 			view1 = knopImageView1.getImage();
 		} else
-			view1 = new Image(DWOplayer.DWO_BUNDLE.klapuit1());		
+			view1 = new Image(DWOplayer.DWO_BUNDLE.klapuit1().getSafeUri());		
 		if(knopImageView2 != null && knopImageView2.exists()) {
 			view2 = knopImageView2.getImage();
 		} else {
-			view2 = new Image(DWOplayer.DWO_BUNDLE.klapuit2());
+			view2 = new Image(DWOplayer.DWO_BUNDLE.klapuit2().getSafeUri());
 		}
 		final Image masterView = ingeklapt ? view2 : view1;
 		masterView.getElement().getStyle().setProperty("verticalAlign", hoogtes.get(0).intValue() + "px");

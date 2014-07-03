@@ -368,9 +368,9 @@ public class AntwoordTekstVak implements InteractionView{
 			ashoogte = Math.round(hoogte) - 5;// /*antwoordTF.getOffsetHeight()*/ - 3;
 		}
 		
-		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen());
-		goedKrulHalfImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_geel());
-		foutKruisImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_kruisje_rood());
+		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
+		goedKrulHalfImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri());
+		foutKruisImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
 		
 		basisPanel.add(goedKrulImage);
 		basisPanel.add(goedKrulHalfImage);

@@ -668,8 +668,8 @@ public class CheckSleepUnit implements InteractionStub{
 			}
 		});
 		
-		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.goedkrul_en());
-		foutKruisImage = new Image(DWOplayer.DWO_BUNDLE.foutkruis());
+		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.goedkrul_en().getSafeUri());
+		foutKruisImage = new Image(DWOplayer.DWO_BUNDLE.foutkruis().getSafeUri());
 		
 		basisPanel.add(goedKrulImage);
 		basisPanel.add(foutKruisImage);
