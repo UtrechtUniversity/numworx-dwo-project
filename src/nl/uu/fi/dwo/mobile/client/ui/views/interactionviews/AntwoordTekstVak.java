@@ -330,7 +330,8 @@ public class AntwoordTekstVak implements InteractionView{
 		} ;
 		//hier toetsenbord aan vastmaken. WIM??
 		formuleVak.setFormuleToolBijFocus(formuleToolBijFocus);
-		formuleVak.getMainRegel().setMinimumWidth(breedte - 20);
+		//formuleVak.getMainRegel().setMinimumWidth(breedte - 20);
+		formuleVak.getMainRegel().setMinimumWidth(breedte);
 		formuleVak.getMainRegel().setMinimumHeight(hoogte - 8);
 		
 		//formuleVak.setFont(formuleVakFont);
@@ -340,7 +341,6 @@ public class AntwoordTekstVak implements InteractionView{
 		//addMouseListener(this);
 		
 		if (formuleMode) 
-			//dus ga even met wat anders verder.
 		{	//basisPanel.setSize(Math.max(minBreedte, formuleVak.getSize().width + 24), formuleVak.getSize().height + 8);
 			achtergrondPanel = new TouchPanel();
 			achtergrondPanel.getElement().getStyle().setBackgroundColor("white");
@@ -635,6 +635,8 @@ public class AntwoordTekstVak implements InteractionView{
 		goedKrulImage.setVisible(false);
 		goedKrulHalfImage.setVisible(false);
 		foutKruisImage.setVisible(false);
+		//if(!ingevuld)
+		//	return;
 		if (uitslag == GEEN)
 			return;
 		if (uitslag == GOED)
@@ -655,7 +657,7 @@ public class AntwoordTekstVak implements InteractionView{
 		checkAntwoord(show);
 		
 		if (formuleMode)
-			ingevuld = !(formuleVak.toString() == null || formuleVak.toString().equals("$f@"));
+			ingevuld = !(formuleVak.toString() == null || formuleVak.toString().equals(""));
 		else
 			ingevuld = !(antwoordTF.getText() == null || antwoordTF.getText().equals(""));
 

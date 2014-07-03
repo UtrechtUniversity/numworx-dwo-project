@@ -236,7 +236,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				else
 				{
 					spStyle.setBorderStyle(Style.BorderStyle.NONE);
-					spStyle.setProperty("borderBottom", "thin dotted");
+					//spStyle.setProperty("borderBottom", "thin dotted");
+					//this.getMainRegel().vulVak("...");
+					this.getMainRegel().zetStippels(true);
+					
+					//this.getMainRegel().paintObject();
 					spStyle.setProperty("background", "none");
 				}
 				//sp.getElement().getStyle().setPadding(3, Style.Unit.PX);
@@ -268,6 +272,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			sp.add(this.getMainRegel().getCanvas());
 			sp.add(checkimg);
 			sp.addTouchHandler(new FormuleEditorTouchHandler(this));
+			
 		}
 	}
 

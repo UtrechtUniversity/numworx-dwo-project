@@ -693,6 +693,7 @@ public class TekstVakPanel implements InteractionView
 						formuleEditorWithAnswer.zetInstellingen(instellingen);
 						if(i == 0 && j == 0)
 							queuedObject = formuleEditorWithAnswer.getUitwerking(this);
+						formuleEditorWithAnswer.paint();
 					}
 					else if (currentObject instanceof FormuleEditorWithAnswer.FormuleEditorPopup)
 					{
@@ -1024,8 +1025,8 @@ public class TekstVakPanel implements InteractionView
 			{
 				if(tekstVakken[i][j].getAsHoogte() > asHoogte)
 				{
-					
 					asHoogte = tekstVakken[i][j].getAsHoogte();
+					
 					
 				}
 				
@@ -1042,8 +1043,12 @@ public class TekstVakPanel implements InteractionView
 		
 		int[] ashoogtes = new int[hoogtes.size()];
 		for(int i = 0; i < hoogtes.size(); i++) //ashoogtes vullen, voor het geval de hoogte niet wordt aangepast.
-		{
-			ashoogtes[i] = tekstVakken[i][0].getAsHoogte();
+		{	int ashoogte = tekstVakken[i][0].getAsHoogte();
+			for(int j = 1; j < breedtes.size(); j++)
+			{	if(tekstVakken[i][j].getAsHoogte() > ashoogte)
+					ashoogte = tekstVakken[i][j].getAsHoogte();
+			}
+			ashoogtes[i] = ashoogte;
 		}
 		int totaleHoogte = hoogte;
 		int totaleBreedte = breedte;
@@ -1767,7 +1772,13 @@ public class TekstVakPanel implements InteractionView
 
 	@Override
 	public int getAsHoogte() {
-		return tekstVakken[0][0].getAsHoogte(); // of + randbreedte oid?
+		int ashoogte = tekstVakken[0][0].getAsHoogte();
+		for(int j = 1; j < breedtes.size(); j++)
+		{	if(tekstVakken[0][j].getAsHoogte() > ashoogte)
+				ashoogte = tekstVakken[0][j].getAsHoogte();
+		}
+		
+		return ashoogte; 
 	}
 
 	@Override

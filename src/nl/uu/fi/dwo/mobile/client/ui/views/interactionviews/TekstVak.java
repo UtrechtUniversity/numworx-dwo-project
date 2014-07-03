@@ -408,7 +408,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				}
 				if(currentObject instanceof PopupFacade && ((PopupFacade) currentObject).getDelegate() instanceof AntwoordKeuzeVakGWT)
 					{	//System.out.println("instance of antwoordkeuzevak, ashoogte wordt: " + (regelVakken[aantalRegels - 1].getTekstAsHoogte() + 20));
-					((PopupFacade) currentObject).getDelegate().setAsHoogte(regelVakken[aantalRegels - 1].getTekstAsHoogte() + 4);
+					//((PopupFacade) currentObject).getDelegate().setAsHoogte(regelVakken[aantalRegels - 1].getTekstAsHoogte() + 4);
 				}
 				
 				

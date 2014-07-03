@@ -49,6 +49,8 @@ public class FormuleRegel extends FormuleElement
 
 	private int[] selectioncords =
 	{ 0, 0, 0, 0 };
+	
+	private boolean stippels = false;
 
 	public FormuleRegel(FormuleHolder holder)
 	{
@@ -344,6 +346,9 @@ public class FormuleRegel extends FormuleElement
 		ctx.setStrokeStyle("#f00");
 		ctx.setLineWidth(2.0);
 		this.drawline(ctx, selectioncords[0], selectioncords[1], selectioncords[2], selectioncords[3]);
+		
+		if(children.size() == 0 && stippels)
+			ctx.fillText("...", 0, getAsHoogte());
 	}
 
 	/**
@@ -1203,6 +1208,12 @@ public class FormuleRegel extends FormuleElement
 		
 		}
 		this.setSize(width, h);
+	}
+	
+	public void zetStippels(boolean b)
+	{
+		stippels = b;
+		this.setChanged(true);
 	}
 
 	/*

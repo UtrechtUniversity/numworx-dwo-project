@@ -113,6 +113,8 @@ public abstract class FormuleElement implements TekstElement
 	public int getHeight()
 	{
 		return height;
+		//System.out.println("getHeight geeft " + canvas.getCoordinateSpaceHeight());
+		//return canvas.getCoordinateSpaceHeight();
 	}
 
 	public void setHeight(int height)

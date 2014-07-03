@@ -38,6 +38,7 @@ import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
+import fi.antwoordkeuzevakgwt.client.AntwoordKeuzeVakGWT;
 import fi.wiskopdr.FormuleParser;
 /**
  * Common code voor ViewModuleViewImpl en DescriptionViewImpl.
@@ -55,6 +56,7 @@ public abstract class XMLView {
 	protected boolean newVersion = true;
 	protected FormuleKeyboard kb = null;
 	private static Logger logger = Logger.getLogger("XMLView");
+	private static int defaultFontSize = 12;
 
 	protected void setupView(HashMap<String, Object> launchData)
 	{
@@ -75,6 +77,9 @@ public abstract class XMLView {
 			String fontName = wrap.getString("fontName");
 			FormuleFont.zetDefaultFont(fontName);
 			FormuleHolder.setDefaultFont(FormuleFont.createFromFontSize(font_size));
+			AntwoordKeuzeVakGWT.setFontSize(font_size);
+			defaultFontSize = font_size;
+			//AntwoordKeuzeVakGWT.setFont(fontName);
 			
 			boolean formTimes = wrap.getBoolean("formTimes");
 			FormuleFont.zetFormTimes(formTimes);
@@ -237,6 +242,11 @@ public abstract class XMLView {
 	
 		fp.add(p);
 		return p;
+	}
+	
+	public static int getDefaultFontSize()
+	{
+		return defaultFontSize;
 	}
 
 	private void addFormulePanelListeners(final TouchPanel tp, final FormuleHolder editor) {

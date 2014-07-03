@@ -189,6 +189,7 @@ public class FormuleHolder implements TekstElement
 	public int getHeight() {
 		
 		return main.height;
+		//return main.getHeight();
 	}
 
 	@Override

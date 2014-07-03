@@ -17,6 +17,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
+import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -78,7 +79,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	//contentPanel is layoutPanel geworden om pijlvakken (met operatoren, abc, substitutie, etc) neer te kunnen zetten.
 	//private FlowPanel contentPanel = null;
 	private FlowPanel feedbackPanel = null;
-	int feedbackPanelHeight = 0;
+	int feedbackPanelHeight = 34;
 	private FlowPanel mainPanel = null;
 	private OpdrNavIF comRoot;
 	private int mode;
@@ -342,6 +343,10 @@ public class FormuleEditorWithSteps implements InteractionView
 		if(editor != null)
 		{	FlowPanel current = stepPanels.get(stepPanels.size() - 1);
 			contentPanel.setWidgetTopHeight(current, stepPanelY, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
+			if(feedbackPanel.isAttached())
+			{
+				contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + editor.getHeight(), Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX);
+			}
 			//stepPanelY = current.getAbsoluteTop() - contentPanel.getAbsoluteTop() + editor.getHeight() + stapH;
 			//System.out.println("resize: stepPanelY = " + stepPanelY);
 		}
@@ -439,10 +444,14 @@ public class FormuleEditorWithSteps implements InteractionView
 		contentPanel.remove(feedbackPanel);
 		feedbackPanel.getElement().setInnerHTML(feedback);
 		feedbackPanel.getElement().getStyle().setPadding(10, Unit.PX);
+		feedbackPanelHeight= 34;
 		if (hasFeedback)
 		{	contentPanel.add(feedbackPanel);
 			contentPanel.setWidgetLeftRight(feedbackPanel, 5, Style.Unit.PX, 5, Style.Unit.PX);
-			int height = viewers.isEmpty() ? 23 : viewers.get(viewers.size() - 1).getHeight();
+			int height = editor.getHeight();
+			if(height < 23)
+				height = 23;
+			//int height = viewers.isEmpty() ? 23 : viewers.get(viewers.size() - 1).getHeight();
 			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + height, Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX); 
 		}
 	}
@@ -504,6 +513,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		feedbackPanel.getElement().getStyle().setWidth(breedte - 25, Unit.PX);
 		feedbackPanel.getElement().getStyle().setProperty("display", "inline-block");
 		feedbackPanel.getElement().getStyle().setBackgroundColor("#FFFFDD");
+		feedbackPanel.getElement().getStyle().setFontSize(XMLView.getDefaultFontSize(), Style.Unit.PX);
 
 		sp.setWidget(contentPanel);
 		mainPanel.add(sp);
@@ -956,4 +966,6 @@ public class FormuleEditorWithSteps implements InteractionView
 	public void setAsHoogte(int ashoogte) {
 		viewers.get(0).setAsHoogte(ashoogte);
 	}
+	
+	
 }
