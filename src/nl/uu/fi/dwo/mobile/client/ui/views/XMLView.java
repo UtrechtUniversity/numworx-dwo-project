@@ -50,6 +50,7 @@ public abstract class XMLView {
 	protected HashMap<String, Object> launchData;
 	protected Map<String, Object> instellingen;
 	protected int font_size = 12;
+	protected String font_name = "Arial";
 	protected String[] randomVarNamen = null;
 	protected HashMap randomVarWaarden = null;
 	protected ArrayList<Object> opdrachtObjects;
@@ -57,6 +58,7 @@ public abstract class XMLView {
 	protected FormuleKeyboard kb = null;
 	private static Logger logger = Logger.getLogger("XMLView");
 	private static int defaultFontSize = 12;
+	private static String defaultFontName = "Arial";
 
 	protected void setupView(HashMap<String, Object> launchData)
 	{
@@ -74,11 +76,12 @@ public abstract class XMLView {
 			boolean maalTeken =  wrap.getBoolean("maalTeken");
 			FormuleTeken.zetMaalTeken(maalTeken);
 			
-			String fontName = wrap.getString("fontName");
-			FormuleFont.zetDefaultFont(fontName);
+			font_name = wrap.getString("fontName");
+			FormuleFont.zetDefaultFont(font_name);
 			FormuleHolder.setDefaultFont(FormuleFont.createFromFontSize(font_size));
 			AntwoordKeuzeVakGWT.setFontSize(font_size);
 			defaultFontSize = font_size;
+			defaultFontName = font_name;
 			//AntwoordKeuzeVakGWT.setFont(fontName);
 			
 			boolean formTimes = wrap.getBoolean("formTimes");
@@ -247,6 +250,11 @@ public abstract class XMLView {
 	public static int getDefaultFontSize()
 	{
 		return defaultFontSize;
+	}
+	
+	public static String getDefaultFont()
+	{
+		return defaultFontSize + "px " + defaultFontName;
 	}
 
 	private void addFormulePanelListeners(final TouchPanel tp, final FormuleHolder editor) {

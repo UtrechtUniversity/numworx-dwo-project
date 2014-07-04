@@ -160,6 +160,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		facade = new PopupFacade(h);
 		sp = new TouchPanel();
+		if(h == null)
+			return;
 		if (h.containsKey("interactiePanelLaunchState") )
 		{
 			ObjectMap map = JSONUtilities.wrapMap(h);

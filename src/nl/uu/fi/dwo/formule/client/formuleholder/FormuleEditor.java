@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.SubscriptVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.WortelVak;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.PijlVak;
 
 import com.google.gwt.user.client.ui.Panel;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
@@ -39,6 +40,8 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 	private FormuleElement currentElement = null;
 
 	public void enter() {}
+	
+	private PijlVak pijlVak = null;
 	
 	
 	public FormuleEditor()
@@ -68,6 +71,7 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 		this.setCurrentElementRepaint(newElement);
 		this.paint();
 		this.hasSelection = false;
+		resize();
 	}
 
 	@Deprecated
@@ -84,6 +88,7 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 		current.removePrevious();
 		this.hasSelection = false;
 		this.paint();
+		resize();
 	}
 
 	public void removeNextElement()
@@ -91,6 +96,7 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 		current.removeNext();
 		this.hasSelection = false;
 		this.paint();
+		resize();
 	}
 
 	public void insert(String text)
@@ -98,6 +104,7 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 		current.insert(text);
 		this.hasSelection = false;
 		this.paint();
+		resize();
 	}
 
 	public void setCurrentRegel(FormuleRegel regel)
@@ -189,18 +196,21 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 			return;
 		this.current.clearSelection();
 		this.hasSelection = false;
+		resize();
 	}
 	
 	public void clearAll()
 	{
 		this.current.deleteAll();
 		this.hasSelection = false;
+		resize();
 	}
 
 	public void deleteSelection()
 	{
 		this.current.deleteSelection();
 		this.hasSelection = false;
+		resize();
 	}
 
 	public void requestFocus() {
@@ -234,6 +244,7 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 	@Override
 	public void macht() {
 		addElement(new Machtvak(getCurrentRegel()));
+		
 	}
 
 
@@ -354,7 +365,18 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 	public void clearMain() {
 		setCurrentElement(getMainRegel());
 		clearAll();
+		resize();
 	}
 
+	public void resize()
+	{
+		if(pijlVak != null)
+			pijlVak.zetMaat();
+	}
+	
+	public void zetPijlVak(PijlVak pv)
+	{
+		this.pijlVak = pv;
+	}
 	
 }

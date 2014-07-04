@@ -588,8 +588,11 @@ public class CheckSelectieUnit implements InteractionStub
 			}
 		});
 		
-		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.goedkrul_en().getSafeUri());
-		foutKruisImage = new Image(DWOplayer.DWO_BUNDLE.foutkruis().getSafeUri());
+		//TODO: Noordhoff-onderscheid maken
+		//goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.goedkrul_en().getSafeUri());
+		//foutKruisImage = new Image(DWOplayer.DWO_BUNDLE.foutkruis().getSafeUri());
+		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
+		foutKruisImage = new Image(DWOplayer.DWO_BUNDLE.mw_kruisje_rood().getSafeUri());
 		
 		basisPanel.add(goedKrulImage);
 		basisPanel.add(foutKruisImage);
