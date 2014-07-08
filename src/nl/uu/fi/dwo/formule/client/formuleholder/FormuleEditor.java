@@ -240,9 +240,9 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 	
 	
 
-
 	@Override
 	public void macht() {
+		
 		addElement(new Machtvak(getCurrentRegel()));
 		
 	}

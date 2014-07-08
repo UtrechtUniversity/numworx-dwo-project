@@ -115,10 +115,11 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 			{
 				delete(event);
 			}
-			else if (ch == '^')
-			{
-				macht(event, editor);
-			}
+			//else if (ch == '^')
+			//{
+			//	macht(event, editor);
+			//	
+			//}
 			else if (ch == '\n' || ch == '\r') // enter?
 			{
 				enter(event);
@@ -134,7 +135,7 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 		switch (ch)
 		{
 		case '^': // expliciet macht verheffen..
-			return false;
+			return true;
 		default:
 			return Character.isLetterOrDigit(ch);
 		}
@@ -178,7 +179,9 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 			case '6': // shift-6 (asus transformer)
 				if (event.isShiftKeyDown())
 				{
-					macht(event, editor);
+					//System.out.println("met shifttoets down");
+					//macht(event, editor);
+					//Hier nog niet, want het wordt alleen een machtvak als het volgende character een getal is.
 				}
 				break;
 			case 16: // shift

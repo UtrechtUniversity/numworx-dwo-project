@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Breukvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Machtvak;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
@@ -790,6 +791,14 @@ public class FormuleRegel extends FormuleElement
 			addElement(ft);
 			return ft;
 		}
+		if (ft2.geefChar() == '^' && Character.isDigit(ft3.geefChar()))
+		{
+			removePrevious();
+			removePrevious();
+			Machtvak mv = new Machtvak(this);
+			addElement(mv); //of insert?
+			mv.vulVak("" + ft3.geefChar());
+ 		}
 		
 		if (nr <= 1)
 			return fe;
