@@ -24,6 +24,12 @@ public class BinVak extends FormuleElementWithChildren
 		int c = fm.getAscent()/6;
 		int d = fm.getAscent()/8;
 		
+		if (this.isSelected())
+		{
+			ctx.setFillStyle("#aaf");
+			ctx.fillRect(0, 0, this.width, this.height);
+		}
+		
 		ctx.setStrokeStyle(color);
 		ctx.setFillStyle(color);
 		

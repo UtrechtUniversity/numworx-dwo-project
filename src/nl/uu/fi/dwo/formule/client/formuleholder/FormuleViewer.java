@@ -32,7 +32,7 @@ public class FormuleViewer extends FormuleHolder
 
 	private int showResult = NONE;
 
-	FlowPanel sp = null;
+	TouchPanel sp = null;
 	FormuleRegel current;
 	Image checkimg;
 
@@ -50,6 +50,7 @@ public class FormuleViewer extends FormuleHolder
 		checkimg.setVisible(false);
 		sp.add(checkimg);
 		sp.add(this.getMainRegel().getCanvas());
+		sp.addTouchHandler(new FormuleEditorTouchHandler(this));
 		setCurrentRegel(getMainRegel());
 		
 	}
@@ -77,11 +78,12 @@ public class FormuleViewer extends FormuleHolder
 		this.getMainRegel().insert(currentFormule);
 		this.paint();
 
-		sp = new FlowPanel();
+		sp = new TouchPanel();
 		checkimg = new Image(FORMULE_BUNDLE.goedkrul().getSafeUri());
 		checkimg.setVisible(false);
 		sp.add(this.getMainRegel().getCanvas());
 		sp.add(checkimg);
+		sp.addTouchHandler(new FormuleEditorTouchHandler(this));
 		setCurrentRegel(getMainRegel());
 	}
 

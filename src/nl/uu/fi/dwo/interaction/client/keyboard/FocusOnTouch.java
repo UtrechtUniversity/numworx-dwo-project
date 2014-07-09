@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.interaction.client.keyboard;
 
+import java.awt.event.KeyEvent;
+
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 
@@ -152,16 +154,37 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 
 		if (event.isLeftArrow())
 		{
-			editor.cursorToLeft();
+			if(event.isShiftKeyDown())
+				editor.cursorToLeftShift();
+			else
+				editor.cursorToLeft();
 			event.preventDefault();
 			event.stopPropagation();
 		}
 		else if (event.isRightArrow())
 		{
-			editor.cursorToRight();
+			if(event.isShiftKeyDown())
+				editor.cursorToRightShift();
+			else
+				editor.cursorToRight();
+			event.preventDefault();
+			event.stopPropagation();
+		}		
+		else if (event.isUpArrow())
+		{
+			editor.cursorUp();
 			event.preventDefault();
 			event.stopPropagation();
 		}
+		else if (event.isDownArrow())
+		{
+			editor.cursorDown();
+			event.preventDefault();
+			event.stopPropagation();
+		}
+		
+		
+		
 		else
 		{
 			switch (event.getNativeKeyCode())

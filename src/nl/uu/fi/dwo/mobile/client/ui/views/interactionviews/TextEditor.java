@@ -328,6 +328,32 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			cursor ++;
 			setCursorWidget(flow.getWidget(cursor));	}
 		}
+	
+	@Override
+	public void cursorToLeftShift() {
+		if(cursor > 0){
+			cursor --;
+			setCursorWidget(flow.getWidget(cursor));
+		}
+	}
+
+	@Override
+	public void cursorToRightShift() {
+		int max = flow.getWidgetCount()-1;
+		if(cursor < max){
+			cursor ++;
+			setCursorWidget(flow.getWidget(cursor));	}
+		}
+	
+	
+	@Override
+	public void cursorUp() {
+	}
+	
+	@Override
+	public void cursorDown() {
+		
+	}
 
 	@Override
 	public void insert(char charAt) {

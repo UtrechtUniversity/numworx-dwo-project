@@ -19,8 +19,16 @@ public interface FormuleEditorIF {
 	void removeNextElement();
 
 	void cursorToLeft();
+	
+	void cursorToLeftShift();
 
 	void cursorToRight();
+	
+	void cursorToRightShift();
+	
+	void cursorUp();
+	
+	void cursorDown();
 
 	void insert(char charAt);
 

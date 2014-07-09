@@ -35,6 +35,12 @@ public class SigmaVak extends FormuleElementWithChildren{
 		changes0.setRelativeSize(150);
 		FormuleFont f0 = FormuleFont.createFromChanges(fm, changes0);
 		
+		if (this.isSelected())
+		{
+			ctx.setFillStyle("#aaf");
+			ctx.fillRect(0, 0, this.width, this.height);
+		}
+		
 		ctx.setStrokeStyle(color);
 		ctx.setFillStyle(color);
 		//int fontSize = fm.getFontSize();

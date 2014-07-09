@@ -41,6 +41,12 @@ public class PrvVak extends FormuleElementWithChildren
 		int t2b = a/3;
 		int t2h = t1h;
 		
+		if (this.isSelected())
+		{
+			ctx.setFillStyle("#aaf");
+			ctx.fillRect(0, 0, this.width, this.height);
+		}
+		
 		ctx.setStrokeStyle(color);
 		ctx.setFillStyle(color);
 		

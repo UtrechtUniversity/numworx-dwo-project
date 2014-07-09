@@ -231,6 +231,27 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 	public void cursorToRight() {
 		getCurrentRegel().cursorToRight();
 	}
+	
+	@Override
+	public void cursorToLeftShift() {
+		getCurrentRegel().cursorToLeftShift();	
+	}
+
+
+	@Override
+	public void cursorToRightShift() {
+		getCurrentRegel().cursorToRightShift();
+	}
+	
+	@Override
+	public void cursorUp() {
+		getCurrentRegel().cursorUp();
+	}
+	
+	@Override
+	public void cursorDown() {
+		getCurrentRegel().cursorDown();
+	}
 
 
 	@Override
@@ -280,7 +301,7 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 
 	@Override
 	public void integraal() {
-		addElement(new IntegraalVak(getCurrentRegel()));
+		addElement(new IntegraalVak(getCurrentRegel(), "x"));
 	}
 
 

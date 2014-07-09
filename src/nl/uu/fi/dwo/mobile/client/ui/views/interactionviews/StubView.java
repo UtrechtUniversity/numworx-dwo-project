@@ -315,7 +315,39 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	private static native void cursorToRight(Object inner) /*-{
 		inner.cursorToRight();
 	}-*/;
+	
+	@Override
+	public void cursorToLeftShift() {
+		cursorToRight(innerView);
+	}
+	private static native void cursorToLeftShift(Object inner) /*-{
+		inner.cursorToLeftShift();
+	}-*/;
+	
+	@Override
+	public void cursorToRightShift() {
+		cursorToRight(innerView);
+	}
+	private static native void cursorToRightShift(Object inner) /*-{
+		inner.cursorToRightShift();
+	}-*/;
 
+	@Override
+	public void cursorUp() {
+		cursorUp(innerView);
+	}
+	private static native void cursorUp(Object inner) /*-{
+		inner.cursorUp();
+	}-*/;
+	
+	@Override
+	public void cursorDown() {
+		cursorUp(innerView);
+	}
+	private static native void cursorDown(Object inner) /*-{
+		inner.cursorUp();
+	}-*/;
+	
 	@Override
 	public void insert(char charAt) {
 		insert(String.valueOf(charAt));
@@ -328,7 +360,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 
 	@Override
 	public void macht() {
-		insert("$m@"); // TODO evenzo voor de rest...
+		insert("$m@"); 
 	}
 
 	@Override

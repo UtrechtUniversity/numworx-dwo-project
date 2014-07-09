@@ -572,6 +572,7 @@ public class CheckSelectieUnit implements InteractionStub
 			checkButton = new PushButton(rb.getString("klaarKnopLabel"));
 		
 		breedte = imWidth + 30;
+		//breedte = imWidth;
 		hoogte = imHeight + 5;
 		ashoogte = hoogte / 2 + 7;
 		basisPanel.setPixelSize(breedte ,  hoogte );
@@ -597,6 +598,7 @@ public class CheckSelectieUnit implements InteractionStub
 		basisPanel.add(goedKrulImage);
 		basisPanel.add(foutKruisImage);
 		basisPanel.setWidgetLeftWidth(goedKrulImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
+		//basisPanel.setWidgetRightWidth(goedKrulImage, 0, Style.Unit.PX, 30, Style.Unit.PX);
 		basisPanel.setWidgetTopHeight(goedKrulImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
 		basisPanel.setWidgetLeftWidth(foutKruisImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
 		basisPanel.setWidgetTopHeight(foutKruisImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);

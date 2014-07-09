@@ -25,7 +25,19 @@ public class IntegraalVak extends FormuleElementWithChildren
 		getChild(1).setFontChanges(changes);
 		getChild(2).setFontChanges(changes);
 
-		//getChild(3).insert("x");
+	}
+	
+	public IntegraalVak(FormuleElement holder, String var)
+	{
+		super(holder, 4);
+
+		FormuleFontChanges changes = new FormuleFontChanges();
+		changes.setSmallText(FormuleFontChanges.TRUE);
+
+		getChild(1).setFontChanges(changes);
+		getChild(2).setFontChanges(changes);
+		
+		getChild(3).insert(var);
 	}
 
 	public void paintObject()
@@ -34,6 +46,7 @@ public class IntegraalVak extends FormuleElementWithChildren
 		this.getChild(1).paint();
 		this.getChild(2).paint();
 		this.getChild(3).paint();
+		
 		zetMaat();
 
 		int asc = fm.getAscent();
@@ -44,8 +57,13 @@ public class IntegraalVak extends FormuleElementWithChildren
 		int th = getChild(0).height + tb;
 		//int ashoogte = this.getAsHoogte();
 		int ashoogte = getAsHoogte();
-		System.out.println("integraalvak getAshoogte = " + ashoogte);
-
+		
+		if (this.isSelected())
+		{
+			ctx.setFillStyle("#aaf");
+			ctx.fillRect(0, 0, this.width, this.height);
+		}
+		
 		ctx.setStrokeStyle(color);
 		ctx.setFillStyle(color);
 		
@@ -130,7 +148,6 @@ public class IntegraalVak extends FormuleElementWithChildren
 		getChild(2).setPosition(k3x, k3y);
 		getChild(3).setPosition(k4x, k4y);
 		this.setAsHoogte(ashoogte);
-		System.out.println("setAshoogte: " + ashoogte);
 	}
 	
 	public int getAsHoogte()

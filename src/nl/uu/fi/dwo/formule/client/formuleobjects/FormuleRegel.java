@@ -1,18 +1,26 @@
 package nl.uu.fi.dwo.formule.client.formuleobjects;
 
+import java.awt.event.KeyEvent;
 import java.util.Vector;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.BinVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Breukvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.IntegraalVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Machtvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeLogVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeWortelVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PrvVak;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
+
+
 
 /**
  * Formula line
@@ -632,21 +640,22 @@ public class FormuleRegel extends FormuleElement
 		{	FormuleHolder holder = (FormuleHolder) this.holder;
 			FormuleRegel parentRegel = null;
 			FormuleElementWithChildren parent = (FormuleElementWithChildren)this.parent;
-			int index = parent.children.indexOf(this);
-			if(parent.children.size() > index+1)
-			{	parentRegel = parent.children.get(index+1);
-				holder.setCurrentRegel(parentRegel);
-				int pos = -1 ;
-				parentRegel.setIndexAt(pos);
-				holder.setCurrentElement(parentRegel);
-			}
-			else
-			{	parentRegel = this.parent.getRegelParent();
+//			int index = parent.children.indexOf(this);
+//			if(parent.children.size() > index+1)
+//			{	parentRegel = parent.children.get(index+1);
+//				holder.setCurrentRegel(parentRegel);
+//				int pos = -1 ;
+//				parentRegel.setIndexAt(pos);
+//				holder.setCurrentElement(parentRegel);
+//			}
+//			else
+//			{	
+			parentRegel = this.parent.getRegelParent();
 				holder.setCurrentRegel(parentRegel);
 				int pos = parentRegel.children.indexOf(this.parent);
 				parentRegel.setIndexAt(pos);
 				holder.setCurrentElement(this.parent);
-			}
+//			}
 			parentRegel.drawCursor();
 			holder.paint();
 		}
@@ -659,7 +668,8 @@ public class FormuleRegel extends FormuleElement
 			FormuleElement fe = getElementAt(currentPosition);
 			if(fe instanceof FormuleElementWithChildren)
 			{	FormuleElementWithChildren fewc = (FormuleElementWithChildren)fe;
-				FormuleRegel fr = fewc.getChild(fewc.children.size()-1);
+				//FormuleRegel fr = fewc.getChild(fewc.children.size()-1);
+				FormuleRegel fr = fewc.getChild(0);
 				holder.setCurrentRegel(fr);
 				int pos = fr.children.size()-1 ;
 				fr.setIndexAt(pos);
@@ -683,20 +693,22 @@ public class FormuleRegel extends FormuleElement
 		{	FormuleHolder holder = (FormuleHolder) this.holder;
 			FormuleRegel parentRegel = null;
 			FormuleElementWithChildren parent = (FormuleElementWithChildren)this.parent;
-			int index = parent.children.indexOf(this);
-			if(index>0)
-			{	parentRegel = parent.children.get(index-1);
-				holder.setCurrentRegel(parentRegel);
-				int pos = parentRegel.children.size()-1 ;
-				parentRegel.setIndexAt(pos);
-				if (pos >= 0)
-					holder.setCurrentElement(parentRegel.children.get(pos));
-				else
-					holder.setCurrentElement(parentRegel);
-				
-			}
-			else
-			{	parentRegel = this.parent.getRegelParent();
+			
+//			int index = parent.children.indexOf(this);
+//			if(index>0)
+//			{	parentRegel = parent.children.get(index-1);
+//				holder.setCurrentRegel(parentRegel);
+//				int pos = parentRegel.children.size()-1 ;
+//				parentRegel.setIndexAt(pos);
+//				if (pos >= 0)
+//					holder.setCurrentElement(parentRegel.children.get(pos));
+//				else
+//					holder.setCurrentElement(parentRegel);
+//				
+//			}
+//			else
+//			{	
+				parentRegel = this.parent.getRegelParent();
 				holder.setCurrentRegel(parentRegel);
 				int pos = parentRegel.children.indexOf(this.parent)-1;
 				parentRegel.setIndexAt(pos);
@@ -704,10 +716,96 @@ public class FormuleRegel extends FormuleElement
 					holder.setCurrentElement(parentRegel.children.get(pos));
 				else
 					holder.setCurrentElement(parentRegel);
-			}
+//			}
 			parentRegel.drawCursor();
 			holder.paint();
 		}
+	}
+	
+	public void cursorToRightShift()
+	{
+		//TODO: implementeren!
+	}
+	
+	public void cursorToLeftShift()
+	{
+		//TODO: implementeren!
+	}
+	
+	public void cursorUp()
+	{
+		//FormuleElement fe = getElementAt(currentPosition);
+		
+		
+		if(!(this.parent==null) && !this.parent.equals(holder) && holder instanceof FormuleEditor)
+		{
+			FormuleHolder holder = (FormuleHolder) this.holder;
+			FormuleRegel parentRegel = null;
+			FormuleElementWithChildren parent = (FormuleElementWithChildren)this.parent;
+			
+			if(parent instanceof BinVak || parent instanceof Breukvak)
+			{
+				parentRegel = parent.children.get(0);
+			}
+			else if(parent instanceof NdeLogVak || parent instanceof NdeWortelVak)
+			{
+				parentRegel = parent.children.get(1);
+			}
+			else if(parent instanceof IntegraalVak || parent instanceof PrvVak)
+			{
+				int index = parent.children.indexOf(this);
+				if(index == 0)
+					parentRegel = parent.children.get(2);
+				else if(index == 1)
+					parentRegel = parent.children.get(0);
+				else
+					return;
+			}
+			holder.setCurrentRegel(parentRegel);
+			holder.setCurrentElement(parentRegel);
+			parentRegel.setIndexAt(-1);
+			parentRegel.drawCursor();
+			holder.paint();
+			
+		}	
+			
+    }
+	
+	public void cursorDown()
+	{
+		if(!(this.parent==null) && !this.parent.equals(holder) && holder instanceof FormuleEditor)
+		{
+			FormuleHolder holder = (FormuleHolder) this.holder;
+			FormuleRegel parentRegel = null;
+			FormuleElementWithChildren parent = (FormuleElementWithChildren)this.parent;
+			
+			if(parent instanceof BinVak || parent instanceof Breukvak)
+			{
+				parentRegel = parent.children.get(1);
+				
+			}
+			else if(parent instanceof NdeLogVak || parent instanceof NdeWortelVak)
+			{
+				parentRegel = parent.children.get(0);
+				
+			}
+			else if(parent instanceof IntegraalVak || parent instanceof PrvVak)
+			{
+				int index = parent.children.indexOf(this);
+				if(index == 0)
+					parentRegel = parent.children.get(1);
+				else if(index == 2)
+					parentRegel = parent.children.get(0);
+				else 
+					return;
+			}
+			holder.setCurrentRegel(parentRegel);
+			holder.setCurrentElement(parentRegel);
+			parentRegel.setIndexAt(-1);
+			parentRegel.drawCursor();
+			holder.paint();
+			
+		}	
 	}
 
 	/*
