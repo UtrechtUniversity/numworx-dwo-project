@@ -1124,6 +1124,23 @@ public class FormuleRegel extends FormuleElement
 
 		return s;
 	}
+	
+	public void knip()
+	{
+		FormuleHolder.setClipboard(getSelectionString());
+		deleteSelection();
+	}
+	
+	public void kopieer()
+	{
+		FormuleHolder.setClipboard(getSelectionString());
+	}
+	
+	public void plak()
+	{
+		deleteSelection();
+		insert(FormuleHolder.getClipboard());
+	}
 
 	public void deleteAll()
 	{

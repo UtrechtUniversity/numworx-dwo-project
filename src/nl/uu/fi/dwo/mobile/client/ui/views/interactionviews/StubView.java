@@ -357,7 +357,32 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	public String getSelectionString() {
 		return "";
 	}
-
+	
+	
+	@Override
+	public void kopieer() {
+		kopieer(innerView);
+	}
+	private static native void kopieer(Object inner) /*-{
+		inner.kopieer();
+	}-*/;
+	
+	@Override
+	public void knip() {
+		knip(innerView);
+	}
+	private static native void knip(Object inner) /*-{
+		inner.knip();
+	}-*/;
+	
+	@Override
+	public void plak() {
+		plak(innerView);
+	}
+	private static native void plak(Object inner) /*-{
+		inner.plak();
+	}-*/;
+	
 	@Override
 	public void macht() {
 		insert("$m@"); 

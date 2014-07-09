@@ -343,7 +343,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		if(cursor < max){
 			cursor ++;
 			setCursorWidget(flow.getWidget(cursor));	}
-		}
+	}
 	
 	
 	@Override
@@ -368,6 +368,18 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	@Override
 	public String getSelectionString() {
 		return "";
+	}
+	
+	@Override
+	public void kopieer() {
+	}
+	
+	@Override
+	public void knip() {
+	}
+	
+	@Override
+	public void plak() {
 	}
 
 	@Override

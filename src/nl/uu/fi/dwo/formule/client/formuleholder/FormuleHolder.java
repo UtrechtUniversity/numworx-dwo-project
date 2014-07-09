@@ -25,6 +25,8 @@ public class FormuleHolder implements TekstElement
 		kb = keyb;
 	}
 	
+	
+	protected static String clipboard = "";
 	public static final FormuleClientBundle FORMULE_BUNDLE = GWT.create(FormuleClientBundle.class);
 	
 	private FormuleRegel main = null;
@@ -101,6 +103,16 @@ public class FormuleHolder implements TekstElement
 		this.paint();
 	}
 	
+	public static String getClipboard()
+	{
+		return clipboard;
+	}
+	
+	public static void setClipboard(String s)
+	{
+		clipboard = s;
+	}
+	
 	public static void setDefaultFont(FormuleFont fm)
 	{
 		defaultfont = fm;
@@ -175,6 +187,23 @@ public class FormuleHolder implements TekstElement
 		return "";
 	}
 
+	public void knip()
+	{
+		//if(hasSelection())
+			getCurrentRegel().knip();
+	}
+	
+	public void kopieer()
+	{
+		//if(hasSelection())
+			getCurrentRegel().kopieer();
+	}
+	
+	public void plak()
+	{
+		getCurrentRegel().plak();
+	}
+	
 	public boolean hasSelection() {
 		return this.hasSelection;
 	}

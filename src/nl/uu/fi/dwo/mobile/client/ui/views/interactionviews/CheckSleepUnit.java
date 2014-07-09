@@ -27,6 +27,7 @@ import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.touch.client.Point;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.PushButton;
@@ -94,6 +95,7 @@ public class CheckSleepUnit implements InteractionStub{
 	private int aantalSleepObjects;
 	private int aantalDoelObjects;
 	
+	FlowPanel nakijkAchtergrond;
 	Image goedKrulImage, foutKruisImage; 
 	
 	private boolean logOption;
@@ -277,7 +279,8 @@ public class CheckSleepUnit implements InteractionStub{
 		ipListSleep = null;
 		aantalSleepObjects = 0;
 		
-		goedKrulImage.setVisible(false);
+		nakijkAchtergrond.setVisible(false);
+    	goedKrulImage.setVisible(false);
 		foutKruisImage.setVisible(false);
 		
 	    correct = false;
@@ -353,7 +356,8 @@ public class CheckSleepUnit implements InteractionStub{
     
     public void kijkNa(boolean show)
     {
-        goedKrulImage.setVisible(false);
+    	nakijkAchtergrond.setVisible(false);
+    	goedKrulImage.setVisible(false);
         foutKruisImage.setVisible(false);
         
     	boolean juist = true;
@@ -524,7 +528,8 @@ public class CheckSleepUnit implements InteractionStub{
         }
         System.out.println("kijkna sleepOpdr: show = " + Boolean.toString(show) + " en check = " + Boolean.toString(check) + " en ingevuld = " + Boolean.toString(ingevuld));
         if(show && check)
-        {	if(correct)
+        {	nakijkAchtergrond.setVisible(true);
+    		if(correct)
         		goedKrulImage.setVisible(true);
         	else
         		foutKruisImage.setVisible(true);
@@ -567,7 +572,7 @@ public class CheckSleepUnit implements InteractionStub{
     @Override
 	public void init(int width, int height, Map<String, Object> launchData,
 			Map<String, Number> values) {
-		breedte = width;
+		breedte = width - 30;
 		hoogte = height;
 		
 		if (launchData != null)
@@ -629,7 +634,7 @@ public class CheckSleepUnit implements InteractionStub{
 		basisPanel.setStylePrimaryName("checksleepunit");
 		//basisPanel.setSize("" + breedte + "px", "" + hoogte + "px");
 		
-		int imWidth = breedte - 30;
+		int imWidth = breedte;
 		int imHeight = 20;
 		Image knopImage = null;
 		if(knopImageString!=null && !"".equals(knopImageString))
@@ -637,7 +642,7 @@ public class CheckSleepUnit implements InteractionStub{
        		knopImage = imageView.getImage();
 			imWidth = imageView.getWidth();
 			imHeight = imageView.getHeight();
-			if(imWidth <= 0) imWidth = 80;
+			if(imWidth <= 0) imWidth = breedte;
 			if(imHeight <= 0) imHeight = 20;
 			//checkButton.setSize(imWidth,imHeight);
 			//zetMaat();
@@ -651,7 +656,7 @@ public class CheckSleepUnit implements InteractionStub{
 			checkButton = new PushButton(rb.getString("klaarKnopLabel"));
 		
 		
-		breedte = imWidth + 30;
+		breedte = imWidth;
 		hoogte = imHeight + 5;
 		ashoogte = hoogte / 2 + 7;
 		basisPanel.setSize("" + breedte + "px", "" + hoogte + "px");
@@ -668,6 +673,15 @@ public class CheckSleepUnit implements InteractionStub{
 			}
 		});
 		
+		nakijkAchtergrond = new FlowPanel();
+		if(knopImage != null)
+			nakijkAchtergrond.getElement().getStyle().setBackgroundColor("white");
+		nakijkAchtergrond.getElement().getStyle().setProperty("borderRadius", (10) + "px");
+		nakijkAchtergrond.setVisible(false);
+		basisPanel.add(nakijkAchtergrond);
+		basisPanel.setWidgetRightWidth(nakijkAchtergrond, 2, Style.Unit.PX, 16, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(nakijkAchtergrond, 7, Style.Unit.PX, 16, Style.Unit.PX);
+		
 		//TODO: Noordhoff-onderscheid maken
 				//goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.goedkrul_en().getSafeUri());
 				//foutKruisImage = new Image(DWOplayer.DWO_BUNDLE.foutkruis().getSafeUri());
@@ -676,10 +690,15 @@ public class CheckSleepUnit implements InteractionStub{
 		
 		basisPanel.add(goedKrulImage);
 		basisPanel.add(foutKruisImage);
-		basisPanel.setWidgetLeftWidth(goedKrulImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(goedKrulImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
-		basisPanel.setWidgetLeftWidth(foutKruisImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(foutKruisImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
+//		basisPanel.setWidgetLeftWidth(goedKrulImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
+//		basisPanel.setWidgetTopHeight(goedKrulImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
+//		basisPanel.setWidgetLeftWidth(foutKruisImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
+//		basisPanel.setWidgetTopHeight(foutKruisImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
+		basisPanel.setWidgetRightWidth(goedKrulImage, 1, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(goedKrulImage, 6, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetRightWidth(foutKruisImage, 2, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(foutKruisImage, 5, Style.Unit.PX, 15, Style.Unit.PX);
+		
 		goedKrulImage.setVisible(false);
 		foutKruisImage.setVisible(false);
 		
@@ -744,6 +763,7 @@ public class CheckSleepUnit implements InteractionStub{
 	
 	public void clickAction()
 	{
+		nakijkAchtergrond.setVisible(false);
 		goedKrulImage.setVisible(false);
 		foutKruisImage.setVisible(false);
 		correct = false;

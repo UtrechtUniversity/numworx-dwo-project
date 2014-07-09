@@ -22,6 +22,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.PushButton;
@@ -77,6 +78,7 @@ public class CheckValueUnit implements InteractionStub{
 	
 	private int aantalValueObjects;
 	
+	private FlowPanel nakijkAchtergrond;
 	private Image goedKrulImage, foutKruisImage;//goedKrulHalfImage
 	
 	private boolean logOption;
@@ -111,7 +113,7 @@ public class CheckValueUnit implements InteractionStub{
 	@Override
 	public void init(int width, int height, Map<String, Object> launchData,
 			Map<String, Number> values) {
-		breedte = width;
+		breedte = width - 30;
 		hoogte = height;
 		//this.randomVarWaarden = randomValues;
 
@@ -161,7 +163,7 @@ public class CheckValueUnit implements InteractionStub{
 		basisPanel = new LayoutPanel();
 		//basisPanel.setSize("" + breedte + "px", "" + hoogte + "px");
 		
-		int imWidth = breedte - 30;
+		int imWidth = breedte;
 		int imHeight = 20;
 		Image knopImage = null;
 		if(knopImageString!=null && !"".equals(knopImageString))
@@ -169,7 +171,7 @@ public class CheckValueUnit implements InteractionStub{
        		knopImage = imageView.getImage();
 			imWidth = imageView.getWidth();
 			imHeight = imageView.getHeight();
-			if(imWidth <= 0) imWidth = 80;
+			if(imWidth <= 0) imWidth = breedte;
 			if(imHeight <= 0) imHeight = 20;
 			//checkButton.setSize(imWidth,imHeight);
 			//zetMaat();
@@ -181,7 +183,7 @@ public class CheckValueUnit implements InteractionStub{
 		}
 		else
 			checkButton = new PushButton(rb.getString("klaarKnopLabel"));
-		breedte = imWidth + 30;
+		breedte = imWidth;
 		hoogte = imHeight + 5;
 		ashoogte = hoogte / 2 + 7;
 		basisPanel.setSize("" + breedte + "px", "" + hoogte + "px");
@@ -198,6 +200,16 @@ public class CheckValueUnit implements InteractionStub{
 			}
 		});
 		
+		nakijkAchtergrond = new FlowPanel();
+		if(knopImage != null)
+			nakijkAchtergrond.getElement().getStyle().setBackgroundColor("white");
+		nakijkAchtergrond.getElement().getStyle().setProperty("borderRadius", (10) + "px");
+		nakijkAchtergrond.setVisible(false);
+		basisPanel.add(nakijkAchtergrond);
+		basisPanel.setWidgetRightWidth(nakijkAchtergrond, 2, Style.Unit.PX, 16, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(nakijkAchtergrond, 7, Style.Unit.PX, 16, Style.Unit.PX);
+		
+		
 		//TODO: Noordhoff-onderscheid maken
 				//goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.goedkrul_en().getSafeUri());
 				//foutKruisImage = new Image(DWOplayer.DWO_BUNDLE.foutkruis().getSafeUri());
@@ -206,10 +218,14 @@ public class CheckValueUnit implements InteractionStub{
 		
 		basisPanel.add(goedKrulImage);
 		basisPanel.add(foutKruisImage);
-		basisPanel.setWidgetLeftWidth(goedKrulImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(goedKrulImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
-		basisPanel.setWidgetLeftWidth(foutKruisImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(foutKruisImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
+//		basisPanel.setWidgetLeftWidth(goedKrulImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
+//		basisPanel.setWidgetTopHeight(goedKrulImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
+//		basisPanel.setWidgetLeftWidth(foutKruisImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
+//		basisPanel.setWidgetTopHeight(foutKruisImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
+		basisPanel.setWidgetRightWidth(goedKrulImage, 1, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(goedKrulImage, 6, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetRightWidth(foutKruisImage, 2, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(foutKruisImage, 5, Style.Unit.PX, 15, Style.Unit.PX);
 		goedKrulImage.setVisible(false);
 		foutKruisImage.setVisible(false);
 		
@@ -233,7 +249,7 @@ public class CheckValueUnit implements InteractionStub{
 	    				for(int i = 0; i < ipValueList.length; i++)
 	    				{	if(e.getSource() == ipValueList[i].getAsPanel())
 	    				
-	    					{	
+	    					{	nakijkAchtergrond.setVisible(false);
 	    						goedKrulImage.setVisible(false);
 	    						//goedKrulHalfImage.setVisible(false);
 	    						foutKruisImage.setVisible(false);
@@ -357,8 +373,8 @@ public class CheckValueUnit implements InteractionStub{
 		//wanneer wordt wis aangeroepen? ipValueList null maken en aantalvalueObjects op 0 zetten lijkt me niet slim..
 		//ipValueList = null;
 		//aantalValueObjects = 0;
-		
-	    goedKrulImage.setVisible(false);
+		nakijkAchtergrond.setVisible(false);
+		goedKrulImage.setVisible(false);
 	    foutKruisImage.setVisible(false);
 	   
 	    correct = false;
@@ -442,8 +458,8 @@ public class CheckValueUnit implements InteractionStub{
     }
     
     public void kijkNa(boolean show)
-    {
-        goedKrulImage.setVisible(false);
+    {	nakijkAchtergrond.setVisible(false);
+		goedKrulImage.setVisible(false);
         //goedKrulHalfImage.setVisible(false);
         foutKruisImage.setVisible(false);
         
@@ -562,7 +578,8 @@ public class CheckValueUnit implements InteractionStub{
             score = 0;
         }
         if(show && check)
-        {	if(correct)
+        {	nakijkAchtergrond.setVisible(true);
+			if(correct)
         		goedKrulImage.setVisible(true);
         	else
         		foutKruisImage.setVisible(true);

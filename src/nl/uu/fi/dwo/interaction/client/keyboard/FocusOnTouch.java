@@ -93,12 +93,23 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 	@Override
 	public void onKeyPress(KeyPressEvent event)
 	{
-		if (event.isAltKeyDown() || event.isControlKeyDown() || event.isMetaKeyDown())
+		if(kb == null || kb.getEditor() == null)
 			return;
+	
+		char ch = event.getCharCode();
+		FormuleEditorIF editor = kb.getEditor();
+		
+		if (event.isAltKeyDown() || event.isControlKeyDown() || event.isMetaKeyDown())
+		{	if(ch == 'x' && event.isControlKeyDown())
+				editor.knip();
+		 	else if(ch == 'c' && event.isControlKeyDown())
+		 		editor.kopieer();
+		 	else if(ch == 'v' && event.isControlKeyDown())
+		 		editor.plak();
+			return;
+		}
 		if (kb != null && kb.getEditor() != null)
 		{
-			FormuleEditorIF editor = kb.getEditor();
-			char ch = event.getCharCode();
 			if (allowed(ch))
 			{
 				editor.insert( ch);
@@ -147,7 +158,9 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 	public void onKeyDown(KeyDownEvent event)
 	{
 		if (event.isAltKeyDown() || event.isControlKeyDown() || event.isMetaKeyDown() || kb == null)
+		{	
 			return;
+		}
 		FormuleEditorIF editor = kb.getEditor();
 		if (editor == null)
 			return;

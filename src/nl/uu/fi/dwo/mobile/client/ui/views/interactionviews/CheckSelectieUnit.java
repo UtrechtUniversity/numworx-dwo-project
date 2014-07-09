@@ -9,10 +9,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import com.bouwkamp.gwt.user.client.ui.RoundedPanel;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -20,6 +22,7 @@ import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.touch.client.Point;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.ListBox;
@@ -32,6 +35,9 @@ import com.google.gwt.user.client.ui.Widget;
 
 
 
+
+
+import com.googlecode.mgwt.ui.client.widget.RoundPanel;
 
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.BasisExpressie;
@@ -97,6 +103,7 @@ public class CheckSelectieUnit implements InteractionStub
 	private TekstVakPanel[] ipList; 
 	private boolean[] juisteSelecties;
 	
+	FlowPanel nakijkAchtergrond;
 	Image goedKrulImage, foutKruisImage; //goedKrulHalfImage
 	
 	
@@ -201,7 +208,8 @@ public class CheckSelectieUnit implements InteractionStub
         }
         
         if(show && check)
-        {	if(correct)
+        {	nakijkAchtergrond.setVisible(true);
+        	if(correct)
         		goedKrulImage.setVisible(true);
         	else
         		foutKruisImage.setVisible(true);
@@ -373,7 +381,7 @@ public class CheckSelectieUnit implements InteractionStub
 	{
 		//ipList = null;
 		//juisteSelecties = null;
-		
+		nakijkAchtergrond.setVisible(false);
 	    goedKrulImage.setVisible(false);
 	    //goedKrulHalfImage.setVisible(false);
 	    foutKruisImage.setVisible(false);
@@ -492,7 +500,7 @@ public class CheckSelectieUnit implements InteractionStub
 	@Override
 	public void init(int width, int height, Map<String, Object> launchData,
 			Map<String, Number> values) {
-		breedte = width;
+		breedte = width - 30;
 		hoogte = height;
 		//this.randomVarWaarden = randomValues;
 		ObjectMap map = JSONUtilities.wrapMap(launchData);
@@ -550,7 +558,9 @@ public class CheckSelectieUnit implements InteractionStub
 		basisPanel = new LayoutPanel();
 		//basisPanel.setSize("" + breedte + "px", "" + hoogte + "px");
 		
-		int imWidth = breedte - 30;
+		//int imWidth = breedte - 30;
+		int imWidth = breedte;
+		System.out.println("breedte = " + breedte);
 		int imHeight = 20;
 		Image knopImage = null;
 		if(knopImageString!=null && !"".equals(knopImageString))
@@ -559,7 +569,7 @@ public class CheckSelectieUnit implements InteractionStub
 			imWidth = imageView.getWidth();
 			imHeight = imageView.getHeight();
 			if(imWidth <= 0) 
-				imWidth = 80;
+				imWidth = breedte;
 			if(imHeight <= 0) 
 				imHeight = 20;
 		}
@@ -569,10 +579,12 @@ public class CheckSelectieUnit implements InteractionStub
 			checkButton.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
 		}
 		else
-			checkButton = new PushButton(rb.getString("klaarKnopLabel"));
+		{	checkButton = new PushButton(rb.getString("klaarKnopLabel"));
+			checkButton.getElement().getStyle().setTextAlign(TextAlign.CENTER);
+		}
 		
-		breedte = imWidth + 30;
-		//breedte = imWidth;
+		//breedte = imWidth + 30;
+		breedte = imWidth;
 		hoogte = imHeight + 5;
 		ashoogte = hoogte / 2 + 7;
 		basisPanel.setPixelSize(breedte ,  hoogte );
@@ -589,7 +601,18 @@ public class CheckSelectieUnit implements InteractionStub
 			}
 		});
 		
-		//TODO: Noordhoff-onderscheid maken
+		nakijkAchtergrond = new FlowPanel();
+		if(knopImage != null)
+			nakijkAchtergrond.getElement().getStyle().setBackgroundColor("white");
+		nakijkAchtergrond.getElement().getStyle().setProperty("borderRadius", (10) + "px");
+		nakijkAchtergrond.setVisible(false);
+		basisPanel.add(nakijkAchtergrond);
+		basisPanel.setWidgetRightWidth(nakijkAchtergrond, 2, Style.Unit.PX, 16, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(nakijkAchtergrond, 7, Style.Unit.PX, 16, Style.Unit.PX);
+		
+		
+		//TODO: Noordhoff-onderscheid maken (ook in plaatsing, alleen in Noordhoff in knop?)
+		
 		//goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.goedkrul_en().getSafeUri());
 		//foutKruisImage = new Image(DWOplayer.DWO_BUNDLE.foutkruis().getSafeUri());
 		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
@@ -597,11 +620,14 @@ public class CheckSelectieUnit implements InteractionStub
 		
 		basisPanel.add(goedKrulImage);
 		basisPanel.add(foutKruisImage);
-		basisPanel.setWidgetLeftWidth(goedKrulImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
-		//basisPanel.setWidgetRightWidth(goedKrulImage, 0, Style.Unit.PX, 30, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(goedKrulImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
-		basisPanel.setWidgetLeftWidth(foutKruisImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(foutKruisImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
+		//basisPanel.setWidgetLeftWidth(goedKrulImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
+		//basisPanel.setWidgetTopHeight(goedKrulImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
+		//basisPanel.setWidgetLeftWidth(foutKruisImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
+		//basisPanel.setWidgetTopHeight(foutKruisImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
+		basisPanel.setWidgetRightWidth(goedKrulImage, 1, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(goedKrulImage, 6, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetRightWidth(foutKruisImage, 2, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(foutKruisImage, 5, Style.Unit.PX, 15, Style.Unit.PX);
 		goedKrulImage.setVisible(false);
 		foutKruisImage.setVisible(false);
 		
@@ -654,6 +680,7 @@ public class CheckSelectieUnit implements InteractionStub
 
 	public void selectClickAction(int i)
 	{
+		nakijkAchtergrond.setVisible(false);
 		goedKrulImage.setVisible(false);
 		//goedKrulHalfImage.setVisible(false);
 		foutKruisImage.setVisible(false);

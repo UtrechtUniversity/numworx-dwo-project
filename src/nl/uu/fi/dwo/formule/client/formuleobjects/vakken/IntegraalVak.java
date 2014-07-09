@@ -29,13 +29,7 @@ public class IntegraalVak extends FormuleElementWithChildren
 	
 	public IntegraalVak(FormuleElement holder, String var)
 	{
-		super(holder, 4);
-
-		FormuleFontChanges changes = new FormuleFontChanges();
-		changes.setSmallText(FormuleFontChanges.TRUE);
-
-		getChild(1).setFontChanges(changes);
-		getChild(2).setFontChanges(changes);
+		this(holder);
 		
 		getChild(3).insert(var);
 	}

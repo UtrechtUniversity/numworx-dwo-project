@@ -33,6 +33,12 @@ public interface FormuleEditorIF {
 	void insert(char charAt);
 
 	String getSelectionString();
+	
+	void knip();
+	
+	void kopieer();
+	
+	void plak();
 
 	void macht();
 
