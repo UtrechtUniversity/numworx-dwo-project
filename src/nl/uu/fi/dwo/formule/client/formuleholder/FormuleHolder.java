@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.formule.client.formuleholder;
 
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
+import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
@@ -19,20 +20,23 @@ import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
  * @author Danny Hendrix
  * 
  */
-public class FormuleHolder implements TekstElement
+public class FormuleHolder implements TekstElement, FormuleEditorIF
 {
 	public static void installKeyboard(FormuleKeyboardIF keyb) {
 		kb = keyb;
 	}
 	
 	
-	protected static String clipboard = "";
+	//protected static String clipboard = "";
 	public static final FormuleClientBundle FORMULE_BUNDLE = GWT.create(FormuleClientBundle.class);
 	
 	private FormuleRegel main = null;
 
 	private FormuleFont font = FormuleFont.createFromFontSize(16);
-	private static FormuleFont defaultfont = FormuleFont.createFromFontSize(16);
+	private FormuleFont defaultFont = FormuleFont.createFromFontSize(16);
+	private static FormuleFont defaultActiviteitFont = FormuleFont.createFromFontSize(16);
+	//private static FormuleFont defaultfont = FormuleFont.createFromFontSize(16);
+	//private FormuleFont originalFont = FormuleFont.createFromFontSize(16);
 	protected static FormuleKeyboardIF kb;
 	private FlowPanel sp = null;
 	private int ashoogte;
@@ -48,6 +52,7 @@ public class FormuleHolder implements TekstElement
 
 	public FormuleHolder()
 	{
+		defaultFont = defaultActiviteitFont;
 		//main regel
 		FormuleRegel regel = new FormuleRegel(this);
 		//GWT.log("Font size:" + defaultfont.getFontStyle());
@@ -79,7 +84,7 @@ public class FormuleHolder implements TekstElement
 
 	public FormuleFont getDefaultFont()
 	{
-		return defaultfont;
+		return defaultFont;
 	}
 	
 	public CssColor getColor()
@@ -103,19 +108,24 @@ public class FormuleHolder implements TekstElement
 		this.paint();
 	}
 	
-	public static String getClipboard()
+//	public static String getClipboard()
+//	{
+//		return clipboard;
+//	}
+//	
+//	public static void setClipboard(String s)
+//	{
+//		clipboard = s;
+//	}
+	
+	public static void setDefaultActiviteitFont(FormuleFont fm)
 	{
-		return clipboard;
+		defaultActiviteitFont = fm;
 	}
 	
-	public static void setClipboard(String s)
+	public void setDefaultFont(FormuleFont fm)
 	{
-		clipboard = s;
-	}
-	
-	public static void setDefaultFont(FormuleFont fm)
-	{
-		defaultfont = fm;
+		defaultFont = fm;
 	}
 
 	public Panel getAsPanel()
@@ -160,7 +170,9 @@ public class FormuleHolder implements TekstElement
 	}
 	
 	public void requestFocus() {
-		kb.setEditor(null);
+		//kb.setEditor(null);
+		if(kb != null)
+			kb.setEditor(this);
 	}
 
 	/**
@@ -186,24 +198,22 @@ public class FormuleHolder implements TekstElement
 			return getCurrentRegel().getSelectionString();
 		return "";
 	}
-
+	
 	public void knip()
 	{
-		//if(hasSelection())
-			getCurrentRegel().knip();
+		getCurrentRegel().knip();
 	}
 	
 	public void kopieer()
 	{
-		//if(hasSelection())
-			getCurrentRegel().kopieer();
+		getCurrentRegel().kopieer();
 	}
 	
 	public void plak()
 	{
 		getCurrentRegel().plak();
 	}
-	
+
 	public boolean hasSelection() {
 		return this.hasSelection;
 	}
@@ -243,5 +253,152 @@ public class FormuleHolder implements TekstElement
 	
 	public void setFormuleToolBijFocus(boolean formuleToolBijFocus) {
 		this.formuleToolBijFocus = formuleToolBijFocus;
+	}
+	
+	@Override
+	public void clearAll() {
+	}
+
+	@Override
+	public void insert(String text) {
+	}
+
+	@Override
+	public void setCurrentElementRepaint() {
+	}
+
+	@Override
+	public void enter() {
+	}
+
+	@Override
+	public void removeCurrentElement() {
+	}
+
+	@Override
+	public void removeNextElement() {
+	}
+
+	@Override
+	public void cursorToLeft() {
+	}
+
+	@Override
+	public void cursorToLeftShift() {
+	}
+
+	@Override
+	public void cursorToRight() {
+	}
+
+	@Override
+	public void cursorToRightShift() {
+	}
+
+	@Override
+	public void cursorUp() {
+	}
+
+	@Override
+	public void cursorDown() {
+	}
+
+	@Override
+	public void insert(char charAt) {
+	}
+
+	@Override
+	public void macht() {
+		
+	}
+
+	@Override
+	public void wortel() {
+		
+	}
+
+	@Override
+	public void breuk() {
+		
+	}
+
+	@Override
+	public void kwadraat() {
+		
+	}
+
+	@Override
+	public void ndewortel() {
+		
+	}
+
+	@Override
+	public void haakjes() {
+		
+	}
+
+	@Override
+	public void integraal() {
+		
+	}
+
+	@Override
+	public void prv() {
+		
+	}
+
+	@Override
+	public void ndelog() {
+		
+	}
+
+	@Override
+	public void abs() {
+		
+	}
+
+	@Override
+	public void subscript() {
+		
+	}
+
+	@Override
+	public void bin() {
+		
+	}
+
+	@Override
+	public void diff() {
+		
+	}
+
+	@Override
+	public void limiet0() {
+		
+	}
+
+	@Override
+	public void limiet1() {
+		
+	}
+
+	@Override
+	public void limiet2() {
+		
+	}
+
+	@Override
+	public void primitieve() {
+		
+	}
+
+	@Override
+	public void conjug() {
+		
+	}
+
+	@Override
+	public void sigma() {
+		
 	}
 }

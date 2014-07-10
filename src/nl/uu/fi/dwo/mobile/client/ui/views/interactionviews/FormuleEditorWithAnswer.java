@@ -537,5 +537,17 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		return null;
 	}
+	
+	public void knip()
+	{
+		super.knip();
+		resize();
+	}
+	
+	public void plak()
+	{
+		super.plak();
+		resize();
+	}
 
 }

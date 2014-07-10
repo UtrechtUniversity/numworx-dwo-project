@@ -376,6 +376,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			{	FormuleFont f = FormuleFont.createFromFontSize(font_size);
 				f.setBold(font_style == 1 || font_style == 3);
 				((FormuleViewer) currentObject).setFont(f);
+				((FormuleViewer) currentObject).setDefaultFont(f);
 				((FormuleViewer) currentObject).setColor(fgColor);
 				
 				if(regelBreedte == 0 || regelBreedte + ((FormuleViewer) currentObject).getWidth() + 4 <= tekstVakBreedte)

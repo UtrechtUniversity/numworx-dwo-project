@@ -78,14 +78,15 @@ public abstract class XMLView {
 			
 			font_name = wrap.getString("fontName");
 			FormuleFont.zetDefaultFont(font_name);
-			FormuleHolder.setDefaultFont(FormuleFont.createFromFontSize(font_size));
+			boolean formTimes = wrap.getBoolean("formTimes");
+			FormuleFont.zetFormTimes(formTimes);
+			FormuleHolder.setDefaultActiviteitFont(FormuleFont.createFromFontSize(font_size));
 			AntwoordKeuzeVakGWT.setFontSize(font_size);
 			defaultFontSize = font_size;
 			defaultFontName = font_name;
 			//AntwoordKeuzeVakGWT.setFont(fontName);
 			
-			boolean formTimes = wrap.getBoolean("formTimes");
-			FormuleFont.zetFormTimes(formTimes);
+			
 			
 			if(wrap.containsKey("woordFormule"))
 				FormuleParser.zetWoordFormule(wrap.getBoolean("woordFormule"));			

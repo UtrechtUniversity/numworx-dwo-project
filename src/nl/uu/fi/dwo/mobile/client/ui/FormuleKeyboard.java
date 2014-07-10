@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
@@ -420,9 +421,10 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 			this.editor.setCurrentElementRepaint();
 		} 
 		this.editor = editor;
-		if(editor != null) 
-			this.setEditorZoomed();
-		else
+		//if(editor != null) 
+		//	this.setEditorZoomed();
+		//else
+		if(editor == null || editor instanceof FormuleViewer)
 			tp.hideKeyboard();
 	}
 

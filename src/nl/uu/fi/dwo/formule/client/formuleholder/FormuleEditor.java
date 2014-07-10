@@ -252,6 +252,21 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 	public void cursorDown() {
 		getCurrentRegel().cursorDown();
 	}
+	
+	public void knip()
+	{
+		getCurrentRegel().knip();
+	}
+	
+	public void kopieer()
+	{
+		getCurrentRegel().kopieer();
+	}
+	
+	public void plak()
+	{
+		getCurrentRegel().plak();
+	}
 
 
 	@Override

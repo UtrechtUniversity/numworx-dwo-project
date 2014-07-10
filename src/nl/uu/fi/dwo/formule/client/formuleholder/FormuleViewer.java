@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
+import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 
 import com.google.gwt.dom.client.Style.Unit;
@@ -22,7 +23,7 @@ import fi.wiskopdr.expressies.Expressie;
  * @author Danny Hendrix
  * 
  */
-public class FormuleViewer extends FormuleHolder
+public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
 {
 	private static Logger logger = Logger.getLogger("FormuleViewer");
 	public static final int NONE = 0;
@@ -160,7 +161,7 @@ public class FormuleViewer extends FormuleHolder
 			hasSelection = false;
 		}
 	}
-
+	
 	public void endSelection(int selectionEndX, int selectionEndY)
 	{
 		//swap?
@@ -201,9 +202,9 @@ public class FormuleViewer extends FormuleHolder
 		current = formuleRegel;
 	}
 
-	@Override
-	public void requestFocus() {
-	}
+//	@Override
+//	public void requestFocus() {
+//	}
 	
 	
 }

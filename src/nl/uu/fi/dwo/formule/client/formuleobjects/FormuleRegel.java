@@ -15,10 +15,14 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeWortelVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PrvVak;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
+import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
+
+
+
 
 
 
@@ -724,12 +728,87 @@ public class FormuleRegel extends FormuleElement
 	
 	public void cursorToRightShift()
 	{
-		//TODO: implementeren!
+		if(this.currentPosition < this.children.size() - 1 && holder instanceof FormuleEditor)
+		{	currentPosition++;
+			FormuleElement fe = getElementAt(currentPosition);
+    		boolean b = fe.isSelected();
+    		fe.setSelected(!b);
+    		if(this.selectionStart == -1 && !b)
+    		{
+    			this.selectionStart = currentPosition;
+    		}
+    		if(b)
+    		{
+    			clearSelection();
+    		}
+    	}
+		else if(!(this.parent==null) && !this.parent.equals(holder) && this.currentPosition == this.children.size() - 1 && holder instanceof FormuleEditor)
+		{	FormuleHolder holder = (FormuleHolder) this.holder;
+			FormuleRegel parentRegel = null;
+			FormuleElementWithChildren parent = (FormuleElementWithChildren)this.parent;
+			parentRegel = this.parent.getRegelParent();
+				holder.setCurrentRegel(parentRegel);
+				int pos = parentRegel.children.indexOf(this.parent);
+				parentRegel.setIndexAt(pos);
+				holder.setCurrentElement(this.parent);
+
+				boolean b = parent.isSelected();
+				parent.setSelected(!b);
+				if(this.selectionStart == -1 && !b)
+				{
+					this.selectionStart = currentPosition;
+				}
+				if(b)
+				{
+					clearSelection();
+				}	
+			
+		}
+		holder.paint();
+		
 	}
 	
 	public void cursorToLeftShift()
 	{
-		//TODO: implementeren!
+		if (this.currentPosition > -1 && holder instanceof FormuleEditor)
+        {   FormuleElement fe = getElementAt(currentPosition);
+        	boolean b = fe.isSelected();
+			fe.setSelected(!b);
+			if(this.selectionStart == -1 && !b)
+			{
+				this.selectionStart = currentPosition;
+			}
+			if(b)
+			{
+				clearSelection();
+			}
+			currentPosition--;
+        }
+		else if(!(this.parent==null) && !this.parent.equals(holder) && this.currentPosition == - 1 && holder instanceof FormuleEditor)
+		{	FormuleHolder holder = (FormuleHolder) this.holder;
+			FormuleRegel parentRegel = null;
+			FormuleElementWithChildren parent = (FormuleElementWithChildren)this.parent;
+			
+			parentRegel = this.parent.getRegelParent();
+			holder.setCurrentRegel(parentRegel);
+			int pos = parentRegel.children.indexOf(this.parent)-1;
+			parentRegel.setIndexAt(pos);
+			if (pos >= 0)
+				holder.setCurrentElement(parentRegel.children.get(pos));
+			else
+				holder.setCurrentElement(parentRegel);
+			boolean b = parent.isSelected();
+			parent.setSelected(!b);
+			if(this.selectionStart == -1 && !b)
+			{
+				this.selectionStart = currentPosition;
+			}
+			if(b)
+			{
+				clearSelection();
+			}
+		}
+		holder.paint();
 	}
 	
 	public void cursorUp()
@@ -1115,31 +1194,42 @@ public class FormuleRegel extends FormuleElement
 	public String getSelectionString()
 	{
 		String s = "";
-		int start = this.selectionStart;
-		if (start < 0)
+		
+		if(this.selectionStart <= this.currentPosition)
+		{	int start = this.selectionStart;
+			if (start < 0)
 			start = 0;
-
-		for (int i = start; i <= this.currentPosition; i++)
-			s += ((FormuleElement) this.children.get(i)).toString();
-
+			for (int i = start; i <= this.currentPosition; i++)
+				s += ((FormuleElement) this.children.get(i)).toString();
+		}
+		else
+		{	int start = currentPosition + 1;
+			for(int i = start; i <= this.selectionStart; i++)
+				s += ((FormuleElement) this.children.get(i)).toString();
+		}
 		return s;
 	}
 	
 	public void knip()
 	{
-		FormuleHolder.setClipboard(getSelectionString());
+		if(holder instanceof FormuleEditor == false)
+			return;
+		FormuleKeyboard.setClipboard(getSelectionString());
 		deleteSelection();
+		paint();
 	}
 	
 	public void kopieer()
 	{
-		FormuleHolder.setClipboard(getSelectionString());
+		FormuleKeyboard.setClipboard(getSelectionString());
 	}
 	
 	public void plak()
 	{
+		if(holder instanceof FormuleEditor == false)
+			return;
 		deleteSelection();
-		insert(FormuleHolder.getClipboard());
+		insert(FormuleKeyboard.getClipboard());
 	}
 
 	public void deleteAll()
@@ -1161,6 +1251,13 @@ public class FormuleRegel extends FormuleElement
 		if (this.selectionStart == -1)
 			return;
 
+		if(this.currentPosition + 1 < this.selectionStart)
+		{//swap
+			int temp = this.currentPosition + 1;
+			this.currentPosition = this.selectionStart;
+			this.selectionStart = temp;
+		}
+		
 		//remove selection
 		int i;
 		for (i = this.currentPosition; i >= this.selectionStart; i--)

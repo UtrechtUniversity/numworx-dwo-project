@@ -9,6 +9,9 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.DomEvent;
+
+import static com.google.gwt.event.dom.client.KeyCodes.*;
+
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
@@ -100,13 +103,7 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 		FormuleEditorIF editor = kb.getEditor();
 		
 		if (event.isAltKeyDown() || event.isControlKeyDown() || event.isMetaKeyDown())
-		{	if(ch == 'x' && event.isControlKeyDown())
-				editor.knip();
-		 	else if(ch == 'c' && event.isControlKeyDown())
-		 		editor.kopieer();
-		 	else if(ch == 'v' && event.isControlKeyDown())
-		 		editor.plak();
-			return;
+		{	return;
 		}
 		if (kb != null && kb.getEditor() != null)
 		{
@@ -157,11 +154,21 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 	@Override
 	public void onKeyDown(KeyDownEvent event)
 	{
+		if(kb == null)
+			return;
+		FormuleEditorIF editor = kb.getEditor();
+		
 		if (event.isAltKeyDown() || event.isControlKeyDown() || event.isMetaKeyDown() || kb == null)
-		{	
+		{	int code = event.getNativeKeyCode();
+			if(code == 88 && event.isControlKeyDown()) //ctrl+x
+				editor.knip();
+			else if(code == 67 && event.isControlKeyDown()) //ctrl+c
+				editor.kopieer();
+			else if(code == 86 && event.isControlKeyDown()) //ctrl+v
+				editor.plak();
+		
 			return;
 		}
-		FormuleEditorIF editor = kb.getEditor();
 		if (editor == null)
 			return;
 
