@@ -77,6 +77,8 @@ public abstract class XMLView {
 			FormuleTeken.zetMaalTeken(maalTeken);
 			
 			font_name = wrap.getString("fontName");
+			if(font_name.equals("SansSerif"))
+				font_name = "Arial";
 			FormuleFont.zetDefaultFont(font_name);
 			boolean formTimes = wrap.getBoolean("formTimes");
 			FormuleFont.zetFormTimes(formTimes);

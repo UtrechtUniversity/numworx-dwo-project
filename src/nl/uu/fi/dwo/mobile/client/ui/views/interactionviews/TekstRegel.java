@@ -254,8 +254,7 @@ public class TekstRegel extends LayoutPanel
 				this.setWidgetTopHeight(w, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
 			}
 			else if (currentObject instanceof FormuleViewer)
-			{	System.out.println("objectverschuiving formuleviewer: " + objectVerschuiving);
-				Panel a = ((FormuleViewer) currentObject).getAsPanel();
+			{	Panel a = ((FormuleViewer) currentObject).getAsPanel();
 				horPositie += 1;
 				
 				this.add(a);

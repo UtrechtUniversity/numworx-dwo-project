@@ -130,6 +130,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private String feedback = "";
 	private int scoreMax = 0;
 	private boolean check = true;
+	private boolean teltMee = true;
 	private int breedte;
 	private int hoogte;
 	private boolean volledigeBreedte;
@@ -183,6 +184,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				if(launchState.containsKey("check") )
 				{
 					check = launchState.getBoolean("check");
+				}
+				if(launchState.containsKey("teltMee"))
+				{
+					teltMee = launchState.getBoolean("teltMee");
 				}
 			
 				if(launchState.containsKey("formuleToolBijFocus"))
@@ -350,15 +355,16 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 		this.correct = (Boolean) checkResults.get("correct");
 		this.score = (Integer) checkResults.get("score");
+		System.out.println("score = " + score);
 		this.feedback = (String) checkResults.get("feedback");
 
 		int goedHalfFout = (Integer) checkResults.get("goedHalfFout");
 
-		logger.fine("userAnswer: " + useranswer);
-		logger.finer("correct: " + correct);
-		logger.finer("score: " + score);
-		logger.finer("goedHalfFout: " + goedHalfFout);
-		logger.finer("feedback: " + feedback);
+//		logger.fine("userAnswer: " + useranswer);
+//		logger.finer("correct: " + correct);
+//		logger.finer("score: " + score);
+//		logger.finer("goedHalfFout: " + goedHalfFout);
+//		logger.finer("feedback: " + feedback);
 
 		if (goedHalfFout == AntwoordVakChecker.DOOR)
 		{
@@ -394,7 +400,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		checkimg.setVisible(check && goedHalfFout != AntwoordVakChecker.GEEN); // Wim: Hier verscheen het vinkje als goedhalfFout GEEN is
 		//sp.setPixelSize(breedte, -1);
 		if (this.fe == null)
-			comRoot.setChanged();
+		{	comRoot.setChanged();
+		
+		}
 
 	}
 	
@@ -505,6 +513,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	@Override
 	public boolean isCorrect()
 	{
+		if(!teltMee)
+			return true;
 		return correct;
 	}
 
