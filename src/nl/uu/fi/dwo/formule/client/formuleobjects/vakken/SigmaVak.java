@@ -54,7 +54,6 @@ public class SigmaVak extends FormuleElementWithChildren{
 		//ctx.setTextAlign(TextAlign.CENTER);
 		
 		int sigmaW = (int) ctx.measureText("\u03A3").getWidth();//fm0.stringWidth("\u03A3");
-		System.out.println("sigmaW: " + sigmaW);
 		//ctx.fillText("\u03A3", getChild(3).x+(getChild(3).width-sigmaW)/2,Math.min(getChild(1).y, getChild(2).y));
 		ctx.fillText("\u03A3", this.getChild(3).x +(this.getChild(3).width-sigmaW)/2,Math.min(this.getChild(1).y, this.getChild(2).y));
 		//fm.setFontSize(2*fontSize/3);

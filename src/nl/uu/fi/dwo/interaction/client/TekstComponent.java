@@ -35,7 +35,6 @@ public class TekstComponent {
 		canvas.setCoordinateSpaceWidth(width);
 		ctx = canvas.getContext2d();
 		ctx.setFont(fm.toString());
-		System.out.println("ctx tekstcomponent: font = " + fm.toString());
 		ashoogte = fm.getAscent();
 		this.tekst = tekst;
 	}

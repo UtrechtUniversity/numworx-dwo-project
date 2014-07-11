@@ -526,7 +526,6 @@ public class CheckSleepUnit implements InteractionStub{
             fout = true;
             score = 0;
         }
-        System.out.println("kijkna sleepOpdr: show = " + Boolean.toString(show) + " en check = " + Boolean.toString(check) + " en ingevuld = " + Boolean.toString(ingevuld));
         if(show && check)
         {	nakijkAchtergrond.setVisible(true);
     		if(correct)

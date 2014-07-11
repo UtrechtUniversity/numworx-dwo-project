@@ -560,7 +560,6 @@ public class CheckSelectieUnit implements InteractionStub
 		
 		//int imWidth = breedte - 30;
 		int imWidth = breedte;
-		System.out.println("breedte = " + breedte);
 		int imHeight = 20;
 		Image knopImage = null;
 		if(knopImageString!=null && !"".equals(knopImageString))

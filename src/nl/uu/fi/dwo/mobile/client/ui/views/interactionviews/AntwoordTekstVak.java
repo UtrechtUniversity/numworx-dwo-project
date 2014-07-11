@@ -770,9 +770,6 @@ public class AntwoordTekstVak implements InteractionView{
 			gelijkwaardig = false;
 			for (int i = 0; i < juisteAntwoorden.length; i++)
 			{
-				System.out.println("juisteAntwoorden[" + i + "]: " + juisteAntwoorden[i]);
-				
-				
 				String antw = antwoordTF.getText();
 				if (formuleMode)
 				{
@@ -780,10 +777,7 @@ public class AntwoordTekstVak implements InteractionView{
 					antw = "$f" + antw + "@";
 					//antw = antw.substring(2, antw.length()-1);
 				}
-				System.out.println("antw voor replace: " + antw);
 				antw = StringUtils.replaceStr(antw, " ", "");
-				System.out.println("antw na replace: " + antw);
-				
 				gelijkwaardig = gelijkwaardig || antw.equals(juisteAntwoorden[i]);
 			}
 		}

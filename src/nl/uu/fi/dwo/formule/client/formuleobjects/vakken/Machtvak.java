@@ -57,7 +57,7 @@ public class Machtvak extends FormuleElementWithChildren
 		//previous object in the line
 		FormuleElement prev = parentRegel.getPrevious(this);
 		int vgh = parentRegel.getFont().getHeight();
-		int vgah = parentRegel.getFont().getHeight() / 2;
+		int vgah = parentRegel.getFont().getAscent();
 		if (prev != null)
 		{
 			vgh = prev.getHeight();
@@ -78,7 +78,7 @@ public class Machtvak extends FormuleElementWithChildren
 	public int getAsHoogte()
 	{	FormuleRegel parentRegel = getRegelParent();
 		FormuleElement prev = parentRegel.getPrevious(this);
-		int vgah = parentRegel.getFont().getAscent() / 2;
+		int vgah = parentRegel.getFont().getAscent();
 		if (prev != null)
 		{
 			vgah = prev.getAsHoogte();
