@@ -111,7 +111,7 @@ public class FormuleEditorWithSteps implements InteractionView
 
 	private int score;
 	private int scoreMax;
-	private boolean correct;
+	private Boolean correct;
 	
 	private boolean stapOk;
 
@@ -253,7 +253,7 @@ public class FormuleEditorWithSteps implements InteractionView
 
 	public void lastStep(String useranswer)
 	{
-		if (correct)
+		if (correct == Boolean.TRUE)
 			return;
 		FlowPanel current = stepPanels.get(stepPanels.size() - 1);
 		highLight(current, false);
@@ -377,7 +377,7 @@ public class FormuleEditorWithSteps implements InteractionView
 
 	public void copyStep()
 	{
-		if (!correct)
+		if ( correct != Boolean.TRUE)
 		{
 			String currentTekst = "";
 			if (stapNr > 0)
@@ -398,12 +398,12 @@ public class FormuleEditorWithSteps implements InteractionView
 	{
 		FlowPanel current = stepPanels.get(stapNr);
 
-		if (!correct && editor.toString().length() > 0)
+		if (correct != Boolean.TRUE && editor.toString().length() > 0)
 		{
 			current.remove(editor.getAsPanel());
 			editor = addNewEditor(current);
 		}
-		else if (correct)
+		else if (correct == Boolean.TRUE)
 		{
 			contentPanel.remove(feedbackPanel);
 			current.remove(viewers.get(viewers.size() - 1).getAsPanel());
@@ -416,7 +416,7 @@ public class FormuleEditorWithSteps implements InteractionView
 			editor.insert(currentTekst);
 			if (stapNr > 1 || stapNr > 0 && !hasStartString)
 				latest_answer_viewer = viewers.get(viewers.size() - 1);
-			correct = false;
+			correct = null;
 			comRoot.setChanged();
 		}
 		else if (stapNr > 1 || stapNr > 0 && !hasStartString)
@@ -864,7 +864,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		int stapNr = 0;
 		String[] formuleVakInhouden = null;
 		boolean ingevuld = true;
-		boolean nagekeken = false;
+		Boolean nagekeken = null;
 		String antwoordString = "";
 
 		if (h.get("stapNr") != null)
@@ -943,7 +943,7 @@ public class FormuleEditorWithSteps implements InteractionView
 			if (viewers.size() > 0)
 				latest_answer_viewer = viewers.get(viewers.size() - 1);
 			correct = nagekeken;
-			score = correct ? scoreMax : 0;
+			score = correct == Boolean.TRUE ? scoreMax : 0;
 
 		}
 		stepPanelY -= editor.getHeight() - stapH;
@@ -965,7 +965,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	}
 
 	@Override
-	public boolean isCorrect()
+	public Boolean isCorrect()
 	{
 		return correct;
 	}

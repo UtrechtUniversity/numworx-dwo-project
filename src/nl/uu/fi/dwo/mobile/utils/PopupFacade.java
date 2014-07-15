@@ -108,7 +108,7 @@ public class PopupFacade implements InteractionView {
 		return delegate.getScore();
 	}
 
-	public boolean isCorrect() {
+	public Boolean isCorrect() {
 		return delegate.isCorrect();
 	}
 	

@@ -130,7 +130,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		inner.setState(state);
 	}-*/;
 	
-	private native static boolean isCorrect(Object inner) /*-{
+	private native static Boolean isCorrect(Object inner) /*-{
 		return inner.isCorrect();
 	}-*/;
 	
@@ -139,7 +139,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	}-*/;
 
 	@Override
-	public boolean isCorrect() {
+	public Boolean isCorrect() {
 		if(innerView != null)
 			return isCorrect(innerView);
 		return false;

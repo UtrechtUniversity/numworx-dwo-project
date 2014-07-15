@@ -855,13 +855,22 @@ public class TekstVakPanel implements InteractionView
 		return score;
 	}
 
-	public boolean isCorrect()
+	
+	/*
+	 * if all  true  return true
+	 * if some null  return null
+	 * if some false return false
+	 * @see nl.uu.fi.dwo.interaction.client.InteractionView#isCorrect()
+	 */
+	public Boolean isCorrect()
 	{
-		boolean correct = true;
+		Boolean correct = Boolean.TRUE;
 		for (int i = 0; i < interactionViewObjects.size(); i++)
 		{
 			Object currentObject = interactionViewObjects.get(i);
-			correct = correct && ((InteractionView) currentObject).isCorrect();
+			Boolean check = ((InteractionView) currentObject).isCorrect();
+			if(check == null) correct = null; 
+			if(Boolean.FALSE.equals( check )) return check;
 		}
 		return correct;
 	}

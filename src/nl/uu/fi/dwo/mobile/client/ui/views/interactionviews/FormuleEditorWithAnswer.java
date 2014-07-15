@@ -126,7 +126,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private boolean strict = true;
 	private Map<String, Object> instellingen = null;
 	private int score = 0;
-	private boolean correct = false;
+	private Boolean correct = null;
 	private String feedback = "";
 	private int scoreMax = 0;
 	private boolean check = true;
@@ -214,7 +214,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			}
 		
 			checkimg = new Image(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
-			checkimg.setVisible(false);
+			resetimg();
 			checkimg.getElement().getStyle().setProperty("marginLeft", "3px");
 			checkimg.getElement().getStyle().setProperty("verticalAlign", "top");
 			
@@ -311,7 +311,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	{
 		super.addElement(e);
 		resize();
-		checkimg.setVisible(false);
+		resetimg();
 	}
 
 	@Override
@@ -319,7 +319,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	{
 		super.removeCurrentElement();
 		resize();
-		checkimg.setVisible(false);
+		resetimg();
 	}
 
 	@Override
@@ -327,7 +327,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	{
 		super.removeNextElement();
 		resize();
-		checkimg.setVisible(false);
+		resetimg();
 	}
 
 	@Override
@@ -335,7 +335,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	{
 		super.insert(text);
 		resize();
+		resetimg();
+	}
+
+	void resetimg() {
 		checkimg.setVisible(false);
+		lastanswer = null;
 	}
 
 	@Override 
@@ -347,7 +352,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		kijkNa();
 	}
 	
-	
+	private String lastanswer = "$f@";
 	public void kijkNa()
 	{
 		String useranswer = "$f" + this.toString() + "@";
@@ -399,8 +404,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		
 		checkimg.setVisible(check && goedHalfFout != AntwoordVakChecker.GEEN); // Wim: Hier verscheen het vinkje als goedhalfFout GEEN is
 		//sp.setPixelSize(breedte, -1);
-		if (this.fe == null)
-		{	comRoot.setChanged();
+		if (this.fe == null && !useranswer.equals(lastanswer))
+		{
+			lastanswer = useranswer;
+			comRoot.setChanged();
 		
 		}
 
@@ -499,6 +506,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			}
 
 			this.insert(antwoord);
+			setCurrentElementRepaint();
+			lastanswer = "$f" + toString() + "@";
 			kijkNa();
 		}
 
@@ -511,10 +520,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	}
 
 	@Override
-	public boolean isCorrect()
+	public Boolean isCorrect()
 	{
 		if(!teltMee)
-			return true;
+			return Boolean.TRUE;
 		return correct;
 	}
 

@@ -174,10 +174,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 
 	public void setChanged() // FIXME Trifork: hier safepoint?
 	{
-		
-		boolean correct = entry.isCorrect();
+		Boolean check = entry.isCorrect();
+		boolean correct =  Boolean.TRUE.equals(check);
 		isCorrect[currentActiviteit][currentOpdracht] = correct;
-		boolean fout = !correct; // FIXME moet zijn entry.isFout();
+		boolean fout = Boolean.FALSE.equals(check); // FIXME moet zijn entry.isFout();
 		if(strafpunten != null && mode == OEFENEN_STRAFPUNTEN && fout)
 			strafpunten[currentActiviteit][currentOpdracht] += foutStraf;
 		if (buttons != null && buttons.size() > currentOpdracht)
@@ -363,7 +363,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		);
 		
 		source.setBeantwoord(getAantalBeantwoord());
-		isCorrect[currentActiviteit][currentOpdracht] = entry.isCorrect();
+		isCorrect[currentActiviteit][currentOpdracht] = Boolean.TRUE == entry.isCorrect();
 		memento.setCurrentActiviteit(currentActiviteit);
 		memento.setCurrentOpdracht(currentOpdracht);
 		double score = getScore();

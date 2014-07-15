@@ -314,8 +314,9 @@ public class CheckSleepUnit implements InteractionStub{
 	    return scoreMax;
 	}
 
-	public boolean isCorrect()
+	public Boolean isCorrect()
 	{	if(!teltMee)return true;
+		if(!correct && !fout) return null;
 	    return correct;
 	}
 	

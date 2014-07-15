@@ -84,8 +84,8 @@ public class AntwoordTekstVak implements InteractionView{
 	private boolean ingevuld;
 	private boolean nagekeken;
 
-	private boolean correct;
-	private boolean fout;
+	private Boolean correct;
+
 
 	private int score;
 	private int scoreMax = 10;
@@ -662,8 +662,7 @@ public class AntwoordTekstVak implements InteractionView{
 		else
 			ingevuld = !(antwoordTF.getText() == null || antwoordTF.getText().equals(""));
 
-		correct = false;
-		fout = true;
+		correct = null;
 		score = 0;
 
 		if (hasFeedback)
@@ -671,22 +670,20 @@ public class AntwoordTekstVak implements InteractionView{
 			{	if (show)
 					zetGoedFout(GOED);
 				score = puntenFeedback;
-				correct = true;
-				fout = false;
+				correct = Boolean.TRUE;
 			}
 			else if (goedHalfFout == 1)
 			{	if (show)
 					zetGoedFout(HALF);
 				score = puntenFeedback;
-				correct = false;
-				fout = false;
+				correct = null;
+
 			}
 			else if (goedHalfFout == 2)
 			{	if (show)
 					zetGoedFout(FOUT);
 				score = puntenFeedback;
-				correct = false;
-				fout = true;
+				correct = Boolean.FALSE;
 			}
 		}
 		else
@@ -695,16 +692,14 @@ public class AntwoordTekstVak implements InteractionView{
 			{
 				if (show)
 					zetGoedFout(GOED);
-				correct = true;
-				fout = false;
+				correct = Boolean.TRUE;
 				score = scoreMax;
 			}
 			else
 			{
 				if (show)
 					zetGoedFout(FOUT);
-				correct = false;
-				fout = true;
+				correct = Boolean.FALSE;
 				score = 0;
 			}
 		}
@@ -820,9 +815,9 @@ public class AntwoordTekstVak implements InteractionView{
 
 
 	@Override
-	public boolean isCorrect() {
+	public Boolean isCorrect() {
 		if (!teltMee)
-			return true;
+			return Boolean.TRUE;
 		return correct;
 	}
 

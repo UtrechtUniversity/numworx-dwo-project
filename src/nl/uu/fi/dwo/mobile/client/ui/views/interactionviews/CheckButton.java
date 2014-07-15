@@ -130,14 +130,19 @@ public class CheckButton implements InteractionStub
 
 			public void onClick(ClickEvent e)
 			{	e.stopPropagation();
-				fout = false;
+//				correct = Boolean.TRUE;
 				for (int i = 0; i < lijst.size(); i++)
 				{	Object object = lijst.get(i);
 					if(object instanceof InteractionView) {
 						InteractionView view = (InteractionView) object;
 						view.kijkNa();
 						//view.zetNagekeken(true); 
-						fout |= !view.isCorrect();
+//						Boolean check = view.isCorrect();
+//						if(check == null) correct = null;
+//						if(check == Boolean.FALSE) {
+//							correct = check; 
+//							return; // early out.
+//						}
 					}
 				}
 			}
@@ -146,6 +151,7 @@ public class CheckButton implements InteractionStub
 	
 	boolean fout;
 	private Image knopImage;
+//	private Boolean correct;
 
 	public void zetNakijkObjecten(ArrayList<Object> lijst)
 	{
@@ -166,14 +172,12 @@ public class CheckButton implements InteractionStub
 
 	@Override
 	public int getScore() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public boolean isCorrect() {
-		// TODO Auto-generated method stub
-		return !fout;
+	public Boolean isCorrect() {
+		return Boolean.TRUE;
 	}
 
 	@Override

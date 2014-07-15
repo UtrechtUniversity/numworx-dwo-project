@@ -13,7 +13,7 @@ public interface InteractionView extends IsWidget, TekstElement
 
 	public int getScore();
 
-	public boolean isCorrect();
+	public Boolean isCorrect(); // TRUE, FALSE, NULL
 
 	public void kijkNa();
 	

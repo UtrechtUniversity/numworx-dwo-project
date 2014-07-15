@@ -426,10 +426,11 @@ public class CheckSelectieUnit implements InteractionStub
 		return scoreMax;
 	}
 
-	public boolean isCorrect()
+	public Boolean isCorrect()
 	{
 		if (!teltMee)
-			return true;
+			return Boolean.TRUE;
+		if (!correct && !fout) return null;
 		return correct;
 	}
 

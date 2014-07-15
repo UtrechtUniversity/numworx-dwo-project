@@ -32,6 +32,7 @@ import nl.uu.fi.dwo.mobile.utils.StringCodeToHashMap;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
 
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style;
@@ -602,15 +603,17 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		return score;
 	}
 
-	public boolean isCorrect()
+	public Boolean isCorrect()
 	{
-		boolean correct = true;
+		Boolean correct = Boolean.TRUE;
 		for (int i = 0; i < opdrachtObjects.size(); i++)
 		{
 			Object currentObject = opdrachtObjects.get(i);
 			if (currentObject instanceof InteractionView)
 			{
-				correct = correct && ((InteractionView) currentObject).isCorrect();
+				Boolean check =  ((InteractionView) currentObject).isCorrect();
+				if(check == null) correct = null;
+				if(Boolean.FALSE.equals(check) ) return check;
 			}
 		}
 		return correct;
@@ -753,18 +756,21 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			
 			@Override
 			public void onTap(TapEvent event) {
+				
 				int cur = on.getCurrentOpdracht() + 1;
-				if(cur >= on.getAantalOpdrachten()) cur = 0;
+				
+				if(cur >= on.getAantalOpdrachten()) cur = on.getAantalOpdrachten()-1;
 				on.gotoOpdracht(cur, scoreNav);
 			}
 		});
 		prev = new HeaderButton(DWOplayer.PARAMETERS.headercss()); prev.setText("< Vorige");
+
 		prev.addTapHandler(new TapHandler() {
 			
 			@Override
 			public void onTap(TapEvent event) {
 				int cur = on.getCurrentOpdracht() - 1;
-				if(cur < 0) cur = on.getAantalOpdrachten()-1;
+				if(cur < 0) cur = 0 ;
 				on.gotoOpdracht(cur, scoreNav);
 			}
 		});
@@ -855,7 +861,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	            left = 0;
 	            top  = hp.getOffsetHeight();
 	            popup.setPopupPosition(left, top);
-	            popup.setPixelSize(offsetWidth, Window.getClientHeight()-top*2);
+	            popup.setPixelSize(offsetWidth, Window.getClientHeight()-top);
 	          }
 	        });
 		

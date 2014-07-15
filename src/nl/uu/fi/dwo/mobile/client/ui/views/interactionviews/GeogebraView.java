@@ -30,7 +30,8 @@ public class GeogebraView implements InteractionView, LoadHandler
 	private Frame frame;
 	private Button btn;
 	private String ggb;
-	private boolean bewaarOptie, nakijken, correct,check;
+	private Boolean correct;
+	private boolean bewaarOptie, nakijken,check;
 	private int score, scoreMax;
 	private PopupFacade facade;
 	private int width;
@@ -164,11 +165,11 @@ public class GeogebraView implements InteractionView, LoadHandler
 	}
 
 	@Override
-	public boolean isCorrect()
+	public Boolean isCorrect()
 	{
 		if(nakijken)
 			return correct;
-		return true;
+		return Boolean.TRUE;
 	}
 
 	@Override
