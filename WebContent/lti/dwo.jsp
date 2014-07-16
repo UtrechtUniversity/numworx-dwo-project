@@ -54,13 +54,14 @@
 
 <pre>
 <%
-/*
+/* */
   Enumeration en = request.getParameterNames();
   while (en.hasMoreElements()) {
     String paramName = (String) en.nextElement();
     out.println(paramName + " = " + request.getParameter(paramName) );
   }
-*/
+  out.println("path info = " + request.getPathInfo() );
+/* */
 %>
 </pre>
 <%
@@ -120,7 +121,7 @@
 	mayscript
 	id="API"
 	name="API"
-	codebase="http://ws.fisme.science.uu.nl/dwo/jars/"
+	codebase="https://ws.fisme.science.uu.nl/dwo/jars/"
 	>
 	Helaas, Java is niet geinstalleerd op uw computer.
 	Klik <a target="_blank" href="http://java.com/nl">

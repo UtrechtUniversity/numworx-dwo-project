@@ -28,6 +28,14 @@
       <servlet-name>ServiceServlet</servlet-name>
       <servlet-class>fi.servlet.lti.ServiceServlet</servlet-class>
     </servlet>
+    <servlet>
+      <servlet-name>dwoparam</servlet-name>
+      <jsp-file>/lti/dwo.jsp</jsp-file>
+    </servlet>
+   <servlet-mapping>
+      <servlet-name>dwoparam</servlet-name>
+      <url-pattern>/lti/dwo.jsp/*</url-pattern>
+   </servlet-mapping>
   
   <servlet-mapping>
 	<servlet-name>image.png</servlet-name>
