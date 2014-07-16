@@ -4,6 +4,7 @@ package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
 
 public class ConjugVak extends FormuleElementWithChildren
 {
@@ -14,59 +15,38 @@ public class ConjugVak extends FormuleElementWithChildren
 		this.setChanged(true);
 	}
 	
-	
-	
-	/*
-	public boolean setFont(FormuleFont fm)
-	{
-		if (super.setFont(fm) == false)
-			return false;
-		if(getChild() == null) 
-			return true;
-		setSize(getChild().width, getChild().height + 2);
-		setAsHoogte(getChild().getAsHoogte() + 2);
-		getChild().setPosition(0, 2);
-		getChild().setFont(fm);//niet nodig, denk ik.
-		
-		//getChild().setPosition(5 * fm.getAscent() / 7 - 1, fm.getAscent() / 4);
-		return true;
-	}
-	*/
+	@Override
 	public void paintObject()
 	{
-		getChild().paint();
-		zetMaat();
-		
+		this.getChild().paint();
+
+		width =  getChild().width;
+		height = getChild().height+2;
+
+		this.setSize(width, height);
+
 		if (this.isSelected())
 		{
 			ctx.setFillStyle("#aaf");
-			ctx.fillRect(0, 0, this.width, this.height);
+			ctx.fillRect(0, 0, width, height);
 		}
-		
+
 		ctx.setStrokeStyle(color);
 		ctx.setFillStyle(color);
-		
+		ctx.setLineWidth(fm.getStrokeWidth());
+
 		ctx.beginPath();
-		ctx.moveTo(2, 0);
+		ctx.moveTo(1, 0);
 		ctx.lineTo(width - 2, 0);
 		ctx.stroke();
-		
+
 		this.getChild().draw(ctx);
 		this.drawCursor();
-	}
-	
-	public void zetMaat()
-	{
-		setSize(getChild().width  + 2,  getChild().height+2);
-		//System.out.println("getChild.width: " + getChild().width +" en getChild.height: " + getChild().height);
-		getChild().setPosition(1, 2);
-		setAsHoogte(getChild().getAsHoogte()+2);
-	}
-	
+	}	
+
 	public int getAsHoogte()
 	{
-		zetMaat();
-		return super.getAsHoogte();
+		return getChild().getAsHoogte()+2;
 	}
 	
 	public String toString()
