@@ -17,6 +17,7 @@ public class SigmaVak extends FormuleElementWithChildren{
 		getChild(1).setFontChanges(changes);
 		getChild(2).setFontChanges(changes);
 		getChild(3).setFontChanges(changes);
+		this.setChanged(true);
 	}
 	
 	public void paintObject()
@@ -62,7 +63,7 @@ public class SigmaVak extends FormuleElementWithChildren{
 		//f = fm2.getFont();
 		//g.setFont(f);
 		ctx.setFont(f1.getFontStyle());
-		ctx.fillText("=", getChild(1).x + getChild(1).width, getChild(2).y + 2*getChild(2).getAsHoogte());
+		ctx.fillText("=", getChild(1).x + getChild(1).width, getChild(1).y + getChild(1).getAsHoogte());
 		//font weer terugzetten naar normaal..
 		//FormuleFontChanges changes2 = new FormuleFontChanges();
 		//changes2.setSmallText(FormuleFontChanges.FALSE);
@@ -110,12 +111,6 @@ public class SigmaVak extends FormuleElementWithChildren{
 		this.getChild(3).setPosition(k4x,k4y);
 	}
 	
-	public int getAsHoogte()
-	{
-		zetMaat();
-		return super.getAsHoogte();
-	}
-
 	public String toString()
 	{	return "$S" + getChild(0).toString() + "$n"+ getChild(1).toString() + "$k" + getChild(2).toString() + "$l" + getChild(3).toString() + "@@@@";
 	}
