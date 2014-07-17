@@ -1,5 +1,7 @@
 package fi.servlet.lti;
 
+import java.util.Hashtable;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +16,7 @@ import fi.dwo.client.persistence.DbAccessIF;
 import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.LoginException;
 import fi.dwo.client.system.PersistenceException;
+import fi.dwo.server.persistence.DwoXmlRpcException;
 
 public class DbAccess {
 	
@@ -60,6 +63,7 @@ public class DbAccess {
 	    String organization = oauth_consumer_key;
 	    
 	    organization = request.getParameter("tool_consumer_instance_description");
+	    if(organization == null)organization = request.getParameter("tool_consumer_instance_name");
 	    if(organization == null)organization = request.getParameter("context_title");
 	    if(organization == null)organization = context_label;
 	    if(organization == null)organization = request.getParameter("resource_link_title");
@@ -75,15 +79,21 @@ public class DbAccess {
 		Group group = getGroup(request.getParameter("roles"));
 		User u = null;
 		try {
-			u = facade.loginViaSAML(lti_id, orgid.getValue());
-		} catch (LoginException e) {
+			u = mapUser(dbaccess.login_saml(lti_id, orgid.getValue()));
+		} catch (Exception e) {
 			String schoolLogin = getRealm(oauth_consumer_key);
 			String username = user_id + "@" + schoolLogin;
 			String groupPassword = getSecret(oauth_consumer_key, group.getGroupID());
 			try {
-				facade.register(username, "", name_given, name_prefix, name_family, email, schoolLogin, group, groupPassword);
-				u = facade.login(username);
-				facade.linkViaSAML(u, lti_id, orgid.getValue());
+				dbaccess.register(username, "", name_given, name_prefix, name_family, email, schoolLogin, group.getGroupID(), groupPassword);
+			} 
+			catch(DwoXmlRpcException exists) {
+				System.err.println(exists);
+			}
+			catch(Exception e1) { e1.printStackTrace(); }
+			try {
+				u = mapUser(dbaccess.login(username, ""));
+				dbaccess.link_saml(lti_id, orgid.getValue(), u.getID());
 			} catch (Exception e1) {
 				e1.printStackTrace();
 				return;
@@ -94,12 +104,19 @@ public class DbAccess {
 			try {
 				SchoolClass c = getSchoolClass(facade, oauth_consumer_key, context_label);
 				if(c != null)
-					facade.changeAccount(u, "", "", name_given, name_prefix, name_family, email, c);
+					facade.changeAccount(u, null, null, name_given, name_prefix, name_family, email, c);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		
+	}
+
+	private User mapUser(Hashtable map) {
+		User u = new User();
+		int userID = ((Number)map.get("userID")).intValue();
+		u.setUserID(userID);
+		return u;
 	}
 
 	/**
@@ -177,6 +194,7 @@ public class DbAccess {
 	private static final String SCO = "/sco/";
 	private static final String COURSE = "/course/";
 	public String getDeepLink(String info) {
+		if(info == null) return "";
 		if(info.startsWith(SCO))
 		{
 			String sco = info.substring(SCO.length());
@@ -184,8 +202,8 @@ public class DbAccess {
 		}
 		if(info.startsWith(COURSE))
 		{
-			String sco = info.substring(COURSE.length());
-			return "<param name='courseViewNr' value='" + sco + "'>";
+			String course = info.substring(COURSE.length());
+			return "<param name='courseViewNr' value='" + course + "'>";
 		}
 		return "";
 	}

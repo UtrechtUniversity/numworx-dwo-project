@@ -1,3 +1,4 @@
+<%@page import="fi.dwo.server.persistence.DbAccessLocal"%>
 <html>
 <head>
   <title>Digitale Wiskunde Omgeving</title>
@@ -29,7 +30,9 @@
 <%@ page import="fi.servlet.lti.DbAccess" %>
 
 <%!
-	private DbAccess dbAccess = new DbAccess();
+	private DbAccess dbAccess = new DbAccess(
+			new DbAccessLocal()
+	);
 
 	private void doReturn(HttpServletRequest request, HttpServletResponse response, 
         String s, JspWriter out)
@@ -88,6 +91,7 @@
   } catch(Exception e) {
     doReturn(request, response, "Error while valdating message", out);
     log("Error validating message", e);
+    return;
   }
 // applet gegevens
  	String language = request.getParameter("launch_presentation_locale");
@@ -131,6 +135,7 @@
 	<param name="profile" value="<%= profile %>" >
 	<param name='cookies' value='false' >
 	<param name='logoutURL' value="<%=logoutURL %>" >
+	<%= dbAccess.getDeepLink(request.getPathInfo()) %>
 </applet>
 
 </body>
