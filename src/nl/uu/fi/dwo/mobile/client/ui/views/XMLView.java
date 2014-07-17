@@ -30,6 +30,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -163,6 +164,7 @@ public abstract class XMLView {
 				//element.getElement().getStyle().setPaddingTop(5, Unit.PX);
 	
 			}
+			
 			else if (currentObject instanceof FormuleEditorWithAnswer)
 			{
 
@@ -229,6 +231,11 @@ public abstract class XMLView {
 				Widget w = iv.getImage();
 				destination.add(w);
 			}
+			else if(currentObject instanceof IsWidget) {
+				IsWidget widget = (IsWidget) currentObject;
+				destination.add(widget);
+			}
+
 	
 		}
 	

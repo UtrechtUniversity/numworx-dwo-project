@@ -6,6 +6,9 @@ import java.util.List;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
+import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.AntwoordTekstVak;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
@@ -132,6 +135,13 @@ public class TekstBuffer
 					i = i + endIndex;
 					result.add(fv);
 				}
+				else if (identifier.equals("$H"))
+				{
+					AnchorView lr = getLinkRegel(tekst, i, endIndex);
+					i = i + endIndex;
+					result.add(lr);
+				}
+
 				else if (identifier.equals("$I"))
 				{
 					ImageView iv = getImageView(tekst, i, endIndex);
@@ -176,6 +186,16 @@ public class TekstBuffer
 		FormuleViewer fv;
 		fv = new FormuleViewer(tekst.substring(i + 2, i + endIndex), randomVarNamen, randomVarWaarden);
 		return fv;
+	}
+	
+	private AnchorView getLinkRegel(String tekst, int i, int endIndex) {
+		String data = tekst.substring(i + 2, i + endIndex);
+		int u = data.indexOf("$U");
+		int b = data.indexOf("@", u);
+		tekst = data.substring(0,u);
+		String href = data.substring(u+2, b);
+		AnchorContext anchorContext = DWOplayer.clientfactory.getEntryView().getAnchorContext();
+		return new AnchorView(tekst, href, anchorContext);
 	}
 	
 	private String[] getBreaks(String normalTekst)

@@ -4,6 +4,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
+import nl.uu.fi.dwo.mobile.client.ui.DummyClientFactory;
+import nl.uu.fi.dwo.mobile.client.ui.event.CBookEventListener;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 
@@ -51,8 +53,15 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 //			RootPanel.get().add(customLogArea);
 //		}
 
+		DummyClientFactory dummyClientFactory = new DummyClientFactory();
+		DWOplayer.clientfactory = dummyClientFactory;
+		
 		MGWTsetup();
 		view = new ViewModuleViewImpl(true).initialize();
+
+		dummyClientFactory.setEntryView(view);
+		dummyClientFactory.setEventBus(CBookEventListener.BUS);
+
 		view.zetMaat();
 		
 		Scorm2004IF api = view.getApi();

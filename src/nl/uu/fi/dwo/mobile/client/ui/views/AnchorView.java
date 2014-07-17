@@ -40,6 +40,7 @@ public class AnchorView implements IsWidget, ClickHandler{
 			this.href = href;
 		} else
 			anchor = new Anchor(tekst, href);
+			anchor .setTarget("_blank");
 	}
 	
 	

@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavPanel;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
+import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
@@ -731,6 +732,17 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 	}
 
+	class MyAnchorContext implements AnchorContext {
+
+		@Override
+		public void gotoUrl(String href) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	MyAnchorContext anchorContext = new MyAnchorContext();
+	
 	public ViewModuleViewImpl initialize()
 	{
 		api = GWT.create(Scorm2004IF.class);
@@ -1006,6 +1018,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	public void setTitle(String string) {
 		hp.setCenter(string);
 		
+	}
+
+	@Override
+	public AnchorContext getAnchorContext() {
+		return anchorContext;
 	}
 
 }
