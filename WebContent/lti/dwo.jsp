@@ -13,7 +13,6 @@
   %>
 </head>
 <body>
-
 <%@ page import="javax.servlet.http.HttpServletRequest" %>
 <%@ page import="java.util.Enumeration" %>
 <%@ page import="java.net.URLEncoder" %>
@@ -28,10 +27,9 @@
 <%@ page import="net.oauth.server.OAuthServlet" %>
 <%@ page import="net.oauth.signature.OAuthSignatureMethod" %>
 <%@ page import="fi.servlet.lti.DbAccess" %>
-
 <%!
 	private DbAccess dbAccess = new DbAccess(
-			new DbAccessLocal()
+			//new DbAccessLocal() // for testing in with local mysql
 	);
 
 	private void doReturn(HttpServletRequest request, HttpServletResponse response, 
@@ -53,11 +51,8 @@
 		out.println("</p>");
 	}
 %>
-
-
-<pre>
 <%
-/* */
+/* * /
   Enumeration en = request.getParameterNames();
   while (en.hasMoreElements()) {
     String paramName = (String) en.nextElement();
@@ -66,7 +61,6 @@
   out.println("path info = " + request.getPathInfo() );
 /* */
 %>
-</pre>
 <%
   OAuthMessage oam = OAuthServlet.getMessage(request, null);
   OAuthValidator oav = new SimpleOAuthValidator();
@@ -137,6 +131,5 @@
 	<param name='logoutURL' value="<%=logoutURL %>" >
 	<%= dbAccess.getDeepLink(request.getPathInfo()) %>
 </applet>
-
 </body>
 </html>

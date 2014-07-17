@@ -70,7 +70,9 @@ public class DbAccess {
 	    if(organization == null)organization = oauth_consumer_key;
 	    
 		Cookie user  = new Cookie(DWO_SAML_USER_ID, lti_id);
-		Cookie orgid = new Cookie(DWO_SAML_ORGANIZATION_ID, "lti:" + oauth_consumer_key);
+		String orgidStr = "lti:" + oauth_consumer_key;
+		Cookie orgid = new Cookie(DWO_SAML_ORGANIZATION_ID, orgidStr);
+		orgidStr = "\"" + orgidStr + "\"";
 		Cookie org   = new Cookie(DWO_SAML_ORGANIZATION, organization);
 		response.addCookie(user);
 		response.addCookie(orgid);
@@ -79,7 +81,7 @@ public class DbAccess {
 		Group group = getGroup(request.getParameter("roles"));
 		User u = null;
 		try {
-			u = mapUser(dbaccess.login_saml(lti_id, orgid.getValue()));
+			u = mapUser(dbaccess.login_saml(lti_id, orgidStr));
 		} catch (Exception e) {
 			String schoolLogin = getRealm(oauth_consumer_key);
 			String username = user_id + "@" + schoolLogin;
@@ -93,7 +95,7 @@ public class DbAccess {
 			catch(Exception e1) { e1.printStackTrace(); }
 			try {
 				u = mapUser(dbaccess.login(username, ""));
-				dbaccess.link_saml(lti_id, orgid.getValue(), u.getID());
+				dbaccess.link_saml(lti_id, orgidStr, u.getID());
 			} catch (Exception e1) {
 				e1.printStackTrace();
 				return;
