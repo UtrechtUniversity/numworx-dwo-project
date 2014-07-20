@@ -1787,17 +1787,17 @@ public class TekstVakPanel implements InteractionView
 				ashoogte = tekstVakken[0][j].getAsHoogte();
 		}
 		
-		return ashoogte; 
+		return facade.wrapAsHoogte(ashoogte); 
 	}
 
 	@Override
 	public int getHeight() {
-		return hoogte;
+		return facade.wrapHeight(hoogte);
 	}
 
 	@Override
 	public int getWidth() {
-		return breedte;
+		return facade.wrapWidth(breedte);
 	}
 	
 	public void zetVolledigeBreedte(int breedte){

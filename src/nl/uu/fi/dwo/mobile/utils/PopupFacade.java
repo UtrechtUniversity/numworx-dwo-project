@@ -83,11 +83,25 @@ public class PopupFacade implements InteractionView {
 		"images/resources/tekstknop.gif",   // textVakLabel
 		"images/resources/geogebra.gif",    // geogebra
 	};
+	final static int heights[] = { 20,20,20,20,20 };
+	final static int widths [] = { 20,20,20,20,20 };
+	
+	
 	private PopupButton popupBtn;
+	private int imageHeight = 20;
+	private int imageWidth  = 20;
 	
 	private Image getImage() {
-		if(popupImageString != null && popupImageString.length()>0)
-			return new ImageView(popupImageString).getImage();
+		if(popupImageString != null && popupImageString.length()>0) {
+			ImageView imageView = new ImageView(popupImageString);
+			imageHeight = imageView.getHeight();
+			imageWidth = imageView.getWidth();
+			return imageView.getImage();
+		}
+// TODO gebruik resources!
+		imageWidth = widths[setNr];
+		imageHeight = heights[setNr];
+		
 		return newImage(interactiePanelSetNames[setNr]);
 	}
 	
@@ -126,22 +140,30 @@ public class PopupFacade implements InteractionView {
 
 	@Override
 	public int getAsHoogte() {
-		if(popup) // FIXME wat is de hashoogte van de button?
-			return asWidget().getOffsetHeight() / 2;
+		if(popup) // FIXME wat is de ashoogte van de button?
+			return getPopupHeight() / 2;
 		return delegate.getAsHoogte();
 	}
 
 	@Override
 	public int getHeight() {
 		if(popup) // FIXME hoogte van button?
-			return asWidget().getOffsetHeight();
+			return getPopupHeight();
 		return delegate.getHeight();
 	}
+
+	private int getPopupHeight() {
+		return imageHeight;
+	}
+	private int getPopupWidth() {
+		return imageWidth; 
+	}
+	
 
 	@Override
 	public int getWidth() {
 		if(popup)
-			return asWidget().getOffsetWidth();
+			return getPopupWidth();
 		return delegate.getWidth();
 	}
 	
@@ -165,12 +187,12 @@ public class PopupFacade implements InteractionView {
 	}
 
 	public int wrapHeight(int height) {
-		if(popup) return getHeight();
+		if(popup) return getPopupHeight();
 		return height;
 	}
 	
 	public int wrapWidth(int width) {
-		if(popup) return getWidth();
+		if(popup) return getPopupWidth();
 		return width;
 	}
 	
