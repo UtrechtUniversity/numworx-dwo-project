@@ -736,7 +736,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 		@Override
 		public void gotoUrl(String href) {
-			// TODO Auto-generated method stub
+			if(href.startsWith("goto:."))
+			{
+				int opdrnr = Integer.parseInt(href.substring(6)) -1 ; // 0based
+				on.gotoOpdracht(opdrnr, scoreNav);
+			} // iets met de place controller.....
 			
 		}
 		
