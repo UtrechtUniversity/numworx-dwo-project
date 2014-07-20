@@ -130,7 +130,6 @@
 	<param name='cookies' value='false' >
 	<param name='logoutURL' value="<%=logoutURL %>" >
 	<%= dbAccess.getDeepLink(request.getPathInfo()) %>
-	<param name="java_arguments" value="-Djava.net.preferIPv4Stack=true -Xmx512m"/>
 </applet>
 </body>
 </html>
