@@ -55,7 +55,11 @@ public class ClientFactoryImpl implements ClientFactory
 	public ViewModuleView getEntryView()
 	{
 		if(entryView == null)
-			entryView = new ViewModuleViewImpl().initialize();
+		{
+			ViewModuleViewImpl impl = new ViewModuleViewImpl();
+			entryView = impl.initialize();
+			impl.zetMaat();
+		}
 		
 		return entryView;
 	}

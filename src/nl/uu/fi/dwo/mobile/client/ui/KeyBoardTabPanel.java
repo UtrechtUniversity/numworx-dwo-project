@@ -11,6 +11,8 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
+import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 
@@ -37,7 +39,7 @@ public class KeyBoardTabPanel
 
 	private int current = 0;
 
-//	private final TouchButton keyboardButton = new TouchButton();
+	private final TouchButton keyboardButton = new TouchButton();
 //	private final TouchButton keyboardRemoveButton = new TouchButton();
 //	private final TouchButton digitsButton = new TouchButton();
 
@@ -58,8 +60,7 @@ public class KeyBoardTabPanel
 		//FIXME CSS contentpanel.getElement().getStyle().setBackgroundImage("url(images/resources/keyboardgradientimage-new.png)");
 		tabcontentpanel.getElement().getStyle().setBorderWidth(0, Unit.PX);
 
-		staticpanel.getElement().getStyle().setHeight(4, Style.Unit.PX);
-		//FIXME CSS staticpanel.getElement().getStyle().setBackgroundImage("url(images/resources/footerbgimage.png)");
+		staticpanel.getElement().getStyle().setHeight(44, Style.Unit.PX);
 
 //		tabcontentpanel.setStylePrimaryName("tabkeyboard");
 //		tabcontentpanel.addStyleDependentName(FormuleKeyBoardButtons.getDependentName());
@@ -72,12 +73,30 @@ public class KeyBoardTabPanel
 	}
 
 	public void zetMaat() {
+		zetMaatCommon();
+		staticpanel.getElement().getStyle().setBackgroundImage("url(images/resources/footerbgimage.png)");
+		contentpanel.getElement().getStyle().setBackgroundImage("url(images/resources/keyboardgradientimage-new.png");
+
+		Image buttonImage = new Image("images/resources/keyboardbutton.png");
+		buttonImage.getElement().getStyle().setMargin(5, Unit.PX);
+		keyboardButton.add(buttonImage);
+		keyboardButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+		keyboardButton.addTapHandler(new TapHandler() {
+
+			@Override
+			public void onTap(TapEvent event) {
+				showKeyboard();
+			}});
+		
+	}
+
+	private void zetMaatCommon() {
 		main.getElement().getStyle().setPosition(Style.Position.ABSOLUTE);
 		main.getElement().getStyle().setBottom(0, Style.Unit.PX);
 	}
 
 	public void zetMaatNoordhoff() {
-		zetMaat();
+		zetMaatCommon();
 		main.setPixelSize(886, -1);
 		main.getElement().getStyle().setFontSize(0, Style.Unit.PX); // anders main is 1 regel = 13 px
 		main.remove(staticpanel);
@@ -87,7 +106,8 @@ public class KeyBoardTabPanel
 	public void clearStaticPanel()
 	{
 		staticpanel.clear();
-//		staticpanel.add(keyboardButton);
+		if(FormuleKeyboard.isNoordhoff()) return;
+		staticpanel.add(keyboardButton);
 //		if(! FormuleKeyboard.hasKeyboard) staticpanel.add(digitsButton);
 //		staticpanel.add(keyboardRemoveButton);
 	}

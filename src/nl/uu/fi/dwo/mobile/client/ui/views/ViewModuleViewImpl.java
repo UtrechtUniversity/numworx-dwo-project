@@ -163,7 +163,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	{
 		contentPanel.clear();
 		if(DWOplayer.JSON) loadJSON(file); else loadXML(file);
-		//hp.setCenter(name);
+		if(!standalone) hp.setCenter(name);
 	}
 
 	private void loadJSON(String file) {
@@ -763,7 +763,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		FormuleHolder.installKeyboard(kb);
 		
 		hp = new HeaderPanel(DWOplayer.PARAMETERS.headercss());
-		hp.setCenter("");
+		setTitle("");
 		//Style style = hp.getElement().getStyle();
 		
 		HeaderButton next, prev;
@@ -840,8 +840,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			}});
 		POPUP.addAutoHidePartner(hb.getElement());
 
-// FIXME HACK voor DWOplayer zelf		
-		hb = new HeaderButton(DWOplayer.PARAMETERS.headercss()); hb.setBackButton(true);hb.setText("Terug");
 		
 		
 		//initWidget(mainPanel);
@@ -910,6 +908,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	}
 	
 	public void zetMaat() {
+
+		// FIXME HACK voor DWOplayer zelf		
+		hb = new HeaderButton(DWOplayer.PARAMETERS.headercss()); hb.setBackButton(true);hb.setText("Terug");
+		hp.setLeftWidget(hb);
+		hp.setRightWidget(null);
+		
 		contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
 		kb.tp.zetMaat();
 	}
@@ -1020,7 +1024,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	}
 
 	public void setTitle(String string) {
-		hp.setCenter(string);
+		if(standalone) hp.setCenter(string);
 		
 	}
 

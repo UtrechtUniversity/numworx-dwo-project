@@ -84,15 +84,15 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 
 	private String[][] buttonCodesGR =
 	{
-	{ "wortel", "macht", "kwadraat", "breuk", "haakjes", "ndewortel", "integraal", "prv", "ndelog", "abs", "subscript", "bin" },
-	{ "diff", "limiet0", "limiet1", "limiet2", "\u221e", "primitieve", "e", "pi", "<", ">", "\u2228", "\u2248", ΑΒ }
+	{ "wortel", "macht", "kwadraat", "breuk", "haakjes", "ndewortel", "integraal", "prv", "ndelog", "abs", "subscript", "bin" ,ΑΒ },
+	{ "diff", "limiet0", "limiet1", "limiet2", "\u221e", "primitieve", "e", "pi", "<", ">", "\u2228", "\u2248", VVV }
 
 	};
 
 	private double[][] buttonWidthsGR =
 	{
-	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.1 }
+	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 , 1.1},
+	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  1.1}
 
 	};
 
@@ -225,13 +225,17 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 			return tp.getPanel();
 		}
 		tp = new KeyBoardTabPanel();
-		// FIXME CSS tp.getPanel().getElement().getStyle().setBackgroundImage("images/resources/footerbgimage.png");
 
 		if(hasKeyboard)
-			tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodesWN, buttonWidthsWN), 69); // was GR
+		{
+			if(isNoordhoff())
+				tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodesWN, buttonWidthsWN), 69); // was GR
+			else
+				tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodesGR, buttonWidthsGR), 181);
+		}
 		else 
 		{
-			if("noordhoff".equals(FormuleKeyBoardButtons.getDependentName()))
+			if(isNoordhoff())
 			{
 				tp.addTab("Toetsenbord", getKeyBoard(buttonCodes_geavanceerd, buttonWidths_geavanceerd),181);
 				tp.addTab(qwerty,         getKeyBoard(buttonCodes_abc, buttonWidths_abc),181);
@@ -280,7 +284,12 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 		opdrnav.getElement().getStyle().setFloat(Style.Float.RIGHT);
 		opdrnav.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 		tp.clearStaticPanel();
-		//tp.getStaticPanel().add(opdrnav);
+		if(!isNoordhoff())
+			tp.getStaticPanel().add(opdrnav);
+	}
+
+	static boolean isNoordhoff() {
+		return "noordhoff".equals(FormuleKeyBoardButtons.getDependentName());
 	}
 
 	public void goTo(String panel)
@@ -298,7 +307,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 		int defwidth = 16;
 		int padding = 16;
 // if(NOORDHOFF)
-		if("noordhoff".equals(FormuleKeyBoardButtons.getDependentName()))
+		if(isNoordhoff())
 		{ defwidth = 52; padding = 0; }
 		double width = 0;
 
