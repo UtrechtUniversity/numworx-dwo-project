@@ -231,7 +231,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 			if(isNoordhoff())
 				tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodesWN, buttonWidthsWN), 69); // was GR
 			else
-				tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodesGR, buttonWidthsGR), 181);
+				tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodesGR, buttonWidthsGR), 108);
 		}
 		else 
 		{
@@ -248,7 +248,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 		}
 		//tp.addTab("ABC", this.getKeyBoard(buttonCodesAbc, buttonWidthsAbc));
 	    //tp.addTab("ABCShift", this.getKeyBoard(buttonCodesAbcShift, buttonWidthsAbcShift));
-		tp.addTab("Alpha", this.getKeyBoard(buttonCodesAlpha, buttonWidthsAlpha),69);
+		tp.addTab("Alpha", this.getKeyBoard(buttonCodesAlpha, buttonWidthsAlpha),270);
 		//tp.addTab("GR", this.getKeyBoard(buttonCodesGR, buttonWidthsGR));
 		//tp.addTab("MW", this.getKeyBoard(buttonCodesMW, buttonWidthsMW));
 

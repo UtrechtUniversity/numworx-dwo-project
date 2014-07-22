@@ -40,6 +40,8 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -914,8 +916,20 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		hp.setLeftWidget(hb);
 		hp.setRightWidget(null);
 		
-		contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
+		///contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
+		int contentHeight = Window.getClientHeight() - 84;
+		Window.addResizeHandler(new ResizeHandler() {
+
+			@Override
+			public void onResize(ResizeEvent event) {
+				int h = event.getHeight() - 84;
+				logger.info("resize event " +  h);
+				kb.tp.setScrollPanel(contentScrollPanel, h);
+				
+			}});
 		kb.tp.zetMaat();
+		kb.tp.setScrollPanel(contentScrollPanel, contentHeight);
+
 	}
 
 	@Override

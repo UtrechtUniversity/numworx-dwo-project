@@ -121,14 +121,17 @@ public class KeyBoardTabPanel
 	static final Logger logger = Logger.getLogger("KeyboardTabPanel");
 
 	Widget scrollPanel; int origHeight = 426 - 40;
+	int origDelta = 0;
 	
 	private void resizeScrollPanel(int size) {
+		origDelta = size;
 		if(scrollPanel != null)
 			scrollPanel.setPixelSize(-1, origHeight - size);
 	}
 	public void setScrollPanel(Widget w, int h) {
 		scrollPanel = w;
 		origHeight = h;
+		if(scrollPanel != null) scrollPanel.setPixelSize(-1, origHeight - origDelta);
 	}
 	
 	public void addTab(String buttonText, Panel p, int height)
