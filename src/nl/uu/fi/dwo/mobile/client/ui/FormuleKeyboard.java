@@ -43,7 +43,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	static final String QWERTY = "ABC";
 	static final String qwerty = "abc";
 	static final String SCRIBBLE = "Scribble";
-	static final boolean hasKeyboard  = ! TouchEvent.isSupported();
+	static final boolean hasKeyboard  = false; //! TouchEvent.isSupported();
 	private FormuleEditorIF editor;
 	public KeyBoardTabPanel tp;
 	private WritePanel writePanel;
@@ -53,7 +53,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 
 	private String[][] buttonCodes =
 	{
-	{ "zoomIn", "zoomOut", "copy", "paste", "del", "back", null, "left", "right", null, "apply" },
+	{ "zoomIn", "zoomOut", "copy", "paste", "del", "back", null, "left", "right", null, "apply", VVV },
 	{ "wortel", "macht", "kwadraat", "breuk", "haakjes", "ndewortel", "x", "y", "(", ")", "1", "2", "3", "/" },
 	{ "integraal", "prv", "ndelog", "abs", "subscript", "bin", "a", "b", "k", "e", "pi", "4", "5", "6", "maal" },
 	{ "diff", "limiet0", "limiet1", "limiet2", "\u221e", "primitieve", "p", "q", "t", "<", ">", "7", "8", "9", "min" },
@@ -76,7 +76,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	
 	private double[][] buttonWidths =
 	{
-	{ 1, 1, 1, 1, 2, 2, 1, 1, 1, 2, 2 },
+	{ 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 2, 1},
 	{ 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1 },
 	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
@@ -243,7 +243,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 			}
 			else
 			{
-				tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodes, buttonWidths),69);
+				tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodes, buttonWidths),270);
 			}
 		}
 		//tp.addTab("ABC", this.getKeyBoard(buttonCodesAbc, buttonWidthsAbc));
@@ -259,9 +259,11 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 		b.setWidth("30px");
 		b.setHeight("16px");
 		writePanel.add(b);
+		b = FormuleKeyBoardButtons.getButton(VVV, this);
+		writePanel.add(b);
 		
 		if (!hasKeyboard)
-			tp.addTab(SCRIBBLE, writePanel, 69);
+			tp.addTab(SCRIBBLE, writePanel, 250);
 
 		//tp.hideTabButton("ABCShift");
 		//SliderPanel sp = new SliderPanel(100, this);

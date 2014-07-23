@@ -41,7 +41,7 @@ public class KeyBoardTabPanel
 
 	private final TouchButton keyboardButton = new TouchButton();
 //	private final TouchButton keyboardRemoveButton = new TouchButton();
-//	private final TouchButton digitsButton = new TouchButton();
+	private final TouchButton digitsButton = new TouchButton();
 
 	private boolean enabled = false;
 	
@@ -87,7 +87,20 @@ public class KeyBoardTabPanel
 			public void onTap(TapEvent event) {
 				showKeyboard();
 			}});
-		
+		if(!FormuleKeyboard.hasKeyboard)
+		{
+			buttonImage = new Image("images/resources/digits.png");
+			buttonImage.getElement().getStyle().setMargin(5, Unit.PX);
+			digitsButton.add(buttonImage);
+			digitsButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+			digitsButton.addTapHandler(new TapHandler() {
+
+				@Override
+				public void onTap(TapEvent event) {
+					if(enabled)
+						goTo(FormuleKeyboard.SCRIBBLE);
+				}});
+		}
 	}
 
 	private void zetMaatCommon() {
@@ -108,7 +121,7 @@ public class KeyBoardTabPanel
 		staticpanel.clear();
 		if(FormuleKeyboard.isNoordhoff()) return;
 		staticpanel.add(keyboardButton);
-//		if(! FormuleKeyboard.hasKeyboard) staticpanel.add(digitsButton);
+		if(! FormuleKeyboard.hasKeyboard) staticpanel.add(digitsButton);
 //		staticpanel.add(keyboardRemoveButton);
 	}
 

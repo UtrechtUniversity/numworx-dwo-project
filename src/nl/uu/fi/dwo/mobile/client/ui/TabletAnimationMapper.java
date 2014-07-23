@@ -42,8 +42,9 @@ public class TabletAnimationMapper implements AnimationMapper
 			return Animation.SLIDE_REVERSE;
 		if (oldPlace instanceof FlatModulePlace && newPlace instanceof ProfilePlace)
 			return Animation.SLIDE_REVERSE;
-		if (oldPlace instanceof TreeModulePlace && newPlace instanceof TreeModulePlace)
+		if (oldPlace == null || oldPlace instanceof TreeModulePlace && newPlace instanceof TreeModulePlace)
 			return null;
+		
 		return Animation.SLIDE;
 	}
 

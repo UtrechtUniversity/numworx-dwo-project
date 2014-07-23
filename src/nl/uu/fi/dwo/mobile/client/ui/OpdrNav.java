@@ -121,13 +121,18 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		currentOpdracht = memento.getCurrentOpdracht();
 		
 		memento.getStrafpunten(strafpunten);
+		memento.getOrGoedFout(isCorrect);
 		
 		//setOpdrachten(currentActiviteit); // kan dat nu al? of anders bij setchanged testen op  buttons.get() != null
 		final HashMap<String, Object> state = states[currentActiviteit][currentOpdracht];
 		if (state == null)
 			entry.zetOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
 		else
+		{
 			entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], state);
+			
+		}
+
 	}
 
 	public Panel getAsPanel()
@@ -184,7 +189,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 			setButtonCorrect(buttons.get(currentOpdracht), correct);
 		saveCurrentState();
 	}
-
+		
 	private void setOpdrachten(int index)
 	{
 		if (fp_opdrachten != null)
@@ -366,6 +371,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		isCorrect[currentActiviteit][currentOpdracht] = Boolean.TRUE == entry.isCorrect();
 		memento.setCurrentActiviteit(currentActiviteit);
 		memento.setCurrentOpdracht(currentOpdracht);
+		memento.setOrGoedFout(isCorrect);
 		double score = getScore();
 		memento.setScore(score);
 		source.setTotaalScore((int) score); 

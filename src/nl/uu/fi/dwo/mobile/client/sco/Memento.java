@@ -52,6 +52,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 
 	private static final String OPDR_CONT_STATES = "opdrContStates";
 	private static final String STRAFPUNTEN = "strafpunten"; // optional!
+	private static final String GOED_FOUT = "orGoedFout";
 	private static final String ONS_STATE = "onsState";
 	static final String SUSPEND_DATA = "cmi.suspend_data";
 	static final String SCORE_RAW = "cmi.score.raw";
@@ -66,7 +67,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 
 	private JSONObject suspendData;
 	private JSONObject onsState;
-	private JSONArray opdrContStates, opdrStrafpunten;
+	private JSONArray opdrContStates, opdrStrafpunten, opdrGoedFout;
 
 	private String scoreRaw;
 	private Date startDate = new Date();
@@ -90,6 +91,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 			onsState = (JSONObject) suspendData.get(ONS_STATE);
 			opdrContStates = (JSONArray) onsState.get(OPDR_CONT_STATES);
 			opdrStrafpunten = (JSONArray) onsState.get(STRAFPUNTEN);
+			opdrGoedFout  = (JSONArray) onsState.get(GOED_FOUT);
 		}
 		catch (Exception e)
 		{
@@ -167,7 +169,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 						opdrStrafpunten = new JSONArray();
 						onsState.put(STRAFPUNTEN, opdrStrafpunten);
 					}
-					if( i <= opdrStrafpunten.size() || isNull(opdrStrafpunten.get(i)) )
+					if( i >= opdrStrafpunten.size() || isNull(opdrStrafpunten.get(i)) )
 						opdrStrafpunten.set(i, new JSONArray());
 					JSONArray array = opdrStrafpunten.get(i).isArray();
 					array.set(j, new JSONNumber(punt));
@@ -185,6 +187,35 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		}
 	}
 	
+	public void setOrGoedFout(boolean[][] o) {
+		if(o == null) return;
+		for (int i = 0; i < o.length; i++) {
+			boolean[] oi = o[i];
+			for (int j = 0; j < oi.length; j++) {
+				boolean punt = oi[j];
+				if(punt != false) {
+					if ( opdrGoedFout == null) {
+						opdrGoedFout = new JSONArray();
+						onsState.put(GOED_FOUT, opdrGoedFout);
+					}
+					if( i >= opdrGoedFout.size() || isNull(opdrGoedFout.get(i)) )
+						opdrGoedFout.set(i, new JSONArray());
+					JSONArray array = opdrGoedFout.get(i).isArray();
+					array.set(j, JSONBoolean.getInstance(punt));
+				} else {
+					if(opdrGoedFout == null 
+							|| opdrGoedFout.size() <= i 
+							|| isNull(opdrGoedFout.get(i)))
+						continue;
+					JSONArray array = opdrGoedFout.get(i).isArray();
+					if(j >= array.size()) continue;
+					array.set(j, JSONBoolean.getInstance(false));
+				}
+			}
+			
+		}
+	}
+
 	private boolean isNull(JSONValue jsonValue) {
 		return jsonValue == null | jsonValue.isNull() == JSONNull.getInstance();
 	}
@@ -207,6 +238,35 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 				}
 			}
 		}
+	}
+	
+	public void getOrGoedFout(boolean[][] o) {
+		if(o == null) return;
+		if(opdrGoedFout == null) {
+			for (int i = 0; i < o.length; i++) {
+				boolean[] oi = o[i];
+				for (int j = 0; j < oi.length; j++) {
+					oi[j] = false;
+				}
+			}
+		} else {
+			for (int i = 0; i < o.length; i++) {
+				JSONArray array = getArray(i, opdrGoedFout);
+				boolean[] oi = o[i];
+				for (int j = 0; j < oi.length; j++) {
+					oi[j] = getBoolean(array, j);
+				}
+			}
+		}
+	}
+
+	private boolean getBoolean(JSONArray array, int j) {
+		if(array == null || j < 0 || j > array.size())
+			return false;
+		JSONBoolean number = array.get(j).isBoolean();
+		if(number != null)
+			return number.booleanValue();
+		return false;
 	}
 
 	public int getInt(JSONArray array, int j) {
