@@ -25,6 +25,11 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 		return JSONUtilities.toJSONObject(map).toString();
 	}
 	
+	private String isCorrect() {
+		return String.valueOf(view.isCorrect());
+	}
+	
+	
 	private void setState(String jso) {
 		JSONObject js = JSONParser.parseLenient(jso).isObject();
 		HashMap<String,Object> result = JSONUtilities.wrapMap(js);
@@ -67,7 +72,7 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 				this.stub.@nl.uu.fi.dwo.interaction.client.Stub::setState(Ljava/lang/String;)(jso);
 			},
 			isCorrect: function() {
-				return this.stub.@nl.uu.fi.dwo.interaction.client.Stub::view.@nl.uu.fi.dwo.interaction.client.InteractionView::isCorrect()();
+				return this.stub.@nl.uu.fi.dwo.interaction.client.Stub::isCorrect()();
 			},
 			init: function(width, height, launchdata,values) {
 				this.stub.@nl.uu.fi.dwo.interaction.client.Stub::init(IILjava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(width, height,launchdata,values);

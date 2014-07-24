@@ -308,15 +308,20 @@ public class PijlVak extends LayoutPanel{
 			b = Math.max(110, getWidth());
 		width = b;
 		setPixelSize(width, height);
+		if(editorPanel.getParent() == this) // FIXME Anders een assertion error bij setWidgetLeftWith
+		{ 
+			this.setWidgetLeftWidth(editorPanel, (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+"   ").getWidth(), Style.Unit.PX, editor.getWidth(), Style.Unit.PX);
 		
-		this.setWidgetLeftWidth(editorPanel, (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+"   ").getWidth(), Style.Unit.PX, editor.getWidth(), Style.Unit.PX);
-		this.setWidgetTopHeight(editorPanel, ashoogte-editor.getAsHoogte()-fm.getDescent()/2, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
+		    this.setWidgetTopHeight(editorPanel, ashoogte-editor.getAsHoogte()-fm.getDescent()/2, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
+		
 		//formuleVak.setLocation((fm.getAscent() + fm.getDescent())/2 + fm.stringWidth("  "+operator+" "),ashoogte-formuleVak.ashoogte-fm.getDescent()/2);
 		//formuleVakHaakjeR.setLocation((fm.getAscent() + fm.getDescent())/2 + fm.stringWidth("  "+operator+" ") + formuleVakHaakjeL.getSize().width + formuleVak.getSize().width,ashoogte-formuleVak.ashoogte-fm.getDescent()/2);
 		if(operator.equals("abc") || operator.equals("sub"))
 		{	
 			this.setWidgetLeftWidth(editorPanel, 10 + prefixVak.getWidth(), Style.Unit.PX, editor.getWidth(), Style.Unit.PX);
 			this.setWidgetTopHeight(editorPanel, ashoogte, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
+		}
+		
 		}
 	}
 	

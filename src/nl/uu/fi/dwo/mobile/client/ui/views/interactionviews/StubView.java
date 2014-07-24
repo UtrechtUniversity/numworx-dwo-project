@@ -130,7 +130,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		inner.setState(state);
 	}-*/;
 	
-	private native static Boolean isCorrect(Object inner) /*-{
+	private native static String isCorrect(Object inner) /*-{
 		return inner.isCorrect();
 	}-*/;
 	
@@ -140,9 +140,12 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 
 	@Override
 	public Boolean isCorrect() {
-		if(innerView != null)
-			return isCorrect(innerView);
-		return false;
+		if(innerView != null) {
+			String correct = isCorrect(innerView);
+			if(correct == null || "null".equals(correct)) return null;
+			return Boolean.valueOf(correct);
+		}
+		return null;
 	}
 	
 	public void kijkNa() {
@@ -485,12 +488,12 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 
 	@Override
 	public int getHeight() {
-		return height;
+		return facade.wrapHeight(height);
 	}
 
 	@Override
 	public int getWidth() {
-		return width;
+		return facade.wrapWidth(width);
 	}
 	
 	public void zetVolledigeBreedte(int breedte)
