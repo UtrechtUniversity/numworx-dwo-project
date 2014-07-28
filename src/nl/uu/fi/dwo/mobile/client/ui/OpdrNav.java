@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
@@ -39,7 +40,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 	public static int EINDTOETS = 3;
 	
 	private static final int foutStraf = 2;
-	
+	private static final Logger logger = Logger.getLogger("OpdrNav");
 
 	private ViewModuleViewImpl entry;
 	private ListBox lb_activiteiten;
@@ -125,10 +126,16 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		
 		//setOpdrachten(currentActiviteit); // kan dat nu al? of anders bij setchanged testen op  buttons.get() != null
 		final HashMap<String, Object> state = states[currentActiviteit][currentOpdracht];
+
+		
 		if (state == null)
+		{
+			logger.info("zetOpdracht no state");
 			entry.zetOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
+		}
 		else
 		{
+			logger.info("zetOpdracht plus state");
 			entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], state);
 			
 		}

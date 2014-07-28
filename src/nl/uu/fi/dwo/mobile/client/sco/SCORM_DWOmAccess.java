@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.sco;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
 import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
@@ -9,6 +10,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class SCORM_DWOmAccess extends SCORM_guest implements Scorm2004IF {
 
+	static final Logger logger = Logger.getLogger("SCORM_DWOmAccess");
 	private int userID;
 	private int scoID;
 	private boolean pending;
@@ -49,6 +51,7 @@ public class SCORM_DWOmAccess extends SCORM_guest implements Scorm2004IF {
 
 				@Override
 				public void onFailure(Throwable caught) {
+					logger.severe("Commit: "+ caught);
 					pending = false;
 					copy.putAll(dirty);
 					dirty.putAll(copy);
@@ -93,6 +96,7 @@ public class SCORM_DWOmAccess extends SCORM_guest implements Scorm2004IF {
 		
 				@Override
 				public void onFailure(Throwable caught) {
+					logger.severe("Initialize: "+ caught);
 					pending = false;
 					if(callback!=null)callback.onFailure(caught);
 				}

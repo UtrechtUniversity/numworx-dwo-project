@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
@@ -284,20 +285,21 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			contentPanel.remove(buttons.get(i));
 
 		super.setupView(launchData);
-		int mode = Integer.parseInt((String)launchData.get("mode"));
-
+//		int mode = 1; // TODO not used! why? zie OpdrNav
+//		try { mode = Integer.parseInt((String)launchData.get("mode"));
+//		} catch (Exception e) {
+//			logger.log(Level.SEVERE, "mode = " + launchData.get("mode"), e);
+//		}
 		ObjectMap wrap = JSONUtilities.wrapMap(instellingen);
 // wanneer verschijnt de opnieuwknop?		
 		boolean opnieuwMogelijk = "true".equals(launchData.get("opnieuwMogelijk"));
 		boolean opnieuw = false;
-		if(wrap.containsKey("opnieuw"))
+		if(wrap != null && wrap.containsKey("opnieuw"))
 		{	opnieuw = wrap.getBoolean("opnieuw");
 		}
 		scoreNav.setOpnieuw(opnieuw || opnieuwMogelijk);
-
 		
-		
-		if(wrap.containsKey("itemOpnieuw"))
+		if(wrap != null && wrap.containsKey("itemOpnieuw"))
 		{
 			scoreNav.setItemOpnieuw(wrap.getBoolean("itemOpnieuw"));
 		}

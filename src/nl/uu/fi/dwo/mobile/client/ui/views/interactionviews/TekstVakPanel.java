@@ -193,7 +193,7 @@ public class TekstVakPanel implements InteractionView
 	private Object queuedObject;
 	
 	static CssColor getColor(ObjectMap map, String key, int r, int g, int b) {
-		ObjectMap colorMap = map != null  ? map.getObjectMap(key) : null ;
+		ObjectMap colorMap = map != null && map.containsKey(key) ? map.getObjectMap(key) : null ;
 		if(colorMap != null) {
 			r = colorMap.getInt("red");
 					//((Number)colorMap.get("red")).intValue();

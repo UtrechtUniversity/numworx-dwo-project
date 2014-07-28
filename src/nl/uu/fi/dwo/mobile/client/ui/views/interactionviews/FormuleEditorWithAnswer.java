@@ -492,6 +492,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	@Override
 	public void setState(HashMap<String, Object> h)
 	{
+		logger.fine("setState " + h);
 		if(fews != null)
 		{
 			fews.setState(h);

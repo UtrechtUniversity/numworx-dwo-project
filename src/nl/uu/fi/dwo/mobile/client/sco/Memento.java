@@ -37,6 +37,7 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 public class Memento implements ClosingHandler, CloseHandler<Window>
 {
 	static Memento _instance;
+	static private Logger logger = Logger.getLogger("Memento");
 
 	static public native void instalOnBeforeUnload() /*-{
 		$wnd.onbeforeunload = @nl.uu.fi.dwo.mobile.client.sco.Memento::unload();
@@ -113,7 +114,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		}
 		catch (Exception e)
 		{
-			Logger.getLogger("Memento").log(Level.SEVERE,"getValue", e);
+			logger.log(Level.SEVERE,"getValue", e);
 			return "";
 		}
 	}
@@ -126,7 +127,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		}
 		catch (Exception e)
 		{
-			Logger.getLogger("Memento").log(Level.SEVERE, "initialize Scorm API", e);
+			logger.log(Level.SEVERE, "initialize Scorm API", e);
 		}
 	}
 
@@ -154,7 +155,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		}
 		catch (Exception e)
 		{
-			Logger.getLogger("Memento").log(Level.SEVERE,"setValue", e);
+			logger.log(Level.SEVERE,"setValue", e);
 		}
 	}
 
@@ -263,7 +264,9 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	private boolean getBoolean(JSONArray array, int j) {
 		if(array == null || j < 0 || j > array.size())
 			return false;
-		JSONBoolean number = array.get(j).isBoolean();
+		JSONValue value = array.get(j);
+		if(value == null) return false;
+		JSONBoolean number = value.isBoolean();
 		if(number != null)
 			return number.booleanValue();
 		return false;
@@ -396,6 +399,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 			for (int j = 0; j < oo.length; j++)
 			{
 				JSONValue value = array.get(j);
+				logger.fine("getstate " + j + "= " + value);
 				oo[j] = value == null ? null : JSONUtilities.wrapMap(value.isObject());
 			}
 		}
