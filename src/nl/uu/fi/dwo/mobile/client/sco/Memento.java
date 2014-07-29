@@ -54,6 +54,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	private static final String OPDR_CONT_STATES = "opdrContStates";
 	private static final String STRAFPUNTEN = "strafpunten"; // optional!
 	private static final String GOED_FOUT = "orGoedFout";
+	private static final String SCORES = "orScores"; // TODO correct name? getPagina score gebruikt deze naam
 	private static final String ONS_STATE = "onsState";
 	static final String SUSPEND_DATA = "cmi.suspend_data";
 	static final String SCORE_RAW = "cmi.score.raw";
@@ -68,7 +69,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 
 	private JSONObject suspendData;
 	private JSONObject onsState;
-	private JSONArray opdrContStates, opdrStrafpunten, opdrGoedFout;
+	private JSONArray opdrContStates, opdrStrafpunten, opdrGoedFout, opdrScores;
 
 	private String scoreRaw;
 	private Date startDate = new Date();
@@ -93,6 +94,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 			opdrContStates = (JSONArray) onsState.get(OPDR_CONT_STATES);
 			opdrStrafpunten = (JSONArray) onsState.get(STRAFPUNTEN);
 			opdrGoedFout  = (JSONArray) onsState.get(GOED_FOUT);
+			opdrScores    = (JSONArray) onsState.get(SCORES);
 		}
 		catch (Exception e)
 		{
@@ -160,32 +162,41 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	}
 
 	public void setStrafpunten(int[][] o) {
-		if(o == null) return;
+		opdrStrafpunten = setIntArrayArray(o, opdrStrafpunten, STRAFPUNTEN);
+	}
+	
+	public void setScores(int[][] o) {
+		opdrScores = setIntArrayArray(o, opdrScores, SCORES);
+	}
+
+	private JSONArray setIntArrayArray(int[][] o, JSONArray source, String key) {
+		if(o == null) return source;
 		for (int i = 0; i < o.length; i++) {
 			int[] oi = o[i];
 			for (int j = 0; j < oi.length; j++) {
 				int punt = oi[j];
 				if(punt != 0) {
-					if ( opdrStrafpunten == null) {
-						opdrStrafpunten = new JSONArray();
-						onsState.put(STRAFPUNTEN, opdrStrafpunten);
+					if ( source == null) {
+						source = new JSONArray();
+						onsState.put(key, source);
 					}
-					if( i >= opdrStrafpunten.size() || isNull(opdrStrafpunten.get(i)) )
-						opdrStrafpunten.set(i, new JSONArray());
-					JSONArray array = opdrStrafpunten.get(i).isArray();
+					if( i >= source.size() || isNull(source.get(i)) )
+						source.set(i, new JSONArray());
+					JSONArray array = source.get(i).isArray();
 					array.set(j, new JSONNumber(punt));
 				} else {
-					if(opdrStrafpunten == null 
-							|| opdrStrafpunten.size() <= i 
-							|| isNull(opdrStrafpunten.get(i)))
+					if(source == null 
+							|| source.size() <= i 
+							|| isNull(source.get(i)))
 						continue;
-					JSONArray array = opdrStrafpunten.get(i).isArray();
+					JSONArray array = source.get(i).isArray();
 					if(j >= array.size()) continue;
 					array.set(j, new JSONNumber(0));
 				}
 			}
 			
 		}
+		return source;
 	}
 	
 	public void setOrGoedFout(boolean[][] o) {
@@ -222,8 +233,16 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	}
 
 	public void getStrafpunten(int[][] o) {
+		getIntArrayArray(o, opdrStrafpunten);
+	}
+	
+	public void getScores(int[][] o) {
+		getIntArrayArray(o, opdrScores);
+	}
+
+	private void getIntArrayArray(int[][] o, JSONArray source) {
 		if(o == null) return;
-		if(opdrStrafpunten == null) {
+		if(source == null) {
 			for (int i = 0; i < o.length; i++) {
 				int[] oi = o[i];
 				for (int j = 0; j < oi.length; j++) {

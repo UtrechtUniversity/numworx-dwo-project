@@ -367,7 +367,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		if(strafpunten != null && mode == OEFENEN_STRAFPUNTEN)
 		{
 			scoreCorrected -= strafpunten[currentActiviteit][currentOpdracht];
-			if( scoreCorrected < 0 ) scoreCorrected = 0; 
+			if( scoreCorrected < 0 ) scoreCorrected = 0;
+			memento.setStrafpunten(strafpunten);
 		}
 		
 		source.setItemScore(currentOpdracht, 
@@ -381,6 +382,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		memento.setOrGoedFout(isCorrect);
 		double score = getScore();
 		memento.setScore(score);
+		memento.setScores(scores);
 		source.setTotaalScore((int) score); 
 		memento.setCompletion(suspendDataCompleted(currentActiviteit, currentOpdracht));
 		memento.setOpdrContStates(states);
