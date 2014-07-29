@@ -804,6 +804,7 @@ public class TekstVakPanel implements InteractionView
 
 	public void setState(HashMap<String, Object> h)
 	{
+		if(h == null || h.isEmpty()) return;
 		ObjectMap map = JSONUtilities.wrapMap(h);
 		boolean ingeklapt = this.ingeklapt;
 		if (map.containsKey("hoogtes") )

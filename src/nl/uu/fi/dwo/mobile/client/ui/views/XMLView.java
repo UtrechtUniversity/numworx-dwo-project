@@ -76,12 +76,13 @@ public abstract class XMLView {
 	
 			boolean maalTeken =  wrap.getBoolean("maalTeken");
 			FormuleTeken.zetMaalTeken(maalTeken);
-			if(wrap.containsKey("fontName"))
-				font_name = wrap.getString("fontName");
-			if(font_name.equals("SansSerif"))
-				font_name = "Arial";
+			if(wrap.containsKey("fontName")) // optional
+			{	font_name = wrap.getString("fontName");
+				if(font_name.equals("SansSerif"))
+					font_name = "Arial";
+			} else font_name = "Arial";
 			FormuleFont.zetDefaultFont(font_name);
-			boolean formTimes = wrap.containsKey("formTimes") && wrap.getBoolean("formTimes");
+			boolean formTimes = wrap.containsKey("formTimes") && wrap.getBoolean("formTimes"); // optional
 			FormuleFont.zetFormTimes(formTimes);
 			FormuleHolder.setDefaultActiviteitFont(FormuleFont.createFromFontSize(font_size));
 			AntwoordKeuzeVakGWT.setFontSize(font_size);

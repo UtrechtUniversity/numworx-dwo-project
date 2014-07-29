@@ -586,7 +586,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			Object currentObject = opdrachtObjects.get(i);
 			if (currentObject instanceof InteractionView)
 			{
-				HashMap<String, Object> state = (HashMap<String, Object>) states.get(stateNr);
+				HashMap<String, Object> state = stateNr < states.size() ? (HashMap<String, Object>) states.get(stateNr) : new HashMap();
 				((InteractionView) currentObject).setState(state);
 				stateNr++;
 			}
