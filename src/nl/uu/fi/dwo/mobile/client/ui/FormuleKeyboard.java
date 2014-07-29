@@ -219,7 +219,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	
 	public Panel getAsPanel()
 	{
-		Logger.getLogger("FormuleKeyboard").log(Level.INFO," Create kb panel");
+		Logger.getLogger("FormuleKeyboard").log(Level.INFO," Create kb panel " + hasKeyboard + " " + isNoordhoff());
 		if (tp != null)
 		{	tp.setEnabled(false);
 			return tp.getPanel();
