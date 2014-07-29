@@ -20,9 +20,9 @@ public class NoordhoffPlayer extends WiskOpdrPlayer {
 		MGWT.applySettings(settings);
 	}
 	
-	public void onModuleLoad()
-	{
-		super.onModuleLoad();
+	@Override
+	protected void zetMaat() {
 		view.zetMaatNoordhoff();
 	}
+	
 }

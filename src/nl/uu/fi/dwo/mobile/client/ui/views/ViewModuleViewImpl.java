@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavPanel;
+import nl.uu.fi.dwo.mobile.client.ui.SlidingPopup;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
@@ -852,7 +853,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	}
 	
 	
-	static class MyPopup extends PopupPanel {
+	static class MyPopup extends SlidingPopup {
 	    public MyPopup(ScoreNavPanel w) {
 	        // PopupPanel's constructor takes 'auto-hide' as its boolean parameter.
 	        // If this is set, the panel closes itself automatically when the user
@@ -872,7 +873,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	
 	protected void popupNavPanel() {
 		 final MyPopup popup = POPUP;
-	        popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+	        popup.setPopupPositionAndShow(new SlidingPopup.PositionCallback() {
 	          public void setPosition(int offsetWidth, int offsetHeight) {
 	            int left = (Window.getClientWidth() - offsetWidth) / 3;
 	            int top = (Window.getClientHeight() - offsetHeight) / 3;

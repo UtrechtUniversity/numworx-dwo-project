@@ -62,7 +62,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 		dummyClientFactory.setEntryView(view);
 		dummyClientFactory.setEventBus(CBookEventListener.BUS);
 
-		view.zetMaat();
+		zetMaat();
 		
 		Scorm2004IF api = view.getApi();
 		RootPanel.get().add(view);
@@ -85,6 +85,10 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 		};
 		api.Initialize(callback); // need some async bootstrapping.	
 		
+	}
+
+	protected void zetMaat() {
+		view.zetMaat();
 	}
 
 	protected void MGWTsetup() {

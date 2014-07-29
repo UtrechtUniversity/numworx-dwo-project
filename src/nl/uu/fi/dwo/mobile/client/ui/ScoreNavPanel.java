@@ -205,7 +205,7 @@ public class ScoreNavPanel extends Composite {
 	private Label[] vraagPunten;
 	private int[] scoreMax;
 	private int currentOpdracht;
-	public PopupPanel popup;
+	public SlidingPopup popup;
 	private boolean opnieuw;
 	private boolean itemOpnieuw;
 	private Button reloadTotal;

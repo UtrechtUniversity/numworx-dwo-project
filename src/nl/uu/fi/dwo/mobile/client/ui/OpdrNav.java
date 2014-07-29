@@ -193,7 +193,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		if(strafpunten != null && mode == OEFENEN_STRAFPUNTEN && fout)
 			strafpunten[currentActiviteit][currentOpdracht] += foutStraf;
 		if (buttons != null && buttons.size() > currentOpdracht)
-			setButtonCorrect(buttons.get(currentOpdracht), correct);
+			setButtonCorrect(buttons.get(currentOpdracht), correct, currentOpdracht);
 		saveCurrentState();
 	}
 		
@@ -214,7 +214,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		for (int j = 0; j < aantalOpdrachten[index]; j++)
 		{
 			setButton(j);
-			setButtonCorrect(buttons.get(j), isCorrect[index][j]);
+			setButtonCorrect(buttons.get(j), isCorrect[index][j], j);
 		}
 		fp_opdrachten.getElement().getStyle().setFloat(Style.Float.LEFT);
 		contentPanel.add(fp_opdrachten);
@@ -288,10 +288,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		});
 	}
 
-	public void setButtonCorrect(TouchButton button, boolean b)
+	private void setButtonCorrect(TouchButton button, boolean b, int j)
 	{
 		button.getElement().getStyle().setBackgroundColor(b ? "#00BB00" : "#FFBBBB");
-		if (scoresMax[currentActiviteit][currentOpdracht] == 0)
+		if (scoresMax[currentActiviteit][j] == 0)
 			button.getElement().getStyle().setBackgroundColor("#909090");
 	}
 
@@ -417,7 +417,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 
 	public void gotoOpdracht(final int opdracht) {
 		saveCurrentState();
-		setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht]);
+		setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht], currentOpdracht);
 
 		removeButtonCursor(buttons.get(currentOpdracht));
 		currentOpdracht = opdracht;
@@ -482,7 +482,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		source.setBeantwoord(getAantalBeantwoord());
 		source.setTotaalScore((int) getScore()); 
 		
-		setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht]);
+		setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht], currentOpdracht);
 
 		removeButtonCursor(buttons.get(currentOpdracht));
 		setButtonCursor(buttons.get(currentOpdracht));
