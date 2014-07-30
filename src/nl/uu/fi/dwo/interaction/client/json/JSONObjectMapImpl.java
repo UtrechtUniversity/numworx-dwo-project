@@ -25,7 +25,16 @@ public class JSONObjectMapImpl extends HashMap<String, Object> implements Object
 		return object.toString();
 	}
 	
-	
+	@Override
+	public int size() {
+		return object.size();
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return object.size() == 0;
+	}
+
 	public JSONObjectMapImpl(JSONObject object) {
 		super();
 		this.object = object;
