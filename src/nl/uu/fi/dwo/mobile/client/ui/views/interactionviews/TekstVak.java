@@ -433,16 +433,17 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			else if (currentObject instanceof AnchorView)
 			{
 				AnchorView av = (AnchorView) currentObject;
-				Widget w = av.asWidget();
-				if(regelBreedte == 0 || regelBreedte + w.getOffsetWidth() <= tekstVakBreedte)
+				String text = av.toString();
+				double width = ctx.measureText(text).getWidth();
+				if(regelBreedte == 0 || regelBreedte + width <= tekstVakBreedte)
 				{	regelVakken[aantalRegels - 1].addObject(currentObject);
-					regelBreedte += w.getOffsetWidth();
+					regelBreedte += (int)width;
 				}
 				else
 				{
 					voegRegelToe();
 					regelVakken[aantalRegels - 1].addObject(currentObject);
-					regelBreedte = w.getOffsetWidth();
+					regelBreedte = (int)width;
 				}
 			}
 		}

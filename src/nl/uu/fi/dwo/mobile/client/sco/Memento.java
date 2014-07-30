@@ -251,7 +251,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 			}
 		} else {
 			for (int i = 0; i < o.length; i++) {
-				JSONArray array = getArray(i, opdrStrafpunten);
+				JSONArray array = getArray(i, source);
 				int[] oi = o[i];
 				for (int j = 0; j < oi.length; j++) {
 					oi[j] = getInt(array, j);
@@ -303,7 +303,10 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	public JSONArray getArray(int i, JSONArray array) {
 		if ( array == null || i < 0 || i > array.size())
 			return null;
-		return array.get(i).isArray();
+		JSONValue get = array.get(i);
+		if(get == null)
+			return null;
+		return get.isArray();
 	}
 	
 	

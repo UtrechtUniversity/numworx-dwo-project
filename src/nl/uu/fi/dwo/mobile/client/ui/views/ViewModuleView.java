@@ -23,5 +23,6 @@ public interface ViewModuleView extends IsWidget
 	void close();
 	
 	AnchorView.AnchorContext getAnchorContext();
+	void setAnchorContext(AnchorView.AnchorContext context);
 
 }

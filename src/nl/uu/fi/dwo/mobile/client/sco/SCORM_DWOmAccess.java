@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
 import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class SCORM_DWOmAccess extends SCORM_guest implements Scorm2004IF {
@@ -34,6 +35,7 @@ public class SCORM_DWOmAccess extends SCORM_guest implements Scorm2004IF {
 		if(scoID!=this.scoID)
 		{
 			map.clear();
+			if(!dirty.isEmpty()) logger.severe("wij hebben een probleem");
 			dirty.clear(); // als niet clear dan hebben we een probleem!!!!
 		}
 		this.scoID = scoID;
@@ -112,6 +114,18 @@ public class SCORM_DWOmAccess extends SCORM_guest implements Scorm2004IF {
 			
 			request = new XmlRpcRequest<HashMap<String,String>>(client, "Initialize", params, cb );
 			request.execute();
+		} else {
+			logger.info("still pending, wait a little");
+			Timer t = new Timer()
+			{
+				@Override
+				public void run()
+				{
+					Initialize(callback);
+				}
+			};
+			t.schedule(100);
+
 		}
 	}
 

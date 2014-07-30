@@ -55,4 +55,10 @@ public class AnchorView implements IsWidget, ClickHandler{
 		context.gotoUrl(href);
 	}
 
+
+	@Override
+	public String toString() {
+		return anchor.getText();
+	}
+
 }

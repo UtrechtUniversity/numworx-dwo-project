@@ -123,6 +123,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		
 		memento.getStrafpunten(strafpunten);
 		memento.getOrGoedFout(isCorrect);
+		memento.getScores(scores);
 		
 		//setOpdrachten(currentActiviteit); // kan dat nu al? of anders bij setchanged testen op  buttons.get() != null
 		final HashMap<String, Object> state = states[currentActiviteit][currentOpdracht];

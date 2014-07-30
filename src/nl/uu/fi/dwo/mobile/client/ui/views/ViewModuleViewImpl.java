@@ -750,7 +750,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 		
 	}
-	MyAnchorContext anchorContext = new MyAnchorContext();
+	AnchorContext anchorContext = new MyAnchorContext();
 	
 	public ViewModuleViewImpl initialize()
 	{
@@ -1048,6 +1048,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	@Override
 	public AnchorContext getAnchorContext() {
 		return anchorContext;
+	}
+	public void setAnchorContext(AnchorContext context) {
+		if (context == null) context = new MyAnchorContext();
+		anchorContext = context;
 	}
 
 }

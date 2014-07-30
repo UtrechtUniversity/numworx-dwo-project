@@ -1,11 +1,14 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
+import java.util.List;
+
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 
 import com.google.gwt.event.shared.EventBus;
@@ -23,11 +26,12 @@ import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
  * @author Danny Hendrix
  * 
  */
-public class ViewModuleActivity extends MGWTAbstractActivity
+public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorContext
 {
 	private ClientFactory clientFactory;
 	private ViewModuleView view;
-
+	private AnchorContext defaultContext;
+	private SelectModuleItem sco;
 	public ViewModuleActivity(ClientFactory clientFactory)
 	{
 		this.clientFactory = clientFactory;
@@ -46,18 +50,20 @@ public class ViewModuleActivity extends MGWTAbstractActivity
 		{
 			ViewModulePlace selectedModulePlace = (ViewModulePlace) place;
 			final int id = Integer.parseInt(selectedModulePlace.getToken());
-			final SelectModuleItem item = SelectModuleItemHolder.getScoByID(id);
+			sco = SelectModuleItemHolder.getScoByID(id);
+			defaultContext = view.getAnchorContext();
+			view.setAnchorContext(this);
 			DWOplayer.api.setScoID(id);
 			AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
-					view.setupModule(item.getName(), item.getFile());
+					view.setupModule(sco.getName(), sco.getFile());
 				}
 
 				@Override
 				public void onSuccess(Void result) {
-					view.setupModule(item.getName(), item.getFile());
+					view.setupModule(sco.getName(), sco.getFile());
 				}
 			};
 			DWOplayer.api.Initialize(callback);
@@ -75,8 +81,37 @@ public class ViewModuleActivity extends MGWTAbstractActivity
 
 	@Override
 	public void onStop() {
+		view.setAnchorContext(defaultContext); // unwrap
 		view.close();
 		super.onStop();
+	}
+
+	@Override
+	public void gotoUrl(String href) {
+		if(href.startsWith("goto:.")) defaultContext.gotoUrl(href);
+		else if(href.startsWith("goto:")){
+			href = href.substring(5);
+			SelectModuleItem parent = sco.getParent();
+			List<SelectModuleItem> list = parent.getChildren();
+			int sconr = -1;
+			try {
+				sconr = Integer.parseInt(href)-1;
+			} catch(Exception _) {}
+			if(sconr <= -1 || sconr >= list.size())
+			{
+				for(sconr = 0; sconr < list.size(); sconr ++) {
+					if(list.get(sconr).getName().startsWith(href))
+						break; // found by prefix
+				}
+			}
+			if(sconr == list.size()) {
+				sconr = Integer.parseInt(href)-1;
+			}
+			SelectModuleItem item = list.get(sconr);
+			sconr = item.getID();
+			if(item != sco )
+				clientFactory.getPlaceController().goTo(new ViewModulePlace(sconr));
+		}
 	}
 	
 }

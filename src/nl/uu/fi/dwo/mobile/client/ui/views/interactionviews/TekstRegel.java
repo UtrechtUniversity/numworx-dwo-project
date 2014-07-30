@@ -205,7 +205,7 @@ public class TekstRegel extends LayoutPanel
 				objectBreedte = ((TekstElement) currentObject).getWidth();
 				objectHoogte = ((TekstElement) currentObject).getHeight();
 			}
-			else if(currentObject instanceof String)
+			else if(currentObject instanceof String || currentObject instanceof AnchorView)
 			{
 				objectVerschuiving = ashoogte - tekstAshoogte;
 				objectBreedte = (int) ctx.measureText(currentObject.toString()).getWidth();
@@ -306,9 +306,8 @@ public class TekstRegel extends LayoutPanel
 			{
 				AnchorView av = (AnchorView) currentObject;
 				Widget w = av.asWidget();
-				objectBreedte = w.getOffsetWidth();
-				objectHoogte = w.getOffsetHeight();
 				this.add(w);
+				objectVerschuiving = 0; // FIXME deze positie werkt niet in Anchorview -13
 				this.setWidgetLeftWidth(w, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
 				this.setWidgetTopHeight(w, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
 			}
@@ -349,7 +348,7 @@ public class TekstRegel extends LayoutPanel
 			else
 			{
 				objectVerschuiving = ashoogte - tekstAshoogte;
-				if(regelObjects.get(i) instanceof String)
+				if(regelObjects.get(i) instanceof String || regelObjects.get(i) instanceof AnchorView )
 				{
 					String s = regelObjects.get(i).toString();
 					objectBreedte = (int) ctx.measureText(s).getWidth();
@@ -358,10 +357,7 @@ public class TekstRegel extends LayoutPanel
 					if(horPositie == 0 && Character.isLetter(s.charAt(0)))
 						horPositie = 2;
 				}
-				else if(regelObjects.get(i) instanceof AnchorView)
-				{	objectBreedte = w.getOffsetWidth();
-					objectHoogte = w.getOffsetHeight();
-				}
+				
 			}
 			this.setWidgetLeftWidth(w, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
 			this.setWidgetTopHeight(w, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
@@ -391,7 +387,7 @@ public class TekstRegel extends LayoutPanel
 				if(hoogte - ash > h2)
 					h2 = hoogte - ash;
 			}
-			else if(currentObject instanceof String)
+			else if(currentObject instanceof String || currentObject instanceof AnchorView)
 			{
 				int hoogte = tekstHoogte;
 				int ash = tekstAshoogte;
