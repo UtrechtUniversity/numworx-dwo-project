@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.MissingResourceException;
+import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
@@ -98,6 +99,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 	private int ideasPuntenAftrek;
          
     private HashMap changedTexts = new HashMap<String,Object>();
+	private final static Logger logger = Logger.getLogger("AntwoordFormuleVakChecker");
     
 	
 	public AntwoordFormuleVakChecker(HashMap<String,Object> map, String[] randomVars, HashMap<String,Object> randomValues )
@@ -225,7 +227,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		checkResults.put("isHerleid", new Boolean(isHerleid));
 		checkResults.put("isExact", new Boolean(isExact));
 		
-		checkResults.put("correct", new Boolean(correct));
+		if(goedHalfFout != GEEN) checkResults.put("correct", new Boolean(correct));
 		checkResults.put("fout", new Boolean(fout));
 		checkResults.put("goedHalfFout", new Integer(goedHalfFout));
 		checkResults.put("score", new Integer(score));
@@ -708,6 +710,10 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		leeg = false;
 		
 		Expressie antwoord = FormuleParser.geefExpressie(expAntwoordString);
+		logger.fine("check antwoord  " + (antwoord == null) );
+		if(antwoord != null) logger.fine(antwoord.getClass().toString());
+// XXX Vraag me niet waarom? 
+		if(antwoord != null && antwoord.toString().isEmpty()) antwoord = null;
 		
 		Expressie antwoordNonSub = antwoord;
 		
