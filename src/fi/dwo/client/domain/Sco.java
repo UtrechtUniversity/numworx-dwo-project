@@ -310,7 +310,7 @@ System.err.println("sum = ["+result+"]");
 		try { 
 			sconr = Integer.parseInt(iValue)-1;
 		} catch(Exception _) {}
-		if(sconr < -1 || sconr >= list.length)
+		if(sconr <= -1 || sconr >= list.length)
 		for(sconr = 0; sconr < list.length; sconr++ ) {
 			if(list[sconr].getScoName().startsWith(iValue)) {
 				break; // found by prefix ? equals? 
