@@ -365,6 +365,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	{
 		if(editor != null)
 		{	FlowPanel current = stepPanels.get(stepPanels.size() - 1);
+			if(current.getParent() == contentPanel) // FIXME why? 
 			contentPanel.setWidgetTopHeight(current, stepPanelY, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
 			if(feedbackPanel.isAttached())
 			{

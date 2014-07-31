@@ -710,10 +710,10 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		leeg = false;
 		
 		Expressie antwoord = FormuleParser.geefExpressie(expAntwoordString);
-		logger.fine("check antwoord  " + (antwoord == null) );
-		if(antwoord != null) logger.fine(antwoord.getClass().toString());
-// XXX Vraag me niet waarom? 
-		if(antwoord != null && antwoord.toString().isEmpty()) antwoord = null;
+		//logger.fine("check antwoord  " + (antwoord == null) );
+		//if(antwoord != null) logger.fine(antwoord.getClass().toString());
+// XXX Vraag me niet waarom? Bug in String.charAt(int)
+		//if(antwoord != null && antwoord.toString().isEmpty()) antwoord = null;
 		
 		Expressie antwoordNonSub = antwoord;
 		

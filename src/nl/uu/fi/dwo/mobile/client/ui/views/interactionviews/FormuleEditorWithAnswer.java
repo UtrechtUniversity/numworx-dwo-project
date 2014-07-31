@@ -365,11 +365,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 		int goedHalfFout = (Integer) checkResults.get("goedHalfFout");
 
-//		logger.fine("userAnswer: " + useranswer);
-//		logger.finer("correct: " + correct);
-//		logger.finer("score: " + score);
-//		logger.finer("goedHalfFout: " + goedHalfFout);
-//		logger.finer("feedback: " + feedback);
+		logger.fine("userAnswer: " + useranswer);
+		logger.fine("correct: " + correct);
+		logger.fine("score: " + score);
+		logger.fine("goedHalfFout: " + goedHalfFout);
+		logger.fine("feedback: " + feedback);
 
 		if (goedHalfFout == AntwoordVakChecker.DOOR)
 		{
@@ -403,6 +403,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		
 		checkimg.setVisible(check && goedHalfFout != AntwoordVakChecker.GEEN); // Wim: Hier verscheen het vinkje als goedhalfFout GEEN is
+		logger.finer(String.valueOf(checkimg.isVisible()));
 		//sp.setPixelSize(breedte, -1);
 		if (this.fe == null && !useranswer.equals(lastanswer))
 		{

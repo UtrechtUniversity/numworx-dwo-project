@@ -294,7 +294,10 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	public int getInt(JSONArray array, int j) {
 		if(array == null || j < 0 || j > array.size())
 			return 0;
-		JSONNumber number = array.get(j).isNumber();
+		JSONValue jsonValue = array.get(j);
+		if(jsonValue == null) 
+			return 0;
+		JSONNumber number = jsonValue.isNumber();
 		if(number != null)
 			return (int) number.doubleValue();
 		return 0;

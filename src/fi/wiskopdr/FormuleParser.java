@@ -1062,6 +1062,8 @@ public class FormuleParser
 			if (woordformule || FormuleParser.woordFormule)
 			{
 				boolean startMetLetter = true;
+// Known bug: issue 6943: String.charAt(int) should throw IndexOutOfBoundsException if index is pointing out of bounds
+				if(s.length() == 0) throw new StringIndexOutOfBoundsException(); // Javascript geeft gewoon geen exception op s.charAt(0) wij verwachten dat wel hier.
 				startMetLetter = Character.isLetter(s.charAt(0));
 				boolean basisString = true;
 				for (int i = 1; i < s.length(); i++)
@@ -2289,7 +2291,7 @@ public class FormuleParser
 			{
 				for (int j = 0; j < varnamen.length; j++)
 				{
-					int value = ((Integer) waarden.get(varnamen[j])).intValue();
+					int value = ((Number) waarden.get(varnamen[j])).intValue();
 					e1 = e1.substitueer(value, varnamen[j]);
 				}
 				e1 = Algebra.herleidMild(e1, breukenGemengd);
@@ -2309,7 +2311,7 @@ public class FormuleParser
 			{
 				for (int j = 0; j < varnamen.length; j++)
 				{
-					int value = ((Integer) waarden.get(varnamen[j])).intValue();
+					int value = ((Number) waarden.get(varnamen[j])).intValue();
 					e2 = e2.substitueer(value, varnamen[j]);
 				}
 				e2 = Algebra.herleidMild(e2, breukenGemengd);
