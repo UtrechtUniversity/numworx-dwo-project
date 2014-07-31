@@ -53,7 +53,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 
 	private String[][] buttonCodes =
 	{
-	{ "zoomIn", "zoomOut", "copy", "paste", "del", "back", null, "left", "right", null, "apply", VVV },
+	{ "zoomIn", "zoomOut", "copy", "paste", "del", "back", null, "left", "right", null, "apply", QWERTY, VVV },
 	{ "wortel", "macht", "kwadraat", "breuk", "haakjes", "ndewortel", "x", "y", "(", ")", "1", "2", "3", "/" },
 	{ "integraal", "prv", "ndelog", "abs", "subscript", "bin", "a", "b", "k", "e", "pi", "4", "5", "6", "maal" },
 	{ "diff", "limiet0", "limiet1", "limiet2", "\u221e", "primitieve", "p", "q", "t", "<", ">", "7", "8", "9", "min" },
@@ -76,7 +76,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	
 	private double[][] buttonWidths =
 	{
-	{ 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 2, 1},
+	{ 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 2, 1,1 },
 	{ 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1 },
 	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
@@ -244,6 +244,8 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 			else
 			{
 				tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodes, buttonWidths),270);
+				tp.addTab(qwerty,         getKeyBoard(buttonCodes_abc, buttonWidths_abc),181);
+				tp.addTab(QWERTY,    getKeyBoard(buttonCodes_ABC, buttonWidths_abc),181);
 			}
 		}
 		//tp.addTab("ABC", this.getKeyBoard(buttonCodesAbc, buttonWidthsAbc));
@@ -324,6 +326,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 				{
 					SimplePanel b = new SimplePanel();
 					width = (defwidth + 2 * (padding)) * widths[j][i] - 2 * padding;
+					width = Math.max(1.0, width);
 					//width += 32;
 					b.setWidth(Math.round(width) + "px");
 					b.setHeight("16px");

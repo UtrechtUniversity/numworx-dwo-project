@@ -254,7 +254,11 @@ public abstract class FormuleKeyBoardButtons
 		buttonTexts = new HashMap<String, String>();
 		//buttonTexts.put("key", "value");
 		buttonTexts.put("pi", "\u03C0");
+// ook in DWO modes
+		buttonImages.put("shift", "images/resources/shift_2.jpg");
+		buttonImages.put("SHIFT", "images/resources/shift_1.jpg");
 
+		
 		setupBundle();
 		
 		DWOplayer.PARAMETERS.keyboardSetup();
