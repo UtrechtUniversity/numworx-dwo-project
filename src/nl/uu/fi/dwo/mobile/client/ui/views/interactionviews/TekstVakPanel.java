@@ -192,6 +192,9 @@ public class TekstVakPanel implements InteractionView
 	private TekstVakContext container;
 	private Object queuedObject;
 	
+	private MouseHandler mouseHandler;
+	private TouchHandler touchHandler;
+	
 	static CssColor getColor(ObjectMap map, String key, int r, int g, int b) {
 		ObjectMap colorMap = map != null && map.containsKey(key) ? map.getObjectMap(key) : null ;
 		if(colorMap != null) {
@@ -378,11 +381,11 @@ public class TekstVakPanel implements InteractionView
 		
 		setCurrentSize(breedte, hoogte);
 		
-		MouseHandler mouseHandler = new MouseHandler();
+		mouseHandler = new MouseHandler();
 		mainPanel2.addDomHandler(mouseHandler, MouseDownEvent.getType());
 		mainPanel2.addDomHandler(mouseHandler, MouseMoveEvent.getType());
 		mainPanel2.addDomHandler(mouseHandler, MouseUpEvent.getType());
-		TouchHandler touchHandler = new TouchHandler();
+		touchHandler = new TouchHandler();
 		mainPanel2.addDomHandler(touchHandler, TouchStartEvent.getType());
 		mainPanel2.addDomHandler(touchHandler, TouchMoveEvent.getType());
 		mainPanel2.addDomHandler(touchHandler, TouchEndEvent.getType());
@@ -927,6 +930,11 @@ public class TekstVakPanel implements InteractionView
 	public boolean isSleepbaar()
 	{
 		return sleepbaar;
+	}
+	
+	public boolean isMouseDown()
+	{
+		return mouseHandler.isMouseDown();
 	}
 	
 	public Point geefLocatie()
@@ -1516,7 +1524,6 @@ public class TekstVakPanel implements InteractionView
 		
 		public void onMouseMove(MouseMoveEvent e)	
 		{
-			
 			// prevent scrolling
 			if(sleepbaar && sleepHandle && (e.getX() > 20 || e.getY() > 20) )
 			{	mouseDown = false;
@@ -1525,12 +1532,33 @@ public class TekstVakPanel implements InteractionView
 			
 			e.stopPropagation(); 
 			
-			if (!mouseDown)
-				return;
-
 			int eventX = e.getClientX();
 			int eventY = e.getClientY();
 			
+			if (!mouseDown)
+			{	for(int i = 0; i < interactionViewObjects.size(); i++)
+				{
+					Object object = interactionViewObjects.get(i);
+					if(object instanceof TekstVakPanel && ((TekstVakPanel) object).isSleepbaar() && ((TekstVakPanel) object).isMouseDown())
+					{	((TekstVakPanel) object).mouseMoveTouchMoveAction(eventX, eventY);
+						return;
+					}
+				}
+				if(parent != null)
+				{
+					TekstVakPanel tekstVakParent = parent.getTekstVakParent();
+					for(int i = 0; i < tekstVakParent.interactionViewObjects.size(); i++)
+					{
+						Object object = tekstVakParent.interactionViewObjects.get(i);
+						if(object instanceof TekstVakPanel && ((TekstVakPanel) object).isSleepbaar() && ((TekstVakPanel) object).isMouseDown())
+						{	((TekstVakPanel) object).mouseMoveTouchMoveAction(eventX, eventY);
+							return;
+						}
+					}
+				}
+				return;
+			}
+
 			if(sleepbaar)
 			{	e.preventDefault();
 				mouseMoveTouchMoveAction(eventX, eventY);
@@ -1539,8 +1567,7 @@ public class TekstVakPanel implements InteractionView
 		} // onMouseMove
 		
 		public void onMouseUp(MouseUpEvent e)	
-		{	
-			// prevent scrolling
+		{	// prevent scrolling
 			if(sleepbaar && sleepHandle && (e.getX() > 20 || e.getY() > 20) )
 			{	mouseDown = false;
 				return;
@@ -1555,6 +1582,11 @@ public class TekstVakPanel implements InteractionView
 			
 			mouseUpTouchEndAction(eventX,eventY);
 
+		}
+		
+		public boolean isMouseDown()
+		{
+			return mouseDown;
 		}
 
 	} //MouseHandler
