@@ -704,6 +704,11 @@ public class TekstVakPanel implements InteractionView
 						aantalVakken++;
 						((FormuleEditorWithSteps) currentObject).zetInstellingen(instellingen);
 					}
+					else if (currentObject instanceof FormuleViewer)
+					{
+						if(this.isSleepbaar())
+							((FormuleViewer) currentObject).setSelectable(false);
+					}
 					else if (currentObject.getClass().getName().equals("fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT"))
 					{
 						aantalVakken++;
@@ -917,6 +922,11 @@ public class TekstVakPanel implements InteractionView
 	public boolean isZwevend()
 	{
 		return zwevend;
+	}
+	
+	public boolean isSleepbaar()
+	{
+		return sleepbaar;
 	}
 	
 	public Point geefLocatie()
@@ -1409,7 +1419,7 @@ public class TekstVakPanel implements InteractionView
 	
 	public void mouseDownTouchStartAction(int eventX, int eventY)
 	{
-		if(selectable)
+		if(selectable && !sleepbaar)
 		{
 			selected = !selected;
 			setSelected(selected);
@@ -1522,7 +1532,9 @@ public class TekstVakPanel implements InteractionView
 			int eventY = e.getClientY();
 			
 			if(sleepbaar)
+			{	e.preventDefault();
 				mouseMoveTouchMoveAction(eventX, eventY);
+			}
 			
 		} // onMouseMove
 		
@@ -1575,7 +1587,6 @@ public class TekstVakPanel implements InteractionView
 		}
 		public void onTouchMove(TouchMoveEvent e)
 		{
-			
 			e.stopPropagation();
 			
 			if(e.getTouches().length() == 0)

@@ -36,6 +36,9 @@ public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
 	TouchPanel sp = null;
 	FormuleRegel current;
 	Image checkimg;
+	
+	boolean selectable = true;
+	
 
 	public FormuleViewer(String formule)
 	{
@@ -155,6 +158,8 @@ public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
 
 	@Override
 	public void clearSelection() {
+		if(!selectable) 
+			return;
 		if(hasSelection())
 		{
 			current.clearSelection();
@@ -164,6 +169,8 @@ public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
 	
 	public void endSelection(int selectionEndX, int selectionEndY)
 	{
+		if(!selectable)
+			return;
 		//swap?
 		int selectionStartX = this.selectionStartX;
 		int selectionStartY = this.selectionStartY;
@@ -202,9 +209,13 @@ public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
 		current = formuleRegel;
 	}
 
+	
 //	@Override
 //	public void requestFocus() {
 //	}
 	
-	
+	public void setSelectable(boolean b)
+	{
+		selectable = b;
+	}
 }
