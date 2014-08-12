@@ -385,8 +385,8 @@ public class FormuleTeken extends FormuleElement
 		//ctx.moveTo(x + fm.getAscent() / 4, y);// + fm.getAscent() / 6);
 		//ctx.lineTo(x + fm.getAscent()/4 + fm.getAscent()/2, y);// + fm.getAscent() / 6);
 		
-		ctx.moveTo(x + fm.getAscent() / 4, y + 5 * fm.getAscent()/8);
-		ctx.lineTo(x + fm.getAscent()/4 + fm.getAscent()/2, y + 5 * fm.getAscent()/8);// + fm.getAscent() / 6);
+		ctx.moveTo(x + fm.getAscent() / 4, y + 5 * fm.getAscent()/8 + 1);
+		ctx.lineTo(x + fm.getAscent()/4 + fm.getAscent()/2, y + 5 * fm.getAscent()/8 + 1);// + fm.getAscent() / 6);
 		ctx.stroke();
 		//this.drawline(ctx, x + fm.getAscent() / 4, y + 5 * fm.getAscent() / 8, x + fm.getAscent() / 4 + fm.getAscent() / 2, y + 5 * fm.getAscent() / 8);
 		//TODO:

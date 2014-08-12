@@ -91,15 +91,13 @@ public class SigmaVak extends FormuleElementWithChildren{
 		int k4w = getChild(3).width;
 		
 		
-		//int k4y = Math.max(0, k1a + 1 - k4h - asc/2);
-		int k4y = Math.max(0, k1a + 1 - k4h - asc);//of int k4y = Math.max(0, k1a + 1 - k4h);
+		int k4y = Math.max(0, k1a + 1 - k4h - asc);
 		int k2x = 0;
 		int k2y = k4y+k4h+asc;
 		int k3y = k4y+k4h+asc;
 		int k3x = k2w+asc/2;
 		
 		int k1x = k3x+k3w;
-		//int k1y = Math.max(0, k4y+k4h+asc/2-k1a-1);
 		int k1y = Math.max(0, k4y+k4h+asc-k1a-1);
 		int w2plus3 = k2w+asc/2+k3w;
 		int k4x = (w2plus3-k4w)/2; //is deze keuze logisch? k4w was k2w. Dit lijkt me beter.

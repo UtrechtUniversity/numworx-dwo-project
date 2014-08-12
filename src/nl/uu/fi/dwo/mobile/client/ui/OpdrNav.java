@@ -190,6 +190,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		Boolean check = entry.isCorrect();
 		boolean correct =  Boolean.TRUE.equals(check);
 		isCorrect[currentActiviteit][currentOpdracht] = correct;
+		
+		//Sietske: nu wordt bij elke keer nakijken gekeken of er ergens iets fout is op de pagina. Dat is te vaak;
+		//een leerling moet alleen strafpunten krijgen als hij iets nakijkt dat fout is, niet als hij iets anders op de pagina nakijkt.
+		//Er moet dus niet gekeken worden naar de hele entry
 		boolean fout = Boolean.FALSE.equals(check); // FIXME moet zijn entry.isFout();
 		if(strafpunten != null && mode == OEFENEN_STRAFPUNTEN && fout)
 			strafpunten[currentActiviteit][currentOpdracht] += foutStraf;
