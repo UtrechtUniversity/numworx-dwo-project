@@ -232,15 +232,30 @@ public class FormuleTeken extends FormuleElement
 		}
 		else if (character == '[')
 		{
-			this.drawline(ctx, x + 3 * fm.getAscent() / 8, y, x + fm.getAscent() / 8, y);
-			this.drawline(ctx, x + 3 * fm.getAscent() / 8, y + fm.getAscent() + fm.getDescent() - 1, x + fm.getAscent() / 8, y + fm.getAscent() + fm.getDescent() - 1);
-			this.drawline(ctx, x + fm.getAscent() / 8, y, x + fm.getAscent() / 8, y + fm.getAscent() + fm.getDescent() - 1);
+			this.width = fm.getAscent() / 2;
+			this.setSize(width, height);
+			//x=0;
+			//y=0;
+			this.setupCTXState();
+			ctx.beginPath();
+			ctx.moveTo(3 * fm.getAscent() / 8, 0);
+			ctx.lineTo(fm.getAscent() / 8, 0);
+			ctx.lineTo(fm.getAscent() / 8, fm.getAscent() + fm.getDescent() - 1);
+			ctx.lineTo(3 * fm.getAscent() / 8, fm.getAscent() + fm.getDescent() - 1);
+			ctx.stroke();
 		}
 		else if (character == ']')
 		{
-			this.drawline(ctx, x + 3 * fm.getAscent() / 8, y, x + fm.getAscent() / 8, y);
-			this.drawline(ctx, x + 3 * fm.getAscent() / 8, y + fm.getAscent() + fm.getDescent() - 1, x + fm.getAscent() / 8, y + fm.getAscent() + fm.getDescent() - 1);
-			this.drawline(ctx, x + 3 * fm.getAscent() / 8, y, x + 3 * fm.getAscent() / 8, y + fm.getAscent() + fm.getDescent() - 1);
+			this.width = fm.getAscent() / 2;
+			this.setSize(width, height);
+			this.setupCTXState();
+			ctx.beginPath();
+			ctx.moveTo(fm.getAscent() / 8, 0);
+			ctx.lineTo(3 * fm.getAscent() / 8, 0);
+			ctx.lineTo(3 * fm.getAscent() / 8, fm.getAscent() + fm.getDescent() - 1);
+			ctx.lineTo(fm.getAscent() / 8, fm.getAscent() + fm.getDescent() - 1);
+			ctx.stroke();
+			
 		}
 		else if (character == '\u2220')
 		{
@@ -362,9 +377,6 @@ public class FormuleTeken extends FormuleElement
 	private void drawMin()
 	{
 		this.width = fm.getAscent();
-		
-		
-		
 		
 		int x = 0;
 		//int y = this.getAsHoogte();
