@@ -88,7 +88,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	
 	//private PijlVak[] pijlVakken;
 	private PijlVak pijlVak;
-	private boolean pijl = true;
+	private boolean pijl = false;
 	//private int pijlX = "GR".equals(WiskOpdr.deployVariant) ? 105 : 130;
 	private int pijlX = 130;
 	//private int stepPanelX = 0;
@@ -107,7 +107,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	protected HashMap randomVarWaarden = null;
 	private ArrayList<FlowPanel> stepPanels = new ArrayList<FlowPanel>();
 	private ArrayList<PijlVak> pijlVakken = new ArrayList<PijlVak>();
-	private FormuleFont font = FormuleFont.createFromFontSize(16);
+	//private FormuleFont font = FormuleFont.createFromFontSize(16);
 
 	private int score;
 	private int scoreMax;
@@ -115,10 +115,11 @@ public class FormuleEditorWithSteps implements InteractionView
 	
 	private boolean stapOk;
 
-	private static FormuleFont defaultfont = FormuleFont.createFromFontSize(18);
+	private FormuleFont defaultfont;
 	//private boolean answeredCorrectly = false;
 	private CssColor hlColor = CssColor.make(255, 255, 255);
-	private CssColor bgColor = CssColor.make(240, 240, 240);
+	//private CssColor bgColor = CssColor.make(240, 240, 240);
+	private CssColor bgColor = CssColor.make(255, 255, 255);
 	private boolean ingevuld;
 	private boolean nagekeken;
 	private boolean hasFeedback;
@@ -131,6 +132,8 @@ public class FormuleEditorWithSteps implements InteractionView
 
 	public FormuleEditorWithSteps(HashMap<String, Object> h, boolean isVergelijkingVak, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
+		defaultfont = FormuleFont.createFromFontSize(XMLView.getDefaultFontSize());
+		
 		this.randomVarNamen = randomVarNamen;
 		this.randomVarWaarden = randomVarWaarden;
 		this.isVergelijkingVak = isVergelijkingVak;
@@ -214,6 +217,7 @@ public class FormuleEditorWithSteps implements InteractionView
 			}
 
 			FormuleViewer f = new FormuleViewer(prefix);
+			f.setFont(defaultfont);
 			prefixViewer = f.getAsPanel();
 			prefixViewer.getElement().getStyle().setProperty("display", "inline-block");
 			prefixViewer.getElement().getStyle().setProperty("clear", "both");
@@ -263,7 +267,8 @@ public class FormuleEditorWithSteps implements InteractionView
 		tb.getElement().getStyle().setVisibility(Visibility.VISIBLE);
 
 		FormuleViewer fv = new FormuleViewer(prefix.substring(2, prefix.length() - 1) + useranswer.substring(2, useranswer.length() - 1));
-
+		fv.setFont(defaultfont);
+		
 		fv.showResult(fv.CORRECT);
 		if (latest_answer_viewer != null)
 		{
@@ -309,6 +314,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		}
 		FormuleViewer fv = new FormuleViewer(prefix.substring(2, prefix.length() - 1) + useranswer.substring(2, useranswer.length() - 1));
 		//System.out.println(" useranswer3: "+ useranswer);
+		fv.setFont(defaultfont);
 		fv.showResult(fv.ALMOSTCORRECT);
 		if (latest_answer_viewer != null && !(hasStartString && stapNr == 1))
 			latest_answer_viewer.showResult(fv.NONE);
@@ -333,8 +339,6 @@ public class FormuleEditorWithSteps implements InteractionView
 		
 		//pijlVak = pijlVakken[stapNr];
 		
-		
-		
 		FlowPanel stepPanel = new FlowPanel();
 		layoutStepPanel(stepPanel);
 		highLight(stepPanel, true);
@@ -357,8 +361,10 @@ public class FormuleEditorWithSteps implements InteractionView
 		//stepPanelY += editor.getHeight() + stapH;
 		
 		
-		sp.getElement().setScrollTop(sp.getElement().getScrollHeight());
+		//sp.getElement().setScrollTop(sp.getElement().getScrollHeight());
 		editor.requestFocus();
+		sp.scrollToBottom();
+		
 	}
 	
 	public void resize()
@@ -487,9 +493,10 @@ public class FormuleEditorWithSteps implements InteractionView
 		mainPanel.getElement().getStyle().setHeight(hoogte - 2, Unit.PX);//-2 om ook rand zichtbaar te krijgen
 		mainPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 		mainPanel.getElement().getStyle().setBorderColor("gray");
-		mainPanel.getElement().getStyle().setBackgroundColor(CssColor.make(240, 240, 240).toString());
+		//mainPanel.getElement().getStyle().setBackgroundColor(CssColor.make(240, 240, 240).toString());
+		mainPanel.getElement().getStyle().setBackgroundColor("white");
 		mainPanel.getElement().getStyle().setBorderWidth(boxMetRand ? 1 : 0, Unit.PX);
-		mainPanel.getElement().getStyle().setProperty("lineHeight", "2.0");
+		//mainPanel.getElement().getStyle().setProperty("lineHeight", "2.0");
 
 		Image buttonImg = new Image(DWOplayer.DWO_BUNDLE.pijlterug().getSafeUri());
 		buttonImg.getElement().getStyle().setMargin(2, Unit.PX);
@@ -528,11 +535,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		sp.getElement().getStyle().setFloat(Style.Float.LEFT);
 
 		contentPanel = new LayoutPanel();
-		//onderstaande nog nodig?
-		//contentPanel.getElement().getStyle().setPadding(5, Unit.PX);
-		//contentPanel.getElement().getStyle().setOverflow(Overflow.HIDDEN);
-		//contentPanel.getElement().getStyle().setProperty("display", "block");
-
+		
 		feedbackPanel = new FlowPanel();
 		feedbackPanel.getElement().getStyle().setFontSize(14, Unit.PX);
 		feedbackPanel.getElement().getStyle().setProperty("lineHeight", "1.2");
@@ -544,9 +547,6 @@ public class FormuleEditorWithSteps implements InteractionView
 		sp.setWidget(contentPanel);
 		mainPanel.add(sp);
 
-		//pijlVakken = new PijlVak[100];
-		
-		
 		FlowPanel stepPanel = new FlowPanel();
 		layoutStepPanel(stepPanel);
 		highLight(stepPanel, true);
@@ -568,11 +568,8 @@ public class FormuleEditorWithSteps implements InteractionView
 				startString = startString.substring(0, startString.length() - 1) + "=@";
 
 			hasStartString = true;
-			//System.out.println("prefix+startstring: " + prefix.substring(2, prefix.length() - 1) + startString.substring(2, startString.length() - 1));
-
-			//System.out.println("waarden: "+randomVarWaarden);
-			//System.out.println("randvarnamen: "+randomVarNamen[0]);
 			FormuleViewer f = new FormuleViewer(prefix.substring(2, prefix.length() - 1) + startString.substring(2, startString.length() - 1));
+			f.setFont(defaultfont);
 			f.getAsPanel().getElement().getStyle().setMarginLeft(23, Unit.PX);
 
 			viewers.add(f);
@@ -682,6 +679,7 @@ public class FormuleEditorWithSteps implements InteractionView
 			editor.getAsPanel().getElement().getStyle().setMarginLeft(13, Unit.PX);
 		editor.getAsPanel().getElement().getStyle().setMarginTop(5, Unit.PX);
 		editor.setFont(defaultfont);
+		//editor.setFont(editor.getDefaultFont());
 		TouchPanel tp = (TouchPanel) editor.getAsPanel();
 		tp.getElement().getStyle().setProperty("display", "inline-block");
 		editor.setCurrent(0, 0);
@@ -895,6 +893,7 @@ public class FormuleEditorWithSteps implements InteractionView
 				i++;
 
 			FormuleViewer fv = new FormuleViewer(formuleVakInhouden[i]);
+			fv.setFont(defaultfont);
 			if (i == stapNr && nagekeken)
 				fv.showResult(FormuleViewer.CORRECT);
 			else if (i == stapNr - 1 && !nagekeken)
@@ -923,23 +922,44 @@ public class FormuleEditorWithSteps implements InteractionView
 
 			}
 
-			if ("".equals(formuleVakInhouden[i]))
+			stepPanel.removeFromParent();
+			contentPanel.add(stepPanel);
+			contentPanel.setWidgetLeftRight(stepPanel, 5, Style.Unit.PX, 5, Style.Unit.PX);
+			
+			if ("".equals(formuleVakInhouden[i]) || "$f@".equals(formuleVakInhouden[i]))
 			{
 				viewers.remove(fv);
 				editor = addNewEditor(stepPanel);
 				editor.insert(antwoordString);
 				highLight(stepPanel, true);
+				contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
+				pijlVak = new PijlVak("", this);
+				int y = stepPanelY + fv.getHeight()/2;
+				if(pijl)
+				{	contentPanel.add(pijlVak);
+					contentPanel.setWidgetRightWidth(pijlVak, 0, Style.Unit.PX, pijlX, Style.Unit.PX);
+					contentPanel.setWidgetTopHeight(pijlVak, y, Style.Unit.PX, pijlVak.getHeight(), Style.Unit.PX);
+				}
+				
+				pijlVakken.add(pijlVak);
+				pijlVak.paintComponent();
+				
+				stepPanelY += editor.getHeight() + stapH;
 			}
 			else
 			{
 				stepPanel.add(p);
 				highLight(stepPanel, false);
+				contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, fv.getHeight(), Style.Unit.PX);
+				stepPanelY += fv.getHeight() + stapH;
 			}
-			stepPanel.removeFromParent();
-			contentPanel.add(stepPanel);
-			contentPanel.setWidgetLeftRight(stepPanel, 5, Style.Unit.PX, 5, Style.Unit.PX);
-			contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
-			stepPanelY += editor.getHeight() + stapH;
+			
+			
+//			stepPanel.removeFromParent();
+//			contentPanel.add(stepPanel);
+//			contentPanel.setWidgetLeftRight(stepPanel, 5, Style.Unit.PX, 5, Style.Unit.PX);
+//			contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
+//			stepPanelY += editor.getHeight() + stapH;
 
 			if (viewers.size() > 0)
 				latest_answer_viewer = viewers.get(viewers.size() - 1);
@@ -951,7 +971,10 @@ public class FormuleEditorWithSteps implements InteractionView
 
 		if (stapNr > 0 || stapNr == 0 && !hasStartString)
 			tb.getElement().getStyle().setVisibility(Visibility.VISIBLE);
-
+		
+		sp.scrollToBottom();
+		
+		
 	}
 	
 	public void kijkNa()
@@ -1199,11 +1222,8 @@ public class FormuleEditorWithSteps implements InteractionView
 	
 	@Override
 	public int getAsHoogte() {
-		if(viewers != null && viewers.size() > 0)
-			return viewers.get(0).getAsHoogte();
-		else
-			return 0;
-		//hier evt ook nog prefixviewers bij. En iets voor als viewers.get(0) niet bestaat?
+		return defaultfont.getAscent();
+		
 	}
 
 	@Override
@@ -1230,6 +1250,8 @@ public class FormuleEditorWithSteps implements InteractionView
 	public void setAsHoogte(int ashoogte) {
 		viewers.get(0).setAsHoogte(ashoogte);
 	}
+	
+	//public static void setDefaultFont()
 	
 	
 }

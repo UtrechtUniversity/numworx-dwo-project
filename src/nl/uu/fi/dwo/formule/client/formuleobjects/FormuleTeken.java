@@ -128,7 +128,7 @@ public class FormuleTeken extends FormuleElement
 		// g.setColor(fgColor);
 
 		// g.setFont(getFont());
-		ctx.setTextAlign(TextAlign.CENTER);
+		//ctx.setTextAlign(TextAlign.CENTER);
 		//ctx.setTextBaseline(TextBaseline.HANGING);
 		//ctx.setTextBaseline(TextBaseline.BOTTOM);
 		ctx.setFont(fm.getFontStyle());
@@ -140,29 +140,16 @@ public class FormuleTeken extends FormuleElement
 		//TODO: set the correct width and x position for custom items like [] and x y z etc
 		//currently all are draw on a canvas. overwrite the draw(ctx,x,y) method to draw straight on the parent canvas
 		
-		//wat moet de ashoogte zijn? Gewoon hoogte / 2 is volgens mij niet zo'n goed idee, dan komen - en x heel laag terecht.
-		
-		//this.setAsHoogte(this.height / 2);
-		
 		this.setSize(width, height);
-		//this.setAsHoogte(fm.getAscent()/2);
 		this.setAsHoogte(fm.getAscent());
 		
-		//this.setAsHoogte(holder.getMainRegel().getAsHoogte());
-		
-		
-		//this.setAsHoogte(holder.getMainRegel().getAsHoogte());
-		//this.setSize(width, height);
-
-		int x = 0;
-		int y = 0;
 		//is dit nodig?
-		x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4;
+		//x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4;
 		//draw single character
 		if (teken != null)
 		{	setFont(fm);
 			this.setupCTXState();
-			ctx.fillText(teken, this.width / 2, this.getAsHoogte());
+			ctx.fillText(teken, 0, this.getAsHoogte());
 			//ctx.beginPath();ctx.rect(0, 0, width, height);ctx.stroke();
 		}
 
@@ -217,16 +204,21 @@ public class FormuleTeken extends FormuleElement
 		}*/
 		else if (character == '\u3008')
 		{
+			this.width = fm.getAscent() / 2;
+			this.setSize(width, height);
 			this.setupCTXState();
-			x = this.width / 2 - 3 / 2 - fm.getAscent() / 4;
+			int x = this.width / 2 - 3 / 2 - fm.getAscent() / 4;
 			//x = this.width/2 - (3*fm.getAscent() / 8 /2)/2;
 			this.drawline(ctx, x + 3 * fm.getAscent() / 8, y, x + fm.getAscent() / 8, y + (fm.getAscent() / 2 + fm.getDescent() / 2));
 			this.drawline(ctx, x + 3 * fm.getAscent() / 8, y + fm.getAscent() + fm.getDescent(), x + fm.getAscent() / 8, y + (fm.getAscent() / 2 + fm.getDescent() / 2));
 		}
 		else if (character == '\u3009')
 		{
+			this.width = fm.getAscent() / 2;
+			this.setSize(width, height);
+			
 			this.setupCTXState();
-			x = this.width / 2 - 3 / 2 - fm.getAscent() / 4;
+			int x = this.width / 2 - 3 / 2 - fm.getAscent() / 4;
 			this.drawline(ctx, x + fm.getAscent() / 8, y, x + 3 * fm.getAscent() / 8, y + (fm.getAscent() / 2 + fm.getDescent() / 2));
 			this.drawline(ctx, x + fm.getAscent() / 8, y + fm.getAscent() + fm.getDescent(), x + 3 * fm.getAscent() / 8, y + (fm.getAscent() / 2 + fm.getDescent() / 2));
 		}
@@ -234,8 +226,6 @@ public class FormuleTeken extends FormuleElement
 		{
 			this.width = fm.getAscent() / 2;
 			this.setSize(width, height);
-			//x=0;
-			//y=0;
 			this.setupCTXState();
 			ctx.beginPath();
 			ctx.moveTo(3 * fm.getAscent() / 8, 0);
@@ -259,8 +249,16 @@ public class FormuleTeken extends FormuleElement
 		}
 		else if (character == '\u2220')
 		{
-			this.drawline(ctx, x + fm.getAscent() / 4, y + fm.getAscent() - 1, x + fm.getAscent() / 4 + fm.getAscent() / 2, y + fm.getAscent() - 1);
-			this.drawline(ctx, x + fm.getAscent() / 4, y + fm.getAscent() - 1, x + fm.getAscent() / 4 + fm.getAscent() / 2, y + 4 * fm.getAscent() / 8);
+			this.width = fm.getAscent();
+			this.setSize(width, height);
+			this.setupCTXState();
+			ctx.beginPath();
+			ctx.moveTo(fm.getAscent() / 4 + fm.getAscent() / 2, fm.getAscent() - 1);
+			ctx.lineTo(fm.getAscent() / 4,  fm.getAscent() - 1);
+			ctx.lineTo(fm.getAscent() / 4 + fm.getAscent() / 2, 4 * fm.getAscent() / 8);
+			ctx.stroke();
+			//this.drawline(ctx, x + fm.getAscent() / 4, y + fm.getAscent() - 1, x + fm.getAscent() / 4 + fm.getAscent() / 2, y + fm.getAscent() - 1);
+			//this.drawline(ctx, x + fm.getAscent() / 4, y + fm.getAscent() - 1, x + fm.getAscent() / 4 + fm.getAscent() / 2, y + 4 * fm.getAscent() / 8);
 		}
 
 		this.drawCursor();
@@ -322,16 +320,14 @@ public class FormuleTeken extends FormuleElement
 
 	private void drawKeer()
 	{
-		int x = 0;
-		int y = 0;
 		//int y = this.getAsHoogte();
 		//x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4;
 
 		//dit is veel te veel als de keer als punt wordt getekend. Kijken hoe de breedte in wiskOpdr wordt bepaald. 
 		if(maalteken)
-			this.width = fm.getAscent() / 4 + 6 + fm.getAscent()/4;
+			this.width = fm.getAscent() / 2 + 7;
 		else
-			this.width = fm.getAscent() / 4 + fm.getAscent()/4;
+			this.width = fm.getAscent() / 2 + 2;
 		//this.width = fm.getAscent();
 
 		this.setSize(width, height);
@@ -347,10 +343,10 @@ public class FormuleTeken extends FormuleElement
 			//ctx.lineTo(x + fm.getAscent()/4 + 6, y + 5 * fm.getAscent()/8 + 4);
 			//ctx.moveTo(x + fm.getAscent()/4 + 1, y + 5 * fm.getAscent()/8 + 4);
 			//ctx.lineTo(x + fm.getAscent()/4 + 6, y + 5 * fm.getAscent()/8 - 1);
-			ctx.moveTo(x + fm.getAscent()/4, y + 5 * fm.getAscent() / 8 - 1);
-			ctx.lineTo(x + fm.getAscent()/4 + 6, y + 5 * fm.getAscent() / 8 + 5);
-			ctx.moveTo(x + fm.getAscent()/4, y + 5 * fm.getAscent() / 8 + 5);
-			ctx.lineTo(x + fm.getAscent()/4 + 6, y + 5 * fm.getAscent() / 8 - 1);
+			ctx.moveTo(fm.getAscent()/4, 5 * fm.getAscent() / 8 - 1);
+			ctx.lineTo(fm.getAscent()/4 + 6, 5 * fm.getAscent() / 8 + 5);
+			ctx.moveTo(fm.getAscent()/4, 5 * fm.getAscent() / 8 + 5);
+			ctx.lineTo(fm.getAscent()/4 + 6, 5 * fm.getAscent() / 8 - 1);
 			ctx.stroke();
 			//this.drawline(ctx, x + fm.getAscent() / 4 + 1, y + 5 * fm.getAscent() / 8 - 1, x + fm.getAscent() / 4 + 6, y + 5 * fm.getAscent() / 8 + 4);
 			//this.drawline(ctx, x + fm.getAscent() / 4 + 1, y + 5 * fm.getAscent() / 8 + 4, x + fm.getAscent() / 4 + 6, y + 5 * fm.getAscent() / 8 - 1);
@@ -358,10 +354,10 @@ public class FormuleTeken extends FormuleElement
 		else
 		{
 			ctx.beginPath();
-			ctx.moveTo(x + fm.getAscent()/4, y + 5 * fm.getAscent() / 8);
-			ctx.lineTo(x + fm.getAscent()/4 + 2, y + 5 * fm.getAscent() / 8);
-			ctx.moveTo(x + fm.getAscent()/4, y + 5 * fm.getAscent() / 8 + 1);
-			ctx.lineTo(x + fm.getAscent()/4 + 2, y + 5 * fm.getAscent() / 8 + 1);
+			ctx.moveTo(fm.getAscent()/4, 5 * fm.getAscent() / 8);
+			ctx.lineTo(fm.getAscent()/4 + 2, 5 * fm.getAscent() / 8);
+			ctx.moveTo(fm.getAscent()/4, 5 * fm.getAscent() / 8 + 1);
+			ctx.lineTo(fm.getAscent()/4 + 2, 5 * fm.getAscent() / 8 + 1);
 			ctx.stroke();
 			//this.drawline(ctx, x + fm.getAscent() / 4, y + 5 * fm.getAscent() / 8, x + fm.getAscent() / 4 + 2, y + 5 * fm.getAscent() / 8);
 			//this.drawline(ctx, x + fm.getAscent() / 4, y + 5 * fm.getAscent() / 8 + 1, x + fm.getAscent() / 4 + 2, y + 5 * fm.getAscent() / 8 + 1);
@@ -378,27 +374,15 @@ public class FormuleTeken extends FormuleElement
 	{
 		this.width = fm.getAscent();
 		
-		int x = 0;
-		//int y = this.getAsHoogte();
-		int y = 0;
 		//is dit nodig?
 		//x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4;
-//System.out.println("in drawMin: x, was 0, wordt: " + x +" en width is nu nog " + width);
-//fm.getAscent() = fm.getAscent()/4 + fm.getAscent()/2 + fm.getAscent()/4. Maar dat is natuurlijk niet helemaal waar vanwege afronding.
-//this.width = fm.getAscent()/4 + fm.getAscent()/2 + fm.getAscent()/4;
-		//System.out.println("width is nu: " + width);
-
 		this.setSize(width, height);
 		this.setupCTXState();
-		//x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4;
 		ctx.setLineWidth(fm.getStrokeWidth());
 		
 		ctx.beginPath();
-		//ctx.moveTo(x + fm.getAscent() / 4, y);// + fm.getAscent() / 6);
-		//ctx.lineTo(x + fm.getAscent()/4 + fm.getAscent()/2, y);// + fm.getAscent() / 6);
-		
-		ctx.moveTo(x + fm.getAscent() / 4, y + 5 * fm.getAscent()/8 + 1);
-		ctx.lineTo(x + fm.getAscent()/4 + fm.getAscent()/2, y + 5 * fm.getAscent()/8 + 1);// + fm.getAscent() / 6);
+		ctx.moveTo(fm.getAscent() / 4, 5 * fm.getAscent()/8 + 1);
+		ctx.lineTo(fm.getAscent()/4 + fm.getAscent()/2, 5 * fm.getAscent()/8 + 1);// + fm.getAscent() / 6);
 		ctx.stroke();
 		//this.drawline(ctx, x + fm.getAscent() / 4, y + 5 * fm.getAscent() / 8, x + fm.getAscent() / 4 + fm.getAscent() / 2, y + 5 * fm.getAscent() / 8);
 		//TODO:
@@ -406,8 +390,8 @@ public class FormuleTeken extends FormuleElement
 		{	ctx.beginPath();
 			//ctx.moveTo(x + fm.getAscent() / 4, y + 1);// fm.getAscent() / 6 + 1);
 			//ctx.lineTo(x + fm.getAscent()/4 + fm.getAscent()/2, y + 1);// + fm.getAscent() / 6 + 1);
-			ctx.moveTo(x + fm.getAscent() / 4, y + 5 * fm.getAscent()/8 + 1);
-			ctx.lineTo(x + fm.getAscent()/4 + fm.getAscent()/2, y + 5 * fm.getAscent()/8 + 1);// + fm.getAscent() / 6);
+			ctx.moveTo(fm.getAscent() / 4, 5 * fm.getAscent()/8 + 1);
+			ctx.lineTo(fm.getAscent()/4 + fm.getAscent()/2, 5 * fm.getAscent()/8 + 1);// + fm.getAscent() / 6);
 		
 			ctx.stroke();	
 		

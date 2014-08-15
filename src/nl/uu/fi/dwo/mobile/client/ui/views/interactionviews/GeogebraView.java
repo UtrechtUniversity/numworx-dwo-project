@@ -116,7 +116,8 @@ public class GeogebraView implements InteractionView, LoadHandler
 		if (h != null)
 			height = (int)Double.parseDouble(h.toString());
 		frame.setSize(width + "px", height + "px");
-		height -= 57 + 2; // toolbar aftrekken?
+		//height -= 57 + 2; // toolbar aftrekken?
+		height -= 2;
 		width  -= 2;  // 1 pixel border
 		ggb += " data-param-width='" + width + "' data-param-height='" + height + "'"; // geeft een scrollbar
 		frame.addLoadHandler(this);
