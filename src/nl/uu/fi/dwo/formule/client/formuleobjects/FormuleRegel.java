@@ -1318,7 +1318,7 @@ public class FormuleRegel extends FormuleElement
 			return null;
 		int lastElement = this.currentPosition;
 		int firstElement = this.currentPosition;
-		logger.finer( this + " entering selection  "  + selectionStartX + " " +  selectionStartY + " " +  selectionEndX + " " + selectionEndY);
+		//logger.finer( this + " entering selection  "  + selectionStartX + " " +  selectionStartY + " " +  selectionEndX + " " + selectionEndY);
 		boolean selectionfound = false;
 
 		//loop through children and set/unset selection
@@ -1381,7 +1381,7 @@ public class FormuleRegel extends FormuleElement
 		}
 		if (ret != null)
 		{
-			logger.finer("exiting selection " + ret + " " + ret.getSelectionString());
+			//logger.finer("exiting selection " + ret + " " + ret.getSelectionString());
 			return ret;
 		}
 		//if(selection == false)
@@ -1406,7 +1406,7 @@ public class FormuleRegel extends FormuleElement
 				selectioncords[3] = selectionEndY;
 				setChanged(true);
 		*/
-		logger.finer("exiting selection2 " + this + " " + this.getSelectionString()  + " " + selectionStart + " " + currentPosition);
+		//logger.finer("exiting selection2 " + this + " " + this.getSelectionString()  + " " + selectionStart + " " + currentPosition);
 		return this;
 	}
 

@@ -198,7 +198,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				if(launchState.containsKey("uitw")) 
 				{
 					vakUitwerking = launchState.getBoolean("uitw");
-					logger.fine("vakuitwerking = " + vakUitwerking);
+					//logger.fine("vakuitwerking = " + vakUitwerking);
 					if (vakUitwerking)
 					{
 						HashMap<String, Object> hh = new HashMap<String,Object>();
@@ -360,16 +360,16 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 		this.correct = (Boolean) checkResults.get("correct");
 		this.score = (Integer) checkResults.get("score");
-		System.out.println("score = " + score);
+		//System.out.println("score = " + score);
 		this.feedback = (String) checkResults.get("feedback");
 
 		int goedHalfFout = (Integer) checkResults.get("goedHalfFout");
 
-		logger.fine("userAnswer: " + useranswer);
-		logger.fine("correct: " + correct);
-		logger.fine("score: " + score);
-		logger.fine("goedHalfFout: " + goedHalfFout);
-		logger.fine("feedback: " + feedback);
+//		logger.fine("userAnswer: " + useranswer);
+//		logger.fine("correct: " + correct);
+//		logger.fine("score: " + score);
+//		logger.fine("goedHalfFout: " + goedHalfFout);
+//		logger.fine("feedback: " + feedback);
 
 		if (goedHalfFout == AntwoordVakChecker.DOOR)
 		{
@@ -403,7 +403,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		
 		checkimg.setVisible(check && goedHalfFout != AntwoordVakChecker.GEEN); // Wim: Hier verscheen het vinkje als goedhalfFout GEEN is
-		logger.finer(String.valueOf(checkimg.isVisible()));
+		//logger.finer(String.valueOf(checkimg.isVisible()));
 		//sp.setPixelSize(breedte, -1);
 		if (this.fe == null && !useranswer.equals(lastanswer))
 		{
@@ -411,7 +411,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			comRoot.setChanged();
 		
 		}
-
 	}
 	
 	public void resize()

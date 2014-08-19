@@ -21,6 +21,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Float;
@@ -260,7 +261,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		if (correct == Boolean.TRUE)
 			return;
 		FlowPanel current = stepPanels.get(stepPanels.size() - 1);
-		highLight(current, false);
+//		highLight(current, false);
 		current.remove(editor.getAsPanel());
 		if (hasPrefix)
 			current.remove(prefixViewer);
@@ -299,7 +300,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		current.remove(editor.getAsPanel());
 		if (hasPrefix)
 			current.remove(prefixViewer);
-		highLight(current, false);
+//		highLight(current, false);
 		tb.getElement().getStyle().setVisibility(Visibility.VISIBLE);
 
 		//System.out.println(" useranswer1: "+ useranswer);
@@ -341,7 +342,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		
 		FlowPanel stepPanel = new FlowPanel();
 		layoutStepPanel(stepPanel);
-		highLight(stepPanel, true);
+//		highLight(stepPanel, true);
 		stapNr++;
 
 		if (hasFeedback)
@@ -363,7 +364,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		
 		//sp.getElement().setScrollTop(sp.getElement().getScrollHeight());
 		editor.requestFocus();
-		sp.scrollToBottom();
+		scrollToBottom();
 		
 	}
 	
@@ -372,7 +373,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		if(editor != null)
 		{	FlowPanel current = stepPanels.get(stepPanels.size() - 1);
 			if(current.getParent() == contentPanel) // FIXME why? 
-			contentPanel.setWidgetTopHeight(current, stepPanelY, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
+				contentPanel.setWidgetTopHeight(current, stepPanelY, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
 			if(feedbackPanel.isAttached())
 			{
 				contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + editor.getHeight(), Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX);
@@ -380,6 +381,7 @@ public class FormuleEditorWithSteps implements InteractionView
 			//stepPanelY = current.getAbsoluteTop() - contentPanel.getAbsoluteTop() + editor.getHeight() + stapH;
 			//System.out.println("resize: stepPanelY = " + stepPanelY);
 		}
+		scrollToBottom();
 	}
 
 	public void copyStep()
@@ -403,6 +405,7 @@ public class FormuleEditorWithSteps implements InteractionView
 
 	public void backStep()
 	{
+		System.out.println("backStep");
 		FlowPanel current = stepPanels.get(stapNr);
 
 		if (correct != Boolean.TRUE && editor.toString().length() > 0)
@@ -414,7 +417,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		{
 			contentPanel.remove(feedbackPanel);
 			current.remove(viewers.get(viewers.size() - 1).getAsPanel());
-			current.getElement().getStyle().setBackgroundColor(hlColor.toString());
+//			current.getElement().getStyle().setBackgroundColor(hlColor.toString());
 			viewers.remove(viewers.get(viewers.size() - 1));
 			String currentTekst = latest_answer_viewer.toString();
 			if (hasPrefix)
@@ -438,7 +441,7 @@ public class FormuleEditorWithSteps implements InteractionView
 			stepPanels.remove(stepPanels.size() - 1);
 
 			current = stepPanels.get(stepPanels.size() - 1);
-			current.getElement().getStyle().setBackgroundColor(hlColor.toString());
+//			current.getElement().getStyle().setBackgroundColor(hlColor.toString());
 
 			current.remove(viewers.get(viewers.size() - 1).getAsPanel());
 			viewers.remove(viewers.get(viewers.size() - 1));
@@ -484,6 +487,7 @@ public class FormuleEditorWithSteps implements InteractionView
 			//int height = viewers.isEmpty() ? 23 : viewers.get(viewers.size() - 1).getHeight();
 			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + height, Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX); 
 		}
+		scrollToBottom();
 	}
 
 	public Panel getAsPanel()
@@ -549,7 +553,7 @@ public class FormuleEditorWithSteps implements InteractionView
 
 		FlowPanel stepPanel = new FlowPanel();
 		layoutStepPanel(stepPanel);
-		highLight(stepPanel, true);
+//		highLight(stepPanel, true);
 		if (hasPrefix)
 			stepPanel.add(prefixViewer);
 
@@ -570,7 +574,7 @@ public class FormuleEditorWithSteps implements InteractionView
 			hasStartString = true;
 			FormuleViewer f = new FormuleViewer(prefix.substring(2, prefix.length() - 1) + startString.substring(2, startString.length() - 1));
 			f.setFont(defaultfont);
-			f.getAsPanel().getElement().getStyle().setMarginLeft(23, Unit.PX);
+			f.getMainRegel().getCanvas().getElement().getStyle().setMarginLeft(23, Unit.PX);
 
 			viewers.add(f);
 			latest_answer_viewer = f;
@@ -582,7 +586,7 @@ public class FormuleEditorWithSteps implements InteractionView
 				Logger.getLogger("FormuleEditorWithStep").info("bordjesmethode");
 				addFormulePanelListeners((TouchPanel) pnl, f);
 			}
-			highLight(stepPanel, false);
+			//highLight(stepPanel, false);
 			contentPanel.add(stepPanel);
 			contentPanel.setWidgetLeftRight(stepPanel, 5, Style.Unit.PX, 5, Style.Unit.PX); 
 			contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, f.getHeight(), Style.Unit.PX);
@@ -604,7 +608,7 @@ public class FormuleEditorWithSteps implements InteractionView
 
 			FlowPanel stepPanelNew = new FlowPanel();
 			layoutStepPanel(stepPanelNew);
-			highLight(stepPanelNew, true);
+//			highLight(stepPanelNew, true);
 
 			if (hasPrefix)
 				stepPanelNew.add(prefixViewer);
@@ -702,13 +706,17 @@ public class FormuleEditorWithSteps implements InteractionView
 		w.getElement().getStyle().setFloat(Float.LEFT);
 		w.getElement().getStyle().setProperty("clear", "both");
 		w.getElement().getStyle().setProperty("display", "block");
-		w.getElement().getStyle().setBackgroundColor(hlColor.toString());
+		//heeft dit zin?
+//		w.getElement().getStyle().setBackgroundColor(hlColor.toString());
+		//w.getElement().getStyle().setBackgroundColor("yellow");
 	}
 
-	public void highLight(Widget w, boolean b)
-	{
-		w.getElement().getStyle().setBackgroundColor(b ? hlColor.toString() : bgColor.toString());
-	}
+	
+//	public void highLight(Widget w, boolean b)
+//	{
+//		w.getElement().getStyle().setBackgroundColor(b ? hlColor.toString() : bgColor.toString());
+//		//w.getElement().getStyle().setBackgroundColor(b ? "yellow" : "red");
+//	}
 
 	private void addButtonHandler(final TouchButton tb)
 	{
@@ -860,6 +868,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	@Override
 	public void setState(HashMap<String, Object> h)
 	{
+		System.out.println("setState");
 		int stapNr = 0;
 		String[] formuleVakInhouden = null;
 		boolean ingevuld = true;
@@ -926,31 +935,52 @@ public class FormuleEditorWithSteps implements InteractionView
 			contentPanel.add(stepPanel);
 			contentPanel.setWidgetLeftRight(stepPanel, 5, Style.Unit.PX, 5, Style.Unit.PX);
 			
+			
 			if ("".equals(formuleVakInhouden[i]) || "$f@".equals(formuleVakInhouden[i]))
 			{
 				viewers.remove(fv);
 				editor = addNewEditor(stepPanel);
 				editor.insert(antwoordString);
-				highLight(stepPanel, true);
+//				highLight(stepPanel, true);
 				contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
-				pijlVak = new PijlVak("", this);
-				int y = stepPanelY + fv.getHeight()/2;
-				if(pijl)
-				{	contentPanel.add(pijlVak);
-					contentPanel.setWidgetRightWidth(pijlVak, 0, Style.Unit.PX, pijlX, Style.Unit.PX);
-					contentPanel.setWidgetTopHeight(pijlVak, y, Style.Unit.PX, pijlVak.getHeight(), Style.Unit.PX);
-				}
 				
-				pijlVakken.add(pijlVak);
-				pijlVak.paintComponent();
+				if(i < stapNr)
+				{
+					//methode maken voor pijl neerzetten? Meegeven: hoogte
+					pijlVak = new PijlVak("", this); //FIXME hier eigenlijk pijlvak uit state halen
+					int y = stepPanelY + editor.getHeight()/2;
+					if(pijl)
+					{	contentPanel.add(pijlVak);
+						contentPanel.setWidgetRightWidth(pijlVak, 0, Style.Unit.PX, pijlX, Style.Unit.PX);
+						contentPanel.setWidgetTopHeight(pijlVak, y, Style.Unit.PX, pijlVak.getHeight(), Style.Unit.PX);
+					}
+					
+					pijlVakken.add(pijlVak);
+					pijlVak.paintComponent();
+				}
 				
 				stepPanelY += editor.getHeight() + stapH;
 			}
 			else
 			{
 				stepPanel.add(p);
-				highLight(stepPanel, false);
+//				highLight(stepPanel, false);
 				contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, fv.getHeight(), Style.Unit.PX);
+				
+				if(i < stapNr)
+				{
+					//methode voor pijl neerzetten gebruiken.
+					pijlVak = new PijlVak("", this);//FIXME hier eigenlijk pijlvak uit state halen
+					int y = stepPanelY + fv.getHeight()/2;
+					if(pijl)
+					{	contentPanel.add(pijlVak);
+						contentPanel.setWidgetRightWidth(pijlVak, 0, Style.Unit.PX, pijlX, Style.Unit.PX);
+						contentPanel.setWidgetTopHeight(pijlVak, y, Style.Unit.PX, pijlVak.getHeight(), Style.Unit.PX);
+					}
+					
+					pijlVakken.add(pijlVak);
+					pijlVak.paintComponent();
+				}
 				stepPanelY += fv.getHeight() + stapH;
 			}
 			
@@ -967,12 +997,12 @@ public class FormuleEditorWithSteps implements InteractionView
 			score = correct == Boolean.TRUE ? scoreMax : 0;
 
 		}
-		stepPanelY -= editor.getHeight() - stapH;
+		stepPanelY -= editor.getHeight() + stapH;
 
 		if (stapNr > 0 || stapNr == 0 && !hasStartString)
 			tb.getElement().getStyle().setVisibility(Visibility.VISIBLE);
 		
-		sp.scrollToBottom();
+		scrollToBottom();
 		
 		
 	}
@@ -1252,6 +1282,14 @@ public class FormuleEditorWithSteps implements InteractionView
 	}
 	
 	//public static void setDefaultFont()
-	
+	public void scrollToBottom()
+	{
+		Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+	        @Override
+	        public void execute() {
+	            sp.scrollToBottom();
+	        }
+		});
+	}
 	
 }

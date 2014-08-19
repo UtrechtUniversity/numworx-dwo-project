@@ -2347,7 +2347,7 @@ public class FormuleParser
 				sNieuw = s;
 			}
 		}
-		logger.info(formString + " : " + sNieuw);
+		//logger.info(formString + " : " + sNieuw);
 		return sNieuw;
 	}
 
