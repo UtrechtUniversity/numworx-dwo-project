@@ -1,11 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Polygon;
-import java.awt.RenderingHints;
+import java.util.Vector;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
@@ -21,6 +16,7 @@ import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.Algebra;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
+import fi.wiskopdr.text.Text_nl;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
@@ -34,6 +30,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSte
 
 public class PijlVak extends LayoutPanel{
 
+	public static Text_nl rb = new Text_nl();
 	private static String font = "14px sans-serif";
 	
 	private String operator;
@@ -80,22 +77,27 @@ public class PijlVak extends LayoutPanel{
 			width = 110;
 		
 		 
+		if(op.equals(""))
+		{	//ashoogte = 15;
+			width = 30;
+			//height = 30;
+		}
 		ashoogte = 5*(fm.getAscent() + fm.getDescent())/4;
 		
-		if(op.equals(""))
-		{	ashoogte = 15;
-			width = 30;
-			height = 30;
-		}
+		
 		
 		setPixelSize(width, height);
 		//this.getElement().getStyle().setBackgroundColor("red");
 		if(operator.equals("abc") || operator.equals("sub"))
 		{	hasPrefix = true;
 			if(operator.equals("abc"))
-				prefixVak = new FormuleViewer("D=");
+			{	prefixVak = new FormuleViewer("D=");
+				prefixVak.setFont(fm);
+			}
 			if(operator.equals("sub"))
-				prefixVak = new FormuleViewer("p=");
+			{	prefixVak = new FormuleViewer("p=");
+				prefixVak.setFont(fm);
+			}
 			//Panel p = prefixVak.getAsPanel();
 			//p.getElement().getStyle().setProperty("display", "inline");
 			//this.add(prefixVak.getAsPanel());
@@ -159,6 +161,7 @@ public class PijlVak extends LayoutPanel{
 			if(operator.equals("abc") || operator.equals("sub"))
 			{
 				p.setWidgetLeftWidth(editorPanel, 10 + prefixVak.getWidth(), Style.Unit.PX, editor.getWidth(), Style.Unit.PX);
+				//p.setWidgetTopHeight(editorPanel, ashoogte + fm.getAscent()/2, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
 				p.setWidgetTopHeight(editorPanel, ashoogte, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
 			}
 			
@@ -171,13 +174,15 @@ public class PijlVak extends LayoutPanel{
 	
 	
 	public void paintComponent()
-	{	ctx.setFont(font);
+	{	//ctx.setFont(font);
+		ctx.setFont(XMLView.getDefaultFont());
 		
         ctx.setFillStyle("black");
         ctx.setStrokeStyle("black");
 		
-        if(!operator.equals("abc"))
+        if(!(operator.equals("abc") || operator.equals("sub")))
 		{	int h = ashoogte;
+			//int h = height/2;
 			ctx.beginPath();
 			ctx.arc(-h/2, h, h, (int)(180*Math.PI/4),(int)(-180*Math.PI/2));
 			ctx.stroke();
@@ -194,46 +199,73 @@ public class PijlVak extends LayoutPanel{
 		//g.drawLine(0,getSize().height-4,7,getSize().height-4);
 		//g.setColor(Color.black);
 		
-		/*
 		if(operator.equals("*"))
-		{	g.drawLine((fm.getAscent() + fm.getDescent())/2+10,ashoogte-fm.getAscent()/4+3,(7*fm.getAscent()/4 + fm.getDescent())/2+10,ashoogte+fm.getAscent()/4+2);
-			g.drawLine((fm.getAscent() + fm.getDescent())/2+10,ashoogte+fm.getAscent()/4+2,(7*fm.getAscent()/4 + fm.getDescent())/2+10,ashoogte-fm.getAscent()/4+3);
+		{	ctx.beginPath();
+			ctx.moveTo((fm.getAscent() + fm.getDescent())/2+10,ashoogte-fm.getAscent()/4+3);
+			ctx.lineTo((7*fm.getAscent()/4 + fm.getDescent())/2+10,ashoogte+fm.getAscent()/4+2);
+			ctx.moveTo((fm.getAscent() + fm.getDescent())/2+10,ashoogte+fm.getAscent()/4+2);
+			ctx.lineTo((7*fm.getAscent()/4 + fm.getDescent())/2+10,ashoogte-fm.getAscent()/4+3);
+			ctx.stroke();
+			
+			//g.drawLine((fm.getAscent() + fm.getDescent())/2+10,ashoogte-fm.getAscent()/4+3,(7*fm.getAscent()/4 + fm.getDescent())/2+10,ashoogte+fm.getAscent()/4+2);
+			//g.drawLine((fm.getAscent() + fm.getDescent())/2+10,ashoogte+fm.getAscent()/4+2,(7*fm.getAscent()/4 + fm.getDescent())/2+10,ashoogte-fm.getAscent()/4+3);
 		
 		}
 		else if(operator.equals(":"))
 		{	int b=fm.getAscent() + fm.getDescent();
-			g.fillRect(b/2+10,ashoogte-b/4+2,2,2);
-			g.fillRect(b/2+10,ashoogte+b/4+1,2,2);
-			g.drawLine(b/4+11,ashoogte+2,3*b/4+10,ashoogte+2);
+			ctx.fillRect(b/2+10,ashoogte-b/4+2,2,2);
+			ctx.fillRect(b/2+10,ashoogte+b/4+1,2,2);	
+			ctx.beginPath();
+			ctx.moveTo(b/4+11, ashoogte+2);
+			ctx.lineTo(3*b/4+10, ashoogte+2);
+			ctx.stroke();
+		
+//			g.fillRect(b/2+10,ashoogte-b/4+2,2,2);
+//			g.fillRect(b/2+10,ashoogte+b/4+1,2,2);
+//			g.drawLine(b/4+11,ashoogte+2,3*b/4+10,ashoogte+2);
 		}
 		else if(operator.equals("haakjes"))
-		{	g.drawString(WiskOpdr.rb.getString("haakjesLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent());
-			g.drawString(WiskOpdr.rb.getString("haakjesLabel1"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
+		{	ctx.fillText(rb.getString("haakjesLabel0"), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent());
+			ctx.fillText(rb.getString("haakjesLabel1"), (fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
+			//g.drawString(WiskOpdr.rb.getString("haakjesLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent());
+			//g.drawString(WiskOpdr.rb.getString("haakjesLabel1"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 		
 		}
 		else if(operator.equals("herleid"))
-		{	g.drawString(WiskOpdr.rb.getString("herleidLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
-			g.drawString(WiskOpdr.rb.getString("herleidLabel1"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
+		{	ctx.fillText(rb.getString("herleidLabel0"), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
+			ctx.fillText(rb.getString("herleidLabel1"), (fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
+		
+			//g.drawString(WiskOpdr.rb.getString("herleidLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
+			//g.drawString(WiskOpdr.rb.getString("herleidLabel1"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 		
 		}
 		else if(operator.equals("ontbind"))
-		{	g.drawString(WiskOpdr.rb.getString("ontbindLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
-			g.drawString("",(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
-		
+		{	ctx.fillText(rb.getString("ontbindLabel0"), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
+			ctx.fillText("", (fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
+			
+			//g.drawString(WiskOpdr.rb.getString("ontbindLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
+			//g.drawString("",(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 		}
 		else if(operator.equals("splits"))
-		{	g.drawString(WiskOpdr.rb.getString("splitsLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
-			g.drawString("",(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
-		
+		{	ctx.fillText(rb.getString("splitsLabel0"), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
+			ctx.fillText("", (fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
+			
+			//g.drawString(WiskOpdr.rb.getString("splitsLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
+			//g.drawString("",(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 		}
 		else if(operator.equals("wortel"))
-		{	g.drawString(WiskOpdr.rb.getString("wortelLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
-			g.drawString("",(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
-		
+		{	ctx.fillText(rb.getString("wortelLabel0"), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
+			ctx.fillText("", (fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
+			
+			//g.drawString(WiskOpdr.rb.getString("wortelLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent()+10);
+			//g.drawString("",(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 		}
 		else if(operator.equals("gelijkwaardig"))
-		{	g.drawString(WiskOpdr.rb.getString("gelijkwaardigLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent());
-			g.drawString(WiskOpdr.rb.getString("gelijkwaardigLabel1"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
+		{	ctx.fillText(rb.getString("gelijkwaardigLabel0"), (fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent());
+			ctx.fillText(rb.getString("gelijkwaardigLabel1"), (fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
+		
+			//g.drawString(WiskOpdr.rb.getString("gelijkwaardigLabel0"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte-fm.getDescent());
+			//g.drawString(WiskOpdr.rb.getString("gelijkwaardigLabel1"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 		
 		}
 		else if(operator.equals("implicatie"))
@@ -241,15 +273,19 @@ public class PijlVak extends LayoutPanel{
 			//g.drawString(WiskOpdr.rb.getString("gelijkwaardigLabel1"),(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent());
 		
 		}
-		*/
+		
 		else if(operator.equals("abc"))
-		{	ctx.setFillStyle("white");
+		{	ctx.setFillStyle(CssColor.make(255, 255, 200));
+			//volgende regel eigenlijk alleen voor Noordhoff
+			ctx.setFillStyle("white");
 			ctx.fillRect(0, 0, getWidth(), getHeight());
+			ctx.setStrokeStyle("black");
+			//volgende regel eigenlijk alleen voor Noordhoff
 			ctx.setStrokeStyle(CssColor.make(246,127,142).toString());
-			ctx.setFillStyle("black");
 			ctx.beginPath();
 			ctx.rect(0, 0, getWidth(), getHeight());
 			ctx.stroke();
+			ctx.setFillStyle("black");
 			ctx.fillText("Discriminant", 5, ashoogte - fm.getDescent());
 //			g.setColor(new Color(255,255,200));
 //			if("GR".equals(WiskOpdr.deployVariant))g.setColor(new Color(255,255,255));
@@ -262,22 +298,27 @@ public class PijlVak extends LayoutPanel{
 			//g.drawString("D = ",15 ,ashoogte+fm.getAscent());
 		}
 		
-		/*
 		else if(operator.equals("sub"))
-		{	g.setColor(new Color(255,255,200));
-			if("GR".equals(WiskOpdr.deployVariant))g.setColor(new Color(255,255,255));
-			g.fillRect(0,0,getSize().width,getSize().height);
-			g.setColor(Color.black);
-			if("GR".equals(WiskOpdr.deployVariant))g.setColor(new Color(246,127,142));
-			g.drawRect(0,0,getSize().width-1,getSize().height-1);
-			g.setColor(Color.black);
-			g.drawString(WiskOpdr.rb.getString("subLabel"),5 ,ashoogte-fm.getDescent());
-			//g.drawString("p = ",15 ,ashoogte+fm.getAscent());
+		{	ctx.setFillStyle(CssColor.make(255, 255, 200));
+			//volgende regel eigenlijk alleen voor Noordhoff
+			ctx.setFillStyle("white");
+			ctx.fillRect(0, 0, getWidth(), getHeight());
+			ctx.setStrokeStyle("black");
+			//volgende regel eigenlijk alleen voor Noordhoff
+			ctx.setStrokeStyle(CssColor.make(246,127,142).toString());
+			ctx.beginPath();
+			ctx.rect(0, 0, getWidth(), getHeight());
+			ctx.stroke();
+			
+			ctx.setFillStyle("black");
+			ctx.fillText(rb.getString("subLabel"), 5, ashoogte - fm.getDescent());
 		}
 		else
-		{	g.drawString("  "+operator+" ",(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent()/2);
+		{	
+			ctx.setFillStyle("black");
+			ctx.fillText("  "+operator+" ",(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent()/2);
 		}
-		*/
+		
 		
 	}
 	
@@ -301,18 +342,43 @@ public class PijlVak extends LayoutPanel{
 		return editor;
 	}
 	
+	public String geefOperator()
+	{	return operator;
+	}
+	
+	public String geefExpressieString()
+	{	//Expressie e = formuleVak.geefExpressie();
+		//if(e==null)return null;
+		//String s = e.toStringStrikt();
+		return editor.toString();
+	}
+	
+	public void zetExpressie(String s)
+	{	editor.insert(s);
+		
+		//formuleVak.vulVak("$f" + s + "@");
+	}
+	
 	public void zetMaat()
-	{
-		int b = (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+"   ").getWidth() + editor.getWidth();
+	{	int b = (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+"   ").getWidth() + editor.getWidth();
 		if(operator.equals("abc") || operator.equals("sub")) 
 			b = Math.max(110, getWidth());
 		width = b;
+		if(operator.equals("abc") || operator.equals("sub"))
+		{
+			//hier nog zorgen voor juiste hoogte bij invullen 'hoge' formules.
+			//int h = ashoogte + editor.getMainRegel().getHeight();
+			//h = Math.max(ashoogte + prefixVak.getHeight(), h);
+			//height = h;
+		}
 		setPixelSize(width, height);
 		if(editorPanel.getParent() == this) // FIXME Anders een assertion error bij setWidgetLeftWith
 		{ 
-			this.setWidgetLeftWidth(editorPanel, (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+"   ").getWidth(), Style.Unit.PX, editor.getWidth(), Style.Unit.PX);
+			this.setWidgetLeftWidth(editorPanel, (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+" ").getWidth(), Style.Unit.PX, editor.getWidth(), Style.Unit.PX);
 		
-		    this.setWidgetTopHeight(editorPanel, ashoogte-editor.getAsHoogte()-fm.getDescent()/2, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
+			
+			//hieronder: niet editor.getCurrentRegel().getAsHoogte() nodig??
+		    this.setWidgetTopHeight(editorPanel, ashoogte + fm.getAscent()/2-editor.getMainRegel().getAsHoogte()-fm.getDescent()/2, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
 		
 		//formuleVak.setLocation((fm.getAscent() + fm.getDescent())/2 + fm.stringWidth("  "+operator+" "),ashoogte-formuleVak.ashoogte-fm.getDescent()/2);
 		//formuleVakHaakjeR.setLocation((fm.getAscent() + fm.getDescent())/2 + fm.stringWidth("  "+operator+" ") + formuleVakHaakjeL.getSize().width + formuleVak.getSize().width,ashoogte-formuleVak.ashoogte-fm.getDescent()/2);
@@ -320,6 +386,8 @@ public class PijlVak extends LayoutPanel{
 		{	
 			this.setWidgetLeftWidth(editorPanel, 10 + prefixVak.getWidth(), Style.Unit.PX, editor.getWidth(), Style.Unit.PX);
 			this.setWidgetTopHeight(editorPanel, ashoogte, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
+			this.setWidgetTopHeight(prefixVak.getAsPanel(), ashoogte + editor.getMainRegel().getAsHoogte() - prefixVak.getAsHoogte(), Style.Unit.PX, prefixVak.getHeight(), Style.Unit.PX);
+			
 		}
 		
 		}
@@ -331,18 +399,22 @@ public class PijlVak extends LayoutPanel{
 			remove(goedKrulImage);
 		if(foutKruisImage.isAttached())
 			remove(foutKruisImage);
+		
 		if(operator.equals("abc"))
 		{	String vergelijkingString = fe.getLatestAnswer();
 			VergelijkingMeerv vergelijking = FormuleParser.parseVergelijking("$f" + vergelijkingString + "@");
 			
 			double d = Algebra.geefDiscriminant(vergelijking.geefVergelijking(0));
 			String antwoordString = editor.toString();
-			Expressie antwoordExpressie = FormuleParser.parse(antwoordString);
-			double dAnt = antwoordExpressie.geefWaarde();
+			Expressie antwoordExpressie = FormuleParser.parse(antwoordString);//is parse hier de juiste? Niet beter: geefExpressie? (met $f en @)
+			boolean goed = false;
+			try{
+				double dAnt = antwoordExpressie.geefWaarde();
+				goed = Algebra.isGelijkDouble(d, dAnt);
+			}
+			catch(Exception e)
+			{}
 			
-			boolean goed = Algebra.isGelijkDouble(d, dAnt);
-			//goedIC.setVisible(goed);
-			//foutIC.setVisible(!goed);
 			if(goed)
 			{
 				this.add(goedKrulImage);
@@ -359,6 +431,26 @@ public class PijlVak extends LayoutPanel{
 			{
 				fe.zetEditorTerug();
 			}
+		}
+		else if(operator.equals("sub"))
+		{
+			String substitutieString = editor.toString();
+			Expressie substitutie = FormuleParser.geefExpressie("$f" + substitutieString + "@");
+			fe.zetSubstitutie(substitutie);
+			fe.zetEditorTerug();
+		}
+		else
+		{	if(!operator.equals("haakjes") && !operator.equals("herleid") && !operator.equals("gelijkwaardig") && !operator.equals("ontbind") && !operator.equals("splits") && !operator.equals("wortel")  && !operator.equals("implicatie"))
+			{	if(editor.toString().equals("")) 
+				{	return;
+				}
+			}
+			fe.maakBewerkingStap();
+			Expressie exp = FormuleParser.parse(editor.toString());
+	 		if(exp!=null && Algebra.geefTermen(exp,new Vector()).size()>1)
+	 		{	editor.insert("$h" + exp.toString() + "@");
+	 			
+	 		}
 		}
 	}
 }

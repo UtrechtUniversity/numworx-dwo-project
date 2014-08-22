@@ -17,5 +17,6 @@ public interface AntwoordVakChecker {
 	
 	public HashMap<String,Object> checkAnswer(String answer);
 	
+	public void zetSubstitutie(Expressie e);
 	
 }

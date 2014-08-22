@@ -88,13 +88,11 @@ public class VergelijkingMeerv
 			}
 		}
 		else if (vergelijkingen.length == 1 && operator.equals("splits"))
-		{
-			Expressie e1 = vergelijkingen[0].kind1;
+		{	Expressie e1 = vergelijkingen[0].kind1;
 			Expressie e2 = vergelijkingen[0].kind2;
 			Expressie[] we = Algebra.geefSplitsing(e1, e2);
 			if (we != null && we[1] != null)
-			{
-				vergelijkingenNieuw = new Vergelijking[2];
+			{	vergelijkingenNieuw = new Vergelijking[2];
 				e1 = we[0];
 				e2 = new BasisExpressie(0);
 				Expressie e3 = we[1];

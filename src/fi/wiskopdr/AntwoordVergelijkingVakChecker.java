@@ -4,6 +4,7 @@ import java.util.*;
 
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 //import fi.beans.ideas.IdeasIF;
 //import fi.beans.ideas.RuleIF;
 //import fi.beans.stringutils.StringUtils;
@@ -122,7 +123,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 	private boolean syntaxFout = false;
 	
 	
-	public AntwoordVergelijkingVakChecker(HashMap<String,Object> avvCheckerModel, String[] randomVars, HashMap<String,Object> randomValues )
+	public AntwoordVergelijkingVakChecker(HashMap<String,Object> avvCheckerModel, String[] randomVars, HashMap<String,Object> randomValues)
 	{	
 		ObjectMap map = JSONUtilities.wrapMap(avvCheckerModel);
 		
@@ -405,7 +406,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		this.fout = false;
 		this.goedHalfFout = GEEN;
 		
-		this.substitutie = substitutie;
+		//this.substitutie = substitutie;
 		this.gebruikersSubstituties = gebruikersSubstituties;
 		
 		if(answerPrevious==null)
@@ -535,6 +536,13 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		
 	}
 	
+	public void zetSubstitutie(Expressie e)
+	{
+		System.out.println("antwoordvergelijkingvakChecker"); 
+		if(e != null)
+			System.out.println("zet substitutie: " + e.toString());
+		substitutie = e;
+	}
 	
 	
 	public void zetJuisteAntwoord(String s)
@@ -1024,9 +1032,11 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
             antwoordIngevuld = antwoordAlles;
         }
 
+		
 		if (substitutie != null && antwoordIngevuld != null)
-			antwoord = antwoordIngevuld.substitueer(substitutie, "p");
-
+		{	antwoord = antwoordIngevuld.substitueer(substitutie, "p");
+		}
+		
 		//updateGebruikersSubstituties();
 		if (gebruikersSubstituties != null && antwoord != null) {
 			for (int i = 0; i < gebruikersSubstituties.length; i++) {
@@ -1099,6 +1109,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 			}
 			
 			if (linOefenVersie) {
+			System.out.println("in check linOefenversie");
 				isGelijkwaardig = isJuistUitgevoerdeStap();
 				if (!isGelijkwaardig) {
 					isEindOplossingExact = false;
@@ -1126,10 +1137,11 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 	}
 	
 	public boolean isJuistUitgevoerdeStap() {
+		//TODO: onderstaande implementeren
 		/*if (stapNr == 0)
 			return isGelijkwaardig;
 		String op = pijlVakken[stapNr - 1].geefOperator();
-		pijlVakken[stapNr - 1].formuleVak.setEditable(false);
+		//pijlVakken[stapNr - 1].formuleVak.setEditable(false);
 		Expressie en = pijlVakken[stapNr - 1].formuleVak.geefExpressie();
 		if (op.equals("implicatie") || en == null)
 			return isGelijkwaardig;
@@ -1150,7 +1162,8 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		VergelijkingMeerv vergAntwoord = formuleVakken[stapNr].geefVergelijking();
 		if (op.equals("sub"))
 			vergAntwoord = vergAntwoord.substitueer(substitutie, "p");
-		return vergNieuw.isGelijkMet(vergAntwoord);*/
+		return vergNieuw.isGelijkMet(vergAntwoord);
+		*/
 		return isGelijkwaardig;
 	}
 

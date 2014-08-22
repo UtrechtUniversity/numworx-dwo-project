@@ -28,6 +28,7 @@ import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 import fi.wiskopdr.AntwoordFormuleVakChecker;
 import fi.wiskopdr.AntwoordVakChecker;
 import fi.wiskopdr.AntwoordVergelijkingVakChecker;
+import fi.wiskopdr.expressies.Expressie;
 
 /**
  * Checks inserted formule with the correct answer
@@ -127,6 +128,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private Map<String, Object> instellingen = null;
 	private int score = 0;
 	private Boolean correct = null;
+	
+	//private Expressie substitutie;
 	private String feedback = "";
 	private int scoreMax = 0;
 	private boolean check = true;
@@ -433,6 +436,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		resize();
 	}
 	
+	public void zetSubstitutie(Expressie e)
+	{
+		avChecker.zetSubstitutie(e);
+	}
 
 	@Override
 	public Panel getAsPanel()

@@ -344,6 +344,10 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		
 	}
 	
+	public void zetSubstitutie(Expressie e)
+	{
+		substitutie = e;
+	}
 	
 	public void zetJuisteAntwoord(String s)
 	{	zetJuisteAntwoord(s,true);

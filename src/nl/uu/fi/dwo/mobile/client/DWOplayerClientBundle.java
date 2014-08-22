@@ -21,7 +21,10 @@ public interface DWOplayerClientBundle extends ClientBundle {
 	
 	@Source("nl/uu/fi/dwo/mobile/client/resources/abcknop.png")
 	ImageResource abcknop();
-
+	
+	@Source("nl/uu/fi/dwo/mobile/client/resources/formuleachtergrond.png")
+	ImageResource formuleachtergrondknop();
+	
 	@Source("nl/uu/fi/dwo/mobile/client/resources/appletknop.gif")
 	ImageResource appletknop();
 
