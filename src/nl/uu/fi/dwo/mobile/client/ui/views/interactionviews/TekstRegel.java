@@ -264,7 +264,7 @@ public class TekstRegel extends LayoutPanel
 			}
 			else if (currentObject instanceof FormuleEditorWithSteps)
 			{
-				Panel a = ((FormuleEditorWithSteps) currentObject).getAsPanel();
+				Widget a = ((FormuleEditorWithSteps) currentObject).asWidget();
 				
 				a.getElement().getStyle().setProperty("verticalAlign", "" + objectVerschuiving + "px");
 				this.add(a);

@@ -1505,7 +1505,7 @@ public class FormuleEditorWithSteps implements InteractionView
 
 	@Override
 	public int getHeight() {
-		return hoogte;
+		return facade.wrapHeight(hoogte);
 	}
 	protected void setHeight(int h) {
 		hoogte = h;
@@ -1513,7 +1513,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	
 	@Override
 	public int getWidth() {
-		return breedte;
+		return facade.wrapWidth(breedte);
 	}
 	
 	//voor aanpassen breedte in geval van volledigeBreedte
