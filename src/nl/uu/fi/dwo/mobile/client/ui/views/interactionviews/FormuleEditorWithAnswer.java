@@ -374,6 +374,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 //		logger.fine("goedHalfFout: " + goedHalfFout);
 //		logger.fine("feedback: " + feedback);
 
+		if(fe != null)
+			fe.zetStapOk(goedHalfFout);
 		if (goedHalfFout == AntwoordVakChecker.DOOR)
 		{
 			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri());

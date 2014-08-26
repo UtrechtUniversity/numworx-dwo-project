@@ -45,6 +45,7 @@ import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
+import fi.wiskopdr.text.Text;
 
 
 
@@ -119,7 +120,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	private int scoreMax;
 	private Boolean correct;
 	
-	private boolean stapOk;
+	private boolean stapOk = true;
 
 	private FormuleFont defaultfont;
 	//private boolean answeredCorrectly = false;
@@ -479,6 +480,20 @@ public class FormuleEditorWithSteps implements InteractionView
 
 		}
 	}
+	
+	public void zetStapOk(int goedHalfFout)
+	{
+		if(goedHalfFout == 0)
+		{
+			stapOk = false;
+			if (!pijl)
+				stapOk = true;
+		}
+		else if(goedHalfFout == 1)
+			stapOk = true;
+		else 
+			stapOk = false;
+	}
 
 	public void setFeedback(String feedback)
 	{
@@ -501,10 +516,11 @@ public class FormuleEditorWithSteps implements InteractionView
 		if (hasFeedback)
 		{	contentPanel.add(feedbackPanel);
 			contentPanel.setWidgetLeftRight(feedbackPanel, 5, Style.Unit.PX, 5, Style.Unit.PX);
-			int height = editor.getHeight();
-			if(height < 23)
-				height = 23;
-			//int height = viewers.isEmpty() ? 23 : viewers.get(viewers.size() - 1).getHeight();
+			int height = 23;
+			if(editor != null && editor.getHeight() > 23)
+				height = editor.getHeight();
+			else if(latest_answer_viewer != null && latest_answer_viewer.getHeight() > 23)
+				height = latest_answer_viewer.getHeight();
 			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + height, Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX); 
 		}
 		scrollToBottom();
@@ -1275,6 +1291,12 @@ public class FormuleEditorWithSteps implements InteractionView
 		if (!stapOk && editor != null && !editor.toString().equals(""))
 				//formuleVakken[stapNr] != null && !formuleVakken[stapNr].toString().equals("$f@"))
 			return;
+		else if(!stapOk && latest_answer_viewer.getResult() == FormuleViewer.CORRECT)
+		{
+			return;
+			//Deze return zorgt dat je niet nog een stap kunt doen nadat je in de lineaire strategie-versie de juiste oplossing hebt gevonden.
+		}
+		
 		if (operator.equals("implicatie"))
 		{
 			addStep(editor.toString());
@@ -1365,9 +1387,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		//	return;
 		String operator = pijlVak.geefOperator();
 		
-		//TODO: in plaats van regel hieronder moet de editor van het pijlvak misschien in een viewer veranderd worden.
-		//pijlVak.formuleVak.setEditable(false);
-		Expressie en = FormuleParser.parse(pijlVak.geefExpressieString());
+		Expressie en = FormuleParser.geefExpressie("$f" + pijlVak.geefExpressieString() + "@");
 		//VergelijkingMeerv verg = formuleVakken[stapNr - 1].geefVergelijking();
 		
 		VergelijkingMeerv verg = FormuleParser.parseVergelijking("$f" + latest_answer_viewer.toString() + "@");
@@ -1424,16 +1444,22 @@ public class FormuleEditorWithSteps implements InteractionView
 			//System.out.println(" useranswer3: "+ useranswer);
 			fv.setFont(defaultfont);
 			//fv.showResult(fv.ALMOSTCORRECT);
-			if(vergNieuw.isEindOplossing(vergNieuw.geefVergelijkingVar()))
-			{	fv.showResult(fv.CORRECT);
-				//TODO: hier ook feedback toevoegen ("De vergelijking is correct opgelost.")
-			}
-			else
-				fv.showResult(fv.NONE);
+			
 			if (latest_answer_viewer != null && !(hasStartString && stapNr == 1))
 				latest_answer_viewer.showResult(fv.NONE);
 			stepPanelY += stapH + latest_answer_viewer.getHeight();
 			latest_answer_viewer = fv;
+			
+			if(vergNieuw.isEindOplossing(vergNieuw.geefVergelijkingVar()))
+			{	fv.showResult(fv.CORRECT);
+				setAndAddFeedback(Text.rb.getString("feedbackTekst04"));
+				//"De vergelijking is correct opgelost."
+				stapOk = false;
+			}
+			else
+			{	fv.showResult(fv.NONE);
+				stapOk = true;
+			}
 			viewers.add(fv);
 			Panel p = fv.getAsPanel();
 			p.getElement().getStyle().setProperty("display", "inline");

@@ -49,6 +49,7 @@ public class PijlVak extends LayoutPanel{
 	private FormuleEditorWithSteps fe;
 	
 	Image goedKrulImage, foutKruisImage; //goedKrulHalfImage
+	boolean aanpasbaar = true;
 	
 	
 	public PijlVak(String op, FormuleEditorWithSteps fe)
@@ -201,10 +202,10 @@ public class PijlVak extends LayoutPanel{
 		
 		if(operator.equals("*"))
 		{	ctx.beginPath();
-			ctx.moveTo((fm.getAscent() + fm.getDescent())/2+10,ashoogte-fm.getAscent()/4+3);
-			ctx.lineTo((7*fm.getAscent()/4 + fm.getDescent())/2+10,ashoogte+fm.getAscent()/4+2);
-			ctx.moveTo((fm.getAscent() + fm.getDescent())/2+10,ashoogte+fm.getAscent()/4+2);
-			ctx.lineTo((7*fm.getAscent()/4 + fm.getDescent())/2+10,ashoogte-fm.getAscent()/4+3);
+			ctx.moveTo((fm.getAscent() + fm.getDescent())/2+6,ashoogte-fm.getAscent()/4+3);
+			ctx.lineTo((7*fm.getAscent()/4 + fm.getDescent())/2+6,ashoogte+fm.getAscent()/4+2);
+			ctx.moveTo((fm.getAscent() + fm.getDescent())/2+6,ashoogte+fm.getAscent()/4+2);
+			ctx.lineTo((7*fm.getAscent()/4 + fm.getDescent())/2+6,ashoogte-fm.getAscent()/4+3);
 			ctx.stroke();
 			
 			//g.drawLine((fm.getAscent() + fm.getDescent())/2+10,ashoogte-fm.getAscent()/4+3,(7*fm.getAscent()/4 + fm.getDescent())/2+10,ashoogte+fm.getAscent()/4+2);
@@ -213,11 +214,11 @@ public class PijlVak extends LayoutPanel{
 		}
 		else if(operator.equals(":"))
 		{	int b=fm.getAscent() + fm.getDescent();
-			ctx.fillRect(b/2+10,ashoogte-b/4+2,2,2);
-			ctx.fillRect(b/2+10,ashoogte+b/4+1,2,2);	
+			ctx.fillRect(b/2+6,ashoogte-b/4+2,2,2);
+			ctx.fillRect(b/2+6,ashoogte+b/4+1,2,2);	
 			ctx.beginPath();
-			ctx.moveTo(b/4+11, ashoogte+2);
-			ctx.lineTo(3*b/4+10, ashoogte+2);
+			ctx.moveTo(b/4+8, ashoogte+2);
+			ctx.lineTo(3*b/4+7, ashoogte+2);
 			ctx.stroke();
 		
 //			g.fillRect(b/2+10,ashoogte-b/4+2,2,2);
@@ -316,7 +317,7 @@ public class PijlVak extends LayoutPanel{
 		else
 		{	
 			ctx.setFillStyle("black");
-			ctx.fillText("  "+operator+" ",(fm.getAscent() + fm.getDescent())/2 ,ashoogte+fm.getAscent()/2);
+			ctx.fillText("  "+operator+" ", (fm.getAscent() + fm.getDescent())/2, ashoogte+fm.getAscent()/2);
 		}
 		
 		
@@ -393,8 +394,25 @@ public class PijlVak extends LayoutPanel{
 		}
 	}
 	
+	public void vervangEditorDoorViewer()
+	{
+		String text = editor.toString();
+		if(editorPanel.isAttached())
+			this.remove(editorPanel);
+		FormuleViewer viewer = new FormuleViewer(text);
+		viewer.setFont(fm);
+		Panel viewerPanel = viewer.getAsPanel();
+		this.add(viewerPanel);
+		this.setWidgetLeftWidth(viewerPanel, (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+" ").getWidth(), Style.Unit.PX, viewer.getWidth(), Style.Unit.PX);
+		this.setWidgetTopHeight(viewerPanel, ashoogte + fm.getAscent()/2-viewer.getAsHoogte()-fm.getDescent()/2, Style.Unit.PX, viewer.getHeight(), Style.Unit.PX);
+		
+	}
+	
 	public void enterActie()
 	{
+		if(!aanpasbaar)
+			return;
+		aanpasbaar = false;
 		if(goedKrulImage.isAttached())
 			remove(goedKrulImage);
 		if(foutKruisImage.isAttached())
@@ -420,16 +438,13 @@ public class PijlVak extends LayoutPanel{
 				this.add(goedKrulImage);
 				setWidgetRightWidth(goedKrulImage, 0, Style.Unit.PX, 30, Style.Unit.PX);
 				setWidgetBottomHeight(goedKrulImage, 0, Style.Unit.PX, 30, Style.Unit.PX);
+				fe.zetEditorTerug();
 			}
 			else
-			{
+			{	aanpasbaar = true;
 				this.add(foutKruisImage);
 				setWidgetRightWidth(foutKruisImage, 0, Style.Unit.PX, 30, Style.Unit.PX);
 				setWidgetBottomHeight(foutKruisImage, 0, Style.Unit.PX, 30, Style.Unit.PX);
-			}
-			if(goed)
-			{
-				fe.zetEditorTerug();
 			}
 		}
 		else if(operator.equals("sub"))
@@ -442,7 +457,8 @@ public class PijlVak extends LayoutPanel{
 		else
 		{	if(!operator.equals("haakjes") && !operator.equals("herleid") && !operator.equals("gelijkwaardig") && !operator.equals("ontbind") && !operator.equals("splits") && !operator.equals("wortel")  && !operator.equals("implicatie"))
 			{	if(editor.toString().equals("")) 
-				{	return;
+				{	aanpasbaar = true;
+					return;
 				}
 			}
 			fe.maakBewerkingStap();
@@ -452,5 +468,8 @@ public class PijlVak extends LayoutPanel{
 	 			
 	 		}
 		}
+		if(!aanpasbaar)
+			vervangEditorDoorViewer();
+		
 	}
 }

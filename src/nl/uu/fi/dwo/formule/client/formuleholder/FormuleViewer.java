@@ -115,6 +115,11 @@ public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
 			break;
 		}
 	}
+	
+	public int getResult()
+	{
+		return showResult;
+	}
 
 	public void showResult(String formule, boolean strict)
 	{
