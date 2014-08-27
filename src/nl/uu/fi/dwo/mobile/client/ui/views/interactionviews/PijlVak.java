@@ -40,6 +40,7 @@ public class PijlVak extends LayoutPanel{
 	
 	FormuleViewer prefixVak;
 	FormuleEditor editor;
+	FormuleViewer viewer;
 	TouchPanel editorPanel;
 	
 	private FormuleFont fm;
@@ -52,7 +53,7 @@ public class PijlVak extends LayoutPanel{
 	boolean aanpasbaar = true;
 	
 	
-	public PijlVak(String op, FormuleEditorWithSteps fe)
+	public PijlVak(String op, FormuleEditorWithSteps fe, boolean setState)
 	{
 		super();
 		this.fe = fe;
@@ -110,8 +111,10 @@ public class PijlVak extends LayoutPanel{
 		}
 		//prefixVak.setEditable(false);
 		//prefixVak.setLocation((fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+" ").getWidth(),(fm.getAscent() + fm.getDescent())/2);
-		
-		editor = addNewEditor(this);
+		if(setState)
+			viewer = addNewViewer("", this);
+		else
+			editor = addNewEditor(this);
 		//formuleVak = new FormuleVak();
 		//formuleVak.addActionListener(this);
 		
@@ -168,11 +171,48 @@ public class PijlVak extends LayoutPanel{
 			
 		}
 		
-		editor.requestFocus();
+		//editor.requestFocus();
 		return editor;
 	}
 	
-	
+	public FormuleViewer addNewViewer(String text, LayoutPanel p)
+	{
+		FormuleViewer viewer = new FormuleViewer(text);
+		viewer.setFont(fm);
+		if(editorPanel != null)
+			editorPanel.clear();
+		editorPanel = (TouchPanel) viewer.getAsPanel();
+		//editorPanel.getElement().getStyle().setBackgroundColor("blue");
+		//tp.getElement().getStyle().setProperty("display", "inline-block");
+		//editor.setCurrent(0, 0);
+		//editor.requestFocus();
+		if (hasPrefix)
+		{	p.add(prefixVak.getAsPanel());
+			if(operator.equals("abc") || operator.equals("sub"))
+			{
+				p.setWidgetLeftWidth(prefixVak.getAsPanel(), 10, Style.Unit.PX, prefixVak.getWidth(), Style.Unit.PX);
+				p.setWidgetTopHeight(prefixVak.getAsPanel(), ashoogte, Style.Unit.PX, prefixVak.getHeight(), Style.Unit.PX);
+			}
+		}
+		
+		if(!operator.equals("") && !operator.equals("haakjes") && !operator.equals("herleid") && !operator.equals("gelijkwaardig") && !operator.equals("ontbind") && !operator.equals("splits") && !operator.equals("wortel")  && !operator.equals("implicatie"))
+		{
+			p.add(editorPanel);
+			//formuleVak.setLocation((fm.getAscent() + fm.getDescent())/2 + fm.stringWidth("  "+operator+" "),(fm.getAscent() + fm.getDescent())/2);
+			p.setWidgetLeftWidth(editorPanel, (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+" ").getWidth(), Style.Unit.PX, viewer.getWidth(), Style.Unit.PX);
+			p.setWidgetTopHeight(editorPanel, ashoogte + fm.getAscent()/2-viewer.getMainRegel().getAsHoogte()-fm.getDescent()/2, Style.Unit.PX, viewer.getHeight(), Style.Unit.PX);
+			
+			if(operator.equals("abc") || operator.equals("sub"))
+			{
+				p.setWidgetLeftWidth(editorPanel, 10 + prefixVak.getWidth(), Style.Unit.PX, viewer.getWidth(), Style.Unit.PX);
+				//p.setWidgetTopHeight(editorPanel, ashoogte + fm.getAscent()/2, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
+				p.setWidgetTopHeight(editorPanel, ashoogte + viewer.getMainRegel().getAsHoogte() - prefixVak.getAsHoogte(), Style.Unit.PX, viewer.getHeight(), Style.Unit.PX);
+			}
+			
+		}
+		
+		return viewer;
+	}
 	
 	public void paintComponent()
 	{	//ctx.setFont(font);
@@ -351,17 +391,28 @@ public class PijlVak extends LayoutPanel{
 	{	//Expressie e = formuleVak.geefExpressie();
 		//if(e==null)return null;
 		//String s = e.toStringStrikt();
-		return editor.toString();
+		if(editor != null)
+			return editor.toString();
+		else
+			return viewer.toString();
 	}
 	
 	public void zetExpressie(String s)
-	{	editor.insert(s);
+	{	if(editor != null)
+			editor.insert(s);
+		else
+			viewer = addNewViewer(s, this);
+	//vervangEditorDoorViewer();
 		
 		//formuleVak.vulVak("$f" + s + "@");
 	}
 	
 	public void zetMaat()
-	{	int b = (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+"   ").getWidth() + editor.getWidth();
+	{	int b = (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+"   ").getWidth();
+		if(editor != null)
+			b += editor.getWidth();
+		else
+			b += viewer.getWidth();
 		if(operator.equals("abc") || operator.equals("sub")) 
 			b = Math.max(110, getWidth());
 		width = b;
@@ -397,14 +448,17 @@ public class PijlVak extends LayoutPanel{
 	public void vervangEditorDoorViewer()
 	{
 		String text = editor.toString();
-		if(editorPanel.isAttached())
-			this.remove(editorPanel);
-		FormuleViewer viewer = new FormuleViewer(text);
-		viewer.setFont(fm);
-		Panel viewerPanel = viewer.getAsPanel();
-		this.add(viewerPanel);
-		this.setWidgetLeftWidth(viewerPanel, (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+" ").getWidth(), Style.Unit.PX, viewer.getWidth(), Style.Unit.PX);
-		this.setWidgetTopHeight(viewerPanel, ashoogte + fm.getAscent()/2-viewer.getAsHoogte()-fm.getDescent()/2, Style.Unit.PX, viewer.getHeight(), Style.Unit.PX);
+		editor = null;
+		viewer = addNewViewer(text, this);
+		//if(editorPanel.isAttached())
+		//	this.remove(editorPanel);
+		//viewer.insert("$f" + text + "@");
+		//editorPanel = (TouchPanel) viewer.getAsPanel();
+		//viewer.setFont(fm);
+		//Panel viewerPanel = viewer.getAsPanel();
+		//this.add(viewerPanel);
+		//this.setWidgetLeftWidth(editorPanel, (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+" ").getWidth(), Style.Unit.PX, viewer.getWidth(), Style.Unit.PX);
+		//this.setWidgetTopHeight(editorPanel, ashoogte + fm.getAscent()/2-viewer.getAsHoogte()-fm.getDescent()/2, Style.Unit.PX, viewer.getHeight(), Style.Unit.PX);
 		
 	}
 	

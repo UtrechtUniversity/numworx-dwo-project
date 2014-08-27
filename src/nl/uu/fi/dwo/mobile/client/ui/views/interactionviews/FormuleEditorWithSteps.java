@@ -342,7 +342,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		if(bordjesMethode)
 			addFormulePanelListeners((TouchPanel) p, fv); 
 
-		pijlVak = new PijlVak("", this); //new PijlVak("implicatie");
+		pijlVak = new PijlVak("", this, false); //new PijlVak("implicatie");
 		int y = stepPanelY + fv.getHeight()/2;
 				//formuleVakken[stapNr].getLocation().y + formuleVakken[stapNr].getSize().height / 2;
 		if (pijl)
@@ -420,65 +420,152 @@ public class FormuleEditorWithSteps implements InteractionView
 
 	public void backStep()
 	{
-		System.out.println("backStep");
+		nagekeken = false;
 		FlowPanel current = stepPanels.get(stapNr);
-
-		if (correct != Boolean.TRUE && editor.toString().length() > 0)
+		if (stapNr > 0)
 		{
-			current.remove(editor.getAsPanel());
-			editor = addNewEditor(current);
-		}
-		else if (correct == Boolean.TRUE)
-		{
-			contentPanel.remove(feedbackPanel);
-			current.remove(viewers.get(viewers.size() - 1).getAsPanel());
-//			current.getElement().getStyle().setBackgroundColor(hlColor.toString());
-			viewers.remove(viewers.get(viewers.size() - 1));
-			String currentTekst = latest_answer_viewer.toString();
-			if (hasPrefix)
-				currentTekst = removePrefix(currentTekst);
-			editor = addNewEditor(current);
-			editor.insert(currentTekst);
-			if (stapNr > 1 || stapNr > 0 && !hasStartString)
-				latest_answer_viewer = viewers.get(viewers.size() - 1);
-			correct = null;
-			comRoot.setChanged();
-		}
-		else if (stapNr > 1 || stapNr > 0 && !hasStartString)
-		{
-			contentPanel.remove(feedbackPanel);
-			String currentTekst = latest_answer_viewer.toString();
-			currentTekst = removeIsTeken(currentTekst);
-			if (hasPrefix)
-				currentTekst = removePrefix(currentTekst);
-			contentPanel.remove(current);
-			stepPanelY = stepPanelY - stapH - latest_answer_viewer.getHeight();
-			stepPanels.remove(stepPanels.size() - 1);
-			
+			if(viewers.size() == stapNr + 1)
+			{	current.remove(viewers.get(viewers.size() - 1).getAsPanel());
+				viewers.remove(stapNr);
+				
+			}
+			else
+			{	current.remove(editor.getAsPanel());
+			}
+			stepPanelY -= stapH + viewers.get(viewers.size() - 1).getHeight();
+			System.out.println("nieuwe stepPanelY: " + stepPanelY);
+			latest_answer_viewer = viewers.get(viewers.size() - 1);
 			if(pijlVak != null && pijlVak.isAttached())
 			{	contentPanel.remove(pijlVak);
+				if(pijlVak.geefOperator().equals("sub"))
+					substitutie = null;
 				pijlVakken.remove(pijlVakken.size() - 1);
 			}
-			
-			current = stepPanels.get(stepPanels.size() - 1);
-			pijlVak = pijlVakken.get(pijlVakken.size() - 1);
-//			current.getElement().getStyle().setBackgroundColor(hlColor.toString());
-
-			current.remove(viewers.get(viewers.size() - 1).getAsPanel());
-			viewers.remove(viewers.get(viewers.size() - 1));
-			if (stapNr > 2 || stapNr > 1 && !hasStartString)
-				latest_answer_viewer = viewers.get(viewers.size() - 1);
-
-			editor = addNewEditor(current);
-			editor.insert(currentTekst);
-
-			stapNr--;
-			if (stapNr == 0)
-			{
-				tb.getElement().getStyle().setVisibility(Visibility.HIDDEN);
+			if(feedbackPanel.isAttached())
+				contentPanel.remove(feedbackPanel);
+			if(stapNr > 1 || !hasStartString)
+			{	String currentTekst = viewers.get(viewers.size() - 1).toString();
+				if (hasPrefix)
+					currentTekst = removePrefix(currentTekst);
+				if(!linStrategieVersie)
+				{	editor = addNewEditor(current);
+					editor.insert(currentTekst);
+				}
 			}
+			stapNr--;
+			stapOk = false;
+			
+			if ((mode == 0 || mode == 1) && (stapNr > 0 || !hasStartString))
+			{
+				//if (tips && diagnose)
+				//	kijkNaIdeas();
+				//else
+				kijkNa();//kijken of dit goed gaat..
+			}
+			else
+			{
+				stapOk = true;
+				
+//				if (mode == 0 || mode == 1)
+//					zetGoedFout(GEEN, -1);
+//				else
+//				{
+//					zetGoedFout(GEEN, stapNr + 1);
+//					zetGoedFoutStap(GEEN, stapNr);
+//				}
+
+			}
+//			if (linStrategieVersie)
+//			{
+//				zetGoedFout(GEEN, -1);
+//				formuleVak.setEditable(false);
+//				fout = false;
+//			}
+			
+//			if ("MW".equals(WiskOpdr.deployVariant) || "GR".equals(WiskOpdr.deployVariant))
+//				remove(mwFeedbackPanel);
+//			else
+//				remove(feedbackTekst);
+//			if (stapNr > 1 || !hasStartString)
+//				formuleVakken[stapNr - 1].setEditable(true);
+//			if (bordjesMethode && stapNr > 0)
+//				formuleVakken[stapNr - 1].setSelectable(true);
 
 		}
+		
+		
+		
+		
+		
+		
+//		nagekeken = false;
+//		System.out.println("backStep");
+//		//FlowPanel current = stepPanels.get(stapNr);
+//
+//		if (correct != Boolean.TRUE && editor != null && editor.toString().length() > 0)
+//		{
+//			current.remove(editor.getAsPanel());
+//			editor = addNewEditor(current);
+//		}
+//		else if (correct == Boolean.TRUE)
+//		{
+//			contentPanel.remove(feedbackPanel);
+//			current.remove(viewers.get(viewers.size() - 1).getAsPanel());
+////			current.getElement().getStyle().setBackgroundColor(hlColor.toString());
+//			viewers.remove(viewers.get(viewers.size() - 1));
+//			String currentTekst = latest_answer_viewer.toString();
+//			if (hasPrefix)
+//				currentTekst = removePrefix(currentTekst);
+//			editor = addNewEditor(current);
+//			editor.insert(currentTekst);
+//			if (stapNr > 1 || stapNr > 0 && !hasStartString)
+//				latest_answer_viewer = viewers.get(viewers.size() - 1);
+//			correct = null;
+//			comRoot.setChanged();
+//		}
+//		else if (stapNr > 0 || stapNr == 0 && !hasStartString)
+//		{
+//			contentPanel.remove(feedbackPanel);
+//			//alleen maar nodig om in editor te stoppen. Dat hoeft niet altijd.
+//			String currentTekst = latest_answer_viewer.toString();
+//			currentTekst = removeIsTeken(currentTekst);
+//			if (hasPrefix)
+//				currentTekst = removePrefix(currentTekst);
+//			contentPanel.remove(current);
+//			if(editor != null)
+//				stepPanelY = stepPanelY - stapH - latest_answer_viewer.getHeight();
+//			else
+//				stepPanelY = stepPanelY - stapH - viewers.get(viewers.size() - 2).getHeight();
+//			stepPanels.remove(stepPanels.size() - 1);
+//			
+//			if(pijlVak != null && pijlVak.isAttached())
+//			{	contentPanel.remove(pijlVak);
+//				pijlVakken.remove(pijlVakken.size() - 1);
+//			}
+//			
+//			current = stepPanels.get(stepPanels.size() - 1);
+//			if(pijlVakken.size() > 0)
+//				pijlVak = pijlVakken.get(pijlVakken.size() - 1);
+////			current.getElement().getStyle().setBackgroundColor(hlColor.toString());
+//
+//			current.remove(viewers.get(viewers.size() - 1).getAsPanel());
+//			viewers.remove(viewers.get(viewers.size() - 1));
+//			if (stapNr > 1 || stapNr > 0 && !hasStartString || linStrategieVersie)
+//				latest_answer_viewer = viewers.get(viewers.size() - 1);
+//
+//			if(!linStrategieVersie && stapNr > 0)
+//			{
+//				editor = addNewEditor(current);
+//				editor.insert(currentTekst);
+//			}
+//			
+//			stapNr--;
+//			if (stapNr == 0)
+//			{
+//				tb.getElement().getStyle().setVisibility(Visibility.HIDDEN);
+//			}
+//
+//		}
 	}
 	
 	public void zetStapOk(int goedHalfFout)
@@ -552,6 +639,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		copyButton.add(copyButtonImg);
 		copyButton.getElement().getStyle().setFloat(Style.Float.RIGHT);
 		addCopyButtonHandler(copyButton);
+		copyButton.setVisible(!linStrategieVersie && !bordjesMethode);
 		
 		//FIXME: hoe onderscheid maken tussen Noordhoff en gewone DWO?
 		abcKnop = new FormuleButton("abc", 1);
@@ -693,7 +781,7 @@ public class FormuleEditorWithSteps implements InteractionView
 			stepPanels.add(stepPanel);
 
 			if(!(linStrategieVersie || linOefenVersie || bordjesMethode))
-			{	pijlVak = new PijlVak("", this);
+			{	pijlVak = new PijlVak("", this, false);
 				int y = stepPanelY + f.getHeight()/2;
 				if(pijl)
 				{	contentPanel.add(pijlVak);
@@ -987,14 +1075,15 @@ public class FormuleEditorWithSteps implements InteractionView
 		
 		boolean ingevuld = true;
 		boolean nagekeken = false;
-		String antwoordString;
+		String antwoordString = "";
 		String substitutieString = "";
 		String[] gebruikersSubStrings = null;
 		
-
-		editor.kijkNa();
+		if(editor != null)
+			editor.kijkNa();
 
 		stapNr = this.stapNr;
+		System.out.println("getState: stapNr = " + stapNr);
 		formuleVakInhouden = new String[stapNr + 1];
 		for (int i = 0; i < stapNr + 1; i++)
 		{
@@ -1010,7 +1099,8 @@ public class FormuleEditorWithSteps implements InteractionView
 			pijlVakInhouden[i] = pijlVakken.get(i).geefExpressieString();
 			pijlVakOperatoren[i] = pijlVakken.get(i).geefOperator();
 		}
-		antwoordString = editor.toString();
+		if(editor != null)
+			antwoordString = editor.toString();
 		ingevuld = this.ingevuld;
 		nagekeken = this.nagekeken;
 		if (substitutie != null)
@@ -1035,7 +1125,6 @@ public class FormuleEditorWithSteps implements InteractionView
 	@Override
 	public void setState(HashMap<String, Object> h)
 	{
-		System.out.println("setState");
 		int stapNr = 0;
 		String[] formuleVakInhouden = null;
 		String[] pijlVakInhouden = null;
@@ -1090,7 +1179,7 @@ public class FormuleEditorWithSteps implements InteractionView
 
 		for (int i = 0; i < stapNr + 1; i++)
 		{
-			if (i == 0 && hasStartString)
+			if (i == 0 && hasStartString && !linStrategieVersie && !linOefenVersie)
 			{	zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, viewers.get(i).getHeight()/2);
 				i++;
 			}
@@ -1098,20 +1187,35 @@ public class FormuleEditorWithSteps implements InteractionView
 			FormuleViewer fv = new FormuleViewer(formuleVakInhouden[i]);
 			fv.setFont(defaultfont);
 			if (i == stapNr && nagekeken)
-				fv.showResult(FormuleViewer.CORRECT);
-			else if (i == stapNr - 1 && !nagekeken)
+			{	fv.showResult(FormuleViewer.CORRECT);
+				if(linStrategieVersie)
+				{	setAndAddFeedback(Text.rb.getString("feedbackTekst04"));
+					//"De vergelijking is correct opgelost."
+					stapOk = false;
+				}
+				
+			}
+			else if (i == stapNr - 1 && !nagekeken && !(linStrategieVersie || linOefenVersie || bordjesMethode))
 				fv.showResult(FormuleViewer.ALMOSTCORRECT);
 			else
 				fv.showResult(FormuleViewer.NONE);
+			if(i < viewers.size())
+			{	if(viewers.get(i).getAsPanel().isAttached())
+					stepPanels.get(i).remove(viewers.get(i).getAsPanel());
+				viewers.remove(i);
+			}
 			viewers.add(fv);
 			Panel p = fv.getAsPanel();
 			p.getElement().getStyle().setProperty("display", "inline");
 
 			FlowPanel stepPanel = null;
-			if (i == 0 || i == 1 && hasStartString)
+			if (i == 0 || i == 1 && hasStartString && !(linStrategieVersie || linOefenVersie || bordjesMethode))
 			{
 				stepPanel = stepPanels.get(i);
-				stepPanel.remove(editor.getAsPanel());
+				if(editor != null)
+					stepPanel.remove(editor.getAsPanel());
+				else if(viewers.size() > i)
+					stepPanel.remove(viewers.get(i).getAsPanel());
 				if (hasPrefix && (i < stapNr || nagekeken))
 					stepPanel.remove(prefixViewer);
 			}
@@ -1167,7 +1271,10 @@ public class FormuleEditorWithSteps implements InteractionView
 			correct = nagekeken;
 			score = correct == Boolean.TRUE ? scoreMax : 0;
 		}
-		stepPanelY -= editor.getHeight() + stapH;
+		if(editor != null)
+			stepPanelY -= editor.getHeight() + stapH;
+		else
+			stepPanelY -= latest_answer_viewer.getHeight() + stapH;
 		
 
 		if (stapNr > 0 || stapNr == 0 && !hasStartString)
@@ -1187,16 +1294,19 @@ public class FormuleEditorWithSteps implements InteractionView
 		
 		}
 		
-		if (pijlVakOperatoren != null && pijlVakOperatoren[i] != null)
-			pijlVak = new PijlVak(pijlVakOperatoren[i], this);
+		if (pijlVakOperatoren != null && pijlVakOperatoren.length > i && pijlVakOperatoren[i] != null)
+		{	pijlVak = new PijlVak(pijlVakOperatoren[i], this, true);
+			pijlVak.paintComponent();
+		}
 		else
-			pijlVak = new PijlVak("implicatie", this);
-		if (pijlVakInhouden != null && pijlVakInhouden[i] != null)
+			//pijlVak = new PijlVak("implicatie", this);
+			return;
+		if (pijlVakInhouden != null && pijlVakInhouden.length > i && pijlVakInhouden[i] != null)
 			pijlVak.zetExpressie(pijlVakInhouden[i]);
 			
 		int breedte = pijlX;
 			
-		if (pijlVakOperatoren != null && pijlVakOperatoren[i] != null && (pijlVakOperatoren[i].equals("sub") || pijlVakOperatoren[i].equals("abc")))
+		if (pijlVakOperatoren[i].equals("sub") || pijlVakOperatoren[i].equals("abc"))
 			breedte = pijlX + 30;
 		//if ("GR".equals(WiskOpdr.deployVariant) && pijlVakOperatoren != null && pijlVakOperatoren[i] != null && (pijlVakOperatoren[i].equals("sub") || pijlVakOperatoren[i].equals("abc")))
 		//	pijlVak.setLocation(getSize().width - pijlX - 60, y);
@@ -1207,7 +1317,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		}
 		
 		pijlVakken.add(pijlVak);
-		pijlVak.paintComponent();
+		
 	}
 	
 	public void kijkNa()
@@ -1352,12 +1462,12 @@ public class FormuleEditorWithSteps implements InteractionView
 //			{	contentPanel.remove(pijlVak);
 //				pijlVakken.remove(pijlVakken.size() - 1);
 //			}
-			pijlVak = new PijlVak(operator, this);
+			pijlVak = new PijlVak(operator, this, false);
 			
 			//FIXME: deze y moet nog iets netter berekend worden. Kan verschillen in strategie- en oefenversie.
 			//Deze y gaat er vanuit dat er al een nieuwe regel staat, maar dat is niet altijd zo.
 			//int y = stepPanelY - stapH - editor.getHeight() + viewers.get(stepPanels.size() - 2).getHeight()/2;
-			int y = stepPanelY + latest_answer_viewer.getHeight()/2;//of latest answer viewer?
+			int y = stepPanelY + latest_answer_viewer.getHeight()/2;
 			if(pijl)
 			{	contentPanel.add(pijlVak);
 				contentPanel.setWidgetRightWidth(pijlVak, 0, Style.Unit.PX, pijlX, Style.Unit.PX);
@@ -1455,6 +1565,7 @@ public class FormuleEditorWithSteps implements InteractionView
 				setAndAddFeedback(Text.rb.getString("feedbackTekst04"));
 				//"De vergelijking is correct opgelost."
 				stapOk = false;
+				nagekeken = true;
 			}
 			else
 			{	fv.showResult(fv.NONE);
@@ -1469,11 +1580,12 @@ public class FormuleEditorWithSteps implements InteractionView
 			contentPanel.add(stepPanel);
 			contentPanel.setWidgetLeftRight(stepPanel, 5, Style.Unit.PX, 5, Style.Unit.PX);
 			contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, fv.getHeight(), Style.Unit.PX);
-			stapNr++;
+			//stapNr++;
 			scrollToBottom();
 		}
 		
-		
+		if (stapNr > 0 || stapNr == 0 && !hasStartString)
+			tb.getElement().getStyle().setVisibility(Visibility.VISIBLE);
 		
 		
 //		formuleVakken[stapNr] = new FormuleVak();
