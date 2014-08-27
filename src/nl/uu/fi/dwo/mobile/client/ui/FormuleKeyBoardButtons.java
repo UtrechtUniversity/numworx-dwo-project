@@ -360,8 +360,9 @@ public abstract class FormuleKeyBoardButtons
 				buttonImages.put("\u2248", "images/resources/ongeveer.jpg");
 				buttonImages.put("\u2264", "images/resources/le.jpg"); // FIXME ONTBREEKT 
 				buttonImages.put("\u2265", "images/resources/__.jpg");
-				buttonImages.put("\u00B1", "images/resources/+-.jpg");
-				
+				//buttonImages.put("\u00B1", "images/resources/+-.jpg");
+				buttonImages.put("\u2260", "images/resources/!=.jpg");
+
 				buttonImages.put("back", "images/resources/delete.jpg");
 				buttonImages.put("backspace", "images/resources/delete.jpg");
 				

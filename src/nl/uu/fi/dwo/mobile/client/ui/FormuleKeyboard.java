@@ -61,7 +61,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 
 	private String[][] buttonCodes_geavanceerd =
 		{
-			{ "7", "8", "9", "haakjes", null, "=",   "macht", "wortel",   "ndewortel", "\u00B1", "(",      ")",      null, "apply"     },
+			{ "7", "8", "9", "haakjes", null, "=",   "macht", "wortel",   "ndewortel", "\u2260", "(",      ")",      null, "apply"     },
 			{ "4", "5", "6", "0",       null, "maal", "/",    "kwadraat", "x",         "\u2248", "<",      ">" ,     null, "back",  QWERTY },
 			{ "1", "2", "3", "komma",   null, "plus", "min",  "breuk",    "y",         "pi",     "\u2264", "\u2265", null, "enter", VVV }
 		};
@@ -204,7 +204,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	private String[][] buttonCodesWN = 
 		{
 			{
-				"macht", "breuk", "wortel", "ndewortel", "pi", "kwadraat", "\u2264", "\u2265", "\u00b1", "\u2248", null, VVV 
+				"macht", "breuk", "wortel", "ndewortel", "pi", "kwadraat", "\u2264", "\u2265", "\u2260", "\u2248", null, VVV 
 			}
 		};
 	
