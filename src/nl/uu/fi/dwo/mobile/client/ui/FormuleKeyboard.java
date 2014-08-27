@@ -76,7 +76,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	
 	private double[][] buttonWidths =
 	{
-	{ 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 2, 1,1 },
+	{ 1, 1, 1, 1, 2, 2, 1.15, 1, 1, 1.15, 2, 1,1 },
 	{ 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1 },
 	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
@@ -341,12 +341,12 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 				width = (defwidth + 2 * padding) * widths[j][i] - 2 * padding;
 				b.setWidth(Math.round(width) + "px"); // alleen DWO niet noordhoff.?????
 				//b.setHeight("16px");
-				if ("zoomOut".equals(buttons[j][i]) || "zoomIn".equals(buttons[j][i]))
-				{
-					b.getElement().getStyle().setWidth(32, Unit.PX);
-					b.getElement().getStyle().setHeight(32, Unit.PX);
-					b.getElement().getStyle().setPadding(2, Unit.PX);
-				}
+//				if ("zoomOut".equals(buttons[j][i]) || "zoomIn".equals(buttons[j][i]))
+//				{
+//					b.getElement().getStyle().setWidth(32, Unit.PX);
+//					b.getElement().getStyle().setHeight(32, Unit.PX);
+//					b.getElement().getStyle().setPadding(2, Unit.PX);
+//				}
 				if (b != null)
 					fp2.add(b);
 			}

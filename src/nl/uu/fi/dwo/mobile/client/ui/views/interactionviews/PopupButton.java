@@ -89,12 +89,14 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 		Touch touch = event.getChangedTouches().get(0);
 		clientX = touch.getClientX();
 		clientY = touch.getClientY();
+		event.stopPropagation();
 	}
 
 	@Override
 	public void onMouseDown(MouseDownEvent event) {
 		clientX = event.getClientX();
 		clientY = event.getClientY();
+		event.stopPropagation();
 	}
 
 	

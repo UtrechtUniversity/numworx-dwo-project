@@ -14,12 +14,17 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.StateLess;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyBoardButtons;
 import nl.uu.fi.dwo.mobile.client.ui.event.CBookEvent;
 import nl.uu.fi.dwo.mobile.client.ui.event.CBookEventListener;
+import nl.uu.fi.dwo.mobile.utils.ImageUtils;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
@@ -38,6 +43,11 @@ import fi.wiskopdr.expressies.Expressie;
  */
 public class FormuleEditorWithAnswer extends FormuleEditor implements InteractionView
 {
+	private boolean checkUitklapMogelijkheid() {
+		return "noordhoff".equals(DWOplayer.PARAMETERS.keyboardStyle()); // FIXME beter!
+	}
+	private int extraWidth = 20 ; // of 40;
+	
 	
 	class FormuleEditorPopup extends FormuleEditorWithSteps implements CBookEventListener, StateLess {
 
@@ -77,7 +87,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 		@Override
 		FormuleEditorWithAnswer editorInstance() {
-			return new FormuleEditorWithAnswer(h, isVergelijkingVak, this, randomVarNamen, randomVarWaarden)
+			return new FormuleEditorWithAnswer(super.h, isVergelijkingVak, this, randomVarNamen, randomVarWaarden)
 			{
 				@Override
 				public void enter() {
@@ -198,7 +208,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			
 				if(launchState.containsKey("boxMetRand"))
 					boxMetRand = launchState.getBoolean("boxMetRand");
-				if(launchState.containsKey("uitw")) 
+				if(fe == null && launchState.containsKey("uitw")) 
 				{
 					vakUitwerking = launchState.getBoolean("uitw");
 					//logger.fine("vakuitwerking = " + vakUitwerking);
@@ -208,6 +218,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 						hh.put("volledigeBreedte", Boolean.TRUE);
 						hh.put("breedte", breedte);
 						hh.put("hoogte" , 250); // FIXME wat is hier de goede hoogte?
+						hh.put("breedte", 300); // FIXME wat is hier de goede breedte?
 						HashMap ll = new HashMap();
 						hh.put("interactiePanelLaunchState", launchState);
 						
@@ -224,7 +235,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			if (fe == null)
 			{
 				//sp.getElement().getStyle().setProperty("width", (breedte - 9) + "px");
-				this.getMainRegel().setMinimumWidth(breedte - 20);
+				this.getMainRegel().setMinimumWidth(breedte - extraWidth);
 				//hoogte = 27;
 				this.getMainRegel().setMinimumHeight(hoogte - 6);
 				
@@ -281,6 +292,16 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			//sp.getElement().addClassName("insert_formule");
 			sp.add(this.getMainRegel().getCanvas());
 			sp.add(checkimg);
+			if( vakUitwerking && !checkUitklapMogelijkheid())
+			{
+				PopupButton popup = new PopupButton(fews, ImageUtils.newImage("images/resources/antwoordknop.gif"), this);
+				Style popupstyle = popup.getElement().getStyle();
+				popupstyle.setDisplay(Display.INLINE_BLOCK);
+				popupstyle.setVerticalAlign(VerticalAlign.TOP);
+				sp.add(popup);
+				breedte += 20;	  // wordt niet bij breedte geteld.
+				extraWidth += 20; // width of popup button
+			}
 			sp.addTouchHandler(new FormuleEditorTouchHandler(this));
 			
 		}
@@ -420,10 +441,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	public void resize()
 	{
-		breedte = this.getMainRegel().getWidth() + 20;
+		breedte = this.getMainRegel().getWidth() + extraWidth;
 		hoogte = this.getMainRegel().getHeight() + 6;
 		
-		sp.setSize((breedte-3) + "px", (hoogte-8) + "px");
+		sp.setPixelSize((breedte-3) , (hoogte-8) );
 		if(parentRegel != null)
 			parentRegel.resize();
 		if(fe != null)
