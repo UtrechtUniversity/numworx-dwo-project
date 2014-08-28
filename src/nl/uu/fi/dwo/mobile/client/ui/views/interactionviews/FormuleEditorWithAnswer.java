@@ -33,7 +33,10 @@ import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 import fi.wiskopdr.AntwoordFormuleVakChecker;
 import fi.wiskopdr.AntwoordVakChecker;
 import fi.wiskopdr.AntwoordVergelijkingVakChecker;
+import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.Expressie;
+import fi.wiskopdr.expressies.VergelijkingMeerv;
+import fi.wiskopdr.text.Text;
 
 /**
  * Checks inserted formule with the correct answer
@@ -153,6 +156,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private PopupFacade facade;
 	private int mode;
 	private boolean vakUitwerking;
+	private int goedHalfFout = AntwoordVakChecker.FOUT;
 	
 	private TekstRegel parentRegel;
 	private FormuleEditorPopup fews;
@@ -376,8 +380,13 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		kijkNa();
 	}
 	
-	private String lastanswer = "$f@";
 	public void kijkNa()
+	{
+		kijkNa(false);
+	}
+	
+	private String lastanswer = "$f@";
+	public void kijkNa(boolean backStep)
 	{
 		String useranswer = "$f" + this.toString() + "@";
 		HashMap<String, Object> checkResults = avChecker.checkAnswer(useranswer);
@@ -387,7 +396,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		//System.out.println("score = " + score);
 		this.feedback = (String) checkResults.get("feedback");
 
-		int goedHalfFout = (Integer) checkResults.get("goedHalfFout");
+		this.goedHalfFout = (Integer) checkResults.get("goedHalfFout");
 
 //		logger.fine("userAnswer: " + useranswer);
 //		logger.fine("correct: " + correct);
@@ -395,36 +404,40 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 //		logger.fine("goedHalfFout: " + goedHalfFout);
 //		logger.fine("feedback: " + feedback);
 
-		if(fe != null)
-			fe.zetStapOk(goedHalfFout);
+//		if(fe != null)
+//			fe.zetStapOk(goedHalfFout);
 		if (goedHalfFout == AntwoordVakChecker.DOOR)
 		{
 			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri());
-			if (this.fe != null)
-			{
-				fe.setFeedback(feedback);
-				fe.addStep(useranswer);
-			}
+//			if (this.fe != null)
+//			{
+//				if(backStep)
+//					fe.setAndAddFeedback(feedback);
+//				else
+//				{	fe.setFeedback(feedback);
+//					fe.addStep(useranswer);
+//				}
+//			}
 		}
 		else if (goedHalfFout == AntwoordVakChecker.HALF)
 		{
-			if (this.fe != null)
-				fe.setFeedback(feedback);
+//			if (this.fe != null)
+//				fe.setFeedback(feedback);
 			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri());
 		}
 		else if (goedHalfFout == AntwoordVakChecker.GOED)
 		{
 			checkimg.setUrl(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
-			if (this.fe != null)
-			{
-				fe.setFeedback(feedback);
-				fe.lastStep(useranswer);
-			}
+//			if (this.fe != null)
+//			{
+//				fe.setFeedback(feedback);
+//				fe.lastStep(useranswer);
+//			}
 		}
 		else if (goedHalfFout == AntwoordVakChecker.FOUT)
 		{
-			if (this.fe != null)
-				fe.setAndAddFeedback(feedback);
+//			if (this.fe != null)
+//				fe.setAndAddFeedback(feedback);
 			checkimg.setUrl(FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
 		}
 		
@@ -437,7 +450,21 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			comRoot.setChanged();
 		
 		}
+		if(this.fe != null)
+			fe.maakNakijkenAf(backStep);
 	}
+	
+	public String getFeedback()
+	{
+		return feedback;
+	}
+	
+	public int getGoedHalfFout()
+	{
+		return goedHalfFout;
+	}
+	
+	
 	
 	public void resize()
 	{

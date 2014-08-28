@@ -1210,6 +1210,16 @@ public class FormuleRegel extends FormuleElement
 		return s;
 	}
 	
+	public int getSelectionStart()
+	{
+		return Math.min(selectionStart, currentPosition);
+	}
+	
+	public int getSelectionEnd()
+	{
+		return Math.max(selectionStart, currentPosition);
+	}
+	
 	public void knip()
 	{
 		if(holder instanceof FormuleEditor == false)
