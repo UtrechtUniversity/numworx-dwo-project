@@ -245,7 +245,7 @@ public class FormuleFont
 		if (smalltext != this.smalltext)
 		{
 			if (smalltext == true)
-				this.setSizes(this.fontSize * 3/4);
+				this.setSizes((int)Math.round((double) this.fontSize * 3/4));
 			else
 				this.setSizes(this.fontSize * 4/3);
 		}

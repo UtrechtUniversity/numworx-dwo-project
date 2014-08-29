@@ -34,11 +34,19 @@ public class Breukvak extends FormuleElementWithChildren
 		this.setAsHoogte(getChild(0).height + 5 * fm.getAscent() / 8);
 		this.setChanged(true);
 	}
+	
+	private boolean onlyDigits(String s)
+	{	for(int i=0 ; i<s.length(); i++)
+		{	if(!Character.isDigit(s.charAt(i))) return false;
+		}
+		if(s.length()==0) return false;
+		return true;
+	}
 
 	@Override
 	public void paintObject()
 	{
-		if (getChild(0).isNumber() && getChild(1).isNumber())
+		if (onlyDigits(getChild(0).toString()) && onlyDigits(getChild(1).toString()))
 		{
 			getChild(0).setSmallText(true);
 			getChild(1).setSmallText(true);
@@ -96,12 +104,12 @@ public class Breukvak extends FormuleElementWithChildren
 		//}
 
 		ctx.setLineWidth(fm.getStrokeWidth());
-
+		
 		ctx.beginPath();
 		//ctx.moveTo(fm.getAscent() / 8, getChild(0).height + fm.getAscent() / 8);
 		//ctx.lineTo(this.width - (fm.getAscent() / 8), getChild(0).height + fm.getAscent() / 8);
-		ctx.moveTo(fm.getAscent() / 8, this.getAsHoogte() - 7*fm.getAscent() / 16);
-		ctx.lineTo(this.width - (fm.getAscent() / 8), this.getAsHoogte() - 7*fm.getAscent() / 16);
+		ctx.moveTo(fm.getAscent() / 8, this.getAsHoogte() - 7*fm.getAscent() / 16 - 1);
+		ctx.lineTo(this.width - (fm.getAscent() / 8), this.getAsHoogte() - 7*fm.getAscent() / 16 - 1);
 		ctx.stroke();
 		//this.drawline(ctx, fm.getAscent() / 3, getChild(0).height + fm.getAscent() / 8, this.width - (fm.getAscent() / 3), getChild(0).height + fm.getAscent() / 8);
 

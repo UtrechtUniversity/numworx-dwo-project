@@ -669,12 +669,12 @@ public class FormuleEditorWithSteps implements InteractionView
 		//abcKnop.setText("abc");
 		abcKnop.getElement().getStyle().setFloat(Style.Float.RIGHT);
 		//abcKnop.getElement().getStyle().setBackgroundColor("red");
-		addFormuleButtonHandler(abcKnop);
+		addAbcButtonHandler(abcKnop);
 		
 		//Image subKnopImg = new Image(DWOplayer.DWO_BUNDLE.subknop().getSafeUri());
 		subKnop = new FormuleButton("sub", FormuleButton.BEWERKINGSKNOP);
 		subKnop.getElement().getStyle().setFloat(Style.Float.RIGHT);
-		addFormuleButtonHandler(subKnop);
+		addSubButtonHandler(subKnop);
 		
 		plusKnop = new FormuleButton("plus", FormuleButton.BEWERKINGSKNOP);
 		minKnop = new FormuleButton("min", FormuleButton.BEWERKINGSKNOP);
@@ -698,15 +698,15 @@ public class FormuleEditorWithSteps implements InteractionView
 		splitsKnop.getElement().getStyle().setFloat(Style.Float.LEFT);
 		wortelBewerkKnop.getElement().getStyle().setFloat(Style.Float.LEFT);
 		
-		addFormuleButtonHandler(plusKnop);
-		addFormuleButtonHandler(minKnop);
-		addFormuleButtonHandler(maalKnop);
-		addFormuleButtonHandler(deelKnop);
-		addFormuleButtonHandler(haakjesKnop);
-		addFormuleButtonHandler(herleidKnop);
-		addFormuleButtonHandler(ontbindKnop);
-		addFormuleButtonHandler(splitsKnop);
-		addFormuleButtonHandler(wortelBewerkKnop);		
+		addPlusButtonHandler(plusKnop);
+		addMinButtonHandler(minKnop);
+		addMaalButtonHandler(maalKnop);
+		addDeelButtonHandler(deelKnop);
+		addHaakjesButtonHandler(haakjesKnop);
+		addHerleidButtonHandler(herleidKnop);
+		addOntbindButtonHandler(ontbindKnop);
+		addSplitsButtonHandler(splitsKnop);
+		addWortelButtonHandler(wortelBewerkKnop);
 		
 		
 		mainPanel.add(copyButton);
@@ -724,11 +724,11 @@ public class FormuleEditorWithSteps implements InteractionView
 		mainPanel.add(splitsKnop);
 		mainPanel.add(wortelBewerkKnop);
 		
+			
+		
 		abcKnop.setVisible(abcVisible);
-		System.out.println("abcKnop visible: " + abcVisible);
 		subKnop.setVisible(subVisible);
 		plusKnop.setVisible(bewerkingKnoppen);
-		System.out.println("plusKnop visible: " + bewerkingKnoppen);
 		minKnop.setVisible(bewerkingKnoppen);
 		maalKnop.setVisible(bewerkingKnoppen);
 		deelKnop.setVisible(bewerkingKnoppen);
@@ -957,71 +957,260 @@ public class FormuleEditorWithSteps implements InteractionView
 		});
 	}
 	
-	private void addFormuleButtonHandler(final FormuleButton tb)
-	{
-		tb.addTouchHandler(new TouchHandler()
-		{
-			@Override
+	private void addAbcButtonHandler(final TouchButton tb)
+	{	tb.addTouchHandler(new TouchHandler()
+		{	@Override
 			public void onTouchStart(TouchStartEvent event)
-			{
-				
+			{	maakStap("abc");
 			}
-
 			@Override
-			public void onTouchMove(TouchMoveEvent event)
-			{
-			}
-
-			@Override
-			public void onTouchEnd(TouchEndEvent event)
-			{	if(event.getSource() == abcKnop)
-					maakStap("abc");
-				else if(event.getSource() == subKnop)
-				{
-					if(substitutie == null)
-						maakStap("sub");
-				}
-				else if(event.getSource() == plusKnop)
-				{	maakStap("+");
-				}
-				else if(event.getSource() == minKnop)
-				{	maakStap("-");
-				}
-				else if(event.getSource() == maalKnop)
-				{	maakStap("*");
-				}
-				else if(event.getSource() == deelKnop)
-				{	maakStap(":");
-				}
-				else if(event.getSource() == haakjesKnop)
-				{	maakStap("haakjes");
-					maakBewerkingStap();
-				}
-				else if(event.getSource() == herleidKnop)
-				{	maakStap("herleid");
-					maakBewerkingStap();
-				}
-				else if(event.getSource() == ontbindKnop)
-				{	maakStap("ontbind");
-					maakBewerkingStap();
-				}
-				else if(event.getSource() == splitsKnop)
-				{	maakStap("splits");
-					maakBewerkingStap();
-				}
-				else if(event.getSource() == wortelBewerkKnop)
-				{	maakStap("wortel");
-					maakBewerkingStap();
-				}
+			public void onTouchMove(TouchMoveEvent event){}
 			
-			}
-
 			@Override
-			public void onTouchCanceled(TouchCancelEvent event)
-			{
-			}
+			public void onTouchEnd(TouchEndEvent event){}
+			
+			@Override
+			public void onTouchCanceled(TouchCancelEvent event){}
 		});
 	}
+	
+	private void addSubButtonHandler(final TouchButton tb)
+	{	tb.addTouchHandler(new TouchHandler()
+		{	@Override
+			public void onTouchStart(TouchStartEvent event)
+			{	if(substitutie == null)
+				maakStap("sub");
+			}
+			@Override
+			public void onTouchMove(TouchMoveEvent event){}
+			
+			@Override
+			public void onTouchEnd(TouchEndEvent event){}
+			
+			@Override
+			public void onTouchCanceled(TouchCancelEvent event){}
+		});
+	}
+	
+	private void addPlusButtonHandler(final TouchButton tb)
+	{	tb.addTouchHandler(new TouchHandler()
+		{	@Override
+			public void onTouchStart(TouchStartEvent event)
+			{	maakStap("+");
+			}
+			@Override
+			public void onTouchMove(TouchMoveEvent event){}
+			
+			@Override
+			public void onTouchEnd(TouchEndEvent event){}
+			
+			@Override
+			public void onTouchCanceled(TouchCancelEvent event){}
+		});
+	}
+	
+	private void addMinButtonHandler(final TouchButton tb)
+	{	tb.addTouchHandler(new TouchHandler()
+		{	@Override
+			public void onTouchStart(TouchStartEvent event)
+			{	maakStap("-");
+			}
+			@Override
+			public void onTouchMove(TouchMoveEvent event){}
+			
+			@Override
+			public void onTouchEnd(TouchEndEvent event){}
+			
+			@Override
+			public void onTouchCanceled(TouchCancelEvent event){}
+		});
+	}
+	
+	private void addMaalButtonHandler(final TouchButton tb)
+	{	tb.addTouchHandler(new TouchHandler()
+		{	@Override
+			public void onTouchStart(TouchStartEvent event)
+			{	maakStap("*");
+			}
+			@Override
+			public void onTouchMove(TouchMoveEvent event){}
+			
+			@Override
+			public void onTouchEnd(TouchEndEvent event){}
+			
+			@Override
+			public void onTouchCanceled(TouchCancelEvent event){}
+		});
+	}
+	
+	private void addDeelButtonHandler(final TouchButton tb)
+	{	tb.addTouchHandler(new TouchHandler()
+		{	@Override
+			public void onTouchStart(TouchStartEvent event)
+			{	maakStap(":");
+			}
+			@Override
+			public void onTouchMove(TouchMoveEvent event){}
+			
+			@Override
+			public void onTouchEnd(TouchEndEvent event){}
+			
+			@Override
+			public void onTouchCanceled(TouchCancelEvent event){}
+		});
+	}
+	
+	private void addHaakjesButtonHandler(final TouchButton tb)
+	{	tb.addTouchHandler(new TouchHandler()
+		{	@Override
+			public void onTouchStart(TouchStartEvent event)
+			{	maakStap("haakjes");
+			}
+			@Override
+			public void onTouchMove(TouchMoveEvent event){}
+			
+			@Override
+			public void onTouchEnd(TouchEndEvent event){}
+			
+			@Override
+			public void onTouchCanceled(TouchCancelEvent event){}
+		});
+	}
+	
+	private void addHerleidButtonHandler(final TouchButton tb)
+	{	tb.addTouchHandler(new TouchHandler()
+		{	@Override
+			public void onTouchStart(TouchStartEvent event)
+			{	maakStap("herleid");
+			}
+			@Override
+			public void onTouchMove(TouchMoveEvent event){}
+			
+			@Override
+			public void onTouchEnd(TouchEndEvent event){}
+			
+			@Override
+			public void onTouchCanceled(TouchCancelEvent event){}
+		});
+	}
+	
+	private void addOntbindButtonHandler(final TouchButton tb)
+	{	tb.addTouchHandler(new TouchHandler()
+		{	@Override
+			public void onTouchStart(TouchStartEvent event)
+			{	maakStap("ontbind");
+			}
+			@Override
+			public void onTouchMove(TouchMoveEvent event){}
+			
+			@Override
+			public void onTouchEnd(TouchEndEvent event){}
+			
+			@Override
+			public void onTouchCanceled(TouchCancelEvent event){}
+		});
+	}
+	
+	private void addSplitsButtonHandler(final TouchButton tb)
+	{	tb.addTouchHandler(new TouchHandler()
+		{	@Override
+			public void onTouchStart(TouchStartEvent event)
+			{	maakStap("splits");
+			}
+			@Override
+			public void onTouchMove(TouchMoveEvent event){}
+			
+			@Override
+			public void onTouchEnd(TouchEndEvent event){}
+			
+			@Override
+			public void onTouchCanceled(TouchCancelEvent event){}
+		});
+	}
+	
+	private void addWortelButtonHandler(final TouchButton tb)
+	{	tb.addTouchHandler(new TouchHandler()
+		{	@Override
+			public void onTouchStart(TouchStartEvent event)
+			{	maakStap("wortel");
+			}
+			@Override
+			public void onTouchMove(TouchMoveEvent event){}
+			
+			@Override
+			public void onTouchEnd(TouchEndEvent event){}
+			
+			@Override
+			public void onTouchCanceled(TouchCancelEvent event){}
+		});
+	}
+	
+//	private void addFormuleButtonHandler(final TouchButton tb)
+//	{
+//		tb.addTouchHandler(new TouchHandler()
+//		{
+//			@Override
+//			public void onTouchStart(TouchStartEvent event)
+//			{	copyStep();
+//				if(event.getSource() == abcKnop)
+//				{	maakStap("abc");
+//				}
+//				else if(event.getSource() == subKnop)
+//				{
+//					if(substitutie == null)
+//						maakStap("sub");
+//				}
+//				else if(event.getSource() == plusKnop)
+//				{	maakStap("+");
+//				}
+//				else if(event.getSource() == minKnop)
+//				{	maakStap("-");
+//				}
+//				else if(event.getSource() == maalKnop)
+//				{	maakStap("*");
+//				}
+//				else if(event.getSource() == deelKnop)
+//				{	maakStap(":");
+//				}
+//				else if(event.getSource() == haakjesKnop)
+//				{	maakStap("haakjes");
+//					maakBewerkingStap();
+//				}
+//				else if(event.getSource() == herleidKnop)
+//				{	maakStap("herleid");
+//					maakBewerkingStap();
+//				}
+//				else if(event.getSource() == ontbindKnop)
+//				{	maakStap("ontbind");
+//					maakBewerkingStap();
+//				}
+//				else if(event.getSource() == splitsKnop)
+//				{	maakStap("splits");
+//					maakBewerkingStap();
+//				}
+//				else if(event.getSource() == wortelBewerkKnop)
+//				{	maakStap("wortel");
+//					maakBewerkingStap();
+//				}
+//			}
+//
+//			@Override
+//			public void onTouchMove(TouchMoveEvent event)
+//			{
+//			}
+//
+//			@Override
+//			public void onTouchEnd(TouchEndEvent event)
+//			{	
+//			
+//			}
+//
+//			@Override
+//			public void onTouchCanceled(TouchCancelEvent event)
+//			{
+//			}
+//		});
+//	}
 
 	
 	
