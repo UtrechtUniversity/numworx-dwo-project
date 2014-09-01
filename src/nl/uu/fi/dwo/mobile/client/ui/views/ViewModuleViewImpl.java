@@ -3,13 +3,11 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
-import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
@@ -17,10 +15,7 @@ import nl.uu.fi.dwo.interaction.client.StateLess;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.mobile.client.sco.AssetAPI;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
-import nl.uu.fi.dwo.mobile.client.sco.SCORM_2004_API;
-import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
@@ -38,7 +33,6 @@ import nl.uu.fi.dwo.mobile.utils.VariableCollection;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.shared.GWT;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
@@ -54,6 +48,7 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
@@ -74,10 +69,8 @@ import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
-import com.googlecode.mgwt.ui.client.widget.Button;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
-import com.googlecode.mgwt.ui.client.widget.ScrollPanel;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 /**
@@ -299,7 +292,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		{	opnieuw = wrap.getBoolean("opnieuw");
 		}
 		scoreNav.setOpnieuw(opnieuw || opnieuwMogelijk);
-		
 		if(wrap != null && wrap.containsKey("itemOpnieuw"))
 		{
 			scoreNav.setItemOpnieuw(wrap.getBoolean("itemOpnieuw"));
@@ -319,6 +311,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		scoreNav.setTotaalScore((int)on.getScore());
 		scoreNav.setGotoOpdracht(on);
 		setTitle("Vraag " + (1+on.getCurrentOpdracht()) + " van " + on.getAantalOpdrachten());
+		
+		//call SetupDone Handler, if an object is provided
+		if (this.loadingHandler != null){
+			this.loadingHandler.viewModuleViewSetupDone();;
+		}
+		
 	}
 
 	public void zetOpdracht(HashMap<String, Object> opdracht)
@@ -737,6 +735,13 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 	}
 
+	private ViewModuleView.Loader loadingHandler = null;
+	public ViewModuleViewImpl initialize(ViewModuleView.Loader pLoadingArea) {
+		
+		this.loadingHandler =  pLoadingArea;
+		return this.initialize();
+	}
+	
 	class MyAnchorContext implements AnchorContext {
 
 		@Override
@@ -755,8 +760,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	public ViewModuleViewImpl initialize()
 	{
 		api = GWT.create(Scorm2004IF.class);
-		FlowPanel fp = new FlowPanel();
+		FlowPanel fp = new FlowPanel(); 
 		mainPanel = FocusOnTouch.wrap(fp);
+		
 		
 		mainPanel.setHeight("100%");
 		mainPanel.setWidth("100%");
@@ -805,7 +811,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 		hp.setLeftWidget(hb);
 
-		if(!standalone); fp.add(hp);
+		if(!standalone) fp.add(hp);
 
 		contentScrollPanel = new SimplePanel();contentScrollPanel.addStyleName("contentScrollPanel");
 		contentScrollPanel.setWidth("100%");
@@ -825,6 +831,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		//contentScrollPanel.setScrollingEnabledY(false);
 		contentPanel.getElement().getStyle().setOverflowY(Overflow.AUTO);
 		contentPanel.getElement().getStyle().setOverflowX(Overflow.HIDDEN);
+		
+		contentScrollPanel.getElement().getStyle().setPadding(10, Unit.PX);
 
 		fp.add(contentScrollPanel);
 

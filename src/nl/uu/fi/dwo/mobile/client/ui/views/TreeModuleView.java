@@ -1,27 +1,29 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.List;
-import com.googlecode.mgwt.dom.client.event.tap.HasTapHandlers;
-import com.googlecode.mgwt.ui.client.widget.celllist.HasCellSelectedHandler;
 
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
+import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.TreeItem;
+import com.googlecode.mgwt.dom.client.event.tap.HasTapHandlers;
+import com.googlecode.mgwt.ui.client.widget.celllist.HasCellSelectedHandler;
 
 public interface TreeModuleView extends IsWidget
 {
 	
-	HasTapHandlers getBackBtn();
 	
 	void render(List<SelectModuleItem> currentModel);
-
+	
 	void selectModule(SelectModuleItem item);
 
-	HasSelectionHandlers<TreeItem> getTree();
+	
+	void setPresenter(Presenter presenter);
 
-	HasCellSelectedHandler getCells();
-	List<SelectModuleItem> getCellItems();
+	    public interface Presenter {
+	        void goTo(Place place);
+	    }
 
 }

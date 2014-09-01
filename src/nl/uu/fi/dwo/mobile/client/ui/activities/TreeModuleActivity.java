@@ -34,7 +34,7 @@ import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedEvent;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedHandler;
 
-public class TreeModuleActivity extends MGWTAbstractActivity implements SelectionHandler<TreeItem>, CellSelectedHandler, TapHandler
+public class TreeModuleActivity extends MGWTAbstractActivity implements TreeModuleView.Presenter
 {
 
 	ClientFactory clientFactory;
@@ -54,12 +54,11 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements Selectio
 		view = clientFactory.getTreeModuleView();
 		panel.setWidget(view);
 		currentModel = SelectModuleItemHolder.getItems();
-
+		view.setPresenter(this);
 		view.render(currentModel);
 		
-		addHandlerRegistration(view.getBackBtn().addTapHandler(this));		
-		addHandlerRegistration(view.getTree().addSelectionHandler(this));
-		addHandlerRegistration(view.getCells().addCellSelectedHandler(this));
+		
+
 		view.selectModule(item);
 	}
 
@@ -109,43 +108,12 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements Selectio
 	}
 
 
-	private void selectItem(SelectModuleItem o) {
-		Place place;
-		switch(o.getType()) {
-		default:
-		case ROOT:
-			place = new TreeModulePlace("0");
-			break;
-		case SCO:
-			place = new ViewModulePlace(o.getID());
-			break;
-		case MODULE:
-			place = new SelectModulePlace(o.getID());
-			break;
-		case FOLDER:
-			place = new TreeModulePlace(o.getID());
-			break;
-		}
+
+	@Override
+	public void goTo(Place place) {
 		clientFactory.getPlaceController().goTo(place);
 	}
 
-	@Override
-	public void onSelection(SelectionEvent<TreeItem> event)
-	{
-		TreeItem item = event.getSelectedItem();
-		SelectModuleItem o = (SelectModuleItem) item.getUserObject();
-		selectItem(o);
-	}
-
-	@Override
-	public void onCellSelected(CellSelectedEvent event) {
-		int index = event.getIndex();
-		selectItem(view.getCellItems().get(index));
-	}
-
-	@Override
-	public void onTap(TapEvent event) {
-		History.back();
-	}
+	
 
 }

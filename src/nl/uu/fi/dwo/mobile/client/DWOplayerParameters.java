@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client;
 
+import nl.uu.fi.dwo.mobile.client.ui.NavigationCss;
+
 import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
 
 /**
@@ -39,5 +41,9 @@ public interface DWOplayerParameters {
 	 * Header style
 	 */
 	HeaderCss headercss();
+	/**
+	 * Navigational css 
+	 */
+	NavigationCss navigationcss();
 // More to come....
 }

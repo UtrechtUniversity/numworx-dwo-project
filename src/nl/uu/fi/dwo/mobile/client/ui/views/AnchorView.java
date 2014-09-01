@@ -1,10 +1,10 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
-import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 
 public class AnchorView implements IsWidget, ClickHandler{
 

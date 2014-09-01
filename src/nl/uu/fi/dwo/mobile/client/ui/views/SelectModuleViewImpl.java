@@ -9,24 +9,23 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleCell;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.views.LoginViewImpl.LoginViewImplUiBinder;
 
-import com.google.gwt.user.client.History;
+import com.google.gwt.core.shared.GWT;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.googlecode.mgwt.dom.client.event.tap.HasTapHandlers;
-import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
-import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.ui.client.widget.CellList;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
-import com.googlecode.mgwt.ui.client.widget.LayoutPanel;
-import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedEvent;
-import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedHandler;
 import com.googlecode.mgwt.ui.client.widget.celllist.HasCellSelectedHandler;
 
 /**
@@ -34,7 +33,7 @@ import com.googlecode.mgwt.ui.client.widget.celllist.HasCellSelectedHandler;
  * @author Danny Hendrix
  * 
  */
-public class SelectModuleViewImpl implements SelectModuleView
+public class SelectModuleViewImpl extends Composite implements SelectModuleView
 {
 	
 	class GetScosCallback implements AsyncCallback<List<Map<String,Object>>> {
@@ -66,44 +65,35 @@ public class SelectModuleViewImpl implements SelectModuleView
 		
 	};
 
-	private LayoutPanel main;
-	private CellList<SelectModuleItem> list;
-	private HeaderButton backbutton;
+
+	@UiField (provided=true) CellList<SelectModuleItem> list;
+	@UiField HeaderButton backbutton;
 	private List<SelectModuleItem> items;
-	private HeaderPanel header;
-	private SimplePanel description;
+	@UiField HeaderPanel header;
+	@UiField SimplePanel description;
 
 	public HasTapHandlers getBackBtn() {
 		return backbutton;
 	}
 	
+	private static SelectModuleViewImplUiBinder uiBinder = GWT
+			.create(SelectModuleViewImplUiBinder.class);
+
+	interface SelectModuleViewImplUiBinder extends
+			UiBinder<Widget, SelectModuleViewImpl> {
+	}
+	
 	public SelectModuleViewImpl()
 	{
-		main = new LayoutPanel();
-
-		header = new HeaderPanel();
-		header.setCenter("Selecteer activiteit");
-		main.add(header);
-
-		backbutton = new HeaderButton();
-		backbutton.setBackButton(true);
-		backbutton.setText("Terug");
-		header.setLeftWidget(backbutton);
-		
-		description = new SimplePanel();
-		main.add(description);
+	
 		
 		list = new CellList<SelectModuleItem>(new SelectModuleCell());
-		main.add(list);
+		initWidget(uiBinder.createAndBindUi(this));
+	
 	}
 
 	HandlerRegistration back,sel;
 	
-	@Override
-	public Widget asWidget()
-	{
-		return main;
-	}
 
 	@Override
 	public void render(List<SelectModuleItem> items)

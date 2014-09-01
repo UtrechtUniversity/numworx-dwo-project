@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImpl;
+import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplTablet;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 
@@ -16,6 +17,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
+import com.googlecode.mgwt.ui.client.MGWT;
+import com.googlecode.mgwt.ui.client.OsDetection;
 
 /**
  * @see GWT
@@ -91,8 +94,17 @@ public class ClientFactoryImpl implements ClientFactory
 	@Override
 	public TreeModuleView getTreeModuleView()
 	{
-		if (treeModuleView == null)
-			this.treeModuleView = new TreeModuleViewImpl();
+		if (treeModuleView == null){
+			OsDetection detection = MGWT.getOsDetection();
+			if(detection.isDesktop()
+					//&& false
+					) {
+				this.treeModuleView = new TreeModuleViewImpl();
+			} else {
+				this.treeModuleView = new TreeModuleViewImplTablet();
+			}
+			
+		}
 		return this.treeModuleView;
 	}
 

@@ -2,7 +2,6 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;

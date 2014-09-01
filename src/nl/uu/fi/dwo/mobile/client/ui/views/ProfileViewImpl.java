@@ -4,35 +4,28 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 import java.util.Map;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 
+import com.google.gwt.core.shared.GWT;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.tap.HasTapHandlers;
-import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
-import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
-import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchEndHandler;
-import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 import com.googlecode.mgwt.ui.client.widget.Button;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
-import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
-import com.googlecode.mgwt.ui.client.widget.LayoutPanel;
-import com.googlecode.mgwt.ui.client.widget.WidgetList;
 
-public class ProfileViewImpl implements ProfileView
+public class ProfileViewImpl extends Composite implements ProfileView
 {
 	
-	private LayoutPanel main;
-	private Label school;
-	private Label username;
-	private Label name;
-	private Label userid;
-	private Label schoolKlas;
-	private HeaderButton logoutBtn;
-	private Button submitBtn;
+
+	@UiField Label school;
+	@UiField Label username;
+	@UiField Label name;
+	@UiField Label userid;
+	@UiField Label schoolKlas;
+	@UiField HeaderButton logoutBtn;
+	@UiField Button submitBtn;
 
 	public HasTapHandlers getLogoutBtn() {
 		return logoutBtn;
@@ -42,60 +35,26 @@ public class ProfileViewImpl implements ProfileView
 		return submitBtn;
 	}
 	
+	private static ProfileViewImplUiBinder uiBinder = GWT
+			.create(ProfileViewImplUiBinder.class);
+
+	interface ProfileViewImplUiBinder extends
+			UiBinder<Widget, ProfileViewImpl> {
+	}
+	
 	public ProfileViewImpl()
 	{
-		main = new LayoutPanel();
-
-		HeaderPanel header = new HeaderPanel();
-		header.setCenter("Login");
-		main.add(header);
-
-		logoutBtn = new HeaderButton();
-		logoutBtn.setBackButton(true);
-		logoutBtn.setText("Logout");
-
-
-		header.setLeftWidget(logoutBtn);
-
-		//create details list
-		WidgetList list = new WidgetList();
-		main.add(list);
-
-		username = new Label("Username");
-		username.getElement().addClassName("listitem");
-		list.add(username);
-
-		name = new Label("Name");
-		name.getElement().addClassName("listitem");
-		list.add(name);
-
-		userid = new Label("Userid");
-		userid.getElement().addClassName("listitem");
-		list.add(userid);
-
-		school = new Label("School");
-		school.getElement().addClassName("listitem");
-		list.add(school);
-		schoolKlas = new Label("Klas");
-		schoolKlas.getElement().addClassName("listitem");
-		list.add(schoolKlas);
-
-		submitBtn = new Button();
-		submitBtn.setText("Selecteer module");
-		submitBtn.setWidth("300px");
-		submitBtn.getElement().getStyle().setProperty("margin", "auto");
-		list.add(submitBtn);
+	
+		initWidget(uiBinder.createAndBindUi(this));
 	}
 
-	@Override
-	public Widget asWidget()
-	{
-		return main;
-	}
 
 	@Override
 	public void setupModule()
 	{
+		// FIXME, Maybe can get of these widgets and use the HTML
+		// Elements instead .... should be faster then widgets
+		// according to : http://dl.google.com/io/2009/pres/W_1230_MeasureinMilliseconds-PerformanceTipsforGoogleWebToolkit.pdf
 		final Map<String, Object> profiledata = DWOplayer.profiledata;
 		String user_name = profiledata.get("firstname").toString();
 		if (profiledata.get("middlename").toString().equals("") == false)

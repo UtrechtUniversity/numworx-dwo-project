@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 
+import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 
@@ -24,5 +25,9 @@ public interface ViewModuleView extends IsWidget
 	
 	AnchorView.AnchorContext getAnchorContext();
 	void setAnchorContext(AnchorView.AnchorContext context);
+	
+	 public interface Loader {
+	        void viewModuleViewSetupDone();
+	    }
 
 }
