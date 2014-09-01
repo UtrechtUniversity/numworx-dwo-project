@@ -534,7 +534,7 @@ public class CheckSleepUnit implements InteractionStub{
         	else
         		foutKruisImage.setVisible(true);
         	if (ingevuld)
-        		comRoot.setChanged();
+        		comRoot.setChanged(!juist);
         }
         
        

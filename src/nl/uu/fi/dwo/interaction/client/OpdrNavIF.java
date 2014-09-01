@@ -7,7 +7,7 @@ public interface OpdrNavIF
 	int ZELFTOETS = 2;
 	int EINDTOETS = 3;
 	
-	void setChanged();
+	void setChanged(boolean fout);
 	FormuleKeyboardIF getKeyboard();
 	
 	int getMode();

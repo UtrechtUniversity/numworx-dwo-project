@@ -811,7 +811,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 		hp.setLeftWidget(hb);
 
-		if(!standalone) fp.add(hp);
+		if(!standalone); fp.add(hp);
 
 		contentScrollPanel = new SimplePanel();contentScrollPanel.addStyleName("contentScrollPanel");
 		contentScrollPanel.setWidth("100%");

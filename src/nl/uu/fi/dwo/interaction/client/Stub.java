@@ -122,7 +122,7 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	}
 
 	@Override
-	public void setChanged() {
+	public void setChanged(boolean fout) {
 		try {
 			setChanged0();
 		} catch (Exception e) {

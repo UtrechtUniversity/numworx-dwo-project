@@ -306,7 +306,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		nagekeken = true;
 		correct = true;
 		score = scoreMax;
-		comRoot.setChanged();
+		comRoot.setChanged(false);
 	}
 
 	public void addStep(String useranswer)

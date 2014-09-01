@@ -211,8 +211,8 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		wnd.publish = function(o, viewer) {
 			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::publish(Ljava/lang/Object;)(o)
 		}
-		wnd.setChanged = function(viewer) {
-			viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::comRoot.@nl.uu.fi.dwo.interaction.client.OpdrNavIF::setChanged()();
+		wnd.setChanged = function(b, viewer) {
+			viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::comRoot.@nl.uu.fi.dwo.interaction.client.OpdrNavIF::setChanged(Z)(b);
 		}
 	
 		wnd.setFocus = function(b, viewer) {
@@ -228,7 +228,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	
 	
 	@Override
-	public void setChanged() {
+	public void setChanged(boolean fout) {
 	}
 
 	public Widget asWidget() {

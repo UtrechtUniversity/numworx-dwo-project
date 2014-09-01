@@ -447,7 +447,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if (this.fe == null && !useranswer.equals(lastanswer))
 		{
 			lastanswer = useranswer;
-			comRoot.setChanged();
+			comRoot.setChanged(goedHalfFout == AntwoordVakChecker.FOUT);
 		
 		}
 		if(this.fe != null)
