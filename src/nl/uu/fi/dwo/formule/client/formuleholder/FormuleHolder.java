@@ -200,9 +200,9 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 	}
 
 	public String getSelectionString() {
-		if(hasSelection())
+		//if(hasSelection())
 			return getCurrentRegel().getSelectionString();
-		return "";
+		//return "";
 	}
 	
 	public void knip()
