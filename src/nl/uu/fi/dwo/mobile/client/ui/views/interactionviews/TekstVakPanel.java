@@ -697,6 +697,7 @@ public class TekstVakPanel implements InteractionView
 						if(i == 0 && j == 0)
 							queuedObject = formuleEditorWithAnswer.getUitwerking(this);
 						formuleEditorWithAnswer.paint();
+						
 					}
 					else if (currentObject instanceof FormuleEditorWithAnswer.FormuleEditorPopup)
 					{

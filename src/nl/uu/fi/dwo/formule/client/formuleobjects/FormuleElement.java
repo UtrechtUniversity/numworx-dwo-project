@@ -394,6 +394,7 @@ public abstract class FormuleElement implements TekstElement
 	}
 
 	protected void drawCursor()
+	//public void drawCursor()
 	{
 		this.drawCursor(width);
 	}

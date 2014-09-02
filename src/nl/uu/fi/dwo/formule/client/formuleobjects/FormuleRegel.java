@@ -349,7 +349,8 @@ public class FormuleRegel extends FormuleElement
 			//System.out.println("tekenHoogte: " + ely);
 			e.draw(this.ctx, elx, ely);
 		}
-
+		
+		
 		int x = this.width;
 		if (this.currentPosition == -1 || this.children.size() == 0)
 			x = 0;
@@ -363,6 +364,7 @@ public class FormuleRegel extends FormuleElement
 		if(children.size() == 0 && stippels)
 			ctx.fillText("...", 0, getAsHoogte());
 	}
+
 
 	/**
 	 * backspace

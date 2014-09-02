@@ -844,6 +844,9 @@ public class FormuleEditorWithSteps implements InteractionView
 
 		contentPanel.getElement().addClassName("insert_formule_steps");
 
+		//zorgen dat cursor niet direct, maar pas bij focus verschijnt
+		if(editor != null)
+			editor.setCurrentElementRepaint();
 		return mainPanel;
 	}
 
@@ -1065,6 +1068,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{	maakStap("haakjes");
+				maakBewerkingStap();
 			}
 			@Override
 			public void onTouchMove(TouchMoveEvent event){}
@@ -1082,6 +1086,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{	maakStap("herleid");
+				maakBewerkingStap();
 			}
 			@Override
 			public void onTouchMove(TouchMoveEvent event){}
@@ -1099,6 +1104,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{	maakStap("ontbind");
+				maakBewerkingStap();
 			}
 			@Override
 			public void onTouchMove(TouchMoveEvent event){}
@@ -1116,6 +1122,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{	maakStap("splits");
+				maakBewerkingStap();
 			}
 			@Override
 			public void onTouchMove(TouchMoveEvent event){}
@@ -1133,6 +1140,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		{	@Override
 			public void onTouchStart(TouchStartEvent event)
 			{	maakStap("wortel");
+				maakBewerkingStap();
 			}
 			@Override
 			public void onTouchMove(TouchMoveEvent event){}
@@ -1397,12 +1405,14 @@ public class FormuleEditorWithSteps implements InteractionView
 
 		for (int i = 0; i < stapNr + 1; i++)
 		{
+			
 			if (i == 0 && hasStartString && !linStrategieVersie && !linOefenVersie)
 			{	zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, viewers.get(i).getHeight()/2);
-				i++;
+				if(i < stapNr)
+					i++;
 			}
 
-			FormuleViewer fv = new FormuleViewer(formuleVakInhouden[i]);
+			FormuleViewer fv = new FormuleViewer(formuleVakInhouden.length > i?formuleVakInhouden[i]:"");
 			fv.setFont(defaultfont);
 			if (i == stapNr && nagekeken)
 			{	fv.showResult(FormuleViewer.CORRECT);
@@ -1452,7 +1462,7 @@ public class FormuleEditorWithSteps implements InteractionView
 			contentPanel.setWidgetLeftRight(stepPanel, 5, Style.Unit.PX, 5, Style.Unit.PX);
 			
 			
-			if ("".equals(formuleVakInhouden[i]) || "$f@".equals(formuleVakInhouden[i]))
+			if (i < formuleVakInhouden.length && ("".equals(formuleVakInhouden[i]) || "$f@".equals(formuleVakInhouden[i])))
 			{
 				viewers.remove(fv);
 				editor = addNewEditor(stepPanel);
@@ -1498,6 +1508,8 @@ public class FormuleEditorWithSteps implements InteractionView
 		if (stapNr > 0 || stapNr == 0 && !hasStartString)
 			tb.getElement().getStyle().setVisibility(Visibility.VISIBLE);
 		
+		if(editor != null)
+			editor.setCurrentElementRepaint();
 		scrollToBottom();
 		
 		
