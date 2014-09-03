@@ -18,6 +18,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
+import nl.uu.fi.dwo.mobile.client.ui.KeyBoardTabPanel;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavPanel;
 import nl.uu.fi.dwo.mobile.client.ui.SlidingPopup;
@@ -72,6 +73,7 @@ import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
+
 
 /**
  * 
@@ -270,7 +272,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	{
 		contentPanel.clear();
 		PopupFacade.hide();	
-		kb.setEditor(null);
+		kb.blur();
 	}
 
 	public void setupView(HashMap<String, Object> launchData)
@@ -299,6 +301,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 		contentPanel.getElement().getStyle().setFontSize(font_size, Unit.PX);
 		contentPanel.getElement().getStyle().setPadding(0, Unit.PX); // XXX was 15 
+		contentPanel.getElement().getStyle().setPaddingLeft(10, Unit.PX); // klein randje aan de linkerkant
 		//FormuleHolder.setDefaultFont(FormuleFont.createFromFontSize(font_size));
 
 		
@@ -811,7 +814,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 		hp.setLeftWidget(hb);
 
-		if(!standalone); fp.add(hp);
+		if(standalone) fp.add(hp);
 
 		contentScrollPanel = new SimplePanel();contentScrollPanel.addStyleName("contentScrollPanel");
 		contentScrollPanel.setWidth("100%");
@@ -831,8 +834,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		//contentScrollPanel.setScrollingEnabledY(false);
 		contentPanel.getElement().getStyle().setOverflowY(Overflow.AUTO);
 		contentPanel.getElement().getStyle().setOverflowX(Overflow.HIDDEN);
-		
-		contentScrollPanel.getElement().getStyle().setPadding(10, Unit.PX);
+		//contentScrollPanel.getElement().getStyle().setPadding(10, Unit.PX); WIM: dit is niet goed!!!! niet repareren!
 
 		fp.add(contentScrollPanel);
 
@@ -920,6 +922,13 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	}
 	
+	private int extraHeight = 41 + KeyBoardTabPanel.KEYB_STATIC_HEIGHT;
+	
+	public void setWindowTop(int top) {
+		extraHeight = top + KeyBoardTabPanel.KEYB_STATIC_HEIGHT;
+	}
+	
+	
 	public void zetMaat() {
 
 		// FIXME HACK voor DWOplayer zelf		
@@ -928,12 +937,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		hp.setRightWidget(null);
 		
 		///contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
-		int contentHeight = Window.getClientHeight() - 84;
+		int contentHeight = Window.getClientHeight() - extraHeight;
 		Window.addResizeHandler(new ResizeHandler() {
 
 			@Override
 			public void onResize(ResizeEvent event) {
-				int h = event.getHeight() - 84;
+				int h = event.getHeight() - extraHeight;
 				logger.info("resize event " +  h);
 				kb.tp.setScrollPanel(contentScrollPanel, h);
 				

@@ -48,7 +48,7 @@ public abstract class FormuleKeyBoardButtons
 		@Override
 		public void onTouchEnd(TouchEndEvent event)
 		{
-				//event.preventDefault();
+				event.preventDefault();
 				event.stopPropagation();
 				FocusOnTouch.focus();
 			final FormuleEditorIF editor = kb.getEditor();
@@ -153,7 +153,7 @@ public abstract class FormuleKeyBoardButtons
 			}
 			if (code.equals (FormuleKeyboard._123))
 			{
-				kb.focus();
+				kb.goTo(FormuleKeyboard.KEYBOARD);
 			}
 			if( FormuleKeyboard.VVV.equals(code))
 			{
@@ -166,13 +166,14 @@ public abstract class FormuleKeyBoardButtons
 
 		@Override
 		public void onTouchStart(TouchStartEvent event) {
-			// TODO Auto-generated method stub
-			
+			event.preventDefault();
+			event.stopPropagation();
 		}
 
 		@Override
 		public void onTouchMove(TouchMoveEvent event) {
-			// TODO Auto-generated method stub
+			event.preventDefault();
+			event.stopPropagation();
 			
 		}
 

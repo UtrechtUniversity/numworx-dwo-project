@@ -44,6 +44,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	static final String qwerty = "abc";
 	static final String SCRIBBLE = "Scribble";
 	static final boolean hasKeyboard  = ! TouchEvent.isSupported();
+	protected static final String KEYBOARD = "Toetsenbord";
 	private FormuleEditorIF editor;
 	public KeyBoardTabPanel tp;
 	private WritePanel writePanel;
@@ -229,23 +230,23 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 		if(hasKeyboard)
 		{
 			if(isNoordhoff())
-				tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodesWN, buttonWidthsWN), 69); // was GR
+				tp.addTab(KEYBOARD, this.getKeyBoard(buttonCodesWN, buttonWidthsWN), 69); // was GR
 			else
-				tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodesGR, buttonWidthsGR), 108);
+				tp.addTab(KEYBOARD, this.getKeyBoard(buttonCodesGR, buttonWidthsGR), 108);
 		}
 		else 
 		{
 			if(isNoordhoff())
 			{
-				tp.addTab("Toetsenbord", getKeyBoard(buttonCodes_geavanceerd, buttonWidths_geavanceerd),181);
+				tp.addTab(KEYBOARD, getKeyBoard(buttonCodes_geavanceerd, buttonWidths_geavanceerd),181);
 				tp.addTab(qwerty,         getKeyBoard(buttonCodes_abc, buttonWidths_abc),181);
 				tp.addTab(QWERTY,    getKeyBoard(buttonCodes_ABC, buttonWidths_abc),181);
 			}
 			else
 			{
-				tp.addTab("Toetsenbord", this.getKeyBoard(buttonCodes, buttonWidths),270);
-				tp.addTab(qwerty,         getKeyBoard(buttonCodes_abc, buttonWidths_abc),181);
-				tp.addTab(QWERTY,    getKeyBoard(buttonCodes_ABC, buttonWidths_abc),181);
+				tp.addTab(KEYBOARD, this.getKeyBoard(buttonCodes, buttonWidths),270);
+				tp.addTab(qwerty,         getKeyBoard(buttonCodes_abc, buttonWidths_abc),162);
+				tp.addTab(QWERTY,    getKeyBoard(buttonCodes_ABC, buttonWidths_abc),162);
 			}
 		}
 		//tp.addTab("ABC", this.getKeyBoard(buttonCodesAbc, buttonWidthsAbc));
@@ -468,6 +469,11 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	public void focus() {
 		FocusOnTouch.focus();
 		tp.showKeyboard();
+	}
+	
+	public void blur() {
+		setEditor(null);
+		tp.hideKeyboard();
 	}
 	
 	@Override

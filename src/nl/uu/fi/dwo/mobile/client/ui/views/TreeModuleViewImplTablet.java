@@ -162,8 +162,11 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 			//load sum in the edit area
 			
 			container.clear();
-			ViewModuleViewImpl viewModuleViewImpl = new ViewModuleViewImpl(true);
+			ViewModuleViewImpl viewModuleViewImpl = new ViewModuleViewImpl(false);
 			loadedModule = viewModuleViewImpl.initialize(this);
+			int h = moduleHeaderPanel.getOffsetHeight();
+			Log("window top = " + h);
+			viewModuleViewImpl.setWindowTop(h);
 			viewModuleViewImpl.zetMaat();
 			container.add(loadedModule.asWidget());
 			
@@ -533,30 +536,6 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 		this.presenter = presenter;
 	}
 	
-	private static final TreeItemTemplate TEMPLATE = GWT.create(TreeItemTemplate.class);
-	
-	public interface TreeItemTemplate extends SafeHtmlTemplates {
-		@SafeHtmlTemplates.Template("<div class=''><i class='fa {1} fa-1x treeItem-dwo-icon'></i><span>{0}</span></div>")
-		SafeHtml content(String text, String type);	
-	}
-	
-	private TreeItem getTreeItem(SelectModuleItem item) {
-		
-		
-		switch (item.getType()) {
-		default:
-		case ROOT:
-			return new TreeItem(TEMPLATE.content(item.getName(), "fa-folder"));				
-		case SCO:
-			return new TreeItem(TEMPLATE.content(item.getName(),  "fa-file"));
-		case MODULE:
-			return new TreeItem(TEMPLATE.content(item.getName(),  "fa-book"));		
-		case FOLDER:
-			return new TreeItem(TEMPLATE.content(item.getName(),  "fa-folder"));
-			
-		
-		}		
-	}
 
 
 	@Override

@@ -24,6 +24,8 @@ import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
  */
 public class KeyBoardTabPanel
 {
+	public static final int KEYB_STATIC_HEIGHT = 44;
+
 	private FlowPanel main = new FlowPanel();
 	
 	private FlowPanel contentpanel = new FlowPanel();
@@ -60,7 +62,7 @@ public class KeyBoardTabPanel
 		//FIXME CSS contentpanel.getElement().getStyle().setBackgroundImage("url(images/resources/keyboardgradientimage-new.png)");
 		tabcontentpanel.getElement().getStyle().setBorderWidth(0, Unit.PX);
 
-		staticpanel.getElement().getStyle().setHeight(44, Style.Unit.PX);
+		staticpanel.getElement().getStyle().setHeight(KEYB_STATIC_HEIGHT, Style.Unit.PX);
 
 //		tabcontentpanel.setStylePrimaryName("tabkeyboard");
 //		tabcontentpanel.addStyleDependentName(FormuleKeyBoardButtons.getDependentName());
@@ -85,7 +87,8 @@ public class KeyBoardTabPanel
 
 			@Override
 			public void onTap(TapEvent event) {
-				showKeyboard();
+				if(enabled) 
+					goTo(FormuleKeyboard.KEYBOARD);
 			}});
 		if(!FormuleKeyboard.hasKeyboard)
 		{
@@ -173,8 +176,10 @@ public class KeyBoardTabPanel
 			public void onTouchStart(TouchStartEvent event)
 			{
 				tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
-				tabs.get(index).getElement().getStyle().setDisplay(Display.BLOCK);
-				resizeScrollPanel(tabHeights.get(index));
+				Panel panel = tabs.get(index);
+				panel.getElement().getStyle().setDisplay(Display.BLOCK);
+				int offsetHeight = extractHeight(index, panel);
+				resizeScrollPanel(offsetHeight);
 				current = index;
 			}
 		});
@@ -196,8 +201,10 @@ public class KeyBoardTabPanel
 	{
 		int index = this.tabkeys.indexOf(panel);
 		tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
-		tabs.get(index).getElement().getStyle().setDisplay(Display.BLOCK);
-		resizeScrollPanel(tabHeights.get(index));
+		Panel panel2 = tabs.get(index);
+		panel2.getElement().getStyle().setDisplay(Display.BLOCK);
+		int offsetHeight = extractHeight(index, panel2);
+		resizeScrollPanel(offsetHeight);
 		current = index;
 	}
 
@@ -227,9 +234,10 @@ public class KeyBoardTabPanel
 	public void showKeyboard() {
 		if(enabled) {
 			tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
-			tabs.get(0).getElement().getStyle().setDisplay(Display.BLOCK);
-			resizeScrollPanel(tabHeights.get(0));
-			current = 0;
+			Panel panel = tabs.get(current);
+			panel.getElement().getStyle().setDisplay(Display.BLOCK);
+			int offsetHeight = extractHeight(current, panel);
+			resizeScrollPanel(offsetHeight);
 
 		}
 	}
@@ -237,5 +245,14 @@ public class KeyBoardTabPanel
 	public void showSoftKeyboard() {
 		if (! FormuleKeyboard.hasKeyboard) 
 			showKeyboard();
+	}
+
+	private int extractHeight(final int index, Panel panel) {
+		int offsetHeight = panel.getOffsetHeight();
+		logger.info("height = " + offsetHeight + " == " + tabHeights.get(index));
+		if(Math.abs(offsetHeight-tabHeights.get(index)) >  20) {
+			offsetHeight=tabHeights.get(index);
+		}
+		return offsetHeight;
 	}
 }

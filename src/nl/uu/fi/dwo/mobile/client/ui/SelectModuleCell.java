@@ -23,7 +23,7 @@ public class SelectModuleCell implements Cell<SelectModuleItem>
 
 	public interface Template extends SafeHtmlTemplates
 	{
-		@SafeHtmlTemplates.Template("<div class='listItem-dwo'><i class='fa {1} fa-2x listItem-dwo-icon'></i><span>{0}</span></div>")
+		@SafeHtmlTemplates.Template("<div class='listItem-dwo'><i class='fa {1} fa-2x listItem-dwo-icon'></i><span> {0}</span></div>")
 		SafeHtml content(String text, String type);
 	}
 
