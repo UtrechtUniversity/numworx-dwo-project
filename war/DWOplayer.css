@@ -108,3 +108,8 @@ iframe {
 	background-image: url(images/resources/buttongradient.png);
 	height: 19px;
 }
+
+div.listItem-dwo {
+	color: black;
+}
+
