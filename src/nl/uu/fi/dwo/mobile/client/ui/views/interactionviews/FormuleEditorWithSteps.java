@@ -1270,6 +1270,14 @@ public class FormuleEditorWithSteps implements InteractionView
 		BordjesTouchHandler(FormuleHolder editor) {
 			super(editor);
 		}
+		
+		@Override
+		public void onTouchStart(TouchStartEvent event)
+		{
+			super.onTouchStart(event);
+			if(editor != null)
+				editor.requestFocus();
+		}
 
 		@Override
 		public void onTouchEnd(TouchEndEvent event) {
@@ -1423,15 +1431,20 @@ public class FormuleEditorWithSteps implements InteractionView
 		if (!substitutieString.equals(""))
 			substitutie = FormuleParser.geefExpressie(substitutieString);
 
+		stepPanelY = 0;
 		for (int i = 0; i < stapNr + 1; i++)
 		{
 			
 			if (i == 0 && hasStartString)
 			{	
-				if(!(linStrategieVersie || linOefenVersie || bordjesMethode) || stapNr > 0)
-					zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, viewers.get(i).getHeight()/2);
+				//if(!(linStrategieVersie || linOefenVersie || bordjesMethode) || stapNr > 0)
+				//	zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, viewers.get(i).getHeight()/2);
 				if(i < stapNr)
+				{	if(linStrategieVersie || linOefenVersie || bordjesMethode)
+					{	zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, viewers.get(i).getHeight()/2);
+					}
 					i++;
+				}
 				else
 					return;
 			}
@@ -1440,7 +1453,7 @@ public class FormuleEditorWithSteps implements InteractionView
 			fv.setFont(defaultfont);
 			if (i == stapNr && nagekeken)
 			{	fv.showResult(correct?FormuleViewer.CORRECT:FormuleViewer.WRONG);
-				if(linStrategieVersie || bordjesMethode)
+				if((linStrategieVersie || bordjesMethode) && correct)
 				{	setAndAddFeedback(Text.rb.getString("feedbackTekst04"));
 					//"De vergelijking is correct opgelost."
 					stapOk = false;
