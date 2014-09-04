@@ -88,4 +88,9 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 		navigationcss.ensureInjected();
 		return navigationcss;
 	}
+
+	@Override
+	public boolean isNavTitle() {
+		return false;
+	}
 }

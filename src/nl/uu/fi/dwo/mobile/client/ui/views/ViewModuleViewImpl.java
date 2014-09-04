@@ -162,7 +162,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	{
 		contentPanel.clear();
 		if(DWOplayer.JSON) loadJSON(file); else loadXML(file);
-		if(!standalone) hp.setCenter(name);
+		if(!DWOplayer.PARAMETERS.isNavTitle()) setTitle(name);
 	}
 
 	private void loadJSON(String file) {
@@ -313,8 +313,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		scoreNav.setItemScores(on.getItemScores());
 		scoreNav.setTotaalScore((int)on.getScore());
 		scoreNav.setGotoOpdracht(on);
-		setTitle("Vraag " + (1+on.getCurrentOpdracht()) + " van " + on.getAantalOpdrachten());
-		
+		if(DWOplayer.PARAMETERS.isNavTitle())
+			setTitle("Vraag " + (1+on.getCurrentOpdracht()) + " van " + on.getAantalOpdrachten());
 		//call SetupDone Handler, if an object is provided
 		if (this.loadingHandler != null){
 			this.loadingHandler.viewModuleViewSetupDone();;

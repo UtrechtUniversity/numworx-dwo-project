@@ -95,6 +95,7 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 	public TreeModuleViewImplTablet()
 	{
 		cells = new CellList<SelectModuleItem>(new SelectModuleCell());
+		cells.addStyleName(DWOplayer.PARAMETERS.navigationcss().bodyText());
 		initWidget(uiBinder.createAndBindUi(this));
 		
 		// Don't use basic button layout, but set FA-style backbutton,

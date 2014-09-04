@@ -41,5 +41,10 @@ public class DWOplayerNoordhoff extends DWOplayerDefaults implements DWOplayerPa
 		return  DWOplayer.DWO_BUNDLE.headercss();
 	}
 
+	@Override
+	public boolean isNavTitle() {
+		return true;
+	}
+
 	
 }

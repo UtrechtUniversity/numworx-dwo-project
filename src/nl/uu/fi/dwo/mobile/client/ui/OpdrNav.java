@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 
@@ -464,7 +465,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 			source.setTotaalScore((int) getScore()); 
 			source.setItemScore(oldOpdr, getItemScores()[oldOpdr]);
 		}
-		entry.setTitle("Vraag " + (getCurrentOpdracht()+1) + " van " + getAantalOpdrachten());
+		if(DWOplayer.PARAMETERS.isNavTitle())
+			entry.setTitle("Vraag " + (getCurrentOpdracht()+1) + " van " + getAantalOpdrachten());
 		
 		
 	}

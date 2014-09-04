@@ -15,6 +15,7 @@ import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 public interface ViewModuleView extends IsWidget
 {
 
+	void setTitle(String title);
 	void setupModule(String name, String file);
 
 	public HeaderButton getBackButton();

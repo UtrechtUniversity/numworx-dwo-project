@@ -45,5 +45,10 @@ public interface DWOplayerParameters {
 	 * Navigational css 
 	 */
 	NavigationCss navigationcss();
+	/**
+	 * type of title
+	 */
+	boolean isNavTitle();
+	
 // More to come....
 }
