@@ -14,7 +14,6 @@ public class ReadOnly extends NoCache {
 		return "true";
 	}
 
-	@Override
 	public String getValue(int uid, int scoid, String key) throws PersistenceException
 	{
 		if("suspendData".equals(key))
