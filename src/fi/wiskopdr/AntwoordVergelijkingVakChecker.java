@@ -365,9 +365,9 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 	{ 	geenAntwoord = b;
 	}
 	
-	public HashMap<String,Object> checkAnswer(String answer, String answerPrevious)
-	{	return checkAnswer(answer, answerPrevious, null,null);
-	}
+//	public HashMap<String,Object> checkAnswer(String answer, String answerPrevious)
+//	{	return checkAnswer(answer, answerPrevious, null,null);
+//	}
 	
 	public HashMap<String,Object> checkAnswer(String answer)
 	{	return checkAnswer(answer,null,null,null);
@@ -406,10 +406,17 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		this.fout = false;
 		this.goedHalfFout = GEEN;
 		
-		//this.substitutie = substitutie;
+		this.substitutie = substitutie;
 		this.gebruikersSubstituties = gebruikersSubstituties;
 		
 		if(answerPrevious==null)
+		{	//Algebra.setTestValues(eqTestValueMin, eqTestValueMax);
+			if(hasFeedback)checkFeedback(answer);
+			else check(answer);
+			//Algebra.setDefaultTestValues();
+			evaluate();
+		}
+		else
 		{	//Algebra.setTestValues(eqTestValueMin, eqTestValueMax);
 			if(hasFeedback)checkFeedback(answer);
 			else check(answer);
@@ -538,7 +545,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 	
 	public void zetSubstitutie(Expressie e)
 	{
-		System.out.println("antwoordvergelijkingvakChecker"); 
+		System.out.println("antwoordvergelijkingvakChecker zetSubstitutie"); 
 		if(e != null)
 			System.out.println("zet substitutie: " + e.toString());
 		substitutie = e;
@@ -946,8 +953,6 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 	}
 
 	
-	
-	
 	public void checkFeedback(String antwoordVergString) {
 		int aantalAnswerModels = answerModels.size();
 		for (int h = 0; h < aantalAnswerModels; h++) {
@@ -989,7 +994,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 			}
 		}
 	}
-
+	
 	public void check(String antwoordVergString) {
 		if (gewensteEindOplossing == null)
 			return;
@@ -1108,15 +1113,17 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 					break;
 			}
 			
-			if (linOefenVersie) {
-			System.out.println("in check linOefenversie");
-				isGelijkwaardig = isJuistUitgevoerdeStap();
-				if (!isGelijkwaardig) {
-					isEindOplossingExact = false;
-					isEindOplossing = false;
-					isDeelOplossing = false;
-				}
-			}
+			//juiste-stap-check wordt nu pas in formule-editor with steps gedaan.
+//			if (linOefenVersie) {
+//			System.out.println("in check linOefenversie");
+//				VergelijkingMeerv vorigAntwoord = FormuleParser.parseVergelijking(vorigAntwoordString);
+//				isGelijkwaardig = isJuistUitgevoerdeStap(antwoord, vorigAntwoord, operator, exp);
+//				if (!isGelijkwaardig) {
+//					isEindOplossingExact = false;
+//					isEindOplossing = false;
+//					isDeelOplossing = false;
+//				}
+//			}
 		} else {
 			syntaxFout = true;
 			isGelijkwaardig = false;
@@ -1134,37 +1141,6 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 			}
 		}
 		Algebra.setDefaultTestValues();
-	}
-	
-	public boolean isJuistUitgevoerdeStap() {
-		//TODO: onderstaande implementeren
-		/*if (stapNr == 0)
-			return isGelijkwaardig;
-		String op = pijlVakken[stapNr - 1].geefOperator();
-		//pijlVakken[stapNr - 1].formuleVak.setEditable(false);
-		Expressie en = pijlVakken[stapNr - 1].formuleVak.geefExpressie();
-		if (op.equals("implicatie") || en == null)
-			return isGelijkwaardig;
-		VergelijkingMeerv verg = formuleVakken[stapNr - 1].geefVergelijking();
-
-		VergelijkingMeerv vergNieuw = null;
-
-		int aantalDelen = verg.geefAantal();
-		for (int i = 0; i < aantalDelen && aantalDelen > 0; i++) {
-			if (formuleVakken[stapNr - 1].partEquationSelected(i)) {
-				vergNieuw = verg.bewerkVergelijking(op, en, i);
-				break;
-			}
-		}
-		if (vergNieuw == null)
-			vergNieuw = verg.bewerkVergelijking(op, en);
-
-		VergelijkingMeerv vergAntwoord = formuleVakken[stapNr].geefVergelijking();
-		if (op.equals("sub"))
-			vergAntwoord = vergAntwoord.substitueer(substitutie, "p");
-		return vergNieuw.isGelijkMet(vergAntwoord);
-		*/
-		return isGelijkwaardig;
 	}
 
 	public String vertaalIdeasExpressie(String s)

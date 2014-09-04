@@ -45,6 +45,7 @@ import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 import fi.wiskopdr.AntwoordVakChecker;
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.Expressie;
+import fi.wiskopdr.expressies.Vergelijking;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
 import fi.wiskopdr.text.Text;
 
@@ -101,7 +102,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	private int stapH = 21;
 	
 	private Expressie substitutie;
-	
+	private Vergelijking[] gebruikersSubstituties;
 	
 	private TouchButton tb = null;
 	private TouchButton copyButton = null;
@@ -271,7 +272,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	{
 		return editor;
 	}
-
+	
 	public void lastStep(String useranswer)
 	{
 		if (correct == Boolean.TRUE)
@@ -480,7 +481,7 @@ public class FormuleEditorWithSteps implements InteractionView
 				//if (tips && diagnose)
 				//	kijkNaIdeas();
 				//else
-				kijkNa(true);//kijken of dit goed gaat..
+				kijkNa(true);
 				editor.requestFocus();
 			}
 			else
@@ -869,6 +870,17 @@ public class FormuleEditorWithSteps implements InteractionView
 	{
 		return latest_answer_viewer.toString();
 	}
+	
+	public String getOperator()
+	{
+		return pijlVakken.get(pijlVakken.size() - 1).geefOperator();
+	}
+	
+	public Expressie getOperatorExpressie()
+	{
+		String expString = pijlVakken.get(pijlVakken.size() - 1).geefExpressieString();
+		return FormuleParser.geefExpressie(expString);
+	}
 
 	public String removePrefix(String s)
 	{
@@ -896,7 +908,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	{
 		FormuleEditorWithAnswer editor = editorInstance();
 		editor.setFormuleToolBijFocus(true);
-		editor.zetSubstitutie(substitutie);
+		//editor.zetSubstitutie(substitutie);
 		if (!hasPrefix)
 			editor.getAsPanel().getElement().getStyle().setMarginLeft(13, Unit.PX);
 		editor.getAsPanel().getElement().getStyle().setMarginTop(5, Unit.PX);
@@ -1583,19 +1595,20 @@ public class FormuleEditorWithSteps implements InteractionView
 	public void maakNakijkenAf(boolean backStep)
 	{
 		int goedHalfFout = editor.getGoedHalfFout();
+		
 		//stapOk juiste waarde geven.
-		if(goedHalfFout == 0)
+		if(goedHalfFout == AntwoordVakChecker.GOED)
 		{	stapOk = false;
 			if (!pijl)
 				stapOk = true;
 		}
-		else if(goedHalfFout == 1)
+		else if(goedHalfFout == AntwoordVakChecker.DOOR)
 			stapOk = true;
 		else 
 			stapOk = false;
 		
 		if(bordjesMethode)
-		{	if(stapOk || goedHalfFout == 0)
+		{	if(stapOk || goedHalfFout == AntwoordVakChecker.GOED)
 				vervangEditorDoorViewer("$f" + editor.toString() + "@");
 			
 		}
@@ -1622,7 +1635,41 @@ public class FormuleEditorWithSteps implements InteractionView
 			}
 	}
 	
+	public boolean controleerStap()
+	{
+		if(!linOefenVersie)
+			return true;
+		if (stapNr == 0)
+			return true;
+		String op = pijlVakken.get(stapNr - 1).geefOperator();
+		//pijlVakken[stapNr - 1].formuleVak.setEditable(false);
+		Expressie en = FormuleParser.geefExpressie("$f" + pijlVakken.get(stapNr - 1).geefExpressieString() + "@");
+		if (op.equals("implicatie") || en == null)
+			return true;
+		
+		VergelijkingMeerv verg = FormuleParser.parseVergelijking("$f" + latest_answer_viewer.toString() + "@");
+		VergelijkingMeerv vergNieuw = null;
+
+		int aantalDelen = verg.geefAantal();
+		
+		for (int i = 0; i < aantalDelen && aantalDelen > 0; i++)
+		{
+			if ((editor != null && editor.partEquationSelected(i)) || latest_answer_viewer.partEquationSelected(i))
+			{
+				vergNieuw = verg.bewerkVergelijking(op, en, i);
+				break;
+			}
+		}
+		if (vergNieuw == null)
+			vergNieuw = verg.bewerkVergelijking(op, en);
+
+		VergelijkingMeerv vergAntwoord = FormuleParser.parseVergelijking("$f" + editor.toString() + "@");
+		if (op.equals("sub"))
+			vergAntwoord = vergAntwoord.substitueer(substitutie, "p");
+		return vergNieuw.isGelijkMet(vergAntwoord);
+	}
 	
+		
 
 	@Override
 	public int getScore()
@@ -1639,7 +1686,16 @@ public class FormuleEditorWithSteps implements InteractionView
 	public void zetSubstitutie(Expressie e)
 	{
 		substitutie = e;
-		editor.zetSubstitutie(e);
+	}
+	
+	public Expressie getSubstitutie()
+	{
+		return substitutie;
+	}
+	
+	public Vergelijking[] getGebruikersSubstituties()
+	{
+		return gebruikersSubstituties;
 	}
 	
 	/*

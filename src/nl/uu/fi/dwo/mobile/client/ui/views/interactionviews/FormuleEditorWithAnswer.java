@@ -389,7 +389,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public void kijkNa(boolean backStep)
 	{
 		String useranswer = "$f" + this.toString() + "@";
-		HashMap<String, Object> checkResults = avChecker.checkAnswer(useranswer);
+		
+		HashMap<String, Object> checkResults = new HashMap<String, Object>();
+		if(fe != null)
+			checkResults = avChecker.checkAnswer(useranswer, fe.getLatestAnswer(), fe.getSubstitutie(), fe.getGebruikersSubstituties());
+		else	
+			checkResults = avChecker.checkAnswer(useranswer);
 
 		this.correct = (Boolean) checkResults.get("correct");
 		this.score = (Integer) checkResults.get("score");
@@ -398,6 +403,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 		this.goedHalfFout = (Integer) checkResults.get("goedHalfFout");
 
+		if(fe != null)
+		{	boolean stapCorrect = fe.controleerStap();
+			if(!stapCorrect)
+				this.goedHalfFout = AntwoordVakChecker.FOUT;
+		}
+		
 //		logger.fine("userAnswer: " + useranswer);
 //		logger.fine("correct: " + correct);
 //		logger.fine("score: " + score);
@@ -484,11 +495,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		super.setFont(fm);
 		this.getMainRegel().setMinimumHeight(fm.getHeight() + 3);
 		resize();
-	}
-	
-	public void zetSubstitutie(Expressie e)
-	{
-		avChecker.zetSubstitutie(e);
 	}
 
 	@Override

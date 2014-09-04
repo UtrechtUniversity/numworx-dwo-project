@@ -191,9 +191,9 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 	     
 	}
 	
-	public HashMap checkAnswer(String answer, String answerPrevious)
-	{	return checkAnswer(answer, answerPrevious, null,null);
-	}
+//	public HashMap checkAnswer(String answer, String answerPrevious)
+//	{	return checkAnswer(answer, answerPrevious, null,null);
+//	}
 	
 	public HashMap checkAnswer(String answer)
 	{	return checkAnswer(answer,null,null,null);
