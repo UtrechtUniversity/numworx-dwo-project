@@ -221,6 +221,13 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		else if(tips && diagnose)
 		{	//checkEvaluateIdeas(answer, answerPrevious);
 		}
+		else
+		{
+			Algebra.setTestValues(eqTestValueMin, eqTestValueMax);
+			check(answer);
+			Algebra.setDefaultTestValues();
+			evaluate();
+		}
 		
 		HashMap checkResults = new HashMap();
 		checkResults.put("isGelijkwaardig", new Boolean(isGelijkwaardig));
