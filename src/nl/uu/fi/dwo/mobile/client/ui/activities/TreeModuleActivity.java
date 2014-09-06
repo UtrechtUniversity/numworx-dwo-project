@@ -56,10 +56,12 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements TreeModu
 		currentModel = SelectModuleItemHolder.getItems();
 		view.setPresenter(this);
 		view.render(currentModel);
-		
-		
-
 		view.selectModule(item);
+	}
+	@Override
+	public void onStop() {
+		view.close();
+		super.onStop();
 	}
 
 	private void getItems()

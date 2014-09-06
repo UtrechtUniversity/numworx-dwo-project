@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImpl;
+import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplDesktop;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplTablet;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;

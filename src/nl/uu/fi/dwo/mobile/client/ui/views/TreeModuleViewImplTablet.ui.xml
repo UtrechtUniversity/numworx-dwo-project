@@ -25,7 +25,7 @@
 
 			position:absolute;
 			left:0px;
-			/* if user.agent == Gecko display: inherit; */
+		
 	
 			
 		}
@@ -139,9 +139,6 @@
 					    </g:HTMLPanel>
 					        
 					  
-<!-- 					 	<mgwt:LayoutPanel addStyleNames="{style.full_screen_toggle}"> -->
-<!-- 					   		<mgwt:Button ui:field="fullscreenButton"></mgwt:Button> -->
-<!-- 		    			</mgwt:LayoutPanel> -->
 				
 			        
 			    </mgwt:LayoutPanel>

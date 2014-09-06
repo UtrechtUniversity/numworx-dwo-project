@@ -6,21 +6,20 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleCell;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplTablet.slideNavigationToLeftAnimation;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.place.shared.Place;
@@ -33,9 +32,7 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Tree;
@@ -43,15 +40,15 @@ import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.dom.client.event.tap.HasTapHandlers;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
-import com.googlecode.mgwt.ui.client.widget.Button;
 import com.googlecode.mgwt.ui.client.widget.CellList;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.googlecode.mgwt.ui.client.widget.LayoutPanel;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedEvent;
+import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedHandler;
 import com.googlecode.mgwt.ui.client.widget.celllist.HasCellSelectedHandler;
 
-public class TreeModuleViewImplTablet  extends Composite implements TreeModuleView, ViewModuleView.Loader
+public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleView, ViewModuleView.Loader, CellSelectedHandler 
 {
 
 	@UiField HeaderPanel  navigationHeaderPanel;
@@ -62,103 +59,88 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 	@UiField HeaderPanel moduleHeaderPanel;
 	@UiField HeaderButton moduleBackButton;
 	@UiField LayoutPanel modulePanel;
-
-		
+	
 	
 	ViewModuleView loadedModule = null;
 	
-	@UiField LayoutPanel infoArea;
-	@UiField HTMLPanel loadingArea;
-	@UiField LayoutPanel container;
+	@UiField SimplePanel container;
 	@UiField (provided=true) CellList<SelectModuleItem> cells;
+	@UiField Tree tree;
 	
-
-	
+	private HashMap<SelectModuleItem, TreeItem> inverseMap = new HashMap<SelectModuleItem, TreeItem>();
 	private List<SelectModuleItem> cellItems;
 	private List<SelectModuleItem> model;
-	
-	
-	
-	private Presenter presenter; 
+
+	private Presenter presenter;
 	
 	//================================================================================
     // Constructor and UiBinder 
     //================================================================================
 
-	private static TreeModuleViewImplTabletUiBinder uiBinder = GWT
-			.create(TreeModuleViewImplTabletUiBinder.class);
+	private static TreeModuleViewImplUiBinder uiBinder = GWT
+			.create(TreeModuleViewImplUiBinder.class);
 
-	interface TreeModuleViewImplTabletUiBinder extends
-			UiBinder<Widget, TreeModuleViewImplTablet> {
+	interface TreeModuleViewImplUiBinder extends
+			UiBinder<Widget, TreeModuleViewImplDesktop> {
 	}
 	
-	public TreeModuleViewImplTablet()
+	public TreeModuleViewImplDesktop()
 	{
 		cells = new CellList<SelectModuleItem>(new SelectModuleCell());
-		cells.addStyleName(DWOplayer.PARAMETERS.navigationcss().bodyText());
 		initWidget(uiBinder.createAndBindUi(this));
 		
 		// Don't use basic button layout, but set FA-style backbutton,
 		// Should move this to a Fa Class wrapper
 		this.moduleBackButton.getElement().setInnerHTML("<span class='fa fa-2x fa-chevron-left' ></span>");
-		this.moduleBackButton.addStyleName(DWOplayer.PARAMETERS.navigationcss().headerText());
-		this.navigationBackButton.getElement().setInnerHTML("<span class='fa fa-2x fa-arrow-left' ></span>");
-
-		this.navigationBackButton.addStyleName(DWOplayer.PARAMETERS.navigationcss().headerText());
-		//this.fullscreenButton.getElement().setInnerHTML("<span class='fa fa-expand' ></span>");
-
-		this.loadingArea.setVisible(false);
+		
+		cells.addStyleName("tree-cells");
+		cells.addCellSelectedHandler(this);
 	}
 
 	//================================================================================
     // UiHandlers used by this implementation
     //================================================================================
 
-	private void Log(String log) {
-		
-		Logger.getLogger("DWOplayer").log(Level.INFO, log);
+	@UiHandler("tree")
+	public void onSelection(SelectionEvent<TreeItem> event)
+	{
+		TreeItem item = event.getSelectedItem();
+		SelectModuleItem o = (SelectModuleItem) item.getUserObject();
+		selectItem(o);
 	}
-	
-	@UiHandler("cells")
+
+	// werkt niet? @UiHandler("cells")
 	public void onCellSelected(CellSelectedEvent event) {
 		int index = event.getIndex();
 		selectItem(this.cellItems.get(index));
 	}
 
 	@UiHandler("navigationBackButton")
-	public void onNavigationTap(TapEvent event) {
-		// go back one spot in the tree.
-		History.back();
-		
+	public void onTap(TapEvent event) {
+		// logout
+		DWOplayer.profiledata = null;
+		this.presenter.goTo(new LoginPlace());
 	}
-
-
 	
 	@UiHandler("moduleBackButton")
 	public void onModuleTap(TapEvent event) {
-		
 			toggleNavigationPanel();
 		
 	}
 	
-	
 	private void selectItem(SelectModuleItem o) {
-		Place place = null;
+		Place place;
 		switch(o.getType()) {
 		default:
 		case ROOT:
 			place = new TreeModulePlace("0");
 			break;
 		case SCO:
-			//
-			//load sum in the edit area
-			close();
+			close(); // since we set "loadedModule" to a new value.
 			container.clear();
+			
 			ViewModuleViewImpl viewModuleViewImpl = new ViewModuleViewImpl(false);
 			loadedModule = viewModuleViewImpl.initialize(this);
-			int h = moduleHeaderPanel.getOffsetHeight();
-			Log("window top = " + h);
-			viewModuleViewImpl.setWindowTop(h);
 			viewModuleViewImpl.zetMaat();
 			container.add(loadedModule.asWidget());
 			
@@ -179,34 +161,113 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 				@Override
 				public void onFailure(Throwable caught) {
 					loadedModule.setupModule(item.getName(), item.getFile());
-					//loadingArea.setVisible(false);
+					
 				}
 
 				@Override
 				public void onSuccess(Void result) {
 					loadedModule.setupModule(item.getName(), item.getFile());
-					//loadingArea.setVisible(false);
+					
 					
 				}
 			};
 			
-			loadingArea.setVisible(true);
+			//loadingArea.setVisible(true);
 			DWOplayer.api.Initialize(callback);
 			
 			place = null;
-			
 			break;
 		case MODULE:
+			//place = new SelectModulePlace(o.getID());
 			place = new TreeModulePlace(o.getID());
 			break;
 		case FOLDER:
 			place = new TreeModulePlace(o.getID());
 			break;
 		}
+		
 		if (place != null) {
 			this.presenter.goTo(place);
 		}
 	}
+	
+	//================================================================================
+    // TreeModuleView Interface Methods
+    //================================================================================
+
+	@Override
+	public void render(List<SelectModuleItem> currentModel)
+	{
+		
+		if (currentModel.isEmpty() )
+			return;
+		if (model != currentModel)
+		{
+			tree.removeItems();
+			inverseMap.clear();
+			model = currentModel;
+			initTree();
+		}
+	
+	}
+	
+	@Override
+	public void setPresenter(Presenter presenter) {
+		this.presenter = presenter;
+	}
+	
+	@Override
+	public void selectModule(SelectModuleItem item)
+	{
+		// TODO iets met tree.ensureSelectedItemVisible() na setselectedItem(item)
+		if (item != null)
+		{
+			navigationLabel.setText(item.getName());
+			String description = item.getDescription();
+			if(description != null)
+			{
+				if(description.startsWith(DescriptionView.GZIPPREFIX))
+				{
+					container.setWidget(new DescriptionViewImpl(item.getID()));
+				} else
+				if(description.startsWith("<html>"))
+					container.setWidget(new HTML(description));
+				else
+				{
+					container.setWidget(new Label(description));
+				}
+			} else
+				container.setWidget(new Label(""));
+			if(item.getType() == SelectModuleItem.Type.FOLDER)
+			{
+				if(item.getChildren() == null)
+					loadChildren(item);
+				else
+					addChildren(item.getChildren());
+			} else if(item.getType() == SelectModuleItem.Type.MODULE)
+			{	if(item.getChildren() == null)
+					loadScos(item);
+				else
+					addChildren(item.getChildren());
+			} else if(item.getType() == SelectModuleItem.Type.ROOT )
+			{
+				addChildren(model);
+			}
+			TreeItem node = inverseMap.get(item);
+			tree.setSelectedItem(null, false);
+			if(node != null) {
+				
+				tree.setSelectedItem(node, false);
+				tree.ensureSelectedItemVisible();
+			}
+		}
+		else
+		{
+			container.setWidget(new Label("DWO standaard modules")); // Uit het profiel halen!
+			addChildren(model);
+		}
+	}
+	
 	//================================================================================
     // Animations
     //================================================================================
@@ -277,110 +338,77 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
     }
 	
 
-
-	//================================================================================
-    // TreeModuleView Interface Methods
-    //================================================================================
-
-	@Override
-	public void render(List<SelectModuleItem> currentModel)
-	{
-		
-		if (currentModel.isEmpty() )
-			return;
-		if (model != currentModel)
-		{
-			//tree.removeItems();
-			//inverseMap.clear();
-			model = currentModel;	
-		}
-	
-	}
-	
 	//================================================================================
     // Init and format the tree and cells
     //================================================================================
-
+	
 	private void initTree()
 	{
-		
-		if(model== null)
-			model = Collections.emptyList();
-		this.cellItems = model;
-		cells.render(model);
-		addChildren(model);
+		for (SelectModuleItem item : model)
+		{
+			
+			TreeItem treeItem = getTreeItem(item);
+			treeItem.setUserObject(item);
+			inverseMap.put(item, treeItem);
+			tree.addItem(treeItem);
+			
+			if(item.getChildren() != null)
+				initTree(item.getChildren(), treeItem);
+		}
 	}
 
-	private void initTree(List<SelectModuleItem> model) {
-		if(model== null)
-			model = Collections.emptyList();
-		this.cellItems = model;
-		cells.render(model);
-		addChildren(model);
-		
+	private void initTree(List<SelectModuleItem> model, TreeItem tree) {
+		for (SelectModuleItem item : model)
+		{
+			TreeItem treeItem = getTreeItem(item);
+			treeItem.setUserObject(item);
+			inverseMap.put(item, treeItem);
+			tree.addItem(treeItem);	
+			if(item.getChildren() != null)
+				initTree(item.getChildren(), treeItem);
+		}
+		tree.setState(true);
 	}
 
-	@Override
-	public void selectModule(SelectModuleItem item)
-	{
+	private static final TreeItemTemplate TEMPLATE = GWT.create(TreeItemTemplate.class);
+	
+	public interface TreeItemTemplate extends SafeHtmlTemplates {
+		@SafeHtmlTemplates.Template("<div class=''><i class='fa {1} fa-1x treeItem-dwo-icon'></i> <span>{0}</span></div>")
+		SafeHtml content(String text, String type);	
+	}
+	
+	private TreeItem getTreeItem(SelectModuleItem item) {
 		
-		// TODO iets met tree.ensureSelectedItemVisible() na setselectedItem(item)
-		if (item != null)
-		{
-			navigationLabel.setText(item.getName());
-			
-			navigationBackButton.setVisible(true);
-			String description = item.getDescription();
-			if(description != null)
-			{
-				if(description.startsWith(DescriptionView.GZIPPREFIX))
-				{
-					infoArea.clear();
-					infoArea.add(new DescriptionViewImpl(item.getID()).asWidget());
-				} else
-				if(description.startsWith("<html>")) {
-					infoArea.clear();
-					infoArea.add(new HTML(description).asWidget());
-				}else
-				{
-					infoArea.clear();
-					infoArea.add(new Label(description).asWidget());
-				}
-			} else {
-				infoArea.clear();
-				infoArea.add(new Label(""));
-			}
-			if(item.getType() == SelectModuleItem.Type.FOLDER)
-			{
-				if(item.getChildren() == null)
-					loadChildren(item);
-				else
-					addChildren(item.getChildren());
-			} else if(item.getType() == SelectModuleItem.Type.MODULE)
-			{	if(item.getChildren() == null)
-					loadScos(item);
-				else
-					addChildren(item.getChildren());
-			} else if(item.getType() == SelectModuleItem.Type.ROOT )
-			{
-				navigationBackButton.setVisible(true); // was false
-				addChildren(model);
-			}
-		}
-		else
-		{
-			//container.clear();
-			//container.add(new Label("DWO standaard modules").asWidget()); // Uit het profiel halen!
-			
-			addChildren(model);
-		}
 		
+		switch (item.getType()) {
+		default:
+		case ROOT:
+			return new TreeItem(TEMPLATE.content(item.getName(), "fa-folder"));				
+		case SCO:
+			return new TreeItem(TEMPLATE.content(item.getName(),  "fa-file"));
+		case MODULE:
+			return new TreeItem(TEMPLATE.content(item.getName(),  "fa-book"));		
+		case FOLDER:
+			return new TreeItem(TEMPLATE.content(item.getName(),  "fa-folder"));
+			
+		
+		}		
 	}
 	
 	//================================================================================
     // Load children and Scos
     //================================================================================
-
+	
+	private void loadChildren(final SelectModuleItem item) {
+		GetChildrenCourses getCoursesCallback = new GetChildrenCourses(item);
+		DWOplayer.clientfactory.getRPCHandler().getCourses(item.getID(), getCoursesCallback);
+	}
+	
+	private void loadScos(final SelectModuleItem item) {
+		GetChildrenScos getScosCallback = new GetChildrenScos(item);
+		DWOplayer.clientfactory.getRPCHandler().getScos(item.getID(), getScosCallback);
+	}
+	
 	class GetChildrenCourses implements AsyncCallback<List<Map<String,Object>>> {
 
 		private SelectModuleItem parent;
@@ -406,7 +434,7 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 			}
 			parent.setChildren(items);
 			addChildren(items);
-			initTree(items);
+			initTree(items, inverseMap.get(parent));
 		}
 		
 	};
@@ -436,22 +464,11 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 			}
 			parent.setChildren(items);
 			addChildren(items);
-			initTree(items);
+			initTree(items, inverseMap.get(parent));
 		}
 		
 	};
 	
-	
-	private void loadChildren(final SelectModuleItem item) {
-		GetChildrenCourses getCoursesCallback = new GetChildrenCourses(item);
-		DWOplayer.clientfactory.getRPCHandler().getCourses(item.getID(), getCoursesCallback);
-	}
-	
-	private void loadScos(final SelectModuleItem item) {
-		GetChildrenScos getScosCallback = new GetChildrenScos(item);
-		DWOplayer.clientfactory.getRPCHandler().getScos(item.getID(), getScosCallback);
-	}
-
 	private void addChildren(List<SelectModuleItem> list) {
 		if(list == null)
 			list = Collections.emptyList();
@@ -459,20 +476,12 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 		cells.render(list);
 	}
 
-	
-	@Override
-	public void setPresenter(Presenter presenter) {
-		this.presenter = presenter;
-	}
-	
-
-
 	@Override
 	public void viewModuleViewSetupDone() {
-		// loading is done
-		this.loadingArea.setVisible(false);
-		slideNavigationOut();
+		// TODO Auto-generated method stub
 		
+		// slide out the new area
+		slideNavigationOut(); 
 	}
 
 	@Override
@@ -483,5 +492,6 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 		}
 		
 	}
+
 
 }

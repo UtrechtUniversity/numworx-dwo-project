@@ -333,5 +333,11 @@ public class TreeModuleViewImpl  extends Composite implements TreeModuleView
 		cells.render(list);
 	}
 
+	@Override
+	public void close() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

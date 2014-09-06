@@ -19,7 +19,7 @@ public interface TreeModuleView extends IsWidget
 	
 	void selectModule(SelectModuleItem item);
 
-	
+	void close();
 	void setPresenter(Presenter presenter);
 
 	    public interface Presenter {
