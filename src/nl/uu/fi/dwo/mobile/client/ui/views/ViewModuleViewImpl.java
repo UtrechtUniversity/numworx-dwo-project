@@ -33,7 +33,10 @@ import nl.uu.fi.dwo.mobile.utils.VariableCollection;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
@@ -46,7 +49,9 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -760,6 +765,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	}
 	AnchorContext anchorContext = new MyAnchorContext();
 	
+	private boolean inNavBtn;
+	
 	public ViewModuleViewImpl initialize()
 	{
 		api = GWT.create(Scorm2004IF.class);
@@ -778,19 +785,38 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		
 		hp = new HeaderPanel(DWOplayer.PARAMETERS.headercss());
 		setTitle("");
-		//Style style = hp.getElement().getStyle();
-		
-		HeaderButton next, prev;
+		//Style style = hp.getElement().getStyle();		
+		final HeaderButton next, prev;
 		next = new HeaderButton(DWOplayer.PARAMETERS.headercss()); next.setText("Volgende >");
 		next.addTapHandler(new TapHandler() {
 			
 			@Override
 			public void onTap(TapEvent event) {
+				if(inNavBtn) {
+					return;
+				}
+				inNavBtn = true;
+				next.getElement().getStyle().setProperty("pointerEvents", "none");
+				((Element) next.getElement().getLastChild()).getStyle().setBackgroundColor("gray");
+				Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+					@Override
+					public void execute() {
+						int cur = on.getCurrentOpdracht() + 1;
+						if(cur >= on.getAantalOpdrachten()) cur = on.getAantalOpdrachten()-1;
+							on.gotoOpdracht(cur, scoreNav);
+						
+						Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+							@Override
+							public void execute() {
+								inNavBtn = false;
+									next.getElement().getStyle().clearProperty("pointerEvents");
+									((Element) next.getElement().getLastChild()).getStyle().clearBackgroundColor();
+							}});
+					}});
 				
-				int cur = on.getCurrentOpdracht() + 1;
 				
-				if(cur >= on.getAantalOpdrachten()) cur = on.getAantalOpdrachten()-1;
-				on.gotoOpdracht(cur, scoreNav);
 			}
 		});
 		prev = new HeaderButton(DWOplayer.PARAMETERS.headercss()); prev.setText("< Vorige");
@@ -799,9 +825,33 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			
 			@Override
 			public void onTap(TapEvent event) {
-				int cur = on.getCurrentOpdracht() - 1;
-				if(cur < 0) cur = 0 ;
-				on.gotoOpdracht(cur, scoreNav);
+				if(inNavBtn) {
+					logger.info("disabled");
+					return;
+				}
+				inNavBtn = true;
+				//DOM.setElementPropertyBoolean(next.getElement(), "disabled", true);
+				prev.getElement().getStyle().setProperty("pointerEvents", "none");
+				((Element) prev.getElement().getLastChild()).getStyle().setBackgroundColor("gray");
+				Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+					@Override
+					public void execute() {
+						logger.info("enabled");
+						int cur = on.getCurrentOpdracht() - 1;
+						if(cur < 0) cur = 0 ;
+						on.gotoOpdracht(cur, scoreNav);
+						Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+							@Override
+							public void execute() {
+								inNavBtn = false;
+								//DOM.removeElementAttribute(next.getElement(), "disabled");
+								prev.getElement().getStyle().clearProperty("pointerEvents");
+								((Element) prev.getElement().getLastChild()).getStyle().clearBackgroundColor();
+								logger.info("enable");
+							}});
+					}});
 			}
 		});
 		
