@@ -112,7 +112,7 @@ public class PijlVak extends LayoutPanel{
 		//prefixVak.setEditable(false);
 		//prefixVak.setLocation((fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+" ").getWidth(),(fm.getAscent() + fm.getDescent())/2);
 		if(setState)
-			viewer = addNewViewer("", this);
+			addNewViewer("");
 		else
 			editor = addNewEditor(this);
 		//formuleVak = new FormuleVak();
@@ -175,9 +175,9 @@ public class PijlVak extends LayoutPanel{
 		return editor;
 	}
 	
-	public FormuleViewer addNewViewer(String text, LayoutPanel p)
+	public void addNewViewer(String text)
 	{
-		FormuleViewer viewer = new FormuleViewer(text);
+		viewer = new FormuleViewer(text);
 		viewer.setFont(fm);
 		if(editorPanel != null)
 			editorPanel.clear();
@@ -187,31 +187,31 @@ public class PijlVak extends LayoutPanel{
 		//editor.setCurrent(0, 0);
 		//editor.requestFocus();
 		if (hasPrefix)
-		{	p.add(prefixVak.getAsPanel());
+		{	prefixVak.getAsPanel().removeFromParent();
+			this.add(prefixVak.getAsPanel());
 			if(operator.equals("abc") || operator.equals("sub"))
 			{
-				p.setWidgetLeftWidth(prefixVak.getAsPanel(), 10, Style.Unit.PX, prefixVak.getWidth(), Style.Unit.PX);
-				p.setWidgetTopHeight(prefixVak.getAsPanel(), ashoogte, Style.Unit.PX, prefixVak.getHeight(), Style.Unit.PX);
+				this.setWidgetLeftWidth(prefixVak.getAsPanel(), 10, Style.Unit.PX, prefixVak.getWidth(), Style.Unit.PX);
+				this.setWidgetTopHeight(prefixVak.getAsPanel(), ashoogte, Style.Unit.PX, prefixVak.getHeight(), Style.Unit.PX);
 			}
 		}
 		
 		if(!operator.equals("") && !operator.equals("haakjes") && !operator.equals("herleid") && !operator.equals("gelijkwaardig") && !operator.equals("ontbind") && !operator.equals("splits") && !operator.equals("wortel")  && !operator.equals("implicatie"))
 		{
-			p.add(editorPanel);
+			this.add(editorPanel);
 			//formuleVak.setLocation((fm.getAscent() + fm.getDescent())/2 + fm.stringWidth("  "+operator+" "),(fm.getAscent() + fm.getDescent())/2);
-			p.setWidgetLeftWidth(editorPanel, (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+" ").getWidth(), Style.Unit.PX, viewer.getWidth(), Style.Unit.PX);
-			p.setWidgetTopHeight(editorPanel, ashoogte + fm.getAscent()/2-viewer.getMainRegel().getAsHoogte()-fm.getDescent()/2, Style.Unit.PX, viewer.getHeight(), Style.Unit.PX);
+			this.setWidgetLeftWidth(editorPanel, (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+" ").getWidth(), Style.Unit.PX, viewer.getWidth(), Style.Unit.PX);
+			this.setWidgetTopHeight(editorPanel, ashoogte + fm.getAscent()/2-viewer.getMainRegel().getAsHoogte()-fm.getDescent()/2, Style.Unit.PX, viewer.getHeight(), Style.Unit.PX);
 			
 			if(operator.equals("abc") || operator.equals("sub"))
 			{
-				p.setWidgetLeftWidth(editorPanel, 10 + prefixVak.getWidth(), Style.Unit.PX, viewer.getWidth(), Style.Unit.PX);
+				this.setWidgetLeftWidth(editorPanel, 10 + prefixVak.getWidth(), Style.Unit.PX, viewer.getWidth(), Style.Unit.PX);
 				//p.setWidgetTopHeight(editorPanel, ashoogte + fm.getAscent()/2, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
-				p.setWidgetTopHeight(editorPanel, ashoogte + viewer.getMainRegel().getAsHoogte() - prefixVak.getAsHoogte(), Style.Unit.PX, viewer.getHeight(), Style.Unit.PX);
+				this.setWidgetTopHeight(editorPanel, ashoogte + viewer.getMainRegel().getAsHoogte() - prefixVak.getAsHoogte(), Style.Unit.PX, viewer.getHeight(), Style.Unit.PX);
 			}
 			
 		}
 		
-		return viewer;
 	}
 	
 	public void paintComponent()
@@ -401,7 +401,7 @@ public class PijlVak extends LayoutPanel{
 	{	if(editor != null)
 			editor.insert(s);
 		else
-			viewer = addNewViewer(s, this);
+			addNewViewer(s);
 	//vervangEditorDoorViewer();
 		
 		//formuleVak.vulVak("$f" + s + "@");
@@ -449,7 +449,7 @@ public class PijlVak extends LayoutPanel{
 	{
 		String text = editor.toString();
 		editor = null;
-		viewer = addNewViewer(text, this);
+		addNewViewer(text);
 		//if(editorPanel.isAttached())
 		//	this.remove(editorPanel);
 		//viewer.insert("$f" + text + "@");

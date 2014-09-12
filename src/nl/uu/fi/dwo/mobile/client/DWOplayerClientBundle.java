@@ -19,6 +19,9 @@ public interface DWOplayerClientBundle extends ClientBundle {
 	@Source("nl/uu/fi/dwo/mobile/client/resources/pijlcopy.gif")
 	ImageResource pijlcopy();
 	
+	@Source("nl/uu/fi/dwo/mobile/client/resources/pijldown.gif")
+	ImageResource pijldown();
+	
 	@Source("nl/uu/fi/dwo/mobile/client/resources/abcknop.png")
 	ImageResource abcknop();
 	
