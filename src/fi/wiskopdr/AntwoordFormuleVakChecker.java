@@ -208,6 +208,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		this.correct = false;
 		this.fout = false;
 		this.goedHalfFout = AntwoordVakChecker.GEEN;
+		this.syntaxFout = false;
 		
 		this.substitutie = substitutie;
 		this.gebruikersSubstituties = gebruikersSubstituties;
@@ -239,6 +240,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		checkResults.put("goedHalfFout", new Integer(goedHalfFout));
 		checkResults.put("score", new Integer(score));
 		checkResults.put("feedback", feedback);
+		checkResults.put("syntaxFout", new Boolean(syntaxFout));
 		
 		
 		return checkResults;

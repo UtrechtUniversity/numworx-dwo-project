@@ -439,6 +439,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		checkResults.put("goedHalfFout", new Integer(goedHalfFout));
 		checkResults.put("score", new Integer(score));
 		checkResults.put("feedback", feedback);
+		checkResults.put("syntaxFout", new Boolean(syntaxFout));
 		
 		
 		return checkResults;

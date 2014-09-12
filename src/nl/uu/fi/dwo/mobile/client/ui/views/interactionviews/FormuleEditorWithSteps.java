@@ -358,7 +358,8 @@ public class FormuleEditorWithSteps implements InteractionView
 		stapNr++;
 
 		if (hasFeedback)
-		{	contentPanel.add(feedbackPanel);
+		{	feedbackPanel.removeFromParent();
+			contentPanel.add(feedbackPanel);
 			contentPanel.setWidgetLeftRight(feedbackPanel, 5, Style.Unit.PX, 5, Style.Unit.PX);
 			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + fv.getHeight(), Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX); 
 		}
@@ -1005,6 +1006,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	public FormuleEditorWithAnswer addNewEditor(Panel p)
 	{
 		FormuleEditorWithAnswer editor = editorInstance();
+		editor.zetMode(mode);
 		editor.setFormuleToolBijFocus(true);
 		//editor.zetSubstitutie(substitutie);
 		if (!hasPrefix)
@@ -1456,7 +1458,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		String substitutieString = "";
 		String[] gebruikersSubStrings = null;
 		
-		if(editor != null)
+		if(editor != null && mode != 2 && mode != 3)
 			editor.kijkNa();
 
 		stapNr = this.stapNr;
@@ -1657,90 +1659,88 @@ public class FormuleEditorWithSteps implements InteractionView
 			if (viewers.size() > 0)
 				latest_answer_viewer = viewers.get(viewers.size() - 1);
 			
-			
-			if (i == stapNr && nagekeken)
-			{	if((linStrategieVersie || bordjesMethode))
-				{	fv.showResult(FormuleViewer.CORRECT);
-					setAndAddFeedback(Text.rb.getString("feedbackTekst04"));
-					//"De vergelijking is correct opgelost."
-					stapOk = false;
+			if(mode == 2 || mode == 3)
+				fv.getAsPanel().getElement().getStyle().setMarginLeft(23, Unit.PX);
+			else
+			{	if (i == stapNr && nagekeken)
+				{	if((linStrategieVersie || bordjesMethode))
+					{	fv.showResult(FormuleViewer.CORRECT);
+						setAndAddFeedback(Text.rb.getString("feedbackTekst04"));
+						//"De vergelijking is correct opgelost."
+						stapOk = false;
+					}
+					else //doel: laatste antwoord nogmaals nakijken, om juiste feedback te genereren.
+					{
+						viewers.remove(fv);
+						stepPanel.remove(p);
+						editor = addNewEditor(stepPanel);
+						String currentTekst = latest_answer_viewer.toString();
+						if (hasPrefix)
+							currentTekst = removePrefix(currentTekst);
+						currentTekst = removeIsTeken(currentTekst);
+						editor.insert(currentTekst);
+						if(viewers.size() > 0)
+							latest_answer_viewer = viewers.get(viewers.size() - 1);
+						editor.kijkNa();
+						maakNakijkenAf(false);
+					}
+					
 				}
-				else
+				else if(i == stapNr && editor != null)
 				{
+					if(editor.toString().equals("") && (i > 1 || (!hasStartString && i > 0)))
+					{
+						//stap terug doen en die nakijken, zodat de feedback goed kan worden bepaald. Alleen nodig bij oefenmodi.
+						stepPanel.remove(editor);
+						stapNr--;
+						this.stapNr--;
+						stepPanels.remove(stepPanels.size() - 1);
+						stepPanel = stepPanels.get(stepPanels.size() - 1);
+						stepPanel.remove(viewers.get(viewers.size() - 1).getAsPanel());
+						stepPanelY -= stapH + viewers.get(viewers.size() - 1).getHeight();
+						viewers.remove(viewers.size() - 1);
+						if(pijlVakken.size() > 0)
+						{	
+							if(pijlVakken.get(pijlVakken.size() - 1).isAttached())
+								contentPanel.remove(pijlVakken.get(pijlVakken.size() - 1));
+							pijlVakken.remove(pijlVakken.size() - 1);
+						}
+						
+						editor = addNewEditor(stepPanel);
+						String currentTekst = latest_answer_viewer.toString();
+						if (hasPrefix)
+							currentTekst = removePrefix(currentTekst);
+						currentTekst = removeIsTeken(currentTekst);
+						editor.insert(currentTekst);
+						if(viewers.size() > 0)
+							latest_answer_viewer = viewers.get(viewers.size() - 1);
+						editor.kijkNa();
+					}
+					else 
+					{	editor.kijkNa();
+						
+					}
+				}
+				else if(i == stapNr && (bordjesMethode || linOefenVersie))
+				{
+					fv.showResult(FormuleViewer.ALMOSTCORRECT);
+				}
+				else if(i == stapNr)
+				{
+					//nu: editor = null. 
 					viewers.remove(fv);
 					stepPanel.remove(p);
 					editor = addNewEditor(stepPanel);
-					String currentTekst = latest_answer_viewer.toString();
-					if (hasPrefix)
-						currentTekst = removePrefix(currentTekst);
-					currentTekst = removeIsTeken(currentTekst);
-					editor.insert(currentTekst);
-					if(viewers.size() > 0)
-						latest_answer_viewer = viewers.get(viewers.size() - 1);
+					editor.insert(latest_answer_viewer.toString());
 					editor.kijkNa();
 					maakNakijkenAf(false);
 				}
-				
-			}
-			else if(i == stapNr && editor != null)
-			{
-				if(editor.toString().equals("") && (i > 1 || (!hasStartString && i > 0)))
-				{
-					//stap terug doen en die nakijken, zodat de feedback goed kan worden bepaald.
-					
-					stepPanel.remove(editor);
-					stapNr--;
-					this.stapNr--;
-					stepPanels.remove(stepPanels.size() - 1);
-					stepPanel = stepPanels.get(stepPanels.size() - 1);
-					stepPanel.remove(viewers.get(viewers.size() - 1).getAsPanel());
-					stepPanelY -= stapH + viewers.get(viewers.size() - 1).getHeight();
-					viewers.remove(viewers.size() - 1);
-					if(pijlVakken.size() > 0)
-					{	
-						if(pijlVakken.get(pijlVakken.size() - 1).isAttached())
-							contentPanel.remove(pijlVakken.get(pijlVakken.size() - 1));
-						pijlVakken.remove(pijlVakken.size() - 1);
-					}
-					
-					editor = addNewEditor(stepPanel);
-					String currentTekst = latest_answer_viewer.toString();
-					if (hasPrefix)
-						currentTekst = removePrefix(currentTekst);
-					currentTekst = removeIsTeken(currentTekst);
-					editor.insert(currentTekst);
-					if(viewers.size() > 0)
-						latest_answer_viewer = viewers.get(viewers.size() - 1);
-					editor.kijkNa();
-					
-					
-					
-				}
+				else if (i == stapNr - 1 && !nagekeken && !(linStrategieVersie))
+					fv.showResult(FormuleViewer.ALMOSTCORRECT);
 				else
-				{	editor.kijkNa();
-					
-				}
-			}
-			else if(i == stapNr && (bordjesMethode || linOefenVersie))
-			{
-				fv.showResult(FormuleViewer.ALMOSTCORRECT);
-			}
-			else if(i == stapNr)
-			{
-				//nu: editor = null. 
-				viewers.remove(fv);
-				stepPanel.remove(p);
-				editor = addNewEditor(stepPanel);
-				editor.insert(latest_answer_viewer.toString());
-				editor.kijkNa();
-				maakNakijkenAf(false);
-			}
-			else if (i == stapNr - 1 && !nagekeken && !(linStrategieVersie))
-				fv.showResult(FormuleViewer.ALMOSTCORRECT);
-			else
-				fv.showResult(FormuleViewer.NONE);
-			score = correct == Boolean.TRUE ? scoreMax : 0;
-			
+					fv.showResult(FormuleViewer.NONE);
+				score = correct == Boolean.TRUE ? scoreMax : 0;
+			}	
 		}
 //		if(editor != null)
 //			stepPanelY -= editor.getHeight() + stapH;
@@ -1807,6 +1807,20 @@ public class FormuleEditorWithSteps implements InteractionView
 	public void maakNakijkenAf(boolean backStep)
 	{
 		int goedHalfFout = editor.getGoedHalfFout();
+		if(mode == 2 || mode ==3)
+		{	//hier notatiecheck nog inbouwen.
+			if(goedHalfFout == AntwoordVakChecker.FOUT && editor.isSyntaxFout())
+			{
+				String feedback = editor.getFeedback();
+				setAndAddFeedback(feedback);
+			}
+			else
+			{	addStep("$f" + editor.toString() + "@");
+			}
+			return;
+		}
+		
+		
 		
 		//stapOk juiste waarde geven.
 		if(goedHalfFout == AntwoordVakChecker.GOED)
@@ -2086,6 +2100,8 @@ public class FormuleEditorWithSteps implements InteractionView
 			score = scoreMax;
 			comRoot.setChanged(false);
 		}
+		if(mode == 2 || mode == 3)
+			fv.showResult(fv.NONE);
 		if (latest_answer_viewer != null && !(hasStartString && stapNr == 1))
 			latest_answer_viewer.showResult(fv.NONE);
 		latest_answer_viewer = fv;

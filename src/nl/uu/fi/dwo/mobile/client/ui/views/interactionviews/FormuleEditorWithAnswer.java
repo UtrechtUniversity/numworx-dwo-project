@@ -147,6 +147,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private int scoreMax = 0;
 	private boolean check = true;
 	private boolean teltMee = true;
+	private boolean syntaxFout = false;
 	private int breedte;
 	private int hoogte;
 	private boolean volledigeBreedte;
@@ -373,10 +374,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 	@Override 
 	public void enter() {
-		if(mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS)
-		{
-			return; 
-		}
+//		if(mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS)
+//		{
+//			if(this.fe != null)
+//				fe.maakNakijkenAf(false);
+//			return;
+//		}
 		kijkNa();
 	}
 	
@@ -400,13 +403,19 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		this.score = (Integer) checkResults.get("score");
 		//System.out.println("score = " + score);
 		this.feedback = (String) checkResults.get("feedback");
-
+		this.syntaxFout = (Boolean) checkResults.get("syntaxFout");
+		
 		this.goedHalfFout = (Integer) checkResults.get("goedHalfFout");
 
 		if(fe != null)
 		{	boolean stapCorrect = fe.controleerStap();
 			if(!stapCorrect)
 				this.goedHalfFout = AntwoordVakChecker.FOUT;
+		}
+		if(mode == 2 || mode == 3)
+		{	if(this.fe != null)
+				fe.maakNakijkenAf(backStep);
+			return;
 		}
 		
 //		logger.fine("userAnswer: " + useranswer);
@@ -475,7 +484,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		return goedHalfFout;
 	}
 	
-	
+	public boolean isSyntaxFout()
+	{
+		return syntaxFout;
+	}
 	
 	public void resize()
 	{
@@ -572,7 +584,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			this.insert(antwoord);
 			setCurrentElementRepaint();
 			lastanswer = "$f" + toString() + "@";
-			kijkNa();
+			if(mode != 2 && mode != 3)
+				kijkNa();
 		}
 
 	}
