@@ -217,7 +217,7 @@ public class ResultScoreButton extends JPanel implements
 				sco.getScoPanel(GuiCreator.instance().getDWO(), GuiCreator.instance().getUser());
 				PartialScoreIF ps = sco.getPartialScoreIF();
 				Map map = ps.getScoreObjectivesMap(sco);
-				sco.end();
+				sco.endWithoutSaving();
 				sco.setLessonMode(mode);
 				if(map != null) {
 					JDialog d = new JDialog(DwoHelper.getFrameForComponent(null), "Deelscores");
