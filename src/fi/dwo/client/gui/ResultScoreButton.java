@@ -212,15 +212,21 @@ public class ResultScoreButton extends JPanel implements
         	if(score != 0)
         	try {
 				Sco sco = (Sco) domain.getLessonGroup();
+				String mode = sco.getLessonMode();
+				sco.setLessonMode(Sco.BROWSE);
 				sco.getScoPanel(GuiCreator.instance().getDWO(), GuiCreator.instance().getUser());
 				PartialScoreIF ps = sco.getPartialScoreIF();
 				Map map = ps.getScoreObjectivesMap(sco);
+				sco.end();
+				sco.setLessonMode(mode);
 				if(map != null) {
 					JDialog d = new JDialog(DwoHelper.getFrameForComponent(null), "Deelscores");
 					d.setContentPane(new JScrollPane(new fi.wiskopdr.ScoresObjectivesPanel(map)));
 					d.pack();
 					d.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					d.show();
+				} else {
+					JOptionPane.showMessageDialog(this, "Geen deelscores", "", JOptionPane.INFORMATION_MESSAGE);
 				}
 			} catch (Throwable e1) {
 				e1.printStackTrace();
