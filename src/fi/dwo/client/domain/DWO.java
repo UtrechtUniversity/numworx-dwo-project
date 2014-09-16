@@ -1823,7 +1823,12 @@ private static boolean isValidEmail(String email) {
     }
     
     public String LMSCommit(ScoBase sco, String param) {
-		return PersistenceFacade.instance().LMSCommit(sco, getUser(), param);
+		try {
+			return PersistenceFacade.instance().LMSCommit(sco, getUser(), param);
+		} catch (PersistenceException e) {
+        	JOptionPane.showMessageDialog(this, e.getMessage());
+			return "false";
+		}
 	}
 
 	public String LMSGetLastError() {

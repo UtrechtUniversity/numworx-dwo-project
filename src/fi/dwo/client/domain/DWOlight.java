@@ -930,7 +930,13 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 		}
 
 		public String LMSCommit(ScoBase sco, String param) {
-			return PersistenceFacade.instance().LMSCommit(sco, getUser(), param);
+			try {
+				return PersistenceFacade.instance().LMSCommit(sco, getUser(), param);
+			} catch (PersistenceException e) {
+				JOptionPane.showMessageDialog(this, e.getMessage());
+				e.printStackTrace();
+				return "false";
+			}
 		}
 
 		public Sco[] getEditableScos() {

@@ -550,8 +550,7 @@ System.err.println("sum = ["+result+"]");
 				applet.destroy();
 			} catch (RuntimeException e) {
 				// Dialog: interne fout, sco niet goed afgesloten, mogelijk verlies van gegevens.
-				
-				
+				JOptionPane.showMessageDialog(applet, e.getMessage());
 				e.printStackTrace();
 				try {
 					

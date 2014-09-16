@@ -239,15 +239,9 @@ public class PersistenceFacade {
     }
 
     
-    public String LMSCommit(ScoBase sco, User user, String dummy)
+    public String LMSCommit(ScoBase sco, User user, String dummy) throws PersistenceException
     {
-    	try {
 			return StoreCreator.instance().commit(user.getUserID(), sco.getScoID(), dummy);
-		} catch (PersistenceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return "false";
     }
     
     /**

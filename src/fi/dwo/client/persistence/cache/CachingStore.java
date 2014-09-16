@@ -3,14 +3,16 @@ package fi.dwo.client.persistence.cache;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ConcurrentModificationException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import javax.swing.JOptionPane;
+
 import org.apache.xmlrpc.applet.XmlRpcException;
 
+import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.persistence.DbAccessIF;
 import fi.dwo.client.system.PersistenceException;
 import fi.dwo.server.persistence.DwoXmlRpcException;
@@ -168,7 +170,7 @@ public class CachingStore implements IStore, Runnable {
 		try {
 			commit(false);
 		} catch (PersistenceException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(DwoHelper.getApplet(), e.getMessage());
 		}
 		synchronized(this) {
 			while(worker != null) {
