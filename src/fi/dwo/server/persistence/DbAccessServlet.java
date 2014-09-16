@@ -28,6 +28,7 @@ import fi.beans.jdbc.DbConnectIF;
 import fi.beans.xmlrpc.Servlet;
 import fi.dwo.VERSION;
 import fi.dwo.client.persistence.DbAccessIF;
+
 /**
  * Servlet voor XML-RPC access op de DWO database.
  * Zorgt tevens voor access van de jar files.
@@ -45,10 +46,45 @@ import fi.dwo.client.persistence.DbAccessIF;
  */
 public class DbAccessServlet extends Servlet {
     
+	static class MonitorDbAccess extends DbAccess {
+		private Connection mine, his;
+		public void close() {
+			if(mine != null)
+			{
+				try {
+					mine.close();
+				} catch (SQLException e) {
+					log(this + " close " + e);
+				}
+			}
+			mine = null; his = null;
+			super.close();
+		}
+
+		public Connection getConnection() throws SQLException {
+			Connection c = super.getConnection();
+			if(c != his || mine == null) 
+			{	
+				his = c;
+				mine = MonProxyFactory.monitor(c);
+			} 
+			return mine;
+		}
+	};
+
+	
 	static class MyProxy extends DbAccessProxy {
 
 		protected DbAccessIF createDelegate() {
 			return new DbAccess();
+		}
+		
+	}
+
+	static class MonitoringProxy extends DbAccessProxy {
+
+		protected DbAccessIF createDelegate() {
+			return new MonitorDbAccess();
 		}
 		
 	}
@@ -62,8 +98,10 @@ public class DbAccessServlet extends Servlet {
      */
     public DbAccessServlet() {
         super(dbAccess = new MyProxy());
+        unLock();
 
     }
+
     protected DbAccessServlet(DbAccessIF myDbAccess)
     {
         super(dbAccess = myDbAccess);
@@ -72,7 +110,14 @@ public class DbAccessServlet extends Servlet {
     public void init(ServletConfig arg0) throws ServletException {
         super.init(arg0);
         log("Initializatie r" + VERSION.REVISION);
- 
+        if(!"false".equals(getInitParameter("monitor")))
+        {
+        	setHandler(dbAccess = (DbAccessIF) (MonProxyFactory.monitor(new MonitoringProxy())));
+        	log("monitoring");
+        } else {
+        	log("no monitoring");
+        }
+
         int maxthreads = 200;
         String param = getInitParameter("xmlrpc.maxthreads");
         if(param != null )
@@ -81,6 +126,7 @@ public class DbAccessServlet extends Servlet {
 
         if("true".equals(getInitParameter("local")))
         {
+        	setLock(this);
         	dbAccess = new DbAccessLocal() {
         		
         		private Connection mine, his;
