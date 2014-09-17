@@ -61,6 +61,10 @@ public class SelectModuleItem
 			this.name = map.get("name").toString();
 			this.id   = ((Integer) map.get("courseID")).intValue();
 			this.description = (String) map.get("description");
+			Integer parentID = (Integer) map.get("parentID");
+			if(parentID != null && parentID != 0) {
+				this.parent = SelectModuleItemHolder.getItemByID(parentID);
+			}
 			break;
 		case SCO:
 			this.type = type;

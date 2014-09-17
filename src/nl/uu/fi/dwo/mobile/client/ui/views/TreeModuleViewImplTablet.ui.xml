@@ -107,6 +107,9 @@
 								<g:Label ui:field="navigationLabel"  >Modules</g:Label>
 							</g:HTMLPanel>
 						</mgwt:center>
+						<mgwt:right>
+						    <mgwt:HeaderButton ui:field="navigationUpButton" >Up</mgwt:HeaderButton>
+						</mgwt:right>
 					</mgwt:HeaderPanel>
 					 <mgwt:LayoutPanel ui:field="infoArea" addStyleNames="{style.info_area}"> </mgwt:LayoutPanel>
 				   	<mgwt:ScrollPanel>

@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleCell;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
@@ -57,6 +58,7 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 	@UiField HeaderPanel  navigationHeaderPanel;
 	@UiField Label navigationLabel;
 	@UiField HeaderButton navigationBackButton;
+	@UiField HeaderButton navigationUpButton;
 	@UiField LayoutPanel  navigationPanel;
 	
 	@UiField HeaderPanel moduleHeaderPanel;
@@ -76,9 +78,6 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 	
 	private List<SelectModuleItem> cellItems;
 	private List<SelectModuleItem> model;
-	
-	
-	
 	private Presenter presenter; 
 	
 	//================================================================================
@@ -103,8 +102,11 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 		this.moduleBackButton.getElement().setInnerHTML("<span class='fa fa-2x fa-chevron-left' ></span>");
 		this.moduleBackButton.addStyleName(DWOplayer.PARAMETERS.navigationcss().headerText());
 		this.navigationBackButton.getElement().setInnerHTML("<span class='fa fa-2x fa-arrow-left' ></span>");
+		this.navigationUpButton.getElement().setInnerHTML("<span class='fa fa-2x fa-arrow-up' ></span>");
 
 		this.navigationBackButton.addStyleName(DWOplayer.PARAMETERS.navigationcss().headerText());
+		this.navigationUpButton.addStyleName(DWOplayer.PARAMETERS.navigationcss().headerText());
+		
 		//this.fullscreenButton.getElement().setInnerHTML("<span class='fa fa-expand' ></span>");
 
 		this.loadingArea.setVisible(false);
@@ -128,8 +130,17 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 	@UiHandler("navigationBackButton")
 	public void onNavigationTap(TapEvent event) {
 		// go back one spot in the tree.
-		History.back();
+		//History.back();
+		presenter.goTo(new LoginPlace());
 		
+	}
+	@UiHandler("navigationUpButton")
+	public void onNavigationUpTab(TapEvent event) {
+		Log("Go up " + parent);
+		if(parent != null) 
+			selectItem(parent);
+		else 
+			presenter.goTo(new TreeModulePlace());
 	}
 
 
@@ -156,6 +167,7 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 			container.clear();
 			ViewModuleViewImpl viewModuleViewImpl = new ViewModuleViewImpl(false);
 			loadedModule = viewModuleViewImpl.initialize(this);
+			viewModuleViewImpl.setApi(DWOplayer.api);
 			int h = moduleHeaderPanel.getOffsetHeight();
 			Log("window top = " + h);
 			viewModuleViewImpl.setWindowTop(h);
@@ -211,6 +223,7 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
     // Animations
     //================================================================================
 	private int animation_duration = 200; // XXX is there a gwt standard value ?
+	private SelectModuleItem parent;
 	
 	private void toggleNavigationPanel(){
 		if (navigationPanel.getAbsoluteLeft() == 0) {
@@ -328,8 +341,9 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 		if (item != null)
 		{
 			navigationLabel.setText(item.getName());
-			
+			parent = item.getParent();
 			navigationBackButton.setVisible(true);
+			navigationUpButton.setVisible(item.getID() != 0);
 			String description = item.getDescription();
 			if(description != null)
 			{
