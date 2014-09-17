@@ -1,6 +1,9 @@
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@page import="fi.dwo.server.persistence.DbAccessLocal"%>
+<% request.setCharacterEncoding("UTF-8"); %>
 <html>
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <title>Digitale Wiskunde Omgeving</title>
   <%
   	String css = request.getParameter("launch_presentation_css_url");
