@@ -145,6 +145,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	//private Expressie substitutie;
 	private String feedback = "";
 	private int scoreMax = 0;
+	private boolean ingevuld = false;
+	private boolean nagekeken = false;
 	private boolean check = true;
 	private boolean teltMee = true;
 	private boolean syntaxFout = false;
@@ -371,27 +373,52 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		checkimg.setVisible(false);
 		lastanswer = null;
 	}
+	
+	public void setimg(String answer)
+	{
+		checkimg.setVisible(true);
+		lastanswer = answer;
+	}
 
 	@Override 
 	public void enter() {
-//		if(mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS)
-//		{
-//			if(this.fe != null)
-//				fe.maakNakijkenAf(false);
-//			return;
-//		}
-		kijkNa();
+		
+		if(!this.toString().equals(""))
+			ingevuld = true;
+		else
+			ingevuld = false;
+		
+		//Onderstaand if-statement was weggehaald, maar is nodig bij zelftoets en eindtoets, lijkt me.
+		//Maar waarschijnlijk wil ik toch ook in het geval van zelftoets en eindtoets door kijkna heen, om syntaxfouten te onderscheppen.
+		/*
+		if(mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS)
+		{
+			if(this.fe != null && ingevuld)
+				fe.maakNakijkenAf(false);
+			return;
+		}
+		*/
+		if(mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS)
+			kijkNa(false, false);
+		else
+			kijkNa(false, true);
 	}
 	
 	public void kijkNa()
 	{
-		kijkNa(false);
+		kijkNa(false, true);
 	}
 	
+	
+	
 	private String lastanswer = "$f@";
-	public void kijkNa(boolean backStep)
+	public void kijkNa(boolean backStep, boolean show)
 	{
 		String useranswer = "$f" + this.toString() + "@";
+		if(useranswer.equals("$f@"))
+			ingevuld = false;
+		else
+			ingevuld = true;
 		
 		HashMap<String, Object> checkResults = new HashMap<String, Object>();
 		if(fe != null)
@@ -412,9 +439,15 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			if(!stapCorrect)
 				this.goedHalfFout = AntwoordVakChecker.FOUT;
 		}
-		if(mode == 2 || mode == 3)
+		if((mode == 2 || mode == 3) && !show)
 		{	if(this.fe != null)
 				fe.maakNakijkenAf(backStep);
+			
+			if(syntaxFout)
+			{	checkimg.setUrl(FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
+				checkimg.setVisible(true);
+				//TODO: feedback syntaxfout tonen.
+			}
 			return;
 		}
 		
@@ -467,11 +500,15 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if (this.fe == null && !useranswer.equals(lastanswer))
 		{
 			lastanswer = useranswer;
+			if(mode == 0 || mode ==1)
 			comRoot.setChanged(goedHalfFout == AntwoordVakChecker.FOUT);
 		
 		}
-		if(this.fe != null)
-			fe.maakNakijkenAf(backStep);
+		//if(this.fe != null && !(mode == 2 || mode == 3))
+		//	fe.maakNakijkenAf(backStep);
+		if(this.fe != null && ingevuld)
+		{	fe.maakNakijkenAf(backStep);
+		}
 	}
 	
 	public String getFeedback()
@@ -558,8 +595,18 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		} else {
 			h = new HashMap<String, Object>();
 			String[] formuleVakInhouden = {"$f" + this.toString() + "@" } ;
+			boolean ingevuld = true;
+			boolean nagekeken = false;
+			
+			ingevuld = this.ingevuld;
+			nagekeken = this.nagekeken;
+			
+			
 			h.put("formuleVakInhouden", formuleVakInhouden);
 			h.put(ANTWOORD_STRING, formuleVakInhouden[0]);
+			h.put("ingevuld", new Boolean(ingevuld));
+			h.put("nagekeken", new Boolean(nagekeken));
+			
 		}
 		return h;
 	}
@@ -573,7 +620,18 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			fews.setState(h);
 		}
 		
+		boolean ingevuld = true;
+		Boolean nagekeken = null;
+		if (h.get("ingevuld") != null)
+			ingevuld = (Boolean) h.get("ingevuld");
+		if (h.get("nagekeken") != null)
+			nagekeken = (Boolean) h.get("nagekeken");
+		
+		this.ingevuld = ingevuld;
+		this.nagekeken = nagekeken;
+		
 		String antwoord = (String) h.get(ANTWOORD_STRING);
+		
 		if (antwoord != null && !"".equals(antwoord.trim()))
 		{
 			if (antwoord.startsWith("$f"))
@@ -584,7 +642,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			this.insert(antwoord);
 			setCurrentElementRepaint();
 			lastanswer = "$f" + toString() + "@";
-			if(mode != 2 && mode != 3)
+			//if(mode != 2 && mode != 3)
+			//	kijkNa();
+			
+			if (mode == 0 || nagekeken)
 				kijkNa();
 		}
 
@@ -602,6 +663,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if(!teltMee)
 			return Boolean.TRUE;
 		return correct;
+	}
+	
+	public void zetNagekeken(boolean b) {
+		if (ingevuld)
+			nagekeken = b;
 	}
 
 	@Override

@@ -129,6 +129,10 @@ public class PopupFacade implements InteractionView {
 	public void kijkNa() {
 		delegate.kijkNa();
 	}
+	
+	public void zetNagekeken(boolean b) {
+		delegate.zetNagekeken(b);
+	}
 
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		delegate.setCommunicationRoot(comRoot);

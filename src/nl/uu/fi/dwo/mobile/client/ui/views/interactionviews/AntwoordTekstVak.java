@@ -708,6 +708,12 @@ public class AntwoordTekstVak implements InteractionView{
 		//	comRoot.setChanged();
 	}
 	
+	public void zetNagekeken(boolean b)
+	{
+		if(ingevuld)
+			nagekeken = b;
+	}
+	
 	public void checkAntwoord()
 	{
 		checkAntwoord(true);

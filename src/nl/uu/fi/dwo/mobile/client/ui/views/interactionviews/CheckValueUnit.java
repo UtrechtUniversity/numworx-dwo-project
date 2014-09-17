@@ -194,7 +194,7 @@ public class CheckValueUnit implements InteractionStub{
 			public void onClick(ClickEvent e)
 			{	e.stopPropagation();
 				kijkNa();
-	        	if(fout) errorCount++;
+				if(fout) errorCount++;
 	        	attemptsCount++;
 				setAttempt();
 			}
@@ -446,6 +446,7 @@ public class CheckValueUnit implements InteractionStub{
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
+		zetMode(comRoot.getMode());
 	}
 	
 	@Override

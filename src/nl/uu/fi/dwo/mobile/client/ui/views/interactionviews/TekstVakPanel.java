@@ -885,6 +885,13 @@ public class TekstVakPanel implements InteractionView
 		return correct;
 	}
 
+	public void zetNagekeken(boolean b)
+	{
+		for (Object object : interactionViewObjects) {
+			if(object instanceof InteractionView)
+				((InteractionView) object).zetNagekeken(b);
+		}
+	}
 	
 	public void setParent(TekstVak panel)
 	{

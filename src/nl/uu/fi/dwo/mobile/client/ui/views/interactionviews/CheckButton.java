@@ -49,6 +49,8 @@ public class CheckButton implements InteractionStub
 	
 	ArrayList<Object> lijst;
 	
+	private int mode; 
+	
 	
 	public CheckButton(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
@@ -183,6 +185,7 @@ public class CheckButton implements InteractionStub
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
+		zetMode(comRoot.getMode());
 	}
 
 	@Override
@@ -193,6 +196,16 @@ public class CheckButton implements InteractionStub
 	@Override
 	public void kijkNa() {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	public void zetMode(int mode)
+	{
+		this.mode = mode;
+		checkButton.setVisible(mode==0 || mode==1);
+	}
+	
+	public void zetNagekeken(boolean b) {
 		
 	}
 

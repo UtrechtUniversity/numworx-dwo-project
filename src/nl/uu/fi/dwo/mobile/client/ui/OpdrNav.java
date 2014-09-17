@@ -21,11 +21,14 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.PushButton;
 import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
 import com.googlecode.mgwt.dom.client.event.touch.TouchMoveEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
+
+import fi.wiskopdr.text.Text;
 
 /**
  * Used for navigation between assignments
@@ -67,6 +70,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 	private int currentActiviteit = 0;
 	private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
 	private Memento memento;
+	
 
 	public OpdrNav(HashMap<String, Object> launchData, ViewModuleViewImpl ev, Memento memento)
 	{
@@ -149,6 +153,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		mainPanel = new FlowPanel();
 		contentPanel = new FlowPanel();
 		contentPanel.getElement().getStyle().setMargin(5, Unit.PX);
+		
 		mainPanel.add(contentPanel);
 
 		lb_activiteiten = new ListBox();
@@ -394,6 +399,79 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		memento.setOpdrContStates(states);
 	}
 
+	public void kijkToetsNa()
+	{
+		saveCurrentState();
+		for (int j = 0; j < aantalOpdrachten[currentActiviteit]; j++)
+		{
+			if (states[currentActiviteit][j] != null)
+			{	//entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][j], !(gekoppeldeOpdrachten || globalParam), states[currentActiviteit][j]);
+				//TODO: gekoppeldeOpdrachten en globalParam implementeren.
+				entry.clearContentPanel();
+				entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][j], states[currentActiviteit][j]);
+			}
+			else
+				entry.zetOpdracht(opdrachten[currentActiviteit][j]);
+			entry.kijkNa();
+			entry.zetNagekeken(true);
+			states[currentActiviteit][j] = entry.getState();
+			scores[currentActiviteit][j] = entry.getScore();
+			
+			System.out.println("Pagina = " + j + " en score = " + entry.getScore());
+//			if (objectives != null)
+//				scoresObjectives[currentActiviteit][j] = entry.getScoreObjectives();
+			//TODO: objectives (leerdoelen) implementeren
+			Boolean correct = entry.isCorrect();
+			isCorrect[currentActiviteit][j] = Boolean.TRUE == correct;
+			
+			if (buttons != null && buttons.size() > currentOpdracht)
+				setButtonCorrect(buttons.get(j), Boolean.TRUE == correct, j);
+			
+			//or[currentActiviteit].zetScore(j + 1, score);
+		}
+		//entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], !(gekoppeldeOpdrachten || globalParam), states[currentActiviteit][currentOpdracht]);
+		entry.clearContentPanel();
+		entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], states[currentActiviteit][currentOpdracht]);
+		
+		
+//		if (mode == 2 || mode == 3)
+//		{
+//			if (mode == 2 && zelftoetsGeenCorr)
+//			{
+//				// laatste kans op update sessiontime
+//				if (!zelftoetsNagekeken)
+//				{
+//					entry.sessionStop();
+//					times[currentActiviteit][currentOpdracht] = entry.getSessionTime();
+//				}
+//				zetAfdekPanelLeeg(true);
+//			}
+//			zelftoetsNagekeken = true;
+//			nakijkKnop.setEnabled(lessonMode.equals("review") || !zelftoetsGeenCorr);
+//			scoresObjectivesKnop.setEnabled(true);//goed? nodig?
+//			vorigeKnop.setVisible(vorigeKnopZichtbaar || !bolletjesZichtbaar && zelftoetsNagekeken);
+
+//			totaal = Math.max(0, totaal - (Math.max(0, aantalNakijken[currentActiviteit] - 1)) * nakijkStraf);
+//			aantalNakijkLabel.setText("" + aantalNakijken[currentActiviteit] + " keer nagekeken");
+//			if (aantalNakijken[currentActiviteit] > 0 && !zelftoetsGeenCorr)
+//				aantalNakijkLabel.setVisible(true);
+	//	}
+//		activiteitScoreLabels[currentActiviteit].setText(WiskOpdr.rb.getString("score") + totaal);
+//		if (aantalActiviteiten == 1)
+//		{	activiteitScoreLabels[currentActiviteit].setText(WiskOpdr.rb.getString("totaal") + totaal);
+//			if(voortgang)
+//				activiteitScoreLabels[0].setText(WiskOpdr.rb.getString("voortgang") + bepaalVoortgangPercentage(currentActiviteit, currentOpdracht) + "%");
+//		}
+
+//		if (mode == 0 || mode == OEFENEN_STRAFPUNTEN)
+//		{
+//			WiskOpdr.setLMSScore();
+//			WiskOpdr.setLMSState();
+//			setMWScoreLabel();
+//		}
+	}
+	
+	
 	/**
 	 * Is er state bij alle andere opdrachten van deze activiteit? Behalve de opgegeven opdrNr, die heeft zeker state!
 	 * @param actNr

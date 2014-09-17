@@ -37,6 +37,8 @@ public class GeogebraView implements InteractionView, LoadHandler
 	private int width;
 	private int height;
 	private boolean volledigeBreedte;
+	private boolean ingevuld;
+	private boolean nagekeken;
 	public native static Object getGgbWindow(Element frame) /*-{
 		return frame.contentWindow;
 	}-*/;
@@ -171,6 +173,11 @@ public class GeogebraView implements InteractionView, LoadHandler
 		if(nakijken)
 			return correct;
 		return Boolean.TRUE;
+	}
+	
+	public void zetNagekeken(boolean b) {
+		if (ingevuld)
+			nagekeken = b;
 	}
 
 	@Override

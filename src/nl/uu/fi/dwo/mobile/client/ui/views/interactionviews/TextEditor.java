@@ -243,6 +243,11 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	}
 
 	@Override
+	public void zetNagekeken(boolean b) {
+		
+	}
+	
+	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
 

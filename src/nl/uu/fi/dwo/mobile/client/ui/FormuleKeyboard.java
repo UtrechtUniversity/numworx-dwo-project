@@ -20,6 +20,7 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.TouchEvent;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.widget.RoundPanel;
@@ -291,6 +292,14 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 		tp.clearStaticPanel();
 		if(!isNoordhoff())
 			tp.getStaticPanel().add(opdrnav);
+	}
+	
+	public void addKnop(PushButton knop)
+	{
+		knop.getElement().getStyle().setFloat(Style.Float.RIGHT);
+		knop.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+		if(!isNoordhoff())
+			tp.getStaticPanel().add(knop);
 	}
 
 	static boolean isNoordhoff() {

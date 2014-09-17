@@ -478,6 +478,8 @@ public class CheckSelectieUnit implements InteractionStub
 		@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
+		zetMode(comRoot.getMode());
+		
 	}
 	
 	public CheckSelectieUnit(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)//, TekstVakPanel[] ipList)

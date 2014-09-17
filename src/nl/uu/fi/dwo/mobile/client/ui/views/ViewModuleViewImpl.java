@@ -40,6 +40,8 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.http.client.Request;
@@ -59,6 +61,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -78,6 +81,8 @@ import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
+
+import fi.wiskopdr.text.Text;
 
 
 /**
@@ -99,6 +104,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private Panel tekst = null;
 	private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
 	private double zoom = 1;
+	private PushButton nakijkKnop;
 
 	private Panel kbp = null;
 	private HeaderButton hb;
@@ -325,6 +331,27 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			this.loadingHandler.viewModuleViewSetupDone();;
 		}
 		
+		//benodigde knoppen toevoegen.
+		int mode = on.getMode();
+		if(mode == 2)
+		{
+			nakijkKnop = new PushButton(Text.rb.getString("nakijkKnopLabel"));
+			kb.addKnop(nakijkKnop);
+			nakijkKnop.addClickHandler(new ClickHandler(){
+				public void onClick(ClickEvent e)
+				{	e.stopPropagation();
+					
+//					if (!lessonMode.equals("review"))
+//						aantalNakijken[activiteitNr]++;
+					
+					on.kijkToetsNa();
+					
+					System.out.println("toets nagekeken");
+				}
+			});
+		}
+		
+		
 	}
 
 	public void zetOpdracht(HashMap<String, Object> opdracht)
@@ -443,6 +470,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				wellSet = false;
 			}
 		}
+		
 		//else
 		//{   varnamen = RandomVarNamen;
 		//    waarden = RandomVarWaarden;
@@ -466,6 +494,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		tb.zetVolleBreedtes(breedtes);
 		newVersion = !(Boolean) opdracht.get("hasAntwoordVak");
 		//New editor version
+		
 		if (opdrachtGegevens != null || newVersion)
 		{
 			if ((Boolean) opdracht.get("hasTitle"))
@@ -511,8 +540,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 			setupOldVersion(opdracht, tb);
 		}
-
+		
 		setState(state);
+		
+		
+		
 	}
 
 	//Sets up a FormuleEditorWithSteps for each assignment
@@ -600,6 +632,30 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 
 	}
+	
+	public void kijkNa()
+	{
+		for (int i = 0; i < opdrachtObjects.size(); i++)
+		{
+			Object currentObject = opdrachtObjects.get(i);
+			if (currentObject instanceof InteractionView)
+			{
+				((InteractionView)currentObject).kijkNa();
+			}
+		}
+	}
+	
+	public void zetNagekeken(boolean b)
+	{
+		for (int i = 0; i < opdrachtObjects.size(); i++)
+		{
+			Object currentObject = opdrachtObjects.get(i);
+			if (currentObject instanceof InteractionView)
+			{
+				((InteractionView)currentObject).zetNagekeken(b);
+			}
+		}
+	}
 
 	public int getScore()
 	{
@@ -630,7 +686,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 		return correct;
 	}
-
+	
+	
 //	private Panel getFormuleKeyboard(FormuleEditor editor)
 //	{
 //		if (kb == null)

@@ -137,6 +137,10 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	private native static void kijkNa(Object inner) /*-{
 		return inner.kijkNa();
 	}-*/;
+	
+	private native static void zetNagekeken(Object inner, boolean b) /*-{
+		inner.zetNagekeken(b);
+	}-*/;
 
 	@Override
 	public Boolean isCorrect() {
@@ -146,6 +150,11 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			return Boolean.valueOf(correct);
 		}
 		return null;
+	}
+	
+	public void zetNagekeken(boolean b) {
+		if(innerView != null)
+			zetNagekeken(innerView, b);
 	}
 	
 	public void kijkNa() {
