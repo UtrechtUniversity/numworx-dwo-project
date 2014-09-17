@@ -306,7 +306,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 		contentPanel.getElement().getStyle().setFontSize(font_size, Unit.PX);
 		contentPanel.getElement().getStyle().setPadding(0, Unit.PX); // XXX was 15 
-		contentPanel.getElement().getStyle().setPaddingLeft(10, Unit.PX); // klein randje aan de linkerkant
+		//contentPanel.getElement().getStyle().setPaddingLeft(0, Unit.PX); // GEEN randje aan de linkerkant, want dan klopt de maat (100%) niet meer bij noordhoff
 		//FormuleHolder.setDefaultFont(FormuleFont.createFromFontSize(font_size));
 
 		
