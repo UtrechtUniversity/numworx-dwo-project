@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.5.1//EN" "http://google-web-toolkit.googlecode.com/svn/tags/2.5.1/distro-source/core/src/gwt-module.dtd">
+<module  rename-to='DWOplayer'>
+	<inherits name="com.google.gwt.user.User" />
+	<inherits name="nl.uu.fi.dwo.mobile.DWOplayer-module" />
+	<add-linker name='xsiframe' />
+	
+	<inherits name="fi.antwoordkeuzevakgwt.AntwoordKeuzeVakGWT-DWO" />
+    <inherits name="fi.graphtoolgwt.GraphToolGWT-DWO" />
+
+	<entry-point class='nl.uu.fi.dwo.mobile.NoordhoffPlayer'/>
+	
+	 <replace-with class="nl.uu.fi.dwo.mobile.client.sco.AssetAPI">
+    	<when-type-is class="nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF"/>
+    </replace-with>
+
+	 
+	<replace-with class="nl.uu.fi.dwo.mobile.client.DWOplayerCDPLogica">
+        <when-type-is class="nl.uu.fi.dwo.mobile.client.DWOplayerParameters" />
+    </replace-with>
+ 
+    <set-property name="gwt.logging.enabled" value="FALSE"/>
+	<set-property name="gwt.logging.logLevel" value="FINEST"/>
+	 
+</module>
