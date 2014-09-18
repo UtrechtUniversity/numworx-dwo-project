@@ -82,7 +82,6 @@ public class KeyBoardTabPanel
 		Image buttonImage = new Image("images/resources/keyboardbutton.png");
 		buttonImage.getElement().getStyle().setMargin(5, Unit.PX);
 		keyboardButton.add(buttonImage);
-		keyboardButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 		keyboardButton.addTapHandler(new TapHandler() {
 
 			@Override
@@ -95,7 +94,6 @@ public class KeyBoardTabPanel
 			buttonImage = new Image("images/resources/digits.png");
 			buttonImage.getElement().getStyle().setMargin(5, Unit.PX);
 			digitsButton.add(buttonImage);
-			digitsButton.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 			digitsButton.addTapHandler(new TapHandler() {
 
 				@Override
@@ -104,6 +102,7 @@ public class KeyBoardTabPanel
 						goTo(FormuleKeyboard.SCRIBBLE);
 				}});
 		}
+		setKBVisible(false);
 	}
 
 	private void zetMaatCommon() {
@@ -230,6 +229,18 @@ public class KeyBoardTabPanel
 		tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
 		resizeScrollPanel(0);
 	}
+	
+	void blur() {
+		hideKeyboard();
+		setKBVisible(false);
+	}
+
+	private void setKBVisible(boolean b) {
+		Display display = b ? Display.INLINE_BLOCK : Display.NONE;
+		keyboardButton.getElement().getStyle().setDisplay(display);
+		digitsButton.getElement().getStyle().setDisplay(display);
+		
+	}
 
 	public void showKeyboard() {
 		if(enabled) {
@@ -238,13 +249,15 @@ public class KeyBoardTabPanel
 			panel.getElement().getStyle().setDisplay(Display.BLOCK);
 			int offsetHeight = extractHeight(current, panel);
 			resizeScrollPanel(offsetHeight);
-
+			setKBVisible(true);
 		}
 	}
 	
 	public void showSoftKeyboard() {
 		if (! FormuleKeyboard.hasKeyboard) 
 			showKeyboard();
+		else
+			setKBVisible(true);
 	}
 
 	private int extractHeight(final int index, Panel panel) {

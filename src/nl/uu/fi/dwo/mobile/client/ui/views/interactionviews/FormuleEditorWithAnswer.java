@@ -621,11 +621,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		
 		boolean ingevuld = true;
-		Boolean nagekeken = null;
+		boolean nagekeken = false;
 		if (h.get("ingevuld") != null)
 			ingevuld = (Boolean) h.get("ingevuld");
 		if (h.get("nagekeken") != null)
-			nagekeken = (Boolean) h.get("nagekeken");
+			nagekeken = ((Boolean) h.get("nagekeken")).booleanValue();
 		
 		this.ingevuld = ingevuld;
 		this.nagekeken = nagekeken;

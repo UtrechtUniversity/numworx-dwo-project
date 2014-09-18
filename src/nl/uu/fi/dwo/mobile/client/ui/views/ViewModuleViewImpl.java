@@ -1158,6 +1158,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		if(on != null)
 			on.close();
 		PopupFacade.removeAll();
+		kb.blur();
 	}
 
 	public FormuleKeyboard getKeyboard() {

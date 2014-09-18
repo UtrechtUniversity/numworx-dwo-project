@@ -10,28 +10,184 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.event.dom.client.MouseWheelHandler;
+import com.google.gwt.event.dom.client.TouchEndEvent;
+import com.google.gwt.event.dom.client.TouchEndHandler;
+import com.google.gwt.event.dom.client.TouchEvent;
+import com.google.gwt.event.dom.client.TouchMoveEvent;
+import com.google.gwt.event.dom.client.TouchMoveHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
-import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
+import com.google.gwt.user.client.ui.DialogBox.Caption;
 import com.google.gwt.user.client.ui.PushButton;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Touch;
 
 public class PopupButton extends Composite implements ClickHandler, TouchStartHandler, MouseDownHandler {
+
+	public class CaptionImpl extends Composite implements Caption {
+
+		FlowPanel flow = new FlowPanel();
+		HTML btn;
+		private DialogBox.CaptionImpl label;
+		public CaptionImpl() {
+			btn  = new DialogBox.CaptionImpl();
+			btn.setHTML("<span class='btn btn-danger'><i class='fa fa-times fa-lg'></i> &nbsp;</span>");
+			Style btnStyle = btn.getElement().getStyle();
+			btnStyle.setFloat(Style.Float.LEFT);
+			btnStyle.setWidth(2, Unit.EM);
+			label = new DialogBox.CaptionImpl();
+			label.setText("Popup");
+			flow.add(btn);
+			flow.add(label);
+			initWidget(flow);
+			addMouseDownHandler(new MouseDownHandler(){
+
+				@Override
+				public void onMouseDown(MouseDownEvent event) {
+					event.stopPropagation();
+					event.preventDefault();
+					tearDown();
+				}});
+			addTouchStartHandler(new TouchStartHandler() {
+
+				@Override
+				public void onTouchStart(TouchStartEvent event) {
+					event.stopPropagation();
+					event.preventDefault();
+					tearDown();
+				}
+				
+			});
+			
+		}
+
+		@Override
+		public HandlerRegistration addMouseDownHandler(MouseDownHandler handler) {
+			return btn.addMouseDownHandler(handler);
+		}
+		public HandlerRegistration addTouchStartHandler(TouchStartHandler handler) {
+			return btn.addDomHandler(handler, TouchStartEvent.getType());
+		}
+
+		
+		@Override
+		public HandlerRegistration addMouseUpHandler(MouseUpHandler handler) {
+			return null;
+		}
+
+		@Override
+		public HandlerRegistration addMouseOutHandler(MouseOutHandler handler) {
+			return null;
+		}
+
+		@Override
+		public HandlerRegistration addMouseOverHandler(MouseOverHandler handler) {
+			return null;
+		}
+
+		@Override
+		public HandlerRegistration addMouseMoveHandler(MouseMoveHandler handler) {
+			return null;
+		}
+
+		@Override
+		public HandlerRegistration addMouseWheelHandler(
+				MouseWheelHandler handler) {
+			return null;
+		}
+
+		@Override
+		public String getHTML() {
+			return label.getHTML();
+		}
+
+		@Override
+		public void setHTML(String html) {
+			label.setHTML(html);
+		}
+
+		@Override
+		public String getText() {
+			return label.getText();
+		}
+
+		@Override
+		public void setText(String text) {
+			label.setText(text);
+		}
+
+		@Override
+		public void setHTML(SafeHtml html) {
+			label.setHTML(html);
+		}
+
+	}
+
+	static class MyAnchor extends Anchor {
+
+		public MyAnchor(Element element) {
+			super(element);
+			// TODO Auto-generated constructor stub
+		}
+
+
+	}
 
 	ButtonBase btn;
 	IsWidget content;
 	DialogBox box;
 	InteractionView view;
 	HashMap<String,Object> state;
+
+	
+	class DragOnTouch implements TouchStartHandler, TouchMoveHandler, TouchEndHandler {
+		int x,y;
+		@Override
+		public void onTouchEnd(TouchEndEvent event) {
+			box.onMouseUp(box.getCaption().asWidget(), x, y);
+			logger.info("touch end " + x + "," + y);
+		}
+
+		@Override
+		public void onTouchMove(TouchMoveEvent event) {
+			getXY(event);
+			box.onMouseMove(box.getCaption().asWidget(), x, y);
+			logger.info("touch move " + x + "," + y);
+		}
+
+		void getXY(TouchEvent<?> event) {
+			x = event.getTouches().get(0).getRelativeX(box.getElement());
+			y = event.getTouches().get(0).getRelativeY(box.getElement());
+		}
+
+		@Override
+		public void onTouchStart(TouchStartEvent event) {
+			getXY(event);
+			box.onMouseDown(box.getCaption().asWidget(), x, y);
+			logger.info("touch start " + x + "," + y);
+		}
+		
+	}
+	
+	
 	
 	public PopupButton(IsWidget content) {
 		this(content, new Image(DWOplayer.DWO_BUNDLE.appletknop().getSafeUri()), null);
@@ -55,24 +211,17 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 	}
 
 	private int clientX,clientY;
-	private Logger logger = Logger.getLogger("PopupButton");
+	private static Logger logger = Logger.getLogger("PopupButton");
 	@Override
 	public void onClick(ClickEvent event) {
 		if(box == null) {
-			box = new DialogBox(false,false);			
-			VerticalPanel p = new VerticalPanel();
-			Button closeBtn = new Button("[x]");
-			closeBtn.addClickHandler(new ClickHandler() {
-
-				@Override
-				public void onClick(ClickEvent event) {
-					if(view != null)
-						state = view.getState();
-					box.hide();
-				}});
-			p.add(closeBtn);
-			p.add(content);
-			box.setWidget(p);
+			DialogBox.Caption caption = new CaptionImpl();
+			box = new DialogBox(false,false, caption);
+			DragOnTouch t = new DragOnTouch();
+			box.addDomHandler(t, TouchStartEvent.getType());
+			box.addDomHandler(t, TouchMoveEvent.getType());
+			box.addDomHandler(t, TouchEndEvent.getType());
+			box.setWidget(content);
 		}
 		if(!box.isShowing() && view != null && state != null)
 			view.setState(state);
@@ -97,6 +246,12 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 		clientX = event.getClientX();
 		clientY = event.getClientY();
 		event.stopPropagation();
+	}
+
+	void tearDown() {
+		if(view != null)
+			state = view.getState();
+		box.hide();
 	}
 
 	

@@ -482,7 +482,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	
 	public void blur() {
 		setEditor(null);
-		tp.hideKeyboard();
+		tp.blur();
 	}
 	
 	@Override
