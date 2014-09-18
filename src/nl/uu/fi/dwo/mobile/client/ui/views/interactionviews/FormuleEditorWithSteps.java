@@ -2457,7 +2457,12 @@ public class FormuleEditorWithSteps implements InteractionView
 	public void zetVolledigeBreedte(int breedte)
 	{
 		if(volledigeBreedte)
-			this.breedte = breedte;
+		{	this.breedte = breedte;
+			mainPanel.getElement().getStyle().setWidth(breedte - 2, Unit.PX);
+			sp.getElement().getStyle().setWidth(breedte - 5, Unit.PX);
+			feedbackPanel.getElement().getStyle().setWidth(breedte - 25, Unit.PX);	
+		}
+			
 	}
 
 	@Override
