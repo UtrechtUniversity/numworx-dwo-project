@@ -1560,7 +1560,7 @@ public class FormuleEditorWithSteps implements InteractionView
 			substitutie = FormuleParser.geefExpressie(substitutieString);
 
 		stepPanelY = 0;
-		correct = nagekeken; //wordt hieronder nog aangepast als nodig.
+		//correct = nagekeken; //wordt hieronder nog aangepast als nodig.
 		for (int i = 0; i < stapNr + 1; i++)
 		{
 			
@@ -1676,7 +1676,12 @@ public class FormuleEditorWithSteps implements InteractionView
 						//"De vergelijking is correct opgelost."
 						stapOk = false;
 					}
-					else //doel: laatste antwoord nogmaals nakijken, om juiste feedback te genereren.
+					else if(editor != null)//doel: laatste antwoord nogmaals nakijken, om juiste feedback te genereren.
+					{
+						editor.kijkNa();
+						maakNakijkenAf(false);
+					}
+					else
 					{
 						viewers.remove(fv);
 						stepPanel.remove(p);
