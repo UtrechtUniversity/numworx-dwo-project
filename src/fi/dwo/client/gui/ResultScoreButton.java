@@ -230,7 +230,9 @@ public class ResultScoreButton extends JPanel implements
 				}
 			} catch (Throwable e1) {
 				e1.printStackTrace();
-			}
+				JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			} else
+				JOptionPane.showMessageDialog(this, "Geen score", "", JOptionPane.INFORMATION_MESSAGE);
         	
         	
 //        	if(score == 0)
