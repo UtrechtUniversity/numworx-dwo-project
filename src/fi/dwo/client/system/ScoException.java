@@ -23,7 +23,10 @@ public class ScoException extends Exception {
         super(getMesgFromInt(exception));
     }
 
-    private static String getMesgFromInt(int exception) {
+    public ScoException(int exception, Exception e) {
+    	super(getMesgFromInt(exception),e);	}
+
+	private static String getMesgFromInt(int exception) {
         String result = null;
         switch (exception) {
         case (SE_SCO_EXISTS):

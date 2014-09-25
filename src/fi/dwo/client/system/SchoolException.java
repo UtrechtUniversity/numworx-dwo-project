@@ -23,7 +23,12 @@ public class SchoolException extends Exception {
         super(getMesgFromInt(exception));
     }
 
-    private static String getMesgFromInt(int exception) {
+    public SchoolException(int exIo, Exception e) {
+        super(getMesgFromInt(exIo),e);
+		
+	}
+
+	private static String getMesgFromInt(int exception) {
         String result = null;
         switch (exception) {
         case (SE_SCHOOL_EXISTS):

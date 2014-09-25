@@ -1676,16 +1676,24 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     }
     
     
+	/**
+	 * geef alle courses waarbij er student-data aanwezig is voor een profiel en klas
+	 * 
+	 */
     public Vector getResultCount(int profileID, int classID) throws SQLException
     {
-    	String query = "SELECT  c.courseID, count(sco.scoid) "+
+    	long start = System.currentTimeMillis();
+    	String query = "SELECT  c.courseID, 1 "+
     				   "FROM tblStudentSco sco join tblUser stu using (userID) join tblSco course on (sco.scoID = course.scoid) join tblCourse c on (c.courseID = course.courseID) "+     	
     				   "WHERE  stu.classid = ?   and c.dwoProfileID = ? "+
     				   "group by courseid";
     	PreparedStatement ps = getStatement(query);
     	ps.setInt(1, classID);
     	ps.setInt(2, profileID);
-    	return executeQueryWithResult(ps);
+    	Vector result = executeQueryWithResult(ps);
+    	long stop = System.currentTimeMillis();
+    	log("getResultCount " + profileID + "," + classID + " " + (stop-start) +" ms");
+		return result;
     }
     
     

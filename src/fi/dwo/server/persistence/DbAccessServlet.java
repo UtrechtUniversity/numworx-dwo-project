@@ -47,10 +47,14 @@ import fi.dwo.client.persistence.DbAccessIF;
 public class DbAccessServlet extends Servlet {
     
 	static class MonitorDbAccess extends DbAccess {
+	
+		static private int count;
+		
 		private Connection mine, his;
 		public void close() {
 			if(mine != null)
-			{
+			{   --count;
+				if(count > 10) System.out.println(System.currentTimeMillis()+ " dwo access close " + count);
 				try {
 					mine.close();
 				} catch (SQLException e) {
@@ -67,6 +71,8 @@ public class DbAccessServlet extends Servlet {
 			{	
 				his = c;
 				mine = MonProxyFactory.monitor(c);
+				++count;
+				if(count > 10) System.out.println(System.currentTimeMillis()+ " dwo access connect " + count);
 			} 
 			return mine;
 		}
@@ -118,6 +124,7 @@ public class DbAccessServlet extends Servlet {
         	log("no monitoring");
         }
 
+        unLock(); log("UNLOCK");
         int maxthreads = 200;
         String param = getInitParameter("xmlrpc.maxthreads");
         if(param != null )

@@ -115,11 +115,11 @@ public class PersistenceFacade {
             return mapper.get(oid);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new PersistenceException(PersistenceException.EX_IO);
+            throw new PersistenceException(PersistenceException.EX_IO, e);
         } catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC);
+            throw new PersistenceException(PersistenceException.EX_XML_RPC,e);
         } catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB);
+            throw new PersistenceException(PersistenceException.EX_DB,e);
         }
     }
 
@@ -137,11 +137,11 @@ public class PersistenceFacade {
         try {
             mapper.put(oid, obj);
         } catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO);
+            throw new PersistenceException(PersistenceException.EX_IO,e);
         } catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC);
+            throw new PersistenceException(PersistenceException.EX_XML_RPC,e);
         } catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB);
+            throw new PersistenceException(PersistenceException.EX_DB,e);
         }
 
     }
@@ -156,11 +156,11 @@ public class PersistenceFacade {
         try {
             dbAccess.reconnect();
         } catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO);
+            throw new PersistenceException(PersistenceException.EX_IO,e);
         } catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC);
+            throw new PersistenceException(PersistenceException.EX_XML_RPC,e);
         } catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB);
+            throw new PersistenceException(PersistenceException.EX_DB,e);
         }
 
     }
@@ -257,11 +257,11 @@ public class PersistenceFacade {
         try {
             return mapper.get();
         } catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO);
+            throw new PersistenceException(PersistenceException.EX_IO,e);
         } catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC);
+            throw new PersistenceException(PersistenceException.EX_XML_RPC,e);
         } catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB);
+            throw new PersistenceException(PersistenceException.EX_DB,e);
         }
     }
 
@@ -338,15 +338,15 @@ public class PersistenceFacade {
         } catch (IOException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
-            throw new PersistenceException(PersistenceException.EX_IO);
+            throw new PersistenceException(PersistenceException.EX_IO, e);
         } catch (XmlRpcException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
-            throw new PersistenceException(PersistenceException.EX_XML_RPC);
+            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
-            throw new PersistenceException(PersistenceException.EX_DB);
+            throw new PersistenceException(PersistenceException.EX_DB, e);
         }
 
     }
@@ -464,15 +464,15 @@ public class PersistenceFacade {
         } catch (IOException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
-            throw new PersistenceException(PersistenceException.EX_IO);
+            throw new PersistenceException(PersistenceException.EX_IO, e);
         } catch (XmlRpcException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
-            throw new PersistenceException(PersistenceException.EX_XML_RPC);
+            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
-            throw new PersistenceException(PersistenceException.EX_DB);
+            throw new PersistenceException(PersistenceException.EX_DB, e);
         }
 
     }
@@ -503,15 +503,15 @@ public class PersistenceFacade {
         } catch (IOException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
-            throw new PersistenceException(PersistenceException.EX_IO);
+            throw new PersistenceException(PersistenceException.EX_IO,e);
         } catch (XmlRpcException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
-            throw new PersistenceException(PersistenceException.EX_XML_RPC);
+            throw new PersistenceException(PersistenceException.EX_XML_RPC,e);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
-            throw new PersistenceException(PersistenceException.EX_DB);
+            throw new PersistenceException(PersistenceException.EX_DB,e);
         }
 
     }
@@ -538,15 +538,15 @@ public class PersistenceFacade {
         } catch (IOException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
-            throw new PersistenceException(PersistenceException.EX_IO);
+            throw new PersistenceException(PersistenceException.EX_IO,e);
         } catch (XmlRpcException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
-            throw new PersistenceException(PersistenceException.EX_XML_RPC);
+            throw new PersistenceException(PersistenceException.EX_XML_RPC,e);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
-            throw new PersistenceException(PersistenceException.EX_DB);
+            throw new PersistenceException(PersistenceException.EX_DB,e);
         }
 
     }
@@ -565,15 +565,15 @@ public class PersistenceFacade {
         } catch (IOException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
-            throw new PersistenceException(PersistenceException.EX_IO);
+            throw new PersistenceException(PersistenceException.EX_IO,e);
         } catch (XmlRpcException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
-            throw new PersistenceException(PersistenceException.EX_XML_RPC);
+            throw new PersistenceException(PersistenceException.EX_XML_RPC,e);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
-            throw new PersistenceException(PersistenceException.EX_DB);
+            throw new PersistenceException(PersistenceException.EX_DB,e);
         }
 
     }
@@ -1013,7 +1013,7 @@ public class PersistenceFacade {
             return (Exception) excConstr.newInstance(constrArgs);
         } catch (Exception e1) {
             throw new PersistenceException(
-                    PersistenceException.EX_UNKNOWN_ERROR);
+                    PersistenceException.EX_UNKNOWN_ERROR,e);
         }
     }
     /**
@@ -1090,11 +1090,11 @@ public class PersistenceFacade {
                 return new Vector();
             }
         } catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO);
+            throw new PersistenceException(PersistenceException.EX_IO,e);
         } catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC);
+            throw new PersistenceException(PersistenceException.EX_XML_RPC,e);
         } catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB);
+            throw new PersistenceException(PersistenceException.EX_DB,e);
         }
     }
 
@@ -1143,11 +1143,11 @@ public class PersistenceFacade {
             MapperIF mapper = MapperCreator.instance(UserResultList.class);
             return (Vector) (mapper.getObjectFromReturn(v)[0]);
         } catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO);
+            throw new PersistenceException(PersistenceException.EX_IO,e);
         } catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC);
+            throw new PersistenceException(PersistenceException.EX_XML_RPC,e);
         } catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB);
+            throw new PersistenceException(PersistenceException.EX_DB,e);
         }
     }
     /**
@@ -1166,11 +1166,11 @@ public class PersistenceFacade {
             MapperIF mapper = MapperCreator.instance(UserResultList.class);
             return (Vector) (mapper.getObjectFromReturn(v)[0]);
         } catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO);
+            throw new PersistenceException(PersistenceException.EX_IO,e);
         } catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC);
+            throw new PersistenceException(PersistenceException.EX_XML_RPC,e);
         } catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB);
+            throw new PersistenceException(PersistenceException.EX_DB,e);
         }
     }
 
@@ -1189,11 +1189,11 @@ public class PersistenceFacade {
             MapperIF mapper = MapperCreator.instance(UserResultList.class);
             return (Vector) (mapper.getObjectFromReturn(v)[0]);
         } catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO);
+            throw new PersistenceException(PersistenceException.EX_IO,e);
         } catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC);
+            throw new PersistenceException(PersistenceException.EX_XML_RPC,e);
         } catch (SQLException e) {
-            throw new PersistenceException(PersistenceException.EX_DB);
+            throw new PersistenceException(PersistenceException.EX_DB,e);
         }
     }
 
@@ -1272,15 +1272,15 @@ public class PersistenceFacade {
 	        } catch (IOException e) {
 	            System.out.println(e.getMessage());
 	            e.printStackTrace();
-	            throw new PersistenceException(PersistenceException.EX_IO);
+	            throw new PersistenceException(PersistenceException.EX_IO,e);
 	        } catch (XmlRpcException e) {
 	            System.out.println(e.getMessage());
 	            e.printStackTrace();
-	            throw new PersistenceException(PersistenceException.EX_XML_RPC);
+	            throw new PersistenceException(PersistenceException.EX_XML_RPC,e);
 	        } catch (SQLException e) {
 	            System.out.println(e.getMessage());
 	            e.printStackTrace();
-	            throw new PersistenceException(PersistenceException.EX_DB);
+	            throw new PersistenceException(PersistenceException.EX_DB,e);
 	        }
 	    }
 	    else if(user instanceof Admin){
@@ -1292,15 +1292,15 @@ public class PersistenceFacade {
 	        } catch (IOException e) {
 	            System.out.println(e.getMessage());
 	            e.printStackTrace();
-	            throw new PersistenceException(PersistenceException.EX_IO);
+	            throw new PersistenceException(PersistenceException.EX_IO,e);
 	        } catch (XmlRpcException e) {
 	            System.out.println(e.getMessage());
 	            e.printStackTrace();
-	            throw new PersistenceException(PersistenceException.EX_XML_RPC);
+	            throw new PersistenceException(PersistenceException.EX_XML_RPC,e);
 	        } catch (SQLException e) {
 	            System.out.println(e.getMessage());
 	            e.printStackTrace();
-	            throw new PersistenceException(PersistenceException.EX_DB);
+	            throw new PersistenceException(PersistenceException.EX_DB,e);
 	        }
 	    }
 	    else return null;
@@ -1703,19 +1703,19 @@ public class PersistenceFacade {
         	return result;
         } catch(IOException ioe) {
 ioe.printStackTrace();
-        	throw new SchoolException(SchoolException.EX_IO);
+        	throw new SchoolException(SchoolException.EX_IO,ioe);
         } catch (SQLException e) {
 e.printStackTrace();
-			throw new SchoolException(SchoolException.EX_DB);
+			throw new SchoolException(SchoolException.EX_DB,e);
 		} catch (XmlRpcException e) {
 e.printStackTrace();
 			if(e.code == 0)
-				throw new SchoolException(SchoolException.EX_XML_RPC);
+				throw new SchoolException(SchoolException.EX_XML_RPC,e);
 			try {
 				throw (SchoolException) getException(e, e.code);
 			} catch (PersistenceException e1) {
 e1.printStackTrace();
-				throw new SchoolException(SchoolException.EX_UNKNOWN_ERROR);
+				throw new SchoolException(SchoolException.EX_UNKNOWN_ERROR,e1);
 			}
 		}
 	}
@@ -1773,12 +1773,12 @@ e1.printStackTrace();
 			try {
 				DbAccessCreator.instance().editSchool(schoolID, export);
 			} catch (IOException e) {
-				throw new PersistenceException(PersistenceException.EX_IO);
+				throw new PersistenceException(PersistenceException.EX_IO,e);
 			} catch (XmlRpcException e) {
 				e.printStackTrace();
-				throw new PersistenceException(PersistenceException.EX_XML_RPC);
+				throw new PersistenceException(PersistenceException.EX_XML_RPC,e);
 			} catch (SQLException e) {
-				throw new PersistenceException(PersistenceException.EX_DB);
+				throw new PersistenceException(PersistenceException.EX_DB,e);
 			}
 		
 	}
@@ -1790,12 +1790,12 @@ e1.printStackTrace();
             MapperIF mapper = MapperCreator.instance(Course.class);
             return (Course[]) mapper.getObjectFromReturn(v);
         } catch (IOException e) {
-            throw new PersistenceException(PersistenceException.EX_IO);
+            throw new PersistenceException(PersistenceException.EX_IO,e);
         } catch (XmlRpcException e) {
-            throw new PersistenceException(PersistenceException.EX_XML_RPC);
+            throw new PersistenceException(PersistenceException.EX_XML_RPC,e);
         } catch (SQLException e) {
         	e.printStackTrace();
-            throw new PersistenceException(PersistenceException.EX_DB);
+            throw new PersistenceException(PersistenceException.EX_DB,e);
         }
 
 	}
@@ -1809,20 +1809,20 @@ e1.printStackTrace();
                 Hashtable result = dbAccess.editSchool(schoolID,schoolName, schoolLogin, passwd);
                 return (School) mapper.getObjectFromReturn(result);
             } catch (IOException e) { System.out.println(e.toString());
-                throw new SchoolException(SchoolException.EX_IO);
+                throw new SchoolException(SchoolException.EX_IO,e);
             } catch (XmlRpcException e) {
                 if (e.code != 0) {
                     throw (SchoolException) getException(e, e.code);
                 } else {
-                    throw new SchoolException(SchoolException.EX_XML_RPC);
+                    throw new SchoolException(SchoolException.EX_XML_RPC,e);
                 }
             } catch (SQLException e) { System.out.println(e.toString());
-                throw new SchoolException(SchoolException.EX_DB);
+                throw new SchoolException(SchoolException.EX_DB,e);
             } catch (DwoXmlRpcException e) {
                 throw (SchoolException) getException(e, e.code);
             }
         } catch (PersistenceException e) {
-            throw new SchoolException(SchoolException.EX_UNKNOWN_ERROR);
+            throw new SchoolException(SchoolException.EX_UNKNOWN_ERROR,e);
         }
 	}
 
@@ -2006,20 +2006,20 @@ e1.printStackTrace();
             	}
             	
             } catch (IOException e) {
-                throw new ScoException(ScoException.EX_IO);
+                throw new ScoException(ScoException.EX_IO,e);
             } catch (XmlRpcException e) {
                 if (e.code != 0) {
                     throw (ScoException) getException(e, e.code);
                 } else {
-                    throw new ScoException(ScoException.EX_XML_RPC);
+                    throw new ScoException(ScoException.EX_XML_RPC,e);
                 }
             } catch (SQLException e) {
-                throw new ScoException(ScoException.EX_DB);
+                throw new ScoException(ScoException.EX_DB,e);
             } catch (DwoXmlRpcException e) {
                 throw (ScoException) getException(e, e.code);
             }
         } catch (PersistenceException e) {
-            throw new ScoException(ScoException.EX_UNKNOWN_ERROR);
+            throw new ScoException(ScoException.EX_UNKNOWN_ERROR,e);
         }
 	}
 
