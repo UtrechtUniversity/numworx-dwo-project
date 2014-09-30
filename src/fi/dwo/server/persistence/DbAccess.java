@@ -1200,12 +1200,21 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             ps.close();
 
             /* Delete the class */
-            String[] arguments2 = { "tblClass", "classID" };
+            Object[] arguments2 = { "tblClass", "classID" };
             query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments2);
             ps = getStatement(query);
             ps.setInt(1, classID);
             ps.execute();
             ps.close();
+            
+            arguments2[0] = "tblClassCourse";
+            query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments2);
+            ps = getStatement(query);
+            ps.setInt(1, classID);
+            ps.execute();
+            ps.close();
+            
+            
         }
         return canDelete;
     }
