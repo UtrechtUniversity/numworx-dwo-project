@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.4"/>
-	<classpathentry kind="lib" path="output/jar/euclides.jar"/>
-	<classpathentry kind="lib" path="/GraphTool/output/classes"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/geogebra"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/geogebraV4"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/GraphTool"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/WiskOpdr"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/AlgebraPijlenOpdr"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/AlgebraPijlen"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/BalansFruitApplet"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
+	<classpathentry kind="lib" path="output/jar/euclides.jar"/>
 	<classpathentry kind="lib" path="output/jar/aanzichtenraden.jar"/>
 	<classpathentry kind="lib" path="output/jar/algebraexpressies.jar"/>
 	<classpathentry kind="lib" path="output/jar/algebrapijlen.jar"/>
@@ -27,18 +33,6 @@
 	<classpathentry kind="lib" path="output/jar/functiesraden.jar"/>
 	<classpathentry kind="lib" path="output/jar/geldapplet.jar"/>
 	<classpathentry kind="lib" path="output/jar/geodefull.jar"/>
-	<classpathentry kind="lib" path="output/jar/geogebra_cas.jar"/>
-	<classpathentry kind="lib" path="output/jar/geogebra_export.jar"/>
-	<classpathentry kind="lib" path="output/jar/geogebra_gui.jar"/>
-	<classpathentry kind="lib" path="output/jar/geogebra_main.jar"/>
-	<classpathentry kind="lib" path="output/jar/geogebra_properties.jar"/>
-	<classpathentry kind="lib" path="output/jar/geogebra.jar"/>
-	<classpathentry kind="lib" path="output/jar/geogebra3_cas.jar"/>
-	<classpathentry kind="lib" path="output/jar/geogebra3_export.jar"/>
-	<classpathentry kind="lib" path="output/jar/geogebra3_gui.jar"/>
-	<classpathentry kind="lib" path="output/jar/geogebra3_main.jar"/>
-	<classpathentry kind="lib" path="output/jar/geogebra3_properties.jar"/>
-	<classpathentry kind="lib" path="output/jar/geogebra3.jar"/>
 	<classpathentry kind="lib" path="output/jar/geomalgebra.jar"/>
 	<classpathentry kind="lib" path="output/jar/geomalgebra1d.jar"/>
 	<classpathentry kind="lib" path="output/jar/geomalgebraopdr.jar"/>
@@ -100,7 +94,6 @@
 	<classpathentry kind="lib" path="lib/ldap.jar"/>
 	<classpathentry kind="lib" path="lib/mayscript.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-3.0.16-ga-bin.jar"/>
-	<classpathentry kind="lib" path="lib/wiskopdr.jar"/>
 	<classpathentry kind="lib" path="lib/graphtool.jar"/>
 	<classpathentry kind="lib" path="output/jar/vergroten.jar"/>
 	<classpathentry kind="output" path="output/classes"/>

@@ -36,6 +36,7 @@
 -libraryjars ..\output\jar\jlatexmath.jar
 -libraryjars ..\output\jar\jlm_cyrillic.jar
 -libraryjars ..\output\jar\jlm_greek.jar
+-libraryjars ..\output\jar\sardine.jar
 
 -target 1.6
 

@@ -35,6 +35,10 @@
 
 	<import file="${drive}${common.build}" />
 
+	<target name='pack200' />
+
+	<target name='cpjar' />
+	
 	<target name='include.extra.jar' >
     	<jar destfile="${packagename.jar}" update="true" index="true">   	
     	<indexjars>
@@ -62,7 +66,7 @@
 	    <property name='manifest.codebase' value='*.fisme.science.uu.nl' />
 	    <property name='manifest.permissions' value='sandbox' />
 	    <property name='manifest.application-name' value='${ant.project.name}' />
-
+	 <delete file='${packagename.jar}' />
 	<jar
 			destfile='${packagename.jar}'
 			duplicate='preserve'
@@ -77,8 +81,8 @@
 			    <attribute name="Application-Name" value='${manifest.application-name}' />        
 			</manifest>
 		</jar>
-		<antcall target='include.extra.jar' />
-		<antcall target='include.manifest' />
+		<!--antcall target='include.extra.jar' /-->
+		<!--antcall target='include.manifest' /-->
 		<!--antcall target='sign.jars' /-->
 	</target>
 
