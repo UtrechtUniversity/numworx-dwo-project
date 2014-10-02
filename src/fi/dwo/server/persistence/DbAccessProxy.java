@@ -13,11 +13,9 @@ import fi.beans.jdbc.DbConnect;
 import fi.dwo.client.persistence.DbAccessIF;
 import fi.dwo.client.system.LoginException;
 
-public class DbAccessProxy extends DbConnect implements DbAccessIF {
+public abstract class DbAccessProxy extends DbConnect implements DbAccessIF {
 
-	protected DbAccessIF createDelegate() {
-		return new DbAccessLdap();
-	}
+	protected abstract DbAccessIF createDelegate();
 	
 	ThreadLocal delegate = new ThreadLocal() {
 

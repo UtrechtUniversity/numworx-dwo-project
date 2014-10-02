@@ -52,7 +52,7 @@ import javax.swing.plaf.ColorUIResource;
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.base64code.StringCodeObject;
 import fi.beans.fidentity.CheckEmail;
-import fi.beans.fidentity.Fidentity;
+//import fi.beans.fidentity.Fidentity;
 import fi.beans.mainframe.MainFrame;
 import fi.beans.scorm.SCORM12APIInterface;
 import fi.beans.jvmchecker.JVMChecker;
@@ -117,8 +117,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
     private String userName;
     
     private String passWord;
-
-	private Fidentity fidentity;
 	
 	private int courseViewNr;
 	
@@ -1929,116 +1927,6 @@ private static boolean isValidEmail(String email) {
       */
      private User getInitialUser()
      {
- 		fidentity = Fidentity.getInstance(this);
- // DEBUGGING, uitzettten bij commmit!
- 		//fidentity = new Fidentity(this, "peterb", "DL_FIUUNL_K3K=C100&sn=Boon&givenName=Peter");
- 		String username = fidentity.getUid();
- System.out.println("[" + username + "]");
-        if(username == null||"".equals(username))
-            return null;
-        System.out.println(fidentity.getRole());
-        System.out.println(fidentity.getSchoolUid());
-        String className = fidentity.getClassName();
-		System.out.println(className);
-        if (Fidentity.SCHOOL.equals(fidentity.getRole()))
-        {
-            System.out.println("Guest from school " + fidentity.getSchoolUid());
-            return null;
-        }
-        if(Fidentity.GAST.equals(fidentity.getRole()))
-        {
-        	return Guest.instance();
-        }
-        
-        User u =  null; // Guest.instance();
-        try
-     {
-         DwoHelper.setContact(Fidentity.CONTACTDOCENT.equals(fidentity.getRole()));
-         u = PersistenceFacade.instance().login(username);
-         u.setFirstname(fidentity.getFirstName());
-         u.setMiddleName(fidentity.getMiddleName());
-         u.setLastName(fidentity.getSurName());
-         u.setEmail(fidentity.getEmailAddress());
-         
-         /* TODO if user geen lid van school en fidentity.getBrin() != null
-          * meld de user aan bij school
-          */
-         if(null != fidentity.getSchoolUid())
-         {
-        	 School school = u.getSchool();
-        	 if( school == null ||
-        	     !
-        	     (school.getSchoolLogin().equals(fidentity.getSchoolUid())||
-        	      fidentity.getSchoolUid().equals(String.valueOf(school.getSchoolID()))
-        	     )
-        	 )
-        	 {
-        		 try {
-					addInitialUserToSchool(u);
-				} catch (RegisterException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-                 u = PersistenceFacade.instance().login(username);
-                 u.setFirstname(fidentity.getFirstName());
-                 u.setMiddleName(fidentity.getMiddleName());
-                 u.setLastName(fidentity.getSurName());
-                 u.setEmail(fidentity.getEmailAddress());
-                 school = u.getSchool();
-        	 }
-        	 setInitialUserInClass(className, u, school);
-         } else
-         {	 /* FIXME als user lid en getBrin == null, meld user af! */
-        	 //u.setSchool(null);
-        	 //u.setInClass(null);
-         }
-         
-         u.setLogout(false); // op verzoek van Peter          									  // een eigen account.
-         u.setReadonly(false); // voor de klas keuze
-         if(setExtraRights(u))
-        	 return u;
-     } catch (LoginException e)
-     {   String msg = TextMapper.getText(TextMapper.EXL_UNKNOWN_USER);
-         if( msg.equals(e.getMessage()) )
-         {  
-             try
-             {
-                 if(fidentity.isRegistered()) 
-                 {   
-                     PersistenceFacade.instance().register(username, 
-                             null, /* no password! */
-                             fidentity.getFirstName(), 
-                             fidentity.getMiddleName(),
-                             fidentity.getSurName(), fidentity.getEmailAddress());
-                     u = PersistenceFacade.instance().login(username);
-                     if (fidentity.getBrin()!=null)
-                     {
- System.out.println(fidentity.getBrin());
- System.out.println(fidentity.getSchoolUid());
-
-                         addInitialUserToSchool(u);
-                     }
-                     // u kan nu een Teacher zijn...
-                     u = PersistenceFacade.instance().login(username);
-                     setInitialUserInClass(className, u, u.getSchool());
-                     u.setLogout(false); // op verzoek van peter
-                     u.setReadonly(true); // TODO is dit wel
-                                                             // ok?
-                 } else { 
-                     u = Guest.instance(); // fi-ers en uu-ers.
-                 }
-                 
-                 if(setExtraRights(u))
-                	 return u;
-             } catch (RegisterException e1)
-             { e1.printStackTrace();
-             } catch (LoginException e2)
-             { 
-                 e2.printStackTrace();
-             }
-             
-         }
-     }
          return null;
      }
 
@@ -2070,36 +1958,6 @@ private static boolean isValidEmail(String email) {
 	}
 
 	/**
-	 * @param u
-	 * @throws RegisterException
-	 */
-	private void addInitialUserToSchool(User u) throws RegisterException {
-		try
-		 {
-		     Group group = findGroup(fidentity.getRole());
-		     if(group!=null)
-		     {
-System.out.println(group.getName() + " " + group.getGroupID());
- 				String schoolUid = fidentity.getSchoolUid();
- 				int schoolId = Integer.parseInt(schoolUid);
-System.out.println(schoolUid);
- 				 String schoolname   = "";
-		         String schoolpasswd = "";
-		         School school = (School) PersistenceFacade.instance().get(schoolId,School.class);
-		         schoolpasswd = school.getPasswd(group.getGroupID());
-		         schoolname   = school.getSchoolLogin();
-System.out.println(school.getSchoolLogin() + " " + group.getName() + " " + schoolpasswd);
-// TODO addToSchool(u, school, group);	zonder gedoe met passwords.	         
-		         PersistenceFacade.instance().addToSchool(u, schoolname, group, schoolpasswd);
-		         MapperCreator.instance(User.class).removeAllObjects();
-		     }
-		 } catch (PersistenceException e1)
-		 {
-		     // TODO Auto-generated catch block
-		     e1.printStackTrace();
-		 }
-	}
-     /**
       * Converteer een role naar een Group. De namen van de group zijn niet
       * gelijk aan die van de 'role' (entree.kennisnet.nl). Er moet daarom
       * gemapped worden.
@@ -2112,9 +1970,9 @@ System.out.println(school.getSchoolLogin() + " " + group.getName() + " " + schoo
          if (role == null)
              return null;
          // TODO is deze mapping compleet?
-         if (role.indexOf(Fidentity.DOCENT)>=0) // docent en contactdocent
+         if (false) // docent en contactdocent
              role = "TEACHER";
-         if (Fidentity.LEERLING.equals(role))
+         if (false)
              role = "STUDENT";
          //
          Group[] groups = getGroups();

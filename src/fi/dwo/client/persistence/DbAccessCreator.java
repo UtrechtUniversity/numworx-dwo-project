@@ -9,7 +9,6 @@ import java.net.URL;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.server.persistence.DbAccess;
 import fi.dwo.server.persistence.DbAccessColorado;
-import fi.dwo.server.persistence.DbAccessLdap;
 import fi.dwo.server.persistence.DbAccessLocal;
 import fi.dwo.server.persistence.DbAccessScience;
 

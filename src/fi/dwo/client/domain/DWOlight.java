@@ -11,7 +11,6 @@ import java.util.Date;
 import javax.swing.JOptionPane;
 
 import fi.beans.appletutil.AppletUtil;
-import fi.beans.fidentity.Fidentity;
 import fi.beans.jvmchecker.JVMChecker;
 import fi.beans.mainframe.MainFrame;
 import fi.beans.scorm.SCORM12APIInterface;
@@ -34,7 +33,6 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 
 	private Course currentCourse;
     private User currentUser;
-	private Fidentity fidentity;
     private DwoProfile dwoProfile;
     private int dwoProfileID;
     private String userName;
@@ -656,146 +654,9 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	      */
 	     private User getInitialUser()
 	     {
-	 		this.fidentity = Fidentity.getInstance(this);
-	        String username = fidentity.getUid();
-	 System.out.println("[" + username + "]");
-	        if(username == null||"".equals(username))
 	            return null;
-	        System.out.println(fidentity.getRole());
-	        System.out.println(fidentity.getSchoolUid());
-	        String className = fidentity.getClassName();
-			System.out.println(className);
-	        if ("school".equals(fidentity.getRole()))
-	        {
-	            System.out.println("Guest from school " + fidentity.getSchoolUid());
-	            return null;
-	        }
-	        
-	        
-	        User u =  null; // Guest.instance();
-	        try
-	     {
-	         u = PersistenceFacade.instance().login(username);
-	         u.setFirstname(fidentity.getFirstName());
-	         u.setMiddleName(fidentity.getMiddleName());
-	         u.setLastName(fidentity.getSurName());
-	         u.setEmail(fidentity.getEmailAddress());
-	         
-	         /* TODO if user geen lid van school en fidentity.getBrin() != null
-	          * meld de user aan bij school
-	          */
-	         if(null != fidentity.getSchoolUid())
-	         {
-	        	 School school = u.getSchool();
-	        	 if( school == null ||
-	        	     !
-	        	     (school.getSchoolLogin().equals(fidentity.getSchoolUid())||
-	        	      fidentity.getSchoolUid().equals(String.valueOf(school.getSchoolID()))
-	        	     )
-	        	 )
-	        	 {
-	        		 try {
-						addInitialUserToSchool(u);
-					} catch (RegisterException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-	                 u = PersistenceFacade.instance().login(username);
-	                 school = u.getSchool();
-	        	 }
-	        	 setInitialUserInClass(className, u, school);
-	         } else
-	         {	 /* TODO als user lid en getBrin == null, meld user af! */
-	         }
-	         
-	         u.setLogout(!fidentity.isForeign()); // op verzoek van Peter, logout als          									  // een eigen account.
-	         u.setReadonly(false); // voor de klas keuze
-	         return u;
-	     } catch (LoginException e)
-	     {   String msg = TextMapper.getText(TextMapper.EXL_UNKNOWN_USER);
-	         if( msg.equals(e.getMessage()) )
-	         {  
-	             try
-	             {
-	                 if(fidentity.isRegistered()) 
-	                 {   
-	                     PersistenceFacade.instance().register(username, 
-	                             null, /* no password! */
-	                             fidentity.getFirstName(), 
-	                             fidentity.getMiddleName(),
-	                             fidentity.getSurName(), fidentity.getEmailAddress());
-	                     u = PersistenceFacade.instance().login(username);
-	                     if (fidentity.getBrin()!=null)
-	                     {
-	 System.out.println(fidentity.getBrin());
-	 System.out.println(fidentity.getSchoolUid());
-
-	                         addInitialUserToSchool(u);
-	                     }
-	                     // u kan nu een Teacher zijn...
-	                     u = PersistenceFacade.instance().login(username);
-	                     setInitialUserInClass(className, u, u.getSchool());
-	                     u.setLogout(!fidentity.isForeign()); // op verzoek van peter
-	                     u.setReadonly(true); // TODO is dit wel
-	                                                             // ok?
-	                 } else { 
-	                     u = new Guest() { 
-	                         public String getName() { 
-	                             return fidentity.getName();
-	                         }
-	                     };
-	                     u.setLogout(false); // fi-ers en uu-ers.
-	                 }
-	                 return u;
-	             } catch (RegisterException e1)
-	             { e1.printStackTrace();
-	             } catch (LoginException e2)
-	             { 
-	                 e2.printStackTrace();
-	             }
-	             
-	         }
-	     }
-	         return null;
 	     }
 	 	/**
-	 	 * @param u
-	 	 * @throws RegisterException
-	 	 */
-	 	private void addInitialUserToSchool(User u) throws RegisterException {
-	 		try
-	 		 {
-	 		     Group group = findGroup(fidentity.getRole());
-	 		     if(group!=null)
-	 		     {
-	 System.out.println(group.getName() + " " + group.getGroupID());
-	  				String schoolUid = fidentity.getSchoolUid();
-	 System.out.println(schoolUid);
-	  				 String schoolname   = "";
-	 		         String schoolpasswd = "";
-	 		         School[] school = (School[]) PersistenceFacade.instance().get(School.class);
-	 		         for (int i = 0; i < school.length; i++)
-	 		         {
-	 		             if(school[i].getSchoolLogin().equals (schoolUid) ||
-	 		            	schoolUid.equals(String.valueOf(school[i].getSchoolID()))     
-	 		             )
-	 		             {
-	 		                 schoolpasswd = school[i].getPasswd(group.getGroupID());
-	 		                 schoolname   = school[i].getSchoolLogin();
-	 		                 System.out.println(school[i].getSchoolLogin() + " " + group.getName() + " " + schoolpasswd);
-	 		                 break;
-	 		             }
-	 		         }
-	 		         PersistenceFacade.instance().addToSchool(u, schoolname, group, schoolpasswd);
-	 		         MapperCreator.instance(User.class).removeAllObjects();
-	 		     }
-	 		 } catch (PersistenceException e1)
-	 		 {
-	 		     // TODO Auto-generated catch block
-	 		     e1.printStackTrace();
-	 		 }
-	 	}
-	     /**
 	      * Converteer een role naar een Group. De namen van de group zijn niet
 	      * gelijk aan die van de 'role' (entree.kennisnet.nl). Er moet daarom
 	      * gemapped worden.
