@@ -174,8 +174,9 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 		}
 
 		void getXY(TouchEvent<?> event) {
-			x = event.getTouches().get(0).getRelativeX(box.getElement());
-			y = event.getTouches().get(0).getRelativeY(box.getElement());
+			x = event.getTouches().get(0).getClientX();
+			y = event.getTouches().get(0).getClientY();
+			logger.info("touchevent x=" + x + ",y=" + y);
 		}
 
 		@Override
