@@ -100,7 +100,7 @@ public class ClientFactoryImpl implements ClientFactory
 			if(detection.isDesktop()
 					//&& false
 					) {
-				this.treeModuleView = new TreeModuleViewImpl();
+				this.treeModuleView = new TreeModuleViewImplDesktop();
 			} else {
 				this.treeModuleView = new TreeModuleViewImplTablet();
 			}

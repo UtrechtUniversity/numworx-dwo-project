@@ -19,6 +19,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplTablet.slideNavigat
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -92,6 +93,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 		// Don't use basic button layout, but set FA-style backbutton,
 		// Should move this to a Fa Class wrapper
 		this.moduleBackButton.getElement().setInnerHTML("<span class='fa fa-2x fa-chevron-left' ></span>");
+		this.navigationBackButton.getElement().setInnerHTML("<span class='fa fa-2x fa-power-off' ></span>");
 		
 		cells.addStyleName("tree-cells");
 		cells.addCellSelectedHandler(this);
@@ -138,9 +140,10 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 		case SCO:
 			close(); // since we set "loadedModule" to a new value.
 			container.clear();
-			
+			cells.getElement().getStyle().setDisplay(Display.NONE);
 			ViewModuleViewImpl viewModuleViewImpl = new ViewModuleViewImpl(false);
 			loadedModule = viewModuleViewImpl.initialize(this);
+			viewModuleViewImpl.setApi(DWOplayer.api);
 			viewModuleViewImpl.zetMaat();
 			container.add(loadedModule.asWidget());
 			
@@ -487,6 +490,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	@Override
 	public void close() {
 		if(loadedModule != null) {
+			cells.getElement().getStyle().clearDisplay();
 			loadedModule.close();
 			loadedModule = null;
 		}

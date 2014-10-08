@@ -15,6 +15,7 @@ public class SCORM_DWOmAccess extends SCORM_guest implements Scorm2004IF {
 	private int userID;
 	private int scoID;
 	private boolean pending;
+	boolean inited;
 
 	private Map<String,String> map = new HashMap<String, String>();
 	private Map<String,String> dirty = new HashMap<String, String>();
@@ -35,14 +36,76 @@ public class SCORM_DWOmAccess extends SCORM_guest implements Scorm2004IF {
 		if(scoID!=this.scoID)
 		{
 			map.clear();
-			if(!dirty.isEmpty()) logger.severe("wij hebben een probleem");
+			if(!dirty.isEmpty())
+				logger.severe("wij hebben een probleem setScoID "+ dirty);
 			dirty.clear(); // als niet clear dan hebben we een probleem!!!!
 		}
+		inited = true;
 		this.scoID = scoID;
 	}
 
-	@Override
+	class Committer implements AsyncCallback<Boolean> {
+
+		boolean pending;
+		Map<String,String> dirty, copy;
+		Object[] params;
+		
+		@Override
+		public void onFailure(Throwable caught) {
+			logger.severe("Commit: "+ caught);
+			commit();
+		}
+
+		@Override
+		public void onSuccess(Boolean result) {
+			pending = false;
+			if(!Boolean.TRUE.equals(result)) onFailure(null);
+			else {
+				copy.clear();
+				if(!dirty.isEmpty()) commit();
+			}
+				
+		}
+		
+		public void commit() {
+			copy.putAll(dirty);
+			dirty.clear();
+			XmlRpcRequest<Boolean> request;
+			pending = true;
+			request = new XmlRpcRequest<Boolean>(client, "Commit", params, this);
+			request.execute();
+		}
+		
+		Committer(int scoID, int userID, Map<String,String> dirty) {
+			copy = new HashMap<String,String>(dirty);
+			this.dirty = new HashMap<String,String>();
+			params = new Object[] { userID, scoID, copy };
+		}
+
+		public void add(Map<String, String> dirty) {
+			this.dirty.putAll(dirty);
+		}
+	}
+	
+	Committer committer;
+	
 	public synchronized String Commit() {
+		if(!dirty.isEmpty())
+		{
+			if(committer == null) {
+				committer = new Committer(scoID, userID, dirty);
+			} else {
+				committer.add(dirty);
+			}
+			dirty.clear();
+			if(!committer.pending) committer.commit();
+			else logger.info("pending commit");
+			
+		}
+		return super.Commit();
+	}
+	
+	public synchronized String Commitxxx() {
 		if(!pending && !dirty.isEmpty())
 		{	pending = true;
 			XmlRpcRequest<Boolean> request;
@@ -70,6 +133,8 @@ public class SCORM_DWOmAccess extends SCORM_guest implements Scorm2004IF {
 				}};
 				request = new XmlRpcRequest<Boolean>(client, "Commit", params, callback );
 				request.execute();
+		} else {
+			logger.info("pending commit");
 		}
 		return super.Commit();
 	}
@@ -132,6 +197,8 @@ public class SCORM_DWOmAccess extends SCORM_guest implements Scorm2004IF {
 	@Override
 	public String Terminate() {
 		Commit();
+		committer = null; // no access possible
+		inited = false;
 		return super.Terminate();
 	}
 

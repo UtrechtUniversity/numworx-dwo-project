@@ -101,7 +101,7 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 		// Should move this to a Fa Class wrapper
 		this.moduleBackButton.getElement().setInnerHTML("<span class='fa fa-2x fa-chevron-left' ></span>");
 		this.moduleBackButton.addStyleName(DWOplayer.PARAMETERS.navigationcss().headerText());
-		this.navigationBackButton.getElement().setInnerHTML("<span class='fa fa-2x fa-arrow-left' ></span>");
+		this.navigationBackButton.getElement().setInnerHTML("<span class='fa fa-2x fa-power-off' ></span>");
 		this.navigationUpButton.getElement().setInnerHTML("<span class='fa fa-2x fa-arrow-up' ></span>");
 
 		this.navigationBackButton.addStyleName(DWOplayer.PARAMETERS.navigationcss().headerText());

@@ -15,6 +15,8 @@ import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
+import com.google.gwt.event.dom.client.TouchCancelEvent;
+import com.google.gwt.event.dom.client.TouchCancelHandler;
 import com.google.gwt.event.dom.client.TouchEndEvent;
 import com.google.gwt.event.dom.client.TouchEndHandler;
 import com.google.gwt.event.dom.client.TouchEvent;
@@ -158,32 +160,42 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 	HashMap<String,Object> state;
 
 	
-	class DragOnTouch implements TouchStartHandler, TouchMoveHandler, TouchEndHandler {
+	class DragOnTouch implements TouchStartHandler, TouchMoveHandler, TouchEndHandler, TouchCancelHandler  {
 		int x,y;
 		@Override
 		public void onTouchEnd(TouchEndEvent event) {
+			box.onMouseMove(box.getCaption().asWidget(), x, y);
 			box.onMouseUp(box.getCaption().asWidget(), x, y);
-			logger.info("touch end " + x + "," + y);
+			//logger.info("touch end " + x + "," + y);
+			event.stopPropagation();
+			event.preventDefault();
 		}
 
 		@Override
 		public void onTouchMove(TouchMoveEvent event) {
 			getXY(event);
-			box.onMouseMove(box.getCaption().asWidget(), x, y);
-			logger.info("touch move " + x + "," + y);
+//			box.onMouseMove(box.getCaption().asWidget(), x, y);
+			//logger.info("touch move " + x + "," + y);
 		}
 
 		void getXY(TouchEvent<?> event) {
-			x = event.getTouches().get(0).getClientX();
-			y = event.getTouches().get(0).getClientY();
-			logger.info("touchevent x=" + x + ",y=" + y);
+			x = event.getTouches().get(0).getRelativeX(box.getElement());
+			y = event.getTouches().get(0).getRelativeY(box.getElement());
+			event.stopPropagation();
+			event.preventDefault();
 		}
 
 		@Override
 		public void onTouchStart(TouchStartEvent event) {
 			getXY(event);
 			box.onMouseDown(box.getCaption().asWidget(), x, y);
-			logger.info("touch start " + x + "," + y);
+			//logger.info("touch start " + x + "," + y);
+		}
+
+		@Override
+		public void onTouchCancel(TouchCancelEvent event) {
+			//logger.info("touch cancel");
+			
 		}
 		
 	}
@@ -222,6 +234,7 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 			box.addDomHandler(t, TouchStartEvent.getType());
 			box.addDomHandler(t, TouchMoveEvent.getType());
 			box.addDomHandler(t, TouchEndEvent.getType());
+			box.addDomHandler(t, TouchCancelEvent.getType());
 			box.setWidget(content);
 		}
 		if(!box.isShowing() && view != null && state != null)

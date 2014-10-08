@@ -1995,7 +1995,7 @@ public class FormuleEditorWithSteps implements InteractionView
 					setAndAddFeedback(feedback);
 				else
 				{	setFeedback(feedback);
-					addStep("$f" + editor.toString() + "@");
+					addStep("$f" + editor.toString() + "@"); // deze regel wordt in 'setState' aangeroepen als je de state terugzet, komt er zomaar een extra regel, why?
 				}
 			}
 			else if (goedHalfFout == AntwoordVakChecker.HALF)

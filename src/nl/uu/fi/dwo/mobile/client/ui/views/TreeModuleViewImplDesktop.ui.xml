@@ -52,7 +52,7 @@
 		}
 
 	.cells_area {
-		z-index: -1;
+<!-- why?		z-index: -1; -->
 	}
 		
 	</ui:style>
