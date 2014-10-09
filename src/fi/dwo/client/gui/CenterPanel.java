@@ -244,7 +244,7 @@ if(iconizer)
         if(GuiConstants.GUI_IMAGE_BG)
         	setBorder(MAIN_BORDER);
         if (centerSubPanel != null) {
-            centerSubPanel.end();
+            end();
             if (spe.isVisible()) {
                 ((Component) centerSubPanel).setVisible(false);
                 sp.remove((Component) centerSubPanel);
@@ -259,6 +259,7 @@ if(iconizer)
         GuiCreator.instance().setWait();
 
         centerSubPanel = panel;
+        hasStarted = true;
         centerSubPanel.setCenterPanel(this);
         if(GuiConstants.GUI_IMAGE_BG)
         	mainPanel.setGuiImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_COURSE));
@@ -310,7 +311,7 @@ invalidate();
         	getParent().add(this,0);
         	setLocation(5,-9);
             }
-           	centerSubPanel.end();
+           	end();
             if (sp.isVisible()) {
                 ((Component) centerSubPanel).setVisible(false);
                 sp.remove((Component) centerSubPanel);
@@ -323,6 +324,7 @@ invalidate();
         }
         spe.setVisible(false); // centerSubPanel direct aan centerMainSub -> sp.hide();
         centerSubPanel = panel;
+        hasStarted = true;
         panel.setCenterPanel(this);
         
     	mainPanel.setGuiImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_SCO));
@@ -406,15 +408,17 @@ invalidate();
     }
     
     
-
+    private boolean hasStarted = true;
     /**
      * Called when this panel is closes. Can be used to save session-data, for
      * example the sco-data
      *  
      */
     public void end() {
-        if (centerSubPanel != null) {
+        if (centerSubPanel != null && hasStarted) {
+        	hasStarted = false;
             centerSubPanel.end();
+            
         }
     }
 

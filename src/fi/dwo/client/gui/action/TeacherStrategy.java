@@ -1,9 +1,13 @@
 package fi.dwo.client.gui.action;
 
+import java.awt.Component;
 import java.awt.event.ActionListener;
 
+import javax.swing.JComponent;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.event.ChangeEvent;
 
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseMap;
@@ -21,6 +25,44 @@ import fi.dwo.client.gui.SelectStrategy;
 import fi.dwo.client.system.TextMapper;
 
 public class TeacherStrategy implements SelectStrategy{
+
+	static class NO_SCO implements  CenterSubPanel {
+
+		private Object userObject;
+		
+		
+		NO_SCO(Object userObject) {
+			super();
+			this.userObject = userObject;
+		}
+
+		private JPanel panel = new JPanel();
+		@Override
+		public void stateChanged(ChangeEvent e) {
+		}
+
+		@Override
+		public void end() {
+		}
+
+		@Override
+		public Component getHeaderPanel() {
+			return panel;
+		}
+
+		@Override
+		public void setCenterPanel(CenterPanel centerPanel) {
+		}
+
+		@Override
+		public JComponent getComponent() {
+			return panel;
+		}
+
+		@Override
+		public Object getUserObject() {
+			return this;
+		}};
 
 	public TeacherStrategy() {
 		hasAdminRight = getUser().hasRight(User.PROFILE_ADMIN_RIGHT);
@@ -210,10 +252,13 @@ public class TeacherStrategy implements SelectStrategy{
 		} else if (value instanceof Sco) 
 		{
 			Sco s = (Sco)value;
+			center.end();
 		    CenterSubPanel csp = instance.getScoPanel(s);
 		    if(csp != null) {
 		    	s.setLessonMode(getLessonMode());
 		        center.loadTotal(csp);
+		    } else {
+		    	center.loadTotal(new NO_SCO(value));
 		    }
 		}
 	}
