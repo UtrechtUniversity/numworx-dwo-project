@@ -1,0 +1,12 @@
+<!doctype html>
+<html>
+	<head>
+    	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    	<link type="text/css" rel="stylesheet" href="{13}DWOplayer.css">
+		<title>{0}</title>
+    	<script type="text/javascript" language="javascript" src="{13}scripts/lz-string.js"></script>
+    	<script type="text/javascript" language="javascript" src="{13}scripts/assetapi.js"></script>  
+    	<script type="text/javascript" language="javascript" src="{13}DWOplayer/DWOplayer.nocache.js"></script>
+	</head>
+	<body id='main'></body>
+</html>
