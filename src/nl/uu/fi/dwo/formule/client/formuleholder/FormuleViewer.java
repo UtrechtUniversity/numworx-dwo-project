@@ -172,6 +172,16 @@ public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
 		}
 	}
 	
+	public void setSelection(int selectionStartX, int selectionStartY, int selectionEndX, int selectionEndY)
+	{
+		this.selectionStartX = selectionStartX;
+		this.selectionStartY = selectionStartY;
+		FormuleRegel l = this.getMainRegel().selection(selectionStartX, selectionStartY, selectionEndX, selectionEndY);
+		hasSelection = l.hasSelection();
+		setCurrentRegel(l);
+		this.paint();
+	}
+	
 	public void endSelection(int selectionEndX, int selectionEndY)
 	{
 		if(!selectable)

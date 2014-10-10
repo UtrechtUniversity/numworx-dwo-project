@@ -140,6 +140,12 @@ public class FormuleEditorWithSteps implements InteractionView
 	private boolean bordjesMethode;
 	private boolean linStrategieVersie; // TODO implement this
 	private boolean linOefenVersie;
+	
+	private static boolean fontOvererving;
+	
+	public static void zetFontOverervingForm(boolean b)
+	{	fontOvererving = b;
+	}
 
 	public FormuleEditorWithSteps(HashMap<String, Object> h, boolean isVergelijkingVak, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
@@ -2224,6 +2230,17 @@ public class FormuleEditorWithSteps implements InteractionView
 			return;
 		FlowPanel current = stepPanels.get(stepPanels.size() - 1);
 		current.remove(editor.getAsPanel());
+		int selectionStartX = 0;
+		int selectionStartY = 0;
+		int selectionEndX = 0;
+		int selectionEndY = 0;
+		if(editor.hasSelection())
+		{	int[] selectionBounds = editor.getSelectionBounds();
+			selectionStartX = selectionBounds[0];
+			selectionEndX = selectionBounds[1];
+			selectionStartY = selectionBounds[2];
+			selectionEndY = selectionBounds[3];
+		}
 		editor = null;
 		if(hasPrefix)
 			current.remove(prefixViewer);
@@ -2240,6 +2257,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		FormuleViewer fv = new FormuleViewer(prefix.substring(2, prefix.length() - 1) + antwoord.substring(2, antwoord.length() - 1));
 		//System.out.println(" useranswer3: "+ useranswer);
 		fv.setFont(defaultfont);
+		fv.setSelection(selectionStartX, selectionStartY, selectionEndX, selectionEndY);
 		fv.showResult(fv.ALMOSTCORRECT);
 		VergelijkingMeerv verg = FormuleParser.parseVergelijking("$f" + fv.toString() + "@");
 		if(bordjesMethode && verg.isEindOplossing(verg.geefVergelijkingVar()))

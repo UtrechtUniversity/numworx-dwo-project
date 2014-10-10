@@ -164,6 +164,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private TekstRegel parentRegel;
 	private FormuleEditorPopup fews;
 	
+	private static boolean fontOvererving = false;
+	
+	public static void zetFontOverervingForm(boolean b)
+	{	fontOvererving = b;
+	}
+	
 	public FormuleEditorWithAnswer(HashMap<String, Object> h, boolean isVergelijkingVak, FormuleEditorWithSteps fe, String[] randomVarNamen, HashMap<String, Object> randomVarWaarden)
 	{
 		super();

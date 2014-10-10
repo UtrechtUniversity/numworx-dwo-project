@@ -12,10 +12,12 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleTeken;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVak;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.utils.StringCodeToHashMap;
 
@@ -60,6 +62,8 @@ public abstract class XMLView {
 	private static Logger logger = Logger.getLogger("XMLView");
 	private static int defaultFontSize = 12;
 	private static String defaultFontName = "Arial";
+	
+	private TekstVakPanel hoofdPanel;
 
 	protected void setupView(HashMap<String, Object> launchData)
 	{
@@ -93,7 +97,14 @@ public abstract class XMLView {
 			
 			
 			if(wrap.containsKey("woordFormule"))
-				FormuleParser.zetWoordFormule(wrap.getBoolean("woordFormule"));			
+				FormuleParser.zetWoordFormule(wrap.getBoolean("woordFormule"));	
+			if(wrap.containsKey("fontOvererving"))
+				TekstVakPanel.zetFontOvererving(wrap.getBoolean("fontOvererving"));
+			if(wrap.containsKey("fontOverervingForm"))
+			{
+				FormuleEditorWithAnswer.zetFontOverervingForm(wrap.getBoolean("fontOverervingForm"));
+				FormuleEditorWithSteps.zetFontOverervingForm(wrap.getBoolean("fontOverervingForm"));
+			}
 		}
 
 	}
@@ -143,8 +154,35 @@ public abstract class XMLView {
 		}
 	}
 
-	public void setObjects(ArrayList<Object> opdrachtObjects, Panel destination) {
+	//public void setObjects(ArrayList<Object> opdrachtObjects, Panel destination) 
+	public void setObjects(HashMap<String, Object> opdracht, Panel destination, OpdrNavIF comRoot)
+	{	
+		//marges vanuit instellingen meenemen:
+		destination.getElement().getStyle().setMarginBottom(((Number) instellingen.get("margeOnder")).intValue(), Style.Unit.PX);
+		destination.getElement().getStyle().setMarginTop(((Number) instellingen.get("margeBoven")).intValue(), Style.Unit.PX);
+		destination.getElement().getStyle().setMarginLeft(((Number) instellingen.get("margeLinks")).intValue(), Style.Unit.PX);
+		destination.getElement().getStyle().setMarginRight(((Number) instellingen.get("margeRechts")).intValue(), Style.Unit.PX);
+		
+		int hoogte = 500;
+		int breedte = 800;
+		
+		if(opdracht.containsKey("scheidingX"))
+		{
+			breedte = ((Number) opdracht.get("scheidingX")).intValue();
+		}
+		
+		hoofdPanel = new TekstVakPanel(breedte, hoogte, randomVarNamen, randomVarWaarden);
+		hoofdPanel.setCommunicationRoot(comRoot);
+		hoofdPanel.zetInstellingen(instellingen, true);
+		hoofdPanel.setKeyboard(kb);
+		
+		hoofdPanel.zetOpdracht(opdracht);
+		
+		destination.add(hoofdPanel);
+		opdrachtObjects.add(hoofdPanel);
 	
+			
+		/*
 		for (int i = 0; i < opdrachtObjects.size(); i++)
 		{
 	
@@ -236,9 +274,7 @@ public abstract class XMLView {
 				IsWidget widget = (IsWidget) currentObject;
 				destination.add(widget);
 			}
-
-	
-		}
+		}*/
 	
 	}
 

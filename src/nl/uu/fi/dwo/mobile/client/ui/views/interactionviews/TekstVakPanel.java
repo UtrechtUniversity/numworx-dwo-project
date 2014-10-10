@@ -99,6 +99,7 @@ public class TekstVakPanel implements InteractionView
 	private static final CBookEvent KLAPUIT_EVENT = new CBookEvent(TVP_KLAPUIT); 
 	private static final CBookEvent KLAPIN_EVENT = new CBookEvent(TVP_KLAPIN); 
 	
+	
 	class TekstVakContext {
 
 		private int rij,kolom;
@@ -133,7 +134,7 @@ public class TekstVakPanel implements InteractionView
 	
 	private TekstVak parent = null;
 	
-	ArrayList<Object> interactionViewObjects = new ArrayList<Object>();
+	private ArrayList<Object> interactionViewObjects = new ArrayList<Object>();
 
 	List<Double> breedtes = null;
 	List<Double> hoogtes = null;
@@ -195,6 +196,8 @@ public class TekstVakPanel implements InteractionView
 	private MouseHandler mouseHandler;
 	private TouchHandler touchHandler;
 	
+	private static boolean fontOvererving;
+	
 	static CssColor getColor(ObjectMap map, String key, int r, int g, int b) {
 		ObjectMap colorMap = map != null && map.containsKey(key) ? map.getObjectMap(key) : null ;
 		if(colorMap != null) {
@@ -208,7 +211,57 @@ public class TekstVakPanel implements InteractionView
 		return CssColor.make(r, g, b);
 	}
 	
-	
+	//Hiermee maak je het basispanel dat alle componenten van een pagina bevat.
+	public TekstVakPanel(int breedte, int hoogte, String[] randomVarNamen, HashMap randomVarWaarden)
+	{
+		this.randomVarNamen = randomVarNamen;
+		this.randomVarWaarden = randomVarWaarden;
+		
+		//niet nodig waarschijnlijk
+		facade = new PopupFacade(null);
+		
+		mainPanel2 = new LayoutPanel(); 
+		mainPanel2.setStylePrimaryName("tekstvakpanel");
+		
+		setCurrentSize(breedte, hoogte);
+		pasAanH = true;
+		
+		mainPanel = new Grid(1, 1);
+		mainPanel.getElement().getStyle().setProperty("borderSpacing", "" + cellSpaceColumn + "px " + cellSpaceRow + "px");
+		mainPanel.getElement().getStyle().setProperty("margin", "" + (-cellSpaceRow) + "px " + (-cellSpaceColumn) + "px");
+		
+		tekstVakken = new TekstVak[1][1];	
+		tekstVakken[0][0] = new TekstVak(this, 0, 0);
+		tekstVakken[0][0].setSize(breedte, hoogte);
+		tekstVakken[0][0].setColor(fgColor);
+		tekstVakken[0][0].setFontSize(font_size);
+		tekstVakken[0][0].setFontStyle(font_style);
+		//tekstVakken[i][j].setRonding(ronding);
+		//tekstVakken[i][j].setCentering(centerH, centerV);
+		//tekstVakken[i][j].setPasHoogteBreedteAan(pasAanH, pasAanB);
+		//tekstVakken[i][j].setTekstVakBreedte(tekstVakBreedte);
+		//tekstVakken[i][j].setMarges(bovenMarge, cellMarge);
+		//tekstVakken[i][j].setInterlinie(interlinie);
+		
+		mainPanel.setWidget(0, 0, tekstVakken[0][0]);
+		
+		randPanel = new LayoutPanel();
+		randPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
+		randPanel.getElement().getStyle().setBorderColor(randColor.toString());
+		randPanel.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
+		randPanel.getElement().getStyle().setProperty("borderRadius", (ronding / 2) + "px");
+		mainPanel2.add(randPanel);
+		mainPanel2.setWidgetLeftRight(randPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+		mainPanel2.setWidgetTopBottom(randPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+		
+		mainPanel2.add(mainPanel);
+		mainPanel2.setWidgetLeftRight(mainPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+		mainPanel2.setWidgetTopBottom(mainPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+		
+		
+		breedtes = Arrays.asList((double) breedte);
+		hoogtes = Arrays.asList((double) hoogte);
+	}
 	
 	
 	public TekstVakPanel(HashMap<String, Object> hh, String[] randomVarNamen, HashMap randomVarWaarden)
@@ -246,6 +299,7 @@ public class TekstVakPanel implements InteractionView
 		int randColor_red = 0;
 		int randColor_green = 0;
 		int randColor_blue = 0;
+		boolean anderFont = false;
 
 		if (launchState.containsKey("breedtes") )
 		{
@@ -311,6 +365,8 @@ public class TekstVakPanel implements InteractionView
 			font_size = m.getInt("size");
 			font_style = m.getInt("style");
 		}
+		if(launchState.containsKey("anderFont"))
+			anderFont = launchState.getBoolean("anderFont");
 		
 		if (launchState.containsKey("selectable"))
 			selectable = launchState.getBoolean("selectable"); 
@@ -377,7 +433,6 @@ public class TekstVakPanel implements InteractionView
 
 		mainPanel2 = new LayoutPanel(); 
 		mainPanel2.setStylePrimaryName("tekstvakpanel");
-		
 		
 		setCurrentSize(breedte, hoogte);
 		
@@ -449,6 +504,15 @@ public class TekstVakPanel implements InteractionView
 				tekstVakken[i][j].setColor(fgColor);
 				tekstVakken[i][j].setFontSize(font_size);
 				tekstVakken[i][j].setFontStyle(font_style);
+				if(fontOvererving && !anderFont && parent != null && parent.getTekstVakParent() != null)
+				{	CssColor fgColorOvererving = parent.getTekstVakParent().fgColor;
+					int fontSizeOvererving = parent.getTekstVakParent().font_size;
+					int fontStyleOvererving = parent.getTekstVakParent().font_style;
+					tekstVakken[i][j].setColor(fgColorOvererving);
+					tekstVakken[i][j].setFontSize(fontSizeOvererving);
+					tekstVakken[i][j].setFontStyle(fontStyleOvererving);
+					//TODO: kijken of dit goed get met lettertype (arial, etc), die zet je nu volgens mij nog niet.
+				}
 				tekstVakken[i][j].setRonding(ronding);
 				tekstVakken[i][j].setCentering(centerH, centerV);
 				tekstVakken[i][j].setPasHoogteBreedteAan(pasAanH, pasAanB);
@@ -522,6 +586,18 @@ public class TekstVakPanel implements InteractionView
 		this.instellingen = instellingen;
 		//if(instellingen.get("fontSize") != null)
 		//	font_size = ((Number) instellingen.get("fontSize")).intValue();
+	}
+	
+	public void zetInstellingen(Map<String, Object> instellingen, boolean xmlPanel)
+	{
+		zetInstellingen(instellingen);
+		if(instellingen.get("fontSize") != null)
+			font_size = ((Number) instellingen.get("fontSize")).intValue();
+		if(instellingen.get("fontStyle") != null)
+			font_style = ((Number) instellingen.get("fontStyle")).intValue();
+		tekstVakken[0][0].setFontSize(font_size);
+		tekstVakken[0][0].setFontStyle(font_style);
+		
 	}
 
 	public void setKeyboard(FormuleKeyboard kb)
@@ -627,7 +703,10 @@ public class TekstVakPanel implements InteractionView
 					if (currentObject instanceof InteractionView)
 					{ 	((InteractionView) currentObject).setCommunicationRoot(comRoot);
 						if(! (currentObject instanceof StateLess))
+						{	if(currentObject instanceof FormuleEditorWithAnswer)
+								System.out.println("formuleEditorWithAnswer wordt toegevoegd aan interactionViewObjects");
 							interactionViewObjects.add(currentObject);
+						}
 						
 						
 						if(currentObject instanceof CheckValueUnit)
@@ -681,7 +760,12 @@ public class TekstVakPanel implements InteractionView
 					if (currentObject instanceof TekstVakPanel)
 					{
 						Object launchData = opdrachtGegevens.get(aantalVakken);
+						//Als opdrachtGegevens direct uit XMLView komen, zitten er eerst 5 lege entries.
+						if(opdrachtGegevens.get(0) == null)
+						{	launchData = opdrachtGegevens.get(aantalVakken + 5);
+						}
 						aantalVakken++;
+						
 						HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) launchData).get("interactiePanelLaunchState");
 						TekstVakPanel tekstVakChild = (TekstVakPanel) currentObject;
 						if(tekstVakChild.isZwevend())
@@ -1223,6 +1307,10 @@ public class TekstVakPanel implements InteractionView
 				}
 			}
 		}
+	}
+	
+	public static void zetFontOvererving(boolean b)
+	{	fontOvererving = b;
 	}
 	
 	public int getIpId()

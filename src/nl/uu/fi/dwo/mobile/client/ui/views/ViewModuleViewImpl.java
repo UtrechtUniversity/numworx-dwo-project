@@ -409,8 +409,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				//title.getElement().getStyle().setFloat(Float.LEFT);
 				contentPanel.add(title);
 			}
+			/*
 			opdrachtObjects = tb.convertTekst(opdracht);
 			int aantalVakken = 0;
+			
 			for (int i = 0; i < opdrachtObjects.size(); i++)
 			{
 				Object currentObject = opdrachtObjects.get(i);
@@ -431,7 +433,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 					}
 				}
 			}
-			setObjects(opdrachtObjects, contentPanel);
+			*/
+			
+			setObjects(opdracht, contentPanel, on);
+			//setObjects(opdrachtObjects, contentPanel);
 		}
 		else if (!newVersion)
 		{ //Old editor version 
@@ -448,6 +453,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	public void zetOpdrachtPlusState(HashMap<String, Object> opdracht, HashMap<String, Object> state)
 	{
+		
+		System.out.println("zetOpdrachtPlusState");
 		String randVarString;
 		randVarString = (String) opdracht.get("randVarString");
 		if(randVarString == null ) randVarString = "";
@@ -508,6 +515,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				//title.getElement().getStyle().setFloat(Float.LEFT);
 				contentPanel.add(title);
 			}
+			
+			/*
 			opdrachtObjects = tb.convertTekst(opdracht);
 			int aantalVakken = 0;
 			for (int i = 0; i < opdrachtObjects.size(); i++)
@@ -526,8 +535,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 						((TekstVakPanel) currentObject).zetOpdracht(launchState);
 					}
 				}
-			}
-			setObjects(opdrachtObjects, contentPanel);
+			}*/
+			setObjects(opdracht, contentPanel, on);
+			//setObjects(opdrachtObjects, contentPanel);
 		}
 		else if (!newVersion)
 		{ //Old editor version 
@@ -565,7 +575,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		title.getElement().getStyle().setPaddingTop(5, Unit.PX);
 		tekst.add(title);
 		opdrachtObjects = tb.convertTekst(opdracht);
-		setObjects(opdrachtObjects, tekst);
+		//setObjects(opdrachtObjects, tekst);
+		setObjects(opdracht, tekst, on);
 		contentPanel.add(tekst);
 		FormuleEditorWithSteps fews = new FormuleEditorWithSteps(opdracht, false, tb.getVarNamen(), tb.getVarWaarden());
 

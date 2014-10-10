@@ -53,8 +53,10 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 	protected boolean hasSelection = false;
 
 	protected int selectionStartX = -1;
-
 	protected int selectionStartY = 0;
+	protected int selectionEndX = -1;
+	protected int selectionEndY = 0;
+	
 
 	public FormuleHolder()
 	{
@@ -172,7 +174,9 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 	public void clearSelection() {
 	}
 
-	public void endSelection(int x, int y) {		
+	public void endSelection(int x, int y) {	
+		this.selectionEndX = x;
+		this.selectionEndY = y;
 	}
 	
 	public void requestFocus() {
@@ -187,6 +191,16 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 	public void startSelection(int x, int y) {
 		this.selectionStartX = x;
 		this.selectionStartY = y;
+	}
+	
+	public int[] getSelectionBounds()
+	{
+		int[] selectionBounds = new int[4];
+		selectionBounds[0] = selectionStartX;
+		selectionBounds[1] = selectionEndX;
+		selectionBounds[2] = selectionStartY;
+		selectionBounds[3] = selectionEndY;
+		return selectionBounds;
 	}
 
 	public FormuleRegel getCurrentRegel() {

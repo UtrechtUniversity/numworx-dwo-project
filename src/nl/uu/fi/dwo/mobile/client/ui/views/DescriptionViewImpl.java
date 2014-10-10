@@ -135,7 +135,8 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Ent
 					((TekstVakPanel) currentObject).zetOpdracht(launchState);
 				}
 			}
-			setObjects(opdrachtObjects, contentPanel);
+			//setObjects(opdrachtObjects, contentPanel);
+			setObjects(opdracht, contentPanel, null);
 		}
 		else if (!newVersion)
 		{ //Old editor version 
@@ -165,7 +166,8 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Ent
 		title.getElement().getStyle().setPaddingTop(5, Unit.PX);
 		tekst.add(title);
 		opdrachtObjects = tb.convertTekst(opdracht);
-		setObjects(opdrachtObjects, tekst);
+		//setObjects(opdrachtObjects, tekst);
+		setObjects(opdracht, tekst, null);
 		contentPanel.add(tekst);
 		FormuleEditorWithSteps fews = new FormuleEditorWithSteps(opdracht, false, tb.getVarNamen(), tb.getVarWaarden());
 
