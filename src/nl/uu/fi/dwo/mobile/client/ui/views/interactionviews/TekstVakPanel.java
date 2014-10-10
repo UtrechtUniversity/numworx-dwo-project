@@ -442,7 +442,9 @@ public class TekstVakPanel implements InteractionView
 				if( tekstVakHoogte < 0) tekstVakHoogte = 0;
 				
 				tekstVakken[i][j] = new TekstVak(this, i, j);
-				tekstVakken[i][j].setSize(breedtes.get(j).intValue(), hoogtes.get(i).intValue());
+				int th = hoogtes.get(i).intValue();
+				tekstVakken[i][j].setSize(breedtes.get(j).intValue(), th);
+				tekstVakken[i][j].setVisible(th>0);
 				//tekstVakken[i][j].setPixelSize(breedtes.get(j).intValue(), hoogtes.get(i).intValue());
 				tekstVakken[i][j].setColor(fgColor);
 				tekstVakken[i][j].setFontSize(font_size);
