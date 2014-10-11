@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
@@ -278,6 +280,12 @@ public class JSONObjectMapImpl extends HashMap<String, Object> implements Object
 	@Override
 	public Set<String> keySet() {
 		return object.keySet();
+	}
+
+	@Override
+	public Object put(String key, Object value) {
+		JSONValue json = JSONUtilities.toJSONValue(value);
+		return toObject(object.put(key, json));
 	}
 
 }

@@ -271,6 +271,13 @@ public class TekstBuffer
 		switch (soortVak)
 		{
 		case -2:
+// copy classname to inner, so that MCSquared.html can read it.
+			HashMap inner = (HashMap)currentVakGegevens.get("interactiePanelLaunchState");
+			String className = currentVakGegevens.get("soortInteractiePanelClass").toString();
+			int haak = className.indexOf('[');
+			if(haak > 0 ) className = className.substring(0,haak);
+			inner.put("className", className);
+			
 			return new StubView("MCSquared.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		case 4: 
 			return new PopupFacade(currentVakGegevens, new TextEditor( currentVakGegevens, randomVarNamen, randomVarWaarden ));
