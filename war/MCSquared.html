@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>MC Scuared</title>
+<script type="text/javascript" language="javascript" >
+var wnd = window;
+window.inner = {
+		getScore: function() {
+				return 0;
+		},
+		getState: function() {
+			return "{}";
+		},
+		setState: function(jso) {
+			
+		},
+		isCorrect: function() {
+			return "null";
+		},
+		init: function(width, height, launchdata, values) {
+			console.log("width="  + width + ", height = " + height);
+			console.log(wnd);
+			document.getElementById("stub").innerHTML = launchdata;
+		},
+		enter: function() {
+		},
+		clearAll: function() {
+		},
+		insert: function(string) {
+		},
+		cursorToRight: function() {
+		},
+		cursorToLeft: function() {
+		},
+		getSelectionString: function() {
+			return "";
+		},
+		removeNextElement: function() {
+		},
+		backspace: function() {
+		},
+		
+}
+
+</script>
+<style>
+	body { 
+		background-color: #888;
+		color: white;
+	}
+</style>
+
+</head>
+
+
+<body>
+<div id='stub' >This is a stub</div>
+</body>
+</html>

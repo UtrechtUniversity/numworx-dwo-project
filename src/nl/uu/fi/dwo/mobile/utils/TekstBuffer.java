@@ -270,6 +270,8 @@ public class TekstBuffer
 		
 		switch (soortVak)
 		{
+		case -2:
+			return new StubView("MCSquared.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		case 4: 
 			return new PopupFacade(currentVakGegevens, new TextEditor( currentVakGegevens, randomVarNamen, randomVarWaarden ));
 		
