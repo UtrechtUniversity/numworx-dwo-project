@@ -57,7 +57,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 		DWOplayer.clientfactory = dummyClientFactory;
 		
 		MGWTsetup();
-		view = new ViewModuleViewImpl(true).initialize();
+		view = createEntryVlew();
 
 		dummyClientFactory.setEntryView(view);
 		dummyClientFactory.setEventBus(CBookEventListener.BUS);
@@ -85,6 +85,14 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 		};
 		api.Initialize(callback); // need some async bootstrapping.	
 		
+	}
+
+	/**
+	 * Factory method pattern. Initialize clientFactory
+	 * @return
+	 */
+	protected ViewModuleViewImpl createEntryVlew() {
+		return new ViewModuleViewImpl(false).initialize();
 	}
 
 	protected void zetMaat() {

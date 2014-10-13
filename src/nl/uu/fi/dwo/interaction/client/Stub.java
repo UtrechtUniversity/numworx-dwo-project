@@ -65,6 +65,9 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 			getScore: function() {
 				return this.stub.@nl.uu.fi.dwo.interaction.client.Stub::view.@nl.uu.fi.dwo.interaction.client.InteractionView::getScore()();
 			},
+			setNagekeken: function(arg) {
+				return this.stub.@nl.uu.fi.dwo.interaction.client.Stub::view.@nl.uu.fi.dwo.interaction.client.InteractionView::zetNagekeken(Z)(arg);
+			},
 			getState: function() {
 				return this.stub.@nl.uu.fi.dwo.interaction.client.Stub::getState()();
 			},
@@ -124,14 +127,14 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	@Override
 	public void setChanged(boolean fout) {
 		try {
-			setChanged0();
+			setChanged0(fout);
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "setChanged", e);
 		}
 	}
 	
-	private static native void setChanged0() /*-{
-		$wnd.setChanged($wnd.outer);
+	private static native void setChanged0(boolean fout) /*-{
+		$wnd.setChanged(fout, $wnd.outer);
 	}-*/;
 
 	@Override

@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile;
 
+import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
+
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
@@ -23,6 +25,11 @@ public class NoordhoffPlayer extends WiskOpdrPlayer {
 	@Override
 	protected void zetMaat() {
 		view.zetMaatNoordhoff();
+	}
+
+	@Override
+	protected ViewModuleViewImpl createEntryVlew() {
+		return new ViewModuleViewImpl(true).initialize();
 	}
 	
 }
