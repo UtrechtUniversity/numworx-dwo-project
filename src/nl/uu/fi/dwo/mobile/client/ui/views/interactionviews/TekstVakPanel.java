@@ -197,6 +197,7 @@ public class TekstVakPanel implements InteractionView
 	private TouchHandler touchHandler;
 	
 	private static boolean fontOvererving;
+	private boolean anderFont = false;
 	
 	static CssColor getColor(ObjectMap map, String key, int r, int g, int b) {
 		ObjectMap colorMap = map != null && map.containsKey(key) ? map.getObjectMap(key) : null ;
@@ -299,7 +300,7 @@ public class TekstVakPanel implements InteractionView
 		int randColor_red = 0;
 		int randColor_green = 0;
 		int randColor_blue = 0;
-		boolean anderFont = false;
+		//boolean anderFont = false;
 
 		if (launchState.containsKey("breedtes") )
 		{
@@ -359,6 +360,7 @@ public class TekstVakPanel implements InteractionView
 			font_size = launchState.getInt("font_size");
 		if (launchState.containsKey("font_style"))
 			font_style = launchState.getInt("font_style");
+		
 		
 		if(launchState.containsKey("font")) {
 			ObjectMap m = launchState.getObjectMap("font");
@@ -504,15 +506,6 @@ public class TekstVakPanel implements InteractionView
 				tekstVakken[i][j].setColor(fgColor);
 				tekstVakken[i][j].setFontSize(font_size);
 				tekstVakken[i][j].setFontStyle(font_style);
-				if(fontOvererving && !anderFont && parent != null && parent.getTekstVakParent() != null)
-				{	CssColor fgColorOvererving = parent.getTekstVakParent().fgColor;
-					int fontSizeOvererving = parent.getTekstVakParent().font_size;
-					int fontStyleOvererving = parent.getTekstVakParent().font_style;
-					tekstVakken[i][j].setColor(fgColorOvererving);
-					tekstVakken[i][j].setFontSize(fontSizeOvererving);
-					tekstVakken[i][j].setFontStyle(fontStyleOvererving);
-					//TODO: kijken of dit goed get met lettertype (arial, etc), die zet je nu volgens mij nog niet.
-				}
 				tekstVakken[i][j].setRonding(ronding);
 				tekstVakken[i][j].setCentering(centerH, centerV);
 				tekstVakken[i][j].setPasHoogteBreedteAan(pasAanH, pasAanB);
@@ -581,22 +574,29 @@ public class TekstVakPanel implements InteractionView
 		}
 	}
 
+//	public void zetInstellingen(Map<String, Object> instellingen)
+//	{
+//		this.instellingen = instellingen;
+//		//if(instellingen.get("fontSize") != null)
+//		//	font_size = ((Number) instellingen.get("fontSize")).intValue();
+//	}
+	
 	public void zetInstellingen(Map<String, Object> instellingen)
 	{
 		this.instellingen = instellingen;
-		//if(instellingen.get("fontSize") != null)
-		//	font_size = ((Number) instellingen.get("fontSize")).intValue();
-	}
-	
-	public void zetInstellingen(Map<String, Object> instellingen, boolean xmlPanel)
-	{
-		zetInstellingen(instellingen);
-		if(instellingen.get("fontSize") != null)
-			font_size = ((Number) instellingen.get("fontSize")).intValue();
-		if(instellingen.get("fontStyle") != null)
-			font_style = ((Number) instellingen.get("fontStyle")).intValue();
-		tekstVakken[0][0].setFontSize(font_size);
-		tekstVakken[0][0].setFontStyle(font_style);
+		if(!anderFont && !fontOvererving)
+		{	if(instellingen.get("fontSize") != null)
+				font_size = ((Number) instellingen.get("fontSize")).intValue();
+			font_style = 0;
+			for (int i = 0; i < hoogtes.size(); i++)
+			{
+				for (int j = 0; j < breedtes.size(); j++)
+				{	tekstVakken[i][j].setFontSize(font_size);
+					tekstVakken[i][j].setFontStyle(font_style);
+				}
+			}
+		}
+		
 		
 	}
 
@@ -703,9 +703,7 @@ public class TekstVakPanel implements InteractionView
 					if (currentObject instanceof InteractionView)
 					{ 	((InteractionView) currentObject).setCommunicationRoot(comRoot);
 						if(! (currentObject instanceof StateLess))
-						{	if(currentObject instanceof FormuleEditorWithAnswer)
-								System.out.println("formuleEditorWithAnswer wordt toegevoegd aan interactionViewObjects");
-							interactionViewObjects.add(currentObject);
+						{	interactionViewObjects.add(currentObject);
 						}
 						
 						
@@ -768,8 +766,7 @@ public class TekstVakPanel implements InteractionView
 						
 						HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) launchData).get("interactiePanelLaunchState");
 						TekstVakPanel tekstVakChild = (TekstVakPanel) currentObject;
-						if(tekstVakChild.isZwevend())
-							tekstVakChild.setParent(tekstVakken[i][j]);
+						tekstVakChild.setParent(tekstVakken[i][j]);
 						tekstVakChild.zetInstellingen(instellingen);
 						tekstVakChild.setKeyboard(kb);
 						tekstVakChild.zetOpdracht(launchState);
@@ -982,6 +979,23 @@ public class TekstVakPanel implements InteractionView
 	public void setParent(TekstVak panel)
 	{
 		parent = panel;
+		if(fontOvererving && !anderFont && parent != null && parent.getTekstVakParent() != null)
+		{	
+			System.out.println("fontOvererving vindt plaats");
+			CssColor fgColorOvererving = parent.getTekstVakParent().fgColor;
+			int fontSizeOvererving = parent.getTekstVakParent().font_size;
+			int fontStyleOvererving = parent.getTekstVakParent().font_style;
+			
+			for (int i = 0; i < hoogtes.size(); i++)
+			{
+				for (int j = 0; j < breedtes.size(); j++)
+				{	tekstVakken[i][j].setColor(fgColorOvererving);
+					tekstVakken[i][j].setFontSize(fontSizeOvererving);
+					tekstVakken[i][j].setFontStyle(fontStyleOvererving);
+				}
+			}
+			//TODO: kijken of dit goed gaat met lettertype (arial, etc), die zet je nu volgens mij nog niet.
+		}
 	}
 	
 	public Panel getPanelElement(final FormuleHolder editor)
@@ -1043,7 +1057,7 @@ public class TekstVakPanel implements InteractionView
 		locationX = (int) x;
 		locationY = (int) y;
 		
-		if(parent != null)
+		if(parent != null && zwevend)
 		{	parent.remove(this.asWidget());
 			parent.add(this.asWidget());
 			parent.setWidgetLeftWidth(this.asWidget(), locationX, Style.Unit.PX, breedte, Style.Unit.PX);
@@ -1546,7 +1560,7 @@ public class TekstVakPanel implements InteractionView
 		locationX = eventX - startX;
 		locationY = eventY - startY;
 		
-		if(parent != null)
+		if(parent != null && zwevend)
 		{	locationX = Math.max(locationX, 0);
 			locationX = Math.min(locationX, parent.getOffsetWidth() - breedte);
 			locationY = Math.max(locationY, 0);
@@ -1568,7 +1582,7 @@ public class TekstVakPanel implements InteractionView
 		}
 		locationX = eventX - startX;
 		locationY = eventY - startY;
-		if(parent != null)
+		if(parent != null && zwevend)
 		{	locationX = Math.max(locationX, 0);
 			locationX = Math.min(locationX, parent.getOffsetWidth() - breedte);
 			locationY = Math.max(locationY, 0);
@@ -1642,7 +1656,7 @@ public class TekstVakPanel implements InteractionView
 						return;
 					}
 				}
-				if(parent != null)
+				if(parent != null && zwevend)
 				{
 					TekstVakPanel tekstVakParent = parent.getTekstVakParent();
 					for(int i = 0; i < tekstVakParent.interactionViewObjects.size(); i++)

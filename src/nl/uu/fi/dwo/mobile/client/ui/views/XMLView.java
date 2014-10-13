@@ -173,7 +173,7 @@ public abstract class XMLView {
 		
 		hoofdPanel = new TekstVakPanel(breedte, hoogte, randomVarNamen, randomVarWaarden);
 		hoofdPanel.setCommunicationRoot(comRoot);
-		hoofdPanel.zetInstellingen(instellingen, true);
+		hoofdPanel.zetInstellingen(instellingen);
 		hoofdPanel.setKeyboard(kb);
 		
 		hoofdPanel.zetOpdracht(opdracht);
