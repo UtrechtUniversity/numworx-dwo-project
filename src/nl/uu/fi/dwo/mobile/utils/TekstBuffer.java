@@ -21,8 +21,6 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.GeogebraView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TextEditor;
-//import fi.kladjegwt.client.KladjeGWT;
-//import fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT;
 
 /**
  * Uses information in the launchdata HashMap to create objects that will be
@@ -272,11 +270,7 @@ public class TekstBuffer
 		{
 		case -2:
 // copy classname to inner, so that MCSquared.html can read it.
-			HashMap inner = (HashMap)currentVakGegevens.get("interactiePanelLaunchState");
-			String className = currentVakGegevens.get("soortInteractiePanelClass").toString();
-			int haak = className.indexOf('[');
-			if(haak > 0 ) className = className.substring(0,haak);
-			inner.put("className", className);
+			mc2FixInner(currentVakGegevens);
 			
 			return new StubView("MCSquared.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		case 4: 
@@ -383,6 +377,18 @@ public class TekstBuffer
 		}
 
 		return result;
+	}
+
+	private HashMap<String, Object> mc2FixInner(HashMap<String, Object> currentVakGegevens) {
+		@SuppressWarnings("unchecked")
+		HashMap<String,Object> inner = (HashMap<String,Object>)currentVakGegevens.get("interactiePanelLaunchState");
+		String className = currentVakGegevens.get("soortInteractiePanelClass").toString();
+		int haak = className.indexOf('[');
+		if(haak > 0 ) className = className.substring(0,haak);
+		Object value = currentVakGegevens.get("crossWidgetId");
+		inner.put("crossWidgetId", value);
+		inner.put("className", className);
+		return currentVakGegevens;
 	}
 
 	public String[] getVarNamen()

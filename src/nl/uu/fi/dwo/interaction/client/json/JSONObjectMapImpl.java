@@ -288,4 +288,12 @@ public class JSONObjectMapImpl extends HashMap<String, Object> implements Object
 		return toObject(object.put(key, json));
 	}
 
+	@Override
+	public Object remove(Object key) {
+		if(key instanceof String)
+			return toObject(object.put((String) key, null));
+		else
+			return null; // no non-strings in object
+	}
+//
 }
