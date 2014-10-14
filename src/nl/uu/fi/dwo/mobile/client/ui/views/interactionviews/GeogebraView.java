@@ -36,6 +36,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 	private PopupFacade facade;
 	private int width;
 	private int height;
+	private int barHeight;
 	private boolean volledigeBreedte;
 	private boolean ingevuld;
 	private boolean nagekeken;
@@ -87,7 +88,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 			@SuppressWarnings("unchecked")
 			Set<String> keys = ((Map)object).keySet();
 			for(String key: keys) {
-				geogebraParams.put(key, object.get(key));
+				geogebraParams.put(key, object.get(key).toString());
 			}
 			//geogebraParams.putAll(map);
 		}
@@ -109,13 +110,17 @@ public class GeogebraView implements InteractionView, LoadHandler
 		{
 			params.append( "data-param-" + entry.getKey() + "='" + entry.getValue() + "' ");
 		}
+		if("true".equals(geogebraParams.get("showMenuBar")))
+			barHeight += 33;
+		if("true".equals(geogebraParams.get("showToolBar")))
+			barHeight += 57;
+		
 		params.append(ggb);
 		ggb = params.toString();
 		width = 400;
 		if (json.containsKey("breedte"))
 			width = json.getInt("breedte");
 		height = 400;
-		Object h = launchData.get("hoogte");
 		if (json.containsKey("hoogte"))
 			height = json.getInt("hoogte");
 		volledigeBreedte = json.containsKey("volledigeBreedte") && json.getBoolean("volledigeBreedte");
@@ -126,10 +131,13 @@ public class GeogebraView implements InteractionView, LoadHandler
 	}
 
 	private void initFrame() {
+		int height = this.height;
+		int width  = this.width;
 		frame.setPixelSize(width, height);
-		//height -= 57 + 2; // toolbar aftrekken?
-		height -= 2;
+		//height -= 57 + 2; // toolbar aftrekken? ja dus!
+		height -= 6;
 		width  -= 2;  // 1 pixel border
+		height -= barHeight;
 		ggb += " data-param-width='" + width + "' data-param-height='" + height + "'"; // geeft een scrollbar
 		frame.addLoadHandler(this);
 		mainPanel.setWidget(frame);
