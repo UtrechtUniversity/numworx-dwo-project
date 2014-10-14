@@ -164,6 +164,12 @@ public class TeacherStrategy implements SelectStrategy{
 			m.add(new JMenuItem(new RenameAction(map)));
 			m.add(new JMenuItem(new DeleteAction(map)));
 		}
+		
+		if(object instanceof Sco) {
+			m.addSeparator();
+			m.add(new JMenuItem(new OpenHtml5(map)));
+		}
+		
 		return m;
 	}
 

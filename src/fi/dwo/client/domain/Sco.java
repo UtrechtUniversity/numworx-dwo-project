@@ -154,7 +154,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
      * Loads the applet corresponding to this sco.
      *  
      */
-    private void loadApplet() {
+    protected void loadApplet() {
         try {
             Applet lastApplet = applet;
             lessonLocation = null;
