@@ -70,10 +70,14 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		int height =400; if(outermap.containsKey("hoogte")) height = outermap.getInt("hoogte");
 		boolean volledigeBreedte = false; if(outermap.containsKey("volledigeBreedte")) volledigeBreedte = outermap.getBoolean("volledigeBreedte");
 		
-		frame.setPixelSize(width , height );
+		this.volledigeBreedte = volledigeBreedte;
 		this.width = width;
 		this.height = height;
-		this.volledigeBreedte = volledigeBreedte;
+		if(!volledigeBreedte ) initFrame();
+	}
+
+	private void initFrame() {
+		frame.setPixelSize(width , height);
 		frame.addLoadHandler(this);
 		setWidget(frame);
 	}
@@ -508,7 +512,10 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	public void zetVolledigeBreedte(int breedte)
 	{
 		if(volledigeBreedte)
+		{
 			width = breedte;
+			initFrame();
+		}
 	}
 
 	@Override

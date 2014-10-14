@@ -39,6 +39,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 	private boolean volledigeBreedte;
 	private boolean ingevuld;
 	private boolean nagekeken;
+	private String pendingState;
 	public native static Object getGgbWindow(Element frame) /*-{
 		return frame.contentWindow;
 	}-*/;
@@ -46,6 +47,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 	public String install(Object o)
 	{
 		ggbApplet = o;
+		setPendingState();
 		return ggb;
 	}
 
@@ -110,22 +112,27 @@ public class GeogebraView implements InteractionView, LoadHandler
 		params.append(ggb);
 		ggb = params.toString();
 		width = 400;
-		Object w = launchData.get("breedte");
-		if (w != null)
-			width = (int)Double.parseDouble(w.toString());
+		if (json.containsKey("breedte"))
+			width = json.getInt("breedte");
 		height = 400;
 		Object h = launchData.get("hoogte");
-		if (h != null)
-			height = (int)Double.parseDouble(h.toString());
-		frame.setSize(width + "px", height + "px");
+		if (json.containsKey("hoogte"))
+			height = json.getInt("hoogte");
+		volledigeBreedte = json.containsKey("volledigeBreedte") && json.getBoolean("volledigeBreedte");
+		
+		if(!volledigeBreedte) initFrame();
+		return this;
+
+	}
+
+	private void initFrame() {
+		frame.setPixelSize(width, height);
 		//height -= 57 + 2; // toolbar aftrekken?
 		height -= 2;
 		width  -= 2;  // 1 pixel border
 		ggb += " data-param-width='" + width + "' data-param-height='" + height + "'"; // geeft een scrollbar
 		frame.addLoadHandler(this);
 		mainPanel.setWidget(frame);
-		return this;
-
 	}
 
 	@Override
@@ -153,7 +160,17 @@ public class GeogebraView implements InteractionView, LoadHandler
 	{
 		if(h == null) return;
 		String xml = (String) h.get("state");
-		if(bewaarOptie && xml != null && ggbApplet != null) setXML(ggbApplet, xml);
+		if(bewaarOptie && xml != null)
+		{
+			if (ggbApplet != null)
+			{	pendingState = null;
+				setXML(ggbApplet, xml);
+			}
+			else
+				this.pendingState = xml;
+		} else {
+			this.pendingState = null;
+		}
 	}
 
 	public void kijkNa()
@@ -198,6 +215,14 @@ public class GeogebraView implements InteractionView, LoadHandler
 		if (w != null)
 		{
 			ggbApplet = getApplet(w, this);
+			setPendingState();
+		}
+	}
+
+	private void setPendingState() {
+		if(pendingState != null && ggbApplet != null) {
+			setXML(ggbApplet, pendingState);
+			pendingState = null;
 		}
 	}
 
@@ -227,7 +252,10 @@ public class GeogebraView implements InteractionView, LoadHandler
 	public void zetVolledigeBreedte(int breedte)
 	{
 		if(volledigeBreedte)
+		{
 			width = breedte;
+			initFrame();
+		}
 	}
 
 	@Override

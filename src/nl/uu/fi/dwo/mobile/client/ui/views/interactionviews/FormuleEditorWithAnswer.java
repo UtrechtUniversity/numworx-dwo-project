@@ -696,7 +696,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	}
 
 	public Object getUitwerking(TekstVakPanel parent) {
-		if(vakUitwerking)
+		if(vakUitwerking && checkUitklapMogelijkheid())
 		{
 			double hoogte = parent.uitklapHoogtes.get(1); // Marges??????
 			fews.setHeight(hoogte);
