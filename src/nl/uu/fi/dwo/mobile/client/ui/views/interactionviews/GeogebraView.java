@@ -41,6 +41,8 @@ public class GeogebraView implements InteractionView, LoadHandler
 	private boolean ingevuld;
 	private boolean nagekeken;
 	private String pendingState;
+	private ObjectMap randomVars;
+	
 	public native static Object getGgbWindow(Element frame) /*-{
 		return frame.contentWindow;
 	}-*/;
@@ -48,6 +50,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 	public String install(Object o)
 	{
 		ggbApplet = o;
+		setRandomVars();
 		setPendingState();
 		return ggb;
 	}
@@ -67,13 +70,15 @@ public class GeogebraView implements InteractionView, LoadHandler
 		mainPanel = new SimplePanel();
 	}
 
-	public GeogebraView(HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap randomVarWaarden)
+	public GeogebraView(HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap<String,?> randomVarWaarden)
 	{
 		this();
+		if(!randomVarWaarden.isEmpty()) 
+			randomVars = JSONUtilities.wrapMap(randomVarWaarden);
 		init(launchdata);
 	}
 
-	public GeogebraView init(HashMap<String, Object> launchData)
+	private GeogebraView init(HashMap<String, Object> launchData)
 	{
 		facade = new PopupFacade(launchData);
 		ObjectMap json = JSONUtilities.wrapMap(launchData);
@@ -183,6 +188,19 @@ public class GeogebraView implements InteractionView, LoadHandler
 
 	public void kijkNa()
 	{
+		if(nakijken)
+		{
+			double val = getValue(ggbApplet, "checkDWO");
+			if( val == 1.0)
+			{
+				score = scoreMax;
+				correct = Boolean.TRUE;
+			} else {
+				score = 0;
+				correct = Boolean.FALSE;
+			}
+			nagekeken = true;				
+		}
 		
 	}
 	
@@ -223,6 +241,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 		if (w != null)
 		{
 			ggbApplet = getApplet(w, this);
+			setRandomVars();
 			setPendingState();
 		}
 	}
@@ -233,7 +252,30 @@ public class GeogebraView implements InteractionView, LoadHandler
 			pendingState = null;
 		}
 	}
-
+	
+	private void setRandomVars() {
+		if(ggbApplet != null && randomVars != null) {
+			Set<String> keys = randomVars.keySet();
+			for (String key : keys) {
+				double value = randomVars.getDouble(key);
+				key = "dwo_" + key.replace("?(", "").replace(")", "");
+				setValue(ggbApplet, key, value);
+			}
+		}
+	}
+	
+	private static native void setValue(Object ggb, String key, double value) /*-{
+		ggb.setValue(key, value);
+	}-*/;
+	
+	private static native double getValue(Object ggb, String key) /*-{
+		return ggb.getValue(key);
+	}-*/;
+	
+	private static native String getValueString(Object ggb, String key) /*-{
+		return ggb.getValueString(key);
+	}-*/;
+	
 	private native static int execute(Object js) /*-{
 		return js.execute();
 	}-*/;

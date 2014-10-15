@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.interaction.client.json;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface ObjectMap {
 
@@ -34,5 +35,7 @@ public interface ObjectMap {
 	String[] getStringArray(String key);
 	boolean[] getBooleanArray(String key);
 	
+	boolean isEmpty();
+	Set<String> keySet();
 	
 }
