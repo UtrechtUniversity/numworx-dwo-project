@@ -235,4 +235,29 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 		this.mode = mode;
 	}
 
+	@Override
+	public int getCurrentOpdracht() {
+		return 0;
+	}
+
+	@Override
+	public String getLearnerId() {
+		return "guest";
+	}
+
+	@Override
+	public String getLearnerName() {
+		return "Guest";
+	}
+
+	@Override
+	public String getBackground() {
+		return "#FFFFFF";
+	}
+
+	@Override
+	public String getUnitId() {
+		return "0";
+	}
+
 }

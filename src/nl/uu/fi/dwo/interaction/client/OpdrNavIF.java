@@ -11,4 +11,10 @@ public interface OpdrNavIF
 	FormuleKeyboardIF getKeyboard();
 	
 	int getMode();
+
+	int getCurrentOpdracht();
+	String getLearnerId();
+	String getLearnerName();
+	String getBackground();
+	String getUnitId();	
 }

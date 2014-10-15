@@ -590,4 +590,24 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 	public int getMode() {
 		return mode;
 	}
+
+	@Override
+	public String getLearnerId() {
+		return "guest";
+	}
+
+	@Override
+	public String getLearnerName() {
+		return "Guest";
+	}
+
+	@Override
+	public String getBackground() {
+		return "#FFFFFF";
+	}
+
+	@Override
+	public String getUnitId() {
+		return "0";
+	}
 }

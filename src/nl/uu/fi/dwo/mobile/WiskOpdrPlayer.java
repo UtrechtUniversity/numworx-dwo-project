@@ -36,6 +36,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 		}
 
 	}
+	private static final String LAUNCH_DATA = "cmi.launch_data";
 	private static Logger logger = Logger.getLogger("WiskOpdrPlayer");
 	protected ViewModuleViewImpl view;
 
@@ -119,10 +120,23 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 		String value = event.getValue();
 		String target = DWOplayer.PREFIX + value;
 		logger.info(value);
+		if(LAUNCH_DATA.equals(value))
+			setupLaunchData();
+		else
 		if(DWOplayer.PREFIX == null || value == null || value.equals(""))
 			setupOldView();
 		else
 			view.setupModule(value, target);
+	}
+
+	protected void setupLaunchData() {
+		Scorm2004IF api = view.getApi();
+		api.Initialize();
+		String launchData = api.GetValue(LAUNCH_DATA);
+		if(launchData == null || launchData.isEmpty() )
+			setupOldView();
+		else
+			view.setupView(launchData);
 	}
 
 	protected void setupOldView() {

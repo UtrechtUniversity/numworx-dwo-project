@@ -197,21 +197,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 						logger.info("Data: " + responseText.substring(0, Math.min(30, responseText.length()) ));
 						if (!responseText.isEmpty())
 						{
-							//  FIXME voor huub: 
-							if(responseText.startsWith("<"))
-							{		
-								Document dom = XMLParser.parse(responseText);
-								StringCodeToHashMap sc = new StringCodeToHashMap();
-								launchData = sc.decodeStringToHashMap(dom);
-
-							} else
-							{
-								JSONValue dom = JSONParser.parseStrict(responseText);
-								//launchData = JSONUtilities.fromJSONObject(dom.isObject());
-								launchData = JSONUtilities.wrapMap(dom.isObject());
-							}
-							
-							setupView(launchData);
+							setupView(responseText);
 						} else {
 							logger.severe("response empty");
 						}
@@ -333,7 +319,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		
 		//benodigde knoppen toevoegen.
 		int mode = on.getMode();
-		if(mode == 2)
+		if(mode == OpdrNav.ZELFTOETS)
 		{
 			nakijkKnop = new PushButton(Text.rb.getString("nakijkKnopLabel"));
 			kb.addKnop(nakijkKnop);
@@ -1188,6 +1174,24 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	public void setAnchorContext(AnchorContext context) {
 		if (context == null) context = new MyAnchorContext();
 		anchorContext = context;
+	}
+
+	public void setupView(String launchDataString) {
+		contentPanel.clear();
+		// voor huub: allow old XML data 
+		if(launchDataString.startsWith("<"))
+		{		
+			Document dom = XMLParser.parse(launchDataString);
+			StringCodeToHashMap sc = new StringCodeToHashMap();
+			launchData = sc.decodeStringToHashMap(dom);
+
+		} else
+		{
+			JSONValue dom = JSONParser.parseStrict(launchDataString);
+			//launchData = JSONUtilities.fromJSONObject(dom.isObject());
+			launchData = JSONUtilities.wrapMap(dom.isObject());
+		}
+		setupView(launchData);
 	}
 
 }

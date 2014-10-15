@@ -522,4 +522,44 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	public void setAsHoogte(int ashoogte) {
 		//this.ashoogte = ashoogte;
 	}
+
+	/**
+	 * @return
+	 * @see nl.uu.fi.dwo.interaction.client.OpdrNavIF#getCurrentOpdracht()
+	 */
+	public int getCurrentOpdracht() {
+		return comRoot.getCurrentOpdracht();
+	}
+
+	/**
+	 * @return
+	 * @see nl.uu.fi.dwo.interaction.client.OpdrNavIF#getLearnerId()
+	 */
+	public String getLearnerId() {
+		return comRoot.getLearnerId();
+	}
+
+	/**
+	 * @return
+	 * @see nl.uu.fi.dwo.interaction.client.OpdrNavIF#getLearnerName()
+	 */
+	public String getLearnerName() {
+		return comRoot.getLearnerName();
+	}
+
+	/**
+	 * @return
+	 * @see nl.uu.fi.dwo.interaction.client.OpdrNavIF#getBackground()
+	 */
+	public String getBackground() {
+		return comRoot.getBackground();
+	}
+
+	/**
+	 * @return
+	 * @see nl.uu.fi.dwo.interaction.client.OpdrNavIF#getUnitId()
+	 */
+	public String getUnitId() {
+		return comRoot.getUnitId();
+	}
 }
