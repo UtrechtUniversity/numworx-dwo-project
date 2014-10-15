@@ -81,7 +81,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
 
 	private CardLayout layout;
 
-	ParameterManagementPanel tmp;
+	public ParameterManagementPanel tmp;
 
     /**
      * Creates a new ScoPanel with an applet of the specified sco.

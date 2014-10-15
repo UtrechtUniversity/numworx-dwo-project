@@ -65,6 +65,7 @@ import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.ScoEditor;
 import fi.dwo.client.gui.action.ImportScorm;
+import fi.dwo.client.gui.action.PreviewHtml5;
 import fi.dwo.client.gui.action.Save2004Action;
 import fi.dwo.client.gui.action.SaveAppletAction;
 import fi.dwo.client.persistence.MapperCreator;
@@ -316,9 +317,8 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         }
     }
 
-    boolean done;
-
-	Hashtable tmp;
+    public boolean done;
+	public Hashtable tmp;
 
 	private String scormTitel;
     public void end() {
@@ -345,6 +345,10 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
     	box.add(saveBtn = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_SAVE)));    	
     	box.add(Box.createHorizontalStrut(10));
     	box.add(previewBtn = new JButton("Preview"));
+  
+    	PreviewHtml5 action = new PreviewHtml5(this, sco);
+		if(action.isEnabled()) box.add(new JButton(action));
+    	
     	if(DwoHelper.isAdminLoggedIn()) {
     		box.add(Box.createHorizontalStrut(30));
     		box.add(unsafeSaveBtn = new JButton(new UnsafeSaveAction()));

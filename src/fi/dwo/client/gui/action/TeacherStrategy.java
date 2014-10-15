@@ -3,6 +3,7 @@ package fi.dwo.client.gui.action;
 import java.awt.Component;
 import java.awt.event.ActionListener;
 
+import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -166,8 +167,11 @@ public class TeacherStrategy implements SelectStrategy{
 		}
 		
 		if(object instanceof Sco) {
-			m.addSeparator();
-			m.add(new JMenuItem(new OpenHtml5(map)));
+			Action action = new OpenHtml5(map);
+			if(action.isEnabled()) {
+				m.addSeparator();
+				m.add(new JMenuItem(action));
+			}
 		}
 		
 		return m;

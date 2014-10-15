@@ -13,6 +13,7 @@ import fi.dwo.client.gui.GuiCreator;
 public class DwoProfile implements Descriptor {
 
 	public static char READONLY = 'r';
+	public static char PREVIEW  = 'p';
     private int dwoProfileID;
     private String description;
     private String text;
