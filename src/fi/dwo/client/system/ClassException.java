@@ -21,6 +21,9 @@ public class ClassException extends Exception {
     public ClassException(int exception) {
         super(getMesgFromInt(exception));
     }
+    public ClassException(int exception, Throwable throwable) {
+        super(getMesgFromInt(exception), throwable);
+    }
 
     private static String getMesgFromInt(int exception) {
         String result = null;
@@ -36,4 +39,10 @@ public class ClassException extends Exception {
         return result;
 
     }
+	
+	public String getMessage() { 
+		if(getCause() == null)
+			return super.getMessage();
+		return super.getMessage() + "\n" + getCause().getMessage();
+	}
 }

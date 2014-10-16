@@ -43,4 +43,11 @@ public class ScoException extends Exception {
         return result;
 
     }
+	
+	public String getMessage() { 
+		if(getCause() == null)
+			return super.getMessage();
+		return super.getMessage() + "\n" + getCause().getMessage();
+	}
+
 }

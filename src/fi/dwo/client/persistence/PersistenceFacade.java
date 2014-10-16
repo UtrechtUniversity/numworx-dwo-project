@@ -1525,15 +1525,15 @@ public class PersistenceFacade {
                 if (e.code != 0) {
                     throw (ScoException) getException(e, e.code);
                 } else {
-                    throw new ScoException(ScoException.EX_XML_RPC);
+                    throw new ScoException(ScoException.EX_XML_RPC, e);
                 }
             } catch (SQLException e) {
-                throw new ScoException(ScoException.EX_DB);
+                throw new ScoException(ScoException.EX_DB, e);
             } catch (DwoXmlRpcException e) {
                 throw (ScoException) getException(e, e.code);
             }
         } catch (PersistenceException e) {
-            throw new ScoException(ScoException.EX_UNKNOWN_ERROR);
+            throw new ScoException(ScoException.EX_UNKNOWN_ERROR,e);
         }
     }
 
@@ -1569,18 +1569,18 @@ public class PersistenceFacade {
 			} catch (DwoXmlRpcException e) {
 				throw (ScoException) getException(e,e.code);
 			} catch (SQLException e) {
-				throw new ScoException(ScoException.EX_DB);
+				throw new ScoException(ScoException.EX_DB, e);
 			} catch (IOException e) {
-				throw new ScoException(ScoException.EX_IO);
+				throw new ScoException(ScoException.EX_IO, e);
 			} catch (XmlRpcException e) {
 			    if (e.code != 0) {
 			        throw (ScoException) getException(e, e.code);
 			    } else {
-			        throw new ScoException(ScoException.EX_XML_RPC);
+			        throw new ScoException(ScoException.EX_XML_RPC, e);
 			    }
 			}
 		} catch (PersistenceException e) {
-            throw new ScoException(ScoException.EX_UNKNOWN_ERROR);
+            throw new ScoException(ScoException.EX_UNKNOWN_ERROR, e);
 		}
         return result;
     }
@@ -1603,20 +1603,20 @@ public class PersistenceFacade {
                 }
                 return returnValue;
             } catch (IOException e) {
-                throw new CourseException(CourseException.EX_IO);
+                throw new CourseException(CourseException.EX_IO, e);
             } catch (XmlRpcException e) {
                 if (e.code != 0) {
                     throw (CourseException) getException(e, e.code);
                 } else {
-                    throw new CourseException(CourseException.EX_XML_RPC);
+                    throw new CourseException(CourseException.EX_XML_RPC, e);
                 }
             } catch (SQLException e) {
-                throw new CourseException(CourseException.EX_DB);
+                throw new CourseException(CourseException.EX_DB, e);
             } catch (DwoXmlRpcException e) {
                 throw (CourseException) getException(e, e.code);
             }
         } catch (PersistenceException e) {
-            throw new CourseException(CourseException.EX_UNKNOWN_ERROR);
+            throw new CourseException(CourseException.EX_UNKNOWN_ERROR, e);
         }
     }
 
@@ -1657,20 +1657,20 @@ public class PersistenceFacade {
                 }
                 return returnValue;
             } catch (IOException e) {
-                throw new ScoException(CourseException.EX_IO);
+                throw new ScoException(CourseException.EX_IO, e);
             } catch (XmlRpcException e) {
                 if (e.code != 0) {
                     throw (ScoException) getException(e, e.code);
                 } else {
-                    throw new ScoException(ScoException.EX_XML_RPC);
+                    throw new ScoException(ScoException.EX_XML_RPC, e);
                 }
             } catch (SQLException e) {
-                throw new ScoException(ScoException.EX_DB);
+                throw new ScoException(ScoException.EX_DB,e);
             } catch (DwoXmlRpcException e) {
                 throw (ScoException) getException(e, e.code);
             }
         } catch (PersistenceException e) {
-            throw new ScoException(ScoException.EX_UNKNOWN_ERROR);
+            throw new ScoException(ScoException.EX_UNKNOWN_ERROR, e);
         }
     }
 
