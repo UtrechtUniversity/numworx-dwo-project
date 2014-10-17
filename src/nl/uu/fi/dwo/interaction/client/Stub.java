@@ -136,7 +136,7 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	private static native void setChanged0(boolean fout) /*-{
 		$wnd.setChanged(fout, $wnd.outer);
 	}-*/;
-
+	
 	@Override
 	public FormuleKeyboardIF getKeyboard() {
 		return this;
@@ -222,19 +222,12 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	@Override
 	public void softFocus() {		
 	}
-
-	private int mode = OEFENEN;
 	
 	@Override
-	public int getMode() {
-		return mode;
-	}
+	public native int getMode() /*-{
+		return $wnd.getMode($wnd.outer);
+	}-*/;
 	
-	// via stub interface!
-	void setMode(int mode) {
-		this.mode = mode;
-	}
-
 	@Override
 	public int getCurrentOpdracht() {
 		return 0;

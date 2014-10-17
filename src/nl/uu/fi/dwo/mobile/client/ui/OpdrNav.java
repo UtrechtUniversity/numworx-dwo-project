@@ -598,7 +598,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 
 	@Override
 	public String getLearnerName() {
-		return "Guest";
+		return "Guest, Anonymous";
 	}
 
 	@Override

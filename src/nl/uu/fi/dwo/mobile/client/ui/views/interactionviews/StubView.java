@@ -227,11 +227,27 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		wnd.setChanged = function(b, viewer) {
 			viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::comRoot.@nl.uu.fi.dwo.interaction.client.OpdrNavIF::setChanged(Z)(b);
 		}
-	
 		wnd.setFocus = function(b, viewer) {
 			viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::setFocus(Z)(b)
 		}
-		
+		wnd.getMode = function(viewer) {
+			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::getMode()()
+		}
+		wnd.getPage = function(viewer) {
+			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::getCurrentOpdracht()()
+		}
+		wnd.getLearnerName = function (viewer) {
+			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::getLearnerName()()
+		}
+		wnd.getLearnerId = function (viewer) {
+			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::getLearnerId()()
+		}
+		wnd.getUnitId = function (viewer) {
+			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::getUnitId()()
+		}
+		wnd.getBackground = function (viewer) {
+			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::getBackground()()
+		}
 		return wnd.inner;
 	}-*/;
 

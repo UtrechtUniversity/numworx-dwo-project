@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>MC Scuared</title>
 <script type="text/javascript" language="javascript" >
-var wnd = window;
+var $wnd = window;
 window.inner = {
 		getScore: function() {
 				return 0;
@@ -19,8 +19,22 @@ window.inner = {
 			return "null";
 		},
 		init: function(width, height, launchdata, values) {
+			values = JSON.stringify(values);
+			launch = JSON.parse(launchdata);
+			console.log(launch);
+			launchdata = JSON.stringify(launch.launchData);
+			wid = launch.crossWidgetId;
+			className = launch.className;
 			console.log("width="  + width + ", height = " + height);
-			console.log(wnd);
+			console.log("mode = "  + $wnd.getMode($wnd.outer)  );
+			console.log("learnerName = "  + $wnd.getLearnerName($wnd.outer) );
+			console.log("learnerId = "  + $wnd.getLearnerId($wnd.outer) );
+			console.log("background = " + $wnd.getBackground($wnd.outer) )
+			console.log("values = " + values);
+			console.log("class = " + className);
+			uuid = $wnd.getUnitId($wnd.outer) + "-" + $wnd.getPage($wnd.outer) + "-" + wid;
+			console.log("uuid = " + uuid);
+			
 			document.getElementById("stub").innerHTML = launchdata;
 		},
 		enter: function() {
