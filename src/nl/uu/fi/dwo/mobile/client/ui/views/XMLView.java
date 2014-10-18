@@ -175,7 +175,7 @@ public abstract class XMLView {
 		hoofdPanel.setCommunicationRoot(comRoot);
 		hoofdPanel.zetInstellingen(instellingen);
 		hoofdPanel.setKeyboard(kb);
-		
+		hoofdPanel.setHoofdPanel(true);
 		hoofdPanel.zetOpdracht(opdracht);
 		
 		destination.add(hoofdPanel);

@@ -99,7 +99,23 @@ public class TekstVakPanel implements InteractionView
 	private static final CBookEvent KLAPUIT_EVENT = new CBookEvent(TVP_KLAPUIT); 
 	private static final CBookEvent KLAPIN_EVENT = new CBookEvent(TVP_KLAPIN); 
 	
+	private boolean hoofdPanel;
 	
+	
+	/**
+	 * @return the hoofdPanel
+	 */
+	public boolean isHoofdPanel() {
+		return hoofdPanel;
+	}
+
+	/**
+	 * @param hoofdPanel the hoofdPanel to set
+	 */
+	public void setHoofdPanel(boolean hoofdPanel) {
+		this.hoofdPanel = hoofdPanel;
+	}
+
 	class TekstVakContext {
 
 		private int rij,kolom;
@@ -759,7 +775,7 @@ public class TekstVakPanel implements InteractionView
 					{
 						Object launchData = opdrachtGegevens.get(aantalVakken);
 						//Als opdrachtGegevens direct uit XMLView komen, zitten er eerst 5 lege entries.
-						if(opdrachtGegevens.get(0) == null)
+						if(opdrachtGegevens.get(0) == null || isHoofdPanel())
 						{	launchData = opdrachtGegevens.get(aantalVakken + 5);
 						}
 						aantalVakken++;
