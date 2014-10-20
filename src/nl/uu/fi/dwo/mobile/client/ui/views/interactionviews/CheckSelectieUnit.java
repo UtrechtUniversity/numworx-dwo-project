@@ -582,6 +582,7 @@ public class CheckSelectieUnit implements InteractionStub
 		}
 		else
 		{	checkButton = new PushButton(rb.getString("klaarKnopLabel"));
+			checkButton.getElement().getStyle().setFontSize(12, Style.Unit.PX);
 			checkButton.getElement().getStyle().setTextAlign(TextAlign.CENTER);
 		}
 		

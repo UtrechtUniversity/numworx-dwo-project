@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
@@ -113,7 +114,10 @@ public class CheckButton implements InteractionStub
 			checkButton.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
 		}
 		else
-			checkButton = new PushButton(rb.getString("klaarKnopLabel"));
+		{	checkButton = new PushButton(rb.getString("klaarKnopLabel"));
+			checkButton.getElement().getStyle().setFontSize(12, Style.Unit.PX);
+			checkButton.getElement().getStyle().setTextAlign(TextAlign.CENTER);
+		}
 		
 		breedte = imWidth;
 		hoogte = imHeight + 5;

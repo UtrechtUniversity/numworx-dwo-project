@@ -239,7 +239,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		
 		aantalRegels = 1;
 		
-		int regelBreedte = 0;
+		double regelBreedte = 0;
 		//ctx maken om tekst te kunnen meten. 
 		Canvas canvas = Canvas.createIfSupported();
 		Context2d ctx = canvas.getContext2d();
@@ -274,6 +274,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				while(s.contains(" "))
 				{	String sub = s.substring(0, s.indexOf(" ") + 1); 
 					s = s.substring(s.indexOf(" ") + 1); 
+					//int width = (int) Math.round(ctx.measureText(sub.substring(0, sub.length() - 1)).getWidth());
 					double width = ctx.measureText(sub.substring(0, sub.length() - 1)).getWidth();
 					if(regelBreedte == 0)
 						regelBreedte = 2;
@@ -296,7 +297,8 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 					{
 						voegRegelToe();
 						regelVakken[aantalRegels - 1].addObject(sub.substring(0, sub.length() - 1));
-						regelBreedte = (int) width + 2;
+						//regelBreedte = (int) width + 2;
+						regelBreedte = width + 2;
 						if(regelBreedte <= 2 || regelBreedte + spatieBreedte <= tekstVakBreedte)
 						{
 							regelVakken[aantalRegels - 1].addObject(" ");
@@ -321,7 +323,8 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 					{
 						voegRegelToe();
 						regelVakken[aantalRegels - 1].addObject(s);
-						regelBreedte = (int) width + 2;
+						//regelBreedte = (int) width + 2;
+						regelBreedte = width + 2;
 					}
 				}
 				//nodig om nieuwe regels te krijgen bij enter. De tweede voorwaarde is een (enigszins) kunstmatige oplossing 
@@ -437,13 +440,15 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				double width = ctx.measureText(text).getWidth();
 				if(regelBreedte == 0 || regelBreedte + width <= tekstVakBreedte)
 				{	regelVakken[aantalRegels - 1].addObject(currentObject);
-					regelBreedte += (int)width;
+					//regelBreedte += (int)width;
+					regelBreedte += width;
 				}
 				else
 				{
 					voegRegelToe();
 					regelVakken[aantalRegels - 1].addObject(currentObject);
-					regelBreedte = (int)width;
+					//regelBreedte = (int)width;
+					regelBreedte += width;
 				}
 			}
 		}

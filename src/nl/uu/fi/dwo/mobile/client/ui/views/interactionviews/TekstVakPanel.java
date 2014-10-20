@@ -555,19 +555,19 @@ public class TekstVakPanel implements InteractionView
 
 	}
 	
-	public void setTableBounds()
-	{
-		int b = breedte;
-		int h = hoogte;
-		for (int i = 0; i < hoogtes.size(); i++)
-		{
-			for (int j = 0; j < breedtes.size(); j++)
-			{
-				tekstVakken[i][j].setSize(breedtes.get(j).intValue(), hoogtes.get(i).intValue());
-				
-			}
-		}
-	}
+//	public void setTableBounds()
+//	{
+//		int b = breedte;
+//		int h = hoogte;
+//		for (int i = 0; i < hoogtes.size(); i++)
+//		{
+//			for (int j = 0; j < breedtes.size(); j++)
+//			{
+//				tekstVakken[i][j].setSize(breedtes.get(j).intValue(), hoogtes.get(i).intValue());
+//				
+//			}
+//		}
+//	}
 	
 	public void plaatsTabelRanden()
 	{
