@@ -3,8 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <title>MC Scuared</title>
+<script type="text/javascript" language="javascript" src="scripts/sha1.js" ></script>
 <script type="text/javascript" language="javascript" >
 var $wnd = window;
+
+function $(id) {
+	return document.getElementById(id)
+}
+function signature() {
+	var url = document.getElementById('lti').action;
+	console.log("signature for " + url);
+	url = encodeURIComponent(url);
+	var pfx="POST&" + url + "&";
+	var text = ""
+	var secret = "secret&";
+	var inputs = document.getElementsByTagName("input");
+	var b = false;
+	var i;
+	for( i = 0; i < inputs.length; i++) {
+		input = inputs[i]
+		if(input.name == 'oauth_signature')
+			continue;
+		name = encodeURIComponent(input.name);
+		value = encodeURIComponent(input.value);
+		if(b) text += "&"
+		b = true;
+		text += name + "=" + value 
+	}
+	text = pfx + encodeURIComponent(text)
+	//$("stub").innerHTML = text;
+	n = b64_hmac_sha1(secret, text);
+	$('oauth_signature').value = n;
+}
+
 window.inner = {
 		getScore: function() {
 				return 0;
@@ -19,23 +50,29 @@ window.inner = {
 			return "null";
 		},
 		init: function(width, height, launchdata, values) {
-			values = JSON.stringify(values);
 			launch = JSON.parse(launchdata);
-			console.log(launch);
-			launchdata = JSON.stringify(launch.launchData);
 			wid = launch.crossWidgetId;
 			className = launch.className;
-			console.log("width="  + width + ", height = " + height);
-			console.log("mode = "  + $wnd.getMode($wnd.outer)  );
-			console.log("learnerName = "  + $wnd.getLearnerName($wnd.outer) );
-			console.log("learnerId = "  + $wnd.getLearnerId($wnd.outer) );
-			console.log("background = " + $wnd.getBackground($wnd.outer) )
-			console.log("values = " + values);
-			console.log("class = " + className);
 			uuid = $wnd.getUnitId($wnd.outer) + "-" + $wnd.getPage($wnd.outer) + "-" + wid;
-			console.log("uuid = " + uuid);
-			
-			document.getElementById("stub").innerHTML = launchdata;
+			launchdata = {
+					assessmentMode: $wnd.getMode($wnd.outer),
+					randomValues: values,
+					launchData: launch.launchData,
+					background: $wnd.getBackground($wnd.outer),
+					scoreMax: launch.scoreMax,
+					logOption: launch.logOption,
+					logID: launch.logID,
+			}
+			launchdata = JSON.stringify(launchdata);			
+			$("launch_presentation_height").value = height;
+			$("launch_presentation_width").value = width;
+			$("oauth_consumer_key").value = className;
+			$('resource_link_id').value = uuid;
+			$('user_id').value = $wnd.getLearnerId($wnd.outer);
+			learnername = $wnd.getLearnerName($wnd.outer); // FIXME Last, Given -> Given Last
+			$('lis_person_name_full').value = learnername;
+			$("custom_launch_data").value = launchdata;
+			signature()
 		},
 		enter: function() {
 		},
@@ -62,6 +99,7 @@ window.inner = {
 	body { 
 		background-color: #888;
 		color: white;
+		overflow: scroll;
 	}
 </style>
 
@@ -69,6 +107,41 @@ window.inner = {
 
 
 <body>
-<div id='stub' >This is a stub</div>
+<form id='lti' method="POST" action='http://localhost:8080/DWOmAccess/lti/widget.jsp' >
+<input name='custom_launch_data' id='custom_launch_data' value='{}'><br>
+<input name='launch_presentation_height' id='launch_presentation_height' value='200'><br>
+<input name='launch_presentation_locale' value='en'><br>
+<input name='launch_presentation_width' id='launch_presentation_width' value='200'><br>
+
+<input name='lis_person_name_family' value='Guest' ><br>
+<input name='lis_person_name_full' id='lis_person_name_full' value='Anonymous Guest' ><br>
+<input name='lis_person_name_given' value='Anonymous' ><br>
+
+<input name='lti_message_type' value='basic-lti-launch-request' ><br>
+<input name='lti_version' value='LTI-1p0' ><br>
+
+<input name='oauth_consumer_key' id='oauth_consumer_key' value='12345' ><br>
+<input name='oauth_nonce' value='1244834250435893000' ><br>
+<input name='oauth_signature_method' value='HMAC-SHA1'><br>
+<input name='oauth_timestamp' id='oauth_timestamp' value='1413494648' ><br>
+<input name='oauth_version' value='1.0' ><br>
+
+<input name='resource_link_id' id='resource_link_id' value='000000-0-000000' ><br>
+<input name='roles' value='Learner' ><br>
+
+<input value="submit" name="submit" type="submit" ><br>
+
+<input name='user_id' id='user_id' value='guest' > <br>
+
+<input name='oauth_signature' id='oauth_signature' value='?' ><br>
+</form>
+
+<script>
+	d = new Date();
+	n = Math.floor( d.getTime()/1000 );
+	document.getElementById('oauth_timestamp').value = n;	
+</script>
+
+
 </body>
 </html>

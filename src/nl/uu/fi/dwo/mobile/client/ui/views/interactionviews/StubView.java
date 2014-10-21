@@ -22,6 +22,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -49,6 +50,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	private boolean volledigeBreedte;
 	private PopupFacade facade;
 	private FormuleFont defaultFont = FormuleFont.createFromFontSize(18);
+	private HandlerRegistration loadhandler;
 
 	public StubView(String html, HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
@@ -76,9 +78,10 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		if(!volledigeBreedte ) initFrame();
 	}
 
+	
 	private void initFrame() {
 		frame.setPixelSize(width , height);
-		frame.addLoadHandler(this);
+		loadhandler = frame.addLoadHandler(this);
 		setWidget(frame);
 	}
 
@@ -206,6 +209,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 
 	@Override
 	public void onLoad(LoadEvent event) {
+		loadhandler.removeHandler();
 		Object w = getContentWindow(frame.getElement());
 		if (w != null)
 		{
