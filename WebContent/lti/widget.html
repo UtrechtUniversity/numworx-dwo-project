@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script src="sha1.js" language="javascript" type="text/javascript">
+</script>
+<title>Insert title here</title>
+</head>
+<body>
+<form method="POST" action="http://localhost:8080/DWOmAccess/lti/widget.jsp" >
+<input name='custom_launch_data' id='custom_launch_data' value='{"launchData":{"initial":"","answer":"54","question":"how old are you","maxScore":10}}'><br>
+<input name='launch_presentation_height' id='launch_presentation_height' value='200'><br>
+<input name='launch_presentation_locale' value='en'><br>
+<input name='launch_presentation_width' id='launch_presentation_width' value='200'><br>
+
+<input name='lis_person_name_family' value='Guest' ><br>
+<input name='lis_person_name_full' id='lis_person_name_full' value='Anonymous Guest' ><br>
+<input name='lis_person_name_given' value='Anonymous' ><br>
+
+<input name='lti_message_type' value='basic-lti-launch-request' ><br>
+<input name='lti_version' value='LTI-1p0' ><br>
+
+<input name='oauth_consumer_key' id='oauth_consumer_key' value='widgetsample.SampleWidget' ><br>
+<input name='oauth_nonce' value='1244834250435893000' ><br>
+<input name='oauth_signature_method' value='HMAC-SHA1'><br>
+<input name='oauth_timestamp' id='oauth_timestamp' value='1413494648' ><br>
+<input name='oauth_version' value='1.0' ><br>
+
+<input name='resource_link_id' id='resource_link_id' value='000000-0-000000' ><br>
+<input name='roles' value='Learner' ><br>
+
+<input value="submit" name="submit" type="submit" ><br>
+
+<input name='user_id' id='user_id' value='guest' > <br>
+
+<input name='oauth_signature' id='oauth_signature' value='?' ><br>
+</form>
+
+<script>
+function $(id) {
+	return document.getElementById(id)
+}
+function signature() {
+	var url = document.forms[0].action;
+	console.log("signature for " + url);
+	url = encodeURIComponent(url);
+	var pfx="POST&" + url + "&";
+	var text = ""
+	var secret = "secret&";
+	var inputs = document.getElementsByTagName("input");
+	var b = false;
+	var i;
+	for( i = 0; i < inputs.length; i++) {
+		input = inputs[i]
+		if(input.name == 'oauth_signature')
+			continue;
+		name = encodeURIComponent(input.name);
+		value = encodeURIComponent(input.value);
+		if(b) text += "&"
+		b = true;
+		text += name + "=" + value 
+	}
+	text = pfx + encodeURIComponent(text)
+	//$("stub").innerHTML = text;
+	n = b64_hmac_sha1(secret, text);
+	$('oauth_signature').value = n;
+}
+
+
+
+
+	d = new Date();
+	n = Math.floor( d.getTime()/1000 );
+	$('oauth_timestamp').value = n;
+	signature();
+</script>
+
+
+</body>
+
+
+
+
+</form>
+
+</body>
+</html>
