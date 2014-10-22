@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.interaction.client.InteractionView;
+import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -235,7 +236,7 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 			box.addDomHandler(t, TouchMoveEvent.getType());
 			box.addDomHandler(t, TouchEndEvent.getType());
 			box.addDomHandler(t, TouchCancelEvent.getType());
-			box.setWidget(content);
+			box.setWidget(FocusOnTouch.wrap(content.asWidget(),false));
 		}
 		if(!box.isShowing() && view != null && state != null)
 			view.setState(state);

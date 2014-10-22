@@ -158,6 +158,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	public ViewModuleViewImpl(boolean b) {
 		standalone = b;
+		if(!b) setWindowTop(0);
 	}
 	
 	public ViewModuleViewImpl() {
@@ -825,7 +826,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	{
 		api = GWT.create(Scorm2004IF.class);
 		FlowPanel fp = new FlowPanel(); 
-		mainPanel = FocusOnTouch.wrap(fp);
+		mainPanel = FocusOnTouch.wrap(fp, true);
 		
 		
 		mainPanel.setHeight("100%");

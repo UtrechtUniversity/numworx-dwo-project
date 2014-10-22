@@ -24,9 +24,10 @@ import com.google.gwt.user.client.ui.Widget;
 
 final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPressHandler
 {
-	private static FocusPanel focusPanel;
+	private FocusPanel focusPanel;
+	private static FocusPanel mainPanel;
 	
-	static public FocusPanel wrap ( Widget w ) {
+	static public FocusPanel wrap ( Widget w , boolean main) {
 		FocusPanel focus;
 		if(w instanceof FocusPanel) 
 			focus = (FocusPanel) w;
@@ -34,6 +35,8 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 			focus = new FocusPanel();
 			focus.add(w);
 		}
+		if(main)
+			mainPanel = focus;
 		boolean hastouch = com.google.gwt.event.dom.client.TouchStartEvent.isSupported();
 		FocusOnTouch handler = new FocusOnTouch(focus);
 		focus.addKeyDownHandler(handler);
@@ -280,7 +283,7 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 	}
 
 	public static void focus() {
-		if(focusPanel != null)
-			requestFocus(focusPanel);
+		if(mainPanel != null)
+			requestFocus(mainPanel);
 	}
 }
