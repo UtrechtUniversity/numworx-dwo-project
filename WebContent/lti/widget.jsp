@@ -68,6 +68,7 @@
     out.println(paramName + " = " + request.getParameter(paramName) );
   }
   out.println("path info = " + request.getPathInfo() );
+  out.println(widgets);
 /* */
 %>
 <%
@@ -119,15 +120,26 @@
   	if(height == null || height.isEmpty()) height="100%";
   	
   	String className = request.getParameter("oauth_consumer_key");
-  	String randomValues = StringEscapeUtils.escapeHtml(JSONValue.toJSONString(map.get("randomValues")));
+  	Object r = map.get("randomValues");
+  	if (r == null) r = java.util.Collections.EMPTY_LIST;
+  	String randomValues = StringEscapeUtils.escapeHtml(JSONValue.toJSONString(r));
   	String uuid = request.getParameter("resource_link_id");
-  	String assessmentMode = StringEscapeUtils.escapeHtml(String.valueOf(map.get("assessmentMode")));;
+  	Object o = map.get("assessmentMode");
+  	if(o == null) o = Integer.valueOf(0);
+  	String assessmentMode = StringEscapeUtils.escapeHtml(String.valueOf(o));;
   	String learnerId = request.getParameter("user_id");
   	String learnerName = request.getParameter("lis_person_name_full");
-  	String background = StringEscapeUtils.escapeHtml(String.valueOf(map.get("background")));
+  	Object b = map.get("background");
+  	if (b == null) b = "#FFFFFF";
+  	String background = StringEscapeUtils.escapeHtml(String.valueOf(b));
+  	
   	String logID = StringEscapeUtils.escapeHtml(JSONValue.toJSONString(map.get("logID")));
-  	String logOption = StringEscapeUtils.escapeHtml(JSONValue.toJSONString(map.get("logOption")));
-  	String scoreMax = StringEscapeUtils.escapeHtml(JSONValue.toJSONString(map.get("scoreMax")));
+  	Object l = map.get("logOption");
+  	if(l == null) l = Boolean.FALSE;
+  	String logOption = StringEscapeUtils.escapeHtml(JSONValue.toJSONString(l));
+  	Object s = map.get("scoreMax");
+  	if( s == null) s = Integer.valueOf(10);
+  	String scoreMax = StringEscapeUtils.escapeHtml(JSONValue.toJSONString(s));
   	
   	String archive = widgets.getArchive(className);
 %>

@@ -47,7 +47,7 @@
 			duplicate='preserve'
 		>
 			<fileset dir='${classes}'
-				includes='**/*.class'
+				includes='**/*.class **/resources/*'
 			/>
 		</jar>
 	</target>

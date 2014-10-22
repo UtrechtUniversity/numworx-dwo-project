@@ -13,10 +13,11 @@ public class WidgetBean implements Serializable {
 		properties = new Properties();
 		properties.setProperty("widgetsample.SampleWidget", "widgetsample.jar");
 		try {
-			InputStream in = getClass().getResourceAsStream("index.properties");
+			InputStream in = getClass().getResourceAsStream("resources/index.properties");
 			properties.load(in);
 			in.close();
 		} catch (Exception _) {
+			_.printStackTrace();
 		}
 	}
 	
@@ -30,5 +31,10 @@ public class WidgetBean implements Serializable {
 		WidgetBean wb = new WidgetBean();
 		System.out.println(wb.getArchive("xxx"));
 		
+	}
+	public String toString() { 
+		return super.toString() + 
+				"[properties=" + 	
+				properties.keySet().toString() + "]";
 	}
 }
