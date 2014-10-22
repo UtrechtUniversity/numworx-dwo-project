@@ -27,6 +27,9 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 	private FocusPanel focusPanel;
 	private static FocusPanel mainPanel;
 	
+	static public FocusPanel wrap ( Widget w) {
+		return wrap(w, true);
+	}
 	static public FocusPanel wrap ( Widget w , boolean main) {
 		FocusPanel focus;
 		if(w instanceof FocusPanel) 
