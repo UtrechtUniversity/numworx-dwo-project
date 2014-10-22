@@ -314,6 +314,7 @@ public class TekstRegel extends LayoutPanel
 			horPositie += objectBreedte;
 		}
 		breedte = horPositie + 1; //zie resize tekstRegel WiskOpdr.
+		//breedte = horPositie;
 	}
 	
 	public void resize()
@@ -366,6 +367,7 @@ public class TekstRegel extends LayoutPanel
 				horPositie += 3;
 		}
 		breedte = horPositie  + 1; //zie resize tekstRegel WiskOpdr.
+		//breedte = horPositie;
 	}
 	
 	

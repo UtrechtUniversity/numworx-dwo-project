@@ -181,6 +181,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	
 	public void setTekstVakBreedte(double tekstVakBreedte)
 	{
+		System.out.println("setTekstVakBreedte: tekstVakBreedte = " + tekstVakBreedte);
 		this.tekstVakBreedte = tekstVakBreedte;
 		//flowVak.setWidth(tekstVakBreedte + "px");
 		for(int i = 0; i < aantalRegels  + 1; i++)
@@ -192,6 +193,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		this.cellMarge = cellMarge;
 		this.bovenMarge = bovenMarge;
 		tekstVakBreedte = breedte - 2  * cellMarge - knopBreedte;//hier stond - 2 bij. Die was ergens goed voor, maar levert ook problemen als het vak zijn breedte aanpast aan de inhoud.
+		System.out.println("setMarges: tekstVakBreedte = " + tekstVakBreedte);
 		if(tekstVakBreedte >= 0)
 		{	//if(hoogte > 0)
 			//	flowVak.setSize(tekstVakBreedte + "px", "" + hoogte + "px");
@@ -209,8 +211,10 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	public void setSize(int b, int h)
 	{
 		this.breedte = b;
+		System.out.println("setSize: breedte = " + breedte);
 		this.hoogte = h;
 		tekstVakBreedte = b - 2 * cellMarge - knopBreedte;//hier stond - 2 bij. Die was ergens goed voor, maar levert ook problemen als het vak zijn breedte aanpast aan de inhoud.
+		System.out.println("setSize: tekstVakBreedte = " + tekstVakBreedte);
 		if(tekstVakBreedte >= 0 && h >= 0)
 		{	//flowVak.setSize("" + tekstVakBreedte  + "px", "" + h + "px");
 			for(int i = 0; i < aantalRegels  + 1; i++)
@@ -235,6 +239,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	
 	public void setObjects(ArrayList<Object> opdrachtObjects)
 	{
+		System.out.println("setObjects");
 		this.opdrachtObjects = opdrachtObjects;
 		
 		aantalRegels = 1;
@@ -278,11 +283,11 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 					double width = ctx.measureText(sub.substring(0, sub.length() - 1)).getWidth();
 					if(regelBreedte == 0)
 						regelBreedte = 2;
-					if(regelBreedte <=2 || regelBreedte + width  <= tekstVakBreedte)
+					if(regelBreedte <=2 || regelBreedte + width  <= tekstVakBreedte || pasAanB)
 					{
 						regelVakken[aantalRegels - 1].addObject(sub.substring(0, sub.length() - 1));
 						regelBreedte += width;
-						if(regelBreedte <= 2 || regelBreedte + spatieBreedte <= tekstVakBreedte)
+						if(regelBreedte <= 2 || regelBreedte + spatieBreedte <= tekstVakBreedte || pasAanB)
 						{
 							regelVakken[aantalRegels - 1].addObject(" ");
 							regelBreedte += spatieBreedte;
@@ -314,7 +319,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				if(s.length() > 0)//nu zitten er in s geen spaties meer. De rest nog proberen te plaatsen.
 				{
 					double width = ctx.measureText(s).getWidth();
-					if(regelBreedte <= 2 || regelBreedte + width  <= tekstVakBreedte)
+					if(regelBreedte <= 2 || regelBreedte + width  <= tekstVakBreedte || pasAanB)
 					{
 						regelVakken[aantalRegels - 1].addObject(s);
 						regelBreedte += width;
@@ -345,7 +350,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			if(currentObject instanceof AntwoordTekstVak)
 			{
 				((AntwoordTekstVak) currentObject).setFontSize(font_size);
-				if(regelBreedte == 0 || regelBreedte + ((AntwoordTekstVak) currentObject).getWidth() <= tekstVakBreedte)
+				if(regelBreedte == 0 || regelBreedte + ((AntwoordTekstVak) currentObject).getWidth() <= tekstVakBreedte || pasAanB)
 				{	regelVakken[aantalRegels - 1].addObject(currentObject);
 					((AntwoordTekstVak) currentObject).setParentRegel(regelVakken[aantalRegels - 1]);
 					regelBreedte += ((AntwoordTekstVak) currentObject).getWidth();
@@ -362,7 +367,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			{
 				//((FormuleEditorWithAnswer) currentObject).setFont(FormuleFont.createFromFontSize(font_size));
 				//((FormuleEditorWithAnswer) currentObject).setColor(fgColor);
-				if(regelBreedte == 0 || regelBreedte + ((FormuleEditorWithAnswer) currentObject).getWidth() <= tekstVakBreedte)
+				if(regelBreedte == 0 || regelBreedte + ((FormuleEditorWithAnswer) currentObject).getWidth() <= tekstVakBreedte || pasAanB)
 				{	regelVakken[aantalRegels - 1].addObject(currentObject);
 					((FormuleEditorWithAnswer) currentObject).setParentRegel(regelVakken[aantalRegels - 1]);
 					regelBreedte += ((FormuleEditorWithAnswer) currentObject).getWidth();
@@ -382,7 +387,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				((FormuleViewer) currentObject).setDefaultFont(f);
 				((FormuleViewer) currentObject).setColor(fgColor);
 				
-				if(regelBreedte == 0 || regelBreedte + ((FormuleViewer) currentObject).getWidth() + 4 <= tekstVakBreedte)
+				if(regelBreedte == 0 || regelBreedte + ((FormuleViewer) currentObject).getWidth() + 4 <= tekstVakBreedte || pasAanB)
 				{	regelVakken[aantalRegels - 1].addObject(currentObject);
 					regelBreedte += ((FormuleViewer) currentObject).getWidth() + 4;
 				}
@@ -399,7 +404,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				{	zwevendeTekstVakken.add((TekstVakPanel) currentObject);
 				}
 				else
-				{	if(regelBreedte == 0 || regelBreedte + ((InteractionView) currentObject).getWidth() <= tekstVakBreedte)
+				{	if(regelBreedte == 0 || regelBreedte + ((InteractionView) currentObject).getWidth() <= tekstVakBreedte || pasAanB)
 					{	regelVakken[aantalRegels - 1].addObject(currentObject);
 						regelBreedte += ((InteractionView) currentObject).getWidth();
 					}
@@ -421,7 +426,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			{
 				ImageView iv = (ImageView) currentObject;
 				//Widget w = iv.getImage();
-				if(regelBreedte == 0 || regelBreedte + iv.getWidth() <= tekstVakBreedte)
+				if(regelBreedte == 0 || regelBreedte + iv.getWidth() <= tekstVakBreedte || pasAanB)
 				{	regelVakken[aantalRegels - 1].addObject(currentObject);
 					regelBreedte += iv.getWidth();
 				}
@@ -438,7 +443,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				AnchorView av = (AnchorView) currentObject;
 				String text = av.toString();
 				double width = ctx.measureText(text).getWidth();
-				if(regelBreedte == 0 || regelBreedte + width <= tekstVakBreedte)
+				if(regelBreedte == 0 || regelBreedte + width <= tekstVakBreedte || pasAanB)
 				{	regelVakken[aantalRegels - 1].addObject(currentObject);
 					//regelBreedte += (int)width;
 					regelBreedte += width;
@@ -594,7 +599,9 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			for(int i = 0; i < aantalRegels; i++)
 				if(regelVakken[i].getWidth() > tekstVakBreedte)
 					tekstVakBreedte = regelVakken[i].getWidth();
+			System.out.println("resize: tekstVakBreedte = " + tekstVakBreedte);
 			breedte = (int) tekstVakBreedte + 2 * cellMarge + knopBreedte;
+			System.out.println("resize: breedte = " + breedte);
 		}
 		
 		FormuleFont fm = regelVakken[0].getFont();
@@ -659,7 +666,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	{
 		this.knopBreedte = knopBreedte;
 		tekstVakBreedte = this.breedte - 2 * cellMarge - knopBreedte;
-		
+		System.out.println("zetUitklapKnopLinks: tekstVakBreedte = " + tekstVakBreedte);
 		for(int i = 0; i < this.getWidgetCount(); i++)
 		{
 			Widget w = this.getWidget(i);
