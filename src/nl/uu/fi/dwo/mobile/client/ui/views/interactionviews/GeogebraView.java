@@ -56,6 +56,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 	private boolean nakijkenGemaakteObjecten;
 	private String[] geogebraCheckObjects;
 	private int[] geogebraCheckScores;
+	private OpdrNavIF comRoot;
 	
 	public native static Object getGgbWindow(Element frame) /*-{
 		return frame.contentWindow;
@@ -197,6 +198,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 	protected void onCheck() {
 		kijkNa();
 		setCheckImg();
+		comRoot.setChanged(Boolean.FALSE.equals(correct));
 		
 	}
 
@@ -361,6 +363,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot)
 	{
+		this.comRoot = comRoot;
 		int mode = comRoot.getMode();
 		if(nakijken & mode > 1) {
 			// FIXME haal checkbutton weg.
