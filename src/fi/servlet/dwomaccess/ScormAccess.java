@@ -1,17 +1,13 @@
 package fi.servlet.dwomaccess;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.TimeZone;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +19,8 @@ import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.DbAccessIF;
 
 public class ScormAccess extends Servlet implements ScormAccessIF {
+
+	private static final String SUSPEND_DATA = "suspendData";
 
 	/**
 	 * 
@@ -44,7 +42,7 @@ public class ScormAccess extends Servlet implements ScormAccessIF {
 	private static final String CMI_TOTAL_TIME = "cmi." + TOTAL_TIME;
 	
 	static {
-		CONVERT.put("cmi.suspend_data", "suspendData");
+		CONVERT.put("cmi.suspend_data", SUSPEND_DATA);
 		CONVERT.put("cmi.score.raw", "score");
 		CONVERT.put(CMI_SESSION_TIME, SESSION_TIME);
 		CONVERT.put(CMI_TOTAL_TIME, TOTAL_TIME);
@@ -57,7 +55,6 @@ public class ScormAccess extends Servlet implements ScormAccessIF {
 	
 	DbAccessIF access = DbAccessCreator.instance();
 	
-	@SuppressWarnings("unchecked")
 	public boolean Commit(int userID, int scoID, Hashtable map) throws Exception {
 		
 		Set entryset = map.entrySet();
@@ -70,12 +67,50 @@ public class ScormAccess extends Servlet implements ScormAccessIF {
 			{
 				iValue = CMI.to1_2Timex(CMI.from2004Time(iValue)); // sessiontime in 1.2 format.
 			}
+			if(iDataModelElement.equals(SUSPEND_DATA))
+			{
+				iValue = convertUEsc(iValue);
+			}
 			
 			access.LMSSetValue(scoID, userID, iDataModelElement, iValue);
 		}
 		return true;
 	}
 	
+	// replace chars > 100 with \ u escapes
+	
+	static String convertUEsc(String s) {
+		char[] charArray = s.toCharArray();
+		int length = charArray.length;
+		int start = 0;
+		for ( ; start < length; start ++) {
+			if (needEscape(charArray[start])) break;
+		}
+		if( start == length ) return s;
+		StringBuilder b = new StringBuilder();
+		if( start > 0)
+			b.append(charArray, 0, start);	
+		for( ; start < length; start ++ ){
+			char c = charArray[start];
+		    if( needEscape(c)  ){
+		        b.append( "\\u" ).append( toHexString(c) );
+		    }else{
+		        b.append( c );
+		    }
+		}
+		return b.toString();	}
+
+	private static String toHexString(char c) {
+		String r = Integer.toHexString(c);
+		while( r.length() < 4) r = '0' + r;
+		return r;
+	}
+
+	private static boolean needEscape(char c) {
+		return c > '\u00FF' // || c < ' '
+		;
+	}
+
 	@SuppressWarnings("unchecked")
 	public Hashtable Initialize(int userID, int scoID) throws Exception {
 		Hashtable map = new Hashtable();
@@ -162,7 +197,6 @@ public class ScormAccess extends Servlet implements ScormAccessIF {
 		protected String to2004Timex(long time) {
 			return super.to2004Time(time);
 		}
-		
-		
+
 	}
 }
