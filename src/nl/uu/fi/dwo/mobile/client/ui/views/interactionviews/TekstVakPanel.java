@@ -201,7 +201,7 @@ public class TekstVakPanel implements InteractionView
 	private int locationX, locationY;
 	private int startX, startY;
 
-	private boolean inklapbaar, ingeklapt;
+	private boolean inklapbaar, ingeklapt, checkUitklapVak;
 	private int inklapKnopPos;
 	//private String knopImageString1, knopImageString2;
 	private ImageView knopImageView1, knopImageView2;
@@ -386,42 +386,32 @@ public class TekstVakPanel implements InteractionView
 		if(launchState.containsKey("anderFont"))
 			anderFont = launchState.getBoolean("anderFont");
 		
-		if (launchState.containsKey("selectable"))
-			selectable = launchState.getBoolean("selectable"); 
-		if (launchState.containsKey("sleepbaar"))
-			sleepbaar = launchState.getBoolean("sleepbaar");
-		if (launchState.containsKey("sleepdoel"))
-			sleepdoel = launchState.getBoolean("sleepdoel");
-		if (launchState.containsKey("sleepHandle"))
-			sleepHandle = launchState.getBoolean("sleepHandle");
+		selectable = launchState.getBoolean("selectable",selectable); 
+		sleepbaar = launchState.getBoolean("sleepbaar", sleepbaar);
+		sleepdoel = launchState.getBoolean("sleepdoel",sleepdoel);
+		sleepHandle = launchState.getBoolean("sleepHandle",sleepHandle);
 		if (launchState.containsKey("checkExpressieString"))
 			checkExpressieString = launchState.getString("checkExpressieString");
-		if (launchState.containsKey("defaultBijNull"))
-			defaultBijNull = launchState.getBoolean("defaultBijNull");
+		defaultBijNull = launchState.getBoolean("defaultBijNull",defaultBijNull);
 		if (launchState.containsKey("ipId"))
 			ipId = launchState.getInt("ipId");
-		if (launchState.containsKey("colorSelection"))
-			colorSelection = launchState.getBoolean("colorSelection");
-		if (launchState.containsKey("tableBorders"))
-			tableBorders = launchState.getBoolean("tableBorders");
-		if (launchState.containsKey("centerV"))
-			centerV = launchState.getBoolean("centerV");
-		if (launchState.containsKey("centerH"))
-			centerH = launchState.getBoolean("centerH");
-		if (launchState.containsKey("zwevend"))
-			zwevend = launchState.getBoolean("zwevend");
+		colorSelection = launchState.getBoolean("colorSelection",colorSelection);
+		tableBorders = launchState.getBoolean("tableBorders",tableBorders);
+		centerV = launchState.getBoolean("centerV",centerV);
+		centerH = launchState.getBoolean("centerH",centerH);
+		zwevend = launchState.getBoolean("zwevend",zwevend);
 		if (launchState.containsKey("locationX"))
 			locationX = launchState.getInt("locationX");
 		if (launchState.containsKey("locationY"))
 			locationY = launchState.getInt("locationY");
 // klap schaats
-		if( launchState.containsKey("inklapbaar"))
-			inklapbaar = launchState.getBoolean("inklapbaar");
+		inklapbaar = launchState.getBoolean("inklapbaar", inklapbaar);
+		checkUitklapVak = launchState.getBoolean("checkUitklapVak", checkUitklapVak);
+java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " + checkUitklapVak);
+		ingeklapt = launchState.getBoolean("ingeklapt", ingeklapt);
 		if( launchState.containsKey("inklapKnopPos"))
 			inklapKnopPos = launchState.getInt("inklapKnopPos");
 		else inklapKnopPos = RIGHT;
-		if( launchState.containsKey("ingeklapt"))
-			ingeklapt = launchState.getBoolean("ingeklapt");
 		if( launchState.containsKey("uitklapHoogtes"))
 			uitklapHoogtes = launchState.getDoubleList("uitklapHoogtes");
 		if( launchState.containsKey("knopImageString1"))
@@ -429,10 +419,8 @@ public class TekstVakPanel implements InteractionView
 		if( launchState.containsKey("knopImageString2"))
 			knopImageView2 = new ImageView(launchState.getString("knopImageString2"));
 // launchState never null!
-		if( launchState.containsKey("pasAanH"))
-			pasAanH = launchState.getBoolean("pasAanH");
-		if( launchState.containsKey("pasAanB"))
-			pasAanB = launchState.getBoolean("pasAanB");
+		pasAanH = launchState.getBoolean("pasAanH",pasAanH);
+		pasAanB = launchState.getBoolean("pasAanB",pasAanB);
 
 // FIXME overleg met Peter		
 //		if(ingeklapt) for(int i = 0; i < hoogtes.size(); i++) {
@@ -1846,14 +1834,28 @@ public class TekstVakPanel implements InteractionView
 	private static final int RIGHT = 1;
 	private static final int MIDDLE = 2;
 	
+	private Image view1goed, view1; 
+	
 	private void initieerKlapUitButton (boolean ingeklapt)
 	{
 		Image view1, view2;
 		final int inklapKnopPos = this.inklapKnopPos;
 		if(knopImageView1 != null && knopImageView1.exists()) {
-			view1 = knopImageView1.getImage();
+			view1 = this.view1 = this.view1goed = knopImageView1.getImage();
 		} else
-			view1 = new Image(DWOplayer.DWO_BUNDLE.klapuit1().getSafeUri());		
+		{
+			this.view1 = new Image(DWOplayer.DWO_BUNDLE.klapuit1goed().getSafeUri());
+			if(checkUitklapVak)
+				this.view1goed = new Image(DWOplayer.DWO_BUNDLE.klapuit1goed().getSafeUri());
+			else 
+				this.view1goed = this.view1;
+			
+			
+			if(checkUitklapVak && isKlapvakCorrect())
+				view1 = this.view1goed;
+			else
+				view1 = this.view1;		
+		}
 		if(knopImageView2 != null && knopImageView2.exists()) {
 			view2 = knopImageView2.getImage();
 		} else {
@@ -1861,9 +1863,13 @@ public class TekstVakPanel implements InteractionView
 		}
 		final Image masterView = ingeklapt ? view2 : view1;
 		masterView.getElement().getStyle().setProperty("verticalAlign", hoogtes.get(0).intValue() + "px");
-		klapUitButton = new ToggleButton(view2, view1);
-		klapUitButton.addClickHandler(new ClickHandler() {
+		klapUitButton = new ToggleButton(view2, view1,
+				new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				if( ! TekstVakPanel.this.ingeklapt && checkUitklapVak )
+				{
+					klapUitButton.getDownFace().setImage(isKlapvakCorrect() ? view1goed : TekstVakPanel.this.view1 );
+				}
 				klapUitAction();				
 			}});
 		
@@ -1902,6 +1908,9 @@ public class TekstVakPanel implements InteractionView
 		{
 			layoutPanel.insert(klapUitButton,0);
 			int width = knopImageView1.getWidth();
+// neem max.
+			width = Math.max(width, knopImageView2.getWidth());
+			
 			int height = knopImageView1.getHeight();
 			klapUitButton.setPixelSize(width, hoogtes.get(0).intValue());		
 			setPositionUitklapButton(layoutPanel, inklapKnopPos, width, height);
@@ -1918,6 +1927,11 @@ public class TekstVakPanel implements InteractionView
 		}
 	}
 
+
+	private boolean isKlapvakCorrect() {
+		// TODO Auto-generated method stub
+		return true; // ipObjectIsCorrect();
+	}
 
 	public void setPositionUitklapButton(TekstVak layoutPanel, int inklapKnopPos, int width, int height)
 	{

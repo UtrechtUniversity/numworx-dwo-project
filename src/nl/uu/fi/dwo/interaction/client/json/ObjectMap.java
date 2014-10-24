@@ -15,6 +15,7 @@ public interface ObjectMap {
 	int getInt(String key);
 	double getDouble(String key);
 	boolean getBoolean(String key);
+	boolean getBoolean(String key, boolean value);
 	String  getString(String key);
 	
 	Map<String,Object> getMap(String key);

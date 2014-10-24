@@ -70,6 +70,11 @@ public class ObjectMapImpl extends HashMap<String, Object> implements ObjectMap 
 	public boolean getBoolean(String key) {
 		return Boolean.TRUE.equals(get(key));
 	}
+	
+	@Override
+	public boolean getBoolean(String key, boolean value) {
+		return containsKey(key) ? getBoolean(key) : value;
+	}
 
 	@Override
 	public List<String> getStringList(String key) {

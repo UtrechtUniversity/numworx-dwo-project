@@ -112,6 +112,11 @@ public class JSONObjectMapImpl extends HashMap<String, Object> implements Object
 	}
 
 	@Override
+	public boolean getBoolean(String key, boolean value) {
+		return containsKey(key) ? getBoolean(key) : value;
+	}
+
+	@Override
 	public String getString(String key) {
 		return get0(key).isString().stringValue();
 	}
