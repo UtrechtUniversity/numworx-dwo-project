@@ -17,8 +17,8 @@ import fi.beans.scorm.PartialScoreIF;
 import fi.dwo.client.domain.AppletData;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.Sco;
-import fi.dwo.client.domain.ScoEditor;
 import fi.dwo.client.domain.User;
+import fi.dwo.client.system.TextMapper;
 
 class WrapSco extends Sco {
 	/**
@@ -26,10 +26,13 @@ class WrapSco extends Sco {
 	 */
 	WrapSco(Sco delegate) {
 		this.delegate = delegate;
+		setEditor(delegate);
 	}
 
 	private Sco delegate;
 
+	public Sco unwrap() { return delegate; }
+	
 	/**
 	 * @param listener
 	 * @see fi.dwo.client.domain.Sco#addPropertyChangeListener(java.beans.PropertyChangeListener)
@@ -480,7 +483,11 @@ class WrapSco extends Sco {
 	 */
 	public String getParameter(String name) {
 		if("url".equals(name))
-			return "/dwo/apps/player.html#" + getScoID(); // FIXME correct url.
+		{
+			String language = TextMapper.getLanguage();
+			language = "locale=" + language;
+			return "/dwo/apps/player.html?"+ language + "#cmi.launch_data:" + getScoID(); // FIXME correct url.
+		}
 		if("debug".equals(name))
 			return null;
 		return super.getParameter(name);
@@ -597,14 +604,6 @@ class WrapSco extends Sco {
 
 	/**
 	 * @return
-	 * @see fi.dwo.client.domain.Sco#getEditLaunchdata()
-	 */
-	public Hashtable getEditLaunchdata() {
-		return delegate.getEditLaunchdata();
-	}
-
-	/**
-	 * @return
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() {
@@ -657,22 +656,6 @@ class WrapSco extends Sco {
 	 */
 	public String toString() {
 		return delegate.toString();
-	}
-
-	/**
-	 * @param editor
-	 * @see fi.dwo.client.domain.Sco#setEditor(fi.dwo.client.domain.ScoEditor)
-	 */
-	public void setEditor(ScoEditor editor) {
-		delegate.setEditor(editor);
-	}
-
-	/**
-	 * @param params
-	 * @see fi.dwo.client.domain.Sco#setEditLaunchdata(java.util.Hashtable)
-	 */
-	public void setEditLaunchdata(Hashtable params) {
-		delegate.setEditLaunchdata(params);
 	}
 
 	/**

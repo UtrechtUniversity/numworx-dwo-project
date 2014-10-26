@@ -43,6 +43,7 @@ public class PreviewHtml5 extends GuiAction {
     	sco.setLaunchdata(tmp);
     	ScoPanel sp = instance().previewSco(wrap);
     	sp.tmp = panel;
+    	wrap.dwo.setCurrentSco(wrap);
     	center.loadCenter(sp);
 	}
 }

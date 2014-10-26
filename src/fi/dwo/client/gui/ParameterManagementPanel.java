@@ -151,7 +151,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         center.end(); // idempotent!
         GuiCreator.instance().setWait();
 
-        this.sco = sco;
+        this.sco = sco = sco.unwrap();
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         JPanel buttonPanel;
 		JPanel mainPanel;  // import van awt componenten
