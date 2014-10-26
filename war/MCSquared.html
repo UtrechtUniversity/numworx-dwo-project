@@ -7,6 +7,21 @@
 <script type="text/javascript" language="javascript" >
 var $wnd = window;
 
+function getLocale() {
+	var locale = "nl"; // FIXME get Locale from Window?
+	var  query = $wnd.location.search;
+	var k = query.indexOf("locale=");
+	if(k >= 0)
+	{
+		query = query.substring(k+7);
+		k = query.indexOf('&');
+		if(k > 0) query = query.substring(0, k);
+		locale = query;
+	}
+	return locale;
+}
+
+
 function $(id) {
 	return document.getElementById(id)
 }
@@ -53,6 +68,9 @@ window.inner = {
 			launch = JSON.parse(launchdata);
 			wid = launch.crossWidgetId;
 			className = launch.className;
+// TODO calculate locale from ?locale=XX 
+			locale = getLocale();
+			
 			uuid = $wnd.getUnitId($wnd.outer) + "-" + $wnd.getPage($wnd.outer) + "-" + wid;
 			launchdata = {
 					assessmentMode: $wnd.getMode($wnd.outer),
@@ -66,6 +84,7 @@ window.inner = {
 			launchdata = JSON.stringify(launchdata);			
 			$("launch_presentation_height").value = height;
 			$("launch_presentation_width").value = width;
+			$("launch_presentation_locale").value = locale;
 			$("oauth_consumer_key").value = className;
 			$('resource_link_id').value = uuid;
 			$('user_id').value = $wnd.getLearnerId($wnd.outer);
@@ -110,21 +129,21 @@ window.inner = {
 <form id='lti' method="POST" action='http://localhost:8080/DWOmAccess/lti/widget.jsp' >
 <input name='custom_launch_data' id='custom_launch_data' value='{}'><br>
 <input name='launch_presentation_height' id='launch_presentation_height' value='200'><br>
-<input name='launch_presentation_locale' value='en'><br>
+<input name='launch_presentation_locale' id='launch_presentation_locale' value='en'><br>
 <input name='launch_presentation_width' id='launch_presentation_width' value='200'><br>
 
 <input name='lis_person_name_family' value='Guest' ><br>
 <input name='lis_person_name_full' id='lis_person_name_full' value='Anonymous Guest' ><br>
 <input name='lis_person_name_given' value='Anonymous' ><br>
 
-<input name='lti_message_type' value='basic-lti-launch-request' ><br>
-<input name='lti_version' value='LTI-1p0' ><br>
+<input name='lti_message_type' value='basic-lti-launch-request' type='hidden'>
+<input name='lti_version' value='LTI-1p0' type='hidden'>
 
 <input name='oauth_consumer_key' id='oauth_consumer_key' value='12345' ><br>
-<input name='oauth_nonce' value='1244834250435893000' ><br>
-<input name='oauth_signature_method' value='HMAC-SHA1'><br>
+<input name='oauth_nonce' value='1244834250435893000' type='hidden'>
+<input name='oauth_signature_method' value='HMAC-SHA1' type='hidden'>
 <input name='oauth_timestamp' id='oauth_timestamp' value='1413494648' ><br>
-<input name='oauth_version' value='1.0' ><br>
+<input name='oauth_version' value='1.0'  type='hidden'>
 
 <input name='resource_link_id' id='resource_link_id' value='000000-0-000000' ><br>
 <input name='roles' value='Learner' ><br>

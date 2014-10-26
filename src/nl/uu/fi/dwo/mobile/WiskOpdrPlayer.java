@@ -120,23 +120,40 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 		String value = event.getValue();
 		String target = DWOplayer.PREFIX + value;
 		logger.info(value);
-		if(LAUNCH_DATA.equals(value))
-			setupLaunchData();
+		if(value.startsWith(LAUNCH_DATA))
+			setupLaunchData(value);
 		else
 		if(DWOplayer.PREFIX == null || value == null || value.equals(""))
 			setupOldView();
 		else
+		{
+			view.setUnitId(value);
 			view.setupModule(value, target);
+		}
 	}
 
-	protected void setupLaunchData() {
+	protected void setupLaunchData(String value) {
 		Scorm2004IF api = view.getApi();
 		api.Initialize();
+		int k = value.indexOf(':');
+		if(k > 0) {
+			value = value.substring(k+1);
+			view.setUnitId(value);
+		} else 
+			view.setUnitId("scoViewNr");
 		String launchData = api.GetValue(LAUNCH_DATA);
 		if(launchData == null || launchData.isEmpty() )
-			setupOldView();
+		{
+			if(k > 0) {
+				String target = DWOplayer.PREFIX + value;
+				view.setupModule(value, target);
+			} else
+				setupOldView();
+		}
 		else
+		{
 			view.setupView(launchData);
+		}
 	}
 
 	protected void setupOldView() {
@@ -160,6 +177,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 			url = path + ".xml";
 			link = path + ".xmr";
 		}
+		view.setUnitId("scoViewNr");
 		view.preSetupModule(link, url);
 	}
 	

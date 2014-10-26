@@ -11,6 +11,12 @@ public class SCORM_guest implements Scorm2004IF {
 
 	@Override
 	public String GetValue(String name) {
+		if(Memento.LEARNER_ID.equals(name))
+			return "guest";
+		if(Memento.LEARNER_NAME.equals(name))
+			return "Guest, Anonymous";
+		if(Memento.LEARNER_PREFERENCE_LANGUAGE.equals(name))
+			return "nl"; // FIXME uit ?locale=xx halen
 		return "";
 	}
 

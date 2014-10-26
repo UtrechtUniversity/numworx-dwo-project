@@ -1028,7 +1028,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	}
 	
 	private int extraHeight = 41 + KeyBoardTabPanel.KEYB_STATIC_HEIGHT;
+	private String unitId = "scoViewNr";
 	
+	public void setUnitId(String unitId) {
+		this.unitId = unitId;
+	}
+
 	public void setWindowTop(int top) {
 		extraHeight = top + KeyBoardTabPanel.KEYB_STATIC_HEIGHT;
 	}
@@ -1193,6 +1198,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			launchData = JSONUtilities.wrapMap(dom.isObject());
 		}
 		setupView(launchData);
+	}
+
+	public String getUnitId() {
+		return unitId;
 	}
 
 }

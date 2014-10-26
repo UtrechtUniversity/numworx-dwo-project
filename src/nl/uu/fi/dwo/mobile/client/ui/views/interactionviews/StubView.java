@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -55,7 +56,23 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	public StubView(String html, HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
 		html = DWOplayer.PARAMETERS.getStubView() + html;
+		String locale = getLocale();		
+		html += "?locale=" + locale;
 		init(html, launchdata, randomVarNamen, randomVarWaarden);
+	}
+
+	String getLocale() {
+		String locale = "nl"; // FIXME get Locale from Window?
+		String query = Window.Location.getQueryString();
+		int k = query.indexOf("locale=");
+		if(k > 0)
+		{
+			query = query.substring(k+7);
+			k = query.indexOf('&');
+			if(k > 0) query = query.substring(0, k);
+			locale = query;
+		}
+		return locale;
 	}
 	
 	private void init(String html, HashMap<String, Object> launchData,
@@ -195,7 +212,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 				pendingState = null;
 			} 
 		} catch(Exception e) {
-			Logger.getLogger("StubView").log(Level.SEVERE,"init", e);
+			Logger.getLogger("StubView").log(Level.SEVERE,"init "+ e);
 		}
 		
 				

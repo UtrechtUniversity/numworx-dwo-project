@@ -593,12 +593,12 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 
 	@Override
 	public String getLearnerId() {
-		return "guest";
+		return memento.getLearnerId();
 	}
 
 	@Override
 	public String getLearnerName() {
-		return "Guest, Anonymous";
+		return memento.getLearnerName();
 	}
 
 	@Override
@@ -608,6 +608,6 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 
 	@Override
 	public String getUnitId() {
-		return "0";
+		return entry.getUnitId();
 	}
 }

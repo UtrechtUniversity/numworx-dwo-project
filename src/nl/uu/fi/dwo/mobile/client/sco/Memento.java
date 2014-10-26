@@ -64,6 +64,9 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	
 	static final String COMPLETE = "completed";
 	static final String INCOMPLETE = "incomplete";
+	public static final String LEARNER_ID = "cmi.learner_id";
+	public static final String LEARNER_NAME = "cmi.learner_name";
+	public static final String LEARNER_PREFERENCE_LANGUAGE = "cmi.learner_preference.language";
 
 	private Scorm2004IF api;
 
@@ -620,6 +623,17 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	
 	public void setCompletion(boolean complete) {
 		api.SetValue(COMPLETION_STATUS, complete?COMPLETE:INCOMPLETE);
+	}
+
+	public String getLearnerId() {
+		return api.GetValue(LEARNER_ID);
+	}
+	public String getLearnerName() {
+		return api.GetValue(LEARNER_NAME);
+	}
+	
+	public String getLanguage() {
+		return api.GetValue(LEARNER_PREFERENCE_LANGUAGE);	
 	}
 
 }
