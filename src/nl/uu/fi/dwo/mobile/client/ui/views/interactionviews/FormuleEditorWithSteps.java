@@ -1678,7 +1678,7 @@ public class FormuleEditorWithSteps implements InteractionView
 			{	if (i == stapNr && nagekeken)
 				{	if((linStrategieVersie || bordjesMethode))
 					{	fv.showResult(FormuleViewer.CORRECT);
-						setAndAddFeedback(Text.rb.getString("feedbackTekst04"));
+						setAndAddFeedback(Text.constants.feedbackTekst04());
 						//"De vergelijking is correct opgelost."
 						stapOk = false;
 					}
@@ -2262,7 +2262,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		VergelijkingMeerv verg = FormuleParser.parseVergelijking("$f" + fv.toString() + "@");
 		if(bordjesMethode && verg.isEindOplossing(verg.geefVergelijkingVar()))
 		{	fv.showResult(fv.CORRECT);
-			setAndAddFeedback(Text.rb.getString("feedbackTekst04"));
+			setAndAddFeedback(Text.constants.feedbackTekst04());
 			//"De vergelijking is correct opgelost."
 			stapOk = false;
 			nagekeken = true;
@@ -2367,7 +2367,7 @@ public class FormuleEditorWithSteps implements InteractionView
 			
 			if(vergNieuw != null && vergNieuw.isEindOplossing(vergNieuw.geefVergelijkingVar()))
 			{	fv.showResult(fv.CORRECT);
-				setAndAddFeedback(Text.rb.getString("feedbackTekst04"));
+				setAndAddFeedback(Text.constants.feedbackTekst04());
 				//"De vergelijking is correct opgelost."
 				stapOk = false;
 				nagekeken = true;

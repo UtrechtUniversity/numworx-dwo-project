@@ -756,7 +756,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 			score = 0;
 			correct = false;
 			fout = true;
-			feedback = Text.rb.getString("feedbackTekst09");
+			feedback = Text.constants.feedbackTekst09();
 			return;
 		}
 		else if (hasFeedback) {
@@ -796,14 +796,14 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 					score = puntenGelijkwaardig + puntenVorm;
 					correct = true;
 					fout = false;
-					feedback = Text.rb.getString("feedbackTekst16");
+					feedback = Text.constants.feedbackTekst16();
 					//"Dit is een correcte vergelijking"
 				} else // isGelijkwaardig && vorm && !isJuisteVorm
 				{	goedHalfFout = DOOR;
 					score = puntenGelijkwaardig;
 					correct = false;
 					fout = false;
-					feedback = Text.rb.getString("feedbackTekst17");
+					feedback = Text.constants.feedbackTekst17();
 					// "Deze vergelijking heeft (nog)niet de juiste vorm"
 				}
 			} else if (eindOplossingNodig) {
@@ -812,7 +812,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 					score = 0;
 					correct = false;
 					fout = false;
-					feedback = Text.rb.getString("feedbackTekst02");
+					feedback = Text.constants.feedbackTekst02();
 					// "Niet alle oplossingen voldoen aan de oorspronkelijke vergelijking. Verwijder de oplossingen die niet voldoen."
 				} else if (isEindOplossing) {
 					if (exact) {
@@ -827,19 +827,19 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 								goedHalfFout = GOED;
 								correct = true;
 								fout = false;
-								feedback = Text.rb.getString("feedbackTekst03");
+								feedback = Text.constants.feedbackTekst03();
 								// "De ongelijkheid is correct opgelost"
 							} else if (gewensteEindOplossing.isAfronding()) {
 								goedHalfFout = GOED;
 								correct = true;
 								fout = false;
-								feedback = Text.rb.getString("feedbackTekst11");
+								feedback = Text.constants.feedbackTekst11();
 								// "De oplossing is correct afgerond"
 							} else {
 								goedHalfFout = GOED;
 								correct = true;
 								fout = false;
-								feedback = Text.rb.getString("feedbackTekst04");
+								feedback = Text.constants.feedbackTekst04();
 								// "De vergelijking is correct opgelost"
 							}
 						} 
@@ -850,7 +850,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 							score = puntenGelijkwaardig + puntenEindOplossing;
 							correct = false;
 							fout = false;
-							feedback = Text.rb.getString("feedbackTekst10");
+							feedback = Text.constants.feedbackTekst10();
 							//"Oplossing is goed, maar nog niet in de juiste vorm."
 						}
 					} else // isGelijkwaardig && eindOplossingNodig &&
@@ -860,19 +860,19 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 						if (gewensteEindOplossing.isOngelijkheid()) {
 							correct = true;
 							fout = false;
-							feedback = Text.rb.getString("feedbackTekst03");
+							feedback = Text.constants.feedbackTekst03();
 							// "De ongelijkheid is correct opgelost"
 						} else if (gewensteEindOplossing.isAfronding()) {
 							goedHalfFout = GOED;
 							correct = true;
 							fout = false;
-							feedback = Text.rb.getString("feedbackTekst11");
+							feedback = Text.constants.feedbackTekst11();
 							// "De oplossing is correct afgerond"
 						} else {
 							goedHalfFout = GOED;
 							correct = true;
 							fout = false;
-							feedback = Text.rb.getString("feedbackTekst04");
+							feedback = Text.constants.feedbackTekst04();
 							// "De vergelijking is correct opgelost"
 						}
 					}
@@ -888,7 +888,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 						score = 0;
 						correct = false;
 						fout = false;
-						feedback = Text.rb.getString("feedbackTekst05");
+						feedback = Text.constants.feedbackTekst05();
 						// "Geef de gevraagde afronding"
 					} else if (moetNogOngelijkheid) // isGelijkwaardig &&
 													// eindOplossingNodig &&
@@ -897,7 +897,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 						score = 0;
 						correct = false;
 						fout = false;
-						feedback = Text.rb.getString("feedbackTekst06");
+						feedback = Text.constants.feedbackTekst06();
 						// "Geef nu de oplossing(en) van de ongelijkheid"
 					} else {
 						goedHalfFout = DOOR;
@@ -916,7 +916,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 				// van ware beweringen
 				correct = true;
 				fout = false;
-				feedback = Text.rb.getString("feedbackTekst16");
+				feedback = Text.constants.feedbackTekst16();
 				// "Dit is een correcte vergelijking"
 			}
 		}
@@ -930,7 +930,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 					score = 0;
 					correct = false;
 					fout = true;
-					feedback = Text.rb.getString("feedbackTekst01");
+					feedback = Text.constants.feedbackTekst01();
 					// "Deze stap bevat correcte en niet correcte onderdelen. Verwijder of vervang de delen die niet correct zijn"
 				} 
 				else // !isGelijkwaardig && isDeelOplossing &&
@@ -939,7 +939,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 					score = 0;
 					correct = false;
 					fout = true;
-					feedback = Text.rb.getString("feedbackTekst07");
+					feedback = Text.constants.feedbackTekst07();
 					// "Er ontbreken oplossingen. Vul aan."
 				}
 			} else // niet isDeelOplossing
@@ -1134,11 +1134,11 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 			bevatFouteOplossing = false;
 			bevatVoldoetNiet = false;
 			if (antwoordVergString.indexOf("|") > -1) { // setFeedback("Gebruik geen absoluut strepen ( bv: |x-3| )");
-				feedback = Text.rb.getString("feedbackTekst08");
+				feedback = Text.constants.feedbackTekst08();
 			} else if (antwoordVergString.length() > 3) { // setFeedback("De notatie van de vergelijking of oplossingen is niet juist");
 				//if (mode == 2 || mode == 3)
 					ingevuld = true;
-					feedback = Text.rb.getString("feedbackTekst09");
+					feedback = Text.constants.feedbackTekst09();
 			}
 		}
 		Algebra.setDefaultTestValues();
@@ -1148,14 +1148,14 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 	{
 		//System.out.println(s);
 		//s = StringUtils.replaceStr(s,"?",Text.rb.getString("ofLabel"));
-		s = s.replaceAll("\u2228",Text.rb.getString("ofLabel"));
+		s = s.replaceAll("\u2228",Text.constants.ofLabel());
         if(s.equals("false"))s = "x=geen";
         return s;
 	}
 	
 	public String vertaalNaarIdeasExpressie(String s)
 	{
-		s = s.replaceAll(Text.rb.getString("ofLabel"),"\u2228");
+		s = s.replaceAll(Text.constants.ofLabel(),"\u2228");
 		s = s.replaceAll(" ", "");
 		if(s.equals("geenoplossingen"))s = "false";
         return s;

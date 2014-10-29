@@ -490,11 +490,11 @@ public class Vergelijking
 		}
 		else if (Algebra.isGelijkDouble(kind2.geefWaarde(), 0.1234567))
 		{
-			s = Text.rb.getString("geenOplossingen");
+			s = Text.constants.geenOplossingen();
 		}
 		else if (Algebra.isGelijkDouble(kind2.geefWaarde(), 0.7654321))
 		{
-			s = Text.rb.getString("allesOplossing");
+			s = Text.constants.allesOplossing();
 		}
 		else
 			s = kind1.toString() + "" + vergelijkingsTeken + "" + kind2.toString();
@@ -513,11 +513,11 @@ public class Vergelijking
 		}
 		else if (Algebra.isGelijkDouble(kind2.geefWaarde(), 0.1234567))
 		{
-			s = Text.rb.getString("geenOplossingen");
+			s = Text.constants.geenOplossingen();
 		}
 		else if (Algebra.isGelijkDouble(kind2.geefWaarde(), 0.7654321))
 		{
-			s = Text.rb.getString("allesOplossing");
+			s = Text.constants.geenOplossingen();
 		}
 		else
 			s = kind1.toStringStrikt() + "" + vergelijkingsTeken + "" + kind2.toStringStrikt();

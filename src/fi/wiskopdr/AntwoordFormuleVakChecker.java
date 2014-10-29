@@ -565,7 +565,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 	public void evaluate()
 	{	if(syntaxFout)
 		{	goedHalfFout = FOUT;
-			feedback = Text.rb.getString("feedbackTekst14");
+			feedback = Text.constants.feedbackTekst14();
 			return;
 		}
 		else if(leeg)
@@ -846,14 +846,14 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 	{
 		//System.out.println(s);
 		//s = StringUtils.replaceStr(s,"?",WiskOpdr.rb.getString("ofLabel"));
-		s = s.replaceAll("\u2228",Text.rb.getString("ofLabel"));
+		s = s.replaceAll("\u2228",Text.constants.ofLabel());
         if(s.equals("false"))s = "x=geen";
         return s;
 	}
 	
 	public String vertaalNaarIdeasExpressie(String s)
 	{
-		s = s.replaceAll(Text.rb.getString("ofLabel"),"\u2228");
+		s = s.replaceAll(Text.constants.ofLabel(),"\u2228");
 		s = s.replaceAll(" ", "");
 		if(s.equals("geenoplossingen"))s = "false";
         return s;

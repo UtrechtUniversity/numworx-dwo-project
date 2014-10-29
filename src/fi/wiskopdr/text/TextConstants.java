@@ -1,0 +1,77 @@
+package fi.wiskopdr.text;
+
+import com.google.gwt.i18n.client.ConstantsWithLookup;
+import com.google.gwt.i18n.client.Constants.DefaultStringValue;
+
+// This is the GWT way:
+public interface TextConstants extends ConstantsWithLookup, TextIF {
+	@DefaultStringValue("of")
+	String ofLabel();
+	@DefaultStringValue("en")
+	String enLabel();
+	
+	
+	@DefaultStringValue("klaar")
+	String klaarKnopLabel();
+	@DefaultStringValue("kijk na")
+	String nakijkKnopLabel();
+	@DefaultStringValue("Einde")
+	String eindeKnopLabel();
+	@DefaultStringValue("Nagekeken: ")
+	String nakijkLabel();
+	@DefaultStringValue(" keer ")
+	String nakijkLabel2();
+	@DefaultStringValue("opnieuw")
+	String opnieuwKnopLabel();
+	@DefaultStringValue("alles opnieuw")
+	String allesOpnieuwKnopLabel();
+	@DefaultStringValue("Opdracht:")
+	String opdrachtLabel();
+	@DefaultStringValue("Pagina:")
+	String paginaLabel();
+	@DefaultStringValue("Onderdeel:")
+	String onderdeelLabel();
+	@DefaultStringValue("Score:")
+	String scoreLabel();
+	
+	@DefaultStringValue("Deze stap bevat correcte en niet correcte onderdelen. Verwijder of vervang de delen die niet correct zijn.")
+	String feedbackTekst01();
+	@DefaultStringValue("Niet alle oplossingen voldoen aan de oorspronkelijke vergelijking. Verwijder de oplossingen die niet voldoen.")
+	String feedbackTekst02();
+	@DefaultStringValue("De ongelijkheid is correct opgelost.")
+	String feedbackTekst03();
+	@DefaultStringValue("De vergelijking is correct opgelost.")
+	String feedbackTekst04();
+	@DefaultStringValue("Geef de gevraagde afronding.")
+	String feedbackTekst05();
+	@DefaultStringValue("Geef nu de oplossing(en) van de ongelijkheid.")
+	String feedbackTekst06();
+	@DefaultStringValue("Er ontbreken oplossingen. Vul aan.")
+	String feedbackTekst07();
+	@DefaultStringValue("Gebruik geen absoluut strepen ( bv: |x-3| ).")
+	String feedbackTekst08();
+	@DefaultStringValue("De notatie van de vergelijking of oplossingen is niet juist.")
+	String feedbackTekst09();
+	@DefaultStringValue("Oplossing is goed, maar nog niet in de juiste vorm.")
+	String feedbackTekst10();
+	@DefaultStringValue("Deze benadering is een goede oplossing.")
+	String feedbackTekst11();
+	@DefaultStringValue("De notatie van het antwoord klopt niet.")
+	String feedbackTekst14();
+	@DefaultStringValue("Dit is een correcte vergelijking")
+	String feedbackTekst16();
+	@DefaultStringValue("Deze vergelijking heeft niet de gevraagde vorm")
+	String feedbackTekst17();
+	
+	
+
+	@DefaultStringValue("geen oplossingen") // vergelijking.java
+	String geenOplossingen();
+	@DefaultStringValue("alles is een oplossing") // vergelijking.java
+	String allesOplossing();
+	@DefaultStringValue("geen")
+	String antwoordModelGeen();
+	@DefaultStringValue("abc")
+	String abc();
+// enzovoort
+}

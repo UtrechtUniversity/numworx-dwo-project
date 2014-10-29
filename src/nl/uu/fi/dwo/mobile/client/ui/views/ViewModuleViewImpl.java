@@ -322,7 +322,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		int mode = on.getMode();
 		if(mode == OpdrNav.ZELFTOETS)
 		{
-			nakijkKnop = new PushButton(Text.rb.getString("nakijkKnopLabel"));
+			nakijkKnop = new PushButton(Text.constants.nakijkKnopLabel());
 			kb.addKnop(nakijkKnop);
 			nakijkKnop.addClickHandler(new ClickHandler(){
 				public void onClick(ClickEvent e)

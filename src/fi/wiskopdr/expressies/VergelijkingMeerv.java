@@ -452,7 +452,7 @@ public class VergelijkingMeerv
 		String s = vergelijkingen[0].toString();
 		for (int i = 1; i < vergelijkingen.length; i++)
 		{
-			s = s + "  " + Text.rb.getString("ofLabel") + "  " + vergelijkingen[i].toString();
+			s = s + "  " + Text.constants.ofLabel() + "  " + vergelijkingen[i].toString();
 		}
 
 		return s;
@@ -463,7 +463,7 @@ public class VergelijkingMeerv
 		String s = vergelijkingen[0].toStringStrikt();
 		for (int i = 1; i < vergelijkingen.length; i++)
 		{
-			s = s + "  " + Text.rb.getString("ofLabel") + "  " + vergelijkingen[i].toStringStrikt();
+			s = s + "  " + Text.constants.ofLabel() + "  " + vergelijkingen[i].toStringStrikt();
 		}
 
 		return s;

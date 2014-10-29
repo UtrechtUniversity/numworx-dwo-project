@@ -60,7 +60,7 @@ public class FormuleParser
 	private static boolean woordFormule = false;
 	private static boolean tweeHoofdletterVariabele = false;
 
-	private static String ofLabel = Text.rb.getString("ofLabel"); // FIXME GWT i18n hier nodig!
+	private static String ofLabel = Text.constants.ofLabel();
 	
 	public FormuleParser()
 	{

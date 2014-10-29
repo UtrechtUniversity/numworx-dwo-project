@@ -243,7 +243,7 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 		VergelijkingMeerv vergMeerv = FormuleParser.parseVergelijking("$f" + s + "@");
 		if(vergMeerv==null)
 			return false;
-		String ofLabel = Text.rb.getString("ofLabel");
+		String ofLabel = Text.constants.ofLabel();
 		int index = 0;
 		int teller = 0;
 		while (index !=-1)
