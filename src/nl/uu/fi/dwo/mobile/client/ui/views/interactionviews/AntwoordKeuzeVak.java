@@ -1,0 +1,880 @@
+package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Vector;
+
+import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.canvas.dom.client.CanvasGradient;
+import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.TextAlign;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.Widget;
+
+import fi.wiskopdr.FormuleParser;
+import fi.wiskopdr.text.Text_nl;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
+import nl.uu.fi.dwo.interaction.client.InteractionStub;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
+import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
+import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
+
+public class AntwoordKeuzeVak implements InteractionStub{
+	
+	public static Text_nl rb = new Text_nl();
+	
+	static final String holderId = "dockholder";
+	private HashMap<String, Object> launchState; 
+	String[] randomVarNamen = null;
+	HashMap randomVarWaarden = null;
+	OpdrNavIF comRoot;
+	
+	private LayoutPanel basisPanel;
+	int breedte = 110;
+	int hoogte = 24; 
+	int ashoogte = hoogte /2;
+	
+	private Canvas uitklapPijlCanvas;
+	private Context2d gIm;
+	
+	TekstVak huidigeKeuzeVak;
+	TekstVak[] keuzeOptieVakken;
+	PopupPanel popupBox;
+	boolean isShowing = false;
+	
+	private int mode;
+	
+	private int selectedIndex = 0;
+	    
+    private boolean ingevuld;
+    private boolean nagekeken;
+    
+    private boolean correct;
+    private boolean fout;
+    
+    private int attemptsCount;
+	private Vector attempts;
+	
+	private String antwoordString;
+	private String[] keuzeMogelijkheden;
+	private ObjectMap[] answerModels;
+	private boolean hasFeedback, checkExternal;
+
+	private int goedHalfFout;
+	private int puntenFeedback;
+	private String feedback;
+	private LayoutPanel feedbackPanel;
+	private boolean gelijkwaardig;
+	
+	
+	private int score;
+    private int errorCount;
+    private int scoreMax=10;
+    
+	static int GOED = 1;
+	static int FOUT = 0;
+	static int HALF = 2;
+	static int GEEN = 3;
+	
+	Image goedKrulImage, foutKruisImage; //goedKrulHalfImage
+	
+	
+	private boolean logOption;
+	private String logID;
+	
+	private boolean[][] logObjectives;
+	
+	private boolean check;
+	private boolean teltMee;
+	
+	
+	
+	
+	public AntwoordKeuzeVak(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
+	{
+		
+		if (h != null && h.containsKey("breedte"))
+			breedte = ((Number) h.get("breedte")).intValue();
+		if (h != null && h.containsKey("hoogte"))
+			hoogte = ((Number) h.get("hoogte")).intValue();
+		if (h != null && h.containsKey("interactiePanelLaunchState"))
+			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
+		
+		this.randomVarNamen = randomVarNamen;
+		this.randomVarWaarden = randomVarWaarden;
+		
+		init(breedte, hoogte, launchState, randomVarWaarden);
+		
+		initialize(h, randomVarNamen, randomVarWaarden);
+	}
+
+	@Override
+	public void init(int width, int height, Map<String, Object> launchData,
+			Map<String, Number> values) {
+		breedte = width;
+		hoogte = height;
+		ObjectMap map = JSONUtilities.wrapMap(launchData);
+		if (map != null)
+		{
+			if(map.containsKey("keuzeMogelijkheden") )
+				keuzeMogelijkheden = map.getStringArray("keuzeMogelijkheden");
+			if(map.containsKey("antwoordString"))
+				antwoordString = map.getString("antwoordString");
+			if(map.containsKey("scoreMax")) 
+				scoreMax = map.getInt("scoreMax");
+			if(map.containsKey("answerModels") )
+			{	ObjectList answerModelsList =map.getObjectList("answerModels");
+				answerModels = new ObjectMap[answerModelsList.size()];
+				for(int i = 0; i < answerModelsList.size(); i++)
+					answerModels[i] = answerModelsList.getObjectMap(i);
+			}
+			if(map.containsKey("hasFeedback") )
+				hasFeedback = map.getBoolean("hasFeedback");
+		    if(map.containsKey("logOption")) 
+		    	logOption = map.getBoolean("logOption");
+			if(map.containsKey("logID")) 
+				logID = map.getString("logID");
+			if(map.containsKey("check")) 
+				check = map.getBoolean("check");
+			if(map.containsKey("teltMee")) 
+				teltMee = map.getBoolean("teltMee");
+			if(map.containsKey("logObjectives"))
+			{	ObjectList logObjectivesList = ( map.getObjectList("logObjectives") );
+				logObjectives = new boolean[logObjectivesList.size()][];
+				for(int i = 0; i < logObjectivesList.size(); i++)
+				{	logObjectives[i] = logObjectivesList.getBooleanArray(i);
+				}
+			}
+			if(map.containsKey("checkExternal"))
+				checkExternal = map.getBoolean("checkExternal");	
+		}
+		
+		
+	}
+	
+	private void initialize(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
+	{
+		attempts = new Vector();
+		
+		basisPanel = new LayoutPanel();
+		
+		ashoogte = hoogte / 2 + 7;
+		basisPanel.setPixelSize(breedte,  hoogte);
+		popupBox = new PopupPanel(true);
+		FlowPanel popupPanel = new FlowPanel();
+		popupBox.add(popupPanel);
+		popupBox.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
+		popupBox.getElement().getStyle().setBorderColor("black");
+		popupBox.getElement().getStyle().setBorderWidth(1, Style.Unit.PX);
+		popupBox.getElement().getStyle().setPadding(0, Style.Unit.PX);
+		
+		huidigeKeuzeVak = maakKeuzeVak();
+		huidigeKeuzeVak.getElement().getStyle().setBorderColor(CssColor.make(128, 128, 128).toString());
+		huidigeKeuzeVak.getElement().getStyle().setBorderWidth(1, Style.Unit.PX);
+		huidigeKeuzeVak.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
+		huidigeKeuzeVak.setPixelSize(breedte - 22, hoogte - 2);
+		basisPanel.add(huidigeKeuzeVak);
+		basisPanel.setWidgetLeftRight(huidigeKeuzeVak, 0, Style.Unit.PX, 20, Style.Unit.PX);
+		basisPanel.setWidgetTopBottom(huidigeKeuzeVak, 0, Style.Unit.PX, 0, Style.Unit.PX);
+		ArrayList<Object> kiesObjects = new ArrayList<Object> ();
+		kiesObjects.add(rb.getString("keuzeVakKiesLabel"));
+		huidigeKeuzeVak.setObjects(kiesObjects);
+		
+		
+		huidigeKeuzeVak.addDomHandler(new ClickHandler(){
+			public void onClick(ClickEvent e)
+			{	popupBox.setPopupPosition(basisPanel.getAbsoluteLeft(), basisPanel.getAbsoluteTop() + basisPanel.getOffsetHeight());
+				if(isShowing)
+				{	popupBox.hide();
+					isShowing = false;
+				}
+				else
+				{	popupBox.show();
+					isShowing = true;
+				}
+			}
+		}, ClickEvent.getType());
+		
+		huidigeKeuzeVak.addDomHandler(new MouseOverHandler(){
+			public void onMouseOver(MouseOverEvent e)
+			{	if(!isShowing && popupBox.isShowing())
+				{	isShowing = true;
+					
+				}
+			}
+		}, MouseOverEvent.getType());
+		
+		huidigeKeuzeVak.addDomHandler(new MouseOutHandler(){
+			public void onMouseOut(MouseOutEvent e)
+			{	isShowing = false;
+				
+			}
+		}, MouseOutEvent.getType());
+	
+		
+		//TODO: Noordhoff-onderscheid maken (ook in plaatsing, alleen in Noordhoff in knop?)
+		
+		//goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.goedkrul_en().getSafeUri());
+		//foutKruisImage = new Image(DWOplayer.DWO_BUNDLE.foutkruis().getSafeUri());
+		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
+		foutKruisImage = new Image(DWOplayer.DWO_BUNDLE.mw_kruisje_rood().getSafeUri());
+		
+		basisPanel.add(goedKrulImage);
+		basisPanel.add(foutKruisImage);
+		//basisPanel.setWidgetLeftWidth(goedKrulImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
+		//basisPanel.setWidgetTopHeight(goedKrulImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
+		//basisPanel.setWidgetLeftWidth(foutKruisImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
+		//basisPanel.setWidgetTopHeight(foutKruisImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
+		basisPanel.setWidgetRightWidth(goedKrulImage, 1, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(goedKrulImage, 6, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetRightWidth(foutKruisImage, 2, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(foutKruisImage, 5, Style.Unit.PX, 15, Style.Unit.PX);
+		goedKrulImage.setVisible(false);
+		foutKruisImage.setVisible(false);
+		
+				
+		int aantalKeuzes = 0;
+		TekstBuffer tb = new TekstBuffer();
+		if (keuzeMogelijkheden != null)
+			aantalKeuzes = keuzeMogelijkheden.length;
+		keuzeOptieVakken = new TekstVak[aantalKeuzes + 1];
+		keuzeOptieVakken[0] = maakKeuzeVak();
+		keuzeOptieVakken[0].setPasHoogteBreedteAan(true, false);
+		keuzeOptieVakken[0].setObjects(kiesObjects);
+		popupPanel.add(keuzeOptieVakken[0]);
+		keuzeOptieVakken[0].resize();
+		keuzeOptieVakken[0].getElement().getStyle().setBackgroundColor(CssColor.make(163, 184, 204).toString());
+		keuzeOptieVakken[0].addDomHandler(new MouseOverHandler(){
+			public void onMouseOver(MouseOverEvent event) {
+				zetVakAangewezen(0);
+			}
+		}, MouseOverEvent.getType());
+		keuzeOptieVakken[0].addDomHandler(new ClickHandler(){
+			public void onClick(ClickEvent event) {
+				zetSelectie(0);
+			}
+		}, ClickEvent.getType());
+		for (int i = 0; i < aantalKeuzes; i++)
+		{
+			keuzeOptieVakken[i + 1] = maakKeuzeVak();
+			keuzeOptieVakken[i + 1].setPasHoogteBreedteAan(true, false);
+			popupPanel.add(keuzeOptieVakken[i + 1]);
+			try
+			{
+				keuzeMogelijkheden[i] = FormuleParser.randomizeTekstVakString(keuzeMogelijkheden[i], randomVarNamen, randomVarWaarden);
+			}
+			catch (Exception e)
+			{	
+			}
+			ArrayList<Object> keuzeOptie = tb.convertTekst(keuzeMogelijkheden[i], null, false);
+					
+			keuzeOptieVakken[i + 1].setObjects(keuzeOptie);
+			keuzeOptieVakken[i + 1].resize();
+			final int index = i + 1;
+			keuzeOptieVakken[i + 1].addDomHandler(new MouseOverHandler(){
+				public void onMouseOver(MouseOverEvent event) {
+					zetVakAangewezen(index);
+				}
+			}, MouseOverEvent.getType());
+			keuzeOptieVakken[i + 1].addDomHandler(new ClickHandler(){
+				public void onClick(ClickEvent event) {
+					zetSelectie(index);
+				}
+			}, ClickEvent.getType());
+			
+		}
+
+		
+		try
+		{
+			antwoordString = FormuleParser.randomizeTekstVakString(antwoordString, randomVarNamen, randomVarWaarden);
+		}
+		catch (Exception e)
+		{
+		}
+		
+		uitklapPijlCanvas = Canvas.createIfSupported();
+		gIm = uitklapPijlCanvas.getContext2d();
+		
+		uitklapPijlCanvas.setWidth(20 + "px");
+		uitklapPijlCanvas.setHeight(hoogte + "px");
+		uitklapPijlCanvas.setCoordinateSpaceWidth(20);
+		uitklapPijlCanvas.setCoordinateSpaceHeight(hoogte);
+		
+		
+		
+		CanvasGradient gradient = gIm.createLinearGradient(0, 0, 20, hoogte);
+		gradient.addColorStop(0, "white");
+		gradient.addColorStop(1, CssColor.make(200, 200, 200).toString());
+		gIm.setFillStyle(gradient);
+		gIm.setStrokeStyle("black");
+		gIm.setLineWidth(1.0d);
+		gIm.rect(0, 0, 20, hoogte);
+		gIm.fill();
+		gIm.stroke();
+		
+		gIm.beginPath();
+		gIm.moveTo(6, hoogte / 2 - 2);
+		gIm.lineTo(14, hoogte / 2 - 2);
+		gIm.lineTo(11, hoogte / 2 + 2);
+		gIm.lineTo(10, hoogte / 2 + 2);
+		gIm.closePath();
+		gIm.setFillStyle("black");
+		gIm.fill();
+		
+		basisPanel.add(uitklapPijlCanvas);
+		basisPanel.setWidgetRightWidth(uitklapPijlCanvas, 20, Style.Unit.PX, 20, Style.Unit.PX);
+		basisPanel.setWidgetTopBottom(uitklapPijlCanvas, 0, Style.Unit.PX, 0, Style.Unit.PX);
+		
+		
+		uitklapPijlCanvas.addDomHandler(new ClickHandler(){
+			public void onClick(ClickEvent e)
+			{	popupBox.setPopupPosition(basisPanel.getAbsoluteLeft(), basisPanel.getAbsoluteTop() + basisPanel.getOffsetHeight());
+				if(isShowing)
+				{	popupBox.hide();
+					isShowing = false;
+				}
+				else
+				{	popupBox.show();
+					isShowing = true;
+				}
+			}
+		}, ClickEvent.getType());
+		
+		uitklapPijlCanvas.addDomHandler(new MouseOverHandler(){
+			public void onMouseOver(MouseOverEvent e)
+			{	if(!isShowing && popupBox.isShowing())
+				{	isShowing = true;
+					
+				}
+			}
+		}, MouseOverEvent.getType());
+		
+		uitklapPijlCanvas.addDomHandler(new MouseOutHandler(){
+			public void onMouseOut(MouseOutEvent e)
+			{	isShowing = false;
+			}
+		}, MouseOutEvent.getType());
+	}
+	
+	public TekstVak maakKeuzeVak()
+	{
+		TekstVak vak = new TekstVak();
+		vak.setSize(breedte - 23, hoogte);
+		vak.setMarges(2, 5);
+		vak.getElement().getStyle().setBackgroundColor(CssColor.make(238, 238, 238).toString());
+		vak.setFontSize(XMLView.getDefaultFontSize());
+		vak.setColor(CssColor.make("black"));
+		vak.setCentering(false, true);
+		return vak;
+	}
+	
+	public void zetVakAangewezen(int index)
+	{
+		for(int i = 0; i < keuzeOptieVakken.length; i++)
+		{
+			keuzeOptieVakken[i].getElement().getStyle().setBackgroundColor(CssColor.make(238, 238, 238).toString());
+		}
+		keuzeOptieVakken[index].getElement().getStyle().setBackgroundColor(CssColor.make(163, 184, 204).toString());
+	}
+	
+	public void zetSelectie(int index)
+	{
+		
+		selectedIndex = index;
+		huidigeKeuzeVak.clear();
+		
+		ArrayList<Object> huidigeKeuze = new ArrayList<Object> ();
+		huidigeKeuze.add(rb.getString("keuzeVakKiesLabel"));
+		
+		TekstBuffer tb = new TekstBuffer();
+		if(index > 0)
+			huidigeKeuze = tb.convertTekst(keuzeMogelijkheden[index - 1], null, false);
+		
+		huidigeKeuzeVak.setObjects(huidigeKeuze);
+		
+		popupBox.hide();
+		
+		if (!checkExternal &&(mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN))
+		{
+			kijkNa();
+			if (fout)
+				errorCount++;
+			attemptsCount++;
+			setAttempt();
+		} 
+		else if(checkExternal) {
+			zetGoedFout(GEEN);
+		}
+	}
+	
+	
+	public HashMap<String, Object> getState()
+	{
+		boolean ingevuld = false;
+		boolean nagekeken = false;
+		String antwoord = "";
+		Vector attempts = new Vector();
+		int attemptsCount = 0;
+		int errorCount = 0;
+
+		ingevuld = this.ingevuld;
+		nagekeken = this.nagekeken;
+		if(selectedIndex > 0)
+			antwoord = keuzeMogelijkheden[selectedIndex - 1];
+		else
+			antwoord = rb.getString("keuzeVakKiesLabel");
+		attempts = this.attempts;
+		attemptsCount = this.attemptsCount;
+		errorCount = this.errorCount;
+
+		//if (!("MW".equals(WiskOpdr.deployVariant) || "GR".equals(WiskOpdr.deployVariant)))
+			kijkNa(false);
+		if (logOption)
+		{
+			HashMap<String, Object> logMap = new HashMap<String, Object>();
+
+			String logString = antwoord;
+			if (selectedIndex == 0)
+				logString = "";
+
+			logMap.put("logAnswer", logString);
+			logMap.put("logScore", new Integer(score));
+			logMap.put("logMaxScore", new Integer(scoreMax));
+			logMap.put("logErrorCount", new Integer(errorCount));
+			logMap.put("logAttemptsCount", new Integer(attemptsCount));
+			logMap.put("logAttempts", attempts);
+
+			//WiskOpdr.setLog(logID, logMap);
+
+		}
+
+		HashMap<String, Object> h = new HashMap<String, Object>();
+		h.put("ingevuld", new Boolean(ingevuld));
+		h.put("nagekeken", new Boolean(nagekeken));
+		h.put("antwoord", antwoord);
+		h.put("attempts", attempts);
+		h.put("attemptsCount", new Integer(attemptsCount));
+		h.put("errorCount", new Integer(errorCount));
+
+		return h;
+	}
+	
+	public void setAttempt()
+	{
+		String goedFout = "";
+		
+		if (goedKrulImage.isVisible())
+			goedFout = "goed";
+		//if (goedKrulHalfImage.isVisible())
+		//	goedFout = "half";
+		if (foutKruisImage.isVisible())
+			goedFout = "fout";
+		String formule = "";
+		//String string = huidigeKeuzeVak.getOpdrachtObjects().toString();
+		String string = "";
+		if(selectedIndex > 0)
+			string = keuzeMogelijkheden[selectedIndex - 1];
+		
+		
+		//String string = (String) antwoordKV.getItemText(antwoordKV.getSelectedIndex());
+
+		/*
+		String fbTekst = "";
+		if (feedbackTekst.isVisible() && feedbackTekst.getParent() != null)
+			fbTekst = feedbackTekst.getText();
+			*/
+
+		String s = string;
+		s = s + "   ;   ";
+		s = s + "Regelnummer = ";
+		s = s + "   ;   ";
+		s = s + goedFout;
+		s = s + "   ;   ";
+		s = s + "score = " + score;
+		s = s + "   ;   ";
+		s = s + new Date().toString();
+		s = s + "   ;   ";
+		//s = s + fbTekst;
+
+		attempts.addElement(s);
+		//System.out.println(s);
+	}
+
+	public void setState(HashMap<String, Object> h)
+	{
+		boolean ingevuld = false;
+		boolean nagekeken = false;
+		String antwoord = "";
+		Vector attempts = new Vector();
+		int attemptsCount = 0;
+		int errorCount = 0;
+
+		if (h.containsKey("ingevuld"))
+			ingevuld = ((Boolean) h.get("ingevuld")).booleanValue();
+		if (h.containsKey("nagekeken"))
+			nagekeken = ((Boolean) h.get("nagekeken")).booleanValue();
+		if (h.containsKey("antwoord"))
+			antwoord = (String) h.get("antwoord");
+		if (h.containsKey("attempts"))
+			attempts = toVector(h.get("attempts"));
+		if (h.containsKey("attemptsCount"))
+			attemptsCount = ((Number) h.get("attemptsCount")).intValue();
+		if (h.containsKey("errorCount"))
+			errorCount = ((Number) h.get("errorCount")).intValue();
+
+		this.ingevuld = ingevuld;
+		this.nagekeken = nagekeken;
+		this.attempts = attempts;
+		this.attemptsCount = attemptsCount;
+		this.errorCount = errorCount;
+
+		selectedIndex = 0;
+		for(int i = 0; i < keuzeMogelijkheden.length; i++)
+			if(keuzeMogelijkheden[i].equals(antwoord))
+			{	selectedIndex = i + 1;
+				break;
+			}
+		huidigeKeuzeVak.clear();
+		
+		ArrayList<Object> huidigeKeuze = new ArrayList<Object> ();
+		huidigeKeuze.add(rb.getString("keuzeVakKiesLabel"));
+		
+		TekstBuffer tb = new TekstBuffer();
+		if(selectedIndex > 0)
+			huidigeKeuze = tb.convertTekst(keuzeMogelijkheden[selectedIndex - 1], null, false);
+		
+		huidigeKeuzeVak.setObjects(huidigeKeuze);
+		//antwoordKV.setSelectedIndex(index);
+		//antwoordKV.setSelectedItem(antwoord);
+
+		if (ingevuld && (mode == 0 || mode == 1 || nagekeken))
+			kijkNa();
+	}
+	
+	public static Vector toVector(Object object)
+	{
+		if (object == null || object instanceof Vector)
+			return (Vector) object;
+		if (object instanceof Collection)
+		{
+			return new Vector((Collection) object);
+		}
+		return null;
+	}
+
+	@Override
+	public int getScore() {
+		if (!teltMee)
+			return 0;
+		return score;
+	}
+	
+	public int[][] getScoreObjectives()
+	{
+		if (logObjectives == null)
+			return null;
+		int[][] scoreObjectives = new int[logObjectives.length][];
+		for (int i = 0; i < logObjectives.length; i++)
+			scoreObjectives[i] = new int[logObjectives[i].length];
+		for (int i = 0; i < logObjectives.length; i++)
+			for (int j = 0; j < logObjectives[i].length; j++)
+			{
+				if (logObjectives[i][j])
+					scoreObjectives[i][j] = score;
+			}
+		return scoreObjectives;
+	}
+
+	public int getScoreMax()
+	{
+		if (!teltMee)
+			return 0;
+		return scoreMax;
+	}
+
+	public Boolean isCorrect()
+	{
+		if (!teltMee)
+			return Boolean.TRUE;
+		if (!correct && !fout) return null;
+		return correct;
+	}
+
+	public boolean isFout()
+	{
+		if (!teltMee)
+			return false;
+		return fout;
+	}
+
+	public void zetMode(int mode)
+	{
+		this.mode = mode;
+	}
+
+	@Override
+	public void kijkNa() {
+		kijkNa(true);
+	}
+	
+	public void kijkNa(boolean show)
+	{
+		checkAntwoord();
+
+		//ingevuld = antwoordKV.getSelectedIndex() > 0;
+		ingevuld = selectedIndex > 0;
+
+		correct = false;
+		fout = true;
+		score = 0;
+
+		if (!ingevuld)
+		{	if (show)
+				zetGoedFout(GEEN);
+			fout = false;
+			return;
+		}
+
+		if (hasFeedback)
+		{
+			if (goedHalfFout == 0)
+			{
+				if (show)
+					zetGoedFout(GOED);
+				score = puntenFeedback;
+				correct = true;
+				fout = false;
+			}
+			else if (goedHalfFout == 1)
+			{
+				if (show)
+					zetGoedFout(HALF);
+				score = puntenFeedback;
+				correct = false;
+				fout = false;
+			}
+			else if (goedHalfFout == 2)
+			{
+				if (show)
+					zetGoedFout(FOUT);
+				score = puntenFeedback;
+				correct = false;
+				fout = true;
+			}
+		}
+		else
+		{	if (gelijkwaardig)
+			{
+				if (show)
+				{	zetGoedFout(GOED);
+				}
+				correct = true;
+				fout = false;
+				score = scoreMax;
+			}
+			else
+			{
+				if (show)
+					zetGoedFout(FOUT);
+				correct = false;
+				fout = true;
+				score = 0;
+			}
+		}
+
+		
+		if (show)
+			if (ingevuld)
+				//comRoot.setChanged(fout);
+				comRoot.setChanged(fout);
+	}
+	
+	private void zetGoedFout(int uitslag)
+	{
+		if (!check)
+		{	return;
+		}
+		
+		goedKrulImage.setVisible(false);
+		//goedKrulHalfImage.setVisible(false);
+		foutKruisImage.setVisible(false);
+		
+		if (uitslag == GEEN)
+			return;
+		if (uitslag == GOED)
+			goedKrulImage.setVisible(true);
+		else if (uitslag == FOUT)
+			foutKruisImage.setVisible(true);
+		//else if (uitslag == HALF)
+		//	goedKrulHalfImage.setVisible(true);
+	}
+	
+	public void checkAntwoord()
+	{
+		if (hasFeedback)
+		{
+			int aantalAnswerModels = answerModels.length;
+			for (int h = 0; h < aantalAnswerModels; h++)
+			{
+				setAnswerModel(h);
+				gelijkwaardig = false;
+				if(selectedIndex > 0)
+					gelijkwaardig = antwoordString.trim().equals(keuzeMogelijkheden[selectedIndex - 1].trim());
+
+				if (gelijkwaardig || h == aantalAnswerModels - 1)
+				{
+					if (!feedback.trim().equals(""))
+					{
+						//setFeedback(feedback, true);
+						//feedbackButton.setVisible(true);
+					}
+					else
+					{
+						//feedbackButton.setVisible(false);
+						//if (feedbackPanel.getParent() != null)
+						//{
+							//Container c = feedbackPanel.getParent();
+							//c.remove(feedbackPanel);
+							//c.repaint();
+						//}
+
+					}
+					break;
+				}
+
+			}
+		}
+		else
+		{
+			gelijkwaardig = false;
+			if(selectedIndex > 0)
+				gelijkwaardig = antwoordString.trim().equals(keuzeMogelijkheden[selectedIndex - 1].trim());
+			//System.out.println("+" + antwoordString);
+			//System.out.println("+" + ((String) huidigeKeuzeVak.getOpdrachtObjects().get(0)));
+		}
+		//repaint();
+	}
+	
+	public void setAnswerModel(int nr)
+	{
+		ObjectMap h = answerModels[nr];
+		if (h == null)
+			return;
+
+		String antwoordString = "$f@";
+		int puntenFeedback = 0;
+		String feedback = "";
+		int goedHalfFout = 0;
+
+		if (h != null)
+		{
+			if (h.containsKey("antwoordString"))
+				antwoordString = (String) h.getString("antwoordString");
+			if (h.containsKey("puntenFeedback"))
+				puntenFeedback = h.getInt("puntenFeedback");
+			if (h.containsKey("feedback"))
+				feedback = h.getString("feedback");
+			if (h.containsKey("goedHalfFout"))
+				goedHalfFout = h.getInt("goedHalfFout");
+
+		}
+
+		try
+		{
+			antwoordString = FormuleParser.randomizeTekstVakString(antwoordString, randomVarNamen, randomVarWaarden);
+		}
+		catch (Exception e)
+		{
+		}
+		try
+		{
+			feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);
+		}
+		catch (Exception e)
+		{
+			feedback = "$f???@";
+		}
+
+		this.goedHalfFout = goedHalfFout;
+		this.puntenFeedback = puntenFeedback;
+		this.antwoordString = antwoordString;
+		this.feedback = feedback;
+
+		//zetJuisteAntwoord(antwoordString);
+
+	}
+
+	@Override
+	public void zetNagekeken(boolean b) {
+		if (ingevuld)
+			nagekeken = b;
+	}
+
+	@Override
+	public void setCommunicationRoot(OpdrNavIF comRoot) {
+		this.comRoot = comRoot;
+		zetMode(comRoot.getMode());		
+	}
+
+	
+
+	@Override
+	public Widget asWidget() {
+		return basisPanel;
+	}
+
+		public int getAsHoogte() {
+		return ashoogte;
+	}
+
+	@Override
+	public int getHeight() {
+		return hoogte;
+	}
+
+	@Override
+	public int getWidth() {
+		return breedte;
+	}
+	
+	public void zetVolledigeBreedte(int breedte)
+	{
+		
+	}
+
+	
+	@Override
+	public void setAsHoogte(int ashoogte) {
+		//this.ashoogte = ashoogte;
+		
+	}
+
+}

@@ -317,6 +317,12 @@ public class TekstRegel extends LayoutPanel
 		//breedte = horPositie;
 	}
 	
+	public void clear()
+	{
+		super.clear();
+		regelObjects = new ArrayList<Object>();
+	}
+	
 	public void resize()
 	{
 		bepaalAshoogte();

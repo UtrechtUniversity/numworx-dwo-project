@@ -121,7 +121,7 @@ public class CheckButton implements InteractionStub
 		
 		breedte = imWidth;
 		hoogte = imHeight + 5;
-		ashoogte = hoogte / 2 + 1;
+		ashoogte = hoogte / 2 + 7;
 		basisPanel.setSize("" + breedte + "px", "" + hoogte + "px");
 		basisPanel.add(checkButton);
 		if(imWidth > 0 && imHeight > 0)

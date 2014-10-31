@@ -41,7 +41,6 @@ import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
-import fi.antwoordkeuzevakgwt.client.AntwoordKeuzeVakGWT;
 import fi.wiskopdr.FormuleParser;
 /**
  * Common code voor ViewModuleViewImpl en DescriptionViewImpl.
@@ -89,7 +88,7 @@ public abstract class XMLView {
 			boolean formTimes = wrap.containsKey("formTimes") && wrap.getBoolean("formTimes"); // optional
 			FormuleFont.zetFormTimes(formTimes);
 			FormuleHolder.setDefaultActiviteitFont(FormuleFont.createFromFontSize(font_size));
-			AntwoordKeuzeVakGWT.setFontSize(font_size);
+			//AntwoordKeuzeVakGWT.setFontSize(font_size);
 			defaultFontSize = font_size;
 			defaultFontName = font_name;
 			//AntwoordKeuzeVakGWT.setFont(fontName);

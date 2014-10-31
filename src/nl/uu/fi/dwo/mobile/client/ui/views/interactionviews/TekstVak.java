@@ -30,7 +30,7 @@ import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import fi.antwoordkeuzevakgwt.client.AntwoordKeuzeVakGWT;
+
 
 public class TekstVak extends LayoutPanel //implements InteractionView
 {
@@ -90,6 +90,12 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		//this.add(vPanel);
 		//this.setWidgetLeftRight(vPanel, 0, Unit.PX, 0, Unit.PX);
 		//this.setWidgetTopBottom(vPanel, 0, Unit.PX, 0, Unit.PX);
+	}
+	
+	public TekstVak()
+	{
+		this(null, 0, 0);
+		
 	}
 
 	public TekstVakPanel getTekstVakParent()
@@ -181,7 +187,6 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	
 	public void setTekstVakBreedte(double tekstVakBreedte)
 	{
-		System.out.println("setTekstVakBreedte: tekstVakBreedte = " + tekstVakBreedte);
 		this.tekstVakBreedte = tekstVakBreedte;
 		//flowVak.setWidth(tekstVakBreedte + "px");
 		for(int i = 0; i < aantalRegels  + 1; i++)
@@ -193,7 +198,6 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		this.cellMarge = cellMarge;
 		this.bovenMarge = bovenMarge;
 		tekstVakBreedte = breedte - 2  * cellMarge - knopBreedte;//hier stond - 2 bij. Die was ergens goed voor, maar levert ook problemen als het vak zijn breedte aanpast aan de inhoud.
-		System.out.println("setMarges: tekstVakBreedte = " + tekstVakBreedte);
 		if(tekstVakBreedte >= 0)
 		{	//if(hoogte > 0)
 			//	flowVak.setSize(tekstVakBreedte + "px", "" + hoogte + "px");
@@ -211,10 +215,8 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	public void setSize(int b, int h)
 	{
 		this.breedte = b;
-		System.out.println("setSize: breedte = " + breedte);
 		this.hoogte = h;
 		tekstVakBreedte = b - 2 * cellMarge - knopBreedte;//hier stond - 2 bij. Die was ergens goed voor, maar levert ook problemen als het vak zijn breedte aanpast aan de inhoud.
-		System.out.println("setSize: tekstVakBreedte = " + tekstVakBreedte);
 		if(tekstVakBreedte >= 0 && h >= 0)
 		{	//flowVak.setSize("" + tekstVakBreedte  + "px", "" + h + "px");
 			for(int i = 0; i < aantalRegels  + 1; i++)
@@ -237,9 +239,20 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		return breedte;
 	}
 	
+	public void clear()
+	{
+		for(int i = 0; i < regelVakken.length; i++)
+		{
+			if(regelVakken[i] == null)
+				break;
+			regelVakken[i].clear();
+		}
+		super.clear();
+		
+	}
+	
 	public void setObjects(ArrayList<Object> opdrachtObjects)
 	{
-		System.out.println("setObjects");
 		this.opdrachtObjects = opdrachtObjects;
 		
 		aantalRegels = 1;
@@ -415,10 +428,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 						regelBreedte = ((InteractionView) currentObject).getWidth();
 					}
 				}
-				if(currentObject instanceof PopupFacade && ((PopupFacade) currentObject).getDelegate() instanceof AntwoordKeuzeVakGWT)
-					{	//System.out.println("instance of antwoordkeuzevak, ashoogte wordt: " + (regelVakken[aantalRegels - 1].getTekstAsHoogte() + 20));
-					//((PopupFacade) currentObject).getDelegate().setAsHoogte(regelVakken[aantalRegels - 1].getTekstAsHoogte() + 4);
-				}
+				
 				
 				
 			}
@@ -599,9 +609,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			for(int i = 0; i < aantalRegels; i++)
 				if(regelVakken[i].getWidth() > tekstVakBreedte)
 					tekstVakBreedte = regelVakken[i].getWidth();
-			System.out.println("resize: tekstVakBreedte = " + tekstVakBreedte);
 			breedte = (int) tekstVakBreedte + 2 * cellMarge + knopBreedte;
-			System.out.println("resize: breedte = " + breedte);
 		}
 		
 		FormuleFont fm = regelVakken[0].getFont();
@@ -659,14 +667,14 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		ashoogte = regelVakken[0].getAsHoogte();
 		*/
 		
-		parent.resize();
+		if(parent != null)
+			parent.resize();
 	}
 	
 	public void zetUitklapKnopLinks(int knopBreedte)
 	{
 		this.knopBreedte = knopBreedte;
 		tekstVakBreedte = this.breedte - 2 * cellMarge - knopBreedte;
-		System.out.println("zetUitklapKnopLinks: tekstVakBreedte = " + tekstVakBreedte);
 		for(int i = 0; i < this.getWidgetCount(); i++)
 		{
 			Widget w = this.getWidget(i);
