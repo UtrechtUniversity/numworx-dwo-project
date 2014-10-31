@@ -90,9 +90,9 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             + "WHERE (tblCourse.schoolID = ?) and (parentID = 0)"
             + "ORDER BY name ";
 
-    //TBLSPLIT DONE SELECT `{0}` FROM tblStudentScoContext join tblStudentData using (studentSco) WHERE (scoID = ?) AND (userID = ?)
+    //TBLSPLIT DONE SELECT `{0}` FROM tblStudentScoContext join tblStudentScoData using (studentSco) WHERE (scoID = ?) AND (userID = ?)
     private final static String QRY_GET_STUDENT_SCO = "SELECT `{0}` "
-            + "FROM tblStudentScoContext join tblStudentData using (studentSco) "
+            + "FROM tblStudentScoContext join tblStudentScoData using (studentSco) "
             + "WHERE (scoID = ?) "
             + "AND   (userID = ?) ";
 //    private final static String QRY_GET_STUDENT_SCO = "SELECT `{0}` "
@@ -102,8 +102,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 //TBL_SPLIT DONE   
     private final static String QRY_ADD_EMPTY_STUDENT_SCO_CONTEXT = "INSERT INTO tblStudentScoContext(scoID, userID, createDate, score) "
             + "VALUES(?, ?, CURDATE(), 0) ";
-    private final static String QRY_ADD_EMPTY_STUDENT_SCO_DATA = "INSERT INTO tblStudentScoData(scoID,suspendData) "
-            + "VALUES(?, ?, CURDATE(), 0) ";
+    private final static String QRY_ADD_EMPTY_STUDENT_SCO_DATA = "INSERT INTO tblStudentScoData(studentSco,suspendData) "
+            + "VALUES(?, '') ";
 //    private final static String QRY_ADD_EMPTY_STUDENT_SCO = "INSERT INTO tblStudentSco(scoID, userID, createDate, score, suspendData) "
 //            + "VALUES(?, ?, CURDATE(), 0, '') ";
 
@@ -1588,18 +1588,21 @@ public class DbAccess extends DbConnect implements DbAccessIF {
                 ps.setInt(1, scoID);
                 ps.setInt(2, userID);
                 ps.execute();
-                int count = ps.getUpdateCount();
-                if (count != 1) {
-                    log("iets mis1 " + count);
-                }
-                //TBLSPLIT DONE
-                ps = getStatement(QRY_ADD_EMPTY_STUDENT_SCO_DATA);
+                ResultSet rs = ps.getGeneratedKeys();
+                int id = -1;
+                if (rs.next()) {
+                    id = rs.getInt(1);
+                    //TBLSPLIT DONE
+                    ps = getStatement(QRY_ADD_EMPTY_STUDENT_SCO_DATA);
 
-                ps.setInt(1, scoID);
-                ps.execute();
-                count = ps.getUpdateCount();
-                if (count != 1) {
-                    log("iets mis1 " + count);
+                    ps.setInt(1, id);
+                    ps.execute();
+                    int count = ps.getUpdateCount();
+                    if (count != 1) {
+                        log("Error with inserting tblStudentScoData" + count);
+                    }
+                } else {
+                    log("Error with inserting tblStudentScoContext");
                 }
                 c.commit();
             }
@@ -1620,7 +1623,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             int count = ps.getUpdateCount();
             if (count != 1) {
                 // iets mis2 ...
-                log("iets mis2 " + count);
+                log("QRY_UPDATE_STUDENT_SCO count is  " + count);
 
             }
             c.commit();
