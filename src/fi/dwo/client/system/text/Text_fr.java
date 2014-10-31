@@ -1,4 +1,4 @@
-﻿//Source file:
+//Source file:
 //N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\system\\Text_en.java
 
 

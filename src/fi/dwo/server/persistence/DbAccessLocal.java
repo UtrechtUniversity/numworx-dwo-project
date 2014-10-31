@@ -26,7 +26,7 @@ public class DbAccessLocal extends DbAccess {
 			return c;
 		//c = DriverManager.getConnection("jdbc:mysql://localhost/dwo_tst", "root", "");
 		//c = DriverManager.getConnection("jdbc:mysql://localhost/dwo_tst", "root", "gvt-33");
-		c = DriverManager.getConnection("jdbc:mysql://localhost/dwo_tst", "root", "_dwo");
+		c = DriverManager.getConnection("jdbc:mysql://localhost/dwo-tst", "root", "_dwo");
 		return c;
 	}
 

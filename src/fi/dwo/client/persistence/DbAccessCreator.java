@@ -46,7 +46,7 @@ public class DbAccessCreator {
         	URL server; 
            if(DwoHelper.isApplication()) { 
         	   //Bij testen van lokale dbAccess, TODO in comment bij productie!
-        	   //if(true) dbAccess = new DbAccessLocal(); else
+        	   if(true) dbAccess = new DbAccessLocal(); else
         	   //if(true) dbAccess = new DbAccess(); else
            	   //if(true) dbAccess = new DbAccessScience(); else
            	   //if(true) dbAccess = new DbAccessColorado(); else
