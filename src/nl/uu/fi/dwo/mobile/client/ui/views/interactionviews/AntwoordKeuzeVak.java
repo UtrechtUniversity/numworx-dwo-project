@@ -29,6 +29,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
@@ -188,7 +189,7 @@ public class AntwoordKeuzeVak implements InteractionStub{
 		ashoogte = hoogte / 2 + 7;
 		basisPanel.setPixelSize(breedte,  hoogte);
 		popupBox = new PopupPanel(true);
-		FlowPanel popupPanel = new FlowPanel();
+		LayoutPanel popupPanel = new LayoutPanel();
 		popupBox.add(popupPanel);
 		popupBox.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 		popupBox.getElement().getStyle().setBorderColor("black");
@@ -261,6 +262,7 @@ public class AntwoordKeuzeVak implements InteractionStub{
 		
 				
 		int aantalKeuzes = 0;
+		int hoogtePanels = 0;
 		TekstBuffer tb = new TekstBuffer();
 		if (keuzeMogelijkheden != null)
 			aantalKeuzes = keuzeMogelijkheden.length;
@@ -270,22 +272,45 @@ public class AntwoordKeuzeVak implements InteractionStub{
 		keuzeOptieVakken[0].setObjects(kiesObjects);
 		popupPanel.add(keuzeOptieVakken[0]);
 		keuzeOptieVakken[0].resize();
+		popupPanel.setWidgetLeftWidth(keuzeOptieVakken[0], 0, Style.Unit.PX, breedte - 23, Style.Unit.PX);
+		popupPanel.setWidgetTopHeight(keuzeOptieVakken[0], hoogtePanels, Style.Unit.PX, keuzeOptieVakken[0].getHeight(), Style.Unit.PX);
 		keuzeOptieVakken[0].getElement().getStyle().setBackgroundColor(CssColor.make(163, 184, 204).toString());
 		keuzeOptieVakken[0].addDomHandler(new MouseOverHandler(){
 			public void onMouseOver(MouseOverEvent event) {
 				zetVakAangewezen(0);
 			}
 		}, MouseOverEvent.getType());
-		keuzeOptieVakken[0].addDomHandler(new ClickHandler(){
+//		keuzeOptieVakken[0].addDomHandler(new ClickHandler(){
+//			public void onClick(ClickEvent event) {
+//				zetSelectie(0);
+//			}
+//		}, ClickEvent.getType());
+		
+		FlowPanel[] keuzeOptiePanels = new FlowPanel[aantalKeuzes + 1];
+		keuzeOptiePanels[0] = new FlowPanel();
+		keuzeOptiePanels[0].addDomHandler(new MouseOverHandler(){
+			public void onMouseOver(MouseOverEvent event) {
+				zetVakAangewezen(0);
+			}
+		}, MouseOverEvent.getType());
+		keuzeOptiePanels[0].addDomHandler(new ClickHandler(){
 			public void onClick(ClickEvent event) {
 				zetSelectie(0);
 			}
 		}, ClickEvent.getType());
+		popupPanel.add(keuzeOptiePanels[0]);
+		popupPanel.setWidgetLeftWidth(keuzeOptiePanels[0], 0, Style.Unit.PX, breedte - 23, Style.Unit.PX);
+		popupPanel.setWidgetTopHeight(keuzeOptiePanels[0], hoogtePanels, Style.Unit.PX, keuzeOptieVakken[0].getHeight(), Style.Unit.PX);
+		hoogtePanels += keuzeOptieVakken[0].getHeight();
+		
+		
 		for (int i = 0; i < aantalKeuzes; i++)
 		{
 			keuzeOptieVakken[i + 1] = maakKeuzeVak();
 			keuzeOptieVakken[i + 1].setPasHoogteBreedteAan(true, false);
-			popupPanel.add(keuzeOptieVakken[i + 1]);
+			
+			keuzeOptiePanels[i + 1] = new FlowPanel();
+			
 			try
 			{
 				keuzeMogelijkheden[i] = FormuleParser.randomizeTekstVakString(keuzeMogelijkheden[i], randomVarNamen, randomVarWaarden);
@@ -297,20 +322,32 @@ public class AntwoordKeuzeVak implements InteractionStub{
 					
 			keuzeOptieVakken[i + 1].setObjects(keuzeOptie);
 			keuzeOptieVakken[i + 1].resize();
+			popupPanel.add(keuzeOptieVakken[i + 1]);
+			popupPanel.setWidgetLeftWidth(keuzeOptieVakken[i + 1], 0, Style.Unit.PX, breedte - 23, Style.Unit.PX);
+			popupPanel.setWidgetTopHeight(keuzeOptieVakken[i + 1], hoogtePanels, Style.Unit.PX, keuzeOptieVakken[i + 1].getHeight(), Style.Unit.PX);
+			popupPanel.add(keuzeOptiePanels[i + 1]);
+			popupPanel.setWidgetLeftWidth(keuzeOptiePanels[i + 1], 0, Style.Unit.PX, breedte - 23, Style.Unit.PX);
+			popupPanel.setWidgetTopHeight(keuzeOptiePanels[i + 1], hoogtePanels, Style.Unit.PX, keuzeOptieVakken[i + 1].getHeight(), Style.Unit.PX);
+			
+			hoogtePanels += keuzeOptieVakken[i + 1].getHeight();
+			
 			final int index = i + 1;
-			keuzeOptieVakken[i + 1].addDomHandler(new MouseOverHandler(){
+			keuzeOptiePanels[i + 1].addDomHandler(new MouseOverHandler(){
 				public void onMouseOver(MouseOverEvent event) {
 					zetVakAangewezen(index);
 				}
 			}, MouseOverEvent.getType());
-			keuzeOptieVakken[i + 1].addDomHandler(new ClickHandler(){
+			keuzeOptiePanels[i + 1].addDomHandler(new ClickHandler(){
 				public void onClick(ClickEvent event) {
+					event.stopPropagation();
+					event.preventDefault();
 					zetSelectie(index);
 				}
 			}, ClickEvent.getType());
 			
 		}
-
+		popupPanel.setPixelSize(breedte - 23, hoogtePanels);
+		
 		
 		try
 		{
@@ -327,8 +364,6 @@ public class AntwoordKeuzeVak implements InteractionStub{
 		uitklapPijlCanvas.setHeight(hoogte + "px");
 		uitklapPijlCanvas.setCoordinateSpaceWidth(20);
 		uitklapPijlCanvas.setCoordinateSpaceHeight(hoogte);
-		
-		
 		
 		CanvasGradient gradient = gIm.createLinearGradient(0, 0, 20, hoogte);
 		gradient.addColorStop(0, "white");

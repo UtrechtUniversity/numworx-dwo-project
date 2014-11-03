@@ -710,13 +710,12 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	
 	
 
-	/*
-	@Override
 	public int getHeight() {
-		// TODO Auto-generated method stub
-		return 0;
+		 
+		return hoogte;
 	}
 
+	/*
 	@Override
 	public int getWidth() {
 		// TODO Auto-generated method stub
