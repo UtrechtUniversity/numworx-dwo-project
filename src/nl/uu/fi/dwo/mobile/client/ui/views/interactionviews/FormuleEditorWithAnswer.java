@@ -21,12 +21,23 @@ import nl.uu.fi.dwo.mobile.client.ui.event.CBookEventListener;
 import nl.uu.fi.dwo.mobile.utils.ImageUtils;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
+import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.canvas.dom.client.CanvasGradient;
+import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.FontStyle;
+import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.VerticalAlign;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
@@ -135,6 +146,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	OpdrNavIF comRoot;
 	TouchPanel sp = null;
 	Image checkimg;
+	Label feedbackLabel;
+	PopupPanel feedbackPanel;
+	Label feedbackTekst;
+	Canvas feedbackSluitKnop;
+	Context2d gIm;
+	FlowPanel checkPanel;
 	private ObjectMap launchState;
 	private FormuleEditorWithSteps fe = null;
 	private boolean strict = true;
@@ -241,9 +258,86 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			}
 		
 			checkimg = new Image(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
-			resetimg();
+			checkimg.setVisible(false);
+			lastanswer = null;
 			checkimg.getElement().getStyle().setProperty("marginLeft", "3px");
-			checkimg.getElement().getStyle().setProperty("verticalAlign", "top");
+			checkimg.getElement().getStyle().setProperty("marginTop", "-5px"); //in plaats hiervan zou marginTop -5px ook goed kunnen werken.
+			checkimg.getElement().getStyle().setProperty("marginBottom", "-6px");
+			
+			feedbackPanel = new PopupPanel(true);
+			FlowPanel panel = new FlowPanel();
+			feedbackPanel.add(panel);
+			feedbackPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
+			feedbackPanel.getElement().getStyle().setBorderColor("black");
+			feedbackPanel.getElement().getStyle().setBorderWidth(1, Style.Unit.PX);
+			feedbackPanel.getElement().getStyle().setPadding(2, Style.Unit.PX);
+			feedbackPanel.getElement().getStyle().setBackgroundColor("#FFFFDD");
+			
+			feedbackTekst = new Label("");
+			feedbackTekst.setWidth(200 + "px");
+			feedbackTekst.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+			panel.add(feedbackTekst);
+			
+			feedbackSluitKnop = Canvas.createIfSupported();
+			gIm = feedbackSluitKnop.getContext2d();
+			
+			feedbackSluitKnop.setWidth(10 + "px");
+			feedbackSluitKnop.setHeight(10 + "px");
+			feedbackSluitKnop.setCoordinateSpaceWidth(10);
+			feedbackSluitKnop.setCoordinateSpaceHeight(10);
+			
+			CanvasGradient gradient = gIm.createLinearGradient(0, 0, 10, 10);
+			gradient.addColorStop(0, CssColor.make(242, 242, 242).toString());
+			gradient.addColorStop(1, CssColor.make(221, 221, 221).toString());
+			gIm.setFillStyle(gradient);
+			//gIm.setFillStyle(CssColor.make(245, 245, 245).toString());
+			gIm.fillRect(0, 0, 10, 10);
+			gIm.setStrokeStyle("black");
+			gIm.beginPath();
+			gIm.moveTo(1, 1);
+			gIm.lineTo(9, 9);
+			gIm.moveTo(1, 9);
+			gIm.lineTo(9, 1);
+			gIm.stroke();
+			
+			feedbackSluitKnop.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+			feedbackSluitKnop.getElement().getStyle().setProperty("verticalAlign", "top");
+			panel.add(feedbackSluitKnop);
+			
+			feedbackSluitKnop.addDomHandler(new ClickHandler(){
+				public void onClick(ClickEvent e)
+				{
+					feedbackPanel.hide();
+				}
+			}, ClickEvent.getType());
+						
+			feedbackLabel = new Label("?");
+			feedbackLabel.getElement().getStyle().setFontSize(11, Style.Unit.PX);
+			feedbackLabel.getElement().getStyle().setFontWeight(FontWeight.BOLD);
+			feedbackLabel.getElement().getStyle().setPadding(0, Style.Unit.PX);
+			feedbackLabel.getElement().getStyle().setMarginTop(0, Style.Unit.PX);
+			feedbackLabel.getElement().getStyle().setMarginLeft(3, Style.Unit.PX);
+			feedbackLabel.getElement().getStyle().setPaddingLeft(4, Style.Unit.PX);
+			feedbackLabel.getElement().getStyle().setBackgroundColor(CssColor.make(230, 230, 230).toString());
+			feedbackLabel.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+			feedbackLabel.getElement().getStyle().setVerticalAlign(VerticalAlign.TOP);
+			feedbackLabel.setWidth(10 + "px");
+			feedbackLabel.setVisible(false);
+			
+			feedbackLabel.addDomHandler(new ClickHandler(){
+				public void onClick(ClickEvent e)
+				{
+					feedbackPanel.setPopupPosition(asWidget().getAbsoluteLeft() + 10, asWidget().getAbsoluteTop() + asWidget().getOffsetHeight() + 10);
+					feedbackPanel.show();
+				}
+			}, ClickEvent.getType());
+			
+			checkPanel = new FlowPanel();
+			checkPanel.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+			checkPanel.getElement().getStyle().setProperty("verticalAlign", "top");
+			checkPanel.getElement().getStyle().setMarginTop(-3, Style.Unit.PX);
+			checkPanel.add(checkimg);
+			checkPanel.add(feedbackLabel);
 			
 			if (fe == null)
 			{
@@ -304,7 +398,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 			//sp.getElement().addClassName("insert_formule");
 			sp.add(this.getMainRegel().getCanvas());
-			sp.add(checkimg);
+			//sp.add(checkimg);
+			//sp.add(feedbackLabel);
+			sp.add(checkPanel);
 			if( vakUitwerking && !checkUitklapMogelijkheid())
 			{
 				PopupButton popup = new PopupButton(fews, ImageUtils.newImage("images/resources/antwoordknop.gif"), this);
@@ -377,6 +473,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 	void resetimg() {
 		checkimg.setVisible(false);
+		feedbackLabel.setVisible(false);
+		feedbackPanel.hide();
 		lastanswer = null;
 	}
 	
@@ -450,8 +548,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				fe.maakNakijkenAf(backStep);
 			
 			if(syntaxFout)
-			{	checkimg.setUrl(FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
-				checkimg.setVisible(true);
+			{	//checkimg.setUrl(FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
+				//checkimg.setVisible(true);
+				feedbackTekst.setText(feedback);
+				feedbackLabel.setVisible(true);
+				
+				
 				//TODO: feedback syntaxfout tonen.
 			}
 			return;
@@ -512,6 +614,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		//if(this.fe != null && !(mode == 2 || mode == 3))
 		//	fe.maakNakijkenAf(backStep);
+		if(!feedback.equals("") && fe == null)
+		{
+			feedbackTekst.setText(feedback);
+			feedbackLabel.setVisible(true);
+		}
+		
 		if(this.fe != null && ingevuld)
 		{	fe.maakNakijkenAf(backStep);
 		}

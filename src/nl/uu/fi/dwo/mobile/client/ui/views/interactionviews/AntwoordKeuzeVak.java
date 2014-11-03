@@ -421,6 +421,7 @@ public class AntwoordKeuzeVak implements InteractionStub{
 		huidigeKeuzeVak.setObjects(huidigeKeuze);
 		
 		popupBox.hide();
+		isShowing = false;
 		
 		if (!checkExternal &&(mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN))
 		{
