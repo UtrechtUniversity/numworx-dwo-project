@@ -1187,10 +1187,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 //        ps.close();
 
 // Link aan SAML
-        String[] arguments = {"tblStudentSco", "userID"};
+        String[] arguments = {"tblSamlUser", "userID"};
         String query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
-        arguments[0] = "tblSamlUser";
-        query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
         ps = getStatement(query);
         ps.setInt(1, userID);
         ps.execute();

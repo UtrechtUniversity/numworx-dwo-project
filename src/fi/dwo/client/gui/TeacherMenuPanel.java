@@ -5,43 +5,22 @@ package fi.dwo.client.gui;
 
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.sql.SQLException;
-
-import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.border.Border;
-import javax.swing.tree.DefaultMutableTreeNode;
-
-import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.DwoIF;
 import fi.dwo.client.domain.SchoolClass;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.action.Clipboard;
-import fi.dwo.client.gui.action.CutCopyAction;
-import fi.dwo.client.gui.action.DeleteAction;
-import fi.dwo.client.gui.action.NewAction;
-import fi.dwo.client.gui.action.PasteAction;
-import fi.dwo.client.gui.action.SchoolConfigAction;
 import fi.dwo.client.gui.action.TeacherStrategy;
-import fi.dwo.client.persistence.MapperCreator;
 import fi.dwo.client.system.TextMapper;
 
 /**
