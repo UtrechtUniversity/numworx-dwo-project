@@ -5,7 +5,10 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
+import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
@@ -22,6 +25,9 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
+import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.HandlerRegistration;
+import com.google.web.bindery.event.shared.SimpleEventBus;
 import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
@@ -70,6 +76,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 	private int currentActiviteit = 0;
 	private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
 	private Memento memento;
+	private final static EventBus BUS = new SimpleEventBus();
 	
 
 	public OpdrNav(HashMap<String, Object> launchData, ViewModuleViewImpl ev, Memento memento)
@@ -602,12 +609,47 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 	}
 
 	@Override
-	public String getBackground() {
-		return "#FFFFFF";
+	public CssColor getBackground() {
+		return CssColor.make("white");
 	}
 
 	@Override
-	public String getUnitId() {
-		return entry.getUnitId();
+	public String getUUID() {
+		return entry.getUnitId() + "-" + getCurrentOpdracht() + "-" + getWidgetId();
+	}
+
+	protected String getWidgetId() {
+		return "XXXXXXXX";
+	}
+
+		
+	/* Event handling:
+	 * on top: OpdrNavIF.addCBookEventListener(command, listener);
+	 * en      OpdrNavIf.fireEvent(event);
+	 * 
+	 * 
+	 * lowestlevel
+	 * 		   BUS.addHandlerToSource(TYPE, listener, UUID_of_listener + command)
+	 * 		   forall dest in destinations of command;
+	 * 		   BUS.fireEventFromSource(event, UUID_dest + command);
+	 * 
+	 */
+	
+	
+	
+	@Override
+	public HandlerRegistration addCBookEventListener(String command,
+			CBookEventListener listener) {
+		return null;
+	}
+	
+	
+
+	@Override
+	public void fireEvent(CBookEvent event) {
+	}
+
+	public static EventBus getEventBus() {
+		return BUS;
 	}
 }

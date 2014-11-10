@@ -1,7 +1,14 @@
-package nl.uu.fi.dwo.mobile.client.ui.event;
+package nl.uu.fi.dwo.interaction.client.event;
 
 import java.util.Map;
 
+import nl.uu.fi.dwo.interaction.client.InteractionView;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
+import com.google.gwt.json.client.JSONValue;
 import com.google.web.bindery.event.shared.Event;
 
 
@@ -29,7 +36,7 @@ public class CBookEvent extends Event<CBookEventListener> {
 	 * @param command
 	 * @param parameters
 	 */
-	public CBookEvent(Object source, String command, Map<String,?> parameters) {
+	public CBookEvent(InteractionView source, String command, Map<String,?> parameters) {
 		setSource(source);
 		this.command = command;
 		this.parameters = parameters;
@@ -40,8 +47,8 @@ public class CBookEvent extends Event<CBookEventListener> {
 	 * @param source the cbook widget instance that originated the event.
 	 * @param command
 	 */
-	public CBookEvent(Object source, String command) {
-		setSource(source);
+	public CBookEvent(InteractionView source, String command) {
+		super.setSource(source);
 		this.command = command;
 		this.parameters = null;
 		this.message = null;
@@ -59,11 +66,39 @@ public class CBookEvent extends Event<CBookEventListener> {
 	 * @param command
 	 * @param message
 	 */
-	public CBookEvent(Object source, String command, String message) {
-		setSource(source);
+	public CBookEvent(InteractionView source, String command, String message) {
+		super.setSource(source);
 		this.command = command;
 		this.parameters = null;
 		this.message = message;
+	}
+
+	public CBookEvent(ObjectMap map) {
+		this.command = map.getString("command");
+		this.parameters = map.getMap("parameters");
+		this.message = map.getString("message");
+		setSource(map.getString("source"));
+	}
+	CBookEvent(String command, ObjectMap map) {
+		this.command = command;
+		this.parameters = map.getMap("parameters");
+		this.message = map.getString("message");
+		setSource(map.getString("source"));
+	}
+	
+	
+	public ObjectMap toObjectMap() {
+		JSONValue c = JSONUtilities.toJSONValue(command);
+		JSONValue m = JSONUtilities.toJSONValue(message);
+		JSONValue s = JSONUtilities.toJSONValue(getSource());
+		JSONValue p = JSONUtilities.toJSONObject(parameters);
+		
+		JSONObject o = new JSONObject();
+		o.put("message", m);
+		o.put("parameters", p);
+		o.put("command", c);
+		o.put("source", s);		
+		return JSONUtilities.wrapMap(o);
 	}
 
 	/**
@@ -102,4 +137,13 @@ public class CBookEvent extends Event<CBookEventListener> {
 		return message;
 	}
 	
+	@Deprecated // Use constructor!
+	public void setSource(InteractionView source) {
+		super.setSource(source);
+	}
+
+	public void setSource(String uuid) {
+		super.setSource(uuid);
+	}
+
 }

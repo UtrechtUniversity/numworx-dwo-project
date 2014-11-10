@@ -3,9 +3,13 @@ package nl.uu.fi.dwo.mobile.utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
+import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
@@ -32,6 +36,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TextEditor;
  */
 public class TekstBuffer
 {
+	private static final String CROSS_WIDGET_ID = "crossWidgetId";
 	String[] randomVarNamen;
 	HashMap<String, Object> randomVarWaarden;
 	int aantalVakken = 0;
@@ -255,6 +260,7 @@ public class TekstBuffer
 	{
 		Object result = null;
 		HashMap<String, Object> currentVakGegevens = null;
+		ObjectMap map;
 		// ik denk dat het +5 is en niet +1
 		if (opdrachtGegevens.size() > index + 5) // FIXME size() = 6, index = 0 get(0)= null
 			currentVakGegevens = (HashMap<String, Object>) opdrachtGegevens.get(index + 5);
@@ -263,17 +269,16 @@ public class TekstBuffer
 		if (currentVakGegevens == null) // FIXME Komt voor in kladje
 			return new TekstVakPanel(new HashMap(), randomVarNamen, randomVarWaarden); // was ""
 
-		int soortVak = ((Number) currentVakGegevens.get("soortInteractiePanel")).intValue();
+		map = JSONUtilities.wrapMap(currentVakGegevens);
+		int soortVak = map.getInt("soortInteractiePanel");
 
-		
-		
 		switch (soortVak)
 		{
 		case -2:
 // copy classname to inner, so that MCSquared.html can read it.
 			mc2FixInner(currentVakGegevens);
 			
-			return new StubView("MCSquared.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return x(map, new StubView("MCSquared.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 4: 
 			return new PopupFacade(currentVakGegevens, new TextEditor( currentVakGegevens, randomVarNamen, randomVarWaarden ));
 		
@@ -281,12 +286,13 @@ public class TekstBuffer
 		case 39: case 10: // geogebra3
 			return new GeogebraView(currentVakGegevens, randomVarNamen, randomVarWaarden);
 		case 45: // GraphTool
-			return 
+			return x(map,
 					//new StubView("GraphToolGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 					new PopupFacade( 
 						currentVakGegevens,
 							new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom])
-					);
+					)
+		);
 			
 		case 15: 
 			return new StubView("DoorzienGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
@@ -321,7 +327,7 @@ public class TekstBuffer
 		}
 		else if (soortVak == 2)
 		{
-			result = new FormuleEditorWithAnswer(currentVakGegevens, false, null, randomVarNamen, randomVarWaarden);
+			result = x(map,new FormuleEditorWithAnswer(currentVakGegevens, false, null, randomVarNamen, randomVarWaarden));
 		}
 		else if (soortVak == 3)
 		{
@@ -334,7 +340,7 @@ public class TekstBuffer
 		}
 		else if (soortVak == 9)
 		{
-			result = new TekstVakPanel(currentVakGegevens, randomVarNamen, randomVarWaarden);
+			result = x(new TekstVakPanel(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		}
 		else if(soortVak == 11) 
 		{
@@ -380,14 +386,49 @@ public class TekstBuffer
 		return result;
 	}
 
+	private Map<InteractionView, Connector> xWidgetMap = new HashMap<InteractionView,Connector>();
+			
+	/**
+	 * @return the xWidgetMap
+	 */
+	public Map<InteractionView, Connector> getXWidgetMap() {
+		return xWidgetMap;
+	}
+
+	private InteractionView x(ObjectMap g, InteractionView v)
+	{
+		String value = null;
+		if(g.containsKey(CROSS_WIDGET_ID)) value = g.getString(CROSS_WIDGET_ID);
+		if(value != null) {
+			ObjectList connections = null;
+			ObjectMap  subscriptions = null;
+// the old way, deprecated
+			if(g.containsKey("connections"))
+					connections = g.getObjectList("connections");
+// the new way
+			if(g.containsKey("subscriptions"))
+					subscriptions = g.getObjectMap("subscriptions");
+			xWidgetMap.put(v, new Connector(v, value, connections, subscriptions));
+		}
+		return v;
+	}
+	
+	
+	private TekstVakPanel x(TekstVakPanel v) {
+		xWidgetMap.putAll(v.getXWidgetMap());
+		return v;
+	}
+
+	
+	
 	private HashMap<String, Object> mc2FixInner(HashMap<String, Object> currentVakGegevens) {
 		@SuppressWarnings("unchecked")
 		HashMap<String,Object> inner = (HashMap<String,Object>)currentVakGegevens.get("interactiePanelLaunchState");
 		String className = currentVakGegevens.get("soortInteractiePanelClass").toString();
 		int haak = className.indexOf('[');
 		if(haak > 0 ) className = className.substring(0,haak);
-		Object value = currentVakGegevens.get("crossWidgetId");
-		inner.put("crossWidgetId", value);
+		Object value = currentVakGegevens.get(CROSS_WIDGET_ID);
+		inner.put(CROSS_WIDGET_ID, value);
 		inner.put("className", className);
 		return currentVakGegevens;
 	}

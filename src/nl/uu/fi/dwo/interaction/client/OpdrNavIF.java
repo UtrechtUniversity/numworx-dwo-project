@@ -1,5 +1,11 @@
 package nl.uu.fi.dwo.interaction.client;
 
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+
+import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.web.bindery.event.shared.HandlerRegistration;
+
 public interface OpdrNavIF
 {
 	int OEFENEN = 0;
@@ -12,9 +18,11 @@ public interface OpdrNavIF
 	
 	int getMode();
 
-	int getCurrentOpdracht();
 	String getLearnerId();
 	String getLearnerName();
-	String getBackground();
-	String getUnitId();	
+	CssColor getBackground();
+	String getUUID();
+	
+	HandlerRegistration addCBookEventListener(String command, CBookEventListener listener);
+	void fireEvent(CBookEvent event);
 }

@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.DummyClientFactory;
-import nl.uu.fi.dwo.mobile.client.ui.event.CBookEventListener;
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 
@@ -61,7 +61,6 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String> {
 		view = createEntryVlew();
 
 		dummyClientFactory.setEntryView(view);
-		dummyClientFactory.setEventBus(CBookEventListener.BUS);
 
 		zetMaat();
 		

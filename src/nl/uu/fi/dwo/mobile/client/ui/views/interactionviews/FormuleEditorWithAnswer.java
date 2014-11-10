@@ -13,11 +13,11 @@ import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.StateLess;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyBoardButtons;
-import nl.uu.fi.dwo.mobile.client.ui.event.CBookEvent;
-import nl.uu.fi.dwo.mobile.client.ui.event.CBookEventListener;
 import nl.uu.fi.dwo.mobile.utils.ImageUtils;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
@@ -55,7 +55,7 @@ import fi.wiskopdr.text.Text;
  * @author Danny Hendrix, Evertson Croes
  * 
  */
-public class FormuleEditorWithAnswer extends FormuleEditor implements InteractionView
+public class FormuleEditorWithAnswer extends FormuleEditor implements InteractionView, CBookEventListener
 {
 	private boolean checkUitklapMogelijkheid() {
 		return "noordhoff".equals(DWOplayer.PARAMETERS.keyboardStyle()); // FIXME beter!
@@ -506,6 +506,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			kijkNa(false, false);
 		else
 			kijkNa(false, true);
+		comRoot.fireEvent(new CBookEvent(this, "input", toString()));
 	}
 	
 	public void kijkNa()
@@ -685,7 +686,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public int getAsHoogte()
 	{
 		return facade.wrapAsHoogte(this.getMainRegel().getAsHoogte() + 5 /* margin top + padding top */);
-		
 	}
 
 	public void setStrict(boolean strict)
@@ -748,10 +748,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		
 		if (antwoord != null && !"".equals(antwoord.trim()))
 		{
-			if (antwoord.startsWith("$f"))
-			{
-				antwoord = antwoord.substring(2, antwoord.length() - 1);
-			}
+			antwoord = strip$f(antwoord);
 
 			this.insert(antwoord);
 			setCurrentElementRepaint();
@@ -763,6 +760,14 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				kijkNa();
 		}
 
+	}
+
+	public String strip$f(String antwoord) {
+		if (antwoord.startsWith("$f"))
+		{
+			antwoord = antwoord.substring(2, antwoord.length() - 1);
+		}
+		return antwoord;
 	}
 
 	@Override
@@ -791,6 +796,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		zetMode(comRoot.getMode());
 		if(fews != null)
 			fews.setCommunicationRoot(comRoot);
+		comRoot.addCBookEventListener("input", this);
+		comRoot.addCBookEventListener("index", this);
 	}
 
 	@Override
@@ -824,6 +831,14 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	{
 		super.plak();
 		resize();
+	}
+
+	@Override
+	public void acceptCBookEvent(CBookEvent event) {
+		String message = event.getMessage();
+		message = strip$f(message);
+		insert(message); // Of zo iets.Strip $F en @
+		setCurrentElementRepaint();
 	}
 
 }

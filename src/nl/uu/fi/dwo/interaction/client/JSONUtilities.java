@@ -242,7 +242,7 @@ public class JSONUtilities {
 	}
 
 
-	public static Object toJSONObject(ObjectMap innerMap) {
+	public static JSONValue toJSONObject(ObjectMap innerMap) {
 		if(innerMap instanceof JSONObjectMapImpl)
 			return ((JSONObjectMapImpl) innerMap).unwrap();
 		if(innerMap instanceof ObjectMapImpl) 

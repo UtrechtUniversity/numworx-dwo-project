@@ -12,18 +12,20 @@ import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
+import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -34,6 +36,7 @@ import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -61,7 +64,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		init(html, launchdata, randomVarNamen, randomVarWaarden);
 	}
 
-	String getLocale() {
+	static String getLocale() {
 		String locale = "nl"; // FIXME get Locale from Window?
 		String query = Window.Location.getQueryString();
 		int k = query.indexOf("locale=");
@@ -254,21 +257,30 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		wnd.getMode = function(viewer) {
 			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::getMode()()
 		}
-		wnd.getPage = function(viewer) {
-			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::getCurrentOpdracht()()
-		}
 		wnd.getLearnerName = function (viewer) {
 			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::getLearnerName()()
 		}
 		wnd.getLearnerId = function (viewer) {
 			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::getLearnerId()()
 		}
-		wnd.getUnitId = function (viewer) {
-			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::getUnitId()()
+		wnd.getUUID = function (viewer) {
+			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::getUUID()()
 		}
 		wnd.getBackground = function (viewer) {
-			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::getBackground()()
+			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::getBackgroundAsString()()
 		}
+		
+		wnd.fireEvent = function (event, viewer) {
+			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::fireJSEvent(Lcom/google/gwt/core/client/JavaScriptObject;)(event)
+		}
+		
+		wnd.addCBookEventListener = function (command, listener, viewer) {
+			return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::addCBookEventListener(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)(command, listener)
+		}
+		wnd.removeCBookEventListener = function (registration) {
+			return @nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::removeCBookListener(Lcom/google/web/bindery/event/shared/HandlerRegistration;)(registration)
+		}
+		
 		return wnd.inner;
 	}-*/;
 
@@ -276,9 +288,36 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		comRoot.getKeyboard().setEditor( b ? this : null);
 	}
 	
+	private void fireJSEvent(JavaScriptObject jso) {
+		JSONObject value = new JSONObject(jso);
+		CBookEvent evt = new CBookEvent(JSONUtilities.wrapMap(value));
+		fireEvent(evt);
+	}
+	
+	private static native void acceptCBookEvent(JavaScriptObject jso, JavaScriptObject event) /*-{
+		jso.acceptCBookEvent(event)
+	}-*/;
+	
+	
+	private HandlerRegistration addCBookEventListener(String command, final JavaScriptObject listener) {
+		return comRoot.addCBookEventListener(command, new CBookEventListener() {
+			
+			@Override
+			public void acceptCBookEvent(CBookEvent event) {
+				JSONValue ev = JSONUtilities.toJSONObject(event.toObjectMap());
+				StubView.acceptCBookEvent(listener, ev.isObject().getJavaScriptObject());
+			}
+		});
+	}
+	
+	private static void removeCBookListener(HandlerRegistration r) {
+		r.removeHandler();
+	}
 	
 	@Override
 	public void setChanged(boolean fout) {
+		if(comRoot != this)
+			comRoot.setChanged(fout);
 	}
 
 	public Widget asWidget() {
@@ -562,14 +601,6 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 
 	/**
 	 * @return
-	 * @see nl.uu.fi.dwo.interaction.client.OpdrNavIF#getCurrentOpdracht()
-	 */
-	public int getCurrentOpdracht() {
-		return comRoot.getCurrentOpdracht();
-	}
-
-	/**
-	 * @return
 	 * @see nl.uu.fi.dwo.interaction.client.OpdrNavIF#getLearnerId()
 	 */
 	public String getLearnerId() {
@@ -588,15 +619,31 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	 * @return
 	 * @see nl.uu.fi.dwo.interaction.client.OpdrNavIF#getBackground()
 	 */
-	public String getBackground() {
+	public CssColor getBackground() {
 		return comRoot.getBackground();
+	}
+
+	public String getBackgroundAsString() {
+		return getBackground().value();
 	}
 
 	/**
 	 * @return
 	 * @see nl.uu.fi.dwo.interaction.client.OpdrNavIF#getUnitId()
 	 */
-	public String getUnitId() {
-		return comRoot.getUnitId();
+	public String getUUID() {
+		return comRoot.getUUID();
+	}
+
+	@Override
+	public HandlerRegistration addCBookEventListener(
+			String command, CBookEventListener listener) {
+		return comRoot.addCBookEventListener(command, listener);
+	}
+
+	@Override
+	public void fireEvent(CBookEvent event) {
+		
+		
 	}
 }

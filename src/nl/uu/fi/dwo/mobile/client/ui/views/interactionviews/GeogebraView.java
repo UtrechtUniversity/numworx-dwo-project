@@ -129,7 +129,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 			scoreMax = ggbMap.getInt("scoreMax");
 		
 		
-		frame = new Frame(DWOplayer.PARAMETERS.getStubView() + "SlopeTestWeb.html");
+		frame = new Frame(DWOplayer.PARAMETERS.getStubView() + "SlopeTestWeb.html?locale=" + StubView.getLocale());
 		frame.setStylePrimaryName(".gwt-StubView");
 		frame.addStyleDependentName("borderless");
 

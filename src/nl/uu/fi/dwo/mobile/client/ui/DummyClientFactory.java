@@ -9,10 +9,11 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 
 import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.SimpleEventBus;
 
 public class DummyClientFactory implements ClientFactory {
 
-	private EventBus eventBus;
+	private static EventBus eventBus = new SimpleEventBus();
 	private ViewModuleView entryView;
 	
 	public DummyClientFactory() {
@@ -56,10 +57,6 @@ public class DummyClientFactory implements ClientFactory {
 	@Override
 	public RPCHandler getRPCHandler() {
 		return null;
-	}
-
-	public void setEventBus(EventBus eventBus) {
-		this.eventBus = eventBus;
 	}
 
 	public void setEntryView(ViewModuleView entryView) {

@@ -21,13 +21,15 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.StateLess;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
-import nl.uu.fi.dwo.mobile.client.ui.event.CBookEvent;
-import nl.uu.fi.dwo.mobile.client.ui.event.CBookEventListener;
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
+import nl.uu.fi.dwo.mobile.utils.Connector;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
@@ -689,7 +691,8 @@ java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " +
 			for (int j = 0; j < breedtes.size(); j++)
 			{
 				opdrachtObjects = tb.convertTekst(interactiePanelLaunchState, i, j);
-				
+				xWidgetMap.putAll(tb.getXWidgetMap());
+				Connector.calculateSubscriptions(xWidgetMap.values());
 				if(queuedObject != null && i == 1 && j == 0)
 				{
 					opdrachtObjects.clear();
@@ -705,7 +708,11 @@ java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " +
 				{
 					Object currentObject = opdrachtObjects.get(k);
 					if (currentObject instanceof InteractionView)
-					{ 	((InteractionView) currentObject).setCommunicationRoot(comRoot);
+					{
+						OpdrNavIF comRoot2 = comRoot;
+						Connector connector = find(currentObject);
+						comRoot2 = new OpdrNavContext(comRoot,connector, bgColor);
+						((InteractionView) currentObject).setCommunicationRoot(comRoot2);
 						if(! (currentObject instanceof StateLess))
 						{	interactionViewObjects.add(currentObject);
 						}
@@ -770,6 +777,8 @@ java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " +
 						
 						HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) launchData).get("interactiePanelLaunchState");
 						TekstVakPanel tekstVakChild = (TekstVakPanel) currentObject;
+						xWidgetMap.putAll(tekstVakChild.xWidgetMap);
+						Connector.calculateSubscriptions(xWidgetMap.values());
 						tekstVakChild.setParent(tekstVakken[i][j]);
 						tekstVakChild.zetInstellingen(instellingen);
 						tekstVakChild.setKeyboard(kb);
@@ -846,6 +855,10 @@ java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " +
 
 	}
 	
+	private Connector find(Object currentObject) {
+		return getXWidgetMap().get(currentObject);
+	}
+
 	public ArrayList<Object> geefInteractionViews(int k, int row, int column, ArrayList<Object> opdrachtObjects)
 	{
 		ArrayList<Object> lijst = new ArrayList<Object>();
@@ -1823,11 +1836,11 @@ java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " +
 	}
 
 	public HandlerRegistration addCBookEventListener(CBookEventListener listener) {
-		return CBookEventListener.BUS.addHandlerToSource(CBookEvent.TYPE, this, listener);
+		return DWOplayer.clientfactory.getEventBus().addHandlerToSource(CBookEvent.TYPE, this, listener);
 	}
 
 	private void fireEvent(CBookEvent event) {
-		CBookEventListener.BUS.fireEventFromSource(event, this);
+		DWOplayer.clientfactory.getEventBus().fireEventFromSource(event, this);
 	}
 	
 	private static final int LEFT = 0;
@@ -1996,5 +2009,9 @@ java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " +
 		{
 			tekstVakken[0][i].setAshoogte(ashoogte);
 		}
+	}
+	private Map<InteractionView,Connector> xWidgetMap = new HashMap<InteractionView, Connector>();
+	public Map<InteractionView, Connector> getXWidgetMap() {
+		return xWidgetMap;
 	}
 }

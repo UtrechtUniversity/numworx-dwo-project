@@ -1,14 +1,20 @@
 package nl.uu.fi.dwo.interaction.client;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+
+import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 
 
 public class Stub implements OpdrNavIF, FormuleKeyboardIF {
@@ -157,6 +163,15 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 		$wnd.setFocus(b, $wnd.outer)
 	}-*/;
 	
+	private static native String getBackground0() /*-{
+		return $wnd.getBackground($wnd.outer)
+	}-*/;
+	
+	private static native void fireEvent(Object o) /*-{
+		$wnd.fireEvent(o, $wnd.outer)
+	}-*/;
+	
+	
 	@Override
 	public void backspace() {
 		if(editor != null)
@@ -228,29 +243,40 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 		return $wnd.getMode($wnd.outer);
 	}-*/;
 	
+
 	@Override
-	public int getCurrentOpdracht() {
-		return 0;
+	public native String getLearnerId() /*-{
+		return $wnd.getLearnerId($wnd.outer)
+	}-*/;
+
+	@Override
+	public native String getLearnerName() /*-{
+		return $wnd.getLearnerName($wnd.outer)
+	}-*/;
+	
+	@Override
+	public CssColor getBackground() {
+		return CssColor.make(getBackground0());
 	}
 
 	@Override
-	public String getLearnerId() {
-		return "guest";
-	}
+	public native String getUUID() /*-{
+		return $wnd.getUUID($wnd.outer)
+	}-*/;
 
 	@Override
-	public String getLearnerName() {
-		return "Guest";
+	public HandlerRegistration addCBookEventListener(String command,
+			CBookEventListener listener) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
+	
+	
 	@Override
-	public String getBackground() {
-		return "#FFFFFF";
-	}
-
-	@Override
-	public String getUnitId() {
-		return "0";
+	public void fireEvent(CBookEvent event) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -66,17 +66,18 @@ window.inner = {
 		},
 		init: function(width, height, launchdata, values) {
 			launch = JSON.parse(launchdata);
-			wid = launch.crossWidgetId;
 			className = launch.className;
-// TODO calculate locale from ?locale=XX 
+// calculate locale from ?locale=XX 
 			locale = getLocale();
-			
-			uuid = $wnd.getUnitId($wnd.outer) + "-" + $wnd.getPage($wnd.outer) + "-" + wid;
+			background = $wnd.getBackground($wnd.outer)
+			console.log(background)
+			document.body.style.backgroundColor = background
+			uuid = $wnd.getUUID($wnd.outer);
 			launchdata = {
 					assessmentMode: $wnd.getMode($wnd.outer),
 					randomValues: values,
 					launchData: launch.launchData,
-					background: $wnd.getBackground($wnd.outer),
+					background: background,
 					scoreMax: launch.scoreMax,
 					logOption: launch.logOption,
 					logID: launch.logID,
