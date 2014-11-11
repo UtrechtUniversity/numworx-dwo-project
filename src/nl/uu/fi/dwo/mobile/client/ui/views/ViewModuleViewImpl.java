@@ -104,6 +104,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private Panel tekst = null;
 	private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
 	private double zoom = 1;
+	private PushButton volgendeKnop, vorigeKnop, eindeKnop;
 	private PushButton nakijkKnop;
 
 	private Panel kbp = null;
@@ -305,7 +306,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		
 		on =  new OpdrNav(launchData, this, new Memento(api));
 		FlowPanel onp = (FlowPanel) on.getAsPanel();
-		kb.addNavPanel(onp);
+		if(bolletjesZichtbaar)
+			kb.addNavPanel(onp);
 		scoreNav.setAantalOpdrachten(on.getAantalOpdrachten(), on.getMaxScores());
 		scoreNav.setBeantwoord(on.getAantalBeantwoord());
 		scoreNav.setItemScores(on.getItemScores());
@@ -323,7 +325,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		if(mode == OpdrNav.ZELFTOETS)
 		{
 			nakijkKnop = new PushButton(Text.constants.nakijkKnopLabel());
-			kb.addKnop(nakijkKnop);
+			kb.addKnop(nakijkKnop, false);
 			nakijkKnop.addClickHandler(new ClickHandler(){
 				public void onClick(ClickEvent e)
 				{	e.stopPropagation();
@@ -337,6 +339,45 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				}
 			});
 		}
+		
+		//uitzoeken of de volgende en vorige knop erin moeten.
+		
+		vorigeKnop = new PushButton(Text.constants.vorigeKnopLabel());
+		vorigeKnop.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent e)
+			{
+				e.stopPropagation();
+				int cur = on.getCurrentOpdracht() - 1;
+				if(cur < 0) cur = 0 ;
+				on.gotoOpdracht(cur, scoreNav);
+			}
+		});
+		
+		volgendeKnop = new PushButton(Text.constants.volgendeKnopLabel());
+		volgendeKnop.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent e)
+			{
+				e.stopPropagation();
+				int cur = on.getCurrentOpdracht() + 1;
+				if(cur >= on.getAantalOpdrachten()) cur = on.getAantalOpdrachten()-1;
+					on.gotoOpdracht(cur, scoreNav);
+			}
+		});
+		
+		eindeKnop = new PushButton(Text.constants.eindeKnopLabel());
+		eindeKnop.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent e)
+			{
+				e.stopPropagation();
+				//TODO: functie geven.
+			}
+		});
+		
+		if(volgendeKnopZichtbaar)
+			kb.addKnop(volgendeKnop, true);
+		if(vorigeKnopZichtbaar)
+			kb.addKnop(vorigeKnop, true);
+		
 		
 		
 	}

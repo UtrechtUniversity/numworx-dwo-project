@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
@@ -62,6 +63,17 @@ public abstract class XMLView {
 	private static int defaultFontSize = 12;
 	private static String defaultFontName = "Arial";
 	
+	protected boolean bolletjesZichtbaar = true;
+	protected boolean volgendeKnopZichtbaar = false;
+	protected boolean vorigeKnopZichtbaar = false;
+	
+	protected boolean condNav = false;
+	protected boolean condNavPerc = false;
+	protected boolean condNavVoorwaarden = false;
+	protected int[][][] navVoorwaarden = null;
+	protected boolean[][] bezocht = null;
+	protected int condPerc = 100;
+	
 	private TekstVakPanel hoofdPanel;
 
 	protected void setupView(HashMap<String, Object> launchData)
@@ -93,8 +105,6 @@ public abstract class XMLView {
 			defaultFontName = font_name;
 			//AntwoordKeuzeVakGWT.setFont(fontName);
 			
-			
-			
 			if(wrap.containsKey("woordFormule"))
 				FormuleParser.zetWoordFormule(wrap.getBoolean("woordFormule"));	
 			if(wrap.containsKey("fontOvererving"))
@@ -104,6 +114,44 @@ public abstract class XMLView {
 				FormuleEditorWithAnswer.zetFontOverervingForm(wrap.getBoolean("fontOverervingForm"));
 				FormuleEditorWithSteps.zetFontOverervingForm(wrap.getBoolean("fontOverervingForm"));
 			}
+			if(wrap.containsKey("volgendeKnopZichtbaar"))
+				volgendeKnopZichtbaar = wrap.getBoolean("volgendeKnopZichtbaar");
+			if(wrap.containsKey("vorigeKnopZichtbaar"))
+				vorigeKnopZichtbaar = wrap.getBoolean("vorigeKnopZichtbaar");
+			if(wrap.containsKey("bolletjesZichtbaar"))
+				bolletjesZichtbaar = wrap.getBoolean("bolletjesZichtbaar");
+			if(wrap.containsKey("condNav"))
+				condNav = wrap.getBoolean("condNav");
+			if(wrap.containsKey("condNavPerc"))
+				condNavPerc = wrap.getBoolean("condNavPerc");
+			if(wrap.containsKey("condNavVoorwaarden"))
+				condNavVoorwaarden = wrap.getBoolean("condNavVoorwaarden");
+			if(wrap.containsKey("navVoorwaarden")) //int[][][]
+			{
+				ObjectList navVoorwaardenList = wrap.getObjectList("navVoorwaarden");
+				navVoorwaarden = new int[navVoorwaardenList.size()][][];
+				for(int i = 0; i < navVoorwaardenList.size(); i++)
+				{
+					ObjectList lijst = navVoorwaardenList.getObjectList(i);
+					for(int j = 0; j < lijst.size(); j++)
+						navVoorwaarden[i][j] = lijst.getIntArray(j);
+				}
+			}
+			if(wrap.containsKey("bezocht")) //boolean[][]
+			{
+				ObjectList bezochtList = wrap.getObjectList("bezocht");
+				bezocht = new boolean[bezochtList.size()][];
+				for(int i = 0; i < bezochtList.size(); i++)
+				{
+					bezocht[i] = bezochtList.getBooleanArray(i);
+				}
+			}
+			if(wrap.containsKey("condPerc"))
+				condPerc = wrap.getInt("condPerc");
+				
+			
+			
+			
 		}
 
 	}
@@ -179,102 +227,7 @@ public abstract class XMLView {
 		
 		destination.add(hoofdPanel);
 		opdrachtObjects.add(hoofdPanel);
-	
-			
-		/*
-		for (int i = 0; i < opdrachtObjects.size(); i++)
-		{
-	
-			Object currentObject = opdrachtObjects.get(i);
-			if (currentObject instanceof String)
-			{
-				Element element = DOM.createSpan();
-				element.setInnerHTML((String) currentObject);
-				//element.getElement().getStyle().setFloat(Float.LEFT);
-				destination.getElement().appendChild(element);
-	
-				if (opdrachtObjects.size() > i + 1 && opdrachtObjects.get(i + 1) instanceof String)
-					destination.getElement().appendChild(DOM.createElement("br"));
-				//destination.add(new HTML((String) currentObject));
-				//destination.getElement().setInnerHTML(destination.getElement().getInnerHTML() + ((String) currentObject));
-				//element.setInnerHTML((String) currentObject);
-				//element.getElement().getStyle().setPaddingBottom(5, Unit.PX);
-				//element.getElement().getStyle().setPaddingTop(5, Unit.PX);
-	
-			}
-			
-			else if (currentObject instanceof FormuleEditorWithAnswer)
-			{
-
-				FormuleEditorWithAnswer formuleEditorWithAnswer = (FormuleEditorWithAnswer) currentObject;
-				formuleEditorWithAnswer.setFont(FormuleFont.createFromFontSize(font_size));
-				Widget asWidget = formuleEditorWithAnswer.asWidget();
-				int asHoogte = formuleEditorWithAnswer.getAsHoogte();
-				int hoogte = formuleEditorWithAnswer.getHeight();
-				Style widgetStyle = asWidget.getElement().getStyle();
-				widgetStyle.setProperty("display", "inline-block");
-				widgetStyle.setProperty("position", "relative");
-				widgetStyle.setProperty("top", (hoogte - asHoogte - Math.rint(font_size * 0.33) - 2) + "px");
-				destination.add(asWidget);
-			}
-			else if (currentObject instanceof FormuleViewer)
-			{
-				((FormuleViewer) currentObject).setFont(FormuleFont.createFromFontSize(font_size));
-				((FormuleViewer) currentObject).setColor(CssColor.make(0, 0, 0));
-				int asHoogte = ((FormuleViewer) currentObject).getMainRegel().getAsHoogte();
-				int hoogte = ((FormuleViewer) currentObject).getMainRegel().getHeight();
-				Panel a = ((FormuleViewer) currentObject).getAsPanel();
-				a.getElement().getStyle().setProperty("display", "inline-block");
-				a.getElement().getStyle().setProperty("position", "relative");
-				a.getElement().getStyle().setProperty("top", (hoogte - asHoogte - Math.rint(font_size * 0.33)) + "px");
-	
-				destination.add(a);
-	
-			}
-			else if (currentObject instanceof FormuleEditorWithSteps)
-			{
-				Widget a = ((InteractionView) currentObject).asWidget();
-				//a.getElement().getStyle().setFloat(Float.LEFT);
-				//((FormuleEditorWithSteps) currentObject).getEditor().requestFocus();
-				a.getElement().getStyle().setProperty("display", "inline-block");
-				a.getElement().getStyle().setProperty("verticalAlign", "top");
-	
-				destination.add(a);
-			}
-	
-			else if (currentObject instanceof TekstVakPanel)
-			{
-				Widget a = ((InteractionView) currentObject).asWidget();
-				//a.getElement().getStyle().setFloat(Float.LEFT);
-				a.getElement().getStyle().setProperty("display", "inline-block");
-				a.getElement().getStyle().setProperty("verticalAlign", "top");
-	
-				destination.add(a);
-			}
-			// all big interaction views
-			else if (currentObject instanceof InteractionView)
-			{
-				Widget a = ((InteractionView) currentObject).asWidget();
-				//a.getElement().getStyle().setFloat(Float.LEFT);
-				a.getElement().getStyle().setProperty("display", "inline-block");
-				a.getElement().getStyle().setProperty("verticalAlign", (-font_size * 0.45) + "px");
-				//a.getElement().getStyle().setProperty("position", "relative");
-				//a.getElement().getStyle().setProperty("top", (-font_size*0.1)+"px");
-	
-				destination.add(a);
-			}
-			else if (currentObject instanceof ImageView)
-			{
-				ImageView iv = (ImageView) currentObject;
-				Widget w = iv.getImage();
-				destination.add(w);
-			}
-			else if(currentObject instanceof IsWidget) {
-				IsWidget widget = (IsWidget) currentObject;
-				destination.add(widget);
-			}
-		}*/
-	
+		
 	}
 
 	public Panel getPanelElement(final FormuleHolder editor) {

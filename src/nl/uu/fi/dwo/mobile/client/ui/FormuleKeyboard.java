@@ -17,6 +17,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.event.dom.client.TouchEvent;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
@@ -287,17 +288,24 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 
 	public void addNavPanel(Panel opdrnav)
 	{
-		opdrnav.getElement().getStyle().setFloat(Style.Float.RIGHT);
+		//opdrnav.getElement().getStyle().setFloat(Style.Float.RIGHT);
+		opdrnav.getElement().getStyle().setFloat(Style.Float.LEFT);
 		opdrnav.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 		tp.clearStaticPanel();
 		if(!isNoordhoff())
 			tp.getStaticPanel().add(opdrnav);
 	}
 	
-	public void addKnop(PushButton knop)
+	public void addKnop(PushButton knop, boolean right)
 	{
-		knop.getElement().getStyle().setFloat(Style.Float.RIGHT);
+		if(right)
+			knop.getElement().getStyle().setFloat(Style.Float.RIGHT);
+		else
+			knop.getElement().getStyle().setFloat(Style.Float.LEFT);
 		knop.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+		knop.getElement().getStyle().setMarginTop(10, Style.Unit.PX);
+		knop.setWidth(80 + "px");
+		knop.getElement().getStyle().setProperty("horizontalAlign", "center"); //TODO: helpt dit?
 		if(!isNoordhoff())
 			tp.getStaticPanel().add(knop);
 	}
