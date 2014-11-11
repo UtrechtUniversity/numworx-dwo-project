@@ -23,6 +23,7 @@ import nl.uu.fi.dwo.interaction.client.StateLess;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
@@ -202,6 +203,13 @@ public class TekstVakPanel implements InteractionView
 	
 	private int locationX, locationY;
 	private int startX, startY;
+	
+	String[][][] randomteksten = new String[1][][];
+	ObjectList randomIpLaunchdata;
+	//ObjectMap[][] randomIpLaunchdata;
+	private boolean random = false;
+	private int aantalRandom = 1;
+	private String randomVar = "a";
 
 	private boolean inklapbaar, ingeklapt, checkUitklapVak;
 	private int inklapKnopPos;
@@ -423,6 +431,20 @@ java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " +
 // launchState never null!
 		pasAanH = launchState.getBoolean("pasAanH",pasAanH);
 		pasAanB = launchState.getBoolean("pasAanB",pasAanB);
+		
+		if(launchState.containsKey("random"))
+			random = launchState.getBoolean("random");
+		if(launchState.containsKey("aantalRandom"))
+			aantalRandom = launchState.getInt("aantalRandom");
+		if(launchState.containsKey("randomIpLaunchdata")) //FIXME grote of kleine D?
+		{
+			randomIpLaunchdata = launchState.getObjectList("randomIpLaunchdata");
+		}
+		
+		//FIXME: Wim, hoe krijg ik de randomteksten (een String[][][]) en vooral de Hashtable randomIpLaunchData uit de launchState?
+		
+		if(launchState.containsKey("randomVar"))
+			randomVar = launchState.getString("randomVar");
 
 // FIXME overleg met Peter		
 //		if(ingeklapt) for(int i = 0; i < hoogtes.size(); i++) {
@@ -678,6 +700,24 @@ java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " +
 		ArrayList<Object> opdrachtObjects = new ArrayList<Object>();
 		List<Object> opdrachtGegevens = JSONUtilities.toArrayList( interactiePanelLaunchState.get("interactiePanelLaunchData") );
 
+		if (random)
+		{
+			for (int i = 0; i < randomVarNamen.length; i++)
+			{
+				if(randomVar.equals(randomVarNamen[i]))
+				{
+					int tabNummer = ((Integer) randomVarWaarden.get(randomVar)).intValue() - 1;
+					if (tabNummer < aantalRandom && tabNummer > -1)
+					{
+						//teksten = randomteksten[tabNummer];
+						//opdrachtGegevens = JSONUtilities.toArrayList(randomIpLaunchdata[tabNummer]);
+						opdrachtGegevens = randomIpLaunchdata.getList(tabNummer);
+					}
+					break;
+				}
+			}
+		}
+		
 		TekstBuffer tb = new TekstBuffer(randomVarNamen, randomVarWaarden);
 		int[] volleBreedtes = new int[breedtes.size()];
 		for (int j = 0; j < breedtes.size(); j++)
