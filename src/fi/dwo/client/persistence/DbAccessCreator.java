@@ -1,6 +1,5 @@
 // Source file:
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\DbAccessCreator.java
-
 package fi.dwo.client.persistence;
 
 import fi.dwo.client.domain.DWO;
@@ -8,79 +7,89 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.server.persistence.DbAccess;
-import fi.dwo.server.persistence.DbAccessColorado;
 import fi.dwo.server.persistence.DbAccessLocal;
-import fi.dwo.server.persistence.DbAccessScience;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DbAccessCreator {
+
+    private static final Logger log = Logger.getLogger(DbAccessCreator.class.getName());
+
     private static DbAccessIF dbAccess;
     /**
-     * URL van dbaccess servlet.
-     * Publiek, kan dus aangepast worden in DWO.main() of Dwo.init()
+     * URL van dbaccess servlet. Publiek, kan dus aangepast worden in DWO.main()
+     * of Dwo.init()
+     *
      * @see fi.dwo.client.domain.DWO#init()
      * @see fi.dwo.client.domain.DWO#main(String[])
      */
-	
-    
+
     public static String SERVLET = "/servlet/fi.dwo.server.persistence.DbAccessServlet";
     //public static String SERVLET = "/dwo/dbaccess";
-	
+
 	// Let op, bovenstaande switch is nodig voor de dwoserver (bij start.jar)
-
     /**
-
+     *
      */
     public DbAccessCreator() {
 
     }
 
     public static void setInstance(DbAccessIF update) {
-    	dbAccess = update;
+        dbAccess = update;
     }
+
     /**
      * @return fi.dwo.client.persistence.DbAccessIF
-
+     *
      */
     public static DbAccessIF instance() {
         if (dbAccess == null) {
-        	URL server; 
-           if(DwoHelper.isApplication()) { 
+            URL server;
+            if (DwoHelper.isApplication()) {
         	   //Bij testen van lokale dbAccess, TODO in comment bij productie!
-        	   if(true || !DWO.getDbConnectStringProperty().matches("")) dbAccess = new DbAccessLocal(); else
-        	   //if(true) dbAccess = new DbAccess(); else
-           	   //if(true) dbAccess = new DbAccessScience(); else
-           	   //if(true) dbAccess = new DbAccessColorado(); else
-        	   //if(true)try{dbAccess=new DbAccessClient(new URL("http://localhost:8888/dwoapp"));}catch(MalformedURLException e1){e1.printStackTrace();}else
-        	   try {
-        		   server = new URL(new URL("http://ws.fisme.science.uu.nl/") , SERVLET);
+                //if(true) dbAccess = new DbAccess(); else
+                //if(true) dbAccess = new DbAccessScience(); else
+                //if(true) dbAccess = new DbAccessColorado(); else
+                //if(true)try{dbAccess=new DbAccessClient(new URL("http://localhost:8888/dwoapp"));}catch(MalformedURLException e1){e1.printStackTrace();}else
+                if (DWO.getConnectModeProperty().matches("Local") && !DWO.getDbConnectStringProperty().matches("")) {
+                    dbAccess = new DbAccessLocal();
+                } else if (DWO.getConnectModeProperty().matches("Servlet")) {
+                    try {
+                        server = new URL(DWO.getServletConnectStringProperty());
+                        dbAccess = new DbAccessClient(server);
+                    } catch (MalformedURLException ex) {
+                        log.log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    try {
+                        server = new URL(new URL("http://ws.fisme.science.uu.nl/"), SERVLET);
         		   //server = new URL(new URL("http://dwo.fi.uu.nl/") , SERVLET);
-	        	// Let op, bovenstaande switch is nodig voor de dwoserver (bij start.jar)
-	        	   
-	               dbAccess = new DbAccessClient(server);
-        	   } 
-        	   catch (MalformedURLException e) {
-	                e.printStackTrace();
-	           }
-           }
-           else
-           {
+                        // Let op, bovenstaande switch is nodig voor de dwoserver (bij start.jar)
+
+                        dbAccess = new DbAccessClient(server);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
 // for local access, overrule SERVLET
-        	   String servletParameter = 	
-        	   DwoHelper.getApplet().getParameter("SERVLET");
-        	   if( null != servletParameter)
-        		   SERVLET = servletParameter;
+                String servletParameter
+                        = DwoHelper.getApplet().getParameter("SERVLET");
+                if (null != servletParameter) {
+                    SERVLET = servletParameter;
+                }
 //         	   
-	            try {
-	                server = new URL(DwoHelper.getApplet().getCodeBase() , SERVLET);
+                try {
+                    server = new URL(DwoHelper.getApplet().getCodeBase(), SERVLET);
 	                //System.out.println(DwoHelper.getApplet().getCodeBase() + SERVLET);
-	                //server = new URL("http://www.fi.uu.nl/servlet/fi.dwo.server.persistence.DbAccessServlet");
-	                dbAccess = new DbAccessClient(server);
-	            } 
-	            catch (MalformedURLException e) {
-	                e.printStackTrace();
-	            }/**/
-           }
+                    //server = new URL("http://www.fi.uu.nl/servlet/fi.dwo.server.persistence.DbAccessServlet");
+                    dbAccess = new DbAccessClient(server);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }/**/
+
+            }
         }
 
         return dbAccess;
