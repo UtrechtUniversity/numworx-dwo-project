@@ -110,8 +110,6 @@
 	if(launchData == null)
 		launchData = "{}";
 
-	Map map = (Map)JSONValue.parse(launchData);
-	launchData = JSONValue.toJSONString(map.get("launchData"));
 	launchData = StringEscapeUtils.escapeHtml(launchData);
 	
   	String width = request.getParameter("launch_presentation_width");
@@ -120,15 +118,19 @@
   	if(height == null || height.isEmpty()) height="100%";
   	
   	String className = request.getParameter("oauth_consumer_key");
-  	Object r = map.get("randomValues");
-  	if (r == null) r = java.util.Collections.EMPTY_LIST;
-  	String randomValues = StringEscapeUtils.escapeHtml(JSONValue.toJSONString(r));
+  	String randomValues = request.getParameter("custom_randomvalues");
+ 	if(randomValues == null) randomValues = "{}";
   	String uuid = request.getParameter("resource_link_id");
-  	Object o = map.get("assessmentMode");
+  	Object o = "0";
   	if(o == null) o = Integer.valueOf(0);
   	String assessmentMode = StringEscapeUtils.escapeHtml(String.valueOf(o));;
   	String learnerId = request.getParameter("user_id");
   	String learnerName = request.getParameter("lis_person_name_full");
+
+  	String context = request.getParameter("custom_context");
+  	if(context == null) context = "{}";
+  	Map map = (Map) JSONValue.parse(context);
+  	
   	Object b = map.get("background");
   	if (b == null) b = "#FFFFFF";
   	String background = StringEscapeUtils.escapeHtml(String.valueOf(b));
