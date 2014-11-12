@@ -119,7 +119,7 @@ public final class DwoHelper {
     }
     
     public static boolean isSecure()
-    {	return true;
+    {	return false;
     }
     
     public static boolean isAdminLoggedIn()

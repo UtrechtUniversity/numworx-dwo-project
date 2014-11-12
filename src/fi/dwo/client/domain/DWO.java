@@ -3,50 +3,34 @@
 
 package fi.dwo.client.domain;
 
-import java.applet.Applet;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.FocusTraversalPolicy;
-import java.awt.Frame;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.Panel;
-import java.awt.Toolkit;
 import java.awt.Window;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.List;
-import java.util.Locale;
 import java.util.Properties;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.DebugGraphics;
 import javax.swing.JApplet;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.BevelBorder;
-import javax.swing.border.Border;
 import javax.swing.plaf.ColorUIResource;
 
 import fi.beans.appletutil.AppletUtil;
@@ -59,14 +43,9 @@ import fi.beans.jvmchecker.JVMChecker;
 
 import fi.dwo.VERSION;
 import fi.dwo.client.gui.CenterSubPanel;
-import fi.dwo.client.gui.CourseIcon;
-//import fi.dwo.client.gui.DwoMessageDialog;
-import fi.dwo.client.gui.DWOBorder;
 import fi.dwo.client.gui.GuiConstants;
 import fi.dwo.client.gui.GuiCreator;
 import fi.dwo.client.gui.MainPanel;
-import fi.dwo.client.gui.ModuleTreePanel;
-import fi.dwo.client.gui.ScoLinkedLabel;
 import fi.dwo.client.gui.ScoPanel;
 import fi.dwo.client.persistence.MapperCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
@@ -79,21 +58,41 @@ import fi.dwo.client.system.PersistenceException;
 import fi.dwo.client.system.RegisterException;
 import fi.dwo.client.system.ScoException;
 import fi.dwo.client.system.TextMapper;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
- * This is the main applet class of the DWO.<br>
- * At the start, a WelcomePanel is showed.<br>
- * @author M.J.B. Kupers
- *  
+ * This is the DWO application class. 
+ * 
+ * For testing purposes there is the option for
+ * a property file in the local startup directory named <code>DWO.properties</code>  
+ * It allows to set a specific database connection string for testing purposes:<p>
+ * <p>
+ * dbConnectString=jdbc:mysql://localhost/fisme_dwo?user=root&password=secret<p>
  */
 public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
+
+        // ensure logger works
+    private static final Logger log = Logger.getLogger("fi.dwo");
+    
+    private static String dbConnectStringProperty="";
 
     private static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
 
 	private static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
 
 	private static final String PROFILE_EXTENSION = "profileExtension";
+
+    /**
+     * @return the dbConnectStringProperty
+     */
+    public static String getDbConnectStringProperty() {
+        return dbConnectStringProperty;
+    }
 
 	private Course currentCourse;
     
@@ -134,6 +133,35 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
 		
 	FocusTraversalPolicy delegate;
 
+    private static void ReadConfigProperties() {
+
+        try {
+            Properties properties = new Properties();
+            
+            FileInputStream file;
+            
+            //folder relative to the current directory
+            String path = "./DWO.properties";
+            
+            //file handle for main.properties
+            file = new FileInputStream(path);
+            
+            //load the properties
+            properties.load(file);
+            
+            //done with file
+            file.close();
+            
+            //assign properties to static value.
+            dbConnectStringProperty = properties.getProperty("dbConnectString");
+            log.log(Level.FINER,"Property {0} is value: {1}", new Object[]{"dbConnectString", getDbConnectStringProperty()});
+        } catch (FileNotFoundException ex) {
+            log.log(Level.FINER,"No external database connection defined");
+        } catch (IOException ex) {
+            log.log(Level.FINER,"IO error reading DWO.properties file.");
+        }
+    }        
+        
 	/**
 	 * Java 7 throws exceptions, catch them. 
 	 * Deze "catch" policy catch ze en doet een default actie. 
@@ -209,7 +237,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF  {
      * Creates a new DWO object.
      *  
      */
-    public DWO() {
+    public DWO(){
         nestedWait = 0;
         dwoProfileID = 1;
     }
@@ -1460,6 +1488,7 @@ private static boolean isValidEmail(String email) {
      * @throws ClassNotFoundException 
      */
     public static void main(String[] args) throws Exception {
+        ReadConfigProperties();
     	//String  lookAndFeel = UIManager.getCrossPlatformLookAndFeelClassName();
     	//lookAndFeel = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
     	//lookAndFeel = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";

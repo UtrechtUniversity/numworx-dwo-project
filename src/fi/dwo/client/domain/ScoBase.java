@@ -224,7 +224,10 @@ public abstract class ScoBase extends ScormAdapter {
 	}
 
 	public void setUser(User u) {
-		user = u;	
+		if(u != user)
+		{	lessonLocation = null;
+			user = u;
+		}
 	}
 
 	public String getLessonMode() {
@@ -235,7 +238,7 @@ public abstract class ScoBase extends ScormAdapter {
 		if(NORMAL.equals(lessonMode))
 			lessonMode = defaultLessonMode;
 		this.lessonMode = lessonMode;
-		lessonLocation = null;
+		//lessonLocation = null;
 	}
 
 	public AppletData getAppletData() {
@@ -298,14 +301,21 @@ public abstract class ScoBase extends ScormAdapter {
 		return NO_CREDIT;
 	}
 
-	private String getLessonLocation() {
-		if(REVIEW.equals(lessonMode) && locationOverride != null) {
+	public String getLessonLocation() {
+		if(isReview() && locationOverride != null) {
 			lessonLocation = locationOverride;
 			locationOverride = null;
 		}
-		if(REVIEW.equals(lessonMode) && lessonLocation != null)
+		if(lessonLocation != null)
 			return lessonLocation;
-		return "";//dwo.LMSGetValue(this, user, LESSON_LOCATION);
+		return dwo.LMSGetValue(this, user, LESSON_LOCATION);
+	}
+
+	/**
+	 * @return
+	 */
+	private boolean isReview() {
+		return REVIEW.equals(lessonMode);
 	}
 
 	/**
@@ -356,10 +366,16 @@ public abstract class ScoBase extends ScormAdapter {
 	//				iDataModelElement = TOTAL_TIME;
 	//				iValue = to1_2Time(from2004Time(iValue)); // totaltime in 1.2 format.
 	//			}
+// track location in normal mode.				
+				if(LESSON_LOCATION.equals(iDataModelElement))
+	    		{
+	    			lessonLocation = iValue;
+	    		}
+				
 	    		return tf(dwo.LMSSetValue(this, user, iDataModelElement, iValue));
 	    	}
 	
-	    	if(REVIEW.equals(lessonMode))
+	    	if(isReview())
 	    	{
 	    		boolean ok = getReviewable(iDataModelElement);
 	    		if(ok)

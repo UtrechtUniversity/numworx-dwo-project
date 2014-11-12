@@ -96,21 +96,21 @@ public class DbAccessServlet extends Servlet {
 	}
 	
 	
-    private static DbAccessIF dbAccess;
+   // private static DbAccessIF dbAccess;
     
    // private static final String JAR_FOLDER = "file:/space/WWW/InfoGroups/dwo/jars/";
     /**
 
      */
     public DbAccessServlet() {
-        super(dbAccess = new MyProxy());
+        super(/*dbAccess = */new MyProxy());
         unLock();
 
     }
 
     protected DbAccessServlet(DbAccessIF myDbAccess)
     {
-        super(dbAccess = myDbAccess);
+        super(/*dbAccess = */myDbAccess);
     }
     
     public void init(ServletConfig arg0) throws ServletException {
@@ -118,7 +118,7 @@ public class DbAccessServlet extends Servlet {
         log("Initializatie r" + VERSION.REVISION);
         if(!"false".equals(getInitParameter("monitor")))
         {
-        	setHandler(dbAccess = (DbAccessIF) (MonProxyFactory.monitor(new MonitoringProxy())));
+        	setHandler(/*dbAccess = */(DbAccessIF) (MonProxyFactory.monitor(new MonitoringProxy())));
         	log("monitoring");
         } else {
         	log("no monitoring");
@@ -134,7 +134,7 @@ public class DbAccessServlet extends Servlet {
         if("true".equals(getInitParameter("local")))
         {
         	setLock(this);
-        	dbAccess = new DbAccessLocal() {
+        	DbAccessLocal dbAccess = new DbAccessLocal() {
         		
         		private Connection mine, his;
 				public void close() {
@@ -220,7 +220,7 @@ public class DbAccessServlet extends Servlet {
 
     public void destroy() {
         log("En weg ben ik...");
-        ((DbConnectIF) dbAccess).close();
+        ((DbConnectIF) getHandler()).close();
         super.destroy();
     }
     

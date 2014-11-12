@@ -64,6 +64,7 @@ import fi.dwo.client.domain.DWO;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.ScoEditor;
+import fi.dwo.client.domain.User;
 import fi.dwo.client.gui.action.ImportScorm;
 import fi.dwo.client.gui.action.PreviewHtml5;
 import fi.dwo.client.gui.action.Save2004Action;
@@ -152,6 +153,8 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         GuiCreator.instance().setWait();
 
         this.sco = sco = sco.unwrap();
+        sco.setUser(User.getCurrentUser());
+        sco.dwo = GuiCreator.instance().dwo;
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         JPanel buttonPanel;
 		JPanel mainPanel;  // import van awt componenten
@@ -177,6 +180,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         if(editMode) {
             Hashtable launchData = sco.getLaunchdata();
             launchData.put("language", TextMapper.getLanguage());
+            launchData.put(Sco.LESSON_LOCATION, sco.getLessonLocation());
         	editComponent = applet.getEditComponent(launchData);
             this.setSize(800, 620);
             this.setPreferredSize(getSize());
@@ -487,10 +491,11 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         Hashtable old = sco.getLaunchdata();
     	old.remove("language");old.remove("bgcolor");
     	tmp.remove("language");tmp.remove("bgcolor");
-    	
-    	
-    	
-        message = TextMapper.getText(TextMapper.GUIPA_MSG_PARAM_SAVE);
+    	String location = (String) tmp.remove(Sco.LESSON_LOCATION);
+    	if(location != null)
+    		sco.SetValue(Sco.LESSON_LOCATION, location);
+
+    	message = TextMapper.getText(TextMapper.GUIPA_MSG_PARAM_SAVE);
         int result = JOptionPane.NO_OPTION;
 // Deze tekst is m.i. niet helemaal lekker geformuleerd. Wim
         if (

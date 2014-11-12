@@ -3,6 +3,13 @@
 <web-app  xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4">
    <distributable/>
 
+  <resource-ref>
+      <description>DWO DB Connection</description>
+      <res-ref-name>jdbc/dwodb</res-ref-name>
+      <res-type>javax.sql.DataSource</res-type>
+      <res-auth>Container</res-auth>
+  </resource-ref>
+
     <!--
     To use non XDoclet filters, create a filters.xml file that
     contains the additional filters (eg Sitemesh) and place it in your
@@ -68,6 +75,25 @@
       </init-param>
    </servlet>
    
+	<servlet>
+   		<description>Datasource servlet</description>
+   		<servlet-name>dsaccess</servlet-name>
+   		<servlet-class>fi.dwo.server.persistence.DataSourceAccessServlet</servlet-class>
+   		<init-param>
+   			<param-name>datasource</param-name>
+   			<param-value>jdbc/dwodb</param-value>   		
+   		</init-param>
+   		<init-param>
+   			<param-name>monitor</param-name>
+   			<param-value>true</param-value>	
+   		</init-param>
+   		<init-param>
+   			<param-name>threading</param-name>
+   			<param-value>true</param-value>	
+   		</init-param>
+	</servlet>
+   
+   
 
   <!--
   To use non XDoclet servlets, create a servlets.xml file that
@@ -90,6 +116,11 @@
       <servlet-name>DwoWebPage</servlet-name>
       <url-pattern>/dwowebpage</url-pattern>
    </servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>dsaccess</servlet-name>
+		<url-pattern>/dsaccess</url-pattern>
+	</servlet-mapping>
 
    <!--
    To specify mime mappings, create a file named mime-mappings.xml, put it in your project's mergedir.
