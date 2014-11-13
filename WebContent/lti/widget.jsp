@@ -93,7 +93,7 @@
   try {
     oav.validateMessage(oam,acc);
   } catch(Exception e) {
-    doReturn(request, response, "Error while valdating message", out);
+    doReturn(request, response, "Error while validating message", out);
     log("Error validating message", e);
     return;
   }
