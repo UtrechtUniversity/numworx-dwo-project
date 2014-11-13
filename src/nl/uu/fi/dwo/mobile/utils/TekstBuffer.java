@@ -458,6 +458,12 @@ public class TekstBuffer
 		Object value = currentVakGegevens.get(CROSS_WIDGET_ID);
 		inner.put(CROSS_WIDGET_ID, value);
 		inner.put("className", className);
+		String subscriptions = "{}"; // TODO vullen uit currentVakGegevens.
+		if(currentVakGegevens.containsKey("subscriptions"))
+		{
+			// ....
+		}
+		inner.put("subscriptions", subscriptions);
 		return currentVakGegevens;
 	}
 

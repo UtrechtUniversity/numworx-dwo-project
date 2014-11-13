@@ -604,7 +604,10 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	 * @see nl.uu.fi.dwo.interaction.client.OpdrNavIF#getLearnerId()
 	 */
 	public String getLearnerId() {
-		return comRoot.getLearnerId();
+		String learnerId = comRoot.getLearnerId();
+		if(learnerId == null || learnerId.isEmpty())
+			learnerId = "guest";
+		return learnerId;
 	}
 
 	/**
@@ -612,7 +615,10 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	 * @see nl.uu.fi.dwo.interaction.client.OpdrNavIF#getLearnerName()
 	 */
 	public String getLearnerName() {
-		return comRoot.getLearnerName();
+		String learnerName = comRoot.getLearnerName();
+		if(learnerName == null || learnerName.isEmpty())
+			learnerName = "Guest, Anonymous";
+		return learnerName;
 	}
 
 	/**
