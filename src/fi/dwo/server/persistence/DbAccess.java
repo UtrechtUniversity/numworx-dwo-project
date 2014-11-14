@@ -27,7 +27,9 @@ import fi.beans.scorm2xml.Scorm2Xml;
 import fi.dwo.client.domain.SchoolGroup;
 import fi.dwo.client.persistence.DbAccessIF;
 import fi.dwo.client.persistence.PersistenceFacade;
-import java.sql.Statement;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DbAccess extends DbConnect implements DbAccessIF {
 
@@ -442,9 +444,32 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      */
     public DbAccess() {
         super(MYSQL2_SCIENCE_FISME, "dwo");
-        if (DEBUG) {
-            log("Dbacces DEBUG aan");
+        try {
+            if (DEBUG) {
+                log("Dbacces DEBUG aan");
+            }
+            //check for proper DB version
+            PreparedStatement ps = getStatement("select * from tblDWOParameters where name like 'DBVersion%'");
+            ResultSet rs = ps.executeQuery();
+            HashMap<String, String> hashMap = new HashMap<String, String>(5);
+            while(rs.next()){
+                hashMap.put(rs.getString("name"),rs.getString("value"));
+            }
+            Integer one  = 1;
+            Integer zero = 0;
+            
+            if(hashMap.get("DBVersion Major").matches("1") && hashMap.get("DBVersion Minor").matches("1")
+                    && hashMap.get("DBVersion Revision").matches("0")){
+                System.out.print("We are compatible with the server database.");
+            }else{
+                System.err.print("Database version of server not compatible with v1.1.0. Exiting.");
+                System.exit(20);
+            }
+                    } catch (SQLException ex) {
+                System.err.print("Database version of server not compatible with v1.1.0. Missing version numbers. Exiting.");
+                System.exit(20);
         }
+
     }
 
     /**
@@ -927,7 +952,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         /* Search the school from the teacher */
         Hashtable result = null;
         PreparedStatement ps = getStatement(QRY_SELECT_SCHOOL_FROM_USER);
-        
+
         ps.setInt(1, teacher);
 
         ResultSet rs = ps.executeQuery();
