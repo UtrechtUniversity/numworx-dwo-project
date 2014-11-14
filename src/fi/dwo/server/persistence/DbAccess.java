@@ -27,6 +27,7 @@ import fi.beans.scorm2xml.Scorm2Xml;
 import fi.dwo.client.domain.SchoolGroup;
 import fi.dwo.client.persistence.DbAccessIF;
 import fi.dwo.client.persistence.PersistenceFacade;
+import java.sql.Statement;
 
 public class DbAccess extends DbConnect implements DbAccessIF {
 
@@ -926,6 +927,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         /* Search the school from the teacher */
         Hashtable result = null;
         PreparedStatement ps = getStatement(QRY_SELECT_SCHOOL_FROM_USER);
+        
         ps.setInt(1, teacher);
 
         ResultSet rs = ps.executeQuery();
@@ -933,7 +935,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             int schoolID = rs.getInt(1);
             rs.close();
 
-            ps = getStatement(QRY_ADD_CLASS);
+            ps = getStatementWithGeneratedKeys(QRY_ADD_CLASS);
             ps.setInt(1, teacher);
             ps.setInt(2, schoolID);
             ps.setString(3, className);
@@ -992,7 +994,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         if (schoolLoginExists(schoolLogin)) {
             throw new DwoXmlRpcException(DwoXmlRpcException.EXC_SCHOOL_EXISTS);
         } else {
-            PreparedStatement ps = getStatement(QRY_ADD_SCHOOLID);
+            PreparedStatement ps = getStatementWithGeneratedKeys(QRY_ADD_SCHOOLID);
             ps.setString(1, schoolName);
             ps.setString(2, schoolLogin);
             ps.setInt(3, schoolID);
@@ -1034,7 +1036,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         if (schoolLoginExists(schoolLogin)) {
             throw new DwoXmlRpcException(DwoXmlRpcException.EXC_SCHOOL_EXISTS);
         } else {
-            PreparedStatement ps = getStatement(QRY_ADD_SCHOOLID);
+            PreparedStatement ps = getStatementWithGeneratedKeys(QRY_ADD_SCHOOLID);
             ps.setString(1, schoolName);
             ps.setString(2, schoolLogin);
             ps.setInt(3, schoolID);
@@ -1581,7 +1583,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
                 //ps = getStatement(QRY_ADD_EMPTY_STUDENT_SCO);
                 //TBLSPLIT DONE
-                ps = getStatement(QRY_ADD_EMPTY_STUDENT_SCO_CONTEXT);
+                ps = getStatementWithGeneratedKeys(QRY_ADD_EMPTY_STUDENT_SCO_CONTEXT);
 
                 ps.setInt(1, scoID);
                 ps.setInt(2, userID);
@@ -2000,7 +2002,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         PreparedStatement ps;
 
         if (schoolID == 0) {
-            ps = getStatement(QRY_ADD_COURSE_BASIC);
+            ps = getStatementWithGeneratedKeys(QRY_ADD_COURSE_BASIC);
             ps.setString(1, name);
             ps.setString(2, description);
             ps.setString(3, image);
@@ -2008,7 +2010,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             ps.setInt(5, parentID);
             ps.setBoolean(6, isMap);
         } else {
-            ps = getStatement(QRY_ADD_COURSE);
+            ps = getStatementWithGeneratedKeys(QRY_ADD_COURSE);
             ps.setInt(1, schoolID);
             ps.setString(2, name);
             ps.setString(3, description);
@@ -2284,7 +2286,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             throws SQLException, DwoXmlRpcException {
         if (appletID != -1) {
             PreparedStatement ps;
-            ps = getStatement(QRY_ADD_SCO);
+            ps = getStatementWithGeneratedKeys(QRY_ADD_SCO);
             ps.setInt(1, courseID);
             ps.setInt(2, appletID);
             ps.setString(3, name);
