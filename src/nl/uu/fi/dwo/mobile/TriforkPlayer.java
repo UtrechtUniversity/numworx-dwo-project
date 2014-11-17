@@ -44,8 +44,8 @@ try {
 		logger.severe(getTarget());
 		
 		MGWTsetup();
-		view = new ViewModuleViewImpl(true).initialize();
-		view.zetMaat();
+		view = new ViewModuleViewImpl(false).initialize();
+		view.zetMaatTrifork();
 		//RootPanel.get().add(view);
 		if( LogConfiguration.loggingIsEnabled()) {
 			RootPanel.get().add(customLogArea);
@@ -100,13 +100,13 @@ try {
 	}
 
 
-	public void onValueChange(ValueChangeEvent<String> event) {
-		
-		String value = event.getValue();
-		String target = value;
-		logger.info(value);
-		view.setupModule(value, target);
-	}
+//	public void onValueChange(ValueChangeEvent<String> event) {
+//		
+//		String value = event.getValue();
+//		String target = value;
+//		logger.info(value);
+//		view.setupModule(value, target);
+//	}
 
 	
 }

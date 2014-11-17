@@ -118,6 +118,14 @@ public class KeyBoardTabPanel
 		main.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 	}
 
+	public void zetMaatTrifork() {
+		zetMaatCommon();
+		main.getElement().getStyle().setFontSize(0, Style.Unit.PX); // anders main is 1 regel = 13 px
+		main.remove(staticpanel);
+		main.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+	}
+
+	
 	public void clearStaticPanel()
 	{
 		staticpanel.clear();

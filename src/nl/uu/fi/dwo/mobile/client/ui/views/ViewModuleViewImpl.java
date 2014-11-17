@@ -1102,6 +1102,24 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		kb.tp.setScrollPanel(contentScrollPanel, contentHeight);
 
 	}
+	
+	public void zetMaatTrifork() {
+		extraHeight = 0;
+		///contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
+		int contentHeight = Window.getClientHeight() - extraHeight;
+		Window.addResizeHandler(new ResizeHandler() {
+
+			@Override
+			public void onResize(ResizeEvent event) {
+				int h = event.getHeight() - extraHeight;
+				logger.info("resize event " +  h);
+				kb.tp.setScrollPanel(contentScrollPanel, h);
+				
+			}});
+		kb.tp.zetMaatTrifork();
+		kb.tp.setScrollPanel(contentScrollPanel, contentHeight);
+
+	}
 
 	@Override
 	public void onModuleLoad()

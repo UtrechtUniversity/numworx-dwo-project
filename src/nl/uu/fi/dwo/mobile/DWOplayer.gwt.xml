@@ -36,8 +36,6 @@
 <!--  <inherits name="fi.kladjegwt.KladjeGWT-DWO" /> -->
 <!-- - -> <inherits name="fi.draaibankgwt.DraaibankGWT-DWO" /> -->
 
-<!-- --> <inherits name="fi.antwoordkeuzevakgwt.AntwoordKeuzeVakGWT-DWO" />  
-
 <!--  <inherits name="fi.nabouwenaanzichtengwt.NabouwenAanzichtenGWT-DWO" /> -->
      
 

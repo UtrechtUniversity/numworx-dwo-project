@@ -5,7 +5,6 @@
 	<inherits name="nl.uu.fi.dwo.mobile.DWOplayer-module" />
 	<add-linker name='xsiframe' />
 	
-	<inherits name="fi.antwoordkeuzevakgwt.AntwoordKeuzeVakGWT-DWO" />
     <inherits name="fi.graphtoolgwt.GraphToolGWT-DWO" />
 
 	<entry-point class='nl.uu.fi.dwo.mobile.NoordhoffPlayer'/>

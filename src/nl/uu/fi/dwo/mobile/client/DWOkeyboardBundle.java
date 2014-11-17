@@ -22,5 +22,42 @@ public interface DWOkeyboardBundle extends ClientBundle {
 
 	@Source("nl/uu/fi/dwo/mobile/client/resources/kb/keyboardremovebutton.png")
 	ImageResource VVV();
+ 		//buttonImages.put("haakjes", "images/resources/mw_haakjes.gif");
+		//buttonImages.put("integraal", "images/resources/mw_integraal.gif");
+		//buttonImages.put("prv", "images/resources/");
+		//buttonImages.put("ndelog", "images/resources/");
+		//buttonImages.put("abs", "images/resources/");
+		//buttonImages.put("subscript", "images/resources/");
+		//buttonImages.put("bin", "images/resources/");
+		//buttonImages.put("diff", "images/resources/mw_diff.gif");
+		//buttonImages.put("limiet0", "images/resources/mw_limiet0.gif");
+		//buttonImages.put("limiet1", "images/resources/mw_limiet1.gif");
+		//buttonImages.put("limiet2", "images/resources/mw_limiet2.gif");
+		//buttonImages.put("primitieve", "images/resources/mw_primitieve.gif");
+
+	@Source("nl/uu/fi/dwo/mobile/client/resources/kb/mw_abs.gif")
+	ImageResource abs();
+	@Source("nl/uu/fi/dwo/mobile/client/resources/kb/mw_bin.gif")
+	ImageResource bin();
+	@Source("nl/uu/fi/dwo/mobile/client/resources/kb/mw_diff.gif")
+	ImageResource diff();
+	@Source("nl/uu/fi/dwo/mobile/client/resources/kb/mw_haakjes.gif")
+	ImageResource haakjes();
+	@Source("nl/uu/fi/dwo/mobile/client/resources/kb/mw_integraal.gif")
+	ImageResource integraal();
+	@Source("nl/uu/fi/dwo/mobile/client/resources/kb/mw_limiet0.gif")
+	ImageResource limiet0();
+	@Source("nl/uu/fi/dwo/mobile/client/resources/kb/mw_limiet1.gif")
+	ImageResource limiet1();
+	@Source("nl/uu/fi/dwo/mobile/client/resources/kb/mw_limiet2.gif")
+	ImageResource limiet2();
+	@Source("nl/uu/fi/dwo/mobile/client/resources/kb/mw_ndelog.gif")
+	ImageResource ndelog();
+	@Source("nl/uu/fi/dwo/mobile/client/resources/kb/mw_primitieve.gif")
+	ImageResource primitieve();
+	@Source("nl/uu/fi/dwo/mobile/client/resources/kb/mw_prv.gif")
+	ImageResource prv();
+	@Source("nl/uu/fi/dwo/mobile/client/resources/kb/mw_subscript.gif")
+	ImageResource subscript();
 	
 }

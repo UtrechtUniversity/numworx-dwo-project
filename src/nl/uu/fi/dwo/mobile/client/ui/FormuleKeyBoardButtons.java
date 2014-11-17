@@ -183,14 +183,30 @@ public abstract class FormuleKeyBoardButtons
 			
 		}
 	}
-
+/*
+{ "wortel", "macht", "kwadraat", "breuk", "haakjes", "ndewortel", "integraal", "prv", "ndelog", "abs", "subscript", "bin" ,ΑΒ },
+{ "diff", "limiet0", "limiet1", "limiet2", "\u221e", "primitieve", "e", "pi", "<", ">", "\u2228", "\u2248", VVV }
+ */
 	private static void setupBundle() {
 		DWOkeyboardBundle KB = GWT.create(DWOkeyboardBundle.class);
+		buttonImages_put("abs", KB.abs());
+		buttonImages_put("bin", KB.bin());
 		buttonImages_put("breuk", KB.breuk());
+		buttonImages_put("diff", KB.diff());
+		buttonImages_put("haakjes", KB.haakjes());
+		buttonImages_put("integraal", KB.integraal());
 		buttonImages_put("kwadraat", KB.kwadraat());
+		buttonImages_put("limiet0", KB.limiet0());
+		buttonImages_put("limiet1", KB.limiet1());
+		buttonImages_put("limiet2", KB.limiet2());
 		buttonImages_put("macht", KB.macht());
+		buttonImages_put("ndelog", KB.ndelog());
 		buttonImages_put("ndewortel", KB.ndewortel());
+		buttonImages_put("primitieve", KB.primitieve());
+		buttonImages_put("prv", KB.prv());
+		buttonImages_put("subscript", KB.subscript());
 		buttonImages_put("wortel", KB.wortel());
+		
 		buttonImages_put(FormuleKeyboard.VVV, KB.VVV());
 	}
 	
@@ -218,22 +234,22 @@ public abstract class FormuleKeyBoardButtons
 		//buttonImages.put("macht", "images/resources/mw_macht.gif");
 		//buttonImages.put("kwadraat", "images/resources/mw_kwadraat.gif");
 		//buttonImages.put("ndewortel", "images/resources/mw_ndewortel.gif");
-		buttonImages.put("haakjes", "images/resources/mw_haakjes.gif");
+		//buttonImages.put("haakjes", "images/resources/mw_haakjes.gif");
 		buttonImages.put("min", "images/resources/mw_min.gif");
 		buttonImages.put("plus", "images/resources/mw_plus.gif");
 		buttonImages.put("maal", "images/resources/mw_maal.gif");
 
-		buttonImages.put("integraal", "images/resources/mw_integraal.gif");
-		buttonImages.put("prv", "images/resources/mw_prv.gif");
-		buttonImages.put("ndelog", "images/resources/mw_ndelog.gif");
-		buttonImages.put("abs", "images/resources/mw_abs.gif");
-		buttonImages.put("subscript", "images/resources/mw_subscript.gif");
-		buttonImages.put("bin", "images/resources/mw_bin.gif");
-		buttonImages.put("diff", "images/resources/mw_diff.gif");
-		buttonImages.put("limiet0", "images/resources/mw_limiet0.gif");
-		buttonImages.put("limiet1", "images/resources/mw_limiet1.gif");
-		buttonImages.put("limiet2", "images/resources/mw_limiet2.gif");
-		buttonImages.put("primitieve", "images/resources/mw_primitieve.gif");
+		//buttonImages.put("integraal", "images/resources/mw_integraal.gif");
+		//buttonImages.put("prv", "images/resources/mw_prv.gif");
+		//buttonImages.put("ndelog", "images/resources/mw_ndelog.gif");
+		//buttonImages.put("abs", "images/resources/mw_abs.gif");
+		//buttonImages.put("subscript", "images/resources/mw_subscript.gif");
+		//buttonImages.put("bin", "images/resources/mw_bin.gif");
+		//buttonImages.put("diff", "images/resources/mw_diff.gif");
+		//buttonImages.put("limiet0", "images/resources/mw_limiet0.gif");
+		//buttonImages.put("limiet1", "images/resources/mw_limiet1.gif");
+		//buttonImages.put("limiet2", "images/resources/mw_limiet2.gif");
+		//buttonImages.put("primitieve", "images/resources/mw_primitieve.gif");
 		
 		buttonImages.put("conjug", "images/resources/mw_conjug.gif");
 		buttonImages.put("sigma", "images/resources/mw_sigma.gif");
@@ -269,7 +285,11 @@ public abstract class FormuleKeyBoardButtons
 	public static TouchPanel getButton(String key, FormuleKeyboard kb)
 	{
 		setUp();
-		ButtonListener listener = new ButtonListener(key, kb);
+		String key1 = key;
+		// HACK r? -> ? voor ?=x,y
+		if("rx".equals(key) || "ry".equals(key) ) key1 = key1.substring(1);
+		
+		ButtonListener listener = new ButtonListener(key1, kb);
 		TouchPanel b;
 		String[] diabledItems =
 		//{ "integraal", "prv", "ndelog", "abs", "subscript", "bin", "diff", "limiet0", "limiet1", "limiet2", "primitieve", "conjug", "sigma", "diff_partial" };
@@ -361,7 +381,7 @@ public abstract class FormuleKeyBoardButtons
 				buttonImages.put("\u2248", "images/resources/ongeveer.jpg");
 				buttonImages.put("\u2264", "images/resources/le.jpg"); // FIXME ONTBREEKT 
 				buttonImages.put("\u2265", "images/resources/__.jpg");
-				//buttonImages.put("\u00B1", "images/resources/+-.jpg");
+				//buttonImages.put("\u00B1", "images/resources/plusmin.jpg");
 				buttonImages.put("\u2260", "images/resources/!=.jpg");
 
 				buttonImages.put("back", "images/resources/delete.jpg");
@@ -369,6 +389,8 @@ public abstract class FormuleKeyBoardButtons
 				
 				buttonImages.put("0", "images/resources/0.jpg");
 				buttonImages.put("1", "images/resources/1.jpg");
+				buttonImages.put("rx", "images/resources/rx.jpg");
+				buttonImages.put("ry", "images/resources/ry.jpg");
 				buttonImages.put("2", "images/resources/2.jpg");
 				buttonImages.put("3", "images/resources/3.jpg");
 				buttonImages.put("4", "images/resources/4.jpg");
@@ -380,7 +402,7 @@ public abstract class FormuleKeyBoardButtons
 				buttonImages.put("(", "images/resources/(.jpg");
 				buttonImages.put(")", "images/resources/).jpg");
 				buttonImages.put("haakjes", "images/resources/(-).jpg");
-				buttonImages.put("plus", "images/resources/+.jpg");
+				buttonImages.put("plus", "images/resources/plus.jpg");
 				buttonImages.put("min", "images/resources/min.jpg");
 				buttonImages.put("maal", "images/resources/vermenigvuldigen.jpg");
 				buttonImages.put("/", "images/resources/delen.jpg");

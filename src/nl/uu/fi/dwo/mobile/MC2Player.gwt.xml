@@ -4,7 +4,6 @@
 	<inherits name="com.google.gwt.user.User" />
 	<inherits name="nl.uu.fi.dwo.mobile.DWOplayer-module" />
 	
-	<inherits name="fi.antwoordkeuzevakgwt.AntwoordKeuzeVakGWT-DWO" />
     <inherits name="fi.graphtoolgwt.GraphToolGWT-DWO" />
 
 	<entry-point class='nl.uu.fi.dwo.mobile.WiskOpdrPlayer'/>
