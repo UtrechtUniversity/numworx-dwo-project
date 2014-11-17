@@ -19,6 +19,7 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -223,7 +224,8 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 				break;
 //In chrome: zowel keydown als keypres op 'enter' 
 			case 13: //firefox
-				enter(event);
+				if(! Window.Navigator.getUserAgent().toLowerCase().contains("chrome"))
+					enter(event);
 				break;
 			case '6': // shift-6 (asus transformer)
 				if (event.isShiftKeyDown())

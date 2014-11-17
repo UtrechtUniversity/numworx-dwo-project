@@ -46,7 +46,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 
 	static void unload()
 	{
-		//Window.alert("unload");
+		logger.severe("unload");
 		if (_instance != null)
 			_instance.close();
 	}
@@ -441,6 +441,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 //		System.out.println(suspendData.toString());
 //		System.out.println("END SUSPENDDATA-----------");
 		setValue(SUSPEND_DATA, suspendData.toString());
+		logger.info("memento flush");
 		try
 		{
 			api.Commit();
@@ -454,6 +455,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	{
 		if (this != _instance)
 			return;
+		logger.info("closing memento");
 		_instance = null;
 		runner.run();
 		Date stopDate = new Date();

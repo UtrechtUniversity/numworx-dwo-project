@@ -299,11 +299,9 @@ public abstract class FormuleKeyBoardButtons
 
 		if (buttonImages.containsKey(key) == true){
 			b = getImageButton(buttonImages.get(key));
-			//b.getElement().getStyle().setBackgroundImage("url(images/resources/buttongradient.png)");
 		}
 		else if (buttonTexts.containsKey(key) == true){
 			b = getNewButton(buttonTexts.get(key));
-			//b.getElement().getStyle().setBackgroundImage("url(images/resources/buttongradient.png)");
 		}
 		else
 		{
@@ -312,7 +310,6 @@ public abstract class FormuleKeyBoardButtons
 				b.addStyleDependentName(getDependentName() + "-numeric");
 				//b.getElement().getStyle().setBackgroundImage("url(images/resources/numericbuttongradient.png)");
 			}
-			//else b.getElement().getStyle().setBackgroundImage("url(images/resources/buttongradient.png)"); 
 				
 		}
 		
