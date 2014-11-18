@@ -16,6 +16,8 @@ div.cbg-RP { background-color:#c3d9ff; }
 .keyboardtabs {background:#000;}
 div.keyboard {background:#dedede; left:0px; right:0px; }
 
+div.tekstregel { overflow: hidden; }
+
 .kbd-Button { display: inline-block; }
 .kbd-Button-dwo {background:#ddd; color:#000; padding:10px; margin:5px;  border: 1px solid #888; border-radius:5px; text-align:center; overflow:hidden;}
 .kbd-Button-dwo:active {background:#e00;}
@@ -107,6 +109,7 @@ iframe {
 .kbd-Button-dwo { 
 	background-image: url(images/resources/buttongradient.png);
 	height: 19px;
+	font-size: 13px;
 }
 
 div.listItem-dwo {
