@@ -25,8 +25,14 @@ function getLocale() {
 function $(id) {
 	return document.getElementById(id)
 }
+// To be more stringent in adhering to RFC 3986, more reserved characters:
+function fixedEncodeURIComponent (str) {
+	  return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
+	    return '%' + c.charCodeAt(0).toString(16);
+	  });
+	}
 function signature() {
-	var url = document.getElementById('lti').action;
+	var url = $('lti').action;
 	console.log("signature for " + url);
 	url = encodeURIComponent(url);
 	var pfx="POST&" + url + "&";
@@ -40,13 +46,14 @@ function signature() {
 		if(input.name == 'oauth_signature')
 			continue;
 		name = encodeURIComponent(input.name);
-		value = encodeURIComponent(input.value);
+		value = fixedEncodeURIComponent(input.value);
 		if(b) text += "&"
 		b = true;
 		text += name + "=" + value 
 	}
 	text = pfx + encodeURIComponent(text)
-	//$("stub").innerHTML = text;
+	$("stub").innerHTML = text;
+	
 	n = b64_hmac_sha1(secret, text);
 	$('oauth_signature').value = n;
 }
@@ -64,25 +71,27 @@ window.inner = {
 		isCorrect: function() {
 			return "null";
 		},
-		init: function(width, height, launchdata, values) {
+		init: function(width, height, launchdata, randomvalues) {
 			launch = JSON.parse(launchdata);
 			className = launch.className;
 // calculate locale from ?locale=XX 
-			locale = getLocale();
+			locale = getLocale()
 			background = $wnd.getBackground($wnd.outer)
-			console.log(background)
 			document.body.style.backgroundColor = background
-			uuid = $wnd.getUUID($wnd.outer);
-			launchdata = {
+			uuid = $wnd.getUUID($wnd.outer)
+			context = {
 					assessmentMode: $wnd.getMode($wnd.outer),
-					randomValues: values,
-					launchData: launch.launchData,
 					background: background,
+					//font: "",
 					scoreMax: launch.scoreMax,
 					logOption: launch.logOption,
 					logID: launch.logID,
+					UUID: uuid
 			}
-			launchdata = JSON.stringify(launchdata);			
+			launchdata = JSON.stringify(launch.launchData)	
+			context = JSON.stringify(context)
+			randomvalues = JSON.stringify(randomvalues)
+			subscriptions = launch.subscriptions || "{}"
 			$("launch_presentation_height").value = height;
 			$("launch_presentation_width").value = width;
 			$("launch_presentation_locale").value = locale;
@@ -90,8 +99,12 @@ window.inner = {
 			$('resource_link_id').value = uuid;
 			$('user_id').value = $wnd.getLearnerId($wnd.outer);
 			learnername = $wnd.getLearnerName($wnd.outer); // FIXME Last, Given -> Given Last
-			$('lis_person_name_full').value = learnername;
-			$("custom_launch_data").value = launchdata;
+			$('lis_person_name_full').value = learnername
+
+			$("custom_launch_data").value = launchdata
+			$("custom_randomvalues").value = randomvalues
+			$("custom_context").value = context
+			$("custom_subscriptions").value = subscriptions
 			signature()
 		},
 		enter: function() {
@@ -119,16 +132,20 @@ window.inner = {
 	body { 
 		background-color: #888;
 		color: white;
-		overflow: scroll;
+		overflow: initial;
 	}
 </style>
 
 </head>
-
-
+<!-- http://localhost:8080/DWOmAccess/lti/widget.jsp -->
+<!-- http://www.staff.science.uu.nl/~velth101/lti/tool.php -->
 <body>
 <form id='lti' method="POST" action='http://localhost:8080/DWOmAccess/lti/widget.jsp' >
+<input name='custom_context' id='custom_context' value='{}'><br>
 <input name='custom_launch_data' id='custom_launch_data' value='{}'><br>
+<input name='custom_randomvalues' id='custom_randomvalues' value='{}'><br>
+<input name='custom_subscriptions' id='custom_subscriptions' value='{}'><br>
+
 <input name='launch_presentation_height' id='launch_presentation_height' value='200'><br>
 <input name='launch_presentation_locale' id='launch_presentation_locale' value='en'><br>
 <input name='launch_presentation_width' id='launch_presentation_width' value='200'><br>
@@ -143,25 +160,22 @@ window.inner = {
 <input name='oauth_consumer_key' id='oauth_consumer_key' value='12345' ><br>
 <input name='oauth_nonce' value='1244834250435893000' type='hidden'>
 <input name='oauth_signature_method' value='HMAC-SHA1' type='hidden'>
-<input name='oauth_timestamp' id='oauth_timestamp' value='1413494648' ><br>
+<input name='oauth_timestamp' id='oauth_timestamp' value='1413494648' type='hidden'>
 <input name='oauth_version' value='1.0'  type='hidden'>
 
 <input name='resource_link_id' id='resource_link_id' value='000000-0-000000' ><br>
-<input name='roles' value='Learner' ><br>
-
+<input name='roles' value='Learner' type='hidden' >
 <input value="submit" name="submit" type="submit" ><br>
-
 <input name='user_id' id='user_id' value='guest' > <br>
-
 <input name='oauth_signature' id='oauth_signature' value='?' ><br>
 </form>
 
 <script>
 	d = new Date();
 	n = Math.floor( d.getTime()/1000 );
-	document.getElementById('oauth_timestamp').value = n;	
+	$('oauth_timestamp').value = n;	
 </script>
 
-
+<div id='stub'></div>
 </body>
 </html>
