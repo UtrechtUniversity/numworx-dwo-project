@@ -21,7 +21,5 @@
 
 <!-- English language, independent of country -->
   	<extend-property name="locale" values="en"/>
-  	<extend-property name="locale" values="nl"/>  	
-  	<set-property-fallback name="locale" value="nl"/> <!-- Dutch is the default -->
 	 
 </module>
