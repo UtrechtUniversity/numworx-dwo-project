@@ -3,8 +3,6 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
@@ -25,13 +23,11 @@ import nl.uu.fi.dwo.mobile.client.ui.SlidingPopup;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.StringCodeToHashMap;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
 
-import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -42,6 +38,7 @@ import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.TouchEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.http.client.Request;
@@ -51,16 +48,12 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -69,25 +62,22 @@ import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
-import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
-import com.googlecode.mgwt.dom.client.event.touch.TouchMoveEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
+import com.googlecode.mgwt.dom.client.recognizer.pinch.PinchEvent;
+import com.googlecode.mgwt.dom.client.recognizer.pinch.PinchHandler;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
 import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
+import com.googlecode.mgwt.ui.client.widget.touch.TouchDelegate;
 
 import fi.wiskopdr.text.Text;
 
 
 /**
  * 
- * @author Danny Hendrix, Evertson Croes
+ * @author Danny Hendrix, Evertson Croes, Sietske Tacoma, Wim van Velthoven
  * 
  */
 public class ViewModuleViewImpl extends XMLView implements ViewModuleView, EntryPoint
@@ -112,50 +102,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private HeaderPanel hp;
 
 	private Scorm2004IF api;
-
-	/*public ViewModuleViewImpl()
-	{
-		
-		
-		mainPanel.setHeight("100%");
-		mainPanel.setWidth("100%");
-		
-
-		hp = new HeaderPanel();
-		//hp.setCenter("Module 1");
-		Style style = hp.getElement().getStyle();
-
-		hb = new HeaderButton();
-		hb.setBackButton(true);
-		hb.setText("Home");
-
-		hp.setLeftWidget(hb);
-
-		mainPanel.add(hp);
-
-		contentScrollPanel = new ScrollPanel();
-		contentScrollPanel.setWidth("100%");
-		contentScrollPanel.setHeight("100%");
-		contentScrollPanel.getElement().getStyle().setOverflow(Overflow.AUTO);
-
-		contentPanel = new TouchPanel();
-		contentPanel.getElement().getStyle().setProperty("display", "inline-block");
-		contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
-		contentPanel.setWidth("99%");
-		addContentPanelTouchListener(contentPanel);
-
-		contentScrollPanel.setWidget(contentPanel);
-
-		mainPanel.add(contentScrollPanel);
-
-		kb = new FormuleKeyboard();
-		Panel kbp = kb.getAsPanel();
-		mainPanel.add(kbp);
-
-		initWidget(mainPanel);
-		
-		 
-	}*/
 
 	public ViewModuleViewImpl(boolean b) {
 		standalone = b;
@@ -223,45 +169,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	public void preSetupModule(final String link, final String url)
 	{
-//		RequestBuilder rb = new RequestBuilder(RequestBuilder.GET, link);
-//		try
-//		{
-//			rb.sendRequest(null, new RequestCallback()
-//			{
-//
-//				@Override
-//				public void onResponseReceived(Request request, Response response)
-//				{
-//
-//					String link = response.getText(); // another link? 
-//					if (response.getStatusCode() > 399)
-//						link = "";
-//					int i = link.indexOf('\r');
-//					if (i >= 0)
-//						link = link.substring(0, i);
-//					i = link.indexOf('\n');
-//					if (i >= 0)
-//						link = link.substring(0, i);
-//					if (!link.isEmpty())
-//					{
-//						setupModule(link, link);
-//					}
-//					else
-//					{
-//						setupModule(url, url);
-//					}
-//
-//				}
-//
-//				@Override
-//				public void onError(Request request, Throwable exception)
-//				{
-//					setupModule(url, url);
-//
-//				}
-//			});
-//		}
-//		catch (RequestException ignore)
 		{
 			setupModule(url, url);
 		}
@@ -280,11 +187,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			contentPanel.remove(buttons.get(i));
 
 		super.setupView(launchData);
-//		int mode = 1; // TODO not used! why? zie OpdrNav
-//		try { mode = Integer.parseInt((String)launchData.get("mode"));
-//		} catch (Exception e) {
-//			logger.log(Level.SEVERE, "mode = " + launchData.get("mode"), e);
-//		}
 		ObjectMap wrap = JSONUtilities.wrapMap(instellingen);
 // wanneer verschijnt de opnieuwknop?		
 		boolean opnieuwMogelijk = "true".equals(launchData.get("opnieuwMogelijk"));
@@ -300,10 +202,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 		contentPanel.getElement().getStyle().setFontSize(font_size, Unit.PX);
 		contentPanel.getElement().getStyle().setPadding(0, Unit.PX); // XXX was 15 
-		//contentPanel.getElement().getStyle().setPaddingLeft(0, Unit.PX); // GEEN randje aan de linkerkant, want dan klopt de maat (100%) niet meer bij noordhoff
-		//FormuleHolder.setDefaultFont(FormuleFont.createFromFontSize(font_size));
+		// GEEN randje aan de linkerkant, want dan klopt de maat (100%) niet meer bij noordhoff
 
-		
 		on =  new OpdrNav(launchData, this, new Memento(api));
 		FlowPanel onp = (FlowPanel) on.getAsPanel();
 		if(bolletjesZichtbaar)
@@ -398,21 +298,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			{
 				varnamen = vc.getVariableNames();
 				waarden = vc.getRandomValues();
-				//RandomVarNamen = varnamen;
-				//RandomVarWaarden = waarden;
 			}
 			catch (Exception ex)
 			{
 				wellSet = false;
 			}
 		}
-		//else
-		//{   varnamen = RandomVarNamen;
-		//    waarden = RandomVarWaarden;
-		//}
-
-		//System.out.println("randvarnamen: "+varnamen[0]);
-		//System.out.println("waarden: "+waarden);
 
 		this.randomVarNamen = varnamen;
 		this.randomVarWaarden = waarden;
@@ -437,34 +328,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				//title.getElement().getStyle().setFloat(Float.LEFT);
 				contentPanel.add(title);
 			}
-			/*
-			opdrachtObjects = tb.convertTekst(opdracht);
-			int aantalVakken = 0;
-			
-			for (int i = 0; i < opdrachtObjects.size(); i++)
-			{
-				Object currentObject = opdrachtObjects.get(i);
-				if (currentObject instanceof InteractionView)
-				{
-					((InteractionView) currentObject).setCommunicationRoot(on);
-					aantalVakken++;
-				}
-				if (currentObject instanceof TekstVakPanel)
-				{
-					//aantalVakken++;
-					Object launchData = opdrachtGegevens.get(aantalVakken + 4); // FIXME Hier ook een +5-1 Wim
-					((TekstVakPanel) currentObject).zetInstellingen(instellingen);
-					((TekstVakPanel) currentObject).setKeyboard(kb);
-					if(launchData != null)
-					{  HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) launchData).get("interactiePanelLaunchState");
-						((TekstVakPanel) currentObject).zetOpdracht(launchState);
-					}
-				}
-			}
-			*/
 			
 			setObjects(opdracht, contentPanel, on);
-			//setObjects(opdrachtObjects, contentPanel);
 		}
 		else if (!newVersion)
 		{ //Old editor version 
@@ -497,8 +362,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			{
 				varnamen = vc.getVariableNames();
 				waarden = vc.getRandomValues();
-				//RandomVarNamen = varnamen;
-				//RandomVarWaarden = waarden;
 			}
 			catch (Exception ex)
 			{
@@ -506,14 +369,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			}
 		}
 		
-		//else
-		//{   varnamen = RandomVarNamen;
-		//    waarden = RandomVarWaarden;
-		//}
-
-		//System.out.println("randvarnamen: "+varnamen[0]);
-		//System.out.println("waarden: "+waarden);
-
 		this.randomVarNamen = varnamen;
 		this.randomVarWaarden = waarden;
 
@@ -544,28 +399,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				contentPanel.add(title);
 			}
 			
-			/*
-			opdrachtObjects = tb.convertTekst(opdracht);
-			int aantalVakken = 0;
-			for (int i = 0; i < opdrachtObjects.size(); i++)
-			{
-				Object currentObject = opdrachtObjects.get(i);
-				if (currentObject instanceof InteractionView)
-					((InteractionView) currentObject).setCommunicationRoot(on);
-				if (currentObject instanceof TekstVakPanel)
-				{
-					aantalVakken++;
-					Object launchData = opdrachtGegevens.get(aantalVakken + 4); // nog een +5 voor het launchdata Wim
-					((TekstVakPanel) currentObject).zetInstellingen(instellingen);
-					((TekstVakPanel) currentObject).setKeyboard(kb);
-					if (launchData != null)
-					{	HashMap<String, Object> launchState = (HashMap<String, Object>) ((HashMap<String, Object>) launchData).get("interactiePanelLaunchState");
-						((TekstVakPanel) currentObject).zetOpdracht(launchState);
-					}
-				}
-			}*/
 			setObjects(opdracht, contentPanel, on);
-			//setObjects(opdrachtObjects, contentPanel);
 		}
 		else if (!newVersion)
 		{ //Old editor version 
@@ -588,7 +422,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	//Sets up a FormuleEditorWithSteps for each assignment
 	private void setupOldVersion(HashMap<String, Object> opdracht, TekstBuffer tb)
 	{
-		//ArrayList<Object> opdrachtObjects;
 		tekst = new FlowPanel();
 		Object object = opdracht.get("scheidingX");
 		if(object == null ) object = new Integer ( 0 );
@@ -623,18 +456,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	{
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		int aantalInteractionViews = 5;
-//		for (int i = 0; i < opdrachtObjects.size(); i++)
-//		{
-//			Object currentObject = opdrachtObjects.get(i);
-//			if (currentObject instanceof InteractionView)
-//			{
-//				aantalInteractionViews++;
-//			}
-//		}
 		ArrayList<Object> states = new ArrayList<Object>(opdrachtObjects.size() + 5);
 		for (int i = 0; i < 5; i++)
 			states.add(null);
-//		aantalInteractionViews = 5;
 
 		for (int i = 0; i < opdrachtObjects.size(); i++)
 		{
@@ -725,85 +549,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		}
 		return correct;
 	}
-	
-	
-//	private Panel getFormuleKeyboard(FormuleEditor editor)
-//	{
-//		if (kb == null)
-//			kb = new FormuleKeyboard();
-//		kb.setEditor(editor);
-//		Panel kbp = kb.getAsPanel();
-//
-//		kbp.getElement().getStyle().setPosition(Style.Position.ABSOLUTE);
-//		kbp.getElement().getStyle().setBottom(0, Style.Unit.PX);
-//		kbp.getElement().getStyle().setLeft(0, Style.Unit.PX);
-//
-//		return kbp;
-//	}
 
-
-	private void addContentPanelTouchListener(TouchPanel contentPanel)
-	{
-		final HashMap<String, Double> dif = new HashMap<String, Double>();
-		contentPanel.addTouchHandler(new TouchHandler()
-		{
-
-			@Override
-			public void onTouchStart(TouchStartEvent event)
-			{
-				if (event.touches().length() == 2)
-				{
-					event.stopPropagation();
-					double touch1X = event.touches().get(0).getPageX();
-					double touch1Y = event.touches().get(0).getPageY();
-					double touch2X = event.touches().get(1).getPageX();
-					double touch2Y = event.touches().get(1).getPageY();
-					dif.put("x", Math.abs(touch1X - touch2X));
-					dif.put("y", Math.abs(touch1Y - touch2Y));
-				}
-
-			}
-
-			@Override
-			public void onTouchMove(TouchMoveEvent event)
-			{
-				double difx;
-				double dify;
-
-				if (event.touches().length() == 2)
-				{
-					event.stopPropagation();
-					difx = Math.abs(event.touches().get(0).getPageX() - event.touches().get(1).getPageX());
-					dify = Math.abs(event.touches().get(0).getPageY() - event.touches().get(1).getPageY());
-					double ratio = 0;
-
-					if (dif.get("x") - difx > 0 && dif.get("y") - dify > 0)
-					{
-						ratio = ((dif.get("x") - difx) + (dif.get("y") - dify)) / 200;
-						DWOplayer.log("ratio: " + ratio);
-						zoomOut(ratio);
-					}
-					else if (dif.get("x") - difx < 0 && dif.get("y") - dify < 0)
-					{
-						ratio = ((Math.abs(dif.get("x") - difx)) + (Math.abs(dif.get("y") - dify))) / 200;
-						DWOplayer.log("ratio: " + ratio);
-						zoomIn(ratio);
-					}
-				}
-			}
-
-			@Override
-			public void onTouchEnd(TouchEndEvent event)
-			{
-			}
-
-			@Override
-			public void onTouchCanceled(TouchCancelEvent event)
-			{
-			}
-
-		});
-	}
 
 	public OpdrNavIF getOpdrNav()
 	{
@@ -973,7 +719,27 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		//contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
 		contentPanel.setWidth("100%"); // hoeveel is 100% - 30px ?
 		contentPanel.setHeight("100%");
-		//addContentPanelTouchListener(contentPanel);
+// FIXME Hier moeten we een gesture recognizer maken:
+
+		if(TouchEvent.isSupported()) {
+			TouchDelegate touchDelegate = new TouchDelegate(contentPanel);
+			touchDelegate.addPinchHandler(new PinchHandler() {
+				double zoom = 1.0;
+				@Override
+				public void onPinch(PinchEvent event) {
+					double factor = event.getScaleFactor();
+					int x = event.getX();
+					int y = event.getY();
+					zoom = zoom / factor;
+					zoom = Math.max(1.0, zoom);
+					zoom = Math.min(5.0, zoom);
+					logger.info("x=" + x + ", y= " + y + ", scale=" + factor + ", z=" + zoom);
+					contentPanel.getElement().getStyle().setProperty("zoom", String.valueOf(zoom));
+				}
+				
+			});
+		}
+		//ipv addContentPanelTouchListener(contentPanel);
 
 		contentScrollPanel.setWidget(contentPanel);
 //		contentScrollPanel.setScrollingEnabledX(false); // XXX IF NOORDHOFF 
