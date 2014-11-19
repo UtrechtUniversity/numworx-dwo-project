@@ -2,8 +2,10 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+
 
 
 
@@ -532,7 +534,7 @@ public class AntwoordTekstVak implements InteractionView{
 		boolean ingevuld = false;
 		boolean nagekeken = false;
 		String antwoord = "";
-		Vector attempts = new Vector();
+		List attempts = new Vector();
 		int attemptsCount = 0;
 		int errorCount = 0;
 
@@ -543,7 +545,7 @@ public class AntwoordTekstVak implements InteractionView{
 		if (h.containsKey("antwoord"))
 			antwoord = (String) h.get("antwoord");
 		if (h.containsKey("attempts"))
-			attempts = (Vector) h.get("attempts");
+			attempts = JSONUtilities.toArrayList( h.get("attempts") ); // do not expect Vector, it might be Object[]
 		if (h.containsKey("attemptsCount"))
 			attemptsCount = ((Number) h.get("attemptsCount")).intValue();
 		if (h.containsKey("errorCount"))
@@ -551,7 +553,7 @@ public class AntwoordTekstVak implements InteractionView{
 
 		this.ingevuld = ingevuld;
 		this.nagekeken = nagekeken;
-		this.attempts = attempts;
+		this.attempts = new Vector(attempts);
 		this.attemptsCount = attemptsCount;
 		this.errorCount = errorCount;
 
