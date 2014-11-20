@@ -35,6 +35,7 @@ import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
 
 import fi.wiskopdr.FormuleParser;
+import fi.wiskopdr.text.Text;
 import fi.wiskopdr.text.Text_nl;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
@@ -49,7 +50,7 @@ import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
 public class AntwoordKeuzeVak implements InteractionStub{
 	
-	public static Text_nl rb = new Text_nl();
+	//public static Text_nl rb = new Text_nl();
 	
 	static final String holderId = "dockholder";
 	private HashMap<String, Object> launchState; 
@@ -205,7 +206,7 @@ public class AntwoordKeuzeVak implements InteractionStub{
 		basisPanel.setWidgetLeftRight(huidigeKeuzeVak, 0, Style.Unit.PX, 20, Style.Unit.PX);
 		basisPanel.setWidgetTopBottom(huidigeKeuzeVak, 0, Style.Unit.PX, 0, Style.Unit.PX);
 		ArrayList<Object> kiesObjects = new ArrayList<Object> ();
-		kiesObjects.add(rb.getString("keuzeVakKiesLabel"));
+		kiesObjects.add(Text.constants.keuzeVakKiesLabel());
 		huidigeKeuzeVak.setObjects(kiesObjects);
 		
 		
@@ -447,7 +448,7 @@ public class AntwoordKeuzeVak implements InteractionStub{
 		huidigeKeuzeVak.clear();
 		
 		ArrayList<Object> huidigeKeuze = new ArrayList<Object> ();
-		huidigeKeuze.add(rb.getString("keuzeVakKiesLabel"));
+		huidigeKeuze.add(Text.constants.keuzeVakKiesLabel());
 		
 		TekstBuffer tb = new TekstBuffer();
 		if(index > 0)
@@ -486,7 +487,7 @@ public class AntwoordKeuzeVak implements InteractionStub{
 		if(selectedIndex > 0)
 			antwoord = keuzeMogelijkheden[selectedIndex - 1];
 		else
-			antwoord = rb.getString("keuzeVakKiesLabel");
+			antwoord = Text.constants.keuzeVakKiesLabel();
 		attempts = this.attempts;
 		attemptsCount = this.attemptsCount;
 		errorCount = this.errorCount;
@@ -601,7 +602,7 @@ public class AntwoordKeuzeVak implements InteractionStub{
 		huidigeKeuzeVak.clear();
 		
 		ArrayList<Object> huidigeKeuze = new ArrayList<Object> ();
-		huidigeKeuze.add(rb.getString("keuzeVakKiesLabel"));
+		huidigeKeuze.add(Text.constants.keuzeVakKiesLabel());
 		
 		TekstBuffer tb = new TekstBuffer();
 		if(selectedIndex > 0)

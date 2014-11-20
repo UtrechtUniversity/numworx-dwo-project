@@ -77,5 +77,8 @@ public interface TextConstants extends ConstantsWithLookup, TextIF {
 	String antwoordModelGeen();
 	@DefaultStringValue("abc")
 	String abc();
+	
+	@DefaultStringValue("Kies")
+	String keuzeVakKiesLabel();
 // enzovoort
 }
