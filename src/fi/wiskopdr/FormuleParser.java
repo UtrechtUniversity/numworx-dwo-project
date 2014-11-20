@@ -574,7 +574,7 @@ public class FormuleParser
 			if (index > -1 && tel > index + 2)
 				s = s.substring(0, index) + "(" + s.substring(index + 1, tel) + ")" + s.substring(tel);
 
-			else if (index > -1 && index + 2 < s.length() && Character.isLetter(s.charAt(index + 2)))
+			else if (index > -1 && index + 2 < s.length() && Letter.isLetter(s.charAt(index + 2)))
 			{
 				tel = index + 3;
 				s = s.substring(0, index) + "(-1)" + s.substring(index + 2);
@@ -598,7 +598,7 @@ public class FormuleParser
 			if (index > -1 && tel > index + 2)
 				s = s.substring(0, index) + "/(" + s.substring(index + 1, tel) + ")" + s.substring(tel);
 
-			else if (index > -1 && index + 2 < s.length() && Character.isLetter(s.charAt(index + 2)))
+			else if (index > -1 && index + 2 < s.length() && Letter.isLetter(s.charAt(index + 2)))
 			{
 				tel = index + 3;
 				s = s.substring(0, index) + "(-1)/" + s.substring(index + 2);
@@ -639,7 +639,7 @@ public class FormuleParser
 				char c0 = s.charAt(i);
 				char c1 = s.charAt(i + 1);
 				boolean isUpperCasePair = Character.isUpperCase(c0) && Character.isUpperCase(c1);
-				if (!isUpperCasePair && ((Character.isLetter(c0) || Character.isDigit(c0) || c0 == ')') && (Character.isLetter(c1) || c1 == '(')))
+				if (!isUpperCasePair && ((Letter.isLetter(c0) || Character.isDigit(c0) || c0 == ')') && (Letter.isLetter(c1) || c1 == '(')))
 				{
 					s = s.substring(0, i + 1) + '*' + s.substring(i + 1);
 				}
@@ -653,7 +653,7 @@ public class FormuleParser
 		{
 			for (int i = 0; i < s.length() - 1; i++)
 			{
-				if ((Character.isLetter(s.charAt(i)) || Character.isDigit(s.charAt(i)) || s.charAt(i) == ')') && (Character.isLetter(s.charAt(i + 1)) || s.charAt(i + 1) == '('))
+				if ((Letter.isLetter(s.charAt(i)) || Character.isDigit(s.charAt(i)) || s.charAt(i) == ')') && (Letter.isLetter(s.charAt(i + 1)) || s.charAt(i + 1) == '('))
 				{
 					s = s.substring(0, i + 1) + '*' + s.substring(i + 1);
 				}
@@ -1064,11 +1064,11 @@ public class FormuleParser
 				boolean startMetLetter = true;
 // Known bug: issue 6943: String.charAt(int) should throw IndexOutOfBoundsException if index is pointing out of bounds
 				if(s.length() == 0) throw new StringIndexOutOfBoundsException(); // Javascript geeft gewoon geen exception op s.charAt(0) wij verwachten dat wel hier.
-				startMetLetter = Character.isLetter(s.charAt(0));
+				startMetLetter = Letter.isLetter(s.charAt(0));
 				boolean basisString = true;
 				for (int i = 1; i < s.length(); i++)
 				{
-					basisString = startMetLetter && (Character.isLetter(s.charAt(i)) || Character.isDigit(s.charAt(i)));
+					basisString = startMetLetter && (Letter.isLetter(s.charAt(i)) || Character.isDigit(s.charAt(i)));
 					if (!basisString)
 						break;
 				}
@@ -1089,7 +1089,7 @@ public class FormuleParser
 				boolean upperCasePair = s.length() == 2 && Character.isUpperCase(s.charAt(0)) && Character.isUpperCase(s.charAt(1));
 				if (upperCasePair)
 					return new BasisExpressie(s);
-				else if (s.length() == 1 && Character.isLetter(s.charAt(0)))
+				else if (s.length() == 1 && Letter.isLetter(s.charAt(0)))
 				{
 					if (s.charAt(0) == 'e')
 						exp = new E();
@@ -1103,7 +1103,7 @@ public class FormuleParser
 			else
 			{
 				//is het een letter?		
-				if (s.length() == 1 && Character.isLetter(s.charAt(0)))
+				if (s.length() == 1 && Letter.isLetter(s.charAt(0)))
 				{
 					if (s.charAt(0) == 'e')
 						exp = new E();
