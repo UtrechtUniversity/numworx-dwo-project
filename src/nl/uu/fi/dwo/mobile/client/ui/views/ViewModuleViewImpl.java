@@ -64,6 +64,8 @@ import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.dom.client.recognizer.pinch.PinchEvent;
 import com.googlecode.mgwt.dom.client.recognizer.pinch.PinchHandler;
+import com.googlecode.mgwt.dom.client.recognizer.swipe.SwipeEndEvent;
+import com.googlecode.mgwt.dom.client.recognizer.swipe.SwipeEndHandler;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
@@ -634,31 +636,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			
 			@Override
 			public void onTap(TapEvent event) {
-				if(inNavBtn) {
-					return;
-				}
-				inNavBtn = true;
-				next.getElement().getStyle().setProperty("pointerEvents", "none");
-				((Element) next.getElement().getLastChild()).getStyle().setBackgroundColor("gray");
-				Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-
-					@Override
-					public void execute() {
-						int cur = on.getCurrentOpdracht() + 1;
-						if(cur >= on.getAantalOpdrachten()) cur = on.getAantalOpdrachten()-1;
-							on.gotoOpdracht(cur, scoreNav);
-						
-						Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-
-							@Override
-							public void execute() {
-								inNavBtn = false;
-									next.getElement().getStyle().clearProperty("pointerEvents");
-									((Element) next.getElement().getLastChild()).getStyle().clearBackgroundColor();
-							}});
-					}});
-				
-				
+				gotoNext(next);
 			}
 		});
 		prev = new HeaderButton(DWOplayer.PARAMETERS.headercss()); prev.setText("< Vorige");
@@ -667,33 +645,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			
 			@Override
 			public void onTap(TapEvent event) {
-				if(inNavBtn) {
-					logger.info("disabled");
-					return;
-				}
-				inNavBtn = true;
-				//DOM.setElementPropertyBoolean(next.getElement(), "disabled", true);
-				prev.getElement().getStyle().setProperty("pointerEvents", "none");
-				((Element) prev.getElement().getLastChild()).getStyle().setBackgroundColor("gray");
-				Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-
-					@Override
-					public void execute() {
-						logger.info("enabled");
-						int cur = on.getCurrentOpdracht() - 1;
-						if(cur < 0) cur = 0 ;
-						on.gotoOpdracht(cur, scoreNav);
-						Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-
-							@Override
-							public void execute() {
-								inNavBtn = false;
-								//DOM.removeElementAttribute(next.getElement(), "disabled");
-								prev.getElement().getStyle().clearProperty("pointerEvents");
-								((Element) prev.getElement().getLastChild()).getStyle().clearBackgroundColor();
-								logger.info("enable");
-							}});
-					}});
+				gotoPrev(prev);
 			}
 		});
 		
@@ -737,6 +689,18 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 					contentPanel.getElement().getStyle().setProperty("zoom", String.valueOf(zoom));
 				}
 				
+			});
+			
+			touchDelegate.addSwipeEndHandler(new SwipeEndHandler() {
+				
+				@Override
+				public void onSwipeEnd(SwipeEndEvent event) {
+					switch( event.getDirection()) {
+					case LEFT_TO_RIGHT:  gotoPrev(prev); break;
+					case RIGHT_TO_LEFT: gotoNext(next); break;
+					}
+					
+				}
 			});
 		}
 		//ipv addContentPanelTouchListener(contentPanel);
@@ -1027,6 +991,62 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	public String getUnitId() {
 		return unitId;
+	}
+
+	private void gotoNext(final HeaderButton next) {
+		if(inNavBtn) {
+			return;
+		}
+		inNavBtn = true;
+		next.getElement().getStyle().setProperty("pointerEvents", "none");
+		((Element) next.getElement().getLastChild()).getStyle().setBackgroundColor("gray");
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+			@Override
+			public void execute() {
+				int cur = on.getCurrentOpdracht() + 1;
+				if(cur >= on.getAantalOpdrachten()) cur = on.getAantalOpdrachten()-1;
+					on.gotoOpdracht(cur, scoreNav);
+				
+				Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+					@Override
+					public void execute() {
+						inNavBtn = false;
+							next.getElement().getStyle().clearProperty("pointerEvents");
+							((Element) next.getElement().getLastChild()).getStyle().clearBackgroundColor();
+					}});
+			}});
+	}
+
+	private void gotoPrev(final HeaderButton prev) {
+		if(inNavBtn) {
+			logger.info("disabled");
+			return;
+		}
+		inNavBtn = true;
+		//DOM.setElementPropertyBoolean(next.getElement(), "disabled", true);
+		prev.getElement().getStyle().setProperty("pointerEvents", "none");
+		((Element) prev.getElement().getLastChild()).getStyle().setBackgroundColor("gray");
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+			@Override
+			public void execute() {
+				logger.info("enabled");
+				int cur = on.getCurrentOpdracht() - 1;
+				if(cur < 0) cur = 0 ;
+				on.gotoOpdracht(cur, scoreNav);
+				Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+					@Override
+					public void execute() {
+						inNavBtn = false;
+						//DOM.removeElementAttribute(next.getElement(), "disabled");
+						prev.getElement().getStyle().clearProperty("pointerEvents");
+						((Element) prev.getElement().getLastChild()).getStyle().clearBackgroundColor();
+						logger.info("enable");
+					}});
+			}});
 	}
 
 }
