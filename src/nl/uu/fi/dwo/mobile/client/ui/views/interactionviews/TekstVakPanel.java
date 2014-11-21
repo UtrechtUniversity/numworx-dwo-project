@@ -1866,7 +1866,7 @@ java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " +
 					tekstVakken[i][j].resize();
 					//tekstVakken[i][j].setPixelSize(breedtes.get(j).intValue(), h);
 				}
-				hoogte += hoogtes.get(i);
+				hoogte += hoogtes.get(i) + cellSpaceRow;
 			}
 			this.hoogte = (int)hoogte;
 			

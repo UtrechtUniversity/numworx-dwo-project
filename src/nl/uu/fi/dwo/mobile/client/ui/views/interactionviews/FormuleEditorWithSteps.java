@@ -250,8 +250,10 @@ public class FormuleEditorWithSteps implements InteractionView
 		}
 		
 		mainPanel = new FlowPanel();
-		mainPanel.getElement().getStyle().setWidth(breedte - 2, Unit.PX);//-2 om ook rand zichtbaar te krijgen
-		mainPanel.getElement().getStyle().setHeight(hoogte - 2, Unit.PX);//-2 om ook rand zichtbaar te krijgen
+		mainPanel.addStyleName("formuleEditorWithSteps");
+//		mainPanel.getElement().getStyle().setWidth(breedte - 2, Unit.PX);//-2 om ook rand zichtbaar te krijgen
+//		mainPanel.getElement().getStyle().setHeight(hoogte - 2, Unit.PX);//-2 om ook rand zichtbaar te krijgen
+		mainPanel.setPixelSize(breedte-2, hoogte-2);
 		mainPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 		mainPanel.getElement().getStyle().setBorderColor("gray");
 		//mainPanel.getElement().getStyle().setBackgroundColor(CssColor.make(240, 240, 240).toString());
@@ -365,8 +367,9 @@ public class FormuleEditorWithSteps implements InteractionView
 		
 		sp = new ScrollPanel();
 
-		sp.getElement().getStyle().setWidth(breedte - 5, Unit.PX);
-		sp.getElement().getStyle().setHeight(hoogte - 50, Unit.PX);
+//		sp.getElement().getStyle().setWidth(breedte - 5, Unit.PX);
+//		sp.getElement().getStyle().setHeight(hoogte - 50, Unit.PX);
+		sp.setPixelSize(breedte-5, hoogte-50);
 		sp.getElement().getStyle().setOverflow(Overflow.AUTO);
 		sp.getElement().getStyle().setFloat(Style.Float.LEFT);
 
@@ -2473,6 +2476,8 @@ public class FormuleEditorWithSteps implements InteractionView
 	}
 	protected void setHeight(int h) {
 		hoogte = h;
+		mainPanel.setPixelSize(-1, h-2);
+		sp.setPixelSize(-1, h-50);
 	}
 	
 	@Override

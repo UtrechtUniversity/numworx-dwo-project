@@ -16,6 +16,7 @@ import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.FontStyle;
@@ -224,8 +225,13 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				//TODO gaat dit goed met centreren?
 			}
 		}
+		if(b <= 0)
+		{
+			GWT.log(b + "<= 0");
+			return;
+		}
 		if(h > 0)
-			this.setSize("" + b + "px", "" + h + "px");
+			this.setPixelSize(b,h);
 	}
 	
 	public int getInhoudBreedte()
