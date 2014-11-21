@@ -757,8 +757,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			//if(mode != 2 && mode != 3)
 			//	kijkNa();
 			
-			if (mode == 0 || nagekeken)
+			if (mode == 0 || mode == 1 || nagekeken)
 				kijkNa();
+			//TODO: kijken of dit goed gaat met de strafpunten als een antwoord niet goed is..
 		}
 
 	}

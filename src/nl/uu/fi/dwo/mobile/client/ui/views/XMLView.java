@@ -74,6 +74,8 @@ public abstract class XMLView {
 	protected boolean[][] bezocht = null;
 	protected int condPerc = 100;
 	
+	protected boolean allesCorrectNodig = false;
+	
 	private TekstVakPanel hoofdPanel;
 
 	protected void setupView(HashMap<String, Object> launchData)
@@ -131,29 +133,35 @@ public abstract class XMLView {
 				ObjectList navVoorwaardenList = wrap.getObjectList("navVoorwaarden");
 				navVoorwaarden = new int[navVoorwaardenList.size()][][];
 				for(int i = 0; i < navVoorwaardenList.size(); i++)
-				{
-					ObjectList lijst = navVoorwaardenList.getObjectList(i);
+				{	ObjectList lijst = navVoorwaardenList.getObjectList(i);
+					navVoorwaarden[i] = new int[lijst.size()][];
 					for(int j = 0; j < lijst.size(); j++)
-						navVoorwaarden[i][j] = lijst.getIntArray(j);
+					{	try{
+							navVoorwaarden[i][j] = lijst.getIntArray(j);
+						}
+						catch(Exception e)
+						{}
+					}
 				}
 			}
-			if(wrap.containsKey("bezocht")) //boolean[][]
-			{
-				ObjectList bezochtList = wrap.getObjectList("bezocht");
-				bezocht = new boolean[bezochtList.size()][];
-				for(int i = 0; i < bezochtList.size(); i++)
-				{
-					bezocht[i] = bezochtList.getBooleanArray(i);
-				}
-			}
+//			if(wrap.containsKey("bezocht")) //boolean[][]
+//			{
+//				ObjectList bezochtList = wrap.getObjectList("bezocht");
+//				bezocht = new boolean[bezochtList.size()][];
+//				for(int i = 0; i < bezochtList.size(); i++)
+//				{
+//					bezocht[i] = bezochtList.getBooleanArray(i);
+//				}
+//			}
 			if(wrap.containsKey("condPerc"))
 				condPerc = wrap.getInt("condPerc");
-				
+			if(wrap.containsKey("allesCorrectNodig"))
+				allesCorrectNodig = wrap.getBoolean("allesCorrectNodig");
 			
 			
 			
 		}
-
+		
 	}
 
 	protected void loadXML(String xmlPath) {
@@ -258,5 +266,10 @@ public abstract class XMLView {
 
 	private void addFormulePanelListeners(final TouchPanel tp, final FormuleHolder editor) {
 		tp.addTouchHandler(new FormuleEditorTouchHandler(editor));
+	}
+	
+	public boolean bolletjesZichtbaar()
+	{
+		return bolletjesZichtbaar;
 	}
 }

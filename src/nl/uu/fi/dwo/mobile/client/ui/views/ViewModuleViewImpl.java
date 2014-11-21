@@ -49,6 +49,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.CustomButton;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -96,12 +97,17 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private Panel tekst = null;
 	private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
 	private double zoom = 1;
-	private PushButton volgendeKnop, vorigeKnop, eindeKnop;
+	private PushButton volgendeKnop, vorigeKnop ;//, eindeKnop;
 	private PushButton nakijkKnop;
-
+	
 	private Panel kbp = null;
 	private HeaderButton hb;
 	private HeaderPanel hp;
+	
+	private HeaderButton next, prev;
+	private boolean nextEnabled = true;
+	private boolean prevEnabled = true;
+	
 
 	private Scorm2004IF api;
 
@@ -222,6 +228,13 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			this.loadingHandler.viewModuleViewSetupDone();;
 		}
 		
+//		bezocht = new boolean[on.getAantalActiviteiten()][on.getAantalOpdrachten()];
+//		for(int j = 0; j < on.getAantalActiviteiten(); j++)
+//		{	for(int i = 0; i < bezocht[j].length; i++)
+//				bezocht[j][i] = false;
+//		}	
+//		bezocht[0][0] = true;
+		
 		//benodigde knoppen toevoegen.
 		int mode = on.getMode();
 		if(mode == OpdrNav.ZELFTOETS)
@@ -249,9 +262,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			public void onClick(ClickEvent e)
 			{
 				e.stopPropagation();
-				int cur = on.getCurrentOpdracht() - 1;
-				if(cur < 0) cur = 0 ;
-				on.gotoOpdracht(cur, scoreNav);
+//				int cur = on.getCurrentOpdracht() - 1;
+//				if(cur < 0) cur = 0 ;
+//				on.gotoOpdracht(cur, scoreNav);
+				gaNaarVorigeOpdracht();
 			}
 		});
 		
@@ -260,12 +274,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			public void onClick(ClickEvent e)
 			{
 				e.stopPropagation();
-				int cur = on.getCurrentOpdracht() + 1;
-				if(cur >= on.getAantalOpdrachten()) cur = on.getAantalOpdrachten()-1;
-					on.gotoOpdracht(cur, scoreNav);
+				
+				gaNaarVolgendeOpdracht();
 			}
 		});
 		
+		/*
 		eindeKnop = new PushButton(Text.constants.eindeKnopLabel());
 		eindeKnop.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
@@ -274,18 +288,78 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				//TODO: functie geven.
 			}
 		});
+		*/
 		
 		if(volgendeKnopZichtbaar)
 			kb.addKnop(volgendeKnop, true);
 		if(vorigeKnopZichtbaar)
 			kb.addKnop(vorigeKnop, true);
-		
-		
-		
+		stelNavigatieIn();
+	}
+	
+	public void gaNaarVolgendeOpdracht()
+	{
+		if(condNav && condNavVoorwaarden)
+		{
+//		{	states[activiteitNr][opdrachtNr] = opdrContainer.getState();
+//			scores[activiteitNr][opdrachtNr] = opdrContainer.getScore();
+//			if (objectives != null)
+//				scoresObjectives[activiteitNr][opdrachtNr] = opdrContainer.getScoreObjectives();
+//			isCorrect[activiteitNr][opdrachtNr] = opdrContainer.isCorrect();
+//			stelNavigatieIn(activiteitNr, opdrachtNr);
+//			gaNaarVolgendeOpdracht(activiteitNr, opdrachtNr);
+			int cur = bepaalVolgendeOpdracht(on.getCurrentActiviteit(), on.getCurrentOpdracht());
+			if(cur >= on.getAantalOpdrachten()) 
+				cur = on.getAantalOpdrachten()-1;
+			on.gotoOpdracht(cur, scoreNav);
+			stelNavigatieIn();
+			
+			
+		}
+		else
+		{	int cur = on.getCurrentOpdracht() + 1;
+			if(cur >= on.getAantalOpdrachten()) 
+				cur = on.getAantalOpdrachten()-1;
+			on.gotoOpdracht(cur, scoreNav);
+			stelNavigatieIn();
+			
+		}
+	}
+	
+	public void gaNaarVorigeOpdracht()
+	{
+		if(condNav && condNavVoorwaarden)
+		{
+			int cur = Math.max(on.getCurrentOpdracht() - 1, 0);
+			while(!bezocht[on.getCurrentActiviteit()][cur] && cur > 0)
+				cur--;
+			on.gotoOpdracht(cur, scoreNav);
+			stelNavigatieIn();
+		}
+		else
+		{
+			int cur = on.getCurrentOpdracht() - 1;
+			if(cur < 0) 
+				cur = 0 ;
+			on.gotoOpdracht(cur, scoreNav);
+			stelNavigatieIn();
+			
+		}
 	}
 
 	public void zetOpdracht(HashMap<String, Object> opdracht)
 	{
+		if(bezocht == null)
+		{
+			bezocht = new boolean[on.getAantalActiviteiten()][on.getAantalOpdrachten()];
+			for(int j = 0; j < on.getAantalActiviteiten(); j++)
+			{	for(int i = 0; i < bezocht[j].length; i++)
+					bezocht[j][i] = false;
+			}	
+			bezocht[0][0] = true;
+		}
+		
+		
 		String randVarString = "";
 		randVarString = (String) opdracht.get("randVarString");
 		if(randVarString == null) randVarString = "";
@@ -332,6 +406,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			}
 			
 			setObjects(opdracht, contentPanel, on);
+			//stelNavigatieIn(on.getCurrentActiviteit(), on.getCurrentOpdracht());
 		}
 		else if (!newVersion)
 		{ //Old editor version 
@@ -402,6 +477,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			}
 			
 			setObjects(opdracht, contentPanel, on);
+			//stelNavigatieIn(on.getCurrentActiviteit(), on.getCurrentOpdracht());
 		}
 		else if (!newVersion)
 		{ //Old editor version 
@@ -417,7 +493,181 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		
 		setState(state);
 		
+	}
+	
+	public void stelNavigatieIn()
+	{	//Omzetting in GWT: overal opdrachtenCorrect[actNr][opdrNr] vervangen door on.getOpdrachtCorrect(actNr, opdrNr)
+		int opdrNr = on.getCurrentOpdracht();
+		int actNr = on.getCurrentActiviteit();
 		
+		try{
+			if(bezocht!=null && opdrNr > 0 && opdrNr < bezocht[actNr].length)
+				bezocht[actNr][opdrNr] = true;
+			}
+			catch(Exception e){}
+		
+		//bolletje zelf moet altijd enabled zijn, als het al een keer is bezocht.
+		try{	
+			if(bezocht[actNr][opdrNr])
+				on.setButtonEnabled(opdrNr, true);
+				//or[actNr].setEnabled(true, opdrNr + 1);
+		}
+		catch(Exception e){}
+			
+		//Als op laatste pagina: geen bolletjes in te stellen, einde-knop neerzetten
+		if(opdrNr == on.getAantalOpdrachten() - 1)
+		{
+			zetVolgendeKnoppenEnabled(false);
+			//volgendeKnop.setEnabled(false);
+			
+			//Nog invoegen: Einde-knop
+			/*
+			if(!"GR".equals(WiskOpdr.deployVariant) && !"MW".equals(WiskOpdr.deployVariant))
+			{	volgendeKnop.setVisible(false);
+				eindeKnop.setVisible(volgendeKnopZichtbaar);
+				eindeKnop.setEnabled(true);
+			}
+			*/
+		}
+		//Als conditionele navigatie met voorwaarden, en van huidige pagina word je naar
+		//menu gestuurd: einde-knop neerzetten, alle volgende bolletjes disabled.
+		else if(condNav && condNavVoorwaarden && bepaalVolgendeOpdracht(actNr, opdrNr) == -1)
+		{
+			//if("GR".equals(WiskOpdr.deployVariant) || "MW".equals(WiskOpdr.deployVariant))
+				//volgendeKnop.setEnabled(false);
+				zetVolgendeKnoppenEnabled(false);
+			//else
+			//{	volgendeKnop.setVisible(false);
+			//	eindeKnop.setVisible(volgendeKnopZichtbaar);
+			//}
+			for(int i = opdrNr + 1; i < on.getAantalOpdrachten(); i++)
+				//or[actNr].setEnabled(false, i + 1);
+				on.setButtonEnabled(i, false);
+			
+//			if(allesCorrectNodig && !on.getOpdrachtCorrect(actNr, opdrNr) && !on.geefNoScore(actNr, opdrNr + 1)) // klopt die + 1??
+//				eindeKnop.setEnabled(false);
+//			else
+//				eindeKnop.setEnabled(true);
+		}
+		else
+		{	//eindeKnop.setVisible(false);
+			//eindeKnop.setEnabled(false);
+			if(volgendeKnop != null)
+				volgendeKnop.setVisible(volgendeKnopZichtbaar);
+		
+			//Als leerling pas door mag als alles op pagina correct: volgende bolletjes en volgende/einde-knop disablen.
+			if(allesCorrectNodig && !on.getOpdrachtCorrect(actNr, opdrNr) && !on.geefNoScore(actNr, opdrNr + 1)) //klopt die + 1??
+			{	for(int i = opdrNr + 1; i < on.getAantalOpdrachten(); i++)
+					on.setButtonEnabled(i, false);
+				//volgendeKnop.setEnabled(false);
+				zetVolgendeKnoppenEnabled(false);
+				//eindeKnop.setEnabled(false);
+				zetVorigeKnoppenEnabled(opdrNr > 0);
+				return;
+			}
+			
+			if(condNav && condNavPerc)
+			{	//boolean conditie = on.geefNoScore(actNr, opdrNr + 1) || //or[actNr].geefNoScore(opdrNr + 1) || 
+				//		100.0 * (Math.max(0, on.getScore(actNr, opdrNr) - on.getStrafpunten(actNr, opdrNr))) / on.getMaxScore(actNr, opdrNr) >= condPerc;
+				boolean conditie = on.geefNoScore(actNr, opdrNr + 1) || 100 * on.getScore(actNr, opdrNr) / on.getMaxScore(actNr, opdrNr) >= condPerc;
+				for(int i = opdrNr + 2; i < on.getAantalOpdrachten(); i++)
+				{	//or[actNr].setEnabled(bezocht[actNr][i], i + 1);
+					on.setButtonEnabled(i, bezocht[actNr][i]);
+				}
+				//or[actNr].setEnabled(conditie, opdrNr + 2);
+				on.setButtonEnabled(opdrNr + 1, conditie);
+				//volgendeKnop.setEnabled(conditie);
+				zetVolgendeKnoppenEnabled(conditie);
+				//eindeKnop.setEnabled(conditie);
+			}
+			else
+			//	volgendeKnop.setEnabled(true);
+				
+				zetVolgendeKnoppenEnabled(true);
+			if(condNav && condNavVoorwaarden)
+			{	for(int i = opdrNr + 1; i < on.getAantalOpdrachten(); i++)
+				//	or[actNr].setEnabled(bezocht[actNr][i], i + 1);
+					on.setButtonEnabled(i, bezocht[actNr][i]);
+				if(bepaalVolgendeOpdracht(actNr, opdrNr) > -1)
+				{	on.setButtonEnabled(bepaalVolgendeOpdracht(actNr, opdrNr), !allesCorrectNodig || on.geefNoScore(actNr, opdrNr + 1) || on.getOpdrachtCorrect(actNr, opdrNr));
+					if(!allesCorrectNodig)
+					{	int volgende = bepaalVolgendeOpdracht(actNr, opdrNr);
+						while(bepaalVolgendeOpdracht(actNr, volgende) > -1)
+						{	if(bepaalVolgendeOpdracht(actNr, volgende) > volgende + 1)
+								for(int i = volgende + 1; i < bepaalVolgendeOpdracht(actNr, volgende); i++)
+								//	or[actNr].setEnabled(false, i + 1);
+									on.setButtonEnabled(i, false);
+							//or[actNr].setEnabled(true, bepaalVolgendeOpdracht(actNr, volgende) + 1);
+							on.setButtonEnabled(bepaalVolgendeOpdracht(actNr, volgende), true);
+							volgende = bepaalVolgendeOpdracht(actNr, volgende);
+						}
+						if(volgende + 1 < on.getAantalOpdrachten())
+						{	for(int i = volgende + 1; i < on.getAantalOpdrachten(); i++)
+							//	or[actNr].setEnabled(false, i + 1);
+							on.setButtonEnabled(i, false);
+						}
+								
+					}
+				
+				}
+			}
+		
+		}
+		zetVorigeKnoppenEnabled(opdrNr > 0);
+	}
+	
+	public void zetVolgendeKnoppenEnabled(boolean b)
+	{	if(volgendeKnop != null)
+			volgendeKnop.setEnabled(b);
+		nextEnabled = b;
+	}
+	
+	public void zetVorigeKnoppenEnabled(boolean b)
+	{
+		if(vorigeKnop != null)
+			vorigeKnop.setEnabled(b);
+		prevEnabled = b;
+	}
+	
+	public int bepaalVolgendeOpdracht(int actNr, int opdrNr)
+	{
+		int scoreSelectie = 0;
+		int scoreMaxSelectie = 0;
+		int scorePercTotHier;
+		int volgendeOpdracht = 0;
+		
+		try
+		{	int[] naarPaginas = navVoorwaarden[0][opdrNr];//kan fout gaan als navVoorwaarden leeg (of niet gevuld voor opdrNr)
+			int[] scorePaginas = navVoorwaarden[1][opdrNr];
+			int[] grensScores = navVoorwaarden[2][opdrNr];
+			
+			for(int i = 0; i < scorePaginas.length; i++)//kan fout gaat als scorePaginas leeg
+			{	if(bezocht[actNr][scorePaginas[i]-1])
+				{	scoreSelectie = scoreSelectie + on.getScore(actNr, scorePaginas[i]-1)-on.getStrafpunten(actNr, scorePaginas[i]-1);
+					scoreMaxSelectie += on.getMaxScore(actNr, scorePaginas[i]-1);
+				}
+			}
+			scorePercTotHier = 100 * scoreSelectie / scoreMaxSelectie;//kan fout gaan bij delen door 0
+			
+			if(scorePercTotHier <= grensScores[0])
+				volgendeOpdracht = naarPaginas[0] - 1;
+			else
+			{	for(int i = 1; i < grensScores.length; i++)//kan fout gaat als grensscores leeg
+					if(scorePercTotHier > grensScores[i-1] && scorePercTotHier <= grensScores[i])
+						volgendeOpdracht = naarPaginas[i] - 1;
+			}
+			if(scorePercTotHier > grensScores[grensScores.length - 1])
+				volgendeOpdracht = naarPaginas[grensScores.length - 1] - 1;
+		}
+		catch(Exception e)//als bovenstaande niet lukt, ga je gewoon naar de volgende pagina.
+		{	if(opdrNr < on.getAantalOpdrachten() - 1)
+				volgendeOpdracht = opdrNr + 1;	
+			else
+				volgendeOpdracht = -1;
+		}
+		if(volgendeOpdracht >= on.getAantalOpdrachten())
+			volgendeOpdracht = -1;
+		return volgendeOpdracht;
 		
 	}
 
@@ -630,13 +880,13 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		hp = new HeaderPanel(DWOplayer.PARAMETERS.headercss());
 		setTitle("");
 		//Style style = hp.getElement().getStyle();		
-		final HeaderButton next, prev;
 		next = new HeaderButton(DWOplayer.PARAMETERS.headercss()); next.setText("Volgende >");
 		next.addTapHandler(new TapHandler() {
 			
 			@Override
 			public void onTap(TapEvent event) {
-				gotoNext(next);
+				if(nextEnabled)
+					gotoNext(next);
 			}
 		});
 		prev = new HeaderButton(DWOplayer.PARAMETERS.headercss()); prev.setText("< Vorige");
@@ -645,7 +895,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			
 			@Override
 			public void onTap(TapEvent event) {
-				gotoPrev(prev);
+				if(prevEnabled)
+					gotoPrev(prev);
 			}
 		});
 		
@@ -731,8 +982,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			}});
 		POPUP.addAutoHidePartner(hb.getElement());
 
-		
-		
 		//initWidget(mainPanel);
 		return this;
 
@@ -1004,9 +1253,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 			@Override
 			public void execute() {
-				int cur = on.getCurrentOpdracht() + 1;
-				if(cur >= on.getAantalOpdrachten()) cur = on.getAantalOpdrachten()-1;
-					on.gotoOpdracht(cur, scoreNav);
+				gaNaarVolgendeOpdracht();
+				
+//				int cur = on.getCurrentOpdracht() + 1;
+//				if(cur >= on.getAantalOpdrachten()) cur = on.getAantalOpdrachten()-1;
+//					on.gotoOpdracht(cur, scoreNav);
 				
 				Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 
@@ -1021,7 +1272,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	private void gotoPrev(final HeaderButton prev) {
 		if(inNavBtn) {
-			logger.info("disabled");
+			//logger.info("disabled");
 			return;
 		}
 		inNavBtn = true;
@@ -1032,10 +1283,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 			@Override
 			public void execute() {
-				logger.info("enabled");
-				int cur = on.getCurrentOpdracht() - 1;
-				if(cur < 0) cur = 0 ;
-				on.gotoOpdracht(cur, scoreNav);
+				//logger.info("enabled");
+				gaNaarVorigeOpdracht();
+//				int cur = on.getCurrentOpdracht() - 1;
+//				if(cur < 0) cur = 0 ;
+//				on.gotoOpdracht(cur, scoreNav);
 				Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 
 					@Override

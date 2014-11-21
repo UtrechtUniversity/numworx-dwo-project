@@ -61,12 +61,15 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 	private int[] aantalOpdrachten;
 	private String[] activiteitNamen;
 	private int maxAantalOpdrachten = 50;
-
+	
+	private boolean[][] buttonsEnabled;
+	
 	private HashMap<String, Object>[][] opdrachten;
 	private HashMap<String, Object>[][] states;
 	private int[][] scoresMax;
 	private int[][] scores;
 	private boolean[][] isCorrect;
+	private boolean[][] opdrachtenCorrect;
 	
 	private int mode;
 	private int[][] strafpunten;
@@ -87,6 +90,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		aantalActiviteiten = Integer.parseInt((String) launchData.get("aantalActiviteiten"));
 		activiteitNamen = new String[aantalActiviteiten];
 		aantalOpdrachten = new int[aantalActiviteiten];
+		buttonsEnabled = new boolean[aantalActiviteiten][];
 		
 		mode = Integer.parseInt((String)launchData.get("mode"));
 		maxAantalOpdrachten = 1;
@@ -96,12 +100,17 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 			String aantalString = (String) launchData.get("aantalOpdrachten_" + (i + 1));
 			aantalOpdrachten[i] = Integer.parseInt(aantalString);
 			maxAantalOpdrachten = Math.max(maxAantalOpdrachten, aantalOpdrachten[i]);
+			buttonsEnabled[i] = new boolean[aantalOpdrachten[i]];
+			for(int j = 0; j < aantalOpdrachten[i]; j++)
+				buttonsEnabled[i][j] = true;
 		}
-
+		
+		
 		opdrachten = new HashMap[aantalActiviteiten][maxAantalOpdrachten];
 		scoresMax = new int[aantalActiviteiten][maxAantalOpdrachten];
 		scores = new int[aantalActiviteiten][maxAantalOpdrachten];
 		isCorrect = new boolean[aantalActiviteiten][maxAantalOpdrachten];
+		opdrachtenCorrect = new boolean[aantalActiviteiten][maxAantalOpdrachten];
 		states = new HashMap[aantalActiviteiten][maxAantalOpdrachten];
 		scoreMax = 0;
 		
@@ -137,7 +146,11 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		memento.getOrGoedFout(isCorrect);
 		memento.getScores(scores);
 		
-		//setOpdrachten(currentActiviteit); // kan dat nu al? of anders bij setchanged testen op  buttons.get() != null
+		contentPanel = new FlowPanel();
+		contentPanel.getElement().getStyle().setMargin(5, Unit.PX);
+		
+		setOpdrachten(currentActiviteit); // kan dat nu al? of anders bij setchanged testen op  buttons.get() != null
+		
 		final HashMap<String, Object> state = states[currentActiviteit][currentOpdracht];
 
 		
@@ -197,18 +210,25 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 	{
 		return mainPanel;
 	}
+	
+	public boolean getOpdrachtCorrect(int i, int j)
+	{
+		return opdrachtenCorrect[i][j];
+	}
 
 	public void setChanged(boolean fout) // FIXME Trifork: hier safepoint?
 	{
 		Boolean check = entry.isCorrect();
 		boolean correct =  Boolean.TRUE.equals(check);
 		isCorrect[currentActiviteit][currentOpdracht] = correct;
+		opdrachtenCorrect[currentActiviteit][currentOpdracht] = correct;
 		
 		if(strafpunten != null && mode == OEFENEN_STRAFPUNTEN && fout)
 			strafpunten[currentActiviteit][currentOpdracht] += foutStraf;
 		if (buttons != null && buttons.size() > currentOpdracht)
 			setButtonCorrect(buttons.get(currentOpdracht), correct, currentOpdracht);
 		saveCurrentState();
+		entry.stelNavigatieIn();
 	}
 		
 	private void setOpdrachten(int index)
@@ -249,6 +269,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		button.getElement().getStyle().setBackgroundColor("#FFBBBB");
 		if (scoresMax[currentActiviteit][j] == 0)
 			button.getElement().getStyle().setBackgroundColor("#909090");
+		if(!buttonsEnabled[currentActiviteit][j])
+			button.getElement().getStyle().setBackgroundColor("white");
 		button.getElement().getStyle().setProperty("borderRadius", "20px");
 
 		button.getElement().getStyle().setBorderWidth(1, Unit.PX);
@@ -265,6 +287,18 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		buttons.add(button);
 		fp_opdrachten.add(button);
 	}
+	
+	public TouchButton getButton(int j)
+	{
+		try{
+			return buttons.get(j);
+		}
+		catch(Exception e)
+		{
+			return null;
+		}
+		
+	}
 
 	private void addButtonHandler(TouchButton button, int id)
 	{
@@ -275,7 +309,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 			@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
-				gotoOpdracht(button_id, entry.scoreNav);
+				if(buttonsEnabled[currentActiviteit][button_id])
+					gotoOpdracht(button_id, entry.scoreNav);
 			}
 
 			@Override
@@ -305,8 +340,28 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 	private void setButtonCorrect(TouchButton button, boolean b, int j)
 	{
 		button.getElement().getStyle().setBackgroundColor(b ? "#00BB00" : "#FFBBBB");
-		if (scoresMax[currentActiviteit][j] == 0)
+		if (geefNoScore(currentActiviteit, j))
 			button.getElement().getStyle().setBackgroundColor("#909090");
+	}
+	
+	public boolean geefNoScore(int actNr, int opdrNr)
+	{
+		return scoresMax[actNr][opdrNr] == 0;
+	}
+	
+	public void setButtonEnabled(int j, boolean b)
+	{
+		if(!entry.bolletjesZichtbaar() || buttons.size() < j)
+			return;
+		buttonsEnabled[currentActiviteit][j] = b;
+		if(b)
+		{	setButtonCorrect(buttons.get(j), isCorrect[currentActiviteit][j], j);
+		}
+		else
+		{	buttons.get(j).getElement().getStyle().setBackgroundColor("white");
+			
+			
+		}
 	}
 
 	public void setButtonCursor(TouchButton button)
@@ -367,6 +422,28 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 			doubleScore = 0;
 		return doubleScore;
 	}
+	
+	public int getScore(int actNr, int opdrNr)
+	{
+		return scores[actNr][opdrNr];
+	}
+	
+	public int getStrafpunten(int actNr, int opdrNr)
+	{
+		try{
+			return strafpunten[actNr][opdrNr];
+		}
+		catch(Exception e)
+		{
+			return 0;
+		}
+		
+	}
+	
+	public int getMaxScore(int actNr, int opdrNr)
+	{
+		return scoresMax[actNr][opdrNr];
+	}
 
 	public void run()
 	{
@@ -400,8 +477,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		source.setTotaalScore((int) score); 
 		memento.setCompletion(suspendDataCompleted(currentActiviteit, currentOpdracht));
 		memento.setOpdrContStates(states);
-	}
-
+	}	
+	
 	public void kijkToetsNa()
 	{
 		saveCurrentState();
@@ -523,8 +600,16 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		return currentOpdracht;	
 	}
 	
+	public int getCurrentActiviteit() {
+		return currentActiviteit;
+	}
+	
 	public int getAantalOpdrachten() {
 		return aantalOpdrachten[currentActiviteit];
+	}
+	
+	public int getAantalActiviteiten() {
+		return aantalActiviteiten;
 	}
 
 	public int getAantalBeantwoord() {
