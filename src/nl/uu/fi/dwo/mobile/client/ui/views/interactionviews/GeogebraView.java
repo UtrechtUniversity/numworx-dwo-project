@@ -143,7 +143,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 		if("true".equals(geogebraParams.get("showMenuBar")))
 			barHeight += 33;
 		if("true".equals(geogebraParams.get("showToolBar")))
-			barHeight += 57;
+			barHeight += 9; //57;
 		
 		params.append(ggb);
 		ggb = params.toString();
@@ -168,7 +168,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 		
 		frame.setPixelSize(width, height);
 		//height -= 57 + 2; // toolbar aftrekken? ja dus!
-		height -= 6;
+		height -= 2;
 		width  -= 2;  // 1 pixel border
 		height -= barHeight;
 		ggb += " data-param-width='" + width + "' data-param-height='" + height + "'"; // geeft een scrollbar

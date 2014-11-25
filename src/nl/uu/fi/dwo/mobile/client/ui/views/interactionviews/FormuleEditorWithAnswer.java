@@ -124,10 +124,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			}
 			if(TekstVakPanel.TVP_KLAPIN == event.getCommand())
 			{
-				FormuleEditor other = FormuleEditorWithAnswer.this;
+				FormuleEditorWithAnswer other = FormuleEditorWithAnswer.this;
 				String useranswer = getEditor().toString();
 				other.clearMain();
 				other.insert(useranswer);
+				boolean show = mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN;
+				other.kijkNa(false, show);
 			
 			}
 		}
@@ -135,6 +137,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		void setHeight(double hoogte) {
 			logger.fine("setHeight(" + hoogte + ")");
 			super.setHeight((int)hoogte);
+		}
+
+		@Override
+		void fire(String command, String message) {
 		}
 
 		
@@ -401,16 +407,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			//sp.add(checkimg);
 			//sp.add(feedbackLabel);
 			sp.add(checkPanel);
-			if( vakUitwerking && !checkUitklapMogelijkheid())
-			{
-				PopupButton popup = new PopupButton(fews, ImageUtils.newImage("images/resources/antwoordknop.gif"), this);
-				Style popupstyle = popup.getElement().getStyle();
-				popupstyle.setDisplay(Display.INLINE_BLOCK);
-				popupstyle.setVerticalAlign(VerticalAlign.TOP);
-				sp.add(popup);
-				breedte += 20;	  // wordt niet bij breedte geteld.
-				extraWidth += 20; // width of popup button
-			}
 			sp.addTouchHandler(new FormuleEditorTouchHandler(this));
 			
 		}
@@ -506,7 +502,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			kijkNa(false, false);
 		else
 			kijkNa(false, true);
-		comRoot.fireEvent(new CBookEvent(this, "input", toString()));
+		if(comRoot != null) // alleen niet null als fewa een toplevel is.
+			comRoot.fireEvent(new CBookEvent(this, "input", toString()));
+		else if( fe != null) {
+			fe.fire("input", toString());
+		}
+			
 	}
 	
 	public void kijkNa()
@@ -813,13 +814,27 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	}
 
 	public Object getUitwerking(TekstVakPanel parent) {
-		if(vakUitwerking && checkUitklapMogelijkheid())
+
+		if(parent != null && vakUitwerking && parent.uitklapHoogtes != null && parent.uitklapHoogtes.size() > 1)
 		{
 			double hoogte = parent.uitklapHoogtes.get(1); // Marges??????
 			fews.setHeight(hoogte);
 			parent.addCBookEventListener(fews);
 			return fews;
 		}
+// van constructor naar hier....
+		if( vakUitwerking )
+		{
+			PopupButton popup = new PopupButton(fews, ImageUtils.newImage("images/resources/antwoordknop.gif"), this);
+			Style popupstyle = popup.getElement().getStyle();
+			popupstyle.setDisplay(Display.INLINE_BLOCK);
+			popupstyle.setVerticalAlign(VerticalAlign.TOP);
+			sp.add(popup);
+			breedte += 20;	  // wordt niet bij breedte geteld.
+			extraWidth += 20; // width of popup button
+		}
+
+		
 		return null;
 	}
 	

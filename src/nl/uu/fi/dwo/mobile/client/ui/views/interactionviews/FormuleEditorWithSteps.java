@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
@@ -2511,6 +2512,11 @@ public class FormuleEditorWithSteps implements InteractionView
 	            sp.scrollToBottom();
 	        }
 		});
+	}
+
+	void fire(String command, String message) {
+		if( comRoot != null)
+			comRoot.fireEvent(new CBookEvent(this, command, message));	
 	}
 	
 }

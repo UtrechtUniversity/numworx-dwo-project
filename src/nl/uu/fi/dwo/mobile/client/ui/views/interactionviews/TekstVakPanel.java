@@ -65,6 +65,7 @@ import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.touch.client.Point;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -224,6 +225,10 @@ public class TekstVakPanel implements InteractionView
 	
 	private static boolean fontOvererving;
 	private boolean anderFont = false;
+	
+	private boolean isLink = false;
+	private ObjectList linkUrls;
+	
 	
 	static CssColor getColor(ObjectMap map, String key, int r, int g, int b) {
 		ObjectMap colorMap = map != null && map.containsKey(key) ? map.getObjectMap(key) : null ;
@@ -431,6 +436,13 @@ java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " +
 // launchState never null!
 		pasAanH = launchState.getBoolean("pasAanH",pasAanH);
 		pasAanB = launchState.getBoolean("pasAanB",pasAanB);
+		
+// link feature of tekstVakPanel.		
+		isLink = launchState.getBoolean("isLink", false);
+		if( isLink && launchState.containsKey("linkUrls"))
+		{
+			linkUrls = launchState.getObjectList("linkUrls");
+		}
 		
 		if(launchState.containsKey("random"))
 			random = launchState.getBoolean("random");
@@ -832,6 +844,10 @@ java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " +
 						formuleEditorWithAnswer.zetInstellingen(instellingen);
 						if(i == 0 && j == 0)
 							queuedObject = formuleEditorWithAnswer.getUitwerking(this);
+						else 
+						{
+							formuleEditorWithAnswer.getUitwerking(null);
+						}
 						formuleEditorWithAnswer.paint();
 						
 					}
@@ -1633,10 +1649,8 @@ java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " +
 	}
 	
 	public void mouseUpTouchEndAction(int eventX, int eventY)
-	{	if(!sleepbaar)
+	{	if(sleepbaar)
 		{	//hier zorgen dat de pagina wordt versleept?
-			return;
-		}
 		locationX = eventX - startX;
 		locationY = eventY - startY;
 		if(parent != null && zwevend)
@@ -1670,6 +1684,12 @@ java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " +
 			parent.setWidgetLeftWidth(this.asWidget(), locationX, Style.Unit.PX, breedte, Style.Unit.PX);
 			parent.setWidgetTopHeight(this.asWidget(), locationY, Style.Unit.PX, hoogte, Style.Unit.PX);
 		}
+		} else {
+// Werk dit?		
+		if(isLink && linkUrls != null) {
+			String link = linkUrls.getString(0);
+			Window.open(link, "_blank", "");
+		}}
 	}
 	
 	class MouseHandler implements MouseDownHandler, MouseMoveHandler, MouseUpHandler
