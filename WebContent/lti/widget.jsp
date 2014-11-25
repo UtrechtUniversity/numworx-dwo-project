@@ -221,18 +221,19 @@
   	String randomValues = request.getParameter("custom_randomvalues");
  	if(randomValues == null) randomValues = "{}";
   	String uuid = request.getParameter("resource_link_id");
-  	Object o = "0";
-  	if(o == null) o = Integer.valueOf(0);
-  	String assessmentMode = StringEscapeUtils.escapeHtml(String.valueOf(o));;
   	String learnerId = request.getParameter("user_id");
   	String learnerName = request.getParameter("lis_person_name_full");
 
   	String context = request.getParameter("custom_context");
-  	if(context == null) context = "{}";
+  	if(context == null) context = "{\"assessmentMode\": 0}";
   	Map map = (Map) JSONValue.parse(context);
+
+  	Object o = map.get("assessmentMode");
+  	if(o == null) o = Integer.valueOf(0);
+  	String assessmentMode = StringEscapeUtils.escapeHtml(String.valueOf(o));;
   	
   	Object b = map.get("background");
-  	if (b == null) b = "#FFFFFF";
+  	if (b == null) b = "rgb(255,255,255)";
   	String background = StringEscapeUtils.escapeHtml(String.valueOf(b));
   	
   	String logID = StringEscapeUtils.escapeHtml(String.valueOf(map.get("logID")));
@@ -242,7 +243,7 @@
   	Object s = map.get("scoreMax");
   	if( s == null) s = Integer.valueOf(10);
   	String scoreMax = StringEscapeUtils.escapeHtml(JSONValue.toJSONString(s));
-  	
+
   	String archive = widgets.getArchive(className);
 %>
 <applet
