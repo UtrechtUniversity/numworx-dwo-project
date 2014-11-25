@@ -245,14 +245,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		
 		return checkResults;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+		
 	public void setAnswerModel(int nr)
 	{	ObjectMap h = answerModels.getObjectMap(nr);
 		if(h==null) return;
@@ -270,7 +263,6 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		String vormString = "$f@";
 		int goedHalfFout = 0;
 		
-		
 		if(h!=null) 
 		{	if(h.containsKey("antwoordString")) antwoordString = h.getString("antwoordString");
 			if(h.containsKey("gelijkwaardig")) gelijkwaardig = h.getBoolean("gelijkwaardig");
@@ -284,7 +276,6 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 			if(h.containsKey("feedback")) feedback = h.getString("feedback");
 			if(h.containsKey("vormString")) vormString = h.getString("vormString");
 			if(h.containsKey("goedHalfFout")) goedHalfFout = h.getInt("goedHalfFout");
-			
 		}
 		
 		//correctie voor afstemming op antwoordVergelijkingVakChecker (met extra optie: "door")
@@ -295,14 +286,12 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		gelijkwaardigP = gelijkwaardig;
 		this.goedHalfFout = goedHalfFout;
 		this.puntenFeedback = puntenFeedback;
-		
-		
+
         try         
         {   antwoordString = FormuleParser.randomizeString(antwoordString,randomVarNamen,randomVarWaarden);
         }
         catch(Exception e)
         {   antwoordString = "$f???@";
-            
         }
         
         try         
@@ -310,7 +299,6 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
         }
         catch(Exception e)
         {   vormString = "$f???@";
-            
         }
         
         try         
@@ -324,9 +312,8 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
         zetJuisteVorm(vormString);
        
         this.gekozenAntwoordString = antwoordString;
-        this.feedback = feedback;
-       
-       
+        this.feedback = feedback.trim();
+
 	}
 	
 	

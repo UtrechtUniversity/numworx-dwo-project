@@ -475,7 +475,9 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 			if(map.containsKey("eindOplossingNodig")) eindOplossingNodig = map.getBoolean("eindOplossingNodig");
 			if(map.containsKey("exact")) exact = map.getBoolean("exact");
 			if(map.containsKey("puntenFeedback")) puntenFeedback = map.getInt("puntenFeedback");
-			if(map.containsKey("feedback")) feedback = map.getString("feedback");
+			if(map.containsKey("feedback")) {
+				feedback = map.getString("feedback");
+			}
 			if(map.containsKey("vormString")) vormString = map.getString("vormString");
 			if(map.containsKey("goedHalfFout")) goedHalfFout = map.getInt("goedHalfFout");
 			
@@ -514,7 +516,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
         zetJuisteAntwoord(antwoordString);
 		zetJuisteVorm(vormString);
        
-        this.feedback = feedback;
+        this.feedback = feedback.trim();
        
        
 	}
