@@ -1,4 +1,5 @@
 call proguard
 call jarindex
 call sign
-call export-jar
+rem NO EXPORT!
+rem call export-jar

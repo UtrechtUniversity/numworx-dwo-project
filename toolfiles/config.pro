@@ -16,7 +16,7 @@
 -libraryjars ..\lib\junit.jar
 -libraryjars ..\lib\ldap.jar
 -libraryjars ..\lib\mayscript.jar
--libraryjars ..\lib\mysql-connector-java-3.0.16-ga-bin.jar
+-libraryjars ..\lib\mysql-connector-java-5.1.34-bin.jar
 -libraryjars ..\lib\AppleJavaExtensions-1.4.jar
 -libraryjars ..\lib\classes
 -libraryjars ..\output\jar\geogebra.jar
