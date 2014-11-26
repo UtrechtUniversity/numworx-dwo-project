@@ -1878,6 +1878,8 @@ java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " +
 					else h = 100;
 					hoogtes.set(i, Double.valueOf(h));
 				}
+				hoogte += hoogtes.get(i) + cellSpaceRow;
+				mainPanel2.setPixelSize(-1, (int)hoogte);
 				for(int j = 0; j < tekstVakken[i].length; j ++)
 				{
 					tekstVakken[i][j].setVisible(true);
@@ -1886,7 +1888,6 @@ java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " +
 					tekstVakken[i][j].resize();
 					//tekstVakken[i][j].setPixelSize(breedtes.get(j).intValue(), h);
 				}
-				hoogte += hoogtes.get(i) + cellSpaceRow;
 			}
 			this.hoogte = (int)hoogte;
 			
