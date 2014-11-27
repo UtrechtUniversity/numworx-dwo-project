@@ -32,19 +32,13 @@ public class DataSourceAccess extends DbAccess {
 	/**
 	 * 
 	 */
-	
 	public DataSourceAccess(DataSource ds) {
+		super(false); // will not call checkVersion(), because ds uninitialized
 		setDs(ds);
 	}
-	public DataSourceAccess() {
-		setDs(ds);
-	}
-
-	
 	
 	public void setDs(DataSource ds) {
 		this.ds = ds;
-		System.err.println("Using datasource " + ds);
 	}
 
 

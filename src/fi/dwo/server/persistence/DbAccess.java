@@ -439,12 +439,18 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
 // TODO false bij een export.    
     static public final boolean DEBUG = false;
-
+    
     /**
      */
-    public DbAccess() {
+    protected DbAccess(boolean check) {
         super(MYSQL2_SCIENCE_FISME, "dwo");
-        try {
+        if(check && checkVersion()) System.exit(20);
+    }
+    
+    public DbAccess() { this(true); }
+
+	public boolean checkVersion() {
+		try {
             if (DEBUG) {
                 log("Dbacces DEBUG aan");
             }
@@ -463,14 +469,14 @@ public class DbAccess extends DbConnect implements DbAccessIF {
                 System.out.print("We are compatible with the server database.");
             }else{
                 System.err.print("Database version of server not compatible with v1.1.0. Exiting.");
-                System.exit(20);
+                return true;
             }
                     } catch (SQLException ex) {
                 System.err.print("Database version of server not compatible with v1.1.0. Missing version numbers. Exiting.");
-                System.exit(20);
-        }
-
-    }
+                return true;
+                  }
+		return false; // all ok...
+	}
 
     /**
      * @param tableName

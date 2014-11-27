@@ -27,6 +27,6 @@
 
   <Resource name="jdbc/dwodb" auth="Container" type="javax.sql.DataSource"
                maxActive="100" maxIdle="30" maxWait="10000"
-               username="root" password="_dwo" driverClassName="com.mysql.jdbc.Driver"
-               url="jdbc:mysql://localhost:3306/dwo_tst"/>
+               username="dwo" password="EE4k5AWu??&lt;,A#F@jD" driverClassName="com.mysql.jdbc.Driver"
+               url="jdbc:mysql://mysql5.science.uu.nl:3306/dwo_large_v1_1"/>
 </Context>

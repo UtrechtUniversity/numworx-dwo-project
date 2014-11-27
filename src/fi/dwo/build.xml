@@ -158,7 +158,7 @@
     		<zipfileset dir="${jar}" includes="*.jar" prefix="jars"/>
     		<zipfileset dir="${src}/resources" prefix="resources"/>
         	<classes dir="${classes}" includes="**/*.class" />
-    		<lib dir="lib" includes="*mysql*.jar *jamon*.jar" />
+    		<!-- lib dir="lib" includes="*mysql*.jar *jamon*.jar" /-->
     	</war>
     	
     </target>

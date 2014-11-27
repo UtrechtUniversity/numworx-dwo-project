@@ -118,6 +118,19 @@ public class DataSourceAccessServlet extends Servlet {
 			Context initContext = new InitialContext();
 			Context envContext  = (Context)initContext.lookup("java:/comp/env");
 			ds = (DataSource)envContext.lookup(source);
+			if(ds == null) {
+				throw new ServletException("Resource " + source + " is null");
+			} else log("found datasource " + ds);
+
+//			try {
+//				new com.mysql.jdbc.Driver();
+//			} catch (SQLException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+// CHECK version here:
+//			if (new DataSourceAccess(ds).checkVersion())
+//				throw new ServletException("Datasource invalid version");
 			
 			DbAccessIF dbaccess;
 			if (threading)
@@ -163,7 +176,11 @@ public class DataSourceAccessServlet extends Servlet {
 			log("runtime exception " + re, re);
 			throw re;
 		} finally { 
-			((DbConnectIF) getHandler()).close();
+			try {
+				((DbConnectIF) getHandler()).close();
+			} catch (Exception e) {
+				log("finally close failed", e);
+			}
 		}
 	}
 
