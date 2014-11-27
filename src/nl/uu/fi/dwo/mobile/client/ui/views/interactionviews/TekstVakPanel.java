@@ -1889,7 +1889,7 @@ public class TekstVakPanel implements InteractionView
 	private static final int RIGHT = 1;
 	private static final int MIDDLE = 2;
 	
-	private Image view1goed, view1; 
+	private Image view1; 
 	
 	private void initieerKlapUitButton (boolean ingeklapt)
 	{
@@ -1898,21 +1898,21 @@ public class TekstVakPanel implements InteractionView
 		final int inklapKnopPos = this.inklapKnopPos;
 		if(knopImageView1 != null && knopImageView1.exists()) 
 		{
-			view1 = this.view1 = this.view1goed = knopImageView1.getImage();
+			view1 = this.view1 = knopImageView1.getImage();
 		} 
 		else
 		{
-			this.view1 = new Image(DWOplayer.DWO_BUNDLE.klapuit1goed().getSafeUri());
-			if(checkUitklapVak)
-				this.view1goed = new Image(DWOplayer.DWO_BUNDLE.klapuit1goed().getSafeUri());
-			else 
-				this.view1goed = this.view1;
+			view1 = this.view1 = new Image(DWOplayer.DWO_BUNDLE.klapuit1().getSafeUri());
+//			if(checkUitklapVak)
+//				this.view1goed = new Image(DWOplayer.DWO_BUNDLE.klapuit1().getSafeUri());
+//			else 
+//				this.view1goed = this.view1;
+//			
 			
-			
-			if(checkUitklapVak && isKlapvakCorrect())
-				view1 = this.view1goed;
-			else
-				view1 = this.view1;		
+//			if(checkUitklapVak && isKlapvakCorrect())
+//				view1 = this.view1goed;
+//			else
+//				view1 = this.view1;		
 		}
 		if(knopImageView2 != null && knopImageView2.exists()) {
 			view2 = knopImageView2.getImage();
@@ -1927,9 +1927,6 @@ public class TekstVakPanel implements InteractionView
 		
 		klapUitPanel.setPixelSize(breedtePanel, hoogteKnop);
 		
-		klapUitPanel.getElement().getStyle().setBackgroundColor("red");
-			
-		
 		final Image masterView = ingeklapt ? view2 : view1;
 		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
 		goedKrulImage.setVisible(false);
@@ -1941,7 +1938,7 @@ public class TekstVakPanel implements InteractionView
 				
 				if( ! TekstVakPanel.this.ingeklapt && checkUitklapVak )
 				{
-					klapUitButton.getDownFace().setImage(isKlapvakCorrect() ? view1goed : TekstVakPanel.this.view1 );
+					klapUitButton.getDownFace().setImage(TekstVakPanel.this.view1);
 					System.out.println("tekstvakpanel ingeklapt, isKlapvakCorrect geeft " + Boolean.toString(isKlapvakCorrect()));
 					goedKrulImage.setVisible(isKlapvakCorrect());
 				
@@ -2051,7 +2048,6 @@ public class TekstVakPanel implements InteractionView
 				else
 					vakinhoudCorrect = vakinhoudCorrect && ((InteractionView) object).isCorrect().booleanValue();
 			}
-			 
 		}
 		
 		return vakinhoudCorrect;
