@@ -1265,6 +1265,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
         } catch (PersistenceException e) {
         }
         GuiConstants.setDwoProfile(dwoProfileID, getParameter(PROFILE_EXTENSION));
+		ModuleTreePanel.initialize(dwoProfile);
 // Hier fixen we nog de iconizer 
         GuiConstants.fixIconizer(scoViewNr, courseViewNr);
 

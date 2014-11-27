@@ -124,6 +124,11 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 			return "false";
 		}
 
+		@Override
+		public void setUser(User u) {
+			user = u;
+		}
+
 		public String LMSFinish(String iParam) {
 			return "false";
 		}

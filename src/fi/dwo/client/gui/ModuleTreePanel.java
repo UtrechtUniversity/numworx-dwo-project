@@ -70,14 +70,16 @@ import fi.dwo.client.system.TextMapper;
 
 public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 
-	public static final String STANDAARD_DWO_MODULES;
-	static {
-		String standaard = TextMapper.getText("Standaard DWO modules");
-		DwoProfile profile = GuiCreator.instance().getDWO().getDwoProfile();
+	public static String STANDAARD_DWO_MODULES = TextMapper.getText("Standaard DWO modules");
+	public static void initialize(DwoProfile profile) 
+	{
+		//DwoProfile profile = GuiCreator.instance().getDWO().getDwoProfile();
 		if(profile.getID() != 1) // TODO overleg met Peter nodig.
-			standaard = profile.getHeader();
-		STANDAARD_DWO_MODULES = standaard;
+			STANDAARD_DWO_MODULES = profile.getHeader();
+		else
+			STANDAARD_DWO_MODULES = TextMapper.getText("Standaard DWO modules");
 	}
+		
 	public static final String ALLE_MODULES = TextMapper.getText("Alle modules");
 
 	private boolean isPossible(Object o) {

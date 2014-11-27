@@ -225,7 +225,7 @@ public abstract class ScoBase extends ScormAdapter {
 
 	public void setUser(User u) {
 		if(u != user)
-		{	lessonLocation = null;
+		{	if(!isReview())lessonLocation = null; // in reviewmode de sco is de baas over de lessonlocation, 
 			user = u;
 		}
 	}
