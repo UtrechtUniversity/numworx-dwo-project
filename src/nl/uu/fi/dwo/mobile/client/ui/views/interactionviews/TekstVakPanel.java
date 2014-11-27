@@ -6,53 +6,37 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
-import org.hamcrest.core.Is;
-
-import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
-import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.StateLess;
-import nl.uu.fi.dwo.interaction.client.TekstElement;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
-import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
-import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.utils.Connector;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
-import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.CssColor;
-import com.google.gwt.core.shared.GWT;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.dom.client.Style.BorderStyle;
-import com.google.gwt.dom.client.Style.FontStyle;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.dom.client.MouseEvent;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
@@ -64,35 +48,21 @@ import com.google.gwt.event.dom.client.TouchMoveHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.touch.client.Point;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.ComplexPanel;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment.HorizontalAlignmentConstant;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment.VerticalAlignmentConstant;
-import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.IndexedPanel;
-import com.google.gwt.user.client.ui.InsertPanel;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ToggleButton;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import fi.wiskopdr.FormuleParser;
-import fi.wiskopdr.expressies.Aftrekking;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.Optelling;
-import fi.wiskopdr.expressies.Vergelijking;
-import fi.wiskopdr.expressies.VergelijkingMeerv;
 
 
 public class TekstVakPanel implements InteractionView
@@ -153,6 +123,7 @@ public class TekstVakPanel implements InteractionView
 	HashMap<String, Object> randomVarWaarden = null;
 	
 	private TekstVak parent = null;
+	private int mode = 0;
 	
 	private ArrayList<Object> interactionViewObjects = new ArrayList<Object>();
 
@@ -216,7 +187,9 @@ public class TekstVakPanel implements InteractionView
 	private int inklapKnopPos;
 	//private String knopImageString1, knopImageString2;
 	private ImageView knopImageView1, knopImageView2;
+	private Image goedKrulImage;
 	private ToggleButton klapUitButton;
+	private LayoutPanel klapUitPanel;
 	private TekstVakContext container;
 	private Object queuedObject;
 	
@@ -422,7 +395,7 @@ public class TekstVakPanel implements InteractionView
 // klap schaats
 		inklapbaar = launchState.getBoolean("inklapbaar", inklapbaar);
 		checkUitklapVak = launchState.getBoolean("checkUitklapVak", checkUitklapVak);
-java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " + checkUitklapVak);
+//java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " + checkUitklapVak);
 		ingeklapt = launchState.getBoolean("ingeklapt", ingeklapt);
 		if( launchState.containsKey("inklapKnopPos"))
 			inklapKnopPos = launchState.getInt("inklapKnopPos");
@@ -945,6 +918,8 @@ java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " +
 	public void setCommunicationRoot(OpdrNavIF comRoot)
 	{
 		this.comRoot = comRoot;
+		mode = comRoot.getMode();
+		
 	}
 
 	public HashMap<String, Object> getState()
@@ -1005,6 +980,12 @@ java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " +
 		{	
 			klapUitButton.setDown(ingeklapt);
 			klapUitAction();
+			
+			
+		}
+		if(inklapbaar && checkUitklapVak)
+		{
+			goedKrulImage.setVisible(isKlapvakCorrect());
 		}
 		resize();
 		
@@ -1912,11 +1893,14 @@ java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " +
 	
 	private void initieerKlapUitButton (boolean ingeklapt)
 	{
+		klapUitPanel = new LayoutPanel();
 		Image view1, view2;
 		final int inklapKnopPos = this.inklapKnopPos;
-		if(knopImageView1 != null && knopImageView1.exists()) {
+		if(knopImageView1 != null && knopImageView1.exists()) 
+		{
 			view1 = this.view1 = this.view1goed = knopImageView1.getImage();
-		} else
+		} 
+		else
 		{
 			this.view1 = new Image(DWOplayer.DWO_BUNDLE.klapuit1goed().getSafeUri());
 			if(checkUitklapVak)
@@ -1935,14 +1919,33 @@ java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " +
 		} else {
 			view2 = new Image(DWOplayer.DWO_BUNDLE.klapuit2().getSafeUri());
 		}
+		
+		//In deze implementatie ga ik er voorlopig vanuit dat view1 en view2 dezelfde maat hebben.
+		final int breedtePanel = (checkUitklapVak && !isNoordhoff())?view1.getWidth() + 20:view1.getWidth();
+		int hoogteKnop = view1.getHeight();
+		System.out.println("breedtePanel = " + breedtePanel + " en hoogteKnop = " + hoogteKnop);
+		
+		klapUitPanel.setPixelSize(breedtePanel, hoogteKnop);
+		
+		klapUitPanel.getElement().getStyle().setBackgroundColor("red");
+			
+		
 		final Image masterView = ingeklapt ? view2 : view1;
+		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
+		goedKrulImage.setVisible(false);
 		masterView.getElement().getStyle().setProperty("verticalAlign", hoogtes.get(0).intValue() + "px");
 		klapUitButton = new ToggleButton(view2, view1,
 				new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				System.out.println("onClick. checkUitklapVak = " + Boolean.toString(checkUitklapVak));
+				
 				if( ! TekstVakPanel.this.ingeklapt && checkUitklapVak )
 				{
 					klapUitButton.getDownFace().setImage(isKlapvakCorrect() ? view1goed : TekstVakPanel.this.view1 );
+					System.out.println("tekstvakpanel ingeklapt, isKlapvakCorrect geeft " + Boolean.toString(isKlapvakCorrect()));
+					goedKrulImage.setVisible(isKlapvakCorrect());
+				
+					
 				}
 				klapUitAction();				
 			}});
@@ -1951,6 +1954,25 @@ java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " +
 		//klapUitButton.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE)
 		//masterView.getElement().getStyle().setVerticalAlign(VerticalAlign.MIDDLE);
 		klapUitButton.setDown(ingeklapt);
+		klapUitPanel.add(klapUitButton);
+		klapUitPanel.setWidgetLeftRight(klapUitButton, 0, Style.Unit.PX, (checkUitklapVak && !isNoordhoff())?20:0, Style.Unit.PX);
+		klapUitPanel.setWidgetTopBottom(klapUitButton, 0 , Style.Unit.PX, 0, Style.Unit.PX);
+		if(checkUitklapVak)
+		{
+			klapUitPanel.add(goedKrulImage);
+			if(isNoordhoff())
+			{
+				klapUitPanel.setWidgetRightWidth(goedKrulImage, 9, Style.Unit.PX, 16, Style.Unit.PX);
+				klapUitPanel.setWidgetTopBottom(goedKrulImage, 9, Style.Unit.PX, 0, Style.Unit.PX);
+			}
+			else
+			{
+				klapUitPanel.setWidgetRightWidth(goedKrulImage, 0, Style.Unit.PX, 16, Style.Unit.PX);
+				klapUitPanel.setWidgetTopBottom(goedKrulImage, 0, Style.Unit.PX, 0, Style.Unit.PX);
+			}
+			
+		}
+		
 		int pos;
 // Links of rechts kunnen we aan!
 		switch(inklapKnopPos) {
@@ -1969,64 +1991,99 @@ java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " +
 
 			@Override
 			public void onLoad(LoadEvent event) {
-				int width = masterView.getWidth();
+				//int width = masterView.getWidth();
+				//int width = klapUitPanel.getOffsetWidth();
 				int height = masterView.getHeight();
-				klapUitButton.setPixelSize(width, hoogtes.get(0).intValue());
 				
-				setPositionUitklapButton(layoutPanel, inklapKnopPos, width, height);
+				setSizeUitklapButton(breedtePanel, hoogtes.get(0).intValue());
+				//klapUitButton.setPixelSize(width, hoogtes.get(0).intValue());
+				
+				setPositionUitklapButton(layoutPanel, inklapKnopPos, breedtePanel, height);
 				
 			}
 		};
 // preinitialize width/height?
 		if (knopImageView1 != null && knopImageView1.getWidth() > 0 && knopImageView1.getHeight() > 0)
 		{
-			layoutPanel.insert(klapUitButton,0);
+			//layoutPanel.insert(klapUitButton,0);
+			layoutPanel.insert(klapUitPanel, 0);
 			int width = knopImageView1.getWidth();
 // neem max.
 			width = Math.max(width, knopImageView2.getWidth());
 			
 			int height = knopImageView1.getHeight();
-			klapUitButton.setPixelSize(width, hoogtes.get(0).intValue());		
-			setPositionUitklapButton(layoutPanel, inklapKnopPos, width, height);
+			setSizeUitklapButton(breedtePanel, hoogtes.get(0).intValue());
+			
+			//klapUitButton.setPixelSize(width, hoogtes.get(0).intValue());		
+			//setPositionUitklapButton(layoutPanel, inklapKnopPos, width, height);
+			setPositionUitklapButton(layoutPanel, inklapKnopPos, breedtePanel, height);
 		}
 		else 
 		if (masterView.getWidth() > 0)
 		{
-			layoutPanel.insert(klapUitButton,0);
+			//layoutPanel.insert(klapUitButton,0);
+			layoutPanel.insert(klapUitPanel, 0);
 			handler.onLoad(null);
 		}
 		else 
 		{	masterView.addLoadHandler(handler);
-			layoutPanel.insert(klapUitButton,0);
+			//layoutPanel.insert(klapUitButton,0);
+			layoutPanel.insert(klapUitPanel, 0);
 		}
 	}
 
 
 	private boolean isKlapvakCorrect() {
-		// TODO Auto-generated method stub
-		return true; // ipObjectIsCorrect();
+		
+		boolean vakinhoudCorrect = true;
+		//Vector v = parent.getOpdrachtObjects();
+		ArrayList<Object> opdrObjects = parent.getOpdrachtObjects();
+		
+		for(int i = 0; i < opdrObjects.size(); i++)
+		{
+			Object object = opdrObjects.get(i);
+			if(object instanceof InteractionView)
+			{
+				if(mode == 0 || mode == 1)
+					((InteractionView) object).kijkNa();
+				if(((InteractionView) object).isCorrect() == null)
+					vakinhoudCorrect = false;
+				else
+					vakinhoudCorrect = vakinhoudCorrect && ((InteractionView) object).isCorrect().booleanValue();
+			}
+			 
+		}
+		
+		return vakinhoudCorrect;
+		
 	}
-
+	
 	public void setPositionUitklapButton(TekstVak layoutPanel, int inklapKnopPos, int width, int height)
 	{
 		switch(inklapKnopPos) {
 		case LEFT:
 				//layoutPanel.setWidgetLeftRight(widget, width, Unit.PX, 0, Unit.PX);
-				layoutPanel.setWidgetLeftWidth(klapUitButton, 1, Unit.PX, width, Unit.PX);
-				layoutPanel.setWidgetTopHeight(klapUitButton, (hoogtes.get(0).intValue()-height)/2, Unit.PX, height, Unit.PX);
+				layoutPanel.setWidgetLeftWidth(klapUitPanel, 1, Unit.PX, width, Unit.PX);
+				layoutPanel.setWidgetTopHeight(klapUitPanel, (hoogtes.get(0).intValue()-height)/2, Unit.PX, height, Unit.PX);
 				layoutPanel.zetUitklapKnopLinks(width);
 				break;
 		case MIDDLE: // FIXME werkt nog van geen meter!
-			layoutPanel.setWidgetLeftWidth(klapUitButton, layoutPanel.getRegelBreedte(), Unit.PX, width, Unit.PX);
-			layoutPanel.setWidgetTopHeight(klapUitButton, (hoogtes.get(0).intValue()-height)/2, Unit.PX, height, Unit.PX);
+			layoutPanel.setWidgetLeftWidth(klapUitPanel, layoutPanel.getRegelBreedte(), Unit.PX, width, Unit.PX);
+			layoutPanel.setWidgetTopHeight(klapUitPanel, (hoogtes.get(0).intValue()-height)/2, Unit.PX, height, Unit.PX);
 			
 			break;
 		case RIGHT:
 		default:
 			//layoutPanel.setWidgetLeftRight(widget, 0, Unit.PX, width, Unit.PX);
-			layoutPanel.setWidgetRightWidth(klapUitButton, 1, Unit.PX, width, Unit.PX);
-			layoutPanel.setWidgetTopHeight(klapUitButton, (hoogtes.get(0).intValue()-height)/2, Unit.PX, height, Unit.PX);
+			layoutPanel.setWidgetRightWidth(klapUitPanel, 1, Unit.PX, width, Unit.PX);
+			layoutPanel.setWidgetTopHeight(klapUitPanel, (hoogtes.get(0).intValue()-height)/2, Unit.PX, height, Unit.PX);
 		}
+	}
+	
+	public void setSizeUitklapButton(int breedte, int hoogte)
+	{
+		klapUitPanel.setPixelSize(breedte, hoogte);
+		
 	}
 
 
@@ -2074,5 +2131,11 @@ java.util.logging.Logger.getLogger("TekstVakPanel").info("check uitklapvak = " +
 	private Map<InteractionView,Connector> xWidgetMap = new HashMap<InteractionView, Connector>();
 	public Map<InteractionView, Connector> getXWidgetMap() {
 		return xWidgetMap;
+	}
+	
+	public static boolean isNoordhoff()
+	{
+		String dependentName = DWOplayer.PARAMETERS.keyboardStyle();
+		return "noordhoff".equals(dependentName);
 	}
 }
