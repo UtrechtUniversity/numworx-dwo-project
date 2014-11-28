@@ -75,6 +75,7 @@ public abstract class XMLView {
 	protected int condPerc = 100;
 	
 	protected boolean allesCorrectNodig = false;
+	protected boolean zelftoetsGeenCorr = false;
 	
 	private TekstVakPanel hoofdPanel;
 
@@ -157,7 +158,8 @@ public abstract class XMLView {
 				condPerc = wrap.getInt("condPerc");
 			if(wrap.containsKey("allesCorrectNodig"))
 				allesCorrectNodig = wrap.getBoolean("allesCorrectNodig");
-			
+			if(wrap.containsKey("zelftoetsGeenCorr"))
+				zelftoetsGeenCorr = wrap.getBoolean("zelftoetsGeenCorr");
 			
 			
 		}

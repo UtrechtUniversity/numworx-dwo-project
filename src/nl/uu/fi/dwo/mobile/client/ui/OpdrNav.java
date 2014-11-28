@@ -339,6 +339,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 
 	private void setButtonCorrect(TouchButton button, boolean b, int j)
 	{
+		if((mode == 2 || mode == 3) && !entry.getZelftoetsNagekeken())
+			b = false;
 		button.getElement().getStyle().setBackgroundColor(b ? "#00BB00" : "#FFBBBB");
 		if (geefNoScore(currentActiviteit, j))
 			button.getElement().getStyle().setBackgroundColor("#909090");
@@ -450,7 +452,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		saveCurrentState();
 	}
 
-	void saveCurrentState()
+	public void saveCurrentState()
 	{
 		states[currentActiviteit][currentOpdracht] = entry.getState();
 		ScoreNavPanel source = entry.scoreNav;

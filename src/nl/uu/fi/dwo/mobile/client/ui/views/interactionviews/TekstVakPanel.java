@@ -918,7 +918,8 @@ public class TekstVakPanel implements InteractionView
 	public void setCommunicationRoot(OpdrNavIF comRoot)
 	{
 		this.comRoot = comRoot;
-		mode = comRoot.getMode();
+		if(comRoot != null)
+			mode = comRoot.getMode();
 		
 	}
 

@@ -10,6 +10,7 @@ import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.StateLess;
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -99,6 +100,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private double zoom = 1;
 	private PushButton volgendeKnop, vorigeKnop ;//, eindeKnop;
 	private PushButton nakijkKnop;
+	
+	//private boolean zelftoetsGeenCorr = false;
+	
+	private boolean zelftoetsNagekeken = false;
+	
 	
 	private Panel kbp = null;
 	private HeaderButton hb;
@@ -240,17 +246,20 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		if(mode == OpdrNav.ZELFTOETS)
 		{
 			nakijkKnop = new PushButton(Text.constants.nakijkKnopLabel());
+			nakijkKnop.setEnabled(on.getAantalOpdrachten() == 1);
 			kb.addKnop(nakijkKnop, false);
 			nakijkKnop.addClickHandler(new ClickHandler(){
 				public void onClick(ClickEvent e)
 				{	e.stopPropagation();
-					
+					on.saveCurrentState();
 //					if (!lessonMode.equals("review"))
 //						aantalNakijken[activiteitNr]++;
-					
+					zetToetsNagekeken();
 					on.kijkToetsNa();
 					
-					System.out.println("toets nagekeken");
+					
+					
+					//System.out.println("toets nagekeken");
 				}
 			});
 		}
@@ -295,6 +304,52 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		if(vorigeKnopZichtbaar)
 			kb.addKnop(vorigeKnop, true);
 		stelNavigatieIn();
+	}
+	
+	public void zetToetsNagekeken()
+	{
+		int mode = on.getMode();
+		if (mode == 2 || mode == 3)
+		{
+			if (mode == 2 && zelftoetsGeenCorr)
+			{
+				// laatste kans op update sessiontime
+//				if (!zelftoetsNagekeken)
+//				{
+//					opdrContainer.sessionStop();
+//					times[activiteitNr][opdrachtNr] = opdrContainer.getSessionTime();
+//				}
+//				zetAfdekPanelLeeg(true);
+			}
+			zelftoetsNagekeken = true;
+			nakijkKnop.setEnabled(!zelftoetsGeenCorr);
+			//scoresObjectivesKnop.setEnabled(true);//goed? nodig?
+			vorigeKnop.setVisible(vorigeKnopZichtbaar || !bolletjesZichtbaar && zelftoetsNagekeken);
+
+//			totaal = Math.max(0, totaal - (Math.max(0, aantalNakijken[activiteitNr] - 1)) * nakijkStraf);
+//			aantalNakijkLabel.setText("" + aantalNakijken[activiteitNr] + " keer nagekeken");
+//			if (aantalNakijken[activiteitNr] > 0 && !zelftoetsGeenCorr)
+//				aantalNakijkLabel.setVisible(true);
+		}
+//		activiteitScoreLabels[activiteitNr].setText(WiskOpdr.rb.getString("score") + totaal);
+//		if (aantalActiviteiten == 1)
+//		{	activiteitScoreLabels[activiteitNr].setText(WiskOpdr.rb.getString("totaal") + totaal);
+//			if(voortgang)
+//				activiteitScoreLabels[0].setText(WiskOpdr.rb.getString("voortgang") + bepaalVoortgangPercentage(activiteitNr, opdrachtNr) + "%");
+//		}
+
+		
+//		if (mode == 0 || mode == OEFENEN_STRAFPUNTEN)
+//		{
+//			WiskOpdr.setLMSScore();
+//			WiskOpdr.setLMSState();
+//			setMWScoreLabel();
+//		}
+	}
+	
+	public boolean getZelftoetsNagekeken()
+	{
+		return zelftoetsNagekeken;
 	}
 	
 	public void gaNaarVolgendeOpdracht()
@@ -406,7 +461,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			}
 			
 			setObjects(opdracht, contentPanel, on);
-			//stelNavigatieIn(on.getCurrentActiviteit(), on.getCurrentOpdracht());
+			stelNavigatieIn();
 		}
 		else if (!newVersion)
 		{ //Old editor version 
@@ -513,7 +568,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				//or[actNr].setEnabled(true, opdrNr + 1);
 		}
 		catch(Exception e){}
-			
+		
 		//Als op laatste pagina: geen bolletjes in te stellen, einde-knop neerzetten
 		if(opdrNr == on.getAantalOpdrachten() - 1)
 		{
@@ -563,6 +618,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				zetVolgendeKnoppenEnabled(false);
 				//eindeKnop.setEnabled(false);
 				zetVorigeKnoppenEnabled(opdrNr > 0);
+				zetNakijkKnopEnabled();
 				return;
 			}
 			
@@ -614,6 +670,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		
 		}
 		zetVorigeKnoppenEnabled(opdrNr > 0);
+		zetNakijkKnopEnabled();
 	}
 	
 	public void zetVolgendeKnoppenEnabled(boolean b)
@@ -627,6 +684,12 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		if(vorigeKnop != null)
 			vorigeKnop.setEnabled(b);
 		prevEnabled = b;
+	}
+	
+	public void zetNakijkKnopEnabled()
+	{
+		if(nakijkKnop != null)
+			nakijkKnop.setEnabled(!(zelftoetsNagekeken && zelftoetsGeenCorr) && suspendDataCompleted(on.getCurrentActiviteit(), on.getCurrentOpdracht()));
 	}
 	
 	public int bepaalVolgendeOpdracht(int actNr, int opdrNr)
@@ -721,9 +784,18 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				aantalInteractionViews++;
 			}
 		}
+		
+		h.put("activiteitNr", new Integer(on.getCurrentActiviteit()));
+		h.put("opdrachtNr", new Integer(on.getCurrentOpdracht()));
+		
 		h.put("interactiePanelStates", states);
 		h.put(RANDOM_VAR_NAMEN, randomVarNamen);
 		h.put(RANDOM_VAR_WAARDEN, randomVarWaarden);
+		h.put("zelftoetsNagekeken", new Boolean(zelftoetsNagekeken));
+		if (bezocht != null)
+			h.put("bezocht", bezocht);
+
+		
 		return h;
 	}
 
@@ -745,6 +817,52 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				stateNr++;
 			}
 		}
+		
+		ObjectMap map = JSONUtilities.wrapMap(h);
+		int activiteitNr = 0;
+		int opdrachtNr = 0;
+		if (map.containsKey("activiteitNr"))
+			activiteitNr = map.getInt("activiteitNr");
+		if (map.containsKey("opdrachtNr"))
+			opdrachtNr = map.getInt("opdrachtNr");
+
+		
+		if (map.containsKey("bezocht"))
+			try{	
+				ObjectList bezochtList = ( map.getObjectList("bezocht") );
+				bezocht = new boolean[bezochtList.size()][];
+				for(int i = 0; i < bezochtList.size(); i++)
+				{	bezocht[i] = bezochtList.getBooleanArray(i);
+				}
+				
+				
+			}
+			catch(Exception e)
+			{
+				bezocht = new boolean[on.getAantalActiviteiten()][on.getAantalOpdrachten()];
+				bezocht[0] = map.getBooleanArray("bezocht");
+				if(on.getAantalActiviteiten() > 1)
+					for(int j = 1; j < on.getAantalActiviteiten(); j++)
+					{	for(int i = 0; i < on.getAantalOpdrachten(); i++)
+							bezocht[j][i] = false;
+					}
+			}
+		if(bezocht == null)
+		{	bezocht = new boolean[on.getAantalActiviteiten()][on.getAantalOpdrachten()];
+			for(int j = 0; j < on.getAantalActiviteiten(); j++)
+			{	for(int i = 0; i < on.getAantalOpdrachten(); i++)
+					bezocht[j][i] = false;
+			}
+			bezocht[activiteitNr][opdrachtNr] = true;
+			
+		}
+		
+		
+		if (h.containsKey("zelftoetsNagekeken"))
+			zelftoetsNagekeken = ((Boolean) h.get("zelftoetsNagekeken")).booleanValue();
+//		if (h != null && h.containsKey("zelftoetsGeenCorr"))
+//			zelftoetsGeenCorr = ((Boolean) h.get("zelftoetsGeenCorr")).booleanValue();
+		stelNavigatieIn();
 
 	}
 	
@@ -770,6 +888,32 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				((InteractionView)currentObject).zetNagekeken(b);
 			}
 		}
+	}
+	
+	/**
+	 * Hiermee wordt gevraagd of er supenddata zijn van alle opdrachten van
+	 * deze activiteit, behalve die met het meegegeven opdrachtnummer (huidige
+	 * opdracht).
+	 */
+	public boolean suspendDataCompleted(int actNr, int opdrNr)
+	{
+		boolean completed = true;
+		if(condNav && condNavVoorwaarden)
+		{	if(bepaalVolgendeOpdracht(actNr, opdrNr) > -1 && opdrNr < on.getAantalOpdrachten() - 1)
+			{
+			completed = false;
+			}
+		}
+		else
+			for (int j = 0; j < on.getAantalOpdrachten(); j++)
+			{
+				if(opdrNr != j)
+				{	completed = bezocht != null && bezocht[on.getCurrentActiviteit()] != null && bezocht[on.getCurrentActiviteit()][j];
+					if(!completed)
+						break;
+				}
+			}
+		return completed;
 	}
 
 	public int getScore()
