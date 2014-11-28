@@ -45,6 +45,7 @@ import fi.dwo.client.gui.CenterSubPanel;
 import fi.dwo.client.gui.GuiConstants;
 import fi.dwo.client.gui.GuiCreator;
 import fi.dwo.client.gui.MainPanel;
+import fi.dwo.client.gui.ModuleTreePanel;
 import fi.dwo.client.gui.ScoPanel;
 import fi.dwo.client.persistence.MapperCreator;
 import fi.dwo.client.persistence.PersistenceFacade;
