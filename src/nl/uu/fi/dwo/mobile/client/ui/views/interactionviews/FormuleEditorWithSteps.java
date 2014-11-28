@@ -21,6 +21,7 @@ import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
+import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.Scheduler;
@@ -87,7 +88,8 @@ public class FormuleEditorWithSteps implements InteractionView
 	private LayoutPanel contentPanel = null;
 	//contentPanel is layoutPanel geworden om pijlvakken (met operatoren, abc, substitutie, etc) neer te kunnen zetten.
 	//private FlowPanel contentPanel = null;
-	private FlowPanel feedbackPanel = null;
+	//private FlowPanel feedbackPanel = null;
+	private TekstVak feedbackPanel = null;
 	int feedbackPanelHeight = 34;
 	private FlowPanel mainPanel = null;
 	private OpdrNavIF comRoot;
@@ -376,13 +378,22 @@ public class FormuleEditorWithSteps implements InteractionView
 
 		contentPanel = new LayoutPanel();
 		
-		feedbackPanel = new FlowPanel();
-		feedbackPanel.getElement().getStyle().setFontSize(14, Unit.PX);
-		feedbackPanel.getElement().getStyle().setProperty("lineHeight", "1.2");
-		feedbackPanel.getElement().getStyle().setWidth(breedte - 25, Unit.PX);
-		feedbackPanel.getElement().getStyle().setProperty("display", "inline-block");
+		//feedbackPanel = new FlowPanel();
+		feedbackPanel = new TekstVak();
+		feedbackPanel.setSize(breedte - 25, feedbackPanelHeight);
+		//	vak.setMarges(2, 5);
+		//	vak.getElement().getStyle().setBackgroundColor(CssColor.make(238, 238, 238).toString());
+		feedbackPanel.setFontSize(XMLView.getDefaultFontSize());
+		feedbackPanel.setColor(CssColor.make("black"));
+		feedbackPanel.setCentering(false, true);
+		feedbackPanel.setPasHoogteBreedteAan(true, false);
+		
+		//feedbackPanel.getElement().getStyle().setFontSize(14, Unit.PX);
+		// feedbackPanel.getElement().getStyle().setProperty("lineHeight", "1.2");
+		// feedbackPanel.getElement().getStyle().setWidth(breedte - 25, Unit.PX);
+		// feedbackPanel.getElement().getStyle().setProperty("display", "inline-block");
 		feedbackPanel.getElement().getStyle().setBackgroundColor("#FFFFDD");
-		feedbackPanel.getElement().getStyle().setFontSize(XMLView.getDefaultFontSize(), Style.Unit.PX);
+		//feedbackPanel.getElement().getStyle().setFontSize(XMLView.getDefaultFontSize(), Style.Unit.PX);
 
 		sp.setWidget(contentPanel);
 		mainPanel.add(sp);
@@ -879,21 +890,27 @@ public class FormuleEditorWithSteps implements InteractionView
 	public void setFeedback(String feedback)
 	{
 		hasFeedback = !"".equals(feedback.trim());
+		TekstBuffer b = new TekstBuffer();
+		try{
+			feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);
+		}
+		catch(Exception e){}
+		ArrayList<Object> feedbackList = b.convertTekst(feedback, null, false);
 		feedbackPanel.clear();
-		feedbackPanel.getElement().setInnerHTML(feedback);
-		feedbackPanel.getElement().getStyle().setPadding(10, Unit.PX);
-		feedbackPanelHeight = 34;
-		//TODO: hoogte feedbackPanel bepalen.
+		feedbackPanel.setSize(breedte - 10, feedbackPanelHeight);
+		feedbackPanel.setObjects(feedbackList);
+		feedbackPanel.resize();
+		feedbackPanelHeight = feedbackPanel.getHeight();
+		//feedbackPanel.getElement().setInnerHTML(feedback);
+		//feedbackPanel.getElement().getStyle().setPadding(10, Unit.PX);
 	}
 
 	public void setAndAddFeedback(String feedback)
 	{
-		hasFeedback = !"".equals(feedback.trim());
-		feedbackPanel.clear();
+		
+		setFeedback(feedback);
+				
 		contentPanel.remove(feedbackPanel);
-		feedbackPanel.getElement().setInnerHTML(feedback);
-		feedbackPanel.getElement().getStyle().setPadding(10, Unit.PX);
-		feedbackPanelHeight= 34;
 		if (hasFeedback)
 		{	contentPanel.add(feedbackPanel);
 			contentPanel.setWidgetLeftRight(feedbackPanel, 5, Style.Unit.PX, 5, Style.Unit.PX);
