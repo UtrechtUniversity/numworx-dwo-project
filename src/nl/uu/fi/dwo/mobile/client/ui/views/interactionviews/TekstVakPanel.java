@@ -654,13 +654,16 @@ public class TekstVakPanel implements InteractionView
 		TekstVak myVak = tekstVakken[rij][kolom];
 		int n = myVak.getAantalRegels();
 		for(int i = 0; i < n; i++) 
-			myVak.getRegelVak(i).hervulRegel();
+		{	myVak.getRegelVak(i).hervulRegel();
+			
+		}
+		//	myVak.getRegelVak(i).resize();
 		
 		
 //		com.google.gwt.user.client.Element element = child.getAsPanel().getElement();
 //		element.getStyle().setProperty("verticalAlign", (tekstGrootte - cch + 1) + "px");
-		if(pasAanH)
-		{
+		//if(pasAanH)
+		//{
 //			int cellHoogte = hoogtes.get(rij).intValue();
 //			int c0 = Math.max(cellHoogte, minHoogtes.get(rij).intValue());
 //			cellHoogte += delta;
@@ -675,7 +678,7 @@ public class TekstVakPanel implements InteractionView
 //			//mainPanel2.setPixelSize(width, height += delta);
 //						setCurrentSize(-1, hoogte + delta);
 			resize();
-		}
+		//}
 		
 	}
 	
@@ -1036,7 +1039,6 @@ public class TekstVakPanel implements InteractionView
 		parent = panel;
 		if(fontOvererving && !anderFont && parent != null && parent.getTekstVakParent() != null)
 		{	
-			System.out.println("fontOvererving vindt plaats");
 			CssColor fgColorOvererving = parent.getTekstVakParent().fgColor;
 			int fontSizeOvererving = parent.getTekstVakParent().font_size;
 			int fontStyleOvererving = parent.getTekstVakParent().font_style;
@@ -1228,9 +1230,10 @@ public class TekstVakPanel implements InteractionView
 			}
 		}
 		
-		//kijken of pasAanH en of pasAanB true zijn; anders zijn we klaar.
-		if(!pasAanH && !pasAanB)
-			return;
+		//kijken of pasAanH en of pasAanB true zijn; anders zijn we klaar. 
+		//NEE, want resize gebeurt ook bij in/uitklappen van vak binnen tekstvakpanel; dan veranderen maten ook.
+		//if(!pasAanH && !pasAanB)
+		//	return;
 		
 		int[] ashoogtes = new int[hoogtes.size()];
 		for(int i = 0; i < hoogtes.size(); i++) //ashoogtes vullen, voor het geval de hoogte niet wordt aangepast.
@@ -1244,8 +1247,10 @@ public class TekstVakPanel implements InteractionView
 		int totaleHoogte = hoogte;
 		int totaleBreedte = breedte;
 		
-		if(pasAanH)
-		{	totaleHoogte = 0;
+		//if(pasAanH)
+		//{	
+			if(pasAanH)
+				totaleHoogte = 0;
 			for(int i = 0; i < hoogtes.size(); i++)
 			{
 				if(i > 0 && inklapbaar && ingeklapt)
@@ -1256,7 +1261,13 @@ public class TekstVakPanel implements InteractionView
 				for(int j = 0; j < breedtes.size(); j++)
 				{
 					//opnieuw alles plaatsen qua hoogte; zoals het tekstvak het zelf zou doen als hem geen hoogte was opgelegd.
-					tekstVakken[i][j].pasHoogteAanInhoudAan();
+					if(pasAanH)
+						tekstVakken[i][j].pasHoogteAanInhoudAan();
+					else
+						for(int k = 0; k < tekstVakken[i][j].getAantalRegels(); k++)
+						{
+							tekstVakken[i][j].getRegelVak(k).bepaalAshoogte();
+						}
 					int hoogte = tekstVakken[i][j].hoogte;
 					int ash = tekstVakken[i][j].getAsHoogte();
 					if(!tekstVakken[i][j].isVisible())
@@ -1272,12 +1283,14 @@ public class TekstVakPanel implements InteractionView
 				
 				
 				hoogtes.set(i, new Double(h1 + h2));
-				totaleHoogte += h1 + h2 + cellSpaceRow;
+				if(pasAanH)
+					totaleHoogte += h1 + h2 + cellSpaceRow;
 				ashoogtes[i] = h1;
 			}
-			totaleHoogte -= cellSpaceRow;
+			if(pasAanH)
+				totaleHoogte -= cellSpaceRow;
 			
-		}
+		//}
 		
 		
 		if(pasAanB)
@@ -1312,10 +1325,16 @@ public class TekstVakPanel implements InteractionView
 				}
 			}
 		}
-				
+		
 		if(parent != null)
+		{	if(isZwevend() && this.getAsPanel().isAttached())
+			{
+				parent.setWidgetLeftWidth(this.getAsPanel(), this.getLocationX(), Style.Unit.PX, totaleBreedte, Style.Unit.PX);
+				parent.setWidgetTopHeight(this.getAsPanel(), this.getLocationY(), Style.Unit.PX, totaleHoogte, Style.Unit.PX);
+			}
 			parent.resize();
-
+		
+		}
 	}
 	
 	/*
@@ -1834,7 +1853,7 @@ public class TekstVakPanel implements InteractionView
 	void klapUitAction() {
 		
 		int delta = hoogte-hoogtes.get(0).intValue();
-		System.out.println("delta = " + delta);
+		//System.out.println("delta = " + delta);
 		if( ingeklapt = ! ingeklapt) {
 			for(int i = 1; i < tekstVakken.length; i++)
 			{
@@ -1874,6 +1893,7 @@ public class TekstVakPanel implements InteractionView
 			this.hoogte = (int)hoogte;
 			
 			setCurrentSize( breedte, this.hoogte);
+			
 			fireEvent(KLAPUIT_EVENT);
 		}
 	}

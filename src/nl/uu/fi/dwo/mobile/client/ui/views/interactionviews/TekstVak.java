@@ -525,12 +525,18 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		}
 		//ashoogte = regelVakken[0].getAsHoogte();
 		hoogte = 2 * bovenMarge + regelHoogtes;
+		for(int i = 0; i < zwevendeTekstVakken.size(); i++)
+		{
+			TekstVakPanel panel = ((TekstVakPanel) zwevendeTekstVakken.get(i));
+			hoogte = Math.max(hoogte, panel.getLocationY() + panel.getHoogte());
+		}	
 	}
 	
 	public void setAshoogte(int ashoogte)
 	{
 		this.ashoogte = ashoogte;
 		//regelVakken[0].setAsHoogte(ashoogte);
+		//resize();
 		plaatsRegels(true);
 	}
 	
@@ -631,6 +637,11 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		if(pasAanH)
 		{
 			hoogte = 2 * bovenMarge + regelHoogtes;
+			for(int i = 0; i < zwevendeTekstVakken.size(); i++)
+			{
+				TekstVakPanel panel = ((TekstVakPanel) zwevendeTekstVakken.get(i));
+				hoogte = Math.max(hoogte, panel.getLocationY() + panel.getHoogte());
+			}			
 		}
 		setSize(breedte, hoogte); 
 		
