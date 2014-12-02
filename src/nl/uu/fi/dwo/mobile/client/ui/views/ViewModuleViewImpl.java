@@ -356,6 +356,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	{
 		if(condNav && condNavVoorwaarden)
 		{
+			
 //		{	states[activiteitNr][opdrachtNr] = opdrContainer.getState();
 //			scores[activiteitNr][opdrachtNr] = opdrContainer.getScore();
 //			if (objectives != null)
@@ -704,6 +705,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			int[] scorePaginas = navVoorwaarden[1][opdrNr];
 			int[] grensScores = navVoorwaarden[2][opdrNr];
 			
+			
 			for(int i = 0; i < scorePaginas.length; i++)//kan fout gaat als scorePaginas leeg
 			{	if(bezocht[actNr][scorePaginas[i]-1])
 				{	scoreSelectie = scoreSelectie + on.getScore(actNr, scorePaginas[i]-1)-on.getStrafpunten(actNr, scorePaginas[i]-1);
@@ -723,7 +725,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 				volgendeOpdracht = naarPaginas[grensScores.length - 1] - 1;
 		}
 		catch(Exception e)//als bovenstaande niet lukt, ga je gewoon naar de volgende pagina.
-		{	if(opdrNr < on.getAantalOpdrachten() - 1)
+		{	
+			if(opdrNr < on.getAantalOpdrachten() - 1)
 				volgendeOpdracht = opdrNr + 1;	
 			else
 				volgendeOpdracht = -1;
@@ -1217,7 +1220,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			@Override
 			public void onResize(ResizeEvent event) {
 				int h = event.getHeight() - extraHeight;
-				logger.info("resize event " +  h);
+				//logger.info("resize event " +  h);
 				kb.tp.setScrollPanel(contentScrollPanel, h);
 				
 			}});
@@ -1235,7 +1238,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			@Override
 			public void onResize(ResizeEvent event) {
 				int h = event.getHeight() - extraHeight;
-				logger.info("resize event " +  h);
+				//logger.info("resize event " +  h);
 				kb.tp.setScrollPanel(contentScrollPanel, h);
 				
 			}});
@@ -1440,7 +1443,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 						//DOM.removeElementAttribute(next.getElement(), "disabled");
 						prev.getElement().getStyle().clearProperty("pointerEvents");
 						((Element) prev.getElement().getLastChild()).getStyle().clearBackgroundColor();
-						logger.info("enable");
+						//logger.info("enable");
 					}});
 			}});
 	}

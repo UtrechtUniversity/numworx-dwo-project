@@ -432,13 +432,17 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 	
 	public int getStrafpunten(int actNr, int opdrNr)
 	{
-		try{
-			return strafpunten[actNr][opdrNr];
+		if(strafpunten != null)
+		{	try{
+				return strafpunten[actNr][opdrNr];
+			}
+			catch(Exception e)
+			{
+				return 0;
+			}
 		}
-		catch(Exception e)
-		{
+		else
 			return 0;
-		}
 		
 	}
 	
