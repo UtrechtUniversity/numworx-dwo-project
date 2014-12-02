@@ -11,6 +11,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.Composite;
@@ -23,6 +25,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -30,9 +33,28 @@ import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.ui.client.theme.base.ButtonCss;
 import com.googlecode.mgwt.ui.client.widget.Button;
+import com.googlecode.mgwt.ui.client.widget.HeaderButton;
+
+import fi.wiskopdr.text.Text;
 
 public class ScoreNavPanel extends Composite {
 	
+	class CheckHandler implements TapHandler, ClickHandler {
+
+		@Override
+		public void onTap(TapEvent event) {
+			if(checker != null)
+				checker.checkOpdracht(ScoreNavPanel.this);
+		}
+
+		@Override
+		public void onClick(ClickEvent event) {
+			if(checker != null)
+				checker.checkOpdracht(ScoreNavPanel.this);
+		}
+
+	}
+
 	static Logger logger = Logger.getLogger("ScoreNavPanel");
 	
 	
@@ -40,8 +62,15 @@ public class ScoreNavPanel extends Composite {
 		void gotoOpdracht(int i, ScoreNavPanel source);
 		void reloadOpdracht(int i, ScoreNavPanel source);
 	}
+
+	public interface Checker {
+		void checkOpdracht(ScoreNavPanel source);
+	}
+	
 	
 	GotoOpdracht listener;
+	Checker checker;
+	
 	
 	class TouchHandler implements TapHandler {
 
@@ -148,20 +177,23 @@ public class ScoreNavPanel extends Composite {
 		text.getElement().getStyle().setFontWeight(FontWeight.BOLD);
 		top.add(setFontFamily(text));
 		top.add(new InlineHTML("<hr>"));
-		Grid grid = new Grid(2,3);
+		Grid grid = new Grid(2,4);
 		grid.getColumnFormatter().setWidth(0, "80px");
 		grid.getColumnFormatter().setWidth(1, "160px");
 		grid.getColumnFormatter().setWidth(2, "70px");
 		grid.setCellPadding(10);
 		grid.setCellSpacing(10);
-		HorizontalPanel hbox = new HorizontalPanel();
-		hbox.add(grid);
 		reloadTotal = new Button(DWOplayer.DWO_BUNDLE.imgbutton());
 		reloadTotal.addTapHandler(new ReloadHandler(-1));
 		reloadTotal.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.reload().getSafeUri().asString() + "')");
-		hbox.add(reloadTotal);
+		grid.setWidget(0, 3, reloadTotal);
+		checkBtn = new Button( DWOplayer.DWO_BUNDLE.txtbutton(),Text.constants.nakijkKnopLabel());
+		checkBtn.addTapHandler(new CheckHandler());
+		grid.setWidget(1, 3, checkBtn);
+		checkBtn.setVisible(false);
+		top.add(grid);
+
 		reloadTotal.setVisible(false);
-		top.add(hbox);
 		text = new Label("Beantwoord");
 		grid.setWidget(0, 0, setFontFamily(text));
 		text = new Label("Totaalscore");
@@ -209,6 +241,7 @@ public class ScoreNavPanel extends Composite {
 	private boolean opnieuw;
 	private boolean itemOpnieuw;
 	private Button reloadTotal;
+	private Button checkBtn;
 
 	private void createVragen(int[] scoreMax) {
 		vragen.clear(true);
@@ -276,6 +309,10 @@ public class ScoreNavPanel extends Composite {
 		vraagPunten[item].setText(score + " punt" + (score != 1?"en":""));
 	}
 	
+	public void setItemEnabled(int item, boolean enable) {
+		vragen.getWidget(item, 3).setVisible(enable);
+	}
+	
 	public void setItemScores(int[] scores) {
 		for (int i = 0; i < rows; i++) {
 			setItemScore(i, scores[i]);
@@ -304,11 +341,15 @@ public class ScoreNavPanel extends Composite {
 	public void setOpnieuw(boolean opnieuw) {
 		this.opnieuw = opnieuw;
 		reloadTotal.setVisible(opnieuw);
-		
 	}
 
 	public void setItemOpnieuw(boolean itemOpnieuw) {
 		this.itemOpnieuw = itemOpnieuw;
+	}
+	
+	public void setKijkNa(Checker checker) {
+		this.checker = checker;
+		this.checkBtn.setVisible(checker != null);
 	}
 	
 }

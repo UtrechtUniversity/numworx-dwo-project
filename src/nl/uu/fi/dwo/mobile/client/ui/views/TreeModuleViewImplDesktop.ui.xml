@@ -71,9 +71,9 @@
 					</g:HTMLPanel>
 				</mgwt:center>
 			</mgwt:HeaderPanel>
-  				<mgwt:ScrollPanel>
+  				<g:ScrollPanel alwaysShowScrollBars='true'>
 					<g:Tree ui:field="tree"> </g:Tree>
-				</mgwt:ScrollPanel>
+				</g:ScrollPanel>
 			
 		</mgwt:LayoutPanel>
 		

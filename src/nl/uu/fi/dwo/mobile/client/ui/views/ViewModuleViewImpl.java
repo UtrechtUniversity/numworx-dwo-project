@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
@@ -199,7 +200,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	{
 		for (int i = 0; i < buttons.size(); i++)
 			contentPanel.remove(buttons.get(i));
-
+try {
 		super.setupView(launchData);
 		ObjectMap wrap = JSONUtilities.wrapMap(instellingen);
 // wanneer verschijnt de opnieuwknop?		
@@ -227,6 +228,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		scoreNav.setItemScores(on.getItemScores());
 		scoreNav.setTotaalScore((int)on.getScore());
 		scoreNav.setGotoOpdracht(on);
+} catch(Exception e) {
+		logger.log(Level.SEVERE, "setupView()", e);
+		Window.alert("Exception in setup: " + e.toString() + "\nActivity might be instable");
+}
 		if(DWOplayer.PARAMETERS.isNavTitle())
 			setTitle("Vraag " + (1+on.getCurrentOpdracht()) + " van " + on.getAantalOpdrachten());
 		//call SetupDone Handler, if an object is provided
@@ -254,7 +259,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 					on.saveCurrentState();
 //					if (!lessonMode.equals("review"))
 //						aantalNakijken[activiteitNr]++;
-					zetToetsNagekeken();
+					zetToetsNagekeken(scoreNav);
 					on.kijkToetsNa();
 					
 					
@@ -262,6 +267,20 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 					//System.out.println("toets nagekeken");
 				}
 			});
+			
+			scoreNav.setKijkNa( new ScoreNavPanel.Checker() {
+
+				@Override
+				public void checkOpdracht(ScoreNavPanel source) {
+					on.saveCurrentState();
+					zetToetsNagekeken(source);
+					on.kijkToetsNa();
+				}
+				
+			});
+			
+			
+			
 		}
 		
 		//uitzoeken of de volgende en vorige knop erin moeten.
@@ -306,7 +325,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		stelNavigatieIn();
 	}
 	
-	public void zetToetsNagekeken()
+	void zetToetsNagekeken(ScoreNavPanel scoreNav)
 	{
 		int mode = on.getMode();
 		if (mode == 2 || mode == 3)
@@ -323,6 +342,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			}
 			zelftoetsNagekeken = true;
 			nakijkKnop.setEnabled(!zelftoetsGeenCorr);
+			if(zelftoetsGeenCorr) scoreNav.setKijkNa(null);
 			//scoresObjectivesKnop.setEnabled(true);//goed? nodig?
 			vorigeKnop.setVisible(vorigeKnopZichtbaar || !bolletjesZichtbaar && zelftoetsNagekeken);
 

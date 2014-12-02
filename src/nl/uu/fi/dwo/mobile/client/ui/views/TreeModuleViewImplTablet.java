@@ -164,7 +164,6 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 			//
 			//load sum in the edit area
 			close();
-			container.clear();
 			ViewModuleViewImpl viewModuleViewImpl = new ViewModuleViewImpl(false);
 			loadedModule = viewModuleViewImpl.initialize(this);
 			viewModuleViewImpl.setApi(DWOplayer.api);
@@ -486,7 +485,6 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 		// loading is done
 		this.loadingArea.setVisible(false);
 		slideNavigationOut();
-		
 	}
 
 	@Override
@@ -495,7 +493,7 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 			loadedModule.close();
 			loadedModule = null;
 		}
-		
+		container.clear();
 	}
 
 }
