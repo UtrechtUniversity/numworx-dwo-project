@@ -455,7 +455,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
                 log("Dbacces DEBUG aan");
             }
             //check for proper DB version
-            PreparedStatement ps = getStatement("select * from tblDWOParameters where name like 'DBVersion%'");
+            PreparedStatement ps = getStatement("select * from tblDWOSystemParameters where name like 'DBVersion%'");
             ResultSet rs = ps.executeQuery();
             HashMap<String, String> hashMap = new HashMap<String, String>(5);
             while(rs.next()){
@@ -471,10 +471,11 @@ public class DbAccess extends DbConnect implements DbAccessIF {
                 System.err.print("Database version of server not compatible with v1.1.0. Exiting.");
                 return true;
             }
-                    } catch (SQLException ex) {
-                System.err.print("Database version of server not compatible with v1.1.0. Missing version numbers. Exiting.");
-                return true;
-                  }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            System.err.print("Database version of server not compatible with v1.1.0. Missing version numbers. Exiting.");
+            return true;
+        }
 		return false; // all ok...
 	}
 
