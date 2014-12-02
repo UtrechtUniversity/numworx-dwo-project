@@ -129,8 +129,8 @@ public class DataSourceAccessServlet extends Servlet {
 //				e.printStackTrace();
 //			}
 // CHECK version here:
-//			if (new DataSourceAccess(ds).checkVersion())
-//				throw new ServletException("Datasource invalid version");
+			if (new DataSourceAccess(ds).checkVersion())
+				throw new ServletException("Datasource invalid version");
 			
 			DbAccessIF dbaccess;
 			if (threading)
