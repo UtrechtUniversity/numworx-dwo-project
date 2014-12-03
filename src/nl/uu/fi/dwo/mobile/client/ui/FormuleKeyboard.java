@@ -298,6 +298,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	
 	public void addKnop(PushButton knop, boolean right)
 	{
+		if(knop == null) return;
 		if(right)
 			knop.getElement().getStyle().setFloat(Style.Float.RIGHT);
 		else

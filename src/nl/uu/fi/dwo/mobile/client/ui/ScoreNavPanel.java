@@ -8,6 +8,9 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
@@ -37,39 +40,22 @@ import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 
 import fi.wiskopdr.text.Text;
 
-public class ScoreNavPanel extends Composite {
+public class ScoreNavPanel extends Composite implements ScoreNavIF {
 	
-	class CheckHandler implements TapHandler, ClickHandler {
+	class CheckHandler implements TapHandler {
 
 		@Override
 		public void onTap(TapEvent event) {
 			if(checker != null)
 				checker.checkOpdracht(ScoreNavPanel.this);
 		}
-
-		@Override
-		public void onClick(ClickEvent event) {
-			if(checker != null)
-				checker.checkOpdracht(ScoreNavPanel.this);
-		}
-
 	}
 
 	static Logger logger = Logger.getLogger("ScoreNavPanel");
 	
 	
-	interface GotoOpdracht {
-		void gotoOpdracht(int i, ScoreNavPanel source);
-		void reloadOpdracht(int i, ScoreNavPanel source);
-	}
-
-	public interface Checker {
-		void checkOpdracht(ScoreNavPanel source);
-	}
-	
-	
-	GotoOpdracht listener;
-	Checker checker;
+	ScoreNavIF.GotoOpdracht listener;
+	ScoreNavIF.Checker checker;
 	
 	
 	class TouchHandler implements TapHandler {
@@ -327,7 +313,7 @@ public class ScoreNavPanel extends Composite {
 		}
 	}
 	
-	public void setGotoOpdracht(GotoOpdracht listener)
+	public void setGotoOpdracht(ScoreNavIF.GotoOpdracht listener)
 	{
 		this.listener = listener;
 	}
@@ -347,11 +333,93 @@ public class ScoreNavPanel extends Composite {
 		this.itemOpnieuw = itemOpnieuw;
 	}
 	
-	public void setKijkNa(Checker checker) {
+	public void setKijkNa(ScoreNavIF.Checker checker) {
 		this.checker = checker;
-		this.checkBtn.setVisible(checker != null);
+		setKijkNaEnabled(checker != null);
 	}
+
+	public void setKijkNaEnabled(boolean enable) {
+		checkBtn.setVisible(enable);
+	}
+
+	private NextPrevHandler nextprev;
 	
+	@Override
+	public void setNextPrevHandler(NextPrevHandler nextprev) {
+		this.nextprev = nextprev;
+	}
+
+	HeaderButton next, prev;
+	private boolean nextEnabled = true;
+	private boolean prevEnabled = true;
+
+	@Override
+	public Widget getNextButton() {
+		if(next == null) {
+			next = new HeaderButton(DWOplayer.PARAMETERS.headercss()); next.setText("Volgende >");
+			next.addTapHandler(new TapHandler() {
+				
+				@Override
+				public void onTap(TapEvent event) {
+					if(nextEnabled)
+						nextprev.gotoNext(ScoreNavPanel.this);
+				}
+			});
+		}
+		return next;
+	}
+
+	@Override
+	public Widget getPrevButton() {
+		if(prev == null) {
+			prev = new HeaderButton(DWOplayer.PARAMETERS.headercss()); prev.setText("< Vorige");
+			prev.addTapHandler(new TapHandler() {
+				
+				@Override
+				public void onTap(TapEvent event) {
+					if(prevEnabled)
+						nextprev.gotoPrev(ScoreNavPanel.this);
+				}
+			});
+		}
+		return prev;
+	}
+
+	@Override
+	public void setVolgendeEnabled(boolean enable) {
+		nextEnabled = enable;	
+	}
+
+	@Override
+	public void setVorigeEnabled(boolean enable) {
+		prevEnabled = enable;
+	}
+
+	@Override
+	public PushButton getKijkNaButton() {
+		return new PushButton();
+	}
+
+	@Override
+	public void setVolgendeVisible(boolean visible) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setVorigeVisible(boolean visible) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setButtonEnabled(int opdrNr, boolean b) {
+		vragen.getWidget(opdrNr, 3).setVisible(b);
+		
+	}
+
+
+
 }
 
 

@@ -20,6 +20,8 @@ import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.KeyBoardTabPanel;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
+import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
+import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF.NextPrevHandler;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavPanel;
 import nl.uu.fi.dwo.mobile.client.ui.SlidingPopup;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
@@ -85,7 +87,7 @@ import fi.wiskopdr.text.Text;
  * @author Danny Hendrix, Evertson Croes, Sietske Tacoma, Wim van Velthoven
  * 
  */
-public class ViewModuleViewImpl extends XMLView implements ViewModuleView, EntryPoint
+public class ViewModuleViewImpl extends XMLView implements ViewModuleView, EntryPoint, NextPrevHandler
 {
 	private static final String RANDOM_VAR_WAARDEN = "RandomVarWaarden";
 	private static final String RANDOM_VAR_NAMEN = "RandomVarNamen";
@@ -99,8 +101,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private Panel tekst = null;
 	private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
 	private double zoom = 1;
-	private PushButton volgendeKnop, vorigeKnop ;//, eindeKnop;
-	private PushButton nakijkKnop;
 	
 	//private boolean zelftoetsGeenCorr = false;
 	
@@ -111,9 +111,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private HeaderButton hb;
 	private HeaderPanel hp;
 	
-	private HeaderButton next, prev;
-	private boolean nextEnabled = true;
-	private boolean prevEnabled = true;
+	private Widget next, prev;
 	
 
 	private Scorm2004IF api;
@@ -121,6 +119,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	public ViewModuleViewImpl(boolean b) {
 		standalone = b;
 		if(!b) setWindowTop(0);
+		
+		if(b)
+			scoreNav = scoreNavPanel;
+		else
+			scoreNav = new ScoreNavFacade();
 	}
 	
 	public ViewModuleViewImpl() {
@@ -209,11 +212,6 @@ try {
 		if(wrap != null && wrap.containsKey("opnieuw"))
 		{	opnieuw = wrap.getBoolean("opnieuw");
 		}
-		scoreNav.setOpnieuw(opnieuw || opnieuwMogelijk);
-		if(wrap != null && wrap.containsKey("itemOpnieuw"))
-		{
-			scoreNav.setItemOpnieuw(wrap.getBoolean("itemOpnieuw"));
-		}
 
 		contentPanel.getElement().getStyle().setFontSize(font_size, Unit.PX);
 		contentPanel.getElement().getStyle().setPadding(0, Unit.PX); // XXX was 15 
@@ -223,6 +221,12 @@ try {
 		FlowPanel onp = (FlowPanel) on.getAsPanel();
 		if(bolletjesZichtbaar)
 			kb.addNavPanel(onp);
+// pas vanaf hier toevoegen mogelijk.
+		scoreNav.setOpnieuw(opnieuw || opnieuwMogelijk);
+		if(wrap != null && wrap.containsKey("itemOpnieuw"))
+		{
+			scoreNav.setItemOpnieuw(wrap.getBoolean("itemOpnieuw"));
+		}
 		scoreNav.setAantalOpdrachten(on.getAantalOpdrachten(), on.getMaxScores());
 		scoreNav.setBeantwoord(on.getAantalBeantwoord());
 		scoreNav.setItemScores(on.getItemScores());
@@ -250,28 +254,12 @@ try {
 		int mode = on.getMode();
 		if(mode == OpdrNav.ZELFTOETS)
 		{
-			nakijkKnop = new PushButton(Text.constants.nakijkKnopLabel());
-			nakijkKnop.setEnabled(on.getAantalOpdrachten() == 1);
-			kb.addKnop(nakijkKnop, false);
-			nakijkKnop.addClickHandler(new ClickHandler(){
-				public void onClick(ClickEvent e)
-				{	e.stopPropagation();
-					on.saveCurrentState();
-//					if (!lessonMode.equals("review"))
-//						aantalNakijken[activiteitNr]++;
-					zetToetsNagekeken(scoreNav);
-					on.kijkToetsNa();
-					
-					
-					
-					//System.out.println("toets nagekeken");
-				}
-			});
-			
-			scoreNav.setKijkNa( new ScoreNavPanel.Checker() {
+			scoreNav.setKijkNaEnabled(on.getAantalOpdrachten() == 1);
+			kb.addKnop(scoreNav.getKijkNaButton(), false);		
+			scoreNav.setKijkNa( new ScoreNavIF.Checker() {
 
 				@Override
-				public void checkOpdracht(ScoreNavPanel source) {
+				public void checkOpdracht(ScoreNavIF source) {
 					on.saveCurrentState();
 					zetToetsNagekeken(source);
 					on.kijkToetsNa();
@@ -282,30 +270,9 @@ try {
 			
 			
 		}
-		
+		scoreNav.setNextPrevHandler(this);
 		//uitzoeken of de volgende en vorige knop erin moeten.
 		
-		vorigeKnop = new PushButton(Text.constants.vorigeKnopLabel());
-		vorigeKnop.addClickHandler(new ClickHandler(){
-			public void onClick(ClickEvent e)
-			{
-				e.stopPropagation();
-//				int cur = on.getCurrentOpdracht() - 1;
-//				if(cur < 0) cur = 0 ;
-//				on.gotoOpdracht(cur, scoreNav);
-				gaNaarVorigeOpdracht();
-			}
-		});
-		
-		volgendeKnop = new PushButton(Text.constants.volgendeKnopLabel());
-		volgendeKnop.addClickHandler(new ClickHandler(){
-			public void onClick(ClickEvent e)
-			{
-				e.stopPropagation();
-				
-				gaNaarVolgendeOpdracht();
-			}
-		});
 		
 		/*
 		eindeKnop = new PushButton(Text.constants.eindeKnopLabel());
@@ -317,15 +284,11 @@ try {
 			}
 		});
 		*/
-		
-		if(volgendeKnopZichtbaar)
-			kb.addKnop(volgendeKnop, true);
-		if(vorigeKnopZichtbaar)
-			kb.addKnop(vorigeKnop, true);
+		scoreNav.setVolgendeVisible(volgendeKnopZichtbaar);
 		stelNavigatieIn();
 	}
 	
-	void zetToetsNagekeken(ScoreNavPanel scoreNav)
+	void zetToetsNagekeken(ScoreNavIF source)
 	{
 		int mode = on.getMode();
 		if (mode == 2 || mode == 3)
@@ -341,10 +304,9 @@ try {
 //				zetAfdekPanelLeeg(true);
 			}
 			zelftoetsNagekeken = true;
-			nakijkKnop.setEnabled(!zelftoetsGeenCorr);
-			if(zelftoetsGeenCorr) scoreNav.setKijkNa(null);
+			source.setKijkNaEnabled(!zelftoetsGeenCorr);
 			//scoresObjectivesKnop.setEnabled(true);//goed? nodig?
-			vorigeKnop.setVisible(vorigeKnopZichtbaar || !bolletjesZichtbaar && zelftoetsNagekeken);
+			prev.setVisible(vorigeKnopZichtbaar || !bolletjesZichtbaar && zelftoetsNagekeken);
 
 //			totaal = Math.max(0, totaal - (Math.max(0, aantalNakijken[activiteitNr] - 1)) * nakijkStraf);
 //			aantalNakijkLabel.setText("" + aantalNakijken[activiteitNr] + " keer nagekeken");
@@ -389,16 +351,13 @@ try {
 				cur = on.getAantalOpdrachten()-1;
 			on.gotoOpdracht(cur, scoreNav);
 			stelNavigatieIn();
-			
-			
 		}
 		else
 		{	int cur = on.getCurrentOpdracht() + 1;
 			if(cur >= on.getAantalOpdrachten()) 
 				cur = on.getAantalOpdrachten()-1;
 			on.gotoOpdracht(cur, scoreNav);
-			stelNavigatieIn();
-			
+			stelNavigatieIn();		
 		}
 	}
 	
@@ -585,7 +544,7 @@ try {
 		//bolletje zelf moet altijd enabled zijn, als het al een keer is bezocht.
 		try{	
 			if(bezocht[actNr][opdrNr])
-				on.setButtonEnabled(opdrNr, true);
+				scoreNav.setButtonEnabled(opdrNr,true);
 				//or[actNr].setEnabled(true, opdrNr + 1);
 		}
 		catch(Exception e){}
@@ -618,7 +577,7 @@ try {
 			//}
 			for(int i = opdrNr + 1; i < on.getAantalOpdrachten(); i++)
 				//or[actNr].setEnabled(false, i + 1);
-				on.setButtonEnabled(i, false);
+				scoreNav.setButtonEnabled(i, false);
 			
 //			if(allesCorrectNodig && !on.getOpdrachtCorrect(actNr, opdrNr) && !on.geefNoScore(actNr, opdrNr + 1)) // klopt die + 1??
 //				eindeKnop.setEnabled(false);
@@ -628,13 +587,11 @@ try {
 		else
 		{	//eindeKnop.setVisible(false);
 			//eindeKnop.setEnabled(false);
-			if(volgendeKnop != null)
-				volgendeKnop.setVisible(volgendeKnopZichtbaar);
-		
+			scoreNav.setVolgendeVisible(volgendeKnopZichtbaar);
 			//Als leerling pas door mag als alles op pagina correct: volgende bolletjes en volgende/einde-knop disablen.
 			if(allesCorrectNodig && !on.getOpdrachtCorrect(actNr, opdrNr) && !on.geefNoScore(actNr, opdrNr + 1)) //klopt die + 1??
 			{	for(int i = opdrNr + 1; i < on.getAantalOpdrachten(); i++)
-					on.setButtonEnabled(i, false);
+					scoreNav.setButtonEnabled(i, false);
 				//volgendeKnop.setEnabled(false);
 				zetVolgendeKnoppenEnabled(false);
 				//eindeKnop.setEnabled(false);
@@ -649,10 +606,10 @@ try {
 				boolean conditie = on.geefNoScore(actNr, opdrNr + 1) || 100 * on.getScore(actNr, opdrNr) / on.getMaxScore(actNr, opdrNr) >= condPerc;
 				for(int i = opdrNr + 2; i < on.getAantalOpdrachten(); i++)
 				{	//or[actNr].setEnabled(bezocht[actNr][i], i + 1);
-					on.setButtonEnabled(i, bezocht[actNr][i]);
+					scoreNav.setButtonEnabled(i, bezocht[actNr][i]);
 				}
 				//or[actNr].setEnabled(conditie, opdrNr + 2);
-				on.setButtonEnabled(opdrNr + 1, conditie);
+				scoreNav.setButtonEnabled(opdrNr + 1, conditie);
 				//volgendeKnop.setEnabled(conditie);
 				zetVolgendeKnoppenEnabled(conditie);
 				//eindeKnop.setEnabled(conditie);
@@ -664,24 +621,24 @@ try {
 			if(condNav && condNavVoorwaarden)
 			{	for(int i = opdrNr + 1; i < on.getAantalOpdrachten(); i++)
 				//	or[actNr].setEnabled(bezocht[actNr][i], i + 1);
-					on.setButtonEnabled(i, bezocht[actNr][i]);
+					scoreNav.setButtonEnabled(i, bezocht[actNr][i]);
 				if(bepaalVolgendeOpdracht(actNr, opdrNr) > -1)
-				{	on.setButtonEnabled(bepaalVolgendeOpdracht(actNr, opdrNr), !allesCorrectNodig || on.geefNoScore(actNr, opdrNr + 1) || on.getOpdrachtCorrect(actNr, opdrNr));
+				{	scoreNav.setButtonEnabled(bepaalVolgendeOpdracht(actNr, opdrNr), !allesCorrectNodig || on.geefNoScore(actNr, opdrNr + 1) || on.getOpdrachtCorrect(actNr, opdrNr));
 					if(!allesCorrectNodig)
 					{	int volgende = bepaalVolgendeOpdracht(actNr, opdrNr);
 						while(bepaalVolgendeOpdracht(actNr, volgende) > -1)
 						{	if(bepaalVolgendeOpdracht(actNr, volgende) > volgende + 1)
 								for(int i = volgende + 1; i < bepaalVolgendeOpdracht(actNr, volgende); i++)
 								//	or[actNr].setEnabled(false, i + 1);
-									on.setButtonEnabled(i, false);
+									scoreNav.setButtonEnabled(i, false);
 							//or[actNr].setEnabled(true, bepaalVolgendeOpdracht(actNr, volgende) + 1);
-							on.setButtonEnabled(bepaalVolgendeOpdracht(actNr, volgende), true);
+							scoreNav.setButtonEnabled(bepaalVolgendeOpdracht(actNr, volgende), true);
 							volgende = bepaalVolgendeOpdracht(actNr, volgende);
 						}
 						if(volgende + 1 < on.getAantalOpdrachten())
 						{	for(int i = volgende + 1; i < on.getAantalOpdrachten(); i++)
 							//	or[actNr].setEnabled(false, i + 1);
-							on.setButtonEnabled(i, false);
+							scoreNav.setButtonEnabled(i, false);
 						}
 								
 					}
@@ -695,22 +652,20 @@ try {
 	}
 	
 	public void zetVolgendeKnoppenEnabled(boolean b)
-	{	if(volgendeKnop != null)
-			volgendeKnop.setEnabled(b);
-		nextEnabled = b;
+	{	
+		scoreNav.setVolgendeEnabled(b);
 	}
 	
 	public void zetVorigeKnoppenEnabled(boolean b)
 	{
-		if(vorigeKnop != null)
-			vorigeKnop.setEnabled(b);
-		prevEnabled = b;
+
+		scoreNav.setVorigeEnabled(b);
 	}
 	
 	public void zetNakijkKnopEnabled()
 	{
-		if(nakijkKnop != null)
-			nakijkKnop.setEnabled(!(zelftoetsNagekeken && zelftoetsGeenCorr) && suspendDataCompleted(on.getCurrentActiviteit(), on.getCurrentOpdracht()));
+		boolean enable = !(zelftoetsNagekeken && zelftoetsGeenCorr) && suspendDataCompleted(on.getCurrentActiviteit(), on.getCurrentOpdracht());
+		scoreNav.setKijkNaEnabled(enable);
 	}
 	
 	public int bepaalVolgendeOpdracht(int actNr, int opdrNr)
@@ -1046,38 +1001,17 @@ try {
 		
 		hp = new HeaderPanel(DWOplayer.PARAMETERS.headercss());
 		setTitle("");
-		//Style style = hp.getElement().getStyle();		
-		next = new HeaderButton(DWOplayer.PARAMETERS.headercss()); next.setText("Volgende >");
-		next.addTapHandler(new TapHandler() {
-			
-			@Override
-			public void onTap(TapEvent event) {
-				if(nextEnabled)
-					gotoNext(next);
-			}
-		});
-		prev = new HeaderButton(DWOplayer.PARAMETERS.headercss()); prev.setText("< Vorige");
-
-		prev.addTapHandler(new TapHandler() {
-			
-			@Override
-			public void onTap(TapEvent event) {
-				if(prevEnabled)
-					gotoPrev(prev);
-			}
-		});
-		
-		HorizontalPanel hbox = new HorizontalPanel();
-		hbox.add(prev); hbox.add(next);
-		hp.setRightWidget(hbox);
-		
-		hb = new HeaderButton(DWOplayer.PARAMETERS.headercss());
-		hb.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.menuIcon().getSafeUri().asString() + "')");
-
-		hp.setLeftWidget(hb);
-
-		if(standalone) fp.add(hp);
-
+		next = scoreNav.getNextButton();
+		prev = scoreNav.getPrevButton();
+		if(standalone) {
+			HorizontalPanel hbox = new HorizontalPanel();
+			hbox.add(prev); hbox.add(next);
+			hp.setRightWidget(hbox);
+			hb = new HeaderButton(DWOplayer.PARAMETERS.headercss());
+			hb.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.menuIcon().getSafeUri().asString() + "')");
+			hp.setLeftWidget(hb);
+			fp.add(hp);
+		}
 		contentScrollPanel = new SimplePanel();contentScrollPanel.addStyleName("contentScrollPanel");
 		contentScrollPanel.setWidth("100%");
 		contentScrollPanel.setHeight("100%");
@@ -1114,8 +1048,9 @@ try {
 				@Override
 				public void onSwipeEnd(SwipeEndEvent event) {
 					switch( event.getDirection()) {
-					case LEFT_TO_RIGHT:  gotoPrev(prev); break;
-					case RIGHT_TO_LEFT: gotoNext(next); break;
+					case LEFT_TO_RIGHT:  gotoPrev(scoreNav); break;
+					case RIGHT_TO_LEFT: gotoNext(scoreNav); break;
+					default:
 					}
 					
 				}
@@ -1137,7 +1072,8 @@ try {
 		fp.add(kbp);
 
 // POPUP of floating in ????
-		hb.addTapHandler(new TapHandler() {
+		if(hb != null)
+		{  hb.addTapHandler(new TapHandler() {
 
 			@Override
 			public void onTap(TapEvent event) {
@@ -1147,8 +1083,8 @@ try {
 						popupNavPanel();
 				
 			}});
-		POPUP.addAutoHidePartner(hb.getElement());
-
+			POPUP.addAutoHidePartner(hb.getElement());
+		}
 		//initWidget(mainPanel);
 		return this;
 
@@ -1170,8 +1106,197 @@ try {
 	      }
 	}
 
-	public ScoreNavPanel scoreNav = new ScoreNavPanel();
-    MyPopup POPUP = new MyPopup(scoreNav);
+	private ScoreNavPanel scoreNavPanel = new ScoreNavPanel();
+    MyPopup POPUP = new MyPopup(scoreNavPanel);
+    
+    public ScoreNavIF scoreNav; 
+    
+    class ScoreNavFacade implements ScoreNavIF {
+
+    	private final class ReloadAllHandler implements ClickHandler {
+			@Override
+			public void onClick(ClickEvent event) {
+				event.stopPropagation();
+				reloadOpdracht(-1);
+			}
+		}
+    	private final class ReloadHandler implements ClickHandler {
+			@Override
+			public void onClick(ClickEvent event) {
+				event.stopPropagation();
+				reloadOpdracht(currentOpdracht);
+			}
+		}
+
+
+		private PushButton nakijkKnop;
+    	private Checker checker;
+    	private PushButton volgendeKnop, vorigeKnop ;//, eindeKnop;
+    	private NextPrevHandler nextprev;
+		private PushButton allesOpnieuwKnop, opnieuwKnop;
+		private GotoOpdracht gotoOpdracht;
+		private int currentOpdracht;
+
+    	public ScoreNavFacade() {
+			nakijkKnop = new PushButton(Text.constants.nakijkKnopLabel());
+			nakijkKnop.addClickHandler(new ClickHandler(){
+				public void onClick(ClickEvent e)
+				{	e.stopPropagation();
+					checker.checkOpdracht(ScoreNavFacade.this);
+				}
+			});
+			vorigeKnop = new PushButton(Text.constants.vorigeKnopLabel());
+			vorigeKnop.addClickHandler(new ClickHandler(){
+				public void onClick(ClickEvent e)
+				{
+					e.stopPropagation();
+					nextprev.gotoPrev(ScoreNavFacade.this);
+				}
+			});
+			
+			volgendeKnop = new PushButton(Text.constants.volgendeKnopLabel());
+			volgendeKnop.addClickHandler(new ClickHandler(){
+				public void onClick(ClickEvent e)
+				{
+					e.stopPropagation();
+					nextprev.gotoNext(ScoreNavFacade.this);
+				}
+			});
+		
+    	}
+    	
+		@Override
+		public void setBeantwoord(int aantalBeantwoord) {
+		}
+
+		@Override
+		public void setOpdracht(int currentOpdracht) {
+			this.currentOpdracht = currentOpdracht;
+		}
+
+		@Override
+		public void setTotaalScore(int score) {
+		}
+
+		@Override
+		public void setItemScore(int oldOpdr, int i) {
+		}
+
+		@Override
+		public void setKijkNaEnabled(boolean enable) {
+			nakijkKnop.setEnabled(enable);		
+		}
+
+		@Override
+		public void setAantalOpdrachten(int aantalOpdrachten, int[] maxScores) {
+		}
+
+		@Override
+		public void setItemScores(int[] itemScores) {
+		}
+
+		@Override
+		public void setGotoOpdracht(GotoOpdracht gotoOpdracht) {
+			this.gotoOpdracht = gotoOpdracht;
+		}
+
+		@Override
+		public void setItemOpnieuw(boolean b) {
+			if(b) {
+				if(opnieuwKnop ==  null) {
+					opnieuwKnop = new PushButton(Text.constants.opnieuwKnopLabel());
+					opnieuwKnop.addClickHandler(new ReloadHandler());
+					kb.addKnop(opnieuwKnop, true);
+				}
+				opnieuwKnop.setVisible(true);
+			} else if(opnieuwKnop != null) {
+				opnieuwKnop.setVisible(false);
+			}
+		}
+
+		@Override
+		public void setOpnieuw(boolean b) {
+			if(b) {
+				if(allesOpnieuwKnop ==  null) {
+					allesOpnieuwKnop = new PushButton(Text.constants.allesOpnieuwKnopLabel());
+					allesOpnieuwKnop.addClickHandler(new ReloadAllHandler());
+					kb.addKnop(allesOpnieuwKnop, true);
+				}
+				allesOpnieuwKnop.setVisible(true);
+			} else if(allesOpnieuwKnop != null) {
+				allesOpnieuwKnop.setVisible(false);
+			}
+		}
+
+		@Override
+		public void setKijkNa(Checker checker) {
+			this.checker = checker;			
+		}
+
+		@Override
+		public void setNextPrevHandler(NextPrevHandler nextprev) {
+			this.nextprev = nextprev;
+		}
+
+		@Override
+		public Widget getNextButton() {
+			return volgendeKnop;
+		}
+
+		@Override
+		public Widget getPrevButton() {
+			return vorigeKnop;
+		}
+
+		@Override
+		public void setVolgendeEnabled(boolean enable) {
+			  volgendeKnop.setEnabled(enable);	
+		}
+
+		@Override
+		public void setVorigeEnabled(boolean enable) {
+			vorigeKnop.setEnabled(enable);
+		}
+
+
+		@Override
+		public PushButton getKijkNaButton() {
+			return nakijkKnop;
+		}
+
+
+		@Override
+		public void setVolgendeVisible(boolean volgendeKnopZichtbaar) {
+			volgendeKnop.setVisible(volgendeKnopZichtbaar);
+			volgendeKnop.removeFromParent();
+			if(volgendeKnopZichtbaar)
+			{	
+				kb.addKnop(volgendeKnop, true);
+			}
+		}
+
+
+		@Override
+		public void setVorigeVisible(boolean vorigeKnopZichtbaar) {
+			vorigeKnop.setVisible(vorigeKnopZichtbaar);
+			vorigeKnop.removeFromParent();
+			if(vorigeKnopZichtbaar)
+				kb.addKnop(vorigeKnop, true);
+		}
+
+
+		@Override
+		public void setButtonEnabled(int opdrNr, boolean b) {
+			on.setButtonEnabled(opdrNr, b);
+		}
+
+
+		private void reloadOpdracht(int opdracht) {
+			gotoOpdracht.reloadOpdracht(opdracht, ScoreNavFacade.this);
+		}
+    	
+    }
+    
 	
 	protected void popupNavPanel() {
 		 final MyPopup popup = POPUP;
@@ -1409,7 +1534,12 @@ try {
 		return unitId;
 	}
 
-	private void gotoNext(final HeaderButton next) {
+	public void gotoNext(ScoreNavIF source)
+	{
+		gotoNext(source.getNextButton());
+	}
+	
+	private void gotoNext(final Widget next) {
 		if(inNavBtn) {
 			return;
 		}
@@ -1420,12 +1550,7 @@ try {
 
 			@Override
 			public void execute() {
-				gaNaarVolgendeOpdracht();
-				
-//				int cur = on.getCurrentOpdracht() + 1;
-//				if(cur >= on.getAantalOpdrachten()) cur = on.getAantalOpdrachten()-1;
-//					on.gotoOpdracht(cur, scoreNav);
-				
+				gaNaarVolgendeOpdracht();			
 				Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 
 					@Override
@@ -1437,35 +1562,32 @@ try {
 			}});
 	}
 
-	private void gotoPrev(final HeaderButton prev) {
+	public void gotoPrev(ScoreNavIF source) {
+		gotoPrev(source.getPrevButton());
+	}
+	
+	private void gotoPrev(final Widget prev) {
 		if(inNavBtn) {
-			//logger.info("disabled");
 			return;
 		}
 		inNavBtn = true;
-		//DOM.setElementPropertyBoolean(next.getElement(), "disabled", true);
 		prev.getElement().getStyle().setProperty("pointerEvents", "none");
 		((Element) prev.getElement().getLastChild()).getStyle().setBackgroundColor("gray");
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 
 			@Override
 			public void execute() {
-				//logger.info("enabled");
 				gaNaarVorigeOpdracht();
-//				int cur = on.getCurrentOpdracht() - 1;
-//				if(cur < 0) cur = 0 ;
-//				on.gotoOpdracht(cur, scoreNav);
 				Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 
 					@Override
 					public void execute() {
 						inNavBtn = false;
-						//DOM.removeElementAttribute(next.getElement(), "disabled");
 						prev.getElement().getStyle().clearProperty("pointerEvents");
 						((Element) prev.getElement().getLastChild()).getStyle().clearBackgroundColor();
-						//logger.info("enable");
 					}});
 			}});
 	}
+
 
 }

@@ -42,7 +42,7 @@ import fi.wiskopdr.text.Text;
  * @author Evertson Croes
  * 
  */
-public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
+public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 {
 	public static int OEFENEN = 0;
 	public static int OEFENEN_STRAFPUNTEN = 1;
@@ -459,7 +459,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 	public void saveCurrentState()
 	{
 		states[currentActiviteit][currentOpdracht] = entry.getState();
-		ScoreNavPanel source = entry.scoreNav;
+		ScoreNavIF source = entry.scoreNav;
 		int scoreCorrected = entry.getScore();
 		if(strafpunten != null && mode == OEFENEN_STRAFPUNTEN)
 		{
@@ -627,7 +627,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 	}
 
 	@Override
-	public void gotoOpdracht(int i, ScoreNavPanel source) {
+	public void gotoOpdracht(int i, ScoreNavIF source) {
 		if(i == currentOpdracht) return;
 		int oldOpdr = currentOpdracht;
 		gotoOpdracht(i);
@@ -651,8 +651,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 		return scores[currentActiviteit];
 	}
 
-	@Override
-	public void reloadOpdracht(int opdracht, ScoreNavPanel source) {
+
+	public void reloadOpdracht(int opdracht, ScoreNavIF source) {
 		saveCurrentState();
 		
 		if(opdracht < 0) {
@@ -675,7 +675,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavPanel.GotoOpdracht
 			entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], states[currentActiviteit][currentOpdracht]);
 	}
 
-	public void clearState(int opdracht, ScoreNavPanel source) {
+	public void clearState(int opdracht, ScoreNavIF source) {
 		isCorrect[currentActiviteit][opdracht] = false;
 		scores[currentActiviteit][opdracht] = 0;
 		states[currentActiviteit][opdracht] = null;
