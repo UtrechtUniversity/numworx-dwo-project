@@ -33,6 +33,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 
 
+
 public class TekstVak extends LayoutPanel //implements InteractionView
 {
 	
@@ -509,14 +510,15 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		return ashoogte;
 	}
 	
-	public void pasHoogteAanInhoudAan()
+	public void pasHoogteAanInhoudAan(boolean b)
 	{
 		FormuleFont fm = regelVakken[0].getFont();
 		int regelafstand = fm.getAscent()+fm.getDescent()+interlinie;
 		int regelHoogtes = 0;
 		for(int i = 0; i < aantalRegels; i++)
 		{
-			regelVakken[i].bepaalAshoogte();
+			if(b)
+				regelVakken[i].bepaalAshoogte();
 		
 			int corr = 0;
         	if(i>0)corr = Math.max(regelafstand-(regelVakken[i-1].getHeight()-regelVakken[i-1].getAsHoogte()+regelVakken[i].getAsHoogte()), 0);
@@ -529,7 +531,12 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		{
 			TekstVakPanel panel = ((TekstVakPanel) zwevendeTekstVakken.get(i));
 			hoogte = Math.max(hoogte, panel.getLocationY() + panel.getHoogte());
-		}	
+		}
+		if(parent != null) 
+		{
+			hoogte = Math.max(hoogte, parent.getFirstRowMinHeight(this));
+		}
+		
 	}
 	
 	public void setAshoogte(int ashoogte)
@@ -624,24 +631,31 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			breedte = (int) tekstVakBreedte + 2 * cellMarge + knopBreedte;
 		}
 		
-		FormuleFont fm = regelVakken[0].getFont();
-		int regelafstand = fm.getAscent()+fm.getDescent()+interlinie;
-		int regelHoogtes = 0;
-		
-		 for(int i=0 ; i<aantalRegels; i++)
+		if(pasAanH)
+		{	
+			/*
+			FormuleFont fm = regelVakken[0].getFont();
+			int regelafstand = fm.getAscent()+fm.getDescent()+interlinie;
+			int regelHoogtes = 0;
+			
+			for(int i=0 ; i<aantalRegels; i++)
 	        {   int corr = 0;
 	        	if(i>0)corr = Math.max(regelafstand-(regelVakken[i-1].getHeight()-regelVakken[i-1].getAsHoogte()+regelVakken[i].getAsHoogte()), 0);
 			   	regelHoogtes += regelVakken[i].getHeight() + corr;
 	        }
 		
-		if(pasAanH)
-		{
 			hoogte = 2 * bovenMarge + regelHoogtes;
 			for(int i = 0; i < zwevendeTekstVakken.size(); i++)
 			{
 				TekstVakPanel panel = ((TekstVakPanel) zwevendeTekstVakken.get(i));
 				hoogte = Math.max(hoogte, panel.getLocationY() + panel.getHoogte());
-			}			
+			}
+			*/
+			pasHoogteAanInhoudAan(false);
+		}
+		if(parent != null) 
+		{
+			hoogte = Math.max(hoogte, parent.getFirstRowMinHeight(this));
 		}
 		setSize(breedte, hoogte); 
 		

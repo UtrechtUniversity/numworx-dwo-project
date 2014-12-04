@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
@@ -201,6 +203,9 @@ public class TekstVakPanel implements InteractionView
 	
 	private boolean isLink = false;
 	private ObjectList linkUrls;
+	
+	private FlowPanel klikPanel;
+	
 	
 	
 	static CssColor getColor(ObjectMap map, String key, int r, int g, int b) {
@@ -878,6 +883,9 @@ public class TekstVakPanel implements InteractionView
 			}
 			*/
 		}
+		
+		if (selectable || (sleepbaar && !sleepHandle))
+			zetKlikPanel();
 
 		if(inklapbaar)
 		{	initieerKlapUitButton(ingeklapt);
@@ -1174,6 +1182,23 @@ public class TekstVakPanel implements InteractionView
 		return sleepdoelMarge;
 	}
 	
+	public void zetKlikPanel()
+	{
+		if (klikPanel == null)
+		{
+			klikPanel = new FlowPanel();
+			//klikPanel.setBounds(0, 0, getSize().width, getSize().height);
+			//klikPanel.setOpaque(false);
+			//klikPanel.addMouseListener(this);
+			mainPanel2.add(klikPanel);
+			mainPanel2.setWidgetLeftRight(klikPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+			mainPanel2.setWidgetTopBottom(klikPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+		}
+
+		mainPanel2.setWidgetLeftRight(klikPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+		mainPanel2.setWidgetTopBottom(klikPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
+	}
+	
 	public void setRelocate(boolean relocate)
 	{
 		this.relocate = relocate;
@@ -1262,7 +1287,7 @@ public class TekstVakPanel implements InteractionView
 				{
 					//opnieuw alles plaatsen qua hoogte; zoals het tekstvak het zelf zou doen als hem geen hoogte was opgelegd.
 					if(pasAanH)
-						tekstVakken[i][j].pasHoogteAanInhoudAan();
+						tekstVakken[i][j].pasHoogteAanInhoudAan(true);
 					else
 						for(int k = 0; k < tekstVakken[i][j].getAantalRegels(); k++)
 						{
@@ -1850,6 +1875,16 @@ public class TekstVakPanel implements InteractionView
 
 	}
 	
+	public int getFirstRowMinHeight(TekstVak tv)
+	{
+		if(tv!=tekstVakken[0][0] || !pasAanH) 
+			return 0;
+		int minHeight = 2*bovenMarge;
+		if(inklapbaar && klapUitButton!=null) 
+			minHeight = minHeight + knopImageView1.getHeight();
+		return minHeight;
+	}
+	
 	void klapUitAction() {
 		
 		int delta = hoogte-hoogtes.get(0).intValue();
@@ -2030,7 +2065,7 @@ public class TekstVakPanel implements InteractionView
 			width = Math.max(width, knopImageView2.getWidth());
 			
 			int height = knopImageView1.getHeight();
-			setSizeUitklapButton(breedtePanel, hoogtes.get(0).intValue());
+			setSizeUitklapButton(breedtePanel, Math.max(height, hoogtes.get(0).intValue()));
 			
 			//klapUitButton.setPixelSize(width, hoogtes.get(0).intValue());		
 			//setPositionUitklapButton(layoutPanel, inklapKnopPos, width, height);
@@ -2081,19 +2116,19 @@ public class TekstVakPanel implements InteractionView
 		case LEFT:
 				//layoutPanel.setWidgetLeftRight(widget, width, Unit.PX, 0, Unit.PX);
 				layoutPanel.setWidgetLeftWidth(klapUitPanel, 1, Unit.PX, width, Unit.PX);
-				layoutPanel.setWidgetTopHeight(klapUitPanel, (hoogtes.get(0).intValue()-height)/2, Unit.PX, height, Unit.PX);
+				layoutPanel.setWidgetTopHeight(klapUitPanel, (hoogtes.get(0).intValue()-height)/2 + 2, Unit.PX, height, Unit.PX);
 				layoutPanel.zetUitklapKnopLinks(width);
 				break;
 		case MIDDLE: // FIXME werkt nog van geen meter!
 			layoutPanel.setWidgetLeftWidth(klapUitPanel, layoutPanel.getRegelBreedte(), Unit.PX, width, Unit.PX);
-			layoutPanel.setWidgetTopHeight(klapUitPanel, (hoogtes.get(0).intValue()-height)/2, Unit.PX, height, Unit.PX);
+			layoutPanel.setWidgetTopHeight(klapUitPanel, (hoogtes.get(0).intValue()-height)/2 + 2, Unit.PX, height, Unit.PX);
 			
 			break;
 		case RIGHT:
 		default:
 			//layoutPanel.setWidgetLeftRight(widget, 0, Unit.PX, width, Unit.PX);
 			layoutPanel.setWidgetRightWidth(klapUitPanel, 1, Unit.PX, width, Unit.PX);
-			layoutPanel.setWidgetTopHeight(klapUitPanel, (hoogtes.get(0).intValue()-height)/2, Unit.PX, height, Unit.PX);
+			layoutPanel.setWidgetTopHeight(klapUitPanel, (hoogtes.get(0).intValue()-height)/2 + 2, Unit.PX, height, Unit.PX);
 		}
 	}
 	
