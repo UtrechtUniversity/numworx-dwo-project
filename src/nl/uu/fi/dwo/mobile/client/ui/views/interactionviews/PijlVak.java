@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
+import fi.graphtoolgwt.client.FormuleComponentGWT;
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.Algebra;
 import fi.wiskopdr.expressies.Expressie;
@@ -126,14 +127,9 @@ public class PijlVak extends LayoutPanel{
 	}
 	
 	
-	public FormuleEditor addNewEditor(LayoutPanel p)
+	public PijlVakFormuleEditor addNewEditor(LayoutPanel p)
 	{
-		FormuleEditor editor = new FormuleEditor(){
-			public void enter()
-			{
-				enterActie();
-			}
-		};
+		PijlVakFormuleEditor editor = new PijlVakFormuleEditor(this);
 		//FormuleEditorWithAnswer editorInstance() {
 		//	return new FormuleEditorWithAnswer(h, isVergelijkingVak, this, randomVarNamen, randomVarWaarden);
 		//}
@@ -142,7 +138,6 @@ public class PijlVak extends LayoutPanel{
 		//	editor.getAsPanel().getElement().getStyle().setMarginLeft(13, Unit.PX);
 		//editor.getAsPanel().getElement().getStyle().setMarginTop(5, Unit.PX);
 		editor.setFont(fm);
-		editor.zetPijlVak(this);
 		editorPanel = (TouchPanel) editor.getAsPanel();
 		//tp.getElement().getStyle().setProperty("display", "inline-block");
 		//editor.setCurrent(0, 0);
@@ -192,7 +187,7 @@ public class PijlVak extends LayoutPanel{
 			if(operator.equals("abc") || operator.equals("sub"))
 			{
 				this.setWidgetLeftWidth(prefixVak.getAsPanel(), 10, Style.Unit.PX, prefixVak.getWidth(), Style.Unit.PX);
-				this.setWidgetTopHeight(prefixVak.getAsPanel(), ashoogte, Style.Unit.PX, prefixVak.getHeight(), Style.Unit.PX);
+				this.setWidgetTopHeight(prefixVak.getAsPanel(), ashoogte + viewer.getAsHoogte() - prefixVak.getAsHoogte(), Style.Unit.PX, prefixVak.getHeight(), Style.Unit.PX);
 			}
 		}
 		
@@ -201,7 +196,9 @@ public class PijlVak extends LayoutPanel{
 			this.add(editorPanel);
 			//formuleVak.setLocation((fm.getAscent() + fm.getDescent())/2 + fm.stringWidth("  "+operator+" "),(fm.getAscent() + fm.getDescent())/2);
 			this.setWidgetLeftWidth(editorPanel, (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+" ").getWidth(), Style.Unit.PX, viewer.getWidth(), Style.Unit.PX);
-			this.setWidgetTopHeight(editorPanel, ashoogte + fm.getAscent()/2-viewer.getMainRegel().getAsHoogte()-fm.getDescent()/2, Style.Unit.PX, viewer.getHeight(), Style.Unit.PX);
+			//this.setWidgetTopHeight(editorPanel, ashoogte + fm.getAscent()/2-viewer.getMainRegel().getAsHoogte()-fm.getDescent()/2, Style.Unit.PX, viewer.getHeight(), Style.Unit.PX);
+			this.setWidgetTopHeight(editorPanel, ashoogte, Style.Unit.PX, viewer.getHeight(), Style.Unit.PX);
+			
 			
 			if(operator.equals("abc") || operator.equals("sub"))
 			{
@@ -211,6 +208,7 @@ public class PijlVak extends LayoutPanel{
 			}
 			
 		}
+		zetMaat();
 		
 	}
 	
@@ -419,30 +417,37 @@ public class PijlVak extends LayoutPanel{
 		if(operator.equals("abc") || operator.equals("sub"))
 		{
 			//hier nog zorgen voor juiste hoogte bij invullen 'hoge' formules.
-			//int h = ashoogte + editor.getMainRegel().getHeight();
-			//h = Math.max(ashoogte + prefixVak.getHeight(), h);
-			//height = h;
+			int h = height;
+			if(editor != null)
+				h = ashoogte + editor.getHeight() + 5;
+			else if(viewer != null)
+				h = ashoogte + viewer.getHeight() + 5;
+			h = Math.max(ashoogte + prefixVak.getHeight() + 5, h);
+				
+			height = h;
 		}
 		setPixelSize(width, height);
 		if(editorPanel.getParent() == this) // FIXME Anders een assertion error bij setWidgetLeftWith
 		{ 
-			this.setWidgetLeftWidth(editorPanel, (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+" ").getWidth(), Style.Unit.PX, editor.getWidth(), Style.Unit.PX);
+			this.setWidgetLeftWidth(editorPanel, (fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+" ").getWidth(), Style.Unit.PX, (editor != null)?editor.getWidth():viewer.getWidth(), Style.Unit.PX);
 		
 			
 			//hieronder: niet editor.getCurrentRegel().getAsHoogte() nodig??
-		    this.setWidgetTopHeight(editorPanel, ashoogte + fm.getAscent()/2-editor.getMainRegel().getAsHoogte()-fm.getDescent()/2, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
+		    this.setWidgetTopHeight(editorPanel, ashoogte + fm.getAscent()/2-((editor != null)?editor.getMainRegel().getAsHoogte():viewer.getMainRegel().getAsHoogte())-fm.getDescent()/2, Style.Unit.PX, (editor != null)?editor.getHeight():viewer.getHeight(), Style.Unit.PX);
 		
-		//formuleVak.setLocation((fm.getAscent() + fm.getDescent())/2 + fm.stringWidth("  "+operator+" "),ashoogte-formuleVak.ashoogte-fm.getDescent()/2);
-		//formuleVakHaakjeR.setLocation((fm.getAscent() + fm.getDescent())/2 + fm.stringWidth("  "+operator+" ") + formuleVakHaakjeL.getSize().width + formuleVak.getSize().width,ashoogte-formuleVak.ashoogte-fm.getDescent()/2);
-		if(operator.equals("abc") || operator.equals("sub"))
-		{	
-			this.setWidgetLeftWidth(editorPanel, 10 + prefixVak.getWidth(), Style.Unit.PX, editor.getWidth(), Style.Unit.PX);
-			this.setWidgetTopHeight(editorPanel, ashoogte, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
-			this.setWidgetTopHeight(prefixVak.getAsPanel(), ashoogte + editor.getMainRegel().getAsHoogte() - prefixVak.getAsHoogte(), Style.Unit.PX, prefixVak.getHeight(), Style.Unit.PX);
-			
-		}
+			//formuleVak.setLocation((fm.getAscent() + fm.getDescent())/2 + fm.stringWidth("  "+operator+" "),ashoogte-formuleVak.ashoogte-fm.getDescent()/2);
+			//formuleVakHaakjeR.setLocation((fm.getAscent() + fm.getDescent())/2 + fm.stringWidth("  "+operator+" ") + formuleVakHaakjeL.getSize().width + formuleVak.getSize().width,ashoogte-formuleVak.ashoogte-fm.getDescent()/2);
+			if(operator.equals("abc") || operator.equals("sub"))
+			{	
+				this.setWidgetLeftWidth(editorPanel, 10 + prefixVak.getWidth(), Style.Unit.PX, (editor != null)?editor.getWidth():viewer.getWidth(), Style.Unit.PX);
+				this.setWidgetTopHeight(editorPanel, ashoogte, Style.Unit.PX, (editor != null)?editor.getHeight():viewer.getHeight(), Style.Unit.PX);
+				this.setWidgetTopHeight(prefixVak.getAsPanel(), ashoogte + ((editor != null)?editor.getMainRegel().getAsHoogte():viewer.getMainRegel().getAsHoogte()) - prefixVak.getAsHoogte(), Style.Unit.PX, prefixVak.getHeight(), Style.Unit.PX);
+				
+			}
 		
 		}
+		fe.zetPijlVakMaat();
+		paintComponent();
 	}
 	
 	public void vervangEditorDoorViewer()
@@ -462,68 +467,86 @@ public class PijlVak extends LayoutPanel{
 		
 	}
 	
-	public void enterActie()
-	{
-		if(!aanpasbaar)
-			return;
-		aanpasbaar = false;
-		if(goedKrulImage.isAttached())
-			remove(goedKrulImage);
-		if(foutKruisImage.isAttached())
-			remove(foutKruisImage);
+	public class PijlVakFormuleEditor extends FormuleEditor {
+
+		PijlVak pijlvak;
+		public PijlVakFormuleEditor(PijlVak pv)
+		{
+			super();
+			pijlvak = pv;
+		}
 		
-		if(operator.equals("abc"))
-		{	String vergelijkingString = fe.getLatestAnswer();
-			VergelijkingMeerv vergelijking = FormuleParser.parseVergelijking("$f" + vergelijkingString + "@");
+		@Override
+		public void enter() {
+            
+			if(!aanpasbaar)
+				return;
+			aanpasbaar = false;
+			if(goedKrulImage.isAttached())
+				remove(goedKrulImage);
+			if(foutKruisImage.isAttached())
+				remove(foutKruisImage);
 			
-			double d = Algebra.geefDiscriminant(vergelijking.geefVergelijking(0));
-			String antwoordString = editor.toString();
-			Expressie antwoordExpressie = FormuleParser.parse(antwoordString);//is parse hier de juiste? Niet beter: geefExpressie? (met $f en @)
-			boolean goed = false;
-			try{
-				double dAnt = antwoordExpressie.geefWaarde();
-				goed = Algebra.isGelijkDouble(d, dAnt);
+			if(operator.equals("abc"))
+			{	String vergelijkingString = fe.getLatestAnswer();
+				VergelijkingMeerv vergelijking = FormuleParser.parseVergelijking("$f" + vergelijkingString + "@");
+				
+				double d = Algebra.geefDiscriminant(vergelijking.geefVergelijking(0));
+				String antwoordString = editor.toString();
+				Expressie antwoordExpressie = FormuleParser.geefExpressie("$f" + antwoordString + "@");
+						//FormuleParser.parse(antwoordString);//is parse hier de juiste? Niet beter: geefExpressie? (met $f en @)
+				boolean goed = false;
+				try{
+					double dAnt = antwoordExpressie.geefWaarde();
+					goed = Algebra.isGelijkDouble(d, dAnt);
+				}
+				catch(Exception e)
+				{}
+				
+				if(goed)
+				{
+					pijlvak.add(goedKrulImage);
+					setWidgetRightWidth(goedKrulImage, 0, Style.Unit.PX, 30, Style.Unit.PX);
+					setWidgetBottomHeight(goedKrulImage, 0, Style.Unit.PX, 30, Style.Unit.PX);
+					fe.zetEditorTerug();
+				}
+				else
+				{	aanpasbaar = true;
+					pijlvak.add(foutKruisImage);
+					setWidgetRightWidth(foutKruisImage, 0, Style.Unit.PX, 30, Style.Unit.PX);
+					setWidgetBottomHeight(foutKruisImage, 0, Style.Unit.PX, 30, Style.Unit.PX);
+				}
 			}
-			catch(Exception e)
-			{}
-			
-			if(goed)
+			else if(operator.equals("sub"))
 			{
-				this.add(goedKrulImage);
-				setWidgetRightWidth(goedKrulImage, 0, Style.Unit.PX, 30, Style.Unit.PX);
-				setWidgetBottomHeight(goedKrulImage, 0, Style.Unit.PX, 30, Style.Unit.PX);
+				String substitutieString = editor.toString();
+				Expressie substitutie = FormuleParser.geefExpressie("$f" + substitutieString + "@");
+				fe.zetSubstitutie(substitutie);
 				fe.zetEditorTerug();
 			}
 			else
-			{	aanpasbaar = true;
-				this.add(foutKruisImage);
-				setWidgetRightWidth(foutKruisImage, 0, Style.Unit.PX, 30, Style.Unit.PX);
-				setWidgetBottomHeight(foutKruisImage, 0, Style.Unit.PX, 30, Style.Unit.PX);
-			}
-		}
-		else if(operator.equals("sub"))
-		{
-			String substitutieString = editor.toString();
-			Expressie substitutie = FormuleParser.geefExpressie("$f" + substitutieString + "@");
-			fe.zetSubstitutie(substitutie);
-			fe.zetEditorTerug();
-		}
-		else
-		{	if(!operator.equals("haakjes") && !operator.equals("herleid") && !operator.equals("gelijkwaardig") && !operator.equals("ontbind") && !operator.equals("splits") && !operator.equals("wortel")  && !operator.equals("implicatie"))
-			{	if(editor.toString().equals("")) 
-				{	aanpasbaar = true;
-					return;
+			{	if(!operator.equals("haakjes") && !operator.equals("herleid") && !operator.equals("gelijkwaardig") && !operator.equals("ontbind") && !operator.equals("splits") && !operator.equals("wortel")  && !operator.equals("implicatie"))
+				{	if(editor.toString().equals("")) 
+					{	aanpasbaar = true;
+						return;
+					}
 				}
+				fe.maakBewerkingStap();
+				Expressie exp = FormuleParser.parse(editor.toString());
+		 		if(exp!=null && Algebra.geefTermen(exp,new Vector()).size()>1)
+		 		{	editor.insert("$h" + exp.toString() + "@");
+		 			
+		 		}
 			}
-			fe.maakBewerkingStap();
-			Expressie exp = FormuleParser.parse(editor.toString());
-	 		if(exp!=null && Algebra.geefTermen(exp,new Vector()).size()>1)
-	 		{	editor.insert("$h" + exp.toString() + "@");
-	 			
-	 		}
+			if(!aanpasbaar)
+				vervangEditorDoorViewer();
 		}
-		if(!aanpasbaar)
-			vervangEditorDoorViewer();
+		
+		public void resize()
+		{
+			System.out.println("resize aangeroepen");
+			pijlvak.zetMaat();
+		}
 		
 	}
 }

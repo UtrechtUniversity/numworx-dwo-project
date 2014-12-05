@@ -41,9 +41,7 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 
 	public void enter() {}
 	
-	private PijlVak pijlVak = null;
-	
-	
+		
 	public FormuleEditor()
 	{
 		super();
@@ -408,15 +406,10 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 		resize();
 	}
 
+	//Wordt in uitbreidingen van deze class (in GraphToolGWT en in PijlVak FormuleEditorWithSteps) overschreven.
 	public void resize()
 	{
-		if(pijlVak != null)
-			pijlVak.zetMaat();
-	}
-	
-	public void zetPijlVak(PijlVak pv)
-	{
-		this.pijlVak = pv;
+		
 	}
 	
 }
