@@ -116,6 +116,7 @@ public class KeyBoardTabPanel
 		main.getElement().getStyle().setFontSize(0, Style.Unit.PX); // anders main is 1 regel = 13 px
 		main.remove(staticpanel);
 		main.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+		margins = 22; // die div.tabkeyboard-noordhoff (x2)
 	}
 
 	public void zetMaatTrifork() {
@@ -268,8 +269,9 @@ public class KeyBoardTabPanel
 			setKBVisible(true);
 	}
 
+	private static int margins = 0;
 	private int extractHeight(final int index, Panel panel) {
-		int offsetHeight = panel.getOffsetHeight();
+		int offsetHeight = panel.getOffsetHeight() + margins; // binnenmaat en buitenmaat verschillend bij noordhoff
 		logger.info("height = " + offsetHeight + " == " + tabHeights.get(index));
 		if(Math.abs(offsetHeight-tabHeights.get(index)) >  20) {
 			offsetHeight=tabHeights.get(index);

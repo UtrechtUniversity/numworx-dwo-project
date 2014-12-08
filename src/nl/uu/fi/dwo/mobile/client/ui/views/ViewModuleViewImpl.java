@@ -149,6 +149,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			logger.info("request " + method + " " + url);
 			logger.fine("requesting url = " + Window.Location.getHref());
 			RequestBuilder rb = new RequestBuilder(method, url);
+			rb.setTimeoutMillis(1000000);
 			try
 			{
 				rb.sendRequest(null, new RequestCallback()
@@ -173,7 +174,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 					@Override
 					public void onError(Request request, Throwable exception)
 					{
-						Window.alert("error");
+						Window.alert("error " + exception);
 					}
 				});
 		
@@ -650,6 +651,7 @@ try {
 		zetVorigeKnoppenEnabled(opdrNr > 0);
 		zetNakijkKnopEnabled();
 	}
+	
 	
 	public void zetVolgendeKnoppenEnabled(boolean b)
 	{	

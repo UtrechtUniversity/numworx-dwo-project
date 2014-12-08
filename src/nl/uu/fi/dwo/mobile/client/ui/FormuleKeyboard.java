@@ -232,7 +232,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 		if(hasKeyboard)
 		{
 			if(isNoordhoff())
-				tp.addTab(KEYBOARD, this.getKeyBoard(buttonCodesWN, buttonWidthsWN), 69); // was GR
+				tp.addTab(KEYBOARD, this.getKeyBoard(buttonCodesWN, buttonWidthsWN), 78); // was GR, 78 = 15 + 15 + 48
 			else
 				tp.addTab(KEYBOARD, this.getKeyBoard(buttonCodesGR, buttonWidthsGR), 108);
 		}
@@ -240,9 +240,9 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 		{
 			if(isNoordhoff())
 			{
-				tp.addTab(KEYBOARD, getKeyBoard(buttonCodes_geavanceerd, buttonWidths_geavanceerd),181);
-				tp.addTab(qwerty,         getKeyBoard(buttonCodes_abc, buttonWidths_abc),181);
-				tp.addTab(QWERTY,    getKeyBoard(buttonCodes_ABC, buttonWidths_abc),181);
+				tp.addTab(KEYBOARD, getKeyBoard(buttonCodes_geavanceerd, buttonWidths_geavanceerd),190); // 190 = 15*2 + 8*2 + 48*3
+				tp.addTab(qwerty,         getKeyBoard(buttonCodes_abc, buttonWidths_abc),190);
+				tp.addTab(QWERTY,    getKeyBoard(buttonCodes_ABC, buttonWidths_abc),190);
 			}
 			else
 			{

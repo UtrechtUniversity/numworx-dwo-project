@@ -373,7 +373,7 @@ public class FormuleEditorWithSteps implements InteractionView
 
 //		sp.getElement().getStyle().setWidth(breedte - 5, Unit.PX);
 //		sp.getElement().getStyle().setHeight(hoogte - 50, Unit.PX);
-		sp.setPixelSize(breedte-5, hoogte-50);
+		sp.setPixelSize(breedte-5, hoogte-50 + 20); // waar komt die 50 vandaan, er kan nog 20 pixels bij
 		sp.getElement().getStyle().setOverflow(Overflow.AUTO);
 		sp.getElement().getStyle().setFloat(Style.Float.LEFT);
 
