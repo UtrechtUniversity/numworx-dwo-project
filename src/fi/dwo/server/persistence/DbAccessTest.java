@@ -83,7 +83,7 @@ public class DbAccessTest extends TestCase
 	   columnnames.add("sconame");
 	   Hashtable wheredef = new Hashtable();
 	   wheredef.put("courseID", new Integer(1));
-	   Vector result = db.getTable("tblSco", columnnames, wheredef, "sequencenr");
+	   Vector result = db.getTable("tblScoView", columnnames, wheredef, "sequencenr");
 	   
 	   System.out.println(result);
 	   assertEquals(3, result.size());
@@ -99,7 +99,7 @@ public class DbAccessTest extends TestCase
 	   Hashtable wheredef = new Hashtable();
 	   wheredef.put("courseID", new Integer(1));
 	   wheredef.put("appletID", new Integer(1));
-	   Vector result = db.getTable("tblSco", columnnames, wheredef, "sequencenr");
+	   Vector result = db.getTable("tblScoView", columnnames, wheredef, "sequencenr");
 	   
 	   System.out.println(result);
 	   assertEquals(3, result.size());

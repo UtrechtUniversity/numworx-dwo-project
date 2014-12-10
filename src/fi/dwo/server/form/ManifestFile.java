@@ -80,9 +80,8 @@ class ManifestFile {
 		{
 			// insert scoid in restriction.
 		}
-		Vector scos      = dbAccess.getTable("tblSco", restriction, SEQUENCE_NR);
-		
-		
+		Vector scos      = dbAccess.getTable("tblScoView", restriction, SEQUENCE_NR);
+				
 		DocumentBuilderFactory factory;
 		factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);

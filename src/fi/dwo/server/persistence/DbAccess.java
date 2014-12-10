@@ -93,32 +93,20 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             + "WHERE (tblCourse.schoolID = ?) and (parentID = 0)"
             + "ORDER BY name ";
 
-    //TBLSPLIT DONE SELECT `{0}` FROM tblStudentScoContext join tblStudentScoData using (studentSco) WHERE (scoID = ?) AND (userID = ?)
     private final static String QRY_GET_STUDENT_SCO = "SELECT `{0}` "
             + "FROM tblStudentScoContext join tblStudentScoData using (studentSco) "
             + "WHERE (scoID = ?) "
             + "AND   (userID = ?) ";
-//    private final static String QRY_GET_STUDENT_SCO = "SELECT `{0}` "
-//            + "FROM tblStudentSco " + "WHERE (scoID = ?) "
-//            + "AND   (userID = ?) ";
 
-//TBL_SPLIT DONE   
     private final static String QRY_ADD_EMPTY_STUDENT_SCO_CONTEXT = "INSERT INTO tblStudentScoContext(scoID, userID, createDate, score) "
             + "VALUES(?, ?, CURDATE(), 0) ";
     private final static String QRY_ADD_EMPTY_STUDENT_SCO_DATA = "INSERT INTO tblStudentScoData(studentSco,suspendData) "
             + "VALUES(?, '') ";
-//    private final static String QRY_ADD_EMPTY_STUDENT_SCO = "INSERT INTO tblStudentSco(scoID, userID, createDate, score, suspendData) "
-//            + "VALUES(?, ?, CURDATE(), 0, '') ";
 
-//TBLSPLIT DONE
     private final static String QRY_UPDATE_STUDENT_SCO = "UPDATE tblStudentScoContext, tblStudentScoData "
             + "SET `{0}` = ?, createDate = CURDATE() "
             + "WHERE (scoID = ?) "
             + "AND   (userID = ?) AND (tblStudentScoContext.studentSco = tblStudentScoData.studentSco)";
-//    private final static String QRY_UPDATE_STUDENT_SCO = "UPDATE tblStudentSco "
-//            + "SET `{0}` = ?, createDate = CURDATE() "
-//            + "WHERE (scoID = ?) "
-//            + "AND   (userID = ?) ";
 
     private final static String QRY_WHERE_COLUMN = "AND ({0} = ?) ";
 
@@ -219,155 +207,74 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     private final static String QRY_DISCONNECT_USER_CLASS = "UPDATE tblUser "
             + "SET classID = null " + "WHERE userID = ? ";
 
-//TBLSPLIT  DONE
     private final static String QRY_RESULTS_ALL = "SELECT tblClass.classID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
             + "FROM (tblClass, tblCourse) join  tblUser on tblUser.classId =  tblClass.classId "
-            + "left join tblSco  on tblSco.courseId =  tblCourse.courseId "
-            + "left join  tblStudentScoContext on tblStudentScoContext.userid =   tblUser.userId and tblStudentScoContext.scoId =   tblSco.scoId "
+            + "left join tblScoContext  on tblScoContext.courseId =  tblCourse.courseId "
+            + "left join  tblStudentScoContext on tblStudentScoContext.userid =   tblUser.userId and tblStudentScoContext.scoId =   tblScoContext.scoId "
             + "where (tblCourse.courseID in ({0})) "
             + "and   (tblClass.userID = ?) "
             + "group by tblClass.classID, tblCourse.courseID "
             + "having tblClass.classID is not null "
             + "ORDER BY tblClass.classID";
-//    private final static String QRY_RESULTS_ALL = "SELECT tblClass.classID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
-//            + "FROM (tblClass, tblCourse) join  tblUser on tblUser.classId =  tblClass.classId "
-//            + "left join tblSco  on tblSco.courseId =  tblCourse.courseId "
-//            + "left join  tblStudentSco on tblStudentSco.userid =   tblUser.userId and tblStudentSco.scoId =   tblSco.scoId "
-//            + "where (tblCourse.courseID in ({0})) "
-//            + "and   (tblClass.userID = ?) "
-//            + "group by tblClass.classID, tblCourse.courseID "
-//            + "having tblClass.classID is not null "
-//            + "ORDER BY tblClass.classID";
 
     /**
      * results of selected courses from a single user.
      */
-//TBLSPLIT DONE
     private final static String QRY_RESULTS_SINGLE = "SELECT tblUser.userID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
             + "FROM tblUser  "
             + "left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID "
-            + "right join tblSco on tblStudentScoContext.scoID = tblSco.scoID "
-            + "left join tblCourse on tblSco.courseID = tblCourse.courseID "
+            + "right join tblScoContext on tblStudentScoContext.scoID = tblScoContext.scoID "
+            + "left join tblCourse on tblScoContext.courseID = tblCourse.courseID "
             + "where (tblCourse.courseID in ({0})) "
             + "and   (tblUser.userID = ?) "
             + "group by tblCourse.courseID ";
-//    private final static String QRY_RESULTS_SINGLE = "SELECT tblUser.userID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
-//            + "FROM tblUser  "
-//            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID "
-//            + "right join tblSco on tblStudentSco.scoID = tblSco.scoID "
-//            + "left join tblCourse on tblSco.courseID = tblCourse.courseID "
-//            + "where (tblCourse.courseID in ({0})) "
-//            + "and   (tblUser.userID = ?) "
-//            + "group by tblCourse.courseID ";
 
-//TBLSPLIT DONE
     private final static String QRY_RESULTS_CLASS = "SELECT tblUser.userID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
             + "FROM (tblUser, tblCourse) "
             + "join tblClass on tblClass.classID = tblUser.classID "
-            + "join tblSco on tblSco.courseID = tblCourse.courseID "
-            + "left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID and tblStudentScoContext.scoId = tblSco.scoId "
+            + "join tblScoContext on tblScoContext.courseID = tblCourse.courseID "
+            + "left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID and tblStudentScoContext.scoId = tblScoContext.scoId "
             + "where (tblUser.classID = ?) "
             + "and (tblCourse.courseID in ({0})) "
             + "and   (tblClass.userID = ?) "
             + "group by tblUser.userID, tblCourse.courseID "
             + "ORDER BY tblUser.userID";
-//    private final static String QRY_RESULTS_CLASS = "SELECT tblUser.userID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
-//            + "FROM (tblUser, tblCourse) "
-//            + "join tblClass on tblClass.classID = tblUser.classID "
-//            + "join tblSco on tblSco.courseID = tblCourse.courseID "
-//            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID and tblStudentSco.scoId = tblSco.scoId "
-//            + "where (tblUser.classID = ?) "
-//            + "and (tblCourse.courseID in ({0})) "
-//            + "and   (tblClass.userID = ?) "
-//            + "group by tblUser.userID, tblCourse.courseID "
-//            + "ORDER BY tblUser.userID";
 
-//TBLSPLIT DONE
     private final static String QRY_RESULTS_CLASS_COURSE = "SELECT tblUser.userID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
             + "FROM (tblUser, tblCourse) "
             + "join tblClass on tblClass.classID = tblUser.classID "
-            + "join tblSco on tblSco.courseID = tblCourse.courseID "
-            + "left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID and tblStudentScoContext.scoId = tblSco.scoId "
+            + "join tblScoContext on tblScoContext.courseID = tblCourse.courseID "
+            + "left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID and tblStudentScoContext.scoId = tblScoContext.scoId "
             + "where (tblUser.classID = ?) "
             + "and (tblCourse.courseID = ?) "
             + "group by tblUser.userID, tblCourse.courseID "
             + "ORDER BY tblUser.userID";
-//    private final static String QRY_RESULTS_CLASS_COURSE = "SELECT tblUser.userID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
-//            + "FROM (tblUser, tblCourse) "
-//            + "join tblClass on tblClass.classID = tblUser.classID "
-//            + "join tblSco on tblSco.courseID = tblCourse.courseID "
-//            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID and tblStudentSco.scoId = tblSco.scoId "
-//            + "where (tblUser.classID = ?) "
-//            + "and (tblCourse.courseID = ?) "
-//            + "group by tblUser.userID, tblCourse.courseID "
-//            + "ORDER BY tblUser.userID";
 
-//TBLSPLIT DONE
-    private final static String QRY_RESULTS_STUDENT_COURSE = "SELECT tblUser.userID, tblSco.scoID, tblSco.sequencenr,  if(score=0,-1,score) as score, total_time "
-            + "FROM (tblUser, tblSco)  join tblClass on tblClass.classID = tblUser.classID "
-            + "join tblCourse on tblSco.courseID = tblCourse.courseID "
-            + "left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID and tblStudentScoContext.scoId = tblSco.scoId "
+    private final static String QRY_RESULTS_STUDENT_COURSE = "SELECT tblUser.userID, tblScoContext.scoID, tblScoContext.sequencenr,  if(score=0,-1,score) as score, total_time "
+            + "FROM (tblUser, tblScoContext)  join tblClass on tblClass.classID = tblUser.classID "
+            + "join tblCourse on tblScoContext.courseID = tblCourse.courseID "
+            + "left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID and tblStudentScoContext.scoId = tblScoContext.scoId "
             + "where (tblUser.classID = ?) "
             + "and (tblCourse.courseID = ?) "
             + "and   (tblClass.userID = ?) "
-            + "ORDER BY tblUser.userID, tblSco.sequencenr";
-//    private final static String QRY_RESULTS_STUDENT_COURSE = "SELECT tblUser.userID, tblSco.scoID, tblSco.sequencenr,  if(score=0,-1,score) as score, total_time "
-//            + "FROM (tblUser, tblSco)  join tblClass on tblClass.classID = tblUser.classID "
-//            + "join tblCourse on tblSco.courseID = tblCourse.courseID "
-//            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID and tblStudentSco.scoId = tblSco.scoId "
-//            + "where (tblUser.classID = ?) "
-//            + "and (tblCourse.courseID = ?) "
-//            + "and   (tblClass.userID = ?) "
-//            + "ORDER BY tblUser.userID, tblSco.sequencenr";
+            + "ORDER BY tblUser.userID, tblScoContext.sequencenr";
 
     /**
      * Select the SCO scores of one student.
      */
-//    private final static String QRY_RESULTS_SINGLE_STUDENT_COURSE_MYSQL4 = "SELECT tblUser.userID, tblSco.scoID, tblSco.sequencenr,  if(score=0,-1,score) as score, total_time "
-//        + "FROM tblUser "
-//        + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID "
-//        + "right join tblSco on tblStudentSco.scoID = tblSco.scoID "
-//        + "left join tblCourse on tblSco.courseID = tblCourse.courseID "
-//        + "where (tblUser.userID = ?) "
-//        + "and (tblCourse.courseID = ?) "
-//        + "group by tblUser.userID, tblSco.scoID, tblSco.sequencenr "
-//        + "ORDER BY tblUser.userID, tblSco.sequencenr";
-//    private final static String QRY_RESULTS_SINGLE_STUDENT_COURSE_MYSQL4 = "SELECT tblUser.userID, tblSco.scoID, tblSco.sequencenr,  if(score=0,-1,score) as score, total_time "
-//        + "FROM tblUser "
-//        + "left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID "
-//        + "right join tblSco on tblStudentScoContext.scoID = tblSco.scoID "
-//        + "left join tblCourse on tblSco.courseID = tblCourse.courseID "
-//        + "where (tblUser.userID = ?) "
-//        + "and (tblCourse.courseID = ?) "
-//        + "group by tblUser.userID, tblSco.scoID, tblSco.sequencenr "
-//        + "ORDER BY tblUser.userID, tblSco.sequencenr";
-//TBLSPLIT DONE
     private static String QRY_RESULTS_SINGLE_STUDENT_COURSE
-            = "SELECT tblUser.userID, tblSco.scoID, tblSco.sequencenr,  if(score=0,-1,score) as score, total_time "
-            + "FROM ( tblSco, tblUser ) left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID and tblStudentScoContext.scoID = tblSco.scoID "
-            + "where tblUser.userID = ? and tblSco.courseID = ? "
-            + "order by tblSco.sequencenr";
-//    private static String QRY_RESULTS_SINGLE_STUDENT_COURSE
-//            = "SELECT tblUser.userID, tblSco.scoID, tblSco.sequencenr,  if(score=0,-1,score) as score, total_time "
-//            + "FROM ( tblSco, tblUser ) left join tblStudentSco on tblStudentSco.userID = tblUser.userID and tblStudentSco.scoID = tblSco.scoID "
-//            + "where tblUser.userID = ? and tblSco.courseID = ? "
-//            + "order by tblSco.sequencenr";
+            = "SELECT tblUser.userID, tblScoContext.scoID, tblScoContext.sequencenr,  if(score=0,-1,score) as score, total_time "
+            + "FROM ( tblScoContext, tblUser ) left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID and tblStudentScoContext.scoID = tblScoContext.scoID "
+            + "where tblUser.userID = ? and tblScoContext.courseID = ? "
+            + "order by tblScoContext.sequencenr";
 
-//TBLSPLIT     DONE
-    private final static String QRY_RESULTS_COURSE = "SELECT tblClass.classID, tblSco.scoID, tblSco.sequencenr, avg(score) as score, count(score) as totaal "
-            + "FROM (tblClass, tblSco) join tblUser on tblClass.classID = tblUser.classID "
-            + "left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID and tblStudentScoContext.scoID = tblSco.scoID "
-            + "where  (tblSco.courseID = ?) "
+    private final static String QRY_RESULTS_COURSE = "SELECT tblClass.classID, tblScoContext.scoID, tblScoContext.sequencenr, avg(score) as score, count(score) as totaal "
+            + "FROM (tblClass, tblScoContext) join tblUser on tblClass.classID = tblUser.classID "
+            + "left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID and tblStudentScoContext.scoID = tblScoContext.scoID "
+            + "where  (tblScoContext.courseID = ?) "
             + "and   (tblClass.userID = ?) "
-            + "group by tblClass.classID, tblSco.scoID "
-            + "ORDER BY tblClass.classID, tblSco.sequencenr";
-//    private final static String QRY_RESULTS_COURSE = "SELECT tblClass.classID, tblSco.scoID, tblSco.sequencenr, avg(score) as score, count(score) as totaal "
-//            + "FROM (tblClass, tblSco) join tblUser on tblClass.classID = tblUser.classID "
-//            + "left join tblStudentSco on tblStudentSco.userID = tblUser.userID and tblStudentSco.scoID = tblSco.scoID "
-//            + "where  (tblSco.courseID = ?) "
-//            + "and   (tblClass.userID = ?) "
-//            + "group by tblClass.classID, tblSco.scoID "
-//            + "ORDER BY tblClass.classID, tblSco.sequencenr";
+            + "group by tblClass.classID, tblScoContext.scoID "
+            + "ORDER BY tblClass.classID, tblScoContext.sequencenr";
 
     private final static String QRY_UPDATE_CLASS_NAME = "UPDATE tblClass "
             + "SET class = ? " + "WHERE (classID = ?) ";
@@ -414,43 +321,72 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     private final static String QRY_UPDATE_COURSE4 = "UPDATE tblCourse "
             + "SET name = ?, description = ?, export = ?, schoolID = ?, parentID = ? WHERE (courseID = ?) ";
 
-    private final static String QRY_ADD_SCO = "INSERT INTO tblSco(courseID, appletID, sconame, description, launchdata, sequencenr) "
-            + "VALUES(?, ?, ?, ?, ?, ?) ";
+//TODO tblSco done
+//    private final static String QRY_ADD_SCO = "INSERT INTO tblSco(courseID, appletID, sconame, description, launchdata, sequencenr) "
+//            + "VALUES(?, ?, ?, ?, ?, ?) ";
+    //TODO tblSco done
+    private final static String QRY_ADD_SCO_CONTEXT = "INSERT INTO tblScoContext(courseID, appletID, sconame, sequencenr) "
+            + "VALUES(?, ?, ?, ?) ";
+    //TODO tblSco done
+    private final static String QRY_ADD_SCO_DATA = "INSERT INTO tblScoData(scoID, description, launchdata) "
+            + "VALUES(?, ?, ?) ";
 
-    private final static String QRY_UPDATE_SCO = "UPDATE tblSco "
-            + "SET sconame = ?, "
-            + "description = ?, "
-            + "launchdata = ? "
-            + "WHERE (scoID = ?) ";
+//TODO tblSco done
+//    private final static String QRY_UPDATE_SCO = "UPDATE tblSco "
+//            + "SET sconame = ?, "
+//            + "description = ?, "
+//            + "launchdata = ? "
+//            + "WHERE (scoID = ?) ";
+//    // update sco zonder launchdata
+    private final static String QRY_UPDATE_SCO = "UPDATE tblScoContext, tblScoData "
+            + "SET tblScoContext.sconame = ?, "
+            + "tblScoData.description = ?, "
+            + "tblScoData.launchdata = ? "
+            + "WHERE (tblScoContext.scoID = ? and tblScoContext.scoID = tblScoData.scoID)  ";
     // update sco zonder launchdata
-    private final static String QRY_UPDATE_SCO2 = "UPDATE tblSco "
-            + "SET sconame = ?, "
-            + "description = ? "
-            + "WHERE (scoID = ?) ";
-    private final static String QRY_UPDATE_SCO3 = "UPDATE tblSco "
-            + "SET sconame = ?, "
-            + "description = ?, "
-            + "showscore = ? "
-            + "WHERE (scoID = ?) ";
+//TODO tblSco done
+//    private final static String QRY_UPDATE_SCO2 = "UPDATE tblSco "
+//            + "SET sconame = ?, "
+//            + "description = ? "
+//            + "WHERE (scoID = ?) ";
+    private final static String QRY_UPDATE_SCO2 = "UPDATE tblScoContext, tblScoData "
+            + "SET tblScoContext.sconame = ?, "
+            + "tblScoData.description = ? "
+            + "WHERE (tblScoContext.scoID = ? and tblScoContext.scoID = tblScoData.scoID) ";
+//TODO tblSco done
+//    private final static String QRY_UPDATE_SCO3 = "UPDATE tblSco "
+//            + "SET sconame = ?, "
+//            + "description = ?, "
+//            + "showscore = ? "
+//            + "WHERE (scoID = ?) ";
+    private final static String QRY_UPDATE_SCO3 = "UPDATE tblScoContext, tblScoData "
+            + "SET tblScoContext.sconame = ?, "
+            + "tblScoData.description = ?, "
+            + "tblScoContext.showscore = ? "
+            + "WHERE (tblScoContext.scoID = ? and tblScoContext.scoID = tblScoData.scoID) ";
 
-    private final static String QRY_UPDATE_SCO_SEQUENCE = "UPDATE tblSco "
+    private final static String QRY_UPDATE_SCO_SEQUENCE = "UPDATE tblScoContext "
             + "SET sequencenr = sequencenr - 1 " + "WHERE (sequencenr > ?) "
             + "AND   (courseid = ?) ";
 
 // TODO false bij een export.    
     static public final boolean DEBUG = false;
-    
+
     /**
      */
     protected DbAccess(boolean check) {
         super(MYSQL2_SCIENCE_FISME, "dwo");
-        if(check && checkVersion()) System.exit(20);
+        if (check && checkVersion()) {
+            System.exit(20);
+        }
     }
-    
-    public DbAccess() { this(true); }
 
-	public boolean checkVersion() {
-		try {
+    public DbAccess() {
+        this(true);
+    }
+
+    public boolean checkVersion() {
+        try {
             if (DEBUG) {
                 log("Dbacces DEBUG aan");
             }
@@ -458,16 +394,16 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             PreparedStatement ps = getStatement("select * from tblDWOSystemParameters where name like 'DBVersion%'");
             ResultSet rs = ps.executeQuery();
             HashMap<String, String> hashMap = new HashMap<String, String>(5);
-            while(rs.next()){
-                hashMap.put(rs.getString("name"),rs.getString("value"));
+            while (rs.next()) {
+                hashMap.put(rs.getString("name"), rs.getString("value"));
             }
-            Integer one  = 1;
+            Integer one = 1;
             Integer zero = 0;
-            
-            if(hashMap.get("DBVersion Major").matches("1") && hashMap.get("DBVersion Minor").matches("1")
-                    && hashMap.get("DBVersion Revision").matches("0")){
+
+            if (hashMap.get("DBVersion Major").matches("1") && hashMap.get("DBVersion Minor").matches("1")
+                    && hashMap.get("DBVersion Revision").matches("0")) {
                 System.out.print("We are compatible with the server database.");
-            }else{
+            } else {
                 System.err.print("Database version of server not compatible with v1.1.0. Exiting.");
                 return true;
             }
@@ -476,8 +412,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             System.err.print("Database version of server not compatible with v1.1.0. Missing version numbers. Exiting.");
             return true;
         }
-		return false; // all ok...
-	}
+        return false; // all ok...
+    }
 
     /**
      * @param tableName
@@ -1208,7 +1144,6 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      */
     public boolean deleteUser(int userID) throws SQLException {
 // Student suspend_data
-//TBLSPLIT DONE 
         PreparedStatement ps = getStatement(QRY_DELETE_STUDENTSCO_BY_STUDENT);
         ps.setInt(1, userID);
         ps.execute();
@@ -1613,8 +1548,6 @@ public class DbAccess extends DbConnect implements DbAccessIF {
                 Connection c = getConnection();
                 c.setAutoCommit(false);
 
-                //ps = getStatement(QRY_ADD_EMPTY_STUDENT_SCO);
-                //TBLSPLIT DONE
                 ps = getStatementWithGeneratedKeys(QRY_ADD_EMPTY_STUDENT_SCO_CONTEXT);
 
                 ps.setInt(1, scoID);
@@ -1624,7 +1557,6 @@ public class DbAccess extends DbConnect implements DbAccessIF {
                 int id = -1;
                 if (rs.next()) {
                     id = rs.getInt(1);
-                    //TBLSPLIT DONE
                     ps = getStatement(QRY_ADD_EMPTY_STUDENT_SCO_DATA);
 
                     ps.setInt(1, id);
@@ -1785,15 +1717,12 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      */
     public Vector getResultCount(int profileID, int classID) throws SQLException {
         long start = System.currentTimeMillis();
-//TBLSPLIT DONE
         String query = "SELECT  c.courseID, 1 "
-                + "FROM tblStudentScoContext sco join tblUser stu using (userID) join tblSco course on (sco.scoID = course.scoid) join tblCourse c on (c.courseID = course.courseID) "
+                + "FROM tblStudentScoContext sco join tblUser stu using (userID) join tblScoContext"
+                + " course on (sco.scoID = course.scoid) join tblCourse c on (c.courseID = course.courseID) "
                 + "WHERE  stu.classid = ?   and c.dwoProfileID = ? "
                 + "group by courseid";
-//        String query = "SELECT  c.courseID, 1 "
-//                + "FROM tblStudentScoContext sco join tblUser stu using (userID) join tblSco course on (sco.scoID = course.scoid) join tblCourse c on (c.courseID = course.courseID) "
-//                + "WHERE  stu.classid = ?   and c.dwoProfileID = ? "
-//                + "group by courseid";
+
         PreparedStatement ps = getStatement(query);
         ps.setInt(1, classID);
         ps.setInt(2, profileID);
@@ -2216,15 +2145,11 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             int id = ((Number) course.get("courseID")).intValue();
             deleteCourse(id);
         }
-
+// TODO tblSco done
         wheredef.clear();
         wheredef.put("courseID", new Integer(courseID));
-        Vector scos = getTable("tblSco", wheredef);
+        Vector scos = getTable("tblScoContext", wheredef);
         String[] arguments = new String[2];
-//TBLSPLIT DONE delete tblStudentScoContext, tblStudentScoData from tblStudentScoContext join tblStudentScoData using (studentSco) where scoID=?
-        //QRY_DELETE_STUDENTSCO_BY_SCO
-//        arguments[0] = "tblStudentSco";
-//        arguments[1] = "scoID";
 
         /* Delete results of sco's of the course */
         String statement = "";
@@ -2242,6 +2167,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         }
 
         /* Delete Sco's of the course */
+// TODO tblSco
         arguments[0] = "tblSco";
         arguments[1] = "courseID";
         statement = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
@@ -2273,7 +2199,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             IOException, XmlRpcException, SQLException {
         Hashtable data;
         if (appletConfigID < 0) {
-            data = getRecord("tblSco", "scoID", -appletConfigID);
+// TODO tblSco done
+            data = getRecord("tblScoContext", "scoID", -appletConfigID);
         } else {
             data = getRecord("tblAppletConfig", "appletConfigID",
                     appletConfigID);
@@ -2316,16 +2243,38 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     public int addSco(int courseID, String name, String description,
             int appletID, String launchdata, int sequencenr)
             throws SQLException, DwoXmlRpcException {
+        int result = -1;
         if (appletID != -1) {
-            PreparedStatement ps;
-            ps = getStatementWithGeneratedKeys(QRY_ADD_SCO);
+//TODO tblSco done            
+//            PreparedStatement ps;
+//            ps = getStatementWithGeneratedKeys(QRY_ADD_SCO);
+//            ps.setInt(1, courseID);
+//            ps.setInt(2, appletID);
+//            ps.setString(3, name);
+//            ps.setString(4, description);
+//            ps.setString(5, launchdata);
+//            ps.setInt(6, sequencenr);
+//
+//            try {
+//                ps.execute();
+//            } catch (SQLException e) {
+//                if (e.getErrorCode() == 1062) {
+//                    /* The sco already exists */
+//                    throw new DwoXmlRpcException(
+//                            DwoXmlRpcException.EXC_SCO_EXISTS);
+//                } else {
+//                    throw e;
+//                }
+//            }
+            Connection c = getConnection();
+            c.setAutoCommit(false);
+
+            PreparedStatement ps = getStatementWithGeneratedKeys(QRY_ADD_SCO_CONTEXT);
+
             ps.setInt(1, courseID);
             ps.setInt(2, appletID);
             ps.setString(3, name);
-            ps.setString(4, description);
-            ps.setString(5, launchdata);
-            ps.setInt(6, sequencenr);
-
+            ps.setInt(4, sequencenr);
             try {
                 ps.execute();
             } catch (SQLException e) {
@@ -2339,12 +2288,27 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             }
 
             ResultSet rs = ps.getGeneratedKeys();
+            int id = -1;
+            if (rs.next()) {
+                id = rs.getInt(1);
+                ps = getStatement(QRY_ADD_SCO_DATA);
 
-            int result = -1;
-            if (!isEmpty(rs)) {
-                result = rs.getInt(1);
+                ps.setInt(1, id);
+                ps.setString(2, description);
+                ps.setString(3, launchdata);
+                ps.execute();
+                int count = ps.getUpdateCount();
+                if (count != 1) {
+                    log("Error with inserting tblScoData" + count);
+                    id = -1;
+                    c.rollback();
+                }
+            } else {
+                log("Error with inserting tblScoContext");
+                c.rollback();
             }
-            rs.close();
+            result = id;
+            c.commit();
             return result;
         } else { //no appletconfig found
             throw new DwoXmlRpcException(DwoXmlRpcException.EXC_SCO_EXISTS);
@@ -2464,11 +2428,6 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             String[] arguments = new String[2];
 
             /* Delete results of sco's */
-//TBLSPLIT DONE delete tblStudentScoContext, tblStudentScoData from tblStudentScoContext join tblStudentScoData using (studentSco) where scoID=?
-//            arguments[0] = "tblStudentSco";
-//            arguments[1] = "scoID";
-//            String statement = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
-//            ps = getStatement(statement);
             ps = getStatement(QRY_DELETE_STUDENTSCO_BY_SCO);
             ps.setInt(1, scoID);
             ps.execute();
@@ -2481,7 +2440,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             SQLException {
         changeSco(scoID, name, description, showScore);
         PreparedStatement ps;
-        String query = "UPDATE tblSco "
+        // TODO tblSco done
+        String query = "UPDATE tblScoData "
                 + "SET "
                 + "launchdatabytes = ? "
                 + "WHERE (scoID = ?) ";
@@ -2506,7 +2466,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     }
 
     static private final String QRY_UPDATE_SCO_SEQUENCENR
-            = "UPDATE tblSco SET sequencenr = ? WHERE (scoID = ?) ";
+            = "UPDATE tblScoContext SET sequencenr = ? WHERE (scoID = ?) ";
 
     protected static final String SELECT_USERNAME_FROM_USERID = "select username, passwd from tblUser where userID=?";
 
@@ -2548,6 +2508,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      */
     public boolean deleteSco(int scoID) throws DwoXmlRpcException, IOException,
             XmlRpcException, SQLException {
+// TODO tblSco
         Hashtable scodata = getRecord("tblSco", "scoID", scoID);
         int sequencenr = -1;
         int courseid = -1;
@@ -2568,18 +2529,14 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         }
 
         String[] arguments = new String[2];
-//TBLSPLIT DONE delete tblStudentScoContext, tblStudentScoData from tblStudentScoContext join tblStudentScoData using (studentSco) where scoID=?
-//        arguments[0] = "tblStudentSco";
-//        arguments[1] = "scoID";
         String statement;
-//        statement = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
-//        ps = getStatement(statement);
         ps = getStatement(QRY_DELETE_STUDENTSCO_BY_SCO);
         ps.setInt(1, scoID);
         ps.execute();
         ps.close();
 
         /* Delete Sco's */
+// TODO tblSco
         arguments[0] = "tblSco";
         arguments[1] = "scoID";
         statement = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
@@ -2624,6 +2581,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
         // TODO
 // 5) delete sco's die bij courses van school horen.
+                // TODO tblSco
         String QRY_DELETE_SCO_FROM_SCHOOL
                 = "DELETE FROM tblSco WHERE courseID in (SELECT courseID FROM tblCourse WHERE schoolID = ?)";
         ps = getStatement(QRY_DELETE_SCO_FROM_SCHOOL);
@@ -2795,7 +2753,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             ResultSet rs;
             Vector scos, users;
 
-            sql = "select scoID from tblSco where courseID = ?";
+            // TODO tblSco done
+            sql = "select scoID from tblScoContext where courseID = ?";
             ps = c.prepareStatement(sql);
             ps.setInt(1, courseID);
             rs = ps.executeQuery();
@@ -2818,8 +2777,6 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             rs.close();
             ps.close();
             int n = 0;
-//TBLSPLIT DONE 
-//            sql = "delete from tblStudentSco where scoID = ? and userID = ?";
             sql = "delete tblStudentScoContext, tblStudentScoData from tblStudentScoContext join tblStudentScoData using (studentSco) where scoID=? and userID =?";
             ps = c.prepareStatement(sql);
             Enumeration sco, user;
@@ -2948,7 +2905,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 		
              set (courseid, seqnr) in sco
              */
-            ps = getStatement("SELECT courseID, sequencenr from tblSco where scoID = ?");
+            ps = getStatement("SELECT courseID, sequencenr from tblScoContext where scoID = ?");
             ps.setInt(1, scoID);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -2959,9 +2916,9 @@ public class DbAccess extends DbConnect implements DbAccessIF {
                 if (courseID == oldCourseID) {
                     // gelijk.....
                     if (sequencenr > oldSequencenr) {
-                        ps = getStatement("UPDATE tblSco SET sequencenr = sequencenr -1 WHERE courseID = ? AND sequencenr > ? AND sequencenr <= ?");
+                        ps = getStatement("UPDATE tblScoContext SET sequencenr = sequencenr -1 WHERE courseID = ? AND sequencenr > ? AND sequencenr <= ?");
                     } else {
-                        ps = getStatement("UPDATE tblSco SET sequencenr = sequencenr + 1 WHERE courseID = ? AND sequencenr < ? AND sequencenr >= ?");
+                        ps = getStatement("UPDATE tblScoContext SET sequencenr = sequencenr + 1 WHERE courseID = ? AND sequencenr < ? AND sequencenr >= ?");
                     }
                     ps.setInt(1, courseID);
                     ps.setInt(2, oldSequencenr);
@@ -2970,18 +2927,18 @@ public class DbAccess extends DbConnect implements DbAccessIF {
                     ps.close();
                 } else {
                     // ongelijk
-                    ps = getStatement("UPDATE tblSco SET sequencenr = sequencenr - 1 WHERE courseID = ? AND sequencenr > ?");
+                    ps = getStatement("UPDATE tblScoContext SET sequencenr = sequencenr - 1 WHERE courseID = ? AND sequencenr > ?");
                     ps.setInt(1, oldCourseID);
                     ps.setInt(2, oldSequencenr);
                     ps.executeUpdate();
                     ps.close();
-                    ps = getStatement("UPDATE tblSco SET sequencenr = sequencenr + 1 WHERE courseID = ? AND sequencenr >= ?");
+                    ps = getStatement("UPDATE tblScoContext SET sequencenr = sequencenr + 1 WHERE courseID = ? AND sequencenr >= ?");
                     ps.setInt(1, courseID);
                     ps.setInt(2, sequencenr);
                     ps.executeUpdate();
                     ps.close();
                 }
-                ps = getStatement("UPDATE tblSco SET courseID = ?, sequencenr = ?, sconame = ? where scoID = ?");
+                ps = getStatement("UPDATE tblScoContext SET courseID = ?, sequencenr = ?, sconame = ? where scoID = ?");
                 ps.setInt(1, courseID);
                 ps.setInt(2, sequencenr);
                 ps.setString(3, name);
