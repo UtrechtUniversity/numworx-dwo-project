@@ -968,7 +968,6 @@ public class FormuleEditorWithSteps implements InteractionView
 		//stapNr++;
 		FormuleViewer fv = viewers.get(viewers.size() - 1);
 
-		
 		if (hasFeedback)
 		{	feedbackPanel.removeFromParent();
 		//feedbackpanel staat nu een beetje in de weg; maar evne weglaten dus.
@@ -993,8 +992,6 @@ public class FormuleEditorWithSteps implements InteractionView
 			editor = addNewEditor(stepPanel);
 			
 		}
-		
-		
 		stepPanelY += fv.getHeight() + stapH;
 		contentPanel.add(stepPanel);
 		contentPanel.setWidgetLeftRight(stepPanel, 5, Style.Unit.PX, 5, Style.Unit.PX); 
@@ -1064,7 +1061,6 @@ public class FormuleEditorWithSteps implements InteractionView
 	public FormuleEditorWithAnswer addNewEditor(Panel p)
 	{
 		FormuleEditorWithAnswer editor = editorInstance();
-		
 		editor.zetMode(mode);
 		editor.setFormuleToolBijFocus(true);
 		//editor.zetSubstitutie(substitutie);
@@ -1072,19 +1068,15 @@ public class FormuleEditorWithSteps implements InteractionView
 		if (!hasPrefix)
 			tp.getElement().getStyle().setMarginLeft(13, Unit.PX);
 		tp.getElement().getStyle().setMarginTop(5, Unit.PX);
-		
 		editor.setFont(defaultfont);
 		//editor.setFont(editor.getDefaultFont());
-		
 		tp.getElement().getStyle().setProperty("display", "inline-block");
-		
 		editor.setCurrent(0, 0);
 		//editor.requestFocus();
 		if (hasPrefix)
 			p.add(prefixViewer);
 		p.add(tp);
 		addFormulePanelListeners(tp, editor);
-		
 		return editor;
 	}
 
@@ -2291,9 +2283,9 @@ public class FormuleEditorWithSteps implements InteractionView
 			return;
 		FlowPanel current = stepPanels.get(stepPanels.size() - 1);
 		current.remove(editor.getAsPanel());
-		int selectionStartX = 0;
+		int selectionStartX = -1;
 		int selectionStartY = 0;
-		int selectionEndX = 0;
+		int selectionEndX = -1;
 		int selectionEndY = 0;
 		if(editor.hasSelection())
 		{	int[] selectionBounds = editor.getSelectionBounds();
@@ -2552,6 +2544,8 @@ public class FormuleEditorWithSteps implements InteractionView
 			mainPanel.getElement().getStyle().setWidth(breedte - 2, Unit.PX);
 			sp.getElement().getStyle().setWidth(breedte - 5, Unit.PX);
 			feedbackPanel.getElement().getStyle().setWidth(breedte - 25, Unit.PX);	
+			for(int i = 0; i < stepPanels.size(); i++)
+				stepPanels.get(i).setWidth((breedte - 5) + "px");
 		}
 			
 	}

@@ -326,6 +326,22 @@ public class AntwoordTekstVak implements InteractionView{
 				return false;
 			}
 			
+			public void resize()
+			{
+				if(!formuleMode)
+					return;
+				
+				breedte = formuleVak.getMainRegel().getWidth() + 18;
+				hoogte = formuleVak.getMainRegel().getHeight() + 4;
+				//System.out.println("nieuwe breedte: " + breedte);
+				//System.out.println("nieuwe hoogte: " + hoogte);
+				//nog zorgen dat hoogte altijd minimaal 24 is?
+				basisPanel.setSize((breedte) + "px", (hoogte) + "px");
+				ashoogte = formuleVak.getMainRegel().getAsHoogte() + 3;
+				if(parentRegel != null)
+					parentRegel.resize();
+			}
+			
 			
 			
 			
@@ -333,7 +349,7 @@ public class AntwoordTekstVak implements InteractionView{
 		//hier toetsenbord aan vastmaken. WIM??
 		formuleVak.setFormuleToolBijFocus(formuleToolBijFocus);
 		//formuleVak.getMainRegel().setMinimumWidth(breedte - 20);
-		formuleVak.getMainRegel().setMinimumWidth(breedte);
+		formuleVak.getMainRegel().setMinimumWidth(breedte - 18);
 		formuleVak.getMainRegel().setMinimumHeight(hoogte - 8);
 		
 		//formuleVak.setFont(formuleVakFont);
@@ -360,7 +376,7 @@ public class AntwoordTekstVak implements InteractionView{
 			//basisPanel.add(formuleVak.getMainRegel().getCanvas());
 			//basisPanel.setWidgetLeftRight(formuleVak.getMainRegel().getCanvas(), 4, Style.Unit.PX, 20, Style.Unit.PX);
 			//basisPanel.setWidgetTopBottom(formuleVak.getMainRegel().getCanvas(), 4, Style.Unit.PX, 4, Style.Unit.PX);
-			ashoogte = formuleVak.getMainRegel().getAsHoogte() + 2;
+			ashoogte = formuleVak.getMainRegel().getAsHoogte() + 3;
 		}
 		else
 		{	//basisPanel.setSize(Math.max(minBreedte, antwoordTF.getSize().width + 2), antwoordTF.getSize().height + 4);
@@ -837,22 +853,6 @@ public class AntwoordTekstVak implements InteractionView{
 	}
 
 
-	public void resize()
-	{
-		if(!formuleMode)
-			return;
-		
-		breedte = formuleVak.getMainRegel().getWidth() + 18;
-		hoogte = formuleVak.getMainRegel().getHeight() + 4;
-		//System.out.println("nieuwe breedte: " + breedte);
-		//System.out.println("nieuwe hoogte: " + hoogte);
-		//nog zorgen dat hoogte altijd minimaal 24 is?
-		basisPanel.setSize((breedte) + "px", (hoogte) + "px");
-		ashoogte = formuleVak.getMainRegel().getAsHoogte() + 2;
-		if(parentRegel != null)
-			parentRegel.resize();
-	}
-	
 	public void setParentRegel(TekstRegel regel)
 	{
 		parentRegel = regel;

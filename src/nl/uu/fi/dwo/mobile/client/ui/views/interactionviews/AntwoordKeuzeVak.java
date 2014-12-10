@@ -13,7 +13,10 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.TextAlign;
+import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -27,6 +30,7 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
@@ -92,7 +96,13 @@ public class AntwoordKeuzeVak implements InteractionStub{
 	private int goedHalfFout;
 	private int puntenFeedback;
 	private String feedback;
-	private LayoutPanel feedbackPanel;
+	Label feedbackLabel;
+	PopupPanel feedbackPanel;
+	TekstVak feedbackTekst;
+	Canvas feedbackSluitKnop;
+	Context2d gImFeedback;
+	LayoutPanel checkPanel;
+	
 	private boolean gelijkwaardig;
 	
 	
@@ -248,18 +258,110 @@ public class AntwoordKeuzeVak implements InteractionStub{
 		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
 		foutKruisImage = new Image(DWOplayer.DWO_BUNDLE.mw_kruisje_rood().getSafeUri());
 		
-		basisPanel.add(goedKrulImage);
-		basisPanel.add(foutKruisImage);
+		
+//		checkimg = new Image(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
+//		checkimg.setVisible(false);
+//		checkimg.getElement().getStyle().setProperty("marginLeft", "3px");
+//		checkimg.getElement().getStyle().setProperty("marginTop", "-5px"); //in plaats hiervan zou marginTop -5px ook goed kunnen werken.
+//		checkimg.getElement().getStyle().setProperty("marginBottom", "-6px");
+		
+		feedbackPanel = new PopupPanel(true);
+		feedbackPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
+		feedbackPanel.getElement().getStyle().setBorderColor("black");
+		feedbackPanel.getElement().getStyle().setBorderWidth(1, Style.Unit.PX);
+		feedbackPanel.getElement().getStyle().setPadding(2, Style.Unit.PX);
+		feedbackPanel.getElement().getStyle().setBackgroundColor("#FFFFDD");
+		
+		feedbackTekst = new TekstVak();
+		feedbackTekst.setSize(200, 50);
+		feedbackTekst.setFontSize(XMLView.getDefaultFontSize());
+		feedbackTekst.setColor(CssColor.make("black"));
+		feedbackTekst.setCentering(false, true);
+		feedbackTekst.setPasHoogteBreedteAan(true, false);
+		feedbackTekst.setTekstVakBreedte(190);
+		feedbackPanel.add(feedbackTekst);
+		
+		feedbackSluitKnop = Canvas.createIfSupported();
+		gImFeedback = feedbackSluitKnop.getContext2d();
+		
+		feedbackSluitKnop.setWidth(10 + "px");
+		feedbackSluitKnop.setHeight(10 + "px");
+		feedbackSluitKnop.setCoordinateSpaceWidth(10);
+		feedbackSluitKnop.setCoordinateSpaceHeight(10);
+		
+		CanvasGradient feedbackGradient = gImFeedback.createLinearGradient(0, 0, 10, 10);
+		feedbackGradient.addColorStop(0, CssColor.make(242, 242, 242).toString());
+		feedbackGradient.addColorStop(1, CssColor.make(221, 221, 221).toString());
+		gImFeedback.setFillStyle(feedbackGradient);
+		//gIm.setFillStyle(CssColor.make(245, 245, 245).toString());
+		gImFeedback.fillRect(0, 0, 10, 10);
+		gImFeedback.setStrokeStyle("black");
+		gImFeedback.beginPath();
+		gImFeedback.moveTo(1, 1);
+		gImFeedback.lineTo(9, 9);
+		gImFeedback.moveTo(1, 9);
+		gImFeedback.lineTo(9, 1);
+		gImFeedback.stroke();
+		
+		feedbackSluitKnop.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+		feedbackSluitKnop.getElement().getStyle().setProperty("verticalAlign", "top");
+		voegFeedbackSluitKnopToe();
+		
+		feedbackSluitKnop.addDomHandler(new ClickHandler(){
+			public void onClick(ClickEvent e)
+			{
+				feedbackPanel.hide();
+			}
+		}, ClickEvent.getType());
+					
+		feedbackLabel = new Label("?");
+		feedbackLabel.getElement().getStyle().setFontSize(11, Style.Unit.PX);
+		feedbackLabel.getElement().getStyle().setFontWeight(FontWeight.BOLD);
+		feedbackLabel.getElement().getStyle().setPadding(0, Style.Unit.PX);
+		feedbackLabel.getElement().getStyle().setMarginTop(0, Style.Unit.PX);
+		feedbackLabel.getElement().getStyle().setMarginLeft(3, Style.Unit.PX);
+		feedbackLabel.getElement().getStyle().setPaddingLeft(4, Style.Unit.PX);
+		feedbackLabel.getElement().getStyle().setBackgroundColor(CssColor.make(230, 230, 230).toString());
+		feedbackLabel.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+		feedbackLabel.getElement().getStyle().setVerticalAlign(VerticalAlign.TOP);
+		feedbackLabel.setWidth(10 + "px");
+		feedbackLabel.setVisible(false);
+		
+		feedbackLabel.addDomHandler(new ClickHandler(){
+			public void onClick(ClickEvent e)
+			{
+				feedbackPanel.setPopupPosition(asWidget().getAbsoluteLeft() + 10, asWidget().getAbsoluteTop() + asWidget().getOffsetHeight() + 10);
+				feedbackPanel.show();
+			}
+		}, ClickEvent.getType());
+		
+		checkPanel = new LayoutPanel();
+		checkPanel.add(goedKrulImage);
+		checkPanel.add(foutKruisImage);
+		checkPanel.add(feedbackLabel);
+		checkPanel.setWidgetRightWidth(goedKrulImage, 1, Style.Unit.PX, 15, Style.Unit.PX);
+		checkPanel.setWidgetTopHeight(goedKrulImage, -3, Style.Unit.PX, 15, Style.Unit.PX);
+		checkPanel.setWidgetRightWidth(foutKruisImage, 2, Style.Unit.PX, 15, Style.Unit.PX);
+		checkPanel.setWidgetTopHeight(foutKruisImage, -5, Style.Unit.PX, 15, Style.Unit.PX);
+		checkPanel.setWidgetRightWidth(feedbackLabel, 5, Style.Unit.PX, 15, Style.Unit.PX);
+		checkPanel.setWidgetBottomHeight(feedbackLabel, 0, Style.Unit.PX, 10, Style.Unit.PX);
+		
+		
+		//basisPanel.add(goedKrulImage);
+		//basisPanel.add(foutKruisImage);
 		//basisPanel.setWidgetLeftWidth(goedKrulImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
 		//basisPanel.setWidgetTopHeight(goedKrulImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
 		//basisPanel.setWidgetLeftWidth(foutKruisImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
 		//basisPanel.setWidgetTopHeight(foutKruisImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
-		basisPanel.setWidgetRightWidth(goedKrulImage, 1, Style.Unit.PX, 15, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(goedKrulImage, 6, Style.Unit.PX, 15, Style.Unit.PX);
-		basisPanel.setWidgetRightWidth(foutKruisImage, 2, Style.Unit.PX, 15, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(foutKruisImage, 5, Style.Unit.PX, 15, Style.Unit.PX);
+		//basisPanel.setWidgetRightWidth(goedKrulImage, 1, Style.Unit.PX, 15, Style.Unit.PX);
+		//basisPanel.setWidgetTopHeight(goedKrulImage, 6, Style.Unit.PX, 15, Style.Unit.PX);
+		//basisPanel.setWidgetRightWidth(foutKruisImage, 2, Style.Unit.PX, 15, Style.Unit.PX);
+		//basisPanel.setWidgetTopHeight(foutKruisImage, 5, Style.Unit.PX, 15, Style.Unit.PX);
 		goedKrulImage.setVisible(false);
 		foutKruisImage.setVisible(false);
+		basisPanel.add(checkPanel);
+		basisPanel.setWidgetRightWidth(checkPanel, 0, Style.Unit.PX, 16, Style.Unit.PX);
+		basisPanel.setWidgetTopBottom(checkPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
 		
 				
 		int aantalKeuzes = 0;
@@ -418,6 +520,13 @@ public class AntwoordKeuzeVak implements InteractionStub{
 			{	isShowing = false;
 			}
 		}, MouseOutEvent.getType());
+	}
+	
+	public void voegFeedbackSluitKnopToe()
+	{
+		feedbackTekst.add(feedbackSluitKnop);
+		feedbackTekst.setWidgetRightWidth(feedbackSluitKnop, 0, Style.Unit.PX, 10, Style.Unit.PX);
+		feedbackTekst.setWidgetTopHeight(feedbackSluitKnop, 0, Style.Unit.PX, 10, Style.Unit.PX);
 	}
 	
 	public TekstVak maakKeuzeVak()
@@ -763,6 +872,7 @@ public class AntwoordKeuzeVak implements InteractionStub{
 		goedKrulImage.setVisible(false);
 		//goedKrulHalfImage.setVisible(false);
 		foutKruisImage.setVisible(false);
+		feedbackLabel.setVisible(false);
 		
 		if (uitslag == GEEN)
 			return;
@@ -790,8 +900,8 @@ public class AntwoordKeuzeVak implements InteractionStub{
 				{
 					if (!feedback.trim().equals(""))
 					{
-						//setFeedback(feedback, true);
-						//feedbackButton.setVisible(true);
+						zetFeedback();
+						feedbackLabel.setVisible(true);
 					}
 					else
 					{
@@ -867,6 +977,21 @@ public class AntwoordKeuzeVak implements InteractionStub{
 
 		//zetJuisteAntwoord(antwoordString);
 
+	}
+	
+	public void zetFeedback()
+	{
+		TekstBuffer b = new TekstBuffer();
+		try{
+			feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);
+		}
+		catch(Exception e){}
+		ArrayList<Object> feedbackList = b.convertTekst(feedback, null, false);
+		feedbackTekst.clear();
+		feedbackTekst.setObjects(feedbackList);
+		voegFeedbackSluitKnopToe();
+		feedbackTekst.resize();
+		feedbackLabel.setVisible(true);
 	}
 
 	@Override

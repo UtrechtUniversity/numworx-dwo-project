@@ -192,6 +192,7 @@ public class TekstVakPanel implements InteractionView
 	private Image goedKrulImage;
 	private ToggleButton klapUitButton;
 	private LayoutPanel klapUitPanel;
+	private int klapUitPanelWidth, klapUitPanelHeight;
 	private TekstVakContext container;
 	private Object queuedObject;
 	
@@ -447,7 +448,10 @@ public class TekstVakPanel implements InteractionView
 //		}
 		
 		bgColor = getColor(launchState, "bgColor", bgColor_red, bgColor_green, bgColor_blue);
-		fgColor = getColor(launchState, "fgColor",fgColor_red, fgColor_green, fgColor_blue);
+		if(anderFont)
+		{	fgColor = getColor(launchState, "fgColor",fgColor_red, fgColor_green, fgColor_blue);
+		
+		}
 		randColor = getColor(launchState, "randColor",randColor_red, randColor_green, randColor_blue);
 		randDikte = randZichtbaar ? randDikte : 0; 
 
@@ -656,6 +660,7 @@ public class TekstVakPanel implements InteractionView
 //		int cch = child.getHeight();
 //		int tekstGrootte = child.font_size;
 //
+		System.out.println("doLayout rij " + rij + " en kolom " + kolom);
 		TekstVak myVak = tekstVakken[rij][kolom];
 		int n = myVak.getAantalRegels();
 		for(int i = 0; i < n; i++) 
@@ -682,7 +687,7 @@ public class TekstVakPanel implements InteractionView
 //			System.out.println("new size = " + breedte + "x" + "(" + hoogte + "+ " + delta + ")");
 //			//mainPanel2.setPixelSize(width, height += delta);
 //						setCurrentSize(-1, hoogte + delta);
-			resize();
+		//resize();
 		//}
 		
 	}
@@ -889,9 +894,12 @@ public class TekstVakPanel implements InteractionView
 
 		if(inklapbaar)
 		{	initieerKlapUitButton(ingeklapt);
+			//hierin gebeurt ook resize();
 		}
+		else
+			resize();
 		
-		resize();
+		
 
 	}
 	
@@ -1979,7 +1987,6 @@ public class TekstVakPanel implements InteractionView
 		//In deze implementatie ga ik er voorlopig vanuit dat view1 en view2 dezelfde maat hebben.
 		final int breedtePanel = (checkUitklapVak && !isNoordhoff())?view1.getWidth() + 20:view1.getWidth();
 		int hoogteKnop = view1.getHeight();
-		System.out.println("breedtePanel = " + breedtePanel + " en hoogteKnop = " + hoogteKnop);
 		
 		klapUitPanel.setPixelSize(breedtePanel, hoogteKnop);
 		
@@ -1990,12 +1997,9 @@ public class TekstVakPanel implements InteractionView
 		klapUitButton = new ToggleButton(view2, view1,
 				new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				System.out.println("onClick. checkUitklapVak = " + Boolean.toString(checkUitklapVak));
-				
 				if( ! TekstVakPanel.this.ingeklapt && checkUitklapVak )
 				{
 					klapUitButton.getDownFace().setImage(TekstVakPanel.this.view1);
-					System.out.println("tekstvakpanel ingeklapt, isKlapvakCorrect geeft " + Boolean.toString(isKlapvakCorrect()));
 					goedKrulImage.setVisible(isKlapvakCorrect());
 				
 					
@@ -2048,10 +2052,10 @@ public class TekstVakPanel implements InteractionView
 				//int width = klapUitPanel.getOffsetWidth();
 				int height = masterView.getHeight();
 				
-				setSizeUitklapButton(breedtePanel, hoogtes.get(0).intValue());
+				//setSizeUitklapButton(breedtePanel, hoogtes.get(0).intValue());
 				//klapUitButton.setPixelSize(width, hoogtes.get(0).intValue());
 				
-				setPositionUitklapButton(layoutPanel, inklapKnopPos, breedtePanel, height);
+				setPositionUitklapButton(layoutPanel, breedtePanel, height);
 				
 			}
 		};
@@ -2065,11 +2069,11 @@ public class TekstVakPanel implements InteractionView
 			width = Math.max(width, knopImageView2.getWidth());
 			
 			int height = knopImageView1.getHeight();
-			setSizeUitklapButton(breedtePanel, Math.max(height, hoogtes.get(0).intValue()));
+			//setSizeUitklapButton(breedtePanel, Math.max(height, hoogtes.get(0).intValue()));
 			
 			//klapUitButton.setPixelSize(width, hoogtes.get(0).intValue());		
 			//setPositionUitklapButton(layoutPanel, inklapKnopPos, width, height);
-			setPositionUitklapButton(layoutPanel, inklapKnopPos, breedtePanel, height);
+			setPositionUitklapButton(layoutPanel, breedtePanel, height);
 		}
 		else 
 		if (masterView.getWidth() > 0)
@@ -2083,6 +2087,7 @@ public class TekstVakPanel implements InteractionView
 			//layoutPanel.insert(klapUitButton,0);
 			layoutPanel.insert(klapUitPanel, 0);
 		}
+		layoutPanel.resize();
 	}
 
 
@@ -2110,33 +2115,62 @@ public class TekstVakPanel implements InteractionView
 		
 	}
 	
-	public void setPositionUitklapButton(TekstVak layoutPanel, int inklapKnopPos, int width, int height)
+	public void setPositionUitklapButton(TekstVak layoutPanel, int width, int height)
 	{
+		klapUitPanelWidth = width;
+		klapUitPanelHeight = height;
 		switch(inklapKnopPos) {
 		case LEFT:
 				//layoutPanel.setWidgetLeftRight(widget, width, Unit.PX, 0, Unit.PX);
 				layoutPanel.setWidgetLeftWidth(klapUitPanel, 1, Unit.PX, width, Unit.PX);
-				layoutPanel.setWidgetTopHeight(klapUitPanel, (hoogtes.get(0).intValue()-height)/2 + 2, Unit.PX, height, Unit.PX);
+				layoutPanel.setWidgetTopHeight(klapUitPanel, (layoutPanel.hoogte-height)/2, Unit.PX, height, Unit.PX);
 				layoutPanel.zetUitklapKnopLinks(width);
 				break;
 		case MIDDLE: // FIXME werkt nog van geen meter!
 			layoutPanel.setWidgetLeftWidth(klapUitPanel, layoutPanel.getRegelBreedte(), Unit.PX, width, Unit.PX);
-			layoutPanel.setWidgetTopHeight(klapUitPanel, (hoogtes.get(0).intValue()-height)/2 + 2, Unit.PX, height, Unit.PX);
+			layoutPanel.setWidgetTopHeight(klapUitPanel, (layoutPanel.hoogte-height)/2, Unit.PX, height, Unit.PX);
 			
 			break;
 		case RIGHT:
 		default:
 			//layoutPanel.setWidgetLeftRight(widget, 0, Unit.PX, width, Unit.PX);
 			layoutPanel.setWidgetRightWidth(klapUitPanel, 1, Unit.PX, width, Unit.PX);
-			layoutPanel.setWidgetTopHeight(klapUitPanel, (hoogtes.get(0).intValue()-height)/2 + 2, Unit.PX, height, Unit.PX);
+			layoutPanel.setWidgetTopHeight(klapUitPanel, (layoutPanel.hoogte-height)/2, Unit.PX, height, Unit.PX);
 		}
 	}
 	
+	public void setPositionUitklapButton(TekstVak layoutPanel)
+	{
+		if(klapUitPanel == null || klapUitPanel.getParent() != layoutPanel)
+			return;
+			
+		switch(inklapKnopPos) {
+		case LEFT:
+				//layoutPanel.setWidgetLeftRight(widget, width, Unit.PX, 0, Unit.PX);
+				layoutPanel.setWidgetLeftWidth(klapUitPanel, 1, Unit.PX, klapUitPanelWidth, Unit.PX);
+				layoutPanel.setWidgetTopHeight(klapUitPanel, (layoutPanel.hoogte-klapUitPanelHeight)/2, Unit.PX, klapUitPanelHeight, Unit.PX);
+				layoutPanel.zetUitklapKnopLinks(klapUitPanelWidth);
+				break;
+		case MIDDLE: // FIXME werkt nog van geen meter!
+			layoutPanel.setWidgetLeftWidth(klapUitPanel, layoutPanel.getRegelBreedte(), Unit.PX, klapUitPanelWidth, Unit.PX);
+			layoutPanel.setWidgetTopHeight(klapUitPanel, (layoutPanel.hoogte-klapUitPanelHeight)/2, Unit.PX, klapUitPanelHeight, Unit.PX);
+			
+			break;
+		case RIGHT:
+		default:
+			//layoutPanel.setWidgetLeftRight(widget, 0, Unit.PX, width, Unit.PX);
+			layoutPanel.setWidgetRightWidth(klapUitPanel, 1, Unit.PX, klapUitPanelWidth, Unit.PX);
+			layoutPanel.setWidgetTopHeight(klapUitPanel, (layoutPanel.hoogte-klapUitPanelHeight)/2, Unit.PX, klapUitPanelHeight, Unit.PX);
+		}
+	}
+	
+	/*
 	public void setSizeUitklapButton(int breedte, int hoogte)
 	{
 		klapUitPanel.setPixelSize(breedte, hoogte);
 		
 	}
+	*/
 
 
 	@Override

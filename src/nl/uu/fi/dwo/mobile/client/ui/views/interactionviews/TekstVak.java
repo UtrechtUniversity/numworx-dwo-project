@@ -554,7 +554,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	
 	public int getRegelBreedte()
 	{
-		return regelVakken[0].getWidth();
+		return regelVakken[0].getWidth() + cellMarge;
 	}
 	
 	public TekstRegel getRegelVak(int i)
@@ -661,7 +661,10 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		
 		plaatsRegels(true);
 		
-		
+		if(parent != null)
+		{	parent.setPositionUitklapButton(this);
+			parent.resize();
+		}
 		
 		/*
 		//toegevoegde widgets zijn ofwel tekstregels, ofwel zwevende tekstvakken, of een in/uitklapknop
@@ -698,8 +701,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		ashoogte = regelVakken[0].getAsHoogte();
 		*/
 		
-		if(parent != null)
-			parent.resize();
+		
 	}
 	
 	public void zetUitklapKnopLinks(int knopBreedte)
