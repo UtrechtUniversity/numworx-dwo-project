@@ -83,6 +83,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     private final static String QRY_DELETE_CLASS_COURSE = "DELETE FROM tblClassCourse "
             + "WHERE (classID = ?) " + "AND (courseID = ?) ";
 
+    private final static String QRY_DELETE_SCO_BY_ID = "delete tblScoContext, tblScoData from tblScoContext join tblScoData using (scoID) where scoID = ?";
+
     private final static String QRY_SELECT_COURSES_EDITABLE_ADMIN = "SELECT tblCourse.* "
             + "FROM tblCourse "
             + "WHERE (isnull(tblCourse.schoolID)) and (tblCourse.parentID = 0)"
@@ -191,8 +193,10 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
     private final static String QRY_DELETE_STUDENTS_FROM_CLASS = "UPDATE tblUser "
             + "SET classID = null " + "WHERE (classID = ?) ";
+    
     private final static String QRY_DELETE_STUDENTSCO_BY_STUDENT = "DELETE tblStudentScoContext, tblStudentScoData"
             + "FROM tblStudentScoContext join tblStudentScoData using (studentSco) WHERE (userID = ?) ";
+    
     private final static String QRY_DELETE_STUDENTSCO_BY_SCO = "DELETE tblStudentScoContext, tblStudentScoData"
             + "FROM tblStudentScoContext join tblStudentScoData using (studentSco) WHERE (scoID = ?) ";
 
@@ -397,19 +401,20 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             while (rs.next()) {
                 hashMap.put(rs.getString("name"), rs.getString("value"));
             }
-            Integer one = 1;
-            Integer zero = 0;
 
-            if (hashMap.get("DBVersion Major").matches("1") && hashMap.get("DBVersion Minor").matches("1")
-                    && hashMap.get("DBVersion Revision").matches("0")) {
-                System.out.print("We are compatible with the server database.");
+            if (hashMap.get("DBVersion Major").matches("1") && hashMap.get("DBVersion Minor").matches("2")
+                    ) {
+                System.out.print("We are compatible with the server database version ("
+                        +hashMap.get("DBVersion Major")+"."
+                        +hashMap.get("DBVersion Minor")+"."
+                        +hashMap.get("DBVersion Revision")+").");
             } else {
-                System.err.print("Database version of server not compatible with v1.1.0. Exiting.");
+                System.err.print("Database version of server not compatible with v1.2.x. Exiting.");
                 return true;
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-            System.err.print("Database version of server not compatible with v1.1.0. Missing version numbers. Exiting.");
+            System.err.print("Database version of server not compatible with v1.2.x. Missing version numbers. Exiting.");
             return true;
         }
         return false; // all ok...
@@ -2167,11 +2172,12 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         }
 
         /* Delete Sco's of the course */
-// TODO tblSco
-        arguments[0] = "tblSco";
-        arguments[1] = "courseID";
-        statement = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
-        ps = getStatement(statement);
+// TODO tblSco done
+//        arguments[0] = "tblSco";
+//        arguments[1] = "courseID";
+//        statement = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
+        ps = getStatement("delete tblScoContext, tblScoData  from tblScoContext join tblScoData using (scoID) where courseid = ?");
+        //ps = getStatement(statement);
         ps.setInt(1, courseID);
         ps.execute();
         ps.close();
@@ -2508,8 +2514,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      */
     public boolean deleteSco(int scoID) throws DwoXmlRpcException, IOException,
             XmlRpcException, SQLException {
-// TODO tblSco
-        Hashtable scodata = getRecord("tblSco", "scoID", scoID);
+// TODO tblSco done
+        Hashtable scodata = getRecord("tblScoView", "scoID", scoID);
         int sequencenr = -1;
         int courseid = -1;
         PreparedStatement ps;
@@ -2536,11 +2542,13 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps.close();
 
         /* Delete Sco's */
-// TODO tblSco
-        arguments[0] = "tblSco";
-        arguments[1] = "scoID";
-        statement = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
-        ps = getStatement(statement);
+// TODO tblSco done
+//        arguments[0] = "tblSco";
+//        arguments[1] = "scoID";
+//        statement = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
+//        ps = getStatement(statement);
+//        ps.setInt(1, scoID);
+        ps = getStatement(QRY_DELETE_STUDENTSCO_BY_SCO);
         ps.setInt(1, scoID);
         ps.execute();
         ps.close();
@@ -2579,11 +2587,11 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps.close();
 // 4) delete suspend data that become inaccessable.
 
-        // TODO
 // 5) delete sco's die bij courses van school horen.
-                // TODO tblSco
+                // TODO tblSco done
         String QRY_DELETE_SCO_FROM_SCHOOL
-                = "DELETE FROM tblSco WHERE courseID in (SELECT courseID FROM tblCourse WHERE schoolID = ?)";
+                //= "DELETE FROM tblSco WHERE courseID in (SELECT courseID FROM tblCourse WHERE schoolID = ?)";
+                ="delete tblScoContext, tblScoData from tblScoContext join tblScoData using (scoID) where courseID in (SELECT courseID FROM tblCourse WHERE schoolID = ?)";
         ps = getStatement(QRY_DELETE_SCO_FROM_SCHOOL);
         ps.setInt(1, schoolID);
         ps.executeUpdate();
