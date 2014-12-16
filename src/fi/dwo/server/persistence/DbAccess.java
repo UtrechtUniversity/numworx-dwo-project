@@ -194,10 +194,10 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     private final static String QRY_DELETE_STUDENTS_FROM_CLASS = "UPDATE tblUser "
             + "SET classID = null " + "WHERE (classID = ?) ";
     
-    private final static String QRY_DELETE_STUDENTSCO_BY_STUDENT = "DELETE tblStudentScoContext, tblStudentScoData"
+    private final static String QRY_DELETE_STUDENTSCO_BY_STUDENT = "DELETE tblStudentScoContext, tblStudentScoData "
             + "FROM tblStudentScoContext join tblStudentScoData using (studentSco) WHERE (userID = ?) ";
     
-    private final static String QRY_DELETE_STUDENTSCO_BY_SCO = "DELETE tblStudentScoContext, tblStudentScoData"
+    private final static String QRY_DELETE_STUDENTSCO_BY_SCO = "DELETE tblStudentScoContext, tblStudentScoData "
             + "FROM tblStudentScoContext join tblStudentScoData using (studentSco) WHERE (scoID = ?) ";
 
     private final static String QRY_SELECT_SCHOOL_FROM_USER = "SELECT schoolID "
@@ -1723,8 +1723,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     public Vector getResultCount(int profileID, int classID) throws SQLException {
         long start = System.currentTimeMillis();
         String query = "SELECT  c.courseID, 1 "
-                + "FROM tblStudentScoContext sco join tblUser stu using (userID) join tblScoContext"
-                + " course on (sco.scoID = course.scoid) join tblCourse c on (c.courseID = course.courseID) "
+                + "FROM tblStudentScoContext sco join tblUser stu using (userID) join tblScoContext "
+                + "course on (sco.scoID = course.scoid) join tblCourse c on (c.courseID = course.courseID) "
                 + "WHERE  stu.classid = ?   and c.dwoProfileID = ? "
                 + "group by courseid";
 
