@@ -50,7 +50,14 @@
 				right:0px;
 				bottom:0px;
 		}
-
+		.tree_area {
+			position: absolute !important; 
+			top:    41px;
+			bottom: 0px;
+			left:   0px;
+			width: 350px;
+		}
+		
 	.cells_area {
 <!-- why?		z-index: -1; -->
 	}
@@ -71,9 +78,9 @@
 					</g:HTMLPanel>
 				</mgwt:center>
 			</mgwt:HeaderPanel>
-  				<g:ScrollPanel alwaysShowScrollBars='true'>
-					<g:Tree ui:field="tree"> </g:Tree>
-				</g:ScrollPanel>
+  			<g:ScrollPanel alwaysShowScrollBars="true" addStyleNames="{style.tree_area}" >
+				<g:Tree ui:field="tree"></g:Tree>
+			</g:ScrollPanel>
 			
 		</mgwt:LayoutPanel>
 		

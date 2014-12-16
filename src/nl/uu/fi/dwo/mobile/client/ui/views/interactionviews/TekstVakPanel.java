@@ -1895,7 +1895,7 @@ public class TekstVakPanel implements InteractionView
 	
 	void klapUitAction() {
 		
-		int delta = hoogte-hoogtes.get(0).intValue();
+		int delta;
 		//System.out.println("delta = " + delta);
 		if( ingeklapt = ! ingeklapt) {
 			for(int i = 1; i < tekstVakken.length; i++)
@@ -1930,6 +1930,12 @@ public class TekstVakPanel implements InteractionView
 					tekstVakken[i][j].setPixelSize(-1, h);
 					tekstVakken[i][j].hoogte = h;
 					tekstVakken[i][j].resize();
+					delta = tekstVakken[i][j].hoogte-h;
+					if(delta>0)
+					{
+						hoogte += delta;
+						h += delta;
+					}
 					//tekstVakken[i][j].setPixelSize(breedtes.get(j).intValue(), h);
 				}
 			}
