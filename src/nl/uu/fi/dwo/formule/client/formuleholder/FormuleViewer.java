@@ -59,6 +59,11 @@ public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
 		setCurrentRegel(getMainRegel());
 		
 	}
+	
+	public int getHeight()
+	{
+		return Math.max(super.getHeight(), 20); //checkimg heeft hoogte 20, dus die hoogte moet minimaal worden gegeven.
+	}
 
 	public FormuleViewer(String formule, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
@@ -122,38 +127,38 @@ public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
 		return showResult;
 	}
 
-	public void showResult(String formule, boolean strict)
-	{
-		//check formules
-		String useranswer = "$f" + this.toString() + "@";
-
-		if (useranswer.equals("$f@"))
-			useranswer = "$f0@";
-
-		//inserted expresion
-		Expressie answer = FormuleParser.geefExpressie(useranswer);
-		Expressie correctanswer = FormuleParser.geefExpressie(formule);
-
-		if (strict == true)
-		{
-			if (Algebra.zijnGelijk(answer, correctanswer) == false)
-			{
-				showResult(CORRECT);
-				return;
-			}
-			if (Algebra.isGelijkwaardig(answer, correctanswer))
-			{
-				showResult(ALMOSTCORRECT);
-				return;
-			}
-		}
-		else if (Algebra.zijnGelijk(answer, correctanswer) == false)
-		{
-			showResult(CORRECT);
-			return;
-		}
-		showResult(WRONG);
-	}
+//	public void showResult(String formule, boolean strict)
+//	{
+//		//check formules
+//		String useranswer = "$f" + this.toString() + "@";
+//
+//		if (useranswer.equals("$f@"))
+//			useranswer = "$f0@";
+//
+//		//inserted expresion
+//		Expressie answer = FormuleParser.geefExpressie(useranswer);
+//		Expressie correctanswer = FormuleParser.geefExpressie(formule);
+//
+//		if (strict == true)
+//		{
+//			if (Algebra.zijnGelijk(answer, correctanswer) == false)
+//			{
+//				showResult(CORRECT);
+//				return;
+//			}
+//			if (Algebra.isGelijkwaardig(answer, correctanswer))
+//			{
+//				showResult(ALMOSTCORRECT);
+//				return;
+//			}
+//		}
+//		else if (Algebra.zijnGelijk(answer, correctanswer) == false)
+//		{
+//			showResult(CORRECT);
+//			return;
+//		}
+//		showResult(WRONG);
+//	}
 
 	@Override
 	public Panel getAsPanel()

@@ -112,9 +112,9 @@ public class PijlVak extends LayoutPanel{
 		}
 		//prefixVak.setEditable(false);
 		//prefixVak.setLocation((fm.getAscent() + fm.getDescent())/2 + (int) ctx.measureText("  "+operator+" ").getWidth(),(fm.getAscent() + fm.getDescent())/2);
-		if(setState)
-			addNewViewer("");
-		else
+		//if(setState)
+		//	addNewViewer("");
+		if(!setState)
 			editor = addNewEditor(this);
 		//formuleVak = new FormuleVak();
 		//formuleVak.addActionListener(this);
@@ -391,8 +391,10 @@ public class PijlVak extends LayoutPanel{
 		//String s = e.toStringStrikt();
 		if(editor != null)
 			return editor.toString();
-		else
+		else if (viewer != null)
 			return viewer.toString();
+		else
+			return "";
 	}
 	
 	public void zetExpressie(String s)

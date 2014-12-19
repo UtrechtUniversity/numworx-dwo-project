@@ -132,7 +132,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				other.clearMain();
 				other.insert(useranswer);
 				boolean show = mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN;
-				other.kijkNa(false, show);
+				other.kijkNa(false, show, false);
 			
 			}
 		}
@@ -512,9 +512,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		*/
 		if(mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS)
-			kijkNa(false, false);
+			kijkNa(false, false, false);
 		else
-			kijkNa(false, true);
+			kijkNa(false, true, false);
 		if(comRoot != null) // alleen niet null als fewa een toplevel is.
 			comRoot.fireEvent(new CBookEvent(this, "input", toString()));
 		else if( fe != null) {
@@ -525,13 +525,18 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	public void kijkNa()
 	{
-		kijkNa(false, true);
+		kijkNa(false);
+	}
+	
+	public void kijkNa(boolean setState)
+	{
+		kijkNa(false, true, setState);
 	}
 	
 	
 	
 	private String lastanswer = "$f@";
-	public void kijkNa(boolean backStep, boolean show)
+	public void kijkNa(boolean backStep, boolean show, boolean setState)
 	{
 		String useranswer = "$f" + this.toString() + "@";
 		if(useranswer.equals("$f@"))
@@ -560,7 +565,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		if((mode == 2 || mode == 3) && !show)
 		{	if(this.fe != null)
-				fe.maakNakijkenAf(backStep);
+				fe.maakNakijkenAf(backStep, setState);
 			
 			if(syntaxFout)
 			{	//checkimg.setUrl(FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
@@ -569,7 +574,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				
 				//TODO: feedback syntaxfout tonen.
 			}
-			comRoot.setChanged(goedHalfFout == AntwoordVakChecker.FOUT);
+			if(setState)
+				comRoot.setChanged(goedHalfFout == AntwoordVakChecker.FOUT);
 			return;
 		}
 		
@@ -635,7 +641,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		
 		if(this.fe != null && ingevuld)
-		{	fe.maakNakijkenAf(backStep);
+		{	fe.maakNakijkenAf(backStep, setState);
 		}
 	}
 	
