@@ -8,12 +8,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import fi.beans.xmlrpc.Servlet;
+import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.server.persistence.DbAccessLocal;
 
 public class DbAccessServlet extends Servlet {
 
 	public DbAccessServlet() {
-		super(new fi.dwo.server.persistence.DbAccess());
+		super(DbAccessCreator.instance());
 	}
 
 	/* (non-Javadoc)
