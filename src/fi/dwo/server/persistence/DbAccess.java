@@ -2206,7 +2206,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         Hashtable data;
         if (appletConfigID < 0) {
 // TODO tblSco done
-            data = getRecord("tblScoContext", "scoID", -appletConfigID);
+            data = getRecord("tblScoView", "scoID", -appletConfigID); // Wim: 24 dec Data, geen context
         } else {
             data = getRecord("tblAppletConfig", "appletConfigID",
                     appletConfigID);
