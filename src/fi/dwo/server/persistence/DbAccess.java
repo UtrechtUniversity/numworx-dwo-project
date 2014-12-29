@@ -2548,7 +2548,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 //        statement = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
 //        ps = getStatement(statement);
 //        ps.setInt(1, scoID);
-        ps = getStatement(QRY_DELETE_STUDENTSCO_BY_SCO);
+        ps = getStatement(QRY_DELETE_SCO_BY_ID);
         ps.setInt(1, scoID);
         ps.execute();
         ps.close();
