@@ -47,4 +47,10 @@ public interface IStore {
 	 */
 	boolean changeSco(int scoid, String scoName, String description, boolean delete,
 			byte[] launchdata, Boolean showScore) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+
+	/**
+	 * clear cache.
+	 * @param scoID the sco, 0 = all
+	 */
+	void clear(int scoId);
 }

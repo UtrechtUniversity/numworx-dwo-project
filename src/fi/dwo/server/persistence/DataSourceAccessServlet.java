@@ -3,7 +3,13 @@ package fi.dwo.server.persistence;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Hashtable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -12,6 +18,7 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 import org.apache.xmlrpc.XmlRpc;
@@ -27,9 +34,10 @@ public class DataSourceAccessServlet extends Servlet {
 	private DataSource ds;
 	private boolean monitor;
 	private boolean threading;
+	static private ThreadLocal<HttpSession> session = new ThreadLocal<HttpSession>();
+	static private Logger logger = Logger.getLogger(DataSourceAccessServlet.class.getName());
 	
-	
-	static class MonitorDataSourceAccess extends DataSourceAccess {
+	static class MonitorDataSourceAccess extends DataSourceAccess implements fi.beans.jdbc.DbConnectIF, DbAccessIF {
 		
 		static private int count;
 		
@@ -37,15 +45,29 @@ public class DataSourceAccessServlet extends Servlet {
 			super(ds);
 		}
 
+		@Override
+		protected String session() {
+			return session.get().getAttribute("login") 
+			+ "," + session.get().getAttribute("ip")
+			+ ":";
+		}
+
+		@Override
+		public Hashtable login(String username, String password)
+				throws SQLException, DwoXmlRpcException {
+			session.get().setAttribute("login", username);
+			return super.login(username, password);
+		}
+
 		private Connection mine, his;
 		public void close() {
 			if(mine != null)
 			{   --count;
-				if(count > 10) System.out.println(System.currentTimeMillis()+ " dwo access close " + count);
+				if(count > 10) logger.info(" dwo access close " + count);
 				try {
 					mine.close();
 				} catch (SQLException e) {
-					log(this + " close " + e);
+					logger.log(Level.SEVERE, " close " , e);
 				}
 			}
 			mine = null; his = null;
@@ -59,7 +81,7 @@ public class DataSourceAccessServlet extends Servlet {
 				his = c;
 				mine = MonProxyFactory.monitor(c);
 				++count;
-				if(count > 10) System.out.println(System.currentTimeMillis()+ " dwo access connect " + count);
+				if(count > 10) logger.info(" dwo access connect " + count);
 			} 
 			return mine;
 		}
@@ -84,6 +106,7 @@ public class DataSourceAccessServlet extends Servlet {
 
 		DataSource ds;
 		protected DbAccessIF createDelegate() {
+			//return (DbAccessIF) MonProxyFactory.monitor(new MonitorDataSourceAccess(ds));
 			return new MonitorDataSourceAccess(ds);
 		}
 
@@ -101,7 +124,7 @@ public class DataSourceAccessServlet extends Servlet {
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 
-        log("Initializatie r" + VERSION.REVISION);
+        logger.info("Initializatie r" + VERSION.REVISION);
         int maxthreads = 200;
         String param = getInitParameter("xmlrpc.maxthreads");
         if(param != null )
@@ -112,7 +135,7 @@ public class DataSourceAccessServlet extends Servlet {
 		monitor = ! "false".equals (getInitParameter("monitor"));
 		threading = "true".equals(getInitParameter("threading"));
 		
-		log( "monitoring = " + monitor + ", threading = " + threading);
+		logger.info( "monitoring = " + monitor + ", threading = " + threading);
 		try {
 // find datasource from tomcat
 			Context initContext = new InitialContext();
@@ -157,6 +180,19 @@ public class DataSourceAccessServlet extends Servlet {
 
 	}
 
+	private void printRS(ResultSet rs, PrintWriter out) throws SQLException {
+		ResultSetMetaData rsMeta = rs.getMetaData();
+		String colName;
+        while(rs.next()) {
+            for (int i = 1; i <= rsMeta.getColumnCount(); i++) {
+                colName = rsMeta.getColumnName(i);
+                out.print (" " + colName  + ": "+   rs.getObject(i));
+            }
+            out.println();
+        }
+
+	}
+	
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		resp.setContentType("text/plain");
@@ -166,14 +202,36 @@ public class DataSourceAccessServlet extends Servlet {
 		out.println(ds);
 		out.println("monitor = " + monitor);
 		out.println("threading = " + threading);
+		Connection c = null;
+		try {
+			c = ds.getConnection();
+			Statement s = c.createStatement();
+			ResultSet rs = s.executeQuery("SHOW TABLES");
+			printRS(rs, out);
+			rs.close();s.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace(out);
+		} finally { 
+			try {
+				c.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace(out);
+			}
+		}
+		
 	}
 
 	protected void service(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		try { 
+			HttpSession s = req.getSession(true);
+			session.set(s);
+			s.setAttribute("ip", req.getRemoteAddr());
 			super.service(req, resp);
 		} catch (RuntimeException re) {
-			log("runtime exception " + re, re);
+			logger.log(Level.SEVERE, "service", re);
 			throw re;
 		} finally { 
 			try {
@@ -185,7 +243,7 @@ public class DataSourceAccessServlet extends Servlet {
 	}
 
     public void destroy() {
-        log("En weg ben ik...");
+        logger.fine("En weg ben ik...");
         ((DbConnectIF) getHandler()).close();
         super.destroy();
     }

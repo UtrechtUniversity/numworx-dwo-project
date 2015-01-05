@@ -585,6 +585,8 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
         if(!DwoHelper.isAdminLoggedIn())
         {	root = prune(root);
         	root.setParent(null);
+        } else {
+        	TOP_LEVEL = new TopMap(dwo.getDwoProfile()); // initialize TOP_LEVEL, if admin
         }
         
         

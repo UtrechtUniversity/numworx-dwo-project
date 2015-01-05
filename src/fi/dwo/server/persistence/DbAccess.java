@@ -19,6 +19,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
@@ -32,7 +34,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DbAccess extends DbConnect implements DbAccessIF {
-
+	
+	private static Logger logger = Logger.getLogger(DbAccess.class.getName());
+	protected String session() {
+		return "";
+	}
+	
+	private void log(Level level, String msg, Throwable t) {
+//		System.err.println(session() + msg);
+//		if(t != null) t.printStackTrace();
+		logger.log(level, session() + msg, t);
+	}
+	
     private final static String QRY_DEFAULT_SELECT_ID = "SELECT * "
             + "FROM {0} " + "WHERE `{1}` = ?";
 
@@ -381,7 +394,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     protected DbAccess(boolean check) {
         super(MYSQL2_SCIENCE_FISME, "dwo");
         if (check && checkVersion()) {
-            System.exit(20);
+            new RuntimeException("old sofware trying to use 1.2 database");
         }
     }
 
@@ -1541,9 +1554,10 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             ps.setInt(2, userID);
 
             Hashtable ht = executeQueryWithRecord(ps); // Never returns null, emtpy instead!
-//			log("DbAccess.LMSSetValue("
-//			        + scoID + ", " + userID + ", " + iDataModelElement + ", "
-//			        + iValue + ")");
+// moet FINE zijn
+			log(Level.INFO, "LMSSetValue("
+			        + scoID + ", " + userID + ", " + iDataModelElement + ", "
+			        + iValue + ")", null);
 //			if ((iValue == null) || (iValue.equals(""))) {
 //			    log("Hij is leeg... " + iDataModelElement + " "
 //			            + userID);
@@ -1912,10 +1926,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @see fi.dwo.client.persistence.DbAccessIF#log(java.lang.String)
      */
     public boolean log(String s) {
-        currentTime.setTime(System.currentTimeMillis());
-        System.err.println("DbAccessLog " + currentTime + ":"
-                + s);
-        return false;
+    	log(Level.INFO, s, null);
+    	return false;
     }
 
     /*

@@ -178,7 +178,6 @@ public class CachingStore implements IStore, Runnable {
 				try {
 					wait();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -230,5 +229,11 @@ public class CachingStore implements IStore, Runnable {
 			if(((Bucket) inter.next()).getScoid() == scoid )
 				inter.remove();
 	}
+
+	@Override
+	public synchronized void clear(int scoid) {
+		uncache(scoid, false);
+	}
+	
 	
 }

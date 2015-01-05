@@ -128,7 +128,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
     public ScoPanel getScoPanel(DwoIF dwo, User user) {
         this.dwo = dwo;
         User lastUser = this.user;
-        this.user = user;
+        setUser(user);
         if(lastUser != this.user || user==null) {
             applet = null;
             //MapperCreator.instance(Applet.class).removeAllObjects();
@@ -227,6 +227,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
      *  
      */
     public String LMSInitialize(String iParam) {
+    	if(initialized) return ko("false");
     	initialized = true;
     	if(NORMAL.equals(getLessonMode()))
     		SetValue(SESSION_TIME, "00:00:00");
@@ -587,7 +588,7 @@ System.err.println("sum = ["+result+"]");
 			}
             applet = null;
             sc = null;
-            
+            initialized = false;
             
 //            dwo.endSco(this);
         }

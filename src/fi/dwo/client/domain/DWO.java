@@ -13,6 +13,9 @@ import java.awt.Graphics;
 import java.awt.Window;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -1136,6 +1139,10 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
             TextMapper.setLanguage(lang);
             fi.dwo.parameters.system.TextMapper.setLanguage(lang);
         }
+        
+    	CookieManager cookieManager = new CookieManager();
+    	CookieHandler.setDefault(cookieManager);
+    	cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
 
         boolean cookies = false;
         String cookiesString = getParameter("cookies");

@@ -46,14 +46,14 @@ public class DwoWebPageServlet extends Servlet {
 
     //private String SERVLET = "/servlet/fi.dwo.server.persistence.DbAccessServlet";
 
-    private DbAccess dbAccess;
+    //private DbAccess dbAccess;
 
     /**
      *  
      */
     public DwoWebPageServlet() {
         super();
-        dbAccess = new DbAccess();
+        
     }
 
     /**
@@ -202,11 +202,6 @@ public class DwoWebPageServlet extends Servlet {
 //        param = getInitParameter("servlet");
 //        if(param!=null)
 //        	SERVLET = param;
-        if("true".equals(getInitParameter("local")))
-        {
-        	dbAccess = new DbAccessLocal();
-        	setHandler(dbAccess);
-        }
     }
 
 }

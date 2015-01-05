@@ -448,14 +448,16 @@ public class GuiCreator {
      */
     public CenterSubPanel getScoPanel(Sco sco) {
         dwo.setWait();
-        CenterSubPanel csp = dwo.loadSco(sco);
-        if(sco.getCreditStatus() == Sco.CREDIT)
-        {
-            dwo.setReady();
-        	return new FramedScoPanel(csp, sco);
-        }
-        dwo.setReady();
+        try { 
+        	CenterSubPanel csp = dwo.loadSco(sco);
+        	if(sco.getCreditStatus() == Sco.CREDIT)
+        	{
+        		return new FramedScoPanel(csp, sco);
+        	}
         return csp;
+        } finally { 
+        	dwo.setReady();
+        }
     }
 
     /**

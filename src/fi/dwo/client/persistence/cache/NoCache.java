@@ -95,4 +95,7 @@ public class NoCache implements IStore {
 		return result;
 	}
 
+	public void clear(int scoid) {
+	}
+
 }

@@ -157,7 +157,7 @@
     		<fileset dir="WebContent" />
     		<zipfileset dir="${jar}" includes="*.jar" prefix="jars"/>
     		<zipfileset dir="${src}/resources" prefix="resources"/>
-        	<classes dir="${classes}" includes="**/*.class" />
+        	<classes dir="${classes}" includes="**/*.class logging.properties" />
     		<!-- lib dir="lib" includes="*mysql*.jar *jamon*.jar" /-->
     	</war>
     	

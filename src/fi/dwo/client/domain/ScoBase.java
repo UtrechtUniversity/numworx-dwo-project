@@ -32,6 +32,7 @@ public abstract class ScoBase extends ScormAdapter {
 	public static final String LESSON_MODE = "cmi.mode";
 	public static final String LAUNCH_DATA = "cmi.launch_data";
 	public static final String LESSON_LOCATION = "cmi.location";
+	public static final String COMPLETION_STATUS = "cmi.completion_status";
 	protected static final String SESSION_TIME = "session_time";
 	protected static final String CMI_SESSION_TIME = "cmi." + SESSION_TIME;
 	protected static final String TOTAL_TIME = "total_time";
@@ -380,7 +381,9 @@ public abstract class ScoBase extends ScormAdapter {
 	    		boolean ok = getReviewable(iDataModelElement);
 	    		if(ok)
 	    		{
-	    			return dwo.LMSSetValue(this, user, iDataModelElement, iValue);
+	    			String value = dwo.LMSSetValue(this, user, iDataModelElement, iValue);
+	    			firePropertyChange(iDataModelElement, null, iValue);
+					return value;
 	    		} else if(LESSON_LOCATION.equals(iDataModelElement))
 	    		{
 	    			String last = lessonLocation;
@@ -408,6 +411,8 @@ public abstract class ScoBase extends ScormAdapter {
 			return false;
 		if (LESSON_LOCATION.equals(element))		// special case. 
 			return false;
+		if (COMPLETION_STATUS.equals(element))
+				return true;
 		if(features == null)
 		{	features = getAppletData().getFeatures();
 			if(features == null) features = "";

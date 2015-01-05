@@ -33,6 +33,7 @@ import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.SwingConstants;
@@ -141,7 +142,15 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
      * Initialiseer applet. applet moet een parent en stub hebben!
      */
     public void init() {
-		sco.LMSInitialize("");
+		String init = sco.LMSInitialize("");
+// Duplicaat detectie
+		if( ! "true".equals( init)) {
+// inform user.
+			JOptionPane.showMessageDialog(this, "Duplicate initialization", "Error", JOptionPane.ERROR_MESSAGE);
+			throw new RuntimeException("duplicate detected");
+		}
+		
+		
 		try {
 			applet.setLocation(10000,10000); // let op, buiten beeld anders geflits.
 			applet.setSize(getSize()); // zet applet een default size, voor oude applets

@@ -35,6 +35,7 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.AbstractListModel;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.ButtonModel;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
@@ -42,17 +43,20 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultSingleSelectionModel;
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SingleSelectionModel;
 import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -166,14 +170,38 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 			setSelectedItem(u);
 		}
 
+		private void setComplete(int i, Boolean b) {
+			API api = getApi(i);
+			String value = "unknown";
+			if(Boolean.TRUE.equals(b))
+				value = "completed";
+			else if(Boolean.FALSE.equals(b))
+				value = "incomplete";
+			api.SetValue(ScoBase.COMPLETION_STATUS, value);
+		}
+
+		private API getApi(int i) {
+			return new API(sco, getUser(i));
+		}
+
+		private Boolean getComplete(int i) {
+			API api = getApi(i);
+			String value = api.GetValue(ScoBase.COMPLETION_STATUS);
+			if("completed".equals(value))
+				return Boolean.TRUE;
+			if("incomplete".equals(value))
+				return Boolean.FALSE;
+			return null;
+		}
+		
+		
 		private static User[] sorted(User[] students) {
 			Arrays.sort(students);
 			return students;
 		}
 
 		public List getScoreList(int i) {
-				User u = getUser(i);
-				return sco.getPartialScoreIF().getScoreMapList(new API(sco, u));
+			return sco.getPartialScoreIF().getScoreMapList(getApi(i));
 		}
 
 		public User getUser(int i) {
@@ -184,7 +212,9 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 	private ScoPanel scoPanel;
 
     private JButton closeButton;
-
+    private JCheckBox studentSeal;
+    private JButton   globalSeal;
+    
 	private JTable table;
 
     /**
@@ -215,6 +245,11 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         closeButton.setSize(closeButton.getPreferredSize());
         closeButton.addActionListener(this);
 
+        globalSeal = new JButton("Alles verzegelen");
+        globalSeal.addActionListener(this);
+        studentSeal = new JCheckBox("Verzegeld voor deze leerling");
+        studentSeal.setOpaque(false);
+        
        // this.pack();
         Insets insets = contentPane.getInsets();
         
@@ -234,10 +269,16 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         //hbox1.setOpaque(false);
         hbox1.add(Box.createHorizontalStrut(10));
         hbox1.add(closeButton);
+        hbox1.add(Box.createHorizontalStrut(10));
+        hbox1.add(globalSeal);
+        hbox1.add(Box.createHorizontalStrut(10));
         hbox1.add(Box.createHorizontalGlue());
+        
+        hbox1.add(studentSeal);
+        hbox1.add(Box.createHorizontalStrut(50));
+        
         contentPane.add(hbox1, BorderLayout.SOUTH);
         closeButton.setVisible(true);
-
         
 		
         JPanel basisPanel = new JPanel(new BorderLayout(0, 5));
@@ -271,6 +312,12 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         this.addWindowListener(this);
     }
+
+
+	static void resetSeal(ScoPanel sp, ButtonModel sealmodel) {
+		boolean selected = "completed" .equals ( sp.LMSGetValue("cmi.completion_status"));
+        sealmodel.setSelected(selected);
+	}
 
 	private static Box createTitleBox(String title) {
 		Box hbox;
@@ -306,6 +353,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
     	final ClassModel model = new ClassModel(s, u, sp.getSco());
 		Model tableModel = new Model(model, s.getName());
 		final JTable table = new JTable(tableModel);
+		final ButtonModel sealmodel = new JCheckBox.ToggleButtonModel();
 		table.setOpaque(false);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		combo.setModel(model);
@@ -327,6 +375,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 						//list.setSelectedValue(u, false);
 						int i = combo.getSelectedIndex()+1;
 						table.setRowSelectionInterval(i, i);
+						resetSeal(sp, sealmodel);
 						break;
 				}
 			}};
@@ -334,6 +383,17 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		hbox.add(userLabel);
         ScoDialog sd = new ScoDialog(parent, TextMapper.getText(TextMapper.GUIRS_RESULTS), hbox, true, sp);
         sd.table = table;
+		resetSeal(sp, sealmodel);
+        sd.studentSeal.setModel(sealmodel);
+        sealmodel.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				boolean selected = sealmodel.isSelected();
+				sp.LMSSetValue("cmi.completion_status", selected?"completed": "incomplete");
+			}
+		});
+        
         sp.getSco().addPropertyChangeListener(Sco.LESSON_LOCATION, sd);
         final Container content = sd.getContentPane();
         final IconizedPanel panel = new IconizedPanel(TextMapper.getText(TextMapper.GUIS_STUDENTS));
@@ -534,6 +594,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
     static class Model extends AbstractTableModel {
     	
     	List[] lists;
+    	Boolean   global;
     	String klas = "klas";
     	private List getScoreList(int i) {
     		if(lists[i] == null)
@@ -542,17 +603,24 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
     	}
     	
     	Model(ClassModel model, String klas) {
-			super();
 			this.model = model;
 			lists = new List[model.getSize()];
 			this.klas = klas;
+			global = Boolean.TRUE;
+
+			for(int i = 0; i < model.getSize(); i++) {
+				if( ! global.equals( model.getComplete(i))) {
+					global = Boolean.FALSE;
+					break;
+				}
+			}
     	}
     	
 		/* (non-Javadoc)
 		 * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
 		 */
 		public Class getColumnClass(int col) {
-			if(col > 0) return Integer.class;
+			if(col != 0) return Integer.class;
 			return super.getColumnClass(col);
 		}
 
@@ -562,7 +630,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		 */
 		public boolean isCellEditable(int row, int col) {
 			
-			if(col > 0 && row > 0 )
+			if(col > 0 && row > 0 || col == 1 )
 				return true;
 			return super.isCellEditable(row, col);
 		}
@@ -591,7 +659,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 			
 			
 			if(col == 0)
-				return ((User) model.getElementAt(row)).getName();
+				return (model.getUser(row)).getName();
 			try {
 				return new Integer(((Map) getScoreList(row).get(col-1)).get(PartialScoreIF.SCORE_RAW).toString());
 			} catch (Exception e) {
@@ -602,7 +670,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		public String getColumnName(int column) {
 			if(column == 0)
 				return klas;
-			return Integer.toString(column);
+			return Integer.toString(column-1);
 		}
     	
     }
@@ -621,6 +689,18 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == closeButton) {
             windowClosing(null);
+        }
+        if (e.getSource() == globalSeal) { 
+        	if( JOptionPane.showConfirmDialog(this, "De activiteit voor alle leerlingen verzegelen?", "Verzegelen", JOptionPane.YES_NO_OPTION)== JOptionPane.YES_OPTION)
+        	{
+        		Model m = (Model) table.getModel();
+        		ClassModel model = m.model;
+        		for(int i = 0; i < model.getSize(); i++ )
+        		{
+        			model.setComplete(i, Boolean.TRUE);
+        		}
+        		studentSeal.setSelected(true);
+        	}
         }
     }
 

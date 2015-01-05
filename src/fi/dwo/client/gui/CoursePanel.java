@@ -16,7 +16,9 @@ import java.awt.MediaTracker;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Vector;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -26,23 +28,26 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.text.JTextComponent;
 
-import netscape.javascript.JSObject;
+import org.apache.xmlrpc.applet.XmlRpcException;
 
+import netscape.javascript.JSObject;
 import fi.dwo.client.domain.Course;
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.ResultsModuleIF;
 import fi.dwo.client.domain.Sco;
 import fi.dwo.client.domain.Teacher;
 import fi.dwo.client.domain.UserResultList;
+import fi.dwo.client.gui.action.NullStrategy;
+import fi.dwo.client.persistence.DbAccessCreator;
+import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.client.system.TextMapper;
-
 import fi.beans.mathkit.JMathPane;
 import fi.beans.tekstobjects.TekstArea;
-
 import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.WiskOpdrPanel;
 import fi.wiskopdr.tekstobjects.LinkIF;
@@ -343,31 +348,74 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
     	return hp; 
     }
 
+    static private final NullStrategy NULS = new NullStrategy();
     /**
      * Invoked when an action occurs.
      * 
      * @param e The ActionEvent.
      */
-   public void actionPerformed(ActionEvent e) {
+   public synchronized void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof ScoLinkedLabel && !scoLoading) {
         	scoLoading = true;
         	Sco sco = ((ScoLinkedLabel) e.getSource()).getSco();
             if(!scoLoading)GuiCreator.instance().setWait();
+            GuiCreator.instance().getMainPanel().center.setStrategy(NULS);
             final Sco s = sco;
+ // Java 1.6 minimum
+            SwingWorker<CenterSubPanel, Void> worker;
+            worker = new SwingWorker<CenterSubPanel, Void>() {
+				
+				@Override
+				protected CenterSubPanel doInBackground() throws Exception {
+					CenterSubPanel csp = GuiCreator.instance().getScoPanel(s);
+					return csp;
+				}
+
+				@Override
+				protected void done() {
+					try {
+						CenterSubPanel csp = get();
+						if(csp != null) {
+							s.setLessonMode(getLessonMode());
+						    center.loadTotal(csp);
+						}
+					} catch (InterruptedException e) {
+					} catch (ExecutionException e) {
+					}
+                    synchronized(CoursePanel.this) {
+                        GuiCreator.instance().getMainPanel().center.setStrategy(null);
+                    	GuiCreator.instance().setReady();
+                    	scoLoading = false;
+                    }
+				}
+				
+			};
+            worker.execute();
+ /*           
+  // FIXME SWINGWORKER
             Thread thread = new Thread() {	
 
 				public void run() {	
-                    CenterSubPanel csp = GuiCreator.instance().getScoPanel(s);
-                    if(csp != null) {
-                    	s.setLessonMode(getLessonMode());
-                        center.loadTotal(csp);
+                    try {
+						CenterSubPanel csp = GuiCreator.instance().getScoPanel(s);
+						if(csp != null) {
+							s.setLessonMode(getLessonMode());
+						    center.loadTotal(csp);
+						}
+					} catch (Exception e) {
+						try {
+							DbAccessCreator.instance().log(e.toString());
+						} catch (Exception _) {
+						} 
+					}
+                    synchronized(CoursePanel.this) {
+                    	GuiCreator.instance().setReady();
+                    	scoLoading = false;
                     }
-                    GuiCreator.instance().setReady();
-                    scoLoading = false;
 				}
 			};
-            thread.start();/**/
-            
+            thread.start();
+*/            
         } else if (e.getSource() == showResultsButton) {
             CenterSubPanel cp = GuiCreator.instance().getResultPanel(course);
             center.loadCenter(cp);
