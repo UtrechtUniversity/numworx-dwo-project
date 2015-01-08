@@ -203,11 +203,13 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 
 	};
 
+	static final String RIGHT_ARROW = "\u2192";
+	static final String LEFT_ARROW = "\u2190";
 	
 	private String[][] buttonCodesWN = 
 		{
 			{
-				"macht", "breuk", "wortel", "ndewortel", "pi", "kwadraat", "\u2264", "\u2265", "\u2260", "\u2248", null, VVV 
+				"macht", "breuk", "wortel", "ndewortel", "pi", "kwadraat", "\u2264", "\u2265", "\u2260", "\u2248", LEFT_ARROW, RIGHT_ARROW, null, VVV 
 			}
 		};
 	
@@ -215,7 +217,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	private double[][] buttonWidthsWN = 
 		{
 			{
-				1,1,1,1,1,1,1,1,1,1, 3.5, 1
+				1,1,1,1,1,1,1,1,1,1, 1,1,1.5, 1
 			}
 		};
 

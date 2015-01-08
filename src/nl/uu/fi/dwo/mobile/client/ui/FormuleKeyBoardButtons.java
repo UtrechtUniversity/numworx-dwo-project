@@ -417,6 +417,8 @@ public abstract class FormuleKeyBoardButtons
 
 				buttonImages.put("shift", "images/resources/shift_2.jpg");
 				buttonImages.put("SHIFT", "images/resources/shift_1.jpg");
+				buttonImages.put(FormuleKeyboard.LEFT_ARROW, "images/resources/leftarrow.png");
+				buttonImages.put(FormuleKeyboard.RIGHT_ARROW, "images/resources/rightarrow.png");
 
 				for (char i = 'a'; i <= 'z'; i++) {
 					String string = Character.toString(i);
