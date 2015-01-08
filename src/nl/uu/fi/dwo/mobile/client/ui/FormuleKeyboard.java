@@ -217,7 +217,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 	private double[][] buttonWidthsWN = 
 		{
 			{
-				1,1,1,1,1,1,1,1,1,1, 1,1,1.5, 1
+				1,1,1,1,1,1,1,1,1,1, 1,1,1.2, 1
 			}
 		};
 

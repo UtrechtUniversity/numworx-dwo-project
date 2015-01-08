@@ -1888,8 +1888,13 @@ public class TekstVakPanel implements InteractionView
 		if(tv!=tekstVakken[0][0] || !pasAanH) 
 			return 0;
 		int minHeight = 2*bovenMarge;
-		if(inklapbaar && klapUitButton!=null) 
-			minHeight = minHeight + knopImageView1.getHeight();
+		if(inklapbaar && klapUitButton!=null ) 
+		{	
+			if(knopImageView1 != null)
+				minHeight = minHeight + knopImageView1.getHeight();
+			else if(view1 != null) 
+				minHeight += view1.getHeight();
+		}
 		return minHeight;
 	}
 	
