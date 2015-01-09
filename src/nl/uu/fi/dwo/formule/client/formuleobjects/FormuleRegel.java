@@ -880,6 +880,8 @@ public class FormuleRegel extends FormuleElement
 				else 
 					return;
 			}
+			else
+				return;
 			holder.setCurrentRegel(parentRegel);
 			holder.setCurrentElement(parentRegel);
 			parentRegel.setIndexAt(-1);
