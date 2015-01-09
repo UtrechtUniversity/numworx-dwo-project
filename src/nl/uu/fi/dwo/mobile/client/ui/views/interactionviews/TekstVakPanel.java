@@ -1579,7 +1579,7 @@ public class TekstVakPanel implements InteractionView
 			if(object instanceof FormuleEditorWithAnswer)
 			{	FormuleEditorWithAnswer object2 = (FormuleEditorWithAnswer) object;
 				object2.kijkNa();
-				juist = object2.isCorrect();
+				juist = object2.isCorrectStrikt() != null && object2.isCorrectStrikt().booleanValue();
 			}
 		}
 		

@@ -819,6 +819,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		return correct;
 	}
 	
+	public Boolean isCorrectStrikt()
+	{
+		return correct;
+	}
+	
 	public void zetNagekeken(boolean b) {
 		if (ingevuld)
 			nagekeken = b;
