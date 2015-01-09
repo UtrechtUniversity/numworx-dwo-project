@@ -21,11 +21,13 @@ public class WortelVak extends FormuleElementWithChildren
 		//setSize(4 * fm.getAscent() / 3, 5 * fm.getAscent() / 4 + fm.getDescent());
 
 		//ind1.setLocation(5 * fm.getAscent() / 7 - 1, fm.getAscent() / 4);
-
+		this.setSize(5 * fm.getAscent() / 6 + getChild().width, fm.getAscent() / 4 + getChild().height);
+		
 		getChild().setPosition(5 * fm.getAscent() / 7 - 1, fm.getAscent() / 4);
 		//this.paint();
 		this.setChanged(true);
 		this.setAsHoogte(3 * fm.getAscent() / 4);
+		
 	}
 
 	@Override
@@ -37,7 +39,7 @@ public class WortelVak extends FormuleElementWithChildren
 		this.getChild().paint();
 
 		width = 5 * fm.getAscent() / 6 + getChild().width;
-		height = fm.getAscent() / 4 + getChild().height;
+		height = fm.getAscent() / 4 + getChild().height + 3; //+3 omdat dat werkt.. is misschien niet de netste oplossing.
 
 		this.setAsHoogte(getChild().getAsHoogte() + fm.getAscent() / 4);
 		this.setSize(width, height);
@@ -57,14 +59,14 @@ public class WortelVak extends FormuleElementWithChildren
 		ctx.setLineWidth(fm.getStrokeWidth());
 
 		ctx.beginPath();
-		ctx.moveTo(0, 2 * height / 3);
-		ctx.lineTo(fm.getAscent() / 3, height);
+		ctx.moveTo(1, 2 * height / 3 - 1);
+		ctx.lineTo(fm.getAscent() / 3, height - 3);
 		ctx.stroke();
 		//this.drawline(ctx, 0, 2 * height / 3, fm.getAscent() / 3, height);
 
 		ctx.beginPath();
-		ctx.moveTo(1, 2 * height / 3);
-		ctx.lineTo(fm.getAscent() / 3 + 1, height);
+		ctx.moveTo(2, 2 * height / 3 - 1);
+		ctx.lineTo(fm.getAscent() / 3 + 1, height - 3);
 		ctx.lineTo(2 * fm.getAscent() / 3 - 1, fm.getAscent() / 8);
 		ctx.lineTo(width, fm.getAscent() / 8);
 		ctx.stroke();

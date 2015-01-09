@@ -389,8 +389,18 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				//sp.getElement().getStyle().setMarginRight(1, Style.Unit.PX);
 				//sp.getElement().getStyle().setMarginRight(1, Style.Unit.PX);
 
-				sp.getElement().getStyle().setMarginTop(2, Style.Unit.PX);
-				sp.getElement().getStyle().setPaddingTop(3, Style.Unit.PX);
+				
+				//probeersels 9-1
+				spStyle.setMarginTop(0, Style.Unit.PX);
+				spStyle.setMarginBottom(2, Style.Unit.PX);
+				spStyle.setPaddingTop(1, Style.Unit.PX);
+				spStyle.setPaddingBottom(2,Style.Unit.PX);
+				
+				
+				//oorspronkelijke versie 9-1: volgende twee regels.
+			//	sp.getElement().getStyle().setMarginTop(2, Style.Unit.PX);
+			//	sp.getElement().getStyle().setPaddingTop(3, Style.Unit.PX);
+				
 
 				//spStyle.setMarginTop(2, Style.Unit.PX);
 				//spStyle.setPaddingTop(1, Style.Unit.PX);
@@ -677,8 +687,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	public void resize()
 	{
+		System.out.println("resize: hoogte = " + hoogte);
 		breedte = this.getMainRegel().getWidth() + extraWidth;
 		hoogte = this.getMainRegel().getHeight() + 6;
+		System.out.println("hoogte is geworden: " + hoogte);
 		
 		sp.setPixelSize((breedte-3) , (hoogte-8) );
 		if(parentRegel != null)
