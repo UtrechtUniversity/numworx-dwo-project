@@ -10,10 +10,11 @@ import java.util.Vector;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.beans.jdbc.DbConnect;
+import fi.beans.jdbc.DbConnectIF;
 import fi.dwo.client.persistence.DbAccessIF;
 import fi.dwo.client.system.LoginException;
 
-public abstract class DbAccessProxy extends DbConnect implements DbAccessIF {
+public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
 
 	protected abstract DbAccessIF createDelegate();
 	
@@ -27,13 +28,8 @@ public abstract class DbAccessProxy extends DbConnect implements DbAccessIF {
 	
 	
 	public void close() {
-		DbConnect connector = (DbConnect) delegate.get();
+		DbConnectIF connector = (DbConnectIF) delegate.get();
 		connector.close();
-	}
-
-	public Connection getConnection() throws SQLException {
-		DbConnect connector = (DbConnect) delegate.get();
-		return connector.getConnection();
 	}
 
 	protected DbAccessIF getDelegate() {
