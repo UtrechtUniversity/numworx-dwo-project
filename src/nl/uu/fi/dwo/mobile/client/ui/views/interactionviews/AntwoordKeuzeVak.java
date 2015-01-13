@@ -27,6 +27,7 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -125,6 +126,7 @@ public class AntwoordKeuzeVak implements InteractionStub{
 	
 	private boolean check;
 	private boolean teltMee;
+	private int hoogtePopup;
 	
 	
 	
@@ -222,7 +224,10 @@ public class AntwoordKeuzeVak implements InteractionStub{
 		
 		huidigeKeuzeVak.addDomHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
-			{	popupBox.setPopupPosition(basisPanel.getAbsoluteLeft(), basisPanel.getAbsoluteTop() + basisPanel.getOffsetHeight());
+			{	int top = basisPanel.getAbsoluteTop() + basisPanel.getOffsetHeight();
+			    int topMax = Window.getClientHeight() - hoogtePopup;
+			    top = Math.min(top,topMax);
+			    popupBox.setPopupPosition(basisPanel.getAbsoluteLeft(), top);
 				if(isShowing)
 				{	popupBox.hide();
 					isShowing = false;
@@ -450,7 +455,7 @@ public class AntwoordKeuzeVak implements InteractionStub{
 			
 		}
 		popupPanel.setPixelSize(breedte - 23, hoogtePanels);
-		
+		this.hoogtePopup = hoogtePanels;
 		
 		try
 		{
@@ -494,7 +499,10 @@ public class AntwoordKeuzeVak implements InteractionStub{
 		
 		uitklapPijlCanvas.addDomHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
-			{	popupBox.setPopupPosition(basisPanel.getAbsoluteLeft(), basisPanel.getAbsoluteTop() + basisPanel.getOffsetHeight());
+			{	int top = basisPanel.getAbsoluteTop() + basisPanel.getOffsetHeight();
+				int topMax = Window.getClientHeight() - hoogtePopup;
+				top = Math.min(top, topMax);
+				popupBox.setPopupPosition(basisPanel.getAbsoluteLeft(), top);
 				if(isShowing)
 				{	popupBox.hide();
 					isShowing = false;
