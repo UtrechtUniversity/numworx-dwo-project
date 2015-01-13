@@ -1604,7 +1604,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
             ps.execute();
             int count = ps.getUpdateCount();
-            if (count != 1) {
+            if (count != 2) {
                 // iets mis2 ...
                 log("QRY_UPDATE_STUDENT_SCO count is  " + count);
 
