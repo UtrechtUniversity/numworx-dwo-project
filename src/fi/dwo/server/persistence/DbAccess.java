@@ -1540,7 +1540,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             // eerste botte implementatie
             String xmlStr = LMSGetValue(scoID, userID, "cocd");
             Scorm2Xml xml = new Scorm2Xml(String.valueOf(xmlStr));
-            xml.setValue(iDataModelElement, iValue);
+            xml.LMSSetValue(iDataModelElement, iValue);
             iDataModelElement = "cocd";
             iValue = xml.toString();
         }
@@ -1604,7 +1604,9 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
             ps.execute();
             int count = ps.getUpdateCount();
-            if (count != 2) {
+// XXX we gaan uit 2 goed is, en niet een dubbele 1
+// FIXME voor variablen in context is het 1 voor suspend data is het 2
+            if (count != 2 && count != 1) {
                 // iets mis2 ...
                 log("QRY_UPDATE_STUDENT_SCO count is  " + count);
 
