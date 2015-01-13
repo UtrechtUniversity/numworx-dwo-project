@@ -202,7 +202,14 @@ public class AntwoordTekstVak implements InteractionView{
 			if (map.containsKey("boxMetRand"))
 				boxMetRand = map.getBoolean("boxMetRand");
 			if (map.containsKey("logObjectives"))
-				logObjectives = (boolean[][]) map.get("logObjectives");
+			{	
+				//logObjectives = (boolean[][]) map.get("logObjectives"); 
+				ObjectList list = map.getObjectList("logObjectives");
+				logObjectives = new boolean[list.size()][];
+				for (int i = 0; i < logObjectives.length; i++) {
+					logObjectives[i]  = list.getBooleanArray(i);
+				}
+			}
 		}
 		
 		

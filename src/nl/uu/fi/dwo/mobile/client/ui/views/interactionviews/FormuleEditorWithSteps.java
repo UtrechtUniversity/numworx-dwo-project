@@ -70,7 +70,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	private int hoogte = 250;
 	private boolean volledigeBreedte = false;
 	private HashMap<String, Object> launchState;
-	private Map<String, Object> instellingen;
+	private ObjectMap instellingen;
 	private ArrayList<FormuleViewer> viewers = new ArrayList<FormuleViewer>();
 	private FormuleEditorWithAnswer editor = null;
 	private FormuleViewer prefixViewer;
@@ -430,9 +430,9 @@ public class FormuleEditorWithSteps implements InteractionView
 		
 	}
 
-	public void zetInstellingen(Map<String, Object> instellingen)
+	public void zetInstellingen(ObjectMap instellingen2)
 	{
-		this.instellingen = instellingen;
+		this.instellingen = instellingen2;
 	}
 	
 	public void addPrefixViewer(LayoutPanel p)

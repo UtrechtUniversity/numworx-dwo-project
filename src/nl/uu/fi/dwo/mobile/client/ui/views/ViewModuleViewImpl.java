@@ -206,7 +206,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			contentPanel.remove(buttons.get(i));
 try {
 		super.setupView(launchData);
-		ObjectMap wrap = JSONUtilities.wrapMap(instellingen);
+		ObjectMap wrap = (instellingen);
 // wanneer verschijnt de opnieuwknop?		
 		boolean opnieuwMogelijk = "true".equals(launchData.get("opnieuwMogelijk"));
 		boolean opnieuw = false;

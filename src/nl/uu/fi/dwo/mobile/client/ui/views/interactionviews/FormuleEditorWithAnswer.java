@@ -164,7 +164,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private ObjectMap launchState;
 	private FormuleEditorWithSteps fe = null;
 	private boolean strict = true;
-	private Map<String, Object> instellingen = null;
+	private ObjectMap instellingen = null;
 	private int score = 0;
 	private Boolean correct = null;
 	
@@ -428,11 +428,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 	}
 
-	public void zetInstellingen(Map<String, Object> instellingen)
+	public void zetInstellingen(ObjectMap instellingen2)
 	{
-		this.instellingen = instellingen;
+		this.instellingen = instellingen2;
 		//System.out.println("fontSize uit instellingen formuleEditorWithAnswer: " + ((Number) instellingen.get("fontSize")).intValue());
-		setFont(FormuleFont.createFromFontSize(((Number) instellingen.get("fontSize")).intValue()));
+		setFont(FormuleFont.createFromFontSize(instellingen2.getInt("fontSize")));
 
 	}
 	

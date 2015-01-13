@@ -114,7 +114,7 @@ public class TekstVakPanel implements InteractionView
 	private int breedte = 600;
 	private int hoogte = 250;
 	//ObjectMap launchState;
-	private Map<String, Object> instellingen;
+	private ObjectMap instellingen;
 	private LayoutPanel mainPanel2 = null;
 	private Grid mainPanel = null;
 	private LayoutPanel randPanel = null;
@@ -603,12 +603,12 @@ public class TekstVakPanel implements InteractionView
 //		//	font_size = ((Number) instellingen.get("fontSize")).intValue();
 //	}
 	
-	public void zetInstellingen(Map<String, Object> instellingen)
+	public void zetInstellingen(ObjectMap instellingen2)
 	{
-		this.instellingen = instellingen;
+		this.instellingen = instellingen2;
 		if(!anderFont && !fontOvererving)
-		{	if(instellingen.get("fontSize") != null)
-				font_size = ((Number) instellingen.get("fontSize")).intValue();
+		{	if(instellingen2.containsKey("fontSize") )
+				font_size =  instellingen2.getInt("fontSize");
 			font_style = 0;
 			for (int i = 0; i < hoogtes.size(); i++)
 			{

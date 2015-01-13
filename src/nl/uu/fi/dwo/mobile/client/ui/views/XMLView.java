@@ -51,7 +51,7 @@ import fi.wiskopdr.FormuleParser;
 public abstract class XMLView {
 
 	protected HashMap<String, Object> launchData;
-	protected Map<String, Object> instellingen;
+	protected ObjectMap instellingen;
 	protected int font_size = 12;
 	protected String font_name = "Arial";
 	protected String[] randomVarNamen = null;
@@ -87,8 +87,8 @@ public abstract class XMLView {
 		ImageView.setMap(imagemap);
 		
 		if (wrap.containsKey("instellingen"))
-		{	instellingen = wrap.getMap("instellingen");
-			wrap = JSONUtilities.wrapMap(instellingen);
+		{	instellingen = wrap.getObjectMap("instellingen");
+			wrap = (instellingen);
 			if (wrap.containsKey("fontSize") )
 				font_size = wrap.getInt("fontSize");
 	
@@ -214,12 +214,7 @@ public abstract class XMLView {
 	//public void setObjects(ArrayList<Object> opdrachtObjects, Panel destination) 
 	public void setObjects(HashMap<String, Object> opdracht, Panel destination, OpdrNavIF comRoot)
 	{	
-		//marges vanuit instellingen meenemen:
-		destination.getElement().getStyle().setMarginBottom(((Number) instellingen.get("margeOnder")).intValue(), Style.Unit.PX);
-		destination.getElement().getStyle().setMarginTop(((Number) instellingen.get("margeBoven")).intValue(), Style.Unit.PX);
-		destination.getElement().getStyle().setMarginLeft(((Number) instellingen.get("margeLinks")).intValue(), Style.Unit.PX);
-		destination.getElement().getStyle().setMarginRight(((Number) instellingen.get("margeRechts")).intValue(), Style.Unit.PX);
-		
+			
 		int hoogte = 500;
 		int breedte = 800;
 		
@@ -237,7 +232,12 @@ public abstract class XMLView {
 		
 		destination.add(hoofdPanel);
 		opdrachtObjects.add(hoofdPanel);
-		
+		//marges vanuit instellingen meenemen:
+		Style style = hoofdPanel.asWidget().getElement().getStyle();
+		style.setMarginBottom( instellingen.getInt("margeOnder"), Style.Unit.PX);
+		style.setMarginTop(instellingen.getInt("margeBoven"), Style.Unit.PX);
+		style.setMarginLeft(instellingen.getInt("margeLinks"), Style.Unit.PX);
+		style.setMarginRight(instellingen.getInt("margeRechts"), Style.Unit.PX);		
 	}
 
 	public Panel getPanelElement(final FormuleHolder editor) {
