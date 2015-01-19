@@ -660,6 +660,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		TekstBuffer b = new TekstBuffer();
 		try{
 			feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);
+			System.out.println("feedback is: " + feedback);
 		}
 		catch(Exception e){}
 		ArrayList<Object> feedbackList = b.convertTekst(feedback, null, false);

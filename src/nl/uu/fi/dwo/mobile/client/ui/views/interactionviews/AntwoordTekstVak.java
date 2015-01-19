@@ -1,10 +1,17 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+
+
+
+
+
+
 
 
 
@@ -38,13 +45,21 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.StringUtils;
+import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
+import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.canvas.dom.client.CanvasGradient;
+import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
@@ -54,8 +69,10 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ValueBoxBase.TextAlignment;
@@ -82,12 +99,10 @@ public class AntwoordTekstVak implements InteractionView{
 	int hoogte = 24; 	
 	boolean volledigeBreedte = false;
 	
-
 	private boolean ingevuld;
 	private boolean nagekeken;
 
 	private Boolean correct;
-
 
 	private int score;
 	private int scoreMax = 10;
@@ -109,9 +124,14 @@ public class AntwoordTekstVak implements InteractionView{
 	private int puntenFeedback;
 	private String feedback;
 	private boolean gelijkwaardig;
-	private FlowPanel feedbackPanel = null;
-	private PopupFacade feedbackPopup;
-	private PopupButton feedbackButton;
+	Label feedbackLabel;
+	private PopupPanel feedbackPanel;
+	TekstVak feedbackTekst;
+	Canvas feedbackSluitKnop;
+	Context2d gIm;
+	
+	//private PopupFacade feedbackPopup;
+	//private PopupButton feedbackButton;
 	//private TekstArea feedbackTekst;
 	//private FormuleButton feedbackButton;
 	
@@ -293,9 +313,7 @@ public class AntwoordTekstVak implements InteractionView{
 			{
 				super.addElement(e);
 				resize();
-				goedKrulImage.setVisible(false);
-				goedKrulHalfImage.setVisible(false);
-				foutKruisImage.setVisible(false);
+				resetimg();
 			}
 
 			@Override
@@ -303,9 +321,7 @@ public class AntwoordTekstVak implements InteractionView{
 			{
 				super.removeCurrentElement();
 				resize();
-				goedKrulImage.setVisible(false);
-				goedKrulHalfImage.setVisible(false);
-				foutKruisImage.setVisible(false);
+				resetimg();
 			}
 
 			@Override
@@ -313,9 +329,7 @@ public class AntwoordTekstVak implements InteractionView{
 			{
 				super.removeNextElement();
 				resize();
-				goedKrulImage.setVisible(false);
-				goedKrulHalfImage.setVisible(false);
-				foutKruisImage.setVisible(false);
+				resetimg();
 			}
 
 			@Override
@@ -323,9 +337,7 @@ public class AntwoordTekstVak implements InteractionView{
 			{
 				super.insert(text);
 				resize();
-				goedKrulImage.setVisible(false);
-				goedKrulHalfImage.setVisible(false);
-				foutKruisImage.setVisible(false);
+				resetimg();
 			}
 
 			@Override
@@ -347,6 +359,15 @@ public class AntwoordTekstVak implements InteractionView{
 				ashoogte = formuleVak.getMainRegel().getAsHoogte() + 3;
 				if(parentRegel != null)
 					parentRegel.resize();
+			}
+			
+			void resetimg() {
+				goedKrulImage.setVisible(false);
+				goedKrulHalfImage.setVisible(false);
+				foutKruisImage.setVisible(false);
+				feedbackLabel.setVisible(false);
+				feedbackPanel.hide();
+				
 			}
 			
 			
@@ -413,28 +434,88 @@ public class AntwoordTekstVak implements InteractionView{
 		
 		zetJuisteAntwoord(antwoordString);
 		
-		feedbackPanel = new FlowPanel();
-		feedbackPanel.getElement().getStyle().setFontSize(14, Unit.PX);
-		feedbackPanel.getElement().getStyle().setProperty("lineHeight", "1.2");
-		feedbackPanel.getElement().getStyle().setWidth(200, Unit.PX);
-		feedbackPanel.getElement().getStyle().setHeight(40, Style.Unit.PX);
-		feedbackPanel.getElement().getStyle().setProperty("display", "inline-block");
+		feedbackPanel = new PopupPanel(true);
+		feedbackPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
+		feedbackPanel.getElement().getStyle().setBorderColor("black");
+		feedbackPanel.getElement().getStyle().setBorderWidth(1, Style.Unit.PX);
+		feedbackPanel.getElement().getStyle().setPadding(2, Style.Unit.PX);
 		feedbackPanel.getElement().getStyle().setBackgroundColor("#FFFFDD");
 		
+		feedbackTekst = new TekstVak();
+		feedbackTekst.setSize(200, 50);
+		feedbackTekst.setFontSize(XMLView.getDefaultFontSize());
+		feedbackTekst.setColor(CssColor.make("black"));
+		feedbackTekst.setCentering(false, true);
+		feedbackTekst.setPasHoogteBreedteAan(true, false);
+		feedbackTekst.setTekstVakBreedte(190);
+		feedbackPanel.add(feedbackTekst);
+		
+		feedbackSluitKnop = Canvas.createIfSupported();
+		gIm = feedbackSluitKnop.getContext2d();
+		
+		feedbackSluitKnop.setWidth(10 + "px");
+		feedbackSluitKnop.setHeight(10 + "px");
+		feedbackSluitKnop.setCoordinateSpaceWidth(10);
+		feedbackSluitKnop.setCoordinateSpaceHeight(10);
+		
+		CanvasGradient gradient = gIm.createLinearGradient(0, 0, 10, 10);
+		gradient.addColorStop(0, CssColor.make(242, 242, 242).toString());
+		gradient.addColorStop(1, CssColor.make(221, 221, 221).toString());
+		gIm.setFillStyle(gradient);
+		//gIm.setFillStyle(CssColor.make(245, 245, 245).toString());
+		gIm.fillRect(0, 0, 10, 10);
+		gIm.setStrokeStyle("black");
+		gIm.beginPath();
+		gIm.moveTo(1, 1);
+		gIm.lineTo(9, 9);
+		gIm.moveTo(1, 9);
+		gIm.lineTo(9, 1);
+		gIm.stroke();
+		
+		feedbackSluitKnop.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+		feedbackSluitKnop.getElement().getStyle().setProperty("verticalAlign", "top");
+		voegFeedbackSluitKnopToe();
 		
 		
-		feedbackButton = new PopupButton(feedbackPanel, goedKrulHalfImage, null);
-		feedbackButton.getElement().getStyle().setPaddingLeft(0, Style.Unit.PX);
-		feedbackButton.getElement().getStyle().setPaddingTop(0, Style.Unit.PX);
-		feedbackButton.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
-		//feedbackButton.getElement().getStyle().setBackgroundColor(CssColor.make(215, 215, 215).toString());
-		feedbackButton.setVisible(false);
-		//setLayer((Component) feedbackButton, JLayeredPane.PALETTE_LAYER.intValue());
-		basisPanel.add(feedbackButton);
-		basisPanel.setWidgetRightWidth(feedbackButton, 2, Style.Unit.PX, 15, Style.Unit.PX);
-		basisPanel.setWidgetBottomHeight(feedbackButton, 2, Style.Unit.PX, 15, Style.Unit.PX);
+		feedbackSluitKnop.addDomHandler(new ClickHandler(){
+			public void onClick(ClickEvent e)
+			{
+				feedbackPanel.hide();
+			}
+		}, ClickEvent.getType());
+					
+		feedbackLabel = new Label("?");
+		feedbackLabel.getElement().getStyle().setFontSize(11, Style.Unit.PX);
+		feedbackLabel.getElement().getStyle().setFontWeight(FontWeight.BOLD);
+		feedbackLabel.getElement().getStyle().setPadding(0, Style.Unit.PX);
+		feedbackLabel.getElement().getStyle().setMarginTop(0, Style.Unit.PX);
+		feedbackLabel.getElement().getStyle().setMarginLeft(3, Style.Unit.PX);
+		feedbackLabel.getElement().getStyle().setPaddingLeft(4, Style.Unit.PX);
+		feedbackLabel.getElement().getStyle().setBackgroundColor(CssColor.make(230, 230, 230).toString());
+		feedbackLabel.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+		feedbackLabel.getElement().getStyle().setVerticalAlign(VerticalAlign.TOP);
+		feedbackLabel.setWidth(10 + "px");
+		feedbackLabel.setVisible(false);
+		
+		feedbackLabel.addDomHandler(new ClickHandler(){
+			public void onClick(ClickEvent e)
+			{
+				feedbackPanel.setPopupPosition(asWidget().getAbsoluteLeft() + 10, asWidget().getAbsoluteTop() + asWidget().getOffsetHeight() + 10);
+				feedbackPanel.show();
+			}
+		}, ClickEvent.getType());
+		basisPanel.add(feedbackLabel);
+		basisPanel.setWidgetRightWidth(feedbackLabel, 2, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetBottomHeight(feedbackLabel, 1, Style.Unit.PX, 10, Style.Unit.PX);
 		
 		
+	}
+	
+	public void voegFeedbackSluitKnopToe()
+	{
+		feedbackTekst.add(feedbackSluitKnop);
+		feedbackTekst.setWidgetRightWidth(feedbackSluitKnop, 0, Style.Unit.PX, 10, Style.Unit.PX);
+		feedbackTekst.setWidgetTopHeight(feedbackSluitKnop, 0, Style.Unit.PX, 10, Style.Unit.PX);
 	}
 	
 	public void setAnswerModel(int nr)
@@ -775,11 +856,11 @@ public class AntwoordTekstVak implements InteractionView{
 					if (!feedback.trim().equals("") && show)
 					{
 						setFeedback(feedback, true);
-						feedbackButton.setVisible(true);
+						//feedbackButton.setVisible(true);
 					}
 					else
 					{
-						feedbackButton.setVisible(false);
+						//feedbackButton.setVisible(false);
 						if (feedbackPanel.getParent() != null)
 						{
 							basisPanel.remove(feedbackPanel);
@@ -810,10 +891,18 @@ public class AntwoordTekstVak implements InteractionView{
 	}
 	
 	public void setFeedback(String feedback, boolean closeable)
-	{	hasFeedback = !"".equals(feedback.trim());
-		feedbackPanel.clear();
-		feedbackPanel.getElement().setInnerHTML(feedback);
-		feedbackPanel.getElement().getStyle().setPadding(10, Unit.PX);
+	{	TekstBuffer b = new TekstBuffer();
+		try{
+			feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);
+			System.out.println("feedback is: " + feedback);
+		}
+		catch(Exception e){}
+		ArrayList<Object> feedbackList = b.convertTekst(feedback, null, false);
+		feedbackTekst.clear();
+		feedbackTekst.setObjects(feedbackList);
+		voegFeedbackSluitKnopToe();
+		feedbackTekst.resize();
+		feedbackLabel.setVisible(true);
 	}
 
 	/*

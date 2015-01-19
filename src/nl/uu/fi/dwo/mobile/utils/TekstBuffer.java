@@ -197,7 +197,7 @@ public class TekstBuffer
 
 		if (lastIndex < tekst.length() && lastIndex != 0)
 		{
-			String[] breaks = getBreaks(tekst.substring(lastIndex, tekst.length() - 1));
+			String[] breaks = getBreaks(tekst.substring(lastIndex, tekst.length()));
 			for (int j = 0; j < breaks.length; j++)
 				result.add(breaks[j]);
 
