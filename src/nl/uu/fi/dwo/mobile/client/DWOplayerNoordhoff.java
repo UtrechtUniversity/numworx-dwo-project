@@ -45,6 +45,11 @@ public class DWOplayerNoordhoff extends DWOplayerDefaults implements DWOplayerPa
 	public boolean isNavTitle() {
 		return true;
 	}
+	
+	@Override
+	public int getWindowHeight() {
+		return 426;
+	}
 
 	
 }

@@ -7,6 +7,7 @@ import nl.uu.fi.dwo.mobile.client.ui.NavigationTextDefault;
 import nl.uu.fi.dwo.mobile.client.ui.NavigationTextIpad;
 
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.user.client.Window;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTStyle;
 import com.googlecode.mgwt.ui.client.OsDetection;
@@ -92,5 +93,10 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 	@Override
 	public boolean isNavTitle() {
 		return false;
+	}
+	
+	@Override
+	public int getWindowHeight() {
+		return Window.getClientHeight();
 	}
 }

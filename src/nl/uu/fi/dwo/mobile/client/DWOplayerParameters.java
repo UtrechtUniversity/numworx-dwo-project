@@ -50,5 +50,8 @@ public interface DWOplayerParameters {
 	 */
 	boolean isNavTitle();
 	
+	
+	int getWindowHeight();
+	
 // More to come....
 }

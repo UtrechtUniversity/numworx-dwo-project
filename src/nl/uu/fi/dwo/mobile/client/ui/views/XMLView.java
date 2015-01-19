@@ -145,15 +145,6 @@ public abstract class XMLView {
 					}
 				}
 			}
-//			if(wrap.containsKey("bezocht")) //boolean[][]
-//			{
-//				ObjectList bezochtList = wrap.getObjectList("bezocht");
-//				bezocht = new boolean[bezochtList.size()][];
-//				for(int i = 0; i < bezochtList.size(); i++)
-//				{
-//					bezocht[i] = bezochtList.getBooleanArray(i);
-//				}
-//			}
 			if(wrap.containsKey("condPerc"))
 				condPerc = wrap.getInt("condPerc");
 			if(wrap.containsKey("allesCorrectNodig"))

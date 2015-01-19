@@ -225,7 +225,7 @@ public class AntwoordKeuzeVak implements InteractionStub{
 		huidigeKeuzeVak.addDomHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
 			{	int top = basisPanel.getAbsoluteTop() + basisPanel.getOffsetHeight();
-			    int topMax = Window.getClientHeight() - hoogtePopup;
+			    int topMax = DWOplayer.PARAMETERS.getWindowHeight() - hoogtePopup;
 			    top = Math.min(top,topMax);
 			    popupBox.setPopupPosition(basisPanel.getAbsoluteLeft(), top);
 				if(isShowing)
@@ -500,7 +500,7 @@ public class AntwoordKeuzeVak implements InteractionStub{
 		uitklapPijlCanvas.addDomHandler(new ClickHandler(){
 			public void onClick(ClickEvent e)
 			{	int top = basisPanel.getAbsoluteTop() + basisPanel.getOffsetHeight();
-				int topMax = Window.getClientHeight() - hoogtePopup;
+				int topMax = DWOplayer.PARAMETERS.getWindowHeight() - hoogtePopup;
 				top = Math.min(top, topMax);
 				popupBox.setPopupPosition(basisPanel.getAbsoluteLeft(), top);
 				if(isShowing)

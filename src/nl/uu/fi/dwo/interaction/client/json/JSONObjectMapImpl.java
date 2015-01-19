@@ -118,7 +118,11 @@ public class JSONObjectMapImpl extends HashMap<String, Object> implements Object
 
 	@Override
 	public String getString(String key) {
-		return get0(key).isString().stringValue();
+		JSONValue get0 = get0(key);
+		if(get0 == null) return null;
+		JSONString string = get0.isString();
+		if(string == null) return null;
+		return string.stringValue();
 	}
 
 	@Override
@@ -147,7 +151,10 @@ public class JSONObjectMapImpl extends HashMap<String, Object> implements Object
 
 	@Override
 	public ObjectList getObjectList(String key) {
-		JSONArray o = get0(key).isArray();
+		JSONValue get0 = get0(key);
+		if(get0 == null) return null;
+		JSONArray o = get0.isArray();
+		if(o == null) return null;
 		return new JSONObjectListImpl(o);
 	}
 

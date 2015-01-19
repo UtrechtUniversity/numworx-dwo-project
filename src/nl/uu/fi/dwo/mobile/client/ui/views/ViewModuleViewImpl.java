@@ -228,7 +228,7 @@ try {
 		{
 			scoreNav.setItemOpnieuw(wrap.getBoolean("itemOpnieuw"));
 		}
-		scoreNav.setAantalOpdrachten(on.getAantalOpdrachten(), on.getMaxScores());
+		scoreNav.setAantalOpdrachten(on.getAantalOpdrachten(), on.getMaxScores(), on.getCurrentOpdracht());
 		scoreNav.setBeantwoord(on.getAantalBeantwoord());
 		scoreNav.setItemScores(on.getItemScores());
 		scoreNav.setTotaalScore((int)on.getScore());
@@ -385,13 +385,11 @@ try {
 
 	public void zetOpdracht(HashMap<String, Object> opdracht)
 	{
-		if(bezocht == null)
-		{
-			bezocht = new boolean[on.getAantalActiviteiten()][on.getAantalOpdrachten()];
+// initializeer bezocht		
+		{	bezocht = new boolean[on.getAantalActiviteiten()][];
 			for(int j = 0; j < on.getAantalActiviteiten(); j++)
-			{	for(int i = 0; i < bezocht[j].length; i++)
-					bezocht[j][i] = false;
-			}	
+			{	bezocht[j] = new boolean[on.getAantalOpdrachten(j)]; // all false
+			}
 			bezocht[0][0] = true;
 		}
 		
@@ -460,7 +458,7 @@ try {
 	public void zetOpdrachtPlusState(HashMap<String, Object> opdracht, HashMap<String, Object> state)
 	{
 		
-		System.out.println("zetOpdrachtPlusState");
+		//System.out.println("zetOpdrachtPlusState");
 		String randVarString;
 		randVarString = (String) opdracht.get("randVarString");
 		if(randVarString == null ) randVarString = "";
@@ -819,22 +817,20 @@ try {
 			}
 			catch(Exception e)
 			{
-				bezocht = new boolean[on.getAantalActiviteiten()][on.getAantalOpdrachten()];
+				bezocht = new boolean[on.getAantalActiviteiten()][];
 				bezocht[0] = map.getBooleanArray("bezocht");
-				if(on.getAantalActiviteiten() > 1)
-					for(int j = 1; j < on.getAantalActiviteiten(); j++)
-					{	for(int i = 0; i < on.getAantalOpdrachten(); i++)
-							bezocht[j][i] = false;
-					}
+				for(int j = 1; j < on.getAantalActiviteiten(); j++)
+				{	bezocht[j] = new boolean[on.getAantalOpdrachten(j)];
+				}
 			}
-		if(bezocht == null)
-		{	bezocht = new boolean[on.getAantalActiviteiten()][on.getAantalOpdrachten()];
-			for(int j = 0; j < on.getAantalActiviteiten(); j++)
-			{	for(int i = 0; i < on.getAantalOpdrachten(); i++)
-					bezocht[j][i] = false;
+		else {
+			if(bezocht == null)
+			{	bezocht = new boolean[on.getAantalActiviteiten()][];
+				for(int j = 0; j < on.getAantalActiviteiten(); j++)
+				{	bezocht[j] = new boolean[on.getAantalOpdrachten(j)];
+				}
 			}
 			bezocht[activiteitNr][opdrachtNr] = true;
-			
 		}
 		
 		
@@ -1190,7 +1186,7 @@ try {
 		}
 
 		@Override
-		public void setAantalOpdrachten(int aantalOpdrachten, int[] maxScores) {
+		public void setAantalOpdrachten(int aantalOpdrachten, int[] maxScores, int current) {
 		}
 
 		@Override

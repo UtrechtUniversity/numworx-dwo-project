@@ -79,9 +79,9 @@ public class TekstBuffer
 		boolean vanTekstVakPanel = false;
 		ObjectMap opdrachtMap = JSONUtilities.wrapMap(opdracht);
 		List<Object> opdrachtGegevens = JSONUtilities.toArrayList( opdracht.get("interactiePanelLaunchData") );
-		String tekst = (String) opdracht.get("tekst");
+		String tekst = opdrachtMap.getString("tekst");
 		if (tekst == null)
-		{	List<Object> teksten = JSONUtilities.toArrayList( (opdracht.get("teksten")) );
+		{	ObjectList teksten = opdrachtMap.getObjectList("teksten");
 		
 			boolean random = false;
 			if(opdracht.containsKey("random"))
@@ -94,11 +94,11 @@ public class TekstBuffer
 				{
 					if(randomVar.equals(randomVarNamen[i]))
 					{
-						int tabNummer = ((Integer) randomVarWaarden.get(randomVar)).intValue() - 1;
+						int tabNummer = ((Number) randomVarWaarden.get(randomVar)).intValue() - 1;
 						if (tabNummer < aantalRandom && tabNummer > -1)
 						{
-							List<Object> randomteksten = JSONUtilities.toArrayList(opdracht.get("randomteksten"));
-							teksten = JSONUtilities.toArrayList(randomteksten.get(tabNummer));
+							ObjectList randomteksten = (opdrachtMap.getObjectList("randomteksten"));
+							teksten = randomteksten.getObjectList(tabNummer);
 							//teksten = randomteksten[tabNummer];
 							ObjectList randomIpLaunchdata = opdrachtMap.getObjectList("randomIpLaunchdata");
 							opdrachtGegevens = randomIpLaunchdata.getList(tabNummer);
@@ -111,7 +111,7 @@ public class TekstBuffer
 			}
 			
 			if (teksten != null)
-				tekst = (String) (JSONUtilities.toArrayList(teksten.get(row))).get(column);
+				tekst = teksten.getStringArray(row)[column];
 			vanTekstVakPanel = true;
 		}
 		

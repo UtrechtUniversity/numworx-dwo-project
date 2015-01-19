@@ -32,7 +32,7 @@ public interface ScoreNavIF {
 	void setVolgendeEnabled(boolean enable);
 	void setVorigeEnabled(boolean enable);
 
-	void setAantalOpdrachten(int aantalOpdrachten, int[] maxScores);
+	void setAantalOpdrachten(int aantalOpdrachten, int[] maxScores, int current);
 
 	void setItemScores(int[] itemScores);
 

@@ -704,7 +704,7 @@ public class TekstVakPanel implements InteractionView
 			{
 				if(randomVar.equals(randomVarNamen[i]))
 				{
-					int tabNummer = ((Integer) randomVarWaarden.get(randomVar)).intValue() - 1;
+					int tabNummer = ((Number) randomVarWaarden.get(randomVar)).intValue() - 1;
 					if (tabNummer < aantalRandom && tabNummer > -1)
 					{
 						//teksten = randomteksten[tabNummer];

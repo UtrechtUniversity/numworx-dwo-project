@@ -613,6 +613,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	public int getAantalOpdrachten() {
 		return aantalOpdrachten[currentActiviteit];
 	}
+
+	public int getAantalOpdrachten(int act) {
+		return aantalOpdrachten[act];
+	}
 	
 	public int getAantalActiviteiten() {
 		return aantalActiviteiten;
@@ -622,7 +626,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		int len = getAantalOpdrachten();
 		int totaal = 0;
 		for(int i = 0; i < len; i++ )
-			if( states[currentActiviteit][i] != null || scores[currentActiviteit][i]!= 0) totaal++;
+			if( 	states[currentActiviteit] != null &&
+					states[currentActiviteit][i] != null || scores[currentActiviteit][i]!= 0) totaal++;
 		return totaal;
 	}
 
