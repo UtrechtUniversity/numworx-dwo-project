@@ -28,7 +28,7 @@ public class NdeWortelVak extends FormuleElementWithChildren
 		getChild(0).setPosition(5 * fm.getAscent() / 7 + 5, fm.getAscent() / 4);
 
 		getChild(1).setPosition(fm.getAscent() / 4, 0);
-		getChild(1).setEditable(false);
+		//getChild(1).setEditable(false);
 
 		FormuleFontChanges changes = new FormuleFontChanges();
 		changes.setSmallText(FormuleFontChanges.TRUE);
@@ -42,9 +42,14 @@ public class NdeWortelVak extends FormuleElementWithChildren
 		this.getChild(0).paint();
 		this.getChild(1).paint();
 
-		setSize(5 * fm.getAscent() / 6 + getChild(0).width + 5, fm.getAscent() / 4 + getChild(0).height);
+		//setSize(5 * fm.getAscent() / 6 + getChild(0).width + 5, fm.getAscent() / 4 + getChild(0).height);
+		//System.out.println("getChild(1).width = " + getChild(1).width);
+		setSize(getChild(1).width + getChild(0).width + 5 * fm.getAscent() / 6 - 2, fm.getAscent() / 4 + getChild(0).height);
+		getChild(0).x = 5 * fm.getAscent() / 7 + getChild(1).width - 2;
+		
+		
 		setAsHoogte(getChild(0).getAsHoogte() + fm.getAscent() / 4);
-
+		
 		if (this.isSelected())
 		{
 			ctx.setFillStyle("#aaf");
@@ -61,12 +66,12 @@ public class NdeWortelVak extends FormuleElementWithChildren
 		ctx.setLineWidth(fm.getStrokeWidth());
 
 		ctx.beginPath();
-		ctx.moveTo(6, 2 * height / 3);
-		ctx.lineTo(fm.getAscent() / 3 + 6, height);
-		ctx.moveTo(5, 2 * height / 3);
-		ctx.lineTo(fm.getAscent() / 3 + 5, height);
-		ctx.lineTo(2 * fm.getAscent() / 3 + 4, fm.getAscent() / 8);
-		ctx.moveTo(2 * fm.getAscent() / 3 + 5, fm.getAscent() / 8);
+		ctx.moveTo(getChild(1).width - 1, 2 * height / 3);
+		ctx.lineTo(fm.getAscent() / 3 + getChild(1).width - 1, height);
+		ctx.moveTo(getChild(1).width - 2, 2 * height / 3);
+		ctx.lineTo(fm.getAscent() / 3 + getChild(1).width - 2, height);
+		ctx.lineTo(2 * fm.getAscent() / 3 + getChild(1).width - 3, fm.getAscent() / 8);
+		ctx.moveTo(2 * fm.getAscent() / 3 + getChild(1).width - 2, fm.getAscent() / 8);
 		ctx.lineTo(width + 5, fm.getAscent() / 8);
 		ctx.stroke();
 		

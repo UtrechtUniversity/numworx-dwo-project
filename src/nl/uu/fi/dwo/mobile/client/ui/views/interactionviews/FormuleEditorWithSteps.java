@@ -1627,7 +1627,10 @@ public class FormuleEditorWithSteps implements InteractionView
 		score = 0;
 		
 		if((mode == 0 || mode == 1) && editor != null)
+		{	
 			editor.kijkNa(backStep, show, setState);
+			
+		}
 		else if(mode == 2 || mode == 3)
 		{
 			if(editor != null && !editor.toString().equals(""))
@@ -1695,6 +1698,8 @@ public class FormuleEditorWithSteps implements InteractionView
 		{	stapOk = false;
 			if (!pijl)
 				stapOk = true;
+			correct = true;
+			score = editor.getScore();
 		}
 		else if(goedHalfFout == AntwoordVakChecker.DOOR)
 		{	stapOk = true;
@@ -1725,15 +1730,13 @@ public class FormuleEditorWithSteps implements InteractionView
 					addStep("$f" + editor.toString() + "@", setState); // deze regel wordt in 'setState' aangeroepen als je de state terugzet, komt er zomaar een extra regel, why?
 				}
 			}
-			else if (goedHalfFout == AntwoordVakChecker.HALF)
-				setFeedback(feedback);
+			else if (goedHalfFout == AntwoordVakChecker.HALF || goedHalfFout == AntwoordVakChecker.FOUT)
+				setAndAddFeedback(feedback);
 			else if (goedHalfFout == AntwoordVakChecker.GOED)
 			{ 	setFeedback(feedback);
 				lastStep("$f" + editor.toString() + "@");
 			}
-			else if (goedHalfFout == AntwoordVakChecker.FOUT)
-				setAndAddFeedback(feedback);
-			}
+		}
 	}
 	
 	public boolean controleerStap()

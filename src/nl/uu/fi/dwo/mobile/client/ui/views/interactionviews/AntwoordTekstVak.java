@@ -33,6 +33,7 @@ import java.util.Vector;
 
 
 
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
@@ -42,6 +43,7 @@ import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.TekstElement;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -894,11 +896,19 @@ public class AntwoordTekstVak implements InteractionView{
 	{	TekstBuffer b = new TekstBuffer();
 		try{
 			feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);
-			System.out.println("feedback is: " + feedback);
 		}
 		catch(Exception e){}
 		ArrayList<Object> feedbackList = b.convertTekst(feedback, null, false);
 		feedbackTekst.clear();
+		int tekstVakBreedte = 190;
+		for(int i = 0; i < feedbackList.size(); i++)
+		{
+			Object object = feedbackList.get(i);
+			if(object instanceof TekstElement && ((TekstElement) object).getWidth() > tekstVakBreedte)
+				tekstVakBreedte = ((TekstElement) object).getWidth();
+		}
+		feedbackTekst.setSize(tekstVakBreedte + 10, 50);
+		feedbackTekst.setTekstVakBreedte(tekstVakBreedte);
 		feedbackTekst.setObjects(feedbackList);
 		voegFeedbackSluitKnopToe();
 		feedbackTekst.resize();

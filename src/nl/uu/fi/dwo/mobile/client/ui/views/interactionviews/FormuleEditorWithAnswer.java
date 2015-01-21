@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.StateLess;
+import nl.uu.fi.dwo.interaction.client.TekstElement;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
@@ -660,11 +661,19 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		TekstBuffer b = new TekstBuffer();
 		try{
 			feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);
-			System.out.println("feedback is: " + feedback);
 		}
 		catch(Exception e){}
 		ArrayList<Object> feedbackList = b.convertTekst(feedback, null, false);
 		feedbackTekst.clear();
+		int tekstVakBreedte = 190;
+		for(int i = 0; i < feedbackList.size(); i++)
+		{
+			Object object = feedbackList.get(i);
+			if(object instanceof TekstElement && ((TekstElement) object).getWidth() > tekstVakBreedte)
+				tekstVakBreedte = ((TekstElement) object).getWidth();
+		}
+		feedbackTekst.setSize(tekstVakBreedte + 10, 50);
+		feedbackTekst.setTekstVakBreedte(tekstVakBreedte);
 		feedbackTekst.setObjects(feedbackList);
 		voegFeedbackSluitKnopToe();
 		feedbackTekst.resize();
@@ -688,11 +697,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	public void resize()
 	{
-		System.out.println("resize: hoogte = " + hoogte);
 		breedte = this.getMainRegel().getWidth() + extraWidth;
 		hoogte = this.getMainRegel().getHeight() + 6;
-		System.out.println("hoogte is geworden: " + hoogte);
-		
 		sp.setPixelSize((breedte-3) , (hoogte-8) );
 		if(parentRegel != null)
 			parentRegel.resize();

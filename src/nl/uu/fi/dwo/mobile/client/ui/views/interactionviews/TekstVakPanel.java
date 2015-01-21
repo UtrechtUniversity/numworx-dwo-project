@@ -315,16 +315,16 @@ public class TekstVakPanel implements InteractionView
 		if (launchState.containsKey("breedtes") )
 		{
 			breedtes = launchState.getDoubleList("breedtes");
-			if(!breedtes.isEmpty() && breedtes.get(0).intValue() > breedte)
-				breedte = breedtes.get(0).intValue();
+			if(!breedtes.isEmpty() && Math.round(breedtes.get(0).doubleValue()) > breedte)
+				breedte = (int) Math.round(breedtes.get(0).doubleValue());
 		}
 		else
 			breedtes = (Arrays.asList(600.0));
 		if (launchState.containsKey("hoogtes") )
 		{
 			hoogtes = launchState.getDoubleList("hoogtes");
-			if(!hoogtes.isEmpty() && hoogtes.get(0).intValue() > hoogte)
-				hoogte = hoogtes.get(0).intValue();
+			if(!hoogtes.isEmpty() && Math.round(hoogtes.get(0).doubleValue()) > hoogte)
+				hoogte = (int) Math.round(hoogtes.get(0).doubleValue());
 		}
 		else
 			hoogtes = (Arrays.asList(250.0));
@@ -521,8 +521,8 @@ public class TekstVakPanel implements InteractionView
 				if( tekstVakHoogte < 0) tekstVakHoogte = 0;
 				
 				tekstVakken[i][j] = new TekstVak(this, i, j);
-				int th = hoogtes.get(i).intValue();
-				tekstVakken[i][j].setSize(breedtes.get(j).intValue(), th);
+				int th = (int) (Math.round(hoogtes.get(i).doubleValue()));
+				tekstVakken[i][j].setSize((int) (Math.round(breedtes.get(j).doubleValue())), th);
 				tekstVakken[i][j].setVisible(th>0);
 				//tekstVakken[i][j].setPixelSize(breedtes.get(j).intValue(), hoogtes.get(i).intValue());
 				tekstVakken[i][j].setColor(fgColor);
@@ -581,16 +581,16 @@ public class TekstVakPanel implements InteractionView
 		double breedteCum = -0.5 - cellSpaceColumn / 2;
 		
 		for (int i = 0; i < hoogtes.size() - 1; i++)
-		{	hoogteCum += ((Number) hoogtes.get(i)).intValue() + cellSpaceRow;
+		{	hoogteCum += ((Number) hoogtes.get(i)).doubleValue() + cellSpaceRow;
 			randPanel.setWidgetLeftRight(horizontalBorders[i], 0, Style.Unit.PX, 0, Style.Unit.PX);
 			//randPanel.setWidgetTopHeight(horizontalBorders[i], Math.round(hoogteCum), Style.Unit.PX, 1, Style.Unit.PX);
-			randPanel.setWidgetTopHeight(horizontalBorders[i], (int) hoogteCum, Style.Unit.PX, 1, Style.Unit.PX);
+			randPanel.setWidgetTopHeight(horizontalBorders[i], (int) Math.round(hoogteCum), Style.Unit.PX, 1, Style.Unit.PX);
 		}
 		for (int i = 0; i < breedtes.size() - 1; i++)
 		{
-			breedteCum += breedtes.get(i).intValue() + cellSpaceColumn;
+			breedteCum += breedtes.get(i).doubleValue() + cellSpaceColumn;
 			//randPanel.setWidgetLeftWidth(verticalBorders[i], Math.round(breedteCum), Style.Unit.PX, 1, Style.Unit.PX);
-			randPanel.setWidgetLeftWidth(verticalBorders[i], (int) breedteCum, Style.Unit.PX, 1, Style.Unit.PX);
+			randPanel.setWidgetLeftWidth(verticalBorders[i], (int) Math.round(breedteCum), Style.Unit.PX, 1, Style.Unit.PX);
 			randPanel.setWidgetTopBottom(verticalBorders[i], 0, Style.Unit.PX, 0, Style.Unit.PX);
 			
 		}
@@ -660,7 +660,7 @@ public class TekstVakPanel implements InteractionView
 //		int cch = child.getHeight();
 //		int tekstGrootte = child.font_size;
 //
-		System.out.println("doLayout rij " + rij + " en kolom " + kolom);
+		//System.out.println("doLayout rij " + rij + " en kolom " + kolom);
 		TekstVak myVak = tekstVakken[rij][kolom];
 		int n = myVak.getAantalRegels();
 		for(int i = 0; i < n; i++) 
@@ -970,8 +970,8 @@ public class TekstVakPanel implements InteractionView
 		if (map.containsKey("hoogtes") )
 		{
 			hoogtes = map.getDoubleList("hoogtes");
-			if(!hoogtes.isEmpty() && hoogtes.get(0).intValue() > hoogte)
-				hoogte = hoogtes.get(0).intValue();
+			if(!hoogtes.isEmpty() && Math.round(hoogtes.get(0).doubleValue()) > hoogte)
+				hoogte = (int) Math.round(hoogtes.get(0).doubleValue());
 		}
 
 		
@@ -1315,9 +1315,10 @@ public class TekstVakPanel implements InteractionView
 				}
 				
 				
-				hoogtes.set(i, new Double(h1 + h2));
 				if(pasAanH)
+				{	hoogtes.set(i, new Double(h1 + h2));
 					totaleHoogte += h1 + h2 + cellSpaceRow;
+				}
 				ashoogtes[i] = h1;
 			}
 			if(pasAanH)
@@ -1353,7 +1354,7 @@ public class TekstVakPanel implements InteractionView
 			{
 				if(i == 0 || !(inklapbaar && ingeklapt))
 				{
-					tekstVakken[i][j].setSize(breedtes.get(j).intValue(), hoogtes.get(i).intValue());
+					tekstVakken[i][j].setSize((int) Math.round(breedtes.get(j).doubleValue()), (int) Math.round(hoogtes.get(i).doubleValue()));
 					tekstVakken[i][j].setAshoogte(ashoogtes[i]);
 				}
 			}
@@ -1911,7 +1912,7 @@ public class TekstVakPanel implements InteractionView
 					//tekstVakken[i][j].setPixelSize(-1, 0);
 				}
 			}
-			setCurrentSize(breedte,  hoogtes.get(0).intValue() );
+			setCurrentSize(breedte,  (int) Math.round(hoogtes.get(0).doubleValue()) );
 			//this.hoogte = hoogtes.get(0).intValue();
 			if(parent != null) parent.resize();
 			fireEvent(KLAPIN_EVENT);
@@ -1921,9 +1922,9 @@ public class TekstVakPanel implements InteractionView
 			
 			for(int i = 1; i < tekstVakken.length; i++)
 			{
-				int h = hoogtes.get(i).intValue();
+				int h = (int) Math.round(hoogtes.get(i).doubleValue());
 				if(h <= 0 ) {
-					if (uitklapHoogtes != null && uitklapHoogtes.size() > i) h = uitklapHoogtes.get(i).intValue();
+					if (uitklapHoogtes != null && uitklapHoogtes.size() > i) h = (int) Math.round(uitklapHoogtes.get(i).doubleValue());
 					else h = 100;
 					hoogtes.set(i, Double.valueOf(h));
 				}
@@ -2004,7 +2005,7 @@ public class TekstVakPanel implements InteractionView
 		final Image masterView = ingeklapt ? view2 : view1;
 		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
 		goedKrulImage.setVisible(false);
-		masterView.getElement().getStyle().setProperty("verticalAlign", hoogtes.get(0).intValue() + "px");
+		masterView.getElement().getStyle().setProperty("verticalAlign", Math.round(hoogtes.get(0).doubleValue()) + "px");
 		klapUitButton = new ToggleButton(view2, view1,
 				new ClickHandler() {
 			public void onClick(ClickEvent event) {
