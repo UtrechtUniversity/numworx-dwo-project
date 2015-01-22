@@ -583,7 +583,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		{	if(current.getParent() == contentPanel) // FIXME why? 
 				contentPanel.setWidgetTopHeight(current, stepPanelY, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
 			current.setWidgetTopHeight(editor.getAsPanel(), 0, Style.Unit.PX, editor.getHeight(), Style.Unit.PX);
-			current.setWidgetLeftWidth(editor, hasPrefix?prefixViewer.getWidth() + 23:23, Style.Unit.PX, editor.getWidth(), Style.Unit.PX);
+			current.setWidgetLeftWidth(editor.getAsPanel(), hasPrefix?prefixViewer.getWidth() + 23:23, Style.Unit.PX, editor.getWidth(), Style.Unit.PX);
 			if(hasPrefix)
 			{	current.setWidgetTopHeight(prefixViewer.getAsPanel(), editor.getMainRegel().getAsHoogte() - prefixViewer.getMainRegel().getAsHoogte(), Style.Unit.PX, prefixViewer.getHeight(), Style.Unit.PX);
 			}
