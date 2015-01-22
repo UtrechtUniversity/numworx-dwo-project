@@ -20,7 +20,7 @@ public class SCORM_DWOmAccess extends SCORM_guest implements Scorm2004IF {
 	private Map<String,String> map = new HashMap<String, String>();
 	private Map<String,String> dirty = new HashMap<String, String>();
 	
-	private XmlRpcClient client = new XmlRpcClient("http://dwo.fisme.science.uu.nl/DWOmAccess/scormaccess");
+	private XmlRpcClient client = new XmlRpcClient("https://ws.fisme.science.uu.nl/DWOmAccess/scormaccess");
 		
 	public SCORM_DWOmAccess(int userID) {
 		this.userID = userID;

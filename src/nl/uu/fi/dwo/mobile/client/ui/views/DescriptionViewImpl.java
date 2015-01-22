@@ -21,7 +21,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class DescriptionViewImpl extends XMLView implements DescriptionView, EntryPoint {
 
 	private static final String GET_COURSE_DESCRIPTION = 
-			"http://ws-dev.fisme.science.uu.nl:8080/DWOmAccess/getCourseDescription?c=";
+			"https://ws.fisme.science.uu.nl/DWOmAccess/getCourseDescription?c=";
 	
 	
 	private SimplePanel main;

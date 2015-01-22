@@ -17,7 +17,7 @@ public class DWOplayerNoordhoff extends DWOplayerDefaults implements DWOplayerPa
 
 	@Override
 	public String getResource(String resource) {
-		return "http://www.fisme.science.uu.nl/dwo/apps/noordhoff/" + resource;
+		return "https://ws.fisme.science.uu.nl/dwo/apps/noordhoff/" + resource;
 		//return "http://cdplogica.toegang.nu/noordhoff/vo/fi/dwo/2014_v1_0/" + resource;
 	}
 

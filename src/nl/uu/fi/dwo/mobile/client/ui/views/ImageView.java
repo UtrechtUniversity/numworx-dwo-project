@@ -64,7 +64,7 @@ public class ImageView implements IsWidget, TekstElement
 		{
 			String url = (String) map.get(naam + "/u");
 			if (url.startsWith("/"))
-				url = "http://www.fisme.science.uu.nl" + url; // IS DIT ALTIJD GOED?
+				url = "https://ws.fisme.science.uu.nl" + url; // IS DIT ALTIJD GOED?
 			return new Image(url);
 		}
 		else

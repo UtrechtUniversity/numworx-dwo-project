@@ -28,7 +28,7 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 
 	@Override
 	public String getLaunchData() {
-		return "http://dwo.fisme.science.uu.nl/DWOmAccess/getJSONLaunchDataBytes?s=";
+		return "https://ws.fisme.science.uu.nl/DWOmAccess/getJSONLaunchDataBytes?s=";
 	}
 
 	@Override

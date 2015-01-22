@@ -21,7 +21,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public class RPCHandler {
 
 	private static final List<String> SCO_KEYS = Arrays.asList("scoID", "appletID", "sconame", "description", "showscore", "sequencenr", "courseID" );
-	private String server = "http://dwo.fisme.science.uu.nl/DWOmAccess/dbaccess";
+	private String server = "https://ws.fisme.science.uu.nl/DWOmAccess/dbaccess";
 	private static int PROFILE_OFFSET = -1234;
 	
 	public void login(String name, String password, AsyncCallback<? super Map<String,Object>> callback)
