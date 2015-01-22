@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.activities.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginView;
 import nl.uu.fi.dwo.mobile.client.ui.views.LoginViewImpl;
@@ -64,7 +65,7 @@ public class ClientFactoryImpl implements ClientFactory
 			entryView = impl.initialize();
 			impl.zetMaat();
 		}
-		
+		entryView.setApi(DWOplayer.api);
 		return entryView;
 	}
 

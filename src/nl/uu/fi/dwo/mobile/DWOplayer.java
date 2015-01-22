@@ -283,10 +283,10 @@ public class DWOplayer implements EntryPoint
 		count = 1;
 		AsyncCallback<List<Map<String, Object>>> callback = GETCOURSES_CALLBACK;
 		if(profiledata == null)
-			clientfactory.getEntryView().setApi(api = new SCORM_guest());
+			/*clientfactory.getEntryView().setApi()*/api = new SCORM_guest();
 		else
 		{	int userID = ((Integer) profiledata.get("userID")).intValue();
-			clientfactory.getEntryView().setApi(api = new SCORM_DWOmAccess(userID));
+			/*clientfactory.getEntryView().setApi()*/api = new SCORM_DWOmAccess(userID);
 			if(!"".equals(profiledata.get("classID")))
 			{
 				boolean iconizer = Boolean.TRUE.equals(profiledata.get("iconizer"));
