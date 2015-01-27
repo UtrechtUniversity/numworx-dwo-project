@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
@@ -151,9 +152,24 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		
 		setOpdrachten(currentActiviteit); // kan dat nu al? of anders bij setchanged testen op  buttons.get() != null
 		
+		// initializeer bezocht		
+		{	boolean[][] bezocht;
+			bezocht = new boolean[getAantalActiviteiten()][];
+			for(int j = 0; j < getAantalActiviteiten(); j++)
+			{	bezocht[j] = new boolean[getAantalOpdrachten(j)]; // all false
+			}
+			bezocht[0][0] = true;
+			entry.bezocht = bezocht;
+		}
+		
+		memento.getBezocht(entry.bezocht);
+		entry.zelftoetsGeenCorr = memento.getZelftoetsGeenCorr();
+		entry.zelftoetsNagekeken = memento.getZelftoetsNagekeken();
+		
 		final HashMap<String, Object> state = states[currentActiviteit][currentOpdracht];
 
-		
+		entry.scoreNav.setAantalOpdrachten(getAantalOpdrachten(), getMaxScores(), getCurrentOpdracht());
+
 		if (state == null)
 		{
 			logger.info("zetOpdracht no state");
@@ -481,6 +497,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		memento.setScore(score);
 		memento.setScores(scores);
 		source.setTotaalScore((int) score); 
+		memento.setBezocht(entry.bezocht);
+		memento.setZelftoetsNagekeken(entry.zelftoetsNagekeken);
+		memento.setZelftoetsGeenCorr(entry.zelftoetsGeenCorr);
 		memento.setCompletion(suspendDataCompleted(currentActiviteit, currentOpdracht));
 		memento.setOpdrContStates(states);
 	}	

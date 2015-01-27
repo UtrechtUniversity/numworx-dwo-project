@@ -36,6 +36,9 @@ import com.google.gwt.user.client.Window.ClosingHandler;
  */
 public class Memento implements ClosingHandler, CloseHandler<Window>
 {
+	private static final String BEZOCHT = "bezocht";
+	private static final String ZELFTOETS_GEEN_CORR = "zelftoetsGeenCorr";
+	private static final String ZELFTOETS_NAGEKEKEN = "zelftoetsNagekeken";
 	static Memento _instance;
 	static private Logger logger = Logger.getLogger("Memento");
 
@@ -72,7 +75,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 
 	private JSONObject suspendData;
 	private JSONObject onsState;
-	private JSONArray opdrContStates, opdrStrafpunten, opdrGoedFout, opdrScores;
+	private JSONArray opdrContStates, opdrStrafpunten, opdrGoedFout, opdrScores, opdrBezocht;
+	private JSONBoolean zelftoetsNagekeken, zelftoetsGeenCorr;
 
 	private String scoreRaw;
 	private Date startDate = new Date();
@@ -98,6 +102,11 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 			opdrStrafpunten = (JSONArray) onsState.get(STRAFPUNTEN);
 			opdrGoedFout  = (JSONArray) onsState.get(GOED_FOUT);
 			opdrScores    = (JSONArray) onsState.get(SCORES);
+			opdrBezocht   = (JSONArray) onsState.get(BEZOCHT);
+			zelftoetsNagekeken = (JSONBoolean) onsState.get(ZELFTOETS_NAGEKEKEN);
+			zelftoetsGeenCorr = (JSONBoolean) onsState.get(ZELFTOETS_GEEN_CORR);
+			
+			
 		}
 		catch (Exception e)
 		{
@@ -424,7 +433,9 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 			HashMap<String, Object>[] oo = o[i];
 			if (oo == null)
 				o[i] = oo = new HashMap[array.size()];
-			for (int j = 0; j < oo.length; j++)
+			int len = array.size();
+			len = Math.min(len,oo.length);
+			for (int j = 0; j < len; j++)
 			{
 				JSONValue value = array.get(j);
 				logger.fine("getstate " + j + "= " + value);
@@ -636,6 +647,73 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	
 	public String getLanguage() {
 		return api.GetValue(LEARNER_PREFERENCE_LANGUAGE);	
+	}
+
+	public void getBezocht(boolean[][] bezocht) {
+		if(bezocht == null) return;
+		if(opdrBezocht == null) {
+		} else {
+			for (int i = 0; i < bezocht.length; i++) {
+				JSONArray array = getArray(i, opdrBezocht);
+				boolean[] oi = bezocht[i];
+				for (int j = 0; j < oi.length; j++) {
+					oi[j] = getBoolean(array, j);
+				}
+			}
+		}
+	}
+
+	public void setBezocht(boolean[][] bezocht) {
+		if(bezocht == null) return;
+		for (int i = 0; i < bezocht.length; i++) {
+			boolean[] oi = bezocht[i];
+			for (int j = 0; j < oi.length; j++) {
+				boolean punt = oi[j];
+				if(punt != false) {
+					if ( opdrBezocht == null) {
+						opdrBezocht = new JSONArray();
+						onsState.put(BEZOCHT, opdrBezocht);
+					}
+					if( i >= opdrBezocht.size() || isNull(opdrBezocht.get(i)) )
+						opdrBezocht.set(i, new JSONArray());
+					JSONArray array = opdrBezocht.get(i).isArray();
+					array.set(j, JSONBoolean.getInstance(punt));
+				} else {
+					if(opdrBezocht == null 
+							|| opdrBezocht.size() <= i 
+							|| isNull(opdrBezocht.get(i)))
+						continue;
+					JSONArray array = opdrBezocht.get(i).isArray();
+					if(j >= array.size()) continue;
+					array.set(j, JSONBoolean.getInstance(false));
+				}
+			}
+			
+		}
+	}
+
+	public void setZelftoetsNagekeken(boolean zelftoetsNagekeken) {
+		this.zelftoetsNagekeken = JSONBoolean.getInstance(zelftoetsNagekeken);
+		this.onsState.put(ZELFTOETS_NAGEKEKEN, this.zelftoetsNagekeken);
+		
+	}
+
+	public void setZelftoetsGeenCorr(boolean zelftoetsGeenCorr) {
+		this.zelftoetsGeenCorr = JSONBoolean.getInstance(zelftoetsGeenCorr);
+		this.onsState.put(ZELFTOETS_GEEN_CORR, this.zelftoetsGeenCorr);
+		
+	}
+
+	public boolean getZelftoetsGeenCorr() {
+		if (zelftoetsGeenCorr == null)
+			return false;
+		return zelftoetsGeenCorr.booleanValue();
+	}
+
+	public boolean getZelftoetsNagekeken() {
+		if (zelftoetsNagekeken == null)
+			return false;
+		return zelftoetsNagekeken.booleanValue();
 	}
 
 }

@@ -71,11 +71,11 @@ public abstract class XMLView {
 	protected boolean condNavPerc = false;
 	protected boolean condNavVoorwaarden = false;
 	protected int[][][] navVoorwaarden = null;
-	protected boolean[][] bezocht = null;
+	public boolean[][] bezocht = null;
 	protected int condPerc = 100;
 	
 	protected boolean allesCorrectNodig = false;
-	protected boolean zelftoetsGeenCorr = false;
+	public boolean zelftoetsGeenCorr = false;
 	
 	private TekstVakPanel hoofdPanel;
 

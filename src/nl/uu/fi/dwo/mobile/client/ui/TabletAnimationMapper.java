@@ -22,7 +22,9 @@ public class TabletAnimationMapper implements AnimationMapper
 	@Override
 	public Animation getAnimation(Place oldPlace, Place newPlace)
 	{
-		if (oldPlace instanceof ViewModulePlace && newPlace instanceof SelectModulePlace)
+		return null; // geen animaties, deze is gebroken. AnimationEnd event ontbreekt ineens. why?
+		
+/*		if (oldPlace instanceof ViewModulePlace && newPlace instanceof SelectModulePlace)
 			return Animation.SLIDE_REVERSE;
 		if (oldPlace instanceof ViewModulePlace && newPlace instanceof TreeModulePlace)
 			return Animation.SLIDE_REVERSE;
@@ -46,6 +48,6 @@ public class TabletAnimationMapper implements AnimationMapper
 			return null;
 		
 		return Animation.SLIDE;
-	}
+*/	}
 
 }

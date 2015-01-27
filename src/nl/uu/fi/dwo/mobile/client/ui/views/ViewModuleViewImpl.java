@@ -104,7 +104,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	
 	//private boolean zelftoetsGeenCorr = false;
 	
-	private boolean zelftoetsNagekeken = false;
+	public boolean zelftoetsNagekeken = false;
 	
 	
 	private Panel kbp = null;
@@ -218,17 +218,16 @@ try {
 		contentPanel.getElement().getStyle().setPadding(0, Unit.PX); // XXX was 15 
 		// GEEN randje aan de linkerkant, want dan klopt de maat (100%) niet meer bij noordhoff
 
-		on =  new OpdrNav(launchData, this, new Memento(api));
-		FlowPanel onp = (FlowPanel) on.getAsPanel();
-		if(bolletjesZichtbaar)
-			kb.addNavPanel(onp);
-// pas vanaf hier toevoegen mogelijk.
 		scoreNav.setOpnieuw(opnieuw || opnieuwMogelijk);
 		if(wrap != null && wrap.containsKey("itemOpnieuw"))
 		{
 			scoreNav.setItemOpnieuw(wrap.getBoolean("itemOpnieuw"));
 		}
-		scoreNav.setAantalOpdrachten(on.getAantalOpdrachten(), on.getMaxScores(), on.getCurrentOpdracht());
+		on =  new OpdrNav(launchData, this, new Memento(api));
+		FlowPanel onp = (FlowPanel) on.getAsPanel();
+		if(bolletjesZichtbaar)
+			kb.addNavPanel(onp);
+// pas vanaf hier toevoegen mogelijk.
 		scoreNav.setBeantwoord(on.getAantalBeantwoord());
 		scoreNav.setItemScores(on.getItemScores());
 		scoreNav.setTotaalScore((int)on.getScore());
@@ -243,14 +242,7 @@ try {
 		if (this.loadingHandler != null){
 			this.loadingHandler.viewModuleViewSetupDone();;
 		}
-		
-//		bezocht = new boolean[on.getAantalActiviteiten()][on.getAantalOpdrachten()];
-//		for(int j = 0; j < on.getAantalActiviteiten(); j++)
-//		{	for(int i = 0; i < bezocht[j].length; i++)
-//				bezocht[j][i] = false;
-//		}	
-//		bezocht[0][0] = true;
-		
+				
 		//benodigde knoppen toevoegen.
 		int mode = on.getMode();
 		if(mode == OpdrNav.ZELFTOETS)
@@ -267,9 +259,6 @@ try {
 				}
 				
 			});
-			
-			
-			
 		}
 		scoreNav.setNextPrevHandler(this);
 		//uitzoeken of de volgende en vorige knop erin moeten.
@@ -385,13 +374,6 @@ try {
 
 	public void zetOpdracht(HashMap<String, Object> opdracht)
 	{
-// initializeer bezocht		
-		{	bezocht = new boolean[on.getAantalActiviteiten()][];
-			for(int j = 0; j < on.getAantalActiviteiten(); j++)
-			{	bezocht[j] = new boolean[on.getAantalOpdrachten(j)]; // all false
-			}
-			bezocht[0][0] = true;
-		}
 		
 		
 		String randVarString = "";
@@ -745,7 +727,7 @@ try {
 		this.on = (OpdrNav) comRoot;
 	}
 
-	public HashMap<String, Object> getState()
+	public HashMap<String, Object> getState() // equivalent met opdrContainer.getstate()
 	{
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		int aantalInteractionViews = 5;
@@ -763,15 +745,9 @@ try {
 			}
 		}
 		
-		h.put("activiteitNr", new Integer(on.getCurrentActiviteit()));
-		h.put("opdrachtNr", new Integer(on.getCurrentOpdracht()));
-		
 		h.put("interactiePanelStates", states);
 		h.put(RANDOM_VAR_NAMEN, randomVarNamen);
 		h.put(RANDOM_VAR_WAARDEN, randomVarWaarden);
-		h.put("zelftoetsNagekeken", new Boolean(zelftoetsNagekeken));
-		if (bezocht != null)
-			h.put("bezocht", bezocht);
 
 		
 		return h;
@@ -796,48 +772,6 @@ try {
 			}
 		}
 		
-		ObjectMap map = JSONUtilities.wrapMap(h);
-		int activiteitNr = 0;
-		int opdrachtNr = 0;
-		if (map.containsKey("activiteitNr"))
-			activiteitNr = map.getInt("activiteitNr");
-		if (map.containsKey("opdrachtNr"))
-			opdrachtNr = map.getInt("opdrachtNr");
-
-		
-		if (map.containsKey("bezocht"))
-			try{	
-				ObjectList bezochtList = ( map.getObjectList("bezocht") );
-				bezocht = new boolean[bezochtList.size()][];
-				for(int i = 0; i < bezochtList.size(); i++)
-				{	bezocht[i] = bezochtList.getBooleanArray(i);
-				}
-				
-				
-			}
-			catch(Exception e)
-			{
-				bezocht = new boolean[on.getAantalActiviteiten()][];
-				bezocht[0] = map.getBooleanArray("bezocht");
-				for(int j = 1; j < on.getAantalActiviteiten(); j++)
-				{	bezocht[j] = new boolean[on.getAantalOpdrachten(j)];
-				}
-			}
-		else {
-			if(bezocht == null)
-			{	bezocht = new boolean[on.getAantalActiviteiten()][];
-				for(int j = 0; j < on.getAantalActiviteiten(); j++)
-				{	bezocht[j] = new boolean[on.getAantalOpdrachten(j)];
-				}
-			}
-			bezocht[activiteitNr][opdrachtNr] = true;
-		}
-		
-		
-		if (h.containsKey("zelftoetsNagekeken"))
-			zelftoetsNagekeken = ((Boolean) h.get("zelftoetsNagekeken")).booleanValue();
-//		if (h != null && h.containsKey("zelftoetsGeenCorr"))
-//			zelftoetsGeenCorr = ((Boolean) h.get("zelftoetsGeenCorr")).booleanValue();
 		stelNavigatieIn();
 
 	}
