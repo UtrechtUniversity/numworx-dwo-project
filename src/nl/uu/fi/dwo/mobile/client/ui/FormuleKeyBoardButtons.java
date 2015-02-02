@@ -157,7 +157,10 @@ public abstract class FormuleKeyBoardButtons
 			}
 			if( FormuleKeyboard.VVV.equals(code))
 			{
-				kb.tp.hideKeyboard();
+				if( FormuleKeyboard.hasKeyboard )
+					kb.tp.hideKeyboard();
+				else
+					kb.blur();
 			}
 			
 			else if (code.length() == 1)
