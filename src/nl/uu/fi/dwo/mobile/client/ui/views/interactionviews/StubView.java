@@ -26,6 +26,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -65,7 +66,8 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	}
 
 	static String getLocale() {
-		String locale = "nl"; // FIXME get Locale from Window?
+		String locale;
+		locale = LocaleInfo.getCurrentLocale().getLocaleName();
 		String query = Window.Location.getQueryString();
 		int k = query.indexOf("locale=");
 		if(k > 0)

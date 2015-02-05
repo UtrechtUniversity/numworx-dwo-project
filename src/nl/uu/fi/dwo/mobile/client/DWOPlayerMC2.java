@@ -10,7 +10,7 @@ public class DWOPlayerMC2 extends DWOplayerDefaults implements DWOplayerParamete
 	public DWOPlayerMC2() {
 		String host = Window.Location.getHost();
 		if(!GWT.isProdMode())
-			host = "9-dot-mc2dme.appspot.com";
+			host = "mc2dme.appspot.com";
 
 		launchData = "http://"
 				+ host

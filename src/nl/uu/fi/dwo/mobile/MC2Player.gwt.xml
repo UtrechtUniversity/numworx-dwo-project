@@ -4,6 +4,7 @@
 	<inherits name="com.google.gwt.user.User" />
 	<inherits name="com.google.gwt.i18n.I18N"/>
 	<inherits name="nl.uu.fi.dwo.mobile.DWOplayer-module" />
+	<add-linker name='xsiframe' />
 	
     <inherits name="fi.graphtoolgwt.GraphToolGWT-DWO" />
 
@@ -22,5 +23,7 @@
 
 <!-- English language, independent of country -->
   	<extend-property name="locale" values="en"/>
+  	<extend-property name="locale" values="nl"/>  	
+  	<set-property-fallback name="locale" value="en"/> <!-- English is the default -->
 	 
 </module>
