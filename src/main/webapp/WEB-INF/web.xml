@@ -21,22 +21,6 @@
     </resource-ref>
 
     <!-- Servlets -->
-
-    <servlet>
-        <description><![CDATA[Servlet voor database access van DWO via XML-RPC]]></description>
-        <servlet-name>DbAccess</servlet-name>
-        <servlet-class>fi.dwo.server.persistence.DbAccessServlet</servlet-class>
-
-        <init-param>
-            <param-name>local</param-name>
-            <param-value>true</param-value>
-        </init-param>
-        <init-param>
-            <param-name>jar.folder</param-name>
-            <param-value>webapps/dwo/jars/</param-value>
-        </init-param>
-
-    </servlet>
    
     <servlet>
         <description><![CDATA[Servlet voor het genereren van de dwo.html pagina]]></description>
@@ -56,16 +40,6 @@
             <param-value>/dwo/dbaccess</param-value>
         </init-param>
 
-    </servlet>
-   
-    <servlet>
-        <description>DME Colorado</description>
-        <servlet-name>Colorado</servlet-name>
-        <servlet-class>fi.dwo.server.persistence.DbAccessColoradoServlet</servlet-class>
-        <init-param>
-            <param-name>local</param-name>
-            <param-value>false</param-value>
-        </init-param>
     </servlet>
    
     <servlet>
@@ -95,18 +69,12 @@
         <url-pattern>/dbaccess</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>Colorado</servlet-name>
-        <url-pattern>/colorado</url-pattern>
+        <servlet-name>dsaccess</servlet-name>
+        <url-pattern>/dsaccess</url-pattern>
     </servlet-mapping>
-   
     <servlet-mapping>
         <servlet-name>DwoWebPage</servlet-name>
         <url-pattern>/dwowebpage</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>dsaccess</servlet-name>
-        <url-pattern>/dsaccess</url-pattern>
     </servlet-mapping>
 
 </web-app>
