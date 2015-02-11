@@ -2,6 +2,7 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\server\\persistence\\DbAccess.java
 package fi.dwo.server.persistence;
 
+import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,15 +20,14 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.beans.jdbc.DbConnect;
 import fi.beans.scorm2xml.Scorm2Xml;
+import fi.dwo.commons.entities.SchoolGroupRoles;
 //import fi.dwo.client.domain.SchoolGroup;
-import fi.dwo.client.persistence.DbAccessIF;
+import fi.dwo.commons.persistence.DbAccessIF;
 //import fi.dwo.client.persistence.PersistenceFacade;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -45,6 +45,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 //		if(t != null) t.printStackTrace();
 		logger.log(level, session() + msg, t);
 	}
+        
+        private static final int PROFILEOFFSET = -1234;
 	
     private final static String QRY_DEFAULT_SELECT_ID = "SELECT * "
             + "FROM {0} " + "WHERE `{1}` = ?";
@@ -1052,8 +1054,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             throws DwoXmlRpcException, SQLException {
         Hashtable result = getRecord("tblSchool", "schoolID", schoolID);
         updateSchoolNameLogin(schoolID, schoolName, schoolLogin, result);
-        updateSchoolGroupPasswd(schoolID, SchoolGroup.STUDENT, studentPassw);
-        updateSchoolGroupPasswd(schoolID, SchoolGroup.TEACHER, teacherPassw);
+        updateSchoolGroupPasswd(schoolID, SchoolGroupRoles.STUDENT, studentPassw);
+        updateSchoolGroupPasswd(schoolID, SchoolGroupRoles.TEACHER, teacherPassw);
         result = getRecord("tblSchool", "schoolID", schoolID);
         return result;
     }
@@ -1457,9 +1459,9 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         PreparedStatement ps;
         if (userID < 0) {
             /* User is a guest */
-            if (userID < PersistenceFacade.PROFILEOFFSET) {
+            if (userID < PROFILEOFFSET) {
                 ps = getStatement(QRY_SELECT_COURSES_PROFILE_GUEST);
-                ps.setInt(1, PersistenceFacade.PROFILEOFFSET - userID);
+                ps.setInt(1, PROFILEOFFSET - userID);
             } else {
                 ps = getStatement(QRY_SELECT_COURSES_GUEST);
             }

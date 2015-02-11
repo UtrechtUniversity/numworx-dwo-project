@@ -1,5 +1,6 @@
 package fi.dwo.server.persistence;
 
+import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -11,8 +12,8 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.beans.jdbc.DbConnect;
 import fi.beans.jdbc.DbConnectIF;
-import fi.dwo.client.persistence.DbAccessIF;
-import fi.dwo.client.system.LoginException;
+import fi.dwo.commons.persistence.DbAccessIF;
+import fi.dwo.commons.exceptions.LoginException;
 
 public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
 

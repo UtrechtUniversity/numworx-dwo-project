@@ -1,5 +1,6 @@
 package fi.dwo.server.persistence;
 
+import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -27,123 +28,142 @@ import com.jamonapi.proxy.MonProxyFactory;
 
 import fi.beans.jdbc.DbConnectIF;
 import fi.beans.xmlrpc.Servlet;
-import fi.dwo.VERSION;
-import fi.dwo.client.persistence.DbAccessIF;
+import fi.dwo.commons.persistence.DbAccessIF;
+import java.io.InputStream;
+import java.util.jar.Manifest;
+import javax.servlet.ServletContext;
 
 public class DataSourceAccessServlet extends Servlet {
-	private DataSource ds;
-	private boolean monitor;
-	private boolean threading;
-	static private ThreadLocal<HttpSession> session = new ThreadLocal<HttpSession>();
-	static private Logger logger = Logger.getLogger(DataSourceAccessServlet.class.getName());
-	
-	static class MonitorDataSourceAccess extends DataSourceAccess implements fi.beans.jdbc.DbConnectIF, DbAccessIF {
-		
-		static private int count;
-		
-		public MonitorDataSourceAccess(DataSource ds) {
-			super(ds);
-		}
 
-		@Override
-		protected String session() {
-			return session.get().getAttribute("login") 
-			+ "," + session.get().getAttribute("ip")
-			+ ":";
-		}
+    private DataSource ds;
+    private boolean monitor;
+    private boolean threading;
+    static private ThreadLocal<HttpSession> session = new ThreadLocal<HttpSession>();
+    static private Logger log = Logger.getLogger(DataSourceAccessServlet.class.getName());
 
-		@Override
-		public Hashtable login(String username, String password)
-				throws SQLException, DwoXmlRpcException {
-			session.get().setAttribute("login", username);
-			return super.login(username, password);
-		}
+    static class MonitorDataSourceAccess extends DataSourceAccess implements fi.beans.jdbc.DbConnectIF, DbAccessIF {
 
-		private Connection mine, his;
-		public void close() {
-			if(mine != null)
-			{   --count;
-				if(count > 10) logger.info(" dwo access close " + count);
-				try {
-					mine.close();
-				} catch (SQLException e) {
-					logger.log(Level.SEVERE, " close " , e);
-				}
-			}
-			mine = null; his = null;
-			super.close();
-		}
+        static private int count;
 
-		public Connection getConnection() throws SQLException {
-			Connection c = super.getConnection();
-			if(c != his || mine == null) 
-			{	
-				his = c;
-				mine = MonProxyFactory.monitor(c);
-				++count;
-				if(count > 10) logger.info(" dwo access connect " + count);
-			} 
-			return mine;
-		}
-	};
+        public MonitorDataSourceAccess(DataSource ds) {
+            super(ds);
+        }
 
-	static class DataSourceProxy extends DbAccessProxy {
+        @Override
+        protected String session() {
+            return session.get().getAttribute("login")
+                    + "," + session.get().getAttribute("ip")
+                    + ":";
+        }
 
-		DataSource ds;
-		
-		protected DbAccessIF createDelegate() {
-			return new DataSourceAccess(ds);
-		}
+        @Override
+        public Hashtable login(String username, String password)
+                throws SQLException, DwoXmlRpcException {
+            session.get().setAttribute("login", username);
+            return super.login(username, password);
+        }
 
-		DataSourceProxy(DataSource ds) {
-			this.ds = ds;
-		}
+        private Connection mine, his;
 
-		
-	}
+        public void close() {
+            if (mine != null) {
+                --count;
+                if (count > 10) {
+                    log.info(" dwo access close " + count);
+                }
+                try {
+                    mine.close();
+                } catch (SQLException e) {
+                    log.log(Level.SEVERE, " close ", e);
+                }
+            }
+            mine = null;
+            his = null;
+            super.close();
+        }
 
-	static class MonitoringProxy extends DbAccessProxy {
+        public Connection getConnection() throws SQLException {
+            Connection c = super.getConnection();
+            if (c != his || mine == null) {
+                his = c;
+                mine = MonProxyFactory.monitor(c);
+                ++count;
+                if (count > 10) {
+                    log.info(" dwo access connect " + count);
+                }
+            }
+            return mine;
+        }
+    };
 
-		DataSource ds;
-		protected DbAccessIF createDelegate() {
-			//return (DbAccessIF) MonProxyFactory.monitor(new MonitorDataSourceAccess(ds));
-			return new MonitorDataSourceAccess(ds);
-		}
+    static class DataSourceProxy extends DbAccessProxy {
 
-		MonitoringProxy(DataSource ds) {
-			this.ds = ds;
-		}
-		
-		
-	}
+        DataSource ds;
 
-	
-	/* (non-Javadoc)
-	 * @see fi.dwo.server.persistence.DbAccessServlet#init(javax.servlet.ServletConfig)
-	 */
-	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
+        protected DbAccessIF createDelegate() {
+            return new DataSourceAccess(ds);
+        }
 
-        logger.info("Initializatie r" + VERSION.REVISION);
+        DataSourceProxy(DataSource ds) {
+            this.ds = ds;
+        }
+
+    }
+
+    static class MonitoringProxy extends DbAccessProxy {
+
+        DataSource ds;
+
+        protected DbAccessIF createDelegate() {
+            //return (DbAccessIF) MonProxyFactory.monitor(new MonitorDataSourceAccess(ds));
+            return new MonitorDataSourceAccess(ds);
+        }
+
+        MonitoringProxy(DataSource ds) {
+            this.ds = ds;
+        }
+
+    }
+
+    /* (non-Javadoc)
+     * @see fi.dwo.server.persistence.DbAccessServlet#init(javax.servlet.ServletConfig)
+     */
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+
+        ServletContext application = getServletConfig().getServletContext();
+        InputStream inputStream = application.getResourceAsStream("/META-INF/MANIFEST.MF");
+        try {
+            Manifest manifest = new Manifest(inputStream);
+            String softwareVersion = manifest.getMainAttributes().getValue("Implementation-Version");
+            String svnRevision = manifest.getMainAttributes().getValue("Implementation-Build");
+            log.log(Level.INFO, "Software version {0},  subversion revision {1}", new Object[]{softwareVersion, svnRevision});
+        } catch (IOException ex) {
+            Logger.getLogger(DataSourceAccessServlet.class.getName()).log(Level.SEVERE, "Can't open /META-INF/MANIFEST.MF", ex);
+        }
+
         int maxthreads = 200;
         String param = getInitParameter("xmlrpc.maxthreads");
-        if(param != null )
-        	maxthreads = Integer.parseInt(param);
+        if (param != null) {
+            maxthreads = Integer.parseInt(param);
+        }
         XmlRpc.setMaxThreads(maxthreads);
-		
-		String source = getInitParameter("datasource");
-		monitor = ! "false".equals (getInitParameter("monitor"));
-		threading = "true".equals(getInitParameter("threading"));
-		
-		logger.info( "monitoring = " + monitor + ", threading = " + threading);
-		try {
+
+        String source = getInitParameter("datasource");
+        monitor = !"false".equals(getInitParameter("monitor"));
+        threading = "true".equals(getInitParameter("threading"));
+
+        log.info("monitoring = " + monitor + ", threading = " + threading);
+        try {
 // find datasource from tomcat
-			Context initContext = new InitialContext();
-			Context envContext  = (Context)initContext.lookup("java:/comp/env");
-			ds = (DataSource)envContext.lookup(source);
-			if(ds == null) {
-				throw new ServletException("Resource " + source + " is null");
-			} else log("found datasource " + ds);
+            Context initContext = new InitialContext();
+            Context envContext = (Context) initContext.lookup("java:/comp/env");
+            ds = (DataSource) envContext.lookup(source);
+            if (ds == null) {
+                throw new ServletException("Resource " + source + " is null");
+            } else {
+                log("found datasource " + ds);
+            }
 
 //			try {
 //				new com.mysql.jdbc.Driver();
@@ -152,98 +172,99 @@ public class DataSourceAccessServlet extends Servlet {
 //				e.printStackTrace();
 //			}
 // CHECK version here:
-			if (new DataSourceAccess(ds).checkVersion())
-				throw new ServletException("Datasource invalid version");
-			
-			DbAccessIF dbaccess;
-			if (threading)
-			{
-				if(monitor)
-					dbaccess = new MonitoringProxy(ds);
-				else
-					dbaccess = new DataSourceProxy(ds);
-				unLock();
-			}
-			else 
-			{
-				if(monitor)
-					dbaccess = (DbAccessIF) MonProxyFactory.monitor(new MonitorDataSourceAccess(ds));
-				else
-					dbaccess = new DataSourceAccess(ds);
-			}
-			
-			setHandler(dbaccess);
+            if (new DataSourceAccess(ds).checkVersion()) {
+                throw new ServletException("Datasource invalid version");
+            }
 
-		} catch (NamingException e) {
-			throw new ServletException("Datasource in error",e);
-		}
+            DbAccessIF dbaccess;
+            if (threading) {
+                if (monitor) {
+                    dbaccess = new MonitoringProxy(ds);
+                } else {
+                    dbaccess = new DataSourceProxy(ds);
+                }
+                unLock();
+            } else {
+                if (monitor) {
+                    dbaccess = (DbAccessIF) MonProxyFactory.monitor(new MonitorDataSourceAccess(ds));
+                } else {
+                    dbaccess = new DataSourceAccess(ds);
+                }
+            }
 
-	}
+            setHandler(dbaccess);
 
-	private void printRS(ResultSet rs, PrintWriter out) throws SQLException {
-		ResultSetMetaData rsMeta = rs.getMetaData();
-		String colName;
-        while(rs.next()) {
+        } catch (NamingException e) {
+            throw new ServletException("Datasource in error", e);
+        }
+
+    }
+
+    private void printRS(ResultSet rs, PrintWriter out) throws SQLException {
+        ResultSetMetaData rsMeta = rs.getMetaData();
+        String colName;
+        while (rs.next()) {
             for (int i = 1; i <= rsMeta.getColumnCount(); i++) {
                 colName = rsMeta.getColumnName(i);
-                out.print (" " + colName  + ": "+   rs.getObject(i));
+                out.print(" " + colName + ": " + rs.getObject(i));
             }
             out.println();
         }
 
-	}
-	
-	public void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		resp.setContentType("text/plain");
-		PrintWriter out = resp.getWriter();
-		out.println(this);
-		out.println(getHandler());
-		out.println(ds);
-		out.println("monitor = " + monitor);
-		out.println("threading = " + threading);
-		Connection c = null;
-		try {
-			c = ds.getConnection();
-			Statement s = c.createStatement();
-			ResultSet rs = s.executeQuery("SHOW TABLES");
-			printRS(rs, out);
-			rs.close();s.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace(out);
-		} finally { 
-			try {
-				c.close();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace(out);
-			}
-		}
-		
-	}
+    }
 
-	protected void service(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		try { 
-			HttpSession s = req.getSession(true);
-			session.set(s);
-			s.setAttribute("ip", req.getRemoteAddr());
-			super.service(req, resp);
-		} catch (RuntimeException re) {
-			logger.log(Level.SEVERE, "service", re);
-			throw re;
-		} finally { 
-			try {
-				((DbConnectIF) getHandler()).close();
-			} catch (Exception e) {
-				log("finally close failed", e);
-			}
-		}
-	}
+    public void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        resp.setContentType("text/plain");
+        PrintWriter out = resp.getWriter();
+        out.println(this);
+        out.println(getHandler());
+        out.println(ds);
+        out.println("monitor = " + monitor);
+        out.println("threading = " + threading);
+        Connection c = null;
+        try {
+            c = ds.getConnection();
+            Statement s = c.createStatement();
+            ResultSet rs = s.executeQuery("SHOW TABLES");
+            printRS(rs, out);
+            rs.close();
+            s.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace(out);
+        } finally {
+            try {
+                c.close();
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace(out);
+            }
+        }
+
+    }
+
+    protected void service(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        try {
+            HttpSession s = req.getSession(true);
+            session.set(s);
+            s.setAttribute("ip", req.getRemoteAddr());
+            super.service(req, resp);
+        } catch (RuntimeException re) {
+            log.log(Level.SEVERE, "service", re);
+            throw re;
+        } finally {
+            try {
+                ((DbConnectIF) getHandler()).close();
+            } catch (Exception e) {
+                log("finally close failed", e);
+            }
+        }
+    }
 
     public void destroy() {
-        logger.fine("En weg ben ik...");
+        log.fine("En weg ben ik...");
         ((DbConnectIF) getHandler()).close();
         super.destroy();
     }

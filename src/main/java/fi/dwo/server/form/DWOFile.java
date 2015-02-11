@@ -17,9 +17,9 @@ import javax.xml.transform.TransformerException;
 import org.apache.xmlrpc.applet.XmlRpcException;
 import org.xml.sax.SAXException;
 
-import fi.dwo.client.persistence.DbAccessIF;
-import fi.dwo.server.persistence.DbAccessLocal;
-import fi.dwo.server.persistence.DwoXmlRpcException;
+import fi.dwo.commons.persistence.DbAccessIF;
+//import fi.dwo.server.persistence.DbAccessLocal;
+import fi.dwo.commons.exceptions.DwoXmlRpcException;
 
 public class DWOFile {
 
@@ -93,22 +93,22 @@ public class DWOFile {
 		return m.inputIMSManifest(input);
 	}
 	
-	
-	public static void main(String[] args) throws Exception
-	{
-		DWOFile f = new DWOFile(new DbAccessLocal());
-		File file = new File(System.getProperty("user.home"));
-		file = new File(file, ManifestFile.FILENAME);
-		OutputStream output = new FileOutputStream(file);
-		f.createIMSManifest(226, -1, output);
-		output.close();
-		InputStream input = new FileInputStream(file);
-		Hashtable r = f.inputIMSManifest(input);
-		System.out.println(r);
-		
-		//int c = f.addCourse(r, 3, 0);
-		//System.out.println("courseID="+c);
-	}
+//	
+//	public static void main(String[] args) throws Exception
+//	{
+//		DWOFile f = new DWOFile(new DbAccessLocal());
+//		File file = new File(System.getProperty("user.home"));
+//		file = new File(file, ManifestFile.FILENAME);
+//		OutputStream output = new FileOutputStream(file);
+//		f.createIMSManifest(226, -1, output);
+//		output.close();
+//		InputStream input = new FileInputStream(file);
+//		Hashtable r = f.inputIMSManifest(input);
+//		System.out.println(r);
+//		
+//		//int c = f.addCourse(r, 3, 0);
+//		//System.out.println("courseID="+c);
+//	}
 
 	public void appendCourse(int courseID, int offset, Hashtable course) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException
 	{

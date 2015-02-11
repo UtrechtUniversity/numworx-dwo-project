@@ -32,10 +32,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import fi.dwo.client.persistence.DbAccessIF;
+import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.server.persistence.DbAccess;
-import fi.dwo.server.persistence.DbAccessLocal;
-import fi.dwo.server.persistence.DwoXmlRpcException;
+//import fi.dwo.server.persistence.DbAccessLocal;
+import fi.dwo.commons.exceptions.DwoXmlRpcException;
 
 /**
  * Save en restore van courses en single sco's.
