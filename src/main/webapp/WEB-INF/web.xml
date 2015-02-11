@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app  xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4">
+    <display-name>DWOServer</display-name>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+    <!-- Allow the web application to be distributed across a Tomcat cluster -->
+    <distributable/>
+
+    <!-- Tomcat resource connection for the DWO database server -->
+    <resource-ref>
+        <description>DWO DB Connection</description>
+        <res-ref-name>jdbc/dwodb2</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
+
+    <!-- Servlets -->
+
+    <servlet>
+        <description><![CDATA[Servlet voor database access van DWO via XML-RPC]]></description>
+        <servlet-name>DbAccess</servlet-name>
+        <servlet-class>fi.dwo.server.persistence.DbAccessServlet</servlet-class>
+
+        <init-param>
+            <param-name>local</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>jar.folder</param-name>
+            <param-value>webapps/dwo/jars/</param-value>
+        </init-param>
+
+    </servlet>
+   
+    <servlet>
+        <description><![CDATA[Servlet voor het genereren van de dwo.html pagina]]></description>
+        <servlet-name>DwoWebPage</servlet-name>
+        <servlet-class>fi.dwo.server.persistence.DwoWebPageServlet</servlet-class>
+
+        <init-param>
+            <param-name>html_source</param-name>
+            <param-value>file:webapps/dwo/dwo.html</param-value>
+        </init-param>
+        <init-param>
+            <param-name>local</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>servlet</param-name>
+            <param-value>/dwo/dbaccess</param-value>
+        </init-param>
+
+    </servlet>
+   
+    <servlet>
+        <description>DME Colorado</description>
+        <servlet-name>Colorado</servlet-name>
+        <servlet-class>fi.dwo.server.persistence.DbAccessColoradoServlet</servlet-class>
+        <init-param>
+            <param-name>local</param-name>
+            <param-value>false</param-value>
+        </init-param>
+    </servlet>
+   
+    <servlet>
+        <description>Datasource servlet</description>
+        <servlet-name>dsaccess</servlet-name>
+        <servlet-class>fi.dwo.server.persistence.DataSourceAccessServlet</servlet-class>
+        <init-param>
+            <param-name>datasource</param-name>
+            <param-value>jdbc/dwodb</param-value>   		
+        </init-param>
+        <init-param>
+            <param-name>monitor</param-name>
+            <param-value>true</param-value>	
+        </init-param>
+        <init-param>
+            <param-name>threading</param-name>
+            <param-value>true</param-value>	
+        </init-param>
+    </servlet>
+   
+    <!--
+    servlet mappings 
+    -->
+
+    <servlet-mapping>
+        <servlet-name>dsaccess</servlet-name>
+        <url-pattern>/dbaccess</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Colorado</servlet-name>
+        <url-pattern>/colorado</url-pattern>
+    </servlet-mapping>
+   
+    <servlet-mapping>
+        <servlet-name>DwoWebPage</servlet-name>
+        <url-pattern>/dwowebpage</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>dsaccess</servlet-name>
+        <url-pattern>/dsaccess</url-pattern>
+    </servlet-mapping>
+
+</web-app>
+
