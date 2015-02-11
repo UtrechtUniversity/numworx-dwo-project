@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Adjust artifact, name and description for new projects -->
+    <groupId>fi.dwo</groupId>
+    <artifactId>DWO-commons-lib</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>DWO-commons-lib</name>
+    <description>This is a description</description>
+    
+    <url>http://www.dwo.nl</url>
+    <!-- Update year to current when starting a new project -->
+    <inceptionYear>2015</inceptionYear> 
+    <organization>
+        <name>Freudenthal Institute</name>
+        <url>http://www.uu.nl/onderzoek/freudenthal-instituut</url>
+    </organization>
+    
+    <licenses>
+        <license>
+            <name>The GNU Lesser General Public Licence, Version 3.0</name>
+            <url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>Gert van der Plas</id>
+            <name>plas0006</name>
+            <email>g.a.j.vanderplas@uu.nl</email>
+            <organization>Freudenthal Institute</organization>
+            <organizationUrl>http://www.uu.nl/onderzoek/freudenthal-instituut</organizationUrl>
+            <roles>
+                <role>Administrator</role>
+                <role>Java Developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <plugins>
+            <!-- Order is important ! Execution follows the declaration order -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>        
+        </plugins>
+    </build>
+
+<!-- The proguard-maven-plugin is maven2 plugin to execute ProGuard
+                http://wvengen.github.io/proguard-maven-plugin/
+
+The Assembly Plugin for Maven is primarily intended to allow users to 
+aggregate the project output along with its dependencies, modules, 
+site documentation, and other files into a single distributable archive.
+
+An example is commented below.
+
+    <profiles>
+        <profile>
+            <id>sonatype-oss-release</id>
+            <build>
+
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.wvengen</groupId>
+                        <artifactId>proguard-maven-plugin</artifactId>
+                        <version>2.0.8</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>proguard</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <proguardInclude>src/proguard/exec.pro</proguardInclude>
+                            <obfuscate>true</obfuscate>
+                            <libs>
+                                <lib>${java.home}/lib/rt.jar</lib>
+                            </libs>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>net.sf.proguard</groupId>
+                                <artifactId>proguard-base</artifactId>
+                                <version>4.10</version>
+                                <scope>runtime</scope>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <version>2.4</version>
+                        <configuration>
+                            <descriptor>src/assemble/exec.xml</descriptor>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>make-assembly</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+
+            </build>
+        </profile>
+    </profiles>
+-->
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.ws.xmlrpc</groupId>
+            <artifactId>xmlrpc</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+        
+    </dependencies>
+</project>
