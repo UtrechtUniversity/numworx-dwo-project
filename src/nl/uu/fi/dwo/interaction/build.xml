@@ -49,6 +49,28 @@
    		
     	</jar>
 	</target>
+	<target name='syncjc' />
+	<target name='jar' depends='resources, compile, syncjc' unless='jarfile.uptodate' >
+	    <property name='manifest.codebase' value='*.fisme.science.uu.nl' />
+	    <property name='manifest.permissions' value='sandbox' />
+	    <property name='manifest.application-name' value='${ant.project.name}' />
+
+	<jar
+			destfile='${packagename.jar}'
+			duplicate='preserve'
+		>
+			<fileset dir='${classes}'
+				includes='${fullpackagename}/**/*.class ${fullpackagename}/**/resources/**'
+			/>
+			<manifest>
+			    <attribute name="Main-Class" value="${main-class}"/>
+			    <attribute name="Codebase" value="${manifest.codebase}" />
+			    <attribute name="Permissions" value='${manifest.permissions}' />
+			    <attribute name="Application-Name" value='${manifest.application-name}' />        
+			</manifest>
+		</jar>
+		<antcall target='include.extra.jar' />
+	</target>
 
 	<import file="${drive}${common.build}" />
 

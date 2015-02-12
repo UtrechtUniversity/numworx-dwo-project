@@ -112,7 +112,7 @@ public class KeyBoardTabPanel
 
 	public void zetMaatNoordhoff() {
 		zetMaatCommon();
-		main.setPixelSize(886, -1);
+		//main.setPixelSize(886, -1);
 		main.getElement().getStyle().setFontSize(0, Style.Unit.PX); // anders main is 1 regel = 13 px
 		main.remove(staticpanel);
 		main.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);

@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
+import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
@@ -37,7 +38,7 @@ import fi.writemathgwt.client.WritePanelHolder;
  * @author Danny Hendrix
  * 
  */
-public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
+public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, FormuleClipboardIF
 {
 	static final String VVV = "VVV";
 	static final String _123 = "123";
@@ -261,7 +262,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 
 		//tp.addTab("Verberg", new SimplePanel(),0);
 
-		writePanel = new WritePanel(this);
+		writePanel = new WritePanel(this, 1); // FIXME vul hier tekenset 1 of tekenset 2 in
 		TouchPanel b = FormuleKeyBoardButtons.getButton("apply", this);
 		b.setWidth("30px");
 		b.setHeight("16px");
@@ -392,12 +393,12 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF
 		return fp;
 	}
 
-	public static String getClipboard()
+	public String getClipboard()
 	{
 		return clipboard;
 	}
 
-	public static void setClipboard(String text)
+	public void setClipboard(String text)
 	{
 		clipboard = text;
 	}

@@ -34,11 +34,11 @@ public interface FormuleEditorIF {
 
 	String getSelectionString();
 	
-	void knip();
+	void knip(FormuleClipboardIF clip);
 	
-	void kopieer();
+	void kopieer(FormuleClipboardIF clip);
 	
-	void plak();
+	void plak(FormuleClipboardIF clip);
 
 	void macht();
 

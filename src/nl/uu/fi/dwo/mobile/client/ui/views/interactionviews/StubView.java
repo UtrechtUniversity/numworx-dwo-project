@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
@@ -454,7 +455,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	
 	
 	@Override
-	public void kopieer() {
+	public void kopieer(FormuleClipboardIF clip) {
 		kopieer(innerView);
 	}
 	private static native void kopieer(Object inner) /*-{
@@ -462,7 +463,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	}-*/;
 	
 	@Override
-	public void knip() {
+	public void knip(FormuleClipboardIF clip) {
 		knip(innerView);
 	}
 	private static native void knip(Object inner) /*-{
@@ -470,7 +471,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	}-*/;
 	
 	@Override
-	public void plak() {
+	public void plak(FormuleClipboardIF clip) {
 		plak(innerView);
 	}
 	private static native void plak(Object inner) /*-{
@@ -653,5 +654,12 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	public void fireEvent(CBookEvent event) {
 		
 		
+	}
+
+	@Override
+	public FormuleClipboardIF getClipboard() {
+		if(comRoot!=this)
+			return comRoot.getClipboard();
+		return null;
 	}
 }

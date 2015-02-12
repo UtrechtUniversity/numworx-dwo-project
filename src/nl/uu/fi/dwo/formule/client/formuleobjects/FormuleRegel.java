@@ -13,10 +13,9 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Machtvak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeLogVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeWortelVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PrvVak;
+import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
-import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
@@ -1226,26 +1225,26 @@ public class FormuleRegel extends FormuleElement
 		return Math.max(selectionStart, currentPosition);
 	}
 	
-	public void knip()
+	public void knip(FormuleClipboardIF clip)
 	{
 		if(holder instanceof FormuleEditor == false)
 			return;
-		FormuleKeyboard.setClipboard(getSelectionString());
+		clip.setClipboard(getSelectionString());
 		deleteSelection();
 		paint();
 	}
 	
-	public void kopieer()
+	public void kopieer(FormuleClipboardIF clip)
 	{
-		FormuleKeyboard.setClipboard(getSelectionString());
+		clip.setClipboard(getSelectionString());
 	}
 	
-	public void plak()
+	public void plak(FormuleClipboardIF clip)
 	{
 		if(holder instanceof FormuleEditor == false)
 			return;
 		deleteSelection();
-		insert(FormuleKeyboard.getClipboard());
+		insert(clip.getClipboard());
 	}
 
 	public void deleteAll()

@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.interaction.client.keyboard;
 
 import java.awt.event.KeyEvent;
 
+import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 
@@ -52,8 +53,9 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 		return focus;
 	}
 	
-	public static void installKeyboard(FormuleKeyboardIF keyb) {
+	public static void installKeyboard(FormuleKeyboardIF keyb, FormuleClipboardIF clp) {
 		kb = keyb;
+		clip = clp;
 	}
 	
 	public static void requestFocus(final FocusPanel focusPanel)
@@ -78,6 +80,7 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 	}
 	
 	private static FormuleKeyboardIF kb;
+	private static FormuleClipboardIF clip;
 
 	private void backspace(DomEvent<?> event)
 	{
@@ -168,11 +171,11 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 		if (event.isAltKeyDown() || event.isControlKeyDown() || event.isMetaKeyDown() || kb == null)
 		{	int code = event.getNativeKeyCode();
 			if(code == 88 && event.isControlKeyDown()) //ctrl+x
-				editor.knip();
+				editor.knip(clip);
 			else if(code == 67 && event.isControlKeyDown()) //ctrl+c
-				editor.kopieer();
+				editor.kopieer(clip);
 			else if(code == 86 && event.isControlKeyDown()) //ctrl+v
-				editor.plak();
+				editor.plak(clip);
 		
 			return;
 		}

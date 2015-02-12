@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
@@ -603,6 +604,11 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	@Override
 	public FormuleKeyboardIF getKeyboard() {
+		return entry.getKeyboard();
+	}
+
+	@Override
+	public FormuleClipboardIF getClipboard() {
 		return entry.getKeyboard();
 	}
 

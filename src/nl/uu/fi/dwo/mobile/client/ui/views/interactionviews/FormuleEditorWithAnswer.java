@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
+import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
@@ -894,15 +895,15 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		return null;
 	}
 	
-	public void knip()
+	public void knip(FormuleClipboardIF clip)
 	{
-		super.knip();
+		super.knip(clip);
 		resize();
 	}
 	
-	public void plak()
+	public void plak(FormuleClipboardIF clip)
 	{
-		super.plak();
+		super.plak(clip);
 		resize();
 	}
 

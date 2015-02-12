@@ -28,6 +28,7 @@ import com.googlecode.mgwt.ui.client.widget.touch.TouchDelegate;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
@@ -376,15 +377,15 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	}
 	
 	@Override
-	public void kopieer() {
+	public void kopieer(FormuleClipboardIF clip) {
 	}
 	
 	@Override
-	public void knip() {
+	public void knip(FormuleClipboardIF clip) {
 	}
 	
 	@Override
-	public void plak() {
+	public void plak(FormuleClipboardIF clip) {
 	}
 
 	@Override

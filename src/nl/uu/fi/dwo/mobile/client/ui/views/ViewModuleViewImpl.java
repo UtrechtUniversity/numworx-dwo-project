@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF.NextPrevHandler;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavPanel;
 import nl.uu.fi.dwo.mobile.client.ui.SlidingPopup;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
+import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
@@ -110,6 +111,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private Panel kbp = null;
 	private HeaderButton hb;
 	private HeaderPanel hp;
+	private WaitScreen waitscreen = new WaitScreen();
 	
 	private Widget next, prev;
 	
@@ -144,6 +146,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	private void loadJSON(String file) {
 		 {
+			waitscreen.w();
 			RequestBuilder.Method method = RequestBuilder.GET;
 			String url = file;
 			logger.info("request " + method + " " + url);
@@ -168,12 +171,13 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 						} else {
 							logger.severe("response empty");
 						}
-		
+						waitscreen.hide();
 					}
 		
 					@Override
 					public void onError(Request request, Throwable exception)
 					{
+						waitscreen.hide();
 						Window.alert("error " + exception);
 					}
 				});
@@ -181,6 +185,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			}
 			catch (RequestException e)
 			{
+				waitscreen.hide();
 				RootPanel.get().add(new Label("cannot load xml: " + e.getMessage()));
 			}
 		}
@@ -898,6 +903,16 @@ try {
 		return this.initialize();
 	}
 	
+	private final class Resizer implements ResizeHandler {
+		@Override
+		public void onResize(ResizeEvent event) {
+			int h = event.getHeight() - extraHeight;
+			//logger.info("resize event " +  h);
+			kb.tp.setScrollPanel(contentScrollPanel, h);
+			
+		}
+	}
+
 	class MyAnchorContext implements AnchorContext {
 
 		@Override
@@ -928,7 +943,7 @@ try {
 		//fp.setWidth("886px");
 
 		kb = new FormuleKeyboard();
-		FocusOnTouch.installKeyboard(kb);
+		FocusOnTouch.installKeyboard(kb, kb);
 		FormuleHolder.installKeyboard(kb);
 		
 		hp = new HeaderPanel(DWOplayer.PARAMETERS.headercss());
@@ -991,16 +1006,12 @@ try {
 		//ipv addContentPanelTouchListener(contentPanel);
 
 		contentScrollPanel.setWidget(contentPanel);
-//		contentScrollPanel.setScrollingEnabledX(false); // XXX IF NOORDHOFF 
-		//contentScrollPanel.setScrollingEnabledY(false);
 		contentPanel.getElement().getStyle().setOverflowY(Overflow.AUTO);
 		contentPanel.getElement().getStyle().setOverflowX(Overflow.HIDDEN);
-		//contentScrollPanel.getElement().getStyle().setPadding(10, Unit.PX); WIM: dit is niet goed!!!! niet repareren!
 
 		fp.add(contentScrollPanel);
 
 		Panel kbp = kb.getAsPanel();
-		//kbp.setWidth("886px");
 		fp.add(kbp);
 
 // POPUP of floating in ????
@@ -1249,20 +1260,22 @@ try {
 	{
 		//FlowPanel fp = new FlowPanel();
 		//mainPanel = FocusOnTouch.wrap(fp);
-		mainPanel.setHeight("426px");
-		mainPanel.setWidth("886px");
-		
+		//mainPanel.setHeight("426px");
+		//mainPanel.setWidth("886px");
+		extraHeight = 40;
 		//fp.setHeight("428px");
 		//fp.setWidth("886px");
 		//if(!standalone) fp.add(hp);
-		final int contentHeight = 426 - 40; // 40 = hoogte headerpanel.
-		contentScrollPanel.setPixelSize(886, contentHeight ); 
+		//final int contentHeight = 426 - 40; // 40 = hoogte headerpanel.
+		int contentHeight = Window.getClientHeight() - extraHeight;
+		Window.addResizeHandler(new Resizer());
+		//contentScrollPanel.setPixelSize(886, contentHeight ); 
 		//contentScrollPanel.setHeight("100%");
 		//fp.add(contentScrollPanel);
-		contentPanel.getElement().getStyle().clearMarginBottom();
+//		contentPanel.getElement().getStyle().clearMarginBottom();
 // probeersel!
 //
-		contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
+//		contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
 //		Panel kbp = kb.getAsPanel();
 //		kbp.setWidth("886px");
 		kb.tp.zetMaatNoordhoff();
@@ -1292,15 +1305,7 @@ try {
 		
 		///contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
 		int contentHeight = Window.getClientHeight() - extraHeight;
-		Window.addResizeHandler(new ResizeHandler() {
-
-			@Override
-			public void onResize(ResizeEvent event) {
-				int h = event.getHeight() - extraHeight;
-				//logger.info("resize event " +  h);
-				kb.tp.setScrollPanel(contentScrollPanel, h);
-				
-			}});
+		Window.addResizeHandler(new Resizer());
 		kb.tp.zetMaat();
 		kb.tp.setScrollPanel(contentScrollPanel, contentHeight);
 
@@ -1310,15 +1315,7 @@ try {
 		extraHeight = 0;
 		///contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
 		int contentHeight = Window.getClientHeight() - extraHeight;
-		Window.addResizeHandler(new ResizeHandler() {
-
-			@Override
-			public void onResize(ResizeEvent event) {
-				int h = event.getHeight() - extraHeight;
-				//logger.info("resize event " +  h);
-				kb.tp.setScrollPanel(contentScrollPanel, h);
-				
-			}});
+		Window.addResizeHandler(new Resizer());
 		kb.tp.zetMaatTrifork();
 		kb.tp.setScrollPanel(contentScrollPanel, contentHeight);
 

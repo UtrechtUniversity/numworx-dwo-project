@@ -20,9 +20,8 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PrvVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.SigmaVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.SubscriptVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.WortelVak;
+import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
-import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.PijlVak;
 
 import com.google.gwt.user.client.ui.Panel;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
@@ -255,19 +254,19 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 		getCurrentRegel().cursorDown();
 	}
 	
-	public void knip()
+	public void knip(FormuleClipboardIF clip)
 	{
-		getCurrentRegel().knip();
+		getCurrentRegel().knip( clip);
 	}
 	
-	public void kopieer()
+	public void kopieer(FormuleClipboardIF clip)
 	{
-		getCurrentRegel().kopieer();
+		getCurrentRegel().kopieer(clip);
 	}
 	
-	public void plak()
+	public void plak(FormuleClipboardIF clip)
 	{
-		getCurrentRegel().plak();
+		getCurrentRegel().plak(clip);
 	}
 
 

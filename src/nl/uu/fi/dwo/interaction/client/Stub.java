@@ -271,12 +271,32 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 		return null;
 	}
 
-	
+	FormuleClipboardIF clip = new FormuleClipboardIF() {
+		String content;
+		
+		@Override
+		public String getClipboard() {
+			return content;
+		}
+
+		@Override
+		public void setClipboard(String formule) {
+			content = formule;
+		}
+		
+	};
 	
 	@Override
 	public void fireEvent(CBookEvent event) {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public FormuleClipboardIF getClipboard() {
+		return clip;
+	}
+
+	
 
 }

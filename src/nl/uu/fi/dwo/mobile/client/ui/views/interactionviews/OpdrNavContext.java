@@ -4,6 +4,7 @@ import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
+import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
@@ -58,6 +59,9 @@ public class OpdrNavContext implements OpdrNavIF {
 	 */
 	public FormuleKeyboardIF getKeyboard() {
 		return comRoot.getKeyboard();
+	}
+	public FormuleClipboardIF getClipboard() {
+		return comRoot.getClipboard();
 	}
 
 	/**

@@ -91,9 +91,9 @@ public abstract class FormuleKeyBoardButtons
 			else if (code.equals("sigma") == true)
 				editor.sigma();
 			else if (code.equals("copy") == true)
-				FormuleKeyboard.setClipboard(editor.getSelectionString());
+				editor.kopieer(kb);
 			else if (code.equals("paste") == true)
-				editor.insert(FormuleKeyboard.getClipboard());
+				editor.plak(kb);
 			else if (code.equals("backspace"))
 				kb.backspace();
 			else if (code.equals("back"))
