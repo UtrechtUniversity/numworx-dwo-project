@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleCell;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.WaitScreen;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
@@ -138,12 +139,14 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 			place = new TreeModulePlace("0");
 			break;
 		case SCO:
+			WaitScreen.instance().w();
 			close(); // since we set "loadedModule" to a new value.
 			container.clear();
 			cells.getElement().getStyle().setDisplay(Display.NONE);
 			ViewModuleViewImpl viewModuleViewImpl = new ViewModuleViewImpl(false);
 			loadedModule = viewModuleViewImpl.initialize(this);
 			viewModuleViewImpl.setApi(DWOplayer.api);
+			viewModuleViewImpl.setWindowTop(41);
 			viewModuleViewImpl.zetMaat();
 			container.add(loadedModule.asWidget());
 			
@@ -485,6 +488,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 		
 		// slide out the new area
 		slideNavigationOut(); 
+		WaitScreen.instance().hide();
 	}
 
 	@Override

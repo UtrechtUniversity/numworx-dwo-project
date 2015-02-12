@@ -37,6 +37,8 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.DialogBox.Caption;
 import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.animation.client.AnimationScheduler;
+import com.google.gwt.animation.client.AnimationScheduler.AnimationHandle;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
@@ -161,10 +163,15 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 	HashMap<String,Object> state;
 
 	
-	class DragOnTouch implements TouchStartHandler, TouchMoveHandler, TouchEndHandler, TouchCancelHandler  {
+	class DragOnTouch implements TouchStartHandler, TouchMoveHandler, TouchEndHandler, TouchCancelHandler, com.google.gwt.animation.client.AnimationScheduler.AnimationCallback  {
 		int x,y;
+		boolean track;
+		AnimationHandle handle;
 		@Override
 		public void onTouchEnd(TouchEndEvent event) {
+			track = false;
+			if(handle != null) handle.cancel();
+			handle = null;
 			box.onMouseMove(box.getCaption().asWidget(), x, y);
 			box.onMouseUp(box.getCaption().asWidget(), x, y);
 			//logger.info("touch end " + x + "," + y);
@@ -190,13 +197,23 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 		public void onTouchStart(TouchStartEvent event) {
 			getXY(event);
 			box.onMouseDown(box.getCaption().asWidget(), x, y);
+			track = true;
+			handle = AnimationScheduler.get().requestAnimationFrame(this,box.getElement());
 			//logger.info("touch start " + x + "," + y);
 		}
 
 		@Override
 		public void onTouchCancel(TouchCancelEvent event) {
-			//logger.info("touch cancel");
-			
+			track = false;
+			box.onMouseUp(box.getCaption().asWidget(), x, y);
+		}
+
+		@Override
+		public void execute(double timestamp) {
+			if(track) {
+				box.onMouseMove(box.getCaption().asWidget(), x, y);
+				handle = AnimationScheduler.get().requestAnimationFrame(this,box.getElement());
+			}
 		}
 		
 	}

@@ -111,7 +111,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private Panel kbp = null;
 	private HeaderButton hb;
 	private HeaderPanel hp;
-	private WaitScreen waitscreen = new WaitScreen();
+	private WaitScreen waitscreen = WaitScreen.instance();
 	
 	private Widget next, prev;
 	
@@ -146,7 +146,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	private void loadJSON(String file) {
 		 {
-			waitscreen.w();
 			RequestBuilder.Method method = RequestBuilder.GET;
 			String url = file;
 			logger.info("request " + method + " " + url);
@@ -171,13 +170,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 						} else {
 							logger.severe("response empty");
 						}
-						waitscreen.hide();
 					}
 		
 					@Override
 					public void onError(Request request, Throwable exception)
 					{
-						waitscreen.hide();
 						Window.alert("error " + exception);
 					}
 				});
@@ -185,7 +182,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 			}
 			catch (RequestException e)
 			{
-				waitscreen.hide();
 				RootPanel.get().add(new Label("cannot load xml: " + e.getMessage()));
 			}
 		}
@@ -1472,7 +1468,7 @@ try {
 		if(inNavBtn) {
 			return;
 		}
-		inNavBtn = true;
+		inNavBtn = true;p();
 		next.getElement().getStyle().setProperty("pointerEvents", "none");
 		((Element) next.getElement().getLastChild()).getStyle().setBackgroundColor("gray");
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
@@ -1484,7 +1480,7 @@ try {
 
 					@Override
 					public void execute() {
-						inNavBtn = false;
+						inNavBtn = false;v();
 							next.getElement().getStyle().clearProperty("pointerEvents");
 							((Element) next.getElement().getLastChild()).getStyle().clearBackgroundColor();
 					}});
@@ -1499,7 +1495,7 @@ try {
 		if(inNavBtn) {
 			return;
 		}
-		inNavBtn = true;
+		inNavBtn = true;p();
 		prev.getElement().getStyle().setProperty("pointerEvents", "none");
 		((Element) prev.getElement().getLastChild()).getStyle().setBackgroundColor("gray");
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
@@ -1511,7 +1507,7 @@ try {
 
 					@Override
 					public void execute() {
-						inNavBtn = false;
+						inNavBtn = false;v();
 						prev.getElement().getStyle().clearProperty("pointerEvents");
 						((Element) prev.getElement().getLastChild()).getStyle().clearBackgroundColor();
 					}});
@@ -1519,4 +1515,20 @@ try {
 	}
 
 
+	// WaitScreen management: p(); .....; v();
+	private int sema;
+	public void p() {
+		if( sema++ == 0) {
+			waitscreen.w();
+		}
+	}
+		
+	public void v() {
+		if ( --sema <= 0) {
+			sema = 0;
+			waitscreen.hide();
+		}
+	}
+	
+	
 }

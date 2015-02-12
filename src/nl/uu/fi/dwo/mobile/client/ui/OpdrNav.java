@@ -16,7 +16,10 @@ import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 
 import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dev.js.EvalFunctionsAtTopScope;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Display;
@@ -35,6 +38,7 @@ import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
 import com.googlecode.mgwt.dom.client.event.touch.TouchMoveEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
+import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 
 import fi.wiskopdr.text.Text;
 
@@ -320,35 +324,22 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	private void addButtonHandler(TouchButton button, int id)
 	{
 		final int button_id = id;
-		button.addTouchHandler(new TouchHandler()
+		button.addTouchStartHandler(new TouchStartHandler()
 		{
-
 			@Override
 			public void onTouchStart(TouchStartEvent event)
 			{
 				if(buttonsEnabled[currentActiviteit][button_id])
-					gotoOpdracht(button_id, entry.scoreNav);
-			}
+				{
+					entry.p();
+					Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 
-			@Override
-			public void onTouchMove(TouchMoveEvent event)
-			{
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void onTouchEnd(TouchEndEvent event)
-			{
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void onTouchCanceled(TouchCancelEvent event)
-			{
-				// TODO Auto-generated method stub
-
+						@Override
+						public void execute() {
+							gotoOpdracht(button_id, entry.scoreNav);		
+							entry.v();
+						}});
+				}
 			}
 
 		});
@@ -669,8 +660,6 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		}
 		if(DWOplayer.PARAMETERS.isNavTitle())
 			entry.setTitle("Vraag " + (getCurrentOpdracht()+1) + " van " + getAantalOpdrachten());
-		
-		
 	}
 
 	public int[] getMaxScores() {
