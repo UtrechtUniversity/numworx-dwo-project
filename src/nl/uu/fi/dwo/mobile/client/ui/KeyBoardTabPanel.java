@@ -27,6 +27,7 @@ public class KeyBoardTabPanel
 	public static final int KEYB_STATIC_HEIGHT = 44;
 
 	private FlowPanel main = new FlowPanel();
+	private FormuleKeyboard kb;
 	
 	private FlowPanel contentpanel = new FlowPanel();
 	private FlowPanel tabpanel = new FlowPanel();
@@ -55,9 +56,9 @@ public class KeyBoardTabPanel
 		this.enabled = enabled;
 	}
 
-	public KeyBoardTabPanel()
+	public KeyBoardTabPanel(FormuleKeyboard formuleKeyboard)
 	{
-
+		this.kb = formuleKeyboard;
 		contentpanel.add(tabcontentpanel);
 		//FIXME CSS contentpanel.getElement().getStyle().setBackgroundImage("url(images/resources/keyboardgradientimage-new.png)");
 		tabcontentpanel.getElement().getStyle().setBorderWidth(0, Unit.PX);
@@ -87,7 +88,9 @@ public class KeyBoardTabPanel
 			@Override
 			public void onTap(TapEvent event) {
 				if(enabled) 
+				{
 					goTo(FormuleKeyboard.KEYBOARD);
+				}
 			}});
 		if(!FormuleKeyboard.hasKeyboard)
 		{
@@ -99,7 +102,10 @@ public class KeyBoardTabPanel
 				@Override
 				public void onTap(TapEvent event) {
 					if(enabled)
+					{
+
 						goTo(FormuleKeyboard.SCRIBBLE);
+					}
 				}});
 		}
 		setKBVisible(false);
@@ -207,6 +213,8 @@ public class KeyBoardTabPanel
 
 	public void goTo(String panel)
 	{
+		if(FormuleKeyboard.SCRIBBLE.equals(panel))
+			kb.setWriteString();
 		int index = this.tabkeys.indexOf(panel);
 		tabs.get(current).getElement().getStyle().setDisplay(Display.NONE);
 		Panel panel2 = tabs.get(index);

@@ -230,7 +230,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 		{	tp.setEnabled(false);
 			return tp.getPanel();
 		}
-		tp = new KeyBoardTabPanel();
+		tp = new KeyBoardTabPanel(this);
 
 		if(hasKeyboard)
 		{
@@ -264,11 +264,14 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 
 		writePanel = new WritePanel(this, 1); // FIXME vul hier tekenset 1 of tekenset 2 in
 		TouchPanel b = FormuleKeyBoardButtons.getButton("apply", this);
-		b.setWidth("30px");
-		b.setHeight("16px");
 		writePanel.add(b);
+		writePanel.setWidgetLeftWidth(b, 680-60, Style.Unit.PX, /*96*/ 52, Style.Unit.PX);
+		writePanel.setWidgetTopHeight(b, 238-60, Style.Unit.PX, 52, Style.Unit.PX);
+
 		b = FormuleKeyBoardButtons.getButton(VVV, this);
 		writePanel.add(b);
+		writePanel.setWidgetLeftWidth(b, 680-60-55, Style.Unit.PX, /*96*/ 52, Style.Unit.PX);
+		writePanel.setWidgetTopHeight(b, 238-60, Style.Unit.PX, 52, Style.Unit.PX);
 		
 		if (!hasKeyboard)
 			tp.addTab(SCRIBBLE, writePanel, 250);
@@ -283,6 +286,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 	
 	public void writePanelChanged() 
 	{
+		if(recurse) return;
 		String text = writePanel.parseFormule();
 		
 		editor.clearAll();
@@ -489,9 +493,22 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 	@Override
 	public void focus() {
 		FocusOnTouch.focus();
+		setWriteString();
 		tp.showKeyboard();
 	}
 	
+	boolean recurse;
+	void setWriteString() {
+		if( editor != null) {
+			recurse = true;
+			String string = editor.toString(); // part of the contract
+			writePanel.readFormula(string);
+			recurse = false;
+		} else 
+			writePanel.wis();
+		
+	}
+
 	public void blur() {
 		setEditor(null);
 		tp.blur();
@@ -500,6 +517,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 	@Override
 	public void softFocus() {
 		FocusOnTouch.focus();
+		setWriteString();
 		tp.showSoftKeyboard();
 	}
 
