@@ -1,0 +1,41 @@
+<?xml version='1.0' ?>
+
+<!--
+     Zet dit file met de naam 'build.xml' eerst in de main package source folder van je project:
+	..../&lt;ProjectName&gt;/src/fi/&lt;packagename&gt;/
+
+    Vervang bij name='ProjectName' ProjectName door de naam van je project, d.w.z de naam van je main appliction name.
+    Let op: de waarde van basedir geldt voor Applets&Applications;
+    	voeg aan het begin nog een ../ toe als het gaat om servlet, demo of bean
+    	het path vanaf de basedir is dan immers 1 subFolder langner
+ -->
+<project name='_beans_scorm2xml' basedir='../../../..' default='cpjc' >
+
+	<description>
+	Auteur: Wim
+
+	Deze ant build kan je gebruiken voor het automatiseren van common tasks in de referentie omgeving.
+	!Let op de eis dat de main application name gelijk is aan de project name!
+
+
+	</description>
+
+	<dirname property="ant.dir" file="${ant.file}"  />
+	<property file="${ant.dir}/build.properties"/>
+
+	<property name='dosdrive' value='N:' />
+	<property name='java.resources' value='/home/java/resources' />
+	<property name='common.build' value='${java.resources}/ant/common-build.xml' />
+	<condition property='dos' value='dos' >
+	   	<os family='dos' />
+	</condition>
+	<condition property='drive' value='${dosdrive}'>
+		<os family='dos' />
+	</condition>
+	<condition property='drive' value=''  >
+		<os family='unix' />
+	</condition>
+
+	<import file="${drive}${common.build}" />
+
+</project>
