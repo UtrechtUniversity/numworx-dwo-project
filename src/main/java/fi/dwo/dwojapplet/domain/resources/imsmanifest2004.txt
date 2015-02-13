@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- 
+	UUID = {10}
+	VERSION = {9}
+	CLASS = {1}
+	JAR = {2}
+-->
+<manifest
+	xmlns="http://www.imsglobal.org/xsd/imscp_v1p1" 
+	xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_v1p3" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:lom="http://www.imsglobal.org/xsd/imsmd_v1p2" 
+	xsi:schemaLocation="http://www.imsglobal.org/xsd/imscp_v1p1 http://www.imsglobal.org/xsd/imscp_v1p1.xsd 
+	                    http://www.adlnet.org/xsd/adlcp_v1p3 adlcp_v1p3.xsd
+	                    http://www.imsglobal.org/xsd/imsmd_v1p2 http://www.imsglobal.org/xsd/imsmd_v1p2p4.xsd"
+	identifier="freudenthal.nl-{9}-{1}-{10}"
+>
+	<metadata>
+		<schema>ADL SCORM</schema>
+		<schemaversion>2004 3rd Edition</schemaversion>
+		<adlcp:location>metadata.xml</adlcp:location>
+	</metadata>
+	<organizations
+		default="ORG-{10}"
+	>
+		<organization
+			identifier="ORG-{10}"
+		>
+			<title>{0}</title>
+			<item
+				identifier="ITEM-{10}"
+				identifierref="RES-{10}"
+			>
+				<title>{0}</title>
+			</item>
+		</organization>
+	</organizations>
+	<resources>
+		<resource
+			identifier="RES-{10}"
+			type="webcontent"
+			href="sco/sco.html"
+			adlcp:scormType="sco"
+		>
+			<file href="sco/sco.html" />
+			<file href="sco/script/FiSco2004Script.js" />
+			<file href="sco/Image1.png" />
+			<file href="sco/Image2.png" />
+			<file href="sco/Image3.png" />
+			<file href="sco/Image4.png" />
+			<file href="sco/Image5.png" />
+			<file href="sco/Image6.png" />
+			<file href="sco/Image7.png" />
+			<file href="sco/Image8.png" />
+			<file href="http://ws.fisme.science.uu.nl/dwo/jars/{2}" />
+		</resource>
+	</resources>			
+</manifest>
