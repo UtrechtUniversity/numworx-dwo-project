@@ -155,7 +155,8 @@ public class GeogebraView implements InteractionView, LoadHandler
 			height = json.getInt("hoogte");
 		volledigeBreedte = json.containsKey("volledigeBreedte") && json.getBoolean("volledigeBreedte");
 		
-		if(!volledigeBreedte) initFrame();
+		//if(!volledigeBreedte) //als volledigeBreedte dan wordt initFrame gedaan in zetVolledigeBreedte.
+		//initFrame();
 		return this;
 
 	}
@@ -188,6 +189,8 @@ public class GeogebraView implements InteractionView, LoadHandler
 			vp.setPixelSize(this.width, 36);
 			vp.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 			vp.add(checkBtn);
+			if(nakijken && comRoot != null && comRoot.getMode() > 1) 
+				checkBtn.setVisible(false);
 			hp.setFooterWidget(vp);
 			mainPanel.setWidget(hp);
 		}
@@ -365,7 +368,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 	{
 		this.comRoot = comRoot;
 		int mode = comRoot.getMode();
-		if(nakijken & mode > 1) {
+		if(nakijken & mode > 1 && checkBtn != null) {
 			// FIXME haal checkbutton weg.
 			checkBtn.setVisible(false);
 		}
@@ -461,8 +464,9 @@ public class GeogebraView implements InteractionView, LoadHandler
 		if(volledigeBreedte)
 		{
 			width = breedte;
-			initFrame();
+			//initFrame();
 		}
+		initFrame();
 	}
 
 	@Override

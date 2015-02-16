@@ -254,7 +254,7 @@ try {
 
 				@Override
 				public void checkOpdracht(ScoreNavIF source) {
-					on.saveCurrentState();
+					//on.saveCurrentState();
 					zetToetsNagekeken(source);
 					on.kijkToetsNa();
 				}

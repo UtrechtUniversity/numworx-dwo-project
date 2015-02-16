@@ -41,6 +41,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -156,7 +157,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private final static Logger logger = Logger.getLogger("FormuleEditorWithAnswer");
 	OpdrNavIF comRoot;
 	TouchPanel sp = null;
-	Image checkimg;
+	//FlowPanel prefixPanel = null;
+	private Image checkimg;
 	Label feedbackLabel;
 	PopupPanel feedbackPanel;
 	TekstVak feedbackTekst;
@@ -172,6 +174,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	//private Expressie substitutie;
 	private String feedback = "";
+	private boolean hasFeedback = false;
 	private int scoreMax = 0;
 	private boolean ingevuld = false;
 	private boolean nagekeken = false;
@@ -215,6 +218,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		facade = new PopupFacade(h);
 		sp = new TouchPanel();
+		
 		if(h == null)
 			return;
 		if (h.containsKey("interactiePanelLaunchState") )
@@ -266,12 +270,16 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 						fews = new FormuleEditorPopup(hh,isVergelijkingVak,randomVarNamen,randomVarWaarden);
 					}
 				}
+				if(launchState.containsKey("hasFeedback"))
+				{	hasFeedback = launchState.getBoolean("hasFeedback");
+				}
 			}
 		
 			checkimg = new Image(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
 			checkimg.setVisible(false);
 			lastanswer = null;
-			checkimg.getElement().getStyle().setProperty("marginLeft", "3px");
+			checkimg.getElement().getStyle().setProperty("marginLeft", "0px");
+			checkimg.getElement().getStyle().setProperty("marginRight", "10px");
 			checkimg.getElement().getStyle().setProperty("marginTop", "-5px"); //in plaats hiervan zou marginTop -5px ook goed kunnen werken.
 			checkimg.getElement().getStyle().setProperty("marginBottom", "-6px");
 			
@@ -421,10 +429,18 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			}
 
 			//sp.getElement().addClassName("insert_formule");
-			sp.add(this.getMainRegel().getCanvas());
+			//sp.add(this.getMainRegel().getCanvas());
 			//sp.add(checkimg);
 			//sp.add(feedbackLabel);
+			//sp.add(contentPanel);
+			//sp.add(prefixPanel);
+			
+			sp.add(this.getMainRegel().getCanvas());
 			sp.add(checkPanel);
+			
+			//checkPanel.getElement().getStyle().setBackgroundColor("red");
+			//prefixPanel.getElement().getStyle().setBackgroundColor("yellow");
+			//this.getMainRegel().getCanvas().getElement().getStyle().setBackgroundColor("blue");
 			sp.addTouchHandler(new FormuleEditorTouchHandler(this));
 			
 		}
@@ -464,32 +480,33 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public void addElement(FormuleElement e)
 	{
 		super.addElement(e);
-		resize();
 		resetimg();
+		resize();
 	}
 
 	@Override
 	public void removeCurrentElement()
 	{
 		super.removeCurrentElement();
-		resize();
 		resetimg();
+		resize();
+		
 	}
 
 	@Override
 	public void removeNextElement()
 	{
 		super.removeNextElement();
-		resize();
 		resetimg();
+		resize();
 	}
 
 	@Override
 	public void insert(String text)
 	{
 		super.insert(text);
-		resize();
 		resetimg();
+		resize();
 	}
 
 	void resetimg() {
@@ -499,11 +516,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		lastanswer = null;
 	}
 	
-	public void setimg(String answer)
-	{
-		checkimg.setVisible(true);
-		lastanswer = answer;
-	}
+//	public void setimg(String answer)
+//	{
+//		checkimg.setVisible(true);
+//		lastanswer = answer;
+//	}
 
 	@Override 
 	public void enter() {
@@ -555,6 +572,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			ingevuld = false;
 		else
 			ingevuld = true;
+		if(fe != null)
+			fe.zetIngevuld(ingevuld);
 		
 		HashMap<String, Object> checkResults = new HashMap<String, Object>();
 		if(fe != null)
@@ -565,7 +584,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		this.correct = (Boolean) checkResults.get("correct");
 		this.score = (Integer) checkResults.get("score");
 		//System.out.println("score = " + score);
-		this.feedback = (String) checkResults.get("feedback");
+		if(hasFeedback || correct == null || !correct)
+		{	this.feedback = (String) checkResults.get("feedback");
+		}
+		else
+			this.feedback = "";
 		this.syntaxFout = (Boolean) checkResults.get("syntaxFout");
 		
 		this.goedHalfFout = (Integer) checkResults.get("goedHalfFout");
@@ -577,7 +600,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		if((mode == 2 || mode == 3) && !show)
 		{	if(this.fe != null)
-				fe.maakNakijkenAf(backStep, setState);
+				fe.maakNakijkenAf(backStep, show, setState);
 			
 			if(syntaxFout)
 			{	//checkimg.setUrl(FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
@@ -635,6 +658,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		
 		checkimg.setVisible(check && goedHalfFout != AntwoordVakChecker.GEEN); // Wim: Hier verscheen het vinkje als goedhalfFout GEEN is
+		resize();
 		//logger.finer(String.valueOf(checkimg.isVisible()));
 		//sp.setPixelSize(breedte, -1);
 		if (this.fe == null && !useranswer.equals(lastanswer))
@@ -649,12 +673,16 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if(!feedback.equals("") && fe == null)
 		{
 			zetFeedback();
-			feedbackLabel.setVisible(true);
 		}
 		
 		if(this.fe != null && ingevuld)
-		{	fe.maakNakijkenAf(backStep, setState);
+		{	fe.maakNakijkenAf(backStep, show, setState);
 		}
+	}
+	
+	public boolean getImageVisible()
+	{
+		return checkimg.isVisible();
 	}
 	
 	public void zetFeedback()
@@ -698,13 +726,15 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	public void resize()
 	{
-		breedte = this.getMainRegel().getWidth() + extraWidth;
+		breedte = this.getMainRegel().getWidth() + extraWidth + (getImageVisible()?26:0);
 		hoogte = this.getMainRegel().getHeight() + 6;
 		sp.setPixelSize((breedte-3) , (hoogte-8) );
 		if(parentRegel != null)
-			parentRegel.resize();
+		{	parentRegel.resize();
+		}
 		if(fe != null)
-			fe.resize();
+		{	fe.resize();
+		}
 		
 	}
 	
@@ -755,18 +785,28 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	@Override
 	public HashMap<String, Object> getState()
 	{
-		HashMap<String, Object> h;
+		HashMap<String, Object> h = new HashMap<String, Object>();
+		boolean fewsIngevuld = false;
 		if(fews != null)
 		{
-			h = fews.getState();
-			h.put(ANTWOORD_STRING,  toString() );
-		} else {
-			h = new HashMap<String, Object>();
+			HashMap<String, Object> h2 = fews.getState();
+			if(h2.containsKey("ingevuld") && ((Boolean) h2.get("ingevuld")).booleanValue())
+			{
+				h = h2;
+				h.put(ANTWOORD_STRING,  toString() );
+				fewsIngevuld = true;
+			}
+		}			
+		if(!fewsIngevuld)	
+		{
+			
 			String[] formuleVakInhouden = {"$f" + this.toString() + "@" } ;
-			boolean ingevuld = true;
+			if(!this.toString().equals(""))
+				this.ingevuld = true;
+			boolean ingevuld = this.ingevuld;
 			boolean nagekeken = false;
 			
-			ingevuld = this.ingevuld;
+			//ingevuld = this.ingevuld;
 			nagekeken = this.nagekeken;
 			
 			
@@ -846,7 +886,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	public void zetNagekeken(boolean b) {
 		if (ingevuld)
-			nagekeken = b;
+		{	nagekeken = b;
+			if(fews != null)
+				fews.zetNagekeken(b);
+		}
 	}
 
 	@Override

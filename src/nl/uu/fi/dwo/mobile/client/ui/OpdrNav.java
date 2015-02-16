@@ -498,37 +498,45 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	
 	public void kijkToetsNa()
 	{
-		saveCurrentState();
+		int opdrachtNr = currentOpdracht;
 		for (int j = 0; j < aantalOpdrachten[currentActiviteit]; j++)
 		{
+			gotoOpdracht(j);
+			/*
 			if (states[currentActiviteit][j] != null)
 			{	//entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][j], !(gekoppeldeOpdrachten || globalParam), states[currentActiviteit][j]);
 				//TODO: gekoppeldeOpdrachten en globalParam implementeren.
+				
 				entry.clearContentPanel();
 				entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][j], states[currentActiviteit][j]);
 			}
 			else
+			{	entry.clearContentPanel();
 				entry.zetOpdracht(opdrachten[currentActiviteit][j]);
+			}
+			*/
 			entry.kijkNa();
 			entry.zetNagekeken(true);
-			states[currentActiviteit][j] = entry.getState();
-			scores[currentActiviteit][j] = entry.getScore();
 			
-			System.out.println("Pagina = " + j + " en score = " + entry.getScore());
-//			if (objectives != null)
-//				scoresObjectives[currentActiviteit][j] = entry.getScoreObjectives();
-			//TODO: objectives (leerdoelen) implementeren
-			Boolean correct = entry.isCorrect();
-			isCorrect[currentActiviteit][j] = Boolean.TRUE == correct;
-			
-			if (buttons != null && buttons.size() > currentOpdracht)
-				setButtonCorrect(buttons.get(j), Boolean.TRUE == correct, j);
+//			
+//			states[currentActiviteit][j] = entry.getState();
+//			scores[currentActiviteit][j] = entry.getScore();
+//			
+//			System.out.println("Pagina = " + j + " en score = " + entry.getScore());
+////			if (objectives != null)
+////				scoresObjectives[currentActiviteit][j] = entry.getScoreObjectives();
+//			//TODO: objectives (leerdoelen) implementeren
+//			Boolean correct = entry.isCorrect();
+//			isCorrect[currentActiviteit][j] = Boolean.TRUE == correct;
+//			
+//			if (buttons != null && buttons.size() > currentOpdracht)
+//				setButtonCorrect(buttons.get(j), Boolean.TRUE == correct, j);
 			
 			//or[currentActiviteit].zetScore(j + 1, score);
 		}
 		//entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], !(gekoppeldeOpdrachten || globalParam), states[currentActiviteit][currentOpdracht]);
-		entry.clearContentPanel();
-		entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], states[currentActiviteit][currentOpdracht]);
+		
+		gotoOpdracht(opdrachtNr);
 		
 		
 //		if (mode == 2 || mode == 3)
