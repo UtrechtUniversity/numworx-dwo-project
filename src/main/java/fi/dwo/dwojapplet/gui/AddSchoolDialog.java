@@ -15,10 +15,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.Vector;
 import java.util.Map.Entry;
@@ -36,15 +34,20 @@ import javax.swing.SpringLayout;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JSpinnerDateEditor;
 
-
 import fi.dwo.client.domain.DwoHelper;
 import fi.dwo.client.domain.School;
 import fi.dwo.client.domain.SchoolGroup;
 import fi.dwo.client.domain.SchoolPasswdMap;
 import fi.dwo.client.gui.action.CopyLabel;
 import fi.dwo.client.persistence.PersistenceFacade;
-import fi.dwo.client.system.TextMapper;
-import fi.dwo.client.system.SchoolException;
+import fi.dwo.commons.exceptions.SchoolException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.SchoolGroup;
+import fi.dwo.dwojapplet.domain.SchoolPasswdMap;
+import fi.dwo.dwojapplet.gui.action.CopyLabel;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
 /**
  * This is a dialog for editing the SCO name and description.
