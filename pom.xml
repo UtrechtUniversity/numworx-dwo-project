@@ -65,7 +65,7 @@
             <artifactId>plugin</artifactId>
             <version>1.8.0_31</version>
             <type>jar</type>
-        </dependency>
+        </dependency>        
         <dependency>
             <groupId>fi.dwo</groupId>
             <artifactId>DWO-commons-lib</artifactId>

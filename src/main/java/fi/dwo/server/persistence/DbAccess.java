@@ -415,6 +415,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             HashMap<String, String> hashMap = new HashMap<String, String>(5);
             while (rs.next()) {
                 hashMap.put(rs.getString("name"), rs.getString("value"));
+                System.out.println(rs.getString("name") + " "+ rs.getString("value"));
             }
 
             if (hashMap.get("DBVersion Major").matches("1") && hashMap.get("DBVersion Minor").matches("2")

@@ -132,15 +132,15 @@ public class DataSourceAccessServlet extends Servlet {
         super.init(config);
 
         ServletContext application = getServletConfig().getServletContext();
-        InputStream inputStream = application.getResourceAsStream("/META-INF/MANIFEST.MF");
-        try {
-            Manifest manifest = new Manifest(inputStream);
-            String softwareVersion = manifest.getMainAttributes().getValue("Implementation-Version");
-            String svnRevision = manifest.getMainAttributes().getValue("Implementation-Build");
-            log.log(Level.INFO, "Software version {0},  subversion revision {1}", new Object[]{softwareVersion, svnRevision});
-        } catch (IOException ex) {
-            Logger.getLogger(DataSourceAccessServlet.class.getName()).log(Level.SEVERE, "Can't open /META-INF/MANIFEST.MF", ex);
-        }
+//        InputStream inputStream = application.getResourceAsStream("/META-INF/MANIFEST.MF");
+//        try {
+//            Manifest manifest = new Manifest(inputStream);
+//            String softwareVersion = manifest.getMainAttributes().getValue("Implementation-Version");
+//            String svnRevision = manifest.getMainAttributes().getValue("Implementation-Build");
+//            log.log(Level.INFO, "Software version {0},  subversion revision {1}", new Object[]{softwareVersion, svnRevision});
+//        } catch (IOException ex) {
+//            Logger.getLogger(DataSourceAccessServlet.class.getName()).log(Level.SEVERE, "Can't open /META-INF/MANIFEST.MF", ex);
+//        }
 
         int maxthreads = 200;
         String param = getInitParameter("xmlrpc.maxthreads");
@@ -165,13 +165,6 @@ public class DataSourceAccessServlet extends Servlet {
                 log("found datasource " + ds);
             }
 
-//			try {
-//				new com.mysql.jdbc.Driver();
-//			} catch (SQLException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-// CHECK version here:
             if (new DataSourceAccess(ds).checkVersion()) {
                 throw new ServletException("Datasource invalid version");
             }

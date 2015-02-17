@@ -24,9 +24,9 @@
          -->
     <!-- this context resource can be overloaded by placing a copy in the context.xml 
         of the tomcat -->
-  <Resource name="jdbc/dwodb" auth="Container" type="javax.sql.DataSource"
+<!--  <Resource name="jdbc/dwodb" auth="Container" type="javax.sql.DataSource"
                maxActive="100" maxIdle="30" maxWait="10000"
                username="dwo" password="bla" driverClassName="com.mysql.jdbc.Driver"
                url="jdbc:mysql://mysql5.science.uu.nl:3306/dwo_large_v1_2"/>
-  
-  </Context>/>
+   -->
+  </Context>
