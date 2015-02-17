@@ -39,6 +39,7 @@ public BASE64Encoder(boolean b) {
    * OutputStream.
    * @throws IOException        if an I/O error has occurred.
    */
+  @Override
   public final void encodeBuffer(InputStream in,
                                  OutputStream out) throws IOException {
     BufferedInputStream bin = new BufferedInputStream(in);

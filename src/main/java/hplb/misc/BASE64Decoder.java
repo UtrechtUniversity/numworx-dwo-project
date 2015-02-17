@@ -42,6 +42,7 @@ public class BASE64Decoder extends CharacterDecoder {
    * @param out                 decoded output
    * @throws IOException        if an I/O error has occurred.
    */
+  @Override
   public void decodeBuffer(InputStream in,
                            OutputStream out) throws IOException {
     BufferedInputStream bin = new BufferedInputStream(in);

@@ -119,22 +119,35 @@
                 </configuration>
             </plugin>    
             
-            <!-- put the build number in the manifest -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.5</version>
+                <version>2.6</version>
                 <configuration>
+                    <warSourceDirectory>src/main/webapp</warSourceDirectory>
+                    <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
                     <archive>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                         </manifest>
                         <manifestEntries>
-                            <Implementation-Build>${buildNumber}</Implementation-Build>
+                            <!-- put the project version and build number in the manifest -->
+                            <version>${project.version}</version>
+                            <buildnumber>${buildNumber}</buildnumber>
                         </manifestEntries>
                     </archive>
+                    <!-- put the build number in the web.xml of the war file -->
+                    <webResources>
+                        <resource>
+                            <filtering>true</filtering>
+                            <directory>src/main/webapp</directory>
+                            <includes>
+                                <include>**/web.xml</include>
+                            </includes>
+                        </resource>
+                    </webResources>
                 </configuration>
-            </plugin>              
+            </plugin>          
         </plugins>
     </build>
 

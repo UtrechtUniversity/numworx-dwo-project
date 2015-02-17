@@ -62,6 +62,7 @@ public class DwoWebPageServlet extends Servlet {
         super(arg0);
     }
 
+    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
@@ -192,6 +193,7 @@ public class DwoWebPageServlet extends Servlet {
      * @see #HTML_SOURCE
      * @see fi.beans.xmlrpc.Servlet#init(javax.servlet.ServletConfig)
      */
+    @Override
     public void init(ServletConfig config) throws ServletException
     {
         super.init(config);

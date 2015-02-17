@@ -12,6 +12,8 @@ import java.util.TimeZone;
  * @author velth101
  *
  */
+
+//TODO Clean up code after here
 public abstract class ScormAdapter {
 
 	protected static DateFormat FORMAT1_2 = new SimpleDateFormat("HH:mm:ss");

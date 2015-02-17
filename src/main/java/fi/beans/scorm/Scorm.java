@@ -9,6 +9,7 @@ public abstract class Scorm
   * Method used to retrieve an implemenation of SCORM12APIInterface.
   * @param applet The Applet invoking this method.
   * @return SCORM12APIInterface the appropriate implementation of SCORM12APIInterface determined by using Applet.getParameter( "API" ).
+     * @throws java.lang.Exception
   */
   public static SCORM12APIInterface findAPI( Applet applet ) throws Exception
   {

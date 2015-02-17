@@ -1,21 +1,18 @@
 // Source file: C:\\fi\\beans\\scorm\\Parameter.java
-
 package fi.beans.scorm;
 
 public class Parameter {
 
     protected String helpText;
-
     private String name;
-
     private String postLabel;
-
     private String preLabel;
-
     protected DataTypeIF type;
 
     /**
-     * @roseuid 425E23C600BB
+     * @param name
+     * @param preLabel
+     * @param type
      */
     public Parameter(String name, String preLabel, DataTypeIF type) {
         this.name = name;

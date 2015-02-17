@@ -115,6 +115,7 @@ public class Scorm2Xml extends ScormAdapter {
 		} 
 	}
 
+        @Override
 	public String toString()
 	{
 		StringWriter out = new StringWriter();
@@ -131,6 +132,7 @@ public class Scorm2Xml extends ScormAdapter {
 		write( new StreamResult(out));
 	}
 
+        @Override
 	public String GetValue(String key) {
 		if(!key.startsWith("cmi."))
 			return "";
@@ -204,6 +206,7 @@ public class Scorm2Xml extends ScormAdapter {
 	 * @param key cmi.xxx...
 	 * @param value de waarde 
 	 */
+        @Override
 	public String SetValue(String key, String value) {
 		if(!key.startsWith("cmi."))
 			return "";

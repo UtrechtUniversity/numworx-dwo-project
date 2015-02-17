@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 
 public class DbAccess extends DbConnect implements DbAccessIF {
 	
-	private static Logger logger = Logger.getLogger(DbAccess.class.getName());
+	private static Logger log = Logger.getLogger(DbAccess.class.getName());
 	protected String session() {
 		return "";
 	}
@@ -43,7 +43,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 	private void log(Level level, String msg, Throwable t) {
 //		System.err.println(session() + msg);
 //		if(t != null) t.printStackTrace();
-		logger.log(level, session() + msg, t);
+		log.log(level, session() + msg, t);
 	}
         
         private static final int PROFILEOFFSET = -1234;
@@ -407,7 +407,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     public boolean checkVersion() {
         try {
             if (DEBUG) {
-                log("Dbacces DEBUG aan");
+                log.log(Level.INFO,"Dbacces DEBUG aan");
             }
             //check for proper DB version
             PreparedStatement ps = getStatement("select * from tblDWOSystemParameters where name like 'DBVersion%'");
@@ -415,22 +415,22 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             HashMap<String, String> hashMap = new HashMap<String, String>(5);
             while (rs.next()) {
                 hashMap.put(rs.getString("name"), rs.getString("value"));
-                System.out.println(rs.getString("name") + " "+ rs.getString("value"));
             }
 
             if (hashMap.get("DBVersion Major").matches("1") && hashMap.get("DBVersion Minor").matches("2")
                     ) {
-                System.out.print("We are compatible with the server database version ("
-                        +hashMap.get("DBVersion Major")+"."
-                        +hashMap.get("DBVersion Minor")+"."
-                        +hashMap.get("DBVersion Revision")+").");
+                log.log(Level.INFO, "We are compatible with the database version: {0}.{1}.{2}", 
+                        new Object[]{hashMap.get("DBVersion Major"),
+                            hashMap.get("DBVersion Minor"),
+                            hashMap.get("DBVersion Revision")});
+                
             } else {
-                System.err.print("Database version of server not compatible with v1.2.x. Exiting.");
+                log.log(Level.SEVERE, "Database version of server not compatible with v1.2.x. Exiting.");
                 return true;
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-            System.err.print("Database version of server not compatible with v1.2.x. Missing version numbers. Exiting.");
+            log.log(Level.SEVERE,"Database version of server not compatible with v1.2.x. Missing version numbers. Exiting.");
             return true;
         }
         return false; // all ok...
@@ -442,6 +442,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @param oid
      * @return java.util.Hashtable
      */
+        @Override
     public Hashtable getRecord(String tableName, String idCol, int oid)
             throws SQLException {
         String[] arguments = {tableName, idCol};
@@ -457,6 +458,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @return java.util.Vector The vector contains Hashtables who contains the
      * rows mapped on the columnname.
      */
+        @Override
     public Vector getTable(String tableName) throws SQLException {
         String[] arguments = {tableName};
         String query = MessageFormat
@@ -470,6 +472,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @return java.util.Vector The vector contains Hashtables who contains the
      * rows mapped on the columnname.
      */
+        @Override
     public Vector getTable(String tableName, String orderCol) throws SQLException {
         String[] arguments = {tableName, orderCol};
         String query = MessageFormat
@@ -484,6 +487,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @return java.util.Vector The vector contains Hashtables who contains the
      * rows mapped on the columnname.
      */
+        @Override
     public Vector getTable(String tableName, Hashtable wheredef, String orderBy)
             throws SQLException {
         String[] arguments = {tableName};
@@ -517,6 +521,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return executeQueryWithResult(ps);
     }
 
+        @Override
     public Vector getTable(String tableName, Vector columnNames, Hashtable wheredef, String orderBy)
             throws SQLException {
         StringBuffer sb = new StringBuffer("SELECT ");
@@ -647,6 +652,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @return boolean
      * @throws fi.dwo.client.system.RegisterException
      */
+        @Override
     public boolean register(String username, String password, String firstname,
             String middlename, String lastname, String email)
             throws DwoXmlRpcException, SQLException {
@@ -680,6 +686,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @return boolean
      * @throws fi.dwo.client.system.RegisterException
      */
+        @Override
     public boolean register(String username, String password, String firstname,
             String middlename, String lastname, String email,
             String schoolLogin, int groupID, String groupPassword)
@@ -714,6 +721,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @param password
      * @return java.util.Hashtable
      */
+        @Override
     public Hashtable login(String username, String password)
             throws SQLException, DwoXmlRpcException {
         close(); //for lazy connection
@@ -798,6 +806,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @throws fi.dwo.client.system.RegisterException
      *
      */
+        @Override
     public Hashtable addToSchool(int userID, String schoolLogin, int groupID,
             String groupPassword) throws DwoXmlRpcException, SQLException {
         Hashtable result = null;
@@ -834,6 +843,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @throws fi.dwo.client.system.RegisterException
      *
      */
+        @Override
     public boolean changeAccount(int userID, String password,
             String newPassword, String firstname, String middlename,
             String lastname, String email, int classID)
@@ -872,6 +882,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @throws fi.dwo.client.system.RegisterException
      *
      */
+        @Override
     public boolean changeAccount(int userID, String password,
             String newPassword, String firstname, String middlename,
             String lastname, String email) throws DwoXmlRpcException,
@@ -911,6 +922,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @throws fi.dwo.client.system.ClassException
      *
      */
+        @Override
     public Hashtable addClass(int teacher, String className)
             throws DwoXmlRpcException, SQLException {
         /* Search the school from the teacher */
@@ -962,6 +974,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @throws fi.dwo.client.system.SchoolException
      * @deprecated Gebruik expliciet nummer.
      */
+        @Override
     public Hashtable addSchool(String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
             throws DwoXmlRpcException, SQLException {
         return addSchool(0, schoolName, schoolLogin, studentPassw, teacherPassw);
@@ -977,6 +990,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @throws fi.dwo.client.system.SchoolException
      *
      */
+        @Override
     public Hashtable addSchool(int schoolID, String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
             throws DwoXmlRpcException, SQLException {
         Hashtable result = null;
@@ -1019,6 +1033,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return result;
     }
 
+        @Override
     public Hashtable addSchool(int schoolID, String schoolName, String schoolLogin, Hashtable passwdMap)
             throws DwoXmlRpcException, SQLException {
         Hashtable result = null;
@@ -1051,6 +1066,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @throws fi.dwo.client.system.SchoolException
      *
      */
+        @Override
     public Hashtable editSchool(int schoolID, String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
             throws DwoXmlRpcException, SQLException {
         Hashtable result = getRecord("tblSchool", "schoolID", schoolID);
@@ -1107,6 +1123,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         }
     }
 
+        @Override
     public Hashtable editSchool(int schoolID, String schoolName, String schoolLogin, Hashtable passwdMap) throws SQLException {
         Hashtable result;
         result = getRecord("tblSchool", "schoolID", schoolID);
@@ -1163,6 +1180,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @param userID
      *
      */
+        @Override
     public boolean deleteUser(int userID) throws SQLException {
 // Student suspend_data
         PreparedStatement ps = getStatement(QRY_DELETE_STUDENTSCO_BY_STUDENT);
@@ -1203,6 +1221,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @return boolean Indicates if the class is deleted or not.
      *
      */
+        @Override
     public boolean deleteClass(int classID, boolean mustEmpty)
             throws SQLException {
         boolean canDelete = !mustEmpty;
@@ -1257,6 +1276,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @param uid
      *
      */
+        @Override
     public boolean disconnectFromClass(int uid) throws SQLException {
         PreparedStatement ps = getStatement(QRY_DISCONNECT_USER_CLASS);
         ps.setInt(1, uid);
@@ -1376,6 +1396,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     }
 
     ////peter
+        @Override
     public Vector getCoursesForClass(int classID) throws IOException,
             XmlRpcException, SQLException {
         close(); //for lazy connection        
@@ -1396,6 +1417,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
     protected final static long DATE_OFFSET = 36L * 3600L * 1000L; // 36 uur. 
 
+        @Override
     public boolean selectCoursesForClass(int classID, int courseID, int type,
             Date van, Date tot) throws IOException, XmlRpcException,
             SQLException {
@@ -1421,6 +1443,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return true;
     }
 
+        @Override
     public boolean selectCoursesForClass(int classID, int courseID)
             throws IOException, XmlRpcException, SQLException {
         close(); //for lazy connection
@@ -1434,6 +1457,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return true;
     }
 
+        @Override
     public boolean deSelectCoursesForClass(int classID, int courseID)
             throws IOException, XmlRpcException, SQLException {
         close(); //for lazy connection
@@ -1454,6 +1478,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * 
      * @see fi.dwo.client.persistence.DbAccessIF#getCourses(int)
      */
+        @Override
     public Vector getCourses(int userID) throws IOException, XmlRpcException,
             SQLException {
         close(); //for lazy connection
@@ -1479,6 +1504,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @see fi.dwo.client.persistence.DbAccessIF#getTable(java.lang.String,
      *      java.util.Hashtable)
      */
+        @Override
     public Vector getTable(String tableName, Hashtable wheredef)
             throws IOException, XmlRpcException, SQLException {
         return getTable(tableName, wheredef, null);
@@ -1489,6 +1515,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * 
      * @see fi.dwo.client.persistence.DbAccessIF#LMSGetValue(java.lang.String)
      */
+        @Override
     public String LMSGetValue(int scoID, int userID, String iDataModelElement)
             throws IOException, XmlRpcException, SQLException {
         if (iDataModelElement.startsWith("cmi.")) {
@@ -1536,6 +1563,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      *      java.lang.String)
      */
 
+        @Override
     public String LMSSetValue(int scoID, int userID, String iDataModelElement,
             String iValue) throws SQLException, IOException, XmlRpcException {
 
@@ -1630,6 +1658,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
     }
 
+        @Override
     public String LMSSetValue(int scoID, int userID, String iDataModelElement,
             String iValue, String random) throws SQLException, IOException, XmlRpcException {
         LMSSetValue(scoID, userID, iDataModelElement, iValue);
@@ -1641,6 +1670,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * 
      * @see fi.dwo.client.persistence.DbAccessIF#getResults(int[])
      */
+        @Override
     public Vector getResults(Vector courses, int userID) throws IOException,
             XmlRpcException, SQLException {
         int i;
@@ -1702,6 +1732,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
     static final Comparator comparator = new Comparator() {
         // sort on userID, courseID
+        @Override
         public int compare(Object arg0, Object arg1) {
             Hashtable h0 = (Hashtable) arg0;
             Hashtable h1 = (Hashtable) arg1;
@@ -1717,6 +1748,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         }
     };
 
+        @Override
     public Vector getResults(Vector courses, int classID, int teacherID)
             throws SQLException {
         if (courses.isEmpty()) {
@@ -1739,6 +1771,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * klas
      *
      */
+        @Override
     public Vector getResultCount(int profileID, int classID) throws SQLException {
         long start = System.currentTimeMillis();
         String query = "SELECT  c.courseID, 1 "
@@ -1761,6 +1794,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * 
      * @see fi.dwo.client.persistence.DbAccessIF#getResults(int, int)
      */
+        @Override
     public Vector getResults(int courseID, int classID, int userID)
             throws IOException, XmlRpcException, SQLException {
         PreparedStatement ps = getStatement(QRY_RESULTS_STUDENT_COURSE);
@@ -1775,6 +1809,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     /**
      * The results of a single course by a single student.
      */
+        @Override
     public Vector getUserResults(int courseID, int userID)
             throws IOException, XmlRpcException, SQLException {
         PreparedStatement ps = getStatement(QRY_RESULTS_SINGLE_STUDENT_COURSE);
@@ -1790,6 +1825,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * 
      * @see fi.dwo.client.persistence.DbAccessIF#getResults(int)
      */
+        @Override
     public Vector getResults(int courseID, int userID) throws IOException,
             XmlRpcException, SQLException {
         PreparedStatement ps = getStatement(QRY_RESULTS_COURSE);
@@ -1804,6 +1840,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @see fi.dwo.client.persistence.DbAccessIF#renameClass(int,
      *      java.lang.String)
      */
+        @Override
     public boolean renameClass(int classID, String newName)
             throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException {
@@ -1829,6 +1866,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return true;
     }
 
+        @Override
     public boolean renameClass(int classID, String newName, boolean iconizer) throws SQLException, DwoXmlRpcException {
         PreparedStatement ps = getStatement(QRY_UPDATE_CLASS_NAME2);
         ps.setString(1, newName);
@@ -1844,6 +1882,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @param classID een klas
      * @param userID een docent
      */
+        @Override
     public boolean reassignClass(int classID, int userID)
             throws SQLException {
         PreparedStatement ps = getStatement(QRY_UPDATE_CLASS_USER);
@@ -1859,6 +1898,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @see fi.dwo.client.persistence.DbAccessIF#selectJar(java.lang.String,
      * java.lang.String)
      */
+        @Override
     public boolean selectJar(String key, String jar) throws IOException,
             XmlRpcException, SQLException {
         PreparedStatement ps = getStatement(QRY_JAR_INSERT_KEY);
@@ -1919,6 +1959,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * 
      * @see fi.dwo.client.persistence.DbAccessIF#reconnect()
      */
+        @Override
     public boolean reconnect() throws IOException, XmlRpcException,
             SQLException {
         close();
@@ -1930,6 +1971,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * 
      * @see fi.dwo.client.persistence.DbAccessIF#log(java.lang.String)
      */
+        @Override
     public boolean log(String s) {
     	log(Level.INFO, s, null);
     	return false;
@@ -1940,6 +1982,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * 
      * @see fi.dwo.client.persistence.DbAccessIF#getEditableCourses(int)
      */
+        @Override
     public Vector getEditableCourses(int schoolID) throws IOException,
             XmlRpcException, SQLException {
 
@@ -1954,6 +1997,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * 
      * @see fi.dwo.client.persistence.DbAccessIF#getEditableCoursesAdmin()
      */
+        @Override
     public Vector getEditableCoursesAdmin() throws IOException,
             XmlRpcException, SQLException {
 
@@ -1962,6 +2006,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return executeQueryWithResult(ps);
     }
 
+        @Override
     public int addCourse(int schoolID, String name, String description, int dwoProfile) throws DwoXmlRpcException, SQLException {
         return addCourse(schoolID, name, description, dwoProfile, 0, false);
     }
@@ -1972,6 +2017,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @see fi.dwo.client.persistence.DbAccessIF#addCourse(java.lang.String,
      *      java.lang.String)
      */
+        @Override
     public int addCourse(int schoolID, String name, String description, int dwoProfile, int parentID, boolean isMap)
             throws DwoXmlRpcException, SQLException {
         Hashtable schoolData = getRecord("tblSchool", "schoolID", schoolID);
@@ -2033,6 +2079,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @see fi.dwo.client.persistence.DbAccessIF#changeCourse(int,
      *      java.lang.String, java.lang.String)
      */
+        @Override
     public boolean changeCourse(int courseID, String name, String description)
             throws DwoXmlRpcException, SQLException {
         PreparedStatement ps;
@@ -2055,6 +2102,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return true;
     }
 
+        @Override
     public boolean changeCourse(int courseID, String name, String description, boolean export)
             throws DwoXmlRpcException, SQLException {
         PreparedStatement ps;
@@ -2078,6 +2126,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return true;
     }
 
+        @Override
     public boolean changeCourse(int courseID, String name, String description, boolean export, int schoolID)
             throws DwoXmlRpcException, SQLException {
 
@@ -2119,6 +2168,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return true;
     }
 
+        @Override
     public boolean changeCourse(int courseID, String name, String description,
             boolean export, int schoolID, int parentID)
             throws DwoXmlRpcException, SQLException {
@@ -2217,6 +2267,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @see fi.dwo.client.persistence.DbAccessIF#addSco(int, java.lang.String,
      *      java.lang.String, int)
      */
+        @Override
     public int addSco(int courseID, String name, String description,
             int appletConfigID, int sequencenr) throws DwoXmlRpcException,
             IOException, XmlRpcException, SQLException {
@@ -2242,6 +2293,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
                 sequencenr);
     }
 
+        @Override
     public int addSco(int courseID, String name, String description,
             int appletConfigID, int sequencenr, boolean showScore) throws DwoXmlRpcException,
             IOException, XmlRpcException, SQLException {
@@ -2263,6 +2315,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @throws SQLException
      * @throws org.apache.xmlrpc.XmlRpcException
      */
+        @Override
     public int addSco(int courseID, String name, String description,
             int appletID, String launchdata, int sequencenr)
             throws SQLException, DwoXmlRpcException {
@@ -2343,6 +2396,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      *
      * @see #changeSco(int, String, String, String)
      */
+        @Override
     public boolean changeSco(int scoID, String name, String description)
             throws SQLException, DwoXmlRpcException {
         PreparedStatement ps;
@@ -2370,6 +2424,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      *
      * @see #changeSco(int, String, String, String)
      */
+        @Override
     public boolean changeSco(int scoID, String name, String description, boolean showScore)
             throws SQLException, DwoXmlRpcException {
         PreparedStatement ps;
@@ -2399,6 +2454,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @see fi.dwo.client.persistence.DbAccessIF#changeSco(int,
      *      java.lang.String, java.lang.String)
      */
+        @Override
     public boolean changeSco(int scoID, String name, String description, String launchdata, boolean showScore)
             throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException {
@@ -2412,12 +2468,14 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @see fi.dwo.client.persistence.DbAccessIF#changeSco(int,
      *      java.lang.String, java.lang.String)
      */
+        @Override
     public boolean changeSco(int scoID, String name, String description, String launchdata)
             throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException {
         return changeSco(scoID, name, description, true, launchdata);
     }
 
+        @Override
     public boolean changeSco(int scoID, String name, String description, boolean delete, String launchdata)
             throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException {
@@ -2458,6 +2516,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         }
     }
 
+        @Override
     public boolean changeSco(int scoID, String name, String description, boolean delete, byte[] launchdata, boolean showScore)
             throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException {
@@ -2508,6 +2567,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @throws SQLException
      * @see #changeSco(int, String, String, String)
      */
+        @Override
     public boolean changeScoSequenceNr(int scoID, int sequencenr, int scoID2, int sequencenr2) throws SQLException {
         PreparedStatement ps;
         ps = getStatement(QRY_UPDATE_SCO_SEQUENCENR);
@@ -2529,6 +2589,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * 
      * @see fi.dwo.client.persistence.DbAccessIF#deleteSco(int)
      */
+        @Override
     public boolean deleteSco(int scoID) throws DwoXmlRpcException, IOException,
             XmlRpcException, SQLException {
 // TODO tblSco done
@@ -2578,6 +2639,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      *
      * @param schoolID School Identifier.
      */
+        @Override
     public boolean deleteSchool(int schoolID) throws IOException, XmlRpcException, SQLException {
 
 // 1) delete students from class
@@ -2646,6 +2708,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return true;
     }
 
+        @Override
     public Vector getUserResults(Vector courses, int userID) throws SQLException {
         int i;
         StringBuffer courseString = new StringBuffer();
@@ -2669,6 +2732,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         }
     }
 
+        @Override
     public boolean setLogo(int id, byte[] image) throws SQLException,
             IOException, XmlRpcException {
 
@@ -2694,10 +2758,12 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return result;
     }
 
+        @Override
     public Hashtable getFidentitySchools() throws DwoXmlRpcException {
         throw new DwoXmlRpcException(DwoXmlRpcException.EXC_SCHOOL_UNSUPPORTED);
     }
 
+        @Override
     public boolean editSchool(int schoolID, boolean export) throws IOException,
             XmlRpcException, SQLException {
 
@@ -2709,6 +2775,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return export;
     }
 
+        @Override
     public boolean editSchoolRights(int schoolID, String rights) throws IOException, SQLException {
         PreparedStatement ps = getStatement(QRY_UPDATE_SCHOOL3);
         ps.setString(1, rights);
@@ -2718,6 +2785,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return r != 0;
     }
 
+        @Override
     public Vector getImportCourses(int schoolFrom, int schoolTo, int profileID)
             throws IOException, XmlRpcException, SQLException {
         String sql
@@ -2733,6 +2801,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
     }
 
+        @Override
     public boolean deleteUserFromSchool(int id, int schoolID)
             throws IOException, XmlRpcException, SQLException {
         String sql = "UPDATE tblUser SET classID = NULL, schoolGroupID = NULL WHERE "
@@ -2744,6 +2813,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return cnt != 0;
     }
 
+        @Override
     public boolean updateSchoolTo(int schoolID, Vector schoolTo)
             throws IOException, XmlRpcException, SQLException {
         Connection c = getConnection();
@@ -2769,6 +2839,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return true;
     }
 
+        @Override
     public boolean deleteCourseDataFromClass(int courseID, int classID)
             throws SQLException {
         Connection c = getConnection();
@@ -2837,6 +2908,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return true;
     }
 
+        @Override
     public String setRights(int uid, int profileid, String rights)
             throws SQLException, IOException, XmlRpcException {
         String sql = "SELECT rights FROM tblUser where userID = ?";
@@ -2871,6 +2943,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return rights;
     }
 
+        @Override
     public boolean setCourseSequence(Vector vector, int schoolID, int classID,
             int parent, int profileID) throws SQLException {
         Connection c = getConnection();
@@ -2909,6 +2982,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @see fi.dwo.client.persistence.DbAccessIF#moveSco(int, int, int, String)
      */
 
+        @Override
     public boolean moveSco(int scoID, int courseID, int sequencenr, String name)
             throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException {
@@ -2984,6 +3058,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
     static final Integer DEFAULT_TYPE = new Integer(0);
 
+        @Override
     public boolean selectCoursesForClass(int id, Vector v) throws SQLException {
         // XXX 
         Connection c = getConnection();
@@ -3049,6 +3124,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return true;
     }
 
+        @Override
     public boolean setExpireDate(int schoolID, Date date) throws IOException,
             XmlRpcException, SQLException {
         PreparedStatement ps = getStatement("UPDATE tblSchool SET expire = ? WHERE (schoolID = ?) LIMIT 1");
@@ -3062,6 +3138,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return x > 0;
     }
 
+        @Override
     public Hashtable login_saml(String userid, String orgid) throws DwoXmlRpcException,
             IOException, XmlRpcException, SQLException {
         close(); //for lazy connection
@@ -3074,6 +3151,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return login_tail(ps);
     }
 
+        @Override
     public boolean link_saml(String userid, String orgid, int id)
             throws SQLException {
         String INSERT_SAML_USER = "INSERT INTO tblSamlUser(samluserid, samlorgid, userID) VALUE(?,?,?)";

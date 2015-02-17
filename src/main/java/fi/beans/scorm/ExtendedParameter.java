@@ -6,6 +6,9 @@ public class ExtendedParameter extends Parameter {
     private Parameter subParameters[];
 
     /**
+     * @param name
+     * @param preLabel
+     * @param type
      * @roseuid 425E23C60157
      */
     public ExtendedParameter(String name, String preLabel, DataTypeIF type) {
@@ -26,6 +29,7 @@ public class ExtendedParameter extends Parameter {
         subParameters = newSub;
     }
     
+    @Override
     public String getHelpText() {
     	if(type instanceof ScormGroup) {
     		String txt = "";
@@ -35,14 +39,14 @@ public class ExtendedParameter extends Parameter {
 				txt = helpText;
  	    		txt += "\n\n";
 			}
-    		for(int i = 0; i < subParameters.length;i++) {
-    			tmp = subParameters[i].getHelpText();
-    			if((tmp != null) && (!tmp.equals(""))) {
-        			txt += subParameters[i].getPreLabel() + ":\n";
-        			txt += tmp + "\n";
-        			txt += "\n\n";    				
-    			}
-    		}
+                for (Parameter subParameter : subParameters) {
+                    tmp = subParameter.getHelpText();
+                    if ((tmp != null) && (!tmp.equals(""))) {
+                        txt += subParameter.getPreLabel() + ":\n";
+                        txt += tmp + "\n";
+                        txt += "\n\n";
+                    }
+                }
     		return txt;
     	} else {
     		return helpText;

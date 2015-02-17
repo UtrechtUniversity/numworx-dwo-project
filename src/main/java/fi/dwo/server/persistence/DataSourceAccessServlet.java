@@ -29,9 +29,8 @@ import com.jamonapi.proxy.MonProxyFactory;
 import fi.beans.jdbc.DbConnectIF;
 import fi.beans.xmlrpc.Servlet;
 import fi.dwo.commons.persistence.DbAccessIF;
-import java.io.InputStream;
-import java.util.jar.Manifest;
-import javax.servlet.ServletContext;
+import java.sql.PreparedStatement;
+import java.util.HashMap;
 
 public class DataSourceAccessServlet extends Servlet {
 
@@ -65,6 +64,7 @@ public class DataSourceAccessServlet extends Servlet {
 
         private Connection mine, his;
 
+        @Override
         public void close() {
             if (mine != null) {
                 --count;
@@ -82,6 +82,7 @@ public class DataSourceAccessServlet extends Servlet {
             super.close();
         }
 
+        @Override
         public Connection getConnection() throws SQLException {
             Connection c = super.getConnection();
             if (c != his || mine == null) {
@@ -100,6 +101,7 @@ public class DataSourceAccessServlet extends Servlet {
 
         DataSource ds;
 
+        @Override
         protected DbAccessIF createDelegate() {
             return new DataSourceAccess(ds);
         }
@@ -114,6 +116,7 @@ public class DataSourceAccessServlet extends Servlet {
 
         DataSource ds;
 
+        @Override
         protected DbAccessIF createDelegate() {
             //return (DbAccessIF) MonProxyFactory.monitor(new MonitorDataSourceAccess(ds));
             return new MonitorDataSourceAccess(ds);
@@ -128,19 +131,13 @@ public class DataSourceAccessServlet extends Servlet {
     /* (non-Javadoc)
      * @see fi.dwo.server.persistence.DbAccessServlet#init(javax.servlet.ServletConfig)
      */
+    @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
 
-        ServletContext application = getServletConfig().getServletContext();
-//        InputStream inputStream = application.getResourceAsStream("/META-INF/MANIFEST.MF");
-//        try {
-//            Manifest manifest = new Manifest(inputStream);
-//            String softwareVersion = manifest.getMainAttributes().getValue("Implementation-Version");
-//            String svnRevision = manifest.getMainAttributes().getValue("Implementation-Build");
-//            log.log(Level.INFO, "Software version {0},  subversion revision {1}", new Object[]{softwareVersion, svnRevision});
-//        } catch (IOException ex) {
-//            Logger.getLogger(DataSourceAccessServlet.class.getName()).log(Level.SEVERE, "Can't open /META-INF/MANIFEST.MF", ex);
-//        }
+        String buildnumber = getInitParameter("buildnumber");
+        String projectVersion = getInitParameter("projectVersion");
+        log.log(Level.INFO, "Software version, buildnumber: {0}, {1}", new Object[]{projectVersion, buildnumber});
 
         int maxthreads = 200;
         String param = getInitParameter("xmlrpc.maxthreads");
@@ -206,6 +203,7 @@ public class DataSourceAccessServlet extends Servlet {
 
     }
 
+    @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         resp.setContentType("text/plain");
@@ -213,30 +211,64 @@ public class DataSourceAccessServlet extends Servlet {
         out.println(this);
         out.println(getHandler());
         out.println(ds);
+
+        String buildnumber = getInitParameter("buildnumber");
+        String projectVersion = getInitParameter("projectVersion");
+        out.println();
+        out.println("Software version, buildnumber: " + projectVersion + ", " + buildnumber);
+        out.println();
         out.println("monitor = " + monitor);
         out.println("threading = " + threading);
+
+        //check for proper DB version
         Connection c = null;
         try {
             c = ds.getConnection();
-            Statement s = c.createStatement();
-            ResultSet rs = s.executeQuery("SHOW TABLES");
-            printRS(rs, out);
-            rs.close();
-            s.close();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace(out);
-        } finally {
-            try {
-                c.close();
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace(out);
+            PreparedStatement ps = c.prepareStatement("select * from tblDWOSystemParameters where name like 'DBVersion%'");
+            ResultSet rs = ps.executeQuery();
+            HashMap<String, String> hashMap = new HashMap<String, String>(5);
+            while (rs.next()) {
+                hashMap.put(rs.getString("name"), rs.getString("value"));
             }
+            out.println();
+            out.printf("We are compatible with the database version: {0}.{1}.{2}", new Object[]{hashMap.get("DBVersion Major"),
+                hashMap.get("DBVersion Minor"),
+                hashMap.get("DBVersion Revision")});
+        } catch (Exception e) {
+                    log.log(Level.SEVERE, "Eror retrieving database version information from the database", e);
+        } finally {
+            if(c!=null){
+                try {
+                    c.close();
+                } catch (SQLException ex) {
+                    log.log(Level.SEVERE, "Eror closing the connection", ex);
+                }
+            }            
         }
+        
+        //Disabled code for security issues.
+//        try {
+//            c = ds.getConnection();
+//            Statement s = c.createStatement();
+//            ResultSet rs = s.executeQuery("SHOW TABLES");
+//            printRS(rs, out);
+//            rs.close();
+//            s.close();
+//        } catch (SQLException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace(out);
+//        } finally {
+//            try {
+//                c.close();
+//            } catch (Exception e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace(out);
+//            }
+//        }
 
     }
 
+    @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         try {
@@ -256,6 +288,7 @@ public class DataSourceAccessServlet extends Servlet {
         }
     }
 
+    @Override
     public void destroy() {
         log.fine("En weg ben ik...");
         ((DbConnectIF) getHandler()).close();

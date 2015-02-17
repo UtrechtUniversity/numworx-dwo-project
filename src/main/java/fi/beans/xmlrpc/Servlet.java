@@ -44,6 +44,7 @@ public abstract class Servlet extends HttpServlet {
 /**
  * Standaard init. Moet aangeroepen worden in subclasses!
  */    
+    @Override
     public void init(ServletConfig config) throws ServletException
     {
     	super.init(config);
@@ -56,6 +57,7 @@ public abstract class Servlet extends HttpServlet {
  * Noot: als de handler een 'DbConnect' object is, wordt daarvan close aangeroepen.
  * @see fi.beans.jdbc.DbConnect#close()
  */    
+    @Override
 	final public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws IOException
     {

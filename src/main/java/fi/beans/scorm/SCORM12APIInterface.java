@@ -145,19 +145,7 @@ public interface SCORM12APIInterface
  *   The current value of the requested data model parameter is returned.
  *   Only one value -- always a string -- is returned for each call.
  *
- * @param iElement
- *   <ul>
- *    <li>datamodel.group.element  Returns the value of the named element</li>
- *    <li>datamodel._version  The _version keyword is used to determine
- *       the version of the data model supported by the LMS.</li>
- *    <li>datamodel.element._count The _count keyword is used to determine the
- *       number of elements
- *       currently in an array.  The count is the total number of elements in the
- *       array, not the index number of the last position in the array.</li>
- *   <li>datamodel.element._children  The _children keyword is used to
- *       determine all of the elements in a group or category that are
- *       supported by the LMS.</li>
- *   </ul>
+     * @param iDataModelElement
  * @return All return values are strings.
  *    <ul>
  *    <li>LMSGetValue(datamodel.group.element) The return value is a string
@@ -190,7 +178,8 @@ public interface SCORM12APIInterface
  *  included as the second parameter in the call.  Only one value is
  *  sent with each call.
  *
- * @param iElement This is the name of a fully qualified element defined
+     * @param iDataModelElement
+ * @param iValue This is the name of a fully qualified element defined
  *  in the data model.  The argument is case sensitive.  The argument is a
  *  string enclosed in quotes. The following represents some forms this
  *  parameter may take.

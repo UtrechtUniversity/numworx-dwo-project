@@ -39,7 +39,6 @@
             <param-name>servlet</param-name>
             <param-value>/dbaccess</param-value>
         </init-param>
-
     </servlet>
    
     <servlet>
@@ -57,6 +56,14 @@
         <init-param>
             <param-name>threading</param-name>
             <param-value>true</param-value>	
+        </init-param>
+        <init-param>
+            <param-name>projectVersion</param-name>
+            <param-value>${project.version}</param-value>            
+        </init-param>
+        <init-param>
+            <param-name>buildnumber</param-name>
+            <param-value>${buildNumber}</param-value>            
         </init-param>
     </servlet>
    

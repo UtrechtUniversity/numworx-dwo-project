@@ -77,6 +77,7 @@ public class SessionTime
         return string;
     }
     
+    @Override
     public String toString() {
         return string;
     }

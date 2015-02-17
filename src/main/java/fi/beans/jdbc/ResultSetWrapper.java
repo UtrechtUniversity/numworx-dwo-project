@@ -49,6 +49,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public boolean absolute(int row) throws SQLException {
 		return rs.absolute(row);
 	}
@@ -56,6 +57,7 @@ class ResultSetWrapper implements ResultSet {
 	/**
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void afterLast() throws SQLException {
 		rs.afterLast();
 	}
@@ -63,6 +65,7 @@ class ResultSetWrapper implements ResultSet {
 	/**
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void beforeFirst() throws SQLException {
 		rs.beforeFirst();
 	}
@@ -70,6 +73,7 @@ class ResultSetWrapper implements ResultSet {
 	/**
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void cancelRowUpdates() throws SQLException {
 		rs.cancelRowUpdates();
 	}
@@ -77,6 +81,7 @@ class ResultSetWrapper implements ResultSet {
 	/**
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void clearWarnings() throws SQLException {
 		rs.clearWarnings();
 	}
@@ -84,6 +89,7 @@ class ResultSetWrapper implements ResultSet {
 	/**
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void close() throws SQLException {
 		Statement s = rs.getStatement();
 		rs.close();
@@ -93,6 +99,7 @@ class ResultSetWrapper implements ResultSet {
 	/**
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void deleteRow() throws SQLException {
 		rs.deleteRow();
 	}
@@ -100,7 +107,9 @@ class ResultSetWrapper implements ResultSet {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+                @Override
 	public boolean equals(Object obj) {
+            //TODO one should also check the type of the object before equality exists.
 		return rs.equals(obj);
 	}
 
@@ -109,6 +118,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public int findColumn(String columnName) throws SQLException {
 		return rs.findColumn(columnName);
 	}
@@ -117,6 +127,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public boolean first() throws SQLException {
 		return rs.first();
 	}
@@ -126,6 +137,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Array getArray(int i) throws SQLException {
 		return rs.getArray(i);
 	}
@@ -135,6 +147,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Array getArray(String colName) throws SQLException {
 		return rs.getArray(colName);
 	}
@@ -144,6 +157,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public InputStream getAsciiStream(int columnIndex) throws SQLException {
 		return rs.getAsciiStream(columnIndex);
 	}
@@ -153,6 +167,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public InputStream getAsciiStream(String columnName) throws SQLException {
 		return rs.getAsciiStream(columnName);
 	}
@@ -162,6 +177,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
 		return rs.getBigDecimal(columnIndex);
 	}
@@ -172,6 +188,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public BigDecimal getBigDecimal(int columnIndex, int scale)
 		throws SQLException {
 		return rs.getBigDecimal(columnIndex, scale);
@@ -182,6 +199,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public BigDecimal getBigDecimal(String columnName) throws SQLException {
 		return rs.getBigDecimal(columnName);
 	}
@@ -192,6 +210,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public BigDecimal getBigDecimal(String columnName, int scale)
 		throws SQLException {
 		return rs.getBigDecimal(columnName, scale);
@@ -202,6 +221,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public InputStream getBinaryStream(int columnIndex) throws SQLException {
 		return rs.getBinaryStream(columnIndex);
 	}
@@ -211,6 +231,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public InputStream getBinaryStream(String columnName) throws SQLException {
 		return rs.getBinaryStream(columnName);
 	}
@@ -220,6 +241,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Blob getBlob(int i) throws SQLException {
 		return rs.getBlob(i);
 	}
@@ -229,6 +251,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Blob getBlob(String colName) throws SQLException {
 		return rs.getBlob(colName);
 	}
@@ -238,6 +261,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public boolean getBoolean(int columnIndex) throws SQLException {
 		return rs.getBoolean(columnIndex);
 	}
@@ -247,6 +271,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public boolean getBoolean(String columnName) throws SQLException {
 		return rs.getBoolean(columnName);
 	}
@@ -256,6 +281,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public byte getByte(int columnIndex) throws SQLException {
 		return rs.getByte(columnIndex);
 	}
@@ -265,6 +291,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public byte getByte(String columnName) throws SQLException {
 		return rs.getByte(columnName);
 	}
@@ -274,6 +301,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public byte[] getBytes(int columnIndex) throws SQLException {
 		return rs.getBytes(columnIndex);
 	}
@@ -283,6 +311,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public byte[] getBytes(String columnName) throws SQLException {
 		return rs.getBytes(columnName);
 	}
@@ -292,6 +321,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Reader getCharacterStream(int columnIndex) throws SQLException {
 		return rs.getCharacterStream(columnIndex);
 	}
@@ -301,6 +331,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Reader getCharacterStream(String columnName) throws SQLException {
 		return rs.getCharacterStream(columnName);
 	}
@@ -310,6 +341,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Clob getClob(int i) throws SQLException {
 		return rs.getClob(i);
 	}
@@ -319,6 +351,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Clob getClob(String colName) throws SQLException {
 		return rs.getClob(colName);
 	}
@@ -327,6 +360,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public int getConcurrency() throws SQLException {
 		return rs.getConcurrency();
 	}
@@ -335,6 +369,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public String getCursorName() throws SQLException {
 		return rs.getCursorName();
 	}
@@ -344,6 +379,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Date getDate(int columnIndex) throws SQLException {
 		return rs.getDate(columnIndex);
 	}
@@ -354,6 +390,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Date getDate(int columnIndex, Calendar cal) throws SQLException {
 		return rs.getDate(columnIndex, cal);
 	}
@@ -363,6 +400,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Date getDate(String columnName) throws SQLException {
 		return rs.getDate(columnName);
 	}
@@ -373,6 +411,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Date getDate(String columnName, Calendar cal) throws SQLException {
 		return rs.getDate(columnName, cal);
 	}
@@ -382,6 +421,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public double getDouble(int columnIndex) throws SQLException {
 		return rs.getDouble(columnIndex);
 	}
@@ -391,6 +431,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public double getDouble(String columnName) throws SQLException {
 		return rs.getDouble(columnName);
 	}
@@ -399,6 +440,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public int getFetchDirection() throws SQLException {
 		return rs.getFetchDirection();
 	}
@@ -407,6 +449,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public int getFetchSize() throws SQLException {
 		return rs.getFetchSize();
 	}
@@ -416,6 +459,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public float getFloat(int columnIndex) throws SQLException {
 		return rs.getFloat(columnIndex);
 	}
@@ -425,6 +469,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public float getFloat(String columnName) throws SQLException {
 		return rs.getFloat(columnName);
 	}
@@ -434,6 +479,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public int getInt(int columnIndex) throws SQLException {
 		return rs.getInt(columnIndex);
 	}
@@ -443,6 +489,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public int getInt(String columnName) throws SQLException {
 		return rs.getInt(columnName);
 	}
@@ -452,6 +499,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public long getLong(int columnIndex) throws SQLException {
 		return rs.getLong(columnIndex);
 	}
@@ -461,6 +509,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public long getLong(String columnName) throws SQLException {
 		return rs.getLong(columnName);
 	}
@@ -469,6 +518,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public ResultSetMetaData getMetaData() throws SQLException {
 		return rs.getMetaData();
 	}
@@ -478,6 +528,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Object getObject(int columnIndex) throws SQLException {
 		return rs.getObject(columnIndex);
 	}
@@ -488,6 +539,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Object getObject(int i, Map<String, Class<?>> map) throws SQLException {
 		return rs.getObject(i, map);
 	}
@@ -497,6 +549,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Object getObject(String columnName) throws SQLException {
 		return rs.getObject(columnName);
 	}
@@ -507,6 +560,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Object getObject(String colName, Map<String, Class<?>> map) throws SQLException {
 		return rs.getObject(colName, map);
 	}
@@ -516,6 +570,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Ref getRef(int i) throws SQLException {
 		return rs.getRef(i);
 	}
@@ -525,6 +580,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Ref getRef(String colName) throws SQLException {
 		return rs.getRef(colName);
 	}
@@ -533,6 +589,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public int getRow() throws SQLException {
 		return rs.getRow();
 	}
@@ -542,6 +599,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public short getShort(int columnIndex) throws SQLException {
 		return rs.getShort(columnIndex);
 	}
@@ -551,6 +609,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public short getShort(String columnName) throws SQLException {
 		return rs.getShort(columnName);
 	}
@@ -559,6 +618,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Statement getStatement() throws SQLException {
 		return rs.getStatement();
 	}
@@ -568,6 +628,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public String getString(int columnIndex) throws SQLException {
 		return rs.getString(columnIndex);
 	}
@@ -577,6 +638,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public String getString(String columnName) throws SQLException {
 		return rs.getString(columnName);
 	}
@@ -586,6 +648,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Time getTime(int columnIndex) throws SQLException {
 		return rs.getTime(columnIndex);
 	}
@@ -596,6 +659,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Time getTime(int columnIndex, Calendar cal) throws SQLException {
 		return rs.getTime(columnIndex, cal);
 	}
@@ -605,6 +669,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Time getTime(String columnName) throws SQLException {
 		return rs.getTime(columnName);
 	}
@@ -615,6 +680,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Time getTime(String columnName, Calendar cal) throws SQLException {
 		return rs.getTime(columnName, cal);
 	}
@@ -624,6 +690,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Timestamp getTimestamp(int columnIndex) throws SQLException {
 		return rs.getTimestamp(columnIndex);
 	}
@@ -634,6 +701,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Timestamp getTimestamp(int columnIndex, Calendar cal)
 		throws SQLException {
 		return rs.getTimestamp(columnIndex, cal);
@@ -644,6 +712,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Timestamp getTimestamp(String columnName) throws SQLException {
 		return rs.getTimestamp(columnName);
 	}
@@ -654,6 +723,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public Timestamp getTimestamp(String columnName, Calendar cal)
 		throws SQLException {
 		return rs.getTimestamp(columnName, cal);
@@ -663,6 +733,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public int getType() throws SQLException {
 		return rs.getType();
 	}
@@ -672,6 +743,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public InputStream getUnicodeStream(int columnIndex) throws SQLException {
 		return rs.getUnicodeStream(columnIndex);
 	}
@@ -681,6 +753,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public InputStream getUnicodeStream(String columnName)
 		throws SQLException {
 		return rs.getUnicodeStream(columnName);
@@ -691,6 +764,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public URL getURL(int columnIndex) throws SQLException {
 		return rs.getURL(columnIndex);
 	}
@@ -700,6 +774,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public URL getURL(String columnName) throws SQLException {
 		return rs.getURL(columnName);
 	}
@@ -708,6 +783,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public SQLWarning getWarnings() throws SQLException {
 		return rs.getWarnings();
 	}
@@ -715,6 +791,7 @@ class ResultSetWrapper implements ResultSet {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
+                @Override
 	public int hashCode() {
 		return rs.hashCode();
 	}
@@ -722,6 +799,7 @@ class ResultSetWrapper implements ResultSet {
 	/**
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void insertRow() throws SQLException {
 		rs.insertRow();
 	}
@@ -730,6 +808,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public boolean isAfterLast() throws SQLException {
 		return rs.isAfterLast();
 	}
@@ -738,6 +817,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public boolean isBeforeFirst() throws SQLException {
 		return rs.isBeforeFirst();
 	}
@@ -746,6 +826,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public boolean isFirst() throws SQLException {
 		return rs.isFirst();
 	}
@@ -754,6 +835,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public boolean isLast() throws SQLException {
 		return rs.isLast();
 	}
@@ -762,6 +844,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public boolean last() throws SQLException {
 		return rs.last();
 	}
@@ -769,6 +852,7 @@ class ResultSetWrapper implements ResultSet {
 	/**
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void moveToCurrentRow() throws SQLException {
 		rs.moveToCurrentRow();
 	}
@@ -776,6 +860,7 @@ class ResultSetWrapper implements ResultSet {
 	/**
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void moveToInsertRow() throws SQLException {
 		rs.moveToInsertRow();
 	}
@@ -784,6 +869,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public boolean next() throws SQLException {
 		return rs.next();
 	}
@@ -792,6 +878,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public boolean previous() throws SQLException {
 		return rs.previous();
 	}
@@ -799,6 +886,7 @@ class ResultSetWrapper implements ResultSet {
 	/**
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void refreshRow() throws SQLException {
 		rs.refreshRow();
 	}
@@ -808,6 +896,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public boolean relative(int rows) throws SQLException {
 		return rs.relative(rows);
 	}
@@ -816,6 +905,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public boolean rowDeleted() throws SQLException {
 		return rs.rowDeleted();
 	}
@@ -824,6 +914,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public boolean rowInserted() throws SQLException {
 		return rs.rowInserted();
 	}
@@ -832,6 +923,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public boolean rowUpdated() throws SQLException {
 		return rs.rowUpdated();
 	}
@@ -840,6 +932,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param direction
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void setFetchDirection(int direction) throws SQLException {
 		rs.setFetchDirection(direction);
 	}
@@ -848,6 +941,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param rows
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void setFetchSize(int rows) throws SQLException {
 		rs.setFetchSize(rows);
 	}
@@ -855,6 +949,7 @@ class ResultSetWrapper implements ResultSet {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+                @Override
 	public String toString() {
 		return rs.toString();
 	}
@@ -864,6 +959,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateArray(int columnIndex, Array x) throws SQLException {
 		rs.updateArray(columnIndex, x);
 	}
@@ -873,6 +969,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateArray(String columnName, Array x) throws SQLException {
 		rs.updateArray(columnName, x);
 	}
@@ -883,6 +980,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param length
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateAsciiStream(int columnIndex, InputStream x, int length)
 		throws SQLException {
 		rs.updateAsciiStream(columnIndex, x, length);
@@ -894,6 +992,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param length
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateAsciiStream(String columnName, InputStream x, int length)
 		throws SQLException {
 		rs.updateAsciiStream(columnName, x, length);
@@ -904,6 +1003,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateBigDecimal(int columnIndex, BigDecimal x)
 		throws SQLException {
 		rs.updateBigDecimal(columnIndex, x);
@@ -914,6 +1014,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateBigDecimal(String columnName, BigDecimal x)
 		throws SQLException {
 		rs.updateBigDecimal(columnName, x);
@@ -925,6 +1026,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param length
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateBinaryStream(int columnIndex, InputStream x, int length)
 		throws SQLException {
 		rs.updateBinaryStream(columnIndex, x, length);
@@ -936,6 +1038,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param length
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateBinaryStream(
 		String columnName,
 		InputStream x,
@@ -949,6 +1052,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateBlob(int columnIndex, Blob x) throws SQLException {
 		rs.updateBlob(columnIndex, x);
 	}
@@ -958,6 +1062,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateBlob(String columnName, Blob x) throws SQLException {
 		rs.updateBlob(columnName, x);
 	}
@@ -967,6 +1072,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateBoolean(int columnIndex, boolean x) throws SQLException {
 		rs.updateBoolean(columnIndex, x);
 	}
@@ -976,6 +1082,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateBoolean(String columnName, boolean x)
 		throws SQLException {
 		rs.updateBoolean(columnName, x);
@@ -986,6 +1093,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateByte(int columnIndex, byte x) throws SQLException {
 		rs.updateByte(columnIndex, x);
 	}
@@ -995,6 +1103,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateByte(String columnName, byte x) throws SQLException {
 		rs.updateByte(columnName, x);
 	}
@@ -1004,6 +1113,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateBytes(int columnIndex, byte[] x) throws SQLException {
 		rs.updateBytes(columnIndex, x);
 	}
@@ -1013,6 +1123,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateBytes(String columnName, byte[] x) throws SQLException {
 		rs.updateBytes(columnName, x);
 	}
@@ -1023,6 +1134,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param length
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateCharacterStream(int columnIndex, Reader x, int length)
 		throws SQLException {
 		rs.updateCharacterStream(columnIndex, x, length);
@@ -1034,6 +1146,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param length
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateCharacterStream(
 		String columnName,
 		Reader reader,
@@ -1047,6 +1160,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateClob(int columnIndex, Clob x) throws SQLException {
 		rs.updateClob(columnIndex, x);
 	}
@@ -1056,6 +1170,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateClob(String columnName, Clob x) throws SQLException {
 		rs.updateClob(columnName, x);
 	}
@@ -1065,6 +1180,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateDate(int columnIndex, Date x) throws SQLException {
 		rs.updateDate(columnIndex, x);
 	}
@@ -1074,6 +1190,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateDate(String columnName, Date x) throws SQLException {
 		rs.updateDate(columnName, x);
 	}
@@ -1083,6 +1200,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateDouble(int columnIndex, double x) throws SQLException {
 		rs.updateDouble(columnIndex, x);
 	}
@@ -1092,6 +1210,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateDouble(String columnName, double x) throws SQLException {
 		rs.updateDouble(columnName, x);
 	}
@@ -1101,6 +1220,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateFloat(int columnIndex, float x) throws SQLException {
 		rs.updateFloat(columnIndex, x);
 	}
@@ -1110,6 +1230,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateFloat(String columnName, float x) throws SQLException {
 		rs.updateFloat(columnName, x);
 	}
@@ -1119,6 +1240,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateInt(int columnIndex, int x) throws SQLException {
 		rs.updateInt(columnIndex, x);
 	}
@@ -1128,6 +1250,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateInt(String columnName, int x) throws SQLException {
 		rs.updateInt(columnName, x);
 	}
@@ -1137,6 +1260,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateLong(int columnIndex, long x) throws SQLException {
 		rs.updateLong(columnIndex, x);
 	}
@@ -1146,6 +1270,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateLong(String columnName, long x) throws SQLException {
 		rs.updateLong(columnName, x);
 	}
@@ -1154,6 +1279,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param columnIndex
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateNull(int columnIndex) throws SQLException {
 		rs.updateNull(columnIndex);
 	}
@@ -1162,6 +1288,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param columnName
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateNull(String columnName) throws SQLException {
 		rs.updateNull(columnName);
 	}
@@ -1171,6 +1298,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateObject(int columnIndex, Object x) throws SQLException {
 		rs.updateObject(columnIndex, x);
 	}
@@ -1181,6 +1309,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param scale
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateObject(int columnIndex, Object x, int scale)
 		throws SQLException {
 		rs.updateObject(columnIndex, x, scale);
@@ -1191,6 +1320,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateObject(String columnName, Object x) throws SQLException {
 		rs.updateObject(columnName, x);
 	}
@@ -1201,6 +1331,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param scale
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateObject(String columnName, Object x, int scale)
 		throws SQLException {
 		rs.updateObject(columnName, x, scale);
@@ -1211,6 +1342,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateRef(int columnIndex, Ref x) throws SQLException {
 		rs.updateRef(columnIndex, x);
 	}
@@ -1220,6 +1352,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateRef(String columnName, Ref x) throws SQLException {
 		rs.updateRef(columnName, x);
 	}
@@ -1227,6 +1360,7 @@ class ResultSetWrapper implements ResultSet {
 	/**
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateRow() throws SQLException {
 		rs.updateRow();
 	}
@@ -1236,6 +1370,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateShort(int columnIndex, short x) throws SQLException {
 		rs.updateShort(columnIndex, x);
 	}
@@ -1245,6 +1380,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateShort(String columnName, short x) throws SQLException {
 		rs.updateShort(columnName, x);
 	}
@@ -1254,6 +1390,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateString(int columnIndex, String x) throws SQLException {
 		rs.updateString(columnIndex, x);
 	}
@@ -1263,6 +1400,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateString(String columnName, String x) throws SQLException {
 		rs.updateString(columnName, x);
 	}
@@ -1272,6 +1410,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateTime(int columnIndex, Time x) throws SQLException {
 		rs.updateTime(columnIndex, x);
 	}
@@ -1281,6 +1420,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateTime(String columnName, Time x) throws SQLException {
 		rs.updateTime(columnName, x);
 	}
@@ -1290,6 +1430,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateTimestamp(int columnIndex, Timestamp x)
 		throws SQLException {
 		rs.updateTimestamp(columnIndex, x);
@@ -1300,6 +1441,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @param x
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public void updateTimestamp(String columnName, Timestamp x)
 		throws SQLException {
 		rs.updateTimestamp(columnName, x);
@@ -1309,6 +1451,7 @@ class ResultSetWrapper implements ResultSet {
 	 * @return
 	 * @throws java.sql.SQLException
 	 */
+                @Override
 	public boolean wasNull() throws SQLException {
 		return rs.wasNull();
 	}
@@ -1697,12 +1840,14 @@ class ResultSetWrapper implements ResultSet {
 	}
 
 
+                @Override
 	public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
+                @Override
 	public <T> T getObject(String columnLabel, Class<T> type)
 			throws SQLException {
 		// TODO Auto-generated method stub

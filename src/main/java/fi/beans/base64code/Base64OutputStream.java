@@ -7,6 +7,7 @@ public class Base64OutputStream extends FilterOutputStream
    	{  super(out);
    	}
 
+@Override
 	public void write(byte b[], int off, int len) throws IOException 
 	{	if ((off | len | (b.length - (len + off)) | (off + len)) < 0)
 	    throw new IndexOutOfBoundsException();
@@ -16,10 +17,11 @@ public class Base64OutputStream extends FilterOutputStream
 		}
     }
     
+@Override
    	public void write(int c) throws IOException
-   	{  inbuf[i] = c;
-      i++;
-      if (i == 3)
+   	{  inbuf[_i] = c;
+      _i++;
+      if (_i == 3)
       {  super.write(toBase64[(inbuf[0] & 0xFC) >> 2]);
          super.write(toBase64[((inbuf[0] & 0x03) << 4) |
             ((inbuf[1] & 0xF0) >> 4)]);
@@ -27,7 +29,7 @@ public class Base64OutputStream extends FilterOutputStream
             ((inbuf[2] & 0xC0) >> 6)]);
          super.write(toBase64[inbuf[2] & 0x3F]);
          col += 4;
-         i = 0;
+         _i = 0;
          if (col >= 76)
          {  //super.write('\n');
             col = 0;
@@ -36,20 +38,20 @@ public class Base64OutputStream extends FilterOutputStream
    }
 
    private void flush0() throws IOException
-   {  if (i == 1)
+   {  if (_i == 1)
       {  super.write(toBase64[(inbuf[0] & 0xFC) >> 2]);
          super.write(toBase64[(inbuf[0] & 0x03) << 4]);
          super.write('=');
          super.write('=');
       }
-      else if (i == 2)
+      else if (_i == 2)
       {  super.write(toBase64[(inbuf[0] & 0xFC) >> 2]);
          super.write(toBase64[((inbuf[0] & 0x03) << 4) |
             ((inbuf[1] & 0xF0) >> 4)]);
          super.write(toBase64[(inbuf[1] & 0x0F) << 2]);
          super.write('=');
       }
-      i = 0;
+      _i = 0;
    }
    
    public void finish() throws IOException
@@ -59,7 +61,7 @@ public class Base64OutputStream extends FilterOutputStream
    }
    
 
-   private static char[] toBase64 =
+   private static final char[] toBase64 =
    {  'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
       'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
       'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
@@ -71,11 +73,12 @@ public class Base64OutputStream extends FilterOutputStream
    };
 
    private int col = 0;
-   private int i = 0;
-   private int[] inbuf = new int[3];
+   private int _i = 0;
+   private final int[] inbuf = new int[3];
 /* (non-Javadoc)
  * @see java.io.FilterOutputStream#close()
  */
+@Override
 public void close() throws IOException {
 	flush0();
 	super.close();

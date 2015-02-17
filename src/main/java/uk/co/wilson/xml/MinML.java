@@ -128,26 +128,32 @@ public class MinML implements Parser, Locator, DocumentHandler, ErrorHandler {
   final Vector attributeValues = new Vector();
 
   final AttributeList attrs = new AttributeList() {
+    @Override
     public int getLength() {
       return attributeNames.size();
     }
 
+    @Override
     public String getName(final int i) {
       return (String)attributeNames.elementAt(i);
     }
 
+    @Override
     public String getType(final int i) {
       return "CDATA";
     }
 
+    @Override
     public String getValue(final int i) {
       return (String)attributeValues.elementAt(i);
     }
 
+    @Override
     public String getType(final String name) {
       return "CDATA";
     }
 
+    @Override
     public String getValue(final String name) {
     final int index = attributeNames.indexOf(name);
 
@@ -474,6 +480,7 @@ public class MinML implements Parser, Locator, DocumentHandler, ErrorHandler {
     }
   }
 
+  @Override
   public void parse(final InputSource source) throws SAXException, IOException {
     if (source.getCharacterStream() != null)
       parse(source.getCharacterStream());
@@ -483,53 +490,66 @@ public class MinML implements Parser, Locator, DocumentHandler, ErrorHandler {
      parse(new InputStreamReader(new URL(source.getSystemId()).openStream()));
   }
 
+  @Override
   public void parse(final String systemId) throws SAXException, IOException {
     parse(new InputSource(systemId));
   }
 
+  @Override
   public void setLocale(final Locale locale) throws SAXException {
     throw new SAXException("Not supported");
   }
 
+  @Override
   public void setEntityResolver(final EntityResolver resolver) {
     // not supported
   }
 
+  @Override
   public void setDTDHandler(final DTDHandler handler) {
     // not supported
   }
 
+  @Override
   public void setDocumentHandler(final org.xml.sax.DocumentHandler handler) {
    this.documentHandler = (handler == null) ? this : handler;
    this.extDocumentHandler = this;
   }
 
+  @Override
   public void setDocumentHandler(final DocumentHandler handler) {
    this.documentHandler = this.extDocumentHandler = (handler == null) ? this : handler;
    this.documentHandler.setDocumentLocator(this);
   }
 
+  @Override
   public void setErrorHandler(final ErrorHandler handler) {
    this.errorHandler = (handler == null) ? this : handler;
   }
 
+  @Override
   public void setDocumentLocator(final Locator locator) {
   }
 
+  @Override
   public void startDocument() throws SAXException {
   }
 
+  @Override
   public Writer startDocument(final Writer writer) throws SAXException {
     this.documentHandler.startDocument();
     return writer;
   }
 
+  @Override
   public void endDocument() throws SAXException {
   }
 
+  @Override
   public void startElement(final String name, final AttributeList attributes) throws SAXException {
   }
 
+  @Override
   public Writer startElement(final String name, final AttributeList attributes, final Writer writer)
         throws SAXException
   {
@@ -537,41 +557,52 @@ public class MinML implements Parser, Locator, DocumentHandler, ErrorHandler {
     return writer;
   }
 
+  @Override
   public void endElement(final String name) throws SAXException {
   }
 
+  @Override
   public void characters(final char ch[], final int start, final int length) throws SAXException {
   }
 
+  @Override
   public void ignorableWhitespace(final char ch[], final int start, final int length) throws SAXException {
   }
 
+  @Override
   public void processingInstruction(final String target, final String data) throws SAXException {
   }
 
+  @Override
   public void warning(final SAXParseException e) throws SAXException {
   }
 
+  @Override
   public void error(final SAXParseException e) throws SAXException {
   }
 
+  @Override
   public void fatalError(final SAXParseException e) throws SAXException {
     throw e;
   }
 
+  @Override
   public String getPublicId() {
     return "";
   }
 
 
+  @Override
   public String getSystemId() {
     return "";
   }
 
+  @Override
   public int getLineNumber () {
     return this.lineNumber;
   }
 
+  @Override
   public int getColumnNumber () {
     return this.columnNumber;
   }
@@ -585,10 +616,12 @@ public class MinML implements Parser, Locator, DocumentHandler, ErrorHandler {
       this.in = in;
     }
 
+    @Override
     public void close() throws IOException {
       flush();
     }
 
+    @Override
     public void flush() throws IOException {
       try {
         _flush();
@@ -599,11 +632,13 @@ public class MinML implements Parser, Locator, DocumentHandler, ErrorHandler {
       }
     }
 
+    @Override
     public void write(final int c) throws IOException {
       written = true;
       chars[count++] = (char)c;
     }
 
+    @Override
     public void write(final char[] cbuf, final int off, final int len) throws IOException {
       written = true;
       System.arraycopy(cbuf, off, chars, count, len);

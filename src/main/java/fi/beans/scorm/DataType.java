@@ -17,18 +17,22 @@ public class DataType implements DataTypeIF {
 
     }
 
+    @Override
     public boolean getMustTabSheet() {
         return mustTabSheet;
     }
 
+    @Override
     public void setMustTabSheet(boolean mustTabSheet) {
         this.mustTabSheet = mustTabSheet;
     }
 
+    @Override
     public int getSize() {
         return size;
     }
 
+    @Override
     public void setSize(int size) {
         this.size = size;
     }

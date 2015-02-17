@@ -28,7 +28,6 @@ public class MainFrame extends Frame   implements WindowListener, AppletStub, Ap
             }
         }
     }
-
 	
 	private Applet applet;
 
@@ -45,6 +44,7 @@ public class MainFrame extends Frame   implements WindowListener, AppletStub, Ap
 		applet.start();
 	}
         
+    @Override
 	public void windowClosing(WindowEvent e)
 	{	
 		quit();
@@ -56,29 +56,43 @@ public class MainFrame extends Frame   implements WindowListener, AppletStub, Ap
 		dispose();
 		System.exit(0);
 	}
+    @Override
 	public void windowOpened(WindowEvent e){}
+    @Override
 	public void windowIconified(WindowEvent e){doLayout();}
+    @Override
 	public void windowDeiconified(WindowEvent e){doLayout();}
+    @Override
 	public void windowClosed(WindowEvent e){
 		
 	}
+    @Override
 	public void windowActivated(WindowEvent e){}
+    @Override
 	public void windowDeactivated(WindowEvent e){}
     
     // AppletStub methodes
+    @Override
     public boolean isActive(){return true;}
+    @Override
     public URL getDocumentBase(){return null;}
+    @Override
 	public URL getCodeBase(){return null;}
+    @Override
 	public String getParameter(String name){return null;}
+    @Override
     public void appletResize( int width, int height ){}
+    @Override
     public AppletContext getAppletContext(){return this;}
     	
     // AppletContext methodes
+    @Override
     public AudioClip getAudioClip( URL url )
     {
     	return java.applet.Applet.newAudioClip(url);
     }
     
+    @Override
     public Image getImage( URL url )
     {	Toolkit tk = Toolkit.getDefaultToolkit();
 		try
@@ -90,12 +104,20 @@ public class MainFrame extends Frame   implements WindowListener, AppletStub, Ap
 			return null;
 		}
 	}
+    @Override
 	public Applet getApplet( String name ){return null;}
+    @Override
     public Enumeration getApplets(){return null;}
+    @Override
     public void setStream(String s, InputStream is){}
+    @Override
     public InputStream getStream(String s){return null;}
+    @Override
     public Iterator getStreamKeys(){return null;}
+    @Override
 	public void showDocument( URL url ){}
+    @Override
     public void showDocument( URL url, String target ){}
+    @Override
     public void showStatus( String status ){}
 }

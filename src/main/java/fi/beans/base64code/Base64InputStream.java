@@ -7,24 +7,27 @@ public class Base64InputStream extends FilterInputStream
    {  super(in);
    }
 
+@Override
    public int read(byte[] b, int off, int len) throws IOException
    {  if (len > b.length - off) len = b.length - off;
       for (int i = 0; i < len; i++)
-      {  int ch = read();
-         if (ch == -1) return i==0?-1:i;
-         b[i + off] = (byte)ch;
+      {  int c = read();
+         if (c == -1) return i==0?-1:i;
+         b[i + off] = (byte)c;
       }
       return len;
 
    }
 
+@Override
    public int read(byte[] b) throws IOException
    {  return read(b, 0, b.length);
    }
 
+@Override
    public int read() throws IOException
    {  int r;
-      if (i == 0)
+      if (_i == 0)
       {  // skip whitespace
          do
          {  ch[0] = super.read();
@@ -33,28 +36,28 @@ public class Base64InputStream extends FilterInputStream
          while (Character.isWhitespace((char)ch[0]));
          ch[1] = super.read();
          if (ch[1] == -1) return -1;
-         i++;
+         _i++;
          r = (fromBase64[ch[0]] << 2)
             | (fromBase64[ch[1]] >> 4);
       }
-      else if (i == 1)
+      else if (_i == 1)
       {  ch[2] = super.read();
          if (ch[2] == '=' || ch[2] == -1) return -1;
-         i++;
+         _i++;
          r = ((fromBase64[ch[1]] & 0x0F) << 4)
             | (fromBase64[ch[2]] >> 2);
       }
       else
       {  ch[3] = super.read();
          if (ch[3] == '=' || ch[3] == -1) return -1;
-         i = 0;
+         _i = 0;
          r = ((fromBase64[ch[2]] & 0x03) << 6)
             | fromBase64[ch[3]];
       }
       return r;
    }
 
-   private static int[] fromBase64 =
+   private static final int[] fromBase64 =
    {  -1, -1, -1, -1, -1, -1, -1, -1,
       -1, -1, -1, -1, -1, -1, -1, -1,
       -1, -1, -1, -1, -1, -1, -1, -1,
@@ -73,7 +76,7 @@ public class Base64InputStream extends FilterInputStream
       49, 50, 51, -1, -1, -1, -1, -1
    };
 
-   int i = 0;
+   int _i = 0;
    int[] ch = new int[4];
 }
 

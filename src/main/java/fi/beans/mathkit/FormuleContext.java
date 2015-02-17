@@ -7,35 +7,25 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.geom.AffineTransform;
 import java.awt.font.LineMetrics;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.SizeRequirements;
-import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.BoxView;
-import javax.swing.text.ComponentView;
-import javax.swing.text.CompositeView;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
-import javax.swing.text.IconView;
-import javax.swing.text.LabelView;
-import javax.swing.text.ParagraphView;
-import javax.swing.text.Segment;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
-import javax.swing.text.Utilities;
 import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
-import javax.swing.text.WrappedPlainView;
 import javax.swing.text.Position.Bias;
 
 class FormuleContext implements ViewFactory {
+        private static final Logger log = Logger.getLogger(TableDataView.class.getName());
+        
 
 	static class MultiScriptsView extends SubSupView {
 
@@ -44,6 +34,7 @@ class FormuleContext implements ViewFactory {
 		}
 // FIXME Dit is compleet fout, maar werkt in het log(x,n) geval
 		
+                @Override
 		protected void layoutMajorAxis(int targetSpan, int axis, int[] offsets,
 				int[] spans) {
 			int span = (int)getView(0).getMinimumSpan(axis);
@@ -66,11 +57,13 @@ class FormuleContext implements ViewFactory {
 			super(elem);
 		}
 
+                @Override
 		protected SizeRequirements calculateMinorAxisRequirements(int axis,
 				SizeRequirements r) {
 			return baselineRequirements(axis, r);
 		}
 
+                @Override
 		protected void layoutMinorAxis(int targetSpan, int axis, int[] offsets,
 				int[] spans) {
 			baselineLayout(targetSpan, axis, offsets, spans);
@@ -87,18 +80,22 @@ class FormuleContext implements ViewFactory {
 			super(elem);
 		}
 
+                @Override
 		public float getPreferredSpan(int axis) {
 			return 0;
 		}
 
+                @Override
 		public Shape modelToView(int pos, Shape a, Bias b)
 				throws BadLocationException {
 			return new Rectangle();
 		}
 
+                @Override
 		public void paint(Graphics g, Shape allocation) {
 		}
 
+                @Override
 		public int viewToModel(float x, float y, Shape a, Bias[] biasReturn) {
 			return 0;
 		}
@@ -111,6 +108,7 @@ class FormuleContext implements ViewFactory {
 			super(elem);
 		}
 
+                @Override
 		protected SizeRequirements calculateMajorAxisRequirements(int axis,
 				SizeRequirements r) {
 			r = super.calculateMajorAxisRequirements(axis, r);
@@ -120,6 +118,7 @@ class FormuleContext implements ViewFactory {
 			return r;
 		}
 
+                @Override
 		protected void layoutMajorAxis(int targetSpan, int axis, int[] offsets,
 				int[] spans) {
 			int span0 = (int) getView(0).getMinimumSpan(axis);
@@ -131,6 +130,7 @@ class FormuleContext implements ViewFactory {
 		
 		}
 
+                @Override
 		public void paint(Graphics g, Shape allocation) {
 			super.paint(g, allocation);
 			g.setColor(getForeground());
@@ -172,6 +172,7 @@ class FormuleContext implements ViewFactory {
 			super(elem);
 		}
 
+                @Override
 		protected void layoutMinorAxis(int targetSpan, int axis, int[] offsets,
 				int[] spans) {
 			int n = getViewCount();
@@ -200,6 +201,7 @@ class FormuleContext implements ViewFactory {
 		    
 		}
 
+                @Override
 		protected SizeRequirements calculateMajorAxisRequirements(int axis,
 				SizeRequirements r) {
 			// calculate tiled request
@@ -221,6 +223,7 @@ class FormuleContext implements ViewFactory {
 			return r;
 		}
 
+                @Override
 		protected SizeRequirements calculateMinorAxisRequirements(int axis,
 				SizeRequirements r) {
 			View v = getView(0);
@@ -252,6 +255,7 @@ class FormuleContext implements ViewFactory {
 			r.maximum = r.preferred;
 			return r;
 		}
+                @Override
 		protected void layoutMajorAxis(int targetSpan, int axis, int[] offsets,
 				int[] spans) {
 			int span = (int)getView(0).getMinimumSpan(axis);
@@ -289,6 +293,7 @@ class FormuleContext implements ViewFactory {
 
 
 
+        @Override
 	public View create(Element elem) {
 	    String kind = elem.getName();
 	    if("none".equals(kind)||"mprescripts".equals(kind))
@@ -343,6 +348,7 @@ class FormuleContext implements ViewFactory {
 		public UnderView(Element elem) {
 			super(elem, BoxView.Y_AXIS);
 		}
+                @Override
 		protected SizeRequirements calculateMajorAxisRequirements(int axis,
 				SizeRequirements r) {
 			r = super.calculateMajorAxisRequirements(axis, r);
@@ -361,6 +367,7 @@ class FormuleContext implements ViewFactory {
 			super(elem, BoxView.Y_AXIS);
 		}
 
+                @Override
 		protected SizeRequirements calculateMajorAxisRequirements(int axis,
 				SizeRequirements r) {
 			r = super.calculateMajorAxisRequirements(axis, r);
@@ -389,6 +396,7 @@ class FormuleContext implements ViewFactory {
 			super(elem);
 		}
 
+                @Override
 		protected SizeRequirements calculateMajorAxisRequirements(int axis,
 				SizeRequirements r) {
 			r = minimumRequirements(axis, r);
@@ -421,7 +429,7 @@ class FormuleContext implements ViewFactory {
 				r.preferred = r.minimum;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.log(Level.SEVERE,null,e);
 			}
 			return r;
 		}
@@ -440,6 +448,7 @@ class FormuleContext implements ViewFactory {
 			setInsets((short)0, (short)1, (short)0, (short)1);
 		}
 
+                @Override
 		public void paint(Graphics g, Shape allocation) {
 			super.paint(g, allocation);
 			Shape shape = getChildAllocation(0, allocation);
@@ -458,6 +467,7 @@ class FormuleContext implements ViewFactory {
 		/* (non-Javadoc)
 		 * @see javax.swing.text.View#append(javax.swing.text.View)
 		 */
+                @Override
 		public void append(View v) {
 			if(getViewCount()<2)
 				super.append(v);
@@ -466,6 +476,7 @@ class FormuleContext implements ViewFactory {
 		/* (non-Javadoc)
 		 * @see javax.swing.text.CompositeView#loadChildren(javax.swing.text.ViewFactory)
 		 */
+                @Override
 		protected void loadChildren(ViewFactory f) {
 		    	if (f == null) {
 		    	    // No factory. This most likely indicates the parent view
@@ -498,6 +509,7 @@ class FormuleContext implements ViewFactory {
 			this.over = over;
 		}
 
+                @Override
 		protected void layoutMajorAxis(int targetSpan, int axis, int[] offsets,
 				int[] spans) {
 			super.layoutMajorAxis(targetSpan, axis, offsets, spans);
@@ -509,6 +521,7 @@ class FormuleContext implements ViewFactory {
 			offsets[over] = o0;
 		}
 
+                @Override
 		protected SizeRequirements calculateMajorAxisRequirements(int axis,
 				SizeRequirements r) {
 
@@ -532,6 +545,7 @@ class FormuleContext implements ViewFactory {
 			super(elem);
 		}
 
+                @Override
 		protected SizeRequirements calculateMinorAxisRequirements(int axis,
 				SizeRequirements r) {
 			View v = getView(0);
@@ -558,6 +572,7 @@ class FormuleContext implements ViewFactory {
 			return r;
 		}
 
+                @Override
 		protected void layoutMinorAxis(int targetSpan, int axis, int[] offsets,
 				int[] spans) {
 			int n = getViewCount();
@@ -584,6 +599,7 @@ class FormuleContext implements ViewFactory {
 		    
 		}
 
+                @Override
 		protected void loadChildren(ViewFactory f) {
 					if (f == null) {
 					    // No factory. This most likely indicates the parent view
@@ -631,6 +647,7 @@ class FormuleContext implements ViewFactory {
 			return 10;
 		}
 
+                @Override
 		public void paint(Graphics g, Shape allocation) {			
 			super.paint(g, allocation);
 			g.setColor(getForeground());
@@ -669,6 +686,7 @@ class FormuleContext implements ViewFactory {
 			super(elem, axis);
 		}
 
+                @Override
 		protected SizeRequirements calculateMinorAxisRequirements(int axis,
 				SizeRequirements r) {
 			r = super.calculateMinorAxisRequirements(axis, r);
@@ -764,6 +782,7 @@ class FormuleContext implements ViewFactory {
 		}
 
 		
+                @Override
 		protected SizeRequirements calculateMinorAxisRequirements(int axis,
 				SizeRequirements r) {
 			// TODO Auto-generated method stub
@@ -798,6 +817,7 @@ class FormuleContext implements ViewFactory {
 			return result;
 		}
 		
+                @Override
 		public void paint(Graphics g, Shape a) {
 			super.paint(g, a);
 			g.setColor(getForeground());
@@ -815,7 +835,7 @@ class FormuleContext implements ViewFactory {
 			int y = (int) (r.y + g.getFontMetrics().getAscent());
 			String str;
 			AttributeSet attributes = getElement().getAttributes();
-			h = g.getFontMetrics().getAscent();
+//			h = g.getFontMetrics().getAscent();
 			if(!attributes.isDefined("open")) str = "(";
 			else str = (String)attributes.getAttribute("open");
 			g.drawString(str, x, y);

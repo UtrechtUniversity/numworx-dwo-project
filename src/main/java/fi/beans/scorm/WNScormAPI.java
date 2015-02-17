@@ -37,29 +37,35 @@ public class WNScormAPI implements SCORM12APIInterface {
 	}
 	
 	
+        @Override
 	public String LMSCommit(String param) {
 		return "";
 	}
 
+        @Override
 	public String LMSFinish(String param) {
 		return "";
 	}
 
+        @Override
 	public String LMSGetDiagnostic(String errorCode) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+        @Override
 	public String LMSGetErrorString(String errorCode) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+        @Override
 	public String LMSGetLastError() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+        @Override
 	public String LMSGetValue(String dataModelElement) {
 	    if(SUSPENDDATA.equals(dataModelElement))
         {
@@ -68,6 +74,7 @@ public class WNScormAPI implements SCORM12APIInterface {
         return "";
 	}
 
+        @Override
 	public String LMSInitialize(String param) {
 		String result = "";
 		if(!inited && window != null)
@@ -172,6 +179,7 @@ public class WNScormAPI implements SCORM12APIInterface {
 		return result;
 	}
 	
+        @Override
 	public String LMSSetValue(String dataModelElement, String value) {
 		if(SCORE.equals(dataModelElement))
 		{

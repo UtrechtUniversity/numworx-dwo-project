@@ -12,6 +12,7 @@ public class DataSourceAccess extends DbAccess {
     /* (non-Javadoc)
 	 * @see fi.beans.jdbc.DbConnect#close()
 	 */
+    @Override
 	public void close() {
 		if(c != null)
 			try {
@@ -22,6 +23,7 @@ public class DataSourceAccess extends DbAccess {
 			}
 	}
 
+    @Override
 	public Connection getConnection() throws SQLException {
 		if(c != null && !c.isClosed())
 			return c;
