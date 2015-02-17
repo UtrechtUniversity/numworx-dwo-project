@@ -79,7 +79,7 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>   
-            
+                                          
             <!-- ensure the build number is available as ${buildNumber} -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -196,6 +196,12 @@ An example is commented below.
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
-        </dependency>        
+        </dependency>       
+        <dependency>
+            <groupId>jre.plugin</groupId>
+            <artifactId>plugin</artifactId>
+            <version>1.8.0_31</version>
+            <type>jar</type>
+        </dependency>         
     </dependencies>
 </project>
