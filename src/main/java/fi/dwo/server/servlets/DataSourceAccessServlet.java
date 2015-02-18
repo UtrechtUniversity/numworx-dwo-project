@@ -233,9 +233,9 @@ public class DataSourceAccessServlet extends Servlet {
                 hashMap.put(rs.getString("name"), rs.getString("value"));
             }
             out.println();
-            out.printf("We are compatible with the database version: {0}.{1}.{2}", new Object[]{hashMap.get("DBVersion Major"),
-                hashMap.get("DBVersion Minor"),
-                hashMap.get("DBVersion Revision")});
+            out.printf("We are compatible with the database version: "+(String)  hashMap.get("DBVersion Major")
+                    +"."+(String) hashMap.get("DBVersion Minor")
+                    +"."+(String) hashMap.get("DBVersion Revision"));
         } catch (Exception e) {
             log.log(Level.SEVERE, "Eror retrieving database version information from the database", e);
         } finally {
