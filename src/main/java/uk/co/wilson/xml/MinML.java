@@ -173,7 +173,7 @@ public class MinML implements Parser, Locator, DocumentHandler, ErrorHandler {
             while (true) {
                 charCount++;
 
-        //
+                //
                 // this is to try and make the loop a bit faster
                 // currentChar = buffer.read(); is simpler but is a bit slower.
                 //
@@ -468,7 +468,7 @@ public class MinML implements Parser, Locator, DocumentHandler, ErrorHandler {
                         return;
 
                     case writeCdata:
-          // write character data
+                        // write character data
                         // this will also write any skipped whitespace
 
                         buffer.write(currentChar);

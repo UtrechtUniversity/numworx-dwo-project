@@ -1,4 +1,4 @@
-package fi.dwo.server.persistence;
+package fi.dwo.server.servlets;
 
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import java.io.IOException;
@@ -28,6 +28,8 @@ import com.jamonapi.proxy.MonProxyFactory;
 import fi.beans.jdbc.DbConnectIF;
 import fi.beans.xmlrpc.Servlet;
 import fi.dwo.commons.persistence.DbAccessIF;
+import fi.dwo.server.persistence.DataSourceAccess;
+import fi.dwo.server.persistence.DbAccessProxy;
 import java.sql.PreparedStatement;
 import java.util.HashMap;
 

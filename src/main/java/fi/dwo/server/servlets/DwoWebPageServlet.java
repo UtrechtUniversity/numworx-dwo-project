@@ -2,7 +2,7 @@
  * Created on Apr 5, 2005
  *
  */
-package fi.dwo.server.persistence;
+package fi.dwo.server.servlets;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
