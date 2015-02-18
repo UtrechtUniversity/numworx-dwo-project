@@ -13,8 +13,8 @@ import javax.swing.text.ViewFactory;
 import javax.swing.text.html.HTMLEditorKit;
 
 /**
- * 
- * 
+ *
+ *
  * @author Wim
  *
  */
@@ -32,12 +32,12 @@ public class MathKit extends HTMLEditorKit {
         return context;
     }
 
-     // TODO Why are private functions now public?
+    // TODO Why are private functions now public?
     public void setStylePreferences(FormuleContext formuleContext) {
         context = formuleContext;
     }
 
-	// --- EditorKit methods -------------------------
+    // --- EditorKit methods -------------------------
     /**
      * Get the MIME type of the data that this kit represents support for. This
      * kit supports the type <code>text/java</code>.

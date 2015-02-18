@@ -21,7 +21,7 @@ public class FormuleDocument extends HTMLDocument {
 
     }
 
-	// --- AbstractDocument methods ----------------------------
+    // --- AbstractDocument methods ----------------------------
     @Override
     protected void insertUpdate(DefaultDocumentEvent chng, AttributeSet attr) {
         super.insertUpdate(chng, attr);
