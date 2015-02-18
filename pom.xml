@@ -56,11 +56,6 @@
             <version>2.0.1</version>
         </dependency>
         <dependency>
-            <groupId>com.jamonapi</groupId>
-            <artifactId>jamon</artifactId>
-            <version>2.80</version>
-        </dependency>
-        <dependency>
             <groupId>jre.plugin</groupId>
             <artifactId>plugin</artifactId>
             <version>1.8.0_31</version>
@@ -78,6 +73,37 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>  
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jamonapi</groupId>
+            <artifactId>jamon</artifactId>
+            <version>2.75</version>
+        </dependency>
+        <dependency>
+            <groupId>net.oauth.core</groupId>
+            <artifactId>oauth</artifactId>
+            <version>20100601</version>
+        </dependency>
+        <dependency>
+            <groupId>net.oauth.core</groupId>
+            <artifactId>oauth-provider</artifactId>
+            <version>20100601</version>
+        </dependency>
+        <dependency>
+            <groupId>net.oauth.core</groupId>
+            <artifactId>oauth-consumer</artifactId>
+            <version>20100601</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
+        
     </dependencies>
 
     <build>
@@ -160,5 +186,5 @@
             <id>xmlrpc</id>
             <url>http://ws.apache.org/xmlrpc/</url>
         </repository>
-    </repositories>    
+    </repositories>
 </project>
