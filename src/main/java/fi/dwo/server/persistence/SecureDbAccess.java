@@ -16,10 +16,10 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 /**
  * This class extends DbAccess and adds a security layer
- * 
+ *
  * @author plas0006
  */
-public class SecureDbAccess implements DbAccessIF{
+public class SecureDbAccess implements DbAccessIF {
 
     @Override
     public Vector getCoursesForClass(int classID) throws IOException, XmlRpcException, SQLException {
@@ -410,5 +410,5 @@ public class SecureDbAccess implements DbAccessIF{
     public boolean changeSco(int scoid, String scoName, String description, boolean delete, byte[] launchdata, boolean showScore) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

@@ -1,5 +1,4 @@
 // Source file: C:\\fi\\beans\\scorm\\ScormDouble.java
-
 package fi.beans.scorm;
 
 public class ScormDouble extends DataType {

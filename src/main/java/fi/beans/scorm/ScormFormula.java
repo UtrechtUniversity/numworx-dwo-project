@@ -1,5 +1,4 @@
 // Source file: C:\\fi\\beans\\scorm\\ScormFormula.java
-
 package fi.beans.scorm;
 
 public class ScormFormula extends DataType {

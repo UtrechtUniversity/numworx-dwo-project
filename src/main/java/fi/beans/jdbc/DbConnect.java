@@ -17,10 +17,10 @@ import java.util.logging.Logger;
  */
 public class DbConnect implements DbConnectIF {
 
-        private static final Logger log = Logger.getLogger(DbConnect.class.getName());
+    private static final Logger log = Logger.getLogger(DbConnect.class.getName());
 
     public static final int DEFAULT = 1;
-	//public static final int VECTOR  = 0;
+    //public static final int VECTOR  = 0;
 
     /**
      * Constant voor access naar mysql.fi.uu.nl. Voorbeeld van gebruik:
@@ -154,10 +154,10 @@ public class DbConnect implements DbConnectIF {
 
     /**
      * Gemaksmethode. Combineer getConnection met prepareStatement
-     * 
+     *
      * @param sql
-     * @return 
-     * @throws java.sql.SQLException 
+     * @return
+     * @throws java.sql.SQLException
      */
     protected PreparedStatement getStatement(String sql) throws SQLException {
         return getConnection().prepareStatement(sql);
@@ -165,10 +165,10 @@ public class DbConnect implements DbConnectIF {
 
     /**
      * Gemaksmethode. Combineer getConnection met prepareStatement
-     * 
+     *
      * @param sql
-     * @return 
-     * @throws java.sql.SQLException 
+     * @return
+     * @throws java.sql.SQLException
      */
     protected PreparedStatement getStatementWithGeneratedKeys(String sql) throws SQLException {
         return getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -176,9 +176,9 @@ public class DbConnect implements DbConnectIF {
 
     /**
      * Gemaksmethode. Combineer getConnection met executeQuery
-     * 
+     *
      * @param sql
-     * @return 
+     * @return
      * @throws java.sql.SQLException
      */
     protected ResultSet executeQuery(String sql) throws SQLException {
@@ -212,7 +212,7 @@ public class DbConnect implements DbConnectIF {
                 c.close();
             }
         } catch (Exception e) {
-            log.log(Level.WARNING,"Could not close connection: {0}.", new Object[]{e.getMessage()});
+            log.log(Level.WARNING, "Could not close connection: {0}.", new Object[]{e.getMessage()});
         }
         c = null;
     }

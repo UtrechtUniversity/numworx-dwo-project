@@ -54,11 +54,11 @@ import java.util.Random;
  02111-1307, USA
 
  */
-
 /**
  * <P>
  * This class contains a variety of utility String manipulating static methods.
  * </P>
+ *
  * @author Jonathan Abbey, jonabbey@arlut.utexas.edu - tweaked by M.J.B. Kupers
  * @see <a href="http://tools.arlut.utexas.edu/gash2/">Gash2</a>
  */
@@ -69,12 +69,14 @@ public class StringUtils {
      * This method strips out any characters from inputString that are not
      * present in legalChars.
      * </P>
-     * 
+     *
      * <P>
      * This method will always return a non-null String.
      * </P>
+     *
      * @param inputString The string to strip characters from.
-     * @param legalChars The characters that are allowed. The other characters will be removed.
+     * @param legalChars The characters that are allowed. The other characters
+     * will be removed.
      * @return A string with only the legalChars.
      */
     public static String strip(String inputString, String legalChars) {
@@ -102,10 +104,14 @@ public class StringUtils {
      * characters not contained within legalChars, containsOnly() will return
      * true, otherwise it will return false.
      * </P>
-     * 
+     *
      * <P>
      * Note that containsOnly will always return true if inputString is null.
      * </P>
+     * 
+     * @param inputString
+     * @param legalChars
+     * @return 
      */
     public static boolean containsOnly(String inputString, String legalChars) {
         if (inputString == null || inputString.length() == 0) {
@@ -132,13 +138,15 @@ public class StringUtils {
      * This method takes an inputString and counts the number of times that
      * patternString occurs within it.
      * </P>
+     * @param inputString
+     * @param patternString
+     * @return 
      */
     public static int count(String inputString, String patternString) {
         int index = 0;
         int count = 0;
 
         /* -- */
-
         while (true) {
             index = inputString.indexOf(patternString, index);
 
@@ -161,12 +169,15 @@ public class StringUtils {
      * splitString. The splitString divider will not be returned in the split
      * strings.
      * </P>
-     * 
+     *
      * <P>
      * In particular, this can be used to split a multiline String into an array
      * of Strings by using a splitString of "\n". The resulting strings will not
      * include their terminating newlines.
      * </P>
+     * @param inputString
+     * @param splitString
+     * @return 
      */
     public static String[] split(String inputString, String splitString) {
         int index;
@@ -175,7 +186,6 @@ public class StringUtils {
         String results[] = new String[count + 1];
 
         /* -- */
-
         index = 0;
         count = 0;
 
@@ -193,7 +203,6 @@ public class StringUtils {
         }
 
         // we should never get here
-
         return results;
     }
 
@@ -202,8 +211,11 @@ public class StringUtils {
      * This method behaves like String.replace(), but replaces substrings rather
      * than chars.
      * </p>
+     * @param inputString
+     * @param splitString
+     * @param joinString
+     * @return 
      */
-
     public static String replaceStr(String inputString, String splitString,
             String joinString) {
         StringBuffer buffer = new StringBuffer();
@@ -227,21 +239,23 @@ public class StringUtils {
     private static int rand(int lo, int hi) {
         int n = hi - lo + 1;
         int i = rn.nextInt() % n;
-        if (i < 0)
+        if (i < 0) {
             i = -i;
+        }
         return lo + i;
     }
 
     private static String randomstring(int lo, int hi) {
         int n = rand(lo, hi);
         byte b[] = new byte[n];
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++) {
             b[i] = (byte) rand('a', 'z');
+        }
         return new String(b, 0);
     }
 
     public static String randomstring() {
         return randomstring(10, 20);
     }
-    
+
 }

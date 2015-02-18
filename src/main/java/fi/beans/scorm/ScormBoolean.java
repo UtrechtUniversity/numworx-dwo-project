@@ -1,5 +1,4 @@
 // Source file: C:\\fi\\beans\\scorm\\ScormBoolean.java
-
 package fi.beans.scorm;
 
 public class ScormBoolean extends DataType {

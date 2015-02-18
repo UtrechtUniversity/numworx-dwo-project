@@ -1,8 +1,8 @@
 // Source file: C:\\fi\\beans\\scorm\\ScormTree.java
-
 package fi.beans.scorm;
 
 public class ScormTree extends DataType {
+
     private int maxItems;
 
     /**

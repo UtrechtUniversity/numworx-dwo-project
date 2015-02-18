@@ -7,7 +7,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,11 +33,12 @@ import java.util.HashMap;
 
 public class DataSourceAccessServlet extends Servlet {
 
+    private static final Logger log = Logger.getLogger(DataSourceAccessServlet.class.getName());
+
     private DataSource ds;
     private boolean monitor;
     private boolean threading;
     static private ThreadLocal<HttpSession> session = new ThreadLocal<HttpSession>();
-    static private Logger log = Logger.getLogger(DataSourceAccessServlet.class.getName());
 
     static class MonitorDataSourceAccess extends DataSourceAccess implements fi.beans.jdbc.DbConnectIF, DbAccessIF {
 
@@ -69,7 +69,7 @@ public class DataSourceAccessServlet extends Servlet {
             if (mine != null) {
                 --count;
                 if (count > 10) {
-                    log.info(" dwo access close " + count);
+                    log.log(Level.INFO, " dwo access close {0}", count);
                 }
                 try {
                     mine.close();
@@ -90,7 +90,7 @@ public class DataSourceAccessServlet extends Servlet {
                 mine = MonProxyFactory.monitor(c);
                 ++count;
                 if (count > 10) {
-                    log.info(" dwo access connect " + count);
+                    log.log(Level.INFO, " dwo access connect {0}", count);
                 }
             }
             return mine;
@@ -150,7 +150,7 @@ public class DataSourceAccessServlet extends Servlet {
         monitor = !"false".equals(getInitParameter("monitor"));
         threading = "true".equals(getInitParameter("threading"));
 
-        log.info("monitoring = " + monitor + ", threading = " + threading);
+        log.log(Level.INFO, "monitoring = {0}, threading = {1}", new Object[]{monitor, threading});
         try {
 // find datasource from tomcat
             Context initContext = new InitialContext();
@@ -235,17 +235,17 @@ public class DataSourceAccessServlet extends Servlet {
                 hashMap.get("DBVersion Minor"),
                 hashMap.get("DBVersion Revision")});
         } catch (Exception e) {
-                    log.log(Level.SEVERE, "Eror retrieving database version information from the database", e);
+            log.log(Level.SEVERE, "Eror retrieving database version information from the database", e);
         } finally {
-            if(c!=null){
+            if (c != null) {
                 try {
                     c.close();
                 } catch (SQLException ex) {
                     log.log(Level.SEVERE, "Eror closing the connection", ex);
                 }
-            }            
+            }
         }
-        
+
         //Disabled code for security issues.
 //        try {
 //            c = ds.getConnection();
@@ -265,7 +265,6 @@ public class DataSourceAccessServlet extends Servlet {
 //                e.printStackTrace(out);
 //            }
 //        }
-
     }
 
     @Override

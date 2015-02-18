@@ -1,5 +1,4 @@
 // Source file: C:\\fi\\beans\\scorm\\ScormGroup.java
-
 package fi.beans.scorm;
 
 public class ScormGroup extends DataType {

@@ -1,5 +1,4 @@
 // Source file: C:\\fi\\beans\\scorm\\ScormEditComponentIF.java
-
 package fi.beans.scorm;
 
 import java.awt.Component;
@@ -18,10 +17,10 @@ public interface ScormEditComponentIF {
      * @roseuid 425A4E4102CE
      */
     public Hashtable getLaunchData();
-    
+
     public void setState(Hashtable launchData);
-    
+
     public void end();
-    
+
     public void reset();
 }

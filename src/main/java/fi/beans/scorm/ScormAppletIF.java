@@ -1,5 +1,4 @@
 // Source file: C:\\fi\\beans\\scorm\\ScormAppletIF.java
-
 package fi.beans.scorm;
 
 import java.util.Hashtable;
@@ -17,7 +16,7 @@ public interface ScormAppletIF {
      * @roseuid 4253952E0271
      */
     public void setState(String state);
-    
+
     public void stopSco();
 
     /**
@@ -27,9 +26,8 @@ public interface ScormAppletIF {
     public boolean hasEditMode();
 
     /**
-     * @param String
+     * @param launchdata
      * @return fi.beans.scorm.ScormEditComponentIF
-     * @roseuid 425395920138
      */
     public ScormEditComponentIF getEditComponent(Hashtable launchdata);
 
@@ -38,7 +36,6 @@ public interface ScormAppletIF {
      * @roseuid 42539737036B
      */
     public Parameter[] getEditableParameters();
-
 
     public Parameter[] getAllParameters();
 }

@@ -1,5 +1,4 @@
 // Source file: C:\\fi\\beans\\scorm\\ScormText.java
-
 package fi.beans.scorm;
 
 public class ScormText extends DataType {
