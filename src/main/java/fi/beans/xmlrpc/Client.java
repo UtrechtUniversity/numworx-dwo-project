@@ -9,22 +9,23 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 /**
  * Abstract superclass voor jxmlrpcc gegenereerde stubs.
+ *
  * @author wim
  *
- *  */
+ *
+ */
 public abstract class Client {
-	private SimpleXmlRpcClient client;
 
-	protected Object invoke(String naam, Vector params)
-	throws IOException, XmlRpcException
-	{
-		return client.execute(naam, params);
-	}
+    private SimpleXmlRpcClient client;
 
-	protected Client(URL u)
-	{
-		client = new SimpleXmlRpcClient(u);
+    protected Object invoke(String naam, Vector params)
+            throws IOException, XmlRpcException {
+        return client.execute(naam, params);
+    }
 
-	}
+    protected Client(URL u) {
+        client = new SimpleXmlRpcClient(u);
+
+    }
 
 }

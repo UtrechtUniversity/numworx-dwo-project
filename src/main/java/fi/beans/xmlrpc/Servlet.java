@@ -30,125 +30,129 @@ import org.apache.xmlrpc.XmlRpcServer;
 import fi.beans.jdbc.DbConnectIF;
 
 /**
- * Generieke XML-RPC servlet. Voor gebruik bij 
+ * Generieke XML-RPC servlet. Voor gebruik bij
+ *
  * @author wim
  * @see org.apache.xmlrpc.applet.XmlRpcClient
  */
 public abstract class Servlet extends HttpServlet {
 
-
     protected XmlRpcServer xmlrpc;
     private Object handler;
     private Object lock;
-    
-/**
- * Standaard init. Moet aangeroepen worden in subclasses!
- */    
-    public void init(ServletConfig config) throws ServletException
-    {
-    	super.init(config);
-		xmlrpc = new XmlRpcServer ();
-        xmlrpc.addHandler ("$default", handler);
+
+    /**
+     * Standaard init. Moet aangeroepen worden in subclasses!
+     * @param config
+     * @throws javax.servlet.ServletException
+     */
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        xmlrpc = new XmlRpcServer();
+        xmlrpc.addHandler("$default", handler);
     }
-    
-/**
- * Handel XML RPC request af. Alle public methods kunnen aangeroepen worden d.m.v reflection.
- * Noot: als de handler een 'DbConnect' object is, wordt daarvan close aangeroepen.
- * @see fi.beans.jdbc.DbConnect#close()
- */    
-	final public void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws IOException
-    {
-	    
-	    byte[] result;
-    	ServletInputStream in = request.getInputStream ();
-    	if(lock != null)
-    		synchronized (lock)
-    		{
-    			result = execute(in);
-    		}
-    	else 
-    		result = execute(in);
-        response.setContentType ("text/xml");
-        response.setContentLength (result.length);
+
+    /**
+     * Handel XML RPC request af. Alle public methods kunnen aangeroepen worden
+     * d.m.v reflection. Noot: als de handler een 'DbConnect' object is, wordt
+     * daarvan close aangeroepen.
+     *
+     * @param request
+     * @param response
+     * @throws java.io.IOException
+     * @see fi.beans.jdbc.DbConnect#close()
+     */
+    @Override
+    final public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+
+        byte[] result;
+        ServletInputStream in = request.getInputStream();
+        if (lock != null) {
+            synchronized (lock) {
+                result = execute(in);
+            }
+        } else {
+            result = execute(in);
+        }
+        response.setContentType("text/xml");
+        response.setContentLength(result.length);
         OutputStream out = response.getOutputStream();
-        out.write (result);
-        out.flush ();
+        out.write(result);
+        out.flush();
     }
 
-private byte[] execute(ServletInputStream in) {
-	byte[] result;
-	result = xmlrpc.execute (in);
-	if(handler instanceof DbConnectIF)
-	{
+    private byte[] execute(ServletInputStream in) {
+        byte[] result;
+        result = xmlrpc.execute(in);
+        if (handler instanceof DbConnectIF) {
 // disconnect database, if fi design pattern used.          
-	    ((DbConnectIF)handler).close();
-	}
-	return result;
-}
+            ((DbConnectIF) handler).close();
+        }
+        return result;
+    }
 
-    protected Servlet() 
-    {
+    protected Servlet() {
         handler = this;
         lock = this;
     }
 
-    protected Servlet(Object h)
-    {
+    protected Servlet(Object h) {
         handler = h;
-        lock = this;;
+        lock = this;
     }
+
     /**
      * @return Returns the handler.
      */
-    protected Object getHandler()
-    {
+    protected Object getHandler() {
         return handler;
     }
+
     /**
      * @param handler The handler to set.
      */
-    protected void setHandler(Object handler)
-    {
+    protected void setHandler(Object handler) {
         this.handler = handler;
         getXmlrpc().addHandler("$default", handler);
-        
+
     }
+
     /**
      * @return Returns the xmlrpc.
      */
-    protected XmlRpcServer getXmlrpc()
-    {
+    protected XmlRpcServer getXmlrpc() {
         return xmlrpc;
     }
+
     /**
      * @param xmlrpc The xmlrpc to set.
      */
-    protected void setXmlrpc(XmlRpcServer xmlrpc)
-    {
+    protected void setXmlrpc(XmlRpcServer xmlrpc) {
         this.xmlrpc = xmlrpc;
     }
+
     /**
      * @return Returns the lock.
      */
-    protected Object getLock()
-    {
+    protected Object getLock() {
         return lock;
     }
+
     /**
      * @param lock The lock to set.
      */
-    protected void setLock(Object lock)
-    {
-        if(lock == null)
+    protected void setLock(Object lock) {
+        if (lock == null) {
             this.lock = this;
-        else
+        } else {
             this.lock = lock;
+        }
     }
-    
+
     // no lock at all
-    protected void unLock()
-    {
-    	this.lock = null;
+    protected void unLock() {
+        this.lock = null;
     }
 }
