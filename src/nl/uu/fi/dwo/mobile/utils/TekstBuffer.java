@@ -341,7 +341,11 @@ public class TekstBuffer
 		case 46 :
 			return new StubView("DraaibankGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//return new PopupFacade(currentVakGegevens, new fi.draaibankgwt.client.DraaibankGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
-		
+		case 30:
+			return new StubView("StatistiekGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			//return new PopupFacade(currentVakGegevens, new fi.statistiekgwt.client.StatistiekGWT(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom]));
+			
+			
 		}
 		
 
