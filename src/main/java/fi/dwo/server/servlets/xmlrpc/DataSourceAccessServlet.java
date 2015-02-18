@@ -1,4 +1,4 @@
-package fi.dwo.server.servlets;
+package fi.dwo.server.servlets.xmlrpc;
 
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import java.io.IOException;

@@ -22,7 +22,7 @@
     <servlet>
         <description>Servlet voor het genereren van de dwo.html paginaServlet voor het genereren van de dwo.html pagina</description>
         <servlet-name>DwoWebPage</servlet-name>
-        <servlet-class>fi.dwo.server.servlets.DwoWebPageServlet</servlet-class>
+        <servlet-class>fi.dwo.server.servlets.xmlrpc.DwoWebPageServlet</servlet-class>
         <init-param>
             <param-name>html_source</param-name>
             <param-value>file:webapps/dwo/dwo.html</param-value>
@@ -33,13 +33,13 @@
         </init-param>
         <init-param>
             <param-name>servlet</param-name>
-            <param-value>/dbaccess</param-value>
+            <param-value>/xmlrpc</param-value>
         </init-param>
     </servlet>
     <servlet>
         <description>Datasource servlet</description>
-        <servlet-name>dsaccess</servlet-name>
-        <servlet-class>fi.dwo.server.servlets.DataSourceAccessServlet</servlet-class>
+        <servlet-name>xmlrpc</servlet-name>
+        <servlet-class>fi.dwo.server.servlets.xmlrpc.DataSourceAccessServlet</servlet-class>
         <init-param>
             <param-name>datasource</param-name>
             <param-value>jdbc/dwodb</param-value>
@@ -65,12 +65,8 @@
     servlet mappings 
     -->
     <servlet-mapping>
-        <servlet-name>dsaccess</servlet-name>
-        <url-pattern>/dbaccess</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>dsaccess</servlet-name>
-        <url-pattern>/dsaccess</url-pattern>
+        <servlet-name>xmlrpc</servlet-name>
+        <url-pattern>/xmlrpc</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>DwoWebPage</servlet-name>
