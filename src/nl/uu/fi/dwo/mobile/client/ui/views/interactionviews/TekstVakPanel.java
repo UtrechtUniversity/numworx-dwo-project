@@ -9,6 +9,8 @@ import java.util.Map;
 
 
 
+
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
@@ -28,6 +30,8 @@ import nl.uu.fi.dwo.mobile.utils.Connector;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
+import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Touch;
@@ -138,6 +142,7 @@ public class TekstVakPanel implements InteractionView
 	int cellMarge = 0;
 	int bovenMarge = 0;
 	int ronding = 0;
+	int hoek = 0;
 	CssColor bgColor = CssColor.make(255, 255, 255);
 	CssColor fgColor = CssColor.make(0, 0, 0);
 	CssColor randColor = CssColor.make(150, 150, 150);
@@ -342,6 +347,8 @@ public class TekstVakPanel implements InteractionView
 			bovenMarge = launchState.getInt("bovenMarge");
 		if (launchState.containsKey("ronding"))
 			ronding = launchState.getInt("ronding");
+		if (launchState.containsKey("hoek"))
+			hoek = launchState.getInt("hoek");
 		if (launchState.containsKey("bgColorZichtbaar") )
 			bgColorZichtbaar = launchState.getBoolean("bgColorZichtbaar");
 		if (launchState.containsKey("bgColor_red") )
@@ -554,6 +561,16 @@ public class TekstVakPanel implements InteractionView
 			mainPanel2.setWidgetLeftWidth(ic, 0, Style.Unit.PX, 20, Style.Unit.PX);
 			mainPanel2.setWidgetTopHeight(ic, 0, Style.Unit.PX, 20, Style.Unit.PX);
 		}
+		if(hoek != 0)
+		{	//voor Chrome, Firefox
+			mainPanel2.getElement().getStyle().setProperty("transform", "rotate(" + hoek + "deg)");
+			//voor Safari
+			mainPanel2.getElement().getStyle().setProperty("WebkitTransform", "rotate(" + hoek + "deg)");
+			
+		}
+		
+		
+		
 // pas bij zet opdracht
 //		if(inklapbaar)
 //		{	initieerKlapUitButton(ingeklapt);

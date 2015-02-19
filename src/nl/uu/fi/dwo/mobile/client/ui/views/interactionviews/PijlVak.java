@@ -212,6 +212,14 @@ public class PijlVak extends LayoutPanel{
 		
 	}
 	
+	public void setPijlVisible(boolean b)
+	{
+		if(!b && (operator.equals("implicatie") || operator.equals("")) && geefExpressieString().length() < 1)
+			setVisible(false);
+		else
+			setVisible(true);
+	}
+	
 	public void paintComponent()
 	{	//ctx.setFont(font);
 		ctx.setFont(XMLView.getDefaultFont());

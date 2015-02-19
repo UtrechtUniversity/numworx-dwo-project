@@ -196,7 +196,9 @@ public class FormuleEditorWithSteps implements InteractionView
 			
 			if (launchState.containsKey("pijl"))
 				pijl = ((Boolean) launchState.get("pijl")).booleanValue();
-			
+			//op verzoek van Noordhoff:
+			if(isNoordhoff())
+				pijl = false;
 			bordjesMethode = Boolean.TRUE.equals( launchState.get("bordjesMethode"));
 			linStrategieVersie = Boolean.TRUE.equals(launchState.get("linStrategieVersie"));
 			linOefenVersie = Boolean.TRUE.equals(launchState.get("linOefenVersie"));
@@ -432,11 +434,11 @@ public class FormuleEditorWithSteps implements InteractionView
 			if(!(linStrategieVersie || linOefenVersie || bordjesMethode))
 			{	pijlVak = new PijlVak("", this, false);
 				int y = stepPanelY + f.getHeight()/2;
-				if(pijl)
-				{	contentPanel.add(pijlVak);
-					contentPanel.setWidgetRightWidth(pijlVak, 0, Style.Unit.PX, pijlX, Style.Unit.PX);
-					contentPanel.setWidgetTopHeight(pijlVak, y, Style.Unit.PX, pijlVak.getHeight(), Style.Unit.PX);
-				}
+				//if(pijl)
+				contentPanel.add(pijlVak);
+				contentPanel.setWidgetRightWidth(pijlVak, 0, Style.Unit.PX, pijlX, Style.Unit.PX);
+				contentPanel.setWidgetTopHeight(pijlVak, y, Style.Unit.PX, pijlVak.getHeight(), Style.Unit.PX);
+				pijlVak.setPijlVisible(pijl);
 				
 				pijlVakken.add(pijlVak);
 				pijlVak.paintComponent();
@@ -577,11 +579,11 @@ public class FormuleEditorWithSteps implements InteractionView
 		
 		pijlVak = new PijlVak("", this, false); 
 		int y = stepPanelY + fv.getHeight()/2;
-		if (pijl)
-		{	contentPanel.add(pijlVak);
+		//if (pijl)
+			contentPanel.add(pijlVak);
 			contentPanel.setWidgetRightWidth(pijlVak, 0, Style.Unit.PX, pijlX, Style.Unit.PX);
 			contentPanel.setWidgetTopHeight(pijlVak, y, Style.Unit.PX, pijlVak.getHeight(), Style.Unit.PX);
-		}
+		pijlVak.setPijlVisible(pijl);
 		pijlVakken.add(pijlVak);
 		pijlVak.paintComponent();
 		
@@ -1596,13 +1598,13 @@ public class FormuleEditorWithSteps implements InteractionView
 		if (pijlVakOperatoren[i].equals("sub") || pijlVakOperatoren[i].equals("abc"))
 			breedte = pijlX + 30;
 		
-		if(pijl)
-		{	contentPanel.add(pijlVak);
+		//if(pijl)
+			contentPanel.add(pijlVak);
 			if (pijlVakInhouden != null && pijlVakInhouden.length > i && pijlVakInhouden[i] != null)
 				pijlVak.zetExpressie(pijlVakInhouden[i]);
 			contentPanel.setWidgetRightWidth(pijlVak, 0, Style.Unit.PX, breedte, Style.Unit.PX);
 			contentPanel.setWidgetTopHeight(pijlVak, h, Style.Unit.PX, pijlVak.getHeight(), Style.Unit.PX);
-		}
+		pijlVak.setPijlVisible(pijl);
 		
 			
 		//if ("GR".equals(WiskOpdr.deployVariant) && pijlVakOperatoren != null && pijlVakOperatoren[i] != null && (pijlVakOperatoren[i].equals("sub") || pijlVakOperatoren[i].equals("abc")))
@@ -1983,13 +1985,12 @@ public class FormuleEditorWithSteps implements InteractionView
 			
 			pijlVak = new PijlVak(operator, this, false);
 			int y = stepPanelY + latest_answer_viewer.getHeight()/2;
-			if(pijl)
-			{	contentPanel.add(pijlVak);
-				contentPanel.setWidgetRightWidth(pijlVak, 0, Style.Unit.PX, pijlX, Style.Unit.PX);
-				contentPanel.setWidgetTopHeight(pijlVak, y, Style.Unit.PX, pijlVak.getHeight(), Style.Unit.PX);
-				if(operator.equals("abc") || operator.equals("sub"))
-					contentPanel.setWidgetRightWidth(pijlVak, 0, Style.Unit.PX, pijlX + 30, Style.Unit.PX);
-			}
+			contentPanel.add(pijlVak);
+			contentPanel.setWidgetRightWidth(pijlVak, 0, Style.Unit.PX, pijlX, Style.Unit.PX);
+			contentPanel.setWidgetTopHeight(pijlVak, y, Style.Unit.PX, pijlVak.getHeight(), Style.Unit.PX);
+			if(operator.equals("abc") || operator.equals("sub"))
+				contentPanel.setWidgetRightWidth(pijlVak, 0, Style.Unit.PX, pijlX + 30, Style.Unit.PX);
+			pijlVak.setPijlVisible(pijl);
 			pijlVak.paintComponent();
 			pijlVakken.add(pijlVak);
 			pijlVak.getEditor().requestFocus();
@@ -2263,5 +2264,11 @@ public class FormuleEditorWithSteps implements InteractionView
 	void fire(String command, String message) {
 		if( comRoot != null)
 			comRoot.fireEvent(new CBookEvent(this, command, message));	
+	}
+	
+	public static boolean isNoordhoff()
+	{
+		String dependentName = DWOplayer.PARAMETERS.keyboardStyle();
+		return "noordhoff".equals(dependentName);
 	}
 }
