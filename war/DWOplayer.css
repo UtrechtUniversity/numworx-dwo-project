@@ -117,3 +117,10 @@ div.listItem-dwo {
 	color: black;
 }
 
+
+.gwt-PopupPanel-WaitScreen {
+	margin: 0px;
+	padding: 0px !important;
+	border-style: none !important;
+	opacity: 0.5;
+}

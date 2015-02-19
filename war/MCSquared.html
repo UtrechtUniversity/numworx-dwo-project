@@ -52,11 +52,22 @@ function signature() {
 		text += name + "=" + value 
 	}
 	text = pfx + encodeURIComponent(text)
-	$("stub").innerHTML = text;
+	//$("stub").innerHTML = text;
 	
 	n = b64_hmac_sha1(secret, text);
 	$('oauth_signature').value = n;
 }
+
+function getAction(name) 
+{
+	if(name == 'de.cinderella.CindyWidget') 
+		return 'http://cinderella.de/services/widget';
+	if(name == 'org.cbook.mediaman.MediaMan')
+		return 'http://mc2-mediaman.appspot.com/';
+	
+	return 'http://ws.fisme.science.uu.nl/DWOmAccess/lti/widget.jsp';
+}
+
 
 window.inner = {
 		getScore: function() {
@@ -74,6 +85,9 @@ window.inner = {
 		init: function(width, height, launchdata, randomvalues) {
 			launch = JSON.parse(launchdata);
 			className = launch.className;
+			var action = getAction(className)
+			$('lti').action = action;
+
 // calculate locale from ?locale=XX 
 			locale = getLocale()
 			background = $wnd.getBackground($wnd.outer)
@@ -131,7 +145,7 @@ window.inner = {
 <style>
 	body { 
 		background-color: #888;
-		color: white;
+		color: black;
 		overflow: initial;
 	}
 </style>
@@ -139,35 +153,35 @@ window.inner = {
 </head>
 <!-- http://localhost:8080/DWOmAccess/lti/widget.jsp -->
 <!-- http://www.staff.science.uu.nl/~velth101/lti/tool.php -->
+<!-- de.cinderella.CindyWidget: http://cinderella.de/services/widget -->
 <body>
 <form id='lti' method="POST" action='http://dwo.fisme.science.uu.nl/DWOmAccess/lti/widget.jsp' >
-<input name='custom_context' id='custom_context' value='{}'><br>
-<input name='custom_launch_data' id='custom_launch_data' value='{}'><br>
-<input name='custom_randomvalues' id='custom_randomvalues' value='{}'><br>
-<input name='custom_subscriptions' id='custom_subscriptions' value='{}'><br>
+custom_context<input name='custom_context' id='custom_context' value='{}'><br>
+custom_launch_data<input name='custom_launch_data' id='custom_launch_data' value='{}'><br>
+custom_randomvalues<input name='custom_randomvalues' id='custom_randomvalues' value='{}'><br>
+custom_subscriptions<input name='custom_subscriptions' id='custom_subscriptions' value='{}'><br>
 
-<input name='launch_presentation_height' id='launch_presentation_height' value='200'><br>
-<input name='launch_presentation_locale' id='launch_presentation_locale' value='en'><br>
-<input name='launch_presentation_width' id='launch_presentation_width' value='200'><br>
+launch_presentation_height<input name='launch_presentation_height' id='launch_presentation_height' value='200'><br>
+launch_presentation_locale<input name='launch_presentation_locale' id='launch_presentation_locale' value='en'><br>
+launch_presentation_width<input name='launch_presentation_width' id='launch_presentation_width' value='200'><br>
 
-<input name='lis_person_name_family' value='Guest' ><br>
-<input name='lis_person_name_full' id='lis_person_name_full' value='Anonymous Guest' ><br>
-<input name='lis_person_name_given' value='Anonymous' ><br>
-
+<!--  lis_person_name_family<input name='lis_person_name_family' value='Guest' ><br> -->
+lis_person_name_full<input name='lis_person_name_full' id='lis_person_name_full' value='Anonymous Guest' ><br>
+<!--  lis_person_name_given<input name='lis_person_name_given' value='Anonymous' ><br> -->
 <input name='lti_message_type' value='basic-lti-launch-request' type='hidden'>
 <input name='lti_version' value='LTI-1p0' type='hidden'>
 
-<input name='oauth_consumer_key' id='oauth_consumer_key' value='12345' ><br>
+oauth_consumer_key<input name='oauth_consumer_key' id='oauth_consumer_key' value='12345' ><br>
 <input name='oauth_nonce' value='1244834250435893000' type='hidden'>
 <input name='oauth_signature_method' value='HMAC-SHA1' type='hidden'>
 <input name='oauth_timestamp' id='oauth_timestamp' value='1413494648' type='hidden'>
 <input name='oauth_version' value='1.0'  type='hidden'>
 
-<input name='resource_link_id' id='resource_link_id' value='000000-0-000000' ><br>
+resource_link_id<input name='resource_link_id' id='resource_link_id' value='000000-0-000000' ><br>
 <input name='roles' value='Learner' type='hidden' >
 <input value="submit" name="submit" type="submit" ><br>
-<input name='user_id' id='user_id' value='guest' > <br>
-<input name='oauth_signature' id='oauth_signature' value='?' ><br>
+user_id<input name='user_id' id='user_id' value='guest' > <br>
+oauth_signature<input name='oauth_signature' id='oauth_signature' value='?' ><br>
 </form>
 
 <script>
