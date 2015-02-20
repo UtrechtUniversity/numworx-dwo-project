@@ -149,11 +149,14 @@
                 </configuration>
             </plugin>          
         </plugins>
+       <finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
     </build>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+         <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
+   </properties>
     
     <repositories>
         <repository>
