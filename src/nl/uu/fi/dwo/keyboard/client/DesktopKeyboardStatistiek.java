@@ -6,7 +6,7 @@ public class DesktopKeyboardStatistiek extends DesktopKeyboard {
 
 	public DesktopKeyboardStatistiek() {
 		super();
-		c31.removeFromParent();
+		c31.getUpFace().setHTML("");c31.getDownFace().setHTML("");c31.setEnabled(false);
 		c24.getUpFace().setHTML("<img src='images/kb/Statistiek/Desktop/C24.png'>");
 		c24.getDownFace().setHTML("<img src='images/kb/Statistiek/Desktop/C24-2.png'>");
 		c25.getUpFace().setHTML("<img src='images/kb/Statistiek/Desktop/C25.png'>");

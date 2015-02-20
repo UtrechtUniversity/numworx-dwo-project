@@ -7,7 +7,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 public class KeyboardGWT implements EntryPoint {
 
-	Label tekst = new Label();
+	Label tekst = new Label("...");
 	
 	AbstractEditor editor = new AbstractEditor() {
 
@@ -40,6 +40,10 @@ public class KeyboardGWT implements EntryPoint {
 		public void insert(String text) {
 			x( "insert " + text);
 		}
+		@Override
+		public void insert(char text) {
+			x( "insert " + text);
+		}
 		
 		
 	};
@@ -52,11 +56,22 @@ public class KeyboardGWT implements EntryPoint {
 		
 		DesktopKeyboard panel = new DesktopKeyboard();
 		panel.setEditor(editor);
-		RootPanel.get().add(panel);
+		RootPanel root = RootPanel.get();
+		root.add(new Label("algebra"));
+		root.add(panel);
+		root.add(new Label("statistiek"));
 		panel = new DesktopKeyboardStatistiek();
 		panel.setEditor(editor);
-		RootPanel.get().add(panel);
-		RootPanel.get().add(tekst);
+		root.add(panel);
+		root.add(new Label("meetkunde"));
+		panel = new DesktopKeyboardMeetkunde();
+		panel.setEditor(editor);
+		root.add(panel);
+		root.add(new Label("meetkunde"));
+		panel = new DesktopKeyboardGonio();
+		panel.setEditor(editor);
+		root.add(panel);
+		root.add(tekst);
 
 	}
 

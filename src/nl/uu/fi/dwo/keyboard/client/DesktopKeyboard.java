@@ -201,5 +201,9 @@ public class DesktopKeyboard extends Composite {
 		getEditor().insert("00");
 	}
 
+	protected void disableKey(Key key) {
+		key.getUpFace().setHTML("");key.getDownFace().setHTML("");key.setEnabled(false);
+	}
+
 
 }
