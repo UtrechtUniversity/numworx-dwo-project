@@ -8,6 +8,5 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/WriteMathGWT"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/GraphToolGWT"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/AntwoordKeuzeVakGWT"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

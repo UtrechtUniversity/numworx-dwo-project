@@ -17,7 +17,7 @@ public class SCORM_12_API implements Scorm2004IF {
 	}-*/;
 
 	public native String SetValue(String name, String value)/*-{
-		return $wnd.doSetValue(name, value)
+		return $wnd.doLMSSetValue(name, value)
 	}-*/;
 
 	@Override
