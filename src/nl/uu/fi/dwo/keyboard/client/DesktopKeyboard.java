@@ -3,14 +3,14 @@
  */
 package nl.uu.fi.dwo.keyboard.client;
 
+import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -21,6 +21,16 @@ public class DesktopKeyboard extends Composite {
 
 	private static DesktopKeyboardUiBinder uiBinder = GWT
 			.create(DesktopKeyboardUiBinder.class);
+	
+	private FormuleEditorIF formuleEditor;
+
+	public FormuleEditorIF getEditor() {
+		return formuleEditor;
+	}
+
+	public void setEditor(FormuleEditorIF formuleEditor) {
+		this.formuleEditor = formuleEditor;
+	}
 
 	interface DesktopKeyboardUiBinder extends UiBinder<Widget, DesktopKeyboard> {
 	}
@@ -53,9 +63,143 @@ public class DesktopKeyboard extends Composite {
 	@UiField
 	Key c26, c27, c28, c29, c30, c31;
 
-	@UiHandler(value={"c1", "c2"})
-	void onClick(ClickEvent e) {
-		System.out.println(e.getSource());
+	@UiHandler("c1")
+	void onC1(ClickEvent e) {
+		getEditor().wortel();
 	}
+
+	@UiHandler("c2")
+	void onC2(ClickEvent e) {
+		getEditor().macht();
+	}
+	@UiHandler("c3")
+	void onC3(ClickEvent e) {
+		getEditor().kwadraat();
+	}
+	@UiHandler("c4")
+	void onC4(ClickEvent e) {
+		getEditor().breuk();
+	}
+
+	@UiHandler("c5")
+	void onC5(ClickEvent e) {
+		getEditor().haakjes();
+	}
+	@UiHandler("c6")
+	void onC6(ClickEvent e) {
+		getEditor().ndewortel();
+	}
+
+	@UiHandler("c7")
+	void onC7(ClickEvent e) {
+		getEditor().integraal();;
+	}
+
+	@UiHandler("c8")
+	void onC8(ClickEvent e) {
+		getEditor().prv();
+	}
+	@UiHandler("c9")
+	void onC9(ClickEvent e) {
+		getEditor().ndelog();
+	}
+	@UiHandler("c10")
+	void onC10(ClickEvent e) {
+		getEditor().abs();
+	}
+
+	@UiHandler("c11")
+	void onC11(ClickEvent e) {
+		getEditor().subscript();
+	}
+	@UiHandler("c12")
+	void onC12(ClickEvent e) {
+		getEditor().bin() ;
+	}
+	@UiHandler("c13")
+	void onC13(ClickEvent e) {
+		getEditor().insert("[");
+	}
+	@UiHandler("c14")
+	void onC14(ClickEvent e) {
+		getEditor().insert("]");
+	}
+
+	@UiHandler("c15")
+	void onC15(ClickEvent e) {
+		getEditor().insert("(");
+	}
+	@UiHandler("c16")
+	void onC16(ClickEvent e) {
+		getEditor().insert(")");
+	}
+
+	@UiHandler("c17")
+	void onC17(ClickEvent e) {
+		getEditor().insert("<-"); // TODO u code
+	}
+
+	@UiHandler("c18")
+	void onC18(ClickEvent e) {
+		getEditor().insert("->"); // TODO u code
+	}
+	@UiHandler("c19")
+	void onC19(ClickEvent e) {
+		getEditor().insert(" of ");
+	}
+	@UiHandler("c20")
+	void onC20(ClickEvent e) {
+		getEditor().insert(" en ");
+	}
+
+	@UiHandler("c21")
+	void onC21(ClickEvent e) {
+		getEditor().insert("~");
+	}
+	@UiHandler("c22")
+	void onC22(ClickEvent e) {
+		getEditor().insert("<=");
+	}
+	@UiHandler("c23")
+	void onC23(ClickEvent e) {
+		getEditor().insert(">=");
+	}
+	@UiHandler("c24")
+	void onC24(ClickEvent e) {
+		getEditor().insert("ln");
+	}
+
+	@UiHandler("c25")
+	void onC25(ClickEvent e) {
+		getEditor().primitieve();
+	}
+	@UiHandler("c26")
+	void onC26(ClickEvent e) {
+		getEditor().insert("log");
+	}
+
+	@UiHandler("c27")
+	void onC27(ClickEvent e) {
+		getEditor().limiet0(); // TODO u code
+	}
+
+	@UiHandler("c28")
+	void onC28(ClickEvent e) {
+		getEditor().limiet1(); // TODO u code
+	}
+	@UiHandler("c29")
+	void onC29(ClickEvent e) {
+		getEditor().limiet2();
+	}
+	@UiHandler("c30")
+	void onC30(ClickEvent e) {
+		getEditor().diff();
+	}
+
+	@UiHandler("c31")
+	void onC31(ClickEvent e) {
+		getEditor().insert("00");
+	}
+
 
 }

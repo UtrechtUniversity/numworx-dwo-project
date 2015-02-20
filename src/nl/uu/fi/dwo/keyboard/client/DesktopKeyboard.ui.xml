@@ -136,7 +136,7 @@
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c27" >
 			<my:upFace><img src="images/kb/Algebra/Desktop/C27.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Algebra/Desktop/C7-2.png"/></my:downFace>
+			<my:downFace><img src="images/kb/Algebra/Desktop/C27-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c28" >
 			<my:upFace><img src="images/kb/Algebra/Desktop/C28.png"/></my:upFace>
