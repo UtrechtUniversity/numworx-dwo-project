@@ -53,6 +53,9 @@ public class KeyboardGWT implements EntryPoint {
 		DesktopKeyboard panel = new DesktopKeyboard();
 		panel.setEditor(editor);
 		RootPanel.get().add(panel);
+		panel = new DesktopKeyboardStatistiek();
+		panel.setEditor(editor);
+		RootPanel.get().add(panel);
 		RootPanel.get().add(tekst);
 
 	}
