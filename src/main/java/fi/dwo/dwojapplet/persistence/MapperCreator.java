@@ -16,9 +16,9 @@ import java.util.Hashtable;
  */
 public class MapperCreator {
 
-    private final static String DOMAIN_PACKAGE = "fi.dwo.client.domain";
+    private final static String DOMAIN_PACKAGE = "fi.dwo.dwojapplet.domain";
 
-    private final static String PERSISTENCE_PACKAGE = "fi.dwo.client.persistence";
+    private final static String PERSISTENCE_PACKAGE = "fi.dwo.dwojapplet.persistence";
 
     /**
      * A list of all the mappers of objects in the DWO. e.g. The Course is in
