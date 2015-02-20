@@ -48,7 +48,9 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+         <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
+   </properties>
 
     <!-- update the https path for a different branch or tag! -->
     <scm>
