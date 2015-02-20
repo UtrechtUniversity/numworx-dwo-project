@@ -3,7 +3,7 @@ package fi.dwo.dwojapplet.gui.action;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-import fi.dwo.client.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.CourseMap;
 
 public class Clipboard {
 	public static String cmd;

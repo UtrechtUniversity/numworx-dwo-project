@@ -3,13 +3,12 @@ package fi.dwo.dwojapplet.gui.action;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.Teacher;
-import fi.dwo.client.gui.ExportImportDialog;
-import fi.dwo.client.gui.GuiCreator;
-import fi.dwo.client.system.PersistenceException;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.Teacher;
+import fi.dwo.dwojapplet.gui.ExportImportDialog;
 
 public class ShareCourseAction extends GuiAction {
 
@@ -25,6 +24,7 @@ public class ShareCourseAction extends GuiAction {
 		setEnabled(instance().getUser() instanceof Teacher);
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent ev) {
 		Component component;
 		Object o = ev.getSource();
@@ -43,6 +43,7 @@ public class ShareCourseAction extends GuiAction {
 		}		
 		
 	}
+        @Override
 	public void setMap(CourseMap map) {
 		this.map = map;
 	}

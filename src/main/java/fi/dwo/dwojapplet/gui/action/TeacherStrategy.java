@@ -10,20 +10,20 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.event.ChangeEvent;
 
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.Descriptor;
-import fi.dwo.client.domain.School;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.CenterPanel;
-import fi.dwo.client.gui.CenterSubPanel;
-import fi.dwo.client.gui.CourseChoisePanel;
-import fi.dwo.client.gui.CoursePanel;
-import fi.dwo.client.gui.GuiCreator;
-import fi.dwo.client.gui.ModuleTreePanel;
-import fi.dwo.client.gui.SelectStrategy;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.Descriptor;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.CenterPanel;
+import fi.dwo.dwojapplet.gui.CenterSubPanel;
+import fi.dwo.dwojapplet.gui.CourseChoicePanel;
+import fi.dwo.dwojapplet.gui.CoursePanel;
+import fi.dwo.dwojapplet.gui.GuiCreator;
+import fi.dwo.dwojapplet.gui.ModuleTreePanel;
+import fi.dwo.dwojapplet.gui.SelectStrategy;
 
 public class TeacherStrategy implements SelectStrategy{
 
@@ -240,7 +240,7 @@ public class TeacherStrategy implements SelectStrategy{
 			Course c = (Course)value;
 			if(c.isWithChildren())
 			{
-				panel = new CourseChoisePanel(c, c);
+				panel = new CourseChoicePanel(c, c);
 				center.loadCenter(panel);
 			} else {
 				CoursePanel cp = (CoursePanel) instance.getCoursePanel(c);
@@ -251,10 +251,10 @@ public class TeacherStrategy implements SelectStrategy{
 		{
 			if(value == ModuleTreePanel.ALLE_MODULES)
 			{				
-				panel = CourseChoisePanel.newInstance();
+				panel = CourseChoicePanel.newInstance();
 			} else 
 			{
-				panel = new CourseChoisePanel(new Bridge(instance.getDWO().getDwoProfile(), node), value);
+				panel = new CourseChoicePanel(new Bridge(instance.getDWO().getDwoProfile(), node), value);
 				
 			}
 			center.loadCenter(panel); // undo side-effect 'select Alle_modules'

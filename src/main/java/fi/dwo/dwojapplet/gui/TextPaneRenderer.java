@@ -17,6 +17,7 @@ public class TextPaneRenderer extends JTextPane implements TableCellRenderer {
 		setEditable(false);
 	}
 
+        @Override
 	public Component getTableCellRendererComponent(JTable table,
 			Object value, boolean selected, boolean hasFocus, int row,
 			int column) {

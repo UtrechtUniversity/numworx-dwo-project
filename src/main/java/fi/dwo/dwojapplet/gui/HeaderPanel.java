@@ -77,6 +77,7 @@ public class HeaderPanel extends JPanel
 	/* (non-Javadoc)
 	 * @see java.awt.Component#resize(java.awt.Dimension)
 	 */
+        @Override
 	public void resize(Dimension d) {
 		// TODO Auto-generated method stub
 		super.resize(d);
@@ -86,6 +87,7 @@ public class HeaderPanel extends JPanel
 	/* (non-Javadoc)
 	 * @see java.awt.Component#resize(int, int)
 	 */
+        @Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
 		super.resize(width, height);
@@ -95,6 +97,7 @@ public class HeaderPanel extends JPanel
 	/* (non-Javadoc)
 	 * @see java.awt.Component#setBounds(int, int, int, int)
 	 */
+        @Override
 	public void setBounds(int x, int y, int width, int height) {
 		// TODO Auto-generated method stub
 		super.setBounds(x, y, width, height);
@@ -104,6 +107,7 @@ public class HeaderPanel extends JPanel
 	/* (non-Javadoc)
 	 * @see java.awt.Component#setBounds(java.awt.Rectangle)
 	 */
+        @Override
 	public void setBounds(Rectangle r) {
 		super.setBounds(r);
 		scale();
@@ -113,6 +117,7 @@ public class HeaderPanel extends JPanel
 	/* (non-Javadoc)
 	 * @see java.awt.Component#setSize(java.awt.Dimension)
 	 */
+        @Override
 	public void setSize(Dimension d) {
 		// TODO Auto-generated method stub
 		super.setSize(d);
@@ -122,6 +127,7 @@ public class HeaderPanel extends JPanel
 	/* (non-Javadoc)
 	 * @see java.awt.Component#setSize(int, int)
 	 */
+        @Override
 	public void setSize(int width, int height) {
 		// TODO Auto-generated method stub
 		super.setSize(width, height);
@@ -129,6 +135,7 @@ public class HeaderPanel extends JPanel
 	}
 
 	
+        @Override
 	public void paint(Graphics g)
 	{
 		if(scale)

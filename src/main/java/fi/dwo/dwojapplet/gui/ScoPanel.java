@@ -8,23 +8,16 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.MediaTracker;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Hashtable;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -37,19 +30,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.beans.scorm.SCORM12APIInterface;
-import fi.beans.scorm.ScormAppletIF;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.persistence.DbAccessCreator;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 
 /**
  * This class represents a panel witch shows an applet of the sco.
@@ -181,6 +170,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
      * Indicate that another panel is loaded and the connections of this panel
      * must be closed.
      */
+        @Override
     public void end() {
         sco.end();
     }
@@ -190,6 +180,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
      * 
      * @param centerPanel The centerPanel to communicate with.
      */
+        @Override
     public void setCenterPanel(CenterPanel centerPanel) {
         center = centerPanel;
     }
@@ -200,6 +191,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
      * @return A Component that can function as a header panel.
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
+        @Override
     public Component getHeaderPanel() {
 // TODO cleanup needed!!!!
     	JPanel jp = new JPanel(new BorderLayout());
@@ -439,6 +431,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
      * @param e The ActionEvent.
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+        @Override
     public void actionPerformed(ActionEvent e) {
         if (/* e.getSource() == mainMenuButton || */ e.getSource() == mainMenuImageButton) {
          //   center.loadCenter(GuiCreator.instance().getCourseChoisePanel());
@@ -475,6 +468,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
      * @see fi.beans.scorm.SCORM12APIInterface#LMSInitialize(java.lang.String)
      *  
      */
+        @Override
     public String LMSInitialize(String iParam) {
         return sco.LMSInitialize(iParam);
     }
@@ -500,6 +494,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
      * @see fi.beans.scorm.SCORM12APIInterface#LMSFinish(java.lang.String)
      *  
      */
+        @Override
     public String LMSFinish(String iParam) {
         return sco.LMSFinish(iParam);
     }
@@ -512,6 +507,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
      * @see fi.beans.scorm.SCORM12APIInterface#LMSGetValue(java.lang.String)
      *  
      */
+        @Override
     public String LMSGetValue(String iDataModelElement) {
         return sco.LMSGetValue(iDataModelElement);
     }
@@ -532,6 +528,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
      *      java.lang.String)
      *  
      */
+        @Override
     public String LMSSetValue(String iDataModelElement, String iValue) {
 //        try {
 //            DbAccessCreator.instance().log("ScoPanel.LMSSetValue(" + iDataModelElement + ", " + iValue + ")");
@@ -563,6 +560,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
      * @see fi.beans.scorm.SCORM12APIInterface#LMSCommit(java.lang.String)
      *  
      */
+        @Override
     public String LMSCommit(String iParam) {
         return sco.LMSCommit(iParam);
     }
@@ -604,6 +602,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
      * @see fi.beans.scorm.SCORM12APIInterface#LMSGetLastError()
      *  
      */
+        @Override
     public String LMSGetLastError() {
         return sco.LMSGetLastError();
     }
@@ -619,6 +618,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
      * @see fi.beans.scorm.SCORM12APIInterface#LMSGetErrorString(java.lang.String)
      *  
      */
+        @Override
     public String LMSGetErrorString(String iErrorCode) {
         return sco.LMSGetErrorString(iErrorCode);
     }
@@ -644,6 +644,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
      * @see fi.beans.scorm.SCORM12APIInterface#LMSGetDiagnostic(java.lang.String)
      *  
      */
+        @Override
     public String LMSGetDiagnostic(String iErrorCode) {
         return sco.LMSGetDiagnostic(iErrorCode);
     }
@@ -657,6 +658,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
         return sco;
     }
     
+        @Override
     public Object getUserObject() {
     	return getSco();
     }
@@ -667,10 +669,12 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
      * @return the current object.
      * @see fi.dwo.client.gui.CenterSubPanel#getComponent()
      */
+        @Override
     public JComponent getComponent() {
         return this;
     }
 
+        @Override
 	public void stateChanged(ChangeEvent e) {
 		// TODO Auto-generated method stub
 		

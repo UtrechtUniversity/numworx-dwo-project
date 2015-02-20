@@ -3,14 +3,11 @@ package fi.dwo.dwojapplet.gui.action;
 import java.awt.event.ActionEvent;
 import java.util.Hashtable;
 
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.DwoProfile;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.gui.CenterPanel;
-import fi.dwo.client.gui.CenterSubPanel;
-import fi.dwo.client.gui.GuiCreator;
-import fi.dwo.client.gui.ParameterManagementPanel;
-import fi.dwo.client.gui.ScoPanel;
+import fi.dwo.dwojapplet.domain.DwoProfile;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.gui.CenterPanel;
+import fi.dwo.dwojapplet.gui.ParameterManagementPanel;
+import fi.dwo.dwojapplet.gui.ScoPanel;
 
 public class PreviewHtml5 extends GuiAction {
 

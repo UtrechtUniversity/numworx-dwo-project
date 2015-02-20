@@ -8,7 +8,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
 import java.util.Vector;
@@ -18,21 +17,21 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.xmlrpc.applet.XmlRpcException;
 import org.xml.sax.SAXException;
 
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.DwoIF;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.CourseManagementPanel;
-import fi.dwo.client.gui.GuiCreator;
-import fi.dwo.client.gui.ModuleTreePanel;
-import fi.dwo.client.persistence.DbAccessCreator;
-import fi.dwo.client.persistence.MapperCreator;
-import fi.dwo.client.persistence.MapperIF;
-import fi.dwo.client.system.TextMapper;
-import fi.dwo.server.form.DWOFile;
-import fi.dwo.server.persistence.DwoXmlRpcException;
+import fi.dwo.commons.exceptions.DwoXmlRpcException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.DwoIF;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.CourseManagementPanel;
+import fi.dwo.dwojapplet.gui.GuiCreator;
+import fi.dwo.dwojapplet.gui.ModuleTreePanel;
+import fi.dwo.dwojapplet.persistence.DbAccessCreator;
+import fi.dwo.dwojapplet.persistence.MapperCreator;
+import fi.dwo.dwojapplet.persistence.MapperIF;
+import fi.dwo.dwojapplet.form.DWOFile;
 
 public class ImportModuleAction extends GuiAction {
 
@@ -66,6 +65,7 @@ public class ImportModuleAction extends GuiAction {
 		this.course = courseManagementPanel.getMap(); // werkt niet!!!
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent e) {
     	Frame topFrame = DwoHelper.getFrameForComponent(null);
 		openDial = new FileDialog(topFrame, getToolTipText(), FileDialog.LOAD);
@@ -201,6 +201,7 @@ public class ImportModuleAction extends GuiAction {
 		this.course = course;
 	}
 
+        @Override
 	void setMap(CourseMap map) {
 		setEnabled (DwoHelper.isSecure() && canModify(map) && !(map.getUserObject() instanceof Sco));
 	}

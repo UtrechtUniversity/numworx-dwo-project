@@ -7,13 +7,11 @@ import java.awt.FontMetrics;
 import java.awt.event.FocusEvent;
 import java.util.Hashtable;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JRadioButton;
 
 import fi.beans.scorm.Parameter;
-import fi.dwo.parameters.system.TextMapper;
+import fi.dwo.dwojapplet.parameters.system.TextMapper;
 
 public class BooleanParameterComponent extends ParameterComponent {
     private JRadioButton falseValue;
@@ -95,11 +93,13 @@ public class BooleanParameterComponent extends ParameterComponent {
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.ParameterComponentIF#addParameters(java.util.Hashtable)
      */
+    @Override
     public void addParameters(Hashtable parameters) {
         String value = Boolean.toString(trueValue.isSelected());
         addParameter(parameters, value);
     }
     
+    @Override
     public void focusGained(FocusEvent evt) {
         super.focusGained(evt);
         falseValue.setBackground(getBackground());
@@ -108,6 +108,7 @@ public class BooleanParameterComponent extends ParameterComponent {
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.ParameterComponentIF#reset()
      */
+    @Override
     public void reset() {
         if(this.defaultValue.containsKey(parameter.getName())) {
             Boolean boolValue = (Boolean) this.defaultValue.get(parameter.getName());
@@ -123,6 +124,7 @@ public class BooleanParameterComponent extends ParameterComponent {
         }
     }
 
+    @Override
     public void unFocus() {
         super.unFocus();
         falseValue.setBackground(getBackground());

@@ -3,14 +3,10 @@
 
 package fi.dwo.dwojapplet.domain;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.text.MessageFormat;
 import java.util.Vector;
 
 import fi.dwo.dwojapplet.gui.ScoDialog;
 import fi.dwo.dwojapplet.gui.ScoPanel;
-import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.MapperIF;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
@@ -20,7 +16,6 @@ import java.util.Comparator;
 
 import javax.swing.JOptionPane;
 
-import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
@@ -77,6 +72,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      * @param rs The resultscore wherefrom the result must been showed.
      *  
      */
+    @Override
     public void showResult(ResultScore rs) {
     	if((rs.getUserGroup() instanceof SchoolClass)
     			&& (rs.getLessonGroup() instanceof Course)
@@ -110,6 +106,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
 	        	sco.setLessonMode(Sco.REVIEW);
 	        	dwo.setWait();
 	            Thread thread = new Thread() {	
+                    @Override
 	                public void run() {	
 	                	
 			            ScoPanel sp = sco.getScoPanel(dwo, user);
@@ -133,6 +130,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      * @return The current list of results.
      *  
      */
+    @Override
     public Vector zoomIn(UserGroup ug) {
         orderedLessonIndex = -1;
         currentlyZoomedUser = ug;
@@ -146,6 +144,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      * @param ug The usergroup to zoom out.
      * @return The current list of results.
      */
+    @Override
     public Vector zoomOut(UserGroup ug) {
         orderedLessonIndex = -1;
         currentlyZoomedUser = null;
@@ -160,6 +159,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      * @return The current list of results.
      *  
      */
+    @Override
     public Vector zoomIn(LessonGroup lg) {
         orderedLessonIndex = -1;
         currentlyZoomedLesson = lg;
@@ -173,6 +173,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      * @param lg The lessongroup to zoom out.
      * @return The current list of results.
      */
+    @Override
     public Vector zoomOut(LessonGroup lg) {
         orderedLessonIndex = -1;
         currentlyZoomedLesson = null;
@@ -188,6 +189,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      * @return The current list of results ordered as specified.
      *  
      */
+    @Override
     public Vector orderBy(UserGroup ug, int orderWay) {
         orderedLessonIndex = -1;
         orderedWay = orderWay;
@@ -205,6 +207,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      * @return The current list of results ordered as specified.
      *  
      */
+    @Override
     public Vector orderBy(LessonGroup lg, int orderWay) {
         orderedLessonIndex = -1;
         orderedWay = orderWay;
@@ -220,6 +223,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      * @return The results ordered and zoomed as specified.
      *  
      */
+    @Override
     public Vector getResults() {
         if ((currentlyZoomedLesson == null) && (currentlyZoomedUser == null)) {
             try {
@@ -261,6 +265,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      * @param courses The courses to select.
      *  
      */
+    @Override
     public void selectCourses(Course[] courses) {
         this.courses = courses;
     }
@@ -276,6 +281,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      * @see java.util.Comparator#compare(java.lang.Object,
      *      java.lang.Object)
      */
+    @Override
     public int compare(Object o1, Object o2) {
         UserResultList url1 = (UserResultList) o1;
         UserResultList url2 = (UserResultList) o2;
@@ -359,6 +365,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      * @return The selected courses.
      * @see fi.dwo.client.domain.ResultsModuleIF#getSelectedCourse()
      */
+    @Override
     public Course[] getSelectedCourse() {
         return courses;
     }
@@ -369,6 +376,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      * @return All the available courses.
      * @see fi.dwo.client.domain.ResultsModuleIF#getAllCourses()
      */
+    @Override
     public Course[] getAllCourses() {
         return dwo.getCourses();
     }
@@ -378,6 +386,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      * 
      * @see fi.dwo.client.domain.ResultsModuleIF#reset()
      */
+    @Override
     public void reset() {
         MapperIF m = MapperCreator.instance(UserResultList.class);
         
@@ -399,6 +408,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      * @see fi.dwo.client.domain.ResultsModuleIF#selectCourses(fi.dwo.client.domain.Course[],
      *      boolean)
      */
+    @Override
     public Vector selectCourses(Course[] courses, boolean getResults) {
         this.courses = courses;
         if (getResults) {
@@ -417,6 +427,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      * @return The currently zoomed UserGroup.
      * @see fi.dwo.client.domain.ResultsModuleIF#getZoomedUserGroup()
      */
+    @Override
     public UserGroup getZoomedUserGroup() {
         return currentlyZoomedUser;
     }
@@ -426,6 +437,7 @@ public class ResultsModule implements ResultsModuleIF, Comparator {
      * @return The currently zoomed LessonGroup.
      * @see fi.dwo.client.domain.ResultsModuleIF#getZoomedLessonGroup()
      */
+    @Override
     public LessonGroup getZoomedLessonGroup() {
         return currentlyZoomedLesson;
     }

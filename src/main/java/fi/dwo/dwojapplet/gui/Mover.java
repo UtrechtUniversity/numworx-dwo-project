@@ -6,10 +6,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
 import javax.swing.Box;
 import javax.swing.JComponent;
@@ -67,6 +64,7 @@ public class Mover extends JComponent  {
 	}
 
 
+        @Override
 	protected void processMouseEvent(MouseEvent e) {
 		super.processMouseEvent(e);
 		track(e);
@@ -112,6 +110,7 @@ public class Mover extends JComponent  {
 	}
 
 
+        @Override
 	protected void processMouseMotionEvent(MouseEvent e) {
 		super.processMouseMotionEvent(e);
 		track(e);
@@ -119,6 +118,7 @@ public class Mover extends JComponent  {
 
 
 
+        @Override
 	protected void paintComponent(Graphics g) {
 		if(isOpaque())
 		{

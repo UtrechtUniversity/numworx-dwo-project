@@ -7,77 +7,46 @@ import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.FileDialog;
 import java.awt.FlowLayout;
 import java.awt.FontMetrics;
-import java.awt.Frame;
 import java.awt.Graphics;
-import java.awt.List;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.*;
-import java.net.URL;
-import java.net.URLConnection;
-import java.security.SecureRandom;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipOutputStream;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.ListSelectionEvent;
-
-import fi.beans.appletutil.AppletUtil;
-import fi.beans.base64code.StringCodeObject;
 import fi.beans.scorm.Parameter;
 import fi.beans.scorm.ScormAppletIF;
 import fi.beans.scorm.ScormEditComponentIF;
-import fi.dwo.client.domain.DWO;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.ScoEditor;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.action.ImportScorm;
-import fi.dwo.client.gui.action.PreviewHtml5;
-import fi.dwo.client.gui.action.Save2004Action;
-import fi.dwo.client.gui.action.SaveAppletAction;
-import fi.dwo.client.persistence.MapperCreator;
-import fi.dwo.client.persistence.PersistenceFacade;
-//import fi.dwo.client.system.Collections;
-import fi.dwo.client.system.ScoException;
-import fi.dwo.client.system.TextMapper;
-import fi.dwo.parameters.domain.ConvertorCreator;
-import fi.dwo.parameters.domain.ConvertorIF;
-import fi.dwo.parameters.gui.MainParameterComponent;
-import fi.dwo.parameters.gui.ParameterComponent;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.ScoEditor;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.action.ImportScorm;
+import fi.dwo.dwojapplet.gui.action.PreviewHtml5;
+import fi.dwo.dwojapplet.gui.action.Save2004Action;
+import fi.dwo.dwojapplet.gui.action.SaveAppletAction;
+import fi.dwo.dwojapplet.parameters.domain.ConvertorCreator;
+import fi.dwo.dwojapplet.parameters.domain.ConvertorIF;
+import fi.dwo.dwojapplet.parameters.gui.MainParameterComponent;
+import fi.dwo.dwojapplet.parameters.gui.ParameterComponent;
 
 /**
  * This class is a panel for editing the parameters of a SCO.
@@ -123,6 +92,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 		 */
 		private static final long serialVersionUID = 1L;
 
+                @Override
 		public void actionPerformed(ActionEvent e) {
 	       	unsafeSaveSco();
         	done = false;
@@ -325,6 +295,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 	public Hashtable tmp;
 
 	private String scormTitel;
+    @Override
     public void end() {
     	if(!done)
     	{	done = true;
@@ -341,6 +312,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
      * @return A panel that can function as a header panel.
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
+    @Override
     public Component getHeaderPanel() {
     	HeaderPanel hp = new HeaderPanel(TextMapper.getText(TextMapper.GUIPA_SCO_EDIT));
     	Box box = Box.createHorizontalBox();
@@ -372,6 +344,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
      * 
      * @param centerPanel The centerPanel to communicate with.
      */
+    @Override
     public void setCenterPanel(CenterPanel centerPanel) {
         center = centerPanel;
     }
@@ -379,6 +352,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
     /**
      * @return java.awt.Component
      */
+    @Override
     public JComponent getComponent() {
         return this;
     }
@@ -389,6 +363,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
      * @param e The ActionEvent.
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
         if(src == stopBtn)
@@ -643,16 +618,20 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 	}
     
 
+    @Override
 	public Object getUserObject() {
 		return sco;
 	}
 
+    @Override
 	public void windowActivated(WindowEvent e) {
 	}
 
+    @Override
 	public void windowClosed(WindowEvent e) {
 	}
 
+    @Override
 	public void windowClosing(WindowEvent e) {
 		ActionEvent event = new ActionEvent(closeButton, ActionEvent.ACTION_PERFORMED, closeButton.getActionCommand() );
 		actionPerformed(event);
@@ -660,18 +639,23 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 			e.getWindow().dispose();
 	}
 
+    @Override
 	public void windowDeactivated(WindowEvent e) {
 	}
 
+    @Override
 	public void windowDeiconified(WindowEvent e) {
 	}
 
+    @Override
 	public void windowIconified(WindowEvent e) {
 	}
 
+    @Override
 	public void windowOpened(WindowEvent e) {
 	}
 
+    @Override
 	public void stateChanged(ChangeEvent e) {
 		// TODO Auto-generated method stub
 		

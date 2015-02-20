@@ -14,6 +14,7 @@ class PreviewAction extends AbstractAction {
 		this.scoPanel = scoPanel;
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent _) {
 		scoPanel.getSco().setLaunchdata(scoPanel.tmp.tmp);
 		scoPanel.getSco().setDataChanged(false);

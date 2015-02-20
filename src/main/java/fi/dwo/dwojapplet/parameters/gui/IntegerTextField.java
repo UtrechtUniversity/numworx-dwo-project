@@ -43,6 +43,7 @@ public class IntegerTextField extends JTextField {
     // function, but this is neater, since ideally, it would prevent
     // the text from appearing at all.  Sigh.  See bugid 4100317/4114565.
     //
+    @Override
     protected void processEvent(AWTEvent evt) {
         int id = evt.getID();
         if (id != KeyEvent.KEY_TYPED) {

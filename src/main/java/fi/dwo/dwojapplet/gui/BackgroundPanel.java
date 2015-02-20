@@ -25,6 +25,7 @@ public class BackgroundPanel extends JPanel {
 		super(layout, isDoubleBuffered);
 	}
 
+        @Override
 	public void paintComponent(Graphics g) {
 	    	validate();
 	    	if(GuiConstants.GUI_IMAGE_BG) {

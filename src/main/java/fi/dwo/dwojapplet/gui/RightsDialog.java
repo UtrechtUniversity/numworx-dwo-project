@@ -1,17 +1,11 @@
 package fi.dwo.dwojapplet.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Dialog;
 import java.awt.Frame;
-import java.awt.GraphicsConfiguration;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Vector;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -19,20 +13,15 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
-import org.apache.xmlrpc.applet.XmlRpcException;
-
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.School;
-import fi.dwo.client.domain.SchoolGroup;
-import fi.dwo.client.domain.Teacher;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.UserManagementPanel.TeacherDelegate;
-import fi.dwo.client.persistence.DbAccessCreator;
-import fi.dwo.client.persistence.PersistenceFacade;
-import fi.dwo.client.system.PersistenceException;
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.SchoolGroup;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.persistence.DbAccessCreator;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
 public class RightsDialog extends JDialog implements ActionListener {
 
@@ -78,10 +67,12 @@ public class RightsDialog extends JDialog implements ActionListener {
 		vbox = Box.createVerticalBox();
 		model = new DefaultTableModel() {
 
+                        @Override
 			public boolean isCellEditable(int row, int column) {
 				return column != 0;
 			}
 
+                        @Override
 			public Class getColumnClass(int columnIndex) {
 				return columnIndex == 0 ? String.class : Boolean.class;
 			} 
@@ -171,6 +162,7 @@ public class RightsDialog extends JDialog implements ActionListener {
 		}
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();
 		if(cmd == APPLY || cmd == OK)

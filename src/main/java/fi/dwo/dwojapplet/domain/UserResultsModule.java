@@ -55,6 +55,7 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
         orderedLessonIndex = -1;
 	}
 	
+        @Override
 	public int compare(Object o1, Object o2) {
         UserResultList url1 = (UserResultList) o1;
         UserResultList url2 = (UserResultList) o2;
@@ -94,10 +95,12 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
         return 0;
 	}
 
+        @Override
 	public Course[] getAllCourses() {
         return dwo.getCourses();
 	}
 
+        @Override
 	public Vector getResults() {
 		if (currentlyZoomedLesson != null)
 		try {
@@ -114,18 +117,22 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
 		return userResultList;
 	}
 
+        @Override
 	public Course[] getSelectedCourse() {
         return courses;
 	}
 
+        @Override
 	public LessonGroup getZoomedLessonGroup() {
         return currentlyZoomedLesson;
 	}
 
+        @Override
 	public UserGroup getZoomedUserGroup() {
         return currentlyZoomedUser;
 	}
 
+        @Override
 	public Vector orderBy(UserGroup ug, int orderWay) {
         orderedLessonIndex = -1;
         orderedWay = orderWay;
@@ -135,6 +142,7 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
         return userResultList;
 	}
 
+        @Override
 	public Vector orderBy(LessonGroup lg, int orderWay) {
         orderedLessonIndex = -1;
         orderedWay = orderWay;
@@ -144,6 +152,7 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
         return userResultList;
 	}
 
+        @Override
 	public void reset() {
         MapperIF m = MapperCreator.instance(UserResultList.class);
         
@@ -158,10 +167,12 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
         orderedLessonIndex = -1;
 	}
 
+        @Override
 	public void selectCourses(Course[] courses) {
         this.courses = courses;
 	}
 
+        @Override
 	public Vector selectCourses(Course[] courses, boolean getResults) {
         this.courses = courses;
         if (getResults) {
@@ -175,6 +186,7 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
         }
 	}
 
+        @Override
 	public void showResult(ResultScore rs) {
 		LessonGroup lg = rs.getLessonGroup();
 		if (lg instanceof Sco ) {
@@ -183,6 +195,7 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
             final Sco s = sco;
             
             Thread thread = new Thread() {	
+                @Override
                 public void run() {	
                     CenterSubPanel csp = GuiCreator.instance().getScoPanel(s);
                     if(csp != null) {
@@ -196,6 +209,7 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
 		}
   	}
 
+        @Override
 	public Vector zoomIn(UserGroup ug) {
         orderedLessonIndex = -1;
         currentlyZoomedUser = ug;
@@ -203,6 +217,7 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
         return getResults();
 	}
 
+        @Override
 	public Vector zoomIn(LessonGroup lg) {
         orderedLessonIndex = -1;
         currentlyZoomedLesson = lg;
@@ -210,6 +225,7 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
         return getResults();
 	}
 
+        @Override
 	public Vector zoomOut(UserGroup ug) {
         orderedLessonIndex = -1;
         currentlyZoomedUser = null;
@@ -217,6 +233,7 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
         return getResults();
 	}
 
+        @Override
 	public Vector zoomOut(LessonGroup lg) {
         orderedLessonIndex = -1;
         currentlyZoomedLesson = null;

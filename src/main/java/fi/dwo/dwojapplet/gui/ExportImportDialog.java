@@ -6,7 +6,6 @@ package fi.dwo.dwojapplet.gui;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Dimension;
@@ -14,7 +13,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Graphics;
-import java.awt.GraphicsConfiguration;
 import java.awt.HeadlessException;
 import java.awt.Polygon;
 import java.awt.event.ActionEvent;
@@ -31,7 +29,6 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.TreeSet;
 import java.util.Vector;
 
 import javax.swing.AbstractCellEditor;
@@ -50,7 +47,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -67,26 +63,22 @@ import javax.swing.table.TableColumn;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.beans.appletutil.AppletUtil;
-import fi.dwo.client.domain.AppletConfig;
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.DWO;
-import fi.dwo.client.domain.DWOlight;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.DwoProfile;
-import fi.dwo.client.domain.ResultsModuleIF;
-import fi.dwo.client.domain.School;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.GuiCreatorTeacher.LazyAppletConfig;
-import fi.dwo.client.persistence.ClassMapper;
-import fi.dwo.client.persistence.DbAccessCreator;
-import fi.dwo.client.persistence.MapperCreator;
-import fi.dwo.client.persistence.PersistenceFacade;
-import fi.dwo.client.persistence.XmlRpcMapper;
-import fi.dwo.client.system.CourseException;
-import fi.dwo.client.system.PersistenceException;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.exceptions.CourseException;
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DWO;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.DwoProfile;
+import fi.dwo.dwojapplet.domain.ResultsModuleIF;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.GuiCreatorTeacher.LazyAppletConfig;
+import fi.dwo.dwojapplet.persistence.DbAccessCreator;
+import fi.dwo.dwojapplet.persistence.MapperCreator;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
 /**
  * @author Velth101
@@ -158,6 +150,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		JButton cancel = new JButton(TextMapper.getText("cancel"));
 		int count;
 		private boolean fuse;
+                @Override
 		public void run() {
 			School s = user.getSchool();
 			HashSet set = new HashSet();
@@ -239,30 +232,38 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 			}
 		}
 
+                @Override
 		public void actionPerformed(ActionEvent arg0) {
 			fuse = false;
 		}
 
+                @Override
 		public void windowActivated(WindowEvent arg0) {
 		}
 
+                @Override
 		public void windowClosed(WindowEvent arg0) {
 			fuse = false;
 		}
 
+                @Override
 		public void windowClosing(WindowEvent arg0) {
 			fuse = false;
 		}
 
+                @Override
 		public void windowDeactivated(WindowEvent arg0) {
 		}
 
+                @Override
 		public void windowDeiconified(WindowEvent arg0) {
 		}
 
+                @Override
 		public void windowIconified(WindowEvent arg0) {
 		}
 
+                @Override
 		public void windowOpened(WindowEvent arg0) {
 		}
 
@@ -275,14 +276,17 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 
 		private Polygon p;
 
+                @Override
 		public int getIconHeight() {
 			return 30;
 		}
 
+                @Override
 		public int getIconWidth() {
 			return 50;
 		}
 
+                @Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			g.setColor(c.getForeground());
 			p.translate(x,y);
@@ -316,6 +320,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		ActionListener    listener;
 		String command = "Preview";
 		
+                @Override
 		public void actionPerformed(ActionEvent e) {
 			if(listener != null)
 			{
@@ -325,10 +330,12 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 			fireEditingCanceled();
 		}
 
+                @Override
 		public Object getCellEditorValue() {
 			return null;
 		}
 
+                @Override
 		public Component getTableCellEditorComponent(JTable table,
 				Object value, boolean isSelected, int row, int column) {
 			this.row = row;
@@ -351,10 +358,12 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 			this.school = schools;
 		}
 
+                @Override
 		public Object getElementAt(int index) {
 			return school[index].getName();
 		}
 
+                @Override
 		public int getSize() {
 			return school.length;
 		}
@@ -378,14 +387,17 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 			fireTableDataChanged();
 		}
 
+                @Override
 		public int getColumnCount() {
 			return 3;
 		}
 
+                @Override
 		public int getRowCount() {
 			return courses.length;
 		}
 
+                @Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			switch(columnIndex)
 			{
@@ -399,6 +411,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 			return null;
 		}
 
+                @Override
 		public String getColumnName(int column) {
 			switch(column) {
 			case 1:  return TextMapper.getText("Module");
@@ -408,6 +421,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 			return super.getColumnName(column);
 		}
 
+                @Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
 			return columnIndex != 1;
 		}
@@ -415,6 +429,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		/* (non-Javadoc)
 		 * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
 		 */
+                @Override
 		public Class getColumnClass(int column) {
 			switch(column) {
 			case 0: return Boolean.class;
@@ -425,6 +440,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		/* (non-Javadoc)
 		 * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
 		 */
+                @Override
 		public void setValueAt(Object value, int row, int column) {
 			switch(column) {
 			case 0:
@@ -471,14 +487,17 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 
 		}
 
+                @Override
 		public int getColumnCount() {
 			return 2;
 		}
 
+                @Override
 		public int getRowCount() {
 			return courses.length;
 		}
 
+                @Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			if(columnIndex == 0)
 				return courses[rowIndex].isExport()? Boolean.TRUE : Boolean.FALSE;
@@ -486,6 +505,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		}
 		
 		
+                @Override
 		public Class getColumnClass(int columnIndex) {
 			switch(columnIndex) {
 			case 0: return Boolean.class;
@@ -494,6 +514,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 			return super.getColumnClass(columnIndex);
 		}
 
+                @Override
 		public String getColumnName(int column) {
 			switch(column) {
 			case 0:
@@ -504,12 +525,14 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 			return super.getColumnName(column);
 		}
 
+                @Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
 			if(columnIndex == 0)
 				return true;
 			return super.isCellEditable(rowIndex, columnIndex);
 		}
 
+                @Override
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 			if(columnIndex == 0)
 			{		
@@ -534,6 +557,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		Object[] export;
 		private Map map;
 		
+                @Override
 		public int getColumnCount() {
 			return 2;
 		}
@@ -545,10 +569,12 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 			return -1;
 		}
 		
+                @Override
 		public int getRowCount() {
 			return export.length;
 		}
 
+                @Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			switch(columnIndex) 
 			{
@@ -567,6 +593,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 			}
 		}
 
+                @Override
 		public Class getColumnClass(int columnIndex) {
 			switch(columnIndex)
 			{
@@ -576,6 +603,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 			return super.getColumnClass(columnIndex);
 		}
 
+                @Override
 		public String getColumnName(int column) {
 			switch(column) {
 				case 0: return "";
@@ -584,10 +612,12 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 			return super.getColumnName(column);
 		}
 
+                @Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
 			return (columnIndex == 0);
 		}
 
+                @Override
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 			switch(columnIndex)
 			{
@@ -634,6 +664,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 // track changes
 		enableImport.addChangeListener(new ChangeListener() {
 
+                        @Override
 			public void stateChanged(ChangeEvent event) {
 				
 				School school = user.getSchool();
@@ -718,6 +749,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		exportPanel.add(p, BorderLayout.SOUTH);
 		JButton exportOK = new JButton("OK");
 		exportOK.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 					persistCourses(exportModuleModel.dirty);
 					updateSchoolTo(user.getSchool(), exportSchoolModel, exportAlleScholen.isSelected());
@@ -727,12 +759,14 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		
 		JButton exportCancel = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));
 		exportCancel.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				ExportImportDialog.this.dispose();
 			}});
 		JButton exportApply = new JButton(TextMapper.getText("toepassen"));
 		exportApply.addActionListener(new ActionListener() {
 
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				HashMap dirty = exportModuleModel.dirty;
 				persistCourses(dirty);
@@ -777,6 +811,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		importSchoolList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		importSchoolList.addListSelectionListener(new ListSelectionListener() {
 			int lastIndex = -1;
+                        @Override
 			public void valueChanged(ListSelectionEvent e) {
 				if(e.getValueIsAdjusting())
 				{
@@ -948,6 +983,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
+        @Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() instanceof Course)
 		{
@@ -989,25 +1025,31 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		DWO dwo = new DWO();
 		dwo.setStub(new AppletStub() {
 
+                        @Override
 			public void appletResize(int arg0, int arg1) {
 			}
 
+                        @Override
 			public AppletContext getAppletContext() {
 				return null;
 			}
 
+                        @Override
 			public URL getCodeBase() {
 				return null;
 			}
 
+                        @Override
 			public URL getDocumentBase() {
 				return null;
 			}
 
+                        @Override
 			public String getParameter(String arg0) {
 				return null;
 			}
 
+                        @Override
 			public boolean isActive() {
 				return false;
 			}});
@@ -1024,20 +1066,25 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 		System.exit(0);
 	}
 
+        @Override
 	public ResultsModuleIF getUserResultsModule(Course course) {
 		return null;
 	}
 
+        @Override
 	public void hideClassList() {
 	}
+        @Override
 	public void loadCenter(CenterSubPanel cp) {
 	}
 
+        @Override
 	public void loadTotal(CenterSubPanel csp) {
 		ScoPanel sp = (ScoPanel) csp;
 		ScoDialog.showScoPreview(this, sp);
 	}
 
+        @Override
 	public void showClassList() {
 	}
 

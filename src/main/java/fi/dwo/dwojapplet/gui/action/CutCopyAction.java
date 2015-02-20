@@ -1,14 +1,13 @@
 package fi.dwo.dwojapplet.gui.action;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import fi.dwo.client.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.CourseMap;
 
 public class CutCopyAction extends GuiAction
 {
 	CourseMap object;
 	boolean cut;
+        @Override
 	public void actionPerformed(ActionEvent e) {
 		if(object == null)
 			Clipboard.setClipboard(Clipboard.getSelection());
@@ -26,6 +25,7 @@ public class CutCopyAction extends GuiAction
 		this.cut = cut;
 	}
 
+        @Override
 	void setMap(CourseMap map) {
 		if(map == null || map.getUserObject()instanceof String)
 			setEnabled(false);

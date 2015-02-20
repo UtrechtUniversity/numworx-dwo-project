@@ -33,11 +33,13 @@ public class Guest extends User
     /* (non-Javadoc)
      * @see fi.dwo.client.domain.User#getName()
      */
+    @Override
     public String getName()
     {
          return TextMapper.getText(TextMapper.USER_GUEST);
     }
 
+    @Override
 	public String getStudentName() {
 		return getName();
 	}
@@ -52,6 +54,7 @@ public class Guest extends User
  */   /**
      * Guest user is readonly.
      */
+    @Override
     public boolean isReadonly()
     {
         return true;

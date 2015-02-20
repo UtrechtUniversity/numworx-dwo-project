@@ -10,7 +10,7 @@ import java.util.Vector;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-import fi.dwo.client.system.PersistenceException;
+import fi.dwo.commons.exceptions.PersistenceException;
 
 /**
  * This class contains basic functionality for the mappers who communicate with
@@ -22,10 +22,12 @@ public abstract class XmlRpcMapper implements MapperIF {
 
     protected Hashtable objects = new Hashtable();
 
+    @Override
     public void removeObject(int key) {
         objects.remove(new Integer(key));
     }
 
+    @Override
     public void removeAllObjects() {
         objects.clear();
     }
@@ -35,6 +37,7 @@ public abstract class XmlRpcMapper implements MapperIF {
      * @return All the objects representing the specified mapper. 
      * @see fi.dwo.client.persistence.MapperIF#get()
      */
+    @Override
     public Object[] get() throws IOException, XmlRpcException, SQLException {
         DbAccessIF dbAccess = DbAccessCreator.instance();
         return getObjectFromReturn(dbAccess.getTable(getTableName(), getOrderbyCol()));
@@ -58,6 +61,7 @@ public abstract class XmlRpcMapper implements MapperIF {
      * @param oid The ID of the object to return.
      * @return The object representing the oid.
      */
+    @Override
     public Object get(int oid) throws IOException, XmlRpcException,
             SQLException {
         if (objects.containsKey(new Integer(oid))) {
@@ -107,6 +111,7 @@ public abstract class XmlRpcMapper implements MapperIF {
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.MapperIF#getObjectFromReturn(java.util.Vector)
      */
+    @Override
     public Object[] getObjectFromReturn(Vector data) throws IOException,
             SQLException, XmlRpcException {
         int i;

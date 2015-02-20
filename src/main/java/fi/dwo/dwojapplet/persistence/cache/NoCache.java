@@ -5,9 +5,9 @@ import java.sql.SQLException;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-import fi.dwo.client.persistence.DbAccessIF;
-import fi.dwo.client.system.PersistenceException;
-import fi.dwo.server.persistence.DwoXmlRpcException;
+import fi.dwo.commons.exceptions.DwoXmlRpcException;
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.dwojapplet.persistence.DbAccessIF;
 
 public class NoCache implements IStore {
 
@@ -18,6 +18,7 @@ public class NoCache implements IStore {
 	private DbAccessIF dbAccess;
 	
 	
+        @Override
 	public String getValue(int uid, int scoid, String key) throws PersistenceException {
 		String result = null;
 		try {
@@ -32,6 +33,7 @@ public class NoCache implements IStore {
 		return result;
 	}
 
+        @Override
 	public String setValue(int uid, int scoid, String key, String value) throws PersistenceException {
         String random = Long.toHexString(Double.doubleToRawLongBits(Math.random()));
         String result;
@@ -64,13 +66,16 @@ public class NoCache implements IStore {
 		} 
 	}
 
+        @Override
 	public String commit(int uid, int scoid, String param) {
 		return "true";
 	}
 
+        @Override
 	public void destroy() {
 	}
 
+        @Override
 	public boolean changeSco(int scoid, String scoName, String description,
 			boolean delete, String launchdataString, Boolean showScore) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
 		if(delete)
@@ -87,6 +92,7 @@ public class NoCache implements IStore {
 		}
 	}
 
+        @Override
 	public boolean changeSco(int scoid, String scoName, String description,
 			boolean delete, byte[] launchdata, Boolean showScore) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
 		if(showScore == null)
@@ -95,6 +101,7 @@ public class NoCache implements IStore {
 		return result;
 	}
 
+        @Override
 	public void clear(int scoid) {
 	}
 

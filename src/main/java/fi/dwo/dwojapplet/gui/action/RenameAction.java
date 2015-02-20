@@ -2,12 +2,12 @@ package fi.dwo.dwojapplet.gui.action;
 
 import java.awt.event.ActionEvent;
 
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.gui.CourseNameDialog;
-import fi.dwo.client.gui.ScoNameDialog;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.gui.CourseNameDialog;
+import fi.dwo.dwojapplet.gui.ScoNameDialog;
 
 public class RenameAction extends GuiAction {
 
@@ -19,6 +19,7 @@ public class RenameAction extends GuiAction {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.gui.action.GuiAction#setMap(fi.dwo.client.domain.CourseMap)
 	 */
+        @Override
 	void setMap(CourseMap map) {
 		setEnabled(canModify(map));
 		this.map = map;
@@ -50,6 +51,7 @@ public class RenameAction extends GuiAction {
 		this.sco = sco;
 	}
 	
+        @Override
 	public void actionPerformed(ActionEvent event) {
 		if(course != null) {
 			if(CourseNameDialog.editCourse(course)) {

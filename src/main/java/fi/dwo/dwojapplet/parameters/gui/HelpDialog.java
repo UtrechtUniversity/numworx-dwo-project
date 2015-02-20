@@ -19,9 +19,9 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JTextArea;
 
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.gui.GuiConstants;
-import fi.dwo.parameters.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.gui.GuiConstants;
+import fi.dwo.dwojapplet.parameters.system.TextMapper;
 
 public class HelpDialog extends JDialog implements ActionListener {
 
@@ -106,6 +106,7 @@ public class HelpDialog extends JDialog implements ActionListener {
     /* (non-Javadoc)
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == closeButton) {
             this.hide();

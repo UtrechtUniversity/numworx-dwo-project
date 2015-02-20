@@ -31,6 +31,7 @@ public class TreeGroupParameterComponent extends GroupParameterComponent impleme
      * Calls the parent generatePostItems, and adds a delete-button.
      * @see fi.dwo.parameters.gui.ParameterComponent#generatePostItems(java.awt.Component)
      */
+    @Override
     protected Component generatePostItems(Component after) {
         Component last = super.generatePostItems(after);
         deleteButton = new DeleteButton();
@@ -42,6 +43,7 @@ public class TreeGroupParameterComponent extends GroupParameterComponent impleme
         
         return last;
     }
+    @Override
 	public void setColor(Color c) {
 	    super.setColor(c);
 
@@ -50,6 +52,7 @@ public class TreeGroupParameterComponent extends GroupParameterComponent impleme
 		}
 	}
 	
+    @Override
 	protected void isFocussed() {
 	    super.isFocussed();
 
@@ -59,6 +62,7 @@ public class TreeGroupParameterComponent extends GroupParameterComponent impleme
 		}
 	}
 	
+    @Override
 	public void unFocus() {
 	    super.unFocus();
 		if(deleteButton != null) {
@@ -70,6 +74,7 @@ public class TreeGroupParameterComponent extends GroupParameterComponent impleme
     /* (non-Javadoc)
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == deleteButton) {
             if(parent instanceof DeleteTreeItemIF) {

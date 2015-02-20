@@ -41,6 +41,7 @@ public class DwoProfile implements Descriptor {
     /**
      * @return Returns the text.
      */
+        @Override
     public String getText() {
         return text;
     }
@@ -103,6 +104,7 @@ public class DwoProfile implements Descriptor {
     	return rights.indexOf(right)>=0;
     }
 
+        @Override
 	public String getHeader() {
 		return getDescription();
 	}
@@ -111,6 +113,7 @@ public class DwoProfile implements Descriptor {
 	 * get Courses.
 	 * Note: layer inconsistency: domain/gui
 	 */
+        @Override
 	public CourseMap[] getChildren() {
 		return GuiCreator.instance().getCourseList();
 	}

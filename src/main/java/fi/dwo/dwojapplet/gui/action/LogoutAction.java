@@ -4,13 +4,11 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.Icon;
-
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.Guest;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.GuiCreator;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.Guest;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.GuiCreator;
 
 public class LogoutAction extends AbstractAction {
 
@@ -21,6 +19,7 @@ public class LogoutAction extends AbstractAction {
 	
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent arg0) {
         GuiCreator.instance().logoff();
         DwoHelper.deleteCookie("dwoUserName");

@@ -1,20 +1,15 @@
 package fi.dwo.dwojapplet.gui.action;
 
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.text.MessageFormat;
 
-import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.gui.GuiCreator;
-import fi.dwo.client.gui.ScoManagementPanel;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.Sco;
 
 public class DeleteAction extends GuiAction  {
 
@@ -34,6 +29,7 @@ public class DeleteAction extends GuiAction  {
 			setMap(map);
 		}
 
+                @Override
 		void setMap(CourseMap map) {
 			this.map = map;
 			Object o = map == null ? null : map.getUserObject();
@@ -81,6 +77,7 @@ public class DeleteAction extends GuiAction  {
 		}
 		
 		
+                @Override
 		public void actionPerformed(ActionEvent e) {
 			if(map == null)
 			{

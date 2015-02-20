@@ -1,18 +1,14 @@
 package fi.dwo.dwojapplet.gui;
 
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.table.AbstractTableModel;
 
-import fi.dwo.client.domain.DwoIF;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.GuestMenuPanel.MenuPanelButton;
-import fi.dwo.client.gui.action.SchoolConfigAction;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoIF;
+import fi.dwo.dwojapplet.gui.action.SchoolConfigAction;
 
 public class ContactDocentMenuPanel extends TeacherMenuPanel {
 
@@ -27,6 +23,7 @@ public class ContactDocentMenuPanel extends TeacherMenuPanel {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.gui.TeacherMenuPanel#createMenuButtons()
 	 */
+        @Override
 	protected void createMenuButtons() {
 		super.createMenuButtons();
 		add(Box.createVerticalStrut(20));
@@ -49,6 +46,7 @@ public class ContactDocentMenuPanel extends TeacherMenuPanel {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.gui.TeacherMenuPanel#actionPerformed(java.awt.event.ActionEvent)
 	 */
+        @Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		super.actionPerformed(e);

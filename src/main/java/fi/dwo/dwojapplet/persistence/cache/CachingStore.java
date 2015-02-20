@@ -60,6 +60,7 @@ public class CachingStore implements IStore, Runnable {
 		notifyAll();
 	}
 	
+        @Override
 	public void run() {
 		long backoff = INI_BACKOFF;
 		while(!Thread.interrupted())
@@ -110,6 +111,7 @@ public class CachingStore implements IStore, Runnable {
 		notifyAll();
 	}
 
+        @Override
 	public String getValue(int uid, int scoid, String key)
 			throws PersistenceException {
 		Bucket b = new Bucket(uid, scoid, key, "");
@@ -135,6 +137,7 @@ public class CachingStore implements IStore, Runnable {
 		}
 	}
 
+        @Override
 	public String setValue(int uid, int scoid, String key, String value)
 			throws PersistenceException {
 		putWork(new Bucket(uid, scoid, key, value));
@@ -145,6 +148,7 @@ public class CachingStore implements IStore, Runnable {
 		return "true";
 	}
 
+        @Override
 	public String commit(int uid, int scoid, String param)
 			throws PersistenceException {
 		commit(true);
@@ -165,6 +169,7 @@ public class CachingStore implements IStore, Runnable {
 			}
 	}
 
+        @Override
 	public void destroy() {
 		cache.clear();
 		try {
@@ -191,6 +196,7 @@ public class CachingStore implements IStore, Runnable {
 		worker = new Thread(this);
 		worker.start();
 	}
+        @Override
 	public synchronized boolean changeSco(int scoid, String scoName, String description,
 			boolean delete, String launchdataString, Boolean showScore)
 			throws DwoXmlRpcException, IOException, XmlRpcException,
@@ -199,6 +205,7 @@ public class CachingStore implements IStore, Runnable {
 		return delegate.changeSco(scoid, scoName, description, delete, launchdataString, showScore);
 	}
 
+        @Override
 	public synchronized boolean changeSco(int scoid, String scoName, String description,
 			boolean delete, byte[] launchdata, Boolean showScore)
 			throws DwoXmlRpcException, IOException, XmlRpcException,

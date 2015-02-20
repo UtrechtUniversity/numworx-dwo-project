@@ -81,6 +81,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 			super(name);
 		}
 
+                @Override
 		public void actionPerformed(ActionEvent e) {
 			ClipboardExport.instance().export(model);
 
@@ -110,6 +111,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 			setLessonMode(REVIEW);
 		}
 
+                @Override
 		public String LMSInitialize(String iParam) {
 			return "false";
 		}
@@ -119,6 +121,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 			user = u;
 		}
 
+                @Override
 		public String LMSFinish(String iParam) {
 			return "false";
 		}
@@ -126,6 +129,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		/* (non-Javadoc)
 		 * @see fi.dwo.client.domain.ScoBase#getCreditStatus()
 		 */
+                @Override
 		public String getCreditStatus() {
 			return creditStatus;
 		}
@@ -133,6 +137,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		/* (non-Javadoc)
 		 * @see fi.beans.scorm.ScormAdapter#LMSGetValue(java.lang.String)
 		 */
+                @Override
 		public String LMSGetValue(String key) {
 			return super.LMSGetValue(key);
 		}
@@ -140,6 +145,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		/* (non-Javadoc)
 		 * @see fi.beans.scorm.ScormAdapter#LMSSetValue(java.lang.String, java.lang.String)
 		 */
+                @Override
 		public String LMSSetValue(String key, String value) {
 			return super.LMSSetValue(key, value);
 		}
@@ -347,6 +353,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		table.setRowSelectionInterval(combo.getSelectedIndex()+1, combo.getSelectedIndex()+1);
 		final ItemListener itemListener = new ItemListener() {
 
+                        @Override
 			public void itemStateChanged(ItemEvent event) {
 				User u = (User) event.getItem();
 				switch (event.getStateChange()) {
@@ -415,6 +422,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 	    table.setDefaultEditor(Integer.class, new IntegerEditor(combo, tableModel, sp.getSco()));
 	    table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
+                        @Override
 			public void valueChanged(ListSelectionEvent e) {
 				if(!e.getValueIsAdjusting())
 				{
@@ -438,6 +446,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		comp.setViewportBorder(null);
         vbox.addComponentListener(new ComponentAdapter() {
 
+                        @Override
 			public void componentResized(ComponentEvent event) {
 				content.validate();
 				content.repaint();
@@ -466,6 +475,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		/* (non-Javadoc)
 		 * @see javax.swing.table.DefaultTableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
 		 */
+            @Override
 		public Component getTableCellRendererComponent(JTable table,
 				Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 			int max = 100;
@@ -547,6 +557,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
     	Sco sco;
     	int n,page;
 		private JTable table;
+            @Override
 		public void actionPerformed(ActionEvent arg0) {
 			String loc = (String) ((Map) model.getScoreList(n).get(page)).get(PartialScoreIF.LOCATION);
 			if(loc != null)
@@ -558,10 +569,12 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 			fireEditingCanceled();
 		}
 
+            @Override
 		public Object getCellEditorValue() {
 			return value;
 		}
 
+            @Override
 		public Component getTableCellEditorComponent(JTable table, Object value,
 				boolean isSelected, int n, int col) {
 			this.value = value;
@@ -608,6 +621,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		/* (non-Javadoc)
 		 * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
 		 */
+            @Override
 		public Class getColumnClass(int col) {
 			if(col != 0) return Integer.class;
 			return super.getColumnClass(col);
@@ -617,6 +631,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 		/* (non-Javadoc)
 		 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
 		 */
+            @Override
 		public boolean isCellEditable(int row, int col) {
 			
 			if(col > 0 && row > 0 || col == 1 )
@@ -626,14 +641,17 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 
 
 		private ClassModel model;
+            @Override
 		public int getColumnCount() {
 			return getScoreList(0).size()+1;
 		}
 
+            @Override
 		public int getRowCount() {
 			return model.getSize()+1;
 		}
 
+            @Override
 		public Object getValueAt(int row, int col) {
 			if(row == 0)
 			{
@@ -656,6 +674,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 			}
 		}
 
+            @Override
 		public String getColumnName(int column) {
 			if(column == 0)
 				return klas;
@@ -680,6 +699,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
      * @param e The ActionEvent.
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+        @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == closeButton) {
             windowClosing(null);
@@ -703,6 +723,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
      * @param e The WindowEvent.
      * @see java.awt.event.WindowListener#windowActivated(java.awt.event.WindowEvent)
      */
+        @Override
     public void windowActivated(WindowEvent e) {
     }
 
@@ -711,6 +732,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
      * @param e The WindowEvent.
      * @see java.awt.event.WindowListener#windowClosed(java.awt.event.WindowEvent)
      */
+        @Override
     public void windowClosed(WindowEvent e) {
     }
 
@@ -719,6 +741,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
      * @param e The WindowEvent.
      * @see java.awt.event.WindowListener#windowClosing(java.awt.event.WindowEvent)
      */
+        @Override
     public void windowClosing(WindowEvent e) {
         setVisible(false);
         scoPanel.getSco().removePropertyChangeListener(Sco.LESSON_LOCATION, this);
@@ -731,6 +754,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
      * @param e The WindowEvent.
      * @see java.awt.event.WindowListener#windowDeactivated(java.awt.event.WindowEvent)
      */
+        @Override
     public void windowDeactivated(WindowEvent e) {
     }
 
@@ -739,6 +763,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
      * @param e The WindowEvent.
      * @see java.awt.event.WindowListener#windowDeiconified(java.awt.event.WindowEvent)
      */
+        @Override
     public void windowDeiconified(WindowEvent e) {
     }
 
@@ -747,6 +772,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
      * @param e The WindowEvent.
      * @see java.awt.event.WindowListener#windowIconified(java.awt.event.WindowEvent)
      */
+        @Override
     public void windowIconified(WindowEvent e) {
     }
 
@@ -755,10 +781,12 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
      * @param e The WindowEvent.
      * @see java.awt.event.WindowListener#windowOpened(java.awt.event.WindowEvent)
      */
+        @Override
     public void windowOpened(WindowEvent e) {
     }
 
 
+        @Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		table.repaint();
 	}

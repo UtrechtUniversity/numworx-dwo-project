@@ -114,6 +114,7 @@ public class BorderedPanel extends Panel {
      * 
      * @see java.awt.Component#paint(java.awt.Graphics)
      */
+    @Override
     public void paint(Graphics g) {
         super.paint(g);
         g.setColor(borderColor);
@@ -158,6 +159,7 @@ public class BorderedPanel extends Panel {
      * @see       LayoutManager
      * @since     JDK1.1
      */
+    @Override
     public Insets getInsets() {
         int top = 0;
         int bottom = 0;

@@ -1,11 +1,8 @@
 package fi.dwo.dwojapplet.domain;
 
 import java.applet.Applet;
-import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.GridLayout;
-import java.awt.Panel;
 import java.util.Date;
 
 import javax.swing.JOptionPane;
@@ -14,13 +11,18 @@ import fi.beans.appletutil.AppletUtil;
 import fi.beans.jvmchecker.JVMChecker;
 import fi.beans.mainframe.MainFrame;
 import fi.beans.scorm.SCORM12APIInterface;
-import fi.dwo.dwojapplet.gui.CenterPanel;
+import fi.dwo.commons.exceptions.ClassException;
+import fi.dwo.commons.exceptions.LoginException;
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.exceptions.RegisterException;
+import fi.dwo.commons.exceptions.SchoolException;
+import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.CenterSubPanel;
 //import fi.dwo.client.gui.DwoMessageDialog;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.ScoPanel;
-import fi.dwo.dwojapplet.persistence.MapperCreator;
+import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
 public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
@@ -59,7 +61,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 // allow update van SERVLET
         if(args!= null && args.length>1 && "-s".equals(args[0]))
         {
-        	fi.dwo.client.persistence.DbAccessCreator.SERVLET = args[1];
+        	DbAccessCreator.SERVLET = args[1];
         	o = 2;
         }
 // allow definitie van Locale.
@@ -101,6 +103,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#addClass(java.lang.String)
 	 */
+        @Override
 	public boolean addClass(String className) throws ClassException {
 		return false;
 	}
@@ -108,6 +111,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#addCourse(java.lang.String, java.lang.String)
 	 */
+        @Override
 	public Course addCourse(String name, String description, Course parent, boolean isMap) {
 		return null;
 	}
@@ -116,6 +120,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#addSco(fi.dwo.client.domain.Course, fi.dwo.client.domain.AppletConfig, java.lang.String, java.lang.String)
 	 */
+        @Override
 	public Sco addSco(Course course, AppletConfig appletConfig, String name,
 			String description, boolean showScore) {
 		return null;
@@ -124,6 +129,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#changeAccount(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, fi.dwo.client.domain.SchoolClass)
 	 */
+        @Override
 	public void changeAccount(String password, String newPassword,
 			String reNewPassword, String firstName, String middleName,
 			String lastName, String email, SchoolClass c)
@@ -133,6 +139,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#changeAccount(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, fi.dwo.client.domain.Group, java.lang.String)
 	 */
+        @Override
 	public void changeAccount(String password, String newPassword,
 			String reNewPassword, String firstName, String middleName,
 			String lastName, String email, String schoolLogin, Group group,
@@ -142,6 +149,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#changeAccount(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
+        @Override
 	public void changeAccount(String password, String newPassword,
 			String reNewPassword, String firstName, String middleName,
 			String lastName, String email) throws RegisterException {
@@ -150,12 +158,14 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#clearCurrentUserData()
 	 */
+        @Override
 	public void clearCurrentUserData() {
 	}
 
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#deleteClass(fi.dwo.client.domain.SchoolClass)
 	 */
+        @Override
 	public boolean deleteClass(SchoolClass c) {
 		return false;
 	}
@@ -163,6 +173,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#deleteCourse(fi.dwo.client.domain.Course)
 	 */
+        @Override
 	public boolean deleteCourse(Course course) {
 		return false;
 	}
@@ -170,6 +181,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#deleteSchool(fi.dwo.client.domain.School)
 	 */
+        @Override
 	public boolean deleteSchool(School sc) {
 		return false;
 	}
@@ -177,6 +189,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#deleteSco(fi.dwo.client.domain.Sco)
 	 */
+        @Override
 	public boolean deleteSco(Sco sco) {
 		return false;
 	}
@@ -184,6 +197,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#deleteUser()
 	 */
+        @Override
 	public void deleteUser() {
 	}
 
@@ -199,6 +213,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#getAppletConfig()
 	 */
+        @Override
 	public AppletConfig[] getAppletConfig() {
 		return null;
 	}
@@ -206,6 +221,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#getCourses()
 	 */
+        @Override
 	public Course[] getCourses() {
 		return null;
 	}
@@ -213,6 +229,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#getCourseViewNr()
 	 */
+        @Override
 	public int getCourseViewNr() {
 		return courseViewNr;
 	}
@@ -220,6 +237,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#getDwoProfile()
 	 */
+        @Override
 	public DwoProfile getDwoProfile() {
 		return dwoProfile;
 	}
@@ -227,6 +245,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#getEditableCourses()
 	 */
+        @Override
 	public Course[] getEditableCourses() {
 		return null;
 	}
@@ -237,6 +256,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
      * @return An array of all the available groups.
      *  
      */
+        @Override
     public Group[] getGroups() {
         try {
             return (Group[]) PersistenceFacade.instance().get(Group.class);
@@ -249,6 +269,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#getResultsModule()
 	 */
+        @Override
 	public ResultsModuleIF getResultsModule() {
 		return null;
 	}
@@ -256,6 +277,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#getResultsModule(fi.dwo.client.domain.Course[], boolean)
 	 */
+        @Override
 	public ResultsModuleIF getResultsModule(Course[] courses, boolean showSco) {
 		return null;
 	}
@@ -263,6 +285,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#getResultsModule(fi.dwo.client.domain.Course[])
 	 */
+        @Override
 	public ResultsModuleIF getResultsModule(Course[] courses) {
 		return null;
 	}
@@ -270,6 +293,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#getResultsModule(fi.dwo.client.domain.SchoolClass)
 	 */
+        @Override
 	public ResultsModuleIF getResultsModule(SchoolClass schoolClass) {
 		return null;
 	}
@@ -277,6 +301,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#getSchool()
 	 */
+        @Override
 	public School[] getSchool() {
 		return null;
 	}
@@ -284,6 +309,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#getScoViewNr()
 	 */
+        @Override
 	public int getScoViewNr() {
 		return scoViewNr;
 	}
@@ -296,6 +322,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
      *         guest, NULL is returned.
      *  
      */
+        @Override
     public User getUser() {
         return currentUser;
     }
@@ -303,6 +330,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#getUserResultsModule(fi.dwo.client.domain.Course)
 	 */
+        @Override
 	public ResultsModuleIF getUserResultsModule(Course course) {
 		return null;
 	}
@@ -310,6 +338,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#loadCourse(fi.dwo.client.domain.Course)
 	 */
+        @Override
 	public CenterSubPanel loadCourse(Course course) {
         currentCourse = course;
         return course.getCoursePanel();
@@ -318,6 +347,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#loadSco(fi.dwo.client.domain.Sco)
 	 */
+        @Override
 	public CenterSubPanel loadSco(Sco sco) {
         if(currentCourse==null)
         	currentCourse = sco.getCourse();
@@ -336,6 +366,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
      *             incorrect.z
      *  
      */
+        @Override
     public boolean login() throws LoginException {
         currentUser = Guest.instance();
         User.setCurrentUser(currentUser);
@@ -345,6 +376,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#login(java.lang.String, java.lang.String)
 	 */
+        @Override
 	public boolean login(String username, String password)
 			throws LoginException {
         currentUser = PersistenceFacade.instance().login(username, password);
@@ -355,12 +387,14 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#logoff()
 	 */
+        @Override
 	public void logoff() {
 	}
 
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#previewSco(fi.dwo.client.domain.AppletConfig)
 	 */
+        @Override
 	public ScoPanel previewSco(AppletConfig appletConfig) {
 		return null;
 	}
@@ -368,6 +402,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#previewSco(fi.dwo.client.domain.Sco)
 	 */
+        @Override
 	public ScoPanel previewSco(Sco sco) {
 		return null;
 	}
@@ -375,6 +410,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#register(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, fi.dwo.client.domain.Group, java.lang.String)
 	 */
+        @Override
 	public boolean register(String username, String password,
 			String rePassword, String firstname, String middlename,
 			String lastname, String email, String schoolLogin, Group group,
@@ -385,6 +421,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#register(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
+        @Override
 	public boolean register(String username, String password,
 			String rePassword, String firstname, String middlename,
 			String lastname, String email) throws RegisterException {
@@ -394,6 +431,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#renameClass(fi.dwo.client.domain.SchoolClass, java.lang.String)
 	 */
+        @Override
 	public boolean renameClass(SchoolClass schoolClass, String newName, boolean iconizer) {
 		return false;
 	}
@@ -401,6 +439,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#setPanel(java.awt.Panel)
 	 */
+        @Override
 	public void setPanel(Container p) {
 		System.out.println(p);
 		setLayout(new GridLayout(1,1));
@@ -413,18 +452,21 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#setReady()
 	 */
+        @Override
 	public void setReady() {
 	}
 
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#setWait()
 	 */
+        @Override
 	public void setWait() {
 	}
 
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#setWait(java.lang.String)
 	 */
+        @Override
 	public void setWait(String waitText) {
 		System.out.println(waitText);
 	}
@@ -432,6 +474,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#swapSco(fi.dwo.client.domain.Sco, fi.dwo.client.domain.Sco)
 	 */
+        @Override
 	public boolean swapSco(Sco sco1, Sco sco2) {
 		return false;
 	}
@@ -439,6 +482,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#updateCourse(fi.dwo.client.domain.Course)
 	 */
+        @Override
 	public boolean updateCourse(Course course) {
 		return false;
 	}
@@ -446,10 +490,12 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.domain.DwoIF#updateSco(fi.dwo.client.domain.Sco)
 	 */
+        @Override
 	public boolean updateSco(Sco sco) {
 		return false;
 	}
 
+        @Override
 	public void destroy()
 	{
 		DwoHelper.clrApplet(this);
@@ -458,13 +504,14 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	/* (non-Javadoc)
 	 * @see java.applet.Applet#init()
 	 */
+        @Override
 	public void init() {
         if( !DwoHelper.setApplet(this)) return;
 		setSize(789,492);
         String lang = getParameter("language");
         if ((lang != null) && (!lang.equals(""))) {
             TextMapper.setLanguage(lang);
-            fi.dwo.parameters.system.TextMapper.setLanguage(lang);
+            fi.dwo.dwojapplet.parameters.system.TextMapper.setLanguage(lang);
         }
         boolean cookies = false; 
         String cookiesString = getParameter("cookies");
@@ -574,6 +621,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
      * Stops the current applet. Indicates at the current course that the applet
      * will be stopped.
      */
+        @Override
     public void stop() {
     	if(this != DwoHelper.getApplet()) return;
     	this.setWait();
@@ -585,6 +633,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
     	this.setReady();
     }
 
+        @Override
 	public String LMSInitialize(String iParam) {
 	        if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
 	        {	return currentCourse.getCurrentSco().LMSInitialize(iParam);
@@ -592,6 +641,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	        else return null;
 	    }
 
+        @Override
 	    public String LMSFinish(String iParam) {
 	        if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
 	        {	return currentCourse.getCurrentSco().LMSFinish(iParam);
@@ -599,6 +649,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	        else return null;
 	    }
 
+        @Override
 	    public String LMSGetValue(String iDataModelElement) {
 	        if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
 	        {	return currentCourse.getCurrentSco().LMSGetValue(iDataModelElement);
@@ -606,6 +657,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	        else return null;
 	    }
 
+        @Override
 	    public String LMSSetValue(String iDataModelElement, String iValue) {
 	        if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
 	        {	return currentCourse.getCurrentSco().LMSSetValue(iDataModelElement, iValue);
@@ -613,6 +665,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	        else return null;
 	    }
 
+        @Override
 	    public String LMSCommit(String iParam) {
 	        if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
 	        {	return currentCourse.getCurrentSco().LMSCommit(iParam);
@@ -620,6 +673,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	        else return null;
 	    }
 
+        @Override
 	    public String LMSGetLastError() {
 	        if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
 	        {	return currentCourse.getCurrentSco().LMSGetLastError();
@@ -627,6 +681,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	        else return null;
 	    }
 
+        @Override
 	    public String LMSGetErrorString(String iErrorCode) {
 	        if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
 	        {	return currentCourse.getCurrentSco().LMSGetErrorString(iErrorCode);
@@ -634,6 +689,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	        else return null;
 	    }
 
+        @Override
 	     public String LMSGetDiagnostic(String iErrorCode) {
 	        if(currentCourse!=null && currentCourse.getCurrentSco()!=null)
 	        {	return currentCourse.getCurrentSco().LMSGetDiagnostic(iErrorCode);
@@ -712,6 +768,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	     * @param iDataModelElement The parameter to ask for.
 	     * @return The value representing for the specified sco, user and parameter.
 	     */
+        @Override
 	    public String LMSGetValue(ScoBase sco, User user, String iDataModelElement) {
 	        if(iDataModelElement.equals(SCORM12APIInterface.USER_GROUP)) {
 	            if(currentUser == null || currentUser instanceof Guest) {
@@ -747,6 +804,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 	     *         was unsuccessful</li>
 	     *         </ul>
 	     */
+        @Override
 	    public String LMSSetValue(ScoBase sco, User user, String iDataModelElement, String iValue) {
 	        try {
 	            return PersistenceFacade.instance().LMSSetValue(sco, user, iDataModelElement, iValue);
@@ -759,20 +817,24 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 		/* (non-Javadoc)
 		 * @see java.applet.Applet#getParameter(java.lang.String)
 		 */
+        @Override
 		public String getParameter(String name) {
 			if("language".equals(name)&& languageOveride != null)
 				return languageOveride;
 			return super.getParameter(name);
 		}
 
+        @Override
 		public void setCurrentSco(Sco sco) {
 		}
 
+        @Override
 		public School addSchool(int id, String schoolName, String schoolLogin,
 				SchoolPasswdMap schoolPasswdMap, Date date) {
 			return null;
 		}
 
+        @Override
 		public School editSchool(int schoolID, String schoolName,
 				String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date) {
 			return null;
@@ -781,9 +843,11 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 		/**
 		 * Dummy. DWOLight heeft geen Welcome panel
 		 */
+        @Override
 		public void setWelcomePanel() {
 		}
 
+        @Override
 		public String LMSCommit(ScoBase sco, String param) {
 			try {
 				return PersistenceFacade.instance().LMSCommit(sco, getUser(), param);
@@ -794,10 +858,12 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 			}
 		}
 
+        @Override
 		public Sco[] getEditableScos() {
 			return null;
 		}
 
+        @Override
 		public Course[] sequence(Course[] allCourses, SchoolClass sc) {
 			return allCourses;
 		}
@@ -807,10 +873,12 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 			return c;
 		}
 
+        @Override
 		public boolean updateLogo(Course c) {
 			return false;
 		}
 
+        @Override
 		public void linkViaSAML() {
 		}
 }

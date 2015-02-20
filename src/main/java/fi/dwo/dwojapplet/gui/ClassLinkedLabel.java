@@ -4,7 +4,7 @@
  */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.client.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.SchoolClass;
 
 /**
  * A Linked Label that represents a SchoolClass.

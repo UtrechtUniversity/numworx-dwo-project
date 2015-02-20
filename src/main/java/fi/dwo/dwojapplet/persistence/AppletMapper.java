@@ -4,20 +4,16 @@
  */
 package fi.dwo.dwojapplet.persistence;
 
-import java.applet.Applet;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Hashtable;
-import java.util.Hashtable;
-import java.lang.ref.SoftReference;
 
 //import fi.oppervlakte_dwo.*;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.system.Loader;
+import fi.dwo.commons.system.Loader;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 
 
 /**
@@ -46,6 +42,7 @@ public class AppletMapper extends XmlRpcMapper {
      * @param obj
 
      */
+    @Override
     public void put(int oid, Object obj) throws IOException, SQLException,
             XmlRpcException {
         System.err.println("AppletMapper.put() Not yet implemented!");
@@ -56,6 +53,7 @@ public class AppletMapper extends XmlRpcMapper {
      * @return Object
 
      */
+    @Override
     public Object getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException  {
         Class a = null;
         if (data.get("appletID") == null) { //We don't know enough to make a
@@ -78,6 +76,7 @@ public class AppletMapper extends XmlRpcMapper {
      * @return Object[]
 
      */
+    @Override
     public Object[] get(Object obj) throws IOException, SQLException,
             XmlRpcException {
         return get();
@@ -88,6 +87,7 @@ public class AppletMapper extends XmlRpcMapper {
      * 
      * @see fi.dwo.client.persistence.XmlRpcMapper#getIDCol()
      */
+    @Override
     protected String getIDCol() {
         return IDCOL;
     }
@@ -97,6 +97,7 @@ public class AppletMapper extends XmlRpcMapper {
      * 
      * @see fi.dwo.client.persistence.XmlRpcMapper#getTableName()
      */
+    @Override
     protected String getTableName() {
         return TABLENAME;
     }
@@ -107,6 +108,7 @@ public class AppletMapper extends XmlRpcMapper {
      * @see fi.dwo.client.persistence.XmlRpcMapper#update(java.lang.Object,
      *      java.util.Hashtable)
      */
+    @Override
     protected Object update(Object obj, Hashtable data) throws IOException, SQLException, XmlRpcException  {
         Class a = null;
         String jarname = (String) data.get("jarname");
@@ -132,12 +134,14 @@ public class AppletMapper extends XmlRpcMapper {
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#createArray(int)
      */
+    @Override
     protected Object[] createArray(int size) {
         return new Class[size];
     }
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#getOrderbyCol()
      */
+    @Override
     protected String getOrderbyCol() {
         return ORDERCOL;
     }
@@ -145,6 +149,7 @@ public class AppletMapper extends XmlRpcMapper {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.persistence.XmlRpcMapper#get(int)
 	 */
+    @Override
 	public Object get(int oid) throws IOException, XmlRpcException,
 			SQLException {
 		Object object = super.get(oid);

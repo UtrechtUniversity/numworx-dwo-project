@@ -4,7 +4,6 @@
 package fi.dwo.dwojapplet.domain;
 
 import java.awt.Container;
-import java.awt.Panel;
 import java.util.Date;
 
 import fi.dwo.dwojapplet.gui.CenterSubPanel;

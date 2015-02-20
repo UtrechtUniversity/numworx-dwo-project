@@ -53,12 +53,14 @@ public class TestTabSheet extends Panel implements TabSheetIF, ActionListener {
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.TabSheetIF#getComponent()
      */
+    @Override
     public Component getComponent() {
         return this;
     }
     /* (non-Javadoc)
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
 	    if(e.getSource() == button) {
 	        if(large) {
@@ -74,6 +76,7 @@ public class TestTabSheet extends Panel implements TabSheetIF, ActionListener {
      * Returns the <i>current</i> size as the minimum size.
      * @see java.awt.Component#getMinimumSize()
      */
+    @Override
     public Dimension getMinimumSize() {
         return super.getSize();
     }
@@ -82,6 +85,7 @@ public class TestTabSheet extends Panel implements TabSheetIF, ActionListener {
      * Returns the <i>current</i> size as the preferred size.
      * @see java.awt.Component#getPreferredSize()
      */
+    @Override
     public Dimension getPreferredSize() {
         return super.getSize();
     }

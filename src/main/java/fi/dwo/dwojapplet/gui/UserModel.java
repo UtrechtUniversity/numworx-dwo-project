@@ -7,12 +7,12 @@ import java.awt.Image;
 
 import javax.swing.table.AbstractTableModel;
 
-import fi.dwo.client.domain.SchoolClass;
-import fi.dwo.client.domain.Teacher;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.persistence.PersistenceFacade;
-import fi.dwo.client.system.RegisterException;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.exceptions.RegisterException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.Teacher;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
 class UserModel extends AbstractTableModel {
 
@@ -25,6 +25,7 @@ class UserModel extends AbstractTableModel {
 	User[] userList;
     Image removeImage, editImage, userImage, teacherImage;
 
+        @Override
 	public int getColumnCount() {
 		return cols;
 	}
@@ -40,10 +41,12 @@ class UserModel extends AbstractTableModel {
 		fireTableRowsDeleted(row, row);
 	}
 
+        @Override
 	public int getRowCount() {
 		return userList.length;
 	}
 
+        @Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		switch(columnIndex) {
 		case 1: 
@@ -62,6 +65,7 @@ class UserModel extends AbstractTableModel {
 		return null;
 	}
 
+        @Override
 	public Class getColumnClass(int col) {
 		if(col == 5)
 			return SchoolClass.class;
@@ -70,6 +74,7 @@ class UserModel extends AbstractTableModel {
 		return super.getColumnClass(col);
 	}
 
+        @Override
 	public String getColumnName(int col) {
 		switch(col) {
 		case 1: return TextMapper.getText("Username");
@@ -81,6 +86,7 @@ class UserModel extends AbstractTableModel {
 		}
 		return "";
 	}
+        @Override
 	public boolean isCellEditable(int row, int col) {
 		boolean b = col >= 2;
 		if(b && col == 5)
@@ -93,6 +99,7 @@ class UserModel extends AbstractTableModel {
 
 
 
+        @Override
 	public void setValueAt(Object aValue, int row, int col) {
 		User user = userList[row];
 		if(col == 5 && aValue != user.getInClass())

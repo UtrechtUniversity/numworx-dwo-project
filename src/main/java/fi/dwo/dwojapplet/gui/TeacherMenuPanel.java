@@ -5,44 +5,22 @@ package fi.dwo.dwojapplet.gui;
 
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.sql.SQLException;
-
-import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.border.Border;
-import javax.swing.tree.DefaultMutableTreeNode;
-
-import org.apache.xmlrpc.applet.XmlRpcException;
-
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.DwoIF;
-import fi.dwo.client.domain.SchoolClass;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.domain.Teacher;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.action.Clipboard;
-import fi.dwo.client.gui.action.CutCopyAction;
-import fi.dwo.client.gui.action.DeleteAction;
-import fi.dwo.client.gui.action.NewAction;
-import fi.dwo.client.gui.action.PasteAction;
-import fi.dwo.client.gui.action.SchoolConfigAction;
-import fi.dwo.client.gui.action.TeacherStrategy;
-import fi.dwo.client.persistence.MapperCreator;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DwoIF;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.Teacher;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.action.TeacherStrategy;
 
 /**
  * This class is the menupanel for the teacher who logged in.
@@ -65,6 +43,7 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
     /* (non-Javadoc)
 	 * @see fi.dwo.client.gui.MenuPanel#createButtons()
 	 */
+    @Override
 	protected void createMenuButtons() {
 		super.createMenuButtons();
 		createGap();
@@ -101,6 +80,7 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
      * overridden by subclasses.
      *  
      */
+    @Override
     protected void addClassList() {
         /* Variables used to create items */
         FontMetrics fm;
@@ -108,7 +88,8 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 
         createRuler();
         Box classBox = Box.createVerticalBox();
-        classPanel = new JScrollPane(classBox)  { public void setVisible(boolean b) { 
+        classPanel = new JScrollPane(classBox)  { @Override 
+            public void setVisible(boolean b) { 
         	
         	super.setVisible(b);
         	
@@ -155,6 +136,7 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
      * @param e The ActionEvent.
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
     	if(!isEnabled()) return;
     	
@@ -190,16 +172,19 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
     
     
     
+    @Override
     public void hideClassList() {
     	if(isEnabled())
         classPanel.setVisible(false);
     }
     
+    @Override
     public void showClassList() {
     	if(isEnabled())
         classPanel.setVisible(true);      
     }
 
+    @Override
 	public void nodeSelected(CourseMap node) {
 		Object u = node.getUserObject();
 		GuiCreator instance = GuiCreator.instance();
@@ -238,6 +223,7 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 	private int schoolID;
 	TeacherStrategy delegate = new TeacherStrategy();
 
+    @Override
 	public JPopupMenu nodeAction(CourseMap node) {
 			return delegate.nodeAction(node);
 		
@@ -246,6 +232,7 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.gui.GuestMenuPanel#setEditing(boolean)
 	 */
+    @Override
 	public void setEditing(boolean b) {
 		boolean enabled = !b;
 		setEnabled(enabled);

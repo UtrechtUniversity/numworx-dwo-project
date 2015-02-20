@@ -1,7 +1,6 @@
 package fi.dwo.dwojapplet.gui.fullscreen;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Dimension;
@@ -33,10 +32,9 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.gui.BackgroundPanel;
-import fi.dwo.client.gui.GuiConstants;
-import fi.wiskopdr.WiskOpdr;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.gui.BackgroundPanel;
+import fi.dwo.dwojapplet.gui.GuiConstants;
 
 public class FullScreenDWO extends JDialog implements ChangeListener, ActionListener, InternalFrameListener {
 
@@ -122,6 +120,7 @@ public class FullScreenDWO extends JDialog implements ChangeListener, ActionList
 		pack();		
 	}
 
+        @Override
 	public void stateChanged(ChangeEvent event) {
 		Object source = event.getSource();
 		log.append(String.valueOf(source));
@@ -172,6 +171,7 @@ public class FullScreenDWO extends JDialog implements ChangeListener, ActionList
 				final JProgressBar bar = new JProgressBar();
 				new Timer(1000, new ActionListener() {
 					
+                        @Override
 					public void actionPerformed(ActionEvent e) {
 						bar.setValue(Math.max(bar.getValue()-1, 0));
 						if(bar.getValue() == 0) {
@@ -222,6 +222,7 @@ public class FullScreenDWO extends JDialog implements ChangeListener, ActionList
 		return frame;
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent event) {
 		
 		if(event.getSource() == timer && timer != null ) {
@@ -237,9 +238,11 @@ public class FullScreenDWO extends JDialog implements ChangeListener, ActionList
 		}
 	}
 
+        @Override
 	public void internalFrameActivated(InternalFrameEvent e) {
 	}
 
+        @Override
 	public void internalFrameClosed(InternalFrameEvent e) {
 		setVisible(false);	
 		fuse = true;
@@ -251,6 +254,7 @@ public class FullScreenDWO extends JDialog implements ChangeListener, ActionList
 	}
 	
 	
+        @Override
 	public void internalFrameClosing(InternalFrameEvent e) {
 		if(weetJeHetZeker())
 		{	internalFrameClosed(null);
@@ -259,15 +263,19 @@ public class FullScreenDWO extends JDialog implements ChangeListener, ActionList
 		}
 	}
 
+        @Override
 	public void internalFrameDeactivated(InternalFrameEvent e) {
 	}
 
+        @Override
 	public void internalFrameDeiconified(InternalFrameEvent e) {
 	}
 
+        @Override
 	public void internalFrameIconified(InternalFrameEvent e) {
 	}
 
+        @Override
 	public void internalFrameOpened(InternalFrameEvent e) {
 	}
 

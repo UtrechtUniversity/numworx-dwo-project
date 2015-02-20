@@ -14,12 +14,13 @@ import java.util.Map;
 
 import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.scorm.PartialScoreIF;
-import fi.dwo.client.domain.AppletData;
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.GuiConstants;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.AppletData;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.Sco;
+import static fi.dwo.dwojapplet.domain.ScoBase.LAUNCH_DATA;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.GuiConstants;
 
 class WrapSco extends Sco {
 	/**

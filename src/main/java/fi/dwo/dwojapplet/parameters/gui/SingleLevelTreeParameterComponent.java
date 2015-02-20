@@ -3,7 +3,6 @@
 
 package fi.dwo.dwojapplet.parameters.gui;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -15,11 +14,10 @@ import java.awt.event.ComponentEvent;
 import java.text.MessageFormat;
 import java.util.Hashtable;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 
 import fi.beans.scorm.TreeParameter;
-import fi.dwo.parameters.system.TextMapper;
+import fi.dwo.dwojapplet.parameters.system.TextMapper;
 
 public class SingleLevelTreeParameterComponent extends ParameterComponent implements ParameterComponentIF,
         ActionListener {
@@ -107,6 +105,7 @@ public class SingleLevelTreeParameterComponent extends ParameterComponent implem
      * 
      * @see fi.dwo.parameters.gui.ParameterComponent#generatePostItems(java.awt.Component)
      */
+    @Override
     protected Component generatePostItems(Component after) {
 	    postLabel = new FixedLabel("(" + TextMapper.getText(TextMapper.LBL_NO_ITEMS) + ")");
 	    postLabel.setFont(ParameterConstants.LABEL_FONT);
@@ -160,6 +159,7 @@ public class SingleLevelTreeParameterComponent extends ParameterComponent implem
     /**
      * @param arg0
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == button) {
             setCursor(new Cursor(Cursor.WAIT_CURSOR));
@@ -191,6 +191,7 @@ public class SingleLevelTreeParameterComponent extends ParameterComponent implem
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.ParameterComponentIF#unFocus()
      */
+    @Override
     public void unFocus() {
         if(tabPane != null) {
             this.remove(tabPane);
@@ -214,6 +215,7 @@ public class SingleLevelTreeParameterComponent extends ParameterComponent implem
     /* (non-Javadoc)
      * @see java.awt.event.ComponentListener#componentResized(java.awt.event.ComponentEvent)
      */
+    @Override
     public void componentResized(ComponentEvent e) {
         if(false && e.getSource() == tabPane) {
             this.setVisible(false);
@@ -225,6 +227,7 @@ public class SingleLevelTreeParameterComponent extends ParameterComponent implem
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.ParameterComponentIF#reset()
      */
+    @Override
     public void reset() {
         if(tabPane != null) {
             this.remove(tabPane);
@@ -252,6 +255,7 @@ public class SingleLevelTreeParameterComponent extends ParameterComponent implem
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.ParameterComponentIF#getSequenceString(fi.dwo.parameters.gui.ParameterComponentIF)
      */
+    @Override
     public String getSequenceString(ParameterComponentIF component) {
         if(parent != null) {
             return parent.getSequenceString(this);
@@ -263,6 +267,7 @@ public class SingleLevelTreeParameterComponent extends ParameterComponent implem
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.ParameterComponentIF#addParameters(java.util.Hashtable)
      */
+    @Override
     public void addParameters(Hashtable parameters) {
         tabSheetCreator.addParameters(parameters);
     }
@@ -270,10 +275,12 @@ public class SingleLevelTreeParameterComponent extends ParameterComponent implem
 	/* (non-Javadoc)
 	 * @see java.awt.Component#setBounds(int, int, int, int)
 	 */
+    @Override
 	public void setBounds(int x, int y, int width, int height) {
 		// TODO Auto-generated method stub
 		super.setBounds(x, y, width, height);
 	}
+    @Override
 	public Dimension getPreferredSize() {
 		if(getLayout() != null) {
 			Dimension size = getLayout().preferredLayoutSize(this);
@@ -288,6 +295,7 @@ public class SingleLevelTreeParameterComponent extends ParameterComponent implem
                 .getSize().height + 2);
 	}
 	
+    @Override
 	public Dimension getMinimumSize() {
 		return getPreferredSize();
 	}

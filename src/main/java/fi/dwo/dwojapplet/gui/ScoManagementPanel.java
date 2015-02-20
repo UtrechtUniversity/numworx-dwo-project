@@ -17,16 +17,8 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.text.MessageFormat;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Set;
-import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractCellEditor;
@@ -47,28 +39,19 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import org.apache.xmlrpc.applet.XmlRpcException;
-import org.xml.sax.SAXException;
-
-import fi.dwo.client.domain.AppletConfig;
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.action.BackupModuleAction;
-import fi.dwo.client.gui.action.DeleteAction;
-import fi.dwo.client.gui.action.ImportModuleAction;
-import fi.dwo.client.gui.action.NewAction;
-import fi.dwo.client.persistence.DbAccessCreator;
-import fi.dwo.client.persistence.PersistenceFacade;
-import fi.dwo.client.system.PersistenceException;
-import fi.dwo.client.system.TextMapper;
-import fi.dwo.server.form.DWOFile;
-import fi.dwo.server.persistence.DwoXmlRpcException;
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.AppletConfig;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.gui.action.BackupModuleAction;
+import fi.dwo.dwojapplet.gui.action.DeleteAction;
+import fi.dwo.dwojapplet.gui.action.ImportModuleAction;
+import fi.dwo.dwojapplet.gui.action.NewAction;
+import fi.dwo.dwojapplet.persistence.DbAccessCreator;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
 import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.WiskOpdrEditPanel;
@@ -254,6 +237,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 		private ImageIcon icon = new ImageIcon();
 		private boolean iconizer;
 
+                @Override
 		public Component getTableCellRendererComponent(JTable table,
 				Object value, boolean selected, boolean hasFocus, int row, int col) {
 			Image image = (Image)value;
@@ -303,6 +287,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     	AbstractTableModel model;
     	int row;
 
+            @Override
     	public Component getTableCellEditorComponent(JTable table, Object value,
     			boolean arg2, int row, int col) {
     		this.value = value;
@@ -313,10 +298,12 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     		return button;
     	}
 
+            @Override
     	public Object getCellEditorValue() {
     		return value;
     	}
 
+            @Override
     	public void actionPerformed(ActionEvent event) {
             Sco s = course.getScoList()[row];
     		if (value == courseImage) {
@@ -371,20 +358,24 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 
     class ScoModelForTree extends AbstractTableModel {
 	
+            @Override
     	public int getColumnCount() {
 			return 5;
 		}
 
+            @Override
 		public int getRowCount() {
 			return course.getScoList().length;
 		}
 
+            @Override
 		public Class getColumnClass(int col) {
 			if(col > 0)
 				return Image.class;
 			return super.getColumnClass(col);
 		}
 
+            @Override
 		public boolean isCellEditable(int row, int col) {
 			if(col == 2)
 				return row != 0;
@@ -393,6 +384,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 			return true;
 		}
 
+            @Override
 		public Object getValueAt(int row, int col) {
 			switch(col)
 			{
@@ -414,20 +406,24 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     
     class ScoModel extends AbstractTableModel {
 
+                @Override
 		public int getColumnCount() {
 			return 7;
 		}
 
+                @Override
 		public int getRowCount() {
 			return course.getScoList().length;
 		}
 
+                @Override
 		public Class getColumnClass(int col) {
 			if(col > 0)
 				return Image.class;
 			return super.getColumnClass(col);
 		}
 
+                @Override
 		public boolean isCellEditable(int row, int col) {
 			if(col == 4)
 				return row != 0;
@@ -436,6 +432,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 			return col > 0;
 		}
 
+                @Override
 		public Object getValueAt(int row, int col) {
 			switch(col)
 			{
@@ -503,10 +500,12 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
      * 
      * @param centerPanel The centerPanel to communicate with.
      */
+        @Override
     public void setCenterPanel(CenterPanel centerPanel) {
         center = centerPanel;
     }
 
+        @Override
     public Component getHeaderPanel() {
     	HeaderPanel hp = new HeaderPanel(TextMapper.getText(TextMapper.GUIS_SCO_MANAGEMENT));
     	stopBtn = new JButton(TextMapper.getText(TextMapper.GUIH_STOP_EDIT));
@@ -522,6 +521,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
      * 
      * @param e The ActionEvent.
      */
+        @Override
     public void actionPerformed(ActionEvent e) {
     	
     	
@@ -678,6 +678,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
      * @return the current object.
      * @see fi.dwo.client.gui.CenterSubPanel#getComponent()
      */
+        @Override
     public JComponent getComponent() {
         return this;
     }
@@ -685,6 +686,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     /* (non-Javadoc)
      * @see fi.dwo.client.gui.CenterSubPanel#end()
      */
+        @Override
     public void end() {
     	if(editorCB.isSelected() &&  !wiskOpdrEditPanel.getText().equals(course.getDescription()))
         {	course.setDescription(wiskOpdrEditPanel.getText());
@@ -715,6 +717,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 		repaint();
 	}
 
+        @Override
 	public Object getUserObject() {
 		return course;
 	}
@@ -724,6 +727,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 	private JTextArea pane;
 	private WiskOpdrEditPanel wiskOpdrEditPanel;
 	
+        @Override
 	public void stateChanged(ChangeEvent e) {
 		//System.out.println("ChangeEvent " + e);
 		if(ok && course == e.getSource())

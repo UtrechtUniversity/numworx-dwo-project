@@ -6,10 +6,7 @@ import java.util.Hashtable;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-import fi.dwo.client.domain.AppletData;
-import fi.dwo.client.domain.School;
-import fi.dwo.client.persistence.SchoolMapper.LazySchool;
-import fi.dwo.client.system.PersistenceException;
+import fi.dwo.dwojapplet.domain.AppletData;
 
 public class AppletDataMapper extends XmlRpcMapper {
 
@@ -17,22 +14,27 @@ public class AppletDataMapper extends XmlRpcMapper {
     private static final String IDCOL = "appletID";
     private static final String ORDERCOL = "classname";
 
+    @Override
     protected Object[] createArray(int size) {
 		return new AppletData[size];
 	}
 
+    @Override
 	protected String getIDCol() {
 		return IDCOL;
 	}
 
+    @Override
 	protected String getOrderbyCol() {
 		return ORDERCOL;
 	}
 
+    @Override
 	protected String getTableName() {
 		return TABLENAME;
 	}
 
+    @Override
 	protected Object update(Object obj, Hashtable data) {
 		AppletData applet = (AppletData)obj;
 		applet.setId((((Number) data.get(IDCOL)).intValue()));
@@ -43,11 +45,13 @@ public class AppletDataMapper extends XmlRpcMapper {
 		return applet;
 	}
 
+    @Override
 	public Object[] get(Object obj) throws IOException, SQLException,
 			XmlRpcException {
 		return get();
 	}
 
+    @Override
 	public Object getObjectFromReturn(Hashtable data) throws IOException,
 			SQLException, XmlRpcException {
         AppletData s = null;
@@ -69,6 +73,7 @@ public class AppletDataMapper extends XmlRpcMapper {
         return s;
 	}
 
+    @Override
 	public void put(int oid, Object obj) throws IOException, SQLException,
 			XmlRpcException {
         System.err.println("AppletDataMapper.put() Not yet implemented!");

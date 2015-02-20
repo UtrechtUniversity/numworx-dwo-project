@@ -6,17 +6,12 @@ package fi.dwo.dwojapplet.gui;
 import java.applet.AppletContext;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.MediaTracker;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 
@@ -33,21 +28,15 @@ import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.text.JTextComponent;
 
-import org.apache.xmlrpc.applet.XmlRpcException;
-
-import netscape.javascript.JSObject;
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.ResultsModuleIF;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.domain.Teacher;
-import fi.dwo.client.domain.UserResultList;
-import fi.dwo.client.gui.action.NullStrategy;
-import fi.dwo.client.persistence.DbAccessCreator;
-import fi.dwo.client.persistence.PersistenceFacade;
-import fi.dwo.client.system.TextMapper;
 import fi.beans.mathkit.JMathPane;
-import fi.beans.tekstobjects.TekstArea;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.ResultsModuleIF;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.Teacher;
+import fi.dwo.dwojapplet.domain.UserResultList;
+import fi.dwo.dwojapplet.gui.action.NullStrategy;
 import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.WiskOpdrPanel;
 import fi.wiskopdr.tekstobjects.LinkIF;
@@ -226,6 +215,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
      * Indicate that another panel is loaded and the connections of this panel
      * must be closed.
      */
+        @Override
     public void end() {
         center.showClassList();
         removeButtons();
@@ -316,6 +306,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
      * @return A panel that can function as a header panel.
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
+        @Override
     public Component getHeaderPanel() {   
     	
     	HeaderPanel hp = new HeaderPanel(course.getName(), true);
@@ -354,6 +345,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
      * 
      * @param e The ActionEvent.
      */
+        @Override
    public synchronized void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof ScoLinkedLabel && !scoLoading) {
         	scoLoading = true;
@@ -428,6 +420,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
      * @return the current object.
      * @see fi.dwo.client.gui.CenterSubPanel#getComponent()
      */
+        @Override
     public JComponent getComponent() {
         return this;
     }
@@ -436,6 +429,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
      * implements CenterSubPanel, uses {@link #setCenterPanel(CourseContainer)}.
      * @see CenterSubPanel#setCenterPanel(CenterPanel)
      */
+        @Override
 	public void setCenterPanel(CenterPanel centerPanel) {
 		CourseContainer cc = centerPanel;
 		setCenterPanel(cc); // geen recursie
@@ -460,10 +454,12 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
 			
 	}
 
+        @Override
 	public Object getUserObject() {
 		return course;
 	}
 
+        @Override
 	public void stateChanged(ChangeEvent e) {
 		if (e.getSource() == course)
 		{

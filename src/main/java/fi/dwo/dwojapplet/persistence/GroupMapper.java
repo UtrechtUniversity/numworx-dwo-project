@@ -9,7 +9,7 @@ import java.util.Hashtable;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-import fi.dwo.client.domain.Group;
+import fi.dwo.dwojapplet.domain.Group;
 
 public class GroupMapper extends XmlRpcMapper {
 
@@ -31,6 +31,7 @@ public class GroupMapper extends XmlRpcMapper {
      * @param obj
 
      */
+    @Override
     public void put(int oid, Object obj) throws IOException, SQLException,
             XmlRpcException {
         System.err.println("GroupMapper.put() Not yet implemented!");
@@ -42,6 +43,7 @@ public class GroupMapper extends XmlRpcMapper {
      * @return Object
 
      */
+    @Override
     public Object getObjectFromReturn(Hashtable data) {
         Group g = null;
         if (data.get("groupID") == null) { //We don't know enough to make a
@@ -65,6 +67,7 @@ public class GroupMapper extends XmlRpcMapper {
      * @return Object[]
 
      */
+    @Override
     public Object[] get(Object obj) throws IOException, SQLException,
             XmlRpcException {
         return get();
@@ -75,6 +78,7 @@ public class GroupMapper extends XmlRpcMapper {
      * 
      * @see fi.dwo.client.persistence.XmlRpcMapper#getIDCol()
      */
+    @Override
     protected String getIDCol() {
         return IDCOL;
     }
@@ -84,6 +88,7 @@ public class GroupMapper extends XmlRpcMapper {
      * 
      * @see fi.dwo.client.persistence.XmlRpcMapper#getTableName()
      */
+    @Override
     protected String getTableName() {
         return TABLENAME;
     }
@@ -94,6 +99,7 @@ public class GroupMapper extends XmlRpcMapper {
      * @see fi.dwo.client.persistence.XmlRpcMapper#update(java.lang.Object,
      *      java.util.Hashtable)
      */
+    @Override
     protected Object update(Object obj, Hashtable data) {
         Group g = (Group) obj;
         g.setGroupID(((Integer) data.get("groupID")).intValue());
@@ -105,6 +111,7 @@ public class GroupMapper extends XmlRpcMapper {
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#createArray(int)
      */
+    @Override
     protected Object[] createArray(int size) {
         return new Group[size];
     }
@@ -112,6 +119,7 @@ public class GroupMapper extends XmlRpcMapper {
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#getOrderbyCol()
      */
+    @Override
     protected String getOrderbyCol() {
         return ORDERCOL;
     }

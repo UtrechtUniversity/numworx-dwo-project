@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import fi.beans.scorm.PartialScoreIF;
-import fi.dwo.client.domain.ResultScore;
-import fi.dwo.client.domain.School;
-import fi.dwo.client.domain.SchoolGroup;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.domain.UserResultList;
+import fi.dwo.dwojapplet.domain.ResultScore;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.SchoolGroup;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.domain.UserResultList;
 
 abstract class Exporter {
 	static abstract class ExportBuffer {

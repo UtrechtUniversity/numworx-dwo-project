@@ -34,12 +34,6 @@ import javax.swing.SpringLayout;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JSpinnerDateEditor;
 
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.School;
-import fi.dwo.client.domain.SchoolGroup;
-import fi.dwo.client.domain.SchoolPasswdMap;
-import fi.dwo.client.gui.action.CopyLabel;
-import fi.dwo.client.persistence.PersistenceFacade;
 import fi.dwo.commons.exceptions.SchoolException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
@@ -321,6 +315,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
      * 
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == cancelButton) {
             this.setVisible(false);
@@ -346,6 +341,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
      *            The WindowEvent.
      * @see java.awt.event.WindowListener#windowActivated(java.awt.event.WindowEvent)
      */
+    @Override
     public void windowActivated(WindowEvent e) {
     }
 
@@ -357,6 +353,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
      *            The WindowEvent.
      * @see java.awt.event.WindowListener#windowClosed(java.awt.event.WindowEvent)
      */
+    @Override
     public void windowClosed(WindowEvent e) {
     }
 
@@ -370,6 +367,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
      *            The WindowEvent.
      * @see java.awt.event.WindowListener#windowClosing(java.awt.event.WindowEvent)
      */
+    @Override
     public void windowClosing(WindowEvent e) {
         setVisible(false);
         dispose();
@@ -384,6 +382,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
      *            The WindowEvent.
      * @see java.awt.event.WindowListener#windowDeactivated(java.awt.event.WindowEvent)
      */
+    @Override
     public void windowDeactivated(WindowEvent e) {
     }
 
@@ -394,6 +393,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
      *            The WindowEvent.
      * @see java.awt.event.WindowListener#windowDeiconified(java.awt.event.WindowEvent)
      */
+    @Override
     public void windowDeiconified(WindowEvent e) {
     }
 
@@ -404,6 +404,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
      *            The WindowEvent.
      * @see java.awt.event.WindowListener#windowIconified(java.awt.event.WindowEvent)
      */
+    @Override
     public void windowIconified(WindowEvent e) {
     }
 
@@ -416,6 +417,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
      *            The WindowEvent.
      * @see java.awt.event.WindowListener#windowOpened(java.awt.event.WindowEvent)
      */
+    @Override
     public void windowOpened(WindowEvent e) {
     }
 

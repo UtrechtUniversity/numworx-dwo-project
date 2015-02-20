@@ -20,10 +20,10 @@ import java.util.Hashtable;
 import java.util.Random;
 
 import fi.beans.base64code.StringCodeObject;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.User;
 
 public class ScormParameters {
 

@@ -5,12 +5,13 @@ import java.sql.SQLException;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-import fi.dwo.client.domain.DWO;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.DwoIF;
-import fi.dwo.client.domain.School;
-import fi.dwo.client.gui.GuiCreatorAdmin;
-import fi.dwo.client.gui.SchoolPanel;
+import fi.dwo.dwojapplet.domain.DWO;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.DwoIF;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.gui.GuiCreatorAdmin;
+import fi.dwo.dwojapplet.gui.SchoolPanel;
+import fi.dwo.dwojapplet.persistence.MapperCreator;
 import junit.framework.TestCase;
 
 public class SchoolMapperTest extends TestCase {

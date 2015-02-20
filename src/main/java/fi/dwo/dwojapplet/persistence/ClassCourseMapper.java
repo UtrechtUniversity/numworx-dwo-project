@@ -7,20 +7,21 @@ import java.util.Hashtable;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-import fi.dwo.client.domain.ClassCourse;
-import fi.dwo.client.domain.SchoolClass;
-import fi.dwo.client.system.PersistenceException;
+import fi.dwo.dwojapplet.domain.ClassCourse;
+import fi.dwo.dwojapplet.domain.SchoolClass;
 
 class ClassCourseMapper extends XmlRpcMapper {
 
 	ClassCourseMapper() {
 	}
 
+        @Override
 	public void put(int oid, Object obj) throws IOException, SQLException,
 			XmlRpcException {
 
 	}
 
+        @Override
 	public Object getObjectFromReturn(Hashtable data) throws IOException,
 			SQLException, XmlRpcException {
         ClassCourse c = null;
@@ -42,6 +43,7 @@ class ClassCourseMapper extends XmlRpcMapper {
         return c;
 	}
 
+        @Override
 	public Object[] get(Object obj) throws IOException, SQLException,
 			XmlRpcException {
 		Hashtable ht = new Hashtable();
@@ -59,6 +61,7 @@ class ClassCourseMapper extends XmlRpcMapper {
 		return super.get(ht);
 	}
 
+        @Override
 	protected Object update(Object obj, Hashtable data) throws IOException,
 			SQLException, XmlRpcException {
 		ClassCourse cc = (ClassCourse) obj;
@@ -78,19 +81,23 @@ class ClassCourseMapper extends XmlRpcMapper {
 		return cc;
 	}
 
+        @Override
 	protected Object[] createArray(int size) {
 		return new ClassCourse[size];
 	}
 
+        @Override
 	protected String getIDCol() {
 		return "ClassCourseID";
 	}
 
+        @Override
 	protected String getTableName() {
 
 		return "tblClassCourse";
 	}
 
+        @Override
 	protected String getOrderbyCol() {
 		return "ClassCourseID";
 	}

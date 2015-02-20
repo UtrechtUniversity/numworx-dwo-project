@@ -19,8 +19,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Vector;
 
-import fi.beans.tooltip.ToolTipIF;
-import fi.beans.tooltip.ToolTipManager;
 
 /**
  * A button in the good formats and style for the dwo. Default color is
@@ -104,6 +102,7 @@ public class DwoButton extends BorderedPanel implements MouseListener, FocusList
      * 
      * @return A dimension object indicating this component's minimum size.
      */
+    @Override
     public Dimension getMinimumSize() {
         if(!this.size().equals(new Dimension(0, 0))) {
             return this.size();
@@ -131,6 +130,7 @@ public class DwoButton extends BorderedPanel implements MouseListener, FocusList
      * 
      * @return A dimension object indicating this component's preferred size.
      */
+    @Override
     public Dimension getPreferredSize() {
         if(!this.size().equals(new Dimension(0, 0))) {
             return this.size();
@@ -152,6 +152,7 @@ public class DwoButton extends BorderedPanel implements MouseListener, FocusList
      * 
      * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
      */
+    @Override
     public void mouseClicked(MouseEvent arg0) {
         isPressed = false;
         isFocussed = false;
@@ -165,6 +166,7 @@ public class DwoButton extends BorderedPanel implements MouseListener, FocusList
      * Op de Apple met safari, ontbreekt dit event als het scherm geen focus heeft
      * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
      */
+    @Override
     public void mouseEntered(MouseEvent e) {
         setCursor(new Cursor(Cursor.HAND_CURSOR));
         isMouseOver = true;
@@ -177,6 +179,7 @@ public class DwoButton extends BorderedPanel implements MouseListener, FocusList
      * 
      * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
      */
+    @Override
     public void mouseExited(MouseEvent arg0) {
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         isMouseOver = false;
@@ -189,6 +192,7 @@ public class DwoButton extends BorderedPanel implements MouseListener, FocusList
      * 
      * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
      */
+    @Override
     public void mousePressed(MouseEvent e) {
         isPressed = true;
         isMouseOver = true;
@@ -201,6 +205,7 @@ public class DwoButton extends BorderedPanel implements MouseListener, FocusList
      * 
      * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
      */
+    @Override
     public void mouseReleased(MouseEvent e) {
         isFocussed = false;
         isPressed = false;
@@ -210,6 +215,7 @@ public class DwoButton extends BorderedPanel implements MouseListener, FocusList
         repaint();
     }
     
+    @Override
     public void paint(Graphics g) {
         super.paint(g);
 
@@ -260,6 +266,7 @@ public class DwoButton extends BorderedPanel implements MouseListener, FocusList
     /* (non-Javadoc)
      * @see java.awt.event.FocusListener#focusGained(java.awt.event.FocusEvent)
      */
+    @Override
     public void focusGained(FocusEvent e) {
         isFocussed = true;
         repaint();
@@ -268,6 +275,7 @@ public class DwoButton extends BorderedPanel implements MouseListener, FocusList
     /* (non-Javadoc)
      * @see java.awt.event.FocusListener#focusLost(java.awt.event.FocusEvent)
      */
+    @Override
     public void focusLost(FocusEvent e) {
         isFocussed = false;
         isPressed = false;
@@ -275,6 +283,7 @@ public class DwoButton extends BorderedPanel implements MouseListener, FocusList
         repaint();
     }
 
+    @Override
     public boolean isFocusTraversable() {
         return false;
     }
@@ -282,6 +291,7 @@ public class DwoButton extends BorderedPanel implements MouseListener, FocusList
     /* (non-Javadoc)
      * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
      */
+    @Override
     public void keyPressed(KeyEvent e) {
         if(isFocussed) {
             isPressed = true;
@@ -292,6 +302,7 @@ public class DwoButton extends BorderedPanel implements MouseListener, FocusList
     /* (non-Javadoc)
      * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
      */
+    @Override
     public void keyReleased(KeyEvent e) {
         if(isFocussed && (e.getKeyCode() == KeyEvent.VK_SPACE)) {
             callActionListeners();
@@ -303,6 +314,7 @@ public class DwoButton extends BorderedPanel implements MouseListener, FocusList
     /* (non-Javadoc)
      * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
      */
+    @Override
     public void keyTyped(KeyEvent e) {
         if(isFocussed) {
             isPressed = true;

@@ -3,7 +3,6 @@
 package fi.dwo.dwojapplet.parameters.gui;
 
 import java.awt.Component;
-import java.text.NumberFormat;
 import java.util.Hashtable;
 
 import javax.swing.JFormattedTextField;
@@ -72,6 +71,7 @@ public class IntegerParameterComponent extends ParameterComponent {
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.ParameterComponentIF#reset()
      */
+    @Override
     public void reset() {
         if(this.defaultValue.containsKey(parameter.getName())) {
             Object intValue = this.defaultValue.get(parameter.getName());
@@ -85,6 +85,7 @@ public class IntegerParameterComponent extends ParameterComponent {
      * Adds the value of the textfield to the hashtable.
      * @see fi.dwo.parameters.gui.ParameterComponentIF#addParameters(java.util.Hashtable)
      */
+    @Override
     public void addParameters(Hashtable parameters) {
         String value = textField.getText();
         addParameter(parameters, value);

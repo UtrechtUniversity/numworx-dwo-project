@@ -2,19 +2,19 @@ package fi.dwo.dwojapplet.gui.action;
 
 import java.awt.event.ActionEvent;
 
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.gui.CenterPanel;
-import fi.dwo.client.gui.CenterSubPanel;
-import fi.dwo.client.gui.CourseChoisePanel;
-import fi.dwo.client.gui.GuiCreatorTeacher;
-import fi.dwo.client.gui.ModuleTreePanel;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.gui.CenterPanel;
+import fi.dwo.dwojapplet.gui.CenterSubPanel;
+import fi.dwo.dwojapplet.gui.CourseChoicePanel;
+import fi.dwo.dwojapplet.gui.GuiCreatorTeacher;
+import fi.dwo.dwojapplet.gui.ModuleTreePanel;
 
 public class CourseManagementAction extends GuiAction {
 
 	private Object userObject;
 
-	public CourseManagementAction(CourseChoisePanel courseChoisePanel) {
+	public CourseManagementAction(CourseChoicePanel courseChoisePanel) {
 		super(TextMapper.getText(TextMapper.GUIH_EDIT));
 		userObject = courseChoisePanel.getUserObject();
 	}
@@ -24,6 +24,7 @@ public class CourseManagementAction extends GuiAction {
 		userObject = map.getUserObject();
 	}
 	
+        @Override
 	public void actionPerformed(ActionEvent e) {
 		GuiCreatorTeacher.instance().setWait();
 		CenterSubPanel cp;

@@ -1,12 +1,12 @@
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Hashtable;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-import fi.dwo.server.persistence.DwoXmlRpcException;
 
 /**
  * functor pattern.

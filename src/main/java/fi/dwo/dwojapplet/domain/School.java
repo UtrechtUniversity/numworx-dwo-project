@@ -227,6 +227,7 @@ public class School {
     	return rights.indexOf(right)>=0;
     }
 
+    @Override
     public String toString() {
     	return getName();
     }

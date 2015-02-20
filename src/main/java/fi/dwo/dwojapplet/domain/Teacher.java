@@ -5,7 +5,6 @@ package fi.dwo.dwojapplet.domain;
 
 import java.util.Arrays;
 
-import fi.dwo.dwojapplet.gui.GuiCreator;
 
 /**
  * This class is responsible for the Teacher data. It extends <code>User</code>, 
@@ -82,6 +81,7 @@ public class Teacher extends User {
      * @param right
      * @return
      */
+    @Override
     public boolean hasRight(char right)
     {
     	String  id;
@@ -106,6 +106,7 @@ public class Teacher extends User {
     	return rights.substring(index, end).indexOf(right)>=0;
     }
 
+    @Override
 	public boolean hasIconizer() {
 		return true;
 	}

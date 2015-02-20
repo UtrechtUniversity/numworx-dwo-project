@@ -28,6 +28,7 @@ public class Text_nl extends ListResourceBundle {
  /**
   * @return Object[][]
   */
+ @Override
  public Object[][] getContents() {
      return contents;
  }

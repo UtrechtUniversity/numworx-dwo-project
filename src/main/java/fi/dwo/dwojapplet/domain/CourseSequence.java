@@ -16,6 +16,7 @@ public class CourseSequence implements Comparable {
 	private int parent; // TODO... 
 	private int profileID;
 	
+        @Override
 	public int compareTo(Object o) {
 		CourseSequence cs = (CourseSequence) o;
 		int a = sequencenr;

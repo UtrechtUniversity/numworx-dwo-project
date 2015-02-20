@@ -15,6 +15,7 @@ import java.util.zip.GZIPOutputStream;
 
 import fi.beans.base64code.StringCodeObject;
 import fi.beans.dwomaccess.JSONEncoder;
+//import fi.beans.dwomaccess.JSONEncoder;
 import fi.beans.scorm.ScormAdapter;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.dwojapplet.gui.ScoPanel;
@@ -262,6 +263,7 @@ public abstract class ScoBase extends ScormAdapter {
 	 * @see fi.beans.scorm.SCORM12APIInterface#LMSGetValue(java.lang.String)
 	 *  
 	 */
+        @Override
 	public String GetValue(String iDataModelElement) {
 	    	if(LESSON_MODE.equals(iDataModelElement))
 	    		return ok(getLessonMode());
@@ -339,6 +341,7 @@ public abstract class ScoBase extends ScormAdapter {
 	 *      java.lang.String)
 	 *  
 	 */
+        @Override
 	public String SetValue(String iDataModelElement, String iValue) {
 	    	if(LESSON_MODE.equals(iDataModelElement))
 	    	{

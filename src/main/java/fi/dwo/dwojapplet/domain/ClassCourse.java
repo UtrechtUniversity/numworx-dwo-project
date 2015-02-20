@@ -1,12 +1,7 @@
 package fi.dwo.dwojapplet.domain;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Date;
 
-import org.apache.xmlrpc.applet.XmlRpcException;
-
-import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
 public class ClassCourse {

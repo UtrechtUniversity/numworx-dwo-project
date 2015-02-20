@@ -7,7 +7,7 @@ import fi.beans.xmlrpc.Client;
 import org.apache.xmlrpc.applet.XmlRpcException;
 import java.io.IOException;
 
-public class DbAccessClient extends Client implements fi.dwo.client.persistence.DbAccessIF {
+public class DbAccessClient extends Client implements DbAccessIF {
 
 	public DbAccessClient(URL u) {
 		super(u);

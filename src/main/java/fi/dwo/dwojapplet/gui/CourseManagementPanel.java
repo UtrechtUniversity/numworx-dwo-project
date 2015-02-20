@@ -5,32 +5,17 @@ package fi.dwo.dwojapplet.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Frame;
-import java.awt.Graphics;
-import java.awt.HeadlessException;
 import java.awt.Image;
-import java.awt.MediaTracker;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Set;
-import java.util.Vector;
-
-import javax.swing.AbstractButton;
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -39,9 +24,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
@@ -49,33 +32,21 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.DWO;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.DwoIF;
-import fi.dwo.client.domain.School;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.SchoolPanel.ImageButtonEditor;
-import fi.dwo.client.gui.SchoolPanel.ImageRenderer;
-import fi.dwo.client.gui.SchoolPanel.SchoolModel;
-import fi.dwo.client.gui.action.DeleteAction;
-import fi.dwo.client.gui.action.ImportModuleAction;
-import fi.dwo.client.gui.action.ShareCourseAction;
-import fi.dwo.client.persistence.DbAccessCreator;
-import fi.dwo.client.persistence.PersistenceFacade;
-
-import java.util.Collections;
-
-import fi.dwo.client.system.PersistenceException;
-import fi.dwo.client.system.SchoolException;
-import fi.dwo.client.system.TextMapper;
-import fi.dwo.server.form.DWOFile;
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DWO;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.action.DeleteAction;
+import fi.dwo.dwojapplet.gui.action.ImportModuleAction;
+import fi.dwo.dwojapplet.gui.action.ShareCourseAction;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
 import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.WiskOpdrEditPanel;
@@ -136,6 +107,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
 	class CourseModelForTree extends AbstractTableModel {
 
+                @Override
 		public Class getColumnClass(int col) {
 			if(col == 0)
 				return Boolean.class;
@@ -144,14 +116,17 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 			return super.getColumnClass(col);
 		}
 
+                @Override
 		public int getColumnCount() {
 			return 6; // icon, naam, info, up, down, X
 		}
 
+                @Override
 		public int getRowCount() {
 			return courses.length;
 		}
 
+                @Override
 		public boolean isCellEditable(int row, int col) {
 			if(col == 3) // up
 				return row != 0;
@@ -162,6 +137,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 			return super.isCellEditable(row, col);
 		}
 
+                @Override
 		public Object getValueAt(int row, int col) {
 			Course course = (Course) courses[row];
 			switch(col) {
@@ -184,12 +160,14 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	
 	class CourseModel extends AbstractTableModel {
 
+                @Override
 		public Class getColumnClass(int col) {
 			if(col >= 1)
 				return Image.class;
 			return super.getColumnClass(col);
 		}
 
+                @Override
 		public boolean isCellEditable(int row, int col) {
 			if(col == 3) // up
 				return row != 0 || !DWO.SEQUENCE;
@@ -200,14 +178,17 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 			return super.isCellEditable(row, col);
 		}
 
+                @Override
 		public int getColumnCount() {
 			return DWO.SEQUENCE?6:4;
 		}
 
+                @Override
 		public int getRowCount() {
 			return courses.length;
 		}
 
+                @Override
 		public Object getValueAt(int row, int col) {
 			switch(col) {
 			case 0:
@@ -239,6 +220,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 		
 		private Dimension preferredSize;
 
+                @Override
 		public Component getTableCellRendererComponent(JTable table,
 				Object value, boolean isSelected, boolean hasFocus, int row,
 				int column) {
@@ -271,6 +253,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
 		private ImageIcon icon = new ImageIcon();
 
+                @Override
 		public Component getTableCellRendererComponent(JTable table,
 				Object value, boolean selected, boolean hasFocus, int row, int col) {
 			Image image = (Image)value;
@@ -321,6 +304,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     	AbstractTableModel model;
     	int row;
 
+            @Override
     	public Component getTableCellEditorComponent(JTable table, Object value,
     			boolean arg2, int row, int col) {
     		this.value = value;
@@ -331,10 +315,12 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     		return button;
     	}
 
+            @Override
     	public Object getCellEditorValue() {
     		return value;
     	}
 
+            @Override
     	public void actionPerformed(ActionEvent event) {
     		if(value == editImage)
     		{
@@ -564,6 +550,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
      * 
      * @param centerPanel The centerPanel to communicate with.
      */
+     @Override
     public void setCenterPanel(CenterPanel centerPanel) {
         center = centerPanel;
     }
@@ -575,6 +562,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
     
+     @Override
     public Component getHeaderPanel() {
     	HeaderPanel hp = new HeaderPanel(TextMapper.getText(TextMapper.GUIC_COURSE_MANAGEMENT));
     	stopBtn = new JButton(TextMapper.getText(TextMapper.GUIH_STOP_EDIT));
@@ -589,6 +577,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
      * 
      * @param e The ActionEvent.
      */
+     @Override
     public void actionPerformed(ActionEvent e) {
     	Object src = e.getSource();
             
@@ -700,6 +689,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
      * @return the current object.
      * @see fi.dwo.client.gui.CenterSubPanel#getComponent()
      */
+     @Override
     public JComponent getComponent() {
         return this;
     }
@@ -707,6 +697,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     /* (non-Javadoc)
      * @see fi.dwo.client.gui.CenterSubPanel#end()
      */
+     @Override
     public void end() {
 		center.setStrategy(null);
 		center.getMenu().setEditing(false);
@@ -745,6 +736,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
     }
 
 
+     @Override
 	public Object getUserObject() {
 		return (map == this) ? userObject : map.getUserObject();
 	}
@@ -793,6 +785,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 		ok = true;
 	}
 	
+     @Override
 	public void stateChanged(ChangeEvent e) {
 		if(ok && e.getSource() == getUserObject())
 		{

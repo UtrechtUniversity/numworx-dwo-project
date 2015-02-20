@@ -6,11 +6,7 @@ package fi.dwo.dwojapplet.persistence;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.server.persistence.DbAccess;
-import fi.dwo.server.persistence.DbAccessColorado;
-import fi.dwo.server.persistence.DbAccessLocal;
-import fi.dwo.server.persistence.DbAccessScience;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 
 public class DbAccessCreator {
     private static DbAccessIF dbAccess;

@@ -30,12 +30,14 @@ public class JMathToolTip extends JToolTip {
 		JToolTip  tip;
 		TopView view;
 
+                @Override
 		public void installUI(JComponent c) {
 	    	tip = (JToolTip) c;
 	    	installDefaults(c);
 	    	installListeners(c);
 	    }
 
+                @Override
 		public void propertyChange(PropertyChangeEvent e) {
 			if("tiptext".equals(e.getPropertyName()))
 			{ 
@@ -43,15 +45,18 @@ public class JMathToolTip extends JToolTip {
 			}
 		}
 
+                @Override
 		protected void installListeners(JComponent c)
 		{
 			c.addPropertyChangeListener(this);
 		}
 
+                @Override
 		public Dimension getMaximumSize(JComponent c) {
 			return getPreferredSize(c);
 		}
 
+                @Override
 		public Dimension getPreferredSize(JComponent c) {
 			copy(c);
 			Dimension result = new Dimension();
@@ -63,10 +68,12 @@ public class JMathToolTip extends JToolTip {
 			return result;
 		}
 
+                @Override
 		public Dimension getMinimumSize(JComponent c) {
 			return getPreferredSize(c);
 		}
 
+                @Override
 		public void paint(Graphics g, JComponent c) {
 			copy(c);
 			Rectangle r = c.getBounds();
@@ -100,6 +107,7 @@ public class JMathToolTip extends JToolTip {
 		super();
 	}
 
+        @Override
 	public void updateUI() {
 		setUI(new MathToolTipUI());
 	}
@@ -109,6 +117,7 @@ public class JMathToolTip extends JToolTip {
 	{
 		JMathPane panel = new JMathPane() {
 
+                        @Override
 			public JToolTip createToolTip() {
 				return new JMathToolTip();
 			}

@@ -12,9 +12,9 @@ import java.util.Hashtable;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.Sco;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.Sco;
 
 public class ImportScorm extends GuiAction {
     private FileDialog openDial;
@@ -31,6 +31,7 @@ public class ImportScorm extends GuiAction {
 		this.sco = sco;
 	}
 
+    @Override
 	public void actionPerformed(ActionEvent e) {
 		Component source = (Component) e.getSource();
         final Frame topFrame = DwoHelper.getFrameForComponent(source);
@@ -111,6 +112,7 @@ public class ImportScorm extends GuiAction {
 
 
 
+    @Override
 	void setMap(CourseMap map) {
 		if(map != null)
 			setEnabled( map.getUserObject() instanceof Sco);

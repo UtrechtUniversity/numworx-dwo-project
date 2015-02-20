@@ -1,7 +1,7 @@
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.ResultsModuleIF;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.ResultsModuleIF;
 
 interface CourseContainer {
 

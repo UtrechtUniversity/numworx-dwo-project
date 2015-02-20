@@ -30,6 +30,7 @@ public class FormuleDocument extends HTMLDocument {
 	// --- AbstractDocument methods ----------------------------
 
 
+        @Override
 	protected void insertUpdate(DefaultDocumentEvent chng, AttributeSet attr) {
 		super.insertUpdate(chng, attr);
 	}
@@ -43,6 +44,7 @@ public class FormuleDocument extends HTMLDocument {
 	 * @param chng
 	 *            the change event
 	 */
+        @Override
 	protected void removeUpdate(DefaultDocumentEvent chng) {
 		super.removeUpdate(chng);
 
@@ -50,11 +52,13 @@ public class FormuleDocument extends HTMLDocument {
 	}
 
 
+        @Override
 	protected Element createBranchElement(Element parent, AttributeSet a) {
 		// TODO Auto-generated method stub
 		return super.createBranchElement(parent, a);
 	}
 
+        @Override
 	protected Element createLeafElement(Element parent, AttributeSet a, int p0,
 			int p1) {
 		// TODO Auto-generated method stub
@@ -72,6 +76,7 @@ public class FormuleDocument extends HTMLDocument {
      * @param pos the starting position
      * @return the reader used by the parser to load the document
      */
+        @Override
     public HTMLEditorKit.ParserCallback getReader(int pos) {
 	Object desc = getProperty(Document.StreamDescriptionProperty);
 	if (desc instanceof URL) { 
@@ -121,11 +126,13 @@ public class FormuleDocument extends HTMLDocument {
 		
 		class MCharacterAction extends CharacterAction {
 			MutableAttributeSet extra;
+                        @Override
 			public void end(Tag t) {
 				super.end(t);
 				orgSize=popSize();
 			}
 
+                        @Override
 			public void start(Tag t, MutableAttributeSet attr) {
 				pushSize(orgSize);
 				super.start(t, attr);
@@ -167,11 +174,13 @@ public class FormuleDocument extends HTMLDocument {
 				HTMLReader.BlockAction ba = new HTMLReader.BlockAction() {
 
 					
+                                        @Override
 					public void end(Tag t) {
 						super.end(t);
 						orgSize = popSize();
 					}
 
+                                        @Override
 					public void start(Tag t, MutableAttributeSet attr) {
 						pushSize(orgSize);
 						if(firstSize != 0)
@@ -187,6 +196,7 @@ public class FormuleDocument extends HTMLDocument {
 						super.start(t, attr);
 					} };
 			HTMLReader.BlockAction subpa = new HTMLReader.BlockAction() {
+                                        @Override
 					public void start(Tag t, MutableAttributeSet attr) {
 						pushSize(orgSize);
 						if(firstSize == 0)
@@ -197,6 +207,7 @@ public class FormuleDocument extends HTMLDocument {
 						StyleConstants.setFontSize(attr, firstSize);
 						super.start(t, attr);
 					}
+                                        @Override
 					public void end(Tag t)
 					{
 						super.end(t);
@@ -236,10 +247,12 @@ public class FormuleDocument extends HTMLDocument {
 		}
 
 		
+                @Override
 		protected void addSpecialElement(Tag t, MutableAttributeSet a) {
 			//System.err.println("UNKNOWN TAG: "  + t + " " + a);
 			super.addSpecialElement(t, a);
 		}
+                @Override
 		public void handleSimpleTag(HTML.Tag t, MutableAttributeSet a, int pos) {
 			if(t instanceof HTML.UnknownTag) // TODO betere test voor ...
 			{

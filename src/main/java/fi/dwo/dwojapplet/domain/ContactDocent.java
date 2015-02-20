@@ -9,6 +9,7 @@ public class ContactDocent extends Teacher {
 	/**
 	 * Een schooladmin kan altijd meer dan een docent.
 	 */
+        @Override
 	public boolean hasRight(char right) {
 		switch(right) {
 		case MODIFY_MODULES_RIGHT: 

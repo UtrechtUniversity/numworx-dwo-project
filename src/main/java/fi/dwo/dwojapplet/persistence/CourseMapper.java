@@ -9,22 +9,21 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.WeakHashMap;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-import fi.dwo.client.domain.ClassCourse;
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.DwoIF;
-import fi.dwo.client.domain.School;
-import fi.dwo.client.domain.SchoolClass;
-import fi.dwo.client.domain.Teacher;
-import fi.dwo.client.domain.User;
+import fi.dwo.dwojapplet.domain.ClassCourse;
+import fi.dwo.dwojapplet.domain.Course;
+import static fi.dwo.dwojapplet.domain.Course.NO_CHILDREN;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.DwoIF;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.Teacher;
+import fi.dwo.dwojapplet.domain.User;
 
 public class CourseMapper extends XmlRpcMapper {
 
@@ -52,6 +51,7 @@ public class CourseMapper extends XmlRpcMapper {
      * @param obj
 
      */
+    @Override
     public void put(int oid, Object obj) throws IOException, SQLException,
             XmlRpcException {
         objects.put(new Integer(oid), obj);
@@ -91,6 +91,7 @@ public class CourseMapper extends XmlRpcMapper {
      * @return Object
 
      */
+    @Override
     public Object getObjectFromReturn(Hashtable data) {
         Course c = null;
         if (data.get("courseID") == null) { //We don't know enough to make a
@@ -129,6 +130,7 @@ public class CourseMapper extends XmlRpcMapper {
      * </ul>
      * @return The Courses who satisfy to the restriction. 
      */
+    @Override
     public Object[] get(Object obj) throws IOException, SQLException,
             XmlRpcException {
         Hashtable ht = new Hashtable();
@@ -158,6 +160,7 @@ public class CourseMapper extends XmlRpcMapper {
 /* (non-Javadoc)
 	 * @see fi.dwo.client.persistence.XmlRpcMapper#get(int)
 	 */
+    @Override
 	public Object get(int oid) throws IOException, XmlRpcException,
 			SQLException {
 		Integer Oid = new Integer(oid);
@@ -281,6 +284,7 @@ private Object[] cached(Hashtable ht) throws IOException, XmlRpcException,
      * 
      * @see fi.dwo.client.persistence.XmlRpcMapper#getIDCol()
      */
+    @Override
     protected String getIDCol() {
         return IDCOL;
     }
@@ -290,6 +294,7 @@ private Object[] cached(Hashtable ht) throws IOException, XmlRpcException,
      * 
      * @see fi.dwo.client.persistence.XmlRpcMapper#getTableName()
      */
+    @Override
     protected String getTableName() {
         return TABLENAME;
     }
@@ -300,6 +305,7 @@ private Object[] cached(Hashtable ht) throws IOException, XmlRpcException,
      * @see fi.dwo.client.persistence.XmlRpcMapper#update(java.lang.Object,
      *      java.util.Hashtable)
      */
+    @Override
     protected Object update(Object obj, Hashtable data) {
         Course c = (Course) obj;
         c.setCourseID(((Integer) data.get("courseID")).intValue());
@@ -359,12 +365,14 @@ private Object[] cached(Hashtable ht) throws IOException, XmlRpcException,
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#createArray(int)
      */
+    @Override
     protected Object[] createArray(int size) {
         return new Course[size];
     }
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#getOrderbyCol()
      */
+    @Override
     protected String getOrderbyCol() {
         return ORDERCOL;
     }
@@ -372,6 +380,7 @@ private Object[] cached(Hashtable ht) throws IOException, XmlRpcException,
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.persistence.XmlRpcMapper#removeAllObjects()
 	 */
+    @Override
 	public void removeAllObjects() {
 //System.out.println("cachemap clear all");
 		cachemap.clear();
@@ -381,6 +390,7 @@ private Object[] cached(Hashtable ht) throws IOException, XmlRpcException,
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.persistence.XmlRpcMapper#removeObject(int)
 	 */
+    @Override
 	public void removeObject(int key) {
 //System.out.println("cachemap clear key");
 		cachemap.clear();
@@ -390,6 +400,7 @@ private Object[] cached(Hashtable ht) throws IOException, XmlRpcException,
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.persistence.XmlRpcMapper#getObjectFromReturn(java.util.Vector)
 	 */
+    @Override
 	public Object[] getObjectFromReturn(Vector data) throws IOException,
 			SQLException, XmlRpcException {
 		cachemap.put(key, data);

@@ -8,13 +8,11 @@ import java.util.Map;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.CourseSequence;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.DwoIF;
-import fi.dwo.client.domain.School;
-import fi.dwo.client.domain.SchoolClass;
-import fi.dwo.client.system.PersistenceException;
+import fi.dwo.dwojapplet.domain.CourseSequence;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.DwoIF;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.SchoolClass;
 
 public class CourseSequenceMapper extends XmlRpcMapper {
 	
@@ -27,22 +25,27 @@ public class CourseSequenceMapper extends XmlRpcMapper {
 	private Map cache = new HashMap();
 	
 	
+        @Override
 	protected Object[] createArray(int size) {
 		return new CourseSequence[size];
 	}
 
+        @Override
 	protected String getIDCol() {
 		return IDCOL;
 	}
 
+        @Override
 	protected String getOrderbyCol() {
 		return ORDERBYCOL;
 	}
 
+        @Override
 	protected String getTableName() {
 		return TABLENAME;
 	}
 
+        @Override
 	protected Object update(Object obj, Hashtable data) {
 		CourseSequence cs = (CourseSequence) obj;
 		
@@ -85,6 +88,7 @@ public class CourseSequenceMapper extends XmlRpcMapper {
 	 * get sequencearray. Altijd met het profileID!
 	 */
 	
+        @Override
 	public Object[] get(Object obj) throws IOException, SQLException,
 			XmlRpcException {
         Hashtable ht = new Hashtable();
@@ -119,6 +123,7 @@ public class CourseSequenceMapper extends XmlRpcMapper {
 		return (Object[]) result;
 	}
 
+        @Override
 	public Object getObjectFromReturn(Hashtable data) throws IOException,
 			SQLException, XmlRpcException {
         CourseSequence c = null;
@@ -144,11 +149,13 @@ public class CourseSequenceMapper extends XmlRpcMapper {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.persistence.XmlRpcMapper#removeAllObjects()
 	 */
+        @Override
 	public void removeAllObjects() {
 		cache.clear();
 		super.removeAllObjects();
 	}
 
+        @Override
 	public void put(int oid, Object obj) throws IOException, SQLException,
 			XmlRpcException {
 		System.err.println("CourseSequenceMapper.put() Not yet implemented!");

@@ -35,16 +35,16 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
-import fi.dwo.client.domain.ContactDocent;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.School;
-import fi.dwo.client.domain.SchoolClass;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.persistence.MapperCreator;
-import fi.dwo.client.persistence.PersistenceFacade;
-import fi.dwo.client.system.LoginException;
-import fi.dwo.client.system.RegisterException;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.exceptions.LoginException;
+import fi.dwo.commons.exceptions.RegisterException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.ContactDocent;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.persistence.MapperCreator;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
 /**
  * This class is a panel where the users of a SchoolClass can be viewed and removed.
@@ -75,6 +75,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 			setOpaque(true);
 		}
 
+                @Override
 		public Component getTableCellRendererComponent(JTable table,
 				Object value, boolean selected, boolean hasFocus, int row, int col) {
 			Image image = (Image)value;
@@ -106,6 +107,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
     	Object value;
     	int row;
 
+            @Override
     	public Component getTableCellEditorComponent(JTable table, Object value,
     			boolean arg2, int row, int col) {
     		this.value = value;
@@ -115,10 +117,12 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
     		return button;
     	}
 
+            @Override
     	public Object getCellEditorValue() {
     		return value;
     	}
 
+            @Override
     	public void actionPerformed(ActionEvent event) {
             User u = model.userList[row];
 			if(value == model.userImage )
@@ -183,6 +187,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 	
 	class RemoveAllUsers extends AbstractAction {
 
+                @Override
 		public void actionPerformed(ActionEvent e) {
 			Component source = (Component) e.getSource();
 			int how = NOT;
@@ -357,6 +362,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
      * Indicate that another panel is loaded and the connections of this panel
      * must be closed.
      */
+    @Override
     public void end() {
 
     }
@@ -366,6 +372,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
      * 
      * @param centerPanel The centerPanel to communicate with.
      */
+    @Override
     public void setCenterPanel(CenterPanel centerPanel) {
         center = centerPanel;
     }
@@ -376,6 +383,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
      * @return A panel that can function as a header panel.
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
+    @Override
     public Component getHeaderPanel() {
     	return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_STUDENTS) + " "
                 + schoolClass.getName());
@@ -423,14 +431,17 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
      * @return the current object.
      * @see fi.dwo.client.gui.CenterSubPanel#getComponent()
      */
+    @Override
     public JComponent getComponent() {
         return this;
     }
 
+    @Override
 	public Object getUserObject() {
 		return schoolClass;
 	}
 
+    @Override
 	public void stateChanged(ChangeEvent e) {
 		if(getUserObject() == e.getSource()) 
 		{

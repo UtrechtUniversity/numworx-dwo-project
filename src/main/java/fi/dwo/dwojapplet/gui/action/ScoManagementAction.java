@@ -2,12 +2,12 @@ package fi.dwo.dwojapplet.gui.action;
 
 import java.awt.event.ActionEvent;
 
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.gui.CenterPanel;
-import fi.dwo.client.gui.CenterSubPanel;
-import fi.dwo.client.gui.CoursePanel;
-import fi.dwo.client.gui.GuiCreatorTeacher;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.gui.CenterPanel;
+import fi.dwo.dwojapplet.gui.CenterSubPanel;
+import fi.dwo.dwojapplet.gui.CoursePanel;
+import fi.dwo.dwojapplet.gui.GuiCreatorTeacher;
 
 public class ScoManagementAction extends GuiAction {
 
@@ -23,6 +23,7 @@ public class ScoManagementAction extends GuiAction {
 		this.course = course;
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent arg0) {
 		GuiCreatorTeacher.instance().setWait();
 		CenterSubPanel cp;

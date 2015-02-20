@@ -1,12 +1,9 @@
 package fi.dwo.dwojapplet.gui;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -27,28 +24,19 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import org.apache.xmlrpc.applet.XmlRpcException;
-
-import fi.beans.jdbc.DbConnect;
-import fi.dwo.client.domain.ContactDocent;
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.DwoIF;
-import fi.dwo.client.domain.School;
-import fi.dwo.client.domain.SchoolClass;
-import fi.dwo.client.domain.SchoolGroup;
-import fi.dwo.client.domain.Teacher;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.ClassPanel.ClassModel;
-import fi.dwo.client.gui.UserManagementPanel.TeacherDelegate;
-import fi.dwo.client.persistence.DbAccessCreator;
-import fi.dwo.client.persistence.MapperCreator;
-import fi.dwo.client.persistence.MapperIF;
-import fi.dwo.client.persistence.PersistenceFacade;
-import fi.dwo.client.system.ClassException;
-import fi.dwo.client.system.PersistenceException;
-import fi.dwo.client.system.TextMapper;
-import fi.dwo.server.persistence.DwoXmlRpcException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.ContactDocent;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.DwoIF;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.SchoolGroup;
+import fi.dwo.dwojapplet.domain.Teacher;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.persistence.DbAccessCreator;
+import fi.dwo.dwojapplet.persistence.MapperCreator;
+import fi.dwo.dwojapplet.persistence.MapperIF;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
 public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparator, ActionListener {
 
@@ -70,6 +58,7 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 	
 	class ClassModel extends AbstractTableModel
 	{
+                @Override
 		public int getColumnCount() {
 			return 4;
 		}
@@ -77,6 +66,7 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 		/* (non-Javadoc)
 		 * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
 		 */
+                @Override
 		public void setValueAt(Object value, int rowIndex, int columnIndex) {
 			if(columnIndex == CLASS_USER)
 			{
@@ -114,6 +104,7 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 		/* (non-Javadoc)
 		 * @see javax.swing.table.AbstractTableModel#getColumnName(int)
 		 */
+                @Override
 		public String getColumnName(int column) {
 			switch(column)
 			{
@@ -129,14 +120,17 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 		/* (non-Javadoc)
 		 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
 		 */
+                @Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
 			return true;
 		}
 
+                @Override
 		public int getRowCount() {
 			return classes.length;
 		}
 
+                @Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			SchoolClass c = classes[rowIndex];
 			switch(columnIndex)
@@ -153,6 +147,7 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 			return null;
 		}
 
+                @Override
 		public Class getColumnClass(int columnIndex) {
 			switch(columnIndex)
 			{
@@ -183,6 +178,7 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 			super(items); 
 		}
 		
+                @Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
 		{ 
 			if (isSelected) 
@@ -213,6 +209,7 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
     	ClassModel model;
     	int row;
 
+            @Override
     	public Component getTableCellEditorComponent(JTable table, Object value,
     			boolean arg2, int row, int col) {
     		this.value = value;
@@ -223,10 +220,12 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
     		return button;
     	}
 
+            @Override
     	public Object getCellEditorValue() {
     		return value;
     	}
 
+            @Override
     	public void actionPerformed(ActionEvent event) {
             SchoolClass sc = classes[row];
     		if (value == removeImage) {
@@ -248,17 +247,21 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 	
 	private CenterPanel center;
 
+        @Override
 	public void end() {
 	}
 
+        @Override
 	public JComponent getComponent() {
 		return this;
 	}
 
+        @Override
 	public Component getHeaderPanel() {
     	return new HeaderPanel(TextMapper.getText("Klassen toewijzen"));
 	}
 
+        @Override
 	public void setCenterPanel(CenterPanel centerPanel) {
 		center = centerPanel;
 	}
@@ -356,12 +359,14 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 
 	}
 
+        @Override
 	public int compare(Object arg0, Object arg1) {
 		User u0 = (User) arg0;
 		User u1 = (User) arg1;
 		return u0.getName().compareTo(u1.getName());
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent e) {
 		for(int i = 0; i < dirty.length; i++)
 			if(dirty[i])
@@ -380,11 +385,13 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 		center.loadMenu();
 	}
 
+        @Override
 	public Object getUserObject() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+        @Override
 	public void stateChanged(ChangeEvent arg0) {
 		// TODO Auto-generated method stub
 		

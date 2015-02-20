@@ -16,18 +16,16 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
-import java.util.WeakHashMap;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
-import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import fi.beans.base64code.StringCodeObject;
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.DwoProfile;
-import fi.dwo.client.domain.School;
-import fi.dwo.client.domain.Sco;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.DwoProfile;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.Sco;
 
 public class ScoMapper extends XmlRpcMapper {
 
@@ -112,6 +110,7 @@ public class ScoMapper extends XmlRpcMapper {
      * @param obj
 
      */
+        @Override
     public void put(int oid, Object obj) throws IOException, SQLException,
             XmlRpcException {
         objects.put(new Integer(oid), obj);
@@ -123,6 +122,7 @@ public class ScoMapper extends XmlRpcMapper {
      * @return Object
 
      */
+        @Override
     public Object getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException {
         Sco s = null;
         if (data.get("scoID") == null) { //We don't know enough to make a
@@ -158,6 +158,7 @@ public class ScoMapper extends XmlRpcMapper {
      * </ul>
      * @return The SCO's who satisfies to the restriction. 
      */
+        @Override
     public Object[] get(Object obj) throws IOException, SQLException,
             XmlRpcException {
         Hashtable ht = new Hashtable();
@@ -204,6 +205,7 @@ public class ScoMapper extends XmlRpcMapper {
 			Object key = entry.getKey();
 			Collections.sort(v, new Comparator() {
 
+                                @Override
 				public int compare(Object o1, Object o2) {
 					Sco s1 = (Sco)o1;
 					Sco s2 = (Sco)o2;
@@ -223,6 +225,7 @@ public class ScoMapper extends XmlRpcMapper {
      * 
      * @see fi.dwo.client.persistence.XmlRpcMapper#getIDCol()
      */
+        @Override
     protected String getIDCol() {
         return IDCOL;
     }
@@ -232,6 +235,7 @@ public class ScoMapper extends XmlRpcMapper {
      * 
      * @see fi.dwo.client.persistence.XmlRpcMapper#getTableName()
      */
+        @Override
     protected String getTableName() {
         return TABLENAME;
     }
@@ -242,6 +246,7 @@ public class ScoMapper extends XmlRpcMapper {
      * @see fi.dwo.client.persistence.XmlRpcMapper#update(java.lang.Object,
      *      java.util.Hashtable)
      */
+        @Override
     protected Object update(Object obj, Hashtable data) throws IOException, SQLException, XmlRpcException {
         Sco s = (Sco) obj;
         s.setScoID(((Integer) data.get("scoID")).intValue());
@@ -282,6 +287,7 @@ public class ScoMapper extends XmlRpcMapper {
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#createArray(int)
      */
+        @Override
     protected Object[] createArray(int size) {
        return new Sco[size];
     }
@@ -289,6 +295,7 @@ public class ScoMapper extends XmlRpcMapper {
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#getOrderbyCol()
      */
+        @Override
     protected String getOrderbyCol() {
         return ORDERCOL;
     }
@@ -321,6 +328,7 @@ public class ScoMapper extends XmlRpcMapper {
 
     
     
+        @Override
 	public Object[] get(Hashtable wheredef) throws IOException,
 			XmlRpcException, SQLException {
 		
@@ -343,6 +351,7 @@ public class ScoMapper extends XmlRpcMapper {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.persistence.XmlRpcMapper#removeAllObjects()
 	 */
+        @Override
 	public void removeAllObjects() {
 		cachemap.clear();
 		super.removeAllObjects();
@@ -351,6 +360,7 @@ public class ScoMapper extends XmlRpcMapper {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.persistence.XmlRpcMapper#removeObject(int)
 	 */
+        @Override
 	public void removeObject(int key) {
 		cachemap.clear();
 		//super.removeObject(key);

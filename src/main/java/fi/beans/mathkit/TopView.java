@@ -26,24 +26,30 @@ public class TopView extends View
 		view.setSize(getPreferredSpan(X_AXIS), getPreferredSpan(Y_AXIS));
 	}
 	
+        @Override
 	public float getPreferredSpan(int axis) {
 		return view.getPreferredSpan(axis);
 	}
+        @Override
 	public Shape modelToView(int pos, Shape a, Bias b)
 			throws BadLocationException {
 		return view.modelToView(pos, a, b);
 	}
+        @Override
 	public void paint(Graphics g, Shape allocation) {
 		view.paint(g, allocation);
 	}
+        @Override
 	public int viewToModel(float x, float y, Shape a, Bias[] biasReturn) {
 		return view.viewToModel(x, y, a, biasReturn);
 	}
 // the chain ends here...
+        @Override
 	public ViewFactory getViewFactory() {
 		return f;
 	}
 
+        @Override
 	public Container getContainer() {
 		return tip;
 	}

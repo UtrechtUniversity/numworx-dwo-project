@@ -14,8 +14,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.text.MessageFormat;
-import java.text.NumberFormat;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 
@@ -26,7 +24,6 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.beans.scorm.PartialScoreIF;
 import fi.beans.scorm.SCORM12APIInterface;
-import fi.beans.scorm.ScormAdapter;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.GuiConstants;
@@ -191,6 +188,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
      * @return The name representing the LessonGroup object.
      *  
      */
+        @Override
     public String getName() {
         String[] arguments = new String[1];
         arguments[0] = "" + sequencenr;
@@ -224,6 +222,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
      * @see fi.beans.scorm.SCORM12APIInterface#LMSInitialize(java.lang.String)
      *  
      */
+        @Override
     public String LMSInitialize(String iParam) {
     	if(initialized) return ko("false");
     	initialized = true;
@@ -253,6 +252,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
      * @see fi.beans.scorm.SCORM12APIInterface#LMSFinish(java.lang.String)
      *  
      */
+        @Override
     public String LMSFinish(String iParam) {
     	if(initialized )
     	{
@@ -321,6 +321,7 @@ System.err.println("sum = ["+result+"]");
 		if(sco == current)
 			return "false"; // no jump, no stop/start.
 		SwingUtilities.invokeLater(new Runnable() {
+                        @Override
 			public void run() {
 				if(sc.isShowing()) {
 					// setlessonmode nodig? TODO uitzoeken
@@ -422,6 +423,7 @@ System.err.println("sum = ["+result+"]");
      *         otherwise.
      * @see java.applet.AppletStub#isActive()
      */
+        @Override
     public boolean isActive() {
         return DwoHelper.getApplet().isActive();
     }
@@ -433,6 +435,7 @@ System.err.println("sum = ["+result+"]");
      * @param height the new requested height for the applet.
      * @see java.applet.AppletStub#appletResize(int, int)
      */
+        @Override
     public void appletResize(int width, int height) {
     }
 
@@ -442,6 +445,7 @@ System.err.println("sum = ["+result+"]");
      * @return the applet's context.
      * @see java.applet.AppletStub#getAppletContext()
      */
+        @Override
     public AppletContext getAppletContext() {
         return DwoHelper.getApplet().getAppletContext();
     }
@@ -454,6 +458,7 @@ System.err.println("sum = ["+result+"]");
      *         applet.
      * @see java.applet.AppletStub#getCodeBase()
      */
+        @Override
     public URL getCodeBase() {
         return DwoHelper.getApplet().getCodeBase();
     }
@@ -486,6 +491,7 @@ System.err.println("sum = ["+result+"]");
      *         applet.
      * @see java.applet.AppletStub#getDocumentBase()
      */
+        @Override
     public URL getDocumentBase() {
         return DwoHelper.getApplet().getDocumentBase();
     }
@@ -513,6 +519,7 @@ System.err.println("sum = ["+result+"]");
      * @return the value of the named parameter, or <tt>null</tt> if not set.
      * @see java.applet.AppletStub#getParameter(java.lang.String)
      */
+        @Override
     public String getParameter(String name) {
     	if("deployVariantDWO".equals(name) && GuiConstants.DEPLOY_VARIANT.length()>0)
     		return GuiConstants.DEPLOY_VARIANT;
@@ -611,6 +618,7 @@ System.err.println("sum = ["+result+"]");
      *         returns false.
      * @see fi.dwo.client.domain.LessonGroup#isDeepestLevel()
      */
+        @Override
     public boolean isDeepestLevel() {
         return true;
     }
@@ -622,6 +630,7 @@ System.err.println("sum = ["+result+"]");
      *         returns false.
      * @see fi.dwo.client.domain.LessonGroup#isHighestLevel()
      */
+        @Override
     public boolean isHighestLevel() {
         return false;
     }
@@ -632,6 +641,7 @@ System.err.println("sum = ["+result+"]");
      * @return The Sco specific title.
      * @see fi.dwo.client.domain.LessonGroup#getTitle()
      */
+        @Override
     public String getTitle() {
         String[] arguments = new String[1];
         if (course != null) {
@@ -647,6 +657,7 @@ System.err.println("sum = ["+result+"]");
      * @return A title represents the parent item.
      * @see fi.dwo.client.domain.UserGroup#getParentTitle()
      */
+        @Override
     public String getParentTitle() {
         return TextMapper.getText(TextMapper.LG_SCO_PARENT);
     }
@@ -656,6 +667,7 @@ System.err.println("sum = ["+result+"]");
      * @return A title represents the child item.
      * @see fi.dwo.client.domain.UserGroup#getChildTitle()
      */
+        @Override
     public String getChildTitle() {
         return "";
     }
@@ -665,6 +677,7 @@ System.err.println("sum = ["+result+"]");
      * @return A title represents the Ascending Order item.
      * @see fi.dwo.client.domain.UserGroup#getOrderAscTitle()
      */
+        @Override
     public String getOrderAscTitle() {
         return TextMapper.getText(TextMapper.LG_SCO_ORDER_ASC);
     }
@@ -674,6 +687,7 @@ System.err.println("sum = ["+result+"]");
      * @return A title represents the Descending Order item.
      * @see fi.dwo.client.domain.UserGroup#getOrderDescTitle()
      */
+        @Override
     public String getOrderDescTitle() {
         return TextMapper.getText(TextMapper.LG_SCO_ORDER_DESC);
     }
@@ -703,6 +717,7 @@ System.err.println("sum = ["+result+"]");
      * @return A tooltip for the LessonGroup.
      * @see fi.dwo.client.domain.LessonGroup#getToolTip()
      */
+        @Override
     public String getToolTip() {
         return name;
     }
@@ -714,6 +729,7 @@ System.err.println("sum = ["+result+"]");
      *		is less than, equal to, or greater than the specified sco.
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
+        @Override
     public int compareTo(Object o) {
         Sco s = (Sco) o;
         if(sequencenr == s.getSequencenr())
@@ -725,6 +741,7 @@ System.err.println("sum = ["+result+"]");
         return 1;
     }
     
+        @Override
     public String toString() {
     	return getScoName();
     }

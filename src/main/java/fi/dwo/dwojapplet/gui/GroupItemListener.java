@@ -6,7 +6,7 @@ import java.awt.event.ItemListener;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.system.TextMapper;
 
 class GroupItemListener implements ItemListener {
 	private JTextField schoolpassword;
@@ -18,6 +18,7 @@ class GroupItemListener implements ItemListener {
 		this.schoolpassword = schoolpassword2;
 	}
 
+        @Override
 	public void itemStateChanged(ItemEvent e) {
 		// van en naar schoolcode, schoolwachtwoord onzichtbaar.
 		if(TextMapper.getText(TextMapper.GUIR_OPT_SCHOOLCODE).equals(e.getItem()))

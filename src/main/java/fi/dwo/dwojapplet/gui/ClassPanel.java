@@ -5,14 +5,9 @@
 package fi.dwo.dwojapplet.gui;
 
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.MediaTracker;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
@@ -27,7 +22,6 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
@@ -35,13 +29,13 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.SchoolClass;
-import fi.dwo.client.domain.Teacher;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.system.ClassException;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.exceptions.ClassException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.Teacher;
+import fi.dwo.dwojapplet.domain.User;
 
 /**
  * The panel where a SchoolClass can be managed.
@@ -74,14 +68,17 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
 				cols = 4;
 		}
 
+            @Override
 		public int getColumnCount() {
 			return cols;
 		}
 
+            @Override
 		public int getRowCount() {
 			return classes.length;
 		}
 
+            @Override
 		public Object getValueAt(int row, int col) {
 			switch(col) {
 			case 0:
@@ -98,12 +95,14 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
 			return null;
 		}
 
+            @Override
 		public Class getColumnClass(int col) {
 			if(col>0)
 				return Image.class;
 			return super.getColumnClass(col);
 		}
 
+            @Override
 		public boolean isCellEditable(int row, int col) {
 			if(col == REMOVE_COL)
 				return GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER);
@@ -124,6 +123,7 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
 
 		private ImageIcon icon = new ImageIcon();
 
+                @Override
 		public Component getTableCellRendererComponent(JTable table,
 				Object value, boolean selected, boolean hasFocus, int row, int col) {
 			Image image = (Image)value;
@@ -164,6 +164,7 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
     	ClassModel model;
     	int row;
 
+            @Override
     	public Component getTableCellEditorComponent(JTable table, Object value,
     			boolean arg2, int row, int col) {
     		this.value = value;
@@ -174,10 +175,12 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
     		return button;
     	}
 
+            @Override
     	public Object getCellEditorValue() {
     		return value;
     	}
 
+            @Override
     	public void actionPerformed(ActionEvent event) {
             SchoolClass sc = model.classes[row];
     		final GuiCreator instance = GuiCreator.instance();
@@ -312,6 +315,7 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
      * Indicate that another panel is loaded and the connections of this panel
      * must be closed.
      */
+    @Override
     public void end() {
 
     }
@@ -322,6 +326,7 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
      * 
      * @param centerPanel The centerPanel to communicate with.
      */
+    @Override
     public void setCenterPanel(CenterPanel centerPanel) {
         center = centerPanel;
     }
@@ -333,6 +338,7 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
     
+    @Override
     public Component getHeaderPanel() {
     	return new HeaderPanel(TextMapper.getText(TextMapper.GUIC_CLASS_MANAGEMENT));
     }
@@ -343,6 +349,7 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
      * 
      * @param e The ActionEvent.
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
     	if(e.getSource() == addClassButton) {
             try {
@@ -363,17 +370,20 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
      * @return the current object.
      * @see fi.dwo.client.gui.CenterSubPanel#getComponent()
      */
+    @Override
     public JComponent getComponent() {
         return this;
     }
 
 
+    @Override
 	public Object getUserObject() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
+    @Override
 	public void stateChanged(ChangeEvent e) {
 		// TODO Auto-generated method stub
 		

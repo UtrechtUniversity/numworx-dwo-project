@@ -32,6 +32,7 @@ public class AppletConfigMapper extends XmlRpcMapper {
      * @param obj
 
      */
+    @Override
     public void put(int oid, Object obj) throws IOException, SQLException,
             XmlRpcException {
         System.err.println("AppletConfigMapper.put() Not yet implemented!");
@@ -42,6 +43,7 @@ public class AppletConfigMapper extends XmlRpcMapper {
      * @return Object
 
      */
+    @Override
     public Object getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException {
         AppletConfig ac = null;
         if (data.get("appletConfigID") == null) { //We don't know enough to make a
@@ -65,6 +67,7 @@ public class AppletConfigMapper extends XmlRpcMapper {
      * @return Object[]
 
      */
+    @Override
     public Object[] get(Object obj) throws IOException, SQLException,
             XmlRpcException {
     	if(obj instanceof Locale)
@@ -82,6 +85,7 @@ public class AppletConfigMapper extends XmlRpcMapper {
      * 
      * @see fi.dwo.client.persistence.XmlRpcMapper#getIDCol()
      */
+    @Override
     protected String getIDCol() {
         return IDCOL;
     }
@@ -91,6 +95,7 @@ public class AppletConfigMapper extends XmlRpcMapper {
      * 
      * @see fi.dwo.client.persistence.XmlRpcMapper#getTableName()
      */
+    @Override
     protected String getTableName() {
         return TABLENAME;
     }
@@ -101,6 +106,7 @@ public class AppletConfigMapper extends XmlRpcMapper {
      * @see fi.dwo.client.persistence.XmlRpcMapper#update(java.lang.Object,
      *      java.util.Hashtable)
      */
+    @Override
     protected Object update(Object obj, Hashtable data) throws IOException, SQLException, XmlRpcException {
         AppletConfig ac = (AppletConfig) obj;
         ac.setAppletConfigID(((Integer) data.get("appletConfigID")).intValue());
@@ -118,6 +124,7 @@ public class AppletConfigMapper extends XmlRpcMapper {
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#createArray(int)
      */
+    @Override
     protected Object[] createArray(int size) {
        return new AppletConfig[size];
     }
@@ -125,6 +132,7 @@ public class AppletConfigMapper extends XmlRpcMapper {
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#getOrderbyCol()
      */
+    @Override
     protected String getOrderbyCol() {
         return ORDERCOL;
     }

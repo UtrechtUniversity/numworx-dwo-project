@@ -8,19 +8,17 @@ import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 
-import fi.dwo.client.domain.ClassCourse;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.CenterPanel;
-import fi.dwo.client.gui.CenterSubPanel;
+import fi.dwo.dwojapplet.domain.ClassCourse;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.CenterPanel;
+import fi.dwo.dwojapplet.gui.CenterSubPanel;
 
 public class FramedScoPanel extends JPanel implements CenterSubPanel, ActionListener {
 
@@ -80,6 +78,7 @@ public class FramedScoPanel extends JPanel implements CenterSubPanel, ActionList
 		csp.stateChanged(e);
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent e) {
 		btn.setEnabled(false); // one shot?
 		if(e.getSource() == timer)
@@ -91,8 +90,8 @@ public class FramedScoPanel extends JPanel implements CenterSubPanel, ActionList
 		final JComponent component = csp.getComponent();
 		component.setSize(getSize());
 		component.setLocation(getLocationOnScreen());
-		SwingUtilities.invokeLater(
-		new Runnable() {
+		SwingUtilities.invokeLater(new Runnable() {
+                @Override
 			public void run() {
 				screen = FullScreenDWO.showInFrame(f, component);
 				screen.setVisible(true); // modal dialog

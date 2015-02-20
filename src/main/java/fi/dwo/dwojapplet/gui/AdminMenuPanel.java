@@ -3,12 +3,9 @@
 
 package fi.dwo.dwojapplet.gui;
 
-import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 
-import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.GuestMenuPanel.MenuPanelButton;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.system.TextMapper;
 
 /**
  * This class is the menupanel for the teacher who logged in.
@@ -26,6 +23,7 @@ public class AdminMenuPanel extends MenuPanel {
     /* (non-Javadoc)
 	 * @see fi.dwo.client.gui.MenuPanel#createMenuButtons()
 	 */
+     @Override
 	protected void createMenuButtons() {
 		// TODO Auto-generated method stub
 		super.createMenuButtons();
@@ -68,6 +66,7 @@ public class AdminMenuPanel extends MenuPanel {
      * overridden by subclasses.
      *  
      */
+     @Override
     protected void addClassList() {
     	createRuler();
     }
@@ -79,6 +78,7 @@ public class AdminMenuPanel extends MenuPanel {
      * @param e The ActionEvent.
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+     @Override
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
 

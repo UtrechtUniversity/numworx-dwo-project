@@ -7,14 +7,13 @@ import java.awt.Button;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 
-import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import fi.dwo.client.domain.Group;
-import fi.dwo.client.system.LoginException;
-import fi.dwo.client.system.RegisterException;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.exceptions.LoginException;
+import fi.dwo.commons.exceptions.RegisterException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Group;
 
 /**
  * This class represents a panel for the current user (who is a teacher) to
@@ -44,6 +43,7 @@ public class TeacherProfilePanel extends ProfilePanel {
      * @param lastPanel The panel where under this panel must appear.
      * @return A panel representing user-specific information.
      */
+    @Override
     protected Container getUserPanel(Container lastPanel) {
         int posY = lastPanel.getLocation().y + lastPanel.getSize().height - 1;
         JPanel p;
@@ -60,6 +60,7 @@ public class TeacherProfilePanel extends ProfilePanel {
      * @param e The ActionEvent.
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == resetButton) {
             /* Reset the inputfields */

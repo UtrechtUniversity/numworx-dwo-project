@@ -11,9 +11,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Point;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -21,14 +19,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
-
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.School;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.domain.DwoProfile;
-import fi.dwo.client.gui.action.LogoutURLAction;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.DwoProfile;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.action.LogoutURLAction;
 
 /**
  * This class is the main panel of the application. It shows the FI-logo, the
@@ -53,6 +49,7 @@ public class MainPanel extends BackgroundPanel {
 	     * @see javax.swing.JComponent#paint(java.awt.Graphics)
 	     * @see java.awt.LayoutManager
 	     */
+                @Override
 	    public void paint(Graphics g)
 	    {
 	    	if(!isValid()) {
@@ -188,6 +185,7 @@ public class MainPanel extends BackgroundPanel {
 		return BorderFactory.createMatteBorder(1, 1, 0, 1, Color.black);
 	}
     
+        @Override
     public void setGuiImage(Image image)
     {	loggedIn.setGuiImage(image);
     	guiImage = image;

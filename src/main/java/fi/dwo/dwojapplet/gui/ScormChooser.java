@@ -16,7 +16,6 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
-import javax.swing.filechooser.FileSystemView;
 import javax.swing.filechooser.FileFilter;
 
 /**
@@ -50,6 +49,7 @@ public class ScormChooser extends JFileChooser  {
 	}
 
 
+        @Override
 	protected JDialog createDialog(Component parent) throws HeadlessException {
 		JDialog dialog = super.createDialog(parent);
 		JComponent north = createTop();
@@ -102,10 +102,12 @@ public class ScormChooser extends JFileChooser  {
 class ScormFilter extends FileFilter 
 {
 
+        @Override
 	public boolean accept(File f) {
 		return f.isDirectory() || f.getName().toLowerCase().endsWith(".zip");
 	}
 
+        @Override
 	public String getDescription() {
 		return "SCORM bestanden (*.zip)";
 	}

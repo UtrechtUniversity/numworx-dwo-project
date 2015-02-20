@@ -12,7 +12,6 @@ import java.util.Hashtable;
 import javax.swing.JButton;
 
 import fi.beans.scorm.Parameter;
-import fi.dwo.client.gui.DwoButton;
 
 public class TreeParameterComponent extends ParameterComponent implements ActionListener {
     
@@ -59,6 +58,7 @@ public class TreeParameterComponent extends ParameterComponent implements Action
     /* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
+    @Override
 	public void actionPerformed(ActionEvent e) {
 	    if(e.getSource() == button) {
 	        if(large) {

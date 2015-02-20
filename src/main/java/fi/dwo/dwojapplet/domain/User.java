@@ -3,8 +3,6 @@
 
 package fi.dwo.dwojapplet.domain;
 
-import java.text.MessageFormat;
-import java.util.Date;
 
 import fi.dwo.commons.system.TextMapper;
 
@@ -80,6 +78,7 @@ public class User implements UserGroup, Comparable {
      * @return The fullname of the user.
      *  
      */
+        @Override
     public String getName() {
         if ((middleName == null) || middleName.equals("")) {
             return firstname + " " + lastName;
@@ -104,6 +103,7 @@ public class User implements UserGroup, Comparable {
      * 
      * @return The unique-identifier for the UserGroup object.
      */
+        @Override
     public int getID() {
         return userID;
     }
@@ -239,6 +239,7 @@ public class User implements UserGroup, Comparable {
      * 
      * @return The username of the user.
      */
+        @Override
     public String getUsername() {
         return username;
     }
@@ -259,6 +260,7 @@ public class User implements UserGroup, Comparable {
      *         returns false.
      * @see fi.dwo.client.domain.UserGroup#isDeepestLevel()
      */
+        @Override
     public boolean isDeepestLevel() {
         return true;
     }
@@ -270,6 +272,7 @@ public class User implements UserGroup, Comparable {
      *         returns false.
      * @see fi.dwo.client.domain.UserGroup#isHighestLevel()
      */
+        @Override
     public boolean isHighestLevel() {
         return false;
     }
@@ -280,6 +283,7 @@ public class User implements UserGroup, Comparable {
      * @return A title representing the UserGroup object.
      * @see fi.dwo.client.domain.UserGroup#getTitle()
      */
+        @Override
     public String getTitle() {
         String[] arguments = new String[1];
         if (inClass != null) {
@@ -297,6 +301,7 @@ public class User implements UserGroup, Comparable {
      * @return The name to order the usergroup.
      * @see fi.dwo.client.domain.UserGroup#getOrderName()
      */
+        @Override
     public String getOrderName() {
         return lastName.toLowerCase();
     }
@@ -306,6 +311,7 @@ public class User implements UserGroup, Comparable {
      * @return A typename representing the User.
      * @see fi.dwo.client.domain.UserGroup#getType()
      */
+        @Override
     public String getType() {
         return TextMapper.getText(TextMapper.UG_USER_TITLE);
     }
@@ -315,6 +321,7 @@ public class User implements UserGroup, Comparable {
      * @return A title represents the parent item.
      * @see fi.dwo.client.domain.UserGroup#getParentTitle()
      */
+        @Override
     public String getParentTitle() {
     return TextMapper.getText(TextMapper.UG_USER_PARENT);
     }
@@ -324,6 +331,7 @@ public class User implements UserGroup, Comparable {
      * @return A title represents the child item.
      * @see fi.dwo.client.domain.UserGroup#getChildTitle()
      */
+        @Override
     public String getChildTitle() {
         return "";
     }
@@ -333,6 +341,7 @@ public class User implements UserGroup, Comparable {
      * @return A title represents the Ascending Order item.
      * @see fi.dwo.client.domain.UserGroup#getOrderAscTitle()
      */
+        @Override
     public String getOrderAscTitle() {
         return TextMapper.getText(TextMapper.UG_USER_ORDER_ASC);
     }
@@ -342,6 +351,7 @@ public class User implements UserGroup, Comparable {
      * @return A title represents the Descending Order item.
      * @see fi.dwo.client.domain.UserGroup#getOrderDescTitle()
      */
+        @Override
     public String getOrderDescTitle() {
         return TextMapper.getText(TextMapper.UG_USER_ORDER_DESC);
     }
@@ -417,6 +427,7 @@ public class User implements UserGroup, Comparable {
 	 * @param o2 user 2
 	 * @return -1/0/+1
 	 */
+        @Override
 	public int compareTo(Object o2) {
 		User u2 = (User)o2;
 		int r;
@@ -489,6 +500,7 @@ public class User implements UserGroup, Comparable {
 		return timeZone;
 	}
 
+        @Override
 	public String toString() {
 		return getName();
 	}

@@ -9,9 +9,9 @@ import java.util.Hashtable;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-import fi.dwo.client.domain.School;
-import fi.dwo.client.domain.SchoolClass;
-import fi.dwo.client.domain.Teacher;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.Teacher;
 
 public class ClassMapper extends XmlRpcMapper {
     private static final String TABLENAME = "tblClass";
@@ -32,6 +32,7 @@ public class ClassMapper extends XmlRpcMapper {
      * @param obj
 
      */
+    @Override
     public void put(int oid, Object obj) throws IOException, SQLException,
             XmlRpcException {
         System.err.println("ClassMapper.put() Not yet implemented!");
@@ -43,8 +44,9 @@ public class ClassMapper extends XmlRpcMapper {
      * @return Object
 
      */
+    @Override
     public Object getObjectFromReturn(Hashtable data) {
-        fi.dwo.client.domain.SchoolClass c = null;
+        SchoolClass c = null;
         if (data == null || data.get("classID") == null) { //We don't know enough to make a
                                            // classobject
             return null;
@@ -52,9 +54,9 @@ public class ClassMapper extends XmlRpcMapper {
             return null;
         } else if (objects.containsKey(data.get("classID"))) { // Did we know
                                                                // the class?
-            c = (fi.dwo.client.domain.SchoolClass) objects.get(data.get("classID"));
+            c = (SchoolClass) objects.get(data.get("classID"));
         } else {
-            c = new fi.dwo.client.domain.SchoolClass();
+            c = new SchoolClass();
         }
         c = (SchoolClass) update(c, data);
         if(!objects.containsKey(new Integer(c.getID()))) {
@@ -72,6 +74,7 @@ public class ClassMapper extends XmlRpcMapper {
      * </ul>
      * @return The SchoolClasses who satisfy to the restriction. 
      */
+    @Override
     public Object[] get(Object obj) throws IOException, SQLException,
             XmlRpcException {
         Hashtable ht = new Hashtable();
@@ -90,6 +93,7 @@ public class ClassMapper extends XmlRpcMapper {
      * 
      * @see fi.dwo.client.persistence.XmlRpcMapper#getIDCol()
      */
+    @Override
     protected String getIDCol() {
         return IDCOL;
     }
@@ -99,6 +103,7 @@ public class ClassMapper extends XmlRpcMapper {
      * 
      * @see fi.dwo.client.persistence.XmlRpcMapper#getTableName()
      */
+    @Override
     protected String getTableName() {
         return TABLENAME;
     }
@@ -109,8 +114,9 @@ public class ClassMapper extends XmlRpcMapper {
      * @see fi.dwo.client.persistence.XmlRpcMapper#update(java.lang.Object,
      *      java.util.Hashtable)
      */
+    @Override
     protected Object update(Object obj, Hashtable data) {
-        fi.dwo.client.domain.SchoolClass c = (SchoolClass) obj;
+        SchoolClass c = (SchoolClass) obj;
         c.setClassID(((Integer) data.get("classID")).intValue());
         c.setClassName((String) data.get("class"));
         c.setIconizer(Boolean.TRUE.equals(data.get("iconizer")));
@@ -120,13 +126,15 @@ public class ClassMapper extends XmlRpcMapper {
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#createArray(int)
      */
+    @Override
     protected Object[] createArray(int size) {
-        return new fi.dwo.client.domain.SchoolClass[size];
+        return new SchoolClass[size];
     }
 
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#getOrderbyCol()
      */
+    @Override
     protected String getOrderbyCol() {
         return ORDERCOL;
     }

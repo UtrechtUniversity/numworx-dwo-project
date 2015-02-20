@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import fi.dwo.client.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 
 public class LogoutURLAction extends LogoutAction {
 
@@ -18,6 +18,7 @@ public class LogoutURLAction extends LogoutAction {
 
 	String url;
 		
+        @Override
 	public void actionPerformed(ActionEvent arg0) {
 		super.actionPerformed(arg0);
 		URL u = DwoHelper.getApplet().getDocumentBase();

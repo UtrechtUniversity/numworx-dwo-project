@@ -3,10 +3,10 @@
 
 package fi.dwo.dwojapplet.persistence;
 
-import fi.dwo.client.domain.UserResultList;
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.LessonGroup;
-import fi.dwo.client.domain.UserGroup;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.LessonGroup;
+import fi.dwo.dwojapplet.domain.UserGroup;
+import fi.dwo.dwojapplet.domain.UserResultList;
 
 public class ResultsHandler {
 

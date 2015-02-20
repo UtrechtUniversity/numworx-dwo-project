@@ -1,6 +1,3 @@
-// Source file:
-// N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\domain\\Admin.java
-
 package fi.dwo.dwojapplet.domain;
 
 /**
@@ -22,10 +19,12 @@ public class Admin extends User {
 	/** Een admin mag alles.
 	 * @see fi.dwo.client.domain.User#hasRight(char)
 	 */
+    @Override
 	public boolean hasRight(char right) {
 		return true;
 	}
 
+    @Override
 	public boolean hasIconizer() {
 		return true;
 	}

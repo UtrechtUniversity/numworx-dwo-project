@@ -9,8 +9,8 @@ import java.util.Hashtable;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-import fi.dwo.client.domain.SchoolGroup;
-import fi.dwo.client.domain.School;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.SchoolGroup;
 
 public class SchoolGroupMapper extends XmlRpcMapper {
 
@@ -32,6 +32,7 @@ public class SchoolGroupMapper extends XmlRpcMapper {
      * @param obj
 
      */
+    @Override
     public void put(int oid, Object obj) throws IOException, SQLException,
             XmlRpcException {
         System.err.println("GroupMapper.put() Not yet implemented!");
@@ -43,6 +44,7 @@ public class SchoolGroupMapper extends XmlRpcMapper {
      * @return Object
 
      */
+    @Override
     public Object getObjectFromReturn(Hashtable data) {
         SchoolGroup g = null;
         if (data.get("schoolGroupID") == null) { //We don't know enough to make a
@@ -66,6 +68,7 @@ public class SchoolGroupMapper extends XmlRpcMapper {
      * @return Object[]
 
      */
+    @Override
     public Object[] get(Object obj) throws IOException, SQLException,
             XmlRpcException {
         Hashtable ht = new Hashtable();
@@ -81,6 +84,7 @@ public class SchoolGroupMapper extends XmlRpcMapper {
      * 
      * @see fi.dwo.client.persistence.XmlRpcMapper#getIDCol()
      */
+    @Override
     protected String getIDCol() {
         return IDCOL;
     }
@@ -90,6 +94,7 @@ public class SchoolGroupMapper extends XmlRpcMapper {
      * 
      * @see fi.dwo.client.persistence.XmlRpcMapper#getTableName()
      */
+    @Override
     protected String getTableName() {
         return TABLENAME;
     }
@@ -100,6 +105,7 @@ public class SchoolGroupMapper extends XmlRpcMapper {
      * @see fi.dwo.client.persistence.XmlRpcMapper#update(java.lang.Object,
      *      java.util.Hashtable)
      */
+    @Override
     protected Object update(Object obj, Hashtable data) {
         SchoolGroup g = (SchoolGroup) obj;
         g.setSchoolGroupID(((Integer) data.get("schoolGroupID")).intValue());
@@ -113,6 +119,7 @@ public class SchoolGroupMapper extends XmlRpcMapper {
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#createArray(int)
      */
+    @Override
     protected Object[] createArray(int size) {
         return new SchoolGroup[size];
     }
@@ -120,6 +127,7 @@ public class SchoolGroupMapper extends XmlRpcMapper {
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#getOrderbyCol()
      */
+    @Override
     protected String getOrderbyCol() {
         return ORDERCOL;
     }

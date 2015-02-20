@@ -10,7 +10,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
-import fi.dwo.client.gui.LinkedLabel;
+import fi.dwo.dwojapplet.gui.LinkedLabel;
 
 /**
  * @author M.J.B. Kupers

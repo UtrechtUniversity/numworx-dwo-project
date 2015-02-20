@@ -3,6 +3,9 @@
 
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.SchoolGroup;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
@@ -10,9 +13,6 @@ import java.util.Hashtable;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-import fi.dwo.client.domain.School;
-import fi.dwo.client.domain.SchoolGroup;
-import fi.dwo.client.domain.SchoolClass;
 
 public class SchoolMapper extends XmlRpcMapper {
 
@@ -118,6 +118,7 @@ public class SchoolMapper extends XmlRpcMapper {
      * @param obj
 
      */
+        @Override
     public void put(int oid, Object obj) throws IOException, SQLException,
             XmlRpcException {
         System.err.println("SchoolMapper.put() Not yet implemented!");
@@ -129,6 +130,7 @@ public class SchoolMapper extends XmlRpcMapper {
      * @return Object
 
      */
+        @Override
     public Object getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException {
         School s = null;
         if (data.get("schoolID") == null) { //We don't know enough to make a
@@ -154,6 +156,7 @@ public class SchoolMapper extends XmlRpcMapper {
      * @return Object[]
 
      */
+        @Override
     public Object[] get(Object obj) throws IOException, SQLException,
             XmlRpcException {
     	if(Boolean.TRUE.equals(obj))
@@ -170,6 +173,7 @@ public class SchoolMapper extends XmlRpcMapper {
      * 
      * @see fi.dwo.client.persistence.XmlRpcMapper#getIDCol()
      */
+        @Override
     protected String getIDCol() {
         return IDCOL;
     }
@@ -179,6 +183,7 @@ public class SchoolMapper extends XmlRpcMapper {
      * 
      * @see fi.dwo.client.persistence.XmlRpcMapper#getTableName()
      */
+        @Override
     protected String getTableName() {
         return TABLENAME;
     }
@@ -189,6 +194,7 @@ public class SchoolMapper extends XmlRpcMapper {
      * @see fi.dwo.client.persistence.XmlRpcMapper#update(java.lang.Object,
      *      java.util.Hashtable)
      */
+        @Override
     protected Object update(Object obj, Hashtable data) throws IOException, SQLException, XmlRpcException {
         School s = (School) obj;
         s.setSchoolID(((Integer) data.get("schoolID")).intValue());
@@ -222,6 +228,7 @@ public class SchoolMapper extends XmlRpcMapper {
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#createArray(int)
      */
+        @Override
     protected Object[] createArray(int size) {
         return new School[size];
     }
@@ -229,6 +236,7 @@ public class SchoolMapper extends XmlRpcMapper {
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#getOrderbyCol()
      */
+        @Override
     protected String getOrderbyCol() {
         return ORDERCOL;
     }

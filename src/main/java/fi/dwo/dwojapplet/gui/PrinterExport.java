@@ -1,15 +1,12 @@
 package fi.dwo.dwojapplet.gui;
 
 import java.awt.Dimension;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.PrintGraphics;
 import java.awt.PrintJob;
 import java.awt.Toolkit;
 import java.util.Properties;
 
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.gui.Exporter.ExportBuffer;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 
 class PrinterExport extends Exporter {
 
@@ -24,10 +21,12 @@ class PrinterExport extends Exporter {
 		Graphics g;
 		int y;
 		
+                @Override
 		protected void export() {
 			job.end();
 		}
 				
+                @Override
 		protected void export(String[] line) {
 			int x = 0;
 			y += g.getFontMetrics().getHeight();
@@ -37,6 +36,7 @@ class PrinterExport extends Exporter {
 			}
 		}
 		
+                @Override
 		protected void exportHeader(String[] line)
 		{
 			job = Toolkit.getDefaultToolkit().getPrintJob(DwoHelper.getFrameForComponent(DwoHelper.getApplet()), jobtitle, props);
@@ -56,6 +56,7 @@ class PrinterExport extends Exporter {
 
 	}
 
+        @Override
 	protected ExportBuffer createExportBuffer() {
 		return new PrinterBuffer();
 	}

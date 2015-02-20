@@ -23,6 +23,7 @@ public class ItemLaunchdata implements ItemLaunchdataIF {
     /**
      * @param parameters
      */
+    @Override
     public void addParameters(Hashtable parameters) {
         Enumeration enumer = launchdata.keys();
         while(enumer.hasMoreElements()) {
@@ -35,6 +36,7 @@ public class ItemLaunchdata implements ItemLaunchdataIF {
     /**
      * @return Object
      */
+    @Override
     public Object getKey() {
         return key;
     }
@@ -42,6 +44,7 @@ public class ItemLaunchdata implements ItemLaunchdataIF {
     /**
      * @param key
      */
+    @Override
     public void setKey(Object key) {
         this.key = key;
     }
@@ -49,6 +52,7 @@ public class ItemLaunchdata implements ItemLaunchdataIF {
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.ItemLaunchdataIF#getLaunchdata()
      */
+    @Override
     public Hashtable getLaunchdata() {
         return launchdata;
     }

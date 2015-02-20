@@ -52,7 +52,6 @@ import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.domain.UserResultList;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.persistence.cache.StoreCreator;
-import fi.dwo.server.persistence.DwoXmlRpcException;
 
 /**
  * This class is the Facade between the Domain layer and the Persistence layer.
@@ -425,6 +424,7 @@ public class PersistenceFacade {
     	Course[] courses = (Course[]) combine_(dwoCourses, schoolCourses);
     	Arrays.sort(courses, new Comparator() {
 
+                        @Override
 			public int compare(Object o1, Object o2) {
 				Course c1 = (Course)o1;
 				Course c2 = (Course)o2;
@@ -1678,6 +1678,7 @@ public class PersistenceFacade {
 
     private static final DbAccessLogin LOGIN_SAML = new DbAccessLogin() {
 
+                        @Override
 			public Hashtable login(String a, String b) throws IOException,
 					SQLException, XmlRpcException, DwoXmlRpcException {
 				return DbAccessCreator.instance().login_saml(a, b);

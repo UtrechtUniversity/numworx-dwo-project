@@ -7,11 +7,7 @@ package fi.dwo.dwojapplet.gui;
 import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.Vector;
 
 import javax.swing.JButton;
 
@@ -69,6 +65,7 @@ public class LinkedLabel extends JButton  {
 
     }
 
+    @Override
     protected void processMouseEvent(MouseEvent e) {
 		super.processMouseEvent(e);
 		switch(e.getID()) {

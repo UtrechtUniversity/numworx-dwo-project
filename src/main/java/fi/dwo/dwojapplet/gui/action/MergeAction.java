@@ -6,12 +6,10 @@ import java.lang.reflect.Method;
 
 import javax.swing.JOptionPane;
 
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.gui.GuiConstants;
-import fi.dwo.client.persistence.PersistenceFacade;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.Sco;
 
 public class MergeAction extends GuiAction {
 	
@@ -47,6 +45,7 @@ public class MergeAction extends GuiAction {
 	}
 	
 	static final String MERGECMD = "mergeLaunchData";
+        @Override
 	public void actionPerformed(ActionEvent ev) {
 		instance().setWait();
 		try {

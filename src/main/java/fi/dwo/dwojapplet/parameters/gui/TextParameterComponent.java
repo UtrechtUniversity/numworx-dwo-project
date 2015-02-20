@@ -48,6 +48,7 @@ public class TextParameterComponent extends ParameterComponent {
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.ParameterComponentIF#reset()
      */
+    @Override
     public void reset() {
         if(this.defaultValue.containsKey(parameter.getName())) {
             textArea.setText((String) this.defaultValue.get(parameter.getName()));
@@ -60,6 +61,7 @@ public class TextParameterComponent extends ParameterComponent {
      * Adds the value of the textfield to the hashtable.
      * @see fi.dwo.parameters.gui.ParameterComponentIF#addParameters(java.util.Hashtable)
      */
+    @Override
     public void addParameters(Hashtable parameters) {
         String value = textArea.getText();
         addParameter(parameters, value);

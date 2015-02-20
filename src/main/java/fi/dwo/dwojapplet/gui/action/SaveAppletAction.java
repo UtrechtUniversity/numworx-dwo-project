@@ -3,7 +3,6 @@ package fi.dwo.dwojapplet.gui.action;
 import java.awt.Component;
 import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -16,10 +15,10 @@ import java.text.MessageFormat;
 import java.util.Hashtable;
 
 import fi.beans.base64code.StringCodeObject;
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.Sco;
 
 public class SaveAppletAction extends GuiAction {
 	private Sco sco0, sco; // in constructor
@@ -38,6 +37,7 @@ public class SaveAppletAction extends GuiAction {
 	
 	
 	
+        @Override
 	public void actionPerformed(ActionEvent e) {
 
 
@@ -128,6 +128,7 @@ public class SaveAppletAction extends GuiAction {
         
 	}
 
+        @Override
 	void setMap(CourseMap map) {
 		setEnabled( map != null && map.getUserObject() instanceof Sco);
 	}

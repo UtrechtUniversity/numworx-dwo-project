@@ -3,9 +3,7 @@
 
 package fi.dwo.dwojapplet.domain;
 
-import java.text.MessageFormat;
 import java.util.Date;
-import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
@@ -151,6 +149,7 @@ public class SchoolClass implements UserGroup, Comparable {
      * @return The name of the class.
      *  
      */
+    @Override
     public String getName() {
         return className;
     }
@@ -161,6 +160,7 @@ public class SchoolClass implements UserGroup, Comparable {
      * @return The unique-identifier of the class.
      *  
      */
+    @Override
     public int getID() {
         return classID;
     }
@@ -172,6 +172,7 @@ public class SchoolClass implements UserGroup, Comparable {
      *         returns false.
      * @see fi.dwo.client.domain.UserGroup#isDeepestLevel()
      */
+    @Override
     public boolean isDeepestLevel() {
         return false;
     }
@@ -183,6 +184,7 @@ public class SchoolClass implements UserGroup, Comparable {
      *         returns false.
      * @see fi.dwo.client.domain.UserGroup#isHighestLevel()
      */
+    @Override
     public boolean isHighestLevel() {
         return true;
     }
@@ -193,6 +195,7 @@ public class SchoolClass implements UserGroup, Comparable {
      * @return A title representing the UserGroup object.
      * @see fi.dwo.client.domain.UserGroup#getTitle()
      */
+    @Override
     public String getTitle() {
         return TextMapper.getText(TextMapper.UG_CLASSES);
     }
@@ -223,6 +226,7 @@ public class SchoolClass implements UserGroup, Comparable {
      * @return The name to order the usergroup.
      * @see fi.dwo.client.domain.UserGroup#getOrderName()
      */
+    @Override
     public String getOrderName() {
         return className.toLowerCase();
     }
@@ -237,6 +241,7 @@ public class SchoolClass implements UserGroup, Comparable {
      *         second.
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
+    @Override
     public int compareTo(Object o) {
         SchoolClass sc = (SchoolClass) o;
         return className.toLowerCase().compareTo(sc.getName().toLowerCase());
@@ -248,6 +253,7 @@ public class SchoolClass implements UserGroup, Comparable {
      * @return A typename representing the Class.
      * @see fi.dwo.client.domain.UserGroup#getType()
      */
+    @Override
     public String getType() {
         return TextMapper.getText(TextMapper.UG_CLASS_TITLE);
     }
@@ -258,6 +264,7 @@ public class SchoolClass implements UserGroup, Comparable {
      * @return A title represents the parent item.
      * @see fi.dwo.client.domain.UserGroup#getParentTitle()
      */
+    @Override
     public String getParentTitle() {
         return "";
     }
@@ -268,6 +275,7 @@ public class SchoolClass implements UserGroup, Comparable {
      * @return A title represents the child item.
      * @see fi.dwo.client.domain.UserGroup#getChildTitle()
      */
+    @Override
     public String getChildTitle() {
         String[] arguments = new String[1];
         arguments[0] = className;
@@ -280,6 +288,7 @@ public class SchoolClass implements UserGroup, Comparable {
      * @return A title represents the Ascending Order item.
      * @see fi.dwo.client.domain.UserGroup#getOrderAscTitle()
      */
+    @Override
     public String getOrderAscTitle() {
         return TextMapper.getText(TextMapper.UG_CLASS_ORDER_ASC);
     }
@@ -290,6 +299,7 @@ public class SchoolClass implements UserGroup, Comparable {
      * @return A title represents the Descending Order item.
      * @see fi.dwo.client.domain.UserGroup#getOrderDescTitle()
      */
+    @Override
     public String getOrderDescTitle() {
         return TextMapper.getText(TextMapper.UG_CLASS_ORDER_DESC);
     }
@@ -298,10 +308,12 @@ public class SchoolClass implements UserGroup, Comparable {
 		return iconizer ;
 	}
 
+    @Override
 	public String toString() {
 		return getName();
 	}
 
+    @Override
 	public String getUsername() {
 		return "";
 	}

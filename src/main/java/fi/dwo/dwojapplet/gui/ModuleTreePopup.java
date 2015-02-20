@@ -1,19 +1,14 @@
 package fi.dwo.dwojapplet.gui;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.gui.ModuleTreePanel.TreeMap;
+import fi.dwo.dwojapplet.domain.CourseMap;
 
 public class ModuleTreePopup extends MouseAdapter  {
 
@@ -28,6 +23,7 @@ public class ModuleTreePopup extends MouseAdapter  {
 	}
 
 
+        @Override
 	public void mousePressed(MouseEvent e) {
 		
 		if (e.isPopupTrigger())
@@ -58,6 +54,7 @@ public class ModuleTreePopup extends MouseAdapter  {
 			popup.show( tree, e.getX(), e.getY() );
 	}
 
+        @Override
 	public void mouseReleased(MouseEvent e) {
 		if(e.isPopupTrigger())
 			popupTrigger(e);

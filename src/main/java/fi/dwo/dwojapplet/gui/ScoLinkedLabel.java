@@ -4,7 +4,7 @@
  */
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.client.domain.Sco;
+import fi.dwo.dwojapplet.domain.Sco;
 
 /**
  * This class is a linked label for a sco.

@@ -2,25 +2,16 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\domain\\Course.java
 package fi.dwo.dwojapplet.domain;
 
-import java.awt.Component;
 import java.awt.Image;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.text.MessageFormat;
 
 import javax.swing.JOptionPane;
 
-import org.apache.xmlrpc.applet.XmlRpcException;
-
-import fi.dwo.dwojapplet.gui.CenterSubPanel;
 import fi.dwo.dwojapplet.gui.CoursePanel;
 //import fi.dwo.client.gui.DwoMessageDialog;
 import fi.dwo.dwojapplet.gui.GuiConstants;
-import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -100,6 +91,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
      * @return The name of the course.
      *
      */
+    @Override
     public String getName() {
         return name;
     }
@@ -130,6 +122,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
      * @return The ID of the course.
      *
      */
+    @Override
     public int getID() {
         return courseID;
     }
@@ -311,6 +304,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
      * returns false.
      * @see fi.dwo.client.domain.LessonGroup#isDeepestLevel()
      */
+    @Override
     public boolean isDeepestLevel() {
         return false;
     }
@@ -322,6 +316,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
      * returns false.
      * @see fi.dwo.client.domain.LessonGroup#isHighestLevel()
      */
+    @Override
     public boolean isHighestLevel() {
         return true;
     }
@@ -332,6 +327,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
      * @return The Course specific title.
      * @see fi.dwo.client.domain.LessonGroup#getTitle()
      */
+    @Override
     public String getTitle() {
         return TextMapper.getText(TextMapper.LG_COURSES);
     }
@@ -342,6 +338,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
      * @return A title represents the parent item.
      * @see fi.dwo.client.domain.UserGroup#getParentTitle()
      */
+    @Override
     public String getParentTitle() {
         return "";
     }
@@ -352,6 +349,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
      * @return A title represents the child item.
      * @see fi.dwo.client.domain.UserGroup#getChildTitle()
      */
+    @Override
     public String getChildTitle() {
         String[] arguments = new String[1];
         arguments[0] = name;
@@ -364,6 +362,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
      * @return A title represents the Ascending Order item.
      * @see fi.dwo.client.domain.UserGroup#getOrderAscTitle()
      */
+    @Override
     public String getOrderAscTitle() {
         return TextMapper.getText(TextMapper.LG_COURSE_ORDER_ASC);
     }
@@ -374,6 +373,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
      * @return A title represents the Descending Order item.
      * @see fi.dwo.client.domain.UserGroup#getOrderDescTitle()
      */
+    @Override
     public String getOrderDescTitle() {
         return TextMapper.getText(TextMapper.LG_COURSE_ORDER_DESC);
     }
@@ -384,6 +384,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
      * @return A tooltip for the LessonGroup.
      * @see fi.dwo.client.domain.LessonGroup#getToolTip()
      */
+    @Override
     public String getToolTip() {
         return name;
     }
@@ -410,6 +411,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
     /* (non-Javadoc)
      * @see fi.dwo.client.system.Comparable#compareTo(java.lang.Object)
      */
+    @Override
     public int compareTo(Object o) {
         Course c = (Course) o;
         return getName().toLowerCase().compareTo(c.getName().toLowerCase());
@@ -429,6 +431,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
         return export;
     }
 
+    @Override
     public String toString() {
         return getName();
     }
@@ -447,14 +450,17 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
     public static final CourseMap[] NO_CHILDREN = new CourseMap[0];
     public static final Sco[] NO_SCOS = new Sco[0];
 
+    @Override
     public CourseMap[] getChildren() {
         return children;
     }
 
+    @Override
     public void setChildren(CourseMap[] children) {
         this.children = children;
     }
 
+    @Override
     public void addChild(Course child) {
         child.setParentID(getID());
         CourseMap[] children = getChildren();
@@ -470,6 +476,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
         setChildren(children);
     }
 
+    @Override
     public void removeChild(int index) {
         int length = children.length;
         ((Course) children[index]).setParentID(0);
@@ -493,6 +500,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
         return children != null;
     }
 
+    @Override
     public Object getUserObject() {
         return this;
     }
@@ -502,6 +510,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
      * (non-Javadoc)
      * @see fi.dwo.client.domain.Descriptor#getText()
      */
+    @Override
     public String getText() {
         return getDescription();
     }
@@ -510,6 +519,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
      * (non-Javadoc)
      * @see fi.dwo.client.domain.Descriptor#getHeader()
      */
+    @Override
     public String getHeader() {
         return getName();
     }
@@ -528,6 +538,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
         return names;
     }
 
+    @Override
     public Set getChildNames() {
         CourseMap[] children = getChildren();
         if (children == null) {
@@ -542,6 +553,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
         return names;
     }
 
+    @Override
     public CourseMap getParentMap() {
         return parentMap;
     }

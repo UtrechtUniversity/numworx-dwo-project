@@ -61,18 +61,18 @@ import javax.swing.tree.TreeNode;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JSpinnerDateEditor;
 
-import fi.dwo.client.domain.ClassCourse;
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.DwoIF;
-import fi.dwo.client.domain.School;
-import fi.dwo.client.domain.SchoolClass;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.persistence.DbAccessCreator;
-import fi.dwo.client.persistence.PersistenceFacade;
-import fi.dwo.client.system.PersistenceException;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.ClassCourse;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.DwoIF;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.persistence.DbAccessCreator;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
 class CourseData implements CourseMap {
 	Course course;
@@ -91,6 +91,7 @@ class CourseData implements CourseMap {
 		}
 	}
 	Image data;
+        @Override
 	public String toString() {
 		return String.valueOf(course);
 	}
@@ -157,14 +158,17 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 		private Color color = Color.red;
 		Font font = new Font("Arial", Font.BOLD, 20);
 		private String str;
+                @Override
 		public int getIconHeight() {
 			return icon.getIconHeight();
 		}
 
+                @Override
 		public int getIconWidth() {
 			return icon.getIconWidth();
 		}
 
+                @Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			icon.paintIcon(c, g, x, y);
 			g.setColor(color);
@@ -193,14 +197,17 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     	//private Icon dataLeafIcon = new EnhancedIcon(getDefaultLeafIcon(), Color.red, "×");
     	private Icon dataOpenIcon = new EnhancedIcon(getDefaultOpenIcon(), Color.red, "/");
     	
+            @Override
 		public Icon getClosedIcon() {
 			return getOpenIcon();
 		}
 
+            @Override
 		public Icon getLeafIcon() {
 			return getOpenIcon(); // er zijn alleen maar mappen
 		}
 
+            @Override
 		public Icon getOpenIcon() {
 			if(cd != null && cd.isSelected())
 				return selectedOpenIcon;
@@ -211,6 +218,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
 
 
+            @Override
 		public Component getTreeCellRendererComponent(JTree tree, Object value,
 				boolean sel, boolean expanded, boolean leaf, int row,
 				boolean hasFocus) {
@@ -248,6 +256,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 		private Object value;
 		private int row;
 		private CoursesModel model;
+                @Override
 		public Component getTableCellEditorComponent(JTable table,
 				Object value, boolean isSelected, int row, int column) {
     		this.value = value;
@@ -258,10 +267,12 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     		return button;
 		}
 
+                @Override
 		public Object getCellEditorValue() {
 			return value;
 		}
 
+                @Override
 		public void actionPerformed(ActionEvent e) {
 			CourseData[] cd = model.getCD();
 			if (value == removeImage) {
@@ -330,6 +341,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     		this.cd = cd;
     		fireTableDataChanged();
     	}
+            @Override
 		public int getColumnCount() {
 			return columnCount;
 		}
@@ -338,10 +350,12 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			this.columnCount = columnCount;
 		}
 
+            @Override
 		public int getRowCount() {
 			return cd.length;
 		}
 
+            @Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			switch(columnIndex) {
 			case 0: 
@@ -363,6 +377,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			return null;
 		}
 
+            @Override
 		public Class getColumnClass(int columnIndex) {
 			if(columnIndex == 2 )
 				return Image.class;
@@ -374,6 +389,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			return super.getColumnClass(columnIndex);
 		}
 
+            @Override
 		public String getColumnName(int column) {
 			switch(column) {
 			case COURSE_TYPE: return TextMapper.getText("soort");
@@ -386,6 +402,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			return super.getColumnName(column);
 		}
 
+            @Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
 			switch(columnIndex) {
 			case COURSE_TYPE: case 4: case 5:
@@ -397,6 +414,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			return super.isCellEditable(rowIndex, columnIndex);
 		}
 
+            @Override
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 			switch(columnIndex) {
 			case 0:
@@ -443,6 +461,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			label.setIcon(UIManager.getIcon("Tree.openIcon")); // of closedIcon
 		}
 
+                @Override
 		public Component getTableCellRendererComponent(JTable table,
 				Object value, boolean isSelected, boolean hasFocus, int row,
 				int column) {
@@ -467,6 +486,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 		/* (non-Javadoc)
 		 * @see javax.swing.table.DefaultTableCellRenderer#setValue(java.lang.Object)
 		 */
+                @Override
 		protected void setValue(Object value) {
 			value = date2String(value);
 			super.setValue(value);
@@ -476,6 +496,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 		/* (non-Javadoc)
 		 * @see javax.swing.table.DefaultTableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
 		 */
+                @Override
 		public Component getTableCellRendererComponent(JTable table,
 				Object value, boolean select, boolean focus, int row, int col) {
 			super.getTableCellRendererComponent(table, value, select, focus, row, col);
@@ -517,6 +538,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			btn.addActionListener(this);
 		}
 
+                @Override
 		public Component getTableCellEditorComponent(JTable table,
 				Object value, boolean isSelected, int row, int column) {
 			this.value = (Date)value;
@@ -527,10 +549,12 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 			return btn;
 		}
 
+                @Override
 		public Object getCellEditorValue() {
 			return value;
 		}
 
+                @Override
 		public void actionPerformed(ActionEvent e) {
 			value = changeDate(wat, value);
 			fireEditingStopped();
@@ -608,6 +632,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
     	    
     	  }
 
+                @Override
     	  public Component getTreeCellRendererComponent(JTree tree, Object value,
     	      boolean selected, boolean expanded, boolean leaf, int row,
     	      boolean hasFocus) {
@@ -772,6 +797,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
         	
         	tree = new ModuleTreePanel() {
 
+                        @Override
         		protected void createModel(DwoIF dwo) {
 //        			super.createModel(null);
         			
@@ -787,6 +813,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 
         			setStrategy(new SelectStrategy() {
 
+                                @Override
 						public void nodeSelected(CourseMap node) {
 							CourseData[] children;
 								CourseMap[] courses = node.getChildren();
@@ -818,6 +845,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 							return (CourseData[]) v.toArray(new CourseData[v.size()]);
 						}
 
+                                @Override
 						public JPopupMenu nodeAction(CourseMap node) {
 							return null;
 						}});
@@ -888,7 +916,9 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                 	//tree2.setEditable(true);
         		}
 			
+                        @Override
         		protected void createCloseBtn(Box bar) {}
+                        @Override
         		protected void createMenubar(Box bar) {}
         	};
 			tree.createModel(null);
@@ -1010,6 +1040,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
      * @param e The ActionEvent.
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+        @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == cancelButton) {
         	selectedCourses = null;
@@ -1130,6 +1161,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
 		final int dwoProfile = allCourses[0].getDwoProfile();
 		
 new Thread() {
+        @Override
 	public void run() {
 		// persistencefacade....'
 		try {

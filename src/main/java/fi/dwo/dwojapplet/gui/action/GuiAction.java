@@ -1,19 +1,18 @@
 package fi.dwo.dwojapplet.gui.action;
 
-import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.AbstractAction;
 
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.School;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.CenterPanel;
-import fi.dwo.client.gui.GuiCreator;
-import fi.dwo.client.gui.ModuleTreePanel;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.CenterPanel;
+import fi.dwo.dwojapplet.gui.GuiCreator;
+import fi.dwo.dwojapplet.gui.ModuleTreePanel;
 
 abstract public class GuiAction extends AbstractAction implements PropertyChangeListener {
 
@@ -72,6 +71,7 @@ abstract public class GuiAction extends AbstractAction implements PropertyChange
 		super(text);
 	}
 
+        @Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		CourseMap map = (CourseMap) evt.getNewValue();
 		setMap(map);

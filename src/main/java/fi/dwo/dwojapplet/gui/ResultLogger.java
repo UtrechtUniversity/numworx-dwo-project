@@ -40,10 +40,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.JTextPane;
 import javax.swing.JToolTip;
 import javax.swing.JViewport;
-import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
@@ -56,18 +54,17 @@ import javax.swing.table.TableModel;
 import fi.beans.base64code.StringCodeObject;
 import fi.beans.mathkit.JMathPane;
 import fi.beans.mathkit.JMathToolTip;
-import fi.beans.mathkit.MathKit;
 import fi.beans.scorm.PartialScoreIF;
 import fi.beans.scorm2xml.Scorm2Xml;
 import fi.beans.stringutils.StringUtils;
-import fi.dwo.client.domain.ResultScore;
-import fi.dwo.client.domain.SchoolClass;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.ResultsModulePanel.ResultsModel;
-import fi.dwo.client.persistence.PersistenceFacade;
-import fi.dwo.client.system.PersistenceException;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.ResultScore;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.ResultsModulePanel.ResultsModel;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
 public class  ResultLogger extends JPanel implements ActionListener {
 
@@ -192,6 +189,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		scrollPane = new JScrollPane[table.length+2];
 		ChangeListener changeListener = new ChangeListener() {
 
+                        @Override
 			public void stateChanged(ChangeEvent e) {
 				int y2 = ((JViewport) e.getSource()).getViewPosition().y;
 				leerlingView.setViewPosition(new Point(0, y2));
@@ -218,6 +216,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		tabpane.add(scrollPane[i], LOG_BUTTONS[i]);
 		ChangeListener l = new ChangeListener()
 		{
+                        @Override
 			public void stateChanged(ChangeEvent e) {
 				int index = tabpane.getSelectedIndex();
 				if(index < table.length)
@@ -292,6 +291,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		partialModel.setRowCount(leerlingen.length+1);
 		SortedSet pages = new TreeSet(new Comparator() {
 
+                        @Override
 			public int compare(Object o1, Object o2) { // if it looks like a duck, sort like a duck
 				Comparable s1 = o1.toString();
 				Comparable s2 = o2.toString();
@@ -543,6 +543,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		return xml.toProperties();
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent e) {
 		if(BUTTON_REFRESH == e.getActionCommand()){
 			requestLog();
@@ -795,6 +796,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 		private LogRenderer renderer = new LogRenderer();
 		private LogEditor editor = new LogEditor();
 		
+                @Override
 		public JToolTip createToolTip() {
 			return new JMathToolTip();
 		}
@@ -809,12 +811,14 @@ public class  ResultLogger extends JPanel implements ActionListener {
 			repaint();
 		}
 		
+                @Override
 		public TableCellRenderer getCellRenderer(int row, int column) {
 			if(column>=0)
 				return renderer;
 			return super.getCellRenderer(row, column);
 		}
 		
+                @Override
 		public TableCellEditor getCellEditor(int row, int column) {
 			if(column>=0)
 				return editor;
@@ -849,6 +853,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 			
 		}
 
+                @Override
 		public Component getTableCellRendererComponent(JTable table,
 				Object value, boolean isSelected, boolean hasFocus, int row,
 				int column) {
@@ -878,6 +883,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 			this.logModeKey = logModeKey;
 		}
 		
+                @Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean hasFocus, int row, int col) {
 			setFont(GuiConstants.NORMAL_TEXT);
 			 {
@@ -1133,6 +1139,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 			super();
 		}
 
+                @Override
 		public Object getCellEditorValue() {
 			if(value!=null && value instanceof Hashtable)
 			{	int score = ((Integer)((Hashtable)value).get("logScore")).intValue();
@@ -1141,6 +1148,7 @@ public class  ResultLogger extends JPanel implements ActionListener {
 			return value;
 		}
 
+                @Override
 		public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
 			this.value = value;
 			TableCellRenderer renderer = table.getCellRenderer(row, column);

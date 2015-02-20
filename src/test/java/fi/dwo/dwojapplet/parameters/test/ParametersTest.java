@@ -29,10 +29,10 @@ import fi.beans.scorm.ScormText;
 import fi.beans.scorm.ScormTree;
 import fi.beans.scorm.TreeParameter;
 //import fi.beans.tooltip.ToolTipManager;
-import fi.dwo.client.gui.AutoScrollPanel;
-import fi.dwo.client.gui.GuiConstants;
-import fi.dwo.parameters.gui.MainParameterComponent;
-import fi.dwo.parameters.gui.ParameterComponent;
+import fi.dwo.dwojapplet.gui.AutoScrollPanel;
+import fi.dwo.dwojapplet.gui.GuiConstants;
+import fi.dwo.dwojapplet.parameters.gui.MainParameterComponent;
+import fi.dwo.dwojapplet.parameters.gui.ParameterComponent;
 
 /**
  * @author M.J.B. Kupers
@@ -368,6 +368,7 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
 //      ht.put("appel", ht2);
     }
 
+    @Override
     public void init() {
         super.init();
         int aantal = 11;
@@ -392,9 +393,7 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
         
         Parameter[] params = new Parameter[aantal];
         
-        for(int i = 0; i < aantal; i++) {
-            params[i] = parameters[i];
-        }
+        System.arraycopy(parameters, 0, params, 0, aantal);
         
         
         ParameterComponent pc = new MainParameterComponent(params, ht);
@@ -410,6 +409,7 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
     /* (non-Javadoc)
      * @see java.awt.event.ComponentListener#componentHidden(java.awt.event.ComponentEvent)
      */
+    @Override
     public void componentHidden(ComponentEvent e) {
         // TODO Auto-generated method stub
         
@@ -418,6 +418,7 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
     /* (non-Javadoc)
      * @see java.awt.event.ComponentListener#componentMoved(java.awt.event.ComponentEvent)
      */
+    @Override
     public void componentMoved(ComponentEvent e) {
         // TODO Auto-generated method stub
         
@@ -426,6 +427,7 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
     /* (non-Javadoc)
      * @see java.awt.event.ComponentListener#componentResized(java.awt.event.ComponentEvent)
      */
+    @Override
     public void componentResized(ComponentEvent e) {
 //        validate();
         // TODO Auto-generated method stub
@@ -435,6 +437,7 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
     /* (non-Javadoc)
      * @see java.awt.event.ComponentListener#componentShown(java.awt.event.ComponentEvent)
      */
+    @Override
     public void componentShown(ComponentEvent e) {
         // TODO Auto-generated method stub
         
@@ -451,6 +454,7 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
     /* (non-Javadoc)
      * @see fi.beans.scorm.ScormAppletIF#getState()
      */
+    @Override
     public String getState() {
         // TODO Auto-generated method stub
         return "";
@@ -459,6 +463,7 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
     /* (non-Javadoc)
      * @see fi.beans.scorm.ScormAppletIF#setState(java.lang.String)
      */
+    @Override
     public void setState(String state) {
         // TODO Auto-generated method stub
         
@@ -467,6 +472,7 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
     /* (non-Javadoc)
      * @see fi.beans.scorm.ScormAppletIF#stopSco()
      */
+    @Override
     public void stopSco() {
         // TODO Auto-generated method stub
         
@@ -475,6 +481,7 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
     /* (non-Javadoc)
      * @see fi.beans.scorm.ScormAppletIF#hasEditMode()
      */
+    @Override
     public boolean hasEditMode() {
         // TODO Auto-generated method stub
         return false;
@@ -483,6 +490,7 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
     /* (non-Javadoc)
      * @see fi.beans.scorm.ScormAppletIF#getEditComponent(java.lang.String)
      */
+    @Override
     public ScormEditComponentIF getEditComponent(Hashtable launchdata) {
         // TODO Auto-generated method stub
         return null;
@@ -491,16 +499,19 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
     /* (non-Javadoc)
      * @see fi.beans.scorm.ScormAppletIF#getParameters()
      */
+    @Override
     public Parameter[] getEditableParameters() {
         return parameters;
     }
     
+    @Override
     public Parameter[] getAllParameters() {
         return null;
     }
 
     /**
 	De testsuite. 
+     * @return 
     */
     public static junit.framework.Test suite()
     {

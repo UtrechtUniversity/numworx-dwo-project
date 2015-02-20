@@ -3,6 +3,7 @@
 
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
@@ -11,7 +12,6 @@ import java.util.Vector;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-import fi.dwo.server.persistence.DwoXmlRpcException;
 
 /**
  * The interface between the client and the server.
@@ -239,6 +239,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * @return java.util.Hashtable
 
      */
+    @Override
     public Hashtable login(String username, String password)
             throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 

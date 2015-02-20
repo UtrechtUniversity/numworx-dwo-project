@@ -36,7 +36,24 @@
     </scm>
 
     <!-- dependencies -->
-    <dependencies>
+    <dependencies>        
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>  
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
+        </dependency>        
+        <!-- Jcalendar spinoff with time-zone support -->
+        <dependency>
+            <groupId>com.toedter</groupId>
+            <artifactId>jcalendar</artifactId>
+            <version>1.4</version>
+        </dependency>
         <dependency>
             <groupId>fi.dwo</groupId>
             <artifactId>DWO-commons-lib</artifactId>
@@ -44,11 +61,10 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>  
+            <groupId>fi</groupId>
+            <artifactId>WiskOpdr</artifactId>
+            <version>0.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -71,7 +87,14 @@
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>      
-            <!-- ensure the build number is available as ${buildNumber} -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.18.1</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>            <!-- ensure the build number is available as ${buildNumber} -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
@@ -93,7 +116,7 @@
             <!-- put the build number in the manifest -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
+                <artifactId>maven-jar-plugin</artifactId>
                 <version>2.5</version>
                 <configuration>
                     <archive>
@@ -105,20 +128,27 @@
                         </manifestEntries>
                     </archive>
                 </configuration>
-            </plugin>              
+            </plugin>                    
         </plugins>
+        <finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
     </build>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
     </properties>
     
- <!--   <repositories>
+    <repositories>
         <repository>
+            <id>repo</id>
+            <url>file://${project.basedir}/repo</url>
+        </repository>
+        <!--    <repository>
             <id>xmlrpc</id>
             <url>http://ws.apache.org/xmlrpc/</url>
-        </repository>
-    </repositories> -->
+        </repository>-->
+    </repositories>
     
     <packaging>jar</packaging>
 </project>

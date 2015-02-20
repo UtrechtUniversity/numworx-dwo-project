@@ -41,9 +41,11 @@ public class FixedLabel extends JLabel {
      * Returns the <i>current</i> size as the minimum size.
      * @see java.awt.Component#getMinimumSize()
      */
+    @Override
     public Dimension getMinimumSize() {
         return super.getSize();
     }
+    @Override
     public Dimension getMaximumSize() {
         return super.getSize();
     }
@@ -52,6 +54,7 @@ public class FixedLabel extends JLabel {
      * Returns the <i>current</i> size as the preferred size.
      * @see java.awt.Component#getPreferredSize()
      */
+    @Override
     public Dimension getPreferredSize() {
         return super.getSize();
     }

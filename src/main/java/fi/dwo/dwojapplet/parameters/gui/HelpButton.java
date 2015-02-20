@@ -6,22 +6,18 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
-import java.util.Vector;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-import fi.beans.tooltip.ToolTipIF;
-import fi.beans.tooltip.ToolTipManager;
-import fi.dwo.parameters.system.TextMapper;
+import fi.dwo.dwojapplet.parameters.system.TextMapper;
 
 public class HelpButton extends JButton implements  MouseListener, ActionListener {
 
@@ -65,6 +61,7 @@ public class HelpButton extends JButton implements  MouseListener, ActionListene
      * @param g The graphics context to use for painting.
      * @see java.awt.Component#paint(java.awt.Graphics)
      */
+    @Override
     public void paint(Graphics g) {
         super.paint(g);
         if(mouseOver) {
@@ -107,12 +104,14 @@ public class HelpButton extends JButton implements  MouseListener, ActionListene
     /* (non-Javadoc)
      * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
      */
+    @Override
     public void mouseClicked(MouseEvent e) {
     }
 
     /* (non-Javadoc)
      * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
      */
+    @Override
     public void mouseEntered(MouseEvent e) {
         mouseOver = true;
         setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -126,6 +125,7 @@ public class HelpButton extends JButton implements  MouseListener, ActionListene
      * 
      * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
      */
+    @Override
     public void mouseExited(MouseEvent e) {
         mouseOver = false;
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -136,6 +136,7 @@ public class HelpButton extends JButton implements  MouseListener, ActionListene
     /* (non-Javadoc)
      * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
      */
+    @Override
     public void mousePressed(MouseEvent e) {
         mouseOver = false;
         repaint();
@@ -147,6 +148,7 @@ public class HelpButton extends JButton implements  MouseListener, ActionListene
      * 
      * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
      */
+    @Override
     public void mouseReleased(MouseEvent e) {
         mouseOver = false;
         setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -157,6 +159,7 @@ public class HelpButton extends JButton implements  MouseListener, ActionListene
     /* (non-Javadoc)
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == this) {
             HelpDialog.showHelpDialog(this, helpText);            

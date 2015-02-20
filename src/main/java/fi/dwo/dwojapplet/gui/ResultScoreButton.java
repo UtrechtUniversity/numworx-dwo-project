@@ -2,42 +2,31 @@
 
 package fi.dwo.dwojapplet.gui;
 
-import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.FontMetrics;
-import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.text.MessageFormat;
 import java.util.Map;
 
 import javax.swing.AbstractButton;
-import javax.swing.Box;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 
 import fi.beans.scorm.PartialScoreIF;
-import fi.beans.scorm2xml.Scorm2Xml;
-import fi.beans.tooltip.ToolTipIF;
-import fi.beans.tooltip.ToolTipManager;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.ResultScoreIF;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.ResultScoreIF;
+import fi.dwo.dwojapplet.domain.Sco;
 
+import fi.wiskopdr.ScoresObjectivesPanel;
 /**
  * Shows a panel with the color representing the score. It also shows the score.
  */
@@ -205,6 +194,7 @@ public class ResultScoreButton extends JPanel implements
      * @param e The ActionEvent.
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         if(active)domain.showResult();
         else if (false) // TODO parameter voor testing.... false is productie!
@@ -221,7 +211,7 @@ public class ResultScoreButton extends JPanel implements
 				sco.setLessonMode(mode);
 				if(map != null) {
 					JDialog d = new JDialog(DwoHelper.getFrameForComponent(null), "Deelscores");
-					d.setContentPane(new JScrollPane(new fi.wiskopdr.ScoresObjectivesPanel(map)));
+					d.setContentPane(new JScrollPane(new ScoresObjectivesPanel(map)));
 					d.pack();
 					d.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					d.show();

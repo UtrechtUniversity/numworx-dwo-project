@@ -14,10 +14,6 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import fi.dwo.client.domain.ResultScore;
-import fi.dwo.client.domain.School;
-import fi.dwo.client.domain.UserResultList;
-import fi.dwo.client.gui.Exporter.ExportBuffer;
 
 /**
  * Class that will export a tab separated table to the clipboard
@@ -29,10 +25,12 @@ public class ClipboardExport extends Exporter implements ClipboardOwner {
 	private class ClipBoardBuffer extends ExportBuffer {
 
 		StringBuffer sb = new StringBuffer();
+                @Override
 		protected void export() {
 			ClipboardExport.this.export(sb);
 		}
 
+                @Override
 		protected void export(String[] line) {
 			ClipboardExport.this.export(sb,line);
 		}
@@ -63,13 +61,16 @@ public class ClipboardExport extends Exporter implements ClipboardOwner {
 		f.setLayout(new BorderLayout());
 		f.add(area,BorderLayout.CENTER);
 		f.addWindowListener(new WindowAdapter() {
+                        @Override
 			public void windowOpened(WindowEvent e) {
 				area.requestFocus();
 				area.setCaretPosition(0);
 			}
+                        @Override
 			public void windowActivated(WindowEvent e) {
 				area.selectAll();
 			}
+                        @Override
 			public void windowClosing(WindowEvent e) {
 					e.getWindow().dispose();
 			} });
@@ -109,10 +110,12 @@ public class ClipboardExport extends Exporter implements ClipboardOwner {
 		return _instance;
 	}
 
+        @Override
 	public void lostOwnership(Clipboard clipboard, Transferable contents) {
 	}
 
 
+        @Override
 	protected ExportBuffer createExportBuffer() {
 		return new ClipBoardBuffer();
 	}

@@ -56,6 +56,7 @@ public class IconizedPanel extends JPanel implements ActionListener {
 		this("");	
 	}
 	
+        @Override
 	public Component add(Component c)
 	{
 		if(window != null)
@@ -104,6 +105,7 @@ public class IconizedPanel extends JPanel implements ActionListener {
 		getIcon().setText(string);	
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == icon)
 		{
@@ -126,6 +128,7 @@ public class IconizedPanel extends JPanel implements ActionListener {
 		return iconized;
 	}
 	
+        @Override
 	public Dimension getPreferredSize() {
 		if(isIconized())
 			return box.getPreferredSize();
@@ -134,12 +137,14 @@ public class IconizedPanel extends JPanel implements ActionListener {
 		}
 	}
 
+        @Override
 	public Dimension getMinimumSize() {
 		if(isIconized())
 			return box.getPreferredSize();
 		else
 			return super.getMinimumSize();
 	}
+        @Override
 	public Dimension getMaximumSize() {
 		if(isIconized())
 			return box.getMaximumSize();
@@ -177,6 +182,7 @@ public class IconizedPanel extends JPanel implements ActionListener {
 
 	class CloseAction extends AbstractAction {
 
+                @Override
 		public void actionPerformed(ActionEvent e) {
 			setIconized(true);			
 		}

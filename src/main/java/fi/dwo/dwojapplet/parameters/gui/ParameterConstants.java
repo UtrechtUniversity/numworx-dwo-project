@@ -5,7 +5,7 @@ package fi.dwo.dwojapplet.parameters.gui;
 import java.awt.Color;
 import java.awt.Font;
 
-import fi.dwo.client.gui.GuiConstants;
+import fi.dwo.dwojapplet.gui.GuiConstants;
 
 /**
  * @author s107473 TODO To change the template for this generated type comment

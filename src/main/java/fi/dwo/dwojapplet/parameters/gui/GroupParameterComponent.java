@@ -54,6 +54,7 @@ public class GroupParameterComponent extends ParameterComponent {
 	/* (non-Javadoc)
 	 * @see fi.dwo.parameters.gui.ParameterComponentIF#isFocussed(fi.dwo.parameters.gui.ParameterComponentIF)
 	 */
+    @Override
 	public void isFocussed(ParameterComponentIF component) {
 		isFocussed();
 		super.isFocussed(component);
@@ -67,6 +68,7 @@ public class GroupParameterComponent extends ParameterComponent {
 	/* (non-Javadoc)
 	 * @see fi.dwo.parameters.gui.ParameterComponentIF#unFocus()
 	 */
+    @Override
 	public void unFocus() {
 		super.unFocus();
 		for(int i = 0; i < subComponents.size(); i++) {
@@ -78,6 +80,7 @@ public class GroupParameterComponent extends ParameterComponent {
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.ParameterComponentIF#getSequenceString(fi.dwo.parameters.gui.ParameterComponentIF)
      */
+    @Override
     public String getSequenceString(ParameterComponentIF component) {
         if(parent != null) {
             return parent.getSequenceString(this);

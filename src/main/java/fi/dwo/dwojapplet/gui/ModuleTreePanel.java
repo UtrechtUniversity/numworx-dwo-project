@@ -4,14 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Image;
-import java.awt.LayoutManager;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
@@ -20,7 +17,6 @@ import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -29,8 +25,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.JTree.DynamicUtilTreeNode;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -42,31 +36,29 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.Descriptor;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.DwoIF;
-import fi.dwo.client.domain.DwoProfile;
-import fi.dwo.client.domain.School;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.domain.Teacher;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.action.BackupModuleAction;
-import fi.dwo.client.gui.action.CutCopyAction;
-import fi.dwo.client.gui.action.DeleteAction;
-import fi.dwo.client.gui.action.ImportModuleAction;
-import fi.dwo.client.gui.action.ImportScorm;
-import fi.dwo.client.gui.action.NewAction;
-import fi.dwo.client.gui.action.PasteAction;
-import fi.dwo.client.gui.action.RenameAction;
-import fi.dwo.client.gui.action.Save2004Action;
-import fi.dwo.client.gui.action.SaveAppletAction;
-import fi.dwo.client.gui.action.TeacherStrategy;
-import fi.dwo.client.persistence.MapperCreator;
-import fi.dwo.client.persistence.PersistenceFacade;
-import fi.dwo.client.system.PersistenceException;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.Descriptor;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.DwoIF;
+import fi.dwo.dwojapplet.domain.DwoProfile;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.action.BackupModuleAction;
+import fi.dwo.dwojapplet.gui.action.CutCopyAction;
+import fi.dwo.dwojapplet.gui.action.DeleteAction;
+import fi.dwo.dwojapplet.gui.action.ImportModuleAction;
+import fi.dwo.dwojapplet.gui.action.ImportScorm;
+import fi.dwo.dwojapplet.gui.action.NewAction;
+import fi.dwo.dwojapplet.gui.action.PasteAction;
+import fi.dwo.dwojapplet.gui.action.RenameAction;
+import fi.dwo.dwojapplet.gui.action.Save2004Action;
+import fi.dwo.dwojapplet.gui.action.SaveAppletAction;
+import fi.dwo.dwojapplet.gui.action.TeacherStrategy;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
 public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 
@@ -178,16 +170,20 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 	static class StudentTopMap extends TopMap { 
 		CourseMap map;
 		
+                @Override
 		public String getHeader() { 
 			return delegate.getHeader();
 		}
 		
+                @Override
 		public CourseMap[] getChildren() { 
 			return map.getChildren();
 		}
+                @Override
 		public Object getUserObject() { 
 			return map.getUserObject();	
 		}
+                @Override
 		public Set getChildNames() {
 			return map.getChildNames();
 		}
@@ -232,6 +228,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		}
 		
 		private CourseMap[] children;
+                @Override
 		public CourseMap[] getChildren() {
 			if(children == null)
 				children = getChildrenFetch();
@@ -245,6 +242,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		/* (non-Javadoc)
 		 * @see fi.dwo.client.gui.ModuleTreePanel.TreeMap#addChild(fi.dwo.client.domain.Course)
 		 */
+                @Override
 		public void addChild(Course child) {
 			child.setParentID(0);
 			if(getChildren() == null)
@@ -263,6 +261,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		/* (non-Javadoc)
 		 * @see fi.dwo.client.gui.ModuleTreePanel.TreeMap#removeChild(int)
 		 */
+                @Override
 		public void removeChild(int index) {
 			int length = children.length;
 			((Course) children[index]).setParentID(0);
@@ -287,6 +286,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 			userObject = node.getUserObject();
 		}
 
+                @Override
 		public String toString() {
 			return userObject.toString();
 		}
@@ -335,18 +335,21 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 			bookIcon = new ImageIcon(book);
 		}
 
+                @Override
 		public Icon getOpenIcon() {
 			if(isCourse)
 				return bookIcon;
 			return super.getDefaultOpenIcon();
 		}
 
+                @Override
 		public Icon getClosedIcon() {
 			if(isCourse)
 				return bookIcon;
 			return super.getDefaultClosedIcon();
 		}
 
+                @Override
 		public Icon getLeafIcon() {
 			if(isCourse)
 				return bookIcon;
@@ -355,6 +358,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 			return super.getDefaultLeafIcon();
 		}
 
+                @Override
 		public Component getTreeCellRendererComponent(JTree tree, Object value,
 				boolean sel, boolean expanded, boolean leaf, int row,
 				boolean hasFocus) {
@@ -459,6 +463,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		tree.setModel(model);
 	}
 	
+        @Override
 	public void setEnabled(boolean b){
 		tree.setEnabled(b);
 		bar.getMenu(0).setEnabled(b);
@@ -480,6 +485,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 		boolean isLoaded() {
 			return loadedChildren;
 		}
+                @Override
 		protected void loadChildren() {
 			setWait(); // zijeffect: recusie!
 			if(!loadedChildren)
@@ -501,6 +507,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
 			}
 			setReady();
 		}
+                @Override
 		public void removeAllChildren() {
 			setLoaded();
 			super.removeAllChildren();
@@ -817,6 +824,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
  * Hier een aanpassing, voor leerlingen/gasten wordt de tree afgeknot tot het punt 
  * waar hij uitwaaiert.
  */
+                        @Override
 			protected DefaultMutableTreeNode prune(DefaultMutableTreeNode root) {
 				MutableTreeNode dwonode = (MutableTreeNode) root.getFirstChild();
 				if(dwonode.getChildCount() == 0)
@@ -875,6 +883,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener{
     }
 
 		
+        @Override
 	public void valueChanged(TreeSelectionEvent e) {
 		if(isSelect())
 			return;

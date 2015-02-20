@@ -33,6 +33,7 @@ public class IconBorder implements Border {
 	private int  padding = 6;
 	static private Insets NULL = new Insets(1, 1, 1, 1);
 
+        @Override
 	public Insets getBorderInsets(Component c) {
 		if(icon == null)
 			return NULL;
@@ -45,10 +46,12 @@ public class IconBorder implements Border {
 		}
 	}
 
+        @Override
 	public boolean isBorderOpaque() {
 		return false;
 	}
 
+        @Override
 	public void paintBorder(Component c, Graphics g, int x, int y, int width,
 			int height) {
 		switch(orientation)

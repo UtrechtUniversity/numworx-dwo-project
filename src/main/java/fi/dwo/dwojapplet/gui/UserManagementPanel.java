@@ -1,16 +1,11 @@
 package fi.dwo.dwojapplet.gui;
 
 import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.EventObject;
-import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.AbstractCellEditor;
@@ -19,38 +14,32 @@ import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
-import fi.dwo.client.domain.ContactDocent;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.DwoIF;
-import fi.dwo.client.domain.School;
-import fi.dwo.client.domain.SchoolClass;
-import fi.dwo.client.domain.SchoolGroup;
-import fi.dwo.client.domain.Teacher;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.SchoolPanel.SchoolModel;
-
-import fi.dwo.client.persistence.MapperCreator;
-import fi.dwo.client.persistence.PersistenceFacade;
-import fi.dwo.client.system.LoginException;
-import fi.dwo.client.system.PersistenceException;
-import fi.dwo.client.system.RegisterException;
-import fi.dwo.client.system.SchoolException;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.exceptions.LoginException;
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.exceptions.RegisterException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.ContactDocent;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.DwoIF;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.SchoolGroup;
+import fi.dwo.dwojapplet.domain.Teacher;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.persistence.MapperCreator;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
 public class UserManagementPanel extends JPanel implements CenterSubPanel {
 
@@ -192,6 +181,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
     	UserModel model;
     	int row;
     	
+                   @Override
 		public Component getTableCellEditorComponent(JTable table, Object value,
 				boolean arg2, int row, int col) {
 			this.value = value;
@@ -202,10 +192,12 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 			return button;
 		}
 
+                   @Override
 		public Object getCellEditorValue() {
 			return value;
 		}
 
+                   @Override
 		public void actionPerformed(ActionEvent event) {
 			User user = model.userList[row];
 			if(value == model.userImage || value == model.teacherImage)
@@ -360,28 +352,34 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 		}
 	}
 
+        @Override
 	public void end() {
 		// TODO Auto-generated method stub
 
 	}
 
+        @Override
 	public JComponent getComponent() {
 		return this;
 	}
 
+        @Override
 	public Component getHeaderPanel() {
 		// TODO Auto-generated method stub
 		return new HeaderPanel(TextMapper.getText(TextMapper.GUIUMP_MANAGE_USERS));
 	}
 
+        @Override
 	public void setCenterPanel(CenterPanel centerPanel) {
 		center = centerPanel;
 
 	}
+        @Override
 	public Object getUserObject() {
 		return docent.getSchool();
 	}
 	
+        @Override
 	public void stateChanged(ChangeEvent e) {
 		if(e.getSource() instanceof School || e.getSource() instanceof SchoolClass)
 		{
@@ -401,6 +399,7 @@ class SchoolClassTableRenderer extends JComboBox implements TableCellRenderer
 	private final DefaultTableCellRenderer NULL = new DefaultTableCellRenderer();
 	private Vector items;
 	
+        @Override
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 		Component component = NULL.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);

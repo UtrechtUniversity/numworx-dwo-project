@@ -20,8 +20,7 @@ import javax.swing.JPanel;
 import fi.beans.scorm.Parameter;
 import fi.beans.scorm.ScormTree;
 import fi.beans.scorm.TreeParameter;
-import fi.dwo.client.gui.DwoButton;
-import fi.dwo.parameters.system.TextMapper;
+import fi.dwo.dwojapplet.parameters.system.TextMapper;
 
 public class MultiLevelTreeTabSheet extends TreeTabSheet implements
         DeleteTreeItemIF, ActionListener {
@@ -125,6 +124,7 @@ public class MultiLevelTreeTabSheet extends TreeTabSheet implements
      * 
      * @see fi.dwo.parameters.gui.DeleteTreeItemIF#deleteItem(fi.dwo.parameters.gui.ParameterComponentIF)
      */
+    @Override
     public void deleteItem(ParameterComponentIF parameterComponent) {
         int index = subComponents.indexOf(parameterComponent);
         subComponents.removeElement(parameterComponent);
@@ -160,6 +160,7 @@ public class MultiLevelTreeTabSheet extends TreeTabSheet implements
      * 
      * @see fi.dwo.parameters.gui.ParameterComponentIF#addParameters(java.util.Hashtable)
      */
+    @Override
     public void addParameters(Hashtable parameters) {
         Hashtable ht = new Hashtable();
         ht.put(((TreeParameter) parameter).getItemCountName(), Integer.toString(getNrItems()));
@@ -175,6 +176,7 @@ public class MultiLevelTreeTabSheet extends TreeTabSheet implements
      * 
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == addButton) {
             addTab();
@@ -216,6 +218,7 @@ public class MultiLevelTreeTabSheet extends TreeTabSheet implements
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.ParameterComponentIF#getSequenceString(fi.dwo.parameters.gui.ParameterComponentIF)
      */
+    @Override
     public String getSequenceString(ParameterComponentIF component) {
         return "_" + (subComponents.indexOf(component) + 1);
     }
@@ -223,6 +226,7 @@ public class MultiLevelTreeTabSheet extends TreeTabSheet implements
 	/* (non-Javadoc)
 	 * @see java.awt.Component#setBounds(int, int, int, int)
 	 */
+    @Override
 	public void setBounds(int x, int y, int width, int height) {
 		// TODO Auto-generated method stub
 		super.setBounds(x, y, width, height);

@@ -125,6 +125,7 @@ public class TabPane extends JPanel implements ActionListener, ComponentListener
     /**
      * @param color
      */
+    @Override
     public void setBackground(Color color) {
         super.setBackground(color);
         if(tabLabelPanel != null)
@@ -158,6 +159,7 @@ public class TabPane extends JPanel implements ActionListener, ComponentListener
     /**
      * @param arg0
      */
+    @Override
     public void actionPerformed(ActionEvent arg0) {
 
     }
@@ -212,6 +214,7 @@ public class TabPane extends JPanel implements ActionListener, ComponentListener
     /* (non-Javadoc)
      * @see java.awt.event.ComponentListener#componentHidden(java.awt.event.ComponentEvent)
      */
+    @Override
     public void componentHidden(ComponentEvent e) {
 //        this.setSize(this.getLayout().preferredLayoutSize(this));
 //        this.validate();
@@ -220,6 +223,7 @@ public class TabPane extends JPanel implements ActionListener, ComponentListener
     /* (non-Javadoc)
      * @see java.awt.event.ComponentListener#componentMoved(java.awt.event.ComponentEvent)
      */
+    @Override
     public void componentMoved(ComponentEvent e) {
 //        this.setSize(this.getLayout().preferredLayoutSize(this));
 //        this.validate();
@@ -228,6 +232,7 @@ public class TabPane extends JPanel implements ActionListener, ComponentListener
     /* (non-Javadoc)
      * @see java.awt.event.ComponentListener#componentResized(java.awt.event.ComponentEvent)
      */
+    @Override
     public void componentResized(ComponentEvent e) {
     	if(false)
     	{
@@ -256,6 +261,7 @@ public class TabPane extends JPanel implements ActionListener, ComponentListener
     /* (non-Javadoc)
      * @see java.awt.event.ComponentListener#componentShown(java.awt.event.ComponentEvent)
      */
+    @Override
     public void componentShown(ComponentEvent e) {
 //        this.setSize(this.getLayout().preferredLayoutSize(this));
 //        this.validate();
@@ -263,11 +269,13 @@ public class TabPane extends JPanel implements ActionListener, ComponentListener
     /* (non-Javadoc)
      * @see java.awt.Component#getPreferredSize()
      */
+    @Override
     public Dimension getPreferredSize() {
 //    	System.out.println("Tabpane pref=" + super.getPreferredSize() + " now = " + getSize());
         return 
         new Dimension( largestWidth, super.getPreferredSize().height);
     }
+    @Override
     public Dimension getMinimumSize() { 
 //    	System.out.println("Tabpane min=" + super.getPreferredSize() + " now = " + getSize());
         return super.getPreferredSize();
@@ -277,6 +285,7 @@ public class TabPane extends JPanel implements ActionListener, ComponentListener
 	/* (non-Javadoc)
 	 * @see java.awt.Component#setBounds(int, int, int, int)
 	 */
+    @Override
 	public void setBounds(int x, int y, int width, int height) {
 		
 		super.setBounds(x, y, width, height);
@@ -286,6 +295,7 @@ public class TabPane extends JPanel implements ActionListener, ComponentListener
 	/* (non-Javadoc)
 	 * @see java.awt.Component#processComponentEvent(java.awt.event.ComponentEvent)
 	 */
+    @Override
 	protected void processComponentEvent(ComponentEvent e) {
 		// TODO Auto-generated method stub
 		super.processComponentEvent(e);

@@ -3,16 +3,13 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Insets;
-import javax.swing.BorderFactory;
 
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.text.Document;
-
-import fi.dwo.client.domain.LessonGroup;
+import fi.dwo.dwojapplet.domain.LessonGroup;
 
 
 public class MultiLineTableCellRenderer extends JTextArea implements TableCellRenderer {
@@ -37,6 +34,7 @@ public class MultiLineTableCellRenderer extends JTextArea implements TableCellRe
 		initialize();
 	}
 
+        @Override
 	public Dimension getPreferredSize() {
 		Dimension preferredSize = super.getPreferredSize();
 		Insets insets = getInsets();
@@ -46,6 +44,7 @@ public class MultiLineTableCellRenderer extends JTextArea implements TableCellRe
 		return preferredSize;
 	}
 
+        @Override
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 		

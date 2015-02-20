@@ -17,8 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import fi.beans.scorm.TreeParameter;
-import fi.dwo.parameters.system.TextMapper;
-import fi.dwo.parameters.test.ParametersTest;
+import fi.dwo.dwojapplet.parameters.system.TextMapper;
 
 public class SingleLevelTreeTabSheet extends TreeTabSheet implements
         ItemLaunchdataIF, ActionListener {
@@ -122,6 +121,7 @@ public class SingleLevelTreeTabSheet extends TreeTabSheet implements
     /* (non-Javadoc)
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == deleteButton) {
             treeSheetCreator.removeTab(this);
@@ -134,6 +134,7 @@ public class SingleLevelTreeTabSheet extends TreeTabSheet implements
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.ParameterComponentIF#addParameters(java.util.Hashtable)
      */
+    @Override
     public void addParameters(Hashtable parameters) {
         // TODO Auto-generated method stub
         super.addParameters(parameters);
@@ -142,6 +143,7 @@ public class SingleLevelTreeTabSheet extends TreeTabSheet implements
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.ParameterComponentIF#getSequenceString(fi.dwo.parameters.gui.ParameterComponentIF)
      */
+    @Override
     public String getSequenceString(ParameterComponentIF component) {
         if(parent != null) {
             return parent.getSequenceString(this);
@@ -154,6 +156,7 @@ public class SingleLevelTreeTabSheet extends TreeTabSheet implements
     /**
      * @return Object
      */
+    @Override
     public Object getKey() {
         return key;
     }
@@ -163,6 +166,7 @@ public class SingleLevelTreeTabSheet extends TreeTabSheet implements
      * 
      * @see fi.dwo.parameters.gui.ItemLaunchdataIF#getLaunchdata()
      */
+    @Override
     public Hashtable getLaunchdata() {
         return null;
     }
@@ -170,10 +174,12 @@ public class SingleLevelTreeTabSheet extends TreeTabSheet implements
     /**
      * @param key
      */
+    @Override
     public void setKey(Object key) {
         this.key = key;
     }
 
+    @Override
     public Dimension getPreferredSize() {
     	Dimension size = getLayout().preferredLayoutSize(this);
 //System.out.println("single tab sheet pref=" + size + "now = " + getSize());
@@ -181,6 +187,7 @@ public class SingleLevelTreeTabSheet extends TreeTabSheet implements
     	
     }
     
+    @Override
     public Dimension getMinimumSize() { 
     	return getPreferredSize();
     }

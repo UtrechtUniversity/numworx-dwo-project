@@ -2,12 +2,16 @@
 
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.AppletConfig;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.Sco;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FontMetrics;
 import java.awt.LayoutManager;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -26,7 +30,6 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -36,11 +39,6 @@ import javax.swing.JScrollPane;
 import javax.swing.Scrollable;
 import javax.swing.SwingConstants;
 
-import fi.dwo.client.domain.AppletConfig;
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.system.TextMapper;
 
 /**
  * This class shows in a dialog a list with all the possible <code>AppletConfig</code>'s.<br>
@@ -62,6 +60,7 @@ public class AddScoDialog extends JDialog implements ActionListener,
 			super(layout);
 		}
 
+                @Override
 		public Dimension getPreferredScrollableViewportSize() {
 			int h;
 			if(getComponentCount() == 0)
@@ -71,6 +70,7 @@ public class AddScoDialog extends JDialog implements ActionListener,
 			return new Dimension(585, h);
 		}
 
+                @Override
 		public int getScrollableBlockIncrement(Rectangle visibleRect,
 				int orientation, int direction) {
 			if(orientation == SwingConstants.VERTICAL)
@@ -88,14 +88,17 @@ public class AddScoDialog extends JDialog implements ActionListener,
 			return visibleRect.width;
 		}
 
+                @Override
 		public boolean getScrollableTracksViewportHeight() {
 			return false;
 		}
 
+                @Override
 		public boolean getScrollableTracksViewportWidth() {
 			return false;
 		}
 
+                @Override
 		public int getScrollableUnitIncrement(Rectangle visibleRect,
 				int orientation, int direction) {
 			if(orientation == SwingConstants.VERTICAL && getComponentCount()!= 0)
@@ -274,6 +277,7 @@ public class AddScoDialog extends JDialog implements ActionListener,
         titleBox.add(eigen);
         titleBox.add(Box.createHorizontalGlue());
         ItemListener listener = new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e)
             {
                 if(eigen == e.getSource())
@@ -388,6 +392,7 @@ public class AddScoDialog extends JDialog implements ActionListener,
      * @param e The ActionEvent.
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+        @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == cancelButton) {
             this.setVisible(false);
@@ -428,6 +433,7 @@ public class AddScoDialog extends JDialog implements ActionListener,
      *            The WindowEvent.
      * @see java.awt.event.WindowListener#windowActivated(java.awt.event.WindowEvent)
      */
+        @Override
     public void windowActivated(WindowEvent e) {
    }
 
@@ -439,6 +445,7 @@ public class AddScoDialog extends JDialog implements ActionListener,
      *            The WindowEvent.
      * @see java.awt.event.WindowListener#windowClosed(java.awt.event.WindowEvent)
      */
+        @Override
     public void windowClosed(WindowEvent e) {
     }
 
@@ -452,6 +459,7 @@ public class AddScoDialog extends JDialog implements ActionListener,
      *            The WindowEvent.
      * @see java.awt.event.WindowListener#windowClosing(java.awt.event.WindowEvent)
      */
+        @Override
     public void windowClosing(WindowEvent e) {
         setVisible(false);
         dispose();
@@ -466,6 +474,7 @@ public class AddScoDialog extends JDialog implements ActionListener,
      *            The WindowEvent.
      * @see java.awt.event.WindowListener#windowDeactivated(java.awt.event.WindowEvent)
      */
+        @Override
     public void windowDeactivated(WindowEvent e) {
     }
 
@@ -476,6 +485,7 @@ public class AddScoDialog extends JDialog implements ActionListener,
      *            The WindowEvent.
      * @see java.awt.event.WindowListener#windowDeiconified(java.awt.event.WindowEvent)
      */
+        @Override
     public void windowDeiconified(WindowEvent e) {
     }
 
@@ -486,6 +496,7 @@ public class AddScoDialog extends JDialog implements ActionListener,
      *            The WindowEvent.
      * @see java.awt.event.WindowListener#windowIconified(java.awt.event.WindowEvent)
      */
+        @Override
     public void windowIconified(WindowEvent e) {
     }
 
@@ -498,6 +509,7 @@ public class AddScoDialog extends JDialog implements ActionListener,
      *            The WindowEvent.
      * @see java.awt.event.WindowListener#windowOpened(java.awt.event.WindowEvent)
      */
+        @Override
     public void windowOpened(WindowEvent e) {
     }
 

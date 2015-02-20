@@ -12,9 +12,9 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import fi.dwo.client.domain.DWO;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.User;
+import fi.dwo.dwojapplet.domain.DWO;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.User;
 
 /**
  * Some constants used in the GUI.

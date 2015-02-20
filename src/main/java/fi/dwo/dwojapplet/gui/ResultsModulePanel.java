@@ -43,18 +43,18 @@ import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
 
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.LessonGroup;
-import fi.dwo.client.domain.ResultScore;
-import fi.dwo.client.domain.ResultScoreIF;
-import fi.dwo.client.domain.ResultsModuleIF;
-import fi.dwo.client.domain.SchoolClass;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.domain.UserGroup;
-import fi.dwo.client.domain.UserResultList;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.LessonGroup;
+import fi.dwo.dwojapplet.domain.ResultScore;
+import fi.dwo.dwojapplet.domain.ResultScoreIF;
+import fi.dwo.dwojapplet.domain.ResultsModuleIF;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.domain.UserGroup;
+import fi.dwo.dwojapplet.domain.UserResultList;
 
 /**
  * This class is a panel represents the resultscores of a group of users and a
@@ -81,6 +81,7 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 		}
 
 		
+            @Override
     	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
     		this.col = column;
     		model = (ResultsModel) table.getModel();
@@ -93,10 +94,12 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
     		return button;
 		}
 
+            @Override
 		public Object getCellEditorValue() {
 			return null;
 		}
 
+            @Override
 		public void actionPerformed(ActionEvent e) {
 			if(icon.getImage()!=null && icon.getImage()==imageStats){
 				currentUserGroup = domain.getZoomedUserGroup();
@@ -151,6 +154,7 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 		/* (non-Javadoc)
 		 * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.MouseEvent)
 		 */
+            @Override
 		public void mouseReleased(MouseEvent e) {
 			header = (JTableHeader) e.getComponent();
 			int col = header.columnAtPoint(e.getPoint());
@@ -187,6 +191,7 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 		/* (non-Javadoc)
 		 * @see java.awt.event.MouseAdapter#mousePressed(java.awt.event.MouseEvent)
 		 */
+            @Override
 		public void mousePressed(MouseEvent e) {
 			header = (JTableHeader) e.getComponent();
 			col = header.columnAtPoint(e.getPoint());			
@@ -202,6 +207,7 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 		private UserResultList[] data;
 		private int rowCount, columnCount;
 
+                @Override
 		public Class getColumnClass(int columnIndex) {
 			if(columnIndex > 0)
 				return Float.class;
@@ -224,14 +230,17 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 			columnCount = this.data[0].getResultScore().length+1;
 		}
 
+                @Override
 		public int getColumnCount() {
 			return columnCount;
 		}
 
+                @Override
 		public int getRowCount() {
 			return rowCount+2;
 		}
 
+                @Override
 		public Object getValueAt(int row, int col) {
 			if(row == 1)
 			{
@@ -263,6 +272,7 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 		/* (non-Javadoc)
 		 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
 		 */
+                @Override
 		public boolean isCellEditable(int row, int column) {
 			if(row == 0 || row == 1)
 				return true;
@@ -303,6 +313,7 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 			button.addActionListener(this);
 		}
 
+                @Override
 		public void actionPerformed(ActionEvent e) {
 			float f = domain.getScore();
 			domain.showResult();		
@@ -314,10 +325,12 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 			}
 		}
 
+                @Override
 		public Object getCellEditorValue() {
 			return value;
 		}
 
+                @Override
 		public Component getTableCellEditorComponent(JTable table,
 				Object value, boolean isSelected, int row, int column) {
 			
@@ -361,6 +374,7 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 			StyleConstants.setBold(boldStyle, true);
 			StyleConstants.setAlignment(centerStyle, StyleConstants.ALIGN_CENTER);
 		}
+                @Override
 		public Component getTableCellRendererComponent(JTable table,
 				Object value, boolean selected, boolean hasFocus, int row, int col) {
 			
@@ -462,6 +476,7 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 	        button.setFont(GuiConstants.NORMAL_TEXT);
 		}
 
+                @Override
 		public void actionPerformed(ActionEvent e) {
 			currentUserGroup = value;
         	GuiCreator.instance().setWait();
@@ -471,6 +486,7 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 			fireEditingCanceled();
 		}
 
+                @Override
 		public Component getTableCellEditorComponent(JTable table,
 				Object value, boolean isSelected, int row, int column) {
 			//this.value = (UserGroup) value;
@@ -484,6 +500,7 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 			return button;
 		}
 
+                @Override
 		public Object getCellEditorValue() {
 			return value.getName();
 		}
@@ -493,6 +510,7 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 	
 	public class ClassRenderer extends DefaultTableCellRenderer {
 
+                @Override
 		public Rectangle getVisibleRect() {
 			return getBounds();
 		}
@@ -502,6 +520,7 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 		/* (non-Javadoc)
 		 * @see javax.swing.JComponent#getPreferredSize()
 		 */
+                @Override
 		public Dimension getPreferredSize() {
 			
 			Dimension preferredSize = super.getPreferredSize();
@@ -525,11 +544,13 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 		/* (non-Javadoc)
 		 * @see org.jdesktop.swingx.JXLabel#paintComponent(java.awt.Graphics)
 		 */
+                @Override
 		protected void paintComponent(Graphics arg0) {
 			// TODO Auto-generated method stub
 			super.paintComponent(arg0);
 		}
 
+                @Override
 		public Component getTableCellRendererComponent(JTable table,
 				Object value, boolean isSelected, boolean hasFocus, int row,
 				int column) {
@@ -669,6 +690,7 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
      * @param e The ActionEvent.
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
     	if ( e.getSource() == copyButton)
     	{
@@ -746,6 +768,7 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
      * Indicate that another panel is loaded and the connections of this panel
      * must be closed.
      */
+    @Override
     public void end() {
 
     }
@@ -755,6 +778,7 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
      * 
      * @param centerPanel The centerPanel to communicate with.
      */
+    @Override
     public void setCenterPanel(CenterPanel centerPanel) {
 
     }
@@ -765,6 +789,7 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
      * @return A panel that can functionate as a header panel.
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
+    @Override
     public Component getHeaderPanel() {
     	return new HeaderPanel(TextMapper.getText(TextMapper.GUIRS_RESULTS));
     }
@@ -837,6 +862,7 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
             //imageRenderer.setBorder(BorderFactory.createRaisedBevelBorder());
     		JTable table = new JTable(new ResultsModel(data)) {
     			
+                                @Override
 				public TableCellRenderer getCellRenderer(int row, int column) {
 					if(row == 0  && column!=0 || row == 1)
 						return imageRenderer;
@@ -846,6 +872,7 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 				/* (non-Javadoc)
 				 * @see javax.swing.JTable#getCellEditor(int, int)
 				 */
+                                @Override
 				public TableCellEditor getCellEditor(int row, int column) {
 					if(row==0 || row == 1)
 						return new ImageEditor();
@@ -1200,15 +1227,18 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 	 * @return the current object.
 	 * @see fi.dwo.client.gui.CenterSubPanel#getComponent()
 	 */
+    @Override
     public JComponent getComponent() {
         return this;
     }
 
+    @Override
 	public Object getUserObject() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+    @Override
 	public void stateChanged(ChangeEvent e) {
 		// TODO Auto-generated method stub
 		

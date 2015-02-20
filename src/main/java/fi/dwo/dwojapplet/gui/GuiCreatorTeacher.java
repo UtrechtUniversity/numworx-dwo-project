@@ -13,24 +13,22 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import fi.beans.base64code.StringCodeObject;
-import fi.dwo.client.domain.AppletConfig;
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.DWO;
-import fi.dwo.client.domain.DwoIF;
-import fi.dwo.client.domain.SchoolClass;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.domain.Teacher;
-import fi.dwo.client.domain.Admin;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.action.CourseManagementAction;
-import fi.dwo.client.gui.action.ScoManagementAction;
-import fi.dwo.client.gui.action.ScoParameterAction;
-import fi.dwo.client.persistence.PersistenceFacade;
-import fi.dwo.client.system.TextMapper;
+
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Admin;
+import fi.dwo.dwojapplet.domain.AppletConfig;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DwoIF;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.Teacher;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.action.CourseManagementAction;
+import fi.dwo.dwojapplet.gui.action.ScoManagementAction;
+import fi.dwo.dwojapplet.gui.action.ScoParameterAction;
 
 /**
  * This class implements Teacher-specific methods of the GuiCreator.
@@ -85,6 +83,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      * 
      * @return The MenuPanel with all the menu-options for the type user.
      */
+    @Override
     public GuestMenuPanel getMenuPanel() {
         User u = dwo.getUser();
 
@@ -107,6 +106,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      * @return fi.dwo.client.gui.CenterSubPanel
      *  
      */
+    @Override
     public CenterSubPanel getProfilePanel() {
         dwo.setWait();
         CenterSubPanel csb;
@@ -121,6 +121,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      * 
      * @return A panel with results for users of the classes of the teacher.
      */
+    @Override
     public CenterSubPanel getResultPanel() {
         dwo.setWait();
         CenterSubPanel csp = new ResultsModulePanel(dwo.getResultsModule());
@@ -134,6 +135,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      * 
      * @return A panel with results for users of the classes of the teacher.
      */
+    @Override
     public CenterSubPanel getResultPanel(Course c) {
         Course[] courses = new Course[1];
         courses[0] = c;
@@ -150,6 +152,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      * @param schoolClass The SchoolClass to show the results from.
      * @return A panel with results for users of the specified class.
      */
+    @Override
     public CenterSubPanel getResultPanel(SchoolClass schoolClass) {
         dwo.setWait();
         CenterSubPanel csp = new ResultsModulePanel(dwo.getResultsModule(schoolClass));
@@ -164,6 +167,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      * @return A panel representing the specified SchoolClass.
      *  
      */
+    @Override
     public CenterSubPanel getClassUsersPanel(SchoolClass c) {
         return new ClassUsersPanel(c);
     }
@@ -174,6 +178,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      * @return A panel for managing schoolclasses.
      *  
      */
+    @Override
     public CenterSubPanel getClassPanel() {
         return new ClassPanel();
     }
@@ -181,6 +186,7 @@ public class GuiCreatorTeacher extends GuiCreator {
     /**
      * @return fi.dwo.client.gui.CenterSubPanel
      */
+    @Override
     public CenterSubPanel getCourseManagementPanel() {
         Course[] editableCourses = dwo.getEditableCourses();
         if(editableCourses != null) {
@@ -189,6 +195,7 @@ public class GuiCreatorTeacher extends GuiCreator {
             return null;
         }
     }
+    @Override
     public CenterSubPanel getCourseManagementPanel(CourseMap map)
     {
  // constructor cannot sort, we do!
@@ -233,6 +240,7 @@ public class GuiCreatorTeacher extends GuiCreator {
     	return result;
     }
   
+    @Override
     public AppletConfig[] getAppletConfigFromTeacher() {
     	Vector ac = new Vector();
     	Sco[] scos = dwo.getEditableScos();
@@ -246,6 +254,7 @@ public class GuiCreatorTeacher extends GuiCreator {
     	return result;
     }
 
+    @Override
 	public AppletConfig getAppletConfigFromSco(Sco sco) {
 		LazyAppletConfig config;
 		config = new LazyAppletConfig();
@@ -264,6 +273,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      * @param description
      * @return fi.dwo.client.domain.Course
      */
+    @Override
     public Course addCourse(String name, String description, Course parent, boolean isMap) {
         Course course = dwo.addCourse(name, description, parent, isMap);
         getMainPanel().getCenter().addCourse(course);
@@ -274,6 +284,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      * @param course
      * @return boolean
      */
+    @Override
     public boolean updateCourse(Course course) {
     	boolean b = dwo.updateCourse(course);
     	if(b)
@@ -285,6 +296,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      * @param course
      * @return boolean
      */
+    @Override
     public boolean deleteCourse(Course course) {
     	getMainPanel().getCenter().deleteCourse(course);
         return dwo.deleteCourse(course);
@@ -294,6 +306,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      * @param sco
      * @return boolean
      */
+    @Override
     public boolean deleteSco(Sco sco) {
     	Course c = sco.getCourse();
         boolean b = dwo.deleteSco(sco);
@@ -305,6 +318,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      * @param course
      * @return fi.dwo.client.gui.CenterSubPanel)
      */
+    @Override
     public CenterSubPanel getScoManagementPanel(Course course) {
         return new ScoManagementPanel(course);
     }
@@ -313,6 +327,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      * @param sco
      * @return boolean
      */
+    @Override
     public boolean updateSco(Sco sco) {
         return dwo.updateSco(sco);
     }
@@ -321,6 +336,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      * @param sco
      * @return fi.dwo.client.gui.CenterSubPanel
      */
+    @Override
     public void loadParameterManagementPanel(Sco sco) {
         new ParameterManagementPanel(sco);
     }
@@ -328,6 +344,7 @@ public class GuiCreatorTeacher extends GuiCreator {
     /**
      * @return fi.dwo.client.domain.DWO
      */
+    @Override
     public DwoIF getDWO() {
         return dwo;
     }
@@ -335,6 +352,7 @@ public class GuiCreatorTeacher extends GuiCreator {
     /**
      * @return fi.dwo.client.domain.AppletConfig[]
      */
+    @Override
     public AppletConfig[] getAppletConfig() {
         return dwo.getAppletConfig();
     }
@@ -343,6 +361,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      * @param appletConfig
      * @return fi.dwo.client.gui.ScoPanel
      */
+    @Override
     public ScoPanel previewSco(AppletConfig appletConfig) {
         return dwo.previewSco(appletConfig);
     }
@@ -351,6 +370,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      * @param sco
      * @return fi.dwo.client.gui.ScoPanel
      */
+    @Override
     public ScoPanel previewSco(Sco sco) {
         return dwo.previewSco(sco);
     }
@@ -361,6 +381,7 @@ public class GuiCreatorTeacher extends GuiCreator {
      * @param description
      * @return fi.dwo.client.domain.Sco
      */
+    @Override
     public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean showScore) {
         Sco result = dwo.addSco(course, appletConfig, name, description, showScore);
         if(result != null) 
@@ -375,11 +396,13 @@ public class GuiCreatorTeacher extends GuiCreator {
 	 * @param sco2 Sco
 	 * @return boolean: succes of gefaald
 	 */
+    @Override
 	public boolean swapSco(Sco sco1, Sco sco2) {
 		return dwo.swapSco(sco1, sco2);
 	}
 
-	public JComponent getButtonBox(CourseChoisePanel courseChoisePanel) {
+    @Override
+	public JComponent getButtonBox(CourseChoicePanel courseChoisePanel) {
 			Object userObject = courseChoisePanel.getUserObject();
 			if(userObject == ModuleTreePanel.ALLE_MODULES)
 				return null;
@@ -393,6 +416,7 @@ public class GuiCreatorTeacher extends GuiCreator {
 			return fx(new JButton(new CourseManagementAction(courseChoisePanel)));
 	}
 
+    @Override
 	public JComponent fx(JComponent b) { 
 		if(!CenterPanel.isIconizer() || readOnly)
 			return null;
@@ -403,12 +427,14 @@ public class GuiCreatorTeacher extends GuiCreator {
 		return box;
 	}
 	
+    @Override
 	public JComponent getButtonBox(CoursePanel coursePanel) {
 		if(noAdmin && coursePanel.getCourse().getSchoolID() == 0)
 			return null;
 		return fx(new JButton(new ScoManagementAction(coursePanel)));
 	}
    
+    @Override
 	public JComponent getButtonBox(ScoPanel scoPanel) {
 		if(noAdmin && scoPanel.getSco().getCourse().getSchoolID() == 0)
 			return null;
@@ -433,6 +459,7 @@ public class GuiCreatorTeacher extends GuiCreator {
 		return fx(new JButton(new ScoParameterAction(scoPanel)));
 	}
 	
+    @Override
 	public void updateLogo(Course c) { 
 		if( dwo.updateLogo(c) )
 			;

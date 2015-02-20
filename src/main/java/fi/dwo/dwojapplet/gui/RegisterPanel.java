@@ -7,8 +7,6 @@ import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.MediaTracker;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -23,10 +21,10 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.Group;
-import fi.dwo.client.system.RegisterException;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.exceptions.RegisterException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.Group;
 
 /**
  * This class is a panel where a user can register himself at the dwo.
@@ -390,6 +388,7 @@ public class RegisterPanel extends ContentPanel implements ActionListener {
         
         
 		addComponentListener(new ComponentAdapter(){
+                        @Override
 			public void componentResized(ComponentEvent e) {
 				super.componentResized(e);
 				int width = getWidth();
@@ -415,6 +414,7 @@ public class RegisterPanel extends ContentPanel implements ActionListener {
         return mandatoryLabel;
     }
     
+    @Override
     public void paintComponent(Graphics g) {
 //    	if(GuiConstants.GUI_IMAGE_BG) {
 //	       	Point p = DwoHelper.getComponentLocation(this);
@@ -430,6 +430,7 @@ public class RegisterPanel extends ContentPanel implements ActionListener {
      * @param e The ActionEvent.
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == registerButton) {
             if ((groupChoice.getSelectedIndex() == 0) && (schoollogin.getText().equals("")) && (schoolpassword.getText().equals(""))) {

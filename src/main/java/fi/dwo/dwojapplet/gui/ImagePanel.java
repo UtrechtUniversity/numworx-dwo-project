@@ -5,14 +5,11 @@
 package fi.dwo.dwojapplet.gui;
 
 import java.awt.Component;
-import java.awt.Graphics;
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-import fi.beans.tooltip.ToolTipIF;
-import fi.beans.tooltip.ToolTipManager;
 
 /**
  * A simple panel with an image on it. The panel has the size of the image.

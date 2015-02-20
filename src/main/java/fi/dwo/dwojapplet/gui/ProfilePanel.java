@@ -6,10 +6,7 @@ package fi.dwo.dwojapplet.gui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -24,13 +21,12 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.Group;
-import fi.dwo.client.domain.SchoolClass;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.system.LoginException;
-import fi.dwo.client.system.RegisterException;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.exceptions.LoginException;
+import fi.dwo.commons.exceptions.RegisterException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Group;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.User;
 
 /**
  * This class represents a panel for the current user to change his account.
@@ -514,6 +510,7 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
      * Indicate that another panel is loaded and the connections of this panel
      * must be closed.
      */
+    @Override
     public void end() {
 
     }
@@ -523,6 +520,7 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
      * 
      * @param centerPanel The centerPanel to communicate with.
      */
+    @Override
     public void setCenterPanel(CenterPanel centerPanel) {
 
     }
@@ -548,6 +546,7 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
      * @param e The ActionEvent.
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == resetButton) {
             /* Reset all the fields */
@@ -672,6 +671,7 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
    
+    @Override
     public Component getHeaderPanel() {
     	return new HeaderPanel(TextMapper.getText(TextMapper.GUIP_MY_PROFILE));
     }
@@ -682,15 +682,18 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
      * @return the current object.
      * @see fi.dwo.client.gui.CenterSubPanel#getComponent()
      */
+    @Override
     public JComponent getComponent() {
         return this;
     }
 
+    @Override
 	public Object getUserObject() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+    @Override
 	public void stateChanged(ChangeEvent e) {
 		// TODO Auto-generated method stub
 		

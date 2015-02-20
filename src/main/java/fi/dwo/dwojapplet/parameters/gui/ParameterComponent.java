@@ -18,7 +18,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import fi.beans.scorm.Parameter;
-import fi.dwo.client.gui.BorderedPanel;
 
 public class ParameterComponent extends JPanel implements ParameterComponentIF, FocusListener, ComponentListener {
 	
@@ -133,6 +132,7 @@ public class ParameterComponent extends JPanel implements ParameterComponentIF, 
 	/**
 	 * @roseuid 42551A7500A7
 	 */
+    @Override
 	public void isFocussed(ParameterComponentIF component) {
 	    if((focussedComponent != null) && (focussedComponent != component)) {
 	        focussedComponent.unFocus();
@@ -143,6 +143,7 @@ public class ParameterComponent extends JPanel implements ParameterComponentIF, 
 	/**
 	 * @roseuid 42551A7500ED
 	 */
+    @Override
 	public void unFocus() {
 		if (parent != null) {
 			this.setBackground(parent.getColor());
@@ -164,6 +165,7 @@ public class ParameterComponent extends JPanel implements ParameterComponentIF, 
 	/**
 	 * @roseuid 42551A750101
 	 */
+    @Override
 	public Color getColor() {
 		return getBackground();
 	}
@@ -171,6 +173,7 @@ public class ParameterComponent extends JPanel implements ParameterComponentIF, 
 	/**
 	 * @roseuid 42551A75010B
 	 */
+    @Override
 	public void addParameters(Hashtable parameters) {
 		ParameterComponentIF com;
 		for(int i = 0; i < subComponents.size(); i++) {
@@ -182,6 +185,7 @@ public class ParameterComponent extends JPanel implements ParameterComponentIF, 
 	/**
 	 * @roseuid 42551A75015B
 	 */
+    @Override
 	public String getSequenceString(ParameterComponentIF component) {
 		return "";
 	}
@@ -189,6 +193,7 @@ public class ParameterComponent extends JPanel implements ParameterComponentIF, 
 	/**
 	 * @roseuid 42551A750165
 	 */
+    @Override
 	public void registerComponent(ParameterComponentIF component) {
 		subComponents.addElement(component);
 	}
@@ -196,6 +201,7 @@ public class ParameterComponent extends JPanel implements ParameterComponentIF, 
 	/**
 	 * @return Returns the parent.
 	 */
+    @Override
 	public ParameterComponentIF getParentCom() {
 		return parent;
 	}
@@ -204,6 +210,7 @@ public class ParameterComponent extends JPanel implements ParameterComponentIF, 
 	 * @param parent
 	 *            The parent to set.
 	 */
+    @Override
 	public void setParentCom(ParameterComponentIF parent) {
 		this.parent = parent;
 	}
@@ -240,6 +247,7 @@ public class ParameterComponent extends JPanel implements ParameterComponentIF, 
 	/* (non-Javadoc)
 	 * @see java.awt.event.FocusListener#focusGained(java.awt.event.FocusEvent)
 	 */
+    @Override
 	public void focusGained(FocusEvent evt) {
 		isFocussed();
 	}
@@ -247,12 +255,14 @@ public class ParameterComponent extends JPanel implements ParameterComponentIF, 
 	/* (non-Javadoc)
 	 * @see java.awt.event.FocusListener#focusLost(java.awt.event.FocusEvent)
 	 */
+    @Override
 	public void focusLost(FocusEvent arg0) {
 	}
 
 	/* (non-Javadoc)
 	 * @see fi.dwo.parameters.gui.ParameterComponentIF#getComponent()
 	 */
+    @Override
 	public Component getComponent() {
 		return this;
 	}
@@ -260,6 +270,7 @@ public class ParameterComponent extends JPanel implements ParameterComponentIF, 
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.ParameterComponentIF#reset()
      */
+    @Override
     public void reset() {
 		ParameterComponentIF com;
 		for(int i = 0; i < subComponents.size(); i++) {
@@ -271,6 +282,7 @@ public class ParameterComponent extends JPanel implements ParameterComponentIF, 
 	/* (non-Javadoc)
 	 * @see fi.dwo.parameters.gui.ParameterComponentIF#setColor(java.awt.Color)
 	 */
+    @Override
 	public void setColor(Color c) {
 		this.setBackground(c);
 		if(preLabel != null) {
@@ -285,6 +297,7 @@ public class ParameterComponent extends JPanel implements ParameterComponentIF, 
      * Returns the <i>current</i> size as the minimum size.
      * @see java.awt.Component#getMinimumSize()
      */
+    @Override
     public Dimension getMinimumSize() {
         return super.getSize();
     }
@@ -293,6 +306,7 @@ public class ParameterComponent extends JPanel implements ParameterComponentIF, 
      * Returns the <i>current</i> size as the preferred size.
      * @see java.awt.Component#getPreferredSize()
      */
+    @Override
     public Dimension getPreferredSize() {
     	if(getLayout() == null)
     		return super.getSize();
@@ -303,18 +317,21 @@ public class ParameterComponent extends JPanel implements ParameterComponentIF, 
     /* (non-Javadoc)
      * @see java.awt.event.ComponentListener#componentHidden(java.awt.event.ComponentEvent)
      */
+    @Override
     public void componentHidden(ComponentEvent e) {
     }
 
     /* (non-Javadoc)
      * @see java.awt.event.ComponentListener#componentMoved(java.awt.event.ComponentEvent)
      */
+    @Override
     public void componentMoved(ComponentEvent e) {
     }
 
     /* (non-Javadoc)
      * @see java.awt.event.ComponentListener#componentResized(java.awt.event.ComponentEvent)
      */
+    @Override
     public void componentResized(ComponentEvent e) {
         if(! isResizing) {
             //this.setVisible(false);
@@ -341,12 +358,14 @@ public class ParameterComponent extends JPanel implements ParameterComponentIF, 
     /* (non-Javadoc)
      * @see java.awt.event.ComponentListener#componentShown(java.awt.event.ComponentEvent)
      */
+    @Override
     public void componentShown(ComponentEvent e) {
     }
 
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.ParameterComponentIF#setSequenceLabel(int)
      */
+    @Override
     public void setSequenceLabel(int nr) {
         preLabel.setText(parameter.getPreLabel() + " " + nr + ":");
     }

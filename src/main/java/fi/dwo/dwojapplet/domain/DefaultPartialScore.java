@@ -14,6 +14,7 @@ public class DefaultPartialScore implements PartialScoreIF {
 
 	private Component applet;
 
+        @Override
 	public List getScoreMapList(SCORM12APIInterface api) {
 		HashMap result = new HashMap();
 		String raw = api.LMSGetValue("cmi.core.score.raw");
@@ -28,6 +29,7 @@ public class DefaultPartialScore implements PartialScoreIF {
 		return Collections.singletonList(result);
 	}
 
+        @Override
 	public Component getContentPage() {
 		return applet;
 	}
@@ -37,6 +39,7 @@ public class DefaultPartialScore implements PartialScoreIF {
 		this.applet = applet;
 	}
 
+        @Override
 	public Map getScoreObjectivesMap(SCORM12APIInterface api) {
 		return null;
 	}

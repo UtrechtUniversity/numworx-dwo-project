@@ -9,7 +9,7 @@ import java.awt.LayoutManager;
 
 import javax.swing.JPanel;
 
-import fi.dwo.client.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 
 /**
  * @author wim
@@ -49,6 +49,7 @@ public class ContentPanel extends JPanel {
 		// TODO Auto-generated constructor stub
 	}
 
+        @Override
 	public void paintComponent(Graphics g) {
 		if(GuiConstants.GUI_IMAGE_BG) {
 	       	//Point p = DwoHelper.getComponentLocation(this);

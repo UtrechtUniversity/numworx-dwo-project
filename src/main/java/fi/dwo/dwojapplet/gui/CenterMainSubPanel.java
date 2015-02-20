@@ -7,12 +7,9 @@ package fi.dwo.dwojapplet.gui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.LayoutManager;
-import java.awt.Point;
-import java.awt.Image;
 
 import javax.swing.JPanel;
 
-import fi.dwo.client.domain.DwoHelper;
 
 /**
  * This is the main-centerpanel. 
@@ -52,6 +49,7 @@ public class CenterMainSubPanel extends JPanel {
         g.drawLine(161, 0, 161, 445);
     }*/
     
+    @Override
     public void paintComponent(Graphics g) {
 		super.paintComponent(g);
     	if(!GuiConstants.GUI_IMAGE_BG) {

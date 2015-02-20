@@ -1,29 +1,23 @@
 package fi.dwo.dwojapplet.gui.action;
 
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.AbstractAction;
-
-import fi.dwo.client.domain.AppletConfig;
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.DWO;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.CenterPanel;
-import fi.dwo.client.gui.CourseManagementPanel;
-import fi.dwo.client.gui.GuiCreator;
-import fi.dwo.client.gui.ModuleTreePanel;
-import fi.dwo.client.persistence.PersistenceFacade;
-import fi.dwo.client.system.PersistenceException;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.AppletConfig;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DWO;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.CourseManagementPanel;
+import fi.dwo.dwojapplet.gui.ModuleTreePanel;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
 public class PasteAction extends GuiAction
 	{
 		CourseMap map;
 
+                @Override
 		public void actionPerformed(ActionEvent e) {
 			if(map == null)
 				map = Clipboard.getSelection();
@@ -314,6 +308,7 @@ public class PasteAction extends GuiAction
 			Clipboard.addPropertyChangeListener("selection", this);
 			
 		}
+                @Override
 		void setMap(CourseMap map) {
 			setEnabled(
 					Clipboard.getClipboard() != null &&

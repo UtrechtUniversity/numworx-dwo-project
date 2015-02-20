@@ -16,6 +16,7 @@ public class MyBoxLayout extends BoxLayout implements LayoutManager {
 	/* (non-Javadoc)
 	 * @see javax.swing.BoxLayout#layoutContainer(java.awt.Container)
 	 */
+        @Override
 	public void layoutContainer(Container panel) {
 		super.layoutContainer(panel);
 		Dimension size = panel.getSize();

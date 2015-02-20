@@ -9,38 +9,32 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.DwoIF;
-import fi.dwo.client.domain.Guest;
-import fi.dwo.client.domain.ResultsModuleIF;
-import fi.dwo.client.domain.School;
-import fi.dwo.client.domain.SchoolClass;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.domain.Teacher;
-import fi.dwo.client.gui.action.NullStrategy;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.DwoIF;
+import fi.dwo.dwojapplet.domain.ResultsModuleIF;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.Teacher;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.action.NullStrategy;
 
 /**
  * The main-centerpanel.
@@ -68,6 +62,7 @@ public class CenterPanel extends JPanel implements CourseContainer {
 			this.c = c;
 		}
 
+                @Override
 		public void run() {
 		       c.requestFocusInWindow();
 		}
@@ -233,6 +228,7 @@ if(iconizer)
      * @param panel The centerpanel to load.
      * @see fi.dwo.client.gui.CenterSubPanel
      */
+        @Override
     public void loadCenter(CenterSubPanel panel) {
         
         if(tree != null)
@@ -292,6 +288,7 @@ if(iconizer)
      * @param panel The mainpanel to load.
      * @see fi.dwo.client.gui.CenterSubPanel
      */
+        @Override
     public void loadTotal(CenterSubPanel panel) {
 if(!iconizer)
 {    	if(GuiConstants.GUI_IMAGE_BG) // todo tuning
@@ -379,6 +376,7 @@ invalidate();
     }*/
     
     
+        @Override
     public void paint(Graphics g) {
        	super.paint(g);
     	if(!GuiConstants.GUI_IMAGE_BG) {
@@ -448,9 +446,11 @@ invalidate();
         return menu;
     }
 
+        @Override
 	public void showClassList() {
 		getMenu().showClassList();
 	}
+        @Override
 	public void hideClassList() {
 		getMenu().hideClassList();
 	}

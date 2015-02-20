@@ -6,54 +6,44 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Insets;
 import java.awt.Rectangle;
-import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
 import java.awt.image.ColorModel;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
 import java.awt.image.ImageProducer;
-import java.awt.image.RGBImageFilter;
-import java.awt.image.WritableRaster;
 
 import javax.swing.AbstractButton;
 import javax.swing.Action;
-import javax.swing.ButtonModel;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.plaf.ButtonUI;
-import javax.swing.plaf.basic.BasicButtonUI;
-import javax.swing.plaf.basic.BasicHTML;
-import javax.swing.text.View;
 
 public class VButton extends JButton {
 
+        @Override
 	public int getHeight() {
 		return hor ? super.getWidth(): super.getHeight();
 	}
 
+        @Override
 	public Font getFont() { 
 		return super.getFont();
 	}
 	
+        @Override
 	public int getWidth() {
 		return hor ? super.getHeight(): super.getWidth();
 	}
 	
+        @Override
 	public Dimension getSize() 
 	{
 		Dimension size = super.getSize();
@@ -122,6 +112,7 @@ public class VButton extends JButton {
 	        rect.height = (int) Math.ceil(maxy) - rect.y + 1;
 	    }
 
+            @Override
 	    public void setDimensions(int width, int height) {
 	        Rectangle rect = new Rectangle(0, 0, width, height);
 	        transformBBox(rect);
@@ -135,10 +126,12 @@ public class VButton extends JButton {
 	        consumer.setDimensions(dstW, dstH);
 	    }
 
+            @Override
 	    public void setColorModel(ColorModel model) {
 	        consumer.setColorModel(defaultRGB);
 	    }
 
+            @Override
 	    public void setHints(int hintflags) {
 	        consumer.setHints(TOPDOWNLEFTRIGHT
 	                          | COMPLETESCANLINES
@@ -146,6 +139,7 @@ public class VButton extends JButton {
 	                          | (hintflags & SINGLEFRAME));
 	    }
 
+            @Override
 	    public void setPixels(int x, int y, int w, int h, ColorModel model,
 	                          byte pixels[], int off, int scansize) {
 	        int srcoff = off;
@@ -159,6 +153,7 @@ public class VButton extends JButton {
 	        }
 	    }
 
+            @Override
 	    public void setPixels(int x, int y, int w, int h, ColorModel model,
 	                          int pixels[], int off, int scansize) {
 	        int srcoff = off;
@@ -180,6 +175,7 @@ public class VButton extends JButton {
 	        }
 	    }
 
+            @Override
 	    public void imageComplete(int status) {
 	        if (status == IMAGEERROR || status == IMAGEABORTED) {
 	            consumer.imageComplete(status);
@@ -232,6 +228,7 @@ public class VButton extends JButton {
 			this.ui = ui;
 		}
 
+                @Override
 		public void installUI(JComponent c) {
 			ui.installUI(c);
 			installDefaults((AbstractButton) c);
@@ -246,19 +243,23 @@ public class VButton extends JButton {
 			b.setFocusPainted(false);
 		}
 
+                @Override
 		public Dimension getMaximumSize(JComponent c) {
 			return swap(ui.getMaximumSize(c));
 		}
 
+                @Override
 		public Dimension getMinimumSize(JComponent c) {
 			return swap(ui.getMinimumSize(c));
 		}
 
+                @Override
 		public Dimension getPreferredSize(JComponent c) {
 // c.getSize() relevant?
 			return swap(ui.getPreferredSize(c));
 		}
 
+                @Override
 		public void paint(Graphics g, JComponent c) {
 			VButton v = (VButton) c;
 			boolean h = v.hor;//c.setSize(swap(c.getSize()));
@@ -280,6 +281,7 @@ public class VButton extends JButton {
 			g.drawImage(img, 0, 0, null);
 		}
 
+                @Override
 		public void update(Graphics g, JComponent c) {
 			VButton v = (VButton) c;
 			boolean h = v.hor;//c.setSize(swap(c.getSize()));
@@ -299,6 +301,7 @@ public class VButton extends JButton {
 
 	}
 
+        @Override
 	public void updateUI() {
 		super.updateUI();
 		setUI(new UI(getUI()));
@@ -310,14 +313,17 @@ public class VButton extends JButton {
 		static final int SIZE = 8;
 		static final BasicStroke STROKE = new BasicStroke(2.0f);
 
+                @Override
 		public int getIconHeight() {
 			return SIZE;
 		}
 
+                @Override
 		public int getIconWidth() {
 			return SIZE;
 		}
 
+                @Override
 		public void paintIcon(Component c, Graphics g, int x, int y) {
 			if(g instanceof Graphics2D)
 			{
@@ -360,6 +366,7 @@ public class VButton extends JButton {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		VButton button = new VButton("Knoppen", new VButton.V() );
 		button.addActionListener(new ActionListener() {
+                        @Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println(e);			
 			} });

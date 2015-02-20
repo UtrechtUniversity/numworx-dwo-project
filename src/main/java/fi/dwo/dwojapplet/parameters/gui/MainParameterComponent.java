@@ -19,6 +19,7 @@ public class MainParameterComponent extends ParameterComponent implements TabShe
     /* (non-Javadoc)
 	 * @see fi.dwo.parameters.gui.ParameterComponent#getMinimumSize()
 	 */
+    @Override
 	public Dimension getMinimumSize() {
 		return getLayout().minimumLayoutSize(this);
 		//return super.getMinimumSize();
@@ -29,6 +30,7 @@ public class MainParameterComponent extends ParameterComponent implements TabShe
 	/* (non-Javadoc)
 	 * @see fi.dwo.parameters.gui.ParameterComponent#getPreferredSize()
 	 */
+    @Override
 	public Dimension getPreferredSize() {
 		//return super.getPreferredSize();
 		Dimension size = getLayout().preferredLayoutSize(this);

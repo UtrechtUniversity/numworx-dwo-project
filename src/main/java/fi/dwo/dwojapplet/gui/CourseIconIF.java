@@ -5,7 +5,7 @@ package fi.dwo.dwojapplet.gui;
 
 import java.awt.event.ActionListener;
 
-import fi.dwo.client.domain.Course;
+import fi.dwo.dwojapplet.domain.Course;
 
 /**
  * 

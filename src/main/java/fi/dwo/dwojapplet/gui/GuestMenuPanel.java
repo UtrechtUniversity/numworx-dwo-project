@@ -8,15 +8,11 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Insets;
 
 import javax.swing.Action;
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -24,9 +20,8 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.DwoIF;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoIF;
 
 /**
  * This is a panel with the menu-options for a guest-user.
@@ -63,6 +58,7 @@ public class GuestMenuPanel extends JPanel implements ActionListener {
 		/* (non-Javadoc)
 		 * @see javax.swing.JComponent#getMaximumSize()
 		 */
+                @Override
 		public Dimension getMaximumSize() {
 			return new Dimension(GuestMenuPanel.this.getWidth()-MARGIN,getPreferredSize().height);
 		}
@@ -73,12 +69,15 @@ public class GuestMenuPanel extends JPanel implements ActionListener {
     		setOpaque(false);
     		setBackground(Color.black);
     	}
+            @Override
     	public Dimension getPreferredSize() {
     		return new Dimension(1000, 1);
     	}
+            @Override
     	public Dimension getMaximumSize() {
     		return getPreferredSize();
     	}
+            @Override
     	public Dimension getMinimumSize() { 
     		return new Dimension(1,1);
     	}
@@ -117,6 +116,7 @@ public class GuestMenuPanel extends JPanel implements ActionListener {
 	/* (non-Javadoc)
 	 * @see java.awt.Component#setBounds(int, int, int, int)
 	 */
+        @Override
 	public void setBounds(int x, int y, int width, int height) {
 		// TODO Auto-generated method stub
 		super.setBounds(x, y, width, height);
@@ -152,6 +152,7 @@ public class GuestMenuPanel extends JPanel implements ActionListener {
      * @param e The ActionEvent.
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+        @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == mainMenuButton) {
             //center.loadCenter(new CourseChoisePanel());

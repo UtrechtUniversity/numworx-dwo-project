@@ -47,6 +47,7 @@ public class ResultScore implements ResultScoreIF {
      * 
      * @return the current Lessongroup.
      */
+    @Override
     public LessonGroup getLessonGroup() {
         return lessonGroup;
     }
@@ -68,6 +69,7 @@ public class ResultScore implements ResultScoreIF {
      * 
      * @return The current UserGroup.
      */
+    @Override
     public UserGroup getUserGroup() {
         return userGroup;
     }
@@ -88,6 +90,7 @@ public class ResultScore implements ResultScoreIF {
      *         returns true. Otherwise it returns false.
      * @see fi.dwo.client.domain.ResultScoreIF#isDeepest()
      */
+    @Override
     public boolean isDeepest() {
         return userGroup.isDeepestLevel() && lessonGroup.isDeepestLevel();
     }
@@ -132,6 +135,7 @@ public class ResultScore implements ResultScoreIF {
      * Shows the result of the current usergroup/lessongroup.
      *  
      */
+    @Override
     public void showResult() {
         userResultList.showResult(this);
         // update score... werkt niet, want showResults is asynchroon.

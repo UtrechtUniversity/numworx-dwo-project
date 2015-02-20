@@ -25,7 +25,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicButtonUI;
 
-import fi.dwo.client.domain.Course;
+import fi.dwo.dwojapplet.domain.Course;
 
 /**
  * This class is a panel witch shows a icon of the course.
@@ -41,10 +41,12 @@ public class CourseIcon extends JButton implements CourseIconIF {
     
     private Color textColor;
 
+    @Override
     public String getUIClassID() {
 		return "CourseIconUI";
 	}
 
+    @Override
 	public void updateUI() {
 		setUI(new CourseIconUI());
 	}
@@ -71,6 +73,7 @@ public class CourseIcon extends JButton implements CourseIconIF {
         } catch (Exception e) {
         }
         ImageIcon icon = new ImageIcon(courseLogo) {
+                        @Override
 			public int getIconHeight() {
 				return 60;
 			} } ;
@@ -94,6 +97,7 @@ public class CourseIcon extends JButton implements CourseIconIF {
      * @return The current Course.
      * @see fi.dwo.client.gui.CourseIconIF#getCourse()
      */
+    @Override
     public Course getCourse() {
         return course;
     }
@@ -101,6 +105,7 @@ public class CourseIcon extends JButton implements CourseIconIF {
     /* (non-Javadoc)
 	 * @see javax.swing.JComponent#processMouseMotionEvent(java.awt.event.MouseEvent)
 	 */
+    @Override
 	protected void processMouseEvent(MouseEvent e) {
 		super.processMouseEvent(e);
 		if(e.getID()== MouseEvent.MOUSE_ENTERED)
@@ -114,10 +119,12 @@ public class CourseIcon extends JButton implements CourseIconIF {
 		}
 	}
         
+    @Override
     public Dimension getMinimumSize() {
         return new Dimension(120,120);
     }
 
+    @Override
     public Dimension getPreferredSize() {
         Dimension result = super.getPreferredSize();
         if(result.width < 120)
@@ -157,11 +164,13 @@ public class CourseIcon extends JButton implements CourseIconIF {
 
 class CourseIconUI extends BasicButtonUI {
 
+        @Override
 	public void paint(Graphics g, JComponent c) {
 		// TODO Auto-generated method stub
 		super.paint(g, c);
 	}
 
+        @Override
 	protected void paintText(Graphics g, AbstractButton b, Rectangle textRect,
 			String text) {
 
@@ -236,12 +245,14 @@ class CourseIconUI extends BasicButtonUI {
 		// TODO Auto-generated constructor stub
 	}
 
+        @Override
 	public void installUI(JComponent c) {
         installDefaults((AbstractButton) c);
         installListeners((AbstractButton) c);
         installKeyboardActions((AbstractButton) c);
 	}
 
+        @Override
 	public Dimension getPreferredSize(JComponent c) {
 		return getPreferredButtonSize((JButton)c, ((JButton) c).getIconTextGap());
 	}

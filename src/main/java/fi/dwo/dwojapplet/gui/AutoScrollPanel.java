@@ -41,6 +41,7 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
     /* (non-Javadoc)
      * @see java.awt.event.ComponentListener#componentHidden(java.awt.event.ComponentEvent)
      */
+    @Override
     public void componentHidden(ComponentEvent e) {
         
     }
@@ -48,6 +49,7 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
     /* (non-Javadoc)
      * @see java.awt.event.ComponentListener#componentMoved(java.awt.event.ComponentEvent)
      */
+    @Override
     public void componentMoved(ComponentEvent e) {
         resizePanel();
         
@@ -56,6 +58,7 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
     /* (non-Javadoc)
      * @see java.awt.event.ComponentListener#componentResized(java.awt.event.ComponentEvent)
      */
+    @Override
     public void componentResized(ComponentEvent e) {
         resizePanel();
         
@@ -64,6 +67,7 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
     /* (non-Javadoc)
      * @see java.awt.event.ComponentListener#componentShown(java.awt.event.ComponentEvent)
      */
+    @Override
     public void componentShown(ComponentEvent e) {
         
     }
@@ -148,6 +152,7 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
     /* (non-Javadoc)
      * @see java.awt.Container#add(java.awt.Component)
      */
+    @Override
     public Component add(Component comp) {
         comp.addComponentListener(this);
         p.add(comp);
@@ -157,6 +162,7 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
     /* (non-Javadoc)
      * @see java.awt.Container#add(java.awt.Component, int)
      */
+    @Override
     public Component add(Component comp, int index) {
         comp.addComponentListener(this);
         p.add(comp, index);
@@ -166,6 +172,7 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
     /* (non-Javadoc)
      * @see java.awt.Container#add(java.awt.Component, java.lang.Object, int)
      */
+    @Override
     public void add(Component comp, Object constraints, int index) {
         comp.addComponentListener(this);
         p.add(comp, constraints, index);
@@ -174,6 +181,7 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
     /* (non-Javadoc)
      * @see java.awt.Container#add(java.awt.Component, java.lang.Object)
      */
+    @Override
     public void add(Component comp, Object constraints) {
         comp.addComponentListener(this);
         p.add(comp, constraints);
@@ -182,6 +190,7 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
     /* (non-Javadoc)
      * @see java.awt.Container#add(java.lang.String, java.awt.Component)
      */
+    @Override
     public Component add(String name, Component comp) {
         comp.addComponentListener(this);
         p.add(name, comp);
@@ -191,30 +200,35 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
     /* (non-Javadoc)
      * @see java.awt.Container#getComponent(int)
      */
+    @Override
     public Component getComponent(int n) {
         return p.getComponent(n);
     }
     /* (non-Javadoc)
      * @see java.awt.Component#getComponentAt(int, int)
      */
+    @Override
     public Component getComponentAt(int x, int y) {
         return p.getComponentAt(x, y);
     }
     /* (non-Javadoc)
      * @see java.awt.Component#getComponentAt(java.awt.Point)
      */
+    @Override
     public Component getComponentAt(Point p) {
         return this.p.getComponentAt(p);
     }
     /* (non-Javadoc)
      * @see java.awt.Container#getComponentCount()
      */
+    @Override
     public int getComponentCount() {
         return p.getComponentCount();
     }
     /* (non-Javadoc)
      * @see java.awt.Container#getComponents()
      */
+    @Override
     public Component[] getComponents() {
         return p.getComponents();
     }

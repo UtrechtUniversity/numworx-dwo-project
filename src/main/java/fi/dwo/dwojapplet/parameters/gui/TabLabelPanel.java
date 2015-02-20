@@ -22,7 +22,6 @@ import java.util.Hashtable;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import fi.dwo.client.gui.BorderedPanel;
 
 /**
  * @author M.J.B. Kupers
@@ -140,6 +139,7 @@ public class TabLabelPanel extends JPanel implements ActionListener {
     /* (non-Javadoc)
      * @see java.awt.Component#paint(java.awt.Graphics)
      */
+    @Override
     public void paint(Graphics g) {
         super.paint(g);
         
@@ -174,6 +174,7 @@ public class TabLabelPanel extends JPanel implements ActionListener {
     /* (non-Javadoc)
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
         if(obj instanceof TabLinkedLabel) {
@@ -196,6 +197,7 @@ public class TabLabelPanel extends JPanel implements ActionListener {
     /* (non-Javadoc)
      * @see java.awt.Container#getInsets()
      */
+    @Override
     public Insets getInsets() {
         Insets insets = super.getInsets();
         insets.top += 30;

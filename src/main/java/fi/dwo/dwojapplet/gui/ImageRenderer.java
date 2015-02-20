@@ -12,6 +12,7 @@ public class ImageRenderer extends JLabel implements TableCellRenderer {
 
 	private ImageIcon icon = new ImageIcon();
 	
+        @Override
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 		

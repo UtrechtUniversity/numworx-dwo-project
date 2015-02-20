@@ -3,28 +3,19 @@
 
 package fi.dwo.dwojapplet.gui;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
 import java.awt.Color;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.DebugGraphics;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.border.Border;
 
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.DwoIF;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoIF;
+import fi.dwo.dwojapplet.domain.User;
 
 /**
  * This class is the menupanel for the user who logged in.
@@ -46,6 +37,7 @@ public class MenuPanel extends GuestMenuPanel {
     /* (non-Javadoc)
 	 * @see fi.dwo.client.gui.GuestMenuPanel#createButtons()
 	 */
+        @Override
 	protected void createButtons() {
 		super.createButtons();
         createMenuButtons();
@@ -149,6 +141,7 @@ public class MenuPanel extends GuestMenuPanel {
      * @param e The ActionEvent.
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+        @Override
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
         if (e.getSource() == myProfileButton) {

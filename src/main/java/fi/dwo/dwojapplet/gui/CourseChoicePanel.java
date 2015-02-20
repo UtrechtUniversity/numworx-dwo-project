@@ -5,14 +5,12 @@ package fi.dwo.dwojapplet.gui;
 
 import java.applet.AppletContext;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,18 +26,16 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import netscape.javascript.JSObject;
 
 
 import fi.beans.mathkit.JMathPane;
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.Descriptor;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.DwoProfile;
-import fi.dwo.client.gui.action.TeacherStrategy;
-import fi.dwo.client.persistence.PersistenceFacade;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.Descriptor;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.DwoProfile;
+import fi.dwo.dwojapplet.gui.action.TeacherStrategy;
 import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.WiskOpdrPanel;
 import fi.wiskopdr.tekstobjects.LinkIF;
@@ -49,7 +45,7 @@ import fi.wiskopdr.tekstobjects.LinkIF;
  * @author M.J.B. Kupers
  *  
  */
-public class CourseChoisePanel extends JPanel implements ActionListener,
+public class CourseChoicePanel extends JPanel implements ActionListener,
         CenterSubPanel, Scrollable, LinkIF {
     private CenterPanel center;
 
@@ -68,15 +64,15 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
 	 * overview of all the available courses to the user.
 	 * FIXME ModuleTreePanel moet worden GuiConstants!
 	 */
-	private CourseChoisePanel(DwoProfile dwoProfile) {
+	private CourseChoicePanel(DwoProfile dwoProfile) {
 		this(dwoProfile, GuiCreator.instance().getCourseList(), ModuleTreePanel.ALLE_MODULES);
 	}
 
-	public CourseChoisePanel(Descriptor descriptor, Object userObject) {
+	public CourseChoicePanel(Descriptor descriptor, Object userObject) {
 		this(descriptor, descriptor.getChildren(), userObject);
 	}
 	
-	public static CourseChoisePanel newInstance() {
+	public static CourseChoicePanel newInstance() {
 		if(CenterPanel.isIconizer())
 		{
 			
@@ -85,16 +81,17 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
 			CourseMap toplevel = tree.toCourseMap(root);
 			if(toplevel instanceof Descriptor) {
 				Descriptor d = (Descriptor) toplevel;
-				return new CourseChoisePanel(d, toplevel.getUserObject());
+				return new CourseChoicePanel(d, toplevel.getUserObject());
 			}
 			if(toplevel != null)
 // FIXME structuur niet transparant
-				return new CourseChoisePanel(new TeacherStrategy.Bridge(GuiCreator.instance().getDWO().getDwoProfile(),toplevel), toplevel.getUserObject());
+				return new CourseChoicePanel(new TeacherStrategy.Bridge(GuiCreator.instance().getDWO().getDwoProfile(),toplevel), toplevel.getUserObject());
 		}
-		return new CourseChoisePanel(GuiCreator.instance().dwo.getDwoProfile(), ModuleTreePanel.ALLE_MODULES);
+		return new CourseChoicePanel(GuiCreator.instance().dwo.getDwoProfile(), ModuleTreePanel.ALLE_MODULES);
 	}
 	
 	
+    @Override
 	public Object getUserObject() {
 		return userObject;
 	}
@@ -104,7 +101,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
      * overview of all the available courses to the user.
      * @param courseList TODO
      */
-    public CourseChoisePanel(Descriptor dwoProfile, CourseMap[] courseList, Object userObject) {
+    public CourseChoicePanel(Descriptor dwoProfile, CourseMap[] courseList, Object userObject) {
         super();
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         setLayout(new BorderLayout());
@@ -236,6 +233,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
 	}
     
   
+    @Override
    public void paint(Graphics g)
    {
 	   //validate();
@@ -248,6 +246,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
      * @param e The ActionEvent.
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof CourseIcon) {
             Course course = ((CourseIcon) e.getSource()).getCourse();
@@ -267,6 +266,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
      * Indicate that another panel is loaded and the connections of this panel
      * must be closed.
      */
+    @Override
     public void end() {
 
     }
@@ -278,6 +278,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
      * @return A panel that can function as a header panel.
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
+    @Override
     public Component getHeaderPanel() {
         HeaderPanel p; //  = new BorderedPanel(null); 
 
@@ -299,6 +300,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
      * 
      * @param centerPanel The centerPanel to communicate with.
      */
+    @Override
     public void setCenterPanel(CenterPanel centerPanel) {
         center = centerPanel;
     }
@@ -309,15 +311,18 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
      * @return the current object.
      * @see fi.dwo.client.gui.CenterSubPanel#getComponent()
      */
+    @Override
     public JComponent getComponent() {
         return this;
     }
 
 
+    @Override
 	public Dimension getPreferredScrollableViewportSize() {
 		return getPreferredSize();
 	}
 
+    @Override
 	public int getScrollableBlockIncrement(Rectangle visibleRect,
 			int orientation, int direction) {
 		if(orientation == SwingConstants.VERTICAL)			
@@ -327,13 +332,16 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
 		else 
 			return visibleRect.width;
 	}
+    @Override
 	public boolean getScrollableTracksViewportHeight() {
 		return false;
 	}
+    @Override
 	public boolean getScrollableTracksViewportWidth() {
 		return getParent().getWidth() > getMinimumSize().width;
 	}
 // onder windows xp, een mousewheel click is 3 units.	
+    @Override
 	public int getScrollableUnitIncrement(Rectangle visibleRect,
 			int orientation, int direction) {
 		if(orientation == SwingConstants.VERTICAL)			
@@ -342,6 +350,7 @@ public class CourseChoisePanel extends JPanel implements ActionListener,
 			return unit.width;
 	}
 
+    @Override
 	public void stateChanged(ChangeEvent e) {
 		Object source = e.getSource();
 		if(source instanceof CourseMap)

@@ -29,6 +29,7 @@ public class TreeTabSheet extends ParameterComponent implements TabSheetIF
     }
     
     
+    @Override
     public Component getComponent()
     {
         return this;

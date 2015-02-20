@@ -5,20 +5,19 @@ package fi.dwo.dwojapplet.persistence;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.Hashtable;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-import fi.dwo.client.domain.ContactDocent;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.School;
-import fi.dwo.client.domain.SchoolClass;
-import fi.dwo.client.domain.SchoolGroup;
-import fi.dwo.client.domain.Teacher;
-import fi.dwo.client.domain.Admin;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Admin;
+import fi.dwo.dwojapplet.domain.ContactDocent;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.SchoolGroup;
+import fi.dwo.dwojapplet.domain.Teacher;
+import fi.dwo.dwojapplet.domain.User;
 
 public class UserMapper extends XmlRpcMapper {
 
@@ -41,6 +40,7 @@ public class UserMapper extends XmlRpcMapper {
      * @param obj
 
      */
+    @Override
     public void put(int oid, Object obj) throws IOException, SQLException,
             XmlRpcException {
         System.err.println("UserMapper.put() Not yet implemented!");
@@ -51,6 +51,7 @@ public class UserMapper extends XmlRpcMapper {
      * @return Object
 
      */
+    @Override
     public Object getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException {
         User u = null;
         if (data.get("userID") == null) { //We don't know enough to make a
@@ -98,6 +99,7 @@ public class UserMapper extends XmlRpcMapper {
      * </ul>
      * @return The Users who satisfies the restriction. 
      */
+    @Override
     public Object[] get(Object obj) throws IOException, SQLException,
             XmlRpcException {
         Hashtable ht = new Hashtable();
@@ -120,6 +122,7 @@ public class UserMapper extends XmlRpcMapper {
      * 
      * @see fi.dwo.client.persistence.XmlRpcMapper#getIDCol()
      */
+    @Override
     protected String getIDCol() {
         return IDCOL;
     }
@@ -129,6 +132,7 @@ public class UserMapper extends XmlRpcMapper {
      * 
      * @see fi.dwo.client.persistence.XmlRpcMapper#getTableName()
      */
+    @Override
     protected String getTableName() {
         return TABLENAME;
     }
@@ -139,6 +143,7 @@ public class UserMapper extends XmlRpcMapper {
      * @see fi.dwo.client.persistence.XmlRpcMapper#update(java.lang.Object,
      *      java.util.Hashtable)
      */
+    @Override
     protected Object update(Object obj, Hashtable data) throws IOException, SQLException, XmlRpcException {
         User u = (User) obj;
         u.setEmail((String) data.get("email"));
@@ -190,6 +195,7 @@ public class UserMapper extends XmlRpcMapper {
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#createArray(int)
      */
+    @Override
     protected Object[] createArray(int size) {
         return new User[size];
     }
@@ -197,6 +203,7 @@ public class UserMapper extends XmlRpcMapper {
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#getOrderbyCol()
      */
+    @Override
     protected String getOrderbyCol() {
         return ORDERCOL;
     }

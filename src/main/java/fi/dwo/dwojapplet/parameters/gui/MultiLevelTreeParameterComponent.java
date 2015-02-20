@@ -16,8 +16,7 @@ import javax.swing.JButton;
 
 import fi.beans.scorm.Parameter;
 import fi.beans.scorm.TreeParameter;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.parameters.system.TextMapper;
+import fi.dwo.dwojapplet.parameters.system.TextMapper;
 
 public class MultiLevelTreeParameterComponent extends ParameterComponent
         implements ActionListener {
@@ -150,6 +149,7 @@ public class MultiLevelTreeParameterComponent extends ParameterComponent
      * 
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == button) {
 //System.out.println("start uitklappen");
@@ -189,6 +189,7 @@ public class MultiLevelTreeParameterComponent extends ParameterComponent
      * 
      * @see fi.dwo.parameters.gui.ParameterComponentIF#addParameters(java.util.Hashtable)
      */
+    @Override
     public void addParameters(Hashtable parameters) {
         if(tabSheet == null) {
             addParameter(parameters, defaultValue);
@@ -203,6 +204,7 @@ public class MultiLevelTreeParameterComponent extends ParameterComponent
      * 
      * @see fi.dwo.parameters.gui.ParameterComponent#generatePostItems(java.awt.Component)
      */
+    @Override
     protected Component generatePostItems(Component after) {
 	    postLabel = new FixedLabel("(" + TextMapper.getText(TextMapper.LBL_NO_ITEMS) + ")");
 	    postLabel.setFont(ParameterConstants.LABEL_FONT);
@@ -241,6 +243,7 @@ public class MultiLevelTreeParameterComponent extends ParameterComponent
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.ParameterComponentIF#unFocus()
      */
+    @Override
     public void unFocus() {
         if(tabPane != null) {
             this.remove(tabPane);
@@ -263,6 +266,7 @@ public class MultiLevelTreeParameterComponent extends ParameterComponent
     /* (non-Javadoc)
      * @see java.awt.event.ComponentListener#componentResized(java.awt.event.ComponentEvent)
      */
+    @Override
     public void componentResized(ComponentEvent e) {
         if(e.getSource() == tabPane) {
             this.setVisible(false);
@@ -274,6 +278,7 @@ public class MultiLevelTreeParameterComponent extends ParameterComponent
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.ParameterComponentIF#reset()
      */
+    @Override
     public void reset() {
         if(tabPane != null) {
             this.remove(tabPane);
@@ -298,6 +303,7 @@ public class MultiLevelTreeParameterComponent extends ParameterComponent
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.ParameterComponentIF#getSequenceString(fi.dwo.parameters.gui.ParameterComponentIF)
      */
+    @Override
     public String getSequenceString(ParameterComponentIF component) {
         if(parent != null) {
             return parent.getSequenceString(this);
@@ -309,6 +315,7 @@ public class MultiLevelTreeParameterComponent extends ParameterComponent
 	/* (non-Javadoc)
 	 * @see java.awt.Component#setBounds(int, int, int, int)
 	 */
+    @Override
 	public void setBounds(int x, int y, int width, int height) {
 		// TODO Auto-generated method stub
 		super.setBounds(x, y, width, height);

@@ -7,14 +7,12 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.*;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 import javax.swing.table.*;
 
 import fi.dwo.dwojapplet.domain.*;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.system.TextMapper;
-import fi.beans.stringutils.*;
 
 public class RegisterClassListButton extends JButton implements ActionListener
 {
@@ -162,6 +160,7 @@ public class RegisterClassListButton extends JButton implements ActionListener
 	private static final String CLOSING = "closing";
 	class OnClose extends WindowAdapter {
 
+                @Override
 		public void windowClosing(WindowEvent e) {
 			ActionEvent ae = new ActionEvent(frame, ActionEvent.ACTION_PERFORMED, CLOSING);
 			fireActionPerformed(ae);
@@ -169,6 +168,7 @@ public class RegisterClassListButton extends JButton implements ActionListener
 	}
 	
 	
+        @Override
 	public void actionPerformed(ActionEvent e)
 	{
 		if(CLOSING.equals(e.getActionCommand()))

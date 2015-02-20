@@ -15,16 +15,15 @@ import java.util.Vector;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.LessonGroup;
-import fi.dwo.client.domain.ResultScore;
-import fi.dwo.client.domain.ResultsModule;
-import fi.dwo.client.domain.ResultsModuleIF;
-import fi.dwo.client.domain.SchoolClass;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.domain.UserGroup;
-import fi.dwo.client.domain.UserResultList;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.LessonGroup;
+import fi.dwo.dwojapplet.domain.ResultScore;
+import fi.dwo.dwojapplet.domain.ResultsModuleIF;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.domain.UserGroup;
+import fi.dwo.dwojapplet.domain.UserResultList;
 
 /**
  * @author thijsk
@@ -52,6 +51,7 @@ public class UserResultListMapper extends XmlRpcMapper {
      * @param obj
 
      */
+    @Override
     public void put(int oid, Object obj) throws IOException, SQLException,
             XmlRpcException {
         System.err.println("UserMapper.put() Not yet implemented!");
@@ -62,6 +62,7 @@ public class UserResultListMapper extends XmlRpcMapper {
      * @return Object
 
      */
+    @Override
     public Object getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException {
         ResultScore rs = new ResultScore();
         return update(rs, data);
@@ -72,6 +73,7 @@ public class UserResultListMapper extends XmlRpcMapper {
      * @return Object[]
 
      */
+    @Override
     public Object[] get(Object obj) throws IOException, SQLException,
             XmlRpcException {
         return get();
@@ -82,6 +84,7 @@ public class UserResultListMapper extends XmlRpcMapper {
      * 
      * @see fi.dwo.client.persistence.XmlRpcMapper#getIDCol()
      */
+    @Override
     protected String getIDCol() {
         return IDCOL;
     }
@@ -91,6 +94,7 @@ public class UserResultListMapper extends XmlRpcMapper {
      * 
      * @see fi.dwo.client.persistence.XmlRpcMapper#getTableName()
      */
+    @Override
     protected String getTableName() {
         return TABLENAME;
     }
@@ -101,6 +105,7 @@ public class UserResultListMapper extends XmlRpcMapper {
      * @see fi.dwo.client.persistence.XmlRpcMapper#update(java.lang.Object,
      *      java.util.Hashtable)
      */
+    @Override
     protected Object update(Object obj, Hashtable data) throws IOException, SQLException, XmlRpcException {
         ResultScore rs = (ResultScore) obj;
         
@@ -158,6 +163,7 @@ public class UserResultListMapper extends XmlRpcMapper {
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#createArray(int)
      */
+    @Override
     protected Object[] createArray(int size) {
         return new UserResultList[size];
     }
@@ -165,10 +171,12 @@ public class UserResultListMapper extends XmlRpcMapper {
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#getOrderbyCol()
      */
+    @Override
     protected String getOrderbyCol() {
         return ORDERCOL;
     }
 
+    @Override
     public Object[] getObjectFromReturn(Vector data) throws IOException,
             SQLException, XmlRpcException {
         Vector result = new Vector();

@@ -39,11 +39,13 @@ public class EnumParameterComponent extends ParameterComponent implements Parame
         this.setSize(last.getLocation().x + last.getSize().width + 5, 23);
 	}
 
+        @Override
 	public void addParameters(Hashtable parameters) {
         String value = comboBox.getSelectedItem().toString();
         addParameter(parameters, value);
 	}
 
+        @Override
 	public void reset() {
         if(defaultValue.containsKey(parameter.getName())) {
             comboBox.setSelectedItem(defaultValue.get(parameter.getName()));

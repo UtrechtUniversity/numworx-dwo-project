@@ -9,11 +9,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 
-import fi.dwo.client.domain.School;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.persistence.PersistenceFacade;
-import fi.dwo.client.system.PersistenceException;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
 public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
 
@@ -54,6 +54,7 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
 		modifyModules.setSelected(b);
 	}
 
+        @Override
 	public void end() {
 		StringBuffer sb = new StringBuffer();
 		sb.append(school.getRights());
@@ -81,23 +82,28 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
 		}
 	}
 
+        @Override
 	public JComponent getComponent() {
 		return this;
 	}
 
+        @Override
 	public Component getHeaderPanel() {
 		String opschrift = TextMapper.getText(TextMapper.GUIH_SETTINGS);
 		return new HeaderPanel(opschrift);
 	}
 
+        @Override
 	public Object getUserObject() {
 		return this;
 	}
 
+        @Override
 	public void setCenterPanel(CenterPanel centerPanel) {
 		center = centerPanel;
 	}
 
+        @Override
 	public void stateChanged(ChangeEvent e) {
 	}
 

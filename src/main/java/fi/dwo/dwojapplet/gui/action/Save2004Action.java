@@ -25,20 +25,20 @@ import javax.swing.JFileChooser;
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.base64code.StringCodeObject;
 import fi.beans.dwomaccess.JSONEncoder;
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.domain.Sco;
-import fi.dwo.client.domain.User;
-import fi.dwo.client.gui.GuiConstants;
-import fi.dwo.client.gui.GuiCreator;
-import fi.dwo.client.gui.ScormChooser;
-import fi.dwo.client.gui.ScormParameters;
-import fi.dwo.client.system.TextMapper;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.gui.GuiConstants;
+import fi.dwo.dwojapplet.gui.GuiCreator;
+import fi.dwo.dwojapplet.gui.ScormChooser;
+import fi.dwo.dwojapplet.gui.ScormParameters;
 
 public class Save2004Action extends GuiAction {
 
 	private static final String WWWURL = "http://www.fisme.science.uu.nl";
 
+        @Override
 	public void actionPerformed(ActionEvent e) {
 		if(sco0 == null)
 		{
@@ -466,6 +466,7 @@ public class Save2004Action extends GuiAction {
 		
 	}
 	
+        @Override
 	void setMap(CourseMap map) {
 		if(map != null)
 			setEnabled( map.getUserObject() instanceof Sco);

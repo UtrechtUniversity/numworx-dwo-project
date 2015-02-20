@@ -14,12 +14,12 @@ import javax.xml.transform.TransformerException;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-import fi.dwo.client.domain.Course;
-import fi.dwo.client.domain.CourseMap;
-import fi.dwo.client.domain.DwoHelper;
-import fi.dwo.client.persistence.DbAccessCreator;
-import fi.dwo.client.system.TextMapper;
-import fi.dwo.server.form.DWOFile;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.persistence.DbAccessCreator;
+import fi.dwo.dwojapplet.form.DWOFile;
 
 public class BackupModuleAction extends GuiAction {
 
@@ -49,6 +49,7 @@ public class BackupModuleAction extends GuiAction {
 		setEnabled(false);
 	}
 
+        @Override
 	public void actionPerformed(ActionEvent evt) {
 		try {
 			if(course == null && Clipboard.getSelection() instanceof Course)
@@ -82,6 +83,7 @@ public class BackupModuleAction extends GuiAction {
 		}
 	}
 
+        @Override
 	void setMap(CourseMap map) {
 		super.setMap(map);
 		boolean enabled = false;

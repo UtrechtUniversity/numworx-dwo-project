@@ -1,9 +1,8 @@
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.client.domain.ContactDocent;
-import fi.dwo.client.domain.DwoIF;
-import fi.dwo.client.domain.Teacher;
-import fi.dwo.client.domain.User;
+import fi.dwo.dwojapplet.domain.ContactDocent;
+import fi.dwo.dwojapplet.domain.DwoIF;
+import fi.dwo.dwojapplet.domain.User;
 
 public class GuiCreatorContactDocent extends GuiCreatorTeacher {
 
@@ -16,6 +15,7 @@ public class GuiCreatorContactDocent extends GuiCreatorTeacher {
 	 * @see fi.dwo.client.gui.GuiCreatorTeacher#getMenuPanel()
 	 */
 
+        @Override
 	public GuestMenuPanel getMenuPanel() {
         User u = dwo.getUser();
 
@@ -28,10 +28,12 @@ public class GuiCreatorContactDocent extends GuiCreatorTeacher {
 	/* (non-Javadoc)
 	 * @see fi.dwo.client.gui.GuiCreator#getUserManagementPanel()
 	 */
+        @Override
 	public CenterSubPanel getUserManagementPanel() {
 		return new UserManagementPanel(dwo);
 	}
 	
+        @Override
 	public CenterSubPanel getClassAdminPanel() {
 		return new ClassAdminPanel(dwo);
 	}
