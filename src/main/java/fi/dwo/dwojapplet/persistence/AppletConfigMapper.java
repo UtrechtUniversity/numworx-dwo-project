@@ -1,6 +1,5 @@
 // Source file:
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\ScoMapper.java
-
 package fi.dwo.dwojapplet.persistence;
 
 import java.io.IOException;
@@ -21,7 +20,7 @@ public class AppletConfigMapper extends XmlRpcMapper {
     private static final String ORDERCOL = "name";
 
     /**
-
+     *
      */
     public AppletConfigMapper() {
 
@@ -30,7 +29,8 @@ public class AppletConfigMapper extends XmlRpcMapper {
     /**
      * @param oid
      * @param obj
-
+     * @throws org.apache.xmlrpc.applet.XmlRpcException
+     *
      */
     @Override
     public void put(int oid, Object obj) throws IOException, SQLException,
@@ -41,22 +41,23 @@ public class AppletConfigMapper extends XmlRpcMapper {
     /**
      * @param data
      * @return Object
-
+     * @throws org.apache.xmlrpc.applet.XmlRpcException
+     *
      */
     @Override
     public Object getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException {
         AppletConfig ac = null;
         if (data.get("appletConfigID") == null) { //We don't know enough to make a
-                                         // AppletConfigobject
+            // AppletConfigobject
             return null;
         } else if (objects.containsKey(data.get("appletConfigID"))) { // Did we know the
-                                                             // AppletConfig?
+            // AppletConfig?
             ac = (AppletConfig) objects.get(data.get("appletConfigID"));
         } else {
             ac = new AppletConfig();
         }
         ac = (AppletConfig) update(ac, data);
-        if(!objects.containsKey(new Integer(ac.getID()))) {
+        if (!objects.containsKey(new Integer(ac.getID()))) {
             objects.put(new Integer(ac.getID()), ac);
         }
         return ac;
@@ -65,18 +66,18 @@ public class AppletConfigMapper extends XmlRpcMapper {
     /**
      * @param obj
      * @return Object[]
-
+     * @throws org.apache.xmlrpc.applet.XmlRpcException
+     *
      */
     @Override
     public Object[] get(Object obj) throws IOException, SQLException,
             XmlRpcException {
-    	if(obj instanceof Locale)
-    	{
-    		Locale locale = (Locale)obj;
-    		Hashtable map = new Hashtable();
-    		map.put("language", locale.getLanguage());
-    		return super.get(map);
-    	}
+        if (obj instanceof Locale) {
+            Locale locale = (Locale) obj;
+            Hashtable map = new Hashtable();
+            map.put("language", locale.getLanguage());
+            return super.get(map);
+        }
         return super.get();
     }
 
@@ -112,12 +113,13 @@ public class AppletConfigMapper extends XmlRpcMapper {
         ac.setAppletConfigID(((Integer) data.get("appletConfigID")).intValue());
         ac.setLaunchdata((String) data.get("launchdata"));
         ac.setName((String) data.get("name"));
-        if(!data.get("appletID").equals("")) {
+        if (!data.get("appletID").equals("")) {
             ac.setAppletID(((Integer) data.get("appletID")).intValue());
         }
         Object lang = data.get("language");
-		if(lang != null && !lang.equals(""))
-        	ac.setLanguage(String.valueOf(lang));
+        if (lang != null && !lang.equals("")) {
+            ac.setLanguage(String.valueOf(lang));
+        }
         return ac;
     }
 
@@ -126,7 +128,7 @@ public class AppletConfigMapper extends XmlRpcMapper {
      */
     @Override
     protected Object[] createArray(int size) {
-       return new AppletConfig[size];
+        return new AppletConfig[size];
     }
 
     /* (non-Javadoc)

@@ -1,5 +1,4 @@
 // Source file: C:\\parameters\\fi\\dwo\\client\\gui\\ScoManagementPanel.java
-
 package fi.dwo.dwojapplet.gui;
 
 import java.awt.BorderLayout;
@@ -57,38 +56,38 @@ import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.WiskOpdrEditPanel;
 
 /**
- * This class is a panel containing a list of SCO's to edit, delete or add.
- * It is used for SCO-management.
+ * This class is a panel containing a list of SCO's to edit, delete or add. It
+ * is used for SCO-management.
+ *
  * @author M.J.B. Kupers
  * @author Wim van Velthoven
  *
  */
 public class ScoManagementPanel extends JPanel implements CenterSubPanel, ActionListener {
 
-	private CenterPanel center;
+    private CenterPanel center;
 
     private JButton addScoButton, exportCourseButton, importScosButton;
-    private JButton courseLogoButton; 
+    private JButton courseLogoButton;
 
     private Image removeImage, editImage, courseImage, parametersImage, upImage, downImage;
 
     private Course course;
-    
+
     private JLabel label;
-    
+
     private JLabel noScosLabel;
-	private FileDialog saveDial, openDial;
-	
-	private JCheckBox editorCB;
-	private Box editorBox = Box.createVerticalBox();
+    private FileDialog saveDial, openDial;
+
+    private JCheckBox editorCB;
+    private Box editorBox = Box.createVerticalBox();
 
 	//private JButton publishButton;
-
     /**
      * @param course
      */
     public ScoManagementPanel(Course course) {
-        super(new BorderLayout(10,10));
+        super(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 30, 0, 10));
         this.course = course;
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
@@ -102,10 +101,9 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_SCO_IMAGE);
         courseImage = DwoHelper.getResourceImage(GuiConstants.COURSE_SCO_IMAGE);
         parametersImage = DwoHelper.getResourceImage(GuiConstants.PARAMETERS_SCO_IMAGE);
-        
+
         upImage = DwoHelper.getResourceImage(GuiConstants.UP_SCO_IMAGE);
         downImage = DwoHelper.getResourceImage(GuiConstants.DOWN_SCO_IMAGE);
-        
 
         Box top = Box.createHorizontalBox();
         //top.add(Box.createHorizontalStrut(30));
@@ -118,30 +116,32 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         top.add(addScoButton);
         top.add(Box.createHorizontalGlue());
         /*if(course.getSchoolID()>0 && GuiCreator.instance().dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT))
-        {
-        	publishButton = new JButton("Publiceer");
-        	publishButton.setToolTipText("Verplaats module naar profiel");
-        	publishButton.addActionListener(this);
-        	top.add(publishButton);
-        	top.add(Box.createHorizontalStrut(10));
-        }*/
-        if(DwoHelper.isSecure() ){
-        exportCourseButton = new JButton(new BackupModuleAction(course));
-        exportCourseButton.setSize(exportCourseButton.getPreferredSize());
-        //exportCourseButton.addActionListener(this);
-        exportCourseButton.setVisible(false);
-        top.add(exportCourseButton);
-        if(DwoHelper.isSecure() )// && !CenterPanel.isIconizer()) // TODO verplaatsen naar menu van tree
-        	exportCourseButton.setVisible(true);
-        
-        top.add(Box.createHorizontalStrut(10));
-        importScosButton = new JButton(new ImportModuleAction(course));
-        importScosButton.setSize(importScosButton.getPreferredSize());
-        importScosButton.addActionListener(this);
-        importScosButton.setVisible(false);
-        top.add(importScosButton);
+         {
+         publishButton = new JButton("Publiceer");
+         publishButton.setToolTipText("Verplaats module naar profiel");
+         publishButton.addActionListener(this);
+         top.add(publishButton);
+         top.add(Box.createHorizontalStrut(10));
+         }*/
+        if (DwoHelper.isSecure()) {
+            exportCourseButton = new JButton(new BackupModuleAction(course));
+            exportCourseButton.setSize(exportCourseButton.getPreferredSize());
+            //exportCourseButton.addActionListener(this);
+            exportCourseButton.setVisible(false);
+            top.add(exportCourseButton);
+            if (DwoHelper.isSecure())// && !CenterPanel.isIconizer()) // TODO verplaatsen naar menu van tree
+            {
+                exportCourseButton.setVisible(true);
+            }
+
+            top.add(Box.createHorizontalStrut(10));
+            importScosButton = new JButton(new ImportModuleAction(course));
+            importScosButton.setSize(importScosButton.getPreferredSize());
+            importScosButton.addActionListener(this);
+            importScosButton.setVisible(false);
+            top.add(importScosButton);
         //top.add(Box.createHorizontalStrut(10));
-        
+
         }
         courseLogoButton = new JButton(new ImageIcon(logo));
         courseLogoButton.setBorderPainted(false);
@@ -151,24 +151,24 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         top.setBounds(0, 10, getWidth(), addScoButton.getPreferredSize().height);
         add(top, BorderLayout.NORTH);
         top.doLayout();
-        JPanel panel = new JPanel(new BorderLayout(10,10));
-		panel.setOpaque(false);
-		cpanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		cpanel.setOpaque(false);
-		panel.add(cpanel, BorderLayout.SOUTH);
+        JPanel panel = new JPanel(new BorderLayout(10, 10));
+        panel.setOpaque(false);
+        cpanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        cpanel.setOpaque(false);
+        panel.add(cpanel, BorderLayout.SOUTH);
         add(panel, BorderLayout.CENTER);
         //if(false && DwoHelper.isApplication())
-        if(DwoHelper.isSecure())
-        {	importScosButton.setVisible(true );// && !CenterPanel.isIconizer()); // TODO verplaatsen naar Tree Menu
+        if (DwoHelper.isSecure()) {
+            importScosButton.setVisible(true);// && !CenterPanel.isIconizer()); // TODO verplaatsen naar Tree Menu
             courseLogoButton.addActionListener(this);
             courseLogoButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             courseLogoButton.setBorderPainted(true);
         }
-        
+
         String[] arguments = new String[1];
         arguments[0] = course.getName();
         label = new JLabel(TextMapper.format((TextMapper.GUIS_LBL_SCO_OF_COURSE), arguments));
-        
+
         label.setFont(GuiConstants.SCO_TEXT);
         label.setSize(label.getPreferredSize());
         label.setLocation(30, 50);
@@ -177,28 +177,27 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         courseLogoButton.setSize(courseLogoButton.getPreferredSize());
         Box hulp = Box.createVerticalBox();
         hulp.add(courseLogoButton);
-       
+
         JPanel panel1 = new JPanel(new BorderLayout());
         panel1.setOpaque(false);
         panel.add(panel1, BorderLayout.CENTER);
-        
+
         editorCB = new JCheckBox("Editor");
         editorCB.addActionListener(this);
         editorBox.add(editorCB);
-        if(course.getDescription().startsWith("H4sIAAAAAA"))
-        {	editorCB.setSelected(true);
-        	wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription());
-        	wiskOpdrEditPanel.setPreferredSize(new Dimension(700,300));
-        	editorBox.add(wiskOpdrEditPanel);
-        }
-        else
-        {	pane = new JTextArea();
-        	pane.setText(course.getDescription());
-        	pane.setBorder(BorderFactory.createLineBorder(Color.black));
-        	editorBox.add(pane);
+        if (course.getDescription().startsWith("H4sIAAAAAA")) {
+            editorCB.setSelected(true);
+            wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription());
+            wiskOpdrEditPanel.setPreferredSize(new Dimension(700, 300));
+            editorBox.add(wiskOpdrEditPanel);
+        } else {
+            pane = new JTextArea();
+            pane.setText(course.getDescription());
+            pane.setBorder(BorderFactory.createLineBorder(Color.black));
+            editorBox.add(pane);
         }
         panel1.add(editorBox, BorderLayout.NORTH);
-        
+
         panel1.add(cpanel, BorderLayout.CENTER);
         hulp.add(Box.createVerticalGlue());
         this.add(hulp, BorderLayout.EAST);
@@ -207,478 +206,477 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         noScosLabel = new JLabel(TextMapper.format((TextMapper.GUIS_NO_SCOS), arguments));
         noScosLabel.setFont(GuiConstants.SCO_TEXT);
         noScosLabel.setSize(noScosLabel.getPreferredSize());
-        noScosLabel.setLocation((this.getSize().width/2) - (noScosLabel.getSize().width/2), 100);
-        
-        
+        noScosLabel.setLocation((this.getSize().width / 2) - (noScosLabel.getSize().width / 2), 100);
+
         addScoTable();
-        if(DwoHelper.isSecure())
-        {
-        	final Frame topFrame = DwoHelper.getFrameForComponent(null);		
-        	saveDial = new FileDialog(topFrame, exportCourseButton.getToolTipText(), FileDialog.SAVE);
-        	saveDial.setDirectory(System.getProperty("user.dir","."));
-        	openDial = new FileDialog(topFrame, importScosButton.getToolTipText(), FileDialog.LOAD);
-        	openDial.setDirectory(System.getProperty("user.dir","."));
+        if (DwoHelper.isSecure()) {
+            final Frame topFrame = DwoHelper.getFrameForComponent(null);
+            saveDial = new FileDialog(topFrame, exportCourseButton.getToolTipText(), FileDialog.SAVE);
+            saveDial.setDirectory(System.getProperty("user.dir", "."));
+            openDial = new FileDialog(topFrame, importScosButton.getToolTipText(), FileDialog.LOAD);
+            openDial.setDirectory(System.getProperty("user.dir", "."));
         }
     }
 
-    
     JTable jtbl;
 
-	private JPanel cpanel;
+    private JPanel cpanel;
 
-	private JButton stopBtn;
-	public class ImageRenderer extends JLabel implements TableCellRenderer {
+    private JButton stopBtn;
 
-		ImageRenderer(boolean iconizer) {
-			super();
-			this.iconizer = iconizer;
-		}
+    public class ImageRenderer extends JLabel implements TableCellRenderer {
 
-		private ImageIcon icon = new ImageIcon();
-		private boolean iconizer;
+        ImageRenderer(boolean iconizer) {
+            super();
+            this.iconizer = iconizer;
+        }
 
-                @Override
-		public Component getTableCellRendererComponent(JTable table,
-				Object value, boolean selected, boolean hasFocus, int row, int col) {
-			Image image = (Image)value;
-			if(image != null) {
-				icon.setImage(image);
-				setIcon(icon);
-			} else {
-				setIcon(null);
-			}
-			setHorizontalAlignment(SwingConstants.CENTER);
-			setOpaque(true);
-			Object[] arguments = new Object[]  { table.getValueAt(row, 0) };
+        private ImageIcon icon = new ImageIcon();
+        private boolean iconizer;
 
-			if(iconizer && col > 0)
-				col++;
-			if(iconizer && col > 2)
-				col++;
+        @Override
+        public Component getTableCellRendererComponent(JTable table,
+                Object value, boolean selected, boolean hasFocus, int row, int col) {
+            Image image = (Image) value;
+            if (image != null) {
+                icon.setImage(image);
+                setIcon(icon);
+            } else {
+                setIcon(null);
+            }
+            setHorizontalAlignment(SwingConstants.CENTER);
+            setOpaque(true);
+            Object[] arguments = new Object[]{table.getValueAt(row, 0)};
 
-			switch(col) {
-			case 1:	
-	    			setToolTipText(TextMapper.format((TextMapper.GUIS_TLTP_COURSE_SCO), arguments));
-	    			break;
-			case 2: setToolTipText(TextMapper.getText(TextMapper.GUIS_TLTP_EDIT_SCO));
-				break;
-			case 3: setToolTipText(TextMapper.getText(TextMapper.GUIS_TLTP_PARAMETERS_SCO));
-			break;
-			case 7: String format = TextMapper.getText(TextMapper.GUIS_TLTP_DELETE_SCO);
-					setToolTipText(MessageFormat.format(format, arguments));
-				break;
-			default:
-				setToolTipText(null); // TODO ....
-			}
-			if(selected)
-			{
-				setBackground(table.getSelectionBackground());
-			} else {
-				setBackground(table.getBackground());
-			}
-			return this;
-		}
+            if (iconizer && col > 0) {
+                col++;
+            }
+            if (iconizer && col > 2) {
+                col++;
+            }
 
-	}
+            switch (col) {
+                case 1:
+                    setToolTipText(TextMapper.format((TextMapper.GUIS_TLTP_COURSE_SCO), arguments));
+                    break;
+                case 2:
+                    setToolTipText(TextMapper.getText(TextMapper.GUIS_TLTP_EDIT_SCO));
+                    break;
+                case 3:
+                    setToolTipText(TextMapper.getText(TextMapper.GUIS_TLTP_PARAMETERS_SCO));
+                    break;
+                case 7:
+                    String format = TextMapper.getText(TextMapper.GUIS_TLTP_DELETE_SCO);
+                    setToolTipText(MessageFormat.format(format, arguments));
+                    break;
+                default:
+                    setToolTipText(null); // TODO ....
+            }
+            if (selected) {
+                setBackground(table.getSelectionBackground());
+            } else {
+                setBackground(table.getBackground());
+            }
+            return this;
+        }
+
+    }
+
     public class ImageButtonEditor extends AbstractCellEditor implements
-	TableCellEditor, ActionListener {
+            TableCellEditor, ActionListener {
 
-    	Object value;
-    	AbstractTableModel model;
-    	int row;
+        Object value;
+        AbstractTableModel model;
+        int row;
 
-            @Override
-    	public Component getTableCellEditorComponent(JTable table, Object value,
-    			boolean arg2, int row, int col) {
-    		this.value = value;
-    		JButton button = new JButton(new ImageIcon((Image)value));
-    		button.addActionListener(this);
-    		this.row = row;
-    		model = (AbstractTableModel) table.getModel();
-    		return button;
-    	}
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value,
+                boolean arg2, int row, int col) {
+            this.value = value;
+            JButton button = new JButton(new ImageIcon((Image) value));
+            button.addActionListener(this);
+            this.row = row;
+            model = (AbstractTableModel) table.getModel();
+            return button;
+        }
 
-            @Override
-    	public Object getCellEditorValue() {
-    		return value;
-    	}
+        @Override
+        public Object getCellEditorValue() {
+            return value;
+        }
 
-            @Override
-    	public void actionPerformed(ActionEvent event) {
+        @Override
+        public void actionPerformed(ActionEvent event) {
             Sco s = course.getScoList()[row];
-    		if (value == courseImage) {
+            if (value == courseImage) {
                 /* Show the Course Panel */
-    			int id = course.getParentID();
-    			if(id != 0)
-    			{
-    				CourseMap map;
-					try {
-						map = (CourseMap) PersistenceFacade.instance().get(id, Course.class);
-	    				center.loadCenter(GuiCreator.instance().getCourseManagementPanel(map));
-					} catch (PersistenceException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-    			} else
-    				center.loadCenter(GuiCreator.instance().getCourseManagementPanel());
-    		} else
-    		if (value == editImage) {
+                int id = course.getParentID();
+                if (id != 0) {
+                    CourseMap map;
+                    try {
+                        map = (CourseMap) PersistenceFacade.instance().get(id, Course.class);
+                        center.loadCenter(GuiCreator.instance().getCourseManagementPanel(map));
+                    } catch (PersistenceException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                } else {
+                    center.loadCenter(GuiCreator.instance().getCourseManagementPanel());
+                }
+            } else if (value == editImage) {
                 if (ScoNameDialog.editSco(s)) {
                     model.fireTableCellUpdated(row, 0);
                     noUpdateCourse();
                 }
-    		} else if (value == removeImage) {
-                /* Delete the Sco */               
+            } else if (value == removeImage) {
+                /* Delete the Sco */
                 if (DeleteAction.deleteSco(s)) {
-                	model.fireTableRowsDeleted(row, row);
-                	noUpdateCourse();
-                	if(model.getRowCount()==0)
-                	{
-                		addScoTable();
-                	}
+                    model.fireTableRowsDeleted(row, row);
+                    noUpdateCourse();
+                    if (model.getRowCount() == 0) {
+                        addScoTable();
+                    }
                 }
-                
-    		} else if (value == parametersImage) {
-    			GuiCreator.instance().loadParameterManagementPanel(s);
-    		} else if (value == upImage) {
-    			Sco s2 = course.getScoList()[row-1];
-    			swapSco(s, s2);
-    			model.fireTableRowsUpdated(row-1, row);
-    			noUpdateCourse();
-    		} else if (value == downImage) {
-    			Sco s2 = course.getScoList()[row+1];
-    			swapSco(s, s2);
-    			model.fireTableRowsUpdated(row, row+1);
-    			noUpdateCourse();
-    		}
-    		fireEditingStopped();
-    	}
 
-}
+            } else if (value == parametersImage) {
+                GuiCreator.instance().loadParameterManagementPanel(s);
+            } else if (value == upImage) {
+                Sco s2 = course.getScoList()[row - 1];
+                swapSco(s, s2);
+                model.fireTableRowsUpdated(row - 1, row);
+                noUpdateCourse();
+            } else if (value == downImage) {
+                Sco s2 = course.getScoList()[row + 1];
+                swapSco(s, s2);
+                model.fireTableRowsUpdated(row, row + 1);
+                noUpdateCourse();
+            }
+            fireEditingStopped();
+        }
+
+    }
 
     class ScoModelForTree extends AbstractTableModel {
-	
-            @Override
-    	public int getColumnCount() {
-			return 5;
-		}
 
-            @Override
-		public int getRowCount() {
-			return course.getScoList().length;
-		}
+        @Override
+        public int getColumnCount() {
+            return 5;
+        }
 
-            @Override
-		public Class getColumnClass(int col) {
-			if(col > 0)
-				return Image.class;
-			return super.getColumnClass(col);
-		}
+        @Override
+        public int getRowCount() {
+            return course.getScoList().length;
+        }
 
-            @Override
-		public boolean isCellEditable(int row, int col) {
-			if(col == 2)
-				return row != 0;
-			if(col == 3)
-				return row != getRowCount()-1;
-			return true;
-		}
+        @Override
+        public Class getColumnClass(int col) {
+            if (col > 0) {
+                return Image.class;
+            }
+            return super.getColumnClass(col);
+        }
 
-            @Override
-		public Object getValueAt(int row, int col) {
-			switch(col)
-			{
-			case 0: return course.getScoList()[row].getScoName();
-			case 1: return editImage;
-			case 2: if(row != 0)
-						return upImage;
-					break;
-			case 3: if(row != getRowCount()-1)
-						return downImage;
-					break;
-			case 4: return removeImage;
-			}
-			return null;
-		}
-    	
+        @Override
+        public boolean isCellEditable(int row, int col) {
+            if (col == 2) {
+                return row != 0;
+            }
+            if (col == 3) {
+                return row != getRowCount() - 1;
+            }
+            return true;
+        }
+
+        @Override
+        public Object getValueAt(int row, int col) {
+            switch (col) {
+                case 0:
+                    return course.getScoList()[row].getScoName();
+                case 1:
+                    return editImage;
+                case 2:
+                    if (row != 0) {
+                        return upImage;
+                    }
+                    break;
+                case 3:
+                    if (row != getRowCount() - 1) {
+                        return downImage;
+                    }
+                    break;
+                case 4:
+                    return removeImage;
+            }
+            return null;
+        }
+
     }
-    
-    
+
     class ScoModel extends AbstractTableModel {
 
-                @Override
-		public int getColumnCount() {
-			return 7;
-		}
+        @Override
+        public int getColumnCount() {
+            return 7;
+        }
 
-                @Override
-		public int getRowCount() {
-			return course.getScoList().length;
-		}
+        @Override
+        public int getRowCount() {
+            return course.getScoList().length;
+        }
 
-                @Override
-		public Class getColumnClass(int col) {
-			if(col > 0)
-				return Image.class;
-			return super.getColumnClass(col);
-		}
+        @Override
+        public Class getColumnClass(int col) {
+            if (col > 0) {
+                return Image.class;
+            }
+            return super.getColumnClass(col);
+        }
 
-                @Override
-		public boolean isCellEditable(int row, int col) {
-			if(col == 4)
-				return row != 0;
-			if(col == 7)
-				return row != getRowCount()-1;
-			return col > 0;
-		}
+        @Override
+        public boolean isCellEditable(int row, int col) {
+            if (col == 4) {
+                return row != 0;
+            }
+            if (col == 7) {
+                return row != getRowCount() - 1;
+            }
+            return col > 0;
+        }
 
-                @Override
-		public Object getValueAt(int row, int col) {
-			switch(col)
-			{
-			case 0: return course.getScoList()[row].getScoName();
-			case 1: return courseImage;
-			case 2: return editImage;
-			case 3: return parametersImage;
-			case 6: return removeImage;
-			
-			case 4: if(row != 0)
-						return upImage;
-					break;
-			case 5: if(row != getRowCount()-1)
-						return downImage;
-					break;
-			}
-			return null;
-		}
-    	
+        @Override
+        public Object getValueAt(int row, int col) {
+            switch (col) {
+                case 0:
+                    return course.getScoList()[row].getScoName();
+                case 1:
+                    return courseImage;
+                case 2:
+                    return editImage;
+                case 3:
+                    return parametersImage;
+                case 6:
+                    return removeImage;
+
+                case 4:
+                    if (row != 0) {
+                        return upImage;
+                    }
+                    break;
+                case 5:
+                    if (row != getRowCount() - 1) {
+                        return downImage;
+                    }
+                    break;
+            }
+            return null;
+        }
+
     }
-    
-    
-    
+
     private JComponent buildJTable() {
-    	if(jtbl != null)
-    	{
-    		if(jtbl.getParent()!= null)
-    			jtbl.getParent().remove(jtbl);
-    		jtbl = null;
-    	} else {
-    		if(noScosLabel.isShowing())
-    			noScosLabel.getParent().remove(noScosLabel);
-    	}
+        if (jtbl != null) {
+            if (jtbl.getParent() != null) {
+                jtbl.getParent().remove(jtbl);
+            }
+            jtbl = null;
+        } else {
+            if (noScosLabel.isShowing()) {
+                noScosLabel.getParent().remove(noScosLabel);
+            }
+        }
         Sco[] scos = course.getScoList();
-        if(scos == null || scos.length == 0) {
+        if (scos == null || scos.length == 0) {
             noScosLabel.setVisible(true);
             label.setVisible(false);
             return noScosLabel;
         } else {
-            noScosLabel.setVisible(false);            
+            noScosLabel.setVisible(false);
             label.setVisible(true);
         }
         TableModel model = new ScoModel();
-        if(CenterPanel.isIconizer())
-        	model = new ScoModelForTree();
-		JTable table = new JTable(model);
-    	TableUtil.setDefaults(table, false, new ImageRenderer(CenterPanel.isIconizer()), new ImageButtonEditor());
+        if (CenterPanel.isIconizer()) {
+            model = new ScoModelForTree();
+        }
+        JTable table = new JTable(model);
+        TableUtil.setDefaults(table, false, new ImageRenderer(CenterPanel.isIconizer()), new ImageButtonEditor());
 
-    	TableUtil.setJTableSizes(table);
+        TableUtil.setJTableSizes(table);
     	//table.setSize(table.getPreferredSize());
-    	//table.setMaximumSize(table.getPreferredSize());
-    	jtbl = table;
+        //table.setMaximumSize(table.getPreferredSize());
+        jtbl = table;
     	//TableUtil.setBorder(jtbl);
-    	//jtbl.setBorder(TableUtil.tableBorder);
+        //jtbl.setBorder(TableUtil.tableBorder);
         //jtbl.setLocation(30, label.getSize().height
         //        + label.getLocation().y+10);
         //TableUtil.shrinkToFit(table, jtbl, 520-30, 405);
-    	return table;
+        return table;
     }
-    
-    
- 
+
     /**
      * Sets the centerpanel to communicate with.
-     * 
+     *
      * @param centerPanel The centerPanel to communicate with.
      */
-        @Override
+    @Override
     public void setCenterPanel(CenterPanel centerPanel) {
         center = centerPanel;
     }
 
-        @Override
+    @Override
     public Component getHeaderPanel() {
-    	HeaderPanel hp = new HeaderPanel(TextMapper.getText(TextMapper.GUIS_SCO_MANAGEMENT));
-    	stopBtn = new JButton(TextMapper.getText(TextMapper.GUIH_STOP_EDIT));
-    	stopBtn.addActionListener(this);
-    	hp.setButtonBox(GuiCreator.instance().fx(stopBtn));
-    	return hp;
+        HeaderPanel hp = new HeaderPanel(TextMapper.getText(TextMapper.GUIS_SCO_MANAGEMENT));
+        stopBtn = new JButton(TextMapper.getText(TextMapper.GUIH_STOP_EDIT));
+        stopBtn.addActionListener(this);
+        hp.setButtonBox(GuiCreator.instance().fx(stopBtn));
+        return hp;
     }
 
-
-    
     /**
      * Invoked when an action occurs.
-     * 
+     *
      * @param e The ActionEvent.
      */
-        @Override
+    @Override
     public void actionPerformed(ActionEvent e) {
-    	
-    	
-    	
-    	Object src = e.getSource();
-    	if(src == editorCB)
-    	{	if(editorCB.isSelected())
-    		{	if(wiskOpdrEditPanel==null)
-    			{	wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription());
-            		wiskOpdrEditPanel.setPreferredSize(new Dimension(700,300));
-            		editorBox.add(wiskOpdrEditPanel);
-    			}
-    			wiskOpdrEditPanel.setVisible(true);
-    			pane.setVisible(false);
-    		}
-    		else if(wiskOpdrEditPanel!=null)
-    		{	if(pane==null)
-				{	pane = new JTextArea();
-		        	pane.setText("");
-		        	pane.setBorder(BorderFactory.createLineBorder(Color.black));
-		        	editorBox.add(pane);
-				}
-    			wiskOpdrEditPanel.setVisible(false);
-    			pane.setVisible(true);
-    		}
-    	}
-    	
-    	if(src == stopBtn)
-    	{
-    		end();
-    		center.select(course);
-    	}
 
-		if(src == courseLogoButton)
-    	{
-    		try {
-				importCourseLogo();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			return;
-    	}
-      	if(src == exportCourseButton)
-    	{
-    		return;
-    	} else if(src == importScosButton)
-    	{
+        Object src = e.getSource();
+        if (src == editorCB) {
+            if (editorCB.isSelected()) {
+                if (wiskOpdrEditPanel == null) {
+                    wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription());
+                    wiskOpdrEditPanel.setPreferredSize(new Dimension(700, 300));
+                    editorBox.add(wiskOpdrEditPanel);
+                }
+                wiskOpdrEditPanel.setVisible(true);
+                pane.setVisible(false);
+            } else if (wiskOpdrEditPanel != null) {
+                if (pane == null) {
+                    pane = new JTextArea();
+                    pane.setText("");
+                    pane.setBorder(BorderFactory.createLineBorder(Color.black));
+                    editorBox.add(pane);
+                }
+                wiskOpdrEditPanel.setVisible(false);
+                pane.setVisible(true);
+            }
+        }
+
+        if (src == stopBtn) {
+            end();
+            center.select(course);
+        }
+
+        if (src == courseLogoButton) {
+            try {
+                importCourseLogo();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            return;
+        }
+        if (src == exportCourseButton) {
+            return;
+        } else if (src == importScosButton) {
 //    		try { 
 //    			importScos();
 //    		} catch (Exception e2) {
 //    			e2.printStackTrace();			
 //    		}
-    	}
-        if(src == addScoButton) {
-        	Sco s = null;
-        	
-        	// speciaal voor de SAG en REV: er kan maar 1 soort appletConfig gebruikt worden, nl WiskOpdr
-        	if(course.getDwoProfile()==15 ) {
-        		try {
-        		AppletConfig ac = (AppletConfig)(PersistenceFacade.instance().get(55,AppletConfig.class));
-        		s = ScoNameDialog.addSco(this, course, ac);
-	        	} catch (PersistenceException ex) {
-	                JOptionPane.showMessageDialog(this, ex.getMessage());
-  	            }
-            }
-        	//
-        	
+        }
+        if (src == addScoButton) {
+            Sco s = null;
+
+            // speciaal voor de SAG en REV: er kan maar 1 soort appletConfig gebruikt worden, nl WiskOpdr
+            if (course.getDwoProfile() == 15) {
+                try {
+                    AppletConfig ac = (AppletConfig) (PersistenceFacade.instance().get(55, AppletConfig.class));
+                    s = ScoNameDialog.addSco(this, course, ac);
+                } catch (PersistenceException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                }
+            } //
             else {
-            	s = AddScoDialog.addSco(this, course);
+                s = AddScoDialog.addSco(this, course);
             }
-            if(s != null) {
+            if (s != null) {
 // FIXME addSco kan de sco al in de lijst gezet hebben....
-	            Sco[] as = course.getScoList();
-	            /* Create a larger array and add the item */
-	            Sco[] tmp = new Sco[as.length + 1];
-	            System.arraycopy(as, 0, tmp, 0, as.length);
-	            tmp[tmp.length - 1] = s;
-	            course.setScoList(tmp);
-	            center.updateCourse(course);
+                Sco[] as = course.getScoList();
+                /* Create a larger array and add the item */
+                Sco[] tmp = new Sco[as.length + 1];
+                System.arraycopy(as, 0, tmp, 0, as.length);
+                tmp[tmp.length - 1] = s;
+                course.setScoList(tmp);
+                center.updateCourse(course);
             }
 
         } //else if( src == publishButton)
         //{
         //	publishCourse();
         //}
-            
+
     }
 
     /*private void publishCourse() {
-		if(course.getSchoolID()>0)
-		{
-			course.setSchoolID(0);
-			course.setExport(false); // ik denk dat een gepubliceerde course niet exporteerbaar is!
-			publishButton.setEnabled(false); // gray out
-			noUpdateCourse();
-		}
+     if(course.getSchoolID()>0)
+     {
+     course.setSchoolID(0);
+     course.setExport(false); // ik denk dat een gepubliceerde course niet exporteerbaar is!
+     publishButton.setEnabled(false); // gray out
+     noUpdateCourse();
+     }
 	
-	}*/
-
-
-
-	private void importCourseLogo() throws IOException 
-    {
-    	String naam; // FIXME
-    	openDial.setTitle(TextMapper.format(TextMapper.GUIS_LOAD_LOGO , new Object[] { course.toString() }));
-    	openDial.show();
-    	naam = openDial.getFile();
-    	if(naam != null)
-    	{
-    		ByteArrayOutputStream output = new ByteArrayOutputStream();
-    		File dir = new File(openDial.getDirectory());
-    		File file = new File(dir,naam);
-    		BufferedImage img = ImageIO.read(file);
-    		Image reduced;
-    		if(img.getWidth()<=64 && img.getHeight()<=64)
-    			reduced = img;
-    		else
-    			reduced = img.getScaledInstance(Math.min(64,img.getWidth()), Math.min(64,img.getHeight()), Image.SCALE_SMOOTH);
-    		if(reduced instanceof BufferedImage)
-    		{
-    			img = (BufferedImage) reduced;
-    		} else {
-    			img = new BufferedImage(Math.min(64,img.getWidth()),Math.min(64,img.getHeight()),BufferedImage.TYPE_INT_ARGB);
-    			img.createGraphics().drawImage(reduced, 0, 0, null);
-    		}
-    		ImageIO.write(img, "png", output);
-    		output.close();
-    		byte[] data = output.toByteArray();
-    		reduced = Toolkit.getDefaultToolkit().createImage(data);
-    		course.setImageData(data);
-    		course.setCourseLogo(reduced);
-    		courseLogoButton.setIcon(new ImageIcon(reduced));
+     }*/
+    private void importCourseLogo() throws IOException {
+        String naam; // FIXME
+        openDial.setTitle(TextMapper.format(TextMapper.GUIS_LOAD_LOGO, new Object[]{course.toString()}));
+        openDial.show();
+        naam = openDial.getFile();
+        if (naam != null) {
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            File dir = new File(openDial.getDirectory());
+            File file = new File(dir, naam);
+            BufferedImage img = ImageIO.read(file);
+            Image reduced;
+            if (img.getWidth() <= 64 && img.getHeight() <= 64) {
+                reduced = img;
+            } else {
+                reduced = img.getScaledInstance(Math.min(64, img.getWidth()), Math.min(64, img.getHeight()), Image.SCALE_SMOOTH);
+            }
+            if (reduced instanceof BufferedImage) {
+                img = (BufferedImage) reduced;
+            } else {
+                img = new BufferedImage(Math.min(64, img.getWidth()), Math.min(64, img.getHeight()), BufferedImage.TYPE_INT_ARGB);
+                img.createGraphics().drawImage(reduced, 0, 0, null);
+            }
+            ImageIO.write(img, "png", output);
+            output.close();
+            byte[] data = output.toByteArray();
+            reduced = Toolkit.getDefaultToolkit().createImage(data);
+            course.setImageData(data);
+            course.setCourseLogo(reduced);
+            courseLogoButton.setIcon(new ImageIcon(reduced));
 // TODO omzetten in PersistenceFacade!
-    		try {
-				DbAccessCreator.instance().setLogo(course.getID(), data);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-    		
-    	}
+            try {
+                DbAccessCreator.instance().setLogo(course.getID(), data);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
     }
-    
-    
 
-
-	private void swapSco(Sco s1, Sco s2) {
-    	if (GuiCreator.instance().swapSco(s1, s2))
+    private void swapSco(Sco s1, Sco s2) {
+        if (GuiCreator.instance().swapSco(s1, s2))
     		/*buildJTable()*/;
-	}
+    }
 
-	/**
+    /**
      * Returns the current object, as the object to add to a gui.
-     * 
+     *
      * @return the current object.
      * @see fi.dwo.client.gui.CenterSubPanel#getComponent()
      */
-        @Override
+    @Override
     public JComponent getComponent() {
         return this;
     }
@@ -686,58 +684,54 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     /* (non-Javadoc)
      * @see fi.dwo.client.gui.CenterSubPanel#end()
      */
-        @Override
+    @Override
     public void end() {
-    	if(editorCB.isSelected() &&  !wiskOpdrEditPanel.getText().equals(course.getDescription()))
-        {	course.setDescription(wiskOpdrEditPanel.getText());
-	    	GuiCreator.instance().updateCourse(course);
-	    }
-    	else if(!editorCB.isSelected() && pane!=null && !pane.getText().equals(course.getDescription()))
-        {	course.setDescription(pane.getText());
-        	GuiCreator.instance().updateCourse(course);
+        if (editorCB.isSelected() && !wiskOpdrEditPanel.getText().equals(course.getDescription())) {
+            course.setDescription(wiskOpdrEditPanel.getText());
+            GuiCreator.instance().updateCourse(course);
+        } else if (!editorCB.isSelected() && pane != null && !pane.getText().equals(course.getDescription())) {
+            course.setDescription(pane.getText());
+            GuiCreator.instance().updateCourse(course);
         }
         center.getMenu().setEditing(false);
-		center.setStrategy(null);
+        center.setStrategy(null);
     }
 
+    /**
+     *
+     */
+    private void addScoTable() {
+        cpanel.removeAll();
+        JComponent comp = buildJTable();
+        comp.setAlignmentY(0.0f);
+        cpanel.add(comp);
+        cpanel.invalidate();
+        validate();
+        repaint();
+    }
 
+    @Override
+    public Object getUserObject() {
+        return course;
+    }
 
-	/**
-	 * 
-	 */
-    
-    
-	private void addScoTable() {
-		cpanel.removeAll();
-		JComponent comp = buildJTable();
-		comp.setAlignmentY(0.0f);
-		cpanel.add(comp);
-		cpanel.invalidate();
-		validate();
-		repaint();
-	}
+    private boolean ok = true;
 
-        @Override
-	public Object getUserObject() {
-		return course;
-	}
+    private JTextArea pane;
+    private WiskOpdrEditPanel wiskOpdrEditPanel;
 
-	private boolean ok = true;
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        //System.out.println("ChangeEvent " + e);
+        if (ok && course == e.getSource()) {
+            addScoTable();
+        }
+    }
 
-	private JTextArea pane;
-	private WiskOpdrEditPanel wiskOpdrEditPanel;
-	
-        @Override
-	public void stateChanged(ChangeEvent e) {
-		//System.out.println("ChangeEvent " + e);
-		if(ok && course == e.getSource())
-			addScoTable();
-	}
-
-	private void noUpdateCourse() {
-		ok = false;
-		center.updateCourse(course);
-		ok = true;
-	}
+    private void noUpdateCourse() {
+        ok = false;
+        center.updateCourse(course);
+        ok = true;
+    }
 
 }

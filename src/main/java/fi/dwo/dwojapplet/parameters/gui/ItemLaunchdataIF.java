@@ -1,26 +1,24 @@
 //Source file: C:\\parameters\\fi\\dwo\\parameters\\gui\\ItemLaunchdataIF.java
-
 package fi.dwo.dwojapplet.parameters.gui;
 
 import java.util.Hashtable;
 
-public interface ItemLaunchdataIF 
-{
-    
+public interface ItemLaunchdataIF {
+
     /**
-    @param parameters
+     * @param parameters
      */
     public void addParameters(Hashtable parameters);
-    
+
     /**
-    @return Object
+     * @return Object
      */
     public Object getKey();
-    
+
     /**
-    @param key
+     * @param key
      */
     public void setKey(Object key);
-    
+
     public Hashtable getLaunchdata();
 }

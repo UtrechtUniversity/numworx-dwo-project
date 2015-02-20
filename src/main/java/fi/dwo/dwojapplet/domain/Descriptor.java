@@ -2,8 +2,10 @@ package fi.dwo.dwojapplet.domain;
 
 public interface Descriptor {
 
-	String getText();
-	String getHeader();
-	CourseMap[] getChildren();
+    String getText();
+
+    String getHeader();
+
+    CourseMap[] getChildren();
 
 }

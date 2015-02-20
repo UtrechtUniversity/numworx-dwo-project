@@ -1,6 +1,5 @@
 // Source file:
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\ResultsHandler.java
-
 package fi.dwo.dwojapplet.persistence;
 
 import fi.dwo.dwojapplet.domain.Course;
@@ -11,7 +10,7 @@ import fi.dwo.dwojapplet.domain.UserResultList;
 public class ResultsHandler {
 
     /**
-
+     *
      */
     public ResultsHandler() {
 
@@ -22,7 +21,7 @@ public class ResultsHandler {
      * @param zoomedLesson
      * @param zoomedUser
      * @return fi.dwo.client.domain.UserResultList[]
-
+     *
      */
     public UserResultList[] getResults(Course[] courses,
             LessonGroup zoomedLesson, UserGroup zoomedUser) {
@@ -31,7 +30,7 @@ public class ResultsHandler {
 
     /**
      * @return fi.dwo.client.persistence.ResultsHandler
-
+     *
      */
     public ResultsHandler instance() {
         return null;

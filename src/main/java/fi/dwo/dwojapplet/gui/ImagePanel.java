@@ -10,21 +10,21 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-
 /**
  * A simple panel with an image on it. The panel has the size of the image.
- * 
+ *
  * @author M.J.B. Kupers
- *  
+ *
  */
 public class ImagePanel extends JLabel {
+
     private Image image;
     private String toolTip;
 
     /**
      * Creates a new instance of ImagePanel. The panel has the same size as the
      * image.
-     * 
+     *
      * @param i The images contained by the panel.
      */
     public ImagePanel(Image i) {
@@ -35,6 +35,7 @@ public class ImagePanel extends JLabel {
 
     /**
      * Sets the tooltip of this component.
+     *
      * @param toolTip The tooltip to set.
      * @see fi.beans.tooltip.ToolTipIF#setToolTip(java.lang.String)
      */
@@ -45,7 +46,8 @@ public class ImagePanel extends JLabel {
 
     /**
      * Returns the tooltip of this component.
-     * @return The tooltip of this component. 
+     *
+     * @return The tooltip of this component.
      * @see fi.beans.tooltip.ToolTipIF#getToolTip()
      */
     public String getToolTip() {
@@ -54,6 +56,7 @@ public class ImagePanel extends JLabel {
 
     /**
      * Returns this component.
+     *
      * @return This component.
      * @see fi.beans.tooltip.ToolTipIF#getComponent()
      */

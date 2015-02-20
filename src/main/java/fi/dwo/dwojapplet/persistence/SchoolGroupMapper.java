@@ -1,6 +1,5 @@
 // Source file:
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\GroupMapper.java
-
 package fi.dwo.dwojapplet.persistence;
 
 import java.io.IOException;
@@ -19,9 +18,9 @@ public class SchoolGroupMapper extends XmlRpcMapper {
     private static final String IDCOL = "schoolGroupID";
 
     private static final String ORDERCOL = "groupID";
-    
-    /**
 
+    /**
+     *
      */
     public SchoolGroupMapper() {
 
@@ -30,7 +29,8 @@ public class SchoolGroupMapper extends XmlRpcMapper {
     /**
      * @param oid
      * @param obj
-
+     * @throws org.apache.xmlrpc.applet.XmlRpcException
+     *
      */
     @Override
     public void put(int oid, Object obj) throws IOException, SQLException,
@@ -42,22 +42,22 @@ public class SchoolGroupMapper extends XmlRpcMapper {
     /**
      * @param data
      * @return Object
-
+     *
      */
     @Override
     public Object getObjectFromReturn(Hashtable data) {
         SchoolGroup g = null;
         if (data.get("schoolGroupID") == null) { //We don't know enough to make a
-                                           // groupobject
+            // groupobject
             return null;
         } else if (objects.containsKey(data.get("schoolGroupID"))) { // Did we know
-                                                               // the group?
+            // the group?
             g = (SchoolGroup) objects.get(data.get("schoolGroupID"));
         } else {
             g = new SchoolGroup();
         }
         g = (SchoolGroup) update(g, data);
-        if(!objects.containsKey(new Integer(g.getSchoolGroupID()))) {
+        if (!objects.containsKey(new Integer(g.getSchoolGroupID()))) {
             objects.put(new Integer(g.getSchoolGroupID()), g);
         }
         return g;
@@ -66,13 +66,14 @@ public class SchoolGroupMapper extends XmlRpcMapper {
     /**
      * @param obj
      * @return Object[]
-
+     * @throws org.apache.xmlrpc.applet.XmlRpcException
+     *
      */
     @Override
     public Object[] get(Object obj) throws IOException, SQLException,
             XmlRpcException {
         Hashtable ht = new Hashtable();
-        if(obj instanceof School) {
+        if (obj instanceof School) {
             School sc = (School) obj;
             ht.put("schoolID", new Integer(sc.getSchoolID()));
         }

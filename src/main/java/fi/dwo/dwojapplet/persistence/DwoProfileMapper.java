@@ -1,6 +1,5 @@
 // Source file:
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\ScoMapper.java
-
 package fi.dwo.dwojapplet.persistence;
 
 import java.io.IOException;
@@ -20,7 +19,7 @@ public class DwoProfileMapper extends XmlRpcMapper {
     private static final String ORDERCOL = "dwoProfileName";
 
     /**
-
+     *
      */
     public DwoProfileMapper() {
 
@@ -29,7 +28,8 @@ public class DwoProfileMapper extends XmlRpcMapper {
     /**
      * @param oid
      * @param obj
-
+     * @throws org.apache.xmlrpc.applet.XmlRpcException
+     *
      */
     @Override
     public void put(int oid, Object obj) throws IOException, SQLException,
@@ -40,22 +40,23 @@ public class DwoProfileMapper extends XmlRpcMapper {
     /**
      * @param data
      * @return Object
-
+     * @throws org.apache.xmlrpc.applet.XmlRpcException
+     *
      */
     @Override
     public Object getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException {
         DwoProfile dp = null;
         if (data.get("dwoProfileID") == null) { //We don't know enough to make a
-                                         // DwoProfileobject
+            // DwoProfileobject
             return null;
         } else if (objects.containsKey(data.get("dwoProfileID"))) { // Did we know the
-                                                             // DwoProfile?
+            // DwoProfile?
             dp = (DwoProfile) objects.get(data.get("dwoProfileID"));
         } else {
             dp = new DwoProfile();
         }
         dp = (DwoProfile) update(dp, data);
-        if(!objects.containsKey(new Integer(dp.getID()))) {
+        if (!objects.containsKey(new Integer(dp.getID()))) {
             objects.put(new Integer(dp.getID()), dp);
         }
         return dp;
@@ -64,7 +65,8 @@ public class DwoProfileMapper extends XmlRpcMapper {
     /**
      * @param obj
      * @return Object[]
-
+     * @throws org.apache.xmlrpc.applet.XmlRpcException
+     *
      */
     @Override
     public Object[] get(Object obj) throws IOException, SQLException,
@@ -105,7 +107,7 @@ public class DwoProfileMapper extends XmlRpcMapper {
         dp.setName((String) data.get("dwoProfileName"));
         dp.setDescription((String) data.get("dwoProfileDescription"));
         dp.setText((String) data.get("dwoProfileText"));
-        dp.setRights((String)data.get("dwoProfileRights"));
+        dp.setRights((String) data.get("dwoProfileRights"));
         return dp;
     }
 
@@ -114,7 +116,7 @@ public class DwoProfileMapper extends XmlRpcMapper {
      */
     @Override
     protected Object[] createArray(int size) {
-       return new DwoProfile[size];
+        return new DwoProfile[size];
     }
 
     /* (non-Javadoc)

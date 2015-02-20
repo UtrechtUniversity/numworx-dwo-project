@@ -22,14 +22,14 @@ import javax.swing.JButton;
 public class TestTabSheet extends Panel implements TabSheetIF, ActionListener {
 
     private JButton button;
-    
+
     private boolean large;
-    
+
     public TestTabSheet() {
         super(null);
         this.setBackground(ParameterComponent.SELECTED_COLOR_2);
         button = new JButton("Test" + Math.random());
-        
+
         FontMetrics fm = button.getFontMetrics(button.getFont());
         button.setSize(fm.stringWidth(button.getLabel()) + 20, fm.getHeight() + 10);
         button.setLocation(10 + 10, 1);
@@ -37,22 +37,21 @@ public class TestTabSheet extends Panel implements TabSheetIF, ActionListener {
         button.addActionListener(this);
         this.add(button);
         button.setVisible(true);
-        
+
         Component last = button;
         minSize = new Dimension(last.getLocation().x + last.getSize().width + 5, button.getSize().height + 2);
         maxSize = new Dimension(last.getLocation().x + last.getSize().width + 5, button.getSize().height + 100);
         this.setSize(minSize);
-        
-        
+
         large = false;
 
-        
     }
-    
+
     private Dimension minSize, maxSize;
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.TabSheetIF#getComponent()
      */
+
     @Override
     public Component getComponent() {
         return this;
@@ -60,20 +59,23 @@ public class TestTabSheet extends Panel implements TabSheetIF, ActionListener {
     /* (non-Javadoc)
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
+
     @Override
     public void actionPerformed(ActionEvent e) {
-	    if(e.getSource() == button) {
-	        if(large) {
-	            this.setSize(minSize);
-	        } else {
-	            this.setSize(maxSize);
-	        }
-	        large = !large;
-	    }
+        if (e.getSource() == button) {
+            if (large) {
+                this.setSize(minSize);
+            } else {
+                this.setSize(maxSize);
+            }
+            large = !large;
+        }
     }
-    
-	/**
+
+    /**
      * Returns the <i>current</i> size as the minimum size.
+     *
+     * @return 
      * @see java.awt.Component#getMinimumSize()
      */
     @Override
@@ -83,6 +85,8 @@ public class TestTabSheet extends Panel implements TabSheetIF, ActionListener {
 
     /**
      * Returns the <i>current</i> size as the preferred size.
+     *
+     * @return 
      * @see java.awt.Component#getPreferredSize()
      */
     @Override

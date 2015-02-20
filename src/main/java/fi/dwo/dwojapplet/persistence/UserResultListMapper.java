@@ -34,13 +34,13 @@ public class UserResultListMapper extends XmlRpcMapper {
     private static final String TABLENAME = "tblUser";
 
     private static final String IDCOL = "userID";
-    
+
     private static final String ORDERCOL = "lastname";
-    
+
     private ResultsModuleIF resultsModule;
 
     /**
-
+     *
      */
     public UserResultListMapper() {
 
@@ -49,7 +49,8 @@ public class UserResultListMapper extends XmlRpcMapper {
     /**
      * @param oid
      * @param obj
-
+     * @throws org.apache.xmlrpc.applet.XmlRpcException
+     *
      */
     @Override
     public void put(int oid, Object obj) throws IOException, SQLException,
@@ -60,7 +61,8 @@ public class UserResultListMapper extends XmlRpcMapper {
     /**
      * @param data
      * @return Object
-
+     * @throws org.apache.xmlrpc.applet.XmlRpcException
+     *
      */
     @Override
     public Object getObjectFromReturn(Hashtable data) throws IOException, SQLException, XmlRpcException {
@@ -71,7 +73,8 @@ public class UserResultListMapper extends XmlRpcMapper {
     /**
      * @param obj
      * @return Object[]
-
+     * @throws org.apache.xmlrpc.applet.XmlRpcException
+     *
      */
     @Override
     public Object[] get(Object obj) throws IOException, SQLException,
@@ -108,54 +111,52 @@ public class UserResultListMapper extends XmlRpcMapper {
     @Override
     protected Object update(Object obj, Hashtable data) throws IOException, SQLException, XmlRpcException {
         ResultScore rs = (ResultScore) obj;
-        
+
         UserGroup ug = null;
         LessonGroup lg = null;
-        
-        if(data.containsKey("classID")) {
+
+        if (data.containsKey("classID")) {
             ug = (SchoolClass) MapperCreator.instance(SchoolClass.class).get(((Integer) data.get("classID")).intValue());
-        } else if(data.containsKey("userID")) {
+        } else if (data.containsKey("userID")) {
             ug = (User) MapperCreator.instance(User.class).get(((Integer) data.get("userID")).intValue());
         }
-        
-        if(data.containsKey("courseID")) {
+
+        if (data.containsKey("courseID")) {
             lg = (Course) MapperCreator.instance(Course.class).get(((Integer) data.get("courseID")).intValue());
-        } else if(data.containsKey("scoID")) {
+        } else if (data.containsKey("scoID")) {
             lg = (Sco) MapperCreator.instance(Sco.class).get(((Integer) data.get("scoID")).intValue());
         }
-        
+
         rs.setLessonGroup(lg);
         rs.setUserGroup(ug);
         Object score = data.get("score");
-        if(score instanceof String) {
+        if (score instanceof String) {
             /* Score a string -> it was null */
             rs.setScore(0);
-        } else if(score instanceof Float){
+        } else if (score instanceof Float) {
             rs.setScore(((Float) score).floatValue());
-        } else if(score instanceof Double) {
+        } else if (score instanceof Double) {
             rs.setScore(((Double) score).floatValue());
         } else {
             rs.setScore(Float.valueOf((String) score).floatValue());
         }
         Object totaal = data.get("totaal");
-        if(totaal instanceof String)
-        {
-        	rs.setTotaal(1);
-        } else if (totaal instanceof Number)
-        {
-        	rs.setTotaal(((Number)totaal).intValue());
+        if (totaal instanceof String) {
+            rs.setTotaal(1);
+        } else if (totaal instanceof Number) {
+            rs.setTotaal(((Number) totaal).intValue());
         }
         Object total_time = data.get("total_time");
-        if(total_time instanceof String && !("".equals(total_time))) { 
-        	SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
-        	formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
-        	formatter.setLenient(true);
-        	try {
-				rs.setTotal_time(formatter.parse(total_time.toString()).getTime());
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+        if (total_time instanceof String && !("".equals(total_time))) {
+            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
+            formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+            formatter.setLenient(true);
+            try {
+                rs.setTotal_time(formatter.parse(total_time.toString()).getTime());
+            } catch (ParseException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
         return rs;
     }
@@ -180,8 +181,8 @@ public class UserResultListMapper extends XmlRpcMapper {
     public Object[] getObjectFromReturn(Vector data) throws IOException,
             SQLException, XmlRpcException {
         Vector result = new Vector();
-        
-        if(data.size() == 0) {
+
+        if (data.size() == 0) {
             Vector[] tmp = new Vector[1];
             tmp[0] = result;
             return tmp;
@@ -189,39 +190,37 @@ public class UserResultListMapper extends XmlRpcMapper {
 
         String userGroupKey = "classID";
         Hashtable ht;
-        
+
         ht = (Hashtable) data.elementAt(0);
-        if(!ht.containsKey(userGroupKey)) {
+        if (!ht.containsKey(userGroupKey)) {
             userGroupKey = "userID";
         }
-        
+
         /* Lookup the number of columns (through searching for the first difference in userGroupKEY) */
         int colLength = 0;
         Object curID = ht.get(userGroupKey);
-        while(ht.get(userGroupKey).equals(curID) && (data.size() > colLength)) {
+        while (ht.get(userGroupKey).equals(curID) && (data.size() > colLength)) {
             colLength++;
-            if(data.size() > colLength) {
+            if (data.size() > colLength) {
                 ht = (Hashtable) data.elementAt(colLength);
             }
         }
-        
-        
+
         UserResultList url;
         ResultScore[] rs = new ResultScore[colLength];
         int currentUrl = 0; //Current Row
         int currentResultScore = 0; //Current Column
-        
+
         url = new UserResultList();
         url.setResultsModule(resultsModule);
-        for(int i = 0; i < data.size(); i++) {
+        for (int i = 0; i < data.size(); i++) {
             ht = (Hashtable) data.elementAt(i);
             rs[currentResultScore] = (ResultScore) getObjectFromReturn(ht);
             rs[currentResultScore].setUserResultList(url);
             currentResultScore++;
-            
-            
+
             /* Total column done */
-            if(currentResultScore >= rs.length) {
+            if (currentResultScore >= rs.length) {
                 currentResultScore = 0;
                 url.setResultScore(rs);
                 result.addElement(url);
@@ -231,14 +230,13 @@ public class UserResultListMapper extends XmlRpcMapper {
                 url.setResultsModule(resultsModule);
             }
         }
-        
+
         Vector[] v = new Vector[1];
         v[0] = result;
         return v;
-        
+
     }
-    
-    
+
     public void setResultsModule(ResultsModuleIF resultsModule) {
         this.resultsModule = resultsModule;
         removeAllObjects();

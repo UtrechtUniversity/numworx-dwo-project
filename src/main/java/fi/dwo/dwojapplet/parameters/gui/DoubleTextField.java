@@ -1,5 +1,4 @@
 // Source file: C:\\fi\\dwo\\parameters\\gui\\DoubleTextField.java
-
 package fi.dwo.dwojapplet.parameters.gui;
 
 import java.awt.AWTEvent;
@@ -52,17 +51,17 @@ public class DoubleTextField extends JTextField {
         char c = kevt.getKeyChar();
 
         boolean isDecimalChar = (c == '\u002c') || (c == '\u002e');
-        
-        if(isDecimalChar) {
-            
+
+        if (isDecimalChar) {
+
             c = new DecimalFormatSymbols(Locale.getDefault()).getDecimalSeparator();
             kevt.setKeyChar(c);
         }
-        
+
         // Digits, backspace, and delete are okay
         // Note that the minus sign is allowed, but not the decimal
-        if (Character.isDigit(c) || (c == '\b') || (c == '\u007f') || 
-            (c == '\u002d') || isDecimalChar) {
+        if (Character.isDigit(c) || (c == '\b') || (c == '\u007f')
+                || (c == '\u002d') || isDecimalChar) {
             super.processEvent(evt);
             return;
         }
@@ -97,11 +96,11 @@ public class DoubleTextField extends JTextField {
 
         char c = ',';
         NumberFormat nf = DecimalFormat.getInstance();
-        if(nf instanceof DecimalFormat) {
+        if (nf instanceof DecimalFormat) {
             c = ((DecimalFormat) nf).getDecimalFormatSymbols().getDecimalSeparator();
         }
         textToCheck = textToCheck.replace(c, '.');
-        
+
         try {
             value = Double.parseDouble(textToCheck);
             return true;
@@ -109,13 +108,13 @@ public class DoubleTextField extends JTextField {
             return false;
         }
     }
-    
+
     public double getDoubleValue() {
         double value = -1;
 
         char c = ',';
         NumberFormat nf = DecimalFormat.getInstance();
-        if(nf instanceof DecimalFormat) {
+        if (nf instanceof DecimalFormat) {
             c = ((DecimalFormat) nf).getDecimalFormatSymbols().getDecimalSeparator();
         }
         String s = getText().replace(c, '.');

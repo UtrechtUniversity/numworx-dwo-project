@@ -16,68 +16,68 @@ public class AppletDataMapper extends XmlRpcMapper {
 
     @Override
     protected Object[] createArray(int size) {
-		return new AppletData[size];
-	}
+        return new AppletData[size];
+    }
 
     @Override
-	protected String getIDCol() {
-		return IDCOL;
-	}
+    protected String getIDCol() {
+        return IDCOL;
+    }
 
     @Override
-	protected String getOrderbyCol() {
-		return ORDERCOL;
-	}
+    protected String getOrderbyCol() {
+        return ORDERCOL;
+    }
 
     @Override
-	protected String getTableName() {
-		return TABLENAME;
-	}
+    protected String getTableName() {
+        return TABLENAME;
+    }
 
     @Override
-	protected Object update(Object obj, Hashtable data) {
-		AppletData applet = (AppletData)obj;
-		applet.setId((((Number) data.get(IDCOL)).intValue()));
-		applet.setAppletName((String)data.get("appletName"));
-		applet.setClassName( (String)data.get(ORDERCOL));
-		applet.setJarName((String)data.get("jarname"));
-		applet.setFeatures((String)data.get("features"));
-		return applet;
-	}
+    protected Object update(Object obj, Hashtable data) {
+        AppletData applet = (AppletData) obj;
+        applet.setId((((Number) data.get(IDCOL)).intValue()));
+        applet.setAppletName((String) data.get("appletName"));
+        applet.setClassName((String) data.get(ORDERCOL));
+        applet.setJarName((String) data.get("jarname"));
+        applet.setFeatures((String) data.get("features"));
+        return applet;
+    }
 
     @Override
-	public Object[] get(Object obj) throws IOException, SQLException,
-			XmlRpcException {
-		return get();
-	}
+    public Object[] get(Object obj) throws IOException, SQLException,
+            XmlRpcException {
+        return get();
+    }
 
     @Override
-	public Object getObjectFromReturn(Hashtable data) throws IOException,
-			SQLException, XmlRpcException {
+    public Object getObjectFromReturn(Hashtable data) throws IOException,
+            SQLException, XmlRpcException {
         AppletData s = null;
         if (data.get("appletID") == null) { //We don't know enough to make a
-                                            // schoolobject
+            // schoolobject
             return null;
         } else if (data.get("appletID") instanceof String) { //If it is a string, it was null
             return null;
         } else if (objects.containsKey(data.get("appletID"))) { // Did we knew
-                                                                // the applet?
+            // the applet?
             s = (AppletData) objects.get(data.get("appletID"));
         } else {
             s = new AppletData();
         }
         s = (AppletData) update(s, data);
-        if(!objects.containsKey(new Integer(s.getId()))) {
+        if (!objects.containsKey(new Integer(s.getId()))) {
             objects.put(new Integer(s.getId()), s);
         }
         return s;
-	}
+    }
 
     @Override
-	public void put(int oid, Object obj) throws IOException, SQLException,
-			XmlRpcException {
+    public void put(int oid, Object obj) throws IOException, SQLException,
+            XmlRpcException {
         System.err.println("AppletDataMapper.put() Not yet implemented!");
 
-	}
+    }
 
 }

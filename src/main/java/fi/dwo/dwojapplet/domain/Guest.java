@@ -10,23 +10,21 @@ import fi.dwo.commons.system.TextMapper;
 
 /**
  * Singleton Guest user. Goed voor implementatie van het null-pattern.
+ *
  * @author wim
  */
-
-public class Guest extends User
-{
+public class Guest extends User {
 
     private static User _instance;
 
-    protected Guest()
-    {
+    protected Guest() {
         super();
     }
-    
-    static public User instance()
-    {
-        if ( _instance == null)
+
+    static public User instance() {
+        if (_instance == null) {
             _instance = new Guest();
+        }
         return _instance;
     }
 
@@ -34,30 +32,29 @@ public class Guest extends User
      * @see fi.dwo.client.domain.User#getName()
      */
     @Override
-    public String getName()
-    {
-         return TextMapper.getText(TextMapper.USER_GUEST);
+    public String getName() {
+        return TextMapper.getText(TextMapper.USER_GUEST);
     }
 
     @Override
-	public String getStudentName() {
-		return getName();
-	}
+    public String getStudentName() {
+        return getName();
+    }
 
-/**
+    /**
      * Guest user is locked in.
      */
-/*    public boolean canLogout()
-    {
-        return false;
-    }
- */   /**
+    /*    public boolean canLogout()
+     {
+     return false;
+     }
+     */ /**
      * Guest user is readonly.
+     * @return 
      */
     @Override
-    public boolean isReadonly()
-    {
+    public boolean isReadonly() {
         return true;
     }
-    
+
 }

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package fi.dwo.dwojapplet.gui;
 
@@ -11,26 +11,27 @@ import javax.swing.table.TableCellRenderer;
 
 public class TextPaneRenderer extends JTextPane implements TableCellRenderer {
 
-	TextPaneRenderer() {
-		super();
-		setFont(GuiConstants.NORMAL_TEXT);
-		setEditable(false);
-	}
+    TextPaneRenderer() {
+        super();
+        setFont(GuiConstants.NORMAL_TEXT);
+        setEditable(false);
+    }
 
-        @Override
-	public Component getTableCellRendererComponent(JTable table,
-			Object value, boolean selected, boolean hasFocus, int row,
-			int column) {
-		if(selected)
-			setBackground(table.getSelectionBackground());
-		else
-			setBackground(table.getBackground());
-		setCell(value);
-		return this;
-	}
+    @Override
+    public Component getTableCellRendererComponent(JTable table,
+            Object value, boolean selected, boolean hasFocus, int row,
+            int column) {
+        if (selected) {
+            setBackground(table.getSelectionBackground());
+        } else {
+            setBackground(table.getBackground());
+        }
+        setCell(value);
+        return this;
+    }
 
-	protected void setCell(Object value) {
-		setText(value == null ? " ": value.toString());
-	}
-	
+    protected void setCell(Object value) {
+        setText(value == null ? " " : value.toString());
+    }
+
 }

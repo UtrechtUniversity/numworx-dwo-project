@@ -1,5 +1,4 @@
 //Source file: C:\\parameters\\fi\\dwo\\parameters\\gui\\TreeIntegerParameterComponent.java
-
 package fi.dwo.dwojapplet.parameters.gui;
 
 import java.awt.Color;
@@ -10,18 +9,15 @@ import java.util.Hashtable;
 
 import fi.beans.scorm.Parameter;
 
+public class TreeIntegerParameterComponent extends IntegerParameterComponent implements ActionListener {
 
-public class TreeIntegerParameterComponent extends IntegerParameterComponent implements ActionListener 
-{
-    
     private DeleteButton deleteButton;
-    
+
     public TreeIntegerParameterComponent(ParameterComponentIF parent,
-            Parameter parameter, Hashtable defaultValue) 
-    {
+            Parameter parameter, Hashtable defaultValue) {
         super(parent, parameter, defaultValue);
     }
-    
+
     public TreeIntegerParameterComponent(ParameterComponentIF parent,
             Parameter parameter, Hashtable defaultValue, boolean isSub) {
         super(parent, parameter, defaultValue, isSub);
@@ -29,7 +25,10 @@ public class TreeIntegerParameterComponent extends IntegerParameterComponent imp
 
     /**
      * Calls the parent generatePostItems, and adds a delete-button.
-     * @see fi.dwo.parameters.gui.ParameterComponent#generatePostItems(java.awt.Component)
+     *
+     * @return 
+     * @see
+     * fi.dwo.parameters.gui.ParameterComponent#generatePostItems(java.awt.Component)
      */
     @Override
     protected Component generatePostItems(Component after) {
@@ -40,49 +39,48 @@ public class TreeIntegerParameterComponent extends IntegerParameterComponent imp
         this.add(deleteButton);
         deleteButton.addActionListener(this);
         last = deleteButton;
-        
+
         return last;
     }
 
     @Override
-	public void setColor(Color c) {
-	    super.setColor(c);
+    public void setColor(Color c) {
+        super.setColor(c);
 
-	    if(deleteButton != null) {
-	        deleteButton.setBackground(c);
-		}
-	}
-	
-    @Override
-	protected void isFocussed() {
-	    super.isFocussed();
+        if (deleteButton != null) {
+            deleteButton.setBackground(c);
+        }
+    }
 
-	    if(deleteButton != null) {
-		    deleteButton.setVisible(true);
-		    deleteButton.repaint();
-		}
-	}
-	
     @Override
-	public void unFocus() {
-	    super.unFocus();
-		if(deleteButton != null) {
-		    deleteButton.setVisible(false);
-		    deleteButton.repaint();
-		}	    
-	}
+    protected void isFocussed() {
+        super.isFocussed();
+
+        if (deleteButton != null) {
+            deleteButton.setVisible(true);
+            deleteButton.repaint();
+        }
+    }
+
+    @Override
+    public void unFocus() {
+        super.unFocus();
+        if (deleteButton != null) {
+            deleteButton.setVisible(false);
+            deleteButton.repaint();
+        }
+    }
 
     /* (non-Javadoc)
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == deleteButton) {
-            if(parent instanceof DeleteTreeItemIF) {
+        if (e.getSource() == deleteButton) {
+            if (parent instanceof DeleteTreeItemIF) {
                 ((DeleteTreeItemIF) parent).deleteItem(this);
             }
         }
     }
-
 
 }

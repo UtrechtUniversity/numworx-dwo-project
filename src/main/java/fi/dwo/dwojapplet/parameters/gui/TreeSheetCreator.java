@@ -1,5 +1,4 @@
 // Source file: C:\\parameters\\fi\\dwo\\parameters\\gui\\TreeSheetCreator.java
-
 package fi.dwo.dwojapplet.parameters.gui;
 
 import java.awt.Color;
@@ -24,23 +23,24 @@ public class TreeSheetCreator implements TabSheetCreatorIF, ItemLaunchdataCallBa
     private Vector itemLaunchdata;
 
     private SingleLevelTreeParameterComponent parent;
-    
+
     private TabPane tabPane;
 
     /**
      * @param parameter
      * @param default
+     * @param defaultValue
      */
     public TreeSheetCreator(SingleLevelTreeParameterComponent parent,
             TreeParameter parameter, Hashtable defaultValue) {
         this.parent = parent;
         this.parameter = parameter;
 
-        if(defaultValue.containsKey(parameter.getItemCountName())) {
+        if (defaultValue.containsKey(parameter.getItemCountName())) {
             /* If the parameter is not definied, use 0 as number of items */
             String sNrItems = (String) defaultValue.get(parameter.getItemCountName());
             int nrItems = 0;
-            if(sNrItems != null) {
+            if (sNrItems != null) {
                 nrItems = Integer.parseInt(sNrItems);
             }
             itemLaunchdata = new Vector(nrItems);
@@ -53,16 +53,16 @@ public class TreeSheetCreator implements TabSheetCreatorIF, ItemLaunchdataCallBa
             Object item;
             Parameter subParameter;
             int i, j;
-            for(i = 1; i <= nrItems; i++) {
+            for (i = 1; i <= nrItems; i++) {
                 ht = new Hashtable();
-                for(j = 0; j < parameter.getSubParameters().length; j++) {
+                for (j = 0; j < parameter.getSubParameters().length; j++) {
                     subParameter = parameter.getSubParameters()[j];
                     item = defaultValue.get(subParameter.getName() + "_" + i);
-                    ht.put(subParameter.getName(), item);                    
+                    ht.put(subParameter.getName(), item);
                 }
                 itemLaunchdata.addElement(new ItemLaunchdata(this, ht));
             }
-            
+
         } else {
             itemLaunchdata = new Vector();
         }
@@ -70,9 +70,9 @@ public class TreeSheetCreator implements TabSheetCreatorIF, ItemLaunchdataCallBa
     }
 
     public void addTab() {
-        if(parameter.getType() instanceof ScormTree) {
+        if (parameter.getType() instanceof ScormTree) {
             ScormTree scormTree = (ScormTree) parameter.getType();
-            if((scormTree.getMaxItems() != -1) &&(scormTree.getMaxItems() <= getNrItems())) {
+            if ((scormTree.getMaxItems() != -1) && (scormTree.getMaxItems() <= getNrItems())) {
                 String[] arguments = new String[2];
                 arguments[0] = Integer.toString(scormTree.getMaxItems());
                 arguments[1] = parameter.getPreLabel();
@@ -98,13 +98,13 @@ public class TreeSheetCreator implements TabSheetCreatorIF, ItemLaunchdataCallBa
         int index = itemLaunchdata.indexOf(tabSheet);
         itemLaunchdata.removeElementAt(index);
         ItemLaunchdataIF item;
-        for(int i = index; i < itemLaunchdata.size(); i++) {
+        for (int i = index; i < itemLaunchdata.size(); i++) {
             item = (ItemLaunchdataIF) itemLaunchdata.elementAt(i);
             tabPane.renameTab(parameter.getItemLabel() + " " + (i + 1), item.getKey());
         }
-        
+
         tabPane.removeTab(key);
-        if(getNrItems() == 0) {
+        if (getNrItems() == 0) {
             parent.noItems();
         }
     }
@@ -124,14 +124,14 @@ public class TreeSheetCreator implements TabSheetCreatorIF, ItemLaunchdataCallBa
     }
 
     public void createTabs() {
-        if(tabPane != null) {
-	        int i;
-	        ItemLaunchdataIF item;
-	        for(i = 0; i < itemLaunchdata.size(); i++) {
-	            item = (ItemLaunchdataIF) itemLaunchdata.elementAt(i);
-	            item.setKey(StringUtils.randomstring());
-	            tabPane.addRuntimeTabSheet(parameter.getItemLabel() + " " + (i + 1), item.getKey());
-	        }
+        if (tabPane != null) {
+            int i;
+            ItemLaunchdataIF item;
+            for (i = 0; i < itemLaunchdata.size(); i++) {
+                item = (ItemLaunchdataIF) itemLaunchdata.elementAt(i);
+                item.setKey(StringUtils.randomstring());
+                tabPane.addRuntimeTabSheet(parameter.getItemLabel() + " " + (i + 1), item.getKey());
+            }
         }
 
     }
@@ -143,17 +143,17 @@ public class TreeSheetCreator implements TabSheetCreatorIF, ItemLaunchdataCallBa
     @Override
     public TabSheetIF createTabSheet(Object key) {
         int i = 0;
-        while(((ItemLaunchdataIF) itemLaunchdata.elementAt(i)).getKey() != key) {
+        while (((ItemLaunchdataIF) itemLaunchdata.elementAt(i)).getKey() != key) {
             i++;
         }
         ItemLaunchdataIF item = (ItemLaunchdataIF) itemLaunchdata.elementAt(i);
-        if(item instanceof TabSheetIF) {
+        if (item instanceof TabSheetIF) {
             return (TabSheetIF) item;
         } else {
-	        SingleLevelTreeTabSheet tabSheet = new SingleLevelTreeTabSheet(this, parameter, item.getLaunchdata());
-	        tabSheet.setKey(key);
-	        itemLaunchdata.setElementAt(tabSheet, i);
-	        return tabSheet;
+            SingleLevelTreeTabSheet tabSheet = new SingleLevelTreeTabSheet(this, parameter, item.getLaunchdata());
+            tabSheet.setKey(key);
+            itemLaunchdata.setElementAt(tabSheet, i);
+            return tabSheet;
         }
     }
 
@@ -176,11 +176,11 @@ public class TreeSheetCreator implements TabSheetCreatorIF, ItemLaunchdataCallBa
     @Override
     public void addParameters(Hashtable parameters) {
         Hashtable ht = new Hashtable();
-        ht.put(((TreeParameter) parameter).getItemCountName(), Integer.toString(getNrItems()));        
-        for(int i = 0; i < itemLaunchdata.size(); i++) {
+        ht.put(((TreeParameter) parameter).getItemCountName(), Integer.toString(getNrItems()));
+        for (int i = 0; i < itemLaunchdata.size(); i++) {
             ((ItemLaunchdataIF) itemLaunchdata.elementAt(i)).addParameters(ht);
         }
-        parent.addParameter(parameters, ht);        
+        parent.addParameter(parameters, ht);
 
     }
 
@@ -207,7 +207,6 @@ public class TreeSheetCreator implements TabSheetCreatorIF, ItemLaunchdataCallBa
     public void isFocussed(ParameterComponentIF component) {
 
     }
-
 
     /**
      * @param component

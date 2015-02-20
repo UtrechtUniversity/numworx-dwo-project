@@ -4,8 +4,8 @@ import java.util.Hashtable;
 
 public interface ScoEditor {
 
-	Hashtable getLaunchdata();
+    Hashtable getLaunchdata();
 
-	void setLaunchdata(Hashtable params);
+    void setLaunchdata(Hashtable params);
 
 }

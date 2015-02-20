@@ -21,115 +21,117 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
 
 public class SaveAppletAction extends GuiAction {
-	private Sco sco0, sco; // in constructor
+
+    private Sco sco0, sco; // in constructor
     private FileDialog saveDial;
 
-	public SaveAppletAction(Sco sco) {
-		super("Export Applet");
-		this.sco0 = sco;
-	}
-	public SaveAppletAction() {
-		super("Export Applet");
-		setEnabled(false);
-		Clipboard.addPropertyChangeListener("selection", this);
-	}
-	
-	
-	
-	
-        @Override
-	public void actionPerformed(ActionEvent e) {
+    public SaveAppletAction(Sco sco) {
+        super("Export Applet");
+        this.sco0 = sco;
+    }
 
+    public SaveAppletAction() {
+        super("Export Applet");
+        setEnabled(false);
+        Clipboard.addPropertyChangeListener("selection", this);
+    }
 
-		sco = sco0;
-		if(sco == null)
-		{
-			if(Clipboard.getSelection().getUserObject() instanceof Sco)
-			{
-				sco = (Sco) Clipboard.getSelection().getUserObject();
-			} else
-			return;
-		}
+    @Override
+    public void actionPerformed(ActionEvent e) {
 
-		saveDial = new FileDialog(DwoHelper.getFrameForComponent((Component) e.getSource()), "opslaan", FileDialog.SAVE);
-		saveDial.setDirectory(System.getProperty("user.dir","."));
-		saveDial.setName("*.htm");
-		
-		saveApplet();
+        sco = sco0;
+        if (sco == null) {
+            if (Clipboard.getSelection().getUserObject() instanceof Sco) {
+                sco = (Sco) Clipboard.getSelection().getUserObject();
+            } else {
+                return;
+            }
+        }
 
-	}
-	private void saveApplet()
-	{	String directory,naam;
-		saveDial.show();
-		directory = saveDial.getDirectory();
-		naam = saveDial.getFile();
-		if(naam!=null)
-		{	if(naam.indexOf(".")>-1)naam = naam.substring(0,naam.indexOf("."));
-			schrijfGrApplet(directory+""+sco.getScoName()+".htm");
-		}
-	}
-	
-	
-	private void schrijfGrApplet(String naam)
-	{	try
-		{	PrintWriter out = new PrintWriter(new FileWriter(naam));
-			GRHTML(out);
-			out.close();
-		}
-		catch(IOException ie)
-		{
-		}
-	}
-	
-	
-	private void GRHTML(PrintWriter out)
-	{	Hashtable launchData;
-		launchData = sco.getEditLaunchdata();
-		if(launchData == null)
-			launchData = sco.getLaunchdata();
-		String className = sco.getApplet().getClass().getName();
-		String jarName = className.substring(3,className.indexOf(".",3));
-		String launchDataString = StringCodeObject.encodeObjectToString(launchData);
-		String scoName = sco.getScoName();
-		
-		String language = TextMapper.getLanguage();
-		//String bgcolor = "#" + Integer.toHexString(GuiConstants.MAIN_BACKGROUND.getRGB()).substring(2);
-		String bgcolor = "#FFFFFF";
-		
-		String[] arguments = {scoName, className, jarName, language, bgcolor, launchDataString};
-		
-		try {	
-			URL htmlSource = new URL("http://www.fisme.science.uu.nl/dwo/scorm/applet/applet.htm");
-			if(sco.getCourse().getDwoProfile()==13 || sco.getCourse().getDwoProfile()==57 || sco.getCourse().getDwoProfile()==64 || sco.getCourse().getDwoProfile()==65)htmlSource = new URL("http://www.fisme.science.uu.nl/dwo/scorm/applet/appletGR.htm");
-			if(sco.getCourse().getDwoProfile()==27 || sco.getCourse().getDwoProfile()==51)htmlSource = new URL("http://www.fisme.science.uu.nl/dwo/scorm/applet/appletMW.htm");
-			if(sco.getCourse().getDwoProfile()==46)htmlSource = new URL("http://www.fisme.science.uu.nl/dwo/scorm/applet/appletNWK.htm");
+        saveDial = new FileDialog(DwoHelper.getFrameForComponent((Component) e.getSource()), "opslaan", FileDialog.SAVE);
+        saveDial.setDirectory(System.getProperty("user.dir", "."));
+        saveDial.setName("*.htm");
 
-			URLConnection connection = htmlSource.openConnection();
-	        BufferedReader in = null;
-	        try {
-	            in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-	        } catch (FileNotFoundException exception) {
-	            System.out.println(exception.toString());
-	        }
-	
-	        if (in != null) {
-	            String result = "";
-	            String tmp = "";
-	            while ((tmp = in.readLine()) != null) {
-	                result += tmp + "\n";
-	            }
-	            in.close();
-	            result = MessageFormat.format(result, arguments); 
-	            out.print(result);
-	        }
-		}
-        catch (IOException e) 
-	    {   }
-        
-	}
+        saveApplet();
 
-        @Override
-	void setMap(CourseMap map) {
-		setEnabled( map != null && map.getUserObject() instanceof Sco);
-	}
+    }
+
+    private void saveApplet() {
+        String directory, naam;
+        saveDial.show();
+        directory = saveDial.getDirectory();
+        naam = saveDial.getFile();
+        if (naam != null) {
+            if (naam.indexOf(".") > -1) {
+                naam = naam.substring(0, naam.indexOf("."));
+            }
+            schrijfGrApplet(directory + "" + sco.getScoName() + ".htm");
+        }
+    }
+
+    private void schrijfGrApplet(String naam) {
+        try {
+            PrintWriter out = new PrintWriter(new FileWriter(naam));
+            GRHTML(out);
+            out.close();
+        } catch (IOException ie) {
+        }
+    }
+
+    private void GRHTML(PrintWriter out) {
+        Hashtable launchData;
+        launchData = sco.getEditLaunchdata();
+        if (launchData == null) {
+            launchData = sco.getLaunchdata();
+        }
+        String className = sco.getApplet().getClass().getName();
+        String jarName = className.substring(3, className.indexOf(".", 3));
+        String launchDataString = StringCodeObject.encodeObjectToString(launchData);
+        String scoName = sco.getScoName();
+
+        String language = TextMapper.getLanguage();
+        //String bgcolor = "#" + Integer.toHexString(GuiConstants.MAIN_BACKGROUND.getRGB()).substring(2);
+        String bgcolor = "#FFFFFF";
+
+        String[] arguments = {scoName, className, jarName, language, bgcolor, launchDataString};
+
+        try {
+            URL htmlSource = new URL("http://www.fisme.science.uu.nl/dwo/scorm/applet/applet.htm");
+            if (sco.getCourse().getDwoProfile() == 13 || sco.getCourse().getDwoProfile() == 57 || sco.getCourse().getDwoProfile() == 64 || sco.getCourse().getDwoProfile() == 65) {
+                htmlSource = new URL("http://www.fisme.science.uu.nl/dwo/scorm/applet/appletGR.htm");
+            }
+            if (sco.getCourse().getDwoProfile() == 27 || sco.getCourse().getDwoProfile() == 51) {
+                htmlSource = new URL("http://www.fisme.science.uu.nl/dwo/scorm/applet/appletMW.htm");
+            }
+            if (sco.getCourse().getDwoProfile() == 46) {
+                htmlSource = new URL("http://www.fisme.science.uu.nl/dwo/scorm/applet/appletNWK.htm");
+            }
+
+            URLConnection connection = htmlSource.openConnection();
+            BufferedReader in = null;
+            try {
+                in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            } catch (FileNotFoundException exception) {
+                System.out.println(exception.toString());
+            }
+
+            if (in != null) {
+                String result = "";
+                String tmp = "";
+                while ((tmp = in.readLine()) != null) {
+                    result += tmp + "\n";
+                }
+                in.close();
+                result = MessageFormat.format(result, arguments);
+                out.print(result);
+            }
+        } catch (IOException e) {
+        }
+
+    }
+
+    @Override
+    void setMap(CourseMap map) {
+        setEnabled(map != null && map.getUserObject() instanceof Sco);
+    }
 }

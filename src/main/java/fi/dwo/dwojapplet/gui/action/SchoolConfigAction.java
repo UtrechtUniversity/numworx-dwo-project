@@ -13,17 +13,16 @@ import fi.dwo.dwojapplet.gui.SchoolConfigPanel;
 
 public class SchoolConfigAction extends AbstractAction {
 
-        @Override
-	public void actionPerformed(ActionEvent e) {
-		MainPanel main = GuiCreator.instance().getMainPanel();
-		CenterPanel center = main.getCenter();
-		School school = GuiCreator.instance().getUser().getSchool();
-		center.loadCenter(new SchoolConfigPanel(school));
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        MainPanel main = GuiCreator.instance().getMainPanel();
+        CenterPanel center = main.getCenter();
+        School school = GuiCreator.instance().getUser().getSchool();
+        center.loadCenter(new SchoolConfigPanel(school));
+    }
 
-	public SchoolConfigAction() {
-		super(TextMapper.getText(TextMapper.GUIH_SETTINGS));
-	}
-
+    public SchoolConfigAction() {
+        super(TextMapper.getText(TextMapper.GUIH_SETTINGS));
+    }
 
 }

@@ -11,28 +11,28 @@ import fi.dwo.dwojapplet.gui.GuiCreatorTeacher;
 
 public class ScoManagementAction extends GuiAction {
 
-	private Course course;
+    private Course course;
 
-	public ScoManagementAction(CoursePanel coursePanel) {
-		super(TextMapper.getText(TextMapper.GUIH_EDIT));
-		course = coursePanel.getCourse();
-	}
-	
-	public ScoManagementAction(Course course) {
-		super(TextMapper.getText(TextMapper.GUIH_EDIT));
-		this.course = course;
-	}
+    public ScoManagementAction(CoursePanel coursePanel) {
+        super(TextMapper.getText(TextMapper.GUIH_EDIT));
+        course = coursePanel.getCourse();
+    }
 
-        @Override
-	public void actionPerformed(ActionEvent arg0) {
-		GuiCreatorTeacher.instance().setWait();
-		CenterSubPanel cp;
-		cp = GuiCreatorTeacher.instance().getScoManagementPanel(course);
-		CenterPanel center = getCenter();
+    public ScoManagementAction(Course course) {
+        super(TextMapper.getText(TextMapper.GUIH_EDIT));
+        this.course = course;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+        GuiCreatorTeacher.instance().setWait();
+        CenterSubPanel cp;
+        cp = GuiCreatorTeacher.instance().getScoManagementPanel(course);
+        CenterPanel center = getCenter();
         center.setStrategy(new NullStrategy());
         center.getMenu().setEditing(true);
         center.loadCenter(cp);
-        GuiCreatorTeacher.instance().setReady();           
-	}
-	
+        GuiCreatorTeacher.instance().setReady();
+    }
+
 }

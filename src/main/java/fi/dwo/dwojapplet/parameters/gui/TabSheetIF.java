@@ -13,7 +13,7 @@ import java.awt.Component;
  *
  */
 public interface TabSheetIF {
-    
+
     public Component getComponent();
 
 }

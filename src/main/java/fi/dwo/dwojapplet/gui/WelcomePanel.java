@@ -103,8 +103,8 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         dialog.setOpaque(false);
         dialog.setBounds(getWidth() / 2 - 200, 0, 400, getHeight());
         this.add(dialog);
-        
-        String version="unknown";
+
+        String version = "unknown";
         URLClassLoader cl = (URLClassLoader) getClass().getClassLoader();
         try {
             URL url = cl.findResource("META-INF/MANIFEST.MF");

@@ -5,12 +5,14 @@ import fi.dwo.dwojapplet.domain.ResultsModuleIF;
 
 interface CourseContainer {
 
-	void showClassList();
-	void hideClassList();
+    void showClassList();
 
-	void loadCenter(CenterSubPanel cp);
-	void loadTotal(CenterSubPanel csp);
+    void hideClassList();
 
-	ResultsModuleIF getUserResultsModule(Course course);
+    void loadCenter(CenterSubPanel cp);
+
+    void loadTotal(CenterSubPanel csp);
+
+    ResultsModuleIF getUserResultsModule(Course course);
 
 }

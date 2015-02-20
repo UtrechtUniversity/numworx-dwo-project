@@ -11,11 +11,11 @@ import java.awt.LayoutManager;
 import java.awt.Panel;
 
 /**
- * A panel with a border. 
- * The user can define the location of the borders (NORTH, SOUTH, EAST, WEST).
- * 
+ * A panel with a border. The user can define the location of the borders
+ * (NORTH, SOUTH, EAST, WEST).
+ *
  * @author M.J.B. Kupers
- * @deprecated gebruik JPanel en setBorder 
+ * @deprecated gebruik JPanel en setBorder
  */
 public class BorderedPanel extends Panel {
 
@@ -63,7 +63,7 @@ public class BorderedPanel extends Panel {
     /**
      * Creates a new BorderedPanel with borders on all sides with the specified
      * LayoutManager.
-     * 
+     *
      * @param lm The LayoutManager to set.
      */
     public BorderedPanel(LayoutManager lm) {
@@ -77,7 +77,7 @@ public class BorderedPanel extends Panel {
     /**
      * Creates a new BorderedPanel with the specified borders and the specified
      * LayoutManager.
-     * 
+     *
      * @param lm The LayoutManager to set.
      * @param borders The borders to show.
      */
@@ -89,11 +89,10 @@ public class BorderedPanel extends Panel {
         this.insets().right = 2;
         this.borders = borders;
     }
-    
-   
+
     /**
      * Returns the current border color.
-     * 
+     *
      * @return The current border color.
      */
     public Color getBorderColor() {
@@ -102,7 +101,7 @@ public class BorderedPanel extends Panel {
 
     /**
      * Sets the current border color.
-     * 
+     *
      * @param borderColor The borderColor to set.
      */
     public void setBorderColor(Color borderColor) {
@@ -111,7 +110,7 @@ public class BorderedPanel extends Panel {
 
     /**
      * Paints the panel and his borders.
-     * 
+     *
      * @see java.awt.Component#paint(java.awt.Graphics)
      */
     @Override
@@ -135,29 +134,30 @@ public class BorderedPanel extends Panel {
 
     /**
      * Returns the current borders.
+     *
      * @return The current borders.
      */
     public int getBorders() {
         return borders;
     }
-    
+
     /**
      * Sets the current Borders.
+     *
      * @param borders The borders to set.
      */
     public void setBorders(int borders) {
         this.borders = borders;
     }
-    
-    
+
     /**
-     * Determines the insets of this BorderedPanel, which indicate the size 
-     * of the borders. 
+     * Determines the insets of this BorderedPanel, which indicate the size of
+     * the borders.
      * <p>
-     * @return    the insets of this BorderedPanel.
-     * @see       Insets
-     * @see       LayoutManager
-     * @since     JDK1.1
+     * @return the insets of this BorderedPanel.
+     * @see Insets
+     * @see LayoutManager
+     * @since JDK1.1
      */
     @Override
     public Insets getInsets() {

@@ -14,9 +14,10 @@ import fi.dwo.dwojapplet.gui.LinkedLabel;
 
 /**
  * @author M.J.B. Kupers
- *  
+ *
  */
 public class TabLinkedLabel extends LinkedLabel {
+
     private Color deselectedColor;
 
     private boolean isSelected;
@@ -42,6 +43,8 @@ public class TabLinkedLabel extends LinkedLabel {
 
     /**
      * Returns the <i>current</i> size as the minimum size.
+     *
+     * @return 
      * @see java.awt.Component#getMinimumSize()
      */
     public Dimension getMinimumSize() {
@@ -50,6 +53,8 @@ public class TabLinkedLabel extends LinkedLabel {
 
     /**
      * Returns the <i>current</i> size as the preferred size.
+     *
+     * @return 
      * @see java.awt.Component#getPreferredSize()
      */
     public Dimension getPreferredSize() {
@@ -69,21 +74,19 @@ public class TabLinkedLabel extends LinkedLabel {
     public boolean isSelected() {
         return isSelected;
     }
-    
-    
 
     /* (non-Javadoc)
      * @see java.awt.Component#paint(java.awt.Graphics)
      */
     public void paint(Graphics g) {
-        if(isSelected) {
+        if (isSelected) {
             this.setBackground(selectedColor);
         } else {
             this.setBackground(deselectedColor);
         }
         super.paint(g);
-        
-        if(isSelected) {
+
+        if (isSelected) {
             g.setColor(Color.black);
             g.drawLine(0, 0, this.getSize().width - 1, 0); //top line
             g.drawLine(0, this.getSize().height - 1, this.getSize().width - 1, this.getSize().height - 1); //bottom line
@@ -92,16 +95,14 @@ public class TabLinkedLabel extends LinkedLabel {
     }
 
     /**
-     * @param deselectedColor
-     *            The deselectedColor to set.
+     * @param deselectedColor The deselectedColor to set.
      */
     public void setDeselectedColor(Color deselectedColor) {
         this.deselectedColor = deselectedColor;
     }
 
     /**
-     * @param isSelected
-     *            The isSelected to set.
+     * @param isSelected The isSelected to set.
      */
     public void setSelected(boolean isSelected) {
         this.isSelected = isSelected;
@@ -109,8 +110,7 @@ public class TabLinkedLabel extends LinkedLabel {
     }
 
     /**
-     * @param selectedColor
-     *            The selectedColor to set.
+     * @param selectedColor The selectedColor to set.
      */
     public void setSelectedColor(Color selectedColor) {
         this.selectedColor = selectedColor;

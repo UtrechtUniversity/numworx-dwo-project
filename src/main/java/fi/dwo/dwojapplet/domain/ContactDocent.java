@@ -2,24 +2,25 @@ package fi.dwo.dwojapplet.domain;
 
 public class ContactDocent extends Teacher {
 
-	public ContactDocent() {
-		// TODO Auto-generated constructor stub
-	}
+    public ContactDocent() {
+        // TODO Auto-generated constructor stub
+    }
 
-	/**
-	 * Een schooladmin kan altijd meer dan een docent.
-	 */
-        @Override
-	public boolean hasRight(char right) {
-		switch(right) {
-		case MODIFY_MODULES_RIGHT: 
-		case CHANGE_CLASS_RIGHT:
-		case CHANGE_CLASS_RIGHT_TEACHER:
-			return true;
-		default:
-			return super.hasRight(right);
+    /**
+     * Een schooladmin kan altijd meer dan een docent.
+     * @return 
+     */
+    @Override
+    public boolean hasRight(char right) {
+        switch (right) {
+            case MODIFY_MODULES_RIGHT:
+            case CHANGE_CLASS_RIGHT:
+            case CHANGE_CLASS_RIGHT_TEACHER:
+                return true;
+            default:
+                return super.hasRight(right);
 
-		}
-	}
+        }
+    }
 
 }

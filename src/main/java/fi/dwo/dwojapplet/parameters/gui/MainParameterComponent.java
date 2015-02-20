@@ -1,5 +1,4 @@
 // Source file: C:\\fi\\dwo\\parameters\\gui\\MainParameterComponent.java
-
 package fi.dwo.dwojapplet.parameters.gui;
 
 import fi.beans.scorm.Parameter;
@@ -13,36 +12,31 @@ import java.util.Hashtable;
 public class MainParameterComponent extends ParameterComponent implements TabSheetIF {
 
     private GridBagLayout gridbag;
-    
-    
-    
+
     /* (non-Javadoc)
-	 * @see fi.dwo.parameters.gui.ParameterComponent#getMinimumSize()
-	 */
+     * @see fi.dwo.parameters.gui.ParameterComponent#getMinimumSize()
+     */
     @Override
-	public Dimension getMinimumSize() {
-		return getLayout().minimumLayoutSize(this);
-		//return super.getMinimumSize();
-	}
+    public Dimension getMinimumSize() {
+        return getLayout().minimumLayoutSize(this);
+        //return super.getMinimumSize();
+    }
 
-
-
-	/* (non-Javadoc)
-	 * @see fi.dwo.parameters.gui.ParameterComponent#getPreferredSize()
-	 */
+    /* (non-Javadoc)
+     * @see fi.dwo.parameters.gui.ParameterComponent#getPreferredSize()
+     */
     @Override
-	public Dimension getPreferredSize() {
-		//return super.getPreferredSize();
-		Dimension size = getLayout().preferredLayoutSize(this);
+    public Dimension getPreferredSize() {
+        //return super.getPreferredSize();
+        Dimension size = getLayout().preferredLayoutSize(this);
 //System.out.println("main preferred=" + size + " now= " + getSize());
-		return size;
-		
-	}
+        return size;
 
+    }
 
-
-	/**
+    /**
      * @param parameters
+     * @param defaultValue
      * @param default
      * @roseuid 425A79BE02AF
      */
@@ -60,7 +54,7 @@ public class MainParameterComponent extends ParameterComponent implements TabShe
         c.gridwidth = GridBagConstraints.REMAINDER;
 
         ParameterComponentIF pc;
-        for(int i = 0; i < parameters.length; i++) {
+        for (int i = 0; i < parameters.length; i++) {
             pc = ParameterComponentCreator.createComponent(this, parameters[i], defaultValue);
             this.registerComponent(pc);
             gridbag.addLayoutComponent(pc.getComponent(), c);
@@ -72,8 +66,7 @@ public class MainParameterComponent extends ParameterComponent implements TabShe
 
         this.setSize(gridbag.preferredLayoutSize(this));
         this.validate();
-        
-        
+
     }
-    
+
 }

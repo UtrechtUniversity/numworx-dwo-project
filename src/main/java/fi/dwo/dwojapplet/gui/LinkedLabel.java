@@ -14,19 +14,18 @@ import javax.swing.JButton;
 /**
  * This Class is an Label witch you can add ActionListeners. It also shows a
  * MouseHand on mouse over and highlighted the text.
- * 
+ *
  * @author M.J.B. Kupers
- *  
+ *
  */
-public class LinkedLabel extends JButton  {
-    
+public class LinkedLabel extends JButton {
+
     private Color mouseoverColor = GuiConstants.RED_COLOR;
     private Color defForeground = Color.black;
-    
 
     /**
      * Creates a new LinkedLabel with the specified text.
-     * 
+     *
      * @param s The caption of the label.
      */
     public LinkedLabel(String s) {
@@ -36,10 +35,10 @@ public class LinkedLabel extends JButton  {
         setContentAreaFilled(false);
         enableEvents(AWTEvent.MOUSE_EVENT_MASK);
     }
-    
-    public void setNewForeground(Color c){
-    	defForeground = c;
-    	setForeground(c);
+
+    public void setNewForeground(Color c) {
+        defForeground = c;
+        setForeground(c);
     }
 
     private void mouseEntered(MouseEvent arg0) {
@@ -47,16 +46,17 @@ public class LinkedLabel extends JButton  {
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         repaint();
     }
-    
+
     private void mouseReleased(MouseEvent e) {
-    	setCursor(Cursor.getDefaultCursor());
-    	mouseExited(e);
+        setCursor(Cursor.getDefaultCursor());
+        mouseExited(e);
     }
-    
+
     /**
      * Invoked when the mouse exits the CourseIcon. The Default Cursor is showed
      * and the text will be displayed normal.
-     * 
+     *
+     * @param arg0
      * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
      */
     private void mouseExited(MouseEvent arg0) {
@@ -67,21 +67,24 @@ public class LinkedLabel extends JButton  {
 
     @Override
     protected void processMouseEvent(MouseEvent e) {
-		super.processMouseEvent(e);
-		switch(e.getID()) {
-		case MouseEvent.MOUSE_ENTERED:
-			mouseEntered(e); break;
-		case MouseEvent.MOUSE_EXITED:
-			mouseExited(e); break;
-		case MouseEvent.MOUSE_RELEASED:
-			mouseReleased(e); break;
-		}
-	}
+        super.processMouseEvent(e);
+        switch (e.getID()) {
+            case MouseEvent.MOUSE_ENTERED:
+                mouseEntered(e);
+                break;
+            case MouseEvent.MOUSE_EXITED:
+                mouseExited(e);
+                break;
+            case MouseEvent.MOUSE_RELEASED:
+                mouseReleased(e);
+                break;
+        }
+    }
 
-	/**
+    /**
      * Returns the current mouseovercolor. The mouseovercolor is showed when the
      * mouse is above the label.
-     * 
+     *
      * @return The current mouseovercolor.
      */
     public Color getMouseoverColor() {
@@ -91,7 +94,7 @@ public class LinkedLabel extends JButton  {
     /**
      * Sets the current mouseovercolor. The mouseovercolor is showed when the
      * mouse is above the label.
-     * 
+     *
      * @param mouseoverColor The mouseovercolor to set.
      */
     public void setMouseoverColor(Color mouseoverColor) {

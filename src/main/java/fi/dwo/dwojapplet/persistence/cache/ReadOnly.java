@@ -5,22 +5,21 @@ import fi.dwo.dwojapplet.persistence.DbAccessIF;
 
 public class ReadOnly extends NoCache {
 
-	public ReadOnly(DbAccessIF dbAccess) {
-		super(dbAccess);
-	}
+    public ReadOnly(DbAccessIF dbAccess) {
+        super(dbAccess);
+    }
 
-        @Override
-	public String setValue(int uid, int scoid, String key, String value)
-	{
-		return "true";
-	}
+    @Override
+    public String setValue(int uid, int scoid, String key, String value) {
+        return "true";
+    }
 
-        @Override
-	public String getValue(int uid, int scoid, String key) throws PersistenceException
-	{
-		if("suspendData".equals(key))
-			return "";
-		return super.getValue(uid, scoid, key);
-	}
+    @Override
+    public String getValue(int uid, int scoid, String key) throws PersistenceException {
+        if ("suspendData".equals(key)) {
+            return "";
+        }
+        return super.getValue(uid, scoid, key);
+    }
 
 }

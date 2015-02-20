@@ -1,36 +1,35 @@
 // Source file:
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\domain\\Group.java
-
 package fi.dwo.dwojapplet.domain;
 
 /**
  * This class is responsible for the Group data.<br>
  * A group is the possible usergroup of the user (e.g. Teacher or Student).<br>
  * This is only used when at the registration-part of the DWO.
- * 
+ *
  * @author M.J.B. Kupers
- *  
+ *
  */
 public class SchoolGroup {
-	
-	public static final int STUDENT = 1;
-	public static final int TEACHER = 2;
-	public static final int ADMIN = 3;
-	public static final int DIGICODE = 4;
-	public static final int SCHOOLADMIN = 5;
-	public static final int LENGTH = 6; // for arrays
-	
+
+    public static final int STUDENT = 1;
+    public static final int TEACHER = 2;
+    public static final int ADMIN = 3;
+    public static final int DIGICODE = 4;
+    public static final int SCHOOLADMIN = 5;
+    public static final int LENGTH = 6; // for arrays
+
     private int schoolGroupID;
 
     private int schoolID;
-    
+
     private int groupID;
-    
+
     private String passwd;
 
     /**
      * Creates a new instance of a Group Object.
-     *  
+     *
      */
     public SchoolGroup() {
 
@@ -38,7 +37,7 @@ public class SchoolGroup {
 
     /**
      * Returns the current GroupID
-     * 
+     *
      * @return The groupID.
      */
     public int getGroupID() {
@@ -47,16 +46,16 @@ public class SchoolGroup {
 
     /**
      * Sets the groupID
-     * 
+     *
      * @param groupID The groupID to set.
      */
     public void setGroupID(int groupID) {
         this.groupID = groupID;
     }
-    
+
     /**
      * Returns the current schoolGroupID
-     * 
+     *
      * @return The schoolGroupID.
      */
     public int getSchoolGroupID() {
@@ -65,16 +64,17 @@ public class SchoolGroup {
 
     /**
      * Sets the schoolGroupID
-     * 
+     *
+     * @param schoolGroupID
      * @param groupID The schoolGroupID to set.
      */
     public void setSchoolGroupID(int schoolGroupID) {
         this.schoolGroupID = schoolGroupID;
     }
-    
+
     /**
      * Returns the current schoolID
-     * 
+     *
      * @return The schoolID.
      */
     public int getSchoolID() {
@@ -83,7 +83,8 @@ public class SchoolGroup {
 
     /**
      * Sets the schoolID
-     * 
+     *
+     * @param schoolID
      * @param groupID The schoolID to set.
      */
     public void setSchoolID(int schoolID) {
@@ -92,7 +93,7 @@ public class SchoolGroup {
 
     /**
      * Returns the group-passwd.
-     * 
+     *
      * @return The group-passwd.
      */
     public String getPasswd() {
@@ -101,7 +102,8 @@ public class SchoolGroup {
 
     /**
      * Sets the group-passwd
-     * 
+     *
+     * @param passwd
      * @param name The group-passwd to set.
      */
     public void setPasswd(String passwd) {

@@ -6,36 +6,35 @@ import fi.dwo.dwojapplet.domain.User;
 
 public class GuiCreatorContactDocent extends GuiCreatorTeacher {
 
-	public GuiCreatorContactDocent(DwoIF dwo) {
-		super(dwo);
-		// TODO Auto-generated constructor stub
-	}
+    public GuiCreatorContactDocent(DwoIF dwo) {
+        super(dwo);
+        // TODO Auto-generated constructor stub
+    }
 
-	/* (non-Javadoc)
-	 * @see fi.dwo.client.gui.GuiCreatorTeacher#getMenuPanel()
-	 */
-
-        @Override
-	public GuestMenuPanel getMenuPanel() {
+    /* (non-Javadoc)
+     * @see fi.dwo.client.gui.GuiCreatorTeacher#getMenuPanel()
+     */
+    @Override
+    public GuestMenuPanel getMenuPanel() {
         User u = dwo.getUser();
 
         if (u instanceof ContactDocent) {
             return new ContactDocentMenuPanel(dwo);
         }
-		return super.getMenuPanel();
-	}
+        return super.getMenuPanel();
+    }
 
-	/* (non-Javadoc)
-	 * @see fi.dwo.client.gui.GuiCreator#getUserManagementPanel()
-	 */
-        @Override
-	public CenterSubPanel getUserManagementPanel() {
-		return new UserManagementPanel(dwo);
-	}
-	
-        @Override
-	public CenterSubPanel getClassAdminPanel() {
-		return new ClassAdminPanel(dwo);
-	}
+    /* (non-Javadoc)
+     * @see fi.dwo.client.gui.GuiCreator#getUserManagementPanel()
+     */
+    @Override
+    public CenterSubPanel getUserManagementPanel() {
+        return new UserManagementPanel(dwo);
+    }
+
+    @Override
+    public CenterSubPanel getClassAdminPanel() {
+        return new ClassAdminPanel(dwo);
+    }
 
 }

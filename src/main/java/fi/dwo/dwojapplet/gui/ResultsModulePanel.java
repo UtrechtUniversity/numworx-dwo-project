@@ -1,6 +1,5 @@
 // Source file:
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\ResultsModulePanel.java
-
 package fi.dwo.dwojapplet.gui;
 
 import java.awt.BorderLayout;
@@ -42,7 +41,6 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
-
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.DwoHelper;
@@ -59,567 +57,571 @@ import fi.dwo.dwojapplet.domain.UserResultList;
 /**
  * This class is a panel represents the resultscores of a group of users and a
  * group of lessons.
- * 
+ *
  * @author M.J.B. Kupers
  * @author Wim van Velthoven
- *  
+ *
  */
-public class ResultsModulePanel extends JPanel implements  ActionListener, CenterSubPanel {
-	
+public class ResultsModulePanel extends JPanel implements ActionListener, CenterSubPanel {
+
     public class ImageEditor extends AbstractCellEditor implements
-			TableCellEditor, ActionListener {
+            TableCellEditor, ActionListener {
 
-    	JButton button = new JButton();
-    	ImageIcon icon = new ImageIcon();
-    	int col;
-    	ResultsModel model;
-    	JTable table;
-    	
-		public ImageEditor() {
-			button.addActionListener(this);
-			
-		}
+        JButton button = new JButton();
+        ImageIcon icon = new ImageIcon();
+        int col;
+        ResultsModel model;
+        JTable table;
 
-		
-            @Override
-    	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-    		this.col = column;
-    		model = (ResultsModel) table.getModel();
-    		this.table = table;
-    		if(value != null)
-    		{
-    			icon.setImage((Image) value); button.setIcon(icon);
-    		} else
-    			button.setIcon(null);
-    		return button;
-		}
+        public ImageEditor() {
+            button.addActionListener(this);
 
-            @Override
-		public Object getCellEditorValue() {
-			return null;
-		}
+        }
 
-            @Override
-		public void actionPerformed(ActionEvent e) {
-			if(icon.getImage()!=null && icon.getImage()==imageStats){
-				currentUserGroup = domain.getZoomedUserGroup();
-		        currentLessonGroup = domain.getZoomedLessonGroup();
-		        if(currentUserGroup instanceof SchoolClass && currentLessonGroup instanceof Course){
-					SchoolClass schoolClass = ((SchoolClass)currentUserGroup);
-					Sco sco = ((Course)currentLessonGroup).getScoList()[col-1];
-					ResultLogger.showLogs(sco,schoolClass);
-				}
-				
-			}
-			else {
-				if(sortedCol == col)
-				{
-					image = image == imageAsc? imageDesc: imageAsc;
-				} else {
-					sortedCol = col;
-					image = col ==0 ?imageAsc: imageDesc;
-				}
-	//			model.fireTableRowsUpdated(0, 0);
-				fireEditingCanceled();
-	
-				if(col == 0)
-				{
-					if(image == imageAsc)
-					{
-						model.setData(domain.orderBy(new User(), ResultsModuleIF.ASC));
-					} else
-						model.setData(domain.orderBy(new User(), ResultsModuleIF.DESC));
-				} else {
-					int sort = image==imageAsc?ResultsModuleIF.ASC: ResultsModuleIF.DESC;
-					LessonGroup lg = (LessonGroup) table.getColumnModel().getColumn(col).getHeaderValue();
-					model.setData(domain.orderBy(lg, sort));
-				}
-				model.fireTableDataChanged();
-			}
-			
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            this.col = column;
+            model = (ResultsModel) table.getModel();
+            this.table = table;
+            if (value != null) {
+                icon.setImage((Image) value);
+                button.setIcon(icon);
+            } else {
+                button.setIcon(null);
+            }
+            return button;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return null;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (icon.getImage() != null && icon.getImage() == imageStats) {
+                currentUserGroup = domain.getZoomedUserGroup();
+                currentLessonGroup = domain.getZoomedLessonGroup();
+                if (currentUserGroup instanceof SchoolClass && currentLessonGroup instanceof Course) {
+                    SchoolClass schoolClass = ((SchoolClass) currentUserGroup);
+                    Sco sco = ((Course) currentLessonGroup).getScoList()[col - 1];
+                    ResultLogger.showLogs(sco, schoolClass);
+                }
+
+            } else {
+                if (sortedCol == col) {
+                    image = image == imageAsc ? imageDesc : imageAsc;
+                } else {
+                    sortedCol = col;
+                    image = col == 0 ? imageAsc : imageDesc;
+                }
+                //			model.fireTableRowsUpdated(0, 0);
+                fireEditingCanceled();
+
+                if (col == 0) {
+                    if (image == imageAsc) {
+                        model.setData(domain.orderBy(new User(), ResultsModuleIF.ASC));
+                    } else {
+                        model.setData(domain.orderBy(new User(), ResultsModuleIF.DESC));
+                    }
+                } else {
+                    int sort = image == imageAsc ? ResultsModuleIF.ASC : ResultsModuleIF.DESC;
+                    LessonGroup lg = (LessonGroup) table.getColumnModel().getColumn(col).getHeaderValue();
+                    model.setData(domain.orderBy(lg, sort));
+                }
+                model.fireTableDataChanged();
+            }
+
 //          if (e.getID() == ResultTableHeader.ACT_SORT_ASC) {
 //          setData(domain.orderBy(new User(), ResultsModuleIF.ASC));
 //      } else if (e.getID() == ResultTableHeader.ACT_SORT_DESC) {
 //          setData(domain.orderBy(new User(), ResultsModuleIF.DESC));
+        }
 
-			
-		}
+    }
 
-	}
+    class HeaderListener extends MouseAdapter {
 
-	class HeaderListener extends MouseAdapter {
+        JTableHeader header;
+        int col;
+        /* (non-Javadoc)
+         * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.MouseEvent)
+         */
 
-    	JTableHeader header;
-    	int col;
-		/* (non-Javadoc)
-		 * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.MouseEvent)
-		 */
-            @Override
-		public void mouseReleased(MouseEvent e) {
-			header = (JTableHeader) e.getComponent();
-			int col = header.columnAtPoint(e.getPoint());
-			if(col != this.col)
-				return;
-			
-			Object o = header.getColumnModel().getColumn(col).getHeaderValue();
-			if(col == 0)
-			{
-				if(currentUserGroup != null) // een student, zoom naar alle klassen.
-				{	GuiCreator.instance().setWait();
-					sortedCol = -1;
-                	setJData(domain.zoomOut(currentUserGroup));
-                	currentUserGroup = null;
-                	GuiCreator.instance().setReady();                        
-				}				
-			} else {
-				LessonGroup lg = (LessonGroup)o;
-				if (lg.isHighestLevel()) {
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            header = (JTableHeader) e.getComponent();
+            int col = header.columnAtPoint(e.getPoint());
+            if (col != this.col) {
+                return;
+            }
+
+            Object o = header.getColumnModel().getColumn(col).getHeaderValue();
+            if (col == 0) {
+                if (currentUserGroup != null) // een student, zoom naar alle klassen.
+                {
+                    GuiCreator.instance().setWait();
+                    sortedCol = -1;
+                    setJData(domain.zoomOut(currentUserGroup));
+                    currentUserGroup = null;
+                    GuiCreator.instance().setReady();
+                }
+            } else {
+                LessonGroup lg = (LessonGroup) o;
+                if (lg.isHighestLevel()) {
                     currentLessonGroup = lg;
-                	GuiCreator.instance().setWait();
-                	sortedCol=-1;
+                    GuiCreator.instance().setWait();
+                    sortedCol = -1;
                     setJData(domain.zoomIn(lg));
-                	GuiCreator.instance().setReady();
+                    GuiCreator.instance().setReady();
                 } else {
                     currentLessonGroup = null;
-                	GuiCreator.instance().setWait();
-                	sortedCol=-1;
+                    GuiCreator.instance().setWait();
+                    sortedCol = -1;
                     setJData(domain.zoomOut(lg));
-                	GuiCreator.instance().setReady();
+                    GuiCreator.instance().setReady();
                 }
-			}
-		}
-		/* (non-Javadoc)
-		 * @see java.awt.event.MouseAdapter#mousePressed(java.awt.event.MouseEvent)
-		 */
-            @Override
-		public void mousePressed(MouseEvent e) {
-			header = (JTableHeader) e.getComponent();
-			col = header.columnAtPoint(e.getPoint());			
-		}
+            }
+        }
+        /* (non-Javadoc)
+         * @see java.awt.event.MouseAdapter#mousePressed(java.awt.event.MouseEvent)
+         */
 
-	}
+        @Override
+        public void mousePressed(MouseEvent e) {
+            header = (JTableHeader) e.getComponent();
+            col = header.columnAtPoint(e.getPoint());
+        }
 
-	private Image image, imageAsc, imageDesc, imageAscDesc, imageStats;
-	private int sortedCol;
-	
-	public class ResultsModel extends AbstractTableModel {
+    }
 
-		private UserResultList[] data;
-		private int rowCount, columnCount;
+    private Image image, imageAsc, imageDesc, imageAscDesc, imageStats;
+    private int sortedCol;
 
-                @Override
-		public Class getColumnClass(int columnIndex) {
-			if(columnIndex > 0)
-				return Float.class;
-			return super.getColumnClass(columnIndex);
-		}
+    public class ResultsModel extends AbstractTableModel {
 
+        private UserResultList[] data;
+        private int rowCount, columnCount;
 
-		public ResultsModel(Vector data) {
-			setData(data);
-		}
+        @Override
+        public Class getColumnClass(int columnIndex) {
+            if (columnIndex > 0) {
+                return Float.class;
+            }
+            return super.getColumnClass(columnIndex);
+        }
 
+        public ResultsModel(Vector data) {
+            setData(data);
+        }
 
-		/**
-		 * @param data
-		 */
-		public void setData(Vector data) {
-			rowCount = data.size();
-			this.data = new UserResultList[rowCount];
-			data.copyInto(this.data);
-			columnCount = this.data[0].getResultScore().length+1;
-		}
+        /**
+         * @param data
+         */
+        public void setData(Vector data) {
+            rowCount = data.size();
+            this.data = new UserResultList[rowCount];
+            data.copyInto(this.data);
+            columnCount = this.data[0].getResultScore().length + 1;
+        }
 
-                @Override
-		public int getColumnCount() {
-			return columnCount;
-		}
+        @Override
+        public int getColumnCount() {
+            return columnCount;
+        }
 
-                @Override
-		public int getRowCount() {
-			return rowCount+2;
-		}
+        @Override
+        public int getRowCount() {
+            return rowCount + 2;
+        }
 
-                @Override
-		public Object getValueAt(int row, int col) {
-			if(row == 1)
-			{
-				return imageAscDesc; // col == sortedCol?image:null;
-			}
-			if(row == 0)
-			{
-				boolean scoView = domain.getZoomedLessonGroup()instanceof Course;
-				boolean classView = domain.getZoomedUserGroup()instanceof SchoolClass;
-				if(col!=0 && scoView && classView)return imageStats; // col == sortedCol?image:null;
-				else return null;
-			}
-			row-=2;
-			if(col == 0) {
-				return data[row].getResultScore()[0].getUserGroup().getName(); 
-			}
+        @Override
+        public Object getValueAt(int row, int col) {
+            if (row == 1) {
+                return imageAscDesc; // col == sortedCol?image:null;
+            }
+            if (row == 0) {
+                boolean scoView = domain.getZoomedLessonGroup() instanceof Course;
+                boolean classView = domain.getZoomedUserGroup() instanceof SchoolClass;
+                if (col != 0 && scoView && classView) {
+                    return imageStats; // col == sortedCol?image:null;
+                } else {
+                    return null;
+                }
+            }
+            row -= 2;
+            if (col == 0) {
+                return data[row].getResultScore()[0].getUserGroup().getName();
+            }
 // Float.valueOf(float) is 1.5
-			return new Float( data[row].getResultScore()[col-1].getScore() );
-		}
-		
-		public long getTotalTimeAt(int row, int col)
-		{
-			if(row == 0 || col == 0)
-				return -1;
-			return data[row-2].getResultScore()[col-1].getTotal_time();
-		}
+            return new Float(data[row].getResultScore()[col - 1].getScore());
+        }
+
+        public long getTotalTimeAt(int row, int col) {
+            if (row == 0 || col == 0) {
+                return -1;
+            }
+            return data[row - 2].getResultScore()[col - 1].getTotal_time();
+        }
 
 
-		/* (non-Javadoc)
-		 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
-		 */
-                @Override
-		public boolean isCellEditable(int row, int column) {
-			if(row == 0 || row == 1)
-				return true;
-			row-=2;
-			boolean isUser = data[row].getResultScore()[0].getUserGroup().isDeepestLevel();
-			if(column > 0)
-			{	
-				if(!isUser) // is klas
-				{
-					return 
-					data[row].getResultScore()[column-1].getLessonGroup().isHighestLevel() && 
-					data[row].getResultScore()[column-1].getScore() != 0.0f;
-				}
-				
-				
-				return isUser &&
-					data[row].getResultScore()[column-1].getLessonGroup().isDeepestLevel() && 
-					data[row].getResultScore()[column-1].getScore() != 0.0f;
-			}
-			return !isUser;
-		}
-
-	}
-	
-	public class FloatEditor extends AbstractCellEditor implements ActionListener, TableCellEditor
-	{
-		private JButton button = new JButton();
-		private Float value;
-		private ResultScore domain;
-		private ResultsModel model;
-		
-
-		/**
-		 * 
-		 */
-		public FloatEditor() {
-			super();
-			button.addActionListener(this);
-		}
-
-                @Override
-		public void actionPerformed(ActionEvent e) {
-			float f = domain.getScore();
-			domain.showResult();		
-			if(f == domain.getScore())
-				fireEditingCanceled();
-			else
-			{	fireEditingStopped();
-				model.fireTableDataChanged();
-			}
-		}
-
-                @Override
-		public Object getCellEditorValue() {
-			return value;
-		}
-
-                @Override
-		public Component getTableCellEditorComponent(JTable table,
-				Object value, boolean isSelected, int row, int column) {
-			
-			this.value = (Float) value;
-			TableCellRenderer renderer = table.getCellRenderer(row, column);
-			Component component = renderer.getTableCellRendererComponent(table, value, true, true, row, column);
-			row-=2;
-			model = (ResultsModel) table.getModel();
-			domain = model.data[row].getResultScore()[column-1];
-			if(value.equals(ZERO))	
-			{	
-				fireEditingCanceled();
-				return component;
-			
-			}
-			button.setText(((JTextPane) component).getText()); // ons kent ons!
-			button.setBackground(component.getBackground());
-			return button;
-		}
-		
-	}
-	
-	static final Float ZERO = new Float(0);
-	
-	public class FloatRenderer extends TextPaneRenderer {
-
-		private StyledDocument document;
-		private Style defaultStyle;
-		private Style boldStyle;
-		private Style centerStyle;
-		
-		public FloatRenderer() {
-			super();
-			setOpaque(true);
-			document = getStyledDocument();
-			defaultStyle = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
-			StyleConstants.setFontFamily(defaultStyle, GuiConstants.NORMAL_TEXT.getFamily());
-			defaultStyle = document.addStyle("normal", defaultStyle);
-			boldStyle = document.addStyle("bold", defaultStyle);
-			centerStyle = document.addStyle("center", defaultStyle);
-			StyleConstants.setBold(boldStyle, true);
-			StyleConstants.setAlignment(centerStyle, StyleConstants.ALIGN_CENTER);
-		}
-                @Override
-		public Component getTableCellRendererComponent(JTable table,
-				Object value, boolean selected, boolean hasFocus, int row, int col) {
-			
-			if(ZERO.equals(value))
-			{
-				setText("");
-				if(selected)
-					setBackground(table.getSelectionBackground());
-				else
-					setBackground(table.getBackground());
-				setToolTipText(null);
-			} else {
-		        int red = 255;
-		        int green = 255;
-		        int blue = 0;
-				float f = ((Float)value).floatValue();
-		        if (f != 0) {
-		            if(f == -1) { //it is -1 he did the course but has no score
-		                f = 0;
-		            }
-		            if (f > 100) {
-		                red = 0;
-		            } else {
-			            if (f < 50) {
-			                green = (int) (green * (f / 50));
-			            } else {
-			                red = (int) (red * (1 - (f - 50) / 50));
-			            }
-		            }
-		        }
-		        if(red>255)red=255;
-		        if(green>255)green=255;
-		        if(blue>255)blue=255;
-		        if(red<0)red=0;
-		        if(green<0)green=0;
-		        if(blue<0)blue=0;
-		        setBackground(new Color(red, green, blue));
-				setText( Math.round(f) + " %");
-				ResultScoreIF domain;
-				domain = ((UserResultList) data.get(row-2)).getResultScore()[col-1];
-                if(domain.isDeepest())
+        /* (non-Javadoc)
+         * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
+         */
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            if (row == 0 || row == 1) {
+                return true;
+            }
+            row -= 2;
+            boolean isUser = data[row].getResultScore()[0].getUserGroup().isDeepestLevel();
+            if (column > 0) {
+                if (!isUser) // is klas
                 {
-    				Object[] arguments = new Object[2];
-                	arguments[0] = domain.getUserGroup().getName();
-                	arguments[1] = domain.getLessonGroup().getToolTip();
-                	String s = TextMapper.getText(TextMapper.GUIRS_TLTP_RESULT_SCORE_BUTTON);
-                	s = MessageFormat.format(s, arguments);
-                	ResultsModel model = (ResultsModel) table.getModel();
-                	long totalTime = model.getTotalTimeAt(row, col);
-// TODO maak hier eens iets moois van
-                	if(totalTime > 0)
-                	{	String time;
-                		if(totalTime < 120000)
-                			time = " (in " + (totalTime/1000) + " sec)";
-                		else 
-                			time = " (in " + (totalTime/60000) + " min)";
-                		//setText("<html><b>"+getText()+"</b>" + time+"</html>");
-                		setStyledText(getText() , time);
-                	} else {
-                		setStyledText("", getText());
-                	}
-                	
-                	setToolTipText(s);
-                } else 
-                {
-                	setToolTipText(null);
-            		setStyledText("", getText());
-               	
+                    return data[row].getResultScore()[column - 1].getLessonGroup().isHighestLevel()
+                            && data[row].getResultScore()[column - 1].getScore() != 0.0f;
                 }
-			}
-			return this;
-		}
-	
-		public void setStyledText(String bold, String normal)
-		{
-	        try {
-	        	document.remove(0, document.getLength());
-	        	document.insertString(0, normal, defaultStyle);
-				document.insertString(0, bold, boldStyle);
-				document.setParagraphAttributes(0, document.getLength(),centerStyle, false);
-			} catch (BadLocationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	public class ClassEditor extends AbstractCellEditor implements ActionListener, TableCellEditor
-	{
-		JButton button = new JButton();
-		UserGroup value;
-		/**
-		 * 
-		 */
-		public ClassEditor() {
-			button.addActionListener(this);
-	        button.setHorizontalTextPosition(SwingConstants.LEFT);
-	        button.setHorizontalAlignment(SwingConstants.LEADING);
-	        button.setFont(GuiConstants.NORMAL_TEXT);
-		}
 
-                @Override
-		public void actionPerformed(ActionEvent e) {
-			currentUserGroup = value;
-        	GuiCreator.instance().setWait();
-        	sortedCol=-1;
+                return isUser
+                        && data[row].getResultScore()[column - 1].getLessonGroup().isDeepestLevel()
+                        && data[row].getResultScore()[column - 1].getScore() != 0.0f;
+            }
+            return !isUser;
+        }
+
+    }
+
+    public class FloatEditor extends AbstractCellEditor implements ActionListener, TableCellEditor {
+
+        private JButton button = new JButton();
+        private Float value;
+        private ResultScore domain;
+        private ResultsModel model;
+
+        /**
+         *
+         */
+        public FloatEditor() {
+            super();
+            button.addActionListener(this);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            float f = domain.getScore();
+            domain.showResult();
+            if (f == domain.getScore()) {
+                fireEditingCanceled();
+            } else {
+                fireEditingStopped();
+                model.fireTableDataChanged();
+            }
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return value;
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table,
+                Object value, boolean isSelected, int row, int column) {
+
+            this.value = (Float) value;
+            TableCellRenderer renderer = table.getCellRenderer(row, column);
+            Component component = renderer.getTableCellRendererComponent(table, value, true, true, row, column);
+            row -= 2;
+            model = (ResultsModel) table.getModel();
+            domain = model.data[row].getResultScore()[column - 1];
+            if (value.equals(ZERO)) {
+                fireEditingCanceled();
+                return component;
+
+            }
+            button.setText(((JTextPane) component).getText()); // ons kent ons!
+            button.setBackground(component.getBackground());
+            return button;
+        }
+
+    }
+
+    static final Float ZERO = new Float(0);
+
+    public class FloatRenderer extends TextPaneRenderer {
+
+        private StyledDocument document;
+        private Style defaultStyle;
+        private Style boldStyle;
+        private Style centerStyle;
+
+        public FloatRenderer() {
+            super();
+            setOpaque(true);
+            document = getStyledDocument();
+            defaultStyle = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
+            StyleConstants.setFontFamily(defaultStyle, GuiConstants.NORMAL_TEXT.getFamily());
+            defaultStyle = document.addStyle("normal", defaultStyle);
+            boldStyle = document.addStyle("bold", defaultStyle);
+            centerStyle = document.addStyle("center", defaultStyle);
+            StyleConstants.setBold(boldStyle, true);
+            StyleConstants.setAlignment(centerStyle, StyleConstants.ALIGN_CENTER);
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table,
+                Object value, boolean selected, boolean hasFocus, int row, int col) {
+
+            if (ZERO.equals(value)) {
+                setText("");
+                if (selected) {
+                    setBackground(table.getSelectionBackground());
+                } else {
+                    setBackground(table.getBackground());
+                }
+                setToolTipText(null);
+            } else {
+                int red = 255;
+                int green = 255;
+                int blue = 0;
+                float f = ((Float) value).floatValue();
+                if (f != 0) {
+                    if (f == -1) { //it is -1 he did the course but has no score
+                        f = 0;
+                    }
+                    if (f > 100) {
+                        red = 0;
+                    } else {
+                        if (f < 50) {
+                            green = (int) (green * (f / 50));
+                        } else {
+                            red = (int) (red * (1 - (f - 50) / 50));
+                        }
+                    }
+                }
+                if (red > 255) {
+                    red = 255;
+                }
+                if (green > 255) {
+                    green = 255;
+                }
+                if (blue > 255) {
+                    blue = 255;
+                }
+                if (red < 0) {
+                    red = 0;
+                }
+                if (green < 0) {
+                    green = 0;
+                }
+                if (blue < 0) {
+                    blue = 0;
+                }
+                setBackground(new Color(red, green, blue));
+                setText(Math.round(f) + " %");
+                ResultScoreIF domain;
+                domain = ((UserResultList) data.get(row - 2)).getResultScore()[col - 1];
+                if (domain.isDeepest()) {
+                    Object[] arguments = new Object[2];
+                    arguments[0] = domain.getUserGroup().getName();
+                    arguments[1] = domain.getLessonGroup().getToolTip();
+                    String s = TextMapper.getText(TextMapper.GUIRS_TLTP_RESULT_SCORE_BUTTON);
+                    s = MessageFormat.format(s, arguments);
+                    ResultsModel model = (ResultsModel) table.getModel();
+                    long totalTime = model.getTotalTimeAt(row, col);
+// TODO maak hier eens iets moois van
+                    if (totalTime > 0) {
+                        String time;
+                        if (totalTime < 120000) {
+                            time = " (in " + (totalTime / 1000) + " sec)";
+                        } else {
+                            time = " (in " + (totalTime / 60000) + " min)";
+                        }
+                        //setText("<html><b>"+getText()+"</b>" + time+"</html>");
+                        setStyledText(getText(), time);
+                    } else {
+                        setStyledText("", getText());
+                    }
+
+                    setToolTipText(s);
+                } else {
+                    setToolTipText(null);
+                    setStyledText("", getText());
+
+                }
+            }
+            return this;
+        }
+
+        public void setStyledText(String bold, String normal) {
+            try {
+                document.remove(0, document.getLength());
+                document.insertString(0, normal, defaultStyle);
+                document.insertString(0, bold, boldStyle);
+                document.setParagraphAttributes(0, document.getLength(), centerStyle, false);
+            } catch (BadLocationException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public class ClassEditor extends AbstractCellEditor implements ActionListener, TableCellEditor {
+
+        JButton button = new JButton();
+        UserGroup value;
+
+        /**
+         *
+         */
+        public ClassEditor() {
+            button.addActionListener(this);
+            button.setHorizontalTextPosition(SwingConstants.LEFT);
+            button.setHorizontalAlignment(SwingConstants.LEADING);
+            button.setFont(GuiConstants.NORMAL_TEXT);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            currentUserGroup = value;
+            GuiCreator.instance().setWait();
+            sortedCol = -1;
             setJData(domain.zoomIn(value));
-        	GuiCreator.instance().setReady();
-			fireEditingCanceled();
-		}
+            GuiCreator.instance().setReady();
+            fireEditingCanceled();
+        }
 
-                @Override
-		public Component getTableCellEditorComponent(JTable table,
-				Object value, boolean isSelected, int row, int column) {
-			//this.value = (UserGroup) value;
-			TableCellRenderer renderer = table.getCellRenderer(row, column);
-			JLabel label = (JLabel) renderer.getTableCellRendererComponent(table, value, true, true, row, column);
-			row-=2;
-			ResultsModel model = (ResultsModel) table.getModel();
-			this.value = model.data[row].getResultScore()[0].getUserGroup();
-			button.setIcon(label.getIcon());
-			button.setText(label.getText());
-			return button;
-		}
+        @Override
+        public Component getTableCellEditorComponent(JTable table,
+                Object value, boolean isSelected, int row, int column) {
+            //this.value = (UserGroup) value;
+            TableCellRenderer renderer = table.getCellRenderer(row, column);
+            JLabel label = (JLabel) renderer.getTableCellRendererComponent(table, value, true, true, row, column);
+            row -= 2;
+            ResultsModel model = (ResultsModel) table.getModel();
+            this.value = model.data[row].getResultScore()[0].getUserGroup();
+            button.setIcon(label.getIcon());
+            button.setText(label.getText());
+            return button;
+        }
 
-                @Override
-		public Object getCellEditorValue() {
-			return value.getName();
-		}
-		
-	}
+        @Override
+        public Object getCellEditorValue() {
+            return value.getName();
+        }
 
-	
-	public class ClassRenderer extends DefaultTableCellRenderer {
+    }
 
-                @Override
-		public Rectangle getVisibleRect() {
-			return getBounds();
-		}
-		
-		private boolean head;
-		
-		/* (non-Javadoc)
-		 * @see javax.swing.JComponent#getPreferredSize()
-		 */
-                @Override
-		public Dimension getPreferredSize() {
-			
-			Dimension preferredSize = super.getPreferredSize();
-			//System.out.println("presz" + preferredSize + " for " + getText());
-			if(head) preferredSize.height += 8;
-			return preferredSize;
-		}
+    public class ClassRenderer extends DefaultTableCellRenderer {
 
-		public ClassRenderer(String zoom, boolean head) {
-			super();
-			if(zoom != null) {
-	           Image image = DwoHelper.getResourceImage(zoom);
-	           setIcon(new ImageIcon(image));
-			}
-	           //System.out.println("getIw " + getIcon().getIconWidth());
-	        	setHorizontalTextPosition(SwingConstants.LEFT);
-	        
-	           this.head = head;
-		}
+        @Override
+        public Rectangle getVisibleRect() {
+            return getBounds();
+        }
 
-		/* (non-Javadoc)
-		 * @see org.jdesktop.swingx.JXLabel#paintComponent(java.awt.Graphics)
-		 */
-                @Override
-		protected void paintComponent(Graphics arg0) {
-			// TODO Auto-generated method stub
-			super.paintComponent(arg0);
-		}
+        private boolean head;
 
-                @Override
-		public Component getTableCellRendererComponent(JTable table,
-				Object value, boolean isSelected, boolean hasFocus, int row,
-				int column) {
+        /* (non-Javadoc)
+         * @see javax.swing.JComponent#getPreferredSize()
+         */
+        @Override
+        public Dimension getPreferredSize() {
 
-			if(head)
-			{
-				setOpaque(true);
-				setForeground(table.getForeground());
-				setBackground(new Color(230,230,230));
-				if(value instanceof UserGroup)
-					setText(((UserGroup) value).getTitle());
-				else
-				{	
-					setValue(value);
-					setFont(table.getFont());
-					//setLineWrap(true);
-				}
-				//setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-				setBorder(BorderFactory.createLineBorder(new Color(230,230,230), 1));
-				setHorizontalAlignment(SwingConstants.CENTER);
-				if(value instanceof LessonGroup)
-		        { 
-					LessonGroup lg = ((LessonGroup)value);
-					setText(lg.getName());
-					String[] arguments = new String[1];
-		        	if(lg.isHighestLevel())
-		        		arguments[0] = lg.getChildTitle();        
-		        	else 
-		        		arguments[0] = lg.getParentTitle();
-		        	String tooltip = TextMapper.getText(TextMapper.GUIRS_TLTP_ZOOM);
-		        	setToolTipText(MessageFormat.format(tooltip, arguments));
-					setVerticalAlignment(SwingConstants.TOP);
-		        } else
-				if(value instanceof UserGroup)
-				{
-					UserGroup ug = (UserGroup) value;
-					String[] arguments = new String[1];
-					if(ug.isHighestLevel())
-						arguments[0] = ug.getChildTitle();
-					else
-						arguments[0] = ug.getParentTitle();
-			        
-			        String tooltip = TextMapper.getText(TextMapper.GUIRS_TLTP_ZOOM);
-			        setToolTipText(MessageFormat.format(tooltip, arguments));
-				} else
-					setToolTipText(null);
-				
-				
-				return this;
-			}
-			
-			if(column==0)
-			{
-				Object[] arguments = { TextMapper.format(TextMapper.UG_CLASS_CHILD, new Object[] {value}) };
-				setToolTipText(TextMapper.format(TextMapper.GUIRS_TLTP_ZOOM, arguments));
-			} else
-				setToolTipText(null);
-			if(row == 0 && column == 0)
-				return empty;
-			
-			return super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
-					row, column);
-		}
+            Dimension preferredSize = super.getPreferredSize();
+            //System.out.println("presz" + preferredSize + " for " + getText());
+            if (head) {
+                preferredSize.height += 8;
+            }
+            return preferredSize;
+        }
 
-		JLabel empty = new JLabel();
-	}
-	
-	
-	private ResultsModuleIF domain;
+        public ClassRenderer(String zoom, boolean head) {
+            super();
+            if (zoom != null) {
+                Image image = DwoHelper.getResourceImage(zoom);
+                setIcon(new ImageIcon(image));
+            }
+            //System.out.println("getIw " + getIcon().getIconWidth());
+            setHorizontalTextPosition(SwingConstants.LEFT);
+
+            this.head = head;
+        }
+
+        /* (non-Javadoc)
+         * @see org.jdesktop.swingx.JXLabel#paintComponent(java.awt.Graphics)
+         */
+        @Override
+        protected void paintComponent(Graphics arg0) {
+            // TODO Auto-generated method stub
+            super.paintComponent(arg0);
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table,
+                Object value, boolean isSelected, boolean hasFocus, int row,
+                int column) {
+
+            if (head) {
+                setOpaque(true);
+                setForeground(table.getForeground());
+                setBackground(new Color(230, 230, 230));
+                if (value instanceof UserGroup) {
+                    setText(((UserGroup) value).getTitle());
+                } else {
+                    setValue(value);
+                    setFont(table.getFont());
+                    //setLineWrap(true);
+                }
+                //setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+                setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230), 1));
+                setHorizontalAlignment(SwingConstants.CENTER);
+                if (value instanceof LessonGroup) {
+                    LessonGroup lg = ((LessonGroup) value);
+                    setText(lg.getName());
+                    String[] arguments = new String[1];
+                    if (lg.isHighestLevel()) {
+                        arguments[0] = lg.getChildTitle();
+                    } else {
+                        arguments[0] = lg.getParentTitle();
+                    }
+                    String tooltip = TextMapper.getText(TextMapper.GUIRS_TLTP_ZOOM);
+                    setToolTipText(MessageFormat.format(tooltip, arguments));
+                    setVerticalAlignment(SwingConstants.TOP);
+                } else if (value instanceof UserGroup) {
+                    UserGroup ug = (UserGroup) value;
+                    String[] arguments = new String[1];
+                    if (ug.isHighestLevel()) {
+                        arguments[0] = ug.getChildTitle();
+                    } else {
+                        arguments[0] = ug.getParentTitle();
+                    }
+
+                    String tooltip = TextMapper.getText(TextMapper.GUIRS_TLTP_ZOOM);
+                    setToolTipText(MessageFormat.format(tooltip, arguments));
+                } else {
+                    setToolTipText(null);
+                }
+
+                return this;
+            }
+
+            if (column == 0) {
+                Object[] arguments = {TextMapper.format(TextMapper.UG_CLASS_CHILD, new Object[]{value})};
+                setToolTipText(TextMapper.format(TextMapper.GUIRS_TLTP_ZOOM, arguments));
+            } else {
+                setToolTipText(null);
+            }
+            if (row == 0 && column == 0) {
+                return empty;
+            }
+
+            return super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+                    row, column);
+        }
+
+        JLabel empty = new JLabel();
+    }
+
+    private ResultsModuleIF domain;
 
     private JButton selectCoursesButton, copyButton;
 
@@ -628,11 +630,11 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
     private UserGroup currentUserGroup;
 
     private LessonGroup currentLessonGroup;
-    
+
     /**
      * Creates a new ResultsModulePanel. It shows the resultscores of a group of
      * users and a group of lessons.
-     * 
+     *
      * @param rm
      */
     public ResultsModulePanel(ResultsModuleIF rm) {
@@ -648,16 +650,15 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
         imageAscDesc = DwoHelper.getResourceImage(GuiConstants.RESULTS_ORDER_ASCDESC);
         imageStats = DwoHelper.getResourceImage(GuiConstants.RESULTS_STATS);
 // Track media before rendering.
-        
-        
+
         currentUserGroup = domain.getZoomedUserGroup();
         currentLessonGroup = domain.getZoomedLessonGroup();;
         int x;
-        
+
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(GuiConstants.MAIN_BACKGROUND);
-        add(buttonPanel,BorderLayout.NORTH);
-        
+        add(buttonPanel, BorderLayout.NORTH);
+
         selectCoursesButton = new JButton(TextMapper.getText(TextMapper.GUIRS_BTN_SELECT_COURSES));
         selectCoursesButton.setSize(selectCoursesButton.getPreferredSize());
         selectCoursesButton.addActionListener(this);
@@ -667,7 +668,7 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
         buttonPanel.add(selectCoursesButton);
         selectCoursesButton.setVisible(true);
 
-        copyButton = new JButton(/*FIXME "Copy"*/ TextMapper.getText(TextMapper.GUIRS_BTN_COPY_TO_CLIPBOARD ));
+        copyButton = new JButton(/*FIXME "Copy"*/TextMapper.getText(TextMapper.GUIRS_BTN_COPY_TO_CLIPBOARD));
         copyButton.setSize(copyButton.getPreferredSize());
         copyButton.addActionListener(this);
         copyButton.setLocation(x - copyButton.getSize().width - 20, 3);
@@ -686,81 +687,79 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 
     /**
      * Invoked when an action occurs.
-     * 
+     *
      * @param e The ActionEvent.
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     * @see
+     * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-    	if ( e.getSource() == copyButton)
-    	{
-       	    if(data != null)
-    		{
-       	    	int size = data.size();
-       	    	UserResultList[] userresult =  new UserResultList[size];
-       	    	data.toArray(userresult);
-       	    	ClipboardExport.instance().export(userresult);
-    		}   		
-       	    return;
-    	}
-    	
-    	
-//        if (e.getSource() instanceof ResultTableHeader) {
-//            ResultTableHeader rth = (ResultTableHeader) e.getSource();
-//            if ((!lessons.containsKey(rth)) && (!users.containsKey(rth))) {
-//                /* Order users */
-//                if (e.getID() == ResultTableHeader.ACT_SORT_ASC) {
-//                    setData(domain.orderBy(new User(), ResultsModuleIF.ASC));
-//                } else if (e.getID() == ResultTableHeader.ACT_SORT_DESC) {
-//                    setData(domain.orderBy(new User(), ResultsModuleIF.DESC));
-//                } else if (e.getID() == ResultTableHeader.ACT_ZOOM_OUT) {
-//                    if (currentUserGroup != null) {
-//                    	GuiCreator.instance().setWait();
-//                        setData(domain.zoomOut(currentUserGroup));
-//                    	GuiCreator.instance().setReady();                        
-//                    }
-//                }
-//            } else if (lessons.containsKey(rth)) {
-//                /* Something done with a lesson */
-//                LessonGroup lg = (LessonGroup) lessons.get(rth);
-//                if (e.getID() == ResultTableHeader.ACT_SORT_ASC) {
-//                    setData(domain.orderBy(lg, ResultsModuleIF.ASC));
-//                } else if (e.getID() == ResultTableHeader.ACT_SORT_DESC) {
-//                    setData(domain.orderBy(lg, ResultsModuleIF.DESC));
-//                } else if (e.getID() == ResultTableHeader.ACT_ZOOM_IN) {
-//                    currentLessonGroup = lg;
-//                	GuiCreator.instance().setWait();
-//                    setData(domain.zoomIn(lg));
-//                	GuiCreator.instance().setReady();
-//                } else if (e.getID() == ResultTableHeader.ACT_ZOOM_OUT) {
-//                    currentLessonGroup = null;
-//                	GuiCreator.instance().setWait();
-//                    setData(domain.zoomOut(lg));
-//                	GuiCreator.instance().setReady();
-//                }
-//            } else if (users.containsKey(rth)) {
-//                /* Something done with a user */
-//                UserGroup ug = (UserGroup) users.get(rth);
-//                if (e.getID() == ResultTableHeader.ACT_SORT_ASC) {
-//                    setData(domain.orderBy(ug, ResultsModuleIF.ASC));
-//                } else if (e.getID() == ResultTableHeader.ACT_SORT_DESC) {
-//                    setData(domain.orderBy(ug, ResultsModuleIF.DESC));
-//                } else if (e.getID() == ResultTableHeader.ACT_ZOOM_IN) {
-//                    currentUserGroup = ug;
-//                	GuiCreator.instance().setWait();
-//                    setData(domain.zoomIn(ug));
-//                	GuiCreator.instance().setReady();
-//                } else if (e.getID() == ResultTableHeader.ACT_ZOOM_OUT) {
-//                    currentUserGroup = null;
-//                	GuiCreator.instance().setWait();
-//                    setData(domain.zoomOut(ug));
-//                	GuiCreator.instance().setReady();
-//                }
-//            }
-//        } 
-    	else if (e.getSource() == selectCoursesButton) {
-        	Course[] selectedCourses = SelectCoursesDialog.selectCourses(this, domain.getAllCourses(), domain.getSelectedCourse());
-        	if(selectedCourses!=null)setJData(domain.selectCourses(selectedCourses, true));
+        if (e.getSource() == copyButton) {
+            if (data != null) {
+                int size = data.size();
+                UserResultList[] userresult = new UserResultList[size];
+                data.toArray(userresult);
+                ClipboardExport.instance().export(userresult);
+            }
+            return;
+        } //        if (e.getSource() instanceof ResultTableHeader) {
+        //            ResultTableHeader rth = (ResultTableHeader) e.getSource();
+        //            if ((!lessons.containsKey(rth)) && (!users.containsKey(rth))) {
+        //                /* Order users */
+        //                if (e.getID() == ResultTableHeader.ACT_SORT_ASC) {
+        //                    setData(domain.orderBy(new User(), ResultsModuleIF.ASC));
+        //                } else if (e.getID() == ResultTableHeader.ACT_SORT_DESC) {
+        //                    setData(domain.orderBy(new User(), ResultsModuleIF.DESC));
+        //                } else if (e.getID() == ResultTableHeader.ACT_ZOOM_OUT) {
+        //                    if (currentUserGroup != null) {
+        //                    	GuiCreator.instance().setWait();
+        //                        setData(domain.zoomOut(currentUserGroup));
+        //                    	GuiCreator.instance().setReady();                        
+        //                    }
+        //                }
+        //            } else if (lessons.containsKey(rth)) {
+        //                /* Something done with a lesson */
+        //                LessonGroup lg = (LessonGroup) lessons.get(rth);
+        //                if (e.getID() == ResultTableHeader.ACT_SORT_ASC) {
+        //                    setData(domain.orderBy(lg, ResultsModuleIF.ASC));
+        //                } else if (e.getID() == ResultTableHeader.ACT_SORT_DESC) {
+        //                    setData(domain.orderBy(lg, ResultsModuleIF.DESC));
+        //                } else if (e.getID() == ResultTableHeader.ACT_ZOOM_IN) {
+        //                    currentLessonGroup = lg;
+        //                	GuiCreator.instance().setWait();
+        //                    setData(domain.zoomIn(lg));
+        //                	GuiCreator.instance().setReady();
+        //                } else if (e.getID() == ResultTableHeader.ACT_ZOOM_OUT) {
+        //                    currentLessonGroup = null;
+        //                	GuiCreator.instance().setWait();
+        //                    setData(domain.zoomOut(lg));
+        //                	GuiCreator.instance().setReady();
+        //                }
+        //            } else if (users.containsKey(rth)) {
+        //                /* Something done with a user */
+        //                UserGroup ug = (UserGroup) users.get(rth);
+        //                if (e.getID() == ResultTableHeader.ACT_SORT_ASC) {
+        //                    setData(domain.orderBy(ug, ResultsModuleIF.ASC));
+        //                } else if (e.getID() == ResultTableHeader.ACT_SORT_DESC) {
+        //                    setData(domain.orderBy(ug, ResultsModuleIF.DESC));
+        //                } else if (e.getID() == ResultTableHeader.ACT_ZOOM_IN) {
+        //                    currentUserGroup = ug;
+        //                	GuiCreator.instance().setWait();
+        //                    setData(domain.zoomIn(ug));
+        //                	GuiCreator.instance().setReady();
+        //                } else if (e.getID() == ResultTableHeader.ACT_ZOOM_OUT) {
+        //                    currentUserGroup = null;
+        //                	GuiCreator.instance().setWait();
+        //                    setData(domain.zoomOut(ug));
+        //                	GuiCreator.instance().setReady();
+        //                }
+        //            }
+        //        } 
+        else if (e.getSource() == selectCoursesButton) {
+            Course[] selectedCourses = SelectCoursesDialog.selectCourses(this, domain.getAllCourses(), domain.getSelectedCourse());
+            if (selectedCourses != null) {
+                setJData(domain.selectCourses(selectedCourses, true));
+            }
         }
     }
 
@@ -775,7 +774,7 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 
     /**
      * Sets the centerpanel to communicate with.
-     * 
+     *
      * @param centerPanel The centerPanel to communicate with.
      */
     @Override
@@ -785,15 +784,15 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 
     /**
      * Returns a Panel that can functionate as a header panel.
-     * 
+     *
      * @return A panel that can functionate as a header panel.
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
     @Override
     public Component getHeaderPanel() {
-    	return new HeaderPanel(TextMapper.getText(TextMapper.GUIRS_RESULTS));
+        return new HeaderPanel(TextMapper.getText(TextMapper.GUIRS_RESULTS));
     }
-    
+
 //    private void setToolTips(UserGroup ug, ResultTableHeader rth) {
 //        String[] arguments = new String[1];
 //        arguments[0] = ug.getChildTitle();
@@ -826,29 +825,28 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 //        
 //        rth.setToolTipLabel(lg.getToolTip());
 //    }
-
     private Vector data;
-    
+
     private JComponent jtbl;
+
     public void setJData(Vector data) {
-    	
+
     	//if(true) { setData(data); return; }
-    	
-    	if(jtbl != null) {
-    		remove(jtbl);
-    		jtbl = null;
-    		
-    	}
-    	if(label != null) {
-    		remove(label);
-    		label = null;
-    	}
-    	this.data = data;
-    	if(data.size()>0) {
-    		
-    		setTotalen();
-    		
-    		selectCoursesButton.setVisible(currentLessonGroup == null);
+        if (jtbl != null) {
+            remove(jtbl);
+            jtbl = null;
+
+        }
+        if (label != null) {
+            remove(label);
+            label = null;
+        }
+        this.data = data;
+        if (data.size() > 0) {
+
+            setTotalen();
+
+            selectCoursesButton.setVisible(currentLessonGroup == null);
             LessonGroup lg;
             UserGroup ug;
             ResultScore[] results = ((UserResultList) data.elementAt(0)).getResultScore();
@@ -856,126 +854,122 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
             ug = results[0].getUserGroup();
             lg = results[0].getLessonGroup();
 
-    	
             final ImageRenderer imageRenderer = new ImageRenderer();
             imageRenderer.setHorizontalAlignment(SwingConstants.CENTER);
             //imageRenderer.setBorder(BorderFactory.createRaisedBevelBorder());
-    		JTable table = new JTable(new ResultsModel(data)) {
-    			
-                                @Override
-				public TableCellRenderer getCellRenderer(int row, int column) {
-					if(row == 0  && column!=0 || row == 1)
-						return imageRenderer;
-					return super.getCellRenderer(row, column);
-				}
+            JTable table = new JTable(new ResultsModel(data)) {
 
-				/* (non-Javadoc)
-				 * @see javax.swing.JTable#getCellEditor(int, int)
-				 */
-                                @Override
-				public TableCellEditor getCellEditor(int row, int column) {
-					if(row==0 || row == 1)
-						return new ImageEditor();
-					return super.getCellEditor(row, column);
-				}
-				
-				
-				
-     		} ;
-    		table.setDefaultRenderer(Float.class, new FloatRenderer());
-    		//table.setDefaultRenderer(Float.class, new TextPaneRenderer());
-     		table.setDefaultEditor(Float.class, new FloatEditor());
-    		table.setBackground(GuiConstants.MAIN_BACKGROUND);
-    		table.getTableHeader().setBackground(table.getBackground());
-    		table.getTableHeader().setReorderingAllowed(false);
-    		table.getTableHeader().addMouseListener(new HeaderListener());
-    		
-    		TableColumnModel columnModel = table.getColumnModel();
-    		columnModel.getColumn(0).setHeaderValue(results[0].getUserGroup());
-    		if(ug.isHighestLevel())
-    		{	
-    			columnModel.getColumn(0).setCellRenderer(new ClassRenderer(GuiConstants.RESULTS_ZOOM_IN, false));
-    			ClassRenderer classRenderer = new ClassRenderer(null, true);
-    			classRenderer.setFont(GuiConstants.RESULTS_HEADER_TEXT);
-    			columnModel.getColumn(0).setHeaderRenderer(classRenderer);
-    			columnModel.getColumn(0).setCellEditor(new ClassEditor());
-    			
-    		} else {
-    			ClassRenderer classRenderer = new ClassRenderer(GuiConstants.RESULTS_ZOOM_OUT, true);
-    			classRenderer.setFont(GuiConstants.RESULTS_HEADER_TEXT);
-    			columnModel.getColumn(0).setHeaderRenderer(classRenderer);
-    		}
-			int len = table.getColumnCount();
-			boolean in = true;
-			in = lg.isHighestLevel();
-			TableCellRenderer renderer;
-			
-			ClassRenderer drenderer = new ClassRenderer(GuiConstants.RESULTS_ZOOM_OUT, true);
+                @Override
+                public TableCellRenderer getCellRenderer(int row, int column) {
+                    if (row == 0 && column != 0 || row == 1) {
+                        return imageRenderer;
+                    }
+                    return super.getCellRenderer(row, column);
+                }
+
+                /* (non-Javadoc)
+                 * @see javax.swing.JTable#getCellEditor(int, int)
+                 */
+                @Override
+                public TableCellEditor getCellEditor(int row, int column) {
+                    if (row == 0 || row == 1) {
+                        return new ImageEditor();
+                    }
+                    return super.getCellEditor(row, column);
+                }
+
+            };
+            table.setDefaultRenderer(Float.class, new FloatRenderer());
+            //table.setDefaultRenderer(Float.class, new TextPaneRenderer());
+            table.setDefaultEditor(Float.class, new FloatEditor());
+            table.setBackground(GuiConstants.MAIN_BACKGROUND);
+            table.getTableHeader().setBackground(table.getBackground());
+            table.getTableHeader().setReorderingAllowed(false);
+            table.getTableHeader().addMouseListener(new HeaderListener());
+
+            TableColumnModel columnModel = table.getColumnModel();
+            columnModel.getColumn(0).setHeaderValue(results[0].getUserGroup());
+            if (ug.isHighestLevel()) {
+                columnModel.getColumn(0).setCellRenderer(new ClassRenderer(GuiConstants.RESULTS_ZOOM_IN, false));
+                ClassRenderer classRenderer = new ClassRenderer(null, true);
+                classRenderer.setFont(GuiConstants.RESULTS_HEADER_TEXT);
+                columnModel.getColumn(0).setHeaderRenderer(classRenderer);
+                columnModel.getColumn(0).setCellEditor(new ClassEditor());
+
+            } else {
+                ClassRenderer classRenderer = new ClassRenderer(GuiConstants.RESULTS_ZOOM_OUT, true);
+                classRenderer.setFont(GuiConstants.RESULTS_HEADER_TEXT);
+                columnModel.getColumn(0).setHeaderRenderer(classRenderer);
+            }
+            int len = table.getColumnCount();
+            boolean in = true;
+            in = lg.isHighestLevel();
+            TableCellRenderer renderer;
+
+            ClassRenderer drenderer = new ClassRenderer(GuiConstants.RESULTS_ZOOM_OUT, true);
 // TODO een groot IF statement graag FIXME tussen activiteiten en modules.
-			
-// activiteiten
-			drenderer.setHorizontalAlignment(SwingConstants.CENTER);
-			drenderer.setVerticalTextPosition(SwingConstants.BOTTOM);
-			drenderer.setHorizontalTextPosition(SwingConstants.CENTER);
-			drenderer.setHorizontalAlignment(SwingConstants.CENTER);
-// modules
-			MultiLineTableCellRenderer mrenderer = new MultiLineTableCellRenderer(in?3:1,in?20:10);
-			String zoom =  in?GuiConstants.RESULTS_ZOOM_IN:GuiConstants.RESULTS_ZOOM_OUT;
-			Image image = DwoHelper.getResourceImage(zoom);
-			
-	        IconBorder border = new IconBorder(new ImageIcon(image));
-	        mrenderer.setBorder(border);
-	        
-	        if(in)
-	        	renderer = mrenderer;
-	        else 
-	        	renderer = drenderer;
-   			for(int i = 1; i < len; i++)
-    		{
-   				columnModel.getColumn(i).setHeaderValue(results[i-1].getLessonGroup());
-				columnModel.getColumn(i).setHeaderRenderer(renderer);
-    		}
-    		
-    		TableUtil.setJTableSizes(table);
-    		int sum = 0;
-   			for(int i = 1; i < len; i++)
-    		{
-   				TableColumn column = columnModel.getColumn(i);
-				int width = column.getPreferredWidth();
-				if(width > 100) width = 100;
-				sum += width;
-				//System.out.println(i + " : " + width + " " + sum);
-   				column.setMinWidth(width);
-   				column.setMaxWidth(width);
-    		}
-   			
-   			
-   			table.validate();
-            table.setSize(table.getPreferredSize());
-        	JPanel panel = new JPanel(new BorderLayout());
-        	panel.add(table.getTableHeader(),BorderLayout.NORTH);
-        	panel.add(table, BorderLayout.CENTER);
 
-        	table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+// activiteiten
+            drenderer.setHorizontalAlignment(SwingConstants.CENTER);
+            drenderer.setVerticalTextPosition(SwingConstants.BOTTOM);
+            drenderer.setHorizontalTextPosition(SwingConstants.CENTER);
+            drenderer.setHorizontalAlignment(SwingConstants.CENTER);
+// modules
+            MultiLineTableCellRenderer mrenderer = new MultiLineTableCellRenderer(in ? 3 : 1, in ? 20 : 10);
+            String zoom = in ? GuiConstants.RESULTS_ZOOM_IN : GuiConstants.RESULTS_ZOOM_OUT;
+            Image image = DwoHelper.getResourceImage(zoom);
+
+            IconBorder border = new IconBorder(new ImageIcon(image));
+            mrenderer.setBorder(border);
+
+            if (in) {
+                renderer = mrenderer;
+            } else {
+                renderer = drenderer;
+            }
+            for (int i = 1; i < len; i++) {
+                columnModel.getColumn(i).setHeaderValue(results[i - 1].getLessonGroup());
+                columnModel.getColumn(i).setHeaderRenderer(renderer);
+            }
+
+            TableUtil.setJTableSizes(table);
+            int sum = 0;
+            for (int i = 1; i < len; i++) {
+                TableColumn column = columnModel.getColumn(i);
+                int width = column.getPreferredWidth();
+                if (width > 100) {
+                    width = 100;
+                }
+                sum += width;
+                //System.out.println(i + " : " + width + " " + sum);
+                column.setMinWidth(width);
+                column.setMaxWidth(width);
+            }
+
+            table.validate();
+            table.setSize(table.getPreferredSize());
+            JPanel panel = new JPanel(new BorderLayout());
+            panel.add(table.getTableHeader(), BorderLayout.NORTH);
+            panel.add(table, BorderLayout.CENTER);
+
+            table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     		//JScrollPane pane = new JScrollPane(panel,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    		//pane.getViewport().setBackground(Color.RED);
-    		//TableUtil.setBorder(pane);
-    		table.setGridColor(new Color(210,210,210));
-    		jtbl = new JPanel(new BorderLayout());
-    		JLabel title = new JLabel(lg.getTitle()); // FIXME je juiste naam...
-    		title.setOpaque(false);
-    		jtbl.setOpaque(false);
-    		jtbl.add(title, BorderLayout.NORTH);
-    		//TableUtil.shrinkToFit(table, pane, 600, 470);
-    		jtbl.add(panel, BorderLayout.CENTER);
-    		
+            //pane.getViewport().setBackground(Color.RED);
+            //TableUtil.setBorder(pane);
+            table.setGridColor(new Color(210, 210, 210));
+            jtbl = new JPanel(new BorderLayout());
+            JLabel title = new JLabel(lg.getTitle()); // FIXME je juiste naam...
+            title.setOpaque(false);
+            jtbl.setOpaque(false);
+            jtbl.add(title, BorderLayout.NORTH);
+            //TableUtil.shrinkToFit(table, pane, 600, 470);
+            jtbl.add(panel, BorderLayout.CENTER);
+
     		//Dimension pref = jtbl.getPreferredSize();
-    		//pref.width = Math.min(623-10, pref.width);
-    		//pref.height = Math.min(487-10-10, pref.height);
-    		//jtbl.setSize(623-10, 487-10-10);
-    		//jtbl.setSize(pref);
-    		
-    		
+            //pref.width = Math.min(623-10, pref.width);
+            //pref.height = Math.min(487-10-10, pref.height);
+            //jtbl.setSize(623-10, 487-10-10);
+            //jtbl.setSize(pref);
 //    		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 //    		int cols = columnModel.getColumnCount();
 //    		int rows = table.getRowCount();
@@ -1004,33 +998,27 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 //	            //ChartUtilities.applyCurrentTheme(chart);
 //            ChartPanel chartPanel = new ChartPanel(chart, false, false, false, false, true);
 //    		jtbl.add(chartPanel, BorderLayout.SOUTH);
-    		
-    		
-    		
-    		
-            jtbl.setLocation(10, 10+5);
+            jtbl.setLocation(10, 10 + 5);
             jtbl.validate();
             add(jtbl);
             Dimension pref = jtbl.getPreferredSize();
-    		pref.height += 40;
+            pref.height += 40;
             setPreferredSize(pref);
             jtbl.invalidate();
             validate();
             repaint();
- 
-    	} else {
+
+        } else {
             label = new JLabel(TextMapper.getText(TextMapper.GUIRS_NO_RESULTS));
             label.setFont(GuiConstants.SCO_TEXT);
             FontMetrics fm = label.getFontMetrics(label.getFont());
             label.setSize(fm.stringWidth(label.getText()) + 10, fm.getHeight());
-            label.setLocation((this.getSize().width/2) - (label.getSize().width/2), 100);
+            label.setLocation((this.getSize().width / 2) - (label.getSize().width / 2), 100);
             selectCoursesButton.setVisible(false);
             add(label);
         }
     }
-    
-    
-    
+
 //    /**
 //     * Sets the data of the ResultsModule Gui object.
 //     * 
@@ -1188,59 +1176,59 @@ public class ResultsModulePanel extends JPanel implements  ActionListener, Cente
 //
 ////        this.setVisible(true);
 //   }
-    
-    private void setTotalen() { 
-    	ResultScore[] results;
-		UserGroup ug;
-		LessonGroup lg;
-		int i, j;
-		for (i = 0; i < data.size(); i++) {
-			results = ((UserResultList) data.elementAt(i)).getResultScore();
-			ug = results[0].getUserGroup();
-			for (j = 0; j < results.length; j++) {
-				// FIXME dit hoort hier niet thuis maar moet private zijn
-				lg = results[j].getLessonGroup();
-				ug = results[j].getUserGroup();
-				int corrTotaal = 1;
-				// average course/students
-				if (lg instanceof Course) {
-					Course course = (Course) lg;
-					if (course.getScoList() == null)
-						course.loadScos();
-					corrTotaal = course.getScoList().length;
-				}
-				if (ug instanceof SchoolClass) {
-					SchoolClass schoolClass = (SchoolClass) ug;
-					User[] u = schoolClass.getStudents();
-					if (u != null)
-						corrTotaal *= u.length;
-				}
-				results[j].setCorrTotaal(corrTotaal);
-			}
-		}
+    private void setTotalen() {
+        ResultScore[] results;
+        UserGroup ug;
+        LessonGroup lg;
+        int i, j;
+        for (i = 0; i < data.size(); i++) {
+            results = ((UserResultList) data.elementAt(i)).getResultScore();
+            ug = results[0].getUserGroup();
+            for (j = 0; j < results.length; j++) {
+                // FIXME dit hoort hier niet thuis maar moet private zijn
+                lg = results[j].getLessonGroup();
+                ug = results[j].getUserGroup();
+                int corrTotaal = 1;
+                // average course/students
+                if (lg instanceof Course) {
+                    Course course = (Course) lg;
+                    if (course.getScoList() == null) {
+                        course.loadScos();
+                    }
+                    corrTotaal = course.getScoList().length;
+                }
+                if (ug instanceof SchoolClass) {
+                    SchoolClass schoolClass = (SchoolClass) ug;
+                    User[] u = schoolClass.getStudents();
+                    if (u != null) {
+                        corrTotaal *= u.length;
+                    }
+                }
+                results[j].setCorrTotaal(corrTotaal);
+            }
+        }
     }
-    
-    
+
     /**
-	 * Returns the current object, as the object to add to a gui.
-	 * 
-	 * @return the current object.
-	 * @see fi.dwo.client.gui.CenterSubPanel#getComponent()
-	 */
+     * Returns the current object, as the object to add to a gui.
+     *
+     * @return the current object.
+     * @see fi.dwo.client.gui.CenterSubPanel#getComponent()
+     */
     @Override
     public JComponent getComponent() {
         return this;
     }
 
     @Override
-	public Object getUserObject() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Object getUserObject() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
     @Override
-	public void stateChanged(ChangeEvent e) {
+    public void stateChanged(ChangeEvent e) {
 		// TODO Auto-generated method stub
-		
-	}
+
+    }
 }

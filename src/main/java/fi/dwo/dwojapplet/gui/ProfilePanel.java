@@ -1,6 +1,5 @@
 // Source file:
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\ProfilePanel.java
-
 package fi.dwo.dwojapplet.gui;
 
 import java.awt.Color;
@@ -30,9 +29,9 @@ import fi.dwo.dwojapplet.domain.User;
 
 /**
  * This class represents a panel for the current user to change his account.
- * 
+ *
  * @author M.J.B. Kupers
- *  
+ *
  */
 public class ProfilePanel extends JPanel implements CenterSubPanel,
         ActionListener {
@@ -72,7 +71,7 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
     /**
      * Creates a new ProfilePanel for the current user. The account of the
      * current user can be changed.
-     * 
+     *
      * @param groups The possible groups wherefrom a user can be part of.
      */
     public ProfilePanel(Group[] groups) {
@@ -89,7 +88,8 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
         JLabel l;
 
         /* Add Register-panel */
-        p = new JPanel(null); p.setBorder(BorderFactory.createLineBorder(getForeground()));
+        p = new JPanel(null);
+        p.setBorder(BorderFactory.createLineBorder(getForeground()));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         p.setBounds(getSize().width / 2 - 155, 20, 310, 130);
         this.add(p);
@@ -177,7 +177,8 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
         p.add(repassword);
 
         /* Add PersonalInfo-panel */
-        p = new JPanel(null); p.setBorder(BorderFactory.createLineBorder(getForeground()));
+        p = new JPanel(null);
+        p.setBorder(BorderFactory.createLineBorder(getForeground()));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         p.setBounds(getSize().width / 2 - 155, 149, 310, 130);
         this.add(p);
@@ -213,7 +214,7 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
 
         /* Middlename label */
         String middleNameLabel = TextMapper.getText(TextMapper.GUIP_MIDDLENAME);
-		l = new JLabel(middleNameLabel + ":");
+        l = new JLabel(middleNameLabel + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
@@ -228,31 +229,31 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
         middlename.setEditable(!user.isReadonly());
         p.add(middlename);
 // skip middlename for languages that do not support it.
-        boolean visible = user.getMiddleName().length()>0 || middleNameLabel.length()>0;
+        boolean visible = user.getMiddleName().length() > 0 || middleNameLabel.length() > 0;
         middlename.setVisible(visible);
         l.setVisible(visible);
-        int v = visible?0:25;
-        
+        int v = visible ? 0 : 25;
+
 
         /* Lastname label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIP_LASTNAME) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
-        l.setLocation(10, 80-v);
+        l.setLocation(10, 80 - v);
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
         p.add(l);
 
         /* Lastname field */
         lastname = new JTextField();
         lastname.setText(user.getLastName());
-        lastname.setBounds(160, 78-v, 120, 20);
+        lastname.setBounds(160, 78 - v, 120, 20);
         lastname.setEditable(!user.isReadonly());
         p.add(lastname);
 
         /* Lastname mandatory label */
         l = createMandatoryLabel();
-        l.setLocation(285, 78-v);
+        l.setLocation(285, 78 - v);
         p.add(l);
 
         /* Email label */
@@ -260,39 +261,39 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
-        l.setLocation(10, 105-v);
+        l.setLocation(10, 105 - v);
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
         p.add(l);
 
         /* Email field */
         email = new JTextField();
         email.setText(user.getEmail());
-        email.setBounds(160, 103-v, 120, 20);
+        email.setBounds(160, 103 - v, 120, 20);
         email.setEditable(!user.isReadonly());
         p.add(email);
 
         /* Email mandatory label */
         l = createMandatoryLabel();
-        l.setLocation(285, 103-v);
+        l.setLocation(285, 103 - v);
         p.add(l);
         Container c = p;
 // readonly users are unable to set school stuff.
 // TODO hoe zit dat dan precies?
-        if(!user.isReadonly() || user.getSchool() != null )
-        {
-        	add(c = getUserPanel(p));
+        if (!user.isReadonly() || user.getSchool() != null) {
+            add(c = getUserPanel(p));
         } else {
-        	getUserPanel(p);
+            getUserPanel(p);
         }
-        if(!user.isReadonly())
-        	addButtonsPanel(c);
+        if (!user.isReadonly()) {
+            addButtonsPanel(c);
+        }
 
     }
 
     /**
      * This method returns the specific panel for the user. <BR>
      * Can be overridden by subclasses.
-     * 
+     *
      * @param p2 The panel where under this panel must appear.
      * @return A panel representing user-specific information.
      */
@@ -305,7 +306,8 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
         FontMetrics fm;
         if (user.getSchool() == null) {
             /* Add School-panel */
-            p = new JPanel(null); p.setBorder(BorderFactory.createLineBorder(getForeground()));
+            p = new JPanel(null);
+            p.setBorder(BorderFactory.createLineBorder(getForeground()));
             p.setBackground(GuiConstants.SUB_BACKGROUND);
             p.setBounds(getSize().width / 2 - 155, posY, 310, 115);
             this.add(p);
@@ -377,11 +379,12 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
             schoolpassword.setEchoChar('*');
             p.add(schoolpassword);
             groupChoice.addItemListener(new GroupItemListener(schoolpassword));
-            
+
         } else {
             /* We know the school, so show the classlist */
             /* Add School-panel */
-            p = new JPanel(null); p.setBorder(BorderFactory.createLineBorder(getForeground()));
+            p = new JPanel(null);
+            p.setBorder(BorderFactory.createLineBorder(getForeground()));
             p.setBackground(GuiConstants.SUB_BACKGROUND);
             p.setBounds(getSize().width / 2 - 155, posY, 310, 80);
             this.add(p);
@@ -405,7 +408,7 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
 
             /* Schoologin label */
             l = new JLabel(user.getSchool().getName());
-            if(l.getText() == null) {
+            if (l.getText() == null) {
                 l.setText("");
             }
             l.setForeground(Color.black);
@@ -451,7 +454,7 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
 
     /**
      * This method adds a button panel under the last panel. <BR>
-     * 
+     *
      * @param p2 The panel where under this panel must appear.
      */
     protected void addButtonsPanel(Container p2) {
@@ -460,7 +463,8 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
 
         int locationY = p2.getSize().height + p2.getLocation().y
                 - 1;
-        JPanel p = new JPanel(null); p.setBorder(BorderFactory.createLineBorder(getForeground()));
+        JPanel p = new JPanel(null);
+        p.setBorder(BorderFactory.createLineBorder(getForeground()));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         p.setBounds(getSize().width / 2 - 155, locationY, 310, 35);
         this.add(p);
@@ -500,10 +504,11 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
         // user kan uitloggen
         // user heeft geen school (nieuw (17/5/13)
         // user mag van klas veranderen.
-        if(!user.isReadonly() && user.canLogout() && ( user.hasRight(User.CHANGE_CLASS_RIGHT) || user.getSchool() == null ) )
+        if (!user.isReadonly() && user.canLogout() && (user.hasRight(User.CHANGE_CLASS_RIGHT) || user.getSchool() == null)) {
             deleteButton.addActionListener(this);
-        else 
+        } else {
             deleteButton.setVisible(false);
+        }
     }
 
     /**
@@ -517,7 +522,7 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
 
     /**
      * Sets the centerpanel to communicate with.
-     * 
+     *
      * @param centerPanel The centerPanel to communicate with.
      */
     @Override
@@ -528,7 +533,7 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
     /**
      * Creates a new label with a asterisk. It can be used to indicate that a
      * field is mandatory.
-     * 
+     *
      * @return A label with the caption of a asterisk.
      */
     private JLabel createMandatoryLabel() {
@@ -542,9 +547,10 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
 
     /**
      * Invoked when an action occurs.
-     * 
+     *
      * @param e The ActionEvent.
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     * @see
+     * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -592,8 +598,8 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
 
                 } else {
                     /* Link the user to a school */
-                    Group g = null; 
-                    if(groupChoice.getSelectedIndex() > 0) {
+                    Group g = null;
+                    if (groupChoice.getSelectedIndex() > 0) {
                         g = groupList[groupChoice.getSelectedIndex() - 1];
                     }
                     try {
@@ -666,19 +672,18 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
 
     /**
      * Returns a Panel that can functionate as a header panel.
-     * 
+     *
      * @return A panel that can functionate as a header panel.
      * @see fi.dwo.client.gui.CenterSubPanel#getHeaderPanel()
      */
-   
     @Override
     public Component getHeaderPanel() {
-    	return new HeaderPanel(TextMapper.getText(TextMapper.GUIP_MY_PROFILE));
+        return new HeaderPanel(TextMapper.getText(TextMapper.GUIP_MY_PROFILE));
     }
 
     /**
      * Returns the current object, as the object to add to a gui.
-     * 
+     *
      * @return the current object.
      * @see fi.dwo.client.gui.CenterSubPanel#getComponent()
      */
@@ -688,14 +693,14 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
     }
 
     @Override
-	public Object getUserObject() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Object getUserObject() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
     @Override
-	public void stateChanged(ChangeEvent e) {
+    public void stateChanged(ChangeEvent e) {
 		// TODO Auto-generated method stub
-		
-	}
+
+    }
 }

@@ -22,23 +22,22 @@ import java.util.Hashtable;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-
 /**
  * @author M.J.B. Kupers
  *
  */
 public class TabLabelPanel extends JPanel implements ActionListener {
-    
+
     private GridLayout gridLayout;
-    
+
     private Hashtable tabLabels;
-    
+
     private TabLinkedLabel selectedTab;
-    
+
     private TabPane tabPane;
-    
+
     private Color selectedTabColor;
-    
+
     public TabLabelPanel(TabPane tabPane) {
         super(null);
         //, BorderedPanel.EAST);
@@ -48,7 +47,7 @@ public class TabLabelPanel extends JPanel implements ActionListener {
         gridLayout = new GridLayout(0, 1);
         this.setLayout(gridLayout);
     }
-    
+
     public void addTabLabel(String label, Object key) {
         TabLinkedLabel tmp = new TabLinkedLabel(label);
         tmp.setFont(ParameterConstants.LABEL_FONT);
@@ -61,55 +60,55 @@ public class TabLabelPanel extends JPanel implements ActionListener {
         this.add(tmp);
         tmp.setVisible(true);
         tabLabels.put(tmp, key);
-        
+
         /* If we don't have a tab selected, select thisone */
-        if(selectedTab == null) {
+        if (selectedTab == null) {
             selectTab(tmp);
         }
         this.setSize(this.getLayout().preferredLayoutSize(this));
     }
-    
+
     private TabLinkedLabel getLabel(Object key) {
         Enumeration enumer = tabLabels.keys();
         Object obj = null;
         boolean found = false;
-        while((!found) && enumer.hasMoreElements()) {
+        while ((!found) && enumer.hasMoreElements()) {
             obj = enumer.nextElement();
-            if(tabLabels.get(obj) == key) {
+            if (tabLabels.get(obj) == key) {
                 found = true;
             }
         }
-        
-        if(found) {
+
+        if (found) {
             return (TabLinkedLabel) obj;
         } else {
             return null;
         }
     }
-    
+
     public void renameTab(String label, Object key) {
         TabLinkedLabel tmp = getLabel(key);
-        if(tmp != null) {
+        if (tmp != null) {
             tmp.setText(label);
         }
     }
-    
+
     public void removeTab(Object key) {
         Enumeration enumer = tabLabels.keys();
         Object obj = null;
         boolean found = false;
         Object next = null;
-        while((!found) && enumer.hasMoreElements()) {
+        while ((!found) && enumer.hasMoreElements()) {
             obj = enumer.nextElement();
-            if(tabLabels.get(obj) == key) {
+            if (tabLabels.get(obj) == key) {
                 found = true;
                 Component[] ac = this.getComponents();
-                for(int i = 0; i < ac.length; i++) {
-                    if(ac[i] == (Component) obj) {
-                        if((i == 0) && (i + 1 < ac.length)) {
+                for (int i = 0; i < ac.length; i++) {
+                    if (ac[i] == (Component) obj) {
+                        if ((i == 0) && (i + 1 < ac.length)) {
                             next = ac[i + 1];
                             break;
-                        } else if(i > 0) {
+                        } else if (i > 0) {
                             next = ac[i - 1];
                             break;
                         } else if ((i == ac.length - 1) && (i > 0)) {
@@ -120,12 +119,12 @@ public class TabLabelPanel extends JPanel implements ActionListener {
                 }
             }
         }
-        
-        if(found) {
+
+        if (found) {
             this.remove((Component) obj);
             tabLabels.remove(obj);
-            
-            if(next != null) {
+
+            if (next != null) {
                 selectTab((TabLinkedLabel) next);
             } else {
                 selectedTab = null;
@@ -133,8 +132,6 @@ public class TabLabelPanel extends JPanel implements ActionListener {
             this.setSize(this.getLayout().preferredLayoutSize(this));
         }
     }
-    
-    
 
     /* (non-Javadoc)
      * @see java.awt.Component#paint(java.awt.Graphics)
@@ -142,32 +139,32 @@ public class TabLabelPanel extends JPanel implements ActionListener {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        
-        if(selectedTab != null) {
+
+        if (selectedTab != null) {
             g.setColor(selectedTabColor);
             Point location = selectedTab.getLocation();
             Dimension size = selectedTab.getSize();
             g.drawLine(this.getSize().width - 1, location.y + 1, this.getSize().width - 1, location.y + size.height - 2);
         }
     }
-    
+
     public void selectTab(Object key) {
         TabLinkedLabel tll = getLabel(key);
-        if(tll != null) {
+        if (tll != null) {
             selectTab(tll);
         }
     }
-    
+
     private void selectTab(TabLinkedLabel tabLinkedLabel) {
-        if(tabLinkedLabel != selectedTab) {
-	        Object key = tabLabels.get(tabLinkedLabel);
-	        if(selectedTab != null) {
-	            selectedTab.setSelected(false); //the current was deselected
-	        }
-	        selectedTab = tabLinkedLabel;
-	        selectedTab.setSelected(true);
-	        this.repaint();
-	        tabPane.tabSelected(key);        
+        if (tabLinkedLabel != selectedTab) {
+            Object key = tabLabels.get(tabLinkedLabel);
+            if (selectedTab != null) {
+                selectedTab.setSelected(false); //the current was deselected
+            }
+            selectedTab = tabLinkedLabel;
+            selectedTab.setSelected(true);
+            this.repaint();
+            tabPane.tabSelected(key);
         }
     }
 
@@ -177,17 +174,18 @@ public class TabLabelPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
-        if(obj instanceof TabLinkedLabel) {
+        if (obj instanceof TabLinkedLabel) {
             selectTab((TabLinkedLabel) obj);
         }
     }
-    
+
     /**
      * @return Returns the selectedTabColor.
      */
     public Color getSelectedTabColor() {
         return selectedTabColor;
     }
+
     /**
      * @param selectedTabColor The selectedTabColor to set.
      */
@@ -197,6 +195,7 @@ public class TabLabelPanel extends JPanel implements ActionListener {
     /* (non-Javadoc)
      * @see java.awt.Container#getInsets()
      */
+
     @Override
     public Insets getInsets() {
         Insets insets = super.getInsets();

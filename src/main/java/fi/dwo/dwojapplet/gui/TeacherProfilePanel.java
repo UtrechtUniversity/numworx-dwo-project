@@ -1,6 +1,5 @@
 // Source file:
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\TeacherProfilePanel.java
-
 package fi.dwo.dwojapplet.gui;
 
 import java.awt.Button;
@@ -18,9 +17,9 @@ import fi.dwo.dwojapplet.domain.Group;
 /**
  * This class represents a panel for the current user (who is a teacher) to
  * change his account.
- * 
+ *
  * @author M.J.B. Kupers
- *  
+ *
  */
 public class TeacherProfilePanel extends ProfilePanel {
 
@@ -39,7 +38,7 @@ public class TeacherProfilePanel extends ProfilePanel {
      * This method returns the specific panel for the teacher. Because there is
      * no teacher-specific information, it returns a panel with the height of
      * zero pixels.
-     * 
+     *
      * @param lastPanel The panel where under this panel must appear.
      * @return A panel representing user-specific information.
      */
@@ -56,9 +55,10 @@ public class TeacherProfilePanel extends ProfilePanel {
 
     /**
      * Invoked when an action occurs.
-     * 
+     *
      * @param e The ActionEvent.
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     * @see
+     * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     @Override
     public void actionPerformed(ActionEvent e) {

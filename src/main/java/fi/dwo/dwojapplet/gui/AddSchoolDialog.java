@@ -1,5 +1,4 @@
 // Source file: C:\\parameters\\fi\\dwo\\client\\gui\\ScoNameDialog.java
-
 package fi.dwo.dwojapplet.gui;
 
 import java.awt.BorderLayout;
@@ -45,7 +44,7 @@ import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
 /**
  * This is a dialog for editing the SCO name and description.
- * 
+ *
  * @author M.J.B. Kupers
  *
  */
@@ -54,42 +53,43 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
 
     private static final Object ZERO = new Integer(0);
 
-	private String schoolName;
-    
+    private String schoolName;
+
     private String schoolLogin;
-    
+
     private boolean confirmed;
 
     private Component schoolNameField;
-    
+
     private JTextField schoolLoginField;
 
     private JTextField passwdField[] = new JTextField[SchoolGroup.LENGTH];
-    private String   passwdLabel[] = new String[SchoolGroup.LENGTH];
-    
-    { 
-    	passwdLabel[SchoolGroup.STUDENT] = "Wachtwoord Leerlingen";
-    	passwdLabel[SchoolGroup.TEACHER] = "Wachtwoord Docenten";
-    	passwdLabel[SchoolGroup.SCHOOLADMIN] = "Wachtwoord Schooladmin";
-    	passwdLabel[SchoolGroup.ADMIN] = "Wachtwoord Administrator";
+    private String passwdLabel[] = new String[SchoolGroup.LENGTH];
+
+    {
+        passwdLabel[SchoolGroup.STUDENT] = "Wachtwoord Leerlingen";
+        passwdLabel[SchoolGroup.TEACHER] = "Wachtwoord Docenten";
+        passwdLabel[SchoolGroup.SCHOOLADMIN] = "Wachtwoord Schooladmin";
+        passwdLabel[SchoolGroup.ADMIN] = "Wachtwoord Administrator";
     }
     private boolean usePasswd[] = new boolean[SchoolGroup.LENGTH];
+
     {
-    	usePasswd[SchoolGroup.STUDENT] = true;
-    	usePasswd[SchoolGroup.TEACHER] = true;
-    	usePasswd[SchoolGroup.SCHOOLADMIN] = true;
+        usePasswd[SchoolGroup.STUDENT] = true;
+        usePasswd[SchoolGroup.TEACHER] = true;
+        usePasswd[SchoolGroup.SCHOOLADMIN] = true;
     }
-    
+
     private SchoolPasswdMap passwdMap;
-    
+
     private JButton okButton;
 
     private JButton cancelButton;
 
     private void addNorth(Component c) {
-    	getContentPane().add(c, BorderLayout.NORTH);
+        getContentPane().add(c, BorderLayout.NORTH);
     }
-    
+
     public AddSchoolDialog(Component owner, String windowTitle, String schoolName, String schoolLogin,
             SchoolPasswdMap spm, Date expire) {
         super(DwoHelper.getFrameForComponent(owner),
@@ -102,7 +102,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         form.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.schoolName = schoolName;
         this.schoolName = schoolLogin;
-        this.passwdMap =  spm;
+        this.passwdMap = spm;
         confirmed = false;
 
         JLabel l;
@@ -121,39 +121,39 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
 
         /* schoolName field */
         Hashtable fidentitySchools = PersistenceFacade.instance().getFidentitySchools();
-		if(!"".equals(schoolName)) {
-        	JTextField tf = new JTextField(schoolName);
-        	tf.setEditable(fidentitySchools==null);
-        	schoolNameField = tf;
+        if (!"".equals(schoolName)) {
+            JTextField tf = new JTextField(schoolName);
+            tf.setEditable(fidentitySchools == null);
+            schoolNameField = tf;
         } else {
-        	schoolIdVector.clear();
-        	schoolIdVector.addElement(ZERO);
-        	if(fidentitySchools == null)
-        		schoolNameField = new JTextField();
-        	else {
-        		TreeMap reversemap = new TreeMap();
-        		Iterator iter = fidentitySchools.entrySet().iterator();
-        		while (iter.hasNext()) {
-					Entry object = (Entry) iter.next();
-					reversemap.put(object.getValue(), object.getKey());
-				}
-        		JComboBox combo;
-                schoolNameField = combo = new JComboBox(); 
-        		Iterator enumeration = reversemap.keySet().iterator();
-        		while (enumeration.hasNext()) {
-        			Object element = enumeration.next();
-        			schoolIdVector.addElement(new Integer(reversemap.get(element).toString()));
-        			combo.addItem(element.toString());
-        		}
-        	}
+            schoolIdVector.clear();
+            schoolIdVector.addElement(ZERO);
+            if (fidentitySchools == null) {
+                schoolNameField = new JTextField();
+            } else {
+                TreeMap reversemap = new TreeMap();
+                Iterator iter = fidentitySchools.entrySet().iterator();
+                while (iter.hasNext()) {
+                    Entry object = (Entry) iter.next();
+                    reversemap.put(object.getValue(), object.getKey());
+                }
+                JComboBox combo;
+                schoolNameField = combo = new JComboBox();
+                Iterator enumeration = reversemap.keySet().iterator();
+                while (enumeration.hasNext()) {
+                    Object element = enumeration.next();
+                    schoolIdVector.addElement(new Integer(reversemap.get(element).toString()));
+                    combo.addItem(element.toString());
+                }
+            }
         }
-        
+
         int w = Math.max(300, schoolNameField.getPreferredSize().width);
-		schoolNameField.setBounds(150, 28, w, 20);
+        schoolNameField.setBounds(150, 28, w, 20);
         schoolNameField.setVisible(false);
         form.add(schoolNameField);
         schoolNameField.setVisible(true);
-        
+
         /* schoolLogin label */
         l = new JLabel("Schoollogin");
         l.setForeground(Color.black);
@@ -171,22 +171,22 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         schoolLoginField.setVisible(false);
         form.add(schoolLoginField);
         schoolLoginField.setVisible(true);
-        
-        for (int groupId = 0; groupId < SchoolGroup.LENGTH; groupId++)
-        {
-        	String text = spm.getPasswd(groupId);
-        	if(text.length()!=0)
-        		usePasswd[groupId] = true;
-        	if(usePasswd[groupId]) {
+
+        for (int groupId = 0; groupId < SchoolGroup.LENGTH; groupId++) {
+            String text = spm.getPasswd(groupId);
+            if (text.length() != 0) {
+                usePasswd[groupId] = true;
+            }
+            if (usePasswd[groupId]) {
                 l = new JLabel(passwdLabel[groupId]);
                 l.setForeground(Color.black);
                 l.setFont(GuiConstants.NORMAL_TEXT);
                 form.add(l);
                 passwdField[groupId] = new JTextField(text);
                 form.add(passwdField[groupId]);
-        	}
+            }
         }
-        
+
         l = new JLabel("Expire");
         l.setFont(GuiConstants.NORMAL_TEXT);
         form.add(l);
@@ -194,8 +194,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         dateField = new JDateChooser(null, expire, null, dateEditor);
         dateField.setEnabled(fidentitySchools == null);
         form.add(dateField);
-        
-        
+
         //this.setSize(460, 280);
         Box okbox = Box.createHorizontalBox();
         okbox.add(Box.createHorizontalGlue());
@@ -213,23 +212,22 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
 
         okButton.setLocation(
                 (getSize().width / 2)
-                        - ((okButton.getSize().width
-                                + cancelButton.getSize().width + 5) / 2), 163);
+                - ((okButton.getSize().width
+                + cancelButton.getSize().width + 5) / 2), 163);
         okbox.add(okButton);
         okbox.add(Box.createHorizontalStrut(10));
         cancelButton.setLocation(
                 (getSize().width / 2)
-                        - ((okButton.getSize().width
-                                + cancelButton.getSize().width + 5) / 2)
-                        + okButton.getSize().width + 5, 163);
+                - ((okButton.getSize().width
+                + cancelButton.getSize().width + 5) / 2)
+                + okButton.getSize().width + 5, 163);
         okbox.add(cancelButton);
         okbox.add(Box.createHorizontalGlue());
         makeCompactGrid(form, //parent
-                form.getComponentCount()/2, 2,
-                10, 10,  //initX, initY
+                form.getComponentCount() / 2, 2,
+                10, 10, //initX, initY
                 10, 10); //xPad, yPad
 
-        
         contentPane.add(form, BorderLayout.CENTER);
         contentPane.add(okbox, BorderLayout.SOUTH);
         pack();
@@ -245,19 +243,20 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         this.addWindowListener(this);
     }
 
-    public static School addSchool()  throws SchoolException {
+    public static School addSchool() throws SchoolException {
         return addSchool(null);
     }
 
     /**
      * @return fi.dwo.client.domain.Sco
+     * @throws fi.dwo.commons.exceptions.SchoolException
      */
-    public static School addSchool(Component owner)  throws SchoolException {
+    public static School addSchool(Component owner) throws SchoolException {
         AddSchoolDialog asd = new AddSchoolDialog(owner, "Nieuwe school", "", "", new SchoolPasswdMap(), null);
         asd.show();
         if (asd.isConfirmed()) {
             School s = GuiCreator.instance().addSchool(asd.getSchoolId(), asd.getSchoolName(), asd.getSchoolLogin(), asd.getSchoolPasswdMap(), asd.dateField.getDate());
-            if(s == null) { //something went wrong, reshow the dialog
+            if (s == null) { //something went wrong, reshow the dialog
                 s = addSchool(owner);
             }
             return s;
@@ -266,30 +265,31 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         }
     }
 
-	public static School editSchool(School school)  throws SchoolException {
+    public static School editSchool(School school) throws SchoolException {
         return editSchool(null, school);
     }
 
     /**
      * @return fi.dwo.client.domain.Sco
+     * @throws fi.dwo.commons.exceptions.SchoolException
      */
-    public static School editSchool(Component owner, School school)  throws SchoolException {
+    public static School editSchool(Component owner, School school) throws SchoolException {
         String sn = school.getName();
         String sl = school.getSchoolLogin();
         SchoolPasswdMap spm = new SchoolPasswdMap(school);
-        Date  expire = school.getExpire();
-                
+        Date expire = school.getExpire();
+
         AddSchoolDialog asd = new AddSchoolDialog(owner, "Schoolgegevens wijzigen", sn, sl, spm, expire);
-  
+
         String id = String.valueOf(school.getSchoolID());
         JLabel label = new JLabel(id);
         label.addMouseListener(new CopyLabel(id));
         asd.addNorth(label);
-        
+
         asd.show();
         if (asd.isConfirmed()) {
-            School s = GuiCreator.instance().editSchool(school.getSchoolID(), asd.getSchoolName(), asd.getSchoolLogin(), asd.getSchoolPasswdMap(),asd.dateField.getDate());
-            if(s == null) { //something went wrong, reshow the dialog
+            School s = GuiCreator.instance().editSchool(school.getSchoolID(), asd.getSchoolName(), asd.getSchoolLogin(), asd.getSchoolPasswdMap(), asd.dateField.getDate());
+            if (s == null) { //something went wrong, reshow the dialog
                 s = editSchool(owner, school);
             }
             return s;
@@ -297,20 +297,19 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
             return null;
         }
     }
-    
 
-   
     private SchoolPasswdMap getSchoolPasswdMap() {
-    	SchoolPasswdMap result = new SchoolPasswdMap(passwdMap);
-    	for (int i = 0; i < passwdField.length; i++) {
-			JTextField field = passwdField[i];
-			if(field != null && field.getText().trim().length()>0)
-				result.setPasswd(i, field.getText());
-		}
-		return result;
-	}
+        SchoolPasswdMap result = new SchoolPasswdMap(passwdMap);
+        for (int i = 0; i < passwdField.length; i++) {
+            JTextField field = passwdField[i];
+            if (field != null && field.getText().trim().length() > 0) {
+                result.setPasswd(i, field.getText());
+            }
+        }
+        return result;
+    }
 
-	/*
+    /*
      * (non-Javadoc)
      * 
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
@@ -320,11 +319,12 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         if (e.getSource() == cancelButton) {
             this.setVisible(false);
         } else if (e.getSource() == okButton) {
-        	if(schoolNameField instanceof JComboBox)
-        		schoolName = (String) ((JComboBox) schoolNameField).getSelectedItem();
-        	else
-        		schoolName = ((JTextField) schoolNameField).getText();
-        	
+            if (schoolNameField instanceof JComboBox) {
+                schoolName = (String) ((JComboBox) schoolNameField).getSelectedItem();
+            } else {
+                schoolName = ((JTextField) schoolNameField).getText();
+            }
+
             schoolLogin = schoolLoginField.getText();
             confirmed = true;
             this.setVisible(false);
@@ -336,10 +336,10 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
      * Invoked when the window is set to be the user's active window, which
      * means the window (or one of its subcomponents) will receive keyboard
      * events.
-     * 
-     * @param e
-     *            The WindowEvent.
-     * @see java.awt.event.WindowListener#windowActivated(java.awt.event.WindowEvent)
+     *
+     * @param e The WindowEvent.
+     * @see
+     * java.awt.event.WindowListener#windowActivated(java.awt.event.WindowEvent)
      */
     @Override
     public void windowActivated(WindowEvent e) {
@@ -348,10 +348,10 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
     /**
      * Invoked when a window has been closed as the result of calling dispose on
      * the window.
-     * 
-     * @param e
-     *            The WindowEvent.
-     * @see java.awt.event.WindowListener#windowClosed(java.awt.event.WindowEvent)
+     *
+     * @param e The WindowEvent.
+     * @see
+     * java.awt.event.WindowListener#windowClosed(java.awt.event.WindowEvent)
      */
     @Override
     public void windowClosed(WindowEvent e) {
@@ -362,10 +362,10 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
      * system menu. If the program does not explicitly hide or dispose the
      * window while processing this event, the window close operation will be
      * cancelled.
-     * 
-     * @param e
-     *            The WindowEvent.
-     * @see java.awt.event.WindowListener#windowClosing(java.awt.event.WindowEvent)
+     *
+     * @param e The WindowEvent.
+     * @see
+     * java.awt.event.WindowListener#windowClosing(java.awt.event.WindowEvent)
      */
     @Override
     public void windowClosing(WindowEvent e) {
@@ -377,10 +377,10 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
      * Invoked when a window is no longer the user's active window, which means
      * that keyboard events will no longer be delivered to the window or its
      * subcomponents.
-     * 
-     * @param e
-     *            The WindowEvent.
-     * @see java.awt.event.WindowListener#windowDeactivated(java.awt.event.WindowEvent)
+     *
+     * @param e The WindowEvent.
+     * @see
+     * java.awt.event.WindowListener#windowDeactivated(java.awt.event.WindowEvent)
      */
     @Override
     public void windowDeactivated(WindowEvent e) {
@@ -388,10 +388,10 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
 
     /**
      * Invoked when a window is changed from a minimized to a normal state.
-     * 
-     * @param e
-     *            The WindowEvent.
-     * @see java.awt.event.WindowListener#windowDeiconified(java.awt.event.WindowEvent)
+     *
+     * @param e The WindowEvent.
+     * @see
+     * java.awt.event.WindowListener#windowDeiconified(java.awt.event.WindowEvent)
      */
     @Override
     public void windowDeiconified(WindowEvent e) {
@@ -399,10 +399,10 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
 
     /**
      * Invoked when a window is changed from a minimized to a normal state.
-     * 
-     * @param e
-     *            The WindowEvent.
-     * @see java.awt.event.WindowListener#windowIconified(java.awt.event.WindowEvent)
+     *
+     * @param e The WindowEvent.
+     * @see
+     * java.awt.event.WindowListener#windowIconified(java.awt.event.WindowEvent)
      */
     @Override
     public void windowIconified(WindowEvent e) {
@@ -412,10 +412,10 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
      * Invoked when a window is changed from a normal to a minimized state. For
      * many platforms, a minimized window is displayed as the icon specified in
      * the window's iconImage property.
-     * 
-     * @param e
-     *            The WindowEvent.
-     * @see java.awt.event.WindowListener#windowOpened(java.awt.event.WindowEvent)
+     *
+     * @param e The WindowEvent.
+     * @see
+     * java.awt.event.WindowListener#windowOpened(java.awt.event.WindowEvent)
      */
     @Override
     public void windowOpened(WindowEvent e) {
@@ -427,7 +427,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
     public boolean isConfirmed() {
         return confirmed;
     }
-    
+
     /**
      * @return Returns the schoolLogin.
      */
@@ -437,33 +437,31 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
 
     private Vector schoolIdVector = new Vector();
 
-	private JDateChooser dateField;
-    
-    private int getSchoolId() { 
-    	if(schoolNameField instanceof JComboBox)
-    	{ 
-    		Integer n = (Integer) schoolIdVector.get(((JComboBox) schoolNameField).getSelectedIndex()+1);
-    		return n.intValue();
-    	}
-    	return 0;
+    private JDateChooser dateField;
+
+    private int getSchoolId() {
+        if (schoolNameField instanceof JComboBox) {
+            Integer n = (Integer) schoolIdVector.get(((JComboBox) schoolNameField).getSelectedIndex() + 1);
+            return n.intValue();
+        }
+        return 0;
     }
-   
+
     /**
      * @return Returns the schoolName.
      */
     public String getSchoolName() {
         return schoolName;
     }
-    
-    
+
     /**
-     * Aligns the first <code>rows</code> * <code>cols</code>
-     * components of <code>parent</code> in
-     * a grid. Each component in a column is as wide as the maximum
-     * preferred width of the components in that column;
-     * height is similarly determined for each row.
-     * The parent is made just big enough to fit them all.
+     * Aligns the first <code>rows</code> * <code>cols</code> components of
+     * <code>parent</code> in a grid. Each component in a column is as wide as
+     * the maximum preferred width of the components in that column; height is
+     * similarly determined for each row. The parent is made just big enough to
+     * fit them all.
      *
+     * @param parent
      * @param rows number of rows
      * @param cols number of columns
      * @param initialX x location to start the grid at
@@ -472,12 +470,12 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
      * @param yPad y padding between cells
      */
     public static void makeCompactGrid(Container parent,
-                                       int rows, int cols,
-                                       int initialX, int initialY,
-                                       int xPad, int yPad) {
+            int rows, int cols,
+            int initialX, int initialY,
+            int xPad, int yPad) {
         SpringLayout layout;
         try {
-            layout = (SpringLayout)parent.getLayout();
+            layout = (SpringLayout) parent.getLayout();
         } catch (ClassCastException exc) {
             System.err.println("The first argument to makeCompactGrid must use SpringLayout.");
             return;
@@ -489,12 +487,12 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
             Spring width = Spring.constant(0);
             for (int r = 0; r < rows; r++) {
                 width = Spring.max(width,
-                                   getConstraintsForCell(r, c, parent, cols).
-                                       getWidth());
+                        getConstraintsForCell(r, c, parent, cols).
+                        getWidth());
             }
             for (int r = 0; r < rows; r++) {
-                SpringLayout.Constraints constraints =
-                        getConstraintsForCell(r, c, parent, cols);
+                SpringLayout.Constraints constraints
+                        = getConstraintsForCell(r, c, parent, cols);
                 constraints.setX(x);
                 constraints.setWidth(width);
             }
@@ -507,12 +505,12 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
             Spring height = Spring.constant(0);
             for (int c = 0; c < cols; c++) {
                 height = Spring.max(height,
-                                    getConstraintsForCell(r, c, parent, cols).
-                                        getHeight());
+                        getConstraintsForCell(r, c, parent, cols).
+                        getHeight());
             }
             for (int c = 0; c < cols; c++) {
-                SpringLayout.Constraints constraints =
-                        getConstraintsForCell(r, c, parent, cols);
+                SpringLayout.Constraints constraints
+                        = getConstraintsForCell(r, c, parent, cols);
                 constraints.setY(y);
                 constraints.setHeight(height);
             }
@@ -525,15 +523,14 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
         pCons.setConstraint(SpringLayout.EAST, x);
     }
     /* Used by makeCompactGrid. */
+
     private static SpringLayout.Constraints getConstraintsForCell(
-                                                int row, int col,
-                                                Container parent,
-                                                int cols) {
+            int row, int col,
+            Container parent,
+            int cols) {
         SpringLayout layout = (SpringLayout) parent.getLayout();
         Component c = parent.getComponent(row * cols + col);
         return layout.getConstraints(c);
     }
 
-
-    
 }

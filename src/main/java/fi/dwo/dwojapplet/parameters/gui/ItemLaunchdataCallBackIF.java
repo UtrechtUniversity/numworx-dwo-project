@@ -11,17 +11,18 @@ package fi.dwo.dwojapplet.parameters.gui;
  *
  */
 public interface ItemLaunchdataCallBackIF {
-    
+
     /**
      * For nested items. They can ask to the parent a string representing the
      * current sequence.
-     * 
-     * (The name is different from getSequenceString in ParameterComponentIF to prevent type conflicts)
-     * 
+     *
+     * (The name is different from getSequenceString in ParameterComponentIF to
+     * prevent type conflicts)
+     *
+     * @param component
      * @return java.lang.String
      * @roseuid 42567A5600EA
      */
     public String getSequenceStr(ItemLaunchdataIF component);
-
 
 }

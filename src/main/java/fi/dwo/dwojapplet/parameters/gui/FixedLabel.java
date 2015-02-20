@@ -4,7 +4,6 @@
  */
 package fi.dwo.dwojapplet.parameters.gui;
 
-
 import java.awt.Dimension;
 
 import javax.swing.JLabel;
@@ -12,24 +11,26 @@ import javax.swing.JLabel;
 /**
  * @author M.J.B. Kupers
  *
- * This class is the same as a label, but the prefered size, and the minimum size
- * are equal to the current size (so the size can't be fucked up by the layoutmanager).
+ * This class is the same as a label, but the prefered size, and the minimum
+ * size are equal to the current size (so the size can't be fucked up by the
+ * layoutmanager).
  */
 public class FixedLabel extends JLabel {
 
-    
     /**
      * @throws java.awt.HeadlessException
      */
     public FixedLabel() {
         super();
     }
+
     /**
      * @param text
      */
     public FixedLabel(String text) {
         super(text);
     }
+
     /**
      * @param text
      * @param alignment
@@ -37,14 +38,18 @@ public class FixedLabel extends JLabel {
     public FixedLabel(String text, int alignment) {
         super(text, alignment);
     }
+
     /**
      * Returns the <i>current</i> size as the minimum size.
+     *
+     * @return 
      * @see java.awt.Component#getMinimumSize()
      */
     @Override
     public Dimension getMinimumSize() {
         return super.getSize();
     }
+
     @Override
     public Dimension getMaximumSize() {
         return super.getSize();
@@ -52,6 +57,8 @@ public class FixedLabel extends JLabel {
 
     /**
      * Returns the <i>current</i> size as the preferred size.
+     *
+     * @return 
      * @see java.awt.Component#getPreferredSize()
      */
     @Override

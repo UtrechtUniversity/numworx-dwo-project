@@ -1,6 +1,5 @@
 // Source file:
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\TeacherMenuPanel.java
-
 package fi.dwo.dwojapplet.gui;
 
 import java.awt.FontMetrics;
@@ -24,61 +23,62 @@ import fi.dwo.dwojapplet.gui.action.TeacherStrategy;
 
 /**
  * This class is the menupanel for the teacher who logged in.
- * 
+ *
  * @author M.J.B. Kupers
- *  
+ *
  */
 public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 
     private static final Border TITLE_BORDER = BorderFactory.createEmptyBorder(0, 10, 0, 0);
     private static final Border CLASS_BORDER = BorderFactory.createEmptyBorder(0, 20, 0, 0);
-	private JButton classManagementButton;
-    
+    private JButton classManagementButton;
+
     private JButton courseManagementButton;
 
     private ClassLinkedLabel[] classLinkedList;
-    
+
     private JScrollPane classPanel;
 
     /* (non-Javadoc)
-	 * @see fi.dwo.client.gui.MenuPanel#createButtons()
-	 */
+     * @see fi.dwo.client.gui.MenuPanel#createButtons()
+     */
     @Override
-	protected void createMenuButtons() {
-		super.createMenuButtons();
-		createGap();
-		
+    protected void createMenuButtons() {
+        super.createMenuButtons();
+        createGap();
+
         /* Add ClassManagement button */
         classManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_CLASS_MANAGEMENT));
         classManagementButton.addActionListener(this);
-        this.add(classManagementButton);        
+        this.add(classManagementButton);
         /* Als dwo in Deeplink mode, geen coursemanagement */
-        if(dwo.getCourseViewNr()>0 || !dwo.getUser().hasRight(User.MODIFY_MODULES_RIGHT) || CenterPanel.isIconizer())
-        	return;
+        if (dwo.getCourseViewNr() > 0 || !dwo.getUser().hasRight(User.MODIFY_MODULES_RIGHT) || CenterPanel.isIconizer()) {
+            return;
+        }
         createGap();
         /* Add CourseManagement Button */
         courseManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_COURSE_MANAGEMENT));
         courseManagementButton.addActionListener(this);
         add(courseManagementButton);
-        
-        
-        
-	}
 
-	/**
+    }
+
+    /**
      * Creates a new MenuPanel for the user. It contains the parent items (from
-     * MenuPanel) and buttons to show the result of students, and to add a class.
+     * MenuPanel) and buttons to show the result of students, and to add a
+     * class.
+     * @param dwo
      */
     public TeacherMenuPanel(DwoIF dwo) {
         super(dwo);
-		hasAdminRight = dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT);
-		schoolID = dwo.getUser().getSchool().getSchoolID();
+        hasAdminRight = dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT);
+        schoolID = dwo.getUser().getSchool().getSchoolID();
     }
 
     /**
      * Adds the name of the classes wherefrom the user is teacher. Can be
      * overridden by subclasses.
-     *  
+     *
      */
     @Override
     protected void addClassList() {
@@ -88,68 +88,71 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
 
         createRuler();
         Box classBox = Box.createVerticalBox();
-        classPanel = new JScrollPane(classBox)  { @Override 
-            public void setVisible(boolean b) { 
-        	
-        	super.setVisible(b);
-        	
-        } } ;
+        classPanel = new JScrollPane(classBox) {
+            @Override
+            public void setVisible(boolean b) {
+
+                super.setVisible(b);
+
+            }
+        };
         classPanel.setDoubleBuffered(false);
         classPanel.setOpaque(false);
         classPanel.getViewport().setOpaque(false);
         classPanel.setViewportBorder(null);
         classPanel.setBorder(null);
         /* Add class-info */
-        if(dwo.getUser() instanceof Teacher){
-	        Teacher t = (Teacher) dwo.getUser();
-	        if ((t.getClasses() != null) && (t.getClasses().length != 0)) {
-	            l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_CLASS_RESULTS)
-	                    + ":");
-	            l.setOpaque(false);
-	            l.setFont(GuiConstants.NORMAL_TEXT);
-	            l.setBorder(TITLE_BORDER);
-	            classBox.add(l);
-	
-	            SchoolClass[] classes = t.getClasses();
-	            classLinkedList = new ClassLinkedLabel[classes.length];
-	            ClassLinkedLabel cll;
-	
-	
-	            for (int i = 0; i < classes.length; i++) {
-	                cll = new ClassLinkedLabel(classes[i]);
-	                cll.setBorder(CLASS_BORDER);
-	                cll.addActionListener(this);
-	                classLinkedList[i] = cll;
-	                cll.setFont(GuiConstants.NORMAL_TEXT);
-	                classBox.add(cll);
-	            }
-	        }
-	        classPanel.setVisible(false);
-	        this.add(classPanel);
-	        classPanel.setVisible(true);
-		}
-   }
+        if (dwo.getUser() instanceof Teacher) {
+            Teacher t = (Teacher) dwo.getUser();
+            if ((t.getClasses() != null) && (t.getClasses().length != 0)) {
+                l = new JLabel(TextMapper.getText(TextMapper.GUIMNU_CLASS_RESULTS)
+                        + ":");
+                l.setOpaque(false);
+                l.setFont(GuiConstants.NORMAL_TEXT);
+                l.setBorder(TITLE_BORDER);
+                classBox.add(l);
+
+                SchoolClass[] classes = t.getClasses();
+                classLinkedList = new ClassLinkedLabel[classes.length];
+                ClassLinkedLabel cll;
+
+                for (int i = 0; i < classes.length; i++) {
+                    cll = new ClassLinkedLabel(classes[i]);
+                    cll.setBorder(CLASS_BORDER);
+                    cll.addActionListener(this);
+                    classLinkedList[i] = cll;
+                    cll.setFont(GuiConstants.NORMAL_TEXT);
+                    classBox.add(cll);
+                }
+            }
+            classPanel.setVisible(false);
+            this.add(classPanel);
+            classPanel.setVisible(true);
+        }
+    }
 
     /**
      * Invoked when an action occurs.
-     * 
+     *
      * @param e The ActionEvent.
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     * @see
+     * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-    	if(!isEnabled()) return;
-    	
+        if (!isEnabled()) {
+            return;
+        }
+
         Object src = e.getSource();
-		GuiCreator instance = GuiCreator.instance();
-        if(src == mainMenuButton)
-        {
-        	instance.getMainPanel().getCenter().select(ModuleTreePanel.ALLE_MODULES);
-        	return;
+        GuiCreator instance = GuiCreator.instance();
+        if (src == mainMenuButton) {
+            instance.getMainPanel().getCenter().select(ModuleTreePanel.ALLE_MODULES);
+            return;
         }
         super.actionPerformed(e);
 
-		if (src instanceof ClassLinkedLabel) {
+        if (src instanceof ClassLinkedLabel) {
             instance.setWait();
             CenterSubPanel cp = instance.getResultPanel(((ClassLinkedLabel) src).getSchoolClass());
             center.reset();
@@ -161,87 +164,85 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
             center.reset();
             center.loadCenter(cp);
             instance.setReady();
-       } else if (src == courseManagementButton) {
-           instance.setWait();
-           CenterSubPanel cp = instance.getCourseManagementPanel();
-           center.loadCenter(cp);
-           center.setStrategy(this);
-           instance.setReady();           
-       }
+        } else if (src == courseManagementButton) {
+            instance.setWait();
+            CenterSubPanel cp = instance.getCourseManagementPanel();
+            center.loadCenter(cp);
+            center.setStrategy(this);
+            instance.setReady();
+        }
     }
-    
-    
-    
+
     @Override
     public void hideClassList() {
-    	if(isEnabled())
-        classPanel.setVisible(false);
+        if (isEnabled()) {
+            classPanel.setVisible(false);
+        }
     }
-    
+
     @Override
     public void showClassList() {
-    	if(isEnabled())
-        classPanel.setVisible(true);      
+        if (isEnabled()) {
+            classPanel.setVisible(true);
+        }
     }
 
     @Override
-	public void nodeSelected(CourseMap node) {
-		Object u = node.getUserObject();
-		GuiCreator instance = GuiCreator.instance();
-		if(u instanceof String)
-		{
-			if(u == ModuleTreePanel.ALLE_MODULES)
-				return;
-			if(u == ModuleTreePanel.STANDAARD_DWO_MODULES && ! hasAdminRight)
-				return;
-			CenterSubPanel cp = new CourseManagementPanel(node);
-			center.loadCenter(cp);
-		} else
-		if(u instanceof Course)
-		{
-            Course c = (Course) u;
-            if(c.getSchoolID()!= 0 || hasAdminRight) // allowed?
-            {
-            	if(c.isWithChildren())
-            	{
-            		center.loadCenter(instance.getCourseManagementPanel(c));
-            	} else
-            		center.loadCenter(instance.getScoManagementPanel(c));
+    public void nodeSelected(CourseMap node) {
+        Object u = node.getUserObject();
+        GuiCreator instance = GuiCreator.instance();
+        if (u instanceof String) {
+            if (u == ModuleTreePanel.ALLE_MODULES) {
+                return;
             }
-		} else 
-		if( u instanceof Sco)
-		{
-			Sco s = (Sco) u;
-			Course c = s.getCourse();
-            if(c.getSchoolID()!= 0 || hasAdminRight) // allowed?
-            	instance.loadParameterManagementPanel(s);
-		}
-	}
+            if (u == ModuleTreePanel.STANDAARD_DWO_MODULES && !hasAdminRight) {
+                return;
+            }
+            CenterSubPanel cp = new CourseManagementPanel(node);
+            center.loadCenter(cp);
+        } else if (u instanceof Course) {
+            Course c = (Course) u;
+            if (c.getSchoolID() != 0 || hasAdminRight) // allowed?
+            {
+                if (c.isWithChildren()) {
+                    center.loadCenter(instance.getCourseManagementPanel(c));
+                } else {
+                    center.loadCenter(instance.getScoManagementPanel(c));
+                }
+            }
+        } else if (u instanceof Sco) {
+            Sco s = (Sco) u;
+            Course c = s.getCourse();
+            if (c.getSchoolID() != 0 || hasAdminRight) // allowed?
+            {
+                instance.loadParameterManagementPanel(s);
+            }
+        }
+    }
 
-	
-	private boolean hasAdminRight;
-	private int schoolID;
-	TeacherStrategy delegate = new TeacherStrategy();
+    private boolean hasAdminRight;
+    private int schoolID;
+    TeacherStrategy delegate = new TeacherStrategy();
 
     @Override
-	public JPopupMenu nodeAction(CourseMap node) {
-			return delegate.nodeAction(node);
-		
-	}
+    public JPopupMenu nodeAction(CourseMap node) {
+        return delegate.nodeAction(node);
 
-	/* (non-Javadoc)
-	 * @see fi.dwo.client.gui.GuestMenuPanel#setEditing(boolean)
-	 */
+    }
+
+    /* (non-Javadoc)
+     * @see fi.dwo.client.gui.GuestMenuPanel#setEditing(boolean)
+     */
     @Override
-	public void setEditing(boolean b) {
-		boolean enabled = !b;
-		setEnabled(enabled);
-		for(int i= 0; i < getComponentCount(); i++) {
-			getComponent(i).setEnabled(enabled);
-		}
-		classPanel.setVisible(!b);
+    public void setEditing(boolean b) {
+        boolean enabled = !b;
+        setEnabled(enabled);
+        for (int i = 0; i < getComponentCount(); i++) {
+            getComponent(i).setEnabled(enabled);
+        }
+        classPanel.setVisible(!b);
 		//repaint();
-		
-	}
+
+    }
 
 }

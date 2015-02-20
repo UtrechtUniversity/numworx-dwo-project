@@ -1,6 +1,5 @@
  // Source file:
 // C:\\parameters\\fi\\dwo\\parameters\\gui\\SingleLevelTreeTabSheet.java
-
 package fi.dwo.dwojapplet.parameters.gui;
 
 import java.awt.Dimension;
@@ -21,18 +20,19 @@ import fi.dwo.dwojapplet.parameters.system.TextMapper;
 
 public class SingleLevelTreeTabSheet extends TreeTabSheet implements
         ItemLaunchdataIF, ActionListener {
-    
+
     private JButton addButton;
     private JButton deleteButton;
 
     private GridBagLayout gridbag;
     private Object key;
-    
+
     private TreeSheetCreator treeSheetCreator;
-    
+
     /**
      * @param treeSheetCreator
      * @param launchdata
+     * @param defaultValue
      */
     public SingleLevelTreeTabSheet(TreeSheetCreator treeSheetCreator, TreeParameter parameter,
             Hashtable defaultValue) {
@@ -40,13 +40,13 @@ public class SingleLevelTreeTabSheet extends TreeTabSheet implements
         this.treeSheetCreator = treeSheetCreator;
 
         /* The color is the other color than the parent */
-		if(parent.getColor() == SELECTED_COLOR_1) {
-			this.setBackground(SELECTED_COLOR_2);
-		} else {
-			this.setBackground(SELECTED_COLOR_1);
-		}
+        if (parent.getColor() == SELECTED_COLOR_1) {
+            this.setBackground(SELECTED_COLOR_2);
+        } else {
+            this.setBackground(SELECTED_COLOR_1);
+        }
 		//setBackground(ParametersTest.randomColor());
-		
+
         GridBagConstraints c = new GridBagConstraints();
         gridbag = new GridBagLayout();
         this.setLayout(gridbag);
@@ -54,7 +54,7 @@ public class SingleLevelTreeTabSheet extends TreeTabSheet implements
         c.insets = new Insets(2, 4, 20, 4);
         c.anchor = GridBagConstraints.NORTH;
         c.fill = GridBagConstraints.NONE;
-        
+
         String[] arguments = new String[1];
         arguments[0] = parameter.getItemLabel();
         String s = TextMapper.getText(TextMapper.BTN_TREE_ADD_ITEM);
@@ -68,7 +68,7 @@ public class SingleLevelTreeTabSheet extends TreeTabSheet implements
         this.add(addButton);
         gridbag.addLayoutComponent(addButton, c);
         addButton.setVisible(true);
-        
+
         s = TextMapper.getText(TextMapper.BTN_TREE_DELETE_ITEM);
 
         deleteButton = new JButton(MessageFormat.format(s, arguments));//, getColor());
@@ -90,17 +90,17 @@ public class SingleLevelTreeTabSheet extends TreeTabSheet implements
         this.add(p);
         p.setVisible(true);
         gridbag.addLayoutComponent(p, c);
-        
+
         c.insets = new Insets(COMPONENT_SPACING, 4, 0, 4);
-        
+
         ParameterComponentIF pc;
-        for(int i = 0; i < parameter.getSubParameters().length; i++) {
+        for (int i = 0; i < parameter.getSubParameters().length; i++) {
             pc = ParameterComponentCreator.createComponent(this, parameter.getSubParameters()[i], defaultValue);
             this.registerComponent(pc);
             gridbag.addLayoutComponent(pc.getComponent(), c);
             this.add(pc.getComponent());
             pc.getComponent().addComponentListener(this);
-            if(i == 0) {
+            if (i == 0) {
                 pc.getComponent().requestFocus();
             }
         }
@@ -113,7 +113,6 @@ public class SingleLevelTreeTabSheet extends TreeTabSheet implements
 //        c.insets = new Insets(0, 0, 0, 0);
 //        c.fill = GridBagConstraints.BOTH;
 //        gridbag.addLayoutComponent(p, c);
-
         this.setSize(gridbag.preferredLayoutSize(this));
         this.validate();
     }
@@ -123,14 +122,14 @@ public class SingleLevelTreeTabSheet extends TreeTabSheet implements
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == deleteButton) {
+        if (e.getSource() == deleteButton) {
             treeSheetCreator.removeTab(this);
-        } else if(e.getSource() == addButton) {
+        } else if (e.getSource() == addButton) {
             treeSheetCreator.addTab();
         }
-        
+
     }
-    
+
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.ParameterComponentIF#addParameters(java.util.Hashtable)
      */
@@ -139,19 +138,18 @@ public class SingleLevelTreeTabSheet extends TreeTabSheet implements
         // TODO Auto-generated method stub
         super.addParameters(parameters);
     }
-    
+
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.ParameterComponentIF#getSequenceString(fi.dwo.parameters.gui.ParameterComponentIF)
      */
     @Override
     public String getSequenceString(ParameterComponentIF component) {
-        if(parent != null) {
+        if (parent != null) {
             return parent.getSequenceString(this);
         } else {
             return super.getSequenceString(component);
         }
     }
-    
 
     /**
      * @return Object
@@ -181,15 +179,15 @@ public class SingleLevelTreeTabSheet extends TreeTabSheet implements
 
     @Override
     public Dimension getPreferredSize() {
-    	Dimension size = getLayout().preferredLayoutSize(this);
+        Dimension size = getLayout().preferredLayoutSize(this);
 //System.out.println("single tab sheet pref=" + size + "now = " + getSize());
-    	return size;
-    	
+        return size;
+
     }
-    
+
     @Override
-    public Dimension getMinimumSize() { 
-    	return getPreferredSize();
+    public Dimension getMinimumSize() {
+        return getPreferredSize();
     }
-    
+
 }

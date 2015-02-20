@@ -13,6 +13,7 @@ import javax.swing.JTextField;
 
 /**
  * TODO paste events.
+ *
  * @author M.J.B. Kupers
  * @deprecated gebruik JFormattedTextField
  */
@@ -56,8 +57,8 @@ public class IntegerTextField extends JTextField {
 
         // Digits, backspace, and delete are okay
         // Note that the minus sign is allowed, but not the decimal
-        if (Character.isDigit(c) || (c == '\b') || (c == '\u007f') || 
-            (c == '\u002d')) {
+        if (Character.isDigit(c) || (c == '\b') || (c == '\u007f')
+                || (c == '\u002d')) {
             super.processEvent(evt);
             return;
         }
@@ -97,7 +98,7 @@ public class IntegerTextField extends JTextField {
             return false;
         }
     }
-    
+
     public int getIntValue() {
         int value = -1;
 

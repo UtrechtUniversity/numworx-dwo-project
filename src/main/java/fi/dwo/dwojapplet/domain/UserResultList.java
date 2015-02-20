@@ -1,20 +1,21 @@
 // Source file:
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\domain\\UserResultList.java
-
 package fi.dwo.dwojapplet.domain;
 
 /**
  * This class represents a List of UserResults.
+ *
  * @author M.J.B. Kupers
- *  
+ *
  */
 public class UserResultList {
+
     private ResultsModuleIF resultsModule;
 
     private ResultScore resultScore[];
 
     /**
-     *  Creates a new UserResultLists.
+     * Creates a new UserResultLists.
      */
     public UserResultList() {
 
@@ -22,8 +23,9 @@ public class UserResultList {
 
     /**
      * Shows the result of the specified ResultScore.
+     *
      * @param rs The resultscore to show the result of.
-     *  
+     *
      */
     public void showResult(ResultScore rs) {
         if (resultsModule != null) {
@@ -34,6 +36,7 @@ public class UserResultList {
 
     /**
      * Returns all the ResultScores in this list.
+     *
      * @return All the ResultScores in this list.
      */
     public ResultScore[] getResultScore() {
@@ -42,6 +45,7 @@ public class UserResultList {
 
     /**
      * Sets the list of ResultScores.
+     *
      * @param resultScore The list to set.
      */
     public void setResultScore(ResultScore[] resultScore) {
@@ -50,6 +54,7 @@ public class UserResultList {
 
     /**
      * Returns the ResultsModule where the list is part of.
+     *
      * @return The ResultsModule where the list is part of.
      */
     public ResultsModuleIF getResultsModule() {
@@ -58,6 +63,7 @@ public class UserResultList {
 
     /**
      * Sets the ResultsModule where the list is part of.
+     *
      * @param resultsModule2 The ResultsModule to set.
      */
     public void setResultsModule(ResultsModuleIF resultsModule2) {

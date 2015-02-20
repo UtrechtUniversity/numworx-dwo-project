@@ -12,40 +12,42 @@ import fi.dwo.dwojapplet.gui.ExportImportDialog;
 
 public class ShareCourseAction extends GuiAction {
 
-	private CourseMap map;
-	
-	public ShareCourseAction(Component component) {
-		this(component, null);
-	}
-	public ShareCourseAction(Component component, CourseMap map)
-	{	
-		super(TextMapper.getText(TextMapper.GUIC_COURSE_SHARE));
-		this.map = map;
-		setEnabled(instance().getUser() instanceof Teacher);
-	}
+    private CourseMap map;
 
-        @Override
-	public void actionPerformed(ActionEvent ev) {
-		Component component;
-		Object o = ev.getSource();
-		if(o instanceof Component)
-			component = (Component)o;
-		else
-			component = DwoHelper.getApplet();
-		ExportImportDialog dialog;
-		try {
-			dialog = new ExportImportDialog(DwoHelper.getFrameForComponent(component), instance().getUser(), instance().getDWO().getDwoProfile());
-			dialog.setMap(map);
-			dialog.setVisible(true);
-			getCenter().updateMap(map);
-		} catch (PersistenceException e1) {
-			e1.printStackTrace();
-		}		
-		
-	}
-        @Override
-	public void setMap(CourseMap map) {
-		this.map = map;
-	}
+    public ShareCourseAction(Component component) {
+        this(component, null);
+    }
+
+    public ShareCourseAction(Component component, CourseMap map) {
+        super(TextMapper.getText(TextMapper.GUIC_COURSE_SHARE));
+        this.map = map;
+        setEnabled(instance().getUser() instanceof Teacher);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent ev) {
+        Component component;
+        Object o = ev.getSource();
+        if (o instanceof Component) {
+            component = (Component) o;
+        } else {
+            component = DwoHelper.getApplet();
+        }
+        ExportImportDialog dialog;
+        try {
+            dialog = new ExportImportDialog(DwoHelper.getFrameForComponent(component), instance().getUser(), instance().getDWO().getDwoProfile());
+            dialog.setMap(map);
+            dialog.setVisible(true);
+            getCenter().updateMap(map);
+        } catch (PersistenceException e1) {
+            e1.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void setMap(CourseMap map) {
+        this.map = map;
+    }
 
 }

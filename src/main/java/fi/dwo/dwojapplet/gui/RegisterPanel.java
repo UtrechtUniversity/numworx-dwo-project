@@ -1,6 +1,5 @@
 // Source file:
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\RegisterPanel.java
-
 package fi.dwo.dwojapplet.gui;
 
 import java.awt.Color;
@@ -28,11 +27,12 @@ import fi.dwo.dwojapplet.domain.Group;
 
 /**
  * This class is a panel where a user can register himself at the dwo.
- * 
+ *
  * @author M.J.B. Kupers
- *  
+ *
  */
 public class RegisterPanel extends ContentPanel implements ActionListener {
+
     private Group groupList[];
 
     private JTextField username;
@@ -60,13 +60,13 @@ public class RegisterPanel extends ContentPanel implements ActionListener {
     private JButton backButton;
 
     private JComboBox groupChoice;
-    
-    private JPanel dialog; 
+
+    private JPanel dialog;
 
     /**
      * Creates a new RegisterPanel. At the registerpanel, a user can register
      * himself.
-     * 
+     *
      * @param groups The possible groups wherefrom a user can be part of.
      */
     public RegisterPanel(Group[] groups) {
@@ -89,21 +89,26 @@ public class RegisterPanel extends ContentPanel implements ActionListener {
         /* Add FI logo */
         Image fiLogo;
         fiLogo = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.FI_LOGO_LOCATION);
-        if(fiLogo == null)
-        	fiLogo = DwoHelper.getResourceImage(GuiConstants.FI_LOGO_LOCATION);
-    
-    	ImagePanel ip = new ImagePanel(fiLogo);
-    	ip.setLocation(getSize().width / 2 - 130, 50);
-    	dialog.add(ip);
-    	if(GuiConstants.GUI_IMAGE_BG) dialog.remove(ip);
-    
+        if (fiLogo == null) {
+            fiLogo = DwoHelper.getResourceImage(GuiConstants.FI_LOGO_LOCATION);
+        }
+
+        ImagePanel ip = new ImagePanel(fiLogo);
+        ip.setLocation(getSize().width / 2 - 130, 50);
+        dialog.add(ip);
+        if (GuiConstants.GUI_IMAGE_BG) {
+            dialog.remove(ip);
+        }
+
         /* Register Label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_REGISTER));
         l.setFont(GuiConstants.HEADER_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setBounds(ip.getLocation().x + ip.getSize().width + 10, 70, fm.stringWidth(l.getText()), fm.getHeight());
         dialog.add(l);
-        if(GuiConstants.GUI_IMAGE_BG) dialog.remove(l);
+        if (GuiConstants.GUI_IMAGE_BG) {
+            dialog.remove(l);
+        }
 
         /* Add Register-panel */
         p = new JPanel(null);
@@ -215,41 +220,41 @@ public class RegisterPanel extends ContentPanel implements ActionListener {
 
         /* Middlename label */
         String middleNameLabel = TextMapper.getText(TextMapper.GUIR_MIDDLENAME);
-		l = new JLabel(middleNameLabel + ":");
+        l = new JLabel(middleNameLabel + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
         l.setLocation(10, 55);
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
         p.add(l);
-        
+
         /* Middlename field */
         middlename = new JTextField();
         middlename.setBounds(160, 53, 120, 20);
         p.add(middlename);
 // if no middlename, skip it.        
-        boolean visible = middleNameLabel.length()>0;
+        boolean visible = middleNameLabel.length() > 0;
         l.setVisible(visible);
         middlename.setVisible(visible);
-        int v = visible?0:25;
-        
+        int v = visible ? 0 : 25;
+
         /* Lastname label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_LASTNAME) + ":");
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
-        l.setLocation(10, 80-v);
+        l.setLocation(10, 80 - v);
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
         p.add(l);
 
         /* Lastname field */
         lastname = new JTextField();
-        lastname.setBounds(160, 78-v, 120, 20);
+        lastname.setBounds(160, 78 - v, 120, 20);
         p.add(lastname);
 
         /* Lastname mandatory label */
         l = createMandatoryLabel();
-        l.setLocation(285, 78-v);
+        l.setLocation(285, 78 - v);
         p.add(l);
 
         /* Email label */
@@ -257,18 +262,18 @@ public class RegisterPanel extends ContentPanel implements ActionListener {
         l.setForeground(Color.black);
         l.setFont(GuiConstants.NORMAL_TEXT);
         fm = l.getFontMetrics(l.getFont());
-        l.setLocation(10, 105-v);
+        l.setLocation(10, 105 - v);
         l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
         p.add(l);
 
         /* Email field */
         email = new JTextField();
-        email.setBounds(160, 103-v, 120, 20);
+        email.setBounds(160, 103 - v, 120, 20);
         p.add(email);
 
         /* Email mandatory label */
         l = createMandatoryLabel();
-        l.setLocation(285, 103-v);
+        l.setLocation(285, 103 - v);
         p.add(l);
 
         /* Add School-panel */
@@ -364,12 +369,12 @@ public class RegisterPanel extends ContentPanel implements ActionListener {
 
         registerButton.setLocation((p.getSize().width / 2)
                 - ((registerButton.getSize().width
-                        + resetButton.getSize().width + 5) / 2), 5);
+                + resetButton.getSize().width + 5) / 2), 5);
         p.add(registerButton);
 
         resetButton.setLocation((p.getSize().width / 2)
                 - ((registerButton.getSize().width
-                        + resetButton.getSize().width + 5) / 2)
+                + resetButton.getSize().width + 5) / 2)
                 + registerButton.getSize().width + 5, 5);
         p.add(resetButton);
 
@@ -385,24 +390,23 @@ public class RegisterPanel extends ContentPanel implements ActionListener {
         backButton.addActionListener(this);
 
         groupChoice.addItemListener(new GroupItemListener(schoolpassword));
-        
-        
-		addComponentListener(new ComponentAdapter(){
-                        @Override
-			public void componentResized(ComponentEvent e) {
-				super.componentResized(e);
-				int width = getWidth();
-	// move dialogbox  horizontal
-				dialog.setLocation(width / 2 - dialog.getWidth() / 2, dialog.getY());
-			}
-		}); 
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                super.componentResized(e);
+                int width = getWidth();
+                // move dialogbox  horizontal
+                dialog.setLocation(width / 2 - dialog.getWidth() / 2, dialog.getY());
+            }
+        });
 
     }
 
     /**
      * Creates a new label with a asterisk. It can be used to indicate that a
      * field is mandatory.
-     * 
+     *
      * @return A label with the caption of a asterisk.
      */
     private JLabel createMandatoryLabel() {
@@ -413,22 +417,23 @@ public class RegisterPanel extends ContentPanel implements ActionListener {
         mandatoryLabel.setSize(fm.stringWidth(mandatoryLabel.getText()) + 5, fm.getHeight());
         return mandatoryLabel;
     }
-    
+
     @Override
     public void paintComponent(Graphics g) {
 //    	if(GuiConstants.GUI_IMAGE_BG) {
 //	       	Point p = DwoHelper.getComponentLocation(this);
 //	       	g.drawImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_WELCOME),0,0,null);
 //    	}       
- 
-    	super.paintComponent(g);
+
+        super.paintComponent(g);
     }
 
     /**
      * Invoked when an action occurs.
-     * 
+     *
      * @param e The ActionEvent.
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     * @see
+     * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -440,8 +445,8 @@ public class RegisterPanel extends ContentPanel implements ActionListener {
                     JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                Group g = null; 
-                if(groupChoice.getSelectedIndex() > 0) {
+                Group g = null;
+                if (groupChoice.getSelectedIndex() > 0) {
                     g = groupList[groupChoice.getSelectedIndex() - 1];
                 }
                 try {

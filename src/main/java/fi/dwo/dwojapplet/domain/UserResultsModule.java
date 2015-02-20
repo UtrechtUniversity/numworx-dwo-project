@@ -16,34 +16,32 @@ import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.dwojapplet.persistence.UserResultListMapper;
 
 /**
- * Een ResultsModuleIF geschikt gemaakt voor één enkele student.
- * TODO een common AbstractResultsModule base class samen met
- * ResultsModule
+ * Een ResultsModuleIF geschikt gemaakt voor één enkele student. TODO een common
+ * AbstractResultsModule base class samen met ResultsModule
+ *
  * @author Wim
  * @see ResultsModule
  *
  */
 public class UserResultsModule implements Comparator, ResultsModuleIF {
-	private Course[] courses;
-	private User user;
-	private DWO dwo;
-	private LessonGroup currentlyZoomedLesson;
-	private UserGroup currentlyZoomedUser;
-	private UserGroup currentlyOrderedUser;
-	private Object currentlyOrderedLesson;
-	private int orderedLessonIndex;
-	private Vector userResultList = new Vector();
-	private int orderedWay;
 
-	
-	public UserResultsModule(Course course, User user, DWO dwo)
-	{
-		this( new Course[] { course} , user, dwo);
-		currentlyZoomedLesson = course;
-	}
-	
-	public UserResultsModule(Course[] courses, User user, DWO dwo)
-	{
+    private Course[] courses;
+    private User user;
+    private DWO dwo;
+    private LessonGroup currentlyZoomedLesson;
+    private UserGroup currentlyZoomedUser;
+    private UserGroup currentlyOrderedUser;
+    private Object currentlyOrderedLesson;
+    private int orderedLessonIndex;
+    private Vector userResultList = new Vector();
+    private int orderedWay;
+
+    public UserResultsModule(Course course, User user, DWO dwo) {
+        this(new Course[]{course}, user, dwo);
+        currentlyZoomedLesson = course;
+    }
+
+    public UserResultsModule(Course[] courses, User user, DWO dwo) {
         this.courses = courses;
         this.user = user;
         this.dwo = dwo;
@@ -53,10 +51,10 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
         currentlyOrderedUser = user;
         currentlyOrderedLesson = null;
         orderedLessonIndex = -1;
-	}
-	
-        @Override
-	public int compare(Object o1, Object o2) {
+    }
+
+    @Override
+    public int compare(Object o1, Object o2) {
         UserResultList url1 = (UserResultList) o1;
         UserResultList url2 = (UserResultList) o2;
 
@@ -85,78 +83,81 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
 
         }
         return 0;
-	}
+    }
 
-	private int compareFloats(float f1, float f2) {
-        if (f1 < f2)
+    private int compareFloats(float f1, float f2) {
+        if (f1 < f2) {
             return -1; // Neither val is NaN, thisVal is smaller
-        if (f1 > f2)
+        }
+        if (f1 > f2) {
             return 1; // Neither val is NaN, thisVal is larger
+        }
         return 0;
-	}
+    }
 
-        @Override
-	public Course[] getAllCourses() {
+    @Override
+    public Course[] getAllCourses() {
         return dwo.getCourses();
-	}
+    }
 
-        @Override
-	public Vector getResults() {
-		if (currentlyZoomedLesson != null)
-		try {
-			userResultList = PersistenceFacade.instance().getUserResults((Course) currentlyZoomedLesson, user);
-		} catch (PersistenceException e) {
-			JOptionPane.showMessageDialog(dwo, e.getMessage());
-		} else {
+    @Override
+    public Vector getResults() {
+        if (currentlyZoomedLesson != null) {
+            try {
+                userResultList = PersistenceFacade.instance().getUserResults((Course) currentlyZoomedLesson, user);
+            } catch (PersistenceException e) {
+                JOptionPane.showMessageDialog(dwo, e.getMessage());
+            }
+        } else {
             try {
                 userResultList = PersistenceFacade.instance().getUserResults(courses, user);
             } catch (PersistenceException e) {
-            	JOptionPane.showMessageDialog(dwo, e.getMessage());
+                JOptionPane.showMessageDialog(dwo, e.getMessage());
             }
-		}
-		return userResultList;
-	}
+        }
+        return userResultList;
+    }
 
-        @Override
-	public Course[] getSelectedCourse() {
+    @Override
+    public Course[] getSelectedCourse() {
         return courses;
-	}
+    }
 
-        @Override
-	public LessonGroup getZoomedLessonGroup() {
+    @Override
+    public LessonGroup getZoomedLessonGroup() {
         return currentlyZoomedLesson;
-	}
+    }
 
-        @Override
-	public UserGroup getZoomedUserGroup() {
+    @Override
+    public UserGroup getZoomedUserGroup() {
         return currentlyZoomedUser;
-	}
+    }
 
-        @Override
-	public Vector orderBy(UserGroup ug, int orderWay) {
+    @Override
+    public Vector orderBy(UserGroup ug, int orderWay) {
         orderedLessonIndex = -1;
         orderedWay = orderWay;
         currentlyOrderedLesson = null;
         currentlyOrderedUser = ug;
         Collections.sort(userResultList, this);
         return userResultList;
-	}
+    }
 
-        @Override
-	public Vector orderBy(LessonGroup lg, int orderWay) {
+    @Override
+    public Vector orderBy(LessonGroup lg, int orderWay) {
         orderedLessonIndex = -1;
         orderedWay = orderWay;
         currentlyOrderedLesson = lg;
         currentlyOrderedUser = null;
         Collections.sort(userResultList, this);
         return userResultList;
-	}
+    }
 
-        @Override
-	public void reset() {
+    @Override
+    public void reset() {
         MapperIF m = MapperCreator.instance(UserResultList.class);
-        
-        if(m instanceof UserResultListMapper) {
+
+        if (m instanceof UserResultListMapper) {
             ((UserResultListMapper) m).setResultsModule(this);
         }
 
@@ -165,15 +166,15 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
         currentlyOrderedUser = null;
         currentlyOrderedLesson = null;
         orderedLessonIndex = -1;
-	}
+    }
 
-        @Override
-	public void selectCourses(Course[] courses) {
+    @Override
+    public void selectCourses(Course[] courses) {
         this.courses = courses;
-	}
+    }
 
-        @Override
-	public Vector selectCourses(Course[] courses, boolean getResults) {
+    @Override
+    public Vector selectCourses(Course[] courses, boolean getResults) {
         this.courses = courses;
         if (getResults) {
             if (currentlyZoomedLesson == null) {
@@ -184,61 +185,62 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
         } else {
             return new Vector();
         }
-	}
+    }
 
-        @Override
-	public void showResult(ResultScore rs) {
-		LessonGroup lg = rs.getLessonGroup();
-		if (lg instanceof Sco ) {
-			Sco sco = (Sco) lg;
+    @Override
+    public void showResult(ResultScore rs) {
+        LessonGroup lg = rs.getLessonGroup();
+        if (lg instanceof Sco) {
+            Sco sco = (Sco) lg;
             GuiCreator.instance().setWait();
             final Sco s = sco;
-            
-            Thread thread = new Thread() {	
+
+            Thread thread = new Thread() {
                 @Override
-                public void run() {	
+                public void run() {
                     CenterSubPanel csp = GuiCreator.instance().getScoPanel(s);
-                    if(csp != null) {
-                    	s.setLessonMode(Sco.REVIEW);
+                    if (csp != null) {
+                        s.setLessonMode(Sco.REVIEW);
                         GuiCreator.instance().getMainPanel().getCenter().loadTotal(csp);
                     }
                     GuiCreator.instance().setReady();
-				}
-			};
+                }
+            };
             thread.start();/**/
-		}
-  	}
 
-        @Override
-	public Vector zoomIn(UserGroup ug) {
+        }
+    }
+
+    @Override
+    public Vector zoomIn(UserGroup ug) {
         orderedLessonIndex = -1;
         currentlyZoomedUser = ug;
         currentlyOrderedUser = null;
         return getResults();
-	}
+    }
 
-        @Override
-	public Vector zoomIn(LessonGroup lg) {
+    @Override
+    public Vector zoomIn(LessonGroup lg) {
         orderedLessonIndex = -1;
         currentlyZoomedLesson = lg;
         currentlyOrderedLesson = null;
         return getResults();
-	}
+    }
 
-        @Override
-	public Vector zoomOut(UserGroup ug) {
+    @Override
+    public Vector zoomOut(UserGroup ug) {
         orderedLessonIndex = -1;
         currentlyZoomedUser = null;
         currentlyOrderedUser = null;
         return getResults();
-	}
+    }
 
-        @Override
-	public Vector zoomOut(LessonGroup lg) {
+    @Override
+    public Vector zoomOut(LessonGroup lg) {
         orderedLessonIndex = -1;
         currentlyZoomedLesson = null;
         currentlyOrderedLesson = null;
         return getResults();
-	}
+    }
 
 }

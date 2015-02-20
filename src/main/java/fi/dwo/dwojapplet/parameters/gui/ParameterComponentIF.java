@@ -1,5 +1,4 @@
 // Source file: C:\\fi\\dwo\\parameters\\gui\\ParameterComponentIF.java
-
 package fi.dwo.dwojapplet.parameters.gui;
 
 import java.awt.Color;
@@ -18,13 +17,13 @@ public interface ParameterComponentIF {
      * @roseuid 42567A2A0399
      */
     public Color getColor();
-    
+
     public void setColor(Color c);
 
     /**
      * Adds this parameter (and possible subparameters) to the hashtable
-     * 
-     * 
+     *
+     *
      * @param parameters
      * @roseuid 42567A2A03A9
      */
@@ -57,8 +56,9 @@ public interface ParameterComponentIF {
     /**
      * For nested items. They can ask to the parent a string representing the
      * current sequence.
-     * 
-     * 
+     *
+     *
+     * @param component
      * @return java.lang.String
      * @roseuid 42567A5600EA
      */
@@ -67,8 +67,8 @@ public interface ParameterComponentIF {
     /**
      * Register a component to the parent. At the end, the parent can ask to all
      * the registerd component for the parameters
-     * 
-     * 
+     *
+     *
      * @param component
      * @roseuid 42567A5600FA
      */
@@ -78,6 +78,6 @@ public interface ParameterComponentIF {
      * @roseuid 425D00FF00BB
      */
     public void reset();
-    
+
     public void setSequenceLabel(int nr);
 }

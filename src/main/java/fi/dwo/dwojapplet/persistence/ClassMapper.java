@@ -1,6 +1,5 @@
 // Source file:
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\ClassMapper.java
-
 package fi.dwo.dwojapplet.persistence;
 
 import java.io.IOException;
@@ -14,6 +13,7 @@ import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Teacher;
 
 public class ClassMapper extends XmlRpcMapper {
+
     private static final String TABLENAME = "tblClass";
 
     private static final String IDCOL = "classID";
@@ -21,7 +21,7 @@ public class ClassMapper extends XmlRpcMapper {
     private static final String ORDERCOL = "class";
 
     /**
-
+     *
      */
     public ClassMapper() {
 
@@ -30,7 +30,8 @@ public class ClassMapper extends XmlRpcMapper {
     /**
      * @param oid
      * @param obj
-
+     * @throws org.apache.xmlrpc.applet.XmlRpcException
+     *
      */
     @Override
     public void put(int oid, Object obj) throws IOException, SQLException,
@@ -42,24 +43,24 @@ public class ClassMapper extends XmlRpcMapper {
     /**
      * @param data
      * @return Object
-
+     *
      */
     @Override
     public Object getObjectFromReturn(Hashtable data) {
         SchoolClass c = null;
         if (data == null || data.get("classID") == null) { //We don't know enough to make a
-                                           // classobject
+            // classobject
             return null;
         } else if (data.get("classID") instanceof String) { //If it is a string, it was null
             return null;
         } else if (objects.containsKey(data.get("classID"))) { // Did we know
-                                                               // the class?
+            // the class?
             c = (SchoolClass) objects.get(data.get("classID"));
         } else {
             c = new SchoolClass();
         }
         c = (SchoolClass) update(c, data);
-        if(!objects.containsKey(new Integer(c.getID()))) {
+        if (!objects.containsKey(new Integer(c.getID()))) {
             objects.put(new Integer(c.getID()), c);
         }
         return c;
@@ -67,21 +68,24 @@ public class ClassMapper extends XmlRpcMapper {
 
     /**
      * Returns all the SchoolClasses whith the object as restriction.
-     * @param obj The object who specifies the restriction. possible objects are:
+     *
+     * @param obj The object who specifies the restriction. possible objects
+     * are:
      * <ul>
      * <li><code>Teacher</code>: The classes of the teacher are returned;
      * <li><code>School</code>: The classes of the school are returned;
      * </ul>
-     * @return The SchoolClasses who satisfy to the restriction. 
+     * @return The SchoolClasses who satisfy to the restriction.
+     * @throws org.apache.xmlrpc.applet.XmlRpcException
      */
     @Override
     public Object[] get(Object obj) throws IOException, SQLException,
             XmlRpcException {
         Hashtable ht = new Hashtable();
-        if(obj instanceof Teacher) {
+        if (obj instanceof Teacher) {
             Teacher t = (Teacher) obj;
             ht.put("userID", new Integer(t.getID()));
-        } else if(obj instanceof School) {
+        } else if (obj instanceof School) {
             School s = (School) obj;
             ht.put("schoolID", new Integer(s.getSchoolID()));
         }

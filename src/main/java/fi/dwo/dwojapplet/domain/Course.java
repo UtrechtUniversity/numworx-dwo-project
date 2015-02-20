@@ -149,6 +149,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
      * Sets the current sco of the course.
      *
      * @param currentSco The currentSco to set.
+     * @return 
      */
     public Sco getCurrentSco() {
         return currentSco;

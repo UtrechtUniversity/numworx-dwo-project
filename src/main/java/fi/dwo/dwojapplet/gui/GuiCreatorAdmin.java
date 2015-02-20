@@ -29,9 +29,11 @@ import fi.dwo.dwojapplet.gui.action.ScoParameterAction;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
 /**
- * This class implements Admin-specific methods of the GuiCreator.
- * These methods are implemented in this specific subclass because of imports.<br>
- * Now, a normal user must not import the admin-specific classes and must not load them.
+ * This class implements Admin-specific methods of the GuiCreator. These methods
+ * are implemented in this specific subclass because of imports.<br>
+ * Now, a normal user must not import the admin-specific classes and must not
+ * load them.
+ *
  * @author M.J.B. Kupers
  *
  */
@@ -52,7 +54,7 @@ public class GuiCreatorAdmin extends GuiCreator {
      * Otherwise, a normal MenuPanel is returned. <BR>
      * <BR>
      * The menupanel shows all the menu-options for the type of user.
-     * 
+     *
      * @return The MenuPanel with all the menu-options for the type user.
      */
     @Override
@@ -61,19 +63,18 @@ public class GuiCreatorAdmin extends GuiCreator {
 
         if (u instanceof Admin) {
             return new AdminMenuPanel();
-        } 
-        else {
+        } else {
             return super.getMenuPanel();
         }
     }
-    
+
     /**
      * Returns a panel for changing the profile of the user. If the user is a
      * teacher, it returns a TeacherProfilePanel. Otherwise, it returns a
      * ProfilePanel for the user.
-     * 
+     *
      * @return fi.dwo.client.gui.CenterSubPanel
-     *  
+     *
      */
     @Override
     public CenterSubPanel getProfilePanel() {
@@ -83,13 +84,13 @@ public class GuiCreatorAdmin extends GuiCreator {
         dwo.setReady();
         return csb;
     }
-    
+
     /**
      * Returns a panel representing the specified SchoolClass.
-     * 
+     *
      * @param c The SchoolClass of the panel to return.
      * @return A panel representing the specified SchoolClass.
-     *  
+     *
      */
     public CenterSubPanel getSchoolUsersPanel(SchoolClass c) {
         return null; //new ClassUsersPanel(c);
@@ -97,22 +98,22 @@ public class GuiCreatorAdmin extends GuiCreator {
 
     /**
      * Returns a panel for managing schoolclasses.
-     * 
+     *
      * @return A panel for managing schoolclasses.
-     *  
+     *
      */
     @Override
     public CenterSubPanel getSchoolPanel() {
         return new SchoolPanel();
     }
-    
+
     /**
      * @return fi.dwo.client.gui.CenterSubPanel
      */
     @Override
     public CenterSubPanel getCourseManagementPanel() {
         Course[] editableCourses = dwo.getEditableCourses();
-        if(editableCourses != null) {
+        if (editableCourses != null) {
             return new CourseManagementPanel(editableCourses, ModuleTreePanel.STANDAARD_DWO_MODULES);
         } else {
             return null;
@@ -140,10 +141,10 @@ public class GuiCreatorAdmin extends GuiCreator {
     }
 
     @Override
-    public void updateLogo(Course c) { 
-		if( dwo.updateLogo(c) )
+    public void updateLogo(Course c) {
+        if (dwo.updateLogo(c))
 			;
-	}
+    }
 
     /**
      * @param course
@@ -183,7 +184,6 @@ public class GuiCreatorAdmin extends GuiCreator {
 
     /**
      * @param sco
-     * @return fi.dwo.client.gui.CenterSubPanel
      */
     @Override
     public void loadParameterManagementPanel(Sco sco) {
@@ -197,7 +197,7 @@ public class GuiCreatorAdmin extends GuiCreator {
     public AppletConfig[] getAppletConfig() {
         return dwo.getAppletConfig();
     }
-    
+
     /**
      * @return fi.dwo.client.domain.AppletConfig[]
      */
@@ -228,6 +228,7 @@ public class GuiCreatorAdmin extends GuiCreator {
      * @param appletID
      * @param name
      * @param description
+     * @param showScore
      * @return fi.dwo.client.domain.Sco
      */
     @Override
@@ -235,87 +236,87 @@ public class GuiCreatorAdmin extends GuiCreator {
         return dwo.addSco(course, appletConfig, name, description, showScore);
     }
 
-	/* (non-Javadoc)
-	 * @see fi.dwo.client.gui.GuiCreator#deleteSchool(fi.dwo.client.domain.School)
-	 */
+    /* (non-Javadoc)
+     * @see fi.dwo.client.gui.GuiCreator#deleteSchool(fi.dwo.client.domain.School)
+     */
     @Override
-	public boolean deleteSchool(School sc) {
-		return dwo.deleteSchool(sc);
-	}
-    
-    /**
-	 * Verwissel de sequencenrs van twee Sco's.
-	 * De Sco's moeten tot dezelfe Course behoren.
-	 * @param sco1 Sco
-	 * @param sco2 Sco
-	 * @return boolean: succes of gefaald
-	 */
-    @Override
-	public boolean swapSco(Sco sco1, Sco sco2) {
-		return dwo.swapSco(sco1, sco2);
-	}
-
-    @Override
-	public JComponent getButtonBox(CourseChoicePanel courseChoisePanel) {
-		Object userObject = courseChoisePanel.getUserObject();
-		if(userObject == ModuleTreePanel.ALLE_MODULES)
-			return null;
-		return fx(new JButton(new CourseManagementAction(courseChoisePanel)));
-	}
-
-    @Override
-	public JComponent fx(JComponent b) { 
-		if(!CenterPanel.isIconizer() )
-			return null;
-		Box box = Box.createVerticalBox();
-		box.add(Box.createGlue());
-		box.add(b);
-		box.setBorder(BorderFactory.createEmptyBorder(0, 0, 3, 0)); // Meten!
-		return box;
-	}
-
-    @Override
-	public JComponent getButtonBox(CoursePanel coursePanel) {
-		return fx(new JButton(new ScoManagementAction(coursePanel)));
-	}
-	
-    @Override
-	public JComponent getButtonBox(ScoPanel scoPanel) {
-		if(scoPanel.getSco().getLessonMode() == Sco.BROWSE)
-		{
-			Box box = Box.createHorizontalBox();
-			JLabel lab = new JLabel("PREVIEW");
-			lab.setVerticalAlignment(JLabel.BOTTOM);
-			lab.setForeground(Color.red);
-			lab.setFont(new Font("SansSerif", Font.BOLD, 20));
-			box.add(lab);
-			box.add(Box.createHorizontalStrut(10));
-			box.add(new JButton(new PreviewAction(scoPanel)));
-			return fx(box);
-		}
-		return fx(new JButton(new ScoParameterAction(scoPanel)));
-	}
-
-	/* (non-Javadoc)
-	 * @see fi.dwo.client.gui.GuiCreator#unsafeSaveSco(fi.dwo.client.domain.Sco)
-	 */
-    @Override
-	public void unsafeSaveSco(Sco sco) {
-		try {
-			PersistenceFacade.instance().unsafeSaveSco(sco);
-		} catch (ScoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-    @Override
-    public CenterSubPanel getCourseManagementPanel(CourseMap map)
-    {
-    	CourseManagementPanel panel = new CourseManagementPanel(map.getChildren(), map);
-    	panel.setMap(map);
-		return panel;
+    public boolean deleteSchool(School sc) {
+        return dwo.deleteSchool(sc);
     }
 
-	
+    /**
+     * Verwissel de sequencenrs van twee Sco's. De Sco's moeten tot dezelfe
+     * Course behoren.
+     *
+     * @param sco1 Sco
+     * @param sco2 Sco
+     * @return boolean: succes of gefaald
+     */
+    @Override
+    public boolean swapSco(Sco sco1, Sco sco2) {
+        return dwo.swapSco(sco1, sco2);
+    }
+
+    @Override
+    public JComponent getButtonBox(CourseChoicePanel courseChoisePanel) {
+        Object userObject = courseChoisePanel.getUserObject();
+        if (userObject == ModuleTreePanel.ALLE_MODULES) {
+            return null;
+        }
+        return fx(new JButton(new CourseManagementAction(courseChoisePanel)));
+    }
+
+    @Override
+    public JComponent fx(JComponent b) {
+        if (!CenterPanel.isIconizer()) {
+            return null;
+        }
+        Box box = Box.createVerticalBox();
+        box.add(Box.createGlue());
+        box.add(b);
+        box.setBorder(BorderFactory.createEmptyBorder(0, 0, 3, 0)); // Meten!
+        return box;
+    }
+
+    @Override
+    public JComponent getButtonBox(CoursePanel coursePanel) {
+        return fx(new JButton(new ScoManagementAction(coursePanel)));
+    }
+
+    @Override
+    public JComponent getButtonBox(ScoPanel scoPanel) {
+        if (scoPanel.getSco().getLessonMode() == Sco.BROWSE) {
+            Box box = Box.createHorizontalBox();
+            JLabel lab = new JLabel("PREVIEW");
+            lab.setVerticalAlignment(JLabel.BOTTOM);
+            lab.setForeground(Color.red);
+            lab.setFont(new Font("SansSerif", Font.BOLD, 20));
+            box.add(lab);
+            box.add(Box.createHorizontalStrut(10));
+            box.add(new JButton(new PreviewAction(scoPanel)));
+            return fx(box);
+        }
+        return fx(new JButton(new ScoParameterAction(scoPanel)));
+    }
+
+    /* (non-Javadoc)
+     * @see fi.dwo.client.gui.GuiCreator#unsafeSaveSco(fi.dwo.client.domain.Sco)
+     */
+    @Override
+    public void unsafeSaveSco(Sco sco) {
+        try {
+            PersistenceFacade.instance().unsafeSaveSco(sco);
+        } catch (ScoException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public CenterSubPanel getCourseManagementPanel(CourseMap map) {
+        CourseManagementPanel panel = new CourseManagementPanel(map.getChildren(), map);
+        panel.setMap(map);
+        return panel;
+    }
+
 }

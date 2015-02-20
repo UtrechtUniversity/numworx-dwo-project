@@ -7,11 +7,11 @@ import fi.dwo.dwojapplet.gui.SelectStrategy;
 
 public class NullStrategy implements SelectStrategy {
 
-	public void nodeSelected(CourseMap node) {
-	}
+    public void nodeSelected(CourseMap node) {
+    }
 
-	public JPopupMenu nodeAction(CourseMap node) {
-		return null;
-	}
-	
+    public JPopupMenu nodeAction(CourseMap node) {
+        return null;
+    }
+
 }

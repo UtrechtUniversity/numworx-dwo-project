@@ -8,26 +8,26 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 
 public class LogoutURLAction extends LogoutAction {
 
-	/**
-	 * @param url
-	 */
-	public LogoutURLAction(String url) {
-		super();
-		this.url = url;
-	}
+    /**
+     * @param url
+     */
+    public LogoutURLAction(String url) {
+        super();
+        this.url = url;
+    }
 
-	String url;
-		
-        @Override
-	public void actionPerformed(ActionEvent arg0) {
-		super.actionPerformed(arg0);
-		URL u = DwoHelper.getApplet().getDocumentBase();
-		try {
-			u = new URL(u, url);
-		} catch (MalformedURLException e) {
-		}
-		DwoHelper.getApplet().getAppletContext().showDocument(u);
-		
-	}
+    String url;
+
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+        super.actionPerformed(arg0);
+        URL u = DwoHelper.getApplet().getDocumentBase();
+        try {
+            u = new URL(u, url);
+        } catch (MalformedURLException e) {
+        }
+        DwoHelper.getApplet().getAppletContext().showDocument(u);
+
+    }
 
 }

@@ -1,5 +1,4 @@
 // Source file: C:\\fi\\dwo\\parameters\\gui\\HelpDialog.java
-
 package fi.dwo.dwojapplet.parameters.gui;
 
 import java.awt.BorderLayout;
@@ -26,14 +25,16 @@ import fi.dwo.dwojapplet.parameters.system.TextMapper;
 public class HelpDialog extends JDialog implements ActionListener {
 
     private JButton closeButton;
+
     /**
+     * @param text
      * @roseuid 425E240D0242
      */
     public HelpDialog(Component owner, String title, boolean modal,
             String text) {
         super(DwoHelper.getFrameForComponent(owner), title, modal);
         Container contentPane = getContentPane();
-        contentPane.setLayout(new BorderLayout(5,5));
+        contentPane.setLayout(new BorderLayout(5, 5));
         contentPane.setBackground(GuiConstants.MAIN_BACKGROUND);
         JTextArea wl = new JTextArea(text);
         wl.setOpaque(false);
@@ -46,10 +47,10 @@ public class HelpDialog extends JDialog implements ActionListener {
         Insets insets = this.getInsets();
         wl.setLocation(insets.left + 10, insets.top + 30);
         wl.setVisible(false);
-        
+
         contentPane.add(wl, BorderLayout.CENTER);
         wl.setVisible(true);
-        
+
         closeButton = new JButton(TextMapper.getText(TextMapper.BTN_CLOSE));
 
         FontMetrics fm = closeButton.getFontMetrics(closeButton.getFont());
@@ -81,11 +82,11 @@ public class HelpDialog extends JDialog implements ActionListener {
                 : Toolkit.getDefaultToolkit().getScreenSize();
         Dimension mySize = getSize();
         x = p.x + (parentSize.width - mySize.width) / 2;
-        if(x < 10) {
+        if (x < 10) {
             x = 10;
         }
         y = p.y + (parentSize.height - mySize.height) / 2;
-        if( y < 10) {
+        if (y < 10) {
             y = 10;
         }
 
@@ -95,6 +96,7 @@ public class HelpDialog extends JDialog implements ActionListener {
 
     /**
      * @param parameter
+     * @param text
      * @roseuid 425D04D40290
      */
     public static void showHelpDialog(Component parent, String text) {
@@ -108,7 +110,7 @@ public class HelpDialog extends JDialog implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == closeButton) {
+        if (e.getSource() == closeButton) {
             this.hide();
         }
     }

@@ -8,6 +8,7 @@ import fi.dwo.dwojapplet.domain.SchoolClass;
 
 /**
  * A Linked Label that represents a SchoolClass.
+ *
  * @author M.J.B. Kupers
  *
  */
@@ -17,7 +18,7 @@ public class ClassLinkedLabel extends LinkedLabel {
 
     /**
      * Creates a new Linked Label with the specified SchoolClass.
-     * 
+     *
      * @param c The SchoolClass of the label.
      */
     public ClassLinkedLabel(SchoolClass c) {
@@ -27,7 +28,7 @@ public class ClassLinkedLabel extends LinkedLabel {
 
     /**
      * Returns the SchoolClass of the Label.
-     * 
+     *
      * @return The SchoolClass of the Label.
      */
     public SchoolClass getSchoolClass() {
@@ -36,7 +37,7 @@ public class ClassLinkedLabel extends LinkedLabel {
 
     /**
      * Sets the SchoolClass of the label.
-     * 
+     *
      * @param schoolClass The schoolClass to set.
      */
     public void setSchoolClass(SchoolClass schoolClass) {

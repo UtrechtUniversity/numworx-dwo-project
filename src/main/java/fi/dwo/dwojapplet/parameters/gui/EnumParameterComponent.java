@@ -1,6 +1,5 @@
 package fi.dwo.dwojapplet.parameters.gui;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.util.Hashtable;
 
@@ -11,21 +10,20 @@ import fi.beans.scorm.ScormEnum;
 
 public class EnumParameterComponent extends ParameterComponent implements ParameterComponentIF {
 
-	private JComboBox comboBox;
-	
-	
-	public EnumParameterComponent(ParameterComponentIF parent,
-			Parameter parameter, Hashtable defaultValue, boolean isSub) {
-		super(parent, parameter, defaultValue, isSub);
-		ScormEnum e;
-		e = (ScormEnum) parameter.getType();		
-		comboBox = new JComboBox(e.getItems());
+    private JComboBox comboBox;
 
-		if(defaultValue.containsKey(parameter.getName())) {
+    public EnumParameterComponent(ParameterComponentIF parent,
+            Parameter parameter, Hashtable defaultValue, boolean isSub) {
+        super(parent, parameter, defaultValue, isSub);
+        ScormEnum e;
+        e = (ScormEnum) parameter.getType();
+        comboBox = new JComboBox(e.getItems());
+
+        if (defaultValue.containsKey(parameter.getName())) {
             comboBox.setSelectedItem(defaultValue.get(parameter.getName()));
         }
         int size = parameter.getType().getSize();
-        if(size <= 0) {
+        if (size <= 0) {
             //size = 20;
             size = 30;
         }
@@ -37,17 +35,17 @@ public class EnumParameterComponent extends ParameterComponent implements Parame
         comboBox.setVisible(true);
         Component last = generatePostItems(comboBox);
         this.setSize(last.getLocation().x + last.getSize().width + 5, 23);
-	}
+    }
 
-        @Override
-	public void addParameters(Hashtable parameters) {
+    @Override
+    public void addParameters(Hashtable parameters) {
         String value = comboBox.getSelectedItem().toString();
         addParameter(parameters, value);
-	}
+    }
 
-        @Override
-	public void reset() {
-        if(defaultValue.containsKey(parameter.getName())) {
+    @Override
+    public void reset() {
+        if (defaultValue.containsKey(parameter.getName())) {
             comboBox.setSelectedItem(defaultValue.get(parameter.getName()));
         } else {
             comboBox.setSelectedIndex(0);

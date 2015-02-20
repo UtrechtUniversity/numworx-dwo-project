@@ -1,5 +1,4 @@
 // Source file: C:\\parameters\\fi\\dwo\\client\\gui\\CourseNameDialog.java
-
 package fi.dwo.dwojapplet.gui;
 
 import java.awt.Color;
@@ -28,6 +27,7 @@ import fi.dwo.dwojapplet.gui.action.CopyLabel;
 
 /**
  * This is a dialog for editing the course name and description.
+ *
  * @author M.J.B. Kupers
  *
  */
@@ -36,17 +36,15 @@ public class CourseNameDialog extends JDialog implements ActionListener {
     private String courseName;
     private String courseDescription;
     private boolean confirmed;
-    
-    
-    
+
     private JTextField name;
     private JTextArea description;
     private JCheckBox showScore;
-    
+
     private JButton okButton;
     private JButton cancelButton;
-	private JScrollPane pane;
-    
+    private JScrollPane pane;
+
     CourseNameDialog(Component owner, String windowTitle, int courseID, String courseName, String courseDescription, String courseNameLabel, String courseDescriptionLabel) {
         super(DwoHelper.getFrameForComponent(owner), windowTitle, true);
         //this.setLayout(new FlowLayout());
@@ -60,7 +58,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
         //add(contentPane);
         JLabel l;
         FontMetrics fm;
-        
+
         /* CourseID label */
         l = new JLabel("" + courseID);
         l.setForeground(Color.black);
@@ -72,7 +70,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
         l.setVisible(false);
         contentPane.add(l);
         l.setVisible(true);
-        
+
         /* Coursename label */
         l = new JLabel(TextMapper.getText(courseNameLabel) + ":");
         l.setForeground(Color.black);
@@ -90,7 +88,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
         name.setVisible(false);
         contentPane.add(name);
         name.setVisible(true);
-        
+
         /* Coursedescription label */
         l = new JLabel(TextMapper.getText(courseDescriptionLabel) + ":");
         l.setForeground(Color.black);
@@ -105,9 +103,9 @@ public class CourseNameDialog extends JDialog implements ActionListener {
         /* Coursedescription field */
         description = new JTextArea(courseDescription, 0, 0);//, TextArea.SCROLLBARS_VERTICAL_ONLY);
         pane = new JScrollPane(description, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		pane.setBounds(150, 53, 200, 100);
+        pane.setBounds(150, 53, 200, 100);
         contentPane.add(pane);
-        
+
         contentPane.setPreferredSize(new Dimension(360, 220));
         contentPane.setSize(contentPane.getPreferredSize());
         /* Register button */
@@ -124,12 +122,12 @@ public class CourseNameDialog extends JDialog implements ActionListener {
 
         okButton.setLocation((contentPane.getSize().width / 2)
                 - ((okButton.getSize().width
-                        + cancelButton.getSize().width + 5) / 2), 163);
+                + cancelButton.getSize().width + 5) / 2), 163);
         contentPane.add(okButton);
 
         cancelButton.setLocation((contentPane.getSize().width / 2)
                 - ((okButton.getSize().width
-                        + cancelButton.getSize().width + 5) / 2)
+                + cancelButton.getSize().width + 5) / 2)
                 + okButton.getSize().width + 5, 163);
         contentPane.add(cancelButton);
         owner = DwoHelper.getApplet(); // centreer t.o.v. dwo applet
@@ -143,8 +141,8 @@ public class CourseNameDialog extends JDialog implements ActionListener {
         setLocation(x, y);
         //this.addWindowListener(this);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-     }
-    
+    }
+
     /**
      * @deprecated met PARENT
      * @return
@@ -154,57 +152,59 @@ public class CourseNameDialog extends JDialog implements ActionListener {
     }
 
     /**
-	 * @return fi.dwo.client.domain.Course
-	 */
-	public static Course addCourse(Component owner, Course parent) {
-		return addCourse(owner, TextMapper.getText(TextMapper.GUICDLG_TTL_ADD_COURSE), parent, false);
-	}
+     * @param parent
+     * @return fi.dwo.client.domain.Course
+     */
+    public static Course addCourse(Component owner, Course parent) {
+        return addCourse(owner, TextMapper.getText(TextMapper.GUICDLG_TTL_ADD_COURSE), parent, false);
+    }
 
-	/**
+    /**
      * @param title TODO
-	 * @param parent 
+     * @param parent
+     * @param isMap
      * @return fi.dwo.client.domain.Course
      */
     public static Course addCourse(Component owner, String title, Course parent, boolean isMap) {
-        CourseNameDialog cnd = new CourseNameDialog(owner, title, 0, "", "", isMap?TextMapper.GUICDLG_MAP_NAME:TextMapper.GUICDLG_COURSE_NAME, TextMapper.GUICDLG_COURSE_DESCRIPTION);
+        CourseNameDialog cnd = new CourseNameDialog(owner, title, 0, "", "", isMap ? TextMapper.GUICDLG_MAP_NAME : TextMapper.GUICDLG_COURSE_NAME, TextMapper.GUICDLG_COURSE_DESCRIPTION);
         cnd.show();
-        if(cnd.isConfirmed()) {
+        if (cnd.isConfirmed()) {
             Course c = GuiCreator.instance().addCourse(cnd.getCourseName(), cnd.getCourseDescription(), parent, isMap);
             return c;
         } else { //action canceled
             return null;
         }
     }
-    
+
     public static boolean editCourse(Course course) {
         return editCourse(course, DwoHelper.getApplet());
     }
 
     /**
      * @param course
+     * @param owner
      * @return boolean
      */
     public static boolean editCourse(Course course, Component owner) {
         String id = TextMapper.GUICDLG_COURSE_NAME;
-		String tit = TextMapper.GUICDLG_TTL_EDIT_COURSE;
-        if(course.isWithChildren())
-        {
-        	tit = TextMapper.GUIC_TLTP_EDIT_MAP;
-        	id = TextMapper.GUICDLG_MAP_NAME;
+        String tit = TextMapper.GUICDLG_TTL_EDIT_COURSE;
+        if (course.isWithChildren()) {
+            tit = TextMapper.GUIC_TLTP_EDIT_MAP;
+            id = TextMapper.GUICDLG_MAP_NAME;
         }
-		CourseNameDialog cnd = new CourseNameDialog(owner, TextMapper.getText(tit), course.getID(), course.getName(), course.getDescription(), id, TextMapper.GUICDLG_COURSE_DESCRIPTION);
+        CourseNameDialog cnd = new CourseNameDialog(owner, TextMapper.getText(tit), course.getID(), course.getName(), course.getDescription(), id, TextMapper.GUICDLG_COURSE_DESCRIPTION);
         cnd.show();
-        if(cnd.isConfirmed()) {
+        if (cnd.isConfirmed()) {
             String oldName = course.getName();
             String oldDescription = course.getDescription();
             course.setName(cnd.getCourseName());
             course.setDescription(cnd.getCourseDescription());
             boolean result = GuiCreator.instance().updateCourse(course);
-            if(!result) { //something went wrong. Reset the data.
+            if (!result) { //something went wrong. Reset the data.
                 course.setName(oldName);
                 course.setDescription(oldDescription);
             }
-            
+
             return result;
         } else { //action canceled
             return false;
@@ -216,7 +216,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == cancelButton) {
+        if (e.getSource() == cancelButton) {
             this.setVisible(false);
         } else if (e.getSource() == okButton) {
             courseName = name.getText();
@@ -224,7 +224,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
             confirmed = true;
             this.setVisible(false);
         }
-        
+
     }
 
     /**
@@ -233,56 +233,57 @@ public class CourseNameDialog extends JDialog implements ActionListener {
     public boolean isConfirmed() {
         return confirmed;
     }
+
     /**
      * @return Returns the courseDescription.
      */
     public String getCourseDescription() {
         return courseDescription;
     }
-    
+
     public String getScoDescription() {
-    	return courseDescription;
+        return courseDescription;
     }
+
     /**
      * @return Returns the courseName.
      */
     public String getCourseName() {
         return courseName;
     }
+
     public String getScoName() {
-    	return courseName;
-    }
-    
-    public boolean isShowScore()
-    {
-    	return showScore.isSelected();
-    }
-    
-    public void setShowScore(boolean b)
-    {
-    	if(showScore == null)
-    	{
-    		showScore = new JCheckBox(TextMapper.getText(TextMapper.GUIS_SHOW_SCORE));
-    		Container content = getContentPane();
-    		showScore.setBackground(GuiConstants.MAIN_BACKGROUND);
-    		showScore.setFont(GuiConstants.NORMAL_TEXT);
-    		content.add(showScore);
-    		int h = showScore.getPreferredSize().height;
-    		int th = pane.getHeight();
-    		int tw = pane.getWidth();
-    		int x =  pane.getX();
-    		int y =  pane.getY();
-    		pane.setSize(tw, th-h);
-    		showScore.setBounds(x, y+th-h, tw, h);
-    	}
-    	showScore.setSelected(b);
+        return courseName;
     }
 
-	public static Course addMap(Component owner, Course parent) {
-		// TODO Auto-generated method stub
-		Course c = addCourse(owner, TextMapper.getText("Nieuwe Modulemap"), parent, true);
-		if(c != null)
-			c.setChildren(Course.NO_CHILDREN);
-		return c;
-	}
+    public boolean isShowScore() {
+        return showScore.isSelected();
+    }
+
+    public void setShowScore(boolean b) {
+        if (showScore == null) {
+            showScore = new JCheckBox(TextMapper.getText(TextMapper.GUIS_SHOW_SCORE));
+            Container content = getContentPane();
+            showScore.setBackground(GuiConstants.MAIN_BACKGROUND);
+            showScore.setFont(GuiConstants.NORMAL_TEXT);
+            content.add(showScore);
+            int h = showScore.getPreferredSize().height;
+            int th = pane.getHeight();
+            int tw = pane.getWidth();
+            int x = pane.getX();
+            int y = pane.getY();
+            pane.setSize(tw, th - h);
+            showScore.setBounds(x, y + th - h, tw, h);
+        }
+        showScore.setSelected(b);
+    }
+
+    public static Course addMap(Component owner, Course parent) {
+        // TODO Auto-generated method stub
+        Course c = addCourse(owner, TextMapper.getText("Nieuwe Modulemap"), parent, true);
+        if (c != null) {
+            c.setChildren(Course.NO_CHILDREN);
+        }
+        return c;
+    }
 }

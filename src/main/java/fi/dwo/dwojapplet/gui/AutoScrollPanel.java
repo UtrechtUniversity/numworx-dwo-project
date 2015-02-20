@@ -9,19 +9,22 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
 /**
- * This class is a panel that shows a Scrollbar if the content is to large for the size of the panel.
- * The difference with the default <code>ScrollPane</code> is that with no scrollbars, no border is showed.
- * note: The functionality is not complete (e.g. the deleteComponent methods are not implemented).
+ * This class is a panel that shows a Scrollbar if the content is to large for
+ * the size of the panel. The difference with the default
+ * <code>ScrollPane</code> is that with no scrollbars, no border is showed.
+ * note: The functionality is not complete (e.g. the deleteComponent methods are
+ * not implemented).
+ *
  * @author M.J.B. Kupers
  *
  */
 public class AutoScrollPanel extends Panel implements ComponentListener {
-    
+
     ScrollPane sp;
     Panel p;
 
     /**
-     * 
+     *
      */
     public AutoScrollPanel() {
         super(null);
@@ -29,6 +32,7 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
         super.add(p);
         this.addComponentListener(this);
     }
+
     /**
      * @param layout
      */
@@ -41,9 +45,10 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
     /* (non-Javadoc)
      * @see java.awt.event.ComponentListener#componentHidden(java.awt.event.ComponentEvent)
      */
+
     @Override
     public void componentHidden(ComponentEvent e) {
-        
+
     }
 
     /* (non-Javadoc)
@@ -52,7 +57,7 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
     @Override
     public void componentMoved(ComponentEvent e) {
         resizePanel();
-        
+
     }
 
     /* (non-Javadoc)
@@ -61,7 +66,7 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
     @Override
     public void componentResized(ComponentEvent e) {
         resizePanel();
-        
+
     }
 
     /* (non-Javadoc)
@@ -69,17 +74,17 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
      */
     @Override
     public void componentShown(ComponentEvent e) {
-        
+
     }
-    
+
     /**
      * Checks if the scrollbars must be showed.
      *
      */
     private void checkScrollBars() {
-        if((p.getSize().width > getSize().width) || (p.getSize().height > getSize().height)) {
+        if ((p.getSize().width > getSize().width) || (p.getSize().height > getSize().height)) {
             //show scrollbar
-            if(sp == null) {
+            if (sp == null) {
                 p.setVisible(false);
                 super.remove(p);
                 sp = new ScrollPane();
@@ -92,7 +97,7 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
             sp.validate();
         } else {
             //hide scrollbar
-            if(sp != null) {
+            if (sp != null) {
                 p.setVisible(false);
                 super.remove(sp);
                 sp = null;
@@ -101,9 +106,9 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
                 p.setVisible(true);
             }
         }
-        
+
     }
-    
+
     /**
      * Resizes the subpanel to the size of the components.
      *
@@ -114,38 +119,38 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
         int maxheight = 0;
         Component comp;
         Component[] cmp = p.getComponents();
-        for(int i = 0; i < cmp.length;i++) {
+        for (int i = 0; i < cmp.length; i++) {
             comp = cmp[i];
             width = comp.getLocation().x + comp.getSize().width;
-            if(width > maxwidth) {
+            if (width > maxwidth) {
                 maxwidth = width;
             }
             height = comp.getLocation().y + comp.getSize().height;
-            if(height > maxheight) {
+            if (height > maxheight) {
                 maxheight = height;
             }
         }
-        
+
         p.setSize(maxwidth, maxheight);
-        checkScrollBars();        
+        checkScrollBars();
     }
-    
+
     /**
-     * Component comp is changed. 
-     * Is he located out of the bounds of the panel, 
+     * Component comp is changed. Is he located out of the bounds of the panel,
      * than resize the subpanel and check scrollbars.
+     *
      * @param comp The component that is changed.
      */
     private void resizePanel(Component comp) {
         int width = comp.getLocation().x + comp.getSize().width;
         int height = comp.getLocation().y + comp.getSize().height;
-        if(width < p.getSize().width) {
+        if (width < p.getSize().width) {
             width = p.getSize().width;
         }
-        if(height < p.getSize().height) {
+        if (height < p.getSize().height) {
             height = p.getSize().height;
         }
-        p.setSize(width, height);        
+        p.setSize(width, height);
         checkScrollBars();
     }
 
@@ -162,6 +167,7 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
     /* (non-Javadoc)
      * @see java.awt.Container#add(java.awt.Component, int)
      */
+
     @Override
     public Component add(Component comp, int index) {
         comp.addComponentListener(this);
@@ -172,6 +178,7 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
     /* (non-Javadoc)
      * @see java.awt.Container#add(java.awt.Component, java.lang.Object, int)
      */
+
     @Override
     public void add(Component comp, Object constraints, int index) {
         comp.addComponentListener(this);
@@ -181,6 +188,7 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
     /* (non-Javadoc)
      * @see java.awt.Container#add(java.awt.Component, java.lang.Object)
      */
+
     @Override
     public void add(Component comp, Object constraints) {
         comp.addComponentListener(this);
@@ -190,6 +198,7 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
     /* (non-Javadoc)
      * @see java.awt.Container#add(java.lang.String, java.awt.Component)
      */
+
     @Override
     public Component add(String name, Component comp) {
         comp.addComponentListener(this);
@@ -200,6 +209,7 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
     /* (non-Javadoc)
      * @see java.awt.Container#getComponent(int)
      */
+
     @Override
     public Component getComponent(int n) {
         return p.getComponent(n);
@@ -207,6 +217,7 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
     /* (non-Javadoc)
      * @see java.awt.Component#getComponentAt(int, int)
      */
+
     @Override
     public Component getComponentAt(int x, int y) {
         return p.getComponentAt(x, y);
@@ -214,6 +225,7 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
     /* (non-Javadoc)
      * @see java.awt.Component#getComponentAt(java.awt.Point)
      */
+
     @Override
     public Component getComponentAt(Point p) {
         return this.p.getComponentAt(p);
@@ -221,6 +233,7 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
     /* (non-Javadoc)
      * @see java.awt.Container#getComponentCount()
      */
+
     @Override
     public int getComponentCount() {
         return p.getComponentCount();
@@ -228,6 +241,7 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
     /* (non-Javadoc)
      * @see java.awt.Container#getComponents()
      */
+
     @Override
     public Component[] getComponents() {
         return p.getComponents();

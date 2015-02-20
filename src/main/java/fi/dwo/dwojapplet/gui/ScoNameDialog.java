@@ -1,5 +1,4 @@
 // Source file: C:\\parameters\\fi\\dwo\\client\\gui\\ScoNameDialog.java
-
 package fi.dwo.dwojapplet.gui;
 
 import java.awt.Component;
@@ -11,13 +10,13 @@ import fi.dwo.dwojapplet.domain.Sco;
 
 /**
  * This is a dialog for editing the SCO name and description.
- * 
+ *
  * @author M.J.B. Kupers
  *
  */
 public class ScoNameDialog //extends Dialog implements ActionListener,
-       // WindowListener
-        {
+// WindowListener
+{
 
 //    private String scoName;
 //
@@ -121,24 +120,23 @@ public class ScoNameDialog //extends Dialog implements ActionListener,
 //        this.addWindowListener(this);
 //        pack();
 //    }
-
 //    public static Sco addSco(Course course, AppletConfig appletConfig) {
 //        return addSco(null, course, appletConfig);
 //    }
-
     /**
+     * @param appletConfig
      * @return fi.dwo.client.domain.Sco
      */
     public static Sco addSco(Component owner, Course course, AppletConfig appletConfig) {
         CourseNameDialog cnd = new CourseNameDialog(owner, TextMapper
-                .getText(TextMapper.GUISDLG_TTL_ADD_SCO), 0, appletConfig.getName(), "",TextMapper.GUISDLG_SCO_NAME, TextMapper.GUISDLG_SCO_DESCRIPTION);
+                .getText(TextMapper.GUISDLG_TTL_ADD_SCO), 0, appletConfig.getName(), "", TextMapper.GUISDLG_SCO_NAME, TextMapper.GUISDLG_SCO_DESCRIPTION);
         cnd.setShowScore(true);
         cnd.show();
         if (cnd.isConfirmed()) {
             //System.out.println("voor hij wordt aangemaakt: " + appletConfig.getLaunchdata() + "; " + appletConfig.getAppletID());
             Sco s = GuiCreator.instance().addSco(course, appletConfig, cnd.getScoName(),
                     cnd.getScoDescription(), cnd.isShowScore());
-            if(s == null) { //something went wrong, reshow the dialog
+            if (s == null) { //something went wrong, reshow the dialog
                 s = addSco(owner, course, appletConfig);
             }
             //System.out.println("en nu...: " + s.getLaunchdataString());
@@ -155,6 +153,7 @@ public class ScoNameDialog //extends Dialog implements ActionListener,
 
     /**
      * @param sco
+     * @param owner
      * @return boolean
      */
     public static boolean editSco(Sco sco, Component owner) {
@@ -170,14 +169,14 @@ public class ScoNameDialog //extends Dialog implements ActionListener,
             sco.setName(cnd.getScoName());
             sco.setDescription(cnd.getScoDescription());
 // keep null as long as possible. TRUE -> NULL if null
-            if(cnd.isShowScore())
-            {
-            	if( sco.getShowScore() != null)
-            		sco.setShowScore(Boolean.TRUE);
+            if (cnd.isShowScore()) {
+                if (sco.getShowScore() != null) {
+                    sco.setShowScore(Boolean.TRUE);
+                }
             } else {
-            	sco.setShowScore(Boolean.FALSE);
+                sco.setShowScore(Boolean.FALSE);
             }
-            	
+
             boolean result = GuiCreator.instance().updateSco(sco);
             if (!result) { //something went wrong. Reset the data and reshow the dialog.
                 sco.setName(oldName);

@@ -1,6 +1,5 @@
 // Source file:
 // C:\\parameters\\fi\\dwo\\parameters\\gui\\SingleLevelTreeParameterComponent.java
-
 package fi.dwo.dwojapplet.parameters.gui;
 
 import java.awt.Component;
@@ -21,16 +20,16 @@ import fi.dwo.dwojapplet.parameters.system.TextMapper;
 
 public class SingleLevelTreeParameterComponent extends ParameterComponent implements ParameterComponentIF,
         ActionListener {
+
     private TabPane tabPane;
 
     private TreeSheetCreator tabSheetCreator;
 
     private JButton button;
-    
-    private Component last;
-    
-    private JButton addButton; //with no elements, we show a button
 
+    private Component last;
+
+    private JButton addButton; //with no elements, we show a button
 
     /**
      * @param parent
@@ -49,11 +48,11 @@ public class SingleLevelTreeParameterComponent extends ParameterComponent implem
         //setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
         setOpaque(false);
         Hashtable tmp = defaultValue;
-        if(defaultValue.containsKey(parameter.getName())) {
+        if (defaultValue.containsKey(parameter.getName())) {
             tmp = (Hashtable) defaultValue.get(parameter.getName());
         }
         tabSheetCreator = new TreeSheetCreator(this, parameter, tmp);
-        
+
         String[] arguments = new String[1];
         arguments[0] = "" + tabSheetCreator.getNrItems();
         String s = TextMapper.getText(TextMapper.BTN_TREE_NR_ITEMS);
@@ -66,7 +65,7 @@ public class SingleLevelTreeParameterComponent extends ParameterComponent implem
         button.setLocation(preLabel.getLocation().x + preLabel.getSize().width
                 + 10, 1);
         button.addActionListener(this);
-        
+
         arguments[0] = parameter.getItemLabel();
         s = TextMapper.getText(TextMapper.BTN_TREE_ADD_ITEM);
 
@@ -79,65 +78,64 @@ public class SingleLevelTreeParameterComponent extends ParameterComponent implem
                 + 10, 1);
         addButton.addActionListener(this);
 
-        
-        if(tabSheetCreator.getNrItems() == 0) {
+        if (tabSheetCreator.getNrItems() == 0) {
             addButton.setVisible(false);
             this.add(addButton);
             addButton.setVisible(true);
             last = generatePostItems(addButton);
-            
+
         } else {
             button.setVisible(false);
             this.add(button);
-            button.setVisible(true);            
+            button.setVisible(true);
             last = generatePostItems(button);
         }
 
         this.setSize(last.getLocation().x + last.getSize().width + 5, button
                 .getSize().height + 2);
 
-
     }
 
     /**
      * With a tree element, there is no help button so generate nothing and
      * return <code>after</code>
-     * 
-     * @see fi.dwo.parameters.gui.ParameterComponent#generatePostItems(java.awt.Component)
+     *
+     * @return 
+     * @see
+     * fi.dwo.parameters.gui.ParameterComponent#generatePostItems(java.awt.Component)
      */
     @Override
     protected Component generatePostItems(Component after) {
-	    postLabel = new FixedLabel("(" + TextMapper.getText(TextMapper.LBL_NO_ITEMS) + ")");
-	    postLabel.setFont(ParameterConstants.LABEL_FONT);
+        postLabel = new FixedLabel("(" + TextMapper.getText(TextMapper.LBL_NO_ITEMS) + ")");
+        postLabel.setFont(ParameterConstants.LABEL_FONT);
         FontMetrics fm = postLabel.getFontMetrics(postLabel.getFont());
         postLabel.setSize(fm.stringWidth(postLabel.getText()) + 10, fm.getHeight());
         postLabel.setLocation(after.getLocation().x + after.getSize().width + 10, 1);
 
-        if(tabSheetCreator.getNrItems() == 0) {
+        if (tabSheetCreator.getNrItems() == 0) {
             this.add(postLabel);
             after = postLabel;
         }
         return after;
     }
-    
+
     private void createTabPane() {
-        if(tabPane == null) {
+        if (tabPane == null) {
             tabPane = new TabPane();
             tabPane.setBackground(parent.getColor());
-			/* The color is the other color than the parent */
-			if(parent.getColor() == SELECTED_COLOR_1) {
+            /* The color is the other color than the parent */
+            if (parent.getColor() == SELECTED_COLOR_1) {
                 tabPane.setTabColor(SELECTED_COLOR_2);
-			} else {
+            } else {
                 tabPane.setTabColor(SELECTED_COLOR_1);
-			}
-			tabPane.setTabSheetCreator(tabSheetCreator);
-			tabSheetCreator.setTabPane(tabPane);
-			tabSheetCreator.createTabs();
-			
-			
-			tabPane.setLocation(preLabel.getLocation());
-			tabPane.addComponentListener(this);
-        }        
+            }
+            tabPane.setTabSheetCreator(tabSheetCreator);
+            tabSheetCreator.setTabPane(tabPane);
+            tabSheetCreator.createTabs();
+
+            tabPane.setLocation(preLabel.getLocation());
+            tabPane.addComponentListener(this);
+        }
     }
 
     public void noItems() {
@@ -145,35 +143,36 @@ public class SingleLevelTreeParameterComponent extends ParameterComponent implem
         add(addButton);
         postLabel.setLocation(addButton.getLocation().x + addButton.getSize().width + 10, 1);
         add(postLabel);
-        if(tabPane != null) {
+        if (tabPane != null) {
             remove(tabPane);
         }
         remove(button);
         parent.isFocussed(this);
-        
+
         this.setSize(postLabel.getLocation().x + postLabel.getSize().width + 5, addButton
                 .getSize().height + 2);
 
     }
 
     /**
+     * @param e
      * @param arg0
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == button) {
+        if (e.getSource() == button) {
             setCursor(new Cursor(Cursor.WAIT_CURSOR));
             createTabPane();
-            
+
             add(tabPane);
             remove(preLabel);
             remove(button);
-            
+
             parent.isFocussed(this);
             this.setSize(tabPane.getLocation().x + tabPane.getSize().width, tabPane.getLocation().y + tabPane.getSize().height);
             setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
             validate();
-        } else if(e.getSource() == addButton) {
+        } else if (e.getSource() == addButton) {
             createTabPane();
             tabSheetCreator.addTab();
             add(tabPane);
@@ -185,7 +184,6 @@ public class SingleLevelTreeParameterComponent extends ParameterComponent implem
 
         }
 
-
     }
 
     /* (non-Javadoc)
@@ -193,21 +191,21 @@ public class SingleLevelTreeParameterComponent extends ParameterComponent implem
      */
     @Override
     public void unFocus() {
-        if(tabPane != null) {
+        if (tabPane != null) {
             this.remove(tabPane);
-         }
+        }
         String[] arguments = new String[1];
         arguments[0] = "" + tabSheetCreator.getNrItems();
         String s = TextMapper.getText(TextMapper.BTN_TREE_NR_ITEMS);
 
         button.setLabel(MessageFormat.format(s, arguments));
 
-        if(tabSheetCreator.getNrItems() != 0) { 
-	        this.add(preLabel);
-	        this.add(button);     
+        if (tabSheetCreator.getNrItems() != 0) {
+            this.add(preLabel);
+            this.add(button);
         } else {
         }
-        
+
         this.setSize(last.getLocation().x + last.getSize().width + 5, button
                 .getSize().height + 2);
 
@@ -215,9 +213,10 @@ public class SingleLevelTreeParameterComponent extends ParameterComponent implem
     /* (non-Javadoc)
      * @see java.awt.event.ComponentListener#componentResized(java.awt.event.ComponentEvent)
      */
+
     @Override
     public void componentResized(ComponentEvent e) {
-        if(false && e.getSource() == tabPane) {
+        if (false && e.getSource() == tabPane) {
             this.setVisible(false);
             this.setSize(tabPane.getLocation().x + tabPane.getSize().width, tabPane.getLocation().y + tabPane.getSize().height);
             this.setVisible(true);
@@ -227,23 +226,24 @@ public class SingleLevelTreeParameterComponent extends ParameterComponent implem
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.ParameterComponentIF#reset()
      */
+
     @Override
     public void reset() {
-        if(tabPane != null) {
+        if (tabPane != null) {
             this.remove(tabPane);
         }
         tabPane = null;
         Hashtable tmp = defaultValue;
-        if(defaultValue.containsKey(parameter.getName())) {
+        if (defaultValue.containsKey(parameter.getName())) {
             tmp = (Hashtable) defaultValue.get(parameter.getName());
         }
-        int oldNrItems = tabSheetCreator.getNrItems(); 
-        
+        int oldNrItems = tabSheetCreator.getNrItems();
+
         tabSheetCreator = new TreeSheetCreator(this, (TreeParameter) parameter, tmp);
-        if(tabSheetCreator.getNrItems() == 0) {
+        if (tabSheetCreator.getNrItems() == 0) {
             noItems();
         }
-        if((oldNrItems == 0) && (tabSheetCreator.getNrItems() != 0)) {
+        if ((oldNrItems == 0) && (tabSheetCreator.getNrItems() != 0)) {
             //we showed the no items button, but we must remove it.
             remove(preLabel);
             remove(postLabel);
@@ -251,19 +251,19 @@ public class SingleLevelTreeParameterComponent extends ParameterComponent implem
         }
         unFocus();
     }
-    
+
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.ParameterComponentIF#getSequenceString(fi.dwo.parameters.gui.ParameterComponentIF)
      */
     @Override
     public String getSequenceString(ParameterComponentIF component) {
-        if(parent != null) {
+        if (parent != null) {
             return parent.getSequenceString(this);
         } else {
             return super.getSequenceString(component);
         }
     }
-    
+
     /* (non-Javadoc)
      * @see fi.dwo.parameters.gui.ParameterComponentIF#addParameters(java.util.Hashtable)
      */
@@ -272,31 +272,33 @@ public class SingleLevelTreeParameterComponent extends ParameterComponent implem
         tabSheetCreator.addParameters(parameters);
     }
 
-	/* (non-Javadoc)
-	 * @see java.awt.Component#setBounds(int, int, int, int)
-	 */
+    /* (non-Javadoc)
+     * @see java.awt.Component#setBounds(int, int, int, int)
+     */
     @Override
-	public void setBounds(int x, int y, int width, int height) {
-		// TODO Auto-generated method stub
-		super.setBounds(x, y, width, height);
-	}
+    public void setBounds(int x, int y, int width, int height) {
+        // TODO Auto-generated method stub
+        super.setBounds(x, y, width, height);
+    }
+
     @Override
-	public Dimension getPreferredSize() {
-		if(getLayout() != null) {
-			Dimension size = getLayout().preferredLayoutSize(this);
-			System.out.println("single pref="+ size + " now=" + getSize());
-			return size;
-		}
-		
-		if(tabPane != null && tabPane.isShowing())
+    public Dimension getPreferredSize() {
+        if (getLayout() != null) {
+            Dimension size = getLayout().preferredLayoutSize(this);
+            System.out.println("single pref=" + size + " now=" + getSize());
+            return size;
+        }
+
+        if (tabPane != null && tabPane.isShowing()) {
             return new Dimension(tabPane.getLocation().x + tabPane.getPreferredSize().width, tabPane.getLocation().y + tabPane.getPreferredSize().height);
-		else
-			return  new Dimension(last.getLocation().x + last.getSize().width + 5, button
-                .getSize().height + 2);
-	}
-	
+        } else {
+            return new Dimension(last.getLocation().x + last.getSize().width + 5, button
+                    .getSize().height + 2);
+        }
+    }
+
     @Override
-	public Dimension getMinimumSize() {
-		return getPreferredSize();
-	}
+    public Dimension getMinimumSize() {
+        return getPreferredSize();
+    }
 }

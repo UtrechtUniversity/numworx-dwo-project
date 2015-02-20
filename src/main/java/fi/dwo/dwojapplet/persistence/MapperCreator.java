@@ -1,48 +1,50 @@
 // Source file:
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\MapperCreator.java
-
 package fi.dwo.dwojapplet.persistence;
 
 import java.util.Hashtable;
 
 /**
  * This class creates the mappers which can map database-hashtables on objects.
- * e.g. the data out the coursetable are read out of the database and put in a hashtable (on the serverside). These hashtable is converted in a Course object.
+ * e.g. the data out the coursetable are read out of the database and put in a
+ * hashtable (on the serverside). These hashtable is converted in a Course
+ * object.
  * <img src="doc-files/MapperCreator-1.gif" alt="diagram of the converting of a hashtable to a Course-object">
- * 
+ *
  * @author M.J.B. Kupers
  *
  */
 public class MapperCreator {
+
     private final static String DOMAIN_PACKAGE = "fi.dwo.client.domain";
 
     private final static String PERSISTENCE_PACKAGE = "fi.dwo.client.persistence";
 
     /**
-     * A list of all the mappers of objects in the DWO.
-     * e.g. The Course is in the DOMAIN_PACKAGE and the CourseMapper in the PERSISTENCE_PACKAGE
+     * A list of all the mappers of objects in the DWO. e.g. The Course is in
+     * the DOMAIN_PACKAGE and the CourseMapper in the PERSISTENCE_PACKAGE
      */
     private final static String mapperDefenitionList[][] = {
-            { "User", "UserMapper" }, 
-            { "School", "SchoolMapper" },
-            { "Group", "GroupMapper" }, 
-            { "SchoolGroup", "SchoolGroupMapper" },
-            { "Course", "CourseMapper" },
-            { "Sco", "ScoMapper" }, 
-            { "SchoolClass", "ClassMapper" },
-            { "UserResultList", "UserResultListMapper" },
-            { "AppletConfig", "AppletConfigMapper" },
-            { "DwoProfile", "DwoProfileMapper" },
-            { "AppletData", "AppletDataMapper" },
-            { "CourseSequence", "CourseSequenceMapper"},
-            { "ClassCourse", "ClassCourseMapper" },
-           };
+        {"User", "UserMapper"},
+        {"School", "SchoolMapper"},
+        {"Group", "GroupMapper"},
+        {"SchoolGroup", "SchoolGroupMapper"},
+        {"Course", "CourseMapper"},
+        {"Sco", "ScoMapper"},
+        {"SchoolClass", "ClassMapper"},
+        {"UserResultList", "UserResultListMapper"},
+        {"AppletConfig", "AppletConfigMapper"},
+        {"DwoProfile", "DwoProfileMapper"},
+        {"AppletData", "AppletDataMapper"},
+        {"CourseSequence", "CourseSequenceMapper"},
+        {"ClassCourse", "ClassCourseMapper"},};
 
     /**
-     * The mappers for external classes. e.g. The Applet-class is not in the DOMAIN_PACKAGE
+     * The mappers for external classes. e.g. The Applet-class is not in the
+     * DOMAIN_PACKAGE
      */
     private final static String mapperDefenitionOtherList[][] = {
-            { "java.applet.Applet", PERSISTENCE_PACKAGE + ".AppletMapper"}
+        {"java.applet.Applet", PERSISTENCE_PACKAGE + ".AppletMapper"}
     };
 
     private static Hashtable mapperList;
@@ -50,15 +52,15 @@ public class MapperCreator {
     private static Hashtable classList;
 
     /**
-
+     *
      */
     public MapperCreator() {
 
     }
 
     /**
-     * Fills the classList Hashmap with as key SchoolClass-objects, and as value the
-     * name of the mapper class (including package)
+     * Fills the classList Hashmap with as key SchoolClass-objects, and as value
+     * the name of the mapper class (including package)
      */
     private static void createClasses() {
         int i;
@@ -85,6 +87,7 @@ public class MapperCreator {
 
     /**
      * Creates an instance of the corresponding mapper.
+     *
      * @param c The class wherefor the mapper must be created.
      */
     private static void addMapper(Class c) {
@@ -99,8 +102,9 @@ public class MapperCreator {
     }
 
     /**
-     * Returns an instance of a mapper for the corresponding class.
-     * For example, if c is <code>Course</code> then a CourseMapper is returned.
+     * Returns an instance of a mapper for the corresponding class. For example,
+     * if c is <code>Course</code> then a CourseMapper is returned.
+     *
      * @param c The class wherefrom the mapper must be returned.
      * @return The corresponding mapper.
      */

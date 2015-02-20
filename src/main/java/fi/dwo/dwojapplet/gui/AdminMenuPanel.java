@@ -1,6 +1,5 @@
 // Source file:
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\TeacherMenuPanel.java
-
 package fi.dwo.dwojapplet.gui;
 
 import java.awt.event.ActionEvent;
@@ -9,28 +8,27 @@ import fi.dwo.commons.system.TextMapper;
 
 /**
  * This class is the menupanel for the teacher who logged in.
- * 
+ *
  * @author M.J.B. Kupers
- *  
+ *
  */
 public class AdminMenuPanel extends MenuPanel {
 
-     private MenuPanelButton courseManagementButton;
-     
-     private MenuPanelButton schoolManagementButton;
+    private MenuPanelButton courseManagementButton;
 
-    
+    private MenuPanelButton schoolManagementButton;
+
     /* (non-Javadoc)
-	 * @see fi.dwo.client.gui.MenuPanel#createMenuButtons()
-	 */
-     @Override
-	protected void createMenuButtons() {
-		// TODO Auto-generated method stub
-		super.createMenuButtons();
+     * @see fi.dwo.client.gui.MenuPanel#createMenuButtons()
+     */
+    @Override
+    protected void createMenuButtons() {
+        // TODO Auto-generated method stub
+        super.createMenuButtons();
         /* Variables used to create items */
         //FontMetrics fm;
         createGap();
-         /* Add SchoolManagement button */
+        /* Add SchoolManagement button */
         schoolManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_SCHOOL_MANAGEMENT));
 //        fm = schoolManagementButton.getFontMetrics(schoolManagementButton.getFont());
 //        schoolManagementButton.setSize(this.getSize().width - 20, fm.getHeight() + 10);
@@ -41,8 +39,9 @@ public class AdminMenuPanel extends MenuPanel {
 //       schoolManagementButton.setVisible(true);
         createGap();
         /* Add CourseManagement Button */
-        if(CenterPanel.isIconizer())
-        	return;
+        if (CenterPanel.isIconizer()) {
+            return;
+        }
         courseManagementButton = new MenuPanelButton(TextMapper.getText(TextMapper.GUIMNU_COURSE_MANAGEMENT));
 //        fm = courseManagementButton.getFontMetrics(courseManagementButton.getFont());
 //        courseManagementButton.setSize(this.getSize().width - 20, fm.getHeight() + 10);
@@ -51,9 +50,9 @@ public class AdminMenuPanel extends MenuPanel {
 //        courseManagementButton.setVisible(false);
         this.add(courseManagementButton);
 //        courseManagementButton.setVisible(true);
-	}
+    }
 
-	/**
+    /**
      * Creates a new MenuPanel for the user. It contains the parent items (from
      * MenuPanel) and buttons to show the reult of students, and to add a class.
      */
@@ -61,33 +60,33 @@ public class AdminMenuPanel extends MenuPanel {
         super();
     }
 
-	/**
+    /**
      * Adds the name of the classes wherefrom the user is teacher. Can be
      * overridden by subclasses.
-     *  
+     *
      */
-     @Override
+    @Override
     protected void addClassList() {
-    	createRuler();
+        createRuler();
     }
-    
 
     /**
      * Invoked when an action occurs.
-     * 
+     *
      * @param e The ActionEvent.
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     * @see
+     * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
-     @Override
+    @Override
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
 
         if (e.getSource() == courseManagementButton) {
-           GuiCreator.instance().setWait();
-           CenterSubPanel cp = GuiCreator.instance().getCourseManagementPanel();
-           center.loadCenter(cp);
-           GuiCreator.instance().setReady();           
-       	} else if (e.getSource() == schoolManagementButton) {
+            GuiCreator.instance().setWait();
+            CenterSubPanel cp = GuiCreator.instance().getCourseManagementPanel();
+            center.loadCenter(cp);
+            GuiCreator.instance().setReady();
+        } else if (e.getSource() == schoolManagementButton) {
             GuiCreator.instance().setWait();
             CenterSubPanel cp = GuiCreator.instance().getSchoolPanel();
             center.loadCenter(cp);

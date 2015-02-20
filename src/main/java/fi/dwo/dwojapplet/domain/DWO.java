@@ -213,6 +213,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * username
      * password
      * </pre>
+     * @param args
      */
     public DWO(String[] args) {
         nestedWait = 0;
@@ -281,6 +282,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * @param password The password of the user.
      * @return If the user was successfully logged in it returns true. Otherwise
      * it returns false.
+     * @throws fi.dwo.commons.exceptions.LoginException
      * @throws fi.dwo.client.system.LoginException If some login-information is
      * incorrect.
      *
@@ -345,6 +347,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
     /**
      * Login as guest. CurrentUser becomes an instance of class Guest.
      *
+     * @throws fi.dwo.commons.exceptions.LoginException
      * @see Guest
      *
      * @return If the guest was successfully logged in it returns true.
@@ -394,6 +397,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * @param email The e-mail address of the user.
      * @return If the user was successfully registered true is returned.
      * Otherwise false is returned.
+     * @throws fi.dwo.commons.exceptions.RegisterException
      * @throws fi.dwo.client.system.RegisterException If some
      * register-information is incorrect or the user already exists.
      *
@@ -553,6 +557,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * and the school.
      * @return If the user was successfully registered true is returned.
      * Otherwise false is returned.
+     * @throws fi.dwo.commons.exceptions.RegisterException
      * @throws fi.dwo.client.system.RegisterException If some
      * register-information is incorrect or the user already exists.
      *
@@ -684,6 +689,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
     /**
      * Sorteer course op class (is nu school).
      *
+     * @return 
      * @deprecated er is geen class meer, altijd school
      */
     @Override
@@ -699,6 +705,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * Returns all the courses available for the user. If some courses are
      * available for the users school, they are also returned.
      *
+     * @param schoolClass
      * @deprecated not used?
      * @return An array of all the courses for the current user.
      *
@@ -784,6 +791,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * @param lastName The lastname (familyname) of the user.
      * @param email The e-mail address of the user.
      * @param c The new SchoolClass of the user.
+     * @throws fi.dwo.commons.exceptions.RegisterException
      * @throws fi.dwo.client.system.RegisterException If some
      * register-information is incorrect or the user already exists.
      *
@@ -821,6 +829,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * @param group The group from the user.
      * @param groupPassword The password corresponding with the specified group
      * and the school.
+     * @throws fi.dwo.commons.exceptions.RegisterException
      * @throws fi.dwo.client.system.RegisterException If some
      * register-information is incorrect or the user already exists.
      *
@@ -870,6 +879,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * e.g: <code>Van</code>
      * @param lastName The lastname (familyname) of the user.
      * @param email The e-mail address of the user.
+     * @throws fi.dwo.commons.exceptions.RegisterException
      * @throws fi.dwo.client.system.RegisterException If some
      * register-information is incorrect or the user already exists.
      *
@@ -932,6 +942,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * @param className The name of the new class.
      * @return boolean If the class is successfully inserted it returns true.
      * Otherwise it returns false.
+     * @throws fi.dwo.commons.exceptions.ClassException
      * @throws fi.dwo.client.system.ClassException If some class-information is
      * incorrect.
      *
@@ -1089,7 +1100,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
             setFocusTraversalPolicy(CATCH_POLICY);
         }
 
-    	// override van swing properties... 
+        // override van swing properties... 
         // TODO dit ook testen in een applet omgeving!
         UIDefaults defaults;
         defaults = UIManager.getDefaults();
@@ -1346,6 +1357,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * Overides the Applet.paint method. Draws a wait string, and calls the
      * super. If the mainpanel is made invisible, nothing is showed above the
      * wait string, so the wait string is showed.
+     * @param g
      */
     public void paintx(Graphics g) {
         g.setColor(getBackground());
@@ -1437,6 +1449,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * Sets the LMS value for the specified sco for the current user.
      *
      * @param sco The sco wherefrom the LMS value is set.
+     * @param user
      * @param iDataModelElement The dataModeElement to set.
      * @param iValue The new value for the dataModeElement.
      * @return String representing a boolean
@@ -1513,7 +1526,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * @throws ClassNotFoundException
      */
     public static void main(String[] args) throws Exception {
-    	//String  lookAndFeel = UIManager.getCrossPlatformLookAndFeelClassName();
+        //String  lookAndFeel = UIManager.getCrossPlatformLookAndFeelClassName();
         //lookAndFeel = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
         //lookAndFeel = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
         //lookAndFeel = UIManager.getSystemLookAndFeelClassName();
@@ -1604,6 +1617,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * Shows a wait cursor and the specified wait message to indicate that the
      * user must wait for a while.
      *
+     * @param waitText
      * @see fi.dwo.client.domain.DwoIF#setWait()
      */
     @Override
@@ -1671,6 +1685,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
     /**
      * Alle aangepaste sco's van een school binnen dit profiel. TODO als de
      * docent profiel-rechten heeft, wat dan?
+     * @return 
      */
     @Override
     public Sco[] getEditableScos() {
@@ -2128,6 +2143,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * @param schoolPasswMap Passwords.
      * @return boolean If the school is successfully inserted it returns true.
      * Otherwise it returns false.
+     * @throws fi.dwo.commons.exceptions.SchoolException
      * @throws fi.dwo.client.system.ClassException If some school-information is
      * incorrect.
      *
@@ -2150,11 +2166,11 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * @param schoolLogin The new login name of the school.
      * @param schoolPasswMap new Passwords.
      * @return school
+     * @throws fi.dwo.commons.exceptions.SchoolException
      * @throws fi.dwo.client.system.ClassException If some school-information is
      * incorrect.
      *
      */
-
     @Override
     public School editSchool(int schoolID, String schoolName,
             String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date) throws SchoolException {

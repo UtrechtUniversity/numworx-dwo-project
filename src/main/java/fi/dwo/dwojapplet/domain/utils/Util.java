@@ -11,77 +11,72 @@ import java.net.URLEncoder;
 
 /**
  * Utility class
+ *
  * @author Velth101
  *
  */
 public class Util {
 
-	static final String UTF8 = "UTF-8";
+    static final String UTF8 = "UTF-8";
 
-	private Util() {}
-	
-	static void encode(String key, char value, StringBuffer sb)
-	{
-	    encode(key, String.valueOf(value), sb);
-	}
+    private Util() {
+    }
 
-	static void encode(String key, int value, StringBuffer sb)
-	{
-	    encode(key, String.valueOf(value), sb);
-	}
+    static void encode(String key, char value, StringBuffer sb) {
+        encode(key, String.valueOf(value), sb);
+    }
 
-	static void encode(String key, String value, StringBuffer sb)
-	{
-	    try
-	    {
-	        sb.append(URLEncoder.encode(key, UTF8));
-	        sb.append("=");
-	        sb.append(URLEncoder.encode(value, UTF8));
-	    } catch (UnsupportedEncodingException e)
-	    {
-	        e.printStackTrace();
-	    }
-	}
+    static void encode(String key, int value, StringBuffer sb) {
+        encode(key, String.valueOf(value), sb);
+    }
 
-	public static class ResultException extends IOException 
-	{
+    static void encode(String key, String value, StringBuffer sb) {
+        try {
+            sb.append(URLEncoder.encode(key, UTF8));
+            sb.append("=");
+            sb.append(URLEncoder.encode(value, UTF8));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
 
-		ResultException() {
-			super();
-		}
+    public static class ResultException extends IOException {
 
-		ResultException(String s) {
-			super(s);
-		}
-		
-	}
-	
-	public static class NoException extends Exception {
-	
-		public NoException(String message) {
-			super(message);
-		}
-	}
+        ResultException() {
+            super();
+        }
 
-	/**
-	 * @param sb
-	 * @throws MalformedURLException
-	 * @throws IOException
-	 * @throws UnsupportedEncodingException
-	 */
-	static String call(StringBuffer sb) throws MalformedURLException, IOException, UnsupportedEncodingException
-	{
-	    URL u = new URL(sb.toString());
-	    InputStream in = u.openStream();
-	    BufferedReader br = new BufferedReader(new InputStreamReader(in, UTF8));
-	    String line = br.readLine();
-	    char c = line.charAt(0);
-	    br.close();
-	    if(c != '2')
-	    {
-	        throw new ResultException(line);
-	    }
-	    return line;
-	}
+        ResultException(String s) {
+            super(s);
+        }
+
+    }
+
+    public static class NoException extends Exception {
+
+        public NoException(String message) {
+            super(message);
+        }
+    }
+
+    /**
+     * @param sb
+     * @return 
+     * @throws MalformedURLException
+     * @throws IOException
+     * @throws UnsupportedEncodingException
+     */
+    static String call(StringBuffer sb) throws MalformedURLException, IOException, UnsupportedEncodingException {
+        URL u = new URL(sb.toString());
+        InputStream in = u.openStream();
+        BufferedReader br = new BufferedReader(new InputStreamReader(in, UTF8));
+        String line = br.readLine();
+        char c = line.charAt(0);
+        br.close();
+        if (c != '2') {
+            throw new ResultException(line);
+        }
+        return line;
+    }
 
 }

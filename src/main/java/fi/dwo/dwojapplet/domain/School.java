@@ -1,6 +1,5 @@
 // Source file:
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\domain\\School.java
-
 package fi.dwo.dwojapplet.domain;
 
 import java.util.Arrays;
@@ -8,44 +7,46 @@ import java.util.Date;
 
 /**
  * This class is responsible for the School data.
+ *
  * @author M.J.B. Kupers
- *  
+ *
  */
 public class School {
+
     private static final String DEFAULT_RIGHTS = "" + User.CHANGE_CLASS_RIGHT + User.CHANGE_CLASS_RIGHT_TEACHER + User.MODIFY_MODULES_RIGHT;
 
-	private int schoolID;
+    private int schoolID;
 
     private String name;
-    
+
     private String schoolLogin;
 
     private SchoolGroup[] schoolGroupList;
 
     private SchoolClass[] classList;
-    
+
     private String image;
-    
+
     private boolean export;
     private String rights = DEFAULT_RIGHTS;
 
-	private Date expire;
+    private Date expire;
 
     /**
      * Creates a new School object.
-     *  
+     *
      */
     public School() {
 
     }
 
     public School(int i) {
-		setSchoolID(i);
-	}
+        setSchoolID(i);
+    }
 
-	/**
+    /**
      * Returns the name of the school.
-     * 
+     *
      * @return The name of the school.
      */
     public String getName() {
@@ -54,7 +55,7 @@ public class School {
 
     /**
      * Sets the name of the school.
-     * 
+     *
      * @param name The new name of the school.
      */
     public void setName(String name) {
@@ -63,7 +64,7 @@ public class School {
 
     /**
      * Returns the unique-identifier of the school.
-     * 
+     *
      * @return The unique-identifier of the school.
      */
     public int getSchoolID() {
@@ -72,16 +73,16 @@ public class School {
 
     /**
      * Sets the unique-identifier of the school.
-     * 
+     *
      * @param schoolID The unique-identifier of the school.
      */
     public void setSchoolID(int schoolID) {
         this.schoolID = schoolID;
     }
-    
+
     /**
      * Returns the unique-identifier of the school.
-     * 
+     *
      * @return The unique-identifier of the school.
      */
     public String getSchoolLogin() {
@@ -90,16 +91,17 @@ public class School {
 
     /**
      * Sets the unique-identifier of the school.
-     * 
+     *
+     * @param schoolLogin
      * @param schoolID The unique-identifier of the school.
      */
     public void setSchoolLogin(String schoolLogin) {
         this.schoolLogin = schoolLogin;
     }
-    
+
     /**
      * Returns the list of schoolGroups specified for the school.
-     * 
+     *
      * @return The list of schoolGroups specified for the school.
      */
     public SchoolGroup[] getSchoolGroupList() {
@@ -108,28 +110,27 @@ public class School {
 
     /**
      * Sets the list of schoolGroups for the school.
-     * 
+     *
      * @param schoolGroupList The list of schoolGroups for the school.
      */
     public void setSchoolGroupList(SchoolGroup[] schoolGroupList) {
         this.schoolGroupList = schoolGroupList;
     }
-    
+
     public String getPasswd(int groupID) {
-    	if(schoolGroupList != null)
-    	{  	for(int i=0 ; i<schoolGroupList.length; i++) {
-	    		if(schoolGroupList[i] != null && schoolGroupList[i].getGroupID()==groupID) {
-	    			return schoolGroupList[i].getPasswd();
-	    		}
-	    	}
-	    }
-    	return null;
+        if (schoolGroupList != null) {
+            for (int i = 0; i < schoolGroupList.length; i++) {
+                if (schoolGroupList[i] != null && schoolGroupList[i].getGroupID() == groupID) {
+                    return schoolGroupList[i].getPasswd();
+                }
+            }
+        }
+        return null;
     }
-    
-    
+
     /**
      * Returns the list of classes specified for the school.
-     * 
+     *
      * @return The list of classes specified for the school.
      */
     public SchoolClass[] getClassList() {
@@ -138,7 +139,7 @@ public class School {
 
     /**
      * Sets the list of classes for the school.
-     * 
+     *
      * @param classList The list of classes for the school.
      */
     public void setClassList(SchoolClass[] classList) {
@@ -147,7 +148,7 @@ public class School {
 
     /**
      * Adds a class to the list of classes.
-     * 
+     *
      * @param c The class to add.
      */
     public void addClass(SchoolClass c) {
@@ -159,15 +160,17 @@ public class School {
         Arrays.sort(sc);
         classList = sc;
     }
+
     /**
      * Deletes a class from the list of classes.
-     * 
+     *
      * @param schoolClass The class to delete.
      */
     public void deleteClass(SchoolClass schoolClass) {
 // FIXME komt voor dat classList.length = 0
-    	if(classList.length == 0)
-    		return;
+        if (classList.length == 0) {
+            return;
+        }
         SchoolClass[] sc = new SchoolClass[classList.length - 1];
         int difference = 0;
         for (int i = 0; i < classList.length; i++) {
@@ -186,6 +189,7 @@ public class School {
     public String getImage() {
         return image;
     }
+
     /**
      * @param image The image to set.
      */
@@ -193,51 +197,52 @@ public class School {
         this.image = image;
     }
 
-	/**
-	 * @param export the export to set
-	 */
-	public void setExport(boolean export) {
-		this.export = export;
-	}
+    /**
+     * @param export the export to set
+     */
+    public void setExport(boolean export) {
+        this.export = export;
+    }
 
-	/**
-	 * @return the export
-	 */
-	public boolean isExport() {
-		return export;
-	}
+    /**
+     * @return the export
+     */
+    public boolean isExport() {
+        return export;
+    }
 
-	/**
-	 * @return the rights
-	 */
-	public String getRights() {
-		return rights;
-	}
+    /**
+     * @return the rights
+     */
+    public String getRights() {
+        return rights;
+    }
 
-	/**
-	 * @param rights the rights to set
-	 */
-	public void setRights(String rights) {
-		if (rights == null || "_".equals(rights) ) rights = DEFAULT_RIGHTS;
-		this.rights = rights;
-	}
-	
-    public boolean hasRight(char right)
-    {
-    	return rights.indexOf(right)>=0;
+    /**
+     * @param rights the rights to set
+     */
+    public void setRights(String rights) {
+        if (rights == null || "_".equals(rights)) {
+            rights = DEFAULT_RIGHTS;
+        }
+        this.rights = rights;
+    }
+
+    public boolean hasRight(char right) {
+        return rights.indexOf(right) >= 0;
     }
 
     @Override
     public String toString() {
-    	return getName();
+        return getName();
     }
 
-	public void setExpire(Date expire) {
-		this.expire = expire;
-	}
-	
-	public Date getExpire() {
-		return expire;
-	}
-	
+    public void setExpire(Date expire) {
+        this.expire = expire;
+    }
+
+    public Date getExpire() {
+        return expire;
+    }
+
 }

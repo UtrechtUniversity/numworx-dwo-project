@@ -8,9 +8,9 @@ import fi.dwo.dwojapplet.domain.Sco;
 
 /**
  * This class is a linked label for a sco.
- * 
+ *
  * @author M.J.B. Kupers
- *  
+ *
  */
 public class ScoLinkedLabel extends LinkedLabel {
 
@@ -19,7 +19,7 @@ public class ScoLinkedLabel extends LinkedLabel {
     /**
      * Creates a new ScoLinkedLabel. It is a normal linked label with the
      * sconame as caption.
-     * 
+     *
      * @param s The sco of the Scolabel
      */
     public ScoLinkedLabel(Sco s) {
@@ -30,7 +30,7 @@ public class ScoLinkedLabel extends LinkedLabel {
 
     /**
      * Returns the current sco.
-     * 
+     *
      * @return The current sco.
      */
     public Sco getSco() {

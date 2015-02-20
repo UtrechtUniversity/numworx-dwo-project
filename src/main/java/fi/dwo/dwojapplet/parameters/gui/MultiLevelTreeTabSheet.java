@@ -1,6 +1,5 @@
 // Source file:
 // C:\\parameters\\fi\\dwo\\parameters\\gui\\MultiLevelTreeTabSheet.java
-
 package fi.dwo.dwojapplet.parameters.gui;
 
 import java.awt.Component;
@@ -36,6 +35,7 @@ public class MultiLevelTreeTabSheet extends TreeTabSheet implements
     /**
      * @param parent
      * @param launchdata
+     * @param defaultValue
      */
     public MultiLevelTreeTabSheet(MultiLevelTreeParameterComponent parent,
             TreeParameter parameter, Vector defaultValue) {
@@ -164,11 +164,11 @@ public class MultiLevelTreeTabSheet extends TreeTabSheet implements
     public void addParameters(Hashtable parameters) {
         Hashtable ht = new Hashtable();
         ht.put(((TreeParameter) parameter).getItemCountName(), Integer.toString(getNrItems()));
-        for(int i = 0; i < subComponents.size(); i++) {
+        for (int i = 0; i < subComponents.size(); i++) {
             ((ParameterComponentIF) subComponents.elementAt(i)).addParameters(ht);
         }
         addParameter(parameters, ht);
-        
+
     }
 
     /*
@@ -223,14 +223,13 @@ public class MultiLevelTreeTabSheet extends TreeTabSheet implements
         return "_" + (subComponents.indexOf(component) + 1);
     }
 
-	/* (non-Javadoc)
-	 * @see java.awt.Component#setBounds(int, int, int, int)
-	 */
+    /* (non-Javadoc)
+     * @see java.awt.Component#setBounds(int, int, int, int)
+     */
     @Override
-	public void setBounds(int x, int y, int width, int height) {
-		// TODO Auto-generated method stub
-		super.setBounds(x, y, width, height);
-	}
-    
-    
+    public void setBounds(int x, int y, int width, int height) {
+        // TODO Auto-generated method stub
+        super.setBounds(x, y, width, height);
+    }
+
 }
