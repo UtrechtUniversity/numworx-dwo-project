@@ -22,7 +22,7 @@ public class DesktopKeyboardGonio extends DesktopKeyboard {
 
 	@Override
 	void onC24(ClickEvent e) {
-		getEditor().insert("degree");
+		getEditor().insert("°");
 	}
 	@Override
 	void onC25(ClickEvent e) {
@@ -30,12 +30,24 @@ public class DesktopKeyboardGonio extends DesktopKeyboard {
 	}
 	@Override
 	void onC26(ClickEvent e) {
-		getEditor().insert("angle");
+		getEditor().insert("∠");
 	}
 
+	private AlphaKeys alphaKeys;
+	
 	@Override
 	void onC27(ClickEvent e) {
-		// TODO popup		
+		if(alphaKeys == null) {
+			alphaKeys = new AlphaKeys();
+		}
+		if (alphaKeys.isAlphaShown()) {
+			alphaKeys.hideAlpha();
+		} else {
+			alphaKeys.setEditor(getEditor());
+			int x = c27.getAbsoluteLeft()-184/2+24/2;
+			int y = c27.getAbsoluteTop()-44;
+			alphaKeys.showAlfa(x, y);
+		}
 	}
 
 	@Override

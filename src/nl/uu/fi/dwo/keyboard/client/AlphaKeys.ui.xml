@@ -1,0 +1,65 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
+	>
+	<ui:style>
+	/* Add CSS here. See the GWT docs on UI Binder for more details */
+	.key {
+		width: 24px;
+		height: 24px;
+		margin-top: 10px;
+		margin-left: 2px;
+		margin-right: 2px;
+	}
+	.first {
+		width: 24px;
+		height: 24px;
+		margin-top: 10px;
+		margin-left: 10px;
+		margin-right: 2px;
+	}
+	.last {
+		width: 24px;
+		height: 24px;
+		margin-top: 10px;
+		margin-left: 2px;
+		margin-right: 10px;
+	}
+	
+	.panel { 
+		width: 184px;
+		height: 44px;
+		border-collapse: collapse;
+		border-spacing: 0px;
+		background-color: #595959
+		
+	}
+	</ui:style>
+	<g:HorizontalPanel styleName="{style.panel}">
+		<my:Key styleName="{style.first}" ui:field="c1" >
+			<my:upFace><img src="images/kb/Gonio/Desktop/C32.png"/></my:upFace>
+			<my:downFace><img src="images/kb/Gonio/Desktop/C32-2.png"/></my:downFace>
+		</my:Key>
+		<my:Key styleName="{style.key}" ui:field="c2" >
+			<my:upFace><img src="images/kb/Gonio/Desktop/C33.png"/></my:upFace>
+			<my:downFace><img src="images/kb/Gonio/Desktop/C33-2.png"/></my:downFace>
+		</my:Key>
+		<my:Key styleName="{style.key}" ui:field="c3" >
+			<my:upFace><img src="images/kb/Gonio/Desktop/C34.png"/></my:upFace>
+			<my:downFace><img src="images/kb/Gonio/Desktop/C34-2.png"/></my:downFace>
+		</my:Key>
+		<my:Key styleName="{style.key}" ui:field="c4" >
+			<my:upFace><img src="images/kb/Gonio/Desktop/C35.png"/></my:upFace>
+			<my:downFace><img src="images/kb/Gonio/Desktop/C35-2.png"/></my:downFace>
+		</my:Key>
+		<my:Key styleName="{style.key}" ui:field="c5" >
+			<my:upFace><img src="images/kb/Gonio/Desktop/C36.png"/></my:upFace>
+			<my:downFace><img src="images/kb/Gonio/Desktop/C36-2.png"/></my:downFace>
+		</my:Key>
+		<my:Key styleName="{style.last}" ui:field="c6" >
+			<my:upFace><img src="images/kb/Gonio/Desktop/C37.png"/></my:upFace>
+			<my:downFace><img src="images/kb/Gonio/Desktop/C37-2.png"/></my:downFace>
+		</my:Key>
+	</g:HorizontalPanel>
+</ui:UiBinder> 

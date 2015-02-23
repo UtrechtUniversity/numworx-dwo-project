@@ -4,6 +4,7 @@
 package nl.uu.fi.dwo.keyboard.client;
 
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
+import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -17,7 +18,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author wim
  *
  */
-public class DesktopKeyboard extends Composite {
+public class DesktopKeyboard extends Composite implements FormuleKeyboardIF {
 
 	private static DesktopKeyboardUiBinder uiBinder = GWT
 			.create(DesktopKeyboardUiBinder.class);
@@ -118,30 +119,30 @@ public class DesktopKeyboard extends Composite {
 	}
 	@UiHandler("c13")
 	void onC13(ClickEvent e) {
-		getEditor().insert("[");
+		getEditor().insert('[');
 	}
 	@UiHandler("c14")
 	void onC14(ClickEvent e) {
-		getEditor().insert("]");
+		getEditor().insert(']');
 	}
 
 	@UiHandler("c15")
 	void onC15(ClickEvent e) {
-		getEditor().insert("(");
+		getEditor().insert('(');
 	}
 	@UiHandler("c16")
 	void onC16(ClickEvent e) {
-		getEditor().insert(")");
+		getEditor().insert(')');
 	}
 
 	@UiHandler("c17")
 	void onC17(ClickEvent e) {
-		getEditor().insert("<-"); // TODO u code
+		getEditor().insert('\u2190'); // TODO u code
 	}
 
 	@UiHandler("c18")
 	void onC18(ClickEvent e) {
-		getEditor().insert("->"); // TODO u code
+		getEditor().insert('\u2192'); // TODO u code
 	}
 	@UiHandler("c19")
 	void onC19(ClickEvent e) {
@@ -154,15 +155,15 @@ public class DesktopKeyboard extends Composite {
 
 	@UiHandler("c21")
 	void onC21(ClickEvent e) {
-		getEditor().insert("~");
+		getEditor().insert('\u2248');
 	}
 	@UiHandler("c22")
 	void onC22(ClickEvent e) {
-		getEditor().insert("<=");
+		getEditor().insert('\u2264');
 	}
 	@UiHandler("c23")
 	void onC23(ClickEvent e) {
-		getEditor().insert(">=");
+		getEditor().insert('\u2265');
 	}
 	@UiHandler("c24")
 	void onC24(ClickEvent e) {
@@ -205,5 +206,36 @@ public class DesktopKeyboard extends Composite {
 		key.getUpFace().setHTML("");key.getDownFace().setHTML("");key.setEnabled(false);
 	}
 
+	@Override
+	public void backspace() {
+		getEditor().removeCurrentElement();
+		
+	}
+
+	@Override
+	public void delete() {
+		getEditor().removeNextElement();
+		
+	}
+
+	@Override
+	public void enter() {
+		getEditor().enter();
+		
+	}
+
+	@Override
+	public void focus() {
+		this.setVisible(true);
+		
+	}
+
+	@Override
+	public void softFocus() {
+	}
+
+	public void blur() {
+		this.setVisible(false);
+	}
 
 }

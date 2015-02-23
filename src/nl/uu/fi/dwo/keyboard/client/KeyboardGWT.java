@@ -67,10 +67,16 @@ public class KeyboardGWT implements EntryPoint {
 		panel = new DesktopKeyboardMeetkunde();
 		panel.setEditor(editor);
 		root.add(panel);
-		root.add(new Label("meetkunde"));
+		root.add(new Label("gonio"));
 		panel = new DesktopKeyboardGonio();
 		panel.setEditor(editor);
 		root.add(panel);
+		AlphaKeys alpha = new AlphaKeys();
+		root.add(new Label("alpha"));
+		alpha.setEditor(editor);
+		root.add(alpha);
+
+		
 		root.add(tekst);
 
 	}

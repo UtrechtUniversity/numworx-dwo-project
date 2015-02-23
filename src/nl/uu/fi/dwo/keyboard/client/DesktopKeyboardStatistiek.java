@@ -26,22 +26,22 @@ public class DesktopKeyboardStatistiek extends DesktopKeyboard {
 
 	@Override
 	void onC24(ClickEvent e) {
-		getEditor().insert("0");
+		getEditor().insert("°");
 	}
 
 	@Override
 	void onC25(ClickEvent e) {
-		getEditor().insert("delta");
+		getEditor().insert("Δ");
 	}
 
 	@Override
 	void onC26(ClickEvent e) {
-		getEditor().insert("mu");
+		getEditor().insert("μ");
 	}
 
 	@Override
 	void onC27(ClickEvent e) {
-		getEditor().insert("sigma");		
+		getEditor().insert("σ");		
 	}
 
 	@Override
