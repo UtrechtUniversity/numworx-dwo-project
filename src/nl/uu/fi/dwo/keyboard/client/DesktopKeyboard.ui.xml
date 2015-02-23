@@ -4,7 +4,6 @@
 	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
 	>
 	<ui:style>
-	/* Add CSS here. See the GWT docs on UI Binder for more details */
 	.key {
 		width: 24px;
 		height: 24px;

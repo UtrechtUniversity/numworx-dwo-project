@@ -1,0 +1,349 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
+	>
+	<ui:style>
+	.key {
+		width: 42px;
+		height: 32px;
+		padding-top: 2px;
+		padding-bottom: 2px;
+		margin-left: 2px;
+		margin-right: 2px;
+	}
+	.enter {
+		width: 42px;
+		height: 68px;
+		padding-top: 2px;
+		padding-bottom: 2px;
+		margin-left: 2px;
+		margin-right: 2px;
+	}
+	.blur {
+		width: 42px;
+		height: 42px;
+		padding-top: 2px;
+		padding-bottom: 0px;
+		margin-left: 2px;
+		margin-right: 2px;
+	}
+	
+	.panel { 
+		width: 884px;
+		height: 184px;
+		border-collapse: collapse;
+		border-spacing: 0px;
+		background-color: #D2D2D2
+		
+	}
+	</ui:style>
+	<g:HorizontalPanel styleName="{style.panel}" >
+		<g:FlowPanel>
+			<my:Key styleName="{style.key}" ui:field="t1_1" >
+				<my:upFace><img src="images/kb/Basis/Touch/T1.1.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T1.1-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t2_1">
+				<my:upFace><img src="images/kb/Basis/Touch/T2.1.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T2.1-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t3_1">
+				<my:upFace><img src="images/kb/Basis/Touch/T3.1.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T3.1-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t4_1">
+				<my:upFace><img src="images/kb/Basis/Touch/T4.1.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T4.1-2.png"/></my:downFace>
+			</my:Key>
+		</g:FlowPanel>
+		<g:FlowPanel>
+			<my:Key styleName="{style.key}" ui:field="t1_2">
+				<my:upFace><img src="images/kb/Basis/Touch/T1.2.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T1.2-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t2_2">
+				<my:upFace><img src="images/kb/Basis/Touch/T2.2.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T2.2-3.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t3_2">
+				<my:upFace><img src="images/kb/Basis/Touch/T3.2.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T3.2-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t4_2">
+				<my:upFace><img src="images/kb/Basis/Touch/T4.2.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T4.2-2.png"/></my:downFace>
+			</my:Key>
+		</g:FlowPanel>
+		<g:FlowPanel>
+			<my:Key styleName="{style.key}" ui:field="t1_3" >
+				<my:upFace><img src="images/kb/Basis/Touch/T1.3.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T1.3-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t2_3">
+				<my:upFace><img src="images/kb/Basis/Touch/T2.3.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T2.3-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t3_3">
+				<my:upFace><img src="images/kb/Basis/Touch/T3.3.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T3.3-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t4_3">
+				<my:upFace><img src="images/kb/Basis/Touch/T4.3.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T4.3-2.png"/></my:downFace>
+			</my:Key>
+		</g:FlowPanel>
+		<g:FlowPanel>
+			<my:Key styleName="{style.key}" ui:field="t1_4">
+				<my:upFace><img src="images/kb/Basis/Touch/T1.4.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T1.4-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t2_4">
+				<my:upFace><img src="images/kb/Basis/Touch/T2.4.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T2.4-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t3_4">
+				<my:upFace><img src="images/kb/Basis/Touch/T3.4.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T3.4-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t4_4">
+				<my:upFace><img src="images/kb/Basis/Touch/T4.4.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T4.4-2.png"/></my:downFace>
+			</my:Key>
+		</g:FlowPanel>
+
+		<g:FlowPanel>
+			<my:Key styleName="{style.key}" ui:field="t1_5" >
+				<my:upFace><img src="images/kb/Basis/Touch/T1.5.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T1.5-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t2_5">
+				<my:upFace><img src="images/kb/Basis/Touch/T2.5.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T2.5-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t3_5">
+				<my:upFace><img src="images/kb/Basis/Touch/T3.5.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T3.5-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t4_5">
+				<my:upFace><img src="images/kb/Basis/Touch/T4.5.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T4.5-2.png"/></my:downFace>
+			</my:Key>
+		</g:FlowPanel>
+		<g:FlowPanel>
+			<my:Key styleName="{style.key}" ui:field="t1_6">
+				<my:upFace><img src="images/kb/Basis/Touch/T1.6.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T1.6-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t2_6">
+				<my:upFace><img src="images/kb/Basis/Touch/T2.6.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T2.6-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t3_6">
+				<my:upFace><img src="images/kb/Basis/Touch/T3.6.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T3.6-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t4_6">
+				<my:upFace><img src="images/kb/Basis/Touch/T4.6.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T4.6-2.png"/></my:downFace>
+			</my:Key>
+		</g:FlowPanel>
+		<g:FlowPanel>
+			<my:Key styleName="{style.key}" ui:field="t1_7" >
+				<my:upFace><img src="images/kb/Basis/Touch/T1.7.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T1.7-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t2_7">
+				<my:upFace><img src="images/kb/Basis/Touch/T2.7.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T2.7-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t3_7">
+				<my:upFace><img src="images/kb/Basis/Touch/T3.7.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T3.7-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t4_7">
+				<my:upFace><img src="images/kb/Basis/Touch/T4.7.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T4.7-2.png"/></my:downFace>
+			</my:Key>
+		</g:FlowPanel>
+		<g:FlowPanel>
+			<my:Key styleName="{style.key}" ui:field="t1_8">
+				<my:upFace><img src="images/kb/Basis/Touch/T1.8.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T1.8-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t2_8">
+				<my:upFace><img src="images/kb/Algebra/Touch/T2.8.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Algebra/Touch/T2.8-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t3_8">
+				<my:upFace><img src="images/kb/Algebra/Touch/T3.8.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Algebra/Touch/T3.8-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t4_8">
+				<my:upFace><img src="images/kb/Algebra/Touch/T4.8.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Algebra/Touch/T4.8-2.png"/></my:downFace>
+			</my:Key>
+		</g:FlowPanel>
+		<g:FlowPanel>
+			<my:Key styleName="{style.key}" ui:field="t1_9" >
+				<my:upFace><img src="images/kb/Algebra/Touch/T1.9.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Algebra/Touch/T1.9-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t2_9">
+				<my:upFace><img src="images/kb/Algebra/Touch/T2.9.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Algebra/Touch/T2.9-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t3_9">
+				<my:upFace><img src="images/kb/Algebra/Touch/T3.9.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Algebra/Touch/T3.9-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t4_9">
+				<my:upFace><img src="images/kb/Algebra/Touch/T4.9.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Algebra/Touch/T4.9-2.png"/></my:downFace>
+			</my:Key>
+		</g:FlowPanel>
+		<g:FlowPanel>
+			<my:Key styleName="{style.key}" ui:field="t1_10">
+				<my:upFace><img src="images/kb/Algebra/Touch/T1.10.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Algebra/Touch/T1.10-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t2_10">
+				<my:upFace><img src="images/kb/Basis/Touch/T2.10.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T2.10-3.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t3_10">
+				<my:upFace><img src="images/kb/Basis/Touch/T3.10.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T3.10-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t4_10">
+				<my:upFace><img src="images/kb/Basis/Touch/T4.10.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T4.10-2.png"/></my:downFace>
+			</my:Key>
+		</g:FlowPanel>
+		<g:FlowPanel>
+			<my:Key styleName="{style.key}" ui:field="t1_11" >
+				<my:upFace><img src="images/kb/Basis/Touch/T1.11.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T1.11-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t2_11">
+				<my:upFace><img src="images/kb/Basis/Touch/T2.11.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T2.11-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t3_11">
+				<my:upFace><img src="images/kb/Basis/Touch/T3.11.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T3.11-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t4_11">
+				<my:upFace><img src="images/kb/Basis/Touch/T4.11.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T4.11-2.png"/></my:downFace>
+			</my:Key>
+		</g:FlowPanel>
+		<g:FlowPanel>
+			<my:Key styleName="{style.key}" ui:field="t1_12">
+				<my:upFace><img src="images/kb/Basis/Touch/T1.12.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T1.12-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t2_12">
+				<my:upFace><img src="images/kb/Basis/Touch/T2.12.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T2.12-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t3_12">
+				<my:upFace><img src="images/kb/Basis/Touch/T3.12.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T3.12-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t4_12">
+				<my:upFace><img src="images/kb/Basis/Touch/T4.12.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T4.12-2.png"/></my:downFace>
+			</my:Key>
+		</g:FlowPanel>
+
+		<g:FlowPanel>
+			<my:Key styleName="{style.key}" ui:field="t1_13" >
+				<my:upFace><img src="images/kb/Basis/Touch/T1.13.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T1.13-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t2_13">
+				<my:upFace><img src="images/kb/Basis/Touch/T2.13.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T2.13-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t3_13">
+				<my:upFace><img src="images/kb/Basis/Touch/T3.13.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T3.13-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t4_13">
+				<my:upFace><img src="images/kb/Basis/Touch/T4.13.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T4.13-2.png"/></my:downFace>
+			</my:Key>
+		</g:FlowPanel>
+		<g:FlowPanel>
+			<my:Key styleName="{style.key}" ui:field="t1_14">
+				<my:upFace><img src="images/kb/Basis/Touch/T1.14.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T1.14-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t2_14">
+				<my:upFace><img src="images/kb/Basis/Touch/T2.14.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T2.14-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t3_14">
+				<my:upFace><img src="images/kb/Basis/Touch/T3.14.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T3.14-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t4_14">
+				<my:upFace><img src="images/kb/Basis/Touch/T4.14.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T4.14-2.png"/></my:downFace>
+			</my:Key>
+		</g:FlowPanel>
+		<g:FlowPanel>
+			<my:Key styleName="{style.key}" ui:field="t1_15" >
+				<my:upFace><img src="images/kb/Basis/Touch/T1.15.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T1.15-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t2_15">
+				<my:upFace><img src="images/kb/Basis/Touch/T2.15.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T2.15-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t3_15">
+				<my:upFace><img src="images/kb/Basis/Touch/T3.15.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T3.15-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t4_15">
+				<my:upFace><img src="images/kb/Basis/Touch/T4.15.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T4.15-2.png"/></my:downFace>
+			</my:Key>
+		</g:FlowPanel>
+		<g:FlowPanel>
+			<my:Key styleName="{style.key}" ui:field="t1_16">
+				<my:upFace><img src="images/kb/Basis/Touch/T1.16.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T1.16-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t2_16">
+				<my:upFace><img src="images/kb/Basis/Touch/T2.16.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T2.16-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t3_16">
+				<my:upFace><img src="images/kb/Basis/Touch/T3.16.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T3.16-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.key}" ui:field="t4_16">
+				<my:upFace><img src="images/kb/Basis/Touch/T4.16.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T4.16-2.png"/></my:downFace>
+			</my:Key>
+		</g:FlowPanel>
+
+		<g:FlowPanel>
+			<my:Key styleName="{style.key}" ui:field="t1_17">
+				<my:upFace><img src="images/kb/Basis/Touch/T1.17.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T1.17-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.enter}" ui:field="t2_17">
+				<my:upFace><img src="images/kb/Basis/Touch/T2.17.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T2.17-2.png"/></my:downFace>
+			</my:Key>
+			<my:Key styleName="{style.blur}" ui:field="t4_17">
+				<my:upFace><img src="images/kb/Basis/Touch/T4.17.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T4.17-2.png"/></my:downFace>
+			</my:Key>
+		</g:FlowPanel>
+
+	</g:HorizontalPanel>
+</ui:UiBinder> 

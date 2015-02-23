@@ -59,6 +59,9 @@ public class KeyboardGWT implements EntryPoint {
 		RootPanel root = RootPanel.get();
 		root.add(new Label("algebra"));
 		root.add(panel);
+		TabletKeyboard tablet = new TabletKeyboard();
+		tablet.setEditor(editor);
+		root.add(tablet);
 		root.add(new Label("statistiek"));
 		panel = new DesktopKeyboardStatistiek();
 		panel.setEditor(editor);
@@ -71,12 +74,17 @@ public class KeyboardGWT implements EntryPoint {
 		panel = new DesktopKeyboardGonio();
 		panel.setEditor(editor);
 		root.add(panel);
+		root.add(new Label("onderbouw"));
+		panel = new DesktopKeyboardOnderbouw();
+		panel.setEditor(editor);
+		root.add(panel);
+
+		
 		AlphaKeys alpha = new AlphaKeys();
 		root.add(new Label("alpha"));
 		alpha.setEditor(editor);
 		root.add(alpha);
 
-		
 		root.add(tekst);
 
 	}
