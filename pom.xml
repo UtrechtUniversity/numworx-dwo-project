@@ -6,8 +6,8 @@
     <groupId>fi.dwo</groupId>
     <artifactId>DWOServer</artifactId>
     <packaging>war</packaging>
-    <version>1.0-SNAPSHOT</version>
-    <name>DWOServer</name>
+    <version>1.0.0</version>
+    <name>DWOServer-1.0.0</name>
     <url>http://www.dwo.nl</url>
     <!-- Update year to current when starting a new project -->
     <inceptionYear>2015</inceptionYear> 
@@ -32,7 +32,7 @@
 
     <!-- update the https path for a different branch or tag! -->
     <scm>
-        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOServer/trunk</developerConnection>
+        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOServer/releases/RELEASE-1.0.0</developerConnection>
         <tag>HEAD</tag>
     </scm>
   
@@ -56,6 +56,11 @@
             <version>2.0.1</version>
         </dependency>
         <dependency>
+            <groupId>com.jamonapi</groupId>
+            <artifactId>jamon</artifactId>
+            <version>2.80</version>
+        </dependency>
+        <dependency>
             <groupId>jre.plugin</groupId>
             <artifactId>plugin</artifactId>
             <version>1.8.0_31</version>
@@ -73,37 +78,6 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>  
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jamonapi</groupId>
-            <artifactId>jamon</artifactId>
-            <version>2.75</version>
-        </dependency>
-        <dependency>
-            <groupId>net.oauth.core</groupId>
-            <artifactId>oauth</artifactId>
-            <version>20100601</version>
-        </dependency>
-        <dependency>
-            <groupId>net.oauth.core</groupId>
-            <artifactId>oauth-provider</artifactId>
-            <version>20100601</version>
-        </dependency>
-        <dependency>
-            <groupId>net.oauth.core</groupId>
-            <artifactId>oauth-consumer</artifactId>
-            <version>20100601</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
-        </dependency>
-        
     </dependencies>
 
     <build>
@@ -175,16 +149,19 @@
                 </configuration>
             </plugin>          
         </plugins>
+       <finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
     </build>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+         <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
+   </properties>
     
     <repositories>
         <repository>
             <id>xmlrpc</id>
             <url>http://ws.apache.org/xmlrpc/</url>
         </repository>
-    </repositories>
+    </repositories>    
 </project>
