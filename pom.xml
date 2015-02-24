@@ -6,8 +6,8 @@
     <groupId>fi.dwo</groupId>
     <artifactId>DWOServer</artifactId>
     <packaging>war</packaging>
-    <version>1.0.0</version>
-    <name>DWOServer-1.0.0</name>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>DWOServer-trunk</name>
     <url>http://www.dwo.nl</url>
     <!-- Update year to current when starting a new project -->
     <inceptionYear>2015</inceptionYear> 
