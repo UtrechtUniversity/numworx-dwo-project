@@ -59,7 +59,6 @@ public interface IStore {
      * clear cache.
      *
      * @param scoId
-     * @param scoID the sco, 0 = all
      */
     void clear(int scoId);
 }

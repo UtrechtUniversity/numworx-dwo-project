@@ -415,6 +415,7 @@ public class User implements UserGroup, Comparable {
     /**
      * Een gast/leerling mag niets. Docenten mogen meer.
      *
+     * @param right
      * @return 
      * @see fi.dwo.client.domain.Teacher#hasRight(char)
      */

@@ -248,6 +248,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
     }
 
     /**
+     * @param owner
      * @return fi.dwo.client.domain.Sco
      * @throws fi.dwo.commons.exceptions.SchoolException
      */
@@ -270,6 +271,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
     }
 
     /**
+     * @param school
      * @return fi.dwo.client.domain.Sco
      * @throws fi.dwo.commons.exceptions.SchoolException
      */

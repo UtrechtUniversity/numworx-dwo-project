@@ -378,6 +378,7 @@ public class GuiCreatorTeacher extends GuiCreator {
     }
 
     /**
+     * @param course
      * @param appletID
      * @param name
      * @param description

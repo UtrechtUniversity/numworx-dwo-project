@@ -225,6 +225,7 @@ public class GuiCreatorAdmin extends GuiCreator {
     }
 
     /**
+     * @param course
      * @param appletID
      * @param name
      * @param description

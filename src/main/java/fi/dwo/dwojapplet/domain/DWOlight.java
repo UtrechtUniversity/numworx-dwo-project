@@ -24,8 +24,13 @@ import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.ScoPanel;
 import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JApplet;
 
 public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
+
+    private static final Logger log = Logger.getLogger(JApplet.class.getName());
 
     private Course currentCourse;
     private User currentUser;
@@ -53,6 +58,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
      * username
      * password
      * </pre>
+     *
      * @param args
      */
     public DWOlight(String[] args) {
@@ -361,8 +367,6 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
      *
      * @return If the guest was successfully logged in it returns true.
      * Otherwise it returns false.
-     * @throws fi.dwo.client.system.LoginException If some login-information is
-     * incorrect.z
      *
      */
     @Override
@@ -738,8 +742,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
         }
         //
         Group[] groups = getGroups();
-        for (int i = 0; i < groups.length; i++) {
-            Group group = groups[i];
+        for (Group group : groups) {
             if (role.equalsIgnoreCase(group.getName())) {
                 return group;
             }
@@ -759,14 +762,14 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
         if (className != null
                 && (schoolClass == null || !schoolClass.getName().equals(className))) {
             SchoolClass[] classes = school.getClassList();
-            for (int i = 0; i < classes.length; i++) {
-                if (className.equals(classes[i].getName())) {
-                    u.setInClass(classes[i]);
+            for (SchoolClass classe : classes) {
+                if (className.equals(classe.getName())) {
+                    u.setInClass(classe);
                     try {
                         PersistenceFacade.instance().changeAccount(u, null, null, u.getFirstname(), u.getMiddleName(), u.getLastName(), u.getEmail(), u.getInClass());
                     } catch (RegisterException e) {
                         // TODO Auto-generated catch block
-                        e.printStackTrace();
+                        log.log(Level.SEVERE, null, e);
                     }
                 }
             }
@@ -869,7 +872,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
             return PersistenceFacade.instance().LMSCommit(sco, getUser(), param);
         } catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
-            e.printStackTrace();
+            log.log(Level.SEVERE, null, e);
             return "false";
         }
     }

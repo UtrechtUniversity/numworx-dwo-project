@@ -111,6 +111,7 @@ public class SchoolMapper extends XmlRpcMapper {
      * @param oid
      * @param obj
      * @throws org.apache.xmlrpc.applet.XmlRpcException
+     * @throws java.sql.SQLException
      *
      */
     @Override
@@ -124,6 +125,7 @@ public class SchoolMapper extends XmlRpcMapper {
      * @param data
      * @return Object
      * @throws org.apache.xmlrpc.applet.XmlRpcException
+     * @throws java.sql.SQLException
      *
      */
     @Override
@@ -151,6 +153,7 @@ public class SchoolMapper extends XmlRpcMapper {
      * @param obj
      * @return Object[]
      * @throws org.apache.xmlrpc.applet.XmlRpcException
+     * @throws java.sql.SQLException
      *
      */
     @Override

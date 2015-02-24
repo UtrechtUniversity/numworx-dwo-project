@@ -17,6 +17,8 @@ import java.util.Set;
 
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class is responsible for the Course data.
@@ -24,6 +26,7 @@ import fi.dwo.commons.system.TextMapper;
  * @author M.J.B. Kupers
  */
 public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
+    private static final Logger log = Logger.getLogger(Course.class.getName());
 
     private int courseID;
 
@@ -148,7 +151,6 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
     /**
      * Sets the current sco of the course.
      *
-     * @param currentSco The currentSco to set.
      * @return 
      */
     public Sco getCurrentSco() {
@@ -222,8 +224,7 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
                 return courseLogo = l.getImage();
             }
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
         }
         if ((getImageUrl() != null)
                 && (!getImageUrl().equals(""))) {
@@ -464,17 +465,17 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
     @Override
     public void addChild(Course child) {
         child.setParentID(getID());
-        CourseMap[] children = getChildren();
-        if (children == null) {
-            children = new Course[]{child};
+        CourseMap[] lclChildren = getChildren();
+        if (lclChildren == null) {
+            lclChildren = new Course[]{child};
         } else {
-            int length = children.length;
+            int length = lclChildren.length;
             Course[] n = new Course[length + 1];
-            System.arraycopy(children, 0, n, 0, length);
+            System.arraycopy(lclChildren, 0, n, 0, length);
             n[length] = child;
-            children = n;
+            lclChildren = n;
         }
-        setChildren(children);
+        setChildren(lclChildren);
     }
 
     @Override
@@ -488,9 +489,9 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
     }
 
     public void removeChild(Course child) {
-        CourseMap[] children = getChildren();
-        for (int i = 0; i < children.length; i++) {
-            if (children[i] == child) {
+        CourseMap[] lclChildren = getChildren();
+        for (int i = 0; i < lclChildren.length; i++) {
+            if (lclChildren[i] == child) {
                 removeChild(i);
                 break;
             }
@@ -529,27 +530,27 @@ public class Course implements LessonGroup, Comparable, CourseMap, Descriptor {
         if (isWithChildren()) {
             return null;
         }
-        Sco[] scoList = getScoList();
-        int offset = scoList.length;
+        Sco[] lclScoList = getScoList();
+        int offset = lclScoList.length;
         Set names = new HashSet();
         for (int i = 0; i < offset; i++) {
-            String name = scoList[i].getScoName();
-            names.add(name);
+            String lclName = lclScoList[i].getScoName();
+            names.add(lclName);
         }
         return names;
     }
 
     @Override
     public Set getChildNames() {
-        CourseMap[] children = getChildren();
-        if (children == null) {
+        CourseMap[] lclChildren = getChildren();
+        if (lclChildren == null) {
             return null;
         }
-        int offset = children.length;
+        int offset = lclChildren.length;
         Set names = new HashSet();
         for (int i = 0; i < offset; i++) {
-            String name = children[i].toString();
-            names.add(name);
+            String lclName = lclChildren[i].toString();
+            names.add(lclName);
         }
         return names;
     }

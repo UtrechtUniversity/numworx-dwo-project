@@ -30,6 +30,8 @@ import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.ScoPanel;
 import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class is responsible for the Sco data. It also implements the
@@ -39,6 +41,7 @@ import fi.dwo.dwojapplet.persistence.PersistenceFacade;
  *
  */
 public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, AppletStub, Comparable, ScoEditor {
+    private static final Logger log = Logger.getLogger(Sco.class.getName());
 
     private ScoEditor editor = this;
     private PropertyChangeSupport bean = new PropertyChangeSupport(this);
@@ -79,7 +82,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
 
     public static void setDefaultLessonMode(String mode) {
         if (BROWSE.equals(mode)) {
-            mode = new String(BROWSE);
+            mode = BROWSE;
         } else {
             mode = NORMAL;
         }
@@ -107,7 +110,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
     }
 
     public void setShowScore(boolean showScore) {
-        this.showScore = Boolean.valueOf(showScore);
+        this.showScore = showScore;
     }
 
     public void setShowScore(Boolean showScore) {
@@ -296,7 +299,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
                     SetValue(TOTAL_TIME, result.toString());
                     System.err.println("sum = [" + result + "]");
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.log(Level.SEVERE,null,e);
                 }
             }
             return ok("true");
@@ -318,7 +321,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
 // XXX Sietske wil eerst op nummer daarna pas op titel
         try {
             sconr = Integer.parseInt(iValue) - 1;
-        } catch (Exception _) {
+        } catch (Exception e) {
         }
         if (sconr <= -1 || sconr >= list.length) {
             for (sconr = 0; sconr < list.length; sconr++) {

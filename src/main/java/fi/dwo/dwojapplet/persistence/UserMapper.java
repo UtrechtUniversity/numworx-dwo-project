@@ -38,6 +38,7 @@ public class UserMapper extends XmlRpcMapper {
      * @param oid
      * @param obj
      * @throws org.apache.xmlrpc.applet.XmlRpcException
+     * @throws java.sql.SQLException
      *
      */
     @Override
@@ -50,6 +51,7 @@ public class UserMapper extends XmlRpcMapper {
      * @param data
      * @return Object
      * @throws org.apache.xmlrpc.applet.XmlRpcException
+     * @throws java.sql.SQLException
      *
      */
     @Override
@@ -101,6 +103,7 @@ public class UserMapper extends XmlRpcMapper {
      * </ul>
      * @return The Users who satisfies the restriction.
      * @throws org.apache.xmlrpc.applet.XmlRpcException
+     * @throws java.sql.SQLException
      */
     @Override
     public Object[] get(Object obj) throws IOException, SQLException,

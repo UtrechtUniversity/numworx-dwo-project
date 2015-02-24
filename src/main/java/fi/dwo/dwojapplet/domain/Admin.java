@@ -20,6 +20,7 @@ public class Admin extends User {
     /**
      * Een admin mag alles.
      *
+     * @param right
      * @return 
      * @see fi.dwo.client.domain.User#hasRight(char)
      */

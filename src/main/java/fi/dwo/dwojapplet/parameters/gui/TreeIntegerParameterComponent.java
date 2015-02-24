@@ -26,6 +26,7 @@ public class TreeIntegerParameterComponent extends IntegerParameterComponent imp
     /**
      * Calls the parent generatePostItems, and adds a delete-button.
      *
+     * @param after
      * @return 
      * @see
      * fi.dwo.parameters.gui.ParameterComponent#generatePostItems(java.awt.Component)

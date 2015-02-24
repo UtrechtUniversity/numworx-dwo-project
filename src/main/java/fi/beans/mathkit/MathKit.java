@@ -30,7 +30,6 @@ public class MathKit extends HTMLEditorKit {
         return context;
     }
 
-    // TODO Wim: Check please do we need to export this non-public function to public?
     public void setStylePreferences(FormuleContext formuleContext) {
         context = formuleContext;
     }
@@ -53,8 +52,8 @@ public class MathKit extends HTMLEditorKit {
      *
      * @return
      */
-    //TODO Wim: Does not call clone.super, does not throw CloneNotSupported Exception
     @Override
+    @SuppressWarnings("CloneDeclaresCloneNotSupported")
     public Object clone() {
         MathKit kit = new MathKit();
         kit.context = context;

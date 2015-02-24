@@ -36,6 +36,7 @@ public abstract class XmlRpcMapper implements MapperIF {
      * Returns alle the objects representing the specified mapper.
      *
      * @return All the objects representing the specified mapper.
+     * @throws java.io.IOException
      * @throws java.sql.SQLException
      * @see fi.dwo.client.persistence.MapperIF#get()
      */
@@ -65,6 +66,7 @@ public abstract class XmlRpcMapper implements MapperIF {
      * @param oid The ID of the object to return.
      * @return The object representing the oid.
      * @throws java.sql.SQLException
+     * @throws org.apache.xmlrpc.applet.XmlRpcException
      */
     @Override
     public Object get(int oid) throws IOException, XmlRpcException,

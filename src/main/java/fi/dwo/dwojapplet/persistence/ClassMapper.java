@@ -31,6 +31,7 @@ public class ClassMapper extends XmlRpcMapper {
      * @param oid
      * @param obj
      * @throws org.apache.xmlrpc.applet.XmlRpcException
+     * @throws java.sql.SQLException
      *
      */
     @Override
@@ -77,6 +78,7 @@ public class ClassMapper extends XmlRpcMapper {
      * </ul>
      * @return The SchoolClasses who satisfy to the restriction.
      * @throws org.apache.xmlrpc.applet.XmlRpcException
+     * @throws java.sql.SQLException
      */
     @Override
     public Object[] get(Object obj) throws IOException, SQLException,

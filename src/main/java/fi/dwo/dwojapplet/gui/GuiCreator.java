@@ -81,8 +81,6 @@ public class GuiCreator {
      * @return If the user was successfully logged in it returns true. Otherwise
      * it returns false.
      * @throws fi.dwo.commons.exceptions.LoginException
-     * @throws fi.dwo.client.system.LoginException If some login-information is
-     * incorrect.
      *
      */
     public void login(String username, String password) throws LoginException {
@@ -172,8 +170,6 @@ public class GuiCreator {
      * @return If the guest was successfully logged in it returns true.
      * Otherwise it returns false.
      * @throws fi.dwo.commons.exceptions.LoginException
-     * @throws fi.dwo.client.system.LoginException If some login-information is
-     * incorrect.
      *
      */
     public void login() throws LoginException {
@@ -205,8 +201,6 @@ public class GuiCreator {
      * @return If the user was successfully registered true is returned.
      * Otherwise false is returned.
      * @throws fi.dwo.commons.exceptions.RegisterException
-     * @throws fi.dwo.client.system.RegisterException If some
-     * register-information is incorrect or the user already exists.
      *
      */
     public void register(String username, String password, String rePassword,
@@ -243,8 +237,6 @@ public class GuiCreator {
      * @return If the user was successfully registered true is returned.
      * Otherwise false is returned.
      * @throws fi.dwo.commons.exceptions.RegisterException
-     * @throws fi.dwo.client.system.RegisterException If some
-     * register-information is incorrect or the user already exists.
      *
      */
     public void register(String username, String password, String rePassword,
@@ -478,8 +470,6 @@ public class GuiCreator {
      * @param email The e-mail address of the user.
      * @param c The new SchoolClass of the user.
      * @throws fi.dwo.commons.exceptions.RegisterException
-     * @throws fi.dwo.client.system.RegisterException If some
-     * register-information is incorrect or the user already exists.
      *
      */
     public void changeAccount(String password, String newPassword,
@@ -508,8 +498,6 @@ public class GuiCreator {
      * @param groupPassword The password corresponding with the specified group
      * and the school.
      * @throws fi.dwo.commons.exceptions.RegisterException
-     * @throws fi.dwo.client.system.RegisterException If some
-     * register-information is incorrect or the user already exists.
      *
      */
     public void changeAccount(String password, String newPassword,
@@ -535,8 +523,6 @@ public class GuiCreator {
      * @param lastName The lastname (familyname) of the user.
      * @param email The e-mail address of the user.
      * @throws fi.dwo.commons.exceptions.RegisterException
-     * @throws fi.dwo.client.system.RegisterException If some
-     * register-information is incorrect or the user already exists.
      *
      */
     public void changeAccount(String password, String newPassword,
@@ -569,7 +555,11 @@ public class GuiCreator {
     /**
      * Shows a dialog to edit a school.
      *
+     * @param schoolID
+     * @param schoolName
+     * @param schoolLogin
      * @param date
+     * @param schoolPasswdMap
      *
      * @return edited School
      * @throws fi.dwo.commons.exceptions.SchoolException
@@ -583,8 +573,9 @@ public class GuiCreator {
      * Shows a dialog to add a school and adds the school.
      *
      * @param id
+     * @param schoolName
      * @param date
-     * @param schooladminPasswd
+     * @param schoolPasswdMap
      *
      * @return boolean Indicates if the school is added, or the operation is
      * canceled.
@@ -813,7 +804,7 @@ public class GuiCreator {
     }
 
     /**
-     * @param appletID
+     * @param course
      * @param appletConfig
      * @param name
      * @param description

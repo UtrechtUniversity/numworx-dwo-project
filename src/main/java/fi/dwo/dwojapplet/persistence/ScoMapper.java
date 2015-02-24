@@ -106,6 +106,7 @@ public class ScoMapper extends XmlRpcMapper {
      * @param oid
      * @param obj
      * @throws org.apache.xmlrpc.applet.XmlRpcException
+     * @throws java.sql.SQLException
      *
      */
     @Override
@@ -119,6 +120,7 @@ public class ScoMapper extends XmlRpcMapper {
      * @param data
      * @return Object
      * @throws org.apache.xmlrpc.applet.XmlRpcException
+     * @throws java.sql.SQLException
      *
      */
     @Override
@@ -160,6 +162,7 @@ public class ScoMapper extends XmlRpcMapper {
      * </ul>
      * @return The SCO's who satisfies to the restriction.
      * @throws org.apache.xmlrpc.applet.XmlRpcException
+     * @throws java.sql.SQLException
      */
     @Override
     public Object[] get(Object obj) throws IOException, SQLException,

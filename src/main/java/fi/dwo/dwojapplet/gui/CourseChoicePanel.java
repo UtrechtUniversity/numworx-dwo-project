@@ -100,6 +100,7 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
      * Creates a new instance of a CourseChoisePanel This panel gives an
      * overview of all the available courses to the user.
      *
+     * @param dwoProfile
      * @param courseList TODO
      * @param userObject
      */

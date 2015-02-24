@@ -37,7 +37,6 @@ public class MainParameterComponent extends ParameterComponent implements TabShe
     /**
      * @param parameters
      * @param defaultValue
-     * @param default
      * @roseuid 425A79BE02AF
      */
     public MainParameterComponent(Parameter[] parameters, Hashtable defaultValue) {

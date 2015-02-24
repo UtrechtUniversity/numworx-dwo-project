@@ -202,6 +202,7 @@ public class MultiLevelTreeParameterComponent extends ParameterComponent
      * With a tree element, there is no help button so generate nothing and
      * return <code>after</code>
      *
+     * @param after
      * @return 
      * @see
      * fi.dwo.parameters.gui.ParameterComponent#generatePostItems(java.awt.Component)

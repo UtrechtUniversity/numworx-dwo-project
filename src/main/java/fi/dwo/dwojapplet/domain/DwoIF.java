@@ -42,8 +42,6 @@ public interface DwoIF {
      * @return If the user was successfully logged in it returns true. Otherwise
      * it returns false.
      * @throws fi.dwo.commons.exceptions.LoginException
-     * @throws fi.dwo.client.system.LoginException If some login-information is
-     * incorrect.
      *
      */
     public boolean login(String username, String password)
@@ -55,8 +53,6 @@ public interface DwoIF {
      * @return If the guest was successfully logged in it returns true.
      * Otherwise it returns false.
      * @throws fi.dwo.commons.exceptions.LoginException
-     * @throws fi.dwo.client.system.LoginException If some login-information is
-     * incorrect.
      *
      */
     public boolean login() throws LoginException;
@@ -76,8 +72,6 @@ public interface DwoIF {
      * @return If the user was successfully registered true is returned.
      * Otherwise false is returned.
      * @throws fi.dwo.commons.exceptions.RegisterException
-     * @throws fi.dwo.client.system.RegisterException If some
-     * register-information is incorrect or the user already exists.
      *
      */
     public boolean register(String username, String password,
@@ -103,8 +97,6 @@ public interface DwoIF {
      * @return If the user was successfully registered true is returned.
      * Otherwise false is returned.
      * @throws fi.dwo.commons.exceptions.RegisterException
-     * @throws fi.dwo.client.system.RegisterException If some
-     * register-information is incorrect or the user already exists.
      *
      */
     public boolean register(String username, String password,
@@ -187,8 +179,6 @@ public interface DwoIF {
      * @param email The e-mail address of the user.
      * @param c The new SchoolClass of the user.
      * @throws fi.dwo.commons.exceptions.RegisterException
-     * @throws fi.dwo.client.system.RegisterException If some
-     * register-information is incorrect or the user already exists.
      *
      */
     public void changeAccount(String password, String newPassword,
@@ -214,8 +204,6 @@ public interface DwoIF {
      * @param groupPassword The password corresponding with the specified group
      * and the school.
      * @throws fi.dwo.commons.exceptions.RegisterException
-     * @throws fi.dwo.client.system.RegisterException If some
-     * register-information is incorrect or the user already exists.
      *
      */
     public void changeAccount(String password, String newPassword,
@@ -237,8 +225,6 @@ public interface DwoIF {
      * @param lastName The lastname (familyname) of the user.
      * @param email The e-mail address of the user.
      * @throws fi.dwo.commons.exceptions.RegisterException
-     * @throws fi.dwo.client.system.RegisterException If some
-     * register-information is incorrect or the user already exists.
      *
      */
     public void changeAccount(String password, String newPassword,
@@ -254,8 +240,6 @@ public interface DwoIF {
      * @return boolean If the class is successfully inserted it returns true.
      * Otherwise it returns false.
      * @throws fi.dwo.commons.exceptions.ClassException
-     * @throws fi.dwo.client.system.ClassException If some class-information is
-     * incorrect.
      *
      */
     public boolean addClass(String className) throws ClassException;
@@ -397,6 +381,7 @@ public interface DwoIF {
     /**
      * @param name
      * @param description
+     * @param parent
      * @param isMap
      * @return fi.dwo.client.domain.Course
      * @throws CourseException
@@ -410,6 +395,7 @@ public interface DwoIF {
     public boolean updateCourse(Course course);
 
     /**
+     * @param course
      * @param appletID
      * @param appletConfig
      * @param name

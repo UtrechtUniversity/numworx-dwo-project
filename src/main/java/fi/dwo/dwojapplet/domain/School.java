@@ -93,7 +93,6 @@ public class School {
      * Sets the unique-identifier of the school.
      *
      * @param schoolLogin
-     * @param schoolID The unique-identifier of the school.
      */
     public void setSchoolLogin(String schoolLogin) {
         this.schoolLogin = schoolLogin;

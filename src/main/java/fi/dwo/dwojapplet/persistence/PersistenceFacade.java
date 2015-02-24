@@ -135,7 +135,6 @@ public class PersistenceFacade {
      * NOT IMPLEMENTED!!
      *
      * @param oid
-     * @param c
      * @param obj
      * @throws fi.dwo.commons.exceptions.PersistenceException
      *
@@ -625,8 +624,6 @@ public class PersistenceFacade {
      * @return If the user was successfully registered true is returned.
      * Otherwise false is returned.
      * @throws fi.dwo.commons.exceptions.RegisterException
-     * @throws fi.dwo.client.system.RegisterException If some
-     * register-information is incorrect or the user already exists.
      *
      */
     public boolean register(String username, String password, String firstname,
@@ -670,8 +667,6 @@ public class PersistenceFacade {
      * @return If the user was successfully registered true is returned.
      * Otherwise false is returned.
      * @throws fi.dwo.commons.exceptions.RegisterException
-     * @throws fi.dwo.client.system.RegisterException If some
-     * register-information is incorrect or the user already exists.
      *
      */
     public boolean register(String username, String password, String firstname,
@@ -707,8 +702,6 @@ public class PersistenceFacade {
      * @param password The password of the user.
      * @return The user who logged in. If an exception occurs, null is returned.
      * @throws fi.dwo.commons.exceptions.LoginException
-     * @throws fi.dwo.client.system.LoginException If some login-information is
-     * incorrect.
      *
      */
     public User login(String username, String password) throws LoginException {
@@ -762,7 +755,6 @@ public class PersistenceFacade {
      * @param groupPassword The password of the usergroup.
      * @return fi.dwo.client.domain.School The school of the user.
      * @throws fi.dwo.commons.exceptions.RegisterException
-     * @throws fi.dwo.client.system.RegisterException
      *
      */
     public School addToSchool(User user, String schoolLogin, Group group,
@@ -797,6 +789,7 @@ public class PersistenceFacade {
      *
      * @param user The user to change.
      * @param password The new password.
+     * @param newPassword
      * @param firstname The new firstname.
      * @param middlename The new middlename. e.g: <code>Van</code>
      * @param lastname The new lastname.
@@ -857,6 +850,7 @@ public class PersistenceFacade {
      *
      * @param user The user to change.
      * @param password The new password.
+     * @param newPassword
      * @param firstname The new firstname.
      * @param middlename The new middlename. e.g: <code>Van</code>
      * @param lastname The new lastname.
@@ -907,8 +901,6 @@ public class PersistenceFacade {
      * @param className The name of the new schoolclass.
      * @return The new schoolclass. If an exception occurs, null is returned.
      * @throws fi.dwo.commons.exceptions.ClassException
-     * @throws fi.dwo.client.system.ClassException If something went wrong with
-     * the classname.
      *
      */
     public SchoolClass addClass(Teacher teacher, String className)
@@ -949,8 +941,6 @@ public class PersistenceFacade {
      * @param studentPassw Password for students.
      * @param teacherPassw Password for teachers.
      * @return The new schoolclass. If an exception occurs, null is returned.
-     * @throws fi.dwo.client.system.ClassException If something went wrong with
-     * the classname.
      *
      */
     public School addSchool(int id, String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
@@ -1012,6 +1002,7 @@ public class PersistenceFacade {
     /**
      * Edit an old school
      *
+     * @param schoolID
      * @throws fi.dwo.commons.exceptions.SchoolException
      * @deprecated use {@link #editSchool(int, String, String, Hashtable)}
      * @param schoolName The name of the new school.
@@ -1336,7 +1327,6 @@ public class PersistenceFacade {
      * Returns all the courses which can be edited by the teacher.
      *
      * @param user
-     * @param teacher The teacher wherefrom the courses must be returned.
      * @return The courses which can be edited by the specified teacher.
      * @throws PersistenceException
      */
@@ -1400,6 +1390,7 @@ public class PersistenceFacade {
      * @param name The name of the course.
      * @param description The description of the course.
      * @param withChildren
+     * @param parent
      * @return The new course. If an exception occurs, null is returned.
      * @throws CourseException
      */

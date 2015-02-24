@@ -73,7 +73,7 @@ import java.util.logging.Logger;
  */
 public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
 
-    static private Logger log = Logger.getLogger(JApplet.class.getName());
+    private static final Logger log = Logger.getLogger(JApplet.class.getName());
 
     private static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
 
@@ -213,6 +213,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * username
      * password
      * </pre>
+     *
      * @param args
      */
     public DWO(String[] args) {
@@ -283,8 +284,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * @return If the user was successfully logged in it returns true. Otherwise
      * it returns false.
      * @throws fi.dwo.commons.exceptions.LoginException
-     * @throws fi.dwo.client.system.LoginException If some login-information is
-     * incorrect.
      *
      */
     @Override
@@ -303,6 +302,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * @param currentUser
      * @return
      */
+    @SuppressWarnings("null")
     private boolean setExtraRights(final User currentUser) {
         DwoHelper.setAdminLoggedIn(currentUser instanceof Admin);
         DwoHelper.setScormExportLoggedIn(currentUser.hasRight(User.SCORM_EXPORT_RIGHT));
@@ -315,6 +315,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
                 return false;
             }
             int classNumber = sc.getID();
+            @SuppressWarnings("UnusedAssignment")
             String testNumberString = "0";
             if (testViewKeys.containsKey("" + classNumber)) {
                 testNumberString = (String) testViewKeys.get("" + classNumber);
@@ -322,7 +323,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
                 return false;
             }
             scoViewNr = Integer.parseInt(testNumberString);
-// Hier fixen we nog de iconizer voor deeplink OPNIEUW! FIXME netter?
             GuiConstants.fixIconizer(scoViewNr, courseViewNr);
 
         }
@@ -341,7 +341,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
             }
 
         }
-        return currentUser != null;
+        return (currentUser != null);
     }
 
     /**
@@ -352,8 +352,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      *
      * @return If the guest was successfully logged in it returns true.
      * Otherwise it returns false.
-     * @throws fi.dwo.client.system.LoginException If some login-information is
-     * incorrect.z
      *
      */
     @Override
@@ -398,8 +396,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * @return If the user was successfully registered true is returned.
      * Otherwise false is returned.
      * @throws fi.dwo.commons.exceptions.RegisterException
-     * @throws fi.dwo.client.system.RegisterException If some
-     * register-information is incorrect or the user already exists.
      *
      */
     @Override
@@ -512,8 +508,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
             }
         }
 
-        for (int i = 0; i < realms.length; i++) {
-            if (username.endsWith(realms[i])) {
+        for (String realm : realms) {
+            if (username.endsWith(realm)) {
                 return false;
             }
         }
@@ -558,8 +554,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * @return If the user was successfully registered true is returned.
      * Otherwise false is returned.
      * @throws fi.dwo.commons.exceptions.RegisterException
-     * @throws fi.dwo.client.system.RegisterException If some
-     * register-information is incorrect or the user already exists.
      *
      */
     @Override
@@ -656,9 +650,9 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
             return null;
         }
         Vector v = new Vector();
-        for (int i = 0; i < completeList.length; i++) {
-            if (completeList[i].getDwoProfile() == dwoProfile.getID()) {
-                v.addElement(completeList[i]);
+        for (Course completeList1 : completeList) {
+            if (completeList1.getDwoProfile() == dwoProfile.getID()) {
+                v.addElement(completeList1);
             }
         }
         Course[] selectedCourses = new Course[v.size()];
@@ -689,7 +683,9 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
     /**
      * Sorteer course op class (is nu school).
      *
-     * @return 
+     * @param courses
+     * @param inclass
+     * @return
      * @deprecated er is geen class meer, altijd school
      */
     @Override
@@ -792,8 +788,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * @param email The e-mail address of the user.
      * @param c The new SchoolClass of the user.
      * @throws fi.dwo.commons.exceptions.RegisterException
-     * @throws fi.dwo.client.system.RegisterException If some
-     * register-information is incorrect or the user already exists.
      *
      */
     @Override
@@ -830,8 +824,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * @param groupPassword The password corresponding with the specified group
      * and the school.
      * @throws fi.dwo.commons.exceptions.RegisterException
-     * @throws fi.dwo.client.system.RegisterException If some
-     * register-information is incorrect or the user already exists.
      *
      */
     @Override
@@ -880,8 +872,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * @param lastName The lastname (familyname) of the user.
      * @param email The e-mail address of the user.
      * @throws fi.dwo.commons.exceptions.RegisterException
-     * @throws fi.dwo.client.system.RegisterException If some
-     * register-information is incorrect or the user already exists.
      *
      */
     @Override
@@ -943,8 +933,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * @return boolean If the class is successfully inserted it returns true.
      * Otherwise it returns false.
      * @throws fi.dwo.commons.exceptions.ClassException
-     * @throws fi.dwo.client.system.ClassException If some class-information is
-     * incorrect.
      *
      */
     @Override
@@ -1171,7 +1159,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
         if (testView) {
             String testViewPropertiesString = getParameter("testViewProperties");
 
-            Properties testProperties = null;
+            Properties testProperties;
 
             try {
                 URL url = new URL(getDocumentBase(), testViewPropertiesString);
@@ -1188,7 +1176,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
             } catch (Exception e) {
                 testViewKeys = null;
                 testView = false;
-                e.printStackTrace();
+                log.log(Level.SEVERE, null, e);
             }
         }
 
@@ -1205,7 +1193,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
                 schoolAccessPropertiesString = getParameter("schoolAccessProperties");
             }
 
-            Properties schoolAccessProperties = null;
+            Properties schoolAccessProperties;
 
             try {
                 URL url = new URL(getDocumentBase(), schoolAccessPropertiesString);
@@ -1227,7 +1215,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
             } catch (Exception e) {
                 schoolAccessKeys = null;
                 limitedSchoolAccess = false;
-                e.printStackTrace();
+                log.log(Level.SEVERE, null, e);
             }
 
         }
@@ -1274,19 +1262,19 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
         //this.setLayout(new BorderLayout());
         //this.setLayout(null);
         if (userName == null) {
-            String userName = getParameter("userName");
-            if (userName != null && "".equals(userName)) {
-                userName = null;
-            } else if (userName != null) {
-                this.userName = userName;
+            String lclUserName = getParameter("userName");
+            if (lclUserName != null && "".equals(lclUserName)) {
+                lclUserName = null;
+            } else if (lclUserName != null) {
+                this.userName = lclUserName;
             }
         }
         if (passWord == null) {
-            String passWord = getParameter("passWord");
-            if (passWord != null && "".equals(passWord)) {
-                passWord = null;
-            } else if (passWord != null) {
-                this.passWord = passWord;
+            String lclPassword = getParameter("passWord");
+            if (lclPassword != null && "".equals(lclPassword)) {
+                lclPassword = null;
+            } else if (lclPassword != null) {
+                this.passWord = lclPassword;
             }
         }
 
@@ -1357,6 +1345,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * Overides the Applet.paint method. Draws a wait string, and calls the
      * super. If the mainpanel is made invisible, nothing is showed above the
      * wait string, so the wait string is showed.
+     *
      * @param g
      */
     public void paintx(Graphics g) {
@@ -1600,14 +1589,14 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
 
         waitLabel.setVisible(true);
 // Center....  	
-        Box panel = Box.createHorizontalBox();
-        panel.setOpaque(false);
-        panel.add(Box.createGlue());
-        panel.add(waitLabel);
-        panel.add(Box.createGlue());
+        Box lclPanel = Box.createHorizontalBox();
+        lclPanel.setOpaque(false);
+        lclPanel.add(Box.createGlue());
+        lclPanel.add(waitLabel);
+        lclPanel.add(Box.createGlue());
         Box xbox = Box.createVerticalBox();
         xbox.add(Box.createGlue());
-        xbox.add(panel);
+        xbox.add(lclPanel);
         xbox.add(Box.createGlue());
         setGlassPane(xbox);
         xbox.setVisible(false);
@@ -1685,7 +1674,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
     /**
      * Alle aangepaste sco's van een school binnen dit profiel. TODO als de
      * docent profiel-rechten heeft, wat dan?
-     * @return 
+     *
+     * @return
      */
     @Override
     public Sco[] getEditableScos() {
@@ -2038,14 +2028,13 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
         if (className != null
                 && (schoolClass == null || !schoolClass.getName().equals(className))) {
             SchoolClass[] classes = school.getClassList();
-            for (int i = 0; i < classes.length; i++) {
-                if (className.equals(classes[i].getName())) {
-                    u.setInClass(classes[i]);
+            for (SchoolClass classe : classes) {
+                if (className.equals(classe.getName())) {
+                    u.setInClass(classe);
                     try {
                         PersistenceFacade.instance().changeAccount(u, null, null, u.getFirstname(), u.getMiddleName(), u.getLastName(), u.getEmail(), u.getInClass());
                     } catch (RegisterException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                        log.log(Level.SEVERE, null, e);
                     }
                 }
             }
@@ -2065,17 +2054,15 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
             return null;
         }
         // TODO is deze mapping compleet?
-        if (false) // docent en contactdocent
-        {
-            role = "TEACHER";
-        }
-        if (false) {
-            role = "STUDENT";
-        }
-        //
+//        if (false) // docent en contactdocent
+//        {
+//            role = "TEACHER";
+//        }
+//        if (false) {
+//            role = "STUDENT";
+//        }
         Group[] groups = getGroups();
-        for (int i = 0; i < groups.length; i++) {
-            Group group = groups[i];
+        for (Group group : groups) {
             if (role.equalsIgnoreCase(group.getName())) {
                 return group;
             }
@@ -2137,15 +2124,15 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
     /**
      * Adds a school to the database.
      *
-     * @param id The id of the new school
+     * @param id
      * @param schoolName The name of the new school.
      * @param schoolLogin The login name of the new school.
-     * @param schoolPasswMap Passwords.
-     * @return boolean If the school is successfully inserted it returns true.
-     * Otherwise it returns false.
+     * @param schoolPasswdMap
+     * @param date
+     * @return
+     * @pschool is successfully inserted it returns true. Otherwise it returns
+     * false.
      * @throws fi.dwo.commons.exceptions.SchoolException
-     * @throws fi.dwo.client.system.ClassException If some school-information is
-     * incorrect.
      *
      */
     @Override
@@ -2164,11 +2151,10 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * @param schoolID The ID of the school.
      * @param schoolName The new name of the school.
      * @param schoolLogin The new login name of the school.
-     * @param schoolPasswMap new Passwords.
+     * @param schoolPasswdMap
+     * @param date
      * @return school
      * @throws fi.dwo.commons.exceptions.SchoolException
-     * @throws fi.dwo.client.system.ClassException If some school-information is
-     * incorrect.
      *
      */
     @Override
@@ -2192,7 +2178,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
             GuiCreator.instance().getMainPanel().getCenter().select(sco);
             return "true";
         } catch (Exception e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, null, e);
             return "false";
         }
     }

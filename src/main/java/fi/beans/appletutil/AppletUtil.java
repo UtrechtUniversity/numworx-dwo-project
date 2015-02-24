@@ -64,6 +64,7 @@ public class AppletUtil {
      * ClassLoader getResource niet support (Netscape) en via getCodeBase als
      * getResourceAsStream niet gesupport is.
      *
+     * @param resourceName
      * @return 
      * @see java.lang.ClassLoader#getResource
      */
@@ -135,6 +136,7 @@ public class AppletUtil {
     /**
      * Haal een AudioClip-Resource op. Via getResource of via getCodeBase
      * (audiofile is dan NIET in JAR file)
+     * @param resourceName
      * @return 
      */
     public AudioClip getAudioClip(String resourceName) {

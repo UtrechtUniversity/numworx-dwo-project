@@ -26,6 +26,7 @@ public class TreeDoubleParameterComponent extends DoubleParameterComponent imple
     /**
      * Calls the parent generatePostItems, and adds a delete-button.
      *
+     * @param after
      * @return 
      * @see
      * fi.dwo.parameters.gui.ParameterComponent#generatePostItems(java.awt.Component)

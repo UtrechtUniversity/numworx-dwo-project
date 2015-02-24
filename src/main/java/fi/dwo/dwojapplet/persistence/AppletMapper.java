@@ -13,12 +13,16 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.dwo.commons.system.Loader;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author M.J.B. Kupers
  *
  */
 public class AppletMapper extends XmlRpcMapper {
+
+    private static final Logger log = Logger.getLogger(AppletMapper.class.getName());
 
     private static final char CLASSLOADER = 'c';
 
@@ -38,6 +42,8 @@ public class AppletMapper extends XmlRpcMapper {
     /**
      * @param oid
      * @param obj
+     * @throws java.io.IOException
+     * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      *
      */
@@ -50,7 +56,9 @@ public class AppletMapper extends XmlRpcMapper {
     /**
      * @param data
      * @return Object
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
+     * @throws java.sql.SQLException
      *
      */
     @Override
@@ -74,7 +82,9 @@ public class AppletMapper extends XmlRpcMapper {
     /**
      * @param obj
      * @return Object[]
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
+     * @throws java.sql.SQLException
      *
      */
     @Override
@@ -110,28 +120,30 @@ public class AppletMapper extends XmlRpcMapper {
      *      java.util.Hashtable)
      */
     @Override
+    @SuppressWarnings("UnusedAssignment")
     protected Object update(Object obj, Hashtable data) throws IOException, SQLException, XmlRpcException {
         Class a = null;
         String jarname = (String) data.get("jarname");
         String className = (String) data.get("classname");
+
+        //Try loading class from remote server.
         try {
-            a = Class.forName(className);
+            a = Loader.create(jarname).loadClass(className);
+            return a;
         } catch (ClassNotFoundException e1) {
-            String features = (String) data.get("features");
-            //TODO classloader via url first, local second caching.
-            if (DwoHelper.isSecure() && features != null && features.indexOf(CLASSLOADER) >= 0) {
+            //try loading the jar locally (might be updated).
+            log.log(Level.FINE, "Can't load class {0} in jar {1} from remote server. ", new Object[]{className, jarname});
+            if (DwoHelper.isSecure()) {
                 try {
-                    a = Loader.create(jarname).loadClass(className);
+                    a = Class.forName(className);
                     return a;
-                } catch (ClassNotFoundException e) {
-                    e1 = e;
+                } catch (ClassNotFoundException e2) {
+                    e1 = e2;
                 }
             }
-            e1.printStackTrace();
-            throw new XmlRpcException(-1, "Class not found");
+            log.log(Level.SEVERE, null, e1);
+            throw new XmlRpcException(-1, "Class not found.");
         }
-
-        return a;
     }
 
     /* (non-Javadoc)

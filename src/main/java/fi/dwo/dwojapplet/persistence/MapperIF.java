@@ -28,6 +28,7 @@ public interface MapperIF {
      * @param oid The ID of the object to get.
      * @return Object The object representing the specified objectID and class.
      * @throws java.sql.SQLException
+     * @throws org.apache.xmlrpc.applet.XmlRpcException
      *
      */
     public Object get(int oid) throws IOException, XmlRpcException,
@@ -40,6 +41,7 @@ public interface MapperIF {
      * @param oid
      * @param obj
      * @throws org.apache.xmlrpc.applet.XmlRpcException
+     * @throws java.sql.SQLException
      */
     public void put(int oid, Object obj) throws IOException, SQLException,
             XmlRpcException;
@@ -51,6 +53,7 @@ public interface MapperIF {
      *
      * @return The objects representing the specified class.
      * @throws org.apache.xmlrpc.applet.XmlRpcException
+     * @throws java.sql.SQLException
      */
     public Object[] get() throws IOException, SQLException, XmlRpcException;
 
@@ -88,6 +91,7 @@ public interface MapperIF {
      * @param obj The object who specifies the restriction.
      * @return The objects who satisfy to the restriction.
      * @throws org.apache.xmlrpc.applet.XmlRpcException
+     * @throws java.sql.SQLException
      */
     public Object[] get(Object obj) throws IOException, SQLException,
             XmlRpcException;

@@ -92,6 +92,7 @@ public class ParameterComponent extends JPanel implements ParameterComponentIF, 
     /**
      * Generates the post-label and help button and sets it after the specified
      * component It returns the current last component.
+     * @param after
      * @return 
      */
     protected Component generatePostItems(Component after) {

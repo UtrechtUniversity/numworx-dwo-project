@@ -49,6 +49,7 @@ public class CourseMapper extends XmlRpcMapper {
      * @param oid
      * @param obj
      * @throws org.apache.xmlrpc.applet.XmlRpcException
+     * @throws java.sql.SQLException
      *
      */
     @Override
@@ -129,6 +130,7 @@ public class CourseMapper extends XmlRpcMapper {
      * </ul>
      * @return The Courses who satisfy to the restriction.
      * @throws org.apache.xmlrpc.applet.XmlRpcException
+     * @throws java.sql.SQLException
      */
     @Override
     public Object[] get(Object obj) throws IOException, SQLException,

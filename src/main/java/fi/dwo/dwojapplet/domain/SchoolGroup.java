@@ -66,7 +66,6 @@ public class SchoolGroup {
      * Sets the schoolGroupID
      *
      * @param schoolGroupID
-     * @param groupID The schoolGroupID to set.
      */
     public void setSchoolGroupID(int schoolGroupID) {
         this.schoolGroupID = schoolGroupID;
@@ -85,7 +84,6 @@ public class SchoolGroup {
      * Sets the schoolID
      *
      * @param schoolID
-     * @param groupID The schoolID to set.
      */
     public void setSchoolID(int schoolID) {
         this.schoolID = schoolID;
@@ -104,7 +102,6 @@ public class SchoolGroup {
      * Sets the group-passwd
      *
      * @param passwd
-     * @param name The group-passwd to set.
      */
     public void setPasswd(String passwd) {
         this.passwd = passwd;

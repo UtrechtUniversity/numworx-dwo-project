@@ -28,6 +28,7 @@ public class HelpDialog extends JDialog implements ActionListener {
 
     /**
      * @param text
+     * @param modal
      * @roseuid 425E240D0242
      */
     public HelpDialog(Component owner, String title, boolean modal,
@@ -95,6 +96,7 @@ public class HelpDialog extends JDialog implements ActionListener {
     }
 
     /**
+     * @param parent
      * @param parameter
      * @param text
      * @roseuid 425D04D40290

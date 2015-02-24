@@ -152,6 +152,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
     }
 
     /**
+     * @param owner
      * @param parent
      * @return fi.dwo.client.domain.Course
      */
@@ -160,6 +161,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
     }
 
     /**
+     * @param owner
      * @param title TODO
      * @param parent
      * @param isMap

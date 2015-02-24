@@ -23,6 +23,8 @@ import fi.beans.appletutil.AppletUtil;
 import fi.beans.mainframe.MainFrame;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.MainPanel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Static Helper class for the DWO.
@@ -31,6 +33,8 @@ import fi.dwo.dwojapplet.gui.MainPanel;
  *
  */
 public final class DwoHelper {
+
+    private static final Logger log = Logger.getLogger(DwoHelper.class.getName());
 
     private static AppletUtil au;
 
@@ -93,7 +97,7 @@ public final class DwoHelper {
      * Sets the current Applet.
      *
      * @param applet The applet to set.
-     * @return 
+     * @return
      */
     public static boolean setApplet(Applet applet) {
 // Voor Peter: in comment zetten
@@ -103,11 +107,7 @@ public final class DwoHelper {
         }
 // Einde
         DwoHelper.applet = applet;
-        if (applet.getParent() instanceof MainFrame) {
-            isApplication = true;
-        } else {
-            isApplication = false;
-        }
+        isApplication = applet.getParent() instanceof MainFrame;
         return true;
     }
 
@@ -159,9 +159,9 @@ public final class DwoHelper {
     }
 
     public static Point getComponentLocation(Component c) {
-        Container parent = null;
         int x = c.getLocation().x;
         int y = c.getLocation().y;
+        Container parent;
         parent = c.getParent();
         for (int i = 0; parent != null && i < 30; i++) {
             if (parent instanceof MainPanel) {
@@ -199,11 +199,11 @@ public final class DwoHelper {
             return (Image) loadedImages.get(image);
         }
 
-        Image im = null;
         URL url = getURL(image);
         if (url == null) {
             return null;
         }
+        Image im;
         im = applet.getImage(url);
         return loadImage(image, im);
     }
@@ -214,14 +214,14 @@ public final class DwoHelper {
             if (applicationBase == null) {
                 try {
                     applicationBase = new URL("http://www.fisme.science.uu.nl/dwo/");
+                    //TODO Gert: fix this to allow change of url by property file.
                 } catch (MalformedURLException e) {
                 }
             }
             try {
                 url = new URL(applicationBase, resource);
             } catch (MalformedURLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.log(Level.SEVERE, null, e);
             }
 
         } else {
@@ -270,8 +270,8 @@ public final class DwoHelper {
         if (isApplication()) {
             return null;
         }
-        String cookie = null;
         try {
+            String cookie;
             cookie = (String) JSObject.getWindow(applet).eval("document.cookie");
             return cookie;
         } catch (Throwable ex) {
@@ -285,7 +285,6 @@ public final class DwoHelper {
             return null;
         }
 
-        String value = null;
         String nameIs = name + "=";
         if (cookie.length() > 0) {
             int begin = cookie.indexOf(nameIs);
@@ -295,6 +294,7 @@ public final class DwoHelper {
                 if (einde == -1) {
                     einde = cookie.length();
                 }
+                String value;
                 value = cookie.substring(begin, einde);
                 return value;
             }
