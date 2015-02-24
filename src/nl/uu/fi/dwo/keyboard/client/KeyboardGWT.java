@@ -54,7 +54,7 @@ public class KeyboardGWT implements EntryPoint {
 	@Override
 	public void onModuleLoad() {
 		
-		DesktopKeyboard panel = new DesktopKeyboard();
+		AbstractKeyboard panel = new DesktopKeyboard();
 		panel.setEditor(editor);
 		RootPanel root = RootPanel.get();
 		root.add(new Label("algebra"));

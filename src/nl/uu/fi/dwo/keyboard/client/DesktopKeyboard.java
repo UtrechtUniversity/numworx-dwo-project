@@ -3,7 +3,6 @@
  */
 package nl.uu.fi.dwo.keyboard.client;
 
-import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 
 import com.google.gwt.core.client.GWT;
@@ -18,21 +17,11 @@ import com.google.gwt.user.client.ui.Widget;
  * @author wim
  *
  */
-public class DesktopKeyboard extends Composite implements FormuleKeyboardIF {
+public class DesktopKeyboard extends AbstractKeyboard {
 
 	private static DesktopKeyboardUiBinder uiBinder = GWT
 			.create(DesktopKeyboardUiBinder.class);
 	
-	private FormuleEditorIF formuleEditor;
-
-	public FormuleEditorIF getEditor() {
-		return formuleEditor;
-	}
-
-	public void setEditor(FormuleEditorIF formuleEditor) {
-		this.formuleEditor = formuleEditor;
-	}
-
 	interface DesktopKeyboardUiBinder extends UiBinder<Widget, DesktopKeyboard> {
 	}
 
@@ -200,42 +189,6 @@ public class DesktopKeyboard extends Composite implements FormuleKeyboardIF {
 	@UiHandler("c31")
 	void onC31(ClickEvent e) {
 		getEditor().insert("00");
-	}
-
-	protected void disableKey(Key key) {
-		key.getUpFace().setHTML("");key.getDownFace().setHTML("");key.setEnabled(false);
-	}
-
-	@Override
-	public void backspace() {
-		getEditor().removeCurrentElement();
-		
-	}
-
-	@Override
-	public void delete() {
-		getEditor().removeNextElement();
-		
-	}
-
-	@Override
-	public void enter() {
-		getEditor().enter();
-		
-	}
-
-	@Override
-	public void focus() {
-		this.setVisible(true);
-		
-	}
-
-	@Override
-	public void softFocus() {
-	}
-
-	public void blur() {
-		this.setVisible(false);
 	}
 
 }
