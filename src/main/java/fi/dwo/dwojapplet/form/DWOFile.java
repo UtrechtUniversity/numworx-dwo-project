@@ -92,22 +92,6 @@ public class DWOFile {
         return m.inputIMSManifest(input);
     }
 
-// TODO Wim. Do we need this?	
-//	public static void main(String[] args) throws Exception
-//	{
-//		DWOFile f = new DWOFile(new DbAccessLocal());
-//		File file = new File(System.getProperty("user.home"));
-//		file = new File(file, ManifestFile.FILENAME);
-//		OutputStream output = new FileOutputStream(file);
-//		f.createIMSManifest(226, -1, output);
-//		output.close();
-//		InputStream input = new FileInputStream(file);
-//		Hashtable r = f.inputIMSManifest(input);
-//		System.out.println(r);
-//		
-//		//int c = f.addCourse(r, 3, 0);
-//		//System.out.println("courseID="+c);
-//	}
     public void appendCourse(int courseID, int offset, Hashtable course) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
         m.appendCourse(courseID, offset, course);
     }

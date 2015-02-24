@@ -118,6 +118,7 @@ public class AppletMapper extends XmlRpcMapper {
             a = Class.forName(className);
         } catch (ClassNotFoundException e1) {
             String features = (String) data.get("features");
+            //TODO classloader via url first, local second caching.
             if (DwoHelper.isSecure() && features != null && features.indexOf(CLASSLOADER) >= 0) {
                 try {
                     a = Loader.create(jarname).loadClass(className);
@@ -157,7 +158,7 @@ public class AppletMapper extends XmlRpcMapper {
             SQLException {
         Object object = super.get(oid);
         if (object != null) {
-            objects.put(new Integer(oid), object);
+            objects.put(oid, object);
         }
         return object;
     }
