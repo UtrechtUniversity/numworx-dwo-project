@@ -52,8 +52,9 @@ import fi.dwo.dwojapplet.gui.action.NewAction;
 import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
-import fi.wiskopdr.WiskOpdr;
-import fi.wiskopdr.WiskOpdrEditPanel;
+//TODO WiskOpdr
+//import fi.wiskopdr.WiskOpdr;
+//import fi.wiskopdr.WiskOpdrEditPanel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -190,9 +191,10 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         editorBox.add(editorCB);
         if (course.getDescription().startsWith("H4sIAAAAAA")) {
             editorCB.setSelected(true);
-            wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription());
-            wiskOpdrEditPanel.setPreferredSize(new Dimension(700, 300));
-            editorBox.add(wiskOpdrEditPanel);
+//TODO WiskOpdr
+//            wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription());
+//            wiskOpdrEditPanel.setPreferredSize(new Dimension(700, 300));
+//            editorBox.add(wiskOpdrEditPanel);
         } else {
             pane = new JTextArea();
             pane.setText(course.getDescription());
@@ -545,21 +547,22 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         Object src = e.getSource();
         if (src == editorCB) {
             if (editorCB.isSelected()) {
-                if (wiskOpdrEditPanel == null) {
-                    wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription());
-                    wiskOpdrEditPanel.setPreferredSize(new Dimension(700, 300));
-                    editorBox.add(wiskOpdrEditPanel);
-                }
-                wiskOpdrEditPanel.setVisible(true);
-                pane.setVisible(false);
-            } else if (wiskOpdrEditPanel != null) {
-                if (pane == null) {
-                    pane = new JTextArea();
-                    pane.setText("");
-                    pane.setBorder(BorderFactory.createLineBorder(Color.black));
-                    editorBox.add(pane);
-                }
-                wiskOpdrEditPanel.setVisible(false);
+//TODO WiskOpdr
+//                if (wiskOpdrEditPanel == null) {
+////                    wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription());
+//                    wiskOpdrEditPanel.setPreferredSize(new Dimension(700, 300));
+//                    editorBox.add(wiskOpdrEditPanel);
+//                }
+//                wiskOpdrEditPanel.setVisible(true);
+//                pane.setVisible(false);
+//            } else if (wiskOpdrEditPanel != null) {
+//                if (pane == null) {
+//                    pane = new JTextArea();
+//                    pane.setText("");
+//                    pane.setBorder(BorderFactory.createLineBorder(Color.black));
+//                    editorBox.add(pane);
+//                }
+//                wiskOpdrEditPanel.setVisible(false);
                 pane.setVisible(true);
             }
         }
@@ -689,10 +692,12 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
      */
     @Override
     public void end() {
-        if (editorCB.isSelected() && !wiskOpdrEditPanel.getText().equals(course.getDescription())) {
-            course.setDescription(wiskOpdrEditPanel.getText());
-            GuiCreator.instance().updateCourse(course);
-        } else if (!editorCB.isSelected() && pane != null && !pane.getText().equals(course.getDescription())) {
+//TODO WiskOpdr
+//        if (editorCB.isSelected() && !wiskOpdrEditPanel.getText().equals(course.getDescription())) {
+//            course.setDescription(wiskOpdrEditPanel.getText());
+//            GuiCreator.instance().updateCourse(course);
+//        } else
+            if (!editorCB.isSelected() && pane != null && !pane.getText().equals(course.getDescription())) {
             course.setDescription(pane.getText());
             GuiCreator.instance().updateCourse(course);
         }
@@ -721,7 +726,8 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     private boolean ok = true;
 
     private JTextArea pane;
-    private WiskOpdrEditPanel wiskOpdrEditPanel;
+//TODO WiskOpdr
+//    private WiskOpdrEditPanel wiskOpdrEditPanel;
 
     @Override
     public void stateChanged(ChangeEvent e) {

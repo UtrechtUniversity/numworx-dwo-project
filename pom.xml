@@ -60,11 +60,11 @@
             <version>1.0-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>fi</groupId>
             <artifactId>WiskOpdr</artifactId>
             <version>0.0.0</version>
-        </dependency>
+        </dependency>-->
     </dependencies>
 
     <build>

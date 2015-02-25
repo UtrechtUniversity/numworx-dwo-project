@@ -686,7 +686,6 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             editComponent.setState(params);
         } else {
             sco.setLaunchdata(params);
-            //TODO Wim:.....  parametercomponent???
         }
 
     }

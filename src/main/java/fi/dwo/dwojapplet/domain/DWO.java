@@ -64,6 +64,7 @@ import java.io.IOException;
 import java.net.URLClassLoader;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**
@@ -122,6 +123,30 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
 
     FocusTraversalPolicy delegate;
 
+    private static void ReadLoggingProperties(){
+        try {
+            FileInputStream file;
+            //folder relative to the current directory
+            String path = "./logging.properties";
+            //file handle for main.properties
+            file = new FileInputStream(path);
+
+            LogManager.getLogManager().readConfiguration(file);
+            log.log(Level.INFO, "Using external logging.properties file.");
+        } catch (final Exception e) {
+            Logger.getAnonymousLogger().log(Level.INFO, "No logging.properties file found in current directory. Using default.");
+            try {
+                final InputStream inputStream2 = DWO.class.getResourceAsStream("logging.properties");
+                LogManager.getLogManager().readConfiguration(inputStream2);
+                Logger.getAnonymousLogger().log(Level.INFO, "logging.properties file read from property folder.");
+            } catch (final IOException e2) {
+                Logger.getAnonymousLogger().severe("Could not load internal logging.properties file.");
+            } catch (final SecurityException e3) {
+                Logger.getAnonymousLogger().severe("Could not load internal logging.properties file.");
+                throw e3;
+            }
+        }                
+    }
     /**
      * Reads a config file if it exists.
      * 
@@ -255,7 +280,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * @param args
      */
     public DWO(String[] args) {
-        ReadConfigProperties();
         
         nestedWait = 0;
         dwoProfileID = 1;
@@ -1102,7 +1126,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
     }
 
     /**
-     * Initialises the applet.
+     * Initializes the applet.
      */
     @Override
     public void init() {
@@ -1110,7 +1134,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
         if (!DwoHelper.setApplet(this)) {
             return;
         }
-
+        DWO.ReadLoggingProperties();
+        DWO.ReadConfigProperties();
         //Read the versioning from the MANIFEST
         URLClassLoader cl = (URLClassLoader) getClass().getClassLoader();
         try {
@@ -1555,7 +1580,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * @throws ClassNotFoundException
      */
     public static void main(String[] args) throws Exception {
-        ReadConfigProperties();
         //String  lookAndFeel = UIManager.getCrossPlatformLookAndFeelClassName();
         //lookAndFeel = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
         //lookAndFeel = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";

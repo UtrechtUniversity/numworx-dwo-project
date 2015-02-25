@@ -25,7 +25,7 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.ResultScoreIF;
 import fi.dwo.dwojapplet.domain.Sco;
 
-import fi.wiskopdr.ScoresObjectivesPanel;
+//import fi.wiskopdr.ScoresObjectivesPanel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -227,7 +227,7 @@ public class ResultScoreButton extends JPanel implements
                     sco.setLessonMode(mode);
                     if (map != null) {
                         JDialog d = new JDialog(DwoHelper.getFrameForComponent(null), "Deelscores");
-                        d.setContentPane(new JScrollPane(new ScoresObjectivesPanel(map)));
+//                        d.setContentPane(new JScrollPane(new ScoresObjectivesPanel(map)));
                         d.pack();
                         d.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                         d.show();

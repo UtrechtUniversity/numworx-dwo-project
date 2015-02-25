@@ -36,9 +36,9 @@ import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.UserResultList;
 import fi.dwo.dwojapplet.gui.action.NullStrategy;
-import fi.wiskopdr.WiskOpdr;
-import fi.wiskopdr.WiskOpdrPanel;
-import fi.wiskopdr.tekstobjects.LinkIF;
+//import fi.wiskopdr.WiskOpdr;
+//import fi.wiskopdr.WiskOpdrPanel;
+//import fi.wiskopdr.tekstobjects.LinkIF;
 
 /**
  * This class is a panel witch shows a list of all the SCO's in the specified
@@ -48,7 +48,9 @@ import fi.wiskopdr.tekstobjects.LinkIF;
  *
  */
 public class CoursePanel extends JPanel implements CenterSubPanel,
-        ActionListener, LinkIF {
+        ActionListener 
+        //LinkIF 
+        {
 
     private static final int MINWIDTH = 600;
 
@@ -63,7 +65,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
     private JLabel scoListHeader;
 
     private JTextArea courseDescription;
-    private WiskOpdrPanel wiskOpdrPanel;
+//    private WiskOpdrPanel wiskOpdrPanel;
     private JTextComponent courseDescriptionHTML;
 
     private JButton showResultsButton;
@@ -112,11 +114,11 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
                 startY += courseDescriptionHTML.getHeight() + 10;
             } else if (s.startsWith("H4sIAAAAAA")) {
                 htmlMode = true;
-                wiskOpdrPanel = WiskOpdr.getWiskOpdrPanel(s);
-                wiskOpdrPanel.setLocation(20, startY);
-                wiskOpdrPanel.setJSObjectOwner(this);
-                add(wiskOpdrPanel);
-                startY += wiskOpdrPanel.getHeight() + 10;
+//                wiskOpdrPanel = WiskOpdr.getWiskOpdrPanel(s);
+//                wiskOpdrPanel.setLocation(20, startY);
+//                wiskOpdrPanel.setJSObjectOwner(this);
+//                add(wiskOpdrPanel);
+//                startY += wiskOpdrPanel.getHeight() + 10;
             } else {
                 add(courseDescription);
                 htmlMode = course.isNotVisible();
@@ -249,9 +251,9 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
      * Refresh the sco view. Update the buttons width scores.
      */
     private void refresh() {
-        if (wiskOpdrPanel != null) {
-            wiskOpdrPanel.setJSObjectOwner(this); // GLOBAL EVIL
-        }
+//        if (wiskOpdrPanel != null) {
+//            wiskOpdrPanel.setJSObjectOwner(this); // GLOBAL EVIL
+//        }
         removeButtons();
         //ResultsModuleIF results = GuiCreator.instance().dwo.getUserResultsModule(course);
         ResultsModuleIF results = center.getUserResultsModule(course);
