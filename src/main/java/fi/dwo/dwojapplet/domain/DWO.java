@@ -58,6 +58,8 @@ import fi.dwo.dwojapplet.gui.ScoPanel;
 import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.dwojapplet.persistence.cache.StoreCreator;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URLClassLoader;
 import java.util.jar.Manifest;
@@ -73,8 +75,8 @@ import java.util.logging.Logger;
  */
 public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
 
-    private static final Logger log = Logger.getLogger(JApplet.class.getName());
-
+    private static final Logger log = Logger.getLogger("fi.dwo");    
+    
     private static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
 
     private static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
@@ -120,6 +122,42 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
 
     FocusTraversalPolicy delegate;
 
+    /**
+     * Reads a config file if it exists.
+     * 
+     */
+        private static void ReadConfigProperties() {
+
+        try {
+            Properties properties = new Properties();
+
+            FileInputStream file;
+
+            //folder relative to the current directory
+            String path = "./DWO.properties";
+
+            //file handle for main.properties
+            file = new FileInputStream(path);
+
+            //load the properties
+            properties.load(file);
+            log.log(Level.INFO, "Loaded external DWO.property file");
+
+            //done with file
+            file.close();
+
+            //assign properties to static value.
+            String resourceURLPathString = properties.getProperty("resourceURLPath");
+            DwoHelper.setGetResourceURLPathString(resourceURLPathString);
+            log.log(Level.FINE, "Property {0} is value: {1}", new Object[]{"servletConnectString", 
+                DwoHelper.getGetResourceURLPathString()});
+        } catch (FileNotFoundException ex) {
+            log.log(Level.FINE, "No external resource connection defined");
+        } catch (IOException ex) {
+            log.log(Level.FINE, "IO error reading DWO.properties file.");
+        }
+    }
+    
     /**
      * Java 7 throws exceptions, catch them. Deze "catch" policy catch ze en
      * doet een default actie.
@@ -217,6 +255,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * @param args
      */
     public DWO(String[] args) {
+        ReadConfigProperties();
+        
         nestedWait = 0;
         dwoProfileID = 1;
         int o = 0;
@@ -1515,6 +1555,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * @throws ClassNotFoundException
      */
     public static void main(String[] args) throws Exception {
+        ReadConfigProperties();
         //String  lookAndFeel = UIManager.getCrossPlatformLookAndFeelClassName();
         //lookAndFeel = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
         //lookAndFeel = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";

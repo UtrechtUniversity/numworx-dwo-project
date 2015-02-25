@@ -47,6 +47,8 @@ public final class DwoHelper {
     public static boolean umpc, contact;
 
     private static boolean scormExportLoggedIn, appletExportLoggedIn, adminLoggedIn;
+    
+    private static String getResourceURLPathString; // null if to use the default
 
     /**
      * Returns the current AppletUtil.
@@ -320,5 +322,19 @@ public final class DwoHelper {
             JSObject.getWindow(applet).eval("document.cookie ='" + name + "=dummy" + "';");
         } catch (Throwable ex) {
         }
+    }
+
+    /**
+     * @return the getResourceURLPathString
+     */
+    public static String getGetResourceURLPathString() {
+        return getResourceURLPathString;
+    }
+
+    /**
+     * @param aGetResourceURLPathString the getResourceURLPathString to set
+     */
+    public static void setGetResourceURLPathString(String aGetResourceURLPathString) {
+        getResourceURLPathString = aGetResourceURLPathString;
     }
 }
