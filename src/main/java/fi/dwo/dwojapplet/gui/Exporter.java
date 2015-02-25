@@ -33,8 +33,7 @@ abstract class Exporter {
         }
         String[] line = {"School", "Login", "Leerling", "Docent", "SchoolAdmin"};
         sb.exportHeader(line);
-        for (int i = 0; i < schools.length; i++) {
-            School school = schools[i];
+        for (School school : schools) {
             line[0] = school.getName();
             line[1] = school.getSchoolLogin();
             line[2] = school.getPasswd(SchoolGroup.STUDENT);

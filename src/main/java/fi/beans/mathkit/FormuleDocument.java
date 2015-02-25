@@ -44,14 +44,14 @@ public class FormuleDocument extends HTMLDocument {
 
     @Override
     protected Element createBranchElement(Element parent, AttributeSet a) {
-        // TODO Auto-generated method stub
+
         return super.createBranchElement(parent, a);
     }
 
     @Override
     protected Element createLeafElement(Element parent, AttributeSet a, int p0,
             int p1) {
-        // TODO Auto-generated method stub
+
         return super.createLeafElement(parent, a, p0, p1);
     }
 
@@ -158,7 +158,7 @@ public class FormuleDocument extends HTMLDocument {
 
         FormuleReader(int offset, int popDepth, int pushDepth, Tag insertTag) {
             super(offset, popDepth, pushDepth, insertTag);
-            // TODO Auto-generated constructor stub
+            
         }
 
         FormuleReader(int offset) {

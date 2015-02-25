@@ -299,7 +299,7 @@ public class TabPane extends JPanel implements ActionListener, ComponentListener
      */
     @Override
     protected void processComponentEvent(ComponentEvent e) {
-        // TODO Auto-generated method stub
+
         super.processComponentEvent(e);
     }
 

@@ -64,8 +64,11 @@ import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.ResultsModulePanel.ResultsModel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ResultLogger extends JPanel implements ActionListener {
+    private static final Logger log = Logger.getLogger(ResultLogger.class.getName());
 
     private static final long serialVersionUID = 1L;
     private static final String SAVE = "bewaar";
@@ -107,7 +110,7 @@ public class ResultLogger extends JPanel implements ActionListener {
     private LogTable[] table = new LogTable[LOGKEYS.length];
     private JTable cmiTable, leerlingTable, partialTable;
     private JViewport leerlingView;
-	//private Map itemScores;
+    //private Map itemScores;
     //private Map logAnswers;
     //private Map logScores;
     private DefaultTableModel model, cmiModel, leerlingModel, partialModel;
@@ -130,7 +133,7 @@ public class ResultLogger extends JPanel implements ActionListener {
 
     public void alert(Throwable t) {
         JOptionPane.showMessageDialog(this, t.toString());
-        t.printStackTrace();
+        log.log(Level.SEVERE,null,t);
         throw new RuntimeException(t);
     }
 
@@ -353,7 +356,7 @@ public class ResultLogger extends JPanel implements ActionListener {
     }
 
     public void resizeTable() {
-		//if(true)return;
+        //if(true)return;
 
         for (int i = 0; i < table.length; i++) {
             JTable tablei = table[i];
@@ -375,7 +378,7 @@ public class ResultLogger extends JPanel implements ActionListener {
             Arrays.sort(leerlingen);
             model.setRowCount(leerlingen.length + 1);
             leerlingModel.setRowCount(leerlingen.length + 1);
-			//model.setValueAt("Naam", 0, 0);
+            //model.setValueAt("Naam", 0, 0);
 
             SortedSet set = new TreeSet();
             keys.clear();
@@ -1103,7 +1106,7 @@ public class ResultLogger extends JPanel implements ActionListener {
 
             }
 
-			//setRowHeights(table, row, col);
+            //setRowHeights(table, row, col);
             return this;
         }
 

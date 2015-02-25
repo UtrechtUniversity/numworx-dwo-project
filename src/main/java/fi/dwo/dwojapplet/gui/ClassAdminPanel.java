@@ -37,8 +37,12 @@ import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.MapperIF;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparator, ActionListener {
+
+    private static final Logger log = Logger.getLogger(ClassModel.class.getName());
 
     SchoolClass[] classes;
     boolean[] dirty;
@@ -82,8 +86,8 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
                         fireTableCellUpdated(rowIndex, columnIndex);
                     }
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+    
+                    log.log(Level.SEVERE, null, e);
                 }
 
             } else if (columnIndex == CLASS_NAME) {
@@ -294,8 +298,7 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
         dirty = new boolean[classes.length];
         MapperIF usermapper = MapperCreator.instance(User.class);
         teachers = new Teacher[0];
-        for (int i = 0; i < groups.length; i++) {
-            SchoolGroup schoolGroup = groups[i];
+        for (SchoolGroup schoolGroup : groups) {
             try {
                 if (schoolGroup.getGroupID() == SchoolGroup.TEACHER
                         || schoolGroup.getGroupID() == SchoolGroup.SCHOOLADMIN) {
@@ -315,8 +318,7 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
                 }
 
             } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.log(Level.SEVERE, null, e);
             }
         }
         Arrays.sort(teachers, this);
@@ -327,8 +329,7 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
             items[i] = teacher.getName() + " (" + teacher.getUsername() + ")";
             nameMap.put(items[i], teacher);
             SchoolClass[] classlist = teacher.getClasses();
-            for (int j = 0; j < classlist.length; j++) {
-                SchoolClass schoolClass = classlist[j];
+            for (SchoolClass schoolClass : classlist) {
                 teacherMap.put(schoolClass, items[i]);
                 oldTeacher.put(schoolClass, teacher);
             }
@@ -380,13 +381,13 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 
     @Override
     public Object getUserObject() {
-        // TODO Auto-generated method stub
+
         return null;
     }
 
     @Override
     public void stateChanged(ChangeEvent arg0) {
-		// TODO Auto-generated method stub
+
 
     }
 

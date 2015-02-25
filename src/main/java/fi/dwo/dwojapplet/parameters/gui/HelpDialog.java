@@ -27,7 +27,9 @@ public class HelpDialog extends JDialog implements ActionListener {
     private JButton closeButton;
 
     /**
+     * @param owner
      * @param text
+     * @param title
      * @param modal
      * @roseuid 425E240D0242
      */
@@ -97,7 +99,6 @@ public class HelpDialog extends JDialog implements ActionListener {
 
     /**
      * @param parent
-     * @param parameter
      * @param text
      * @roseuid 425D04D40290
      */

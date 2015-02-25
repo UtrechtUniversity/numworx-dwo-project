@@ -53,7 +53,7 @@ public class LoggedInPanel extends Box {
             setBackground(GuiConstants.MAIN_BACKGROUND);
             setOpaque(true);
         }
-    	// fill the box
+        // fill the box
         // label Ingelogd: 
         // label user 
         // button 'logout'

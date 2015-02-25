@@ -16,8 +16,11 @@ import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.persistence.DbAccessIF;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CachingStore implements IStore, Runnable {
+    private static final Logger log = Logger.getLogger(CachingStore.class.getName());
 
     private static final long MAX_BACKOFF = 2 * 60 * 1000L; // 2 min maximum voor exponential backoff
     private static final long INI_BACKOFF = 200L;
@@ -36,7 +39,7 @@ public class CachingStore implements IStore, Runnable {
             } catch (ConcurrentModificationException cme) {
                 System.err.println("Expected: " + cme + ", niets aan de hand");
             } catch (Exception e) { // expect ConcurrentModificationException
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
             }
         }
 
@@ -127,7 +130,7 @@ public class CachingStore implements IStore, Runnable {
                 try {
                     return delegate.getValue(uid, scoid, key);
                 } catch (PersistenceException e) {
-                    e.printStackTrace();
+                    log.log(Level.SEVERE,null,e);
                     throw e;
                 }
             }
@@ -160,7 +163,7 @@ public class CachingStore implements IStore, Runnable {
             try {
                 wait();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
                 if (x) {
                     throw new PersistenceException(PersistenceException.EX_IO, e);
                 }
@@ -187,7 +190,7 @@ public class CachingStore implements IStore, Runnable {
                 try {
                     wait();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    log.log(Level.SEVERE,null,e);
                 }
             }
         }
@@ -234,7 +237,7 @@ public class CachingStore implements IStore, Runnable {
         try {
             commit(false);
         } catch (PersistenceException e) {
-            e.printStackTrace(); // should not happen
+            log.log(Level.SEVERE,null,e); // should not happen
         }
         inter = cache.keySet().iterator();
         while (inter.hasNext()) {

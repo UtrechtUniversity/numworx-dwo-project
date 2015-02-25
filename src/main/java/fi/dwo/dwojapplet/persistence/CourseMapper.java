@@ -23,8 +23,11 @@ import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CourseMapper extends XmlRpcMapper {
+    private static final Logger log = Logger.getLogger(CourseMapper.class.getName());
 
     private static final String TABLENAME = "tblCourse";
 
@@ -48,6 +51,7 @@ public class CourseMapper extends XmlRpcMapper {
      *
      * @param oid
      * @param obj
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      *
@@ -76,8 +80,8 @@ public class CourseMapper extends XmlRpcMapper {
                 try {
                     setChildren(PersistenceFacade.instance().sequence((Course[]) get(this)));
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+    
+                    log.log(Level.SEVERE,null,e);
                 }
             }
             return super.getChildren();
@@ -129,6 +133,7 @@ public class CourseMapper extends XmlRpcMapper {
      * <li><code>School</code>: the courses of the school are returned;
      * </ul>
      * @return The Courses who satisfy to the restriction.
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      */
@@ -340,8 +345,8 @@ public class CourseMapper extends XmlRpcMapper {
             try {
                 c.link = (ClassCourse) MapperCreator.instance(ClassCourse.class).getObjectFromReturn(data);
             } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+
+                log.log(Level.SEVERE,null,e);
             }
         } else {
             if (c.link != null) {

@@ -83,7 +83,9 @@ public class CourseSequenceMapper extends XmlRpcMapper {
     /**
      * get sequencearray. Altijd met het profileID!
      * @return 
+     * @throws java.io.IOException 
      * @throws org.apache.xmlrpc.applet.XmlRpcException 
+     * @throws java.sql.SQLException 
      */
     @Override
     public Object[] get(Object obj) throws IOException, SQLException,

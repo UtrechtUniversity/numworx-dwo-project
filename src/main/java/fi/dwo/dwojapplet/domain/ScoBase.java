@@ -20,8 +20,11 @@ import fi.beans.scorm.ScormAdapter;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.dwojapplet.gui.ScoPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class ScoBase extends ScormAdapter {
+private static final Logger log = Logger.getLogger(ScoBase.class.getName());
 
     public static final String NORMAL = "normal";
     public static final String REVIEW = "review";
@@ -113,7 +116,7 @@ public abstract class ScoBase extends ScormAdapter {
 
     public ScoBase(boolean isCOCDmodel) {
         super(isCOCDmodel);
-        // TODO Auto-generated constructor stub
+        
     }
 
     protected String ok(String ok) {
@@ -236,12 +239,12 @@ public abstract class ScoBase extends ScormAdapter {
             try {
                 appletData = (AppletData) PersistenceFacade.instance().get(appletID, AppletData.class);
             } catch (PersistenceException e) {
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
             }
         }
         return appletData;
     }
-
+    
     /**
      * Returns the user-specific value for the iDataModelElement.
      *
@@ -345,7 +348,7 @@ public abstract class ScoBase extends ScormAdapter {
                 try {
                     return tf(Sco.gotoSco(iValue, this, course, sc));
                 } catch (Exception e) {
-		    			//e.printStackTrace();
+		    			//log.log(Level.SEVERE,null,e);
 
                 }
             }
@@ -446,8 +449,8 @@ public abstract class ScoBase extends ScormAdapter {
             Writer out = new OutputStreamWriter(zip, "UTF-8");
             JSONEncoder.encode(ld, out);
             out.close();
-        } catch (UnsupportedEncodingException _) {
-        } catch (IOException _) {
+        } catch (UnsupportedEncodingException e) {
+        } catch (IOException e) {
         }
         return bos.toByteArray();
     }

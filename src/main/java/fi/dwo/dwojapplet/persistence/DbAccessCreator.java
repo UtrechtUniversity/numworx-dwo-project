@@ -6,8 +6,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DbAccessCreator {
+    private static final Logger log = Logger.getLogger(DbAccessCreator.class.getName());
 
     private static DbAccessIF dbAccess;
     /**
@@ -47,7 +50,7 @@ public class DbAccessCreator {
                 //if(true) dbAccess = new DbAccess(); else
                 //if(true) dbAccess = new DbAccessScience(); else
                 //if(true) dbAccess = new DbAccessColorado(); else
-                //if(true)try{dbAccess=new DbAccessClient(new URL("http://localhost:8888/dwoapp"));}catch(MalformedURLException e1){e1.printStackTrace();}else
+                //if(true)try{dbAccess=new DbAccessClient(new URL("http://localhost:8888/dwoapp"));}catch(MalformedURLException e1){log.log(Level.SEVERE,null,e1);}else
                 try {
 //                    server = new URL(new URL("http://localhost:8080"), "DWOServer/xmlrpc");
                     server = new URL(new URL("http://ws.fisme.science.uu.nl/"), SERVLET);
@@ -56,7 +59,7 @@ public class DbAccessCreator {
 
                     dbAccess = new DbAccessClient(server);
                 } catch (MalformedURLException e) {
-                    e.printStackTrace();
+                    log.log(Level.SEVERE,null,e);
                 }
             } else {
 // for local access, overrule SERVLET
@@ -72,7 +75,7 @@ public class DbAccessCreator {
                     //server = new URL("http://www.fi.uu.nl/servlet/fi.dwo.server.persistence.DbAccessServlet");
                     dbAccess = new DbAccessClient(server);
                 } catch (MalformedURLException e) {
-                    e.printStackTrace();
+                    log.log(Level.SEVERE,null,e);
                 }/**/
 
             }

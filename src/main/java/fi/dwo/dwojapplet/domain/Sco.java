@@ -556,26 +556,24 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
         }
 // export class id and class name
         if ("class_id".equals(name)) {
-            SchoolClass sc = User.getCurrentUser().getInClass();
-            if (sc != null) {
-                return String.valueOf(sc.getID());
+            SchoolClass tmpSc = User.getCurrentUser().getInClass();
+            if (tmpSc != null) {
+                return String.valueOf(tmpSc.getID());
             }
         }
         if ("class_name".equals(name)) {
-            SchoolClass sc = User.getCurrentUser().getInClass();
-            if (sc != null) {
-                return String.valueOf(sc);
+            SchoolClass tmpSc = User.getCurrentUser().getInClass();
+            if (tmpSc != null) {
+                return String.valueOf(tmpSc);
             }
         }
 
         Hashtable ld = getLaunchdata();
 
-//        if (ld != null) {							// ld never unequal null
         Object result = ld.get(name);
         if (result != null) {
             return (String) result;
         }
-//        }
         return DwoHelper.getApplet().getParameter(name);
     }
 
@@ -589,9 +587,9 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
                 applet.stop();
                 applet.destroy();
             } catch (RuntimeException e) {
-                // Dialog: interne fout, sco niet goed afgesloten, mogelijk verlies van gegevens.
+                //TODO Wim: Dialog: interne fout, sco niet goed afgesloten, mogelijk verlies van gegevens.
                 JOptionPane.showMessageDialog(applet, e.getMessage());
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
                 try {
 
                     User localUser = user;
@@ -605,16 +603,15 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
                     DbAccessCreator.instance().log(w.toString());
 
                 } catch (IOException e1) {
-                    e1.printStackTrace();
+                    log.log(Level.SEVERE,null,e1);
                 } catch (XmlRpcException e1) {
-                    e1.printStackTrace();
+                    log.log(Level.SEVERE,null,e1);
                 } catch (RuntimeException e1) {
-                    e1.printStackTrace();
+                    log.log(Level.SEVERE,null,e1);
                 }
             }
             applet = null;
             LMSFinish("");
-
 //            dwo.endSco(this);
         }
     }
@@ -625,13 +622,11 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
                 applet.stop(); // dit bepaalt wel of niet saven van sco's 
                 applet.destroy();
             } catch (RuntimeException e) {
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
             }
             applet = null;
             sc = null;
             initialized = false;
-
-//            dwo.endSco(this);
         }
     }
 

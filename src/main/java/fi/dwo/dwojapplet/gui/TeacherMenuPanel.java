@@ -67,6 +67,7 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
      * Creates a new MenuPanel for the user. It contains the parent items (from
      * MenuPanel) and buttons to show the result of students, and to add a
      * class.
+     *
      * @param dwo
      */
     public TeacherMenuPanel(DwoIF dwo) {
@@ -241,7 +242,7 @@ public class TeacherMenuPanel extends MenuPanel implements SelectStrategy {
             getComponent(i).setEnabled(enabled);
         }
         classPanel.setVisible(!b);
-		//repaint();
+        //repaint();
 
     }
 

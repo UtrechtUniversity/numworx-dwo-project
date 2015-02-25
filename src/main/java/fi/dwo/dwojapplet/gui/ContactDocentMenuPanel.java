@@ -47,7 +47,7 @@ public class ContactDocentMenuPanel extends TeacherMenuPanel {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
+
         super.actionPerformed(e);
         if (e.getSource() == userManagementButton) {
             GuiCreator.instance().setWait();

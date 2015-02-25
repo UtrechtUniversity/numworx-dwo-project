@@ -59,8 +59,11 @@ import fi.dwo.dwojapplet.gui.action.Save2004Action;
 import fi.dwo.dwojapplet.gui.action.SaveAppletAction;
 import fi.dwo.dwojapplet.gui.action.TeacherStrategy;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
+    private static final Logger log = Logger.getLogger(ModuleTreePanel.class.getName());
 
     public static String STANDAARD_DWO_MODULES = TextMapper.getText("Standaard DWO modules");
 
@@ -592,7 +595,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
                             }
                             find.add(node);
                         } catch (PersistenceException e) {
-                            e.printStackTrace();
+                            log.log(Level.SEVERE,null,e);
                         }
                     } else {
                         dwonode.add(node);
@@ -612,8 +615,8 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
                             }
                             find.add(node);
                         } catch (PersistenceException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
+            
+                            log.log(Level.SEVERE,null,e);
                         }
 
                     } else {
@@ -647,7 +650,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
     }
 
     private void sort_fout(Course[] courses) {
-		// topology sort.
+        // topology sort.
 
         boolean again;
         do {
@@ -809,7 +812,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
 //System.err.println("found " + o);
                 return o;
             }
-			//if(o != null)
+            //if(o != null)
             //	return o; // early out.
         }
 //System.err.println("not found");

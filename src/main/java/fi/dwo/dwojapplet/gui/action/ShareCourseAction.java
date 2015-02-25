@@ -9,8 +9,11 @@ import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.gui.ExportImportDialog;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ShareCourseAction extends GuiAction {
+    private static final Logger log = Logger.getLogger(ShareCourseAction.class.getName());
 
     private CourseMap map;
 
@@ -40,7 +43,7 @@ public class ShareCourseAction extends GuiAction {
             dialog.setVisible(true);
             getCenter().updateMap(map);
         } catch (PersistenceException e1) {
-            e1.printStackTrace();
+            log.log(Level.SEVERE,null,e1);
         }
 
     }

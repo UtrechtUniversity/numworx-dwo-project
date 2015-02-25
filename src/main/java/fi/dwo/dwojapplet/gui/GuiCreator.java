@@ -32,6 +32,8 @@ import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.fullscreen.FramedScoPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This Class is responsible for creating some GUI elements and to communicate
@@ -41,6 +43,8 @@ import fi.dwo.dwojapplet.persistence.PersistenceFacade;
  *
  */
 public class GuiCreator {
+
+    private static final Logger log = Logger.getLogger(GuiCreator.class.getName());
 
     protected DwoIF dwo;
 
@@ -78,8 +82,6 @@ public class GuiCreator {
      *
      * @param username The username of the user.
      * @param password The password of the user.
-     * @return If the user was successfully logged in it returns true. Otherwise
-     * it returns false.
      * @throws fi.dwo.commons.exceptions.LoginException
      *
      */
@@ -167,8 +169,6 @@ public class GuiCreator {
     /**
      * Login as guest. Then it shows the MainPanel.
      *
-     * @return If the guest was successfully logged in it returns true.
-     * Otherwise it returns false.
      * @throws fi.dwo.commons.exceptions.LoginException
      *
      */
@@ -198,8 +198,6 @@ public class GuiCreator {
      * e.g: <code>Van</code>
      * @param lastname The lastname (familyname) of the user.
      * @param email The e-mail address of the user.
-     * @return If the user was successfully registered true is returned.
-     * Otherwise false is returned.
      * @throws fi.dwo.commons.exceptions.RegisterException
      *
      */
@@ -234,8 +232,6 @@ public class GuiCreator {
      * @param group The group from the user.
      * @param groupPassword The password corresponding with the specified group
      * and the school.
-     * @return If the user was successfully registered true is returned.
-     * Otherwise false is returned.
      * @throws fi.dwo.commons.exceptions.RegisterException
      *
      */
@@ -380,8 +376,8 @@ public class GuiCreator {
             Sco viewSco = null;
             try {
                 viewSco = (Sco) PersistenceFacade.instance().get(dwo.getScoViewNr(), Sco.class);
-            } catch (Exception exc) {
-                exc.printStackTrace();
+            } catch (Exception e) {
+                log.log(Level.SEVERE, null, e);
             }
             if (viewSco != null) {
                 dwo.setCurrentSco(viewSco);
@@ -574,6 +570,7 @@ public class GuiCreator {
      *
      * @param id
      * @param schoolName
+     * @param schoolLogin
      * @param date
      * @param schoolPasswdMap
      *
@@ -838,12 +835,12 @@ public class GuiCreator {
     }
 
     public CenterSubPanel getUserManagementPanel() {
-        // TODO Auto-generated method stub
+
         return null;
     }
 
     public CenterSubPanel getClassAdminPanel() {
-        // TODO Auto-generated method stub
+
         return null;
     }
 
@@ -876,12 +873,12 @@ public class GuiCreator {
     }
 
     public void unsafeSaveSco(Sco sco) {
-		// TODO Auto-generated method stub
+
 
     }
 
     public void updateLogo(Course c) {
-		// TODO Auto-generated method stub
+
 
     }
 

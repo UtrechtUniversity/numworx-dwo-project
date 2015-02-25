@@ -30,7 +30,7 @@ public class PreviewHtml5 extends GuiAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent _) {
+    public void actionPerformed(ActionEvent e) {
         final CenterPanel center = instance().getMainPanel().getCenter();
         final WrapSco wrap = new WrapSco(sco);
         Hashtable tmp = panel.getLaunchdata();

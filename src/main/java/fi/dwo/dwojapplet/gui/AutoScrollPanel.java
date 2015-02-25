@@ -119,8 +119,8 @@ public class AutoScrollPanel extends Panel implements ComponentListener {
         int maxheight = 0;
         Component comp;
         Component[] cmp = p.getComponents();
-        for (int i = 0; i < cmp.length; i++) {
-            comp = cmp[i];
+        for (Component cmp1 : cmp) {
+            comp = cmp1;
             width = comp.getLocation().x + comp.getSize().width;
             if (width > maxwidth) {
                 maxwidth = width;

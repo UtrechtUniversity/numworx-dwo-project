@@ -79,12 +79,16 @@ import fi.dwo.dwojapplet.gui.GuiCreatorTeacher.LazyAppletConfig;
 import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Velth101
  *
  */
 public class ExportImportDialog extends JDialog implements ActionListener, CourseContainer {
+
+    private static final Logger log = Logger.getLogger(ImportTask.class.getName());
 
     public DwoProfile profile;
 
@@ -160,12 +164,11 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
                 } else {
                     courses = (Course[]) MapperCreator.instance(Course.class).get(map);
                 }
-                for (int i = 0; i < courses.length; i++) {
-                    Course course = courses[i];
+                for (Course course : courses) {
                     set.add(course.getName());
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                log.log(Level.SEVERE, null, e);
             }
 
             int n = 0;
@@ -185,7 +188,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
                         }
                         newc.setScoList(new Sco[0]);
                     } catch (CourseException e) {
-                        e.printStackTrace();
+                        log.log(Level.SEVERE, null, e);
                     }
                     status.setText(TextMapper.format(TextMapper.GUIEID_MSG4, new Object[]{name}));
                     status.invalidate();
@@ -227,7 +230,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
                 newsa[oldsa.length] = news;
                 course.setScoList(newsa);
             } catch (Exception e) {
-                e.printStackTrace();
+                log.log(Level.SEVERE, null, e);
             }
         }
 
@@ -458,8 +461,8 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
         Course[] courses;
 
         private void copyInto(CourseMap[] courseMaps, Vector v) {
-            for (int i = 0; i < courseMaps.length; i++) {
-                Course course = (Course) courseMaps[i];
+            for (CourseMap courseMap : courseMaps) {
+                Course course = (Course) courseMap;
                 if (course.getDwoProfile() == profileID && course.getSchoolID() == user.getSchool().getSchoolID()) {
                     if (course.isWithChildren()) {
                         copyInto(course.getChildren(), v);
@@ -537,7 +540,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
             if (columnIndex == 0) {
                 Course course = courses[rowIndex];
                 boolean export = course.isExport();
-                if (((Boolean) aValue).booleanValue() != export) {
+                if (((Boolean) aValue) != export) {
                     course.setExport(!export);
                     if (!dirty.containsKey(course)) {
                         dirty.put(course, export ? Boolean.TRUE : Boolean.FALSE);
@@ -590,7 +593,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
             export = new Object[s.length];
             map = new Hashtable();
             for (int i = 0; i < s.length; i++) {
-                map.put(new Integer(s[i].getSchoolID()), new Integer(i));
+                map.put(s[i].getSchoolID(), i);
             }
         }
 
@@ -837,7 +840,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
                     courses = (Course[]) PersistenceFacade.instance().getImportCourses(s, user.getSchool(), profileID);
                 } catch (PersistenceException e1) {
                     courses = null;
-                    e1.printStackTrace();
+                    log.log(Level.SEVERE, null, e);
                 }
 // TODO pas op, als COPY aan de gang is, dan geen veranderingen aan importModuleModel
                 //importModuleModel = new ImportModuleModel();
@@ -879,7 +882,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
     private void initializeExportSchoolModels(
             ExportSchoolModel exportSchoolModel, ButtonModel model) {
         Hashtable wheredef = new Hashtable();
-        wheredef.put("schoolFrom", new Integer(user.getSchool().getSchoolID()));
+        wheredef.put("schoolFrom", user.getSchool().getSchoolID());
         try {
             Vector result = DbAccessCreator.instance().getTable("tblfromto", wheredef);
             Enumeration e = result.elements();
@@ -896,11 +899,11 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, null, e);
         } catch (XmlRpcException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, null, e);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, null, e);
         }
 
     }
@@ -949,7 +952,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
                         PersistenceFacade.instance().updateCourse(course);
                     } catch (CourseException e) {
                         JOptionPane.showMessageDialog(this, e.getMessage(), e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
-                        e.printStackTrace();
+                        log.log(Level.SEVERE, null, e);
                         inerror = true;
                     }
                 }
@@ -988,7 +991,6 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
 
     /**
      * @param e
-     * @param owner
      * @throws HeadlessException
      */
 

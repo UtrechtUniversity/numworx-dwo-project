@@ -8,8 +8,11 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.dwojapplet.persistence.DbAccessIF;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class NoCache implements IStore {
+    private static final Logger log = Logger.getLogger(NoCache.class.getName());
 
     NoCache(DbAccessIF dbAccess) {
         this.dbAccess = dbAccess;
@@ -61,7 +64,7 @@ public class NoCache implements IStore {
             dbAccess.log(result);
         } catch (Exception e) {
             System.err.println(result);
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
         }
     }
 

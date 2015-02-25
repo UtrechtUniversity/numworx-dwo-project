@@ -93,8 +93,8 @@ public class ClipboardExport extends Exporter implements ClipboardOwner {
      * @return sb
      */
     private StringBuffer export(StringBuffer sb, String[] line) {
-        for (int i = 0; i < line.length; i++) {
-            sb.append(line[i]);
+        for (String line1 : line) {
+            sb.append(line1);
             sb.append('\t');
         }
         sb.setCharAt(sb.length() - 1, '\n');
@@ -123,6 +123,10 @@ public class ClipboardExport extends Exporter implements ClipboardOwner {
     public void lostOwnership(Clipboard clipboard, Transferable contents) {
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     protected ExportBuffer createExportBuffer() {
         return new ClipBoardBuffer();

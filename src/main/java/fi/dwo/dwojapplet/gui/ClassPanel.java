@@ -383,13 +383,13 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
 
     @Override
     public Object getUserObject() {
-        // TODO Auto-generated method stub
+
         return null;
     }
 
     @Override
     public void stateChanged(ChangeEvent e) {
-		// TODO Auto-generated method stub
+
 
     }
 }

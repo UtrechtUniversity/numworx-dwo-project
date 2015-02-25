@@ -161,8 +161,8 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             this.setMinimumSize(getSize());
 
             String title = TextMapper.getText(TextMapper.GUIPA_DLG_TTL);
-            String[] tmp = {sco.getScoName()};
-            title = MessageFormat.format(title, tmp);
+            String[] lclTmp = {sco.getScoName()};
+            title = MessageFormat.format(title, lclTmp);
 
             editModeDialog = new JDialog(DwoHelper.getFrameForComponent(DwoHelper.getApplet()), title, false);
 
@@ -247,7 +247,6 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             }
 
             sco.setEditor(this);
-
         }
 
         scrollPanel = new JScrollPane();
@@ -300,8 +299,6 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 
     public boolean done;
     public Hashtable tmp;
-
-    private String scormTitel;
 
     @Override
     public void end() {
@@ -431,6 +428,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             tmp = getLaunchdata();
             old = sco.getLaunchdata();
             sco.setLaunchdata(tmp);
+            //TODO Wim: fix this.
             ScoPanel sp = GuiCreator.instance().previewSco(sco);
             // vreembde fout: preview gaat de eerste keer niet goed, tweede keer wel
             // Ik maak dus nogmaal een scoPanel aan.
@@ -557,7 +555,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         }
     }
 
-	// map equals map, 
+    // map equals map, 
     // serialized object not not equal others.
     private boolean compareMap(Map tmp, Map old) {
         boolean equals = old.equals(tmp); // dit zou genoeg moeten zijn!
@@ -674,16 +672,21 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
 
     @Override
     public void stateChanged(ChangeEvent e) {
-		// TODO Auto-generated method stub
+
 
     }
 
+    /**
+     *
+     * @param params
+     */
+    @Override
     public void setLaunchdata(Hashtable params) {
         if (editMode) {
             editComponent.setState(params);
         } else {
             sco.setLaunchdata(params);
-            // TODO .....  parametercomponent???
+            //TODO Wim:.....  parametercomponent???
         }
 
     }

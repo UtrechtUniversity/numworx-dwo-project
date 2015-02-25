@@ -33,8 +33,11 @@ import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.ScormChooser;
 import fi.dwo.dwojapplet.gui.ScormParameters;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Save2004Action extends GuiAction {
+    private static final Logger log = Logger.getLogger(Save2004Action.class.getName());
 
     private static final String WWWURL = "http://www.fisme.science.uu.nl";
 
@@ -163,7 +166,7 @@ public class Save2004Action extends GuiAction {
             out.close();
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
         }
 
     }
@@ -329,7 +332,7 @@ public class Save2004Action extends GuiAction {
 //		} catch (LicenseException e)
 //		{
 //			// TODO iets beters dan printstacktrace
-//			e.printStackTrace();
+//			log.log(Level.SEVERE,null,e);
 //		}
         String launchDataString = StringCodeObject.encodeObjectToString(launchData);
 //		launchData.remove(LicMan.LICENSE_KEY);
@@ -461,7 +464,7 @@ public class Save2004Action extends GuiAction {
             out.close();
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
         }
 
     }

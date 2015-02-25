@@ -25,8 +25,11 @@ import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.DwoProfile;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.Sco;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ScoMapper extends XmlRpcMapper {
+    private static final Logger log = Logger.getLogger(ScoMapper.class.getName());
 
     private static final Vector LAZY_SCO_KEYS = new Vector();
 
@@ -40,14 +43,14 @@ public class ScoMapper extends XmlRpcMapper {
 
     class LazySco extends Sco {
 
+        @Override
         public Hashtable getLaunchdata() {
             if (this.launchdata != null) {
                 return launchdata;
             }
             Hashtable ht = new Hashtable();
-            ht.put(getIDCol(), new Integer(getID()));
-//System.out.println("request launchdata for " + getID());
-//new Throwable().printStackTrace();
+            ht.put(getIDCol(), getID());
+
             Vector v = new Vector();
             v.add("launchdata");
             if (hasFeature(JSON_IN)) {
@@ -83,11 +86,11 @@ public class ScoMapper extends XmlRpcMapper {
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
             } catch (XmlRpcException e) {
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
             }
 
             return super.getLaunchdata();
@@ -105,6 +108,7 @@ public class ScoMapper extends XmlRpcMapper {
     /**
      * @param oid
      * @param obj
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      *
@@ -119,6 +123,7 @@ public class ScoMapper extends XmlRpcMapper {
     /**
      * @param data
      * @return Object
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      *
@@ -161,6 +166,7 @@ public class ScoMapper extends XmlRpcMapper {
      * <li><code>Course</code>: The sco's of the specified course are returned;
      * </ul>
      * @return The SCO's who satisfies to the restriction.
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      */

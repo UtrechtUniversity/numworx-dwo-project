@@ -32,8 +32,11 @@ import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.MapperIF;
 import fi.dwo.dwojapplet.form.DWOFile;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ImportModuleAction extends GuiAction {
+    private static final Logger log = Logger.getLogger(ImportModuleAction.class.getName());
 
     private CourseMap course;
     private FileDialog openDial;
@@ -77,7 +80,7 @@ public class ImportModuleAction extends GuiAction {
                 importScos((Course) course);
                 return;
             } catch (Exception e1) {
-                e1.printStackTrace();
+                log.log(Level.SEVERE,null,e1);
                 return;
             }
         }
@@ -85,8 +88,8 @@ public class ImportModuleAction extends GuiAction {
             try {
                 upload(course);
             } catch (Exception e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
+
+                log.log(Level.SEVERE,null,e1);
             }
             return;
         }
@@ -97,7 +100,7 @@ public class ImportModuleAction extends GuiAction {
                 importScos((Course) map);
                 return;
             } catch (Exception e1) {
-                e1.printStackTrace();
+                log.log(Level.SEVERE,null,e1);
                 return;
             }
         }
@@ -105,8 +108,8 @@ public class ImportModuleAction extends GuiAction {
             try {
                 upload(map);
             } catch (Exception e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
+
+                log.log(Level.SEVERE,null,e1);
             }
             return;
         }

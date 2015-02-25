@@ -23,7 +23,7 @@ public class AdminMenuPanel extends MenuPanel {
      */
     @Override
     protected void createMenuButtons() {
-        // TODO Auto-generated method stub
+
         super.createMenuButtons();
         /* Variables used to create items */
         //FontMetrics fm;

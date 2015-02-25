@@ -70,7 +70,6 @@ public class ByteArray implements Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-        //TODO Wim: Netbeans suggest to add hashcode
         if (this == obj) {
             return true;
         }

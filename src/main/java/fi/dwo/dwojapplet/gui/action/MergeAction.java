@@ -10,8 +10,11 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MergeAction extends GuiAction {
+    private static final Logger log = Logger.getLogger(MergeAction.class.getName());
 
     Sco dest, src;
     CourseMap map;
@@ -68,7 +71,7 @@ public class MergeAction extends GuiAction {
             }
         } catch (Exception e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
         }
         instance().setReady();
     }

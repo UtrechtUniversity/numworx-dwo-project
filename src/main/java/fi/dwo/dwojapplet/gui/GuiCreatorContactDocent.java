@@ -8,7 +8,7 @@ public class GuiCreatorContactDocent extends GuiCreatorTeacher {
 
     public GuiCreatorContactDocent(DwoIF dwo) {
         super(dwo);
-        // TODO Auto-generated constructor stub
+        
     }
 
     /* (non-Javadoc)

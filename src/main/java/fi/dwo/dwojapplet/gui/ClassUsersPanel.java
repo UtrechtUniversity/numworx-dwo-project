@@ -44,6 +44,8 @@ import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class is a panel where the users of a SchoolClass can be viewed and
@@ -55,13 +57,15 @@ import fi.dwo.dwojapplet.persistence.PersistenceFacade;
  */
 public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionListener*/ {
 
+    private static final Logger log = Logger.getLogger(ImageButtonEditor.class.getName());
+
     private CenterPanel center;
 
     private SchoolClass schoolClass;
 
     Image removeImage, editImage, userImage;
 
-	//private Box tbl;
+    //private Box tbl;
     public class ImageRenderer extends JLabel implements TableCellRenderer {
 
         private ImageIcon icon = new ImageIcon();
@@ -127,7 +131,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
                     MapperCreator.instance(User.class).removeObject(u.getID()); // not good enough, need fresh copy.
                     GuiCreator.instance().login(u.getUsername(), null);
                 } catch (LoginException e) {
-                    e.printStackTrace();
+                    log.log(Level.SEVERE, null, e);
                 }
             } else if (value == model.editImage) {
                 try {
@@ -138,7 +142,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
                         JOptionPane.showMessageDialog(ClassUsersPanel.this, TextMapper.getText(TextMapper.GUIP_MSG_PROFILE_CHANGED));
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.log(Level.SEVERE, null, e);
                 }
             } else if (value == model.removeImage) {
                 String[] arguments = new String[1];
@@ -162,7 +166,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
         schoolClass.disconnect(u);
         model.deleteRow(row);
         if (model.getRowCount() == 0) {
-			// TODO dit is niet goed. createLabel(vbox) o.i.d.
+            // TODO dit is niet goed. createLabel(vbox) o.i.d.
             //tbl.setVisible(false);
             arguments = new String[1];
             arguments[0] = schoolClass.getName();

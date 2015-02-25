@@ -38,6 +38,8 @@ import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.persistence.DbAccessCreator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class represents a panel witch shows an applet of the sco.
@@ -51,6 +53,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
     private static final Color HOME_COLOR = new Color(3, 65, 123);
 
     private Applet applet;
+    private static final Logger log = Logger.getLogger(ScoPanel.class.getName());
 
     private Sco sco;
 
@@ -148,9 +151,9 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
             applet.start();
             validate();
         } catch (RuntimeException e) {
-			// TODO Applet is niet gestart!
+            // TODO Applet is niet gestart!
             // Dialog: interne fout, sco niet goed geïnitialiseerd.
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             try {
                 DbAccessCreator.instance().log(GuiCreator.instance().getUser().getID() + " Sco " + sco.getID() + "," + applet + " exception in ScoPanel.init: " + e.toString());
                 StringWriter w = new StringWriter();
@@ -159,9 +162,9 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
                 DbAccessCreator.instance().log(w.toString());
 
             } catch (IOException e1) {
-                e1.printStackTrace();
+                log.log(Level.SEVERE,null,e1);
             } catch (XmlRpcException e1) {
-                e1.printStackTrace();
+                log.log(Level.SEVERE,null,e1);
             }
         }
     }
@@ -201,7 +204,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
         Box hbox = Box.createHorizontalBox();
         String text = sco.getScoName();
         JLabel l;
-    	//if(!scoView)
+        //if(!scoView)
         //text = sco.getSequencenr() + ".  " + text;
         HeaderPanel hp = new HeaderPanel(text, true);
         hp.setHorizontalAlignment(SwingConstants.LEFT);
@@ -274,7 +277,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
         jp.setPreferredSize(jp.getSize());
         jp.setMinimumSize(new Dimension(50, 70));
         jp.invalidate();
-    	//jp.validate();
+        //jp.validate();
         //jp.doLayout();
         //hbox.doLayout();
         return jp;
@@ -674,7 +677,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
 
     @Override
     public void stateChanged(ChangeEvent e) {
-		// TODO Auto-generated method stub
+
 
     }
 }

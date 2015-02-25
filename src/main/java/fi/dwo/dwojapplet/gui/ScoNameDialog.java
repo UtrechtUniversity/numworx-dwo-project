@@ -124,6 +124,7 @@ public class ScoNameDialog //extends Dialog implements ActionListener,
 //        return addSco(null, course, appletConfig);
 //    }
     /**
+     * @param owner
      * @param appletConfig
      * @param course
      * @return fi.dwo.client.domain.Sco

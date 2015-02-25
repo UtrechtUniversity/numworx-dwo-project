@@ -19,8 +19,7 @@ public class SchoolPasswdMap extends Hashtable {
     }
 
     public SchoolPasswdMap(SchoolGroup[] schoolGroupList) {
-        for (int i = 0; i < schoolGroupList.length; i++) {
-            SchoolGroup sg = schoolGroupList[i];
+        for (SchoolGroup sg : schoolGroupList) {
             put(Integer.toString(sg.getGroupID()), sg.getPasswd());
         }
     }

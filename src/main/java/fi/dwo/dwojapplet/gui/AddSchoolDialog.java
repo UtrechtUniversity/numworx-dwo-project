@@ -51,7 +51,7 @@ import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 public class AddSchoolDialog extends JDialog implements ActionListener,
         WindowListener {
 
-    private static final Object ZERO = new Integer(0);
+    private static final Object ZERO = 0;
 
     private String schoolName;
 
@@ -271,6 +271,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
     }
 
     /**
+     * @param owner
      * @param school
      * @return fi.dwo.client.domain.Sco
      * @throws fi.dwo.commons.exceptions.SchoolException
@@ -444,7 +445,7 @@ public class AddSchoolDialog extends JDialog implements ActionListener,
     private int getSchoolId() {
         if (schoolNameField instanceof JComboBox) {
             Integer n = (Integer) schoolIdVector.get(((JComboBox) schoolNameField).getSelectedIndex() + 1);
-            return n.intValue();
+            return n;
         }
         return 0;
     }

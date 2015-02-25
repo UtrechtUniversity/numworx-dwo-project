@@ -35,7 +35,6 @@ public class MultiLevelTreeTabSheet extends TreeTabSheet implements
     /**
      * @param parent
      * @param parameter
-     * @param launchdata
      * @param defaultValue
      */
     public MultiLevelTreeTabSheet(MultiLevelTreeParameterComponent parent,
@@ -229,7 +228,7 @@ public class MultiLevelTreeTabSheet extends TreeTabSheet implements
      */
     @Override
     public void setBounds(int x, int y, int width, int height) {
-        // TODO Auto-generated method stub
+
         super.setBounds(x, y, width, height);
     }
 

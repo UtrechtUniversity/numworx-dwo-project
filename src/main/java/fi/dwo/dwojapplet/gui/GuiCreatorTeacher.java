@@ -48,6 +48,7 @@ public class GuiCreatorTeacher extends GuiCreator {
         /* (non-Javadoc)
          * @see fi.dwo.client.domain.AppletConfig#getLaunchdata()
          */
+        @Override
         public String getLaunchdata() {
             if (super.getLaunchdata() != null) {
                 return super.getLaunchdata();
@@ -379,7 +380,6 @@ public class GuiCreatorTeacher extends GuiCreator {
 
     /**
      * @param course
-     * @param appletID
      * @param name
      * @param description
      * @param showScore
@@ -459,7 +459,7 @@ public class GuiCreatorTeacher extends GuiCreator {
             lab.setFont(new Font("SansSerif", Font.BOLD, 20));
             box.add(lab);
             box.add(Box.createHorizontalStrut(10));
-            if (Sco.BROWSE == lessonMode) // FIXME SUBTIEL verschil 
+            if (Sco.BROWSE == lessonMode) //SUBTIEL verschil 
             {
                 box.add(new JButton(new PreviewAction(scoPanel)));
             } else {

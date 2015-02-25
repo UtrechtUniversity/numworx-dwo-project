@@ -32,7 +32,6 @@ public class SingleLevelTreeTabSheet extends TreeTabSheet implements
     /**
      * @param treeSheetCreator
      * @param parameter
-     * @param launchdata
      * @param defaultValue
      */
     public SingleLevelTreeTabSheet(TreeSheetCreator treeSheetCreator, TreeParameter parameter,
@@ -136,7 +135,7 @@ public class SingleLevelTreeTabSheet extends TreeTabSheet implements
      */
     @Override
     public void addParameters(Hashtable parameters) {
-        // TODO Auto-generated method stub
+
         super.addParameters(parameters);
     }
 

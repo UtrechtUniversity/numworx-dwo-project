@@ -13,8 +13,12 @@ import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 class UserModel extends AbstractTableModel {
+
+    private static final Logger log = Logger.getLogger(UserModel.class.getName());
 
     UserModel() {
         if (!GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER)) {
@@ -114,8 +118,7 @@ class UserModel extends AbstractTableModel {
                 user.setInClass(c);
                 fireTableCellUpdated(row, col);
             } catch (RegisterException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.log(Level.SEVERE, null, e);
             }
             return;
         }

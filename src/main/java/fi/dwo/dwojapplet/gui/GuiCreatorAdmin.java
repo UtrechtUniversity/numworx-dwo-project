@@ -27,6 +27,8 @@ import fi.dwo.dwojapplet.gui.action.CourseManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoManagementAction;
 import fi.dwo.dwojapplet.gui.action.ScoParameterAction;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class implements Admin-specific methods of the GuiCreator. These methods
@@ -38,6 +40,8 @@ import fi.dwo.dwojapplet.persistence.PersistenceFacade;
  *
  */
 public class GuiCreatorAdmin extends GuiCreator {
+
+    private static final Logger log = Logger.getLogger(GuiCreatorAdmin.class.getName());
 
     /**
      * @param dwo
@@ -226,7 +230,6 @@ public class GuiCreatorAdmin extends GuiCreator {
 
     /**
      * @param course
-     * @param appletID
      * @param name
      * @param description
      * @param showScore
@@ -308,8 +311,7 @@ public class GuiCreatorAdmin extends GuiCreator {
         try {
             PersistenceFacade.instance().unsafeSaveSco(sco);
         } catch (ScoException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.log(Level.SEVERE, null, e);
         }
     }
 

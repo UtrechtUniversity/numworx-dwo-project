@@ -40,7 +40,7 @@ public class ScormChooser extends JFileChooser {
         group.add(scorm2004);
         group.add(html5);
         addChoosableFileFilter(ScormFilter.FILTER);
-		//setAcceptAllFileFilterUsed(false);
+        //setAcceptAllFileFilterUsed(false);
 
     }
 

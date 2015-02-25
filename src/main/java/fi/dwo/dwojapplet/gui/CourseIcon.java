@@ -167,7 +167,7 @@ class CourseIconUI extends BasicButtonUI {
 
     @Override
     public void paint(Graphics g, JComponent c) {
-        // TODO Auto-generated method stub
+
         super.paint(g, c);
     }
 
@@ -239,7 +239,7 @@ class CourseIconUI extends BasicButtonUI {
     }
 
     public CourseIconUI() {
-        // TODO Auto-generated constructor stub
+        
     }
 
     @Override
@@ -294,7 +294,6 @@ class CourseIconUI extends BasicButtonUI {
         int width = fm.stringWidth(text);
         if (width <= textRect.width) {
 // easy case
-            return;
         } else {
 // uneasy case
             int y = textRect.y + fm.getAscent();

@@ -26,6 +26,8 @@ import fi.dwo.dwojapplet.domain.ResultScoreIF;
 import fi.dwo.dwojapplet.domain.Sco;
 
 import fi.wiskopdr.ScoresObjectivesPanel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Shows a panel with the color representing the score. It also shows the score.
@@ -33,13 +35,10 @@ import fi.wiskopdr.ScoresObjectivesPanel;
 public class ResultScoreButton extends JPanel implements
         ActionListener {
 
+    private static final Logger log = Logger.getLogger(ResultScoreButton.class.getName());
+
     private float score;
-
     private ResultScoreIF domain;
-
-    //private ResultsModulePanel resultsModulePanel;
-    private String toolTip;
-
     private boolean active = true;
 
     /**
@@ -113,7 +112,7 @@ public class ResultScoreButton extends JPanel implements
         } else {
             l = new JLabel(" ");
             setBackground(new Color(230, 230, 230));
-        	//addMouseListener(this);
+            //addMouseListener(this);
 
         }
         center(l);
@@ -214,7 +213,7 @@ public class ResultScoreButton extends JPanel implements
     public void actionPerformed(ActionEvent e) {
         if (active) {
             domain.showResult();
-        } else if (false) // TODO parameter voor testing.... false is productie!
+        } else if (false) // TODO Wim: Ehmm? False never happens and active is the switch? Parameter voor testing.... false is productie!
         {
             if (score != 0) {
                 try {
@@ -236,7 +235,7 @@ public class ResultScoreButton extends JPanel implements
                         JOptionPane.showMessageDialog(this, "Geen deelscores", "", JOptionPane.INFORMATION_MESSAGE);
                     }
                 } catch (Throwable e1) {
-                    e1.printStackTrace();
+                    log.log(Level.SEVERE, null, e1);
                     JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } else {

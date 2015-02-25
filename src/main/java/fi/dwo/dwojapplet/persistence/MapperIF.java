@@ -27,6 +27,7 @@ public interface MapperIF {
      *
      * @param oid The ID of the object to get.
      * @return Object The object representing the specified objectID and class.
+     * @throws java.io.IOException
      * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      *
@@ -40,6 +41,7 @@ public interface MapperIF {
      *
      * @param oid
      * @param obj
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      */
@@ -52,6 +54,7 @@ public interface MapperIF {
      * courses in the database are returned.
      *
      * @return The objects representing the specified class.
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      */
@@ -90,6 +93,7 @@ public interface MapperIF {
      *
      * @param obj The object who specifies the restriction.
      * @return The objects who satisfy to the restriction.
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      */

@@ -8,6 +8,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Utility class
@@ -16,6 +18,8 @@ import java.net.URLEncoder;
  *
  */
 public class Util {
+
+    private static final Logger log = Logger.getLogger(Util.class.getName());
 
     static final String UTF8 = "UTF-8";
 
@@ -36,7 +40,8 @@ public class Util {
             sb.append("=");
             sb.append(URLEncoder.encode(value, UTF8));
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, null, e);
+
         }
     }
 
@@ -61,7 +66,7 @@ public class Util {
 
     /**
      * @param sb
-     * @return 
+     * @return
      * @throws MalformedURLException
      * @throws IOException
      * @throws UnsupportedEncodingException

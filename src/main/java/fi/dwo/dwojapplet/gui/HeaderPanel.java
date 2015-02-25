@@ -80,7 +80,7 @@ public class HeaderPanel extends JPanel {
      */
     @Override
     public void resize(Dimension d) {
-        // TODO Auto-generated method stub
+
         super.resize(d);
         scale();
     }
@@ -90,7 +90,7 @@ public class HeaderPanel extends JPanel {
      */
     @Override
     public void resize(int width, int height) {
-        // TODO Auto-generated method stub
+
         super.resize(width, height);
         scale();
     }
@@ -100,7 +100,7 @@ public class HeaderPanel extends JPanel {
      */
     @Override
     public void setBounds(int x, int y, int width, int height) {
-        // TODO Auto-generated method stub
+
         super.setBounds(x, y, width, height);
         scale();
     }
@@ -120,7 +120,7 @@ public class HeaderPanel extends JPanel {
      */
     @Override
     public void setSize(Dimension d) {
-        // TODO Auto-generated method stub
+
         super.setSize(d);
         scale();
     }
@@ -130,7 +130,7 @@ public class HeaderPanel extends JPanel {
      */
     @Override
     public void setSize(int width, int height) {
-        // TODO Auto-generated method stub
+
         super.setSize(width, height);
         scale();
     }

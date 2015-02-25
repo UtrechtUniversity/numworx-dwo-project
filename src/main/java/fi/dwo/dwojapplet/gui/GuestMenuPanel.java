@@ -121,7 +121,7 @@ public class GuestMenuPanel extends JPanel implements ActionListener {
      */
     @Override
     public void setBounds(int x, int y, int width, int height) {
-        // TODO Auto-generated method stub
+
         super.setBounds(x, y, width, height);
     }
 

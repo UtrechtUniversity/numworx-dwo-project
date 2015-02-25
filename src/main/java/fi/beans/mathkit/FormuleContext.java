@@ -437,7 +437,7 @@ class FormuleContext implements ViewFactory {
                 }
                 r.preferred = r.minimum;
             } catch (Exception e) {
-                // TODO Auto-generated catch block
+
                 log.log(Level.SEVERE, null, e);
             }
             return r;
@@ -801,7 +801,7 @@ class FormuleContext implements ViewFactory {
         @Override
         protected SizeRequirements calculateMinorAxisRequirements(int axis,
                 SizeRequirements r) {
-            // TODO Auto-generated method stub
+    
             r = super.calculateMinorAxisRequirements(axis, r);
             Container c = getContainer();
             if (c != null) {

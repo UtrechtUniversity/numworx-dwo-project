@@ -39,7 +39,7 @@ public class TableUtil {
                 }
                 Component c = renderer.getTableCellRendererComponent(jTable, jTable.getColumnModel().getColumn(j).getHeaderValue(), false, false, -1, j);
                 max = c.getPreferredSize().width + 3;
-				//h = Math.max(h, c.getPreferredSize().height);
+                //h = Math.max(h, c.getPreferredSize().height);
 
             }
             int len = jTable.getRowCount();

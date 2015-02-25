@@ -13,8 +13,11 @@ import fi.dwo.dwojapplet.domain.*;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.system.TextMapper;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RegisterClassListButton extends JButton implements ActionListener {
+    private static final Logger log = Logger.getLogger(RegisterClassListButton.class.getName());
 
     JDialog frame;
     JPanel content;
@@ -142,7 +145,7 @@ public class RegisterClassListButton extends JButton implements ActionListener {
                 addTableModel.setDataVector(celStrings, columnNames);
                 return true;
             } catch (Exception e) {
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
                 return false;
             }
         } else {

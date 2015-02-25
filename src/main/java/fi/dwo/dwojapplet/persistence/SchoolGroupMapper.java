@@ -29,6 +29,7 @@ public class SchoolGroupMapper extends XmlRpcMapper {
     /**
      * @param oid
      * @param obj
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      *
@@ -67,6 +68,7 @@ public class SchoolGroupMapper extends XmlRpcMapper {
     /**
      * @param obj
      * @return Object[]
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      *

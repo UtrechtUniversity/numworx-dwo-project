@@ -53,6 +53,8 @@ import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.domain.UserGroup;
 import fi.dwo.dwojapplet.domain.UserResultList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class is a panel represents the resultscores of a group of users and a
@@ -63,6 +65,8 @@ import fi.dwo.dwojapplet.domain.UserResultList;
  *
  */
 public class ResultsModulePanel extends JPanel implements ActionListener, CenterSubPanel {
+
+    private static final Logger log = Logger.getLogger(ResultsModulePanel.class.getName());
 
     public class ImageEditor extends AbstractCellEditor implements
             TableCellEditor, ActionListener {
@@ -151,13 +155,13 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
         @Override
         public void mouseReleased(MouseEvent e) {
             header = (JTableHeader) e.getComponent();
-            int col = header.columnAtPoint(e.getPoint());
-            if (col != this.col) {
+            int lclCol = header.columnAtPoint(e.getPoint());
+            if (lclCol != this.col) {
                 return;
             }
 
-            Object o = header.getColumnModel().getColumn(col).getHeaderValue();
-            if (col == 0) {
+            Object o = header.getColumnModel().getColumn(lclCol).getHeaderValue();
+            if (lclCol == 0) {
                 if (currentUserGroup != null) // een student, zoom naar alle klassen.
                 {
                     GuiCreator.instance().setWait();
@@ -254,7 +258,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
                 return data[row].getResultScore()[0].getUserGroup().getName();
             }
 // Float.valueOf(float) is 1.5
-            return new Float(data[row].getResultScore()[col - 1].getScore());
+            return data[row].getResultScore()[col - 1].getScore();
         }
 
         public long getTotalTimeAt(int row, int col) {
@@ -345,7 +349,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
 
     }
 
-    static final Float ZERO = new Float(0);
+    static final Float ZERO = (float) 0;
 
     public class FloatRenderer extends TextPaneRenderer {
 
@@ -383,7 +387,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
                 int red = 255;
                 int green = 255;
                 int blue = 0;
-                float f = ((Float) value).floatValue();
+                float f = ((Float) value);
                 if (f != 0) {
                     if (f == -1) { //it is -1 he did the course but has no score
                         f = 0;
@@ -459,8 +463,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
                 document.insertString(0, bold, boldStyle);
                 document.setParagraphAttributes(0, document.getLength(), centerStyle, false);
             } catch (BadLocationException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.log(Level.SEVERE, null, e);
             }
         }
     }
@@ -551,7 +554,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
          */
         @Override
         protected void paintComponent(Graphics arg0) {
-            // TODO Auto-generated method stub
+    
             super.paintComponent(arg0);
         }
 
@@ -652,7 +655,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
 // Track media before rendering.
 
         currentUserGroup = domain.getZoomedUserGroup();
-        currentLessonGroup = domain.getZoomedLessonGroup();;
+        currentLessonGroup = domain.getZoomedLessonGroup();
         int x;
 
         JPanel buttonPanel = new JPanel();
@@ -831,7 +834,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
 
     public void setJData(Vector data) {
 
-    	//if(true) { setData(data); return; }
+        //if(true) { setData(data); return; }
         if (jtbl != null) {
             remove(jtbl);
             jtbl = null;
@@ -902,7 +905,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
                 columnModel.getColumn(0).setHeaderRenderer(classRenderer);
             }
             int len = table.getColumnCount();
-            boolean in = true;
+            boolean in;
             in = lg.isHighestLevel();
             TableCellRenderer renderer;
 
@@ -917,9 +920,9 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
 // modules
             MultiLineTableCellRenderer mrenderer = new MultiLineTableCellRenderer(in ? 3 : 1, in ? 20 : 10);
             String zoom = in ? GuiConstants.RESULTS_ZOOM_IN : GuiConstants.RESULTS_ZOOM_OUT;
-            Image image = DwoHelper.getResourceImage(zoom);
+            Image lclImage = DwoHelper.getResourceImage(zoom);
 
-            IconBorder border = new IconBorder(new ImageIcon(image));
+            IconBorder border = new IconBorder(new ImageIcon(lclImage));
             mrenderer.setBorder(border);
 
             if (in) {
@@ -953,7 +956,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
             panel.add(table, BorderLayout.CENTER);
 
             table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-    		//JScrollPane pane = new JScrollPane(panel,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            //JScrollPane pane = new JScrollPane(panel,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             //pane.getViewport().setBackground(Color.RED);
             //TableUtil.setBorder(pane);
             table.setGridColor(new Color(210, 210, 210));
@@ -965,7 +968,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
             //TableUtil.shrinkToFit(table, pane, 600, 470);
             jtbl.add(panel, BorderLayout.CENTER);
 
-    		//Dimension pref = jtbl.getPreferredSize();
+            //Dimension pref = jtbl.getPreferredSize();
             //pref.width = Math.min(623-10, pref.width);
             //pref.height = Math.min(487-10-10, pref.height);
             //jtbl.setSize(623-10, 487-10-10);
@@ -1183,7 +1186,7 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
         int i, j;
         for (i = 0; i < data.size(); i++) {
             results = ((UserResultList) data.elementAt(i)).getResultScore();
-            ug = results[0].getUserGroup();
+            //ug = results[0].getUserGroup();
             for (j = 0; j < results.length; j++) {
                 // FIXME dit hoort hier niet thuis maar moet private zijn
                 lg = results[j].getLessonGroup();
@@ -1222,13 +1225,13 @@ public class ResultsModulePanel extends JPanel implements ActionListener, Center
 
     @Override
     public Object getUserObject() {
-        // TODO Auto-generated method stub
+
         return null;
     }
 
     @Override
     public void stateChanged(ChangeEvent e) {
-		// TODO Auto-generated method stub
+
 
     }
 }

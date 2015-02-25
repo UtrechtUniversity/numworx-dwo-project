@@ -71,6 +71,7 @@ public class MainPanel extends BackgroundPanel {
     /**
      * Creates a new instance of the MainPanel. The main panel shows the
      * FI-logo, the header panel, the logg-of panel and the center panel.
+     *
      * @param dwoProfile
      */
     public MainPanel(DwoProfile dwoProfile) {
@@ -225,7 +226,7 @@ public class MainPanel extends BackgroundPanel {
 
 //    public void setVisible(boolean b) {
 //        Exception e = new Exception();
-//        e.printStackTrace();
+//        log.log(Level.SEVERE,null,e);
 //        super.setVisible(b);
 //    }
     /**

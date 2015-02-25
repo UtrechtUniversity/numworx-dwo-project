@@ -14,7 +14,7 @@ class PreviewAction extends AbstractAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent _) {
+    public void actionPerformed(ActionEvent event) {
         scoPanel.getSco().setLaunchdata(scoPanel.tmp.tmp);
         scoPanel.getSco().setDataChanged(false);
         GuiCreator.instance().getMainPanel().getCenter().loadCenter(scoPanel.tmp);

@@ -20,8 +20,11 @@ import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 import fi.dwo.dwojapplet.form.DWOFile;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BackupModuleAction extends GuiAction {
+    private static final Logger log = Logger.getLogger(BackupModuleAction.class.getName());
 
     private FileDialog saveDial;
     private String tip;
@@ -41,6 +44,7 @@ public class BackupModuleAction extends GuiAction {
 
     private Course course;
 
+    @SuppressWarnings("LeakingThisInConstructor")
     public BackupModuleAction() {
         super(TextMapper.getText("Backup module"));
         setEnabled(DwoHelper.isSecure());
@@ -62,8 +66,7 @@ public class BackupModuleAction extends GuiAction {
                 export(course);
             }
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
         }
     }
 

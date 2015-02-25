@@ -72,6 +72,8 @@ import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 class CourseData implements CourseMap {
 
@@ -939,7 +941,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                             }
                         }
                     }
-                	//tree2.setCellRenderer(new CheckBoxNodeRenderer(true));
+                    //tree2.setCellRenderer(new CheckBoxNodeRenderer(true));
                     //tree2.setCellEditor(new CheckBoxNodeEditor(tree2));
                     //tree2.setEditable(true);
                 }
@@ -962,7 +964,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
             split.setDividerLocation(0.20);
 
             DefaultMutableTreeNode r = (DefaultMutableTreeNode) treeModel.getRoot();
-        	// selecteer root!
+            // selecteer root!
 
             coursesModel = new CoursesModel();
             coursesModel.setColumnCount(cnt);
@@ -1206,7 +1208,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
                     }
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Logger.getGlobal().log(Level.SEVERE, null, e);
                 }
             }
         }.start();

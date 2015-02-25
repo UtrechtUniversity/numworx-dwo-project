@@ -31,7 +31,7 @@ public class OpenHtml5 extends GuiAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent _) {
+    public void actionPerformed(ActionEvent e) {
         final CenterPanel center = instance().getMainPanel().getCenter();
         center.end();
         final WrapSco wrap = new WrapSco(sco);

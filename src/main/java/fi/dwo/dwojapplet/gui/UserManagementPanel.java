@@ -40,8 +40,11 @@ import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UserManagementPanel extends JPanel implements CenterSubPanel {
+    private static final Logger log = Logger.getLogger(UserManagementPanel.class.getName());
 
     static class TeacherDelegate extends Teacher {
 
@@ -204,8 +207,8 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
                     MapperCreator.instance(User.class).removeObject(user.getID()); // not good enough, need fresh copy.
                     GuiCreator.instance().login(user.getUsername(), null);
                 } catch (LoginException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+    
+                    log.log(Level.SEVERE,null,e);
                 }
             } else if (value == model.editImage) {
                 try {
@@ -216,7 +219,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
                         JOptionPane.showMessageDialog(UserManagementPanel.this, TextMapper.getText(TextMapper.GUIP_MSG_PROFILE_CHANGED));
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.log(Level.SEVERE,null,e);
                 }
             } else if (value == model.removeImage) {
                 /* Delete the school */
@@ -317,8 +320,8 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
                 }
                 merge(u);
             } catch (PersistenceException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+
+                log.log(Level.SEVERE,null,e);
             }
         }
         Arrays.sort(userList);
@@ -353,7 +356,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 
     @Override
     public void end() {
-        // TODO Auto-generated method stub
+
 
     }
 
@@ -364,7 +367,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
 
     @Override
     public Component getHeaderPanel() {
-        // TODO Auto-generated method stub
+
         return new HeaderPanel(TextMapper.getText(TextMapper.GUIUMP_MANAGE_USERS));
     }
 

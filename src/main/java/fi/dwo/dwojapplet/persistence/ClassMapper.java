@@ -30,6 +30,7 @@ public class ClassMapper extends XmlRpcMapper {
     /**
      * @param oid
      * @param obj
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      *
@@ -77,6 +78,7 @@ public class ClassMapper extends XmlRpcMapper {
      * <li><code>School</code>: The classes of the school are returned;
      * </ul>
      * @return The SchoolClasses who satisfy to the restriction.
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      */

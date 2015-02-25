@@ -65,13 +65,13 @@ public class VButton extends JButton {
         private int dstW, dstH;
 
         public RotateFilter() {
-	        //this.angle = angle;
+            //this.angle = angle;
             //sin = 1.0; //Math.sin(angle);
             //cos = 0.0; //Math.cos(angle);
         }
 
         public void transform(double x, double y, double[] retcoord) {
-	        // Remember that the coordinate system is upside down so apply
+            // Remember that the coordinate system is upside down so apply
             // the transform as if the angle were negated.
             // cos(-angle) =  cos(angle)
             // sin(-angle) = -sin(angle)
@@ -80,7 +80,7 @@ public class VButton extends JButton {
         }
 
         public void itransform(double x, double y, double[] retcoord) {
-	        // Remember that the coordinate system is upside down so apply
+            // Remember that the coordinate system is upside down so apply
             // the transform as if the angle were negated.  Since inverting
             // the transform is also the same as negating the angle, itransform
             // is calculated the way you would expect to calculate transform.
@@ -234,7 +234,7 @@ public class VButton extends JButton {
         protected void installDefaults(AbstractButton b) {
 
             b.setHorizontalTextPosition(SwingConstants.LEADING);
-			//b.setForeground(UIFOREGROUND);
+            //b.setForeground(UIFOREGROUND);
             //b.setDoubleBuffered(false);
             b.setIconTextGap(15);
             b.setFocusPainted(false);

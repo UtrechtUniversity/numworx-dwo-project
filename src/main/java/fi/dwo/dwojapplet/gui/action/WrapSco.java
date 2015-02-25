@@ -21,8 +21,11 @@ import fi.dwo.dwojapplet.domain.Sco;
 import static fi.dwo.dwojapplet.domain.ScoBase.LAUNCH_DATA;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.GuiConstants;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 class WrapSco extends Sco {
+    private static final Logger log = Logger.getLogger(WrapSco.class.getName());
 
     /**
      * @param delegate
@@ -34,6 +37,7 @@ class WrapSco extends Sco {
 
     private Sco delegate;
 
+    @Override
     public Sco unwrap() {
         return delegate;
     }
@@ -43,6 +47,7 @@ class WrapSco extends Sco {
      * @see
      * fi.dwo.client.domain.Sco#addPropertyChangeListener(java.beans.PropertyChangeListener)
      */
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         delegate.addPropertyChangeListener(listener);
     }
@@ -53,6 +58,7 @@ class WrapSco extends Sco {
      * @see fi.dwo.client.domain.Sco#addPropertyChangeListener(java.lang.String,
      * java.beans.PropertyChangeListener)
      */
+    @Override
     public void addPropertyChangeListener(String propertyName,
             PropertyChangeListener listener) {
         delegate.addPropertyChangeListener(propertyName, listener);
@@ -61,6 +67,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.ScoBase#getID()
      */
+    @Override
     public int getID() {
         return delegate.getID();
     }
@@ -70,6 +77,7 @@ class WrapSco extends Sco {
      * @see
      * fi.dwo.client.domain.Sco#removePropertyChangeListener(java.beans.PropertyChangeListener)
      */
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         delegate.removePropertyChangeListener(listener);
     }
@@ -81,6 +89,7 @@ class WrapSco extends Sco {
      * fi.dwo.client.domain.Sco#removePropertyChangeListener(java.lang.String,
      * java.beans.PropertyChangeListener)
      */
+    @Override
     public void removePropertyChangeListener(String propertyName,
             PropertyChangeListener listener) {
         delegate.removePropertyChangeListener(propertyName, listener);
@@ -89,6 +98,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.Sco#isShowScore()
      */
+    @Override
     public boolean isShowScore() {
         return delegate.isShowScore();
     }
@@ -96,6 +106,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.Sco#getShowScore()
      */
+    @Override
     public Boolean getShowScore() {
         return delegate.getShowScore();
     }
@@ -105,6 +116,7 @@ class WrapSco extends Sco {
      * @return
      * @see fi.beans.scorm.ScormAdapter#LMSGetValue(java.lang.String)
      */
+    @Override
     public String LMSGetValue(String key) {
         System.out.println("GetValue " + key);
         return super.LMSGetValue(key);
@@ -114,6 +126,7 @@ class WrapSco extends Sco {
      * @param showScore
      * @see fi.dwo.client.domain.Sco#setShowScore(boolean)
      */
+    @Override
     public void setShowScore(boolean showScore) {
         delegate.setShowScore(showScore);
     }
@@ -122,6 +135,7 @@ class WrapSco extends Sco {
      * @param showScore
      * @see fi.dwo.client.domain.Sco#setShowScore(java.lang.Boolean)
      */
+    @Override
     public void setShowScore(Boolean showScore) {
         delegate.setShowScore(showScore);
     }
@@ -131,6 +145,7 @@ class WrapSco extends Sco {
      * @return
      * @see fi.dwo.client.domain.ScoBase#LMSCommit(java.lang.String)
      */
+    @Override
     public String LMSCommit(String iParam) {
         return super.LMSCommit(iParam);
     }
@@ -138,6 +153,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.Sco#getPartialScoreIF()
      */
+    @Override
     public PartialScoreIF getPartialScoreIF() {
         return delegate.getPartialScoreIF();
     }
@@ -145,6 +161,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.ScoBase#LMSGetLastError()
      */
+    @Override
     public String LMSGetLastError() {
         return super.LMSGetLastError();
     }
@@ -154,6 +171,7 @@ class WrapSco extends Sco {
      * @return
      * @see fi.dwo.client.domain.ScoBase#LMSGetErrorString(java.lang.String)
      */
+    @Override
     public String LMSGetErrorString(String iErrorCode) {
         return super.LMSGetErrorString(iErrorCode);
     }
@@ -161,6 +179,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.Sco#getName()
      */
+    @Override
     public String getName() {
         return delegate.getName();
     }
@@ -172,6 +191,7 @@ class WrapSco extends Sco {
      * @see fi.beans.scorm.ScormAdapter#LMSSetValue(java.lang.String,
      * java.lang.String)
      */
+    @Override
     public String LMSSetValue(String key, String value) {
         return super.LMSSetValue(key, value);
     }
@@ -179,6 +199,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.Sco#getScoName()
      */
+    @Override
     public String getScoName() {
         return delegate.getScoName();
     }
@@ -188,6 +209,7 @@ class WrapSco extends Sco {
      * @return
      * @see fi.dwo.client.domain.ScoBase#LMSGetDiagnostic(java.lang.String)
      */
+    @Override
     public String LMSGetDiagnostic(String iErrorCode) {
         return super.LMSGetDiagnostic(iErrorCode);
     }
@@ -197,6 +219,7 @@ class WrapSco extends Sco {
      * @return
      * @see fi.dwo.client.domain.Sco#LMSInitialize(java.lang.String)
      */
+    @Override
     public String LMSInitialize(String iParam) {
         System.out.println("Initialize");
         super.LMSInitialize(iParam);
@@ -206,6 +229,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.ScoBase#isDataChanged()
      */
+    @Override
     public boolean isDataChanged() {
         return delegate.isDataChanged();
     }
@@ -214,6 +238,7 @@ class WrapSco extends Sco {
      * @param dataChanged
      * @see fi.dwo.client.domain.ScoBase#setDataChanged(boolean)
      */
+    @Override
     public void setDataChanged(boolean dataChanged) {
         delegate.setDataChanged(dataChanged);
     }
@@ -223,6 +248,7 @@ class WrapSco extends Sco {
      * @return
      * @see fi.dwo.client.domain.Sco#LMSFinish(java.lang.String)
      */
+    @Override
     public String LMSFinish(String iParam) {
         return super.LMSFinish(iParam);
     }
@@ -231,6 +257,7 @@ class WrapSco extends Sco {
      * @param courseChanged
      * @see fi.dwo.client.domain.ScoBase#setCourseChanged(boolean)
      */
+    @Override
     public void setCourseChanged(boolean courseChanged) {
         delegate.setCourseChanged(courseChanged);
     }
@@ -238,6 +265,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.ScoBase#getScoID()
      */
+    @Override
     public int getScoID() {
         return delegate.getScoID();
     }
@@ -246,6 +274,7 @@ class WrapSco extends Sco {
      * @param scoID
      * @see fi.dwo.client.domain.ScoBase#setScoID(int)
      */
+    @Override
     public void setScoID(int scoID) {
         delegate.setScoID(scoID);
     }
@@ -254,6 +283,7 @@ class WrapSco extends Sco {
      * @param u
      * @see fi.dwo.client.domain.ScoBase#setUser(fi.dwo.client.domain.User)
      */
+    @Override
     public void setUser(User u) {
         super.setUser(u);
     }
@@ -261,6 +291,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.ScoBase#getLessonMode()
      */
+    @Override
     public String getLessonMode() {
         return super.getLessonMode();
     }
@@ -269,6 +300,7 @@ class WrapSco extends Sco {
      * @param lessonMode
      * @see fi.dwo.client.domain.ScoBase#setLessonMode(java.lang.String)
      */
+    @Override
     public void setLessonMode(String lessonMode) {
         super.setLessonMode(lessonMode);
     }
@@ -276,6 +308,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.ScoBase#getAppletData()
      */
+    @Override
     public AppletData getAppletData() {
         return delegate.getAppletData();
     }
@@ -285,6 +318,7 @@ class WrapSco extends Sco {
      * @return
      * @see fi.dwo.client.domain.ScoBase#GetValue(java.lang.String)
      */
+    @Override
     public String GetValue(String iDataModelElement) {
         System.out.println("wrap.GetValue " + iDataModelElement);
         if (LAUNCH_DATA.equals(iDataModelElement)) {
@@ -298,6 +332,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.ScoBase#getCreditStatus()
      */
+    @Override
     public String getCreditStatus() {
         return delegate.getCreditStatus();
     }
@@ -309,6 +344,7 @@ class WrapSco extends Sco {
      * @see fi.dwo.client.domain.ScoBase#SetValue(java.lang.String,
      * java.lang.String)
      */
+    @Override
     public String SetValue(String iDataModelElement, String iValue) {
         return super.SetValue(iDataModelElement, iValue);
     }
@@ -318,6 +354,7 @@ class WrapSco extends Sco {
      * @return
      * @see fi.dwo.client.domain.Sco#isMergable(fi.dwo.client.domain.Sco)
      */
+    @Override
     public boolean isMergable(Sco other) {
         return delegate.isMergable(other);
     }
@@ -325,6 +362,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.Sco#getAppletID()
      */
+    @Override
     public int getAppletID() {
         return delegate.getAppletID();
     }
@@ -333,6 +371,7 @@ class WrapSco extends Sco {
      * @param appletID
      * @see fi.dwo.client.domain.Sco#setAppletID(int)
      */
+    @Override
     public void setAppletID(int appletID) {
         delegate.setAppletID(appletID);
     }
@@ -340,6 +379,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.Sco#getDescription()
      */
+    @Override
     public String getDescription() {
         return delegate.getDescription();
     }
@@ -348,6 +388,7 @@ class WrapSco extends Sco {
      * @param description
      * @see fi.dwo.client.domain.Sco#setDescription(java.lang.String)
      */
+    @Override
     public void setDescription(String description) {
         delegate.setDescription(description);
     }
@@ -355,6 +396,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.ScoBase#getUser()
      */
+    @Override
     public User getUser() {
         return super.getUser();
     }
@@ -363,6 +405,7 @@ class WrapSco extends Sco {
      * @param name
      * @see fi.dwo.client.domain.Sco#setName(java.lang.String)
      */
+    @Override
     public void setName(String name) {
         delegate.setName(name);
     }
@@ -372,6 +415,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.ScoBase#getLaunchdata()
      */
+    @Override
     public Hashtable getLaunchdata() {
         return wrapdata;
     }
@@ -379,6 +423,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.ScoBase#getLaunchdataString()
      */
+    @Override
     public String getLaunchdataString() {
         Map ld = new HashMap(getEditLaunchdata());
         StringWriter bos = new StringWriter();
@@ -386,8 +431,8 @@ class WrapSco extends Sco {
             Writer out = bos;
             JSONEncoder.encode(ld, out);
             out.close();
-        } catch (UnsupportedEncodingException _) {
-        } catch (IOException _) {
+        } catch (UnsupportedEncodingException e) {
+        } catch (IOException e) {
         }
         return bos.toString();
     }
@@ -397,6 +442,7 @@ class WrapSco extends Sco {
      * @param height
      * @see fi.dwo.client.domain.Sco#appletResize(int, int)
      */
+    @Override
     public void appletResize(int width, int height) {
         super.appletResize(width, height);
     }
@@ -404,6 +450,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.ScoBase#getLaunchdataBytes()
      */
+    @Override
     public byte[] getLaunchdataBytes() {
         return delegate.getLaunchdataBytes();
     }
@@ -411,6 +458,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.Sco#getAppletContext()
      */
+    @Override
     public AppletContext getAppletContext() {
         return super.getAppletContext();
     }
@@ -419,6 +467,7 @@ class WrapSco extends Sco {
      * @param launchdata
      * @see fi.dwo.client.domain.ScoBase#setLaunchdata(java.util.Hashtable)
      */
+    @Override
     public void setLaunchdata(Hashtable launchdata) {
         delegate.setLaunchdata(launchdata);
     }
@@ -426,6 +475,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.Sco#getCodeBase()
      */
+    @Override
     public URL getCodeBase() {
         return super.getCodeBase();
     }
@@ -434,12 +484,14 @@ class WrapSco extends Sco {
      * @param ld
      * @see fi.dwo.client.domain.ScoBase#setLaunchdataString(java.lang.String)
      */
+    @Override
     public void setLaunchdataString(String ld) {
     }
 
     /**
      * @return @see fi.dwo.client.domain.Sco#getDocumentBase()
      */
+    @Override
     public URL getDocumentBase() {
         return super.getDocumentBase();
     }
@@ -447,6 +499,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.ScoBase#getCourse()
      */
+    @Override
     public Course getCourse() {
         return delegate.getCourse();
     }
@@ -455,6 +508,7 @@ class WrapSco extends Sco {
      * @param course
      * @see fi.dwo.client.domain.ScoBase#setCourse(fi.dwo.client.domain.Course)
      */
+    @Override
     public void setCourse(Course course) {
         delegate.setCourse(course);
     }
@@ -464,6 +518,7 @@ class WrapSco extends Sco {
      * @return
      * @see fi.dwo.client.domain.ScoBase#hasFeature(char)
      */
+    @Override
     public boolean hasFeature(char f) {
         return delegate.hasFeature(f);
     }
@@ -473,6 +528,7 @@ class WrapSco extends Sco {
      * @return
      * @see fi.dwo.client.domain.Sco#getParameter(java.lang.String)
      */
+    @Override
     public String getParameter(String name) {
         if ("url".equals(name)) {
             String language = TextMapper.getLanguage();
@@ -489,6 +545,7 @@ class WrapSco extends Sco {
      *
      * @see fi.dwo.client.domain.Sco#end()
      */
+    @Override
     public void end() {
         dwo.setCurrentSco(null);
         super.end();
@@ -498,6 +555,7 @@ class WrapSco extends Sco {
      *
      * @see fi.dwo.client.domain.Sco#endWithoutSaving()
      */
+    @Override
     public void endWithoutSaving() {
         super.endWithoutSaving();
     }
@@ -505,6 +563,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.Sco#getTitle()
      */
+    @Override
     public String getTitle() {
         return delegate.getTitle();
     }
@@ -512,6 +571,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.Sco#getParentTitle()
      */
+    @Override
     public String getParentTitle() {
         return delegate.getParentTitle();
     }
@@ -519,6 +579,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.Sco#getChildTitle()
      */
+    @Override
     public String getChildTitle() {
         return delegate.getChildTitle();
     }
@@ -526,6 +587,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.Sco#getOrderAscTitle()
      */
+    @Override
     public String getOrderAscTitle() {
         return delegate.getOrderAscTitle();
     }
@@ -533,6 +595,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.Sco#getOrderDescTitle()
      */
+    @Override
     public String getOrderDescTitle() {
         return delegate.getOrderDescTitle();
     }
@@ -540,6 +603,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.Sco#getSequencenr()
      */
+    @Override
     public int getSequencenr() {
         return delegate.getSequencenr();
     }
@@ -547,6 +611,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.Sco#getToolTip()
      */
+    @Override
     public String getToolTip() {
         return delegate.getToolTip();
     }
@@ -556,6 +621,7 @@ class WrapSco extends Sco {
      * @return
      * @see fi.dwo.client.domain.Sco#compareTo(java.lang.Object)
      */
+    @Override
     public int compareTo(Object o) {
         return delegate.compareTo(o);
     }
@@ -565,6 +631,7 @@ class WrapSco extends Sco {
      * @return
      * @see java.lang.Object#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object arg0) {
         return delegate.equals(arg0);
     }
@@ -573,6 +640,7 @@ class WrapSco extends Sco {
      *
      */
     @SuppressWarnings("unchecked")
+    @Override
     protected void loadApplet() {
         Applet applet;
         Class<Applet> clazz;
@@ -580,7 +648,7 @@ class WrapSco extends Sco {
             clazz = (Class<Applet>) Class.forName("fi.popupurlapplet.PopUpURLApplet");
             applet = clazz.newInstance();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             applet = new Applet();
         }
         applet.setStub(this);
@@ -590,6 +658,7 @@ class WrapSco extends Sco {
     /**
      * @return @see java.lang.Object#hashCode()
      */
+    @Override
     public int hashCode() {
         return delegate.hashCode();
     }
@@ -597,6 +666,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.ScoBase#isCourseChanged()
      */
+    @Override
     public boolean isCourseChanged() {
         return delegate.isCourseChanged();
     }
@@ -604,6 +674,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.Sco#isActive()
      */
+    @Override
     public boolean isActive() {
         return delegate.isActive();
     }
@@ -611,6 +682,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.Sco#isDeepestLevel()
      */
+    @Override
     public boolean isDeepestLevel() {
         return delegate.isDeepestLevel();
     }
@@ -618,6 +690,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.Sco#isHighestLevel()
      */
+    @Override
     public boolean isHighestLevel() {
         return delegate.isHighestLevel();
     }
@@ -626,6 +699,7 @@ class WrapSco extends Sco {
      * @param sequencenr
      * @see fi.dwo.client.domain.Sco#setSequencenr(int)
      */
+    @Override
     public void setSequencenr(int sequencenr) {
         delegate.setSequencenr(sequencenr);
     }
@@ -633,6 +707,7 @@ class WrapSco extends Sco {
     /**
      * @return @see fi.dwo.client.domain.Sco#toString()
      */
+    @Override
     public String toString() {
         return delegate.toString();
     }
@@ -641,6 +716,7 @@ class WrapSco extends Sco {
      * @param loc
      * @see fi.dwo.client.domain.Sco#setLocationOverride(java.lang.String)
      */
+    @Override
     public void setLocationOverride(String loc) {
         delegate.setLocationOverride(loc);
     }

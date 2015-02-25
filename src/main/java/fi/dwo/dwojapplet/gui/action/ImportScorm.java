@@ -15,8 +15,11 @@ import java.util.zip.ZipFile;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ImportScorm extends GuiAction {
+    private static final Logger log = Logger.getLogger(ImportScorm.class.getName());
 
     private FileDialog openDial;
     private Sco sco;
@@ -77,7 +80,7 @@ public class ImportScorm extends GuiAction {
 
             if (bin != null) {
                 String string = "";
-                String tmp = "";
+                String tmp;
                 while ((tmp = bin.readLine()) != null) {
                     string += tmp + "\n";
                 }
@@ -109,10 +112,8 @@ public class ImportScorm extends GuiAction {
                 }
                 sco.setEditLaunchdata(params);
             }
-        } catch (IOException ioe) {
-            System.err.println("Unhandled exception:");
-            ioe.printStackTrace();
-            return;
+        } catch (IOException e) {
+            log.log(Level.SEVERE,null,e);
         }
     }
 

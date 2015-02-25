@@ -9,10 +9,13 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 public class SchoolMapper extends XmlRpcMapper {
+    private static final Logger log = Logger.getLogger(SchoolMapper.class.getName());
 
 	// lazy evaluation.
     // DIT STAAT NU AAN!
@@ -37,16 +40,16 @@ public class SchoolMapper extends XmlRpcMapper {
             try {
                 setClassList((SchoolClass[]) MapperCreator.instance(SchoolClass.class).get(this));
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+
+                log.log(Level.SEVERE,null,e);
                 return new SchoolClass[0];  // FIXME fatal, non fatal, retryable?
             } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+
+                log.log(Level.SEVERE,null,e);
                 return new SchoolClass[0]; // FIXME
             } catch (XmlRpcException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+
+                log.log(Level.SEVERE,null,e);
                 return new SchoolClass[0]; // FIXME
             }
 
@@ -61,14 +64,14 @@ public class SchoolMapper extends XmlRpcMapper {
                 try {
                     setSchoolGroupList((SchoolGroup[]) MapperCreator.instance(SchoolGroup.class).get(this));
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+    
+                    log.log(Level.SEVERE,null,e);
                 } catch (SQLException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+    
+                    log.log(Level.SEVERE,null,e);
                 } catch (XmlRpcException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+    
+                    log.log(Level.SEVERE,null,e);
                 }
             }
             return super.getSchoolGroupList();
@@ -110,6 +113,7 @@ public class SchoolMapper extends XmlRpcMapper {
     /**
      * @param oid
      * @param obj
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      *
@@ -124,6 +128,7 @@ public class SchoolMapper extends XmlRpcMapper {
     /**
      * @param data
      * @return Object
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      *
@@ -152,6 +157,7 @@ public class SchoolMapper extends XmlRpcMapper {
     /**
      * @param obj
      * @return Object[]
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      *

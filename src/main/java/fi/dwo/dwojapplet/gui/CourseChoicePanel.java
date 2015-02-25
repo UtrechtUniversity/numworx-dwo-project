@@ -63,6 +63,7 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
      * Creates a new instance of a CourseChoisePanel This panel gives an
      * overview of all the available courses to the user. FIXME ModuleTreePanel
      * moet worden GuiConstants!
+     *
      * @param dwoProfile
      */
     private CourseChoicePanel(DwoProfile dwoProfile) {
@@ -156,7 +157,7 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
 
         }
 
-		//ph.setBounds(0,0,200, profileTextArea.getSize().height+40);
+        //ph.setBounds(0,0,200, profileTextArea.getSize().height+40);
         //profileTextArea.setMinimumSize(new Dimension(100, 100));
         //profileTextArea.setPreferredSize(profileTextArea.getMinimumSize());
         //ph.setPreferredSize(getSize());
@@ -182,11 +183,11 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
         int maxWidth = 10;
         int maxHeight = 10;
 
-        for (int i = 0; i < courses.length; i++) {
+        for (CourseMap course : courses) {
             p = new JPanel(new FlowLayout());
             p.setOpaque(false);
             p.setDoubleBuffered(false);
-            courseIcon = new CourseIcon((Course) courses[i]);
+            courseIcon = new CourseIcon((Course) course);
             courseIcon.addActionListener(this);
             if (courseIcon.getSize().width > maxWidth) {
                 maxWidth = courseIcon.getSize().width;
@@ -197,7 +198,6 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
             courseIcon.setLocation(0, 0);
             p.add(courseIcon);
             pp.add(p);
-
         }
 
         if (courseIcon != null) {
@@ -364,19 +364,23 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
 
     }
 
+    @Override
     public boolean gotoScoNr(String rest) {
         System.out.println("GOTO #" + rest);
         return false;
     }
 
+    @Override
     public Object getJSObject() {
         return jsObject;
     }
 
+    @Override
     public AppletContext getAppletContext() {
         return DwoHelper.getApplet().getAppletContext();
     }
 
+    @Override
     public void setJSObject(Object window) {
         jsObject = window;
 

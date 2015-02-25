@@ -28,6 +28,7 @@ public class DwoProfileMapper extends XmlRpcMapper {
     /**
      * @param oid
      * @param obj
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      *
@@ -41,6 +42,7 @@ public class DwoProfileMapper extends XmlRpcMapper {
     /**
      * @param data
      * @return Object
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      *
@@ -67,6 +69,7 @@ public class DwoProfileMapper extends XmlRpcMapper {
     /**
      * @param obj
      * @return Object[]
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      *

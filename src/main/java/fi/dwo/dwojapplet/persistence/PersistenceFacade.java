@@ -51,6 +51,8 @@ import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.domain.UserResultList;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.persistence.cache.StoreCreator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class is the Facade between the Domain layer and the Persistence layer.
@@ -62,6 +64,7 @@ import fi.dwo.dwojapplet.persistence.cache.StoreCreator;
  *
  */
 public class PersistenceFacade {
+    private static final Logger log = Logger.getLogger(PersistenceFacade.class.getName());
 
     private static final Sco[] EMPTY_SCOS = new Sco[0];
 
@@ -121,7 +124,7 @@ public class PersistenceFacade {
         try {
             return mapper.get(oid);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             throw new PersistenceException(PersistenceException.EX_IO, e);
         } catch (XmlRpcException e) {
             throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
@@ -354,15 +357,15 @@ public class PersistenceFacade {
             return (Course[]) mapper.getObjectFromReturn(v);
         } catch (IOException e) {
             System.out.println(e.getMessage());
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             throw new PersistenceException(PersistenceException.EX_IO, e);
         } catch (XmlRpcException e) {
             System.out.println(e.getMessage());
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             throw new PersistenceException(PersistenceException.EX_DB, e);
         }
 
@@ -486,15 +489,15 @@ public class PersistenceFacade {
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             throw new PersistenceException(PersistenceException.EX_IO, e);
         } catch (XmlRpcException e) {
             System.out.println(e.getMessage());
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             throw new PersistenceException(PersistenceException.EX_DB, e);
         }
 
@@ -528,15 +531,15 @@ public class PersistenceFacade {
             return (Course[]) mapper.getObjectFromReturn(v);
         } catch (IOException e) {
             System.out.println(e.getMessage());
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             throw new PersistenceException(PersistenceException.EX_IO, e);
         } catch (XmlRpcException e) {
             System.out.println(e.getMessage());
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             throw new PersistenceException(PersistenceException.EX_DB, e);
         }
 
@@ -568,15 +571,15 @@ public class PersistenceFacade {
             DbAccessCreator.instance().selectCoursesForClass(classID, courseID, type, van, tot);
         } catch (IOException e) {
             System.out.println(e.getMessage());
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             throw new PersistenceException(PersistenceException.EX_IO, e);
         } catch (XmlRpcException e) {
             System.out.println(e.getMessage());
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             throw new PersistenceException(PersistenceException.EX_DB, e);
         }
 
@@ -596,15 +599,15 @@ public class PersistenceFacade {
                     courseID);
         } catch (IOException e) {
             System.out.println(e.getMessage());
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             throw new PersistenceException(PersistenceException.EX_IO, e);
         } catch (XmlRpcException e) {
             System.out.println(e.getMessage());
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             throw new PersistenceException(PersistenceException.EX_DB, e);
         }
 
@@ -723,25 +726,25 @@ public class PersistenceFacade {
                 return (User) mapper.getObjectFromReturn(dbAccess.login(
                         username, password));
             } catch (IOException e) {
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
                 throw new LoginException(LoginException.EX_IO, e);
             } catch (XmlRpcException e) {
                 if (e.code != 0) {
-                    //e.printStackTrace();
+                    //log.log(Level.SEVERE,null,e);
                     throw (LoginException) getException(e, e.code);
                 } else {
-                    e.printStackTrace();
+                    log.log(Level.SEVERE,null,e);
                     throw new LoginException(LoginException.EX_XML_RPC, e);
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
                 throw new LoginException(LoginException.EX_DB, e);
             } catch (DwoXmlRpcException e) {
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
                 throw (LoginException) getException(e, e.code);
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             throw new LoginException(LoginException.EX_UNKNOWN_ERROR, e);
         }
     }
@@ -798,7 +801,6 @@ public class PersistenceFacade {
      * @return boolean If the user was successfully changed it returns true,
      * otherwise false is returned.
      * @throws fi.dwo.commons.exceptions.RegisterException
-     * @throws fi.dwo.client.system.RegisterException
      *
      */
     public boolean changeAccount(User user, String password,
@@ -823,24 +825,24 @@ public class PersistenceFacade {
                 return dbAccess.changeAccount(user.getUserID(), password,
                         newPassword, firstname, middlename, lastname, email, classid);
             } catch (IOException e) {
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
                 throw new RegisterException(RegisterException.EX_IO);
             } catch (XmlRpcException e) {
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
                 if (e.code != 0) {
                     throw (RegisterException) getException(e, e.code);
                 } else {
                     throw new RegisterException(RegisterException.EX_XML_RPC);
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
                 throw new RegisterException(RegisterException.EX_DB);
             } catch (DwoXmlRpcException e) {
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
                 throw (RegisterException) getException(e, e.code);
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             throw new RegisterException(RegisterException.EX_UNKNOWN_ERROR);
         }
     }
@@ -858,7 +860,6 @@ public class PersistenceFacade {
      * @return boolean If the user was successfully changed it returns true,
      * otherwise false is returned.
      * @throws fi.dwo.commons.exceptions.RegisterException
-     * @throws fi.dwo.client.system.RegisterException
      *
      */
     public boolean changeAccount(User user, String password,
@@ -1010,8 +1011,6 @@ public class PersistenceFacade {
      * @param studentPassw Password for students.
      * @param teacherPassw Password for teachers.
      * @return The new schoolclass. If an exception occurs, null is returned.
-     * @throws fi.dwo.client.system.ClassException If something went wrong with
-     * the classname.
      *
      */
     public School editSchool(int schoolID, String schoolName, String schoolLogin, String studentPassw, String teacherPassw)
@@ -1347,15 +1346,15 @@ public class PersistenceFacade {
                 return (Course[]) mapper.getObjectFromReturn(v);
             } catch (IOException e) {
                 System.out.println(e.getMessage());
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
                 throw new PersistenceException(PersistenceException.EX_IO, e);
             } catch (XmlRpcException e) {
                 System.out.println(e.getMessage());
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
                 throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
                 throw new PersistenceException(PersistenceException.EX_DB, e);
             }
         } else if (user instanceof Admin) {
@@ -1366,15 +1365,15 @@ public class PersistenceFacade {
                 return (Course[]) mapper.getObjectFromReturn(v);
             } catch (IOException e) {
                 System.out.println(e.getMessage());
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
                 throw new PersistenceException(PersistenceException.EX_IO, e);
             } catch (XmlRpcException e) {
                 System.out.println(e.getMessage());
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
                 throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
                 throw new PersistenceException(PersistenceException.EX_DB, e);
             }
         } else {
@@ -1389,6 +1388,7 @@ public class PersistenceFacade {
      * @param school The school wherefore the course must created.
      * @param name The name of the course.
      * @param description The description of the course.
+     * @param dwoProfile
      * @param withChildren
      * @param parent
      * @return The new course. If an exception occurs, null is returned.
@@ -1484,7 +1484,7 @@ public class PersistenceFacade {
                     throw new CourseException(CourseException.EX_XML_RPC);
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
                 throw new CourseException(CourseException.EX_DB);
             } catch (DwoXmlRpcException e) {
                 throw (CourseException) getException(e, e.code);
@@ -1787,21 +1787,21 @@ public class PersistenceFacade {
                 MapperCreator.instance(School.class).removeObject(sc.getSchoolID());
             }
             return result;
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-            throw new SchoolException(SchoolException.EX_IO, ioe);
+        } catch (IOException e) {
+            log.log(Level.SEVERE,null,e);
+            throw new SchoolException(SchoolException.EX_IO, e);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             throw new SchoolException(SchoolException.EX_DB, e);
         } catch (XmlRpcException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             if (e.code == 0) {
                 throw new SchoolException(SchoolException.EX_XML_RPC, e);
             }
             try {
                 throw (SchoolException) getException(e, e.code);
             } catch (PersistenceException e1) {
-                e1.printStackTrace();
+                log.log(Level.SEVERE,null,e1);
                 throw new SchoolException(SchoolException.EX_UNKNOWN_ERROR, e1);
             }
         }
@@ -1812,14 +1812,14 @@ public class PersistenceFacade {
         try {
             return dbaccess.getFidentitySchools();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
         } catch (XmlRpcException e) {
             if (e.code == SchoolException.SE_SCHOOL_UNSUPPORTED && e.getMessage().equals(SchoolException.class.getName())) {
                 return null;
             }
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
         } catch (DwoXmlRpcException e) {
             return null;
         }
@@ -1864,7 +1864,7 @@ public class PersistenceFacade {
         } catch (IOException e) {
             throw new PersistenceException(PersistenceException.EX_IO, e);
         } catch (XmlRpcException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
         } catch (SQLException e) {
             throw new PersistenceException(PersistenceException.EX_DB, e);
@@ -1883,7 +1883,7 @@ public class PersistenceFacade {
         } catch (XmlRpcException e) {
             throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             throw new PersistenceException(PersistenceException.EX_DB, e);
         }
 
@@ -1925,14 +1925,14 @@ public class PersistenceFacade {
                 return result;
 
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+
+                log.log(Level.SEVERE,null,e);
             } catch (XmlRpcException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+
+                log.log(Level.SEVERE,null,e);
             } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+
+                log.log(Level.SEVERE,null,e);
             }
         }
         return false;
@@ -1948,13 +1948,13 @@ public class PersistenceFacade {
             return DbAccessCreator.instance().updateSchoolTo(schoolID, schoolTo);
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
         } catch (XmlRpcException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
         } catch (SQLException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
         }
         return false;
     }
@@ -1965,7 +1965,7 @@ public class PersistenceFacade {
         try {
             return DbAccessCreator.instance().deleteCourseDataFromClass(courseID, classID);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             return false;
         }
     }
@@ -1974,7 +1974,7 @@ public class PersistenceFacade {
         try {
             return (Sco[]) MapperCreator.instance(Sco.class).get(new Object[]{school, profile});
         } catch (Exception e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
         }
         return EMPTY_SCOS;
     }
@@ -1990,7 +1990,7 @@ public class PersistenceFacade {
             return standaard;
         } catch (Exception e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             return new CourseSequence[0];
         }
     }
@@ -2169,7 +2169,7 @@ public class PersistenceFacade {
 
     public School editSchool(int schoolID, String schoolName,
             String schoolLogin, SchoolPasswdMap schoolPasswdMap, Date date) throws SchoolException {
-        // TODO Auto-generated method stub
+
         School school = editSchool(schoolID, schoolName, schoolLogin, schoolPasswdMap);
         setExpireDate(schoolID, date, school);
         return school;
@@ -2186,12 +2186,12 @@ public class PersistenceFacade {
             }
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
         } catch (XmlRpcException e) {
             System.err.println(e); // no such method?
         } catch (SQLException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
         }
     }
 
@@ -2233,11 +2233,11 @@ public class PersistenceFacade {
             }
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
         } catch (XmlRpcException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
         }
         return false;
     }
@@ -2250,7 +2250,7 @@ public class PersistenceFacade {
         try {
             DbAccessCreator.instance().link_saml(userid, orgid, user.getID());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
         }
 
     }

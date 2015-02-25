@@ -22,8 +22,12 @@ import fi.dwo.dwojapplet.domain.SchoolGroup;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RightsDialog extends JDialog implements ActionListener {
+
+    private static final Logger log = Logger.getLogger(RightsDialog.class.getName());
 
     private static final int RIGHTSCOUNT = 3; // a s p
     private static final Object[] HEADERS = new String[]{"naam", "applet", "scorm", "profiel"};
@@ -53,7 +57,7 @@ public class RightsDialog extends JDialog implements ActionListener {
         if (end < 0) {
             end = rights.length();
         }
-        return Boolean.valueOf(rights.substring(index, end).indexOf(right) >= 0);
+        return rights.substring(index, end).indexOf(right) >= 0;
     }
 
     private School school;
@@ -139,8 +143,7 @@ public class RightsDialog extends JDialog implements ActionListener {
                     merge(u);
                 }
             } catch (PersistenceException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.log(Level.SEVERE, null, e);
             }
         }
         Arrays.sort(userList);
@@ -189,8 +192,7 @@ public class RightsDialog extends JDialog implements ActionListener {
                             DbAccessCreator.instance().setRights(user.getID(), profileID, newrights)
                     );
                 } catch (Exception e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
+                    log.log(Level.SEVERE, null, e1);
                 }
             }
         }

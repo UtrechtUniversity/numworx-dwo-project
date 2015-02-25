@@ -36,6 +36,8 @@ import fi.dwo.commons.exceptions.SchoolException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.School;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The panel where a School can be managed.
@@ -45,6 +47,7 @@ import fi.dwo.dwojapplet.domain.School;
  *
  */
 public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListener {
+    private static final Logger log = Logger.getLogger(SchoolPanel.class.getName());
 
     public class ImageButtonEditor extends AbstractCellEditor implements
             TableCellEditor, ActionListener {
@@ -78,7 +81,7 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
                         model.fireTableRowsUpdated(row, row);
                     }
                 } catch (SchoolException e) {
-                    e.printStackTrace();
+                    log.log(Level.SEVERE,null,e);
                 }
             } else if (value == removeImage) {
                 /* Delete the school */
@@ -320,7 +323,7 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
             m.getColumn(i).setMaxWidth(m.getColumn(i).getPreferredWidth());
         }
         table.setSize(table.getPreferredSize());
-    	//JPanel panel = new JPanel(new BorderLayout());
+        //JPanel panel = new JPanel(new BorderLayout());
         //panel.add(table.getTableHeader(),BorderLayout.NORTH);
         //panel.add(table, BorderLayout.CENTER);
         //panel.setPreferredSize(table.getPreferredSize());
@@ -433,13 +436,13 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
 
     @Override
     public Object getUserObject() {
-        // TODO Auto-generated method stub
+
         return null;
     }
 
     @Override
     public void stateChanged(ChangeEvent e) {
-		// TODO Auto-generated method stub
+
 
     }
 }

@@ -14,6 +14,8 @@ import java.util.StringTokenizer;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.User;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Some constants used in the GUI.
@@ -22,8 +24,10 @@ import fi.dwo.dwojapplet.domain.User;
  *
  */
 public abstract class GuiConstants {
-//    public static Color MAIN_BACKGROUND = new Color(230, 240, 255);
 
+    private static final Logger log = Logger.getLogger(GuiConstants.class.getName());
+
+//    public static Color MAIN_BACKGROUND = new Color(230, 240, 255);
     public static Color MAIN_BACKGROUND = new Color(221, 238, 255);
     public static Color CELL_BACKGROUND = new Color(221, 238, 255);//new Color(210, 230, 255);
     public static Color SUB_BACKGROUND = new Color(255, 255, 255);
@@ -247,7 +251,7 @@ public abstract class GuiConstants {
             GUI_IMAGE_WELCOME = "resources/MW-welkom.png";
             GUI_IMAGE_SCO = "resources/MW-tf-sco.png";
             GUI_IMAGE_COURSE = "resources/MW-tf-course.png";
-			//GUI_BGIMAGE_ICON = "resources/MW-iconized-bgimage.png";
+            //GUI_BGIMAGE_ICON = "resources/MW-iconized-bgimage.png";
             //GUI_BGIMAGE_MENU = "resources/MW-menu-bgimage.png";
             //GUI_BGIMAGE_SCO  = "resources/MW-sco-bgimage.png";
         } else if (profile == 39 || profile == 58) {
@@ -315,8 +319,7 @@ public abstract class GuiConstants {
             //u = GuiConstants.class.getResource("/" + resource);
             result = getProperties(u, result);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.log(Level.SEVERE, null, e);
         }
         return result;
     }
@@ -344,7 +347,7 @@ public abstract class GuiConstants {
     private static boolean getBoolean(Properties p, String key) {
         String value = p.getProperty(key);
         //return Boolean.parseBoolean(value); // 1.5
-        return new Boolean(value).booleanValue();
+        return Boolean.valueOf(value);
     }
 
     private static String getString(Properties p, String key) {

@@ -317,23 +317,23 @@ public class AddScoDialog extends JDialog implements ActionListener,
             selectedConfigs = new AppletConfig[0];
             AppletConfig[] tmp;
             s = s.toLowerCase();
-            for (int i = 0; i < appletConfigs.length; i++) {
-                if (appletConfigs[i].getName().toLowerCase().startsWith(s)) {
+            for (AppletConfig appletConfig : appletConfigs) {
+                if (appletConfig.getName().toLowerCase().startsWith(s)) {
                     /* Create a larger array and add the item */
                     tmp = new AppletConfig[selectedConfigs.length + 1];
                     System.arraycopy(selectedConfigs, 0, tmp, 0, selectedConfigs.length);
-                    tmp[tmp.length - 1] = appletConfigs[i];
+                    tmp[tmp.length - 1] = appletConfig;
                     selectedConfigs = tmp;
                 }
             }
         }
 
-        for (int i = 0; i < selectedConfigs.length; i++) {
-            cb = new JRadioButton(selectedConfigs[i].getName(), false);
+        for (AppletConfig selectedConfig : selectedConfigs) {
+            cb = new JRadioButton(selectedConfig.getName(), false);
             cb.setBackground(GuiConstants.MAIN_BACKGROUND);
             checkboxGroup.add(cb);
             cb.setFont(GuiConstants.NORMAL_TEXT);
-            radioApplet.put(cb.getModel(), selectedConfigs[i]);
+            radioApplet.put(cb.getModel(), selectedConfig);
             table.add(cb);
         }
         Container parent = table.getParent();

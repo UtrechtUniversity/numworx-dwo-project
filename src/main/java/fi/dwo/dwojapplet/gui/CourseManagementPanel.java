@@ -49,6 +49,8 @@ import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
 import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.WiskOpdrEditPanel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class is a panel containing a list of courses to edit, delete or add. It
@@ -58,6 +60,8 @@ import fi.wiskopdr.WiskOpdrEditPanel;
  *
  */
 public class CourseManagementPanel extends JPanel implements CenterSubPanel, ActionListener, CourseMap {
+
+    private static final Logger log = Logger.getLogger(CourseManagementPanel.class.getName());
 
     private static final Course STANDAARD_MODULE_PARENT = new Course();
 
@@ -160,7 +164,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
                     return removeImage;
 
                 case 0:
-                    return Boolean.valueOf(course.isWithChildren());
+                    return course.isWithChildren();
             }
             return null;
         }
@@ -538,7 +542,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         TableUtil.setJTableSizes(jTable);
         //TableUtil.setBorder(jScrollPane);
         TableUtil.setBorder(jTable);
-       	//jTable.setLocation(30, addCourseButton.getSize().height
+        //jTable.setLocation(30, addCourseButton.getSize().height
         //        + addCourseButton.getLocation().y + 15);
         //TableUtil.shrinkToFit(jTable, jScrollPane, 520, 405);
         jTable.setSize(jTable.getPreferredSize());
@@ -623,7 +627,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 //				upload();
 //			} catch (Exception e1) {
 //				// TODO Auto-generated catch block
-//				e1.printStackTrace();
+//				log.log(Level.SEVERE,null,e1);
 //			}
         }
 
@@ -713,8 +717,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
                 }
                 PersistenceFacade.instance().setCourseSequence(courses, school);
             } catch (PersistenceException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.log(Level.SEVERE, null, e);
             }
         } else if (userObject instanceof Course) {
             Course course = (Course) userObject;
@@ -733,6 +736,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         return (map == this) ? userObject : map.getUserObject();
     }
 
+    @Override
     public void addChild(Course c) {
         Course[] ac = new Course[courses.length + 1];
         System.arraycopy(courses, 0, ac, 0, courses.length);
@@ -744,14 +748,17 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
     }
 
+    @Override
     public CourseMap[] getChildren() {
         return courses;
     }
 
+    @Override
     public void setChildren(CourseMap[] courses) {
         this.courses = courses;
     }
 
+    @Override
     public void removeChild(int row) {
         Course[] ac = new Course[courses.length - 1];
         System.arraycopy(courses, 0, ac, 0, row);
@@ -786,14 +793,16 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 
     }
 
+    @Override
     public Set getChildNames() {
         HashSet names = new HashSet();
-        for (int i = 0; i < courses.length; i++) {
-            names.add(courses[i].toString());
+        for (CourseMap course : courses) {
+            names.add(course.toString());
         }
         return names;
     }
 
+    @Override
     public CourseMap getParentMap() {
         return map.getParentMap();
     }

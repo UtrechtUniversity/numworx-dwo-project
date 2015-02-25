@@ -768,7 +768,7 @@ public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
                     try {
                         PersistenceFacade.instance().changeAccount(u, null, null, u.getFirstname(), u.getMiddleName(), u.getLastName(), u.getEmail(), u.getInClass());
                     } catch (RegisterException e) {
-                        // TODO Auto-generated catch block
+        
                         log.log(Level.SEVERE, null, e);
                     }
                 }

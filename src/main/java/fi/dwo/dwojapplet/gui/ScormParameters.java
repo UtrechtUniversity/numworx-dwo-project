@@ -98,7 +98,7 @@ public class ScormParameters {
         }
         Class applet = sco.getApplet().getClass();
 
-	// licentie manager, via een parameter
+        // licentie manager, via een parameter
         //String licentie = "null";
         //try { 
         //User u = GuiCreator.instance().getUser();
@@ -107,7 +107,7 @@ public class ScormParameters {
         //} catch (LicenseException e)
         //{
         // TODO iets beters dan printstacktrace
-        //	e.printStackTrace();
+        //	log.log(Level.SEVERE,null,e);
         //}
         parameters[SCO_LAUNCH_DATA] = StringCodeObject.encodeObjectToString(launchData);
         //launchData.remove(LicMan.LICENSE_KEY);

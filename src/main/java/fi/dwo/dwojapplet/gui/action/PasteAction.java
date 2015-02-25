@@ -12,8 +12,11 @@ import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.CourseManagementPanel;
 import fi.dwo.dwojapplet.gui.ModuleTreePanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PasteAction extends GuiAction {
+    private static final Logger log = Logger.getLogger(PasteAction.class.getName());
 
     CourseMap map;
 
@@ -234,7 +237,7 @@ public class PasteAction extends GuiAction {
                 try {
                     pid = ((Course) PersistenceFacade.instance().get(pid, Course.class)).getParentID();
                 } catch (PersistenceException e1) {
-                    e1.printStackTrace();
+                    log.log(Level.SEVERE,null,e1);
                     return;
                 }
             }
@@ -294,7 +297,7 @@ public class PasteAction extends GuiAction {
         try {
             return (CourseMap) PersistenceFacade.instance().get(id, Course.class);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
             throw new RuntimeException(e.getMessage(), e);
         }
     }

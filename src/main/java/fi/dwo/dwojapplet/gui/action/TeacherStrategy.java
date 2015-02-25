@@ -177,6 +177,7 @@ public class TeacherStrategy implements SelectStrategy {
         return m;
     }
 
+    @Override
     public JPopupMenu nodeAction(CourseMap node) {
         if (getUser().hasRight(User.MODIFY_MODULES_RIGHT)) {
             return getPopup(node);
@@ -208,6 +209,7 @@ public class TeacherStrategy implements SelectStrategy {
         /**
          * @return @see fi.dwo.client.domain.Descriptor#getText()
          */
+        @Override
         public String getText() {
             return profile.getText();
         }
@@ -215,6 +217,7 @@ public class TeacherStrategy implements SelectStrategy {
         /**
          * @return @see fi.dwo.client.domain.Descriptor#getHeader()
          */
+        @Override
         public String getHeader() {
             return parent.getUserObject().toString(); // profile.getHeader();
         }
@@ -222,12 +225,14 @@ public class TeacherStrategy implements SelectStrategy {
         /**
          * @return @see fi.dwo.client.domain.CourseMap#getChildren()
          */
+        @Override
         public CourseMap[] getChildren() {
             return parent.getChildren();
         }
 
     }
 
+    @Override
     public void nodeSelected(CourseMap node) {
         Clipboard.setSelection(node);
         Object value = node.getUserObject();

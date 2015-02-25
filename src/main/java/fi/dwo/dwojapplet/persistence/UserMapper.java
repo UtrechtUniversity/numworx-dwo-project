@@ -17,15 +17,19 @@ import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.SchoolGroup;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
+import static java.lang.Math.log;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UserMapper extends XmlRpcMapper {
+    private static final Logger log = Logger.getLogger(UserMapper.class.getName());
 
     private static final String TABLENAME = "tblUser left join tblSchoolGroup on tblUser.schoolGroupID = tblSchoolGroup.schoolGroupID left join tblGroup on tblSchoolGroup.groupID = tblGroup.groupID left join tblSchool on tblSchoolGroup.schoolID = tblSchool.schoolID";
     //private static final String TABLENAME = "tbluser";
     private static final String IDCOL = "userID";
 
     private static final String ORDERCOL = "lastname";
-    private static final Object NUL = new Integer(0);
+    private static final Object NUL = 0;
 
     /**
      *
@@ -37,6 +41,7 @@ public class UserMapper extends XmlRpcMapper {
     /**
      * @param oid
      * @param obj
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      *
@@ -50,6 +55,7 @@ public class UserMapper extends XmlRpcMapper {
     /**
      * @param data
      * @return Object
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      *
@@ -102,6 +108,7 @@ public class UserMapper extends XmlRpcMapper {
      * returned.
      * </ul>
      * @return The Users who satisfies the restriction.
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      */
@@ -183,7 +190,7 @@ public class UserMapper extends XmlRpcMapper {
                 }
             } catch (Exception e) {
                 System.err.println("User: " + data);
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
             }
         }
 

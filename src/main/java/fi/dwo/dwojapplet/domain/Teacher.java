@@ -30,9 +30,7 @@ public class Teacher extends User {
      */
     public void addClass(SchoolClass c) {
         SchoolClass[] sc = new SchoolClass[classList.length + 1];
-        for (int i = 0; i < classList.length; i++) {
-            sc[i] = classList[i];
-        }
+        System.arraycopy(classList, 0, sc, 0, classList.length);
         sc[sc.length - 1] = c;
         Arrays.sort(sc);
         classList = sc;

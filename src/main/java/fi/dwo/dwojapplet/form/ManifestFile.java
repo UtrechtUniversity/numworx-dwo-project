@@ -208,7 +208,7 @@ class ManifestFile {
         NodeList list = element.getChildNodes();
         Attr appletID = element.getAttributeNodeNS(DWO, APPLET_ID);
         result.put(APPLET_ID, new Integer(appletID.getValue()));
-        result.put(SEQUENCE_NR, new Integer(itemNr));
+        result.put(SEQUENCE_NR, itemNr);
         int len = list.getLength();
         for (int i = 0; i < len; i++) {
             Node node = list.item(i);

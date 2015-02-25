@@ -65,6 +65,7 @@ public abstract class XmlRpcMapper implements MapperIF {
      *
      * @param oid The ID of the object to return.
      * @return The object representing the oid.
+     * @throws java.io.IOException
      * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      */

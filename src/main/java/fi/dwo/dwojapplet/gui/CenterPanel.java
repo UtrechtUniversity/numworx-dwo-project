@@ -178,7 +178,8 @@ public class CenterPanel extends JPanel implements CourseContainer {
         if (iconizer) {
             sp.setBorder(scoBorder);
         }
-// Dit moet eigenlijk "NA" de constructor van mainpanel. mp en guicreator variabelen zijn nog niet gezet.
+
+        //TODO Wim: Dit moet eigenlijk "NA" de constructor van mainpanel. mp en guicreator variabelen zijn nog niet gezet.
         mp.center = this; // FIXME DIT WERKT ZO NIET.
         GuiCreator.instance().mainPanel = mp; // FIXME IDEM....
 
@@ -457,6 +458,7 @@ public class CenterPanel extends JPanel implements CourseContainer {
         getMenu().hideClassList();
     }
 
+    @Override
     public ResultsModuleIF getUserResultsModule(Course course) {
         return GuiCreator.instance().dwo.getUserResultsModule(course);
     }
@@ -474,12 +476,12 @@ public class CenterPanel extends JPanel implements CourseContainer {
     }
 
     public void deleteCourse(Course course) {
-		// TODO Auto-generated method stub
+
 
     }
 
     public void addCourse(Course course) {
-		// TODO Auto-generated method stub
+
 
     }
 

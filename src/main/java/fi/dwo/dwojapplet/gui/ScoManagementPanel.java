@@ -54,6 +54,8 @@ import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
 import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.WiskOpdrEditPanel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class is a panel containing a list of SCO's to edit, delete or add. It
@@ -64,6 +66,7 @@ import fi.wiskopdr.WiskOpdrEditPanel;
  *
  */
 public class ScoManagementPanel extends JPanel implements CenterSubPanel, ActionListener {
+    private static final Logger log = Logger.getLogger(ScoManagementPanel.class.getName());
 
     private CenterPanel center;
 
@@ -82,7 +85,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     private JCheckBox editorCB;
     private Box editorBox = Box.createVerticalBox();
 
-	//private JButton publishButton;
+    //private JButton publishButton;
     /**
      * @param course
      */
@@ -140,7 +143,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
             importScosButton.addActionListener(this);
             importScosButton.setVisible(false);
             top.add(importScosButton);
-        //top.add(Box.createHorizontalStrut(10));
+            //top.add(Box.createHorizontalStrut(10));
 
         }
         courseLogoButton = new JButton(new ImageIcon(logo));
@@ -317,8 +320,8 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
                         map = (CourseMap) PersistenceFacade.instance().get(id, Course.class);
                         center.loadCenter(GuiCreator.instance().getCourseManagementPanel(map));
                     } catch (PersistenceException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+        
+                        log.log(Level.SEVERE,null,e);
                     }
                 } else {
                     center.loadCenter(GuiCreator.instance().getCourseManagementPanel());
@@ -501,10 +504,10 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         TableUtil.setDefaults(table, false, new ImageRenderer(CenterPanel.isIconizer()), new ImageButtonEditor());
 
         TableUtil.setJTableSizes(table);
-    	//table.setSize(table.getPreferredSize());
+        //table.setSize(table.getPreferredSize());
         //table.setMaximumSize(table.getPreferredSize());
         jtbl = table;
-    	//TableUtil.setBorder(jtbl);
+        //TableUtil.setBorder(jtbl);
         //jtbl.setBorder(TableUtil.tableBorder);
         //jtbl.setLocation(30, label.getSize().height
         //        + label.getLocation().y+10);
@@ -570,7 +573,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
             try {
                 importCourseLogo();
             } catch (IOException e1) {
-                e1.printStackTrace();
+                log.log(Level.SEVERE,null,e1);
             }
             return;
         }
@@ -580,7 +583,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 //    		try { 
 //    			importScos();
 //    		} catch (Exception e2) {
-//    			e2.printStackTrace();			
+//    			log.log(Level.SEVERE,null,e2);			
 //    		}
         }
         if (src == addScoButton) {
@@ -659,7 +662,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
             try {
                 DbAccessCreator.instance().setLogo(course.getID(), data);
             } catch (Exception e) {
-                e.printStackTrace();
+                log.log(Level.SEVERE,null,e);
             }
 
         }

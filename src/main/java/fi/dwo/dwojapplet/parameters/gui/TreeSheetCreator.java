@@ -29,7 +29,6 @@ public class TreeSheetCreator implements TabSheetCreatorIF, ItemLaunchdataCallBa
     /**
      * @param parent
      * @param parameter
-     * @param default
      * @param defaultValue
      */
     public TreeSheetCreator(SingleLevelTreeParameterComponent parent,
@@ -245,7 +244,7 @@ public class TreeSheetCreator implements TabSheetCreatorIF, ItemLaunchdataCallBa
      */
     @Override
     public ParameterComponentIF getParentCom() {
-        // TODO Auto-generated method stub
+
         return parent;
     }
 

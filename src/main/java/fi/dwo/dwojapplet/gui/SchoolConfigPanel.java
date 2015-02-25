@@ -14,8 +14,12 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
+
+    private static final Logger log = Logger.getLogger(SchoolConfigPanel.class.getName());
 
     private CenterPanel center;
     private School school;
@@ -91,8 +95,7 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
         try {
             PersistenceFacade.instance().editSchool(school, sb.toString());
         } catch (PersistenceException e) {
-            // TODO jammer dan....
-            e.printStackTrace();
+            log.log(Level.SEVERE, null, e);
         }
     }
 

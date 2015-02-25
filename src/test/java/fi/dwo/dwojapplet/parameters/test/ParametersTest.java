@@ -411,7 +411,7 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
      */
     @Override
     public void componentHidden(ComponentEvent e) {
-        // TODO Auto-generated method stub
+
         
     }
 
@@ -420,7 +420,7 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
      */
     @Override
     public void componentMoved(ComponentEvent e) {
-        // TODO Auto-generated method stub
+
         
     }
 
@@ -430,7 +430,7 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
     @Override
     public void componentResized(ComponentEvent e) {
 //        validate();
-        // TODO Auto-generated method stub
+
         
     }
 
@@ -439,7 +439,7 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
      */
     @Override
     public void componentShown(ComponentEvent e) {
-        // TODO Auto-generated method stub
+
         
     }
     
@@ -456,7 +456,7 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
      */
     @Override
     public String getState() {
-        // TODO Auto-generated method stub
+
         return "";
     }
 
@@ -465,7 +465,7 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
      */
     @Override
     public void setState(String state) {
-        // TODO Auto-generated method stub
+
         
     }
 
@@ -474,7 +474,7 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
      */
     @Override
     public void stopSco() {
-        // TODO Auto-generated method stub
+
         
     }
 
@@ -483,7 +483,7 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
      */
     @Override
     public boolean hasEditMode() {
-        // TODO Auto-generated method stub
+
         return false;
     }
 
@@ -492,7 +492,7 @@ public class ParametersTest extends Applet implements ComponentListener, ScormAp
      */
     @Override
     public ScormEditComponentIF getEditComponent(Hashtable launchdata) {
-        // TODO Auto-generated method stub
+
         return null;
     }
 

@@ -1,6 +1,5 @@
 package fi.dwo.dwojapplet.domain.utils;
 
-import fi.dwo.dwojapplet.domain.utils.Util;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -8,8 +7,12 @@ import java.net.URL;
 
 import fi.dwo.dwojapplet.domain.utils.Util.ResultException;
 import fi.dwo.dwojapplet.domain.utils.Util.NoException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CheckEmail {
+
+    private static final Logger log = Logger.getLogger(CheckEmail.class.getName());
 
     private String service;
     private Throwable cause;
@@ -49,11 +52,11 @@ public class CheckEmail {
         } // Deze 3 exceptions ontstaan als de service down is. 
         // Dan moeten we dus helaas 'true' afgeven.
         catch (MalformedURLException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, null, e);
             cause = e;
             return true;
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, null, e);
             cause = e;
             return true;
         } catch (IOException e) {

@@ -64,6 +64,7 @@ public interface DbAccessIF extends DbAccessLogin {
      *
      * @param userID The users wherefor the courses must selected.
      * @return A Vector containing hashtables with the coursedata.
+     * @throws java.io.IOException
      * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      */
@@ -112,6 +113,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param oid The ID value.
      * @return A Hashtable where the column-values are mapped on the
      * columnnames.
+     * @throws java.io.IOException
      * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      *
@@ -125,6 +127,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param tableName The name of the table to select the data.
      * @return A vector contains hashtables where the column-values are mapped
      * on the columnnames.
+     * @throws java.io.IOException
      * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      */
@@ -139,6 +142,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param orderCol The column name to order the data by.
      * @return A Vector contains hashtables where the column-values are mapped
      * on the columnnames.
+     * @throws java.io.IOException
      * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      */
@@ -154,6 +158,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * mapped on the columnname.
      * @return A Vector contains hashtables where the column-values are mapped
      * on the columnames.
+     * @throws java.io.IOException
      * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      *
@@ -171,6 +176,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param orderBy The column name to order the data by.
      * @return java.util.Vector A Vector containing hashtables where the
      * column-values are mapped on the columnames.
+     * @throws java.io.IOException
      * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      */
@@ -234,7 +240,9 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param lastname
      * @param email
      * @return boolean
+     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
      * @throws fi.dwo.client.system.RegisterException
+     * @throws java.io.IOException
      * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      *
@@ -264,7 +272,9 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param groupID
      * @param groupPassword
      * @return boolean
+     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
      * @throws fi.dwo.client.system.RegisterException
+     * @throws java.io.IOException
      * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      *
@@ -279,7 +289,9 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param username
      * @param password
      * @return java.util.Hashtable
+     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
      * @throws java.sql.SQLException
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      *
      */
@@ -293,7 +305,9 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param groupID
      * @param groupPassword
      * @return java.util.Hashtable
+     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
      * @throws fi.dwo.client.system.RegisterException
+     * @throws java.io.IOException
      * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      *
@@ -311,7 +325,9 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param email
      * @param classID
      * @return boolean
+     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
      * @throws fi.dwo.client.system.RegisterException
+     * @throws java.io.IOException
      * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      *
@@ -330,7 +346,9 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param lastname
      * @param email
      * @return boolean
+     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
      * @throws fi.dwo.client.system.RegisterException
+     * @throws java.io.IOException
      * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      *
@@ -344,7 +362,9 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param teacher
      * @param className
      * @return java.util.Hashtable
+     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
      * @throws fi.dwo.client.system.ClassException
+     * @throws java.io.IOException
      * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      *
@@ -358,7 +378,9 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param studentPassw
      * @param teacherPassw
      * @return java.util.Hashtable
+     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
      * @throws fi.dwo.client.system.ClassException
+     * @throws java.io.IOException
      * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      *
@@ -373,7 +395,9 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param studentPassw
      * @param teacherPassw
      * @return java.util.Hashtable
+     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
      * @throws fi.dwo.client.system.ClassException
+     * @throws java.io.IOException
      * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      *
@@ -388,7 +412,9 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param studentPassw
      * @param teacherPassw
      * @return java.util.Hashtable
+     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
      * @throws fi.dwo.client.system.ClassException
+     * @throws java.io.IOException
      * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      *
@@ -399,7 +425,9 @@ public interface DbAccessIF extends DbAccessLogin {
     /**
      * @param userID
      * @return 
+     * @throws java.io.IOException 
      * @throws java.sql.SQLException 
+     * @throws org.apache.xmlrpc.applet.XmlRpcException 
      *
      */
     public boolean deleteUser(int userID) throws IOException, XmlRpcException,
@@ -412,6 +440,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param classID
      * @param mustEmpty
      * @return boolean
+     * @throws java.io.IOException
      * @throws java.sql.SQLException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      *
@@ -430,7 +459,9 @@ public interface DbAccessIF extends DbAccessLogin {
     /**
      * @param uid
      * @return 
+     * @throws java.io.IOException 
      * @throws java.sql.SQLException 
+     * @throws org.apache.xmlrpc.applet.XmlRpcException 
      *
      */
     public boolean disconnectFromClass(int uid) throws IOException,

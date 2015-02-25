@@ -24,12 +24,15 @@ import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.domain.UserGroup;
 import fi.dwo.dwojapplet.domain.UserResultList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author thijsk
  *
  */
 public class UserResultListMapper extends XmlRpcMapper {
+    private static final Logger log = Logger.getLogger(UserResultListMapper.class.getName());
 
     private static final String TABLENAME = "tblUser";
 
@@ -49,6 +52,7 @@ public class UserResultListMapper extends XmlRpcMapper {
     /**
      * @param oid
      * @param obj
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      *
@@ -62,6 +66,7 @@ public class UserResultListMapper extends XmlRpcMapper {
     /**
      * @param data
      * @return Object
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      *
@@ -75,6 +80,7 @@ public class UserResultListMapper extends XmlRpcMapper {
     /**
      * @param obj
      * @return Object[]
+     * @throws java.io.IOException
      * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      *
@@ -157,8 +163,8 @@ public class UserResultListMapper extends XmlRpcMapper {
             try {
                 rs.setTotal_time(formatter.parse(total_time.toString()).getTime());
             } catch (ParseException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+
+                log.log(Level.SEVERE,null,e);
             }
         }
         return rs;

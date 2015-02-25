@@ -281,7 +281,7 @@ public class CourseNameDialog extends JDialog implements ActionListener {
     }
 
     public static Course addMap(Component owner, Course parent) {
-        // TODO Auto-generated method stub
+
         Course c = addCourse(owner, TextMapper.getText("Nieuwe Modulemap"), parent, true);
         if (c != null) {
             c.setChildren(Course.NO_CHILDREN);

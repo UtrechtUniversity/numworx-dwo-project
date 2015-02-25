@@ -523,7 +523,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
             float g = floatValue / max;
             float f = 1 - g;
 
-			//int red = Math.round(goedColor.getRed() * g + foutColor.getRed() * f);
+            //int red = Math.round(goedColor.getRed() * g + foutColor.getRed() * f);
             //int gr = Math.round(goedColor.getGreen() * g + foutColor.getGreen() * f);
             //int bl = Math.round(goedColor.getBlue() * g + foutColor.getBlue() * f);
             int red = 255;

@@ -19,8 +19,11 @@ import fi.dwo.dwojapplet.gui.CourseNameDialog;
 import fi.dwo.dwojapplet.gui.ModuleTreePanel;
 import fi.dwo.dwojapplet.gui.ScoNameDialog;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class NewAction extends GuiAction {
+    private static final Logger log = Logger.getLogger(NewAction.class.getName());
 
     private final static Course STANDARD_MAP = new Course();
     private CourseMap map;
@@ -156,7 +159,7 @@ public class NewAction extends GuiAction {
             }
             PersistenceFacade.instance().setCourseSequence(courses, school);
         } catch (PersistenceException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE,null,e);
         }
 
     }
