@@ -30,6 +30,7 @@ public class TabletKeyboardUpper extends AbstractKeyboard {
 		pad.disableKey(pad.t1_16);
 		pad.t2_16.getUpFace().setHTML("<img src='images/kb/Basis/Touch/T2.16.png'/>");
 		pad.t3_16.getUpFace().setHTML("<img src='images/kb/Basis/Touch/T3.16-3.png'/>");
+		pad.setDelegate(this);
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 	@UiField(provided=true)
@@ -75,5 +76,22 @@ public class TabletKeyboardUpper extends AbstractKeyboard {
 	@UiHandler("t3_12") void onT3_12(ClickEvent e) {getEditor().insert('?');}
 	
 	@UiHandler("t4_1") void onT4_1(ClickEvent e) {getEditor().insert(' ');}
+
+	@Override
+	public void blur() {
+		getDelegate().blur();
+	}
+	@Override
+	void switch123() {
+		getDelegate().switch123();
+	}
+	@Override
+	void switchHand() {
+		getDelegate().switchHand();
+	}
+	@Override
+	void switchLower() {
+		getDelegate().switchLower();
+	}
 
 }

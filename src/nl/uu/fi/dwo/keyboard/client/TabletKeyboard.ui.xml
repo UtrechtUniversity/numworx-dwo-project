@@ -199,16 +199,16 @@
 				<my:downFace><img src="images/kb/Algebra/Touch/T1.10-2.png"/></my:downFace>
 			</my:Key>
 			<my:Key styleName="{style.key}" ui:field="t2_10">
-				<my:upFace><img src="images/kb/Basis/Touch/T2.10.png"/></my:upFace>
-				<my:downFace><img src="images/kb/Basis/Touch/T2.10-3.png"/></my:downFace>
+<!--			<my:upFace><img src="images/kb/Basis/Touch/T2.10.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T2.10-3.png"/></my:downFace>-->
 			</my:Key>
 			<my:Key styleName="{style.key}" ui:field="t3_10">
-				<my:upFace><img src="images/kb/Basis/Touch/T3.10.png"/></my:upFace>
-				<my:downFace><img src="images/kb/Basis/Touch/T3.10-2.png"/></my:downFace>
+<!--  				<my:upFace> <img src="images/kb/Basis/Touch/T3.10.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T3.10-2.png"/></my:downFace>-->
 			</my:Key>
 			<my:Key styleName="{style.key}" ui:field="t4_10">
-				<my:upFace><img src="images/kb/Basis/Touch/T4.10.png"/></my:upFace>
-				<my:downFace><img src="images/kb/Basis/Touch/T4.10-2.png"/></my:downFace>
+<!--				<my:upFace><img src="images/kb/Basis/Touch/T4.10.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T4.10-2.png"/></my:downFace>-->
 			</my:Key>
 		</g:FlowPanel>
 		<g:FlowPanel styleName="{style.col}">
@@ -280,8 +280,8 @@
 				<my:downFace><img src="images/kb/Basis/Touch/T3.14-2.png"/></my:downFace>
 			</my:Key>
 			<my:Key styleName="{style.key}" ui:field="t4_14">
-				<my:upFace><img src="images/kb/Basis/Touch/T4.14.png"/></my:upFace>
-				<my:downFace><img src="images/kb/Basis/Touch/T4.14-2.png"/></my:downFace>
+<!-- 			<my:upFace><img src="images/kb/Basis/Touch/T4.14.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T4.14-2.png"/></my:downFace>-->
 			</my:Key>
 		</g:FlowPanel>
 		<g:FlowPanel styleName="{style.col}">
@@ -298,8 +298,8 @@
 				<my:downFace><img src="images/kb/Basis/Touch/T3.15-2.png"/></my:downFace>
 			</my:Key>
 			<my:Key styleName="{style.key}" ui:field="t4_15">
-				<my:upFace><img src="images/kb/Basis/Touch/T4.15.png"/></my:upFace>
-				<my:downFace><img src="images/kb/Basis/Touch/T4.15-2.png"/></my:downFace>
+<!--			<my:upFace><img src="images/kb/Basis/Touch/T4.15.png"/></my:upFace>
+				<my:downFace><img src="images/kb/Basis/Touch/T4.15-2.png"/></my:downFace> -->
 			</my:Key>
 		</g:FlowPanel>
 		<my:TabletKeyboardPad ui:field="pad" />

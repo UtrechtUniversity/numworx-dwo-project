@@ -38,6 +38,7 @@ public class TabletKeyboard extends AbstractKeyboard {
 	 */
 	public TabletKeyboard() {
 		pad = new TabletKeyboardPad();
+		pad.setDelegate(this);
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 	
@@ -123,5 +124,20 @@ public class TabletKeyboard extends AbstractKeyboard {
 	@UiHandler("t4_13") void onT4_13(ClickEvent e) {getEditor().insert(']');}
 	@UiHandler("t4_14") void onT4_14(ClickEvent e) {}
 	@UiHandler("t4_15") void onT4_15(ClickEvent e) {}
+
+	@Override
+	public void blur() {
+		getDelegate().blur();
+	}
+
+	@Override
+	void switchABC() {
+		getDelegate().switchABC();
+	}
+
+	@Override
+	void switchHand() {
+		getDelegate().switchHand();
+	}
 	
 }

@@ -34,4 +34,22 @@ public class TabletKeyboardPad extends AbstractKeyboard {
 	@UiHandler("t4_16") void onT4_16(ClickEvent e) {switchHand();}
 	@UiHandler("t4_17") void onT4_17(ClickEvent e) {blur();}
 
+
+	@Override
+	public void blur() {
+		getDelegate().blur();
+	}
+	@Override
+	void switchABC() {
+		getDelegate().switchABC();
+	}
+	@Override
+	void switch123() {
+		getDelegate().switch123();
+	}
+	@Override
+	void switchHand() {
+		getDelegate().switchHand();
+	}
+
 }

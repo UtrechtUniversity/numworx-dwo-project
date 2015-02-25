@@ -8,6 +8,15 @@ import com.google.gwt.user.client.ui.Composite;
 abstract class AbstractKeyboard extends Composite implements FormuleKeyboardIF {
 
 	FormuleEditorIF formuleEditor;
+	AbstractKeyboard delegate;
+
+	public AbstractKeyboard getDelegate() {
+		return delegate;
+	}
+
+	public void setDelegate(AbstractKeyboard delegate) {
+		this.delegate = delegate;
+	}
 
 	AbstractKeyboard() {
 	}

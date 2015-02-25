@@ -24,7 +24,23 @@ public class TabletKeyboardPen extends AbstractKeyboard {
 		pad.disableKey(pad.t1_16);
 		pad.t2_16.getUpFace().setHTML("<img src='images/kb/Basis/Touch/T2.16.png'/>");
 		pad.t4_16.getUpFace().setHTML("<img src='images/kb/Basis/Touch/T4.16-3.png'/>");
+		pad.setDelegate(this);
 
+	}
+
+	@Override
+	public void blur() {
+		getDelegate().blur();
+	}
+
+	@Override
+	void switchABC() {
+		getDelegate().switchABC();
+	}
+
+	@Override
+	void switch123() {
+		getDelegate().switch123();
 	}
 
 }
