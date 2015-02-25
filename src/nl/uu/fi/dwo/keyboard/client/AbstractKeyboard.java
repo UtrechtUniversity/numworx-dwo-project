@@ -56,4 +56,13 @@ abstract class AbstractKeyboard extends Composite implements FormuleKeyboardIF {
 		this.setVisible(false);
 	}
 
+	void switchABC() {
+	}
+
+	void switch123() {	
+	}
+	
+	void switchHand() {
+	}
+
 }
