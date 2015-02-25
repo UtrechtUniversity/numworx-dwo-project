@@ -41,7 +41,7 @@
 	}
 	.pad {
 		float: right;
-		margin-right: 10px;
+		margin-right: 7px;
 	}
 	
 	</ui:style>
@@ -127,10 +127,6 @@
 					<my:upFace><img src="images/kb/Abc/lowercase/T2.9.png"/></my:upFace>
 					<my:downFace><img src="images/kb/Abc/lowercase/T2.9-2.png"/></my:downFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t2_10" >
-					<my:upFace><img src="images/kb/Abc/lowercase/T2.10.png"/></my:upFace>
-					<my:downFace><img src="images/kb/Abc/lowercase/T2.10-2.png"/></my:downFace>
-				</my:Key>
 			</g:HorizontalPanel>
 		
 			<g:HorizontalPanel  styleName="{style.row1}" >
@@ -173,6 +169,14 @@
 				<my:Key styleName="{style.key}" ui:field="t3_10" >
 					<my:upFace><img src="images/kb/Abc/lowercase/T3.10.png"/></my:upFace>
 					<my:downFace><img src="images/kb/Abc/lowercase/T3.10-2.png"/></my:downFace>
+				</my:Key>
+				<my:Key styleName="{style.key}" ui:field="t3_11" >
+					<my:upFace><img src="images/kb/Abc/lowercase/T3.11.png"/></my:upFace>
+					<my:downFace><img src="images/kb/Abc/lowercase/T3.11-2.png"/></my:downFace>
+				</my:Key>
+				<my:Key styleName="{style.key}" ui:field="t3_12" >
+					<my:upFace><img src="images/kb/Abc/lowercase/T3.12.png"/></my:upFace>
+					<my:downFace><img src="images/kb/Abc/lowercase/T3.12-2.png"/></my:downFace>
 				</my:Key>
 			</g:HorizontalPanel>
 

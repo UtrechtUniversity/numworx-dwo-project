@@ -65,4 +65,9 @@ abstract class AbstractKeyboard extends Composite implements FormuleKeyboardIF {
 	void switchHand() {
 	}
 
+	void switchUpper() {
+	}
+	
+	void switchLower() {
+	}
 }

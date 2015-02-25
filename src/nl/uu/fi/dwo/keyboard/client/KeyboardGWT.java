@@ -95,7 +95,15 @@ public class KeyboardGWT implements EntryPoint {
 		abc.setEditor(editor);
 		root.add(new Label("abc"));
 		root.add(abc);
+		TabletKeyboardUpper ABC = new TabletKeyboardUpper();
+		ABC.setEditor(editor);
+		root.add(new Label("ABC"));
+		root.add(ABC);
 
+		TabletKeyboardPen pen = new TabletKeyboardPen();
+		pen.setEditor(editor);
+		root.add(new Label("handschrift"));
+		root.add(pen);
 		
 //		AlphaKeys alpha = new AlphaKeys();
 //		root.add(new Label("alpha"));

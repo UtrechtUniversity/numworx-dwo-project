@@ -48,7 +48,7 @@
 				<my:downFace><img src="images/kb/Basis/Touch/T1.16-2.png"/></my:downFace>
 			</my:Key>
 			<my:Key styleName="{style.key}" ui:field="t2_16">
-				<my:upFace><img src="images/kb/Basis/Touch/T2.16.png"/></my:upFace>
+				<my:upFace><img src="images/kb/Basis/Touch/T2.16-3.png"/></my:upFace>
 				<my:downFace><img src="images/kb/Basis/Touch/T2.16-2.png"/></my:downFace>
 			</my:Key>
 			<my:Key styleName="{style.key}" ui:field="t3_16">
