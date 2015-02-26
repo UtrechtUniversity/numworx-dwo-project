@@ -3,13 +3,15 @@
 <module  rename-to='DWOplayer'>
 	<inherits name="com.google.gwt.user.User" />
 	<inherits name="nl.uu.fi.dwo.mobile.DWOplayer-module" />
+	<inherits name="nl.uu.fi.dwo.keyboard.KeyboardGWT-DWO" />
+	
 	<add-linker name='xsiframe' />
 	
     <inherits name="fi.graphtoolgwt.GraphToolGWT-DWO" />
 
 	<entry-point class='nl.uu.fi.dwo.mobile.NoordhoffPlayer'/>
 	
-	 <replace-with class="nl.uu.fi.dwo.mobile.client.sco.AssetAPI">
+	 <replace-with class="nl.uu.fi.dwo.mobile.client.sco.SCORM_12_API">
     	<when-type-is class="nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF"/>
     </replace-with>
 

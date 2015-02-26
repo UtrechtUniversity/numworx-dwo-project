@@ -4,6 +4,7 @@ import com.google.gwt.core.shared.GWT;
 import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.dwokb.FormuleKeyBoardButtons;
 
 public class DWOplayerNoordhoff extends DWOplayerDefaults implements DWOplayerParameters {
@@ -50,6 +51,11 @@ public class DWOplayerNoordhoff extends DWOplayerDefaults implements DWOplayerPa
 //	public int getWindowHeight() {
 //		return 426;
 //	}
+
+	@Override
+	public StatusBarIF getStatusBar() {
+		return new nl.uu.fi.dwo.mobile.client.ui.noordhoffkb.NoordhoffKeyboard();
+	}
 
 	
 }

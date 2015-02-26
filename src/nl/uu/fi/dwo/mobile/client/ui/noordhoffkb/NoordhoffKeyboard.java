@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.noordhoffkb;
 
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -9,14 +10,16 @@ import com.googlecode.mgwt.ui.client.OsDetection;
 
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
+import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard;
 import nl.uu.fi.dwo.keyboard.client.DesktopKeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.KeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.TabletKeyboardFactory;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 
-public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF {
+public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF, FormuleClipboardIF {
 
 	KeyboardFactory factory;
+	AbstractKeyboard kb;
 	
 	public NoordhoffKeyboard() {
 		OsDetection detection = MGWT.getOsDetection();
@@ -27,6 +30,13 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF {
 		} else {
 			factory = new TabletKeyboardFactory();
 		}
+		kb = factory.getKeyboard();
+		setWidget(kb);
+		kb.blur(); // we start hidden!
+
+// css style!		
+		getElement().getStyle().setPosition(Style.Position.ABSOLUTE);
+		getElement().getStyle().setBottom(0, Style.Unit.PX);
 
 	}
 
@@ -45,7 +55,7 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF {
 
 	@Override
 	public void setScrollPanel(Widget w, int h) {
-		// TODO Auto-generated method stub
+		kb.setScrollPanel(w,h);
 	}
 
 	@Override
@@ -67,14 +77,23 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF {
 
 	@Override
 	public FormuleKeyboardIF getFormuleKeyboard() {
-		// TODO Auto-generated method stub
-		return null;
+		return kb;
 	}
 
 	@Override
 	public FormuleClipboardIF getFormuleClipboard() {
-		// TODO Auto-generated method stub
-		return null;
+		return this;
+	}
+
+	private String clipboard = "";
+	@Override
+	public String getClipboard() {
+		return clipboard;
+	}
+
+	@Override
+	public void setClipboard(String formule) {
+		clipboard = formule;
 	}
 
 }

@@ -75,11 +75,6 @@
         <when-type-is class="nl.uu.fi.dwo.mobile.client.DWOplayerParameters" />
     </replace-with>
     
-    <replace-with class="nl.uu.fi.dwo.mobile.client.ui.dwokb.FormuleKeyboard">
-        <when-type-is class="nl.uu.fi.dwo.mobile.client.ui.StatusBarIF" />
-    </replace-with>
-    
-    
     
 <!-- Logging TRUE/FALSE FINEST/.../SEVERE -->   
     <set-property name="gwt.logging.logLevel" value="FINEST"/>

@@ -939,7 +939,7 @@ try {
 		mainPanel.setWidth("100%");
 		//fp.setHeight("428px");
 		//fp.setWidth("886px");
-		sb = GWT.create(StatusBarIF.class); // new nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard();
+		sb = DWOplayer.PARAMETERS.getStatusBar(); // new nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard();
 		kb = sb.getFormuleKeyboard();
 		cb = sb.getFormuleClipboard();
 
