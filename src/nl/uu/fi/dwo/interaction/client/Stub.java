@@ -14,6 +14,7 @@ import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 
@@ -293,8 +294,13 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	}
 
 	@Override
-	public FormuleClipboardIF getClipboard() {
+	public FormuleClipboardIF getFormuleClipboard() {
 		return clip;
+	}
+
+	@Override
+	public void blur() {
+		
 	}
 
 	

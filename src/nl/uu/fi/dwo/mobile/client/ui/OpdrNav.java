@@ -607,8 +607,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	}
 
 	@Override
-	public FormuleClipboardIF getClipboard() {
-		return entry.getKeyboard();
+	public FormuleClipboardIF getFormuleClipboard() {
+		return entry.getClipboard();
 	}
 
 	public void gotoOpdracht(final int opdracht) {

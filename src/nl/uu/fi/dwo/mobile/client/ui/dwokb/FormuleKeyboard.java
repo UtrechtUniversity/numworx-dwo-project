@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.mobile.client.ui;
+package nl.uu.fi.dwo.mobile.client.ui.dwokb;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
+import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 
 import com.google.gwt.core.client.GWT;
@@ -38,7 +39,7 @@ import fi.writemathgwt.client.WritePanelHolder;
  * @author Danny Hendrix
  * 
  */
-public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, FormuleClipboardIF
+public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, FormuleClipboardIF, StatusBarIF
 {
 	static final String VVV = "VVV";
 	static final String _123 = "123";
@@ -223,7 +224,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 		};
 
 	
-	public Panel getAsPanel()
+	public Widget asWidget()
 	{
 		Logger.getLogger("FormuleKeyboard").log(Level.INFO," Create kb panel " + hasKeyboard + " " + isNoordhoff());
 		if (tp != null)
@@ -519,6 +520,37 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 		FocusOnTouch.focus();
 		setWriteString();
 		tp.showSoftKeyboard();
+	}
+
+	public void zetMaat() {
+		tp.zetMaat();
+	}
+
+	public void zetMaatNoordhoff() {
+		tp.zetMaatNoordhoff();
+	}
+
+	public void zetMaatTrifork() {
+		tp.zetMaatTrifork();
+	}
+
+	public void setScrollPanel(Widget w, int h) {
+		tp.setScrollPanel(w, h);
+	}
+
+	@Override
+	public FormuleKeyboardIF getFormuleKeyboard() {
+		return this;
+	}
+
+	@Override
+	public FormuleClipboardIF getFormuleClipboard() {
+		return this;
+	}
+
+	@Override
+	public int getStatusBarHeight() {
+		return KeyBoardTabPanel.KEYB_STATIC_HEIGHT;
 	}
 
 }

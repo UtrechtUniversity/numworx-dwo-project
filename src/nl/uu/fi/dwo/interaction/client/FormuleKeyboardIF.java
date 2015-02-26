@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.interaction.client;
 
+import com.google.gwt.user.client.ui.IsWidget;
+
 public interface FormuleKeyboardIF {
 
 	void setEditor(FormuleEditorIF formuleEditor);
@@ -15,5 +17,7 @@ public interface FormuleKeyboardIF {
 	FormuleEditorIF getEditor();
 
 	void softFocus();
+
+	void blur();
 
 }

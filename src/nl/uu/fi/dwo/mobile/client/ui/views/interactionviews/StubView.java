@@ -657,9 +657,9 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	}
 
 	@Override
-	public FormuleClipboardIF getClipboard() {
+	public FormuleClipboardIF getFormuleClipboard() {
 		if(comRoot!=this)
-			return comRoot.getClipboard();
+			return comRoot.getFormuleClipboard();
 		return null;
 	}
 }

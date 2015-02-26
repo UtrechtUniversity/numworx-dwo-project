@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
+import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Position;
@@ -29,9 +30,9 @@ public class SliderPanel
 	private float buttony = 0;
 	private float startTouchY = 0;
 
-	private FormuleKeyboard keyboard;
+	private FormuleKeyboardIF keyboard;
 
-	public SliderPanel(int height, FormuleKeyboard kb)
+	public SliderPanel(int height, FormuleKeyboardIF kb)
 	{
 		keyboard = kb;
 		panelheight = height;

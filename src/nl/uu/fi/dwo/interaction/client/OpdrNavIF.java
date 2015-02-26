@@ -15,7 +15,7 @@ public interface OpdrNavIF
 	
 	void setChanged(boolean fout);
 	FormuleKeyboardIF getKeyboard();
-	FormuleClipboardIF getClipboard();
+	FormuleClipboardIF getFormuleClipboard();
 	
 	int getMode();
 

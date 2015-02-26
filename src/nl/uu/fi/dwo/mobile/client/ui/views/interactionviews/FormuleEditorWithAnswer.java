@@ -20,7 +20,6 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyBoardButtons;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.ImageUtils;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;

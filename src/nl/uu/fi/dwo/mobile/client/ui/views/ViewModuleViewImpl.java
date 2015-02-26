@@ -7,6 +7,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
+import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
+import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
@@ -17,10 +19,11 @@ import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
-import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
-import nl.uu.fi.dwo.mobile.client.ui.KeyBoardTabPanel;
+//import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
+//import nl.uu.fi.dwo.mobile.client.ui.KeyBoardTabPanel;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
+import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF.NextPrevHandler;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavPanel;
 import nl.uu.fi.dwo.mobile.client.ui.SlidingPopup;
@@ -120,7 +123,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	public ViewModuleViewImpl(boolean b) {
 		standalone = b;
-		if(!b) setWindowTop(0);
 		
 		if(b)
 			scoreNav = scoreNavPanel;
@@ -227,7 +229,7 @@ try {
 		on =  new OpdrNav(launchData, this, new Memento(api));
 		FlowPanel onp = (FlowPanel) on.getAsPanel();
 		if(bolletjesZichtbaar)
-			kb.addNavPanel(onp);
+			sb.addNavPanel(onp);
 // pas vanaf hier toevoegen mogelijk.
 		scoreNav.setBeantwoord(on.getAantalBeantwoord());
 		scoreNav.setItemScores(on.getItemScores());
@@ -249,7 +251,7 @@ try {
 		if(mode == OpdrNav.ZELFTOETS)
 		{
 			scoreNav.setKijkNaEnabled(on.getAantalOpdrachten() == 1);
-			kb.addKnop(scoreNav.getKijkNaButton(), false);		
+			sb.addKnop(scoreNav.getKijkNaButton(), false);		
 			scoreNav.setKijkNa( new ScoreNavIF.Checker() {
 
 				@Override
@@ -904,7 +906,7 @@ try {
 		public void onResize(ResizeEvent event) {
 			int h = event.getHeight() - extraHeight;
 			//logger.info("resize event " +  h);
-			kb.tp.setScrollPanel(contentScrollPanel, h);
+			sb.setScrollPanel(contentScrollPanel, h);
 			
 		}
 	}
@@ -937,9 +939,13 @@ try {
 		mainPanel.setWidth("100%");
 		//fp.setHeight("428px");
 		//fp.setWidth("886px");
+		sb = GWT.create(StatusBarIF.class); // new nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard();
+		kb = sb.getFormuleKeyboard();
+		cb = sb.getFormuleClipboard();
 
-		kb = new FormuleKeyboard();
-		FocusOnTouch.installKeyboard(kb, kb);
+		if(!standalone) setWindowTop(0);
+
+		FocusOnTouch.installKeyboard(kb, cb);
 		FormuleHolder.installKeyboard(kb);
 		
 		hp = new HeaderPanel(DWOplayer.PARAMETERS.headercss());
@@ -1007,7 +1013,7 @@ try {
 
 		fp.add(contentScrollPanel);
 
-		Panel kbp = kb.getAsPanel();
+		Widget kbp = sb.asWidget();
 		fp.add(kbp);
 
 // POPUP of floating in ????
@@ -1145,7 +1151,7 @@ try {
 				if(opnieuwKnop ==  null) {
 					opnieuwKnop = new PushButton(Text.constants.opnieuwKnopLabel());
 					opnieuwKnop.addClickHandler(new ReloadHandler());
-					kb.addKnop(opnieuwKnop, true);
+					sb.addKnop(opnieuwKnop, true);
 				}
 				opnieuwKnop.setVisible(true);
 			} else if(opnieuwKnop != null) {
@@ -1159,7 +1165,7 @@ try {
 				if(allesOpnieuwKnop ==  null) {
 					allesOpnieuwKnop = new PushButton(Text.constants.allesOpnieuwKnopLabel());
 					allesOpnieuwKnop.addClickHandler(new ReloadAllHandler());
-					kb.addKnop(allesOpnieuwKnop, true);
+					sb.addKnop(allesOpnieuwKnop, true);
 				}
 				allesOpnieuwKnop.setVisible(true);
 			} else if(allesOpnieuwKnop != null) {
@@ -1210,7 +1216,7 @@ try {
 			volgendeKnop.removeFromParent();
 			if(volgendeKnopZichtbaar)
 			{	
-				kb.addKnop(volgendeKnop, true);
+				sb.addKnop(volgendeKnop, true);
 			}
 		}
 
@@ -1220,7 +1226,7 @@ try {
 			vorigeKnop.setVisible(vorigeKnopZichtbaar);
 			vorigeKnop.removeFromParent();
 			if(vorigeKnopZichtbaar)
-				kb.addKnop(vorigeKnop, true);
+				sb.addKnop(vorigeKnop, true);
 		}
 
 
@@ -1274,13 +1280,13 @@ try {
 //		contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
 //		Panel kbp = kb.getAsPanel();
 //		kbp.setWidth("886px");
-		kb.tp.zetMaatNoordhoff();
-		kb.tp.setScrollPanel(contentScrollPanel, contentHeight);
+		sb.zetMaatNoordhoff();
+		sb.setScrollPanel(contentScrollPanel, contentHeight);
 		//fp.add(kbp);
 
 	}
 	
-	private int extraHeight = 41 + KeyBoardTabPanel.KEYB_STATIC_HEIGHT;
+	private int extraHeight = 41 + 44 /*KeyBoardTabPanel.KEYB_STATIC_HEIGHT*/;
 	private String unitId = "scoViewNr";
 	
 	public void setUnitId(String unitId) {
@@ -1288,7 +1294,7 @@ try {
 	}
 
 	public void setWindowTop(int top) {
-		extraHeight = top + KeyBoardTabPanel.KEYB_STATIC_HEIGHT;
+		extraHeight = top + sb.getStatusBarHeight();
 	}
 	
 	
@@ -1302,8 +1308,8 @@ try {
 		///contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
 		int contentHeight = Window.getClientHeight() - extraHeight;
 		Window.addResizeHandler(new Resizer());
-		kb.tp.zetMaat();
-		kb.tp.setScrollPanel(contentScrollPanel, contentHeight);
+		sb.zetMaat();
+		sb.setScrollPanel(contentScrollPanel, contentHeight);
 
 	}
 	
@@ -1312,8 +1318,8 @@ try {
 		///contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
 		int contentHeight = Window.getClientHeight() - extraHeight;
 		Window.addResizeHandler(new Resizer());
-		kb.tp.zetMaatTrifork();
-		kb.tp.setScrollPanel(contentScrollPanel, contentHeight);
+		sb.zetMaatTrifork();
+		sb.setScrollPanel(contentScrollPanel, contentHeight);
 
 	}
 
@@ -1419,7 +1425,7 @@ try {
 		kb.blur();
 	}
 
-	public FormuleKeyboard getKeyboard() {
+	public FormuleKeyboardIF getKeyboard() {
 		return kb;
 	}
 
@@ -1528,6 +1534,10 @@ try {
 			sema = 0;
 			waitscreen.hide();
 		}
+	}
+
+	public FormuleClipboardIF getClipboard() {
+		return cb;
 	}
 	
 	

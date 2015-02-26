@@ -1,7 +1,9 @@
-package nl.uu.fi.dwo.mobile.client.ui;
+package nl.uu.fi.dwo.mobile.client.ui.dwokb;
 
 import java.util.Vector;
 import java.util.logging.Logger;
+
+import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
@@ -24,7 +26,7 @@ import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
  */
 public class KeyBoardTabPanel
 {
-	public static final int KEYB_STATIC_HEIGHT = 44;
+	static final int KEYB_STATIC_HEIGHT = 44;
 
 	private FlowPanel main = new FlowPanel();
 	private FormuleKeyboard kb;

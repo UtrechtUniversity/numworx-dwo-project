@@ -1,4 +1,4 @@
-package nl.uu.fi.dwo.mobile.client.ui;
+package nl.uu.fi.dwo.mobile.client.ui.dwokb;
 
 import java.util.ArrayList;
 import java.util.HashMap;

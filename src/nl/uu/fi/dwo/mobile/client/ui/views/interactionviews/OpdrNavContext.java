@@ -60,8 +60,9 @@ public class OpdrNavContext implements OpdrNavIF {
 	public FormuleKeyboardIF getKeyboard() {
 		return comRoot.getKeyboard();
 	}
-	public FormuleClipboardIF getClipboard() {
-		return comRoot.getClipboard();
+	
+	public FormuleClipboardIF getFormuleClipboard() {
+		return comRoot.getFormuleClipboard();
 	}
 
 	/**

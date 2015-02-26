@@ -11,10 +11,13 @@ import java.util.Map;
 
 
 
+
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
+import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
@@ -24,7 +27,6 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.utils.Connector;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
@@ -113,7 +115,7 @@ public class TekstVakPanel implements InteractionView
 	
 	private int font_size = 12;
 	private int font_style = 0;
-	private FormuleKeyboard kb = null;
+	private FormuleKeyboardIF kb = null;
 	private OpdrNavIF comRoot = null;
 	private int breedte = 600;
 	private int hoogte = 250;
@@ -639,12 +641,12 @@ public class TekstVakPanel implements InteractionView
 		
 	}
 
-	public void setKeyboard(FormuleKeyboard kb)
+	public void setKeyboard(FormuleKeyboardIF kb)
 	{
 		this.kb = kb;
 	}
 	
-	public FormuleKeyboard getKeyboard()
+	public FormuleKeyboardIF getKeyboard()
 	{
 		return kb;
 	}
