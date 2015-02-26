@@ -1472,7 +1472,7 @@ public class FormuleEditorWithSteps implements InteractionView
 					}
 					else if(editor != null)//doel: laatste antwoord nogmaals nakijken, om juiste feedback te genereren.
 					{
-						editor.kijkNa();
+						editor.kijkNa(true);
 						//maakNakijkenAf(false);
 					}
 					else
@@ -1487,7 +1487,7 @@ public class FormuleEditorWithSteps implements InteractionView
 						editor.insert(currentTekst);
 						if(viewers.size() > 0)
 							latest_answer_viewer = viewers.get(viewers.size() - 1);
-						editor.kijkNa();
+						editor.kijkNa(true);
 						//maakNakijkenAf(false);
 					}
 					
@@ -1521,10 +1521,10 @@ public class FormuleEditorWithSteps implements InteractionView
 						editor.insert(currentTekst);
 						if(viewers.size() > 0)
 							latest_answer_viewer = viewers.get(viewers.size() - 1);
-						editor.kijkNa();
+						editor.kijkNa(true);
 					}
 					else 
-					{	editor.kijkNa();
+					{	editor.kijkNa(true);
 						
 					}
 				}
@@ -1539,7 +1539,7 @@ public class FormuleEditorWithSteps implements InteractionView
 					stepPanel.remove(fv.getAsPanel());
 					editor = addNewEditor(stepPanel);
 					editor.insert(latest_answer_viewer.toString());
-					editor.kijkNa();
+					editor.kijkNa(true);
 					//maakNakijkenAf(false);
 				}
 				else if (i == stapNr - 1 && !nagekeken && !linStrategieVersie)
@@ -1644,7 +1644,8 @@ public class FormuleEditorWithSteps implements InteractionView
 		if(!check)
 			return;
 		//contentPanel.remove(checkimg);
-		latest_answer_viewer.showResult(FormuleViewer.NONE);
+		if(latest_answer_viewer != null)
+			latest_answer_viewer.showResult(FormuleViewer.NONE);
 
 		if(uitslag == AntwoordVakChecker.FOUT)
 			checkimg.setUrl(FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());

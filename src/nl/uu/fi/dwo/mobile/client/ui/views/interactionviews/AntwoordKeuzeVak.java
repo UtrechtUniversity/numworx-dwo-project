@@ -698,7 +698,10 @@ public class AntwoordKeuzeVak implements InteractionStub{
 		if (h.containsKey("antwoord"))
 			antwoord = (String) h.get("antwoord");
 		if (h.containsKey("attempts"))
+		{
 			attempts = toVector(h.get("attempts"));
+			if(attempts == null) attempts = new Vector();
+		}
 		if (h.containsKey("attemptsCount"))
 			attemptsCount = ((Number) h.get("attemptsCount")).intValue();
 		if (h.containsKey("errorCount"))
