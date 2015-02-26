@@ -3,6 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
 	>
+	<ui:with field='res' type='nl.uu.fi.dwo.keyboard.client.ResourceBase' />
 	<ui:style>
 	.col {
 		padding-top: 7px;
@@ -44,35 +45,35 @@
 	<g:HorizontalPanel>
 		<g:FlowPanel styleName="{style.col}">
 			<my:Key styleName="{style.key}" ui:field="t1_16">
-				<my:upFace><img src="images/kb/Basis/Touch/T1.16.png"/></my:upFace>
-				<my:downFace><img src="images/kb/Basis/Touch/T1.16-2.png"/></my:downFace>
+				<my:upFace><img src="{res.base}/Basis/Touch/T1.16.png"/></my:upFace>
+				<my:downFace><img src="{res.base}/Basis/Touch/T1.16-2.png"/></my:downFace>
 			</my:Key>
 			<my:Key styleName="{style.key}" ui:field="t2_16">
-				<my:upFace><img src="images/kb/Basis/Touch/T2.16-3.png"/></my:upFace>
-				<my:downFace><img src="images/kb/Basis/Touch/T2.16-2.png"/></my:downFace>
+				<my:upFace><img src="{res.base}/Basis/Touch/T2.16-3.png"/></my:upFace>
+				<my:downFace><img src="{res.base}/Basis/Touch/T2.16-2.png"/></my:downFace>
 			</my:Key>
 			<my:Key styleName="{style.key}" ui:field="t3_16">
-				<my:upFace><img src="images/kb/Basis/Touch/T3.16.png"/></my:upFace>
-				<my:downFace><img src="images/kb/Basis/Touch/T3.16-2.png"/></my:downFace>
+				<my:upFace><img src="{res.base}/Basis/Touch/T3.16.png"/></my:upFace>
+				<my:downFace><img src="{res.base}/Basis/Touch/T3.16-2.png"/></my:downFace>
 			</my:Key>
 			<my:Key styleName="{style.key}" ui:field="t4_16">
-				<my:upFace><img src="images/kb/Basis/Touch/T4.16.png"/></my:upFace>
-				<my:downFace><img src="images/kb/Basis/Touch/T4.16-2.png"/></my:downFace>
+				<my:upFace><img src="{res.base}/Basis/Touch/T4.16.png"/></my:upFace>
+				<my:downFace><img src="{res.base}/Basis/Touch/T4.16-2.png"/></my:downFace>
 			</my:Key>
 		</g:FlowPanel>
 
 		<g:FlowPanel styleName="{style.col}">
 			<my:Key styleName="{style.key}" ui:field="t1_17">
-				<my:upFace><img src="images/kb/Basis/Touch/T1.17.png"/></my:upFace>
-				<my:downFace><img src="images/kb/Basis/Touch/T1.17-2.png"/></my:downFace>
+				<my:upFace><img src="{res.base}/Basis/Touch/T1.17.png"/></my:upFace>
+				<my:downFace><img src="{res.base}/Basis/Touch/T1.17-2.png"/></my:downFace>
 			</my:Key>
 			<my:Key styleName="{style.enter}" ui:field="t2_17">
-				<my:upFace><img src="images/kb/Basis/Touch/T2.17.png"/></my:upFace>
-				<my:downFace><img src="images/kb/Basis/Touch/T2.17-2.png"/></my:downFace>
+				<my:upFace><img src="{res.base}/Basis/Touch/T2.17.png"/></my:upFace>
+				<my:downFace><img src="{res.base}/Basis/Touch/T2.17-2.png"/></my:downFace>
 			</my:Key>
 			<my:Key styleName="{style.blur}" ui:field="t4_17">
-				<my:upFace><img src="images/kb/Basis/Touch/T4.17.png"/></my:upFace>
-				<my:downFace><img src="images/kb/Basis/Touch/T4.17-2.png"/></my:downFace>
+				<my:upFace><img src="{res.base}/Basis/Touch/T4.17.png"/></my:upFace>
+				<my:downFace><img src="{res.base}/Basis/Touch/T4.17-2.png"/></my:downFace>
 			</my:Key>
 		</g:FlowPanel>
 

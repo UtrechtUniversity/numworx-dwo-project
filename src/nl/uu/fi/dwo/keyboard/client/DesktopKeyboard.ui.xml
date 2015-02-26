@@ -3,6 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
 	>
+	<ui:with field='res' type='nl.uu.fi.dwo.keyboard.client.ResourceBase' />
 	<ui:style>
 	.key {
 		width: 24px;
@@ -30,128 +31,128 @@
 	</ui:style>
 	<g:HorizontalPanel styleName="{style.panel}">
 		<my:Key styleName="{style.first}" ui:field="c1" >
-			<my:upFace><img src="images/kb/Basis/Desktop/C1.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Basis/Desktop/C1-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Basis/Desktop/C1.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Basis/Desktop/C1-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c2" >
-			<my:upFace><img src="images/kb/Basis/Desktop/C2.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Basis/Desktop/C2-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Basis/Desktop/C2.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Basis/Desktop/C2-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c3" >
-			<my:upFace><img src="images/kb/Basis/Desktop/C3.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Basis/Desktop/C3-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Basis/Desktop/C3.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Basis/Desktop/C3-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c4" >
-			<my:upFace><img src="images/kb/Basis/Desktop/C4.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Basis/Desktop/C4-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Basis/Desktop/C4.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Basis/Desktop/C4-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c5" >
-			<my:upFace><img src="images/kb/Basis/Desktop/C5.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Basis/Desktop/C5-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Basis/Desktop/C5.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Basis/Desktop/C5-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c6" >
-			<my:upFace><img src="images/kb/Basis/Desktop/C6.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Basis/Desktop/C6-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Basis/Desktop/C6.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Basis/Desktop/C6-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c7" >
-			<my:upFace><img src="images/kb/Basis/Desktop/C7.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Basis/Desktop/C7-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Basis/Desktop/C7.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Basis/Desktop/C7-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c8" >
-			<my:upFace><img src="images/kb/Basis/Desktop/C8.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Basis/Desktop/C8-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Basis/Desktop/C8.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Basis/Desktop/C8-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c9" >
-			<my:upFace><img src="images/kb/Basis/Desktop/C9.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Basis/Desktop/C9-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Basis/Desktop/C9.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Basis/Desktop/C9-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c10" >
-			<my:upFace><img src="images/kb/Basis/Desktop/C10.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Basis/Desktop/C10-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Basis/Desktop/C10.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Basis/Desktop/C10-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c11" >
-			<my:upFace><img src="images/kb/Basis/Desktop/C11.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Basis/Desktop/C11-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Basis/Desktop/C11.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Basis/Desktop/C11-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c12" >
-			<my:upFace><img src="images/kb/Basis/Desktop/C12.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Basis/Desktop/C12-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Basis/Desktop/C12.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Basis/Desktop/C12-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c13" >
-			<my:upFace><img src="images/kb/Basis/Desktop/C13.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Basis/Desktop/C13-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Basis/Desktop/C13.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Basis/Desktop/C13-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c14" >
-			<my:upFace><img src="images/kb/Basis/Desktop/C14.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Basis/Desktop/C14-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Basis/Desktop/C14.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Basis/Desktop/C14-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c15" >
-			<my:upFace><img src="images/kb/Basis/Desktop/C15.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Basis/Desktop/C15-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Basis/Desktop/C15.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Basis/Desktop/C15-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c16" >
-			<my:upFace><img src="images/kb/Basis/Desktop/C16.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Basis/Desktop/C16-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Basis/Desktop/C16.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Basis/Desktop/C16-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c17" >
-			<my:upFace><img src="images/kb/Basis/Desktop/C17.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Basis/Desktop/C17-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Basis/Desktop/C17.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Basis/Desktop/C17-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c18" >
-			<my:upFace><img src="images/kb/Basis/Desktop/C18.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Basis/Desktop/C18-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Basis/Desktop/C18.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Basis/Desktop/C18-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c19" >
-			<my:upFace><img src="images/kb/Basis/Desktop/C19.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Basis/Desktop/C19-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Basis/Desktop/C19.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Basis/Desktop/C19-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c20" >
-			<my:upFace><img src="images/kb/Basis/Desktop/C20.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Basis/Desktop/C20-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Basis/Desktop/C20.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Basis/Desktop/C20-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c21" >
-			<my:upFace><img src="images/kb/Basis/Desktop/C21.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Basis/Desktop/C21-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Basis/Desktop/C21.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Basis/Desktop/C21-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c22" >
-			<my:upFace><img src="images/kb/Basis/Desktop/C22.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Basis/Desktop/C22-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Basis/Desktop/C22.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Basis/Desktop/C22-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c23" >
-			<my:upFace><img src="images/kb/Basis/Desktop/C23.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Basis/Desktop/C23-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Basis/Desktop/C23.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Basis/Desktop/C23-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c24" >
-			<my:upFace><img src="images/kb/Algebra/Desktop/C24.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Algebra/Desktop/C24-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Algebra/Desktop/C24.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Algebra/Desktop/C24-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c25" >
-			<my:upFace><img src="images/kb/Algebra/Desktop/C25.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Algebra/Desktop/C25-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Algebra/Desktop/C25.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Algebra/Desktop/C25-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c26" >
-			<my:upFace><img src="images/kb/Algebra/Desktop/C26.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Algebra/Desktop/C26-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Algebra/Desktop/C26.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Algebra/Desktop/C26-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c27" >
-			<my:upFace><img src="images/kb/Algebra/Desktop/C27.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Algebra/Desktop/C27-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Algebra/Desktop/C27.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Algebra/Desktop/C27-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c28" >
-			<my:upFace><img src="images/kb/Algebra/Desktop/C28.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Algebra/Desktop/C28-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Algebra/Desktop/C28.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Algebra/Desktop/C28-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c29" >
-			<my:upFace><img src="images/kb/Algebra/Desktop/C29.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Algebra/Desktop/C29-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Algebra/Desktop/C29.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Algebra/Desktop/C29-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c30" >
-			<my:upFace><img src="images/kb/Algebra/Desktop/C30.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Algebra/Desktop/C30-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Algebra/Desktop/C30.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Algebra/Desktop/C30-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c31" >
-			<my:upFace><img src="images/kb/Algebra/Desktop/C31.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Algebra/Desktop/C31-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Algebra/Desktop/C31.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Algebra/Desktop/C31-2.png"/></my:downFace>
 		</my:Key>
 	</g:HorizontalPanel>
 </ui:UiBinder> 

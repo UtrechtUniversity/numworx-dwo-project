@@ -10,6 +10,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class TabletKeyboardPad extends AbstractKeyboard {
 
+	@UiField ResourceBase res = ResourceBase.INSTANCE;
+
 	private static TabletKeyboardPadUiBinder uiBinder = GWT
 			.create(TabletKeyboardPadUiBinder.class);
 

@@ -19,6 +19,9 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class DesktopKeyboard extends AbstractKeyboard {
 
+	@UiField ResourceBase res = ResourceBase.INSTANCE;
+	
+	
 	private static DesktopKeyboardUiBinder uiBinder = GWT
 			.create(DesktopKeyboardUiBinder.class);
 	
@@ -139,7 +142,7 @@ public class DesktopKeyboard extends AbstractKeyboard {
 	}
 	@UiHandler("c20")
 	void onC20(ClickEvent e) {
-		getEditor().insert(" en ");
+		getEditor().insert("⋀");
 	}
 
 	@UiHandler("c21")
@@ -165,7 +168,7 @@ public class DesktopKeyboard extends AbstractKeyboard {
 	}
 	@UiHandler("c26")
 	void onC26(ClickEvent e) {
-		getEditor().insert("log");
+		getEditor().ndelog();
 	}
 
 	@UiHandler("c27")
@@ -175,11 +178,11 @@ public class DesktopKeyboard extends AbstractKeyboard {
 
 	@UiHandler("c28")
 	void onC28(ClickEvent e) {
-		getEditor().limiet1(); // TODO u code
+		getEditor().limiet2(); // TODO u code
 	}
 	@UiHandler("c29")
 	void onC29(ClickEvent e) {
-		getEditor().limiet2();
+		getEditor().limiet1();
 	}
 	@UiHandler("c30")
 	void onC30(ClickEvent e) {
@@ -188,7 +191,38 @@ public class DesktopKeyboard extends AbstractKeyboard {
 
 	@UiHandler("c31")
 	void onC31(ClickEvent e) {
-		getEditor().insert("00");
+		getEditor().insert('∞');
+	}
+
+	private int getKeyboardHeight() {
+		return 44;
+	}
+
+	private Widget scrollPanel; 
+	private int origHeight = 426 - 40;
+	private int origDelta = 0;
+	
+	void resizeScrollPanel(int size) {
+		origDelta = size;
+		if(scrollPanel != null)
+			scrollPanel.setPixelSize(-1, origHeight - size);
+	}
+	public void setScrollPanel(Widget w, int h) {
+		scrollPanel = w;
+		origHeight = h;
+		if(scrollPanel != null) scrollPanel.setPixelSize(-1, origHeight - origDelta);
+	}
+
+	@Override
+	public void focus() {
+		resizeScrollPanel(getKeyboardHeight());
+		super.focus();
+	}
+
+	@Override
+	public void blur() {
+		resizeScrollPanel(0);
+		super.blur();
 	}
 
 }

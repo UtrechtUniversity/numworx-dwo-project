@@ -6,16 +6,17 @@ public class DesktopKeyboardGonio extends DesktopKeyboard {
 
 	public DesktopKeyboardGonio() {
 		disableKey(c31);
-		c24.getUpFace().setHTML("<img src='images/kb/Gonio/Desktop/C24.png'>");
-		c24.getDownFace().setHTML("<img src='images/kb/Gonio/Desktop/C24-2.png'>");
-		c25.getUpFace().setHTML("<img src='images/kb/Gonio/Desktop/C25.png'>");
-		c25.getDownFace().setHTML("<img src='images/kb/Gonio/Desktop/C25-2.png'>");
-		c26.getUpFace().setHTML("<img src='images/kb/Gonio/Desktop/C26.png'>");
-		c26.getDownFace().setHTML("<img src='images/kb/Gonio/Desktop/C26-2.png'>");
-		c27.getUpFace().setHTML("<img src='images/kb/Gonio/Desktop/C27.png'>");
-		c27.getDownFace().setHTML("<img src='images/kb/Gonio/Desktop/C27-2.png'>");
-		c28.getUpFace().setHTML("<img src='images/kb/Gonio/Desktop/C28.png'>");
-		c28.getDownFace().setHTML("<img src='images/kb/Gonio/Desktop/C28-2.png'>");
+		String b = res.base();
+		c24.getUpFace().setHTML("<img src='"+b+"/Gonio/Desktop/C24.png'>");
+		c24.getDownFace().setHTML("<img src='"+b+"/Gonio/Desktop/C24-2.png'>");
+		c25.getUpFace().setHTML("<img src='"+b+"/Gonio/Desktop/C25.png'>");
+		c25.getDownFace().setHTML("<img src='"+b+"/Gonio/Desktop/C25-2.png'>");
+		c26.getUpFace().setHTML("<img src='"+b+"/Gonio/Desktop/C26.png'>");
+		c26.getDownFace().setHTML("<img src='"+b+"/Gonio/Desktop/C26-2.png'>");
+		c27.getUpFace().setHTML("<img src='"+b+"/Gonio/Desktop/C27.png'>");
+		c27.getDownFace().setHTML("<img src='"+b+"/Gonio/Desktop/C27-2.png'>");
+		c28.getUpFace().setHTML("<img src='"+b+"/Gonio/Desktop/C28.png'>");
+		c28.getDownFace().setHTML("<img src='"+b+"/Gonio/Desktop/C28-2.png'>");
 		disableKey(c29);
 		disableKey(c30);
 	}

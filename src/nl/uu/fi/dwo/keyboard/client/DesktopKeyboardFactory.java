@@ -5,4 +5,10 @@ public class DesktopKeyboardFactory implements KeyboardFactory {
 	public DesktopKeyboardFactory() {
 	}
 
+	@Override
+	public AbstractKeyboard getKeyboard() {
+		return new DesktopKeyboard();
+		//return new DesktopKeyboardMeetkunde();
+	}
+
 }

@@ -18,6 +18,8 @@ import com.google.gwt.user.client.ui.Widget;
  *
  */
 public class TabletKeyboard extends AbstractKeyboard {
+	
+	@UiField ResourceBase res = ResourceBase.INSTANCE;
 
 	private static TabletKeyboardUiBinder uiBinder = GWT
 			.create(TabletKeyboardUiBinder.class);
@@ -82,12 +84,14 @@ public class TabletKeyboard extends AbstractKeyboard {
 	@UiHandler("t2_3") void onT2_3(ClickEvent e) {getEditor().insert('6');}
 	@UiHandler("t2_4") void onT2_4(ClickEvent e) {getEditor().insert('/');}
 	@UiHandler("t2_5") void onT2_5(ClickEvent e) {getEditor().insert('y');}
-	@UiHandler("t2_6") void onT2_6(ClickEvent e) {getEditor().insert("x^-1");}
+	@UiHandler("t2_6") void onT2_6(ClickEvent e) {
+		getEditor().macht();
+		getEditor().insert("-1");}
 	@UiHandler("t2_7") void onT2_7(ClickEvent e) {getEditor().wortel();}
 	@UiHandler("t2_8") void onT2_8(ClickEvent e) {getEditor().insert("ln");}
-	@UiHandler("t2_9") void onT2_9(ClickEvent e) {getEditor().limiet1();}
+	@UiHandler("t2_9") void onT2_9(ClickEvent e) {getEditor().limiet2();}
 	@UiHandler("t2_10") void onT2_10(ClickEvent e) {;}
-	@UiHandler("t2_11") void onT2_11(ClickEvent e) {getEditor().insert(" en ");}
+	@UiHandler("t2_11") void onT2_11(ClickEvent e) {getEditor().insert('⋀');}
 	@UiHandler("t2_12") void onT2_12(ClickEvent e) {getEditor().insert('{');}
 	@UiHandler("t2_13") void onT2_13(ClickEvent e) {getEditor().insert('}');}
 	@UiHandler("t2_14") void onT2_14(ClickEvent e) {getEditor().insert('<');}
@@ -98,10 +102,10 @@ public class TabletKeyboard extends AbstractKeyboard {
 	@UiHandler("t3_3") void onT3_3(ClickEvent e) {getEditor().insert('3');}
 	@UiHandler("t3_4") void onT3_4(ClickEvent e) {getEditor().insert('+');}
 	@UiHandler("t3_5") void onT3_5(ClickEvent e) {getEditor().abs();}
-	@UiHandler("t3_6") void onT3_6(ClickEvent e) {getEditor().insert("*10^");}
+	@UiHandler("t3_6") void onT3_6(ClickEvent e) {getEditor().insert("*10");getEditor().macht();}
 	@UiHandler("t3_7") void onT3_7(ClickEvent e) {getEditor().ndewortel();}
 	@UiHandler("t3_8") void onT3_8(ClickEvent e) {getEditor().primitieve();}
-	@UiHandler("t3_9") void onT3_9(ClickEvent e) {getEditor().limiet2();}
+	@UiHandler("t3_9") void onT3_9(ClickEvent e) {getEditor().limiet1();}
 	@UiHandler("t3_10") void onT3_10(ClickEvent e) {}
 	@UiHandler("t3_11") void onT3_11(ClickEvent e) {getEditor().insert('←');}
 	@UiHandler("t3_12") void onT3_12(ClickEvent e) {getEditor().insert('⟨');}
@@ -116,7 +120,7 @@ public class TabletKeyboard extends AbstractKeyboard {
 	@UiHandler("t4_5") void onT4_5(ClickEvent e) {getEditor().breuk();}
 	@UiHandler("t4_6") void onT4_6(ClickEvent e) {getEditor().insert('\u03c0');}
 	@UiHandler("t4_7") void onT4_7(ClickEvent e) {getEditor().insert('°');}
-	@UiHandler("t4_8") void onT4_8(ClickEvent e) {getEditor().insert("log");}
+	@UiHandler("t4_8") void onT4_8(ClickEvent e) {getEditor().ndelog();}
 	@UiHandler("t4_9") void onT4_9(ClickEvent e) {getEditor().diff();}
 	@UiHandler("t4_10") void onT4_10(ClickEvent e) {}
 	@UiHandler("t4_11") void onT4_11(ClickEvent e) {getEditor().insert('→');}

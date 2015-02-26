@@ -3,9 +3,11 @@ package nl.uu.fi.dwo.keyboard.client;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 public class TabbedTouchKeyboard extends AbstractKeyboard {
-	
+
+	private static int HEIGHT = 166;
 	private AbstractKeyboard current;
 	private TabletKeyboard k123;
 	private TabletKeyboardABC kabc;
@@ -45,8 +47,23 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 
 	@Override
 	public void softFocus() {
-		setVisible(true);
+		focus();
 	}
+	
+	@Override
+	public void focus() {
+		if(current==pen) pen.focus(); // does read formula
+		super.focus();
+		resizeScrollPanel(HEIGHT);
+	}
+
+
+	@Override
+	public void blur() {
+		super.blur();
+		resizeScrollPanel(0);
+	}
+
 
 	boolean upper;
 	@Override
@@ -69,7 +86,7 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 		if(current != pen) {
 			current.setVisible(false);
 			current = pen;
-			current.setVisible(true);
+			current.focus(); // does read formula
 		}
 	}
 
@@ -93,4 +110,24 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 		}
 	}
 
+	private Widget scrollPanel; 
+	private int origHeight = 426 - 40;
+	private int origDelta = 0;
+	
+	void resizeScrollPanel(int size) {
+		origDelta = size;
+		if(scrollPanel != null)
+			scrollPanel.setPixelSize(-1, origHeight - size);
+	}
+	public void setScrollPanel(Widget w, int h) {
+		scrollPanel = w;
+		origHeight = h;
+		if(scrollPanel != null) scrollPanel.setPixelSize(-1, origHeight - origDelta);
+	}
+
+	private int getKeyboardHeight() {
+		return HEIGHT;
+	}
+
+	
 }

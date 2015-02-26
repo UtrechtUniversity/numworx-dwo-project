@@ -18,6 +18,8 @@ public class TabletKeyboardUpper extends AbstractKeyboard {
 		pad.setEditor(formuleEditor);
 	}
 
+	@UiField ResourceBase res = ResourceBase.INSTANCE;
+
 	private static TabletKeyboardUpperUiBinder uiBinder = GWT
 			.create(TabletKeyboardUpperUiBinder.class);
 
@@ -28,8 +30,9 @@ public class TabletKeyboardUpper extends AbstractKeyboard {
 	public TabletKeyboardUpper() {
 		pad = new TabletKeyboardPad();
 		pad.disableKey(pad.t1_16);
-		pad.t2_16.getUpFace().setHTML("<img src='images/kb/Basis/Touch/T2.16.png'/>");
-		pad.t3_16.getUpFace().setHTML("<img src='images/kb/Basis/Touch/T3.16-3.png'/>");
+		String b = res.base();
+		pad.t2_16.getUpFace().setHTML("<img src='"+b+"/Basis/Touch/T2.16.png'/>");
+		pad.t3_16.getUpFace().setHTML("<img src='"+b+"/Basis/Touch/T3.16-3.png'/>");
 		pad.setDelegate(this);
 		initWidget(uiBinder.createAndBindUi(this));
 	}

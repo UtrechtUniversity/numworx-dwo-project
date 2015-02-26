@@ -4,17 +4,18 @@ import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Widget;
 
-abstract class AbstractKeyboard extends Composite implements FormuleKeyboardIF {
+public abstract class AbstractKeyboard extends Composite implements FormuleKeyboardIF {
 
 	FormuleEditorIF formuleEditor;
 	AbstractKeyboard delegate;
 
-	public AbstractKeyboard getDelegate() {
+	AbstractKeyboard getDelegate() {
 		return delegate;
 	}
 
-	public void setDelegate(AbstractKeyboard delegate) {
+	void setDelegate(AbstractKeyboard delegate) {
 		this.delegate = delegate;
 	}
 
@@ -78,5 +79,8 @@ abstract class AbstractKeyboard extends Composite implements FormuleKeyboardIF {
 	}
 	
 	void switchLower() {
+	}
+
+	public void setScrollPanel(Widget w, int h) {
 	}
 }

@@ -3,6 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
 	>
+	<ui:with field='res' type='nl.uu.fi.dwo.keyboard.client.ResourceBase' />
 	<ui:style>
 	/* Add CSS here. See the GWT docs on UI Binder for more details */
 	.key {
@@ -38,28 +39,28 @@
 	</ui:style>
 	<g:HorizontalPanel styleName="{style.panel}">
 		<my:Key styleName="{style.first}" ui:field="c1" >
-			<my:upFace><img src="images/kb/Gonio/Desktop/C32.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Gonio/Desktop/C32-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Gonio/Desktop/C32.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Gonio/Desktop/C32-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c2" >
-			<my:upFace><img src="images/kb/Gonio/Desktop/C33.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Gonio/Desktop/C33-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Gonio/Desktop/C33.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Gonio/Desktop/C33-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c3" >
-			<my:upFace><img src="images/kb/Gonio/Desktop/C34.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Gonio/Desktop/C34-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Gonio/Desktop/C34.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Gonio/Desktop/C34-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c4" >
-			<my:upFace><img src="images/kb/Gonio/Desktop/C35.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Gonio/Desktop/C35-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Gonio/Desktop/C35.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Gonio/Desktop/C35-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.key}" ui:field="c5" >
-			<my:upFace><img src="images/kb/Gonio/Desktop/C36.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Gonio/Desktop/C36-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Gonio/Desktop/C36.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Gonio/Desktop/C36-2.png"/></my:downFace>
 		</my:Key>
 		<my:Key styleName="{style.last}" ui:field="c6" >
-			<my:upFace><img src="images/kb/Gonio/Desktop/C37.png"/></my:upFace>
-			<my:downFace><img src="images/kb/Gonio/Desktop/C37-2.png"/></my:downFace>
+			<my:upFace><img src="{res.base}/Gonio/Desktop/C37.png"/></my:upFace>
+			<my:downFace><img src="{res.base}/Gonio/Desktop/C37-2.png"/></my:downFace>
 		</my:Key>
 	</g:HorizontalPanel>
 </ui:UiBinder> 

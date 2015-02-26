@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.keyboard.client;
 
+import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -36,6 +38,12 @@ public class TabletKeyboardPen extends AbstractKeyboard implements WritePanelHol
 	}
 
 	@Override
+	public void setEditor(FormuleEditorIF formuleEditor) {
+		super.setEditor(formuleEditor);
+		pad.setEditor(formuleEditor);
+	}
+
+	@Override
 	public void blur() {
 		getDelegate().blur();
 	}
@@ -50,10 +58,20 @@ public class TabletKeyboardPen extends AbstractKeyboard implements WritePanelHol
 		getDelegate().switch123();
 	}
 
+	private boolean recurse;
 	@Override
 	public void writePanelChanged() {
+		if(recurse) return;
 		getEditor().clearAll();
 		getEditor().insert(panel.parseFormule());
 	}
 
+	public void focus() {
+		recurse = true;
+		String formula = getEditor().toString();
+		panel.readFormula(formula);
+		super.focus();
+		recurse = false;
+	}
+	
 }
