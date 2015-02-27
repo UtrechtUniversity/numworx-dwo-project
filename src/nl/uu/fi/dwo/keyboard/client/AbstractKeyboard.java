@@ -64,6 +64,7 @@ public abstract class AbstractKeyboard extends Composite implements FormuleKeybo
 
 	public void blur() {
 		this.setVisible(false);
+		getEditor().setCurrentElementRepaint();
 	}
 
 	void switchABC() {

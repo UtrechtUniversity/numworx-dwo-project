@@ -44,7 +44,11 @@ public class KeyboardGWT implements EntryPoint {
 		public void insert(char text) {
 			x( "insert " + text);
 		}
-		
+
+		@Override
+		public void setCurrentElementRepaint() {
+			x("loose focus");
+		}
 		
 	};
 	

@@ -142,7 +142,7 @@ public class DesktopKeyboard extends AbstractKeyboard {
 	}
 	@UiHandler("c20")
 	void onC20(ClickEvent e) {
-		getEditor().insert("⋀");
+		getEditor().insert("\u2227");
 	}
 
 	@UiHandler("c21")

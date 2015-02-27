@@ -65,7 +65,7 @@ public class TabletKeyboardUpper extends AbstractKeyboard {
 	@UiHandler("t2_8") void onT2_8(ClickEvent e) {getEditor().insert('K');}
 	@UiHandler("t2_9") void onT2_9(ClickEvent e) {getEditor().insert('L');}
 
-	@UiHandler("t3_1") void onT3_1(ClickEvent e) {switchUpper();}
+	@UiHandler("t3_1") void onT3_1(ClickEvent e) {switchLower();}
 	@UiHandler("t3_2") void onT3_2(ClickEvent e) {getEditor().insert('Z');}
 	@UiHandler("t3_3") void onT3_3(ClickEvent e) {getEditor().insert('X');}
 	@UiHandler("t3_4") void onT3_4(ClickEvent e) {getEditor().insert('C');}

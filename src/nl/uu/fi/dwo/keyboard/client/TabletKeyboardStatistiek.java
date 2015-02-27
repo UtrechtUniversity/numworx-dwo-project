@@ -36,15 +36,15 @@ public class TabletKeyboardStatistiek extends TabletKeyboard {
 		disableKey(t4_15);
 	}
 
-	void onT1_9(ClickEvent e) {getEditor().insert("Bpdf");}
+	void onT1_9(ClickEvent e) {getEditor().insert("binompdf");}
 	void onT1_10(ClickEvent e) {getEditor().insert('!');}
 
 	void onT2_8(ClickEvent e) {getEditor().insert('μ');}
-	void onT2_9(ClickEvent e) {getEditor().insert("Ncdf");}
+	void onT2_9(ClickEvent e) {getEditor().insert("normalcdf");}
 	void onT2_10(ClickEvent e) {getEditor().insert("p\u0302");}
 	
 	void onT3_8(ClickEvent e) {getEditor().insert('σ');}
-	void onT3_9(ClickEvent e) {getEditor().insert("invN");}
+	void onT3_9(ClickEvent e) {getEditor().insert("invNorm");}
 	void onT3_10(ClickEvent e) {getEditor().insert("nCr");}
 
 	void onT4_8(ClickEvent e) {getEditor().insert('Δ');}

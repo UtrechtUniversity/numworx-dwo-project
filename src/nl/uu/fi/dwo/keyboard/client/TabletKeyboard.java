@@ -77,7 +77,7 @@ public class TabletKeyboard extends AbstractKeyboard {
 	@UiHandler("t1_12") void onT1_12(ClickEvent e) {getEditor().insert('(');}
 	@UiHandler("t1_13") void onT1_13(ClickEvent e) {getEditor().insert(')');}
 	@UiHandler("t1_14") void onT1_14(ClickEvent e) {getEditor().insert('=');}
-	@UiHandler("t1_15") void onT1_15(ClickEvent e) {getEditor().insert('≠');}
+	@UiHandler("t1_15") void onT1_15(ClickEvent e) {getEditor().insert('\u2260');}
 
 	@UiHandler("t2_1") void onT2_1(ClickEvent e) {getEditor().insert('4');}
 	@UiHandler("t2_2") void onT2_2(ClickEvent e) {getEditor().insert('5');}
@@ -91,7 +91,7 @@ public class TabletKeyboard extends AbstractKeyboard {
 	@UiHandler("t2_8") void onT2_8(ClickEvent e) {getEditor().insert("ln");}
 	@UiHandler("t2_9") void onT2_9(ClickEvent e) {getEditor().limiet2();}
 	@UiHandler("t2_10") void onT2_10(ClickEvent e) {;}
-	@UiHandler("t2_11") void onT2_11(ClickEvent e) {getEditor().insert('⋀');}
+	@UiHandler("t2_11") void onT2_11(ClickEvent e) {getEditor().insert('\u2227');}
 	@UiHandler("t2_12") void onT2_12(ClickEvent e) {getEditor().insert('{');}
 	@UiHandler("t2_13") void onT2_13(ClickEvent e) {getEditor().insert('}');}
 	@UiHandler("t2_14") void onT2_14(ClickEvent e) {getEditor().insert('<');}
@@ -110,8 +110,8 @@ public class TabletKeyboard extends AbstractKeyboard {
 	@UiHandler("t3_11") void onT3_11(ClickEvent e) {getEditor().insert('←');}
 	@UiHandler("t3_12") void onT3_12(ClickEvent e) {getEditor().insert('⟨');}
 	@UiHandler("t3_13") void onT3_13(ClickEvent e) {getEditor().insert('⟩');}
-	@UiHandler("t3_14") void onT3_14(ClickEvent e) {getEditor().insert('⩽');}
-	@UiHandler("t3_15") void onT3_15(ClickEvent e) {getEditor().insert('⩾');}
+	@UiHandler("t3_14") void onT3_14(ClickEvent e) {getEditor().insert('\u2264');}
+	@UiHandler("t3_15") void onT3_15(ClickEvent e) {getEditor().insert('\u2265');}
 
 	@UiHandler("t4_1") void onT4_1(ClickEvent e) {getEditor().insert('0');}
 	@UiHandler("t4_2") void onT4_2(ClickEvent e) {getEditor().insert(',');}

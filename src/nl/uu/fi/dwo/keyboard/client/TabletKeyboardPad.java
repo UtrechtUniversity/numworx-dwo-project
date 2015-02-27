@@ -25,7 +25,7 @@ public class TabletKeyboardPad extends AbstractKeyboard {
 	
 	@UiField Key t1_16,t1_17,t2_16,t2_17,t3_16, t4_16,t4_17;
 	
-	@UiHandler("t1_16") void onT1_16(ClickEvent e) {getEditor().insert('≈');}
+	@UiHandler("t1_16") void onT1_16(ClickEvent e) {getEditor().insert('\u2248');}
 	@UiHandler("t1_17") void onT1_17(ClickEvent e) {backspace();}
 
 	@UiHandler("t2_16") void onT2_16(ClickEvent e) {switch123();}
