@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public abstract class AbstractKeyboard extends Composite implements FormuleKeyboardIF {
 
-	FormuleEditorIF formuleEditor;
+	FormuleEditorIF formuleEditor = AbstractEditor.NULL;
 	AbstractKeyboard delegate;
 
 	AbstractKeyboard getDelegate() {
@@ -27,6 +27,7 @@ public abstract class AbstractKeyboard extends Composite implements FormuleKeybo
 	}
 
 	public void setEditor(FormuleEditorIF formuleEditor) {
+		if(formuleEditor == null) formuleEditor = AbstractEditor.NULL;
 		this.formuleEditor = formuleEditor;
 	}
 
