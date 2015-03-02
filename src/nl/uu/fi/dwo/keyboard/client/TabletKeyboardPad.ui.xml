@@ -6,7 +6,7 @@
 	<ui:with field='res' type='nl.uu.fi.dwo.keyboard.client.ResourceBase' />
 	<ui:style>
 	.col {
-		padding-top: 7px;
+		padding-top: 0px;
 	}
 	.key {
 		width: 42px;

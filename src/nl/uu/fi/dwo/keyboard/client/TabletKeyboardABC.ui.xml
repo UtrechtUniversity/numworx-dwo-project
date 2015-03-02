@@ -5,157 +5,122 @@
 	>
 	<ui:with field='res' type='nl.uu.fi.dwo.keyboard.client.ResourceBase' />
 	<ui:style>
-	.col {
-		padding-top: 7px;
-	}
-	.key {
-		width: 42px;
-		height: 32px;
-		padding-top: 3px;
-		padding-bottom: 3px;
-		margin-left: 4px;
-		margin-right: 4px;
-	}
-	.space {
-		width: 492px;
-		height: 32px;
-		padding-top: 3px;
-		padding-bottom: 3px;
-		margin-left: 4px;
-		margin-right: 4px;
-	}
 	
-	.panel { 
-		width: 886px;
-		height: 166px;
-		border-collapse: collapse;
-		border-spacing: 0px;
-		background-color: #D2D2D2
-		
-	}
-	
-	.row1 {
-		padding-left: 86px;
-	}
-	.row2 {
-		padding-left: 111px;
-	}
 	.pad {
 		float: right;
-		margin-right: 7px;
 	}
 	
 	</ui:style>
-	<g:HorizontalPanel addStyleNames="{style.panel}" >
-		<g:VerticalPanel  addStyleNames="{style.col}" >
-			<g:HorizontalPanel  addStyleNames="{style.row1}" >
-				<my:Key addStyleNames="{style.key}" ui:field="t1_1" >
-					<my:upFace><div class='alphabet' >q</div></my:upFace>
+	<g:HorizontalPanel addStyleNames="keyboard keyboard-abc is-active" >
+		<g:FlowPanel  styleName="keys">
+			<g:FlowPanel  addStyleNames="row row-1" >
+				<my:Key addStyleNames="key" ui:field="t1_1" >
+					<my:upFace>q</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t1_2" >
-					<my:upFace><span class='alphabet' >w</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t1_2" >
+					<my:upFace>w</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t1_3" >
-					<my:upFace><span class='alphabet' >e</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t1_3" >
+					<my:upFace>e</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t1_4" >
-					<my:upFace><span class='alphabet' >r</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t1_4" >
+					<my:upFace>r</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t1_5" >
-					<my:upFace><span class='alphabet' >t</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t1_5" >
+					<my:upFace>t</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t1_6" >
-					<my:upFace><span class='alphabet' >y</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t1_6" >
+					<my:upFace>y</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t1_7" >
-					<my:upFace><span class='alphabet' >u</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t1_7" >
+					<my:upFace>u</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t1_8" >
-					<my:upFace><span class='alphabet' >i</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t1_8" >
+					<my:upFace>i</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t1_9" >
-					<my:upFace><span class='alphabet' >o</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t1_9" >
+					<my:upFace>o</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t1_10" >
-					<my:upFace><span class='alphabet' >p</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t1_10" >
+					<my:upFace>p</my:upFace>
 				</my:Key>
-			</g:HorizontalPanel>
+			</g:FlowPanel>
 
-			<g:HorizontalPanel  addStyleNames="{style.row2}" >
-				<my:Key addStyleNames="{style.key}" ui:field="t2_1" >
-					<my:upFace><span class='alphabet' >a</span></my:upFace>
+			<g:FlowPanel  addStyleNames="row row-2" >
+				<my:Key addStyleNames="key" ui:field="t2_1" >
+					<my:upFace>a</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t2_2" >
-					<my:upFace><span class='alphabet' >s</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t2_2" >
+					<my:upFace>s</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t2_3" >
-					<my:upFace><span class='alphabet' >d</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t2_3" >
+					<my:upFace>d</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t2_4" >
-					<my:upFace><span class='alphabet' >f</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t2_4" >
+					<my:upFace>f</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t2_5" >
-					<my:upFace><span class='alphabet' >g</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t2_5" >
+					<my:upFace>g</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t2_6" >
-					<my:upFace><span class='alphabet' >h</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t2_6" >
+					<my:upFace>h</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t2_7" >
-					<my:upFace><span class='alphabet' >j</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t2_7" >
+					<my:upFace>j</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t2_8" >
-					<my:upFace><span class='alphabet' >k</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t2_8" >
+					<my:upFace>k</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t2_9" >
-					<my:upFace><span class='alphabet' >l</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t2_9" >
+					<my:upFace>l</my:upFace>
 				</my:Key>
-			</g:HorizontalPanel>
+			</g:FlowPanel>
 		
-			<g:HorizontalPanel  addStyleNames="{style.row1}" >
-				<my:Key addStyleNames="{style.key}" ui:field="t3_1" >
-					<my:upFace><span class='alphabet' >shft</span></my:upFace>
+			<g:FlowPanel  addStyleNames="row row-3" >
+				<my:Key addStyleNames="key key-shift" ui:field="t3_1" >
+					<my:upFace><span class='basis-T3-1' ></span></my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t3_2" >
-					<my:upFace><span class='alphabet' >z</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t3_2" >
+					<my:upFace>z</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t3_3" >
-					<my:upFace><span class='alphabet' >x</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t3_3" >
+					<my:upFace>x</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t3_4" >
-					<my:upFace><span class='alphabet' >c</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t3_4" >
+					<my:upFace>c</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t3_5" >
-					<my:upFace><span class='alphabet' >v</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t3_5" >
+					<my:upFace>v</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t3_6" >
-					<my:upFace><span class='alphabet' >b</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t3_6" >
+					<my:upFace>b</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t3_7" >
-					<my:upFace><span class='alphabet' >n</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t3_7" >
+					<my:upFace>n</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t3_8" >
-					<my:upFace><span class='alphabet' >m</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t3_8" >
+					<my:upFace>m</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t3_9" >
-					<my:upFace><span class='alphabet' >!</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t3_9" >
+					<my:upFace>!</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t3_10" >
-					<my:upFace><span class='alphabet' >,</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t3_10" >
+					<my:upFace>,</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t3_11" >
-					<my:upFace><span class='alphabet' >.</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t3_11" >
+					<my:upFace>.</my:upFace>
 				</my:Key>
-				<my:Key addStyleNames="{style.key}" ui:field="t3_12" >
-					<my:upFace><span class='alphabet' >?</span></my:upFace>
+				<my:Key addStyleNames="key" ui:field="t3_12" >
+					<my:upFace>?</my:upFace>
 				</my:Key>
-			</g:HorizontalPanel>
+			</g:FlowPanel>
 
-			<g:HorizontalPanel  addStyleNames="{style.row2}" >
-				<my:Key addStyleNames="{style.space}" ui:field="t4_1" >
-					<my:upFace><span class='alphabet' > </span></my:upFace>
+			<g:FlowPanel  addStyleNames="row row-4" >
+				<my:Key addStyleNames="key key-space" ui:field="t4_1" >
+					<my:upFace>spatie</my:upFace>
 				</my:Key>
-			</g:HorizontalPanel>
-		</g:VerticalPanel>
+			</g:FlowPanel>
+		</g:FlowPanel>
 		<my:TabletKeyboardPad ui:field="pad" addStyleNames="{style.pad}" />	
 	</g:HorizontalPanel>
 </ui:UiBinder> 

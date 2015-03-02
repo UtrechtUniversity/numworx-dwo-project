@@ -19,6 +19,8 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 		this.current = tk;
 		FlowPanel main;
 		main = new FlowPanel();
+		main.setStyleName("keyboard-container");
+		main.addStyleName("touch");
 		main.add(tk);
 		tk.setDelegate(this);
 		kabc = new TabletKeyboardABC();
