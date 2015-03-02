@@ -38,6 +38,12 @@
     <!-- dependencies -->
     <dependencies>        
         <dependency>
+            <groupId>fi.dwo</groupId>
+            <artifactId>DWO-commons-lib</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
@@ -64,11 +70,11 @@
             <groupId>fi</groupId>
             <artifactId>WiskOpdr</artifactId>
             <version>0.0.0</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 
     <build>
+        <!-- order is relevant -->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -95,7 +101,57 @@
                 <configuration>
                     <skipTests>true</skipTests>
                 </configuration>
-            </plugin>            <!-- ensure the build number is available as ${buildNumber} -->
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>*:*</include>
+                                    <!--                                    <include>fi:WiskOpdr:*</include> -->
+                                </includes>
+                            </artifactSet>
+                            <!--
+                                                    <filters>
+                                                        <filter>
+                                                            <artifact>fi:WiskOpdr</artifact>
+                                                            <excludes>
+                                                                <exclude>fi.beans.appletutil.AppletUtil</exclude>
+                                                                <exclude>fi.beans.dwomaccess.ByteArray</exclude>
+                                                            </excludes>
+                                                        </filter>                                
+                                                    </filters>
+                            -->                        
+                            <relocations>
+                                <relocation>
+                                    <pattern>fi.wiskopdr</pattern>
+                                    <shadedPattern>fi.shaded.wiskopdr2</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <!-- Possible to override the main-class in case of relocation
+                    <transformers>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                            <mainClass>fi.dwo.dwojapplet.domain.DWO</mainClass>
+                                </transformer>
+                            </transformers>                            
+                            -->
+                            <!-- In case we don't want to overwrite the non-shaded jar
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>launcher</shadedClassifierName>
+                            -->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>            
+            <!-- ensure the build number is available as ${buildNumber} -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
@@ -123,13 +179,58 @@
                     <archive>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addClasspath>true</addClasspath>
                         </manifest>
                         <manifestEntries>
                             <Implementation-Build>${buildNumber}</Implementation-Build>
+                            <Main-Class>fi.dwo.dwojapplet.domain.DWO</Main-Class>
+                            <Trusted-Only>true</Trusted-Only>
+                            <Permissions>all-permissions</Permissions>
+                            <Codebase>*.uu.nl *.fi.uu.nl dme.colorado.edu *.appspot.com *.dwo.nl localhost dme.mathhouse.org</Codebase>
+                            <Caller-Allowable-Codebase>*.uu.nl *.fi.uu.nl dme.colorado.edu *.appspot.com *.dwo.nl localhost dme.mathhouse.org</Caller-Allowable-Codebase>
                         </manifestEntries>
                     </archive>
                 </configuration>
-            </plugin>                    
+            </plugin>
+            <plugin>
+                <groupId>com.github.wvengen</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <version>2.0.8</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>proguard</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <proguardVersion>5.2</proguardVersion>
+                    <obfuscate>true</obfuscate>
+                    <!--                    <options>
+                        <option>-allowaccessmodification</option>
+                        <option>-keep public class com.class.path.MainClass { public *; public static *; }</option>
+                    </options> -->
+                    <injar>${project.build.finalName}.jar</injar>
+                    <outjar>${project.build.finalName}-proguarded.jar</outjar>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                    <proguardInclude>config.pro</proguardInclude>
+                    <libs>
+                        <lib>${java.home}/lib/rt.jar</lib>
+                       <lib>${java.home}/lib/jsse.jar</lib>
+                       <lib>${java.home}/lib/plugin.jar</lib>
+                    </libs>
+                    <addMavenDescriptor>false</addMavenDescriptor>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.sf.proguard</groupId>
+                        <artifactId>proguard-base</artifactId>
+                        <version>5.2</version>
+                        <scope>runtime</scope>
+                    </dependency>
+                </dependencies>
+            </plugin>            
         </plugins>
         <finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
     </build>

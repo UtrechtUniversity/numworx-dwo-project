@@ -53,8 +53,8 @@ import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
 //TODO WiskOpdr
-//import fi.wiskopdr.WiskOpdr;
-//import fi.wiskopdr.WiskOpdrEditPanel;
+import fi.wiskopdr.WiskOpdr;
+import fi.wiskopdr.WiskOpdrEditPanel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -192,9 +192,9 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         if (course.getDescription().startsWith("H4sIAAAAAA")) {
             editorCB.setSelected(true);
 //TODO WiskOpdr
-//            wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription());
-//            wiskOpdrEditPanel.setPreferredSize(new Dimension(700, 300));
-//            editorBox.add(wiskOpdrEditPanel);
+            wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription());
+            wiskOpdrEditPanel.setPreferredSize(new Dimension(700, 300));
+            editorBox.add(wiskOpdrEditPanel);
         } else {
             pane = new JTextArea();
             pane.setText(course.getDescription());
@@ -548,21 +548,21 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         if (src == editorCB) {
             if (editorCB.isSelected()) {
 //TODO WiskOpdr
-//                if (wiskOpdrEditPanel == null) {
-////                    wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription());
-//                    wiskOpdrEditPanel.setPreferredSize(new Dimension(700, 300));
-//                    editorBox.add(wiskOpdrEditPanel);
-//                }
-//                wiskOpdrEditPanel.setVisible(true);
-//                pane.setVisible(false);
-//            } else if (wiskOpdrEditPanel != null) {
-//                if (pane == null) {
-//                    pane = new JTextArea();
-//                    pane.setText("");
-//                    pane.setBorder(BorderFactory.createLineBorder(Color.black));
-//                    editorBox.add(pane);
-//                }
-//                wiskOpdrEditPanel.setVisible(false);
+                if (wiskOpdrEditPanel == null) {
+//                    wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription());
+                    wiskOpdrEditPanel.setPreferredSize(new Dimension(700, 300));
+                    editorBox.add(wiskOpdrEditPanel);
+                }
+                wiskOpdrEditPanel.setVisible(true);
+                pane.setVisible(false);
+            } else if (wiskOpdrEditPanel != null) {
+                if (pane == null) {
+                    pane = new JTextArea();
+                    pane.setText("");
+                    pane.setBorder(BorderFactory.createLineBorder(Color.black));
+                    editorBox.add(pane);
+                }
+                wiskOpdrEditPanel.setVisible(false);
                 pane.setVisible(true);
             }
         }
@@ -693,10 +693,10 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     @Override
     public void end() {
 //TODO WiskOpdr
-//        if (editorCB.isSelected() && !wiskOpdrEditPanel.getText().equals(course.getDescription())) {
-//            course.setDescription(wiskOpdrEditPanel.getText());
-//            GuiCreator.instance().updateCourse(course);
-//        } else
+        if (editorCB.isSelected() && !wiskOpdrEditPanel.getText().equals(course.getDescription())) {
+            course.setDescription(wiskOpdrEditPanel.getText());
+            GuiCreator.instance().updateCourse(course);
+        } else
             if (!editorCB.isSelected() && pane != null && !pane.getText().equals(course.getDescription())) {
             course.setDescription(pane.getText());
             GuiCreator.instance().updateCourse(course);
@@ -727,7 +727,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 
     private JTextArea pane;
 //TODO WiskOpdr
-//    private WiskOpdrEditPanel wiskOpdrEditPanel;
+    private WiskOpdrEditPanel wiskOpdrEditPanel;
 
     @Override
     public void stateChanged(ChangeEvent e) {

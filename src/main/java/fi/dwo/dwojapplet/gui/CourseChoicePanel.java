@@ -33,11 +33,10 @@ import fi.dwo.dwojapplet.domain.Descriptor;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.DwoProfile;
 import fi.dwo.dwojapplet.gui.action.TeacherStrategy;
+import fi.wiskopdr.WiskOpdr;
 //TODO WiskOpdr
-//import fi.wiskopdr.WiskOpdr;
-//import fi.wiskopdr.WiskOpdrPanel;
-//import fi.wiskopdr.tekstobjects.LinkIF;
-
+import fi.wiskopdr.WiskOpdrPanel;
+import fi.wiskopdr.tekstobjects.LinkIF;
 /**
  * This class is a panel where the user gets a overview of the different
  * courses.
@@ -48,7 +47,7 @@ import fi.dwo.dwojapplet.gui.action.TeacherStrategy;
 public class CourseChoicePanel extends JPanel implements ActionListener,
         CenterSubPanel, Scrollable
 //TODO WiskOpdr
-//, LinkIF 
+, LinkIF 
 {
 
     private CenterPanel center;
@@ -57,7 +56,7 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
 
     private JTextComponent profileTextArea;
 //TODO WiskOpdr
-//    private WiskOpdrPanel wiskOpdrPanel;
+    private WiskOpdrPanel wiskOpdrPanel;
     private Dimension unit = new Dimension(1, 1);
     private Descriptor dwoProfile;
 
@@ -134,15 +133,15 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
                 profileTextArea = new JMathPane(base);
             } else if (s.startsWith("H4sIAAAAAA")) {
 //TODO WiskOpdr
-//                wiskOpdrPanel = WiskOpdr.getWiskOpdrPanel(s);
-//                wiskOpdrPanel.setJSObjectOwner(this);
-//                wiskOpdrPanel.setLocation(20, 20);
+                wiskOpdrPanel = WiskOpdr.getWiskOpdrPanel(s);
+                wiskOpdrPanel.setJSObjectOwner(this);
+                wiskOpdrPanel.setLocation(20, 20);
                 JPanel wrapPanel = new JPanel();
                 wrapPanel.setOpaque(false);
                 wrapPanel.setLayout(null);
 //TODO WiskOpdr
-//                wrapPanel.setPreferredSize(new Dimension(wiskOpdrPanel.getWidth() + 40, (wiskOpdrPanel.getHeight() + 40)));
-//                wrapPanel.add(wiskOpdrPanel);
+                wrapPanel.setPreferredSize(new Dimension(wiskOpdrPanel.getWidth() + 40, (wiskOpdrPanel.getHeight() + 40)));
+                wrapPanel.add(wiskOpdrPanel);
                 add(wrapPanel, BorderLayout.NORTH);
             } else {
                 JTextArea area = new JTextArea();
@@ -212,8 +211,8 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
             if (profileTextArea != null) {
                 descriptionHeight = profileTextArea.getSize().height;
 //TODO WiskOpdr
-//            } else if (wiskOpdrPanel != null) {
-//                descriptionHeight = wiskOpdrPanel.getSize().height;
+            } else if (wiskOpdrPanel != null) {
+                descriptionHeight = wiskOpdrPanel.getSize().height;
             }
 
             if ((maxWidth * NR_COLUMNS) < 600) {
