@@ -33,6 +33,11 @@ import fi.dwo.server.persistence.DbAccessProxy;
 import java.sql.PreparedStatement;
 import java.util.HashMap;
 
+/**
+ * Supplies doGet for database status info and database-operations via doPost using 
+ * an XML-RPC handler.
+ * 
+ */
 public class DataSourceAccessServlet extends Servlet {
 
     private static final Logger log = Logger.getLogger(DataSourceAccessServlet.class.getName());
@@ -130,8 +135,13 @@ public class DataSourceAccessServlet extends Servlet {
 
     }
 
-    /* (non-Javadoc)
-     * @see fi.dwo.server.persistence.DbAccessServlet#init(javax.servlet.ServletConfig)
+    /** Initializes the xmlrpc servlet.
+     * 
+     * Retrieves a database interface, {@link fi.dwo.commons.persistence.DBAccessIF}
+     * via the context.xml parameter. Encapsulates the connector via monitoring 
+     * and/or threading of servlets.
+     * 
+     * @throws javax.servlet.ServletException
      */
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -161,7 +171,7 @@ public class DataSourceAccessServlet extends Servlet {
             if (ds == null) {
                 throw new ServletException("Resource " + source + " is null");
             } else {
-                log("found datasource " + ds);
+                        log.log(Level.INFO, "Found datasource {0}", new Object[]{ds});
             }
 
             if (new DataSourceAccess(ds).checkVersion()) {
@@ -204,7 +214,13 @@ public class DataSourceAccessServlet extends Servlet {
         }
 
     }
-
+/** Returns public servlet status information in a plain text webpage.
+ * 
+     * @param req
+     * @param resp
+     * @throws javax.servlet.ServletException
+     * @throws java.io.IOException
+    */
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -284,14 +300,14 @@ public class DataSourceAccessServlet extends Servlet {
             try {
                 ((DbConnectIF) getHandler()).close();
             } catch (Exception e) {
-                log("finally close failed", e);
+                log.log(Level.FINE,"Closing handler in finally failed:", e);
             }
         }
     }
 
     @Override
     public void destroy() {
-        log.fine("En weg ben ik...");
+        log.log(Level.FINE, "Closing xmlrpc handler.");
         ((DbConnectIF) getHandler()).close();
         super.destroy();
     }

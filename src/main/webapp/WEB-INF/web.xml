@@ -23,6 +23,7 @@
         <description>Servlet voor het genereren van de dwo.html paginaServlet voor het genereren van de dwo.html pagina</description>
         <servlet-name>DwoWebPage</servlet-name>
         <servlet-class>fi.dwo.server.servlets.xmlrpc.DwoWebPageServlet</servlet-class>
+        <!-- note that these parameters can be overridden in the server context.xml and hence should have reverse domain/package naming prefix -->
         <init-param>
             <param-name>html_source</param-name>
             <param-value>file:webapps/dwo/dwo.html</param-value>

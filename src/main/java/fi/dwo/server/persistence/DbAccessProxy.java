@@ -2,7 +2,6 @@ package fi.dwo.server.persistence;
 
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Hashtable;
@@ -10,7 +9,6 @@ import java.util.Vector;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-import fi.beans.jdbc.DbConnect;
 import fi.beans.jdbc.DbConnectIF;
 import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.commons.exceptions.LoginException;

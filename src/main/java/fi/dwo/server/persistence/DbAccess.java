@@ -34,12 +34,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Provides handles persistent entity operations on the database.
  *
- * @author plas0006
+ * 
  */
 public class DbAccess extends DbConnect implements DbAccessIF {
 
-    private static Logger log = Logger.getLogger(DbAccess.class.getName());
+    private static final Logger log = Logger.getLogger(DbAccess.class.getName());
 
     /**
      *
@@ -50,8 +51,6 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     }
 
     private void log(Level level, String msg, Throwable t) {
-//		System.err.println(session() + msg);
-//		if(t != null) t.printStackTrace();
         log.log(level, session() + msg, t);
     }
 

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ClassDiagram name="Reverse engineered main.java.fi.dwo.server.servlets.xmlrpc 2015.03.02 09-38-13-196">
+  <ClassDiagramComponents>
+    <Class xPosition="20.0" yPosition="20.0" package="fi.dwo.server.servlets.xmlrpc" name="DataSourceAccessServlet" visibility="public">
+      <Constructors/>
+      <Fields>
+        <Field name="log" visibility="private" type="Logger" isStatic="true" isFinal="true"/>
+        <Field name="ds" visibility="private" type="DataSource"/>
+        <Field name="monitor" visibility="private" type="boolean"/>
+        <Field name="threading" visibility="private" type="boolean"/>
+        <Field name="session" visibility="private" type="ThreadLocal&lt;HttpSession&gt;" isStatic="true"/>
+      </Fields>
+      <Methods>
+        <Method name="init" visibility="public" returnType="void">
+          <Argument type="ServletConfig" name="config"/>
+        </Method>
+        <Method name="printRS" visibility="private" returnType="void">
+          <Argument type="ResultSet" name="rs"/>
+          <Argument type="PrintWriter" name="out"/>
+        </Method>
+        <Method name="doGet" visibility="public" returnType="void">
+          <Argument type="HttpServletRequest" name="req"/>
+          <Argument type="HttpServletResponse" name="resp"/>
+        </Method>
+        <Method name="service" visibility="protected" returnType="void">
+          <Argument type="HttpServletRequest" name="req"/>
+          <Argument type="HttpServletResponse" name="resp"/>
+        </Method>
+        <Method name="destroy" visibility="public" returnType="void"/>
+      </Methods>
+    </Class>
+    <Class xPosition="320.0" yPosition="20.0" package="fi.dwo.server.servlets.xmlrpc" name="DwoWebPageServlet" visibility="public">
+      <Constructors>
+        <Constructor name="DwoWebPageServlet" visibility="public"/>
+        <Constructor name="DwoWebPageServlet" visibility="public">
+          <Argument type="Object" name="arg0"/>
+        </Constructor>
+      </Constructors>
+      <Fields>
+        <Field name="HTML_SOURCE" visibility="private" type="String"/>
+        <Field name="rn" visibility="private" type="Random" isStatic="true"/>
+      </Fields>
+      <Methods>
+        <Method name="doGet" visibility="protected" returnType="void">
+          <Argument type="HttpServletRequest" name="req"/>
+          <Argument type="HttpServletResponse" name="resp"/>
+        </Method>
+        <Method name="rand" visibility="private" returnType="int" isStatic="true">
+          <Argument type="int" name="lo"/>
+          <Argument type="int" name="hi"/>
+        </Method>
+        <Method name="randomstring" visibility="private" returnType="String" isStatic="true">
+          <Argument type="int" name="lo"/>
+          <Argument type="int" name="hi"/>
+        </Method>
+        <Method name="randomstring" visibility="private" returnType="String" isStatic="true"/>
+        <Method name="init" visibility="public" returnType="void">
+          <Argument type="ServletConfig" name="config"/>
+        </Method>
+      </Methods>
+    </Class>
+  </ClassDiagramComponents>
+  <ClassDiagramRelations/>
+</ClassDiagram>

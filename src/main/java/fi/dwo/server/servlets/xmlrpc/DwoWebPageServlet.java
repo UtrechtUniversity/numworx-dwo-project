@@ -33,6 +33,7 @@ import fi.beans.xmlrpc.Servlet;
  */
 public class DwoWebPageServlet extends Servlet {
 
+    //TODO Wim: Do we need a static default? It makes things go easily awry.
     private String HTML_SOURCE = "file:/home/projects/fisme-sites/www/dwo/dwo.html";
 
     //private String SERVLET = "/servlet/fi.dwo.server.persistence.DbAccessServlet";
@@ -132,16 +133,7 @@ public class DwoWebPageServlet extends Servlet {
             }
 
             String[] arguments = {archives, lang, key, profile, guestUser, scoViewNr, courseViewNr};
-//	        log("arguments[0] " + arguments[0]);
-//	        log("arguments[1] " + arguments[1]);
-//	        log("arguments[2] " + arguments[2]);
-//	        log("arguments[3] " + arguments[3]);
-//            log("arguments[4] " + arguments[4]);
-//            log("arguments[5] " + arguments[5]);
-//            log("arguments[6] " + arguments[6]);
-//	        log("result before: " + result);
-            result = MessageFormat.format(result, arguments);
-//	        log("result after: " + result);
+            result = MessageFormat.format(result, (Object) arguments);
 
             resp.setContentType("text/html");
 
@@ -179,12 +171,15 @@ public class DwoWebPageServlet extends Servlet {
     /**
      * Haal parameter html_source op. Andere parameters zijn servlet en local.
      *
+     * @throws javax.servlet.ServletException
+     * 
      * @see #HTML_SOURCE
      * @see fi.beans.xmlrpc.Servlet#init(javax.servlet.ServletConfig)
      */
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
+        //TODO Discuss: Note that these parameters can be overridden in the server context.xml and hence should have reverse domain/package naming prefix
         String param = getInitParameter("html_source");
         if (param != null) {
             HTML_SOURCE = param;
