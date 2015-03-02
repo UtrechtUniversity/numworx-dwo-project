@@ -446,7 +446,7 @@ public abstract class TextMapper {
             }
             Locale lang = new Locale(language, "");
 
-            String className = "fi.dwo.client.system.text" + "."
+            String className = "fi.dwo.commons.system.text" + "."
             + TEXT_CLASS;
 //            String className = TextMapper.class.getPackage().getName() + "."
 //                    + TEXT_CLASS;

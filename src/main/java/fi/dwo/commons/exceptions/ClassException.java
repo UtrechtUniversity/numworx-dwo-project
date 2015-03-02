@@ -18,7 +18,7 @@ public class ClassException extends Exception {
     public final static int CE_CLASS_EXISTS = 1;
 
     /**
-
+     * @param exception
      */
     public ClassException(int exception) {
         super(getMesgFromInt(exception));
@@ -28,7 +28,7 @@ public class ClassException extends Exception {
     }
 
     private static String getMesgFromInt(int exception) {
-        String result = null;
+        String result;
         switch (exception) {
         case (CE_CLASS_EXISTS):
             result = TextMapper.getText(TextMapper.EXC_CLASS_EXISTS);
@@ -42,6 +42,7 @@ public class ClassException extends Exception {
 
     }
 	
+    @Override
 	public String getMessage() { 
 		if(getCause() == null)
 			return super.getMessage();

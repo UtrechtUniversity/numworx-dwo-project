@@ -12,8 +12,11 @@ import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Loader extends URLClassLoader {
+    private static final Logger log = Logger.getLogger(Loader.class.getName());
 
 	private static URL urlPrefix;
 	static {
@@ -28,7 +31,7 @@ public class Loader extends URLClassLoader {
 	public static void setPrefix(String prefix) {
 		try {
 			urlPrefix = new URL(prefix);
-		} catch (MalformedURLException _) {
+		} catch (MalformedURLException e) {
 		}
 	}
 
@@ -42,13 +45,13 @@ public class Loader extends URLClassLoader {
 			URL u = new URL(urlPrefix, jar);
 			addURL(list, u);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.log(Level.SEVERE,null,e);
 		}
 		ClassLoader parent = Loader.class.getClassLoader();
 		return new Loader((URL[]) list.toArray(new URL[list.size()]), parent);
 	}
 
-	/**
+/**
 	 * @param list
 	 * @param u
 	 * @throws IOURLException
@@ -63,7 +66,7 @@ public class Loader extends URLClassLoader {
 				jarin = new JarInputStream(u.openStream());
 			} catch (IOException e) {
 				System.err.println(u + " exception:");
-				e.printStackTrace();
+				log.log(Level.SEVERE,null,e);
 				return;
 			}
 			list.add(uu);
@@ -103,6 +106,7 @@ public class Loader extends URLClassLoader {
 	/* (non-Javadoc)
 	 * @see java.net.URLClassLoader#findClass(java.lang.String)
 	 */
+    @Override
 	protected Class findClass(String name) throws ClassNotFoundException {
 		try {
 			Class clazz = super.findClass(name);
@@ -110,7 +114,7 @@ public class Loader extends URLClassLoader {
 			//System.out.println(" found " + clazz + ", loader=" + clazz.getClassLoader());
 			return clazz;
 		} catch (ClassNotFoundException e) {
-			System.out.println(name + " not found");
+			log.log(Level.SEVERE,"Class with name {0} not found.",new Object[]{name});
 			throw e;
 		}
 	}
