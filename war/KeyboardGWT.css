@@ -2,3 +2,17 @@
 .html-face {
 	display: inline;
 }
+
+.kbd-Key .alphabet {
+	background-color: white;
+	width: 42px;
+	height: 32px;
+}
+
+.kbd-Key-down .alphabet {
+	background-color: gray;
+}
+
+.kbd-Key-down-hovering .alphabet {
+	background-color: gray;
+}

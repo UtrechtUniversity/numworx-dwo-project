@@ -46,148 +46,116 @@
 	}
 	
 	</ui:style>
-	<g:HorizontalPanel styleName="{style.panel}" >
-		<g:VerticalPanel  styleName="{style.col}" >
-			<g:HorizontalPanel  styleName="{style.row1}" >
-				<my:Key styleName="{style.key}" ui:field="t1_1" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T1.1.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T1.1-2.png"/></my:downFace>
+	<g:HorizontalPanel addStyleNames="{style.panel}" >
+		<g:VerticalPanel  addStyleNames="{style.col}" >
+			<g:HorizontalPanel  addStyleNames="{style.row1}" >
+				<my:Key addStyleNames="{style.key}" ui:field="t1_1" >
+					<my:upFace><div class='alphabet' >q</div></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t1_2" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T1.2.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T1.2-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t1_2" >
+					<my:upFace><span class='alphabet' >w</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t1_3" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T1.3.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T1.3-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t1_3" >
+					<my:upFace><span class='alphabet' >e</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t1_4" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T1.4.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T1.4-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t1_4" >
+					<my:upFace><span class='alphabet' >r</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t1_5" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T1.5.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T1.5-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t1_5" >
+					<my:upFace><span class='alphabet' >t</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t1_6" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T1.6.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T1.6-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t1_6" >
+					<my:upFace><span class='alphabet' >y</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t1_7" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T1.7.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T1.7-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t1_7" >
+					<my:upFace><span class='alphabet' >u</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t1_8" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T1.8.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T1.8-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t1_8" >
+					<my:upFace><span class='alphabet' >i</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t1_9" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T1.9.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T1.9-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t1_9" >
+					<my:upFace><span class='alphabet' >o</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t1_10" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T1.10.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T1.10-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t1_10" >
+					<my:upFace><span class='alphabet' >p</span></my:upFace>
 				</my:Key>
 			</g:HorizontalPanel>
 
-			<g:HorizontalPanel  styleName="{style.row2}" >
-				<my:Key styleName="{style.key}" ui:field="t2_1" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T2.1.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T2.1-2.png"/></my:downFace>
+			<g:HorizontalPanel  addStyleNames="{style.row2}" >
+				<my:Key addStyleNames="{style.key}" ui:field="t2_1" >
+					<my:upFace><span class='alphabet' >a</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t2_2" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T2.2.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T2.2-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t2_2" >
+					<my:upFace><span class='alphabet' >s</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t2_3" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T2.3.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T2.3-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t2_3" >
+					<my:upFace><span class='alphabet' >d</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t2_4" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T2.4.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T2.4-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t2_4" >
+					<my:upFace><span class='alphabet' >f</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t2_5" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T2.5.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T2.5-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t2_5" >
+					<my:upFace><span class='alphabet' >g</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t2_6" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T2.6.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T2.6-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t2_6" >
+					<my:upFace><span class='alphabet' >h</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t2_7" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T2.7.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T2.7-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t2_7" >
+					<my:upFace><span class='alphabet' >j</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t2_8" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T2.8.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T2.8-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t2_8" >
+					<my:upFace><span class='alphabet' >k</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t2_9" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T2.9.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T2.9-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t2_9" >
+					<my:upFace><span class='alphabet' >l</span></my:upFace>
 				</my:Key>
 			</g:HorizontalPanel>
 		
-			<g:HorizontalPanel  styleName="{style.row1}" >
-				<my:Key styleName="{style.key}" ui:field="t3_1" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T3.1.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T3.1-2.png"/></my:downFace>
+			<g:HorizontalPanel  addStyleNames="{style.row1}" >
+				<my:Key addStyleNames="{style.key}" ui:field="t3_1" >
+					<my:upFace><span class='alphabet' >shft</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t3_2" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T3.2.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T3.2-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t3_2" >
+					<my:upFace><span class='alphabet' >z</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t3_3" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T3.3.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T3.3-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t3_3" >
+					<my:upFace><span class='alphabet' >x</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t3_4" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T3.4.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T3.4-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t3_4" >
+					<my:upFace><span class='alphabet' >c</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t3_5" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T3.5.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T3.5-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t3_5" >
+					<my:upFace><span class='alphabet' >v</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t3_6" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T3.6.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T3.6-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t3_6" >
+					<my:upFace><span class='alphabet' >b</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t3_7" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T3.7.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T3.7-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t3_7" >
+					<my:upFace><span class='alphabet' >n</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t3_8" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T3.8.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T3.8-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t3_8" >
+					<my:upFace><span class='alphabet' >m</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t3_9" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T3.9.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T3.9-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t3_9" >
+					<my:upFace><span class='alphabet' >!</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t3_10" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T3.10.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T3.10-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t3_10" >
+					<my:upFace><span class='alphabet' >,</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t3_11" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T3.11.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T3.11-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t3_11" >
+					<my:upFace><span class='alphabet' >.</span></my:upFace>
 				</my:Key>
-				<my:Key styleName="{style.key}" ui:field="t3_12" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T3.12.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T3.12-2.png"/></my:downFace>
+				<my:Key addStyleNames="{style.key}" ui:field="t3_12" >
+					<my:upFace><span class='alphabet' >?</span></my:upFace>
 				</my:Key>
 			</g:HorizontalPanel>
 
-			<g:HorizontalPanel  styleName="{style.row2}" >
-				<my:Key styleName="{style.space}" ui:field="t4_1" >
-					<my:upFace><img src="{res.base}/Abc/lowercase/T4.1.png"/></my:upFace>
-					<my:downFace><img src="{res.base}/Abc/lowercase/T4.1-2.png"/></my:downFace>
+			<g:HorizontalPanel  addStyleNames="{style.row2}" >
+				<my:Key addStyleNames="{style.space}" ui:field="t4_1" >
+					<my:upFace><span class='alphabet' > </span></my:upFace>
 				</my:Key>
 			</g:HorizontalPanel>
 		</g:VerticalPanel>
-		<my:TabletKeyboardPad ui:field="pad" styleName="{style.pad}" />	
+		<my:TabletKeyboardPad ui:field="pad" addStyleNames="{style.pad}" />	
 	</g:HorizontalPanel>
 </ui:UiBinder> 
