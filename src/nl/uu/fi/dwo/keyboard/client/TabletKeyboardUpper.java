@@ -30,9 +30,7 @@ public class TabletKeyboardUpper extends AbstractKeyboard {
 	public TabletKeyboardUpper() {
 		pad = new TabletKeyboardPad();
 		pad.disableKey(pad.t1_16);
-		String b = res.base();
-		pad.t2_16.getUpFace().setHTML("<img src='"+b+"/Basis/Touch/T2.16.png'/>");
-		pad.t3_16.getUpFace().setHTML("<img src='"+b+"/Basis/Touch/T3.16-3.png'/>");
+		pad.t3_16.addStyleName("is-active");;
 		pad.setDelegate(this);
 		initWidget(uiBinder.createAndBindUi(this));
 	}

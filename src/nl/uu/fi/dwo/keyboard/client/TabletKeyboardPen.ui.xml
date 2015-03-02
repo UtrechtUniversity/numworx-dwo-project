@@ -20,14 +20,12 @@
 	.pen {
 		width: 740px;
 		height: 150px;
-		margin-top: 10px;
 		background-image: url('images/kb/penpad.png');
-		margin-left: 10px;
 		opacity: 0.25;
 	}
 	
 	</ui:style>
-		<g:HorizontalPanel styleName="{style.panel}" >
+		<g:HorizontalPanel addStyleNames="keyboard keyboard-hand is-active" >
 			<g:SimplePanel ui:field="writePanel" styleName="{style.pen}" />
 			<my:TabletKeyboardPad ui:field="pad" styleName="{style.pad}" />	
 		</g:HorizontalPanel>

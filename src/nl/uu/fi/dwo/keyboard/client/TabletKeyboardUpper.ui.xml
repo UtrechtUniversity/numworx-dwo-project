@@ -76,7 +76,7 @@
 		
 			<g:FlowPanel  addStyleNames="row row-3" >
 				<my:Key addStyleNames="key" ui:field="t3_1" >
-					<my:upFace><span class='basis-T3-1' ></span></my:upFace>
+					<my:upFace><span class='basis basis-T3-1' ></span></my:upFace>
 				</my:Key>
 				<my:Key addStyleNames="key" ui:field="t3_2" >
 					<my:upFace>Z</my:upFace>

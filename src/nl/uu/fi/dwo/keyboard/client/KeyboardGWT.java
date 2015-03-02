@@ -93,6 +93,7 @@ public class KeyboardGWT implements EntryPoint {
 		root.add(panel);
 		root.add(new Label("touch")); tablet = new TabbedTouchKeyboard(new TabletKeyboardOnderbouw());
 		tablet.setEditor(editor);
+		tablet.switchABC();
 		root.add(tablet);
 
 //		TabletKeyboardABC abc = new TabletKeyboardABC();

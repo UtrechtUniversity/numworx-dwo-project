@@ -5,75 +5,40 @@
 	>
 	<ui:with field='res' type='nl.uu.fi.dwo.keyboard.client.ResourceBase' />
 	<ui:style>
-	.col {
-		padding-top: 0px;
-	}
-	.key {
-		width: 42px;
-		height: 32px;
-		padding-top: 3px;
-		padding-bottom: 3px;
-		margin-left: 4px;
-		margin-right: 4px;
-	}
-	.enter {
-		width: 42px;
-		height: 70px;
-		padding-top: 3px;
-		padding-bottom: 3px;
-		margin-left: 4px;
-		margin-right: 4px;
-	}
-	.blur {
-		width: 42px;
-		height: 43px;
-		padding-top: 3px;
-		padding-bottom: 0px;
-		margin-left: 4px;
-		margin-right: 4px;
-	}
-	
+
 	.panel { 
 		width: 100px;
 		height: 166px;
 		border-collapse: collapse;
 		border-spacing: 0px;
-		background-color: #D2D2D2
-		
+		background-color: #D2D2D2;
 	}
 	</ui:style>
-	<g:HorizontalPanel>
-		<g:FlowPanel styleName="{style.col}">
-			<my:Key styleName="{style.key}" ui:field="t1_16">
-				<my:upFace><img src="{res.base}/Basis/Touch/T1.16.png"/></my:upFace>
-				<my:downFace><img src="{res.base}/Basis/Touch/T1.16-2.png"/></my:downFace>
+	<g:HorizontalPanel styleName="{style.panel}" >
+		<g:FlowPanel addStyleNames="clm clm-16">
+			<my:Key addStyleNames="key icon" ui:field="t1_16">
+				<my:upFace><span class="basis basis-T1-16"></span></my:upFace>
 			</my:Key>
-			<my:Key styleName="{style.key}" ui:field="t2_16">
-				<my:upFace><img src="{res.base}/Basis/Touch/T2.16-3.png"/></my:upFace>
-				<my:downFace><img src="{res.base}/Basis/Touch/T2.16-2.png"/></my:downFace>
+			<my:Key addStyleNames="key bg-grey icon" ui:field="t2_16">
+				<my:upFace><span class="basis basis-T2-16"></span></my:upFace>
 			</my:Key>
-			<my:Key styleName="{style.key}" ui:field="t3_16">
-				<my:upFace><img src="{res.base}/Basis/Touch/T3.16.png"/></my:upFace>
-				<my:downFace><img src="{res.base}/Basis/Touch/T3.16-2.png"/></my:downFace>
+			<my:Key addStyleNames="key bg-grey icon" ui:field="t3_16">
+				<my:upFace><span class="basis basis-T3-16"></span></my:upFace>
 			</my:Key>
-			<my:Key styleName="{style.key}" ui:field="t4_16">
-				<my:upFace><img src="{res.base}/Basis/Touch/T4.16.png"/></my:upFace>
-				<my:downFace><img src="{res.base}/Basis/Touch/T4.16-2.png"/></my:downFace>
+			<my:Key addStyleNames="key bg-grey icon" ui:field="t4_16">
+				<my:upFace><span class="basis basis-T4-16"></span></my:upFace>
 			</my:Key>
 		</g:FlowPanel>
 
-		<g:FlowPanel styleName="{style.col}">
-			<my:Key styleName="{style.key}" ui:field="t1_17">
-				<my:upFace><img src="{res.base}/Basis/Touch/T1.17.png"/></my:upFace>
-				<my:downFace><img src="{res.base}/Basis/Touch/T1.17-2.png"/></my:downFace>
+		<g:FlowPanel addStyleNames="clm clm-17">
+			<my:Key addStyleNames="key bg-purple icon" ui:field="t1_17">
+				<my:upFace><span class="basis basis-T1-17"></span></my:upFace>
 			</my:Key>
-			<my:Key styleName="{style.enter}" ui:field="t2_17">
-				<my:upFace><img src="{res.base}/Basis/Touch/T2.17.png"/></my:upFace>
-				<my:downFace><img src="{res.base}/Basis/Touch/T2.17-2.png"/></my:downFace>
+			<my:Key addStyleNames="key bg-orange height-l icon" ui:field="t2_17">
+				<my:upFace><span class="basis basis-T2-17"></span></my:upFace>
 			</my:Key>
-			<my:Key styleName="{style.blur}" ui:field="t4_17">
-				<my:upFace><img src="{res.base}/Basis/Touch/T4.17.png"/></my:upFace>
-				<my:downFace><img src="{res.base}/Basis/Touch/T4.17-2.png"/></my:downFace>
+			<my:Key addStyleNames="key bg-purple height-m icon" ui:field="t4_17">
+				<my:upFace><span class="basis basis-T4-17-1"></span></my:upFace>
 			</my:Key>
 		</g:FlowPanel>
 

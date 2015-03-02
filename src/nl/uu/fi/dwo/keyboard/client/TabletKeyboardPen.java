@@ -29,8 +29,7 @@ public class TabletKeyboardPen extends AbstractKeyboard implements WritePanelHol
 	public TabletKeyboardPen() {
 		initWidget(uiBinder.createAndBindUi(this));
 		pad.disableKey(pad.t1_16);
-		pad.t2_16.getUpFace().setHTML("<img src='images/kb/Basis/Touch/T2.16.png'/>");
-		pad.t4_16.getUpFace().setHTML("<img src='images/kb/Basis/Touch/T4.16-3.png'/>");
+		pad.t4_16.addStyleName("is-active");;
 		pad.setDelegate(this);
 		
 		panel = new WritePanel(740,150,this,1);

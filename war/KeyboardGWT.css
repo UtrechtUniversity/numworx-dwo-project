@@ -1,6 +1,7 @@
 
 .html-face {
-	display: inline;
+	display: block;
+	text-align: center;
 }
 
 .keyboard-container {
@@ -200,16 +201,19 @@
 @font-face {
   font-family: "basis";
   src: url("images/kb/fonts/basis/basis.eot");
-  src: url("images/kb/fonts/basis/basis.eot?#iefix") format("embedded-opentype"), url("images/kb/fonts/basis/basis.woff") format("woff"), url("images/kb/fonts/basis/basis.ttf") format("truetype"), url("../fonts/basis/basis.svg#basis") format("svg");
+  src: url("images/kb/fonts/basis/basis.eot?#iefix") format("embedded-opentype"), url("images/kb/fonts/basis/basis.woff") format("woff"), url("images/kb/fonts/basis/basis.ttf") format("truetype"), url("images/kb/fonts/basis/basis.svg#basis") format("svg");
   font-weight: normal;
   font-style: normal; }
 .key[class*="basis-"] {
   font-family: "basis"; }
+.basis {
+	font-family: "basis";
+}
 
 @font-face {
   font-family: "statistiek";
-  src: url("../fonts/statistiek/statistiek.eot");
-  src: url("../fonts/statistiek/statistiek.eot?#iefix") format("embedded-opentype"), url("../fonts/statistiek/statistiek.woff") format("woff"), url("../fonts/statistiek/statistiek.ttf") format("truetype"), url("../fonts/statistiek/statistiek.svg#statistiek") format("svg");
+  src: url("images/kb/fonts/statistiek/statistiek.eot");
+  src: url("images/kb/fonts/statistiek/statistiek.eot?#iefix") format("embedded-opentype"), url("images/kb/fonts/statistiek/statistiek.woff") format("woff"), url("images/kb/fonts/statistiek/statistiek.ttf") format("truetype"), url("images/kb/fonts/statistiek/statistiek.svg#statistiek") format("svg");
   font-weight: normal;
   font-style: normal; }
 .key[class*="statistiek-"] {
@@ -217,21 +221,27 @@
 
 @font-face {
   font-family: "gonio";
-  src: url("../fonts/gonio/gonio.eot");
-  src: url("../fonts/gonio/gonio.eot?#iefix") format("embedded-opentype"), url("../fonts/gonio/gonio.woff") format("woff"), url("../fonts/gonio/gonio.ttf") format("truetype"), url("../fonts/gonio/gonio.svg#gonio") format("svg");
+  src: url("images/kb/fonts/gonio/gonio.eot");
+  src: url("images/kb/fonts/gonio/gonio.eot?#iefix") format("embedded-opentype"), url("images/kb/fonts/gonio/gonio.woff") format("woff"), url("images/kb/fonts/gonio/gonio.ttf") format("truetype"), url("images/kb/fonts/gonio/gonio.svg#gonio") format("svg");
   font-weight: normal;
   font-style: normal; }
 .key[class*="gonio-"] {
   font-family: "gonio"; }
+.gonio {
+	font-family: "gonio";
+}
 
 @font-face {
   font-family: "algebra";
-  src: url("../fonts/algebra/algebra.eot");
-  src: url("../fonts/algebra/algebra.eot?#iefix") format("embedded-opentype"), url("../fonts/algebra/algebra.woff") format("woff"), url("../fonts/algebra/algebra.ttf") format("truetype"), url("../fonts/algebra/algebra.svg#algebra") format("svg");
+  src: url("images/kb/fonts/algebra/algebra.eot");
+  src: url("images/kb/fonts/algebra/algebra.eot?#iefix") format("embedded-opentype"), url("images/kb/fonts/algebra/algebra.woff") format("woff"), url("images/kb/fonts/algebra/algebra.ttf") format("truetype"), url("images/kb/fonts/algebra/algebra.svg#algebra") format("svg");
   font-weight: normal;
   font-style: normal; }
 .key[class*="algebra-"] {
   font-family: "algebra"; }
+.algebra {
+	font-family: "algebra";
+}
 
 @font-face {
   font-family: "meetkunde";
@@ -250,6 +260,8 @@
   font-style: normal; }
 .key[class*="onderbouw-"] {
   font-family: "onderbouw"; }
+
+
 
 .icon, .icon span {
   position: relative; }

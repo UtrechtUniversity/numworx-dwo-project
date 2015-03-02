@@ -32,7 +32,7 @@ public abstract class AbstractKeyboard extends Composite implements FormuleKeybo
 	}
 
 	protected void disableKey(Key key) {
-		key.getUpFace().setHTML("");key.getDownFace().setHTML("");key.setEnabled(false);
+		key.getUpFace().setHTML("");key.getDownFace().setHTML("");key.setEnabled(false);key.addStyleName("disabled");
 	}
 
 	@Override
