@@ -151,47 +151,47 @@ public class DesktopKeyboard extends AbstractKeyboard {
 	}
 	@UiHandler("c22")
 	void onC22(ClickEvent e) {
-		getEditor().insert('\u2264');
+		getEditor().insert('\u2260');
 	}
 	@UiHandler("c23")
 	void onC23(ClickEvent e) {
-		getEditor().insert('\u2265');
+		getEditor().insert('\u2264');
 	}
 	@UiHandler("c24")
 	void onC24(ClickEvent e) {
-		getEditor().insert("ln");
+		getEditor().insert('\u2265');
 	}
-
+	
 	@UiHandler("c25")
 	void onC25(ClickEvent e) {
 		getEditor().primitieve();
 	}
 	@UiHandler("c26")
 	void onC26(ClickEvent e) {
-		getEditor().ndelog();
+		getEditor().limiet0(); // TODO u code
 	}
 
 	@UiHandler("c27")
 	void onC27(ClickEvent e) {
-		getEditor().limiet0(); // TODO u code
+		getEditor().limiet2(); // TODO u code
 	}
 
 	@UiHandler("c28")
 	void onC28(ClickEvent e) {
-		getEditor().limiet2(); // TODO u code
+		getEditor().limiet1();
 	}
 	@UiHandler("c29")
 	void onC29(ClickEvent e) {
-		getEditor().limiet1();
+		getEditor().diff();
 	}
 	@UiHandler("c30")
 	void onC30(ClickEvent e) {
-		getEditor().diff();
+		getEditor().insert('∞');
 	}
 
 	@UiHandler("c31")
 	void onC31(ClickEvent e) {
-		getEditor().insert('∞');
+		
 	}
 
 	private int getKeyboardHeight() {
@@ -223,6 +223,11 @@ public class DesktopKeyboard extends AbstractKeyboard {
 	public void blur() {
 		resizeScrollPanel(0);
 		super.blur();
+	}
+
+	public AbstractKeyboard init() {
+		disableKey(c31);
+		return this;
 	}
 
 }

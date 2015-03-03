@@ -7,7 +7,7 @@ public class DesktopKeyboardFactory implements KeyboardFactory {
 
 	@Override
 	public AbstractKeyboard getKeyboard() {
-		return new DesktopKeyboard();
+		return new DesktopKeyboard().init();
 		//return new DesktopKeyboardMeetkunde();
 	}
 

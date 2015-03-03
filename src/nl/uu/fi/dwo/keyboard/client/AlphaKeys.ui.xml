@@ -5,62 +5,25 @@
 	>
 	<ui:with field='res' type='nl.uu.fi.dwo.keyboard.client.ResourceBase' />
 	<ui:style>
-	/* Add CSS here. See the GWT docs on UI Binder for more details */
-	.key {
-		width: 24px;
-		height: 24px;
-		margin-top: 10px;
-		margin-left: 2px;
-		margin-right: 2px;
-	}
-	.first {
-		width: 24px;
-		height: 24px;
-		margin-top: 10px;
-		margin-left: 10px;
-		margin-right: 2px;
-	}
-	.last {
-		width: 24px;
-		height: 24px;
-		margin-top: 10px;
-		margin-left: 2px;
-		margin-right: 10px;
-	}
-	
-	.panel { 
-		width: 184px;
-		height: 44px;
-		border-collapse: collapse;
-		border-spacing: 0px;
-		background-color: #595959
-		
-	}
 	</ui:style>
-	<g:HorizontalPanel styleName="{style.panel}">
-		<my:Key styleName="{style.first}" ui:field="c1" >
-			<my:upFace><img src="{res.base}/Gonio/Desktop/C32.png"/></my:upFace>
-			<my:downFace><img src="{res.base}/Gonio/Desktop/C32-2.png"/></my:downFace>
+	<g:FlowPanel addStyleNames="popup keyboard">
+		<my:Key addStyleNames="key icon" ui:field="c1" >
+			<my:upFace><span class='gonio gonio-C31'></span></my:upFace>
 		</my:Key>
-		<my:Key styleName="{style.key}" ui:field="c2" >
-			<my:upFace><img src="{res.base}/Gonio/Desktop/C33.png"/></my:upFace>
-			<my:downFace><img src="{res.base}/Gonio/Desktop/C33-2.png"/></my:downFace>
+		<my:Key addStyleNames="key icon" ui:field="c2" >
+			<my:upFace><span class='gonio gonio-C32'></span></my:upFace>
 		</my:Key>
-		<my:Key styleName="{style.key}" ui:field="c3" >
-			<my:upFace><img src="{res.base}/Gonio/Desktop/C34.png"/></my:upFace>
-			<my:downFace><img src="{res.base}/Gonio/Desktop/C34-2.png"/></my:downFace>
+		<my:Key addStyleNames="key icon" ui:field="c3" >
+			<my:upFace><span class='gonio gonio-C33'></span></my:upFace>
 		</my:Key>
-		<my:Key styleName="{style.key}" ui:field="c4" >
-			<my:upFace><img src="{res.base}/Gonio/Desktop/C35.png"/></my:upFace>
-			<my:downFace><img src="{res.base}/Gonio/Desktop/C35-2.png"/></my:downFace>
+		<my:Key addStyleNames="key icon" ui:field="c4" >
+			<my:upFace><span class='gonio gonio-C34'></span></my:upFace>
 		</my:Key>
-		<my:Key styleName="{style.key}" ui:field="c5" >
-			<my:upFace><img src="{res.base}/Gonio/Desktop/C36.png"/></my:upFace>
-			<my:downFace><img src="{res.base}/Gonio/Desktop/C36-2.png"/></my:downFace>
+		<my:Key addStyleNames="key icon" ui:field="c5" >
+			<my:upFace><span class='gonio gonio-C35'></span></my:upFace>
 		</my:Key>
-		<my:Key styleName="{style.last}" ui:field="c6" >
-			<my:upFace><img src="{res.base}/Gonio/Desktop/C37.png"/></my:upFace>
-			<my:downFace><img src="{res.base}/Gonio/Desktop/C37-2.png"/></my:downFace>
+		<my:Key addStyleNames="key icon" ui:field="c6" >
+			<my:upFace><span class='gonio gonio-C36'></span></my:upFace>
 		</my:Key>
-	</g:HorizontalPanel>
+	</g:FlowPanel>
 </ui:UiBinder> 

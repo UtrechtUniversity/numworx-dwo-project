@@ -6,28 +6,15 @@ public class DesktopKeyboardStatistiek extends DesktopKeyboard {
 
 	public DesktopKeyboardStatistiek() {
 		super();
-		c31.getUpFace().setHTML("");c31.getDownFace().setHTML("");c31.setEnabled(false);
-		c24.getUpFace().setHTML("<img src='images/kb/Statistiek/Desktop/C24.png'>");
-		c24.getDownFace().setHTML("<img src='images/kb/Statistiek/Desktop/C24-2.png'>");
-		c25.getUpFace().setHTML("<img src='images/kb/Statistiek/Desktop/C25.png'>");
-		c25.getDownFace().setHTML("<img src='images/kb/Statistiek/Desktop/C25-2.png'>");
-		c26.getUpFace().setHTML("<img src='images/kb/Statistiek/Desktop/C26.png'>");
-		c26.getDownFace().setHTML("<img src='images/kb/Statistiek/Desktop/C26-2.png'>");
-		c27.getUpFace().setHTML("<img src='images/kb/Statistiek/Desktop/C27.png'>");
-		c27.getDownFace().setHTML("<img src='images/kb/Statistiek/Desktop/C27-2.png'>");
-		c28.getUpFace().setHTML("<img src='images/kb/Statistiek/Desktop/C28.png'>");
-		c28.getDownFace().setHTML("<img src='images/kb/Statistiek/Desktop/C28-2.png'>");
-		c29.getUpFace().setHTML("<img src='images/kb/Statistiek/Desktop/C29.png'>");
-		c29.getDownFace().setHTML("<img src='images/kb/Statistiek/Desktop/C29-2.png'>");
-		c30.getUpFace().setHTML("<img src='images/kb/Statistiek/Desktop/C30.png'>");
-		c30.getDownFace().setHTML("<img src='images/kb/Statistiek/Desktop/C30-2.png'>");
+		c25.getUpFace().setHTML("<span class='statistiek statistiek-C25'></span>");
+		c26.getUpFace().setHTML("<span class='statistiek statistiek-C26'></span>");
+		c27.getUpFace().setHTML("<span class='statistiek statistiek-C27'></span>");
+		c28.getUpFace().setHTML("<span class='statistiek statistiek-C28'><span class='path1'></span><span class='path2'></span><span class='path3'></span></span>");
+		c29.getUpFace().setHTML("<span class='statistiek statistiek-C29'></span>");
+		c30.getUpFace().setHTML("<span class='statistiek statistiek-C30'></span>");
+		c31.getUpFace().setHTML("<span class='onderbouw onderbouw-C17'></span>");
 	}
 
-
-	@Override
-	void onC24(ClickEvent e) {
-		getEditor().insert('°');
-	}
 
 	@Override
 	void onC25(ClickEvent e) {
@@ -61,5 +48,9 @@ public class DesktopKeyboardStatistiek extends DesktopKeyboard {
 
 	@Override
 	void onC31(ClickEvent e) {
+		getEditor().insert('°');
 	}
+
+	
+
 }

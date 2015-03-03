@@ -14,11 +14,8 @@ public class DesktopKeyboardOnderbouw extends DesktopKeyboard {
 		disableKey(c12);
 		disableKey(c19);
 		disableKey(c20);
-		c24.getUpFace().setHTML("<img src='images/kb/Gonio/Desktop/C24.png'>");
-		c24.getDownFace().setHTML("<img src='images/kb/Gonio/Desktop/C24-2.png'>");
-		c25.getUpFace().setHTML("<img src='images/kb/Gonio/Desktop/C25.png'>");
-		c25.getDownFace().setHTML("<img src='images/kb/Gonio/Desktop/C25-2.png'>");
-		disableKey(c26);
+		c25.getUpFace().setHTML("<span class='onderbouw onderbouw-C16'></span>");
+		c26.getUpFace().setHTML("<span class='onderbouw onderbouw-C17'></span>");
 		disableKey(c27);
 		disableKey(c28);
 		disableKey(c29);
@@ -32,7 +29,7 @@ public class DesktopKeyboardOnderbouw extends DesktopKeyboard {
 		//key.removeFromParent();
 	}
 	@Override
-	void onC24(ClickEvent e) {
+	void onC26(ClickEvent e) {
 		getEditor().insert("°");
 	}
 	@Override

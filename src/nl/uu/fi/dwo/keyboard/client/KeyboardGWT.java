@@ -129,7 +129,7 @@ public class KeyboardGWT implements EntryPoint {
 	@Override
 	public void onModuleLoad() {
 		
-		AbstractKeyboard panel = new DesktopKeyboard();
+		AbstractKeyboard panel = new DesktopKeyboard().init();
 		panel.setEditor(editor);
 		RootPanel root = RootPanel.get();
 		root.add(new Label("algebra"));
@@ -157,7 +157,7 @@ public class KeyboardGWT implements EntryPoint {
 		tablet.setEditor(editor);
 		root.add(tablet);
 		root.add(new Label("gonio"));
-		panel = new DesktopKeyboardGonio();
+		panel = new DesktopKeyboardGonio().init();
 		panel.setEditor(editor);
 		root.add(panel);
 		root.add(new Label("touch")); tablet = new TabbedTouchKeyboard(new TabletKeyboardGonio());

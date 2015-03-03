@@ -183,12 +183,11 @@
 
 .popup {
   height: 24px;
-  position: absolute;
   background-color: #595959;
   padding: 10px;
-  color: white;
+  color: buttontext;
   z-index: -100;
-  display: none; }
+  display: block; }
   .popup .key {
     display: block;
     float: left;
