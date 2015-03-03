@@ -49,6 +49,77 @@ public class KeyboardGWT implements EntryPoint {
 		public void setCurrentElementRepaint() {
 			x("loose focus");
 		}
+
+		@Override
+		public void enter() {
+			x("enter()");
+		}
+
+		@Override
+		public void ndewortel() {
+			x("ndewortel()");
+		}
+
+		@Override
+		public void integraal() {
+			x("integraal()");
+		}
+
+		@Override
+		public void prv() {
+			x("prv()");
+		}
+
+		@Override
+		public void ndelog() {
+			x("ndelog()");
+		}
+
+		@Override
+		public void abs() {
+			x("abs()");
+		}
+
+		@Override
+		public void subscript() {
+			x("subscript()");
+		}
+
+		@Override
+		public void bin() {
+			x("bin()");
+		}
+
+		@Override
+		public void diff() {
+			x("diff()");
+		}
+
+		@Override
+		public void limiet0() {
+			x("limiet0()");
+		}
+
+		@Override
+		public void limiet1() {
+			x("limiet1()");
+		}
+
+		@Override
+		public void limiet2() {
+
+			x("limiet2()");
+		}
+
+		@Override
+		public void primitieve() {
+			x("primitieve()");
+		}
+
+		@Override
+		public void sigma() {
+			x("sigma");
+		}
 		
 	};
 	

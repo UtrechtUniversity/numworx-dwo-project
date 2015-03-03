@@ -88,7 +88,7 @@ public class TabletKeyboard extends AbstractKeyboard {
 		getEditor().macht();
 		getEditor().insert("-1");}
 	@UiHandler("t2_7") void onT2_7(ClickEvent e) {getEditor().wortel();}
-	@UiHandler("t2_8") void onT2_8(ClickEvent e) {getEditor().insert("ln");}
+	@UiHandler("t2_8") void onT2_8(ClickEvent e) {getEditor().integraal();}
 	@UiHandler("t2_9") void onT2_9(ClickEvent e) {getEditor().limiet2();}
 	@UiHandler("t2_10") void onT2_10(ClickEvent e) {;}
 	@UiHandler("t2_11") void onT2_11(ClickEvent e) {getEditor().insert('\u2227');}
