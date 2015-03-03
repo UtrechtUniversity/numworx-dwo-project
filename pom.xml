@@ -205,6 +205,7 @@ An example is commented below.
             <artifactId>plugin</artifactId>
             <version>1.8.0_31</version>
             <type>jar</type>
+            <scope>provided</scope>
         </dependency>         
     </dependencies>
 </project>
