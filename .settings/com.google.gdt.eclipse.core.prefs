@@ -1,3 +1,4 @@
 eclipse.preferences.version=1
+lastWarOutDir=/Users/peterboon/Documents/workspace-luna
 warSrcDir=war
-warSrcDirIsOutput=true
+warSrcDirIsOutput=false

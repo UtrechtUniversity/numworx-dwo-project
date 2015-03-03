@@ -9,7 +9,7 @@ public class TabletKeyboardGonio extends TabletKeyboard {
 		t1_9.getUpFace().setHTML("<span class='gonio gonio-T1-9'></span>");
 		t1_10.getUpFace().setHTML("<span class='gonio gonio-T1-10'></span>");
 
-		t2_8.getUpFace().setHTML("<span class='gonio gonio-T2-8'></span>");
+		//t2_8.getUpFace().setHTML("<span class='gonio gonio-T2-8'></span>");
 		t2_9.getUpFace().setHTML("<span class='gonio gonio-T2-9'></span>");
 		t2_10.getUpFace().setHTML("<span class='gonio gonio-T2-10'></span>");
 
@@ -28,7 +28,7 @@ public class TabletKeyboardGonio extends TabletKeyboard {
 	void onT1_9(ClickEvent e) {getEditor().insert('α');}
 	void onT1_10(ClickEvent e) {getEditor().insert('β');}
 
-	void onT2_8(ClickEvent e) {getEditor().insert("rad");}
+	//void onT2_8(ClickEvent e) {getEditor().insert("rad");}
 	void onT2_9(ClickEvent e) {getEditor().insert('γ');}
 	void onT2_10(ClickEvent e) {getEditor().insert('λ');}
 	

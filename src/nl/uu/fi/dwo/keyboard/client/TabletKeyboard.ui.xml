@@ -6,12 +6,15 @@
 	<ui:with field='res' type='nl.uu.fi.dwo.keyboard.client.ResourceBase' />
 	<ui:style>
 	.pad {
-		left-padding: 6px;
+		float:right;
+	}
+	.panel {
+		float: left;
 	}
 	</ui:style>
 
-	<g:HorizontalPanel addStyleNames="keyboard is-active" >
-	  <g:FlowPanel>
+	<g:HorizontalPanel addStyleNames="keyboard keyboard-abc is-active" >
+	  <g:FlowPanel styleName="{style.panel}">
 		<g:FlowPanel addStyleNames="clm clm-1">
 			<my:Key addStyleNames="key bg-blue" ui:field="t1_1" >
 				<my:upFace>7</my:upFace>
@@ -70,7 +73,7 @@
 		</g:FlowPanel>
 
 		<g:FlowPanel addStyleNames="clm clm-5">
-			<my:Key addStyleNames="key" ui:field="t1_5" >
+			<my:Key addStyleNames="key icon" ui:field="t1_5" >
 				<my:upFace><span class="basis basis-T1-5"></span></my:upFace>
 				
 			</my:Key>
@@ -94,7 +97,7 @@
 			<my:Key addStyleNames="key icon" ui:field="t3_6">
 				<my:upFace><span class="basis basis-T3-6"><span class='path1'></span><span class='path2'></span><span class='path3'></span><span class='path4'></span></span></my:upFace>
 			</my:Key>
-			<my:Key addStyleNames="key" ui:field="t4_6">
+			<my:Key addStyleNames="key icon" ui:field="t4_6">
 				<my:upFace><span class="basis basis-T4-6"></span></my:upFace>
 			</my:Key>
 		</g:FlowPanel>
@@ -144,11 +147,11 @@
 			<my:Key addStyleNames="key icon" ui:field="t1_10">
 				<my:upFace><span class="algebra algebra-T1-10"></span></my:upFace>
 			</my:Key>
-			<my:Key addStyleNames="key" ui:field="t2_10">
+			<my:Key addStyleNames="key icon" ui:field="t2_10">
 			</my:Key>
-			<my:Key addStyleNames="key" ui:field="t3_10">
+			<my:Key addStyleNames="key icon" ui:field="t3_10">
 			</my:Key>
-			<my:Key addStyleNames="key" ui:field="t4_10">
+			<my:Key addStyleNames="key icon" ui:field="t4_10">
 			</my:Key>
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="clm clm-11">
@@ -208,10 +211,10 @@
 			</my:Key>
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="clm clm-15">
-			<my:Key addStyleNames="key" ui:field="t1_15" >
+			<my:Key addStyleNames="key icon" ui:field="t1_15" >
 				<my:upFace><span class="basis basis-T1-15"></span></my:upFace>
 			</my:Key>
-			<my:Key addStyleNames="key" ui:field="t2_15">
+			<my:Key addStyleNames="key icon" ui:field="t2_15">
 				<my:upFace><span class="basis basis-T2-15"></span></my:upFace>
 			</my:Key>
 			<my:Key addStyleNames="key icon" ui:field="t3_15">
@@ -220,7 +223,7 @@
 			<my:Key addStyleNames="key disabled" ui:field="t4_15">
 			</my:Key>
 		</g:FlowPanel>
-		</g:FlowPanel>
+	    </g:FlowPanel>
 		<my:TabletKeyboardPad ui:field="pad" addStyleNames="{style.pad}" />
 	</g:HorizontalPanel>
 </ui:UiBinder> 

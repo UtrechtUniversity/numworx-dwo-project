@@ -218,6 +218,9 @@
   font-style: normal; }
 .key[class*="statistiek-"] {
   font-family: "statistiek"; }
+.statistiek {
+	font-family: "statistiek";
+}
 
 @font-face {
   font-family: "gonio";
@@ -245,22 +248,27 @@
 
 @font-face {
   font-family: "meetkunde";
-  src: url("../fonts/meetkunde/meetkunde.eot");
-  src: url("../fonts/meetkunde/meetkunde.eot?#iefix") format("embedded-opentype"), url("../fonts/meetkunde/meetkunde.woff") format("woff"), url("../fonts/meetkunde/meetkunde.ttf") format("truetype"), url("../fonts/meetkunde/meetkunde.svg#meetkunde") format("svg");
+  src: url("images/kb/fonts/meetkunde/meetkunde.eot");
+  src: url("images/kb/fonts/meetkunde/meetkunde.eot?#iefix") format("embedded-opentype"), url("images/kb/fonts/meetkunde/meetkunde.woff") format("woff"), url("images/kb/fonts/meetkunde/meetkunde.ttf") format("truetype"), url("images/kb/fonts/meetkunde/meetkunde.svg#meetkunde") format("svg");
   font-weight: normal;
   font-style: normal; }
 .key[class*="meetkunde-"] {
   font-family: "meetkunde"; }
+.meetkunde {
+	font-family: "meetkunde"; 
+}
 
 @font-face {
   font-family: "onderbouw";
-  src: url("../fonts/onderbouw/onderbouw.eot");
-  src: url("../fonts/onderbouw/onderbouw.eot?#iefix") format("embedded-opentype"), url("../fonts/onderbouw/onderbouw.woff") format("woff"), url("../fonts/onderbouw/onderbouw.ttf") format("truetype"), url("../fonts/onderbouw/onderbouw.svg#onderbouw") format("svg");
+  src: url("images/kb/fonts/onderbouw/onderbouw.eot");
+  src: url("images/kb/fonts/onderbouw/onderbouw.eot?#iefix") format("embedded-opentype"), url("images/kb/fonts/onderbouw/onderbouw.woff") format("woff"), url("images/kb/fonts/onderbouw/onderbouw.ttf") format("truetype"), url("images/kb/fonts/onderbouw/onderbouw.svg#onderbouw") format("svg");
   font-weight: normal;
   font-style: normal; }
 .key[class*="onderbouw-"] {
   font-family: "onderbouw"; }
-
+.onderbouw {
+	font-family: "onderbouw";
+}
 
 
 .icon, .icon span {
@@ -271,8 +279,9 @@
   height: 100%;
   display: block;
   position: absolute;
-  top: 10%;
-  left: 10%; }
+/*  top: 10%;
+  left: 10%; */
+  }
   .icon span:before {
     margin: 0 !important; }
 
