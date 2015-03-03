@@ -144,4 +144,10 @@ public class TabletKeyboard extends AbstractKeyboard {
 		getDelegate().switchHand();
 	}
 	
+	TabletKeyboard init() {
+		disableKey(t2_10);
+		disableKey(t3_10);
+		disableKey(t4_10);
+		return this;
+	}
 }

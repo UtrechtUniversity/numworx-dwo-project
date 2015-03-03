@@ -89,7 +89,7 @@
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="clm clm-6">
 			<my:Key addStyleNames="key icon" ui:field="t1_6">
-				<my:upFace><span class="basis basis-T1-6"><span class='path1'></span><span class='path2'></span><span class='path3'></span></span></my:upFace>
+				<my:upFace><span class="basis basis-T1-6"><span class='path1'></span><span class='path2'></span></span></my:upFace>
 			</my:Key>
 			<my:Key addStyleNames="key icon" ui:field="t2_6">
 				<my:upFace><span class="basis basis-T2-6"></span></my:upFace>

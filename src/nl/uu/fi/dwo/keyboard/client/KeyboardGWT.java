@@ -134,10 +134,7 @@ public class KeyboardGWT implements EntryPoint {
 		RootPanel root = RootPanel.get();
 		root.add(new Label("algebra"));
 		root.add(panel);
-		TabletKeyboard tk = new TabletKeyboard();
-		tk.disableKey(tk.t2_10);
-		tk.disableKey(tk.t3_10);
-		tk.disableKey(tk.t4_10);
+		TabletKeyboard tk = new TabletKeyboard().init();;
 		
 		AbstractKeyboard tablet = new TabbedTouchKeyboard(tk);
 		tablet.setEditor(editor);

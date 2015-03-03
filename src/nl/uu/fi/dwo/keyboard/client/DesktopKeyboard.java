@@ -59,6 +59,8 @@ public class DesktopKeyboard extends AbstractKeyboard {
 	@UiHandler("c1")
 	void onC1(ClickEvent e) {
 		getEditor().wortel();
+		e.stopPropagation();
+		e.preventDefault();
 	}
 
 	@UiHandler("c2")
