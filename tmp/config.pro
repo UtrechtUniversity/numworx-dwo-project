@@ -1,12 +1,9 @@
-# Note the commented instructions directly below are now in the pom.xml file.
-# For running proguard on the command line copy this file and remove the hashes
-# and update the paths.
-#-injars DWOJApplet-1.0-SNAPSHOT-r9081.jar
-#-outjars  DWOJApplet-1.0-SNAPSHOT-r9081-proguarded.jar
-# Note these are system dependent, hence moved to pom.xml and made compile platform dependent.
-#-libraryjars C:\Program Files\Java\jdk1.7.0_67\jre\lib\rt.jar
-#-libraryjars C:\Program Files\Java\jdk1.7.0_67\jre\lib\jfxrt.jar
-#-libraryjars C:\Program Files\Java\jdk1.7.0_67\jre\lib\jsse.jar
+-injars DWOJApplet-1.0-SNAPSHOT-r9081.jar
+-outjars  DWOJApplet-1.0-SNAPSHOT-r9081-proguarded.jar
+
+-libraryjars C:\Program Files\Java\jdk1.7.0_67\jre\lib\rt.jar
+-libraryjars C:\Program Files\Java\jdk1.7.0_67\jre\lib\jfxrt.jar
+-libraryjars C:\Program Files\Java\jdk1.7.0_67\jre\lib\jsse.jar
 
 -target 1.6
 
