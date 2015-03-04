@@ -35,8 +35,10 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF, Formu
 		kb.blur(); // we start hidden!
 
 // css style!		
-		getElement().getStyle().setPosition(Style.Position.ABSOLUTE);
-		getElement().getStyle().setBottom(0, Style.Unit.PX);
+		Style style = getElement().getStyle();
+		style.setPosition(Style.Position.ABSOLUTE);
+		style.setBottom(0, Style.Unit.PX);
+		style.setWidth(100, Style.Unit.PCT);
 
 	}
 
