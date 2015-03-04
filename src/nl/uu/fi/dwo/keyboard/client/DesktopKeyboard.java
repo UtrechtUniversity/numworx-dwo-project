@@ -44,23 +44,21 @@ public class DesktopKeyboard extends AbstractKeyboard {
 	}
 
 	@UiField
-	Key c1, c2, c3, c4, c5;
+	FKey c1, c2, c3, c4, c5;
 	@UiField
-	Key c6, c7, c8, c9, c10;
+	FKey c6, c7, c8, c9, c10;
 	@UiField
-	Key c11, c12, c13, c14, c15;
+	FKey c11, c12, c13, c14, c15;
 	@UiField
-	Key c16, c17, c18, c19, c20;
+	FKey c16, c17, c18, c19, c20;
 	@UiField
-	Key c21, c22, c23, c24, c25;
+	FKey c21, c22, c23, c24, c25;
 	@UiField
-	Key c26, c27, c28, c29, c30, c31;
+	FKey c26, c27, c28, c29, c30, c31;
 
 	@UiHandler("c1")
 	void onC1(ClickEvent e) {
 		getEditor().wortel();
-		e.stopPropagation();
-		e.preventDefault();
 	}
 
 	@UiHandler("c2")

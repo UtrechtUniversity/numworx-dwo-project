@@ -1,6 +1,9 @@
 package nl.uu.fi.dwo.keyboard.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.Widget;
 
 public class DesktopKeyboardOnderbouw extends DesktopKeyboard {
 
@@ -14,8 +17,8 @@ public class DesktopKeyboardOnderbouw extends DesktopKeyboard {
 		disableKey(c12);
 		disableKey(c19);
 		disableKey(c20);
-		c25.getUpFace().setHTML("<span class='onderbouw onderbouw-C16'></span>");
-		c26.getUpFace().setHTML("<span class='onderbouw onderbouw-C17'></span>");
+		c25.setHTML("<span class='onderbouw onderbouw-C16'></span>");
+		c26.setHTML("<span class='onderbouw onderbouw-C17'></span>");
 		disableKey(c27);
 		disableKey(c28);
 		disableKey(c29);
@@ -24,9 +27,10 @@ public class DesktopKeyboardOnderbouw extends DesktopKeyboard {
 	}
 
 	@Override
-	protected void disableKey(Key key) {
+	protected void disableKey(FKey key) {
 		super.disableKey(key);
-		//key.removeFromParent();
+		HasWidgets parent = (HasWidgets) key.getParent(); key.removeFromParent();
+		parent.add(key);
 	}
 	@Override
 	void onC26(ClickEvent e) {

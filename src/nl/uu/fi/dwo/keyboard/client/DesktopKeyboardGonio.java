@@ -5,10 +5,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 public class DesktopKeyboardGonio extends DesktopKeyboard {
 
 	public DesktopKeyboardGonio() {
-		c25.getUpFace().setHTML("<span class='gonio gonio-C25'></span>");
-		c26.getUpFace().setHTML("<span class='gonio gonio-C26'></span>");
-		c27.getUpFace().setHTML("<span class='gonio gonio-C27'><span class='path1'><span class='path2'></span></span>");
-		c28.getUpFace().setHTML("<span class='onderbouw onderbouw-C17'></span>");
+		c25.setHTML("<span class='gonio gonio-C25'></span>");
+		c26.setHTML("<span class='gonio gonio-C26'></span>");
+		c27.setHTML("<span class='gonio gonio-C27'><span class='path1'><span class='path2'></span></span>");
+		c28.setHTML("<span class='onderbouw onderbouw-C17'></span>");
 		disableKey(c30);
 		disableKey(c31);		
 	}

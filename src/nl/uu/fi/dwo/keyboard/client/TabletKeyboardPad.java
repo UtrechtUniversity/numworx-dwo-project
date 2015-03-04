@@ -10,8 +10,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class TabletKeyboardPad extends AbstractKeyboard {
 
-	@UiField ResourceBase res = ResourceBase.INSTANCE;
-
 	private static TabletKeyboardPadUiBinder uiBinder = GWT
 			.create(TabletKeyboardPadUiBinder.class);
 
@@ -23,7 +21,7 @@ public class TabletKeyboardPad extends AbstractKeyboard {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
 	
-	@UiField Key t1_16,t1_17,t2_16,t2_17,t3_16, t4_16,t4_17;
+	@UiField FKey t1_16,t1_17,t2_16,t2_17,t3_16, t4_16,t4_17;
 	
 	@UiHandler("t1_16") void onT1_16(ClickEvent e) {getEditor().insert('\u2248');}
 	@UiHandler("t1_17") void onT1_17(ClickEvent e) {backspace();}

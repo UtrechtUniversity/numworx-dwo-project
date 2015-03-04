@@ -17,6 +17,7 @@ public class FKey extends Composite implements HasClickHandlers, HasHTML {
 	public FKey() {
 		panel = new HTML();
 		initWidget(panel);
+		setStyleName("kbd-Key");
 	}
 
 	@Override

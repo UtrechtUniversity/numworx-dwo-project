@@ -6,13 +6,13 @@ public class TabletKeyboardOnderbouw extends TabletKeyboard {
 
 	public TabletKeyboardOnderbouw() {
 		// move around
-		t2_6.getUpFace().setHTML(t4_5.getUpFace().getHTML());
+		t2_6.setHTML(t4_5.getHTML());
 
-		t3_6.getUpFace().setHTML(t2_7.getUpFace().getHTML());
-		t3_5.getUpFace().setHTML(t3_7.getUpFace().getHTML());
+		t3_6.setHTML(t2_7.getHTML());
+		t3_5.setHTML(t3_7.getHTML());
 
-		t4_5.getUpFace().setHTML(t4_6.getUpFace().getHTML());
-		t4_6.getUpFace().setHTML(t4_7.getUpFace().getHTML());
+		t4_5.setHTML(t4_6.getHTML());
+		t4_6.setHTML(t4_7.getHTML());
 
 		disableKey(t1_8);
 		disableKey(t1_9);

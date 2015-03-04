@@ -4,14 +4,6 @@
 	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
 	>
 	<ui:style>
-	
-	.panel { 
-		width: 886px;
-		height: 166px;
-		border-collapse: collapse;
-		border-spacing: 0px;
-		background-color: #D2D2D2		
-	}
 	.pad {
 		float: right;
 		margin-right: 7px;

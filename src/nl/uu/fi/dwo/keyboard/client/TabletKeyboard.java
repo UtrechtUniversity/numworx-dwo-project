@@ -19,8 +19,6 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class TabletKeyboard extends AbstractKeyboard {
 	
-	@UiField ResourceBase res = ResourceBase.INSTANCE;
-
 	private static TabletKeyboardUiBinder uiBinder = GWT
 			.create(TabletKeyboardUiBinder.class);
 
@@ -55,13 +53,13 @@ public class TabletKeyboard extends AbstractKeyboard {
 	@UiField(provided=true)
 	TabletKeyboardPad pad;
 	@UiField
-	Key t1_1,t1_2,t1_3,t1_4, t1_5,t1_6,t1_7,t1_8, t1_9,t1_10,t1_11,t1_12, t1_13,t1_14,t1_15;
+	FKey t1_1,t1_2,t1_3,t1_4, t1_5,t1_6,t1_7,t1_8, t1_9,t1_10,t1_11,t1_12, t1_13,t1_14,t1_15;
 	@UiField
-	Key t2_1,t2_2,t2_3,t2_4, t2_5,t2_6,t2_7,t2_8, t2_9,t2_10,t2_11,t2_12, t2_13,t2_14,t2_15;
+	FKey t2_1,t2_2,t2_3,t2_4, t2_5,t2_6,t2_7,t2_8, t2_9,t2_10,t2_11,t2_12, t2_13,t2_14,t2_15;
 	@UiField
-	Key t3_1,t3_2,t3_3,t3_4, t3_5,t3_6,t3_7,t3_8, t3_9,t3_10,t3_11,t3_12, t3_13,t3_14,t3_15;
+	FKey t3_1,t3_2,t3_3,t3_4, t3_5,t3_6,t3_7,t3_8, t3_9,t3_10,t3_11,t3_12, t3_13,t3_14,t3_15;
 	@UiField
-	Key t4_1,t4_2,t4_3,t4_4, t4_5,t4_6,t4_7,t4_8, t4_9,t4_10,t4_11,t4_12, t4_13,t4_14,t4_15;
+	FKey t4_1,t4_2,t4_3,t4_4, t4_5,t4_6,t4_7,t4_8, t4_9,t4_10,t4_11,t4_12, t4_13,t4_14,t4_15;
 
 	@UiHandler("t1_1") void onT1_1(ClickEvent e) {getEditor().insert('7');}
 	@UiHandler("t1_2") void onT1_2(ClickEvent e) {getEditor().insert('8');}

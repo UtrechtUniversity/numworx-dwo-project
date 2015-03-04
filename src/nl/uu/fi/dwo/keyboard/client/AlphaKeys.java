@@ -16,7 +16,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class AlphaKeys extends Composite {
 
-	@UiField ResourceBase res = ResourceBase.INSTANCE;
 
 	private static AlphaKeysUiBinder uiBinder = GWT
 			.create(AlphaKeysUiBinder.class);
@@ -61,10 +60,8 @@ public class AlphaKeys extends Composite {
 		return popup.isShowing();
 	}
 	
-	
-
 	@UiField
-	Key c1,c2,c3,c4,c5,c6;
+	FKey c1,c2,c3,c4,c5,c6;
 
 	public AlphaKeys(String firstName) {
 		initWidget(uiBinder.createAndBindUi(this));

@@ -3,7 +3,6 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
 	>
-	<ui:with field='res' type='nl.uu.fi.dwo.keyboard.client.ResourceBase' />
 	<ui:style>
 	.pad {
 		float: right;
@@ -13,110 +12,111 @@
 	<g:HorizontalPanel addStyleNames="keyboard keyboard-abc is-active" >
 		<g:FlowPanel  addStyleNames="keys" >
 			<g:FlowPanel  addStyleNames="row row-1" >
-				<my:Key addStyleNames="key" ui:field="t1_1" >
-					<my:upFace>Q</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t1_2" >
-					<my:upFace>W</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t1_3" >
-					<my:upFace>E</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t1_4" >
-					<my:upFace>R</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t1_5" >
-					<my:upFace>T</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t1_6" >
-					<my:upFace>Y</my:upFace>				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t1_7" >
-					<my:upFace>U</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t1_8" >
-					<my:upFace>I</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t1_9" >
-					<my:upFace>O</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t1_10" >
-					<my:upFace>P</my:upFace>
-				</my:Key>
+				<my:FKey addStyleNames="key" ui:field="t1_1" >
+					Q
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t1_2" >
+					W
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t1_3" >
+					E
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t1_4" >
+					R
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t1_5" >
+					T
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t1_6" >
+					Y
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t1_7" >
+					U
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t1_8" >
+					I
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t1_9" >
+					O
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t1_10" >
+					P
+				</my:FKey>
 			</g:FlowPanel>
 
 			<g:FlowPanel  addStyleNames="row row-2" >
-				<my:Key addStyleNames="key" ui:field="t2_1" >
-					<my:upFace>A</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t2_2" >
-					<my:upFace>S</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t2_3" >
-					<my:upFace>D</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t2_4" >
-					<my:upFace>F</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t2_5" >
-					<my:upFace>G</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t2_6" >
-					<my:upFace>H</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t2_7" >
-					<my:upFace>J</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t2_8" >
-					<my:upFace>K</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t2_9" >
-					<my:upFace>L</my:upFace>
-				</my:Key>
+				<my:FKey addStyleNames="key" ui:field="t2_1" >
+					A
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t2_2" >
+					S
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t2_3" >
+					D
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t2_4" >
+					F
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t2_5" >
+					G
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t2_6" >
+					H
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t2_7" >
+					J
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t2_8" >
+					K
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t2_9" >
+					L
+				</my:FKey>
 			</g:FlowPanel>
 		
 			<g:FlowPanel  addStyleNames="row row-3" >
-				<my:Key addStyleNames="key" ui:field="t3_1" >
-					<my:upFace>⇧</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t3_2" >
-					<my:upFace>Z</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t3_3" >
-					<my:upFace>X</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t3_4" >
-					<my:upFace>C</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t3_5" >
-					<my:upFace>V</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t3_6" >
-					<my:upFace>B</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t3_7" >
-					<my:upFace>N</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t3_8" >
-					<my:upFace>M</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t3_9" >
-					<my:upFace>!</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t3_10" >
-					<my:upFace>,</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t3_11" >
-					<my:upFace>.</my:upFace>
-				</my:Key>
-				<my:Key addStyleNames="key" ui:field="t3_12" >
-					<my:upFace>?</my:upFace>
-				</my:Key>
+				<my:FKey addStyleNames="key" ui:field="t3_1" >
+					⇧
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t3_2" >
+					Z
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t3_3" >
+					X
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t3_4" >
+					C
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t3_5" >
+					V
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t3_6" >
+					B
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t3_7" >
+					N
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t3_8" >
+					M
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t3_9" >
+					!
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t3_10" >
+					,
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t3_11" >
+					.
+				</my:FKey>
+				<my:FKey addStyleNames="key" ui:field="t3_12" >
+					?
+				</my:FKey>
 			</g:FlowPanel>
 
-			<g:FlowPanel  addStyleNames="row row-4" >
-				<my:Key addStyleNames="key key-space" ui:field="t4_1" >
-					<my:upFace>spatie</my:upFace>
-				</my:Key>
+			<g:FlowPanel addStyleNames="row row-4" >
+				<my:FKey addStyleNames="key key-space" ui:field="t4_1" >
+					spatie
+				</my:FKey>
 			</g:FlowPanel>
 		</g:FlowPanel>
 		<my:TabletKeyboardPad ui:field="pad" addStyleNames="{style.pad}" />	

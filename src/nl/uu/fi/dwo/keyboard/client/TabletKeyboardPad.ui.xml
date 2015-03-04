@@ -3,7 +3,6 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
 	>
-	<ui:with field='res' type='nl.uu.fi.dwo.keyboard.client.ResourceBase' />
 	<ui:style>
 
 	.panel { 
@@ -16,30 +15,30 @@
 	</ui:style>
 	<g:HorizontalPanel styleName="{style.panel}" >
 		<g:FlowPanel addStyleNames="clm clm-16">
-			<my:Key addStyleNames="key icon" ui:field="t1_16">
-				<my:upFace><span class="basis basis-T1-16"></span></my:upFace>
-			</my:Key>
-			<my:Key addStyleNames="key bg-grey icon" ui:field="t2_16">
-				<my:upFace><span class="basis basis-T2-16"></span></my:upFace>
-			</my:Key>
-			<my:Key addStyleNames="key bg-grey icon" ui:field="t3_16">
-				<my:upFace><span class="basis basis-T3-16"></span></my:upFace>
-			</my:Key>
-			<my:Key addStyleNames="key bg-grey icon" ui:field="t4_16">
-				<my:upFace><span class="basis basis-T4-16"></span></my:upFace>
-			</my:Key>
+			<my:FKey addStyleNames="key icon" ui:field="t1_16">
+				<span class="basis basis-T1-16"></span>
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-grey icon" ui:field="t2_16">
+				<span class="basis basis-T2-16"></span>
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-grey icon" ui:field="t3_16">
+				<span class="basis basis-T3-16"></span>
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-grey icon" ui:field="t4_16">
+				<span class="basis basis-T4-16"></span>
+			</my:FKey>
 		</g:FlowPanel>
 
 		<g:FlowPanel addStyleNames="clm clm-17">
-			<my:Key addStyleNames="key bg-purple icon" ui:field="t1_17">
-				<my:upFace><span class="basis basis-T1-17"></span></my:upFace>
-			</my:Key>
-			<my:Key addStyleNames="key bg-orange height-l icon" ui:field="t2_17">
-				<my:upFace><span class="basis basis-T2-17"></span></my:upFace>
-			</my:Key>
-			<my:Key addStyleNames="key bg-purple height-m icon" ui:field="t4_17">
-				<my:upFace><span class="basis basis-T4-17-1"></span></my:upFace>
-			</my:Key>
+			<my:FKey addStyleNames="key bg-purple icon" ui:field="t1_17">
+				<span class="basis basis-T1-17"></span>
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-orange height-l icon" ui:field="t2_17">
+				<span class="basis basis-T2-17"></span>
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-purple height-m icon" ui:field="t4_17">
+				<span class="basis basis-T4-17-1"></span>
+			</my:FKey>
 		</g:FlowPanel>
 
 	</g:HorizontalPanel>

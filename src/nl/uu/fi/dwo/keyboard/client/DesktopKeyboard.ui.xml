@@ -16,99 +16,98 @@
 	</ui:style>
 	<g:FlowPanel addStyleNames="keyboard-container computer">
 	<g:FlowPanel addStyleNames="keyboard" >
-		<my:Key addStyleNames="key icon" ui:field="c1" >
-			<my:upFace><span class='basis basis-C1'><span class='path1'></span><span class='path2'></span></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key icon" ui:field="c2" >
-			<my:upFace><span class='basis basis-C2'></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key icon" ui:field="c3" >
-			<my:upFace><span class='basis basis-C3'><span class='path1'></span><span class='path2'></span></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key icon" ui:field="c4" >
-			<my:upFace><span class='basis basis-C4'><span class='path1'></span><span class='path2'></span><span class='path3'></span></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key icon" ui:field="c5" >
-			<my:upFace><span class='basis basis-C5'><span class='path1'></span><span class='path2'></span><span class='path3'></span></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key icon" ui:field="c6" >
-			<my:upFace><span class='basis basis-C6'><span class='path1'></span><span class='path2'></span><span class='path3'></span></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key icon" ui:field="c7" >
-			<my:upFace><span class='basis basis-C7'><span class='path1'></span><span class='path2'></span><span class='path3'></span></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key icon" ui:field="c8" >
-			<my:upFace><span class='basis basis-C8'><span class='path1'></span><span class='path2'></span><span class='path3'></span><span class='path4'></span></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key icon" ui:field="c9" >
-			<my:upFace><span class='basis basis-C9'><span class='path1'></span><span class='path2'></span><span class='path3'></span><span class='path4'></span></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key icon" ui:field="c10" >
-			<my:upFace><span class='basis basis-C10'><span class='path1'></span><span class='path2'></span><span class='path3'></span></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key icon" ui:field="c11" >
-			<my:upFace><span class='basis basis-C11'></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key icon" ui:field="c12" >
-			<my:upFace><span class='basis basis-C12'><span class='path1'></span><span class='path2'></span><span class='path3'></span><span class='path4'></span></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key bg-purple icon" ui:field="c13" >
-			<my:upFace><span class='basis basis-C13'></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key bg-purple icon" ui:field="c14" >
-			<my:upFace><span class='basis basis-C14'></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key bg-purple icon" ui:field="c15" >
-			<my:upFace><span class='basis basis-C15'></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key bg-purple icon" ui:field="c16" >
-			<my:upFace><span class='basis basis-C16'></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key bg-purple icon" ui:field="c17" >
-			<my:upFace><span class='basis basis-C17'></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key bg-purple icon" ui:field="c18" >
-			<my:upFace><span class='basis basis-C18'></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key icon" ui:field="c19" >
-			<my:upFace><span class='basis basis-C19'></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key icon" ui:field="c20" >
-			<my:upFace><span class='basis basis-C20'></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key icon" ui:field="c21" >
-			<my:upFace><span class='basis basis-C21'></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key icon" ui:field="c22" >
-			<my:upFace><span class='basis basis-C22'></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key icon" ui:field="c23" >
-			<my:upFace><span class='basis basis-C23'></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key icon" ui:field="c24" >
-			<my:upFace><span class='basis basis-C24'></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key icon" ui:field="c25" >
-			<my:upFace><span class='algebra algebra-C25'></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key icon" ui:field="c26" >
-			<my:upFace><span class='algebra algebra-C26'></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key icon" ui:field="c27" >
-			<my:upFace><span class='algebra algebra-C27'></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key icon" ui:field="c28" >
-			<my:upFace><span class='algebra algebra-C28'></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key icon" ui:field="c29" >
-			<my:upFace><span class='algebra algebra-C29'></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key icon" ui:field="c30" >
-			<my:upFace><span class='algebra algebra-C30'></span></my:upFace>
-		</my:Key>
-		<my:Key addStyleNames="key icon" ui:field="c31" >
-			<my:upFace></my:upFace>
-		</my:Key>
+		<my:FKey addStyleNames="key icon" ui:field="c1" >
+			<span class='basis basis-C1'><span class='path1'></span><span class='path2'></span></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key icon" ui:field="c2" >
+			<span class='basis basis-C2'></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key icon" ui:field="c3" >
+			<span class='basis basis-C3'><span class='path1'></span><span class='path2'></span></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key icon" ui:field="c4" >
+			<span class='basis basis-C4'><span class='path1'></span><span class='path2'></span><span class='path3'></span></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key icon" ui:field="c5" >
+			<span class='basis basis-C5'><span class='path1'></span><span class='path2'></span><span class='path3'></span></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key icon" ui:field="c6" >
+			<span class='basis basis-C6'><span class='path1'></span><span class='path2'></span><span class='path3'></span></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key icon" ui:field="c7" >
+			<span class='basis basis-C7'><span class='path1'></span><span class='path2'></span><span class='path3'></span></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key icon" ui:field="c8" >
+			<span class='basis basis-C8'><span class='path1'></span><span class='path2'></span><span class='path3'></span><span class='path4'></span></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key icon" ui:field="c9" >
+			<span class='basis basis-C9'><span class='path1'></span><span class='path2'></span><span class='path3'></span><span class='path4'></span></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key icon" ui:field="c10" >
+			<span class='basis basis-C10'><span class='path1'></span><span class='path2'></span><span class='path3'></span></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key icon" ui:field="c11" >
+			<span class='basis basis-C11'></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key icon" ui:field="c12" >
+			<span class='basis basis-C12'><span class='path1'></span><span class='path2'></span><span class='path3'></span><span class='path4'></span></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key bg-purple icon" ui:field="c13" >
+			<span class='basis basis-C13'></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key bg-purple icon" ui:field="c14" >
+			<span class='basis basis-C14'></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key bg-purple icon" ui:field="c15" >
+			<span class='basis basis-C15'></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key bg-purple icon" ui:field="c16" >
+			<span class='basis basis-C16'></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key bg-purple icon" ui:field="c17" >
+			<span class='basis basis-C17'></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key bg-purple icon" ui:field="c18" >
+			<span class='basis basis-C18'></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key icon" ui:field="c19" >
+			<span class='basis basis-C19'></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key icon" ui:field="c20" >
+			<span class='basis basis-C20'></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key icon" ui:field="c21" >
+			<span class='basis basis-C21'></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key icon" ui:field="c22" >
+			<span class='basis basis-C22'></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key icon" ui:field="c23" >
+			<span class='basis basis-C23'></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key icon" ui:field="c24" >
+			<span class='basis basis-C24'></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key icon" ui:field="c25" >
+			<span class='algebra algebra-C25'></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key icon" ui:field="c26" >
+			<span class='algebra algebra-C26'></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key icon" ui:field="c27" >
+			<span class='algebra algebra-C27'></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key icon" ui:field="c28" >
+			<span class='algebra algebra-C28'></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key icon" ui:field="c29" >
+			<span class='algebra algebra-C29'></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key icon" ui:field="c30" >
+			<span class='algebra algebra-C30'></span>
+		</my:FKey>
+		<my:FKey addStyleNames="key icon" ui:field="c31" >		
+		</my:FKey>
 	</g:FlowPanel>
 	</g:FlowPanel>
 </ui:UiBinder> 

@@ -5,8 +5,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 public class DesktopKeyboardMeetkunde extends DesktopKeyboardGonio {
 
 	public DesktopKeyboardMeetkunde() {
-		c29.getUpFace().setHTML(c28.getUpFace().getHTML());
-		c28.getUpFace().setHTML("<span class='meetkunde meetkunde-C28'></span>");
+		c29.setHTML(c28.getHTML());
+		c28.setHTML("<span class='meetkunde meetkunde-C28'></span>");
 	}
 	
 	@Override

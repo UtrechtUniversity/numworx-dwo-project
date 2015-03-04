@@ -31,8 +31,8 @@ public abstract class AbstractKeyboard extends Composite implements FormuleKeybo
 		this.formuleEditor = formuleEditor;
 	}
 
-	protected void disableKey(Key key) {
-		key.getUpFace().setHTML("");key.getDownFace().setHTML("");key.setEnabled(false);key.addStyleName("disabled");
+	protected void disableKey(FKey key) {
+		key.setHTML("");key.addStyleName("disabled");
 	}
 
 	@Override
