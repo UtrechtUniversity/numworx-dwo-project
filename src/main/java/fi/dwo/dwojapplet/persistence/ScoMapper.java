@@ -31,7 +31,7 @@ public class ScoMapper extends XmlRpcMapper {
 
     private static final Vector LAZY_SCO_KEYS = new Vector();
 
-    private static final String TABLENAME = "tblSco";
+    private static final String TABLENAME = "tblScoView";
 
     private static final String IDCOL = "scoID";
 
@@ -182,7 +182,7 @@ public class ScoMapper extends XmlRpcMapper {
             Hashtable wheredef = new Hashtable();
             wheredef.put("schoolID", new Integer(school.getSchoolID()));
             wheredef.put("dwoprofileid", new Integer(profile.getID()));
-            String tableName = "tblSco left join tblCourse on tblSco.courseid = tblCourse.courseid";
+            String tableName = "tblScoView left join tblCourse on tblScoView.courseid = tblCourse.courseid";
             String orderBy = "sconame";
 
             Vector data = (Vector) cachemap.get(wheredef);
@@ -313,9 +313,9 @@ public class ScoMapper extends XmlRpcMapper {
     }
 
     static {
-        LAZY_SCO_KEYS.add("tblSco.courseID");
+        LAZY_SCO_KEYS.add("tblScoView.courseID");
         LAZY_SCO_KEYS.add("appletID");
-        LAZY_SCO_KEYS.add("tblSco.description");
+        LAZY_SCO_KEYS.add("tblScoView.description");
         LAZY_SCO_KEYS.add("scoID");
         LAZY_SCO_KEYS.add("sconame");
         LAZY_SCO_KEYS.add("sequencenr");

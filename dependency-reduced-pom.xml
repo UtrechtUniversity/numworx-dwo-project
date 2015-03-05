@@ -72,6 +72,7 @@
                 <filter>
                   <artifact>fi.dwo:DWO-commons-lib</artifact>
                   <excludes>
+                    <exclude>javax.servlet:*</exclude>
                     <exclude>commons-codec:*</exclude>
                     <exclude>commons-httpclient:*</exclude>
                     <exclude>commons-logging:*</exclude>
@@ -144,23 +145,6 @@
                 <goals>
                   <goal>proguard</goal>
                 </goals>
-                <configuration>
-                  <proguardVersion>5.2</proguardVersion>
-                  <options>
-                    <option>-verbose</option>
-                    <option>-dontwarn</option>
-                  </options>
-                  <obfuscate>true</obfuscate>
-                  <inputDirectory>D:\Gert-do-not-delete\NetbeansProjects\project.fisme.java-root\DWOJAppletClient\trunk\target</inputDirectory>
-                  <injar>DWOJApplet-1.0-SNAPSHOT-r${buildNumber}.jar</injar>
-                  <proguardInclude>config.pro</proguardInclude>
-                  <libs>
-                    <lib>C:\Program Files\Java\jdk1.7.0_67\jre/lib/rt.jar</lib>
-                    <lib>C:\Program Files\Java\jdk1.7.0_67\jre/lib/jsse.jar</lib>
-                    <lib>C:\Program Files\Java\jdk1.7.0_67\jre/lib/jfxrt.jar</lib>
-                  </libs>
-                  <addMavenDescriptor>false</addMavenDescriptor>
-                </configuration>
               </execution>
             </executions>
             <dependencies>
@@ -178,13 +162,13 @@
                 <option>-dontwarn</option>
               </options>
               <obfuscate>true</obfuscate>
-              <inputDirectory>D:\Gert-do-not-delete\NetbeansProjects\project.fisme.java-root\DWOJAppletClient\trunk\target</inputDirectory>
-              <injar>DWOJApplet-1.0-SNAPSHOT-r${buildNumber}.jar</injar>
+              <inputDirectory>${project.build.directory}</inputDirectory>
+              <injar>${project.build.finalName}.jar</injar>
               <proguardInclude>config.pro</proguardInclude>
               <libs>
-                <lib>C:\Program Files\Java\jdk1.7.0_67\jre/lib/rt.jar</lib>
-                <lib>C:\Program Files\Java\jdk1.7.0_67\jre/lib/jsse.jar</lib>
-                <lib>C:\Program Files\Java\jdk1.7.0_67\jre/lib/jfxrt.jar</lib>
+                <lib>${java.home}/lib/rt.jar</lib>
+                <lib>${java.home}/lib/jsse.jar</lib>
+                <lib>${java.home}/lib/jfxrt.jar</lib>
               </libs>
               <addMavenDescriptor>false</addMavenDescriptor>
             </configuration>
@@ -209,10 +193,6 @@
                 </goals>
                 <configuration>
                   <normalizeOnly>true</normalizeOnly>
-                  <processMainArtifact>true</processMainArtifact>
-                  <includeClassifiers>
-                    <includeClassifier>all-in-one</includeClassifier>
-                  </includeClassifiers>
                 </configuration>
               </execution>
               <execution>
@@ -223,10 +203,6 @@
                 </goals>
                 <configuration>
                   <normalizeOnly>false</normalizeOnly>
-                  <processMainArtifact>true</processMainArtifact>
-                  <includeClassifiers>
-                    <includeClassifier>all-in-one</includeClassifier>
-                  </includeClassifiers>
                 </configuration>
               </execution>
             </executions>
@@ -236,7 +212,6 @@
                 <artifactId>maven-pack200-plugin</artifactId>
                 <version>1.0.1</version>
                 <type>maven-plugin</type>
-                <scope>compile</scope>
               </dependency>
             </dependencies>
             <configuration>
@@ -255,35 +230,19 @@
                 <goals>
                   <goal>sign</goal>
                 </goals>
-                <configuration>
-                  <keystore>U:\My Documents\surfdrive\DWO-project\tools\pboon.keystore</keystore>
-                  <alias>pboon</alias>
-                  <storepass>passww</storepass>
-                  <keypass>passw</keypass>
-                  <sigfile>UU</sigfile>
-                  <tsa>https://timestamp.geotrust.com/tsa</tsa>
-                </configuration>
               </execution>
               <execution>
                 <id>verify</id>
                 <goals>
                   <goal>verify</goal>
                 </goals>
-                <configuration>
-                  <keystore>U:\My Documents\surfdrive\DWO-project\tools\pboon.keystore</keystore>
-                  <alias>pboon</alias>
-                  <storepass>passww</storepass>
-                  <keypass>passw</keypass>
-                  <sigfile>UU</sigfile>
-                  <tsa>https://timestamp.geotrust.com/tsa</tsa>
-                </configuration>
               </execution>
             </executions>
             <configuration>
-              <keystore>U:\My Documents\surfdrive\DWO-project\tools\pboon.keystore</keystore>
-              <alias>pboon</alias>
-              <storepass>passww</storepass>
-              <keypass>passw</keypass>
+              <keystore>${dwoKeyStore}</keystore>
+              <alias>${dwoCertKeyAlias}</alias>
+              <storepass>${dwoCertKeyStorePassword}</storepass>
+              <keypass>${dwoCertKeyPassword}</keypass>
               <sigfile>UU</sigfile>
               <tsa>https://timestamp.geotrust.com/tsa</tsa>
             </configuration>

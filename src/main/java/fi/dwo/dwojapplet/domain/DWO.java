@@ -41,13 +41,13 @@ import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 import java.util.jar.Manifest;
@@ -170,9 +170,17 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
             file.close();
 
             //assign properties to static value.
-            String resourceURLPathString = properties.getProperty("resourceURLPath");
-            DwoHelper.setGetResourceURLPathString(resourceURLPathString);
-            log.log(Level.FINE, "Property {0} is value: {1}", new Object[]{"servletConnectString",
+            String connectModeProperty;
+            connectModeProperty = properties.getProperty("connectMode");
+
+            String servletConnectStringProperty = properties.getProperty("servletConnectString");
+            DwoHelper.setServletConnectString(servletConnectStringProperty);
+            log.log(Level.FINE, "Property {0} is value: {1}", new Object[]{"setServletConnectString",
+                DwoHelper.getServletConnectString()});
+
+            String resourceURLPathStringProperty = properties.getProperty("resourceURLPath");
+            DwoHelper.setGetResourceURLPathString(resourceURLPathStringProperty);
+            log.log(Level.FINE, "Property {0} is value: {1}", new Object[]{"resourceURLPathStringProperty",
                 DwoHelper.getGetResourceURLPathString()});
         } catch (FileNotFoundException ex) {
             log.log(Level.FINE, "No external resource connection defined");
@@ -1136,16 +1144,26 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
         DWO.ReadConfigProperties();
         //Read the versioning from the MANIFEST
         URLClassLoader cl = (URLClassLoader) DWO.class.getClassLoader();
-        if(cl==null){
+        if (cl == null) {
             cl = (URLClassLoader) getClass().getClassLoader();
         }
         try {
             //TODO FIX Broken Manifest reading in Application mode and perhaps Applet mode.
             URL url = cl.findResource("META-INF/MANIFEST.MF");
             Manifest manifest = new Manifest(url.openStream());
+            // code picks the manifest of the first jar loaded. 
+            // It works only correct if started as stand-alone application. 
+            // 
+            String mainClass = manifest.getMainAttributes().getValue("Main-Class");
+            if(mainClass!=null && mainClass.matches("fi.dwo.dwojapplet.domain.DWO")){
             String softwareVersion = manifest.getMainAttributes().getValue("DWOJApplet-Implementation-Version");
             String svnRevision = manifest.getMainAttributes().getValue("DWOJApplet-Implementation-Build");
             log.log(Level.INFO, "Software version {0},  subversion revision {1}", new Object[]{softwareVersion, svnRevision});
+            }
+            else{
+                if(mainClass==null) mainClass = "";
+                log.log(Level.INFO, "No version numbering available. Possible running from IDE. Wrong 'Main-Class' value in MANIFEST-MF: '{0}'.", new Object[]{mainClass});
+            }
         } catch (IOException ex) {
             log.log(Level.SEVERE, "Can't open /META-INF/MANIFEST.MF", ex);
         }

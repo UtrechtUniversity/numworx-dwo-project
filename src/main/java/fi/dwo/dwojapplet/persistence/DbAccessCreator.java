@@ -42,44 +42,25 @@ public class DbAccessCreator {
      */
     public static DbAccessIF instance() {
         if (dbAccess == null) {
-            URL server;
-            if (DwoHelper.isApplication()) {
-        	   //Bij testen van lokale dbAccess, TODO in comment bij productie!
-                //if(true) dbAccess = new DbAccessLocal(); else
-                //if(true) dbAccess = new DbAccess(); else
-                //if(true) dbAccess = new DbAccessScience(); else
-                //if(true) dbAccess = new DbAccessColorado(); else
-                //if(true)try{dbAccess=new DbAccessClient(new URL("http://localhost:8888/dwoapp"));}catch(MalformedURLException e1){log.log(Level.SEVERE,null,e1);}else
-                try {
-//                    server = new URL(new URL("http://localhost:8080"), "DWOServer/xmlrpc");
-                    server = new URL(new URL("http://ws.fisme.science.uu.nl/"), SERVLET);
-        		   //server = new URL(new URL("http://dwo.fi.uu.nl/") , SERVLET);
-                    // Let op, bovenstaande switch is nodig voor de dwoserver (bij start.jar)
-
-                    dbAccess = new DbAccessClient(server);
-                } catch (MalformedURLException e) {
-                    log.log(Level.SEVERE,null,e);
+        URL server;
+            if(DwoHelper.getServletConnectString()!=null){
+            try {
+                        server = new URL(DwoHelper.getServletConnectString());
+                        dbAccess = new DbAccessClient(server);
+                    } catch (MalformedURLException ex) {
+                        log.log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    try {
+                        //TODO FIX put the URL in the Manifest and pick it up from there
+                        //THIS Allows it to be configured from the pom.
+                        server = new URL(new URL("http://ws.fisme.science.uu.nl/"), SERVLET);
+                        dbAccess = new DbAccessClient(server);
+                    } catch (MalformedURLException e) {
+                        log.log(Level.SEVERE,null,e);
+                    }
                 }
-            } else {
-// for local access, overrule SERVLET
-                String servletParameter
-                        = DwoHelper.getApplet().getParameter("SERVLET");
-                if (null != servletParameter) {
-                    SERVLET = servletParameter;
-                }
-//         	   
-                try {
-                    server = new URL(DwoHelper.getApplet().getCodeBase(), SERVLET);
-	                //System.out.println(DwoHelper.getApplet().getCodeBase() + SERVLET);
-                    //server = new URL("http://www.fi.uu.nl/servlet/fi.dwo.server.persistence.DbAccessServlet");
-                    dbAccess = new DbAccessClient(server);
-                } catch (MalformedURLException e) {
-                    log.log(Level.SEVERE,null,e);
-                }/**/
-
-            }
-        }
-
+            } 
         return dbAccess;
     }
 }

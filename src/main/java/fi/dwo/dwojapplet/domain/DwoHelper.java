@@ -44,8 +44,9 @@ public final class DwoHelper {
     public static boolean umpc, contact;
 
     private static boolean scormExportLoggedIn, appletExportLoggedIn, adminLoggedIn;
-    
-    private static String getResourceURLPathString; // null if to use the default
+
+    private static String resourceURLPathString; // null if to use the default
+    private static String servletConnectString; // null if to use the default
 
     /**
      * Returns the current AppletUtil.
@@ -322,16 +323,24 @@ public final class DwoHelper {
     }
 
     /**
-     * @return the getResourceURLPathString
+     * @return the resourceURLPathString
      */
     public static String getGetResourceURLPathString() {
-        return getResourceURLPathString;
+        return resourceURLPathString;
     }
 
     /**
-     * @param aGetResourceURLPathString the getResourceURLPathString to set
+     * @param aGetResourceURLPathString the resourceURLPathString to set
      */
     public static void setGetResourceURLPathString(String aGetResourceURLPathString) {
-        getResourceURLPathString = aGetResourceURLPathString;
+        resourceURLPathString = aGetResourceURLPathString;
+    }
+
+    public static void setServletConnectString(String aServletConnectString) {
+        servletConnectString = aServletConnectString;
+    }
+
+    public static String getServletConnectString() {
+        return servletConnectString;
     }
 }
