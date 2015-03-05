@@ -2,6 +2,15 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\CoursePanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.mathkit.JMathPane;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.ResultsModuleIF;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.Teacher;
+import fi.dwo.dwojapplet.domain.UserResultList;
+import fi.dwo.dwojapplet.gui.action.NullStrategy;
 import java.applet.AppletContext;
 import java.awt.Color;
 import java.awt.Component;
@@ -13,7 +22,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
-
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -26,20 +34,6 @@ import javax.swing.SwingWorker;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.text.JTextComponent;
-
-import fi.beans.mathkit.JMathPane;
-import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.Course;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.ResultsModuleIF;
-import fi.dwo.dwojapplet.domain.Sco;
-import fi.dwo.dwojapplet.domain.Teacher;
-import fi.dwo.dwojapplet.domain.UserResultList;
-import fi.dwo.dwojapplet.gui.action.NullStrategy;
-//import fi.wiskopdr.WiskOpdr;
-//import fi.wiskopdr.WiskOpdrPanel;
-//import fi.wiskopdr.tekstobjects.LinkIF;
-
 /**
  * This class is a panel witch shows a list of all the SCO's in the specified
  * Course.

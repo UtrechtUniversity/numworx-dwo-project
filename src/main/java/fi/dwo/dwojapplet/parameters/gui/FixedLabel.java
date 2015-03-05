@@ -5,7 +5,6 @@
 package fi.dwo.dwojapplet.parameters.gui;
 
 import java.awt.Dimension;
-
 import javax.swing.JLabel;
 
 /**

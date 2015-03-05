@@ -2,17 +2,15 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\TeacherProfilePanel.java
 package fi.dwo.dwojapplet.gui;
 
-import java.awt.Button;
-import java.awt.Container;
-import java.awt.event.ActionEvent;
-
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Group;
+import java.awt.Button;
+import java.awt.Container;
+import java.awt.event.ActionEvent;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 /**
  * This class represents a panel for the current user (who is a teacher) to

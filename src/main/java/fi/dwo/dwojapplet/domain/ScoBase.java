@@ -1,5 +1,11 @@
 package fi.dwo.dwojapplet.domain;
 
+import fi.beans.base64code.StringCodeObject;
+import fi.beans.dwomaccess.JSONEncoder;
+import fi.beans.scorm.ScormAdapter;
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.dwojapplet.gui.ScoPanel;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -11,17 +17,9 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
-import java.util.zip.GZIPOutputStream;
-
-import fi.beans.base64code.StringCodeObject;
-import fi.beans.dwomaccess.JSONEncoder;
-//import fi.beans.dwomaccess.JSONEncoder;
-import fi.beans.scorm.ScormAdapter;
-import fi.dwo.commons.exceptions.PersistenceException;
-import fi.dwo.dwojapplet.gui.ScoPanel;
-import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.GZIPOutputStream;
 
 public abstract class ScoBase extends ScormAdapter {
 private static final Logger log = Logger.getLogger(ScoBase.class.getName());

@@ -1,13 +1,12 @@
 package fi.dwo.dwojapplet.gui.action;
 
-import java.awt.event.ActionEvent;
-
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.gui.CourseNameDialog;
 import fi.dwo.dwojapplet.gui.ScoNameDialog;
+import java.awt.event.ActionEvent;
 
 public class RenameAction extends GuiAction {
 

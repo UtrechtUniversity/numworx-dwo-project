@@ -3,7 +3,6 @@
 package fi.dwo.dwojapplet.gui;
 
 import java.awt.Component;
-
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
 

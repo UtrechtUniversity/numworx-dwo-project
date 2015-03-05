@@ -1,9 +1,8 @@
 package fi.dwo.dwojapplet.gui.action;
 
-import javax.swing.JPopupMenu;
-
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.gui.SelectStrategy;
+import javax.swing.JPopupMenu;
 
 public class NullStrategy implements SelectStrategy {
 

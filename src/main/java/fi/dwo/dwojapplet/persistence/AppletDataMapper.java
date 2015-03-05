@@ -1,12 +1,10 @@
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.dwojapplet.domain.AppletData;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Hashtable;
-
 import org.apache.xmlrpc.applet.XmlRpcException;
-
-import fi.dwo.dwojapplet.domain.AppletData;
 
 public class AppletDataMapper extends XmlRpcMapper {
 

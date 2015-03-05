@@ -1,9 +1,8 @@
 package fi.dwo.dwojapplet.gui.action;
 
+import fi.dwo.dwojapplet.domain.CourseMap;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-
-import fi.dwo.dwojapplet.domain.CourseMap;
 
 public class Clipboard {
 

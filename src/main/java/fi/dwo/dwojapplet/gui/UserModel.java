@@ -3,18 +3,16 @@
  */
 package fi.dwo.dwojapplet.gui;
 
-import java.awt.Image;
-
-import javax.swing.table.AbstractTableModel;
-
 import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.awt.Image;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.table.AbstractTableModel;
 
 class UserModel extends AbstractTableModel {
 

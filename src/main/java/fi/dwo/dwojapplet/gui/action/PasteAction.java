@@ -1,6 +1,5 @@
 package fi.dwo.dwojapplet.gui.action;
 
-import java.awt.event.ActionEvent;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.AppletConfig;
@@ -12,6 +11,7 @@ import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.CourseManagementPanel;
 import fi.dwo.dwojapplet.gui.ModuleTreePanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.awt.event.ActionEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

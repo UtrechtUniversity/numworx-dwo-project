@@ -1,12 +1,5 @@
 package fi.dwo.dwojapplet.domain;
 
-import java.applet.Applet;
-import java.awt.Container;
-import java.awt.GridLayout;
-import java.util.Date;
-
-import javax.swing.JOptionPane;
-
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.jvmchecker.JVMChecker;
 import fi.beans.mainframe.MainFrame;
@@ -18,15 +11,19 @@ import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.exceptions.SchoolException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.CenterSubPanel;
-//import fi.dwo.client.gui.DwoMessageDialog;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.ScoPanel;
 import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.applet.Applet;
+import java.awt.Container;
+import java.awt.GridLayout;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JApplet;
+import javax.swing.JOptionPane;
 
 public class DWOlight extends Applet implements SCORM12APIInterface, DwoIF {
 

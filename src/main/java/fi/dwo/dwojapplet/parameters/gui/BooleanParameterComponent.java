@@ -1,16 +1,14 @@
 // Source file: C:\\fi\\dwo\\parameters\\gui\\BooleanParameterComponent.java
 package fi.dwo.dwojapplet.parameters.gui;
 
+import fi.beans.scorm.Parameter;
+import fi.dwo.dwojapplet.parameters.system.TextMapper;
 import java.awt.Component;
 import java.awt.FontMetrics;
 import java.awt.event.FocusEvent;
 import java.util.Hashtable;
-
 import javax.swing.ButtonGroup;
 import javax.swing.JRadioButton;
-
-import fi.beans.scorm.Parameter;
-import fi.dwo.dwojapplet.parameters.system.TextMapper;
 
 public class BooleanParameterComponent extends ParameterComponent {
 

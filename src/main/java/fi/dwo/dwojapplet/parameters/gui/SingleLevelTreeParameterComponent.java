@@ -2,6 +2,8 @@
 // C:\\parameters\\fi\\dwo\\parameters\\gui\\SingleLevelTreeParameterComponent.java
 package fi.dwo.dwojapplet.parameters.gui;
 
+import fi.beans.scorm.TreeParameter;
+import fi.dwo.dwojapplet.parameters.system.TextMapper;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -9,14 +11,9 @@ import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
-
 import java.text.MessageFormat;
 import java.util.Hashtable;
-
 import javax.swing.JButton;
-
-import fi.beans.scorm.TreeParameter;
-import fi.dwo.dwojapplet.parameters.system.TextMapper;
 
 public class SingleLevelTreeParameterComponent extends ParameterComponent implements ParameterComponentIF,
         ActionListener {

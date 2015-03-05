@@ -1,7 +1,16 @@
 package fi.beans.copyright;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /*
 

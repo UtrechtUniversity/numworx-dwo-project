@@ -7,7 +7,6 @@ package fi.dwo.dwojapplet.gui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.LayoutManager;
-
 import javax.swing.JPanel;
 
 /**

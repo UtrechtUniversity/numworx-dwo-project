@@ -1,6 +1,21 @@
 // Source file: C:\\parameters\\fi\\dwo\\client\\gui\\ScoManagementPanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.AppletConfig;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.gui.action.BackupModuleAction;
+import fi.dwo.dwojapplet.gui.action.DeleteAction;
+import fi.dwo.dwojapplet.gui.action.ImportModuleAction;
+import fi.dwo.dwojapplet.gui.action.NewAction;
+import fi.dwo.dwojapplet.persistence.DbAccessCreator;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import fi.wiskopdr.WiskOpdr;
+import fi.wiskopdr.WiskOpdrEditPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -18,19 +33,20 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.JCheckBox;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
@@ -38,25 +54,6 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
-import fi.dwo.commons.exceptions.PersistenceException;
-import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.AppletConfig;
-import fi.dwo.dwojapplet.domain.Course;
-import fi.dwo.dwojapplet.domain.CourseMap;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.Sco;
-import fi.dwo.dwojapplet.gui.action.BackupModuleAction;
-import fi.dwo.dwojapplet.gui.action.DeleteAction;
-import fi.dwo.dwojapplet.gui.action.ImportModuleAction;
-import fi.dwo.dwojapplet.gui.action.NewAction;
-import fi.dwo.dwojapplet.persistence.DbAccessCreator;
-import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-
-//TODO WiskOpdr
-import fi.wiskopdr.WiskOpdr;
-import fi.wiskopdr.WiskOpdrEditPanel;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This class is a panel containing a list of SCO's to edit, delete or add. It
@@ -549,7 +546,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
             if (editorCB.isSelected()) {
 //TODO WiskOpdr
                 if (wiskOpdrEditPanel == null) {
-//                    wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription());
+                    wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription());
                     wiskOpdrEditPanel.setPreferredSize(new Dimension(700, 300));
                     editorBox.add(wiskOpdrEditPanel);
                 }

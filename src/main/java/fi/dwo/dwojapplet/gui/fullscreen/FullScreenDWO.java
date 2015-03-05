@@ -1,5 +1,8 @@
 package fi.dwo.dwojapplet.gui.fullscreen;
 
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.gui.BackgroundPanel;
+import fi.dwo.dwojapplet.gui.GuiConstants;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dialog;
@@ -12,7 +15,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.beans.PropertyVetoException;
-
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -31,10 +33,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
-
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.gui.BackgroundPanel;
-import fi.dwo.dwojapplet.gui.GuiConstants;
 
 public class FullScreenDWO extends JDialog implements ChangeListener, ActionListener, InternalFrameListener {
 

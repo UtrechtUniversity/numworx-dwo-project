@@ -2,6 +2,11 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\ScoPanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.scorm.SCORM12APIInterface;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -17,7 +22,8 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
@@ -30,16 +36,7 @@ import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
-
 import org.apache.xmlrpc.applet.XmlRpcException;
-
-import fi.beans.scorm.SCORM12APIInterface;
-import fi.dwo.dwojapplet.domain.Course;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.Sco;
-import fi.dwo.dwojapplet.persistence.DbAccessCreator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This class represents a panel witch shows an applet of the sco.

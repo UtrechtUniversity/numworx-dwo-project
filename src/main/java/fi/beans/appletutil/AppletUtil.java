@@ -4,11 +4,17 @@
  */
 package fi.beans.appletutil;
 
-import java.net.*;
-import java.util.*;
-import java.applet.*;
-import java.awt.*;
-import java.io.*;
+import java.applet.Applet;
+import java.applet.AudioClip;
+import java.awt.Image;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Hashtable;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

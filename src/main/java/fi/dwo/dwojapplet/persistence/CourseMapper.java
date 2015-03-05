@@ -2,17 +2,6 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\CourseMapper.java
 package fi.dwo.dwojapplet.persistence;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Vector;
-
-import org.apache.xmlrpc.applet.XmlRpcException;
-
 import fi.dwo.dwojapplet.domain.ClassCourse;
 import fi.dwo.dwojapplet.domain.Course;
 import static fi.dwo.dwojapplet.domain.Course.NO_CHILDREN;
@@ -23,8 +12,17 @@ import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.xmlrpc.applet.XmlRpcException;
 
 public class CourseMapper extends XmlRpcMapper {
     private static final Logger log = Logger.getLogger(CourseMapper.class.getName());

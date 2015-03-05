@@ -2,6 +2,18 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\ResultsModulePanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.LessonGroup;
+import fi.dwo.dwojapplet.domain.ResultScore;
+import fi.dwo.dwojapplet.domain.ResultScoreIF;
+import fi.dwo.dwojapplet.domain.ResultsModuleIF;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.domain.UserGroup;
+import fi.dwo.dwojapplet.domain.UserResultList;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -16,7 +28,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.MessageFormat;
 import java.util.Vector;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -40,21 +53,6 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
-
-import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.Course;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.LessonGroup;
-import fi.dwo.dwojapplet.domain.ResultScore;
-import fi.dwo.dwojapplet.domain.ResultScoreIF;
-import fi.dwo.dwojapplet.domain.ResultsModuleIF;
-import fi.dwo.dwojapplet.domain.SchoolClass;
-import fi.dwo.dwojapplet.domain.Sco;
-import fi.dwo.dwojapplet.domain.User;
-import fi.dwo.dwojapplet.domain.UserGroup;
-import fi.dwo.dwojapplet.domain.UserResultList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This class is a panel represents the resultscores of a group of users and a

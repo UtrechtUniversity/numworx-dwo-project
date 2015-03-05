@@ -2,7 +2,6 @@
 package fi.dwo.dwojapplet.parameters.gui;
 
 import fi.beans.scorm.Parameter;
-
 import java.awt.Component;
 import java.util.Hashtable;
 

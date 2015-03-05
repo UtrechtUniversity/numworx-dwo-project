@@ -2,6 +2,12 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\MainPanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.DwoProfile;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.action.LogoutURLAction;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -11,19 +17,12 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
-
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
-import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.DwoProfile;
-import fi.dwo.dwojapplet.domain.School;
-import fi.dwo.dwojapplet.domain.User;
-import fi.dwo.dwojapplet.gui.action.LogoutURLAction;
 
 /**
  * This class is the main panel of the application. It shows the FI-logo, the

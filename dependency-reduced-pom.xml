@@ -68,6 +68,16 @@
                   <include>*:*</include>
                 </includes>
               </artifactSet>
+              <filters>
+                <filter>
+                  <artifact>fi.dwo:DWO-commons-lib</artifact>
+                  <excludes>
+                    <exclude>commons-codec:*</exclude>
+                    <exclude>commons-httpclient:*</exclude>
+                    <exclude>commons-logging:*</exclude>
+                  </excludes>
+                </filter>
+              </filters>
               <relocations>
                 <relocation>
                   <pattern>fi.wiskopdr</pattern>
@@ -105,7 +115,9 @@
               <addClasspath>true</addClasspath>
             </manifest>
             <manifestEntries>
+              <DWOJApplet-Implementation-Version>${project.version}</DWOJApplet-Implementation-Version>
               <Implementation-Build>${buildNumber}</Implementation-Build>
+              <DWOJApplet-Implementation-Build>${buildNumber}</DWOJApplet-Implementation-Build>
               <Main-Class>fi.dwo.dwojapplet.domain.DWO</Main-Class>
               <Trusted-Only>true</Trusted-Only>
               <Permissions>all-permissions</Permissions>
@@ -115,115 +127,171 @@
           </archive>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>com.github.wvengen</groupId>
-        <artifactId>proguard-maven-plugin</artifactId>
-        <version>2.0.8</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>proguard</goal>
-            </goals>
-          </execution>
-        </executions>
-        <dependencies>
-          <dependency>
-            <groupId>net.sf.proguard</groupId>
-            <artifactId>proguard-base</artifactId>
-            <version>5.2</version>
-            <scope>runtime</scope>
-          </dependency>
-        </dependencies>
-        <configuration>
-          <proguardVersion>5.2</proguardVersion>
-          <options>
-            <option>-verbose</option>
-            <option>-dontwarn</option>
-          </options>
-          <obfuscate>true</obfuscate>
-          <inputDirectory>${project.build.directory}</inputDirectory>
-          <injar>${project.build.finalName}.jar</injar>
-          <outputDirectory>${project.build.directory}</outputDirectory>
-          <outjar>${project.build.finalName}-proguarded.jar</outjar>
-          <proguardInclude>config.pro</proguardInclude>
-          <libs>
-            <lib>${java.home}/lib/rt.jar</lib>
-            <lib>${java.home}/lib/jsse.jar</lib>
-            <lib>${java.home}/lib/jfxrt.jar</lib>
-          </libs>
-          <addMavenDescriptor>false</addMavenDescriptor>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>com.github.batkinson.plugins</groupId>
-        <artifactId>maven-pack200-plugin</artifactId>
-        <version>1.0.1</version>
-        <executions>
-          <execution>
-            <id>normalize-jars</id>
-            <phase>package</phase>
-            <goals>
-              <goal>pack</goal>
-            </goals>
+    </plugins>
+  </build>
+  <profiles>
+    <profile>
+      <id>dwo-obfuscate</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.github.wvengen</groupId>
+            <artifactId>proguard-maven-plugin</artifactId>
+            <version>2.0.8</version>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>proguard</goal>
+                </goals>
+                <configuration>
+                  <proguardVersion>5.2</proguardVersion>
+                  <options>
+                    <option>-verbose</option>
+                    <option>-dontwarn</option>
+                  </options>
+                  <obfuscate>true</obfuscate>
+                  <inputDirectory>D:\Gert-do-not-delete\NetbeansProjects\project.fisme.java-root\DWOJAppletClient\trunk\target</inputDirectory>
+                  <injar>DWOJApplet-1.0-SNAPSHOT-r${buildNumber}.jar</injar>
+                  <proguardInclude>config.pro</proguardInclude>
+                  <libs>
+                    <lib>C:\Program Files\Java\jdk1.7.0_67\jre/lib/rt.jar</lib>
+                    <lib>C:\Program Files\Java\jdk1.7.0_67\jre/lib/jsse.jar</lib>
+                    <lib>C:\Program Files\Java\jdk1.7.0_67\jre/lib/jfxrt.jar</lib>
+                  </libs>
+                  <addMavenDescriptor>false</addMavenDescriptor>
+                </configuration>
+              </execution>
+            </executions>
+            <dependencies>
+              <dependency>
+                <groupId>net.sf.proguard</groupId>
+                <artifactId>proguard-base</artifactId>
+                <version>5.2</version>
+                <scope>runtime</scope>
+              </dependency>
+            </dependencies>
             <configuration>
-              <normalizeOnly>true</normalizeOnly>
+              <proguardVersion>5.2</proguardVersion>
+              <options>
+                <option>-verbose</option>
+                <option>-dontwarn</option>
+              </options>
+              <obfuscate>true</obfuscate>
+              <inputDirectory>D:\Gert-do-not-delete\NetbeansProjects\project.fisme.java-root\DWOJAppletClient\trunk\target</inputDirectory>
+              <injar>DWOJApplet-1.0-SNAPSHOT-r${buildNumber}.jar</injar>
+              <proguardInclude>config.pro</proguardInclude>
+              <libs>
+                <lib>C:\Program Files\Java\jdk1.7.0_67\jre/lib/rt.jar</lib>
+                <lib>C:\Program Files\Java\jdk1.7.0_67\jre/lib/jsse.jar</lib>
+                <lib>C:\Program Files\Java\jdk1.7.0_67\jre/lib/jfxrt.jar</lib>
+              </libs>
+              <addMavenDescriptor>false</addMavenDescriptor>
             </configuration>
-          </execution>
-          <execution>
-            <id>pack-jars</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>pack</goal>
-            </goals>
-            <configuration>
-              <normalizeOnly>false</normalizeOnly>
-            </configuration>
-          </execution>
-        </executions>
-        <dependencies>
-          <dependency>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>dwo-pack-sign</id>
+      <build>
+        <plugins>
+          <plugin>
             <groupId>com.github.batkinson.plugins</groupId>
             <artifactId>maven-pack200-plugin</artifactId>
             <version>1.0.1</version>
-            <type>maven-plugin</type>
-          </dependency>
-        </dependencies>
-        <configuration>
-          <processMainArtifact>true</processMainArtifact>
-          <includeClassifiers>
-            <includeClassifier>all-in-one</includeClassifier>
-          </includeClassifiers>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-jarsigner-plugin</artifactId>
-        <version>1.4</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>sign</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>verify</id>
-            <goals>
-              <goal>verify</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <keystore>${dwoKeyStore}</keystore>
-          <alias>${dwoCertKeyAlias}</alias>
-          <storepass>${dwoCertKeyStorePassword}</storepass>
-          <keypass>${dwoCertKeyPassword}</keypass>
-          <sigfile>UU</sigfile>
-          <tsa>https://timestamp.geotrust.com/tsa</tsa>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+            <executions>
+              <execution>
+                <id>normalize-jars</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>pack</goal>
+                </goals>
+                <configuration>
+                  <normalizeOnly>true</normalizeOnly>
+                  <processMainArtifact>true</processMainArtifact>
+                  <includeClassifiers>
+                    <includeClassifier>all-in-one</includeClassifier>
+                  </includeClassifiers>
+                </configuration>
+              </execution>
+              <execution>
+                <id>pack-jars</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>pack</goal>
+                </goals>
+                <configuration>
+                  <normalizeOnly>false</normalizeOnly>
+                  <processMainArtifact>true</processMainArtifact>
+                  <includeClassifiers>
+                    <includeClassifier>all-in-one</includeClassifier>
+                  </includeClassifiers>
+                </configuration>
+              </execution>
+            </executions>
+            <dependencies>
+              <dependency>
+                <groupId>com.github.batkinson.plugins</groupId>
+                <artifactId>maven-pack200-plugin</artifactId>
+                <version>1.0.1</version>
+                <type>maven-plugin</type>
+                <scope>compile</scope>
+              </dependency>
+            </dependencies>
+            <configuration>
+              <processMainArtifact>true</processMainArtifact>
+              <includeClassifiers>
+                <includeClassifier>all-in-one</includeClassifier>
+              </includeClassifiers>
+            </configuration>
+          </plugin>
+          <plugin>
+            <artifactId>maven-jarsigner-plugin</artifactId>
+            <version>1.4</version>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+                <configuration>
+                  <keystore>U:\My Documents\surfdrive\DWO-project\tools\pboon.keystore</keystore>
+                  <alias>pboon</alias>
+                  <storepass>passww</storepass>
+                  <keypass>passw</keypass>
+                  <sigfile>UU</sigfile>
+                  <tsa>https://timestamp.geotrust.com/tsa</tsa>
+                </configuration>
+              </execution>
+              <execution>
+                <id>verify</id>
+                <goals>
+                  <goal>verify</goal>
+                </goals>
+                <configuration>
+                  <keystore>U:\My Documents\surfdrive\DWO-project\tools\pboon.keystore</keystore>
+                  <alias>pboon</alias>
+                  <storepass>passww</storepass>
+                  <keypass>passw</keypass>
+                  <sigfile>UU</sigfile>
+                  <tsa>https://timestamp.geotrust.com/tsa</tsa>
+                </configuration>
+              </execution>
+            </executions>
+            <configuration>
+              <keystore>U:\My Documents\surfdrive\DWO-project\tools\pboon.keystore</keystore>
+              <alias>pboon</alias>
+              <storepass>passww</storepass>
+              <keypass>passw</keypass>
+              <sigfile>UU</sigfile>
+              <tsa>https://timestamp.geotrust.com/tsa</tsa>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
   <repositories>
     <repository>
       <id>repo</id>

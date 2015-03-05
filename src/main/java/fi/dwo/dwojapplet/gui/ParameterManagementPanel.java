@@ -2,6 +2,22 @@
 // C:\\parameters\\fi\\dwo\\client\\gui\\ParameterManagementPanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.scorm.Parameter;
+import fi.beans.scorm.ScormAppletIF;
+import fi.beans.scorm.ScormEditComponentIF;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.ScoEditor;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.action.ImportScorm;
+import fi.dwo.dwojapplet.gui.action.PreviewHtml5;
+import fi.dwo.dwojapplet.gui.action.Save2004Action;
+import fi.dwo.dwojapplet.gui.action.SaveAppletAction;
+import fi.dwo.dwojapplet.parameters.domain.ConvertorCreator;
+import fi.dwo.dwojapplet.parameters.domain.ConvertorIF;
+import fi.dwo.dwojapplet.parameters.gui.MainParameterComponent;
+import fi.dwo.dwojapplet.parameters.gui.ParameterComponent;
 import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -30,22 +46,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.ChangeEvent;
-import fi.beans.scorm.Parameter;
-import fi.beans.scorm.ScormAppletIF;
-import fi.beans.scorm.ScormEditComponentIF;
-import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.Sco;
-import fi.dwo.dwojapplet.domain.ScoEditor;
-import fi.dwo.dwojapplet.domain.User;
-import fi.dwo.dwojapplet.gui.action.ImportScorm;
-import fi.dwo.dwojapplet.gui.action.PreviewHtml5;
-import fi.dwo.dwojapplet.gui.action.Save2004Action;
-import fi.dwo.dwojapplet.gui.action.SaveAppletAction;
-import fi.dwo.dwojapplet.parameters.domain.ConvertorCreator;
-import fi.dwo.dwojapplet.parameters.domain.ConvertorIF;
-import fi.dwo.dwojapplet.parameters.gui.MainParameterComponent;
-import fi.dwo.dwojapplet.parameters.gui.ParameterComponent;
 
 /**
  * This class is a panel for editing the parameters of a SCO. If the SCO has an

@@ -4,17 +4,6 @@
  */
 package fi.dwo.dwojapplet.persistence;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Hashtable;
-import java.util.Locale;
-import java.util.TimeZone;
-import java.util.Vector;
-
-import org.apache.xmlrpc.applet.XmlRpcException;
-
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.LessonGroup;
 import fi.dwo.dwojapplet.domain.ResultScore;
@@ -24,8 +13,17 @@ import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.domain.UserGroup;
 import fi.dwo.dwojapplet.domain.UserResultList;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Hashtable;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.xmlrpc.applet.XmlRpcException;
 
 /**
  * @author thijsk

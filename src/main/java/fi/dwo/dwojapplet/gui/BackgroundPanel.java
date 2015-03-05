@@ -3,7 +3,6 @@ package fi.dwo.dwojapplet.gui;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.LayoutManager;
-
 import javax.swing.JPanel;
 
 public class BackgroundPanel extends JPanel {

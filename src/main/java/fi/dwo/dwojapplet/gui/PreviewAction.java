@@ -1,7 +1,6 @@
 package fi.dwo.dwojapplet.gui;
 
 import java.awt.event.ActionEvent;
-
 import javax.swing.AbstractAction;
 
 class PreviewAction extends AbstractAction {

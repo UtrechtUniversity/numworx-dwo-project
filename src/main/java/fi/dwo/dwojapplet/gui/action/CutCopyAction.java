@@ -1,7 +1,7 @@
 package fi.dwo.dwojapplet.gui.action;
 
-import java.awt.event.ActionEvent;
 import fi.dwo.dwojapplet.domain.CourseMap;
+import java.awt.event.ActionEvent;
 
 public class CutCopyAction extends GuiAction {
 

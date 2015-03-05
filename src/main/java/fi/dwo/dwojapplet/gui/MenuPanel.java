@@ -2,19 +2,17 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\MenuPanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoIF;
+import fi.dwo.dwojapplet.domain.User;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.border.Border;
-
-import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.DwoIF;
-import fi.dwo.dwojapplet.domain.User;
 
 /**
  * This class is the menupanel for the user who logged in.

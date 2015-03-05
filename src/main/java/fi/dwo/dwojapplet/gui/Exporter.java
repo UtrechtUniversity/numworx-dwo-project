@@ -1,14 +1,13 @@
 package fi.dwo.dwojapplet.gui;
 
-import java.util.List;
-import java.util.Map;
-
 import fi.beans.scorm.PartialScoreIF;
 import fi.dwo.dwojapplet.domain.ResultScore;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolGroup;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.domain.UserResultList;
+import java.util.List;
+import java.util.Map;
 
 abstract class Exporter {
 

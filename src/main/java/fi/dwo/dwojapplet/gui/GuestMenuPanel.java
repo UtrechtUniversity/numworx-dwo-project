@@ -4,23 +4,21 @@
  */
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoIF;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.Insets;
-
 import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-
-import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.DwoIF;
 
 /**
  * This is a panel with the menu-options for a guest-user.

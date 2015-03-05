@@ -2,19 +2,18 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\LoggedInPanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Guest;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.action.LogoutAction;
 import java.awt.Graphics;
 import java.awt.Image;
-
 import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.Guest;
-import fi.dwo.dwojapplet.domain.User;
-import fi.dwo.dwojapplet.gui.action.LogoutAction;
 
 /**
  * This class represents a panel that shows who is logged in and a button to

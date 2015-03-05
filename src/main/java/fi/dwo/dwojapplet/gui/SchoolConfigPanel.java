@@ -1,21 +1,19 @@
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.awt.Component;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
-
-import fi.dwo.commons.exceptions.PersistenceException;
-import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.School;
-import fi.dwo.dwojapplet.domain.User;
-import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
 

@@ -1,12 +1,11 @@
 package fi.dwo.dwojapplet.gui.action;
 
-import java.awt.event.ActionEvent;
-
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DwoProfile;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.gui.CenterPanel;
 import fi.dwo.dwojapplet.gui.CenterSubPanel;
+import java.awt.event.ActionEvent;
 
 public class OpenHtml5 extends GuiAction {
 

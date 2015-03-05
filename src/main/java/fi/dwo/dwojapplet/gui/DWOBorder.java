@@ -5,7 +5,6 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Insets;
-
 import javax.swing.border.AbstractBorder;
 
 /**

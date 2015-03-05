@@ -1,15 +1,13 @@
 package fi.dwo.dwojapplet.gui.action;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
-
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.gui.CenterPanel;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.MainPanel;
 import fi.dwo.dwojapplet.gui.SchoolConfigPanel;
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
 
 public class SchoolConfigAction extends AbstractAction {
 

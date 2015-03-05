@@ -1,18 +1,16 @@
 package fi.dwo.dwojapplet.persistence;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
-
-import org.apache.xmlrpc.applet.XmlRpcException;
-
 import fi.dwo.dwojapplet.domain.CourseSequence;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.DwoIF;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+import org.apache.xmlrpc.applet.XmlRpcException;
 
 public class CourseSequenceMapper extends XmlRpcMapper {
 

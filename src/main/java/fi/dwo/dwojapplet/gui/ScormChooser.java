@@ -3,12 +3,11 @@
  */
 package fi.dwo.dwojapplet.gui;
 
-import java.io.File;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.HeadlessException;
-
+import java.io.File;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.JComponent;

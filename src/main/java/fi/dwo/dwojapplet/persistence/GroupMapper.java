@@ -2,13 +2,11 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\GroupMapper.java
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.dwojapplet.domain.Group;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Hashtable;
-
 import org.apache.xmlrpc.applet.XmlRpcException;
-
-import fi.dwo.dwojapplet.domain.Group;
 
 public class GroupMapper extends XmlRpcMapper {
 

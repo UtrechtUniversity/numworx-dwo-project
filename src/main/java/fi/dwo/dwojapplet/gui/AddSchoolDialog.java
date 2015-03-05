@@ -1,6 +1,16 @@
 // Source file: C:\\parameters\\fi\\dwo\\client\\gui\\ScoNameDialog.java
 package fi.dwo.dwojapplet.gui;
 
+import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JSpinnerDateEditor;
+import fi.dwo.commons.exceptions.SchoolException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.SchoolGroup;
+import fi.dwo.dwojapplet.domain.SchoolPasswdMap;
+import fi.dwo.dwojapplet.gui.action.CopyLabel;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -16,10 +26,9 @@ import java.awt.event.WindowListener;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.Vector;
-import java.util.Map.Entry;
-
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -29,18 +38,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Spring;
 import javax.swing.SpringLayout;
-
-import com.toedter.calendar.JDateChooser;
-import com.toedter.calendar.JSpinnerDateEditor;
-
-import fi.dwo.commons.exceptions.SchoolException;
-import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.School;
-import fi.dwo.dwojapplet.domain.SchoolGroup;
-import fi.dwo.dwojapplet.domain.SchoolPasswdMap;
-import fi.dwo.dwojapplet.gui.action.CopyLabel;
-import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 
 /**
  * This is a dialog for editing the SCO name and description.

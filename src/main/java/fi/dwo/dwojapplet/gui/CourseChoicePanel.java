@@ -2,29 +2,6 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\CourseChoisePanel.java
 package fi.dwo.dwojapplet.gui;
 
-import java.applet.AppletContext;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.BorderLayout;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.GridLayout;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.net.URL;
-
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.Scrollable;
-import javax.swing.SwingConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.text.JTextComponent;
-import javax.swing.tree.DefaultMutableTreeNode;
-
 import fi.beans.mathkit.JMathPane;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
@@ -34,9 +11,29 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.DwoProfile;
 import fi.dwo.dwojapplet.gui.action.TeacherStrategy;
 import fi.wiskopdr.WiskOpdr;
-//TODO WiskOpdr
 import fi.wiskopdr.WiskOpdrPanel;
 import fi.wiskopdr.tekstobjects.LinkIF;
+import java.applet.AppletContext;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.net.URL;
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.Scrollable;
+import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.text.JTextComponent;
+import javax.swing.tree.DefaultMutableTreeNode;
 /**
  * This class is a panel where the user gets a overview of the different
  * courses.
@@ -371,19 +368,27 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
 
     }
 
+    @Override
     public boolean gotoScoNr(String rest) {
         System.out.println("GOTO #" + rest);
         return false;
     }
 
+    @Override
     public Object getJSObject() {
         return jsObject;
     }
 
+    /**
+     *
+     * @return
+     */
+    @Override
     public AppletContext getAppletContext() {
         return DwoHelper.getApplet().getAppletContext();
     }
 
+    @Override
     public void setJSObject(Object window) {
         jsObject = window;
 

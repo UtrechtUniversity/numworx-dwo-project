@@ -1,14 +1,12 @@
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.dwojapplet.domain.CourseMap;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
-
-import fi.dwo.dwojapplet.domain.CourseMap;
 
 public class ModuleTreePopup extends MouseAdapter {
 

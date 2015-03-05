@@ -1,12 +1,10 @@
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.system.TextMapper;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-
-import fi.dwo.commons.system.TextMapper;
 
 class GroupItemListener implements ItemListener {
 

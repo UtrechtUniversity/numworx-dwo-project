@@ -4,6 +4,13 @@
  */
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.exceptions.ClassException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.Teacher;
+import fi.dwo.dwojapplet.domain.User;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -28,14 +35,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-
-import fi.dwo.commons.exceptions.ClassException;
-import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.Course;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.SchoolClass;
-import fi.dwo.dwojapplet.domain.Teacher;
-import fi.dwo.dwojapplet.domain.User;
 
 /**
  * The panel where a SchoolClass can be managed.

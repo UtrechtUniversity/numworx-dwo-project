@@ -1,12 +1,11 @@
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.PrintJob;
 import java.awt.Toolkit;
 import java.util.Properties;
-
-import fi.dwo.dwojapplet.domain.DwoHelper;
 
 class PrinterExport extends Exporter {
 

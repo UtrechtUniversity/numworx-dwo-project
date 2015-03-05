@@ -1,7 +1,6 @@
 package fi.beans.mathkit;
 
 import java.net.URL;
-
 import javax.swing.JTextPane;
 import javax.swing.text.EditorKit;
 import javax.swing.text.StyledDocument;

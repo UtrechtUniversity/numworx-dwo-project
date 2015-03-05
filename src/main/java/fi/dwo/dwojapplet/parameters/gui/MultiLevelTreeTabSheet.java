@@ -2,6 +2,10 @@
 // C:\\parameters\\fi\\dwo\\parameters\\gui\\MultiLevelTreeTabSheet.java
 package fi.dwo.dwojapplet.parameters.gui;
 
+import fi.beans.scorm.Parameter;
+import fi.beans.scorm.ScormTree;
+import fi.beans.scorm.TreeParameter;
+import fi.dwo.dwojapplet.parameters.system.TextMapper;
 import java.awt.Component;
 import java.awt.FontMetrics;
 import java.awt.GridBagConstraints;
@@ -12,14 +16,8 @@ import java.awt.event.ActionListener;
 import java.text.MessageFormat;
 import java.util.Hashtable;
 import java.util.Vector;
-
 import javax.swing.JButton;
 import javax.swing.JPanel;
-
-import fi.beans.scorm.Parameter;
-import fi.beans.scorm.ScormTree;
-import fi.beans.scorm.TreeParameter;
-import fi.dwo.dwojapplet.parameters.system.TextMapper;
 
 public class MultiLevelTreeTabSheet extends TreeTabSheet implements
         DeleteTreeItemIF, ActionListener {

@@ -2,11 +2,10 @@
 // C:\\parameters\\fi\\dwo\\parameters\\domain\\LaunchdataConvertor.java
 package fi.dwo.dwojapplet.parameters.domain;
 
-import java.util.Hashtable;
-
 import fi.beans.scorm.ExtendedParameter;
 import fi.beans.scorm.Parameter;
 import fi.beans.scorm.TreeParameter;
+import java.util.Hashtable;
 
 /**
  * This convertor is used to convert the Launchdata from the parameters (with

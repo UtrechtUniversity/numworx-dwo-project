@@ -1,8 +1,7 @@
 package fi.dwo.dwojapplet.domain;
 
-import java.util.Date;
-
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

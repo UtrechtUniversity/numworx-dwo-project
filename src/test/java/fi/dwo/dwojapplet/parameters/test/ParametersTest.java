@@ -4,14 +4,6 @@
  */
 package fi.dwo.dwojapplet.parameters.test;
 
-import java.applet.Applet;
-import java.awt.Color;
-import java.awt.HeadlessException;
-import java.awt.Panel;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.util.Hashtable;
-
 import fi.beans.scorm.DataType;
 import fi.beans.scorm.DataTypeIF;
 import fi.beans.scorm.ExtendedParameter;
@@ -28,11 +20,17 @@ import fi.beans.scorm.ScormString;
 import fi.beans.scorm.ScormText;
 import fi.beans.scorm.ScormTree;
 import fi.beans.scorm.TreeParameter;
-//import fi.beans.tooltip.ToolTipManager;
 import fi.dwo.dwojapplet.gui.AutoScrollPanel;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.parameters.gui.MainParameterComponent;
 import fi.dwo.dwojapplet.parameters.gui.ParameterComponent;
+import java.applet.Applet;
+import java.awt.Color;
+import java.awt.HeadlessException;
+import java.awt.Panel;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.util.Hashtable;
 
 /**
  * @author M.J.B. Kupers

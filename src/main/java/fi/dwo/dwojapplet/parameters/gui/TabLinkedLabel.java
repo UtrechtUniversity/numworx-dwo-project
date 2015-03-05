@@ -6,11 +6,10 @@
  */
 package fi.dwo.dwojapplet.parameters.gui;
 
+import fi.dwo.dwojapplet.gui.LinkedLabel;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-
-import fi.dwo.dwojapplet.gui.LinkedLabel;
 
 /**
  * @author M.J.B. Kupers

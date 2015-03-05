@@ -3,13 +3,11 @@
  */
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.LayoutManager;
-
 import javax.swing.JPanel;
-
-import fi.dwo.dwojapplet.domain.DwoHelper;
 
 /**
  * @author wim

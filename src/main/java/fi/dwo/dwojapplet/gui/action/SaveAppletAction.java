@@ -1,5 +1,10 @@
 package fi.dwo.dwojapplet.gui.action;
 
+import fi.beans.base64code.StringCodeObject;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.Sco;
 import java.awt.Component;
 import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
@@ -13,12 +18,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.MessageFormat;
 import java.util.Hashtable;
-
-import fi.beans.base64code.StringCodeObject;
-import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.CourseMap;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.Sco;
 
 public class SaveAppletAction extends GuiAction {
 

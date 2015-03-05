@@ -4,6 +4,15 @@
  */
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.scorm.PartialScoreIF;
+import fi.beans.scorm.SCORM12APIInterface;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.ScoBase;
+import static fi.dwo.dwojapplet.domain.ScoBase.REVIEW;
+import fi.dwo.dwojapplet.domain.User;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -26,7 +35,6 @@ import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
 import javax.swing.AbstractAction;
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
@@ -49,16 +57,6 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
-
-import fi.beans.scorm.PartialScoreIF;
-import fi.beans.scorm.SCORM12APIInterface;
-import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.SchoolClass;
-import fi.dwo.dwojapplet.domain.Sco;
-import fi.dwo.dwojapplet.domain.ScoBase;
-import static fi.dwo.dwojapplet.domain.ScoBase.REVIEW;
-import fi.dwo.dwojapplet.domain.User;
 
 /**
  * This class is a dialog that shows the sco, with the results of the specified

@@ -1,5 +1,9 @@
 package fi.dwo.dwojapplet.persistence.cache;
 
+import fi.dwo.commons.exceptions.DwoXmlRpcException;
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.persistence.DbAccessIF;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ConcurrentModificationException;
@@ -7,17 +11,10 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
-
-import javax.swing.JOptionPane;
-
-import org.apache.xmlrpc.applet.XmlRpcException;
-
-import fi.dwo.commons.exceptions.DwoXmlRpcException;
-import fi.dwo.commons.exceptions.PersistenceException;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.persistence.DbAccessIF;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import org.apache.xmlrpc.applet.XmlRpcException;
 
 public class CachingStore implements IStore, Runnable {
     private static final Logger log = Logger.getLogger(CachingStore.class.getName());

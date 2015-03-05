@@ -1,17 +1,15 @@
 package fi.dwo.dwojapplet.gui.action;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.lang.reflect.Method;
-
-import javax.swing.JOptionPane;
-
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 public class MergeAction extends GuiAction {
     private static final Logger log = Logger.getLogger(MergeAction.class.getName());

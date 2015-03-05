@@ -1,12 +1,11 @@
 // Source file: C:\\fi\\dwo\\parameters\\gui\\GroupParameterComponent.java
 package fi.dwo.dwojapplet.parameters.gui;
 
+import fi.beans.scorm.ExtendedParameter;
+import fi.beans.scorm.Parameter;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.util.Hashtable;
-
-import fi.beans.scorm.ExtendedParameter;
-import fi.beans.scorm.Parameter;
 
 public class GroupParameterComponent extends ParameterComponent {
 

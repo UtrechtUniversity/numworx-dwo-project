@@ -1,5 +1,7 @@
 package fi.dwo.dwojapplet.form;
 
+import fi.dwo.commons.exceptions.DwoXmlRpcException;
+import fi.dwo.dwojapplet.persistence.DbAccessIF;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -7,17 +9,10 @@ import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-
 import org.apache.xmlrpc.applet.XmlRpcException;
 import org.xml.sax.SAXException;
-
-import fi.dwo.commons.exceptions.DwoXmlRpcException;
-import fi.dwo.dwojapplet.persistence.DbAccessIF;
-//import fi.dwo.server.persistence.DbAccessLocal;
-
 public class DWOFile {
 
     // DWO v 1.0

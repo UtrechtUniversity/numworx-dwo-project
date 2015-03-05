@@ -3,11 +3,10 @@ package fi.beans.mathkit;
 import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Shape;
-
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Position.Bias;
 import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
-import javax.swing.text.Position.Bias;
 
 public class TopView extends View {
 

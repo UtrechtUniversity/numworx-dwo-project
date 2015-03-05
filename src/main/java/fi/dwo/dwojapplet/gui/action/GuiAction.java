@@ -1,10 +1,5 @@
 package fi.dwo.dwojapplet.gui.action;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.AbstractAction;
-
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.School;
@@ -13,6 +8,9 @@ import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.CenterPanel;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.ModuleTreePanel;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import javax.swing.AbstractAction;
 
 abstract public class GuiAction extends AbstractAction implements PropertyChangeListener {
 

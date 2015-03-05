@@ -1,6 +1,7 @@
 // Source file: C:\\parameters\\fi\\dwo\\parameters\\gui\\TabPane.java
 package fi.dwo.dwojapplet.parameters.gui;
 
+import fi.beans.stringutils.StringUtils;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,11 +11,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.Hashtable;
-
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-
-import fi.beans.stringutils.StringUtils;
 
 public class TabPane extends JPanel implements ActionListener, ComponentListener {
 

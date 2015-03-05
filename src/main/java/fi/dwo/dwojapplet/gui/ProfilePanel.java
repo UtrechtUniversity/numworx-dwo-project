@@ -2,13 +2,18 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\ProfilePanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.exceptions.LoginException;
+import fi.dwo.commons.exceptions.RegisterException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Group;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.User;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -19,13 +24,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
-
-import fi.dwo.commons.exceptions.LoginException;
-import fi.dwo.commons.exceptions.RegisterException;
-import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.Group;
-import fi.dwo.dwojapplet.domain.SchoolClass;
-import fi.dwo.dwojapplet.domain.User;
 
 /**
  * This class represents a panel for the current user to change his account.

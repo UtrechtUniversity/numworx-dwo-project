@@ -1,12 +1,11 @@
 package fi.dwo.dwojapplet.gui.action;
 
-import java.awt.event.ActionEvent;
-
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.gui.CenterPanel;
 import fi.dwo.dwojapplet.gui.GuiCreatorTeacher;
 import fi.dwo.dwojapplet.gui.ScoPanel;
+import java.awt.event.ActionEvent;
 
 public class ScoParameterAction extends GuiAction {
 

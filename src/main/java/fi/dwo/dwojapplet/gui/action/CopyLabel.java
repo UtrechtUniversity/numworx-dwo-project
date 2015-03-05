@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.gui.action;
 
+import fi.dwo.commons.system.TextMapper;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
@@ -9,11 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
-
 import javax.swing.AbstractAction;
 import javax.swing.JPopupMenu;
-
-import fi.dwo.commons.system.TextMapper;
 
 public class CopyLabel extends AbstractAction implements MouseListener, ClipboardOwner, Transferable {
 

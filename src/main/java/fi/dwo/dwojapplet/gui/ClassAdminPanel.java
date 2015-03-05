@@ -1,5 +1,18 @@
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.ContactDocent;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.DwoIF;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.SchoolGroup;
+import fi.dwo.dwojapplet.domain.Teacher;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.persistence.DbAccessCreator;
+import fi.dwo.dwojapplet.persistence.MapperCreator;
+import fi.dwo.dwojapplet.persistence.MapperIF;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -7,7 +20,8 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;
@@ -23,22 +37,6 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-
-import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.ContactDocent;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.DwoIF;
-import fi.dwo.dwojapplet.domain.School;
-import fi.dwo.dwojapplet.domain.SchoolClass;
-import fi.dwo.dwojapplet.domain.SchoolGroup;
-import fi.dwo.dwojapplet.domain.Teacher;
-import fi.dwo.dwojapplet.domain.User;
-import fi.dwo.dwojapplet.persistence.DbAccessCreator;
-import fi.dwo.dwojapplet.persistence.MapperCreator;
-import fi.dwo.dwojapplet.persistence.MapperIF;
-import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparator, ActionListener {
 

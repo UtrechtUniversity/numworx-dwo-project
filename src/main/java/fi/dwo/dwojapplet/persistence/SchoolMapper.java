@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 public class SchoolMapper extends XmlRpcMapper {

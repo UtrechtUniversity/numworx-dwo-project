@@ -1,13 +1,12 @@
 package fi.dwo.dwojapplet.gui.action;
 
-import java.awt.event.ActionEvent;
-import java.util.Hashtable;
-
 import fi.dwo.dwojapplet.domain.DwoProfile;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.gui.CenterPanel;
 import fi.dwo.dwojapplet.gui.ParameterManagementPanel;
 import fi.dwo.dwojapplet.gui.ScoPanel;
+import java.awt.event.ActionEvent;
+import java.util.Hashtable;
 
 public class PreviewHtml5 extends GuiAction {
 

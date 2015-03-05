@@ -10,7 +10,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.Reader;
 import java.io.StringReader;
-
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JToolTip;

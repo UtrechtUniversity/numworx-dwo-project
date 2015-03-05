@@ -2,12 +2,6 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\UserMapper.java
 package fi.dwo.dwojapplet.persistence;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Hashtable;
-
-import org.apache.xmlrpc.applet.XmlRpcException;
-
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Admin;
 import fi.dwo.dwojapplet.domain.ContactDocent;
@@ -17,9 +11,12 @@ import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.SchoolGroup;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
-import static java.lang.Math.log;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.xmlrpc.applet.XmlRpcException;
 
 public class UserMapper extends XmlRpcMapper {
     private static final Logger log = Logger.getLogger(UserMapper.class.getName());

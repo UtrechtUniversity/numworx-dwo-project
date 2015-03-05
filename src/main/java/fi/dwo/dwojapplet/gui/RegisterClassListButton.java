@@ -1,20 +1,31 @@
 package fi.dwo.dwojapplet.gui;
 
-import java.awt.*;
+import fi.dwo.commons.exceptions.RegisterException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.Group;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.SchoolGroup;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import java.awt.event.*;
-
-import javax.swing.*;
-import javax.swing.table.*;
-
-import fi.dwo.dwojapplet.domain.*;
-import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-import fi.dwo.commons.exceptions.RegisterException;
-import fi.dwo.commons.system.TextMapper;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 public class RegisterClassListButton extends JButton implements ActionListener {
     private static final Logger log = Logger.getLogger(RegisterClassListButton.class.getName());

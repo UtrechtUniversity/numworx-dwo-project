@@ -2,6 +2,8 @@
 // C:\\parameters\\fi\\dwo\\parameters\\gui\\SingleLevelTreeTabSheet.java
 package fi.dwo.dwojapplet.parameters.gui;
 
+import fi.beans.scorm.TreeParameter;
+import fi.dwo.dwojapplet.parameters.system.TextMapper;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.GridBagConstraints;
@@ -11,12 +13,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
 import java.util.Hashtable;
-
 import javax.swing.JButton;
 import javax.swing.JPanel;
-
-import fi.beans.scorm.TreeParameter;
-import fi.dwo.dwojapplet.parameters.system.TextMapper;
 
 public class SingleLevelTreeTabSheet extends TreeTabSheet implements
         ItemLaunchdataIF, ActionListener {

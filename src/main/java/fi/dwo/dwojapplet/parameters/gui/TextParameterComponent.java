@@ -1,13 +1,11 @@
 // Source file: C:\\fi\\dwo\\parameters\\gui\\TextParameterComponent.java
 package fi.dwo.dwojapplet.parameters.gui;
 
+import fi.beans.scorm.Parameter;
 import java.awt.Component;
 import java.util.Hashtable;
-
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-
-import fi.beans.scorm.Parameter;
 
 public class TextParameterComponent extends ParameterComponent {
 

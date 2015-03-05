@@ -8,7 +8,6 @@ import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.MouseEvent;
-
 import javax.swing.JButton;
 
 /**

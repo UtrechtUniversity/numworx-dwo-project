@@ -1,5 +1,6 @@
 package fi.beans.dwomaccess;
 
+import fi.beans.base64code.StringCodeObject;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.IOException;
@@ -11,12 +12,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import org.json.simple.JSONAware;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONStreamAware;
-
-import fi.beans.base64code.StringCodeObject;
 
 public class JSONEncoder {
 

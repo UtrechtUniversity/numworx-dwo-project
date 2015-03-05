@@ -1,5 +1,8 @@
 package fi.dwo.dwojapplet.gui.action;
 
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.Sco;
 import java.awt.Component;
 import java.awt.FileDialog;
 import java.awt.Frame;
@@ -9,14 +12,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Hashtable;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
-import fi.dwo.dwojapplet.domain.CourseMap;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.Sco;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 public class ImportScorm extends GuiAction {
     private static final Logger log = Logger.getLogger(ImportScorm.class.getName());

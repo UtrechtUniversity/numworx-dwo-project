@@ -1,8 +1,8 @@
 // Source file: C:\\parameters\\fi\\dwo\\parameters\\domain\\ConvertorIF.java
 package fi.dwo.dwojapplet.parameters.domain;
 
-import java.util.Hashtable;
 import fi.beans.scorm.Parameter;
+import java.util.Hashtable;
 
 /**
  * The Convertor is used to convert the launchdata from the parameters in the

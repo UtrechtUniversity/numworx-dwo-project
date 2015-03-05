@@ -1,10 +1,9 @@
 //Source file: C:\\fi\\dwo\\parameters\\gui\\ParameterConstants.java
 package fi.dwo.dwojapplet.parameters.gui;
 
+import fi.dwo.dwojapplet.gui.GuiConstants;
 import java.awt.Color;
 import java.awt.Font;
-
-import fi.dwo.dwojapplet.gui.GuiConstants;
 
 /**
  * @author s107473 TODO To change the template for this generated type comment

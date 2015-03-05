@@ -1,6 +1,7 @@
 // Source file: C:\\fi\\dwo\\parameters\\gui\\ParameterComponent.java
 package fi.dwo.dwojapplet.parameters.gui;
 
+import fi.beans.scorm.Parameter;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -12,11 +13,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.Hashtable;
 import java.util.Vector;
-
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-
-import fi.beans.scorm.Parameter;
 
 public class ParameterComponent extends JPanel implements ParameterComponentIF, FocusListener, ComponentListener {
 

@@ -2,8 +2,8 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\domain\\ResultsModule.java
 package fi.dwo.dwojapplet.domain;
 
-import java.util.Vector;
-
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.ScoDialog;
 import fi.dwo.dwojapplet.gui.ScoPanel;
 import fi.dwo.dwojapplet.persistence.MapperCreator;
@@ -12,11 +12,8 @@ import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.dwojapplet.persistence.UserResultListMapper;
 import java.util.Collections;
 import java.util.Comparator;
-
+import java.util.Vector;
 import javax.swing.JOptionPane;
-
-import fi.dwo.commons.exceptions.PersistenceException;
-import fi.dwo.commons.system.TextMapper;
 
 /**
  * This class managed the results (zooming, ordering, select courses) who are

@@ -1,16 +1,15 @@
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.dwojapplet.domain.LessonGroup;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Insets;
-
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
-import fi.dwo.dwojapplet.domain.LessonGroup;
 
 public class MultiLineTableCellRenderer extends JTextArea implements TableCellRenderer {
 

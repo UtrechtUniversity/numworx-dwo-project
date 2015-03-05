@@ -1,6 +1,11 @@
 //Source file: N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\ResultScoreButton.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.scorm.PartialScoreIF;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.ResultScoreIF;
+import fi.dwo.dwojapplet.domain.Sco;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -9,25 +14,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
 import java.util.Map;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
-
-import fi.beans.scorm.PartialScoreIF;
-import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.ResultScoreIF;
-import fi.dwo.dwojapplet.domain.Sco;
-
-//import fi.wiskopdr.ScoresObjectivesPanel;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Shows a panel with the color representing the score. It also shows the score.

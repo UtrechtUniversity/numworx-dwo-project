@@ -1,18 +1,15 @@
 package fi.dwo.dwojapplet.persistence;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
-import org.apache.xmlrpc.applet.XmlRpcException;
-
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.DwoIF;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.gui.GuiCreatorAdmin;
 import fi.dwo.dwojapplet.gui.SchoolPanel;
-import fi.dwo.dwojapplet.persistence.MapperCreator;
+import java.io.IOException;
+import java.sql.SQLException;
 import junit.framework.TestCase;
+import org.apache.xmlrpc.applet.XmlRpcException;
 
 public class SchoolMapperTest extends TestCase {
 

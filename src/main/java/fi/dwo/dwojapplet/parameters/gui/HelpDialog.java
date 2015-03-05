@@ -1,6 +1,9 @@
 // Source file: C:\\fi\\dwo\\parameters\\gui\\HelpDialog.java
 package fi.dwo.dwojapplet.parameters.gui;
 
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.gui.GuiConstants;
+import fi.dwo.dwojapplet.parameters.system.TextMapper;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
@@ -11,16 +14,11 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JTextArea;
-
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.gui.GuiConstants;
-import fi.dwo.dwojapplet.parameters.system.TextMapper;
 
 public class HelpDialog extends JDialog implements ActionListener {
 

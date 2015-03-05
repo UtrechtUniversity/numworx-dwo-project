@@ -2,9 +2,8 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\CourseIconIF.java
 package fi.dwo.dwojapplet.gui;
 
-import java.awt.event.ActionListener;
-
 import fi.dwo.dwojapplet.domain.Course;
+import java.awt.event.ActionListener;
 
 /**
  *

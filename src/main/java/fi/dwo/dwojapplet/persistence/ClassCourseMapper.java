@@ -1,14 +1,12 @@
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.dwojapplet.domain.ClassCourse;
+import fi.dwo.dwojapplet.domain.SchoolClass;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Hashtable;
-
 import org.apache.xmlrpc.applet.XmlRpcException;
-
-import fi.dwo.dwojapplet.domain.ClassCourse;
-import fi.dwo.dwojapplet.domain.SchoolClass;
 
 class ClassCourseMapper extends XmlRpcMapper {
 

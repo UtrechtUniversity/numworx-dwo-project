@@ -2,23 +2,18 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\domain\\Course.java
 package fi.dwo.dwojapplet.domain;
 
-import java.awt.Image;
-
-import javax.swing.JOptionPane;
-
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.CoursePanel;
-//import fi.dwo.client.gui.DwoMessageDialog;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-
+import java.awt.Image;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
-import fi.dwo.commons.exceptions.PersistenceException;
-import fi.dwo.commons.system.TextMapper;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  * This class is responsible for the Course data.

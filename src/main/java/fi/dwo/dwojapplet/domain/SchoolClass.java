@@ -2,15 +2,12 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\domain\\SchoolClass.java
 package fi.dwo.dwojapplet.domain;
 
-import java.util.Date;
-
-import javax.swing.JOptionPane;
-
-//import fi.dwo.client.gui.DwoMessageDialog;
-import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.util.Date;
+import javax.swing.JOptionPane;
 
 /**
  * This class is responsible for the SchoolClass data.

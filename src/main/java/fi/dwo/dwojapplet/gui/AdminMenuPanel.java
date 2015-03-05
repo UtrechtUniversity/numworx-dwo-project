@@ -2,9 +2,8 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\TeacherMenuPanel.java
 package fi.dwo.dwojapplet.gui;
 
-import java.awt.event.ActionEvent;
-
 import fi.dwo.commons.system.TextMapper;
+import java.awt.event.ActionEvent;
 
 /**
  * This class is the menupanel for the teacher who logged in.

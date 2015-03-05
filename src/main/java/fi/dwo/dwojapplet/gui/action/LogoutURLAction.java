@@ -1,10 +1,9 @@
 package fi.dwo.dwojapplet.gui.action;
 
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.awt.event.ActionEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import fi.dwo.dwojapplet.domain.DwoHelper;
 
 public class LogoutURLAction extends LogoutAction {
 

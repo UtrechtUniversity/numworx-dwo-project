@@ -2,6 +2,9 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\GuiConstants.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.dwojapplet.domain.DWO;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.User;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Insets;
@@ -10,10 +13,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 import java.util.StringTokenizer;
-
-import fi.dwo.dwojapplet.domain.DWO;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.User;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

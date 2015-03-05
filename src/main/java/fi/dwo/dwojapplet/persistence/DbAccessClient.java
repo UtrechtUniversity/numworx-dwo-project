@@ -1,11 +1,11 @@
 // Generated code, do not edit
 package fi.dwo.dwojapplet.persistence;
 
-import java.util.Vector;
-import java.net.URL;
 import fi.beans.xmlrpc.Client;
-import org.apache.xmlrpc.applet.XmlRpcException;
 import java.io.IOException;
+import java.net.URL;
+import java.util.Vector;
+import org.apache.xmlrpc.applet.XmlRpcException;
 
 public class DbAccessClient extends Client implements DbAccessIF {
 

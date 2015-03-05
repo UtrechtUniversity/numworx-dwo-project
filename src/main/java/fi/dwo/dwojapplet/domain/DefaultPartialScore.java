@@ -1,14 +1,13 @@
 package fi.dwo.dwojapplet.domain;
 
+import fi.beans.scorm.PartialScoreIF;
+import fi.beans.scorm.SCORM12APIInterface;
+import fi.dwo.commons.system.TextMapper;
 import java.awt.Component;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import fi.beans.scorm.PartialScoreIF;
-import fi.beans.scorm.SCORM12APIInterface;
-import fi.dwo.commons.system.TextMapper;
 
 public class DefaultPartialScore implements PartialScoreIF {
 

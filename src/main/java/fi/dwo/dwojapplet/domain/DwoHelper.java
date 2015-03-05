@@ -4,27 +4,24 @@
  */
 package fi.dwo.dwojapplet.domain;
 
-import java.applet.Applet;
-import java.awt.Component;
-import java.awt.MediaTracker;
-import java.awt.Point;
-import java.awt.Container;
-import java.awt.Frame;
-import java.awt.Image;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Hashtable;
-
-import javax.swing.JOptionPane;
-
-import netscape.javascript.JSObject;
-
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.mainframe.MainFrame;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.MainPanel;
+import java.applet.Applet;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Frame;
+import java.awt.Image;
+import java.awt.MediaTracker;
+import java.awt.Point;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import netscape.javascript.JSObject;
 
 /**
  * Static Helper class for the DWO.

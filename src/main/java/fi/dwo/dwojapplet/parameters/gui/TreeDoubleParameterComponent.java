@@ -1,13 +1,12 @@
 //Source file: C:\\parameters\\fi\\dwo\\parameters\\gui\\TreeDoubleParameterComponent.java
 package fi.dwo.dwojapplet.parameters.gui;
 
+import fi.beans.scorm.Parameter;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Hashtable;
-
-import fi.beans.scorm.Parameter;
 
 public class TreeDoubleParameterComponent extends DoubleParameterComponent implements ActionListener {
 

@@ -3,6 +3,23 @@
  */
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.appletutil.AppletUtil;
+import fi.dwo.commons.exceptions.CourseException;
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DWO;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.DwoProfile;
+import fi.dwo.dwojapplet.domain.ResultsModuleIF;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.GuiCreatorTeacher.LazyAppletConfig;
+import fi.dwo.dwojapplet.persistence.DbAccessCreator;
+import fi.dwo.dwojapplet.persistence.MapperCreator;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
 import java.awt.BorderLayout;
@@ -30,7 +47,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
 import javax.swing.AbstractListModel;
 import javax.swing.BorderFactory;
@@ -59,28 +77,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-
 import org.apache.xmlrpc.applet.XmlRpcException;
-
-import fi.beans.appletutil.AppletUtil;
-import fi.dwo.commons.exceptions.CourseException;
-import fi.dwo.commons.exceptions.PersistenceException;
-import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.Course;
-import fi.dwo.dwojapplet.domain.CourseMap;
-import fi.dwo.dwojapplet.domain.DWO;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.DwoProfile;
-import fi.dwo.dwojapplet.domain.ResultsModuleIF;
-import fi.dwo.dwojapplet.domain.School;
-import fi.dwo.dwojapplet.domain.Sco;
-import fi.dwo.dwojapplet.domain.User;
-import fi.dwo.dwojapplet.gui.GuiCreatorTeacher.LazyAppletConfig;
-import fi.dwo.dwojapplet.persistence.DbAccessCreator;
-import fi.dwo.dwojapplet.persistence.MapperCreator;
-import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Velth101

@@ -2,14 +2,12 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\GroupMapper.java
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.SchoolGroup;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Hashtable;
-
 import org.apache.xmlrpc.applet.XmlRpcException;
-
-import fi.dwo.dwojapplet.domain.School;
-import fi.dwo.dwojapplet.domain.SchoolGroup;
 
 public class SchoolGroupMapper extends XmlRpcMapper {
 

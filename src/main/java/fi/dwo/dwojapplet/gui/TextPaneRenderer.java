@@ -4,7 +4,6 @@
 package fi.dwo.dwojapplet.gui;
 
 import java.awt.Component;
-
 import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.table.TableCellRenderer;

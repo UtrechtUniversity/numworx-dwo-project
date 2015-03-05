@@ -1,12 +1,10 @@
 package fi.dwo.dwojapplet.parameters.gui;
 
-import java.awt.Component;
-import java.util.Hashtable;
-
-import javax.swing.JComboBox;
-
 import fi.beans.scorm.Parameter;
 import fi.beans.scorm.ScormEnum;
+import java.awt.Component;
+import java.util.Hashtable;
+import javax.swing.JComboBox;
 
 public class EnumParameterComponent extends ParameterComponent implements ParameterComponentIF {
 

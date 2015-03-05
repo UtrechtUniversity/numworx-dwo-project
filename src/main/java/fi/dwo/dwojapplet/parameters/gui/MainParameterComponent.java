@@ -2,7 +2,6 @@
 package fi.dwo.dwojapplet.parameters.gui;
 
 import fi.beans.scorm.Parameter;
-
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

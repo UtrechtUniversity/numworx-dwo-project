@@ -1,15 +1,5 @@
 package fi.dwo.dwojapplet.gui.action;
 
-import java.awt.Component;
-import java.awt.event.ActionListener;
-
-import javax.swing.Action;
-import javax.swing.JComponent;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.event.ChangeEvent;
-
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
@@ -24,6 +14,14 @@ import fi.dwo.dwojapplet.gui.CoursePanel;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.ModuleTreePanel;
 import fi.dwo.dwojapplet.gui.SelectStrategy;
+import java.awt.Component;
+import java.awt.event.ActionListener;
+import javax.swing.Action;
+import javax.swing.JComponent;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.event.ChangeEvent;
 
 public class TeacherStrategy implements SelectStrategy {
 

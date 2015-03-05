@@ -11,17 +11,16 @@ import java.awt.font.LineMetrics;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.swing.SizeRequirements;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.BoxView;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
+import javax.swing.text.Position.Bias;
 import javax.swing.text.StyledDocument;
 import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
-import javax.swing.text.Position.Bias;
 
 class FormuleContext implements ViewFactory {
 

@@ -1,5 +1,11 @@
 package fi.dwo.dwojapplet.gui.action;
 
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.form.DWOFile;
+import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 import java.awt.FileDialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -7,21 +13,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-
 import org.apache.xmlrpc.applet.XmlRpcException;
-
-import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.Course;
-import fi.dwo.dwojapplet.domain.CourseMap;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.persistence.DbAccessCreator;
-import fi.dwo.dwojapplet.form.DWOFile;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class BackupModuleAction extends GuiAction {
     private static final Logger log = Logger.getLogger(BackupModuleAction.class.getName());

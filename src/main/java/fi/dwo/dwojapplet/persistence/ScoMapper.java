@@ -2,6 +2,11 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\ScoMapper.java
 package fi.dwo.dwojapplet.persistence;
 
+import fi.beans.base64code.StringCodeObject;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.DwoProfile;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.Sco;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,18 +20,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
-import java.util.zip.GZIPInputStream;
-
-import org.apache.xmlrpc.applet.XmlRpcException;
-import org.json.simple.JSONValue;
-
-import fi.beans.base64code.StringCodeObject;
-import fi.dwo.dwojapplet.domain.Course;
-import fi.dwo.dwojapplet.domain.DwoProfile;
-import fi.dwo.dwojapplet.domain.School;
-import fi.dwo.dwojapplet.domain.Sco;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
+import org.apache.xmlrpc.applet.XmlRpcException;
+import org.json.simple.JSONValue;
 
 public class ScoMapper extends XmlRpcMapper {
     private static final Logger log = Logger.getLogger(ScoMapper.class.getName());

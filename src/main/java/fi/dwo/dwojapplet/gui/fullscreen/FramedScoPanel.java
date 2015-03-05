@@ -1,11 +1,15 @@
 package fi.dwo.dwojapplet.gui.fullscreen;
 
+import fi.dwo.dwojapplet.domain.ClassCourse;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.CenterPanel;
+import fi.dwo.dwojapplet.gui.CenterSubPanel;
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
-
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
@@ -13,12 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
-
-import fi.dwo.dwojapplet.domain.ClassCourse;
-import fi.dwo.dwojapplet.domain.Sco;
-import fi.dwo.dwojapplet.domain.User;
-import fi.dwo.dwojapplet.gui.CenterPanel;
-import fi.dwo.dwojapplet.gui.CenterSubPanel;
 
 public class FramedScoPanel extends JPanel implements CenterSubPanel, ActionListener {
 

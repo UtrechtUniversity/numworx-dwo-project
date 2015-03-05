@@ -16,7 +16,6 @@ import java.awt.image.ColorModel;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
 import java.awt.image.ImageProducer;
-
 import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.Icon;

@@ -2,9 +2,8 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\domain\\ResultScore.java
 package fi.dwo.dwojapplet.domain;
 
-import java.awt.Component;
-
 import fi.dwo.dwojapplet.gui.ResultScoreButton;
+import java.awt.Component;
 
 /**
  * This class handles the score of a user (schoolclass, user) and a

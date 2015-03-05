@@ -2,16 +2,14 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\domain\\DwoIF.java
 package fi.dwo.dwojapplet.domain;
 
-import java.awt.Container;
-import java.util.Date;
-
-import fi.dwo.dwojapplet.gui.CenterSubPanel;
-import fi.dwo.dwojapplet.gui.ScoPanel;
 import fi.dwo.commons.exceptions.ClassException;
-import fi.dwo.commons.exceptions.SchoolException;
-import fi.dwo.commons.exceptions.CourseException;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.exceptions.RegisterException;
+import fi.dwo.commons.exceptions.SchoolException;
+import fi.dwo.dwojapplet.gui.CenterSubPanel;
+import fi.dwo.dwojapplet.gui.ScoPanel;
+import java.awt.Container;
+import java.util.Date;
 
 /**
  * The interface for the Gui to communicate with the DWO.<br>

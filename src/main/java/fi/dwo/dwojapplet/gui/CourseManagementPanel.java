@@ -2,6 +2,20 @@
 
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DWO;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.gui.action.DeleteAction;
+import fi.dwo.dwojapplet.gui.action.ImportModuleAction;
+import fi.dwo.dwojapplet.gui.action.ShareCourseAction;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import fi.wiskopdr.WiskOpdr;
+import fi.wiskopdr.WiskOpdrEditPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -34,22 +48,6 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultTreeCellRenderer;
-
-import fi.dwo.commons.exceptions.PersistenceException;
-import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.Course;
-import fi.dwo.dwojapplet.domain.CourseMap;
-import fi.dwo.dwojapplet.domain.DWO;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.School;
-import fi.dwo.dwojapplet.domain.User;
-import fi.dwo.dwojapplet.gui.action.DeleteAction;
-import fi.dwo.dwojapplet.gui.action.ImportModuleAction;
-import fi.dwo.dwojapplet.gui.action.ShareCourseAction;
-import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-
-import fi.wiskopdr.WiskOpdr;
-import fi.wiskopdr.WiskOpdrEditPanel;
 
 /**
  * This class is a panel containing a list of courses to edit, delete or add.
@@ -149,7 +147,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 					return downImage;
 			case 5: return removeImage;
 			
-			case 0: return Boolean.valueOf(course.isWithChildren());
+			case 0: return course.isWithChildren();
 			}
 			return null;
 		}

@@ -1,20 +1,5 @@
 package fi.dwo.dwojapplet.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Frame;
-import java.awt.HeadlessException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Arrays;
-
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.School;
@@ -22,8 +7,21 @@ import fi.dwo.dwojapplet.domain.SchoolGroup;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.awt.BorderLayout;
+import java.awt.Frame;
+import java.awt.HeadlessException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 public class RightsDialog extends JDialog implements ActionListener {
 

@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.Vector;
-
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 /**

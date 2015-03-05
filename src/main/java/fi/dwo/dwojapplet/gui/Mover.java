@@ -7,7 +7,6 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
-
 import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JFrame;

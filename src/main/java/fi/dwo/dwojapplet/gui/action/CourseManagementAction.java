@@ -1,7 +1,5 @@
 package fi.dwo.dwojapplet.gui.action;
 
-import java.awt.event.ActionEvent;
-
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.gui.CenterPanel;
@@ -9,6 +7,7 @@ import fi.dwo.dwojapplet.gui.CenterSubPanel;
 import fi.dwo.dwojapplet.gui.CourseChoicePanel;
 import fi.dwo.dwojapplet.gui.GuiCreatorTeacher;
 import fi.dwo.dwojapplet.gui.ModuleTreePanel;
+import java.awt.event.ActionEvent;
 
 public class CourseManagementAction extends GuiAction {
 

@@ -1,8 +1,7 @@
 package fi.dwo.dwojapplet.gui;
 
-import javax.swing.JPopupMenu;
-
 import fi.dwo.dwojapplet.domain.CourseMap;
+import javax.swing.JPopupMenu;
 
 public interface SelectStrategy {
 

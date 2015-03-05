@@ -1,10 +1,9 @@
 //Source file: C:\\parameters\\fi\\dwo\\parameters\\gui\\TreeTabSheet.java
 package fi.dwo.dwojapplet.parameters.gui;
 
+import fi.beans.scorm.Parameter;
 import java.awt.Component;
 import java.util.Hashtable;
-
-import fi.beans.scorm.Parameter;
 
 public class TreeTabSheet extends ParameterComponent implements TabSheetIF {
 

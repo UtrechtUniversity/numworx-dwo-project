@@ -1,12 +1,11 @@
 package fi.dwo.dwojapplet.domain.utils;
 
+import fi.dwo.dwojapplet.domain.utils.Util.NoException;
+import fi.dwo.dwojapplet.domain.utils.Util.ResultException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import fi.dwo.dwojapplet.domain.utils.Util.ResultException;
-import fi.dwo.dwojapplet.domain.utils.Util.NoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

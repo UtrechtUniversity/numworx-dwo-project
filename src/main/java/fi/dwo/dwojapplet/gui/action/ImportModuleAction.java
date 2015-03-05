@@ -1,5 +1,20 @@
 package fi.dwo.dwojapplet.gui.action;
 
+import fi.dwo.commons.exceptions.DwoXmlRpcException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.Course;
+import fi.dwo.dwojapplet.domain.CourseMap;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.DwoIF;
+import fi.dwo.dwojapplet.domain.Sco;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.form.DWOFile;
+import fi.dwo.dwojapplet.gui.CourseManagementPanel;
+import fi.dwo.dwojapplet.gui.GuiCreator;
+import fi.dwo.dwojapplet.gui.ModuleTreePanel;
+import fi.dwo.dwojapplet.persistence.DbAccessCreator;
+import fi.dwo.dwojapplet.persistence.MapperCreator;
+import fi.dwo.dwojapplet.persistence.MapperIF;
 import java.awt.FileDialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -11,29 +26,11 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Set;
 import java.util.Vector;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.apache.xmlrpc.applet.XmlRpcException;
-import org.xml.sax.SAXException;
-
-import fi.dwo.commons.exceptions.DwoXmlRpcException;
-import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.Course;
-import fi.dwo.dwojapplet.domain.CourseMap;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.DwoIF;
-import fi.dwo.dwojapplet.domain.Sco;
-import fi.dwo.dwojapplet.domain.User;
-import fi.dwo.dwojapplet.gui.CourseManagementPanel;
-import fi.dwo.dwojapplet.gui.GuiCreator;
-import fi.dwo.dwojapplet.gui.ModuleTreePanel;
-import fi.dwo.dwojapplet.persistence.DbAccessCreator;
-import fi.dwo.dwojapplet.persistence.MapperCreator;
-import fi.dwo.dwojapplet.persistence.MapperIF;
-import fi.dwo.dwojapplet.form.DWOFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import org.apache.xmlrpc.applet.XmlRpcException;
+import org.xml.sax.SAXException;
 
 public class ImportModuleAction extends GuiAction {
     private static final Logger log = Logger.getLogger(ImportModuleAction.class.getName());

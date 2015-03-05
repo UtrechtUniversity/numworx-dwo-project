@@ -2,13 +2,6 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\GuiCreator.java
 package fi.dwo.dwojapplet.gui;
 
-import java.awt.Container;
-import java.util.Date;
-import java.util.Map;
-
-import javax.swing.JComponent;
-import javax.swing.JOptionPane;
-
 import fi.dwo.commons.exceptions.ClassException;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.exceptions.RegisterException;
@@ -32,8 +25,13 @@ import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.fullscreen.FramedScoPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.awt.Container;
+import java.util.Date;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 
 /**
  * This Class is responsible for creating some GUI elements and to communicate

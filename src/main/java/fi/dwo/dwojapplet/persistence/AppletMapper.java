@@ -4,17 +4,14 @@
  */
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.commons.system.Loader;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Hashtable;
-
-//import fi.oppervlakte_dwo.*;
-import org.apache.xmlrpc.applet.XmlRpcException;
-
-import fi.dwo.commons.system.Loader;
-import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.xmlrpc.applet.XmlRpcException;
 
 /**
  * @author M.J.B. Kupers

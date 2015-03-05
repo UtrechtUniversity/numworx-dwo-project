@@ -1,15 +1,13 @@
 // Source file: C:\\fi\\dwo\\parameters\\gui\\IntegerParameterComponent.java
 package fi.dwo.dwojapplet.parameters.gui;
 
+import fi.beans.scorm.Parameter;
+import fi.beans.scorm.ScormInteger;
 import java.awt.Component;
 import java.util.Hashtable;
-
 import javax.swing.JFormattedTextField;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
-
-import fi.beans.scorm.Parameter;
-import fi.beans.scorm.ScormInteger;
 
 public class IntegerParameterComponent extends ParameterComponent {
 

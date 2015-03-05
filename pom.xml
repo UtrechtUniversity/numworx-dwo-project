@@ -8,6 +8,7 @@
     <version>1.0-SNAPSHOT</version>
     <name>DWOJApplet</name>
     <url>http://www.dwo.nl</url>
+    <packaging>jar</packaging>
     <!-- Update year to current when starting a new project -->
     <inceptionYear>2015</inceptionYear> 
     <organization>
@@ -117,20 +118,30 @@
                             <artifactSet>
                                 <includes>
                                     <include>*:*</include>
-                                    <!--                                    <include>fi:WiskOpdr:*</include> -->
                                 </includes>
                             </artifactSet>
-                            <!--
-                                                    <filters>
-                                                        <filter>
-                                                            <artifact>fi:WiskOpdr</artifact>
-                                                            <excludes>
-                                                                <exclude>fi.beans.appletutil.AppletUtil</exclude>
-                                                                <exclude>fi.beans.dwomaccess.ByteArray</exclude>
-                                                            </excludes>
-                                                        </filter>                                
-                                                    </filters>
-                            -->                        
+                            <filters>
+                                <filter>
+                                    <artifact>fi.dwo:DWO-commons-lib</artifact>
+                                    <excludes>
+                                        <!--
+                                        <exclude>javax.servlet:*</exclude> 
+                                        -->
+                                        <exclude>commons-codec:*</exclude>
+                                        <exclude>commons-httpclient:*</exclude>
+                                        <exclude>commons-logging:*</exclude>
+                                    </excludes>
+                                </filter>                                
+                                <!--
+                                    <filter>
+                                        <artifact>fi:WiskOpdr</artifact>
+                                        <excludes>
+                                            <exclude>fi.beans.appletutil.AppletUtil</exclude>
+                                            <exclude>fi.beans.dwomaccess.ByteArray</exclude>
+                                        </excludes>
+                                    </filter>                                
+                                -->                        
+                            </filters>
                             <relocations>
                                 <relocation>
                                     <pattern>fi.wiskopdr</pattern>
@@ -183,7 +194,9 @@
                             <addClasspath>true</addClasspath>
                         </manifest>
                         <manifestEntries>
+                            <DWOJApplet-Implementation-Version>${project.version}</DWOJApplet-Implementation-Version>
                             <Implementation-Build>${buildNumber}</Implementation-Build>
+                            <DWOJApplet-Implementation-Build>${buildNumber}</DWOJApplet-Implementation-Build>
                             <Main-Class>fi.dwo.dwojapplet.domain.DWO</Main-Class>
                             <Trusted-Only>true</Trusted-Only>
                             <Permissions>all-permissions</Permissions>
@@ -193,117 +206,6 @@
                     </archive>
                 </configuration>
             </plugin>
-            <!-- proguard obfuscation -->            
-            <plugin>
-                <groupId>com.github.wvengen</groupId>
-                <artifactId>proguard-maven-plugin</artifactId>
-                <version>2.0.8</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>proguard</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <proguardVersion>5.2</proguardVersion>
-                    <options>
-                        <option>-verbose</option>
-                        <option>-dontwarn</option> 
-                    </options>
-                    <obfuscate>true</obfuscate>                    
-                    <inputDirectory>${project.build.directory}</inputDirectory>
-                    <injar>${project.build.finalName}.jar</injar>
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                    <outjar>${project.build.finalName}-proguarded.jar</outjar>
-                    <proguardInclude>config.pro</proguardInclude>
-                    <libs>
-                        <lib>${java.home}/lib/rt.jar</lib>
-                        <lib>${java.home}/lib/jsse.jar</lib>
-                        <lib>${java.home}/lib/jfxrt.jar</lib>                       
-                    </libs>
-                    <addMavenDescriptor>false</addMavenDescriptor>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>net.sf.proguard</groupId>
-                        <artifactId>proguard-base</artifactId>
-                        <version>5.2</version>
-                        <scope>runtime</scope>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <!-- repack as pack200 -->
-            <plugin>
-                <groupId>com.github.batkinson.plugins</groupId>
-                <artifactId>maven-pack200-plugin</artifactId>
-                <version>1.0.1</version>
-                <executions>
-                    <execution>
-                        <id>normalize-jars</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>pack</goal>
-                        </goals>
-                        <configuration>
-                            <normalizeOnly>true</normalizeOnly>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>pack-jars</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>pack</goal>
-                        </goals>
-                        <configuration>
-                            <normalizeOnly>false</normalizeOnly>
-                        </configuration>
-                    </execution>
-                </executions>
-                <configuration>
-                    <processMainArtifact>true</processMainArtifact>
-                    <includeClassifiers>
-                        <includeClassifier>all-in-one</includeClassifier>
-                    </includeClassifiers>
-                </configuration>                
-                <dependencies>
-                    <dependency>
-                        <groupId>com.github.batkinson.plugins</groupId>
-                        <artifactId>maven-pack200-plugin</artifactId>
-                        <version>1.0.1</version>
-                        <type>maven-plugin</type>
-                    </dependency>
-                </dependencies>                
-            </plugin>        
-            <!-- jar signing TODO -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jarsigner-plugin</artifactId>
-                <version>1.4</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>verify</id>
-                        <goals>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <keystore>${dwoKeyStore}</keystore>
-                    <alias>${dwoCertKeyAlias}</alias>
-                    <storepass>${dwoCertKeyStorePassword}</storepass>
-                    <keypass>${dwoCertKeyPassword}</keypass>
-                    <sigfile>UU</sigfile>
-                    <tsa>https://timestamp.geotrust.com/tsa</tsa>
-                </configuration>            
-            </plugin>        
         </plugins>
         <finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
     </build>
@@ -329,5 +231,143 @@
         </repository>-->
     </repositories>
     
-    <packaging>jar</packaging>
+    <profiles>
+        <profile>
+            <id>dwo-obfuscate</id> 
+            <activation>
+                <property>
+                    <name>profile.dwo-obfuscate-pack-sign</name>
+                </property>
+            </activation>            
+            <build>
+                <plugins>
+                    <!-- proguard obfuscation -->            
+                    <plugin>
+                        <groupId>com.github.wvengen</groupId>
+                        <artifactId>proguard-maven-plugin</artifactId>
+                        <version>2.0.8</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>proguard</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <proguardVersion>5.2</proguardVersion>
+                            <options>
+                                <option>-verbose</option>
+                                <option>-dontwarn</option> 
+                            </options>
+                            <obfuscate>true</obfuscate>                    
+                            <inputDirectory>${project.build.directory}</inputDirectory>
+                            <injar>${project.build.finalName}.jar</injar>
+                            <!-- uncomment to change the output file
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <outjar>${project.build.finalName}-proguarded.jar</outjar>
+                            -->
+                            <proguardInclude>config.pro</proguardInclude>
+                            <libs>
+                                <lib>${java.home}/lib/rt.jar</lib>
+                                <lib>${java.home}/lib/jsse.jar</lib>
+                                <lib>${java.home}/lib/jfxrt.jar</lib>                       
+                            </libs>
+                            <addMavenDescriptor>false</addMavenDescriptor>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>net.sf.proguard</groupId>
+                                <artifactId>proguard-base</artifactId>
+                                <version>5.2</version>
+                                <scope>runtime</scope>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>      
+            </build>
+        </profile>
+        <profile>
+            <id>dwo-pack-sign</id> 
+            <activation>
+                <property>
+                    <name>profile.dwo-obfuscate-pack-sign</name>
+                </property>
+            </activation>              
+            <build>
+                <plugins>
+                    <!-- repack as pack200 -->
+                    <plugin>
+                        <groupId>com.github.batkinson.plugins</groupId>
+                        <artifactId>maven-pack200-plugin</artifactId>
+                        <version>1.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>normalize-jars</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>pack</goal>
+                                </goals>
+                                <configuration>
+                                    <normalizeOnly>true</normalizeOnly>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>pack-jars</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>pack</goal>
+                                </goals>
+                                <configuration>
+                                    <normalizeOnly>false</normalizeOnly>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <processMainArtifact>true</processMainArtifact>
+                            <includeClassifiers>
+                                <includeClassifier>all-in-one</includeClassifier>
+                            </includeClassifiers>
+                        </configuration>                
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.github.batkinson.plugins</groupId>
+                                <artifactId>maven-pack200-plugin</artifactId>
+                                <version>1.0.1</version>
+                                <type>maven-plugin</type>
+                            </dependency>
+                        </dependencies>                
+                    </plugin>        
+                    <!-- jar signing TODO -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jarsigner-plugin</artifactId>
+                        <version>1.4</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>verify</id>
+                                <goals>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <keystore>${dwoKeyStore}</keystore>
+                            <alias>${dwoCertKeyAlias}</alias>
+                            <storepass>${dwoCertKeyStorePassword}</storepass>
+                            <keypass>${dwoCertKeyPassword}</keypass>
+                            <sigfile>UU</sigfile>
+                            <tsa>https://timestamp.geotrust.com/tsa</tsa>
+                        </configuration>            
+                    </plugin>  
+                </plugins>      
+            </build>
+        </profile>
+    </profiles>
 </project>

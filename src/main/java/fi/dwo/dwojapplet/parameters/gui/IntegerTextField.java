@@ -8,7 +8,6 @@ import java.awt.AWTEvent;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.TextEvent;
-
 import javax.swing.JTextField;
 
 /**

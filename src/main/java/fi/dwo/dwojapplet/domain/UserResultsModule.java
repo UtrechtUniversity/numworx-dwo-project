@@ -1,12 +1,5 @@
 package fi.dwo.dwojapplet.domain;
 
-import java.util.Vector;
-
-import java.util.Collections;
-import java.util.Comparator;
-
-import javax.swing.JOptionPane;
-
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.dwojapplet.gui.CenterSubPanel;
 import fi.dwo.dwojapplet.gui.GuiCreator;
@@ -14,6 +7,10 @@ import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.MapperIF;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.dwojapplet.persistence.UserResultListMapper;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Vector;
+import javax.swing.JOptionPane;
 
 /**
  * Een ResultsModuleIF geschikt gemaakt voor één enkele student. TODO een common

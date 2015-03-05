@@ -1,14 +1,13 @@
 package fi.dwo.dwojapplet.gui.action;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.gui.ExportImportDialog;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

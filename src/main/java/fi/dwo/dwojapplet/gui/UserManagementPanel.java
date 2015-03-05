@@ -1,5 +1,19 @@
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.exceptions.LoginException;
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.exceptions.RegisterException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.ContactDocent;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.DwoIF;
+import fi.dwo.dwojapplet.domain.School;
+import fi.dwo.dwojapplet.domain.SchoolClass;
+import fi.dwo.dwojapplet.domain.SchoolGroup;
+import fi.dwo.dwojapplet.domain.Teacher;
+import fi.dwo.dwojapplet.domain.User;
+import fi.dwo.dwojapplet.persistence.MapperCreator;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -7,7 +21,8 @@ import java.awt.event.ActionListener;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Vector;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
@@ -25,23 +40,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-
-import fi.dwo.commons.exceptions.LoginException;
-import fi.dwo.commons.exceptions.PersistenceException;
-import fi.dwo.commons.exceptions.RegisterException;
-import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.ContactDocent;
-import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.DwoIF;
-import fi.dwo.dwojapplet.domain.School;
-import fi.dwo.dwojapplet.domain.SchoolClass;
-import fi.dwo.dwojapplet.domain.SchoolGroup;
-import fi.dwo.dwojapplet.domain.Teacher;
-import fi.dwo.dwojapplet.domain.User;
-import fi.dwo.dwojapplet.persistence.MapperCreator;
-import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class UserManagementPanel extends JPanel implements CenterSubPanel {
     private static final Logger log = Logger.getLogger(UserManagementPanel.class.getName());

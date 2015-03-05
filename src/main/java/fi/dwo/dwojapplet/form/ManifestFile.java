@@ -1,5 +1,7 @@
 package fi.dwo.dwojapplet.form;
 
+import fi.dwo.commons.exceptions.DwoXmlRpcException;
+import fi.dwo.dwojapplet.persistence.DbAccessIF;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -7,7 +9,6 @@ import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -16,7 +17,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
 import org.apache.xmlrpc.applet.XmlRpcException;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
@@ -25,9 +25,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import fi.dwo.commons.exceptions.DwoXmlRpcException;
-import fi.dwo.dwojapplet.persistence.DbAccessIF;
 
 /**
  * Save en restore van courses en single sco's.

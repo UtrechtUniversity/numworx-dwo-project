@@ -2,10 +2,9 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\DbAccessCreator.java
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

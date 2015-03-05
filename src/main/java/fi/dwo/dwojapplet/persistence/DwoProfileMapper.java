@@ -2,13 +2,11 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\ScoMapper.java
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.dwojapplet.domain.DwoProfile;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Hashtable;
-
 import org.apache.xmlrpc.applet.XmlRpcException;
-
-import fi.dwo.dwojapplet.domain.DwoProfile;
 
 public class DwoProfileMapper extends XmlRpcMapper {
 

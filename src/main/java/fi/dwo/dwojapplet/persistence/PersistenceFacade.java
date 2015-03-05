@@ -2,24 +2,7 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\PersistenceFacade.java
 package fi.dwo.dwojapplet.persistence;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Constructor;
-import java.net.URL;
-import java.net.URLConnection;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Vector;
-
-import org.apache.xmlrpc.applet.XmlRpcException;
-
 import fi.beans.base64code.StringCodeObject;
-
 import fi.dwo.commons.exceptions.ClassException;
 import fi.dwo.commons.exceptions.CourseException;
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
@@ -51,8 +34,22 @@ import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.domain.UserResultList;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.persistence.cache.StoreCreator;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.net.URL;
+import java.net.URLConnection;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.xmlrpc.applet.XmlRpcException;
 
 /**
  * This class is the Facade between the Domain layer and the Persistence layer.

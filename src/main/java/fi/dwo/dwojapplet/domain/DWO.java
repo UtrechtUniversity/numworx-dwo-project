@@ -1,28 +1,59 @@
 package fi.dwo.dwojapplet.domain;
 
+import fi.beans.appletutil.AppletUtil;
+import fi.beans.base64code.StringCodeObject;
+import fi.beans.jvmchecker.JVMChecker;
+import fi.beans.mainframe.MainFrame;
+import fi.beans.scorm.SCORM12APIInterface;
+import fi.dwo.commons.exceptions.ClassException;
+import fi.dwo.commons.exceptions.CourseException;
+import fi.dwo.commons.exceptions.LoginException;
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.exceptions.RegisterException;
+import fi.dwo.commons.exceptions.SchoolException;
+import fi.dwo.commons.exceptions.ScoException;
+import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.utils.CheckEmail;
+import fi.dwo.dwojapplet.gui.CenterSubPanel;
+import fi.dwo.dwojapplet.gui.GuiConstants;
+import fi.dwo.dwojapplet.gui.GuiCreator;
+import fi.dwo.dwojapplet.gui.MainPanel;
+import fi.dwo.dwojapplet.gui.ModuleTreePanel;
+import fi.dwo.dwojapplet.gui.ScoPanel;
+import fi.dwo.dwojapplet.persistence.MapperCreator;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import fi.dwo.dwojapplet.persistence.cache.StoreCreator;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FocusTraversalPolicy;
-import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Window;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
-import java.net.URL;
-import java.net.URLDecoder;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.net.URLDecoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Vector;
-
+import java.util.jar.Manifest;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JApplet;
@@ -33,40 +64,6 @@ import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.plaf.ColorUIResource;
 
-import fi.beans.appletutil.AppletUtil;
-import fi.beans.base64code.StringCodeObject;
-import fi.dwo.dwojapplet.domain.utils.CheckEmail;
-//import fi.beans.fidentity.CheckEmail;
-//import fi.beans.fidentity.Fidentity;
-import fi.beans.mainframe.MainFrame;
-import fi.beans.scorm.SCORM12APIInterface;
-import fi.beans.jvmchecker.JVMChecker;
-import fi.dwo.commons.exceptions.ClassException;
-import fi.dwo.commons.exceptions.CourseException;
-import fi.dwo.commons.exceptions.LoginException;
-import fi.dwo.commons.exceptions.PersistenceException;
-import fi.dwo.commons.exceptions.RegisterException;
-import fi.dwo.commons.exceptions.SchoolException;
-import fi.dwo.commons.exceptions.ScoException;
-import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.gui.CenterSubPanel;
-import fi.dwo.dwojapplet.gui.GuiConstants;
-import fi.dwo.dwojapplet.gui.GuiCreator;
-import fi.dwo.dwojapplet.gui.MainPanel;
-import fi.dwo.dwojapplet.gui.ModuleTreePanel;
-import fi.dwo.dwojapplet.gui.ScoPanel;
-import fi.dwo.dwojapplet.persistence.MapperCreator;
-import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-import fi.dwo.dwojapplet.persistence.cache.StoreCreator;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URLClassLoader;
-import java.util.jar.Manifest;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
-
 /**
  * This is the main applet class of the DWO.<br>
  * At the start, a WelcomePanel is showed.<br>
@@ -76,8 +73,8 @@ import java.util.logging.Logger;
  */
 public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
 
-    private static final Logger log = Logger.getLogger("fi.dwo");    
-    
+    private static final Logger log = Logger.getLogger("fi.dwo");
+
     private static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
 
     private static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
@@ -123,7 +120,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
 
     FocusTraversalPolicy delegate;
 
-    private static void ReadLoggingProperties(){
+    private static void ReadLoggingProperties() {
         try {
             FileInputStream file;
             //folder relative to the current directory
@@ -145,13 +142,14 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
                 Logger.getAnonymousLogger().severe("Could not load internal logging.properties file.");
                 throw e3;
             }
-        }                
+        }
     }
+
     /**
      * Reads a config file if it exists.
-     * 
+     *
      */
-        private static void ReadConfigProperties() {
+    private static void ReadConfigProperties() {
 
         try {
             Properties properties = new Properties();
@@ -174,7 +172,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
             //assign properties to static value.
             String resourceURLPathString = properties.getProperty("resourceURLPath");
             DwoHelper.setGetResourceURLPathString(resourceURLPathString);
-            log.log(Level.FINE, "Property {0} is value: {1}", new Object[]{"servletConnectString", 
+            log.log(Level.FINE, "Property {0} is value: {1}", new Object[]{"servletConnectString",
                 DwoHelper.getGetResourceURLPathString()});
         } catch (FileNotFoundException ex) {
             log.log(Level.FINE, "No external resource connection defined");
@@ -182,7 +180,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
             log.log(Level.FINE, "IO error reading DWO.properties file.");
         }
     }
-    
+
     /**
      * Java 7 throws exceptions, catch them. Deze "catch" policy catch ze en
      * doet een default actie.
@@ -280,7 +278,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * @param args
      */
     public DWO(String[] args) {
-        
+
         nestedWait = 0;
         dwoProfileID = 1;
         int o = 0;
@@ -1137,12 +1135,16 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
         DWO.ReadLoggingProperties();
         DWO.ReadConfigProperties();
         //Read the versioning from the MANIFEST
-        URLClassLoader cl = (URLClassLoader) getClass().getClassLoader();
+        URLClassLoader cl = (URLClassLoader) DWO.class.getClassLoader();
+        if(cl==null){
+            cl = (URLClassLoader) getClass().getClassLoader();
+        }
         try {
+            //TODO FIX Broken Manifest reading in Application mode and perhaps Applet mode.
             URL url = cl.findResource("META-INF/MANIFEST.MF");
             Manifest manifest = new Manifest(url.openStream());
-            String softwareVersion = manifest.getMainAttributes().getValue("Implementation-Version");
-            String svnRevision = manifest.getMainAttributes().getValue("Implementation-Build");
+            String softwareVersion = manifest.getMainAttributes().getValue("DWOJApplet-Implementation-Version");
+            String svnRevision = manifest.getMainAttributes().getValue("DWOJApplet-Implementation-Build");
             log.log(Level.INFO, "Software version {0},  subversion revision {1}", new Object[]{softwareVersion, svnRevision});
         } catch (IOException ex) {
             log.log(Level.SEVERE, "Can't open /META-INF/MANIFEST.MF", ex);

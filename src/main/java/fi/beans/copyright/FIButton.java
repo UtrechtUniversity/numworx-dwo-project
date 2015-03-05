@@ -1,7 +1,9 @@
 package fi.beans.copyright;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class FIButton extends Component {
 

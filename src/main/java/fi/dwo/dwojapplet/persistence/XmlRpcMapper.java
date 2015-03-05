@@ -2,14 +2,12 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\XmlRpcMapper.java
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.commons.exceptions.PersistenceException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.Vector;
-
 import org.apache.xmlrpc.applet.XmlRpcException;
-
-import fi.dwo.commons.exceptions.PersistenceException;
 
 /**
  * This class contains basic functionality for the mappers who communicate with

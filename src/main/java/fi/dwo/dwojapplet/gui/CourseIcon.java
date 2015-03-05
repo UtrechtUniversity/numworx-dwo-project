@@ -2,6 +2,7 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\CourseIcon.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.dwojapplet.domain.Course;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -14,7 +15,6 @@ import java.awt.Insets;
 import java.awt.MediaTracker;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-
 import javax.swing.AbstractButton;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -23,8 +23,6 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicButtonUI;
-
-import fi.dwo.dwojapplet.domain.Course;
 
 /**
  * This class is a panel witch shows a icon of the course. If the course has no
