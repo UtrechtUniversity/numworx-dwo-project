@@ -1489,7 +1489,7 @@ public class TekstVakPanel implements InteractionView
 		for(int i = 0; i < interactionViewObjects.size(); i++)
 		{	Object object = interactionViewObjects.get(i);
 			if(object instanceof FormuleEditorWithAnswer)
-			{	FormuleRegel fr = ((FormuleEditorWithAnswer) object).getCurrentRegel();
+			{	FormuleRegel fr = ((FormuleEditorWithAnswer) object).getMainRegel();
 				if (fr != null)
 				{
 					String string = fr.toString();
