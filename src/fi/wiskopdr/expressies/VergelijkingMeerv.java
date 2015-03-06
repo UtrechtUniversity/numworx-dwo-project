@@ -2,6 +2,7 @@ package fi.wiskopdr.expressies;
 
 import java.util.Vector;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
 import fi.wiskopdr.text.Text;
 
 public class VergelijkingMeerv
@@ -553,6 +554,14 @@ public class VergelijkingMeerv
 			vergelijkingenNieuw[i] = vergelijkingen[i].substitueer(subst, var);
 		}
 		return new VergelijkingMeerv(vergelijkingenNieuw);
+	}
+
+	public Object visit(AbstractConverter instance) {
+		Object[] objects  = new Object[vergelijkingen.length];
+		for (int i = 0; i < objects.length; i++) {
+			objects[i] = vergelijkingen[i].visit(instance);
+		}
+		return instance.vergelijkingmeerv(objects);
 	}
 
 }

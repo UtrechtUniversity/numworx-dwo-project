@@ -3,6 +3,8 @@ package fi.wiskopdr.expressies;
 import java.awt.*;
 import java.util.*;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 public class Aftrekking extends Expressie  
 {	
 	
@@ -82,11 +84,9 @@ public class Aftrekking extends Expressie
 		return "$a" + s1 + "$n" + s2 + "@@";
 	}
     
-    public String toStringCAS()
-    {   String s1 = kind1.toStringCAS();
-        String s2 = kind2.toStringCAS();
-        if(kind1 instanceof BasisExpressie && ((BasisExpressie)kind1).geefWaarde()==0)s1 = "";
-        if(kind2.isVeelterm)s2 = "(" + s2 + ")";
-        return s1 + "-" + s2;
-    }
+	public Object visit(AbstractConverter converter) 
+	{
+		return converter.aftrekking( kind1.visit(converter), kind2.visit(converter) );
+	}
+
 }

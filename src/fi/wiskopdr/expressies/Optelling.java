@@ -2,6 +2,8 @@ package fi.wiskopdr.expressies;
 
 import java.awt.*;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 public class Optelling extends Expressie  
 {	
 	
@@ -103,23 +105,7 @@ public class Optelling extends Expressie
 		return "$o" + kind1.toStringStrikt() + "$n" + kind2.toStringStrikt() + "@@";
 	}
     
-    public String toStringCAS()
-    {   if(kind2 instanceof Deling && kind1 instanceof BasisExpressie && kind2.kind1 instanceof BasisExpressie && kind2.kind2 instanceof BasisExpressie)
-		{	int getal,teller,noemer;
-			boolean integerBreuk = true;
-			try
-			{	getal = Integer.parseInt(((BasisExpressie)kind1).basisString);
-				teller = Integer.parseInt(((BasisExpressie)kind2.kind1).basisString);
-				noemer = Integer.parseInt(((BasisExpressie)kind2.kind2).basisString);
-			}
-			catch(NumberFormatException e)
-			{	integerBreuk = false;
-			}
-			if(integerBreuk)
-			{	isVeelterm = false;
-				return "(" + kind1.toStringCAS() + "+" + kind2.toStringCAS() + ")";
-			}
-		}
-        return kind1.toStringCAS() + "+" + kind2.toStringCAS();
+    public Object visit(AbstractConverter converter) {
+    	return converter.optelling(kind1.visit(converter), kind2.visit(converter));
     }
 }

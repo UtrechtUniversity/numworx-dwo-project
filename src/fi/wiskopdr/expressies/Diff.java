@@ -1,5 +1,7 @@
 package fi.wiskopdr.expressies;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 public class Diff extends Expressie
 {
 	double waarde = Double.NaN;
@@ -80,8 +82,7 @@ public class Diff extends Expressie
 
 	}
 
-	public String toStringCAS()
-	{
-		return "D[" + kind1.toStringCAS() + "," + kind2.toStringCAS() + "]";
-	}
+    public Object visit(AbstractConverter converter) {
+    	return converter.diff(kind1.visit(converter), kind2.visit(converter));  			
+    }
 }

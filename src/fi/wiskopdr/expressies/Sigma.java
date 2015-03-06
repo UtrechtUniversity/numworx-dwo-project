@@ -1,5 +1,7 @@
 package fi.wiskopdr.expressies;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 
 public class Sigma extends Expressie
 {
@@ -81,11 +83,7 @@ public class Sigma extends Expressie
 		return "$S" + kind1.toStringStrikt() + "$n" + kind2.toStringStrikt() + "$k" + kind3.toStringStrikt() + "$l" + kind4.toStringStrikt() + "@@@@";//"$n" + kind3.toString() + 
 	}
 
-	public String toStringCAS()
-	{
-		if (Double.isInfinite(kind4.geefWaarde()))
-			return "Sum[" + kind1.toStringCAS() + ",{" + kind2.toStringCAS() + "," + kind3.toStringCAS() + ",Infinity}]";
-		else
-			return "Sum[" + kind1.toStringCAS() + ",{" + kind2.toStringCAS() + "," + kind3.toStringCAS() + "," + kind4.toStringCAS() + "}]";
-	}
+    public Object visit(AbstractConverter converter) {
+    	return converter.sigma(kind1.visit(converter), kind2.visit(converter),kind3.visit(converter), kind4.visit(converter));
+    }
 }

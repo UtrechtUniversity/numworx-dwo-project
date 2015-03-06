@@ -4,6 +4,8 @@ import java.util.Vector;
 
 import com.google.gwt.i18n.client.NumberFormat;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 public class BasisExpressie extends Expressie
 {
 	String basisString;
@@ -313,14 +315,9 @@ public class BasisExpressie extends Expressie
 		//return basisString;
 	}
 
-	public String toStringCAS()
-	{
-		basisString = basisString.replace(',', '.');
-		if (basisString.equals("\u221e"))
-			return ("Infinity");
-		if (basisString.equals("-\u221e"))
-			return ("-Infinity");
-		return basisString;
-	}
+    public Object visit(AbstractConverter c)
+    {
+    	return c.basis(basisString);
+    }
 
 }

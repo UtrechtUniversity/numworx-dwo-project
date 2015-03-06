@@ -3,6 +3,7 @@ package fi.wiskopdr.expressies;
 import java.util.Vector;
 
 import fi.wiskopdr.FormuleParser;
+import fi.wiskopdr.expressies.repr.AbstractConverter;
 
 public class Vermenigvuldiging extends Expressie
 {
@@ -121,8 +122,7 @@ public class Vermenigvuldiging extends Expressie
 		return "$v" + s1 + "$n" + s2 + "@@";
 	}
 
-	public String toStringCAS()
-	{
-		return "(" + kind1.toStringCAS() + ")*(" + kind2.toStringCAS() + ")";
-	}
+    public Object visit(AbstractConverter converter) {
+    	return converter.vermenigvuldiging(this);
+    }
 }

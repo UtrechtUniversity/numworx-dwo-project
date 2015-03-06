@@ -2,6 +2,8 @@ package fi.wiskopdr.expressies;
 
 import java.awt.*;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 public class SigRound extends Expressie  
 {	
 	
@@ -82,7 +84,7 @@ public class SigRound extends Expressie
 		return "rns" + "$h" + kind1.toStringStrikt() + "_" + kind2.toStringStrikt() + "_" + kind3.toStringStrikt() + "@";
 	}
     
-    public String toStringCAS()
-    {   return "N" + "[" + kind1.toStringCAS() + "," + kind2.toStringCAS() + "]";
+    public Object visit(AbstractConverter converter) {
+    	return converter.siground(kind1.visit(converter), kind2.visit(converter), kind3.visit(converter));
     }
 }

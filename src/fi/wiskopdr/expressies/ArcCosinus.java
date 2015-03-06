@@ -2,6 +2,8 @@ package fi.wiskopdr.expressies;
 
 import java.awt.*;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 public class ArcCosinus extends Expressie  
 {	
 	
@@ -63,8 +65,9 @@ public class ArcCosinus extends Expressie
 	{	return "arccos" + "$h" + kind1.toStringStrikt() + "@";
 	}
     
-    public String toStringCAS()
-    {   return "ArcCos" + "[" + kind1.toStringCAS() + "]";
-    }
+    public Object visit(AbstractConverter converter) 
+	{
+		return converter.arccos( kind1.visit(converter));
+	}
     
 }

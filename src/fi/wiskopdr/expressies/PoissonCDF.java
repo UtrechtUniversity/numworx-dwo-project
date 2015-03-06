@@ -1,5 +1,7 @@
 package fi.wiskopdr.expressies;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 public class PoissonCDF extends Expressie
 {
 	double waarde = Double.NaN;
@@ -111,9 +113,7 @@ public class PoissonCDF extends Expressie
 		return "poissoncdf" + "$h" + kind1.toString() + "_" + kind2.toString() + "@";
 	}
 
-	public String toStringCAS()
-	{
-
-		return null;
-	}
+    public Object visit(AbstractConverter converter) {
+    	return converter.poissoncdf(kind1.visit(converter), kind2.visit(converter));
+    }
 }

@@ -1,5 +1,7 @@
 package fi.wiskopdr.expressies;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 
 public class GCD extends Expressie
 {
@@ -161,9 +163,7 @@ public class GCD extends Expressie
 		return "gcd" + "$h" + kind1.toString() + "_" + kind2.toString() + "@";
 	}
 
-	public String toStringCAS()
-	{
-
-		return null;
-	}
+    public Object visit(AbstractConverter converter ) {
+    	return converter.gcd( kind1.visit(converter), kind2.visit(converter));
+    }
 }

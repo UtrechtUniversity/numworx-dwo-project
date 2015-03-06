@@ -2,6 +2,8 @@ package fi.wiskopdr.expressies;
 
 import java.awt.*;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 public class Macht extends Expressie  
 {		
 	public Macht(Expressie e1, Expressie e2 )
@@ -128,10 +130,7 @@ public class Macht extends Expressie
 		return "$p" + s1 + "$n" + s2 + "@@";
 	}
     
-    public String toStringCAS()
-    {   String s1 = kind1.toStringCAS();
-        String s2 = kind2.toStringCAS();
-        if(!kind1.isBasis)s1 = "(" + s1 + ")";
-        return s1 + "^(" + s2 + ")";
+    public Object visit(AbstractConverter converter) {
+    	return converter.macht( kind1.visit(converter), kind2.visit(converter));
     }
 }

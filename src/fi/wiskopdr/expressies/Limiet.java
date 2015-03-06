@@ -1,5 +1,7 @@
 package fi.wiskopdr.expressies;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 
 public class Limiet extends Expressie
 {
@@ -85,13 +87,7 @@ public class Limiet extends Expressie
 		return "$T" + kind1.toStringStrikt() + "$n" + kind2.toStringStrikt() + "$k" + kind3.toStringStrikt() + "$l" + kind4.toStringStrikt() + "@@@@";//"$n" + kind3.toString() + 
 	}
 
-	public String toStringCAS()
-	{
-		if (kind4.geefWaarde() == 1)
-			return "Limit[" + kind1.toStringCAS() + "," + kind2.toStringCAS() + "->" + kind3.toStringCAS() + ",Direction->-1" + "]";
-		if (kind4.geefWaarde() == 2)
-			return "Limit[" + kind1.toStringCAS() + "," + kind2.toStringCAS() + "->" + kind3.toStringCAS() + ",Direction->1" + "]";
-		else
-			return "Limit[" + kind1.toStringCAS() + "," + kind2.toStringCAS() + "->" + kind3.toStringCAS() + "]";
-	}
+    public Object visit(AbstractConverter converter ) {
+    	return converter.limit( kind1.visit(converter),kind2.visit(converter),kind3.visit(converter),kind4.visit(converter));
+    }
 }

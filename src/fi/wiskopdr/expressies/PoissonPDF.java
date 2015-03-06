@@ -1,5 +1,7 @@
 package fi.wiskopdr.expressies;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 
 public class PoissonPDF extends Expressie
 {
@@ -102,9 +104,7 @@ public class PoissonPDF extends Expressie
 		return "poissonpdf" + "$h" + kind1.toString() + "_" + kind2.toString() + "@";
 	}
 
-	public String toStringCAS()
-	{
-
-		return null;
-	}
+    public Object visit(AbstractConverter converter) {
+    	return converter.poissonpdf(kind1.visit(converter), kind2.visit(converter));
+    }
 }

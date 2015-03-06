@@ -2,6 +2,8 @@ package fi.wiskopdr.expressies;
 
 import java.awt.*;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 public class Faculteit extends Expressie  
 {	
 	
@@ -75,7 +77,7 @@ public class Faculteit extends Expressie
 	{	return  kind1.toStringStrikt() + "!";
 	}
     
-    public String toStringCAS()
-    {   return "Fac" + "[" + kind1.toStringCAS() + "]";
+    public Object visit(AbstractConverter converter ) {
+    	return converter.fac( kind1.visit(converter));
     }
 }

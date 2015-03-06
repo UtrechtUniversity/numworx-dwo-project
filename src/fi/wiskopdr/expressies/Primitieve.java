@@ -1,5 +1,7 @@
 package fi.wiskopdr.expressies;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 
 public class Primitieve extends Expressie
 {
@@ -73,13 +75,7 @@ public class Primitieve extends Expressie
 		return "$P" + kind1.toStringStrikt() + "$n" + kind2.toStringStrikt() + "@@";//"$n" + kind3.toString() + 
 	}
 
-	public String toStringCAS()
-	{
-		if (!kind2.isVar())
-		{ //TODO
-			String var = kind2.geefVarNaam();
-			return "Integrate[" + kind1.toStringCAS() + "*D[" + kind2.toStringCAS() + "," + var + "]" + "," + var + "]";
-		}
-		return "Integrate[" + kind1.toStringCAS() + "," + kind2.toStringCAS() + "]";//"$n" + kind3.toString() + 
-	}
+    public Object visit(AbstractConverter converter) {
+    	return converter.primitieve(kind1.visit(converter), kind2.visit(converter), kind2.geefVarNaam());
+    }
 }

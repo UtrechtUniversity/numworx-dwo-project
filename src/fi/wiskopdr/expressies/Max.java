@@ -1,5 +1,7 @@
 package fi.wiskopdr.expressies;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 
 public class Max extends Expressie
 {
@@ -138,9 +140,7 @@ public class Max extends Expressie
 		return "max" + "$h" + kind1.toString() + "_" + kind2.toString() + "@";
 	}
 
-	public String toStringCAS()
-	{
-
-		return null;
-	}
+    public Object visit(AbstractConverter converter) {
+    	return converter.max( kind1.visit(converter), kind2.visit(converter));
+    }
 }

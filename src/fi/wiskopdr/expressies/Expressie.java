@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 import com.google.gwt.i18n.client.NumberFormat;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 public class Expressie
 {
 	public Expressie kind1, kind2, kind3, kind4;
@@ -295,4 +297,8 @@ public class Expressie
 		return v;
 	}
 	*/
+
+	public Object visit(AbstractConverter converter) {
+		return converter.expressie(this);
+	}
 }

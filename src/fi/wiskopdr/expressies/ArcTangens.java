@@ -2,6 +2,8 @@ package fi.wiskopdr.expressies;
 
 import java.awt.*;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 public class ArcTangens extends Expressie  
 {	
 	
@@ -63,7 +65,8 @@ public class ArcTangens extends Expressie
 	{	return "arctan" + "$h" + kind1.toStringStrikt() + "@";
 	}
     
-    public String toStringCAS()
-    {   return "ArcTan" + "[" + kind1.toStringCAS() + "]";
-    }
+    public Object visit(AbstractConverter converter) 
+	{
+		return converter.arctan( kind1.visit(converter));
+	}
 }

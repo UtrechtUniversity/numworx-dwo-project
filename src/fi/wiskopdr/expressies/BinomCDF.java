@@ -1,5 +1,7 @@
 package fi.wiskopdr.expressies;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 public class BinomCDF extends Expressie
 {
 	double waarde = Double.NaN;
@@ -118,9 +120,8 @@ public class BinomCDF extends Expressie
 		return "binomcdf" + "$h" + kind1.toString() + "_" + kind2.toString() + "_" + kind3.toString() + "@";
 	}
 
-	public String toStringCAS()
+    public Object visit(AbstractConverter converter) 
 	{
-
-		return null;
+		return converter.binomcdf( kind1.visit(converter), kind2.visit(converter), kind3.visit(converter));
 	}
 }

@@ -1,5 +1,7 @@
 package fi.wiskopdr.expressies;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 public class BinomPDF extends Expressie
 {
 	double waarde = Double.NaN;
@@ -102,9 +104,8 @@ public class BinomPDF extends Expressie
 		return "binompdf" + "$h" + kind1.toString() + "_" + kind2.toString() + "_" + kind3.toString() + "@";
 	}
 
-	public String toStringCAS()
+    public Object visit(AbstractConverter converter) 
 	{
-
-		return null;
+		return converter.binompdf( kind1.visit(converter), kind2.visit(converter), kind3.visit(converter));
 	}
 }

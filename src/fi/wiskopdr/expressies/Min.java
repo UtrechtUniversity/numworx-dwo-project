@@ -1,5 +1,7 @@
 package fi.wiskopdr.expressies;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 public class Min extends Expressie
 {
 	double waarde = Double.NaN;
@@ -137,9 +139,7 @@ public class Min extends Expressie
 		return "min" + "$h" + kind1.toString() + "_" + kind2.toString() + "@";
 	}
 
-	public String toStringCAS()
-	{
-
-		return null;
-	}
+    public Object visit(AbstractConverter converter) {
+    	return converter.min( kind1.visit(converter), kind2.visit(converter));
+    }
 }

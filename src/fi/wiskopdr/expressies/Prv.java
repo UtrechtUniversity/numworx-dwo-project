@@ -1,5 +1,7 @@
 package fi.wiskopdr.expressies;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 
 public class Prv extends Expressie
 {
@@ -89,8 +91,7 @@ public class Prv extends Expressie
 		return "$q" + kind1.toStringStrikt() + "$n" + kind2.toStringStrikt() + "$k" + kind3.toStringStrikt() + "$l" + kind4.toStringStrikt() + "@@@@";//"$n" + kind3.toString() + 
 	}
 
-	public String toStringCAS() // nog afmaken
-	{
-		return "(" + kind1.substitueer(kind3, kind4.toString()).toStringCAS() + ")-(" + kind1.substitueer(kind2, kind4.toString()).toStringCAS() + ")";//"$n" + kind3.toString() + 
-	}
+    public Object visit(AbstractConverter converter) {
+    	return converter.prv(kind1.visit(converter), kind2.visit(converter),kind3.visit(converter),kind4.visit(converter));
+    }
 }

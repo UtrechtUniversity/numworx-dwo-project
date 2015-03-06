@@ -1,5 +1,7 @@
 package fi.wiskopdr.expressies;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 
 public class NormalCDF extends Expressie
 {
@@ -185,9 +187,7 @@ public class NormalCDF extends Expressie
 		return "normalcdf" + "$h" + kind1.toString() + "_" + kind2.toString() + "_" + kind3.toString() + "_" + kind4.toString() + "@";
 	}
 
-	public String toStringCAS()
-	{
-
-		return null;
-	}
+    public Object visit(AbstractConverter converter) {
+    	return converter.normalcdf(kind1.visit(converter), kind2.visit(converter), kind3.visit(converter), kind4.visit(converter));
+    }
 }

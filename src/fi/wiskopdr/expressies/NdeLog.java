@@ -2,6 +2,8 @@ package fi.wiskopdr.expressies;
 
 import java.awt.*;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 public class NdeLog extends Expressie  
 {	
 	
@@ -62,7 +64,7 @@ public class NdeLog extends Expressie
 	{	return "$L" + kind1.toStringStrikt() + "$n" +kind2.toStringStrikt() + "@@";
 	}
     
-    public String toStringCAS()
-    {   return "Log" + "[" + kind2.toStringCAS() + ",10" + kind1.toStringCAS() + "]";
+    public Object visit(AbstractConverter converter) {
+    	return converter.ndelog(kind1.visit(converter), kind2.visit(converter));
     }
 }

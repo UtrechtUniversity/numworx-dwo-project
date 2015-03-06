@@ -2,6 +2,7 @@ package fi.wiskopdr.expressies;
 
 import java.util.Vector;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
 import fi.wiskopdr.text.Text;
 
 public class Vergelijking
@@ -522,6 +523,17 @@ public class Vergelijking
 		else
 			s = kind1.toStringStrikt() + "" + vergelijkingsTeken + "" + kind2.toStringStrikt();
 		return s;
+	}
+
+	public Object visit(AbstractConverter instance) {
+		if("~".equals( vergelijkingsTeken))
+		{
+			Object s1 = kind2.kind2.kind1.visit(instance);
+			Object s2 = kind2.kind2.kind2.visit(instance);
+			int comb = (int)kind2.kind1.geefWaarde();
+			return instance.vergelijking(s1,tekenParen[comb][0], kind1.visit(instance), tekenParen[comb][1], s2 );
+		}
+		return instance.vergelijking( kind1.visit(instance), vergelijkingsTeken , kind2.visit(instance));
 	}
 
 }

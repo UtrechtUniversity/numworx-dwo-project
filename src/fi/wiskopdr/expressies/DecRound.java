@@ -2,6 +2,8 @@ package fi.wiskopdr.expressies;
 
 import java.awt.*;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 public class DecRound extends Expressie  
 {	
 	
@@ -75,7 +77,7 @@ public class DecRound extends Expressie
 		return "rnd" + "$h" + kind1.toStringStrikt() + "_" + kind2.toStringStrikt() + "@";
 	}
     
-    public String toStringCAS()
-    {   return "N" + "[" + kind1.toStringCAS() + "," + kind2.toStringCAS() + "]";
+    public Object visit(AbstractConverter converter) {
+    	return converter.decround(kind1.visit(converter), kind2.visit(converter));  			
     }
 }

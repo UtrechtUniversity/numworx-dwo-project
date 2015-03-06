@@ -2,6 +2,8 @@ package fi.wiskopdr.expressies;
 
 import java.awt.*;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 public class Cosecans extends Expressie  
 {	
 	
@@ -63,7 +65,7 @@ public class Cosecans extends Expressie
 	{	return "csc" + "$h" + kind1.toStringStrikt() + "@";
 	}
     
-    public String toStringCAS()
-    {   return "Csc" + "[" + kind1.toStringCAS() + "]";
+    public Object visit(AbstractConverter converter) {
+    	return converter.cosecans(kind1.visit(converter));  			
     }
 }

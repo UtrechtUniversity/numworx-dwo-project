@@ -1,5 +1,7 @@
 package fi.wiskopdr.expressies;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 
 public class InvNorm extends Expressie
 {
@@ -104,9 +106,7 @@ public class InvNorm extends Expressie
 		return "invNorm" + "$h" + kind1.toString() + "_" + kind2.toString() + "_" + kind3.toString() + "@";
 	}
 
-	public String toStringCAS()
-	{
-
-		return null;
-	}
+    public Object visit(AbstractConverter converter ) {
+    	return converter.invNorm( kind1.visit(converter),kind2.visit(converter),kind3.visit(converter));
+    }
 }

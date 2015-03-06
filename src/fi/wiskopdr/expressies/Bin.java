@@ -2,6 +2,8 @@ package fi.wiskopdr.expressies;
 
 import java.awt.*;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 public class Bin extends Expressie  
 {	
 	
@@ -97,7 +99,8 @@ public class Bin extends Expressie
 	{	return "$y" + kind1.toStringStrikt() + "$n" + kind2.toStringStrikt() + "@@"; 
 	}
     
-    public String toStringCAS()
-    {   return "Fac" + "[" + kind1.toStringCAS() + "]";
-    }
+    public Object visit(AbstractConverter converter) 
+	{
+		return converter.bin( kind1.visit(converter), kind2.visit(converter));
+	}
 }

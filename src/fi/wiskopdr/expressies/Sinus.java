@@ -2,6 +2,8 @@ package fi.wiskopdr.expressies;
 
 import java.awt.*;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 public class Sinus extends Expressie  
 {	
 	
@@ -63,7 +65,7 @@ public class Sinus extends Expressie
 	{	return "sin" + "$h" + kind1.toStringStrikt() + "@";
 	}
     
-    public String toStringCAS()
-    {   return "Sin" + "[" + kind1.toStringCAS() + "]";
+    public Object visit(AbstractConverter converter) {
+    	return converter.sinus(kind1.visit(converter));
     }
 }

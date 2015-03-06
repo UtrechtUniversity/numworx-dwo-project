@@ -2,6 +2,8 @@ package fi.wiskopdr.expressies;
 
 import java.awt.*;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 public class NdeWortel extends Expressie  
 {		
 	public NdeWortel(Expressie e1, Expressie e2 )
@@ -102,9 +104,7 @@ public class NdeWortel extends Expressie
 		return "$W" + s1 + "$n" + s2 + "@@";
 	}
     
-    public String toStringCAS()
-    {   String s1 = kind1.toStringCAS();
-        String s2 = kind2.toStringCAS();
-        return "(" + s1 + ")^(1/(" + s2 + "))";
+    public Object visit(AbstractConverter converter) {
+    	return converter.root(kind1.visit(converter), kind2.visit(converter));
     }
 }

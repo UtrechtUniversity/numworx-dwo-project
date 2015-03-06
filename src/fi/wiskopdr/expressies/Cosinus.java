@@ -2,6 +2,8 @@ package fi.wiskopdr.expressies;
 
 import java.awt.*;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 public class Cosinus extends Expressie  
 {	
 	
@@ -63,7 +65,7 @@ public class Cosinus extends Expressie
 	{	return "cos" + "$h" + kind1.toStringStrikt() + "@";
 	}
     
-    public String toStringCAS()
-    {   return "Cos" + "[" + kind1.toStringCAS() + "]";
+    public Object visit(AbstractConverter converter) {
+    	return converter.cosinus(kind1.visit(converter));  			
     }
 }

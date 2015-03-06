@@ -2,6 +2,8 @@ package fi.wiskopdr.expressies;
 
 import java.awt.*;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 public class Abs extends Expressie  
 {	
 	
@@ -59,8 +61,10 @@ public class Abs extends Expressie
 	public String toStringStrikt()
 	{	return "$r" + kind1.toStringStrikt() + "@";
 	}
+
+	public Object visit(AbstractConverter converter) 
+	{
+		return converter.abs( kind1.visit(converter));
+	}
     
-    public String toStringCAS()
-    {   return "Abs" + "[" + kind1.toStringCAS() + "]";
-    }
 }

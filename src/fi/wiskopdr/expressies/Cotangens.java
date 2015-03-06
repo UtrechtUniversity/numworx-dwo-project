@@ -2,6 +2,8 @@ package fi.wiskopdr.expressies;
 
 import java.awt.*;
 
+import fi.wiskopdr.expressies.repr.AbstractConverter;
+
 public class Cotangens extends Expressie  
 {	
 	
@@ -63,7 +65,7 @@ public class Cotangens extends Expressie
 	{	return "cot" + "$h" + kind1.toStringStrikt() + "@";
 	}
     
-    public String toStringCAS()
-    {   return "Cot" + "[" + kind1.toStringCAS() + "]";
+    public Object visit(AbstractConverter converter) {
+    	return converter.cotangens(kind1.visit(converter));  			
     }
 }
