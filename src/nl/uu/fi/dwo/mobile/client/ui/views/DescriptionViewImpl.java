@@ -48,13 +48,13 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Ent
 		main = new SimplePanel();
 	}
 
-	public DescriptionViewImpl(int id) {
+	public DescriptionViewImpl(Object id) {
 		this();
 		setupModule(id);
 	}
 
 	@Override
-	public void setupModule(int id) {
+	public void setupModule(Object id) {
 		loading.setText("loading course description " + id);
 		main.setWidget(loading);
 		String xml = GET_COURSE_DESCRIPTION + id;

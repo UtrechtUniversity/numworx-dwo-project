@@ -51,11 +51,17 @@ import fi.wiskopdr.text.Text_nl;
 public class DWOplayer implements EntryPoint
 {
 	public static final boolean JSON = true;
-	public static final int PROFILE_ID = 77;
+	public static int PROFILE_ID = 77;
 	
 	public static final DWOplayerClientBundle DWO_BUNDLE = GWT.create(DWOplayerClientBundle.class);
 	public static final DWOplayerParameters PARAMETERS = GWT.create(DWOplayerParameters.class);
+	private static DWOplayer instance;
 	
+	public DWOplayer() {
+		super();
+		instance = this;
+	}
+
 	public static final String PREFIX = PARAMETERS.getLaunchData();
 	
 	private Place defaultPlace = new LoginPlace(); // new SelectModulePlace("select");
@@ -72,7 +78,7 @@ public class DWOplayer implements EntryPoint
 			clientfactory.getPlaceController().goTo(new FlatModulePlace());		
 	}
 	
-	public static final AsyncCallback<List<Map<String,Object>>> GETCOURSES_CALLBACK_CLASS_FLAT = new AsyncCallback<List<Map<String,Object>>>(){
+	static final AsyncCallback<List<Map<String,Object>>> GETCOURSES_CALLBACK_CLASS_FLAT = new AsyncCallback<List<Map<String,Object>>>(){
 
 		@Override
 		public void onFailure(Throwable caught) {
@@ -89,7 +95,7 @@ public class DWOplayer implements EntryPoint
 		
 	};
 
-	public static final AsyncCallback<List<Map<String,Object>>> GETCOURSES_CALLBACK = 
+	static final AsyncCallback<List<Map<String,Object>>> GETCOURSES_CALLBACK = 
 			new AsyncCallback<List<Map<String,Object>>>() {
 		@Override
 		public void onFailure(Throwable caught) {
@@ -105,7 +111,7 @@ public class DWOplayer implements EntryPoint
 	//private Place defaultPlace = new SelectModulePlace("Home");
 	private static HashMap<String, String> resources = new HashMap<String, String>();
 
-	public static final AsyncCallback<List<Map<String,Object>>>
+	private static final AsyncCallback<List<Map<String,Object>>>
 	GETCOURSES_CALLBACK_CLASS_TREE = new AsyncCallback<List<Map<String,Object>>>(){
 
 		@Override
@@ -200,7 +206,8 @@ public class DWOplayer implements EntryPoint
 		AsyncCallback<Map<String,Object>> getProfileCallback = new AsyncCallback<Map<String,Object>>() {
 
 			@Override
-			public void onFailure(Throwable caught) {				
+			public void onFailure(Throwable caught) {
+				
 			}
 
 			@Override
@@ -229,12 +236,16 @@ public class DWOplayer implements EntryPoint
 		MGWT.applySettings(settings);
 
 		//GWT Settings//
-		clientfactory = new ClientFactoryImpl();
+		clientfactory = createClientFactory();
 		AppPlaceHistoryMapper historyMapper = GWT.create(AppPlaceHistoryMapper.class);
 		final PlaceHistoryHandler historyHandler = new PlaceHistoryHandler(historyMapper);
 		historyHandler.register(clientfactory.getPlaceController(), clientfactory.getEventBus(), defaultPlace);
 		createTabletDisplay(clientfactory);
 		historyHandler.handleCurrentHistory();
+	}
+
+	protected ClientFactory createClientFactory() {
+		return new ClientFactoryImpl();
 	}
 
 	private void createTabletDisplay(ClientFactory clientfactory)
@@ -279,6 +290,10 @@ public class DWOplayer implements EntryPoint
 	}
 
 	public static void gotoCourses() {
+		instance.gotoCourses_impl();
+	}
+	
+	protected void gotoCourses_impl() {
 		SelectModuleItemHolder.clear(); // hier leegmaken of elders?
 		count = 1;
 		AsyncCallback<List<Map<String, Object>>> callback = GETCOURSES_CALLBACK;
@@ -320,7 +335,8 @@ public class DWOplayer implements EntryPoint
 			SelectModuleItemHolder.insert(item);
 		}
 	}
-	public static void insertTree(List<Map<String,Object>> result) {
+
+	private static void insertTree(List<Map<String,Object>> result) {
 		for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
 			Map<String, Object> map = iterator.next();
 			SelectModuleItem item = new SelectModuleItem(map, SelectModuleItem.Type.MODULE);

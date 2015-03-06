@@ -12,9 +12,9 @@ public class SelectModulePlace extends Place
 {
 	private String token;
 
-	public SelectModulePlace(String token)
+	public SelectModulePlace(Object token)
 	{
-		this.token = token;
+		this.token = token == null ? null : token.toString();
 	}
 
 	public SelectModulePlace(int id) {

@@ -117,4 +117,8 @@ public class ClientFactoryImpl implements ClientFactory
 		return this.handler;
 	}
 
+	public void setRPCHandler(RPCHandler handler) {
+		this.handler = handler;
+	}
+	
 }

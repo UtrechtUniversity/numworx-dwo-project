@@ -342,7 +342,7 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 			navigationLabel.setText(item.getName());
 			parent = item.getParent();
 			navigationBackButton.setVisible(true);
-			navigationUpButton.setVisible(item.getID() != 0);
+			navigationUpButton.setVisible(item.getType() != SelectModuleItem.Type.ROOT);
 			String description = item.getDescription();
 			if(description != null)
 			{

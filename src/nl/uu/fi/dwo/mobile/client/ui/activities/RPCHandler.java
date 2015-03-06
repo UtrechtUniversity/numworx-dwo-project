@@ -21,7 +21,17 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public class RPCHandler {
 
 	private static final List<String> SCO_KEYS = Arrays.asList("scoID", "appletID", "sconame", "description", "showscore", "sequencenr", "courseID" );
-	private String server = "https://ws.fisme.science.uu.nl/DWOmAccess/dbaccess";
+	private String server;
+
+	public RPCHandler(String server) {
+		this.server = server;
+	}
+	
+	public RPCHandler() {
+		this("https://ws.fisme.science.uu.nl/DWOmAccess/dbaccess");
+	}
+	
+
 	private static int PROFILE_OFFSET = -1234;
 	
 	public void login(String name, String password, AsyncCallback<? super Map<String,Object>> callback)
@@ -117,7 +127,7 @@ public class RPCHandler {
 		return DWOplayer.PROFILE_ID;
 	}
 
-	public <T> void getCourses(int id, AsyncCallback<T> getCoursesCallback) {
+	public <T> void getCourses(Object id, AsyncCallback<T> getCoursesCallback) {
 		HashMap<String, Object> g = new HashMap<String,Object>();
 		g.put("parentID", id);
 		String method = "getTable";
@@ -127,7 +137,7 @@ public class RPCHandler {
 		request.execute();
 	}
 
-	public <T> void getScos(int id, AsyncCallback<T> getScosCallback) {
+	public <T> void getScos(Object id, AsyncCallback<T> getScosCallback) {
 		HashMap<String, Object> g = new HashMap<String,Object>();
 		g.put("courseID", id);
 		String method = "getTable";
@@ -145,7 +155,7 @@ public class RPCHandler {
 		request.execute();
 	}
 	
-	public <T> void getClasses(int userID, AsyncCallback<T> getClassesCallback) {
+	public <T> void getClasses(Object userID, AsyncCallback<T> getClassesCallback) {
 		HashMap<String, Object> g = new HashMap<String,Object>();
 		g.put("userID", userID);
 		String method = "getTable";

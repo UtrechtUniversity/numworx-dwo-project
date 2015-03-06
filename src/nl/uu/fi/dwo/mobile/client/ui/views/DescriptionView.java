@@ -6,5 +6,5 @@ public interface DescriptionView extends IsWidget {
 
 	static final String GZIPPREFIX = "H4s"; // FIXME
 
-	void setupModule(int id);
+	void setupModule(Object id);
 }

@@ -15,15 +15,15 @@ import com.google.gwt.xml.client.Node;
 public class SelectModuleItemHolder
 {
 	private static List<SelectModuleItem> list;
-	private static HashMap<Integer, SelectModuleItem> map, scos;
+	private static HashMap<String, SelectModuleItem> map, scos;
 
 	private static void init()
 	{
 		if (list != null)
 			return;
 		list = new ArrayList<SelectModuleItem>();
-		map = new HashMap<Integer, SelectModuleItem>();
-		scos = new HashMap<Integer, SelectModuleItem>();
+		map = new HashMap<String, SelectModuleItem>();
+		scos = new HashMap<String, SelectModuleItem>();
 		
 		/*
 				insert(0, "test1", "test.xml");
@@ -35,29 +35,29 @@ public class SelectModuleItemHolder
 				*/
 	}
 
-	public static void insert(int id, String name, String file)
+	public static void insert(Object id, String name, String file)
 	{
 		init();
 		SelectModuleItem item = new SelectModuleItem(id, name, file);
-		map.put(id, item);
+		map.put(id.toString(), item);
 		list.add(item);
 	}
 
-	public static void insert(int id, Node node)
+	public static void insert(Object id, Node node)
 	{
 		init();
 		SelectModuleItem item = new SelectModuleItem(id, node);
-		map.put(id, item);
+		map.put(id.toString(), item);
 		list.add(item);
 	}
 	
 	public static void insert(SelectModuleItem item) {
 		init();
 		switch(item.getType()) {
-		case SCO: scos.put(item.getID(), item);
+		case SCO: scos.put(item.getID().toString(), item);
 				break;
 		default:
-			map.put(item.getID(), item);
+			map.put(item.getID().toString(), item);
 			if(item.getParent() == null) list.add(item);
 		}
 	}
@@ -68,20 +68,27 @@ public class SelectModuleItemHolder
 		return list;
 	}
 
-	public static SelectModuleItem getItemByID(int id)
+	public static SelectModuleItem getItemByID(Object id)
 	{
+		init();
+		return map.get(id.toString());
+	}
+
+	public static SelectModuleItem getItemByID(String id) {
 		init();
 		return map.get(id);
 	}
-
-	public static SelectModuleItem getScoByID(int id) {
-		return scos.get(id);
+	
+	public static SelectModuleItem getScoByID(Object id) {
+		return scos.get(id.toString());
 	}
 
 	public static void clear() {
 		init();
 		list.clear();
-		map.clear(); map.put(0,  SelectModuleItem.ROOT);
+		map.clear();
+		map.put("0",  SelectModuleItem.ROOT);
+		map.put("", SelectModuleItem.ROOT);
 		scos.clear();
 	}
 	

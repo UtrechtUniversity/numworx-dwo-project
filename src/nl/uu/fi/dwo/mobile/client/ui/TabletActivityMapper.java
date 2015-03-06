@@ -38,14 +38,14 @@ public class TabletActivityMapper implements ActivityMapper
 		if (place instanceof SelectModulePlace)
 		{
 			SelectModulePlace tmp = (SelectModulePlace) place;
-			int id = Integer.parseInt(tmp.getToken());
+			String id = (tmp.getToken());
 			SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);			
 			return new SelectModuleActivity(clientFactory, item);
 		}
 		if (place instanceof FlatModulePlace)
 		{
 			FlatModulePlace tmp = (FlatModulePlace) place;
-			int id = Integer.parseInt(tmp.getToken());
+			String id = tmp.getToken();
 			SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);			
 			return new FlatModuleActivity(clientFactory, item);
 		}
@@ -62,7 +62,7 @@ public class TabletActivityMapper implements ActivityMapper
 		if (place instanceof TreeModulePlace)
 		{
 			TreeModulePlace tmp = (TreeModulePlace) place;
-			int id = Integer.parseInt(tmp.getToken());
+			String id = tmp.getToken();
 			SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);
 			if(item == null)
 				return new LoginActivity(clientFactory);

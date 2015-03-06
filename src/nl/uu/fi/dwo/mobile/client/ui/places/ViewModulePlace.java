@@ -12,9 +12,9 @@ public class ViewModulePlace extends Place
 {
 	private String token;
 
-	public ViewModulePlace(String token)
+	public ViewModulePlace(Object token)
 	{
-		this.token = token;
+		this.token = token == null ? null : token.toString();
 	}
 
 	public ViewModulePlace(int id) {

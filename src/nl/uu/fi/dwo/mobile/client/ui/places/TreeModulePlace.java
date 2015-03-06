@@ -13,9 +13,9 @@ public class TreeModulePlace extends Place
 		this("0");
 	}
 
-	public TreeModulePlace(String token)
+	public TreeModulePlace(Object token)
 	{
-		this.token = token;
+		this.token = token == null ? null : token.toString();
 	}
 
 	public TreeModulePlace(int id)

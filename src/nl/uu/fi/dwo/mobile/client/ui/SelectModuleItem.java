@@ -36,13 +36,13 @@ public class SelectModuleItem
 	private String name;
 	private String file;
 	private String description;
-	private int id;
+	private Object id;
 
 	private Type type = Type.ROOT;
 	private List<SelectModuleItem> children;
 	private SelectModuleItem parent;
 
-	public SelectModuleItem(int id, String name, String file)
+	public SelectModuleItem(Object id, String name, String file)
 	{
 		this.id = id;
 		this.name = name;
@@ -59,18 +59,19 @@ public class SelectModuleItem
 			else
 				this.type = Type.MODULE;
 			this.name = map.get("name").toString();
-			this.id   = ((Integer) map.get("courseID")).intValue();
+			this.id   = map.get("courseID");
 			this.description = (String) map.get("description");
-			Integer parentID = (Integer) map.get("parentID");
-			if(parentID != null && parentID != 0) {
+			Object parentID =  map.get("parentID");
+			if(parentID != null) {
 				this.parent = SelectModuleItemHolder.getItemByID(parentID);
+				if(this.parent != null && this.parent.getType() == Type.ROOT) this.parent = null; // children of root have no parent
 			}
 			break;
 		case SCO:
 			this.type = type;
 			this.name = map.get("sconame").toString();
 			this.description = (String) map.get("description");
-			this.id = ((Integer) map.get("scoID")).intValue();
+			this.id =  map.get("scoID");
 			this.file = PREFIX + this.id;
 		break;
 // more to follow....			
@@ -81,7 +82,7 @@ public class SelectModuleItem
 	
 	
 	
-	public SelectModuleItem(int id, Node node)
+	public SelectModuleItem(Object id, Node node)
 	{
 		this.id = id;
 		for (int i = 0; i < node.getChildNodes().getLength(); i++)
@@ -117,12 +118,12 @@ public class SelectModuleItem
 		this.file = file;
 	}
 
-	public int getID()
+	public Object getID()
 	{
 		return this.id;
 	}
 
-	public void setID(int id)
+	public void setID(Object id)
 	{
 		this.id = id;
 	}

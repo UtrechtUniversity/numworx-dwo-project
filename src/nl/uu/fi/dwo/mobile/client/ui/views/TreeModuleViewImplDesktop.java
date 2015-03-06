@@ -155,7 +155,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 			
 		
 			ViewModulePlace selectedModulePlace = (ViewModulePlace) place;
-			final int id = Integer.parseInt(selectedModulePlace.getToken());
+			String id = selectedModulePlace.getToken();
 			final SelectModuleItem item = SelectModuleItemHolder.getScoByID(id);
 			
 			//

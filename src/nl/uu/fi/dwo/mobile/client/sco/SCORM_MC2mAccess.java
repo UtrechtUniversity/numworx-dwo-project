@@ -6,38 +6,43 @@ import java.util.logging.Logger;
 
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
 import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public class SCORM_DWOmAccess extends SCORM_guest implements Scorm2004IF {
+public class SCORM_MC2mAccess extends SCORM_guest implements Scorm2004IF {
 
 	static final Logger logger = Logger.getLogger("SCORM_DWOmAccess");
-	private int userID;
-	private int scoID;
+	private String userID;
+	private String scoID;
 	private boolean pending;
 	boolean inited;
 
 	private Map<String,String> map = new HashMap<String, String>();
 	private Map<String,String> dirty = new HashMap<String, String>();
 	
-	private XmlRpcClient client = new XmlRpcClient("https://ws.fisme.science.uu.nl/DWOmAccess/scormaccess");
+	private XmlRpcClient client;
 		
-	public SCORM_DWOmAccess(int userID) {
+	public SCORM_MC2mAccess(String userID) {
+		
+		String host = Window.Location.getHost();
+		if(!GWT.isProdMode())
+			host = "9-dot-mc2dme.appspot.com";
+
+		client = new XmlRpcClient("https://" + host + "/dwoapp");
+		
 		this.userID = userID;
 		pending = false;
 		client.setTimeoutMillis(1000000);
 	}
 
-	public int getScoID() {
+	public Object getScoID() {
 		return scoID;
 	}
 
 	public void setScoID(String scoID) {
-		setScoID(Integer.parseInt(scoID));
-	}
-	
-	public void setScoID(int scoID) {
-		if(scoID!=this.scoID)
+		if(!scoID.equals(this.scoID))
 		{
 			map.clear();
 			if(!dirty.isEmpty())
@@ -80,7 +85,7 @@ public class SCORM_DWOmAccess extends SCORM_guest implements Scorm2004IF {
 			request.execute();
 		}
 		
-		Committer(int scoID, int userID, Map<String,String> dirty) {
+		Committer(String scoID, String userID, Map<String,String> dirty) {
 			copy = new HashMap<String,String>(dirty);
 			this.dirty = new HashMap<String,String>();
 			params = new Object[] { userID, scoID, copy };

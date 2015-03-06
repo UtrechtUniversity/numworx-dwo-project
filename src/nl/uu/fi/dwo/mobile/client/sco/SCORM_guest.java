@@ -57,6 +57,9 @@ public class SCORM_guest implements Scorm2004IF {
 		return "";
 	}
 
+	public void setScoID(String scoID) {
+		
+	}
 	public void setScoID(int scoID) {
 	}
 	

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.5.1//EN" "http://google-web-toolkit.googlecode.com/svn/tags/2.5.1/distro-source/core/src/gwt-module.dtd">
+<module rename-to='DWOplayer'>
+	<inherits name="nl.uu.fi.dwo.mobile.DWOplayer-module" />
+<!-- --> <inherits name="fi.graphtoolgwt.GraphToolGWT-DWO" />
+	<entry-point class='nl.uu.fi.dwo.mobile.MC2LMS'/>
+	
+	<replace-with class="nl.uu.fi.dwo.mobile.client.DWOPlayerMC2">
+        <when-type-is class="nl.uu.fi.dwo.mobile.client.DWOplayerParameters" />
+    </replace-with>
+
+	<replace-with class="nl.uu.fi.dwo.mobile.client.sco.SCORM_guest">
+    	<when-type-is class="nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF"/>
+    </replace-with>
+	
+	
+	<source path='' />
+</module>

@@ -108,9 +108,9 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 				sconr = Integer.parseInt(href)-1;
 			}
 			SelectModuleItem item = list.get(sconr);
-			sconr = item.getID();
+			Object scoid = item.getID();
 			if(item != sco )
-				clientFactory.getPlaceController().goTo(new ViewModulePlace(sconr));
+				clientFactory.getPlaceController().goTo(new ViewModulePlace(scoid));
 		}
 	}
 	
