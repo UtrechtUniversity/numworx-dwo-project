@@ -71,12 +71,6 @@
               <filters>
                 <filter>
                   <artifact>fi.dwo:DWO-commons-lib</artifact>
-                  <excludes>
-                    <exclude>javax.servlet:*</exclude>
-                    <exclude>commons-codec:*</exclude>
-                    <exclude>commons-httpclient:*</exclude>
-                    <exclude>commons-logging:*</exclude>
-                  </excludes>
                 </filter>
               </filters>
               <relocations>
