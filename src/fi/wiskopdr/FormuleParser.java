@@ -52,7 +52,6 @@ import fi.wiskopdr.expressies.VergelijkingMeerv;
 import fi.wiskopdr.expressies.Vermenigvuldiging;
 import fi.wiskopdr.expressies.Wortel;
 import fi.wiskopdr.text.Text;
-import fi.wiskopdr.text.Text_nl;
 
 public class FormuleParser
 {
@@ -1008,6 +1007,52 @@ public class FormuleParser
 		}
 		return s;
 	}
+	
+	public static Expressie[] splitExpressieParameters(String string, char scheidingsChar, int aantal)
+	{	Expressie[] expressies = splitExpressieParameters(string, scheidingsChar);
+		if(expressies!=null && expressies.length==aantal) 
+			return expressies;
+		return null;
+	}
+	
+	public static Expressie[] splitExpressieParameters(String string, char scheidingsChar)
+	{	int lev=1;
+	    int index1 = -1;
+	    int index2 = -1;
+	    int index3 = -1;
+	    for (int i=0 ; i<string.length() ; i++)
+	    {   if(i>0 && lev==0) break;
+	        if(string.charAt(i) == '(') lev++;
+	        if(string.charAt(i) == ')') lev--;
+	        if(index1==-1 && lev==1 && string.charAt(i)==scheidingsChar) index1 = i;
+	        else if(index2==-1 && lev==1 && string.charAt(i)==scheidingsChar) index2 = i;
+	        else if(index3==-1 && lev==1 && string.charAt(i)==scheidingsChar) index3 = i;
+	    }
+	    if(index2==-1)
+        { 	Expressie[] expressies = new Expressie[2];
+        	expressies[0] = parse(string.substring(0,index1));
+        	expressies[1] = parse(string.substring(index1+1));
+            if(expressies[0]==null || expressies[1]==null)return null;
+            else return expressies;
+        }
+	    else if(index3==-1)
+	    {   Expressie[] expressies = new Expressie[3];
+	    	expressies[0] = parse(string.substring(0,index1));
+	    	expressies[1] = parse(string.substring(index1+1,index2));
+	    	expressies[2] = parse(string.substring(index2+1));
+	    	if(expressies[0]==null || expressies[1]==null || expressies[2]==null)return null;
+	    	else return expressies;
+	    }
+	    else 
+	    {   Expressie[] expressies = new Expressie[4];
+	    	expressies[0] = parse(string.substring(0,index1));
+	    	expressies[1] = parse(string.substring(index1+1,index2));
+	    	expressies[2] = parse(string.substring(index2+1,index3));
+	    	expressies[3] = parse(string.substring(index3+1));
+	    	if(expressies[0]==null || expressies[1]==null || expressies[2]==null || expressies[3]==null)return null;
+	    	else return expressies;
+	    }
+	}
 
 	public static Expressie parse(String s)
 	{
@@ -1784,153 +1829,196 @@ public class FormuleParser
 			else if (s.length() > 8 && s.substring(0, 8).equals("binomcdf"))
 			{
 				String string = s.substring(9, s.length() - 1);
-				int lastIndex0 = string.lastIndexOf('_');
-				int lastIndex1 = string.lastIndexOf('_', lastIndex0 - 1);
-				int lastIndex2 = string.lastIndexOf('_', lastIndex1 - 1);
-				Expressie e1 = parse(string.substring(0, lastIndex1));
-				Expressie e2 = parse(string.substring(lastIndex1 + 1, lastIndex0));
-				Expressie e3 = parse(string.substring(lastIndex0 + 1));
-				if (e1 == null || e2 == null || e3 == null)
-					return null;
-				else
-					return new BinomCDF(e1, e2, e3);
+//				int lastIndex0 = string.lastIndexOf('_');
+//				int lastIndex1 = string.lastIndexOf('_', lastIndex0 - 1);
+//				int lastIndex2 = string.lastIndexOf('_', lastIndex1 - 1);
+//				Expressie e1 = parse(string.substring(0, lastIndex1));
+//				Expressie e2 = parse(string.substring(lastIndex1 + 1, lastIndex0));
+//				Expressie e3 = parse(string.substring(lastIndex0 + 1));
+//				if (e1 == null || e2 == null || e3 == null)
+//					return null;
+//				else
+//					return new BinomCDF(e1, e2, e3);
+				Expressie[] expressies = splitExpressieParameters(string,'_',3);
+				if(expressies==null) return null;
+				return new BinomCDF(expressies[0],expressies[1],expressies[2]);
 			}
 			else if (s.length() > 8 && s.substring(0, 8).equals("binompdf"))
 			{
-				String string = s.substring(9, s.length() - 1);
-				int lastIndex0 = string.lastIndexOf('_');
-				int lastIndex1 = string.lastIndexOf('_', lastIndex0 - 1);
-				int lastIndex2 = string.lastIndexOf('_', lastIndex1 - 1);
-				Expressie e1 = parse(string.substring(0, lastIndex1));
-				Expressie e2 = parse(string.substring(lastIndex1 + 1, lastIndex0));
-				Expressie e3 = parse(string.substring(lastIndex0 + 1));
-				if (e1 == null || e2 == null || e3 == null)
-					return null;
-				else
-					return new BinomPDF(e1, e2, e3);
+//				String string = s.substring(9, s.length() - 1);
+//				int lastIndex0 = string.lastIndexOf('_');
+//				int lastIndex1 = string.lastIndexOf('_', lastIndex0 - 1);
+//				int lastIndex2 = string.lastIndexOf('_', lastIndex1 - 1);
+//				Expressie e1 = parse(string.substring(0, lastIndex1));
+//				Expressie e2 = parse(string.substring(lastIndex1 + 1, lastIndex0));
+//				Expressie e3 = parse(string.substring(lastIndex0 + 1));
+//				if (e1 == null || e2 == null || e3 == null)
+//					return null;
+//				else
+//					return new BinomPDF(e1, e2, e3);
+				String string = s.substring(9,s.length()-1);
+				Expressie[] expressies = splitExpressieParameters(string,'_',3);
+				if(expressies==null) return null;
+				return new BinomPDF(expressies[0],expressies[1],expressies[2]);
 			}
 			else if (s.length() > 10 && s.substring(0, 10).equals("poissoncdf"))
 			{
-				String string = s.substring(11, s.length() - 1);
-				int lastIndex = string.lastIndexOf('_');
-				Expressie e1 = parse(string.substring(0, lastIndex));
-				Expressie e2 = parse(string.substring(lastIndex + 1));
-				if (e1 == null || e2 == null)
-					return null;
-				else
-					return new PoissonCDF(e1, e2);
+//				String string = s.substring(11, s.length() - 1);
+//				int lastIndex = string.lastIndexOf('_');
+//				Expressie e1 = parse(string.substring(0, lastIndex));
+//				Expressie e2 = parse(string.substring(lastIndex + 1));
+//				if (e1 == null || e2 == null)
+//					return null;
+//				else
+//					return new PoissonCDF(e1, e2);
+				String string = s.substring(11,s.length()-1);
+				Expressie[] expressies = splitExpressieParameters(string,'_',2);
+				if(expressies==null) return null;
+				return new PoissonCDF(expressies[0],expressies[1]);
 			}
 			else if (s.length() > 10 && s.substring(0, 10).equals("poissonpdf"))
 			{
-				String string = s.substring(11, s.length() - 1);
-				int lastIndex = string.lastIndexOf('_');
-				Expressie e1 = parse(string.substring(0, lastIndex));
-				Expressie e2 = parse(string.substring(lastIndex + 1));
-				if (e1 == null || e2 == null)
-					return null;
-				else
-					return new PoissonPDF(e1, e2);
+//				String string = s.substring(11, s.length() - 1);
+//				int lastIndex = string.lastIndexOf('_');
+//				Expressie e1 = parse(string.substring(0, lastIndex));
+//				Expressie e2 = parse(string.substring(lastIndex + 1));
+//				if (e1 == null || e2 == null)
+//					return null;
+//				else
+//					return new PoissonPDF(e1, e2);
+				String string = s.substring(11,s.length()-1);
+				Expressie[] expressies = splitExpressieParameters(string,'_',2);
+				if(expressies==null) return null;
+				return new PoissonPDF(expressies[0],expressies[1]);
 			}
 			else if (s.length() > 3 && s.substring(0, 3).equals("bin"))
 			{
-				String string = s.substring(4, s.length() - 1);
-				//String[] stringDelen = StringUtils.split(string, "_");
-				//Expressie e1 = parse(stringDelen[0]);
-				//Expressie e2 = parse(stringDelen[1]);
-				int lastIndex = string.lastIndexOf('_');
-				Expressie e1 = parse(string.substring(0, lastIndex));
-				Expressie e2 = parse(string.substring(lastIndex + 1));
-				if (e1 == null || e2 == null)
-					return null;
-				else
-					return new Bin(e1, e2);
+//				String string = s.substring(4, s.length() - 1);
+//				//String[] stringDelen = StringUtils.split(string, "_");
+//				//Expressie e1 = parse(stringDelen[0]);
+//				//Expressie e2 = parse(stringDelen[1]);
+//				int lastIndex = string.lastIndexOf('_');
+//				Expressie e1 = parse(string.substring(0, lastIndex));
+//				Expressie e2 = parse(string.substring(lastIndex + 1));
+//				if (e1 == null || e2 == null)
+//					return null;
+//				else
+//					return new Bin(e1, e2);
+				String string = s.substring(4,s.length()-1);
+				Expressie[] expressies = splitExpressieParameters(string,'_', 2);
+				if(expressies==null) return null;
+				return new Bin(expressies[0],expressies[1]);
 			}
 			else if (s.length() > 6 && s.substring(0, 6).equals("difpar"))
 			{
-				String string = s.substring(7, s.length() - 1);
-				int lastIndex = string.lastIndexOf('_');
-				Expressie e1 = parse(string.substring(0, lastIndex));
-				Expressie e2 = parse(string.substring(lastIndex + 1));
-				if (e1 == null || e2 == null)
-					return null;
-				else
-					return new DiffPartial(e1, e2);
+//				String string = s.substring(7, s.length() - 1);
+//				int lastIndex = string.lastIndexOf('_');
+//				Expressie e1 = parse(string.substring(0, lastIndex));
+//				Expressie e2 = parse(string.substring(lastIndex + 1));
+//				if (e1 == null || e2 == null)
+//					return null;
+//				else
+//					return new DiffPartial(e1, e2);
+				String string = s.substring(7,s.length()-1);
+				Expressie[] expressies = splitExpressieParameters(string,'_',2);
+				if(expressies==null) return null;
+				return new DiffPartial(expressies[0],expressies[1]);
 			}
 			else if (s.length() > 3 && s.substring(0, 3).equals("dif"))
 			{
-				String string = s.substring(4, s.length() - 1);
-				int lastIndex = string.lastIndexOf('_');
-				Expressie e1 = parse(string.substring(0, lastIndex));
-				Expressie e2 = parse(string.substring(lastIndex + 1));
-				if (e1 == null || e2 == null)
-					return null;
-				else
-					return new Diff(e1, e2);
+//				String string = s.substring(4, s.length() - 1);
+//				int lastIndex = string.lastIndexOf('_');
+//				Expressie e1 = parse(string.substring(0, lastIndex));
+//				Expressie e2 = parse(string.substring(lastIndex + 1));
+//				if (e1 == null || e2 == null)
+//					return null;
+//				else
+//					return new Diff(e1, e2);
+				String string = s.substring(4,s.length()-1);
+				Expressie[] expressies = splitExpressieParameters(string,'_',2);
+				if(expressies==null) return null;
+				return new Diff(expressies[0],expressies[1]);
 			}
 			else if (s.length() > 3 && s.substring(0, 3).equals("prm"))
 			{
-				String string = s.substring(4, s.length() - 1);
-				int lastIndex = string.lastIndexOf('_');
-				Expressie e1 = parse(string.substring(0, lastIndex));
-				Expressie e2 = parse(string.substring(lastIndex + 1));
-				if (e1 == null || e2 == null)
-					return null;
-				else
-					return new Primitieve(e1, e2);
+//				String string = s.substring(4, s.length() - 1);
+//				int lastIndex = string.lastIndexOf('_');
+//				Expressie e1 = parse(string.substring(0, lastIndex));
+//				Expressie e2 = parse(string.substring(lastIndex + 1));
+//				if (e1 == null || e2 == null)
+//					return null;
+//				else
+//					return new Primitieve(e1, e2);
+				String string = s.substring(4,s.length()-1);
+				Expressie[] expressies = splitExpressieParameters(string,'_',2);
+				if(expressies==null) return null;
+				return new Primitieve(expressies[0],expressies[1]);
 			}
 			else if (s.length() > 3 && s.substring(0, 3).equals("lim"))
 			{
-				String string = s.substring(4, s.length() - 1);
-				int lastIndex0 = string.lastIndexOf('_');
-				int lastIndex1 = string.lastIndexOf('_', lastIndex0 - 1);
-				int lastIndex2 = string.lastIndexOf('_', lastIndex1 - 1);
-				//String[] stringDelen = StringUtils.split(string, "_");
-				//Expressie e1 = parse(stringDelen[0]);
-				//Expressie e2 = parse(stringDelen[1]);
-				//Expressie e3 = parse(stringDelen[2]);
-				//Expressie e4 = parse(stringDelen[3]);
-				Expressie e1 = parse(string.substring(0, lastIndex2));
-				Expressie e2 = parse(string.substring(lastIndex2 + 1, lastIndex1));
-				Expressie e3 = parse(string.substring(lastIndex1 + 1, lastIndex0));
-				Expressie e4 = parse(string.substring(lastIndex0 + 1));
-				if (e1 == null || e2 == null || e3 == null || e4 == null)
-					return null;
-				else
-					return new Limiet(e1, e2, e3, e4);
+//				String string = s.substring(4, s.length() - 1);
+//				int lastIndex0 = string.lastIndexOf('_');
+//				int lastIndex1 = string.lastIndexOf('_', lastIndex0 - 1);
+//				int lastIndex2 = string.lastIndexOf('_', lastIndex1 - 1);
+//				//String[] stringDelen = StringUtils.split(string, "_");
+//				//Expressie e1 = parse(stringDelen[0]);
+//				//Expressie e2 = parse(stringDelen[1]);
+//				//Expressie e3 = parse(stringDelen[2]);
+//				//Expressie e4 = parse(stringDelen[3]);
+//				Expressie e1 = parse(string.substring(0, lastIndex2));
+//				Expressie e2 = parse(string.substring(lastIndex2 + 1, lastIndex1));
+//				Expressie e3 = parse(string.substring(lastIndex1 + 1, lastIndex0));
+//				Expressie e4 = parse(string.substring(lastIndex0 + 1));
+//				if (e1 == null || e2 == null || e3 == null || e4 == null)
+//					return null;
+//				else
+//					return new Limiet(e1, e2, e3, e4);
+				String string = s.substring(4,s.length()-1);
+				Expressie[] expressies = splitExpressieParameters(string,'_',4);
+				if(expressies==null) return null;
+				return new Limiet(expressies[0],expressies[1],expressies[2],expressies[3]);
 			}
 			else if (s.length() > 3 && s.substring(0, 3).equals("sig"))
 			{
-				String string = s.substring(4, s.length() - 1);
-				int lastIndex0 = string.lastIndexOf('_');
-				int lastIndex1 = string.lastIndexOf('_', lastIndex0 - 1);
-				int lastIndex2 = string.lastIndexOf('_', lastIndex1 - 1);
-				//String[] stringDelen = StringUtils.split(string, "_");
-				//Expressie e1 = parse(stringDelen[0]);
-				//Expressie e2 = parse(stringDelen[1]);
-				//Expressie e3 = parse(stringDelen[2]);
-				//Expressie e4 = parse(stringDelen[3]);
-				Expressie e1 = parse(string.substring(0, lastIndex2));
-				Expressie e2 = parse(string.substring(lastIndex2 + 1, lastIndex1));
-				Expressie e3 = parse(string.substring(lastIndex1 + 1, lastIndex0));
-				Expressie e4 = parse(string.substring(lastIndex0 + 1));
-				if (e1 == null || e2 == null || e3 == null || e4 == null)
-					return null;
-				else
-					return new Sigma(e1, e2, e3, e4);
+//				String string = s.substring(4, s.length() - 1);
+//				int lastIndex0 = string.lastIndexOf('_');
+//				int lastIndex1 = string.lastIndexOf('_', lastIndex0 - 1);
+//				int lastIndex2 = string.lastIndexOf('_', lastIndex1 - 1);
+//				//String[] stringDelen = StringUtils.split(string, "_");
+//				//Expressie e1 = parse(stringDelen[0]);
+//				//Expressie e2 = parse(stringDelen[1]);
+//				//Expressie e3 = parse(stringDelen[2]);
+//				//Expressie e4 = parse(stringDelen[3]);
+//				Expressie e1 = parse(string.substring(0, lastIndex2));
+//				Expressie e2 = parse(string.substring(lastIndex2 + 1, lastIndex1));
+//				Expressie e3 = parse(string.substring(lastIndex1 + 1, lastIndex0));
+//				Expressie e4 = parse(string.substring(lastIndex0 + 1));
+//				if (e1 == null || e2 == null || e3 == null || e4 == null)
+//					return null;
+//				else
+//					return new Sigma(e1, e2, e3, e4);
+				String string = s.substring(4,s.length()-1);
+				Expressie[] expressies = splitExpressieParameters(string,'_',4);
+				if(expressies==null) return null;
+				return new Sigma(expressies[0],expressies[1],expressies[2],expressies[3]);
 			}
 			else if (s.length() > 3 && s.substring(0, 3).equals("rnd"))
 			{
-				String string = s.substring(4, s.length() - 1);
-				//String[] stringDelen = StringUtils.split(string, "_");
-				//Expressie e1 = parse(stringDelen[0]);
-				//Expressie e2 = parse(stringDelen[1]);
-				int lastIndex = string.lastIndexOf('_');
-				Expressie e1 = parse(string.substring(0, lastIndex));
-				Expressie e2 = parse(string.substring(lastIndex + 1));
-				if (e1 == null || e2 == null)
-					return null;
-				else
-					return new DecRound(e1, e2);
+//				String string = s.substring(4, s.length() - 1);
+//				//String[] stringDelen = StringUtils.split(string, "_");
+//				//Expressie e1 = parse(stringDelen[0]);
+//				//Expressie e2 = parse(stringDelen[1]);
+//				int lastIndex = string.lastIndexOf('_');
+//				Expressie e1 = parse(string.substring(0, lastIndex));
+//				Expressie e2 = parse(string.substring(lastIndex + 1));
+//				if (e1 == null || e2 == null)
+//					return null;
+//				else
+//					return new DecRound(e1, e2);
+				String string = s.substring(4,s.length()-1);
+				Expressie[] expressies = splitExpressieParameters(string,'_',2);
+				if(expressies==null) return null;
+				return new DecRound(expressies[0],expressies[1]);
 			}
 			else if (s.length() > 4 && s.substring(0, 4).equals("sgf("))
 			{
@@ -1942,148 +2030,187 @@ public class FormuleParser
 
 			else if (s.length() > 3 && s.substring(0, 3).equals("rns"))
 			{
-				String string = s.substring(4, s.length() - 1);
-				String[] stringDelen = string.split("_");
-				//StringUtils.split(string, "_");
-				if (stringDelen.length == 2)
-				{
-					int lastIndex = string.lastIndexOf('_');
-					Expressie e1 = parse(string.substring(0, lastIndex));
-					Expressie e2 = parse(string.substring(lastIndex + 1));
-					if (e1 == null || e2 == null)
-						return null;
-					else
-						return new SigRoundStandard(e1, e2);
-				}
-				else if (stringDelen.length == 3)
-				{
-					int lastIndex0 = string.lastIndexOf('_');
-					int lastIndex1 = string.lastIndexOf('_', lastIndex0 - 1);
-					Expressie e1 = parse(string.substring(0, lastIndex1));
-					Expressie e2 = parse(string.substring(lastIndex1 + 1, lastIndex0));
-					Expressie e3 = parse(string.substring(lastIndex0 + 1));
-					if (e1 == null || e2 == null || e3 == null)
-						return null;
-					else
-						return new SigRound(e1, e2, e3);
-				}
+//				String string = s.substring(4, s.length() - 1);
+//				String[] stringDelen = string.split("_");
+//				//StringUtils.split(string, "_");
+//				if (stringDelen.length == 2)
+//				{
+//					int lastIndex = string.lastIndexOf('_');
+//					Expressie e1 = parse(string.substring(0, lastIndex));
+//					Expressie e2 = parse(string.substring(lastIndex + 1));
+//					if (e1 == null || e2 == null)
+//						return null;
+//					else
+//						return new SigRoundStandard(e1, e2);
+//				}
+//				else if (stringDelen.length == 3)
+//				{
+//					int lastIndex0 = string.lastIndexOf('_');
+//					int lastIndex1 = string.lastIndexOf('_', lastIndex0 - 1);
+//					Expressie e1 = parse(string.substring(0, lastIndex1));
+//					Expressie e2 = parse(string.substring(lastIndex1 + 1, lastIndex0));
+//					Expressie e3 = parse(string.substring(lastIndex0 + 1));
+//					if (e1 == null || e2 == null || e3 == null)
+//						return null;
+//					else
+//						return new SigRound(e1, e2, e3);
+//				}
+				String string = s.substring(4,s.length()-1);
+				Expressie[] expressies = splitExpressieParameters(string,'_');
+				if(expressies==null) return null;
+				if(expressies.length==2)
+					return new SigRoundStandard(expressies[0],expressies[1]);
+				if(expressies.length==3)
+					return new SigRound(expressies[0],expressies[1],expressies[2]);
 			}
 			else if (s.length() > 3 && s.substring(0, 3).equals("rnq"))
 			{
-				String string = s.substring(4, s.length() - 1);
-				//String[] stringDelen = StringUtils.split(string, "_");
-				//Expressie e1 = parse(stringDelen[0]);
-				//Expressie e2 = parse(stringDelen[1]);
-				int lastIndex = string.lastIndexOf('_');
-				Expressie e1 = parse(string.substring(0, lastIndex));
-				Expressie e2 = parse(string.substring(lastIndex + 1));
-				if (e1 == null || e2 == null)
-					return null;
-				else
-					return new DecRoundStrict(e1, e2);
+//				String string = s.substring(4, s.length() - 1);
+//				//String[] stringDelen = StringUtils.split(string, "_");
+//				//Expressie e1 = parse(stringDelen[0]);
+//				//Expressie e2 = parse(stringDelen[1]);
+//				int lastIndex = string.lastIndexOf('_');
+//				Expressie e1 = parse(string.substring(0, lastIndex));
+//				Expressie e2 = parse(string.substring(lastIndex + 1));
+//				if (e1 == null || e2 == null)
+//					return null;
+//				else
+//					return new DecRoundStrict(e1, e2);
+				String string = s.substring(4,s.length()-1);
+				Expressie[] expressies = splitExpressieParameters(string,'_',2);
+				if(expressies==null) return null;
+				return new DecRoundStrict(expressies[0],expressies[1]);
 			}
 			else if (s.length() > 3 && s.substring(0, 3).equals("int"))
 			{
-				String string = s.substring(4, s.length() - 1);
-				int lastIndex0 = string.lastIndexOf('_');
-				int lastIndex1 = string.lastIndexOf('_', lastIndex0 - 1);
-				int lastIndex2 = string.lastIndexOf('_', lastIndex1 - 1);
-				//String[] stringDelen = StringUtils.split(string, "_");
-				//Expressie e1 = parse(stringDelen[0]);
-				//Expressie e2 = parse(stringDelen[1]);
-				//Expressie e3 = parse(stringDelen[2]);
-				//Expressie e4 = parse(stringDelen[3]);
-				Expressie e1 = parse(string.substring(0, lastIndex2));
-				Expressie e2 = parse(string.substring(lastIndex2 + 1, lastIndex1));
-				Expressie e3 = parse(string.substring(lastIndex1 + 1, lastIndex0));
-				Expressie e4 = parse(string.substring(lastIndex0 + 1));
-				if (e1 == null || e2 == null || e3 == null || e4 == null)
-					return null;
-				else
-					return new Integraal(e1, e2, e3, e4);
+//				String string = s.substring(4, s.length() - 1);
+//				int lastIndex0 = string.lastIndexOf('_');
+//				int lastIndex1 = string.lastIndexOf('_', lastIndex0 - 1);
+//				int lastIndex2 = string.lastIndexOf('_', lastIndex1 - 1);
+//				//String[] stringDelen = StringUtils.split(string, "_");
+//				//Expressie e1 = parse(stringDelen[0]);
+//				//Expressie e2 = parse(stringDelen[1]);
+//				//Expressie e3 = parse(stringDelen[2]);
+//				//Expressie e4 = parse(stringDelen[3]);
+//				Expressie e1 = parse(string.substring(0, lastIndex2));
+//				Expressie e2 = parse(string.substring(lastIndex2 + 1, lastIndex1));
+//				Expressie e3 = parse(string.substring(lastIndex1 + 1, lastIndex0));
+//				Expressie e4 = parse(string.substring(lastIndex0 + 1));
+//				if (e1 == null || e2 == null || e3 == null || e4 == null)
+//					return null;
+//				else
+//					return new Integraal(e1, e2, e3, e4);
+				String string = s.substring(4,s.length()-1);
+				Expressie[] expressies = splitExpressieParameters(string,'_',4);
+				if(expressies==null) return null;
+				return new Integraal(expressies[0],expressies[1],expressies[2],expressies[3]);
 			}
 			else if (s.length() > 3 && s.substring(0, 3).equals("gcd"))
 			{
-				String string = s.substring(4, s.length() - 1);
-				int lastIndex = string.lastIndexOf('_');
-				Expressie e1 = parse(string.substring(0, lastIndex));
-				Expressie e2 = parse(string.substring(lastIndex + 1));
-				if (e1 == null || e2 == null)
-					return null;
-				else
-					return new GCD(e1, e2);
+//				String string = s.substring(4, s.length() - 1);
+//				int lastIndex = string.lastIndexOf('_');
+//				Expressie e1 = parse(string.substring(0, lastIndex));
+//				Expressie e2 = parse(string.substring(lastIndex + 1));
+//				if (e1 == null || e2 == null)
+//					return null;
+//				else
+//					return new GCD(e1, e2);
+				String string = s.substring(4,s.length()-1);
+				Expressie[] expressies = splitExpressieParameters(string,'_',2);
+				if(expressies==null) return null;
+				return new GCD(expressies[0],expressies[1]);
 			}
 			else if (s.length() > 3 && s.substring(0, 3).equals("min"))
 			{
-				String string = s.substring(4, s.length() - 1);
-				int lastIndex = string.lastIndexOf('_');
-				Expressie e1 = parse(string.substring(0, lastIndex));
-				Expressie e2 = parse(string.substring(lastIndex + 1));
-				if (e1 == null || e2 == null)
-					return null;
-				else
-					return new Min(e1, e2);
+//				String string = s.substring(4, s.length() - 1);
+//				int lastIndex = string.lastIndexOf('_');
+//				Expressie e1 = parse(string.substring(0, lastIndex));
+//				Expressie e2 = parse(string.substring(lastIndex + 1));
+//				if (e1 == null || e2 == null)
+//					return null;
+//				else
+//					return new Min(e1, e2);
+				String string = s.substring(4,s.length()-1);
+				Expressie[] expressies = splitExpressieParameters(string,'_',2);
+				if(expressies==null) return null;
+				return new Min(expressies[0],expressies[1]);
 			}
 			else if (s.length() > 3 && s.substring(0, 3).equals("max"))
 			{
-				String string = s.substring(4, s.length() - 1);
-				int lastIndex = string.lastIndexOf('_');
-				Expressie e1 = parse(string.substring(0, lastIndex));
-				Expressie e2 = parse(string.substring(lastIndex + 1));
-				if (e1 == null || e2 == null)
-					return null;
-				else
-					return new Max(e1, e2);
+//				String string = s.substring(4, s.length() - 1);
+//				int lastIndex = string.lastIndexOf('_');
+//				Expressie e1 = parse(string.substring(0, lastIndex));
+//				Expressie e2 = parse(string.substring(lastIndex + 1));
+//				if (e1 == null || e2 == null)
+//					return null;
+//				else
+//					return new Max(e1, e2);
+				String string = s.substring(4,s.length()-1);
+				Expressie[] expressies = splitExpressieParameters(string,'_',2);
+				if(expressies==null) return null;
+				return new Max(expressies[0],expressies[1]);
 			}
 			else if (s.length() > 9 && s.substring(0, 9).equals("normalcdf"))
 			{
-				String string = s.substring(10, s.length() - 1);
-				int lastIndex0 = string.lastIndexOf('_');
-				int lastIndex1 = string.lastIndexOf('_', lastIndex0 - 1);
-				int lastIndex2 = string.lastIndexOf('_', lastIndex1 - 1);
-				Expressie e1 = parse(string.substring(0, lastIndex2));
-				Expressie e2 = parse(string.substring(lastIndex2 + 1, lastIndex1));
-				Expressie e3 = parse(string.substring(lastIndex1 + 1, lastIndex0));
-				Expressie e4 = parse(string.substring(lastIndex0 + 1));
-				if (e1 == null || e2 == null || e3 == null || e4 == null)
-					return null;
-				else
-					return new NormalCDF(e1, e2, e3, e4);
+//				String string = s.substring(10, s.length() - 1);
+//				int lastIndex0 = string.lastIndexOf('_');
+//				int lastIndex1 = string.lastIndexOf('_', lastIndex0 - 1);
+//				int lastIndex2 = string.lastIndexOf('_', lastIndex1 - 1);
+//				Expressie e1 = parse(string.substring(0, lastIndex2));
+//				Expressie e2 = parse(string.substring(lastIndex2 + 1, lastIndex1));
+//				Expressie e3 = parse(string.substring(lastIndex1 + 1, lastIndex0));
+//				Expressie e4 = parse(string.substring(lastIndex0 + 1));
+//				if (e1 == null || e2 == null || e3 == null || e4 == null)
+//					return null;
+//				else
+//					return new NormalCDF(e1, e2, e3, e4);
+				String string = s.substring(10,s.length()-1);
+				Expressie[] expressies = splitExpressieParameters(string,'_',4);
+				if(expressies==null) return null;
+				return new NormalCDF(expressies[0],expressies[1],expressies[2],expressies[3]);
 			}
 			else if (s.length() > 7 && s.substring(0, 7).equals("invNorm"))
 			{
-				String string = s.substring(8, s.length() - 1);
-				int lastIndex0 = string.lastIndexOf('_');
-				int lastIndex1 = string.lastIndexOf('_', lastIndex0 - 1);
-				int lastIndex2 = string.lastIndexOf('_', lastIndex1 - 1);
-				Expressie e1 = parse(string.substring(0, lastIndex1));
-				Expressie e2 = parse(string.substring(lastIndex1 + 1, lastIndex0));
-				Expressie e3 = parse(string.substring(lastIndex0 + 1));
-				if (e1 == null || e2 == null || e3 == null)
-					return null;
-				else
-					return new InvNorm(e1, e2, e3);
+//				String string = s.substring(8, s.length() - 1);
+//				int lastIndex0 = string.lastIndexOf('_');
+//				int lastIndex1 = string.lastIndexOf('_', lastIndex0 - 1);
+//				int lastIndex2 = string.lastIndexOf('_', lastIndex1 - 1);
+//				Expressie e1 = parse(string.substring(0, lastIndex1));
+//				Expressie e2 = parse(string.substring(lastIndex1 + 1, lastIndex0));
+//				Expressie e3 = parse(string.substring(lastIndex0 + 1));
+//				if (e1 == null || e2 == null || e3 == null)
+//					return null;
+//				else
+//					return new InvNorm(e1, e2, e3);
+				String string = s.substring(8,s.length()-1);
+				Expressie[] expressies = splitExpressieParameters(string,'_',3);
+				if(expressies==null) return null;
+				return new InvNorm(expressies[0],expressies[1],expressies[2]);
 			}
 
 			else if (s.length() > 3 && s.substring(0, 3).equals("prv"))
 			{
-				String string = s.substring(4, s.length() - 1);
-				int lastIndex0 = string.lastIndexOf('_');
-				int lastIndex1 = string.lastIndexOf('_', lastIndex0 - 1);
-				int lastIndex2 = string.lastIndexOf('_', lastIndex1 - 1);
-				//String[] stringDelen = StringUtils.split(string, "_");
-				//Expressie e1 = parse(stringDelen[0]);
-				//Expressie e2 = parse(stringDelen[1]);
-				//Expressie e3 = parse(stringDelen[2]);
-				//Expressie e4 = parse(stringDelen[3]);
-				Expressie e1 = parse(string.substring(0, lastIndex2));
-				Expressie e2 = parse(string.substring(lastIndex2 + 1, lastIndex1));
-				Expressie e3 = parse(string.substring(lastIndex1 + 1, lastIndex0));
-				Expressie e4 = parse(string.substring(lastIndex0 + 1));
-				if (e1 == null || e2 == null || e3 == null || e4 == null)
-					return null;
-				else
-					return new Prv(e1, e2, e3, e4);
+//				String string = s.substring(4, s.length() - 1);
+//				int lastIndex0 = string.lastIndexOf('_');
+//				int lastIndex1 = string.lastIndexOf('_', lastIndex0 - 1);
+//				int lastIndex2 = string.lastIndexOf('_', lastIndex1 - 1);
+//				//String[] stringDelen = StringUtils.split(string, "_");
+//				//Expressie e1 = parse(stringDelen[0]);
+//				//Expressie e2 = parse(stringDelen[1]);
+//				//Expressie e3 = parse(stringDelen[2]);
+//				//Expressie e4 = parse(stringDelen[3]);
+//				Expressie e1 = parse(string.substring(0, lastIndex2));
+//				Expressie e2 = parse(string.substring(lastIndex2 + 1, lastIndex1));
+//				Expressie e3 = parse(string.substring(lastIndex1 + 1, lastIndex0));
+//				Expressie e4 = parse(string.substring(lastIndex0 + 1));
+//				if (e1 == null || e2 == null || e3 == null || e4 == null)
+//					return null;
+//				else
+//					return new Prv(e1, e2, e3, e4);
+				String string = s.substring(4,s.length()-1);
+				Expressie[] expressies = splitExpressieParameters(string,'_',4);
+				if(expressies==null) return null;
+				return new Prv(expressies[0],expressies[1],expressies[2],expressies[3]);
 			}
 			//		is het een arcsinus
 			else if (s.length() > 7 && s.substring(0, 7).equals("arcsin("))
