@@ -4,7 +4,7 @@
   <groupId>fi.dwo</groupId>
   <artifactId>DWOJApplet</artifactId>
   <name>DWOJApplet</name>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <url>http://www.dwo.nl</url>
   <inceptionYear>2015</inceptionYear>
   <developers>
@@ -139,23 +139,6 @@
                 <goals>
                   <goal>proguard</goal>
                 </goals>
-                <configuration>
-                  <proguardVersion>5.2</proguardVersion>
-                  <options>
-                    <option>-verbose</option>
-                    <option>-dontwarn</option>
-                  </options>
-                  <obfuscate>true</obfuscate>
-                  <inputDirectory>D:\Gert-do-not-delete\NetbeansProjects\project.fisme.java-root\DWOJAppletClient\trunk\target</inputDirectory>
-                  <injar>DWOJApplet-1.0-SNAPSHOT-r${buildNumber}.jar</injar>
-                  <proguardInclude>config.pro</proguardInclude>
-                  <libs>
-                    <lib>C:\Program Files\Java\jdk1.7.0_67\jre/lib/rt.jar</lib>
-                    <lib>C:\Program Files\Java\jdk1.7.0_67\jre/lib/jsse.jar</lib>
-                    <lib>C:\Program Files\Java\jdk1.7.0_67\jre/lib/jfxrt.jar</lib>
-                  </libs>
-                  <addMavenDescriptor>false</addMavenDescriptor>
-                </configuration>
               </execution>
             </executions>
             <dependencies>
@@ -173,13 +156,13 @@
                 <option>-dontwarn</option>
               </options>
               <obfuscate>true</obfuscate>
-              <inputDirectory>D:\Gert-do-not-delete\NetbeansProjects\project.fisme.java-root\DWOJAppletClient\trunk\target</inputDirectory>
-              <injar>DWOJApplet-1.0-SNAPSHOT-r${buildNumber}.jar</injar>
+              <inputDirectory>${project.build.directory}</inputDirectory>
+              <injar>${project.build.finalName}.jar</injar>
               <proguardInclude>config.pro</proguardInclude>
               <libs>
-                <lib>C:\Program Files\Java\jdk1.7.0_67\jre/lib/rt.jar</lib>
-                <lib>C:\Program Files\Java\jdk1.7.0_67\jre/lib/jsse.jar</lib>
-                <lib>C:\Program Files\Java\jdk1.7.0_67\jre/lib/jfxrt.jar</lib>
+                <lib>${java.home}/lib/rt.jar</lib>
+                <lib>${java.home}/lib/jsse.jar</lib>
+                <lib>${java.home}/lib/jfxrt.jar</lib>
               </libs>
               <addMavenDescriptor>false</addMavenDescriptor>
             </configuration>

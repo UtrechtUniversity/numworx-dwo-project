@@ -6,7 +6,6 @@ import fi.beans.scorm.SCORM12APIInterface;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
-import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -151,18 +150,11 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
             // TODO Applet is niet gestart!
             // Dialog: interne fout, sco niet goed geïnitialiseerd.
             log.log(Level.SEVERE,null,e);
-            try {
-                DbAccessCreator.instance().log(GuiCreator.instance().getUser().getID() + " Sco " + sco.getID() + "," + applet + " exception in ScoPanel.init: " + e.toString());
-                StringWriter w = new StringWriter();
-                PrintWriter pw = new PrintWriter(w);
-                e.printStackTrace(pw);
-                DbAccessCreator.instance().log(w.toString());
-
-            } catch (IOException e1) {
-                log.log(Level.SEVERE,null,e1);
-            } catch (XmlRpcException e1) {
-                log.log(Level.SEVERE,null,e1);
-            }
+            log.log(Level.FINE, "{0} Sco {1},{2} exception in ScoPanel.init: {3}", new Object[]{GuiCreator.instance().getUser().getID(), sco.getID(), applet, e.toString()});
+            StringWriter w = new StringWriter();
+            PrintWriter pw = new PrintWriter(w);
+            log.log(Level.FINE,w.toString());
+            log.log(Level.FINE,pw.toString());
         }
     }
 
@@ -530,7 +522,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
     @Override
     public String LMSSetValue(String iDataModelElement, String iValue) {
 //        try {
-//            DbAccessCreator.instance().log("ScoPanel.LMSSetValue(" + iDataModelElement + ", " + iValue + ")");
+//            log.log("ScoPanel.LMSSetValue(Level.FINE," + iDataModelElement + ", " + iValue + ")");
 //        } catch(Exception e2) {
 ////            DwoMessageDialog.showMessageDialog(null, e2.getMessage());
 //            

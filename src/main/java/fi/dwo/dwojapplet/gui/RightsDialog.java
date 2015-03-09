@@ -5,7 +5,6 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolGroup;
 import fi.dwo.dwojapplet.domain.User;
-import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.awt.BorderLayout;
 import java.awt.Frame;
@@ -187,7 +186,7 @@ public class RightsDialog extends JDialog implements ActionListener {
 // naar persistencefacade TODO
                 try {
                     user.setRights(
-                            DbAccessCreator.instance().setRights(user.getID(), profileID, newrights)
+                            PersistenceFacade.instance().setRights(user.getID(), profileID, newrights)
                     );
                 } catch (Exception e1) {
                     log.log(Level.SEVERE, null, e1);

@@ -9,7 +9,6 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.ScoPanel;
-import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.applet.Applet;
 import java.applet.AppletContext;
@@ -17,7 +16,6 @@ import java.applet.AppletStub;
 import java.awt.Component;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
@@ -28,7 +26,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-import org.apache.xmlrpc.applet.XmlRpcException;
 
 /**
  * This class is responsible for the Sco data. It also implements the
@@ -593,16 +590,11 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
                     if (localUser == null) {
                         localUser = dwo.getUser();
                     }
-                    DbAccessCreator.instance().log(localUser.getID() + " Sco " + scoID + "," + applet + " exception in Sco.end: " + e.toString());
+                    log.log(Level.FINE, "{0} Sco {1},{2} exception in Sco.end: {3}", new Object[]{localUser.getID(), scoID, applet, e.toString()});
                     StringWriter w = new StringWriter();
                     PrintWriter pw = new PrintWriter(w);
                     e.printStackTrace(pw);
-                    DbAccessCreator.instance().log(w.toString());
-
-                } catch (IOException e1) {
-                    log.log(Level.SEVERE,null,e1);
-                } catch (XmlRpcException e1) {
-                    log.log(Level.SEVERE,null,e1);
+                    log.log(Level.FINE,w.toString());
                 } catch (RuntimeException e1) {
                     log.log(Level.SEVERE,null,e1);
                 }

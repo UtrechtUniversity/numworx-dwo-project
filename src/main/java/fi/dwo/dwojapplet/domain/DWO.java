@@ -47,7 +47,6 @@ import java.net.URLDecoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 import java.util.jar.Manifest;
@@ -282,6 +281,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * username
      * password
      * </pre>
+     * 
+     * SERVLET requires the full URL path.
      *
      * @param args
      */
@@ -301,8 +302,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
             }
 
             // allow update van SERVLET
-            if ("-s".equals(args[o])) {
-                fi.dwo.dwojapplet.persistence.DbAccessCreator.SERVLET = args[1 + o];
+            if ("-s".equals(args[o])) {                
+                DwoHelper.setServletConnectString(args[1 + o]);
                 o += 2;
             }
             // initialize applicationBase
@@ -314,7 +315,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
                 }
                 o += 2;
             }
-// allow definitie van Locale.
+            // allow definitie van Locale.
             if (args.length > 1 + o && "-l".equals(args[o])) {
                 languageOveride = args[o + 1];
                 o += 2;

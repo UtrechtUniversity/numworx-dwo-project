@@ -18,7 +18,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
  */
 public interface DbAccessIF extends DbAccessLogin {
 
-	// LET OP: void/null returns en null parameters zijn niet gesupport!
+    // LET OP: void/null returns en null parameters zijn niet gesupport!
     public static String ERROR_CLASS = "__ERROR_CLASS__";
     public static String ERROR_CODE = "__ERROR_CODE__";
 
@@ -423,10 +423,10 @@ public interface DbAccessIF extends DbAccessLogin {
 
     /**
      * @param userID
-     * @return 
-     * @throws java.io.IOException 
-     * @throws java.sql.SQLException 
-     * @throws org.apache.xmlrpc.applet.XmlRpcException 
+     * @return
+     * @throws java.io.IOException
+     * @throws java.sql.SQLException
+     * @throws org.apache.xmlrpc.applet.XmlRpcException
      *
      */
     public boolean deleteUser(int userID) throws IOException, XmlRpcException,
@@ -457,10 +457,10 @@ public interface DbAccessIF extends DbAccessLogin {
 
     /**
      * @param uid
-     * @return 
-     * @throws java.io.IOException 
-     * @throws java.sql.SQLException 
-     * @throws org.apache.xmlrpc.applet.XmlRpcException 
+     * @return
+     * @throws java.io.IOException
+     * @throws java.sql.SQLException
+     * @throws org.apache.xmlrpc.applet.XmlRpcException
      *
      */
     public boolean disconnectFromClass(int uid) throws IOException,
@@ -650,5 +650,7 @@ public interface DbAccessIF extends DbAccessLogin {
     public boolean changeSco(int scoid, String scoName, String description,
             boolean delete, byte[] launchdata, boolean showScore)
             throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
+
+    public Vector getToSchoolsFrom(int schoolID) throws IOException, XmlRpcException, SQLException;
 
 }

@@ -881,7 +881,8 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
         Hashtable wheredef = new Hashtable();
         wheredef.put("schoolFrom", user.getSchool().getSchoolID());
         try {
-            Vector result = DbAccessCreator.instance().getTable("tblfromto", wheredef);
+            Vector result = PersistenceFacade.instance().getToSchoolsFrom(user.getSchool().getSchoolID());
+            //DbAccessCreator.instance().getTable("tblfromto", wheredef);
             Enumeration e = result.elements();
             while (e.hasMoreElements()) {
                 Hashtable row = (Hashtable) e.nextElement();
@@ -895,6 +896,8 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
                     }
                 }
             }
+        } catch (PersistenceException e) {
+            log.log(Level.SEVERE, null, e);
         } catch (IOException e) {
             log.log(Level.SEVERE, null, e);
         } catch (XmlRpcException e) {
@@ -902,7 +905,6 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
         } catch (SQLException e) {
             log.log(Level.SEVERE, null, e);
         }
-
     }
 
     protected void updateSchoolTo(School from,

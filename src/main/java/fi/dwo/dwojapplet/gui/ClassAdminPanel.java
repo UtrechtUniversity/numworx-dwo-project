@@ -9,7 +9,6 @@ import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.SchoolGroup;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
-import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.MapperIF;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
@@ -75,7 +74,8 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
                 Teacher t = (Teacher) nameMap.get(value);
                 Teacher o = (Teacher) oldTeacher.get(c);
                 try {
-                    if (DbAccessCreator.instance().reassignClass(c.getID(), t.getID())) {
+                    
+                    if (PersistenceFacade.instance().reassignClass(c, t)) {
                         teacherMap.put(classes[rowIndex], value);
                         o.deleteClass(c);
                         t.addClass(c);

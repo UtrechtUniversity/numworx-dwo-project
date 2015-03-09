@@ -247,12 +247,11 @@ class ManifestFile {
             dbAccess.addSco(courseID, notnull(name), notnull(description), appletID, notnull(launchdata), sequencenr + offset);
         }
     }
-
+    
     private static String notnull(String s) {
         if (s == null) {
             return "";
         }
         return s;
     }
-
 }

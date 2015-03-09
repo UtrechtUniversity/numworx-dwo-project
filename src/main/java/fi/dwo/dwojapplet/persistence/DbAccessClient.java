@@ -4,6 +4,7 @@ package fi.dwo.dwojapplet.persistence;
 import fi.beans.xmlrpc.Client;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Vector;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
@@ -713,6 +714,7 @@ public class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean changeSco(int a, java.lang.String b, java.lang.String c, boolean d, byte[] e, boolean f) throws IOException, XmlRpcException {
         Vector vv = new Vector(6);
         vv.addElement(new Integer(a));
@@ -723,6 +725,14 @@ public class DbAccessClient extends Client implements DbAccessIF {
         vv.addElement(Boolean.valueOf(f));
         Object object = invoke("changeSco", vv);
         return ((Boolean) object).booleanValue();
+    }
+
+    @Override
+    public Vector getToSchoolsFrom(int a)  throws IOException, XmlRpcException, SQLException  {
+        Vector vv = new Vector(1);
+        vv.addElement(a);
+        Object object = invoke("getToSchoolsFrom", vv);
+        return (java.util.Vector) object;
     }
 
 }

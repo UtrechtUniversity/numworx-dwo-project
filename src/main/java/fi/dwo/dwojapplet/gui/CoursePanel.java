@@ -397,7 +397,7 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
              }
              } catch (Exception e) {
              try {
-             DbAccessCreator.instance().log(e.toString());
+             log.log(Level.FINE,e.toString());
              } catch (Exception _) {
              } 
              }

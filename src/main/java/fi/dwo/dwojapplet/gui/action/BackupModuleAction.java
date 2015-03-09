@@ -75,9 +75,9 @@ public class BackupModuleAction extends GuiAction {
         saveDial.show();
         naam = saveDial.getFile();
         if (naam != null) {
-            File dir = new File(saveDial.getDirectory());
-            this.dir = dir.getAbsolutePath();
-            File file = new File(dir, naam);
+            File lclDir = new File(saveDial.getDirectory());
+            this.dir = lclDir.getAbsolutePath();
+            File file = new File(lclDir, naam);
             FileOutputStream out = new FileOutputStream(file);
             DWOFile zipper = new DWOFile(DbAccessCreator.instance());
             zipper.createIMSManifest(course.getID(), -1, out);

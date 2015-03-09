@@ -12,7 +12,6 @@ import fi.dwo.dwojapplet.gui.action.BackupModuleAction;
 import fi.dwo.dwojapplet.gui.action.DeleteAction;
 import fi.dwo.dwojapplet.gui.action.ImportModuleAction;
 import fi.dwo.dwojapplet.gui.action.NewAction;
-import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.WiskOpdrEditPanel;
@@ -660,7 +659,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
             courseLogoButton.setIcon(new ImageIcon(reduced));
 // TODO omzetten in PersistenceFacade!
             try {
-                DbAccessCreator.instance().setLogo(course.getID(), data);
+                PersistenceFacade.instance().setLogo(course.getID(), data);
             } catch (Exception e) {
                 log.log(Level.SEVERE,null,e);
             }

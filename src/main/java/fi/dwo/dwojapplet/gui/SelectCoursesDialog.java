@@ -14,7 +14,6 @@ import fi.dwo.dwojapplet.domain.DwoIF;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.User;
-import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -647,7 +646,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
             Boolean booleanValue = (Boolean) UIManager
                     .get("Tree.drawsFocusBorderAroundIcon");
             leafRenderer.setFocusPainted((booleanValue != null)
-                    && (booleanValue.booleanValue()));
+                    && (booleanValue));
             leafRenderer.setContentAreaFilled(true);
             selectionBorderColor = UIManager.getColor("Tree.selectionBorderColor");
             selectionForeground = UIManager.getColor("Tree.selectionForeground");
@@ -1193,7 +1192,7 @@ public final class SelectCoursesDialog extends JDialog implements ActionListener
             public void run() {
                 // persistencefacade....'
                 try {
-                    Vector result = DbAccessCreator.instance().getResultCount(
+                    Vector result = PersistenceFacade.instance().getResultCount(
                             dwoProfile, sc.getID());
                     Enumeration e = result.elements();
                     CourseData[] cd = scd.cd;
