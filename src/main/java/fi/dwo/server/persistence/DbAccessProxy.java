@@ -595,4 +595,9 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
         return getDelegate().link_saml(userid, orgid, id);
     }
 
+    @Override
+    public Vector getToSchoolsFrom(int schoolID) throws IOException, XmlRpcException, SQLException {
+        return getDelegate().getToSchoolsFrom(schoolID);
+    }
+
 }

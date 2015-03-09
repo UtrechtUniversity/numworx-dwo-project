@@ -36,7 +36,7 @@ import java.util.logging.Logger;
 /**
  * Provides handles persistent entity operations on the database.
  *
- * 
+ *
  */
 public class DbAccess extends DbConnect implements DbAccessIF {
 
@@ -402,6 +402,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             + "SET sequencenr = sequencenr - 1 " + "WHERE (sequencenr > ?) "
             + "AND   (courseid = ?) ";
 
+    private final static String QRY_SELECT_TO_SCHOOLS_FROM = "select * from tblSchoolFrom where schoolFrom = ? ";
+    
 // TODO false bij een export.    
     /**
      *
@@ -971,7 +973,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @param className
      * @return java.util.Hashtable
      *
-     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException @throws fi.dwo.client.system.ClassException
+     * @throws fi.dwo.commons.exceptions.DwoXmlRpcException @throws
+     * fi.dwo.client.system.ClassException
      * @throws java.sql.SQLException
      *
      */
@@ -1207,6 +1210,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         result = getRecord("tblSchool", "schoolID", schoolID);
         return result;
     }
+
     private void updateSchoolGroupPasswdMap(int schoolID, Hashtable passwdMap)
             throws SQLException {
         Set entries = passwdMap.entrySet();
@@ -1622,6 +1626,25 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     public Vector getTable(String tableName, Hashtable wheredef)
             throws IOException, XmlRpcException, SQLException {
         return getTable(tableName, wheredef, null);
+    }
+
+    /**
+     *
+     * @param schoolID
+     * @return
+     * @throws IOException
+     * @throws XmlRpcException
+     * @throws SQLException
+     */
+    
+    @Override
+    public Vector getToSchoolsFrom(int schoolID)
+            throws IOException, XmlRpcException, SQLException {
+        close(); //for lazy connection
+        PreparedStatement ps;
+        ps = getStatement(QRY_SELECT_TO_SCHOOLS_FROM);
+        ps.setInt(1, schoolID);
+        return executeQueryWithResult(ps);
     }
 
     /*
