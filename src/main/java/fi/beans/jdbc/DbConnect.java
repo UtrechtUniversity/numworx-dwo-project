@@ -18,7 +18,6 @@ import java.util.logging.Logger;
 public class DbConnect implements DbConnectIF {
 
     private static final Logger log = Logger.getLogger(DbConnect.class.getName());
-
     public static final int DEFAULT = 1;
     //public static final int VECTOR  = 0;
 
