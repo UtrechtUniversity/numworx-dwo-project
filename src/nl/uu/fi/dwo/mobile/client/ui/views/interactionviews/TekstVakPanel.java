@@ -13,6 +13,7 @@ import java.util.Map;
 
 
 
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
@@ -395,6 +396,17 @@ public class TekstVakPanel implements InteractionView
 		sleepHandle = launchState.getBoolean("sleepHandle",sleepHandle);
 		if (launchState.containsKey("checkExpressieString"))
 			checkExpressieString = launchState.getString("checkExpressieString");
+		try
+		{
+			checkExpressieString = FormuleParser.randomizeString(checkExpressieString, randomVarNamen, randomVarWaarden);
+		}
+		catch (Exception e)
+		{
+			checkExpressieString = "$f???@";
+
+		}
+		
+		
 		defaultBijNull = launchState.getBoolean("defaultBijNull",defaultBijNull);
 		if (launchState.containsKey("ipId"))
 			ipId = launchState.getInt("ipId");
