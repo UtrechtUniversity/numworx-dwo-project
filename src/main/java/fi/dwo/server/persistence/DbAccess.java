@@ -512,6 +512,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
     /**
      * @param tableName The tablename of the table to select data.
+     * @param wheredef
+     * @param orderBy
      * @return java.util.Vector The vector contains Hashtables who contains the
      * rows mapped on the columnname.
      * @throws java.sql.SQLException
