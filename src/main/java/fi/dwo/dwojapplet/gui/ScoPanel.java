@@ -18,7 +18,6 @@ import java.awt.MediaTracker;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.logging.Level;
@@ -35,7 +34,6 @@ import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
-import org.apache.xmlrpc.applet.XmlRpcException;
 
 /**
  * This class represents a panel witch shows an applet of the sco.

@@ -1,6 +1,7 @@
 package fi.dwo.dwojapplet.form;
 
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
+import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.dwojapplet.persistence.DbAccessIF;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,8 +21,8 @@ public class DWOFile {
 
     ManifestFile m;
 
-    public DWOFile(DbAccessIF dbAccess) {
-        m = new ManifestFile(dbAccess);
+    public DWOFile() {
+        m = new ManifestFile();
     }
 
     /**
@@ -38,7 +39,7 @@ public class DWOFile {
      */
     public void createIMSManifest(int course, int scoid, OutputStream out)
             throws ParserConfigurationException, TransformerException,
-            SQLException, IOException, XmlRpcException {
+            SQLException, IOException, XmlRpcException, PersistenceException {
 
         out.write(prefix);
         GZIPOutputStream gout;

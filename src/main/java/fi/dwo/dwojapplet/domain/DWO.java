@@ -373,7 +373,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * @param currentUser
      * @return
      */
-    @SuppressWarnings("null")
+    //@SuppressWarnings("null")
     private boolean setExtraRights(final User currentUser) {
         DwoHelper.setAdminLoggedIn(currentUser instanceof Admin);
         DwoHelper.setScormExportLoggedIn(currentUser.hasRight(User.SCORM_EXPORT_RIGHT));

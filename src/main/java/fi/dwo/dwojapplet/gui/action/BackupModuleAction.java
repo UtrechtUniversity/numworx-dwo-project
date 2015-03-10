@@ -1,11 +1,11 @@
 package fi.dwo.dwojapplet.gui.action;
 
+import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.form.DWOFile;
-import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 import java.awt.FileDialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -67,7 +67,7 @@ public class BackupModuleAction extends GuiAction {
         }
     }
 
-    private void export(Course course) throws ParserConfigurationException, TransformerException, SQLException, IOException, XmlRpcException {
+    private void export(Course course) throws ParserConfigurationException, TransformerException, SQLException, IOException, XmlRpcException, PersistenceException {
         String naam;
         final Frame topFrame = DwoHelper.getFrameForComponent(null);
         saveDial = new FileDialog(topFrame, tip, FileDialog.SAVE);
@@ -79,7 +79,7 @@ public class BackupModuleAction extends GuiAction {
             this.dir = lclDir.getAbsolutePath();
             File file = new File(lclDir, naam);
             FileOutputStream out = new FileOutputStream(file);
-            DWOFile zipper = new DWOFile(DbAccessCreator.instance());
+            DWOFile zipper = new DWOFile();
             zipper.createIMSManifest(course.getID(), -1, out);
         }
     }

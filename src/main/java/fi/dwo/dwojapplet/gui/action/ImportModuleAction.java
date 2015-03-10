@@ -12,7 +12,6 @@ import fi.dwo.dwojapplet.form.DWOFile;
 import fi.dwo.dwojapplet.gui.CourseManagementPanel;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.ModuleTreePanel;
-import fi.dwo.dwojapplet.persistence.DbAccessCreator;
 import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.MapperIF;
 import java.awt.FileDialog;
@@ -123,7 +122,7 @@ public class ImportModuleAction extends GuiAction {
             this.dir = dir.getAbsolutePath();
             File file = new File(dir, naam);
             FileInputStream input = new FileInputStream(file);
-            DWOFile zipper = new DWOFile(DbAccessCreator.instance());
+            DWOFile zipper = new DWOFile();
             Hashtable result = zipper.inputIMSManifest(input);
             Set names = course.getScoNames();
             int offset = names.size();
@@ -159,7 +158,7 @@ public class ImportModuleAction extends GuiAction {
             this.dir = dir.getAbsolutePath();
             File file = new File(dir, naam);
             FileInputStream input = new FileInputStream(file);
-            DWOFile zipper = new DWOFile(DbAccessCreator.instance());
+            DWOFile zipper = new DWOFile();
             Hashtable result = zipper.inputIMSManifest(input);
 
 // TODO deze code verplaatsen naar DWOFile?

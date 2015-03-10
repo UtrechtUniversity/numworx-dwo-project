@@ -1,7 +1,8 @@
 package fi.dwo.dwojapplet.form;
 
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
-import fi.dwo.dwojapplet.persistence.DbAccessIF;
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -48,24 +49,23 @@ class ManifestFile {
     private static String LAUNCHDATA = "launchdata";
     private static String SEQUENCE_NR = "sequencenr";
 
-    private DbAccessIF dbAccess;
+//    private DbAccessIF dbAccess;
     private Document document;
 
-    public ManifestFile(DbAccessIF dbAccessIF) {
-        this.dbAccess = dbAccessIF;
+    public ManifestFile() {
     }
 
     Hashtable configMap = new Hashtable();
 
-    public void createIMSManifest(int course, int scoid, OutputStream out) throws ParserConfigurationException, TransformerException, SQLException, IOException, XmlRpcException {
-        Hashtable record = dbAccess.getRecord("tblCourse", "courseID", course);
+    public void createIMSManifest(int course, int scoid, OutputStream out) throws ParserConfigurationException, TransformerException, SQLException, IOException, XmlRpcException, PersistenceException {
+        Hashtable record = PersistenceFacade.instance().getRecord("tblCourse", "courseID", course);
         Hashtable restriction;
         restriction = new Hashtable();
         restriction.put("courseID", record.get("courseID"));
         if (scoid != -1) {
             // insert scoid in restriction.
         }
-        Vector scos = dbAccess.getTable("tblSco", restriction, SEQUENCE_NR);
+        Vector scos = PersistenceFacade.instance().getScos(restriction, SEQUENCE_NR);
 
         DocumentBuilderFactory factory;
         factory = DocumentBuilderFactory.newInstance();
@@ -229,7 +229,7 @@ class ManifestFile {
         String description;
         name = (String) course.get(COURSE_TITLE);
         description = (String) course.get(DESCRIPTION);
-        int courseID = dbAccess.addCourse(schoolID, notnull(name), notnull(description), dwoProfile, parent, false);
+        int courseID = PersistenceFacade.instance().addCourse(schoolID, notnull(name), notnull(description), dwoProfile, parent, false);
         appendCourse(courseID, 0, course);
         return courseID;
     }
@@ -244,7 +244,7 @@ class ManifestFile {
             int sequencenr = ((Number) sco.get(SEQUENCE_NR)).intValue();
             String description = (String) sco.get(DESCRIPTION);
             String launchdata = (String) sco.get(LAUNCHDATA);
-            dbAccess.addSco(courseID, notnull(name), notnull(description), appletID, notnull(launchdata), sequencenr + offset);
+            PersistenceFacade.instance().addSco(courseID, notnull(name), notnull(description), appletID, notnull(launchdata), sequencenr + offset);
         }
     }
     

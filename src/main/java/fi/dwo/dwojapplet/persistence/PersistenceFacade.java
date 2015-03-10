@@ -2,6 +2,7 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\PersistenceFacade.java
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.dwojapplet.persistence.cache.StoreCreator;
 import fi.beans.base64code.StringCodeObject;
 import fi.dwo.commons.exceptions.ClassException;
 import fi.dwo.commons.exceptions.CourseException;
@@ -33,7 +34,6 @@ import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.domain.UserResultList;
 import fi.dwo.dwojapplet.gui.GuiConstants;
-import fi.dwo.dwojapplet.persistence.cache.StoreCreator;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -2289,10 +2289,10 @@ public class PersistenceFacade {
     }
 
     public String setRights(int userID, int profileID, String newRights) throws PersistenceException {
-        String result=null;
+        String result = null;
         try {
             result = DbAccessCreator.instance().setRights(userID, profileID, newRights);
-          } catch (IOException e) {
+        } catch (IOException e) {
             throw new PersistenceException(PersistenceException.EX_IO, e);
         } catch (SQLException e) {
             throw new PersistenceException(PersistenceException.EX_DB, e);
@@ -2300,13 +2300,13 @@ public class PersistenceFacade {
             throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
         }
 
-            return result;
+        return result;
     }
 
     public void setLogo(int id, byte[] data) throws PersistenceException {
         try {
-            DbAccessCreator.instance().setLogo(id,data);
-         } catch (IOException e) {
+            DbAccessCreator.instance().setLogo(id, data);
+        } catch (IOException e) {
             throw new PersistenceException(PersistenceException.EX_IO, e);
         } catch (SQLException e) {
             throw new PersistenceException(PersistenceException.EX_DB, e);
@@ -2317,33 +2317,81 @@ public class PersistenceFacade {
 
     public Vector getResultCount(int dwoProfile, int id) throws PersistenceException {
         try {
-            Vector v = DbAccessCreator.instance().getResultCount(dwoProfile,id);
+            Vector v = DbAccessCreator.instance().getResultCount(dwoProfile, id);
             return v;
-         } catch (IOException e) {
+        } catch (IOException e) {
             throw new PersistenceException(PersistenceException.EX_IO, e);
         } catch (SQLException e) {
             throw new PersistenceException(PersistenceException.EX_DB, e);
         } catch (XmlRpcException e) {
             throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }    
+        }
     }
-    
+
     public Vector getToSchoolsFrom(int schoolID)
             throws IOException, XmlRpcException, SQLException, PersistenceException {
         try {
             Vector v = DbAccessCreator.instance().getToSchoolsFrom(schoolID);
             return v;
-         } catch (IOException e) {
+        } catch (IOException e) {
             throw new PersistenceException(PersistenceException.EX_IO, e);
         } catch (SQLException e) {
             throw new PersistenceException(PersistenceException.EX_DB, e);
         } catch (XmlRpcException e) {
             throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
-        }    
-        
+        }
+
     }
-    
+
+    public Hashtable getRecord(String tableName, String idCol, int oid)
+            throws IOException, XmlRpcException, SQLException, PersistenceException {
+        try {
+            Hashtable h = DbAccessCreator.instance().getRecord(tableName, idCol, oid);
+            return h;
+        } catch (IOException e) {
+            throw new PersistenceException(PersistenceException.EX_IO, e);
+        } catch (SQLException e) {
+            throw new PersistenceException(PersistenceException.EX_DB, e);
+        } catch (XmlRpcException e) {
+            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+        }
+
+    }
+
+   public Vector getRecord(String tableName, Hashtable restriction, String seq)
+            throws IOException, XmlRpcException, SQLException, PersistenceException {
+        try {
+            Vector h = DbAccessCreator.instance().getTable(tableName, restriction, seq);
+            return h;
+        } catch (IOException e) {
+            throw new PersistenceException(PersistenceException.EX_IO, e);
+        } catch (SQLException e) {
+            throw new PersistenceException(PersistenceException.EX_DB, e);
+        } catch (XmlRpcException e) {
+            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+        }
+
+    }    
+    public int addCourse(int schoolID, String notnull, String notnull0, int dwoProfile, int parent, boolean b) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void addSco(int courseID, String notnull, String notnull0, int appletID, String notnull1, int i) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Vector getScos(Hashtable restriction, String SEQUENCE_NR) 
+     throws IOException, XmlRpcException, SQLException, PersistenceException {
+        try {
+            Vector v = DbAccessCreator.instance().getTable("tblScoView", restriction, SEQUENCE_NR);
+            return v;
+        } catch (IOException e) {
+            throw new PersistenceException(PersistenceException.EX_IO, e);
+        } catch (SQLException e) {
+            throw new PersistenceException(PersistenceException.EX_DB, e);
+        } catch (XmlRpcException e) {
+            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+        }
+    }
+
 }
-
-
-
