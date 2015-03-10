@@ -122,13 +122,13 @@
   cursor: pointer;
   font-size: 14px;
   font-weight: bold; }
-  .keyboard .key:hover, .key.switch:hover {
+  .keyboard .key.hover, .key.switch.hover {
     background-color: #666666 !important;
     color: #c7c7c7;
     outline: 0; }
-    .keyboard .key:hover:before, .key.switch:hover:before,
-    .keyboard .key:hover span:before,
-    .key.switch:hover span:before {
+    .keyboard .key.hover:before, .key.switch.hover:before,
+    .keyboard .key.hover span:before,
+    .key.switch.hover span:before {
       color: #c7c7c7 !important; }
   .keyboard .key:focus, .key.switch:focus {
     outline: 0; }

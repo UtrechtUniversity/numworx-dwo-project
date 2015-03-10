@@ -120,11 +120,11 @@ public class DesktopKeyboard extends AbstractKeyboard {
 
 	@UiHandler("c15")
 	void onC15(ClickEvent e) {
-		getEditor().insert('(');
+		getEditor().insert('⟨');
 	}
 	@UiHandler("c16")
 	void onC16(ClickEvent e) {
-		getEditor().insert(')');
+		getEditor().insert('⟩');
 	}
 
 	@UiHandler("c17")
