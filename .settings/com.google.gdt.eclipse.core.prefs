@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+jarsExcludedFromWebInfLib=
 lastWarOutDir=/Users/peterboon/Documents/workspace-luna
 warSrcDir=war
-warSrcDirIsOutput=false
+warSrcDirIsOutput=true

@@ -129,12 +129,12 @@ public class DesktopKeyboard extends AbstractKeyboard {
 
 	@UiHandler("c17")
 	void onC17(ClickEvent e) {
-		getEditor().insert('\u2190'); // TODO u code
+		getEditor().insert('\u2190');
 	}
 
 	@UiHandler("c18")
 	void onC18(ClickEvent e) {
-		getEditor().insert('\u2192'); // TODO u code
+		getEditor().insert('\u2192');
 	}
 	@UiHandler("c19")
 	void onC19(ClickEvent e) {

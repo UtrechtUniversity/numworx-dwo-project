@@ -1,21 +1,19 @@
 package nl.uu.fi.dwo.keyboard.client;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasMouseOutHandlers;
-import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.dom.client.TouchEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHTML;
-import com.google.gwt.user.client.ui.SimplePanel;
 
-public class FKey extends Composite implements HasClickHandlers, HasHTML, MouseOverHandler, MouseOutHandler {
+public class FKey extends Composite implements HasClickHandlers, HasHTML, MouseOverHandler, MouseOutHandler, ClickHandler {
 
 	private static final String HOVER = "hover";
 	HTML panel;
@@ -26,8 +24,15 @@ public class FKey extends Composite implements HasClickHandlers, HasHTML, MouseO
 		setStyleName("kbd-Key");
 		panel.addMouseOverHandler(this);
 		panel.addMouseOutHandler(this);
+		if(TouchEvent.isSupported())
+		{
+			panel.addClickHandler(this);
+		}
 	}
 
+	
+	
+	
 	@Override
 	public String getText() {
 		return panel.getText();
@@ -62,7 +67,10 @@ public class FKey extends Composite implements HasClickHandlers, HasHTML, MouseO
 	public void onMouseOver(MouseOverEvent event) {
 		panel.addStyleName(HOVER);	
 	}
-	
-	
+
+	@Override
+	public void onClick(ClickEvent event) {
+		panel.removeStyleName(HOVER);
+	}
 
 }
