@@ -8,7 +8,7 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DbAccessCreator {
+class DbAccessCreator {
     private static final Logger log = Logger.getLogger(DbAccessCreator.class.getName());
 
     private static DbAccessIF dbAccess;

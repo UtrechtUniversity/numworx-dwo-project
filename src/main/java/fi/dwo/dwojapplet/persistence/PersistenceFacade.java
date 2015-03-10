@@ -2,7 +2,6 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\PersistenceFacade.java
 package fi.dwo.dwojapplet.persistence;
 
-import fi.dwo.dwojapplet.persistence.cache.StoreCreator;
 import fi.beans.base64code.StringCodeObject;
 import fi.dwo.commons.exceptions.ClassException;
 import fi.dwo.commons.exceptions.CourseException;
@@ -2394,4 +2393,31 @@ public class PersistenceFacade {
         }
     }
 
+    /**
+     * Clears user data from mapper cache
+     * 
+     * @param id userID whose data needs to be cleared.
+     */
+    public void clearCurrentUserDataCache(int id){
+         MapperCreator.instance(User.class).removeObject(id);
+    }
+
+    /**
+     * Clears data from mapper cache for a certain class
+     * 
+     * @param c Class
+     */
+    public void clearCurrentMapperDataCache(Class c){
+         MapperCreator.instance(c).removeAllObjects();
+    }
+
+    /**
+     * Clears data from mapper cache for a certain class
+     * 
+     * @param c Class
+     */
+    public void clearObjectInMapperCache(Class c, int id){
+         MapperCreator.instance(c).removeObject(id);
+    }
+    
 }

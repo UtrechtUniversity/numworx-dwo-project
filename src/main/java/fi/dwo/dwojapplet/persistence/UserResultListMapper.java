@@ -29,7 +29,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
  * @author thijsk
  *
  */
-public class UserResultListMapper extends XmlRpcMapper {
+class UserResultListMapper extends XmlRpcMapper {
     private static final Logger log = Logger.getLogger(UserResultListMapper.class.getName());
 
     private static final String TABLENAME = "tblUser";

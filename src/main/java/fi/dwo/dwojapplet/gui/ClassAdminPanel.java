@@ -9,8 +9,6 @@ import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.SchoolGroup;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
-import fi.dwo.dwojapplet.persistence.MapperCreator;
-import fi.dwo.dwojapplet.persistence.MapperIF;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.awt.Component;
 import java.awt.Image;

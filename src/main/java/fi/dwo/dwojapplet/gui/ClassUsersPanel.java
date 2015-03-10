@@ -10,7 +10,6 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.User;
-import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -125,7 +124,8 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
             User u = model.userList[row];
             if (value == model.userImage) {
                 try {
-                    MapperCreator.instance(User.class).removeObject(u.getID()); // not good enough, need fresh copy.
+                    //MapperCreator.instance(User.class).removeObject(u.getID()); // not good enough, need fresh copy.
+                    PersistenceFacade.instance().clearObjectInMapperCache(User.class,u.getID());
                     GuiCreator.instance().login(u.getUsername(), null);
                 } catch (LoginException e) {
                     log.log(Level.SEVERE, null, e);

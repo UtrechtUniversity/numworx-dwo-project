@@ -12,8 +12,9 @@ import fi.dwo.dwojapplet.form.DWOFile;
 import fi.dwo.dwojapplet.gui.CourseManagementPanel;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.ModuleTreePanel;
-import fi.dwo.dwojapplet.persistence.MapperCreator;
-import fi.dwo.dwojapplet.persistence.MapperIF;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+//import fi.dwo.dwojapplet.persistence.MapperCreator;
+//import fi.dwo.dwojapplet.persistence.MapperIF;
 import java.awt.FileDialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -184,9 +185,7 @@ public class ImportModuleAction extends GuiAction {
             }
             if (schoolID != 0 || dwo.getUser().hasRight(User.PROFILE_ADMIN_RIGHT)) {
                 id = zipper.addCourse(result, dwo.getDwoProfile().getID(), schoolID, id);
-                MapperIF mapper = MapperCreator.instance(Course.class);
-                Course c = (Course) mapper.get(id);
-                mapper.put(id, c);
+                Course c = (Course) PersistenceFacade.instance().get(id, Course.class);
                 map.addChild(c);
             }
             getCenter().updateMap(map);

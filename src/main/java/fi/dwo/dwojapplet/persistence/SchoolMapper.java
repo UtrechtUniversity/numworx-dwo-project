@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-public class SchoolMapper extends XmlRpcMapper {
+class SchoolMapper extends XmlRpcMapper {
     private static final Logger log = Logger.getLogger(SchoolMapper.class.getName());
 
 	// lazy evaluation.

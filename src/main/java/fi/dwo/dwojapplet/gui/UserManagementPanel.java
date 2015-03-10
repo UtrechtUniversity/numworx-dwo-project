@@ -12,7 +12,6 @@ import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.SchoolGroup;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
-import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.awt.Component;
 import java.awt.Image;
@@ -203,6 +202,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
             if (value == model.userImage || value == model.teacherImage) {
                 try {
                     MapperCreator.instance(User.class).removeObject(user.getID()); // not good enough, need fresh copy.
+                    PersistenceFacade.instance().
                     GuiCreator.instance().login(user.getUsername(), null);
                 } catch (LoginException e) {
     

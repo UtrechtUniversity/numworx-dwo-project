@@ -1,8 +1,10 @@
-package fi.dwo.dwojapplet.persistence.cache;
+package fi.dwo.dwojapplet.persistence;
 
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.DwoProfile;
-import fi.dwo.dwojapplet.persistence.DbAccessCreator;
+import fi.dwo.dwojapplet.persistence.cache.CachingStore;
+import fi.dwo.dwojapplet.persistence.cache.IStore;
+import fi.dwo.dwojapplet.persistence.cache.ReadOnly;
 import javax.swing.JOptionPane;
 
 public class StoreCreator {

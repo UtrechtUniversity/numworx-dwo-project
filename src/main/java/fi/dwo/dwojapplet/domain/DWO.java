@@ -20,9 +20,8 @@ import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.MainPanel;
 import fi.dwo.dwojapplet.gui.ModuleTreePanel;
 import fi.dwo.dwojapplet.gui.ScoPanel;
-import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-import fi.dwo.dwojapplet.persistence.cache.StoreCreator;
+import fi.dwo.dwojapplet.persistence.StoreCreator;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -281,7 +280,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * username
      * password
      * </pre>
-     * 
+     *
      * SERVLET requires the full URL path.
      *
      * @param args
@@ -302,7 +301,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
             }
 
             // allow update van SERVLET
-            if ("-s".equals(args[o])) {                
+            if ("-s".equals(args[o])) {
                 DwoHelper.setServletConnectString(args[1 + o]);
                 o += 2;
             }
@@ -810,8 +809,10 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
         courseList = null;
         resultsModule = null;
         // MapperCreator.instance(Applet.class).removeAllObjects();
-        MapperCreator.instance(Sco.class).removeAllObjects();
-        MapperCreator.instance(Course.class).removeAllObjects();
+
+        //TODO NOW do a clear cache function.
+        PersistenceFacade.instance().clearCurrentMapperDataCache(Sco.class);
+        PersistenceFacade.instance().clearCurrentMapperDataCache(Course.class);
     }
 
     /**
@@ -1156,13 +1157,14 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
             // It works only correct if started as stand-alone application. 
             // 
             String mainClass = manifest.getMainAttributes().getValue("Main-Class");
-            if(mainClass!=null && mainClass.matches("fi.dwo.dwojapplet.domain.DWO")){
-            String softwareVersion = manifest.getMainAttributes().getValue("DWOJApplet-Implementation-Version");
-            String svnRevision = manifest.getMainAttributes().getValue("DWOJApplet-Implementation-Build");
-            log.log(Level.INFO, "Software version {0},  subversion revision {1}", new Object[]{softwareVersion, svnRevision});
-            }
-            else{
-                if(mainClass==null) mainClass = "";
+            if (mainClass != null && mainClass.matches("fi.dwo.dwojapplet.domain.DWO")) {
+                String softwareVersion = manifest.getMainAttributes().getValue("DWOJApplet-Implementation-Version");
+                String svnRevision = manifest.getMainAttributes().getValue("DWOJApplet-Implementation-Build");
+                log.log(Level.INFO, "Software version {0},  subversion revision {1}", new Object[]{softwareVersion, svnRevision});
+            } else {
+                if (mainClass == null) {
+                    mainClass = "";
+                }
                 log.log(Level.INFO, "No version numbering available. Possible running from IDE. Wrong 'Main-Class' value in MANIFEST-MF: '{0}'.", new Object[]{mainClass});
             }
         } catch (IOException ex) {
@@ -1577,6 +1579,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
             currentSco.end();
         }
         logoff();
+        //TODO NOW
         StoreCreator.destroy();
         this.setReady();
     }
@@ -1736,7 +1739,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      */
     @Override
     public void clearCurrentUserData() {
-        MapperCreator.instance(User.class).removeObject(User.getCurrentUser().getUserID());
+        //MapperCreator.instance(User.class).removeObject(User.getCurrentUser().getUserID());
+        PersistenceFacade.instance().clearCurrentUserDataCache(User.getCurrentUser().getUserID());
         User.setCurrentUser(null);
         currentCourse = null;
         courseList = null;

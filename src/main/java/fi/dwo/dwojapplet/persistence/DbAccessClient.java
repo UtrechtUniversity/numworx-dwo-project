@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.Vector;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-public class DbAccessClient extends Client implements DbAccessIF {
+class DbAccessClient extends Client implements DbAccessIF {
 
     public DbAccessClient(URL u) {
         super(u);

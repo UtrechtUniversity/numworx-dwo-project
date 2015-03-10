@@ -12,7 +12,7 @@ import java.util.Hashtable;
 import java.util.Map;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-public class CourseSequenceMapper extends XmlRpcMapper {
+class CourseSequenceMapper extends XmlRpcMapper {
 
     private static final String IDCOL = "coursesequenceID";
     private static final String ORDERBYCOL = "sequencenr";

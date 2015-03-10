@@ -9,7 +9,7 @@ import java.util.Hashtable;
 import java.util.Locale;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-public class AppletConfigMapper extends XmlRpcMapper {
+class AppletConfigMapper extends XmlRpcMapper {
 
     private static final String TABLENAME = "tblAppletConfig";
 

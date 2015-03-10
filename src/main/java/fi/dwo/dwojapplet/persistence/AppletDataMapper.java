@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.Hashtable;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-public class AppletDataMapper extends XmlRpcMapper {
+class AppletDataMapper extends XmlRpcMapper {
 
     private static final String TABLENAME = "tblApplet";
     private static final String IDCOL = "appletID";

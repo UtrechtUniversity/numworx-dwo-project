@@ -24,7 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-public class CourseMapper extends XmlRpcMapper {
+class CourseMapper extends XmlRpcMapper {
     private static final Logger log = Logger.getLogger(CourseMapper.class.getName());
 
     private static final String TABLENAME = "tblCourse";

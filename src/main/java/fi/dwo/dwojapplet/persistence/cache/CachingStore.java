@@ -193,7 +193,7 @@ public class CachingStore implements IStore, Runnable {
         }
     }
 
-    CachingStore(DbAccessIF dba) {
+    public CachingStore(DbAccessIF dba) {
         delegate = new NoCache(dba);
         work = new LinkedHashMap();
         cache = new WeakHashMap();

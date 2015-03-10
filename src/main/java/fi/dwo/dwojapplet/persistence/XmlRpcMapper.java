@@ -16,7 +16,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
  * @author M.J.B. Kupers
  *
  */
-public abstract class XmlRpcMapper implements MapperIF {
+abstract class XmlRpcMapper implements MapperIF {
 
     protected Hashtable objects = new Hashtable();
 

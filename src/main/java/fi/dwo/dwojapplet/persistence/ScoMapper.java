@@ -26,7 +26,7 @@ import java.util.zip.GZIPInputStream;
 import org.apache.xmlrpc.applet.XmlRpcException;
 import org.json.simple.JSONValue;
 
-public class ScoMapper extends XmlRpcMapper {
+class ScoMapper extends XmlRpcMapper {
     private static final Logger log = Logger.getLogger(ScoMapper.class.getName());
 
     private static final Vector LAZY_SCO_KEYS = new Vector();

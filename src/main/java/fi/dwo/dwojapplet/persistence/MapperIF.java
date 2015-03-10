@@ -17,7 +17,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
  * @author M.J.B. Kupers
  *
  */
-public interface MapperIF {
+interface MapperIF {
 
     /**
      * Returns a object of the class, with the specified objectID.<br>

@@ -17,7 +17,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
  * @author M.J.B. Kupers
  *
  */
-public class AppletMapper extends XmlRpcMapper {
+class AppletMapper extends XmlRpcMapper {
 
     private static final Logger log = Logger.getLogger(AppletMapper.class.getName());
 

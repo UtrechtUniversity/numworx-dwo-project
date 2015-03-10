@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.Hashtable;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
-public class GroupMapper extends XmlRpcMapper {
+class GroupMapper extends XmlRpcMapper {
 
     private static final String TABLENAME = "tblGroup";
 

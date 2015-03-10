@@ -14,7 +14,7 @@ import java.util.Hashtable;
  * @author M.J.B. Kupers
  *
  */
-public class MapperCreator {
+class MapperCreator {
 
     private final static String DOMAIN_PACKAGE = "fi.dwo.dwojapplet.domain";
 

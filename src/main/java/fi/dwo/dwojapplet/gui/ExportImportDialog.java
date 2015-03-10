@@ -17,7 +17,6 @@ import fi.dwo.dwojapplet.domain.School;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.GuiCreatorTeacher.LazyAppletConfig;
-import fi.dwo.dwojapplet.persistence.MapperCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
