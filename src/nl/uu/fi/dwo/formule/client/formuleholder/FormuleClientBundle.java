@@ -10,12 +10,12 @@ public interface FormuleClientBundle extends ClientBundle {
 	   @Source("nl/uu/fi/dwo/formule/client/resources/goedkrul_en.gif")
 	   public ImageResource goedkrul_en();
 
-	   @Source("nl/uu/fi/dwo/formule/client/resources/mw_vinkje_geel.png")
+	   @Source("nl/uu/fi/dwo/formule/client/resources/knop-indicatie-magdoor.png")
 	   public ImageResource mw_vinkje_geel();
 
-	   @Source("nl/uu/fi/dwo/formule/client/resources/mw_vinkje_groen.png")
+	   @Source("nl/uu/fi/dwo/formule/client/resources/knop-indicatie-goed.png")
 	   public ImageResource mw_vinkje_groen();
 
-	   @Source("nl/uu/fi/dwo/formule/client/resources/mw_kruisje_rood.png")
+	   @Source("nl/uu/fi/dwo/formule/client/resources/knop-indicatie-fout.png")
 	   public ImageResource mw_kruisje_rood();
 }
