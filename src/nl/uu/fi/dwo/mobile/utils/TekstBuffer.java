@@ -23,6 +23,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckValueUnit;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.MC2View;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.GeogebraView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TextEditor;
@@ -306,7 +307,7 @@ public class TekstBuffer
 // copy classname to inner, so that MCSquared.html can read it.
 			mc2FixInner(currentVakGegevens);
 			
-			return x(map, new StubView("MCSquared.html", currentVakGegevens, randomVarNamen, randomVarWaarden));
+			return x(map, new MC2View(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 4: 
 			return new PopupFacade(currentVakGegevens, new TextEditor( currentVakGegevens, randomVarNamen, randomVarWaarden ));
 		

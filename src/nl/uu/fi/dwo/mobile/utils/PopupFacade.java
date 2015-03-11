@@ -5,12 +5,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.google.gwt.user.client.ui.Image;
-
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.PopupButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
@@ -56,6 +56,14 @@ public class PopupFacade implements InteractionView {
 	}
 	
 	
+	public PopupFacade(ObjectMap h) {
+		if(h == null) return;
+		popup = h.getBoolean("popup", false);
+		if(h.containsKey("setNr"))
+			setNr = h.getInt("setNr");
+		popupImageString = h.getString("popupImageString");
+	}
+
 	public Widget wrap(Widget container) {
 		if(popup) {
 			if(popupBtn==null)
