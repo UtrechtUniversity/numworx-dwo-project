@@ -2420,4 +2420,8 @@ public class PersistenceFacade {
          MapperCreator.instance(c).removeObject(id);
     }
     
+    public Course[] getCourseFromMapper(Object o) throws IOException, SQLException, XmlRpcException {
+        return (Course []) MapperCreator.instance(Course.class).get(o);        
+    }
+
 }

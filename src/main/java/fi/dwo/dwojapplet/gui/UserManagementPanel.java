@@ -201,8 +201,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
             User user = model.userList[row];
             if (value == model.userImage || value == model.teacherImage) {
                 try {
-                    MapperCreator.instance(User.class).removeObject(user.getID()); // not good enough, need fresh copy.
-                    PersistenceFacade.instance().
+                    PersistenceFacade.instance().clearCurrentUserDataCache(user.getID());
                     GuiCreator.instance().login(user.getUsername(), null);
                 } catch (LoginException e) {
     

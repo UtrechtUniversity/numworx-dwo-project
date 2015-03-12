@@ -155,9 +155,11 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
             try {
                 Course[] courses;
                 if (map == null) {
-                    courses = (Course[]) MapperCreator.instance(Course.class).get(s);
+//                    courses = (Course[]) MapperCreator.instance(Course.class).get(s);
+                    courses = (Course[]) PersistenceFacade.instance().getCourseFromMapper(s);
                 } else {
-                    courses = (Course[]) MapperCreator.instance(Course.class).get(map);
+//                    courses = (Course[]) MapperCreator.instance(Course.class).get(map);
+                    courses = (Course[]) PersistenceFacade.instance().getCourseFromMapper(map);
                 }
                 for (Course course : courses) {
                     set.add(course.getName());
@@ -1008,7 +1010,6 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
             new Thread(r).start();
             r.show();
         }
-
     }
 
     // TODO DIALOG met [sluiten] knop.

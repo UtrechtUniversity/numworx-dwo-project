@@ -292,7 +292,6 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
             classes = new SchoolClass[0];
         }
         dirty = new boolean[classes.length];
-        MapperIF usermapper = MapperCreator.instance(User.class);
         teachers = new Teacher[0];
         for (SchoolGroup schoolGroup : groups) {
             try {
@@ -303,7 +302,7 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
                     for (int j = 0; j < u.length; j++) {
                         User uj = u[j];
                         if (!(uj instanceof Teacher)) {
-                            usermapper.removeObject(uj.getUserID());
+                            PersistenceFacade.instance().clearCurrentUserDataCache(uj.getUserID());
                             t[j] = (Teacher) PersistenceFacade.instance().login(uj.getUsername());
                         } else {
                             t[j] = (Teacher) uj;

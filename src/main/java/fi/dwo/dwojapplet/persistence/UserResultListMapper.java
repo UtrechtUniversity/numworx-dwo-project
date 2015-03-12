@@ -38,8 +38,6 @@ class UserResultListMapper extends XmlRpcMapper {
 
     private static final String ORDERCOL = "lastname";
 
-    private ResultsModuleIF resultsModule;
-
     /**
      *
      */
@@ -219,7 +217,6 @@ class UserResultListMapper extends XmlRpcMapper {
         int currentResultScore = 0; //Current Column
 
         url = new UserResultList();
-        url.setResultsModule(resultsModule);
         for (int i = 0; i < data.size(); i++) {
             ht = (Hashtable) data.elementAt(i);
             rs[currentResultScore] = (ResultScore) getObjectFromReturn(ht);
@@ -234,7 +231,6 @@ class UserResultListMapper extends XmlRpcMapper {
                 rs = new ResultScore[colLength];
                 currentUrl++;
                 url = new UserResultList();
-                url.setResultsModule(resultsModule);
             }
         }
 
@@ -242,10 +238,5 @@ class UserResultListMapper extends XmlRpcMapper {
         v[0] = result;
         return v;
 
-    }
-
-    public void setResultsModule(ResultsModuleIF resultsModule) {
-        this.resultsModule = resultsModule;
-        removeAllObjects();
     }
 }

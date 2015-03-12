@@ -6,6 +6,7 @@ import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Vector;
 import javax.swing.JOptionPane;
 
@@ -149,12 +150,7 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
 
     @Override
     public void reset() {
-        MapperIF m = MapperCreator.instance(UserResultList.class);
-
-        if (m instanceof UserResultListMapper) {
-            ((UserResultListMapper) m).setResultsModule(this);
-        }
-
+        PersistenceFacade.instance().clearCurrentMapperDataCache(UserResultList.class);
         currentlyZoomedLesson = null;
         currentlyZoomedUser = null;
         currentlyOrderedUser = null;
@@ -210,7 +206,12 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
         orderedLessonIndex = -1;
         currentlyZoomedUser = ug;
         currentlyOrderedUser = null;
-        return getResults();
+        Vector<Object> list = getResults();
+        List<UserResultList> urList = (List<UserResultList>) list.get(0);
+        for(UserResultList l: urList){
+            l.setResultsModule(this);
+        }
+        return list;
     }
 
     @Override
@@ -218,7 +219,12 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
         orderedLessonIndex = -1;
         currentlyZoomedLesson = lg;
         currentlyOrderedLesson = null;
-        return getResults();
+        Vector<Object> list = getResults();
+        List<UserResultList> urList = (List<UserResultList>) list.get(0);
+        for(UserResultList l: urList){
+            l.setResultsModule(this);
+        }
+        return list;
     }
 
     @Override
@@ -226,7 +232,12 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
         orderedLessonIndex = -1;
         currentlyZoomedUser = null;
         currentlyOrderedUser = null;
-        return getResults();
+        Vector<Object> list = getResults();
+        List<UserResultList> urList = (List<UserResultList>) list.get(0);
+        for(UserResultList l: urList){
+            l.setResultsModule(this);
+        }
+        return list;
     }
 
     @Override
@@ -234,7 +245,12 @@ public class UserResultsModule implements Comparator, ResultsModuleIF {
         orderedLessonIndex = -1;
         currentlyZoomedLesson = null;
         currentlyOrderedLesson = null;
-        return getResults();
+        Vector<Object> list = getResults();
+        List<UserResultList> urList = (List<UserResultList>) list.get(0);
+        for(UserResultList l: urList){
+            l.setResultsModule(this);
+        }
+        return list;
     }
 
 }
