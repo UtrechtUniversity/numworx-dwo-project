@@ -11,9 +11,9 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
     <!-- Adjust artifact, name and description for new projects -->
     <groupId>fi.dwo</groupId>
     <artifactId>DWO-commons-lib</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>DWO-commons-lib</name>
+    <name>DWO-commons-lib trunk</name>
     <description>This is a description</description>
     
     <url>http://www.dwo.nl</url>
