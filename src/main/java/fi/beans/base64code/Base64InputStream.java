@@ -1,0 +1,90 @@
+package fi.beans.base64code;
+
+import java.io.*;
+
+public class Base64InputStream extends FilterInputStream {
+
+    public Base64InputStream(InputStream in) {
+        super(in);
+    }
+
+    @Override
+    public int read(byte[] b, int off, int len) throws IOException {
+        if (len > b.length - off) {
+            len = b.length - off;
+        }
+        for (int i = 0; i < len; i++) {
+            int c = read();
+            if (c == -1) {
+                return i == 0 ? -1 : i;
+            }
+            b[i + off] = (byte) c;
+        }
+        return len;
+
+    }
+
+    @Override
+    public int read(byte[] b) throws IOException {
+        return read(b, 0, b.length);
+    }
+
+    @Override
+    public int read() throws IOException {
+        int r;
+        if (_i == 0) {  // skip whitespace
+            do {
+                ch[0] = super.read();
+                if (ch[0] == -1) {
+                    return -1;
+                }
+            } while (Character.isWhitespace((char) ch[0]));
+            ch[1] = super.read();
+            if (ch[1] == -1) {
+                return -1;
+            }
+            _i++;
+            r = (fromBase64[ch[0]] << 2)
+                    | (fromBase64[ch[1]] >> 4);
+        } else if (_i == 1) {
+            ch[2] = super.read();
+            if (ch[2] == '=' || ch[2] == -1) {
+                return -1;
+            }
+            _i++;
+            r = ((fromBase64[ch[1]] & 0x0F) << 4)
+                    | (fromBase64[ch[2]] >> 2);
+        } else {
+            ch[3] = super.read();
+            if (ch[3] == '=' || ch[3] == -1) {
+                return -1;
+            }
+            _i = 0;
+            r = ((fromBase64[ch[2]] & 0x03) << 6)
+                    | fromBase64[ch[3]];
+        }
+        return r;
+    }
+
+    private static final int[] fromBase64
+            = {-1, -1, -1, -1, -1, -1, -1, -1,
+                -1, -1, -1, -1, -1, -1, -1, -1,
+                -1, -1, -1, -1, -1, -1, -1, -1,
+                -1, -1, -1, -1, -1, -1, -1, -1,
+                -1, -1, -1, -1, -1, -1, -1, -1,
+                -1, -1, -1, 62, -1, -1, -1, 63,
+                52, 53, 54, 55, 56, 57, 58, 59,
+                60, 61, -1, -1, -1, -1, -1, -1,
+                -1, 0, 1, 2, 3, 4, 5, 6,
+                7, 8, 9, 10, 11, 12, 13, 14,
+                15, 16, 17, 18, 19, 20, 21, 22,
+                23, 24, 25, -1, -1, -1, -1, -1,
+                -1, 26, 27, 28, 29, 30, 31, 32,
+                33, 34, 35, 36, 37, 38, 39, 40,
+                41, 42, 43, 44, 45, 46, 47, 48,
+                49, 50, 51, -1, -1, -1, -1, -1
+            };
+
+    int _i = 0;
+    int[] ch = new int[4];
+}
