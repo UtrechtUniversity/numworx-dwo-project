@@ -123,13 +123,13 @@
                             <filters>
                                 <filter>
                                     <artifact>fi.dwo:DWO-commons-lib</artifact>
-<!--                                    <excludes>
+                                    <excludes>
                                         <exclude>javax.servlet:*</exclude> 
-                                        <exclude>commons-codec:*</exclude>
+<!--                                        <exclude>commons-codec:*</exclude>
                                         <exclude>commons-httpclient:*</exclude>
                                         <exclude>commons-logging:*</exclude>
-                                    </excludes>
 -->
+                                        </excludes>
                                 </filter>                                
                                 <!--
                                     <filter>
@@ -146,11 +146,24 @@
                                     <pattern>fi.wiskopdr</pattern>
                                     <shadedPattern>fi.shaded.wiskopdr2</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>org.cbook</pattern>
+                                    <shadedPattern>org.cbook.shaded</shadedPattern>
+                                </relocation>
+<!--
+                                <relocation>
+                                    <pattern>uk.</pattern>
+                                    <shadedPattern>uk.shaded</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>fi.beans</pattern>
+                                    <shadedPattern>fi.shaded.beans</shadedPattern>
+                                </relocation>-->
                             </relocations>
-                            <!-- Possible to override the main-class in case of relocation
+                            <!-- Possible to override the main-class in case of relocation 
                     <transformers>
                         <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                            <mainClass>fi.dwo.dwojapplet.domain.DWO</mainClass>
+                                            <mainClass>fi.shaded.dwo.dwojapplet.domain.DWO</mainClass>
                                 </transformer>
                             </transformers>                            
                             -->
@@ -258,6 +271,7 @@
                             <options>
                                 <option>-verbose</option>
                                 <option>-dontwarn</option> 
+                                <option>-printconfiguration mapping.txt</option>
                             </options>
                             <obfuscate>true</obfuscate>                    
                             <inputDirectory>${project.build.directory}</inputDirectory>
