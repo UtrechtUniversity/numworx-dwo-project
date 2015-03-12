@@ -5,8 +5,8 @@
     <!-- Adjust artifact, name and description for new projects -->
     <groupId>fi.dwo</groupId>
     <artifactId>DWOJApplet</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-    <name>DWOJApplet</name>
+    <version>1.0.1-SNAPSHOT</version>
+    <name>DWOJApplet - trunk</name>
     <url>http://www.dwo.nl</url>
     <packaging>jar</packaging>
     <!-- Update year to current when starting a new project -->
