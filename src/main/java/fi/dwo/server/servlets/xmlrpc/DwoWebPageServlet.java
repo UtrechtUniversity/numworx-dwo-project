@@ -171,6 +171,7 @@ public class DwoWebPageServlet extends Servlet {
     /**
      * Haal parameter html_source op. Andere parameters zijn servlet en local.
      *
+     * @param config
      * @throws javax.servlet.ServletException
      * 
      * @see #HTML_SOURCE
