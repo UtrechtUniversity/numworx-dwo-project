@@ -84,7 +84,7 @@ public class PersistenceFacade {
     public static final int PROFILEOFFSET = -1234;
 
     /**
-     *
+     * 
      */
     public PersistenceFacade() {
 
@@ -92,17 +92,31 @@ public class PersistenceFacade {
 
     /**
      * Returns an instance of PersistenceFacade.
+     * 
+     * Thread-safe with double locking for performance.
      *
      * @return fi.dwo.client.persistence.PersistenceFacade
      *
      */
     public static PersistenceFacade instance() {
         if (_instance == null) {
-            _instance = new PersistenceFacade();
+            synchronized (PersistenceFacade.class) {
+                if(_instance == null){
+                _instance = new PersistenceFacade();
+                }
+            }
+            
         }
         return _instance;
     }
 
+// Private support functions      
+    
+// Server-side state information, logging and cache manipulation
+    
+// CRUD operations on server-side.
+    
+//     
     /**
      * Returns a object of the specified class, with the specified objectID.<br>
      * e.g. if the class is fi.dwo.client.domain.Course and the objectID is 1, a
