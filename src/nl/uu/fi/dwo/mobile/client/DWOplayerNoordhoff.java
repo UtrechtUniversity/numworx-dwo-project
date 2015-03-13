@@ -27,10 +27,10 @@ public class DWOplayerNoordhoff extends DWOplayerDefaults implements DWOplayerPa
 		return super.getStubView();
 	}
 
-	@Override
-	public void keyboardSetup() {
-		FormuleKeyBoardButtons.setupWN();
-	}
+//	@Override
+//	public void keyboardSetup() {
+////		FormuleKeyBoardButtons.setupWN();
+//	}
 
 	@Override
 	public String keyboardStyle() {

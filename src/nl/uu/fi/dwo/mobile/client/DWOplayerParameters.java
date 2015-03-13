@@ -32,7 +32,7 @@ public interface DWOplayerParameters {
 	/**
 	 * 
 	 */
-	void keyboardSetup();
+	//void keyboardSetup();
 	/**
 	 * 
 	 * @return StyleDependentName

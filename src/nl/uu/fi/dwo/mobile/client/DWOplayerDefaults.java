@@ -37,9 +37,9 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 		return resource;
 	}
 
-	@Override
-	public void keyboardSetup() {
-	}
+//	@Override
+//	public void keyboardSetup() {
+//	}
 
 	@Override
 	public String keyboardStyle() {
