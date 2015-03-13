@@ -3,7 +3,6 @@ package nl.uu.fi.dwo.mobile.client.ui.dwokb;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
@@ -12,14 +11,11 @@ import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.event.dom.client.TouchEvent;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
@@ -29,7 +25,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.widget.RoundPanel;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
-import fi.writemathgwt.client.Rectangle;
 import fi.writemathgwt.client.WritePanel;
 import fi.writemathgwt.client.WritePanelHolder;
 
@@ -64,19 +59,19 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 	{ "diff", "limiet0", "limiet1", "limiet2", "\u221e", "primitieve", "p", "q", "t", "<", ">", "7", "8", "9", "min" },
 	{ "conjug", "\u2192", "sigma", "\u3008", "\u3009", "diff_partial", "space", "of", "\u2248", "0", ".", "=", "plus" } };
 
-	private String[][] buttonCodes_geavanceerd =
-		{
-			{ "7", "8", "9", "haakjes", null, "=",   "macht", "wortel",   "ndewortel", "\u2260", "(",      ")",      null, "apply"     },
-			{ "4", "5", "6", "0",       null, "maal", "/",    "kwadraat", "rx",         "\u2248", "<",      ">" ,     null, "back",  QWERTY },
-			{ "1", "2", "3", "komma",   null, "plus", "min",  "breuk",    "ry",         "pi",     "\u2264", "\u2265", null, "enter", VVV }
-		};
-	private double[][] buttonWidths_geavanceerd =
-		{
-			{ 1, 1, 1, 1, 0.6, 1,   1, 1, 1, 1, 1, 1, 0.65, 2.153   },
-			{ 1, 1, 1, 1, 0.6, 1,   1, 1, 1, 1, 1, 1, 0.65, 1,    1 },
-			{ 1, 1, 1, 1, 0.6, 1,   1, 1, 1, 1, 1, 1, 0.65, 1,    1 },
-			
-		};
+//	private String[][] buttonCodes_geavanceerd =
+//		{
+//			{ "7", "8", "9", "haakjes", null, "=",   "macht", "wortel",   "ndewortel", "\u2260", "(",      ")",      null, "apply"     },
+//			{ "4", "5", "6", "0",       null, "maal", "/",    "kwadraat", "rx",         "\u2248", "<",      ">" ,     null, "back",  QWERTY },
+//			{ "1", "2", "3", "komma",   null, "plus", "min",  "breuk",    "ry",         "pi",     "\u2264", "\u2265", null, "enter", VVV }
+//		};
+//	private double[][] buttonWidths_geavanceerd =
+//		{
+//			{ 1, 1, 1, 1, 0.6, 1,   1, 1, 1, 1, 1, 1, 0.65, 2.153   },
+//			{ 1, 1, 1, 1, 0.6, 1,   1, 1, 1, 1, 1, 1, 0.65, 1,    1 },
+//			{ 1, 1, 1, 1, 0.6, 1,   1, 1, 1, 1, 1, 1, 0.65, 1,    1 },
+//			
+//		};
 
 	
 	private double[][] buttonWidths =
@@ -101,37 +96,37 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 
 	};
 
-	private String[][] buttonCodesMW =
-	{
-	{ "haakjes", "breuk", "kwadraat", "macht", "wortel", "ndewortel", "ndelog" },
-	{ "diff", "primitieve", "integraal", "prv", "abs", "subscript", "bin" },
-	{ "limiet0", "limiet1", "limiet2", "\u221e", "�", "\u2248", "\u2260" },
-	{ "<", "\u2264", "\u2265", ">", "\u2227", "\u2228", "\u2205" },
-	{ "[", "]", "\u3008", "\u3009", "\u2190", "\u2192", "\u2218" },
-	{ "pi", "e", "\u03b1", "\u03b2", "\u03b3", "\u03bc", "\u03c3" }
+//	private String[][] buttonCodesMW =
+//	{
+//	{ "haakjes", "breuk", "kwadraat", "macht", "wortel", "ndewortel", "ndelog" },
+//	{ "diff", "primitieve", "integraal", "prv", "abs", "subscript", "bin" },
+//	{ "limiet0", "limiet1", "limiet2", "\u221e", "�", "\u2248", "\u2260" },
+//	{ "<", "\u2264", "\u2265", ">", "\u2227", "\u2228", "\u2205" },
+//	{ "[", "]", "\u3008", "\u3009", "\u2190", "\u2192", "\u2218" },
+//	{ "pi", "e", "\u03b1", "\u03b2", "\u03b3", "\u03bc", "\u03c3" }
+//
+//	};
+//
+//	private double[][] buttonWidthsMW =
+//	{
+//	{ 1, 1, 1, 1, 1, 1, 1 },
+//	{ 1, 1, 1, 1, 1, 1, 1 },
+//	{ 1, 1, 1, 1, 1, 1, 1 },
+//	{ 1, 1, 1, 1, 1, 1, 1 },
+//	{ 1, 1, 1, 1, 1, 1, 1 },
+//	{ 1, 1, 1, 1, 1, 1, 1 }
+//
+//	};
 
-	};
-
-	private double[][] buttonWidthsMW =
-	{
-	{ 1, 1, 1, 1, 1, 1, 1 },
-	{ 1, 1, 1, 1, 1, 1, 1 },
-	{ 1, 1, 1, 1, 1, 1, 1 },
-	{ 1, 1, 1, 1, 1, 1, 1 },
-	{ 1, 1, 1, 1, 1, 1, 1 },
-	{ 1, 1, 1, 1, 1, 1, 1 }
-
-	};
-
-	private String[][] buttonCodesAbc =
-	{
-	{ "copy", "paste", "zoomIn", "zoomOut", "del", "back", null, "apply" },
-	{ "@", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "back", "1", "2", "3" },
-	{ "tab", "a", "s", "d", "f", "g", "h", "j", "k", "l", "enter", "4", "5", "6" },
-	{ "shift", "z", "x", "c", "v", "b", "n", "m", ";", "'", "shift", "7", "8", "9" },
-	{ "{", "}", "\\", " ", ",", ".", "/", "%", "0", "." }
-
-	};
+//	private String[][] buttonCodesAbc =
+//	{
+//	{ "copy", "paste", "zoomIn", "zoomOut", "del", "back", null, "apply" },
+//	{ "@", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "back", "1", "2", "3" },
+//	{ "tab", "a", "s", "d", "f", "g", "h", "j", "k", "l", "enter", "4", "5", "6" },
+//	{ "shift", "z", "x", "c", "v", "b", "n", "m", ";", "'", "shift", "7", "8", "9" },
+//	{ "{", "}", "\\", " ", ",", ".", "/", "%", "0", "." }
+//
+//	};
 
 	private String[][] buttonCodes_abc = 
 	{
@@ -155,15 +150,15 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 	
 	
 	
-	private double[][] buttonWidthsAbc =
-	{
-	{ 1, 1, 1, 1, 2, 2, 5, 2 },
-	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-	{ 1.34, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.7, 1, 1, 1 },
-	{ 1.67, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.4, 1, 1, 1 },
-	{ 1, 1, 1, 5, 1, 1, 1, 1, 1, 2 },
-
-	};
+//	private double[][] buttonWidthsAbc =
+//	{
+//	{ 1, 1, 1, 1, 2, 2, 5, 2 },
+//	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+//	{ 1.34, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.7, 1, 1, 1 },
+//	{ 1.67, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.4, 1, 1, 1 },
+//	{ 1, 1, 1, 5, 1, 1, 1, 1, 1, 2 },
+//
+//	};
 
 	private String[][] buttonCodesAlpha =
 	{
@@ -185,48 +180,48 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 
 	};
 
-	private String[][] buttonCodesAbcShift =
-	{
-	{ "copy", "paste", "zoomIn", "zoomOut", "del", "back", null, "apply" },
-	{ "@", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "back", "1", "2", "3" },
-	{ "tab", "A", "S", "D", "F", "G", "H", "J", "K", "L", "enter", "4", "5", "6" },
-	{ "shift", "Z", "X", "C", "V", "B", "N", "M", ":", "\"", "shift", "7", "8", "9" },
-	{ "{", "}", "|", " ", "<", ">", "?", "^" }
+//	private String[][] buttonCodesAbcShift =
+//	{
+//	{ "copy", "paste", "zoomIn", "zoomOut", "del", "back", null, "apply" },
+//	{ "@", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "back", "1", "2", "3" },
+//	{ "tab", "A", "S", "D", "F", "G", "H", "J", "K", "L", "enter", "4", "5", "6" },
+//	{ "shift", "Z", "X", "C", "V", "B", "N", "M", ":", "\"", "shift", "7", "8", "9" },
+//	{ "{", "}", "|", " ", "<", ">", "?", "^" }
+//
+//	};
 
-	};
-
-	private double[][] buttonWidthsAbcShift =
-	{
-	{ 1, 1, 1, 1, 2, 2, 5, 2 },
-	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-	{ 1.34, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.7, 1, 1, 1 },
-	{ 1.67, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.4, 1, 1, 1 },
-	{ 1, 1, 1, 5, 1, 1, 1, 1, 1, 2 },
-
-	};
+//	private double[][] buttonWidthsAbcShift =
+//	{
+//	{ 1, 1, 1, 1, 2, 2, 5, 2 },
+//	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+//	{ 1.34, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.7, 1, 1, 1 },
+//	{ 1.67, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.4, 1, 1, 1 },
+//	{ 1, 1, 1, 5, 1, 1, 1, 1, 1, 2 },
+//
+//	};
 
 	static final String RIGHT_ARROW = "\u2192";
 	static final String LEFT_ARROW = "\u2190";
 	
-	private String[][] buttonCodesWN = 
-		{
-			{
-				"macht", "breuk", "wortel", "ndewortel", "pi", "kwadraat", "\u2264", "\u2265", "\u2260", "\u2248", LEFT_ARROW, RIGHT_ARROW, null, VVV 
-			}
-		};
+//	private String[][] buttonCodesWN = 
+//		{
+//			{
+//				"macht", "breuk", "wortel", "ndewortel", "pi", "kwadraat", "\u2264", "\u2265", "\u2260", "\u2248", LEFT_ARROW, RIGHT_ARROW, null, VVV 
+//			}
+//		};
 	
 	
-	private double[][] buttonWidthsWN = 
-		{
-			{
-				1,1,1,1,1,1,1,1,1,1, 1,1,1.2, 1
-			}
-		};
+//	private double[][] buttonWidthsWN = 
+//		{
+//			{
+//				1,1,1,1,1,1,1,1,1,1, 1,1,1.2, 1
+//			}
+//		};
 
 	
 	public Widget asWidget()
 	{
-		Logger.getLogger("FormuleKeyboard").log(Level.INFO," Create kb panel " + hasKeyboard + " " + isNoordhoff());
+		Logger.getLogger("FormuleKeyboard").log(Level.INFO," Create kb panel " + hasKeyboard + " " + false);
 		if (tp != null)
 		{	tp.setEnabled(false);
 			return tp.getPanel();
@@ -235,25 +230,13 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 
 		if(hasKeyboard)
 		{
-			if(isNoordhoff())
-				tp.addTab(KEYBOARD, this.getKeyBoard(buttonCodesWN, buttonWidthsWN), 78); // was GR, 78 = 15 + 15 + 48
-			else
-				tp.addTab(KEYBOARD, this.getKeyBoard(buttonCodesGR, buttonWidthsGR), 108);
+			tp.addTab(KEYBOARD, this.getKeyBoard(buttonCodesGR, buttonWidthsGR), 108);
 		}
 		else 
 		{
-			if(isNoordhoff())
-			{
-				tp.addTab(KEYBOARD, getKeyBoard(buttonCodes_geavanceerd, buttonWidths_geavanceerd),190); // 190 = 15*2 + 8*2 + 48*3
-				tp.addTab(qwerty,         getKeyBoard(buttonCodes_abc, buttonWidths_abc),190);
-				tp.addTab(QWERTY,    getKeyBoard(buttonCodes_ABC, buttonWidths_abc),190);
-			}
-			else
-			{
-				tp.addTab(KEYBOARD, this.getKeyBoard(buttonCodes, buttonWidths),270);
-				tp.addTab(qwerty,         getKeyBoard(buttonCodes_abc, buttonWidths_abc),162);
-				tp.addTab(QWERTY,    getKeyBoard(buttonCodes_ABC, buttonWidths_abc),162);
-			}
+			tp.addTab(KEYBOARD, this.getKeyBoard(buttonCodes, buttonWidths),270);
+			tp.addTab(qwerty,         getKeyBoard(buttonCodes_abc, buttonWidths_abc),162);
+			tp.addTab(QWERTY,    getKeyBoard(buttonCodes_ABC, buttonWidths_abc),162);
 		}
 		//tp.addTab("ABC", this.getKeyBoard(buttonCodesAbc, buttonWidthsAbc));
 	    //tp.addTab("ABCShift", this.getKeyBoard(buttonCodesAbcShift, buttonWidthsAbcShift));
@@ -300,8 +283,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 		opdrnav.getElement().getStyle().setFloat(Style.Float.LEFT);
 		opdrnav.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 		tp.clearStaticPanel();
-		if(!isNoordhoff())
-			tp.getStaticPanel().add(opdrnav);
+		tp.getStaticPanel().add(opdrnav);
 	}
 	
 	public void addKnop(PushButton knop, boolean right)
@@ -315,12 +297,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 		knop.getElement().getStyle().setMarginTop(10, Style.Unit.PX);
 		knop.setWidth(80 + "px");
 		knop.getElement().getStyle().setProperty("horizontalAlign", "center"); //TODO: helpt dit?
-		if(!isNoordhoff())
-			tp.getStaticPanel().add(knop);
-	}
-
-	static boolean isNoordhoff() {
-		return "noordhoff".equals(FormuleKeyBoardButtons.getDependentName());
+		tp.getStaticPanel().add(knop);
 	}
 
 	public void goTo(String panel)
@@ -337,9 +314,6 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 	{
 		int defwidth = 16;
 		int padding = 16;
-// if(NOORDHOFF)
-		if(isNoordhoff())
-		{ defwidth = 52; padding = 0; }
 		double width = 0;
 
 		FlowPanel fp = new FlowPanel(), fp2 = new FlowPanel();
@@ -527,7 +501,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 	}
 
 	public void zetMaatNoordhoff() {
-		tp.zetMaatNoordhoff();
+//		tp.zetMaatNoordhoff();
 	}
 
 	public void zetMaatTrifork() {

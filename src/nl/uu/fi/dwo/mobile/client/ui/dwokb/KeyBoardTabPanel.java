@@ -118,14 +118,14 @@ public class KeyBoardTabPanel
 		main.getElement().getStyle().setBottom(0, Style.Unit.PX);
 	}
 
-	public void zetMaatNoordhoff() {
-		zetMaatCommon();
-		//main.setPixelSize(886, -1);
-		main.getElement().getStyle().setFontSize(0, Style.Unit.PX); // anders main is 1 regel = 13 px
-		main.remove(staticpanel);
-		main.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-		margins = 22; // die div.tabkeyboard-noordhoff (x2)
-	}
+//	public void zetMaatNoordhoff() {
+//		zetMaatCommon();
+//		//main.setPixelSize(886, -1);
+//		main.getElement().getStyle().setFontSize(0, Style.Unit.PX); // anders main is 1 regel = 13 px
+//		main.remove(staticpanel);
+//		main.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+//		margins = 22; // die div.tabkeyboard-noordhoff (x2)
+//	}
 
 	public void zetMaatTrifork() {
 		zetMaatCommon();
@@ -138,7 +138,6 @@ public class KeyBoardTabPanel
 	public void clearStaticPanel()
 	{
 		staticpanel.clear();
-		if(FormuleKeyboard.isNoordhoff()) return;
 		staticpanel.add(keyboardButton);
 		if(! FormuleKeyboard.hasKeyboard) staticpanel.add(digitsButton);
 //		staticpanel.add(keyboardRemoveButton);

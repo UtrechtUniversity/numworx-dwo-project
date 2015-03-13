@@ -237,7 +237,7 @@ public class TekstVakPanel implements InteractionView
 		this.randomVarWaarden = randomVarWaarden;
 		
 		//niet nodig waarschijnlijk
-		facade = new PopupFacade(null);
+		facade = new PopupFacade((ObjectMap)null);
 		
 		mainPanel2 = new LayoutPanel(); 
 		mainPanel2.setStylePrimaryName("tekstvakpanel");
