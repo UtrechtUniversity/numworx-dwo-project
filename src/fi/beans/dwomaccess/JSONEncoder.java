@@ -99,7 +99,7 @@ public class JSONEncoder {
 	}
 	
 	
-	private static Map transformMap(Map map) {
+	public static Map transformMap(Map map) {
 		Map result = map;
 		Iterator iter = map.entrySet().iterator();
 		while (iter.hasNext()) {
