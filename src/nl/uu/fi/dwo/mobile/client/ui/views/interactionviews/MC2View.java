@@ -9,21 +9,19 @@ import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
-import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.FrameElement;
-import com.google.gwt.dom.client.IFrameElement;
-import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.event.logical.shared.AttachEvent;
+import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Frame;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -31,9 +29,13 @@ public class MC2View extends Composite implements InteractionView, LoadHandler {
 
 	public static final String CROSS_WIDGET_ID = "crossWidgetId";
 
-	private static native JavaScriptObject createIframe(String id, int width, int height, String locale, String relay)
+	private static native JavaScriptObject createIframe(String id, int width, int height, String locale, String relay, MC2View diz)
 	/*-{
-		return $win.createIframe(id, width, height, locale, relay)
+		return $wnd.createIframe(id, width, height, locale, relay, 
+			function() {
+				diz.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.MC2View::onBootstrap()()
+			}
+		)
 	}-*/;
 	
 	private static native JavaScriptObject getIframe(JavaScriptObject o) /*-{
@@ -45,6 +47,21 @@ public class MC2View extends Composite implements InteractionView, LoadHandler {
 				inner.init(width, height, launchdata, randomVars);
 			}-*/;
 
+	
+	private void onBootstrap() {
+		onLoad(null);
+		if(innerView == null) {
+			java.util.logging.Logger.getLogger("MC2View").info("waiting for iframe");
+			Timer t = new Timer() {
+
+				@Override
+				public void run() {
+					onBootstrap();
+					
+				}};
+				t.schedule(200);
+		}
+	}
 	
 	int width;
 	int height;
@@ -65,7 +82,8 @@ public class MC2View extends Composite implements InteractionView, LoadHandler {
 	{
 		ObjectMap launchdata = JSONUtilities.wrapMap(h);
 		String id = launchdata.getString(CROSS_WIDGET_ID);
-		String locale = StubView.getLocale();
+		locale = StubView.getLocale();
+		relay = "http://ws.fisme.science.uu.nl/DWOmAccess/lti/widget.jsp" ;
 		InlineHTML html = new InlineHTML();
 		html.getElement().setId(id);
 		initWidget(html);
@@ -81,10 +99,20 @@ public class MC2View extends Composite implements InteractionView, LoadHandler {
 	
 	private void initFrame() {
 		JavaScriptObject container = 
-		createIframe(id, width, height, locale, relay);
+		createIframe(id, width, height, locale, relay, this);
 		JavaScriptObject node = getIframe(container);
 		frame = new IFrame( node );
-		loadhandler = frame.addLoadHandler(this);
+		loadhandler = frame.addLoadHandler(this); // does not work.
+
+		Timer t = new Timer()
+		{
+			@Override
+			public void run()
+			{
+				onBootstrap();
+			}
+		};
+		t.schedule(100);
 	}
 	
 	
@@ -93,16 +121,22 @@ public class MC2View extends Composite implements InteractionView, LoadHandler {
 		this.id = id;
 		innerMap = outermap.getObjectMap("interactiePanelLaunchState");
 		randomVars = randomVarWaarden;
-		width = 400; if(outermap.containsKey("breedte")) width = outermap.getInt("breedte");
-		height =400; if(outermap.containsKey("hoogte")) height = outermap.getInt("hoogte");
+		width  = 400; if(outermap.containsKey("breedte")) width = outermap.getInt("breedte");
+		height = 400; if(outermap.containsKey("hoogte")) height = outermap.getInt("hoogte");
 		volledigeBreedte  = outermap.getBoolean("volledigeBreedte", false);
 		facade = new PopupFacade(outermap);
-		if(!volledigeBreedte)
-			initFrame();
 	}
 
 	public Widget asWidget() {
-		return facade.wrap(this);
+		Widget wrap = facade.wrap(this);
+		wrap.addAttachHandler(new Handler() {
+			
+			@Override
+			public void onAttachOrDetach(AttachEvent event) {
+				initFrame();
+			}
+		});
+		return wrap;
 	}
 
 
@@ -134,7 +168,6 @@ public class MC2View extends Composite implements InteractionView, LoadHandler {
 	@Override
 	public void setState(HashMap<String, Object> h) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -158,7 +191,6 @@ public class MC2View extends Composite implements InteractionView, LoadHandler {
 	@Override
 	public void zetNagekeken(boolean b) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -170,7 +202,6 @@ public class MC2View extends Composite implements InteractionView, LoadHandler {
 	public void zetVolledigeBreedte(int breedte) {
 		if(volledigeBreedte) {
 			this.width = breedte;
-			initFrame();
 		}
 	}
 
@@ -186,7 +217,7 @@ public class MC2View extends Composite implements InteractionView, LoadHandler {
 		}
 	}
 
-	private static native JavaScriptObject getContentWindow(com.google.gwt.user.client.Element frame) /*={
+	private static native JavaScriptObject getContentWindow(JavaScriptObject frame) /*-{
 		return frame.contentWindow;
 	}-*/;
 
