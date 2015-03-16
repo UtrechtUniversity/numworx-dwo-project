@@ -98,10 +98,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private static Logger logger = Logger.getLogger("ViewModuleViewImpl");
 	private boolean standalone = false;
 
-	private OpdrNav on;
+	OpdrNav on;
 	private FocusPanel mainPanel;
 	FlowPanel contentPanel = null;
-	private SimplePanel contentScrollPanel = null;
+	SimplePanel contentScrollPanel = null;
 	private Panel tekst = null;
 	private ArrayList<TouchButton> buttons = new ArrayList<TouchButton>();
 	private double zoom = 1;
@@ -901,7 +901,7 @@ try {
 		return this.initialize();
 	}
 	
-	private final class Resizer implements ResizeHandler {
+	final class Resizer implements ResizeHandler {
 		@Override
 		public void onResize(ResizeEvent event) {
 			int h = event.getHeight() - extraHeight;
@@ -1280,13 +1280,13 @@ try {
 //		contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
 //		Panel kbp = kb.getAsPanel();
 //		kbp.setWidth("886px");
-		sb.zetMaatNoordhoff();
+		sb.zetMaat();
 		sb.setScrollPanel(contentScrollPanel, contentHeight);
 		//fp.add(kbp);
 
 	}
 	
-	private int extraHeight = 41 + 44 /*KeyBoardTabPanel.KEYB_STATIC_HEIGHT*/;
+	protected int extraHeight = 41 + 44 /*KeyBoardTabPanel.KEYB_STATIC_HEIGHT*/;
 	private String unitId = "scoViewNr";
 	
 	public void setUnitId(String unitId) {
@@ -1313,16 +1313,6 @@ try {
 
 	}
 	
-	public void zetMaatTrifork() {
-		extraHeight = 0;
-		///contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
-		int contentHeight = Window.getClientHeight() - extraHeight;
-		Window.addResizeHandler(new Resizer());
-		sb.zetMaatTrifork();
-		sb.setScrollPanel(contentScrollPanel, contentHeight);
-
-	}
-
 	@Override
 	public void onModuleLoad()
 	{

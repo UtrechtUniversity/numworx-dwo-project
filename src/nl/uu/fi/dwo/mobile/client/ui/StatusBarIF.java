@@ -15,8 +15,6 @@ public interface StatusBarIF extends IsWidget {
 	void setScrollPanel(Widget w, int h);
 
 	void zetMaat();
-	void zetMaatNoordhoff();
-	void zetMaatTrifork();
 	int  getStatusBarHeight();
 	
 	FormuleKeyboardIF getFormuleKeyboard();

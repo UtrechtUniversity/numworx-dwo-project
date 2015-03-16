@@ -4,6 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
+import nl.uu.fi.dwo.mobile.client.ui.views.TriforkModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 
@@ -31,7 +32,7 @@ import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
 public class TriforkPlayer implements EntryPoint {
 
 	private static Logger logger = Logger.getLogger("TriforkPlayer");
-	private ViewModuleViewImpl view;
+	private TriforkModuleViewImpl view;
 
 	@Override
 	public void onModuleLoad() {
@@ -44,8 +45,9 @@ try {
 		logger.severe(getTarget());
 		
 		MGWTsetup();
-		view = new ViewModuleViewImpl(false).initialize();
-		view.zetMaatTrifork();
+		view = new TriforkModuleViewImpl();
+		view.initialize();
+		view.zetMaat();
 		//RootPanel.get().add(view);
 		if( LogConfiguration.loggingIsEnabled()) {
 			RootPanel.get().add(customLogArea);

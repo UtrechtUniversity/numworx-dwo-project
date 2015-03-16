@@ -65,14 +65,6 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF, Formu
 	}
 
 	@Override
-	public void zetMaatNoordhoff() {
-	}
-
-	@Override
-	public void zetMaatTrifork() {
-	}
-
-	@Override
 	public int getStatusBarHeight() {
 		return 0;
 	}

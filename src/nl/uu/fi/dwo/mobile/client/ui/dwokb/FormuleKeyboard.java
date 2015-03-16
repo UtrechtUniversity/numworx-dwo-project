@@ -499,15 +499,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 	public void zetMaat() {
 		tp.zetMaat();
 	}
-
-	public void zetMaatNoordhoff() {
-//		tp.zetMaatNoordhoff();
-	}
-
-	public void zetMaatTrifork() {
-		tp.zetMaatTrifork();
-	}
-
+	
 	public void setScrollPanel(Widget w, int h) {
 		tp.setScrollPanel(w, h);
 	}
