@@ -1674,6 +1674,12 @@ public class FormuleEditorWithSteps implements InteractionView
 	
 	public void kijkNa(boolean backStep, boolean show, boolean setState)
 	{
+		if((mode == 0 || mode == 1) && editor == null)
+		{
+			// er is al nagekeken en/of er valt niets na te kijken
+			//(bijv voor in/uitklappen tekstvak is deze return nodig, om te voorkomen dat correct weer op false wordt gezet).
+			return;
+		}
 		nagekeken = false;
 		correct = false;
 		score = 0;

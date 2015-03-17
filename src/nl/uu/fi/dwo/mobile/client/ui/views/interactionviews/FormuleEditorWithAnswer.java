@@ -65,7 +65,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private boolean checkUitklapMogelijkheid() {
 		return "noordhoff".equals(DWOplayer.PARAMETERS.keyboardStyle()); // FIXME beter!
 	}
-	private int extraWidth = 20 ; // of 40;
+	private int extraWidth = 23 ; // of 43; breedte voor nakijkplaatje en als nodig voor knop voor uitklappen.
 	
 	
 	class FormuleEditorPopup extends FormuleEditorWithSteps implements CBookEventListener, StateLess {
@@ -279,7 +279,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			lastanswer = null;
 			checkimg.getElement().getStyle().setProperty("marginLeft", "0px");
 			checkimg.getElement().getStyle().setProperty("marginRight", "10px");
-			checkimg.getElement().getStyle().setProperty("marginTop", "-5px"); //in plaats hiervan zou marginTop -5px ook goed kunnen werken.
+			checkimg.getElement().getStyle().setProperty("marginTop", "-5px"); 
 			checkimg.getElement().getStyle().setProperty("marginBottom", "-6px");
 			
 			feedbackPanel = new PopupPanel(true);
@@ -359,12 +359,14 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			checkPanel.getElement().getStyle().setMarginTop(-3, Style.Unit.PX);
 			checkPanel.add(checkimg);
 			checkPanel.add(feedbackLabel);
+			checkPanel.setPixelSize(20, hoogte);
 			
 			if (fe == null)
 			{
 				//sp.getElement().getStyle().setProperty("width", (breedte - 9) + "px");
-				this.getMainRegel().setMinimumWidth(breedte - extraWidth);
+				//this.getMainRegel().setMinimumWidth(breedte - extraWidth);
 				//hoogte = 27;
+				this.getMainRegel().setMinimumWidth(breedte - 20);
 				this.getMainRegel().setMinimumHeight(hoogte - 6);
 				
 				//Maat zetten:
@@ -679,11 +681,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 	}
 	
-	public boolean getImageVisible()
-	{
-		return checkimg.isVisible();
-	}
-	
 	public void zetFeedback()
 	{
 		TekstBuffer b = new TekstBuffer();
@@ -725,7 +722,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	public void resize()
 	{
-		breedte = this.getMainRegel().getWidth() + extraWidth + (getImageVisible()?26:0);
+		System.out.println("resize: checkPanel.getOffsetWidth() = " + checkPanel.getOffsetWidth());
+		breedte = this.getMainRegel().getWidth() + extraWidth; //checkPanel.getOffsetWidth() + extraWidth;// + (getImageVisible()?26:0);
 		hoogte = this.getMainRegel().getHeight() + 6;
 		sp.setPixelSize((breedte-3) , (hoogte-8) );
 		if(parentRegel != null)
@@ -788,6 +786,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		boolean fewsIngevuld = false;
 		if(fews != null)
 		{
+			//System.out.println("fews getState");
 			HashMap<String, Object> h2 = fews.getState();
 			if(h2.containsKey("ingevuld") && ((Boolean) h2.get("ingevuld")).booleanValue())
 			{
@@ -924,13 +923,20 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 // van constructor naar hier....
 		if( vakUitwerking )
 		{
-			PopupButton popup = new PopupButton(fews, ImageUtils.newImage("images/resources/antwoordknop.gif"), this);
+			PopupButton popup = new PopupButton(fews, ImageUtils.newImage("images/resources/popup_voor_uitw_icoon.png"), this);
 			Style popupstyle = popup.getElement().getStyle();
 			popupstyle.setDisplay(Display.INLINE_BLOCK);
 			popupstyle.setVerticalAlign(VerticalAlign.TOP);
+			breedte += 20; // wordt niet bij breedte geteld. ???
+			extraWidth = 43;
+			sp.setPixelSize((breedte-3) , (hoogte-8) );
+			if(parentRegel != null)
+			{	parentRegel.resize();
+			}
 			sp.add(popup);
-			breedte += 20;	  // wordt niet bij breedte geteld.
-			extraWidth += 20; // width of popup button
+			
+				  
+			//extraWidth += 20; // width of popup button
 		}
 
 		
