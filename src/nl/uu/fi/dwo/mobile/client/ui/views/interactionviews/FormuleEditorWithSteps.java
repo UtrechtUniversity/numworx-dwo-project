@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleClientBundle;
@@ -2195,6 +2196,11 @@ public class FormuleEditorWithSteps implements InteractionView
 		if (stapNr > 0 || stapNr == 0 && !hasStartString)
 			terugButton.getElement().getStyle().setVisibility(Visibility.VISIBLE);
 		
+	}
+	
+	public void wis() {
+		while(stapNr > (hasStartString?1:0))
+			backStep(false);
 	}
 	
 	

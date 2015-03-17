@@ -722,7 +722,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	public void resize()
 	{
-		System.out.println("resize: checkPanel.getOffsetWidth() = " + checkPanel.getOffsetWidth());
 		breedte = this.getMainRegel().getWidth() + extraWidth; //checkPanel.getOffsetWidth() + extraWidth;// + (getImageVisible()?26:0);
 		hoogte = this.getMainRegel().getHeight() + 6;
 		sp.setPixelSize((breedte-3) , (hoogte-8) );
@@ -821,8 +820,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public void setState(HashMap<String, Object> h)
 	{
 		logger.fine("setState " + h);
+		
 		if(fews != null)
 		{
+			fews.wis();
 			fews.setState(h);
 		}
 		
@@ -842,6 +843,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		{
 			antwoord = strip$f(antwoord);
 
+			this.clearAll();
 			this.insert(antwoord);
 			setCurrentElementRepaint();
 			lastanswer = "$f" + toString() + "@";

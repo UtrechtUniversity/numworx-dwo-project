@@ -257,6 +257,10 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 		}
 		if(!box.isShowing() && view != null && state != null)
 			view.setState(state);
+		else if(!box.isShowing() && view != null && view instanceof FormuleEditorWithAnswer)
+		{	state = view.getState();
+			view.setState(state);
+		}
 		if(!box.isShowing() )
 				box.showRelativeTo(this);		
 	}
