@@ -4,6 +4,25 @@
 <meta charset="UTF-8">
 <title>MC Squared</title>
 <script type="text/javascript" language="javascript" src="scripts/sha1.js" ></script>
+<script type="text/javascript">
+
+
+function getID() {
+	var id = ""; 
+	var  query = window.location.search;
+	var k = query.indexOf("w=");
+	if(k >= 0)
+	{
+		query = query.substring(k+2);
+		k = query.indexOf('&');
+		if(k > 0) query = query.substring(0, k);
+		id = query;
+	}
+	return id;
+}
+
+</script>
+
 <script type="text/javascript" language="javascript" >
 var $wnd = window;
 
@@ -33,6 +52,10 @@ function fixedEncodeURIComponent (str) {
 	}
 function signature() {
 	var url = $('lti').action;
+// strip #
+	var k = url.indexOf('#');
+	if(k >= 0) url = url.substring(0,k);
+
 	console.log("signature for " + url);
 	url = encodeURIComponent(url);
 	var pfx="POST&" + url + "&";
@@ -41,6 +64,7 @@ function signature() {
 	var inputs = document.getElementsByTagName("input");
 	var b = false;
 	var i;
+	var name;
 	for( i = 0; i < inputs.length; i++) {
 		input = inputs[i]
 		if(input.name == 'oauth_signature')
@@ -58,15 +82,6 @@ function signature() {
 	$('oauth_signature').value = n;
 }
 
-function getAction(name) 
-{
-	if(name == 'de.cinderella.CindyWidget') 
-		return 'http://cinderella.de/services/widget';
-	if(name == 'org.cbook.mediaman.MediaMan')
-		return 'http://mc2-mediaman.appspot.com/';
-	
-	return 'http://ws.fisme.science.uu.nl/DWOmAccess/lti/widget.jsp';
-}
 
 
 window.inner = {
@@ -82,11 +97,13 @@ window.inner = {
 		isCorrect: function() {
 			return "null";
 		},
-		init: function(width, height, launchdata, randomvalues) {
+		init: function(width, height, launchdata, randomvalues, action) {
 			launch = JSON.parse(launchdata);
 			className = launch.className;
-			var action = getAction(className)
-			$('lti').action = action;
+			//var action = getAction(className)
+			//action = "testing.html"
+			var ref = window.location.hash
+			$('lti').action = action + ref;
 
 // calculate locale from ?locale=XX 
 			locale = getLocale()
@@ -104,7 +121,6 @@ window.inner = {
 			}
 			launchdata = JSON.stringify(launch.launchData)	
 			context = JSON.stringify(context)
-			randomvalues = JSON.stringify(randomvalues)
 			subscriptions = launch.subscriptions || "{}"
 			$("launch_presentation_height").value = height;
 			$("launch_presentation_width").value = width;
@@ -120,6 +136,7 @@ window.inner = {
 			$("custom_context").value = context
 			$("custom_subscriptions").value = subscriptions
 			signature()
+			$('lti').submit();
 		},
 		enter: function() {
 		},
@@ -179,7 +196,7 @@ oauth_consumer_key<input name='oauth_consumer_key' id='oauth_consumer_key' value
 
 resource_link_id<input name='resource_link_id' id='resource_link_id' value='000000-0-000000' ><br>
 <input name='roles' value='Learner' type='hidden' >
-<input value="submit" name="submit" type="submit" ><br>
+<!-- <input value="submit" name="submit" type="submit" ><br> -->
 user_id<input name='user_id' id='user_id' value='guest' > <br>
 oauth_signature<input name='oauth_signature' id='oauth_signature' value='?' ><br>
 </form>

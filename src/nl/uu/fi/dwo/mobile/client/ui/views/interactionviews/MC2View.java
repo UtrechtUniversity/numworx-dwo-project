@@ -25,55 +25,63 @@ import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
 
-public class MC2View extends Composite implements InteractionView, LoadHandler {
+public class MC2View extends Composite implements InteractionView {
 
+	private static final Logger LOGGER = java.util.logging.Logger.getLogger("MC2View");
 	public static final String CROSS_WIDGET_ID = "crossWidgetId";
 
-	private static native JavaScriptObject createIframe(String id, int width, int height, String locale, String relay, MC2View diz)
+	private static native JavaScriptObject createIframe(String id, int width, int height, String locale, String relay)
 	/*-{
-		return $wnd.createIframe(id, width, height, locale, relay, 
-			function() {
-				diz.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.MC2View::onBootstrap()()
-			}
-		)
+		return $wnd.createIframe(id, width, height, locale, relay)
 	}-*/;
+	
+	private static native void setBootstrap(String id, MC2View diz) /*-{
+		$wnd.setBootstrap(id, function(xwid, data) {
+			diz.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.MC2View::doOpenAjaxEvent(Ljava/lang/String;Ljava/lang/Object;)
+			(xwid, data);
+		})
+		
+	}-*/;
+	
+	
+	private void doOpenAjaxEvent(String topic, Object data) {
+		LOGGER.info("topic:" + topic + " ,data:" + data);
+	}
 	
 	private static native JavaScriptObject getIframe(JavaScriptObject o) /*-{
 		return o.getIframe();
 	}-*/;
 	
 	private static native void init(JavaScriptObject inner, int width, int height, String launchdata,
-			String randomVars) /*-{ 
-				inner.init(width, height, launchdata, randomVars);
+			String randomVars, String action) /*-{ 
+				inner.init(width, height, launchdata, randomVars, action);
 			}-*/;
 
 	
 	private void onBootstrap() {
-		onLoad(null);
+		onLoadApplet();
 		if(innerView == null) {
-			java.util.logging.Logger.getLogger("MC2View").info("waiting for iframe");
+			LOGGER.info("waiting for iframe");
 			Timer t = new Timer() {
 
 				@Override
 				public void run() {
-					onBootstrap();
-					
+					onBootstrap();				
 				}};
 				t.schedule(200);
 		}
 	}
 	
-	int width;
-	int height;
-	boolean volledigeBreedte;
-	String locale;
-	String id;
-	String relay;
-	ObjectMap innerMap;
-	Map randomVars;
-	PopupFacade facade;
-	IFrame frame;
-	private HandlerRegistration loadhandler;
+	private int width;
+	private int height;
+	private boolean volledigeBreedte;
+	private String locale;
+	private String id;
+	private String relay;
+	private ObjectMap innerMap;
+	private Map randomVars;
+	private PopupFacade facade;
+	private IFrame frame;
 	private OpdrNavIF comRoot;
 	private JavaScriptObject innerView;
 	
@@ -83,7 +91,7 @@ public class MC2View extends Composite implements InteractionView, LoadHandler {
 		ObjectMap launchdata = JSONUtilities.wrapMap(h);
 		String id = launchdata.getString(CROSS_WIDGET_ID);
 		locale = StubView.getLocale();
-		relay = "http://ws.fisme.science.uu.nl/DWOmAccess/lti/widget.jsp" ;
+		relay = getAction(launchdata.getObjectMap("interactiePanelLaunchState").getString("className"));
 		InlineHTML html = new InlineHTML();
 		html.getElement().setId(id);
 		initWidget(html);
@@ -98,11 +106,9 @@ public class MC2View extends Composite implements InteractionView, LoadHandler {
 	}
 	
 	private void initFrame() {
-		JavaScriptObject container = 
-		createIframe(id, width, height, locale, relay, this);
+		JavaScriptObject container = createIframe(id, width, height, locale, relay);
 		JavaScriptObject node = getIframe(container);
 		frame = new IFrame( node );
-		loadhandler = frame.addLoadHandler(this); // does not work.
 
 		Timer t = new Timer()
 		{
@@ -205,9 +211,8 @@ public class MC2View extends Composite implements InteractionView, LoadHandler {
 		}
 	}
 
-	@Override
-	public void onLoad(LoadEvent event) {
-		loadhandler.removeHandler();
+
+	private void onLoadApplet() {
 		JavaScriptObject w = getContentWindow(frame.getElement());
 		if (w != null)
 		{
@@ -244,13 +249,30 @@ public class MC2View extends Composite implements InteractionView, LoadHandler {
 	return wnd.inner;
 }-*/;
 
+	static final Map<String,String> actionMap = new HashMap<String,String>();
+	
+	static {
+		actionMap.put("de.cinderella.CindyWidget", "http://cinderella.de/services/widget");
+		actionMap.put("org.cbook.mediaman.MediaMan", "http://mc2-mediaman.appspot.com/");
+		actionMap.put("maltsample.maltWidget", "http://www.talent.gr/malt/");
+		actionMap.put("widgetsample.SampleWidget", "http://mc2-jssample.appspot.com/Jssample.jsp");
+	}
+	
+	String getAction(String name) 
+	{
+		String action = actionMap.get(name);
+		if(action ==  null)
+			return "https://ws.fisme.science.uu.nl/DWOmAccess/lti/widget.jsp";
+		return action;
+	}
+
 
 	private void publish(Object inner) { 
 		innerView = (JavaScriptObject) inner;
 		try {
+			setBootstrap(getUUID(), this);
 			init(innerView, width, height, JSONUtilities.toJSONObject(innerMap).toString(), 
-					JSONUtilities.toJSONObject(randomVars).toString()); 
-
+					JSONUtilities.toJSONObject(randomVars).toString(), relay); 
 //			if(pendingState != null) {
 //				setState(inner, pendingState);
 //				pendingState = null;
