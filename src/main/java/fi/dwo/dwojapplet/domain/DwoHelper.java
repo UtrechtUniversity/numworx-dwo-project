@@ -45,8 +45,9 @@ public final class DwoHelper {
 
     private static boolean scormExportLoggedIn, appletExportLoggedIn, adminLoggedIn;
 
-    private static String resourceURLPathString; // null if to use the default
-    private static String servletConnectString; // null if to use the default
+    private static String resourceURLPathString; // required null if to use the default
+    private static String servletConnectString=null; // required null, filled in main or init
+                                                     //depending on application or applet start.
 
     /**
      * Returns the current AppletUtil.

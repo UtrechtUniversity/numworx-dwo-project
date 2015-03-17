@@ -1,27 +1,27 @@
--injars /Users/gert/NetBeansProjects/DwoSvnCheckout/DWOJAppletClient/branches/working/target/DWOJApplet-1.0.1-r9243_proguard_base.jar(!META-INF/maven/**)
--outjars /Users/gert/NetBeansProjects/DwoSvnCheckout/DWOJAppletClient/branches/working/target/DWOJApplet-1.0.1-r9243.jar
+-injars 'D:\Gert-do-not-delete\NetbeansProjects\project.fisme.java-root\DWOJAppletClient\branches\working\target\DWOJApplet-1.0.1-r9269_proguard_base.jar'(!META-INF/maven/**)
+-outjars 'D:\Gert-do-not-delete\NetbeansProjects\project.fisme.java-root\DWOJAppletClient\branches\working\target\DWOJApplet-1.0.1-r9269.jar'
 
--libraryjars /Users/gert/.m2/repository/fi/dwo/DWO-commons-lib/1.0.2-SNAPSHOT/DWO-commons-lib-1.0.2-SNAPSHOT.jar
--libraryjars /Users/gert/.m2/repository/org/apache/ws/xmlrpc/xmlrpc/2.0.1/xmlrpc-2.0.1.jar
--libraryjars /Users/gert/.m2/repository/javax/servlet/servlet-api/2.2/servlet-api-2.2.jar
--libraryjars /Users/gert/.m2/repository/commons-codec/commons-codec/1.3/commons-codec-1.3.jar
--libraryjars /Users/gert/.m2/repository/commons-httpclient/commons-httpclient/2.0.2/commons-httpclient-2.0.2.jar
--libraryjars /Users/gert/.m2/repository/commons-logging/commons-logging/1.0.3/commons-logging-1.0.3.jar
--libraryjars /Users/gert/.m2/repository/com/googlecode/json-simple/json-simple/1.1.1/json-simple-1.1.1.jar
--libraryjars /Users/gert/.m2/repository/com/toedter/jcalendar/1.4/jcalendar-1.4.jar
--libraryjars /Users/gert/.m2/repository/fi/WiskOpdr/0.0.0/WiskOpdr-0.0.0.jar
--libraryjars /Users/gert/.m2/repository/jre/plugin/plugin/1.8.0_31/plugin-1.8.0_31.jar
--libraryjars /Library/Java/JavaVirtualMachines/jdk1.8.0_31.jdk/Contents/Home/jre/lib/rt.jar
--libraryjars /Library/Java/JavaVirtualMachines/jdk1.8.0_31.jdk/Contents/Home/jre/lib/jsse.jar
--libraryjars /Library/Java/JavaVirtualMachines/jdk1.8.0_31.jdk/Contents/Home/jre/lib/jfxrt.jar
+-libraryjars '\\soliscom.uu.nl\uu\Users\Plas0006\My Documents\.m2\repository\fi\dwo\DWO-commons-lib\1.0.2-SNAPSHOT\DWO-commons-lib-1.0.2-SNAPSHOT.jar'
+-libraryjars '\\soliscom.uu.nl\uu\Users\Plas0006\My Documents\.m2\repository\org\apache\ws\xmlrpc\xmlrpc\2.0.1\xmlrpc-2.0.1.jar'
+-libraryjars '\\soliscom.uu.nl\uu\Users\Plas0006\My Documents\.m2\repository\javax\servlet\servlet-api\2.2\servlet-api-2.2.jar'
+-libraryjars '\\soliscom.uu.nl\uu\Users\Plas0006\My Documents\.m2\repository\commons-codec\commons-codec\1.3\commons-codec-1.3.jar'
+-libraryjars '\\soliscom.uu.nl\uu\Users\Plas0006\My Documents\.m2\repository\commons-httpclient\commons-httpclient\2.0.2\commons-httpclient-2.0.2.jar'
+-libraryjars '\\soliscom.uu.nl\uu\Users\Plas0006\My Documents\.m2\repository\commons-logging\commons-logging\1.0.3\commons-logging-1.0.3.jar'
+-libraryjars '\\soliscom.uu.nl\uu\Users\Plas0006\My Documents\.m2\repository\com\googlecode\json-simple\json-simple\1.1.1\json-simple-1.1.1.jar'
+-libraryjars '\\soliscom.uu.nl\uu\Users\Plas0006\My Documents\.m2\repository\com\toedter\jcalendar\1.4\jcalendar-1.4.jar'
+-libraryjars '\\soliscom.uu.nl\uu\Users\Plas0006\My Documents\.m2\repository\fi\WiskOpdr\0.0.0\WiskOpdr-0.0.0.jar'
+-libraryjars '\\soliscom.uu.nl\uu\Users\Plas0006\My Documents\.m2\repository\jre\plugin\plugin\1.8.0_31\plugin-1.8.0_31.jar'
+-libraryjars 'C:\Program Files\Java\jdk1.7.0_67\jre\lib\rt.jar'
+-libraryjars 'C:\Program Files\Java\jdk1.7.0_67\jre\lib\jsse.jar'
+-libraryjars 'C:\Program Files\Java\jdk1.7.0_67\jre\lib\jfxrt.jar'
 
 -target 1.6
 -forceprocessing
--printmapping /Users/gert/NetBeansProjects/DwoSvnCheckout/DWOJAppletClient/branches/working/target/proguard_map.txt
+-printmapping 'D:\Gert-do-not-delete\NetbeansProjects\project.fisme.java-root\DWOJAppletClient\branches\working\target\proguard_map.txt'
 -verbose
 -dontwarn
--printconfiguration /Users/gert/NetBeansProjects/DwoSvnCheckout/DWOJAppletClient/branches/working/mapping.txt
--printseeds /Users/gert/NetBeansProjects/DwoSvnCheckout/DWOJAppletClient/branches/working/target/proguard_seeds.txt
+-printconfiguration 'D:\Gert-do-not-delete\NetbeansProjects\project.fisme.java-root\DWOJAppletClient\branches\working\mapping.txt'
+-printseeds 'D:\Gert-do-not-delete\NetbeansProjects\project.fisme.java-root\DWOJAppletClient\branches\working\target\proguard_seeds.txt'
 
 
 -keep class uk.co.wilson.xml.* {

@@ -218,8 +218,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
             courseButton.setNewForeground(HOME_COLOR);
             courseButton.setFont(GuiConstants.RED_TEXT);
             courseButton.addActionListener(this);
-            courseButton.setIcon(
-                    new ImageIcon(DwoHelper.getResourceImage(GuiConstants.BACK_COURSEMENU_IMAGE))
+            courseButton.setIcon(new ImageIcon(DwoHelper.getResourceImage(GuiConstants.BACK_COURSEMENU_IMAGE))
             );
             courseButton.setHorizontalTextPosition(JButton.LEADING);
             hbox.add(courseButton);
