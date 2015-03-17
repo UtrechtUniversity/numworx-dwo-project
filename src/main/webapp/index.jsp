@@ -8,9 +8,9 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
-        <div><applet code="fi.dwo.dwojapplet.domain.DWO.class" archive="DWOJApplet-1.0.1-r9243.jar" width="350" height="350">
-                Java DWO applet test page.
+        <h1>Opening the DWO Applet</h1>
+        <div><applet code="fi.dwo.dwojapplet.domain.DWO.class" archive="DWOJApplet-1.0.1-r9269.jar"  codebase="jars/"width="1024" height="800">
+                Java DWO applet page.
             </applet></div>
 
     </body>

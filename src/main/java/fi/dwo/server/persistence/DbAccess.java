@@ -403,7 +403,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             + "AND   (courseid = ?) ";
 
     private final static String QRY_SELECT_TO_SCHOOLS_FROM = "select * from tblSchoolFrom where schoolFrom = ? ";
-    
+
 // TODO false bij een export.    
     /**
      *
@@ -1638,7 +1638,6 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @throws XmlRpcException
      * @throws SQLException
      */
-    
     @Override
     public Vector getToSchoolsFrom(int schoolID)
             throws IOException, XmlRpcException, SQLException {
@@ -1745,7 +1744,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             ps.setInt(2, userID);
 
             Hashtable ht = executeQueryWithRecord(ps); // Never returns null, emtpy instead!
-            log(Level.INFO, "LMSSetValue("
+            log(Level.FINE, "LMSSetValue("
                     + scoID + ", " + userID + ", " + iDataModelElement + ", "
                     + iValue + ")", null);
             ps.close();
@@ -2953,7 +2952,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     /**
      * Update het sequencenr van een sco. Niet gecombineerd met changeSco, omdat
      * er geen bijeffect is dat de studenten hun data verliezen. Voor een swap
-     * zijn twee sco's nodig. Daarom hier meteen twee voor de prijs van één!
+     * zijn twee sco's nodig. Daarom hier meteen twee voor de prijs van Ã©Ã©n!
      *
      * @param scoID
      * @param sequencenr nieuw sequence nummer voor scoID, bij swap oude van
