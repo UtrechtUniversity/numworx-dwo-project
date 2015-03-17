@@ -13,7 +13,7 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
     <artifactId>DWO-commons-lib</artifactId>
     <version>1.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>DWO-commons-lib trunk</name>
+    <name>DWO-commons-lib - working</name>
     <description>This is a description</description>
     
     <url>http://www.dwo.nl</url>
