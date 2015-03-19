@@ -8,10 +8,8 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Opening the DWO Applet</h1>
-        <div><applet code="fi.dwo.dwojapplet.domain.DWO.class" archive="DWOJApplet-1.0.1-r9269.jar"  codebase="jars/"width="1024" height="800">
-                Java DWO applet page.
-            </applet></div>
-
+        <div><applet code="fi.dwo.dwojapplet.domain.DWO.class"
+            archive="<%= getServletContext().getInitParameter("fi.dwo.dwojapplet.web.appletName") %>" 
+            width="100%" height="800" codebase="jars/">The DWO Applet</applet></div>
     </body>
 </html>
