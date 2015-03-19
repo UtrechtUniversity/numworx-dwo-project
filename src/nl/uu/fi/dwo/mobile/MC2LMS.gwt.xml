@@ -12,6 +12,12 @@
 	<replace-with class="nl.uu.fi.dwo.mobile.client.sco.SCORM_guest">
     	<when-type-is class="nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF"/>
     </replace-with>
+
+<!-- English language, independent of country -->
+  	<extend-property name="locale" values="en"/>
+    <extend-property name="locale" values="nl"/> 	
+
+  	<set-property-fallback name="locale" value="en"/> <!-- English is the default -->
 	
 	
 	<source path='' />

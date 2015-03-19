@@ -13,6 +13,8 @@ public interface StatusBarIF extends IsWidget {
 	void addKnop(PushButton kijkNaButton, boolean b);
 	void addNavPanel(Panel onp);
 	void setScrollPanel(Widget w, int h);
+	void setKeyboard(int nr);
+	void setWriteMathSet(int nr);
 
 	void zetMaat();
 	int  getStatusBarHeight();

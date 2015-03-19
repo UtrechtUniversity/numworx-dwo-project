@@ -9,10 +9,11 @@ public class DWOPlayerMC2 extends DWOplayerDefaults implements DWOplayerParamete
 	
 	public DWOPlayerMC2() {
 		String host = Window.Location.getHost();
+		String http = Window.Location.getProtocol();
 		if(!GWT.isProdMode())
 			host = "mc2dme.appspot.com";
 
-		launchData = "http://"
+		launchData = http +"://"
 				+ host
 				+ "/getJSONLaunchDataBytes?s=";
 	}
@@ -20,6 +21,12 @@ public class DWOPlayerMC2 extends DWOplayerDefaults implements DWOplayerParamete
 	@Override
 	public String getLaunchData() {
 		return launchData;
+	}
+	@Override
+	public String getStubView() {
+		if(!GWT.isProdMode())
+			return "";
+		return "/dwo/apps/";
 	}
 
 }

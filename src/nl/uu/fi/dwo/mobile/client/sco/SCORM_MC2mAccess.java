@@ -13,7 +13,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class SCORM_MC2mAccess extends SCORM_guest implements Scorm2004IF {
 
-	static final Logger logger = Logger.getLogger("SCORM_DWOmAccess");
+	static final Logger logger = Logger.getLogger("SCORM_MC²mAccess");
 	private String userID;
 	private String scoID;
 	private boolean pending;
@@ -27,10 +27,11 @@ public class SCORM_MC2mAccess extends SCORM_guest implements Scorm2004IF {
 	public SCORM_MC2mAccess(String userID) {
 		
 		String host = Window.Location.getHost();
+		String http = Window.Location.getProtocol();
 		if(!GWT.isProdMode())
 			host = "9-dot-mc2dme.appspot.com";
 
-		client = new XmlRpcClient("https://" + host + "/dwoapp");
+		client = new XmlRpcClient(http + "://" + host + "/dwoapp");
 		
 		this.userID = userID;
 		pending = false;

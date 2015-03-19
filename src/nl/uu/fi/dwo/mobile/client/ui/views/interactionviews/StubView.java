@@ -77,7 +77,8 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			k = query.indexOf('&');
 			if(k > 0) query = query.substring(0, k);
 			locale = query;
-		}
+		} else if("default".equals(locale)) // no default please.
+			return "nl";
 		return locale;
 	}
 	

@@ -519,4 +519,16 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 		return KeyBoardTabPanel.KEYB_STATIC_HEIGHT;
 	}
 
+	@Override
+	public void setKeyboard(int nr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setWriteMathSet(int nr) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -90,4 +90,14 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF, Formu
 		clipboard = formule;
 	}
 
+	@Override
+	public void setKeyboard(int nr) {
+		kb.setKeyboard(nr);
+	}
+
+	@Override
+	public void setWriteMathSet(int nr) {
+		kb.setWriteMathSet(nr);
+	}
+
 }

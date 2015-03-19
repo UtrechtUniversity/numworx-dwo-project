@@ -95,6 +95,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 {
 	private static final String RANDOM_VAR_WAARDEN = "RandomVarWaarden";
 	private static final String RANDOM_VAR_NAMEN = "RandomVarNamen";
+	private static final String KEYBOARD = "keyboardNr";
+	private static final String WRITE_MATH_SET = "writeMathSetNr";
 	private static Logger logger = Logger.getLogger("ViewModuleViewImpl");
 	private boolean standalone = false;
 
@@ -217,6 +219,18 @@ try {
 		{	opnieuw = wrap.getBoolean("opnieuw");
 		}
 
+		if(wrap.containsKey(KEYBOARD))
+		{
+			sb.setKeyboard(wrap.getInt(KEYBOARD));
+		} else
+			sb.setKeyboard(-1);
+		if(wrap.containsKey(WRITE_MATH_SET))
+		{
+			sb.setWriteMathSet(wrap.getInt(WRITE_MATH_SET));
+		} else
+			sb.setKeyboard(-1);
+		
+		
 		contentPanel.getElement().getStyle().setFontSize(font_size, Unit.PX);
 		contentPanel.getElement().getStyle().setPadding(0, Unit.PX); // XXX was 15 
 		// GEEN randje aan de linkerkant, want dan klopt de maat (100%) niet meer bij noordhoff

@@ -93,14 +93,14 @@ public class FacetMemento extends Memento {
 	}
 
 	@Override
-	void setValue(String key, String value) {
+	boolean setValue(String key, String value) {
 		if(SUSPEND_DATA == key) {
 			StringList list = new StringList();
 			list.add(value);
 			view.getResponses(list);
 			value = list.toString();
 		}
-		super.setValue(key, value);
+		return super.setValue(key, value);
 	}
 
 

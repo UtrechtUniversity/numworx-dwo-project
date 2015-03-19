@@ -140,6 +140,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 		{
 			params.append( "data-param-" + entry.getKey() + "='" + entry.getValue() + "' ");
 		}
+		params.append( "data-param-language='" + StubView.getLocale() + "' ");
 		if("true".equals(geogebraParams.get("showMenuBar")))
 			barHeight += 33;
 		if("true".equals(geogebraParams.get("showToolBar")))

@@ -2,6 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" 
 	xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget">
+	<ui:with type="nl.uu.fi.dwo.mobile.client.text.Text" field="rb" />
 	<ui:style>
 	
 	.login_text_field {
@@ -38,7 +39,7 @@
 		<!-- Topbar Navigation Area -->
 		<mgwt:HeaderPanel >
 			<mgwt:center>
-				<g:Label ui:field="nav_title" >Login</g:Label>
+				<g:Label ui:field="nav_title" ><ui:text from='{rb.login}'/></g:Label>
 			</mgwt:center>
 		</mgwt:HeaderPanel>
 		<!-- Main interaction Area -->
@@ -46,16 +47,16 @@
 			<div style="width: 600px; height: 450px; display: block; margin: 20px auto;">
 	    	    <img src="images/resources/filogo.png" style="float: left;" />
 	    	        <div style="float: left; margin:20px;">
-	    	      		<h1>Digitale Wiskunde Omgeving</h1>
-	    	      		<h4>Freudenthal Instituut</h4>
+	    	      		<h1><ui:text from='{rb.dwo}'/></h1>
+	    	      		<h4><ui:text from='{rb.fi}'/></h4>
 	    	      	</div>
-	    	   	<div style="clear: both; width: 300px; margin: 10px auto;">Gebruikersnaam:</div>
+	    	   	<div style="clear: both; width: 300px; margin: 10px auto;"><ui:text from='{rb.gebruikersnaam}'/></div>
 	    	    <mgwt:MTextBox ui:field="username" addStyleNames="{style.login_text_field}" name="userid"> </mgwt:MTextBox>
-	    	    <div style="clear: both; width: 300px; margin: 10px auto;" name="passwd">Wachtwoord:</div>
+	    	    <div style="clear: both; width: 300px; margin: 10px auto;" name="passwd"><ui:text from='{rb.wachtwoord}'/></div>
 	    	   
 	    	    <mgwt:MPasswordTextBox ui:field="passwd" addStyleNames="{style.login_text_field}"> </mgwt:MPasswordTextBox>	
-	    	    <mgwt:Button ui:field="submitbutton" addStyleNames="{style.login_button}" text="Login"></mgwt:Button>
-	    	    <mgwt:Button ui:field="gastbutton" addStyleNames="{style.login_button}" text="Login als gast"></mgwt:Button>
+	    	    <mgwt:Button ui:field="submitbutton" addStyleNames="{style.login_button}" text="{rb.login}"></mgwt:Button>
+	    	    <mgwt:Button ui:field="gastbutton" addStyleNames="{style.login_button}" text="{rb.loginAlsGast}"></mgwt:Button>
 	    	   
 	    	   	
 	    	</div>	 

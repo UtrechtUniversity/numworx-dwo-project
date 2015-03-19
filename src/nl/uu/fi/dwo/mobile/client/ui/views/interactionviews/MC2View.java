@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -126,7 +127,10 @@ public class MC2View extends Composite implements InteractionView {
 			HashMap randomVarWaarden) {
 		this.id = id;
 		innerMap = outermap.getObjectMap("interactiePanelLaunchState");
-		randomVars = randomVarWaarden;
+		if(randomVarWaarden != null)
+			randomVars = randomVarWaarden;
+		else
+			randomVars = Collections.EMPTY_MAP;
 		width  = 400; if(outermap.containsKey("breedte")) width = outermap.getInt("breedte");
 		height = 400; if(outermap.containsKey("hoogte")) height = outermap.getInt("hoogte");
 		volledigeBreedte  = outermap.getBoolean("volledigeBreedte", false);

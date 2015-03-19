@@ -23,6 +23,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
+import nl.uu.fi.dwo.mobile.utils.FacetHelper;
 import nl.uu.fi.dwo.mobile.utils.ImageUtils;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
@@ -193,6 +194,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private int mode;
 	private boolean vakUitwerking;
 	private int goedHalfFout = AntwoordVakChecker.FOUT;
+	private FacetHelper facet;
 	
 	private TekstRegel parentRegel;
 	private FormuleEditorPopup fews;
@@ -226,6 +228,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if (h.containsKey("interactiePanelLaunchState") )
 		{
 			ObjectMap map = JSONUtilities.wrapMap(h);
+			facet = new FacetHelper(map);
 			this.breedte = map.getInt("breedte");
 			this.hoogte = map.getInt("hoogte");
 			this.volledigeBreedte = map.getBoolean("volledigeBreedte");
@@ -969,7 +972,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	}
 
 	@Override
-	public void getResponses(List<Type> responseTypes, List<String> responses) {
+	public void getResponses(List<String> responses) {
+		List<Type> responseTypes = facet.getResponseTypes();
 		int size = responseTypes.size();
 		if( size > 0 ) {
 			Type type = responseTypes.get(0);

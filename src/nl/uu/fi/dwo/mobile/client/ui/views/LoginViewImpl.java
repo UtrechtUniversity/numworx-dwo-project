@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
+import nl.uu.fi.dwo.mobile.client.text.Text;
+
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.HasAllKeyHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -20,6 +22,7 @@ public class LoginViewImpl extends Composite implements LoginView
 	@UiField Button submitbutton;
 	@UiField MTextBox username;
 	@UiField MPasswordTextBox passwd;
+	@UiField Text rb = Text.constants;
 	
 	private static LoginViewImplUiBinder uiBinder = GWT
 			.create(LoginViewImplUiBinder.class);
