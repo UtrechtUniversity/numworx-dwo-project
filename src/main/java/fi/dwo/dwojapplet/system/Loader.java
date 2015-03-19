@@ -1,4 +1,4 @@
-package fi.dwo.dwojapplet.sytem;
+package fi.dwo.dwojapplet.system;
 
 import java.io.BufferedReader;
 import java.io.IOException;
