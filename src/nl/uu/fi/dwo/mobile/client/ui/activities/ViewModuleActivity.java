@@ -49,10 +49,11 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 		if (place instanceof ViewModulePlace)
 		{
 			ViewModulePlace selectedModulePlace = (ViewModulePlace) place;
-			final int id = Integer.parseInt(selectedModulePlace.getToken());
+			final String id = selectedModulePlace.getToken();
 			sco = SelectModuleItemHolder.getScoByID(id);
 			defaultContext = view.getAnchorContext();
 			view.setAnchorContext(this);
+			view.setUnitId(id);
 			DWOplayer.api.setScoID(id);
 			AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 

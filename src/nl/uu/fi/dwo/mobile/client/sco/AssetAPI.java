@@ -73,11 +73,13 @@ public class AssetAPI implements Scorm2004IF {
 				logger.info("setCompleted(" + value  + " ) " + equals);
 				if(equals)
 					SetCompleted(guid, equals);
-			}
+			} else
+				return "false";
 		} catch (Exception e) {
 			logger.severe("setValue " + name + " :" + e);
+			return "false";
 		}
-		return "";
+		return "true";
 	}
 
 	private String toScore(String value) {

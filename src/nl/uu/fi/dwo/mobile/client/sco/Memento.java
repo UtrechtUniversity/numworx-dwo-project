@@ -70,6 +70,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	public static final String LEARNER_ID = "cmi.learner_id";
 	public static final String LEARNER_NAME = "cmi.learner_name";
 	public static final String LEARNER_PREFERENCE_LANGUAGE = "cmi.learner_preference.language";
+	public static final String LOCATION = "cmi.lesson_location";
 
 	private Scorm2004IF api;
 
@@ -120,7 +121,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		instalOnBeforeUnload();
 	}
 
-	private String getValue(String key)
+	String getValue(String key)
 	{
 		try
 		{
@@ -160,16 +161,17 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		scoreRaw = this.score.toString();
 		setValue(SCORE_RAW, scoreRaw);
 	}
-
-	private void setValue(String key, String value)
+	
+	boolean setValue(String key, String value)
 	{
 		try
 		{
-			api.SetValue(key, value);
+			return "true".equals(api.SetValue(key, value));
 		}
 		catch (Exception e)
 		{
 			logger.log(Level.SEVERE,"setValue", e);
+			return false;
 		}
 	}
 
@@ -615,10 +617,21 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		
 	}
 	public void setCurrentOpdracht(int currentOpdracht) {
+		if(!setValue(LOCATION, Integer.toString(currentOpdracht)))
+			setCurrentOpdracht_old(currentOpdracht);
+	}
+
+	// old style, for use if 'setValue(location)' mislukt
+	private void setCurrentOpdracht_old(int currentOpdracht) {
 		onsState.put("opdrachtNr", new JSONNumber(currentOpdracht));
 	}
 	
 	public int getCurrentOpdracht() {
+		try {
+			return Integer.parseInt(getValue(LOCATION));
+		} catch(Exception _)
+		{
+		}
 		try {
 			return (int) onsState.get("opdrachtNr").isNumber().doubleValue();
 		} catch(Exception e) {
