@@ -169,13 +169,11 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
             file.close();
 
             //assign properties to static value.
-            String connectModeProperty;
-            connectModeProperty = properties.getProperty("connectMode");
 
             String servletConnectStringProperty = properties.getProperty("servletConnectString");
-            if(servletConnectStringProperty==null){
-                servletConnectStringProperty="http://ws.fisme.science.uu.nl/";
-            }
+            //if(servletConnectStringProperty==null){
+               // servletConnectStringProperty="http://ws.fisme.science.uu.nl/";
+            //}
             DwoHelper.setServletConnectString(servletConnectStringProperty);
             log.log(Level.FINE, "Property {0} is value: {1}", new Object[]{"setServletConnectString",
                 DwoHelper.getServletConnectString()});
@@ -1149,10 +1147,9 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
         //It we started from the command line then the DwoHelper.getServletConnectString()
         //has been intialized. Otherwise we set it to the server where we downloaded from
         if(DwoHelper.getServletConnectString()==null){
-            URL url = DwoHelper.getApplet().getDocumentBase();
+            URL url = DwoHelper.getApplet().getCodeBase();
             try {
-                URL jarUrl = new URL(url, "../jars");
-                Loader.setPrefix(jarUrl.toString());
+                Loader.setPrefix(url.toString());
                 URL xmlRpcUrl = new URL(url, "../xmlrpc");
                 DwoHelper.setServletConnectString(xmlRpcUrl.toString());
             } catch (MalformedURLException ex) {
