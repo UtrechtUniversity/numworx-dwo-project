@@ -14,7 +14,6 @@
 	}
 	
 	</ui:style>
-	<g:FlowPanel addStyleNames="keyboard-container computer">
 	<g:FlowPanel addStyleNames="keyboard" >
 		<my:FKey addStyleNames="key icon" ui:field="c1" >
 			<span class='basis basis-C1'><span class='path1'></span><span class='path2'></span></span>
@@ -108,6 +107,5 @@
 		</my:FKey>
 		<my:FKey addStyleNames="key icon" ui:field="c31" >		
 		</my:FKey>
-	</g:FlowPanel>
 	</g:FlowPanel>
 </ui:UiBinder> 

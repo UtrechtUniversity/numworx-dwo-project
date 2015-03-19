@@ -16,7 +16,7 @@ public class DesktopKeyboardMeetkunde extends DesktopKeyboardGonio {
 	void onC29(ClickEvent e) {
 		super.onC28(e);
 	}
-	public AbstractKeyboard init() {
+	public DesktopKeyboard init() {
 		return this;
 	}
 }

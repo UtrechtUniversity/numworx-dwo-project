@@ -225,7 +225,7 @@ public class DesktopKeyboard extends AbstractKeyboard {
 		super.blur();
 	}
 
-	public AbstractKeyboard init() {
+	public DesktopKeyboard init() {
 		disableKey(c31);
 		return this;
 	}

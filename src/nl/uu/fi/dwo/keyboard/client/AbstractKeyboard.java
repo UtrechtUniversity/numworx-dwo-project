@@ -85,4 +85,10 @@ public abstract class AbstractKeyboard extends Composite implements FormuleKeybo
 
 	public void setScrollPanel(Widget w, int h) {
 	}
+
+	public void setKeyboard(int nr) {
+	}
+
+	public void setWriteMathSet(int nr) {
+	}
 }

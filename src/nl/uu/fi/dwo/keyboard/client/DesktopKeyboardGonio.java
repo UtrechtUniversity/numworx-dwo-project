@@ -13,7 +13,7 @@ public class DesktopKeyboardGonio extends DesktopKeyboard {
 		disableKey(c31);		
 	}
 
-	public AbstractKeyboard init() {
+	public DesktopKeyboard init() {
 		disableKey(c29);
 		return this;
 	}
