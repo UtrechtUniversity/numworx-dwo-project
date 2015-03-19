@@ -2,12 +2,14 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
+import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
@@ -52,6 +54,7 @@ import fi.wiskopdr.AntwoordVergelijkingVakChecker;
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
+import fi.wiskopdr.expressies.repr.ContentMathML;
 import fi.wiskopdr.text.Text;
 
 /**
@@ -60,7 +63,7 @@ import fi.wiskopdr.text.Text;
  * @author Danny Hendrix, Evertson Croes
  * 
  */
-public class FormuleEditorWithAnswer extends FormuleEditor implements InteractionView, CBookEventListener
+public class FormuleEditorWithAnswer extends FormuleEditor implements InteractionView, CBookEventListener, FacetAware
 {
 	private boolean checkUitklapMogelijkheid() {
 		return "noordhoff".equals(DWOplayer.PARAMETERS.keyboardStyle()); // FIXME beter!
@@ -963,6 +966,35 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		message = strip$f(message);
 		insert(message); // Of zo iets.Strip $F en @
 		setCurrentElementRepaint();
+	}
+
+	@Override
+	public void getResponses(List<Type> responseTypes, List<String> responses) {
+		int size = responseTypes.size();
+		if( size > 0 ) {
+			Type type = responseTypes.get(0);
+			int start = 0;
+			String useranswer = "$f" + this.toString() + "@";
+			Expressie antwoord = FormuleParser.geefExpressie(useranswer);
+			if(type == Type.formula) {
+				if(antwoord != null) 
+				{
+					responses.add(antwoord.visit(ContentMathML.INSTANCE).toString());
+					start = 1;
+				}
+			} 
+// kandidaat instelling: type is "decimal/integer"
+			else if (type == Type.decimal || type == Type.integer) {
+				if(antwoord != null) {
+					double r = antwoord.geefWaarde();
+					//if(type == Type.integer) r = Math.round(r); TODO wat zeggen de specs
+					responses.add(Double.toString(r)); start = 1;
+				}
+			}
+			if(size>start) { // should not happen!
+				for(; start<size; start ++) responses.add("");
+			}	
+		}
 	}
 
 }

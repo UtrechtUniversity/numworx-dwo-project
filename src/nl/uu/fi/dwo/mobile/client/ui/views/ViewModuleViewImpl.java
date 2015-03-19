@@ -226,7 +226,7 @@ try {
 		{
 			scoreNav.setItemOpnieuw(wrap.getBoolean("itemOpnieuw"));
 		}
-		on =  new OpdrNav(launchData, this, new Memento(api));
+		on =  new OpdrNav(launchData, this, createMemento());
 		FlowPanel onp = (FlowPanel) on.getAsPanel();
 		if(bolletjesZichtbaar)
 			sb.addNavPanel(onp);
@@ -279,6 +279,10 @@ try {
 		*/
 		scoreNav.setVolgendeVisible(volgendeKnopZichtbaar);
 		stelNavigatieIn();
+	}
+
+	protected Memento createMemento() {
+		return new Memento(getApi());
 	}
 	
 	void zetToetsNagekeken(ScoreNavIF source)

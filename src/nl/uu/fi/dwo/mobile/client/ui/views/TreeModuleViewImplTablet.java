@@ -178,13 +178,14 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 			
 		
 			ViewModulePlace selectedModulePlace = (ViewModulePlace) place;
-			final int id = Integer.parseInt(selectedModulePlace.getToken());
+			final String id = selectedModulePlace.getToken();
 			final SelectModuleItem item = SelectModuleItemHolder.getScoByID(id);
 			
 			//
 			moduleHeaderPanel.setCenter(item.getName());
 			
 			DWOplayer.api.setScoID(id);
+			viewModuleViewImpl.setUnitId(id);
 			AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 
 				@Override

@@ -81,7 +81,7 @@ public abstract class XMLView {
 	protected boolean allesCorrectNodig = false;
 	public boolean zelftoetsGeenCorr = false;
 	
-	private TekstVakPanel hoofdPanel;
+	TekstVakPanel hoofdPanel;
 
 	protected void setupView(HashMap<String, Object> launchData)
 	{

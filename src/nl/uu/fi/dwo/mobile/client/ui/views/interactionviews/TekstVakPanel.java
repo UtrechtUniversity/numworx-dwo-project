@@ -14,10 +14,12 @@ import java.util.Map;
 
 
 
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
+import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
@@ -74,7 +76,7 @@ import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.Optelling;
 
 
-public class TekstVakPanel implements InteractionView
+public class TekstVakPanel implements InteractionView, FacetAware
 {
 	public static final String TVP_KLAPUIT = "tvpKlapUit";
 	public static final String TVP_KLAPIN = "tvpKlapIn";
@@ -992,6 +994,16 @@ public class TekstVakPanel implements InteractionView
 		}
 		return h;
 	}
+	
+	public void getResponses( List<String> responses) {
+		for(Object view: interactionViewObjects) {
+			if(view instanceof FacetAware) {
+				((FacetAware) view).getResponses(responses);
+			}
+		}		
+	}
+	
+	
 
 	public void setState(HashMap<String, Object> h)
 	{

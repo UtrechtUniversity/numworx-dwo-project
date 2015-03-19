@@ -31,4 +31,6 @@ public interface ViewModuleView extends IsWidget
 	        void viewModuleViewSetupDone();
 	    }
 
+	void setUnitId(String id);
+
 }
