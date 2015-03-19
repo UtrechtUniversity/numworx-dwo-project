@@ -8,7 +8,7 @@ package fi.dwo.commons.entities;
 /**
  * SchoolGroup roles. Defines the different roles for member in a school group.
  * In the database it is stored in tblGroup.
- * 
+ *  
  * @author plas0006
  */
 public class SchoolGroupRoles {
