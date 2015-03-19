@@ -462,7 +462,13 @@ public abstract class TextMapper {
 
      */
     public static String getText(String text) {
-        return getResourceBundle().getString(text);
+        String result;
+        result = getResourceBundle().getString(text);
+        
+        if(result == null){
+            return text;
+        }
+        return result;
     }
     
     /**
