@@ -22,6 +22,7 @@ import fi.dwo.dwojapplet.gui.ModuleTreePanel;
 import fi.dwo.dwojapplet.gui.ScoPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.dwojapplet.persistence.StoreCreator;
+import fi.dwo.dwojapplet.system.Loader;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -168,10 +169,11 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
             file.close();
 
             //assign properties to static value.
-            String connectModeProperty;
-            connectModeProperty = properties.getProperty("connectMode");
 
             String servletConnectStringProperty = properties.getProperty("servletConnectString");
+            //if(servletConnectStringProperty==null){
+               // servletConnectStringProperty="http://ws.fisme.science.uu.nl/";
+            //}
             DwoHelper.setServletConnectString(servletConnectStringProperty);
             log.log(Level.FINE, "Property {0} is value: {1}", new Object[]{"setServletConnectString",
                 DwoHelper.getServletConnectString()});
@@ -1142,8 +1144,21 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
         if (!DwoHelper.setApplet(this)) {
             return;
         }
-        DWO.ReadLoggingProperties();
-        DWO.ReadConfigProperties();
+        //It we started from the command line then the DwoHelper.getServletConnectString()
+        //has been intialized. Otherwise we set it to the server where we downloaded from
+        if(DwoHelper.getServletConnectString()==null){
+            URL url = DwoHelper.getApplet().getCodeBase();
+            try {
+                Loader.setPrefix(url.toString());
+                URL xmlRpcUrl = new URL(url, "../xmlrpc");
+                DwoHelper.setServletConnectString(xmlRpcUrl.toString());
+            } catch (MalformedURLException ex) {
+                log.log(Level.SEVERE, null, ex);
+            }
+        }
+        //TODO make it configurable in the servlet via a attribute in the jsp
+        //initialized via the tomcat context.xml
+        
         //Read the versioning from the MANIFEST
         URLClassLoader cl = (URLClassLoader) DWO.class.getClassLoader();
         if (cl == null) {
@@ -1612,6 +1627,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
         int width = GuiConstants.DWO_WIDTH;
         int height = GuiConstants.DWO_HEIGHT;
         DWO dwo = new DWO(args);
+        DWO.ReadLoggingProperties();
+        DWO.ReadConfigProperties();
         MainFrame mf = new MainFrame(dwo, width, height);
         mf.setTitle("DWO");
         mf.pack();

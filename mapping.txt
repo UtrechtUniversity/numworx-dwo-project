@@ -1,7 +1,7 @@
--injars 'D:\Gert-do-not-delete\NetbeansProjects\project.fisme.java-root\DWOJAppletClient\trunk\target\DWOJApplet-1.0.0-SNAPSHOT-r9174_proguard_base.jar'(!META-INF/maven/**)
--outjars 'D:\Gert-do-not-delete\NetbeansProjects\project.fisme.java-root\DWOJAppletClient\trunk\target\DWOJApplet-1.0.0-SNAPSHOT-r9174.jar'
+-injars 'D:\Gert-do-not-delete\NetbeansProjects\project.fisme.java-root\DWOJAppletClient\branches\working\target\DWOJApplet-1.0.1-r9269_proguard_base.jar'(!META-INF/maven/**)
+-outjars 'D:\Gert-do-not-delete\NetbeansProjects\project.fisme.java-root\DWOJAppletClient\branches\working\target\DWOJApplet-1.0.1-r9269.jar'
 
--libraryjars '\\soliscom.uu.nl\uu\Users\Plas0006\My Documents\.m2\repository\fi\dwo\DWO-commons-lib\1.0.0-SNAPSHOT\DWO-commons-lib-1.0.0-SNAPSHOT.jar'
+-libraryjars '\\soliscom.uu.nl\uu\Users\Plas0006\My Documents\.m2\repository\fi\dwo\DWO-commons-lib\1.0.2-SNAPSHOT\DWO-commons-lib-1.0.2-SNAPSHOT.jar'
 -libraryjars '\\soliscom.uu.nl\uu\Users\Plas0006\My Documents\.m2\repository\org\apache\ws\xmlrpc\xmlrpc\2.0.1\xmlrpc-2.0.1.jar'
 -libraryjars '\\soliscom.uu.nl\uu\Users\Plas0006\My Documents\.m2\repository\javax\servlet\servlet-api\2.2\servlet-api-2.2.jar'
 -libraryjars '\\soliscom.uu.nl\uu\Users\Plas0006\My Documents\.m2\repository\commons-codec\commons-codec\1.3\commons-codec-1.3.jar'
@@ -17,11 +17,11 @@
 
 -target 1.6
 -forceprocessing
--printmapping 'D:\Gert-do-not-delete\NetbeansProjects\project.fisme.java-root\DWOJAppletClient\trunk\target\proguard_map.txt'
+-printmapping 'D:\Gert-do-not-delete\NetbeansProjects\project.fisme.java-root\DWOJAppletClient\branches\working\target\proguard_map.txt'
 -verbose
 -dontwarn
--printconfiguration 'D:\Gert-do-not-delete\NetbeansProjects\project.fisme.java-root\DWOJAppletClient\trunk\mapping.txt'
--printseeds 'D:\Gert-do-not-delete\NetbeansProjects\project.fisme.java-root\DWOJAppletClient\trunk\target\proguard_seeds.txt'
+-printconfiguration 'D:\Gert-do-not-delete\NetbeansProjects\project.fisme.java-root\DWOJAppletClient\branches\working\mapping.txt'
+-printseeds 'D:\Gert-do-not-delete\NetbeansProjects\project.fisme.java-root\DWOJAppletClient\branches\working\target\proguard_seeds.txt'
 
 
 -keep class uk.co.wilson.xml.* {
@@ -192,7 +192,6 @@
 
 -keep,allowshrinking class org.**
 
-# -keep class org.cbook.**
 -keep,allowshrinking class uk.** {
     <fields>;
     <methods>;

@@ -29,6 +29,7 @@ public class DeleteAction extends GuiAction {
 
     @Override
     void setMap(CourseMap map) {
+        String msg;
         this.map = map;
         Object o = map == null ? null : map.getUserObject();
         if (o instanceof Sco) {
@@ -37,7 +38,9 @@ public class DeleteAction extends GuiAction {
             course = null;
             String format = TextMapper.getText(TextMapper.GUIS_TLTP_DELETE_SCO);
             Object[] arguments = {sco.toString()};
-            putValue(NAME, MessageFormat.format(format, arguments));
+            msg = MessageFormat.format(format, arguments);
+            System.out.println(msg);
+            putValue(NAME, msg);
             setEnabled(canModify(map));
         } else if (o instanceof Course) {
             course = (Course) o;
@@ -54,13 +57,17 @@ public class DeleteAction extends GuiAction {
                             ? TextMapper.getText(TextMapper.GUIC_TLTP_DELETE_MAP)
                             : TextMapper.getText(TextMapper.GUIC_TLTP_DELETE_COURSE);
             Object[] arguments = {o.toString()};
-            putValue(NAME, MessageFormat.format(format, arguments));
+                        msg = MessageFormat.format(format, arguments);
+            System.out.println(msg);
+            putValue(NAME, msg);
+
             setEnabled(canModify(map));
         } else {
             setEnabled(false);
-            putValue(NAME, TextMapper.getText("delete"));
+            msg = TextMapper.getText("delete");
+            System.out.println(msg);
+            putValue(NAME, msg);
         }
-
     }
 
     private void newSelection(Object o) {

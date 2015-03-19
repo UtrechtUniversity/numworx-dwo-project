@@ -5,7 +5,7 @@
     <!-- Adjust artifact, name and description for new projects -->
     <groupId>fi.dwo</groupId>
     <artifactId>DWOJApplet</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <name>DWOJApplet - trunk</name>
     <url>http://www.dwo.nl</url>
     <packaging>jar</packaging>
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>fi.dwo</groupId>
             <artifactId>DWO-commons-lib</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
         <dependency>
