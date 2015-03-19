@@ -1,0 +1,28 @@
+This software is compatible with tomcat7.0 and requires a mysql 5.5 database
+resource. For security reasons the application should best run in it's own tomcat.
+
+Create an empty mysql database using the createdb.sql in the tools directory. 
+Next create a user account for that database.
+
+The database account for the resource should have select, insert update and 
+delete rights. If the database is named dwodb. One might use the following 
+commands in mysql:
+
+CREATE USER 'dwo'@'%' IDENTIFIED BY 'dwopasswd';
+GRANT SELECT,INSERT,UPDATE,DELETE ON `dwodb`.* TO 'dwo'@'%';
+
+Configure the following tomcat context-parameter in the tomcat
+main context.xml. 'fi.dwo.dwojapplet.web.appletName' is the name of the 
+DWOJApplet jar which should be placed in a subdirectory of the location where 
+the index.jsp of the war file is unpacked by the tomcat. The jars directory should 
+contain all relevant applet files.
+
+<Parameter name="fi.dwo.dwojapplet.web.appletName" value="DWOJApplet-1.0.1-r9269.jar"
+         override="true"/>
+
+Once the database was created configure a mysql-db resource in the main context.xml:
+
+<Resource name="jdbc/dwodb" auth="Container" type="javax.sql.DataSource"
+               maxActive="100" maxIdle="30" maxWait="10000"
+               username="dwo" password="dwopassword" driverClassName="com.mysql.jdbc.Driver"
+               url="jdbc:mysql://localhost:3306/dwo_production_v1_2"/>

@@ -66,6 +66,8 @@
     servlet mappings 
     -->
     <servlet-mapping>
+        <!-- note that xmlrpc is a hardcoded path relative to the applet containing html page -->
+        <!-- note that jars is also a hardcoded path relative to the applet containing html page -->
         <servlet-name>xmlrpc</servlet-name>
         <url-pattern>/xmlrpc</url-pattern>
     </servlet-mapping>

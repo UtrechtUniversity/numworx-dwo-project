@@ -238,6 +238,7 @@ public class DataSourceAccessServlet extends Servlet {
         out.println();
         out.println("monitor = " + monitor);
         out.println("threading = " + threading);
+        out.println();
 
         //check for proper DB version
         Connection c = null;
@@ -253,6 +254,7 @@ public class DataSourceAccessServlet extends Servlet {
             out.printf("We are compatible with the database version: "+(String)  hashMap.get("DBVersion Major")
                     +"."+(String) hashMap.get("DBVersion Minor")
                     +"."+(String) hashMap.get("DBVersion Revision"));
+            out.println();
         } catch (Exception e) {
             log.log(Level.SEVERE, "Eror retrieving database version information from the database", e);
         } finally {

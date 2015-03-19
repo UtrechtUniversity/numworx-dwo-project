@@ -7,7 +7,7 @@
     <artifactId>DWOServer</artifactId>
     <packaging>war</packaging>
     <version>1.0.1-SNAPSHOT</version>
-    <name>DWOServer-trunk</name>
+    <name>DWOServer - trunk</name>
     <url>http://www.dwo.nl</url>
     <!-- Update year to current when starting a new project -->
     <inceptionYear>2015</inceptionYear> 
@@ -69,7 +69,7 @@
         <dependency>
             <groupId>fi.dwo</groupId>
             <artifactId>DWO-commons-lib</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.2-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
         <dependency>
