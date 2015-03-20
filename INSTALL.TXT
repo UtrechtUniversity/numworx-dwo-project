@@ -1,8 +1,10 @@
 This software is compatible with tomcat7.0 and requires a mysql 5.5 database
-resource. For security reasons the application should best run in it's own tomcat.
+resource. For security reasons the application should best run in it's own 
+tomcat.
 
-Create an empty mysql database using the createdb.sql in the tools directory. 
-Next create a user account for that database.
+Create an empty mysql database and run the createdb.sql in the tools directory 
+on the commandline of the mysql executable to fill it with tables. Next create a 
+user account for the new database.
 
 The database account for the resource should have select, insert update and 
 delete rights. If the database is named dwodb. One might use the following 

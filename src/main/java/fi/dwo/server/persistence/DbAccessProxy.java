@@ -56,9 +56,9 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
     }
 
     @Override
-    public Vector getCourses(int userID) throws IOException, XmlRpcException,
+    public Vector getCourses(int schoolID) throws IOException, XmlRpcException,
             SQLException {
-        return getDelegate().getCourses(userID);
+        return getDelegate().getCourses(schoolID);
     }
 
 //	public Vector getCourses(int userID, boolean showAll) throws IOException,
@@ -127,13 +127,13 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
             SQLException {
         return getDelegate().renameClass(classID, newName, iconizer);
     }
-
-    @Override
-    public boolean reassignClass(int classID, int newTeacher)
-            throws IOException, SQLException, XmlRpcException,
-            DwoXmlRpcException {
-        return getDelegate().reassignClass(classID, newTeacher);
-    }
+//TODO V1_2 obsolete
+//    @Override
+//    public boolean reassignClass(int classID, int newTeacher)
+//            throws IOException, SQLException, XmlRpcException,
+//            DwoXmlRpcException {
+//        return getDelegate().reassignClass(classID, newTeacher);
+//    }
 
     @Override
     public boolean register(String username, String password, String firstname,
@@ -211,15 +211,16 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
                 .addToSchool(userID, schoolLogin, groupID, groupPassword);
     }
 
-    @Override
-    public boolean changeAccount(int userID, String password,
-            String newPassword, String firstname, String middlename,
-            String lastname, String email, int classID)
-            throws DwoXmlRpcException, IOException, XmlRpcException,
-            SQLException {
-        return getDelegate().changeAccount(userID, password, newPassword, firstname,
-                middlename, lastname, email, classID);
-    }
+    //TODO V1_2 obsolete
+//    @Override
+//    public boolean changeAccount(int userID, String password,
+//            String newPassword, String firstname, String middlename,
+//            String lastname, String email, int classID)
+//            throws DwoXmlRpcException, IOException, XmlRpcException,
+//            SQLException {
+//        return getDelegate().changeAccount(userID, password, newPassword, firstname,
+//                middlename, lastname, email, classID);
+//    }
 
     @Override
     public boolean changeAccount(int userID, String password,
@@ -299,18 +300,18 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
             XmlRpcException, SQLException {
         return getDelegate().getResults(courseID, userID);
     }
+//TODO V1_2 obsolete
+//    @Override
+//    public boolean disconnectFromClass(int uid) throws IOException,
+//            XmlRpcException, SQLException {
+//        return getDelegate().disconnectFromClass(uid);
+//    }
 
-    @Override
-    public boolean disconnectFromClass(int uid) throws IOException,
-            XmlRpcException, SQLException {
-        return getDelegate().disconnectFromClass(uid);
-    }
-
-    @Override
-    public boolean selectJar(String key, String jar) throws IOException,
-            XmlRpcException, SQLException {
-        return getDelegate().selectJar(key, jar);
-    }
+//    @Override
+//    public boolean selectJar(String key, String jar) throws IOException,
+//            XmlRpcException, SQLException {
+//        return getDelegate().selectJar(key, jar);
+//    }
 
     @Override
     public boolean reconnect() throws IOException, XmlRpcException,
@@ -598,6 +599,12 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
     @Override
     public Vector getToSchoolsFrom(int schoolID) throws IOException, XmlRpcException, SQLException {
         return getDelegate().getToSchoolsFrom(schoolID);
+    }
+    
+    
+    @Override
+    public boolean isTeacher(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+        return getDelegate().isTeacher(userID, schoolID);
     }
 
 }
