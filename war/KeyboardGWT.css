@@ -3,6 +3,14 @@
 	text-align: center;
 }
 
+.computer .key {
+	font-size: 21px !important;	
+}
+.popup .icon span::before,
+.computer .icon span::before {
+	font-size: 28px !important; 
+}
+
 .keyboard-container {
   width: auto;
   display: block;
