@@ -70,7 +70,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	public static final String LEARNER_ID = "cmi.learner_id";
 	public static final String LEARNER_NAME = "cmi.learner_name";
 	public static final String LEARNER_PREFERENCE_LANGUAGE = "cmi.learner_preference.language";
-	public static final String LOCATION = "cmi.lesson_location";
+	public static final String LOCATION = "cmi.location";
 
 	private Scorm2004IF api;
 
