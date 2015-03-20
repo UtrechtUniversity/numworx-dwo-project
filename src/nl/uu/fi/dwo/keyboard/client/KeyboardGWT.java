@@ -129,42 +129,42 @@ public class KeyboardGWT implements EntryPoint {
 	@Override
 	public void onModuleLoad() {
 		
-		AbstractKeyboard panel = new DesktopKeyboard().init();
+		AbstractKeyboard panel = new TabbedDesktopKeyboard(1);
 		panel.setEditor(editor);
 		RootPanel root = RootPanel.get();
 		root.add(new Label("algebra"));
 		root.add(panel);
-		TabletKeyboard tk = new TabletKeyboard().init();;
+		TabletKeyboard tk;
 		
-		AbstractKeyboard tablet = new TabbedTouchKeyboard(tk);
+		AbstractKeyboard tablet = new TabbedTouchKeyboard(1);
 		tablet.setEditor(editor);
 		root.add(new Label("touch"));root.add(tablet);
 		root.add(new Label("statistiek"));
-		panel = new DesktopKeyboardStatistiek();
+		panel = new TabbedDesktopKeyboard(3);
 		panel.setEditor(editor);
 		root.add(panel);
-		root.add(new Label("touch")); tablet = new TabbedTouchKeyboard(new TabletKeyboardStatistiek());
+		root.add(new Label("touch")); tablet = new TabbedTouchKeyboard(3);
 		tablet.setEditor(editor);
 		root.add(tablet);
 		root.add(new Label("meetkunde"));
-		panel = new DesktopKeyboardMeetkunde();
+		panel = new TabbedDesktopKeyboard(4);
 		panel.setEditor(editor);
 		root.add(panel);
-		root.add(new Label("touch")); tablet = new TabbedTouchKeyboard(new TabletKeyboardMeetkunde());
+		root.add(new Label("touch")); tablet = new TabbedTouchKeyboard(4);
 		tablet.setEditor(editor);
 		root.add(tablet);
 		root.add(new Label("gonio"));
-		panel = new DesktopKeyboardGonio().init();
+		panel = new TabbedDesktopKeyboard(2);
 		panel.setEditor(editor);
 		root.add(panel);
-		root.add(new Label("touch")); tablet = new TabbedTouchKeyboard(new TabletKeyboardGonio());
+		root.add(new Label("touch")); tablet = new TabbedTouchKeyboard(2);
 		tablet.setEditor(editor);
 		root.add(tablet);
 		root.add(new Label("onderbouw"));
-		panel = new DesktopKeyboardOnderbouw();
+		panel = new TabbedDesktopKeyboard(0);
 		panel.setEditor(editor);
 		root.add(panel);
-		root.add(new Label("touch")); tablet = new TabbedTouchKeyboard(new TabletKeyboardOnderbouw());
+		root.add(new Label("touch")); tablet = new TabbedTouchKeyboard(0);
 		tablet.setEditor(editor);
 		tablet.switchABC();
 		root.add(tablet);

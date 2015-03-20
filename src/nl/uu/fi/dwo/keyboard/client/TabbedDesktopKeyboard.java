@@ -9,8 +9,6 @@ public class TabbedDesktopKeyboard extends AbstractKeyboard {
 
 	private static final int HEIGHT = 44;
 
-	private static final int DEFAULT = 1;
-
 	private DesktopKeyboard current, stock[] = new DesktopKeyboard[5];
 	private int nr;
 	private FlowPanel main;

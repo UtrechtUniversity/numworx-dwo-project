@@ -13,11 +13,32 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 	private TabletKeyboardABC kabc;
 	private TabletKeyboardUpper kABC;
 	private TabletKeyboardPen pen;
+	private TabletKeyboard[] stock = new TabletKeyboard[5];
 	
-	TabbedTouchKeyboard(TabletKeyboard tk) {
+	
+	
+	private TabletKeyboard createKeyboard(int i) {
+		switch(i) {
+		case 0: return new TabletKeyboardOnderbouw();
+		case 1: return new TabletKeyboard().init();
+		case 2: return new TabletKeyboardGonio();
+		case 3: return new TabletKeyboardStatistiek();
+		case 4: return new TabletKeyboardMeetkunde();
+		}
+		return new TabletKeyboard().init();
+	}
+
+	
+	TabbedTouchKeyboard() {
+		this(DEFAULT);
+	}
+	
+	TabbedTouchKeyboard(int nr) {
+		TabletKeyboard tk = createKeyboard(nr);
+		stock [nr] = tk;
+		this.nr = nr;
 		this.k123 = tk;
 		this.current = tk;
-		FlowPanel main;
 		main = new FlowPanel();
 		main.setStyleName("keyboard-container");
 		main.addStyleName("touch");
@@ -115,6 +136,8 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 	private Widget scrollPanel; 
 	private int origHeight = 426 - 40;
 	private int origDelta = 0;
+	private int nr;
+	private FlowPanel main;
 	
 	void resizeScrollPanel(int size) {
 		origDelta = size;
@@ -131,5 +154,20 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 		return HEIGHT;
 	}
 
-	
+	@Override
+	public void setKeyboard(int nr) {
+		if(nr < 0 || nr > 4) nr = DEFAULT;
+		if(this.nr != nr) {
+			boolean shown = k123.isVisible() && current == k123;
+			if(stock[nr] == null) stock[nr] = createKeyboard(nr);
+			this.nr = nr;
+			k123.removeFromParent();
+			k123 = stock[nr];
+			k123.setEditor(getEditor());
+			k123.setDelegate(this);
+			k123.setVisible(shown);
+			main.add(k123);
+		}
+	}
+
 }

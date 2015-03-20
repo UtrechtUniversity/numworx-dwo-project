@@ -8,7 +8,7 @@ public class TabletKeyboardFactory implements KeyboardFactory {
 	@Override
 	public AbstractKeyboard getKeyboard() {
 		//return new TabbedTouchKeyboard(new TabletKeyboardStatistiek());
-		return new TabbedTouchKeyboard(new TabletKeyboard().init());
+		return new TabbedTouchKeyboard();
 	}
 
 }
