@@ -31,6 +31,8 @@ public class ScormAccess extends Servlet implements ScormAccessIF {
 		"cmi.suspend_data",
 		"cmi.score.raw",
 		"cmi.total_time",
+		"cmi.location",
+		"cmi.completion_status"
 	};
 	
 	static private final Properties CONVERT = new Properties();
