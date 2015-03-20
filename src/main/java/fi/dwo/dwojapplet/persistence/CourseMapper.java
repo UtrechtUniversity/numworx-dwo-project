@@ -2,6 +2,7 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\CourseMapper.java
 package fi.dwo.dwojapplet.persistence;
 
+import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.dwojapplet.domain.ClassCourse;
 import fi.dwo.dwojapplet.domain.Course;
 import static fi.dwo.dwojapplet.domain.Course.NO_CHILDREN;

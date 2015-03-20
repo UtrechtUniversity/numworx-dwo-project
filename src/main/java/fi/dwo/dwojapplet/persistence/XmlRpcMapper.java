@@ -3,6 +3,7 @@
 package fi.dwo.dwojapplet.persistence;
 
 import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.persistence.DbAccessIF;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Hashtable;

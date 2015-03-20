@@ -11,6 +11,8 @@ import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.exceptions.SchoolException;
 import fi.dwo.commons.exceptions.ScoException;
+import fi.dwo.commons.persistence.DbAccessIF;
+import fi.dwo.commons.persistence.DbAccessLogin;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.dwojapplet.domain.Admin;
 import fi.dwo.dwojapplet.domain.AppletConfig;
@@ -332,6 +334,7 @@ public class PersistenceFacade {
      * int)
      */
     public Course[] getCourses(User user) throws PersistenceException {
+        throw new RuntimeException("This routine must be rewriten to use DbAccessCreator.instance().getCourses(SchoolID)");
         try {
             MapperIF mapper = MapperCreator.instance(Course.class);
             Vector v;

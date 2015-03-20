@@ -2,7 +2,7 @@ package fi.dwo.dwojapplet.persistence.cache;
 
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import fi.dwo.commons.exceptions.PersistenceException;
-import fi.dwo.dwojapplet.persistence.DbAccessIF;
+import fi.dwo.commons.persistence.DbAccessIF;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;

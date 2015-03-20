@@ -2,6 +2,8 @@
 package fi.dwo.dwojapplet.persistence;
 
 import fi.beans.xmlrpc.Client;
+import fi.dwo.commons.exceptions.DwoXmlRpcException;
+import fi.dwo.commons.persistence.DbAccessIF;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -728,11 +730,96 @@ class DbAccessClient extends Client implements DbAccessIF {
     }
 
     @Override
-    public Vector getToSchoolsFrom(int a)  throws IOException, XmlRpcException, SQLException  {
-        Vector vv = new Vector(1);
-        vv.addElement(a);
-        Object object = invoke("getToSchoolsFrom", vv);
+    public boolean addStudentToClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+        Vector vv = new Vector(2);
+        vv.addElement(new Integer(classID));
+        vv.addElement(new Integer(studentID));
+        Object object = invoke("addStudentToClass", vv);
+        return ((Boolean) object);
+    }
+
+    @Override
+    public boolean removeStudentFromClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+        Vector vv = new Vector(2);
+        vv.addElement(classID);
+        vv.addElement(studentID);
+        Object object = invoke("removeStudentFromClass", vv);
+        return ((Boolean) object);
+    }
+
+    @Override
+    public Vector<Object> getClassesOfStudent(int userID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+        Vector vv = new Vector(0);
+        Object object = invoke("getClassesOfStudent", vv);
         return (java.util.Vector) object;
+    }
+
+    @Override
+    public boolean addTeacherToClass(int classID, int newTeacher) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+        Vector vv = new Vector(2);
+        vv.addElement(new Integer(classID));
+        vv.addElement(new Integer(newTeacher));
+        Object object = invoke("addTeacherToClass", vv);
+        return ((Boolean) object).booleanValue();
+    }
+
+    @Override
+    public boolean removeTeacherFromClass(int classID, int newTeacher) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+        Vector vv = new Vector(2);
+        vv.addElement(new Integer(classID));
+        vv.addElement(new Integer(newTeacher));
+        Object object = invoke("removeTeacherFromClass", vv);
+        return ((Boolean) object);
+    }
+
+    @Override
+    public Vector<Object> getClassesOfTeacher(int userID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+        Vector vv = new Vector(0);
+        Object object = invoke("getClassesOfTeacher", vv);
+        return (java.util.Vector) object;
+    }
+
+    @Override
+    public boolean isStudent(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+        Vector vv = new Vector(2);
+        vv.addElement(new Integer(userID));
+        vv.addElement(new Integer(schoolID));
+        Object object = invoke("isStudent", vv);
+        return ((Boolean) object);
+    }
+
+    @Override
+    public boolean isTeacher(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+        Vector vv = new Vector(2);
+        vv.addElement(new Integer(userID));
+        vv.addElement(new Integer(schoolID));
+        Object object = invoke("isTeacher", vv);
+        return ((Boolean) object);
+    }
+//TODO V1_3
+    @Override
+    public Vector<Object> getStudentsOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Vector<Object> getTeachersOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean renameClass(int classID, String newName, String newRegistrationKey, boolean iconizer) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean disconnectFromClass(int userID, int classID) throws IOException, XmlRpcException, SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Vector getToSchoolsFrom(int schoolID) throws IOException, XmlRpcException, SQLException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

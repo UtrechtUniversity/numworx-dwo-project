@@ -2,7 +2,6 @@ package fi.dwo.dwojapplet.form;
 
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import fi.dwo.commons.exceptions.PersistenceException;
-import fi.dwo.dwojapplet.persistence.DbAccessIF;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
