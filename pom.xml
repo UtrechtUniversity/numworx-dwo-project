@@ -13,7 +13,7 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
     <artifactId>DWO-commons-lib</artifactId>
     <version>1.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>DWO-commons-lib - trunk</name>
+    <name>DWO-commons-lib - working</name>
     <description>This is a description</description>
     
     <url>http://www.dwo.nl</url>
@@ -24,13 +24,6 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
         <url>http://www.uu.nl/onderzoek/freudenthal-instituut</url>
     </organization>
     
-    <licenses>
-        <license>
-            <name>The GNU Lesser General Public Licence, Version 3.0</name>
-            <url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
 
     <developers>
         <developer>
