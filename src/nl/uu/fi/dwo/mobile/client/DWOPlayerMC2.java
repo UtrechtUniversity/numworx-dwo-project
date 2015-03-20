@@ -13,7 +13,7 @@ public class DWOPlayerMC2 extends DWOplayerDefaults implements DWOplayerParamete
 		if(!GWT.isProdMode())
 			host = "mc2dme.appspot.com";
 
-		launchData = http +"://"
+		launchData = http +"//"
 				+ host
 				+ "/getJSONLaunchDataBytes?s=";
 	}

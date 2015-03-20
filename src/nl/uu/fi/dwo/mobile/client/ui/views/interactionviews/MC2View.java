@@ -36,6 +36,11 @@ public class MC2View extends Composite implements InteractionView {
 		return $wnd.createIframe(id, width, height, locale, relay)
 	}-*/;
 	
+	private static native void removeIframe(JavaScriptObject fr)
+	/*-{
+	 	$wnd.removeIframe(fr)
+	}-*/;
+	
 	private static native void setBootstrap(String id, MC2View diz) /*-{
 		$wnd.setBootstrap(id, function(xwid, data) {
 			diz.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.MC2View::doOpenAjaxEvent(Ljava/lang/String;Ljava/lang/Object;)
@@ -85,6 +90,7 @@ public class MC2View extends Composite implements InteractionView {
 	private IFrame frame;
 	private OpdrNavIF comRoot;
 	private JavaScriptObject innerView;
+	private JavaScriptObject container;
 	
 	
 	public MC2View(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
@@ -107,7 +113,7 @@ public class MC2View extends Composite implements InteractionView {
 	}
 	
 	private void initFrame() {
-		JavaScriptObject container = createIframe(id, width, height, locale, relay);
+		container = createIframe(id, width, height, locale, relay);
 		JavaScriptObject node = getIframe(container);
 		frame = new IFrame( node );
 
@@ -143,7 +149,13 @@ public class MC2View extends Composite implements InteractionView {
 			
 			@Override
 			public void onAttachOrDetach(AttachEvent event) {
-				initFrame();
+				if( event.isAttached())
+					initFrame();
+				else 
+				{
+					LOGGER.info("detach MC2view");
+					removeIframe(container);
+				}
 			}
 		});
 		return wrap;
@@ -171,8 +183,9 @@ public class MC2View extends Composite implements InteractionView {
 
 	@Override
 	public HashMap<String, Object> getState() {
-		// TODO Auto-generated method stub
-		return new HashMap<>();
+		HashMap<String, Object> result = new HashMap<String,Object>();
+		// TODO fill from state[xwid]?
+		return result;
 	}
 
 	@Override

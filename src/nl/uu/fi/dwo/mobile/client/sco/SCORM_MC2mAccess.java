@@ -31,7 +31,7 @@ public class SCORM_MC2mAccess extends SCORM_guest implements Scorm2004IF {
 		if(!GWT.isProdMode())
 			host = "9-dot-mc2dme.appspot.com";
 
-		client = new XmlRpcClient(http + "://" + host + "/dwoapp");
+		client = new XmlRpcClient(http + "//" + host + "/dwoapp");
 		
 		this.userID = userID;
 		pending = false;

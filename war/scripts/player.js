@@ -74,7 +74,11 @@
     	        }
     	      );
     }
- 
+    function removeIframe(fr)
+    {
+    	managedHub.removeContainer(fr);
+    }
+    
     // Handle security alerts:
     function client1SecurityAlertHandler(source, alertType) {
     }
