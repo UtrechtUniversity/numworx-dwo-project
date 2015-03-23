@@ -86,7 +86,7 @@ public class PersistenceFacade {
     public static final int PROFILEOFFSET = -1234;
 
     /**
-     * 
+     *
      */
     public PersistenceFacade() {
 
@@ -94,7 +94,7 @@ public class PersistenceFacade {
 
     /**
      * Returns an instance of PersistenceFacade.
-     * 
+     *
      * Thread-safe with double locking for performance.
      *
      * @return fi.dwo.client.persistence.PersistenceFacade
@@ -103,21 +103,18 @@ public class PersistenceFacade {
     public static PersistenceFacade instance() {
         if (_instance == null) {
             synchronized (PersistenceFacade.class) {
-                if(_instance == null){
-                _instance = new PersistenceFacade();
+                if (_instance == null) {
+                    _instance = new PersistenceFacade();
                 }
             }
-            
+
         }
         return _instance;
     }
 
 // Private support functions      
-    
 // Server-side state information, logging and cache manipulation
-    
 // CRUD operations on server-side.
-    
 //     
     /**
      * Returns a object of the specified class, with the specified objectID.<br>
@@ -324,7 +321,7 @@ public class PersistenceFacade {
     /**
      * Returns all the courses for the specified user. A teacher could select
      * some courses for a schoolclass. A student sees active selected courses
-     * from his schoolclass.
+     * from his schoolclass or a profile.
      *
      * @param user The user to select courses from.
      * @return The courses for the specified user.
@@ -334,7 +331,7 @@ public class PersistenceFacade {
      * int)
      */
     public Course[] getCourses(User user) throws PersistenceException {
-        throw new RuntimeException("This routine must be rewriten to use DbAccessCreator.instance().getCourses(SchoolID)");
+//        throw new RuntimeException("This routine must be rewriten to use DbAccessCreator.instance().getCourses(SchoolID)");
         try {
             MapperIF mapper = MapperCreator.instance(Course.class);
             Vector v;
@@ -801,66 +798,66 @@ public class PersistenceFacade {
             throw new RegisterException(RegisterException.EX_UNKNOWN_ERROR);
         }
     }
-
-    /**
-     * Changes the account of the user.
-     *
-     * @param user The user to change.
-     * @param password The new password.
-     * @param newPassword
-     * @param firstname The new firstname.
-     * @param middlename The new middlename. e.g: <code>Van</code>
-     * @param lastname The new lastname.
-     * @param email The new e-mail address of the user.
-     * @param c The new schoolclass of the user.
-     * @return boolean If the user was successfully changed it returns true,
-     * otherwise false is returned.
-     * @throws fi.dwo.commons.exceptions.RegisterException
-     *
-     */
-    public boolean changeAccount(User user, String password,
-            String newPassword, String firstname, String middlename,
-            String lastname, String email, SchoolClass c)
-            throws RegisterException {
-// bypass password check
-        if (password == null) {
-            password = "";
-        } else {
-            password = MD5.getHashString(password);
-        }
-        if (newPassword == null) {
-            newPassword = "";
-        } else {
-            newPassword = MD5.getHashString(newPassword);
-        }
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            try {
-                int classid = c == null ? 0 : c.getID();
-                return dbAccess.changeAccount(user.getUserID(), password,
-                        newPassword, firstname, middlename, lastname, email, classid);
-            } catch (IOException e) {
-                log.log(Level.SEVERE, null, e);
-                throw new RegisterException(RegisterException.EX_IO);
-            } catch (XmlRpcException e) {
-                log.log(Level.SEVERE, null, e);
-                if (e.code != 0) {
-                    throw (RegisterException) getException(e, e.code);
-                } else {
-                    throw new RegisterException(RegisterException.EX_XML_RPC);
-                }
-            } catch (SQLException e) {
-                log.log(Level.SEVERE, null, e);
-                throw new RegisterException(RegisterException.EX_DB);
-            } catch (DwoXmlRpcException e) {
-                log.log(Level.SEVERE, null, e);
-                throw (RegisterException) getException(e, e.code);
-            }
-        } catch (PersistenceException e) {
-            log.log(Level.SEVERE, null, e);
-            throw new RegisterException(RegisterException.EX_UNKNOWN_ERROR);
-        }
-    }
+//
+//    /**
+//     * Changes the account of the user.
+//     *
+//     * @param user The user to change.
+//     * @param password The new password.
+//     * @param newPassword
+//     * @param firstname The new firstname.
+//     * @param middlename The new middlename. e.g: <code>Van</code>
+//     * @param lastname The new lastname.
+//     * @param email The new e-mail address of the user.
+//     * @param c The new schoolclass of the user.
+//     * @return boolean If the user was successfully changed it returns true,
+//     * otherwise false is returned.
+//     * @throws fi.dwo.commons.exceptions.RegisterException
+//     *
+//     */
+//    public boolean changeAccount(User user, String password,
+//            String newPassword, String firstname, String middlename,
+//            String lastname, String email, SchoolClass c)
+//            throws RegisterException {
+//// bypass password check
+//        if (password == null) {
+//            password = "";
+//        } else {
+//            password = MD5.getHashString(password);
+//        }
+//        if (newPassword == null) {
+//            newPassword = "";
+//        } else {
+//            newPassword = MD5.getHashString(newPassword);
+//        }
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        try {
+//            try {
+//                int classid = c == null ? 0 : c.getID();
+//                return dbAccess.changeAccount(user.getUserID(), password,
+//                        newPassword, firstname, middlename, lastname, email, classid);
+//            } catch (IOException e) {
+//                log.log(Level.SEVERE, null, e);
+//                throw new RegisterException(RegisterException.EX_IO);
+//            } catch (XmlRpcException e) {
+//                log.log(Level.SEVERE, null, e);
+//                if (e.code != 0) {
+//                    throw (RegisterException) getException(e, e.code);
+//                } else {
+//                    throw new RegisterException(RegisterException.EX_XML_RPC);
+//                }
+//            } catch (SQLException e) {
+//                log.log(Level.SEVERE, null, e);
+//                throw new RegisterException(RegisterException.EX_DB);
+//            } catch (DwoXmlRpcException e) {
+//                log.log(Level.SEVERE, null, e);
+//                throw (RegisterException) getException(e, e.code);
+//            }
+//        } catch (PersistenceException e) {
+//            log.log(Level.SEVERE, null, e);
+//            throw new RegisterException(RegisterException.EX_UNKNOWN_ERROR);
+//        }
+//    }
 
     /**
      * Changes the account of the user.
@@ -1283,27 +1280,27 @@ public class PersistenceFacade {
             throw new PersistenceException(PersistenceException.EX_DB, e);
         }
     }
-
-    /**
-     * Disconnects a user from a class.
-     *
-     * @param user The user to disconnect.
-     * @throws fi.dwo.commons.exceptions.RegisterException
-     *
-     */
-    public void disconnectFromClass(User user) throws RegisterException {
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            dbAccess.disconnectFromClass(user.getUserID());
-        } catch (IOException e) {
-            throw new RegisterException(RegisterException.EX_IO);
-        } catch (XmlRpcException e) {
-            throw new RegisterException(RegisterException.EX_XML_RPC);
-        } catch (SQLException e) {
-            throw new RegisterException(RegisterException.EX_DB);
-        }
-
-    }
+//
+//    /**
+//     * Disconnects a user from a class.
+//     *
+//     * @param user The user to disconnect.
+//     * @throws fi.dwo.commons.exceptions.RegisterException
+//     *
+//     */
+//    public void disconnectFromClass(User user) throws RegisterException {
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        try {
+//            dbAccess.re(user.getUserID());
+//        } catch (IOException e) {
+//            throw new RegisterException(RegisterException.EX_IO);
+//        } catch (XmlRpcException e) {
+//            throw new RegisterException(RegisterException.EX_XML_RPC);
+//        } catch (SQLException e) {
+//            throw new RegisterException(RegisterException.EX_DB);
+//        }
+//
+//    }
 
     /**
      * Renames the name of the schoolclass in the database.
@@ -1337,40 +1334,42 @@ public class PersistenceFacade {
         }
     }
 
-    /**
-     * Reassigns a teacher to a new class
-     *
-     * @param schoolClass
-     * @param teacher
-     * @return
-     * @throws ClassException
-     */
-    public boolean reassignClass(SchoolClass schoolClass, Teacher teacher) throws ClassException {
-        DbAccessIF dbAccess = DbAccessCreator.instance();
-        try {
-            try {
-                boolean result = dbAccess.reassignClass(schoolClass.getID(), teacher.getID());
-                log.log(Level.FINE, "Reassigned SchoolClass with ID {0} to teacher with ID {1} with result {2}", new Object[]{schoolClass.getID(), teacher.getID(), result});
-                return result;
-            } catch (IOException e) {
-                throw new ClassException(ClassException.EX_IO);
-            } catch (XmlRpcException e) {
-                if (e.code != 0) {
-                    throw (ClassException) getException(e, e.code);
-                } else {
-                    throw new ClassException(ClassException.EX_XML_RPC);
-                }
-            } catch (SQLException e) {
-                throw new ClassException(ClassException.EX_DB);
-            } catch (DwoXmlRpcException e) {
-                throw (ClassException) getException(e, e.code);
-            }
-        } catch (PersistenceException e) {
-            throw new ClassException(ClassException.EX_UNKNOWN_ERROR);
-        }
-
-    }
-
+//    /**
+//     * Reassigns a teacher to a new class
+//     *
+//     * @param schoolClass
+//     * @param teacher
+//     * @return
+//     * @throws ClassException
+//     */
+//    public boolean reassignClass(SchoolClass schoolClass, Teacher teacher) throws ClassException {
+//        DbAccessIF dbAccess = DbAccessCreator.instance();
+//        try {
+//            try {
+//                boolean result = dbAccess.addTeacherToClass(schoolClass.getID(), teacher.getID());
+//                log.log(Level.FINER, "Added Teacher with ID {1} to SchoolClass with ID {0} to with result {2}", new Object[]{schoolClass.getID(), teacher.getID(), result});
+//                boolean result2 = dbAccess.removeTeacherFromClass(schoolClass.getID(), teacher.getID());
+//                log.log(Level.FINER, "Removed Teacher with ID {1} from SchoolClass with ID {0} to with result {2}.", new Object[]{schoolClass.getID(), teacher.getID(), result2});
+//                result = result && result2;
+//                log.log(Level.FINE, "Reassigned Teacher with ID {1} to SchoolClass with ID {0} to with result {2}", new Object[]{schoolClass.getID(), teacher.getID(), result});
+//                return result;
+//            } catch (IOException e) {
+//                throw new ClassException(ClassException.EX_IO);
+//            } catch (XmlRpcException e) {
+//                if (e.code != 0) {
+//                    throw (ClassException) getException(e, e.code);
+//                } else {
+//                    throw new ClassException(ClassException.EX_XML_RPC);
+//                }
+//            } catch (SQLException e) {
+//                throw new ClassException(ClassException.EX_DB);
+//            } catch (DwoXmlRpcException e) {
+//                throw (ClassException) getException(e, e.code);
+//            }
+//        } catch (PersistenceException e) {
+//            throw new ClassException(ClassException.EX_UNKNOWN_ERROR);
+//        }
+//    }
     /**
      * Returns all the courses which can be edited by the teacher.
      *
@@ -2374,7 +2373,7 @@ public class PersistenceFacade {
 
     }
 
-   public Vector getRecord(String tableName, Hashtable restriction, String seq)
+    public Vector getRecord(String tableName, Hashtable restriction, String seq)
             throws IOException, XmlRpcException, SQLException, PersistenceException {
         try {
             Vector h = DbAccessCreator.instance().getTable(tableName, restriction, seq);
@@ -2387,7 +2386,8 @@ public class PersistenceFacade {
             throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
         }
 
-    }    
+    }
+
     public int addCourse(int schoolID, String notnull, String notnull0, int dwoProfile, int parent, boolean b) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -2396,8 +2396,8 @@ public class PersistenceFacade {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public Vector getScos(Hashtable restriction, String SEQUENCE_NR) 
-     throws IOException, XmlRpcException, SQLException, PersistenceException {
+    public Vector getScos(Hashtable restriction, String SEQUENCE_NR)
+            throws IOException, XmlRpcException, SQLException, PersistenceException {
         try {
             Vector v = DbAccessCreator.instance().getTable("tblScoView", restriction, SEQUENCE_NR);
             return v;
@@ -2412,33 +2412,89 @@ public class PersistenceFacade {
 
     /**
      * Clears user data from mapper cache
-     * 
+     *
      * @param id userID whose data needs to be cleared.
      */
-    public void clearCurrentUserDataCache(int id){
-         MapperCreator.instance(User.class).removeObject(id);
+    public void clearCurrentUserDataCache(int id) {
+        MapperCreator.instance(User.class).removeObject(id);
     }
 
     /**
      * Clears data from mapper cache for a certain class
-     * 
+     *
      * @param c Class
      */
-    public void clearCurrentMapperDataCache(Class c){
-         MapperCreator.instance(c).removeAllObjects();
+    public void clearCurrentMapperDataCache(Class c) {
+        MapperCreator.instance(c).removeAllObjects();
     }
 
     /**
      * Clears data from mapper cache for a certain class
-     * 
+     *
      * @param c Class
      */
-    public void clearObjectInMapperCache(Class c, int id){
-         MapperCreator.instance(c).removeObject(id);
+    public void clearObjectInMapperCache(Class c, int id) {
+        MapperCreator.instance(c).removeObject(id);
     }
-    
+
     public Course[] getCourseFromMapper(Object o) throws IOException, SQLException, XmlRpcException {
-        return (Course []) MapperCreator.instance(Course.class).get(o);        
+        return (Course[]) MapperCreator.instance(Course.class).get(o);
+    }
+
+    public void addTeacherToClass(SchoolClass c, int id) throws PersistenceException {
+        try {
+            DbAccessCreator.instance().addTeacherToClass(c.getID(), id);
+        } catch (IOException e) {
+            throw new PersistenceException(PersistenceException.EX_IO, e);
+        } catch (SQLException e) {
+            throw new PersistenceException(PersistenceException.EX_DB, e);
+        } catch (XmlRpcException e) {
+            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+        } catch (DwoXmlRpcException e) {
+            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+        }
+    }
+
+    public boolean removeTeacherFromClass(int classId, int userId) throws PersistenceException  {
+        try {
+            return DbAccessCreator.instance().removeTeacherFromClass(classId, userId);
+        } catch (IOException e) {
+            throw new PersistenceException(PersistenceException.EX_IO, e);
+        } catch (SQLException e) {
+            throw new PersistenceException(PersistenceException.EX_DB, e);
+        } catch (XmlRpcException e) {
+            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+        } catch (DwoXmlRpcException e) {
+            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+        }
+    }
+
+    public void addStudentToClass(SchoolClass c, int id) throws PersistenceException {
+        try {
+            DbAccessCreator.instance().addStudentToClass(c.getID(), id);
+        } catch (IOException e) {
+            throw new PersistenceException(PersistenceException.EX_IO, e);
+        } catch (SQLException e) {
+            throw new PersistenceException(PersistenceException.EX_DB, e);
+        } catch (XmlRpcException e) {
+            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+        } catch (DwoXmlRpcException e) {
+            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+        }
+    }
+
+    public boolean removeStudentFromClass(int classId, int userId) throws PersistenceException  {
+        try {
+            return DbAccessCreator.instance().removeStudentFromClass(classId, userId);
+        } catch (IOException e) {
+            throw new PersistenceException(PersistenceException.EX_IO, e);
+        } catch (SQLException e) {
+            throw new PersistenceException(PersistenceException.EX_DB, e);
+        } catch (XmlRpcException e) {
+            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+        } catch (DwoXmlRpcException e) {
+            throw new PersistenceException(PersistenceException.EX_XML_RPC, e);
+        }
     }
 
 }

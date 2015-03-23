@@ -424,26 +424,26 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
             l.setLocation(10, 55);
             l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
             p.add(l);
-
-            /* Class field */
-            groupChoice = new JComboBox();
-            groupChoice.setBackground(p.getBackground());
-            groupChoice.setFont(GuiConstants.NORMAL_TEXT);
-            if (user.getInClass() == null) {
-                groupChoice.addItem(TextMapper.getText(TextMapper.GUIP_OPT_SELECT_GROUP));
-            }
-
-            classList = user.getSchool().getClassList();
-
-            for (int i = 0; i < classList.length; i++) {
-                groupChoice.addItem(classList[i].getName());
-            }
-            if (user.getInClass() != null) {
-                groupChoice.setSelectedItem(user.getInClass().getName());
-            }
-            groupChoice.setBounds(160, 53, 120, 20);
-            groupChoice.setEnabled(!user.isReadonly() && user.hasRight(User.CHANGE_CLASS_RIGHT));
-            p.add(groupChoice);
+//TODO MANY TO MANY: Add multi-select class list.
+//            /* Class field */
+//            groupChoice = new JComboBox();
+//            groupChoice.setBackground(p.getBackground());
+//            groupChoice.setFont(GuiConstants.NORMAL_TEXT);
+//            if (user.getInClass() == null) {
+//                groupChoice.addItem(TextMapper.getText(TextMapper.GUIP_OPT_SELECT_GROUP));
+//            }
+//
+//            classList = user.getSchool().getClassList();
+//
+//            for (int i = 0; i < classList.length; i++) {
+//                groupChoice.addItem(classList[i].getName());
+//            }
+//            if (user.getInClass() != null) {
+//                groupChoice.setSelectedItem(user.getInClass().getName());
+//            }
+//            groupChoice.setBounds(160, 53, 120, 20);
+//            groupChoice.setEnabled(!user.isReadonly() && user.hasRight(User.CHANGE_CLASS_RIGHT));
+//            p.add(groupChoice);
         }
 
         return p;
@@ -608,33 +608,35 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
                     }
 
                 }
-            } else {
-                /* User was already linked to a school */
-                SchoolClass sc = null;
-                if ((user.getInClass() == null)
-                        && (groupChoice.getSelectedIndex() != 0)) {
-                    /* User not linked to a class and a class is chosen */
-                    sc = classList[groupChoice.getSelectedIndex() - 1];
-                } else {
-                    /*
-                     * User was already linked to a class, but maybe he is in an
-                     * other class?
-                     */
-                    sc = classList[groupChoice.getSelectedIndex()];
-                }
-                try {
-                    if (sc != null) {
-                        /* Add user to a class */
-                        GuiCreator.instance().changeAccount(oldpassword.getText(), pwd, repwd, firstname.getText(), middlename.getText(), lastname.getText(), email.getText(), sc);
-                    } else {
-                        GuiCreator.instance().changeAccount(oldpassword.getText(), pwd, repwd, firstname.getText(), middlename.getText(), lastname.getText(), email.getText());
-                    }
-                } catch (RegisterException exc) {
-                    JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
-                    correct = false;
-                }
-
-            }
+            } 
+            //TODO MANY TO MANY: parse class management panel.
+//            else {
+//                /* User was already linked to a school */
+//                SchoolClass sc = null;
+//                if ((user.getInClass() == null)
+//                        && (groupChoice.getSelectedIndex() != 0)) {
+//                    /* User not linked to a class and a class is chosen */
+//                    sc = classList[groupChoice.getSelectedIndex() - 1];
+//                } else {
+//                    /*
+//                     * User was already linked to a class, but maybe he is in an
+//                     * other class?
+//                     */
+//                    sc = classList[groupChoice.getSelectedIndex()];
+//                }
+//                try {
+//                    if (sc != null) {
+//                        /* Add user to a class */
+//                        GuiCreator.instance().changeAccount(oldpassword.getText(), pwd, repwd, firstname.getText(), middlename.getText(), lastname.getText(), email.getText(), sc);
+//                    } else {
+//                        GuiCreator.instance().changeAccount(oldpassword.getText(), pwd, repwd, firstname.getText(), middlename.getText(), lastname.getText(), email.getText());
+//                    }
+//                } catch (RegisterException exc) {
+//                    JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+//                    correct = false;
+//                }
+//
+//            }
 
             if (correct) {
                 /*

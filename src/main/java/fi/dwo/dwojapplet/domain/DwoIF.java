@@ -162,27 +162,28 @@ public interface DwoIF {
      */
     public CenterSubPanel loadSco(Sco sco);
 
-    /**
-     * Change the current user his account.
-     *
-     * @param password The current password of the user. It will be used to
-     * validate the current user.
-     * @param newPassword The new password of the user.
-     * @param reNewPassword The re-password for the user. It is used to check
-     * for a typing error.
-     * @param firstName The firstname of the user.
-     * @param middleName The middlename of the user. <br>
-     * e.g: <code>Van</code>
-     * @param lastName The lastname (familyname) of the user.
-     * @param email The e-mail address of the user.
-     * @param c The new SchoolClass of the user.
-     * @throws fi.dwo.commons.exceptions.RegisterException
-     *
-     */
-    public void changeAccount(String password, String newPassword,
-            String reNewPassword, String firstName, String middleName,
-            String lastName, String email, SchoolClass c)
-            throws RegisterException;
+//TODO MANY TO MANY DONE: obsolete
+//    /**
+//     * Change the current user his account.
+//     *
+//     * @param password The current password of the user. It will be used to
+//     * validate the current user.
+//     * @param newPassword The new password of the user.
+//     * @param reNewPassword The re-password for the user. It is used to check
+//     * for a typing error.
+//     * @param firstName The firstname of the user.
+//     * @param middleName The middlename of the user. <br>
+//     * e.g: <code>Van</code>
+//     * @param lastName The lastname (familyname) of the user.
+//     * @param email The e-mail address of the user.
+//     * @param c The new SchoolClass of the user.
+//     * @throws fi.dwo.commons.exceptions.RegisterException
+//     *
+//     */
+//    public void changeAccount(String password, String newPassword,
+//            String reNewPassword, String firstName, String middleName,
+//            String lastName, String email, SchoolClass c)
+//            throws RegisterException;
 
     /**
      * Change the current user his account who not is linked to a school.

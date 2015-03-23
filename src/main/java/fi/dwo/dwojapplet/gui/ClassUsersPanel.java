@@ -159,8 +159,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
 
     void removeUserFromClass(User u, int row) {
         String[] arguments;
-        u.setInClass(null);
-        schoolClass.disconnect(u);
+        schoolClass.disconnectStudent(DwoHelper.getSchoolClass().getID(),u);
         model.deleteRow(row);
         if (model.getRowCount() == 0) {
             // TODO dit is niet goed. createLabel(vbox) o.i.d.
@@ -168,7 +167,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
             arguments = new String[1];
             arguments[0] = schoolClass.getName();
             String s = TextMapper.getText(TextMapper.GUIC_NO_STUDENTS);
-            JLabel label = new JLabel(MessageFormat.format(s, arguments));
+            JLabel label = new JLabel(MessageFormat.format(s, (Object[]) arguments));
             label.setFont(GuiConstants.SCO_TEXT);
             label.setAlignmentY(0.24f);
             ClassUsersPanel.this.removeAll();

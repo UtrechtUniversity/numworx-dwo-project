@@ -112,7 +112,8 @@ class UserModel extends AbstractTableModel {
             SchoolClass c = (SchoolClass) aValue;
             // TODO persist....
             try {
-                PersistenceFacade.instance().changeAccount(user, null, null, user.getFirstname(), user.getMiddleName(), user.getLastName(), user.getEmail(), c);
+//TODO MANY TO MANY: Fix GUI so that SchoolClass list of student can be updated.                
+                PersistenceFacade.instance().changeAccount(user, null, null, user.getFirstname(), user.getMiddleName(), user.getLastName(), user.getEmail());
                 user.setInClass(c);
                 fireTableCellUpdated(row, col);
             } catch (RegisterException e) {

@@ -48,6 +48,8 @@ public final class DwoHelper {
     private static String resourceURLPathString; // required null if to use the default
     private static String servletConnectString=null; // required null, filled in main or init
                                                      //depending on application or applet start.
+    private static SchoolClass schoolClass;
+    private static School school;
 
     /**
      * Returns the current AppletUtil.
@@ -343,5 +345,33 @@ public final class DwoHelper {
 
     public static String getServletConnectString() {
         return servletConnectString;
+    }
+
+    /**
+     * @return the schoolClass
+     */
+    public static SchoolClass getSchoolClass() {
+        return schoolClass;
+    }
+
+    /**
+     * @param aSchoolClass the schoolClass to set
+     */
+    public static void setSchoolClass(SchoolClass aSchoolClass) {
+        schoolClass = aSchoolClass;
+    }
+
+    /**
+     * @return the school
+     */
+    public static School getSchool() {
+        return school;
+    }
+
+    /**
+     * @param aSchool the school to set
+     */
+    public static void setSchool(School aSchool) {
+        school = aSchool;
     }
 }

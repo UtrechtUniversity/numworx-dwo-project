@@ -799,27 +799,46 @@ class DbAccessClient extends Client implements DbAccessIF {
 //TODO V1_3
     @Override
     public Vector<Object> getStudentsOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Vector vv = new Vector(1);
+        vv.addElement(new Integer(schoolClassID));
+        Object object = invoke("getStudentsOfClass", vv);
+        return (java.util.Vector) object;
     }
 
     @Override
     public Vector<Object> getTeachersOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Vector vv = new Vector(1);
+        vv.addElement(new Integer(schoolClassID));
+        Object object = invoke("getTeachersOfClass", vv);
+        return (java.util.Vector) object;
     }
 
     @Override
     public boolean renameClass(int classID, String newName, String newRegistrationKey, boolean iconizer) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Vector vv = new Vector(4);
+        vv.addElement(new Integer(classID));
+        vv.addElement(new String(newName));
+        vv.addElement(new String(newRegistrationKey));
+        vv.addElement(new Boolean(iconizer));
+        Object object = invoke("renameClass", vv);
+        return ((Boolean) object);
     }
 
     @Override
     public boolean disconnectFromClass(int userID, int classID) throws IOException, XmlRpcException, SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Vector vv = new Vector(2);
+        vv.addElement(new Integer(userID));
+        vv.addElement(new Integer(classID));
+        Object object = invoke("disconnectFromClass", vv);
+        return ((Boolean) object);
     }
 
     @Override
     public Vector getToSchoolsFrom(int schoolID) throws IOException, XmlRpcException, SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Vector vv = new Vector(1);
+        vv.addElement(new Integer(schoolID));
+        Object object = invoke("getToSchoolsFrom", vv);
+        return (java.util.Vector) object;
     }
 
 }

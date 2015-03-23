@@ -846,39 +846,39 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
         }
         return sco.getScoPanel(this, User.getCurrentUser());
     }
-
-    /**
-     * Change the current user his account.
-     *
-     * @param password The current password of the user. It will be used to
-     * validate the current user.
-     * @param newPassword The new password of the user.
-     * @param reNewPassword The re-password for the user. It is used to check
-     * for a typing error.
-     * @param firstName The firstname of the user.
-     * @param middleName The middlename of the user. <br>
-     * e.g: <code>Van</code>
-     * @param lastName The lastname (familyname) of the user.
-     * @param email The e-mail address of the user.
-     * @param c The new SchoolClass of the user.
-     * @throws fi.dwo.commons.exceptions.RegisterException
-     *
-     */
-    @Override
-    public void changeAccount(String password, String newPassword,
-            String reNewPassword, String firstName, String middleName,
-            String lastName, String email, SchoolClass c)
-            throws RegisterException {
-
-        validateAccount(password, firstName, lastName, email);
-
-        if (!newPassword.equals(reNewPassword)) {
-            throw new RegisterException(RegisterException.RE_WRONG_SECOND_PASSWORD);
-        } else {
-            PersistenceFacade.instance().changeAccount(User.getCurrentUser(), password, newPassword, firstName, middleName, lastName, email, c);
-        }
-
-    }
+//TODO MANY TO MANY DONE: obsolete
+//    /**
+//     * Change the current user his account.
+//     *
+//     * @param password The current password of the user. It will be used to
+//     * validate the current user.
+//     * @param newPassword The new password of the user.
+//     * @param reNewPassword The re-password for the user. It is used to check
+//     * for a typing error.
+//     * @param firstName The firstname of the user.
+//     * @param middleName The middlename of the user. <br>
+//     * e.g: <code>Van</code>
+//     * @param lastName The lastname (familyname) of the user.
+//     * @param email The e-mail address of the user.
+//     * @param c The new SchoolClass of the user.
+//     * @throws fi.dwo.commons.exceptions.RegisterException
+//     *
+//     */
+//    @Override
+//    public void changeAccount(String password, String newPassword,
+//            String reNewPassword, String firstName, String middleName,
+//            String lastName, String email)
+//            throws RegisterException {
+//
+//        validateAccount(password, firstName, lastName, email);
+//
+//        if (!newPassword.equals(reNewPassword)) {
+//            throw new RegisterException(RegisterException.RE_WRONG_SECOND_PASSWORD);
+//        } else {
+//            PersistenceFacade.instance().changeAccount(User.getCurrentUser(), password, newPassword, firstName, middleName, lastName, email);
+//        }
+//
+//    }
 
     /**
      * Change the current user his account.
@@ -2139,9 +2139,12 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
                 if (className.equals(classe.getName())) {
                     u.setInClass(classe);
                     try {
-                        PersistenceFacade.instance().changeAccount(u, null, null, u.getFirstname(), u.getMiddleName(), u.getLastName(), u.getEmail(), u.getInClass());
-                    } catch (RegisterException e) {
+                        PersistenceFacade.instance().changeAccount(u, null, null, u.getFirstname(), u.getMiddleName(), u.getLastName(), u.getEmail());
+                        PersistenceFacade.instance().addStudentToClass(u.getInClass(), u.getID());
+                    } catch (PersistenceException e) {
                         log.log(Level.SEVERE, null, e);
+                    } catch (RegisterException ex) {
+                        log.log(Level.SEVERE, null, ex);
                     }
                 }
             }

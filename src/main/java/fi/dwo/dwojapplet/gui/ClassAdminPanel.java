@@ -72,15 +72,16 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
                 Teacher t = (Teacher) nameMap.get(value);
                 Teacher o = (Teacher) oldTeacher.get(c);
                 try {
-                    
-                    if (PersistenceFacade.instance().reassignClass(c, t)) {
-                        teacherMap.put(classes[rowIndex], value);
-                        o.deleteClass(c);
-                        t.addClass(c);
-                        oldTeacher.put(c, t);
-                        center.loadMenu();
-                        fireTableCellUpdated(rowIndex, columnIndex);
-                    }
+
+                    //TODO MANY TO MANY: fix reassignment with many to many panel
+//                    if (PersistenceFacade.instance().reassignClass(c, t)) {
+//                        teacherMap.put(classes[rowIndex], value);
+//                        o.deleteClass(c);
+//                        t.addClass(c);
+//                        oldTeacher.put(c, t);
+//                        center.loadMenu();
+//                        fireTableCellUpdated(rowIndex, columnIndex);
+//                    }
                 } catch (Exception e) {
     
                     log.log(Level.SEVERE, null, e);

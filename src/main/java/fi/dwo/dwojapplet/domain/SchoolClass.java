@@ -125,6 +125,19 @@ public class SchoolClass implements UserGroup, Comparable {
         }
         return users;
     }
+    /**
+     * Disconnect an user from the class.
+     *
+     * @param user The user to disconnect.
+     *
+     */
+    public void disconnectStudent(int classID, User user) {
+        try {
+            PersistenceFacade.instance().removeStudentFromClass(classID, user.getID());
+        } catch (PersistenceException e) {
+        }
+    }
+
 
     /**
      * Disconnect an user from the class.
@@ -132,13 +145,13 @@ public class SchoolClass implements UserGroup, Comparable {
      * @param user The user to disconnect.
      *
      */
-    public void disconnect(User user) {
+    public void disconnectTeacher(SchoolClass sc, User user) {
         try {
-            PersistenceFacade.instance().disconnectFromClass(user);
-        } catch (RegisterException e) {
+            PersistenceFacade.instance().removeTeacherFromClass(classID, user.getID());
+        } catch (PersistenceException e) {
         }
     }
-
+    
     /**
      * Returns the name of the class.
      *

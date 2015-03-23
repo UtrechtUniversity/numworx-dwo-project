@@ -236,7 +236,7 @@ public class RegisterClassListButton extends JButton implements ActionListener {
                 if (gemaakt && schoolClass != null) {
                     try {
                         User newUser = PersistenceFacade.instance().login(username, password);
-                        PersistenceFacade.instance().changeAccount(newUser, password, password, firstname, middlename, lastname, email, schoolClass);
+                        PersistenceFacade.instance().addStudentToClass(schoolClass, newUser.getID());
                         i = reduceTable(i);
 
                     } catch (Exception exc) {
