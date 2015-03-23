@@ -82,16 +82,15 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     private final static String QRY_DEFAULT_SELECT_TABLE_WHERE = "SELECT * "
             + "FROM {0} " + "WHERE (1=1) ";
 
-
-    private final static String QRY_DEFAULT_SELECT_CLASS_STUDENT = "SELECT userID "
-            + "FROM tblTeacherOf " + "WHERE (classID={0} and userID={1}) ";
+//    private final static String QRY_DEFAULT_SELECT_CLASS_STUDENT = "SELECT userID "
+//            + "FROM tblTeacherOf " + "WHERE (classID={0} and userID={1}) ";
 
     private final static String QRY_SELECT_CLASS_TEACHER = "SELECT userID "
             + "FROM tblTeacherOf " + "WHERE (classID={0} and userID={1}) ";
-    
+
     private final static String QRY_SELECT_CLASS_STUDENT = "SELECT userID "
             + "FROM tblStudentOf " + "WHERE (classID={0} and userID={1}) ";
-    
+
     private final static String QRY_SELECT_TEACHERS_OF_CLASS = "SELECT u.userID, "
             + "u.schoolGroupID, u.firstname, u.middlename, u.lastname, u.username, "
             + "u.email, u.registerDate, u.rights, u.lastLogin " // skipping u.password
@@ -105,30 +104,27 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             + "FROM tblStudentOf t "
             + "join tblUser u using (userID) "
             + "WHERE t.classID = {0}";
-    
-    
+
     private final static String QRY_SELECT_CLASSES_OF_STUDENT = "SELECT c.classID, "
             + "s.userID, c.schoolID, c.class, c.registrationKey, c.iconizer "
             + "FROM tblStudentOf s join tblClass c using (classID) "
             + "WHERE s.userID={0}";
-    
+
     private final static String QRY_IS_STUDENT_ROLE = "SELECT count(userID) = 1 "
             + "FROM tblGroup g join tblSchoolGroup sg using (groupID) "
             + "join tblUser u using (schoolGroupID) "
             + "WHERE u.userID = {0} and g.groupname = \"STUDENT\"";
 
-        private final static String QRY_IS_TEACHER_ROLE = "SELECT count(userID) = 1 "
+    private final static String QRY_IS_TEACHER_ROLE = "SELECT count(userID) = 1 "
             + "FROM tblGroup g join tblSchoolGroup sg using (groupID) "
             + "join tblUser u using (schoolGroupID) "
             + "WHERE u.userID = {0} and g.groupname = \"TEACHER\"";
 
-    
     private final static String QRY_SELECT_CLASSES_OF_TEACHER = "SELECT c.classID, "
             + "s.userID, c.schoolID, c.class, c.registrationKey, c.iconizer "
             + "FROM tblTeacherOf s join tblClass c using (classID) "
             + "WHERE s.userID={0}";
-    
-    
+
 //    /**
 //     * Select all top level course entities a given user may access. Either
 //     * because they are freely accessible or because he is a member of a
@@ -215,7 +211,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             + "FROM tblCourse "
             + "WHERE (tblCourse.schoolID = ?) and (parentID = 0)"
             + "ORDER BY name ";
-        
+
     private final static String QRY_GET_STUDENT_SCO = "SELECT `{0}` "
             + "FROM tblStudentScoContext join tblStudentScoData using (studentSco) "
             + "WHERE (scoID = ?) "
@@ -293,7 +289,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 //            + "AND   (tblSchoolGroup.groupID = tblGroup.groupID) "
 //            + "AND   (tblSchoolGroup.schoolID = tblSchool.schoolID) "
 //            + "AND   (userID = ?) ";
-    /** 
+    /**
      * Gets the user entity for a given user id.
      */
     // TODO DONE V1_3
@@ -301,7 +297,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             + "FROM tblUser WHERE (userID = ?)";
 
     /**
-     * Gets the user entity and school entity for a given user id and school id. 
+     * Gets the user entity and school entity for a given user id and school id.
      */
     // TODO DONE V1_3
     private final static String QRY_GET_SCHOOL_USER_DATA = "SELECT tblUser.*, tblGroup.*, tblSchool.schoolID, tblSchool.schoolName, tblSchool.schoollogin, tblSchool.image, tblSchool.export, tblSchool.schoolRights, tblSchool.expire "
@@ -312,9 +308,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     // TODO V1_2 obsolete using QRY_ADD_USER_TO_SCHOOL now.
 //    protected final static String QRY_ADD_TO_SCHOOL = "UPDATE tblUser "
 //            + "SET schoolGroupID = ? " + "WHERE (userID = ?) ";
-
     /**
-     *
+     * retrieves the default School user data.
      */
     // TODO V1_3
     protected final static String QRY_SELECT_SCHOOL_USER = "SELECT tblSchool.* "
@@ -331,22 +326,21 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 // TODO V1_2 replaced by add to class and remove from class.
 //    private final static String QRY_UPDATE_USER_CLASS = "UPDATE tblUser "
 //            + "SET classID = ? " + "WHERE (userID = ?) ";
-
     /**
      * Adds a teacher to a class.
      */
-    // TODO V1_3
+    // TODO DONE V1_3
     private final static String QRY_ADD_TEACHER = "INSERT INTO tblTeacherOf(classID, userID) "
             + "VALUES(?, ?) ";
 
     /**
      * Adds a student to a class.
      */
-    // TODO V1_3
+    // TODO DONE V1_3
     private final static String QRY_ADD_STUDENT = "INSERT INTO tblStudentOf(classID, userID) "
             + "VALUES(?, ?) ";
 
-/**
+    /**
      * Removes a teacher from a class.
      */
     // TODO V1_3 DONE
@@ -358,8 +352,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      */
     // TODO V1_3 DONE
     private final static String QRY_DELETE_STUDENT = "DELETE FROM tblStudentOf "
-            + "WHERE classID = ? AND userID=? ";   
-    
+            + "WHERE classID = ? AND userID=? ";
+
     private final static String QRY_UPDATE_USER = "UPDATE tblUser "
             + "SET firstname = ?, " + "middlename = ?, " + "lastname = ?, "
             + "passwd = ?, " + "email = ? " + "WHERE (userID = ?)";
@@ -387,7 +381,6 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     private final static String QRY_DELETE_STUDENT_FROM_CLASS_IN_SCHOOL
             = "delete from tblStudentOf join tblClass using (classID) where schoolID = ?";
 
-
     private final static String QRY_DELETE_TEACHER_FROM_CLASS_IN_SCHOOL
             = "delete from tblTeacherOf join tblClass using (classID) where schoolID = ?";
 
@@ -395,10 +388,10 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     private final static String QRY_DELETE_STUDENTSCO_FROM_SCHOOL
             = "Select * FROM tblStudentSco where scoID in "
             + "(select scoID from tblSco join tblCourse using (CourseID)  where schoolID = ? )";
-    
-//TODO V1_3
+
+//TODO DONE V1_3
     private final static String QRY_DELETE_USERS_FROM_SCHOOL
-            = "UPDATE tblUser SET schoolGroupID = NULL WHERE "
+            = "UPDATE tblUser SET schoolGroupID = NULL, classID = NULL WHERE "
             + "SchoolGroupID in (SELECT schoolGroupID FROM tblSchoolGroup where schoolID = ?)";
 
     private final static String QRY_DELETE_STUDENTSCO_BY_STUDENT = "DELETE tblStudentScoContext, tblStudentScoData "
@@ -408,21 +401,21 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             + "FROM tblStudentScoContext join tblStudentScoData using (studentSco) WHERE (scoID = ?) ";
 
     private final static String QRY_DELETE_CLASS_TEACHER = "DELETE FROM tblTeacherOf WHERE userID = ? AND classID=?";
-    
+
     private final static String QRY_DELETE_CLASS_STUDENT = "DELETE FROM tblStudentOf WHERE userID = ? AND classID=?";
 
     private final static String QRY_DELETE_STUDENTS_AND_TEACHERS_FROM_CLASS
             = "DELETE c,s,t FROM tblClass c JOIN tblStudentOf  s using (classID) JOIN tblTeacherOf t using (classID) where classID = ?";
 
-//TODO V1_3
+//TODO DONE V1_3: Fetches default...
     private final static String QRY_SELECT_SCHOOL_FROM_USER = "SELECT schoolID "
             + "FROM tblUser, tblSchoolGroup "
             + "WHERE (tblUser.schoolGroupID = tblSchoolGroup.schoolGroupID) "
             + "AND   (tblUser.userID = ?) ";
 
-    // TODO V1_3
-    private final static String QRY_SELECT_SCHOOL_CLASS = "SELECT classID "
-            + "FROM tblClass " + "WHERE (schoolID = ?) " + "AND   (class = ?) ";
+//// TODO DONE V1_3
+//    private final static String QRY_SELECT_SCHOOL_CLASS = "SELECT classID "
+//            + "FROM tblClass " + "WHERE (schoolID = ?) " + "AND   (class = ?) ";
 
     /**
      * disconnects a user from a class
@@ -430,7 +423,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     private final static String QRY_DISCONNECT_USER_CLASS = "DELETE FROM tblStudentOf,tblTeacherOf "
             + "WHERE classID = ? " + "AND userID = ? ";
 
-    // TODO V1_3 merge with
+    // TODO V1_3 DONE merge with
 //     private final static String QRY_RESULTS_ALL
 //            = "SELECT tblTeacherOf.classID, tblCourse.courseID, avg(score) as score, count(score) as totaal"
 //            + "FROM (tblTeacherOf, tblCourse) join  tblStudentOf on tblStudentOf.classId =  tblTeacherOf.classId "
@@ -441,15 +434,26 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 //            + "group by tblTeacherOf.classID, tblCourse.courseID"
 //            + "having tblTeacherOf.classID is not null"
 //            + "ORDER BY tblTeacherOf.classID";
-    private final static String QRY_RESULTS_ALL = "SELECT tblClass.classID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
-            + "FROM (tblClass, tblCourse) join  tblUser on tblUser.classId =  tblClass.classId "
+//    private final static String QRY_RESULTS_ALL = "SELECT tblClass.classID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
+//            + "FROM (tblClass, tblCourse) join  tblUser on tblUser.classId =  tblClass.classId "
+//            + "left join tblScoContext  on tblScoContext.courseId =  tblCourse.courseId "
+//            + "left join  tblStudentScoContext on tblStudentScoContext.userid =   tblUser.userId and tblStudentScoContext.scoId =   tblScoContext.scoId "
+//            + "where (tblCourse.courseID in ({0})) "
+//            + "and   (tblClass.userID = ?) "
+//            + "group by tblClass.classID, tblCourse.courseID "
+//            + "having tblClass.classID is not null "
+//            + "ORDER BY tblClass.classID";
+
+     private final static String QRY_RESULTS_ALL
+            = "SELECT tblTeacherOf.classID, tblCourse.courseID, avg(score) as score, count(score) as totaal"
+            + "FROM (tblTeacherOf, tblCourse) join  tblStudentOf on tblStudentOf.classId =  tblTeacherOf.classId "
             + "left join tblScoContext  on tblScoContext.courseId =  tblCourse.courseId "
-            + "left join  tblStudentScoContext on tblStudentScoContext.userid =   tblUser.userId and tblStudentScoContext.scoId =   tblScoContext.scoId "
-            + "where (tblCourse.courseID in ({0})) "
-            + "and   (tblClass.userID = ?) "
-            + "group by tblClass.classID, tblCourse.courseID "
-            + "having tblClass.classID is not null "
-            + "ORDER BY tblClass.classID";
+            + "left join  tblStudentScoContext on tblStudentScoContext.userid =   tblStudentOf.userId and tblStudentScoContext.scoId =   tblScoContext.scoId"
+            + "where (tblCourse.courseID in ({0} )"
+            + "and   (tblTeacherOf.userID = ?)"
+            + "group by tblTeacherOf.classID, tblCourse.courseID"
+            + "having tblTeacherOf.classID is not null"
+            + "ORDER BY tblTeacherOf.classID";
 
     /**
      * results of selected courses from a single user.
@@ -462,11 +466,11 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             + "where (tblCourse.courseID in ({0})) "
             + "and   (tblUser.userID = ?) "
             + "group by tblCourse.courseID ";
-   /**
+    /**
      * Returns the results for a <course[], class, teacher> combination.
      */
 
-    // TODO V1_3 merge with:
+    // TODO V1_3 DONE merge with new Context/Data StudentSco/Sco.
 //    private final static String QRY_RESULTS_CLASS_COURSE = "SELECT tblStudentOf.userID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
 //            + "FROM (tblStudentOf, tblCourse) "
 //            + "join tblTeacherOf on tblTeacherOf.classID = tblStudentOf.classID "
@@ -474,44 +478,51 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 //            + "left join tblStudentSco on tblStudentSco.userID = tblStudentOf.userID and tblStudentSco.scoId = tblSco.scoId "
 //            + "where (tblTeacherOf.classID = ? and tblTeacherOf.userID = ?) and (tblCourse.courseID = ?) "
 //            + "group by tblStudentOf.userID, tblCourse.courseID ORDER BY tblStudentOf.userID";
-    private final static String QRY_RESULTS_CLASS = "SELECT tblUser.userID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
-            + "FROM (tblUser, tblCourse) "
-            + "join tblClass on tblClass.classID = tblUser.classID "
+    private final static String QRY_RESULTS_CLASS_COURSE = "SELECT tblStudentOf.userID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
+            + "FROM (tblStudentOf, tblCourse) "
+            + "join tblTeacherOf on tblTeacherOf.classID = tblStudentOf.classID "
             + "join tblScoContext on tblScoContext.courseID = tblCourse.courseID "
-            + "left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID and tblStudentScoContext.scoId = tblScoContext.scoId "
-            + "where (tblUser.classID = ?) "
-            + "and (tblCourse.courseID in ({0})) "
-            + "and   (tblClass.userID = ?) "
-            + "group by tblUser.userID, tblCourse.courseID "
-            + "ORDER BY tblUser.userID";
+            + "left join tblStudentScoContext on tblStudentScoContext.userID = tblStudentOf.userID and tblStudentScoContext.scoId = tblScoContext.scoId "
+            + "where (tblTeacherOf.classID = ? and tblTeacherOf.userID = ?) and (tblCourse.courseID = ?) "
+            + "group by tblStudentOf.userID, tblCourse.courseID ORDER BY tblStudentOf.userID";
 
-    //TODO V1_3 fix sco table
-        private final static String QRY_RESULTS_COURSE_PROFILE = "SELECT c.courseID, count(sco.scoid) FROM tblStudentSco sco "
+//    private final static String QRY_RESULTS_CLASS_COURSE = "SELECT tblUser.userID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
+//            + "FROM (tblUser, tblCourse) "
+//            + "join tblClass on tblClass.classID = tblUser.classID "
+//            + "join tblScoContext on tblScoContext.courseID = tblCourse.courseID "
+//            + "left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID and tblStudentScoContext.scoId = tblScoContext.scoId "
+//            + "where (tblUser.classID = ?) "
+//            + "and (tblCourse.courseID = ?) "
+//            + "group by tblUser.userID, tblCourse.courseID "
+//            + "ORDER BY tblUser.userID";
+//    private final static String QRY_RESULTS_CLASS = "SELECT tblUser.userID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
+//            + "FROM (tblUser, tblCourse) "
+//            + "join tblClass on tblClass.classID = tblUser.classID "
+//            + "join tblScoContext on tblScoContext.courseID = tblCourse.courseID "
+//            + "left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID and tblStudentScoContext.scoId = tblScoContext.scoId "
+//            + "where (tblUser.classID = ?) "
+//            + "and (tblCourse.courseID in ({0})) "
+//            + "and   (tblClass.userID = ?) "
+//            + "group by tblUser.userID, tblCourse.courseID "
+//            + "ORDER BY tblUser.userID";
+
+    //TODO DONE V1_3 fix sco table
+    private final static String QRY_RESULTS_COURSE_PROFILE = "SELECT c.courseID, count(sco.scoid) FROM tblStudentScoContext ssco "
             + "join tblStudentOf stu using (userID)  "
-            + "join tblSco course on (sco.scoID = course.scoid) "
+            + "join tblScoContext course on (ssco.scoID = course.scoid) "
             + "join tblCourse c on (c.courseID = course.courseID) "
             + "WHERE stu.classID=? and  c.dwoProfileID = ? group by courseid";
 
-    // TODO V1_3
-    private final static String QRY_RESULTS_CLASS_COURSE = "SELECT tblUser.userID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
-            + "FROM (tblUser, tblCourse) "
-            + "join tblClass on tblClass.classID = tblUser.classID "
-            + "join tblScoContext on tblScoContext.courseID = tblCourse.courseID "
-            + "left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID and tblStudentScoContext.scoId = tblScoContext.scoId "
-            + "where (tblUser.classID = ?) "
-            + "and (tblCourse.courseID = ?) "
-            + "group by tblUser.userID, tblCourse.courseID "
-            + "ORDER BY tblUser.userID";
 
-    // TODO V1_3
-    private final static String QRY_RESULTS_STUDENT_COURSE = "SELECT tblUser.userID, tblScoContext.scoID, tblScoContext.sequencenr,  if(score=0,-1,score) as score, total_time "
-            + "FROM (tblUser, tblScoContext)  join tblClass on tblClass.classID = tblUser.classID "
+    // TODO DONE V1_3
+    private final static String QRY_RESULTS_STUDENT_COURSE = "SELECT tblStudentOf.userID, tblScoContext.scoID, tblScoContext.sequencenr,  if(score=0,-1,score) as score, total_time "
+            + "FROM (tblStudentOf, tblScoContext)  join tblTeacherOf on tblTeacherOf.classID = tblStudentOf.classID "
             + "join tblCourse on tblScoContext.courseID = tblCourse.courseID "
-            + "left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID and tblStudentScoContext.scoId = tblScoContext.scoId "
-            + "where (tblUser.classID = ?) "
-            + "and (tblCourse.courseID = ?) "
-            + "and   (tblClass.userID = ?) "
-            + "ORDER BY tblUser.userID, tblScoContext.sequencenr";
+            + "left join tblStudentScoContext on tblStudentScoContext.userID = tblStudentOf.userID and tblStudentScoContext.scoId = tblScoContext.scoId "
+            + "where (tblStudentOf.classID = ?) " // student tblUser.classID =>tblStudentOf.classID 
+            + "and (tblCourse.courseID = ?) " //course
+            + "and   (tblTeacherOf.userID = ?) " //teacher tblClass.userID =>tblTeacherOf.userID 
+            + "ORDER BY tblStudentOf.userID, tblScoContext.sequencenr";
 
     /**
      * Select the SCO scores of one student.
@@ -522,7 +533,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             + "where tblUser.userID = ? and tblScoContext.courseID = ? "
             + "order by tblScoContext.sequencenr";
 
-    // TODO V1_3 merge with:
+    // TODO V1_3 DONE merge:
 //        private final static String QRY_RESULTS_COURSE = "SELECT tblTeacherOf.classID, tblSco.scoID, tblSco.sequencenr, "
 //            + "avg(score) as score, count(score) as totaal "
 //            + "FROM (tblTeacherOf, tblSco) "
@@ -532,14 +543,23 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 //            + "and   (tblTeacherOf.userID = ?) "
 //            + "group by tblTeacherOf.classID, tblSco.scoID "
 //            + "ORDER BY tblTeacherOf.classID, tblSco.sequencenr";
-    private final static String QRY_RESULTS_COURSE = "SELECT tblClass.classID, tblScoContext.scoID, tblScoContext.sequencenr, avg(score) as score, count(score) as totaal "
-            + "FROM (tblClass, tblScoContext) join tblUser on tblClass.classID = tblUser.classID "
-            + "left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID and tblStudentScoContext.scoID = tblScoContext.scoID "
+//    private final static String QRY_RESULTS_COURSE = "SELECT tblClass.classID, tblScoContext.scoID, tblScoContext.sequencenr, avg(score) as score, count(score) as totaal "
+//            + "FROM (tblClass, tblScoContext) join tblUser on tblClass.classID = tblUser.classID "
+//            + "left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID and tblStudentScoContext.scoID = tblScoContext.scoID "
+//            + "where  (tblScoContext.courseID = ?) "
+//            + "and   (tblClass.userID = ?) "
+//            + "group by tblClass.classID, tblScoContext.scoID "
+//            + "ORDER BY tblClass.classID, tblScoContext.sequencenr";
+        private final static String QRY_RESULTS_COURSE = "SELECT tblTeacherOf.classID, tblScoContext.scoID, tblScoContext.sequencenr, "
+            + "avg(score) as score, count(score) as totaal "
+            + "FROM (tblTeacherOf, tblScoContext) "
+            + "join tblStudentOf on tblTeacherOf.classID = tblStudentOf.classID "
+            + "left join tblStudentScoContext on tblStudentScoContext.userID = tblStudentOf.userID and tblStudentScoContext.scoID = tblScoContext.scoID "
             + "where  (tblScoContext.courseID = ?) "
-            + "and   (tblClass.userID = ?) "
-            + "group by tblClass.classID, tblScoContext.scoID "
-            + "ORDER BY tblClass.classID, tblScoContext.sequencenr";
-
+            + "and   (tblTeacherOf.userID = ?) "
+            + "group by tblTeacherOf.classID, tblScoContext.scoID "
+            + "ORDER BY tblTeacherOf.classID, tblScoContext.sequencenr";
+    
     private final static String QRY_UPDATE_CLASS_NAME = "UPDATE tblClass "
             + "SET class = ? " + "WHERE (classID = ?) ";
     private final static String QRY_UPDATE_CLASS_NAME2 = "UPDATE tblClass "
@@ -547,9 +567,9 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     private final static String QRY_UPDATE_CLASS_NAME3 = "UPDATE tblClass "
             + "SET class = ?, registrationKey = ?, iconizer = ? " + "WHERE (classID = ?) ";
 
-    // TODO V1_3
-    private final static String QRY_UPDATE_CLASS_USER = "UPDATE tblClass "
-            + "SET userID = ? WHERE (classID = ?)";
+    // TODO DONE V1_3
+//    private final static String QRY_UPDATE_CLASS_USER = "UPDATE tblClass "
+//            + "SET userID = ? WHERE (classID = ?)";
 
     private final static String QRY_UPDATE_SCHOOL = "UPDATE tblSchool "
             + "SET schoolName = ?, " + "schoollogin = ? " + "WHERE (schoolID = ?) ";
@@ -976,7 +996,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             if (schoolGroupID == -1) {
                 throw new DwoXmlRpcException(
                         DwoXmlRpcException.EXC_UNKNOWN_SCHOOLGROUP);
-            } else{
+            } else {
 
                 Connection c = getConnection();
                 c.setAutoCommit(false);
@@ -1086,8 +1106,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             if (!(tmp instanceof String)) { //null-data is an empty string, so
                 // if this is a string, it was null
                 ps.close();
-                //TODO V1_3 new query no longer adds school entity data
-                //patch code, request QRY_GET_SCHOOL_USER_DATA where needed
+                //Request default schoold ID data. Ensure in add school default field is set.
                 ps = getStatement(QRY_GET_USER_DATA);
                 ps.setInt(1, ((Integer) result.get("userID")).intValue());
                 Hashtable result2 = executeQueryWithRecord(ps);
@@ -1202,7 +1221,6 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 //        }
 //        //return true;
 //    }
-
     /**
      * @param userID
      * @param password
@@ -1248,6 +1266,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         }
         return true;
     }
+
     /**
      * Adds a class to the school and adds the teacher to the class.
      *
@@ -1312,22 +1331,22 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
     @Override
     public Vector<Object> getStudentsOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
-            PreparedStatement ps = getStatement(QRY_SELECT_CLASSSTUDENTS_OF_CLASS);
-            ps.setInt(1, schoolClassID);
-            Vector v = executeQueryWithResult(ps);
-            log.log(Level.FINE, "Retrieved ClassStudent's of SchoolClass {0}.", new Object[]{schoolClassID});
-            return v;
+        PreparedStatement ps = getStatement(QRY_SELECT_CLASSSTUDENTS_OF_CLASS);
+        ps.setInt(1, schoolClassID);
+        Vector v = executeQueryWithResult(ps);
+        log.log(Level.FINE, "Retrieved ClassStudent's of SchoolClass {0}.", new Object[]{schoolClassID});
+        return v;
     }
 
-        @Override
+    @Override
     public Vector<Object> getTeachersOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
-            PreparedStatement ps = getStatement(QRY_SELECT_TEACHERS_OF_CLASS);
-            ps.setInt(1, schoolClassID);
-            Vector v = executeQueryWithResult(ps);
-            log.log(Level.FINE, "Retrieved Teacher's of SchoolClass {0}.", new Object[]{schoolClassID});
-            return v;
+        PreparedStatement ps = getStatement(QRY_SELECT_TEACHERS_OF_CLASS);
+        ps.setInt(1, schoolClassID);
+        Vector v = executeQueryWithResult(ps);
+        log.log(Level.FINE, "Retrieved Teacher's of SchoolClass {0}.", new Object[]{schoolClassID});
+        return v;
     }
-    
+
     /**
      * @param schoolName
      * @param schoolLogin
@@ -1654,7 +1673,6 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             ps.setInt(1, classID);
             ps.execute();
             log.log(Level.FINE, "Deleted totally {0} rows, in tblClass, tblTeacherOf and tblStudentOf.", new Object[]{ps.getUpdateCount() - 1, classID});
-
             // TODO merge this line with above multi-table delete
             Object[] arguments2 = {"tblClassCourse", "classID"};
             query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments2);
@@ -1679,7 +1697,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps.setInt(2, schoolClassID);
         ps.execute();
         ps.close();
-        
+
         return true;
     }
 
@@ -1904,6 +1922,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     /**
      * Returns all the available courses for the specified user.
      *
+     * @param profileValue
      * @param schoolID The school for which the courses must selected.
      *
      * @return A Vector containing hash tables with the course data.
@@ -1915,23 +1934,28 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      */
     //TODO WIM discuss change from userID to schoolID signature
     @Override
-    public Vector getCourses(int schoolID) throws IOException, XmlRpcException,
+    public Vector getCourses(int profileValue) throws IOException, XmlRpcException,
             SQLException {
         close(); //for lazy connection
         PreparedStatement ps;
-        if (schoolID < 0) {
+        if (profileValue < 0) {
             /* User is a guest */
-            if (schoolID < PROFILEOFFSET) {
+            if (profileValue < PROFILEOFFSET) {
                 ps = getStatement(QRY_SELECT_COURSES_PROFILE_GUEST);
-                ps.setInt(1, PROFILEOFFSET - schoolID);
-            } else {
-                ps = getStatement(QRY_SELECT_COURSES_GUEST);
+                ps.setInt(1, PROFILEOFFSET - profileValue);
+                return executeQueryWithResult(ps);
             }
         } else {
-            ps = getStatement(QRY_SELECT_COURSES);
-            ps.setInt(1, schoolID);
-        }
-        return executeQueryWithResult(ps);
+            throw new RuntimeException("profileValue has non-negative ");
+        };
+
+//            else {
+//                ps = getStatement(QRY_SELECT_COURSES_GUEST);
+//        else {
+//            ps = getStatement(QRY_SELECT_COURSES);
+//            ps.setInt(1, schoolID);
+//        }
+        return null;
     }
 
     /*
@@ -2280,13 +2304,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     @Override
     public Vector getResultCount(int profileID, int classID) throws SQLException {
         long start = System.currentTimeMillis();
-    //TODO V1_3
-        String query = "SELECT  c.courseID, 1 "
-                + "FROM tblStudentScoContext sco join tblUser stu using (userID) join tblScoContext "
-                + "course on (sco.scoID = course.scoid) join tblCourse c on (c.courseID = course.courseID) "
-                + "WHERE  stu.classid = ?   and c.dwoProfileID = ? "
-                + "group by courseid";
-
+        String query = QRY_RESULTS_COURSE_PROFILE;
+        
         PreparedStatement ps = getStatement(query);
         ps.setInt(1, classID);
         ps.setInt(2, profileID);
@@ -2464,7 +2483,6 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 //        ps.execute();
 //        return true;
 //    }
-
     //TODO V1_2 obsolete
 //    /**
 //     * Maak userID de Teacher van classID.
@@ -2482,7 +2500,6 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 //        ps.execute();
 //        return true;
 //    }
-
 //    /**
 //     *
 //     * @throws java.io.IOException
@@ -2551,24 +2568,6 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     /*
      * (non-Javadoc)
      * 
-     * @see fi.dwo.client.persistence.DbAccessIF#reconnect()
-     */
-    /**
-     *
-     * @return @throws IOException
-     * @throws XmlRpcException
-     * @throws SQLException
-     */
-    @Override
-    public boolean reconnect() throws IOException, XmlRpcException,
-            SQLException {
-        close();
-        return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see fi.dwo.client.persistence.DbAccessIF#log(java.lang.String)
      */
     @Override
@@ -2577,7 +2576,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         log(Level.INFO, s, null);
         return false;
     }
-
+    
     /*
      * (non-Javadoc)
      * 
@@ -3359,7 +3358,6 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps.close();
 
         /* Delete Sco's */
-
         ps = getStatement(QRY_DELETE_SCO_BY_ID);
         ps.setInt(1, scoID);
         ps.execute();
@@ -3436,7 +3434,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         log.log(Level.FINE, "Deleted {0} courses.", new Object[]{ps.getUpdateCount()});
         ps.close();
 // 7) verwijder users uit school, teachers and students are already gone.
-//TODO V1_3 fix query
+//TODO DONE V1_3 fix query
         ps = getStatement(QRY_DELETE_USERS_FROM_SCHOOL);
         ps.setInt(1, schoolID);
         ps.executeUpdate();
@@ -3626,10 +3624,10 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
             //delete userID  from student links pointing to tblClass where schoolID matches. 
             String sql = "DELETE FROM tblStudentOf WHERE userID = ? AND classID IN (SELECT classID FROM tblClass WHERE schoolID = ?)";
-        PreparedStatement ps = getStatement(sql);
+            PreparedStatement ps = getStatement(sql);
             ps.setInt(1, userID);
-        ps.setInt(2, schoolID);
-        int cnt = ps.executeUpdate();
+            ps.setInt(2, schoolID);
+            int cnt = ps.executeUpdate();
             log.log(Level.FINE, "Deleted the student from {0} classes.", new Object[]{cnt});
 
             //delete user as teacherID  from teacher links pointing to tblClass where schoolID matches. 
@@ -3651,10 +3649,10 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             c.commit();
             log.log(Level.FINE, "Transaction commited.");
 
-        return cnt != 0;
+            return cnt != 0;
         } finally {
             c.setAutoCommit(true);
-    }
+        }
     }
 
     /**
@@ -4086,13 +4084,12 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return true;
     }
 
-
     /**
      * Adds a teacher to an existing class, only if he is not a member yet.
      *
      * @param classID
      * @param teacherID
-     * @return  true if (teacher,class) exists in table on exit.
+     * @return true if (teacher,class) exists in table on exit.
      * @throws IOException
      * @throws SQLException
      * @throws XmlRpcException
@@ -4134,15 +4131,16 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return true;
     }
 
-    /** Removes a teacher of a class if a member
-     * 
+    /**
+     * Removes a teacher of a class if a member
+     *
      * @param classID
      * @param teacherID
      * @return true if teacher is no longer in table
      * @throws IOException
      * @throws SQLException
      * @throws XmlRpcException
-     * @throws DwoXmlRpcException 
+     * @throws DwoXmlRpcException
      */
     @Override
     public boolean removeTeacherFromClass(int classID, int teacherID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
@@ -4153,17 +4151,18 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps.executeQuery();
         ps.close();
         return true;
-}
+    }
 
-    /** Adds a student to a class if not exists
-     * 
+    /**
+     * Adds a student to a class if not exists
+     *
      * @param classID
      * @param studentID
-     * @return  true if (student,class) exists in table on exit.
+     * @return true if (student,class) exists in table on exit.
      * @throws IOException
      * @throws SQLException
      * @throws XmlRpcException
-     * @throws DwoXmlRpcException 
+     * @throws DwoXmlRpcException
      */
     @Override
     public boolean addStudentToClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
@@ -4203,14 +4202,14 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
     /**
      * Removes a student from a class if a member
-     * 
+     *
      * @param classID
      * @param studentID
      * @return true if student is no longer in table
      * @throws IOException
      * @throws SQLException
      * @throws XmlRpcException
-     * @throws DwoXmlRpcException 
+     * @throws DwoXmlRpcException
      */
     @Override
     public boolean removeStudentFromClass(int classID, int studentID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
@@ -4225,55 +4224,55 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     }
 
     /**
-     *  Returns the classes to which the student is subscribed.
-     * 
+     * Returns the classes to which the student is subscribed.
+     *
      * @param userID
      * @return
      */
     @Override
     public Vector<Object> getClassesOfStudent(int userID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-            
-            PreparedStatement ps = getStatement(QRY_SELECT_CLASSES_OF_STUDENT);
-            ps.setInt(1, userID);
-            Vector v = executeQueryWithResult(ps);
-            log.log(Level.FINE, "Retrieved student-role role classes of user {0}.", new Object[]{ps.toString()});
-            return v;
-}
+
+        PreparedStatement ps = getStatement(QRY_SELECT_CLASSES_OF_STUDENT);
+        ps.setInt(1, userID);
+        Vector v = executeQueryWithResult(ps);
+        log.log(Level.FINE, "Retrieved student-role role classes of user {0}.", new Object[]{ps.toString()});
+        return v;
+    }
 
     /**
-     *  Returns the classes to which the student is subscribed.
-     * 
+     * Returns the classes to which the student is subscribed.
+     *
      * @param userID
      * @return
      */
     @Override
     public Vector<Object> getClassesOfTeacher(int userID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-            
-            PreparedStatement ps = getStatement(QRY_SELECT_CLASSES_OF_TEACHER);
-            ps.setInt(1, userID);
-            Vector v = executeQueryWithResult(ps);
-            log.log(Level.FINE, "Retrieved teaching-role classes of user {0}.", new Object[]{ps.toString()});
-            return v;
-}
+
+        PreparedStatement ps = getStatement(QRY_SELECT_CLASSES_OF_TEACHER);
+        ps.setInt(1, userID);
+        Vector v = executeQueryWithResult(ps);
+        log.log(Level.FINE, "Retrieved teaching-role classes of user {0}.", new Object[]{ps.toString()});
+        return v;
+    }
 
     @Override
     public boolean isStudent(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-            PreparedStatement ps = getStatement(QRY_IS_STUDENT_ROLE);
-            ps.setInt(1, userID);
-            ps.setInt(1, schoolID);
-            Vector v = executeQueryWithResult(ps);
-            log.log(Level.FINE, "Testing if user {0} is a teacher at school {1}, result is: {2}", new Object[]{userID, schoolID, v});
-            return v.size()>0;
+        PreparedStatement ps = getStatement(QRY_IS_STUDENT_ROLE);
+        ps.setInt(1, userID);
+        ps.setInt(1, schoolID);
+        Vector v = executeQueryWithResult(ps);
+        log.log(Level.FINE, "Testing if user {0} is a teacher at school {1}, result is: {2}", new Object[]{userID, schoolID, v});
+        return v.size() > 0;
     }
 
     @Override
     public boolean isTeacher(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-            PreparedStatement ps = getStatement(QRY_IS_TEACHER_ROLE);
-            ps.setInt(1, userID);
-            ps.setInt(1, schoolID);
-            Vector v = executeQueryWithResult(ps);
-            log.log(Level.FINE, "Testing if user {0} is a teacher at school {1}, result is: {2}", new Object[]{userID, schoolID, v});
-            return v.size()>0;
+        PreparedStatement ps = getStatement(QRY_IS_TEACHER_ROLE);
+        ps.setInt(1, userID);
+        ps.setInt(1, schoolID);
+        Vector v = executeQueryWithResult(ps);
+        log.log(Level.FINE, "Testing if user {0} is a teacher at school {1}, result is: {2}", new Object[]{userID, schoolID, v});
+        return v.size() > 0;
     }
 
 }

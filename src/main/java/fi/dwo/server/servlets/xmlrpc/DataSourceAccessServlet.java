@@ -34,9 +34,9 @@ import java.sql.PreparedStatement;
 import java.util.HashMap;
 
 /**
- * Supplies doGet for database status info and database-operations via doPost using 
- * an XML-RPC handler.
- * 
+ * Supplies doGet for database status info and database-operations via doPost
+ * using an XML-RPC handler.
+ *
  */
 public class DataSourceAccessServlet extends Servlet {
 
@@ -65,8 +65,15 @@ public class DataSourceAccessServlet extends Servlet {
         @Override
         public Hashtable login(String username, String password)
                 throws SQLException, DwoXmlRpcException {
+            Hashtable h = super.login(username, password);
+            //Set some session fixed variables. 
             session.get().setAttribute("login", username);
-            return super.login(username, password);
+            //Set the default SchoolGroup en SchoolClassID
+            Integer schoolGroupId = (Integer) h.get("schoolgroupid");
+            Integer schoolClassId = (Integer) h.get("classid");
+            session.get().setAttribute("SchoolGroupID",schoolGroupId);
+            session.get().setAttribute("SchoolClassID",schoolClassId);
+            return h;
         }
 
         private Connection mine, his;
@@ -135,12 +142,14 @@ public class DataSourceAccessServlet extends Servlet {
 
     }
 
-    /** Initializes the xmlrpc servlet.
-     * 
-     * Retrieves a database interface, {@link fi.dwo.commons.persistence.DBAccessIF}
-     * via the context.xml parameter. Encapsulates the connector via monitoring 
-     * and/or threading of servlets.
-     * 
+    /**
+     * Initializes the xmlrpc servlet.
+     *
+     * Retrieves a database interface,
+     * {@link fi.dwo.commons.persistence.DBAccessIF} via the context.xml
+     * parameter. Encapsulates the connector via monitoring and/or threading of
+     * servlets.
+     *
      * @param config
      * @throws javax.servlet.ServletException
      */
@@ -172,7 +181,7 @@ public class DataSourceAccessServlet extends Servlet {
             if (ds == null) {
                 throw new ServletException("Resource " + source + " is null");
             } else {
-                        log.log(Level.INFO, "Found datasource {0}", new Object[]{ds});
+                log.log(Level.INFO, "Found datasource {0}", new Object[]{ds});
             }
 
             if (new DataSourceAccess(ds).checkVersion()) {
@@ -215,13 +224,15 @@ public class DataSourceAccessServlet extends Servlet {
         }
 
     }
-/** Returns public servlet status information in a plain text webpage.
- * 
+
+    /**
+     * Returns public servlet status information in a plain text webpage.
+     *
      * @param req
      * @param resp
      * @throws javax.servlet.ServletException
      * @throws java.io.IOException
-    */
+     */
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -251,9 +262,9 @@ public class DataSourceAccessServlet extends Servlet {
                 hashMap.put(rs.getString("name"), rs.getString("value"));
             }
             out.println();
-            out.printf("We are compatible with the database version: "+(String)  hashMap.get("DBVersion Major")
-                    +"."+(String) hashMap.get("DBVersion Minor")
-                    +"."+(String) hashMap.get("DBVersion Revision"));
+            out.printf("We are compatible with the database version: " + (String) hashMap.get("DBVersion Major")
+                    + "." + (String) hashMap.get("DBVersion Minor")
+                    + "." + (String) hashMap.get("DBVersion Revision"));
             out.println();
         } catch (Exception e) {
             log.log(Level.SEVERE, "Eror retrieving database version information from the database", e);
@@ -303,7 +314,7 @@ public class DataSourceAccessServlet extends Servlet {
             try {
                 ((DbConnectIF) getHandler()).close();
             } catch (Exception e) {
-                log.log(Level.FINE,"Closing handler in finally failed:", e);
+                log.log(Level.FINE, "Closing handler in finally failed:", e);
             }
         }
     }
