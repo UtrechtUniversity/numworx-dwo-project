@@ -456,29 +456,6 @@ public interface DbAccessIF extends DbAccessLogin {
             XmlRpcException, SQLException;
 
     /**
-     * Select a jar on the serverside. For the problem to dynamically load JAR's
-     * we must pre-set the JAR to select. After the JAR is selected, the class
-     * can be loaded out of the jar and the default classloader (in the browser)
-     * will do a get request ot the servler for a jar. Then, the correct jar is
-     * returned.
-     *
-     * @param key A key-value which can used to read the jar out of the
-     * database.
-     * @param jar The name of the jar to select.
-     * @return
-     * @throws IOException
-     * @throws XmlRpcException
-     * @throws SQLException
-     * @see <a href="doc-files/DbAccessIF-1.pdf">Dynamisch inladen van JAR's
-     * (dutch)</a>
-     * @deprecated niet meer gebruiken
-     */
-//    public boolean selectJar(String key, String jar) throws IOException,
-//            XmlRpcException, SQLException;
-
-    public boolean reconnect() throws IOException, XmlRpcException, SQLException;
-
-    /**
      * Logs a string to the error-log at the server (just for debugging
      * perpose).
      *
