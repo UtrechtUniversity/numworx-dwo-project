@@ -1355,10 +1355,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
 
         /* ToolTipManager ttm =  new ToolTipManager(this); Wim: wordt niet meer gebruikt, alleen swing */
         GuiCreator gc = new GuiCreator(this);
-        try {
-            PersistenceFacade.instance().reConnect();
-        } catch (PersistenceException e) {
-        }
         //this.setSize(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
 
