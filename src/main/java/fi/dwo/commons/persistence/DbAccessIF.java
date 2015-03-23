@@ -65,7 +65,7 @@ public interface DbAccessIF extends DbAccessLogin {
      * @param userID The user where for the courses must selected.
      * @return A Vector containing hash tables with the course data.
      */
-    public Vector getCourses(int schoolID) throws IOException, XmlRpcException, SQLException;
+    public Vector getCourses(int profileValue) throws IOException, XmlRpcException, SQLException;
 
 //    /**
 //     * Returns all the available course for the specified user.
