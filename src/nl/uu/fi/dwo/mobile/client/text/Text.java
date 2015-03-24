@@ -24,4 +24,10 @@ public interface Text extends Constants {
 	@DefaultStringValue("Freudenthal Instituut")
 	String fi();
 
+	/*
+		{ TextMapper.EXR_WRONG_USERNAME_PASSWORD, "Geen gebruiker gevonden met opgegeven gebruikersnaam en wachtwoord" },
+		{ TextMapper.EXR_WRONG_USERNAME_PASSWORD, "An user with the specified username and password was not found" },
+	 */
+	@DefaultStringValue("Geen gebruiker gevonden met opgegeven gebruikersnaam en wachtwoord")
+	String EXR_WRONG_USERNAME_PASSWORD();
 }

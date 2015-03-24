@@ -61,12 +61,12 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	private static final String ONS_STATE = "onsState";
 	static final String SUSPEND_DATA = "cmi.suspend_data";
 	static final String SCORE_RAW = "cmi.score.raw";
-	static final String COMPLETION_STATUS = "cmi.completion_status";
+	static final String EXIT_STATUS = "cmi.exit";
 	private static final String SESSION_TIME = "cmi.session_time";
 	private static final String TOTAL_TIME = "cmi.total_time";
 	
-	static final String COMPLETE = "completed";
-	static final String INCOMPLETE = "incomplete";
+	static final String EXIT_NORMAL = "normal";
+	static final String EXIT_SUSPEND = "suspend";
 	public static final String LEARNER_ID = "cmi.learner_id";
 	public static final String LEARNER_NAME = "cmi.learner_name";
 	public static final String LEARNER_PREFERENCE_LANGUAGE = "cmi.learner_preference.language";
@@ -648,7 +648,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	}
 	
 	public void setCompletion(boolean complete) {
-		api.SetValue(COMPLETION_STATUS, complete?COMPLETE:INCOMPLETE);
+		api.SetValue(EXIT_STATUS, complete?EXIT_NORMAL:EXIT_SUSPEND);
 	}
 
 	public String getLearnerId() {

@@ -3,7 +3,9 @@ package nl.uu.fi.dwo.mobile.client.ui.dwokb;
 import java.util.Vector;
 import java.util.logging.Logger;
 
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
+import nl.uu.fi.dwo.mobile.utils.ImageUtils;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
@@ -62,13 +64,10 @@ public class KeyBoardTabPanel
 	{
 		this.kb = formuleKeyboard;
 		contentpanel.add(tabcontentpanel);
-		//FIXME CSS contentpanel.getElement().getStyle().setBackgroundImage("url(images/resources/keyboardgradientimage-new.png)");
 		tabcontentpanel.getElement().getStyle().setBorderWidth(0, Unit.PX);
 
 		staticpanel.getElement().getStyle().setHeight(KEYB_STATIC_HEIGHT, Style.Unit.PX);
 
-//		tabcontentpanel.setStylePrimaryName("tabkeyboard");
-//		tabcontentpanel.addStyleDependentName(FormuleKeyBoardButtons.getDependentName());
 		main.add(contentpanel);
 		main.add(staticpanel);
 		main.getElement().addClassName("keyboard");
@@ -79,10 +78,14 @@ public class KeyBoardTabPanel
 
 	public void zetMaat() {
 		zetMaatCommon();
-		staticpanel.getElement().getStyle().setBackgroundImage("url(images/resources/footerbgimage.png)");
-		contentpanel.getElement().getStyle().setBackgroundImage("url(images/resources/keyboardgradientimage-new.png");
+		staticpanel.getElement().getStyle().setBackgroundImage("url("
+				+ DWOplayer.PARAMETERS.getResource("images/resources/footerbgimage.png")
+				+ ")");
+		contentpanel.getElement().getStyle().setBackgroundImage("url("
+				+ DWOplayer.PARAMETERS.getResource("images/resources/keyboardgradientimage-new.png")
+				+ ")");
 
-		Image buttonImage = new Image("images/resources/keyboardbutton.png");
+		Image buttonImage = ImageUtils.newImage("images/resources/keyboardbutton.png");
 		buttonImage.getElement().getStyle().setMargin(5, Unit.PX);
 		keyboardButton.add(buttonImage);
 		keyboardButton.addTapHandler(new TapHandler() {
@@ -96,7 +99,7 @@ public class KeyBoardTabPanel
 			}});
 		if(!FormuleKeyboard.hasKeyboard)
 		{
-			buttonImage = new Image("images/resources/digits.png");
+			buttonImage = ImageUtils.newImage("images/resources/digits.png");
 			buttonImage.getElement().getStyle().setMargin(5, Unit.PX);
 			digitsButton.add(buttonImage);
 			digitsButton.addTapHandler(new TapHandler() {

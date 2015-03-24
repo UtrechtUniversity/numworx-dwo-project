@@ -62,7 +62,12 @@ public class MC2LMS extends DWOplayer implements EntryPoint
 	@Override
 	protected ClientFactory createClientFactory() {
 		ClientFactoryImpl factory = new ClientFactoryImpl();
-		factory.setRPCHandler(new RPCHandler("https://9-dot-mc2dme.appspot.com/dwoapp"));
+		String host = Window.Location.getHost();
+		String http = Window.Location.getProtocol();
+		if(!GWT.isProdMode())
+			host = "9-dot-mc2dme.appspot.com";
+
+		factory.setRPCHandler(new RPCHandler(http + "//" + host + "/dwoapp"));
 		return factory;
 	}
 
@@ -152,8 +157,12 @@ public class MC2LMS extends DWOplayer implements EntryPoint
 		if(profiledata == null)
 			api = new SCORM_guest();
 		else
-		{	String userID = ((String) profiledata.get("userID"));
-			api = new SCORM_MC2mAccess(userID);
+		{
+			String userID = ((String) profiledata.get("userID"));
+			String username = (String) profiledata.get("username");
+			String fullname = profiledata.get("middlename") + " " + profiledata.get("lastname") + ", " + profiledata.get("firstname");
+			fullname = fullname.trim();
+			api = new SCORM_MC2mAccess(userID, username, fullname);
 			if(!"".equals(profiledata.get("classID")))
 			{
 				boolean iconizer = Boolean.TRUE.equals(profiledata.get("iconizer"));

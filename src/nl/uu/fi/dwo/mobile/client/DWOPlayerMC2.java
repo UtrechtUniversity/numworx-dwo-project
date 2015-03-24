@@ -29,4 +29,11 @@ public class DWOPlayerMC2 extends DWOplayerDefaults implements DWOplayerParamete
 		return "/dwo/apps/";
 	}
 
+	@Override
+	public String getResource(String resource) {
+		return getStubView() + super.getResource(resource);
+	}
+
+	
+	
 }

@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.ProfilePlace;
@@ -36,7 +37,7 @@ public class LoginActivity extends MGWTAbstractActivity
 		{
 			GWT.log("login failure", caught);
 			if (caught.getMessage().contains("LoginException"))
-				Window.alert("Gebruikersnaam/wachtwoord combinatie niet juist");
+				Window.alert(Text.constants.EXR_WRONG_USERNAME_PASSWORD());
 			else
 				Window.alert("Unable to login");
 

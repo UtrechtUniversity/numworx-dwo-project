@@ -16,6 +16,9 @@ public class SCORM_MC2mAccess extends SCORM_guest implements Scorm2004IF {
 	static final Logger logger = Logger.getLogger("SCORM_MC²mAccess");
 	private String userID;
 	private String scoID;
+	
+	private String learner_id;
+	private String learner_name;
 	private boolean pending;
 	boolean inited;
 
@@ -24,8 +27,10 @@ public class SCORM_MC2mAccess extends SCORM_guest implements Scorm2004IF {
 	
 	private XmlRpcClient client;
 		
-	public SCORM_MC2mAccess(String userID) {
+	public SCORM_MC2mAccess(String userID, String learner_id, String learner_name) {
 		
+		this.learner_id = learner_id;
+		this.learner_name = learner_name;
 		String host = Window.Location.getHost();
 		String http = Window.Location.getProtocol();
 		if(!GWT.isProdMode())
@@ -151,6 +156,8 @@ public class SCORM_MC2mAccess extends SCORM_guest implements Scorm2004IF {
 
 	@Override
 	public String GetValue(String name) {
+		if(Memento.LEARNER_ID.equals(name)) return learner_id;
+		if(Memento.LEARNER_NAME.equals(name)) return learner_name;
 		String result = map.get(name);
 		if(result == null) return "";
 		return result;

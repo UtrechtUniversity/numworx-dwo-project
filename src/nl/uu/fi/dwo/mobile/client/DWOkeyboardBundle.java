@@ -22,18 +22,6 @@ public interface DWOkeyboardBundle extends ClientBundle {
 
 	@Source("nl/uu/fi/dwo/mobile/client/resources/kb/keyboardremovebutton.png")
 	ImageResource VVV();
- 		//buttonImages.put("haakjes", "images/resources/mw_haakjes.gif");
-		//buttonImages.put("integraal", "images/resources/mw_integraal.gif");
-		//buttonImages.put("prv", "images/resources/");
-		//buttonImages.put("ndelog", "images/resources/");
-		//buttonImages.put("abs", "images/resources/");
-		//buttonImages.put("subscript", "images/resources/");
-		//buttonImages.put("bin", "images/resources/");
-		//buttonImages.put("diff", "images/resources/mw_diff.gif");
-		//buttonImages.put("limiet0", "images/resources/mw_limiet0.gif");
-		//buttonImages.put("limiet1", "images/resources/mw_limiet1.gif");
-		//buttonImages.put("limiet2", "images/resources/mw_limiet2.gif");
-		//buttonImages.put("primitieve", "images/resources/mw_primitieve.gif");
 
 	@Source("nl/uu/fi/dwo/mobile/client/resources/kb/mw_abs.gif")
 	ImageResource abs();
