@@ -74,24 +74,24 @@ public class SchoolClass implements UserGroup, Comparable {
             saveSelectedCourses(selectedCourses);
             return;
         }
-        deselectAllCourses(allCourses);
-        for (int i = 0; i < selectedCourses.length; i++) {
-            try {
-                Date tot = null;
-                Date van = null;
-                int type = 0;
-                ClassCourse link = selectedCourses[i].link;
-                if (link != null) {
-                    van = link.getNotBefore();
-                    tot = link.getNotAfter();
-                    type = link.getType();
-                }
-                PersistenceFacade.instance().selectCoursesForClass(getID(),
-                        selectedCourses[i].getID(), type, van, tot);
-            } catch (PersistenceException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage());
-            }
-        }
+//        deselectAllCourses(allCourses);
+//        for (int i = 0; i < selectedCourses.length; i++) {
+//            try {
+//                Date tot = null;
+//                Date van = null;
+//                int type = 0;
+//                ClassCourse link = selectedCourses[i].link;
+//                if (link != null) {
+//                    van = link.getNotBefore();
+//                    tot = link.getNotAfter();
+//                    type = link.getType();
+//                }
+//                PersistenceFacade.instance().selectCoursesForClass(getID(),
+//                        selectedCourses[i].getID(), type, van, tot);
+//            } catch (PersistenceException e) {
+//                JOptionPane.showMessageDialog(null, e.getMessage());
+//            }
+//        }
     }
 
     private void deselectAllCourses(CourseMap[] allCourses) {

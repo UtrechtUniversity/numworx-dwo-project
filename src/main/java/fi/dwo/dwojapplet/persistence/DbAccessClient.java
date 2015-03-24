@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.Vector;
+import java.util.logging.Level;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 class DbAccessClient extends Client implements DbAccessIF {
@@ -354,6 +355,14 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    public boolean log(Level l, java.lang.String a) throws IOException, XmlRpcException {
+        Vector vv = new Vector(2);
+        vv.addElement(l);
+        vv.addElement(a);
+        Object object = invoke("log", vv);
+        return ((Boolean) object).booleanValue();
+    }
+    
     public int addCourse(int a, java.lang.String b, java.lang.String c, int d, int e, boolean f) throws IOException, XmlRpcException {
         Vector vv = new Vector(6);
         vv.addElement(new Integer(a));
@@ -796,7 +805,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         Object object = invoke("isTeacher", vv);
         return ((Boolean) object);
     }
-//TODO V1_3
+
     @Override
     public Vector<Object> getStudentsOfClass(int schoolClassID) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
         Vector vv = new Vector(1);
