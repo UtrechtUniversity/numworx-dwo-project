@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fi.dwo.commons.util;
+package fi.dwo.commons.persistence;
 
 /**
  * Enumerates the classes which can be persistent and have a PeristentID.

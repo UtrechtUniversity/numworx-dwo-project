@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Vector;
+import java.util.logging.Level;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
@@ -465,7 +466,8 @@ public interface DbAccessIF extends DbAccessLogin {
      * @throws XmlRpcException
      */
     public boolean log(String s) throws IOException, XmlRpcException;
-
+    public boolean log(Level level, String s) throws IOException, XmlRpcException;
+    
     public int addCourse(int schoolID, String name, String description, int dwoProfile, int parentID, boolean withChildren) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;
 
     public int addCourse(int schoolID, String name, String description, int dwoProfile) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException;

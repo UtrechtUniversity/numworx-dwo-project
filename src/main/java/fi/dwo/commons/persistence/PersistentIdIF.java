@@ -3,19 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fi.dwo.commons.util;
+package fi.dwo.commons.persistence;
 
 /**
  * A interface to hide database index types.
  *
  * @author plas0006
  */
-public interface PersistentIdIF {
+public interface PersistentIdIF<T extends PersistentId> extends Comparable<T> {
 
-    public PersistentClassType getClassType();
+    public T getPersistentId();
 
-    public void setClassType(PersistentClassType type);
-
+    public void setPersistentId(T o);
+    
     /**
      * Required implementation for implementing types.
      *
