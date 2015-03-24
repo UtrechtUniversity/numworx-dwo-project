@@ -12,6 +12,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 import fi.beans.jdbc.DbConnectIF;
 import fi.dwo.commons.persistence.DbAccessIF;
 import fi.dwo.commons.exceptions.LoginException;
+import java.util.logging.Level;
 
 public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
 //TODO this class should use reflection to delegate stuff going to be purely serverside.
@@ -318,6 +319,11 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
         return getDelegate().log(s);
     }
 
+    @Override
+    public boolean log(Level level, String s) throws IOException, XmlRpcException {
+        return getDelegate().log(level,s);
+    }
+    
     @Override
     public int addCourse(int schoolID, String name, String description,
             int dwoProfile) throws DwoXmlRpcException, IOException,

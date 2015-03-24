@@ -1,4 +1,0 @@
-UPGRADE.TXT
-
-This text describes how to upgrade the current version to a new one.
-

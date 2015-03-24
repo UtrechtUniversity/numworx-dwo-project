@@ -1,4 +1,6 @@
-package fi.dwo.server.servlets.xmlrpc;
+package fi.dwo.server.persistence;
+
+
 
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import java.io.IOException;
@@ -28,8 +30,6 @@ import com.jamonapi.proxy.MonProxyFactory;
 import fi.beans.jdbc.DbConnectIF;
 import fi.beans.xmlrpc.Servlet;
 import fi.dwo.commons.persistence.DbAccessIF;
-import fi.dwo.server.persistence.DataSourceAccess;
-import fi.dwo.server.persistence.DbAccessProxy;
 import java.sql.PreparedStatement;
 import java.util.HashMap;
 
@@ -66,13 +66,15 @@ public class DataSourceAccessServlet extends Servlet {
         public Hashtable login(String username, String password)
                 throws SQLException, DwoXmlRpcException {
             Hashtable h = super.login(username, password);
+            
+            //TODO V1_3 Fetch PersistentUser
+            DwoSessionData sessionData=null;// =  dbAccess.... ; 
+            //TODO V1_3 Ensure that GetSchoolGroup en classId is correctly set.
+            
             //Set some session fixed variables. 
+            session.get().setAttribute("DwoSessionData", sessionData);
+            //TODO V1_3 use DwoSessionData when cleaning up code.
             session.get().setAttribute("login", username);
-            //Set the default SchoolGroup en SchoolClassID
-            Integer schoolGroupId = (Integer) h.get("schoolgroupid");
-            Integer schoolClassId = (Integer) h.get("classid");
-            session.get().setAttribute("SchoolGroupID",schoolGroupId);
-            session.get().setAttribute("SchoolClassID",schoolClassId);
             return h;
         }
 

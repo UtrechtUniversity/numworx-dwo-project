@@ -1,8 +1,10 @@
+package fi.dwo.server.persistence;
+
 /*
  * Created on Apr 5, 2005
  *
  */
-package fi.dwo.server.servlets.xmlrpc;
+
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

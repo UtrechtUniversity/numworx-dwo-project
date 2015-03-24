@@ -22,7 +22,7 @@
     <servlet>
         <description>Servlet voor het genereren van de dwo.html paginaServlet voor het genereren van de dwo.html pagina</description>
         <servlet-name>DwoWebPage</servlet-name>
-        <servlet-class>fi.dwo.server.servlets.xmlrpc.DwoWebPageServlet</servlet-class>
+        <servlet-class>.DwoWebPageServlet</servlet-class>
         <!-- note that these parameters can be overridden in the server context.xml and hence should have reverse domain/package naming prefix -->
         <init-param>
             <param-name>html_source</param-name>
@@ -40,7 +40,7 @@
     <servlet>
         <description>Datasource servlet</description>
         <servlet-name>xmlrpc</servlet-name>
-        <servlet-class>fi.dwo.server.servlets.xmlrpc.DataSourceAccessServlet</servlet-class>
+        <servlet-class>.DataSourceAccessServlet</servlet-class>
         <init-param>
             <param-name>datasource</param-name>
             <param-value>jdbc/dwodb</param-value>
