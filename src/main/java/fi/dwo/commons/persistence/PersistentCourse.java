@@ -6,10 +6,9 @@
 package fi.dwo.commons.persistence;
 
 /**
- * Persistent user.
- * 
+ *
  * @author plas0006
  */
-public class PersistentUser implements PersistentIdIF{
+class PersistentCourse {
     
 }
