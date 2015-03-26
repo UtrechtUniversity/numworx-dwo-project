@@ -185,9 +185,11 @@ public class RightsDialog extends JDialog implements ActionListener {
                 }
 // naar persistencefacade TODO
                 try {
-                    user.setRights(
-                            PersistenceFacade.instance().setRights(user.getID(), profileID, newrights)
-                    );
+                    //TODO V1_3 LATER
+                    throw new RuntimeException("Needs to implement set right stuff for a schoolgroupid.");
+//                    user.setRights(
+//                            PersistenceFacade.instance().setRights(user.getID(), user.profileID, newrights)
+//                    );
                 } catch (Exception e1) {
                     log.log(Level.SEVERE, null, e1);
                 }

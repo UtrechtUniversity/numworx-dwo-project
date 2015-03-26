@@ -628,9 +628,10 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Vector) object;
     }
 
-    public java.lang.String setRights(int a, int b, java.lang.String c) throws IOException, XmlRpcException {
-        Vector vv = new Vector(3);
-        vv.addElement(new Integer(a));
+    public java.lang.String setRights(int uid, int schoolGroup, int b, java.lang.String c) throws IOException, XmlRpcException {
+        Vector vv = new Vector(4);
+        vv.addElement(new Integer(uid));
+        vv.addElement(new Integer(schoolGroup));
         vv.addElement(new Integer(b));
         vv.addElement(c);
         Object object = invoke("setRights", vv);
@@ -757,8 +758,10 @@ class DbAccessClient extends Client implements DbAccessIF {
     }
 
     @Override
-    public Vector<Object> getClassesOfStudent(int userID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        Vector vv = new Vector(0);
+    public Vector<Object> getClassesOfStudent(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+        Vector vv = new Vector(2);
+        vv.addElement(userID);
+        vv.addElement(schoolID);
         Object object = invoke("getClassesOfStudent", vv);
         return (java.util.Vector) object;
     }
@@ -782,14 +785,16 @@ class DbAccessClient extends Client implements DbAccessIF {
     }
 
     @Override
-    public Vector<Object> getClassesOfTeacher(int userID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        Vector vv = new Vector(0);
+    public Vector<Object> getClassesOfTeacher(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+        Vector vv = new Vector(2);
+        vv.addElement(userID);
+        vv.addElement(schoolID);
         Object object = invoke("getClassesOfTeacher", vv);
         return (java.util.Vector) object;
     }
 
     @Override
-    public boolean isStudent(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+    public boolean isInStudentRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(new Integer(userID));
         vv.addElement(new Integer(schoolID));
@@ -798,7 +803,7 @@ class DbAccessClient extends Client implements DbAccessIF {
     }
 
     @Override
-    public boolean isTeacher(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+    public boolean isInTeacherRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(new Integer(userID));
         vv.addElement(new Integer(schoolID));

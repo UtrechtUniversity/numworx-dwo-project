@@ -67,7 +67,7 @@ public class PersistenceFacade {
 
     private static final Sco[] EMPTY_SCOS = new Sco[0];
 
-    private static PersistenceFacade _instance;
+    private volatile static PersistenceFacade _instance;
 
     private static final String[][] scormDatabaseLink = {
         {"cmi.core.score.raw", "score"},
@@ -1490,10 +1490,10 @@ public class PersistenceFacade {
 
     }
 
-    public String setRights(int userID, int profileID, String newRights) throws PersistenceException {
+    public String setRights(int userID, int schoolGroup, int profileID, String newRights) throws PersistenceException {
         String result = null;
         try {
-            result = DbAccessCreator.instance().setRights(userID, profileID, newRights);
+            result = DbAccessCreator.instance().setRights(userID, schoolGroup, profileID, newRights);
         } catch (IOException e) {
             throw new PersistenceException(PersistenceException.EX_IO, e);
         } catch (SQLException e) {

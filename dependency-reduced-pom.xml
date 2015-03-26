@@ -195,10 +195,6 @@
                 </goals>
                 <configuration>
                   <normalizeOnly>true</normalizeOnly>
-                  <processMainArtifact>true</processMainArtifact>
-                  <includeClassifiers>
-                    <includeClassifier>all-in-one</includeClassifier>
-                  </includeClassifiers>
                 </configuration>
               </execution>
               <execution>
@@ -209,10 +205,6 @@
                 </goals>
                 <configuration>
                   <normalizeOnly>false</normalizeOnly>
-                  <processMainArtifact>true</processMainArtifact>
-                  <includeClassifiers>
-                    <includeClassifier>all-in-one</includeClassifier>
-                  </includeClassifiers>
                 </configuration>
               </execution>
             </executions>
@@ -222,7 +214,6 @@
                 <artifactId>maven-pack200-plugin</artifactId>
                 <version>1.0.1</version>
                 <type>maven-plugin</type>
-                <scope>compile</scope>
               </dependency>
             </dependencies>
             <configuration>
@@ -241,35 +232,19 @@
                 <goals>
                   <goal>sign</goal>
                 </goals>
-                <configuration>
-                  <keystore>U:\My Documents\surfdrive\DWO-project\tools\pboon.keystore</keystore>
-                  <alias>pboon</alias>
-                  <storepass>passww</storepass>
-                  <keypass>passw</keypass>
-                  <sigfile>UU</sigfile>
-                  <tsa>https://timestamp.geotrust.com/tsa</tsa>
-                </configuration>
               </execution>
               <execution>
                 <id>verify</id>
                 <goals>
                   <goal>verify</goal>
                 </goals>
-                <configuration>
-                  <keystore>U:\My Documents\surfdrive\DWO-project\tools\pboon.keystore</keystore>
-                  <alias>pboon</alias>
-                  <storepass>passww</storepass>
-                  <keypass>passw</keypass>
-                  <sigfile>UU</sigfile>
-                  <tsa>https://timestamp.geotrust.com/tsa</tsa>
-                </configuration>
               </execution>
             </executions>
             <configuration>
-              <keystore>U:\My Documents\surfdrive\DWO-project\tools\pboon.keystore</keystore>
-              <alias>pboon</alias>
-              <storepass>passww</storepass>
-              <keypass>passw</keypass>
+              <keystore>${dwoKeyStore}</keystore>
+              <alias>${dwoCertKeyAlias}</alias>
+              <storepass>${dwoCertKeyStorePassword}</storepass>
+              <keypass>${dwoCertKeyPassword}</keypass>
               <sigfile>UU</sigfile>
               <tsa>https://timestamp.geotrust.com/tsa</tsa>
             </configuration>
