@@ -522,9 +522,9 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
     }
 
     @Override
-    public String setRights(int uid, int profileid, String rights)
+    public String setRights(int uid, int schoolGroup, int profileid, String rights)
             throws SQLException, IOException, XmlRpcException {
-        return getDelegate().setRights(uid, profileid, rights);
+        return getDelegate().setRights(uid, schoolGroup, profileid, rights);
     }
 
     @Override
@@ -602,8 +602,8 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
     }
 
     @Override
-    public boolean isTeacher(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        return getDelegate().isTeacher(userID, schoolID);
+    public boolean isInTeacherRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+        return getDelegate().isInTeacherRole(userID, schoolID);
     }
 
     @Override
@@ -627,18 +627,18 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
     }
 
     @Override
-    public Vector<Object> getClassesOfTeacher(int userID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        return getDelegate().getClassesOfTeacher(userID);
+    public Vector<Object> getClassesOfTeacher(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+        return getDelegate().getClassesOfTeacher(userID, schoolID);
     }
 
     @Override
-    public boolean isStudent(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        return getDelegate().isStudent(userID, schoolID);
+    public boolean isInStudentRole(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+        return getDelegate().isInStudentRole(userID, schoolID);
     }
     
     @Override
-    public Vector<Object> getClassesOfStudent(int userID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
-        return getDelegate().getClassesOfStudent(userID);
+    public Vector<Object> getClassesOfStudent(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
+        return getDelegate().getClassesOfStudent(userID,schoolID);
     }
 
     @Override

@@ -1,7 +1,5 @@
 package fi.dwo.server.persistence;
 
-
-
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -32,6 +30,9 @@ import fi.beans.xmlrpc.Servlet;
 import fi.dwo.commons.persistence.DbAccessIF;
 import java.sql.PreparedStatement;
 import java.util.HashMap;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  * Supplies doGet for database status info and database-operations via doPost
@@ -42,10 +43,16 @@ public class DataSourceAccessServlet extends Servlet {
 
     private static final Logger log = Logger.getLogger(DataSourceAccessServlet.class.getName());
 
+    private final static EntityManagerFactory emf = Persistence.createEntityManagerFactory("DWO_MySQLDB");
+
     private DataSource ds;
     private boolean monitor;
     private boolean threading;
     static private ThreadLocal<HttpSession> session = new ThreadLocal<HttpSession>();
+
+    private static EntityManager getEntityManager() {
+        return emf.createEntityManager();
+    }
 
     static class MonitorDataSourceAccess extends DataSourceAccess implements fi.beans.jdbc.DbConnectIF, DbAccessIF {
 
@@ -66,14 +73,36 @@ public class DataSourceAccessServlet extends Servlet {
         public Hashtable login(String username, String password)
                 throws SQLException, DwoXmlRpcException {
             Hashtable h = super.login(username, password);
+            log.log(Level.INFO, "Session login for user {0}.", new Object[]{username});
+
+            EntityManager em;
+            EntityManagerFactory emf;
+            emf = Persistence.createEntityManagerFactory("DWO_MySQLDB");
+            em = emf.createEntityManager();
+
+            PersistentUser user;
+            PersistentHasRole hasRole;
+            try {
+                javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
+                q.setParameter("username", username);
+                user = (PersistentUser) q.getSingleResult();
+                log.log(Level.FINE, "Retrieved user {0} with role {1}.", new Object[]{user});
+                q = em.createQuery("SELECT p FROM PersistentHasRole p WHERE p.persistentHasRolePK.schoolGroupID = :schoolGroupID AND p.persistentHasRolePK.userID= :userID");
+                q.setParameter("userID", user.getUserID()).setParameter("schoolGroupID", user.getSchoolGroupID());
+                hasRole = (PersistentHasRole) q.getSingleResult();
+
+            } finally {
+                em.close();
+            }
+            DwoSessionData sessionData = new DwoSessionData();
+
+            sessionData.setLoginUser(user);
+            sessionData.setLoginRole(hasRole);
             
-            //TODO V1_3 Fetch PersistentUser
-            DwoSessionData sessionData=null;// =  dbAccess.... ; 
-            //TODO V1_3 Ensure that GetSchoolGroup en classId is correctly set.
-            
+            log.log(Level.INFO, "Session {0} stored logged in user {1} with role {2}.", new Object[]{session.get().getId(),user.toString(), hasRole.toString()});
+
             //Set some session fixed variables. 
             session.get().setAttribute("DwoSessionData", sessionData);
-            //TODO V1_3 use DwoSessionData when cleaning up code.
             session.get().setAttribute("login", username);
             return h;
         }

@@ -5,15 +5,15 @@
  */
 package fi.dwo.server.persistence;
 
-import fi.dwo.commons.persistence.PersistentHasRole;
-import fi.dwo.commons.persistence.PersistentUser;
+import java.io.Serializable;
+
 
 /**
  * An object to store all relevant DWO SessionData. 
  * 
  * @author plas0006
  */
-class DwoSessionData {
+class DwoSessionData implements Serializable{
     private PersistentUser loginUser;
     private PersistentHasRole loginRole;
 
@@ -44,4 +44,5 @@ class DwoSessionData {
     protected void setLoginRole(PersistentHasRole loginRole) {
         this.loginRole = loginRole;
     }
+
 }
