@@ -596,11 +596,11 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Hashtable) object;
     }
 
-    public boolean deleteUserFromSchool(int a, int b) throws IOException, XmlRpcException {
+    public boolean deleteUserWithRoleFromSchool(int a, int b) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(new Integer(a));
         vv.addElement(new Integer(b));
-        Object object = invoke("deleteUserFromSchool", vv);
+        Object object = invoke("deleteUserWithRoleFromSchool", vv);
         return ((Boolean) object).booleanValue();
     }
 

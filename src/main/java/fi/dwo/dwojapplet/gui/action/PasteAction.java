@@ -6,6 +6,7 @@ import fi.dwo.dwojapplet.domain.AppletConfig;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.CourseMap;
 import fi.dwo.dwojapplet.domain.DWO;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.CourseManagementPanel;
@@ -135,7 +136,7 @@ public class PasteAction extends GuiAction {
 // save ordering 
         if (DWO.SEQUENCE) {
             try {
-                PersistenceFacade.instance().setCourseSequence(c.getChildren(), User.getCurrentUser().getSchool());
+                PersistenceFacade.instance().setCourseSequence(c.getChildren(), DwoHelper.getCurrentUser().getSchool());
             } catch (PersistenceException e) {
             }
         }

@@ -145,7 +145,7 @@ public class NewAction extends GuiAction {
             Object userObject = map.getUserObject();
             CourseMap[] courses = map.getChildren();
 
-            School school = User.getCurrentUser().getSchool();
+            School school = DwoHelper.getCurrentUser().getSchool();
 // een profile admin mag de standaard modules sorteren, maar de school is dan wel null				
             if (userObject == ModuleTreePanel.STANDAARD_DWO_MAP || ModuleTreePanel.STANDAARD_DWO_MODULES == userObject) {
                 school = null;

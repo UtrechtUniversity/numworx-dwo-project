@@ -144,7 +144,7 @@ public class CenterPanel extends JPanel implements CourseContainer {
         }
         if (iconizer) {
 
-            if (User.getCurrentUser() instanceof Teacher) {
+            if (DwoHelper.getCurrentUser() instanceof Teacher) {
                 tree = ModuleTreePanel.newInstance(GuiCreator.instance().dwo);
             } else {
                 tree = ModuleTreePanel.newStudentInstance(GuiCreator.instance().getDWO());

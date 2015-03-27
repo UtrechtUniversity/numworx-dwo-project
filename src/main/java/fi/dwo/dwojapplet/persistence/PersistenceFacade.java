@@ -1,5 +1,3 @@
-// Source file:
-// N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\persistence\\PersistenceFacade.java
 package fi.dwo.dwojapplet.persistence;
 
 import fi.beans.base64code.StringCodeObject;
@@ -1714,12 +1712,22 @@ public class PersistenceFacade {
             throw new SchoolException(SchoolException.EX_UNKNOWN_ERROR, e);
         }
     }
-
-    public boolean deleteUserFromSchool(User u) {
-        if (u.getSchool() != null) {
+/**
+ * 
+ * This function should be removed for MANY TO SCHOOLS
+ * 
+ * @param userWithRole
+ * @return 
+ * 
+ * @depreciated
+ */
+    
+//TODO MANY TO SCHOOLS    change signature to has role reference
+    public boolean deleteUserFromSchool(User userWithRole) {
+        if (userWithRole.getSchool() != null) {
             try {
-                boolean result = DbAccessCreator.instance().deleteUserFromSchool(u.getID(), u.getSchool().getSchoolID());
-                MapperCreator.instance(User.class).removeObject(u.getID());
+                boolean result = DbAccessCreator.instance().deleteUserWithRoleFromSchool(userWithRole.getUserID(), userWithRole.getSchoolGroupID());
+                MapperCreator.instance(User.class).removeObject(userWithRole.getUserID());
                 return result;
 
             } catch (IOException e) {
@@ -2381,7 +2389,7 @@ public class PersistenceFacade {
         if (!DWO.SEQUENCE) {
             return courses;
         }
-        return sequence(courses, User.getCurrentUser());
+        return sequence(courses, DwoHelper.getCurrentUser());
     }
 
     public Course[] sequence(Course[] courses, User currentUser) {
@@ -2543,7 +2551,7 @@ public class PersistenceFacade {
 
     private Vector clipBeforeAfter(Vector v) {
         Iterator iter = v.iterator();
-        long now = System.currentTimeMillis() + User.getCurrentUser().getTimeZone();
+        long now = System.currentTimeMillis() + DwoHelper.getCurrentUser().getTimeZone();
         while (iter.hasNext()) {
             Hashtable ht = (Hashtable) iter.next();
             Object o = ht.get("notBefore");

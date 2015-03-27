@@ -705,7 +705,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
         	updown = false;
         	try {
         		
-				School school = User.getCurrentUser().getSchool();
+				School school = DwoHelper.getCurrentUser().getSchool();
 // een profile admin mag de standaard modules sorteren, maar de school is dan wel null				
 				if(userObject== ModuleTreePanel.STANDAARD_DWO_MAP)
 					school = null;

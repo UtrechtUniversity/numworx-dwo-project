@@ -309,7 +309,7 @@ class CourseMapper extends XmlRpcMapper {
         c.setImageUrl((String) data.get("image"));
         c.setDwoProfile(((Integer) data.get("dwoProfileID")).intValue());
         c.setNotVisible(EEN.equals(data.get("notVisible")));
-        c.setNotVisible(c.isNotVisible() && !(User.getCurrentUser() instanceof Teacher));
+        c.setNotVisible(c.isNotVisible() && !(DwoHelper.getCurrentUser() instanceof Teacher));
         try {
             c.setSchoolID(((Integer) data.get("schoolID")).intValue());
         } catch (Exception e) {

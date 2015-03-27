@@ -5,7 +5,6 @@ package fi.dwo.dwojapplet.domain;
 /**
  * This class is responsible for the Group data.<br>
  * A group is the possible usergroup of the user (e.g. Teacher or Student).<br>
- * This is only used when at the registration-part of the DWO.
  *
  * @author M.J.B. Kupers
  *

@@ -12,7 +12,7 @@ import javax.swing.Action;
 public class LogoutAction extends AbstractAction {
 
     public LogoutAction() {
-        boolean gast = User.getCurrentUser() instanceof Guest;
+        boolean gast = DwoHelper.getCurrentUser() instanceof Guest;
         putValue(Action.NAME,
                 TextMapper.getText(gast ? TextMapper.GUIL_BTN_LOGIN : TextMapper.GUIL_BTN_LOGOFF));
 

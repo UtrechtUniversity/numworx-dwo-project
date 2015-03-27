@@ -8,6 +8,7 @@ import fi.beans.scorm2xml.Scorm2Xml;
 import fi.beans.stringutils.StringUtils;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.ResultScore;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.domain.Sco;
@@ -318,7 +319,7 @@ public class ResultLogger extends JPanel implements ActionListener {
                 lists[i].put(page, object);
             }
         }
-        sco.setUser(User.getCurrentUser());
+        sco.setUser(DwoHelper.getCurrentUser());
         partialModel.setColumnCount(pages.size() * 2);
         for (int i = 0; i < leerlingen.length; i++) {
             int j = 0;

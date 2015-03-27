@@ -50,7 +50,9 @@ public final class DwoHelper {
                                                      //depending on application or applet start.
     private static SchoolClass schoolClass;
     private static School school;
-
+    
+    private static User currentUser;
+    
     /**
      * Returns the current AppletUtil.
      *
@@ -373,5 +375,19 @@ public final class DwoHelper {
      */
     public static void setSchool(School aSchool) {
         school = aSchool;
+    }
+
+    /**
+     * @return the currentUser
+     */
+    public static User getCurrentUser() {
+        return currentUser;
+    }
+
+    /**
+     * @param aCurrentUser the currentUser to set
+     */
+    public static void setCurrentUser(User aCurrentUser) {
+        currentUser = aCurrentUser;
     }
 }
