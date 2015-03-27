@@ -31,7 +31,6 @@ import javax.persistence.UniqueConstraint;
 @NamedQueries({
     @NamedQuery(name = "PersistentUser.findAll", query = "SELECT p FROM PersistentUser p"),
     @NamedQuery(name = "PersistentUser.findByUserID", query = "SELECT p FROM PersistentUser p WHERE p.userID = :userID"),
-    @NamedQuery(name = "PersistentUser.findByClassID", query = "SELECT p FROM PersistentUser p WHERE p.classID = :classID"),
     @NamedQuery(name = "PersistentUser.findBySchoolGroupID", query = "SELECT p FROM PersistentUser p WHERE p.schoolGroupID = :schoolGroupID"),
     @NamedQuery(name = "PersistentUser.findByFirstname", query = "SELECT p FROM PersistentUser p WHERE p.firstname = :firstname"),
     @NamedQuery(name = "PersistentUser.findByMiddlename", query = "SELECT p FROM PersistentUser p WHERE p.middlename = :middlename"),
@@ -40,7 +39,6 @@ import javax.persistence.UniqueConstraint;
     @NamedQuery(name = "PersistentUser.findByPasswd", query = "SELECT p FROM PersistentUser p WHERE p.passwd = :passwd"),
     @NamedQuery(name = "PersistentUser.findByEmail", query = "SELECT p FROM PersistentUser p WHERE p.email = :email"),
     @NamedQuery(name = "PersistentUser.findByRegisterDate", query = "SELECT p FROM PersistentUser p WHERE p.registerDate = :registerDate"),
-    @NamedQuery(name = "PersistentUser.findByRights", query = "SELECT p FROM PersistentUser p WHERE p.rights = :rights"),
     @NamedQuery(name = "PersistentUser.findByLastLogin", query = "SELECT p FROM PersistentUser p WHERE p.lastLogin = :lastLogin")})
 
 public class PersistentUser implements Serializable {
@@ -50,8 +48,6 @@ public class PersistentUser implements Serializable {
     @Basic(optional = false)
     @Column(name = "userID", nullable = false)
     private Integer userID;
-    @Column(name = "classID")
-    private Integer classID;
     @Column(name = "schoolGroupID")
     private Integer schoolGroupID;
     @Basic(optional = false)
@@ -75,8 +71,6 @@ public class PersistentUser implements Serializable {
     @Column(name = "registerDate", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date registerDate;
-    @Column(name = "rights", length = 100)
-    private String rights;
     @Column(name = "lastLogin")
     @Temporal(TemporalType.DATE)
     private Date lastLogin;
@@ -104,14 +98,6 @@ public class PersistentUser implements Serializable {
 
     public void setUserID(Integer userID) {
         this.userID = userID;
-    }
-
-    public Integer getClassID() {
-        return classID;
-    }
-
-    public void setClassID(Integer classID) {
-        this.classID = classID;
     }
 
     public Integer getSchoolGroupID() {
@@ -176,14 +162,6 @@ public class PersistentUser implements Serializable {
 
     public void setRegisterDate(Date registerDate) {
         this.registerDate = registerDate;
-    }
-
-    public String getRights() {
-        return rights;
-    }
-
-    public void setRights(String rights) {
-        this.rights = rights;
     }
 
     public Date getLastLogin() {

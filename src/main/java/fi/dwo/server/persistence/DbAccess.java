@@ -285,7 +285,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     private final static String QRY_USER_LOGIN = "SELECT * "
             + "FROM tblUser u "
             + "join tblHasRole r on (u.schoolGroupID=r.schoolgroupID and u.userID = r.userID) "
-            + "LEFT JOIN tblClass ON tblUser.classID = tblClass.classID "
+            + "JOIN tblClass ON r.classID = tblClass.classID "
             + "WHERE (u.username = ?) " + "AND   (u.passwd = ?) ";
 
 // TODO DONE V1_3 picks no class
