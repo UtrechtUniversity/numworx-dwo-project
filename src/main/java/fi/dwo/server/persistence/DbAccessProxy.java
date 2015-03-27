@@ -498,9 +498,9 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
     }
 
     @Override
-    public boolean deleteUserFromSchool(int id, int schoolID)
+    public boolean deleteUserWithRoleFromSchool(int id, int schoolID)
             throws IOException, XmlRpcException, SQLException {
-        return getDelegate().deleteUserFromSchool(id, schoolID);
+        return getDelegate().deleteUserWithRoleFromSchool(id, schoolID);
     }
 
     @Override

@@ -414,27 +414,29 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     private final static String QRY_DELETE_DEFAULT = "DELETE FROM `{0}` "
             + "WHERE `{1}` = ?";
 
-//TODO V1_3 ensure that tblHasRole classID is set to a valid value.    
     private final static String QRY_DELETE_STUDENT_FROM_CLASS_IN_SCHOOL
             = "delete from tblStudentOf join tblClass using (classID) where schoolID = ?";
     
     private final static String QRY_DELETE_TEACHER_FROM_CLASS_IN_SCHOOL
             = "delete from tblTeacherOf join tblClass using (classID) where schoolID = ?";
 
-    // currently inactive see 'public boolean deleteSchool(int schoolID)'
     private final static String QRY_DELETE_STUDENTSCO_FROM_SCHOOL
             = "Select * FROM tblStudentSco where scoID in "
             + "(select scoID from tblSco join tblCourse using (CourseID)  where schoolID = ? )";
 
-//TODO V1_3 DELETE tblHasRole references too 
+    private final static String QRY_DELETE_SCO_FROM_SCHOOL
+                = "delete tblScoContext, tblScoData from tblScoContext join tblScoData using (scoID) where courseID in (SELECT courseID FROM tblCourse WHERE schoolID = ?)";
+    
+//TODO V1_3 DONE Delete tblHasRole references removed in  QRY_DELETE_ROLES_FROM_SCHOOL
     private final static String QRY_DELETE_USERS_FROM_SCHOOL
             = "UPDATE tblUser SET schoolGroupID = NULL WHERE "
             + "SchoolGroupID in (SELECT schoolGroupID FROM tblSchoolGroup where schoolID = ?)";
 
     private final static String QRY_DELETE_ROLES_FROM_SCHOOL
+            = "DELETE tblHasRole FROM tblHasRole join tblSchoolGroup on (schoolGroupID) WHERE "
+            + "schoolID = ?)";
     
-    
-//TODO V1_3 verify 
+//TODO V1_3 DONE Usage verified.
     private final static String QRY_DELETE_STUDENTSCO_BY_STUDENT = "DELETE tblStudentScoContext, tblStudentScoData "
             + "FROM tblStudentScoContext join tblStudentScoData using (studentSco) WHERE (userID = ?) ";
 
@@ -500,7 +502,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     /**
      * results of selected courses from a single user.
      */
-    //TODO V1_3 fix for many school/role options 
+    //TODO V1_4 fix for many school/role options 
     private final static String QRY_RESULTS_SINGLE = "SELECT tblStudentScoContext.userID, tblCourse.courseID, avg(score) as score, count(score) as totaal "
             + "FROM tblUser  "
 //            + "left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID "
@@ -569,7 +571,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     /**
      * Select the SCO scores of one student.
      */
-    //TODO V1_3 fix for many school/role options 
+    //TODO V1_4 fix for many school/role options 
     private static String QRY_RESULTS_SINGLE_STUDENT_COURSE
             = "SELECT tblUser.userID, tblScoContext.scoID, tblScoContext.sequencenr,  if(score=0,-1,score) as score, total_time "
             + "FROM ( tblScoContext, tblUser ) left join tblStudentScoContext on tblStudentScoContext.userID = tblUser.userID and tblStudentScoContext.scoID = tblScoContext.scoID "
@@ -593,7 +595,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 //            + "and   (tblClass.userID = ?) "
 //            + "group by tblClass.classID, tblScoContext.scoID "
 //            + "ORDER BY tblClass.classID, tblScoContext.sequencenr";
-   //TODO V1_3 fix for many school/role options 
+   //TODO V1_3 DONE RELATED TO COURSE
      private final static String QRY_RESULTS_COURSE = "SELECT tblTeacherOf.classID, tblScoContext.scoID, tblScoContext.sequencenr, "
             + "avg(score) as score, count(score) as totaal "
             + "FROM (tblTeacherOf, tblScoContext) "
@@ -684,7 +686,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     protected DbAccess(boolean check) {
         super(MYSQL2_SCIENCE_FISME, "dwo");
         if (check && checkVersion()) {
-            throw new RuntimeException("old sofware trying to use 1.2 database.");
+            throw new RuntimeException("old sofware trying to use new database.");
         }
     }
 
@@ -1008,7 +1010,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
      * @throws java.sql.SQLException
      */
-    //TODO V1_3 reads as broken method.
+    //TODO V1_3 DONE Added defaults and hasRole insertion
     @Override
     public boolean register(String username, String password, String firstname,
             String middlename, String lastname, String email,
@@ -1663,6 +1665,13 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps.close();
         // Link aan tblTeacherOfClass
         arguments[0] = "tblTeacherOf";
+        query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
+        ps = getStatement(query);
+        ps.setInt(1, userID);
+        ps.execute();
+        ps.close();
+        // Link aan tblHasRole
+        arguments[0] = "tblHasRole";
         query = MessageFormat.format(QRY_DELETE_DEFAULT, arguments);
         ps = getStatement(query);
         ps.setInt(1, userID);
@@ -2637,7 +2646,6 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      */
     @Override
     public boolean log(String s) {
-        //TODO V1_3 make log handler.
         log(Level.INFO, s, null);
         return false;
     }
@@ -3438,7 +3446,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         return true;
     }
 
-//TODO V1_3 fully broken function.    
+//TODO V1_3 DONE
     /**
      * Delete school from the database.
      *
@@ -3498,8 +3506,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         log.log(Level.FINE, "Deleted {0} StudentSco's.", new Object[]{ps.getUpdateCount()});
         ps.close();
 // 5) delete sco's die bij courses van school horen.
-         String QRY_DELETE_SCO_FROM_SCHOOL
-                = "delete tblScoContext, tblScoData from tblScoContext join tblScoData using (scoID) where courseID in (SELECT courseID FROM tblCourse WHERE schoolID = ?)";
+//         String QRY_DELETE_SCO_FROM_SCHOOL
+//                = "delete tblScoContext, tblScoData from tblScoContext join tblScoData using (scoID) where courseID in (SELECT courseID FROM tblCourse WHERE schoolID = ?)";
         ps = getStatement(QRY_DELETE_SCO_FROM_SCHOOL);
         ps.setInt(1, schoolID);
         ps.executeUpdate();
@@ -3518,7 +3526,12 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps = getStatement(QRY_DELETE_USERS_FROM_SCHOOL);
         ps.setInt(1, schoolID);
         ps.executeUpdate();
-        log.log(Level.FINE, "Deleted {0} users.", new Object[]{ps.getUpdateCount()});
+        log.log(Level.FINE, "Deleted {0} users defaults.", new Object[]{ps.getUpdateCount()});
+        //QRY_DELETE_ROLES_FROM_SCHOOL
+        ps = getStatement(QRY_DELETE_ROLES_FROM_SCHOOL);
+        ps.setInt(1, schoolID);
+        ps.executeUpdate();
+        log.log(Level.FINE, "Detached {0} users from a school.", new Object[]{ps.getUpdateCount()});
         ps.close();
 // 8) verwijder schoolgroup
         arguments2 = new String[]{"tblSchoolGroup", "schoolID"};
@@ -3681,7 +3694,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
     }
 
-    //TODO V1_3 fix method below. Clearly only a single role must be deleted.
+    //TODO V1_3 DONE fix method below. Clearly only a single role must be deleted.
     
     /**
      * Removes a user from the school. Removes occur for both student and
@@ -3696,7 +3709,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @throws SQLException
      */
     @Override
-    public boolean deleteUserFromSchool(int userID, int schoolID)
+    public boolean deleteUserWithRoleFromSchool(int userID, int schoolGroupID)
             throws IOException, XmlRpcException, SQLException {
 
         Connection c = getConnection();
@@ -3705,29 +3718,50 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             log.log(Level.FINE, "Transaction started.");
 
             //delete userID  from student links pointing to tblClass where schoolID matches. 
-            String sql = "DELETE FROM tblStudentOf WHERE userID = ? AND classID IN (SELECT classID FROM tblClass WHERE schoolID = ?)";
+            //String sql = "DELETE FROM tblStudentOf WHERE userID = ? AND classID IN (SELECT classID FROM tblClass WHERE tblSchoolGroup.schoolID = ?)";
+            String sql = "select * from tblStudentOf WHERE userID = ? AND tblStudentOf.classID "
+                    + "IN (SELECT tblClass.classID FROM tblClass join tblSchoolGroup using (schoolID) "
+                    + "join tblGroup using (groupID) join tblHasRole using (schoolGroupID) "
+                    + "WHERE schoolGroupID = ? and tblHasRole.userid = ? and groupname = 'STUDENT' )";
             PreparedStatement ps = getStatement(sql);
             ps.setInt(1, userID);
-            ps.setInt(2, schoolID);
+            ps.setInt(2, schoolGroupID);
+            ps.setInt(3, userID);
             int cnt = ps.executeUpdate();
             log.log(Level.FINE, "Deleted the student from {0} classes.", new Object[]{cnt});
 
             //delete user as teacherID  from teacher links pointing to tblClass where schoolID matches. 
-            sql = "DELETE FROM tblTeacherOf WHERE userID = ? AND classID IN (SELECT classID FROM tblClass WHERE schoolID = ?)";
+            //sql = "DELETE FROM tblTeacherOf WHERE tblTeacherOf join tblHasRole using (userID = ? AND classID IN (SELECT classID FROM tblClass WHERE schoolID = ?)";
+            sql = "select * from tblTeacherOf WHERE userID = ? AND tblTeacherOf.classID "
+                    + "IN (SELECT tblClass.classID FROM tblClass join tblSchoolGroup using (schoolID) "
+                    + "join tblGroup using (groupID) join tblHasRole using (schoolGroupID) "
+                    + "WHERE schoolGroupID = ? and tblHasRole.userid = ? and "
+                    + "(groupname = 'TEACHER' or groupname = 'SCHOOLADMIN')";
             ps = getStatement(sql);
             ps.setInt(1, userID);
-            ps.setInt(2, schoolID);
+            ps.setInt(2, schoolGroupID);
+            ps.setInt(3, userID);
             cnt = ps.executeUpdate();
             log.log(Level.FINE, "Deleted the teacher from {0} classes.", new Object[]{cnt});
 
+            //then delete user from hasRole
+            sql = "DELETE FROM tblHasRole  WHERE "
+                    + " userID = ? AND schoolGroupID=?";
+            ps = getStatement(sql);
+            ps.setInt(1, userID);
+            ps.setInt(2, schoolGroupID);
+            cnt = ps.executeUpdate();
+            log.log(Level.FINE, "Deleted the role of  <user {0}, schoolGroup {1}>.", new Object[]{userID,schoolGroupID});
+            
+            
             //then delete student from schoolgroup
             sql = "UPDATE tblUser SET schoolGroupID = NULL WHERE "
                     + " userID = ? AND schoolGroupID IN (SELECT schoolGroupID FROM tblSchoolGroup where schoolID = ?)";
             ps = getStatement(sql);
             ps.setInt(1, userID);
-            ps.setInt(2, schoolID);
+            ps.setInt(2, schoolGroupID);
             cnt = ps.executeUpdate();
-            log.log(Level.FINE, "Deleted the student from school group with schoolID {0}.", new Object[]{schoolID});
+            log.log(Level.FINE, "Cleared the default role for user {0} with schoolID {0}.", new Object[]{userID,schoolGroupID});
             c.commit();
             log.log(Level.FINE, "Transaction commited.");
 
