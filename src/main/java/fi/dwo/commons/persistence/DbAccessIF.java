@@ -538,7 +538,7 @@ public interface DbAccessIF extends DbAccessLogin {
     public Hashtable addSchool(int schoolId, String schoolName, String schoolLogin, Hashtable passwd)
             throws DwoXmlRpcException, IOException, XmlRpcException, SQLException, DwoXmlRpcException;
 
-    public boolean deleteUserFromSchool(int id, int schoolID)
+    public boolean deleteUserWithRoleFromSchool(int id, int schoolGroupID)
             throws IOException, XmlRpcException, SQLException;
 
     public boolean updateSchoolTo(int schoolID, Vector schoolTo)
