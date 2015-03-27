@@ -424,7 +424,9 @@ public class ProfilePanel extends JPanel implements CenterSubPanel,
             l.setLocation(10, 55);
             l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
             p.add(l);
-//TODO MANY TO MANY: Add multi-select class list.
+//TODO MANY TO MANY: Change panel to switch to different schools, roles and classes.
+//                   Add menu 'bewerken' to remove schools/roles or get registration panel.
+//                   Add menu to add/remove yourself to klasses. 
 //            /* Class field */
 //            groupChoice = new JComboBox();
 //            groupChoice.setBackground(p.getBackground());
