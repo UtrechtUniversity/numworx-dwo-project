@@ -45,8 +45,11 @@ public class TriforkAPI implements Scorm2004IF {
 	@Override
 	public String SetValue(String name, String value) {
 		if(Memento.SUSPEND_DATA.equals(name))
+		{
 			setResponse(value);
-		return "";
+			return "true";
+		}
+		return "false";
 	}
 
 	@Override

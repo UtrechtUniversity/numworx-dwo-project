@@ -145,7 +145,7 @@ public class MC2View extends Composite implements InteractionView {
 
 	public Widget asWidget() {
 		Widget wrap = facade.wrap(this);
-		wrap.addAttachHandler(new Handler() {
+		this.addAttachHandler(new Handler() {
 			
 			@Override
 			public void onAttachOrDetach(AttachEvent event) {
@@ -262,6 +262,9 @@ public class MC2View extends Composite implements InteractionView {
 	}
 	wnd.getBackground = function (viewer) {
 		return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.MC2View::getBackgroundAsString()()
+
+	wnd.getLessonMode = function (viewer) {
+		return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.MC2View::getLessonModeAsString()()
 	}	
 	return wnd.inner;
 }-*/;
@@ -349,5 +352,8 @@ public class MC2View extends Composite implements InteractionView {
 		return getBackground().value();
 	}
 
+	public String getLessonModeAsString() {
+		return comRoot.getLessonMode().toString();
+	}
 	
 }

@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.LessonMode;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.logical.shared.CloseEvent;
@@ -71,7 +72,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 	public static final String LEARNER_NAME = "cmi.learner_name";
 	public static final String LEARNER_PREFERENCE_LANGUAGE = "cmi.learner_preference.language";
 	public static final String LOCATION = "cmi.location";
-
+	
+	public static final String LESSON_MODE = "cmi.mode";
 	private Scorm2004IF api;
 
 	private JSONObject suspendData;
@@ -350,79 +352,6 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		flush();
 	}
 
-//	private JSONValue toJSONObject(Map<String, Object> value)
-//	{
-//		if (value != null)
-//		{
-//			JSONObject result = new JSONObject();
-//			for (Map.Entry<String, Object> entry : value.entrySet())
-//			{
-//				result.put(entry.getKey(), toJSONValue(entry.getValue()));
-//			}
-//			return result;
-//		}
-//		else
-//			return JSONNull.getInstance();
-//	}
-//
-//	private JSONValue toJSONValue(Object value)
-//	{
-//		if (value instanceof JSONValue)
-//			return (JSONValue) value;
-//		if (value instanceof Number)
-//		{
-//			return new JSONNumber(((Number) value).doubleValue());
-//		}
-//		if (value instanceof Boolean)
-//		{
-//			return JSONBoolean.getInstance(((Boolean) value).booleanValue());
-//		}
-//		if (value instanceof String)
-//		{
-//			return new JSONString(value.toString());
-//		}
-//		if (value == null)
-//			return JSONNull.getInstance();
-//
-//		if (value instanceof Collection)
-//		{
-//			return toJSONArray(((Collection) value).toArray());
-//		}
-//		if (value instanceof Object[])
-//		{
-//			return toJSONArray((Object[]) value);
-//		}
-//		if (value instanceof Map)
-//		{
-//			return toJSONObject((Map<String, Object>) value);
-//		}
-//		if (value instanceof boolean[])
-//		{
-//			return toJSONArray((boolean[]) value);
-//		}
-//		throw new IllegalArgumentException("unsupported class " + value.getClass());
-//		//return null;
-//	}
-//
-//	private JSONValue toJSONArray(boolean[] objects)
-//	{
-//		JSONArray array = new JSONArray();
-//		for (int i = 0; i < objects.length; i++)
-//		{
-//			array.set(i, JSONBoolean.getInstance(objects[i]));
-//		}
-//		return array;
-//	}
-//
-//	private JSONValue toJSONArray(Object[] objects)
-//	{
-//		JSONArray array = new JSONArray();
-//		for (int i = 0; i < objects.length; i++)
-//		{
-//			array.set(i, toJSONValue(objects[i]));
-//		}
-//		return array;
-//	}
 
 	@SuppressWarnings("unchecked")
 	public HashMap<String, Object>[][] getOpdrContStates(HashMap<String, Object>[][] o)
@@ -729,4 +658,13 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		return zelftoetsNagekeken.booleanValue();
 	}
 
+	public LessonMode getLessonMode() {
+		try {
+			String mode = getValue(LESSON_MODE);
+			return LessonMode.valueOf(mode);
+		} catch (Exception e) {
+			return LessonMode.normal;
+		}
+	}
+	
 }

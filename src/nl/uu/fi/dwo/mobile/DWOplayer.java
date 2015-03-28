@@ -202,7 +202,7 @@ public class DWOplayer implements EntryPoint
 		initProfile();
 	}
 
-	private void initProfile() {
+	protected void initProfile() {
 		AsyncCallback<Map<String,Object>> getProfileCallback = new AsyncCallback<Map<String,Object>>() {
 
 			@Override

@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
@@ -662,5 +663,10 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		if(comRoot!=this)
 			return comRoot.getFormuleClipboard();
 		return null;
+	}
+
+	@Override
+	public LessonMode getLessonMode() {
+		return comRoot.getLessonMode(); // TODO sent lessonMode.name to 'Stub' 
 	}
 }

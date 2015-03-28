@@ -18,10 +18,14 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 
 public class FacetMemento extends Memento {
 
-	static class StringList extends AbstractList<String> implements List<String> {
+	private static class StringList extends AbstractList<String> implements List<String> {
 
 		JSONArray array;
 		
+		private StringList() {
+			array = new JSONArray();
+		}
+
 		@Override
 		public String get(int index) {
 			JSONValue jsonValue = array.get(index);

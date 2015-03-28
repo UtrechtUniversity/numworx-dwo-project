@@ -303,6 +303,9 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 		
 	}
 
-	
+	@Override
+	public LessonMode getLessonMode() {
+		return LessonMode.normal; // TODO retrieve lesson_mode from 'StubView' 
+	}
 
 }

@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Panel;
@@ -27,7 +28,10 @@ import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchDelegate;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
+import fi.wiskopdr.FormuleParser;
+import fi.wiskopdr.expressies.Expressie;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
@@ -55,7 +59,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			System.out.println("mgwt.onTap: " + targetElement);
 			if(targetElement == target || targetElement.getParentElement() == target)
 				comRoot.getKeyboard().setEditor(deze);
-				comRoot.getKeyboard().focus();
+				comRoot.getKeyboard().softFocus();
 			
 		}
 
@@ -64,24 +68,109 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private static final char Σ = 'Σ';
 	private static final char KWADRAAT = '²';
 
-	public class FXHandler implements ClickHandler {
+	
+	private class FormulaVak extends Composite implements HasText {
+
+		
+		@Override
+		public String getText() {
+			return "$f" + editor.toString() + "@";
+		}
 
 		@Override
-		public void onClick(ClickEvent event) {
-			FormuleEditor editor = new FormuleEditor();
+		public void setText(String text) {
+			editor.clearMain();
+			editor.insert(text.substring(2, text.length()-1));
+		}
+		
+		private FormuleEditor editor;
+		
+		private FormulaVak() {
+			editor = new FormuleEditor();
 			editor.insert("?");
 			Panel panel = editor.getAsPanel();
-			comRoot.getKeyboard().setEditor(editor);
+			//comRoot.getKeyboard().setEditor(editor);
 			TouchDelegate wrap = new TouchDelegate(panel);
 			wrap.addTapHandler(new Tapper(editor, panel.getElement()));
 			panel.setWidth("30px");
 			panel.setHeight("30px");
 			panel.getElement().getStyle().setBackgroundColor("#808080");
 			panel.getElement().getStyle().setDisplay(Style.Display.INLINE);
-			sb.insert(cursor, '@');
-			flow.insert(panel, cursor++);
+			initWidget(panel);
+		}
+	}
+	
+	private class CalculatorVak extends Composite implements HasText, ClickHandler {
+
+		@Override
+		public String getText() {
+			return "$R" + editor.toString() + "@";
 		}
 
+		@Override
+		public void setText(String text) {
+			editor.clearMain();
+			editor.insert(text.substring(2, text.length()-1));
+			onClick(null);
+		}		
+		private FormuleEditor editor;
+		private FormuleViewer viewer;
+		private Button btn;
+
+		public CalculatorVak() {
+			editor = new FormuleEditor();
+			editor.insert('0');
+			HorizontalPanel hbox = new HorizontalPanel();
+			Panel panel = editor.getAsPanel();
+			TouchDelegate wrap = new TouchDelegate(panel);
+			wrap.addTapHandler(new Tapper(editor, panel.getElement()));
+			hbox.add(panel);
+			btn = new Button("=");
+			btn.addClickHandler(this);
+			hbox.add(btn);
+			viewer = new FormuleViewer("0");
+			hbox.add(viewer.getAsPanel());
+			initWidget(hbox);
+		}
+
+		@Override
+		public void onClick(ClickEvent event) {
+			String x = editor.toString();
+			Expressie antwoord = FormuleParser.geefExpressie("$f" + x + "@");
+			viewer.getAsPanel().removeFromParent();
+			if(antwoord != null) 
+			{
+				x = String.valueOf(antwoord.geefWaarde());
+			} 
+			viewer = new FormuleViewer(x);
+			((Panel) getWidget()).add(viewer.getAsPanel());
+		}
+		
+		
+	}
+	
+	
+	
+	public class FXHandler implements ClickHandler {
+
+		@Override
+		public void onClick(ClickEvent event) {
+			FormulaVak panel = new FormulaVak();
+			sb.insert(cursor, '@');
+			flow.insert(panel, cursor++);
+			comRoot.getKeyboard().setEditor(panel.editor);
+		}
+	}
+	
+	class CalcHandler implements ClickHandler {
+		@Override
+		public void onClick(ClickEvent event) {
+			CalculatorVak panel = new CalculatorVak();
+			sb.insert(cursor, '@');
+			flow.insert(panel, cursor++);
+			comRoot.getKeyboard().setEditor(panel.editor);
+		}
+		
 	}
 
 	StringBuilder sb = new StringBuilder();
@@ -112,9 +201,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			menubar.setPixelSize(width, menuheight=30);
 			hbox.add(menubar);
 		}
-		boolean boxMetRand = true;
-		if(launchdata.containsKey("boxMetRand"))
-				boxMetRand = launchdata.getBoolean("boxMetRand");
+		boolean boxMetRand;
+		boxMetRand = launchdata.getBoolean("boxMetRand", true);
 		
 		content = getContent(launchdata);
 		content.setPixelSize(width, height-menuheight);
@@ -164,16 +252,18 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		boolean rekentool = true;
 		boolean formuleKnop = true;
 		boolean formuleToolPopup = true;
-		boolean graftool = true;
-		if(launchdata.containsKey("formuleKnop")) formuleKnop = launchdata.getBoolean("formuleKnop");
-		if(launchdata.containsKey("grafTool")) graftool = launchdata.getBoolean("grafTool");
-		if(launchdata.containsKey("rekenTool")) rekentool = launchdata.getBoolean("rekenTool");
+		boolean graftool = false;
+		formuleKnop = launchdata.getBoolean("formuleKnop", formuleKnop);
+		//if(launchdata.containsKey("grafTool")) graftool = launchdata.getBoolean("grafTool");
+		rekentool = launchdata.getBoolean("rekenTool", rekentool);
 		
 		FlowPanel menubar = new FlowPanel();
 		Button fx = new Button("f(x)"); if(formuleKnop) menubar.add(fx);
 		fx.addClickHandler(new FXHandler());
 		Button calc = new Button("calc"); if(rekentool) menubar.add(calc);
+		calc.addClickHandler(new CalcHandler());
 		Button graph = new Button("gr");  if(graftool) menubar.add(graph);
+		
 		return menubar;
 	}
 
@@ -215,8 +305,16 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	@Override
 	public HashMap<String, Object> getState() {
+		StringBuilder sb = new StringBuilder();
+		int count = flow.getWidgetCount();
+		for(int i=0; i < count; i++) {
+			Widget child = flow.getWidget(i);
+			if(child instanceof HasText) {
+				sb.append(((HasText) child).getText());
+			}
+		}
 		HashMap<String,Object> state = new HashMap<String,Object>();
-		state.put("tekst", getText());
+		state.put("tekst", sb.toString());
 		return state;
 	}
 
@@ -270,12 +368,45 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	@Override
 	public void insert(String text) {
 		char[] chars = text.toCharArray();
-		for (int i = 0; i < chars.length; i++) {
-			if(chars[i] == '\n')
-				enter();
-			else
-				insert(chars[i]);
+		int next = 1;
+		for (int i = 0; i < chars.length; i+=next) {
+			next = 1;
+			switch (chars[i])
+			{
+			case '\n': enter(); break;
+			default: insert(chars[i]); break;
+			case '$' : 
+				next = findAt(chars, i, chars.length);
+				String string = new String(chars, i, next);
+				if(chars[i+1] == 'f')
+				{		
+						FormulaVak fv = new FormulaVak();
+						fv.setText(string);
+						sb.insert(cursor, '@');
+						flow.insert(fv,cursor++);
+						break;
+				}
+				if (chars[i+1] == 'R') {
+						CalculatorVak cv = new CalculatorVak();
+						cv.setText(string);
+						sb.insert(cursor, '@');
+						flow.insert(cv, cursor++);
+				}
+				break;
+			}
 		}
+	}
+
+	private int findAt(char[] chars, int i, int length) {
+		int bal = 0;
+		for (int j = i+1; j < chars.length; j++) {
+			if(chars[j] == '$') bal++;
+			else if(chars[j]== '@') {
+				if( bal-- <= 0) 
+					return j-i+1;
+			}
+		}
+		return length;
 	}
 
 	@Override
@@ -294,10 +425,17 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		
 	}
 
+	private class Enter extends InlineHTML implements HasText {
+		private Enter() {
+			super("<br>");
+		}
+		public String getText() { return "\n"; }
+	}
+	
 	@Override
 	public void enter() {
 		sb.insert( cursor, '\n');
-		flow.insert(new InlineHTML("<br>"), cursor); cursor++;
+		flow.insert(new Enter(), cursor); cursor++;
 	}
 
 	@Override

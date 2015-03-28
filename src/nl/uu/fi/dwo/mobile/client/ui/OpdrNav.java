@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
+import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
@@ -769,5 +770,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	public static EventBus getEventBus() {
 		return BUS;
+	}
+
+	@Override
+	public LessonMode getLessonMode() {
+		return memento.getLessonMode();
 	}
 }

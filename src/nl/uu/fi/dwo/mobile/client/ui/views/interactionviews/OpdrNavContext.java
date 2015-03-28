@@ -6,6 +6,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
+import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
@@ -134,6 +135,14 @@ public class OpdrNavContext implements OpdrNavIF {
 	@Override
 	public String getUUID() {
 		return UUID;
+	}
+
+	/**
+	 * delegate to comRoot.
+	 */
+	@Override
+	public LessonMode getLessonMode() {
+		return comRoot.getLessonMode();
 	}
 
 }

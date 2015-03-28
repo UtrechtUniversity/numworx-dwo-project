@@ -23,6 +23,7 @@ public interface OpdrNavIF
 	String getLearnerName();
 	CssColor getBackground();
 	String getUUID();
+	LessonMode getLessonMode();
 	
 	HandlerRegistration addCBookEventListener(String command, CBookEventListener listener);
 	void fireEvent(CBookEvent event);

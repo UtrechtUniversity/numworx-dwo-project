@@ -20,7 +20,7 @@ public class FacetHelper {
 			list = new Vector<FacetAware.Type>();
 			ObjectMap customInteraction = launchData.getObjectMap("customInteraction");
 			if(customInteraction != null) {
-				String[] resourceTypes = customInteraction.getStringArray("resourseTypes");
+				String[] resourceTypes = customInteraction.getStringArray("responseTypes");
 				for (int i = 0; i < resourceTypes.length; i++) {
 					list.add(FacetAware.Type.valueOf(resourceTypes[i]));
 				}
