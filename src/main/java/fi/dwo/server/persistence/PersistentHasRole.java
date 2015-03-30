@@ -23,7 +23,7 @@ import javax.persistence.UniqueConstraint;
  * @author plas0006
  */
 @Entity
-@Table(name = "tblhasrole", catalog = "dwo_large_v1_3", schema = "", uniqueConstraints = {
+@Table(name = "tblhasrole", schema = "", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"schoolGroupID", "userID"})})
 @NamedQueries({
     @NamedQuery(name = "PersistentHasRole.findAll", query = "SELECT p FROM PersistentHasRole p"),

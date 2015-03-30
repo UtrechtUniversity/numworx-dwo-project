@@ -26,7 +26,7 @@ import javax.persistence.UniqueConstraint;
  * @author plas0006
  */
 @Entity
-@Table(name = "tbluser", catalog = "dwo_large_v1_3", schema = "", uniqueConstraints = {
+@Table(name = "tbluser", schema = "", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"username"})})
 @NamedQueries({
     @NamedQuery(name = "PersistentUser.findAll", query = "SELECT p FROM PersistentUser p"),

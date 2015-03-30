@@ -4,6 +4,7 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>fi.dwo.server.persistence.PersistentHasRole</class>
     <class>fi.dwo.server.persistence.PersistentUser</class>
+    <class>fi.dwo.server.persistence.Tbldwosystemparameters</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <shared-cache-mode>NONE</shared-cache-mode>
     <properties>
@@ -13,7 +14,7 @@
       <property name="javax.persistence.jdbc.user" value="dwo"/>
     </properties>
   </persistence-unit>
-<!--  <persistence-unit name="DWO_MySQLocalDB" transaction-type="RESOURCE_LOCAL">
+  <!--  <persistence-unit name="DWO_MySQDB" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>fi.dwo.server.persistence.PersistentHasRole</class>
     <class>fi.dwo.server.persistence.PersistentUser</class>
