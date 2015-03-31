@@ -425,11 +425,11 @@ public class AntwoordTekstVak implements InteractionView{
 		basisPanel.add(goedKrulHalfImage);
 		basisPanel.add(foutKruisImage);
 		basisPanel.setWidgetRightWidth(goedKrulImage, 0, Style.Unit.PX, 15, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(goedKrulImage, 0, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(goedKrulImage, 0, Style.Unit.PX, 20, Style.Unit.PX);
 		basisPanel.setWidgetRightWidth(goedKrulHalfImage, 0, Style.Unit.PX, 15, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(goedKrulHalfImage, 0, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(goedKrulHalfImage, 0, Style.Unit.PX, 20, Style.Unit.PX);
 		basisPanel.setWidgetRightWidth(foutKruisImage, 0, Style.Unit.PX, 15, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(foutKruisImage, 0, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(foutKruisImage, 0, Style.Unit.PX, 20, Style.Unit.PX);
 		goedKrulImage.setVisible(false);
 		goedKrulHalfImage.setVisible(false);
 		foutKruisImage.setVisible(false);
