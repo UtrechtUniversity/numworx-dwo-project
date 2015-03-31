@@ -116,6 +116,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
             "auteur: Peter Boon",
             "programmeur: M.J.B. Kupers,",
             "Wim van Velthoven",
+            "Gert van der Plas",
             "Freudenthal Instituut",
             "www.fisme.science.uu.nl",
             ""
