@@ -261,7 +261,7 @@ public class AntwoordKeuzeVak implements InteractionStub{
 		//goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.goedkrul_en().getSafeUri());
 		//foutKruisImage = new Image(DWOplayer.DWO_BUNDLE.foutkruis().getSafeUri());
 		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
-		foutKruisImage = new Image(DWOplayer.DWO_BUNDLE.mw_kruisje_rood().getSafeUri());
+		foutKruisImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
 		
 		
 //		checkimg = new Image(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
@@ -345,9 +345,9 @@ public class AntwoordKeuzeVak implements InteractionStub{
 		checkPanel.add(foutKruisImage);
 		checkPanel.add(feedbackLabel);
 		checkPanel.setWidgetRightWidth(goedKrulImage, 1, Style.Unit.PX, 15, Style.Unit.PX);
-		checkPanel.setWidgetTopHeight(goedKrulImage, -3, Style.Unit.PX, 15, Style.Unit.PX);
-		checkPanel.setWidgetRightWidth(foutKruisImage, 2, Style.Unit.PX, 15, Style.Unit.PX);
-		checkPanel.setWidgetTopHeight(foutKruisImage, -5, Style.Unit.PX, 15, Style.Unit.PX);
+		checkPanel.setWidgetTopHeight(goedKrulImage, -3, Style.Unit.PX, 20, Style.Unit.PX);
+		checkPanel.setWidgetRightWidth(foutKruisImage, 1, Style.Unit.PX, 15, Style.Unit.PX);
+		checkPanel.setWidgetTopHeight(foutKruisImage, -3, Style.Unit.PX, 20, Style.Unit.PX);
 		checkPanel.setWidgetRightWidth(feedbackLabel, 5, Style.Unit.PX, 15, Style.Unit.PX);
 		checkPanel.setWidgetBottomHeight(feedbackLabel, 0, Style.Unit.PX, 10, Style.Unit.PX);
 		

@@ -619,7 +619,7 @@ public class CheckSelectieUnit implements InteractionStub
 		//goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.goedkrul_en().getSafeUri());
 		//foutKruisImage = new Image(DWOplayer.DWO_BUNDLE.foutkruis().getSafeUri());
 		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
-		foutKruisImage = new Image(DWOplayer.DWO_BUNDLE.mw_kruisje_rood().getSafeUri());
+		foutKruisImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
 		
 		basisPanel.add(goedKrulImage);
 		basisPanel.add(foutKruisImage);
@@ -628,9 +628,9 @@ public class CheckSelectieUnit implements InteractionStub
 		//basisPanel.setWidgetLeftWidth(foutKruisImage, imWidth, Style.Unit.PX, 30, Style.Unit.PX);
 		//basisPanel.setWidgetTopHeight(foutKruisImage, 0, Style.Unit.PX, imHeight + 5, Style.Unit.PX);
 		basisPanel.setWidgetRightWidth(goedKrulImage, 1, Style.Unit.PX, 15, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(goedKrulImage, 6, Style.Unit.PX, 15, Style.Unit.PX);
-		basisPanel.setWidgetRightWidth(foutKruisImage, 2, Style.Unit.PX, 15, Style.Unit.PX);
-		basisPanel.setWidgetTopHeight(foutKruisImage, 5, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(goedKrulImage, 6, Style.Unit.PX, 20, Style.Unit.PX);
+		basisPanel.setWidgetRightWidth(foutKruisImage, 1, Style.Unit.PX, 15, Style.Unit.PX);
+		basisPanel.setWidgetTopHeight(foutKruisImage, 5, Style.Unit.PX, 20, Style.Unit.PX);
 		goedKrulImage.setVisible(false);
 		foutKruisImage.setVisible(false);
 		
