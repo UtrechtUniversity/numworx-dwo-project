@@ -1,5 +1,7 @@
 package fi.dwo.server.persistence;
 
+import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import java.io.IOException;
 import java.io.PrintWriter;

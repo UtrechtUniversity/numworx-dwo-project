@@ -16,9 +16,9 @@
   </persistence-unit>-->
    <persistence-unit name="DWO_MySQLDB" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <class>fi.dwo.server.persistence.PersistentHasRole</class>
-    <class>fi.dwo.server.persistence.PersistentUser</class>
-    <class>fi.dwo.server.persistence.DwoSystemParameters</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentHasRole</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentUser</class>
+    <class>fi.dwo.commons.persistence.entities.DwoSystemParameters</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <shared-cache-mode>NONE</shared-cache-mode>
     <properties>
@@ -28,4 +28,5 @@
       <property name="javax.persistence.jdbc.user" value="root"/>
     </properties>
   </persistence-unit>
+--&gt;
 </persistence>

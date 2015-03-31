@@ -5,6 +5,8 @@
  */
 package fi.dwo.server.persistence;
 
+import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import java.io.Serializable;
 
 

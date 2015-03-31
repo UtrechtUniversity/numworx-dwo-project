@@ -5,6 +5,7 @@
  */
 package fi.dwo.server.persistence;
 
+import fi.dwo.commons.persistence.entities.DwoSystemParameters;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,8 +27,6 @@ public class ServerStatus {
 
     private final static EntityManagerFactory emf = Persistence.createEntityManagerFactory("DWO_MySQLDB");
 
-    @GET
-    @Produces({"application/json, application/xml"})
     public List<DwoSystemParameters> getStatus() {
         EntityManager em;
         em = emf.createEntityManager();
@@ -41,15 +40,45 @@ public class ServerStatus {
         } finally {
             em.close();
         }
+//        StringBuilder string = new StringBuilder();
+//        for (DwoSystemParameters p : result) {
+//            string.append(p.getName());
+//            string.append(" ");
+//            string.append(p.getValue());
+//            string.append("\n");
+//        }
+//        log.log(Level.INFO, "Made output:", new Object[]{string.toString()});
+
+        return result;
+    }
+
+    @GET
+    @Produces({"application/json"})
+    @Path("/json")
+    public List<DwoSystemParameters> getStatusJson() {
+        return getStatus();
+    }
+
+    @GET
+    @Produces({"application/xml"})
+    @Path("/xml")
+    public List<DwoSystemParameters> getStatusXml() {
+        return getStatus();
+    }
+
+    @GET
+    @Produces({"text/html"})
+    @Path("/html")
+    public String getStatusHtml() {
+        List<DwoSystemParameters> result = getStatus();
         StringBuilder string = new StringBuilder();
-        for(DwoSystemParameters p: result){
+        for (DwoSystemParameters p : result) {
             string.append(p.getName());
             string.append(" ");
             string.append(p.getValue());
             string.append("\n");
         }
-            log.log(Level.INFO, "Made output:", new Object[]{string.toString()});
-
-        return result;
+        return string.toString();
     }
+
 }
