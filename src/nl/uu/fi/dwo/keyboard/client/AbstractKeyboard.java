@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.keyboard.client;
 
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
+import nl.uu.fi.dwo.interaction.client.keyboard.AbstractEditor;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;

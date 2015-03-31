@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.keyboard.client;
 
+import nl.uu.fi.dwo.interaction.client.keyboard.AbstractEditor;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.ui.Label;
