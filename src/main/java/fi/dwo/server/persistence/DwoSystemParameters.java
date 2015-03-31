@@ -23,14 +23,14 @@ import javax.ws.rs.Produces;
  * @author plas0006
  */
 @Entity
-@Table(name = "tbldwosystemparameters", catalog = "dwo_large_v1_3", schema = "")
+@Table(name = "tbldwosystemparameters", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Tbldwosystemparameters.findAll", query = "SELECT t FROM Tbldwosystemparameters t"),
-    @NamedQuery(name = "Tbldwosystemparameters.findByName", query = "SELECT t FROM Tbldwosystemparameters t WHERE t.name = :name"),
-    @NamedQuery(name = "Tbldwosystemparameters.findByValue", query = "SELECT t FROM Tbldwosystemparameters t WHERE t.value = :value")})
+    @NamedQuery(name = "DwoSystemParameters.findAll", query = "SELECT t FROM DwoSystemParameters t"),
+    @NamedQuery(name = "DwoSystemParameters.findByName", query = "SELECT t FROM DwoSystemParameters t WHERE t.name = :name"),
+    @NamedQuery(name = "DwoSystemParameters.findByValue", query = "SELECT t FROM DwoSystemParameters t WHERE t.value = :value")})
 @Path("/systemparameters")
-public class Tbldwosystemparameters implements Serializable {
+public class DwoSystemParameters implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -39,10 +39,10 @@ public class Tbldwosystemparameters implements Serializable {
     @Column(name = "value", length = 100)
     private String value;
 
-    public Tbldwosystemparameters() {
+    public DwoSystemParameters() {
     }
 
-    public Tbldwosystemparameters(String name) {
+    public DwoSystemParameters(String name) {
         this.name = name;
     }
 
@@ -72,10 +72,10 @@ public class Tbldwosystemparameters implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Tbldwosystemparameters)) {
+        if (!(object instanceof DwoSystemParameters)) {
             return false;
         }
-        Tbldwosystemparameters other = (Tbldwosystemparameters) object;
+        DwoSystemParameters other = (DwoSystemParameters) object;
         if ((this.name == null && other.name != null) || (this.name != null && !this.name.equals(other.name))) {
             return false;
         }
@@ -90,7 +90,7 @@ public class Tbldwosystemparameters implements Serializable {
     
     @Override
     public String toString() {
-        return "fi.dwo.server.persistence.Tbldwosystemparameters[ name=" + name + " ]";
+        return "fi.dwo.server.persistence.DwoSystemParameters[ name=" + name + " ]";
     }
     
 }

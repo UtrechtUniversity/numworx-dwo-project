@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
-  <persistence-unit name="DWO_MySQLDB" transaction-type="RESOURCE_LOCAL">
+ <!-- <persistence-unit name="DWO_MySQLDB" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>fi.dwo.server.persistence.PersistentHasRole</class>
     <class>fi.dwo.server.persistence.PersistentUser</class>
@@ -13,18 +13,19 @@
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
       <property name="javax.persistence.jdbc.user" value="dwo"/>
     </properties>
-  </persistence-unit>
-  <!--  <persistence-unit name="DWO_MySQDB" transaction-type="RESOURCE_LOCAL">
+  </persistence-unit>-->
+   <persistence-unit name="DWO_MySQLDB" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>fi.dwo.server.persistence.PersistentHasRole</class>
     <class>fi.dwo.server.persistence.PersistentUser</class>
-    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <class>fi.dwo.server.persistence.DwoSystemParameters</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <shared-cache-mode>NONE</shared-cache-mode>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/dwoproduction_v1_3?zeroDateTimeBehavior=convertToNull"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/dwo_productie_v1_2?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.password" value="E=mc2Dwo"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
       <property name="javax.persistence.jdbc.user" value="root"/>
     </properties>
-  </persistence-unit>-->
+  </persistence-unit>
 </persistence>
