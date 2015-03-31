@@ -106,7 +106,7 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 	@Override
 	public void onKeyPress(KeyPressEvent event)
 	{
-		if(kb == null || kb.getEditor() == null)
+		if(kb == null || kb.getEditor() == null || kb.getEditor() == AbstractEditor.NULL)
 			return;
 	
 		char ch = event.getCharCode();
@@ -179,7 +179,7 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 		
 			return;
 		}
-		if (editor == null)
+		if (editor == null || editor == AbstractEditor.NULL)
 			return;
 
 		if (event.isLeftArrow())
