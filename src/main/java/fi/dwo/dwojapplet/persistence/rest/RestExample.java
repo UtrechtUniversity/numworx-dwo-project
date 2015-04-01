@@ -7,6 +7,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
+import org.glassfish.jersey.moxy.xml.MoxyXmlFeature;
 
 /**
  *
@@ -19,13 +20,8 @@ public class RestExample {
     public static void main(String[] args) {
 
         Client client = ClientBuilder.newClient();
-
-//        //get plain text string
-//        String result = client.target("http://localhost:8080")
-//                .path("/DWO/DWOServer/jax-rs/systemparameters")
-//                .request().accept(MediaType.TEXT_PLAIN_TYPE).get(String.class);
-//        System.out.println(result);
-
+        
+        
         //getjson
         GenericType<List<DwoSystemParameters>> dwoParamType = new GenericType<List<DwoSystemParameters>>() {
         };
@@ -37,15 +33,16 @@ public class RestExample {
             System.out.println(p.getName() + " " + p.getValue());
         }
 
-        // broken, needs media type converter with xml support.
-//        entities = ClientBuilder.newClient().target("http://localhost:8080")
+        // broken, needs media type converter with xml support, might work for a single type.
+//        GenericType<List<DwoSystemParameters>> dwoParamColType = new GenericType<List<DwoSystemParameters>>() {
+//        };
+//        List<DwoSystemParameters> entitiesCol = ClientBuilder.newClient().target("http://localhost:8080")
 //                .path("/DWO/DWOServer/jax-rs/serverstatus/xml")
-//                .request().accept(MediaType.APPLICATION_XML_TYPE).get(dwoParamType);
-//        System.out.println(entities.size());
+//                .request().accept(MediaType.APPLICATION_XML_TYPE).get(dwoParamColType);
+//        System.out.println(entitiesCol.getClass());
 //        for (DwoSystemParameters p : entities) {
 //            System.out.println(p.getName() + " " + p.getValue());
 //        }
-
         //get html
 //        GenericType<List<DwoSystemParameters>> dwoParamType = new GenericType<List<DwoSystemParameters>>() {
 //        };
