@@ -56,7 +56,7 @@ public class TabbedDesktopKeyboard extends AbstractKeyboard {
 
 	@Override
 	public void setEditor(FormuleEditorIF formuleEditor) {
-		super.setEditor(formuleEditor);
+		setActiveEditor(formuleEditor);
 		current.setEditor(formuleEditor);
 	}
 

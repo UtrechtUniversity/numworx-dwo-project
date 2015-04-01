@@ -3,14 +3,6 @@
 	text-align: center;
 }
 
-.computer .key {
-	font-size: 21px !important;	
-}
-.popup .icon span::before,
-.computer .icon span::before {
-	font-size: 28px !important; 
-}
-
 .keyboard-container {
   width: auto;
   display: block;
@@ -32,7 +24,7 @@
     height: 44px;
     }
     .keyboard-container.computer .keyboard {
-      padding: 10px 9px; }
+      padding: 3px 9px; }
     .keyboard-container.computer .key {
       float: left;
       margin-left: 4px;
@@ -58,7 +50,8 @@
           left: 0; }
         .keyboard-container.touch .keyboard .clm .key:before, .keyboard-container.touch .keyboard .clm .key span:before, .keyboard-container.touch .keyboard .key:before, .keyboard-container.touch .keyboard .key span:before {
           font-size: 28px;
-          left: 7%; }
+          left: 7%;
+          top:10%; }
       .keyboard-container.touch .keyboard.is-active {
         margin-top: 0; }
     .keyboard-container.touch .keyboard-abc .keys {
@@ -130,17 +123,17 @@
   cursor: pointer;
   font-size: 14px;
   font-weight: bold; }
-  .keyboard .key.hover, .key.switch.hover {
+  .keyboard .hover.key, .hover.key.switch {
     background-color: #666666 !important;
     color: #c7c7c7;
     outline: 0; }
-    .keyboard .key.hover:before, .key.switch.hover:before,
-    .keyboard .key.hover span:before,
-    .key.switch.hover span:before {
+    .keyboard .hover.key:before, .hover.key.switch:before,
+    .keyboard .hover.key span:before,
+    .hover.key.switch span:before {
       color: #c7c7c7 !important; }
   .keyboard .key:focus, .key.switch:focus {
     outline: 0; }
-  .keyboard .key:active, .key.switch:active {
+  .keyboard .tap.key, .tap.key.switch {
     background-color: #595959 !important;
     color: #c7c7c7; }
   .keyboard .key:last-child, .key.switch:last-child {
@@ -190,9 +183,10 @@
 
 .popup {
   height: 24px;
+  position: absolute;
   background-color: #595959;
   padding: 10px;
-  color: buttontext;
+  color: white;
   z-index: -100;
   display: block; }
   .popup .key {
@@ -213,6 +207,7 @@
 span[class*="basis-"] {
   font-family: "basis" !important;
 }
+
 .basis {
 	font-family: "basis" !important;
 }
@@ -291,7 +286,6 @@ span[class*="basis-"] {
 	font-family: "onderbouw";
 }
 
-
 .icon, .icon span {
   position: relative; }
 
@@ -300,9 +294,8 @@ span[class*="basis-"] {
   height: 100%;
   display: block;
   position: absolute;
-/*  top: 10%;
-  left: 10%; */
-  }
+  top:0%;
+  left:0%; }
   .icon span:before {
     margin: 0 !important; }
 
@@ -312,7 +305,7 @@ span[class*="basis-"] {
   text-decoration: inherit;
   text-align: center;
   line-height: 1;
-  font-size: 20px;
+  font-size: 26px;
   position: absolute;
   top: 0;
   left: 0;
@@ -326,8 +319,8 @@ span[class*="basis-"] {
   /* IE 6+ Support ========== */ }
 
 .icon:before {
-  top: 10%;
-  left: 10%; }
+  top: 0%;
+  left: 0%; }
 
 .algebra-T1-9:before {
   content: "\e600"; }
@@ -574,6 +567,9 @@ span[class*="basis-"] {
 
 .basis-T4-17-2:before {
   content: "\e635"; }
+
+.basis-T3-1:before {
+  content: "\e666"; }
 
 .basis-C1 .path1:before {
   content: "\e636";
@@ -1128,3 +1124,6 @@ span[class*="basis-"] {
   font-size: 32px;
   top: 0;
   left: -18%; }
+
+.basis-T3-1:before {
+  font-size: 20px !important; }

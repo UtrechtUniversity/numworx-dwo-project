@@ -34,7 +34,7 @@ public class TabletKeyboardOnderbouw extends TabletKeyboard {
 		disableKey(t4_8);
 		disableKey(t4_9);
 		disableKey(t4_10);
-
+		pad.t2_16.addStyleName("is-active");
 	}
 
 	@Override

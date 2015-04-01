@@ -75,8 +75,8 @@
 			</g:FlowPanel>
 		
 			<g:FlowPanel  addStyleNames="row row-3" >
-				<my:FKey addStyleNames="key" ui:field="t3_1" >
-					⇧
+				<my:FKey addStyleNames="key bg-grey" ui:field="t3_1" >
+					<span class='basis basis-T3-1' ></span>
 				</my:FKey>
 				<my:FKey addStyleNames="key" ui:field="t3_2" >
 					Z

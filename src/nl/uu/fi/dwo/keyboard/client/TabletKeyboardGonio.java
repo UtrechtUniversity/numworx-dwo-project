@@ -19,7 +19,7 @@ public class TabletKeyboardGonio extends TabletKeyboard {
 		t4_8.setHTML("<span class='gonio gonio-T4-8'></span>");
 		t4_9.setHTML("<span class='gonio gonio-T4-9'></span>");
 		t4_10.setHTML("<span class='gonio gonio-T4-10'></span>");
-
+		pad.t2_16.addStyleName("is-active");
 		disableKey(t4_14);
 		disableKey(t4_15);
 	}

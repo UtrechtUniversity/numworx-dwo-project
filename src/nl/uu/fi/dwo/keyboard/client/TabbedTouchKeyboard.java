@@ -61,12 +61,14 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 
 	@Override
 	public void setEditor(FormuleEditorIF formuleEditor) {
-		super.setEditor(formuleEditor);
+		setActiveEditor(formuleEditor);
+		
 		k123.setEditor(formuleEditor);
 		kabc.setEditor(formuleEditor);
 		kABC.setEditor(formuleEditor);
 		pen.setEditor(formuleEditor);
 	}
+
 
 	@Override
 	public void softFocus() {

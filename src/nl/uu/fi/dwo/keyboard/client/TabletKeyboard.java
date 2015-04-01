@@ -146,6 +146,7 @@ public class TabletKeyboard extends AbstractKeyboard {
 		disableKey(t2_10);
 		disableKey(t3_10);
 		disableKey(t4_10);
+		pad.t2_16.addStyleName("is-active");
 		return this;
 	}
 }
