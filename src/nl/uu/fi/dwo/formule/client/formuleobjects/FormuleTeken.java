@@ -69,6 +69,7 @@ public class FormuleTeken extends FormuleElement
 		TextMetrics m;
 		if (this.teken != null)
 		{	m = ctx.measureText(this.teken);
+			
 		}
 		else
 		{	m = ctx.measureText(" ");
@@ -96,6 +97,23 @@ public class FormuleTeken extends FormuleElement
 		// return
 		// (int)Math.round((fm.getStringBounds(teken,getGraphics()).getWidth() -
 		// fm.stringWidth(teken)));
+	}
+	
+	public int getCorrectieLinks()
+	{
+		if(FormuleFont.formTimes && (teken.equals("j") || teken.equals("f")))
+			return 3;
+		else if(teken.equals("j") || (FormuleFont.formTimes && (teken.equals("p") || teken.equals("y"))))
+			return 2;
+		
+		return 0;
+	}
+	
+	public int getCorrectieRechts()
+	{
+		if(FormuleFont.formTimes && teken.equals("f"))
+			return 2;
+		return 0;
 	}
 
 	private void setupCTXState()
@@ -149,8 +167,16 @@ public class FormuleTeken extends FormuleElement
 		if (teken != null)
 		{	setFont(fm);
 			this.setupCTXState();
-			ctx.fillText(teken, 0, this.getAsHoogte());
-			//ctx.beginPath();ctx.rect(0, 0, width, height);ctx.stroke();
+			if(FormuleFont.formTimes && teken.equals("f"))
+				ctx.fillText(teken, 4, this.getAsHoogte());
+			else if(FormuleFont.formTimes && teken.equals("j")) 
+				ctx.fillText(teken, 3, this.getAsHoogte());
+			else if(teken.equals("j") || (FormuleFont.formTimes && (teken.equals("p") || teken.equals("y"))))
+				ctx.fillText(teken, 2, this.getAsHoogte());
+			else
+				ctx.fillText(teken, 0, this.getAsHoogte());
+			
+			
 		}
 
 		// g.drawString(teken,x,y+fm.getAscent());
@@ -295,11 +321,32 @@ public class FormuleTeken extends FormuleElement
 		else
 			m = ctx.measureText(" ");
 
+		int fontheight = fm.getAscent() + fm.getDescent();
 		if(fm.isItalic())
-		{	this.setSize((int) m.getWidth() + 2, fm.getAscent() + fm.getDescent());
+		{	if(FormuleFont.formTimes)
+			{
+				if(teken.equals("f"))
+					this.setSize((int) m.getWidth() + 8, fontheight);
+				else if(teken.equals("j"))
+					this.setSize((int) m.getWidth() + 5, fontheight);
+				else if(teken.equals("p") || teken.equals("y"))
+					this.setSize((int) m.getWidth() + 4, fontheight);
+				else
+					this.setSize((int) m.getWidth() + 2, fontheight);
+			}
+			else
+			{
+				if(teken.equals("j"))
+					this.setSize((int) m.getWidth() + 4, fontheight);
+				else
+					this.setSize((int) m.getWidth() + 2, fontheight);
+			}
+			
+			
+		
 		}
 		else
-		{	this.setSize((int) m.getWidth() + 1, fm.getAscent() + fm.getDescent());
+		{	this.setSize((int) m.getWidth() + 1, fontheight);
 		}
 		//this.setAsHoogte(fm.getAscent()/2);
 		this.setAsHoogte(fm.getAscent());

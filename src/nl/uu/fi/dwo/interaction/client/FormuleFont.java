@@ -28,7 +28,7 @@ public class FormuleFont
 
 	private static String defaultFont = "Arial";
 	private static String defaultTekstFont = "Arial";
-	private static boolean formTimes = false;
+	public static boolean formTimes = false;
 	private String font = "Arial";
 	private boolean bold = false;
 	//private boolean italic = true;

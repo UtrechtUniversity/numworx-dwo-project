@@ -264,6 +264,14 @@ public class FormuleRegel extends FormuleElement
 			//repaint child (if it has changed)
 			e.paint();
 			width += e.width;
+			if(e instanceof FormuleTeken)
+				nextx -= ((FormuleTeken) e).getCorrectieLinks();
+			if(i > 0)
+			{
+				FormuleElement ePrev = this.children.get(i - 1);
+				if(ePrev instanceof FormuleTeken)
+					nextx -= ((FormuleTeken) ePrev).getCorrectieRechts();
+			}
 			e.setPosition(nextx, nexty);
 
 			paintabove_e = e.getAsHoogte();
