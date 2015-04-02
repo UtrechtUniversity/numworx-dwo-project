@@ -25,7 +25,7 @@ public class ServerStatus {
 
     private static final Logger log = Logger.getLogger(ServerStatus.class.getName());
 
-    private final static EntityManagerFactory emf = Persistence.createEntityManagerFactory("DWO_MySQLDB");
+    private final static EntityManagerFactory emf = DwoEmfFactory.instance();
 
     public List<DwoSystemParameters> getStatus() {
         

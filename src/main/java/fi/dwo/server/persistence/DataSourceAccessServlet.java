@@ -78,32 +78,34 @@ public class DataSourceAccessServlet extends Servlet {
             log.log(Level.INFO, "Session login for user {0}.", new Object[]{username});
 
             EntityManager em;
-            //EntityManagerFactory emf;
-            //emf = Persistence.createEntityManagerFactory("DWO_MySQLDB");
+            EntityManagerFactory emf;
+            emf = Persistence.createEntityManagerFactory("DWO_MySQLDB");
             em = emf.createEntityManager();
+//                EntityManagerFactory emf2 = DwoEmfFactory.instance();
+//                em = emf2.createEntityManager();
 
             PersistentUser user;
             PersistentHasRole hasRole;
-            try {
-                javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
-                q.setParameter("username", username);
-                user = (PersistentUser) q.getSingleResult();
-                log.log(Level.FINE, "Retrieved user {0} with role {1}.", new Object[]{user});
-                q = em.createQuery("SELECT p FROM PersistentHasRole p WHERE p.persistentHasRolePK.schoolGroupID = :schoolGroupID AND p.persistentHasRolePK.userID= :userID");
-                q.setParameter("userID", user.getUserID()).setParameter("schoolGroupID", user.getSchoolGroupID());
-                hasRole = (PersistentHasRole) q.getSingleResult();
+//                try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
+            q.setParameter("username", username);
+            user = (PersistentUser) q.getSingleResult();
+            log.log(Level.FINE, "Retrieved user {0} with role {1}.", new Object[]{user});
+            q = em.createQuery("SELECT p FROM PersistentHasRole p WHERE p.persistentHasRolePK.schoolGroupID = :schoolGroupID AND p.persistentHasRolePK.userID= :userID");
+            q.setParameter("userID", user.getUserID()).setParameter("schoolGroupID", user.getSchoolGroupID());
+            hasRole = (PersistentHasRole) q.getSingleResult();
 
-            } finally {
-                em.close();
-            }
+//                } finally {
+//                    em.close();
+//                }
             DwoSessionData sessionData = new DwoSessionData();
 
             sessionData.setLoginUser(user);
             sessionData.setLoginRole(hasRole);
-            
-            log.log(Level.INFO, "Session {0} stored logged in user {1} with role {2}.", new Object[]{session.get().getId(),user.toString(), hasRole.toString()});
 
-            //Set some session fixed variables. 
+            log.log(Level.INFO, "Session {0} stored logged in user {1} with role {2}.", new Object[]{session.get().getId(), user.toString(), hasRole.toString()});
+
+            //Set some session fixed variables.
             session.get().setAttribute("DwoSessionData", sessionData);
             session.get().setAttribute("login", username);
             return h;
