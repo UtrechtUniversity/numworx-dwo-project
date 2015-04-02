@@ -202,6 +202,7 @@ public class Text_nl extends ListResourceBundle {
          { TextMapper.GUIC_DELETE_CLASS, "Verwijder klas"},
          { TextMapper.GUIC_RENAME_CLASS, "Wijzig klasnaam"}, 
          { TextMapper.GUIC_MSG_RENAME_CLASS, "Geef de nieuwe naam van de klas"},
+         { TextMapper.GUIC_MSG_CLASS_CONFIGURATION, "Klasconfiguratiescherm"},
          { TextMapper.GUIC_MSG_DELETE_CLASS, "Weet u zeker dat u de klas wilt verwijderen"},
          { TextMapper.GUIC_CLASS_NOT_EMPTY, "De klas bevat nog leerlingen. Weet u zeker dat u de klas wilt verwijderen"},
          { TextMapper.GUIC_CLASS_NOT_EMPTY_TITLE, "Klas bevat nog leerlingen"},
