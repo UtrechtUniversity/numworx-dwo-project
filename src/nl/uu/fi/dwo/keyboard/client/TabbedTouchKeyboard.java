@@ -160,7 +160,9 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 	public void setKeyboard(int nr) {
 		if(nr < 0 || nr > 4) nr = DEFAULT;
 		if(this.nr != nr) {
-			boolean shown = k123.isVisible() && current == k123;
+			boolean iscurrent = current == k123;
+			boolean shown = k123.isVisible() && iscurrent;
+			
 			if(stock[nr] == null) stock[nr] = createKeyboard(nr);
 			this.nr = nr;
 			k123.removeFromParent();
@@ -168,6 +170,7 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 			k123.setEditor(getEditor());
 			k123.setDelegate(this);
 			k123.setVisible(shown);
+			if(iscurrent) current = k123;
 			main.add(k123);
 		}
 	}

@@ -12,8 +12,6 @@
 	.pen {
 		width: 740px;
 		height: 150px;
-		background-image: url('images/kb/penpad.png');
-		opacity: 0.25;
 	}
 	
 	</ui:style>

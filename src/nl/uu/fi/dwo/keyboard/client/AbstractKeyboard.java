@@ -29,6 +29,10 @@ public abstract class AbstractKeyboard extends Composite implements FormuleKeybo
 	}
 
 	public void setEditor(FormuleEditorIF formuleEditor) {
+		setEditor0(formuleEditor);
+	}
+
+	private void setEditor0(FormuleEditorIF formuleEditor) {
 		if(formuleEditor == null) formuleEditor = AbstractEditor.NULL;
 		this.formuleEditor = formuleEditor;
 	}
@@ -96,7 +100,7 @@ public abstract class AbstractKeyboard extends Composite implements FormuleKeybo
 
 	final protected void setActiveEditor(FormuleEditorIF formuleEditor) {
 		FormuleEditorIF old = getEditor();
-		setEditor(formuleEditor);
+		setEditor0(formuleEditor);
 		if(old != getEditor())
 		{
 			old.setFont(old.getDefaultFont());
