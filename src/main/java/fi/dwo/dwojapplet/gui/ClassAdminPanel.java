@@ -89,7 +89,7 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 
             } else if (columnIndex == CLASS_NAME) {
                 SchoolClass schoolClass = classes[rowIndex];
-                if (dwo.renameClass(schoolClass, value.toString(), schoolClass.hasIconizer())) {
+                if(dwo.renameClass(schoolClass, value.toString(),schoolClass.getRegistrationKey(),schoolClass.hasIconizer())) {
                     dirty[rowIndex] = true;
                     center.loadMenu();
                     fireTableCellUpdated(rowIndex, columnIndex);

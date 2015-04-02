@@ -17,6 +17,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         super(u);
     }
 
+    @Override
     public java.util.Vector getCoursesForClass(int a) throws IOException, XmlRpcException {
         Vector vv = new Vector(1);
         vv.addElement(new Integer(a));
@@ -24,6 +25,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Vector) object;
     }
 
+    @Override
     public boolean selectCoursesForClass(int a, int b) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(new Integer(a));
@@ -32,6 +34,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean deSelectCoursesForClass(int a, int b) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(new Integer(a));
@@ -40,6 +43,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public java.util.Vector getCourses(int a) throws IOException, XmlRpcException {
         Vector vv = new Vector(1);
         vv.addElement(new Integer(a));
@@ -47,12 +51,14 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Vector) object;
     }
 
+    @Override
     public java.util.Vector getEditableCoursesAdmin() throws IOException, XmlRpcException {
         Vector vv = new Vector(0);
         Object object = invoke("getEditableCoursesAdmin", vv);
         return (java.util.Vector) object;
     }
 
+    @Override
     public java.util.Vector getEditableCourses(int a) throws IOException, XmlRpcException {
         Vector vv = new Vector(1);
         vv.addElement(new Integer(a));
@@ -60,6 +66,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Vector) object;
     }
 
+    @Override
     public java.util.Hashtable getRecord(java.lang.String a, java.lang.String b, int c) throws IOException, XmlRpcException {
         Vector vv = new Vector(3);
         vv.addElement(a);
@@ -69,6 +76,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Hashtable) object;
     }
 
+    @Override
     public java.util.Vector getTable(java.lang.String a) throws IOException, XmlRpcException {
         Vector vv = new Vector(1);
         vv.addElement(a);
@@ -76,6 +84,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Vector) object;
     }
 
+    @Override
     public java.util.Vector getTable(java.lang.String a, java.lang.String b) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(a);
@@ -84,6 +93,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Vector) object;
     }
 
+    @Override
     public java.util.Vector getTable(java.lang.String a, java.util.Hashtable b) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(a);
@@ -92,6 +102,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Vector) object;
     }
 
+    @Override
     public java.util.Vector getTable(java.lang.String a, java.util.Hashtable b, java.lang.String c) throws IOException, XmlRpcException {
         Vector vv = new Vector(3);
         vv.addElement(a);
@@ -101,6 +112,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Vector) object;
     }
 
+    @Override
     public java.util.Vector getTable(java.lang.String a, java.util.Vector b, java.util.Hashtable c, java.lang.String d) throws IOException, XmlRpcException {
         Vector vv = new Vector(4);
         vv.addElement(a);
@@ -111,6 +123,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Vector) object;
     }
 
+    @Override
     public boolean renameClass(int a, java.lang.String b, boolean c) throws IOException, XmlRpcException {
         Vector vv = new Vector(3);
         vv.addElement(new Integer(a));
@@ -119,7 +132,18 @@ class DbAccessClient extends Client implements DbAccessIF {
         Object object = invoke("renameClass", vv);
         return ((Boolean) object).booleanValue();
     }
-
+@Override
+    public boolean renameClass(int a, java.lang.String b, java.lang.String c, boolean d) throws IOException, XmlRpcException {
+        Vector vv = new Vector(4);
+        vv.addElement(new Integer(a));
+        vv.addElement(b);
+        vv.addElement(c);
+        vv.addElement(Boolean.valueOf(d));
+        Object object = invoke("renameClass", vv);
+        return ((Boolean) object).booleanValue();
+    }
+    
+    @Override
     public boolean renameClass(int a, java.lang.String b) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(new Integer(a));
@@ -136,6 +160,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean register(java.lang.String a, java.lang.String b, java.lang.String c, java.lang.String d, java.lang.String e, java.lang.String f) throws IOException, XmlRpcException {
         Vector vv = new Vector(6);
         vv.addElement(a);
@@ -148,6 +173,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public java.lang.String LMSGetValue(int a, int b, java.lang.String c) throws IOException, XmlRpcException {
         Vector vv = new Vector(3);
         vv.addElement(new Integer(a));
@@ -157,6 +183,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.lang.String) object;
     }
 
+    @Override
     public java.lang.String LMSSetValue(int a, int b, java.lang.String c, java.lang.String d) throws IOException, XmlRpcException {
         Vector vv = new Vector(4);
         vv.addElement(new Integer(a));
@@ -167,6 +194,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.lang.String) object;
     }
 
+    @Override
     public java.lang.String LMSSetValue(int a, int b, java.lang.String c, java.lang.String d, java.lang.String e) throws IOException, XmlRpcException {
         Vector vv = new Vector(5);
         vv.addElement(new Integer(a));
@@ -178,6 +206,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.lang.String) object;
     }
 
+    @Override
     public boolean register(java.lang.String a, java.lang.String b, java.lang.String c, java.lang.String d, java.lang.String e, java.lang.String f, java.lang.String g, int h, java.lang.String i) throws IOException, XmlRpcException {
         Vector vv = new Vector(9);
         vv.addElement(a);
@@ -193,6 +222,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public java.util.Hashtable login(java.lang.String a, java.lang.String b) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(a);
@@ -201,6 +231,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Hashtable) object;
     }
 
+    @Override
     public java.util.Hashtable addToSchool(int a, java.lang.String b, int c, java.lang.String d) throws IOException, XmlRpcException {
         Vector vv = new Vector(4);
         vv.addElement(new Integer(a));
@@ -225,6 +256,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean changeAccount(int a, java.lang.String b, java.lang.String c, java.lang.String d, java.lang.String e, java.lang.String f, java.lang.String g) throws IOException, XmlRpcException {
         Vector vv = new Vector(7);
         vv.addElement(new Integer(a));
@@ -238,6 +270,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public java.util.Hashtable addClass(int a, java.lang.String b) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(new Integer(a));
@@ -246,6 +279,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Hashtable) object;
     }
 
+    @Override
     public java.util.Hashtable addSchool(java.lang.String a, java.lang.String b, java.lang.String c, java.lang.String d) throws IOException, XmlRpcException {
         Vector vv = new Vector(4);
         vv.addElement(a);
@@ -256,6 +290,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Hashtable) object;
     }
 
+    @Override
     public java.util.Hashtable addSchool(int a, java.lang.String b, java.lang.String c, java.lang.String d, java.lang.String e) throws IOException, XmlRpcException {
         Vector vv = new Vector(5);
         vv.addElement(new Integer(a));
@@ -267,6 +302,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Hashtable) object;
     }
 
+    @Override
     public java.util.Hashtable editSchool(int a, java.lang.String b, java.lang.String c, java.lang.String d, java.lang.String e) throws IOException, XmlRpcException {
         Vector vv = new Vector(5);
         vv.addElement(new Integer(a));
@@ -278,6 +314,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Hashtable) object;
     }
 
+    @Override
     public boolean deleteUser(int a) throws IOException, XmlRpcException {
         Vector vv = new Vector(1);
         vv.addElement(new Integer(a));
@@ -285,6 +322,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean deleteClass(int a, boolean b) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(new Integer(a));
@@ -293,6 +331,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public java.util.Vector getResults(java.util.Vector a, int b) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(a);
@@ -301,6 +340,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Vector) object;
     }
 
+    @Override
     public java.util.Vector getResults(java.util.Vector a, int b, int c) throws IOException, XmlRpcException {
         Vector vv = new Vector(3);
         vv.addElement(a);
@@ -310,6 +350,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Vector) object;
     }
 
+    @Override
     public java.util.Vector getResults(int a, int b, int c) throws IOException, XmlRpcException {
         Vector vv = new Vector(3);
         vv.addElement(new Integer(a));
@@ -319,6 +360,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Vector) object;
     }
 
+    @Override
     public java.util.Vector getResults(int a, int b) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(new Integer(a));
@@ -348,6 +390,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean log(java.lang.String a) throws IOException, XmlRpcException {
         Vector vv = new Vector(1);
         vv.addElement(a);
@@ -355,6 +398,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean log(Level l, java.lang.String a) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(l);
@@ -363,6 +407,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
     
+    @Override
     public int addCourse(int a, java.lang.String b, java.lang.String c, int d, int e, boolean f) throws IOException, XmlRpcException {
         Vector vv = new Vector(6);
         vv.addElement(new Integer(a));
@@ -375,6 +420,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Number) object).intValue();
     }
 
+    @Override
     public int addCourse(int a, java.lang.String b, java.lang.String c, int d) throws IOException, XmlRpcException {
         Vector vv = new Vector(4);
         vv.addElement(new Integer(a));
@@ -385,6 +431,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Number) object).intValue();
     }
 
+    @Override
     public boolean changeCourse(int a, java.lang.String b, java.lang.String c) throws IOException, XmlRpcException {
         Vector vv = new Vector(3);
         vv.addElement(new Integer(a));
@@ -394,6 +441,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean deleteCourse(int a) throws IOException, XmlRpcException {
         Vector vv = new Vector(1);
         vv.addElement(new Integer(a));
@@ -401,6 +449,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public int addSco(int a, java.lang.String b, java.lang.String c, int d, int e) throws IOException, XmlRpcException {
         Vector vv = new Vector(5);
         vv.addElement(new Integer(a));
@@ -412,6 +461,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Number) object).intValue();
     }
 
+    @Override
     public int addSco(int a, java.lang.String b, java.lang.String c, int d, java.lang.String e, int f) throws IOException, XmlRpcException {
         Vector vv = new Vector(6);
         vv.addElement(new Integer(a));
@@ -424,6 +474,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Number) object).intValue();
     }
 
+    @Override
     public int addSco(int a, java.lang.String b, java.lang.String c, int d, int e, boolean f) throws IOException, XmlRpcException {
         Vector vv = new Vector(6);
         vv.addElement(new Integer(a));
@@ -436,6 +487,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Number) object).intValue();
     }
 
+    @Override
     public boolean changeSco(int a, java.lang.String b, java.lang.String c, java.lang.String d) throws IOException, XmlRpcException {
         Vector vv = new Vector(4);
         vv.addElement(new Integer(a));
@@ -446,6 +498,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean changeSco(int a, java.lang.String b, java.lang.String c) throws IOException, XmlRpcException {
         Vector vv = new Vector(3);
         vv.addElement(new Integer(a));
@@ -455,6 +508,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean changeSco(int a, java.lang.String b, java.lang.String c, boolean d) throws IOException, XmlRpcException {
         Vector vv = new Vector(4);
         vv.addElement(new Integer(a));
@@ -465,6 +519,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean changeSco(int a, java.lang.String b, java.lang.String c, java.lang.String d, boolean e) throws IOException, XmlRpcException {
         Vector vv = new Vector(5);
         vv.addElement(new Integer(a));
@@ -476,6 +531,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean changeSco(int a, java.lang.String b, java.lang.String c, boolean d, java.lang.String e) throws IOException, XmlRpcException {
         Vector vv = new Vector(5);
         vv.addElement(new Integer(a));
@@ -487,6 +543,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean changeScoSequenceNr(int a, int b, int c, int d) throws IOException, XmlRpcException {
         Vector vv = new Vector(4);
         vv.addElement(new Integer(a));
@@ -497,6 +554,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean deleteSco(int a) throws IOException, XmlRpcException {
         Vector vv = new Vector(1);
         vv.addElement(new Integer(a));
@@ -504,6 +562,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean deleteSchool(int a) throws IOException, XmlRpcException {
         Vector vv = new Vector(1);
         vv.addElement(new Integer(a));
@@ -511,12 +570,14 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public java.util.Hashtable getFidentitySchools() throws IOException, XmlRpcException {
         Vector vv = new Vector(0);
         Object object = invoke("getFidentitySchools", vv);
         return (java.util.Hashtable) object;
     }
 
+    @Override
     public java.util.Vector getUserResults(int a, int b) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(new Integer(a));
@@ -525,6 +586,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Vector) object;
     }
 
+    @Override
     public java.util.Vector getUserResults(java.util.Vector a, int b) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(a);
@@ -533,6 +595,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Vector) object;
     }
 
+    @Override
     public boolean setLogo(int a, byte[] b) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(new Integer(a));
@@ -541,6 +604,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean changeCourse(int a, java.lang.String b, java.lang.String c, boolean d) throws IOException, XmlRpcException {
         Vector vv = new Vector(4);
         vv.addElement(new Integer(a));
@@ -551,6 +615,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean editSchool(int a, boolean b) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(new Integer(a));
@@ -559,6 +624,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean editSchoolRights(int a, java.lang.String b) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(new Integer(a));
@@ -567,6 +633,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public java.util.Vector getImportCourses(int a, int b, int c) throws IOException, XmlRpcException {
         Vector vv = new Vector(3);
         vv.addElement(new Integer(a));
@@ -576,6 +643,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Vector) object;
     }
 
+    @Override
     public java.util.Hashtable editSchool(int a, java.lang.String b, java.lang.String c, java.util.Hashtable d) throws IOException, XmlRpcException {
         Vector vv = new Vector(4);
         vv.addElement(new Integer(a));
@@ -586,6 +654,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Hashtable) object;
     }
 
+    @Override
     public java.util.Hashtable addSchool(int a, java.lang.String b, java.lang.String c, java.util.Hashtable d) throws IOException, XmlRpcException {
         Vector vv = new Vector(4);
         vv.addElement(new Integer(a));
@@ -596,6 +665,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Hashtable) object;
     }
 
+    @Override
     public boolean deleteUserWithRoleFromSchool(int a, int b) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(new Integer(a));
@@ -604,6 +674,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean updateSchoolTo(int a, java.util.Vector b) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(new Integer(a));
@@ -612,6 +683,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean deleteCourseDataFromClass(int a, int b) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(new Integer(a));
@@ -620,6 +692,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public java.util.Vector getResultCount(int a, int b) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(new Integer(a));
@@ -628,6 +701,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Vector) object;
     }
 
+    @Override
     public java.lang.String setRights(int uid, int schoolGroup, int b, java.lang.String c) throws IOException, XmlRpcException {
         Vector vv = new Vector(4);
         vv.addElement(new Integer(uid));
@@ -638,6 +712,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.lang.String) object;
     }
 
+    @Override
     public boolean changeCourse(int a, java.lang.String b, java.lang.String c, boolean d, int e) throws IOException, XmlRpcException {
         Vector vv = new Vector(5);
         vv.addElement(new Integer(a));
@@ -649,6 +724,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean changeCourse(int a, java.lang.String b, java.lang.String c, boolean d, int e, int f) throws IOException, XmlRpcException {
         Vector vv = new Vector(6);
         vv.addElement(new Integer(a));
@@ -661,6 +737,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean setCourseSequence(java.util.Vector a, int b, int c, int d, int e) throws IOException, XmlRpcException {
         Vector vv = new Vector(5);
         vv.addElement(a);
@@ -672,6 +749,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean moveSco(int a, int b, int c, java.lang.String d) throws IOException, XmlRpcException {
         Vector vv = new Vector(4);
         vv.addElement(new Integer(a));
@@ -682,6 +760,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean selectCoursesForClass(int a, int b, int c, java.util.Date d, java.util.Date e) throws IOException, XmlRpcException {
         Vector vv = new Vector(5);
         vv.addElement(new Integer(a));
@@ -693,6 +772,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean selectCoursesForClass(int a, java.util.Vector b) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(new Integer(a));
@@ -701,6 +781,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public boolean setExpireDate(int a, java.util.Date b) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(new Integer(a));
@@ -709,6 +790,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return ((Boolean) object).booleanValue();
     }
 
+    @Override
     public java.util.Hashtable login_saml(java.lang.String a, java.lang.String b) throws IOException, XmlRpcException {
         Vector vv = new Vector(2);
         vv.addElement(a);
@@ -717,6 +799,7 @@ class DbAccessClient extends Client implements DbAccessIF {
         return (java.util.Hashtable) object;
     }
 
+    @Override
     public boolean link_saml(java.lang.String a, java.lang.String b, int c) throws IOException, XmlRpcException {
         Vector vv = new Vector(3);
         vv.addElement(a);
@@ -825,17 +908,6 @@ class DbAccessClient extends Client implements DbAccessIF {
         vv.addElement(new Integer(schoolClassID));
         Object object = invoke("getTeachersOfClass", vv);
         return (java.util.Vector) object;
-    }
-
-    @Override
-    public boolean renameClass(int classID, String newName, String newRegistrationKey, boolean iconizer) throws DwoXmlRpcException, IOException, XmlRpcException, SQLException {
-        Vector vv = new Vector(4);
-        vv.addElement(new Integer(classID));
-        vv.addElement(new String(newName));
-        vv.addElement(new String(newRegistrationKey));
-        vv.addElement(new Boolean(iconizer));
-        Object object = invoke("renameClass", vv);
-        return ((Boolean) object);
     }
 
     @Override

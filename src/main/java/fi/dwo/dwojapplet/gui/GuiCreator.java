@@ -683,8 +683,8 @@ public class GuiCreator {
      * @return If the class is successfully renamed it returns true. Otherwise
      * it returns false.
      */
-    public boolean renameClass(SchoolClass schoolClass, String newName, boolean iconizer) {
-        return dwo.renameClass(schoolClass, newName, iconizer);
+    public boolean renameClass(SchoolClass schoolClass, String newName, String newRegistrationKey, boolean iconizer) {
+        return dwo.renameClass(schoolClass, newName, newRegistrationKey, iconizer);
     }
 
     /**

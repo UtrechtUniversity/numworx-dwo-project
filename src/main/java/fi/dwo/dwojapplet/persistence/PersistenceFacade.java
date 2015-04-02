@@ -2024,6 +2024,38 @@ public class PersistenceFacade {
     }
 
     /**
+     * Renames the name of the schoolclass in the database.
+     *
+     * @param schoolClass The class to rename.
+     * @param newName The new name of the class.
+     * @param iconizer
+     * @throws ClassException
+     */
+    public void renameClass(SchoolClass schoolClass, String newName, String newRegistrationKey, boolean iconizer)
+            throws ClassException {
+        DbAccessIF dbAccess = DbAccessCreator.instance();
+        try {
+            try {
+                dbAccess.renameClass(schoolClass.getID(), newName, newRegistrationKey, iconizer);
+            } catch (IOException e) {
+                throw new ClassException(ClassException.EX_IO);
+            } catch (XmlRpcException e) {
+                if (e.code != 0) {
+                    throw (ClassException) getException(e, e.code);
+                } else {
+                    throw new ClassException(ClassException.EX_XML_RPC);
+                }
+            } catch (SQLException e) {
+                throw new ClassException(ClassException.EX_DB);
+            } catch (DwoXmlRpcException e) {
+                throw (ClassException) getException(e, e.code);
+            }
+        } catch (PersistenceException e) {
+            throw new ClassException(ClassException.EX_UNKNOWN_ERROR);
+        }
+    }
+
+    /**
      * =============================================================================
      * RESULTS FUNCTIONALITY
      * =============================================================================

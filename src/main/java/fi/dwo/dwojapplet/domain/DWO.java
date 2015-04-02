@@ -1648,10 +1648,11 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
      * java.lang.String)
      */
     @Override
-    public boolean renameClass(SchoolClass schoolClass, String newName, boolean iconizer) {
+    public boolean renameClass(SchoolClass schoolClass, String newName, String newRegistrationKey, boolean iconizer) {
         try {
-            PersistenceFacade.instance().renameClass(schoolClass, newName, iconizer);
+            PersistenceFacade.instance().renameClass(schoolClass, newName, newRegistrationKey, iconizer);
             schoolClass.setClassName(newName);
+            schoolClass.setRegistrationKey(newRegistrationKey);
             schoolClass.setIconizer(iconizer);
             return true;
         } catch (ClassException e) {

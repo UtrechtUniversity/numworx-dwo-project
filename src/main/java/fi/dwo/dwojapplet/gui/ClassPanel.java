@@ -190,16 +190,15 @@ public class ClassPanel extends JPanel implements CenterSubPanel, ActionListener
             SchoolClass sc = model.classes[row];
             final GuiCreator instance = GuiCreator.instance();
             if (value == editImage) {
-                Box box = Box.createVerticalBox();
-                JLabel l1 = new JLabel(TextMapper.getText(TextMapper.GUIC_MSG_RENAME_CLASS));
-                JCheckBox check = new JCheckBox(TextMapper.getText("boomstructuur?"));
-                check.setSelected(sc.hasIconizer());
-                if (CenterPanel.isIconizer()) {
-                    box.add(check);
-                }
-                box.add(l1);
-                String newName = JOptionPane.showInputDialog(ClassPanel.this, box, sc.getName());
-                if ((newName != null) && (!newName.equals("")) && instance.renameClass(sc, newName, check.isSelected())) {
+				ClassRenamePanel panel = new ClassRenamePanel();
+				panel.setSchoolClass(sc);
+				int result = JOptionPane.showConfirmDialog(ClassPanel.this, panel ,TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
+						JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+				//case OK persist returned values
+				if(result==JOptionPane.OK_OPTION){
+					//persist returned values					
+					if(instance.renameClass(sc, panel.getClassName(), panel.getRegistrationKey(), panel.isIconizer()));
+					//update gui when done
                     center.loadMenu();
                     model.fireTableCellUpdated(row, 0);
                 }

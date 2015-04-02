@@ -7,7 +7,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
-import org.glassfish.jersey.moxy.xml.MoxyXmlFeature;
+import org.glassfish.jersey.client.ClientConfig;
 
 /**
  *
