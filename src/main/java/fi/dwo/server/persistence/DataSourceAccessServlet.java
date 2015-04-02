@@ -78,8 +78,8 @@ public class DataSourceAccessServlet extends Servlet {
             log.log(Level.INFO, "Session login for user {0}.", new Object[]{username});
 
             EntityManager em;
-            EntityManagerFactory emf;
-            emf = Persistence.createEntityManagerFactory("DWO_MySQLDB");
+            //EntityManagerFactory emf;
+            //emf = Persistence.createEntityManagerFactory("DWO_MySQLDB");
             em = emf.createEntityManager();
 
             PersistentUser user;

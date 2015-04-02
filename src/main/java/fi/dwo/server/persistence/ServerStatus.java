@@ -28,6 +28,7 @@ public class ServerStatus {
     private final static EntityManagerFactory emf = Persistence.createEntityManagerFactory("DWO_MySQLDB");
 
     public List<DwoSystemParameters> getStatus() {
+        
         EntityManager em;
         em = emf.createEntityManager();
 
@@ -40,6 +41,7 @@ public class ServerStatus {
         } finally {
             em.close();
         }
+        
 //        StringBuilder string = new StringBuilder();
 //        for (DwoSystemParameters p : result) {
 //            string.append(p.getName());
@@ -67,9 +69,9 @@ public class ServerStatus {
     }
 
     @GET
-    @Produces({"text/html"})
+    @Produces({"text/plain"})
     @Path("/html")
-    public String getStatusHtml() {
+    public String getStatusText() {
         List<DwoSystemParameters> result = getStatus();
         StringBuilder string = new StringBuilder();
         for (DwoSystemParameters p : result) {
