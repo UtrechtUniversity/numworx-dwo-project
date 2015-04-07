@@ -46,7 +46,13 @@
         line-height: 33px;
         float: none;
         margin-left: 0; }
-        .keyboard-container.touch .keyboard .clm .key > span, .keyboard-container.touch .keyboard .key > span {
+      .keyboard-container.touch .keyboard .dclm .key {
+        width: 32px;
+        height: 32px;
+        line-height: 33px;
+        float: none;
+        margin-left: 0; }
+         .keyboard-container.touch .keyboard .clm .key > span, .keyboard-container.touch .keyboard .key > span {
           left: 0; }
         .keyboard-container.touch .keyboard .clm .key:before, .keyboard-container.touch .keyboard .clm .key span:before, .keyboard-container.touch .keyboard .key:before, .keyboard-container.touch .keyboard .key span:before {
           font-size: 28px;
@@ -104,6 +110,13 @@
   .keyboard-container.is-hidden .keyboard {
     margin-top: 166px !important; }
 
+.keyboard .dclm {
+  width: 32px;
+  float: left;
+  margin-left: 8px; }
+  .keyboard .dclm:first-child {
+    margin-left: 0; }
+
 .keyboard .clm {
   width: 42px;
   float: left;
@@ -148,6 +161,16 @@
     background-color: #999999;
     color: #FFFFFF; }
     .keyboard .bg-grey.key svg *, .bg-grey.key.switch svg * {
+      fill: #FFFFFF; }
+  .keyboard .bg-dkgrey.key, .bg-dkgrey.key.switch {
+    background-color: #838383;
+    color: #FFFFFF; }
+    .keyboard .bg-dkgrey.key svg *, .bg-dkgrey.key.switch svg * {
+      fill: #FFFFFF; }
+  .keyboard .bg-ltgrey.key, .bg-ltgrey.key.switch {
+    background-color: #9e9e9e;
+    color: #FFFFFF; }
+    .keyboard .bg-ltgrey.key svg *, .bg-ltgrey.key.switch svg * {
       fill: #FFFFFF; }
   .keyboard .bg-purple.key, .bg-purple.key.switch {
     background-color: #7b99c7;

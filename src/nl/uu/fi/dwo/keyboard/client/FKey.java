@@ -9,17 +9,24 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.dom.client.TouchEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.uibinder.client.UiConstructor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHTML;
+import com.google.gwt.user.client.ui.Image;
 
 public class FKey extends Composite implements HasClickHandlers, HasHTML, MouseOverHandler, MouseOutHandler, ClickHandler {
 
 	private static final String HOVER = "hover";
 	HTML panel;
+	Image image;
+	HasClickHandlers click;
 	
+	@UiConstructor
 	public FKey() {
 		panel = new HTML();
+		click = panel;
 		initWidget(panel);
 		setStyleName("kbd-Key");
 		panel.addMouseOverHandler(this);
@@ -30,7 +37,18 @@ public class FKey extends Composite implements HasClickHandlers, HasHTML, MouseO
 		}
 	}
 
-	
+	FKey(ImageResource resource) {
+		panel = new HTML();
+		image = new Image(resource);
+		click = image;
+		initWidget(image);
+		image.addMouseOverHandler(this);
+		image.addMouseOutHandler(this);
+		if(TouchEvent.isSupported())
+		{
+			image.addClickHandler(this);
+		}
+	}
 	
 	
 	@Override
@@ -55,22 +73,22 @@ public class FKey extends Composite implements HasClickHandlers, HasHTML, MouseO
 
 	@Override
 	public HandlerRegistration addClickHandler(ClickHandler handler) {
-		return panel.addClickHandler(handler);
+		return click.addClickHandler(handler);
 	}
 
 	@Override
 	public void onMouseOut(MouseOutEvent event) {
-		panel.removeStyleName(HOVER);	
+		getWidget().removeStyleName(HOVER);	
 	}
 
 	@Override
 	public void onMouseOver(MouseOverEvent event) {
-		panel.addStyleName(HOVER);	
+		getWidget().addStyleName(HOVER);	
 	}
 
 	@Override
 	public void onClick(ClickEvent event) {
-		panel.removeStyleName(HOVER);
+		getWidget().removeStyleName(HOVER);
 	}
 
 }

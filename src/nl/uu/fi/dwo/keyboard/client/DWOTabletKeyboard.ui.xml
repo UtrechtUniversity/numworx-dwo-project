@@ -1,0 +1,209 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
+	>
+	<ui:with type="nl.uu.fi.dwo.keyboard.client.DWOkeyboardBundle" field="resources" />
+	<ui:style>
+	.pad {
+		float:right;
+	}
+	.panel {
+		float: left;
+	}
+	.image {
+		width: 16px !important;
+		height: 16px !important;
+		padding: 8px !important;
+	}
+	.letter {
+		font-family: serif;
+		font-style: italic;
+		font-weight: normal !important;
+	}
+	.symbol {
+		font-family: monospace;
+		font-style: initial;
+		font-weight: normal !important;
+	}
+	</ui:style>
+
+	<g:HorizontalPanel addStyleNames="keyboard keyboard-abc is-active" >
+	  <g:FlowPanel styleName="{style.panel}">
+		<g:FlowPanel addStyleNames="dclm clm-1">
+			<my:FKey addStyleNames="key bg-dkgrey" ui:field="t1_1" >
+				7
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-dkgrey" ui:field="t2_1">
+				4
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-dkgrey" ui:field="t3_1">
+				1
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-dkgrey" ui:field="t4_1">
+				0
+			</my:FKey>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-2">
+			<my:FKey addStyleNames="key bg-dkgrey" ui:field="t1_2">
+				8
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-dkgrey" ui:field="t2_2">
+				5
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-dkgrey" ui:field="t3_2">
+				2
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-dkgrey" ui:field="t4_2">
+				.
+			</my:FKey>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-3">
+			<my:FKey addStyleNames="key bg-dkgrey" ui:field="t1_3" >
+				9
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-dkgrey" ui:field="t2_3">
+				6
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-dkgrey" ui:field="t3_3">
+				3
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-dkgrey" ui:field="t4_3">
+				=
+			</my:FKey>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-4">
+			<my:FKey addStyleNames="key bg-ltgrey" ui:field="t1_4">
+				×
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-ltgrey" ui:field="t2_4">
+				÷
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-ltgrey" ui:field="t3_4">
+				+
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-ltgrey" ui:field="t4_4">
+				−
+			</my:FKey>
+		</g:FlowPanel>
+
+		<g:FlowPanel addStyleNames="dclm clm-5">
+			<my:FKey addStyleNames="key icon {style.letter}" ui:field="t1_5" >
+				x
+			</my:FKey>
+			<my:FKey addStyleNames="key icon {style.letter}" ui:field="t2_5">
+				p
+			</my:FKey>
+			<my:FKey addStyleNames="key icon {style.letter}" ui:field="t3_5">
+				a
+			</my:FKey>
+			<my:FKey addStyleNames="key icon {style.symbol}" ui:field="t4_5">
+				e
+			</my:FKey>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-6">
+			<my:FKey addStyleNames="key icon {style.letter}" ui:field="t1_6">
+				y
+			</my:FKey>
+			<my:FKey addStyleNames="key icon {style.letter}" ui:field="t2_6">
+				q
+			</my:FKey>
+			<my:FKey addStyleNames="key icon {style.letter}" ui:field="t3_6">
+				b
+			</my:FKey>
+			<my:FKey addStyleNames="key icon {style.symbol}" ui:field="t4_6">
+				π
+			</my:FKey>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-7">
+			<my:IKey addStyleNames="key {style.image}" ui:field="t1_7" resource="{resources.wortel}" />
+			<my:IKey addStyleNames="key {style.image}" ui:field="t2_7" resource="{resources.ndewortel}"/>
+			<my:IKey addStyleNames="key {style.image}" ui:field="t3_7" resource="{resources.integraal}" />
+			<my:IKey addStyleNames="key {style.image}" ui:field="t4_7" resource="{resources.limiet0}" />
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-8">
+			<my:IKey addStyleNames="key {style.image}" ui:field="t1_8" resource="{resources.macht}" />
+			<my:IKey addStyleNames="key {style.image}" ui:field="t2_8" resource="{resources.ndelog}"/>
+			<my:IKey addStyleNames="key {style.image}" ui:field="t3_8" resource="{resources.prv}" />
+			<my:IKey addStyleNames="key {style.image}" ui:field="t4_8" resource="{resources.limiet1}" />
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-9">
+			<my:IKey addStyleNames="key {style.image}" ui:field="t1_9" resource="{resources.kwadraat}" />
+			<my:IKey addStyleNames="key {style.image}" ui:field="t2_9" resource="{resources.abs}"/>
+			<my:IKey addStyleNames="key {style.image}" ui:field="t3_9" resource="{resources.primitieve}" />
+			<my:IKey addStyleNames="key {style.image}" ui:field="t4_9" resource="{resources.limiet2}" />
+		</g:FlowPanel>
+		
+		<g:FlowPanel addStyleNames="dclm clm-10">
+			<my:IKey addStyleNames="key {style.image}" ui:field="t1_10" resource="{resources.breuk}" />
+			<my:IKey addStyleNames="key {style.image}" ui:field="t2_10" resource="{resources.subscript}"/>
+			<my:IKey addStyleNames="key {style.image}" ui:field="t3_10" resource="{resources.diff}" />
+			<my:IKey addStyleNames="key {style.image}" ui:field="t4_10" resource="{resources.sigma}" />
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-10">
+			<my:IKey addStyleNames="key {style.image}" ui:field="t1_11" resource="{resources.haakjes}" />
+			<my:IKey addStyleNames="key {style.image}" ui:field="t2_11" resource="{resources.bin}"/>
+			<my:IKey addStyleNames="key {style.image}" ui:field="t3_11" resource="{resources.partialdiff}" />
+			<my:IKey addStyleNames="key {style.image}" ui:field="t4_11" resource="{resources.conjug}" />
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-12">
+			<my:FKey addStyleNames="key bg-ltgrey" ui:field="t1_12">
+				(
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-ltgrey " ui:field="t2_12">
+				[
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-ltgrey" ui:field="t3_12">
+				⟨
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-ltgrey" ui:field="t4_12">
+				←
+			</my:FKey>
+		</g:FlowPanel>
+
+		<g:FlowPanel addStyleNames="dclm clm-13">
+			<my:FKey addStyleNames="key bg-ltgrey" ui:field="t1_13" >
+				)
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-ltgrey" ui:field="t2_13">
+				]
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-ltgrey" ui:field="t3_13">
+				⟩
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-ltgrey" ui:field="t4_13">
+				→
+			</my:FKey>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-14">
+			<my:FKey addStyleNames="key" ui:field="t1_14">
+				≠
+			</my:FKey>
+			<my:FKey addStyleNames="key" ui:field="t2_14">
+				&lt;
+			</my:FKey>
+			<my:FKey addStyleNames="key" ui:field="t3_14">
+				≤
+			</my:FKey>
+			<my:FKey addStyleNames="key icon" ui:field="t4_14">
+				of
+			</my:FKey>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-15">
+			<my:FKey addStyleNames="key" ui:field="t1_15" >
+				≈
+			</my:FKey>
+			<my:FKey addStyleNames="key" ui:field="t2_15">
+				>
+			</my:FKey>
+			<my:FKey addStyleNames="key" ui:field="t3_15">
+				≥
+			</my:FKey>
+			<my:FKey addStyleNames="key" ui:field="t4_15">
+				∞
+			</my:FKey>
+		</g:FlowPanel>
+	    </g:FlowPanel>
+		<my:TabletKeyboardPad ui:field="pad" addStyleNames="{style.pad}" />
+	</g:HorizontalPanel>
+</ui:UiBinder> 
