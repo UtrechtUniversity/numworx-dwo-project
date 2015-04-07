@@ -77,6 +77,9 @@ public abstract class AbstractKeyboard extends Composite implements FormuleKeybo
 	void switchABC() {
 	}
 
+	void switchGreek() {
+	}
+	
 	void switch123() {	
 	}
 	

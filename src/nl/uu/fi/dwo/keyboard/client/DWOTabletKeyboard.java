@@ -37,7 +37,7 @@ public class DWOTabletKeyboard extends AbstractKeyboard {
 	 * implement HasHTML instead of HasText.
 	 */
 	public DWOTabletKeyboard() {
-		pad = new TabletKeyboardPad();
+		pad = new DWOTabletKeyboardPad();
 		pad.setDelegate(this);
 		initWidget(uiBinder.createAndBindUi(this));
 	}
@@ -49,7 +49,7 @@ public class DWOTabletKeyboard extends AbstractKeyboard {
 	}
 
 	@UiField(provided=true)
-	TabletKeyboardPad pad;
+	DWOTabletKeyboardPad pad;
 	@UiField(provided=true)
 	DWOkeyboardBundle resources = DWOTabletKeyboardFactory.resources;
 	

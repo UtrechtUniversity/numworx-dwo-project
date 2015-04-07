@@ -1,0 +1,59 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
+	>
+	<ui:with type="nl.uu.fi.dwo.keyboard.client.DWOkeyboardBundle" field="resources" />
+	<ui:style>
+	.image {
+		width: 16px !important;
+		height: 16px !important;
+		padding: 8px !important;
+	}
+	.imagem {
+		width: 16px !important;
+		height: 16px !important;
+		padding-left: 8px !important;
+		padding-right: 8px !important;
+		padding-top: 8px !important;
+		padding-bottom: 18px !important;
+	}
+	.apply {
+		width: 16px !important;
+		height: 16px !important;
+		padding-left: 8px !important;
+		padding-right:8px !important;
+		padding-top: 27px !important;
+		padding-bottom: 27px !important;
+	}
+
+	.panel { 
+		width: 80px;
+		height: 166px;
+		border-collapse: collapse;
+		border-spacing: 0px;
+		background-color: #D2D2D2;
+	}
+	</ui:style>
+	<g:HorizontalPanel styleName="{style.panel}" >
+		<g:FlowPanel addStyleNames="dclm clm-16">
+			<my:FKey addStyleNames="key bg-dkgrey icon" ui:field="t1_16">
+				αβ
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-dkgrey icon" ui:field="t2_16">
+				123
+			</my:FKey>
+			<my:FKey addStyleNames="key bg-dkgrey icon" ui:field="t3_16">
+				abc
+			</my:FKey>
+			<my:IKey addStyleNames="key bg-grey icon {style.image}" ui:field="t4_16" resource="{resources.hand}" />
+		</g:FlowPanel>
+
+		<g:FlowPanel addStyleNames="dclm clm-17">
+			<my:IKey addStyleNames="key bg-ltgrey icon {style.image}" ui:field="t1_17" resource="{resources.backspace}" />
+			<my:IKey addStyleNames="key bg-ltgrey icon {style.apply}" ui:field="t2_17" resource="{resources.apply}"/>
+			<my:IKey addStyleNames="key bg-ltgrey icon {style.imagem}" ui:field="t4_17" resource="{resources.VVV}" />
+		</g:FlowPanel>
+
+	</g:HorizontalPanel>
+</ui:UiBinder> 

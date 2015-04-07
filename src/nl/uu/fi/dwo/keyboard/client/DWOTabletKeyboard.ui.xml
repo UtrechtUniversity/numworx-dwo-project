@@ -204,6 +204,6 @@
 			</my:FKey>
 		</g:FlowPanel>
 	    </g:FlowPanel>
-		<my:TabletKeyboardPad ui:field="pad" addStyleNames="{style.pad}" />
+		<my:DWOTabletKeyboardPad ui:field="pad" addStyleNames="{style.pad}" />
 	</g:HorizontalPanel>
 </ui:UiBinder> 
