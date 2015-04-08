@@ -11,12 +11,16 @@
 		padding: 8px !important;
 	}
 	.imagem {
-		width: 16px !important;
-		height: 16px !important;
-		padding-left: 8px !important;
-		padding-right: 8px !important;
-		padding-top: 8px !important;
-		padding-bottom: 18px !important;
+		width: 24px !important;
+		height: 24px !important;
+		padding-left: 4px !important;
+		padding-right: 4px !important;
+		padding-top: 4px !important;
+		padding-bottom: 34px !important;
+	}
+	
+	.symbol {
+		font-size: 80% !important;
 	}
 	.apply {
 		width: 16px !important;
@@ -28,32 +32,31 @@
 	}
 
 	.panel { 
-		width: 80px;
 		height: 166px;
-		border-collapse: collapse;
-		border-spacing: 0px;
+		margin-left: 8px;
+		width: auto !important;
 		background-color: #D2D2D2;
 	}
 	</ui:style>
-	<g:HorizontalPanel styleName="{style.panel}" >
-		<g:FlowPanel addStyleNames="dclm clm-16">
-			<my:FKey addStyleNames="key bg-dkgrey icon" ui:field="t1_16">
+	<g:FlowPanel styleName="{style.panel}" >
+		<g:FlowPanel addStyleNames="dclm">
+			<my:FKey addStyleNames="key bg-dkgrey icon {style.symbol}" ui:field="t1_16">
 				αβ
 			</my:FKey>
-			<my:FKey addStyleNames="key bg-dkgrey icon" ui:field="t2_16">
+			<my:FKey addStyleNames="key bg-dkgrey icon {style.symbol}" ui:field="t2_16">
 				123
 			</my:FKey>
-			<my:FKey addStyleNames="key bg-dkgrey icon" ui:field="t3_16">
+			<my:FKey addStyleNames="key bg-dkgrey icon {style.symbol}" ui:field="t3_16">
 				abc
 			</my:FKey>
 			<my:IKey addStyleNames="key bg-grey icon {style.image}" ui:field="t4_16" resource="{resources.hand}" />
 		</g:FlowPanel>
 
-		<g:FlowPanel addStyleNames="dclm clm-17">
+		<g:FlowPanel addStyleNames="dclm">
 			<my:IKey addStyleNames="key bg-ltgrey icon {style.image}" ui:field="t1_17" resource="{resources.backspace}" />
 			<my:IKey addStyleNames="key bg-ltgrey icon {style.apply}" ui:field="t2_17" resource="{resources.apply}"/>
 			<my:IKey addStyleNames="key bg-ltgrey icon {style.imagem}" ui:field="t4_17" resource="{resources.VVV}" />
 		</g:FlowPanel>
 
-	</g:HorizontalPanel>
+	</g:FlowPanel>
 </ui:UiBinder> 

@@ -141,7 +141,12 @@ public class DWOTabletKeyboard extends AbstractKeyboard {
 	void switchHand() {
 		getDelegate().switchHand();
 	}
-	
+
+	@Override
+	void switchGreek() {
+		getDelegate().switchGreek();
+	}
+
 	DWOTabletKeyboard init() {
 		pad.t2_16.addStyleName("is-active");
 		return this;

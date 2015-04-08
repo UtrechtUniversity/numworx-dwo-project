@@ -26,9 +26,20 @@
 		font-style: initial;
 		font-weight: normal !important;
 	}
+	.bsymbol {
+		font-family: monospace;
+		font-style: initial;
+		font-weight: normal !important;
+		font-size: 24px !important;
+	}
+	
+	.dwo {
+		width: auto !important;
+
+	}
 	</ui:style>
 
-	<g:HorizontalPanel addStyleNames="keyboard keyboard-abc is-active" >
+	<g:HorizontalPanel addStyleNames="keyboard keyboard-abc is-active {style.dwo}" >
 	  <g:FlowPanel styleName="{style.panel}">
 		<g:FlowPanel addStyleNames="dclm clm-1">
 			<my:FKey addStyleNames="key bg-dkgrey" ui:field="t1_1" >
@@ -73,16 +84,16 @@
 			</my:FKey>
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-4">
-			<my:FKey addStyleNames="key bg-ltgrey" ui:field="t1_4">
+			<my:FKey addStyleNames="key bg-ltgrey {style.bsymbol}" ui:field="t1_4">
 				×
 			</my:FKey>
-			<my:FKey addStyleNames="key bg-ltgrey" ui:field="t2_4">
+			<my:FKey addStyleNames="key bg-ltgrey {style.bsymbol}" ui:field="t2_4">
 				÷
 			</my:FKey>
-			<my:FKey addStyleNames="key bg-ltgrey" ui:field="t3_4">
+			<my:FKey addStyleNames="key bg-ltgrey {style.bsymbol}" ui:field="t3_4">
 				+
 			</my:FKey>
-			<my:FKey addStyleNames="key bg-ltgrey" ui:field="t4_4">
+			<my:FKey addStyleNames="key bg-ltgrey {style.bsymbol}" ui:field="t4_4">
 				−
 			</my:FKey>
 		</g:FlowPanel>

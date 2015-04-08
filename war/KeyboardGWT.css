@@ -117,6 +117,10 @@
   .keyboard .dclm:first-child {
     margin-left: 0; }
 
+.keyboard .dclm .key {
+	border-radius: 5px;
+}
+
 .keyboard .clm {
   width: 42px;
   float: left;

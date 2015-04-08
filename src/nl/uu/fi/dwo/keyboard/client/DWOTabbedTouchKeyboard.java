@@ -135,6 +135,11 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 		}
 	}
 
+	@Override
+	void switchGreek() {
+		switchABC(); // TODO greek keyboard
+	}
+	
 	private Widget scrollPanel; 
 	private int origHeight = 426 - 40;
 	private int origDelta = 0;
