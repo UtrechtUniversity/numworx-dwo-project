@@ -56,11 +56,11 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		@Override
 		public void onTap(TapEvent event) {
 			Element targetElement = event.getTargetElement();
-			System.out.println("mgwt.onTap: " + targetElement);
 			if(targetElement == target || targetElement.getParentElement() == target)
-				comRoot.getKeyboard().setEditor(deze);
+			{	comRoot.getKeyboard().setEditor(deze);
+				setCursorWidget(cursorWidget);
 				comRoot.getKeyboard().softFocus();
-			
+			}
 		}
 
 	}
@@ -178,7 +178,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private int width;
 	private int height;
 	private boolean volledigeBreedte;
-	private int asHoogte;
+	private int asHoogte = 17;
 	private OpdrNavIF comRoot;
 	private FormuleFont defaultfont = FormuleFont.createFromFontSize(14);
 	private FormuleFont font;
@@ -192,26 +192,29 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		ObjectMap launchdata = h.getObjectMap("interactiePanelLaunchState");
 		width = h.getInt("breedte");
 		height = h.getInt("hoogte");
-		volledigeBreedte = h.getBoolean("volledigeBreedte");
+		volledigeBreedte = h.getBoolean("volledigeBreedte", false);
 		int menuheight = 0;
-		VerticalPanel hbox = new VerticalPanel();
+		boolean boxMetRand;
+		boxMetRand = launchdata.getBoolean("boxMetRand", true);
+		int boxsize = boxMetRand?2:0;
+		FlowPanel hbox = new FlowPanel();
 		Widget menubar, content;
 		menubar = getMenuBar(launchdata);
 		if(menubar != null) {
-			menubar.setPixelSize(width, menuheight=30);
+			menubar.setPixelSize(width-boxsize, menuheight=30);
 			hbox.add(menubar);
 		}
-		boolean boxMetRand;
-		boxMetRand = launchdata.getBoolean("boxMetRand", true);
-		
+		int padding = 4; // TODO bepaal padding;
 		content = getContent(launchdata);
-		content.setPixelSize(width, height-menuheight);
-		content.getElement().getStyle().setBackgroundColor("white");
+		content.setPixelSize(width-boxsize-padding, height-menuheight-boxsize-padding);
+		Style style = content.getElement().getStyle();
+		style.setPadding(padding/2, Unit.PX);
+		style.setBackgroundColor("white");
 		hbox.add(content);
 		hbox.getElement().getStyle().setBackgroundColor("#C0C0C0");
-		hbox.setPixelSize(width, height);
+		hbox.setPixelSize(width-boxsize, height-boxsize);
 		if(boxMetRand)
-			hbox.getElement().getStyle().setProperty("border", "thin solid black");
+			hbox.getElement().getStyle().setProperty("border", "1px solid gray");
 		initWidget(hbox);
 	}
 
@@ -223,6 +226,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		flow.clear();
 		flow.add(setCursorWidget(new InlineHTML(" \u00A0")));
 		insert(tekst);
+		setCurrentElementRepaint();
 	}
 
 	private Widget cursorWidget;
@@ -237,8 +241,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	}
 
 	private Widget setCursorWidget(Widget widget) {
-		if(cursorWidget != null)
-			cursorWidget.setStyleDependentName("cursor", false);
+		if(widget == null) return cursorWidget;
+		setCurrentElementRepaint();
 		widget.setStyleDependentName("cursor", true);
 		cursorWidget = widget;
 		return widget;
@@ -421,8 +425,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	@Override
 	public void setCurrentElementRepaint() {
-		// TODO Auto-generated method stub
-		
+		if(cursorWidget != null)
+			cursorWidget.setStyleDependentName("cursor", false);
 	}
 
 	private class Enter extends InlineHTML implements HasText {

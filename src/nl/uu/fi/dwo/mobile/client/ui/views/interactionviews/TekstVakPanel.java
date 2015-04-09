@@ -289,8 +289,8 @@ public class TekstVakPanel implements InteractionView, FacetAware
 	{
 		this.randomVarNamen = randomVarNamen;
 		this.randomVarWaarden = randomVarWaarden;
-		facade = new PopupFacade(hh);
 		ObjectMap h = JSONUtilities.wrapMap(hh);
+		facade = new PopupFacade(h);
 		ObjectMap launchState = null;
 		if (h != null && h.containsKey("breedte") )
 			breedte = h.getInt("breedte");

@@ -99,6 +99,8 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 
 	@Override
 	public StatusBarIF getStatusBar() {
-		return new nl.uu.fi.dwo.mobile.client.ui.dwokb.FormuleKeyboard();
+		return new nl.uu.fi.dwo.mobile.client.ui.dwokb.DWOKeyboard();
+
+		//return new nl.uu.fi.dwo.mobile.client.ui.dwokb.FormuleKeyboard();
 	}
 }

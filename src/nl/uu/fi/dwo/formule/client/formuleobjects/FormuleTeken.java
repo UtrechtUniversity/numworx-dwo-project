@@ -101,9 +101,9 @@ public class FormuleTeken extends FormuleElement
 	
 	public int getCorrectieLinks()
 	{
-		if(FormuleFont.formTimes && (teken.equals("j") || teken.equals("f")))
+		if(FormuleFont.formTimes && ("j".equals(teken) || "f".equals(teken)))
 			return 3;
-		else if(teken.equals("j") || (FormuleFont.formTimes && (teken.equals("p") || teken.equals("y"))))
+		else if("j".equals(teken) || (FormuleFont.formTimes && ("p".equals(teken) || "y".equals(teken))))
 			return 2;
 		
 		return 0;
@@ -111,7 +111,7 @@ public class FormuleTeken extends FormuleElement
 	
 	public int getCorrectieRechts()
 	{
-		if(FormuleFont.formTimes && teken.equals("f"))
+		if(FormuleFont.formTimes && "f".equals(teken))
 			return 2;
 		return 0;
 	}

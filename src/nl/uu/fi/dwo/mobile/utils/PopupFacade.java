@@ -34,8 +34,10 @@ public class PopupFacade implements InteractionView {
 	private boolean popup;
 	private int setNr;
 	private String popupImageString;
+	private Image  popupImage;
 	private InteractionView delegate;
 	
+	@Deprecated
 	public PopupFacade(HashMap<String, Object> h)
 	{
 		if(h == null) return;
@@ -49,7 +51,13 @@ public class PopupFacade implements InteractionView {
 		popupImageString = (String) h.get("popupImageString");
 	}
 	
+	@Deprecated
 	public PopupFacade(HashMap<String,Object> h, InteractionView delegate)
+	{
+		this(h);
+		this.delegate = delegate;
+	}
+	public PopupFacade(ObjectMap h, InteractionView delegate)
 	{
 		this(h);
 		this.delegate = delegate;
@@ -100,17 +108,18 @@ public class PopupFacade implements InteractionView {
 	private int imageWidth  = 20;
 	
 	private Image getImage() {
+		if(popupImage != null) return popupImage;
 		if(popupImageString != null && popupImageString.length()>0) {
 			ImageView imageView = new ImageView(popupImageString);
 			imageHeight = imageView.getHeight();
 			imageWidth = imageView.getWidth();
-			return imageView.getImage();
+			return popupImage = imageView.getImage();
 		}
 // TODO gebruik resources!
 		imageWidth = widths[setNr];
 		imageHeight = heights[setNr];
 		
-		return newImage(interactiePanelSetNames[setNr]);
+		return popupImage = newImage(interactiePanelSetNames[setNr]);
 	}
 	
 	public InteractionView getDelegate()
@@ -152,8 +161,8 @@ public class PopupFacade implements InteractionView {
 
 	@Override
 	public int getAsHoogte() {
-		if(popup) // FIXME wat is de ashoogte van de button?
-			return getPopupHeight() / 2;
+		if(popup) // wat is de ashoogte van de button? altijd dezelfde waarde: regelhoogte van het default font
+			return 17;
 		return delegate.getAsHoogte();
 	}
 
@@ -165,9 +174,11 @@ public class PopupFacade implements InteractionView {
 	}
 
 	private int getPopupHeight() {
+		getImage();
 		return imageHeight;
 	}
 	private int getPopupWidth() {
+		getImage();
 		return imageWidth; 
 	}
 	
@@ -181,7 +192,7 @@ public class PopupFacade implements InteractionView {
 	
 	public void zetVolledigeBreedte(int breedte)
 	{
-		if(!popup)
+		//if(!popup)
 		{	delegate.zetVolledigeBreedte(breedte);
 		}
 			

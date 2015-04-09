@@ -88,7 +88,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		ObjectMap outermap = JSONUtilities.wrapMap(launchData);
 		innerMap = outermap.getObjectMap("interactiePanelLaunchState");
 		randomVars = randomVarWaarden;
-		facade = new PopupFacade(launchData);
+		facade = new PopupFacade(outermap);
 		frame = new Frame(html);
 		frame.getElement().getStyle().setOverflow(Overflow.HIDDEN);
 		frame.setStylePrimaryName(".gwt-StubView");
@@ -577,7 +577,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	
 	@Override
 	public int getAsHoogte() {
-		return 0;
+		return facade.wrapAsHoogte(0);
 	}
 
 	@Override

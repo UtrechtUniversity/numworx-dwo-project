@@ -24,6 +24,7 @@
    <inherits name="nl.uu.fi.dwo.formule.Formule" />
    <inherits name="fi.writemathgwt.WriteMathGWT-DWO" />
    <inherits name="nl.uu.fi.dwo.mobile.DWOplayer-module"/>
+	<inherits name="nl.uu.fi.dwo.keyboard.KeyboardGWT-DWO" />
 
 <!--  <inherits name="fi.kladjegwt.KladjeGWT-DWO" /> --> 
 <!--  <inherits name="fi.balansfruitgwt.BalansFruitGWT-DWO" /> -->
