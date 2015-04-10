@@ -682,18 +682,25 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	public void reloadOpdracht(int opdracht, ScoreNavIF source) {
 		saveCurrentState();
+		removeButtonCursor(buttons.get(currentOpdracht));
 		
-		if(opdracht < 0) {
+		if(opdracht < 0) 
+		{
+			currentOpdracht = 0;
 			for(opdracht = 0; opdracht < aantalOpdrachten[currentActiviteit]; opdracht ++)
-				clearState(opdracht, source);
-		} else
-			clearState(opdracht,source);
+			{	clearState(opdracht, source);
+				setButtonCorrect(buttons.get(opdracht), isCorrect[currentActiviteit][opdracht], opdracht);
+			}
+		} 
+		else
+		{	clearState(opdracht,source);
+			setButtonCorrect(buttons.get(opdracht), isCorrect[currentActiviteit][opdracht], opdracht);
+		}
 		source.setBeantwoord(getAantalBeantwoord());
 		source.setTotaalScore((int) getScore()); 
 		
-		setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht], currentOpdracht);
+		//setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht], currentOpdracht);
 
-		removeButtonCursor(buttons.get(currentOpdracht));
 		setButtonCursor(buttons.get(currentOpdracht));
 
 		entry.clearContentPanel();
@@ -701,6 +708,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			entry.zetOpdracht(opdrachten[currentActiviteit][currentOpdracht]);
 		else
 			entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], states[currentActiviteit][currentOpdracht]);
+		
+		if(DWOplayer.PARAMETERS.isNavTitle())
+			entry.setTitle("Vraag " + (getCurrentOpdracht()+1) + " van " + getAantalOpdrachten());
 	}
 
 	public void clearState(int opdracht, ScoreNavIF source) {

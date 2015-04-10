@@ -295,8 +295,8 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 			knop.getElement().getStyle().setFloat(Style.Float.LEFT);
 		knop.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 		knop.getElement().getStyle().setMarginTop(10, Style.Unit.PX);
-		knop.setWidth(80 + "px");
-		knop.getElement().getStyle().setProperty("horizontalAlign", "center"); //TODO: helpt dit?
+		//knop.setWidth(60 + "px");
+		//knop.getElement().getStyle().setProperty("horizontalAlign", "center"); //TODO: helpt dit?
 		tp.getStaticPanel().add(knop);
 	}
 

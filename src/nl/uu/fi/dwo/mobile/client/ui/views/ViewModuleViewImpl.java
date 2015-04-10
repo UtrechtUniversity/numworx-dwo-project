@@ -41,7 +41,10 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Float;
+import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -57,10 +60,13 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CustomButton;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
@@ -84,6 +90,7 @@ import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchDelegate;
 
 import fi.wiskopdr.text.Text;
+import fi.wiskopdr.text.Text_nl;
 
 
 /**
@@ -100,6 +107,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private static Logger logger = Logger.getLogger("ViewModuleViewImpl");
 	private boolean standalone = false;
 
+	Text_nl rb = new Text_nl();
 	OpdrNav on;
 	private FocusPanel mainPanel;
 	FlowPanel contentPanel = null;
@@ -207,6 +215,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	public void setupView(HashMap<String, Object> launchData)
 	{
+		System.out.println("ViewModuleViewImp setupView");
 		for (int i = 0; i < buttons.size(); i++)
 			contentPanel.remove(buttons.get(i));
 try {
@@ -235,15 +244,17 @@ try {
 		contentPanel.getElement().getStyle().setPadding(0, Unit.PX); // XXX was 15 
 		// GEEN randje aan de linkerkant, want dan klopt de maat (100%) niet meer bij noordhoff
 
-		scoreNav.setOpnieuw(opnieuw || opnieuwMogelijk);
-		if(wrap != null && wrap.containsKey("itemOpnieuw"))
-		{
-			scoreNav.setItemOpnieuw(wrap.getBoolean("itemOpnieuw"));
-		}
 		on =  new OpdrNav(launchData, this, createMemento());
 		FlowPanel onp = (FlowPanel) on.getAsPanel();
 		if(bolletjesZichtbaar)
 			sb.addNavPanel(onp);
+		if(wrap != null && wrap.containsKey("itemOpnieuw"))
+		{
+			System.out.println("itemOpnieuw zetten");
+			scoreNav.setItemOpnieuw(wrap.getBoolean("itemOpnieuw"));
+		}
+		scoreNav.setOpnieuw(opnieuw || opnieuwMogelijk);
+		
 // pas vanaf hier toevoegen mogelijk.
 		scoreNav.setBeantwoord(on.getAantalBeantwoord());
 		scoreNav.setItemScores(on.getItemScores());
@@ -291,7 +302,9 @@ try {
 			}
 		});
 		*/
-		scoreNav.setVolgendeVisible(volgendeKnopZichtbaar);
+		//vorige en volgende zichtbaar zetten gebeurt als nodig is nog wel in stelNavigatieIn()
+		//scoreNav.setVolgendeVisible(volgendeKnopZichtbaar);
+		//scoreNav.setVorigeVisible(vorigeKnopZichtbaar);
 		stelNavigatieIn();
 	}
 
@@ -590,6 +603,7 @@ try {
 		{	//eindeKnop.setVisible(false);
 			//eindeKnop.setEnabled(false);
 			scoreNav.setVolgendeVisible(volgendeKnopZichtbaar);
+			scoreNav.setVorigeVisible(vorigeKnopZichtbaar);
 			//Als leerling pas door mag als alles op pagina correct: volgende bolletjes en volgende/einde-knop disablen.
 			if(allesCorrectNodig && !on.getOpdrachtCorrect(actNr, opdrNr) && !on.geefNoScore(actNr, opdrNr + 1)) //klopt die + 1??
 			{	for(int i = opdrNr + 1; i < on.getAantalOpdrachten(); i++)
@@ -948,6 +962,7 @@ try {
 	
 	public ViewModuleViewImpl initialize()
 	{
+		System.out.println("ViewModuleViewImp initialize");
 		api = GWT.create(Scorm2004IF.class);
 		FlowPanel fp = new FlowPanel(); 
 		mainPanel = FocusOnTouch.wrap(fp, true);
@@ -1108,7 +1123,10 @@ try {
 					checker.checkOpdracht(ScoreNavFacade.this);
 				}
 			});
-			vorigeKnop = new PushButton(Text.constants.vorigeKnopLabel());
+			vorigeKnop = new PushButton(new Image(DWOplayer.DWO_BUNDLE.vorigeknop().getSafeUri()));
+					//Text.constants.vorigeKnopLabel());
+			
+			vorigeKnop.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
 			vorigeKnop.addClickHandler(new ClickHandler(){
 				public void onClick(ClickEvent e)
 				{
@@ -1117,7 +1135,8 @@ try {
 				}
 			});
 			
-			volgendeKnop = new PushButton(Text.constants.volgendeKnopLabel());
+			volgendeKnop = new PushButton(new Image(DWOplayer.DWO_BUNDLE.volgendeknop().getSafeUri()));//Text.constants.volgendeKnopLabel());
+			volgendeKnop.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
 			volgendeKnop.addClickHandler(new ClickHandler(){
 				public void onClick(ClickEvent e)
 				{
@@ -1169,7 +1188,7 @@ try {
 				if(opnieuwKnop ==  null) {
 					opnieuwKnop = new PushButton(Text.constants.opnieuwKnopLabel());
 					opnieuwKnop.addClickHandler(new ReloadHandler());
-					sb.addKnop(opnieuwKnop, true);
+					sb.addKnop(opnieuwKnop, false);
 				}
 				opnieuwKnop.setVisible(true);
 			} else if(opnieuwKnop != null) {
@@ -1183,7 +1202,7 @@ try {
 				if(allesOpnieuwKnop ==  null) {
 					allesOpnieuwKnop = new PushButton(Text.constants.allesOpnieuwKnopLabel());
 					allesOpnieuwKnop.addClickHandler(new ReloadAllHandler());
-					sb.addKnop(allesOpnieuwKnop, true);
+					sb.addKnop(allesOpnieuwKnop, false);
 				}
 				allesOpnieuwKnop.setVisible(true);
 			} else if(allesOpnieuwKnop != null) {
@@ -1255,7 +1274,51 @@ try {
 
 
 		private void reloadOpdracht(int opdracht) {
-			gotoOpdracht.reloadOpdracht(opdracht, ScoreNavFacade.this);
+			if(opdracht < 0)
+			{
+				final int opdr = opdracht;
+				final DialogBox box = new DialogBox();
+				
+				FlowPanel contents = new FlowPanel();
+				Label titel = new Label(rb.getString("opnieuwPanelTitel"));
+				titel.getElement().getStyle().setFontSize(16, Style.Unit.PX);
+				titel.getElement().getStyle().setFontWeight(FontWeight.BOLD);
+				titel.getElement().getStyle().setPaddingBottom(10, Style.Unit.PX);
+				contents.add(titel);
+				Label meldingTekst1 = new Label(rb.getString("opnieuwPanelTekst1"));
+				meldingTekst1.getElement().getStyle().setFontSize(14, Style.Unit.PX);
+				meldingTekst1.getElement().getStyle().setPaddingBottom(10, Style.Unit.PX);
+				Label meldingTekst2 = new Label(rb.getString("opnieuwPanelTekst2"));
+				meldingTekst2.getElement().getStyle().setFontSize(14, Style.Unit.PX);
+				meldingTekst2.getElement().getStyle().setPaddingBottom(10, Style.Unit.PX);
+				
+				contents.add(meldingTekst1);
+				contents.add(meldingTekst2);
+				Button jaKnop = new Button(rb.getString("jaTekst"));
+				jaKnop.getElement().getStyle().setPaddingLeft(20, Style.Unit.PX);
+			    jaKnop.addClickHandler(new ClickHandler() {
+			        public void onClick(ClickEvent event) {
+			        	box.hide();
+			        	gotoOpdracht.reloadOpdracht(opdr, ScoreNavFacade.this);
+			        	
+			        	
+			        }
+			    });
+			    Button neeKnop = new Button(rb.getString("neeTekst"));
+			    neeKnop.getElement().getStyle().setFloat(Float.RIGHT);
+			    neeKnop.getElement().getStyle().setPaddingRight(20, Style.Unit.PX);
+			    neeKnop.addClickHandler(new ClickHandler() { 
+			    	public void onClick(ClickEvent event) {
+			    		box.hide();
+			    	}
+			    });
+			    contents.add(jaKnop);
+			    contents.add(neeKnop);
+			    box.setWidget(contents);
+			    box.show();
+			}
+			else
+				gotoOpdracht.reloadOpdracht(opdracht, ScoreNavFacade.this);
 		}
     	
     }

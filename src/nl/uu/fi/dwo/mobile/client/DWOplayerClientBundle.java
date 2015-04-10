@@ -61,5 +61,11 @@ public interface DWOplayerClientBundle extends ClientBundle {
 	@Source("nl/uu/fi/dwo/mobile/client/resources/arrow-right-big.png")
 	ImageResource arrowRightBig();
 	
+	@Source("nl/uu/fi/dwo/mobile/client/resources/vorigeknop.gif")
+	ImageResource vorigeknop();
+	
+	@Source("nl/uu/fi/dwo/mobile/client/resources/volgendeknop.gif")
+	ImageResource volgendeknop();
+	
 	
 }

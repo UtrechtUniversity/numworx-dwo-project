@@ -72,8 +72,11 @@ public class Text_nl implements TextIF
 	{ "standaardActiviteitNaam", "Niveau" },
 	{ "standaardOpdrachtNaam", "Opdracht" },
 	{ "opnieuwPanelTekstMW", "Je verliest je huidige score als je opnieuw begint.\n\nWeet je zeker dat je opnieuw wilt beginnen?" },
-	{ "opnieuwPanelTekst", "Je verliest je huidige scores als je opnieuw begint.\n\nWeet je zeker dat je opnieuw wilt beginnen?" },
+	{ "opnieuwPanelTekst1", "Je verliest je huidige scores als je opnieuw begint." },
+	{ "opnieuwPanelTekst2", "Weet je zeker dat je opnieuw wilt beginnen?" },
 	{ "opnieuwPanelTitel", "Opnieuw?" },
+	{ "jaTekst", "Ja"},
+	{ "neeTekst", "Nee"},
 	{ "lockToetsCBLabel", "Verzegel toets" },
 	{ "lockToetsLabel", "Toets verzegeld" },
 
