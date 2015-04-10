@@ -7,7 +7,6 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 
 import com.google.gwt.canvas.dom.client.CssColor;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
@@ -16,12 +15,9 @@ import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.safehtml.client.SafeHtmlTemplates;
-import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -95,48 +91,6 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF {
 	}
 
 	
-	public static class SimpleProgressBar extends Composite  {
-
-        public interface StatusCellSafeHTMLTemplate extends SafeHtmlTemplates {
-                @Template("<div><div style=\"font-size:medium;height:1.2em;width:100%;cursor:default;border:thin #7ba5d5 solid;\">"
-                                + "<div style=\"height:1.2em;width:{0}%; background:#8cb6e6; background-image: url('progress_background.png');\">"
-                                + "</div><div style=\"height:1.2em; margin:-1.2em;font-weight:bold;color:#4e7fba;\">"
-                                + "<center>{0}%</center></div></div></div>")
-                                SafeHtml status(int percentage);
-                @Template("<div><div style=\"font-size:medium;height:1.2em;width:100%;cursor:default;border:thin #7ba5d5 solid;\">"
-                        + "<div style=\"height:1.2em;width:{0}%; background:#8cb6e6;\">"
-                        + "</div><div style=\"height:1.2em; margin:-1.2em;font-weight:bold;color:#4e7fba;\">"
-                        + "<center>\u00A0</center></div></div></div>")
-                        SafeHtml nostatus(int percentage);
-        }
-
-        final private StatusCellSafeHTMLTemplate statusCellSafeHTMLTemplate = (StatusCellSafeHTMLTemplate) GWT
-        .create(StatusCellSafeHTMLTemplate.class);
-
-        final private HTML widget = new HTML();
-
-        private int progress;
-
-        public SimpleProgressBar(int i) {
-                initWidget(widget);
-                setProgress(i);
-        }
-
-        public int getProgress() {
-                return progress;
-        }
-
-        public void setProgress(final int progress) {
-                this.progress = progress;
-                widget.setHTML(statusCellSafeHTMLTemplate.nostatus(progress));
-        }
-
-}
-
-	
-	
-	
-
 	VerticalPanel top;
 	Label beantwoord;
 	Label totaalscore;

@@ -128,5 +128,10 @@ div.listItem-dwo {
 	opacity: 0.5;
 }
 
-
+.statusbar {
+	float: right;
+	display: inline-block;
+	margin-right: 20px;
+	width: 90px;	
+}
 

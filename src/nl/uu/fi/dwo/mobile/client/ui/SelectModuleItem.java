@@ -37,6 +37,7 @@ public class SelectModuleItem
 	private String file;
 	private String description;
 	private Object id;
+	private boolean showScore;
 
 	private Type type = Type.ROOT;
 	private List<SelectModuleItem> children;
@@ -48,6 +49,7 @@ public class SelectModuleItem
 		this.name = name;
 		this.file = file;
 		this.type = Type.SCO;
+		this.showScore = true; // the default
 	}
 
 	public SelectModuleItem(Map<String,Object> map, Type type)
@@ -66,6 +68,7 @@ public class SelectModuleItem
 				this.parent = SelectModuleItemHolder.getItemByID(parentID);
 				if(this.parent != null && this.parent.getType() == Type.ROOT) this.parent = null; // children of root have no parent
 			}
+			this.showScore = false;
 			break;
 		case SCO:
 			this.type = type;
@@ -73,6 +76,7 @@ public class SelectModuleItem
 			this.description = (String) map.get("description");
 			this.id =  map.get("scoID");
 			this.file = PREFIX + this.id;
+			this.showScore = !Boolean.TRUE.equals(map.get("showscore")); // reverse logica
 		break;
 // more to follow....			
 			
@@ -85,6 +89,7 @@ public class SelectModuleItem
 	public SelectModuleItem(Object id, Node node)
 	{
 		this.id = id;
+		this.showScore = false;
 		for (int i = 0; i < node.getChildNodes().getLength(); i++)
 		{
 
@@ -163,4 +168,14 @@ public class SelectModuleItem
 	public void setParent(SelectModuleItem parent) {
 		this.parent = parent;
 	}
+	
+	public boolean isShowScore() {
+		return showScore;
+	}
+
+	private int score = 90;
+	public int getScore() {
+		return score;
+	}
+	
 }
