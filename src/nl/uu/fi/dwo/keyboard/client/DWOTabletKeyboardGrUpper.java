@@ -92,8 +92,8 @@ public class DWOTabletKeyboardGrUpper extends AbstractKeyboard {
 		getDelegate().switchLower();
 	}
 	@Override
-	void switchGreek() {
-		getDelegate().switchGreek();
+	void switchABC() {
+		getDelegate().switchABC();
 	}
 	
 

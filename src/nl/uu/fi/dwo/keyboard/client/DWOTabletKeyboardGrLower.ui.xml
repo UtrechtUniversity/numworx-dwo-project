@@ -91,7 +91,7 @@
 			</g:FlowPanel>
 		
 			<g:FlowPanel  addStyleNames="row row-3" >
-				<my:FKey addStyleNames="key bg-grey {style.dkey}" ui:field="t3_1" >
+				<my:FKey addStyleNames="key {style.dkey}" ui:field="t3_1" >
 					⇧
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t3_2" >
