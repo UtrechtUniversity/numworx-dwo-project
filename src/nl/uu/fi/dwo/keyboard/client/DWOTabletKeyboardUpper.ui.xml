@@ -4,11 +4,9 @@
 	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
 	>
 	<ui:style>
-	
 	.pad {
 		float: right;
 	}
-	
 	.dkey {
 		width: 32px !important;
 		border-radius: 5px;
@@ -23,96 +21,97 @@
 	.row-even {
 		padding-left: 105px !important;
 	}
+	
 	</ui:style>
 	<g:HorizontalPanel addStyleNames="keyboard keyboard-abc is-active {style.dkeys}" >
-		<g:FlowPanel  styleName="keys {style.dkeys}">
+		<g:FlowPanel  addStyleNames="keys {style.dkeys}" >
 			<g:FlowPanel  addStyleNames="row row-1" >
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t1_1" >
-					q
+					Q
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t1_2" >
-					w
+					W
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t1_3" >
-					e
+					E
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t1_4" >
-					r
+					R
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t1_5" >
-					t
+					T
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t1_6" >
-					y
+					Y
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t1_7" >
-					u
+					U
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t1_8" >
-					i
+					I
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t1_9" >
-					o
+					O
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t1_10" >
-					p
+					P
 				</my:FKey>
 			</g:FlowPanel>
 
 			<g:FlowPanel  addStyleNames="row row-2 {style.row-even}" >
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t2_1" >
-					a
+					A
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t2_2" >
-					s
+					S
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t2_3" >
-					d
+					D
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t2_4" >
-					f
+					F
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t2_5" >
-					g
+					G
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t2_6" >
-					h
+					H
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t2_7" >
-					j
+					J
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t2_8" >
-					k
+					K
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t2_9" >
-					l
+					L
 				</my:FKey>
 			</g:FlowPanel>
 		
 			<g:FlowPanel  addStyleNames="row row-3" >
-				<my:FKey addStyleNames="{style.dkey} key key-shift" ui:field="t3_1" >
+				<my:FKey addStyleNames="key bg-grey {style.dkey}" ui:field="t3_1" >
 					⇧
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t3_2" >
-					z
+					Z
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t3_3" >
-					x
+					X
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t3_4" >
-					c
+					C
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t3_5" >
-					v
+					V
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t3_6" >
-					b
+					B
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t3_7" >
-					n
+					N
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t3_8" >
-					m
+					M
 				</my:FKey>
 				<my:FKey addStyleNames="{style.dkey} key" ui:field="t3_9" >
 					!
@@ -128,8 +127,8 @@
 				</my:FKey>
 			</g:FlowPanel>
 
-			<g:FlowPanel  addStyleNames="row row-4  {style.row-even}" >
-				<my:FKey addStyleNames="{style.dkey-space} key key-space" ui:field="t4_1" >
+			<g:FlowPanel addStyleNames="row row-4 {style.row-even}" >
+				<my:FKey addStyleNames="key key-space {style.dkey-space}" ui:field="t4_1" >
 					
 				</my:FKey>
 			</g:FlowPanel>

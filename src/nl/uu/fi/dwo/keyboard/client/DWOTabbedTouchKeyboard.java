@@ -11,7 +11,7 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 	private AbstractKeyboard current;
 	private AbstractKeyboard k123;
 	private DWOTabletKeyboardABC kabc;
-	private TabletKeyboardUpper kABC;
+	private DWOTabletKeyboardUpper kABC;
 	private TabletKeyboardPen pen;
 	private AbstractKeyboard[] stock = new AbstractKeyboard[5];
 	
@@ -48,7 +48,7 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 		kabc.setDelegate(this);
 		kabc.setVisible(false);
 		main.add(kabc);
-		kABC = new TabletKeyboardUpper();
+		kABC = new DWOTabletKeyboardUpper();
 		kABC.setDelegate(this);
 		kABC.setVisible(false);
 		main.add(kABC);
