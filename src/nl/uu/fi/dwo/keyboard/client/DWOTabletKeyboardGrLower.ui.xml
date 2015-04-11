@@ -1,0 +1,140 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
+	>
+	<ui:style>
+	.pad {
+		float: right;
+		padding-left: 22px;
+		
+	}
+	.dkey {
+		width: 32px !important;
+		border-radius: 5px;
+	}
+	.dkey-space {
+		border-radius: 5px;
+	}
+
+	.dkeys {
+		width: auto !important;
+	}
+	.row-even {
+		padding-left: 105px !important;
+	}
+	
+	</ui:style>
+	<g:HorizontalPanel addStyleNames="keyboard keyboard-abc is-active {style.dkeys}" >
+		<g:FlowPanel  addStyleNames="keys {style.dkeys}" >
+			<g:FlowPanel  addStyleNames="row row-1" >
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t1_1" >
+					
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t1_2" >
+					ς
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t1_3" >
+					ε
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t1_4" >
+					ρ
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t1_5" >
+					τ
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t1_6" >
+					υ
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t1_7" >
+					θ
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t1_8" >
+					ι
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t1_9" >
+					ο
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t1_10" >
+					π
+				</my:FKey>
+			</g:FlowPanel>
+
+			<g:FlowPanel  addStyleNames="row row-2 {style.row-even}" >
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t2_1" >
+					α
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t2_2" >
+					σ
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t2_3" >
+					δ
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t2_4" >
+					φ
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t2_5" >
+					γ
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t2_6" >
+					η
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t2_7" >
+					ξ
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t2_8" >
+					κ
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t2_9" >
+					λ
+				</my:FKey>
+			</g:FlowPanel>
+		
+			<g:FlowPanel  addStyleNames="row row-3" >
+				<my:FKey addStyleNames="key bg-grey {style.dkey}" ui:field="t3_1" >
+					⇧
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t3_2" >
+					ζ
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t3_3" >
+					χ
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t3_4" >
+					ψ
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t3_5" >
+					ω
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t3_6" >
+					β
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t3_7" >
+					ν
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t3_8" >
+					μ
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t3_9" >
+					!
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t3_10" >
+					,
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t3_11" >
+					.
+				</my:FKey>
+				<my:FKey addStyleNames="{style.dkey} key" ui:field="t3_12" >
+					?
+				</my:FKey>
+			</g:FlowPanel>
+
+			<g:FlowPanel addStyleNames="row row-4 {style.row-even}" >
+				<my:FKey addStyleNames="key key-space {style.dkey-space}" ui:field="t4_1" >
+					
+				</my:FKey>
+			</g:FlowPanel>
+		</g:FlowPanel>
+		<my:DWOTabletKeyboardPad ui:field="pad" addStyleNames="{style.pad}" />	
+	</g:HorizontalPanel>
+</ui:UiBinder> 

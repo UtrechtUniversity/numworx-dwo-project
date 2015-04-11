@@ -12,6 +12,8 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 	private AbstractKeyboard k123;
 	private DWOTabletKeyboardABC kabc;
 	private DWOTabletKeyboardUpper kABC;
+	private DWOTabletKeyboardGrUpper kGrUpper;
+	private DWOTabletKeyboardGrLower kGrLower;
 	private DWOTabletKeyboardPen pen;
 	private AbstractKeyboard[] stock = new AbstractKeyboard[5];
 	
@@ -52,6 +54,14 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 		kABC.setDelegate(this);
 		kABC.setVisible(false);
 		main.add(kABC);
+		kGrUpper = new DWOTabletKeyboardGrUpper();
+		kGrUpper.setDelegate(this);
+		kGrUpper.setVisible(false);
+		main.add(kGrUpper);
+		kGrLower = new DWOTabletKeyboardGrLower();
+		kGrLower.setDelegate(this);
+		kGrLower.setVisible(false);
+		main.add(kGrLower);
 		pen = new DWOTabletKeyboardPen();
 		pen.setDelegate(this);
 		pen.setVisible(false);
@@ -67,6 +77,7 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 		kabc.setEditor(formuleEditor);
 		kABC.setEditor(formuleEditor);
 		pen.setEditor(formuleEditor);
+		kGrUpper.setEditor(formuleEditor);
 	}
 
 
@@ -93,8 +104,8 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 	boolean upper;
 	@Override
 	void switchABC() {
-		if(upper) switchUpper(); 
-		else switchLower();
+		if(upper) switchLtUpper(); 
+		else switchLtLower();
 	}
 
 	@Override
@@ -117,6 +128,14 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 
 	@Override
 	void switchUpper() {
+		if(current == kGrLower)
+			switchGrUpper();
+		else
+			switchLtUpper();
+	}
+
+
+	private void switchLtUpper() {
 		if(current != kABC) {
 			current.setVisible(false);
 			current = kABC;
@@ -127,6 +146,14 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 
 	@Override
 	void switchLower() {
+		if(current == kGrUpper)
+			switchGrLower();
+		else
+			switchLtLower();
+	}
+
+
+	private void switchLtLower() {
 		if(current != kabc) {
 			current.setVisible(false);
 			current = kabc;
@@ -137,7 +164,29 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 
 	@Override
 	void switchGreek() {
-		switchABC(); // TODO greek keyboard
+		if(upper)
+			switchGrUpper();
+		else
+			switchGrLower();
+	}
+
+
+	private void switchGrUpper() {
+		if(current != kGrUpper) {
+			current.setVisible(false);
+			current = kGrUpper;
+			upper = true;
+			current.setVisible(true);
+		}
+	}
+
+	private void switchGrLower() {
+		if(current != kGrLower) {
+			current.setVisible(false);
+			current = kGrLower;
+			upper = false;
+			current.setVisible(true);
+		}
 	}
 	
 	private Widget scrollPanel; 
