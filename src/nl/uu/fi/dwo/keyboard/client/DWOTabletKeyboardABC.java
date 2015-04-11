@@ -87,6 +87,12 @@ public class DWOTabletKeyboardABC extends AbstractKeyboard {
 	void switchUpper() {
 		getDelegate().switchUpper();
 	}
+	
+	@Override
+	void switchGreek() {
+		getDelegate().switchGreek();
+	}
+	
 	@Override
 	public void blur() {
 		getDelegate().blur();

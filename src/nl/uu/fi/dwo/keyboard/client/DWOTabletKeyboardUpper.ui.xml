@@ -6,6 +6,8 @@
 	<ui:style>
 	.pad {
 		float: right;
+		padding-left: 22px;
+		
 	}
 	.dkey {
 		width: 32px !important;
