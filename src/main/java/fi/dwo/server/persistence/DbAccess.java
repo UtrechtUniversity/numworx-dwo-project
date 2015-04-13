@@ -267,9 +267,6 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     private final static String QRY_INSERT_USER_SCHOOLGROUP = "INSERT INTO tblUser(schoolGroupID, firstname, middlename, lastname, username, passwd, email, registerData, lastLogin) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, CURDATE(),CURDATE())";
 
-//TODO V1_2    
-//    private final static String QRY_INSERT_USER_SCHOOL = "INSERT INTO tblUser(schoolGroupID, firstname, middlename, lastname, username, passwd, email, registerDate) "
-//            + "VALUES (?, ?, ?, ?, ?, ?, ?, CURDATE())";
     /**
      * Inserts an association between a user and a schoolGroup.
      *
