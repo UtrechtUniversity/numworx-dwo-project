@@ -6,7 +6,8 @@
 package fi.dwo.dwojapplet.gui.trial;
 
 /**
- *
+ * Profile panel.
+ * 
  * @author G.A.J. van der Plas
  */
 public class JPanelProfile extends javax.swing.JPanel {
