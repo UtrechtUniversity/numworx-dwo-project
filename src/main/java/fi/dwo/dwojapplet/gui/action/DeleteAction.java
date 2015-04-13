@@ -39,7 +39,6 @@ public class DeleteAction extends GuiAction {
             String format = TextMapper.getText(TextMapper.GUIS_TLTP_DELETE_SCO);
             Object[] arguments = {sco.toString()};
             msg = MessageFormat.format(format, arguments);
-            System.out.println(msg);
             putValue(NAME, msg);
             setEnabled(canModify(map));
         } else if (o instanceof Course) {
@@ -58,14 +57,12 @@ public class DeleteAction extends GuiAction {
                             : TextMapper.getText(TextMapper.GUIC_TLTP_DELETE_COURSE);
             Object[] arguments = {o.toString()};
                         msg = MessageFormat.format(format, arguments);
-            System.out.println(msg);
             putValue(NAME, msg);
 
             setEnabled(canModify(map));
         } else {
             setEnabled(false);
             msg = TextMapper.getText("delete");
-            System.out.println(msg);
             putValue(NAME, msg);
         }
     }
