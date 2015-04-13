@@ -135,12 +135,12 @@ class ScoMapper extends XmlRpcMapper {
         } else if (objects.containsKey(data.get("scoID"))) { // Did we know the
             // sco?
             s = (Sco) objects.get(data.get("scoID"));
-            if (!data.contains("launchdata")) {
+            if (!data.containsKey("launchdata")) {
                 data.put("launchdata", "");
             }
             //System.out.println("reuse " + s + " for " + data.get("scoID"));
         } else {
-            if (!data.contains("launchdata")) {
+            if (!data.containsKey("launchdata")) {
                 s = new LazySco();
                 data.put("launchdata", "");
             } else {

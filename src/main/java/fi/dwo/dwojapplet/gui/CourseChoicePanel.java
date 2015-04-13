@@ -10,9 +10,9 @@ import fi.dwo.dwojapplet.domain.Descriptor;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.DwoProfile;
 import fi.dwo.dwojapplet.gui.action.TeacherStrategy;
-import fi.wiskopdr.WiskOpdr;
-import fi.wiskopdr.WiskOpdrPanel;
-import fi.wiskopdr.tekstobjects.LinkIF;
+import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
+import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
+import fi.dwo.dwojapplet.gui.wiskopdr.LinkIF;
 import java.applet.AppletContext;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -42,9 +42,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  *
  */
 public class CourseChoicePanel extends JPanel implements ActionListener,
-        CenterSubPanel, Scrollable
-//TODO WiskOpdr
-, LinkIF 
+        CenterSubPanel, Scrollable, LinkIF 
 {
 
     private CenterPanel center;
@@ -52,7 +50,6 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
     private int NR_COLUMNS = 4;
 
     private JTextComponent profileTextArea;
-//TODO WiskOpdr
     private WiskOpdrPanel wiskOpdrPanel;
     private Dimension unit = new Dimension(1, 1);
     private Descriptor dwoProfile;
@@ -129,14 +126,12 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
                 URL base = DwoHelper.getURL(".");
                 profileTextArea = new JMathPane(base);
             } else if (s.startsWith("H4sIAAAAAA")) {
-//TODO WiskOpdr
                 wiskOpdrPanel = WiskOpdr.getWiskOpdrPanel(s);
                 wiskOpdrPanel.setJSObjectOwner(this);
                 wiskOpdrPanel.setLocation(20, 20);
                 JPanel wrapPanel = new JPanel();
                 wrapPanel.setOpaque(false);
                 wrapPanel.setLayout(null);
-//TODO WiskOpdr
                 wrapPanel.setPreferredSize(new Dimension(wiskOpdrPanel.getWidth() + 40, (wiskOpdrPanel.getHeight() + 40)));
                 wrapPanel.add(wiskOpdrPanel);
                 add(wrapPanel, BorderLayout.NORTH);
@@ -207,7 +202,6 @@ public class CourseChoicePanel extends JPanel implements ActionListener,
             int descriptionHeight = 0;
             if (profileTextArea != null) {
                 descriptionHeight = profileTextArea.getSize().height;
-//TODO WiskOpdr
             } else if (wiskOpdrPanel != null) {
                 descriptionHeight = wiskOpdrPanel.getSize().height;
             }

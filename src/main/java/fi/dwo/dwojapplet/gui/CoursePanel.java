@@ -11,6 +11,10 @@ import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.UserResultList;
 import fi.dwo.dwojapplet.gui.action.NullStrategy;
+import fi.dwo.dwojapplet.gui.wiskopdr.LinkIF;
+import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
+import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
+
 import java.applet.AppletContext;
 import java.awt.Color;
 import java.awt.Component;
@@ -22,6 +26,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
+
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -42,8 +47,7 @@ import javax.swing.text.JTextComponent;
  *
  */
 public class CoursePanel extends JPanel implements CenterSubPanel,
-        ActionListener 
-        //LinkIF 
+        ActionListener, LinkIF
         {
 
     private static final int MINWIDTH = 600;
@@ -73,6 +77,8 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
     private boolean scoLoading;
 
     private Object jsObject;
+
+	private WiskOpdrPanel wiskOpdrPanel;
 
     /**
      * Creates a new Course Panel. The CoursePanel shows an overview of all the
@@ -108,11 +114,11 @@ public class CoursePanel extends JPanel implements CenterSubPanel,
                 startY += courseDescriptionHTML.getHeight() + 10;
             } else if (s.startsWith("H4sIAAAAAA")) {
                 htmlMode = true;
-//                wiskOpdrPanel = WiskOpdr.getWiskOpdrPanel(s);
-//                wiskOpdrPanel.setLocation(20, startY);
-//                wiskOpdrPanel.setJSObjectOwner(this);
-//                add(wiskOpdrPanel);
-//                startY += wiskOpdrPanel.getHeight() + 10;
+                wiskOpdrPanel = WiskOpdr.getWiskOpdrPanel(s);
+                wiskOpdrPanel.setLocation(20, startY);
+                wiskOpdrPanel.setJSObjectOwner(this);
+                add(wiskOpdrPanel);
+                startY += wiskOpdrPanel.getHeight() + 10;
             } else {
                 add(courseDescription);
                 htmlMode = course.isNotVisible();
