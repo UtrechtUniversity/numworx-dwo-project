@@ -122,7 +122,7 @@ public class DWOTabletKeyboard extends AbstractKeyboard {
 	@UiHandler("t4_9") void onT4_9(ClickEvent e) {getEditor().limiet2();}
 	@UiHandler("t4_10") void onT4_10(ClickEvent e) {getEditor().sigma();}
 	@UiHandler("t4_11") void onT4_11(ClickEvent e) {getEditor().conjug();}
-	@UiHandler("t4_12") void onT4_12(ClickEvent e) {getEditor().insert('[');}
+	@UiHandler("t4_12") void onT4_12(ClickEvent e) {getEditor().insert('←');}
 	@UiHandler("t4_13") void onT4_13(ClickEvent e) {getEditor().insert('→');}
 	@UiHandler("t4_14") void onT4_14(ClickEvent e) {getEditor().insert(" of ");}
 	@UiHandler("t4_15") void onT4_15(ClickEvent e) {getEditor().insert('∞');}

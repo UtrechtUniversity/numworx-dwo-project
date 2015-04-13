@@ -32,7 +32,7 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 
 	
 	DWOTabbedTouchKeyboard() {
-		this(DEFAULT);
+		this(1);
 	}
 	
 	DWOTabbedTouchKeyboard(int nr) {
