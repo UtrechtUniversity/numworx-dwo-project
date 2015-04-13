@@ -21,6 +21,7 @@ import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.MainPanel;
 import fi.dwo.dwojapplet.gui.ModuleTreePanel;
 import fi.dwo.dwojapplet.gui.ScoPanel;
+import fi.dwo.dwojapplet.gui.action.Clipboard;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.dwojapplet.persistence.StoreCreator;
 import fi.dwo.dwojapplet.system.Loader;
@@ -1153,6 +1154,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         if (!DwoHelper.setApplet(this)) {
             return;
         }
+        Clipboard.initialize();
         //It we started from the command line then the DwoHelper.getServletConnectString()
         //has been intialized. Otherwise we set it to the server where we downloaded from
         if(DwoHelper.getServletConnectString()==null){
@@ -1610,6 +1612,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 
     @Override
     public void destroy() {
+    	Clipboard.destroy();
         DwoHelper.clrApplet(this);
     }
 
