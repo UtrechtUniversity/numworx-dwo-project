@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.system.Loader;
 
 public class WiskOpdrEditPanel extends JPanel {
@@ -23,6 +24,7 @@ public class WiskOpdrEditPanel extends JPanel {
 		super(new BorderLayout());
 		this.text = text;
 		try {
+            if(DwoHelper.getGetResourceURLPathString()!=null) Loader.setPrefix(DwoHelper.getGetResourceURLPathString());
 			Class<?> wiskopdr = Loader.create("wiskopdr.jar").loadClass("fi.wiskopdr.WiskOpdr");
 			Method m = wiskopdr.getMethod("getWiskOpdrEditPanel", String.class);
 			component = (Component) m.invoke(null, text);

@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.system.Loader;
 
 public class WiskOpdrPanel extends JPanel implements InvocationHandler {
@@ -27,6 +28,7 @@ public class WiskOpdrPanel extends JPanel implements InvocationHandler {
 		this.text = s;
 		
 		try {
+            if(DwoHelper.getGetResourceURLPathString()!=null) Loader.setPrefix(DwoHelper.getGetResourceURLPathString());
 			Class<?> wiskopdr = Loader.create("wiskopdr.jar").loadClass("fi.wiskopdr.WiskOpdr");
 			Method m = wiskopdr.getMethod("getWiskOpdrPanel", String.class);
 			component = (Component) m.invoke(null, s);
@@ -44,7 +46,7 @@ public class WiskOpdrPanel extends JPanel implements InvocationHandler {
 		this.link = link;
 		try {
 			ClassLoader loader = component.getClass().getClassLoader();
-			Class linkif = loader.loadClass("fi.wiskopdr.textobjects.LinkIF");
+			Class linkif = loader.loadClass("fi.wiskopdr.tekstobjects.LinkIF");
 			Method m = component.getClass().getMethod("setJSObjectOwner", linkif);
 			Object proxy = Proxy.newProxyInstance(loader, new Class[] { linkif } , this);
 			m.invoke(component, proxy);
@@ -57,7 +59,17 @@ public class WiskOpdrPanel extends JPanel implements InvocationHandler {
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args)
 			throws Throwable {
-		log.log(Level.SEVERE, proxy + "." +  method, args);
+		log.log(Level.SEVERE, "." +  method, args);
+		String name = method.getName();
+		if("getJSObject".equals(name))
+			return link.getJSObject();
+		if("toString".equals(name)) {
+			return link.toString();
+		}
+		if("gotoScoNr".equals(name)) {
+			return link.gotoScoNr( (String)  args[0]);
+		}
+		
 		return null;
 	}
 
