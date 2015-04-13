@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Vector;
 
-import org.apache.xmlrpc.applet.SimpleXmlRpcClient;
+import org.apache.xmlrpc.applet.MySimpleXmlRpcClient;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 /**
@@ -16,7 +16,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
  */
 public abstract class Client {
 
-    private SimpleXmlRpcClient client;
+    private MySimpleXmlRpcClient client;
 
     protected Object invoke(String naam, Vector params)
             throws IOException, XmlRpcException {
@@ -24,7 +24,7 @@ public abstract class Client {
     }
 
     protected Client(URL u) {
-        client = new SimpleXmlRpcClient(u);
+        client = new MySimpleXmlRpcClient(u);
 
     }
 
