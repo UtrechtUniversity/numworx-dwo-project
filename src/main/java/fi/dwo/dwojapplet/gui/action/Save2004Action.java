@@ -151,12 +151,17 @@ public class Save2004Action extends GuiAction {
             copyList(out, runner, HTML_SOURCE, scormFileNames);
 
             String[] viewFileNames = {
+                "AlgebraPijlenGWT.html",
+                "AlgebraExprGWT.html",
                 "BalansFruitGWT.html",
                 "DoorzienGWT.html",
+                "DraaibankGWT.html",
+                "GeoGebra.html",
+                "GeomAlgGWT.html",
                 "GraphToolGWT.html",
                 "KladjeGWT.html",
                 "NabouwenAanzichtenGWT.html",
-                "SlopeTestWeb.html", // FIXME: other name!
+                "StatistiekGWT.html",
             // TODO more html files
             };
             copyList(out, runner, scormURL, viewFileNames);

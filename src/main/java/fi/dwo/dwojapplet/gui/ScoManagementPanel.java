@@ -13,8 +13,8 @@ import fi.dwo.dwojapplet.gui.action.DeleteAction;
 import fi.dwo.dwojapplet.gui.action.ImportModuleAction;
 import fi.dwo.dwojapplet.gui.action.NewAction;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
-import fi.wiskopdr.WiskOpdr;
-import fi.wiskopdr.WiskOpdrEditPanel;
+import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
+import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrEditPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -187,7 +187,6 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         editorBox.add(editorCB);
         if (course.getDescription().startsWith("H4sIAAAAAA")) {
             editorCB.setSelected(true);
-//TODO WiskOpdr
             wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription());
             wiskOpdrEditPanel.setPreferredSize(new Dimension(700, 300));
             editorBox.add(wiskOpdrEditPanel);
@@ -543,7 +542,6 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
         Object src = e.getSource();
         if (src == editorCB) {
             if (editorCB.isSelected()) {
-//TODO WiskOpdr
                 if (wiskOpdrEditPanel == null) {
                     wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(course.getDescription());
                     wiskOpdrEditPanel.setPreferredSize(new Dimension(700, 300));
@@ -688,7 +686,6 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
      */
     @Override
     public void end() {
-//TODO WiskOpdr
         if (editorCB.isSelected() && !wiskOpdrEditPanel.getText().equals(course.getDescription())) {
             course.setDescription(wiskOpdrEditPanel.getText());
             GuiCreator.instance().updateCourse(course);
@@ -722,7 +719,6 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
     private boolean ok = true;
 
     private JTextArea pane;
-//TODO WiskOpdr
     private WiskOpdrEditPanel wiskOpdrEditPanel;
 
     @Override

@@ -606,23 +606,29 @@ public class PersistenceFacade {
         }
     }
 
-    // ALLEEN VOOR ADMINISTRATORS
+// ALLEEN VOOR ADMINISTRATORS
     public boolean unsafeSaveSco(Sco sco) throws ScoException {
         DbAccessIF dbAccess = DbAccessCreator.instance();
         try {
             try {
-                MapperCreator.instance(Sco.class).removeObject(sco.getID());
+                MapperCreator.instance(Sco.class).put(sco.getID(), sco);
                 if (sco.isCourseChanged()) {
                     dbAccess.moveSco(sco.getID(), sco.getCourse().getID(), sco.getSequencenr(), sco.getScoName());
                     sco.setCourseChanged(false);
                 }
                 if (sco.isDataChanged()) {
                     boolean result;
-
-                    result = StoreCreator.instance().changeSco(sco.getID(), sco.getScoName(), sco
-                            .getDescription(),
-                            false, // Daar is het om begonnen...
-                            sco.getLaunchdataString(), null);
+            		if(sco.hasFeature(Sco.JSON_OUT))
+            		{	byte[] launchdataBytes = sco.getLaunchdataBytes();
+            			System.out.println("JSON launchdata " + sco.getID() + " " + launchdataBytes.length + " bytes");
+            			result = StoreCreator.instance().changeSco(sco.getID(), sco.getScoName(), sco.getDescription(), 
+					        false, // hier dus ook.
+					        launchdataBytes, sco.getShowScore());
+            		}
+            		result = StoreCreator.instance().changeSco(sco.getID(), sco.getScoName(), 
+            				sco.getDescription(),
+					        false, // Daar is het om begonnen...
+					        sco.getLaunchdataString(), sco.getShowScore());
                     sco.setDataChanged(false);
                     return result;
                 } else {
@@ -651,7 +657,6 @@ public class PersistenceFacade {
             throw new ScoException(ScoException.EX_UNKNOWN_ERROR, e);
         }
     }
-
     /**
      * Swap de sequencenrs van twee sco's. Beide sco's moeten van dezelfde
      * course zijn.

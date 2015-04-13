@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>fi.dwo</groupId>
   <artifactId>DWOJApplet</artifactId>
-  <name>DWOJApplet - working</name>
+  <name>DWOJApplet - trunk</name>
   <version>1.0.1</version>
   <url>http://www.dwo.nl</url>
   <inceptionYear>2015</inceptionYear>
@@ -76,16 +76,7 @@
                   </excludes>
                 </filter>
               </filters>
-              <relocations>
-                <relocation>
-                  <pattern>fi.wiskopdr</pattern>
-                  <shadedPattern>fi.shaded.wiskopdr2</shadedPattern>
-                </relocation>
-                <relocation>
-                  <pattern>org.cbook</pattern>
-                  <shadedPattern>org.cbook.shaded</shadedPattern>
-                </relocation>
-              </relocations>
+              <relocations />
             </configuration>
           </execution>
         </executions>
@@ -254,10 +245,6 @@
     </profile>
   </profiles>
   <repositories>
-    <repository>
-      <id>repo</id>
-      <url>file://${project.basedir}/repo</url>
-    </repository>
     <repository>
       <id>maven-pack200-plugin</id>
       <url>https://oss.sonatype.org/content/repositories/releases/com/github/batkinson/plugins/maven-pack200-plugin/</url>

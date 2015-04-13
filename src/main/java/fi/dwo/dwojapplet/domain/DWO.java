@@ -5,6 +5,7 @@ import fi.beans.base64code.StringCodeObject;
 import fi.beans.jvmchecker.JVMChecker;
 import fi.beans.mainframe.MainFrame;
 import fi.beans.scorm.SCORM12APIInterface;
+import fi.beans.scorm.SCORM2004APIInterface;
 import fi.dwo.commons.exceptions.ClassException;
 import fi.dwo.commons.exceptions.CourseException;
 import fi.dwo.commons.exceptions.LoginException;
@@ -20,9 +21,11 @@ import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.MainPanel;
 import fi.dwo.dwojapplet.gui.ModuleTreePanel;
 import fi.dwo.dwojapplet.gui.ScoPanel;
+import fi.dwo.dwojapplet.gui.action.Clipboard;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.dwojapplet.persistence.StoreCreator;
 import fi.dwo.dwojapplet.system.Loader;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -53,6 +56,7 @@ import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JApplet;
@@ -63,6 +67,8 @@ import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.plaf.ColorUIResource;
 
+import org.apache.xmlrpc.applet.MySimpleXmlRpcClient;
+
 /**
  * This is the main applet class of the DWO.<br>
  * At the start, a WelcomePanel is showed.<br>
@@ -70,7 +76,7 @@ import javax.swing.plaf.ColorUIResource;
  * @author M.J.B. Kupers
  *
  */
-public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
+public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM2004APIInterface   {
 
     private static final Logger log = Logger.getLogger("fi.dwo");
 
@@ -132,7 +138,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
         } catch (final Exception e) {
             Logger.getAnonymousLogger().log(Level.INFO, "No logging.properties file found in current directory. Using default.");
             try {
-                final InputStream inputStream2 = DWO.class.getResourceAsStream("logging.properties");
+                final InputStream inputStream2 = DWO.class.getResourceAsStream("resources/logging.properties");
                 LogManager.getLogManager().readConfiguration(inputStream2);
                 Logger.getAnonymousLogger().log(Level.INFO, "logging.properties file read from property folder.");
             } catch (final IOException e2) {
@@ -182,6 +188,10 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
             DwoHelper.setGetResourceURLPathString(resourceURLPathStringProperty);
             log.log(Level.FINE, "Property {0} is value: {1}", new Object[]{"resourceURLPathStringProperty",
                 DwoHelper.getGetResourceURLPathString()});
+            
+            String xmlrpc_debug = properties.getProperty("xmlrpc.debug", "false");
+            MySimpleXmlRpcClient.setDebug("true".equals(xmlrpc_debug));
+            
         } catch (FileNotFoundException ex) {
             log.log(Level.FINE, "No external resource connection defined");
         } catch (IOException ex) {
@@ -1144,6 +1154,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
         if (!DwoHelper.setApplet(this)) {
             return;
         }
+        Clipboard.initialize();
         //It we started from the command line then the DwoHelper.getServletConnectString()
         //has been intialized. Otherwise we set it to the server where we downloaded from
         if(DwoHelper.getServletConnectString()==null){
@@ -1597,6 +1608,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF {
 
     @Override
     public void destroy() {
+    	Clipboard.destroy();
         DwoHelper.clrApplet(this);
     }
 

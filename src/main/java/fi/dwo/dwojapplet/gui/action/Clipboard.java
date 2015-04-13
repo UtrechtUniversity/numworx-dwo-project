@@ -7,10 +7,22 @@ import java.beans.PropertyChangeSupport;
 public class Clipboard {
 
     public static String cmd;
-    static PropertyChangeSupport support = new PropertyChangeSupport(new Clipboard());
+    static PropertyChangeSupport support;
+    
+    public static void initialize() {
+    	support = new PropertyChangeSupport(new Clipboard());
+    }
+    
+    public static void destroy() {
+    	support = null;
+    }
+    
     private static CourseMap clipboard;
     private static CourseMap selection;
 
+    private Clipboard() {
+    }
+    
     public static void addPropertyChangeListener(String string,
             PropertyChangeListener listener) {
         support.addPropertyChangeListener(string, listener);
