@@ -215,7 +215,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 
 	public void setupView(HashMap<String, Object> launchData)
 	{
-		System.out.println("ViewModuleViewImp setupView");
 		for (int i = 0; i < buttons.size(); i++)
 			contentPanel.remove(buttons.get(i));
 try {
@@ -250,7 +249,6 @@ try {
 			sb.addNavPanel(onp);
 		if(wrap != null && wrap.containsKey("itemOpnieuw"))
 		{
-			System.out.println("itemOpnieuw zetten");
 			scoreNav.setItemOpnieuw(wrap.getBoolean("itemOpnieuw"));
 		}
 		scoreNav.setOpnieuw(opnieuw || opnieuwMogelijk);
@@ -962,7 +960,6 @@ try {
 	
 	public ViewModuleViewImpl initialize()
 	{
-		System.out.println("ViewModuleViewImp initialize");
 		api = GWT.create(Scorm2004IF.class);
 		FlowPanel fp = new FlowPanel(); 
 		mainPanel = FocusOnTouch.wrap(fp, true);

@@ -33,12 +33,16 @@ import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.Visibility;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
+import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
@@ -513,10 +517,8 @@ public class FormuleEditorWithSteps implements InteractionView
 		return editor;
 	}
 	
-	public void lastStep(String useranswer, boolean show)
+	public void lastStep(String useranswer, boolean show, boolean setState)
 	{
-		if (correct == Boolean.TRUE)
-			return;
 		LayoutPanel current = stepPanels.get(stepPanels.size() - 1);
 		current.remove(editor.getAsPanel());
 		if(viewers.size() > stepPanels.size() - 1)
@@ -548,9 +550,11 @@ public class FormuleEditorWithSteps implements InteractionView
 			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + fv.getHeight(), Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX); 
 		}
 		nagekeken = true;
+		System.out.println("lastStep zet correct true");
 		correct = true;
 		score = scoreMax;
-		comRoot.setChanged(false);
+		if(!setState)
+			comRoot.setChanged(false);
 	}
 	
 	public void addStep(String useranswer, boolean show, boolean setState)
@@ -928,8 +932,21 @@ public class FormuleEditorWithSteps implements InteractionView
 	
 	public LayoutPanel maakNieuwStapPanel()
 	{
-		LayoutPanel panel = new LayoutPanel();
+		final LayoutPanel panel = new LayoutPanel();
 		panel.setWidth((breedte - 5) + "px");
+		panel.addDomHandler(new ClickHandler(){
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if(editor != null)
+				{	if(editor.getAsPanel().getParent().equals(panel))
+					{	editor.requestFocus();
+					}
+				}
+			}
+			
+		}, ClickEvent.getType());
+		
 		stepPanels.add(panel);
 		contentPanel.add(panel);
 		contentPanel.setWidgetLeftRight(panel, 5, Style.Unit.PX, 5, Style.Unit.PX);
@@ -1267,7 +1284,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		String substitutieString = "";
 		String[] gebruikersSubStrings = null;
 		
-		if(editor != null && mode != 2 && mode != 3)
+		if(editor != null && !(mode == 2 || mode == 3))
 			editor.kijkNa();
 
 		stapNr = this.stapNr;
@@ -1463,7 +1480,7 @@ public class FormuleEditorWithSteps implements InteractionView
 //				fv.getAsPanel().getElement().getStyle().setMarginLeft(23, Unit.PX);
 			if(mode != 2 && mode != 3)
 			{	if (i == stapNr && nagekeken)
-				{
+				{	System.out.println("geval i == stapNr en nagekeken");
 					VergelijkingMeerv verg = FormuleParser.parseVergelijking("$f" + fv.toString() + "@");
 					if(linStrategieVersie || (bordjesMethode && verg.isEindOplossing(verg.geefVergelijkingVar())))
 					{	fv.showResult(FormuleViewer.CORRECT);
@@ -1477,7 +1494,7 @@ public class FormuleEditorWithSteps implements InteractionView
 						//maakNakijkenAf(false);
 					}
 					else
-					{
+					{	System.out.println("geval editor == null");
 						viewers.remove(fv);
 						stepPanel.remove(fv.getAsPanel());
 						editor = addNewEditor(stepPanel);
@@ -1554,7 +1571,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		{	if(nagekeken)
 			{	
 				
-				kijkToetsNa();
+				kijkToetsNa(true);
 
 			}
 			else
@@ -1692,11 +1709,11 @@ public class FormuleEditorWithSteps implements InteractionView
 		}
 		else if(mode == 2 || mode == 3)
 		{
-			kijkToetsNa();
+			kijkToetsNa(setState);
 		}
 	}
 	
-	public void kijkToetsNa()
+	public void kijkToetsNa(boolean setState)
 	{
 		int start = 0;
 		if (hasStartString)
@@ -1715,7 +1732,8 @@ public class FormuleEditorWithSteps implements InteractionView
 			//editor = addNewEditor(stepPanels.get(stepPanels.size() - 1));
 		aantalStappen = viewers.size();
 		String[] viewersInhouden = new String[viewers.size()];
-		viewersInhouden[0] = viewers.get(0).toString();
+		//if(viewers.size() > 0)
+			viewersInhouden[0] = viewers.get(0).toString();
 		for(int i = viewers.size() - 1; i > start - 1; i--)
 		{
 			viewersInhouden[i] = viewers.get(i).toString();
@@ -1756,7 +1774,7 @@ public class FormuleEditorWithSteps implements InteractionView
 			{
 				checkStap(i - 1, FormuleParser.parseVergelijking("$f" + viewersInhouden[i-1] + "@"), FormuleParser.parseVergelijking("$f" + viewersInhouden[i] + "@"));
 			}
-			editor.kijkNa();
+			editor.kijkNa(setState);
 		}		
 		if(editor != null)
 			zetGoedFoutEditor(editor.getGoedHalfFout());
@@ -1786,7 +1804,8 @@ public class FormuleEditorWithSteps implements InteractionView
 					if(goedHalfFout == AntwoordVakChecker.GOED)
 					{
 						setFeedback(editor.getFeedback());
-						lastStep("$f" + editor.toString() + "@", show);
+						if(correct != Boolean.TRUE)
+							lastStep("$f" + editor.toString() + "@", show, setState);
 					}
 					else
 					{
@@ -1852,7 +1871,7 @@ public class FormuleEditorWithSteps implements InteractionView
 				setAndAddFeedback(feedback);
 			else if (goedHalfFout == AntwoordVakChecker.GOED)
 			{ 	setFeedback(feedback);
-				lastStep("$f" + editor.toString() + "@", show);
+				lastStep("$f" + editor.toString() + "@", show, setState);
 			}
 		}
 	}
@@ -2055,10 +2074,8 @@ public class FormuleEditorWithSteps implements InteractionView
 		}
 		if(mode == 2 || mode == 3)
 		{
-			System.out.println("vervangEditorDoorViewer, fv result zetten " + antwoord);
 			if(show && !stepsForLinKwad)
-			{	System.out.println("show && !stepsForLinKwad");
-				if(goedHalfFout == AntwoordVakChecker.GOED)
+			{	if(goedHalfFout == AntwoordVakChecker.GOED)
 					fv.showResult(FormuleViewer.CORRECT);
 				else if(goedHalfFout == AntwoordVakChecker.DOOR || goedHalfFout == AntwoordVakChecker.HALF)
 					fv.showResult(FormuleViewer.ALMOSTCORRECT);
@@ -2068,7 +2085,6 @@ public class FormuleEditorWithSteps implements InteractionView
 			}
 			else
 			{
-				System.out.println("show = " + Boolean.toString(show) + ", stepsForLinKwad = " + Boolean.toString(stepsForLinKwad));
 				fv.showResult(FormuleViewer.NONE);
 			}
 				
@@ -2200,6 +2216,9 @@ public class FormuleEditorWithSteps implements InteractionView
 	
 	public void wis() {
 		while(stapNr > (hasStartString?1:0))
+			backStep(false);
+		//Als het kan nog één keer vaker (als bijvoorbeeld geen startstring, maar nog wel ingevulde formule op eerste regel).
+		if(terugButton.isVisible())
 			backStep(false);
 	}
 	

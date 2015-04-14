@@ -248,7 +248,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		if(strafpunten != null && mode == OEFENEN_STRAFPUNTEN && fout)
 			strafpunten[currentActiviteit][currentOpdracht] += foutStraf;
 		if (buttons != null && buttons.size() > currentOpdracht)
+		{	System.out.println("setChanged zet Button " + currentOpdracht + " correct; correct = " + correct);
 			setButtonCorrect(buttons.get(currentOpdracht), correct, currentOpdracht);
+		}
 		saveCurrentState();
 		entry.stelNavigatieIn();
 	}

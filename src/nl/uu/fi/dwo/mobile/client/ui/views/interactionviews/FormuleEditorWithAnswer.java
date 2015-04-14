@@ -34,12 +34,15 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.FontStyle;
 import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -47,6 +50,8 @@ import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
+import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import fi.wiskopdr.AntwoordFormuleVakChecker;
@@ -167,7 +172,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	TekstVak feedbackTekst;
 	Canvas feedbackSluitKnop;
 	Context2d gIm;
-	FlowPanel checkPanel;
+	TouchPanel checkPanel;
 	private ObjectMap launchState;
 	private FormuleEditorWithSteps fe = null;
 	private boolean strict = true;
@@ -193,6 +198,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private PopupFacade facade;
 	private int mode;
 	private boolean vakUitwerking;
+	private boolean boxMetRand = true;
 	private int goedHalfFout = AntwoordVakChecker.FOUT;
 	private FacetHelper facet;
 	
@@ -208,8 +214,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public FormuleEditorWithAnswer(HashMap<String, Object> h, boolean isVergelijkingVak, FormuleEditorWithSteps fe, String[] randomVarNamen, HashMap<String, Object> randomVarWaarden)
 	{
 		super();
-		boolean boxMetRand;
-		boxMetRand = true;
 		//getMainRegel().setEditorParent(this);
 		//getMainRegel().setDefaultHeight(24);
 
@@ -284,9 +288,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			checkimg.setVisible(false);
 			lastanswer = null;
 			checkimg.getElement().getStyle().setProperty("marginLeft", "0px");
-			checkimg.getElement().getStyle().setProperty("marginRight", "10px");
-			checkimg.getElement().getStyle().setProperty("marginTop", "-5px"); 
-			checkimg.getElement().getStyle().setProperty("marginBottom", "-6px");
+			checkimg.getElement().getStyle().setProperty("marginRight", "0px");
+			checkimg.getElement().getStyle().setProperty("marginTop", "-2px"); 
+			checkimg.getElement().getStyle().setProperty("marginBottom", "-7px");
 			
 			feedbackPanel = new PopupPanel(true);
 			feedbackPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
@@ -342,30 +346,47 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			feedbackLabel.getElement().getStyle().setFontSize(11, Style.Unit.PX);
 			feedbackLabel.getElement().getStyle().setFontWeight(FontWeight.BOLD);
 			feedbackLabel.getElement().getStyle().setPadding(0, Style.Unit.PX);
-			feedbackLabel.getElement().getStyle().setMarginTop(0, Style.Unit.PX);
-			feedbackLabel.getElement().getStyle().setMarginLeft(3, Style.Unit.PX);
-			feedbackLabel.getElement().getStyle().setPaddingLeft(4, Style.Unit.PX);
-			feedbackLabel.getElement().getStyle().setBackgroundColor(CssColor.make(230, 230, 230).toString());
+			feedbackLabel.getElement().getStyle().setMarginTop(-1, Style.Unit.PX);
+			feedbackLabel.getElement().getStyle().setMarginLeft(1, Style.Unit.PX);
+			feedbackLabel.getElement().getStyle().setPaddingLeft(2, Style.Unit.PX);
+			//feedbackLabel.getElement().getStyle().setBackgroundColor("white");
 			feedbackLabel.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
 			feedbackLabel.getElement().getStyle().setVerticalAlign(VerticalAlign.TOP);
 			feedbackLabel.setWidth(10 + "px");
 			feedbackLabel.setVisible(false);
 			
-			feedbackLabel.addDomHandler(new ClickHandler(){
-				public void onClick(ClickEvent e)
-				{
-					feedbackPanel.setPopupPosition(asWidget().getAbsoluteLeft() + 10, asWidget().getAbsoluteTop() + asWidget().getOffsetHeight() + 10);
-					feedbackPanel.show();
-				}
-			}, ClickEvent.getType());
-			
-			checkPanel = new FlowPanel();
+			checkPanel = new TouchPanel();
 			checkPanel.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+			checkPanel.getElement().getStyle().setPaddingLeft(5, Style.Unit.PX);
 			checkPanel.getElement().getStyle().setProperty("verticalAlign", "top");
 			checkPanel.getElement().getStyle().setMarginTop(-3, Style.Unit.PX);
 			checkPanel.add(checkimg);
 			checkPanel.add(feedbackLabel);
-			checkPanel.setPixelSize(20, hoogte);
+			checkPanel.setPixelSize(15, hoogte);
+			checkPanel.addTapHandler(new TapHandler(){
+
+				@Override
+				public void onTap(TapEvent event) {
+					if(feedbackLabel.isVisible())
+					{	feedbackPanel.setPopupPosition(asWidget().getAbsoluteLeft() + 10, asWidget().getAbsoluteTop() + asWidget().getOffsetHeight() + 10);
+						feedbackPanel.show();
+					}
+				}
+				
+			});
+			
+			
+			
+//			checkPanel.addDomHandler(new ClickHandler(){
+//				public void onClick(ClickEvent e)
+//				{
+//					if(feedbackLabel.isVisible())
+//					{	feedbackPanel.setPopupPosition(asWidget().getAbsoluteLeft() + 10, asWidget().getAbsoluteTop() + asWidget().getOffsetHeight() + 10);
+//						feedbackPanel.show();
+//					}
+//				}
+//			}, ClickEvent.getType());
+//			
 			
 			if (fe == null)
 			{
@@ -518,9 +539,18 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 	void resetimg() {
 		checkimg.setVisible(false);
-		feedbackLabel.setVisible(false);
+		zetFeedbackZichtbaar(false);
 		feedbackPanel.hide();
 		lastanswer = null;
+	}
+	
+	public void zetFeedbackZichtbaar(boolean b)
+	{
+		feedbackLabel.setVisible(b);
+		if(b)
+			checkPanel.getElement().getStyle().setCursor(Cursor.POINTER);
+		else
+			checkPanel.getElement().getStyle().setCursor(Cursor.DEFAULT);
 	}
 	
 //	public void setimg(String answer)
@@ -557,6 +587,15 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			fe.fire("input", toString());
 		}
 			
+	}
+	
+	public void haalAntwoordOp() 
+	{
+		if(fews != null && fews.getEditor() != null && !fews.getEditor().toString().equals(""))
+		{
+			clearMain();
+			insert(fews.getEditor().toString());
+		}
 	}
 	
 	public void kijkNa()
@@ -671,8 +710,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if (this.fe == null && !useranswer.equals(lastanswer))
 		{
 			lastanswer = useranswer;
-			//if(mode == 0 || mode ==1) EVEN UIT VOOR FACET
-			comRoot.setChanged(goedHalfFout == AntwoordVakChecker.FOUT);
+			if(mode == 0 || mode ==1) 
+				comRoot.setChanged(goedHalfFout == AntwoordVakChecker.FOUT);
 		
 		}
 		//if(this.fe != null && !(mode == 2 || mode == 3))
@@ -708,7 +747,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		feedbackTekst.setObjects(feedbackList);
 		voegFeedbackSluitKnopToe();
 		feedbackTekst.resize();
-		feedbackLabel.setVisible(true);
+		zetFeedbackZichtbaar(true);
 	}
 	
 	public String getFeedback()
@@ -771,7 +810,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	public int getAsHoogte()
 	{
-		return facade.wrapAsHoogte(this.getMainRegel().getAsHoogte() + 6 /* margin top + padding top */);
+		return facade.wrapAsHoogte(this.getMainRegel().getAsHoogte() + (boxMetRand?2:1)); //+ 6 /* margin top + padding top */);
+		
 	}
 
 	public void setStrict(boolean strict)
@@ -791,7 +831,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		boolean fewsIngevuld = false;
 		if(fews != null)
 		{
-			//System.out.println("fews getState");
 			HashMap<String, Object> h2 = fews.getState();
 			if(h2.containsKey("ingevuld") && ((Boolean) h2.get("ingevuld")).booleanValue())
 			{
@@ -826,6 +865,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public void setState(HashMap<String, Object> h)
 	{
 		logger.fine("setState " + h);
+		//antwoord eruit halen en dan uit h halen, zodat de antwoordstring niet wordt meegenomen in setState. 
+		String antwoord = (String) h.get(ANTWOORD_STRING);
+		h.put(ANTWOORD_STRING, "");
 		
 		if(fews != null)
 		{
@@ -843,7 +885,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		this.ingevuld = ingevuld;
 		this.nagekeken = nagekeken;
 		
-		String antwoord = (String) h.get(ANTWOORD_STRING);
 		
 		if (antwoord != null && !"".equals(antwoord.trim()))
 		{
@@ -894,7 +935,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if (ingevuld)
 		{	nagekeken = b;
 			if(fews != null)
-				fews.zetNagekeken(b);
+			{	fews.zetNagekeken(b);
+			}
 		}
 	}
 
@@ -904,7 +946,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		this.comRoot = comRoot;
 		zetMode(comRoot.getMode());
 		if(fews != null)
-			fews.setCommunicationRoot(comRoot);
+		{	fews.setCommunicationRoot(comRoot);
+		}
 		comRoot.addCBookEventListener("input", this);
 		comRoot.addCBookEventListener("index", this);
 	}

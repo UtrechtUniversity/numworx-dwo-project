@@ -285,8 +285,16 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 	}
 
 	void tearDown() {
+		System.out.println("tearDown");
 		if(view != null)
+		{	if(view instanceof FormuleEditorWithAnswer)
+			{
+				((FormuleEditorWithAnswer) view).haalAntwoordOp();
+			}
 			state = view.getState();
+			if(view instanceof FormuleEditorWithAnswer)
+				view.setState(state);
+		}
 		box.hide();
 	}
 
