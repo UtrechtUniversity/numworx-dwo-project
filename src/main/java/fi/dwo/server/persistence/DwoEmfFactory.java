@@ -27,9 +27,8 @@ public class DwoEmfFactory {
 
     private static final Logger log = Logger.getLogger(DwoEmfFactory.class.getName());
     
-
-    //
-    private volatile static EntityManagerFactory _instance = Persistence.createEntityManagerFactory("DWO_MySQLDB");;
+    
+    private volatile static EntityManagerFactory _instance = Persistence.createEntityManagerFactory("DWO_MySQLDB");
 //uses config below, but does not load persistent classes. Needs to generate xml or so.
 //<persistence-unit name="DWO_MySQLDB" transaction-type="NON_JTA_DATASOURCE">
 //<!-- include all and any required persistent entity in here exclude-unlisted-classes is being ignored!-->
@@ -49,10 +48,10 @@ public class DwoEmfFactory {
                         Map properties = new HashMap();
                         DataSource dataSource = getDataSource();
                         properties.put(PersistenceUnitProperties.NON_JTA_DATASOURCE, dataSource);
-                        properties.put(PersistenceUnitProperties.LOGGING_LEVEL, "FINE");
-                        properties.put(PersistenceUnitProperties.LOGGING_TIMESTAMP, "false");
-                        properties.put(PersistenceUnitProperties.LOGGING_THREAD, "false");
-                        properties.put(PersistenceUnitProperties.LOGGING_SESSION, "false");
+//                        properties.put(PersistenceUnitProperties.LOGGING_LEVEL, "FINE");
+//                        properties.put(PersistenceUnitProperties.LOGGING_TIMESTAMP, "false");
+//                        properties.put(PersistenceUnitProperties.LOGGING_THREAD, "false");
+//                        properties.put(PersistenceUnitProperties.LOGGING_SESSION, "false");
                         _instance = Persistence.createEntityManagerFactory("DWO_MySQLDB", properties);
                     } catch (NamingException ex) {
                         log.log(Level.SEVERE, null, ex);
@@ -65,13 +64,16 @@ public class DwoEmfFactory {
         return _instance;
     }
 
+    /** 
+     * Looks up the default data source in the tomcat context.xml.
+     * 
+     * @return
+     * @throws NamingException 
+     */
     private static DataSource getDataSource() throws NamingException {
         Context initContext = new InitialContext();
         Context envContext = (Context) initContext.lookup("java:/comp/env");
         DataSource dataSource = (DataSource) envContext.lookup("jdbc/dwodb");
-//        javax.naming.Context context = new javax.naming.InitialContext();
-//        javax.sql.DataSource dataSource = (javax.sql.DataSource) context.lookup("jdbc/dwodb");
-
         log.log(Level.FINE, "Datasource jdbc/dwodb is: {0}.", new Object[]{dataSource.toString()});
         return dataSource;
     }

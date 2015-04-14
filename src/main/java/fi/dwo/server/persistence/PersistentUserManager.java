@@ -26,61 +26,45 @@ public class PersistentUserManager {
 
     private static final Logger log = Logger.getLogger(ServerStatus.class.getName());
 
- //   private final static EntityManagerFactory emf = Persistence.createEntityManagerFactory("DWO_MySQLDB");
-//
-//    public List<PersistentUser> getStatus() {
-//        
-//        EntityManager em;
-//        em = emf.createEntityManager();
-//
-//        List<PersistentUser> result;
-//        try {
-//            javax.persistence.Query q = em.createNamedQuery("PersistentUser.findAll");
-//            result = (List<DwoSystemParameters>) q.getResultList();
-//            log.log(Level.INFO, "Fetched DwoSystemParameters {0}", new Object[]{result.size()});
-//
-//        } finally {
-//            em.close();
-//        }
-        
-//        StringBuilder string = new StringBuilder();
-//        for (DwoSystemParameters p : result) {
-//            string.append(p.getName());
-//            string.append(" ");
-//            string.append(p.getValue());
-//            string.append("\n");
-//        }
-//        log.log(Level.INFO, "Made output:", new Object[]{string.toString()});
-//
-//        return result;
-//    }
-//
-//    @GET
-//    @Produces({"application/json"})
-//    @Path("/json")
-//    public List<PersistentUser> getStatusJson() {
-//        return getStatus();
-//    }
-//
-//    @GET
-//    @Produces({"application/xml"})
-//    @Path("/xml")
-//    public List<PersistentUser> getStatusXml() {
-//        return getStatus();
-//    }
-//
-//    @GET
-//    @Produces({"text/plain"})
-//    @Path("/html")
-//    public String getStatusText() {
-//        List<DwoSystemParameters> result = getStatus();
-//        StringBuilder string = new StringBuilder();
-//        for (DwoSystemParameters p : result) {
-//            string.append(p.getName());
-//            string.append(" ");
-//            string.append(p.getValue());
-//            string.append("\n");
-//        }
-//        return string.toString();
-//    }    
+   private final static EntityManagerFactory emf = Persistence.createEntityManagerFactory("DWO_MySQLDB");
+
+   //CRUD
+   
+   
+   public PersistentUser createUser(PersistentUser user){
+       
+       
+   }
+
+   public PersistentUser readUser(PersistentUser user){
+       
+       
+   }
+
+   
+   public void updateUser(PersistentUser user){
+       
+       
+   }
+
+   public void deleteUser(UserId id){
+       
+       
+   }
+   
+
+    @GET
+    @Produces({"application/json"})
+    @Path("/json")
+    public List<PersistentUser> getStatusJson() {
+        return getStatus();
+    }
+
+    @GET
+    @Produces({"application/xml"})
+    @Path("/xml")
+    public List<PersistentUser> getStatusXml() {
+        return getStatus();
+    }
+
 }
