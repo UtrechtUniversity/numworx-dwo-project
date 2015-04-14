@@ -110,8 +110,9 @@ public class GuiCreatorTeacher extends GuiCreator {
     public CenterSubPanel getProfilePanel() {
         dwo.setWait();
         CenterSubPanel csb;
-        csb = new TeacherProfilePanel();
-        dwo.setReady();
+        csb = //new TeacherProfilePanel();
+new TabbedProfilePanel(dwo.getGroups());
+dwo.setReady();
         return csb;
     }
 

@@ -61,11 +61,11 @@
             <artifactId>jcalendar</artifactId>
             <version>1.4</version>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>fi</groupId>
             <artifactId>WiskOpdr</artifactId>
             <version>0.0.0</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>jre.plugin</groupId>
             <artifactId>plugin</artifactId>
@@ -261,6 +261,10 @@
             <id>maven-pack200-plugin</id>
             <url>https://oss.sonatype.org/content/repositories/releases/com/github/batkinson/plugins/maven-pack200-plugin/</url>
         </repository>
+        <repository>
+      <id>my-internal-site</id>
+      <url>http://myserver/repo</url>
+    </repository>
         <!--    <repository>
             <id>xmlrpc</id>
             <url>http://ws.apache.org/xmlrpc/</url>

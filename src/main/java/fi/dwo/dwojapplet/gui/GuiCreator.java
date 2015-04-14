@@ -444,7 +444,8 @@ public class GuiCreator {
     public CenterSubPanel getProfilePanel() {
         dwo.setWait();
         CenterSubPanel csb;
-        csb = new ProfilePanel(dwo.getGroups());
+//        csb = new ProfilePanel(dwo.getGroups());
+        csb = new TabbedProfilePanel(dwo.getGroups());
         dwo.setReady();
         return csb;
     }
