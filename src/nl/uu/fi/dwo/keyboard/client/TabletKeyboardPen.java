@@ -72,5 +72,10 @@ public class TabletKeyboardPen extends AbstractKeyboard implements WritePanelHol
 		super.focus();
 		recurse = false;
 	}
+
+	@Override
+	public void setWriteMathSet(int nr) {
+		panel.setTekenSet(nr);
+	}
 	
 }

@@ -177,4 +177,10 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 		}
 	}
 
+
+	@Override
+	public void setWriteMathSet(int nr) {
+		pen.setWriteMathSet(nr);
+	}
+
 }

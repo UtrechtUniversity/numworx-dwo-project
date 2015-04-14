@@ -76,5 +76,10 @@ public class DWOTabletKeyboardPen extends AbstractKeyboard implements WritePanel
 		super.focus();
 		recurse = false;
 	}
-	
+
+	@Override
+	public void setWriteMathSet(int nr) {
+		panel.setTekenSet(nr);
+	}
+
 }

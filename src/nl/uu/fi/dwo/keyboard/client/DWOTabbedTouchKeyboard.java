@@ -231,4 +231,9 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 		}
 	}
 
+	@Override
+	public void setWriteMathSet(int nr) {
+		pen.setWriteMathSet(nr);
+	}
+
 }
