@@ -1,0 +1,163 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
+	>
+	<ui:with type="nl.uu.fi.dwo.keyboard.client.DWOkeyboardBundle" field="resources" />
+	<ui:style>
+	.pad {
+		float:right;
+	}
+	.panel {
+		float: left;
+	}
+	.image {
+		width: 16px !important;
+		height: 16px !important;
+		padding: 8px !important;
+	}
+	.letter {
+		font-family: serif;
+		font-style: italic;
+		font-weight: normal !important;
+	}
+	.symbol {
+		font-family: monospace;
+		font-style: initial;
+		font-weight: normal !important;
+	}
+	.bsymbol {
+		font-family: monospace;
+		font-style: initial;
+		font-weight: normal !important;
+		font-size: 24px !important;
+	}
+	.lsymbol {
+		font-size: 80% !important;
+	}
+	
+	.dwo {
+		width: auto !important;
+
+	}
+	
+	.imagem {
+		width: 24px !important;
+		height: 24px !important;
+		padding-left: 4px !important;
+		padding-right: 4px !important;
+		padding-top: 4px !important;
+		padding-bottom: 34px !important;
+	}
+	
+	</ui:style>
+<!--
+	{ "wortel", "macht", "kwadraat", "breuk", "haakjes", "ndewortel", "integraal", "prv", "ndelog", "abs", "subscript", "bin" ,ΑΒ },
+	{ "diff", "limiet0", "limiet1", "limiet2", "\u221e", "primitieve", "e", "pi", "<", ">", "\u2228", "\u2248", VVV }
+-->
+	<g:HorizontalPanel addStyleNames="keyboard keyboard-abc is-active {style.dwo}" >
+	  <g:FlowPanel styleName="{style.panel}">
+		<g:FlowPanel addStyleNames="dclm clm-1">
+			<my:IKey addStyleNames="key {style.image}" ui:field="t3_1" resource="{resources.wortel}" />
+			<my:IKey addStyleNames="key {style.image}" ui:field="t4_1" resource="{resources.diff}" />
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-2">
+			<my:IKey addStyleNames="key {style.image}" ui:field="t3_2" resource="{resources.macht}" />
+			<my:IKey addStyleNames="key {style.image}" ui:field="t4_2" resource="{resources.limiet0}" />
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-3">
+			<my:IKey addStyleNames="key {style.image}" ui:field="t3_3" resource="{resources.kwadraat}" />
+			<my:IKey addStyleNames="key {style.image}" ui:field="t4_3" resource="{resources.limiet1}" />
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-4">
+			<my:IKey addStyleNames="key {style.image}" ui:field="t3_4" resource="{resources.breuk}" />
+			<my:IKey addStyleNames="key {style.image}" ui:field="t4_4" resource="{resources.limiet2}" />
+		</g:FlowPanel>
+
+		<g:FlowPanel addStyleNames="dclm clm-5">
+			<my:IKey addStyleNames="key {style.image}" ui:field="t3_5" resource="{resources.haakjes}" />
+			<my:FKey addStyleNames="key icon {style.symbol} {style.image}" ui:field="t4_5">
+				∞
+			</my:FKey>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-6">
+			<my:IKey addStyleNames="key {style.image}" ui:field="t3_6" resource="{resources.ndewortel}"/>
+			<my:IKey addStyleNames="key {style.image}" ui:field="t4_6" resource="{resources.primitieve}" />
+			
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-7">			
+			<my:IKey addStyleNames="key {style.image}" ui:field="t3_7" resource="{resources.integraal}" />
+			<my:IKey addStyleNames="key {style.image}" ui:field="t4_7" resource="{resources.sigma}" />
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-8">
+			<my:IKey addStyleNames="key {style.image}" ui:field="t3_8" resource="{resources.prv}" />
+			<my:FKey addStyleNames="key icon {style.symbol} {style.image}" ui:field="t4_8">
+				π
+			</my:FKey>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-9">
+			<my:IKey addStyleNames="key {style.image}" ui:field="t3_9" resource="{resources.ndelog}"/>
+			<my:FKey addStyleNames="key {style.image}" ui:field="t4_9">
+				≈
+			</my:FKey>
+			
+		</g:FlowPanel>
+		
+		<g:FlowPanel addStyleNames="dclm clm-10">
+			<my:IKey addStyleNames="key {style.image}" ui:field="t3_10" resource="{resources.abs}"/>
+			<my:FKey addStyleNames="key {style.image}" ui:field="t4_10">
+				≠
+			</my:FKey>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-11">
+			<my:IKey addStyleNames="key {style.image}" ui:field="t3_11" resource="{resources.subscript}"/>
+			<my:FKey addStyleNames="key {style.image}" ui:field="t4_11">
+				≤
+			</my:FKey>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-12">
+			<my:IKey addStyleNames="key {style.image}" ui:field="t3_12" resource="{resources.bin}"/>
+			<my:FKey addStyleNames="key {style.image}" ui:field="t4_12">
+				≥
+			</my:FKey>
+		</g:FlowPanel>
+
+		<g:FlowPanel addStyleNames="dclm clm-13">
+			<my:IKey addStyleNames="key {style.image}" ui:field="t3_13" resource="{resources.conjug}" />
+			<my:IKey addStyleNames="key {style.image}" ui:field="t4_13" resource="{resources.partialdiff}" />
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-13">
+			<my:FKey addStyleNames="key bg-dkgrey icon {style.lsymbol} {style.image}" ui:field="t3_14">
+				αβ
+			</my:FKey>
+			<my:IKey addStyleNames="key bg-ltgrey icon {style.imagem}" ui:field="t4_14" resource="{resources.VVV}" />
+		</g:FlowPanel>
+<!--  
+		<g:FlowPanel addStyleNames="dclm clm-14">
+			<my:FKey addStyleNames="key bg-ltgrey" ui:field="t4_13">
+				→
+			</my:FKey>
+			<my:FKey addStyleNames="key" ui:field="t1_14">
+				≠
+			</my:FKey>
+			<my:FKey addStyleNames="key icon" ui:field="t4_14">
+				of
+			</my:FKey>
+		</g:FlowPanel>
+		<g:FlowPanel addStyleNames="dclm clm-15">
+			<my:IKey addStyleNames="key {style.image}" ui:field="t4_11" resource="{resources.conjug}" />
+			<my:FKey addStyleNames="key" ui:field="t1_15" >
+				≈
+			</my:FKey>
+			<my:FKey addStyleNames="key" ui:field="t2_15">
+				>
+			</my:FKey>
+			<my:FKey addStyleNames="key" ui:field="t4_15">
+				∞
+			</my:FKey>
+		</g:FlowPanel>
+-->
+	    </g:FlowPanel>
+
+	</g:HorizontalPanel>
+</ui:UiBinder> 

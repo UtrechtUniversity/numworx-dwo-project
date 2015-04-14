@@ -131,7 +131,7 @@ public class DWOKeyboardGWT implements EntryPoint {
 	@Override
 	public void onModuleLoad() {
 		
-		AbstractKeyboard panel = new TabbedDesktopKeyboard(1);
+		AbstractKeyboard panel = new DWODesktopKeyboard();
 		panel.setEditor(editor);
 		RootPanel root = RootPanel.get();
 		root.add(new Label("algebra"));
