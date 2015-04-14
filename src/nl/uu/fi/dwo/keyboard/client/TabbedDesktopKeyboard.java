@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.keyboard.client;
 
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
+import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -77,6 +78,24 @@ public class TabbedDesktopKeyboard extends AbstractKeyboard {
 
 	public int getKeyboardHeight() {
 		return HEIGHT;
+	}
+
+	@Override
+	public void focus() {
+		super.focus();
+		resizeScrollPanel(HEIGHT);
+		FocusOnTouch.focus();
+	}
+
+	@Override
+	public void softFocus() {
+		FocusOnTouch.focus();
+	}
+
+	@Override
+	public void blur() {
+		super.blur();
+		resizeScrollPanel(0);
 	}
 
 	

@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.keyboard.client;
 
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
+import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -91,6 +92,7 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 		if(current==pen) pen.focus(); // does read formula
 		super.focus();
 		resizeScrollPanel(HEIGHT);
+		FocusOnTouch.focus();
 	}
 
 
