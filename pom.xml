@@ -41,9 +41,9 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-         <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
-   </properties>
+    </properties>
 
     <!-- update the https path for a different branch or tag! -->
     <scm>
@@ -100,31 +100,30 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.5</version>
                 <configuration>
-                <archive>
-                    <manifest>
-                        <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                    </manifest>
-                    <manifestEntries>
-                        <Implementation-Build>${buildNumber}</Implementation-Build>
-                    </manifestEntries>
-                </archive>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <Implementation-Build>${buildNumber}</Implementation-Build>
+                        </manifestEntries>
+                    </archive>
                 </configuration>
             </plugin>
-             
         </plugins>
         <finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
     </build>
 
     <!-- Note the dependencies are mostly provided. Allowing the common-lib to 
-        be as small as possible and only include the libs needed for the package
-        you need in your master project. Package documentation should declare
-        required depencies. Document if missing.    -->    
+    be as small as possible and only include the libs needed for the package
+    you need in your master project. Package documentation should declare
+    required depencies. Document if missing.    -->    
     <dependencies>
         <dependency>
             <groupId>org.apache.ws.xmlrpc</groupId>
             <artifactId>xmlrpc</artifactId>
             <version>2.0.1</version>
-<!--            <scope>provided</scope>-->
+            <!--            <scope>provided</scope>-->
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -139,7 +138,7 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
             <type>jar</type>
             <scope>provided</scope>
         </dependency>         
-       <dependency>
+        <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>eclipselink</artifactId>
             <version>2.5.2</version>
@@ -172,6 +171,5 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
             <version>2.13</version>
             <scope>provided</scope>
         </dependency>     
-                           
     </dependencies>
 </project>
