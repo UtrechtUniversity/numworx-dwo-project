@@ -76,7 +76,7 @@
 
 		<g:FlowPanel addStyleNames="dclm clm-5">
 			<my:IKey addStyleNames="key {style.image}" ui:field="t3_5" resource="{resources.haakjes}" />
-			<my:FKey addStyleNames="key icon {style.symbol} {style.image}" ui:field="t4_5">
+			<my:FKey addStyleNames="key icon {style.symbol}" ui:field="t4_5">
 				∞
 			</my:FKey>
 		</g:FlowPanel>
@@ -91,13 +91,13 @@
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-8">
 			<my:IKey addStyleNames="key {style.image}" ui:field="t3_8" resource="{resources.prv}" />
-			<my:FKey addStyleNames="key icon {style.symbol} {style.image}" ui:field="t4_8">
+			<my:FKey addStyleNames="key icon {style.symbol}" ui:field="t4_8">
 				π
 			</my:FKey>
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-9">
 			<my:IKey addStyleNames="key {style.image}" ui:field="t3_9" resource="{resources.ndelog}"/>
-			<my:FKey addStyleNames="key {style.image}" ui:field="t4_9">
+			<my:FKey addStyleNames="key icon {style.symbol}" ui:field="t4_9">
 				≈
 			</my:FKey>
 			
@@ -105,19 +105,19 @@
 		
 		<g:FlowPanel addStyleNames="dclm clm-10">
 			<my:IKey addStyleNames="key {style.image}" ui:field="t3_10" resource="{resources.abs}"/>
-			<my:FKey addStyleNames="key {style.image}" ui:field="t4_10">
+			<my:FKey addStyleNames="key icon {style.symbol}" ui:field="t4_10">
 				≠
 			</my:FKey>
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-11">
 			<my:IKey addStyleNames="key {style.image}" ui:field="t3_11" resource="{resources.subscript}"/>
-			<my:FKey addStyleNames="key {style.image}" ui:field="t4_11">
+			<my:FKey addStyleNames="key icon {style.symbol}" ui:field="t4_11">
 				≤
 			</my:FKey>
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-12">
 			<my:IKey addStyleNames="key {style.image}" ui:field="t3_12" resource="{resources.bin}"/>
-			<my:FKey addStyleNames="key {style.image}" ui:field="t4_12">
+			<my:FKey addStyleNames="key icon {style.symbol}" ui:field="t4_12">
 				≥
 			</my:FKey>
 		</g:FlowPanel>
@@ -127,7 +127,7 @@
 			<my:IKey addStyleNames="key {style.image}" ui:field="t4_13" resource="{resources.partialdiff}" />
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-13">
-			<my:FKey addStyleNames="key bg-dkgrey icon {style.lsymbol} {style.image}" ui:field="t3_14">
+			<my:FKey addStyleNames="key bg-dkgrey icon {style.lsymbol}" ui:field="t3_14">
 				αβ
 			</my:FKey>
 			<my:IKey addStyleNames="key bg-ltgrey icon {style.imagem}" ui:field="t4_14" resource="{resources.VVV}" />

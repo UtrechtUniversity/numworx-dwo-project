@@ -6,27 +6,39 @@ import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class TabbedDesktopKeyboard extends AbstractKeyboard {
+public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 
-	private static final int HEIGHT = DesktopKeyboard.HEIGHT;
+	private static final int HEIGHT = 44;
 
-	private DesktopKeyboard current, stock[] = new DesktopKeyboard[5];
+	private AbstractKeyboard k123, current, stock[] = new AbstractKeyboard[5];
 	private int nr;
 	private FlowPanel main;
+	private DWOTabletKeyboardGrUpper grupper;
+	private DWOTabletKeyboardGrLower grlower;
+	
 
-	TabbedDesktopKeyboard(int nr) {
-		current = createKeyboard(nr);
+	DWOTabbedDesktopKeyboard(int nr) {
+		k123 = current = createKeyboard(nr);
 		stock[nr] = current;
 		main = new FlowPanel();
 		initWidget(main);
 		main.setStyleName("keyboard-container");
-		main.addStyleName("computer");
+		main.addStyleName("touch");
 		main.add(current);
 		current.setDelegate(this);
+		grupper = new DWOTabletKeyboardGrUpper();
+		grupper.setDelegate(this);
+		grlower = new DWOTabletKeyboardGrLower();
+		grlower.setDelegate(this);
+		grupper.setVisible(false);
+		main.add(grupper);
+		grlower.setVisible(false);
+		main.add(grlower);
+		main.setHeight("90px"); // FIXME!!!
 	}
 
-	public TabbedDesktopKeyboard() {
-		this(DEFAULT);
+	public DWOTabbedDesktopKeyboard() {
+		this(1);
 	}
 
 
@@ -44,10 +56,10 @@ public class TabbedDesktopKeyboard extends AbstractKeyboard {
 		}
 	}
 	
-	private DesktopKeyboard createKeyboard(int i) {
+	private AbstractKeyboard createKeyboard(int i) {
 		switch(i) {
 		case 0: return new DesktopKeyboardOnderbouw();
-		case 1: return new DesktopKeyboard().init();
+		case 1: return new DWODesktopKeyboard().init();
 		case 2: return new DesktopKeyboardGonio().init();
 		case 3: return new DesktopKeyboardStatistiek();
 		case 4: return new DesktopKeyboardMeetkunde().init();
@@ -58,7 +70,9 @@ public class TabbedDesktopKeyboard extends AbstractKeyboard {
 	@Override
 	public void setEditor(FormuleEditorIF formuleEditor) {
 		setActiveEditor(formuleEditor);
-		current.setEditor(formuleEditor);
+		k123.setEditor(formuleEditor);
+		grupper.setEditor(formuleEditor);
+		grlower.setEditor(formuleEditor);
 	}
 
 	private Widget scrollPanel; 
@@ -70,20 +84,21 @@ public class TabbedDesktopKeyboard extends AbstractKeyboard {
 		if(scrollPanel != null)
 			scrollPanel.setPixelSize(-1, origHeight - size);
 	}
+
 	public void setScrollPanel(Widget w, int h) {
 		scrollPanel = w;
 		origHeight = h;
 		if(scrollPanel != null) scrollPanel.setPixelSize(-1, origHeight - origDelta);
 	}
 
-	public int getKeyboardHeight() {
-		return HEIGHT;
+	int getKeyboardHeight() {
+		return current.getKeyboardHeight();
 	}
 
 	@Override
 	public void focus() {
 		super.focus();
-		resizeScrollPanel(HEIGHT);
+		resizeScrollPanel(getKeyboardHeight());
 		FocusOnTouch.focus();
 	}
 

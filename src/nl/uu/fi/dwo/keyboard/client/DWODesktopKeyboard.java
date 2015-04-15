@@ -19,6 +19,11 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class DWODesktopKeyboard extends AbstractKeyboard {
 	
+	private static int HEIGHT = 90;
+	int getKeyboardHeight() {
+		return HEIGHT;
+	}
+
 	private static TabletKeyboardUiBinder uiBinder = GWT
 			.create(TabletKeyboardUiBinder.class);
 
@@ -38,6 +43,7 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 	 */
 	public DWODesktopKeyboard() {
 		initWidget(uiBinder.createAndBindUi(this));
+		setPixelSize(-1, HEIGHT);
 	}
 	
 	@Override

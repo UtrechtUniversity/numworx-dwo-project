@@ -208,7 +208,7 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 		if(scrollPanel != null) scrollPanel.setPixelSize(-1, origHeight - origDelta);
 	}
 
-	private int getKeyboardHeight() {
+	int getKeyboardHeight() {
 		return HEIGHT;
 	}
 

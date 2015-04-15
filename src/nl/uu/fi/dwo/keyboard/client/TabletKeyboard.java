@@ -22,6 +22,8 @@ public class TabletKeyboard extends AbstractKeyboard {
 	private static TabletKeyboardUiBinder uiBinder = GWT
 			.create(TabletKeyboardUiBinder.class);
 
+	static int HEIGHT = 166;
+
 	interface TabletKeyboardUiBinder extends UiBinder<Widget, TabletKeyboard> {
 	}
 
@@ -148,5 +150,10 @@ public class TabletKeyboard extends AbstractKeyboard {
 		disableKey(t4_10);
 		pad.t2_16.addStyleName("is-active");
 		return this;
+	}
+
+	@Override
+	int getKeyboardHeight() {
+		return HEIGHT;
 	}
 }

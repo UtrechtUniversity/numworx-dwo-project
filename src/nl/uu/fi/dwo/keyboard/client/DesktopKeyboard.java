@@ -20,6 +20,8 @@ import com.google.gwt.user.client.ui.Widget;
 public class DesktopKeyboard extends AbstractKeyboard {
 
 	@UiField ResourceBase res = ResourceBase.INSTANCE;
+
+	static final int HEIGHT = 44;
 	
 	
 	private static DesktopKeyboardUiBinder uiBinder = GWT
@@ -194,8 +196,8 @@ public class DesktopKeyboard extends AbstractKeyboard {
 		
 	}
 
-	private int getKeyboardHeight() {
-		return 44;
+	int getKeyboardHeight() {
+		return HEIGHT;
 	}
 
 	private Widget scrollPanel; 

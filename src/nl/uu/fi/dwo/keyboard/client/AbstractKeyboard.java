@@ -110,4 +110,6 @@ public abstract class AbstractKeyboard extends Composite implements FormuleKeybo
 			old.setCurrentElementRepaint();
 		}
 	}
+
+	abstract int getKeyboardHeight();
 }

@@ -12,6 +12,11 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DWOTabletKeyboardGrUpper extends AbstractKeyboard {
 
+	private static int HEIGHT = 166;
+	int getKeyboardHeight() {
+		return HEIGHT;
+	}
+
 	@Override
 	public void setEditor(FormuleEditorIF formuleEditor) {
 		super.setEditor(formuleEditor);

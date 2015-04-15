@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class TabbedTouchKeyboard extends AbstractKeyboard {
 
-	private static int HEIGHT = 166;
+	private static int HEIGHT = TabletKeyboard.HEIGHT;
 	private AbstractKeyboard current;
 	private TabletKeyboard k123;
 	private TabletKeyboardABC kabc;
@@ -154,7 +154,7 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 		if(scrollPanel != null) scrollPanel.setPixelSize(-1, origHeight - origDelta);
 	}
 
-	private int getKeyboardHeight() {
+	int getKeyboardHeight() {
 		return HEIGHT;
 	}
 

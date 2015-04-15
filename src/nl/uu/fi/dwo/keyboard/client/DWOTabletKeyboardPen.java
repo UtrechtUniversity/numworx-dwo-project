@@ -14,6 +14,11 @@ import fi.writemathgwt.client.WritePanelHolder;
 
 public class DWOTabletKeyboardPen extends AbstractKeyboard implements WritePanelHolder {
 
+	private static int HEIGHT = 166;
+	int getKeyboardHeight() {
+		return HEIGHT;
+	}
+
 	@UiField DWOTabletKeyboardPad pad;
 	@UiField SimplePanel writePanel;
 	

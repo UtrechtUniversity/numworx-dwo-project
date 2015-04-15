@@ -14,6 +14,11 @@ import fi.writemathgwt.client.WritePanelHolder;
 
 public class TabletKeyboardPen extends AbstractKeyboard implements WritePanelHolder {
 
+	private static int HEIGHT = 166;
+	int getKeyboardHeight() {
+		return HEIGHT;
+	}
+
 	@UiField TabletKeyboardPad pad;
 	@UiField SimplePanel writePanel;
 	
