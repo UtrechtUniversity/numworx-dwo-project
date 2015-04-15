@@ -23,6 +23,7 @@ import com.google.gwt.dev.js.EvalFunctionsAtTopScope;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -300,6 +301,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		button.getElement().getStyle().setBorderWidth(1, Unit.PX);
 		button.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 		button.getElement().getStyle().setBorderColor(CssColor.make(121, 127, 144).toString());//("#979797");
+		button.getElement().getStyle().setCursor(Cursor.POINTER);
 
 		button.setText(" " + (j + 1) + " ");
 		if (currentOpdracht == j)
@@ -350,11 +352,16 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	private void setButtonCorrect(TouchButton button, boolean b, int j)
 	{
-		if((mode == 2 || mode == 3) && !entry.getZelftoetsNagekeken())
-			b = false;
-		button.getElement().getStyle().setBackgroundColor(b ? "#00BB00" : "#FFBBBB");
 		if (geefNoScore(currentActiviteit, j))
-			button.getElement().getStyle().setBackgroundColor("#909090");
+		{	button.getElement().getStyle().setBackgroundColor("#909090");
+			return;
+		}
+		if(mode == 0 || mode == 1)
+			button.getElement().getStyle().setBackgroundColor(b ? "#00BB00" : "#FFBBBB");
+//		if((mode == 2 || mode == 3) && !button.getElement().getStyle().getBackgroundColor().equals("#00BB00"))
+//			b = false;
+		
+		
 	}
 	
 	public boolean geefNoScore(int actNr, int opdrNr)
@@ -536,6 +543,11 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 //				setButtonCorrect(buttons.get(j), Boolean.TRUE == correct, j);
 			
 			//or[currentActiviteit].zetScore(j + 1, score);
+			
+			//dit is de enige plek waar de zelftoets/toets de kleur van de bolletjes mag zetten:
+			buttons.get(j).getElement().getStyle().setBackgroundColor(isCorrect[currentActiviteit][j] ? "#00BB00" : "#FFBBBB");
+			if (geefNoScore(currentActiviteit, j))
+				buttons.get(j).getElement().getStyle().setBackgroundColor("#909090");
 		}
 		//entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], !(gekoppeldeOpdrachten || globalParam), states[currentActiviteit][currentOpdracht]);
 		
@@ -616,7 +628,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	public void gotoOpdracht(final int opdracht) {
 		saveCurrentState();
-		setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht], currentOpdracht);
+		if(!(mode == 2 || mode == 3))
+			setButtonCorrect(buttons.get(currentOpdracht), isCorrect[currentActiviteit][currentOpdracht], currentOpdracht);
 
 		removeButtonCursor(buttons.get(currentOpdracht));
 		currentOpdracht = opdracht;

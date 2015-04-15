@@ -255,12 +255,13 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 			box.addDomHandler(t, TouchCancelEvent.getType());
 			box.setWidget(FocusOnTouch.wrap(content.asWidget(),false));
 		}
-		if(!box.isShowing() && view != null && state != null)
-			view.setState(state);
-		else if(!box.isShowing() && view != null && view instanceof FormuleEditorWithAnswer)
+		if(!box.isShowing() && view != null && view instanceof FormuleEditorWithAnswer)
 		{	state = view.getState();
 			view.setState(state);
 		}
+		else if(!box.isShowing() && view != null && state != null)
+			view.setState(state);
+		
 		if(!box.isShowing() )
 				box.showRelativeTo(this);		
 	}
@@ -285,7 +286,6 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 	}
 
 	void tearDown() {
-		System.out.println("tearDown");
 		if(view != null)
 		{	if(view instanceof FormuleEditorWithAnswer)
 			{

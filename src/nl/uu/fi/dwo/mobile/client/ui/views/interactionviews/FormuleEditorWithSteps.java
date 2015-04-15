@@ -445,6 +445,7 @@ public class FormuleEditorWithSteps implements InteractionView
 				pijlVak.setPijlVisible(pijl);
 				
 				pijlVakken.add(pijlVak);
+				
 				pijlVak.paintComponent();
 				
 				stapNr++;
@@ -550,7 +551,6 @@ public class FormuleEditorWithSteps implements InteractionView
 			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + fv.getHeight(), Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX); 
 		}
 		nagekeken = true;
-		System.out.println("lastStep zet correct true");
 		correct = true;
 		score = scoreMax;
 		if(!setState)
@@ -768,7 +768,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	
 	public void haalPijlVakWeg()
 	{
-		if(pijlVak != null && pijlVak.isAttached())
+		if(pijlVak != null && pijlVak.getParent() != null)
 		{	contentPanel.remove(pijlVak);
 			if(pijlVak.geefOperator().equals("sub"))
 				substitutie = null;
@@ -1411,7 +1411,7 @@ public class FormuleEditorWithSteps implements InteractionView
 			fv.setFont(defaultfont);
 			
 			if(i < viewers.size())
-			{	if(viewers.get(i).getAsPanel().isAttached())
+			{	if(viewers.get(i).getAsPanel().getParent() != null)
 					stepPanels.get(i).remove(viewers.get(i).getAsPanel());
 				viewers.remove(i);
 			}
@@ -1480,8 +1480,7 @@ public class FormuleEditorWithSteps implements InteractionView
 //				fv.getAsPanel().getElement().getStyle().setMarginLeft(23, Unit.PX);
 			if(mode != 2 && mode != 3)
 			{	if (i == stapNr && nagekeken)
-				{	System.out.println("geval i == stapNr en nagekeken");
-					VergelijkingMeerv verg = FormuleParser.parseVergelijking("$f" + fv.toString() + "@");
+				{	VergelijkingMeerv verg = FormuleParser.parseVergelijking("$f" + fv.toString() + "@");
 					if(linStrategieVersie || (bordjesMethode && verg.isEindOplossing(verg.geefVergelijkingVar())))
 					{	fv.showResult(FormuleViewer.CORRECT);
 						setAndAddFeedback(Text.constants.feedbackTekst04());
@@ -1494,8 +1493,7 @@ public class FormuleEditorWithSteps implements InteractionView
 						//maakNakijkenAf(false);
 					}
 					else
-					{	System.out.println("geval editor == null");
-						viewers.remove(fv);
+					{	viewers.remove(fv);
 						stepPanel.remove(fv.getAsPanel());
 						editor = addNewEditor(stepPanel);
 						String currentTekst = latest_answer_viewer.toString();
@@ -1526,7 +1524,7 @@ public class FormuleEditorWithSteps implements InteractionView
 						viewers.remove(viewers.size() - 1);
 						if(pijlVakken.size() > 0)
 						{	
-							if(pijlVakken.get(pijlVakken.size() - 1).isAttached())
+							if(pijlVakken.get(pijlVakken.size() - 1).getParent() != null)
 								contentPanel.remove(pijlVakken.get(pijlVakken.size() - 1));
 							pijlVakken.remove(pijlVakken.size() - 1);
 						}
@@ -1597,7 +1595,7 @@ public class FormuleEditorWithSteps implements InteractionView
 	public void zetPijlVakNeer(String[] pijlVakOperatoren, String[] pijlVakInhouden, int i, int h)
 	{
 		if(pijlVakken.size() > i && pijlVakken.get(i) != null)
-		{	if(pijlVakken.get(i).isAttached())
+		{	if(pijlVakken.get(i).getParent() != null)
 				contentPanel.remove(pijlVakken.get(i));
 			pijlVakken.remove(i);
 		
@@ -1719,20 +1717,21 @@ public class FormuleEditorWithSteps implements InteractionView
 		if (hasStartString)
 			start = 1;
 		if(editor != null && editor.toString().equals(""))
-		{	stepPanels.remove(stepPanels.size() - 1);
-			//stapNr--;
+		{	backStep(setState); 
+//			stepPanels.remove(stepPanels.size() - 1);
+//			haalPijlVakWeg();
+//			//stapNr--;
 		}
-		else if (editor != null)
+		if (editor != null && !editor.toString().equals(""))
 		{	vervangEditorDoorViewer("$f" + editor.toString() + "@", true, true);
 			//editor = addNewEditor(stepPanels.get(stepPanels.size() - 1));
 		}
-		
 				
 		//else
 			//editor = addNewEditor(stepPanels.get(stepPanels.size() - 1));
 		aantalStappen = viewers.size();
 		String[] viewersInhouden = new String[viewers.size()];
-		//if(viewers.size() > 0)
+		if(viewers.size() > 0)
 			viewersInhouden[0] = viewers.get(0).toString();
 		for(int i = viewers.size() - 1; i > start - 1; i--)
 		{
@@ -1974,7 +1973,7 @@ public class FormuleEditorWithSteps implements InteractionView
 			//Er staat al een pijl naar de volgende regel. Deze pijl moet worden vervangen door de nieuwe operatie.
 			if(stepPanels.size() == pijlVakken.size())
 			{
-				if(pijlVak != null && pijlVak.isAttached())
+				if(pijlVak != null && pijlVak.getParent() != null)
 				{	contentPanel.remove(pijlVak);
 					pijlVakken.remove(pijlVakken.size() - 1);
 				}
@@ -2019,6 +2018,7 @@ public class FormuleEditorWithSteps implements InteractionView
 			pijlVak.setPijlVisible(pijl);
 			pijlVak.paintComponent();
 			pijlVakken.add(pijlVak);
+			
 			pijlVak.getEditor().requestFocus();
 			scrollToBottom();
 		}
@@ -2220,6 +2220,7 @@ public class FormuleEditorWithSteps implements InteractionView
 		//Als het kan nog één keer vaker (als bijvoorbeeld geen startstring, maar nog wel ingevulde formule op eerste regel).
 		if(terugButton.isVisible())
 			backStep(false);
+		
 	}
 	
 	

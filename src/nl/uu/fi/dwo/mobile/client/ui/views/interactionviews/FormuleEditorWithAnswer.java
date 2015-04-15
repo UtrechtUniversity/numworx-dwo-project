@@ -98,7 +98,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			FormuleEditorWithAnswer other = FormuleEditorWithAnswer.this;
 			other.clearMain();
 			other.insert(string);
-			other.enter();
+			other.processAntwoord();
 		}
 
 //		@Override
@@ -577,6 +577,22 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			return;
 		}
 		*/
+		if(fews != null)
+		{
+			//doen alsof het in de laatste regel van de fews is ingevuld; dan komt het automatisch terug naar de fewa.
+			if(fews.getEditor() == null || fews.getEditor().toString().equals(""))
+				fews.backStep(false);
+			fews.getEditor().clearAll();
+			fews.getEditor().insert(this.toString());
+			fews.getEditor().enter();
+			return;
+		}
+		else
+			processAntwoord();
+	}
+	
+	public void processAntwoord()
+	{
 		if(mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS)
 			kijkNa(false, false, false);
 		else
@@ -586,7 +602,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		else if( fe != null) {
 			fe.fire("input", toString());
 		}
-			
 	}
 	
 	public void haalAntwoordOp() 
@@ -828,18 +843,36 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public HashMap<String, Object> getState()
 	{
 		HashMap<String, Object> h = new HashMap<String, Object>();
-		boolean fewsIngevuld = false;
 		if(fews != null)
 		{
 			HashMap<String, Object> h2 = fews.getState();
 			if(h2.containsKey("ingevuld") && ((Boolean) h2.get("ingevuld")).booleanValue())
 			{
 				h = h2;
-				h.put(ANTWOORD_STRING,  toString() );
-				fewsIngevuld = true;
+			}
+			else
+			{
+				h2 = new HashMap<String, Object>();
+				String[] formuleVakInhouden = {"$f" + this.toString() + "@" } ;
+				if(!this.toString().equals(""))
+					this.ingevuld = true;
+				boolean ingevuld = this.ingevuld;
+				boolean nagekeken = false;
+				
+				nagekeken = this.nagekeken;
+				
+				h2.put("formuleVakInhouden", formuleVakInhouden);
+				h2.put(ANTWOORD_STRING, "");
+				h2.put("ingevuld", new Boolean(ingevuld));
+				h2.put("nagekeken", new Boolean(nagekeken));
+				
+				fews.setState(h2);
+				h2 = fews.getState();
+				h = h2;
+				
 			}
 		}			
-		if(!fewsIngevuld)	
+		else	
 		{
 			
 			String[] formuleVakInhouden = {"$f" + this.toString() + "@" } ;
@@ -866,8 +899,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	{
 		logger.fine("setState " + h);
 		//antwoord eruit halen en dan uit h halen, zodat de antwoordstring niet wordt meegenomen in setState. 
-		String antwoord = (String) h.get(ANTWOORD_STRING);
-		h.put(ANTWOORD_STRING, "");
 		
 		if(fews != null)
 		{
@@ -884,13 +915,14 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		
 		this.ingevuld = ingevuld;
 		this.nagekeken = nagekeken;
-		
-		
+		String antwoord = (String) h.get(ANTWOORD_STRING);
+		if(antwoord == null || "".equals(antwoord.trim()) && fews != null)
+			antwoord = fews.getLatestAnswer();
 		if (antwoord != null && !"".equals(antwoord.trim()))
 		{
 			antwoord = strip$f(antwoord);
 
-			this.clearAll();
+			this.clearMain();
 			this.insert(antwoord);
 			setCurrentElementRepaint();
 			lastanswer = "$f" + toString() + "@";
