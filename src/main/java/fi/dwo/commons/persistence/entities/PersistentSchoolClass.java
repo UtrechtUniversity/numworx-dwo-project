@@ -1,0 +1,152 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package fi.dwo.commons.persistence.entities;
+
+import java.io.Serializable;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+
+/**
+ *
+ * @author G.A.J. van der Plas
+ */
+@Entity
+@Table(name = "tblclass", schema = "", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"class", "schoolID"})})
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "PersistentSchoolClass.findAll", query = "SELECT p FROM PersistentSchoolClass p"),
+    @NamedQuery(name = "PersistentSchoolClass.findByClassID", query = "SELECT p FROM PersistentSchoolClass p WHERE p.classID = :classID"),
+    @NamedQuery(name = "PersistentSchoolClass.findByUserID", query = "SELECT p FROM PersistentSchoolClass p WHERE p.userID = :userID"),
+    @NamedQuery(name = "PersistentSchoolClass.findBySchoolID", query = "SELECT p FROM PersistentSchoolClass p WHERE p.schoolID = :schoolID"),
+    @NamedQuery(name = "PersistentSchoolClass.findByIconizer", query = "SELECT p FROM PersistentSchoolClass p WHERE p.iconizer = :iconizer"),
+    @NamedQuery(name = "PersistentSchoolClass.findByClass1", query = "SELECT p FROM PersistentSchoolClass p WHERE p.class1 = :class1"),
+    @NamedQuery(name = "PersistentSchoolClass.findByRegistrationKey", query = "SELECT p FROM PersistentSchoolClass p WHERE p.registrationKey = :registrationKey")})
+public class PersistentSchoolClass implements Serializable {
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "classID", nullable = false)
+    private Integer classID;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "userID", nullable = false)
+    private int userID;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "schoolID", nullable = false)
+    private int schoolID;
+    @Column(name = "iconizer")
+    private Boolean iconizer;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 100)
+    @Column(name = "class", nullable = false, length = 100)
+    private String class1;
+    @Size(max = 100)
+    @Column(name = "registrationKey", length = 100)
+    private String registrationKey;
+
+    public PersistentSchoolClass() {
+    }
+
+    public PersistentSchoolClass(Integer classID) {
+        this.classID = classID;
+    }
+
+    public PersistentSchoolClass(Integer classID, int userID, int schoolID, String class1) {
+        this.classID = classID;
+        this.userID = userID;
+        this.schoolID = schoolID;
+        this.class1 = class1;
+    }
+
+    public Integer getClassID() {
+        return classID;
+    }
+
+    public void setClassID(Integer classID) {
+        this.classID = classID;
+    }
+
+    public int getUserID() {
+        return userID;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
+
+    public int getSchoolID() {
+        return schoolID;
+    }
+
+    public void setSchoolID(int schoolID) {
+        this.schoolID = schoolID;
+    }
+
+    public Boolean getIconizer() {
+        return iconizer;
+    }
+
+    public void setIconizer(Boolean iconizer) {
+        this.iconizer = iconizer;
+    }
+
+    public String getClass1() {
+        return class1;
+    }
+
+    public void setClass1(String class1) {
+        this.class1 = class1;
+    }
+
+    public String getRegistrationKey() {
+        return registrationKey;
+    }
+
+    public void setRegistrationKey(String registrationKey) {
+        this.registrationKey = registrationKey;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (classID != null ? classID.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof PersistentSchoolClass)) {
+            return false;
+        }
+        PersistentSchoolClass other = (PersistentSchoolClass) object;
+        if ((this.classID == null && other.classID != null) || (this.classID != null && !this.classID.equals(other.classID))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "fi.dwo.server.persistence.PersistentSchoolClass[ classID=" + classID + " ]";
+    }
+    
+}

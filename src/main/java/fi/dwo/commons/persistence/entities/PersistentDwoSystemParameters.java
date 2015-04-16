@@ -26,11 +26,11 @@ import javax.ws.rs.Produces;
 @Table(name = "tbldwosystemparameters", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "DwoSystemParameters.findAll", query = "SELECT t FROM DwoSystemParameters t"),
-    @NamedQuery(name = "DwoSystemParameters.findByName", query = "SELECT t FROM DwoSystemParameters t WHERE t.name = :name"),
-    @NamedQuery(name = "DwoSystemParameters.findByValue", query = "SELECT t FROM DwoSystemParameters t WHERE t.value = :value")})
+    @NamedQuery(name = "PersistentDwoSystemParameters.findAll", query = "SELECT t FROM PersistentDwoSystemParameters t"),
+    @NamedQuery(name = "PersistentDwoSystemParameters.findByName", query = "SELECT t FROM PersistentDwoSystemParameters t WHERE t.name = :name"),
+    @NamedQuery(name = "PersistentDwoSystemParameters.findByValue", query = "SELECT t FROM PersistentDwoSystemParameters t WHERE t.value = :value")})
 @Path("/systemparameters")
-public class DwoSystemParameters implements Serializable {
+public class PersistentDwoSystemParameters implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -39,10 +39,10 @@ public class DwoSystemParameters implements Serializable {
     @Column(name = "value", length = 100)
     private String value;
 
-    public DwoSystemParameters() {
+    public PersistentDwoSystemParameters() {
     }
 
-    public DwoSystemParameters(String name) {
+    public PersistentDwoSystemParameters(String name) {
         this.name = name;
     }
 
@@ -50,17 +50,17 @@ public class DwoSystemParameters implements Serializable {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+//    public void setName(String name) {
+//        this.name = name;
+//    }
 
     public String getValue() {
         return value;
     }
 
-    public void setValue(String value) {
-        this.value = value;
-    }
+//    public void setValue(String value) {
+//        this.value = value;
+//    }
 
     @Override
     public int hashCode() {
@@ -72,20 +72,14 @@ public class DwoSystemParameters implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof DwoSystemParameters)) {
+        if (!(object instanceof PersistentDwoSystemParameters)) {
             return false;
         }
-        DwoSystemParameters other = (DwoSystemParameters) object;
+        PersistentDwoSystemParameters other = (PersistentDwoSystemParameters) object;
         if ((this.name == null && other.name != null) || (this.name != null && !this.name.equals(other.name))) {
             return false;
         }
         return true;
-    }
-
-    @GET
-    @Produces("text/plain")
-    public String getStatus(){
-        return "Testing ";
     }
     
     @Override
