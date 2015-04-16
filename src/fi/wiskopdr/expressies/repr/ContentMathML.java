@@ -145,13 +145,22 @@ public class ContentMathML extends AbstractConverter {
 // FIXME direction 1 en 2
 		if("<cn>1</cn>".equals(direction))
 		{ 
-			
+			return apply("limit",
+					"<bvar>", kind2 , "</bvar>",
+					"<condition>", apply("tendsto type='above'", kind2, kind3),
+					"</condition>",
+					kind1);
 		} else if("<cn>2</cn>".equals(direction))
 		{
+			return apply("limit",
+					"<bvar>", kind2 , "</bvar>",
+					"<condition>", apply("tendsto type='below'", kind2, kind3),
+					"</condition>",
+					kind1);
 			
 		}
 // het normale geval.		
-		return apply("limit", "<bvar>", kind2, "</bvar>", "<lowlimit>", kind2, "</lowlimit>",  kind1);
+		return apply("limit", "<bvar>", kind2, "</bvar>", "<lowlimit>", kind3, "</lowlimit>",  kind1);
 	}
 
 	@Override
@@ -262,7 +271,7 @@ public class ContentMathML extends AbstractConverter {
 			return "<e/>";
 		try { 
 			Double.parseDouble(basisString);
-			return "<cn>"+basisString+"<cn>"; // a number
+			return "<cn>"+basisString+"</cn>"; // a number
 		} catch(Exception _) {
 			return "<ci>"+basisString+"</ci>"; // a variable
 		}
