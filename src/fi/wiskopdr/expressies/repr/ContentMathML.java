@@ -128,9 +128,9 @@ public class ContentMathML extends AbstractConverter {
 	public Object integrate(Object kind1, Object kind2, Object kind3,
 			Object kind4, String string) {
 		return apply("int",
-				"<bvar>", kind2 , "</bvar>",
-				"<lowlimit>", kind3, "</lowlimit>",
-				"<uplimit>", kind4, "</uplimit>",
+				"<bvar>", kind4 , "</bvar>",
+				"<lowlimit>", kind2, "</lowlimit>",
+				"<uplimit>", kind3, "</uplimit>",
 				kind1);
 	}
 
@@ -336,7 +336,9 @@ public class ContentMathML extends AbstractConverter {
 
 	@Override
 	public Object vergelijkingmeerv(Object[] objects) {
-		return apply("and", objects);
+		if(objects.length==1)
+			return objects[0];
+		return apply("or", objects);
 	}
 	
 }

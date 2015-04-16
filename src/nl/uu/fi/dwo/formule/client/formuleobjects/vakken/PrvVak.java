@@ -15,6 +15,7 @@ public class PrvVak extends FormuleElementWithChildren
 		
 		getChild(1).setFontChanges(changes);
 		getChild(2).setFontChanges(changes);
+		getChild(3).insert("x"); // Wim: hoe wordt dit in wiskopdr geinitializeerd?
 	}
 	
 	public void paintObject()

@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Logger;
@@ -12,10 +13,12 @@ import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleButton;
+import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.FacetAware.Type;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -56,6 +59,7 @@ import fi.wiskopdr.expressies.Algebra;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.Vergelijking;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
+import fi.wiskopdr.expressies.repr.ContentMathML;
 import fi.wiskopdr.text.Text;
 
 /**
@@ -64,7 +68,7 @@ import fi.wiskopdr.text.Text;
  * @author Evertson Croes
  * 
  */
-public class FormuleEditorWithSteps implements InteractionView
+public class FormuleEditorWithSteps implements InteractionView, FacetAware
 {
 	//static int GOED = 1;
 	//static int FOUT = 0;
@@ -2302,5 +2306,34 @@ public class FormuleEditorWithSteps implements InteractionView
 	{
 		String dependentName = DWOplayer.PARAMETERS.keyboardStyle();
 		return "noordhoff".equals(dependentName);
+	}
+
+	private String toMathML(String source) {
+		if(isVergelijkingVak)
+		{
+			VergelijkingMeerv verg = FormuleParser.parseVergelijking(source);
+			if(source == null) return "";
+			return verg.visit(ContentMathML.INSTANCE).toString();
+		} else {
+			Expressie antwoord = FormuleParser.geefExpressie(source);
+			if(antwoord == null) return "";
+			return antwoord.visit(ContentMathML.INSTANCE).toString();
+		}
+	}
+	
+	
+	@Override
+	public void getResponses(List<String> responses) {
+		String response = "";
+		if(editor != null) {
+			String useranswer = "$f" + editor.toString() + "@";
+			response = toMathML(useranswer);
+		} else if (latest_answer_viewer != null) {
+			String useranswer = "$f" + latest_answer_viewer.toString() + "@";
+			response = toMathML(useranswer);			
+		} else {
+			response = toMathML(antwoordString);
+		}
+		responses.add(response);		
 	}
 }

@@ -219,6 +219,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 		this.randomVarNamen = randomVarNamen;
 		this.randomVarWaarden = randomVarWaarden;
+		this.isVergelijkingVak = isVergelijkingVak;
 
 		if (fe != null)
 		{
@@ -626,6 +627,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	
 	private String lastanswer = "$f@";
+	private boolean isVergelijkingVak;
 	public void kijkNa(boolean backStep, boolean show, boolean setState)
 	{
 		String useranswer = "$f" + this.toString() + "@";
@@ -1046,6 +1048,19 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		setCurrentElementRepaint();
 	}
 
+	private String toMathML(String source) {
+		if(isVergelijkingVak)
+		{
+			VergelijkingMeerv verg = FormuleParser.parseVergelijking(source);
+			if(verg == null) return "";
+			return verg.visit(ContentMathML.INSTANCE).toString();
+		} else {
+			Expressie antwoord = FormuleParser.geefExpressie(source);
+			if(antwoord == null) return "";
+			return antwoord.visit(ContentMathML.INSTANCE).toString();
+		}
+	}
+
 	@Override
 	public void getResponses(List<String> responses) {
 		List<Type> responseTypes = facet.getResponseTypes();
@@ -1054,16 +1069,13 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			Type type = responseTypes.get(0);
 			int start = 0;
 			String useranswer = "$f" + this.toString() + "@";
-			Expressie antwoord = FormuleParser.geefExpressie(useranswer);
 			if(type == Type.formula) {
-				if(antwoord != null) 
-				{
-					responses.add(antwoord.visit(ContentMathML.INSTANCE).toString());
-					start = 1;
-				}
+				responses.add(toMathML(useranswer));
+				start = 1;
 			} 
-// kandidaat instelling: type is "decimal/integer"
+// kandidaat instelling: type is "decimal/integer" alleen bij formulevak!
 			else if (type == Type.decimal || type == Type.integer) {
+				Expressie antwoord = FormuleParser.geefExpressie(useranswer);
 				if(antwoord != null) {
 					double r = antwoord.geefWaarde();
 					//if(type == Type.integer) r = Math.round(r); TODO wat zeggen de specs
