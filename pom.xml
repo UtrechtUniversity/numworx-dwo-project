@@ -71,6 +71,7 @@
             <artifactId>plugin</artifactId>
             <version>1.8.0_31</version>
             <type>jar</type>
+            <classifier>deprecated</classifier>
             <scope>provided</scope>
         </dependency>
         <!-- is required for unmarshalling json stuff -->         
