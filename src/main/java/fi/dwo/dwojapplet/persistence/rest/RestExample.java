@@ -1,6 +1,6 @@
 package fi.dwo.dwojapplet.persistence.rest;
 
-import fi.dwo.commons.persistence.entities.DwoSystemParameters;
+import fi.dwo.commons.persistence.entities.PersistentDwoSystemParameters;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.ws.rs.client.Client;
@@ -23,13 +23,13 @@ public class RestExample {
         
         
         //getjson
-        GenericType<List<DwoSystemParameters>> dwoParamType = new GenericType<List<DwoSystemParameters>>() {
+        GenericType<List<PersistentDwoSystemParameters>> dwoParamType = new GenericType<List<PersistentDwoSystemParameters>>() {
         };
-        List<DwoSystemParameters> entities = ClientBuilder.newClient().target("http://localhost:8080")
+        List<PersistentDwoSystemParameters> entities = ClientBuilder.newClient().target("http://localhost:8080")
                 .path("/DWO/DWOServer/jax-rs/serverstatus/json")
                 .request().accept(MediaType.APPLICATION_JSON).get(dwoParamType);
         System.out.println(entities.size());
-        for (DwoSystemParameters p : entities) {
+        for (PersistentDwoSystemParameters p : entities) {
             System.out.println(p.getName() + " " + p.getValue());
         }
 
@@ -40,7 +40,7 @@ public class RestExample {
 //                .path("/DWO/DWOServer/jax-rs/serverstatus/xml")
 //                .request().accept(MediaType.APPLICATION_XML_TYPE).get(dwoParamColType);
 //        System.out.println(entitiesCol.getClass());
-//        for (DwoSystemParameters p : entities) {
+//        for (PersistentDwoSystemParameters p : entities) {
 //            System.out.println(p.getName() + " " + p.getValue());
 //        }
         //get html
