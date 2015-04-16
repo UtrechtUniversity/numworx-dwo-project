@@ -271,7 +271,6 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 		
 		antwoordTF = new TextBox();
 		antwoordTF.getElement().getStyle().setProperty("border", "1px solid gray");
-		antwoordTF.getElement().getStyle().setFontSize(12, Style.Unit.PX);
 		antwoordTF.setWidth((breedte - 4) + "px");
 		
 		//antwoordTF.setHeight((hoogte - 5) + "px");
@@ -420,7 +419,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 			basisPanel.add(antwoordTF);
 			basisPanel.setWidgetLeftRight(antwoordTF, 0, Style.Unit.PX, 0, Style.Unit.PX);
 			basisPanel.setWidgetTopBottom(antwoordTF, 0, Style.Unit.PX, 0, Style.Unit.PX);
-			ashoogte = Math.round(hoogte) - 5;// /*antwoordTF.getOffsetHeight()*/ - 3;
+			ashoogte = Math.round(hoogte) - 11;// /*antwoordTF.getOffsetHeight()*/ - 3;
 		}
 		
 		//TODO: Noordhoff-instelling maken.
@@ -969,6 +968,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 	public void setParentRegel(TekstRegel regel)
 	{
 		parentRegel = regel;
+		antwoordTF.getElement().getStyle().setFontSize(parentRegel.getFont().getFontSize(), Style.Unit.PX);
 	}
 	
 	public Panel getAsPanel()
