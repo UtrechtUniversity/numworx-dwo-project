@@ -22,13 +22,12 @@ import nl.uu.fi.dwo.keyboard.client.TabletKeyboardFactory;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 
-public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipboardIF {
+public class CitrusKeyboard extends FlowPanel implements StatusBarIF, FormuleClipboardIF {
 
 	KeyboardFactory factory;
 	AbstractKeyboard kb;
-	FlowPanel staticPanel;
 	
-	public DWOKeyboard() {
+	public CitrusKeyboard() {
 		OsDetection detection = MGWT.getOsDetection();
 		if(detection.isDesktop()
 				&& false
@@ -39,8 +38,6 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 		}
 		kb = factory.getKeyboard();
 		add(kb);
-		staticPanel = new FlowPanel();
-		add(staticPanel);
 		kb.blur(); // we start hidden!
 
 // css style!		
@@ -51,18 +48,6 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 		style.setLeft(0, Style.Unit.PX);
 		style.setBackgroundColor("rgb(210,210,210)");
 		
-		style = staticPanel.getElement().getStyle();
-		style.setHeight(getStatusBarHeight(), Unit.PX);
-		style.setWidth(100, Unit.PCT);
-		style.setBackgroundImage("url("
-				+ DWOplayer.PARAMETERS.getResource("images/resources/footerbgimage.png")
-				+ ")");
-
-		style = kb.getElement().getStyle();
-		style.setProperty("margin", "0 auto");
-		style.setWidth(882, Unit.PX);
-		style.setPosition(Position.RELATIVE);
-		
 	}
 
 	@Override
@@ -72,25 +57,10 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 
 	@Override
 	public void addKnop(PushButton knop, boolean right) {
-		if(knop == null) return;
-		Style style = knop.getElement().getStyle();
-		if(right)
-			style.setFloat(Style.Float.RIGHT);
-		else
-			style.setFloat(Style.Float.LEFT);
-		style.setDisplay(Display.INLINE_BLOCK);
-		style.setMarginTop(10, Style.Unit.PX);
-		style.setWidth(80 ,Style.Unit.PX);
-		style.setProperty("horizontalAlign", "center"); //TODO: helpt dit?
-		staticPanel.add(knop);
 	}
 
 	@Override
 	public void addNavPanel(Panel opdrnav) {
-		opdrnav.getElement().getStyle().setFloat(Style.Float.LEFT);
-		opdrnav.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-		staticPanel.clear();
-		staticPanel.add(opdrnav);
 	}
 
 	@Override
@@ -104,7 +74,7 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 
 	@Override
 	public int getStatusBarHeight() {
-		return KeyBoardTabPanel.KEYB_STATIC_HEIGHT;
+		return 0;
 	}
 
 	@Override

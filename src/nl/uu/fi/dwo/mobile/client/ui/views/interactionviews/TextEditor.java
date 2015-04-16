@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.HashMap;
+import java.util.List;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
@@ -32,6 +33,7 @@ import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.Expressie;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
+import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
@@ -41,7 +43,7 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
-public class TextEditor  implements InteractionView, TouchStartHandler, FormuleEditorIF {
+public class TextEditor  implements InteractionView, TouchStartHandler, FormuleEditorIF, FacetAware {
 	
 	class Tapper implements TapHandler {
 		private FormuleEditorIF deze;
@@ -67,6 +69,8 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	private static final char Σ = 'Σ';
 	private static final char KWADRAAT = '²';
+	private static final char WORTEL = '√';
+	private static final char INTEGRAAL = '∫';
 
 	
 	private class FormulaVak extends Composite implements HasText {
@@ -304,11 +308,17 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	@Override
 	public void setAsHoogte(int ashoogte) {
 		this.asHoogte = ashoogte;
-
 	}
 
 	@Override
 	public HashMap<String, Object> getState() {
+		String sb = getAllText();
+		HashMap<String,Object> state = new HashMap<String,Object>();
+		state.put("tekst", sb.toString());
+		return state;
+	}
+
+	private String getAllText() {
 		StringBuilder sb = new StringBuilder();
 		int count = flow.getWidgetCount();
 		for(int i=0; i < count; i++) {
@@ -317,9 +327,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 				sb.append(((HasText) child).getText());
 			}
 		}
-		HashMap<String,Object> state = new HashMap<String,Object>();
-		state.put("tekst", sb.toString());
-		return state;
+		return sb.toString();
 	}
 
 	private String getText() {
@@ -536,10 +544,12 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	@Override
 	public void wortel() {
+		insert(WORTEL);
 	}
 
 	@Override
 	public void breuk() {
+		insert('/');
 	}
 
 	@Override
@@ -566,10 +576,12 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	@Override
 	public void ndelog() {
+		insert("log");
 	}
 
 	@Override
 	public void abs() {
+		insert("| |");
 	}
 
 	@Override
@@ -598,6 +610,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	@Override
 	public void primitieve() {
+		insert(INTEGRAAL);
 	}
 
 	@Override
@@ -607,6 +620,11 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	@Override
 	public void sigma() {
 		insert(Σ);
+	}
+
+	@Override
+	public void getResponses(List<String> responses) {
+		responses.add(getAllText());
 	}
 
 

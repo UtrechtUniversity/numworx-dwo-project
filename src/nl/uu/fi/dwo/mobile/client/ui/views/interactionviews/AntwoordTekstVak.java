@@ -34,16 +34,21 @@ import java.util.Vector;
 
 
 
+
+
+
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
+import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
+import nl.uu.fi.dwo.interaction.client.FacetAware.Type;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -82,9 +87,11 @@ import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import fi.wiskopdr.FormuleParser;
+import fi.wiskopdr.expressies.Expressie;
+import fi.wiskopdr.expressies.repr.ContentMathML;
 
 
-public class AntwoordTekstVak implements InteractionView{
+public class AntwoordTekstVak implements InteractionView, FacetAware{
 
 	private Map<String, Object> launchState; 
 	OpdrNavIF comRoot;
@@ -1017,6 +1024,25 @@ public class AntwoordTekstVak implements InteractionView{
 			formuleVak.setFont(FormuleFont.createFromFontSize(size));
 		//else
 		//	antwoordTF.getElement().getStyle().setFontSize(size, Style.Unit.PX);
+	}
+
+
+	@Override
+	public void getResponses(List<String> responses) {
+		String antwoord;
+		if(formuleMode)
+		{
+			antwoord = formuleVak.toString();
+			String useranswer = "$f" + antwoord + "@";
+			Expressie expr = FormuleParser.geefExpressie(useranswer);
+			if(expr != null) 
+			{
+					antwoord = expr.visit(ContentMathML.INSTANCE).toString();
+			} // antwoord = "Presentation MathML" ?
+		}
+		else
+			antwoord = antwoordTF.getText();
+		responses.add(antwoord);
 	}
 	
 }

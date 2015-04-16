@@ -10,7 +10,7 @@ public class ContentMathML extends AbstractConverter {
 
 	static final String WISKOPDR = "wiskopdr";
 	
-	public ContentMathML() {
+	private ContentMathML() {
 	}
 
 // official MathML functions
@@ -146,7 +146,7 @@ public class ContentMathML extends AbstractConverter {
 		if("<cn>1</cn>".equals(direction))
 		{ 
 			
-		} else if("<cn>1</cn>".equals(direction))
+		} else if("<cn>2</cn>".equals(direction))
 		{
 			
 		}
@@ -313,6 +313,8 @@ public class ContentMathML extends AbstractConverter {
 			case '\u2264': t = "leq"; break;
 			case '<' : t = "lt"; break;
 			case '>' : t = "gt"; break;
+			case '≠' : t = "neq"; break;
+			case '≈' : t = "approx"; break;
 			default:   t  = "eq"; break;			
 		}
 		return t;

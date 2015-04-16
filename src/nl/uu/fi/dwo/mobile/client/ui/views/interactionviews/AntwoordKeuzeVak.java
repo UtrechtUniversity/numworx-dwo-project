@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -43,6 +44,7 @@ import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.text.Text;
 import fi.wiskopdr.text.Text_nl;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
+import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
@@ -53,7 +55,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
-public class AntwoordKeuzeVak implements InteractionStub{
+public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	
 	//public static Text_nl rb = new Text_nl();
 	
@@ -1048,6 +1050,11 @@ public class AntwoordKeuzeVak implements InteractionStub{
 	public void setAsHoogte(int ashoogte) {
 		//this.ashoogte = ashoogte;
 		
+	}
+
+	@Override
+	public void getResponses(List<String> responses) {
+		responses.add(Integer.toString(selectedIndex));
 	}
 
 }
