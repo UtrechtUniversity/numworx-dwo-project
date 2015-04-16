@@ -60,6 +60,8 @@ public interface DWOkeyboardBundle extends ClientBundle {
 	ImageResource backspace();
 	@Source("nl/uu/fi/dwo/keyboard/client/resources/hand.png")
 	ImageResource hand();
+	@Source("nl/uu/fi/dwo/keyboard/client/resources/empty.png")
+	ImageResource empty();
 
 	
 	

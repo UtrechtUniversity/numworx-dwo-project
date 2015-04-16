@@ -8,8 +8,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 
-	private static final int HEIGHT = 44;
-
 	private AbstractKeyboard k123, current, stock[] = new AbstractKeyboard[5];
 	private int nr;
 	private FlowPanel main;
@@ -29,12 +27,17 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 		grupper = new DWOTabletKeyboardGrUpper();
 		grupper.setDelegate(this);
 		grlower = new DWOTabletKeyboardGrLower();
+		disableKey(grlower.pad.t3_16);
+		disableKey(grlower.pad.t4_16);
+		disableKey(grupper.pad.t3_16);
+		disableKey(grupper.pad.t4_16);
+		
 		grlower.setDelegate(this);
 		grupper.setVisible(false);
 		main.add(grupper);
 		grlower.setVisible(false);
 		main.add(grlower);
-		main.setHeight("90px"); // FIXME!!!
+		setPixelSize(-1, getKeyboardHeight());
 	}
 
 	public DWOTabbedDesktopKeyboard() {
@@ -46,13 +49,18 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 	public void setKeyboard(int nr) {
 		if(nr < 0 || nr > 4) nr = DEFAULT;
 		if(this.nr != nr) {
-			current.removeFromParent();
+			boolean isCurrent = k123 == current;
+			boolean isShown = current.isVisible() && isCurrent;
+			k123.removeFromParent();
 			if(stock[nr] == null) stock[nr] = createKeyboard(nr);
 			this.nr = nr;
-			current = stock[nr];
-			current.setEditor(getEditor());
-			current.setDelegate(this);
-			main.add(current);
+			k123 = stock[nr];
+			k123.setEditor(getEditor());
+			k123.setDelegate(this);
+			main.add(k123);
+			k123.setVisible(isShown);
+			if(isCurrent) current = k123;
+			resizeScrollPanel(getKeyboardHeight());
 		}
 	}
 	
@@ -64,7 +72,7 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 		case 3: return new DesktopKeyboardStatistiek();
 		case 4: return new DesktopKeyboardMeetkunde().init();
 		}
-		return new DesktopKeyboard().init();
+		return new DWODesktopKeyboard().init();
 	}
 
 	@Override
@@ -80,6 +88,7 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 	private int origDelta = 0;
 	
 	void resizeScrollPanel(int size) {
+		setPixelSize(-1, size);
 		origDelta = size;
 		if(scrollPanel != null)
 			scrollPanel.setPixelSize(-1, origHeight - size);
@@ -107,11 +116,47 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 		FocusOnTouch.focus();
 	}
 
+
 	@Override
 	public void blur() {
 		super.blur();
 		resizeScrollPanel(0);
 	}
 
+	private boolean upper;
+	
+	@Override
+	public void switchGreek() {
+		if(upper) switchUpper();
+		else switchLower();
+	}
+
+	public void switchUpper() {
+		upper = true;
+		switchTo(grupper);
+	}
+	
+	public void switchLower() {
+		upper = false;
+		switchTo(grlower);
+	}
+	
+	public void switch123() {
+		switchTo(k123);		
+	}
+
+	private void switchTo(AbstractKeyboard kto) {
+		if(current != kto) {
+			current.setVisible(false);
+			current = kto;
+			current.setVisible(true);
+			resizeScrollPanel(getKeyboardHeight());
+		}
+	}
+
+	public void switchABC() {
+		switchGreek();
+	}
+	
 	
 }

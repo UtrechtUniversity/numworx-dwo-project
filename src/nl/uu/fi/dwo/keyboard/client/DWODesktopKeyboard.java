@@ -74,7 +74,7 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 	@UiHandler("t3_11") void onT3_11(ClickEvent e) {getEditor().diff();}
 	@UiHandler("t3_12") void onT3_12(ClickEvent e) {getEditor().insert('⟨');}
 	@UiHandler("t3_13") void onT3_13(ClickEvent e) {getEditor().insert('⟩');}
-//	@UiHandler("t3_14") void onT3_14(ClickEvent e) {getEditor().insert('\u2264');}
+	@UiHandler("t3_14") void onT3_14(ClickEvent e) {switchGreek();}
 //	@UiHandler("t3_15") void onT3_15(ClickEvent e) {getEditor().insert('\u2265');}
 
 	@UiHandler("t4_1") void onT4_1(ClickEvent e) {getEditor().insert('0');}
@@ -89,8 +89,8 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 	@UiHandler("t4_10") void onT4_10(ClickEvent e) {getEditor().sigma();}
 	@UiHandler("t4_11") void onT4_11(ClickEvent e) {getEditor().conjug();}
 	@UiHandler("t4_12") void onT4_12(ClickEvent e) {getEditor().insert('←');}
-	@UiHandler("t4_13") void onT4_13(ClickEvent e) {getEditor().insert('→');}
-//	@UiHandler("t4_14") void onT4_14(ClickEvent e) {getEditor().insert(" of ");}
+	@UiHandler("t4_13") void onT4_13(ClickEvent e) {getEditor().insert('→');};
+	@UiHandler("t4_14") void onT4_14(ClickEvent e) {blur();}
 //	@UiHandler("t4_15") void onT4_15(ClickEvent e) {getEditor().insert('∞');}
 
 	@Override

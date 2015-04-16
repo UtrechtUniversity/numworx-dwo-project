@@ -3,16 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:my="urn:import:nl.uu.fi.dwo.keyboard.client"
 	>
-	<ui:with field='res' type='nl.uu.fi.dwo.keyboard.client.ResourceBase' />
 	<ui:style>
-	.key {
-		width: 24px;
-		height: 24px;
-		margin-top: 10px;
-		margin-left: 2px;
-		margin-right: 2px;
-	}
-	
 	</ui:style>
 	<g:FlowPanel addStyleNames="keyboard" >
 		<my:FKey addStyleNames="key icon" ui:field="c1" >

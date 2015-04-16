@@ -19,7 +19,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class DesktopKeyboard extends AbstractKeyboard {
 
-	@UiField ResourceBase res = ResourceBase.INSTANCE;
+	//@UiField ResourceBase res = ResourceBase.INSTANCE;
 
 	static final int HEIGHT = 44;
 	
