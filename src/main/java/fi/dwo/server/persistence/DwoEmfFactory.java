@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.sql.DataSource;
@@ -26,8 +27,7 @@ import org.eclipse.persistence.config.PersistenceUnitProperties;
 public class DwoEmfFactory {
 
     private static final Logger log = Logger.getLogger(DwoEmfFactory.class.getName());
-    
-    
+
     private volatile static EntityManagerFactory _instance = Persistence.createEntityManagerFactory("DWO_MySQLDB");
 //uses config below, but does not load persistent classes. Needs to generate xml or so.
 //<persistence-unit name="DWO_MySQLDB" transaction-type="NON_JTA_DATASOURCE">
@@ -40,7 +40,8 @@ public class DwoEmfFactory {
 //    <exclude-unlisted-classes>false</exclude-unlisted-classes>
 //    <shared-cache-mode>NONE</shared-cache-mode>
 //  </persistence-unit>
-    public static EntityManagerFactory instance()  {
+
+    public static EntityManagerFactory instance() {
         if (_instance == null) {
             synchronized (DwoEmfFactory.class) {
                 if (_instance == null) {
@@ -64,11 +65,15 @@ public class DwoEmfFactory {
         return _instance;
     }
 
-    /** 
+    public static EntityManager createEntityManager() {
+        return _instance.createEntityManager();
+    }
+
+    /**
      * Looks up the default data source in the tomcat context.xml.
-     * 
+     *
      * @return
-     * @throws NamingException 
+     * @throws NamingException
      */
     private static DataSource getDataSource() throws NamingException {
         Context initContext = new InitialContext();

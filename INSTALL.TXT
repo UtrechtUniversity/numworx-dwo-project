@@ -28,3 +28,10 @@ Once the database was created configure a mysql-db resource in the main context.
                maxActive="100" maxIdle="30" maxWait="10000"
                username="dwo" password="dwopassword" driverClassName="com.mysql.jdbc.Driver"
                url="jdbc:mysql://localhost:3306/dwo_production_v1_2"/>
+
+Add the authentication in the context.xml for local authentication.
+
+<Realm roleNameCol="groupname" userRoleTable="tomcat_roles_view" userCredCol="passwd" 
+userNameCol="username" userTable="tomcat_user_view" dataSourceName="jdbc/dwodb" 
+className="org.apache.catalina.realm.DataSourceRealm"/>
+

@@ -5,7 +5,7 @@
  */
 package fi.dwo.server.persistence;
 
-import fi.dwo.commons.persistence.entities.DwoSystemParameters;
+import fi.dwo.commons.persistence.entities.PersistentDwoSystemParameters;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import java.util.List;
 import java.util.logging.Level;
@@ -24,47 +24,47 @@ import javax.ws.rs.Produces;
 @Path("/user")
 public class PersistentUserManager {
 
-    private static final Logger log = Logger.getLogger(ServerStatus.class.getName());
+    private static final Logger log = Logger.getLogger(PersistentUserManager.class.getName());
 
    private final static EntityManagerFactory emf = Persistence.createEntityManagerFactory("DWO_MySQLDB");
 
    //CRUD
-   
-   
-   public PersistentUser createUser(PersistentUser user){
-       
-       
-   }
-
-   public PersistentUser readUser(PersistentUser user){
-       
-       
-   }
-
-   
-   public void updateUser(PersistentUser user){
-       
-       
-   }
-
-   public void deleteUser(UserId id){
-       
-       
-   }
-   
-
-    @GET
-    @Produces({"application/json"})
-    @Path("/json")
-    public List<PersistentUser> getStatusJson() {
-        return getStatus();
-    }
-
-    @GET
-    @Produces({"application/xml"})
-    @Path("/xml")
-    public List<PersistentUser> getStatusXml() {
-        return getStatus();
-    }
+//   
+//   
+//   public PersistentUser createUser(PersistentUser user){
+//       
+//       
+//   }
+//
+//   public PersistentUser readUser(PersistentUser user){
+//       
+//       
+//   }
+//
+//   
+//   public void updateUser(PersistentUser user){
+//       
+//       
+//   }
+//
+//   public void deleteUser(UserId id){
+//       
+//       
+//   }
+//   
+//
+//    @GET
+//    @Produces({"application/json"})
+//    @Path("/json")
+//    public List<PersistentUser> getStatusJson() {
+//        return getStatus();
+//    }
+//
+//    @GET
+//    @Produces({"application/xml"})
+//    @Path("/xml")
+//    public List<PersistentUser> getStatusXml() {
+//        return getStatus();
+//    }
 
 }

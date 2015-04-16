@@ -407,6 +407,12 @@ CREATE TABLE `tbluser` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- View for tomcat authentication roles.
+--
+CREATE VIEW tomcat_user_view AS SELECT username, passwd FROM tblUser;
+CREATE VIEW tomcat_roles_view AS select u.username, g.groupname from tblUser u  join tblhasrole h using (userid) join tblschoolgroup sg on (h.schoolGroupID =  sg.schoolGroupID) join tblgroup g using (groupID);
+
+--
 -- Final view structure for view `tblscoview`
 --
 
