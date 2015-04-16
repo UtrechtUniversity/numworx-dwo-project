@@ -11,10 +11,10 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
     <!-- Adjust artifact, name and description for new projects -->
     <groupId>fi.dwo</groupId>
     <artifactId>DWO-commons-lib</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>DWO-commons-lib - working</name>
-    <description>This is a description</description>
+    <description>This is a java library of common classes between the DwoJAppplet and the DwoServer applications.</description>
     
     <url>http://www.dwo.nl</url>
     <!-- Update year to current when starting a new project -->
