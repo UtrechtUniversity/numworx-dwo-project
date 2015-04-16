@@ -267,6 +267,7 @@
       <groupId>jre.plugin</groupId>
       <artifactId>plugin</artifactId>
       <version>1.8.0_31</version>
+      <classifier>deprecated</classifier>
       <scope>provided</scope>
     </dependency>
   </dependencies>
