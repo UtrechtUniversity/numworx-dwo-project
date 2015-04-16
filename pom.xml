@@ -136,6 +136,7 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
             <artifactId>plugin</artifactId>
             <version>1.8.0_31</version>
             <type>jar</type>
+            <classifier>deprecated</classifier>
             <scope>provided</scope>
         </dependency>         
         <dependency>
