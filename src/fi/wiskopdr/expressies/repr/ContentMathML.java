@@ -108,6 +108,9 @@ public class ContentMathML extends AbstractConverter {
 	public Object diff(Object kind1, Object kind2) {
 		return apply("diff", "<bvar>", kind2, "</bvar>", kind1);
 	}
+	public Object diffpartial(Object kind1, Object kind2) {
+		return apply("partialdiff", "<bvar>", kind2, "</bvar>", kind1);
+	}
 
 	@Override
 	public Object differentiaal(Object kind1) {
