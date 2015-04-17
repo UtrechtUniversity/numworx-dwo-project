@@ -7,7 +7,6 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
-import org.glassfish.jersey.client.ClientConfig;
 
 /**
  *
@@ -20,12 +19,16 @@ public class RestExample {
     public static void main(String[] args) {
 
         Client client = ClientBuilder.newClient();
-        
-        
+
         //getjson
         GenericType<List<PersistentDwoSystemParameters>> dwoParamType = new GenericType<List<PersistentDwoSystemParameters>>() {
         };
         List<PersistentDwoSystemParameters> entities = ClientBuilder.newClient().target("http://localhost:8080")
+ //               .property(HTTP_AUTHENTICATION_BASIC_USERNAME, "joe")
+ //               .property(HTTP_AUTHENTICATION_BASIC_PASSWORD, "p1swd745")
+                //or
+ //               .property(HTTP_AUTHENTICATION_DIGEST_USERNAME, "joe")
+ //               .property(HTTP_AUTHENTICATION_DIGEST_PASSWORD, "p1swd745")
                 .path("/DWO/DWOServer/jax-rs/serverstatus/json")
                 .request().accept(MediaType.APPLICATION_JSON).get(dwoParamType);
         System.out.println(entities.size());
