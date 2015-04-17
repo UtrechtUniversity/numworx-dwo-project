@@ -3,6 +3,7 @@ package fi.wiskopdr.expressies.repr;
 import java.math.BigInteger;
 
 import fi.wiskopdr.expressies.Expressie;
+import fi.wiskopdr.expressies.VergelijkingMeerv;
 
 public class ContentMathML extends AbstractConverter {
 	
@@ -351,6 +352,22 @@ public class ContentMathML extends AbstractConverter {
 		if(objects.length==1)
 			return objects[0];
 		return apply("or", objects);
+	}
+
+	public String toString(VergelijkingMeerv verg) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<math xmlns='http://www.w3.org/1998/Math/MathML'>");
+		sb.append(verg.visit(this));
+		sb.append("</math>");
+		return sb.toString();
+	}
+
+	public String toString(Expressie expr) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<math xmlns='http://www.w3.org/1998/Math/MathML'>");
+		sb.append(expr.visit(this));
+		sb.append("</math>");
+		return sb.toString();
 	}
 	
 }

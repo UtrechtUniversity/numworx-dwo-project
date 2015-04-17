@@ -5,10 +5,11 @@ import java.util.List;
 public interface FacetAware {
 
 	enum Type {
-		formula,
+		mathml,
 		integer,
 		decimal,
 		coordinate,
+		string,
 	}
 
 	/**

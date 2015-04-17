@@ -1053,11 +1053,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		{
 			VergelijkingMeerv verg = FormuleParser.parseVergelijking(source);
 			if(verg == null) return "";
-			return verg.visit(ContentMathML.INSTANCE).toString();
+			return ContentMathML.INSTANCE.toString(verg);
 		} else {
 			Expressie antwoord = FormuleParser.geefExpressie(source);
 			if(antwoord == null) return "";
-			return antwoord.visit(ContentMathML.INSTANCE).toString();
+			return ContentMathML.INSTANCE.toString(antwoord);
 		}
 	}
 
@@ -1069,7 +1069,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			Type type = responseTypes.get(0);
 			int start = 0;
 			String useranswer = "$f" + this.toString() + "@";
-			if(type == Type.formula) {
+			if(type == Type.mathml) {
 				responses.add(toMathML(useranswer));
 				start = 1;
 			} 
