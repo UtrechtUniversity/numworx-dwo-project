@@ -37,7 +37,7 @@ public class UserProfileManager {
      */
     @GET
     @Produces({"application/json"})
-    @Path("get/json")
+    @Path("/get/json")
     public PersistentUser getCurrentUser(@Context SecurityContext sc) {
         EntityManager em = DwoEmfFactory.createEntityManager();
         PersistentUser user;
@@ -63,10 +63,26 @@ public class UserProfileManager {
      */
     @PUT
     @Produces({"application/json"})
-    @Path("update/json")
+    @Path("/update/json")
     public PersistentUser updateCurrentUser(PersistentUser user) {
         PersistentUser u=null;
         return u;
     }
+    
+    
+    @GET
+    @Produces({"application/json"})
+    @Path("/info/json")
+    public String info(@Context SecurityContext sc) {
+        return ""+sc.getUserPrincipal();
+    }
 
+    
+    @GET
+    @Produces({"application/json"})
+    @Path("/classinfo/json")
+    public String info() {
+        return this.getClass().getName();
+    }
+    
 }

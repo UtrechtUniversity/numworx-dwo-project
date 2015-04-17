@@ -55,11 +55,11 @@
         </init-param>
         <init-param>
             <param-name>projectVersion</param-name>
-            <param-value>${project.version}</param-value>
+            <param-value>1.0.1-SNAPSHOT</param-value>
         </init-param>
         <init-param>
             <param-name>buildnumber</param-name>
-            <param-value>${buildNumber}</param-value>
+            <param-value>9537</param-value>
         </init-param>
     </servlet>
     <servlet>
@@ -67,7 +67,7 @@
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>    
         <init-param>
             <param-name>jersey.config.server.provider.packages</param-name>
-            <param-value>fi.dwo.server.persistence</param-value>
+            <param-value>fi.dwo.server.rest</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>    
@@ -90,25 +90,56 @@
         <url-pattern>/jax-rs/*</url-pattern>
     </servlet-mapping>
     
-    
+   <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>DwoLogin</web-resource-name>
+            <url-pattern>/login/*</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>TEACHER</role-name>
+        </auth-constraint>
+        <user-data-constraint>
+            <!-- transport-guarantee can be CONFIDENTIAL, INTEGRAL, or NONE -->
+            <transport-guarantee>NONE</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
     <security-constraint>
-		<web-resource-collection>
-			<web-resource-name>DWO</web-resource-name>
-			<url-pattern>/*</url-pattern>
-			<http-method>GET</http-method>
-			<http-method>POST</http-method>
-		</web-resource-collection>
-		<auth-constraint>
-			<role-name>TEACHER</role-name>
-		</auth-constraint>
+        <web-resource-collection>
+            <web-resource-name>DwoJaxRsRest</web-resource-name>
+            <url-pattern>/jax-rs/*</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+            <http-method>PUT</http-method>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>STUDENT</role-name>
+            <role-name>TEACHER</role-name>
+            <role-name>SCHOOLADMIN</role-name>
+            <role-name>ADMIN</role-name>
+        </auth-constraint>
+        <user-data-constraint>           
+            <transport-guarantee>NONE</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
 
-		<user-data-constraint>
-			<!-- transport-guarantee can be CONFIDENTIAL, INTEGRAL, or NONE -->
-			<transport-guarantee>NONE</transport-guarantee>
-		</user-data-constraint>
-	</security-constraint>
+    <!-- Security roles referenced by this web application -->
+    <security-role>
+        <role-name>STUDENT</role-name>
+    </security-role>
+    <security-role>
+        <role-name>TEACHER</role-name>
+    </security-role>
+    <security-role>
+        <role-name>SCHOOLADMIN</role-name>
+    </security-role>
+    <security-role>
+        <role-name>ADMIN</role-name>
+    </security-role>
 
-	<login-config>
-		<auth-method>BASIC</auth-method>
-	</login-config>
+    <login-config>
+        <auth-method>DIGEST</auth-method>
+        <realm-name>DWO account credentials required.</realm-name>
+    </login-config>
 </web-app>

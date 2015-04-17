@@ -3,14 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fi.dwo.server.persistence;
+package fi.dwo.server.rest;
 
-import fi.dwo.commons.persistence.entities.PersistentDwoSystemParameters;
-import fi.dwo.commons.persistence.entities.PersistentUser;
-import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.ws.rs.GET;
@@ -66,5 +61,11 @@ public class PersistentUserManager {
 //    public List<PersistentUser> getStatusXml() {
 //        return getStatus();
 //    }
+    @GET
+    @Produces({"application/json"})
+    @Path("/json")
+    public String getStatusJson() {
+        return "hello";
+    }
 
 }

@@ -22,16 +22,29 @@ contain all relevant applet files.
 <Parameter name="fi.dwo.dwojapplet.web.appletName" value="DWOJApplet-1.0.1-r9269.jar"
          override="true"/>
 
-Once the database was created configure a mysql-db resource in the main context.xml:
-
+Once the database was created configure a mysql-db resource in the main server.xml:
+ <GlobalNamingResources>
+...   
 <Resource name="jdbc/dwodb" auth="Container" type="javax.sql.DataSource"
                maxActive="100" maxIdle="30" maxWait="10000"
                username="dwo" password="dwopassword" driverClassName="com.mysql.jdbc.Driver"
                url="jdbc:mysql://localhost:3306/dwo_production_v1_2"/>
+...  
+</GlobalNamingResources>
 
-Add the authentication in the context.xml for local authentication.
+Deploy the war using a context fragment, it enables the resource db and sets the security realm to be used:
 
-<Realm roleNameCol="groupname" userRoleTable="tomcat_roles_view" userCredCol="passwd" 
-userNameCol="username" userTable="tomcat_user_view" dataSourceName="jdbc/dwodb" 
-className="org.apache.catalina.realm.DataSourceRealm"/>
+<?xml version="1.0" encoding="utf-8"?>
+<Context path="/DWO/DWOServer"  docBase="/opt/dwo/tomcat7/wars/DWOServer" debug="0" crossContext="false" >
+<ResourceLink
+    name="jdbc/dwodb"
+    global="jdbc/dwodb"
+    type="javax.sql.DataSource"
+  />
+    <Realm localDataSource="true" roleNameCol="groupname" userRoleTable="tomcat_roles_view" userCredCol="passwd"
+          userNameCol="username" userTable="tomcat_user_view" dataSourceName="jdbc/dwodb"
+          className="org.apache.catalina.realm.DataSourceRealm"/>
+</Context>
+
+Note the localDataSource="true" attribute in <Realm/>.
 

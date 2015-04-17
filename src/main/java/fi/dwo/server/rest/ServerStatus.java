@@ -5,6 +5,7 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.persistence.entities.PersistentDwoSystemParameters;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.logging.Level;
@@ -26,60 +27,60 @@ public class ServerStatus {
 
     private final static EntityManagerFactory emf = DwoEmfFactory.instance();
 
-//    public List<PersistentDwoSystemParameters> getStatus() {
-//        
-//        EntityManager em;
-//        em = emf.createEntityManager();
-//
-//        List<PersistentDwoSystemParameters> result;
-//        try {
-//            javax.persistence.Query q = em.createNamedQuery("DwoSystemParameters.findAll");
-//            result = (List<PersistentDwoSystemParameters>) q.getResultList();
-//            log.log(Level.INFO, "Fetched DwoSystemParameters {0}", new Object[]{result.size()});
-//
-//        } finally {
-//            em.close();
-//        }
-//        
-////        StringBuilder string = new StringBuilder();
-////        for (PersistentDwoSystemParameters p : result) {
-////            string.append(p.getName());
-////            string.append(" ");
-////            string.append(p.getValue());
-////            string.append("\n");
-////        }
-////        log.log(Level.INFO, "Made output:", new Object[]{string.toString()});
-//
-//        return result;
-//    }
-//
-//    @GET
-//    @Produces({"application/json"})
-//    @Path("/json")
-//    public List<PersistentDwoSystemParameters> getStatusJson() {
-//        return getStatus();
-//    }
-//
-//    @GET
-//    @Produces({"application/xml"})
-//    @Path("/xml")
-//    public List<PersistentDwoSystemParameters> getStatusXml() {
-//        return getStatus();
-//    }
-//
-//    @GET
-//    @Produces({"text/plain"})
-//    @Path("/html")
-//    public String getStatusText() {
-//        List<PersistentDwoSystemParameters> result = getStatus();
-//        StringBuilder string = new StringBuilder();
-//        for (PersistentDwoSystemParameters p : result) {
-//            string.append(p.getName());
-//            string.append(" ");
-//            string.append(p.getValue());
-//            string.append("\n");
-//        }
-//        return string.toString();
-//    }
+    public List<PersistentDwoSystemParameters> getStatus() {
+        
+        EntityManager em;
+        em = emf.createEntityManager();
+
+        List<PersistentDwoSystemParameters> result;
+        try {
+            javax.persistence.Query q = em.createNamedQuery("DwoSystemParameters.findAll");
+            result = (List<PersistentDwoSystemParameters>) q.getResultList();
+            log.log(Level.INFO, "Fetched DwoSystemParameters {0}", new Object[]{result.size()});
+
+        } finally {
+            em.close();
+        }
+        
+        StringBuilder string = new StringBuilder();
+        for (PersistentDwoSystemParameters p : result) {
+            string.append(p.getName());
+            string.append(" ");
+            string.append(p.getValue());
+            string.append("\n");
+        }
+        log.log(Level.INFO, "Made output:", new Object[]{string.toString()});
+
+        return result;
+    }
+
+    @GET
+    @Produces({"application/json"})
+    @Path("/json")
+    public List<PersistentDwoSystemParameters> getStatusJson() {
+        return getStatus();
+    }
+
+    @GET
+    @Produces({"application/xml"})
+    @Path("/xml")
+    public List<PersistentDwoSystemParameters> getStatusXml() {
+        return getStatus();
+    }
+
+    @GET
+    @Produces({"text/plain"})
+    @Path("/html")
+    public String getStatusText() {
+        List<PersistentDwoSystemParameters> result = getStatus();
+        StringBuilder string = new StringBuilder();
+        for (PersistentDwoSystemParameters p : result) {
+            string.append(p.getName());
+            string.append(" ");
+            string.append(p.getValue());
+            string.append("\n");
+        }
+        return string.toString();
+    }
 
 }
