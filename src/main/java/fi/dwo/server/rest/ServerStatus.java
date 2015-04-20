@@ -20,7 +20,7 @@ import javax.ws.rs.Produces;
  *
  * @author G.A.J. van der Plas
  */
-@Path("/serverstatus")
+@Path("/public/serverstatus")
 public class ServerStatus {
 
     private static final Logger log = Logger.getLogger(ServerStatus.class.getName());

@@ -46,5 +46,7 @@ Deploy the war using a context fragment, it enables the resource db and sets the
           className="org.apache.catalina.realm.DataSourceRealm"/>
 </Context>
 
+Verify there is enough permgenspace voor de tomcat.
+
 Note the localDataSource="true" attribute in <Realm/>.
 

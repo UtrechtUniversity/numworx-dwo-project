@@ -87,7 +87,7 @@
     <!-- Jersey JAX_RS JAXB JSON service provider -->
     <servlet-mapping>
         <servlet-name>jersey-servlet</servlet-name>
-        <url-pattern>/jax-rs/*</url-pattern>
+        <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
     
    <security-constraint>
@@ -108,7 +108,7 @@
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>DwoJaxRsRest</web-resource-name>
-            <url-pattern>/jax-rs/*</url-pattern>
+            <url-pattern>/rest/secure/*</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
             <http-method>PUT</http-method>
