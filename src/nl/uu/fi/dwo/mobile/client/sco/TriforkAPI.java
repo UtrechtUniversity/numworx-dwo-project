@@ -12,11 +12,15 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public class TriforkAPI implements Scorm2004IF {
 
 	private native void setResponse(String data) /*-{
-		$wnd.CES.setResponse(data);
+
+		var s = JSON.parse(data)
+		$wnd.CES.setResponse(s);
 	}-*/;
 	
 	private native String getResponse() /*-{
-		return $wnd.CES.getResponse();
+
+		var s =  $wnd.CES.getResponse();
+		return JSON.stringify(s);
 	}-*/;
 	
 	/**
