@@ -40,7 +40,7 @@ public class FramedScoPanel extends JPanel implements CenterSubPanel, ActionList
         Date notAfter = link.getNotAfter();
         if (notAfter != null) {
             System.out.println("stop na " + notAfter);
-            long delay = notAfter.getTime() - System.currentTimeMillis() - DwoHelper.getCurrentUser().getTimeZone();
+            long delay = notAfter.getTime() - System.currentTimeMillis() - DwoHelper.getCurrentFacadeUser().getTimeZone();
             delay = Math.min(Integer.MAX_VALUE, Math.max(0L, delay));
             timer = new Timer((int) delay, this);
             timer.setRepeats(false);

@@ -484,11 +484,11 @@ public class User implements UserGroup, Comparable {
     }
 
     //TODO MANY TO MANY DONE OBSOLETE
-//    public static void setCurrentUser(User currentUser) {
+//    public static void setCurrentFacadeUser(User currentUser) {
 //        User.currentUser = currentUser;
 //    }
 //
-//    public static User getCurrentUser() {
+//    public static User getCurrentFacadeUser() {
 //        return currentUser;
 //    }
 

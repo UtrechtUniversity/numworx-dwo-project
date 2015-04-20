@@ -126,7 +126,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         GuiCreator.instance().setWait();
 
         this.sco = sco = sco.unwrap();
-        sco.setUser(DwoHelper.getCurrentUser());
+        sco.setUser(DwoHelper.getCurrentFacadeUser());
         sco.dwo = GuiCreator.instance().dwo;
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         JPanel buttonPanel;

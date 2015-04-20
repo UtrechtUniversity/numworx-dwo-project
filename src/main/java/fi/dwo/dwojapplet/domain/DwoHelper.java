@@ -6,8 +6,12 @@ package fi.dwo.dwojapplet.domain;
 
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.mainframe.MainFrame;
+import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.entities.DomainUser;
 import fi.dwo.dwojapplet.gui.MainPanel;
+import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.applet.Applet;
 import java.awt.Component;
 import java.awt.Container;
@@ -46,13 +50,22 @@ public final class DwoHelper {
     private static boolean scormExportLoggedIn, appletExportLoggedIn, adminLoggedIn;
 
     private static String resourceURLPathString; // required null if to use the default
-    private static String servletConnectString=null; // required null, filled in main or init
-                                                     //depending on application or applet start.
+    private static String servletConnectString = null; // required null, filled in main or init
+    //depending on application or applet start.
     private static SchoolClass schoolClass;
     private static School school;
-    
-    private static User currentUser;
-    
+
+    private static PersistentUser currentUser;
+
+    /**
+     * ********deprecated attributes **********
+     */
+    private static User currentFacadeUser;
+
+    /**
+     * ****************************************
+     */
+
     /**
      * Returns the current AppletUtil.
      *
@@ -378,16 +391,37 @@ public final class DwoHelper {
     }
 
     /**
-     * @return the currentUser
+     * @return the currentFacadeUser
      */
-    public static User getCurrentUser() {
+    public static PersistentUser getCurrentUser() {
         return currentUser;
     }
 
     /**
-     * @param aCurrentUser the currentUser to set
+     * @param aCurrentUser the currentFacadeUser to set
      */
-    public static void setCurrentUser(User aCurrentUser) {
+    public static void setCurrentUser(PersistentUser aCurrentUser) {
         currentUser = aCurrentUser;
+        try {
+            currentFacadeUser = (User) PersistenceFacade.instance().get(aCurrentUser.getUserID(),User.class);
+        } catch (PersistenceException ex) {
+            log.log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * @return the currentFacadeUser
+     */
+    @Deprecated
+    public static User getCurrentFacadeUser() {
+        return currentFacadeUser;
+    }
+
+    /**
+     * @param aCurrentUser the currentFacadeUser to set
+     */
+    @Deprecated
+    public static void setCurrentFacadeUser(User aCurrentUser) {
+        currentFacadeUser = aCurrentUser;
     }
 }

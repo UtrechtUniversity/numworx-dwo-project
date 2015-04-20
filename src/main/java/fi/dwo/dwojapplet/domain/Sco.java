@@ -550,13 +550,13 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
         }
 // export class id and class name
         if ("class_id".equals(name)) {
-            SchoolClass tmpSc = DwoHelper.getCurrentUser().getInClass();
+            SchoolClass tmpSc = DwoHelper.getCurrentFacadeUser().getInClass();
             if (tmpSc != null) {
                 return String.valueOf(tmpSc.getID());
             }
         }
         if ("class_name".equals(name)) {
-            SchoolClass tmpSc = DwoHelper.getCurrentUser().getInClass();
+            SchoolClass tmpSc = DwoHelper.getCurrentFacadeUser().getInClass();
             if (tmpSc != null) {
                 return String.valueOf(tmpSc);
             }

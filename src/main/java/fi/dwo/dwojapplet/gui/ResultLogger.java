@@ -331,7 +331,7 @@ public class  ResultLogger extends JPanel implements ActionListener,  ClipboardO
 				lists[i].put(page, object);
 			}
 		}
-		sco.setUser(DwoHelper.getCurrentUser());
+		sco.setUser(DwoHelper.getCurrentFacadeUser());
 		partialModel.setColumnCount(pages.size()*2);
 		for (int i = 0; i < leerlingen.length; i++) {
 			int j = 0;

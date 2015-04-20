@@ -2426,7 +2426,7 @@ public class PersistenceFacade {
         if (!DWO.SEQUENCE) {
             return courses;
         }
-        return sequence(courses, DwoHelper.getCurrentUser());
+        return sequence(courses, DwoHelper.getCurrentFacadeUser());
     }
 
     public Course[] sequence(Course[] courses, User currentUser) {
@@ -2588,7 +2588,7 @@ public class PersistenceFacade {
 
     private Vector clipBeforeAfter(Vector v) {
         Iterator iter = v.iterator();
-        long now = System.currentTimeMillis() + DwoHelper.getCurrentUser().getTimeZone();
+        long now = System.currentTimeMillis() + DwoHelper.getCurrentFacadeUser().getTimeZone();
         while (iter.hasNext()) {
             Hashtable ht = (Hashtable) iter.next();
             Object o = ht.get("notBefore");
