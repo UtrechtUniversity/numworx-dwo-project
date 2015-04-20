@@ -46,7 +46,7 @@ public class ContentMathML extends AbstractConverter {
 	
 	@Override
 	public Object expressie(Expressie expressie) {
-		return "<ctext>UNKNOWN</ctext>";
+		return "<ci>" + expressie + "</ci>";
 	}
 
 	@Override

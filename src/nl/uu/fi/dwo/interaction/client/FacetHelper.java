@@ -1,9 +1,8 @@
-package nl.uu.fi.dwo.mobile.utils;
+package nl.uu.fi.dwo.interaction.client;
 
 import java.util.List;
 import java.util.Vector;
 
-import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
 public class FacetHelper {

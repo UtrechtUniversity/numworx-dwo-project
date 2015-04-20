@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
+import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
@@ -16,7 +17,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.PopupButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
 import static nl.uu.fi.dwo.mobile.utils.ImageUtils.newImage;
 
-public class PopupFacade implements InteractionView {
+public class PopupFacade implements InteractionView, FacetAware {
 
 	private static List<PopupButton> list = new LinkedList<PopupButton>();
 	
@@ -222,6 +223,12 @@ public class PopupFacade implements InteractionView {
 	public int wrapAsHoogte(int asHoogte) {
 		if(popup) return getAsHoogte();
 		return asHoogte;
+	}
+
+	@Override
+	public void getResponses(List<String> responses) {
+		if(delegate instanceof FacetAware)
+			((FacetAware) delegate).getResponses(responses);
 	}
 	
 }
