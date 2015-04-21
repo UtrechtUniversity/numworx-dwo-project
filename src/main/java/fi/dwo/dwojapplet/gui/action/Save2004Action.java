@@ -162,6 +162,7 @@ public class Save2004Action extends GuiAction {
                 "KladjeGWT.html",
                 "NabouwenAanzichtenGWT.html",
                 "StatistiekGWT.html",
+        		"KansbomenGWT.html",
             // TODO more html files
             };
             copyList(out, runner, scormURL, viewFileNames);

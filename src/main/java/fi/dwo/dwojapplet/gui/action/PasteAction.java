@@ -83,6 +83,13 @@ public class PasteAction extends GuiAction {
     }
 
     private void copySco(Course course, Sco sco) {
+    	// verify we have scos
+		Sco[] list = course.getScoList();
+		if(list == null) {
+			course.loadScos();
+			list = course.getScoList();
+			if(list == null) return;
+		}
         AppletConfig config = instance().getAppletConfigFromSco(sco);
         String name = config.getName();
         name = CourseManagementPanel.replaceDuplicate(name, course.getScoNames());
