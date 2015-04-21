@@ -7,9 +7,10 @@ package fi.dwo.dwojapplet.domain;
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.mainframe.MainFrame;
 import fi.dwo.commons.exceptions.PersistenceException;
+import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.entities.DomainUser;
+import fi.dwo.dwojapplet.domain.rest.RoleManager;
 import fi.dwo.dwojapplet.gui.MainPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.applet.Applet;
@@ -22,9 +23,11 @@ import java.awt.Point;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.ws.rs.client.WebTarget;
 import netscape.javascript.JSObject;
 
 /**
@@ -49,14 +52,24 @@ public final class DwoHelper {
 
     private static boolean scormExportLoggedIn, appletExportLoggedIn, adminLoggedIn;
 
-    private static String resourceURLPathString; // required null if to use the default
+    private static String baseServletUrlString; 
+    private static String resourceUrlPathString; // required null if to use the default
     private static String servletConnectString = null; // required null, filled in main or init
     //depending on application or applet start.
     private static SchoolClass schoolClass;
     private static School school;
 
     private static PersistentUser currentUser;
+    private static PersistentRole currentRole;
+    private static List<PersistentRole> roles;
 
+    private static WebTarget webTargetRest;
+
+    
+    public void init(){
+        roles = RoleManager.getRoles();
+    }
+    
     /**
      * ********deprecated attributes **********
      */
@@ -65,7 +78,6 @@ public final class DwoHelper {
     /**
      * ****************************************
      */
-
     /**
      * Returns the current AppletUtil.
      *
@@ -271,6 +283,8 @@ public final class DwoHelper {
     }
 
     /**
+     * True if schoolAdmin.
+     * 
      * @return the contact
      */
     public static boolean isContact() {
@@ -278,6 +292,8 @@ public final class DwoHelper {
     }
 
     /**
+     * True if schoolAdmin.
+     * 
      * @param contact the contact to set
      */
     public static void setContact(boolean contact) {
@@ -341,17 +357,17 @@ public final class DwoHelper {
     }
 
     /**
-     * @return the resourceURLPathString
+     * @return the resourceUrlPathString
      */
     public static String getGetResourceURLPathString() {
-        return resourceURLPathString;
+        return resourceUrlPathString;
     }
 
     /**
-     * @param aGetResourceURLPathString the resourceURLPathString to set
+     * @param aGetResourceURLPathString the resourceUrlPathString to set
      */
     public static void setGetResourceURLPathString(String aGetResourceURLPathString) {
-        resourceURLPathString = aGetResourceURLPathString;
+        resourceUrlPathString = aGetResourceURLPathString;
     }
 
     public static void setServletConnectString(String aServletConnectString) {
@@ -403,7 +419,7 @@ public final class DwoHelper {
     public static void setCurrentUser(PersistentUser aCurrentUser) {
         currentUser = aCurrentUser;
         try {
-            currentFacadeUser = (User) PersistenceFacade.instance().get(aCurrentUser.getUserID(),User.class);
+            currentFacadeUser = (User) PersistenceFacade.instance().get(aCurrentUser.getUserID(), User.class);
         } catch (PersistenceException ex) {
             log.log(Level.SEVERE, null, ex);
         }
@@ -424,4 +440,62 @@ public final class DwoHelper {
     public static void setCurrentFacadeUser(User aCurrentUser) {
         currentFacadeUser = aCurrentUser;
     }
+
+    /**
+     * @return the baseServletUrlString
+     */
+    public static String getBaseServletUrlString() {
+        return baseServletUrlString;
+    }
+
+    /**
+     * @param aBaseServletUrlString the baseServletUrlString to set
+     */
+    public static void setBaseServletUrlString(String aBaseServletUrlString) {
+        baseServletUrlString = aBaseServletUrlString;
+    }
+
+    /**
+     * @return the webTargetRest
+     */
+    public static WebTarget getWebTargetRest() {
+        return webTargetRest;
+    }
+
+    /**
+     * @param aWebTargetRest the webTargetRest to set
+     */
+    public static void setWebTargetRest(WebTarget aWebTargetRest) {
+        webTargetRest = aWebTargetRest;
+    }
+
+    /**
+     * @return the currentRole
+     */
+    public static PersistentRole getCurrentRole() {
+        return currentRole;
+    }
+
+    /**
+     * @param aCurrentRole the currentRole to set
+     */
+    public static void setCurrentRole(PersistentRole aCurrentRole) {
+        currentRole = aCurrentRole;
+    }
+
+    /**
+     * @return the roles
+     */
+    public static List<PersistentRole> getRoles() {
+        return roles;
+    }
+
+
+    /**
+     * @return the roles
+     */
+    public static void setRoles(List<PersistentRole> aRoles) {
+        roles = aRoles;
+    }
+
 }

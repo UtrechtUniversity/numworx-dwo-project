@@ -5,6 +5,7 @@
  */
 package fi.dwo.dwojapplet.gui.panels;
 
+import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import java.awt.Dimension;
 
@@ -13,7 +14,7 @@ import java.awt.Dimension;
  * @author G.A.J. van der Plas
  */
 public class JPanelMyProfile extends javax.swing.JPanel {
-
+    private PersistentUser user;
     /**
      * Creates new form JPaneMylProfile
      */

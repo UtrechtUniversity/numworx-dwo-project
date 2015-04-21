@@ -32,7 +32,7 @@ import javax.swing.JTextField;
 
 /**
  * This class represents the panel that is been showed when you start the
- * application.
+ * application. 
  *
  * @author M.J.B. Kupers
  *
@@ -115,8 +115,8 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         fiButton = new FIButton("DWO", new String[]{"versie-info: " + version,
             "auteur: Peter Boon",
             "programmeur: M.J.B. Kupers,",
-            "Wim van Velthoven",
             "Gert van der Plas",
+            "Wim van Velthoven",
             "Freudenthal Instituut",
             "www.fisme.science.uu.nl",
             ""
@@ -337,9 +337,10 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         Object src = e.getSource();
         if ((src == loginButton) || (src == loginname) || (src == password)) {
             try {
-                GuiCreator.instance().login(loginname.getText(), password.getText());
+                //set cookies in browser.
+                GuiCreator.instance().login(loginname.getText(), String.valueOf(password.getPassword()));
                 DwoHelper.setCookie("dwoUserName", loginname.getText());
-                DwoHelper.setCookie("dwoPassWord", password.getText());
+                DwoHelper.setCookie("dwoPassWord", String.valueOf(password.getPassword()));
                 if (linkcheck != null && linkcheck.isSelected()) {
                     GuiCreator.instance().linkViaSAML();
                 }

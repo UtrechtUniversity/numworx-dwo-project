@@ -13,8 +13,11 @@ import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.exceptions.SchoolException;
 import fi.dwo.commons.exceptions.ScoException;
+import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.rest.LoginManager;
+import fi.dwo.dwojapplet.domain.rest.RoleManager;
 import fi.dwo.dwojapplet.domain.utils.CheckEmail;
 import fi.dwo.dwojapplet.gui.CenterSubPanel;
 import fi.dwo.dwojapplet.gui.GuiConstants;
@@ -67,6 +70,8 @@ import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.plaf.ColorUIResource;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
 
 import org.apache.xmlrpc.applet.MySimpleXmlRpcClient;
 
@@ -77,7 +82,7 @@ import org.apache.xmlrpc.applet.MySimpleXmlRpcClient;
  * @author M.J.B. Kupers
  *
  */
-public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM2004APIInterface   {
+public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM2004APIInterface {
 
     private static final Logger log = Logger.getLogger("fi.dwo");
 
@@ -176,10 +181,9 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             file.close();
 
             //assign properties to static value.
-
             String servletConnectStringProperty = properties.getProperty("servletConnectString");
             //if(servletConnectStringProperty==null){
-               // servletConnectStringProperty="http://ws.fisme.science.uu.nl/";
+            // servletConnectStringProperty="http://ws.fisme.science.uu.nl/";
             //}
             DwoHelper.setServletConnectString(servletConnectStringProperty);
             log.log(Level.FINE, "Property {0} is value: {1}", new Object[]{"setServletConnectString",
@@ -189,10 +193,10 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             DwoHelper.setGetResourceURLPathString(resourceURLPathStringProperty);
             log.log(Level.FINE, "Property {0} is value: {1}", new Object[]{"resourceURLPathStringProperty",
                 DwoHelper.getGetResourceURLPathString()});
-            
+
             String xmlrpc_debug = properties.getProperty("xmlrpc.debug", "false");
             MySimpleXmlRpcClient.setDebug("true".equals(xmlrpc_debug));
-            
+
         } catch (FileNotFoundException ex) {
             log.log(Level.FINE, "No external resource connection defined");
         } catch (IOException ex) {
@@ -372,8 +376,12 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     @Override
     public boolean login(String username, String password)
             throws LoginException {
-        DwoHelper.setCurrentUser(LoginManager.login(username, password));
-    
+        PersistentUser user = LoginManager.login(username, MD5.getHashString(password));
+        if (user == null) {
+            throw new LoginException(LoginException.LE_UNKNOWN_USER);
+        }
+        DwoHelper.setCurrentUser(user);
+
         if (password == null) {
             DwoHelper.setCurrentFacadeUser(PersistenceFacade.instance().login(username));
         } else {
@@ -1160,19 +1168,30 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         Clipboard.initialize();
         //It we started from the command line then the DwoHelper.getServletConnectString()
         //has been intialized. Otherwise we set it to the server where we downloaded from
-        if(DwoHelper.getServletConnectString()==null){
+        if (DwoHelper.getServletConnectString() == null) {
             URL url = DwoHelper.getApplet().getCodeBase();
             try {
                 Loader.setPrefix(url.toString());
+                DwoHelper.setBaseServletUrlString((new URL(url, "..")).toString()); // denotes the base servlet url
                 URL xmlRpcUrl = new URL(url, "../xmlrpc");
                 DwoHelper.setServletConnectString(xmlRpcUrl.toString());
             } catch (MalformedURLException ex) {
                 log.log(Level.SEVERE, null, ex);
             }
+        } else {
+            try {
+                DwoHelper.setBaseServletUrlString((new URL(new URL(DwoHelper.getServletConnectString()), ".")).toString()); // denotes the base servlet url
+            } catch (MalformedURLException ex) {
+                log.log(Level.SEVERE, null, ex);
+            }
         }
+        //intialize the proper connection but without any credentials.
+        WebTarget target = ClientBuilder.newClient().target(DwoHelper.getBaseServletUrlString());
+        DwoHelper.setWebTargetRest(target);
+        DwoHelper.setRoles(RoleManager.getRoles());
+
         //TODO make it configurable in the servlet via a attribute in the jsp
         //initialized via the tomcat context.xml
-        
         //Read the versioning from the MANIFEST
         URLClassLoader cl = (URLClassLoader) DWO.class.getClassLoader();
         if (cl == null) {
@@ -1611,7 +1630,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 
     @Override
     public void destroy() {
-    	Clipboard.destroy();
+        Clipboard.destroy();
         DwoHelper.clrApplet(this);
     }
 

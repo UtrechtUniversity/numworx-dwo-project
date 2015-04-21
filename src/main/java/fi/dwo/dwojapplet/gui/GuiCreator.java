@@ -89,7 +89,6 @@ public class GuiCreator {
             DwoHelper.setContact(false);
             if (dwo.login(username, password)) {
 // HOOK: check if username is valide volgens de nieuwe regels.
-                //validUsernameCheck(username);
                 validLicenceCheck(dwo.getUser());
 
                 login(dwo.getUser());
