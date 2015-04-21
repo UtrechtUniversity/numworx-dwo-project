@@ -24,12 +24,10 @@ import javax.ws.rs.Produces;
  */
 @Entity
 @Table(name = "tbldwosystemparameters", schema = "")
-@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "PersistentDwoSystemParameters.findAll", query = "SELECT t FROM PersistentDwoSystemParameters t"),
     @NamedQuery(name = "PersistentDwoSystemParameters.findByName", query = "SELECT t FROM PersistentDwoSystemParameters t WHERE t.name = :name"),
     @NamedQuery(name = "PersistentDwoSystemParameters.findByValue", query = "SELECT t FROM PersistentDwoSystemParameters t WHERE t.value = :value")})
-@Path("/systemparameters")
 public class PersistentDwoSystemParameters implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
