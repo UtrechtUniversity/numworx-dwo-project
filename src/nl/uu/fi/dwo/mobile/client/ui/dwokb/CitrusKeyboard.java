@@ -15,6 +15,7 @@ import com.googlecode.mgwt.ui.client.OsDetection;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard;
+import nl.uu.fi.dwo.keyboard.client.DWODesktopKeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.DWOTabletKeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.DesktopKeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.KeyboardFactory;
@@ -30,9 +31,9 @@ public class CitrusKeyboard extends FlowPanel implements StatusBarIF, FormuleCli
 	public CitrusKeyboard() {
 		OsDetection detection = MGWT.getOsDetection();
 		if(detection.isDesktop()
-				&& false
+				//&& false
 				) {
-			factory = new DesktopKeyboardFactory();
+			factory = new DWODesktopKeyboardFactory();
 		} else {
 			factory = new DWOTabletKeyboardFactory();
 		}
