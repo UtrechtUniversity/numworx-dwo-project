@@ -1,0 +1,179 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package fi.dwo.server.PersistentEntityManagers;
+
+import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.persistence.DwoEmfFactory;
+import fi.dwo.server.persistence.exceptions.NonexistentEntityException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+/**
+ * Manages users in the persistent storage.
+ *
+ * @author G.A.J. van der Plas
+ */
+public class UserManager {
+
+    private static final Logger log = Logger.getLogger(UserManager.class.getName());
+
+    private static EntityManager getEntityManager(){
+        EntityManager em = DwoEmfFactory.createEntityManager();
+        return em;
+    }
+
+    public static void create(PersistentUser persistentUser) {
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            em.persist(persistentUser);
+            em.getTransaction().commit();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
+    public static void edit(PersistentUser persistentUser) throws NonexistentEntityException, Exception {
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            persistentUser = em.merge(persistentUser);
+            em.getTransaction().commit();
+        } catch (Exception ex) {
+            String msg = ex.getLocalizedMessage();
+            if (msg == null || msg.length() == 0) {
+                Integer id = persistentUser.getUserID();
+                if (findPersistentUser(id) == null) {
+                    throw new NonexistentEntityException("The persistentUser with id " + id + " no longer exists.");
+                }
+            }
+            throw ex;
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
+    public static void destroy(Integer id) throws NonexistentEntityException {
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            PersistentUser persistentUser;
+            try {
+                persistentUser = em.getReference(PersistentUser.class, id);
+                persistentUser.getUserID();
+            } catch (EntityNotFoundException enfe) {
+                throw new NonexistentEntityException("The persistentUser with id " + id + " no longer exists.", enfe);
+            }
+            em.remove(persistentUser);
+            em.getTransaction().commit();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
+    public static List<PersistentUser> findPersistentUserEntities() {
+        return findPersistentUserEntities(true, -1, -1);
+    }
+
+    public static List<PersistentUser> findPersistentUserEntities(int maxResults, int firstResult) {
+        return findPersistentUserEntities(false, maxResults, firstResult);
+    }
+
+    private static List<PersistentUser> findPersistentUserEntities(boolean all, int maxResults, int firstResult) {
+        EntityManager em = getEntityManager();
+        try {
+            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+            cq.select(cq.from(PersistentUser.class));
+            Query q = em.createQuery(cq);
+            if (!all) {
+                q.setMaxResults(maxResults);
+                q.setFirstResult(firstResult);
+            }
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    public static PersistentUser findPersistentUser(Integer id) {
+        EntityManager em = getEntityManager();
+        try {
+            return em.find(PersistentUser.class, id);
+        } finally {
+            em.close();
+        }
+    }
+
+    public static int getPersistentUserCount() {
+        EntityManager em = getEntityManager();
+        try {
+            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+            Root<PersistentUser> rt = cq.from(PersistentUser.class);
+            cq.select(em.getCriteriaBuilder().count(rt));
+            Query q = em.createQuery(cq);
+            return ((Long) q.getSingleResult()).intValue();
+        } finally {
+            em.close();
+        }
+    }
+
+    public static PersistentUser findByName(String userName){
+        EntityManager em = DwoEmfFactory.createEntityManager();
+        PersistentUser user=null;
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
+            q.setParameter("username", userName);
+            user = (PersistentUser) q.getSingleResult();
+            log.log(Level.INFO, "User-manager retrieved user with username {0}", new Object[]{user.getUsername()});
+        } catch(Exception e){
+            log.log(Level.WARNING,"Unexpected exception", e.getMessage());
+        }finally {
+            em.close();
+        }
+        return user;
+    }
+    
+    /**
+     * User manager. Resolves links.
+     *
+     * @param sc
+     * @return Returns null if there was an error or login failed.
+     */
+    public static PersistentUser login(String userName, String passwd) {
+        PersistentUser user = null;
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
+            q.setParameter("username", userName);
+            user = (PersistentUser) q.getSingleResult();
+            if (user.getPasswd().compareTo(passwd) != 0) {
+                return null;
+            }
+            log.log(Level.INFO, "Login accepted for user with username {0}", new Object[]{userName});
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Unexpected exception", e.getMessage());
+        } finally {
+            em.close();
+        }
+        return user;
+    }
+
+}

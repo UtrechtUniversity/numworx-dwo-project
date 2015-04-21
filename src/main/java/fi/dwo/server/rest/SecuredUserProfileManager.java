@@ -7,7 +7,6 @@ package fi.dwo.server.rest;
 
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.persistence.DwoEmfFactory;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
@@ -18,7 +17,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 /**
@@ -28,33 +26,34 @@ import javax.ws.rs.core.SecurityContext;
  *
  * @author G.A.J. van der Plas
  */
-@Path("/secure/gui/panels/userprofile")
+@Path("/secure/user/userprofile")
 public class SecuredUserProfileManager {
 
     private static final Logger log = Logger.getLogger(SecuredUserProfileManager.class.getName());
-    @Context  //injected response proxy supporting multiple threads
-    private HttpServletResponse response;
+//    @Context  //injected response proxy supporting multiple threads
+//    private HttpServletResponse response;
 
     /**
      * Returns the currentUser. The information is extracted from the security
      * context.
      *
      * @param sc
-     * @return
+     * @return Returns null if there was an error.
      */
     @GET
     @Produces({"application/json"})
     @Path("/get/json")
     public PersistentUser getCurrentUser(@Context SecurityContext sc) {
         EntityManager em = DwoEmfFactory.createEntityManager();
-        PersistentUser user;
+        PersistentUser user=null;
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
             String userName = sc.getUserPrincipal().getName();
             q.setParameter("username", userName);
             user = (PersistentUser) q.getSingleResult();
             log.log(Level.FINE, "Fetched User with username {0}", new Object[]{userName});
-
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Unexpected exception", e.getMessage());
         } finally {
             em.close();
         }
@@ -96,16 +95,9 @@ public class SecuredUserProfileManager {
             }
             return user;
         } else {
-            log.log(Level.WARNING, "ILLEGAL USER-OPERATION: Trying to update the user profile of {0} under user account {1}.", new Object[]{sc.getUserPrincipal().getName(),user.getUsername()});
+            log.log(Level.WARNING, "ILLEGAL USER-OPERATION: Trying to update the user profile of {0} under user account {1}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
             throw new NotAuthorizedException("You Don't Have Permission to update usercode " + user.getUsername() + ".");
         }
-    }
-
-    @GET
-    @Produces({"application/json"})
-    @Path("/info/json")
-    public String info(@Context SecurityContext sc) {
-        return "username: " + sc.getUserPrincipal().getName();
     }
 
     @GET

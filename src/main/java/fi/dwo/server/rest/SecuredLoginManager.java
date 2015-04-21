@@ -7,6 +7,7 @@ package fi.dwo.server.rest;
 
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.persistence.DwoEmfFactory;
+import fi.dwo.server.PersistentEntityManagers.UserManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
@@ -20,32 +21,26 @@ import javax.ws.rs.core.SecurityContext;
  *
  * @author G.A.J. van der Plas
  */
-@Path("/secure/gui/panels/login/get")
+@Path("/secure/user/login")
 public class SecuredLoginManager {
+
     private static final Logger log = Logger.getLogger(SecuredLoginManager.class.getName());
-    
-/**
-     * Returns the user data if properly logged in.  The information is extracted from the security
-     * context.
+
+    /**
+     * Returns the user data if properly logged in. The information is extracted
+     * from the security context.
      *
      * @param sc
-     * @return
+     * @return Returns null if there was an error.
      */
     @GET
     @Produces({"application/json"})
     @Path("/get/json")
-    public PersistentUser login(@Context SecurityContext sc){
-        EntityManager em = DwoEmfFactory.createEntityManager();
-        PersistentUser user;
-        try {
-            javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
-            String userName = sc.getUserPrincipal().getName();
-            q.setParameter("username", userName);
-            user = (PersistentUser) q.getSingleResult();
-            log.log(Level.INFO, "Login accepted for user with username {0}", new Object[]{userName});
-        } finally {
-            em.close();
-        }
+    public PersistentUser login(@Context SecurityContext sc) {
+        String userName = sc.getUserPrincipal().getName();
+        //TODO REST update lastLogin and such.
+        PersistentUser user = UserManager.findByName(userName);
+        log.log(Level.INFO, "Login accepted for user with username {0}", new Object[]{user.getUsername()});
         return user;
     }
 }

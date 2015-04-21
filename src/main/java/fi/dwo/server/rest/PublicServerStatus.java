@@ -17,13 +17,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
 /**
- *
+ * Public server status. Showing health of the service.
+ * 
  * @author G.A.J. van der Plas
  */
 @Path("/public/serverstatus")
-public class ServerStatus {
+public class PublicServerStatus {
 
-    private static final Logger log = Logger.getLogger(ServerStatus.class.getName());
+    private static final Logger log = Logger.getLogger(PublicServerStatus.class.getName());
 
     private final static EntityManagerFactory emf = DwoEmfFactory.instance();
 
