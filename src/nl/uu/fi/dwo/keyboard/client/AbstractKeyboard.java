@@ -4,6 +4,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.keyboard.AbstractEditor;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -112,4 +113,13 @@ public abstract class AbstractKeyboard extends Composite implements FormuleKeybo
 	}
 
 	abstract int getKeyboardHeight();
+
+	protected void doInsert(ClickEvent e) {
+		Object s = e.getSource(); // HTML mischien getElement en dan DOM methoden?
+		String string = s.toString();
+		int i = string.indexOf('>');
+		int j = string.indexOf('<', i);
+		string = string.substring(i+1, j);
+		getEditor().insert(string);
+	}
 }

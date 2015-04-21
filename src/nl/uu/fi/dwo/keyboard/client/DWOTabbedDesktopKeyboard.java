@@ -13,7 +13,7 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 	private FlowPanel main;
 	private DWOTabletKeyboardGrUpper grupper;
 	private DWOTabletKeyboardGrLower grlower;
-	
+	private DWOMathKeyboard math;
 
 	DWOTabbedDesktopKeyboard(int nr) {
 		k123 = current = createKeyboard(nr);
@@ -24,19 +24,26 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 		main.addStyleName("touch");
 		main.add(current);
 		current.setDelegate(this);
-		grupper = new DWOTabletKeyboardGrUpper();
-		grupper.setDelegate(this);
-		grlower = new DWOTabletKeyboardGrLower();
-		disableKey(grlower.pad.t3_16);
-		disableKey(grlower.pad.t4_16);
-		disableKey(grupper.pad.t3_16);
-		disableKey(grupper.pad.t4_16);
+//		grupper = new DWOTabletKeyboardGrUpper();
+//		grupper.setDelegate(this);
+//		grlower = new DWOTabletKeyboardGrLower();
+//		disableKey(grlower.pad.t3_16);
+//		disableKey(grlower.pad.t4_16);
+//		disableKey(grupper.pad.t3_16);
+//		disableKey(grupper.pad.t4_16);
+//		
+//		grlower.setDelegate(this);
+//		grupper.setVisible(false);
+//		main.add(grupper);
+//		grlower.setVisible(false);
+//		main.add(grlower);
+		math = new DWOMathKeyboard().init();
+		math.setVisible(false);
+		math.setDelegate(this);
+		disableKey(math.pad.t3_16);
+		disableKey(math.pad.t4_16);
+		main.add(math);
 		
-		grlower.setDelegate(this);
-		grupper.setVisible(false);
-		main.add(grupper);
-		grlower.setVisible(false);
-		main.add(grlower);
 		setPixelSize(-1, getKeyboardHeight());
 	}
 
@@ -67,20 +74,21 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 	private AbstractKeyboard createKeyboard(int i) {
 		switch(i) {
 		case 0: return new DesktopKeyboardOnderbouw();
+		default:
 		case 1: return new DWODesktopKeyboard().init();
 		case 2: return new DesktopKeyboardGonio().init();
 		case 3: return new DesktopKeyboardStatistiek();
 		case 4: return new DesktopKeyboardMeetkunde().init();
 		}
-		return new DWODesktopKeyboard().init();
 	}
 
 	@Override
 	public void setEditor(FormuleEditorIF formuleEditor) {
 		setActiveEditor(formuleEditor);
 		k123.setEditor(formuleEditor);
-		grupper.setEditor(formuleEditor);
-		grlower.setEditor(formuleEditor);
+//		grupper.setEditor(formuleEditor);
+//		grlower.setEditor(formuleEditor);
+		math.setEditor(formuleEditor);
 	}
 
 	private Widget scrollPanel; 
@@ -127,8 +135,9 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 	
 	@Override
 	public void switchGreek() {
-		if(upper) switchUpper();
-		else switchLower();
+		switchTo(math);
+//		if(upper) switchUpper();
+//		else switchLower();
 	}
 
 	public void switchUpper() {

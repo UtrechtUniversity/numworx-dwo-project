@@ -85,12 +85,7 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 
 	@UiHandler({"t4_5", "t4_8", "t4_9", "t4_10", "t4_11", "t4_12"} )
 	void insert(ClickEvent e) {
-		Object s = e.getSource(); // HTML mischien getElement en dan DOM methoden?
-		String string = s.toString();
-		int i = string.indexOf('>');
-		int j = string.indexOf('<', i);
-		string = string.substring(i+1, j);
-		getEditor().insert(string);
+		doInsert(e);
 	}
 
 	@UiHandler("t4_13") void onT4_13(ClickEvent e) {getEditor().diff();};
@@ -117,7 +112,7 @@ public class DWODesktopKeyboard extends AbstractKeyboard {
 		getDelegate().switchGreek();
 	}
 
-	DWODesktopKeyboard init() {
+	AbstractKeyboard init() {
 		return this;
 	}
 }

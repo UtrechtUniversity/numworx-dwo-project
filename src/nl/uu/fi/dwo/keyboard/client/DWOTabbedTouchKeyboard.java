@@ -15,6 +15,7 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 	private DWOTabletKeyboardUpper kABC;
 	private DWOTabletKeyboardGrUpper kGrUpper;
 	private DWOTabletKeyboardGrLower kGrLower;
+	private DWOMathKeyboard math;
 	private DWOTabletKeyboardPen pen;
 	private AbstractKeyboard[] stock = new AbstractKeyboard[5];
 	
@@ -67,6 +68,12 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 		pen.setDelegate(this);
 		pen.setVisible(false);
 		main.add(pen);
+		
+		math = new DWOMathKeyboard().init();
+		math.setDelegate(this);
+		math.setVisible(false);
+		main.add(math);
+		
 		initWidget(main);
 	}
 
@@ -79,6 +86,8 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 		kABC.setEditor(formuleEditor);
 		pen.setEditor(formuleEditor);
 		kGrUpper.setEditor(formuleEditor);
+		kGrLower.setEditor(formuleEditor);
+		math.setEditor(formuleEditor);
 	}
 
 
@@ -166,12 +175,20 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 
 	@Override
 	void switchGreek() {
-		if(upper)
-			switchGrUpper();
-		else
-			switchGrLower();
+		switchTo(math);
+//		if(upper)
+//			switchGrUpper();
+//		else
+//			switchGrLower();
 	}
 
+	private void switchTo(AbstractKeyboard kto) {
+		if(current != kto) {
+			current.setVisible(false);
+			current = kto;
+			current.setVisible(true);
+		}
+	}
 
 	private void switchGrUpper() {
 		if(current != kGrUpper) {
