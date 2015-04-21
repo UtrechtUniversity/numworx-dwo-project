@@ -15,220 +15,230 @@
 		width: auto !important;
 
 	}
+	.letter {
+		font-family: serif;
+		font-style: italic;
+		font-weight: normal !important;
+	}
+	.symbol {
+		font-family: monospace;
+		font-style: initial;
+		font-weight: normal !important;
+	}
 	
 	</ui:style>
 
 	<g:HorizontalPanel addStyleNames="keyboard keyboard-abc is-active {style.dwo}" >
 	  <g:FlowPanel styleName="{style.panel}">
 		<g:FlowPanel addStyleNames="dclm clm-1">
-			<my:FKey addStyleNames="key" ui:field="t1_1" >
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t1_1" >
 				←
 			</my:FKey>
-			<my:FKey addStyleNames="key" ui:field="t2_1">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t2_1">
 				α
 			</my:FKey>
-			<my:FKey addStyleNames="key" ui:field="t3_1">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t3_1">
 				ξ
 			</my:FKey>
-			<my:FKey addStyleNames="key" ui:field="t4_1">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t4_1">
 				∈
 			</my:FKey>
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-2">
-			<my:FKey addStyleNames="key" ui:field="t1_2">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t1_2">
 				→
 			</my:FKey>
-			<my:FKey addStyleNames="key" ui:field="t2_2">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t2_2">
 				β
 			</my:FKey>
-			<my:FKey addStyleNames="key" ui:field="t3_2">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t3_2">
 				Σ
 			</my:FKey>
-			<my:FKey addStyleNames="key" ui:field="t4_2">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t4_2">
 				∉
 			</my:FKey>
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-3">
-			<my:FKey addStyleNames="key" ui:field="t1_3" >
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t1_3" >
 				[
 			</my:FKey>
-			<my:FKey addStyleNames="key" ui:field="t2_3">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t2_3">
 				γ
 			</my:FKey>
-			<my:FKey addStyleNames="key" ui:field="t3_3">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t3_3">
 				π
 			</my:FKey>
-			<my:FKey addStyleNames="key" ui:field="t4_3">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t4_3">
 				±
 			</my:FKey>
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-4">
-			<my:FKey addStyleNames="key icon" ui:field="t1_4">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t1_4">
 				]
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t2_4">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t2_4">
 				δ
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t3_4">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t3_4">
 				ρ
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t4_4">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t4_4">
 				≠
 			</my:FKey>
 		</g:FlowPanel>
 
 		<g:FlowPanel addStyleNames="dclm clm-5">
-			<my:FKey addStyleNames="key icon" ui:field="t1_5" >
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t1_5" >
 				〈
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t2_5">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t2_5">
 				ε
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t3_5">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t3_5">
 				ς
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t4_5">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t4_5">
 				÷
 			</my:FKey>
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-6">
-			<my:FKey addStyleNames="key icon" ui:field="t1_6">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t1_6">
 				〉
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t2_6">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t2_6">
 				ζ
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t3_6">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t3_6">
 				σ
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t4_6">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t4_6">
 				×
 			</my:FKey>
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-7">
-			<my:FKey addStyleNames="key icon" ui:field="t1_7" >
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t1_7" >
 				ℝ
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t2_7">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t2_7">
 				η
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t3_7">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t3_7">
 				τ
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t4_7">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t4_7">
 				°
 			</my:FKey>
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-8">
-			<my:FKey addStyleNames="key icon" ui:field="t1_8">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t1_8">
 				Φ
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t2_8">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t2_8">
 				θ
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t3_8">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t3_8">
 				υ
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t4_8">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t4_8">
 				‰
 			</my:FKey>
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-9">
-			<my:FKey addStyleNames="key icon" ui:field="t1_9" >
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t1_9" >
 				Χ
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t2_9">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t2_9">
 				ι
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t3_9">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t3_9">
 				φ
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t4_9">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t4_9">
 				∂
 			</my:FKey>
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-10">
-			<my:FKey addStyleNames="key icon" ui:field="t1_10">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t1_10">
 				Ψ
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t2_10">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t2_10">
 				κ
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t3_10">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t3_10">
 				χ
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t4_10">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t4_10">
 				∆
 			</my:FKey>
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-11">
-			<my:FKey addStyleNames="key icon" ui:field="t1_11" >
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t1_11" >
 				Ω
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t2_11">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t2_11">
 				λ
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t3_11">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t3_11">
 				ψ
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t4_11">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t4_11">
 				∠
 			</my:FKey>
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-12">
-			<my:FKey addStyleNames="key icon" ui:field="t1_12">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t1_12">
 				Γ
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t2_12">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t2_12">
 				μ
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t3_12">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t3_12">
 				ω
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t4_12">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t4_12">
 				∧
 			</my:FKey>
 		</g:FlowPanel>
 
 		<g:FlowPanel addStyleNames="dclm clm-13">
-			<my:FKey addStyleNames="key icon" ui:field="t1_13" >
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t1_13" >
 				Δ
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t2_13">
+			<my:FKey addStyleNames="key {style.letter}" ui:field="t2_13">
 				ν
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t3_13">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t3_13">
 				⊂
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t4_13">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t4_13">
 				∨
 			</my:FKey>
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-14">
-			<my:FKey addStyleNames="key icon" ui:field="t1_14">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t1_14">
 				∀
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t2_14">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t2_14">
 				∃
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t3_14">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t3_14">
 				∄
 			</my:FKey>
-			<my:FKey addStyleNames="key " ui:field="t4_14">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t4_14">
 				∅
 			</my:FKey>
 		</g:FlowPanel>
 		<g:FlowPanel addStyleNames="dclm clm-15">
-			<my:FKey addStyleNames="key icon" ui:field="t1_15" >
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t1_15" >
 				¬
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t2_15">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t2_15">
 				∩
 			</my:FKey>
-			<my:FKey addStyleNames="key icon" ui:field="t3_15">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t3_15">
 				∪
 			</my:FKey>
-			<my:FKey addStyleNames="key" ui:field="t4_15">
+			<my:FKey addStyleNames="key {style.symbol}" ui:field="t4_15">
 				⊃
 			</my:FKey>
 		</g:FlowPanel>
