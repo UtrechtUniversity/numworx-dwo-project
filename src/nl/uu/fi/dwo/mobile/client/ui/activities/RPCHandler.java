@@ -174,4 +174,13 @@ public class RPCHandler {
 		XmlRpcRequest<T> request = new XmlRpcRequest<T>(client, method, params, getStudentsCallback);
 		request.execute();
 	}
+	
+	public <T> void getUserResults(Object courseID, Object userID, AsyncCallback<T> getUserResultsCallback) {
+		Object[] params = { courseID, userID };
+		XmlRpcClient client = getClient();
+		XmlRpcRequest<T> request = new XmlRpcRequest<T>(client, "getUserResults", params, getUserResultsCallback);
+		request.execute();
+	}
+	
+	
 }

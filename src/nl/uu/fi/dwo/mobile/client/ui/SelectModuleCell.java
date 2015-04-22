@@ -40,7 +40,7 @@ public class SelectModuleCell implements Cell<SelectModuleItem>
 			SafeHtml p = EMPTY;
 			if(model.isShowScore())
 			{
-				p = (SimpleProgressBar.statusCellSafeHTMLTemplate.status(model.getScore()));
+				p = (SimpleProgressBar.statusCellSafeHTMLTemplate.status(Math.max(0,model.getScore().intValue())));
 			}
 			safeHtmlBuilder.append(TEMPLATE.content(model.getName(), "fa-file", p));
 			break;

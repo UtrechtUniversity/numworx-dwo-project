@@ -1,16 +1,20 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleView;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.EventBus;
@@ -22,6 +26,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.xml.client.Document;
@@ -52,11 +57,47 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements TreeModu
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
 		view = clientFactory.getTreeModuleView();
+
+		if(item.getType() == Type.MODULE && DWOplayer.profiledata != null) {
+			Object userID = DWOplayer.profiledata.get("userID");
+		if(userID != null) {	
+			Object courseID = item.getID();
+			AsyncCallback<List<Map<String,Object>>> getUserResultsCallback = new AsyncCallback<List<Map<String,Object>>>() {
+
+				@Override
+				public void onFailure(Throwable caught) {
+					GWT.log("failure", caught);
+				}
+
+				@Override
+				public void onSuccess(List<Map<String,Object>> result) {
+					Map<Object, Number> scoreMap = item.getScoreMap();
+					if(scoreMap == null) {
+						scoreMap = new HashMap<Object,Number>();
+						item.setScoreMap(scoreMap);
+					}
+					for( Map<String,Object> entry : result) {
+						Object id = entry.get("scoID");
+						Object score = entry.get("score");
+						if(score instanceof Number) {
+							scoreMap.put(id, (Number) score);
+						} else {
+							scoreMap.remove(id);
+						}
+					}
+					GWT.log("succes " + result);
+					view.selectModule(item);
+				}
+			};
+			clientFactory.getRPCHandler().getUserResults(courseID, userID, getUserResultsCallback);
+		}}
+
 		panel.setWidget(view);
 		currentModel = SelectModuleItemHolder.getItems();
 		view.setPresenter(this);
 		view.render(currentModel);
 		view.selectModule(item);
+		
 	}
 	@Override
 	public void onStop() {

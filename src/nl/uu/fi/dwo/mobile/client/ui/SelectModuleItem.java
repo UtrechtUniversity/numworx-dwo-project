@@ -170,12 +170,25 @@ public class SelectModuleItem
 	}
 	
 	public boolean isShowScore() {
-		return showScore;
+		return showScore && getScore() != null;
 	}
 
-	private int score = 90;
-	public int getScore() {
-		return score;
+	private Map<Object, Number> scoreMap;
+
+	public Number getScore() {
+		if(parent == null) return null;
+		Map<Object,? extends Number> scoreMap = parent.scoreMap;
+		if(scoreMap == null) return null;
+		Number score = scoreMap.get(id);
+		return (Number)score;
+	}
+
+	public Map<Object, Number> getScoreMap() {
+		return scoreMap;
+	}
+
+	public void setScoreMap(Map<Object, Number> scoreMap) {
+		this.scoreMap = scoreMap;
 	}
 	
 }

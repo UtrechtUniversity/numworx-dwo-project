@@ -1,18 +1,24 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
+import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem.Type;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.SelectModuleView;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
 import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
@@ -51,8 +57,42 @@ public class SelectModuleActivity extends MGWTAbstractActivity
 		}
 		else
 		{
+			if(item.getType() == Type.MODULE && DWOplayer.profiledata != null) {
+				Object userID = DWOplayer.profiledata.get("userID");
+			if(userID != null) {	
+				Object courseID = item.getID();
+				AsyncCallback<List<Map<String,Object>>> getUserResultsCallback = new AsyncCallback<List<Map<String,Object>>>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						GWT.log("failure", caught);
+					}
+
+					@Override
+					public void onSuccess(List<Map<String,Object>> result) {
+						Map<Object, Number> scoreMap = item.getScoreMap();
+						if(scoreMap == null) {
+							scoreMap = new HashMap<Object,Number>();
+							item.setScoreMap(scoreMap);
+						}
+						for( Map<String,Object> entry : result) {
+							Object id = entry.get("scoID");
+							Object score = entry.get("score");
+							if(score instanceof Number) {
+								scoreMap.put(id, (Number) score);
+							} else {
+								scoreMap.remove(id);
+							}
+						}
+						GWT.log("succes " + result);
+						view.render(item);
+					}
+				};
+				clientFactory.getRPCHandler().getUserResults(courseID, userID, getUserResultsCallback);
+			}}
 			view.render(item);
 			view.setDescription(item);
+
 		}
 
 		addHandlerRegistration(view.getBackBtn().addTapHandler(new TapHandler()
