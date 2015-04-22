@@ -88,8 +88,8 @@ public class CheckValueUnit implements InteractionStub{
 	
 	private boolean[][] logObjectives;
 	
-	private boolean check;
-	private boolean teltMee;
+	private boolean check = true;
+	private boolean teltMee = true;
 	
 	private String answer = "";
 	private boolean view = false;
