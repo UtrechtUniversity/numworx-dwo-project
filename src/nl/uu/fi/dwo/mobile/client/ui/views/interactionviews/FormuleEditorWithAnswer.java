@@ -43,6 +43,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -369,7 +370,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				@Override
 				public void onTap(TapEvent event) {
 					if(feedbackLabel.isVisible())
-					{	feedbackPanel.setPopupPosition(asWidget().getAbsoluteLeft() + 10, asWidget().getAbsoluteTop() + asWidget().getOffsetHeight() + 10);
+					{	int yPos = asWidget().getAbsoluteTop() + asWidget().getOffsetHeight() + 10;
+						if(yPos + feedbackTekst.hoogte + 10 > Window.getClientHeight())
+							yPos = Window.getClientHeight() - feedbackTekst.hoogte - 10;
+						
+						feedbackPanel.setPopupPosition(asWidget().getAbsoluteLeft() + 10, yPos);
 						feedbackPanel.show();
 					}
 				}
