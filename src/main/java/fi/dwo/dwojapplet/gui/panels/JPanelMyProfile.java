@@ -14,7 +14,6 @@ import java.awt.Dimension;
  * @author G.A.J. van der Plas
  */
 public class JPanelMyProfile extends javax.swing.JPanel {
-    private PersistentUser user;
     /**
      * Creates new form JPaneMylProfile
      */

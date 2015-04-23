@@ -1,6 +1,7 @@
 package fi.dwo.dwojapplet.domain.rest;
 
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.dwojapplet.REST.RestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,18 +23,9 @@ public class UserProfileManager {
     * 
     * @return 
     */
-    public static PersistentUser getCurrentUser(){
+    public static PersistentUser getCurrentUser() throws RestException{
         PersistentUser user;
-        WebTarget target = DwoHelper.getWebTargetRest();
-        Response response = target.path("/rest/secure/user/userprofile/get/json")
-                .request().get();
-        if (response.getStatus() != 200) {
-            log.log(Level.WARNING,"Code: {0}. Reason{1}", new Object[]{response.getStatus(),response.getStatusInfo().getReasonPhrase()});
-            return null;
-        } else {
-            user = (PersistentUser) response.readEntity(PersistentUser.class);
-            log.log(Level.INFO, "Logged in with username {0}.",new Object[]{user.getUsername()});
-        }
+        user = RestManager.getInstance().get("/rest/secure/user/userprofile/get/json", PersistentUser.class);
         return user;
     }   
     
@@ -47,17 +39,9 @@ public class UserProfileManager {
      * @return 
      */
 
-    public static PersistentUser updateCurrentUser(PersistentUser user) {
-        WebTarget target = DwoHelper.getWebTargetRest();
-        Response response = target.path("/rest/secure/user/userprofile/update/json")
-                .request().get();
-        if (response.getStatus() != 200) {
-            System.out.println("Code: " + response.getStatus() + ". Reason: " + response.getStatusInfo().getReasonPhrase());
-            return null;
-        } else {
-            user = (PersistentUser) response.getEntity();
+    public static PersistentUser updateCurrentUser(PersistentUser user) throws RestException {
+            user = RestManager.getInstance().put("/rest/secure/user/userprofile/update/json", PersistentUser.class, user);
             log.log(Level.FINE, "Updated user profile of username {0}.",new Object[]{user.getUsername()});
-        }
         return user;
     }
 }

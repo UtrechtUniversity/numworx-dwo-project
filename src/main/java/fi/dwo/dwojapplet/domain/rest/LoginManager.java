@@ -6,6 +6,7 @@
 package fi.dwo.dwojapplet.domain.rest;
 
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.dwojapplet.REST.RestManager;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,7 +26,7 @@ public class LoginManager {
     private static final Logger log = Logger.getLogger(LoginManager.class.getName());
 
     public static PersistentUser login(String username, String password) {
-        //login to rest service
+        //login to rest service, note there is usually not yet be a fully configured RestManager.
         PersistentUser user;
         HttpAuthenticationFeature feature = HttpAuthenticationFeature.universalBuilder().credentialsForDigest(username, password).build();
         Client client = ClientBuilder.newClient().register(feature);
@@ -44,7 +45,7 @@ public class LoginManager {
             log.log(Level.INFO, "Logged in with username {0}.", new Object[]{user.getUsername()});
             //Set webtarget with credentials for future rest login.
             WebTarget target = client.target(DwoHelper.getBaseServletUrlString());
-            DwoHelper.setWebTargetRest(target);
+            RestManager.setWebTargetRest(target);
             //Set current user for domain
             DwoHelper.setCurrentUser(user);
         }

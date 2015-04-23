@@ -10,6 +10,7 @@ import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.rest.RestException;
 import fi.dwo.dwojapplet.domain.rest.RoleManager;
 import fi.dwo.dwojapplet.gui.MainPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
@@ -63,10 +64,10 @@ public final class DwoHelper {
     private static PersistentRole currentRole;
     private static List<PersistentRole> roles;
 
-    private static WebTarget webTargetRest;
+    
 
     
-    public void init(){
+    public void init() throws RestException{
         roles = RoleManager.getRoles();
     }
     
@@ -453,20 +454,6 @@ public final class DwoHelper {
      */
     public static void setBaseServletUrlString(String aBaseServletUrlString) {
         baseServletUrlString = aBaseServletUrlString;
-    }
-
-    /**
-     * @return the webTargetRest
-     */
-    public static WebTarget getWebTargetRest() {
-        return webTargetRest;
-    }
-
-    /**
-     * @param aWebTargetRest the webTargetRest to set
-     */
-    public static void setWebTargetRest(WebTarget aWebTargetRest) {
-        webTargetRest = aWebTargetRest;
     }
 
     /**

@@ -5,7 +5,10 @@
  */
 package fi.dwo.dwojapplet.gui.panels;
 
+import fi.dwo.commons.system.MD5;
 import fi.dwo.dwojapplet.gui.GuiConstants;
+import java.awt.Color;
+import java.util.logging.Logger;
 
 /**
  *
@@ -13,11 +16,35 @@ import fi.dwo.dwojapplet.gui.GuiConstants;
  */
 public class JPanelAcountData extends javax.swing.JPanel {
 
+    private static final Logger log = Logger.getLogger(JPanelAcountData.class.getName());
+
+    private JPanelAccountDataProperties prop = new JPanelAccountDataProperties();
+
     /**
      * Creates new form NewJPanelAcountData
      */
     public JPanelAcountData() {
         initComponents();
+
+//        jLabelTitle = new javax.swing.JLabel();
+//        jLabelUserName = new javax.swing.JLabel();
+//        jLabelPassword = new javax.swing.JLabel();
+//        jLabelNewPassword = new javax.swing.JLabel();
+//        jLabelConfirmPassword = new javax.swing.JLabel();
+//        jLabelGivenName.setText();
+//        jLabelFamilyName = new javax.swing.JLabel();
+//        jLabelInsertion = new javax.swing.JLabel();
+//        jLabelEmail = new javax.swing.JLabel();
+        jTextFieldUserName.setText(prop.getUser().getUsername());
+        jPasswordFieldConfirmPassword.setText("");
+        jPasswordFieldNewPassword.setText("");
+        jPasswordFieldPassword.setText("");
+        jTextFieldInsertion.setText(prop.getUser().getMiddlename());
+        jTextFieldGivenName.setText(prop.getUser().getFirstname());
+        jTextFieldFamilyName.setText(prop.getUser().getLastname());
+        jTextFieldEmail.setText(prop.getUser().getEmail());
+//        jButtonEditAndCancel.setText(user.getUsername());
+//        jButtonUpdate.setText(user.getUsername());
     }
 
     /**
@@ -33,22 +60,22 @@ public class JPanelAcountData extends javax.swing.JPanel {
         jLabelUserName = new javax.swing.JLabel();
         jTextFieldUserName = new javax.swing.JTextField();
         jLabelPassword = new javax.swing.JLabel();
-        jTextFieldConfirmPassword = new javax.swing.JTextField();
         jLabelNewPassword = new javax.swing.JLabel();
-        jTextFieldNewPassword = new javax.swing.JTextField();
         jLabelConfirmPassword = new javax.swing.JLabel();
-        jTextFieldPassword = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
+        jLabelFamilyName = new javax.swing.JLabel();
         jTextFieldInsertion = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        jLabelGivenName = new javax.swing.JLabel();
+        jLabelInsertion = new javax.swing.JLabel();
         jTextFieldGivenName = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
+        jLabelEmail = new javax.swing.JLabel();
         jTextFieldFamilyName = new javax.swing.JTextField();
         jTextFieldEmail = new javax.swing.JTextField();
         jButtonEditAndCancel = new javax.swing.JButton();
         jButtonUpdate = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        jLabelTitle = new javax.swing.JLabel();
+        jPasswordFieldPassword = new javax.swing.JPasswordField();
+        jPasswordFieldNewPassword = new javax.swing.JPasswordField();
+        jPasswordFieldConfirmPassword = new javax.swing.JPasswordField();
 
         setPreferredSize(new java.awt.Dimension(320, 320));
 
@@ -63,38 +90,35 @@ public class JPanelAcountData extends javax.swing.JPanel {
 
         jLabelPassword.setText("Password");
 
-        jTextFieldConfirmPassword.setEnabled(false);
-        jTextFieldConfirmPassword.setMinimumSize(new java.awt.Dimension(320, 320));
-
         jLabelNewPassword.setText("New password");
         jLabelNewPassword.setEnabled(false);
-
-        jTextFieldNewPassword.setEnabled(false);
-        jTextFieldNewPassword.setMinimumSize(new java.awt.Dimension(320, 320));
-        jTextFieldNewPassword.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldNewPasswordActionPerformed(evt);
-            }
-        });
 
         jLabelConfirmPassword.setText("Confirm password");
         jLabelConfirmPassword.setEnabled(false);
 
-        jTextFieldPassword.setMinimumSize(new java.awt.Dimension(320, 320));
-
-        jLabel4.setText("Family name");
+        jLabelFamilyName.setText("Family name");
 
         jTextFieldInsertion.setEditable(false);
         jTextFieldInsertion.setMinimumSize(new java.awt.Dimension(320, 320));
 
-        jLabel5.setText("Given name");
+        jLabelGivenName.setText("Given name");
 
-        jLabel6.setText("Insertion");
+        jLabelInsertion.setText("Insertion");
 
         jTextFieldGivenName.setEditable(false);
         jTextFieldGivenName.setMinimumSize(new java.awt.Dimension(320, 320));
+        jTextFieldGivenName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldGivenNameActionPerformed(evt);
+            }
+        });
+        jTextFieldGivenName.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jTextFieldGivenNamePropertyChange(evt);
+            }
+        });
 
-        jLabel7.setText("Email");
+        jLabelEmail.setText("Email");
 
         jTextFieldFamilyName.setEditable(false);
         jTextFieldFamilyName.setMinimumSize(new java.awt.Dimension(320, 320));
@@ -103,65 +127,71 @@ public class JPanelAcountData extends javax.swing.JPanel {
         jTextFieldEmail.setMinimumSize(new java.awt.Dimension(320, 320));
 
         jButtonEditAndCancel.setText("Edit");
+        jButtonEditAndCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEditAndCancelActionPerformed(evt);
+            }
+        });
 
         jButtonUpdate.setText("Update");
         jButtonUpdate.setEnabled(false);
+        jButtonUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonUpdateActionPerformed(evt);
+            }
+        });
 
-        jLabel1.setText("Account data en contact details:");
+        jLabelTitle.setText("Account data en contact details:");
+
+        jPasswordFieldPassword.setText("jPasswordField1");
+
+        jPasswordFieldNewPassword.setText("jPasswordField2");
+
+        jPasswordFieldConfirmPassword.setText("jPasswordField3");
 
         javax.swing.GroupLayout jPanelPersonalDataLayout = new javax.swing.GroupLayout(jPanelPersonalData);
         jPanelPersonalData.setLayout(jPanelPersonalDataLayout);
         jPanelPersonalDataLayout.setHorizontalGroup(
             jPanelPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanelPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(jButtonUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonEditAndCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanelPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabelTitle)
                         .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jLabel1))
-                        .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                            .addContainerGap()
                             .addComponent(jLabelUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jTextFieldUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                            .addContainerGap()
                             .addComponent(jLabelPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jTextFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jPasswordFieldPassword))
                         .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                            .addContainerGap()
                             .addComponent(jLabelNewPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jTextFieldNewPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jPasswordFieldNewPassword))
                         .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                            .addContainerGap()
                             .addComponent(jLabelConfirmPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jTextFieldConfirmPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jPasswordFieldConfirmPassword))
                         .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelGivenName, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jTextFieldGivenName, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelInsertion, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jTextFieldInsertion, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelFamilyName, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jTextFieldFamilyName, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jTextFieldEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -170,22 +200,22 @@ public class JPanelAcountData extends javax.swing.JPanel {
             jPanelPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addComponent(jLabelTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
+                    .addComponent(jLabelGivenName)
                     .addComponent(jTextFieldGivenName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
+                    .addComponent(jLabelInsertion)
                     .addComponent(jTextFieldInsertion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
+                    .addComponent(jLabelFamilyName)
                     .addComponent(jTextFieldFamilyName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
+                    .addComponent(jLabelEmail)
                     .addComponent(jTextFieldEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanelPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -194,15 +224,15 @@ public class JPanelAcountData extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelPassword)
-                    .addComponent(jTextFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPasswordFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelNewPassword)
-                    .addComponent(jTextFieldNewPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPasswordFieldNewPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelConfirmPassword)
-                    .addComponent(jTextFieldConfirmPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPasswordFieldConfirmPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonEditAndCancel)
@@ -228,31 +258,98 @@ public class JPanelAcountData extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextFieldNewPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNewPasswordActionPerformed
+    private void jTextFieldGivenNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldGivenNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldNewPasswordActionPerformed
+    }//GEN-LAST:event_jTextFieldGivenNameActionPerformed
+
+    private void jTextFieldGivenNamePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTextFieldGivenNamePropertyChange
+    }//GEN-LAST:event_jTextFieldGivenNamePropertyChange
+
+    private void jButtonEditAndCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditAndCancelActionPerformed
+        if (prop.getUser().getPasswd().equals(MD5.getHashString(jPasswordFieldPassword.getText())
+        )) {
+            //allow update
+            prop.setUpdate(true);
+            jButtonEditAndCancel.setEnabled(false);
+            jButtonUpdate.setEnabled(true);
+
+            jTextFieldUserName.setEditable(true);
+            jPasswordFieldConfirmPassword.setEditable(true);
+            jPasswordFieldNewPassword.setEditable(true);
+            jPasswordFieldPassword.setEditable(true);
+            jTextFieldInsertion.setEditable(true);
+            jTextFieldGivenName.setEditable(true);
+            jTextFieldFamilyName.setEditable(true);
+            jTextFieldEmail.setEditable(true);
+        } else {
+            jPasswordFieldPassword.setBackground(Color.RED);
+            jPasswordFieldPassword.grabFocus();
+        }
+    }//GEN-LAST:event_jButtonEditAndCancelActionPerformed
+
+    private void jButtonUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUpdateActionPerformed
+        //try update else fail.
+        if (prop.getUser().getPasswd().equals(MD5.getHashString(jPasswordFieldPassword.getText())
+        )) {
+            //update data and disable mode
+            prop.setUpdate(false);
+            jButtonEditAndCancel.setEnabled(true);
+            jButtonUpdate.setEnabled(false);
+
+            jTextFieldUserName.setEditable(false);
+            jPasswordFieldConfirmPassword.setEditable(false);
+            jPasswordFieldNewPassword.setEditable(false);
+            jPasswordFieldPassword.setEditable(false);
+            jTextFieldInsertion.setEditable(false);
+            jTextFieldGivenName.setEditable(false);
+            jTextFieldFamilyName.setEditable(false);
+            jTextFieldEmail.setEditable(false);
+            
+            prop.getUser().setFirstname(jTextFieldGivenName.getText());
+            prop.getUser().setMiddlename(jTextFieldInsertion.getText());
+            prop.getUser().setLastname(jTextFieldFamilyName.getText());
+            prop.getUser().setEmail(jTextFieldEmail.getText());
+            if(!jPasswordFieldNewPassword.getText().equals("") 
+                    && jPasswordFieldNewPassword.getText().equals(jPasswordFieldConfirmPassword.getText())){
+                //updates password following some logic.
+                prop.getUser().setPasswd(jPasswordFieldNewPassword.getText());
+            }
+            prop.getUser().setFirstname(jTextFieldGivenName.getText());
+            prop.getUser().setMiddlename(jTextFieldInsertion.getText());
+            prop.getUser().setFirstname(jTextFieldGivenName.getText());
+            prop.getUser().setMiddlename(jTextFieldInsertion.getText());
+        } else {
+            jPasswordFieldPassword.setCaretColor(Color.RED);
+            jPasswordFieldPassword.grabFocus();
+            jButtonEditAndCancel.setEnabled(true);
+            jButtonUpdate.setEnabled(false);
+
+        }
+        prop.Update();
+    }//GEN-LAST:event_jButtonUpdateActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonEditAndCancel;
     private javax.swing.JButton jButtonUpdate;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabelConfirmPassword;
+    private javax.swing.JLabel jLabelEmail;
+    private javax.swing.JLabel jLabelFamilyName;
+    private javax.swing.JLabel jLabelGivenName;
+    private javax.swing.JLabel jLabelInsertion;
     private javax.swing.JLabel jLabelNewPassword;
     private javax.swing.JLabel jLabelPassword;
+    private javax.swing.JLabel jLabelTitle;
     private javax.swing.JLabel jLabelUserName;
     private javax.swing.JPanel jPanelPersonalData;
-    private javax.swing.JTextField jTextFieldConfirmPassword;
+    private javax.swing.JPasswordField jPasswordFieldConfirmPassword;
+    private javax.swing.JPasswordField jPasswordFieldNewPassword;
+    private javax.swing.JPasswordField jPasswordFieldPassword;
     private javax.swing.JTextField jTextFieldEmail;
     private javax.swing.JTextField jTextFieldFamilyName;
     private javax.swing.JTextField jTextFieldGivenName;
     private javax.swing.JTextField jTextFieldInsertion;
-    private javax.swing.JTextField jTextFieldNewPassword;
-    private javax.swing.JTextField jTextFieldPassword;
     private javax.swing.JTextField jTextFieldUserName;
     // End of variables declaration//GEN-END:variables
+
 }

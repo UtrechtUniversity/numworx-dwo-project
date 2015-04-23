@@ -6,19 +6,18 @@
 package fi.dwo.dwojapplet.domain.rest;
 
 import fi.dwo.commons.persistence.entities.PersistentRole;
-import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.REST.RestManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.Response;
 
 /**
  * Returns a list of existing Roles.
- * 
- * It sole purpose is to be called from the DwoHelper. Otherwise it should not be called.
+ *
+ * It sole purpose is to be called from the DwoHelper. Otherwise it should not
+ * be called.
  *
  * @author G.A.J. van der Plas
  */
@@ -30,28 +29,15 @@ public class RoleManager {
      * Returns the user data if properly logged in. The information is extracted
      * from the security context.
      *
-     * @param sc
      * @return Returns null if there was an error.
+     * @throws fi.dwo.dwojapplet.domain.rest.RestException
      */
-    public static List<PersistentRole> getRoles() {
+    public static List<PersistentRole> getRoles() throws RestException {
         //login to rest service
         List<PersistentRole> roles;
-        WebTarget target = DwoHelper.getWebTargetRest();
-            GenericType<ArrayList<PersistentRole>> dwoParamType = new GenericType<ArrayList<PersistentRole>>() {
-        };
-        Response response = target
-                .path("/rest/public/roles/get/json")
-                .request().get();
-        if (response.getStatus() != 200) {
-            // failed login
-            System.out.println("Code: " + response.getStatus() + ". Reason: " + response.getStatusInfo().getReasonPhrase());
-            return null;
-        } else {
-            roles = response.readEntity(dwoParamType);
-//            Set return value
-//            roles = (List<PersistentRole>) target.path("/rest/public/roles/get/json").request().accept(MediaType.APPLICATION_JSON).get(dwoParamType);
-            log.log(Level.FINER, "Fetched {0} roles.", new Object[]{roles.size()});
-        }
+        GenericType<ArrayList<PersistentRole>> oClass = new GenericType<ArrayList<PersistentRole>>() {};
+        roles =  RestManager.getWebTargetRest().path("/rest/public/roles/get/json").request().get(oClass);
+        log.log(Level.FINER, "Fetched {0} roles.", new Object[]{roles.size()});
         return roles;
-    }        
+    }
 }
