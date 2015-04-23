@@ -73,12 +73,12 @@ public class DWOTabbedDesktopKeyboard extends AbstractKeyboard {
 	
 	private AbstractKeyboard createKeyboard(int i) {
 		switch(i) {
-		case 0: return new DesktopKeyboardOnderbouw();
+//		case 0: return new DesktopKeyboardOnderbouw();
 		default:
 		case 1: return new DWODesktopKeyboard().init();
-		case 2: return new DesktopKeyboardGonio().init();
-		case 3: return new DesktopKeyboardStatistiek();
-		case 4: return new DesktopKeyboardMeetkunde().init();
+//		case 2: return new DesktopKeyboardGonio().init();
+//		case 3: return new DesktopKeyboardStatistiek();
+//		case 4: return new DesktopKeyboardMeetkunde().init();
 		}
 	}
 

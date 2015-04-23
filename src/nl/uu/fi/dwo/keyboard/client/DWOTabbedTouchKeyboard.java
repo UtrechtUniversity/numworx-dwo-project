@@ -23,13 +23,12 @@ public class DWOTabbedTouchKeyboard extends AbstractKeyboard {
 	
 	private AbstractKeyboard createKeyboard(int i) {
 		switch(i) {
-		case 0: return new TabletKeyboardOnderbouw();
-		case 1: return new DWOTabletKeyboard().init();
-		case 2: return new TabletKeyboardGonio();
-		case 3: return new TabletKeyboardStatistiek();
-		case 4: return new TabletKeyboardMeetkunde();
+//		case 0: return new TabletKeyboardOnderbouw();
+		default: return new DWOTabletKeyboard().init();
+//		case 2: return new TabletKeyboardGonio();
+//		case 3: return new TabletKeyboardStatistiek();
+//		case 4: return new TabletKeyboardMeetkunde();
 		}
-		return new DWOTabletKeyboard().init();
 	}
 
 	
