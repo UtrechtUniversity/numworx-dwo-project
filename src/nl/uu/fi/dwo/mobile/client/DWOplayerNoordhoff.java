@@ -22,10 +22,6 @@ public class DWOplayerNoordhoff extends DWOplayerDefaults implements DWOplayerPa
 		//return "http://cdplogica.toegang.nu/noordhoff/vo/fi/dwo/2014_v1_0/" + resource;
 	}
 
-	@Override
-	public String getStubView() {
-		return super.getStubView();
-	}
 
 //	@Override
 //	public void keyboardSetup() {
@@ -57,5 +53,11 @@ public class DWOplayerNoordhoff extends DWOplayerDefaults implements DWOplayerPa
 		return new nl.uu.fi.dwo.mobile.client.ui.noordhoffkb.NoordhoffKeyboard();
 	}
 
-	
+	@Override
+	public String getStubView() {
+		if(!GWT.isProdMode())
+			return "";
+		return "../";
+	}
+
 }
