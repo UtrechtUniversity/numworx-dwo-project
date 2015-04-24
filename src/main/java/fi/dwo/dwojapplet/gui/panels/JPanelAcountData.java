@@ -11,6 +11,7 @@ import java.awt.Color;
 import java.util.logging.Logger;
 
 /**
+ * Panel to update the account data.
  *
  * @author G.A.J. van der Plas
  */
@@ -19,6 +20,7 @@ public class JPanelAcountData extends javax.swing.JPanel {
     private static final Logger log = Logger.getLogger(JPanelAcountData.class.getName());
 
     private JPanelAccountDataProperties prop = new JPanelAccountDataProperties();
+    private Color originalBackground;
 
     /**
      * Creates new form NewJPanelAcountData
@@ -80,8 +82,8 @@ public class JPanelAcountData extends javax.swing.JPanel {
         setPreferredSize(new java.awt.Dimension(320, 320));
 
         jPanelPersonalData.setBackground(GuiConstants.MAIN_BACKGROUND);
-        jPanelPersonalData.setMinimumSize(new java.awt.Dimension(324, 300));
-        jPanelPersonalData.setPreferredSize(new java.awt.Dimension(320, 320));
+        jPanelPersonalData.setMinimumSize(new java.awt.Dimension(550, 353));
+        jPanelPersonalData.setPreferredSize(new java.awt.Dimension(550, 353));
 
         jLabelUserName.setText("Username");
 
@@ -155,46 +157,48 @@ public class JPanelAcountData extends javax.swing.JPanel {
             jPanelPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanelPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanelPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
+                        .addComponent(jLabelNewPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPasswordFieldNewPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE))
+                    .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
+                        .addComponent(jLabelConfirmPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPasswordFieldConfirmPassword))
+                    .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
+                        .addComponent(jLabelInsertion, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldInsertion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
+                        .addComponent(jLabelGivenName, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldGivenName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
+                        .addComponent(jLabelFamilyName, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldFamilyName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
+                        .addComponent(jLabelEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldEmail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
+                        .addComponent(jLabelUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldUserName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
+                        .addComponent(jLabelTitle)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
+                        .addComponent(jLabelPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPasswordFieldPassword))
+                    .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButtonUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonEditAndCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanelPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabelTitle)
-                        .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                            .addComponent(jLabelUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jTextFieldUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                            .addComponent(jLabelPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jPasswordFieldPassword))
-                        .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                            .addComponent(jLabelNewPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jPasswordFieldNewPassword))
-                        .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                            .addComponent(jLabelConfirmPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jPasswordFieldConfirmPassword))
-                        .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                            .addComponent(jLabelGivenName, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jTextFieldGivenName, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                            .addComponent(jLabelInsertion, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jTextFieldInsertion, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                            .addComponent(jLabelFamilyName, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jTextFieldFamilyName, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                            .addComponent(jLabelEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jTextFieldEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jButtonEditAndCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jPanelPersonalDataLayout.setVerticalGroup(
             jPanelPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -246,15 +250,15 @@ public class JPanelAcountData extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanelPersonalData, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanelPersonalData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanelPersonalData, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanelPersonalData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -268,6 +272,8 @@ public class JPanelAcountData extends javax.swing.JPanel {
     private void jButtonEditAndCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditAndCancelActionPerformed
         if (prop.getUser().getPasswd().equals(MD5.getHashString(jPasswordFieldPassword.getText())
         )) {
+            //clear the password field if red
+            jPasswordFieldPassword.setBackground(originalBackground);
             //allow update
             prop.setUpdate(true);
             jButtonEditAndCancel.setEnabled(false);
@@ -282,6 +288,7 @@ public class JPanelAcountData extends javax.swing.JPanel {
             jTextFieldFamilyName.setEditable(true);
             jTextFieldEmail.setEditable(true);
         } else {
+            originalBackground = jPasswordFieldPassword.getBackground();
             jPasswordFieldPassword.setBackground(Color.RED);
             jPasswordFieldPassword.grabFocus();
         }
@@ -304,20 +311,21 @@ public class JPanelAcountData extends javax.swing.JPanel {
             jTextFieldGivenName.setEditable(false);
             jTextFieldFamilyName.setEditable(false);
             jTextFieldEmail.setEditable(false);
-            
+
             prop.getUser().setFirstname(jTextFieldGivenName.getText());
             prop.getUser().setMiddlename(jTextFieldInsertion.getText());
             prop.getUser().setLastname(jTextFieldFamilyName.getText());
             prop.getUser().setEmail(jTextFieldEmail.getText());
-            if(!jPasswordFieldNewPassword.getText().equals("") 
-                    && jPasswordFieldNewPassword.getText().equals(jPasswordFieldConfirmPassword.getText())){
+            if (jPasswordFieldNewPassword.getText().equals("")) {
+                jPasswordFieldConfirmPassword.setBackground(originalBackground);
+            } else if (!jPasswordFieldNewPassword.getText().equals("")
+                    && jPasswordFieldNewPassword.getPassword().equals(jPasswordFieldConfirmPassword.getPassword())) {
                 //updates password following some logic.
-                prop.getUser().setPasswd(jPasswordFieldNewPassword.getText());
+                prop.getUser().setPasswd(MD5.getHashString(jPasswordFieldNewPassword.getPassword().toString()));
+                jPasswordFieldConfirmPassword.setBackground(originalBackground);
+            } else {
+                jPasswordFieldConfirmPassword.setBackground(Color.RED);
             }
-            prop.getUser().setFirstname(jTextFieldGivenName.getText());
-            prop.getUser().setMiddlename(jTextFieldInsertion.getText());
-            prop.getUser().setFirstname(jTextFieldGivenName.getText());
-            prop.getUser().setMiddlename(jTextFieldInsertion.getText());
         } else {
             jPasswordFieldPassword.setCaretColor(Color.RED);
             jPasswordFieldPassword.grabFocus();
@@ -325,6 +333,7 @@ public class JPanelAcountData extends javax.swing.JPanel {
             jButtonUpdate.setEnabled(false);
 
         }
+        jPasswordFieldPassword.setText("");
         prop.Update();
     }//GEN-LAST:event_jButtonUpdateActionPerformed
 

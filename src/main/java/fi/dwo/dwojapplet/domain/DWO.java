@@ -16,7 +16,7 @@ import fi.dwo.commons.exceptions.ScoException;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.REST.RestManager;
+import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.rest.LoginManager;
 import fi.dwo.dwojapplet.domain.rest.RestException;
 import fi.dwo.dwojapplet.domain.rest.RoleManager;
@@ -1189,7 +1189,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         }
         //intialize the proper connection but without any credentials.
         WebTarget target = ClientBuilder.newClient().target(DwoHelper.getBaseServletUrlString());
-        RestManager.setWebTargetRest(target);
+        StoredRestManager.setWebTargetRest(target);
         try {
             DwoHelper.setRoles(RoleManager.getRoles());
         } catch (RestException ex) {

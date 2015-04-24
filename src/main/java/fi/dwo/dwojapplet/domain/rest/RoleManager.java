@@ -5,13 +5,11 @@
  */
 package fi.dwo.dwojapplet.domain.rest;
 
+import fi.dwo.commons.persistence.PersistenceClassType;
 import fi.dwo.commons.persistence.entities.PersistentRole;
-import fi.dwo.dwojapplet.REST.RestManager;
-import java.util.ArrayList;
+import fi.dwo.dwojapplet.REST.StoredRestManager;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ws.rs.core.GenericType;
 
 /**
  * Returns a list of existing Roles.
@@ -35,9 +33,13 @@ public class RoleManager {
     public static List<PersistentRole> getRoles() throws RestException {
         //login to rest service
         List<PersistentRole> roles;
-        GenericType<ArrayList<PersistentRole>> oClass = new GenericType<ArrayList<PersistentRole>>() {};
-        roles =  RestManager.getWebTargetRest().path("/rest/public/roles/get/json").request().get(oClass);
-        log.log(Level.FINER, "Fetched {0} roles.", new Object[]{roles.size()});
+//        GenericType<ArrayList<PersistentRole>> oClass = new GenericType<ArrayList<PersistentRole>>() {};
+//        roles =  StoredRestManager.getWebTargetRest().path("/rest/public/roles/get/json").request().get(oClass);
+//        log.log(Level.FINER, "Fetched {0} roles.", new Object[]{roles.size()});
+//        return roles;
+        roles = StoredRestManager.getInstance().getList("/rest/secure/user/userprofile/get/json", PersistenceClassType.PersistentRole);
         return roles;
+
+    
     }
 }

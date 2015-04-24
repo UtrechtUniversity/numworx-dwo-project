@@ -1,12 +1,9 @@
 package fi.dwo.dwojapplet.domain.rest;
 
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.dwojapplet.REST.RestManager;
-import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.REST.StoredRestManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Response;
 
 /**
  * Manages the user profile.
@@ -25,7 +22,7 @@ public class UserProfileManager {
     */
     public static PersistentUser getCurrentUser() throws RestException{
         PersistentUser user;
-        user = RestManager.getInstance().get("/rest/secure/user/userprofile/get/json", PersistentUser.class);
+        user = StoredRestManager.getInstance().get("/rest/secure/user/userprofile/get/json", PersistentUser.class);
         return user;
     }   
     
@@ -40,7 +37,7 @@ public class UserProfileManager {
      */
 
     public static PersistentUser updateCurrentUser(PersistentUser user) throws RestException {
-            user = RestManager.getInstance().put("/rest/secure/user/userprofile/update/json", PersistentUser.class, user);
+            user = StoredRestManager.getInstance().put("/rest/secure/user/userprofile/update/json", PersistentUser.class, user);
             log.log(Level.FINE, "Updated user profile of username {0}.",new Object[]{user.getUsername()});
         return user;
     }

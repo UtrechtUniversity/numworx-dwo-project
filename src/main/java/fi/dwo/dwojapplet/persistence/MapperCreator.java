@@ -88,7 +88,7 @@ class MapperCreator {
     /**
      * Creates an instance of the corresponding mapper.
      *
-     * @param c The class wherefor the mapper must be created.
+     * @param c The class where for the mapper must be created.
      */
     private static void addMapper(Class c) {
         String className = (String) classList.get(c);
