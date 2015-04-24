@@ -36,6 +36,8 @@ import nl.uu.fi.dwo.mobile.utils.StringCodeToHashMap;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 import nl.uu.fi.dwo.mobile.utils.VariableCollection;
 
+import com.google.gwt.animation.client.AnimationScheduler;
+import com.google.gwt.animation.client.AnimationScheduler.AnimationHandle;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -931,6 +933,31 @@ try {
 		return this.initialize();
 	}
 	
+	private final class PinchContent implements PinchHandler, com.google.gwt.animation.client.AnimationScheduler.AnimationCallback {
+		double zoom = 1.0;
+		private AnimationHandle handle;
+		
+		@Override
+		public void onPinch(PinchEvent event) {
+			double factor = event.getScaleFactor();
+			int x = event.getX();
+			int y = event.getY();
+			zoom = zoom / factor;
+			zoom = Math.max(1.0, zoom);
+			zoom = Math.min(5.0, zoom);
+			logger.info("x=" + x + ", y= " + y + ", scale=" + factor + ", z=" + zoom);
+			if(handle == null) {
+				handle = AnimationScheduler.get().requestAnimationFrame(this,contentPanel.getElement());
+			}
+		}
+
+		@Override
+		public void execute(double timestamp) {
+			handle = null;
+			contentPanel.getElement().getStyle().setProperty("zoom", String.valueOf(zoom));
+		}
+	}
+
 	final class Resizer implements ResizeHandler {
 		@Override
 		public void onResize(ResizeEvent event) {
@@ -999,6 +1026,8 @@ try {
 //
 		contentPanel = new FlowPanel();contentPanel.setStylePrimaryName("contentPanel");
 		contentPanel.getElement().getStyle().setProperty("display", "inline-block");
+// smooth scroll on ios devices:
+		contentPanel.getElement().getStyle().setProperty("WebkitOverflowScrolling", "touch");
 		//contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
 		contentPanel.setWidth("100%"); // hoeveel is 100% - 30px ?
 		contentPanel.setHeight("100%");
@@ -1006,21 +1035,7 @@ try {
 
 		if(TouchEvent.isSupported()) {
 			TouchDelegate touchDelegate = new TouchDelegate(contentPanel);
-			touchDelegate.addPinchHandler(new PinchHandler() {
-				double zoom = 1.0;
-				@Override
-				public void onPinch(PinchEvent event) {
-					double factor = event.getScaleFactor();
-					int x = event.getX();
-					int y = event.getY();
-					zoom = zoom / factor;
-					zoom = Math.max(1.0, zoom);
-					zoom = Math.min(5.0, zoom);
-					logger.info("x=" + x + ", y= " + y + ", scale=" + factor + ", z=" + zoom);
-					contentPanel.getElement().getStyle().setProperty("zoom", String.valueOf(zoom));
-				}
-				
-			});
+			touchDelegate.addPinchHandler(new PinchContent());
 			
 			touchDelegate.addSwipeEndHandler(new SwipeEndHandler() {
 				
