@@ -5,6 +5,7 @@
  */
 package fi.dwo.commons.persistence.entities;
 
+import fi.dwo.commons.persistence.PersistentUpdate;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -35,7 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentApplet.findByClassname", query = "SELECT p FROM PersistentApplet p WHERE p.classname = :classname"),
     @NamedQuery(name = "PersistentApplet.findByFeatures", query = "SELECT p FROM PersistentApplet p WHERE p.features = :features"),
     @NamedQuery(name = "PersistentApplet.findByJarname", query = "SELECT p FROM PersistentApplet p WHERE p.jarname = :jarname")})
-public class PersistentApplet implements Serializable {
+public class PersistentApplet implements PersistentUpdate<PersistentApplet>, Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,6 +62,15 @@ public class PersistentApplet implements Serializable {
     @Column(name = "jarname", nullable = false, length = 128)
     private String jarname;
 
+    public PersistentApplet update(PersistentApplet o) {
+        PersistentApplet a = (PersistentApplet) o;
+        appletName = a.appletName;
+        classname = a.classname;
+        features = a.features;
+        jarname = a.jarname;
+        return this;
+    }
+        
     public PersistentApplet() {
     }
 
@@ -139,5 +149,5 @@ public class PersistentApplet implements Serializable {
     public String toString() {
         return "fi.dwo.server.persistence.PersistentApplet[ appletID=" + appletID + " ]";
     }
-    
+
 }

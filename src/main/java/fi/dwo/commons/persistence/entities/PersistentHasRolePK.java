@@ -26,6 +26,13 @@ public class PersistentHasRolePK implements Serializable {
     @Column(name = "schoolGroupID", nullable = false)
     private int schoolGroupID;
 
+   public  long getId(){
+        long id = schoolGroupID;
+        id = id <<32;
+        id = id & userID;
+        return (id);
+    }
+   
     public PersistentHasRolePK() {
     }
 

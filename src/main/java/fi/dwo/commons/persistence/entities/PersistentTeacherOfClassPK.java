@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
  */
 @Embeddable
 public class PersistentTeacherOfClassPK implements Serializable {
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "userID", nullable = false)
@@ -25,6 +26,13 @@ public class PersistentTeacherOfClassPK implements Serializable {
     @NotNull
     @Column(name = "classID", nullable = false)
     private int classID;
+
+    public long getId() {
+        long id = classID;
+        id = id << 32;
+        id = id & userID;
+        return (id);
+    }
 
     public PersistentTeacherOfClassPK() {
     }
@@ -78,5 +86,5 @@ public class PersistentTeacherOfClassPK implements Serializable {
     public String toString() {
         return "fi.dwo.server.persistence.PersistentTeacherOfClassPK[ userID=" + userID + ", classID=" + classID + " ]";
     }
-    
+
 }

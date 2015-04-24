@@ -25,6 +25,13 @@ public class PersistentStudentOfClassPK implements Serializable {
     @NotNull
     @Column(name = "classID", nullable = false)
     private int classID;
+    
+    public long getId() {
+        long id = classID;
+        id = id << 32;
+        id = id & userID;
+        return (id);
+    }
 
     public PersistentStudentOfClassPK() {
     }

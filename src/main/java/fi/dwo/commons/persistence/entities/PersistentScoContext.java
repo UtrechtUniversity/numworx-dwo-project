@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PerisistentScoContext.findBySconame", query = "SELECT p FROM PerisistentScoContext p WHERE p.sconame = :sconame"),
     @NamedQuery(name = "PerisistentScoContext.findByShowscore", query = "SELECT p FROM PerisistentScoContext p WHERE p.showscore = :showscore"),
     @NamedQuery(name = "PerisistentScoContext.findBySequencenr", query = "SELECT p FROM PerisistentScoContext p WHERE p.sequencenr = :sequencenr")})
-public class PerisistentScoContext implements Serializable {
+public class PersistentScoContext implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,14 +63,14 @@ public class PerisistentScoContext implements Serializable {
     @Column(name = "sequencenr", nullable = false)
     private int sequencenr;
 
-    public PerisistentScoContext() {
+    public PersistentScoContext() {
     }
 
-    public PerisistentScoContext(Integer scoID) {
+    public PersistentScoContext(Integer scoID) {
         this.scoID = scoID;
     }
 
-    public PerisistentScoContext(Integer scoID, int courseID, int appletID, String sconame, int sequencenr) {
+    public PersistentScoContext(Integer scoID, int courseID, int appletID, String sconame, int sequencenr) {
         this.scoID = scoID;
         this.courseID = courseID;
         this.appletID = appletID;
@@ -136,10 +136,10 @@ public class PerisistentScoContext implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof PerisistentScoContext)) {
+        if (!(object instanceof PersistentScoContext)) {
             return false;
         }
-        PerisistentScoContext other = (PerisistentScoContext) object;
+        PersistentScoContext other = (PersistentScoContext) object;
         if ((this.scoID == null && other.scoID != null) || (this.scoID != null && !this.scoID.equals(other.scoID))) {
             return false;
         }

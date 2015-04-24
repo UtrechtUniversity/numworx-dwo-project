@@ -7,12 +7,8 @@ package fi.dwo.commons.persistence;
 
 /**
  *
- * @author plas0006
- * @param <T>
+ * @author Gert van der Plas <gertvdplas@gmail.com>
  */
-public interface PersistentIdInterface<T extends PersistentId> extends Comparable<T>{
-
-    @Override
-    int compareTo(T o);
-    
+public interface PersistentUpdate<T> {
+    public abstract T update(T o);
 }
