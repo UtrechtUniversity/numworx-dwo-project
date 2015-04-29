@@ -18,7 +18,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
+ 
 /**
  * This is the plain and direct restManager. Please use the {@Link StoredRestManager} to 
  * minimize memory use.

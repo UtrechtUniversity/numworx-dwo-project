@@ -6,8 +6,10 @@
 package fi.dwo.dwojapplet.gui.panels;
 
 import fi.dwo.commons.system.MD5;
+import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import java.awt.Color;
+import java.awt.Component;
 import java.util.logging.Logger;
 
 /**
@@ -27,6 +29,7 @@ public class JPanelAcountData extends javax.swing.JPanel {
      */
     public JPanelAcountData() {
         initComponents();
+        try{prop.init();
 
 //        jLabelTitle = new javax.swing.JLabel();
 //        jLabelUserName = new javax.swing.JLabel();
@@ -47,6 +50,9 @@ public class JPanelAcountData extends javax.swing.JPanel {
         jTextFieldEmail.setText(prop.getUser().getEmail());
 //        jButtonEditAndCancel.setText(user.getUsername());
 //        jButtonUpdate.setText(user.getUsername());
+       }catch(Exception e){
+           
+       }
     }
 
     /**
@@ -74,7 +80,6 @@ public class JPanelAcountData extends javax.swing.JPanel {
         jTextFieldEmail = new javax.swing.JTextField();
         jButtonEditAndCancel = new javax.swing.JButton();
         jButtonUpdate = new javax.swing.JButton();
-        jLabelTitle = new javax.swing.JLabel();
         jPasswordFieldPassword = new javax.swing.JPasswordField();
         jPasswordFieldNewPassword = new javax.swing.JPasswordField();
         jPasswordFieldConfirmPassword = new javax.swing.JPasswordField();
@@ -85,27 +90,30 @@ public class JPanelAcountData extends javax.swing.JPanel {
         jPanelPersonalData.setMinimumSize(new java.awt.Dimension(550, 353));
         jPanelPersonalData.setPreferredSize(new java.awt.Dimension(550, 353));
 
-        jLabelUserName.setText("Username");
+        jLabelUserName.setText(TextMapper.getText(TextMapper.GUIP_USERNAME));
 
         jTextFieldUserName.setEditable(false);
         jTextFieldUserName.setMinimumSize(new java.awt.Dimension(320, 320));
 
-        jLabelPassword.setText("Password");
+        jLabelPassword.setText(TextMapper.getText(TextMapper.GUIP_OLD_PASSWORD)
+        );
 
-        jLabelNewPassword.setText("New password");
+        jLabelNewPassword.setText(TextMapper.getText(TextMapper.GUIP_PASSWORD));
         jLabelNewPassword.setEnabled(false);
 
-        jLabelConfirmPassword.setText("Confirm password");
+        jLabelConfirmPassword.setText(TextMapper.getText(TextMapper.GUIP_RE_PASSWORD));
         jLabelConfirmPassword.setEnabled(false);
 
-        jLabelFamilyName.setText("Family name");
+        jLabelFamilyName.setText(TextMapper.getText(TextMapper.GUIP_LASTNAME)
+        );
 
         jTextFieldInsertion.setEditable(false);
         jTextFieldInsertion.setMinimumSize(new java.awt.Dimension(320, 320));
 
-        jLabelGivenName.setText("Given name");
+        jLabelGivenName.setText(TextMapper.getText(TextMapper.GUIP_FIRSTNAME));
 
-        jLabelInsertion.setText("Insertion");
+        jLabelInsertion.setText(TextMapper.getText(TextMapper.GUIP_MIDDLENAME)
+        );
 
         jTextFieldGivenName.setEditable(false);
         jTextFieldGivenName.setMinimumSize(new java.awt.Dimension(320, 320));
@@ -120,7 +128,7 @@ public class JPanelAcountData extends javax.swing.JPanel {
             }
         });
 
-        jLabelEmail.setText("Email");
+        jLabelEmail.setText(TextMapper.getText(TextMapper.GUIP_EMAIL));
 
         jTextFieldFamilyName.setEditable(false);
         jTextFieldFamilyName.setMinimumSize(new java.awt.Dimension(320, 320));
@@ -128,22 +136,21 @@ public class JPanelAcountData extends javax.swing.JPanel {
         jTextFieldEmail.setEditable(false);
         jTextFieldEmail.setMinimumSize(new java.awt.Dimension(320, 320));
 
-        jButtonEditAndCancel.setText("Edit");
+        jButtonEditAndCancel.setText(TextMapper.getText(TextMapper.GUIP_BTN_EDIT)
+        );
         jButtonEditAndCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonEditAndCancelActionPerformed(evt);
             }
         });
 
-        jButtonUpdate.setText("Update");
+        jButtonUpdate.setText(TextMapper.getText(TextMapper.GUIP_BTN_SAVE));
         jButtonUpdate.setEnabled(false);
         jButtonUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonUpdateActionPerformed(evt);
             }
         });
-
-        jLabelTitle.setText("Account data en contact details:");
 
         jPasswordFieldPassword.setText("jPasswordField1");
 
@@ -158,54 +165,49 @@ public class JPanelAcountData extends javax.swing.JPanel {
             .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                        .addComponent(jLabelNewPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPersonalDataLayout.createSequentialGroup()
+                        .addComponent(jLabelGivenName, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPasswordFieldNewPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE))
-                    .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                        .addComponent(jLabelConfirmPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextFieldGivenName, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPersonalDataLayout.createSequentialGroup()
+                        .addComponent(jLabelInsertion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPasswordFieldConfirmPassword))
-                    .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                        .addComponent(jLabelInsertion, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextFieldInsertion, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPersonalDataLayout.createSequentialGroup()
+                        .addComponent(jLabelFamilyName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldInsertion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                        .addComponent(jLabelGivenName, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextFieldFamilyName, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPersonalDataLayout.createSequentialGroup()
+                        .addComponent(jLabelEmail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldGivenName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                        .addComponent(jLabelFamilyName, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextFieldEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPersonalDataLayout.createSequentialGroup()
+                        .addComponent(jLabelUserName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldFamilyName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                        .addComponent(jLabelEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextFieldUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPersonalDataLayout.createSequentialGroup()
+                        .addComponent(jLabelPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldEmail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                        .addComponent(jLabelUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPasswordFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPersonalDataLayout.createSequentialGroup()
+                        .addComponent(jLabelNewPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldUserName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                        .addComponent(jLabelTitle)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                        .addComponent(jLabelPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPasswordFieldPassword))
-                    .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
+                        .addComponent(jPasswordFieldNewPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPersonalDataLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButtonUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonEditAndCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jButtonEditAndCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPersonalDataLayout.createSequentialGroup()
+                        .addComponent(jLabelConfirmPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPasswordFieldConfirmPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanelPersonalDataLayout.setVerticalGroup(
             jPanelPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelPersonalDataLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabelTitle)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(31, 31, 31)
                 .addGroup(jPanelPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelGivenName)
                     .addComponent(jTextFieldGivenName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -241,7 +243,7 @@ public class JPanelAcountData extends javax.swing.JPanel {
                 .addGroup(jPanelPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonEditAndCancel)
                     .addComponent(jButtonUpdate))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(97, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -250,14 +252,14 @@ public class JPanelAcountData extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanelPersonalData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanelPersonalData, javax.swing.GroupLayout.DEFAULT_SIZE, 760, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanelPersonalData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanelPersonalData, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -348,7 +350,6 @@ public class JPanelAcountData extends javax.swing.JPanel {
     private javax.swing.JLabel jLabelInsertion;
     private javax.swing.JLabel jLabelNewPassword;
     private javax.swing.JLabel jLabelPassword;
-    private javax.swing.JLabel jLabelTitle;
     private javax.swing.JLabel jLabelUserName;
     private javax.swing.JPanel jPanelPersonalData;
     private javax.swing.JPasswordField jPasswordFieldConfirmPassword;

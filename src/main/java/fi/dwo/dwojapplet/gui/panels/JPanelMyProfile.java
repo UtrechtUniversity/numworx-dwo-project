@@ -5,7 +5,7 @@
  */
 package fi.dwo.dwojapplet.gui.panels;
 
-import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import java.awt.Dimension;
 
@@ -31,7 +31,7 @@ public class JPanelMyProfile extends javax.swing.JPanel {
     private void initComponents() {
 
         jTabbedPaneProfile = new javax.swing.JTabbedPane();
-        newJPanelAcountData1 = new fi.dwo.dwojapplet.gui.panels.JPanelAcountData();
+        jPanelAcountData1 = new fi.dwo.dwojapplet.gui.panels.JPanelAcountData();
         jPanelSchoolsAndClasses = new fi.dwo.dwojapplet.gui.panels.JPanelSchoolsAndClasses();
 
         setBackground(GuiConstants.MAIN_BACKGROUND);
@@ -41,11 +41,8 @@ public class JPanelMyProfile extends javax.swing.JPanel {
         jTabbedPaneProfile.setName("Profile panel"); // NOI18N
         jTabbedPaneProfile.setPreferredSize(new java.awt.Dimension(32767, 32767));
         jTabbedPaneProfile.setRequestFocusEnabled(false);
-
-        newJPanelAcountData1.setBackground(jPanelSchoolsAndClasses.getBackground());
-        newJPanelAcountData1.setPreferredSize(null);
-        jTabbedPaneProfile.addTab("Account details", newJPanelAcountData1);
-        newJPanelAcountData1.getAccessibleContext().setAccessibleParent(jTabbedPaneProfile);
+        jTabbedPaneProfile.addTab(TextMapper.getText(TextMapper.GUIP_ACCOUNTANDCONTACTINFO)
+            , jPanelAcountData1);
 
         jPanelSchoolsAndClasses.setBackground(jPanelSchoolsAndClasses.getBackground());
         jTabbedPaneProfile.addTab("Schools and Classes", jPanelSchoolsAndClasses);
@@ -56,22 +53,22 @@ public class JPanelMyProfile extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPaneProfile, javax.swing.GroupLayout.DEFAULT_SIZE, 764, Short.MAX_VALUE)
+                .addComponent(jTabbedPaneProfile, javax.swing.GroupLayout.DEFAULT_SIZE, 760, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPaneProfile, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)
+                .addComponent(jTabbedPaneProfile, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private fi.dwo.dwojapplet.gui.panels.JPanelAcountData jPanelAcountData1;
     private fi.dwo.dwojapplet.gui.panels.JPanelSchoolsAndClasses jPanelSchoolsAndClasses;
     private javax.swing.JTabbedPane jTabbedPaneProfile;
-    private fi.dwo.dwojapplet.gui.panels.JPanelAcountData newJPanelAcountData1;
     // End of variables declaration//GEN-END:variables
 }

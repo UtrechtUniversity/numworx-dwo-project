@@ -23,7 +23,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jPanelPersonalData" max="32767" attributes="0"/>
+              <Component id="jPanelPersonalData" pref="760" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -32,7 +32,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jPanelPersonalData" max="32767" attributes="0"/>
+              <Component id="jPanelPersonalData" pref="364" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -58,55 +58,51 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="jLabelNewPassword" min="-2" pref="117" max="-2" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="jLabelGivenName" pref="174" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jPasswordFieldNewPassword" pref="415" max="32767" attributes="0"/>
+                          <Component id="jTextFieldGivenName" min="-2" pref="562" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="jLabelConfirmPassword" min="-2" pref="117" max="-2" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="jLabelInsertion" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jPasswordFieldConfirmPassword" max="32767" attributes="0"/>
+                          <Component id="jTextFieldInsertion" min="-2" pref="562" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="jLabelInsertion" min="-2" pref="117" max="-2" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="jLabelFamilyName" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jTextFieldInsertion" max="32767" attributes="0"/>
+                          <Component id="jTextFieldFamilyName" min="-2" pref="562" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="jLabelGivenName" min="-2" pref="117" max="-2" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="jLabelEmail" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jTextFieldGivenName" max="32767" attributes="0"/>
+                          <Component id="jTextFieldEmail" min="-2" pref="562" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="jLabelFamilyName" min="-2" pref="117" max="-2" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="jLabelUserName" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jTextFieldFamilyName" max="32767" attributes="0"/>
+                          <Component id="jTextFieldUserName" min="-2" pref="562" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="jLabelEmail" min="-2" pref="117" max="-2" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="jLabelPassword" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jTextFieldEmail" max="32767" attributes="0"/>
+                          <Component id="jPasswordFieldPassword" min="-2" pref="562" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="jLabelUserName" min="-2" pref="117" max="-2" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="jLabelNewPassword" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jTextFieldUserName" max="32767" attributes="0"/>
+                          <Component id="jPasswordFieldNewPassword" min="-2" pref="562" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="jLabelTitle" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="jLabelPassword" min="-2" pref="117" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jPasswordFieldPassword" max="32767" attributes="0"/>
-                      </Group>
-                      <Group type="102" attributes="0">
+                      <Group type="102" alignment="1" attributes="0">
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           <Component id="jButtonUpdate" min="-2" pref="121" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jButtonEditAndCancel" min="-2" pref="119" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="jLabelConfirmPassword" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jPasswordFieldConfirmPassword" min="-2" pref="562" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -116,9 +112,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jLabelTitle" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabelGivenName" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jTextFieldGivenName" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -163,7 +157,7 @@
                       <Component id="jButtonEditAndCancel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jButtonUpdate" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="97" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -171,7 +165,9 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="jLabelUserName">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Username"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="TextMapper.getText(TextMapper.GUIP_USERNAME)" type="code"/>
+            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="jTextFieldUserName">
@@ -184,24 +180,32 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelPassword">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Password"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="TextMapper.getText(TextMapper.GUIP_OLD_PASSWORD)&#xd;&#xa;" type="code"/>
+            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelNewPassword">
           <Properties>
-            <Property name="text" type="java.lang.String" value="New password"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="TextMapper.getText(TextMapper.GUIP_PASSWORD)" type="code"/>
+            </Property>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelConfirmPassword">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Confirm password"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="TextMapper.getText(TextMapper.GUIP_RE_PASSWORD)" type="code"/>
+            </Property>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelFamilyName">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Family name"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="TextMapper.getText(TextMapper.GUIP_LASTNAME)&#xd;&#xa;" type="code"/>
+            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="jTextFieldInsertion">
@@ -214,12 +218,16 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelGivenName">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Given name"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="TextMapper.getText(TextMapper.GUIP_FIRSTNAME)" type="code"/>
+            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelInsertion">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Insertion"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="TextMapper.getText(TextMapper.GUIP_MIDDLENAME)&#xd;&#xa;" type="code"/>
+            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="jTextFieldGivenName">
@@ -236,7 +244,9 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelEmail">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Email"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="TextMapper.getText(TextMapper.GUIP_EMAIL)" type="code"/>
+            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="jTextFieldFamilyName">
@@ -257,7 +267,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="jButtonEditAndCancel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Edit"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="TextMapper.getText(TextMapper.GUIP_BTN_EDIT)&#xd;&#xa;" type="code"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonEditAndCancelActionPerformed"/>
@@ -265,17 +277,14 @@
         </Component>
         <Component class="javax.swing.JButton" name="jButtonUpdate">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Update"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="TextMapper.getText(TextMapper.GUIP_BTN_SAVE)" type="code"/>
+            </Property>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonUpdateActionPerformed"/>
           </Events>
-        </Component>
-        <Component class="javax.swing.JLabel" name="jLabelTitle">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Account data en contact details:"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JPasswordField" name="jPasswordFieldPassword">
           <Properties>

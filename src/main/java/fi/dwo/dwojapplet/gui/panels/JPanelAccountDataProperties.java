@@ -23,6 +23,10 @@ public class JPanelAccountDataProperties {
     private PersistentUser user;
 
     public JPanelAccountDataProperties() {
+        
+    }
+    
+    public void init(){
         try {
             user = UserProfileManager.getCurrentUser();
         } catch (RestException ex) {
