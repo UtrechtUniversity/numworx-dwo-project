@@ -11,8 +11,12 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -39,6 +43,9 @@ public class PersistentHasRole implements Serializable {
     protected PersistentHasRolePK persistentHasRolePK;
     @Column(name = "classID")
     private Integer classID;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="classID", insertable=false, updatable=false )
+    private PersistentSchoolClass schoolClass;
     @Basic(optional = false)
     @Column(name = "registerDate", nullable = false)
     @Temporal(TemporalType.DATE)
@@ -48,6 +55,10 @@ public class PersistentHasRole implements Serializable {
     @Column(name = "lastLogin")
     @Temporal(TemporalType.DATE)
     private Date lastLogin;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="schoolGroupID", insertable=false, updatable=false )
+    private PersistentSchoolGroup schoolGroup;
+    
 
     public PersistentHasRole() {
     }
@@ -130,6 +141,20 @@ public class PersistentHasRole implements Serializable {
     @Override
     public String toString() {
         return "fi.dwo.server.persistence.PersistentHasRole[ persistentHasRolePK=" + persistentHasRolePK + " ]";
+    }
+
+    /**
+     * @return the schoolClass
+     */
+    public PersistentSchoolClass getSchoolClass() {
+        return schoolClass;
+    }
+
+    /**
+     * @return the schoolGroup
+     */
+    public PersistentSchoolGroup getSchoolGroup() {
+        return schoolGroup;
     }
     
 }

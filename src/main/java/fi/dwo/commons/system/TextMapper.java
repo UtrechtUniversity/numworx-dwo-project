@@ -181,7 +181,7 @@ public abstract class TextMapper {
     public final static String GUIP_REGISTERINFO = "GUIP_REGISTERINFO";
     public final static String GUIP_PERSONALINFO = "GUIP_PERSONALINFO";
     public final static String GUIP_SCHOOLINFO = "GUIP_SCHOOLINFO";
-
+    public final static String GUIP_ACCOUNTANDCONTACTINFO = "GUIP_ACCOUNTANDCONTACTINFO"; 
     public final static String GUIP_USERNAME = "GUIP_USERNAME";
     public final static String GUIP_OLD_PASSWORD = "GUIP_OLD_PASSWORD";
     public final static String GUIP_PASSWORD = "GUIP_PASSWORD";
@@ -197,6 +197,7 @@ public abstract class TextMapper {
     public final static String GUIP_SCHOOLPASSWORD = "GUIP_SCHOOLPASSWORD";
     public final static String GUIP_CLASS = "GUIP_CLASS";
 
+    public final static String GUIP_BTN_EDIT = "GUIP_BTN_EDIT";
     public final static String GUIP_BTN_SAVE = "GUIP_BTN_SAVE";
     public final static String GUIP_BTN_RESET = "GUIP_BTN_RESET";
     public final static String GUIP_BTN_DELETE_PROFILE = "GUIP_BTN_DELETE_PROFILE";

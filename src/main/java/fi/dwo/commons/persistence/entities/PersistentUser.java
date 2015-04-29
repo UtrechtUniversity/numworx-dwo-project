@@ -10,11 +10,15 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -22,7 +26,7 @@ import javax.persistence.UniqueConstraint;
 
 /**
  * PersistentUser
- * 
+ *
  * @author plas0006
  */
 @Entity
@@ -43,6 +47,7 @@ import javax.persistence.UniqueConstraint;
     @NamedQuery(name = "PersistentUser.findByLastLogin", query = "SELECT p FROM PersistentUser p WHERE p.lastLogin = :lastLogin")})
 
 public class PersistentUser implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -75,6 +80,11 @@ public class PersistentUser implements Serializable {
     @Column(name = "lastLogin")
     @Temporal(TemporalType.DATE)
     private Date lastLogin;
+//    @OneToMany(mappedBy = "schoolGroupID")
+//    private List<PersistentSchoolGroup> schoolGroups;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @PrimaryKeyJoinColumn(name = "schoolGroupID")
+    private PersistentSchoolGroup schoolGroup;
 
     public PersistentUser() {
     }
@@ -197,5 +207,8 @@ public class PersistentUser implements Serializable {
     public String toString() {
         return "fi.dwo.server.persistence.PersistentUser[ userID=" + userID + " ]";
     }
-    
+
+    public PersistentSchoolGroup getPersistentSchoolGroup() {
+     return  schoolGroup;
+    }
 }

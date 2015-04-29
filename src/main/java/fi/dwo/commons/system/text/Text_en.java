@@ -134,6 +134,7 @@ public class Text_en extends ListResourceBundle {
             { TextMapper.GUIP_REGISTERINFO, "Registration information" },
             { TextMapper.GUIP_PERSONALINFO, "Personal information" },
             { TextMapper.GUIP_SCHOOLINFO, "School information" },
+            { TextMapper.GUIP_ACCOUNTANDCONTACTINFO, "Account and contact information"},
 
             { TextMapper.GUIP_USERNAME, "Username" },
             { TextMapper.GUIP_OLD_PASSWORD, "Current Password" },
@@ -150,6 +151,7 @@ public class Text_en extends ListResourceBundle {
             { TextMapper.GUIP_SCHOOLPASSWORD, "Password" },
             { TextMapper.GUIP_CLASS, "Class" },
 
+            { TextMapper.GUIP_BTN_EDIT, "Edit" },
             { TextMapper.GUIP_BTN_SAVE, "Save" },
             { TextMapper.GUIP_BTN_RESET, "Reset" },
             { TextMapper.GUIP_BTN_DELETE_PROFILE, "Delete profile" },

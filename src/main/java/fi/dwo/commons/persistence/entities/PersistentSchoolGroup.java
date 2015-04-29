@@ -9,11 +9,16 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -43,15 +48,22 @@ public class PersistentSchoolGroup implements Serializable {
     @NotNull
     @Column(name = "groupID", nullable = false)
     private int groupID;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @PrimaryKeyJoinColumn(name="groupID")
+    private PersistentRole role;
     @Basic(optional = false)
     @NotNull
     @Column(name = "schoolID", nullable = false)
     private int schoolID;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @PrimaryKeyJoinColumn(name="schoolID")
+    private PersistentSchool school;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 128)
     @Column(name = "passwd", nullable = false, length = 128)
     private String passwd;
+    
 
     public PersistentSchoolGroup() {
     }
@@ -122,6 +134,27 @@ public class PersistentSchoolGroup implements Serializable {
     @Override
     public String toString() {
         return "fi.dwo.server.persistence.PersistentSchoolGroup[ schoolGroupID=" + schoolGroupID + " ]";
+    }
+
+    /**
+     * @return the school
+     */
+    public PersistentSchool getSchool() {
+        return school;
+    }
+
+    /**
+     * @return the role
+     */
+    public PersistentRole getRole() {
+        return role;
+    }
+
+    /**
+     * @param role the role to set
+     */
+    public void setRole(PersistentRole role) {
+        this.role = role;
     }
     
 }

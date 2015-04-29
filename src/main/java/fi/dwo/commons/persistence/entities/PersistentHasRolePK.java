@@ -85,5 +85,6 @@ public class PersistentHasRolePK implements Serializable {
     public String toString() {
         return "fi.dwo.server.persistence.PersistentHasRolePK[ userID=" + userID + ", schoolGroupID=" + schoolGroupID + " ]";
     }
+
     
 }

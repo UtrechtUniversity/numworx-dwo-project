@@ -95,6 +95,11 @@ public class MySQLPersistenceId implements PersistenceId {
         this.type = type;
     }
 
+    public static MySQLPersistenceId createPersistenceId(long id, PersistenceClassType t) {
+                return new MySQLPersistenceId(id,t);
+    }
+    
+    
     public static MySQLPersistenceId createPersistentId(PersistentApplet o) {
                 return new MySQLPersistenceId(o.getAppletID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
     }
@@ -120,7 +125,7 @@ public class MySQLPersistenceId implements PersistenceId {
     }
 
 // Don't need this cached.    
-//    public static MySQLPersistenceId createPersistentId(PersistentDwoSystemParameters o) {
+//    public static MySQLPersistenceId createPersistenceId(PersistentDwoSystemParameters o) {
 //                return new MySQLPersistenceId(o.getUserID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
 //    }
 
@@ -129,11 +134,11 @@ public class MySQLPersistenceId implements PersistenceId {
                 return new MySQLPersistenceId(o.getPersistentHasRolePK().getId(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
     }
 
-//    public static MySQLPersistenceId createPersistentId(PersistentImage o) {
+//    public static MySQLPersistenceId createPersistenceId(PersistentImage o) {
 //                return new MySQLPersistenceId(o.(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
 //    }
 
-//    public static MySQLPersistenceId createPersistentId(PersistentJars o) {
+//    public static MySQLPersistenceId createPersistenceId(PersistentJars o) {
 //                return new MySQLPersistenceId(o.getKey(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
 //    }
 

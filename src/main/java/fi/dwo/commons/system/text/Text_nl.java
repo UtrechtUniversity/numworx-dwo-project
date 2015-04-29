@@ -134,6 +134,7 @@ public class Text_nl extends ListResourceBundle {
          { TextMapper.GUIP_REGISTERINFO, "Registratie Informatie"},
          { TextMapper.GUIP_PERSONALINFO, "Persoonlijke Gegevens"}, 
          { TextMapper.GUIP_SCHOOLINFO, "School Gegevens"}, 
+         { TextMapper.GUIP_ACCOUNTANDCONTACTINFO, "Account- en contactinformatie"},
 
          { TextMapper.GUIP_USERNAME, "Gebruikersnaam"}, 
          { TextMapper.GUIP_OLD_PASSWORD, "Huidig Wachtwoord"}, 
@@ -150,6 +151,7 @@ public class Text_nl extends ListResourceBundle {
          { TextMapper.GUIP_SCHOOLPASSWORD, "Wachtwoord"},
          { TextMapper.GUIP_CLASS, "klas"}, 
          
+         { TextMapper.GUIP_BTN_EDIT, "Edit" },
          { TextMapper.GUIP_BTN_SAVE, "Opslaan"},
          { TextMapper.GUIP_BTN_RESET, "Reset"},
          { TextMapper.GUIP_BTN_DELETE_PROFILE, "Profiel Verwijderen"},
