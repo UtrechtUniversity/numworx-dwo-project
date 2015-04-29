@@ -6,7 +6,6 @@
 package fi.dwo.dwojapplet.gui.panels;
 
 import fi.dwo.dwojapplet.gui.GuiConstants;
-import java.awt.Dimension;
 
 /**
  *
