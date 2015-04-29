@@ -66,6 +66,9 @@ public class DwoEmfFactory {
     }
 
     public static EntityManager createEntityManager() {
+        if(_instance==null){
+             _instance = Persistence.createEntityManagerFactory("DWO_MySQLDB");
+        }
         return _instance.createEntityManager();
     }
 
