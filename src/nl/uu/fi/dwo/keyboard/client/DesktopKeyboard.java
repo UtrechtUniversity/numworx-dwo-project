@@ -21,7 +21,7 @@ public class DesktopKeyboard extends AbstractKeyboard {
 
 	//@UiField ResourceBase res = ResourceBase.INSTANCE;
 
-	static final int HEIGHT = 44;
+	static final int HEIGHT = 30;
 	
 	
 	private static DesktopKeyboardUiBinder uiBinder = GWT
