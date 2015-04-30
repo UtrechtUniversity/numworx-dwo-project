@@ -21,7 +21,7 @@
     .keyboard-container .keyboard:after {
       clear: both; }
   .keyboard-container.computer {
-    height: 44px;
+    height: 30px;
     }
     .keyboard-container.computer .keyboard {
       padding: 3px 9px; }
