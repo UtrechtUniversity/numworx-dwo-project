@@ -41,4 +41,20 @@ public class DesktopKeyboardOnderbouw extends DesktopKeyboard {
 		getEditor().insert('\u03C0');
 	}
 
+// disabled keys produce actions....	
+	@Override void onC5(ClickEvent e) {}
+	@Override void onC7(ClickEvent e) {}
+	@Override void onC8(ClickEvent e) {}
+	@Override void onC9(ClickEvent e) {}
+	@Override void onC10(ClickEvent e) {}
+	@Override void onC11(ClickEvent e) {}
+	@Override void onC12(ClickEvent e) {}
+	@Override void onC19(ClickEvent e) {}
+	@Override void onC20(ClickEvent e) {}
+	@Override void onC27(ClickEvent e) {}
+	@Override void onC28(ClickEvent e) {}
+	@Override void onC29(ClickEvent e) {}
+	@Override void onC30(ClickEvent e) {}
+	@Override void onC31(ClickEvent e) {}
+	
 }
