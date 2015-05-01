@@ -32,9 +32,10 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 	private ViewModuleView view;
 	private AnchorContext defaultContext;
 	private SelectModuleItem sco;
-	public ViewModuleActivity(ClientFactory clientFactory)
+	public ViewModuleActivity(ClientFactory clientFactory, SelectModuleItem sco)
 	{
 		this.clientFactory = clientFactory;
+		this.sco = sco;
 
 	}
 
@@ -43,14 +44,8 @@ public class ViewModuleActivity extends MGWTAbstractActivity implements AnchorCo
 	{
 		view = clientFactory.getEntryView();
 		panel.setWidget(view);
-
-		Place place = clientFactory.getPlaceController().getWhere();
-
-		if (place instanceof ViewModulePlace)
 		{
-			ViewModulePlace selectedModulePlace = (ViewModulePlace) place;
-			final String id = selectedModulePlace.getToken();
-			sco = SelectModuleItemHolder.getScoByID(id);
+			final String id = sco.getID().toString();
 			defaultContext = view.getAnchorContext();
 			view.setAnchorContext(this);
 			view.setUnitId(id);

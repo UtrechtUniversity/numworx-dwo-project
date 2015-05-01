@@ -23,7 +23,6 @@ import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 //import nl.uu.fi.dwo.mobile.client.ui.KeyBoardTabPanel;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
-import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF.NextPrevHandler;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavPanel;
 import nl.uu.fi.dwo.mobile.client.ui.SlidingPopup;
@@ -43,14 +42,9 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Float;
-import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.TouchEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -62,16 +56,12 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CustomButton;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -91,7 +81,6 @@ import com.googlecode.mgwt.ui.client.widget.HeaderButton;
 import com.googlecode.mgwt.ui.client.widget.HeaderPanel;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchDelegate;
 
-import fi.wiskopdr.text.Text;
 import fi.wiskopdr.text.Text_nl;
 
 
@@ -109,7 +98,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private static Logger logger = Logger.getLogger("ViewModuleViewImpl");
 	private boolean standalone = false;
 
-	Text_nl rb = new Text_nl();
+	static Text_nl rb = new Text_nl();
+
 	OpdrNav on;
 	private FocusPanel mainPanel;
 	FlowPanel contentPanel = null;
@@ -136,10 +126,6 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	public ViewModuleViewImpl(boolean b) {
 		standalone = b;
 		
-		if(b)
-			scoreNav = scoreNavPanel;
-		else
-			scoreNav = new ScoreNavFacade();
 	}
 	
 	public ViewModuleViewImpl() {
@@ -999,7 +985,10 @@ try {
 		sb = DWOplayer.PARAMETERS.getStatusBar(); // new nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard();
 		kb = sb.getFormuleKeyboard();
 		cb = sb.getFormuleClipboard();
+		scoreNav = DWOplayer.PARAMETERS.getScoreNav();
+		POPUP = scoreNav.getPopup();
 
+		scoreNav.setStatusBar(sb);
 		if(!standalone) setWindowTop(0);
 
 		FocusOnTouch.installKeyboard(kb, cb);
@@ -1062,7 +1051,7 @@ try {
 		fp.add(kbp);
 
 // POPUP of floating in ????
-		if(hb != null)
+		if(hb != null && POPUP != null)
 		{  hb.addTapHandler(new TapHandler() {
 
 			@Override
@@ -1081,263 +1070,13 @@ try {
 	}
 	
 	
-	static class MyPopup extends SlidingPopup {
-	    public MyPopup(ScoreNavPanel w) {
-	        // PopupPanel's constructor takes 'auto-hide' as its boolean parameter.
-	        // If this is set, the panel closes itself automatically when the user
-	        // clicks outside of it.
-	        super(true);
-	        setGlassEnabled(true);
-	        setAnimationEnabled(true);
-	        // PopupPanel is a SimplePanel, so you have to set it's widget property to
-	        // whatever you want its contents to be.
-	        setWidget(w);
-	        w.popup = this;
-	      }
-	}
-
-	private ScoreNavPanel scoreNavPanel = new ScoreNavPanel();
-    MyPopup POPUP = new MyPopup(scoreNavPanel);
+	//private ScoreNavPanel scoreNavPanel = new ScoreNavPanel();
+    SlidingPopup POPUP;
     
     public ScoreNavIF scoreNav; 
     
-    class ScoreNavFacade implements ScoreNavIF {
-
-    	private final class ReloadAllHandler implements ClickHandler {
-			@Override
-			public void onClick(ClickEvent event) {
-				event.stopPropagation();
-				reloadOpdracht(-1);
-			}
-		}
-    	private final class ReloadHandler implements ClickHandler {
-			@Override
-			public void onClick(ClickEvent event) {
-				event.stopPropagation();
-				reloadOpdracht(currentOpdracht);
-			}
-		}
-
-
-		private PushButton nakijkKnop;
-    	private Checker checker;
-    	private PushButton volgendeKnop, vorigeKnop ;//, eindeKnop;
-    	private NextPrevHandler nextprev;
-		private PushButton allesOpnieuwKnop, opnieuwKnop;
-		private GotoOpdracht gotoOpdracht;
-		private int currentOpdracht;
-
-    	public ScoreNavFacade() {
-			nakijkKnop = new PushButton(Text.constants.nakijkKnopLabel());
-			nakijkKnop.addClickHandler(new ClickHandler(){
-				public void onClick(ClickEvent e)
-				{	e.stopPropagation();
-					checker.checkOpdracht(ScoreNavFacade.this);
-				}
-			});
-			vorigeKnop = new PushButton(new Image(DWOplayer.DWO_BUNDLE.vorigeknop().getSafeUri()));
-					//Text.constants.vorigeKnopLabel());
-			
-			vorigeKnop.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
-			vorigeKnop.addClickHandler(new ClickHandler(){
-				public void onClick(ClickEvent e)
-				{
-					e.stopPropagation();
-					nextprev.gotoPrev(ScoreNavFacade.this);
-				}
-			});
-			
-			volgendeKnop = new PushButton(new Image(DWOplayer.DWO_BUNDLE.volgendeknop().getSafeUri()));//Text.constants.volgendeKnopLabel());
-			volgendeKnop.getElement().getStyle().setBorderStyle(BorderStyle.NONE);
-			volgendeKnop.addClickHandler(new ClickHandler(){
-				public void onClick(ClickEvent e)
-				{
-					e.stopPropagation();
-					nextprev.gotoNext(ScoreNavFacade.this);
-				}
-			});
-		
-    	}
-    	
-		@Override
-		public void setBeantwoord(int aantalBeantwoord) {
-		}
-
-		@Override
-		public void setOpdracht(int currentOpdracht) {
-			this.currentOpdracht = currentOpdracht;
-		}
-
-		@Override
-		public void setTotaalScore(int score) {
-		}
-
-		@Override
-		public void setItemScore(int oldOpdr, int i) {
-		}
-
-		@Override
-		public void setKijkNaEnabled(boolean enable) {
-			nakijkKnop.setEnabled(enable);		
-		}
-
-		@Override
-		public void setAantalOpdrachten(int aantalOpdrachten, int[] maxScores, int current) {
-		}
-
-		@Override
-		public void setItemScores(int[] itemScores) {
-		}
-
-		@Override
-		public void setGotoOpdracht(GotoOpdracht gotoOpdracht) {
-			this.gotoOpdracht = gotoOpdracht;
-		}
-
-		@Override
-		public void setItemOpnieuw(boolean b) {
-			if(b) {
-				if(opnieuwKnop ==  null) {
-					opnieuwKnop = new PushButton(Text.constants.opnieuwKnopLabel());
-					opnieuwKnop.addClickHandler(new ReloadHandler());
-					sb.addKnop(opnieuwKnop, false);
-				}
-				opnieuwKnop.setVisible(true);
-			} else if(opnieuwKnop != null) {
-				opnieuwKnop.setVisible(false);
-			}
-		}
-
-		@Override
-		public void setOpnieuw(boolean b) {
-			if(b) {
-				if(allesOpnieuwKnop ==  null) {
-					allesOpnieuwKnop = new PushButton(Text.constants.allesOpnieuwKnopLabel());
-					allesOpnieuwKnop.addClickHandler(new ReloadAllHandler());
-					sb.addKnop(allesOpnieuwKnop, false);
-				}
-				allesOpnieuwKnop.setVisible(true);
-			} else if(allesOpnieuwKnop != null) {
-				allesOpnieuwKnop.setVisible(false);
-			}
-		}
-
-		@Override
-		public void setKijkNa(Checker checker) {
-			this.checker = checker;			
-		}
-
-		@Override
-		public void setNextPrevHandler(NextPrevHandler nextprev) {
-			this.nextprev = nextprev;
-		}
-
-		@Override
-		public Widget getNextButton() {
-			return volgendeKnop;
-		}
-
-		@Override
-		public Widget getPrevButton() {
-			return vorigeKnop;
-		}
-
-		@Override
-		public void setVolgendeEnabled(boolean enable) {
-			  volgendeKnop.setEnabled(enable);	
-		}
-
-		@Override
-		public void setVorigeEnabled(boolean enable) {
-			vorigeKnop.setEnabled(enable);
-		}
-
-
-		@Override
-		public PushButton getKijkNaButton() {
-			return nakijkKnop;
-		}
-
-
-		@Override
-		public void setVolgendeVisible(boolean volgendeKnopZichtbaar) {
-			volgendeKnop.setVisible(volgendeKnopZichtbaar);
-			volgendeKnop.removeFromParent();
-			if(volgendeKnopZichtbaar)
-			{	
-				sb.addKnop(volgendeKnop, true);
-			}
-		}
-
-
-		@Override
-		public void setVorigeVisible(boolean vorigeKnopZichtbaar) {
-			vorigeKnop.setVisible(vorigeKnopZichtbaar);
-			vorigeKnop.removeFromParent();
-			if(vorigeKnopZichtbaar)
-				sb.addKnop(vorigeKnop, true);
-		}
-
-
-		@Override
-		public void setButtonEnabled(int opdrNr, boolean b) {
-			on.setButtonEnabled(opdrNr, b);
-		}
-
-
-		private void reloadOpdracht(int opdracht) {
-			if(opdracht < 0)
-			{
-				final int opdr = opdracht;
-				final DialogBox box = new DialogBox();
-				
-				FlowPanel contents = new FlowPanel();
-				Label titel = new Label(rb.getString("opnieuwPanelTitel"));
-				titel.getElement().getStyle().setFontSize(16, Style.Unit.PX);
-				titel.getElement().getStyle().setFontWeight(FontWeight.BOLD);
-				titel.getElement().getStyle().setPaddingBottom(10, Style.Unit.PX);
-				contents.add(titel);
-				Label meldingTekst1 = new Label(rb.getString("opnieuwPanelTekst1"));
-				meldingTekst1.getElement().getStyle().setFontSize(14, Style.Unit.PX);
-				meldingTekst1.getElement().getStyle().setPaddingBottom(10, Style.Unit.PX);
-				Label meldingTekst2 = new Label(rb.getString("opnieuwPanelTekst2"));
-				meldingTekst2.getElement().getStyle().setFontSize(14, Style.Unit.PX);
-				meldingTekst2.getElement().getStyle().setPaddingBottom(10, Style.Unit.PX);
-				
-				contents.add(meldingTekst1);
-				contents.add(meldingTekst2);
-				Button jaKnop = new Button(rb.getString("jaTekst"));
-				jaKnop.getElement().getStyle().setPaddingLeft(20, Style.Unit.PX);
-			    jaKnop.addClickHandler(new ClickHandler() {
-			        public void onClick(ClickEvent event) {
-			        	box.hide();
-			        	gotoOpdracht.reloadOpdracht(opdr, ScoreNavFacade.this);
-			        	
-			        	
-			        }
-			    });
-			    Button neeKnop = new Button(rb.getString("neeTekst"));
-			    neeKnop.getElement().getStyle().setFloat(Float.RIGHT);
-			    neeKnop.getElement().getStyle().setPaddingRight(20, Style.Unit.PX);
-			    neeKnop.addClickHandler(new ClickHandler() { 
-			    	public void onClick(ClickEvent event) {
-			    		box.hide();
-			    	}
-			    });
-			    contents.add(jaKnop);
-			    contents.add(neeKnop);
-			    box.setWidget(contents);
-			    box.show();
-			}
-			else
-				gotoOpdracht.reloadOpdracht(opdracht, ScoreNavFacade.this);
-		}
-    	
-    }
-    
-	
-	protected void popupNavPanel() {
-		 final MyPopup popup = POPUP;
+    protected void popupNavPanel() {
+		 final SlidingPopup popup = POPUP;
 	        popup.setPopupPositionAndShow(new SlidingPopup.PositionCallback() {
 	          public void setPosition(int offsetWidth, int offsetHeight) {
 	            int left = (Window.getClientWidth() - offsetWidth) / 3;

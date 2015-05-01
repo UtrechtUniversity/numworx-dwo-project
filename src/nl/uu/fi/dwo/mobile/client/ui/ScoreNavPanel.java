@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleClientBundle;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.views.MyPopup;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.Scheduler;
@@ -107,6 +108,7 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF {
 		flow.add(vbox);
 		flow.getElement().getStyle().setOverflowY(Overflow.AUTO);
 		initWidget(flow);
+		popup = new MyPopup(this);
 	}
 	
 	private void initialize() {
@@ -177,7 +179,11 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF {
 	private Label[] vraagPunten;
 	private int[] scoreMax;
 	private int currentOpdracht;
-	public SlidingPopup popup;
+	private SlidingPopup popup;
+	public SlidingPopup getPopup() {
+		return popup;
+	}
+
 	private boolean opnieuw;
 	private boolean itemOpnieuw;
 	private Button reloadTotal;
@@ -370,6 +376,12 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF {
 	@Override
 	public void setButtonEnabled(int opdrNr, boolean b) {
 		vragen.getWidget(opdrNr, 3).setVisible(b);
+		
+	}
+
+	@Override
+	public void setStatusBar(StatusBarIF bar) {
+		// TODO Auto-generated method stub
 		
 	}
 

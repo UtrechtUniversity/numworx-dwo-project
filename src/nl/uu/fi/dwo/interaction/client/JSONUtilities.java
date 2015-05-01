@@ -211,6 +211,7 @@ public class JSONUtilities {
 	
 
 	public static JSONObjectMapImpl wrapMap(JSONObject object) {
+		if(object == null) return null;
 		return new JSONObjectMapImpl(object);
 	}
 	

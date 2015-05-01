@@ -50,7 +50,12 @@ public class TabletActivityMapper implements ActivityMapper
 			return new FlatModuleActivity(clientFactory, item);
 		}
 		if (place instanceof ViewModulePlace)
-			return new ViewModuleActivity(clientFactory);
+		{	String id = ((ViewModulePlace) place).getToken();
+			SelectModuleItem item = SelectModuleItemHolder.getScoByID(id);
+			if(item == null)
+				return new LoginActivity(clientFactory);
+			return new ViewModuleActivity(clientFactory, item);
+		}
 		if (place instanceof LoginPlace)
 			return new LoginActivity(clientFactory);
 		if (place instanceof ProfilePlace)

@@ -132,6 +132,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 
 	@Override
 	public void setState(HashMap<String, Object> h) {
+//		if(h == null) h = new HashMap<String, Object>(); // Never NULL
 		JSONValue object = JSONUtilities.toJSONObject(h);
 		if(innerView != null)
 		{

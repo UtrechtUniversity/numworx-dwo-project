@@ -80,6 +80,7 @@ public class SelectModuleItemHolder
 	}
 	
 	public static SelectModuleItem getScoByID(Object id) {
+		init();
 		return scos.get(id.toString());
 	}
 

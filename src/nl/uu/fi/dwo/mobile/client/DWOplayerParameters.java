@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client;
 
 import nl.uu.fi.dwo.mobile.client.ui.NavigationCss;
+import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 
 import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
@@ -54,6 +55,7 @@ public interface DWOplayerParameters {
 	
 	int getWindowHeight();
 	StatusBarIF getStatusBar();
+	ScoreNavIF  getScoreNav();
 	
 // More to come....
 }

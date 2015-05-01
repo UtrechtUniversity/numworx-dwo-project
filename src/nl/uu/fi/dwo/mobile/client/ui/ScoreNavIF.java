@@ -12,6 +12,7 @@ public interface ScoreNavIF {
 	interface GotoOpdracht {
 		void gotoOpdracht(int i, ScoreNavIF source);
 		void reloadOpdracht(int i, ScoreNavIF source);
+		void setButtonEnabled(int opdrNr, boolean b);
 	}
 
 	public interface NextPrevHandler {
@@ -19,6 +20,7 @@ public interface ScoreNavIF {
 		void gotoPrev(ScoreNavIF source);
 	}
 	
+	void setStatusBar(StatusBarIF bar);
 	
 	void setBeantwoord(int aantalBeantwoord);
 
@@ -55,5 +57,6 @@ public interface ScoreNavIF {
 	void setVorigeVisible(boolean visible);
 
 	void setButtonEnabled(int opdrNr, boolean b);
+	SlidingPopup getPopup();
 
 }

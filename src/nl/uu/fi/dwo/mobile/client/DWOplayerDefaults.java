@@ -5,7 +5,9 @@ import nl.uu.fi.dwo.mobile.client.ui.NavigationBundle;
 import nl.uu.fi.dwo.mobile.client.ui.NavigationTextAndroid;
 import nl.uu.fi.dwo.mobile.client.ui.NavigationTextDefault;
 import nl.uu.fi.dwo.mobile.client.ui.NavigationTextIpad;
+import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
+import nl.uu.fi.dwo.mobile.client.ui.views.ScoreNavFacade;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Window;
@@ -102,5 +104,10 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 		return new nl.uu.fi.dwo.mobile.client.ui.dwokb.DWOKeyboard();
 
 		//return new nl.uu.fi.dwo.mobile.client.ui.dwokb.FormuleKeyboard();
+	}
+
+	@Override
+	public ScoreNavIF getScoreNav() {
+		return new ScoreNavFacade();
 	}
 }
