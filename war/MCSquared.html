@@ -65,7 +65,7 @@ function signature() {
 	var b = false;
 	var i;
 	var name;
-	for( i = 0; i < inputs.length; i++) {
+	for( i = 1; i < inputs.length; i++) {
 		input = inputs[i]
 		if(input.name == 'oauth_signature')
 			continue;
@@ -137,7 +137,7 @@ window.inner = {
 			$("custom_context").value = context
 			$("custom_subscriptions").value = subscriptions
 			signature()
-			$('lti').submit();
+			$('lti').submit()
 		},
 		enter: function() {
 		},
@@ -173,7 +173,8 @@ window.inner = {
 <!-- http://www.staff.science.uu.nl/~velth101/lti/tool.php -->
 <!-- de.cinderella.CindyWidget: http://cinderella.de/services/widget -->
 <body>
-<form id='lti' method="POST" action='http://dwo.fisme.science.uu.nl/DWOmAccess/lti/widget.jsp' >
+<form id='lti' method="POST" action='http://ws.fisme.science.uu.nl/DWOmAccess/lti/widget.jsp' >
+<input type='submit' > <br>
 custom_context<input name='custom_context' id='custom_context' value='{}'><br>
 custom_launch_data<input name='custom_launch_data' id='custom_launch_data' value='{}'><br>
 custom_randomvalues<input name='custom_randomvalues' id='custom_randomvalues' value='{}'><br>
@@ -197,7 +198,6 @@ oauth_consumer_key<input name='oauth_consumer_key' id='oauth_consumer_key' value
 
 resource_link_id<input name='resource_link_id' id='resource_link_id' value='000000-0-000000' ><br>
 <input name='roles' value='Learner' type='hidden' >
-<!-- <input value="submit" name="submit" type="submit" ><br> -->
 user_id<input name='user_id' id='user_id' value='guest' > <br>
 oauth_signature<input name='oauth_signature' id='oauth_signature' value='?' ><br>
 </form>
