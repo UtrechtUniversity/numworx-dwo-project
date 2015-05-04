@@ -248,7 +248,7 @@ public class CheckSleepUnit implements InteractionStub{
 	        }
 	    }
         
-        if(ingevuld && (mode==0 || nagekeken)){
+        if(ingevuld && (mode==0 || mode == 1 || nagekeken)){
         	kijkNa();
         }
 	}

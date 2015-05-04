@@ -341,7 +341,7 @@ public class CheckSelectieUnit implements InteractionStub
 	        //(((TekstInteractiePanelVak)((Component)ipList[0]).getParent()).getTekstVak()).layoutTekst();
         }
         
-        if(ingevuld && (mode==0 || nagekeken)){
+        if(ingevuld && (mode==0 || mode == 1 || nagekeken)){
         	kijkNa();
         }
 	}
