@@ -276,6 +276,8 @@ public class MC2View extends Composite implements InteractionView {
 		actionMap.put("org.cbook.mediaman.MediaMan", "https://mc2-mediaman.appspot.com/");
 		actionMap.put("maltsample.maltWidget", "https://www.talent.gr/malt/");
 		actionMap.put("widgetsample.SampleWidget", "https://mc2-jssample.appspot.com/Jssample.jsp");
+		actionMap.put("ewcbook.EpsiTetrisWidget", "http://www.epsilonwriter.com/GWT/EpsiTetris.php");
+		actionMap.put("fi.ltiwidget.LTIWidget", "https://ws.fisme.science.uu.nl/ltitrampoline/ltiwidget.jsp");
 	}
 	
 	String getAction(String name) 
