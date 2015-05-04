@@ -56,7 +56,7 @@ function SetInitialized(GUID, Initialized)
 }
 function SetScore(GUID, Score)
 {	//alert("SetScore "+Score);
-	return assetAPI.SetScore(GUID, Score);
+	return assetAPI.SetScore(GUID, Number(Score));
 }
 function SetAssetData(GUID, Data)
 {	//alert("SetAssetData ");
