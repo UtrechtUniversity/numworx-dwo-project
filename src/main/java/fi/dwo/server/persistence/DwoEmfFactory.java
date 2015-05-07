@@ -5,8 +5,6 @@
  */
 package fi.dwo.server.persistence;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.Context;
@@ -16,7 +14,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.sql.DataSource;
-import org.eclipse.persistence.config.PersistenceUnitProperties;
 
 /**
  * Read the configured datasource from the web.xml and configures the
@@ -45,19 +42,21 @@ public class DwoEmfFactory {
         if (_instance == null) {
             synchronized (DwoEmfFactory.class) {
                 if (_instance == null) {
-                    try {
-                        Map properties = new HashMap();
-                        DataSource dataSource = getDataSource();
-                        properties.put(PersistenceUnitProperties.NON_JTA_DATASOURCE, dataSource);
+//                    try {
+                    _instance = Persistence.createEntityManagerFactory("DWO_MySQLDB");
+//                        Properties properties = new Properties();
+//                        DataSource dataSource = getDataSource();
+//                       properties.setProperty("datanucleus.ConnectionFactoryName","java:comp/env/jdbc/dwodb");
+//                        properties.put(PersistenceUnitProperties.NON_JTA_DATASOURCE, dataSource);
 //                        properties.put(PersistenceUnitProperties.LOGGING_LEVEL, "FINE");
 //                        properties.put(PersistenceUnitProperties.LOGGING_TIMESTAMP, "false");
 //                        properties.put(PersistenceUnitProperties.LOGGING_THREAD, "false");
 //                        properties.put(PersistenceUnitProperties.LOGGING_SESSION, "false");
-                        _instance = Persistence.createEntityManagerFactory("DWO_MySQLDB", properties);
-                    } catch (NamingException ex) {
-                        log.log(Level.SEVERE, null, ex);
-                        return null;
-                    }
+//                        _instance = Persistence.createEntityManagerFactory("DWO_MySQLDB", properties);
+//                    } catch (NamingException ex) {
+//                        log.log(Level.SEVERE, null, ex);
+//                        return null;
+//                    }
                 }
             }
 
@@ -66,8 +65,12 @@ public class DwoEmfFactory {
     }
 
     public static EntityManager createEntityManager() {
-        if(_instance==null){
-             _instance = Persistence.createEntityManagerFactory("DWO_MySQLDB");
+        if (_instance == null) {
+             synchronized (DwoEmfFactory.class) {
+               if (_instance == null) {
+                   _instance = Persistence.createEntityManagerFactory("DWO_MySQLDB");
+               }
+             }
         }
         return _instance.createEntityManager();
     }
