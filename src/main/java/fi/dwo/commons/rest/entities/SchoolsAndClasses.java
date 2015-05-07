@@ -8,19 +8,21 @@ package fi.dwo.commons.rest.entities;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.PersistenceId;
 import java.io.Serializable;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Schools and classes transported over the REST interface.
  * 
  * @author G.A.J. van der Plas
  */
-public class SchoolsAndClasses implements Serializable {
+@XmlRootElement
+public class SchoolsAndClasses {
     private MySQLPersistenceId schoolId;
     private String schoolName;
     private MySQLPersistenceId roleId;
     private String roleName;
     private MySQLPersistenceId schoolClassId;
-    String schoolClassName;
+    private String schoolClassName;
 
     /**
      * @return the schoolId
@@ -90,6 +92,20 @@ public class SchoolsAndClasses implements Serializable {
      */
     public void setSchoolClassId(MySQLPersistenceId schoolClassId) {
         this.schoolClassId = schoolClassId;
+    }
+
+    /**
+     * @return the schoolClassName
+     */
+    public String getSchoolClassName() {
+        return schoolClassName;
+    }
+
+    /**
+     * @param schoolClassName the schoolClassName to set
+     */
+    public void setSchoolClassName(String schoolClassName) {
+        this.schoolClassName = schoolClassName;
     }
     
 }
