@@ -20,6 +20,7 @@ import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Frame;
@@ -269,16 +270,8 @@ public class MC2View extends Composite implements InteractionView {
 	return wnd.inner;
 }-*/;
 
-	static final Map<String,String> actionMap = new HashMap<String,String>();
+	static final Dictionary actionMap = Dictionary.getDictionary("mc2");
 	
-	static {
-		actionMap.put("de.cinderella.CindyWidget", "http://cinderella.de/services/widget");
-		actionMap.put("org.cbook.mediaman.MediaMan", "https://mc2-mediaman.appspot.com/");
-		actionMap.put("maltsample.maltWidget", "https://www.talent.gr/malt/");
-		actionMap.put("widgetsample.SampleWidget", "https://mc2-jssample.appspot.com/Jssample.jsp");
-		actionMap.put("ewcbook.EpsiTetrisWidget", "http://www.epsilonwriter.com/GWT/EpsiTetris.php");
-		actionMap.put("fi.ltiwidget.LTIWidget", "https://ws.fisme.science.uu.nl/ltitrampoline/ltiwidget.jsp");
-	}
 	
 	String getAction(String name) 
 	{
