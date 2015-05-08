@@ -5,6 +5,7 @@
  */
 package fi.dwo.commons.persistence;
 
+import fi.dwo.commons.rest.RestClassType;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import java.util.EnumMap;
 import java.util.logging.Logger;
@@ -16,17 +17,17 @@ import java.util.logging.Logger;
 public class PersistenceTypeToClassMap {
     private static final Logger log = Logger.getLogger(PersistenceTypeToClassMap.class.getName());
 
-    protected static final EnumMap<PersistenceClassType, Class> classCastMap;
+    protected static final EnumMap<RestClassType, Class> classCastMap;
 
     static {
-        EnumMap<PersistenceClassType, Class> tMap = new EnumMap<PersistenceClassType, Class>(PersistenceClassType.class);
+        EnumMap<RestClassType, Class> tMap = new EnumMap<RestClassType, Class>(RestClassType.class);
         
-        tMap.put(PersistenceClassType.PersistentUser, PersistentUser.class);
+        tMap.put(RestClassType.PersistentUser, PersistentUser.class);
         
-        classCastMap = (EnumMap<PersistenceClassType, Class>) tMap;
+        classCastMap = (EnumMap<RestClassType, Class>) tMap;
     }
 
-    public static Class get(PersistenceClassType type){
+    public static Class get(RestClassType type){
         return classCastMap.get(type);
     }
 }

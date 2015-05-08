@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fi.dwo.commons.persistence;
+package fi.dwo.commons.rest;
 
 /**
  * All the class types that are persistent and are put in the Store. Note the 
@@ -13,7 +13,7 @@ package fi.dwo.commons.persistence;
  * @author Gert van der Plas <gertvdplas@gmail.com>
  */
 
-public enum PersistenceClassType {
+public enum RestClassType {
         PersistentApplet, 
         PersistentAppletConfig, 
         PersistentClassCourse,
@@ -35,5 +35,8 @@ public enum PersistenceClassType {
         PersistentStudentScoContext,
         PersistentStudentScoData,
         PersistentTeacherOfClass,
-        PersistentUser
+        PersistentUser,
+        
+        SchoolRoleAndClass,
+        SchoolsRolesAndClasses
     }

@@ -5,11 +5,20 @@
  */
 package fi.dwo.commons.persistence;
 
+import fi.dwo.commons.rest.RestClassType;
+
 /**
  * A persistent id based on object information.
  * 
  * @author Gert van der Plas <gertvdplas@gmail.com>
  */
 public interface PersistenceId extends Comparable<PersistenceId> {
-    public PersistenceClassType getType();
+    public RestClassType getType();
+    /**
+     * This returns a string id that maps one to one to an internal id
+     * of the implementing class.
+     * 
+     * @return 
+     */
+    public String getIdString();
 }

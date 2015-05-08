@@ -5,9 +5,6 @@
  */
 package fi.dwo.commons.rest.entities;
 
-import fi.dwo.commons.persistence.MySQLPersistenceId;
-import fi.dwo.commons.persistence.PersistenceId;
-import java.io.Serializable;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -16,25 +13,25 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class SchoolsAndClasses {
-    private MySQLPersistenceId schoolId;
+public class SchoolRoleAndClass {
+    private int schoolId;
     private String schoolName;
-    private MySQLPersistenceId roleId;
+    private int roleId;
     private String roleName;
-    private MySQLPersistenceId schoolClassId;
+    private int schoolClassId;
     private String schoolClassName;
-
+    
     /**
      * @return the schoolId
      */
-    public MySQLPersistenceId getSchoolId() {
+    public int getSchoolId() {
         return schoolId;
     }
 
     /**
      * @param schoolId the schoolId to set
      */
-    public void setSchoolId(MySQLPersistenceId schoolId) {
+    public void setSchoolId(int schoolId) {
         this.schoolId = schoolId;
     }
 
@@ -55,14 +52,14 @@ public class SchoolsAndClasses {
     /**
      * @return the roleId
      */
-    public PersistenceId getRoleId() {
+    public int getRoleId() {
         return roleId;
     }
 
     /**
      * @param roleId the roleId to set
      */
-    public void setRoleId(MySQLPersistenceId roleId) {
+    public void setRoleId(int roleId) {
         this.roleId = roleId;
     }
 
@@ -83,14 +80,14 @@ public class SchoolsAndClasses {
     /**
      * @return the schoolClassId
      */
-    public MySQLPersistenceId getSchoolClassId() {
+    public int getSchoolClassId() {
         return schoolClassId;
     }
 
     /**
      * @param schoolClassId the schoolClassId to set
      */
-    public void setSchoolClassId(MySQLPersistenceId schoolClassId) {
+    public void setSchoolClassId(int schoolClassId) {
         this.schoolClassId = schoolClassId;
     }
 

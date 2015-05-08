@@ -1,5 +1,6 @@
 package fi.dwo.commons.persistence;
 
+import fi.dwo.commons.rest.RestClassType;
 import fi.dwo.commons.persistence.entities.*;
 
 /**
@@ -10,15 +11,15 @@ public class MySQLPersistenceId implements PersistenceId {
 
     // the two variables that define the id.
     private long id;
-    private PersistenceClassType type;
+    private RestClassType type;
 
-    private MySQLPersistenceId(long aId, PersistenceClassType aType) {
+    private MySQLPersistenceId(long aId, RestClassType aType) {
         id = aId;
         type = aType;
     }
 
     @Override
-    public PersistenceClassType getType() {
+    public RestClassType getType() {
         return type;
     }
 
@@ -91,103 +92,103 @@ public class MySQLPersistenceId implements PersistenceId {
     /**
      * @param type the type to set
      */
-    public void setType(PersistenceClassType type) {
+    public void setType(RestClassType type) {
         this.type = type;
     }
 
-    public static MySQLPersistenceId createPersistenceId(long id, PersistenceClassType t) {
+    public static MySQLPersistenceId createPersistenceId(long id, RestClassType t) {
                 return new MySQLPersistenceId(id,t);
     }
     
     
     public static MySQLPersistenceId createPersistentId(PersistentApplet o) {
-                return new MySQLPersistenceId(o.getAppletID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+                return new MySQLPersistenceId(o.getAppletID(), RestClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentAppletConfig o) {
-                return new MySQLPersistenceId(o.getAppletConfigID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+                return new MySQLPersistenceId(o.getAppletConfigID(), RestClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentClassCourse o) {
-                return new MySQLPersistenceId(o.getClassCourseID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+                return new MySQLPersistenceId(o.getClassCourseID(), RestClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentCourse o) {
-                return new MySQLPersistenceId(o.getCourseID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+                return new MySQLPersistenceId(o.getCourseID(), RestClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentCourseSequence o) {
-                return new MySQLPersistenceId(o.getCoursesequenceID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+                return new MySQLPersistenceId(o.getCoursesequenceID(), RestClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentDwoProfile o) {
-                return new MySQLPersistenceId(o.getDwoProfileID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+                return new MySQLPersistenceId(o.getDwoProfileID(), RestClassType.valueOf(o.getClass().getSimpleName()));
     }
 
 // Don't need this cached.    
 //    public static MySQLPersistenceId createPersistenceId(PersistentDwoSystemParameters o) {
-//                return new MySQLPersistenceId(o.getUserID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+//                return new MySQLPersistenceId(o.getUserID(), RestClassType.valueOf(o.getClass().getSimpleName()));
 //    }
 
 
     public static MySQLPersistenceId createPersistentId(PersistentHasRole o) {
-                return new MySQLPersistenceId(o.getPersistentHasRolePK().getId(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+                return new MySQLPersistenceId(o.getPersistentHasRolePK().getId(), RestClassType.valueOf(o.getClass().getSimpleName()));
     }
 
 //    public static MySQLPersistenceId createPersistenceId(PersistentImage o) {
-//                return new MySQLPersistenceId(o.(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+//                return new MySQLPersistenceId(o.(), RestClassType.valueOf(o.getClass().getSimpleName()));
 //    }
 
 //    public static MySQLPersistenceId createPersistenceId(PersistentJars o) {
-//                return new MySQLPersistenceId(o.getKey(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+//                return new MySQLPersistenceId(o.getKey(), RestClassType.valueOf(o.getClass().getSimpleName()));
 //    }
 
     public static MySQLPersistenceId createPersistentId(PersistentRole o) {
-                return new MySQLPersistenceId(o.getGroupID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+                return new MySQLPersistenceId(o.getGroupID(), RestClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentSamlUser o) {
-                return new MySQLPersistenceId(o.getId(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+                return new MySQLPersistenceId(o.getId(), RestClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentSchool o) {
-                return new MySQLPersistenceId(o.getSchoolID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+                return new MySQLPersistenceId(o.getSchoolID(), RestClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentSchoolClass o) {
-                return new MySQLPersistenceId(o.getClassID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+                return new MySQLPersistenceId(o.getClassID(), RestClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentSchoolGroup o) {
-                return new MySQLPersistenceId(o.getSchoolGroupID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+                return new MySQLPersistenceId(o.getSchoolGroupID(), RestClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentScoContext o) {
-                return new MySQLPersistenceId(o.getScoID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+                return new MySQLPersistenceId(o.getScoID(), RestClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentScoData o) {
-                return new MySQLPersistenceId(o.getScoID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+                return new MySQLPersistenceId(o.getScoID(), RestClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentStudentOfClass o) {
-                return new MySQLPersistenceId(o.getPersistentStudentOfClassPK().getId(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+                return new MySQLPersistenceId(o.getPersistentStudentOfClassPK().getId(), RestClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentStudentScoContext o) {
-                return new MySQLPersistenceId(o.getStudentSco(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+                return new MySQLPersistenceId(o.getStudentSco(), RestClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentStudentScoData o) {
-                return new MySQLPersistenceId(o.getStudentSco(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+                return new MySQLPersistenceId(o.getStudentSco(), RestClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentTeacherOfClass o) {
-                return new MySQLPersistenceId(o.getPersistentTeacherOfClassPK().getId(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+                return new MySQLPersistenceId(o.getPersistentTeacherOfClassPK().getId(), RestClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentUser o) {
-                return new MySQLPersistenceId(o.getUserID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
+                return new MySQLPersistenceId(o.getUserID(), RestClassType.valueOf(o.getClass().getSimpleName()));
     }
 
 }
