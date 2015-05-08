@@ -5,19 +5,61 @@
  */
 package fi.dwo.dwojapplet.gui.panels;
 
+import fi.dwo.commons.rest.entities.SchoolRoleAndClass;
 import fi.dwo.dwojapplet.gui.GuiConstants;
+import static java.lang.Thread.sleep;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  *
  * @author G.A.J. van der Plas
  */
-public class JPanelSchoolsAndClasses extends javax.swing.JPanel {
+public class JPanelSchoolsRolesAndClasses extends javax.swing.JPanel {
+    private static final Logger log = Logger.getLogger(JPanelSchoolsRolesAndClasses.class.getName());
+
+    private JPanelSchoolsRolesAndClassesProperties prop = new JPanelSchoolsRolesAndClassesProperties();
+    private SchoolsRolesAndClassesTableModel tableModel;
 
     /**
      * Creates new form JPanelSchoolsAndClasses
      */
-    public JPanelSchoolsAndClasses() {
+    public JPanelSchoolsRolesAndClasses() {
+        prop.init();
+        tableModel = new SchoolsRolesAndClassesTableModel();
+        tableModel.init(prop.getSchoolsRolesAndClasses());
         initComponents();
+        jTableSchoolsAndClasses.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent event) {
+                    // do some actions here, for example
+                    // print first column value from selected row
+                if(!event.getValueIsAdjusting()){//
+                    String srcString = ""+ tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(), 0)
+                            + ", " + tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(), 1);
+                    if((Integer) tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(), 5)!=-1){
+                            srcString += ", " + tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(), 2);
+                    }
+                    jTextFieldSchoolRoleClass.setText(srcString);
+                    System.out.println(tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(), 3).toString());
+                }
+            }
+        });
+
+        try {
+            SchoolRoleAndClass src = prop.getActiveSchoolRoleAndClass();
+            String srcString = src.getSchoolName() + ", " + src.getRoleName();
+
+            if (src.getRoleName().equals("STUDENT")) {
+                srcString += ", " + src.getSchoolClassName();
+            }
+            jTextFieldSchoolRoleClass.setText(srcString);
+            //fill table Model
+
+        } catch (Exception e) {
+        }
     }
 
     /**
@@ -48,30 +90,12 @@ public class JPanelSchoolsAndClasses extends javax.swing.JPanel {
         jScrollPane1.setPreferredSize(new java.awt.Dimension(300, 400));
 
         jTableSchoolsAndClasses.setAutoCreateRowSorter(true);
-        jTableSchoolsAndClasses.setBackground(jSplitPane1.getBackground());
-        jTableSchoolsAndClasses.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String [] {
-                "School", "Role", "Class"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jTableSchoolsAndClasses.setColumnSelectionAllowed(true);
+        jTableSchoolsAndClasses.setModel(tableModel);
+        jTableSchoolsAndClasses.setCellSelectionEnabled(false);
+        jTableSchoolsAndClasses.setRowSelectionAllowed(true);
+        jTableSchoolsAndClasses.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jTableSchoolsAndClasses.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jTableSchoolsAndClasses);
-        jTableSchoolsAndClasses.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
         jSplitPane1.setLeftComponent(jScrollPane1);
 
@@ -119,8 +143,6 @@ public class JPanelSchoolsAndClasses extends javax.swing.JPanel {
                 .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
                 .addContainerGap())
         );
-
-        jSplitPane1.getAccessibleContext().setAccessibleParent(null);
     }// </editor-fold>//GEN-END:initComponents
 
 

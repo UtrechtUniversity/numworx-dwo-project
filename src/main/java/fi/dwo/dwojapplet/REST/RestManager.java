@@ -5,9 +5,10 @@
  */
 package fi.dwo.dwojapplet.REST;
 
-import fi.dwo.commons.persistence.PersistenceClassType;
+import fi.dwo.commons.rest.RestClassType;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.rest.entities.SchoolRoleAndClass;
 import fi.dwo.dwojapplet.domain.rest.RestException;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +83,7 @@ class RestManager {
      * @return A list of Class c.
      * @throws RestException
      */
-    public <T> List<T> getList(String path, PersistenceClassType type) throws RestException {
+    public <T> List<T> getList(String path, RestClassType type) throws RestException {
         Response response = webTargetRest.path(path).request().get();
         if (response.getStatus() != 200) {
             log.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
@@ -97,6 +98,10 @@ class RestManager {
                     GenericType<ArrayList<PersistentRole>> pRoleType = new GenericType<ArrayList<PersistentRole>>() {
                     };
                     return (List<T>) response.readEntity(pRoleType);
+                case SchoolsRolesAndClasses:
+                    GenericType<ArrayList<SchoolRoleAndClass>> pSRCType = new GenericType<ArrayList<SchoolRoleAndClass>>() {
+                    };
+                    return (List<T>) response.readEntity(pSRCType);
                 default:
                     String msg = "Error trying to get an unsupported dataType.";
                     log.log(Level.SEVERE, msg);

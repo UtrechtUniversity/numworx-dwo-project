@@ -37,7 +37,7 @@ class MapperCreator {
         {"DwoProfile", "DwoProfileMapper"},
         {"AppletData", "AppletDataMapper"},
         {"CourseSequence", "CourseSequenceMapper"},
-        {"ClassCourse", "ClassCourseMapper"},};
+        {"ClassCourse", "ClassCourseMapper"}};
 
     /**
      * The mappers for external classes. e.g. The Applet-class is not in the

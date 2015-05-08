@@ -73,7 +73,7 @@ public class JPanelAccountDataProperties {
             // update local Global storage.
             DwoHelper.setCurrentUser(user);
         } catch (RestException ex) {
-            Logger.getLogger(JPanelMyProfileProperties.class.getName()).log(Level.SEVERE, null, ex);
+            log.log(Level.SEVERE, null, ex);
         }
     }
 }

@@ -5,7 +5,7 @@
  */
 package fi.dwo.dwojapplet.domain.rest;
 
-import fi.dwo.commons.persistence.PersistenceClassType;
+import fi.dwo.commons.rest.RestClassType;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import java.util.List;
@@ -37,7 +37,7 @@ public class RoleManager {
 //        roles =  StoredRestManager.getWebTargetRest().path("/rest/public/roles/get/json").request().get(oClass);
 //        log.log(Level.FINER, "Fetched {0} roles.", new Object[]{roles.size()});
 //        return roles;
-        roles = StoredRestManager.getInstance().getList("/rest/secure/user/userprofile/get/json", PersistenceClassType.PersistentRole);
+        roles = StoredRestManager.getInstance().getList("/rest/secure/user/userprofile/get/json", RestClassType.PersistentRole);
         return roles;
 
     

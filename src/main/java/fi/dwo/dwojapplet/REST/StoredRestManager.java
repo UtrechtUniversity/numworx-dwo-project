@@ -14,7 +14,7 @@ public class StoredRestManager extends RestManager {
     @Override
     public <T> T get(String path, Class<T> c) throws RestException {
         T object = super.get(path,c);
-        StoreManager.insertOrUpdate(object);
+        //StoreManager.insertOrUpdate(object);
         return object;
     }
 }

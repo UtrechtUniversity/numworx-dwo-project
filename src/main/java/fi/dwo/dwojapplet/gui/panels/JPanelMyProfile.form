@@ -67,7 +67,7 @@
             </Constraint>
           </Constraints>
         </Component>
-        <Component class="fi.dwo.dwojapplet.gui.panels.JPanelSchoolsAndClasses" name="jPanelSchoolsAndClasses">
+        <Component class="fi.dwo.dwojapplet.gui.panels.JPanelSchoolsRolesAndClasses" name="jPanelSchoolsAndClasses">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection component="jPanelSchoolsAndClasses" name="background" type="property"/>

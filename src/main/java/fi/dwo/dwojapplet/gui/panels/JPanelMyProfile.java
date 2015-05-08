@@ -32,7 +32,7 @@ public class JPanelMyProfile extends javax.swing.JPanel {
 
         jTabbedPaneProfile = new javax.swing.JTabbedPane();
         jPanelAcountData1 = new fi.dwo.dwojapplet.gui.panels.JPanelAcountData();
-        jPanelSchoolsAndClasses = new fi.dwo.dwojapplet.gui.panels.JPanelSchoolsAndClasses();
+        jPanelSchoolsAndClasses = new fi.dwo.dwojapplet.gui.panels.JPanelSchoolsRolesAndClasses();
 
         setBackground(GuiConstants.MAIN_BACKGROUND);
         setPreferredSize(new Dimension(GuiConstants.CENTER_WIDTH,GuiConstants.CENTER_HEIGHT));
@@ -68,7 +68,7 @@ public class JPanelMyProfile extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private fi.dwo.dwojapplet.gui.panels.JPanelAcountData jPanelAcountData1;
-    private fi.dwo.dwojapplet.gui.panels.JPanelSchoolsAndClasses jPanelSchoolsAndClasses;
+    private fi.dwo.dwojapplet.gui.panels.JPanelSchoolsRolesAndClasses jPanelSchoolsAndClasses;
     private javax.swing.JTabbedPane jTabbedPaneProfile;
     // End of variables declaration//GEN-END:variables
 }
