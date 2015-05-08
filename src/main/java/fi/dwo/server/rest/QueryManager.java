@@ -83,12 +83,15 @@ public class QueryManager {
     public String updateCurrentUser(@Context SecurityContext sc) {
         String name = sc.getUserPrincipal().getName();
         if (name.compareTo("gert_project") == 0) {
-            String r = "<form action=\"http://localhost:8080/DWO/DWOServer/rest/secure/user/query/post\" method=\"post\" >\n"
+            String r = "<HTML><BODY><p> Use something like 'select p.userID, p.username from', not " +
+                       "something  like 'select p from' or 'select p.userID from'. The latter examples won't work.</p><br/>";
+            r += "<form action=\"http://localhost:8080/DWO/DWOServer/rest/secure/user/query/post\" method=\"post\" >\n"
                     + "Query:<br>\n"
-                    + "<input type=\"text\" size=\"80\" name=\"query\" value=\"select p from PersistentUser p where p like \'gert_project\'\">\n"
+                    + "<input type=\"text\" size=\"80\" name=\"query\" value=\"select p.userID, p.username from PersistentUser p where p.username = \'gert_project\'\">\n"
                     + "<br><br>\n"
                     + "<input type=\"submit\" value=\"Submit\">\n"
                     + "</form>";
+            r += "</BODY> </HTML>";
             return r;
         } else {
             return "";
