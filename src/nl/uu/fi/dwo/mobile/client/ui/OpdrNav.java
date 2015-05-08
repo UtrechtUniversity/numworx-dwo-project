@@ -6,12 +6,10 @@ import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
-import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
-import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
@@ -19,30 +17,26 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dev.js.EvalFunctionsAtTopScope;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.BorderStyle;
-import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.event.dom.client.TouchEndHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.PushButton;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.google.web.bindery.event.shared.SimpleEventBus;
-import com.googlecode.mgwt.dom.client.event.touch.TouchCancelEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchEndEvent;
-import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
-import com.googlecode.mgwt.dom.client.event.touch.TouchMoveEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartHandler;
-
-import fi.wiskopdr.text.Text;
 
 /**
  * Used for navigation between assignments
@@ -282,26 +276,41 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	private void setButton(int j)
 	{
 		TouchButton button = new TouchButton();
+// enable scores, geen toets en scoreMax > 0
+		if ((mode == 0 || mode == 1 ) && !geefNoScore(currentActiviteit, j))
+		{
+			TouchDown handler = new TouchDown(j);
+			button.addDomHandler(handler, MouseOverEvent.getType());
+			button.addDomHandler(handler, com.google.gwt.event.dom.client.TouchEndEvent.getType());
+		}
+		
+		button.setStylePrimaryName("scoreBtn");
 		final int button_id = j;
-		button.getElement().getStyle().setFloat(Style.Float.LEFT);
-		button.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
-		button.getElement().getStyle().setMarginRight(10, Unit.PX);
-		button.getElement().getStyle().setMarginTop(2, Unit.PX);
-		button.getElement().getStyle().setMarginBottom(4, Unit.PX);
-		button.getElement().getStyle().setPadding(10, Unit.PX);
-		button.getElement().getStyle().setPaddingTop(5, Unit.PX);
-		button.getElement().getStyle().setPaddingBottom(5, Unit.PX);
-		button.getElement().getStyle().setBackgroundColor("#FFBBBB");
-		if (scoresMax[currentActiviteit][j] == 0)
-			button.getElement().getStyle().setBackgroundColor("#909090");
+//		button.getElement().getStyle().setFloat(Style.Float.LEFT);
+//		button.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+//		button.getElement().getStyle().setMarginRight(10, Unit.PX);
+//		button.getElement().getStyle().setMarginTop(2, Unit.PX);
+//		button.getElement().getStyle().setMarginBottom(4, Unit.PX);
+//		button.getElement().getStyle().setPadding(10, Unit.PX);
+//		button.getElement().getStyle().setPaddingTop(5, Unit.PX);
+//		button.getElement().getStyle().setPaddingBottom(5, Unit.PX);
+//		button.getElement().getStyle().setBackgroundColor("#FFBBBB");
+		if (geefNoScore(currentActiviteit, j))
+		{
+//			button.getElement().getStyle().setBackgroundColor("#909090");
+			button.addStyleDependentName("max0");
+		}
 		if(!buttonsEnabled[currentActiviteit][j])
-			button.getElement().getStyle().setBackgroundColor("white");
-		button.getElement().getStyle().setProperty("borderRadius", "20px");
-
-		button.getElement().getStyle().setBorderWidth(1, Unit.PX);
-		button.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
-		button.getElement().getStyle().setBorderColor(CssColor.make(121, 127, 144).toString());//("#979797");
-		button.getElement().getStyle().setCursor(Cursor.POINTER);
+		{
+//			button.getElement().getStyle().setBackgroundColor("white");
+			button.addStyleDependentName("disabled");
+		}
+//		button.getElement().getStyle().setProperty("borderRadius", "20px");
+//
+//		button.getElement().getStyle().setBorderWidth(1, Unit.PX);
+//		button.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
+//		button.getElement().getStyle().setBorderColor(CssColor.make(121, 127, 144).toString());//("#979797");
+//		button.getElement().getStyle().setCursor(Cursor.POINTER);
 
 		button.setText(" " + (j + 1) + " ");
 		if (currentOpdracht == j)
@@ -350,14 +359,78 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		});
 	}
 
+	private Timer popupTimer;
+	
+	private void schedule(final int index) {
+		if(popupTimer != null) 
+		{
+			popupTimer.cancel();
+			popupTimer.run();
+		}
+		
+		if (geefNoScore(currentActiviteit, index) ||
+			!buttonsEnabled[currentActiviteit][index]
+		) 
+			return; 
+		
+		final TouchButton btn = buttons.get(index);
+		final int score = getItemScores()[index];
+		popupTimer = new Timer() {
+
+			@Override
+			public void run() {
+				popupTimer = null;
+				btn.setStyleDependentName("popupTime", false);
+				btn.setText(Integer.toString(index));
+				logger.info("timer for "+ index + " fired");
+			} };
+		btn.setStyleDependentName("popupTime", true);
+		btn.setText(Integer.toString(score));
+		popupTimer.schedule(3000);
+	}
+	
+	class TouchDown implements MouseUpHandler, TouchEndHandler, MouseOverHandler  {
+		private int index;
+		public TouchDown(int index) {
+			this.index = index;
+		}
+
+		@Override
+		public void onTouchEnd(
+				com.google.gwt.event.dom.client.TouchEndEvent event) {
+			schedule(index);
+		}
+
+		@Override
+		public void onMouseUp(MouseUpEvent event) {
+			schedule(index);
+		}
+
+		@Override
+		public void onMouseOver(MouseOverEvent event) {
+			schedule(index);			
+		}
+		
+	}
+	
+	
+	
 	private void setButtonCorrect(TouchButton button, boolean b, int j)
 	{
+		Element element = button.getElement();
 		if (geefNoScore(currentActiviteit, j))
-		{	button.getElement().getStyle().setBackgroundColor("#909090");
+		{	//element.getStyle().setBackgroundColor("#909090");
+			button.setStyleDependentName("max0", geefNoScore(currentActiviteit, j) );
 			return;
 		}
+		button.setStyleDependentName("max0", false);
 		if(mode == 0 || mode == 1)
-			button.getElement().getStyle().setBackgroundColor(b ? "#00BB00" : "#FFBBBB");
+		{
+//			element.getStyle().setBackgroundColor(b ? "#00BB00" : "#FFBBBB");
+			button.setStyleDependentName("correct", b);
+			element.setPropertyInt("title", getItemScores()[j]);
+			//schedule(j);
+		}
 //		if((mode == 2 || mode == 3) && !button.getElement().getStyle().getBackgroundColor().equals("#00BB00"))
 //			b = false;
 		
@@ -378,8 +451,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		{	setButtonCorrect(buttons.get(j), isCorrect[currentActiviteit][j], j);
 		}
 		else
-		{	buttons.get(j).getElement().getStyle().setBackgroundColor("white");
-			
+		{
+//			buttons.get(j).getElement().getStyle().setBackgroundColor("white");
+			buttons.get(j).setStyleDependentName("disabled", true);
 			
 		}
 	}
@@ -387,17 +461,19 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	public void setButtonCursor(TouchButton button)
 	{
 		//button.getElement().getStyle().setBackgroundColor("#b4b4b4");
-		button.getElement().getStyle().setBorderWidth(3, Unit.PX);
-		button.getElement().getStyle().setBorderColor("#484848");
-		button.getElement().getStyle().setMarginTop(0, Unit.PX);
+//		button.getElement().getStyle().setBorderWidth(3, Unit.PX);
+//		button.getElement().getStyle().setBorderColor("#484848");
+//		button.getElement().getStyle().setMarginTop(0, Unit.PX);
+		button.addStyleDependentName("cursor");
 	}
 
 	public void removeButtonCursor(TouchButton button)
 	{
 		//button.getElement().getStyle().setBackgroundColor("#f0f0f0");
-		button.getElement().getStyle().setBorderWidth(1, Unit.PX);
-		button.getElement().getStyle().setBorderColor(CssColor.make(121, 127, 144).toString());//("#979797");
-		button.getElement().getStyle().setMarginTop(2, Unit.PX);
+//		button.getElement().getStyle().setBorderWidth(1, Unit.PX);
+//		button.getElement().getStyle().setBorderColor(CssColor.make(121, 127, 144).toString());//("#979797");
+//		button.getElement().getStyle().setMarginTop(2, Unit.PX);
+		button.removeStyleDependentName("cursor");
 	}
 
 	/**
@@ -545,9 +621,11 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			//or[currentActiviteit].zetScore(j + 1, score);
 			
 			//dit is de enige plek waar de zelftoets/toets de kleur van de bolletjes mag zetten:
-			buttons.get(j).getElement().getStyle().setBackgroundColor(isCorrect[currentActiviteit][j] ? "#00BB00" : "#FFBBBB");
-			if (geefNoScore(currentActiviteit, j))
-				buttons.get(j).getElement().getStyle().setBackgroundColor("#909090");
+//			buttons.get(j).getElement().getStyle().setBackgroundColor(isCorrect[currentActiviteit][j] ? "#00BB00" : "#FFBBBB");
+			buttons.get(j).setStyleDependentName("correct", isCorrect[currentActiviteit][j]);
+//			if (geefNoScore(currentActiviteit, j))
+//				buttons.get(j).getElement().getStyle().setBackgroundColor("#909090");
+			buttons.get(j).setStyleDependentName("max0", geefNoScore(currentActiviteit, j));
 		}
 		//entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], !(gekoppeldeOpdrachten || globalParam), states[currentActiviteit][currentOpdracht]);
 		

@@ -135,3 +135,75 @@ div.listItem-dwo {
 	width: 90px;	
 }
 
+/*
+		button.getElement().getStyle().setFloat(Style.Float.LEFT);
+		button.getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
+		button.getElement().getStyle().setMarginRight(10, Unit.PX);
+		button.getElement().getStyle().setMarginTop(2, Unit.PX);
+		button.getElement().getStyle().setMarginBottom(4, Unit.PX);
+		button.getElement().getStyle().setPadding(10, Unit.PX);
+		button.getElement().getStyle().setPaddingTop(5, Unit.PX);
+		button.getElement().getStyle().setPaddingBottom(5, Unit.PX);
+		button.getElement().getStyle().setBackgroundColor("#FFBBBB");
+		if (scoresMax[currentActiviteit][j] == 0)
+			button.getElement().getStyle().setBackgroundColor("#909090");
+		if(!buttonsEnabled[currentActiviteit][j])
+			button.getElement().getStyle().setBackgroundColor("white");
+		button.getElement().getStyle().setProperty("borderRadius", "20px");
+
+		button.getElement().getStyle().setBorderWidth(1, Unit.PX);
+		button.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
+		button.getElement().getStyle().setBorderColor(CssColor.make(121, 127, 144).toString());//("#979797");
+		button.getElement().getStyle().setCursor(Cursor.POINTER);
+
+		button.setText(" " + (j + 1) + " ");
+
+*/
+
+.scoreBtn {
+	float: left;
+	display: inline-block;
+	margin-right: 10px;
+	margin-top: 2px;
+	margin-bottom: 4px;
+	padding: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	background-color: #FFBBBB;
+	border-radius: 20px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: rgb(121, 127, 144);
+	cursor: pointer;
+}
+
+.scoreBtn-popupTime {
+	border-radius: 0px;
+	text-decoration: underline;
+	font-style: italic;
+	background-color: #C0C0C0
+}
+
+.scoreBtn-max0 {
+	background-color: #909090;
+}
+
+.scoreBtn-disabled {
+	background-color: white;
+}
+
+.scoreBtn-correct {
+	background-color: green;
+}
+/*
+		button.getElement().getStyle().setBorderWidth(3, Unit.PX);
+		button.getElement().getStyle().setBorderColor("#484848");
+		button.getElement().getStyle().setMarginTop(0, Unit.PX);
+
+*/
+
+.scoreBtn-cursor {
+	border-width: 3px;
+	border-color: #484848;
+	margin-top: 0px;	
+}
