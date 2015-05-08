@@ -381,12 +381,12 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			public void run() {
 				popupTimer = null;
 				btn.setStyleDependentName("popupTime", false);
-				btn.setText(Integer.toString(index));
+				btn.setText(Integer.toString(index+1));
 				logger.info("timer for "+ index + " fired");
 			} };
 		btn.setStyleDependentName("popupTime", true);
 		btn.setText(Integer.toString(score));
-		popupTimer.schedule(3000);
+		popupTimer.schedule(2000);
 	}
 	
 	class TouchDown implements MouseUpHandler, TouchEndHandler, MouseOverHandler  {
