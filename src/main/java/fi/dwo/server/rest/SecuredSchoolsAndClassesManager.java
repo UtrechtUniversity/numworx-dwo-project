@@ -62,52 +62,40 @@ public class SecuredSchoolsAndClassesManager {
             long userId = user.getUserID();
             log.log(Level.INFO, "Fetched User with username {0}", new Object[]{name});
             log.log(Level.INFO, "And id is {0}", new Object[]{userId});
-            // fetch a list of hasRole's for a user. Then create the tuples of all School, Role, classes
-//            q = em.createNamedQuery("PersistentHasRole.findByUserID");
-//            q.setParameter("userID", user.getUserID());
-//            hasRoleList = (List<PersistentHasRole>) q.getResultList();
-
-            q = em.createQuery("select s.schoolID, s.schoolName, g.role.groupID, g.role.groupname, h.classID, "
-                    + "h.schoolClass.class1 from PersistentHasRole h, PersistentSchoolGroup g join "
-                    + "g.school s where h.persistentHasRolePK.userID = :userID "
-                    + "and h.persistentHasRolePK.schoolGroupID = g.schoolGroupID");
-            q.setParameter("userID",userId);
-            List<Object[]> resultList = q.getResultList();
-            log.log(Level.INFO, "Fetched {0} HasRoles for userId {1}.", new Object[]{userId,resultList.size()});
-//            SchoolsAndClasses sac;            
-            SchoolsAndClasses sac;
-            for (Object[] oList : resultList) {
-                log.log(Level.INFO, "Fetched HasRole: {0}, {1}, {2}, {3}, {4}.", new Object[]{oList[0],oList[1],oList[2],oList[3],oList[4],oList[5]});
-                sac = new SchoolsAndClasses();
-                sac.setSchoolId(MySQLPersistenceId.createPersistenceId((Long) oList[0], PersistenceClassType.PersistentSchool));
-                sac.setSchoolName((String) oList[1]);
-                sac.setRoleId(MySQLPersistenceId.createPersistenceId((Long) oList[2], PersistenceClassType.PersistentRole));
-                sac.setRoleName((String) oList[3]);
-                sac.setSchoolClassId(MySQLPersistenceId.createPersistenceId((Long) oList[4], PersistenceClassType.PersistentSchoolClass));
-                sac.setSchoolClassName((String) oList[5]);
-                sacList.add(sac);
-                TODO fix query so there are results.
+            try {
+                //Sample query
+                //select h.schoolGroup.schoolID, h.schoolGroup.school.schoolName, h.schoolGroup.groupID, h.schoolGroup.role.groupname, h.classID from PersistentHasRole h where h.persistentHasRolePK.userID = 184690
+                q = em.createQuery("select h.schoolGroup.schoolID, h.schoolGroup.school.schoolName, "
+                        + "h.schoolGroup.groupID, h.schoolGroup.role.groupname, h.classID "
+                        + "from PersistentHasRole h where h.persistentHasRolePK.userID = :userID "
+                        + " ");
+                q.setParameter("userID", userId);
+                List<Object[]> resultList = q.getResultList();
+                log.log(Level.INFO, "Fetched {1} HasRoles for userId {0}.", new Object[]{userId, resultList.size()});
+                SchoolsAndClasses sac;
+                for (Object[] oList : resultList) {
+                    log.log(Level.INFO, "Fetched tuple <schoolID, schoolName, groupID, groupname, classID>: {0}, {1}, {2}, {3}, {4}.", new Object[]{oList[0], oList[1], oList[2], oList[3], oList[4]});
+                    sac = new SchoolsAndClasses();
+                    sac.setSchoolId(MySQLPersistenceId.createPersistenceId((Integer) oList[0], PersistenceClassType.PersistentSchool));
+                    sac.setSchoolName((String) oList[1]);
+                    sac.setRoleId(MySQLPersistenceId.createPersistenceId((Integer) oList[2], PersistenceClassType.PersistentRole));
+                    sac.setRoleName((String) oList[3]);
+                    if (oList[4] != null) {
+                        sac.setSchoolClassId(MySQLPersistenceId.createPersistenceId((Integer) oList[4], PersistenceClassType.PersistentSchoolClass));
+                        sac.setSchoolClassName((String) em.createQuery("select c.class1 from PersistentSchoolClass c where c.classID = :id ").setParameter("id", (Integer) oList[4]).getSingleResult());
+                    } else {
+                        sac.setSchoolClassId(null);
+                        sac.setSchoolClassName(null);
+                    }
+                    sacList.add(sac);
+                }
+            } catch (Exception e) {
+                log.log(Level.WARNING, "Unexpected exception: {0}", new Object[]{e.getMessage()});
+                return (List<SchoolsAndClasses>) new ArrayList<SchoolsAndClasses>();
             }
-
-//            log.log(Level.INFO, "Fetched {0} HasRole's for userId {1}.", new Object[]{hasRoleList.size(), user.getUserID()});
-//            SchoolsAndClasses sac;            
-//            for (PersistentHasRole h : hasRoleList) {
-//                log.log(Level.INFO, "Fetched HasRole: {0}, {1}, {2}, {3}, {4}.", new Object[]{h.getPersistentHasRolePK().getUserID(),
-//                    h.getPersistentHasRolePK().getSchoolGroupID(), h.getRights(), h.getLastLogin()});
-//                sac = new SchoolsAndClasses();    
-//                sac.setSchoolId(MySQLPersistenceId.createPersistenceId(h.getSchoolGroup().getSchool().getSchoolID(),PersistenceClassType.PersistentSchool));
-//                sac.setSchoolName(h.getSchoolGroup().getSchool().getSchoolName());
-//                sac.setRoleId(MySQLPersistenceId.createPersistenceId(h.getSchoolGroup().getRole().getGroupID(),PersistenceClassType.PersistentRole));
-//                sac.setRoleName(h.getSchoolGroup().getRole().getGroupname());
-//                sac.setSchoolClassId(MySQLPersistenceId.createPersistenceId(h.getSchoolClass().getClassID(),PersistenceClassType.PersistentSchoolClass));
-//                sac.setRoleName(h.getSchoolClass().getClass1());
-//                sacList.add(sac);
-//            }            
-        } catch (Exception e) {
-            log.log(Level.WARNING, "Unexpected exception: {0}", new Object[]{e.getMessage()});
-        } finally {
-            em.close();
-        }
+            } finally {
+                em.close();
+            }
             return sacList;
         }        // Create all the tuples.
 
@@ -125,6 +113,8 @@ public class SecuredSchoolsAndClassesManager {
         public PersistentUser updateCurrentUser
         (@Context
         SecurityContext sc, PersistentUser user
+            
+            
         
             ) {
         if (user.getUsername().compareTo(sc.getUserPrincipal().getName()) == 0) {
@@ -159,6 +149,7 @@ public class SecuredSchoolsAndClassesManager {
         @Produces({"application/json"})
         @Path("/classinfo/json")
         public String info
+
         
             () {
         return this.getClass().getName();
