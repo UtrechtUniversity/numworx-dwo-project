@@ -250,7 +250,7 @@
 	code="org.cbook.applet.CBookInstance"
 	width="<%=width %>"
 	height="<%=height %>"
-	archive="cbookinstance.jar, <%= archive %>"
+	archive="cbookinstance.jar"
 	mayscript
 	id="API"
 	name="CBookInstance"
@@ -264,6 +264,7 @@
 	<param name="width" value="<%=width%>" >
 	<param name="height" value="<%=height%>" >
 	<param name="className" value="<%=className%>" >
+	<param name="classPath" value="<%=archive%>" >
 	<param name="launchData" value='<%= launchData %>' >
 	<param name="randomValues" value='<%=randomValues %>' >
 	<param name="uuid" value="<%=uuid %>" >
