@@ -5,7 +5,6 @@
  */
 package fi.dwo.server.rest;
 
-import fi.dwo.commons.rest.entities.SchoolsAndClasses;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.logging.Level;
@@ -57,8 +56,8 @@ public class QueryManager {
                 List<Object[]> resultList = q.getResultList();
                 log.log(Level.INFO, "Fetched {1} results for user {0}.", new Object[]{name, resultList.size()});
                 for (Object[] oList : resultList) {
-                    for (int j = 0; j < oList.length; j++) {
-                        r = r + " " + oList[j];
+                    for (Object o : oList) {
+                        r = r + " " + o;
                     }
 
                     log.log(Level.INFO, "Query Result for user {0}: {1}.", new Object[]{name, r});
