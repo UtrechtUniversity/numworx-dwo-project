@@ -195,7 +195,7 @@
   } catch(Exception e) {
     doReturn(request, response, "Error while validating message", out);
     log("Error validating message", e);
-    return;
+//    return;
   }
 // applet gegevens
  	String language = request.getParameter("launch_presentation_locale");
@@ -275,15 +275,15 @@
 	<param name="logID" value="<%=logID%>" >
 	<param name="logOption" value="<%=logOption%>">
 	<param name="scoreMax" value="<%=scoreMax %>" >
-	
+	<param name="codebase_lookup" value="false">
 </applet>
-
+<!-- 
 <div id='footer'>
 	<button type='button' onclick='doReset()' >reset</button>
 	<button type='button' onclick='doCheck()' >check</button>
 	<button type='button' onclick='doStop()'  >stop</button>
 </div>
 
-
+ -->
 </body>
 </html>
