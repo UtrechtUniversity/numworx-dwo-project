@@ -5,6 +5,7 @@
  */
 package fi.dwo.commons.rest.entities;
 
+import fi.dwo.commons.persistence.PersistenceId;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -14,24 +15,24 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class SchoolRoleAndClass {
-    private int schoolId;
+    private PersistenceId schoolId;
     private String schoolName;
-    private int roleId;
+    private PersistenceId roleId;
     private String roleName;
-    private int schoolClassId;
+    private PersistenceId schoolClassId;
     private String schoolClassName;
     
     /**
      * @return the schoolId
      */
-    public int getSchoolId() {
+    public PersistenceId getSchoolId() {
         return schoolId;
     }
 
     /**
      * @param schoolId the schoolId to set
      */
-    public void setSchoolId(int schoolId) {
+    public void setSchoolId(PersistenceId schoolId) {
         this.schoolId = schoolId;
     }
 
@@ -52,14 +53,14 @@ public class SchoolRoleAndClass {
     /**
      * @return the roleId
      */
-    public int getRoleId() {
+    public PersistenceId getRoleId() {
         return roleId;
     }
 
     /**
      * @param roleId the roleId to set
      */
-    public void setRoleId(int roleId) {
+    public void setRoleId(PersistenceId roleId) {
         this.roleId = roleId;
     }
 
@@ -80,14 +81,14 @@ public class SchoolRoleAndClass {
     /**
      * @return the schoolClassId
      */
-    public int getSchoolClassId() {
+    public PersistenceId getSchoolClassId() {
         return schoolClassId;
     }
 
     /**
      * @param schoolClassId the schoolClassId to set
      */
-    public void setSchoolClassId(int schoolClassId) {
+    public void setSchoolClassId(PersistenceId schoolClassId) {
         this.schoolClassId = schoolClassId;
     }
 

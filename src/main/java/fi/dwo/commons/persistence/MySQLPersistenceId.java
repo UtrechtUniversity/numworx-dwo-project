@@ -1,26 +1,107 @@
 package fi.dwo.commons.persistence;
 
-import fi.dwo.commons.rest.RestClassType;
 import fi.dwo.commons.persistence.entities.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
+ * PersistenceId for the MySQL database.
+ *
+ * @see PersistenceId
  *
  * @author Gert van der Plas <gertvdplas@gmail.com>
  */
-public class MySQLPersistenceId implements PersistenceId {
+public class MySQLPersistenceId extends PersistenceId implements Comparable<PersistenceId> {
+
+    private static final Logger log = Logger.getLogger(MySQLPersistenceId.class.getName());
 
     // the two variables that define the id.
     private long id;
-    private RestClassType type;
 
-    private MySQLPersistenceId(long aId, RestClassType aType) {
+    /**
+     * This constructor is only public because of jax-rs. Use a factory to
+     * generate id's.
+     *
+     * @param type the type to set
+     */
+    private MySQLPersistenceId(PersistenceId pid) {
+        String[] strList = pid.getIdString().split(";");
+        if (strList[0].equals("MYSQL")) {
+            super.setIdString(pid.getIdString());
+            super.setType(PersistenceClassType.valueOf(strList[1]));
+            id = Long.parseLong(strList[2]);
+            log.log(Level.FINE, "Converted IdString to id and type : {0} {1}", new Object[]{id, super.getType()});
+        } else {
+            id=-1;
+            super.setType(PersistenceClassType.none);
+            log.log(Level.SEVERE, "Failed to convert IdString to id and type as it is for DB {0}", new Object[]{strList[0]});
+        }
+    }
+
+    /**
+     * This constructor is only public because of jax-rs. Use a factory to
+     * generate id's.
+     *
+     * @param type the type to set
+     */
+    private MySQLPersistenceId(long aId, PersistenceClassType aType) {
         id = aId;
-        type = aType;
+        super.setType(aType);
     }
 
     @Override
-    public RestClassType getType() {
-        return type;
+    public String getIdString() {
+        String s = String.format("MYSQL;%s;%020d", super.getType().name(),id);
+        log.log(Level.FINE, "String id : ", new Object[]{s});
+        return s;
+    }
+
+    @Override
+    public void setIdString(String idString) {
+        String[] strList = idString.split(";");
+        if (strList[0].equals("MYSQL")) {
+            super.setIdString(idString);
+            super.setType(PersistenceClassType.valueOf(strList[1]));
+            id = Long.parseLong(strList[2]);
+            log.log(Level.FINE, "Converted IdString to id and type : {0} {1}", new Object[]{id, super.getType()});
+        } else {
+            id=-1;
+            super.setType(PersistenceClassType.none);
+            log.log(Level.SEVERE, "Failed to convert IdString to id and type as it is for DB {0}", new Object[]{strList[0]});
+        }
+    }
+
+    /**
+     * This functionality is only public because of jax-rs.
+     *
+     * @return the id
+     */
+    public long getId() {
+        return id;
+    }
+
+    /**
+     * This functionality is only public because of jax-rs.
+     *
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public PersistenceClassType getType() {
+        return super.getType();
+    }
+
+    /**
+     * This functionality is only public because of jax-rs.
+     *
+     * @param type the type to set
+     */
+    @Override
+    public void setType(PersistenceClassType type) {
+        super.setType(type);
     }
 
     /**
@@ -36,11 +117,11 @@ public class MySQLPersistenceId implements PersistenceId {
         final int EQUAL = 0;
         final int AFTER = 1;
 
-        if (aId.getType().ordinal() == type.ordinal()
+        if (aId.getType().ordinal() == super.getType().ordinal()
                 && id == ((MySQLPersistenceId) aId).getId()) {
             return EQUAL;
-        } else if (aId.getType().ordinal() < type.ordinal()
-                || (aId.getType().ordinal() == type.ordinal()
+        } else if (aId.getType().ordinal() < super.getType().ordinal()
+                || (aId.getType().ordinal() == super.getType().ordinal()
                 && id < ((MySQLPersistenceId) aId).getId())) {
             return BEFORE;
         } else {
@@ -54,8 +135,9 @@ public class MySQLPersistenceId implements PersistenceId {
      * @param aId
      * @return
      */
+    @Override
     public boolean equals(PersistenceId aId) {
-        if (aId.getType().ordinal() == type.ordinal()
+        if(aId.getType().ordinal() == super.getType().ordinal()
                 && id == ((MySQLPersistenceId) aId).getId()) {
             return true;
         } else {
@@ -65,130 +147,113 @@ public class MySQLPersistenceId implements PersistenceId {
 
     /**
      * A class that overrides equals must override hashCode for HasMaps and such
-     * to work properly. 
+     * to work properly.
      */
     @Override
     public int hashCode() {
         //TODO Improve the hash function
-        long r = type.ordinal();
+        long r = super.getType().ordinal();
         r = r * id;
         return (int) r % Integer.MAX_VALUE;
     }
-
-    /**
-     * @return the id
-     */
-    protected long getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    protected void setId(int id) {
-        this.id = id;
-    }
-
-    /**
-     * @param type the type to set
-     */
-    public void setType(RestClassType type) {
-        this.type = type;
-    }
-
-    public static MySQLPersistenceId createPersistenceId(long id, RestClassType t) {
-                return new MySQLPersistenceId(id,t);
-    }
     
-    
+    public static long getId(PersistenceId aId) {
+        String[] strList = aId.getIdString().split(";");
+        if (strList[0].equals("MYSQL")) {
+            return Long.parseLong(strList[2]);
+        } else {
+            log.log(Level.SEVERE, "Failed to convert IdString {0}", new Object[]{aId.getIdString()});
+            return -1;
+        } 
+    }
+
+    public static MySQLPersistenceId createPersistenceId(long id, PersistenceClassType t) {
+        return new MySQLPersistenceId(id, t);
+    }
+
     public static MySQLPersistenceId createPersistentId(PersistentApplet o) {
-                return new MySQLPersistenceId(o.getAppletID(), RestClassType.valueOf(o.getClass().getSimpleName()));
+        return new MySQLPersistenceId(o.getAppletID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentAppletConfig o) {
-                return new MySQLPersistenceId(o.getAppletConfigID(), RestClassType.valueOf(o.getClass().getSimpleName()));
+        return new MySQLPersistenceId(o.getAppletConfigID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentClassCourse o) {
-                return new MySQLPersistenceId(o.getClassCourseID(), RestClassType.valueOf(o.getClass().getSimpleName()));
+        return new MySQLPersistenceId(o.getClassCourseID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentCourse o) {
-                return new MySQLPersistenceId(o.getCourseID(), RestClassType.valueOf(o.getClass().getSimpleName()));
+        return new MySQLPersistenceId(o.getCourseID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentCourseSequence o) {
-                return new MySQLPersistenceId(o.getCoursesequenceID(), RestClassType.valueOf(o.getClass().getSimpleName()));
+        return new MySQLPersistenceId(o.getCoursesequenceID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentDwoProfile o) {
-                return new MySQLPersistenceId(o.getDwoProfileID(), RestClassType.valueOf(o.getClass().getSimpleName()));
+        return new MySQLPersistenceId(o.getDwoProfileID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
     }
 
 // Don't need this cached.    
 //    public static MySQLPersistenceId createPersistenceId(PersistentDwoSystemParameters o) {
-//                return new MySQLPersistenceId(o.getUserID(), RestClassType.valueOf(o.getClass().getSimpleName()));
+//                return new MySQLPersistenceId(o.getUserID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
 //    }
-
-
     public static MySQLPersistenceId createPersistentId(PersistentHasRole o) {
-                return new MySQLPersistenceId(o.getPersistentHasRolePK().getId(), RestClassType.valueOf(o.getClass().getSimpleName()));
+        return new MySQLPersistenceId(o.getPersistentHasRolePK().getId(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
     }
 
 //    public static MySQLPersistenceId createPersistenceId(PersistentImage o) {
-//                return new MySQLPersistenceId(o.(), RestClassType.valueOf(o.getClass().getSimpleName()));
+//                return new MySQLPersistenceId(o.(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
 //    }
-
 //    public static MySQLPersistenceId createPersistenceId(PersistentJars o) {
-//                return new MySQLPersistenceId(o.getKey(), RestClassType.valueOf(o.getClass().getSimpleName()));
+//                return new MySQLPersistenceId(o.getKey(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
 //    }
-
     public static MySQLPersistenceId createPersistentId(PersistentRole o) {
-                return new MySQLPersistenceId(o.getGroupID(), RestClassType.valueOf(o.getClass().getSimpleName()));
+        return new MySQLPersistenceId(o.getGroupID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentSamlUser o) {
-                return new MySQLPersistenceId(o.getId(), RestClassType.valueOf(o.getClass().getSimpleName()));
+        return new MySQLPersistenceId(o.getId(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentSchool o) {
-                return new MySQLPersistenceId(o.getSchoolID(), RestClassType.valueOf(o.getClass().getSimpleName()));
+        return new MySQLPersistenceId(o.getSchoolID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentSchoolClass o) {
-                return new MySQLPersistenceId(o.getClassID(), RestClassType.valueOf(o.getClass().getSimpleName()));
+        return new MySQLPersistenceId(o.getClassID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentSchoolGroup o) {
-                return new MySQLPersistenceId(o.getSchoolGroupID(), RestClassType.valueOf(o.getClass().getSimpleName()));
+        return new MySQLPersistenceId(o.getSchoolGroupID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentScoContext o) {
-                return new MySQLPersistenceId(o.getScoID(), RestClassType.valueOf(o.getClass().getSimpleName()));
+        return new MySQLPersistenceId(o.getScoID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentScoData o) {
-                return new MySQLPersistenceId(o.getScoID(), RestClassType.valueOf(o.getClass().getSimpleName()));
+        return new MySQLPersistenceId(o.getScoID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentStudentOfClass o) {
-                return new MySQLPersistenceId(o.getPersistentStudentOfClassPK().getId(), RestClassType.valueOf(o.getClass().getSimpleName()));
+        return new MySQLPersistenceId(o.getPersistentStudentOfClassPK().getId(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentStudentScoContext o) {
-                return new MySQLPersistenceId(o.getStudentSco(), RestClassType.valueOf(o.getClass().getSimpleName()));
+        return new MySQLPersistenceId(o.getStudentSco(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentStudentScoData o) {
-                return new MySQLPersistenceId(o.getStudentSco(), RestClassType.valueOf(o.getClass().getSimpleName()));
+        return new MySQLPersistenceId(o.getStudentSco(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentTeacherOfClass o) {
-                return new MySQLPersistenceId(o.getPersistentTeacherOfClassPK().getId(), RestClassType.valueOf(o.getClass().getSimpleName()));
+        return new MySQLPersistenceId(o.getPersistentTeacherOfClassPK().getId(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
     }
 
     public static MySQLPersistenceId createPersistentId(PersistentUser o) {
-                return new MySQLPersistenceId(o.getUserID(), RestClassType.valueOf(o.getClass().getSimpleName()));
+        return new MySQLPersistenceId(o.getUserID(), PersistenceClassType.valueOf(o.getClass().getSimpleName()));
     }
-
 }

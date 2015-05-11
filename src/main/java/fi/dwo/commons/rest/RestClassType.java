@@ -6,14 +6,14 @@
 package fi.dwo.commons.rest;
 
 /**
- * All the class types that are persistent and are put in the Store. Note the 
- * ClassType name is match the Class name exact. The ordering of the class names
- * is to be alphabetically!
+ * All the class types that are use in the rest interface and are put in the Store. Note the 
+ * ClassType name has to match the Class name exactly. 
  * 
  * @author Gert van der Plas <gertvdplas@gmail.com>
  */
 
 public enum RestClassType {
+    //Persistent classes
         PersistentApplet, 
         PersistentAppletConfig, 
         PersistentClassCourse,
@@ -36,7 +36,8 @@ public enum RestClassType {
         PersistentStudentScoData,
         PersistentTeacherOfClass,
         PersistentUser,
-        
+        //Non-peristent classes
+        MySQLPersistenceId,
         SchoolRoleAndClass,
         SchoolsRolesAndClasses
     }
