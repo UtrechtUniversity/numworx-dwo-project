@@ -9,6 +9,7 @@ import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.security.PermitAll;
 import javax.persistence.EntityManager;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotAuthorizedException;
@@ -25,6 +26,7 @@ import javax.ws.rs.core.SecurityContext;
  *
  * @author G.A.J. van der Plas
  */
+@PermitAll
 @Path("/secure/user/userprofile")
 public class SecuredUserProfileManager {
 

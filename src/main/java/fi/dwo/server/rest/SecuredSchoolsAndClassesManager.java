@@ -5,7 +5,6 @@
  */
 package fi.dwo.server.rest;
 
-import fi.dwo.commons.rest.RestClassType;
 import fi.dwo.commons.persistence.*;
 import fi.dwo.commons.persistence.entities.*;
 import fi.dwo.commons.rest.entities.*;
@@ -52,7 +51,6 @@ public class SecuredSchoolsAndClassesManager {
         SchoolsRolesAndClasses sacs = new SchoolsRolesAndClasses();
 
         PersistentUser user = null;
-        List<PersistentHasRole> hasRoleList = null;
         List<SchoolRoleAndClass> sacList = (List<SchoolRoleAndClass>) new ArrayList<SchoolRoleAndClass>();
         // fetch the authenticated user
         try {
@@ -78,30 +76,35 @@ public class SecuredSchoolsAndClassesManager {
                 for (Object[] oList : resultList) {
                     log.log(Level.INFO, "Fetched tuple <schoolID, schoolName, groupID, groupname, classID>: {0}, {1}, {2}, {3}, {4}.", new Object[]{oList[0], oList[1], oList[2], oList[3], oList[4]});
                     sac = new SchoolRoleAndClass();
-                    sac.setSchoolId((Integer) oList[0]);
+                    sac.setSchoolId((PersistenceId) MySQLPersistenceId.createPersistenceId((Integer) oList[0], PersistenceClassType.PersistentSchool));
                     sac.setSchoolName((String) oList[1]);
-                    sac.setRoleId((Integer) oList[2]);
+                    sac.setRoleId((PersistenceId) MySQLPersistenceId.createPersistenceId((Integer) oList[2], PersistenceClassType.PersistentRole));
                     sac.setRoleName((String) oList[3]);
                     if (oList[4] != null) {
-                        sac.setSchoolClassId((Integer) oList[4]);
+                        sac.setSchoolClassId((PersistenceId) MySQLPersistenceId.createPersistenceId((Integer) oList[0], PersistenceClassType.PersistentSchoolClass));
                         sac.setSchoolClassName((String) em.createQuery("select c.class1 from PersistentSchoolClass c where c.classID = :id ").setParameter("id", (Integer) oList[4]).getSingleResult());
                     } else {
-                        sac.setSchoolClassId(-1);
+                    log.log(Level.INFO, " clearing classname and id.");
+                        sac.setSchoolClassId(null);
                         sac.setSchoolClassName(null);
+                    log.log(Level.INFO, " clearing classname and id.");
                     }
                     sacList.add(sac);
+                    log.log(Level.INFO, " added to sac.");
                 }
             } catch (Exception e) {
                 log.log(Level.WARNING, "Unexpected exception: {0}", new Object[]{e.getMessage()});
                 return new SchoolsRolesAndClasses();
             }
         } finally {
+                    log.log(Level.INFO, " closed em.");
             em.close();
         }
         SchoolRoleAndClass curSac = new SchoolRoleAndClass();
         sacs.setCurrentSchoolRoleAndClass(curSac);
         sacs.setSchoolsRolesAndClassesList(sacList);
         //TODO run query for this.
+        log.log(Level.INFO, " returning.");
         return sacs;
     }        // Create all the tuples.
 
@@ -110,39 +113,60 @@ public class SecuredSchoolsAndClassesManager {
      * updated data.
      *
      * @param sc
-     * @param user
+     * @param src
      * @return
      */
     @PUT
     @Produces({"application/json"})
     @Path("/update/json")
-    public PersistentUser updateCurrentUser(@Context SecurityContext sc, PersistentUser user
-    ) {
-        if (user.getUsername().compareTo(sc.getUserPrincipal().getName()) == 0) {
-            //User to update is logged in user.
-            EntityManager em = DwoEmfFactory.createEntityManager();
-            try {
-                em.getTransaction().begin();
-//if(true) { // beperkte update                
-                PersistentUser u = em.find(PersistentUser.class, user.getUserID());
-                u.setEmail(user.getEmail());
-                u.setFirstname(user.getFirstname());
-                u.setMiddlename(user.getMiddlename());
-                u.setLastname(user.getLastname());
-                u.setPasswd(user.getPasswd());
-                user = u;
-//} else { //full update
-//                user = em.merge(user);
-//}
-                em.getTransaction().commit();
-                log.log(Level.FINE, "Updated User with username {0}", new Object[]{user.getUsername()});
-            } finally {
-                em.close();
+    public SchoolRoleAndClass setActiveSchoolRoleClass(@Context SecurityContext sc,
+            SchoolRoleAndClass src) {
+
+        EntityManager em = DwoEmfFactory.createEntityManager();
+        PersistentUser user = null;
+        // fetch the authenticated user
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
+            String userName = sc.getUserPrincipal().getName();
+            q.setParameter("username", userName);
+            user = (PersistentUser) q.getSingleResult();
+            String name = user.getUsername();
+            long userId = user.getUserID();
+            log.log(Level.INFO, "Fetched User with username {0}", new Object[]{name});
+            log.log(Level.INFO, "And id is {0}", new Object[]{userId});
+
+            //Find if a School, role and class exists  and set this as default.
+            q = em.createQuery("select h from PersistentHasRole h where h.persistentHasRolePK.userID = :userID and h.schoolGroup.groupID = :groupID"
+                    + " ");
+            q.setParameter("userID", userId);
+            q.setParameter("groupID", MySQLPersistenceId.getId(src.getRoleId()));
+            List<PersistentHasRole> resultList = q.getResultList();
+            log.log(Level.INFO, "Fetched {1} HasRoles for userId {0}.", new Object[]{userId, resultList.size()});
+
+            if (resultList.size() == 1) {
+                try {
+                    em.getTransaction().begin();
+                    PersistentHasRole h = (PersistentHasRole) resultList.get(0);
+                    em.find(PersistentHasRole.class, h);
+                    h.setClassID((int) (long) MySQLPersistenceId.getId(src.getSchoolClassId()));
+                    em.find(PersistentUser.class, user);
+                    user.setSchoolGroupID(h.getSchoolGroup().getSchoolGroupID());
+
+                    em.getTransaction().commit();
+                    log.log(Level.FINE, "Updated User with username {0}", new Object[]{user.getUsername()});
+                } finally {
+                    em.close();
+                }
+                return src;
+            } else {
+                log.log(Level.WARNING, "ILLEGAL USER-OPERATION: Trying to change the active role of username {0} to school {1} and role {2}.", new Object[]{sc.getUserPrincipal().getName(), src.getSchoolId(), src.getRoleId()});
+                throw new NotAuthorizedException("You Don't Have Permission to update usercode " + user.getUsername() + ".");
             }
-            return user;
-        } else {
-            log.log(Level.WARNING, "ILLEGAL USER-OPERATION: Trying to update the user profile of {0} under user account {1}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
-            throw new NotAuthorizedException("You Don't Have Permission to update usercode " + user.getUsername() + ".");
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Unexpected exception: {0}", new Object[]{e.getMessage()});
+            return null;
+        } finally {
+            em.close();
         }
     }
 

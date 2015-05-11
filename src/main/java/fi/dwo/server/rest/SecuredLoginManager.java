@@ -9,6 +9,7 @@ import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentEntityManagers.UserManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.security.PermitAll;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
