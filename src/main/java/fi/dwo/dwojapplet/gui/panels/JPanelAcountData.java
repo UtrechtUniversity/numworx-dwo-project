@@ -9,7 +9,6 @@ import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import java.awt.Color;
-import java.awt.Component;
 import java.util.logging.Logger;
 
 /**
@@ -283,7 +282,9 @@ public class JPanelAcountData extends javax.swing.JPanel {
 
             jTextFieldUserName.setEditable(true);
             jPasswordFieldConfirmPassword.setEditable(true);
+            jLabelConfirmPassword.setEnabled(true);
             jPasswordFieldNewPassword.setEditable(true);
+            jLabelNewPassword.setEnabled(true);
             jPasswordFieldPassword.setEditable(true);
             jTextFieldInsertion.setEditable(true);
             jTextFieldGivenName.setEditable(true);
@@ -308,7 +309,6 @@ public class JPanelAcountData extends javax.swing.JPanel {
             jTextFieldUserName.setEditable(false);
             jPasswordFieldConfirmPassword.setEditable(false);
             jPasswordFieldNewPassword.setEditable(false);
-            jPasswordFieldPassword.setEditable(false);
             jTextFieldInsertion.setEditable(false);
             jTextFieldGivenName.setEditable(false);
             jTextFieldFamilyName.setEditable(false);

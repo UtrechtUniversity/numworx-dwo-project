@@ -6,6 +6,7 @@
 package fi.dwo.dwojapplet.gui.panels;
 
 import fi.dwo.commons.entities.SchoolGroupRoles;
+import fi.dwo.commons.persistence.PersistenceId;
 import fi.dwo.commons.rest.entities.SchoolRoleAndClass;
 import fi.dwo.commons.rest.entities.SchoolsRolesAndClasses;
 import java.util.List;
@@ -30,20 +31,20 @@ class SchoolsRolesAndClassesTableModel extends AbstractTableModel {
         }
         data = new Object[rows + 1][6];
         data[0][0] = "Schoolloos";
-        data[0][3] = -1;
+        data[0][3] = new PersistenceId();
         data[0][1] = "STUDENT";
         data[0][4] = SchoolGroupRoles.STUDENT;
         data[0][2] = "";
-        data[0][5] = -1;
+        data[0][5] = null;
         int j = 1;
         for (SchoolRoleAndClass src : srcList) {
             data[j][0] = src.getSchoolName();
             data[j][3] = src.getSchoolId();
             data[j][1] = src.getRoleName();
             data[j][4] = src.getRoleId();
-            if (src.getSchoolClassId() == -1) {
+            if (src.getSchoolClassId() == null) {
                 data[j][2] = "";
-                data[j][5] = -1;
+                data[j][5] = null;
             } else {
                 data[j][2] = src.getSchoolClassName();
                 data[j][5] = src.getSchoolClassId();

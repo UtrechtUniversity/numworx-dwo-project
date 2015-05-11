@@ -5,10 +5,9 @@
  */
 package fi.dwo.dwojapplet.gui.panels;
 
+import fi.dwo.commons.persistence.PersistenceId;
 import fi.dwo.commons.rest.entities.SchoolRoleAndClass;
 import fi.dwo.dwojapplet.gui.GuiConstants;
-import static java.lang.Thread.sleep;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -39,7 +38,7 @@ public class JPanelSchoolsRolesAndClasses extends javax.swing.JPanel {
                 if(!event.getValueIsAdjusting()){//
                     String srcString = ""+ tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(), 0)
                             + ", " + tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(), 1);
-                    if((Integer) tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(), 5)!=-1){
+                    if(((PersistenceId) tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(),5))!=null){
                             srcString += ", " + tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(), 2);
                     }
                     jTextFieldSchoolRoleClass.setText(srcString);
