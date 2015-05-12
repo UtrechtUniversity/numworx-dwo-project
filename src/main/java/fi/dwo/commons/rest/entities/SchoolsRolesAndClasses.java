@@ -26,7 +26,7 @@ public class SchoolsRolesAndClasses {
     /**
      * @return the currentSchoolRoleAndClass
      */
-    public SchoolRoleAndClass getCurrentSchoolRoleAndClass() {
+    public SchoolRoleAndClass getActiveSchoolRoleAndClass() {
         return currentSchoolRoleAndClass;
     }
 

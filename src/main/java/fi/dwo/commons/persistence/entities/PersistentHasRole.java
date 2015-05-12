@@ -58,6 +58,9 @@ public class PersistentHasRole implements Serializable {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="schoolGroupID", insertable=false, updatable=false )
     private PersistentSchoolGroup schoolGroup;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="userID", insertable=false, updatable=false )
+    private PersistentUser user;
     
 
     public PersistentHasRole() {
@@ -155,6 +158,20 @@ public class PersistentHasRole implements Serializable {
      */
     public PersistentSchoolGroup getSchoolGroup() {
         return schoolGroup;
+    }
+
+    /**
+     * @return the user
+     */
+    public PersistentUser getUser() {
+        return user;
+    }
+
+    /**
+     * @param user the user to set
+     */
+    public void setUser(PersistentUser user) {
+        this.user = user;
     }
     
 }

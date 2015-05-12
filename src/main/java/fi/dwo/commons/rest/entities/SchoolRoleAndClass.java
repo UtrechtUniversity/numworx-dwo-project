@@ -21,6 +21,8 @@ public class SchoolRoleAndClass {
     private String roleName;
     private PersistenceId schoolClassId;
     private String schoolClassName;
+    private PersistenceId userId;
+    private PersistenceId schoolGroupId;
     
     /**
      * @return the schoolId
@@ -104,6 +106,34 @@ public class SchoolRoleAndClass {
      */
     public void setSchoolClassName(String schoolClassName) {
         this.schoolClassName = schoolClassName;
+    }
+
+    /**
+     * @return the userId
+     */
+    public PersistenceId getUserId() {
+        return userId;
+    }
+
+    /**
+     * @param userId the userId to set
+     */
+    public void setUserId(PersistenceId userId) {
+        this.userId = userId;
+    }
+
+    /**
+     * @return the groupId
+     */
+    public PersistenceId getSchoolGroupId() {
+        return schoolGroupId;
+    }
+
+    /**
+     * @param groupId the groupId to set
+     */
+    public void setSchoolGroupId(PersistenceId schoolGroupId) {
+        this.schoolGroupId = schoolGroupId;
     }
     
 }
