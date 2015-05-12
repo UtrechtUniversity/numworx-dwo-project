@@ -48,10 +48,12 @@ public class SecuredSchoolsAndClassesManager {
     @Path("/get/json")
     public SchoolsRolesAndClasses getSchoolsAndClasses(@Context SecurityContext sc) {
         EntityManager em = DwoEmfFactory.createEntityManager();
+        
         SchoolsRolesAndClasses sacs = new SchoolsRolesAndClasses();
-
-        PersistentUser user = null;
+        PersistentUser user;
         List<SchoolRoleAndClass> sacList = (List<SchoolRoleAndClass>) new ArrayList<SchoolRoleAndClass>();
+        SchoolRoleAndClass curSac = new SchoolRoleAndClass();
+
         // fetch the authenticated user
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
@@ -63,18 +65,19 @@ public class SecuredSchoolsAndClassesManager {
             log.log(Level.INFO, "Fetched User with username {0}", new Object[]{name});
             log.log(Level.INFO, "And id is {0}", new Object[]{userId});
             try {
-                //Sample query
-                //select h.schoolGroup.schoolID, h.schoolGroup.school.schoolName, h.schoolGroup.groupID, h.schoolGroup.role.groupname, h.classID from PersistentHasRole h where h.persistentHasRolePK.userID = 184690
+                //Retrieve the list of possible <School, role, class>, class can be null.
                 q = em.createQuery("select h.schoolGroup.schoolID, h.schoolGroup.school.schoolName, "
                         + "h.schoolGroup.groupID, h.schoolGroup.role.groupname, h.classID "
                         + "from PersistentHasRole h where h.persistentHasRolePK.userID = :userID "
                         + " ");
+                //Sample query
+                //select h.schoolGroup.schoolID, h.schoolGroup.school.schoolName, h.schoolGroup.groupID, h.schoolGroup.role.groupname, h.classID from PersistentHasRole h where h.persistentHasRolePK.userID = 184690
                 q.setParameter("userID", userId);
                 List<Object[]> resultList = q.getResultList();
                 log.log(Level.INFO, "Fetched {1} HasRoles for userId {0}.", new Object[]{userId, resultList.size()});
                 SchoolRoleAndClass sac;
                 for (Object[] oList : resultList) {
-                    log.log(Level.INFO, "Fetched tuple <schoolID, schoolName, groupID, groupname, classID>: {0}, {1}, {2}, {3}, {4}.", new Object[]{oList[0], oList[1], oList[2], oList[3], oList[4]});
+                    log.log(Level.INFO, "Fetched hasRole tuple <schoolID, schoolName, groupID, groupname, classID>: {0}, {1}, {2}, {3}, {4}.", new Object[]{oList[0], oList[1], oList[2], oList[3], oList[4]});
                     sac = new SchoolRoleAndClass();
                     sac.setSchoolId((PersistenceId) MySQLPersistenceId.createPersistenceId((Integer) oList[0], PersistenceClassType.PersistentSchool));
                     sac.setSchoolName((String) oList[1]);
@@ -84,28 +87,48 @@ public class SecuredSchoolsAndClassesManager {
                         sac.setSchoolClassId((PersistenceId) MySQLPersistenceId.createPersistenceId((Integer) oList[0], PersistenceClassType.PersistentSchoolClass));
                         sac.setSchoolClassName((String) em.createQuery("select c.class1 from PersistentSchoolClass c where c.classID = :id ").setParameter("id", (Integer) oList[4]).getSingleResult());
                     } else {
-                    log.log(Level.INFO, " clearing classname and id.");
                         sac.setSchoolClassId(null);
                         sac.setSchoolClassName(null);
-                    log.log(Level.INFO, " clearing classname and id.");
                     }
                     sacList.add(sac);
-                    log.log(Level.INFO, " added to sac.");
                 }
+
+                // retrieve the current active <school,role, class>
+                q = em.createQuery("select h.schoolGroup.schoolID, h.schoolGroup.school.schoolName, h.schoolGroup.groupID, h.schoolGroup.role.groupname, h.classID from PersistentHasRole h where h.persistentHasRolePK.userID = :userID and h.user.schoolGroupID = h.persistentHasRolePK.schoolGroupID");
+                //Sample query
+                //select h.schoolGroup.schoolID, h.schoolGroup.school.schoolName, h.schoolGroup.groupID, h.schoolGroup.role.groupname, h.classID from PersistentHasRole h where h.persistentHasRolePK.userID = 184690
+                q.setParameter("userID", userId);
+                resultList = q.getResultList();
+                log.log(Level.INFO, "resultList size: {0}.", new Object[]{resultList.size()});
+                if(resultList.size()==1){
+                    log.log(Level.INFO, "Fetched current role tuple <schoolID, schoolName, groupID, groupname, classID>: {0}, {1}, {2}, {3}, {4}.", new Object[]{resultList.get(0)[0], resultList.get(0)[1], resultList.get(0)[2], resultList.get(0)[3], resultList.get(0)[4]});
+                    curSac.setSchoolId((PersistenceId) MySQLPersistenceId.createPersistenceId((Integer) resultList.get(0)[0], PersistenceClassType.PersistentSchool));
+                    curSac.setSchoolName((String) resultList.get(0)[1]);
+                    curSac.setRoleId((PersistenceId) MySQLPersistenceId.createPersistenceId((Integer) resultList.get(0)[2], PersistenceClassType.PersistentRole));
+                    curSac.setRoleName((String) resultList.get(0)[3]);
+                    if (resultList.get(0)[4] != null) {
+                        curSac.setSchoolClassId((PersistenceId) MySQLPersistenceId.createPersistenceId((Integer) resultList.get(0)[0], PersistenceClassType.PersistentSchoolClass));
+                        curSac.setSchoolClassName((String) em.createQuery("select c.class1 from PersistentSchoolClass c where c.classID = :id ").setParameter("id", (Integer) resultList.get(0)[4]).getSingleResult());
+                    } else {
+                        curSac.setSchoolClassId(null);
+                        curSac.setSchoolClassName(null);
+                    }
+                }
+
             } catch (Exception e) {
                 log.log(Level.WARNING, "Unexpected exception: {0}", new Object[]{e.getMessage()});
                 return new SchoolsRolesAndClasses();
             }
         } finally {
-                    log.log(Level.INFO, " closed em.");
+            log.log(Level.INFO, " closed em.");
             em.close();
         }
-        SchoolRoleAndClass curSac = new SchoolRoleAndClass();
         sacs.setCurrentSchoolRoleAndClass(curSac);
         sacs.setSchoolsRolesAndClassesList(sacList);
         //TODO run query for this.
         log.log(Level.INFO, " returning.");
         return sacs;
+        
     }        // Create all the tuples.
 
     /**
