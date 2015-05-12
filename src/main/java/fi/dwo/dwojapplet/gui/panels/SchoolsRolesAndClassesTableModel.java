@@ -29,26 +29,28 @@ class SchoolsRolesAndClassesTableModel extends AbstractTableModel {
         for (SchoolRoleAndClass src : srcList) {
             rows++; // one for each item in List
         }
-        data = new Object[rows + 1][6];
+        data = new Object[rows + 1][4];
         data[0][0] = "Schoolloos";
-        data[0][3] = new PersistenceId();
+//        data[0][3] = new PersistenceId();
         data[0][1] = "STUDENT";
-        data[0][4] = SchoolGroupRoles.STUDENT;
+//        data[0][4] = SchoolGroupRoles.STUDENT;
         data[0][2] = "";
-        data[0][5] = null;
+//        data[0][5] = null;
+        data[0][3] = new SchoolRoleAndClass();
         int j = 1;
         for (SchoolRoleAndClass src : srcList) {
             data[j][0] = src.getSchoolName();
-            data[j][3] = src.getSchoolId();
+            //          data[j][3] = src.getSchoolId();
             data[j][1] = src.getRoleName();
-            data[j][4] = src.getRoleId();
+            //           data[j][4] = src.getRoleId();
             if (src.getSchoolClassId() == null) {
                 data[j][2] = "";
-                data[j][5] = null;
+                //               data[j][5] = null;
             } else {
                 data[j][2] = src.getSchoolClassName();
-                data[j][5] = src.getSchoolClassId();
+                //               data[j][5] = src.getSchoolClassId();
             }
+            data[j][3] = src;
             j++;
         }
 

@@ -1377,7 +1377,7 @@ public class PersistenceFacade {
      *
      */
     public User login(String username, String password) throws LoginException {
-        password = MD5.getHashString(password);
+       // password = MD5.getHashString(password); // done DWO.login.
         return login_intern(username, password, DbAccessCreator.instance());
     }
 

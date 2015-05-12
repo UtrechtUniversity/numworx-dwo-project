@@ -378,7 +378,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     @Override
     public boolean login(String username, String password)
             throws LoginException {
-        PersistentUser user = LoginManager.login(username, MD5.getHashString(password));
+        password = MD5.getHashString(password);
+        PersistentUser user = LoginManager.login(username, password);
         if (user == null) {
             throw new LoginException(LoginException.LE_UNKNOWN_USER);
         }
