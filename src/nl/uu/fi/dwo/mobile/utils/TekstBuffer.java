@@ -351,6 +351,10 @@ public class TekstBuffer
 		case 42:
 			return new StubView("KansbomenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//return new PopupFacade(currentVakGegevens, new fi.kansbomengwt.client.KansbomenGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
+		case 24:
+			return new StubView("TekenVeelvlakGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			//return new PopupFacade(currentVakGegevens, new fi.tekenveelvlakgwt.client.TekenVeelvlakGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
+		
 		}
 		
 
