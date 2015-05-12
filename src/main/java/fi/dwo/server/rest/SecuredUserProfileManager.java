@@ -73,7 +73,7 @@ public class SecuredUserProfileManager {
     @Produces({"application/json"})
     @Path("/update/json")
     public PersistentUser updateCurrentUser(@Context SecurityContext sc, PersistentUser user) {
-        if (user.getUsername().compareTo(sc.getUserPrincipal().getName()) == 0) {
+        if (user.getUsername().equals(sc.getUserPrincipal().getName())) {
             //User to update is logged in user.
             EntityManager em = DwoEmfFactory.createEntityManager();
             try {

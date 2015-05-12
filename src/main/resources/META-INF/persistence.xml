@@ -30,18 +30,14 @@
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <shared-cache-mode>NONE</shared-cache-mode>
         <properties>
-            <!--           <property name="datanucleus.ConnectionDriverName" value="com.mysql.jdbc.Driver"/>
-            <property name="datanucleus.ConnectionURL" value="jdbc:mysql://spindle.fisme.uu.nl:3306/dwo_large_v1_3?zeroDateTimeBehavior=convertToNull"/>
+            <!--          
+            <provider>org.datanucleus.api.jpa.PersistenceProviderImpl</provider>
+            <non-jta-data-source>java:comp/env/jdbc/dwodb</non-jta-data-source>
             <property name="datanucleus.ConnectionUserName" value="dwo"/>
             <property name="datanucleus.ConnectionPassword" value="E=mc2Dwo"/>
             <property name="datanucleus.autoCreateSchema" value="false"/>
             <property name="datanucleus.validateTables" value="false"/>
             <property name="datanucleus.validateConstraints" value="false"/>
-            eclipse meuk 
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://spindle.fisme.uu.nl:3306/dwo_large_v1_3?zeroDateTimeBehavior=convertToNull"/>
-            <property name="javax.persistence.jdbc.password" value="E=mc2Dwo"/>
-            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-            <property name="javax.persistence.jdbc.user" value="dwo"/>    
             -->
              <property name="eclipselink.weaving" value="static"/>
         </properties>
