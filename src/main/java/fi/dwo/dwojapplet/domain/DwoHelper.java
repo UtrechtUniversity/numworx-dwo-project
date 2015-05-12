@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.ws.rs.client.WebTarget;
 import netscape.javascript.JSObject;
 
 /**
@@ -64,6 +63,23 @@ public final class DwoHelper {
     private static PersistentRole currentRole;
     private static List<PersistentRole> roles;
 
+    /**
+     * @return the plainPassword
+     */
+    
+    @Deprecated
+    public static String getPlainPassword() {
+        return plainPassword;
+    }
+
+    /**
+     * @param aPlainPassword the plainPassword to set
+     */
+    @Deprecated
+    public static void setPlainPassword(String aPlainPassword) {
+        plainPassword = aPlainPassword;
+    }
+
     
 
     
@@ -75,6 +91,7 @@ public final class DwoHelper {
      * ********deprecated attributes **********
      */
     private static User currentFacadeUser;
+    private static String plainPassword;
 
     /**
      * ****************************************

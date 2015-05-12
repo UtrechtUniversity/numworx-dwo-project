@@ -378,7 +378,37 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     @Override
     public boolean login(String username, String password)
             throws LoginException {
-        password = MD5.getHashString(password);
+        DwoHelper.setPlainPassword(password);
+        String pw = MD5.getHashString(password);
+        PersistentUser user = LoginManager.login(username, pw);
+        if (user == null) {
+            throw new LoginException(LoginException.LE_UNKNOWN_USER);
+        }
+        DwoHelper.setCurrentUser(user);
+
+        if (password == null) {
+            DwoHelper.setCurrentFacadeUser(PersistenceFacade.instance().login(username));
+        } else {
+            DwoHelper.setCurrentFacadeUser(PersistenceFacade.instance().login(username, pw));
+        }
+
+        return setExtraRights(DwoHelper.getCurrentFacadeUser());
+    }
+    /**
+     * Logs a user in into the system. The user will be remembered while the
+     * user is logged in.
+     *
+     * @param username The username of the user.
+     * @param password The password of the user.
+     * @return If the user was successfully logged in it returns true. Otherwise
+     * it returns false.
+     * @throws fi.dwo.commons.exceptions.LoginException
+     *
+     */
+    
+    public boolean loginWithMd5(String username, String password)
+            throws LoginException {
+        String plainPassword = DwoHelper.getPlainPassword();
         PersistentUser user = LoginManager.login(username, password);
         if (user == null) {
             throw new LoginException(LoginException.LE_UNKNOWN_USER);
@@ -388,12 +418,12 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         if (password == null) {
             DwoHelper.setCurrentFacadeUser(PersistenceFacade.instance().login(username));
         } else {
-            DwoHelper.setCurrentFacadeUser(PersistenceFacade.instance().login(username, password));
+            DwoHelper.setCurrentFacadeUser(PersistenceFacade.instance().login(username, plainPassword));
         }
 
         return setExtraRights(DwoHelper.getCurrentFacadeUser());
     }
-
+    
     /**
      * @param currentUser
      * @return
