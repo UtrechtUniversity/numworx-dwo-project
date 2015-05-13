@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.keyboard.client;
 
+import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -19,6 +21,16 @@ import com.google.gwt.user.client.ui.Image;
 public class FKey extends Composite implements HasClickHandlers, HasHTML, MouseOverHandler, MouseOutHandler, ClickHandler {
 
 	private static final String HOVER = "hover";
+	
+	private static ClickHandler KEEP_FOCUS = new ClickHandler() {
+		
+		@Override
+		public void onClick(ClickEvent event) {
+			FocusOnTouch.focus();
+		}
+	};
+	
+	
 	HTML panel;
 	Image image;
 	HasClickHandlers click;
@@ -34,7 +46,8 @@ public class FKey extends Composite implements HasClickHandlers, HasHTML, MouseO
 		if(TouchEvent.isSupported())
 		{
 			panel.addClickHandler(this);
-		}
+		} else
+			panel.addClickHandler(KEEP_FOCUS);
 	}
 
 	FKey(ImageResource resource) {
@@ -47,7 +60,8 @@ public class FKey extends Composite implements HasClickHandlers, HasHTML, MouseO
 		if(TouchEvent.isSupported())
 		{
 			image.addClickHandler(this);
-		}
+		} else
+			image.addClickHandler(KEEP_FOCUS);
 	}
 	
 	
