@@ -182,7 +182,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			if(correct == null || "null".equals(correct)) return null;
 			return Boolean.valueOf(correct);
 		}
-		return null;
+		return null; // FIXME betere voorspelling maken.
 	}
 	
 	public void zetNagekeken(boolean b) {

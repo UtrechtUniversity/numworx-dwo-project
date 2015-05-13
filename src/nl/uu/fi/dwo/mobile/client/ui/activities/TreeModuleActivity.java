@@ -57,7 +57,7 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements TreeModu
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
 		view = clientFactory.getTreeModuleView();
-
+		boolean select = true;
 		if(item.getType() == Type.MODULE && DWOplayer.profiledata != null) {
 			Object userID = DWOplayer.profiledata.get("userID");
 		if(userID != null) {	
@@ -67,6 +67,7 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements TreeModu
 				@Override
 				public void onFailure(Throwable caught) {
 					GWT.log("failure", caught);
+					view.selectModule(item);
 				}
 
 				@Override
@@ -90,13 +91,15 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements TreeModu
 				}
 			};
 			clientFactory.getRPCHandler().getUserResults(courseID, userID, getUserResultsCallback);
+			select = false;
 		}}
 
 		panel.setWidget(view);
 		currentModel = SelectModuleItemHolder.getItems();
 		view.setPresenter(this);
 		view.render(currentModel);
-		view.selectModule(item);
+		if(select)
+			view.selectModule(item);
 		
 	}
 	@Override

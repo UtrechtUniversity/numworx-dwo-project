@@ -318,7 +318,7 @@ public class TekstBuffer
 			return x(map,
 					//new StubView("GraphToolGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 					new PopupFacade( 
-						currentVakGegevens,
+						map,
 							new fi.graphtoolgwt.client.GraphToolGWT(currentVakGegevens, randomVarNamen, randomVarWaarden, volleBreedtes[huidigeKolom])
 					)
 		);
@@ -351,9 +351,9 @@ public class TekstBuffer
 		case 42:
 			return new StubView("KansbomenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//return new PopupFacade(currentVakGegevens, new fi.kansbomengwt.client.KansbomenGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
-		case 24:
+		case 26:
 			return new StubView("TekenVeelvlakGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
-			//return new PopupFacade(currentVakGegevens, new fi.tekenveelvlakgwt.client.TekenVeelvlakGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
+			//return new PopupFacade(map, new fi.tekenveelvlakgwt.client.TekenVeelvlakGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		
 		}
 		
