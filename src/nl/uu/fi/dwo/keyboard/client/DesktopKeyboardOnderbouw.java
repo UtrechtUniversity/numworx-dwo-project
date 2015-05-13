@@ -56,5 +56,14 @@ public class DesktopKeyboardOnderbouw extends DesktopKeyboard {
 	@Override void onC29(ClickEvent e) {}
 	@Override void onC30(ClickEvent e) {}
 	@Override void onC31(ClickEvent e) {}
+
+	@Override
+	public void functionKey(int code) {
+		if(code >= 6) return;
+		if(code == 5)
+			getEditor().ndewortel();
+		else
+			super.functionKey(code);
+	}
 	
 }

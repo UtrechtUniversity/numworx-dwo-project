@@ -4,6 +4,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.keyboard.AbstractEditor;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
@@ -122,4 +123,25 @@ public abstract class AbstractKeyboard extends Composite implements FormuleKeybo
 		string = string.substring(i+1, j);
 		getEditor().insert(string);
 	}
+	
+	public void functionKey(int code) {
+		FormuleEditorIF editor = getEditor();
+		switch(code) {
+		case  1: editor.wortel();   break;
+		case  2: editor.macht();    break;
+		case  3: editor.kwadraat(); break;
+		case  4: editor.breuk();    break;
+		case  5: editor.haakjes();  break;
+		case  6: editor.ndewortel();break;
+		case  7: editor.integraal();break;
+		case  8: editor.primitieve();break;
+		case  9: editor.ndelog();    break;
+		case 10: editor.abs();       break;
+		case 11: editor.subscript(); break;
+		case 12: editor.bin();       break;
+		default:
+		}
+	}
+	
+	
 }

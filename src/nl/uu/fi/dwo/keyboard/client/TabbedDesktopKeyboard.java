@@ -17,6 +17,7 @@ public class TabbedDesktopKeyboard extends AbstractKeyboard {
 	TabbedDesktopKeyboard(int nr) {
 		current = createKeyboard(nr);
 		stock[nr] = current;
+		this.nr = nr;
 		main = new FlowPanel();
 		initWidget(main);
 		main.setStyleName("keyboard-container");
@@ -96,6 +97,11 @@ public class TabbedDesktopKeyboard extends AbstractKeyboard {
 	public void blur() {
 		super.blur();
 		resizeScrollPanel(0);
+	}
+
+	@Override
+	public void functionKey(int code) {
+		stock[nr].functionKey(code);
 	}
 
 	
