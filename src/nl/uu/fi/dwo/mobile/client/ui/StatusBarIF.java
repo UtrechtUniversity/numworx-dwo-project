@@ -22,4 +22,6 @@ public interface StatusBarIF extends IsWidget {
 	FormuleKeyboardIF getFormuleKeyboard();
 	FormuleClipboardIF getFormuleClipboard();
 
+	void showScore(ScoreNavIF scoreNav);
+
 }

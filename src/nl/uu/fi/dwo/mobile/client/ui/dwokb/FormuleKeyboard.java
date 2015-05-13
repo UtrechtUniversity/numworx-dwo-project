@@ -10,6 +10,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
+import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 
 import com.google.gwt.dom.client.Style;
@@ -527,6 +528,32 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 
 	@Override
 	public void setWriteMathSet(int nr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void functionKey(int code) {
+		FormuleEditorIF editor = getEditor();
+		switch(code) {
+		case  1: editor.wortel();   break;
+		case  2: editor.macht();    break;
+		case  3: editor.kwadraat(); break;
+		case  4: editor.breuk();    break;
+		case  5: editor.haakjes();  break;
+		case  6: editor.ndewortel();break;
+		case  7: editor.integraal();break;
+		case  8: editor.primitieve();break;
+		case  9: editor.ndelog();    break;
+		case 10: editor.abs();       break;
+		case 11: editor.subscript(); break;
+		case 12: editor.bin();       break;
+		default:
+		}
+	}
+
+	@Override
+	public void showScore(ScoreNavIF scoreNav) {
 		// TODO Auto-generated method stub
 		
 	}

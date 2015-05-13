@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard;
 import nl.uu.fi.dwo.keyboard.client.DesktopKeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.KeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.TabletKeyboardFactory;
+import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 
 public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF, FormuleClipboardIF {
@@ -98,6 +99,12 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF, Formu
 	@Override
 	public void setWriteMathSet(int nr) {
 		kb.setWriteMathSet(nr);
+	}
+
+	@Override
+	public void showScore(ScoreNavIF scoreNav) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

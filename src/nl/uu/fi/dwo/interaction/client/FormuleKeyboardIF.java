@@ -20,4 +20,6 @@ public interface FormuleKeyboardIF {
 
 	void blur();
 
+	void functionKey(int minF);
+
 }

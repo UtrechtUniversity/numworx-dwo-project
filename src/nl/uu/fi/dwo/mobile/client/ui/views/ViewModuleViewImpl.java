@@ -1033,6 +1033,7 @@ try {
 					switch( event.getDirection()) {
 					case LEFT_TO_RIGHT:  gotoPrev(scoreNav); break;
 					case RIGHT_TO_LEFT: gotoNext(scoreNav); break;
+					case BOTTOM_TO_TOP: showScore(scoreNav);
 					default:
 					}
 					
@@ -1070,6 +1071,10 @@ try {
 	}
 	
 	
+	protected void showScore(ScoreNavIF nav) {
+		nav.showScore();
+	}
+
 	//private ScoreNavPanel scoreNavPanel = new ScoreNavPanel();
     SlidingPopup POPUP;
     

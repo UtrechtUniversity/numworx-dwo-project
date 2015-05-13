@@ -242,34 +242,7 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 				break;
 			default: // unknown
 				int code = event.getNativeKeyCode();
-				if(code == F(1)) {
-					editor.wortel();
-				} else if(code == F(2)) {
-					editor.macht();
-				} else if (code == F(3)) {
-					editor.kwadraat();
-				} else if (code == F(4)) {
-					editor.breuk();
-				} else if (code == F(5)) {
-					editor.haakjes();
-				} else if (code == F(6)) {
-					editor.ndewortel();
-				} else if (code == F(7)) {
-					editor.integraal();
-				} else if (code == F(8)) {
-					editor.primitieve();
-				} else if (code == F(9)) {
-					editor.ndelog();
-				} else if (code == F(10)) {
-					editor.abs();
-				} else if (code == F(11)) {
-					editor.subscript();
-				} else if (code == F(12)) {
-					editor.bin();
-				} else {
-					GWT.log(" code = " + code);
-					return;
-				}
+				kb.functionKey(minF(code));
 				event.stopPropagation();
 				event.preventDefault();
 			}
@@ -281,6 +254,10 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 // Browser dependent function. Keycode of Function key	
 	private int F(int i) {
 		return 111 + i;
+	}
+// de inverse van F
+	private int minF(int i) {
+		return i-111;
 	}
 
 	private void macht(DomEvent<?> event, FormuleEditorIF editor)

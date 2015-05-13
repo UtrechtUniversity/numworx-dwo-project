@@ -21,6 +21,7 @@ import nl.uu.fi.dwo.keyboard.client.DesktopKeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.KeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.TabletKeyboardFactory;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 
 public class CitrusKeyboard extends FlowPanel implements StatusBarIF, FormuleClipboardIF {
@@ -107,6 +108,10 @@ public class CitrusKeyboard extends FlowPanel implements StatusBarIF, FormuleCli
 	@Override
 	public void setWriteMathSet(int nr) {
 		kb.setWriteMathSet(nr);
+	}
+
+	@Override
+	public void showScore(ScoreNavIF scoreNav) {
 	}
 
 }

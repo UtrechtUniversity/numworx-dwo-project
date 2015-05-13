@@ -217,7 +217,12 @@ public abstract class XMLView {
 		{
 			breedte = ((Number) opdracht.get("scheidingX")).intValue();
 		}
-		
+// is dit op tijd? ALLEEN OP TABLET!!!!
+		double factor = destination.getOffsetWidth();
+		factor = factor / breedte;
+		if(factor > 0.6 && factor < 1.4)
+			destination.getElement().getStyle().setProperty("zoom", String.valueOf(factor));
+// FIXME....	
 		hoofdPanel = new TekstVakPanel(breedte, hoogte, randomVarNamen, randomVarWaarden);
 		hoofdPanel.setCommunicationRoot(comRoot);
 		hoofdPanel.zetInstellingen(instellingen);

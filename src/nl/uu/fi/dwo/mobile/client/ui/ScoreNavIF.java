@@ -59,4 +59,6 @@ public interface ScoreNavIF {
 	void setButtonEnabled(int opdrNr, boolean b);
 	SlidingPopup getPopup();
 
+	void showScore();
+
 }

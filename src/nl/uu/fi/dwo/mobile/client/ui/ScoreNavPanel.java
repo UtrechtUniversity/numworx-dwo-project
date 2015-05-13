@@ -385,6 +385,12 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF {
 		
 	}
 
+	@Override
+	public void showScore() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 
 }

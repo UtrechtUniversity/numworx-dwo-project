@@ -5,6 +5,7 @@ import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.SlidingPopup;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Float;
@@ -126,6 +127,10 @@ public class ScoreNavFacade implements ScoreNavIF {
 				opnieuwKnop = new PushButton(Text.constants.opnieuwKnopLabel());
 				opnieuwKnop.addClickHandler(new ReloadHandler());
 				sb.addKnop(opnieuwKnop, false);
+			} else {
+				if(opnieuwKnop.getParent() == null) {
+					sb.addKnop(opnieuwKnop, false); // reattach
+				}
 			}
 			opnieuwKnop.setVisible(true);
 		} else if(opnieuwKnop != null) {
@@ -140,6 +145,10 @@ public class ScoreNavFacade implements ScoreNavIF {
 				allesOpnieuwKnop = new PushButton(Text.constants.allesOpnieuwKnopLabel());
 				allesOpnieuwKnop.addClickHandler(new ReloadAllHandler());
 				sb.addKnop(allesOpnieuwKnop, false);
+			} else {
+				if(allesOpnieuwKnop.getParent() == null) {
+					sb.addKnop(allesOpnieuwKnop, false);
+				}
 			}
 			allesOpnieuwKnop.setVisible(true);
 		} else if(allesOpnieuwKnop != null) {
@@ -262,6 +271,11 @@ public class ScoreNavFacade implements ScoreNavIF {
 	public SlidingPopup getPopup() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void showScore() {
+		sb.showScore(this);
 	}
 	
 }

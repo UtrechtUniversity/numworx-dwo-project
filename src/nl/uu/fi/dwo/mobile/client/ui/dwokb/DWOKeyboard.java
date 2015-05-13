@@ -4,6 +4,9 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
@@ -21,6 +24,7 @@ import nl.uu.fi.dwo.keyboard.client.DesktopKeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.KeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.TabletKeyboardFactory;
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 
 public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipboardIF {
@@ -64,6 +68,13 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 		style.setWidth(882, Unit.PX);
 		style.setPosition(Position.RELATIVE);
 		
+		staticPanel.addDomHandler(new MouseUpHandler() {
+
+			@Override
+			public void onMouseUp(MouseUpEvent event) {
+				showScore(null);
+				
+			}} , MouseUpEvent.getType());
 	}
 
 	@Override
@@ -137,6 +148,22 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 	@Override
 	public void setWriteMathSet(int nr) {
 		kb.setWriteMathSet(nr);
+	}
+
+	Timer scoreTimer;
+	@Override
+	public void showScore(ScoreNavIF scoreNav) {
+		final Style style = staticPanel.getElement().getStyle();
+		style.setHeight(getStatusBarHeight()*2, Unit.PX);
+		scoreTimer = new Timer() {
+			
+			@Override
+			public void run() {
+				scoreTimer = null;
+				style.setHeight(getStatusBarHeight(), Unit.PX);
+			}
+		};
+		scoreTimer.schedule(2000);
 	}
 
 }

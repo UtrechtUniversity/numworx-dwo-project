@@ -308,4 +308,9 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 		return LessonMode.normal; // TODO retrieve lesson_mode from 'StubView' 
 	}
 
+	@Override
+	public void functionKey(int minF) {
+		// TODO Auto-generated method stub
+	}
+
 }
