@@ -242,7 +242,7 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 				break;
 			default: // unknown
 				int code = minF(event.getNativeKeyCode());
-				if(1 <= code && code >= 12)
+				if(1 <= code && code <= 12)
 				{	kb.functionKey(code);
 					event.stopPropagation();
 					event.preventDefault();
