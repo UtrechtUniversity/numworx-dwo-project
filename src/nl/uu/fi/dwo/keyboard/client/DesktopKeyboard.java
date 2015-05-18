@@ -144,7 +144,7 @@ public class DesktopKeyboard extends AbstractKeyboard {
 	}
 	@UiHandler("c20")
 	void onC20(ClickEvent e) {
-		getEditor().insert("\u2227");
+		getEditor().insert(" en ");
 	}
 
 	@UiHandler("c21")
