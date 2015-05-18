@@ -241,10 +241,12 @@ final public class FocusOnTouch implements MouseUpHandler, KeyDownHandler, KeyPr
 			case 16: // shift
 				break;
 			default: // unknown
-				int code = event.getNativeKeyCode();
-				kb.functionKey(minF(code));
-				event.stopPropagation();
-				event.preventDefault();
+				int code = minF(event.getNativeKeyCode());
+				if(1 <= code && code >= 12)
+				{	kb.functionKey(code);
+					event.stopPropagation();
+					event.preventDefault();
+				}
 			}
 
 		}
