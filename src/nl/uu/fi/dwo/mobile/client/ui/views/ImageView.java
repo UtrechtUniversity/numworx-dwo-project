@@ -55,7 +55,8 @@ public class ImageView implements IsWidget, TekstElement
 		// TODO "data:image/png;base64,XXXXXXXxXXXX==" (dataurl) image/png of image/gif is noodzakelijk, uitbreiding in iconan nodig.
 
 		Object object = map.get(naam);
-		if(object == null) return ImageUtils.newImage("images/resources/antwoordknop.gif");
+		if(object == null) 
+			return null; //ImageUtils.newImage("images/resources/antwoordknop.gif");
 		if(object instanceof Map) { // ByteArray
 			object = ((Map) object).get("string");
 		}

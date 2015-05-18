@@ -92,9 +92,12 @@ public class CheckButton implements InteractionStub
 		if(knopImageString!=null && !"".equals(knopImageString))
        	{  	ImageView imageView = new ImageView(knopImageString);
        		knopImage = imageView.getImage();
-			imWidth = imageView.getWidth();
-			imHeight = imageView.getHeight();
-			LoadHandler handler = new LoadHandler() {
+			if(knopImage != null)
+			{
+				imWidth = imageView.getWidth();
+				imHeight = imageView.getHeight();
+			}
+       		LoadHandler handler = new LoadHandler() {
 
 				@Override
 				public void onLoad(LoadEvent event) {

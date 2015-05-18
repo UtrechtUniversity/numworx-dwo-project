@@ -171,9 +171,12 @@ public class CheckValueUnit implements InteractionStub{
 		if(knopImageString!=null && !"".equals(knopImageString))
        	{  	ImageView imageView = new ImageView(knopImageString);
        		knopImage = imageView.getImage();
-			imWidth = imageView.getWidth();
-			imHeight = imageView.getHeight();
-			if(imWidth <= 0) imWidth = breedte;
+			if(knopImage != null)
+			{
+				imWidth = imageView.getWidth();
+				imHeight = imageView.getHeight();
+			}
+       		if(imWidth <= 0) imWidth = breedte;
 			if(imHeight <= 0) imHeight = 20;
 			//checkButton.setSize(imWidth,imHeight);
 			//zetMaat();
