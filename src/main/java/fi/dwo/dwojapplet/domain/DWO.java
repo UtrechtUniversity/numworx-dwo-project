@@ -418,7 +418,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         if (password == null) {
             DwoHelper.setCurrentFacadeUser(PersistenceFacade.instance().login(username));
         } else {
-            DwoHelper.setCurrentFacadeUser(PersistenceFacade.instance().login(username, plainPassword));
+            DwoHelper.setCurrentFacadeUser(PersistenceFacade.instance().login(username, password));
         }
 
         return setExtraRights(DwoHelper.getCurrentFacadeUser());

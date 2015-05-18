@@ -102,6 +102,33 @@ public class GuiCreator {
         }
     }
 
+
+    /**
+     * Logs a user in into the system. The user will be remembered while the
+     * user is logged in. Then it shows the MainPanel.
+     *
+     * @param username The username of the user.
+     * @param password The password of the user.
+     * @throws fi.dwo.commons.exceptions.LoginException
+     *
+     */
+    public void loginWithMd5(String username, String password) throws LoginException {
+        dwo.setWait();
+        try {
+            DwoHelper.setContact(false);
+            if (dwo.loginWithMd5(username, password)) {
+                validLicenceCheck(dwo.getUser());
+
+                login(dwo.getUser());
+
+                //ModuleTreePanel.create(dwo );  
+            }
+        } catch (LoginException e) {
+            throw e;
+        } finally {
+            dwo.setReady();
+        }
+    }    
     /**
      * Toon <b>G</b>een waarschuwing. Fix voor gebruikersnamen die met het
      * fidentity systeem ongeldig worden.
@@ -183,6 +210,7 @@ public class GuiCreator {
         }
     }
 
+    
     /**
      * Register a user in the system, and shows the WelcomeScreen to the user.
      *

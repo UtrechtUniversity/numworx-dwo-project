@@ -5,11 +5,9 @@
  */
 package fi.dwo.dwojapplet.gui.panels;
 
-import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.rest.entities.*;
 import fi.dwo.dwojapplet.domain.rest.RestException;
 import fi.dwo.dwojapplet.domain.rest.SchoolsRolesAndClassesManager;
-import fi.dwo.dwojapplet.domain.rest.UserProfileManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

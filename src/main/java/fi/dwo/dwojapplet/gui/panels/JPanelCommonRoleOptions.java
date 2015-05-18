@@ -7,6 +7,7 @@ package fi.dwo.dwojapplet.gui.panels;
 
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.rest.entities.SchoolRoleAndClass;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import java.util.logging.Level;
@@ -76,13 +77,14 @@ public class JPanelCommonRoleOptions extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonSwitchToProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSwitchToProfileActionPerformed
-        //Update current Role
-        
-        //relogin
+        //Update current active Role, knows selected role.
+        prop.setActiveSchoolRoleAndClass();
+        //get user data
         PersistentUser user = DwoHelper.getCurrentUser();
+        // clear user data
         GuiCreator.instance().clearCurrentUserData();
         try {
-            GuiCreator.instance().login(user.getUsername(), user.getPasswd());
+            GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPasswd());
         } catch (LoginException ex) {
             log.log(Level.SEVERE, null, ex);
         }

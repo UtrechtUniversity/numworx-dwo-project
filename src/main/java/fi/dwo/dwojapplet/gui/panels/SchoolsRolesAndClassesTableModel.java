@@ -23,7 +23,7 @@ class SchoolsRolesAndClassesTableModel extends AbstractTableModel {
 
     private Object[][] data;
 
-    public void init(SchoolsRolesAndClasses srcs) {
+    public void init(SchoolRoleAndClass noSchool, SchoolsRolesAndClasses srcs) {
         List<SchoolRoleAndClass> srcList = srcs.getSchoolsRolesAndClassesList();
         int rows = 0;
         for (SchoolRoleAndClass src : srcList) {
@@ -36,7 +36,7 @@ class SchoolsRolesAndClassesTableModel extends AbstractTableModel {
 //        data[0][4] = SchoolGroupRoles.STUDENT;
         data[0][2] = "";
 //        data[0][5] = null;
-        data[0][3] = new SchoolRoleAndClass();
+        data[0][3] = noSchool;
         int j = 1;
         for (SchoolRoleAndClass src : srcList) {
             data[j][0] = src.getSchoolName();

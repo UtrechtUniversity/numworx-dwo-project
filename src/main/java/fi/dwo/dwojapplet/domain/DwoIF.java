@@ -45,6 +45,9 @@ public interface DwoIF {
     public boolean login(String username, String password)
             throws LoginException;
 
+    public boolean loginWithMd5(String username, String password) throws LoginException;
+
+
     /**
      * Login as guest
      *

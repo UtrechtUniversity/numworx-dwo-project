@@ -28,7 +28,7 @@ public class JPanelSchoolsRolesAndClasses extends javax.swing.JPanel {
     public JPanelSchoolsRolesAndClasses() {
         prop.init();
         tableModel = new SchoolsRolesAndClassesTableModel();
-        tableModel.init(prop.getSchoolsRolesAndClasses());
+        tableModel.init(prop.getSelectedSchoolRoleAndClass(), prop.getSchoolsRolesAndClasses());
         initComponents();
         jPanelCommonRoleOptions2.setProp(prop);
         jTableSchoolsAndClasses.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -44,7 +44,8 @@ public class JPanelSchoolsRolesAndClasses extends javax.swing.JPanel {
                             srcString += ", " + tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(), 2);
                     }
                     jTextFieldSchoolRoleClass.setText(srcString);
-                    System.out.println(tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(), 3).toString());
+//                    System.out.println(tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(), 3).toString());
+                    prop.setSelectedSchoolRoleAndClass((SchoolRoleAndClass) tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(), 3));
                 }
             }
         });
