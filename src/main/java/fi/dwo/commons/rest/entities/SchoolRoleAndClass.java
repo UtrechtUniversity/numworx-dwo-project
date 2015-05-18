@@ -130,7 +130,7 @@ public class SchoolRoleAndClass {
     }
 
     /**
-     * @param groupId the groupId to set
+     * @param schoolGroupId
      */
     public void setSchoolGroupId(PersistenceId schoolGroupId) {
         this.schoolGroupId = schoolGroupId;
