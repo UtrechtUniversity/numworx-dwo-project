@@ -32,7 +32,7 @@
 
     <!-- update the https path for a different branch or tag! -->
     <scm>
-        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOServer/releases/RELEASE-1.0.0</developerConnection>
+        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOServer/branches/working</developerConnection>
         <tag>HEAD</tag>
     </scm>
   
@@ -220,7 +220,7 @@
                     </execution>
                 </executions>
             </plugin>  -->
-<!--            <plugin>
+            <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
@@ -228,10 +228,11 @@
                     <server>TomcatServer</server>
                     <url>${tomcat.deploy.url}</url>
                     <path>/DWO/DWOServer</path>
+                    <warFile>target/${project.artifactId}-${project.version}.war</warFile>
                 </configuration>
-            </plugin>-->
+            </plugin>
         </plugins>
-        <finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
+        <finalName>${project.artifactId}-${project.version}</finalName>
     </build>
 
     <properties>
