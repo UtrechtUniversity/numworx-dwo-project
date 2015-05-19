@@ -243,7 +243,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		if(strafpunten != null && mode == OEFENEN_STRAFPUNTEN && fout)
 			strafpunten[currentActiviteit][currentOpdracht] += foutStraf;
 		if (buttons != null && buttons.size() > currentOpdracht)
-		{	System.out.println("setChanged zet Button " + currentOpdracht + " correct; correct = " + correct);
+		{	logger.fine("setChanged zet Button " + currentOpdracht + " correct; correct = " + correct);
 			setButtonCorrect(buttons.get(currentOpdracht), correct, currentOpdracht);
 		}
 		saveCurrentState();
@@ -417,22 +417,17 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	
 	private void setButtonCorrect(TouchButton button, boolean b, int j)
 	{
-		Element element = button.getElement();
 		if (geefNoScore(currentActiviteit, j))
-		{	//element.getStyle().setBackgroundColor("#909090");
+		{
 			button.setStyleDependentName("max0", geefNoScore(currentActiviteit, j) );
 			return;
 		}
 		button.setStyleDependentName("max0", false);
-		if(mode == 0 || mode == 1)
+		if(mode == OEFENEN || mode == OEFENEN_STRAFPUNTEN)
 		{
-//			element.getStyle().setBackgroundColor(b ? "#00BB00" : "#FFBBBB");
 			button.setStyleDependentName("correct", b);
-			element.setPropertyInt("title", getItemScores()[j]);
-			//schedule(j);
+			button.getElement().setPropertyInt("title", getItemScores()[j]);
 		}
-//		if((mode == 2 || mode == 3) && !button.getElement().getStyle().getBackgroundColor().equals("#00BB00"))
-//			b = false;
 		
 		
 	}
@@ -452,27 +447,17 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		}
 		else
 		{
-//			buttons.get(j).getElement().getStyle().setBackgroundColor("white");
-			buttons.get(j).setStyleDependentName("disabled", true);
-			
+			buttons.get(j).setStyleDependentName("disabled", true);			
 		}
 	}
 
 	public void setButtonCursor(TouchButton button)
 	{
-		//button.getElement().getStyle().setBackgroundColor("#b4b4b4");
-//		button.getElement().getStyle().setBorderWidth(3, Unit.PX);
-//		button.getElement().getStyle().setBorderColor("#484848");
-//		button.getElement().getStyle().setMarginTop(0, Unit.PX);
 		button.addStyleDependentName("cursor");
 	}
 
 	public void removeButtonCursor(TouchButton button)
 	{
-		//button.getElement().getStyle().setBackgroundColor("#f0f0f0");
-//		button.getElement().getStyle().setBorderWidth(1, Unit.PX);
-//		button.getElement().getStyle().setBorderColor(CssColor.make(121, 127, 144).toString());//("#979797");
-//		button.getElement().getStyle().setMarginTop(2, Unit.PX);
 		button.removeStyleDependentName("cursor");
 	}
 
