@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.SubscriptVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.WortelVak;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
+import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 
 import com.google.gwt.user.client.ui.Panel;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
@@ -221,12 +222,16 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 			if(isSoft()) kb.softFocus(); else kb.focus();
 		}
 	}
+	
+	public FormuleKeyboardIF getKeyboard()
+	{
+		return kb;
+	}
 
 	@Override
 	public void cursorToLeft() {
 		getCurrentRegel().cursorToLeft();	
 	}
-
 
 	@Override
 	public void cursorToRight() {
