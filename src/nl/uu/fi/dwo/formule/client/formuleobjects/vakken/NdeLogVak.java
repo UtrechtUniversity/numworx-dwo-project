@@ -48,7 +48,7 @@ public class NdeLogVak extends FormuleElementWithChildren
 		
 		
 		//getChild(1).setPosition(fm.getAscent() / 4, 0);
-		getChild(1).setEditable(false);
+		//getChild(1).setEditable(false);
 
 		FormuleFontChanges changes = new FormuleFontChanges();
 		changes.setSmallText(FormuleFontChanges.TRUE);
