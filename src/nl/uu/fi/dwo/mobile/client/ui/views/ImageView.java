@@ -56,7 +56,9 @@ public class ImageView implements IsWidget, TekstElement
 
 		Object object = map.get(naam);
 		if(object == null) 
-			return null; //ImageUtils.newImage("images/resources/antwoordknop.gif");
+			return null; 
+		//was: ImageUtils.newImage("images/resources/antwoordknop.gif");
+		//maar dat levert problemen bij weggegooide plaatjes op klaar-knoppen.
 		if(object instanceof Map) { // ByteArray
 			object = ((Map) object).get("string");
 		}
