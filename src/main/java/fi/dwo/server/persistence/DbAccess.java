@@ -91,7 +91,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             + "FROM tblStudentOf " + "WHERE (classID={0} and userID={1}) ";
 
     private final static String QRY_SELECT_CLASS = "SELECT * "
-            + "FROM tblClass WHERE classID={0} ";
+            + "FROM tblClass WHERE classID=? ";
 
 //TODO V1_3 DONE adjust lastLogin, registerDate, rights to be in hasRole    
     private final static String QRY_SELECT_TEACHERS_OF_CLASS = "SELECT u.userID, "
@@ -288,7 +288,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 // TODO DONE V1_3 picks no class
     private final static String QRY_USER_LOGIN_NO_PASSWD = "SELECT * "
             + "FROM tblUser "
-            + "WHERE (username = ?) " + "AND   (passwd = ?) ";
+            + "WHERE (username = ?)";
 
 //    private final static String QRY_USER_LOGIN_NO_PASSWD = "SELECT * "
 //            + "FROM tblUser "
@@ -1136,7 +1136,6 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             Object classID = result.get("classID");
             if (classID instanceof Integer) {
                 ps.setInt(1, (Integer) classID);
-                result = executeQueryWithRecord(ps);
                 result.putAll(executeQueryWithRecord(ps));
             }
 
