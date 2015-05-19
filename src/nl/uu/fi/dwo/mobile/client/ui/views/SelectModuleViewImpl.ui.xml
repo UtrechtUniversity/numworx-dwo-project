@@ -3,10 +3,12 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui" 
 	xmlns:mgwt="urn:import:com.googlecode.mgwt.ui.client.widget">
 	<ui:style>
-	
-
+	.fullwidth {
+		width: 100%;
+	}
 	</ui:style>
 	<mgwt:LayoutPanel height="100%" width="100%" >
+	 
 		<!-- Topbar Navigation Area -->
 		<mgwt:HeaderPanel ui:field="header">
 		     <mgwt:left>
@@ -17,8 +19,12 @@
 			</mgwt:center>
 		</mgwt:HeaderPanel>
 		<!-- Main interaction Area -->
-	  	<g:SimplePanel ui:field="description"></g:SimplePanel>    
-		<mgwt:CellList ui:field="list" round="true"></mgwt:CellList>
+		<mgwt:ScrollPanel>
+			<g:VerticalPanel addStyleNames="{style.fullwidth}" >
+	  			<g:SimplePanel ui:field="description"></g:SimplePanel>    
+				<mgwt:CellList ui:field="list" round="true"></mgwt:CellList>
+			</g:VerticalPanel>
+		</mgwt:ScrollPanel>
 	</mgwt:LayoutPanel>
 
 </ui:UiBinder> 

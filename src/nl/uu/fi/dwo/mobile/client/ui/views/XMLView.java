@@ -27,6 +27,8 @@ import nl.uu.fi.dwo.mobile.utils.StringCodeToHashMap;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -42,6 +44,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
+import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import fi.wiskopdr.FormuleParser;
@@ -207,7 +210,7 @@ public abstract class XMLView {
 	}
 
 	//public void setObjects(ArrayList<Object> opdrachtObjects, Panel destination) 
-	public void setObjects(HashMap<String, Object> opdracht, Panel destination, OpdrNavIF comRoot)
+	public void setObjects(HashMap<String, Object> opdracht, final Panel destination, OpdrNavIF comRoot)
 	{	
 			
 		int hoogte = 500;
@@ -217,12 +220,30 @@ public abstract class XMLView {
 		{
 			breedte = ((Number) opdracht.get("scheidingX")).intValue();
 		}
-// is dit op tijd? ALLEEN OP TABLET!!!!
-		double factor = destination.getOffsetWidth();
-		factor = factor / breedte;
-		if(factor > 0.6 && factor < 1.4)
-			destination.getElement().getStyle().setProperty("zoom", String.valueOf(factor));
-// FIXME....	
+
+		if(!MGWT.getOsDetection().isDesktop()) {
+			final int width=breedte;
+
+		// FIXED is dit op tijd? ALLEEN OP TABLET!!!!
+			ResizeHandler resize = new ResizeHandler() {
+
+				@Override
+				public void onResize(ResizeEvent event) {
+					double factor = Window.getClientWidth();
+					factor = factor / width;
+					Style style = destination.getElement().getStyle();
+					if(factor > 0.6 && factor < 1.4)
+					{
+						style.setProperty("zoom", String.valueOf(factor));
+					} else {
+						style.clearProperty("zoom");			
+					}
+				}
+			};
+			resize.onResize(null);
+			Window.addResizeHandler(resize);
+		}
+// FIXME ....	
 		hoofdPanel = new TekstVakPanel(breedte, hoogte, randomVarNamen, randomVarWaarden);
 		hoofdPanel.setCommunicationRoot(comRoot);
 		hoofdPanel.zetInstellingen(instellingen);
