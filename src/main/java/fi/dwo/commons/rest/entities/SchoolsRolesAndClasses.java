@@ -33,7 +33,7 @@ public class SchoolsRolesAndClasses {
     /**
      * @param currentSRC the currentSchoolRoleAndClass to set
      */
-    public void setCurrentSchoolRoleAndClass(SchoolRoleAndClass currentSRC) {
+    public void setActiveSchoolRoleAndClass(SchoolRoleAndClass currentSRC) {
         this.currentSchoolRoleAndClass = currentSRC;
     }
 
