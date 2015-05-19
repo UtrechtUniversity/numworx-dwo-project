@@ -49,7 +49,7 @@ public class SecuredSchoolsRolesAndClassesManager {
             List<Object[]> resultList = q.getResultList();
             log.log(Level.INFO, "resultList size: {0}.", new Object[]{resultList.size()});
             if (resultList.size() == 1) {
-                log.log(Level.INFO, "Fetched current role tuple <schoolID, schoolName, groupID, groupname, classID>: {0}, {1}, {2}, {3}, {4}, {5}, {6}.", new Object[]{resultList.get(0)[0], resultList.get(0)[1], resultList.get(0)[2], resultList.get(0)[3], resultList.get(0)[4], resultList.get(0)[5], resultList.get(0)[6]});
+                log.log(Level.INFO, "Fetched current role tuple <schoolID, schoolName, groupID, groupname, classID, userID, groupID>: {0}, {1}, {2}, {3}, {4}, {5}, {6}.", new Object[]{resultList.get(0)[0], resultList.get(0)[1], resultList.get(0)[2], resultList.get(0)[3], resultList.get(0)[4], resultList.get(0)[5], resultList.get(0)[6]});
                 curSac.setSchoolId((PersistenceId) MySQLPersistenceId.createPersistenceId((Integer) resultList.get(0)[0], PersistenceClassType.PersistentSchool));
                 curSac.setSchoolName((String) resultList.get(0)[1]);
                 curSac.setRoleId((PersistenceId) MySQLPersistenceId.createPersistenceId((Integer) resultList.get(0)[2], PersistenceClassType.PersistentRole));
@@ -140,7 +140,7 @@ public class SecuredSchoolsRolesAndClassesManager {
         }
 
         curSac = this.getCurrentSchoolRoleAndClass(user.getUserID());
-        sacs.setCurrentSchoolRoleAndClass(curSac);
+        sacs.setActiveSchoolRoleAndClass(curSac);
         sacs.setSchoolsRolesAndClassesList(sacList);
         return sacs;
 
@@ -151,7 +151,7 @@ public class SecuredSchoolsRolesAndClassesManager {
      * updated data.
      *
      * @param sc
-     * @param src
+     * @param sarc
      * @return
      */
     @PUT

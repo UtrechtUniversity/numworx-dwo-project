@@ -281,7 +281,7 @@ public class DataSourceAccessServlet extends Servlet {
         String softwareVersion = getInitParameter("projectVersion");
         String timeStamp = getInitParameter("timestamp");
         out.println();
-        out.println("Software version, buildnumber: " + softwareVersion + ", " + buildNumber);
+        out.println("Software version, buildnumber: " + softwareVersion + ", " + buildNumber + ", timestamp "+timeStamp);
         log.log(Level.INFO,"Software version {0}, buildnumber {1}, timestamp {2}", new Object[]{softwareVersion, buildNumber, timeStamp});
         out.println();
         out.println("monitor = " + monitor);
