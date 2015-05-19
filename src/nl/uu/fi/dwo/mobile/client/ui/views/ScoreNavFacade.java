@@ -126,11 +126,9 @@ public class ScoreNavFacade implements ScoreNavIF {
 			if(opnieuwKnop ==  null) {
 				opnieuwKnop = new PushButton(Text.constants.opnieuwKnopLabel());
 				opnieuwKnop.addClickHandler(new ReloadHandler());
-				sb.addKnop(opnieuwKnop, false);
-			} else {
-				if(opnieuwKnop.getParent() == null) {
-					sb.addKnop(opnieuwKnop, false); // reattach
-				}
+			}
+			if(opnieuwKnop.getParent() == null) {
+				sb.addKnop(opnieuwKnop, false); // (re)attach
 			}
 			opnieuwKnop.setVisible(true);
 		} else if(opnieuwKnop != null) {
@@ -144,11 +142,9 @@ public class ScoreNavFacade implements ScoreNavIF {
 			if(allesOpnieuwKnop ==  null) {
 				allesOpnieuwKnop = new PushButton(Text.constants.allesOpnieuwKnopLabel());
 				allesOpnieuwKnop.addClickHandler(new ReloadAllHandler());
+			} 
+			if(allesOpnieuwKnop.getParent() == null) {
 				sb.addKnop(allesOpnieuwKnop, false);
-			} else {
-				if(allesOpnieuwKnop.getParent() == null) {
-					sb.addKnop(allesOpnieuwKnop, false);
-				}
 			}
 			allesOpnieuwKnop.setVisible(true);
 		} else if(allesOpnieuwKnop != null) {
