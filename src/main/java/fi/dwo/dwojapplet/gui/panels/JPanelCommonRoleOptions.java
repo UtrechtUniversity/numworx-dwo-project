@@ -40,6 +40,8 @@ public class JPanelCommonRoleOptions extends javax.swing.JPanel {
         jButton1 = new javax.swing.JButton();
         jButtonSwitchToProfile = new javax.swing.JButton();
 
+        setPreferredSize(new java.awt.Dimension(387, 45));
+
         jButton1.setText("Profiel Verwijderen");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -61,7 +63,7 @@ public class JPanelCommonRoleOptions extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jButtonSwitchToProfile)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 209, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 109, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addContainerGap())
         );

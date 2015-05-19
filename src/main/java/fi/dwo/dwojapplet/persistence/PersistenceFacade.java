@@ -1377,7 +1377,6 @@ public class PersistenceFacade {
      *
      */
     public User login(String username, String password) throws LoginException {
-       // password = MD5.getHashString(password); // done DWO.login.
         return login_intern(username, password, DbAccessCreator.instance());
     }
 
@@ -1392,8 +1391,8 @@ public class PersistenceFacade {
         try {
             try {
                 MapperIF mapper = MapperCreator.instance(User.class);
-                return (User) mapper.getObjectFromReturn(dbAccess.login(
-                        username, password));
+                Hashtable h = dbAccess.login(username, password);
+                return (User) mapper.getObjectFromReturn(h);
             } catch (IOException e) {
                 log.log(Level.SEVERE, null, e);
                 throw new LoginException(LoginException.EX_IO, e);

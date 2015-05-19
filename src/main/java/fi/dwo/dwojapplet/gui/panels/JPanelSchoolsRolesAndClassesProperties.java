@@ -27,7 +27,7 @@ public class JPanelSchoolsRolesAndClassesProperties {
             srcs = SchoolsRolesAndClassesManager.getCurrentEnlistements();
             selectedSrc = srcs.getActiveSchoolRoleAndClass();
         } catch (RestException ex) {
-            log.log(Level.SEVERE, null, ex);
+            log.log(Level.SEVERE, ex.getMessage());
         }
     }
 
@@ -44,7 +44,7 @@ public class JPanelSchoolsRolesAndClassesProperties {
     public void setActiveSchoolRoleAndClass() {
         try {
             SchoolRoleAndClass src = SchoolsRolesAndClassesManager.setActiveSchoolRoleAndClass(getSelectedSchoolRoleAndClass());
-            srcs.setCurrentSchoolRoleAndClass(src);
+            srcs.setActiveSchoolRoleAndClass(src);
         } catch (RestException ex) {
             log.log(Level.SEVERE, null, ex);
         }

@@ -369,6 +369,19 @@ public class GuiCreator {
 
     }
 
+    /**
+     * Log the user off of the system. Shows the Welcome screen.
+     *
+     * @param username
+     */
+    public void logoff(String username) {
+        mainPanel.end();
+        mainPanel = null;
+        dwo.logoff();
+        dwo.setWelcomePanel(username);
+
+    }
+    
     public void setWait() {
         dwo.setWait();
     }

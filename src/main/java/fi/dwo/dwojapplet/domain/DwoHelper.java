@@ -52,21 +52,20 @@ public final class DwoHelper {
 
     private static boolean scormExportLoggedIn, appletExportLoggedIn, adminLoggedIn;
 
-    private static String baseServletUrlString; 
+    private static String baseServletUrlString;
     private static String resourceUrlPathString; // required null if to use the default
     private static String servletConnectString = null; // required null, filled in main or init
     //depending on application or applet start.
     private static SchoolClass schoolClass;
     private static School school;
 
-    private static PersistentUser currentUser;
-    private static PersistentRole currentRole;
+    private static PersistentUser currentUser; // null if none available.
+    private static PersistentRole currentRole; // null if none available.
     private static List<PersistentRole> roles;
 
     /**
      * @return the plainPassword
      */
-    
     @Deprecated
     public static String getPlainPassword() {
         return plainPassword;
@@ -80,13 +79,10 @@ public final class DwoHelper {
         plainPassword = aPlainPassword;
     }
 
-    
-
-    
-    public void init() throws RestException{
+    public void init() throws RestException {
         roles = RoleManager.getRoles();
     }
-    
+
     /**
      * ********deprecated attributes **********
      */
@@ -302,7 +298,7 @@ public final class DwoHelper {
 
     /**
      * True if schoolAdmin.
-     * 
+     *
      * @return the contact
      */
     public static boolean isContact() {
@@ -311,7 +307,7 @@ public final class DwoHelper {
 
     /**
      * True if schoolAdmin.
-     * 
+     *
      * @param contact the contact to set
      */
     public static void setContact(boolean contact) {
@@ -436,10 +432,14 @@ public final class DwoHelper {
      */
     public static void setCurrentUser(PersistentUser aCurrentUser) {
         currentUser = aCurrentUser;
-        try {
-            currentFacadeUser = (User) PersistenceFacade.instance().get(aCurrentUser.getUserID(), User.class);
-        } catch (PersistenceException ex) {
-            log.log(Level.SEVERE, null, ex);
+        if(aCurrentUser != null){
+            try {
+                currentFacadeUser = (User) PersistenceFacade.instance().get(aCurrentUser.getUserID(), User.class);
+            } catch (PersistenceException ex) {
+                log.log(Level.SEVERE, null, ex);
+            }
+        }else{
+             currentFacadeUser=null;
         }
     }
 
@@ -493,7 +493,6 @@ public final class DwoHelper {
     public static List<PersistentRole> getRoles() {
         return roles;
     }
-
 
     /**
      * @return the roles

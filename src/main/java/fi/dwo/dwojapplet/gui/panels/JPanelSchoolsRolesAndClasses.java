@@ -5,9 +5,9 @@
  */
 package fi.dwo.dwojapplet.gui.panels;
 
-import fi.dwo.commons.persistence.PersistenceId;
 import fi.dwo.commons.rest.entities.SchoolRoleAndClass;
 import fi.dwo.dwojapplet.gui.GuiConstants;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -45,7 +45,7 @@ public class JPanelSchoolsRolesAndClasses extends javax.swing.JPanel {
                     }
                     jTextFieldSchoolRoleClass.setText(srcString);
 //                    System.out.println(tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(), 3).toString());
-                    prop.setSelectedSchoolRoleAndClass((SchoolRoleAndClass) tableModel.getValueAt(jTableSchoolsAndClasses.getSelectedRow(), 3));
+                    prop.setSelectedSchoolRoleAndClass(src);
                 }
             }
         });
@@ -54,11 +54,12 @@ public class JPanelSchoolsRolesAndClasses extends javax.swing.JPanel {
             SchoolRoleAndClass src = prop.getSelectedSchoolRoleAndClass();
             String srcString = src.getSchoolName() + ", " + src.getRoleName();
 
-            if (src.getRoleName().equals("STUDENT")) {
+            if (src.getRoleName().equals("STUDENT") && src.getSchoolClassId()!=null){
                 srcString += ", " + src.getSchoolClassName();
             }
             jTextFieldSchoolRoleClass.setText(srcString);
         } catch (Exception e) {
+            log.log(Level.SEVERE, e.getMessage());
         }
     }
 
@@ -70,6 +71,7 @@ public class JPanelSchoolsRolesAndClasses extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         jSplitPane1 = new javax.swing.JSplitPane();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -93,6 +95,7 @@ public class JPanelSchoolsRolesAndClasses extends javax.swing.JPanel {
         jScrollPane1.setPreferredSize(new java.awt.Dimension(300, 400));
 
         jTableSchoolsAndClasses.setAutoCreateRowSorter(true);
+        jTableSchoolsAndClasses.setBackground(new java.awt.Color(255, 255, 255));
         jTableSchoolsAndClasses.setModel(tableModel);
         jTableSchoolsAndClasses.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jTableSchoolsAndClasses.getTableHeader().setReorderingAllowed(false);
@@ -100,7 +103,18 @@ public class JPanelSchoolsRolesAndClasses extends javax.swing.JPanel {
 
         jSplitPane1.setLeftComponent(jScrollPane1);
 
+        jPanel1.setBackground(getBackground());
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel1.setPreferredSize(new java.awt.Dimension(535, 360));
+
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, jPanel1, org.jdesktop.beansbinding.ELProperty.create("${background}"), jPanel1, org.jdesktop.beansbinding.BeanProperty.create("background"));
+        bindingGroup.addBinding(binding);
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, jPanel1, org.jdesktop.beansbinding.ELProperty.create("${background}"), jPanelCommonRoleOptions2, org.jdesktop.beansbinding.BeanProperty.create("background"));
+        bindingGroup.addBinding(binding);
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, jPanel1, org.jdesktop.beansbinding.ELProperty.create("${background}"), jPanelNoRoleOptions1, org.jdesktop.beansbinding.BeanProperty.create("background"));
+        bindingGroup.addBinding(binding);
 
         javax.swing.GroupLayout jPanelNoRoleOptions1Layout = new javax.swing.GroupLayout(jPanelNoRoleOptions1);
         jPanelNoRoleOptions1.setLayout(jPanelNoRoleOptions1Layout);
@@ -110,33 +124,31 @@ public class JPanelSchoolsRolesAndClasses extends javax.swing.JPanel {
         );
         jPanelNoRoleOptions1Layout.setVerticalGroup(
             jPanelNoRoleOptions1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 326, Short.MAX_VALUE)
+            .addGap(0, 312, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jPanelNoRoleOptions1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanelCommonRoleOptions2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 67, Short.MAX_VALUE))
-                    .addComponent(jSeparator1))
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanelCommonRoleOptions2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanelCommonRoleOptions2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanelCommonRoleOptions2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanelNoRoleOptions1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29))
+                .addComponent(jPanelNoRoleOptions1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(28, 28, 28))
         );
 
         jSplitPane1.setRightComponent(jPanel1);
@@ -150,11 +162,11 @@ public class JPanelSchoolsRolesAndClasses extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 819, Short.MAX_VALUE)
+                    .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabelSchoolRoleClass, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextFieldSchoolRoleClass)))
+                        .addComponent(jTextFieldSchoolRoleClass, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -168,6 +180,8 @@ public class JPanelSchoolsRolesAndClasses extends javax.swing.JPanel {
                 .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
                 .addContainerGap())
         );
+
+        bindingGroup.bind();
     }// </editor-fold>//GEN-END:initComponents
 
 
@@ -181,6 +195,7 @@ public class JPanelSchoolsRolesAndClasses extends javax.swing.JPanel {
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTable jTableSchoolsAndClasses;
     private javax.swing.JTextField jTextFieldSchoolRoleClass;
+    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
     /**

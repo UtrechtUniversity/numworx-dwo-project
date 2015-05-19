@@ -356,7 +356,6 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         } else if (src == registerButton) {
             GuiCreator.instance().toRegister();
         }
-
     }
 
     public void setUsername(String username) {

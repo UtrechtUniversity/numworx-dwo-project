@@ -126,7 +126,8 @@ class RestManager {
             log.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
             return null;
         } else {
-            return response.readEntity(c);
+            T r = response.readEntity(c);
+            return (r);
         }
     }
     //

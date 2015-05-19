@@ -123,13 +123,13 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
         public void actionPerformed(ActionEvent event) {
             User u = model.userList[row];
             if (value == model.userImage) {
-                try {
+//                try {
                     //MapperCreator.instance(User.class).removeObject(u.getID()); // not good enough, need fresh copy.
                     PersistenceFacade.instance().clearObjectInMapperCache(User.class,u.getID());
-                    GuiCreator.instance().login(u.getUsername(), null);
-                } catch (LoginException e) {
-                    log.log(Level.SEVERE, null, e);
-                }
+                    GuiCreator.instance().logoff(u.getUsername());
+//                } catch (LoginException e) {
+//                    log.log(Level.SEVERE, null, e);
+//                }
             } else if (value == model.editImage) {
                 try {
                     String newPassword = JOptionPane.showInputDialog(ClassUsersPanel.this, TextMapper.getText(TextMapper.GUIP_PASSWORD), u.getUsername(), JOptionPane.QUESTION_MESSAGE);

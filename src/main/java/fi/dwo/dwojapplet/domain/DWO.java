@@ -27,6 +27,7 @@ import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.MainPanel;
 import fi.dwo.dwojapplet.gui.ModuleTreePanel;
 import fi.dwo.dwojapplet.gui.ScoPanel;
+import fi.dwo.dwojapplet.gui.WelcomePanel;
 import fi.dwo.dwojapplet.gui.action.Clipboard;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.dwojapplet.persistence.StoreCreator;
@@ -861,6 +862,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     @Override
     public void logoff() {
         DwoHelper.setCurrentFacadeUser(null);
+        DwoHelper.setCurrentUser(null);
+        DwoHelper.setCurrentRole(null);
         currentCourse = null;
         courseList = null;
         resultsModule = null;
@@ -1500,6 +1503,13 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         setPanel(GuiCreator.instance().getWelcomePanel(testViewKeys != null || schoolAccessKeys != null));
     }
 
+    @Override
+    public void setWelcomePanel(String username) {
+        WelcomePanel p = GuiCreator.instance().getWelcomePanel(testViewKeys != null || schoolAccessKeys != null);
+        p.setUsername(username);
+        setPanel(p);
+    }
+    
     @Override
     public int getCourseViewNr() {
         return courseViewNr;
