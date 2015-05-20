@@ -137,7 +137,7 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 		}
 	}
 
-	private Widget scrollPanel; 
+	private HasHeight scrollPanel; 
 	private int origHeight = 426 - 40;
 	private int origDelta = 0;
 	private int nr;
@@ -146,12 +146,14 @@ public class TabbedTouchKeyboard extends AbstractKeyboard {
 	void resizeScrollPanel(int size) {
 		origDelta = size;
 		if(scrollPanel != null)
-			scrollPanel.setPixelSize(-1, origHeight - size);
+			scrollPanel.setHeight(origHeight - size);
 	}
-	public void setScrollPanel(Widget w, int h) {
+
+	@Override
+	public void setScrollPanel(HasHeight w, int h) {
 		scrollPanel = w;
 		origHeight = h;
-		if(scrollPanel != null) scrollPanel.setPixelSize(-1, origHeight - origDelta);
+		if(scrollPanel != null) scrollPanel.setHeight(origHeight - origDelta);
 	}
 
 	int getKeyboardHeight() {

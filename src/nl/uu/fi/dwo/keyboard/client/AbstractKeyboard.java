@@ -11,6 +11,11 @@ import com.google.gwt.user.client.ui.Widget;
 
 public abstract class AbstractKeyboard extends Composite implements FormuleKeyboardIF {
 
+	public interface HasHeight {
+		void setHeight(int px);
+	}
+	
+	
 	protected static final int DEFAULT = 0;
 	FormuleEditorIF formuleEditor = AbstractEditor.NULL;
 	AbstractKeyboard delegate;
@@ -94,7 +99,7 @@ public abstract class AbstractKeyboard extends Composite implements FormuleKeybo
 	void switchLower() {
 	}
 
-	public void setScrollPanel(Widget w, int h) {
+	public void setScrollPanel(HasHeight w, int h) {
 	}
 
 	public void setKeyboard(int nr) {
