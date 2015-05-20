@@ -11,6 +11,7 @@ import com.googlecode.mgwt.ui.client.OsDetection;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard;
+import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard.HasHeight;
 import nl.uu.fi.dwo.keyboard.client.DesktopKeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.KeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.TabletKeyboardFactory;
@@ -57,7 +58,7 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF, Formu
 	}
 
 	@Override
-	public void setScrollPanel(Widget w, int h) {
+	public void setScrollPanel(HasHeight w, int h) {
 		kb.setScrollPanel(w,h);
 	}
 

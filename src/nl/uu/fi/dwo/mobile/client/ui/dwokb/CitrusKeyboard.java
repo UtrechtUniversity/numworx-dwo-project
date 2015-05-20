@@ -66,7 +66,7 @@ public class CitrusKeyboard extends FlowPanel implements StatusBarIF, FormuleCli
 	}
 
 	@Override
-	public void setScrollPanel(Widget w, int h) {
+	public void setScrollPanel(AbstractKeyboard.HasHeight w, int h) {
 		kb.setScrollPanel(w,h);
 	}
 

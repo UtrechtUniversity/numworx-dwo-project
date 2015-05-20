@@ -230,6 +230,7 @@ public abstract class XMLView {
 				@Override
 				public void onResize(ResizeEvent event) {
 					double factor = Window.getClientWidth();
+					logger.info("zoom " + factor + " / " + width);
 					factor = factor / width;
 					Style style = destination.getElement().getStyle();
 					if(factor > 0.6 && factor < 1.4)

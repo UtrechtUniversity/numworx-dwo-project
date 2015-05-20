@@ -106,7 +106,7 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 	}
 
 	@Override
-	public void setScrollPanel(Widget w, int h) {
+	public void setScrollPanel(AbstractKeyboard.HasHeight w, int h) {
 		kb.setScrollPanel(w,h);
 	}
 

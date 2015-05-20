@@ -14,29 +14,22 @@ public class TriforkModuleViewImpl extends ViewModuleViewImpl implements
 	public TriforkModuleViewImpl() {
 		super(false);
 	}
-
-	
 	
 	public void zetMaat() {
 		int contentHeight = Window.getClientHeight() - extraHeight;
 		Window.addResizeHandler(new Resizer());
 		sb.zetMaat();
-		sb.setScrollPanel(contentScrollPanel, contentHeight);	
+		sb.setScrollPanel(this, contentHeight);	
 	}
-
-
 
 	@Override
 	protected Memento createMemento() {
 		return new FacetMemento(getApi(), this);
 	}
 
-
-
 	@Override
 	public void getResponses(List<String> responses) {
 		hoofdPanel.getResponses(responses);
-		
 	}
 
 }

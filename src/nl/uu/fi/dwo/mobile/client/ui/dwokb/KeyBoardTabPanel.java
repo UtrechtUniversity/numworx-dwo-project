@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.dwokb;
 import java.util.Vector;
 import java.util.logging.Logger;
 
+import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard.HasHeight;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
 import nl.uu.fi.dwo.mobile.utils.ImageUtils;
@@ -154,18 +155,18 @@ public class KeyBoardTabPanel
 	}
 	static final Logger logger = Logger.getLogger("KeyboardTabPanel");
 
-	Widget scrollPanel; int origHeight = 426 - 40;
+	HasHeight scrollPanel; int origHeight = 426 - 40;
 	int origDelta = 0;
 	
 	private void resizeScrollPanel(int size) {
 		origDelta = size;
 		if(scrollPanel != null)
-			scrollPanel.setPixelSize(-1, origHeight - size);
+			scrollPanel.setHeight(origHeight - size);
 	}
-	public void setScrollPanel(Widget w, int h) {
+	public void setScrollPanel(HasHeight w, int h) {
 		scrollPanel = w;
 		origHeight = h;
-		if(scrollPanel != null) scrollPanel.setPixelSize(-1, origHeight - origDelta);
+		if(scrollPanel != null) scrollPanel.setHeight(origHeight - origDelta);
 	}
 	
 	public void addTab(String buttonText, Panel p, int height)

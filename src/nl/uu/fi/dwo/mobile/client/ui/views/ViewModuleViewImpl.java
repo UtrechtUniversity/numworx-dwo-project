@@ -16,6 +16,7 @@ import nl.uu.fi.dwo.interaction.client.StateLess;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
+import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard.HasHeight;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
@@ -42,6 +43,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
@@ -89,7 +91,7 @@ import fi.wiskopdr.text.Text_nl;
  * @author Danny Hendrix, Evertson Croes, Sietske Tacoma, Wim van Velthoven
  * 
  */
-public class ViewModuleViewImpl extends XMLView implements ViewModuleView, EntryPoint, NextPrevHandler
+public class ViewModuleViewImpl extends XMLView implements ViewModuleView, EntryPoint, NextPrevHandler, HasHeight
 {
 	private static final String RANDOM_VAR_WAARDEN = "RandomVarWaarden";
 	private static final String RANDOM_VAR_NAMEN = "RandomVarNamen";
@@ -949,7 +951,7 @@ try {
 		public void onResize(ResizeEvent event) {
 			int h = event.getHeight() - extraHeight;
 			//logger.info("resize event " +  h);
-			sb.setScrollPanel(contentScrollPanel, h);
+			sb.setScrollPanel(ViewModuleViewImpl.this, h);
 			
 		}
 	}
@@ -1016,7 +1018,7 @@ try {
 		contentPanel = new FlowPanel();contentPanel.setStylePrimaryName("contentPanel");
 		contentPanel.getElement().getStyle().setProperty("display", "inline-block");
 // smooth scroll on ios devices:
-		contentPanel.getElement().getStyle().setProperty("WebkitOverflowScrolling", "touch");
+		setWebkitScrolling(true);
 		//contentPanel.getElement().getStyle().setMarginBottom(360, Unit.PX);
 		contentPanel.setWidth("100%"); // hoeveel is 100% - 30px ?
 		contentPanel.setHeight("100%");
@@ -1069,6 +1071,14 @@ try {
 		return this;
 
 	}
+
+	private void setWebkitScrolling(boolean b) {
+		Style style = contentPanel.getElement().getStyle();
+		if (b)
+			style.setProperty("WebkitOverflowScrolling", "touch");
+		else
+			style.clearProperty("WebkitOverflowScrolling");
+	}
 	
 	
 	protected void showScore(ScoreNavIF nav) {
@@ -1118,7 +1128,7 @@ try {
 //		Panel kbp = kb.getAsPanel();
 //		kbp.setWidth("886px");
 		sb.zetMaat();
-		sb.setScrollPanel(contentScrollPanel, contentHeight);
+		sb.setScrollPanel(this, contentHeight);
 		//fp.add(kbp);
 
 	}
@@ -1146,7 +1156,7 @@ try {
 		int contentHeight = Window.getClientHeight() - extraHeight;
 		Window.addResizeHandler(new Resizer());
 		sb.zetMaat();
-		sb.setScrollPanel(contentScrollPanel, contentHeight);
+		sb.setScrollPanel(this, contentHeight);
 
 	}
 	
@@ -1365,6 +1375,13 @@ try {
 
 	public FormuleClipboardIF getClipboard() {
 		return cb;
+	}
+
+	@Override
+	public void setHeight(int px) {
+		setWebkitScrolling(false);
+		contentScrollPanel.setPixelSize(-1, px);
+		setWebkitScrolling(true);
 	}
 	
 	

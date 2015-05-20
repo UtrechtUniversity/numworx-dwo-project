@@ -10,6 +10,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
+import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 
@@ -501,7 +502,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 		tp.zetMaat();
 	}
 	
-	public void setScrollPanel(Widget w, int h) {
+	public void setScrollPanel(AbstractKeyboard.HasHeight w, int h) {
 		tp.setScrollPanel(w, h);
 	}
 
