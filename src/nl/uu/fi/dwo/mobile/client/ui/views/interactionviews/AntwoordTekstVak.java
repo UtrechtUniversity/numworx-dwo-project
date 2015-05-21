@@ -112,7 +112,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 	private boolean nagekeken;
 
 	private Boolean correct;
-
+	
 	private int score;
 	private int scoreMax = 10;
 
@@ -314,6 +314,8 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 					return; 
 				}
 				kijkNa();
+				if(comRoot != null)
+					comRoot.setChanged(Boolean.FALSE.equals(correct));
 			}
 
 			@Override
