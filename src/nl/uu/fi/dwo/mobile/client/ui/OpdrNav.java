@@ -361,12 +361,15 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	private Timer popupTimer;
 	
-	private void schedule(final int index) {
+	private void schedule(final int index, boolean touch) {
 		if(popupTimer != null) 
 		{
 			popupTimer.cancel();
 			popupTimer.run();
 		}
+		if(touch && index != getCurrentOpdracht())
+			return;
+		
 		
 		if (geefNoScore(currentActiviteit, index) ||
 			!buttonsEnabled[currentActiviteit][index]
@@ -398,17 +401,17 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		@Override
 		public void onTouchEnd(
 				com.google.gwt.event.dom.client.TouchEndEvent event) {
-			schedule(index);
+			schedule(index, true);
 		}
 
 		@Override
 		public void onMouseUp(MouseUpEvent event) {
-			schedule(index);
+			schedule(index, false);
 		}
 
 		@Override
 		public void onMouseOver(MouseOverEvent event) {
-			schedule(index);			
+			schedule(index, false);			
 		}
 		
 	}

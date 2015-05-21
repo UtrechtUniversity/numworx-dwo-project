@@ -221,7 +221,9 @@ public abstract class XMLView {
 			breedte = ((Number) opdracht.get("scheidingX")).intValue();
 		}
 
-		if(!MGWT.getOsDetection().isDesktop()) {
+		if(!MGWT.getOsDetection().isDesktop() 
+				&& false // FIXME staat uit omdat Graphtool clientX en clientY niet goed doet.
+		) {
 			final int width=breedte;
 
 		// FIXED is dit op tijd? ALLEEN OP TABLET!!!!

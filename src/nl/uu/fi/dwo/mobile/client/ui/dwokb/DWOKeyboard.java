@@ -68,13 +68,13 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 		style.setWidth(882, Unit.PX);
 		style.setPosition(Position.RELATIVE);
 		
-		staticPanel.addDomHandler(new MouseUpHandler() {
-
-			@Override
-			public void onMouseUp(MouseUpEvent event) {
-				showScore(null);
-				
-			}} , MouseUpEvent.getType());
+//		staticPanel.addDomHandler(new MouseUpHandler() {
+//
+//			@Override
+//			public void onMouseUp(MouseUpEvent event) {
+//				showScore(null);
+//				
+//			}} , MouseUpEvent.getType());
 	}
 
 	@Override
@@ -153,17 +153,17 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 	Timer scoreTimer;
 	@Override
 	public void showScore(ScoreNavIF scoreNav) {
-		final Style style = staticPanel.getElement().getStyle();
-		style.setHeight(getStatusBarHeight()*2, Unit.PX);
-		scoreTimer = new Timer() {
-			
-			@Override
-			public void run() {
-				scoreTimer = null;
-				style.setHeight(getStatusBarHeight(), Unit.PX);
-			}
-		};
-		scoreTimer.schedule(2000);
+//		final Style style = staticPanel.getElement().getStyle();
+//		style.setHeight(getStatusBarHeight()*2, Unit.PX);
+//		scoreTimer = new Timer() {
+//			
+//			@Override
+//			public void run() {
+//				scoreTimer = null;
+//				style.setHeight(getStatusBarHeight(), Unit.PX);
+//			}
+//		};
+//		scoreTimer.schedule(2000);
 	}
 
 }

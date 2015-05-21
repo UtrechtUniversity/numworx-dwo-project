@@ -1035,7 +1035,7 @@ try {
 					switch( event.getDirection()) {
 					case LEFT_TO_RIGHT:  gotoPrev(scoreNav); break;
 					case RIGHT_TO_LEFT: gotoNext(scoreNav); break;
-					case BOTTOM_TO_TOP: showScore(scoreNav);
+					// TODO case BOTTOM_TO_TOP: showScore(scoreNav);
 					default:
 					}
 					
@@ -1073,11 +1073,11 @@ try {
 	}
 
 	private void setWebkitScrolling(boolean b) {
-		Style style = contentPanel.getElement().getStyle();
-		if (b)
-			style.setProperty("WebkitOverflowScrolling", "touch");
-		else
-			style.clearProperty("WebkitOverflowScrolling");
+//		Style style = contentPanel.getElement().getStyle();
+//		if (b)
+//			style.setProperty("WebkitOverflowScrolling", "touch");
+//		else
+//			style.clearProperty("WebkitOverflowScrolling");
 	}
 	
 	

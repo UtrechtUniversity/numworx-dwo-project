@@ -26,7 +26,9 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 
 	@Override
 	public String getStubView() {
-		return "";
+		if(!GWT.isProdMode())
+			return "";
+		return "/dwo/apps/";
 	}
 
 	@Override
