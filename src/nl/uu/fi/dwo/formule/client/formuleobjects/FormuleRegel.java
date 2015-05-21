@@ -1390,6 +1390,14 @@ public class FormuleRegel extends FormuleElement
 			if (elx > selectionEndX || elx + el.getWidth() < selectionStartX || this.getAsHoogte() - el.getAsHoogte() > selectionEndY || this.getAsHoogte() - el.getAsHoogte() + el.getHeight() < selectionStartY)
 				//outside selection
 				el.setSelected(false);
+			else if(selectionStartX == selectionEndX && selectionStartY == selectionEndY)//geen selectie, wel cursorpositie veranderen
+			{
+				el.setSelected(false);
+				//change cursor
+				lastElement = i;
+				if (firstElement > i)
+					firstElement = i;
+			}
 			else
 			{
 				selectionfound = true;

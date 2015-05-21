@@ -944,38 +944,23 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			public void onClick(ClickEvent event) {
 				if(editor != null)
 				{	if(editor.getAsPanel().getParent().equals(panel))
-					{	//TODO: testen of dit ook op tablet werkt.
-						//TODO: kijken of ik de breedte nog nauwkeuriger kan bepalen, nu is er rechts een stukje waar geen reactie is (editor is breder dan tot laatste teken).
-						if(event.getClientX() > editor.getAsPanel().getAbsoluteLeft() + editor.getAsPanel().getOffsetWidth())	
-						{
-							editor.requestFocus();
-							editor.setCurrentElementRepaint(editor.getCurrentRegel());
+					{	
+						if(event.getClientX() > editor.getAsPanel().getAbsoluteLeft() + editor.getMainRegel().getWidth())	
+						{	editor.requestFocus();
+							editor.startSelection(editor.getMainRegel().getWidth(), 0);
+							editor.endSelection(editor.getMainRegel().getWidth(), 0);
 						}
 						else if(event.getClientX() < editor.getAsPanel().getAbsoluteLeft())
-						{
-							editor.requestFocus();
-							editor.setCurrentElementRepaint(editor.getCurrentRegel());
-							//TODO: nog zorgen dat cursor aan begin komt.
+						{	editor.requestFocus();
+							editor.startSelection(0, 0);
+							editor.endSelection(0, 0);
+							editor.cursorToLeft();
+						
 						}
 						else if(!editor.getKeyboard().getEditor().equals(editor))
 						{	editor.requestFocus();
 							editor.setCurrentElementRepaint(editor.getCurrentRegel());
 						}
-						
-					
-						
-						//editor.paint();
-						//editor.getCurrentRegel().setCurrent(false);
-						//int x = editor.getCurrentRegel().getWidth();
-						//if(!isSupported()) y+=8;// vraag me niet waarom dit nodig is
-
-						//editor.clearSelection();
-						//editor.startSelection(x, 0);
-						//editor.endSelection(x, 0);
-						//this.x = x;
-						//this.y = y;
-						//editor.setCurrentElementRepaint();
-						//editor.cursorToRight();
 					}
 				}
 			}
