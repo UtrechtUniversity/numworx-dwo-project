@@ -102,9 +102,12 @@ public class NdeLogVak extends FormuleElementWithChildren
 		//else g.drawString("log", 5+k2w ,ashoogte + asc/2 + asc/12);
 		//ctx.setTextAlign(TextAlign.CENTER);
 		//ctx.setTextBaseline(TextBaseline.BOTTOM);
-		ctx.setFont(fm.getFontStyle());
-		ctx.fillText("log", 5 + getChild(1).width, getAsHoogte());// + fm.getAscent()/2 + fm.getAscent()/12);
+		FormuleFont fmLog = fm.createCopy();
+		fmLog.setItalic(false);
 		
+		ctx.setFont(fmLog.getFontStyle());
+		ctx.fillText("log", 5 + getChild(1).width, getAsHoogte());// + fm.getAscent()/2 + fm.getAscent()/12);
+		ctx.setFont(fm.getFontStyle());
 		int hoogte = getChild(0).height;
 		int breedte = width;
 		int h =3*fm.getAscent()/2;
