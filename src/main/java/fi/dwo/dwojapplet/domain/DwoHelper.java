@@ -63,6 +63,13 @@ public final class DwoHelper {
     private static PersistentRole currentRole; // null if none available.
     private static List<PersistentRole> roles;
 
+
+    /**
+     * ********deprecated attributes **********
+     */
+    private static User currentFacadeUser;
+    private static String plainPassword;
+    
     /**
      * @return the plainPassword
      */
@@ -82,12 +89,6 @@ public final class DwoHelper {
     public void init() throws RestException {
         roles = RoleManager.getRoles();
     }
-
-    /**
-     * ********deprecated attributes **********
-     */
-    private static User currentFacadeUser;
-    private static String plainPassword;
 
     /**
      * ****************************************

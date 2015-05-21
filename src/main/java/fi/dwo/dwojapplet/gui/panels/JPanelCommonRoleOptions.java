@@ -7,9 +7,12 @@ package fi.dwo.dwojapplet.gui.panels;
 
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.rest.entities.SchoolRoleAndClass;
+import fi.dwo.commons.system.TextMapper;
+import static fi.dwo.commons.system.TextMapper.GUIP_BTN_DELETE_ACCOUNT;
+import static fi.dwo.commons.system.TextMapper.GUIP_BTN_SWITCH_PROFILE;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.GuiCreator;
+import fi.dwo.dwojapplet.gui.ReauthenticatePanel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,6 +21,7 @@ import java.util.logging.Logger;
  * @author G.A.J. van der Plas
  */
 public class JPanelCommonRoleOptions extends javax.swing.JPanel {
+
     private static final Logger log = Logger.getLogger(JPanelCommonRoleOptions.class.getName());
     private JPanelSchoolsRolesAndClassesProperties prop = new JPanelSchoolsRolesAndClassesProperties();
 
@@ -37,19 +41,19 @@ public class JPanelCommonRoleOptions extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
+        jButtonDeleteProfile = new javax.swing.JButton();
         jButtonSwitchToProfile = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(387, 45));
 
-        jButton1.setText("Profiel Verwijderen");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonDeleteProfile.setText(TextMapper.getText(GUIP_BTN_DELETE_ACCOUNT));
+        jButtonDeleteProfile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonDeleteProfileActionPerformed(evt);
             }
         });
 
-        jButtonSwitchToProfile.setText("Naar profiel Switchen");
+        jButtonSwitchToProfile.setText(TextMapper.getText(GUIP_BTN_SWITCH_PROFILE));
         jButtonSwitchToProfile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSwitchToProfileActionPerformed(evt);
@@ -63,8 +67,8 @@ public class JPanelCommonRoleOptions extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jButtonSwitchToProfile)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 109, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 169, Short.MAX_VALUE)
+                .addComponent(jButtonDeleteProfile)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -72,7 +76,7 @@ public class JPanelCommonRoleOptions extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(jButtonDeleteProfile)
                     .addComponent(jButtonSwitchToProfile))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -91,17 +95,17 @@ public class JPanelCommonRoleOptions extends javax.swing.JPanel {
             log.log(Level.SEVERE, null, ex);
         }
 
-        
+
     }//GEN-LAST:event_jButtonSwitchToProfileActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-            // TODO remove profile. After a popup.
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void jButtonDeleteProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteProfileActionPerformed
+        boolean r = ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIREAUTH_AREYOUSURE));
+        log.log(Level.INFO,"Result {0}", new Object[]{r});
+    }//GEN-LAST:event_jButtonDeleteProfileActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButtonDeleteProfile;
     private javax.swing.JButton jButtonSwitchToProfile;
     // End of variables declaration//GEN-END:variables
 

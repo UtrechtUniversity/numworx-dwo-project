@@ -466,7 +466,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
                 JOptionPane.showMessageDialog(this, "gebruikers van deze school hebben hier geen toegang");
                 return false;
             }
-
         }
         return (currentUser != null);
     }

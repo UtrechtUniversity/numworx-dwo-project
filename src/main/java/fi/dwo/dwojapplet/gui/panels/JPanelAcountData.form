@@ -23,7 +23,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jPanelPersonalData" max="32767" attributes="0"/>
+              <Component id="jPanelPersonalData" pref="689" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -59,7 +59,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
-                          <Component id="jLabelGivenName" max="32767" attributes="0"/>
+                          <Component id="jLabelGivenName" pref="103" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jTextFieldGivenName" min="-2" pref="562" max="-2" attributes="0"/>
                       </Group>
@@ -214,6 +214,9 @@
             <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[320, 320]"/>
             </Property>
+            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="jTextFieldFamilyName"/>
+            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelGivenName">
@@ -236,6 +239,9 @@
             <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[320, 320]"/>
             </Property>
+            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="jTextFieldInsertion"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldGivenNameActionPerformed"/>
@@ -255,6 +261,9 @@
             <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[320, 320]"/>
             </Property>
+            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="jTextFieldEmail"/>
+            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="jTextFieldEmail">
@@ -263,12 +272,18 @@
             <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[320, 320]"/>
             </Property>
+            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="jPasswordFieldNewPassword"/>
+            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="jButtonEditAndCancel">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="TextMapper.getText(TextMapper.GUIP_BTN_EDIT)&#xd;&#xa;" type="code"/>
+            </Property>
+            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="jLabelGivenName"/>
             </Property>
           </Properties>
           <Events>
@@ -281,6 +296,9 @@
               <Connection code="TextMapper.getText(TextMapper.GUIP_BTN_SAVE)" type="code"/>
             </Property>
             <Property name="enabled" type="boolean" value="false"/>
+            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="jButtonEditAndCancel"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonUpdateActionPerformed"/>
@@ -289,16 +307,27 @@
         <Component class="javax.swing.JPasswordField" name="jPasswordFieldPassword">
           <Properties>
             <Property name="text" type="java.lang.String" value="jPasswordField1"/>
+            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="jButtonEditAndCancel"/>
+            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JPasswordField" name="jPasswordFieldNewPassword">
           <Properties>
+            <Property name="editable" type="boolean" value="false"/>
             <Property name="text" type="java.lang.String" value="jPasswordField2"/>
+            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="jPasswordFieldConfirmPassword"/>
+            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JPasswordField" name="jPasswordFieldConfirmPassword">
           <Properties>
+            <Property name="editable" type="boolean" value="false"/>
             <Property name="text" type="java.lang.String" value="jPasswordField3"/>
+            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="jButtonUpdate"/>
+            </Property>
           </Properties>
         </Component>
       </SubComponents>

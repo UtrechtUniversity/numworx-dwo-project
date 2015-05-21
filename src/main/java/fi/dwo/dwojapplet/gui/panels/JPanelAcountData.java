@@ -108,6 +108,7 @@ public class JPanelAcountData extends javax.swing.JPanel {
 
         jTextFieldInsertion.setEditable(false);
         jTextFieldInsertion.setMinimumSize(new java.awt.Dimension(320, 320));
+        jTextFieldInsertion.setNextFocusableComponent(jTextFieldFamilyName);
 
         jLabelGivenName.setText(TextMapper.getText(TextMapper.GUIP_FIRSTNAME));
 
@@ -116,6 +117,7 @@ public class JPanelAcountData extends javax.swing.JPanel {
 
         jTextFieldGivenName.setEditable(false);
         jTextFieldGivenName.setMinimumSize(new java.awt.Dimension(320, 320));
+        jTextFieldGivenName.setNextFocusableComponent(jTextFieldInsertion);
         jTextFieldGivenName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldGivenNameActionPerformed(evt);
@@ -131,12 +133,15 @@ public class JPanelAcountData extends javax.swing.JPanel {
 
         jTextFieldFamilyName.setEditable(false);
         jTextFieldFamilyName.setMinimumSize(new java.awt.Dimension(320, 320));
+        jTextFieldFamilyName.setNextFocusableComponent(jTextFieldEmail);
 
         jTextFieldEmail.setEditable(false);
         jTextFieldEmail.setMinimumSize(new java.awt.Dimension(320, 320));
+        jTextFieldEmail.setNextFocusableComponent(jPasswordFieldNewPassword);
 
         jButtonEditAndCancel.setText(TextMapper.getText(TextMapper.GUIP_BTN_EDIT)
         );
+        jButtonEditAndCancel.setNextFocusableComponent(jLabelGivenName);
         jButtonEditAndCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonEditAndCancelActionPerformed(evt);
@@ -145,6 +150,7 @@ public class JPanelAcountData extends javax.swing.JPanel {
 
         jButtonUpdate.setText(TextMapper.getText(TextMapper.GUIP_BTN_SAVE));
         jButtonUpdate.setEnabled(false);
+        jButtonUpdate.setNextFocusableComponent(jButtonEditAndCancel);
         jButtonUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonUpdateActionPerformed(evt);
@@ -152,10 +158,15 @@ public class JPanelAcountData extends javax.swing.JPanel {
         });
 
         jPasswordFieldPassword.setText("jPasswordField1");
+        jPasswordFieldPassword.setNextFocusableComponent(jButtonEditAndCancel);
 
+        jPasswordFieldNewPassword.setEditable(false);
         jPasswordFieldNewPassword.setText("jPasswordField2");
+        jPasswordFieldNewPassword.setNextFocusableComponent(jPasswordFieldConfirmPassword);
 
+        jPasswordFieldConfirmPassword.setEditable(false);
         jPasswordFieldConfirmPassword.setText("jPasswordField3");
+        jPasswordFieldConfirmPassword.setNextFocusableComponent(jButtonUpdate);
 
         javax.swing.GroupLayout jPanelPersonalDataLayout = new javax.swing.GroupLayout(jPanelPersonalData);
         jPanelPersonalData.setLayout(jPanelPersonalDataLayout);
@@ -165,7 +176,7 @@ public class JPanelAcountData extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanelPersonalDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPersonalDataLayout.createSequentialGroup()
-                        .addComponent(jLabelGivenName, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
+                        .addComponent(jLabelGivenName, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTextFieldGivenName, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelPersonalDataLayout.createSequentialGroup()
@@ -251,7 +262,7 @@ public class JPanelAcountData extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanelPersonalData, javax.swing.GroupLayout.DEFAULT_SIZE, 670, Short.MAX_VALUE)
+                .addComponent(jPanelPersonalData, javax.swing.GroupLayout.DEFAULT_SIZE, 689, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -280,7 +291,6 @@ public class JPanelAcountData extends javax.swing.JPanel {
             jButtonEditAndCancel.setEnabled(false);
             jButtonUpdate.setEnabled(true);
 
-            jTextFieldUserName.setEditable(true);
             jPasswordFieldConfirmPassword.setEditable(true);
             jLabelConfirmPassword.setEnabled(true);
             jPasswordFieldNewPassword.setEditable(true);
@@ -306,7 +316,6 @@ public class JPanelAcountData extends javax.swing.JPanel {
             jButtonEditAndCancel.setEnabled(true);
             jButtonUpdate.setEnabled(false);
 
-            jTextFieldUserName.setEditable(false);
             jPasswordFieldConfirmPassword.setEditable(false);
             jPasswordFieldNewPassword.setEditable(false);
             jTextFieldInsertion.setEditable(false);

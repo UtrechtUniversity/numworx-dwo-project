@@ -171,8 +171,8 @@
                             <Main-Class>fi.dwo.dwojapplet.domain.DWO</Main-Class>
                             <Trusted-Only>true</Trusted-Only>
                             <Permissions>all-permissions</Permissions>
-                            <Codebase>*.uu.nl *.fi.uu.nl dme.colorado.edu *.appspot.com *.dwo.nl localhost dme.mathhouse.org</Codebase>
-                            <Caller-Allowable-Codebase>*.uu.nl *.fi.uu.nl dme.colorado.edu *.appspot.com *.dwo.nl localhost dme.mathhouse.org</Caller-Allowable-Codebase>
+                            <Codebase>*.uu.nl spindle.fisme.uu.nl *.fi.uu.nl dme.colorado.edu *.appspot.com *.dwo.nl localhost dme.mathhouse.org</Codebase>
+                            <Caller-Allowable-Codebase>*.uu.nl spindle.fisme.uu.nl *.fi.uu.nl dme.colorado.edu *.appspot.com *.dwo.nl localhost dme.mathhouse.org</Caller-Allowable-Codebase>
                         </manifestEntries>
                     </archive>
                 </configuration>
