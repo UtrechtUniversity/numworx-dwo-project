@@ -1136,7 +1136,11 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             Object classID = result.get("classID");
             if (classID instanceof Integer) {
                 ps.setInt(1, (Integer) classID);
-                result.putAll(executeQueryWithRecord(ps));
+                Hashtable result2 = executeQueryWithRecord(ps);
+                if (result2 != null) {
+                    result2.putAll(result); //note otherwise a userid is swapped.
+                }
+                result = result2;
             }
 
             if (!(tmp instanceof String)) { //null-data is an empty string, so
@@ -1152,8 +1156,9 @@ public class DbAccess extends DbConnect implements DbAccessIF {
                 ps.setInt(1, ((Integer) result.get("userID")).intValue());
                 Hashtable result2 = executeQueryWithRecord(ps);
                 if (result2 != null) {
-                    result.putAll(result2);
+                    result2.putAll(result); //note otherwise a userid is swapped.
                 }
+                result = result2;
             }
             result.put("timestamp", String.valueOf(System.currentTimeMillis()));
         }
@@ -1162,9 +1167,12 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     }
 
     /**
+     * Checks for the user or the user/password combination.
+     * 
      * @param userID
      * @param password
-     * @return java.util.Hashtable
+     * @return True if user exists and password is correct or true if the user 
+     * exists and password is empty. False Otherwise.
      * @throws java.sql.SQLException
      *
      */
