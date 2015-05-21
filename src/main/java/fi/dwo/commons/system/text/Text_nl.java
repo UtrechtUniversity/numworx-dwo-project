@@ -9,7 +9,16 @@ import fi.dwo.commons.system.TextMapper;
 
 public class Text_nl extends ListResourceBundle {
  private final Object[][] contents = {
+     
+     
+     
          { TextMapper.USER_GUEST, "Gast"}, 
+
+         /* General word constants */
+         { TextMapper.LBL_USERNAME, "Gebruikersnaam" },
+         { TextMapper.LBL_PASSWORD, "Wachtwoord" },
+     
+         /* General button constants */
          { TextMapper.BTN_LOGIN, "Login" },
          { TextMapper.BTN_CANCEL, "Annuleren" },
          { TextMapper.BTN_NO, "Nee" },
@@ -38,6 +47,9 @@ public class Text_nl extends ListResourceBundle {
          { TextMapper.EXS_NO_APPLET, "Applet niet gevonden"},
          
          { TextMapper.GUI_WAIT_A_MOMENT, "Een moment geduld aub"}, 
+         
+        /* Reauthenticate Panel */
+         { TextMapper.GUIREAUTH_AREYOUSURE, "<HTML><P>Bent u zeker dat u all uw profielen en data wilt verwijderen?<BR> Vul dan uw wachtwoord in en klik op OK.</P></HTML>"}, 
 
          { TextMapper.GUIW_LOGINDATA, "Inloggegevens" },
          { TextMapper.GUIW_USERNAME, "Gebruikersnaam" },
@@ -154,7 +166,9 @@ public class Text_nl extends ListResourceBundle {
          { TextMapper.GUIP_BTN_EDIT, "Edit" },
          { TextMapper.GUIP_BTN_SAVE, "Opslaan"},
          { TextMapper.GUIP_BTN_RESET, "Reset"},
+         { TextMapper.GUIP_BTN_SWITCH_PROFILE, "Naar geselecteerd profiel schakelen"},
          { TextMapper.GUIP_BTN_DELETE_PROFILE, "Profiel Verwijderen"},
+         { TextMapper.GUIP_BTN_DELETE_ACCOUNT, "Account Verwijderen"},
 
          { TextMapper.GUIP_MSG_PROVIDED_SCHOOL, "Gegevens verstrekt door de school"},
          

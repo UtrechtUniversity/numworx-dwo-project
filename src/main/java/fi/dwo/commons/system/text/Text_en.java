@@ -10,6 +10,12 @@ import fi.dwo.commons.system.TextMapper;
 public class Text_en extends ListResourceBundle {
  private final Object[][] contents = {
          { TextMapper.USER_GUEST, "Guest"},
+     
+         /* General word constants */
+         { TextMapper.LBL_USERNAME, "Username" },
+         { TextMapper.LBL_PASSWORD, "Password" },
+     
+         /* General button constants */
          { TextMapper.BTN_LOGIN, "Login" },
          { TextMapper.BTN_CANCEL, "Cancel" },
          { TextMapper.BTN_NO, "No" },
@@ -38,6 +44,9 @@ public class Text_en extends ListResourceBundle {
 
          { TextMapper.GUI_WAIT_A_MOMENT, "One moment please"},
 
+        /* Reauthenticate Panel */
+         { TextMapper.GUIREAUTH_AREYOUSURE, "<HTML>Are you absolutely sure you want to delete your account, all profiles and all data?<BR> If so, then enter your password and click OK.</HTML>"}, 
+         
          { TextMapper.GUIW_LOGINDATA, "Login data" },
          { TextMapper.GUIW_USERNAME, "Username" },
          { TextMapper.GUIW_PASSWORD, "Password" },
@@ -154,7 +163,9 @@ public class Text_en extends ListResourceBundle {
             { TextMapper.GUIP_BTN_EDIT, "Edit" },
             { TextMapper.GUIP_BTN_SAVE, "Save" },
             { TextMapper.GUIP_BTN_RESET, "Reset" },
+            { TextMapper.GUIP_BTN_SWITCH_PROFILE, "Switch to selected profile"},
             { TextMapper.GUIP_BTN_DELETE_PROFILE, "Delete profile" },
+            { TextMapper.GUIP_BTN_DELETE_ACCOUNT, "Delete account" },
 
             { TextMapper.GUIP_MSG_PROVIDED_SCHOOL, "Data provided by the school" },
 

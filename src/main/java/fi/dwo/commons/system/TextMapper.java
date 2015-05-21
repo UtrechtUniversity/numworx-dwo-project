@@ -13,6 +13,10 @@ public abstract class TextMapper {
     private static final String TEXT_CLASS = "Text";
 
     public final static String USER_GUEST = "USER_GUEST";
+    
+    /* General word constants */
+    public static final String LBL_USERNAME = "LBL_USERNAME";
+    public static final String LBL_PASSWORD = "LBL_PASSWORD";
 
     /* Button text constants */
     public static final String BTN_LOGIN = "BTN_LOGIN";
@@ -70,7 +74,11 @@ public abstract class TextMapper {
 
     /* Gui Messages */
     public final static String GUI_WAIT_A_MOMENT = "GUI_WAIT_A_MOMENT";
+    
+    /* Reauthenticate Panel */
+    public final static String GUIREAUTH_AREYOUSURE = "GUIREAUTH_AREYOUSURE";
 
+    
     /* Welcome Panel */
     public final static String GUIW_LOGINDATA = "GUIW_LOGINDATA";
     public final static String GUIW_USERNAME = "GUIW_USERNAME";
@@ -200,7 +208,9 @@ public abstract class TextMapper {
     public final static String GUIP_BTN_EDIT = "GUIP_BTN_EDIT";
     public final static String GUIP_BTN_SAVE = "GUIP_BTN_SAVE";
     public final static String GUIP_BTN_RESET = "GUIP_BTN_RESET";
+    public final static String GUIP_BTN_SWITCH_PROFILE = "GUIP_BTN_SWITCH_PROFILE";
     public final static String GUIP_BTN_DELETE_PROFILE = "GUIP_BTN_DELETE_PROFILE";
+    public final static String GUIP_BTN_DELETE_ACCOUNT = "GUIP_BTN_DELETE_ACCOUNT";
 
     public final static String GUIP_MSG_PROVIDED_SCHOOL = "GUIP_MSG_PROVIDED_SCHOOL";
 
