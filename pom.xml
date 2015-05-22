@@ -3,9 +3,15 @@
     <modelVersion>4.0.0</modelVersion>
  
     <!-- Adjust artifact, name and description for new projects -->
-    <groupId>fi.dwo</groupId>
+    <parent>
+        <groupId>fi.dwo</groupId>
+        <artifactId>DWO2</artifactId>
+        <version>2.0-SNAPSHOT</version>
+        <relativePath>../../../DWO2/branches/working/pom.xml</relativePath>
+    </parent>
+    <!-- Adjust artifact, name and description for new projects -->
     <artifactId>DWOJApplet</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>2.0-SNAPSHOT</version>
     <name>DWOJApplet - working</name>
     <url>http://www.dwo.nl</url>
     <packaging>jar</packaging>
