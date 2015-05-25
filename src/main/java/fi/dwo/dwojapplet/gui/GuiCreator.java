@@ -58,7 +58,7 @@ public class GuiCreator {
      *
      * @param dwo The dwo to communicate with.
      */
-    //TODO fix memory leak, instantiation should occur different.
+    //TODO WIM fix memory leak, instantiation should occur different.
     public GuiCreator(DwoIF dwo) {
         this.dwo = dwo;
         GuiCreator._instance = this;

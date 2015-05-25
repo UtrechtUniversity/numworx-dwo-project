@@ -168,7 +168,7 @@ public interface DwoIF {
      */
     public CenterSubPanel loadSco(Sco sco);
 
-//TODO MANY TO MANY DONE: obsolete
+//TODO DONE MANY TO MANY: obsolete
 //    /**
 //     * Change the current user his account.
 //     *

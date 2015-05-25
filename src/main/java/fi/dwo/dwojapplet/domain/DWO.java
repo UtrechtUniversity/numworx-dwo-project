@@ -902,7 +902,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         }
         return sco.getScoPanel(this, DwoHelper.getCurrentFacadeUser());
     }
-//TODO MANY TO MANY DONE: obsolete
+//TODO DONE MANY TO MANY : obsolete
 //    /**
 //     * Change the current user his account.
 //     *
