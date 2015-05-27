@@ -47,7 +47,8 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
 
     private JButton guestButton;
 
-    private JButton registerButton;
+    private JButton registerNewUserButton;
+    private JButton registerExistingUserButton;
 
     FIButton fiButton;
     JPanel dialog;
@@ -304,13 +305,22 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         p.add(l);
 
         /* Register button */
-        registerButton = new JButton(TextMapper.getText(TextMapper.GUIW_BTN_REGISTER));//, GuiConstants.SUB_BACKGROUND);
-        fm = registerButton.getFontMetrics(registerButton.getFont());
-        registerButton.setSize(registerButton.getPreferredSize());
-        registerButton.setLocation((p.getSize().width / 2)
-                - (registerButton.getSize().width / 2), 27);
-        p.add(registerButton);
+        registerNewUserButton = new JButton(TextMapper.getText(TextMapper.GUIW_BTN_REGISTER));//, GuiConstants.SUB_BACKGROUND);
+        fm = registerNewUserButton.getFontMetrics(registerNewUserButton.getFont());
+        registerNewUserButton.setSize(registerNewUserButton.getPreferredSize());
+        registerNewUserButton.setLocation((p.getSize().width / 2)
+               +10 , 27);
+        p.add(registerNewUserButton);
 
+        /* Register button */
+        registerExistingUserButton = new JButton("Bestaande gebruiker");//, GuiConstants.SUB_BACKGROUND);
+        fm = registerNewUserButton.getFontMetrics(registerExistingUserButton.getFont());
+        registerExistingUserButton.setSize(registerExistingUserButton.getPreferredSize());
+        registerExistingUserButton.setLocation((p.getSize().width / 2)
+                - 2*(registerExistingUserButton.getSize().width / 2) -10, 27);
+        p.add(registerExistingUserButton);
+
+        
         /* Register message */
         l = new JLabel(TextMapper.getText(TextMapper.GUIW_MSG_REGISTER_NEW));
         l.setFont(GuiConstants.NORMAL_TEXT);
@@ -320,7 +330,8 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         p.add(l);
 
         guestButton.addActionListener(this);
-        registerButton.addActionListener(this);
+        registerNewUserButton.addActionListener(this);
+        registerExistingUserButton.addActionListener(this);
 
     }
     private static final Logger LOG = Logger.getLogger(WelcomePanel.class.getName());
@@ -353,8 +364,10 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
             } catch (LoginException exc) {
                 JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
             }
-        } else if (src == registerButton) {
-            GuiCreator.instance().toRegister();
+        } else if (src == registerNewUserButton) {
+            GuiCreator.instance().toRegisterNewUser();
+        } else if (src == registerExistingUserButton) {
+            GuiCreator.instance().toRegisterExistingUser();
         }
     }
 

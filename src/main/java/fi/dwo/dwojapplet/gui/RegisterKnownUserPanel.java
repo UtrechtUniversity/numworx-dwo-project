@@ -15,12 +15,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 /**
@@ -29,7 +31,7 @@ import javax.swing.JTextField;
  * @author M.J.B. Kupers
  *
  */
-public class RegisterPanel extends ContentPanel implements ActionListener {
+public class RegisterKnownUserPanel extends ContentPanel implements ActionListener {
 
     private Group groupList[];
 
@@ -61,13 +63,14 @@ public class RegisterPanel extends ContentPanel implements ActionListener {
 
     private JPanel dialog;
 
+
     /**
      * Creates a new RegisterPanel. At the registerpanel, a user can register
      * himself.
      *
      * @param groups The possible groups wherefrom a user can be part of.
      */
-    public RegisterPanel(Group[] groups) {
+    public RegisterKnownUserPanel(Group[] groups) {
         groupList = groups;
 
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
@@ -112,7 +115,7 @@ public class RegisterPanel extends ContentPanel implements ActionListener {
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(getForeground()));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(getSize().width / 2 - 155, 140, 310, 105);
+        p.setBounds(getSize().width / 2 - 155, 240, 310, 105);
         dialog.add(p);
 
         /* registerinfo label */
@@ -162,123 +165,128 @@ public class RegisterPanel extends ContentPanel implements ActionListener {
         l.setLocation(285, 53);
         p.add(l);
 
-        /* RePassword label */
-        l = new JLabel(TextMapper.getText(TextMapper.GUIR_RE_PASSWORD) + ":");
-        l.setForeground(Color.black);
-        l.setFont(GuiConstants.NORMAL_TEXT);
-        fm = l.getFontMetrics(l.getFont());
-        l.setLocation(10, 80);
-        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-        p.add(l);
+//        /* RePassword label */
+//        l = new JLabel(TextMapper.getText(TextMapper.GUIR_RE_PASSWORD) + ":");
+//        l.setForeground(Color.black);
+//        l.setFont(GuiConstants.NORMAL_TEXT);
+//        fm = l.getFontMetrics(l.getFont());
+//        l.setLocation(10, 80);
+//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
+//        p.add(l);
+//        repassword = new JPasswordField();
+//        repassword.setBounds(160, 78, 120, 20);
+//        repassword.setEchoChar('*');
+//        p.add(repassword);
+//
+//        /* RePassword mandatory label */
+//        l = createMandatoryLabel();
+//        l.setLocation(285, 78);
+//        p.add(l);
 
-        /* RePassword field */
-        repassword = new JPasswordField();
-        repassword.setBounds(160, 78, 120, 20);
-        repassword.setEchoChar('*');
-        p.add(repassword);
-
-        /* RePassword mandatory label */
-        l = createMandatoryLabel();
-        l.setLocation(285, 78);
-        p.add(l);
-
-        /* Add PersonalInfo-panel */
-        p = new JPanel(null);
-        p.setBorder(BorderFactory.createLineBorder(getForeground()));
-        p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(getSize().width / 2 - 155, 244, 310, 130);
-        dialog.add(p);
-
-        /* personalinfo label */
-        l = new JLabel(TextMapper.getText(TextMapper.GUIR_PERSONALINFO) + ":");
-        l.setForeground(GuiConstants.RED_COLOR);
-        l.setFont(GuiConstants.RED_TEXT);
-        fm = l.getFontMetrics(l.getFont());
-        l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
-        p.add(l);
-
-        /* Firstname label */
-        l = new JLabel(TextMapper.getText(TextMapper.GUIR_FIRSTNAME) + ":");
-        l.setForeground(Color.black);
-        l.setFont(GuiConstants.NORMAL_TEXT);
-        fm = l.getFontMetrics(l.getFont());
-        l.setLocation(10, 30);
-        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-        p.add(l);
-
-        /* Firstname field */
-        firstname = new JTextField();
-        firstname.setBounds(160, 28, 120, 20);
-        p.add(firstname);
-
-        /* Firstname mandatory label */
-        l = createMandatoryLabel();
-        l.setLocation(285, 28);
-        p.add(l);
-
-        /* Middlename label */
-        String middleNameLabel = TextMapper.getText(TextMapper.GUIR_MIDDLENAME);
-        l = new JLabel(middleNameLabel + ":");
-        l.setForeground(Color.black);
-        l.setFont(GuiConstants.NORMAL_TEXT);
-        fm = l.getFontMetrics(l.getFont());
-        l.setLocation(10, 55);
-        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-        p.add(l);
-
-        /* Middlename field */
-        middlename = new JTextField();
-        middlename.setBounds(160, 53, 120, 20);
-        p.add(middlename);
-// if no middlename, skip it.        
-        boolean visible = middleNameLabel.length() > 0;
-        l.setVisible(visible);
-        middlename.setVisible(visible);
-        int v = visible ? 0 : 25;
-
-        /* Lastname label */
-        l = new JLabel(TextMapper.getText(TextMapper.GUIR_LASTNAME) + ":");
-        l.setForeground(Color.black);
-        l.setFont(GuiConstants.NORMAL_TEXT);
-        fm = l.getFontMetrics(l.getFont());
-        l.setLocation(10, 80 - v);
-        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-        p.add(l);
-
-        /* Lastname field */
-        lastname = new JTextField();
-        lastname.setBounds(160, 78 - v, 120, 20);
-        p.add(lastname);
-
-        /* Lastname mandatory label */
-        l = createMandatoryLabel();
-        l.setLocation(285, 78 - v);
-        p.add(l);
-
-        /* Email label */
-        l = new JLabel(TextMapper.getText(TextMapper.GUIR_EMAIL) + ":");
-        l.setForeground(Color.black);
-        l.setFont(GuiConstants.NORMAL_TEXT);
-        fm = l.getFontMetrics(l.getFont());
-        l.setLocation(10, 105 - v);
-        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-        p.add(l);
-
-        /* Email field */
-        email = new JTextField();
-        email.setBounds(160, 103 - v, 120, 20);
-        p.add(email);
-
-        /* Email mandatory label */
-        l = createMandatoryLabel();
-        l.setLocation(285, 103 - v);
-        p.add(l);
+//        /* Add PersonalInfo-panel */
+//        p = new JPanel(null);
+//        p.setBorder(BorderFactory.createLineBorder(getForeground()));
+//        p.setBackground(GuiConstants.SUB_BACKGROUND);
+//        p.setBounds(getSize().width / 2 - 155, 344, 310, 130);
+//        dialog.add(p);
+//
+//        /* Add PersonalInfo-panel */
+//        p = new JPanel(null);
+//        p.setBorder(BorderFactory.createLineBorder(getForeground()));
+//        p.setBackground(GuiConstants.SUB_BACKGROUND);
+//        p.setBounds(getSize().width / 2 - 155, 344, 310, 130);
+//        dialog.add(p);
+//
+//        /* personalinfo label */
+//        l = new JLabel(TextMapper.getText(TextMapper.GUIR_PERSONALINFO) + ":");
+//        l.setForeground(GuiConstants.RED_COLOR);
+//        l.setFont(GuiConstants.RED_TEXT);
+//        fm = l.getFontMetrics(l.getFont());
+//        l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
+//        p.add(l);
+//
+//        /* Firstname label */
+//        l = new JLabel(TextMapper.getText(TextMapper.GUIR_FIRSTNAME) + ":");
+//        l.setForeground(Color.black);
+//        l.setFont(GuiConstants.NORMAL_TEXT);
+//        fm = l.getFontMetrics(l.getFont());
+//        l.setLocation(10, 30);
+//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
+//        p.add(l);
+//
+//        /* Firstname field */
+//        firstname = new JTextField();
+//        firstname.setBounds(160, 28, 120, 20);
+//        p.add(firstname);
+//
+//        /* Firstname mandatory label */
+//        l = createMandatoryLabel();
+//        l.setLocation(285, 28);
+//        p.add(l);
+//
+//        /* Middlename label */
+//        String middleNameLabel = TextMapper.getText(TextMapper.GUIR_MIDDLENAME);
+//        l = new JLabel(middleNameLabel + ":");
+//        l.setForeground(Color.black);
+//        l.setFont(GuiConstants.NORMAL_TEXT);
+//        fm = l.getFontMetrics(l.getFont());
+//        l.setLocation(10, 55);
+//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
+//        p.add(l);
+//
+//        /* Middlename field */
+//        middlename = new JTextField();
+//        middlename.setBounds(160, 53, 120, 20);
+//        p.add(middlename);
+//// if no middlename, skip it.        
+//        boolean visible = middleNameLabel.length() > 0;
+//        l.setVisible(visible);
+//        middlename.setVisible(visible);
+//        int v = visible ? 0 : 25;
+//
+//        /* Lastname label */
+//        l = new JLabel(TextMapper.getText(TextMapper.GUIR_LASTNAME) + ":");
+//        l.setForeground(Color.black);
+//        l.setFont(GuiConstants.NORMAL_TEXT);
+//        fm = l.getFontMetrics(l.getFont());
+//        l.setLocation(10, 80 - v);
+//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
+//        p.add(l);
+//
+//        /* Lastname field */
+//        lastname = new JTextField();
+//        lastname.setBounds(160, 78 - v, 120, 20);
+//        p.add(lastname);
+//
+//        /* Lastname mandatory label */
+//        l = createMandatoryLabel();
+//        l.setLocation(285, 78 - v);
+//        p.add(l);
+//
+//        /* Email label */
+//        l = new JLabel(TextMapper.getText(TextMapper.GUIR_EMAIL) + ":");
+//        l.setForeground(Color.black);
+//        l.setFont(GuiConstants.NORMAL_TEXT);
+//        fm = l.getFontMetrics(l.getFont());
+//        l.setLocation(10, 105 - v);
+//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
+//        p.add(l);
+//
+//        /* Email field */
+//        email = new JTextField();
+//        email.setBounds(160, 103 - v, 120, 20);
+//        p.add(email);
+//
+//        /* Email mandatory label */
+//        l = createMandatoryLabel();
+//        l.setLocation(285, 103 - v);
+//        p.add(l);
 
         /* Add School-panel */
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(Color.black));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(getSize().width / 2 - 155, 373, 310, 115);
+        p.setBounds(getSize().width / 2 - 155, 344, 310, 115);//473
         dialog.add(p);
 
         /* schoolinfo label */
@@ -352,7 +360,7 @@ public class RegisterPanel extends ContentPanel implements ActionListener {
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(Color.black));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(getSize().width / 2 - 155, 487, 310, 35);
+        p.setBounds(getSize().width / 2 - 155, 356, 310, 135);//487
         dialog.add(p);
 
         /* Register button */
@@ -367,20 +375,20 @@ public class RegisterPanel extends ContentPanel implements ActionListener {
 
         registerButton.setLocation((p.getSize().width / 2)
                 - ((registerButton.getSize().width
-                + resetButton.getSize().width + 5) / 2), 5);
+                + resetButton.getSize().width + 5) / 2), 105);
         p.add(registerButton);
 
         resetButton.setLocation((p.getSize().width / 2)
                 - ((registerButton.getSize().width
                 + resetButton.getSize().width + 5) / 2)
-                + registerButton.getSize().width + 5, 5);
+                + registerButton.getSize().width + 5, 105);
         p.add(resetButton);
 
         backButton = new JButton(TextMapper.getText(TextMapper.GUIR_BTN_BACK));//, GuiConstants.MAIN_BACKGROUND);
         fm = backButton.getFontMetrics(backButton.getFont());
         backButton.setSize(backButton.getPreferredSize());
         backButton.setLocation(getSize().width / 2 - backButton.getSize().width
-                / 2, 530);
+                / 2, 500);//630
         dialog.add(backButton);
 
         registerButton.addActionListener(this);

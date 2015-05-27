@@ -278,9 +278,19 @@ public class GuiCreator {
     /**
      * Shows the register panel to the user.
      */
-    public void toRegister() {
+    public void toRegisterNewUser() {
         dwo.setWait();
-        RegisterPanel rp = new RegisterPanel(dwo.getGroups());
+        RegisterNewUserPanel rp = new RegisterNewUserPanel(dwo.getGroups());
+        dwo.setPanel(rp);
+        dwo.setReady();
+    }
+
+    /**
+     * Shows the register panel to the user.
+     */
+    public void toRegisterExistingUser() {
+        dwo.setWait();
+        RegisterKnownUserPanel rp = new RegisterKnownUserPanel(dwo.getGroups());
         dwo.setPanel(rp);
         dwo.setReady();
     }
