@@ -48,6 +48,7 @@ import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import fi.wiskopdr.FormuleParser;
+import fi.wiskopdr.expressies.Expressie;
 /**
  * Common code voor ViewModuleViewImpl en DescriptionViewImpl.
  * @author wim
@@ -101,6 +102,8 @@ public abstract class XMLView {
 	
 			boolean maalTeken =  wrap.getBoolean("maalTeken");
 			FormuleTeken.zetMaalTeken(maalTeken);
+			boolean hoekGraden = wrap.getBoolean("hoekGraden");
+			Expressie.zetHoekGraden(hoekGraden);
 			if(wrap.containsKey("fontName")) // optional
 			{	font_name = wrap.getString("fontName");
 				if(font_name.equals("SansSerif"))
