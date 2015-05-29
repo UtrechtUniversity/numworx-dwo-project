@@ -112,7 +112,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(getForeground()));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(getSize().width / 2 - 155, 140, 310, 105);
+        p.setBounds(getSize().width / 2 - 155, 110, 310, 105);
         dialog.add(p);
 
         /* registerinfo label */
@@ -186,7 +186,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(getForeground()));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(getSize().width / 2 - 155, 244, 310, 130);
+        p.setBounds(getSize().width / 2 - 155, 224, 310, 130);
         dialog.add(p);
 
         /* personalinfo label */
@@ -278,7 +278,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(Color.black));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(getSize().width / 2 - 155, 373, 310, 115);
+        p.setBounds(getSize().width / 2 - 155, 363, 310, 115);
         dialog.add(p);
 
         /* schoolinfo label */
@@ -352,7 +352,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(Color.black));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(getSize().width / 2 - 155, 487, 310, 35);
+        p.setBounds(getSize().width / 2 - 155, 487, 310, 80);
         dialog.add(p);
 
         /* Register button */
@@ -379,9 +379,16 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
         backButton = new JButton(TextMapper.getText(TextMapper.GUIR_BTN_BACK));//, GuiConstants.MAIN_BACKGROUND);
         fm = backButton.getFontMetrics(backButton.getFont());
         backButton.setSize(backButton.getPreferredSize());
-        backButton.setLocation(getSize().width / 2 - backButton.getSize().width
-                / 2, 530);
-        dialog.add(backButton);
+        backButton.setLocation((p.getSize().width / 2)
+                - ((backButton.getSize().width)/ 2),40);//630
+        p.add(backButton);
+//        
+//        backButton = new JButton(TextMapper.getText(TextMapper.GUIR_BTN_BACK));//, GuiConstants.MAIN_BACKGROUND);
+//        fm = backButton.getFontMetrics(backButton.getFont());
+//        backButton.setSize(backButton.getPreferredSize());
+//        backButton.setLocation(getSize().width / 2 - backButton.getSize().width
+//                / 2, 530);
+//        dialog.add(backButton);
 
         registerButton.addActionListener(this);
         resetButton.addActionListener(this);

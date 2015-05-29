@@ -100,7 +100,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
 
         dialog = new JPanel(null);
         dialog.setOpaque(false);
-        dialog.setBounds(getWidth() / 2 - 200, 0, 400, getHeight());
+        dialog.setBounds(getWidth() / 2 - 350, 0, 700, getHeight());
         this.add(dialog);
 
         String version = "unknown";
@@ -188,7 +188,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         //p.setBorderColor(new Color(52,90,126));
-        p.setBounds(dialog.getWidth() / 2 - 130, 110, 260, 115);
+        p.setBounds(dialog.getWidth() /2 - 175, 110, 350, 115);
         dialog.add(p);
 
         /* Inlogdata label */
@@ -260,7 +260,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(dialog.getWidth() / 2 - 130, 235 + h, 260, 85);
+        p.setBounds(dialog.getWidth() /2 - 175, 235 + h, 350, 85);
         //p.setBorderColor(new Color(52,90,126));
         dialog.add(p);
 
@@ -292,7 +292,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(dialog.getWidth() / 2 - 130, 330 + h, 260, 85);
+        p.setBounds(dialog.getWidth() /2 - 175, 330 + h, 350, 65);
         //p.setBorderColor(new Color(52,90,126));
         dialog.add(p);
 
@@ -305,7 +305,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         p.add(l);
 
         /* Register button */
-        registerNewUserButton = new JButton(TextMapper.getText(TextMapper.GUIW_BTN_REGISTER));//, GuiConstants.SUB_BACKGROUND);
+        registerNewUserButton = new JButton(TextMapper.getText(TextMapper.GUIW_MSG_REGISTER_NEW));//, GuiConstants.SUB_BACKGROUND);
         fm = registerNewUserButton.getFontMetrics(registerNewUserButton.getFont());
         registerNewUserButton.setSize(registerNewUserButton.getPreferredSize());
         registerNewUserButton.setLocation((p.getSize().width / 2)
@@ -313,21 +313,21 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         p.add(registerNewUserButton);
 
         /* Register button */
-        registerExistingUserButton = new JButton("Bestaande gebruiker");//, GuiConstants.SUB_BACKGROUND);
+        registerExistingUserButton = new JButton(TextMapper.getText(TextMapper.GUIW_MSG_REGISTER_EXISTING));//, GuiConstants.SUB_BACKGROUND);
         fm = registerNewUserButton.getFontMetrics(registerExistingUserButton.getFont());
         registerExistingUserButton.setSize(registerExistingUserButton.getPreferredSize());
         registerExistingUserButton.setLocation((p.getSize().width / 2)
-                - 2*(registerExistingUserButton.getSize().width / 2) -10, 27);
+                - 2*(registerExistingUserButton.getSize().width / 2), 27);
         p.add(registerExistingUserButton);
 
         
-        /* Register message */
-        l = new JLabel(TextMapper.getText(TextMapper.GUIW_MSG_REGISTER_NEW));
-        l.setFont(GuiConstants.NORMAL_TEXT);
-        fm = l.getFontMetrics(l.getFont());
-        l.setSize(fm.stringWidth(l.getText()), fm.getHeight());
-        l.setLocation((p.getSize().width / 2) - (l.getSize().width / 2), 60);
-        p.add(l);
+//        /* Register message */
+//        l = new JLabel(TextMapper.getText(TextMapper.GUIW_REGISTER));
+//        l.setFont(GuiConstants.NORMAL_TEXT);
+//        fm = l.getFontMetrics(l.getFont());
+//        l.setSize(fm.stringWidth(l.getText()), fm.getHeight());
+//        l.setLocation((p.getSize().width / 2) - (l.getSize().width / 2), 60);
+//        p.add(l);
 
         guestButton.addActionListener(this);
         registerNewUserButton.addActionListener(this);
