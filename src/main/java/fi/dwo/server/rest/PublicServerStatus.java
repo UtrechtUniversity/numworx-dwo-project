@@ -17,14 +17,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
 /**
- * Public server status. Showing health of the service.
+ * Public server status. Showing health of the service. Under development.
  * 
  * @author G.A.J. van der Plas
  */
 @Path("/public/serverstatus")
 public class PublicServerStatus {
 
-    private static final Logger log = Logger.getLogger(PublicServerStatus.class.getName());
+    private static final Logger LOG = Logger.getLogger(PublicServerStatus.class.getName());
 
     private final static EntityManagerFactory emf = DwoEmfFactory.instance();
 
@@ -37,7 +37,7 @@ public class PublicServerStatus {
         try {
             javax.persistence.Query q = em.createNamedQuery("DwoSystemParameters.findAll");
             result = (List<PersistentDwoSystemParameters>) q.getResultList();
-            log.log(Level.INFO, "Fetched DwoSystemParameters {0}", new Object[]{result.size()});
+            LOG.log(Level.INFO, "Fetched DwoSystemParameters {0}", new Object[]{result.size()});
 
         } finally {
             em.close();
@@ -50,7 +50,7 @@ public class PublicServerStatus {
             string.append(p.getValue());
             string.append("\n");
         }
-        log.log(Level.INFO, "Made output:", new Object[]{string.toString()});
+        LOG.log(Level.INFO, "Made output:", new Object[]{string.toString()});
 
         return result;
     }

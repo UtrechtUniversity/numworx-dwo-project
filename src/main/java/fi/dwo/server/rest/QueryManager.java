@@ -24,13 +24,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 
 /**
- *
+ * A secure JPA query tools for development. It requires localhost access and a 
+ * hard-coded usercode to gain access.
+ * 
  * @author Gert van der Plas <gertvdplas@gmail.com>
  */
 @Path("/secure/user/query")
 public class QueryManager {
 
-    private static final Logger log = Logger.getLogger(QueryManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(QueryManager.class.getName());
 
     /**
      * Runs a dangerous free query, but only for some users.
@@ -51,29 +53,29 @@ public class QueryManager {
             String r = "";
             try {
 
-                log.log(Level.INFO, "For user with username {0} a free query is run: {1}", new Object[]{name, query});
+                LOG.log(Level.INFO, "For user with username {0} a free query is run: {1}", new Object[]{name, query});
 
                 javax.persistence.Query q;
                 q = em.createQuery(query);
                 List<Object[]> resultList = q.getResultList();
-                log.log(Level.INFO, "Fetched {1} results for user {0}.", new Object[]{name, resultList.size()});
+                LOG.log(Level.INFO, "Fetched {1} results for user {0}.", new Object[]{name, resultList.size()});
                 for (Object[] oList : resultList) {
                     for (Object o : oList) {
                         r = r + " " + o;
                     }
 
-                    log.log(Level.INFO, "Query Result for user {0}: {1}.", new Object[]{name, r});
+                    LOG.log(Level.INFO, "Query Result for user {0}: {1}.", new Object[]{name, r});
                 }
 
             } catch (Exception e) {
-                log.log(Level.WARNING, "Unexpected exception: {0}", new Object[]{e.getMessage()});
+                LOG.log(Level.WARNING, "Unexpected exception: {0}", new Object[]{e.getMessage()});
                 return e.getMessage();
             } finally {
                 em.close();
             }
             return r;
         } else {
-            log.log(Level.WARNING, "ILLEGAL USER-OPERATION: {0} is trying to run an illegal free query operation.", new Object[]{sc.getUserPrincipal().getName()});
+            LOG.log(Level.WARNING, "ILLEGAL USER-OPERATION: {0} is trying to run an illegal free query operation.", new Object[]{sc.getUserPrincipal().getName()});
             throw new NotAuthorizedException("You Don't Have Permission to run this operation " + name + ".");
         }
     }

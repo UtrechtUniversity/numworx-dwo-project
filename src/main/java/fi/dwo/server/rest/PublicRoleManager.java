@@ -18,14 +18,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
 /**
- * Public access to the different security roles available.
+ * Public access to the different security roles available for users.
  * 
  * @author G.A.J. van der Plas
  */
 
 @Path("/public/roles")
 public class PublicRoleManager {
-private static final Logger log = Logger.getLogger(SecuredLoginManager.class.getName());
+private static final Logger LOG = Logger.getLogger(SecuredLoginManager.class.getName());
     
 /**
      * Returns the user data if properly logged in.  The information is extracted from the security
@@ -43,9 +43,9 @@ private static final Logger log = Logger.getLogger(SecuredLoginManager.class.get
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentRole.findAll");
             roles = (List<PersistentRole>) q.getResultList();
-            log.log(Level.FINER, "Fetched all {0} user roles. ", new Object[]{roles.size()});
+            LOG.log(Level.FINER, "Fetched all {0} user roles. ", new Object[]{roles.size()});
         } catch(Exception e){
-            log.log(Level.WARNING,"Unexpected exception", e.getMessage());
+            LOG.log(Level.WARNING,"Unexpected exception", e.getMessage());
         } finally {
             em.close();
         }

@@ -23,7 +23,7 @@ import javax.sql.DataSource;
  */
 public class DwoEmfFactory {
 
-    private static final Logger log = Logger.getLogger(DwoEmfFactory.class.getName());
+    private static final Logger LOG = Logger.getLogger(DwoEmfFactory.class.getName());
 
     private volatile static EntityManagerFactory _instance = Persistence.createEntityManagerFactory("DWO_MySQLDB");
 //uses config below, but does not load persistent classes. Needs to generate xml or so.
@@ -54,7 +54,7 @@ public class DwoEmfFactory {
 //                        properties.put(PersistenceUnitProperties.LOGGING_SESSION, "false");
 //                        _instance = Persistence.createEntityManagerFactory("DWO_MySQLDB", properties);
 //                    } catch (NamingException ex) {
-//                        log.log(Level.SEVERE, null, ex);
+//                        LOG.log(Level.SEVERE, null, ex);
 //                        return null;
 //                    }
                 }
@@ -85,7 +85,7 @@ public class DwoEmfFactory {
         Context initContext = new InitialContext();
         Context envContext = (Context) initContext.lookup("java:/comp/env");
         DataSource dataSource = (DataSource) envContext.lookup("jdbc/dwodb");
-        log.log(Level.FINE, "Datasource jdbc/dwodb is: {0}.", new Object[]{dataSource.toString()});
+        LOG.log(Level.FINE, "Datasource jdbc/dwodb is: {0}.", new Object[]{dataSource.toString()});
         return dataSource;
     }
 

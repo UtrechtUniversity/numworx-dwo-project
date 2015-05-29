@@ -18,19 +18,25 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 /**
- * Manages users in the persistent storage.
+ * Manages users in the persistent storage. Sample UserManager for building more code. 
+ * Also useful as it is being reused.
  *
  * @author G.A.J. van der Plas
  */
 public class UserManager {
 
-    private static final Logger log = Logger.getLogger(UserManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(UserManager.class.getName());
 
     private static EntityManager getEntityManager(){
         EntityManager em = DwoEmfFactory.createEntityManager();
         return em;
     }
 
+    /**
+     * Create.
+     * 
+     * @param persistentUser 
+     */
     public static void create(PersistentUser persistentUser) {
         EntityManager em = null;
         try {
@@ -45,6 +51,12 @@ public class UserManager {
         }
     }
 
+    /** Update
+     * 
+     * @param persistentUser
+     * @throws NonexistentEntityException
+     * @throws Exception 
+     */
     public static void edit(PersistentUser persistentUser) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
@@ -68,6 +80,12 @@ public class UserManager {
         }
     }
 
+    /**
+     * Removes a user from the persistent store.
+     * 
+     * @param id
+     * @throws NonexistentEntityException 
+     */
     public static void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
@@ -142,9 +160,9 @@ public class UserManager {
             javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
             q.setParameter("username", userName);
             user = (PersistentUser) q.getSingleResult();
-            log.log(Level.INFO, "User-manager retrieved user with username {0}", new Object[]{user.getUsername()});
+            LOG.log(Level.INFO, "User-manager retrieved user with username {0}", new Object[]{user.getUsername()});
         } catch(Exception e){
-            log.log(Level.WARNING,"Unexpected exception", e.getMessage());
+            LOG.log(Level.WARNING,"Unexpected exception", e.getMessage());
         }finally {
             em.close();
         }
@@ -167,9 +185,9 @@ public class UserManager {
             if (user.getPasswd().compareTo(passwd) != 0) {
                 return null;
             }
-            log.log(Level.INFO, "Login accepted for user with username {0}", new Object[]{userName});
+            LOG.log(Level.INFO, "Login accepted for user with username {0}", new Object[]{userName});
         } catch (Exception e) {
-            log.log(Level.WARNING, "Unexpected exception", e.getMessage());
+            LOG.log(Level.WARNING, "Unexpected exception", e.getMessage());
         } finally {
             em.close();
         }

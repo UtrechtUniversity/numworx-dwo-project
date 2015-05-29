@@ -9,7 +9,6 @@ import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentEntityManagers.UserManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.security.PermitAll;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -17,13 +16,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
 /**
- *
+ * User login obtained through validation by the servlet configuraton.
+ * 
  * @author G.A.J. van der Plas
  */
 @Path("/secure/user/login")
 public class SecuredLoginManager {
 
-    private static final Logger log = Logger.getLogger(SecuredLoginManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(SecuredLoginManager.class.getName());
 
     /**
      * Returns the user data if properly logged in. The information is extracted
@@ -39,7 +39,7 @@ public class SecuredLoginManager {
         String userName = sc.getUserPrincipal().getName();
         //TODO REST update lastLogin and such.
         PersistentUser user = UserManager.findByName(userName);
-        log.log(Level.INFO, "Login accepted for user with username {0}", new Object[]{user.getUsername()});
+        LOG.log(Level.INFO, "Login accepted for user with username {0}", new Object[]{user.getUsername()});
         return user;
     }
 }

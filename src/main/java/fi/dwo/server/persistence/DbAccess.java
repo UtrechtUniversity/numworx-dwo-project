@@ -40,7 +40,7 @@ import java.util.logging.Logger;
  */
 public class DbAccess extends DbConnect implements DbAccessIF {
 
-    private static final Logger log = Logger.getLogger(DbAccess.class.getName());
+    private static final Logger LOG = Logger.getLogger(DbAccess.class.getName());
 
     /**
      *
@@ -51,7 +51,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     }
 
     private void log(Level level, String msg, Throwable t) {
-        log.log(level, session() + msg, t);
+        LOG.log(level, session() + msg, t);
     }
 
     //TODO Wim, explain what it does
@@ -700,7 +700,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     public boolean checkVersion() {
         try {
             if (DEBUG) {
-                log.log(Level.INFO, "Dbacces DEBUG aan");
+                LOG.log(Level.INFO, "Dbacces DEBUG aan");
             }
             //check for proper DB version
             PreparedStatement ps = getStatement("select * from tblDWOSystemParameters where name like 'DBVersion%'");
@@ -711,17 +711,17 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             }
 
             if (hashMap.get("DBVersion Major").matches("1") && hashMap.get("DBVersion Minor").matches("3")) {
-                log.log(Level.INFO, "We are compatible with the database model version: {0}.{1}.{2}",
+                LOG.log(Level.INFO, "We are compatible with the database model version: {0}.{1}.{2}",
                         new Object[]{hashMap.get("DBVersion Major"),
                             hashMap.get("DBVersion Minor"),
                             hashMap.get("DBVersion Revision")});
 
             } else {
-                log.log(Level.SEVERE, "Database version of server not compatible with v1.3.x. Exiting.");
+                LOG.log(Level.SEVERE, "Database version of server not compatible with v1.3.x. Exiting.");
                 return true;
             }
         } catch (SQLException ex) {
-            log.log(Level.SEVERE, "Database model version of server not compatible with v1.3.x. Missing version numbers. Exiting.", ex);
+            LOG.log(Level.SEVERE, "Database model version of server not compatible with v1.3.x. Missing version numbers. Exiting.", ex);
             return true;
         }
         return false; // all ok...
@@ -1057,7 +1057,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
                     ps.execute();
                     int count = ps.getUpdateCount();
                     if (count != 1) {
-                        log.log(Level.SEVERE, "Error while adding user {0} to schoolgroup {1}.", new Object[]{id, schoolGroupID});
+                        LOG.log(Level.SEVERE, "Error while adding user {0} to schoolgroup {1}.", new Object[]{id, schoolGroupID});
                         id = -1;
                         c.rollback();
                     }
@@ -1082,7 +1082,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
                         userData.append(" ");
                     }
                     userData.append(email);
-                    log.log(Level.SEVERE, "Error while adding user data to the datbase: {0}", new Object[]{userData});
+                    LOG.log(Level.SEVERE, "Error while adding user data to the datbase: {0}", new Object[]{userData});
                     c.rollback();
                 }
                 c.commit();
@@ -1354,15 +1354,15 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
             try {
                 ps.execute();
-                log.log(Level.FINE, "Added teacher {0} to class named {1} in school {2}.", new Object[]{teacher, className, schoolID});
+                LOG.log(Level.FINE, "Added teacher {0} to class named {1} in school {2}.", new Object[]{teacher, className, schoolID});
             } catch (SQLException e) {
                 if (e.getErrorCode() == 1062) {
                     /* The class already exists */
-                    log.log(Level.FINE, "Class {0} already exists in school {1}.", new Object[]{className, schoolID});
+                    LOG.log(Level.FINE, "Class {0} already exists in school {1}.", new Object[]{className, schoolID});
                     throw new DwoXmlRpcException(
                             DwoXmlRpcException.EXC_CLASS_EXISTS);
                 } else {
-                    //log.log(Level.INFO, "Exception adding teacher {0} to class named {1} of school {2}: {3}", new Object[]{teacher, className, schoolID, e.getMessage()});
+                    //LOG.log(Level.INFO, "Exception adding teacher {0} to class named {1} of school {2}: {3}", new Object[]{teacher, className, schoolID, e.getMessage()});
                     throw e;
                 }
             }
@@ -1377,7 +1377,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
                 ps.setInt(1, classID);
                 ps.setInt(2, teacher);
                 ps.execute();
-                log.log(Level.FINE, "Added teacher {0} to class {1} of school {2}.", new Object[]{teacher, className, schoolID});
+                LOG.log(Level.FINE, "Added teacher {0} to class {1} of school {2}.", new Object[]{teacher, className, schoolID});
             }
             rs.close();
         }
@@ -1390,7 +1390,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         PreparedStatement ps = getStatement(QRY_SELECT_CLASSSTUDENTS_OF_CLASS);
         ps.setInt(1, schoolClassID);
         Vector v = executeQueryWithResult(ps);
-        log.log(Level.FINE, "Retrieved ClassStudent's of SchoolClass {0}.", new Object[]{schoolClassID});
+        LOG.log(Level.FINE, "Retrieved ClassStudent's of SchoolClass {0}.", new Object[]{schoolClassID});
         return v;
     }
 
@@ -1399,7 +1399,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         PreparedStatement ps = getStatement(QRY_SELECT_TEACHERS_OF_CLASS);
         ps.setInt(1, schoolClassID);
         Vector v = executeQueryWithResult(ps);
-        log.log(Level.FINE, "Retrieved Teacher's of SchoolClass {0}.", new Object[]{schoolClassID});
+        LOG.log(Level.FINE, "Retrieved Teacher's of SchoolClass {0}.", new Object[]{schoolClassID});
         return v;
     }
 
@@ -1724,7 +1724,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             ps.setInt(1, classID);
 
             ResultSet rs = ps.executeQuery();
-            log.log(Level.FINE, "Class must be empty for deletion and there are {0} students in the class with id {1}.", new Object[]{ps.getUpdateCount() - 1, classID});
+            LOG.log(Level.FINE, "Class must be empty for deletion and there are {0} students in the class with id {1}.", new Object[]{ps.getUpdateCount() - 1, classID});
 
             canDelete = isEmpty(rs); // no students
             //students
@@ -1738,7 +1738,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             ps = getStatement(QRY_DELETE_STUDENTS_AND_TEACHERS_FROM_CLASS);
             ps.setInt(1, classID);
             ps.execute();
-            log.log(Level.FINE, "Deleted totally {0} rows, in tblClass, tblTeacherOf and tblStudentOf.", new Object[]{ps.getUpdateCount() - 1, classID});
+            LOG.log(Level.FINE, "Deleted totally {0} rows, in tblClass, tblTeacherOf and tblStudentOf.", new Object[]{ps.getUpdateCount() - 1, classID});
 
             ps = getStatement(QRY_CLEAR_ALLUSERS_ROLE_DEFAULT_CLASS);
             ps.setInt(1, classID);
@@ -2221,10 +2221,10 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             //ps.close();
             return "";
         } catch (SQLException e) {
-            log.log(Level.SEVERE, "DbAccess.setLMSSetValue {0} throws {1}, exception message: {2}", new Object[]{iDataModelElement, userID, e.getMessage()});
+            LOG.log(Level.SEVERE, "DbAccess.setLMSSetValue {0} throws {1}, exception message: {2}", new Object[]{iDataModelElement, userID, e.getMessage()});
             throw e;
         } catch (RuntimeException e) {
-            log.log(Level.SEVERE, "DbAccess.setLMSValue {0} runtime {1}, exception message: {2}", new Object[]{iDataModelElement, userID, e.getMessage()});
+            LOG.log(Level.SEVERE, "DbAccess.setLMSValue {0} runtime {1}, exception message: {2}", new Object[]{iDataModelElement, userID, e.getMessage()});
             throw e;
         }
 
@@ -2281,13 +2281,13 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             ps.setInt(1, userID);
             Vector v = executeQueryWithResult(ps);
 
-            log.log(Level.FINE, "Got {0} results for <course[], teacher> "
+            LOG.log(Level.FINE, "Got {0} results for <course[], teacher> "
                     + "= <{1},{2}> combination.", new Object[]{v.size(), courseString, userID});
             return v;
 
         } else {
             /* No Courses, no result */
-            log.log(Level.FINE, "Queried with 0 courses and teacherID "
+            LOG.log(Level.FINE, "Queried with 0 courses and teacherID "
                     + "= {0}. Returning empty vector.", new Object[]{userID});
 
             return new Vector();
@@ -2420,7 +2420,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps.setInt(4, userID);
 
         Vector v = executeQueryWithResult(ps);
-        log.log(Level.FINE, "Got {0} results for <course, class, teacher> "
+        LOG.log(Level.FINE, "Got {0} results for <course, class, teacher> "
                 + "= <{1},{2},{3}> classes.", new Object[]{v.size(), classID, courseID, userID});
         return v;
     }
@@ -2443,7 +2443,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps.setInt(1, userID);
 
         Vector v = executeQueryWithResult(ps);
-        log.log(Level.FINE, "Got {0} results for <course, student> = <{1},{2}> combination.", new Object[]{v.size(), courseID, userID});
+        LOG.log(Level.FINE, "Got {0} results for <course, student> = <{1},{2}> combination.", new Object[]{v.size(), courseID, userID});
 
         return v;
     }
@@ -2469,7 +2469,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps.setInt(1, courseID);
         ps.setInt(2, userID);
         Vector v = executeQueryWithResult(ps);
-        log.log(Level.FINE, "Got {0} results for <course, teacher> = <{1},{2}> combination.", new Object[]{v.size(), courseID, userID});
+        LOG.log(Level.FINE, "Got {0} results for <course, teacher> = <{1},{2}> combination.", new Object[]{v.size(), courseID, userID});
 
         return v;
 
@@ -2535,13 +2535,13 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     private boolean renameCommon(PreparedStatement ps)
             throws DwoXmlRpcException, SQLException {
         try {
-            log.log(Level.FINE, "Trying query: {0}.", new Object[]{ps.toString()});
+            LOG.log(Level.FINE, "Trying query: {0}.", new Object[]{ps.toString()});
             ps.execute();
 
         } catch (SQLException e) {
             if (e.getErrorCode() == 1062) {
                 /* The class already exists */
-                log.log(Level.FINE, "Class {0} already exists. Throwing error.");
+                LOG.log(Level.FINE, "Class {0} already exists. Throwing error.");
                 throw new DwoXmlRpcException(
                         DwoXmlRpcException.EXC_CLASS_EXISTS);
             } else {
@@ -3469,34 +3469,34 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     @Override
     public boolean deleteSchool(int schoolID) throws IOException, XmlRpcException, SQLException {
 
-        log.log(Level.FINE, "Attempting to delete school with id {0} and associated data.", new Object[]{schoolID});
+        LOG.log(Level.FINE, "Attempting to delete school with id {0} and associated data.", new Object[]{schoolID});
 
 // 1) delete students from class which is in the school.
         PreparedStatement ps;
         ps = getStatement(QRY_DELETE_STUDENT_FROM_CLASS_IN_SCHOOL);
         ps.setInt(1, schoolID);
         ps.executeUpdate();
-        log.log(Level.FINE, "Deleted {0} students from class.", new Object[]{ps.getUpdateCount()});
+        LOG.log(Level.FINE, "Deleted {0} students from class.", new Object[]{ps.getUpdateCount()});
 
 // 2) delete teachers from class which is in the school.
         ps = getStatement(QRY_DELETE_TEACHER_FROM_CLASS_IN_SCHOOL);
         ps.setInt(1, schoolID);
         ps.executeUpdate();
-        log.log(Level.FINE, "Deleted {0} teachers from class.", new Object[]{ps.getUpdateCount()});
+        LOG.log(Level.FINE, "Deleted {0} teachers from class.", new Object[]{ps.getUpdateCount()});
         ps.close();
 
 // 2) delete teachers from class which is in the school.
         ps = getStatement(QRY_DELETE_TEACHER_FROM_CLASS_IN_SCHOOL);
         ps.setInt(1, schoolID);
         ps.executeUpdate();
-        log.log(Level.FINE, "Deleted {0} teachers from class.", new Object[]{ps.getUpdateCount()});
+        LOG.log(Level.FINE, "Deleted {0} teachers from class.", new Object[]{ps.getUpdateCount()});
         ps.close();
 
 // 2) delete courses from tblClassCourse which are in the school.
         ps = getStatement(QRY_DELETE_COURSES_FROM_CLASS_IN_SCHOOL);
         ps.setInt(1, schoolID);
         ps.executeUpdate();
-        log.log(Level.FINE, "Deleted {0} classcourses.", new Object[]{ps.getUpdateCount()});
+        LOG.log(Level.FINE, "Deleted {0} classcourses.", new Object[]{ps.getUpdateCount()});
         ps.close();
 // 3) delete class from school which is in the school.
         String[] arguments2 = {"tblClass", "schoolID"};
@@ -3504,14 +3504,14 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps = getStatement(query);
         ps.setInt(1, schoolID);
         ps.executeUpdate();
-        log.log(Level.FINE, "Deleted {0} classes.", new Object[]{ps.getUpdateCount()});
+        LOG.log(Level.FINE, "Deleted {0} classes.", new Object[]{ps.getUpdateCount()});
         ps.close();
 // 4) delete suspend data that become inaccessable.
         //TODO Wim discuss
         ps = getStatement(QRY_DELETE_STUDENTSCO_FROM_SCHOOL);
         ps.setInt(1, schoolID);
         ps.executeUpdate();
-        log.log(Level.FINE, "Deleted {0} StudentSco's.", new Object[]{ps.getUpdateCount()});
+        LOG.log(Level.FINE, "Deleted {0} StudentSco's.", new Object[]{ps.getUpdateCount()});
         ps.close();
 // 5) delete sco's die bij courses van school horen.
 //         String QRY_DELETE_SCO_FROM_SCHOOL
@@ -3519,7 +3519,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps = getStatement(QRY_DELETE_SCO_FROM_SCHOOL);
         ps.setInt(1, schoolID);
         ps.executeUpdate();
-        log.log(Level.FINE, "Deleted {0} SCO's.", new Object[]{ps.getUpdateCount()});
+        LOG.log(Level.FINE, "Deleted {0} SCO's.", new Object[]{ps.getUpdateCount()});
         ps.close();
 // 6) delete courses from school
         arguments2 = new String[]{"tblCourse", "schoolID"};
@@ -3527,19 +3527,19 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps = getStatement(query);
         ps.setInt(1, schoolID);
         ps.executeUpdate();
-        log.log(Level.FINE, "Deleted {0} courses.", new Object[]{ps.getUpdateCount()});
+        LOG.log(Level.FINE, "Deleted {0} courses.", new Object[]{ps.getUpdateCount()});
         ps.close();
 // 7) verwijder users uit school, teachers and students are already gone.
 //TODO DONE V1_3 fix query
         ps = getStatement(QRY_DELETE_USERS_FROM_SCHOOL);
         ps.setInt(1, schoolID);
         ps.executeUpdate();
-        log.log(Level.FINE, "Deleted {0} users defaults.", new Object[]{ps.getUpdateCount()});
+        LOG.log(Level.FINE, "Deleted {0} users defaults.", new Object[]{ps.getUpdateCount()});
         //QRY_DELETE_ROLES_FROM_SCHOOL
         ps = getStatement(QRY_DELETE_ROLES_FROM_SCHOOL);
         ps.setInt(1, schoolID);
         ps.executeUpdate();
-        log.log(Level.FINE, "Detached {0} users from a school.", new Object[]{ps.getUpdateCount()});
+        LOG.log(Level.FINE, "Detached {0} users from a school.", new Object[]{ps.getUpdateCount()});
         ps.close();
 // 8) verwijder schoolgroup
         arguments2 = new String[]{"tblSchoolGroup", "schoolID"};
@@ -3547,7 +3547,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps = getStatement(query);
         ps.setInt(1, schoolID);
         ps.executeUpdate();
-        log.log(Level.FINE, "Deleted {0} tblSchoolGroup.", new Object[]{ps.getUpdateCount()});
+        LOG.log(Level.FINE, "Deleted {0} tblSchoolGroup.", new Object[]{ps.getUpdateCount()});
         ps.close();
 // 9) verwijder school
         arguments2 = new String[]{"tblSchool", "schoolID"};
@@ -3555,7 +3555,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps = getStatement(query);
         ps.setInt(1, schoolID);
         ps.executeUpdate();
-        log.log(Level.FINE, "Deleted {0} school(s).", new Object[]{ps.getUpdateCount()});
+        LOG.log(Level.FINE, "Deleted {0} school(s).", new Object[]{ps.getUpdateCount()});
         ps.close();
 
         return true;
@@ -3585,12 +3585,12 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             String query = MessageFormat.format(QRY_RESULTS_SINGLE, (Object[]) arguments);
             PreparedStatement ps = getStatement(query);
             ps.setInt(1, userID);
-            log.log(Level.FINE, "Going to query: {0}.", new Object[]{ps.toString()});
+            LOG.log(Level.FINE, "Going to query: {0}.", new Object[]{ps.toString()});
             Vector v = executeQueryWithResult(ps);
             return v;
         } else {
             /* No Courses, no result */
-            log.log(Level.FINE, "Submitted 0 courses, returning empty Vector.");
+            LOG.log(Level.FINE, "Submitted 0 courses, returning empty Vector.");
             return courses; // an empty vector
         }
     }
@@ -3697,7 +3697,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps.setInt(2, schoolTo);
         ps.setInt(3, profileID);
         Vector v = executeQueryWithResult(ps);
-        log.log(Level.FINE, "Retrieved {0} courses to import.", new Object[]{v.size()});
+        LOG.log(Level.FINE, "Retrieved {0} courses to import.", new Object[]{v.size()});
         return v;
 
     }
@@ -3722,7 +3722,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         Connection c = getConnection();
         try {
             c.setAutoCommit(false);
-            log.log(Level.FINE, "Transaction started.");
+            LOG.log(Level.FINE, "Transaction started.");
 
             //delete userID  from student links pointing to tblClass where schoolID matches. 
             //String sql = "DELETE FROM tblStudentOf WHERE userID = ? AND classID IN (SELECT classID FROM tblClass WHERE tblSchoolGroup.schoolID = ?)";
@@ -3735,7 +3735,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             ps.setInt(2, schoolGroupID);
             ps.setInt(3, userID);
             int cnt = ps.executeUpdate();
-            log.log(Level.FINE, "Deleted the student from {0} classes.", new Object[]{cnt});
+            LOG.log(Level.FINE, "Deleted the student from {0} classes.", new Object[]{cnt});
 
             //delete user as teacherID  from teacher links pointing to tblClass where schoolID matches. 
             //sql = "DELETE FROM tblTeacherOf WHERE tblTeacherOf join tblHasRole using (userID = ? AND classID IN (SELECT classID FROM tblClass WHERE schoolID = ?)";
@@ -3749,7 +3749,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             ps.setInt(2, schoolGroupID);
             ps.setInt(3, userID);
             cnt = ps.executeUpdate();
-            log.log(Level.FINE, "Deleted the teacher from {0} classes.", new Object[]{cnt});
+            LOG.log(Level.FINE, "Deleted the teacher from {0} classes.", new Object[]{cnt});
 
             //then delete user from hasRole
             sql = "DELETE FROM tblHasRole  WHERE "
@@ -3758,7 +3758,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             ps.setInt(1, userID);
             ps.setInt(2, schoolGroupID);
             cnt = ps.executeUpdate();
-            log.log(Level.FINE, "Deleted the role of  <user {0}, schoolGroup {1}>.", new Object[]{userID, schoolGroupID});
+            LOG.log(Level.FINE, "Deleted the role of  <user {0}, schoolGroup {1}>.", new Object[]{userID, schoolGroupID});
 
             //then delete student from schoolgroup
             sql = "UPDATE tblUser SET schoolGroupID = NULL WHERE "
@@ -3767,9 +3767,9 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             ps.setInt(1, userID);
             ps.setInt(2, schoolGroupID);
             cnt = ps.executeUpdate();
-            log.log(Level.FINE, "Cleared the default role for user {0} with schoolID {0}.", new Object[]{userID, schoolGroupID});
+            LOG.log(Level.FINE, "Cleared the default role for user {0} with schoolID {0}.", new Object[]{userID, schoolGroupID});
             c.commit();
-            log.log(Level.FINE, "Transaction commited.");
+            LOG.log(Level.FINE, "Transaction commited.");
 
             return cnt != 0;
         } finally {
@@ -3869,7 +3869,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
                 }
             }
             ps.close();
-            log.log(Level.FINE, "Deleted SCO data for course {0} and class {1}.", new Object[]{courseID, classID});
+            LOG.log(Level.FINE, "Deleted SCO data for course {0} and class {1}.", new Object[]{courseID, classID});
 // Old Wim code.
 //			c.setAutoCommit(false);
 //			c.commit();
@@ -4231,7 +4231,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
         if (!isEmpty(rs)) {
             //teacher already exists hence return
-            log.log(Level.FINE, "Teacher {0} already a member of class {1}. No insert done.", new Object[]{teacherID, classID});
+            LOG.log(Level.FINE, "Teacher {0} already a member of class {1}. No insert done.", new Object[]{teacherID, classID});
             rs.close();
         } else {
             rs.close();
@@ -4241,15 +4241,15 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             ps.setInt(1, classID);
             ps.setInt(2, teacherID);
             try {
-                log.log(Level.FINE, "Select did not find a teacher, attempting to insert teacher {0} to class {1}.", new Object[]{teacherID, classID});
+                LOG.log(Level.FINE, "Select did not find a teacher, attempting to insert teacher {0} to class {1}.", new Object[]{teacherID, classID});
                 ps.execute();
                 ps.close();
             } catch (SQLException e) {
                 if (e.getErrorCode() == 1062) {
                     // MySQL duplicate entry error code detected.
-                    log.log(Level.FINE, "Teacher {0} has been inserted concurrently into table. Proceeding without exception.", new Object[]{teacherID, classID});
+                    LOG.log(Level.FINE, "Teacher {0} has been inserted concurrently into table. Proceeding without exception.", new Object[]{teacherID, classID});
                 } else {
-                    log.log(Level.FINE, "Unexpected error inserting teacher {0} into class {1}. Throwing exception.", new Object[]{teacherID, classID});
+                    LOG.log(Level.FINE, "Unexpected error inserting teacher {0} into class {1}. Throwing exception.", new Object[]{teacherID, classID});
                     throw e;
                 }
             }
@@ -4300,7 +4300,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
         if (!isEmpty(rs)) {
             //student already exists hence return
-            log.log(Level.FINE, "Student {0} already a member of class {1}. No insert done.", new Object[]{studentID, classID});
+            LOG.log(Level.FINE, "Student {0} already a member of class {1}. No insert done.", new Object[]{studentID, classID});
             rs.close();
             // return
         } else {
@@ -4310,15 +4310,15 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             ps.setInt(1, classID);
             ps.setInt(2, studentID);
             try {
-                log.log(Level.FINE, "Select did not find a student, attempting to insert student {0} to class {1}.", new Object[]{studentID, classID});
+                LOG.log(Level.FINE, "Select did not find a student, attempting to insert student {0} to class {1}.", new Object[]{studentID, classID});
                 ps.execute();
             } catch (SQLException e) {
                 if (e.getErrorCode() == 1062) {
                     // MySQL duplicate entry error code detected.
-                    log.log(Level.FINE, "Student {0} has been inserted concurrently into table. Proceeding without exception.", new Object[]{studentID, classID});
+                    LOG.log(Level.FINE, "Student {0} has been inserted concurrently into table. Proceeding without exception.", new Object[]{studentID, classID});
                     //return
                 } else {
-                    log.log(Level.FINE, "Unexpected error inserting student {0} into class {1}. Throwing exception.", new Object[]{studentID, classID});
+                    LOG.log(Level.FINE, "Unexpected error inserting student {0} into class {1}. Throwing exception.", new Object[]{studentID, classID});
                     throw e;
                 }
             }
@@ -4369,7 +4369,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps.setInt(1, userID);
         ps.setInt(2, schoolID);
         Vector v = executeQueryWithResult(ps);
-        log.log(Level.FINE, "Retrieved student-role classes of user {0} in school {1}.", new Object[]{userID, schoolID});
+        LOG.log(Level.FINE, "Retrieved student-role classes of user {0} in school {1}.", new Object[]{userID, schoolID});
         return v;
     }
 
@@ -4387,7 +4387,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps.setInt(1, userID);
         ps.setInt(2, schoolID);
         Vector v = executeQueryWithResult(ps);
-        log.log(Level.FINE, "Retrieved teaching-role classes of user {0} in school {1}.", new Object[]{userID, schoolID});
+        LOG.log(Level.FINE, "Retrieved teaching-role classes of user {0} in school {1}.", new Object[]{userID, schoolID});
         return v;
     }
 
@@ -4397,7 +4397,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps.setInt(1, userID);
         ps.setInt(1, schoolID);
         Vector v = executeQueryWithResult(ps);
-        log.log(Level.FINE, "Testing if user {0} is a teacher at school {1}, result is: {2}", new Object[]{userID, schoolID, v});
+        LOG.log(Level.FINE, "Testing if user {0} is a teacher at school {1}, result is: {2}", new Object[]{userID, schoolID, v});
         return v.size() > 0;
     }
 
@@ -4407,7 +4407,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         ps.setInt(1, userID);
         ps.setInt(1, schoolID);
         Vector v = executeQueryWithResult(ps);
-        log.log(Level.FINE, "Testing if user {0} is a teacher at school {1}, result is: {2}", new Object[]{userID, schoolID, v});
+        LOG.log(Level.FINE, "Testing if user {0} is a teacher at school {1}, result is: {2}", new Object[]{userID, schoolID, v});
         return v.size() > 0;
     }
 

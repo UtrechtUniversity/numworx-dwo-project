@@ -30,7 +30,7 @@ import javax.ws.rs.core.SecurityContext;
 @Path("/secure/user/userprofile")
 public class SecuredUserProfileManager {
 
-    private static final Logger log = Logger.getLogger(SecuredUserProfileManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(SecuredUserProfileManager.class.getName());
 //    @Context  //injected response proxy supporting multiple threads
 //    private HttpServletResponse response;
 
@@ -52,9 +52,9 @@ public class SecuredUserProfileManager {
             String userName = sc.getUserPrincipal().getName();
             q.setParameter("username", userName);
             user = (PersistentUser) q.getSingleResult();
-            log.log(Level.FINE, "Fetched User with username {0}", new Object[]{userName});
+            LOG.log(Level.FINE, "Fetched User with username {0}", new Object[]{userName});
         } catch (Exception e) {
-            log.log(Level.WARNING, "Unexpected exception", e.getMessage());
+            LOG.log(Level.WARNING, "Unexpected exception", e.getMessage());
         } finally {
             em.close();
         }
@@ -90,13 +90,13 @@ public class SecuredUserProfileManager {
 //                user = em.merge(user);
 //}
                 em.getTransaction().commit();
-                log.log(Level.FINE, "Updated User with username {0}", new Object[]{user.getUsername()});
+                LOG.log(Level.FINE, "Updated User with username {0}", new Object[]{user.getUsername()});
             } finally {
                 em.close();
             }
             return user;
         } else {
-            log.log(Level.WARNING, "ILLEGAL USER-OPERATION: Trying to update the user profile of {0} under user account {1}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
+            LOG.log(Level.WARNING, "ILLEGAL USER-OPERATION: Trying to update the user profile of {0} under user account {1}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
             throw new NotAuthorizedException("You Don't Have Permission to update usercode " + user.getUsername() + ".");
         }
     }

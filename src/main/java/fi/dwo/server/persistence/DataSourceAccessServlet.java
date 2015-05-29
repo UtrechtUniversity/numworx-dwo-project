@@ -43,7 +43,7 @@ import javax.persistence.Persistence;
  */
 public class DataSourceAccessServlet extends Servlet {
 
-    private static final Logger log = Logger.getLogger(DataSourceAccessServlet.class.getName());
+    private static final Logger LOG = Logger.getLogger(DataSourceAccessServlet.class.getName());
 
     private final static EntityManagerFactory emf = Persistence.createEntityManagerFactory("DWO_MySQLDB");
 
@@ -75,7 +75,7 @@ public class DataSourceAccessServlet extends Servlet {
         public Hashtable login(String username, String password)
                 throws SQLException, DwoXmlRpcException {
             Hashtable h = super.login(username, password);
-            log.log(Level.INFO, "Session login for user {0}.", new Object[]{username});
+            LOG.log(Level.INFO, "Session login for user {0}.", new Object[]{username});
 
             EntityManager em;
 //            EntityManagerFactory emf;
@@ -90,7 +90,7 @@ public class DataSourceAccessServlet extends Servlet {
             javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
             q.setParameter("username", username);
             user = (PersistentUser) q.getSingleResult();
-            log.log(Level.FINE, "Retrieved user {0} with role {1}.", new Object[]{user});
+            LOG.log(Level.FINE, "Retrieved user {0} with role {1}.", new Object[]{user});
             q = em.createQuery("SELECT p FROM PersistentHasRole p WHERE p.persistentHasRolePK.schoolGroupID = :schoolGroupID AND p.persistentHasRolePK.userID= :userID");
             q.setParameter("userID", user.getUserID()).setParameter("schoolGroupID", user.getSchoolGroupID());
             hasRole = (PersistentHasRole) q.getSingleResult();
@@ -103,7 +103,7 @@ public class DataSourceAccessServlet extends Servlet {
             sessionData.setLoginUser(user);
             sessionData.setLoginRole(hasRole);
 
-            log.log(Level.INFO, "Session {0} stored logged in user {1} with role {2}.", new Object[]{session.get().getId(), user.toString(), hasRole.toString()});
+            LOG.log(Level.INFO, "Session {0} stored logged in user {1} with role {2}.", new Object[]{session.get().getId(), user.toString(), hasRole.toString()});
 
             //Set some session fixed variables.
             session.get().setAttribute("DwoSessionData", sessionData);
@@ -118,12 +118,12 @@ public class DataSourceAccessServlet extends Servlet {
             if (mine != null) {
                 --count;
                 if (count > 10) {
-                    log.log(Level.INFO, " dwo access close {0}", count);
+                    LOG.log(Level.INFO, " dwo access close {0}", count);
                 }
                 try {
                     mine.close();
                 } catch (SQLException e) {
-                    log.log(Level.SEVERE, " close ", e);
+                    LOG.log(Level.SEVERE, " close ", e);
                 }
             }
             mine = null;
@@ -139,7 +139,7 @@ public class DataSourceAccessServlet extends Servlet {
                 mine = MonProxyFactory.monitor(c);
                 ++count;
                 if (count > 10) {
-                    log.log(Level.INFO, " dwo access connect {0}", count);
+                    LOG.log(Level.INFO, " dwo access connect {0}", count);
                 }
             }
             return mine;
@@ -194,7 +194,7 @@ public class DataSourceAccessServlet extends Servlet {
 
         String buildnumber = getInitParameter("buildnumber");
         String projectVersion = getInitParameter("projectVersion");
-        log.log(Level.INFO, "Software version, buildnumber: {0}, {1}", new Object[]{projectVersion, buildnumber});
+        LOG.log(Level.INFO, "Software version, buildnumber: {0}, {1}", new Object[]{projectVersion, buildnumber});
 
         int maxthreads = 200;
         String param = getInitParameter("xmlrpc.maxthreads");
@@ -207,7 +207,7 @@ public class DataSourceAccessServlet extends Servlet {
         monitor = !"false".equals(getInitParameter("monitor"));
         threading = "true".equals(getInitParameter("threading"));
 
-        log.log(Level.INFO, "monitoring = {0}, threading = {1}", new Object[]{monitor, threading});
+        LOG.log(Level.INFO, "monitoring = {0}, threading = {1}", new Object[]{monitor, threading});
         try {
 // find datasource from tomcat
             Context initContext = new InitialContext();
@@ -216,7 +216,7 @@ public class DataSourceAccessServlet extends Servlet {
             if (ds == null) {
                 throw new ServletException("Resource " + source + " is null");
             } else {
-                log.log(Level.INFO, "Found datasource {0}", new Object[]{ds});
+                LOG.log(Level.INFO, "Found datasource {0}", new Object[]{ds});
             }
 
             if (new DataSourceAccess(ds).checkVersion()) {
@@ -282,7 +282,7 @@ public class DataSourceAccessServlet extends Servlet {
         String timeStamp = getInitParameter("timestamp");
         out.println();
         out.println("Software version, buildnumber: " + softwareVersion + ", " + buildNumber + ", timestamp "+timeStamp);
-        log.log(Level.INFO,"Software version {0}, buildnumber {1}, timestamp {2}", new Object[]{softwareVersion, buildNumber, timeStamp});
+        LOG.log(Level.INFO,"Software version {0}, buildnumber {1}, timestamp {2}", new Object[]{softwareVersion, buildNumber, timeStamp});
         out.println();
         out.println("monitor = " + monitor);
         out.println("threading = " + threading);
@@ -304,13 +304,13 @@ public class DataSourceAccessServlet extends Servlet {
                     + "." + (String) hashMap.get("DBVersion Revision"));
             out.println();
         } catch (Exception e) {
-            log.log(Level.SEVERE, "Eror retrieving database version information from the database", e);
+            LOG.log(Level.SEVERE, "Eror retrieving database version information from the database", e);
         } finally {
             if (c != null) {
                 try {
                     c.close();
                 } catch (SQLException ex) {
-                    log.log(Level.SEVERE, "Eror closing the connection", ex);
+                    LOG.log(Level.SEVERE, "Eror closing the connection", ex);
                 }
             }
         }
@@ -345,20 +345,20 @@ public class DataSourceAccessServlet extends Servlet {
             s.setAttribute("ip", req.getRemoteAddr());
             super.service(req, resp);
         } catch (RuntimeException re) {
-            log.log(Level.SEVERE, "service", re);
+            LOG.log(Level.SEVERE, "service", re);
             throw re;
         } finally {
             try {
                 ((DbConnectIF) getHandler()).close();
             } catch (Exception e) {
-                log.log(Level.FINE, "Closing handler in finally failed:", e);
+                LOG.log(Level.FINE, "Closing handler in finally failed:", e);
             }
         }
     }
 
     @Override
     public void destroy() {
-        log.log(Level.FINE, "Closing xmlrpc handler.");
+        LOG.log(Level.FINE, "Closing xmlrpc handler.");
         ((DbConnectIF) getHandler()).close();
         super.destroy();
     }
