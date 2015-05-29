@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  * @author Gert van der Plas <gertvdplas@gmail.com>
  */
 public class PersistenceTypeToClassMap {
-    private static final Logger log = Logger.getLogger(PersistenceTypeToClassMap.class.getName());
+    private static final Logger LOG = Logger.getLogger(PersistenceTypeToClassMap.class.getName());
 
     protected static final EnumMap<RestClassType, Class> classCastMap;
 

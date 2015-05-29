@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  */
 public class MySQLPersistenceId extends PersistenceId implements Comparable<PersistenceId> {
 
-    private static final Logger log = Logger.getLogger(MySQLPersistenceId.class.getName());
+    private static final Logger LOG = Logger.getLogger(MySQLPersistenceId.class.getName());
 
     // the two variables that define the id.
     private long id;
@@ -30,11 +30,11 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
             super.setIdString(pid.getIdString());
             super.setType(PersistenceClassType.valueOf(strList[1]));
             id = Long.parseLong(strList[2]);
-            log.log(Level.FINE, "Converted IdString to id and type : {0} {1}", new Object[]{id, super.getType()});
+            LOG.log(Level.FINE, "Converted IdString to id and type : {0} {1}", new Object[]{id, super.getType()});
         } else {
             id=-1;
             super.setType(PersistenceClassType.none);
-            log.log(Level.SEVERE, "Failed to convert IdString to id and type as it is for DB {0}", new Object[]{strList[0]});
+            LOG.log(Level.SEVERE, "Failed to convert IdString to id and type as it is for DB {0}", new Object[]{strList[0]});
         }
     }
 
@@ -52,7 +52,7 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
     @Override
     public String getIdString() {
         String s = String.format("MYSQL;%s;%020d", super.getType().name(),id);
-        log.log(Level.FINE, "String id : ", new Object[]{s});
+        LOG.log(Level.FINE, "String id : ", new Object[]{s});
         return s;
     }
 
@@ -63,11 +63,11 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
             super.setIdString(idString);
             super.setType(PersistenceClassType.valueOf(strList[1]));
             id = Long.parseLong(strList[2]);
-            log.log(Level.FINE, "Converted IdString to id and type : {0} {1}", new Object[]{id, super.getType()});
+            LOG.log(Level.FINE, "Converted IdString to id and type : {0} {1}", new Object[]{id, super.getType()});
         } else {
             id=-1;
             super.setType(PersistenceClassType.none);
-            log.log(Level.SEVERE, "Failed to convert IdString to id and type as it is for DB {0}", new Object[]{strList[0]});
+            LOG.log(Level.SEVERE, "Failed to convert IdString to id and type as it is for DB {0}", new Object[]{strList[0]});
         }
     }
 
@@ -162,7 +162,7 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
         if (strList[0].equals("MYSQL")) {
             return Long.parseLong(strList[2]);
         } else {
-            log.log(Level.SEVERE, "Failed to convert IdString {0}", new Object[]{aId.getIdString()});
+            LOG.log(Level.SEVERE, "Failed to convert IdString {0}", new Object[]{aId.getIdString()});
             return -1;
         } 
     }

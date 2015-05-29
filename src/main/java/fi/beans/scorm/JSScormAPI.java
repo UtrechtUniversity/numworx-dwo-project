@@ -8,7 +8,7 @@ import netscape.javascript.*;
 
 public class JSScormAPI implements SCORM12APIInterface {
 
-    private static final Logger log = Logger.getLogger(JSScormAPI.class.getName());
+    private static final Logger LOG = Logger.getLogger(JSScormAPI.class.getName());
 
     private JSObject window;
     private String launchData;
@@ -53,7 +53,7 @@ public class JSScormAPI implements SCORM12APIInterface {
                 args[0] = iDataModelElement;
                 result = (String) window.call("LMSGetValue", args);
             } catch (Exception e) {
-                log.log(Level.SEVERE, null, e);
+                LOG.log(Level.SEVERE, null, e);
             }
         }
         if (result != null && !result.equals("")) {
@@ -83,7 +83,7 @@ public class JSScormAPI implements SCORM12APIInterface {
                 args[1] = iValue;
                 result = (String) window.call("LMSSetValue", args);
             } catch (Exception e) {
-                log.log(Level.SEVERE, null, e);
+                LOG.log(Level.SEVERE, null, e);
 
             }
         }

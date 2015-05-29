@@ -41,7 +41,7 @@ import java.util.logging.Logger;
  */
 public class Scorm2Xml extends ScormAdapter {
 
-    private static final Logger log = Logger.getLogger(Scorm2Xml.class.getName());
+    private static final Logger LOG = Logger.getLogger(Scorm2Xml.class.getName());
 
     public static final String NAMESPACE = "http://ltsc.ieee.org/xsd/1484_11_3";
     public static final String COCD = "cocd";
@@ -93,7 +93,7 @@ public class Scorm2Xml extends ScormAdapter {
             builder = documentBuilderFactory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
             // should not happen
-            log.log(Level.SEVERE, null, e);
+            LOG.log(Level.SEVERE, null, e);
         }
     }
 
@@ -107,7 +107,7 @@ public class Scorm2Xml extends ScormAdapter {
             transformer.setOutputProperty(OutputKeys.ENCODING, "US-ASCII");
         } catch (TransformerConfigurationException e) {
             // should not happen
-            log.log(Level.SEVERE, null, e);
+            LOG.log(Level.SEVERE, null, e);
         }
         DOMSource source = new DOMSource(doc);
         try {

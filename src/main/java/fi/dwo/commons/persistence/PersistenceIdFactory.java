@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  */
 public class PersistenceIdFactory {
 
-    private static final Logger log = Logger.getLogger(PersistenceIdFactory.class.getName());
+    private static final Logger LOG = Logger.getLogger(PersistenceIdFactory.class.getName());
     
     public enum DatabaseType{ MySQL};
 
@@ -80,7 +80,7 @@ public class PersistenceIdFactory {
         if (o instanceof PersistentUser) {
             return createPersistentId((PersistentUser) o);
         }
-        log.log(Level.SEVERE, "Factory was asked to create an unsupported data type.");
+        LOG.log(Level.SEVERE, "Factory was asked to create an unsupported data type.");
         return null;
     }
 
