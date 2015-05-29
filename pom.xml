@@ -115,7 +115,7 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
                 </configuration>
             </plugin>
         </plugins>
-        <finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
+        <finalName>${project.artifactId}-${project.version}</finalName>
     </build>
 
     <!-- Note the dependencies are mostly provided. Allowing the common-lib to 

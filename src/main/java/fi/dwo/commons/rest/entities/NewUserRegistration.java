@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Gert van der Plas <gertvdplas@gmail.com>
  */
 @XmlRootElement
-class NewUserRegistration {
+public class NewUserRegistration {
     //GuiCreator.instance().register( lastname.getText(), email.getText());
     private String username;
     private String password;
