@@ -207,7 +207,7 @@
                 </executions>
             </plugin>       
         </plugins>
-        <finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
+        <finalName>${project.artifactId}-${project.version}</finalName>
     </build>
 
     <properties>
