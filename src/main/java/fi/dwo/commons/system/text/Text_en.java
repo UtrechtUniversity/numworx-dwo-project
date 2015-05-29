@@ -54,10 +54,11 @@ public class Text_en extends ListResourceBundle {
          { TextMapper.GUIW_GUESTLOGIN, "Login as guest" },
          { TextMapper.GUIW_REGISTER, "Register" },
          { TextMapper.GUIW_MSG_WORK_NOT_SAVE, "Your work WON'T be saved" },
-         { TextMapper.GUIW_MSG_REGISTER_NEW, "Register as a new member." },
+         { TextMapper.GUIW_MSG_REGISTER_NEW, "New account." },
+         { TextMapper.GUIW_MSG_REGISTER_EXISTING, "Existing account." },//
          { TextMapper.GUIW_BTN_GUESTLOGIN, "Login as Guest" },
          { TextMapper.GUIW_BTN_LOGIN, "Login" },
-         { TextMapper.GUIW_BTN_REGISTER, "Register" },
+         { TextMapper.GUIW_BTN_REGISTER, "Register for an account or a school" },
          { TextMapper.GUIW_ERR_LOGIN, "Login error" },
 
          { TextMapper.GUIR_REGISTER, "Register" },

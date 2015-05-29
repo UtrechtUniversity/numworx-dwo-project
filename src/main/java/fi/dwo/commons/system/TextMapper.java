@@ -89,6 +89,7 @@ public abstract class TextMapper {
     public final static String GUIW_GUESTLOGIN = "GUIW_GUESTLOGIN";
     public final static String GUIW_MSG_WORK_NOT_SAVE = "GUIW_MSG_WORK_NOT_SAVE";
     public final static String GUIW_MSG_REGISTER_NEW = "GUIW_MSG_REGISTER_NEW";
+    public final static String GUIW_MSG_REGISTER_EXISTING = "GUIW_MSG_REGISTER_EXISTING";
 
     public final static String GUIW_BTN_LOGIN = "GUIW_BTN_LOGIN";
     public final static String GUIW_BTN_GUESTLOGIN = "GUIW_BTN_GUESTLOGIN";
