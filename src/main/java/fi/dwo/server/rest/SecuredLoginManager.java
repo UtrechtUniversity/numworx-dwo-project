@@ -38,7 +38,7 @@ public class SecuredLoginManager {
     public PersistentUser login(@Context SecurityContext sc) {
         String userName = sc.getUserPrincipal().getName();
         //TODO REST update lastLogin and such.
-        PersistentUser user = UserManager.findByName(userName);
+        PersistentUser user = UserManager.findByUserName(userName);
         LOG.log(Level.INFO, "Login accepted for user with username {0}", new Object[]{user.getUsername()});
         return user;
     }

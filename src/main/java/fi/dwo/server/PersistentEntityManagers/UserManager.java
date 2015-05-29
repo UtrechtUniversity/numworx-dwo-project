@@ -13,13 +13,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 /**
- * Manages users in the persistent storage. Sample UserManager for building more code. 
- * Also useful as it is being reused.
+ * Manages users in the persistent storage. Sample UserManager for building more
+ * code. Also useful as it is being reused.
  *
  * @author G.A.J. van der Plas
  */
@@ -27,23 +28,26 @@ public class UserManager {
 
     private static final Logger LOG = Logger.getLogger(UserManager.class.getName());
 
-    private static EntityManager getEntityManager(){
+    private static EntityManager getEntityManager() {
         EntityManager em = DwoEmfFactory.createEntityManager();
         return em;
     }
 
     /**
      * Create.
-     * 
-     * @param persistentUser 
+     *
+     * @param persistentUser
      */
-    public static void create(PersistentUser persistentUser) {
+    public static void create(PersistentUser persistentUser) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             em.persist(persistentUser);
             em.getTransaction().commit();
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "Can't create the user.", e);
+            throw new PersistenceException(e);
         } finally {
             if (em != null) {
                 em.close();
@@ -51,28 +55,30 @@ public class UserManager {
         }
     }
 
-    /** Update
-     * 
+    /**
+     * Update
+     *
      * @param persistentUser
      * @throws NonexistentEntityException
-     * @throws Exception 
+     * @throws Exception
      */
-    public static void edit(PersistentUser persistentUser) throws NonexistentEntityException, Exception {
+    public static void edit(PersistentUser persistentUser) throws PersistenceException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             persistentUser = em.merge(persistentUser);
             em.getTransaction().commit();
-        } catch (Exception ex) {
-            String msg = ex.getLocalizedMessage();
+        } catch (Exception e) {
+            String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Integer id = persistentUser.getUserID();
                 if (findPersistentUser(id) == null) {
-                    throw new NonexistentEntityException("The persistentUser with id " + id + " no longer exists.");
+                    LOG.log(Level.FINE, "The persistentUser with " + id + " no longer exists.", e);
+                    throw new PersistenceException(e);
                 }
             }
-            throw ex;
+            throw new PersistenceException(e);
         } finally {
             if (em != null) {
                 em.close();
@@ -82,21 +88,22 @@ public class UserManager {
 
     /**
      * Removes a user from the persistent store.
-     * 
+     *
      * @param id
-     * @throws NonexistentEntityException 
+     * @throws NonexistentEntityException
      */
-    public static void destroy(Integer id) throws NonexistentEntityException {
+    public static void destroy(Integer id) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            PersistentUser persistentUser;
+            PersistentUser persistentUser = null;
             try {
                 persistentUser = em.getReference(PersistentUser.class, id);
                 persistentUser.getUserID();
-            } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The persistentUser with id " + id + " no longer exists.", enfe);
+            } catch (EntityNotFoundException e) {
+                LOG.log(Level.FINE, "The persistentUser with " + id + " no longer exists.", e);
+                throw new PersistenceException(e);
             }
             em.remove(persistentUser);
             em.getTransaction().commit();
@@ -153,22 +160,20 @@ public class UserManager {
         }
     }
 
-    public static PersistentUser findByName(String userName){
+    public static PersistentUser findByUserName(String userName) {
         EntityManager em = DwoEmfFactory.createEntityManager();
-        PersistentUser user=null;
+        PersistentUser user = null;
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
             q.setParameter("username", userName);
             user = (PersistentUser) q.getSingleResult();
             LOG.log(Level.INFO, "User-manager retrieved user with username {0}", new Object[]{user.getUsername()});
-        } catch(Exception e){
-            LOG.log(Level.WARNING,"Unexpected exception", e.getMessage());
-        }finally {
+        } finally {
             em.close();
         }
         return user;
     }
-    
+
     /**
      * User manager. Resolves links.
      *
@@ -186,8 +191,6 @@ public class UserManager {
                 return null;
             }
             LOG.log(Level.INFO, "Login accepted for user with username {0}", new Object[]{userName});
-        } catch (Exception e) {
-            LOG.log(Level.WARNING, "Unexpected exception", e.getMessage());
         } finally {
             em.close();
         }

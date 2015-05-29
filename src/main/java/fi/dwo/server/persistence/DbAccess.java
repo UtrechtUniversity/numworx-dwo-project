@@ -1077,7 +1077,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
                     userData.append(" ");
                     userData.append(username);
                     userData.append(" ");
-                    if (log.getLevel() == Level.FINEST) {
+                    if (LOG.getLevel() == Level.FINEST) {
                         userData.append(password);// only log unencrypted password at highest log level.
                         userData.append(" ");
                     }
