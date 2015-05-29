@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  */
 public class StoreManager {
 
-    protected static final Logger log = Logger.getLogger(StoreManager.class.getName());
+    protected static final Logger LOG = Logger.getLogger(StoreManager.class.getName());
 
     protected static final StoreManager instance = new StoreManager();
 
@@ -51,7 +51,7 @@ public class StoreManager {
                     store.put(key, o); // The wrong implementation.
                     return o;
                 }else{
-                    log.log(Level.SEVERE," Can't merge to different data types");
+                    LOG.log(Level.SEVERE," Can't merge to different data types");
                 }
             }
         } else {

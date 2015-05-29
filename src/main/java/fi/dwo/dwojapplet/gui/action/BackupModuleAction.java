@@ -21,7 +21,7 @@ import javax.xml.transform.TransformerException;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 public class BackupModuleAction extends GuiAction {
-    private static final Logger log = Logger.getLogger(BackupModuleAction.class.getName());
+    private static final Logger LOG = Logger.getLogger(BackupModuleAction.class.getName());
 
     private FileDialog saveDial;
     private String tip;
@@ -63,7 +63,7 @@ public class BackupModuleAction extends GuiAction {
                 export(course);
             }
         } catch (Exception e) {
-            log.log(Level.SEVERE,null,e);
+            LOG.log(Level.SEVERE,null,e);
         }
     }
 

@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  * @author G.A.J. van der Plas
  */
 public class UserProfileManager {
-    private static final Logger log = Logger.getLogger(UserProfileManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(UserProfileManager.class.getName());
     
     /**
     * Returns the current user 'logged in'. The information is extracted from the 
@@ -38,7 +38,7 @@ public class UserProfileManager {
 
     public static PersistentUser updateCurrentUser(PersistentUser user) throws RestException {
             user = StoredRestManager.getInstance().put("/rest/secure/user/userprofile/update/json", PersistentUser.class, user);
-            log.log(Level.FINE, "Updated user profile of username {0}.",new Object[]{user.getUsername()});
+            LOG.log(Level.FINE, "Updated user profile of username {0}.",new Object[]{user.getUsername()});
         return user;
     }
 }

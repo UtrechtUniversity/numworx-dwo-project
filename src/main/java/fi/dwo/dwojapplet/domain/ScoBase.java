@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
 
 public abstract class ScoBase extends ScormAdapter {
-private static final Logger log = Logger.getLogger(ScoBase.class.getName());
+private static final Logger LOG = Logger.getLogger(ScoBase.class.getName());
 
     public static final String NORMAL = "normal";
     public static final String REVIEW = "review";
@@ -237,7 +237,7 @@ private static final Logger log = Logger.getLogger(ScoBase.class.getName());
             try {
                 appletData = (AppletData) PersistenceFacade.instance().get(appletID, AppletData.class);
             } catch (PersistenceException e) {
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
             }
         }
         return appletData;
@@ -346,7 +346,7 @@ private static final Logger log = Logger.getLogger(ScoBase.class.getName());
                 try {
                     return tf(Sco.gotoSco(iValue, this, course, sc));
                 } catch (Exception e) {
-		    			//log.log(Level.SEVERE,null,e);
+		    			//LOG.log(Level.SEVERE,null,e);
 
                 }
             }

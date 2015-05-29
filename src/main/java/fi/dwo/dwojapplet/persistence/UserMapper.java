@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 class UserMapper extends XmlRpcMapper {
-    private static final Logger log = Logger.getLogger(UserMapper.class.getName());
+    private static final Logger LOG = Logger.getLogger(UserMapper.class.getName());
 
     private static final String TABLENAME = "tblUser left join tblSchoolGroup on tblUser.schoolGroupID = tblSchoolGroup.schoolGroupID left join tblGroup on tblSchoolGroup.groupID = tblGroup.groupID left join tblSchool on tblSchoolGroup.schoolID = tblSchool.schoolID";
     //private static final String TABLENAME = "tbluser";
@@ -187,7 +187,7 @@ class UserMapper extends XmlRpcMapper {
                 }
             } catch (Exception e) {
                 System.err.println("User: " + data);
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
             }
         }
 

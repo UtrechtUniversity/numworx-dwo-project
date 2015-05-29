@@ -10,7 +10,7 @@ import java.util.logging.Logger;
  * @author G.A.J. van der Plas
  */
 public class SchoolsRolesAndClassesManager {
-    private static final Logger log = Logger.getLogger(SchoolsRolesAndClassesManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(SchoolsRolesAndClassesManager.class.getName());
     
     /**
     * Returns the current user 'logged in'. The information is extracted from the 
@@ -37,7 +37,7 @@ public class SchoolsRolesAndClassesManager {
 
     public static SchoolRoleAndClass setActiveSchoolRoleAndClass(SchoolRoleAndClass src) throws RestException {
             src = StoredRestManager.getInstance().put("/rest/secure/user/schoolsrolesandclasses/update/json", SchoolRoleAndClass.class, src);
-            //log.log(Level.FINE, "Updated active role  of username {0}.",new Object[]{src.getRoleId()});
+            //LOG.log(Level.FINE, "Updated active role  of username {0}.",new Object[]{src.getRoleId()});
         return src;
     }
 }

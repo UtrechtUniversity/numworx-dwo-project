@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 public class CachingStore implements IStore, Runnable {
-    private static final Logger log = Logger.getLogger(CachingStore.class.getName());
+    private static final Logger LOG = Logger.getLogger(CachingStore.class.getName());
 
     private static final long MAX_BACKOFF = 2 * 60 * 1000L; // 2 min maximum voor exponential backoff
     private static final long INI_BACKOFF = 200L;
@@ -36,7 +36,7 @@ public class CachingStore implements IStore, Runnable {
             } catch (ConcurrentModificationException cme) {
                 System.err.println("Expected: " + cme + ", niets aan de hand");
             } catch (Exception e) { // expect ConcurrentModificationException
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
             }
         }
 
@@ -127,7 +127,7 @@ public class CachingStore implements IStore, Runnable {
                 try {
                     return delegate.getValue(uid, scoid, key);
                 } catch (PersistenceException e) {
-                    log.log(Level.SEVERE,null,e);
+                    LOG.log(Level.SEVERE,null,e);
                     throw e;
                 }
             }
@@ -160,7 +160,7 @@ public class CachingStore implements IStore, Runnable {
             try {
                 wait();
             } catch (InterruptedException e) {
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
                 if (x) {
                     throw new PersistenceException(PersistenceException.EX_IO, e);
                 }
@@ -187,7 +187,7 @@ public class CachingStore implements IStore, Runnable {
                 try {
                     wait();
                 } catch (InterruptedException e) {
-                    log.log(Level.SEVERE,null,e);
+                    LOG.log(Level.SEVERE,null,e);
                 }
             }
         }
@@ -234,7 +234,7 @@ public class CachingStore implements IStore, Runnable {
         try {
             commit(false);
         } catch (PersistenceException e) {
-            log.log(Level.SEVERE,null,e); // should not happen
+            LOG.log(Level.SEVERE,null,e); // should not happen
         }
         inter = cache.keySet().iterator();
         while (inter.hasNext()) {

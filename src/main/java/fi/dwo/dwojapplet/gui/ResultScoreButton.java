@@ -30,7 +30,7 @@ import javax.swing.SwingConstants;
 public class ResultScoreButton extends JPanel implements
         ActionListener {
 
-    private static final Logger log = Logger.getLogger(ResultScoreButton.class.getName());
+    private static final Logger LOG = Logger.getLogger(ResultScoreButton.class.getName());
 
     private float score;
     private ResultScoreIF domain;
@@ -230,7 +230,7 @@ public class ResultScoreButton extends JPanel implements
                         JOptionPane.showMessageDialog(this, "Geen deelscores", "", JOptionPane.INFORMATION_MESSAGE);
                     }
                 } catch (Throwable e1) {
-                    log.log(Level.SEVERE, null, e1);
+                    LOG.log(Level.SEVERE, null, e1);
                     JOptionPane.showMessageDialog(this, e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } else {

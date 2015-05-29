@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  */
 public class Util {
 
-    private static final Logger log = Logger.getLogger(Util.class.getName());
+    private static final Logger LOG = Logger.getLogger(Util.class.getName());
 
     static final String UTF8 = "UTF-8";
 
@@ -40,7 +40,7 @@ public class Util {
             sb.append("=");
             sb.append(URLEncoder.encode(value, UTF8));
         } catch (UnsupportedEncodingException e) {
-            log.log(Level.SEVERE, null, e);
+            LOG.log(Level.SEVERE, null, e);
 
         }
     }

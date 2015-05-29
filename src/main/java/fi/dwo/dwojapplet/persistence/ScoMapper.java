@@ -28,7 +28,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 import org.json.simple.JSONValue;
 
 class ScoMapper extends XmlRpcMapper {
-    private static final Logger log = Logger.getLogger(ScoMapper.class.getName());
+    private static final Logger LOG = Logger.getLogger(ScoMapper.class.getName());
 
     private static final Vector LAZY_SCO_KEYS = new Vector();
 
@@ -85,11 +85,11 @@ class ScoMapper extends XmlRpcMapper {
                     }
                 }
             } catch (IOException e) {
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
             } catch (XmlRpcException e) {
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
             } catch (SQLException e) {
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
             }
 
             return super.getLaunchdata();

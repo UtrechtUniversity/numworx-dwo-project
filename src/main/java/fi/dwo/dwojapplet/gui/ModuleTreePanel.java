@@ -61,7 +61,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
-    private static final Logger log = Logger.getLogger(ModuleTreePanel.class.getName());
+    private static final Logger LOG = Logger.getLogger(ModuleTreePanel.class.getName());
 
     public static String STANDAARD_DWO_MODULES = TextMapper.getText("Standaard DWO modules");
 
@@ -593,7 +593,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
                             }
                             find.add(node);
                         } catch (PersistenceException e) {
-                            log.log(Level.SEVERE,null,e);
+                            LOG.log(Level.SEVERE,null,e);
                         }
                     } else {
                         dwonode.add(node);
@@ -614,7 +614,7 @@ public class ModuleTreePanel extends JPanel implements TreeSelectionListener {
                             find.add(node);
                         } catch (PersistenceException e) {
             
-                            log.log(Level.SEVERE,null,e);
+                            LOG.log(Level.SEVERE,null,e);
                         }
 
                     } else {

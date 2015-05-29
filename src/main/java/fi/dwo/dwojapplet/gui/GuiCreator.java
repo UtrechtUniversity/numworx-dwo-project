@@ -42,7 +42,7 @@ import javax.swing.JOptionPane;
  */
 public class GuiCreator {
 
-    private static final Logger log = Logger.getLogger(GuiCreator.class.getName());
+    private static final Logger LOG = Logger.getLogger(GuiCreator.class.getName());
 
     protected DwoIF dwo;
 
@@ -425,7 +425,7 @@ public class GuiCreator {
             try {
                 viewSco = (Sco) PersistenceFacade.instance().get(dwo.getScoViewNr(), Sco.class);
             } catch (Exception e) {
-                log.log(Level.SEVERE, null, e);
+                LOG.log(Level.SEVERE, null, e);
             }
             if (viewSco != null) {
                 dwo.setCurrentSco(viewSco);

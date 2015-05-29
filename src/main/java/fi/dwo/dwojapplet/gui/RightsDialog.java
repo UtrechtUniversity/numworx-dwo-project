@@ -24,7 +24,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class RightsDialog extends JDialog implements ActionListener {
 
-    private static final Logger log = Logger.getLogger(RightsDialog.class.getName());
+    private static final Logger LOG = Logger.getLogger(RightsDialog.class.getName());
 
     private static final int RIGHTSCOUNT = 3; // a s p
     private static final Object[] HEADERS = new String[]{"naam", "applet", "scorm", "profiel"};
@@ -140,7 +140,7 @@ public class RightsDialog extends JDialog implements ActionListener {
                     merge(u);
                 }
             } catch (PersistenceException e) {
-                log.log(Level.SEVERE, null, e);
+                LOG.log(Level.SEVERE, null, e);
             }
         }
         Arrays.sort(userList);
@@ -191,7 +191,7 @@ public class RightsDialog extends JDialog implements ActionListener {
 //                            PersistenceFacade.instance().setRights(user.getID(), user.profileID, newrights)
 //                    );
                 } catch (Exception e1) {
-                    log.log(Level.SEVERE, null, e1);
+                    LOG.log(Level.SEVERE, null, e1);
                 }
             }
         }

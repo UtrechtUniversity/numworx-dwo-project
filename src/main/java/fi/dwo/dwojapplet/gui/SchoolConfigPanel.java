@@ -17,7 +17,7 @@ import javax.swing.event.ChangeEvent;
 
 public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
 
-    private static final Logger log = Logger.getLogger(SchoolConfigPanel.class.getName());
+    private static final Logger LOG = Logger.getLogger(SchoolConfigPanel.class.getName());
 
     private CenterPanel center;
     private School school;
@@ -93,7 +93,7 @@ public class SchoolConfigPanel extends JPanel implements CenterSubPanel {
         try {
             PersistenceFacade.instance().editSchool(school, sb.toString());
         } catch (PersistenceException e) {
-            log.log(Level.SEVERE, null, e);
+            LOG.log(Level.SEVERE, null, e);
         }
     }
 

@@ -24,7 +24,7 @@ import javax.swing.text.ViewFactory;
 
 class FormuleContext implements ViewFactory {
 
-    private static final Logger log = Logger.getLogger(FormuleContext.class.getName());
+    private static final Logger LOG = Logger.getLogger(FormuleContext.class.getName());
 
     static class MultiScriptsView extends SubSupView {
 
@@ -437,7 +437,7 @@ class FormuleContext implements ViewFactory {
                 r.preferred = r.minimum;
             } catch (Exception e) {
 
-                log.log(Level.SEVERE, null, e);
+                LOG.log(Level.SEVERE, null, e);
             }
             return r;
         }

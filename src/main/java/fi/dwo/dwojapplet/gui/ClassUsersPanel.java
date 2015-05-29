@@ -53,7 +53,7 @@ import javax.swing.table.TableCellRenderer;
  */
 public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionListener*/ {
 
-    private static final Logger log = Logger.getLogger(ImageButtonEditor.class.getName());
+    private static final Logger LOG = Logger.getLogger(ImageButtonEditor.class.getName());
 
     private CenterPanel center;
 
@@ -128,7 +128,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
                     PersistenceFacade.instance().clearObjectInMapperCache(User.class,u.getID());
                     GuiCreator.instance().logoff(u.getUsername());
 //                } catch (LoginException e) {
-//                    log.log(Level.SEVERE, null, e);
+//                    LOG.log(Level.SEVERE, null, e);
 //                }
             } else if (value == model.editImage) {
                 try {
@@ -139,7 +139,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
                         JOptionPane.showMessageDialog(ClassUsersPanel.this, TextMapper.getText(TextMapper.GUIP_MSG_PROFILE_CHANGED));
                     }
                 } catch (Exception e) {
-                    log.log(Level.SEVERE, null, e);
+                    LOG.log(Level.SEVERE, null, e);
                 }
             } else if (value == model.removeImage) {
                 String[] arguments = new String[1];

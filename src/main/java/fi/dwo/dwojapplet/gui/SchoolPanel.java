@@ -45,7 +45,7 @@ import javax.swing.table.TableModel;
  *
  */
 public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListener {
-    private static final Logger log = Logger.getLogger(SchoolPanel.class.getName());
+    private static final Logger LOG = Logger.getLogger(SchoolPanel.class.getName());
 
     public class ImageButtonEditor extends AbstractCellEditor implements
             TableCellEditor, ActionListener {
@@ -79,7 +79,7 @@ public class SchoolPanel extends JPanel implements CenterSubPanel, ActionListene
                         model.fireTableRowsUpdated(row, row);
                     }
                 } catch (SchoolException e) {
-                    log.log(Level.SEVERE,null,e);
+                    LOG.log(Level.SEVERE,null,e);
                 }
             } else if (value == removeImage) {
                 /* Delete the school */

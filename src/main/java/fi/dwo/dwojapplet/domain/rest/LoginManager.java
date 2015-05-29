@@ -23,7 +23,7 @@ import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
  */
 public class LoginManager {
 
-    private static final Logger log = Logger.getLogger(LoginManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(LoginManager.class.getName());
 
     public static PersistentUser login(String username, String password) {
         //login to rest service, note there is usually not yet be a fully configured StoredRestManager.
@@ -42,7 +42,7 @@ public class LoginManager {
             //Set return value
            user = response.readEntity(PersistentUser.class);
             // succeeded login
-            log.log(Level.INFO, "Logged in with username {0}.", new Object[]{user.getUsername()});
+            LOG.log(Level.INFO, "Logged in with username {0}.", new Object[]{user.getUsername()});
             //Set webtarget with credentials for future rest login.
             WebTarget target = client.target(DwoHelper.getBaseServletUrlString());
             StoredRestManager.setWebTargetRest(target);

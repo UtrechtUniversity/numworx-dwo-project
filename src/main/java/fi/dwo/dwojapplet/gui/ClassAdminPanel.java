@@ -37,7 +37,7 @@ import javax.swing.table.TableColumn;
 
 public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparator, ActionListener {
 
-    private static final Logger log = Logger.getLogger(ClassModel.class.getName());
+    private static final Logger LOG = Logger.getLogger(ClassModel.class.getName());
 
     SchoolClass[] classes;
     boolean[] dirty;
@@ -84,7 +84,7 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
 //                    }
                 } catch (Exception e) {
     
-                    log.log(Level.SEVERE, null, e);
+                    LOG.log(Level.SEVERE, null, e);
                 }
 
             } else if (columnIndex == CLASS_NAME) {
@@ -314,7 +314,7 @@ public class ClassAdminPanel extends JPanel implements CenterSubPanel, Comparato
                 }
 
             } catch (Exception e) {
-                log.log(Level.SEVERE, null, e);
+                LOG.log(Level.SEVERE, null, e);
             }
         }
         Arrays.sort(teachers, this);

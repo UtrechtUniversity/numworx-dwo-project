@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  */
 public abstract class GuiConstants {
 
-    private static final Logger log = Logger.getLogger(GuiConstants.class.getName());
+    private static final Logger LOG = Logger.getLogger(GuiConstants.class.getName());
 
 //    public static Color MAIN_BACKGROUND = new Color(230, 240, 255);
     public static Color MAIN_BACKGROUND = new Color(221, 238, 255);
@@ -318,7 +318,7 @@ public abstract class GuiConstants {
             //u = GuiConstants.class.getResource("/" + resource);
             result = getProperties(u, result);
         } catch (IOException e) {
-            log.log(Level.SEVERE, null, e);
+            LOG.log(Level.SEVERE, null, e);
         }
         return result;
     }

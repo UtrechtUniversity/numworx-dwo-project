@@ -38,7 +38,7 @@ import netscape.javascript.JSObject;
  */
 public final class DwoHelper {
 
-    private static final Logger log = Logger.getLogger(DwoHelper.class.getName());
+    private static final Logger LOG = Logger.getLogger(DwoHelper.class.getName());
 
     private static AppletUtil au;
 
@@ -266,7 +266,7 @@ public final class DwoHelper {
             try {
                 url = new URL(applicationBase, resource);
             } catch (MalformedURLException e) {
-                log.log(Level.SEVERE, null, e);
+                LOG.log(Level.SEVERE, null, e);
             }
 
         } else {
@@ -437,7 +437,7 @@ public final class DwoHelper {
             try {
                 currentFacadeUser = (User) PersistenceFacade.instance().get(aCurrentUser.getUserID(), User.class);
             } catch (PersistenceException ex) {
-                log.log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, null, ex);
             }
         }else{
              currentFacadeUser=null;

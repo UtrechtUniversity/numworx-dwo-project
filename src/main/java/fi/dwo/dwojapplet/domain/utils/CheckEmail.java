@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 public class CheckEmail {
 
-    private static final Logger log = Logger.getLogger(CheckEmail.class.getName());
+    private static final Logger LOG = Logger.getLogger(CheckEmail.class.getName());
 
     private String service;
     private Throwable cause;
@@ -51,11 +51,11 @@ public class CheckEmail {
         } // Deze 3 exceptions ontstaan als de service down is. 
         // Dan moeten we dus helaas 'true' afgeven.
         catch (MalformedURLException e) {
-            log.log(Level.SEVERE, null, e);
+            LOG.log(Level.SEVERE, null, e);
             cause = e;
             return true;
         } catch (UnsupportedEncodingException e) {
-            log.log(Level.SEVERE, null, e);
+            LOG.log(Level.SEVERE, null, e);
             cause = e;
             return true;
         } catch (IOException e) {

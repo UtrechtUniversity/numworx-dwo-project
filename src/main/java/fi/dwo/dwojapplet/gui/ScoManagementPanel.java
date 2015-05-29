@@ -63,7 +63,7 @@ import javax.swing.table.TableModel;
  *
  */
 public class ScoManagementPanel extends JPanel implements CenterSubPanel, ActionListener {
-    private static final Logger log = Logger.getLogger(ScoManagementPanel.class.getName());
+    private static final Logger LOG = Logger.getLogger(ScoManagementPanel.class.getName());
 
     private CenterPanel center;
 
@@ -318,7 +318,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
                         center.loadCenter(GuiCreator.instance().getCourseManagementPanel(map));
                     } catch (PersistenceException e) {
         
-                        log.log(Level.SEVERE,null,e);
+                        LOG.log(Level.SEVERE,null,e);
                     }
                 } else {
                     center.loadCenter(GuiCreator.instance().getCourseManagementPanel());
@@ -570,7 +570,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
             try {
                 importCourseLogo();
             } catch (IOException e1) {
-                log.log(Level.SEVERE,null,e1);
+                LOG.log(Level.SEVERE,null,e1);
             }
             return;
         }
@@ -580,7 +580,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
 //    		try { 
 //    			importScos();
 //    		} catch (Exception e2) {
-//    			log.log(Level.SEVERE,null,e2);			
+//    			LOG.log(Level.SEVERE,null,e2);			
 //    		}
         }
         if (src == addScoButton) {
@@ -659,7 +659,7 @@ public class ScoManagementPanel extends JPanel implements CenterSubPanel, Action
             try {
                 PersistenceFacade.instance().setLogo(course.getID(), data);
             } catch (Exception e) {
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
             }
 
         }

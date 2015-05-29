@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  */
 public class RoleManager {
 
-    private static final Logger log = Logger.getLogger(RoleManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(RoleManager.class.getName());
 
     /**
      * Returns the user data if properly logged in. The information is extracted
@@ -35,7 +35,7 @@ public class RoleManager {
         List<PersistentRole> roles;
 //        GenericType<ArrayList<PersistentRole>> oClass = new GenericType<ArrayList<PersistentRole>>() {};
 //        roles =  StoredRestManager.getWebTargetRest().path("/rest/public/roles/get/json").request().get(oClass);
-//        log.log(Level.FINER, "Fetched {0} roles.", new Object[]{roles.size()});
+//        LOG.log(Level.FINER, "Fetched {0} roles.", new Object[]{roles.size()});
 //        return roles;
         roles = StoredRestManager.getInstance().getList("/rest/secure/user/userprofile/get/json", RestClassType.PersistentRole);
         return roles;

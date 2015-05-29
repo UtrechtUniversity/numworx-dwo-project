@@ -36,7 +36,7 @@ import javax.swing.JFileChooser;
 
 public class Save2004Action extends GuiAction {
 
-    private static final Logger log = Logger.getLogger(Save2004Action.class.getName());
+    private static final Logger LOG = Logger.getLogger(Save2004Action.class.getName());
 
     private static final String WWWURL = "http://www.fisme.science.uu.nl";
 
@@ -170,7 +170,7 @@ public class Save2004Action extends GuiAction {
             out.close();
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            log.log(Level.SEVERE, null, e);
+            LOG.log(Level.SEVERE, null, e);
         }
 
     }
@@ -336,7 +336,7 @@ public class Save2004Action extends GuiAction {
 //		} catch (LicenseException e)
 //		{
 //			// TODO iets beters dan printstacktrace
-//			log.log(Level.SEVERE,null,e);
+//			LOG.log(Level.SEVERE,null,e);
 //		}
         String launchDataString = StringCodeObject.encodeObjectToString(launchData);
 //		launchData.remove(LicMan.LICENSE_KEY);
@@ -468,7 +468,7 @@ public class Save2004Action extends GuiAction {
             out.close();
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            log.log(Level.SEVERE, null, e);
+            LOG.log(Level.SEVERE, null, e);
         }
 
     }

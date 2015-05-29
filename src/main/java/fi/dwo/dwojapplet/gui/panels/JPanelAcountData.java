@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  */
 public class JPanelAcountData extends javax.swing.JPanel {
 
-    private static final Logger log = Logger.getLogger(JPanelAcountData.class.getName());
+    private static final Logger LOG = Logger.getLogger(JPanelAcountData.class.getName());
 
     private JPanelAccountDataProperties prop = new JPanelAccountDataProperties();
     private Color originalBackground;

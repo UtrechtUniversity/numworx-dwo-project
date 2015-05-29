@@ -10,7 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 class DbAccessCreator {
-    private static final Logger log = Logger.getLogger(DbAccessCreator.class.getName());
+    private static final Logger LOG = Logger.getLogger(DbAccessCreator.class.getName());
 
     private static DbAccessIF dbAccess;
     /**
@@ -49,7 +49,7 @@ class DbAccessCreator {
                         server = new URL(DwoHelper.getServletConnectString());
                         dbAccess = new DbAccessClient(server);
                     } catch (MalformedURLException ex) {
-                        log.log(Level.SEVERE, null, ex);
+                        LOG.log(Level.SEVERE, null, ex);
                     }
                 } else {
                     try {
@@ -58,7 +58,7 @@ class DbAccessCreator {
                         server = new URL(new URL("http://ws.fisme.science.uu.nl/"), SERVLET);
                         dbAccess = new DbAccessClient(server);
                     } catch (MalformedURLException e) {
-                        log.log(Level.SEVERE,null,e);
+                        LOG.log(Level.SEVERE,null,e);
                     }
                 }
             } 

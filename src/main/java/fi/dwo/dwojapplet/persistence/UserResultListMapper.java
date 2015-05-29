@@ -30,7 +30,7 @@ import org.apache.xmlrpc.applet.XmlRpcException;
  *
  */
 class UserResultListMapper extends XmlRpcMapper {
-    private static final Logger log = Logger.getLogger(UserResultListMapper.class.getName());
+    private static final Logger LOG = Logger.getLogger(UserResultListMapper.class.getName());
 
     private static final String TABLENAME = "tblUser";
 
@@ -160,7 +160,7 @@ class UserResultListMapper extends XmlRpcMapper {
                 rs.setTotal_time(formatter.parse(total_time.toString()).getTime());
             } catch (ParseException e) {
 
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
             }
         }
         return rs;

@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class NewAction extends GuiAction {
-    private static final Logger log = Logger.getLogger(NewAction.class.getName());
+    private static final Logger LOG = Logger.getLogger(NewAction.class.getName());
 
     private final static Course STANDARD_MAP = new Course();
     private CourseMap map;
@@ -157,7 +157,7 @@ public class NewAction extends GuiAction {
             }
             PersistenceFacade.instance().setCourseSequence(courses, school);
         } catch (PersistenceException e) {
-            log.log(Level.SEVERE,null,e);
+            LOG.log(Level.SEVERE,null,e);
         }
 
     }

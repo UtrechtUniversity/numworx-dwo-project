@@ -24,10 +24,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 /**
- * This class is a panel where a user can register himself at the dwo.
- *
- * @author M.J.B. Kupers
- *
+ * This class is a panel where a known user can register himself for a (new) school.
  */
 public class RegisterKnownUserPanel extends ContentPanel implements ActionListener {
 
@@ -445,7 +442,9 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
         if (e.getSource() == registerButton) {
             if ((groupChoice.getSelectedIndex() == 0) && (schoollogin.getText().equals("")) && (schoolpassword.getText().equals(""))) {
                 try {
-                    GuiCreator.instance().register(username.getText(), password.getText(), repassword.getText(), firstname.getText(), middlename.getText(), lastname.getText(), email.getText());
+                    //TODO create PropertyClass and call manager.
+                    //todo
+                    //GuiCreator.instance().register(username.getText(), password.getText(), repassword.getText(), firstname.getText(), middlename.getText(), lastname.getText(), email.getText());
                 } catch (RegisterException exc) {
                     JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 }
@@ -455,7 +454,8 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
                     g = groupList[groupChoice.getSelectedIndex() - 1];
                 }
                 try {
-                    GuiCreator.instance().register(username.getText(), password.getText(), repassword.getText(), firstname.getText(), middlename.getText(), lastname.getText(), email.getText(), schoollogin.getText(), g, schoolpassword.getText());
+                    //username.getText(), password.getText(), schoollogin.getText(), g, schoolpassword.getText());
+                    todo
                 } catch (RegisterException exc) {
                     JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 }

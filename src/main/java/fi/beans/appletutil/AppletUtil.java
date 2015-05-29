@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  */
 public class AppletUtil {
 
-    private static final Logger log = Logger.getLogger(AppletUtil.class.getName());
+    private static final Logger LOG = Logger.getLogger(AppletUtil.class.getName());
 
     private Applet applet;
     private String packageName, language;
@@ -105,7 +105,7 @@ public class AppletUtil {
                 bos.close();
                 images.put(resourceName, buffer);
             } catch (Exception e) {
-                log.log(Level.SEVERE, null, e);
+                LOG.log(Level.SEVERE, null, e);
                 return null;
             }
         }

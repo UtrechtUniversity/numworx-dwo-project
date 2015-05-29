@@ -225,7 +225,7 @@ public class MainPanel extends BackgroundPanel {
 
 //    public void setVisible(boolean b) {
 //        Exception e = new Exception();
-//        log.log(Level.SEVERE,null,e);
+//        LOG.log(Level.SEVERE,null,e);
 //        super.setVisible(b);
 //    }
     /**

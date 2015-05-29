@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  */
 public class JPanelSchoolsRolesAndClassesProperties {
 
-    private static final Logger log = Logger.getLogger(JPanelSchoolsRolesAndClassesProperties.class.getName());
+    private static final Logger LOG = Logger.getLogger(JPanelSchoolsRolesAndClassesProperties.class.getName());
     private SchoolRoleAndClass selectedSrc;
     private SchoolsRolesAndClasses srcs;
 
@@ -27,7 +27,7 @@ public class JPanelSchoolsRolesAndClassesProperties {
             srcs = SchoolsRolesAndClassesManager.getCurrentEnlistements();
             selectedSrc = srcs.getActiveSchoolRoleAndClass();
         } catch (RestException ex) {
-            log.log(Level.SEVERE, ex.getMessage());
+            LOG.log(Level.SEVERE, ex.getMessage());
         }
     }
 
@@ -46,7 +46,7 @@ public class JPanelSchoolsRolesAndClassesProperties {
             SchoolRoleAndClass src = SchoolsRolesAndClassesManager.setActiveSchoolRoleAndClass(getSelectedSchoolRoleAndClass());
             srcs.setActiveSchoolRoleAndClass(src);
         } catch (RestException ex) {
-            log.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
     }
 

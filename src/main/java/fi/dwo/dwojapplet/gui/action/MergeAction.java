@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class MergeAction extends GuiAction {
-    private static final Logger log = Logger.getLogger(MergeAction.class.getName());
+    private static final Logger LOG = Logger.getLogger(MergeAction.class.getName());
 
     Sco dest, src;
     CourseMap map;
@@ -69,7 +69,7 @@ public class MergeAction extends GuiAction {
             }
         } catch (Exception e) {
             // TODO Auto-generated catch block
-            log.log(Level.SEVERE,null,e);
+            LOG.log(Level.SEVERE,null,e);
         }
         instance().setReady();
     }

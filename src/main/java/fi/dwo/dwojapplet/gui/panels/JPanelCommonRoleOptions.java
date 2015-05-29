@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  */
 public class JPanelCommonRoleOptions extends javax.swing.JPanel {
 
-    private static final Logger log = Logger.getLogger(JPanelCommonRoleOptions.class.getName());
+    private static final Logger LOG = Logger.getLogger(JPanelCommonRoleOptions.class.getName());
     private JPanelSchoolsRolesAndClassesProperties prop = new JPanelSchoolsRolesAndClassesProperties();
 
     /**
@@ -92,7 +92,7 @@ public class JPanelCommonRoleOptions extends javax.swing.JPanel {
         try {
             GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPasswd());
         } catch (LoginException ex) {
-            log.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
 
 
@@ -100,7 +100,7 @@ public class JPanelCommonRoleOptions extends javax.swing.JPanel {
 
     private void jButtonDeleteProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteProfileActionPerformed
         boolean r = ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIREAUTH_AREYOUSURE));
-        log.log(Level.INFO,"Result {0}", new Object[]{r});
+        LOG.log(Level.INFO,"Result {0}", new Object[]{r});
     }//GEN-LAST:event_jButtonDeleteProfileActionPerformed
 
 

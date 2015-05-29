@@ -17,7 +17,7 @@ import javax.swing.event.ListSelectionListener;
  * @author G.A.J. van der Plas
  */
 public class JPanelSchoolsRolesAndClasses extends javax.swing.JPanel {
-    private static final Logger log = Logger.getLogger(JPanelSchoolsRolesAndClasses.class.getName());
+    private static final Logger LOG = Logger.getLogger(JPanelSchoolsRolesAndClasses.class.getName());
 
     private JPanelSchoolsRolesAndClassesProperties prop = new JPanelSchoolsRolesAndClassesProperties();
     private SchoolsRolesAndClassesTableModel tableModel;
@@ -59,7 +59,7 @@ public class JPanelSchoolsRolesAndClasses extends javax.swing.JPanel {
             }
             jTextFieldSchoolRoleClass.setText(srcString);
         } catch (Exception e) {
-            log.log(Level.SEVERE, e.getMessage());
+            LOG.log(Level.SEVERE, e.getMessage());
         }
     }
 

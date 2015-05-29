@@ -17,7 +17,7 @@ import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
  */
 public class RestExample {
 
-    private static final Logger log = Logger.getLogger(RestExample.class.getName());
+    private static final Logger LOG = Logger.getLogger(RestExample.class.getName());
 
     private static String ErrorMessageInResponse(final Response response) {
         String message = response.toString();

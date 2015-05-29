@@ -41,7 +41,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
 public class UserManagementPanel extends JPanel implements CenterSubPanel {
-    private static final Logger log = Logger.getLogger(UserManagementPanel.class.getName());
+    private static final Logger LOG = Logger.getLogger(UserManagementPanel.class.getName());
 
     static class TeacherDelegate extends Teacher {
 
@@ -205,7 +205,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
                     GuiCreator.instance().login(user.getUsername(), null);
                 } catch (LoginException e) {
     
-                    log.log(Level.SEVERE,null,e);
+                    LOG.log(Level.SEVERE,null,e);
                 }
             } else if (value == model.editImage) {
                 try {
@@ -216,7 +216,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
                         JOptionPane.showMessageDialog(UserManagementPanel.this, TextMapper.getText(TextMapper.GUIP_MSG_PROFILE_CHANGED));
                     }
                 } catch (Exception e) {
-                    log.log(Level.SEVERE,null,e);
+                    LOG.log(Level.SEVERE,null,e);
                 }
             } else if (value == model.removeImage) {
                 /* Delete the school */
@@ -318,7 +318,7 @@ public class UserManagementPanel extends JPanel implements CenterSubPanel {
                 merge(u);
             } catch (PersistenceException e) {
 
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
             }
         }
         Arrays.sort(userList);

@@ -35,7 +35,7 @@ import javax.swing.SwingUtilities;
  *
  */
 public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, AppletStub, Comparable, ScoEditor {
-    private static final Logger log = Logger.getLogger(Sco.class.getName());
+    private static final Logger LOG = Logger.getLogger(Sco.class.getName());
 
     private ScoEditor editor = this;
     private PropertyChangeSupport bean = new PropertyChangeSupport(this);
@@ -293,7 +293,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
                     SetValue(TOTAL_TIME, result.toString());
                     System.err.println("sum = [" + result + "]");
                 } catch (Exception e) {
-                    log.log(Level.SEVERE,null,e);
+                    LOG.log(Level.SEVERE,null,e);
                 }
             }
             return ok("true");
@@ -583,20 +583,20 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
             } catch (RuntimeException e) {
                 //TODO Wim: Dialog: interne fout, sco niet goed afgesloten, mogelijk verlies van gegevens.
                 JOptionPane.showMessageDialog(applet, e.getMessage());
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
                 try {
 
                     User localUser = user;
                     if (localUser == null) {
                         localUser = dwo.getUser();
                     }
-                    log.log(Level.FINE, "{0} Sco {1},{2} exception in Sco.end: {3}", new Object[]{localUser.getID(), scoID, applet, e.toString()});
+                    LOG.log(Level.FINE, "{0} Sco {1},{2} exception in Sco.end: {3}", new Object[]{localUser.getID(), scoID, applet, e.toString()});
                     StringWriter w = new StringWriter();
                     PrintWriter pw = new PrintWriter(w);
                     e.printStackTrace(pw);
-                    log.log(Level.FINE,w.toString());
+                    LOG.log(Level.FINE,w.toString());
                 } catch (RuntimeException e1) {
-                    log.log(Level.SEVERE,null,e1);
+                    LOG.log(Level.SEVERE,null,e1);
                 }
             }
             applet = null;
@@ -611,7 +611,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
                 applet.stop(); // dit bepaalt wel of niet saven van sco's 
                 applet.destroy();
             } catch (RuntimeException e) {
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
             }
             applet = null;
             sc = null;

@@ -6,7 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ClassCourse {
-    private static final Logger log = Logger.getLogger(ClassCourse.class.getName());
+    private static final Logger LOG = Logger.getLogger(ClassCourse.class.getName());
 
     public static final int NORMAL = 0;
     public static final int ASSESMENT = 1;
@@ -127,7 +127,7 @@ public class ClassCourse {
         try {
             schoolClass = (SchoolClass) PersistenceFacade.instance().get(getClassID(), SchoolClass.class);
         } catch (Exception e) {
-            log.log(Level.SEVERE,null,e);
+            LOG.log(Level.SEVERE,null,e);
         }
     }
 
@@ -145,7 +145,7 @@ public class ClassCourse {
         try {
             course = (Course) PersistenceFacade.instance().get(getCourseID(), Course.class);
         } catch (Exception e) {
-            log.log(Level.SEVERE,null,e);
+            LOG.log(Level.SEVERE,null,e);
         }
 
     }

@@ -28,7 +28,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class RegisterClassListButton extends JButton implements ActionListener {
-    private static final Logger log = Logger.getLogger(RegisterClassListButton.class.getName());
+    private static final Logger LOG = Logger.getLogger(RegisterClassListButton.class.getName());
 
     JDialog frame;
     JPanel content;
@@ -156,7 +156,7 @@ public class RegisterClassListButton extends JButton implements ActionListener {
                 addTableModel.setDataVector(celStrings, columnNames);
                 return true;
             } catch (Exception e) {
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
                 return false;
             }
         } else {

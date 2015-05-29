@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 public class NoCache implements IStore {
-    private static final Logger log = Logger.getLogger(NoCache.class.getName());
+    private static final Logger LOG = Logger.getLogger(NoCache.class.getName());
 
     NoCache(DbAccessIF dbAccess) {
         this.dbAccess = dbAccess;
@@ -62,7 +62,7 @@ public class NoCache implements IStore {
             dbAccess.log(result);
         } catch (Exception e) {
             System.err.println(result);
-            log.log(Level.SEVERE,null,e);
+            LOG.log(Level.SEVERE,null,e);
         }
     }
 

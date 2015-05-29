@@ -27,7 +27,7 @@ import javax.ws.rs.core.Response;
  * @author Gert van der Plas <gertvdplas@gmail.com>
  */
 class RestManager {
-    protected static final Logger log = Logger.getLogger(RestManager.class.getName());
+    protected static final Logger LOG = Logger.getLogger(RestManager.class.getName());
     
     
     protected static final StoredRestManager instance = new StoredRestManager();
@@ -66,7 +66,7 @@ class RestManager {
     public <T> T get(String path, Class<T> c) throws RestException {
         Response response = webTargetRest.path(path).request().get();
         if (response.getStatus() != 200) {
-            log.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
+            LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
             return null;
         } else {
             return response.readEntity(c);
@@ -86,7 +86,7 @@ class RestManager {
     public <T> List<T> getList(String path, RestClassType type) throws RestException {
         Response response = webTargetRest.path(path).request().get();
         if (response.getStatus() != 200) {
-            log.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
+            LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
             return null;
         } else {
             switch (type) {
@@ -104,7 +104,7 @@ class RestManager {
                     return (List<T>) response.readEntity(pSRCType);
                 default:
                     String msg = "Error trying to get an unsupported dataType.";
-                    log.log(Level.SEVERE, msg);
+                    LOG.log(Level.SEVERE, msg);
                     throw new RestException(msg);
             }
         }
@@ -123,7 +123,7 @@ class RestManager {
     public <T> T put(String path, Class<T> c, Object o) throws RestException {
         Response response = webTargetRest.path(path).request().put(Entity.entity(o, MediaType.APPLICATION_JSON));
         if (response.getStatus() != 200) {
-            log.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
+            LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
             return null;
         } else {
             T r = response.readEntity(c);

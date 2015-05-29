@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  * @author G.A.J. van der Plas
  */
 public class JPanelAccountDataProperties {
-    private static final Logger log = Logger.getLogger(JPanelAccountDataProperties.class.getName());
+    private static final Logger LOG = Logger.getLogger(JPanelAccountDataProperties.class.getName());
     
     private PersistentUser user;
 
@@ -30,7 +30,7 @@ public class JPanelAccountDataProperties {
         try {
             user = UserProfileManager.getCurrentUser();
         } catch (RestException ex) {
-            log.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
     }
     
@@ -73,7 +73,7 @@ public class JPanelAccountDataProperties {
             // update local Global storage.
             DwoHelper.setCurrentUser(user);
         } catch (RestException ex) {
-            log.log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
         }
     }
 }

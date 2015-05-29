@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 import org.apache.xmlrpc.applet.XmlRpcException;
 
 class CourseMapper extends XmlRpcMapper {
-    private static final Logger log = Logger.getLogger(CourseMapper.class.getName());
+    private static final Logger LOG = Logger.getLogger(CourseMapper.class.getName());
 
     private static final String TABLENAME = "tblCourse";
 
@@ -80,7 +80,7 @@ class CourseMapper extends XmlRpcMapper {
                     setChildren(PersistenceFacade.instance().sequence((Course[]) get(this)));
                 } catch (Exception e) {
     
-                    log.log(Level.SEVERE,null,e);
+                    LOG.log(Level.SEVERE,null,e);
                 }
             }
             return super.getChildren();
@@ -345,7 +345,7 @@ class CourseMapper extends XmlRpcMapper {
                 c.link = (ClassCourse) MapperCreator.instance(ClassCourse.class).getObjectFromReturn(data);
             } catch (Exception e) {
 
-                log.log(Level.SEVERE,null,e);
+                LOG.log(Level.SEVERE,null,e);
             }
         } else {
             if (c.link != null) {

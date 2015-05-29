@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  * @author G.A.J. van der Plas
  */
 public class StoredRestManager extends RestManager {
-    private static final Logger log = Logger.getLogger(StoredRestManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(StoredRestManager.class.getName());
 
     @Override
     public <T> T get(String path, Class<T> c) throws RestException {
