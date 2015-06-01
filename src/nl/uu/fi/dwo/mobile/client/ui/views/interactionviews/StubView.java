@@ -56,7 +56,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	private int height;
 	private boolean volledigeBreedte;
 	private PopupFacade facade;
-	private FormuleFont defaultFont = FormuleFont.createFromFontSize(18);
+	private static FormuleFont defaultFont = FormuleFont.createFromFontSize(18);
 	private HandlerRegistration loadhandler;
 
 	public StubView(String html, HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap randomVarWaarden)
@@ -357,7 +357,11 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		inner.insert(text);
 	}-*/;
 	
-
+	public static void createDefaultFont(int size) {
+		defaultFont = FormuleFont.createFromFontSize(size);
+	}
+	
+	
 	@Override
 	public FormuleFont getDefaultFont() {
 		return defaultFont;
@@ -578,7 +582,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	
 	@Override
 	public int getAsHoogte() {
-		return facade.wrapAsHoogte(0);
+		return facade.wrapAsHoogte(defaultFont.getAscent());
 	}
 
 	@Override

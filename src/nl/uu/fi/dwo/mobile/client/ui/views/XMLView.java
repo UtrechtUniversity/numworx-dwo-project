@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVak;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.utils.StringCodeToHashMap;
@@ -113,6 +114,7 @@ public abstract class XMLView {
 			boolean formTimes = wrap.containsKey("formTimes") && wrap.getBoolean("formTimes"); // optional
 			FormuleFont.zetFormTimes(formTimes);
 			FormuleHolder.setDefaultActiviteitFont(FormuleFont.createFromFontSize(font_size));
+			StubView.createDefaultFont(font_size);
 			//AntwoordKeuzeVakGWT.setFontSize(font_size);
 			defaultFontSize = font_size;
 			defaultFontName = font_name;
