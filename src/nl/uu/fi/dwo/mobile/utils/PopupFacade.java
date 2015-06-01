@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
+import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.PopupButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
 import static nl.uu.fi.dwo.mobile.utils.ImageUtils.newImage;
@@ -163,7 +164,7 @@ public class PopupFacade implements InteractionView, FacetAware {
 	@Override
 	public int getAsHoogte() {
 		if(popup) // wat is de ashoogte van de button? altijd dezelfde waarde: regelhoogte van het default font
-			return 17;
+			return XMLView.getDefaultFontSize() + 1;
 		return delegate.getAsHoogte();
 	}
 
