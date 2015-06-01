@@ -25,6 +25,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -62,6 +63,8 @@ public final class DwoHelper {
     private static PersistentUser currentUser; // null if none available.
     private static PersistentRole currentRole; // null if none available.
     private static List<PersistentRole> roles;
+    //TODO fix locale to be set within DWO_main.
+    private static Locale locale = new Locale.Builder().setLanguage("nl").setRegion("NL").build(); //runtime property for locale.
 
 
     /**
@@ -84,6 +87,20 @@ public final class DwoHelper {
     @Deprecated
     public static void setPlainPassword(String aPlainPassword) {
         plainPassword = aPlainPassword;
+    }
+
+    /**
+     * @return the locale
+     */
+    public static Locale getLocale() {
+        return locale;
+    }
+
+    /**
+     * @param aLocale the locale to set
+     */
+    public static void setLocale(Locale aLocale) {
+        locale = aLocale;
     }
 
     public void init() throws RestException {

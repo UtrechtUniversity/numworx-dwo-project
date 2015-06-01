@@ -445,6 +445,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
         if (e.getSource() == registerButton) {
             if ((groupChoice.getSelectedIndex() == 0) && (schoollogin.getText().equals("")) && (schoolpassword.getText().equals(""))) {
                 try {
+                    new accountRegistration manager and let us do automagical login.
                     GuiCreator.instance().register(username.getText(), password.getText(), repassword.getText(), firstname.getText(), middlename.getText(), lastname.getText(), email.getText());
                 } catch (RegisterException exc) {
                     JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
@@ -455,6 +456,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
                     g = groupList[groupChoice.getSelectedIndex() - 1];
                 }
                 try {
+                    new accountRegistration manager and let us do automagical login.
                     GuiCreator.instance().register(username.getText(), password.getText(), repassword.getText(), firstname.getText(), middlename.getText(), lastname.getText(), email.getText(), schoollogin.getText(), g, schoolpassword.getText());
                 } catch (RegisterException exc) {
                     JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
