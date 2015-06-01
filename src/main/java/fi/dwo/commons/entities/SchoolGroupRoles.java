@@ -12,10 +12,11 @@ package fi.dwo.commons.entities;
  * @author plas0006
  */
 public class SchoolGroupRoles {
-	public static final int STUDENT = 1;
+	public static final int NONE = 0; //reserved for future use.
+	public static final int STUDENT = 1; 
 	public static final int TEACHER = 2;
 	public static final int ADMIN = 3;
-	public static final int DIGICODE = 4;
+	public static final int NOSCHOOL = 4;
 	public static final int SCHOOLADMIN = 5;
-	public static final int LENGTH = 6;     
+	public static final int LENGTH = 5;     
 }

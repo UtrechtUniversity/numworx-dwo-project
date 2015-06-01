@@ -5,6 +5,7 @@
  */
 package fi.dwo.commons.rest.entities;
 
+import fi.dwo.commons.persistence.entities.PersistentRole;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -24,6 +25,7 @@ public class NewUserRegistration {
     private String email;
     private String schoolLogin;
     private String schoolCode;
+    private PersistentRole role;
 
     /**
      * @return the GivenName
@@ -149,6 +151,20 @@ public class NewUserRegistration {
      */
     public void setSchoolCode(String schoolCode) {
         this.schoolCode = schoolCode;
+    }
+
+    /**
+     * @return the role
+     */
+    public PersistentRole getRole() {
+        return role;
+    }
+
+    /**
+     * @param role the role to set
+     */
+    public void setRole(PersistentRole role) {
+        this.role = role;
     }
     
 }

@@ -172,7 +172,15 @@ public class PersistentSchool implements Serializable {
         }
         return true;
     }
-
+    public boolean licenseIsValid(){
+    if(getExpire()==null ||getExpire().before(new Date()))
+        {
+            return false;
+        }
+    
+        return true;
+    }
+    
     @Override
     public String toString() {
         return "fi.dwo.server.persistence.PersistentSchool[ schoolID=" + schoolID + " ]";
