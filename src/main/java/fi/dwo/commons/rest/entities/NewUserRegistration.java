@@ -22,6 +22,8 @@ public class NewUserRegistration {
     private String FamilyName;
     private String lastName;
     private String email;
+    private String schoolLogin;
+    private String schoolCode;
 
     /**
      * @return the GivenName
@@ -119,6 +121,34 @@ public class NewUserRegistration {
      */
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    /**
+     * @return the schoolLogin
+     */
+    public String getSchoolLogin() {
+        return schoolLogin;
+    }
+
+    /**
+     * @param schoolLogin the schoolLogin to set
+     */
+    public void setSchoolLogin(String schoolLogin) {
+        this.schoolLogin = schoolLogin;
+    }
+
+    /**
+     * @return the schoolCode
+     */
+    public String getSchoolCode() {
+        return schoolCode;
+    }
+
+    /**
+     * @param schoolCode the schoolCode to set
+     */
+    public void setSchoolCode(String schoolCode) {
+        this.schoolCode = schoolCode;
     }
     
 }
