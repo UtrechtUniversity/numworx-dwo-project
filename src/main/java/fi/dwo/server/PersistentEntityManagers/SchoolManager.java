@@ -5,7 +5,7 @@
  */
 package fi.dwo.server.PersistentEntityManagers;
 
-import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.persistence.exceptions.NonexistentEntityException;
 import java.util.List;
@@ -24,9 +24,9 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class UserManager {
+public class SchoolManager {
 
-    private static final Logger LOG = Logger.getLogger(UserManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(SchoolManager.class.getName());
 
     private static EntityManager getEntityManager() {
         EntityManager em = DwoEmfFactory.createEntityManager();
@@ -36,17 +36,17 @@ public class UserManager {
     /**
      * Create.
      *
-     * @param persistentUser
+     * @param school
      */
-    public static void create(PersistentUser persistentUser) throws PersistenceException {
+    public static void create(PersistentSchool school) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            em.persist(persistentUser);
+            em.persist(school);
             em.getTransaction().commit();
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the user.", e);
+            LOG.log(Level.SEVERE, "Can't create the school.", e);
             throw new PersistenceException(e);
         } finally {
             if (em != null) {
@@ -58,23 +58,23 @@ public class UserManager {
     /**
      * Update
      *
-     * @param persistentUser
+     * @param school
      * @throws NonexistentEntityException
      * @throws Exception
      */
-    public static void edit(PersistentUser persistentUser) throws PersistenceException, Exception {
+    public static void edit(PersistentSchool school) throws PersistenceException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            persistentUser = em.merge(persistentUser);
+            school = em.merge(school);
             em.getTransaction().commit();
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = persistentUser.getUserID();
-                if (findPersistentUser(id) == null) {
-                    LOG.log(Level.FINE, "The persistentUser with " + id + " no longer exists.", e);
+                Integer id = school.getSchoolID();
+                if (findPersistentSchool(id) == null) {
+                    LOG.log(Level.FINE, "The persistentSchool with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
                 }
             }
@@ -97,15 +97,15 @@ public class UserManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            PersistentUser persistentUser = null;
+                PersistentSchool school = null;
             try {
-                persistentUser = em.getReference(PersistentUser.class, id);
-                persistentUser.getUserID();
+                school = em.getReference(PersistentSchool.class, id);
+                school.getSchoolID();
             } catch (EntityNotFoundException e) {
-                LOG.log(Level.FINE, "The persistentUser with " + id + " no longer exists.", e);
+                LOG.log(Level.FINE, "The persistentSchool with " + id + " no longer exists.", e);
                 throw new PersistenceException(e);
             }
-            em.remove(persistentUser);
+            em.remove(school);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -114,19 +114,19 @@ public class UserManager {
         }
     }
 
-    public static List<PersistentUser> findPersistentUserEntities() {
-        return findPersistentUserEntities(true, -1, -1);
+    public static List<PersistentSchool> findPersistentSchoolEntities() {
+        return findPersistentSchoolEntities(true, -1, -1);
     }
 
-    public static List<PersistentUser> findPersistentUserEntities(int maxResults, int firstResult) {
-        return findPersistentUserEntities(false, maxResults, firstResult);
+    public static List<PersistentSchool> findPersistentSchoolEntities(int maxResults, int firstResult) {
+        return findPersistentSchoolEntities(false, maxResults, firstResult);
     }
 
-    private static List<PersistentUser> findPersistentUserEntities(boolean all, int maxResults, int firstResult) {
+    private static List<PersistentSchool> findPersistentSchoolEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(PersistentUser.class));
+            cq.select(cq.from(PersistentSchool.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -138,20 +138,20 @@ public class UserManager {
         }
     }
 
-    public static PersistentUser findPersistentUser(Integer id) {
+    public static PersistentSchool findPersistentSchool(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(PersistentUser.class, id);
+            return em.find(PersistentSchool.class, id);
         } finally {
             em.close();
         }
     }
 
-    public static int getPersistentUserCount() {
+    public static int getPersistentSchoolCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<PersistentUser> rt = cq.from(PersistentUser.class);
+            Root<PersistentSchool> rt = cq.from(PersistentSchool.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
@@ -160,41 +160,19 @@ public class UserManager {
         }
     }
 
-    public static PersistentUser findByUserName(String userName) {
+    public static PersistentSchool findBySchoolName(String schoolName) {
         EntityManager em = DwoEmfFactory.createEntityManager();
-        PersistentUser user = null;
+        PersistentSchool school = null;
         try {
-            javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
-            q.setParameter("username", userName);
-            user = (PersistentUser) q.getSingleResult();
-            LOG.log(Level.FINE, "User-manager retrieved user with username {0}", new Object[]{user.getUsername()});
+            javax.persistence.Query q = em.createNamedQuery("PersistentSchool.findBySchoolName");
+            q.setParameter("schoolname", schoolName);
+            school = (PersistentSchool) q.getSingleResult();
+            LOG.log(Level.FINE, "School-manager retrieved school with school {0}", new Object[]{school.getSchoolName()});
         } finally {
             em.close();
         }
-        return user;
+        return school;
     }
 
-    /**
-     * User manager. Resolves links.
-     *
-     * @param sc
-     * @return Returns null if there was an error or login failed.
-     */
-    public static PersistentUser login(String userName, String passwd) {
-        PersistentUser user = null;
-        EntityManager em = getEntityManager();
-        try {
-            javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
-            q.setParameter("username", userName);
-            user = (PersistentUser) q.getSingleResult();
-            if (user.getPasswd().compareTo(passwd) != 0) {
-                return null;
-            }
-            LOG.log(Level.INFO, "Login accepted for user with username {0}", new Object[]{userName});
-        } finally {
-            em.close();
-        }
-        return user;
-    }
 
 }

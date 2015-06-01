@@ -5,7 +5,8 @@
  */
 package fi.dwo.server.PersistentEntityManagers;
 
-import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.persistence.entities.PersistentHasRole;
+import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.persistence.exceptions.NonexistentEntityException;
 import java.util.List;
@@ -24,9 +25,9 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class UserManager {
+public class HasRoleManager {
 
-    private static final Logger LOG = Logger.getLogger(UserManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(HasRoleManager.class.getName());
 
     private static EntityManager getEntityManager() {
         EntityManager em = DwoEmfFactory.createEntityManager();
@@ -36,17 +37,17 @@ public class UserManager {
     /**
      * Create.
      *
-     * @param persistentUser
+     * @param role
      */
-    public static void create(PersistentUser persistentUser) throws PersistenceException {
+    public static void create(PersistentHasRole hasRole) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            em.persist(persistentUser);
+            em.persist(hasRole);
             em.getTransaction().commit();
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the user.", e);
+            LOG.log(Level.SEVERE, "Can't create the hasRole.", e);
             throw new PersistenceException(e);
         } finally {
             if (em != null) {
@@ -58,23 +59,23 @@ public class UserManager {
     /**
      * Update
      *
-     * @param persistentUser
+     * @param role
      * @throws NonexistentEntityException
      * @throws Exception
      */
-    public static void edit(PersistentUser persistentUser) throws PersistenceException, Exception {
+    public static void edit(PersistentHasRole hasRole) throws PersistenceException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            persistentUser = em.merge(persistentUser);
+            hasRole = em.merge(hasRole);
             em.getTransaction().commit();
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = persistentUser.getUserID();
-                if (findPersistentUser(id) == null) {
-                    LOG.log(Level.FINE, "The persistentUser with " + id + " no longer exists.", e);
+                PersistentHasRolePK id = hasRole.getPersistentHasRolePK();
+                if (findPersistentHasRole(id) == null) {
+                    LOG.log(Level.FINE, "The persistentSchool with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
                 }
             }
@@ -92,20 +93,20 @@ public class UserManager {
      * @param id
      * @throws NonexistentEntityException
      */
-    public static void destroy(Integer id) throws PersistenceException {
+    public static void destroy(PersistentHasRolePK id) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            PersistentUser persistentUser = null;
+                PersistentHasRole role = null;
             try {
-                persistentUser = em.getReference(PersistentUser.class, id);
-                persistentUser.getUserID();
+                role = em.getReference(PersistentHasRole.class, id);
+                role.getPersistentHasRolePK();
             } catch (EntityNotFoundException e) {
-                LOG.log(Level.FINE, "The persistentUser with " + id + " no longer exists.", e);
+                LOG.log(Level.FINE, "The PersistentHasRole with " + id + " no longer exists.", e);
                 throw new PersistenceException(e);
             }
-            em.remove(persistentUser);
+            em.remove(role);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -114,19 +115,19 @@ public class UserManager {
         }
     }
 
-    public static List<PersistentUser> findPersistentUserEntities() {
-        return findPersistentUserEntities(true, -1, -1);
+    public static List<PersistentHasRole> findPersistentHasRoleEntities() {
+        return findPersistentHasRoleEntities(true, -1, -1);
     }
 
-    public static List<PersistentUser> findPersistentUserEntities(int maxResults, int firstResult) {
-        return findPersistentUserEntities(false, maxResults, firstResult);
+    public static List<PersistentHasRole> findPersistentHasRoleEntities(int maxResults, int firstResult) {
+        return findPersistentHasRoleEntities(false, maxResults, firstResult);
     }
 
-    private static List<PersistentUser> findPersistentUserEntities(boolean all, int maxResults, int firstResult) {
+    private static List<PersistentHasRole> findPersistentHasRoleEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(PersistentUser.class));
+            cq.select(cq.from(PersistentHasRole.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -138,20 +139,20 @@ public class UserManager {
         }
     }
 
-    public static PersistentUser findPersistentUser(Integer id) {
+    public static PersistentHasRole findPersistentHasRole(PersistentHasRolePK id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(PersistentUser.class, id);
+            return em.find(PersistentHasRole.class, id);
         } finally {
             em.close();
         }
     }
 
-    public static int getPersistentUserCount() {
+    public static int getPersistentHasRoleCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<PersistentUser> rt = cq.from(PersistentUser.class);
+            Root<PersistentHasRole> rt = cq.from(PersistentHasRole.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
@@ -159,42 +160,4 @@ public class UserManager {
             em.close();
         }
     }
-
-    public static PersistentUser findByUserName(String userName) {
-        EntityManager em = DwoEmfFactory.createEntityManager();
-        PersistentUser user = null;
-        try {
-            javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
-            q.setParameter("username", userName);
-            user = (PersistentUser) q.getSingleResult();
-            LOG.log(Level.FINE, "User-manager retrieved user with username {0}", new Object[]{user.getUsername()});
-        } finally {
-            em.close();
-        }
-        return user;
-    }
-
-    /**
-     * User manager. Resolves links.
-     *
-     * @param sc
-     * @return Returns null if there was an error or login failed.
-     */
-    public static PersistentUser login(String userName, String passwd) {
-        PersistentUser user = null;
-        EntityManager em = getEntityManager();
-        try {
-            javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
-            q.setParameter("username", userName);
-            user = (PersistentUser) q.getSingleResult();
-            if (user.getPasswd().compareTo(passwd) != 0) {
-                return null;
-            }
-            LOG.log(Level.INFO, "Login accepted for user with username {0}", new Object[]{userName});
-        } finally {
-            em.close();
-        }
-        return user;
-    }
-
 }
