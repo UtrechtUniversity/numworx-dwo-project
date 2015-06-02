@@ -10,6 +10,7 @@ package fi.dwo.commons.exceptions;
  * @author Gert van der Plas
  */
 public enum Dwo2ExceptionCode {
-    User_AuthenticationError, // Illegal user details
-    Rest_InterfaceError, // Rest interface threw an error.
+    Rest_InternalError, //Internal software error, a stack trace should be acquired.
+    User_AuthenticationError, // Illegal account details.
+    Rest_InterfaceError, // Error due to an improper Rest-interface.
 }

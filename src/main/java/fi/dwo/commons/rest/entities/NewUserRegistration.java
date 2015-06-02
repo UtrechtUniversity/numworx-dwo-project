@@ -27,6 +27,9 @@ public class NewUserRegistration {
     private String schoolCode;
     private PersistentRole role;
 
+    
+    public NewUserRegistration(){};
+    
     /**
      * @return the GivenName
      */
