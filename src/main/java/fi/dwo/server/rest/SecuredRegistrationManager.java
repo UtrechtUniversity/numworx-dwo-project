@@ -28,6 +28,7 @@ import javax.ws.rs.core.SecurityContext;
  *
  * @author Gert van der Plas
  */
+@Path("/secure/registration")
 public class SecuredRegistrationManager {
 
     private static final Logger LOG = Logger.getLogger(SecuredRegistrationManager.class.getName());
@@ -41,7 +42,7 @@ public class SecuredRegistrationManager {
      */
     @PUT
     @Produces({"application/json"})
-    @Path("/registerExistingUser/json")
+    @Path("/ExistingUser/json")
     public boolean registerExistingUser(@Context SecurityContext sc, NewUserRegistration existingUserReg) {
         EntityManager em = DwoEmfFactory.createEntityManager();
 

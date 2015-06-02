@@ -42,7 +42,7 @@ public class PublicRegistrationManager {
      */
     @PUT
     @Produces({"application/json"})
-    @Path("/registerNewUser/json")
+    @Path("/newUser/json")
     public boolean registerNewUser(@Context SecurityContext sc, NewUserRegistration newUserReg) {
         EntityManager em = DwoEmfFactory.createEntityManager();
 
