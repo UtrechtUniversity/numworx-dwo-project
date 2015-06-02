@@ -5,6 +5,8 @@
  */
 package fi.dwo.dwojapplet.REST;
 
+import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
+import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.rest.RestClassType;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.commons.persistence.entities.PersistentUser;
@@ -19,17 +21,17 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
- 
+
 /**
- * This is the plain and direct restManager. Please use the {@Link StoredRestManager} to 
- * minimize memory use.
+ * This is the plain and direct restManager. Please use the
+ * {@Link StoredRestManager} to minimize memory use.
  *
  * @author Gert van der Plas <gertvdplas@gmail.com>
  */
 class RestManager {
+
     protected static final Logger LOG = Logger.getLogger(RestManager.class.getName());
-    
-    
+
     protected static final StoredRestManager instance = new StoredRestManager();
     protected static WebTarget webTargetRest;
 
@@ -63,11 +65,13 @@ class RestManager {
      * @return A list of class c objects.
      * @throws RestException
      */
-    public <T> T get(String path, Class<T> c) throws RestException {
+    public <T> T get(String path, Class<T> c) throws Dwo2RestException {
         Response response = webTargetRest.path(path).request().get();
         if (response.getStatus() != 200) {
             LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
-            return null;
+            Dwo2RestException e = Dwo2RestException.decodeJSON((String) response.getEntity());
+            LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getCode().name(),e.getDwo2Message()});
+            throw e;
         } else {
             return response.readEntity(c);
         }
@@ -83,11 +87,13 @@ class RestManager {
      * @return A list of Class c.
      * @throws RestException
      */
-    public <T> List<T> getList(String path, RestClassType type) throws RestException {
+    public <T> List<T> getList(String path, RestClassType type) throws Dwo2RestException {
         Response response = webTargetRest.path(path).request().get();
         if (response.getStatus() != 200) {
             LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
-            return null;
+            Dwo2RestException e = Dwo2RestException.decodeJSON((String) response.getEntity());
+            LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getCode().name(),e.getDwo2Message()});
+            throw e;
         } else {
             switch (type) {
                 case PersistentUser:
@@ -105,7 +111,7 @@ class RestManager {
                 default:
                     String msg = "Error trying to get an unsupported dataType.";
                     LOG.log(Level.SEVERE, msg);
-                    throw new RestException(msg);
+                    throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError,msg);
             }
         }
     }
@@ -120,16 +126,18 @@ class RestManager {
      * @return A list of class c objects.
      * @throws RestException
      */
-    public <T> T put(String path, Class<T> c, Object o) throws RestException {
+    public <T> T put(String path, Class<T> c, Object o) throws Dwo2RestException {
         Response response = webTargetRest.path(path).request().put(Entity.entity(o, MediaType.APPLICATION_JSON));
         if (response.getStatus() != 200) {
-            LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
-            return null;
-        } else {
+             LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
+            Dwo2RestException e = Dwo2RestException.decodeJSON((String) response.getEntity());
+            LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getCode().name(),e.getDwo2Message()});
+            throw e;
+       } else {
             T r = response.readEntity(c);
             return (r);
         }
     }
     //
-    
+
 }
