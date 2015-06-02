@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
@@ -160,6 +161,12 @@ public class UserManager {
         }
     }
 
+    /**
+     * returns null if no user with that name was found.
+     * 
+     * @param userName
+     * @return 
+     */
     public static PersistentUser findByUserName(String userName) {
         EntityManager em = DwoEmfFactory.createEntityManager();
         PersistentUser user = null;
@@ -168,17 +175,21 @@ public class UserManager {
             q.setParameter("username", userName);
             user = (PersistentUser) q.getSingleResult();
             LOG.log(Level.FINE, "User-manager retrieved user with username {0}", new Object[]{user.getUsername()});
-        } finally {
+        }catch(NoResultException e){
+            return null;
+        }catch(Exception e){
+            throw new PersistenceException(e);
+        }finally {
             em.close();
         }
         return user;
     }
 
     /**
-     * User manager. Resolves links.
+     * User manager. Returns null if login validation failed.
      *
      * @param sc
-     * @return Returns null if there was an error or login failed.
+     * @return 
      */
     public static PersistentUser login(String userName, String passwd) {
         PersistentUser user = null;

@@ -5,6 +5,8 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
+import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
@@ -45,11 +47,10 @@ public class PublicRegistrationManager {
     @Path("/newUser/json")
     public boolean registerNewUser(@Context SecurityContext sc, NewUserRegistration newUserReg) {
         EntityManager em = DwoEmfFactory.createEntityManager();
-
-        //Check for userid, should not exist.
-        PersistentUser u = UserManager.findByUserName(newUserReg.getUsername());
+        PersistentUser u;
+            u = UserManager.findByUserName(newUserReg.getUsername());
         if (u != null) {
-            return false;
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_UserName_exists, "User with user id " + u.getUsername() + " already exists.");
         }
         //invariant: usercode does not exists
 
@@ -61,26 +62,28 @@ public class PublicRegistrationManager {
             q.setParameter("schoollogin", newUserReg.getSchoolLogin());
             q.setParameter("schoolcode", newUserReg.getSchoolCode());
             q.setParameter("role", (newUserReg.getRole()));
+            Error is here
+            ! Type mismatch
+            .
             sg = (PersistentSchoolGroup) q.getSingleResult();
             school = sg.getSchool(); // Sadly, another query.
-            if(school == null){
+            if (school == null) {
                 LOG.log(Level.INFO, "Registration failde for school {0} with school login {1} and school code {2} for usercode {3}.", new Object[]{school.getSchoolName(), newUserReg.getSchoolLogin(), newUserReg.getSchoolCode(), newUserReg.getUsername()});
                 return false;
             }
-        //invariant: usercode does not exists and a school exists for schoollogin and schoolcode
+            //invariant: usercode does not exists and a school exists for schoollogin and schoolcode
             LOG.log(Level.FINE, "School-manager retrieved school {0} from school login and school code for usercode {3}.", new Object[]{school.getSchoolName(), newUserReg.getSchoolLogin(), newUserReg.getSchoolCode(), newUserReg.getUsername()});
         } catch (Exception ex) {
             LOG.log(Level.WARNING, "Unexpected software error.", ex);
-            return false;
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Unknown error.");
         } finally {
             em.close();
         }
 
-        if(!school.licenseIsValid())
-        {
+        if (!school.licenseIsValid()) {
             return false;
         }
-        
+
         Date now = new Date();
 
         //invariant: usercode does not exists and school exists for schoollogin and schoolcode and has a valid licence.
@@ -97,10 +100,10 @@ public class PublicRegistrationManager {
         //add user
         UserManager.create(user);
         user = UserManager.findByUserName(user.getUsername());
-        
+
         // building hasRole
         PersistentHasRole hasRole = new PersistentHasRole();
-            // buiding compound key hasRole
+        // buiding compound key hasRole
         PersistentHasRolePK pk = new PersistentHasRolePK();
         pk.setSchoolGroupID(sg.getSchoolGroupID());
         pk.setUserID(user.getUserID());
@@ -113,4 +116,4 @@ public class PublicRegistrationManager {
         //success
         return true;
     }
- }
+}

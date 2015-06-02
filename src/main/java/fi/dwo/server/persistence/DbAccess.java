@@ -25,9 +25,9 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 
 import fi.beans.jdbc.DbConnect;
 import fi.beans.scorm2xml.Scorm2Xml;
-import fi.dwo.commons.entities.SchoolGroupRoles;
 //import fi.dwo.client.domain.SchoolGroup;
 import fi.dwo.commons.persistence.DbAccessIF;
+import fi.dwo.commons.persistence.SchoolGroupIndices;
 //import fi.dwo.client.persistence.PersistenceFacade;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -1525,8 +1525,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             throws DwoXmlRpcException, SQLException {
         Hashtable result = getRecord("tblSchool", "schoolID", schoolID);
         updateSchoolNameLogin(schoolID, schoolName, schoolLogin, result);
-        updateSchoolGroupPasswd(schoolID, SchoolGroupRoles.STUDENT, studentPassw);
-        updateSchoolGroupPasswd(schoolID, SchoolGroupRoles.TEACHER, teacherPassw);
+        updateSchoolGroupPasswd(schoolID, SchoolGroupIndices.STUDENT, studentPassw);
+        updateSchoolGroupPasswd(schoolID, SchoolGroupIndices.TEACHER, teacherPassw);
         result = getRecord("tblSchool", "schoolID", schoolID);
         return result;
     }
