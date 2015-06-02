@@ -60,7 +60,7 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
 
 
     /**
-     * Creates a new RegisterPanel. At the registerpanel, a user can register
+     * Creates a new RegisterPanel. At the register panel, a user can register
      * himself.
      *
      * @param groups The possible groups wherefrom a user can be part of.
@@ -441,24 +441,24 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == registerButton) {
             if ((groupChoice.getSelectedIndex() == 0) && (schoollogin.getText().equals("")) && (schoolpassword.getText().equals(""))) {
-                try {
+    //            try {
                     //TODO create PropertyClass and call manager.
                     //todo
                     //GuiCreator.instance().register(username.getText(), password.getText(), repassword.getText(), firstname.getText(), middlename.getText(), lastname.getText(), email.getText());
-                } catch (RegisterException exc) {
-                    JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
-                }
-            } else {
+//                } catch (RegisterException exc) {
+//                    JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+//                }
+//            } else {
                 Group g = null;
                 if (groupChoice.getSelectedIndex() > 0) {
                     g = groupList[groupChoice.getSelectedIndex() - 1];
                 }
-                try {
-                    //username.getText(), password.getText(), schoollogin.getText(), g, schoolpassword.getText());
-                    todo
-                } catch (RegisterException exc) {
-                    JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
-                }
+//                try {
+//                    //username.getText(), password.getText(), schoollogin.getText(), g, schoolpassword.getText());
+//                    todo
+//                } catch (RegisterException exc) {
+//                    JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+//                }
             }
         } else if (e.getSource() == resetButton) {
             username.setText("");

@@ -2,10 +2,14 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\RegisterNewUserPanel.java
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.exceptions.RegisterException;
+import fi.dwo.commons.exceptions.Dwo2RestException;
+import fi.dwo.commons.persistence.RoleType;
+import fi.dwo.commons.persistence.entities.PersistentRole;
+import fi.dwo.commons.rest.entities.NewUserRegistration;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Group;
+import fi.dwo.dwojapplet.domain.rest.RegistrationManager;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -445,10 +449,20 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
         if (e.getSource() == registerButton) {
             if ((groupChoice.getSelectedIndex() == 0) && (schoollogin.getText().equals("")) && (schoolpassword.getText().equals(""))) {
                 try {
-                    new accountRegistration manager and let us do automagical login.
-                    GuiCreator.instance().register(username.getText(), password.getText(), repassword.getText(), firstname.getText(), middlename.getText(), lastname.getText(), email.getText());
-                } catch (RegisterException exc) {
-                    JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                    NewUserRegistration nur = new NewUserRegistration();
+                    
+                    nur.setUsername(username.getText());
+                    nur.setPassword(password.getText());
+                    nur.setGivenName(firstname.getText());
+                    nur.setInsertion(middlename.getText());
+                    nur.setFamilyName(lastname.getText());
+                    nur.setSchoolLogin("Nul");
+                    nur.setSchoolCode("Nul");
+                    do fix the proper school login and code. It should be set int mysql database properties.
+                    RegistrationManager.RegisterNewUser(nur); //throws Dwo2RestException.
+//                    GuiCreator.instance().register(username.getText(), password.getText(), repassword.getText(), firstname.getText(), middlename.getText(), lastname.getText(), email.getText());
+                } catch (Dwo2RestException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 }
             } else {
                 Group g = null;
@@ -456,10 +470,18 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
                     g = groupList[groupChoice.getSelectedIndex() - 1];
                 }
                 try {
-                    new accountRegistration manager and let us do automagical login.
-                    GuiCreator.instance().register(username.getText(), password.getText(), repassword.getText(), firstname.getText(), middlename.getText(), lastname.getText(), email.getText(), schoollogin.getText(), g, schoolpassword.getText());
-                } catch (RegisterException exc) {
-                    JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                    NewUserRegistration nur = new NewUserRegistration();
+                    nur.setUsername(username.getText());
+                    nur.setPassword(password.getText());
+                    nur.setGivenName(firstname.getText());
+                    nur.setInsertion(middlename.getText());
+                    nur.setFamilyName(lastname.getText());
+                    nur.setRole(new PersistentRole(RoleType.valueOf(g.getName())));
+                    nur.setSchoolLogin(schoollogin.getText());
+                    nur.setSchoolCode(schoolpassword.getText());
+                    RegistrationManager.RegisterNewUser(nur); //throws Dwo2RestException.
+                } catch (Dwo2RestException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 }
             }
         } else if (e.getSource() == resetButton) {

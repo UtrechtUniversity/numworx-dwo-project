@@ -37,7 +37,7 @@ public class RoleManager {
 //        roles =  StoredRestManager.getWebTargetRest().path("/rest/public/roles/get/json").request().get(oClass);
 //        LOG.log(Level.FINER, "Fetched {0} roles.", new Object[]{roles.size()});
 //        return roles;
-        roles = StoredRestManager.getInstance().getList("/rest/secure/user/userprofile/get/json", RestClassType.PersistentRole);
+        roles = StoredRestManager.getInstance().getList("/rest/public/roles/get/json", RestClassType.PersistentRole);
         return roles;
 
     
