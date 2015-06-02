@@ -5,6 +5,7 @@
  */
 package fi.dwo.commons.persistence.entities;
 
+import fi.dwo.commons.persistence.RoleType;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -34,6 +35,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentRole.findByGroupID", query = "SELECT p FROM PersistentRole p WHERE p.groupID = :groupID"),
     @NamedQuery(name = "PersistentRole.findByGroupname", query = "SELECT p FROM PersistentRole p WHERE p.groupname = :groupname")})
 public class PersistentRole implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,6 +59,11 @@ public class PersistentRole implements Serializable {
 
     public PersistentRole(Integer groupID) {
         this.groupID = groupID;
+    }
+
+    public PersistentRole(RoleType type) {
+        this.groupID = type.ordinal();
+        this.groupname = type.name();
     }
 
     public PersistentRole(Integer groupID, String groupname, String description) {
@@ -113,5 +120,5 @@ public class PersistentRole implements Serializable {
     public String toString() {
         return "fi.dwo.server.persistence.PersistentRole[ groupID=" + groupID + " ]";
     }
-    
+
 }

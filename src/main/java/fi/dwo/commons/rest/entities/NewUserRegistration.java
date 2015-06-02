@@ -15,7 +15,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class NewUserRegistration {
-    //GuiCreator.instance().register( lastname.getText(), email.getText());
     private String username;
     private String password;
     private String GivenName;
@@ -28,8 +27,9 @@ public class NewUserRegistration {
     private PersistentRole role;
 
     
-    public NewUserRegistration(){};
-    
+    public NewUserRegistration(){
+        
+    }
     /**
      * @return the GivenName
      */
