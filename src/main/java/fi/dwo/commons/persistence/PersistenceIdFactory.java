@@ -9,7 +9,7 @@ import java.util.logging.Logger;
  *
  * @see MySQLPeristenceId.
  *
- * @author Gert van der Plas <gertvdplas@gmail.com>
+ * @author G.A.J. van der Plas
  */
 public class PersistenceIdFactory {
 

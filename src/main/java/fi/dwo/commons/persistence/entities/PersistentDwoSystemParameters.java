@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/* Copyrighted 2015.  */
 package fi.dwo.commons.persistence.entities;
 
 import java.io.Serializable;
@@ -13,17 +9,36 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.ws.rs.GET;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 
 /**
- *
- * @author plas0006
+ * PersistentDwoSystemParameters stores database model dependent parameters. 
+ * 
+ * <center>
+ * <table border=1 frame=hsides rules=rows> 
+ * <tr><th>variable name </th><th> data type </th><th> db model version</th></tr>
+ * <tr><td>DBVersion Major </td><td> integer as string</td><td> v1.2</td></tr>
+ * <tr><td>DBVersion Minor</td><td>int as string</td><td>v1.2</td></tr>
+ * <tr><td>DBVersion Revision</td><td>int as string</td><td>v1.2</td></tr>
+ * <tr><td>DBVersion Built</td><td>int as string</td><td>v1.2</td></tr>
+ * <tr><td>DBPlatform</td><td>string</td><td>v1.3</td></tr>
+ * <tr><td>DwoSchoolIndex</td><td>int as string</td><td>v1.3</td></tr>
+ * <tr><td>NoSchoolIndex</td><td>int as string</td><td>v1.3</td></tr>
+ * </table>
+ * </center>
+ * 
+ * <ul>
+ * <li>DwoSchoolIndex is the index of the DwoSchool. 
+ * <li> NoSchoolIndex is the index of the
+ * school in which users are placed that do not register for any school. 
+ * <li> DBPlatform denotes the database platform, options: MySQL.
+ * </ul>
+ * 
+ * @author G.A.J. van der Plas
  */
 @Entity
 @Table(name = "tbldwosystemparameters", schema = "")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "PersistentDwoSystemParameters.findAll", query = "SELECT t FROM PersistentDwoSystemParameters t"),
     @NamedQuery(name = "PersistentDwoSystemParameters.findByName", query = "SELECT t FROM PersistentDwoSystemParameters t WHERE t.name = :name"),

@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/*Copyrighted 2015. */
 package fi.dwo.commons.persistence;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -10,7 +6,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * A persistent id based on object information.
  * 
- * @author Gert van der Plas <gertvdplas@gmail.com>
+ * @author G.A.J. van der Plas
  */
 @XmlRootElement
 public class PersistenceId implements Comparable<PersistenceId> {
@@ -24,7 +20,7 @@ public class PersistenceId implements Comparable<PersistenceId> {
      * the order of the Id. However it is recommended that, if possible, lexicographical sorting
      * sorts objects in incremental order of class type, object index. 
      * 
-     * @return 
+     * @return A unique string id.
      */
     public String getIdString(){
         return stringId;
@@ -37,7 +33,7 @@ public class PersistenceId implements Comparable<PersistenceId> {
      * the order of the Id. However it is recommended that, if possible, lexicographical sorting
      * sorts objects in incremental order of class type, object index. 
      * 
-     * @param id 
+     * @param id  set a PersistenceId from a String id.
      */
     public void setIdString(String id){
         stringId = id;
@@ -46,14 +42,14 @@ public class PersistenceId implements Comparable<PersistenceId> {
     /**
      * Returns the persistence class type.
      * 
-     * @return 
+     * @return returns the PersistenceId type.
      */
     public PersistenceClassType getType(){
         return type;
     };
 
     /**
-     * Returns the persistence class type.
+     * Sets the persistence class type.
      * 
      * @param aType 
      */

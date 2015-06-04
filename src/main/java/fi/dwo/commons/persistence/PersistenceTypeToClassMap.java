@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/*Copyrighted 2015. */
 package fi.dwo.commons.persistence;
 
 import fi.dwo.commons.rest.RestClassType;
@@ -12,7 +8,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Gert van der Plas <gertvdplas@gmail.com>
+ * @author G.A.J. van der Plas
  */
 public class PersistenceTypeToClassMap {
     private static final Logger LOG = Logger.getLogger(PersistenceTypeToClassMap.class.getName());

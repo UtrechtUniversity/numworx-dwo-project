@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * Carries the information for a new user registration.
  * 
- * @author Gert van der Plas <gertvdplas@gmail.com>
+ * @author G.A.J. van der Plas
  */
 @XmlRootElement
 public class NewUserRegistration {

@@ -27,7 +27,7 @@ import javax.persistence.UniqueConstraint;
 /**
  * PersistentUser
  *
- * @author plas0006
+ * @author G.A.J. van der Plas
  */
 @Entity
 @Table(name = "tbluser", schema = "", uniqueConstraints = {

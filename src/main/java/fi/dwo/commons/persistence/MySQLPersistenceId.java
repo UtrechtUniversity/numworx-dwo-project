@@ -1,3 +1,4 @@
+/* Copyrighted 2015. */
 package fi.dwo.commons.persistence;
 
 import fi.dwo.commons.persistence.entities.*;
@@ -9,7 +10,7 @@ import java.util.logging.Logger;
  *
  * @see PersistenceId
  *
- * @author Gert van der Plas <gertvdplas@gmail.com>
+ * @author G.A.J. van der Plas
  */
 public class MySQLPersistenceId extends PersistenceId implements Comparable<PersistenceId> {
 
@@ -74,7 +75,7 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
     /**
      * This functionality is only public because of jax-rs.
      *
-     * @return the id
+     * @return the id.
      */
     public long getId() {
         return id;

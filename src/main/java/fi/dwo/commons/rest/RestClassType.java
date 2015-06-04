@@ -9,7 +9,7 @@ package fi.dwo.commons.rest;
  * All the class types that are use in the rest interface and are put in the Store. Note the 
  * ClassType name has to match the Class name exactly. 
  * 
- * @author Gert van der Plas <gertvdplas@gmail.com>
+ * @author G.A.J. van der Plas
  */
 
 public enum RestClassType {
