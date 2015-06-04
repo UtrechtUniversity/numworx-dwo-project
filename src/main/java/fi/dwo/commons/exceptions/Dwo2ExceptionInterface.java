@@ -12,12 +12,7 @@ public interface Dwo2ExceptionInterface {
     /**
      * @return the exception code.
      */
-    Dwo2ExceptionCode getCode();
-
-    /**
-     * @param code the exception code to set
-     */
-    void setCode(Dwo2ExceptionCode code);
+    Dwo2ExceptionCode getDwo2Code();
 
     /**
      * Returns the localized Code explanation text.
@@ -31,6 +26,6 @@ public interface Dwo2ExceptionInterface {
      * A full English text error explanation if it exists.
      * @return 
      */
-    public String getMessage();
+    public String getDwo2Message();
     
 }

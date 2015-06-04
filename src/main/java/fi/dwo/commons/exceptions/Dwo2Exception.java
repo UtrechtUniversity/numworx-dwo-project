@@ -15,16 +15,8 @@ public class Dwo2Exception extends Exception implements Dwo2ExceptionInterface{
      * @return the code
      */
     @Override
-    public Dwo2ExceptionCode getCode() {
+    public Dwo2ExceptionCode getDwo2Code() {
         return code;
-    }
-
-    /**
-     * @param code the code to set
-     */
-    @Override
-    public void setCode(Dwo2ExceptionCode code) {
-        this.code = code;
     }
 
     @Override
@@ -32,6 +24,11 @@ public class Dwo2Exception extends Exception implements Dwo2ExceptionInterface{
         ResourceBundle localeLookup = ResourceBundle.getBundle("Dwo2Exceptions", locale);
         String msg = localeLookup.getString(Dwo2ExceptionCode.class.getSimpleName()+"."+code.name());
         return msg;
+    }
+
+    @Override
+    public String getDwo2Message() {
+        return super.getMessage();
     }
 
 }

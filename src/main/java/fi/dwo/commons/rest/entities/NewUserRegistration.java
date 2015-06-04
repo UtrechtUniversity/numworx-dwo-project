@@ -9,7 +9,9 @@ import fi.dwo.commons.persistence.entities.PersistentRole;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Carries the information for a new user registration.
+ * Carries the information for a new user registration. Note that the password is
+ * expected to be MD5 encrypted. If a registration without school is made.
+ * schoolLogin and schoolCode should both be null.
  * 
  * @author G.A.J. van der Plas
  */

@@ -18,64 +18,58 @@ import javax.ws.rs.core.Response;
  */
 public class Dwo2RestException extends WebApplicationException implements Dwo2ExceptionInterface {
 
-    private Dwo2ExceptionCode code;
+    //private Dwo2ExceptionCode dwo2Code;
 
     /**
      * @return the code
      */
     @Override
-    public Dwo2ExceptionCode getCode() {
-        return code;
+    public Dwo2ExceptionCode getDwo2Code() {
+        return decodeCodeInJSON(super.getMessage());
     }
 
-    /**
-     * @param code the code to set
-     */
-    @Override
-    public void setCode(Dwo2ExceptionCode code) {
-        this.code = code;
+    public String getDwo2Message(){
+        return decodeMessageInJSON(super.getMessage());
     }
 
-    public Dwo2RestException(Dwo2ExceptionCode code, String message) {
+    public Dwo2RestException(String message) {
         super(message);
-        setCode(code);
+    }
+    
+    public Dwo2RestException(Dwo2ExceptionCode code, String message) {
+        super(encodeJSON(code,message));
     }
 
         public Dwo2RestException(Dwo2ExceptionCode code, String message, Response.Status status) {
-        super(message, status);
-        setCode(code);
+        super(encodeJSON(code,message), status);
     }
 
     @Override
     public String getLocalizedCodeExplanation(Locale locale) {
         ResourceBundle localeLookup = ResourceBundle.getBundle("Dwo2Exceptions", locale);
-        String msg = localeLookup.getString(Dwo2ExceptionCode.class.getSimpleName() + "." + code.name());
+        String msg = localeLookup.getString(Dwo2ExceptionCode.class.getSimpleName() + "." + getDwo2Code().name());
         return msg;
     }
 
-    @Override
-    public String getMessage() {
-        return encodeJSON();
-    }
-    
-    public String getDwo2Message() {
-        return super.getMessage();
-    }
-
-    private String encodeJSON() {
+    private static String encodeJSON(Dwo2ExceptionCode code, String message) {
         Genson genson = new Genson();
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("Dwo2ExceptionCode", code.name());
-        map.put("msg", super.getMessage());
+        map.put("msg", message);
         String json = genson.serialize(map); 
         return json;
     }
     
-    public static Dwo2RestException decodeJSON(String json) {
+    private static String decodeMessageInJSON(String json) {
         Genson genson = new Genson();
         Map<String, Object> map = (Map<String, Object>) genson.deserialize(json, Map.class);
-        Dwo2RestException r = new Dwo2RestException((Dwo2ExceptionCode) map.get("Dwo2ExceptionCode"), (String) map.get("msg"));        
-        return r;
+        return (String) map.get("msg");
     }
 
+    private static Dwo2ExceptionCode decodeCodeInJSON(String json) {
+        Genson genson = new Genson();
+        Map<String, Object> map = (Map<String, Object>) genson.deserialize(json, Map.class);
+        return (Dwo2ExceptionCode) map.get("Dwo2ExceptionCode");
+    }
+    
 }
