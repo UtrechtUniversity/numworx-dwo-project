@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui.panels;
 
 import fi.dwo.commons.persistence.entities.PersistentUser;

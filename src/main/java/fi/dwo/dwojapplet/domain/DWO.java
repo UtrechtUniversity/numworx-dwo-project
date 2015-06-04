@@ -750,6 +750,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      */
     @Override
     public Group[] getGroups() {
+        DwoHelper.getRoles();
         try {
             return (Group[]) PersistenceFacade.instance().get(Group.class);
         } catch (PersistenceException e) {

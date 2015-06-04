@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/* Copyrighted 2015. */
 package fi.dwo.dwojapplet.REST;
 
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
@@ -69,8 +65,8 @@ class RestManager {
         Response response = webTargetRest.path(path).request().get();
         if (response.getStatus() != 200) {
             LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
-            Dwo2RestException e = Dwo2RestException.decodeJSON((String) response.getEntity());
-            LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getCode().name(),e.getDwo2Message()});
+            Dwo2RestException e = new Dwo2RestException((String) response.getEntity());
+            LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(),e.getDwo2Message()});
             throw e;
         } else {
             return response.readEntity(c);
@@ -91,8 +87,8 @@ class RestManager {
         Response response = webTargetRest.path(path).request().get();
         if (response.getStatus() != 200) {
             LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
-            Dwo2RestException e = Dwo2RestException.decodeJSON((String) response.getEntity());
-            LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getCode().name(),e.getDwo2Message()});
+            Dwo2RestException e = new Dwo2RestException((String) response.getEntity());
+            LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(),e.getDwo2Message()});
             throw e;
         } else {
             switch (type) {
@@ -130,8 +126,9 @@ class RestManager {
         Response response = webTargetRest.path(path).request().put(Entity.entity(o, MediaType.APPLICATION_JSON));
         if (response.getStatus() != 200) {
              LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
-            Dwo2RestException e = Dwo2RestException.decodeJSON((String) response.getEntity());
-            LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getCode().name(),e.getDwo2Message()});
+            String json = (String) response.readEntity(String.class);
+            Dwo2RestException e = new Dwo2RestException(json);
+            LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(),e.getDwo2Message()});
             throw e;
        } else {
             T r = response.readEntity(c);

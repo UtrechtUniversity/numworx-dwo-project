@@ -6,6 +6,7 @@ import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.commons.rest.entities.NewUserRegistration;
+import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Group;
@@ -18,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -35,7 +37,7 @@ import javax.swing.JTextField;
  */
 public class RegisterNewUserPanel extends ContentPanel implements ActionListener {
 
-    private Group groupList[];
+    //private Group groupList[];
 
     private JTextField username;
 
@@ -72,7 +74,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
      * @param groups The possible groups wherefrom a user can be part of.
      */
     public RegisterNewUserPanel(Group[] groups) {
-        groupList = groups;
+//        groupList = groups;
 
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setLayout(null);
@@ -328,9 +330,10 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
         /* Password field */
         groupChoice = new JComboBox();
         groupChoice.addItem(TextMapper.getText(TextMapper.GUIR_OPT_SELECT_GROUP));
-        for (int i = 0; i < groupList.length; i++) {
+        List<PersistentRole> rl = DwoHelper.getRoles();
+        for (int i = 0; i < rl.size(); i++) {
             //if(!groupList[i].getName().equals("ADMIN"))
-            groupChoice.addItem(TextMapper.getText(groupList[i].getName()));
+            groupChoice.addItem(TextMapper.getText(rl.get(i).getGroupname()));
         }
         groupChoice.setSize(groupChoice.getPreferredSize());
 // past niet op de mac 
@@ -452,31 +455,33 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
                     NewUserRegistration nur = new NewUserRegistration();
                     
                     nur.setUsername(username.getText());
-                    nur.setPassword(password.getText());
+                    nur.setPassword(MD5.getHashString(password.getText()));
                     nur.setGivenName(firstname.getText());
                     nur.setInsertion(middlename.getText());
                     nur.setFamilyName(lastname.getText());
-                    nur.setSchoolLogin("Nul");
-                    nur.setSchoolCode("Nul");
-                    do fix the proper school login and code. It should be set int mysql database properties.
+                    nur.setEmail(email.getText());
+                    nur.setSchoolLogin(null);
+                    nur.setSchoolCode(null);
+                    nur.setRole(DwoHelper.getRoles().get(RoleType.NOSCHOOL.ordinal()));
                     RegistrationManager.RegisterNewUser(nur); //throws Dwo2RestException.
 //                    GuiCreator.instance().register(username.getText(), password.getText(), repassword.getText(), firstname.getText(), middlename.getText(), lastname.getText(), email.getText());
                 } catch (Dwo2RestException ex) {
                     JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                Group g = null;
+                PersistentRole role = null;
                 if (groupChoice.getSelectedIndex() > 0) {
-                    g = groupList[groupChoice.getSelectedIndex() - 1];
+                    role = DwoHelper.getRoles().get(groupChoice.getSelectedIndex() - 1);
                 }
                 try {
                     NewUserRegistration nur = new NewUserRegistration();
                     nur.setUsername(username.getText());
-                    nur.setPassword(password.getText());
+                    nur.setPassword(MD5.getHashString(password.getText()));
                     nur.setGivenName(firstname.getText());
                     nur.setInsertion(middlename.getText());
                     nur.setFamilyName(lastname.getText());
-                    nur.setRole(new PersistentRole(RoleType.valueOf(g.getName())));
+                    nur.setEmail(email.getText());
+                    nur.setRole(role);
                     nur.setSchoolLogin(schoollogin.getText());
                     nur.setSchoolCode(schoolpassword.getText());
                     RegistrationManager.RegisterNewUser(nur); //throws Dwo2RestException.
