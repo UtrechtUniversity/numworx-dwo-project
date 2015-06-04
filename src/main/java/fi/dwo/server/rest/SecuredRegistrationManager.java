@@ -26,7 +26,7 @@ import javax.ws.rs.core.SecurityContext;
 
 /**
  * Registration manager for known users.
- * 
+ *
  * @author Gert van der Plas
  */
 @Path("/secure/registration")
@@ -43,7 +43,7 @@ public class SecuredRegistrationManager {
      */
     @PUT
     @Produces({"application/json"})
-    @Path("/ExistingUser/json")
+    @Path("/existingUser/json")
     public boolean registerExistingUser(@Context SecurityContext sc, NewUserRegistration existingUserReg) {
         EntityManager em = DwoEmfFactory.createEntityManager();
 
@@ -57,6 +57,11 @@ public class SecuredRegistrationManager {
         //fetch schoolgroup id.     
         PersistentSchoolGroup sg;
         PersistentSchool school = null;
+        if (existingUserReg.getSchoolLogin() == null && existingUserReg.getSchoolCode() == null) {
+            existingUserReg.setSchoolLogin("null"); //TODO retrieve the null school login and code from the DwoSystemParameters.
+            existingUserReg.setSchoolCode("null");
+        }
+
         try {
             javax.persistence.Query q = em.createQuery(" select sg from PersistentSchoolGroup sg join PersistentSchool s where s.schoollogin = :schoollogin and sg.role.groupname = :role and sg.passwd = :schoolcode");
             q.setParameter("schoollogin", existingUserReg.getSchoolLogin());
@@ -70,10 +75,12 @@ public class SecuredRegistrationManager {
             }
             //invariant: usercode does not exists and a school exists for schoollogin and schoolcode
             LOG.log(Level.FINE, "School-manager retrieved school {0} from school login and school code for usercode {3}.", new Object[]{school.getSchoolName(), existingUserReg.getSchoolLogin(), existingUserReg.getSchoolCode(), existingUserReg.getUsername()});
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             LOG.log(Level.WARNING, "Unexpected software error.", ex);
             return false;
-        } finally {
+        }
+        finally {
             em.close();
         }
 
@@ -89,11 +96,11 @@ public class SecuredRegistrationManager {
         pk.setSchoolGroupID(sg.getSchoolGroupID());
         pk.setUserID(user.getUserID());
         PersistentHasRole hasRole = HasRoleManager.findPersistentHasRole(pk);
-        if(hasRole==null){
+        if (hasRole == null) {
             //user exists
             return false;
         }
-        
+
         //invariant: usercode does exist and school exists for schoollogin and schoolcode and has a valid licence and the hasRole does not yet exist.
         // building hasRole
         // buiding compound key hasRole
@@ -104,6 +111,8 @@ public class SecuredRegistrationManager {
         hasRole.setLastLogin(now); //considering an account creation a first login as there is a password
         hasRole.setRegisterDate(now);
         hasRole.setRights("_");  //TODO make a rightsManager
+        HasRoleManager.create(hasRole);
+        LOG.log(Level.INFO,"HasRole for user, schoolgroup index {0} {1} and role {3} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), hasRole.getSchoolGroup().getRole()});
 
         //success
         return true;
