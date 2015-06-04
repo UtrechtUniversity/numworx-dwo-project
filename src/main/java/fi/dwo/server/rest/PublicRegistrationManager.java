@@ -13,6 +13,8 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.rest.entities.NewUserRegistration;
+import fi.dwo.server.PersistentEntityManagers.DwoSystemParametersManager;
+import fi.dwo.server.PersistentEntityManagers.HasRoleManager;
 import fi.dwo.server.PersistentEntityManagers.UserManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.Date;
@@ -56,15 +58,18 @@ public class PublicRegistrationManager {
 
         //fetch schoolgroup id.     
         PersistentSchoolGroup sg;
+        
         PersistentSchool school = null;
+        //set null school values if appropiate.
+        if(newUserReg.getSchoolLogin()==null && newUserReg.getSchoolCode()==null){
+            newUserReg.setSchoolLogin("null"); //TODO retrieve the null school login and code from the DwoSystemParameters.
+            newUserReg.setSchoolCode("null");
+        }
         try {
             javax.persistence.Query q = em.createQuery(" select sg from PersistentSchoolGroup sg join PersistentSchool s where s.schoollogin = :schoollogin and sg.role.groupname = :role and sg.passwd = :schoolcode");
             q.setParameter("schoollogin", newUserReg.getSchoolLogin());
             q.setParameter("schoolcode", newUserReg.getSchoolCode());
-            q.setParameter("role", (newUserReg.getRole()));
-            Error is here
-            ! Type mismatch
-            .
+            q.setParameter("role", (newUserReg.getRole().getGroupname()));
             sg = (PersistentSchoolGroup) q.getSingleResult();
             school = sg.getSchool(); // Sadly, another query.
             if (school == null) {
@@ -99,7 +104,9 @@ public class PublicRegistrationManager {
         user.setSchoolGroupID(sg.getSchoolGroupID());
         //add user
         UserManager.create(user);
+        //user add success
         user = UserManager.findByUserName(user.getUsername());
+        LOG.log(Level.INFO,"User {0} {1} {2} with usercode {3} and index {4} was added to the database.", new Object[]{user.getFirstname(), user.getMiddlename(), user.getLastname(), user.getUsername(), user.getUserID()});
 
         // building hasRole
         PersistentHasRole hasRole = new PersistentHasRole();
@@ -113,6 +120,8 @@ public class PublicRegistrationManager {
         hasRole.setLastLogin(now); //considering an account creation a first login as there is a password
         hasRole.setRegisterDate(now);
         hasRole.setRights("_"); //TODO make a rights manager
+        HasRoleManager.create(hasRole);
+        LOG.log(Level.INFO,"HasRole for user, schoolgroup index {0} {1} and role {3} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), hasRole.getSchoolGroup().getRole()});
         //success
         return true;
     }

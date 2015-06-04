@@ -14,7 +14,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import sun.util.logging.PlatformLogger;
 
 /**
  * Operations for the GUI Component that manages the User profile section.

@@ -25,7 +25,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
 /**
- *
+ * Registration manager for known users.
+ * 
  * @author Gert van der Plas
  */
 @Path("/secure/registration")
@@ -60,7 +61,7 @@ public class SecuredRegistrationManager {
             javax.persistence.Query q = em.createQuery(" select sg from PersistentSchoolGroup sg join PersistentSchool s where s.schoollogin = :schoollogin and sg.role.groupname = :role and sg.passwd = :schoolcode");
             q.setParameter("schoollogin", existingUserReg.getSchoolLogin());
             q.setParameter("schoolcode", existingUserReg.getSchoolCode());
-            q.setParameter("role", (existingUserReg.getRole()));
+            q.setParameter("role", (existingUserReg.getRole().getGroupname()));
             sg = (PersistentSchoolGroup) q.getSingleResult();
             school = sg.getSchool(); // Sadly, another query.
             if (school == null) {

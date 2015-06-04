@@ -3,17 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fi.dwo.server.persistence;
+package fi.dwo.server.PersistentEntityManagers;
 
 import fi.dwo.commons.persistence.entities.PersistentDwoSystemParameters;
+import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.persistence.exceptions.NonexistentEntityException;
 import fi.dwo.server.persistence.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
@@ -21,18 +27,16 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class DwoSystemParametersJpaController implements Serializable {
+public class DwoSystemParametersManager implements Serializable {
 
-    public DwoSystemParametersJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
-    }
-    private EntityManagerFactory emf = null;
+   // private static final Logger LOG = Logger.getLogger(DwoSystemParametersManager.class.getName());
 
-    public EntityManager getEntityManager() {
-        return emf.createEntityManager();
+    private static EntityManager getEntityManager() {
+        EntityManager em = DwoEmfFactory.createEntityManager();
+        return em;
     }
 
-    public void create(PersistentDwoSystemParameters dwoSystemParameters) throws PreexistingEntityException, Exception {
+    public static void create(PersistentDwoSystemParameters dwoSystemParameters) throws PreexistingEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -51,7 +55,7 @@ public class DwoSystemParametersJpaController implements Serializable {
         }
     }
 
-    public void edit(PersistentDwoSystemParameters dwoSystemParameters) throws NonexistentEntityException, Exception {
+    public static void edit(PersistentDwoSystemParameters dwoSystemParameters) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -74,7 +78,7 @@ public class DwoSystemParametersJpaController implements Serializable {
         }
     }
 
-    public void destroy(String id) throws NonexistentEntityException {
+    public static void destroy(String id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -95,15 +99,15 @@ public class DwoSystemParametersJpaController implements Serializable {
         }
     }
 
-    public List<PersistentDwoSystemParameters> findDwoSystemParametersEntities() {
+    public static List<PersistentDwoSystemParameters> findDwoSystemParametersEntities() {
         return findDwoSystemParametersEntities(true, -1, -1);
     }
 
-    public List<PersistentDwoSystemParameters> findDwoSystemParametersEntities(int maxResults, int firstResult) {
+    public static List<PersistentDwoSystemParameters> findDwoSystemParametersEntities(int maxResults, int firstResult) {
         return findDwoSystemParametersEntities(false, maxResults, firstResult);
     }
 
-    private List<PersistentDwoSystemParameters> findDwoSystemParametersEntities(boolean all, int maxResults, int firstResult) {
+    private static List<PersistentDwoSystemParameters> findDwoSystemParametersEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
@@ -119,7 +123,7 @@ public class DwoSystemParametersJpaController implements Serializable {
         }
     }
 
-    public PersistentDwoSystemParameters findDwoSystemParameters(String id) {
+    public static PersistentDwoSystemParameters findDwoSystemParameters(String id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentDwoSystemParameters.class, id);
@@ -128,7 +132,7 @@ public class DwoSystemParametersJpaController implements Serializable {
         }
     }
 
-    public int getDwoSystemParametersCount() {
+    public static int getDwoSystemParametersCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
@@ -140,5 +144,29 @@ public class DwoSystemParametersJpaController implements Serializable {
             em.close();
         }
     }
+    
+
+    /**
+     * returns null if no user with that name was found.
+     * 
+     * @param userName
+     * @return 
+     */
+    public static PersistentDwoSystemParameters findByName(String paramName) {
+        EntityManager em = DwoEmfFactory.createEntityManager();
+        PersistentDwoSystemParameters param = null;
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentDwoSystemParameters.findByName");
+            q.setParameter(":name", paramName);
+            param = (PersistentDwoSystemParameters) q.getSingleResult();
+        }catch(NoResultException e){
+            return null;
+        }catch(Exception e){
+            throw new PersistenceException(e);
+        }finally {
+            em.close();
+        }
+        return param;
+    }    
     
 }
