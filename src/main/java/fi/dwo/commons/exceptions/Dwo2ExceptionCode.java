@@ -2,7 +2,8 @@
 package fi.dwo.commons.exceptions;
 
 /**
- * Exception codes for which a Localized explanation can be found.
+ * Statically typed Dwo2 exception codes for which a localized description can be found.
+ * 
  * @author Gert van der Plas
  */
 public enum Dwo2ExceptionCode {
