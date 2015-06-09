@@ -13,7 +13,6 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.rest.entities.NewUserRegistration;
-import fi.dwo.server.PersistentEntityManagers.DwoSystemParametersManager;
 import fi.dwo.server.PersistentEntityManagers.HasRoleManager;
 import fi.dwo.server.PersistentEntityManagers.UserManager;
 import fi.dwo.server.persistence.DwoEmfFactory;

@@ -48,7 +48,7 @@ public class SecuredRegistrationManager {
         EntityManager em = DwoEmfFactory.createEntityManager();
 
         //Check for userid, should not exist.
-        PersistentUser user = UserManager.findByUserName(existingUserReg.getUsername());
+        PersistentUser user = UserManager.findByUserName(sc.getUserPrincipal().getName());
         if (user == null) {
             return false;
         }
@@ -91,19 +91,19 @@ public class SecuredRegistrationManager {
         Date now = new Date();
 
         //invariant: usercode does exist and school exists for schoollogin and schoolcode and has a valid licence.
-        // check for hasRole
+        //check for hasRole
         PersistentHasRolePK pk = new PersistentHasRolePK();
         pk.setSchoolGroupID(sg.getSchoolGroupID());
         pk.setUserID(user.getUserID());
         PersistentHasRole hasRole = HasRoleManager.findPersistentHasRole(pk);
-        if (hasRole == null) {
+        if (hasRole != null) {
             //user exists
             return false;
         }
 
         //invariant: usercode does exist and school exists for schoollogin and schoolcode and has a valid licence and the hasRole does not yet exist.
-        // building hasRole
-        // buiding compound key hasRole
+        //building hasRole
+        //buiding compound key hasRole
         hasRole = new PersistentHasRole();
         hasRole.setPersistentHasRolePK(pk);
 
@@ -112,7 +112,7 @@ public class SecuredRegistrationManager {
         hasRole.setRegisterDate(now);
         hasRole.setRights("_");  //TODO make a rightsManager
         HasRoleManager.create(hasRole);
-        LOG.log(Level.INFO,"HasRole for user, schoolgroup index {0} {1} and role {3} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), hasRole.getSchoolGroup().getRole()});
+        LOG.log(Level.INFO,"Created HasRole for user index {0}, schoolgroup index {1} and role {3} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), hasRole.getSchoolGroup().getRole()});
 
         //success
         return true;
