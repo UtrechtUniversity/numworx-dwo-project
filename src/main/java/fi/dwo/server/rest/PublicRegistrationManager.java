@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fi.dwo.server.rest;
 
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
@@ -27,9 +22,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
 /**
- * Handles the public registration of a new user.
+ * Handles the public registration of new users.
  *
- * @author Gert van der Plas <gertvdplas@gmail.com>
+ * @author G.A.J. van der Plas
  */
 @Path("/public/registration")
 public class PublicRegistrationManager {
@@ -73,19 +68,21 @@ public class PublicRegistrationManager {
             school = sg.getSchool(); // Sadly, another query.
             if (school == null) {
                 LOG.log(Level.INFO, "Registration failde for school {0} with school login {1} and school code {2} for usercode {3}.", new Object[]{school.getSchoolName(), newUserReg.getSchoolLogin(), newUserReg.getSchoolCode(), newUserReg.getUsername()});
-                return false;
+                String msg = String.format("Registration failde for school {0} with school login {1} and school code {2} for usercode {3}.",new Object[]{school.getSchoolName(), newUserReg.getSchoolLogin(), newUserReg.getSchoolCode(), newUserReg.getUsername()});
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Invalid_school_role_credentials, msg);                
             }
             //invariant: usercode does not exists and a school exists for schoollogin and schoolcode
             LOG.log(Level.FINE, "School-manager retrieved school {0} from school login and school code for usercode {3}.", new Object[]{school.getSchoolName(), newUserReg.getSchoolLogin(), newUserReg.getSchoolCode(), newUserReg.getUsername()});
         } catch (Exception ex) {
             LOG.log(Level.WARNING, "Unexpected software error.", ex);
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Unknown error.");
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Unknown software error at server.");
         } finally {
             em.close();
         }
 
         if (!school.licenseIsValid()) {
-            return false;
+                LOG.log(Level.INFO, "Registration failde for school {0}, school id {1}, the license expired on {1}.", new Object[]{school.getSchoolName(), school.getSchoolID(), school.getExpire()});
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "The license expired on "+school.getExpire());                
         }
 
         Date now = new Date();
