@@ -2,10 +2,16 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\RegisterPanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.exceptions.RegisterException;
+import fi.dwo.commons.persistence.RoleType;
+import fi.dwo.commons.persistence.entities.PersistentRole;
+import fi.dwo.commons.rest.entities.NewUserRegistration;
+import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Group;
+import fi.dwo.dwojapplet.domain.rest.RegistrationManager;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -14,6 +20,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -24,7 +31,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 /**
- * This class is a panel where a known user can register himself for a (new) school.
+ * This class is a panel where a known user can register himself for a (new)
+ * school.
  */
 public class RegisterKnownUserPanel extends ContentPanel implements ActionListener {
 
@@ -57,7 +65,6 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
     private JComboBox groupChoice;
 
     private JPanel dialog;
-
 
     /**
      * Creates a new RegisterPanel. At the register panel, a user can register
@@ -111,7 +118,7 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(getForeground()));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(getSize().width /2 - 180, 110, 310, 95);//240
+        p.setBounds(getSize().width / 2 - 180, 110, 310, 95);//240
         dialog.add(p);
 
         /* registerinfo label */
@@ -178,7 +185,6 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
 //        l = createMandatoryLabel();
 //        l.setLocation(285, 78);
 //        p.add(l);
-
 //        /* Add PersonalInfo-panel */
 //        p = new JPanel(null);
 //        p.setBorder(BorderFactory.createLineBorder(getForeground()));
@@ -282,7 +288,7 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(Color.black));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(getSize().width /2 - 180, 215, 310, 125);//473
+        p.setBounds(getSize().width / 2 - 180, 215, 310, 125);//473
         dialog.add(p);
 
         /* schoolinfo label */
@@ -328,9 +334,10 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
         /* Password field */
         groupChoice = new JComboBox();
         groupChoice.addItem(TextMapper.getText(TextMapper.GUIR_OPT_SELECT_GROUP));
+        List<PersistentRole> rl = DwoHelper.getRoles();
         for (int i = 0; i < groupList.length; i++) {
             //if(!groupList[i].getName().equals("ADMIN"))
-            groupChoice.addItem(TextMapper.getText(groupList[i].getName()));
+            groupChoice.addItem(TextMapper.getText(rl.get(i).getGroupname()));
         }
         groupChoice.setSize(groupChoice.getPreferredSize());
 // past niet op de mac 
@@ -356,7 +363,7 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(Color.black));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(getSize().width /2 - 180, 350, 310, 80);//487
+        p.setBounds(getSize().width / 2 - 180, 350, 310, 80);//487
         dialog.add(p);
 
         /* Register button */
@@ -384,7 +391,7 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
         fm = backButton.getFontMetrics(backButton.getFont());
         backButton.setSize(backButton.getPreferredSize());
         backButton.setLocation((p.getSize().width / 2)
-                - ((backButton.getSize().width)/ 2),40);//630
+                - ((backButton.getSize().width) / 2), 40);//630
         p.add(backButton);
 
         registerButton.addActionListener(this);
@@ -441,25 +448,39 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == registerButton) {
             if ((groupChoice.getSelectedIndex() == 0) && (schoollogin.getText().equals("")) && (schoolpassword.getText().equals(""))) {
-    //            try {
-                    //TODO create PropertyClass and call manager.
-                    //todo
-                    //GuiCreator.instance().register(username.getText(), password.getText(), repassword.getText(), firstname.getText(), middlename.getText(), lastname.getText(), email.getText());
-//                } catch (RegisterException exc) {
-//                    JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
-//                }
-//            } else {
-                Group g = null;
-                if (groupChoice.getSelectedIndex() > 0) {
-                    g = groupList[groupChoice.getSelectedIndex() - 1];
+                try{
+                NewUserRegistration nur = new NewUserRegistration();
+
+                nur.setUsername(username.getText());
+                nur.setPassword(MD5.getHashString(password.getText()));
+                nur.setGivenName(firstname.getText());
+                nur.setInsertion(middlename.getText());
+                nur.setFamilyName(lastname.getText());
+                nur.setEmail(email.getText());
+                nur.setSchoolLogin(null);
+                nur.setSchoolCode(null);
+                nur.setRole(DwoHelper.getRoles().get(RoleType.NOSCHOOL.ordinal()));
+                RegistrationManager.RegisterExistingUser(nur);
+                } catch (Dwo2RestException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 }
-//                try {
-//                    //username.getText(), password.getText(), schoollogin.getText(), g, schoolpassword.getText());
-//                    todo
-//                } catch (RegisterException exc) {
-//                    JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
-//                }
-            }
+            }else{
+                PersistentRole role = null;
+                if (groupChoice.getSelectedIndex() > 0) {
+                    role = DwoHelper.getRoles().get(groupChoice.getSelectedIndex() - 1);
+                }
+                try {
+                    NewUserRegistration nur = new NewUserRegistration();
+                    nur.setUsername(username.getText());
+                    nur.setPassword(MD5.getHashString(password.getText()));
+                    nur.setRole(role);
+                    nur.setSchoolLogin(schoollogin.getText());
+                    nur.setSchoolCode(schoolpassword.getText());
+                    RegistrationManager.RegisterExistingUser(nur); //throws Dwo2RestException.
+                } catch (Dwo2RestException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                }
+            }            
         } else if (e.getSource() == resetButton) {
             username.setText("");
             password.setText("");

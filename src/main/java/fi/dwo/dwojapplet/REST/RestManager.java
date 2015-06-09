@@ -7,7 +7,6 @@ import fi.dwo.commons.rest.RestClassType;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.rest.entities.SchoolRoleAndClass;
-import fi.dwo.dwojapplet.domain.rest.RestException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -59,7 +58,6 @@ class RestManager {
      * @param path sub context path servlet.
      * @param c Class type to return.
      * @return A list of class c objects.
-     * @throws RestException
      */
     public <T> T get(String path, Class<T> c) throws Dwo2RestException {
         Response response = webTargetRest.path(path).request().get();
@@ -79,9 +77,7 @@ class RestManager {
      * @param <T>
      * @param path sub context path servlet.
      * @param type
-     * @param c Class type to return.
      * @return A list of Class c.
-     * @throws RestException
      */
     public <T> List<T> getList(String path, RestClassType type) throws Dwo2RestException {
         Response response = webTargetRest.path(path).request().get();
@@ -120,7 +116,6 @@ class RestManager {
      * @param c Class type to return.
      * @param o object of Class type c being send.
      * @return A list of class c objects.
-     * @throws RestException
      */
     public <T> T put(String path, Class<T> c, Object o) throws Dwo2RestException {
         Response response = webTargetRest.path(path).request().put(Entity.entity(o, MediaType.APPLICATION_JSON));
