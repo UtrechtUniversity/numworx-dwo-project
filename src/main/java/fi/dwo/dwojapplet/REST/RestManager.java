@@ -65,7 +65,7 @@ class RestManager {
         Response response = webTargetRest.path(path).request().get();
         if (response.getStatus() != 200) {
             LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
-            Dwo2RestException e = new Dwo2RestException((String) response.getEntity());
+            Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.Rest_InterfaceError,(String) response.getEntity());//TODO refine the error codes.
             LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(),e.getDwo2Message()});
             throw e;
         } else {
@@ -87,7 +87,7 @@ class RestManager {
         Response response = webTargetRest.path(path).request().get();
         if (response.getStatus() != 200) {
             LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
-            Dwo2RestException e = new Dwo2RestException((String) response.getEntity());
+            Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.Rest_InterfaceError,(String) response.getEntity());//TODO refine the error codes.
             LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(),e.getDwo2Message()});
             throw e;
         } else {
@@ -127,7 +127,7 @@ class RestManager {
         if (response.getStatus() != 200) {
              LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
             String json = (String) response.readEntity(String.class);
-            Dwo2RestException e = new Dwo2RestException(json);
+            Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.Rest_InterfaceError,json);//TODO refine the error.
             LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(),e.getDwo2Message()});
             throw e;
        } else {
