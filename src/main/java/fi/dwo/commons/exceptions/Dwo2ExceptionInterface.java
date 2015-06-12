@@ -15,6 +15,18 @@ public interface Dwo2ExceptionInterface {
     Dwo2ExceptionCode getDwo2Code();
 
     /**
+     * 
+     * Returns the Dwo2 exception message. The function extracts the component from
+     * the JSON string stored in the default exception message.
+     * 
+     * @return A Dwo2 message string.
+     * 
+     * @see Dwo2ExceptionCode
+     * @return 
+     */
+    public String getDwo2Message();
+    
+    /**
      * Returns the localized Code explanation text.
      *
      * @param locale
@@ -22,10 +34,5 @@ public interface Dwo2ExceptionInterface {
      */
     public String getLocalizedCodeExplanation(Locale locale);
 
-    /**
-     * A full English text error explanation if it exists.
-     * @return 
-     */
-    public String getDwo2Message();
     
 }
