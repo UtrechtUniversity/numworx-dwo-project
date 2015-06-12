@@ -160,7 +160,7 @@
                 </configuration>
             </plugin>      
             
-            <plugin>
+<!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>2.4</version>
@@ -192,7 +192,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
                                   
             <!-- ensure the build number is available as ${buildNumber} -->
             <plugin>
@@ -293,6 +293,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.15</version>
                 <configuration>
                     <configLocation>config/sun_checks.xml</configLocation>
                 </configuration>
