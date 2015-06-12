@@ -25,7 +25,7 @@ public class RegistrationManager {
     public static boolean RegisterNewUser(NewUserRegistration newUserReg) throws Dwo2RestException {
         boolean r;
         r = StoredRestManager.getInstance().put("/rest/public/registration/newUser/json", Boolean.class, newUserReg);
-                    todo return Dwo2Exception on fail
+                   
 
         return r;
     }
@@ -46,7 +46,8 @@ public class RegistrationManager {
                 .request().put(Entity.entity(existingUserReg, MediaType.APPLICATION_JSON));
         if (response.getStatus() != 200) {
             // failed login
-            todo return Dwo2Exception
+            String msg = (String) response.getEntity();
+//            throw Dwo2Exception()
             LOG.log(Level.INFO, "Status {0}, Reason {1}, entity {2}, for user {3}.", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase(), response.getEntity(), existingUserReg.getUsername()});
             return false;
         } else {
