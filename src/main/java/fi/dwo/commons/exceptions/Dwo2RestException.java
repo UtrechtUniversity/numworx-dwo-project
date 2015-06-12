@@ -62,8 +62,9 @@ public class Dwo2RestException extends WebApplicationException implements Dwo2Ex
      */
     public Dwo2RestException(Dwo2ExceptionCode code, String message) {
         super(Response.status(Response.Status.BAD_REQUEST)
-             .entity(encodeJSON(code,message)).type(MediaType.TEXT_PLAIN).build()
+             .entity(code.name()).type(MediaType.TEXT_PLAIN).build()
         );
+        
     }
 
     /**

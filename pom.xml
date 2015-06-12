@@ -77,7 +77,7 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>   
-            <plugin>
+<!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>2.4</version>
@@ -109,7 +109,7 @@ Author plas0006 (g.a.j.vanderplas@uu.nl), (C) 2015.
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
                                           
             <!-- ensure the build number is available as ${buildNumber} -->
             <plugin>

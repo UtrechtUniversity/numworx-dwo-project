@@ -11,7 +11,7 @@ public enum Dwo2ExceptionCode {
     User_AuthenticationError, // Illegal account details.
     Rest_InterfaceError, // Error due to an improper Rest-interface.
     
-    //Registration errors
+    // Registration errors
     Rest_Registration_UserName_exists,  //User exists already, can't register.
     Rest_Registration_Invalid_school_role_credentials, //Illegal combination of school login and passcode.
     Rest_Registration_School_license_expired, 
