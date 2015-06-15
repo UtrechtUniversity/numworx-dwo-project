@@ -3,6 +3,7 @@
  */
 package nl.uu.fi.dwo.mobile.client.sco;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -17,6 +18,15 @@ public class TriforkAPI implements Scorm2004IF {
 	
 	private native String getResponse() /*-{
 		var s =  $wnd.CES.getResponse();
+		return s;
+	}-*/;
+	
+	native void setJSResponse(JavaScriptObject obj) /*-{
+		$wnd.CES.setResponse(obj)
+	}-*/;
+	
+	native JavaScriptObject getJSResponse() /*-{
+		var s = $wnd.CES.getResponse();
 		return s;
 	}-*/;
 	

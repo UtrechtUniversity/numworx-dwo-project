@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dev.json.JsonString;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONNull;
@@ -75,9 +76,11 @@ public class FacetMemento extends Memento {
 	
 	
 	private FacetAware view;
+	private TriforkAPI api;
 	
 	public FacetMemento(Scorm2004IF api, FacetAware view) {
 		super(api);
+		this.api = (TriforkAPI)api;
 		this.view = view;
 	}
 
@@ -86,9 +89,9 @@ public class FacetMemento extends Memento {
 		if(SUSPEND_DATA == key)
 		{
 			try {
-				String value = super.getValue(key);
-				JSONValue ob = JSONParser.parseStrict(value);
-				return ob.isArray().get(0).isString().stringValue();
+				JavaScriptObject value = api.getJSResponse();
+				JSONArray ob = new JSONArray(value);
+				return ob.get(0).isString().stringValue();
 			} catch (Exception e) {
 				return "";
 			}
@@ -102,7 +105,9 @@ public class FacetMemento extends Memento {
 			StringList list = new StringList();
 			list.add(value);
 			view.getResponses(list);
-			value = list.toString();
+			JavaScriptObject ob = list.array.getJavaScriptObject();
+			api.setJSResponse(ob);
+			return true;
 		}
 		return super.setValue(key, value);
 	}
