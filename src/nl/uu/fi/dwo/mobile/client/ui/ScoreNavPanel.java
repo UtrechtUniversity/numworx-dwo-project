@@ -345,6 +345,11 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF {
 		}
 		return prev;
 	}
+	
+	@Override
+	public Widget getEndButton() {
+		return null;
+	}
 
 	@Override
 	public void setVolgendeEnabled(boolean enable) {
@@ -387,6 +392,18 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF {
 
 	@Override
 	public void showScore() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setScoresObjectivesKnop(boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setObjectivesHandler(ObjectivesHandler objectivesHandler) {
 		// TODO Auto-generated method stub
 		
 	}

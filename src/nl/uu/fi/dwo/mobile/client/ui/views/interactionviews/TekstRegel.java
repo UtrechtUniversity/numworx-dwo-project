@@ -205,7 +205,13 @@ public class TekstRegel extends LayoutPanel
 				objectBreedte = ((TekstElement) currentObject).getWidth();
 				objectHoogte = ((TekstElement) currentObject).getHeight();
 			}
-			else if(currentObject instanceof String || currentObject instanceof AnchorView)
+			else if(currentObject instanceof AnchorView)
+			{
+				objectVerschuiving = ashoogte - tekstAshoogte + 3;
+				objectBreedte = (int) ctx.measureText(currentObject.toString()).getWidth();
+				objectHoogte = tekstHoogte;
+			}
+			else if(currentObject instanceof String)
 			{
 				objectVerschuiving = ashoogte - tekstAshoogte;
 				objectBreedte = (int) ctx.measureText(currentObject.toString()).getWidth();
@@ -307,7 +313,7 @@ public class TekstRegel extends LayoutPanel
 				AnchorView av = (AnchorView) currentObject;
 				Widget w = av.asWidget();
 				this.add(w);
-				objectVerschuiving = 0; // FIXME deze positie werkt niet in Anchorview -13
+				//objectVerschuiving = 0; // FIXME deze positie werkt niet in Anchorview -13
 				this.setWidgetLeftWidth(w, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
 				this.setWidgetTopHeight(w, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
 			}

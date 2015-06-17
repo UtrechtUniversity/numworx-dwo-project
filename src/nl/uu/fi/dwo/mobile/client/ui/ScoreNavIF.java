@@ -20,6 +20,10 @@ public interface ScoreNavIF {
 		void gotoPrev(ScoreNavIF source);
 	}
 	
+	public interface ObjectivesHandler {
+		void openObjectivesPanel(ScoreNavIF source);//source nodig?
+	}
+	
 	void setStatusBar(StatusBarIF bar);
 	
 	void setBeantwoord(int aantalBeantwoord);
@@ -43,6 +47,8 @@ public interface ScoreNavIF {
 	void setItemOpnieuw(boolean boolean1);
 
 	void setOpnieuw(boolean b);
+	
+	void setScoresObjectivesKnop(boolean b);
 
 	void setKijkNa(Checker checker);
 	
@@ -50,6 +56,9 @@ public interface ScoreNavIF {
 	
 	Widget getNextButton();
 	Widget getPrevButton();
+	Widget getEndButton();
+	
+	void setObjectivesHandler(ObjectivesHandler objectivesHandler);
 
 	PushButton getKijkNaButton();
 

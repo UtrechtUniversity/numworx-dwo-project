@@ -360,19 +360,19 @@ public class TekstBuffer
 
 		if (soortVak == 0)
 		{
-			result = new FormuleEditorWithSteps(currentVakGegevens, false, randomVarNamen, randomVarWaarden);
+			result = new FormuleEditorWithSteps(currentVakGegevens, false, randomVarNamen, randomVarWaarden, null);
 		}
 		else if (soortVak == 1)
 		{
-			result = new FormuleEditorWithSteps(currentVakGegevens, true, randomVarNamen, randomVarWaarden);
+			result = new FormuleEditorWithSteps(currentVakGegevens, true, randomVarNamen, randomVarWaarden, null);
 		}
 		else if (soortVak == 2)
 		{
-			result = x(map,new FormuleEditorWithAnswer(currentVakGegevens, false, null, randomVarNamen, randomVarWaarden));
+			result = x(map,new FormuleEditorWithAnswer(currentVakGegevens, false, null, randomVarNamen, randomVarWaarden, null));
 		}
 		else if (soortVak == 3)
 		{
-			result = new FormuleEditorWithAnswer(currentVakGegevens, true, null, randomVarNamen, randomVarWaarden);
+			result = new FormuleEditorWithAnswer(currentVakGegevens, true, null, randomVarNamen, randomVarWaarden, null);
 		}
 		else if (soortVak == 6)
 		{

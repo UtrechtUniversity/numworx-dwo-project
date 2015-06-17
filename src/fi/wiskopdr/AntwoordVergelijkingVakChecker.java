@@ -334,8 +334,8 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		}
 		zetStartString(startString);
 
-		
 		this.answerModels = answerModels;
+		initialiseerAnswerModels();
 		this.hasFeedback = hasFeedback;
 
 		this.tips = tips;
@@ -446,7 +446,57 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 	}
 	
 	
-	
+	public void initialiseerAnswerModels()
+	{
+		for(int i = 0; i < answerModels.size(); i++)
+		{
+			Map<String,Object> h = answerModels.get(i);
+			if(h != null)
+			{
+				String antwoordString = "$f@";
+				String feedback = "";
+				String vormString = "$f@";
+				
+				ObjectMap map = JSONUtilities.wrapMap(h);
+				if(map!=null) 
+				{	if(map.containsKey("antwoordString")) 
+						antwoordString = map.getString("antwoordString");
+					if(map.containsKey("feedback")) 
+						feedback = map.getString("feedback");
+					if(map.containsKey("vormString")) 
+						vormString = map.getString("vormString");
+				}
+				
+				try         
+		        {   antwoordString = FormuleParser.randomizeString(antwoordString,randomVarNamen,randomVarWaarden);
+		        }
+		        catch(Exception e)
+		        {   antwoordString = "$f???@";
+		        }
+		        //System.out.println("antwoordString na randomizing: "+antwoordString);
+		        
+		        try         
+		        {   vormString = FormuleParser.randomizeString(vormString,randomVarNamen,randomVarWaarden);
+		        }
+		        catch(Exception e)
+		        {   vormString = "$f???@";
+		            
+		        }
+		        
+		        try         
+		        {   feedback = modifyFeedback(feedback);
+		        	feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);
+		        }
+		        catch(Exception e)
+		        {   feedback = "$f???@";
+		        }
+		        
+		        h.put("antwoordString", antwoordString);
+		        h.put("feedback", feedback);
+		        h.put("vormString", vormString);
+			}
+		}
+	}
 	
 	
 	
@@ -490,29 +540,29 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		this.puntenFeedback = puntenFeedback;
 		
 		//System.out.println("antwoordString: "+antwoordString);
-        try         
-        {   antwoordString = FormuleParser.randomizeString(antwoordString,randomVarNamen,randomVarWaarden);
-        }
-        catch(Exception e)
-        {   antwoordString = "$f???@";
-        }
-        //System.out.println("antwoordString na randomizing: "+antwoordString);
-        
-        try         
-        {   vormString = FormuleParser.randomizeString(vormString,randomVarNamen,randomVarWaarden);
-        }
-        catch(Exception e)
-        {   vormString = "$f???@";
-            
-        }
-        
-        try         
-        {   feedback = modifyFeedback(feedback);
-        	feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);
-        }
-        catch(Exception e)
-        {   feedback = "$f???@";
-        }
+//        try         
+//        {   antwoordString = FormuleParser.randomizeString(antwoordString,randomVarNamen,randomVarWaarden);
+//        }
+//        catch(Exception e)
+//        {   antwoordString = "$f???@";
+//        }
+//        //System.out.println("antwoordString na randomizing: "+antwoordString);
+//        
+//        try         
+//        {   vormString = FormuleParser.randomizeString(vormString,randomVarNamen,randomVarWaarden);
+//        }
+//        catch(Exception e)
+//        {   vormString = "$f???@";
+//            
+//        }
+//        
+//        try         
+//        {   feedback = modifyFeedback(feedback);
+//        	feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);
+//        }
+//        catch(Exception e)
+//        {   feedback = "$f???@";
+//        }
         zetJuisteAntwoord(antwoordString);
 		zetJuisteVorm(vormString);
        

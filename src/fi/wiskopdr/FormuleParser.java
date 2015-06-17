@@ -2417,9 +2417,13 @@ public class FormuleParser
 			if (parseable)
 			{
 				for (int j = 0; j < varnamen.length; j++)
-				{
-					int value = ((Number) waarden.get(varnamen[j])).intValue();
-					e1 = e1.substitueer(value, varnamen[j]);
+				{	String varnaam = varnamen[j];
+					varnaam = varnaam.replace('?', '$').replace('(', 's').replace(')', '@');
+					if(s1.contains(varnaam))
+					{
+						int value = ((Number) waarden.get(varnamen[j])).intValue();
+						e1 = e1.substitueer(value, varnamen[j]);
+					}
 				}
 				e1 = Algebra.herleidMild(e1, breukenGemengd);
 				s1Nieuw = e1.toString();
@@ -2437,9 +2441,13 @@ public class FormuleParser
 			if (parseable)
 			{
 				for (int j = 0; j < varnamen.length; j++)
-				{
-					int value = ((Number) waarden.get(varnamen[j])).intValue();
-					e2 = e2.substitueer(value, varnamen[j]);
+				{	String varnaam = varnamen[j];
+					varnaam = varnaam.replace('?', '$').replace('(', 's').replace(')', '@');
+					if(s2.contains(varnaam))
+					{
+						int value = ((Number) waarden.get(varnamen[j])).intValue();
+						e2 = e2.substitueer(value, varnamen[j]);
+					}
 				}
 				e2 = Algebra.herleidMild(e2, breukenGemengd);
 				s2Nieuw = e2.toString();
@@ -2462,9 +2470,14 @@ public class FormuleParser
 			if (parseable)
 			{
 				for (int j = 0; j < varnamen.length; j++)
-				{
-					int value = ((Number) waarden.get(varnamen[j])).intValue();
-					e = e.substitueer(value, varnamen[j]);
+				{ 	String varnaam = varnamen[j];
+					varnaam = varnaam.replace('?', '$').replace('(', 's').replace(')', '@');
+					if(s.contains(varnaam))
+					{
+						int value = ((Number) waarden.get(varnamen[j])).intValue();
+						e = e.substitueer(value, varnamen[j]);
+					}
+					
 				}
 				e = Algebra.herleidMild(e, breukenGemengd);
 				sNieuw = e.toString();

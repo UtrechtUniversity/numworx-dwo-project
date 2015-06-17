@@ -6,13 +6,17 @@ import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
+import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.Scheduler;
@@ -29,6 +33,7 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.TouchEndHandler;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
@@ -51,6 +56,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	public static int ZELFTOETS = 2;
 	public static int EINDTOETS = 3;
 	
+	private static String[][] objectives;
+	private static String[] categorieString;
+	private boolean objectivesAanwezig = false;
+	
 	private static final int foutStraf = 2;
 	private static final Logger logger = Logger.getLogger("OpdrNav");
 
@@ -72,6 +81,11 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	private int[][] scores;
 	private boolean[][] isCorrect;
 	private boolean[][] opdrachtenCorrect;
+	
+	private int[][][][] scoresMaxObjectives;
+	private int[][][][] scoresObjectives;
+	private DialogBox scoresObjectivesDialog;
+	private ScoresObjectivesPanel scoresObjectivesPanel;
 	
 	private int mode;
 	private int[][] strafpunten;
@@ -115,6 +129,18 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		opdrachtenCorrect = new boolean[aantalActiviteiten][maxAantalOpdrachten];
 		states = new HashMap[aantalActiviteiten][maxAantalOpdrachten];
 		scoreMax = 0;
+		if (objectives != null)
+		{
+			scoresObjectives = new int[aantalActiviteiten][maxAantalOpdrachten][objectives.length][];
+			scoresMaxObjectives = new int[aantalActiviteiten][maxAantalOpdrachten][objectives.length][];
+			for (int k = 0; k < aantalActiviteiten; k++)
+				for (int j = 0; j < maxAantalOpdrachten; j++)
+					for (int i = 0; i < objectives.length; i++)
+					{
+						scoresObjectives[k][j][i] = new int[objectives[i].length];
+						scoresMaxObjectives[k][j][i] = new int[objectives[i].length];
+					}
+		}
 		
 		if(mode == OEFENEN_STRAFPUNTEN)
 			strafpunten = new int[aantalActiviteiten][maxAantalOpdrachten];
@@ -130,14 +156,50 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 					java.util.logging.Logger.getLogger("OpdrNav").severe("Opdracht " + (j+1)  + " geen map ");
 				}
 				opdrachten[i][j] = (HashMap<String, Object>) object;
-				HashMap<String, Object> ht = opdrachten[i][j];
+				HashMap<String, Object> opdrachtInfo = opdrachten[i][j];
+				ObjectMap ht = JSONUtilities.wrapMap(opdrachtInfo);
+				if (ht != null && objectives != null && ht.containsKey("scoreMaxObjectives"))
+				{	
+					ObjectList scoreList = ht.getObjectList("scoreMaxObjectives");
+					scoresMaxObjectives[i][j] = new int[scoreList.size()][];
+					for(int k = 0; k < scoreList.size(); k++)
+					{	try{
+						scoresMaxObjectives[i][j][k] = scoreList.getIntArray(k);
+						}
+						catch(Exception e)
+						{}
+					}
+					
+					
+					//scoresMaxObjectives[i][j] = (int[][]) ht.get("scoreMaxObjectives");
+				}
+				
+				
 				if (ht != null && ht.containsKey("scoreMax"))
-					scoresMax[i][j] = ((Number) ht.get("scoreMax")).intValue();
+					scoresMax[i][j] = ht.getInt("scoreMax");
 				else
 					scoresMax[i][j] = 10;
 				scoreMax += scoresMax[i][j];
 			}
 		}
+		
+		int sumScoresMaxObjectives = 0;
+		try
+		{
+			for (int i = 0; i < scoresMaxObjectives.length; i++)
+				for (int j = 0; j < scoresMaxObjectives[i].length; j++)
+					for (int k = 0; k < scoresMaxObjectives[i][j].length; k++)
+						for (int l = 0; l < scoresMaxObjectives[i][j][k].length; l++)
+							sumScoresMaxObjectives += scoresMaxObjectives[i][j][k][l];
+		}
+		catch (Exception e)
+		{
+		}
+
+		if (sumScoresMaxObjectives > 0)
+			objectivesAanwezig = true;
+		else
+			objectivesAanwezig = false;
 		entry.setCommunicationRoot(this);
 		
 		states = memento.getOpdrContStates(states);
@@ -182,7 +244,19 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			entry.zetOpdrachtPlusState(opdrachten[currentActiviteit][currentOpdracht], state);
 			
 		}
+		
+		
 
+	}
+	
+	public static void setObjectives(String[][] o)
+	{
+		objectives = o;
+	}
+	
+	public static void setCategorieString(String[] c)
+	{
+		categorieString = c;
 	}
 
 	public Panel getAsPanel()
@@ -246,7 +320,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		{	logger.fine("setChanged zet Button " + currentOpdracht + " correct; correct = " + correct);
 			setButtonCorrect(buttons.get(currentOpdracht), correct, currentOpdracht);
 		}
-		saveCurrentState();
+		//XXX treden er problemen op als we saveCurrentState hier weglaten? Maakt het nakijken een stuk sneller..
+		//saveCurrentState();
 		entry.stelNavigatieIn();
 	}
 		
@@ -446,7 +521,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			return;
 		buttonsEnabled[currentActiviteit][j] = b;
 		if(b)
-		{	setButtonCorrect(buttons.get(j), isCorrect[currentActiviteit][j], j);
+		{	buttons.get(j).setStyleDependentName("disabled", false);
+			setButtonCorrect(buttons.get(j), isCorrect[currentActiviteit][j], j);
 		}
 		else
 		{
@@ -759,7 +835,106 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	public int[] getItemScores() {
 		return scores[currentActiviteit];
 	}
+	
+	public boolean zijnObjectivesAanwezig()
+	{
+		return objectivesAanwezig;
+	}
+	
+	public void openObjectivesPanel()
+	{
+		/**
+		 * Maakt panel met deelscores zichtbaar mbv een popup-venster
+		 */
+		    int aantalDiagrammen = 0;
+	        for(int k = 0; k < objectives.length; k++)
+	        {	int somObjective = 0;
+	        	for(int i = 0; i < scoresMaxObjectives.length; i++)
+	        		for(int j = 0; j < scoresMaxObjectives[i].length; j++)
+	        		{	try{
+	        			for(int l = 0; l < scoresMaxObjectives[i][j][k].length; l++)
+	        				somObjective += scoresMaxObjectives[i][j][k][l];
+	        			}
+	        			catch(Exception e){somObjective = 0;
+	        			}
+	        		}
+	        	if(somObjective > 0) aantalDiagrammen++;
+	        }
+			
+	        //uit wiskOpdr (OpdrNavStruct); aanpassen voor in DWOplayer.
+	        //Eerst: ScoresObjectivesPanel in elkaar zetten (tekenen diagrammen).
+	        /*
+			scoresObjectivesDialog = DialogBox.newInstance(this,"deelscores", true);
+	        scoresObjectivesPanel = new ScoresObjectivesPanel(getScoresObjectivesForDiagram());
+	        if(aantalDiagrammen < 4)
+	        	scoresObjectivesPanel.setBounds(0, 0, 400 * aantalDiagrammen, 350);
+	        else 
+	        	scoresObjectivesPanel.setBounds(0, 0, 1200, 700);
+	        scoresObjectivesDialog.getContentPane().add(scoresObjectivesPanel);
+	        scoresObjectivesDialog.setSize(scoresObjectivesPanel.getSize());
+	    
+	        scoresObjectivesDialog.setVisible(true);
+	        */
+	}
+	
+	/**
+	 * Verzamelt de maximale scores per leerdoel, de gerealiseerde scores per
+	 * leerdoel en de leerdoelen zelf en geeft deze terug tbv het diagram.
+	 */
+	public HashMap<String, Object> getScoresObjectivesForDiagram()
+	{
+		HashMap<String, Object> h = new HashMap<String, Object>();
+		if (objectives == null)
+			return h;
+		
+		int[][] totaalScoreObjectives = null;
+		int[][] totaalMaxObjectives = null;
+		double[][] scoresPercObjectives = null;
 
+		totaalScoreObjectives = new int[objectives.length][];
+		totaalMaxObjectives = new int[objectives.length][];
+		scoresPercObjectives = new double[objectives.length][];
+
+		for (int i = 0; i < objectives.length; i++)
+		{
+			totaalScoreObjectives[i] = new int[objectives[i].length];
+			totaalMaxObjectives[i] = new int[objectives[i].length];
+			scoresPercObjectives[i] = new double[objectives[i].length];
+		}
+
+		for (int i = 0; i < aantalActiviteiten; i++)
+		{ //String scoreString = scores[i].getText();
+			//int score = Integer.parseInt(scoreString.substring(7));
+			//totaalScore += score;
+			for (int j = 0; j < aantalOpdrachten[i]; j++)
+			{	if(scoresObjectives[i][j] != null)
+					for (int k = 0; k < objectives.length && k < scoresObjectives[i][j].length; k++)
+					{	if (scoresObjectives[i][j][k] != null)
+							for (int l = 0; l < objectives[k].length && l < scoresObjectives[i][j][k].length; l++)
+								totaalScoreObjectives[k][l] += scoresObjectives[i][j][k][l];
+					}	
+			}
+
+			for (int j = 0; j < aantalOpdrachten[i]; j++)
+			{
+				for (int k = 0; k < objectives.length && k < scoresMaxObjectives[i][j].length; k++)
+				{
+					for (int l = 0; l < objectives[k].length && l < scoresMaxObjectives[i][j][k].length; l++)
+					{
+						if (scoresMaxObjectives[i][j][k] != null)
+							totaalMaxObjectives[k][l] += scoresMaxObjectives[i][j][k][l];
+					}
+				}
+			}
+		}
+
+		h.put("objectives", objectives);
+		h.put("totaalScoreObjectives", totaalScoreObjectives);
+		h.put("totaalMaxObjectives", totaalMaxObjectives);
+		h.put("categorieString", categorieString);
+
+		return h;
+	}
 
 	public void reloadOpdracht(int opdracht, ScoreNavIF source) {
 		saveCurrentState();

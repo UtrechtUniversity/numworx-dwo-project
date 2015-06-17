@@ -25,6 +25,7 @@ import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF.NextPrevHandler;
+import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF.ObjectivesHandler;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavPanel;
 import nl.uu.fi.dwo.mobile.client.ui.SlidingPopup;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
@@ -91,7 +92,7 @@ import fi.wiskopdr.text.Text_nl;
  * @author Danny Hendrix, Evertson Croes, Sietske Tacoma, Wim van Velthoven
  * 
  */
-public class ViewModuleViewImpl extends XMLView implements ViewModuleView, EntryPoint, NextPrevHandler, HasHeight
+public class ViewModuleViewImpl extends XMLView implements ViewModuleView, EntryPoint, NextPrevHandler, ObjectivesHandler, HasHeight
 {
 	private static final String RANDOM_VAR_WAARDEN = "RandomVarWaarden";
 	private static final String RANDOM_VAR_NAMEN = "RandomVarNamen";
@@ -120,7 +121,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 	private HeaderPanel hp;
 	private WaitScreen waitscreen = WaitScreen.instance();
 	
-	private Widget next, prev;
+	private Widget next, prev, end;
 	
 
 	private Scorm2004IF api;
@@ -277,22 +278,8 @@ try {
 			});
 		}
 		scoreNav.setNextPrevHandler(this);
-		//uitzoeken of de volgende en vorige knop erin moeten.
-		
-		
-		/*
-		eindeKnop = new PushButton(Text.constants.eindeKnopLabel());
-		eindeKnop.addClickHandler(new ClickHandler(){
-			public void onClick(ClickEvent e)
-			{
-				e.stopPropagation();
-				//TODO: functie geven.
-			}
-		});
-		*/
-		//vorige en volgende zichtbaar zetten gebeurt als nodig is nog wel in stelNavigatieIn()
-		//scoreNav.setVolgendeVisible(volgendeKnopZichtbaar);
-		//scoreNav.setVorigeVisible(vorigeKnopZichtbaar);
+		scoreNav.setScoresObjectivesKnop(on.zijnObjectivesAanwezig());
+		scoreNav.setObjectivesHandler(this);
 		stelNavigatieIn();
 	}
 
@@ -737,7 +724,7 @@ try {
 		//setObjects(opdrachtObjects, tekst);
 		setObjects(opdracht, tekst, on);
 		contentPanel.add(tekst);
-		FormuleEditorWithSteps fews = new FormuleEditorWithSteps(opdracht, false, tb.getVarNamen(), tb.getVarWaarden());
+		FormuleEditorWithSteps fews = new FormuleEditorWithSteps(opdracht, false, tb.getVarNamen(), tb.getVarWaarden(), null);
 
 		//fews.getEditor().requestFocus();
 		
@@ -1000,9 +987,12 @@ try {
 		setTitle("");
 		next = scoreNav.getNextButton();
 		prev = scoreNav.getPrevButton();
+		end = scoreNav.getEndButton();
 		if(standalone) {
 			HorizontalPanel hbox = new HorizontalPanel();
 			hbox.add(prev); hbox.add(next);
+			if(end != null)
+				hbox.add(end);
 			hp.setRightWidget(hbox);
 			hb = new HeaderButton(DWOplayer.PARAMETERS.headercss());
 			hb.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.menuIcon().getSafeUri().asString() + "')");
@@ -1357,6 +1347,10 @@ try {
 			}});
 	}
 
+	@Override
+	public void openObjectivesPanel(ScoreNavIF source) {
+		on.openObjectivesPanel();
+	}
 
 	// WaitScreen management: p(); .....; v();
 	private int sema;
@@ -1383,6 +1377,8 @@ try {
 		contentScrollPanel.setPixelSize(-1, px);
 		setWebkitScrolling(true);
 	}
+
+	
 	
 	
 }

@@ -47,8 +47,10 @@ public class ScoreNavFacade implements ScoreNavIF {
 
 	private PushButton nakijkKnop;
 	private Checker checker;
-	private PushButton volgendeKnop, vorigeKnop ;//, eindeKnop;
+	private PushButton volgendeKnop, vorigeKnop, eindeKnop;
+	private PushButton scoresObjectivesKnop;
 	private NextPrevHandler nextprev;
+	private ObjectivesHandler objectivesHandler;
 	private PushButton allesOpnieuwKnop, opnieuwKnop;
 	private GotoOpdracht gotoOpdracht;
 	private int currentOpdracht;
@@ -80,6 +82,14 @@ public class ScoreNavFacade implements ScoreNavIF {
 			{
 				e.stopPropagation();
 				nextprev.gotoNext(ScoreNavFacade.this);
+			}
+		});
+		
+		eindeKnop = new PushButton("Einde");
+		eindeKnop.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent e)
+			{
+				//TODO: invullen. Kan pas als goto:0 goed geimplementeerd?
 			}
 		});
 	
@@ -151,6 +161,29 @@ public class ScoreNavFacade implements ScoreNavIF {
 			allesOpnieuwKnop.setVisible(false);
 		}
 	}
+	
+	public void setScoresObjectivesKnop(boolean b)
+	{
+		if(b)
+		{
+			if(scoresObjectivesKnop == null)
+			{
+				scoresObjectivesKnop = new PushButton("Deelscores");
+				scoresObjectivesKnop.addClickHandler(new ClickHandler() {
+					public void onClick(ClickEvent e)
+					{
+						objectivesHandler.openObjectivesPanel(ScoreNavFacade.this);
+					}
+				});
+			}
+			if(scoresObjectivesKnop.getParent() == null)
+				sb.addKnop(scoresObjectivesKnop, false);
+			scoresObjectivesKnop.setVisible(true);
+		}
+		else if(scoresObjectivesKnop != null)
+			scoresObjectivesKnop.setVisible(false);
+	}
+
 
 	@Override
 	public void setKijkNa(Checker checker) {
@@ -160,6 +193,11 @@ public class ScoreNavFacade implements ScoreNavIF {
 	@Override
 	public void setNextPrevHandler(NextPrevHandler nextprev) {
 		this.nextprev = nextprev;
+	}
+	
+	@Override
+	public void setObjectivesHandler(ObjectivesHandler objectivesHandler) {
+		this.objectivesHandler = objectivesHandler;
 	}
 
 	@Override
@@ -173,8 +211,22 @@ public class ScoreNavFacade implements ScoreNavIF {
 	}
 
 	@Override
+	public Widget getEndButton() {
+		return eindeKnop;
+	}
+	
+	@Override
 	public void setVolgendeEnabled(boolean enable) {
-		  volgendeKnop.setEnabled(enable);	
+		
+		vorigeKnop.removeFromParent();
+		volgendeKnop.removeFromParent();
+		eindeKnop.removeFromParent();
+		if(enable)
+			sb.addKnop(volgendeKnop, true);
+		else
+			sb.addKnop(eindeKnop, true);
+		sb.addKnop(vorigeKnop, true);
+		//volgendeKnop.setEnabled(enable);	
 	}
 
 	@Override
@@ -211,7 +263,8 @@ public class ScoreNavFacade implements ScoreNavIF {
 
 	@Override
 	public void setButtonEnabled(int opdrNr, boolean b) {
-		gotoOpdracht.setButtonEnabled(opdrNr, b);
+		if(gotoOpdracht != null)
+			gotoOpdracht.setButtonEnabled(opdrNr, b);
 	}
 
 

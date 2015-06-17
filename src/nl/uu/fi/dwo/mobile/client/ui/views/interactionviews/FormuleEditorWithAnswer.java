@@ -83,7 +83,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		public FormuleEditorPopup(HashMap<String, Object> h,
 				boolean isVergelijkingVak, String[] randomVarNamen,
 				HashMap randomVarWaarden) {
-			super(h, isVergelijkingVak, randomVarNamen, randomVarWaarden);
+			super(h, isVergelijkingVak, randomVarNamen, randomVarWaarden, null);
+		}
+		
+		public FormuleEditorPopup(HashMap<String, Object> h, boolean isVergelijkingVak, AntwoordVakChecker avChecker)
+		{
+			super(h, isVergelijkingVak, randomVarNamen, randomVarWaarden, avChecker);
 		}
 
 //		@Override
@@ -116,7 +121,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 		@Override
 		FormuleEditorWithAnswer editorInstance() {
-			return new FormuleEditorWithAnswer(super.h, isVergelijkingVak, this, randomVarNamen, randomVarWaarden)
+			return new FormuleEditorWithAnswer(super.h, isVergelijkingVak, this, randomVarNamen, randomVarWaarden, avChecker)
 			{
 				@Override
 				public void enter() {
@@ -212,14 +217,19 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	{	fontOvererving = b;
 	}
 	
-	public FormuleEditorWithAnswer(HashMap<String, Object> h, boolean isVergelijkingVak, FormuleEditorWithSteps fe, String[] randomVarNamen, HashMap<String, Object> randomVarWaarden)
+//	public FormuleEditorWithAnswer(HashMap<String, Object> h, boolean isVergelijkingVak, FormuleEditorWithSteps fe, AntwoordVakChecker avChecker)
+//	{
+//		this(h, isVergelijkingVak, fe, null, null, avChecker);
+//	}
+	
+	public FormuleEditorWithAnswer(HashMap<String, Object> h, boolean isVergelijkingVak, FormuleEditorWithSteps fe, String[] randomVarNamen, HashMap<String, Object> randomVarWaarden, AntwoordVakChecker avChecker)
 	{
 		super();
 		//getMainRegel().setEditorParent(this);
 		//getMainRegel().setDefaultHeight(24);
 
-		this.randomVarNamen = randomVarNamen;
-		this.randomVarWaarden = randomVarWaarden;
+		//this.randomVarNamen = randomVarNamen;
+		//this.randomVarWaarden = randomVarWaarden;
 		this.isVergelijkingVak = isVergelijkingVak;
 
 		if (fe != null)
@@ -243,12 +253,16 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			//int breedte = ((Number) h.get("breedte")).intValue();
 			//System.out.println("breedte formuleEditorWithAnswer: " + breedte);
 			launchState = map.getObjectMap("interactiePanelLaunchState");
-
-			if (isVergelijkingVak)
-				avChecker = new AntwoordVergelijkingVakChecker((HashMap<String, Object>) launchState, randomVarNamen, randomVarWaarden);
+			if(avChecker == null)
+			{
+				if (isVergelijkingVak)
+					this.avChecker = new AntwoordVergelijkingVakChecker((HashMap<String, Object>) launchState, randomVarNamen, randomVarWaarden);
+				else
+					this.avChecker = new AntwoordFormuleVakChecker((HashMap<String, Object>) launchState, randomVarNamen, randomVarWaarden);
+			}
 			else
-				avChecker = new AntwoordFormuleVakChecker((HashMap<String, Object>) launchState, randomVarNamen, randomVarWaarden);
-
+				this.avChecker = avChecker;
+			
 			if(launchState != null) {
 				if(launchState.containsKey("check") )
 				{
@@ -278,7 +292,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 						HashMap ll = new HashMap();
 						hh.put("interactiePanelLaunchState", launchState);
 						
-						fews = new FormuleEditorPopup(hh,isVergelijkingVak,randomVarNamen,randomVarWaarden);
+						fews = new FormuleEditorPopup(hh,isVergelijkingVak,this.avChecker);
 					}
 				}
 				if(launchState.containsKey("hasFeedback"))
@@ -751,10 +765,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public void zetFeedback()
 	{
 		TekstBuffer b = new TekstBuffer();
-		try{
-			feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);
-		}
-		catch(Exception e){}
+		//Volgens mij zijn randomvariabelen feedback bij aanmaken antwoordmodel al ingevuld, dus hier weggelaten.
+//		try{
+//			feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);
+//		}
+//		catch(Exception e){}
 		ArrayList<Object> feedbackList = b.convertTekst(feedback, null, false);
 		feedbackTekst.clear();
 		int tekstVakBreedte = 190;

@@ -53,7 +53,9 @@ import com.googlecode.mgwt.dom.client.event.touch.TouchMoveEvent;
 import com.googlecode.mgwt.dom.client.event.touch.TouchStartEvent;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
+import fi.wiskopdr.AntwoordFormuleVakChecker;
 import fi.wiskopdr.AntwoordVakChecker;
+import fi.wiskopdr.AntwoordVergelijkingVakChecker;
 import fi.wiskopdr.FormuleParser;
 import fi.wiskopdr.expressies.Algebra;
 import fi.wiskopdr.expressies.Expressie;
@@ -92,6 +94,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 	private FormuleViewer prefixViewer;
 	private FormuleViewer latest_answer_viewer;
 	private ScrollPanel sp = null;
+	private AntwoordVakChecker avChecker = null;
 	
 	private LayoutPanel contentPanel = null;
 	private TekstVak feedbackPanel = null;
@@ -119,8 +122,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 	private boolean bewerkingKnoppen, bewerkingKnoppenExtra;
 	private int stapNr = 0;
 	protected HashMap<String, Object> h = null;
-	protected String[] randomVarNamen = null;
-	protected HashMap randomVarWaarden = null;
+	protected static String[] randomVarNamen = null;
+	protected static HashMap randomVarWaarden = null;
 	private ArrayList<LayoutPanel> stepPanels = new ArrayList<LayoutPanel>();
 	private ArrayList<PijlVak> pijlVakken = new ArrayList<PijlVak>();
 	
@@ -156,7 +159,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 	{	fontOvererving = b;
 	}
 
-	public FormuleEditorWithSteps(HashMap<String, Object> h, boolean isVergelijkingVak, String[] randomVarNamen, HashMap randomVarWaarden)
+	public FormuleEditorWithSteps(HashMap<String, Object> h, boolean isVergelijkingVak, String[] randomVarNamen, HashMap randomVarWaarden, AntwoordVakChecker avChecker)
 	{
 		defaultfont = FormuleFont.createFromFontSize(XMLView.getDefaultFontSize());
 		
@@ -179,6 +182,16 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		if (h.get("interactiePanelLaunchState") != null)
 		{
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
+			if(avChecker == null)
+			{
+				if (isVergelijkingVak)
+					this.avChecker = new AntwoordVergelijkingVakChecker((HashMap<String, Object>) launchState, randomVarNamen, randomVarWaarden);
+				else
+					this.avChecker = new AntwoordFormuleVakChecker((HashMap<String, Object>) launchState, randomVarNamen, randomVarWaarden);
+			}
+			else
+				this.avChecker = avChecker;
+			
 			if (launchState.get("startString") != null)
 				startString = (String) launchState.get("startString");
 			if (launchState.get("exact") != null)
@@ -210,6 +223,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			bordjesMethode = Boolean.TRUE.equals( launchState.get("bordjesMethode"));
 			linStrategieVersie = Boolean.TRUE.equals(launchState.get("linStrategieVersie"));
 			linOefenVersie = Boolean.TRUE.equals(launchState.get("linOefenVersie"));
+			
+			
 		}
 		else
 		{
@@ -789,10 +804,11 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 	{
 		hasFeedback = !"".equals(feedback.trim());
 		TekstBuffer b = new TekstBuffer();
-		try{
-			feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);
-		}
-		catch(Exception e){}
+		//Ik denk dat randomvariabelen bij initialisatie feedback al zijn ingevuld. 
+//		try{
+//			feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);
+//		}
+//		catch(Exception e){}
 		ArrayList<Object> feedbackList = b.convertTekst(feedback, null, false);
 		feedbackPanel.clear();
 		feedbackPanel.setSize(breedte - 10, feedbackPanelHeight);
@@ -975,7 +991,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 
 	
 	FormuleEditorWithAnswer editorInstance() {
-		return new FormuleEditorWithAnswer(h, isVergelijkingVak, this, randomVarNamen, randomVarWaarden);
+		return new FormuleEditorWithAnswer(h, isVergelijkingVak, this, randomVarNamen, randomVarWaarden, avChecker);
 		
 	}
 

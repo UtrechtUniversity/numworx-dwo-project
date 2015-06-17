@@ -17,6 +17,7 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
@@ -86,6 +87,13 @@ public abstract class XMLView {
 	protected boolean allesCorrectNodig = false;
 	public boolean zelftoetsGeenCorr = false;
 	
+	private int[][][][] scoresObjectives;
+	private String[][] objectives;
+	private String[] categorieString;
+	private int[][][][] scoresMaxObjectives;
+	boolean objectivesAanwezig;
+	
+	
 	TekstVakPanel hoofdPanel;
 
 	protected void setupView(HashMap<String, Object> launchData)
@@ -121,7 +129,9 @@ public abstract class XMLView {
 			//AntwoordKeuzeVakGWT.setFont(fontName);
 			
 			if(wrap.containsKey("woordFormule"))
-				FormuleParser.zetWoordFormule(wrap.getBoolean("woordFormule"));	
+				FormuleParser.zetWoordFormule(wrap.getBoolean("woordFormule"));
+			if(wrap.containsKey("tweeHoofdletterVar"))
+				FormuleParser.zetTweeHoofdletterVariabele(wrap.getBoolean("tweeHoofdletterVar"));
 			if(wrap.containsKey("fontOvererving"))
 				TekstVakPanel.zetFontOvererving(wrap.getBoolean("fontOvererving"));
 			if(wrap.containsKey("fontOverervingForm"))
@@ -163,8 +173,23 @@ public abstract class XMLView {
 				allesCorrectNodig = wrap.getBoolean("allesCorrectNodig");
 			if(wrap.containsKey("zelftoetsGeenCorr"))
 				zelftoetsGeenCorr = wrap.getBoolean("zelftoetsGeenCorr");
+			if (wrap.containsKey("objectives"))
+			{	
+				ObjectList objectivesList = wrap.getObjectList("objectives");
+				objectives = new String[objectivesList.size()][];
+				for(int i = 0; i < objectives.length; i++)
+				{	try{
+					objectives[i] = objectivesList.getStringArray(i);
+					}
+					catch(Exception e)
+					{}
+				}
+			}
+			if(wrap.containsKey("categorieString"))
+				categorieString = wrap.getStringArray("categorieString");
 			
-			
+			OpdrNav.setObjectives(objectives);
+			OpdrNav.setCategorieString(categorieString);
 		}
 		
 	}

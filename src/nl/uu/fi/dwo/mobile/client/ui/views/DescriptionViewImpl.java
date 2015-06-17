@@ -169,7 +169,7 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Ent
 		//setObjects(opdrachtObjects, tekst);
 		setObjects(opdracht, tekst, null);
 		contentPanel.add(tekst);
-		FormuleEditorWithSteps fews = new FormuleEditorWithSteps(opdracht, false, tb.getVarNamen(), tb.getVarWaarden());
+		FormuleEditorWithSteps fews = new FormuleEditorWithSteps(opdracht, false, tb.getVarNamen(), tb.getVarWaarden(), null);
 
 		//kb.setEditor(fews.getEditor());
 		//fews.setKeyboard(kb);
