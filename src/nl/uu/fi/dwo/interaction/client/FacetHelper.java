@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.interaction.client;
 import java.util.List;
 import java.util.Vector;
 
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
 public class FacetHelper {
@@ -19,10 +20,17 @@ public class FacetHelper {
 			list = new Vector<FacetAware.Type>();
 			ObjectMap customInteraction = launchData.getObjectMap("customInteraction");
 			if(customInteraction != null) {
+				if(customInteraction.containsKey("scoring")) {
+					ObjectList list = customInteraction.getObjectList("scoring");
+					for(int i = 0; i < list.size(); i++) {
+						ObjectMap m = list.getObjectMap(i);
+						this.list.add(FacetAware.Type.valueOf(m.keySet().iterator().next()));
+					}
+				} else {
 				String[] resourceTypes = customInteraction.getStringArray("responseTypes");
 				for (int i = 0; i < resourceTypes.length; i++) {
 					list.add(FacetAware.Type.valueOf(resourceTypes[i]));
-				}
+				}}
 			}
 		}
 		return list;
