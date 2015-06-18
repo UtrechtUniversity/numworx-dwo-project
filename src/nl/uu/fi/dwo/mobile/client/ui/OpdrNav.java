@@ -320,8 +320,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		{	logger.fine("setChanged zet Button " + currentOpdracht + " correct; correct = " + correct);
 			setButtonCorrect(buttons.get(currentOpdracht), correct, currentOpdracht);
 		}
-		//XXX treden er problemen op als we saveCurrentState hier weglaten? Maakt het nakijken een stuk sneller..
-		//saveCurrentState();
+		saveCurrentState();
 		entry.stelNavigatieIn();
 	}
 		
