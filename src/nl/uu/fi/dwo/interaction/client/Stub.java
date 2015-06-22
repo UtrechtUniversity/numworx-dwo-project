@@ -313,4 +313,9 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
+	public Role getRole() {
+		return ROLE_LEARNER;
+	}
+
 }

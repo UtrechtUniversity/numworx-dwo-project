@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.Role;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
@@ -674,4 +675,10 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	public LessonMode getLessonMode() {
 		return comRoot.getLessonMode(); // TODO sent lessonMode.name to 'Stub' 
 	}
+
+	public Role getRole() {
+		if(comRoot==this) return ROLE_LEARNER;
+		return comRoot.getRole();
+	}
+	
 }

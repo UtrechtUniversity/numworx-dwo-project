@@ -25,6 +25,10 @@ public interface OpdrNavIF
 	String getUUID();
 	LessonMode getLessonMode();
 	
+	Role ROLE_LEARNER = Role.Learner;
+	Role ROLE_INSTRUCTOR = Role.Instructor;
+	Role getRole();
+	
 	HandlerRegistration addCBookEventListener(String command, CBookEventListener listener);
 	void fireEvent(CBookEvent event);
 }

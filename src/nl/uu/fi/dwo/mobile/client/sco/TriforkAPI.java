@@ -3,6 +3,7 @@
  */
 package nl.uu.fi.dwo.mobile.client.sco;
 
+import nl.uu.fi.dwo.interaction.client.Role;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -74,4 +75,9 @@ public class TriforkAPI implements Scorm2004IF {
 	}
 
 	public void Initialize(final AsyncCallback<Void> callback) { if(callback!=null) callback.onSuccess(null); }
+
+	@Override
+	public Role getRole() {
+		return Role.Learner;
+	}
 }

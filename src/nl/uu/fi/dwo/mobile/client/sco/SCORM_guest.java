@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.sco;
 
+import nl.uu.fi.dwo.interaction.client.Role;
+
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -22,6 +24,11 @@ public class SCORM_guest implements Scorm2004IF {
 		return "";
 	}
 
+	public Role getRole() {
+		return Role.Learner;
+	}
+	
+	
 	static String getLocale() {
 		String locale;
 		locale = LocaleInfo.getCurrentLocale().getLocaleName();

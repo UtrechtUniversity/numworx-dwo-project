@@ -3,6 +3,8 @@ package nl.uu.fi.dwo.mobile.client.sco;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import nl.uu.fi.dwo.interaction.client.Role;
+
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -103,4 +105,9 @@ public class AssetAPI implements Scorm2004IF {
 	}
 	
 	public void Initialize(final AsyncCallback<Void> callback) { if(callback!=null) callback.onSuccess(null); }
+
+	@Override
+	public Role getRole() {
+		return Role.Learner;
+	}
 }

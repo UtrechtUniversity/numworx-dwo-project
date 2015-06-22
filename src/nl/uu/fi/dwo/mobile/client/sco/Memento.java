@@ -10,6 +10,8 @@ import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
+import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.Role;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.logical.shared.CloseEvent;
@@ -667,4 +669,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>
 		}
 	}
 	
+	public Role getRole() {
+		return api.getRole();
+	}
 }

@@ -351,4 +351,8 @@ public class MC2View extends Composite implements InteractionView {
 		return comRoot.getLessonMode().toString();
 	}
 	
+	public String getRoleAsString() {
+		return comRoot.getRole().toString();
+	}
+	
 }
