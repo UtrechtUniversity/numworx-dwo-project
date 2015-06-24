@@ -489,9 +489,9 @@ public abstract class FormuleElement implements TekstElement
 	/**
 	 * ToString
 	 */
-	@Override
-	public String toString()
-	{
-		return null;
+	public abstract String toString();
+	
+	public String toMathML() {
+		return toString();
 	}
 }

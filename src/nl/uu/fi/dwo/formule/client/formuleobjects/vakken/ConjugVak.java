@@ -52,4 +52,11 @@ public class ConjugVak extends FormuleElementWithChildren
 	public String toString()
 	{	return "$c" + getChild().toString() + "@";
 	}
+
+	public String toMathML() {
+/* geen idee welke van de twee de meest gesupporte is */
+		//return "<menclose notation='top' >" + getChild().toMathML() + "</menclose>";
+		return "<mover>" + getChild().toMathML() + "<mo>\u00AF</mo></mover>";
+	}
+
 }

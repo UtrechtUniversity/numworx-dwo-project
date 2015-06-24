@@ -92,4 +92,9 @@ public class Machtvak extends FormuleElementWithChildren
 	{
 		return "$m" + getChild().toString() + "@";
 	}
+
+	public String toMathML() {
+		return getChild().toMathML();
+	}
+
 }

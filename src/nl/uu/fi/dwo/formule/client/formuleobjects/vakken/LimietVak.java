@@ -6,6 +6,7 @@ import com.google.gwt.canvas.dom.client.Context2d.TextBaseline;
 
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
+import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
 import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
 
 public class LimietVak extends FormuleElementWithChildren{
@@ -151,6 +152,18 @@ public class LimietVak extends FormuleElementWithChildren{
 	public String toString()
 	{
 		return "$T" + getChild(0).toString() + "$n"+ getChild(1).toString() + "$k" + getChild(2).toString() + "$l" + getChild(3).toString() + "@@@@";
+	}
+	public String toMathML() {
+		return "<mrow><munder><mi>lim</mi><mrow>" + getChild(1).toMathML() + arrow(getChild(3)) + getChild(2).toMathML() + "</mrow></munder>" + getChild(0).toMathML() + "</mrow>";
+	}
+
+	private String arrow(FormuleRegel k) {
+		char x = '\u2192';
+		if("2".equals(k.toString()))
+			x = '\u2191';
+		else if("1".equals(k.toString()))
+			x = '\u2193';
+		return "<mo>"+ x + "</mo>";
 	}
 
 }

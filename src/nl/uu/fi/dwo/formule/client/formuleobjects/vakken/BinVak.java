@@ -89,4 +89,8 @@ public class BinVak extends FormuleElementWithChildren
 	{
 		return "$y" + getChild(0).toString() + "$n"+ getChild(1).toString() + "@@";
 	}
+	public String toMathML() {
+		return "<mfrac linethickness='0'>" + getChild(0).toMathML() + getChild(1).toMathML() + "</mfrac>";
+	}
+
 }

@@ -153,4 +153,8 @@ public class IntegraalVak extends FormuleElementWithChildren
 	{
 		return "$i" + getChild(0).toString() + "$n" + getChild(1).toString() + "$k" + getChild(2).toString() + "$l" + getChild(3).toString() + "@@@@";//"$n" + kind3.toString() + 
 	}
+	public String toMathML() {
+		return "<mrow><msubsup><mo>\u222b</mo>"+ getChild(1).toMathML()+ getChild(2).toMathML() + "</msubsup>" + getChild(0).toMathML() +"<mo>d</mo>" + getChild(3).toMathML()+"</mrow>" ;
+	}
+
 }

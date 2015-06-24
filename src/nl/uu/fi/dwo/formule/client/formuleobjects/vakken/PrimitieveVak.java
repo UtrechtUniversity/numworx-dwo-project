@@ -97,4 +97,8 @@ public class PrimitieveVak extends FormuleElementWithChildren
 	{
 		return "$P" + getChild(0).toString() + "$n" + getChild(1).toString() + "@@"; 
 	}
+	public String toMathML() {
+		return "<mrow><mo>\u222b</mo>"+ getChild(0).toMathML() + "<mo>d<mo>" + getChild(1).toMathML() + "</mrow>";
+	}
+
 }

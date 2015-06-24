@@ -199,5 +199,17 @@ public class NdeLogVak extends FormuleElementWithChildren
 	{
 		return "$L" + getChild(0).toString() + "$n" + getChild(1).toString() + "@@";
 	}
+
+	static final boolean isEN = false;
+	public String toMathML() 
+	{
+// if language is 'en' grondtal als subscript
+		if(isEN)
+		{
+			return "<mrow><msub><mi>log</mi>" + getChild(1).toMathML() + "</msub><mfenced>" + getChild(0).toMathML() + "</mfenced></mrow>";
+		}
+		return "<mrow><mmultiscripts><mi>log</mi><mprescripts /><none />" + getChild(1).toMathML() + "</mmultiscripts><mfenced>" + getChild(0).toMathML() + "</mfenced></mrow>";
+	}
+
 }
 

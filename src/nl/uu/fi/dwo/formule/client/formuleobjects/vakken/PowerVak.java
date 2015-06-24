@@ -13,6 +13,11 @@ public class PowerVak extends FormuleElementWithChildren {
 	public String toString() {
 		return "$p" + getChild(0) + "$n" + getChild(1) + "@@";
 	}
+	public String toMathML() 
+	{
+		return "<msup>" + getChild(0).toMathML() + getChild(1).toMathML() + "</msup>";
+	}
+
 	public void paintObject() {
 // at 0,0
 		int superscript; 

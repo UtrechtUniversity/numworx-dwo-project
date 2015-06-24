@@ -55,4 +55,10 @@ public class AbsVak extends FormuleElementWithChildren
 	public String toString()
 	{	return "$r" + getChild().toString() + "@";
 	}
+	
+	public String toMathML() 
+	{
+		return "<mfenced open='|' close='|'>" + getChild().toMathML() + "</mfenced>";
+	}
+
 }

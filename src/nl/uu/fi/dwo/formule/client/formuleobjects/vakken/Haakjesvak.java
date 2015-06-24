@@ -127,4 +127,10 @@ public class Haakjesvak extends FormuleElementWithChildren
 	{
 		return "$h" + getChild().toString() + "@";
 	}
+
+	public String toMathML() 
+	{
+		return "<mfenced>" + getChild().toMathML() + "</mfenced>";
+	}
+
 }

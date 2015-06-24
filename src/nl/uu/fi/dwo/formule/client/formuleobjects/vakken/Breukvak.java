@@ -165,4 +165,9 @@ public class Breukvak extends FormuleElementWithChildren
 	{
 		return "$b" + getChild(0).toString() + "$n" + getChild(1).toString() + "@@";
 	}
+
+	public String toMathML() {
+		return "<mfrac>" + getChild(0).toMathML() + getChild(1).toMathML() + "</mfrac>";
+	}
+
 }

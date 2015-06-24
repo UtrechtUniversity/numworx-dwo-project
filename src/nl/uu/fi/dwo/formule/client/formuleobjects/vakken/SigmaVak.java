@@ -115,4 +115,9 @@ public class SigmaVak extends FormuleElementWithChildren{
 	public String toString()
 	{	return "$S" + getChild(0).toString() + "$n"+ getChild(1).toString() + "$k" + getChild(2).toString() + "$l" + getChild(3).toString() + "@@@@";
 	}
+
+	public String toMathML() {
+		return "<mrow><munderover><mo>\u03a3</mo><mrow>"+ getChild(1).toMathML()+ "<mo>=</mo>"+ getChild(2).toMathML() + "</mrow>"+ getChild(3).toMathML() + "</munderover>" + getChild(0).toMathML() +"</mrow>" ;
+	}
+
 }

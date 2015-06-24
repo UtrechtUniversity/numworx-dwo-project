@@ -13,16 +13,13 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Machtvak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeLogVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeWortelVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PrvVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.SubscriptVak;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
-
-
-
-
 
 
 /**
@@ -1335,6 +1332,46 @@ public class FormuleRegel extends FormuleElement
 		return s;
 	}
 
+	public String toMathML() {		
+		int count = children.size();
+		if(count == 1)
+			return ((FormuleElement) children.get(0)).toMathML();
+		int pos = 0;
+		int next = 0;
+		StringBuffer sb = new StringBuffer("<mrow>");
+		for(int i=0 ; i<count  ; i++)
+		{	
+			FormuleElement f = (FormuleElement) children.get(i);
+			next = sb.length();
+			String mathML = f.toMathML();
+			if(f instanceof Machtvak)
+			{
+				sb.insert(pos, "<msup>");				
+				sb.append(mathML);
+				sb.append("</msup>");
+			} else if(f instanceof SubscriptVak)
+			{
+				sb.insert(pos, "<msub>");				
+				sb.append(mathML);
+				sb.append("</msub>");
+			} else
+			{ // merge mtext here.
+				if(sb.length()>=15 && sb.substring(next-8, next).equals("</mtext>") && mathML.startsWith("<mtext>"))
+				{
+					sb.setLength(next-8);
+					sb.append(mathML.substring(7));
+					next = pos;
+				} else
+					sb.append(mathML);
+			}
+			pos = next;
+		}
+		sb.append("</mrow>");
+		return sb.toString();
+	}
+
+	
+	
 	public FormuleRegel selection(int selectionStartX, int selectionStartY, int selectionEndX, int selectionEndY)
 	{
 		if (editable == false)

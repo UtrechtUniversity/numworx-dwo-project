@@ -76,4 +76,8 @@ public class SubscriptVak extends FormuleElementWithChildren
 	public String toString()
 	{	return "$s" + getChild(0).toString() + "@";
 	}
+	
+	public String toMathML() {
+		return getChild().toMathML();
+	}
 }

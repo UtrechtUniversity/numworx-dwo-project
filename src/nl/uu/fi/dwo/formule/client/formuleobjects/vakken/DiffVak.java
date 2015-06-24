@@ -237,6 +237,12 @@ public class DiffVak extends FormuleElementWithChildren
 	{
 		return "$d" + getChild(0).toString() + "$n" + getChild(1).toString() + "@@";
 	}
+
+	public String toMathML() 
+	{
+		return "<mfrac><mrow><mo>d</mo>" + getChild(0).toMathML() + "</mrow><mrow><mo>d</mo>" + getChild(1).toMathML() + "</mrow></mfrac>";
+	}
+
 }
 
 
