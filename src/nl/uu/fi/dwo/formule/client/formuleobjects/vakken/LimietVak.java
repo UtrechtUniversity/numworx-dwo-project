@@ -116,7 +116,7 @@ public class LimietVak extends FormuleElementWithChildren{
 		setAsHoogte(getChild(0).getAsHoogte()); 
 		//System.out.println("getChild(0): " + getChild(0).toString());
 		//boolean breuk = kind1!=null && kind1.getComponentCount()>0 && (kind1.getComponent(0) instanceof BreukVak);
-		boolean breuk = getChild(0)!=null && getChild(0).toString().length() > 0 && getChild(0).getElementAt(0) instanceof Breukvak;
+		boolean breuk = getChild(0)!=null && getChild(0).toString().length() > 0 && getChild(0).getElementAt(0) instanceof BreukVak;
 		int corr = breuk ? fm.getAscent()/3 : 0;
 		
 		getChild(2).x = getChild(1).width + 3 * fm.getAscent() / 4;

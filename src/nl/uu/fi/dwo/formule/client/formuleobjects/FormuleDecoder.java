@@ -3,8 +3,9 @@ package nl.uu.fi.dwo.formule.client.formuleobjects;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.AbsVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.AftrekVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.BinVak;
-import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Breukvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.BreukVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.ConjugVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.DiffPartialVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.DiffVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Haakjesvak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.IntegraalVak;
@@ -47,7 +48,7 @@ public class FormuleDecoder
 		}
 		else if (ch1 == 'b')
 		{
-			return new Breukvak(holder);
+			return new BreukVak(holder);
 			//bv.vulVak(s.substring(2, eind));
 			//regel.addElement(bv);
 			//insert(bv);
@@ -69,6 +70,9 @@ public class FormuleDecoder
 		}
 		else if(ch1=='d')
 		{	return new DiffVak(holder);
+		}
+		else if(ch1=='D')
+		{	return new DiffPartialVak(holder);
 		}
 		else if(ch1=='P')
 		{	return new PrimitieveVak(holder);

@@ -9,12 +9,12 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
 import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
 
-public class DiffVak extends FormuleElementWithChildren
+public class DiffPartialVak extends FormuleElementWithChildren
 
 {		
 	private boolean diffBreuk;
 	
-	public DiffVak(FormuleElement editor)
+	public DiffPartialVak(FormuleElement editor)
 	{
 		super(editor, 2);
 	
@@ -92,8 +92,9 @@ public class DiffVak extends FormuleElementWithChildren
 		ctx.setStrokeStyle(color);
 		ctx.setFillStyle(color);
 		
-		String dString = "d";
+		String dString = "\u2202";
 		fm.setItalic(false);
+		//hier misschien font even 1 pt kleiner zetten. 
 		ctx.setFont(fm.getFontStyle());
 		
 		ctx.beginPath();
@@ -196,14 +197,12 @@ public class DiffVak extends FormuleElementWithChildren
 	@Override
 	public String toString()
 	{
-		return "$d" + getChild(0).toString() + "$n" + getChild(1).toString() + "@@";
+		return "$D" + getChild(0).toString() + "$n" + getChild(1).toString() + "@@";
 	}
 
-	public String toMathML() 
-	{
-		return "<mfrac><mrow><mo>d</mo>" + getChild(0).toMathML() + "</mrow><mrow><mo>d</mo>" + getChild(1).toMathML() + "</mrow></mfrac>";
-	}
+//	public String toMathML() 
+//	{
+//		return "<mfrac><mrow><mo>d</mo>" + getChild(0).toMathML() + "</mrow><mrow><mo>d</mo>" + getChild(1).toMathML() + "</mrow></mfrac>";
+//	}
 
 }
-
-

@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleFontChanges;
 
 public class SubscriptVak extends FormuleElementWithChildren
@@ -61,6 +62,13 @@ public class SubscriptVak extends FormuleElementWithChildren
 		this.getChild().draw(ctx);
 
 		this.drawCursor();
+	}
+	
+	public boolean setFont(FormuleFont fm)
+	{
+		if (super.setFont(fm) == false)
+			return false;
+		return true;
 	}
 	
 	public void zetMaat()

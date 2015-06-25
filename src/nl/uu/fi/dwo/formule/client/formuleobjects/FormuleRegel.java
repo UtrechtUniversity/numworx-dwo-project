@@ -7,7 +7,9 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.BinVak;
-import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Breukvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.BreukVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.DiffPartialVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.DiffVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.IntegraalVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Machtvak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeLogVak;
@@ -828,7 +830,7 @@ public class FormuleRegel extends FormuleElement
 			FormuleRegel parentRegel = null;
 			FormuleElementWithChildren parent = (FormuleElementWithChildren)this.parent;
 			
-			if(parent instanceof BinVak || parent instanceof Breukvak)
+			if(parent instanceof BinVak || parent instanceof BreukVak || parent instanceof DiffVak || parent instanceof DiffPartialVak)
 			{
 				parentRegel = parent.children.get(0);
 			}
@@ -866,7 +868,7 @@ public class FormuleRegel extends FormuleElement
 			FormuleRegel parentRegel = null;
 			FormuleElementWithChildren parent = (FormuleElementWithChildren)this.parent;
 			
-			if(parent instanceof BinVak || parent instanceof Breukvak)
+			if(parent instanceof BinVak || parent instanceof BreukVak || parent instanceof DiffVak || parent instanceof DiffPartialVak)
 			{
 				parentRegel = parent.children.get(1);
 				

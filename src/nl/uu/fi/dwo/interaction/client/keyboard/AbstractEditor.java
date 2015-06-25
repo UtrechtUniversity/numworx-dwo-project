@@ -141,6 +141,11 @@ public class AbstractEditor implements FormuleEditorIF {
 	@Override
 	public void diff() {
 	}
+	
+	@Override
+	public void diff_partial() {
+		
+	}
 
 	@Override
 	public void limiet0() {

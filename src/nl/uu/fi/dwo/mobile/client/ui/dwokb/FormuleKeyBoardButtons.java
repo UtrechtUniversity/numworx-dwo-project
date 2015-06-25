@@ -78,6 +78,8 @@ public abstract class FormuleKeyBoardButtons
 				editor.bin();
 			else if (code.equals("diff") == true)
 				editor.diff();
+			else if (code.equals("diffpar") == true)
+				editor.diff_partial();
 			else if (code.equals("limiet0") == true)
 				editor.limiet0();
 			else if (code.equals("limiet1") == true)

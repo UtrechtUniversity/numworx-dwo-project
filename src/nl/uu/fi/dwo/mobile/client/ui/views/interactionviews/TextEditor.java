@@ -595,6 +595,10 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	@Override
 	public void diff() {
 	}
+	
+	@Override
+	public void diff_partial() {
+	}
 
 	@Override
 	public void limiet0() {

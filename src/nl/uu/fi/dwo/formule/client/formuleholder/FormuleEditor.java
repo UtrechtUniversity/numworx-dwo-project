@@ -5,8 +5,9 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleTeken;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.AbsVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.BinVak;
-import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Breukvak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.BreukVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.ConjugVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.DiffPartialVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.DiffVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Haakjesvak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.IntegraalVak;
@@ -298,7 +299,7 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 
 	@Override
 	public void breuk() {
-		addElement(new Breukvak(getCurrentRegel()));
+		addElement(new BreukVak(getCurrentRegel()));
 	}
 
 
@@ -361,6 +362,10 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 		addElement(new DiffVak(getCurrentRegel()));
 	}
 
+	@Override
+	public void diff_partial(){
+		addElement(new DiffPartialVak(getCurrentRegel()));
+	}
 
 	@Override
 	public void limiet0() {

@@ -552,6 +552,11 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	}
 
 	@Override
+	public void diff_partial() {
+		insert("$D$n@@");
+	}
+	
+	@Override
 	public void limiet0() {
 		insert("$T$n$k$l@@@@");
 	}

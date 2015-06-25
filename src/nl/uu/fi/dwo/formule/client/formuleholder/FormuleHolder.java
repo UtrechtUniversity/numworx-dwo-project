@@ -440,6 +440,11 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 	public void diff() {
 		
 	}
+	
+	@Override
+	public void diff_partial() {
+		
+	}
 
 	@Override
 	public void limiet0() {

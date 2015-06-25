@@ -66,6 +66,8 @@ public interface FormuleEditorIF {
 	
 	void diff();
 	
+	void diff_partial();
+	
 	void limiet0();
 	
 	void limiet1();
