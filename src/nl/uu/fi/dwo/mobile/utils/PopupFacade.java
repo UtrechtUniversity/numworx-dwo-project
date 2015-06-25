@@ -20,12 +20,17 @@ import static nl.uu.fi.dwo.mobile.utils.ImageUtils.newImage;
 
 public class PopupFacade implements InteractionView, FacetAware {
 
-	private static List<PopupButton> list = new LinkedList<PopupButton>();
+	private static List<HasHide> list = new LinkedList<HasHide>();
 	
 	public static void hide() {
-		for (PopupButton btn : list) {
+		for (HasHide btn : list) {
 			btn.hide();
 		}
+	}
+	
+	public static void addPopup(HasHide w) {
+		//if(!list.contains(w)) XXX ?????
+			list.add(w);
 	}
 	
 	public static void removeAll() {

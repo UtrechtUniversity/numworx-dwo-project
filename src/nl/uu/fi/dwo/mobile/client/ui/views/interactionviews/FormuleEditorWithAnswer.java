@@ -24,6 +24,7 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
+import nl.uu.fi.dwo.mobile.utils.AutoHidePopupPanel;
 import nl.uu.fi.dwo.mobile.utils.ImageUtils;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
@@ -72,9 +73,6 @@ import fi.wiskopdr.text.Text;
  */
 public class FormuleEditorWithAnswer extends FormuleEditor implements InteractionView, CBookEventListener, FacetAware
 {
-	private boolean checkUitklapMogelijkheid() {
-		return "noordhoff".equals(DWOplayer.PARAMETERS.keyboardStyle()); // FIXME beter!
-	}
 	private int extraWidth = 23 ; // of 43; breedte voor nakijkplaatje en als nodig voor knop voor uitklappen.
 	
 	
@@ -93,12 +91,12 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 //		@Override
 //		public void kijkNa() {
-//			// TODO Auto-generated method stub
 //			super.kijkNa();
 //			String string = getEditor().toString();
 //			transfer(string);
 //		}
 
+		boolean transfer;
 		void transfer(String string) {
 			logger.fine("userstring = " + string);
 			FormuleEditorWithAnswer other = FormuleEditorWithAnswer.this;
@@ -128,6 +126,13 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 					super.enter();
 					transfer(toString());
 				}
+
+				@Override // Er wordt in backstep om focus gevraagd, bij transfer is dit niet nodig. XXX hoe moet dit netter worden gemaakt.
+				public void requestFocus() {
+					if(!transfer)
+						super.requestFocus();
+				}
+				
 				
 			};
 		}
@@ -174,7 +179,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	//FlowPanel prefixPanel = null;
 	private Image checkimg;
 	Label feedbackLabel;
-	PopupPanel feedbackPanel;
+	AutoHidePopupPanel feedbackPanel;
 	TekstVak feedbackTekst;
 	Canvas feedbackSluitKnop;
 	Context2d gIm;
@@ -308,7 +313,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			checkimg.getElement().getStyle().setProperty("marginTop", "-2px"); 
 			checkimg.getElement().getStyle().setProperty("marginBottom", "-7px");
 			
-			feedbackPanel = new PopupPanel(true);
+			feedbackPanel = new AutoHidePopupPanel(true);
+			PopupFacade.addPopup(feedbackPanel);
 			feedbackPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 			feedbackPanel.getElement().getStyle().setBorderColor("black");
 			feedbackPanel.getElement().getStyle().setBorderWidth(1, Style.Unit.PX);
@@ -599,12 +605,14 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		*/
 		if(fews != null)
 		{
+			fews.transfer = true;
 			//doen alsof het in de laatste regel van de fews is ingevuld; dan komt het automatisch terug naar de fewa.
 			if(fews.getEditor() == null || fews.getEditor().toString().equals(""))
 				fews.backStep(false);
 			fews.getEditor().clearAll();
 			fews.getEditor().insert(this.toString());
 			fews.getEditor().enter();
+			fews.transfer = false;
 			return;
 		}
 		else
@@ -1029,6 +1037,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		if( vakUitwerking )
 		{
 			PopupButton popup = new PopupButton(fews, ImageUtils.newImage("images/resources/popup_voor_uitw_icoon.png"), this);
+			PopupFacade.addPopup(popup);
 			Style popupstyle = popup.getElement().getStyle();
 			popupstyle.setDisplay(Display.INLINE_BLOCK);
 			popupstyle.setVerticalAlign(VerticalAlign.TOP);

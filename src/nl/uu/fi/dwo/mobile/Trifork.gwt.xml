@@ -4,7 +4,7 @@
 
 	<inherits name="com.google.gwt.user.User" />
 	<inherits name="nl.uu.fi.dwo.mobile.DWOplayer-module" />
-	<inherits name="fi.graphtoolgwt.GraphToolGWT-DWO" />
+	<inherits name="fi.graphtoolgwt.GraphToolGWT-Trifork" />
 	<inherits name="nl.uu.fi.dwo.keyboard.KeyboardGWT-DWO" />
  	
 	<set-property name="gwt.logging.enabled" value="FALSE"/>

@@ -252,7 +252,7 @@ public abstract class XMLView {
 		}
 
 		if(!MGWT.getOsDetection().isDesktop() 
-				&& false // FIXME staat uit omdat Graphtool clientX en clientY niet goed doet.
+				//&& false // FIXME staat uit omdat Graphtool clientX en clientY niet goed doet.
 		) {
 			final int width=breedte;
 
