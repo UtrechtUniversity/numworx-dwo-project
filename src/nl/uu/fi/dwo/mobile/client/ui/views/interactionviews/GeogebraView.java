@@ -106,6 +106,10 @@ public class GeogebraView implements InteractionView, LoadHandler
 		facade = new PopupFacade(launchData);
 		ObjectMap json = JSONUtilities.wrapMap(launchData);
 		Map<String, Object> geogebraParams = new HashMap<String,Object>();
+		String randje = "#FFFFFF";
+		if(json.getBoolean("border", false))
+			randje = "#000000";
+		geogebraParams.put("borderColor", randje);
 		ObjectMap ggbMap = json.getObjectMap("interactiePanelLaunchState");
 		ObjectMap object = ggbMap.getObjectMap("ggbFile"); // java:ByteArray struct
 		String string = object.getString("string");
