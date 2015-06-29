@@ -354,9 +354,13 @@ public class TekstBuffer
 		case 26:
 			return new StubView("TekenVeelvlakGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//return new PopupFacade(map, new fi.tekenveelvlakgwt.client.TekenVeelvlakGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
-		
+		case 19:
+			return new StubView("VerknippenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+		case 22: 
+			return new StubView("NormVerdGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+		case 24:
+			return new StubView("BinomVerdGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		}
-		
 
 		if (soortVak == 0)
 		{

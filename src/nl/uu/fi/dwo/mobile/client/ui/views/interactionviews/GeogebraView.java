@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ImageTextButton;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
@@ -34,6 +35,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 {
 
 	private static final String KIJK_NA = "<span>kijk na</span>";
+	private static final int KIJK_NA_HEIGHT = 20;
 	private SimplePanel mainPanel;
 	private Object ggbApplet;
 	private Frame frame;
@@ -166,7 +168,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 		int height = this.height;
 		int width  = this.width;
 		if(nakijken)
-			height -= 36; // button size?
+			height -= KIJK_NA_HEIGHT; // button size?
 		
 		frame.setPixelSize(width, height);
 		//height -= 57 + 2; // toolbar aftrekken? ja dus!
@@ -183,11 +185,13 @@ public class GeogebraView implements InteractionView, LoadHandler
 				public void onClick(ClickEvent event) {
 					onCheck();
 				}} );
+			checkBtn.getElement().getStyle().setPaddingBottom(0, Unit.PX);
+			checkBtn.getElement().getStyle().setPaddingTop(0,Unit.PX);
 			HeaderPanel hp = new HeaderPanel();
 			hp.setPixelSize(this.width, this.height);
 			hp.setContentWidget(frame);
 			VerticalPanel vp = new VerticalPanel();
-			vp.setPixelSize(this.width, 36);
+			vp.setPixelSize(this.width, KIJK_NA_HEIGHT);
 			vp.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 			vp.add(checkBtn);
 			if(nakijken && comRoot != null && comRoot.getMode() > 1) 
