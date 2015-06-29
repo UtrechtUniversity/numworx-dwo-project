@@ -115,8 +115,8 @@ public abstract class XMLView {
 			Expressie.zetHoekGraden(hoekGraden);
 			if(wrap.containsKey("fontName")) // optional
 			{	font_name = wrap.getString("fontName");
-				if(font_name.equals("SansSerif"))
-					font_name = "sans-serif";
+				//if(font_name.equals("SansSerif"))
+				//	font_name = "sans-serif";
 			} else font_name = "Arial";
 			FormuleFont.zetDefaultFont(font_name);
 			boolean formTimes = wrap.containsKey("formTimes") && wrap.getBoolean("formTimes"); // optional

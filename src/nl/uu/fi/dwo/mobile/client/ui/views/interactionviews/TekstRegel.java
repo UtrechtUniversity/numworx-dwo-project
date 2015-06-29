@@ -43,7 +43,7 @@ public class TekstRegel extends LayoutPanel
 	
 	private int font_size;
 	private int font_style;
-	private String font_name = "arial";
+	private String font_name = "Arial";
 	private Context2d ctx;
 	private String fontString;
 	//private fontType = "sans-serif";

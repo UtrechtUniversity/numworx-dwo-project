@@ -34,7 +34,12 @@ public class TekstComponent {
 		canvas.setCoordinateSpaceHeight(height);
 		canvas.setCoordinateSpaceWidth(width);
 		ctx = canvas.getContext2d();
-		ctx.setFont(fm.toString());
+		String fontString = fm.toString();
+		if(fontString.contains("SansSerif"))
+			fontString.replace("SansSerif", "sans-serif");
+		if(fontString.contains("Dialog"))
+			fontString.replace("Dialog", "Arial");
+		ctx.setFont(fontString);
 		ashoogte = fm.getAscent();
 		this.tekst = tekst;
 	}

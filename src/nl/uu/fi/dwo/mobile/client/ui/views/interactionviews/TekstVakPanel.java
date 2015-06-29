@@ -393,6 +393,10 @@ public class TekstVakPanel implements InteractionView, FacetAware
 			font_size = m.getInt("size");
 			font_style = m.getInt("style");
 			font_name = m.getString("family");
+			if(font_name.equals("SansSerif"))
+				font_name = "sans-serif";
+			if(font_name.equals("Dialog"))
+				font_name = "Arial";
 		}
 		if(launchState.containsKey("anderFont"))
 			anderFont = launchState.getBoolean("anderFont");
@@ -649,7 +653,10 @@ public class TekstVakPanel implements InteractionView, FacetAware
 		{	if(instellingen2.containsKey("fontSize") )
 				font_size =  instellingen2.getInt("fontSize");
 			if(instellingen2.containsKey("fontName"))
-				font_name = instellingen2.getString("fontName");
+			{	font_name = instellingen2.getString("fontName");
+				if(font_name.equals("SansSerif"))
+					font_name = "sans-serif";
+			}
 			font_style = 0;
 			for (int i = 0; i < hoogtes.size(); i++)
 			{
