@@ -116,7 +116,7 @@ public abstract class XMLView {
 			if(wrap.containsKey("fontName")) // optional
 			{	font_name = wrap.getString("fontName");
 				if(font_name.equals("SansSerif"))
-					font_name = "Arial";
+					font_name = "sans-serif";
 			} else font_name = "Arial";
 			FormuleFont.zetDefaultFont(font_name);
 			boolean formTimes = wrap.containsKey("formTimes") && wrap.getBoolean("formTimes"); // optional
@@ -314,6 +314,11 @@ public abstract class XMLView {
 	{
 		return defaultFontSize;
 	}
+	
+//	public static String getDefaultFontName()
+//	{
+//		return defaultFontName;
+//	}
 	
 	public static String getDefaultFont()
 	{

@@ -120,6 +120,7 @@ public class TekstVakPanel implements InteractionView, FacetAware
 	
 	private int font_size = 12;
 	private int font_style = 0;
+	private String font_name = "Arial";
 	private FormuleKeyboardIF kb = null;
 	private OpdrNavIF comRoot = null;
 	private int breedte = 600;
@@ -257,8 +258,9 @@ public class TekstVakPanel implements InteractionView, FacetAware
 		tekstVakken[0][0] = new TekstVak(this, 0, 0);
 		tekstVakken[0][0].setSize(breedte, hoogte);
 		tekstVakken[0][0].setColor(fgColor);
-		tekstVakken[0][0].setFontSize(font_size);
 		tekstVakken[0][0].setFontStyle(font_style);
+		tekstVakken[0][0].setFontName(font_name);
+		tekstVakken[0][0].setFontSize(font_size);
 		//tekstVakken[i][j].setRonding(ronding);
 		//tekstVakken[i][j].setCentering(centerH, centerV);
 		//tekstVakken[i][j].setPasHoogteBreedteAan(pasAanH, pasAanB);
@@ -384,12 +386,13 @@ public class TekstVakPanel implements InteractionView, FacetAware
 			font_size = launchState.getInt("font_size");
 		if (launchState.containsKey("font_style"))
 			font_style = launchState.getInt("font_style");
-		
-		
+		if (launchState.containsKey("font_name"))
+			font_name = launchState.getString("font_name");
 		if(launchState.containsKey("font")) {
 			ObjectMap m = launchState.getObjectMap("font");
 			font_size = m.getInt("size");
 			font_style = m.getInt("style");
+			font_name = m.getString("family");
 		}
 		if(launchState.containsKey("anderFont"))
 			anderFont = launchState.getBoolean("anderFont");
@@ -551,8 +554,9 @@ public class TekstVakPanel implements InteractionView, FacetAware
 				tekstVakken[i][j].setVisible(th>0);
 				//tekstVakken[i][j].setPixelSize(breedtes.get(j).intValue(), hoogtes.get(i).intValue());
 				tekstVakken[i][j].setColor(fgColor);
-				tekstVakken[i][j].setFontSize(font_size);
 				tekstVakken[i][j].setFontStyle(font_style);
+				tekstVakken[i][j].setFontName(font_name);
+				tekstVakken[i][j].setFontSize(font_size);
 				tekstVakken[i][j].setRonding(ronding);
 				tekstVakken[i][j].setCentering(centerH, centerV);
 				tekstVakken[i][j].setPasHoogteBreedteAan(pasAanH, pasAanB);
@@ -644,12 +648,15 @@ public class TekstVakPanel implements InteractionView, FacetAware
 		if(!anderFont && !fontOvererving)
 		{	if(instellingen2.containsKey("fontSize") )
 				font_size =  instellingen2.getInt("fontSize");
+			if(instellingen2.containsKey("fontName"))
+				font_name = instellingen2.getString("fontName");
 			font_style = 0;
 			for (int i = 0; i < hoogtes.size(); i++)
 			{
 				for (int j = 0; j < breedtes.size(); j++)
-				{	tekstVakken[i][j].setFontSize(font_size);
-					tekstVakken[i][j].setFontStyle(font_style);
+				{	tekstVakken[i][j].setFontStyle(font_style);
+					tekstVakken[i][j].setFontName(font_name);
+					tekstVakken[i][j].setFontSize(font_size);
 				}
 			}
 		}
@@ -1103,13 +1110,15 @@ public class TekstVakPanel implements InteractionView, FacetAware
 			CssColor fgColorOvererving = parent.getTekstVakParent().fgColor;
 			int fontSizeOvererving = parent.getTekstVakParent().font_size;
 			int fontStyleOvererving = parent.getTekstVakParent().font_style;
+			String fontNameOvererving = parent.getTekstVakParent().font_name;
 			
 			for (int i = 0; i < hoogtes.size(); i++)
 			{
 				for (int j = 0; j < breedtes.size(); j++)
 				{	tekstVakken[i][j].setColor(fgColorOvererving);
-					tekstVakken[i][j].setFontSize(fontSizeOvererving);
 					tekstVakken[i][j].setFontStyle(fontStyleOvererving);
+					tekstVakken[i][j].setFontName(fontNameOvererving);
+					tekstVakken[i][j].setFontSize(fontSizeOvererving);
 				}
 			}
 			//TODO: kijken of dit goed gaat met lettertype (arial, etc), die zet je nu volgens mij nog niet.

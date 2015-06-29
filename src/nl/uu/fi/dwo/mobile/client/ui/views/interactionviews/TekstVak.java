@@ -65,6 +65,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	
 	private int font_size;
 	private int font_style;
+	private String font_name;
 	private CssColor fgColor;
 	int hoogte = 0;
 	int breedte = 0;
@@ -156,6 +157,15 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	
 		for(int i = 0; i < aantalRegels  + 1; i++)
 		{	regelVakken[i].setFontStyle(font_style);
+		}
+	}
+	
+	public void setFontName(String font_name)
+	{
+		this.font_name = font_name;
+		
+		for(int i = 0; i < aantalRegels  + 1; i++)
+		{	regelVakken[i].setFontName(font_name);
 		}
 	}
 	
@@ -276,9 +286,9 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		else if(font_style == 3)
 			fontTypeString = "bold italic";
 		if(fontTypeString.equals(""))
-			ctx.setFont(font_size + "px sans-serif");
+			ctx.setFont(font_size + "px " + font_name);
 		else
-			ctx.setFont(fontTypeString + " " + font_size + "px sans-serif");
+			ctx.setFont(fontTypeString + " " + font_size + "px " + font_name);
 		
 		double spatieBreedte = ctx.measureText(" ").getWidth();
 				
@@ -403,6 +413,8 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			else if (currentObject instanceof FormuleViewer)
 			{	FormuleFont f = FormuleFont.createFromFontSize(font_size);
 				f.setBold(font_style == 1 || font_style == 3);
+				f.setFont(font_name);
+				//TODO: hier nog iets met font_name?
 				((FormuleViewer) currentObject).setFont(f);
 				((FormuleViewer) currentObject).setDefaultFont(f);
 				((FormuleViewer) currentObject).setColor(fgColor);
@@ -493,8 +505,9 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			regelVakken[aantalRegels].setWidth(tekstVakBreedte + "px");
 		regelVakken[aantalRegels].setHeight(font_size + 4 + "px"); //dit is nog een beetje willekeurig...
 		//regelVakken[aantalRegels].setHeight(font_size + 5);
-		regelVakken[aantalRegels].setFontSize(font_size);
 		regelVakken[aantalRegels].setFontStyle(font_style);
+		regelVakken[aantalRegels].setFontName(font_name);
+		regelVakken[aantalRegels].setFontSize(font_size);
 		//regelVakken[aantalRegels].getElement().getStyle().setBackgroundColor(CssColor.make(20*aantalRegels, 255 - 20 * aantalRegels, 255).toString());
 		regelVakken[aantalRegels].getElement().getStyle().setColor(fgColor.toString());
 		

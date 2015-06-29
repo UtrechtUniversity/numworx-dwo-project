@@ -10,6 +10,7 @@ import nl.uu.fi.dwo.interaction.client.TekstElement;
 import nl.uu.fi.dwo.interaction.client.TekstComponent;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
+import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
@@ -42,6 +43,7 @@ public class TekstRegel extends LayoutPanel
 	
 	private int font_size;
 	private int font_style;
+	private String font_name = "arial";
 	private Context2d ctx;
 	private String fontString;
 	//private fontType = "sans-serif";
@@ -120,39 +122,21 @@ public class TekstRegel extends LayoutPanel
 		return regelObjects;
 	}
 	
+	public void setFontName(String font_name)
+	{
+		this.font_name = font_name;
+	}
+	
 	public void setFontSize(int font_size)
 	{
 		//System.out.println("setFontSize: " + font_size);
 		this.font_size = font_size;
 		this.getElement().getStyle().setFontSize(font_size, Unit.PX);
 		fm = FormuleFont.createFromFontSize(font_size, true);
+		fm.setFont(font_name);
 		tekstAshoogte = fm.getAscent();//dit is de hoogte van de baseline (de lijn die raakt aan alle onderkanten van de tekst, niet alleen aan de lage uitsteeksels), gezien vanaf de top.
 		tekstHoogte = fm.getAscent() + fm.getDescent();
 		//System.out.println("tekstHoogte = " + tekstHoogte + " en fm.getAscent() = " + fm.getAscent());
-		
-		Canvas canvas = Canvas.createIfSupported();
-		ctx = canvas.getContext2d();
-		String fontTypeString = "";
-		if(font_style == 1)
-			fontTypeString = "bold";
-		else if(font_style == 2)
-			fontTypeString = "italic";
-		else if(font_style == 3)
-			fontTypeString = "bold italic";
-		if(fontTypeString.equals(""))
-			fontString = font_size + "px sans-serif";
-		else
-			fontString = fontTypeString + " " + font_size + "px sans-serif";
-		ctx.setFont(fontString);
-		
-		
-	}
-	
-	public void setFontStyle(int font_style)
-	{
-		this.font_style = font_style;
-		this.getElement().getStyle().setFontStyle(font_style == 2 || font_style == 3 ? FontStyle.ITALIC : FontStyle.NORMAL);
-		this.getElement().getStyle().setFontWeight(font_style == 1 || font_style == 3 ? Style.FontWeight.BOLD : Style.FontWeight.NORMAL);
 		
 		Canvas canvas = Canvas.createIfSupported();
 		ctx = canvas.getContext2d();
@@ -173,15 +157,51 @@ public class TekstRegel extends LayoutPanel
 			fm.setItalic(true);
 		}
 		else
-		{	fm.setBold(false);
+		{
+			fm.setBold(false);
 			fm.setItalic(false);
 		}
 		if(fontTypeString.equals(""))
-		{	ctx.setFont(font_size + "px sans-serif");
-		}
+			fontString = font_size + "px " + font_name;
 		else
-		{	ctx.setFont(fontTypeString + " " + font_size + "px sans-serif");
-		}
+			fontString = fontTypeString + " " + font_size + "px " + font_name;
+		ctx.setFont(fontString);
+	}
+	
+	public void setFontStyle(int font_style)
+	{
+		this.font_style = font_style;
+		this.getElement().getStyle().setFontStyle(font_style == 2 || font_style == 3 ? FontStyle.ITALIC : FontStyle.NORMAL);
+		this.getElement().getStyle().setFontWeight(font_style == 1 || font_style == 3 ? Style.FontWeight.BOLD : Style.FontWeight.NORMAL);
+		
+//		Canvas canvas = Canvas.createIfSupported();
+//		ctx = canvas.getContext2d();
+//		String fontTypeString = "";
+//		if(font_style == 1)
+//		{	fontTypeString = "bold";
+//			fm.setBold(true);
+//			fm.setItalic(false);
+//		}
+//		else if(font_style == 2)
+//		{	fontTypeString = "italic";
+//			fm.setItalic(true);
+//			fm.setBold(false);
+//		}
+//		else if(font_style == 3)
+//		{	fontTypeString = "bold italic";
+//			fm.setBold(true);
+//			fm.setItalic(true);
+//		}
+//		else
+//		{	fm.setBold(false);
+//			fm.setItalic(false);
+//		}
+//		if(fontTypeString.equals(""))
+//		{	ctx.setFont(font_size + "px " + XMLView.getDefaultFontName());
+//		}
+//		else
+//		{	ctx.setFont(fontTypeString + " " + font_size + "px " + XMLView.getDefaultFontName());
+//		}
 	}
 	
 	public void vulRegel()
