@@ -476,7 +476,7 @@ public class Vergelijking
 	{
 		Expressie e1 = kind1.substitueer(subst, var);
 		Expressie e2 = kind2.substitueer(subst, var);
-		return new Vergelijking(e1, e2);
+		return new Vergelijking(e1, e2, vergelijkingsTeken);
 	}
 
 	public String toString()
