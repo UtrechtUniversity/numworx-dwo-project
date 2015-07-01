@@ -12,6 +12,8 @@ public interface InteractionView extends IsWidget, TekstElement
 	public void setState(HashMap<String, Object> h);
 
 	public int getScore();
+	
+	public int[][] getScoreObjectives();
 
 	public Boolean isCorrect(); // TRUE, FALSE, NULL
 

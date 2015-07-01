@@ -7,14 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-
-
-
-
-
-
-
+import java.util.Vector;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
@@ -32,6 +25,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
+import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.Connector;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
@@ -1079,6 +1073,27 @@ public class TekstVakPanel implements InteractionView, FacetAware
 			score += ((InteractionView) currentObject).getScore();
 		}
 		return score;
+	}
+	
+	public int[][] getScoreObjectives()
+	{
+		int[][] scoreObjectives = new int[XMLView.objectives.length][];
+		for (int i = 0; i < XMLView.objectives.length; i++)
+			scoreObjectives[i] = new int[XMLView.objectives[i].length];
+		for (int i = 0; i < interactionViewObjects.size(); i++)
+		{
+			Object currentObject = interactionViewObjects.get(i);
+			int[][] scoreObj = ((InteractionView) currentObject).getScoreObjectives();
+			for (int j = 0; scoreObj != null && j < XMLView.objectives.length && j < scoreObj.length; j++)
+				for (int k = 0; scoreObj[j] != null && k < XMLView.objectives[j].length && k < scoreObj[j].length; k++)
+				{
+					scoreObjectives[j][k] += scoreObj[j][k];
+					//terug als aftrek voor popup geimplementeerd:
+					//if (aftrekPopup && popupUsed)
+					//	scoreObjectives[j][k] -= puntenAftrekPopup;
+				}
+		}
+		return scoreObjectives;
 	}
 
 	

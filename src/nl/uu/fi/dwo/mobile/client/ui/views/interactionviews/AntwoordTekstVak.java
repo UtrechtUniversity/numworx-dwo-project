@@ -1046,5 +1046,12 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 			antwoord = antwoordTF.getText();
 		responses.add(antwoord);
 	}
+
+
+	@Override
+	public int[][] getScoreObjectives() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

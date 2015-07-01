@@ -151,9 +151,20 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			return getScore(innerView);
 		return 0;
 	}
+	
+	@Override
+	public int[][] getScoreObjectives() {
+		if(innerView != null)
+			return getScoreObjectives(innerView);
+		return null;
+	}
 
 	private native static int getScore(Object inner) /*-{
 		return inner.getScore();
+	}-*/ ;
+	
+	private native static int[][] getScoreObjectives(Object inner) /*-{
+		return inner.getScoreObjectives();
 	}-*/ ;
 
 	private native static String getState(Object inner) /*-{

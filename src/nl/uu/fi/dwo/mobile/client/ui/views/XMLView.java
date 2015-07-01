@@ -88,7 +88,7 @@ public abstract class XMLView {
 	public boolean zelftoetsGeenCorr = false;
 	
 	private int[][][][] scoresObjectives;
-	private String[][] objectives;
+	public static String[][] objectives;
 	private String[] categorieString;
 	private int[][][][] scoresMaxObjectives;
 	boolean objectivesAanwezig;

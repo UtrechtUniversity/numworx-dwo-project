@@ -343,6 +343,12 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	public int getScore() {
 		return 0;
 	}
+	
+	@Override
+	public int[][] getScoreObjectives()
+	{
+		return null;
+	}
 
 	@Override
 	public Boolean isCorrect() {

@@ -629,6 +629,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		source.setItemScore(currentOpdracht, 
 				scores[currentActiviteit][currentOpdracht] = scoreCorrected
 		);
+		if (objectives != null)
+			scoresObjectives[currentActiviteit][currentOpdracht] = entry.getScoreObjectives();
+		
 		
 		source.setBeantwoord(getAantalBeantwoord());
 		isCorrect[currentActiviteit][currentOpdracht] = Boolean.TRUE == entry.isCorrect();
@@ -673,9 +676,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 //			scores[currentActiviteit][j] = entry.getScore();
 //			
 //			System.out.println("Pagina = " + j + " en score = " + entry.getScore());
-////			if (objectives != null)
-////				scoresObjectives[currentActiviteit][j] = entry.getScoreObjectives();
-//			//TODO: objectives (leerdoelen) implementeren
+//			if (objectives != null)
+//				scoresObjectives[currentActiviteit][j] = entry.getScoreObjectives();
 //			Boolean correct = entry.isCorrect();
 //			isCorrect[currentActiviteit][j] = Boolean.TRUE == correct;
 //			
@@ -860,21 +862,29 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	        		}
 	        	if(somObjective > 0) aantalDiagrammen++;
 	        }
-			
-	        //uit wiskOpdr (OpdrNavStruct); aanpassen voor in DWOplayer.
-	        //Eerst: ScoresObjectivesPanel in elkaar zetten (tekenen diagrammen).
-	        /*
-			scoresObjectivesDialog = DialogBox.newInstance(this,"deelscores", true);
+			scoresObjectivesDialog = new DialogBox(true); //evt argument true meegeven voor autohide.
+	        //Misschien geen dialogbox maar een popup. Moet in elk geval ook weer te sluiten zijn.
+	        //scoresObjectivesDialog = new DialogBox(true);
+	        scoresObjectivesDialog.setText("Deelscores"); //TODO: woord uit textbundle halen.
+	       // scoresObjectivesDialog = new DialogBox(this,"deelscores", true);
 	        scoresObjectivesPanel = new ScoresObjectivesPanel(getScoresObjectivesForDiagram());
-	        if(aantalDiagrammen < 4)
-	        	scoresObjectivesPanel.setBounds(0, 0, 400 * aantalDiagrammen, 350);
-	        else 
-	        	scoresObjectivesPanel.setBounds(0, 0, 1200, 700);
-	        scoresObjectivesDialog.getContentPane().add(scoresObjectivesPanel);
-	        scoresObjectivesDialog.setSize(scoresObjectivesPanel.getSize());
-	    
-	        scoresObjectivesDialog.setVisible(true);
-	        */
+//	        if(aantalDiagrammen < 4)
+//	        	scoresObjectivesPanel.setBounds(0, 0, 400 * aantalDiagrammen, 350);
+//	        else 
+//	        	scoresObjectivesPanel.setBounds(0, 0, 1200, 700);
+	        scoresObjectivesDialog.add(scoresObjectivesPanel.asWidget());
+	        //scoresObjectivesDialog.setSize(scoresObjectivesPanel.getSize());
+	        int width = 1200;
+			int height = 730;
+			if(aantalDiagrammen < 4)
+			{	
+				width = 400 * aantalDiagrammen;
+				height = 380;
+			}
+	        scoresObjectivesDialog.setWidth(width + "px");
+	        scoresObjectivesDialog.setHeight(height + "px");
+	        scoresObjectivesDialog.show();
+	       // scoresObjectivesDialog.setVisible(true);
 	}
 	
 	/**
@@ -903,10 +913,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		}
 
 		for (int i = 0; i < aantalActiviteiten; i++)
-		{ //String scoreString = scores[i].getText();
-			//int score = Integer.parseInt(scoreString.substring(7));
-			//totaalScore += score;
-			for (int j = 0; j < aantalOpdrachten[i]; j++)
+		{ 	for (int j = 0; j < aantalOpdrachten[i]; j++)
 			{	if(scoresObjectives[i][j] != null)
 					for (int k = 0; k < objectives.length && k < scoresObjectives[i][j].length; k++)
 					{	if (scoresObjectives[i][j][k] != null)

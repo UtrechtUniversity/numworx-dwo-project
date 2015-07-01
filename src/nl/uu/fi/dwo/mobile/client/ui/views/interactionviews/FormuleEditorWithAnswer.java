@@ -21,6 +21,7 @@ import nl.uu.fi.dwo.interaction.client.StateLess;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
@@ -197,6 +198,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private int scoreMax = 0;
 	private boolean ingevuld = false;
 	private boolean nagekeken = false;
+	
+	private boolean[][] logObjectives;
+	
 	private boolean check = true;
 	private boolean teltMee = true;
 	private boolean syntaxFout = false;
@@ -303,6 +307,14 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				if(launchState.containsKey("hasFeedback"))
 				{	hasFeedback = launchState.getBoolean("hasFeedback");
 				}
+				if(launchState.containsKey("logObjectives"))
+				{	ObjectList logObjectivesList = ( launchState.getObjectList("logObjectives") );
+					logObjectives = new boolean[logObjectivesList.size()][];
+					for(int i = 0; i < logObjectivesList.size(); i++)
+					{	logObjectives[i] = logObjectivesList.getBooleanArray(i);
+					}
+				}
+				
 			}
 		
 			checkimg = new Image(FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
@@ -977,9 +989,28 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	@Override
 	public int getScore()
 	{
+		if(!teltMee)
+			return 0;
 		return score;
 	}
 
+	@Override
+	public int[][] getScoreObjectives()
+	{
+		if (logObjectives == null)
+			return null;
+		int[][] scoreObjectives = new int[logObjectives.length][];
+		for (int i = 0; i < logObjectives.length; i++)
+			scoreObjectives[i] = new int[logObjectives[i].length];
+		for (int i = 0; i < logObjectives.length; i++)
+			for (int j = 0; j < logObjectives[i].length; j++)
+			{
+				if (logObjectives[i][j])
+					scoreObjectives[i][j] = score;
+			}
+		return scoreObjectives;
+	}
+	
 	@Override
 	public Boolean isCorrect()
 	{

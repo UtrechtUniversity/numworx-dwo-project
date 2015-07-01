@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.FacetAware.Type;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.TouchButton;
@@ -130,6 +131,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 	private ArrayList<Image> imagesStappen = new ArrayList<Image>();
 	private Image checkimg;
 	
+	private boolean[][] logObjectives;
+	
 	private boolean check;
 	private boolean teltMee;
 
@@ -182,6 +185,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		if (h.get("interactiePanelLaunchState") != null)
 		{
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
+			ObjectMap launchStateMap = JSONUtilities.wrapMap(launchState);
 			if(avChecker == null)
 			{
 				if (isVergelijkingVak)
@@ -214,9 +218,17 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 				check = ((Boolean) launchState.get("check")).booleanValue();
 			if (launchState.containsKey("teltMee"))
 				teltMee = ((Boolean) launchState.get("teltMee")).booleanValue();
+			if(launchStateMap.containsKey("logObjectives"))
+			{	ObjectList logObjectivesList = ( launchStateMap.getObjectList("logObjectives") );
+				logObjectives = new boolean[logObjectivesList.size()][];
+				for(int i = 0; i < logObjectivesList.size(); i++)
+				{	logObjectives[i] = logObjectivesList.getBooleanArray(i);
+				}
+			}
 			
 			if (launchState.containsKey("pijl"))
 				pijl = ((Boolean) launchState.get("pijl")).booleanValue();
+			
 			//op verzoek van Noordhoff:
 			if(isNoordhoff())
 				pijl = false;
@@ -1951,6 +1963,23 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		if(!teltMee)
 			return 0;
 		return score;
+	}
+	
+	@Override
+	public int[][] getScoreObjectives()
+	{
+		if (logObjectives == null)
+			return null;
+		int[][] scoreObjectives = new int[logObjectives.length][];
+		for (int i = 0; i < logObjectives.length; i++)
+			scoreObjectives[i] = new int[logObjectives[i].length];
+		for (int i = 0; i < logObjectives.length; i++)
+			for (int j = 0; j < logObjectives[i].length; j++)
+			{
+				if (logObjectives[i][j])
+					scoreObjectives[i][j] = score;
+			}
+		return scoreObjectives;
 	}
 
 	@Override

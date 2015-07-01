@@ -145,6 +145,10 @@ public class PopupFacade implements InteractionView, FacetAware {
 	public int getScore() {
 		return delegate.getScore();
 	}
+	
+	public int[][] getScoreObjectives() {
+		return delegate.getScoreObjectives();
+	}
 
 	public Boolean isCorrect() {
 		return delegate.isCorrect();

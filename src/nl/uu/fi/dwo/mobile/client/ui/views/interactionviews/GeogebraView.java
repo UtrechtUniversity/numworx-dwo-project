@@ -358,6 +358,12 @@ public class GeogebraView implements InteractionView, LoadHandler
 	{
 		return score;
 	}
+	
+	@Override
+	public int[][] getScoreObjectives()
+	{
+		return null;
+	}
 
 	@Override
 	public Boolean isCorrect()

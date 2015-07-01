@@ -199,6 +199,11 @@ public class MC2View extends Composite implements InteractionView {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+	@Override
+	public int[][] getScoreObjectives() {
+		return null;
+	}
 
 	@Override
 	public Boolean isCorrect() {

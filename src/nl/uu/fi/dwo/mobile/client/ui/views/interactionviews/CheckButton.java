@@ -183,6 +183,11 @@ public class CheckButton implements InteractionStub
 	public int getScore() {
 		return 0;
 	}
+	
+	@Override
+	public int[][] getScoreObjectives() {
+		return null;
+	}
 
 	@Override
 	public Boolean isCorrect() {

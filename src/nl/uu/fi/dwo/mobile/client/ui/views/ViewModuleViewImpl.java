@@ -836,6 +836,32 @@ try {
 		return completed;
 	}
 
+	public int[][] getScoreObjectives()
+	{
+		if (objectives == null)
+			return null;
+		int[][] scoreObjectives = new int[objectives.length][];
+		for (int i = 0; i < objectives.length; i++)
+			scoreObjectives[i] = new int[objectives[i].length];
+		for (int i = 0; i < opdrachtObjects.size(); i++)
+		{
+			Object currentObject = opdrachtObjects.get(i);
+			if (currentObject instanceof InteractionView)
+			{
+				int[][] scoreObj = ((InteractionView) currentObject).getScoreObjectives();
+				for (int j = 0; scoreObj != null && j < objectives.length && j < scoreObj.length; j++)
+				{
+					for (int k = 0; scoreObj[j] != null && k < objectives[j].length && k < scoreObj[j].length; k++)
+						try{	scoreObjectives[j][k] += scoreObj[j][k];
+						}
+						catch(Exception e){}
+					
+				}
+			}
+		}
+		return scoreObjectives;
+	}
+	
 	public int getScore()
 	{
 		int score = 0;
