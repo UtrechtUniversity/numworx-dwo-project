@@ -44,7 +44,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 	static final String QWERTY = "ABC";
 	static final String qwerty = "abc";
 	static final String SCRIBBLE = "Scribble";
-	static final boolean hasKeyboard  = ! TouchEvent.isSupported();
+	static final boolean hasKeyboard  = true ; // ! TouchEvent.isSupported();
 	protected static final String KEYBOARD = "Toetsenbord";
 	private FormuleEditorIF editor;
 	public KeyBoardTabPanel tp;

@@ -1337,7 +1337,7 @@ public class FormuleRegel extends FormuleElement
 	public String toMathML() {		
 		int count = children.size();
 		if(count == 1)
-			return ((FormuleElement) children.get(0)).toMathML();
+			return fix1char(((FormuleElement) children.get(0)).toMathML());
 		int pos = 0;
 		int next = 0;
 		StringBuffer sb = new StringBuffer("<mrow>");
@@ -1346,6 +1346,8 @@ public class FormuleRegel extends FormuleElement
 			FormuleElement f = (FormuleElement) children.get(i);
 			next = sb.length();
 			String mathML = f.toMathML();
+			
+			mathML = fix1char(mathML);
 			if(f instanceof Machtvak)
 			{
 				sb.insert(pos, "<msup>");				
@@ -1370,6 +1372,18 @@ public class FormuleRegel extends FormuleElement
 		}
 		sb.append("</mrow>");
 		return sb.toString();
+	}
+
+	private String fix1char(String mathML) {
+		if(mathML.length() == 1) {
+			switch(mathML.charAt(0)) {
+			case '>' : mathML = "&gt"; break;
+			case '<' : mathML = "&lt"; break;
+			case '&' : mathML = "&amp;"; break;
+			}
+			mathML = "<mtext>" + mathML + "</mtext>";
+		}
+		return mathML;
 	}
 
 	

@@ -506,6 +506,6 @@ public class FormuleTeken extends FormuleElement
 
 	public String toString()
 	{
-		return "" + this.character;
+		return String.valueOf(this.character);
 	}
 }
