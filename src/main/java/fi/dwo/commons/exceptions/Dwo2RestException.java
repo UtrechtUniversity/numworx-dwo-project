@@ -111,6 +111,7 @@ public class Dwo2RestException extends WebApplicationException implements Dwo2Ex
     public static Dwo2ExceptionCode decodeCodeInJSON(String json) {
         Genson genson = new Genson();
         Map<String, Object> map = (Map<String, Object>) genson.deserialize(json, Map.class);
+        cast error
         return (Dwo2ExceptionCode) map.get("Dwo2ExceptionCode");
     }    
 }
