@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Dwo2 Rest exception. This exception contains an error code and message. The
@@ -19,6 +20,7 @@ import javax.ws.rs.core.Response;
  *
  * @author G.A.J. van der Plas
  */
+@XmlRootElement
 public class Dwo2RestException extends WebApplicationException implements Dwo2ExceptionInterface {
 
     /**
@@ -61,8 +63,8 @@ public class Dwo2RestException extends WebApplicationException implements Dwo2Ex
      * @see WebApplicationException
      */
     public Dwo2RestException(Dwo2ExceptionCode code, String message) {
-        super(Response.status(Response.Status.BAD_REQUEST)
-             .entity(code.name()).type(MediaType.TEXT_PLAIN).build()
+        super(Response.status(400)
+             .entity(encodeJSON(code,message)).type(MediaType.TEXT_HTML).build()
         );
         
     }
@@ -91,7 +93,7 @@ public class Dwo2RestException extends WebApplicationException implements Dwo2Ex
         return msg;
     }
 
-    private static String encodeJSON(Dwo2ExceptionCode code, String message) {
+    public static String encodeJSON(Dwo2ExceptionCode code, String message) {
         Genson genson = new Genson();
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("Dwo2ExceptionCode", code.name());
@@ -100,13 +102,13 @@ public class Dwo2RestException extends WebApplicationException implements Dwo2Ex
         return json;
     }
     
-    private static String decodeMessageInJSON(String json) {
+    public static String decodeMessageInJSON(String json) {
         Genson genson = new Genson();
         Map<String, Object> map = (Map<String, Object>) genson.deserialize(json, Map.class);
         return (String) map.get("msg");
     }
 
-    private static Dwo2ExceptionCode decodeCodeInJSON(String json) {
+    public static Dwo2ExceptionCode decodeCodeInJSON(String json) {
         Genson genson = new Genson();
         Map<String, Object> map = (Map<String, Object>) genson.deserialize(json, Map.class);
         return (Dwo2ExceptionCode) map.get("Dwo2ExceptionCode");
