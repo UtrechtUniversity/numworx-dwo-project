@@ -24,6 +24,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 /**
@@ -46,13 +47,13 @@ public class SecuredRegistrationManager {
     @PUT
     @Produces({"application/json"})
     @Path("/existingUser/json")
-    public boolean registerExistingUser(@Context SecurityContext sc, NewUserRegistration existingUserReg) {
+    public Response registerExistingUser(@Context SecurityContext sc, NewUserRegistration existingUserReg) {
         EntityManager em = DwoEmfFactory.createEntityManager();
 
         //Check for userid, should not exist.
         PersistentUser user = UserManager.findByUserName(sc.getUserPrincipal().getName());
         if (user == null) {
-            return false;
+            return Response.status(400).entity("User already exists.").build();
         }
         //invariant: usercode does exist
 
@@ -117,6 +118,6 @@ public class SecuredRegistrationManager {
         HasRoleManager.create(hasRole);
         LOG.log(Level.INFO,"Created a new HasRole for user index {0}, schoolgroup index {1} and role {2} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), hasRole.getSchoolGroup().getRole()});
         //success
-        return true;
+        return Response.status(200).entity("{works").build();
     }
 }
