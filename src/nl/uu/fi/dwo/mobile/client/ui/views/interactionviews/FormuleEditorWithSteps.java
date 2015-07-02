@@ -1354,12 +1354,16 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		if(editor != null)
 			antwoordString = editor.toString();
 		if(!antwoordString.equals(""))
+		{
 			this.ingevuld = true;
+			formuleVakInhouden[stapNr] = "$f" + antwoordString + "@"; // antwoordstring is laatste inhoud.
+		}
 		if(!hasStartString && !formuleVakInhouden[0].equals("$f@"))
 			this.ingevuld = true;
 		if(hasStartString && stapNr > 0 && !formuleVakInhouden[1].equals("$f@"))
 			this.ingevuld = true;
 		ingevuld = this.ingevuld;
+		
 		nagekeken = this.nagekeken;
 		if (substitutie != null)
 			substitutieString = "$f" + substitutie.toString() + "@";
@@ -1369,7 +1373,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		HashMap<String, Object> h = new HashMap<String, Object>();
 		h.put("stapNr", new Integer(stapNr));
 		h.put("formuleVakInhouden", formuleVakInhouden);
-		h.put("antwoordString", antwoordString);
+		h.put("antwoordString", "$f" + antwoordString + "@");
 		h.put("pijlVakInhouden", pijlVakInhouden);
 		h.put("pijlVakOperatoren", pijlVakOperatoren);
 		h.put("ingevuld", new Boolean(ingevuld));
