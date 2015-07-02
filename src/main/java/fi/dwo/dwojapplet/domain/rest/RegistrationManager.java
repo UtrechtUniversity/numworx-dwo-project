@@ -35,7 +35,7 @@ public class RegistrationManager {
      * @param existingUserReg
      * @return
      */
-    public static boolean RegisterExistingUser(NewUserRegistration existingUserReg) {
+    public static boolean RegisterExistingUser(NewUserRegistration existingUserReg) throws Dwo2RestException {
         boolean r;
         //login to rest service, note there is usually not yet be a fully configured StoredRestManager.
         HttpAuthenticationFeature feature = HttpAuthenticationFeature.universalBuilder().credentialsForDigest(existingUserReg.getUsername(), existingUserReg.getPassword()).build();
@@ -46,10 +46,11 @@ public class RegistrationManager {
                 .request().put(Entity.entity(existingUserReg, MediaType.APPLICATION_JSON));
         if (response.getStatus() != 200) {
             // failed login
-            String msg = (String) response.getEntity();
+            String msg = (String) response.readEntity(String.class);
+             //response.getEntity();
 //            throw Dwo2Exception()
-            LOG.log(Level.INFO, "Status {0}, Reason {1}, entity {2}, for user {3}.", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase(), response.getEntity(), existingUserReg.getUsername()});
-            return false;
+            LOG.log(Level.INFO, "Status {0}, Reason {1}, entity {2}, for user {3}.", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase(), msg, existingUserReg.getUsername()});
+            throw new Dwo2RestException(Dwo2RestException.decodeCodeInJSON(msg), Dwo2RestException.decodeMessageInJSON(msg));
         } else {
             //Set return value
            r = response.readEntity(Boolean.class);
