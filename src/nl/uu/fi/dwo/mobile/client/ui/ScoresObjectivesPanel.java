@@ -7,6 +7,7 @@ import java.util.Map;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.TextArea;
@@ -178,15 +179,13 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 				straalRij[j][i] = (int) Math.round(straal * scoresPercObjectives[j][i]/100);
 			for(int i = 0; i < objectivesForDiagram[j].length; i++)
 			{	objectivesTextAreas[j][i] = new TextArea();
+				objectivesTextAreas[j][i].setWidth(breedteLabel(i,j) + "px");
 				objectivesTextAreas[j][i].getElement().getStyle().setFontSize(12, Unit.PX);
-				//objectivesTextAreas[j][i].
-				//TODO: omzetten naar css-rules
-				//objectivesTextAreas[j][i].setFont();
-				//objectivesTextAreas[j][i].setLineWrap(true);
-				//objectivesTextAreas[j][i].setWrapStyleWord(true);
-				
-				//TODO: plaatsing en toevoegen teksten anders (gwt-style) regelen.
-			
+				//objectivesTextAreas[j][i].setReadOnly(true);
+				objectivesTextAreas[j][i].getElement().getStyle().setBorderStyle(BorderStyle.NONE);
+				objectivesTextAreas[j][i].getElement().getStyle().setMargin(0, Unit.PX);
+				objectivesTextAreas[j][i].getElement().getStyle().setPadding(0, Unit.PX);
+							
 				double links = 0; 
 				double top = 0;
 				ctx.setFont("12 px Arial");
@@ -268,7 +267,7 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 	public double breedteLabel(int i, int j)
 	{
 		double breedte = Math.min(mpX[0] - straal - marge, 
-			ctx.measureText(objectivesForDiagram[j][i] + ": " + (int) scoresPercObjectives[j][i]+"%").getWidth());
+			ctx.measureText(objectivesForDiagram[j][i] + ": " + (int) scoresPercObjectives[j][i]+"%").getWidth() + marge);
 		return breedte;	
 	}
 	
@@ -276,9 +275,9 @@ public class ScoresObjectivesPanel extends LayoutPanel{
 	{
 		double hoogte = 0;
 		if(ctx.measureText(objectivesForDiagram[j][i] + ": " + (int) scoresPercObjectives[j][i] + "%").getWidth() > mpX[0] - straal - marge)
-			hoogte = 30;
+			hoogte = 35;
 		else 
-			hoogte = 15;			
+			hoogte = 17;			
 		
 		return hoogte;
 	}
