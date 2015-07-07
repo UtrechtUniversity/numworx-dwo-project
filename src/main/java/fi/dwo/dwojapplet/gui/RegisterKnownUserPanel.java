@@ -31,8 +31,20 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 /**
- * This class is a panel where a known user can register himself for a (new)
- * school.
+ * <p>This class is a panel where a known user can register himself for a (new)
+ * school.</p>
+ * 
+ * <p>How to test manual:</p>
+ * 
+ * <ul>
+ * <li>Register once for each existing role. Then login and goto to the Profile panel.
+ * Switch to that registered role, it should work. </li>
+ * <li> Try to register for an existing role, it should fail with a message. </li>
+ * <li> Register with a false school name, it should fail with a message.</li>
+ * <li> Register with a false school code, it should fail with a message.<li>
+ * <li> Register with a wrong role but correct school name and code, it should fail with a message.</li>
+ * <li> Test the reset button </li>
+ * </ul>
  */
 public class RegisterKnownUserPanel extends ContentPanel implements ActionListener {
 
@@ -448,23 +460,26 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == registerButton) {
             if ((groupChoice.getSelectedIndex() == 0) && (schoollogin.getText().equals("")) && (schoolpassword.getText().equals(""))) {
-                try{
-                NewUserRegistration nur = new NewUserRegistration();
+                try {
+                    NewUserRegistration nur = new NewUserRegistration();
 
-                nur.setUsername(username.getText());
-                nur.setPassword(MD5.getHashString(password.getText()));
-                nur.setGivenName(firstname.getText());
-                nur.setInsertion(middlename.getText());
-                nur.setFamilyName(lastname.getText());
-                nur.setEmail(email.getText());
-                nur.setSchoolLogin(null);
-                nur.setSchoolCode(null);
-                nur.setRole(DwoHelper.getRoles().get(RoleType.NOSCHOOL.ordinal()));
-                RegistrationManager.RegisterExistingUser(nur);
-                } catch (Dwo2RestException ex) {
+                    nur.setUsername(username.getText());
+                    nur.setPassword(MD5.getHashString(password.getText()));
+                    nur.setGivenName(firstname.getText());
+                    nur.setInsertion(middlename.getText());
+                    nur.setFamilyName(lastname.getText());
+                    nur.setEmail(email.getText());
+                    nur.setSchoolLogin(null);
+                    nur.setSchoolCode(null);
+                    nur.setRole(DwoHelper.getRoles().get(RoleType.NOSCHOOL.ordinal()));
+                    RegistrationManager.RegisterExistingUser(nur);
+                    JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                    GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
+                }
+                catch (Dwo2RestException ex) {
                     JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 }
-            }else{
+            } else {
                 PersistentRole role = null;
                 if (groupChoice.getSelectedIndex() > 0) {
                     role = DwoHelper.getRoles().get(groupChoice.getSelectedIndex() - 1);
@@ -477,10 +492,14 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
                     nur.setSchoolLogin(schoollogin.getText());
                     nur.setSchoolCode(schoolpassword.getText());
                     RegistrationManager.RegisterExistingUser(nur); //throws Dwo2RestException.
-                } catch (Dwo2RestException ex) {
+                    JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+                    GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
+                }
+                catch (Dwo2RestException ex) {
                     JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 }
-            }            
+
+            }
         } else if (e.getSource() == resetButton) {
             username.setText("");
             password.setText("");

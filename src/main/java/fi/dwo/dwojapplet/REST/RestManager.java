@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -60,11 +61,14 @@ class RestManager {
      * @return A list of class c objects.
      */
     public <T> T get(String path, Class<T> c) throws Dwo2RestException {
-        Response response = webTargetRest.path(path).request().get();
+        CacheControl cache = new CacheControl();
+        cache.setNoCache(true);
+        cache.isNoStore();
+        Response response = webTargetRest.path(path).request().cacheControl(cache).get();
         if (response.getStatus() != 200) {
             LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
-            Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.Rest_InterfaceError,(String) response.getEntity());//TODO refine the error codes.
-            LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(),e.getDwo2Message()});
+            Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.Rest_InterfaceError, (String) response.getEntity());//TODO refine the error codes.
+            LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(), e.getDwo2Message()});
             throw e;
         } else {
             return response.readEntity(c);
@@ -80,12 +84,16 @@ class RestManager {
      * @return A list of Class c.
      */
     public <T> List<T> getList(String path, RestClassType type) throws Dwo2RestException {
-        Response response = webTargetRest.path(path).request().get();
+        CacheControl cache = new CacheControl();
+        cache.setNoCache(true);
+        cache.isNoStore();
+        
+        Response response = webTargetRest.path(path).request().cacheControl(cache).get();
         if (response.getStatus() != 200) {
             LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
-           // Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.Rest_InterfaceError,(String) response.getEntity());//TODO refine the error codes.
-           // LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(),e.getDwo2Message()});
-          //  throw e;
+            // Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.Rest_InterfaceError,(String) response.getEntity());//TODO refine the error codes.
+            // LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(),e.getDwo2Message()});
+            //  throw e;
             return null;
         } else {
             switch (type) {
@@ -104,7 +112,7 @@ class RestManager {
                 default:
                     String msg = "Error trying to get an unsupported dataType.";
                     LOG.log(Level.SEVERE, msg);
-                    throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError,msg);
+                    throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
             }
         }
     }
@@ -119,14 +127,24 @@ class RestManager {
      * @return A list of class c objects.
      */
     public <T> T put(String path, Class<T> c, Object o) throws Dwo2RestException {
-        Response response = webTargetRest.path(path).request().put(Entity.entity(o, MediaType.APPLICATION_JSON));
+                CacheControl cache = new CacheControl();
+        cache.setNoCache(true);
+        cache.isNoStore();
+
+        Response response = webTargetRest.path(path).request().cacheControl(cache).put(Entity.entity(o, MediaType.APPLICATION_JSON));
         if (response.getStatus() != 200) {
-             LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
-            String json = (String) response.readEntity(String.class);
-            Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.Rest_InterfaceError,json);//TODO refine the error.
-            LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(),e.getDwo2Message()});
+            LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
+            Dwo2RestException e;
+            if (response.getStatus() == 400) {
+                String json = (String) response.readEntity(String.class);
+                e = new Dwo2RestException(Dwo2RestException.decodeCodeInJSON(json), Dwo2RestException.decodeMessageInJSON(json));
+            } else {
+                e = new Dwo2RestException(Dwo2ExceptionCode.Rest_InterfaceError, response.getStatusInfo().getReasonPhrase());
+            }
+            LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(), e.getDwo2Message()});
             throw e;
-       } else {
+
+        } else {
             T r = response.readEntity(c);
             return (r);
         }
