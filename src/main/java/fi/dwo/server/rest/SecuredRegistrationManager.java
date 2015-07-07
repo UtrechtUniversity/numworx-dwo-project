@@ -102,7 +102,7 @@ public class SecuredRegistrationManager {
         PersistentHasRole hasRole = HasRoleManager.findPersistentHasRole(pk);
         if (hasRole != null) {
                 LOG.log(Level.INFO, "Registration failde for school {0}, schoolgroup id {1}, user id {2} already exists.", new Object[]{school.getSchoolName(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), hasRole.getPersistentHasRolePK().getUserID()});
-                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_hasRole_exists, "The license expired on "+school.getExpire());                
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_hasRole_exists, "The user has already been registered.");                
         }
 
         //invariant: usercode does exist and school exists for schoollogin and schoolcode and has a valid licence and the hasRole does not yet exist.
@@ -118,6 +118,6 @@ public class SecuredRegistrationManager {
         HasRoleManager.create(hasRole);
         LOG.log(Level.INFO,"Created a new HasRole for user index {0}, schoolgroup index {1} and role {2} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), hasRole.getSchoolGroup().getRole()});
         //success
-        return Response.status(200).entity("{works").build();
+        return Response.status(200).entity("{works}").build();
     }
 }
