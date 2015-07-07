@@ -118,6 +118,6 @@ public class SecuredRegistrationManager {
         HasRoleManager.create(hasRole);
         LOG.log(Level.INFO,"Created a new HasRole for user index {0}, schoolgroup index {1} and role {2} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), hasRole.getSchoolGroup().getRole()});
         //success
-        return Response.status(200).entity("{works}").build();
+        return Response.status(200).entity(true).build();
     }
 }
