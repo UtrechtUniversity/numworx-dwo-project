@@ -32,7 +32,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentSchool.findBySchoolID", query = "SELECT p FROM PersistentSchool p WHERE p.schoolID = :schoolID"),
     @NamedQuery(name = "PersistentSchool.findBySchoolName", query = "SELECT p FROM PersistentSchool p WHERE p.schoolName = :schoolName"),
     @NamedQuery(name = "PersistentSchool.findBySchoollogin", query = "SELECT p FROM PersistentSchool p WHERE p.schoollogin = :schoollogin"),
-    @NamedQuery(name = "PersistentSchool.findByPasswordSchool", query = "SELECT p FROM PersistentSchool p WHERE p.passwordSchool = :passwordSchool"),
     @NamedQuery(name = "PersistentSchool.findByExport", query = "SELECT p FROM PersistentSchool p WHERE p.export = :export"),
     @NamedQuery(name = "PersistentSchool.findBySchoolRights", query = "SELECT p FROM PersistentSchool p WHERE p.schoolRights = :schoolRights"),
     @NamedQuery(name = "PersistentSchool.findByImage", query = "SELECT p FROM PersistentSchool p WHERE p.image = :image"),
@@ -54,11 +53,11 @@ public class PersistentSchool implements Serializable {
     @Size(min = 1, max = 128)
     @Column(name = "schoollogin", nullable = false, length = 128)
     private String schoollogin;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 128)
-    @Column(name = "passwordSchool", nullable = false, length = 128)
-    private String passwordSchool;
+//    @Basic(optional = false)
+//    @NotNull
+//    @Size(min = 1, max = 128)
+//    @Column(name = "passwordSchool", nullable = false, length = 128)
+//    private String passwordSchool;
     @Column(name = "export")
     private Boolean export;
     @Size(max = 100)
@@ -78,11 +77,10 @@ public class PersistentSchool implements Serializable {
         this.schoolID = schoolID;
     }
 
-    public PersistentSchool(Integer schoolID, String schoolName, String schoollogin, String passwordSchool) {
+    public PersistentSchool(Integer schoolID, String schoolName, String schoollogin) {
         this.schoolID = schoolID;
         this.schoolName = schoolName;
         this.schoollogin = schoollogin;
-        this.passwordSchool = passwordSchool;
     }
 
     public Integer getSchoolID() {
@@ -108,15 +106,6 @@ public class PersistentSchool implements Serializable {
     public void setSchoollogin(String schoollogin) {
         this.schoollogin = schoollogin;
     }
-
-    public String getPasswordSchool() {
-        return passwordSchool;
-    }
-
-    public void setPasswordSchool(String passwordSchool) {
-        this.passwordSchool = passwordSchool;
-    }
-
     public Boolean getExport() {
         return export;
     }
@@ -173,7 +162,6 @@ public class PersistentSchool implements Serializable {
         {
             return false;
         }
-    
         return true;
     }
     
