@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,11 +16,8 @@ import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.LoadEvent;
-import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
@@ -280,10 +278,14 @@ public class MC2View extends Composite implements InteractionView {
 	
 	String getAction(String name) 
 	{
-		String action = actionMap.get(name);
-		if(action ==  null)
-			return "https://ws.fisme.science.uu.nl/DWOmAccess/lti/widget.jsp";
-		return action;
+		try {
+			String action = actionMap.get(name);
+			if(action !=  null)
+				return action;
+		} catch (MissingResourceException e) {
+			LOGGER.log(Level.INFO, null, e);
+		}
+		return "http://ws.fisme.science.uu.nl/DWOmAccess/lti/widget.jsp";
 	}
 
 
@@ -298,7 +300,7 @@ public class MC2View extends Composite implements InteractionView {
 //				pendingState = null;
 //			} 
 		} catch(Exception e) {
-			Logger.getLogger("MC2View").log(Level.SEVERE,"init "+ e);
+			LOGGER.log(Level.SEVERE,"init "+ e);
 		}
 		
 
