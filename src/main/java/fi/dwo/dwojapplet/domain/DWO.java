@@ -79,11 +79,9 @@ import javax.ws.rs.client.WebTarget;
 import org.apache.xmlrpc.applet.MySimpleXmlRpcClient;
 
 /**
- * This is the main applet class of the DWO.<br>
- * At the start, a WelcomePanel is showed.<br>
- *
- * @author M.J.B. Kupers
- *
+ * This is the main DWO application. It can be started as an applet or as a  
+ * stand alone application. 
+ * 
  */
 public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM2004APIInterface {
 
@@ -134,6 +132,10 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 
     FocusTraversalPolicy delegate;
 
+    /**
+     * Reads a logging properties file. It first tries to find an external one. Otherwise
+     * it reads the internal one.
+     */
     private static void ReadLoggingProperties() {
         try {
             FileInputStream file;
@@ -185,9 +187,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 
             //assign properties to static value.
             String servletConnectStringProperty = properties.getProperty("servletConnectString");
-            //if(servletConnectStringProperty==null){
-            // servletConnectStringProperty="http://ws.fisme.science.uu.nl/";
-            //}
             DwoHelper.setServletConnectString(servletConnectStringProperty);
             LOG.log(Level.FINE, "Property {0} is value: {1}", new Object[]{"setServletConnectString",
                 DwoHelper.getServletConnectString()});
@@ -198,6 +197,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
                 DwoHelper.getGetResourceURLPathString()});
 
             String xmlrpc_debug = properties.getProperty("xmlrpc.debug", "false");
+            LOG.log(Level.FINE, "Property {0} is value: {1}", new Object[]{"xmlrpc.debug",xmlrpc_debug});
             MySimpleXmlRpcClient.setDebug("true".equals(xmlrpc_debug));
 
         } catch (FileNotFoundException ex) {
@@ -1193,7 +1193,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     }
 
     /**
-     * Initializes the applet.
+     * First phase of the applet life-cycle, {@Link start} is called immediately after it.
      */
     @Override
     public void init() {
@@ -1484,7 +1484,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         if (DwoHelper.getCurrentFacadeUser() != null) // Dit is de enige plaats waar op null
         // getest mag worden!
         {
-            gc.login(DwoHelper.getCurrentFacadeUser());
+            gc.configurePanelsForUser(DwoHelper.getCurrentFacadeUser());
             return;
         }
 // einde
@@ -1639,25 +1639,23 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 
     }
 
-//    /**
-//     * Indicate that a sco has been ended, so the data can be cleared.
-//     * 
-//     * @param sco The sco that is ended.
-//     */
-//    public void endSco(Sco sco) {
-//        //MapperCreator.instance(Applet.class).removeObject(sco.getAppletID());
-//    }
+/**
+ * 2nd applet life cycle phase. Called automatically after the method {@link #init}. 
+ */
     @Override
     public void start() {
         this.getRootPane().setDoubleBuffered(true);
     }
 
     /**
-     * Stops the current applet. Indicates at the current course that the applet
-     * will be stopped.
+     * <p>Third phase in an applet life-cycle. Is called when a user moves off the page
+     * on which the applet resides. It can be called repeatedly in the same applet.</p>
+     * 
+     * <p> Closes... </p>
      */
     @Override
     public void stop() {
+        //TODO: Question to Wim - Why this?
         if (DwoHelper.getApplet() != this) {
             return;
         }
@@ -1675,6 +1673,12 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         this.setReady();
     }
 
+    /**
+     * Fourth phase in an applet life-cycle. Is called when a user closes a browser. 
+     * Usually resources are released in phase {@Link stop}.
+     * 
+     * <p> Destroys the clipboard an clears the reference to this Applet in the {@Link DwoHelper}.</p>
+     */
     @Override
     public void destroy() {
         Clipboard.destroy();
@@ -1701,15 +1705,21 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         //lookAndFeel = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
         //lookAndFeel = UIManager.getSystemLookAndFeelClassName();
         //UIManager.setLookAndFeel(lookAndFeel);
+        
         int width = GuiConstants.DWO_WIDTH;
         int height = GuiConstants.DWO_HEIGHT;
+        
+        //Initialize an applet
         DWO dwo = new DWO(args);
+        //Configure the applet
         DWO.ReadLoggingProperties();
         DWO.ReadConfigProperties();
+        //Put applet in a frame.
         MainFrame mf = new MainFrame(dwo, width, height);
         mf.setTitle("DWO");
         mf.pack();
-        mf.show();
+        //Start applet.
+        mf.setVisible(true);
     }
 
     @Override
@@ -2314,7 +2324,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      *
      * @param id
      * @param schoolName The name of the new school.
-     * @param schoolLogin The login name of the new school.
+     * @param schoolLogin The configurePanelsForUser name of the new school.
      * @param schoolPasswdMap
      * @param date
      * @return
@@ -2338,7 +2348,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      *
      * @param schoolID The ID of the school.
      * @param schoolName The new name of the school.
-     * @param schoolLogin The new login name of the school.
+     * @param schoolLogin The new configurePanelsForUser name of the school.
      * @param schoolPasswdMap
      * @param date
      * @return school

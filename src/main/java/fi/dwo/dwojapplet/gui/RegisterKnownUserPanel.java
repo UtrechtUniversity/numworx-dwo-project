@@ -37,8 +37,8 @@ import javax.swing.JTextField;
  * <p>How to test manual:</p>
  * 
  * <ul>
- * <li>Register once for each existing role. Then login and goto to the Profile panel.
- * Switch to that registered role, it should work. </li>
+ * <li>Register once for each existing role. Then configurePanelsForUser and goto to the Profile panel.
+ Switch to that registered role, it should work. </li>
  * <li> Try to register for an existing role, it should fail with a message. </li>
  * <li> Register with a false school name, it should fail with a message.</li>
  * <li> Register with a false school code, it should fail with a message.<li>

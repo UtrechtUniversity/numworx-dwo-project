@@ -439,14 +439,14 @@ public final class DwoHelper {
     }
 
     /**
-     * @return the currentFacadeUser
+     * @return the current User
      */
     public static PersistentUser getCurrentUser() {
         return currentUser;
     }
 
     /**
-     * @param aCurrentUser the currentFacadeUser to set
+     * @param aCurrentUser the current User to set
      */
     public static void setCurrentUser(PersistentUser aCurrentUser) {
         currentUser = aCurrentUser;

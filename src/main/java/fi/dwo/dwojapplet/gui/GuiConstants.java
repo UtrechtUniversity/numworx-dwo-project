@@ -1,5 +1,3 @@
-// Source file:
-// N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\GuiConstants.java
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.dwojapplet.domain.DWO;
@@ -26,7 +24,6 @@ public abstract class GuiConstants {
 
     private static final Logger LOG = Logger.getLogger(GuiConstants.class.getName());
 
-//    public static Color MAIN_BACKGROUND = new Color(230, 240, 255);
     public static Color MAIN_BACKGROUND = new Color(221, 238, 255);
     public static Color CELL_BACKGROUND = new Color(221, 238, 255);//new Color(210, 230, 255);
     public static Color SUB_BACKGROUND = new Color(255, 255, 255);

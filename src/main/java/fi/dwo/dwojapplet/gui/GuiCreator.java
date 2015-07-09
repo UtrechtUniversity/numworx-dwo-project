@@ -88,12 +88,10 @@ public class GuiCreator {
         try {
             DwoHelper.setContact(false);
             if (dwo.login(username, password)) {
-// HOOK: check if username is valide volgens de nieuwe regels.
+                // TODO: remove, currently checks if licence is still valid
                 validLicenceCheck(dwo.getUser());
-
-                login(dwo.getUser());
-
-                //ModuleTreePanel.create(dwo );  
+                //configure GuiCreator to show correct Panels and options.
+                configurePanelsForUser(dwo.getUser());
             }
         } catch (LoginException e) {
             throw e;
@@ -119,7 +117,7 @@ public class GuiCreator {
             if (dwo.loginWithMd5(username, password)) {
                 validLicenceCheck(dwo.getUser());
 
-                login(dwo.getUser());
+                configurePanelsForUser(dwo.getUser());
 
                 //ModuleTreePanel.create(dwo );  
             }
@@ -158,7 +156,7 @@ public class GuiCreator {
     /**
      * @param u
      */
-    public void login(User u) {
+    public void configurePanelsForUser(User u) {
         if (u instanceof Teacher) {
             GuiCreator gc;
             if (u instanceof ContactDocent) {

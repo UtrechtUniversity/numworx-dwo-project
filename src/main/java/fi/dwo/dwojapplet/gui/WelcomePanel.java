@@ -78,8 +78,8 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
     }
 
     /**
-     * Creates a new WelcomePanel with the posibilities to login (as guest) or
-     * to register.
+     * Creates a new WelcomePanel with the posibilities to configurePanelsForUser (as guest) or
+ to register.
      *
      */
     public WelcomePanel() {
