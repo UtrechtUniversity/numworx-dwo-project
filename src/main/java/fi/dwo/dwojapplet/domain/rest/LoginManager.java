@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Response;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 
@@ -26,20 +27,20 @@ public class LoginManager {
         PersistentUser user;
         HttpAuthenticationFeature feature = HttpAuthenticationFeature.universalBuilder().credentialsForDigest(username, password).build();
         Client client = ClientBuilder.newClient().register(feature);
-//                CacheControl cache = new CacheControl();
-//        cache.setNoCache(true);
-//        cache.setNoStore(true);
-        
+        CacheControl cache = new CacheControl();
+        cache.setNoCache(true);
+        cache.setNoStore(true);
+
         Response response = client.target(DwoHelper.getBaseServletUrlString())
                 .path("/rest/secure/user/userprofile/get/json")
-                .request().get(Response.class);
+                .request().cacheControl(cache).get(Response.class);
         if (response.getStatus() != 200) {
             // failed login
             System.out.println("Code: " + response.getStatus() + ". Reason: " + response.getStatusInfo().getReasonPhrase());
             return null;
         } else {
             //Set return value
-           user = response.readEntity(PersistentUser.class);
+            user = response.readEntity(PersistentUser.class);
             // succeeded login
             LOG.log(Level.INFO, "Logged in with username {0}.", new Object[]{user.getUsername()});
             //Set webtarget with credentials for future rest login.
