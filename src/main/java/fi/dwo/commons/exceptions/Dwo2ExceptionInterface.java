@@ -4,7 +4,12 @@ package fi.dwo.commons.exceptions;
 import java.util.Locale;
 
 /**
- *
+ * DWO2 exception interface. An unilateral interface for different base-type Exceptions.
+ * The default Exception message now stores a JSON string
+ * that contains an exception code and an exception message in English.
+ * The {@Link Dwo2ExceptionCode} allows for localized standard messages while the exception
+ * details are stored in English in the {@Link Dwo2ExceptionMessage}.
+ * 
  * @author Gert van der Plas
  */
 public interface Dwo2ExceptionInterface {
@@ -20,9 +25,6 @@ public interface Dwo2ExceptionInterface {
      * the JSON string stored in the default exception message.
      * 
      * @return A Dwo2 message string.
-     * 
-     * @see Dwo2ExceptionCode
-     * @return 
      */
     public String getDwo2Message();
     

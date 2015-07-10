@@ -13,17 +13,16 @@ import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Dwo2 Rest exception. This exception contains an error code and message. The
- * error code can be used to lookup general description that is localized for
- * translation. Primary use is for the client-side. The message part is not
- * localized as it is assumed to contain stack traces and other internal code
- * info which by default is English. For GUI messaging it is recommended to use
- * the method {@Link getLocalizedTypeMessage getLocalizedTypeMessage}.
- *
- * @author G.A.J. van der Plas
+ * A Dwo2 exception for handling rest errors. See 
+ * {@Link Dwo2ExceptionInterface} for main details.
+ * 
+ * @author Gert van der Plas
  */
 @XmlRootElement
 public class Dwo2RestException extends WebApplicationException implements Dwo2ExceptionInterface {
+    private static final Logger LOG = Logger.getLogger(Dwo2RestException.class.getName());
+
+    
     Dwo2ExceptionCode code;
     String message;
     
@@ -93,6 +92,13 @@ public class Dwo2RestException extends WebApplicationException implements Dwo2Ex
         );
     }
 
+    /**
+     * Returns a localized human readable explanation of the exception code. In 
+     * case the resource can not be read. Return the English log message.
+     * 
+     * @param locale
+     * @return 
+     */
     @Override
     public String getLocalizedCodeExplanation(Locale locale) {
         String msg;
@@ -102,22 +108,10 @@ public class Dwo2RestException extends WebApplicationException implements Dwo2Ex
             msg = localeLookup.getString(Dwo2ExceptionCode.class.getSimpleName() + "." + code.name());
         }
         catch (Exception e) {
-            Logger.getLogger(Dwo2RestException.class.getName()).log(Level.SEVERE, null, e);
+            //If resource fails, return the english log message.
+            LOG.log(Level.SEVERE, "Can't find the resource Dwo2Exceptions.properties, returning English log message.", e);
             msg = message;
         }
-//        try {
-//            localeLookup = new PropertyResourceBundle(new FileInputStream("./Dwo2Exceptions_nl_NL.properties"));
-//            msg = localeLookup.getString(Dwo2ExceptionCode.class.getSimpleName() + "." + getDwo2Code().name());
-//        }
-//        catch (FileNotFoundException ex) {
-//            Logger.getLogger(Dwo2RestException.class.getName()).log(Level.SEVERE, null, ex);
-//            msg = this.getDwo2Message();
-//        }
-//        catch (IOException ex) {
-//            Logger.getLogger(Dwo2RestException.class.getName()).log(Level.SEVERE, null, ex);
-//            msg = this.getDwo2Message();
-//        }
-
         return msg;
     }
 

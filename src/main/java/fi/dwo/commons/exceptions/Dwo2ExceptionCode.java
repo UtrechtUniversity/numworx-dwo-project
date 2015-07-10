@@ -10,13 +10,15 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public enum Dwo2ExceptionCode {
-    Rest_InternalError, //Internal software error, a stack trace should be acquired.
     User_AuthenticationError, // Illegal account details.
+
+    //REST interface errors
+    Rest_InternalError, //Internal software error, a stack trace should be acquired.
     Rest_InterfaceError, // Error due to an improper Rest-interface.
     
-    // Registration errors
+    // REST Registration errors
     Rest_Registration_UserName_exists,  //User exists already, can't register.
     Rest_Registration_Invalid_school_role_credentials, //Illegal combination of school login and passcode.
-    Rest_Registration_School_license_expired, 
-    Rest_Registration_hasRole_exists //
+    Rest_Registration_School_license_expired,  
+    Rest_Registration_hasRole_exists //User is already registered for this role.
 }
