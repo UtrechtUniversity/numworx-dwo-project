@@ -19,6 +19,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 /**
@@ -41,7 +42,7 @@ public class PublicRegistrationManager {
     @PUT
     @Produces({"application/json"})
     @Path("/newUser/json")
-    public boolean registerNewUser(@Context SecurityContext sc, NewUserRegistration newUserReg) {
+    public Response registerNewUser(@Context SecurityContext sc, NewUserRegistration newUserReg) {
         EntityManager em = DwoEmfFactory.createEntityManager();
         PersistentUser u;
             u = UserManager.findByUserName(newUserReg.getUsername());
@@ -74,8 +75,8 @@ public class PublicRegistrationManager {
             //invariant: usercode does not exists and a school exists for schoollogin and schoolcode
             LOG.log(Level.FINE, "School-manager retrieved school {0} from school login and school code for usercode {3}.", new Object[]{school.getSchoolName(), newUserReg.getSchoolLogin(), newUserReg.getSchoolCode(), newUserReg.getUsername()});
         } catch (Exception ex) {
-            LOG.log(Level.WARNING, "Unexpected software error.", ex);
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Unknown software error at server.");
+                LOG.log(Level.WARNING, "Registration authentication failed due to a possible software error.", ex);
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Registration authentication failed due to a software error, please try again.");
         } finally {
             em.close();
         }
@@ -119,6 +120,6 @@ public class PublicRegistrationManager {
         HasRoleManager.create(hasRole);
         LOG.log(Level.INFO,"HasRole for user, schoolgroup index {0} {1} and role {3} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), hasRole.getSchoolGroup().getRole()});
         //success
-        return true;
+        return Response.status(200).entity(true).build();
     }
 }

@@ -50,12 +50,12 @@ public class SecuredRegistrationManager {
     public Response registerExistingUser(@Context SecurityContext sc, NewUserRegistration existingUserReg) {
         EntityManager em = DwoEmfFactory.createEntityManager();
 
-        //Check for userid, should not exist.
+        //Check for userid, should exist.
         PersistentUser user = UserManager.findByUserName(sc.getUserPrincipal().getName());
         if (user == null) {
-            return Response.status(400).entity("User already exists.").build();
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "Authentication for " + sc.getUserPrincipal().getName() + " failed.");
         }
-        //invariant: usercode does exist
+        //invariant: have user data
 
         //fetch schoolgroup id.     
         PersistentSchoolGroup sg;
@@ -73,20 +73,21 @@ public class SecuredRegistrationManager {
             sg = (PersistentSchoolGroup) q.getSingleResult();
             school = sg.getSchool(); // Sadly, another query.
             if (school == null) {
-                String msg = String.format("Registration failde for school {0} with school login {1} and school code {2} for usercode {3}.",new Object[]{school.getSchoolName(), existingUserReg.getSchoolLogin(), existingUserReg.getSchoolCode(), existingUserReg.getUsername()});
+                String msg = String.format("Registration authentication failed for school {0} with school login {1} and school code {2} for usercode {3}.",new Object[]{school.getSchoolName(), existingUserReg.getSchoolLogin(), existingUserReg.getSchoolCode(), existingUserReg.getUsername()});
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Invalid_school_role_credentials, msg);                
             }
             //invariant: usercode does not exists and a school exists for schoollogin and schoolcode
             LOG.log(Level.FINE, "School-manager retrieved school {0} from school login and school code for usercode {3}.", new Object[]{school.getSchoolName(), existingUserReg.getSchoolLogin(), existingUserReg.getSchoolCode(), existingUserReg.getUsername()});
         }
         catch (Exception ex) {
-            LOG.log(Level.WARNING, "Unexpected software error.", ex);
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Unknown software error at server.");
+                LOG.log(Level.WARNING, "Registration authentication failed due to a possible software error.", ex);
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Registration authentication failed due to a software error, please try again.");
         }
         finally {
             em.close();
         }
 
+        //invariant: have school data and user data
         if (!school.licenseIsValid()) {
                 LOG.log(Level.INFO, "Registration failde for school {0}, school id {1}, the license expired on {2}.", new Object[]{school.getSchoolName(), school.getSchoolID(), school.getExpire()});
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_School_license_expired, "The license expired on "+school.getExpire());                
@@ -94,7 +95,8 @@ public class SecuredRegistrationManager {
 
         Date now = new Date();
 
-        //invariant: usercode does exist and school exists for schoollogin and schoolcode and has a valid licence.
+        //invariant: have school data and user data and school has a valid licence.
+
         //check for hasRole
         PersistentHasRolePK pk = new PersistentHasRolePK();
         pk.setSchoolGroupID(sg.getSchoolGroupID());
@@ -106,6 +108,7 @@ public class SecuredRegistrationManager {
         }
 
         //invariant: usercode does exist and school exists for schoollogin and schoolcode and has a valid licence and the hasRole does not yet exist.
+
         //building hasRole
         //buiding compound key hasRole
         hasRole = new PersistentHasRole();
@@ -115,6 +118,7 @@ public class SecuredRegistrationManager {
         hasRole.setLastLogin(now); //considering an account creation a first login as there is a password
         hasRole.setRegisterDate(now);
         hasRole.setRights("_");  //TODO make a rightsManager
+
         HasRoleManager.create(hasRole);
         LOG.log(Level.INFO,"Created a new HasRole for user index {0}, schoolgroup index {1} and role {2} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), hasRole.getSchoolGroup().getRole()});
         //success
