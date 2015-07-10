@@ -67,7 +67,16 @@ class RestManager {
         Response response = webTargetRest.path(path).request().cacheControl(cache).get();
         if (response.getStatus() != 200) {
             LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
-            Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.Rest_InterfaceError, (String) response.getEntity());//TODO refine the error codes.
+            Dwo2RestException e;
+            if (response.getStatus() == 400) {
+                //Assuming server side servlet generated exception has been sent.
+                String json = (String) response.readEntity(String.class);
+                e = new Dwo2RestException(Dwo2RestException.decodeCodeInJSON(json), Dwo2RestException.decodeMessageInJSON(json));
+            } else {
+                //non-servlet generated exception has been sent. Convert to Dwo2RestException.
+                //TODO To filter these for the user and suggest a course of action.
+                e = new Dwo2RestException(Dwo2ExceptionCode.Rest_InterfaceError, response.getStatusInfo().getReasonPhrase());
+            }
             LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(), e.getDwo2Message()});
             throw e;
         } else {
@@ -87,14 +96,21 @@ class RestManager {
         CacheControl cache = new CacheControl();
         cache.setNoCache(true);
         cache.isNoStore();
-        
         Response response = webTargetRest.path(path).request().cacheControl(cache).get();
         if (response.getStatus() != 200) {
             LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
-            // Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.Rest_InterfaceError,(String) response.getEntity());//TODO refine the error codes.
-            // LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(),e.getDwo2Message()});
-            //  throw e;
-            return null;
+            Dwo2RestException e;
+            if (response.getStatus() == 400) {
+                //Assuming server side servlet generated exception has been sent.
+                String json = (String) response.readEntity(String.class);
+                e = new Dwo2RestException(Dwo2RestException.decodeCodeInJSON(json), Dwo2RestException.decodeMessageInJSON(json));
+            } else {
+                //non-servlet generated exception has been sent. Convert to Dwo2RestException.
+                //TODO To filter these for the user and suggest a course of action.
+                e = new Dwo2RestException(Dwo2ExceptionCode.Rest_InterfaceError, response.getStatusInfo().getReasonPhrase());
+            }
+            LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(), e.getDwo2Message()});
+            throw e;
         } else {
             switch (type) {
                 case PersistentUser:
@@ -110,7 +126,7 @@ class RestManager {
                     };
                     return (List<T>) response.readEntity(pSRCType);
                 default:
-                    String msg = "Error trying to get an unsupported dataType.";
+                    String msg = "Programming error, trying to get an unsupported dataType.";
                     LOG.log(Level.SEVERE, msg);
                     throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, msg);
             }
@@ -127,7 +143,7 @@ class RestManager {
      * @return A list of class c objects.
      */
     public <T> T put(String path, Class<T> c, Object o) throws Dwo2RestException {
-                CacheControl cache = new CacheControl();
+        CacheControl cache = new CacheControl();
         cache.setNoCache(true);
         cache.isNoStore();
 
@@ -136,9 +152,12 @@ class RestManager {
             LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
             Dwo2RestException e;
             if (response.getStatus() == 400) {
+                //Assuming server side servlet generated exception has been sent.
                 String json = (String) response.readEntity(String.class);
                 e = new Dwo2RestException(Dwo2RestException.decodeCodeInJSON(json), Dwo2RestException.decodeMessageInJSON(json));
             } else {
+                //non-servlet generated exception has been sent. Convert to Dwo2RestException.
+                //TODO To filter these for the user and suggest a course of action.
                 e = new Dwo2RestException(Dwo2ExceptionCode.Rest_InterfaceError, response.getStatusInfo().getReasonPhrase());
             }
             LOG.log(Level.WARNING, "Dwo2Code: {0}. Dwo2Reason{1}", new Object[]{e.getDwo2Code().name(), e.getDwo2Message()});
