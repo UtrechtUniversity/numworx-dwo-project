@@ -27,6 +27,7 @@ public class RoleManager {
      * @throws fi.dwo.dwojapplet.domain.rest.RestException
      */
     public static List<PersistentRole> getRoles() throws RestException {
+        change restException to Dwo2RestException and stuff
         //login to rest service
         List<PersistentRole> roles;
 //        GenericType<ArrayList<PersistentRole>> oClass = new GenericType<ArrayList<PersistentRole>>() {};

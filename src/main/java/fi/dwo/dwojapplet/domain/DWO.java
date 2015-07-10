@@ -73,10 +73,12 @@ import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.plaf.ColorUIResource;
+import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
 import org.apache.xmlrpc.applet.MySimpleXmlRpcClient;
+import org.glassfish.jersey.client.ClientProperties;
 
 /**
  * This is the main DWO application. It can be started as an applet or as a  
@@ -1222,7 +1224,10 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             }
         }
         //intialize the proper connection but without any credentials.
-        WebTarget target = ClientBuilder.newClient().target(DwoHelper.getBaseServletUrlString());
+        Client client = ClientBuilder.newClient();
+        client.property(ClientProperties.CONNECT_TIMEOUT, 5000);
+        client.property(ClientProperties.READ_TIMEOUT,    5000);
+        WebTarget target = client.target(DwoHelper.getBaseServletUrlString());
         StoredRestManager.setWebTargetRest(target);
         try {
             DwoHelper.setRoles(RoleManager.getRoles());

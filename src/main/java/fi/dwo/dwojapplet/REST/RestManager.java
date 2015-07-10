@@ -1,6 +1,7 @@
 /* Copyrighted 2015. */
 package fi.dwo.dwojapplet.REST;
 
+import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.rest.RestClassType;
@@ -92,11 +93,22 @@ class RestManager {
      * @param type
      * @return A list of Class c.
      */
-    public <T> List<T> getList(String path, RestClassType type) throws Dwo2RestException {
+    public <T> List<T> getList(String path, RestClassType type) throws Dwo2RestException, Dwo2Exception {
         CacheControl cache = new CacheControl();
         cache.setNoCache(true);
         cache.isNoStore();
-        Response response = webTargetRest.path(path).request().cacheControl(cache).get();
+        Response response;
+        try{
+            response = webTargetRest.path(path).request().cacheControl(cache).get();
+        }catch(javax.ws.rs.ProcessingException e){
+            //catch time-outs
+            if(e.getMessage().contains("java.net.SocketTimeoutException: connect timed out")){
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_ConnectionTimeout, "Connection time-out.");
+            }else{
+                throw e;
+            }
+        }
+
         if (response.getStatus() != 200) {
             LOG.log(Level.WARNING, "Code: {0}. Reason{1}", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase()});
             Dwo2RestException e;
