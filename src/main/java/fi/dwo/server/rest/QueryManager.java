@@ -73,7 +73,7 @@ public class QueryManager {
             }
             return r;
         } else {
-            LOG.log(Level.WARNING, "ILLEGAL USER-OPERATION: {0} is trying to run an illegal free query operation.", new Object[]{sc.getUserPrincipal().getName()});
+            LOG.log(Level.SEVERE, "ILLEGAL USER-OPERATION: {0} is trying to run an illegal free query operation.", new Object[]{sc.getUserPrincipal().getName()});
             throw new NotAuthorizedException("You Don't Have Permission to run this operation " + name + ".");
         }
     }

@@ -5,6 +5,9 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
+import fi.dwo.commons.exceptions.Dwo2RestException;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.logging.Level;
@@ -46,16 +49,18 @@ public class SecuredUserProfileManager {
     @Path("/get/json")
     public PersistentUser getCurrentUser(@Context SecurityContext sc) {
         EntityManager em = DwoEmfFactory.createEntityManager();
-        PersistentUser user=null;
+        PersistentUser user = null;
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
             String userName = sc.getUserPrincipal().getName();
             q.setParameter("username", userName);
             user = (PersistentUser) q.getSingleResult();
-            LOG.log(Level.FINE, "Fetched User with username {0}", new Object[]{userName});
-        } catch (Exception e) {
-            LOG.log(Level.WARNING, "Unexpected exception", e.getMessage());
-        } finally {
+            LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(),userName});
+        }
+        catch (Exception e) {
+            LOG.log(Level.WARNING, "Username "+sc.getUserPrincipal().getName()+": Unexpected exception",e);
+        }
+        finally {
             em.close();
         }
         return user;
@@ -90,14 +95,16 @@ public class SecuredUserProfileManager {
 //                user = em.merge(user);
 //}
                 em.getTransaction().commit();
-                LOG.log(Level.FINE, "Updated User with username {0}", new Object[]{user.getUsername()});
-            } finally {
+                LOG.log(Level.FINE, "Username {0}: Updated User with username {0}", new Object[]{sc.getUserPrincipal().getName(),user.getUsername()});
+            }
+            finally {
                 em.close();
             }
             return user;
         } else {
-            LOG.log(Level.WARNING, "ILLEGAL USER-OPERATION: Trying to update the user profile of {0} under user account {1}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
-            throw new NotAuthorizedException("You Don't Have Permission to update usercode " + user.getUsername() + ".");
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to update the user profile of user id {1}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to update usercode " + user.getUsername() + ".");
+
         }
     }
 

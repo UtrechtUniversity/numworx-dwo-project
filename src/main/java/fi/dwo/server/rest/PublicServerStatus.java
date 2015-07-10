@@ -5,6 +5,8 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
+import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentDwoSystemParameters;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
@@ -18,7 +20,7 @@ import javax.ws.rs.Produces;
 
 /**
  * Public server status. Showing health of the service. Under development.
- * 
+ *
  * @author G.A.J. van der Plas
  */
 @Path("/public/serverstatus")
@@ -29,7 +31,7 @@ public class PublicServerStatus {
     private final static EntityManagerFactory emf = DwoEmfFactory.instance();
 
     public List<PersistentDwoSystemParameters> getStatus() {
-        
+
         EntityManager em;
         em = emf.createEntityManager();
 
@@ -37,12 +39,17 @@ public class PublicServerStatus {
         try {
             javax.persistence.Query q = em.createNamedQuery("DwoSystemParameters.findAll");
             result = (List<PersistentDwoSystemParameters>) q.getResultList();
-            LOG.log(Level.INFO, "Fetched DwoSystemParameters {0}", new Object[]{result.size()});
+            LOG.log(Level.FINER, "Fetched DwoSystemParameters {0}", new Object[]{result.size()});
+        }
+        catch (Exception e) {
+            LOG.log(Level.SEVERE, "Can't query the DwoSystemParameters", e);
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the DwoSystemParameters.");
 
-        } finally {
+        }
+        finally {
             em.close();
         }
-        
+
         StringBuilder string = new StringBuilder();
         for (PersistentDwoSystemParameters p : result) {
             string.append(p.getName());
@@ -50,7 +57,7 @@ public class PublicServerStatus {
             string.append(p.getValue());
             string.append("\n");
         }
-        LOG.log(Level.INFO, "Made output:", new Object[]{string.toString()});
+        LOG.log(Level.FINER, "Made output:", new Object[]{string.toString()});
 
         return result;
     }

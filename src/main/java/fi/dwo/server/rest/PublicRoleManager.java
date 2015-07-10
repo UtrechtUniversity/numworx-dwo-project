@@ -5,6 +5,8 @@
  */
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
+import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
@@ -45,7 +47,8 @@ private static final Logger LOG = Logger.getLogger(SecuredLoginManager.class.get
             roles = (List<PersistentRole>) q.getResultList();
             LOG.log(Level.FINER, "Fetched all {0} user roles. ", new Object[]{roles.size()});
         } catch(Exception e){
-            LOG.log(Level.WARNING,"Unexpected exception", e.getMessage());
+            LOG.log(Level.WARNING,"Unexpected exception", e);
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the user roles.");
         } finally {
             em.close();
         }

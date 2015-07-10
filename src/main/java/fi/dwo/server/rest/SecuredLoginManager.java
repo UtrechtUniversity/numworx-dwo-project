@@ -35,11 +35,12 @@ public class SecuredLoginManager {
     @GET
     @Produces({"application/json"})
     @Path("/get/json")
+    @Deprecated
     public PersistentUser login(@Context SecurityContext sc) {
         String userName = sc.getUserPrincipal().getName();
         //TODO REST update lastLogin and such.
         PersistentUser user = UserManager.findByUserName(userName);
-        LOG.log(Level.INFO, "Login accepted for user with username {0}", new Object[]{user.getUsername()});
+        LOG.log(Level.INFO, "Username {0}: Login accepted.", new Object[]{user.getUsername()});
         return user;
     }
 }

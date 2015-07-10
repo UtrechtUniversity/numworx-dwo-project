@@ -29,36 +29,28 @@ public class RestTestManager {
 
     @GET
     @Produces({"application/json"})
-    @Path("/testNoError/json") 
+    @Path("/testNoError/json")
     public String testNoError(@Context SecurityContext sc) {
-        String userName = sc.getUserPrincipal().getName();
-        //TODO REST update lastLogin and such.
-        //Response r = Response.status(400).entity("{appel}").build();
-        return "{appel}";
-        //throw e;
-    }
-    
-    @GET
-    @Produces({"application/json"})
-    @Path("/test400Error/json") 
-    public Response test400Error(@Context SecurityContext sc) {
-        String userName = sc.getUserPrincipal().getName();
-        //TODO REST update lastLogin and such.
-        Dwo2RestException e =  new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "DwoRestException 400 thrown on request of user: "+userName+".");
-        
-    throw e;
-//        String s = Dwo2RestException.encodeJSON(Dwo2ExceptionCode.User_AuthenticationError,  "DwoRestException 400 thrown on request of user: "+userName+".");
-//        throw new WebApplicationException(Response.status(400)
-//             .entity(s).type(MediaType.APPLICATION_JSON).build());
+        return "{NoError!}";
     }
 
     @GET
     @Produces({"application/json"})
-    @Path("/test500Error/json") 
+    @Path("/test400Error/json")
+    public Response test400Error(@Context SecurityContext sc) {
+        String userName = sc.getUserPrincipal().getName();
+        //TODO REST update lastLogin and such.
+        Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "DwoRestException 400 thrown on request of user: " + userName + ".");
+        throw e;
+    }
+
+    @GET
+    @Produces({"application/json"})
+    @Path("/test500Error/json")
     public Response test500Error(@Context SecurityContext sc) {
         String userName = sc.getUserPrincipal().getName();
         //TODO REST update lastLogin and such.
-        Dwo2RestException e =  new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "DwoRestException 500 thrown on request of user: "+userName+".");
+        Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "DwoRestException 500 thrown on request of user: " + userName + ".");
         Response r = Response.status(500).entity(e.getMessage()).build();
         return r;
     }
