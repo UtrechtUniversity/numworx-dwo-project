@@ -1,5 +1,3 @@
-// Source file:
-// N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\RegisterNewUserPanel.java
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.exceptions.Dwo2RestException;
@@ -30,14 +28,17 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 /**
-* <p>This class is a panel where a new user can register himself for a (new)
+ * <p>
+ * This class is a panel where a new user can register himself for a (new)
  * school.</p>
-  *
- * <p>How to test manual:</p>
+ *
+ * <p>
+ * How to test manual:</p>
  *
  * <ul>
- * <li>Register once for each existing role. Then configurePanelsForUser and goto to the Profile
- panel. Switch to that registered role, it should work. </li>
+ * <li>Register once for each existing role. Then configurePanelsForUser and
+ * goto to the Profile panel. Switch to that registered role, it should work.
+ * </li>
  * <li> Try to register for an existing role, it should fail with a message.
  * </li>
  * <li> Register with a false school name, it should fail with a message.</li>
@@ -85,7 +86,6 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
      * @param groups The possible groups wherefrom a user can be part of.
      */
     public RegisterNewUserPanel(Group[] groups) {
-//        groupList = groups;
 
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setLayout(null);
@@ -93,8 +93,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
         dialog = new JPanel(null);
         dialog.setOpaque(false);
         dialog.setSize(getSize());
-        this.add(dialog); // een extra layer....
-        //setPreferredSize(getSize()); // Sinds 1.5
+        this.add(dialog);
 
         /* Variables used to create items */
         FontMetrics fm;
@@ -247,7 +246,8 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
         middlename = new JTextField();
         middlename.setBounds(160, 53, 120, 20);
         p.add(middlename);
-// if no middlename, skip it.        
+
+        // if no middlename, skip it.        
         boolean visible = middleNameLabel.length() > 0;
         l.setVisible(visible);
         middlename.setVisible(visible);
@@ -347,7 +347,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
             groupChoice.addItem(TextMapper.getText(rl.get(i).getGroupname()));
         }
         groupChoice.setSize(groupChoice.getPreferredSize());
-// past niet op de mac 
+
         groupChoice.setBounds(160, 63, Math.max(120, groupChoice.getWidth()), 20);
         p.add(groupChoice);
 
@@ -400,13 +400,6 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
         backButton.setLocation((p.getSize().width / 2)
                 - ((backButton.getSize().width) / 2), 40);//630
         p.add(backButton);
-//        
-//        backButton = new JButton(TextMapper.getText(TextMapper.GUIR_BTN_BACK));//, GuiConstants.MAIN_BACKGROUND);
-//        fm = backButton.getFontMetrics(backButton.getFont());
-//        backButton.setSize(backButton.getPreferredSize());
-//        backButton.setLocation(getSize().width / 2 - backButton.getSize().width
-//                / 2, 530);
-//        dialog.add(backButton);
 
         registerButton.addActionListener(this);
         resetButton.addActionListener(this);
@@ -443,11 +436,6 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
 
     @Override
     public void paintComponent(Graphics g) {
-//    	if(GuiConstants.GUI_IMAGE_BG) {
-//	       	Point p = DwoHelper.getComponentLocation(this);
-//	       	g.drawImage(DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.GUI_IMAGE_WELCOME),0,0,null);
-//    	}       
-
         super.paintComponent(g);
     }
 

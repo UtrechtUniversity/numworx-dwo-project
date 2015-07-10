@@ -3,7 +3,6 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.exceptions.Dwo2RestException;
-import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.commons.rest.entities.NewUserRegistration;
@@ -31,18 +30,23 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 /**
- * <p>This class is a panel where a known user can register himself for a (new)
+ * <p>
+ * This class is a panel where a known user can register himself for a (new)
  * school.</p>
- * 
- * <p>How to test manual:</p>
- * 
+ *
+ * <p>
+ * How to test manual:</p>
+ *
  * <ul>
- * <li>Register once for each existing role. Then configurePanelsForUser and goto to the Profile panel.
- Switch to that registered role, it should work. </li>
- * <li> Try to register for an existing role, it should fail with a message. </li>
+ * <li>Register once for each existing role. Then configurePanelsForUser and
+ * goto to the Profile panel. Switch to that registered role, it should work.
+ * </li>
+ * <li> Try to register for an existing role, it should fail with a message.
+ * </li>
  * <li> Register with a false school name, it should fail with a message.</li>
  * <li> Register with a false school code, it should fail with a message.<li>
- * <li> Register with a wrong role but correct school name and code, it should fail with a message.</li>
+ * <li> Register with a wrong role but correct school name and code, it should
+ * fail with a message.</li>
  * <li> Test the reset button </li>
  * </ul>
  */
@@ -180,122 +184,6 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
         l.setLocation(285, 53);
         p.add(l);
 
-//        /* RePassword label */
-//        l = new JLabel(TextMapper.getText(TextMapper.GUIR_RE_PASSWORD) + ":");
-//        l.setForeground(Color.black);
-//        l.setFont(GuiConstants.NORMAL_TEXT);
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setLocation(10, 80);
-//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-//        p.add(l);
-//        repassword = new JPasswordField();
-//        repassword.setBounds(160, 78, 120, 20);
-//        repassword.setEchoChar('*');
-//        p.add(repassword);
-//
-//        /* RePassword mandatory label */
-//        l = createMandatoryLabel();
-//        l.setLocation(285, 78);
-//        p.add(l);
-//        /* Add PersonalInfo-panel */
-//        p = new JPanel(null);
-//        p.setBorder(BorderFactory.createLineBorder(getForeground()));
-//        p.setBackground(GuiConstants.SUB_BACKGROUND);
-//        p.setBounds(getSize().width /2 - 180, 344, 310, 130);
-//        dialog.add(p);
-//
-//        /* Add PersonalInfo-panel */
-//        p = new JPanel(null);
-//        p.setBorder(BorderFactory.createLineBorder(getForeground()));
-//        p.setBackground(GuiConstants.SUB_BACKGROUND);
-//        p.setBounds(getSize().width /2 - 180, 344, 310, 130);
-//        dialog.add(p);
-//
-//        /* personalinfo label */
-//        l = new JLabel(TextMapper.getText(TextMapper.GUIR_PERSONALINFO) + ":");
-//        l.setForeground(GuiConstants.RED_COLOR);
-//        l.setFont(GuiConstants.RED_TEXT);
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
-//        p.add(l);
-//
-//        /* Firstname label */
-//        l = new JLabel(TextMapper.getText(TextMapper.GUIR_FIRSTNAME) + ":");
-//        l.setForeground(Color.black);
-//        l.setFont(GuiConstants.NORMAL_TEXT);
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setLocation(10, 30);
-//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-//        p.add(l);
-//
-//        /* Firstname field */
-//        firstname = new JTextField();
-//        firstname.setBounds(160, 28, 120, 20);
-//        p.add(firstname);
-//
-//        /* Firstname mandatory label */
-//        l = createMandatoryLabel();
-//        l.setLocation(285, 28);
-//        p.add(l);
-//
-//        /* Middlename label */
-//        String middleNameLabel = TextMapper.getText(TextMapper.GUIR_MIDDLENAME);
-//        l = new JLabel(middleNameLabel + ":");
-//        l.setForeground(Color.black);
-//        l.setFont(GuiConstants.NORMAL_TEXT);
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setLocation(10, 55);
-//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-//        p.add(l);
-//
-//        /* Middlename field */
-//        middlename = new JTextField();
-//        middlename.setBounds(160, 53, 120, 20);
-//        p.add(middlename);
-//// if no middlename, skip it.        
-//        boolean visible = middleNameLabel.length() > 0;
-//        l.setVisible(visible);
-//        middlename.setVisible(visible);
-//        int v = visible ? 0 : 25;
-//
-//        /* Lastname label */
-//        l = new JLabel(TextMapper.getText(TextMapper.GUIR_LASTNAME) + ":");
-//        l.setForeground(Color.black);
-//        l.setFont(GuiConstants.NORMAL_TEXT);
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setLocation(10, 80 - v);
-//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-//        p.add(l);
-//
-//        /* Lastname field */
-//        lastname = new JTextField();
-//        lastname.setBounds(160, 78 - v, 120, 20);
-//        p.add(lastname);
-//
-//        /* Lastname mandatory label */
-//        l = createMandatoryLabel();
-//        l.setLocation(285, 78 - v);
-//        p.add(l);
-//
-//        /* Email label */
-//        l = new JLabel(TextMapper.getText(TextMapper.GUIR_EMAIL) + ":");
-//        l.setForeground(Color.black);
-//        l.setFont(GuiConstants.NORMAL_TEXT);
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setLocation(10, 105 - v);
-//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-//        p.add(l);
-//
-//        /* Email field */
-//        email = new JTextField();
-//        email.setBounds(160, 103 - v, 120, 20);
-//        p.add(email);
-//
-//        /* Email mandatory label */
-//        l = createMandatoryLabel();
-//        l.setLocation(285, 103 - v);
-//        p.add(l);
-
         /* Add School-panel */
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -352,7 +240,6 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
             groupChoice.addItem(TextMapper.getText(rl.get(i).getGroupname()));
         }
         groupChoice.setSize(groupChoice.getPreferredSize());
-// past niet op de mac 
         groupChoice.setBounds(160, 63, Math.max(120, groupChoice.getWidth()), 20);
         p.add(groupChoice);
 
