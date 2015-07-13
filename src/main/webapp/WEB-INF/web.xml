@@ -109,6 +109,12 @@
         </user-data-constraint>
     </security-constraint>
 
+    <!-- Required to be directly below the security constraint -->
+    <login-config>
+        <auth-method>DIGEST</auth-method>
+        <realm-name>DWO account credentials required.</realm-name>
+    </login-config>
+
     <!-- Security roles referenced by this web application -->
     <security-role>
         <role-name>STUDENT</role-name>
@@ -123,8 +129,4 @@
         <role-name>ADMIN</role-name>
     </security-role>
 
-    <login-config>
-        <auth-method>DIGEST</auth-method>
-        <realm-name>DWO account credentials required.</realm-name>
-    </login-config>
 </web-app>

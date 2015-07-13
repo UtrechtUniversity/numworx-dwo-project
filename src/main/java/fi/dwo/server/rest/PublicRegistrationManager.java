@@ -75,8 +75,8 @@ public class PublicRegistrationManager {
             //invariant: usercode does not exists and a school exists for schoollogin and schoolcode
             LOG.log(Level.FINE, "School-manager retrieved school {0} from school login and school code for usercode {3}.", new Object[]{school.getSchoolName(), newUserReg.getSchoolLogin(), newUserReg.getSchoolCode(), newUserReg.getUsername()});
         } catch (Exception ex) {
-                LOG.log(Level.WARNING, "Registration authentication failed due to a possible software error.", ex);
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Registration authentication failed due to a software error, please try again.");
+                LOG.log(Level.WARNING, "School registration authentication failed.", ex);
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_School_authentication_failed, "School registration authentication failed, please try again.");
         } finally {
             em.close();
         }
