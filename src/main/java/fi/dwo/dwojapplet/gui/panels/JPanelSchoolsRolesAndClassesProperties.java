@@ -1,8 +1,8 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui.panels;
 
+import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.rest.entities.*;
-import fi.dwo.dwojapplet.domain.rest.RestException;
 import fi.dwo.dwojapplet.domain.rest.SchoolsRolesAndClassesManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,7 +22,7 @@ public class JPanelSchoolsRolesAndClassesProperties {
         try {
             srcs = SchoolsRolesAndClassesManager.getCurrentEnlistements();
             selectedSrc = srcs.getActiveSchoolRoleAndClass();
-        } catch (RestException ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, ex.getMessage());
         }
     }
@@ -41,7 +41,7 @@ public class JPanelSchoolsRolesAndClassesProperties {
         try {
             SchoolRoleAndClass src = SchoolsRolesAndClassesManager.setActiveSchoolRoleAndClass(getSelectedSchoolRoleAndClass());
             srcs.setActiveSchoolRoleAndClass(src);
-        } catch (RestException ex) {
+        } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
     }

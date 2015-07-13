@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.domain.rest;
 
+import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.rest.entities.*;
@@ -23,7 +24,7 @@ public class RegistrationManager {
 
     private static final Logger LOG = Logger.getLogger(RegistrationManager.class.getName());
 
-    public static boolean RegisterNewUser(NewUserRegistration newUserReg) throws Dwo2RestException {
+    public static boolean RegisterNewUser(NewUserRegistration newUserReg) throws Dwo2Exception {
         boolean r;
         r = StoredRestManager.getInstance().put("/rest/public/registration/newUser/json", Boolean.class, newUserReg);
 

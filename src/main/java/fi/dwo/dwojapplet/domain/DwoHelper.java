@@ -6,11 +6,11 @@ package fi.dwo.dwojapplet.domain;
 
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.mainframe.MainFrame;
+import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.rest.RestException;
 import fi.dwo.dwojapplet.domain.rest.RoleManager;
 import fi.dwo.dwojapplet.gui.MainPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
@@ -103,7 +103,7 @@ public final class DwoHelper {
         locale = aLocale;
     }
 
-    public void init() throws RestException {
+    public void init() throws Dwo2Exception {
         roles = RoleManager.getRoles();
     }
 

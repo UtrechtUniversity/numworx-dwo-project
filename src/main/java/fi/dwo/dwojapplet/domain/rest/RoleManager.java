@@ -1,6 +1,7 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.domain.rest;
 
+import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.rest.RestClassType;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
@@ -26,8 +27,7 @@ public class RoleManager {
      * @return Returns null if there was an error.
      * @throws fi.dwo.dwojapplet.domain.rest.RestException
      */
-    public static List<PersistentRole> getRoles() throws RestException {
-        change restException to Dwo2RestException and stuff
+    public static List<PersistentRole> getRoles() throws Dwo2Exception {
         //login to rest service
         List<PersistentRole> roles;
 //        GenericType<ArrayList<PersistentRole>> oClass = new GenericType<ArrayList<PersistentRole>>() {};

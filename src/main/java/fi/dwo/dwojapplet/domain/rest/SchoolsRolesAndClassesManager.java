@@ -1,5 +1,6 @@
 package fi.dwo.dwojapplet.domain.rest;
 
+import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.rest.entities.*;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import java.util.logging.Logger;
@@ -19,7 +20,7 @@ public class SchoolsRolesAndClassesManager {
     * 
     * @return 
     */
-    public static SchoolsRolesAndClasses getCurrentEnlistements() throws RestException{
+    public static SchoolsRolesAndClasses getCurrentEnlistements() throws Dwo2Exception{
         SchoolsRolesAndClasses src;
         src= StoredRestManager.getInstance().get("/rest/secure/user/schoolsrolesandclasses/get/json", SchoolsRolesAndClasses.class);
         return src;
@@ -35,7 +36,7 @@ public class SchoolsRolesAndClassesManager {
      * @return 
      */
 
-    public static SchoolRoleAndClass setActiveSchoolRoleAndClass(SchoolRoleAndClass src) throws RestException {
+    public static SchoolRoleAndClass setActiveSchoolRoleAndClass(SchoolRoleAndClass src) throws Dwo2Exception {
             src = StoredRestManager.getInstance().put("/rest/secure/user/schoolsrolesandclasses/update/json", SchoolRoleAndClass.class, src);
             //LOG.log(Level.FINE, "Updated active role  of username {0}.",new Object[]{src.getRoleId()});
         return src;
