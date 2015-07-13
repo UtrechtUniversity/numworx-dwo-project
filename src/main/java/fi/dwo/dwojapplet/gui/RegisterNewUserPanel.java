@@ -1,6 +1,6 @@
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.exceptions.Dwo2RestException;
+import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.commons.rest.entities.NewUserRegistration;
@@ -466,7 +466,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
                     JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                     GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
                 }
-                catch (Dwo2RestException ex) {
+                catch (Dwo2Exception ex) {
                     JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 }
             } else {
@@ -489,7 +489,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
                     JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                     GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
                 }
-                catch (Dwo2RestException ex) {
+                catch (Dwo2Exception ex) {
                     JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 }
             }

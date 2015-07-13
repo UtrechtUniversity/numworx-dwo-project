@@ -1,6 +1,6 @@
 package fi.dwo.dwojapplet.REST;
 
-import fi.dwo.commons.exceptions.Dwo2RestException;
+import fi.dwo.commons.exceptions.Dwo2Exception;
 import java.util.logging.Logger;
 
 /**
@@ -14,7 +14,7 @@ public class StoredRestManager extends RestManager {
     private static final Logger LOG = Logger.getLogger(StoredRestManager.class.getName());
 
     @Override
-    public <T> T get(String path, Class<T> c) throws Dwo2RestException {
+    public <T> T get(String path, Class<T> c) throws Dwo2Exception {
         T object = super.get(path,c);
         //only store persistent objects... 
         // if(object.getClass().getName().startsWith("fi.dwo.commons.persistence.entities")
