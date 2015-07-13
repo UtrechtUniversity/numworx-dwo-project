@@ -27,6 +27,7 @@ import javax.ws.rs.core.Response;
  */
 class RestManager {
 //TODO Reduce code by implementing an WebException handler
+//TODO Handle  non exception 400 errors gracefully using Dwo2Exception.
     protected static final Logger LOG = Logger.getLogger(RestManager.class.getName());
 
     protected static final StoredRestManager instance = new StoredRestManager();

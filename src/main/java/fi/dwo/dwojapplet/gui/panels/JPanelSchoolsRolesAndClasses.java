@@ -74,8 +74,6 @@ public class JPanelSchoolsRolesAndClasses extends javax.swing.JPanel {
         jTableSchoolsAndClasses = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jPanelCommonRoleOptions2 = new fi.dwo.dwojapplet.gui.panels.JPanelCommonRoleOptions();
-        jPanelNoRoleOptions1 = new fi.dwo.dwojapplet.gui.panels.JPanelNoRoleOptions();
-        jSeparator1 = new javax.swing.JSeparator();
         jLabelSchoolRoleClass = new javax.swing.JLabel();
         jTextFieldSchoolRoleClass = new javax.swing.JTextField();
 
@@ -109,42 +107,21 @@ public class JPanelSchoolsRolesAndClasses extends javax.swing.JPanel {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, jPanel1, org.jdesktop.beansbinding.ELProperty.create("${background}"), jPanelCommonRoleOptions2, org.jdesktop.beansbinding.BeanProperty.create("background"));
         bindingGroup.addBinding(binding);
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, jPanel1, org.jdesktop.beansbinding.ELProperty.create("${background}"), jPanelNoRoleOptions1, org.jdesktop.beansbinding.BeanProperty.create("background"));
-        bindingGroup.addBinding(binding);
-
-        javax.swing.GroupLayout jPanelNoRoleOptions1Layout = new javax.swing.GroupLayout(jPanelNoRoleOptions1);
-        jPanelNoRoleOptions1.setLayout(jPanelNoRoleOptions1Layout);
-        jPanelNoRoleOptions1Layout.setHorizontalGroup(
-            jPanelNoRoleOptions1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPanelNoRoleOptions1Layout.setVerticalGroup(
-            jPanelNoRoleOptions1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 312, Short.MAX_VALUE)
-        );
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanelNoRoleOptions1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanelCommonRoleOptions2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanelCommonRoleOptions2, javax.swing.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanelCommonRoleOptions2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanelNoRoleOptions1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(28, 28, 28))
+                .addComponent(jPanelCommonRoleOptions2, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jSplitPane1.setRightComponent(jPanel1);
@@ -185,9 +162,7 @@ public class JPanelSchoolsRolesAndClasses extends javax.swing.JPanel {
     private javax.swing.JLabel jLabelSchoolRoleClass;
     private javax.swing.JPanel jPanel1;
     private fi.dwo.dwojapplet.gui.panels.JPanelCommonRoleOptions jPanelCommonRoleOptions2;
-    private fi.dwo.dwojapplet.gui.panels.JPanelNoRoleOptions jPanelNoRoleOptions1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTable jTableSchoolsAndClasses;
     private javax.swing.JTextField jTextFieldSchoolRoleClass;
