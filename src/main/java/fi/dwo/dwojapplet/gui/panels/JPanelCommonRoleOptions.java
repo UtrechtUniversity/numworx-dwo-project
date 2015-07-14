@@ -46,7 +46,7 @@ public class JPanelCommonRoleOptions extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
-        setPreferredSize(new java.awt.Dimension(387, 45));
+        setPreferredSize(new java.awt.Dimension(387, 353));
 
         jButtonDeleteProfile.setText(TextMapper.getText(GUIP_BTN_DELETE_ACCOUNT));
         jButtonDeleteProfile.addActionListener(new java.awt.event.ActionListener() {
@@ -62,9 +62,9 @@ public class JPanelCommonRoleOptions extends javax.swing.JPanel {
             }
         });
 
-        jLabelRegisterInstructions.setText("jLabelInstructions");
+        jLabelRegisterInstructions.setText("select class, enter access code and klik register.");
 
-        jButtonRegister.setText("jButtonRegister");
+        jButtonRegister.setText("Register");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -115,7 +115,7 @@ public class JPanelCommonRoleOptions extends javax.swing.JPanel {
                     .addComponent(jTextFieldClassAccessCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonRegister))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
