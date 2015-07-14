@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -246,6 +247,7 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 
 	private int clientX,clientY;
 	private static Logger logger = Logger.getLogger("PopupButton");
+	
 	@Override
 	public void onClick(ClickEvent event) {
 		if(box == null) {
@@ -266,7 +268,18 @@ public class PopupButton extends Composite implements ClickHandler, TouchStartHa
 			view.setState(state);
 		
 		if(!box.isShowing() )
-				box.showRelativeTo(this);		
+				box.showRelativeTo(this);
+		if(box.isShowing() && content instanceof FormuleEditorWithSteps)
+		{	if(((FormuleEditorWithSteps) content).getEditor() != null)
+			{	FormuleEditor editor = ((FormuleEditorWithSteps) content).getEditor();
+				editor.requestFocus();
+		
+				//om te zorgen dat cursor ook getekend wordt:
+				if(editor.getCurrentElement() == null)
+				{	editor.setCurrentElementRepaint(editor.getMainRegel());
+				}
+			}
+		}
 	}
 
 	public void hide() {
