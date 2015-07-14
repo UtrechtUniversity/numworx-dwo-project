@@ -958,7 +958,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		this.ingevuld = ingevuld;
 		this.nagekeken = nagekeken;
 		String antwoord = (String) h.get(ANTWOORD_STRING);
-		if(antwoord == null || "".equals(antwoord.trim()) && fews != null)
+		if(antwoord == null || ("".equals(antwoord.trim()) || "$f@".equals(antwoord.trim())) && fews != null)
 			antwoord = fews.getLatestAnswer();
 		if (antwoord != null && !"".equals(antwoord.trim()))
 		{

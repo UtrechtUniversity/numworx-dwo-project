@@ -615,9 +615,9 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		pijlVak = new PijlVak("", this, false); 
 		int y = stepPanelY + fv.getHeight()/2;
 		//if (pijl)
-			contentPanel.add(pijlVak);
-			contentPanel.setWidgetRightWidth(pijlVak, 0, Style.Unit.PX, pijlX, Style.Unit.PX);
-			contentPanel.setWidgetTopHeight(pijlVak, y, Style.Unit.PX, pijlVak.getHeight(), Style.Unit.PX);
+		contentPanel.add(pijlVak);
+		contentPanel.setWidgetRightWidth(pijlVak, 0, Style.Unit.PX, pijlX, Style.Unit.PX);
+		contentPanel.setWidgetTopHeight(pijlVak, y, Style.Unit.PX, pijlVak.getHeight(), Style.Unit.PX);
 		pijlVak.setPijlVisible(pijl);
 		pijlVakken.add(pijlVak);
 		pijlVak.paintComponent();
@@ -1709,6 +1709,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 	
 	private void zetGoedFoutEditor(int uitslag)
 	{
+		System.out.println("zetGoedFoutEditor");
 		if(!check)
 			return;
 		//contentPanel.remove(checkimg);
@@ -1911,7 +1912,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			String feedback = editor.getFeedback();
 			if (goedHalfFout == AntwoordVakChecker.DOOR)
 			{
-				if(backStep)
+				if(backStep || linOefenVersie)
 					setAndAddFeedback(feedback);
 				else
 				{	setFeedback(feedback);
@@ -2246,8 +2247,13 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 				score = scoreMax;
 				comRoot.setChanged(false);
 			}
-			else if(vergNieuw != null)
+			else if(vergNieuw != null && linStrategieVersie)
 			{	fv.showResult(FormuleViewer.NONE);
+				stapOk = true;
+			}
+			else if(vergNieuw != null)
+			{
+				fv.showResult(FormuleViewer.ALMOSTCORRECT);
 				stapOk = true;
 			}
 			else
