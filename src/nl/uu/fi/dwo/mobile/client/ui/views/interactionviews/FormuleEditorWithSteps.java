@@ -636,7 +636,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		editor = addNewEditor(stepPanel);
 		stepPanelY += fv.getHeight() + stapH;
 		contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, editor.getMainRegel().getHeight(), Style.Unit.PX);
-		editor.requestFocus();
+		requestFocus();
 		checkimg.setVisible(false);
 		scrollToBottom();
 	}
@@ -654,7 +654,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		editor.insert(select);
 		editor.insert("=");
 		editor.paint();
-		editor.requestFocus();
+		requestFocus();
 	}
 	
 	public void resize()
@@ -695,7 +695,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 					currentTekst = removePrefix(currentTekst);
 				currentTekst = removeIsTeken(currentTekst);
 				editor.insert(currentTekst);
-				editor.requestFocus();
+				requestFocus();
 			}
 			terugButton.getElement().getStyle().setVisibility(Visibility.VISIBLE);
 		}
@@ -780,7 +780,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			if ((mode == 0 || mode == 1) && (stapNr > 0 || !hasStartString) && !linStrategieVersie && !bordjesMethode)
 			{
 				kijkNa(true, true, setState);
-				editor.requestFocus();
+				requestFocus();
 			}
 			else
 			{
@@ -795,7 +795,21 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			haalPijlVakWeg();
 			stapOk = true;
 		}
+	}
+
+	private boolean focusEnabled = true;
+	private void requestFocus() {
+		if(focusEnabled && editor != null)
+			editor.requestFocus();
 	}		
+	
+	// save and restore focusEnabled
+	
+	boolean setFocusEnabled(boolean enabled) {
+		boolean old = focusEnabled;
+		focusEnabled = enabled;
+		return old;
+	}
 	
 	public void haalPijlVakWeg()
 	{
@@ -889,7 +903,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, viewers.get(viewers.size()-1).getHeight(), Style.Unit.PX);
 		else
 		{	contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, editor.getMainRegel().getHeight(), Style.Unit.PX);
-			editor.requestFocus();
+			requestFocus();
 		}
 		scrollToBottom();
 	}
@@ -974,19 +988,19 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 				{	if(editor.getAsPanel().getParent().equals(panel))
 					{	
 						if(event.getClientX() > editor.getAsPanel().getAbsoluteLeft() + editor.getMainRegel().getWidth())	
-						{	editor.requestFocus();
+						{	requestFocus();
 							editor.startSelection(editor.getMainRegel().getWidth(), 0);
 							editor.endSelection(editor.getMainRegel().getWidth(), 0);
 						}
 						else if(event.getClientX() < editor.getAsPanel().getAbsoluteLeft())
-						{	editor.requestFocus();
+						{	requestFocus();
 							editor.startSelection(0, 0);
 							editor.endSelection(0, 0);
 							editor.cursorToLeft();
 						
 						}
 						else if(!editor.getKeyboard().getEditor().equals(editor))
-						{	editor.requestFocus();
+						{	requestFocus();
 							editor.setCurrentElementRepaint(editor.getCurrentRegel());
 						}
 					}
@@ -1386,6 +1400,16 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 
 	@Override
 	public void setState(HashMap<String, Object> h)
+	{
+		boolean enabled = setFocusEnabled(false);
+		try {
+			setState0(h);
+		} finally {
+			setFocusEnabled(enabled);
+		}
+	}
+	
+	private void setState0(Map<String, Object>h) 
 	{
 		int stapNr = 0;
 		String[] formuleVakInhouden = null;
@@ -2214,7 +2238,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			stepPanelY += stapH + latest_answer_viewer.getHeight();
 			contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, editor.getMainRegel().getHeight(), Style.Unit.PX);
 			//if (!verg.toString().equals(vergNieuw.toString()) || linStrategieVersie)
-			editor.requestFocus();
+			requestFocus();
 			stapOk = false;	
 			
 		}
