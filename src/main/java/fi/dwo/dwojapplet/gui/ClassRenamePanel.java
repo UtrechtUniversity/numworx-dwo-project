@@ -55,7 +55,7 @@ public class ClassRenamePanel extends JPanel implements ActionListener,
 		treeCB = new JCheckBox(TextMapper.getText("boomstructuur?"));
 		treeCB.addActionListener(this);
 
-		classKeyCB = new JCheckBox(TextMapper.getText("klasssleutel gebruiken"));
+		classKeyCB = new JCheckBox(TextMapper.getText("klassleutel gebruiken"));
 		classKeyCB.addActionListener(this);
 
 		registrationKeyLabel = new JLabel(

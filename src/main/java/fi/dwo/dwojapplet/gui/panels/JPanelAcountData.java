@@ -326,9 +326,9 @@ public class JPanelAcountData extends javax.swing.JPanel {
             if (jPasswordFieldNewPassword.getText().equals("")) {
                 jPasswordFieldConfirmPassword.setBackground(originalBackground);
             } else if (!jPasswordFieldNewPassword.getText().equals("")
-                    && jPasswordFieldNewPassword.getPassword().equals(jPasswordFieldConfirmPassword.getPassword())) {
+                    && jPasswordFieldNewPassword.getText().equals(jPasswordFieldConfirmPassword.getText())) {
                 //updates password following some logic.
-                prop.getUser().setPasswd(MD5.getHashString(jPasswordFieldNewPassword.getPassword().toString()));
+                prop.getUser().setPasswd(MD5.getHashString(jPasswordFieldNewPassword.getText()));
                 jPasswordFieldConfirmPassword.setBackground(originalBackground);
             } else {
                 jPasswordFieldConfirmPassword.setBackground(Color.RED);
@@ -338,7 +338,6 @@ public class JPanelAcountData extends javax.swing.JPanel {
             jPasswordFieldPassword.grabFocus();
             jButtonEditAndCancel.setEnabled(true);
             jButtonUpdate.setEnabled(false);
-
         }
         jPasswordFieldPassword.setText("");
         prop.Update();
