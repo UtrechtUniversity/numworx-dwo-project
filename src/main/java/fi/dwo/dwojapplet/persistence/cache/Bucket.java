@@ -2,14 +2,15 @@ package fi.dwo.dwojapplet.persistence.cache;
 
 public class Bucket {
 
-    Bucket(int uid, int scoid, String key, String value) {
+    Bucket(int uid, int scoid, int sgid, String key, String value) {
         super();
         this.uid = uid;
         this.scoid = scoid;
+        this.sgid = sgid;
         this.key = key;
         this.value = value;
     }
-    private int uid, scoid;
+    private int uid, scoid, sgid; //sgid = schoolgroupid.
     private String key, value;
     /* (non-Javadoc)
      * @see java.lang.Object#hashCode()
@@ -22,6 +23,7 @@ public class Bucket {
         result = prime * result + ((key == null) ? 0 : key.hashCode());
         result = prime * result + scoid;
         result = prime * result + uid;
+        result = prime * result + getSgid();
         return result;
     }
     /* (non-Javadoc)
@@ -108,6 +110,20 @@ public class Bucket {
             return v;
         }
         return v.substring(0, 9) + "... (" + v.length() + ")";
+    }
+
+    /**
+     * @return the sgid
+     */
+    public int getSgid() {
+        return sgid;
+    }
+
+    /**
+     * @param sgid the sgid to set
+     */
+    public void setSgid(int sgid) {
+        this.sgid = sgid;
     }
 
 }

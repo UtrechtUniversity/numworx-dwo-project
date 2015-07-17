@@ -174,34 +174,37 @@ class DbAccessClient extends Client implements DbAccessIF {
     }
 
     @Override
-    public java.lang.String LMSGetValue(int a, int b, java.lang.String c) throws IOException, XmlRpcException {
+    public java.lang.String LMSGetValue(int a, int b, int c, java.lang.String d) throws IOException, XmlRpcException {
         Vector vv = new Vector(3);
         vv.addElement(new Integer(a));
         vv.addElement(new Integer(b));
-        vv.addElement(c);
+        vv.addElement(new Integer(c));
+        vv.addElement(d);
         Object object = invoke("LMSGetValue", vv);
         return (java.lang.String) object;
     }
 
     @Override
-    public java.lang.String LMSSetValue(int a, int b, java.lang.String c, java.lang.String d) throws IOException, XmlRpcException {
+    public java.lang.String LMSSetValue(int a, int b, int c,  java.lang.String d, java.lang.String e) throws IOException, XmlRpcException {
         Vector vv = new Vector(4);
         vv.addElement(new Integer(a));
         vv.addElement(new Integer(b));
-        vv.addElement(c);
+        vv.addElement(new Integer(c));
         vv.addElement(d);
+        vv.addElement(e);
         Object object = invoke("LMSSetValue", vv);
         return (java.lang.String) object;
     }
 
     @Override
-    public java.lang.String LMSSetValue(int a, int b, java.lang.String c, java.lang.String d, java.lang.String e) throws IOException, XmlRpcException {
+    public java.lang.String LMSSetValue(int a, int b, int c, java.lang.String d, java.lang.String e, java.lang.String f) throws IOException, XmlRpcException {
         Vector vv = new Vector(5);
         vv.addElement(new Integer(a));
         vv.addElement(new Integer(b));
-        vv.addElement(c);
+        vv.addElement(new Integer(c));
         vv.addElement(d);
         vv.addElement(e);
+        vv.addElement(f);
         Object object = invoke("LMSSetValue", vv);
         return (java.lang.String) object;
     }

@@ -389,6 +389,8 @@ public final class DwoHelper {
     }
 
     /**
+     * Returns the url path to the resource location where the jars are stored.
+     * 
      * @return the resourceUrlPathString
      */
     public static String getGetResourceURLPathString() {
@@ -396,6 +398,8 @@ public final class DwoHelper {
     }
 
     /**
+     * Sets the url path to the resource location where the jars are stored.
+     * 
      * @param aGetResourceURLPathString the resourceUrlPathString to set
      */
     public static void setGetResourceURLPathString(String aGetResourceURLPathString) {
@@ -478,6 +482,9 @@ public final class DwoHelper {
     }
 
     /**
+     * Returns the base dir of our servlet. Determined as being the parent dir of the
+     * url location where the applet was downloaded.
+     * 
      * @return the baseServletUrlString
      */
     public static String getBaseServletUrlString() {
@@ -485,6 +492,9 @@ public final class DwoHelper {
     }
 
     /**
+     * Sets the base dir of our servlet. Determined as being the parent dir of the
+     * url location where the applet was downloaded.
+     * 
      * @param aBaseServletUrlString the baseServletUrlString to set
      */
     public static void setBaseServletUrlString(String aBaseServletUrlString) {

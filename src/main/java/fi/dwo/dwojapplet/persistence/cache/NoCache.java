@@ -19,10 +19,10 @@ public class NoCache implements IStore {
     private DbAccessIF dbAccess;
 
     @Override
-    public String getValue(int uid, int scoid, String key) throws PersistenceException {
+    public String getValue(int uid, int scoid, int sgid, String key) throws PersistenceException {
         String result = null;
         try {
-            result = dbAccess.LMSGetValue(scoid, uid, key);
+            result = dbAccess.LMSGetValue(scoid, uid, sgid, key);
         } catch (IOException e) {
             throw new PersistenceException(PersistenceException.EX_IO, e);
         } catch (XmlRpcException e) {
@@ -34,11 +34,11 @@ public class NoCache implements IStore {
     }
 
     @Override
-    public String setValue(int uid, int scoid, String key, String value) throws PersistenceException {
+    public String setValue(int uid, int scoid, int sgid, String key, String value) throws PersistenceException {
         String random = Long.toHexString(Double.doubleToRawLongBits(Math.random()));
         String result;
         try {
-            result = dbAccess.LMSSetValue(scoid, uid, key, value, random);
+            result = dbAccess.LMSSetValue(scoid, uid, sgid, key, value, random);
             if (result.equals(random)) {
                 return "true"; // all's well
             }

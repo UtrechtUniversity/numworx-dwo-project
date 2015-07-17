@@ -1251,6 +1251,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             URL url = DwoHelper.getApplet().getCodeBase();
             try {
                 Loader.setPrefix(url.toString());
+                //applet was loaded from the subdir jars
                 DwoHelper.setBaseServletUrlString((new URL(url, "..")).toString()); // denotes the base servlet url
                 URL xmlRpcUrl = new URL(url, "../xmlrpc");
                 DwoHelper.setServletConnectString(xmlRpcUrl.toString());
