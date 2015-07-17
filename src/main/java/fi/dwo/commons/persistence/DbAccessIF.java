@@ -292,13 +292,13 @@ public interface DbAccessIF extends DbAccessLogin {
             throws DwoXmlRpcException, IOException, XmlRpcException,
             SQLException;
 
-    public String LMSGetValue(int scoID, int userID, String iDataModelElement) throws IOException, XmlRpcException,
+    public String LMSGetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement) throws IOException, XmlRpcException,
             SQLException;
 
-    public String LMSSetValue(int scoID, int userID, String iDataModelElement, String iValue) throws IOException, XmlRpcException,
+    public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement, String iValue) throws IOException, XmlRpcException,
             SQLException;
 
-    public String LMSSetValue(int scoID, int userID, String iDataModelElement, String iValue, String random) throws IOException, XmlRpcException,
+    public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement, String iValue, String random) throws IOException, XmlRpcException,
             SQLException;
 
     /**

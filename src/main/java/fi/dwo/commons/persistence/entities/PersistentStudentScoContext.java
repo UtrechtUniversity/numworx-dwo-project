@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentStudentScoContext.findBySessionTime", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.sessionTime = :sessionTime"),
     @NamedQuery(name = "PersistentStudentScoContext.findByStudentSco", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.studentSco = :studentSco"),
     @NamedQuery(name = "PersistentStudentScoContext.findByScoID", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.scoID = :scoID"),
-    @NamedQuery(name = "PersistentStudentScoContext.findByUserID", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.userID = :userID"),
+    @NamedQuery(name = "PersistentStudentScoContext.findByHasRolePK", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.userID = :userID and p.schoolGroupID= :schoolGroupID"),
     @NamedQuery(name = "PersistentStudentScoContext.findByCreateDate", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.createDate = :createDate"),
     @NamedQuery(name = "PersistentStudentScoContext.findByScore", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.score = :score")})
 public class PersistentStudentScoContext implements Serializable {
@@ -59,6 +59,10 @@ public class PersistentStudentScoContext implements Serializable {
     @NotNull
     @Column(name = "userID", nullable = false)
     private int userID;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "schoolGroupID", nullable = false)
+    private int schoolGroupID;
     @Basic(optional = false)
     @NotNull
     @Column(name = "createDate", nullable = false)
@@ -163,6 +167,20 @@ public class PersistentStudentScoContext implements Serializable {
     @Override
     public String toString() {
         return "fi.dwo.server.persistence.PersistentStudentScoContext[ studentSco=" + studentSco + " ]";
+    }
+
+    /**
+     * @return the schoolGroupID
+     */
+    public int getSchoolGroupID() {
+        return schoolGroupID;
+    }
+
+    /**
+     * @param schoolGroupID the schoolGroupID to set
+     */
+    public void setSchoolGroupID(int schoolGroupID) {
+        this.schoolGroupID = schoolGroupID;
     }
     
 }
