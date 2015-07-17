@@ -103,8 +103,9 @@ public class Dwo2RestException extends WebApplicationException implements Dwo2Ex
     public String getLocalizedCodeExplanation(Locale locale) {
         String msg;
         try {
-            //TODO test locale resource finding.
-            ResourceBundle localeLookup = ResourceBundle.getBundle("fi.dwo.commons.exceptions.Dwo2Exceptions", locale);
+            //Current resources are in /java/resources, however if in java/resources/fi/dwo then
+            //replace getBundle("Dwo2Exceptions", locale); with getBundle("fi.dwo.Dwo2Exceptions", locale);
+            ResourceBundle localeLookup = ResourceBundle.getBundle("Dwo2Exceptions", locale);
             msg = localeLookup.getString(Dwo2ExceptionCode.class.getSimpleName() + "." + code.name());
         }
         catch (Exception e) {
