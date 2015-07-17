@@ -15,8 +15,8 @@ public enum Dwo2ExceptionCode {
 
     //REST interface errors
     Rest_InternalError, //Internal software error, a stack trace should be acquired.
-    Rest_InterfaceError, // Error due to an improper Rest-interface.
-    Rest_ConnectionTimeout, //Connection time-out.
+    Rest_InterfaceError, // Error due to an improper REST-interface.
+    Rest_ConnectionTimeout, //Connection time-out to REST-interface.
 
     // REST Registration errors
     Rest_Registration_UserName_exists,  //User exists already, can't register.
