@@ -1,18 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fi.dwo.server.PersistentEntityManagers;
 
-import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
@@ -24,9 +19,9 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class UserManager {
+public class SchoolGroupManager {
 
-    private static final Logger LOG = Logger.getLogger(UserManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(SchoolGroupManager.class.getName());
 
     private static EntityManager getEntityManager() {
         EntityManager em = DwoEmfFactory.createEntityManager();
@@ -36,17 +31,17 @@ public class UserManager {
     /**
      * Create.
      *
-     * @param persistentUser
+     * @param school
      */
-    public static void create(PersistentUser persistentUser) throws PersistenceException {
+    public static void create(PersistentSchoolGroup entity) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            em.persist(persistentUser);
+            em.persist(entity);
             em.getTransaction().commit();
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the user.", e);
+            LOG.log(Level.SEVERE, "Can't create the schoolgroup.", e);
             throw new PersistenceException(e);
         } finally {
             if (em != null) {
@@ -58,23 +53,22 @@ public class UserManager {
     /**
      * Update
      *
-     * @param persistentUser
-     * @throws NonexistentEntityException
+     * @param school
      * @throws Exception
      */
-    public static void edit(PersistentUser persistentUser) throws PersistenceException, Exception {
+    public static void edit(PersistentSchoolGroup entity) throws PersistenceException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            persistentUser = em.merge(persistentUser);
+            entity = em.merge(entity);
             em.getTransaction().commit();
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = persistentUser.getUserID();
+                Integer id = entity.getSchoolGroupID();
                 if (findEntity(id) == null) {
-                    LOG.log(Level.FINE, "The persistentUser with " + id + " no longer exists.", e);
+                    LOG.log(Level.FINE, "The persistentSchool with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
                 }
             }
@@ -90,22 +84,21 @@ public class UserManager {
      * Removes a user from the persistent store.
      *
      * @param id
-     * @throws NonexistentEntityException
      */
     public static void destroy(Integer id) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            PersistentUser persistentUser = null;
+                PersistentSchoolGroup entity = null;
             try {
-                persistentUser = em.getReference(PersistentUser.class, id);
-                persistentUser.getUserID();
+                entity = em.getReference(PersistentSchoolGroup.class, id);
+                entity.getSchoolGroupID();
             } catch (EntityNotFoundException e) {
-                LOG.log(Level.FINE, "The persistentUser with " + id + " no longer exists.", e);
+                LOG.log(Level.FINE, "The persistentSchoolGroup with " + id + " no longer exists.", e);
                 throw new PersistenceException(e);
             }
-            em.remove(persistentUser);
+            em.remove(entity);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -114,19 +107,19 @@ public class UserManager {
         }
     }
 
-    public static List<PersistentUser> findEntities() {
+    public static List<PersistentSchool> findEntities() {
         return findEntities(true, -1, -1);
     }
 
-    public static List<PersistentUser> findEntities(int maxResults, int firstResult) {
+    public static List<PersistentSchool> findEntities(int maxResults, int firstResult) {
         return findEntities(false, maxResults, firstResult);
     }
 
-    private static List<PersistentUser> findEntities(boolean all, int maxResults, int firstResult) {
+    private static List<PersistentSchool> findEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(PersistentUser.class));
+            cq.select(cq.from(PersistentSchool.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -138,10 +131,10 @@ public class UserManager {
         }
     }
 
-    public static PersistentUser findEntity(Integer id) {
+    public static PersistentSchool findEntity(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(PersistentUser.class, id);
+            return em.find(PersistentSchool.class, id);
         } finally {
             em.close();
         }
@@ -151,60 +144,13 @@ public class UserManager {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<PersistentUser> rt = cq.from(PersistentUser.class);
+            Root<PersistentSchool> rt = cq.from(PersistentSchool.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
         } finally {
             em.close();
         }
-    }
-
-    /**
-     * returns null if no user with that name was found.
-     * 
-     * @param userName
-     * @return 
-     */
-    public static PersistentUser findByUserName(String userName) {
-        EntityManager em = DwoEmfFactory.createEntityManager();
-        PersistentUser user = null;
-        try {
-            javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
-            q.setParameter("username", userName);
-            user = (PersistentUser) q.getSingleResult();
-            LOG.log(Level.FINE, "User-manager retrieved user with username {0}", new Object[]{user.getUsername()});
-        }catch(NoResultException e){
-            return null;
-        }catch(Exception e){
-            throw new PersistenceException(e);
-        }finally {
-            em.close();
-        }
-        return user;
-    }
-
-    /**
-     * User manager. Returns null if login validation failed.
-     *
-     * @param sc
-     * @return 
-     */
-    public static PersistentUser login(String userName, String passwd) {
-        PersistentUser user = null;
-        EntityManager em = getEntityManager();
-        try {
-            javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
-            q.setParameter("username", userName);
-            user = (PersistentUser) q.getSingleResult();
-            if (user.getPasswd().compareTo(passwd) != 0) {
-                return null;
-            }
-            LOG.log(Level.INFO, "Login accepted for user with username {0}", new Object[]{userName});
-        } finally {
-            em.close();
-        }
-        return user;
     }
 
 }

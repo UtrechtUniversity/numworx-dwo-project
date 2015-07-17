@@ -71,7 +71,7 @@ public class SchoolManager {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Integer id = school.getSchoolID();
-                if (findPersistentSchool(id) == null) {
+                if (findEntity(id) == null) {
                     LOG.log(Level.FINE, "The persistentSchool with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
                 }
@@ -111,15 +111,15 @@ public class SchoolManager {
         }
     }
 
-    public static List<PersistentSchool> findPersistentSchoolEntities() {
-        return findPersistentSchoolEntities(true, -1, -1);
+    public static List<PersistentSchool> findEntities() {
+        return findEntities(true, -1, -1);
     }
 
-    public static List<PersistentSchool> findPersistentSchoolEntities(int maxResults, int firstResult) {
-        return findPersistentSchoolEntities(false, maxResults, firstResult);
+    public static List<PersistentSchool> findEntities(int maxResults, int firstResult) {
+        return findEntities(false, maxResults, firstResult);
     }
 
-    private static List<PersistentSchool> findPersistentSchoolEntities(boolean all, int maxResults, int firstResult) {
+    private static List<PersistentSchool> findEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
@@ -135,7 +135,7 @@ public class SchoolManager {
         }
     }
 
-    public static PersistentSchool findPersistentSchool(Integer id) {
+    public static PersistentSchool findEntity(Integer id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentSchool.class, id);
@@ -144,7 +144,7 @@ public class SchoolManager {
         }
     }
 
-    public static int getPersistentSchoolCount() {
+    public static int getEntityCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fi.dwo.server.PersistentEntityManagers;
 
 import fi.dwo.commons.persistence.entities.PersistentDwoSystemParameters;
@@ -40,7 +35,7 @@ public class DwoSystemParametersManager implements Serializable {
             em.persist(dwoSystemParameters);
             em.getTransaction().commit();
         } catch (Exception ex) {
-            if (findDwoSystemParameters(dwoSystemParameters.getName()) != null) {
+            if (findEntity(dwoSystemParameters.getName()) != null) {
                 throw new PreexistingEntityException("DwoSystemParameters " + dwoSystemParameters + " already exists.", ex);
             }
             throw ex;
@@ -62,7 +57,7 @@ public class DwoSystemParametersManager implements Serializable {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 String id = dwoSystemParameters.getName();
-                if (findDwoSystemParameters(id) == null) {
+                if (findEntity(id) == null) {
                     throw new NonexistentEntityException("The dwoSystemParameters with id " + id + " no longer exists.");
                 }
             }
@@ -95,15 +90,15 @@ public class DwoSystemParametersManager implements Serializable {
         }
     }
 
-    public static List<PersistentDwoSystemParameters> findDwoSystemParametersEntities() {
-        return findDwoSystemParametersEntities(true, -1, -1);
+    public static List<PersistentDwoSystemParameters> findEntities() {
+        return findEntities(true, -1, -1);
     }
 
-    public static List<PersistentDwoSystemParameters> findDwoSystemParametersEntities(int maxResults, int firstResult) {
-        return findDwoSystemParametersEntities(false, maxResults, firstResult);
+    public static List<PersistentDwoSystemParameters> findEntities(int maxResults, int firstResult) {
+        return findEntities(false, maxResults, firstResult);
     }
 
-    private static List<PersistentDwoSystemParameters> findDwoSystemParametersEntities(boolean all, int maxResults, int firstResult) {
+    private static List<PersistentDwoSystemParameters> findEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
@@ -119,7 +114,7 @@ public class DwoSystemParametersManager implements Serializable {
         }
     }
 
-    public static PersistentDwoSystemParameters findDwoSystemParameters(String id) {
+    public static PersistentDwoSystemParameters findEntity(String id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentDwoSystemParameters.class, id);
@@ -128,7 +123,7 @@ public class DwoSystemParametersManager implements Serializable {
         }
     }
 
-    public static int getDwoSystemParametersCount() {
+    public static int getEntityCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();

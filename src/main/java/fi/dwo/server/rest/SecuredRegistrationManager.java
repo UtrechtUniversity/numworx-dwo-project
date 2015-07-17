@@ -101,7 +101,7 @@ public class SecuredRegistrationManager {
         PersistentHasRolePK pk = new PersistentHasRolePK();
         pk.setSchoolGroupID(sg.getSchoolGroupID());
         pk.setUserID(user.getUserID());
-        PersistentHasRole hasRole = HasRoleManager.findPersistentHasRole(pk);
+        PersistentHasRole hasRole = HasRoleManager.findEntity(pk);
         if (hasRole != null) {
             LOG.log(Level.FINE, "Username {0}: Registration failde for school {1}, schoolgroup id {2}, userid {3} already exists.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolName(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), hasRole.getPersistentHasRolePK().getUserID()});
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_hasRole_exists, "The user has already been registered.");

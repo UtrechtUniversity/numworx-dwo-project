@@ -72,7 +72,7 @@ public class HasRoleManager {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 PersistentHasRolePK id = hasRole.getPersistentHasRolePK();
-                if (findPersistentHasRole(id) == null) {
+                if (findEntity(id) == null) {
                     LOG.log(Level.FINE, "The persistentSchool with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
                 }
@@ -113,15 +113,15 @@ public class HasRoleManager {
         }
     }
 
-    public static List<PersistentHasRole> findPersistentHasRoleEntities() {
-        return findPersistentHasRoleEntities(true, -1, -1);
+    public static List<PersistentHasRole> findEntities() {
+        return findEntities(true, -1, -1);
     }
 
-    public static List<PersistentHasRole> findPersistentHasRoleEntities(int maxResults, int firstResult) {
-        return findPersistentHasRoleEntities(false, maxResults, firstResult);
+    public static List<PersistentHasRole> findEntities(int maxResults, int firstResult) {
+        return findEntities(false, maxResults, firstResult);
     }
 
-    private static List<PersistentHasRole> findPersistentHasRoleEntities(boolean all, int maxResults, int firstResult) {
+    private static List<PersistentHasRole> findEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
@@ -137,7 +137,7 @@ public class HasRoleManager {
         }
     }
 
-    public static PersistentHasRole findPersistentHasRole(PersistentHasRolePK id) {
+    public static PersistentHasRole findEntity(PersistentHasRolePK id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentHasRole.class, id);
@@ -146,7 +146,7 @@ public class HasRoleManager {
         }
     }
 
-    public static int getPersistentHasRoleCount() {
+    public static int getEntityCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
