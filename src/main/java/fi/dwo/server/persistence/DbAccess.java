@@ -224,18 +224,17 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     private final static String QRY_GET_STUDENT_SCO = "SELECT `{0}` "
             + "FROM tblStudentScoContext join tblStudentScoData using (studentSco) "
             + "WHERE (scoID = ?) "
-            + "AND   (userID = ?) ";
-
-    private final static String QRY_ADD_EMPTY_STUDENT_SCO_CONTEXT = "INSERT INTO tblStudentScoContext(scoID, userID, createDate, score) "
-            + "VALUES(?, ?, CURDATE(), 0) ";
+            + "AND   (userID = ?) and (schoolgroupId = ?) ";
+    private final static String QRY_ADD_EMPTY_STUDENT_SCO_CONTEXT = "INSERT INTO tblStudentScoContext(scoID, userID, schoolgroupID, createDate, score) "
+            + "VALUES(?, ?, ?, CURDATE(), 0) ";
 
     private final static String QRY_ADD_EMPTY_STUDENT_SCO_DATA = "INSERT INTO tblStudentScoData(studentSco,suspendData) "
             + "VALUES(?, '') ";
-
+    
     private final static String QRY_UPDATE_STUDENT_SCO = "UPDATE tblStudentScoContext, tblStudentScoData "
             + "SET `{0}` = ?, createDate = CURDATE() "
             + "WHERE (scoID = ?) "
-            + "AND   (userID = ?) AND (tblStudentScoContext.studentSco = tblStudentScoData.studentSco)";
+            + "AND   (userID = ?) AND (schoolGroupID = ?) AND (tblStudentScoContext.studentSco = tblStudentScoData.studentSco)";
 
     private final static String QRY_WHERE_COLUMN = " AND ({0} = ?) ";
 
@@ -2084,11 +2083,11 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @throws SQLException
      */
     @Override
-    public String LMSGetValue(int scoID, int userID, String iDataModelElement)
+    public String LMSGetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement)
             throws IOException, XmlRpcException, SQLException {
         if (iDataModelElement.startsWith("cmi.")) {
             // botte interface naar Xml2Scorm, no caching 
-            String xmlStr = LMSGetValue(scoID, userID, "cocd");
+            String xmlStr = LMSGetValue(scoID, userID, schoolGroupID, "cocd");
             Scorm2Xml xml = new Scorm2Xml(String.valueOf(xmlStr));
             return xml.getValue(iDataModelElement);
         }
@@ -2099,6 +2098,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
         PreparedStatement ps = getStatement(query);
         ps.setInt(1, scoID);
         ps.setInt(2, userID);
+        ps.setInt(3, schoolGroupID);
 
         Hashtable ht = executeQueryWithRecord(ps);
 
@@ -2143,12 +2143,12 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @throws XmlRpcException
      */
     @Override
-    public String LMSSetValue(int scoID, int userID, String iDataModelElement,
+    public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement,
             String iValue) throws SQLException, IOException, XmlRpcException {
 
         if (iDataModelElement.startsWith("cmi.")) {
             // eerste botte implementatie
-            String xmlStr = LMSGetValue(scoID, userID, "cocd");
+            String xmlStr = LMSGetValue(scoID, userID, schoolGroupID, "cocd");
             Scorm2Xml xml = new Scorm2Xml(String.valueOf(xmlStr));
             xml.LMSSetValue(iDataModelElement, iValue);
             iDataModelElement = "cocd";
@@ -2162,7 +2162,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             PreparedStatement ps = getStatement(query);
             ps.setInt(1, scoID);
             ps.setInt(2, userID);
-
+            ps.setInt(3,schoolGroupID);
             Hashtable ht = executeQueryWithRecord(ps); // Never returns null, emtpy instead!
             log(Level.FINE, "LMSSetValue("
                     + scoID + ", " + userID + ", " + iDataModelElement + ", "
@@ -2176,6 +2176,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
 
                 ps.setInt(1, scoID);
                 ps.setInt(2, userID);
+                ps.setInt(3, schoolGroupID);
                 ps.execute();
                 ResultSet rs = ps.getGeneratedKeys();
                 int id = -1;
@@ -2206,6 +2207,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
             ps.setObject(1, iValue);
             ps.setInt(2, scoID);
             ps.setInt(3, userID);
+            ps.setInt(4,schoolGroupID);
 
             ps.execute();
             int count = ps.getUpdateCount();
@@ -2243,9 +2245,9 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @throws XmlRpcException
      */
     @Override
-    public String LMSSetValue(int scoID, int userID, String iDataModelElement,
+    public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement,
             String iValue, String random) throws SQLException, IOException, XmlRpcException {
-        LMSSetValue(scoID, userID, iDataModelElement, iValue);
+        LMSSetValue(scoID, userID, schoolGroupID, iDataModelElement, iValue);
         return random;
     }
 

@@ -8,7 +8,6 @@ package fi.dwo.server.PersistentEntityManagers;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.server.persistence.DwoEmfFactory;
-import fi.dwo.server.persistence.exceptions.NonexistentEntityException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,7 +59,6 @@ public class HasRoleManager {
      * Update
      *
      * @param role
-     * @throws NonexistentEntityException
      * @throws Exception
      */
     public static void edit(PersistentHasRole hasRole) throws PersistenceException, Exception {

@@ -7,7 +7,6 @@ package fi.dwo.server.PersistentEntityManagers;
 
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.persistence.DwoEmfFactory;
-import fi.dwo.server.persistence.exceptions.NonexistentEntityException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,7 +58,6 @@ public class SchoolManager {
      * Update
      *
      * @param school
-     * @throws NonexistentEntityException
      * @throws Exception
      */
     public static void edit(PersistentSchool school) throws PersistenceException, Exception {
@@ -90,7 +88,6 @@ public class SchoolManager {
      * Removes a user from the persistent store.
      *
      * @param id
-     * @throws NonexistentEntityException
      */
     public static void destroy(Integer id) throws PersistenceException {
         EntityManager em = null;

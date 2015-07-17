@@ -147,22 +147,22 @@ public abstract class DbAccessProxy implements DbAccessIF, DbConnectIF {
     }
 
     @Override
-    public String LMSGetValue(int scoID, int userID, String iDataModelElement)
+    public String LMSGetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement)
             throws IOException, XmlRpcException, SQLException {
-        return getDelegate().LMSGetValue(scoID, userID, iDataModelElement);
+        return getDelegate().LMSGetValue(scoID, userID, schoolGroupID, iDataModelElement);
     }
 
     @Override
-    public String LMSSetValue(int scoID, int userID, String iDataModelElement,
+    public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement,
             String iValue) throws IOException, XmlRpcException, SQLException {
-        return getDelegate().LMSSetValue(scoID, userID, iDataModelElement, iValue);
+        return getDelegate().LMSSetValue(scoID, userID, schoolGroupID, iDataModelElement, iValue);
     }
 
     @Override
-    public String LMSSetValue(int scoID, int userID, String iDataModelElement,
+    public String LMSSetValue(int scoID, int userID, int schoolGroupID, String iDataModelElement,
             String iValue, String random) throws IOException, XmlRpcException,
             SQLException {
-        return getDelegate().LMSSetValue(scoID, userID, iDataModelElement, iValue,
+        return getDelegate().LMSSetValue(scoID, userID, schoolGroupID, iDataModelElement, iValue,
                 random);
     }
 

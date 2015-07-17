@@ -6,16 +6,12 @@
 package fi.dwo.server.PersistentEntityManagers;
 
 import fi.dwo.commons.persistence.entities.PersistentDwoSystemParameters;
-import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import fi.dwo.server.persistence.exceptions.NonexistentEntityException;
 import fi.dwo.server.persistence.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;

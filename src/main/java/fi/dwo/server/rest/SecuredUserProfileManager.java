@@ -7,7 +7,6 @@ package fi.dwo.server.rest;
 
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
-import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.logging.Level;
@@ -15,7 +14,6 @@ import java.util.logging.Logger;
 import javax.annotation.security.PermitAll;
 import javax.persistence.EntityManager;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;

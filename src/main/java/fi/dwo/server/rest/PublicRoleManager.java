@@ -20,7 +20,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
 /**
- * Public access to the different security roles available for users.
+ * Public access to the different DWO-roles available for users.
  * 
  * @author G.A.J. van der Plas
  */
