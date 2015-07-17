@@ -81,9 +81,9 @@ import org.apache.xmlrpc.applet.MySimpleXmlRpcClient;
 import org.glassfish.jersey.client.ClientProperties;
 
 /**
- * This is the main DWO application. It can be started as an applet or as a  
- * stand alone application. 
- * 
+ * This is the main DWO application. It can be started as an applet or as a
+ * stand alone application.
+ *
  */
 public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM2004APIInterface {
 
@@ -135,8 +135,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     FocusTraversalPolicy delegate;
 
     /**
-     * Reads a logging properties file. It first tries to find an external one. Otherwise
-     * it reads the internal one.
+     * Reads a logging properties file. It first tries to find an external one.
+     * Otherwise it reads the internal one.
      */
     private static void ReadLoggingProperties() {
         try {
@@ -148,15 +148,18 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 
             LogManager.getLogManager().readConfiguration(file);
             LOG.log(Level.INFO, "Using external logging.properties file.");
-        } catch (final Exception e) {
+        }
+        catch (final Exception e) {
             Logger.getAnonymousLogger().log(Level.INFO, "No logging.properties file found in current directory. Using default.");
-            try {
-                final InputStream inputStream2 = DWO.class.getResourceAsStream("resources/logging.properties");
+            try {                
+                final InputStream inputStream2 = DWO.class.getResourceAsStream("/logging.properties");
                 LogManager.getLogManager().readConfiguration(inputStream2);
                 Logger.getAnonymousLogger().log(Level.INFO, "logging.properties file read from property folder.");
-            } catch (final IOException e2) {
+            }
+            catch (final IOException e2) {
                 Logger.getAnonymousLogger().severe("Could not load internal logging.properties file.");
-            } catch (final SecurityException e3) {
+            }
+            catch (final SecurityException e3) {
                 Logger.getAnonymousLogger().severe("Could not load internal logging.properties file.");
                 throw e3;
             }
@@ -168,16 +171,15 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      *
      */
     private static void ReadConfigProperties() {
-
+            LOG.log(Level.INFO, "Checking for DWO.properties");
+        Properties properties = new Properties();
         try {
-            Properties properties = new Properties();
-
-            FileInputStream file;
 
             //folder relative to the current directory
             String path = "./DWO.properties";
 
             //file handle for main.properties
+            FileInputStream file;
             file = new FileInputStream(path);
 
             //load the properties
@@ -187,26 +189,50 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             //done with file
             file.close();
 
-            //assign properties to static value.
-            String servletConnectStringProperty = properties.getProperty("servletConnectString");
-            DwoHelper.setServletConnectString(servletConnectStringProperty);
-            LOG.log(Level.FINE, "Property {0} is value: {1}", new Object[]{"setServletConnectString",
-                DwoHelper.getServletConnectString()});
-
-            String resourceURLPathStringProperty = properties.getProperty("resourceURLPath");
-            DwoHelper.setGetResourceURLPathString(resourceURLPathStringProperty);
-            LOG.log(Level.FINE, "Property {0} is value: {1}", new Object[]{"resourceURLPathStringProperty",
-                DwoHelper.getGetResourceURLPathString()});
-
-            String xmlrpc_debug = properties.getProperty("xmlrpc.debug", "false");
-            LOG.log(Level.FINE, "Property {0} is value: {1}", new Object[]{"xmlrpc.debug",xmlrpc_debug});
-            MySimpleXmlRpcClient.setDebug("true".equals(xmlrpc_debug));
-
-        } catch (FileNotFoundException ex) {
-            LOG.log(Level.FINE, "No external resource connection defined");
-        } catch (IOException ex) {
-            LOG.log(Level.FINE, "IO error reading DWO.properties file.");
         }
+        catch (FileNotFoundException ex) {
+            LOG.log(Level.FINE, "No external DWO.property file found");
+            try {
+                //try resource folder.
+                String path = "/DWO.properties";
+
+                //file handle for main.properties
+                final InputStream inStream = DWO.class.getResourceAsStream("/DWO.properties");
+                //load the properties
+                properties.load(inStream);
+                LOG.log(Level.INFO, "Loaded internal DWO.property file");
+
+                //done with file
+                inStream.close();
+
+            }
+            catch (FileNotFoundException ex2) {
+                LOG.log(Level.FINE, "No internal DWO.properties file found");
+            }
+            catch (IOException ex2) {
+                LOG.log(Level.SEVERE, "IO error reading internal DWO.properties file.");
+                throw new RuntimeException(ex2);
+            }
+        }
+        catch (IOException ex) {
+            LOG.log(Level.FINE, "IO error reading external DWO.properties file.");
+        }
+
+        //assign properties to static value.
+        String servletConnectStringProperty = properties.getProperty("servletConnectString");
+        DwoHelper.setServletConnectString(servletConnectStringProperty);
+        LOG.log(Level.FINE, "Property {0} is value: {1}", new Object[]{"setServletConnectString",
+            DwoHelper.getServletConnectString()});
+
+        String resourceURLPathStringProperty = properties.getProperty("resourceURLPath");
+        DwoHelper.setGetResourceURLPathString(resourceURLPathStringProperty);
+        LOG.log(Level.FINE, "Property {0} is value: {1}", new Object[]{"resourceURLPathStringProperty",
+            DwoHelper.getGetResourceURLPathString()});
+
+        String xmlrpc_debug = properties.getProperty("xmlrpc.debug", "false");
+        LOG.log(Level.FINE, "Property {0} is value: {1}", new Object[]{"xmlrpc.debug", xmlrpc_debug});
+        MySimpleXmlRpcClient.setDebug("true".equals(xmlrpc_debug));
+        
     }
 
     /**
@@ -221,7 +247,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
                 Component aComponent) {
             try {
                 return delegate.getComponentAfter(focusCycleRoot, aComponent);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 recover(e);
             }
             return getFirstComponent(focusCycleRoot);  // don't crash
@@ -232,7 +259,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
                 Component aComponent) {
             try {
                 return delegate.getComponentBefore(focusCycleRoot, aComponent);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 recover(e);
             }
             return getLastComponent(focusCycleRoot);
@@ -242,7 +270,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         public Component getDefaultComponent(Container focusCycleRoot) {
             try {
                 return delegate.getDefaultComponent(focusCycleRoot);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 recover(e);
             }
             return null;
@@ -252,7 +281,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         public Component getFirstComponent(Container focusCycleRoot) {
             try {
                 return delegate.getFirstComponent(focusCycleRoot);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 recover(e);
             }
             return null;
@@ -262,7 +292,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         public Component getInitialComponent(Window window) {
             try {
                 return delegate.getInitialComponent(window);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 recover(e);
             }
             return super.getInitialComponent(window);
@@ -272,7 +303,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         public Component getLastComponent(Container focusCycleRoot) {
             try {
                 return delegate.getLastComponent(focusCycleRoot);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 recover(e);
             }
             return null;
@@ -331,7 +363,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             if (args.length > 1 + o && "-r".equals(args[o])) {
                 try {
                     DwoHelper.applicationBase = new URL(args[o + 1]);
-                } catch (MalformedURLException e) {
+                }
+                catch (MalformedURLException e) {
                     System.err.println("-r option: " + e);
                 }
                 o += 2;
@@ -350,7 +383,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         if (args != null && args.length > o && args[o] != null) {
             try {
                 dwoProfileID = Integer.parseInt(args[o]);
-            } catch (NumberFormatException e) {
+            }
+            catch (NumberFormatException e) {
             }
             if (args.length > 2 + o && args[1 + o] != null && args[2 + o] != null) {
                 limitedSchoolAccessString = args[1 + o];
@@ -397,6 +431,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 
         return setExtraRights(DwoHelper.getCurrentFacadeUser());
     }
+
     /**
      * Logs a user in into the system. The user will be remembered while the
      * user is logged in.
@@ -408,7 +443,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @throws fi.dwo.commons.exceptions.LoginException
      *
      */
-    
     public boolean loginWithMd5(String username, String password)
             throws LoginException {
         String plainPassword = DwoHelper.getPlainPassword();
@@ -426,7 +460,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 
         return setExtraRights(DwoHelper.getCurrentFacadeUser());
     }
-    
+
     /**
      * @param currentUser
      * @return
@@ -594,7 +628,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         try {
             checkEmail = new CheckEmail(DwoHelper.getApplet().getCodeBase());
             return checkEmail.check(email);
-        } catch (MalformedURLException ex) {
+        }
+        catch (MalformedURLException ex) {
             return true;
         }
     }
@@ -755,7 +790,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         DwoHelper.getRoles();
         try {
             return (Group[]) PersistenceFacade.instance().get(Group.class);
-        } catch (PersistenceException e) {
+        }
+        catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
@@ -803,7 +839,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         try {
             courseList = PersistenceFacade.instance().getCourses(DwoHelper.getCurrentFacadeUser());
             return PersistenceFacade.instance().sequence(selectDwoProfileCourses(courseList));
-        } catch (PersistenceException e) {
+        }
+        catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
@@ -839,7 +876,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         try {
             courseList = PersistenceFacade.instance().getCourses(schoolClass);
             return selectDwoProfileCourses(courseList);
-        } catch (PersistenceException e) {
+        }
+        catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
@@ -1089,7 +1127,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     public void deleteUser() {
         try {
             PersistenceFacade.instance().deleteUser(DwoHelper.getCurrentFacadeUser());
-        } catch (RegisterException e) {
+        }
+        catch (RegisterException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }
@@ -1114,7 +1153,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             } else {
                 returnvalue = true;
             }
-        } catch (ClassException e) {
+        }
+        catch (ClassException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
 
@@ -1195,7 +1235,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     }
 
     /**
-     * First phase of the applet life-cycle, {@Link start} is called immediately after it.
+     * First phase of the applet life-cycle, {@Link start} is called immediately
+     * after it.
      */
     @Override
     public void init() {
@@ -1213,25 +1254,28 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
                 DwoHelper.setBaseServletUrlString((new URL(url, "..")).toString()); // denotes the base servlet url
                 URL xmlRpcUrl = new URL(url, "../xmlrpc");
                 DwoHelper.setServletConnectString(xmlRpcUrl.toString());
-            } catch (MalformedURLException ex) {
+            }
+            catch (MalformedURLException ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }
         } else {
             try {
                 DwoHelper.setBaseServletUrlString((new URL(new URL(DwoHelper.getServletConnectString()), ".")).toString()); // denotes the base servlet url
-            } catch (MalformedURLException ex) {
+            }
+            catch (MalformedURLException ex) {
                 LOG.log(Level.SEVERE, null, ex);
             }
         }
         //intialize the proper connection but without any credentials.
         Client client = ClientBuilder.newClient();
-        client.property(ClientProperties.CONNECT_TIMEOUT, 5000);
-        client.property(ClientProperties.READ_TIMEOUT,    5000);
+        client.property(ClientProperties.CONNECT_TIMEOUT, 50000);
+        client.property(ClientProperties.READ_TIMEOUT, 50000);
         WebTarget target = client.target(DwoHelper.getBaseServletUrlString());
         StoredRestManager.setWebTargetRest(target);
         try {
             DwoHelper.setRoles(RoleManager.getRoles());
-        } catch (Dwo2Exception ex) {
+        }
+        catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
 
@@ -1260,7 +1304,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
                 }
                 LOG.log(Level.INFO, "No version numbering available. Possible running from IDE. Wrong 'Main-Class' value in MANIFEST-MF: '{0}'.", new Object[]{mainClass});
             }
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             LOG.log(Level.SEVERE, "Can't open /META-INF/MANIFEST.MF", ex);
         }
         DwoHelper.setAu(new AppletUtil(this));
@@ -1312,7 +1357,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         if (scoViewNrString != null && (!scoViewNrString.equals(""))) {
             try {
                 scoViewNr = Integer.parseInt(scoViewNrString);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
             }
         }
 //scoViewNr = 58010;       
@@ -1320,7 +1366,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         if (courseViewNrString != null && (!courseViewNrString.equals(""))) {
             try {
                 courseViewNr = Integer.parseInt(courseViewNrString);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
             }
         }
 //courseViewNr = 13916;
@@ -1354,7 +1401,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
                     String testNumber = testProperties.getProperty("test." + i);
                     testViewKeys.put(classNumber, testNumber);
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 testViewKeys = null;
                 testView = false;
                 LOG.log(Level.SEVERE, null, e);
@@ -1393,7 +1441,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
                         schoolAccessKeys.put("rights." + schoolNumber, rights);
                     }
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 schoolAccessKeys = null;
                 limitedSchoolAccess = false;
                 LOG.log(Level.SEVERE, null, e);
@@ -1413,7 +1462,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             if ((dwoProfileString != null) && (!dwoProfileString.equals(""))) {
                 try {
                     dwoProfileID = Integer.parseInt(dwoProfileString);
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                 }
             }
             JVMChecker jvmChecker = new JVMChecker(this);
@@ -1422,7 +1472,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 
         try {
             dwoProfile = (DwoProfile) PersistenceFacade.instance().get(dwoProfileID, DwoProfile.class);
-        } catch (PersistenceException e) {
+        }
+        catch (PersistenceException e) {
         }
         GuiConstants.setDwoProfile(dwoProfileID, getParameter(PROFILE_EXTENSION));
         ModuleTreePanel.initialize(dwoProfile);
@@ -1459,14 +1510,16 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             try {
                 GuiCreator.instance().login(userName, passWord);
                 return;
-            } catch (LoginException exc) {
+            }
+            catch (LoginException exc) {
                 JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
             }
         } else if (guestUser) {
             try {
                 GuiCreator.instance().login();
                 return;
-            } catch (LoginException exc) {
+            }
+            catch (LoginException exc) {
                 JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
             }
         } else if (cookies) {
@@ -1476,7 +1529,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
                 try {
                     GuiCreator.instance().login(userName, passWord);
                     return;
-                } catch (Exception ex) {
+                }
+                catch (Exception ex) {
                 }
             }
         }
@@ -1514,7 +1568,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         p.setUsername(username);
         setPanel(p);
     }
-    
+
     @Override
     public int getCourseViewNr() {
         return courseViewNr;
@@ -1610,7 +1664,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         } else {
             try {
                 return PersistenceFacade.instance().LMSGetValue(sco, user, iDataModelElement);
-            } catch (PersistenceException e) {
+            }
+            catch (PersistenceException e) {
                 JOptionPane.showMessageDialog(this, e.getMessage());
                 return "";
             }
@@ -1637,26 +1692,31 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     public String LMSSetValue(ScoBase sco, User user, String iDataModelElement, String iValue) {
         try {
             return PersistenceFacade.instance().LMSSetValue(sco, user, iDataModelElement, iValue);
-        } catch (PersistenceException e) {
+        }
+        catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return "false";
         }
 
     }
 
-/**
- * 2nd applet life cycle phase. Called automatically after the method {@link #init}. 
- */
+    /**
+     * 2nd applet life cycle phase. Called automatically after the method
+     * {@link #init}.
+     */
     @Override
     public void start() {
         this.getRootPane().setDoubleBuffered(true);
     }
 
     /**
-     * <p>Third phase in an applet life-cycle. Is called when a user moves off the page
-     * on which the applet resides. It can be called repeatedly in the same applet.</p>
-     * 
-     * <p> Closes... </p>
+     * <p>
+     * Third phase in an applet life-cycle. Is called when a user moves off the
+     * page on which the applet resides. It can be called repeatedly in the same
+     * applet.</p>
+     *
+     * <p>
+     * Closes... </p>
      */
     @Override
     public void stop() {
@@ -1679,10 +1739,12 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     }
 
     /**
-     * Fourth phase in an applet life-cycle. Is called when a user closes a browser. 
-     * Usually resources are released in phase {@Link stop}.
-     * 
-     * <p> Destroys the clipboard an clears the reference to this Applet in the {@Link DwoHelper}.</p>
+     * Fourth phase in an applet life-cycle. Is called when a user closes a
+     * browser. Usually resources are released in phase {@Link stop}.
+     *
+     * <p>
+     * Destroys the clipboard an clears the reference to this Applet in the
+     * {@Link DwoHelper}.</p>
      */
     @Override
     public void destroy() {
@@ -1710,10 +1772,10 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         //lookAndFeel = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
         //lookAndFeel = UIManager.getSystemLookAndFeelClassName();
         //UIManager.setLookAndFeel(lookAndFeel);
-        
+        LOG.log(Level.INFO,"Starting as application");
         int width = GuiConstants.DWO_WIDTH;
         int height = GuiConstants.DWO_HEIGHT;
-        
+
         //Initialize an applet
         DWO dwo = new DWO(args);
         //Configure the applet
@@ -1751,7 +1813,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             schoolClass.setRegistrationKey(newRegistrationKey);
             schoolClass.setIconizer(iconizer);
             return true;
-        } catch (ClassException e) {
+        }
+        catch (ClassException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return false;
         }
@@ -1865,7 +1928,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         try {
             courseList = PersistenceFacade.instance().getEditableCourses(DwoHelper.getCurrentFacadeUser());
             return PersistenceFacade.instance().sequence(selectDwoProfileCourses(courseList));
-        } catch (PersistenceException e) {
+        }
+        catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
@@ -1889,7 +1953,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     public Course addCourse(String name, String description, Course parent, boolean isMap) {
         try {
             return PersistenceFacade.instance().addCourse(DwoHelper.getCurrentFacadeUser().getSchool(), name, description, dwoProfile, parent, isMap);
-        } catch (CourseException e) {
+        }
+        catch (CourseException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
@@ -1902,7 +1967,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     public boolean updateCourse(Course course) {
         try {
             return PersistenceFacade.instance().updateCourse(course);
-        } catch (CourseException e) {
+        }
+        catch (CourseException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return false;
         }
@@ -1915,7 +1981,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean showScore) {
         try {
             return PersistenceFacade.instance().addSco(course, appletConfig, name, description, showScore);
-        } catch (ScoException e) {
+        }
+        catch (ScoException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
@@ -1928,7 +1995,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     public boolean updateSco(Sco sco) {
         try {
             return PersistenceFacade.instance().updateSco(sco);
-        } catch (ScoException e) {
+        }
+        catch (ScoException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return false;
         }
@@ -1941,7 +2009,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     public boolean deleteCourse(Course course) {
         try {
             return PersistenceFacade.instance().deleteCourse(course);
-        } catch (CourseException e) {
+        }
+        catch (CourseException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return false;
         }
@@ -1954,7 +2023,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     public boolean deleteSco(Sco sco) {
         try {
             return PersistenceFacade.instance().deleteSco(sco);
-        } catch (ScoException e) {
+        }
+        catch (ScoException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return false;
         }
@@ -1971,7 +2041,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
 //                System.out.println("AppletConfig: " + ac[i].getAppletID() + "; " + ac[i].getName() + "; " + ac[i].getLaunchdata());
 //            }
             return ac;
-        } catch (PersistenceException e) {
+        }
+        catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
@@ -1985,7 +2056,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         try {
             School[] sc = (School[]) PersistenceFacade.instance().get(School.class);
             return sc;
-        } catch (PersistenceException e) {
+        }
+        catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return null;
         }
@@ -2105,7 +2177,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     public String LMSCommit(ScoBase sco, String param) {
         try {
             return PersistenceFacade.instance().LMSCommit(sco, getUser(), param);
-        } catch (PersistenceException e) {
+        }
+        catch (PersistenceException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return "false";
         }
@@ -2164,7 +2237,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             if (value != null) {
                 value = URLDecoder.decode(value, "UTF-8");
             }
-        } catch (UnsupportedEncodingException e) {
+        }
+        catch (UnsupportedEncodingException e) {
         }
         return value;
     }
@@ -2190,7 +2264,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             try {
                 User u = PersistenceFacade.instance().loginViaSAML(samlUserID, samlOrgID);
                 return u;
-            } catch (LoginException e) {
+            }
+            catch (LoginException e) {
             }
             samlData = new HashMap();
             samlData.put(DWO_SAML_USER_ID, samlUserID);
@@ -2234,9 +2309,11 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
                     try {
                         PersistenceFacade.instance().changeAccount(u, null, null, u.getFirstname(), u.getMiddleName(), u.getLastName(), u.getEmail());
                         PersistenceFacade.instance().addStudentToClass(u.getInClass(), u.getID());
-                    } catch (PersistenceException e) {
+                    }
+                    catch (PersistenceException e) {
                         LOG.log(Level.SEVERE, null, e);
-                    } catch (RegisterException ex) {
+                    }
+                    catch (RegisterException ex) {
                         LOG.log(Level.SEVERE, null, ex);
                     }
                 }
@@ -2277,7 +2354,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     public boolean deleteSchool(School sc) {
         try {
             return PersistenceFacade.instance().deleteSchool(sc);
-        } catch (SchoolException e) {
+        }
+        catch (SchoolException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return false;
         }
@@ -2295,7 +2373,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
     public boolean swapSco(Sco sco1, Sco sco2) {
         try {
             return PersistenceFacade.instance().swapScoSequenceNr(sco1, sco2);
-        } catch (ScoException e) {
+        }
+        catch (ScoException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
             return false;
         }
@@ -2380,7 +2459,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
             Sco sco = (Sco) PersistenceFacade.instance().get(id, Sco.class);
             GuiCreator.instance().getMainPanel().getCenter().select(sco);
             return "true";
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             LOG.log(Level.SEVERE, null, e);
             return "false";
         }

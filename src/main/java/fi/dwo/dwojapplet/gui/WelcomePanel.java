@@ -350,8 +350,6 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
             try {
                 //set cookies in browser.
                 GuiCreator.instance().login(loginname.getText(), String.valueOf(password.getPassword()));
-                DwoHelper.setCookie("dwoUserName", loginname.getText());
-                DwoHelper.setCookie("dwoPassWord", String.valueOf(password.getPassword()));
                 if (linkcheck != null && linkcheck.isSelected()) {
                     GuiCreator.instance().linkViaSAML();
                 }
