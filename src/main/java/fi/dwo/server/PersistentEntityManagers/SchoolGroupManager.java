@@ -1,6 +1,5 @@
 package fi.dwo.server.PersistentEntityManagers;
 
-import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
@@ -94,7 +93,7 @@ public class SchoolGroupManager {
                 entity = em.getReference(PersistentSchoolGroup.class, id);
                 entity.getSchoolGroupID();
             } catch (EntityNotFoundException e) {
-                LOG.log(Level.FINE, "The persistentSchoolGroup with " + id + " no longer exists.", e);
+                LOG.log(Level.FINE, "The PersistentSchoolGroup with " + id + " no longer exists.", e);
                 throw new PersistenceException(e);
             }
             em.remove(entity);
@@ -106,19 +105,19 @@ public class SchoolGroupManager {
         }
     }
 
-    public static List<PersistentSchool> findEntities() {
+    public static List<PersistentSchoolGroup> findEntities() {
         return findEntities(true, -1, -1);
     }
 
-    public static List<PersistentSchool> findEntities(int maxResults, int firstResult) {
+    public static List<PersistentSchoolGroup> findEntities(int maxResults, int firstResult) {
         return findEntities(false, maxResults, firstResult);
     }
 
-    private static List<PersistentSchool> findEntities(boolean all, int maxResults, int firstResult) {
+    private static List<PersistentSchoolGroup> findEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(PersistentSchool.class));
+            cq.select(cq.from(PersistentSchoolGroup.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -130,10 +129,10 @@ public class SchoolGroupManager {
         }
     }
 
-    public static PersistentSchool findEntity(Integer id) {
+    public static PersistentSchoolGroup findEntity(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(PersistentSchool.class, id);
+            return em.find(PersistentSchoolGroup.class, id);
         } finally {
             em.close();
         }
@@ -143,7 +142,7 @@ public class SchoolGroupManager {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<PersistentSchool> rt = cq.from(PersistentSchool.class);
+            Root<PersistentSchoolGroup> rt = cq.from(PersistentSchoolGroup.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
