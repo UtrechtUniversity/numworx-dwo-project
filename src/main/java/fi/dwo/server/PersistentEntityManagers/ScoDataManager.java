@@ -1,6 +1,6 @@
 package fi.dwo.server.PersistentEntityManagers;
 
-import fi.dwo.commons.persistence.entities.PersistentClassCourse;
+import fi.dwo.commons.persistence.entities.PersistentScoData;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.logging.Level;
@@ -13,13 +13,14 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 /**
- * Manages class courses in the persistent storage. 
+ * Manages sco data in the persistent storage. As this data will be detached
+ * from the main transactional database it is considered separate data to be retrieved.
  *
  * @author G.A.J. van der Plas
  */
-public class ClassCourseManager {
+public class ScoDataManager {
 
-    private static final Logger LOG = Logger.getLogger(ClassCourseManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(ScoDataManager.class.getName());
 
     private static EntityManager getEntityManager() {
         EntityManager em = DwoEmfFactory.createEntityManager();
@@ -29,17 +30,17 @@ public class ClassCourseManager {
     /**
      * Create.
      *
-     * @param classCourse
+     * @param ssd studentScoData
      */
-    public static void create(PersistentClassCourse classCourse) throws PersistenceException {
+    public static void create(PersistentScoData ssd) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            em.persist(classCourse);
+            em.persist(ssd);
             em.getTransaction().commit();
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentClassCourse.", e);
+            LOG.log(Level.SEVERE, "Can't create the PersistentScoData.", e);
             throw new PersistenceException(e);
         } finally {
             if (em != null) {
@@ -51,22 +52,22 @@ public class ClassCourseManager {
     /**
      * Update
      *
-     * @param classCourse
+     * @param sd studentScoData
      * @throws Exception
      */
-    public static void edit(PersistentClassCourse classCourse) throws PersistenceException, Exception {
+    public static void edit(PersistentScoData sd) throws PersistenceException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            classCourse = em.merge(classCourse);
+            sd = em.merge(sd);
             em.getTransaction().commit();
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                int id = classCourse.getClassCourseID();
+                Integer id = sd.getScoID();
                 if (findEntity(id) == null) {
-                    LOG.log(Level.FINE, "The PersistentClassCourse with " + id + " no longer exists.", e);
+                    LOG.log(Level.FINE, "The PersistentScoData with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
                 }
             }
@@ -83,20 +84,20 @@ public class ClassCourseManager {
      *
      * @param id
      */
-    public static void destroy(int id) throws PersistenceException {
+    public static void destroy(Integer id) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-                PersistentClassCourse classCourse = null;
+            PersistentScoData ssd = null;
             try {
-                classCourse = em.getReference(PersistentClassCourse.class, id);
-                classCourse.getClassCourseID();
+                ssd = em.getReference(PersistentScoData.class, id);
+                ssd.getScoID();
             } catch (EntityNotFoundException e) {
-                LOG.log(Level.FINE, "The PersistentClassCourse with " + id + " no longer exists.", e);
+                LOG.log(Level.FINE, "The PersistentScoData with " + id + " no longer exists.", e);
                 throw new PersistenceException(e);
             }
-            em.remove(classCourse);
+            em.remove(ssd);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -105,19 +106,19 @@ public class ClassCourseManager {
         }
     }
 
-    public static List<PersistentClassCourse> findEntities() {
+    public static List<PersistentScoData> findEntities() {
         return findEntities(true, -1, -1);
     }
 
-    public static List<PersistentClassCourse> findEntities(int maxResults, int firstResult) {
+    public static List<PersistentScoData> findEntities(int maxResults, int firstResult) {
         return findEntities(false, maxResults, firstResult);
     }
 
-    private static List<PersistentClassCourse> findEntities(boolean all, int maxResults, int firstResult) {
+    private static List<PersistentScoData> findEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(PersistentClassCourse.class));
+            cq.select(cq.from(PersistentScoData.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -129,10 +130,10 @@ public class ClassCourseManager {
         }
     }
 
-    public static PersistentClassCourse findEntity(int id) {
+    public static PersistentScoData findEntity(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(PersistentClassCourse.class, id);
+            return em.find(PersistentScoData.class, id);
         } finally {
             em.close();
         }
@@ -142,7 +143,7 @@ public class ClassCourseManager {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<PersistentClassCourse> rt = cq.from(PersistentClassCourse.class);
+            Root<PersistentScoData> rt = cq.from(PersistentScoData.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
@@ -150,4 +151,5 @@ public class ClassCourseManager {
             em.close();
         }
     }
+
 }
