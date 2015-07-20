@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -335,6 +336,12 @@ public class TreeModuleViewImpl  extends Composite implements TreeModuleView
 
 	@Override
 	public void close() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setSortModel(Comparator<SelectModuleItem> sorter) {
 		// TODO Auto-generated method stub
 		
 	}

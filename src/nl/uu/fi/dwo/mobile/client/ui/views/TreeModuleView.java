@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
+import java.util.Comparator;
 import java.util.List;
 
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
@@ -16,7 +17,7 @@ public interface TreeModuleView extends IsWidget
 	
 	
 	void render(List<SelectModuleItem> currentModel);
-	
+	void setSortModel( Comparator<SelectModuleItem> sorter);
 	void selectModule(SelectModuleItem item);
 
 	void close();

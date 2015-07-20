@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -213,6 +214,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 			tree.removeItems();
 			inverseMap.clear();
 			model = currentModel;
+			sort(model);
 			initTree();
 		}
 	
@@ -279,6 +281,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
     // Animations
     //================================================================================
 	private int animation_duration = 200; // XXX is there a gwt standard value ?
+	private Comparator<SelectModuleItem> sortModel;
 	
 	private void toggleNavigationPanel(){
 		if (navigationPanel.getAbsoluteLeft() == 0) {
@@ -365,6 +368,8 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	}
 
 	private void initTree(List<SelectModuleItem> model, TreeItem tree) {
+		sort(model);
+		tree.removeItems(); // the tree should be empty, but it is not always.
 		for (SelectModuleItem item : model)
 		{
 			TreeItem treeItem = getTreeItem(item);
@@ -479,6 +484,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	private void addChildren(List<SelectModuleItem> list) {
 		if(list == null)
 			list = Collections.emptyList();
+		sort(list);
 		this.cellItems = list;
 		cells.render(list);
 	}
@@ -502,5 +508,15 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 		
 	}
 
+	@Override
+	public void setSortModel(Comparator<SelectModuleItem> sorter) {
+		this.sortModel = sorter;
+	}
+
+	private void sort(List<SelectModuleItem> items) {
+		if(sortModel != null) {
+			Collections.sort(items, sortModel);
+		}
+	}
 
 }
