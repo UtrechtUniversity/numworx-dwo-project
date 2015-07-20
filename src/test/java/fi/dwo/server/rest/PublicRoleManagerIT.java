@@ -1,0 +1,59 @@
+/**
+ * Copyrighted Jul 20, 2015
+ */
+package fi.dwo.server.rest;
+
+import fi.dwo.commons.persistence.entities.PersistentRole;
+import java.util.List;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.SecurityContext;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+/**
+ * Tests wether PublicRoleManager works. First code example.
+ * 
+ * @author G.A.J. van der Plas
+ */
+public class PublicRoleManagerIT  extends JerseyTest{
+    
+    public PublicRoleManagerIT() {
+    }
+    
+    @BeforeClass
+    public static void setUpClass() {
+    }
+    
+    @AfterClass
+    public static void tearDownClass() {
+    }
+    
+    @Before
+    public void setUp() {
+    }
+    
+    @After
+    public void tearDown() {
+    }
+
+    /**
+     * Test of getRoles method, of class PublicRoleManager.
+     */
+    @Path("/get/json")
+    @Test
+    public void testGetRoles() {
+        System.out.println("getRoles");
+        SecurityContext sc = null;
+        PublicRoleManager instance = new PublicRoleManager();
+        List<PersistentRole> expResult = null;
+        List<PersistentRole> result = instance.getRoles(sc);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+    
+}
