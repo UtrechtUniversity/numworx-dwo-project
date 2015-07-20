@@ -23,7 +23,10 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
+ * StudentScoContext manager. Known issues are that is does not provide a way
+ * to access data directly on a HasRolePK. Only via the component indices of the 
+ * HasRolePK.
+ * 
  * @author G.A.J. van der Plas
  */
 @Entity
