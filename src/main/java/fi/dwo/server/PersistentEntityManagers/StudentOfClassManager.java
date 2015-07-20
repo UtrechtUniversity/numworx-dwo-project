@@ -8,7 +8,6 @@ package fi.dwo.server.PersistentEntityManagers;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.server.persistence.DwoEmfFactory;
-import fi.dwo.server.persistence.exceptions.NonexistentEntityException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +35,7 @@ public class StudentOfClassManager {
     /**
      * Create.
      *
-     * @param role
+     * @param studentOf
      */
     public static void create(PersistentStudentOfClass studentOf) throws PersistenceException {
         EntityManager em = null;
@@ -58,7 +57,7 @@ public class StudentOfClassManager {
     /**
      * Update
      *
-     * @param role
+     * @param studentOf
      * @throws Exception
      */
     public static void edit(PersistentStudentOfClass studentOf) throws PersistenceException, Exception {
@@ -89,7 +88,6 @@ public class StudentOfClassManager {
      * Removes a user from the persistent store.
      *
      * @param id
-     * @throws NonexistentEntityException
      */
     public static void destroy(PersistentStudentOfClassPK id) throws PersistenceException {
         EntityManager em = null;
