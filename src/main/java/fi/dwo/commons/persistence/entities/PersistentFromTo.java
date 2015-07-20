@@ -38,7 +38,7 @@ public class PersistentFromTo implements Serializable {
         this.tblfromtoPK = new PersistentFromToPK(schoolFrom, schoolTo);
     }
 
-    public PersistentFromToPK getTblfromtoPK() {
+    public PersistentFromToPK getPersistentFromToPK() {
         return tblfromtoPK;
     }
 
