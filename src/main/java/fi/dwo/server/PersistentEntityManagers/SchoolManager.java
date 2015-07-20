@@ -18,8 +18,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 /**
- * Manages users in the persistent storage. Sample UserManager for building more
- * code. Also useful as it is being reused.
+ * Manages schools in the persistent storage.
  *
  * @author G.A.J. van der Plas
  */
@@ -45,7 +44,7 @@ public class SchoolManager {
             em.persist(school);
             em.getTransaction().commit();
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the school.", e);
+            LOG.log(Level.SEVERE, "Can't create the PersistentSchool.", e);
             throw new PersistenceException(e);
         } finally {
             if (em != null) {
@@ -72,7 +71,7 @@ public class SchoolManager {
             if (msg == null || msg.length() == 0) {
                 Integer id = school.getSchoolID();
                 if (findEntity(id) == null) {
-                    LOG.log(Level.FINE, "The persistentSchool with " + id + " no longer exists.", e);
+                    LOG.log(Level.FINE, "The PersistentSchool with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
                 }
             }
@@ -164,7 +163,7 @@ public class SchoolManager {
             javax.persistence.Query q = em.createNamedQuery("PersistentSchool.findBySchoolName");
             q.setParameter("schoolname", schoolName);
             school = (PersistentSchool) q.getSingleResult();
-            LOG.log(Level.FINE, "School-manager retrieved school with school {0}", new Object[]{school.getSchoolName()});
+            LOG.log(Level.FINE, "PersistentSchool-manager retrieved school with school {0}", new Object[]{school.getSchoolName()});
         } finally {
             em.close();
         }

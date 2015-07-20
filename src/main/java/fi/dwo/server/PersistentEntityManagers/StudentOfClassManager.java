@@ -45,7 +45,7 @@ public class StudentOfClassManager {
             em.persist(studentOf);
             em.getTransaction().commit();
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the hasRole.", e);
+            LOG.log(Level.SEVERE, "Can't create the PersistentStudentOfClass.", e);
             throw new PersistenceException(e);
         } finally {
             if (em != null) {
@@ -72,7 +72,7 @@ public class StudentOfClassManager {
             if (msg == null || msg.length() == 0) {
                 PersistentStudentOfClassPK id = studentOf.getPersistentStudentOfClassPK();
                 if (findEntity(id) == null) {
-                    LOG.log(Level.FINE, "The persistentSchool with " + id + " no longer exists.", e);
+                    LOG.log(Level.FINE, "The PersistentStudentOfClass with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
                 }
             }
@@ -99,7 +99,7 @@ public class StudentOfClassManager {
                 student = em.getReference(PersistentStudentOfClass.class, id);
                 student.getPersistentStudentOfClassPK();
             } catch (EntityNotFoundException e) {
-                LOG.log(Level.FINE, "The PersistentHasRole with " + id + " no longer exists.", e);
+                LOG.log(Level.FINE, "The PersistentStudentOfClass with " + id + " no longer exists.", e);
                 throw new PersistenceException(e);
             }
             em.remove(student);

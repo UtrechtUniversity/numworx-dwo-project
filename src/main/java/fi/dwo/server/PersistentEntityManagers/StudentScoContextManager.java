@@ -44,7 +44,7 @@ public class StudentScoContextManager {
             em.persist(studentOf);
             em.getTransaction().commit();
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the hasRole.", e);
+            LOG.log(Level.SEVERE, "Can't create the PersistentStudentScoContext.", e);
             throw new PersistenceException(e);
         } finally {
             if (em != null) {
@@ -71,7 +71,7 @@ public class StudentScoContextManager {
             if (msg == null || msg.length() == 0) {
                 int id = studentOf.getScoID();
                 if (findEntity(id) == null) {
-                    LOG.log(Level.FINE, "The persistentSchool with " + id + " no longer exists.", e);
+                    LOG.log(Level.FINE, "The PersistentStudentScoContext with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
                 }
             }
@@ -98,7 +98,7 @@ public class StudentScoContextManager {
                 ssc = em.getReference(PersistentStudentScoContext.class, id);
                 ssc.getStudentSco();
             } catch (EntityNotFoundException e) {
-                LOG.log(Level.FINE, "The PersistentHasRole with " + id + " no longer exists.", e);
+                LOG.log(Level.FINE, "The PersistentStudentScoContext with " + id + " no longer exists.", e);
                 throw new PersistenceException(e);
             }
             em.remove(ssc);

@@ -46,7 +46,7 @@ public class UserManager {
             em.persist(persistentUser);
             em.getTransaction().commit();
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the user.", e);
+            LOG.log(Level.SEVERE, "Can't create the PersistentUser.", e);
             throw new PersistenceException(e);
         } finally {
             if (em != null) {
@@ -74,7 +74,7 @@ public class UserManager {
             if (msg == null || msg.length() == 0) {
                 Integer id = persistentUser.getUserID();
                 if (findEntity(id) == null) {
-                    LOG.log(Level.FINE, "The persistentUser with " + id + " no longer exists.", e);
+                    LOG.log(Level.FINE, "The PersistentUser with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
                 }
             }
@@ -102,7 +102,7 @@ public class UserManager {
                 persistentUser = em.getReference(PersistentUser.class, id);
                 persistentUser.getUserID();
             } catch (EntityNotFoundException e) {
-                LOG.log(Level.FINE, "The persistentUser with " + id + " no longer exists.", e);
+                LOG.log(Level.FINE, "The PersistentUser with " + id + " no longer exists.", e);
                 throw new PersistenceException(e);
             }
             em.remove(persistentUser);
@@ -173,7 +173,7 @@ public class UserManager {
             javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
             q.setParameter("username", userName);
             user = (PersistentUser) q.getSingleResult();
-            LOG.log(Level.FINE, "User-manager retrieved user with username {0}", new Object[]{user.getUsername()});
+            LOG.log(Level.FINE, "PersistentUser-manager retrieved user with username {0}", new Object[]{user.getUsername()});
         }catch(NoResultException e){
             return null;
         }catch(Exception e){

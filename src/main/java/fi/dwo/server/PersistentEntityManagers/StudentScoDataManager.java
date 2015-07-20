@@ -5,7 +5,7 @@
  */
 package fi.dwo.server.PersistentEntityManagers;
 
-import fi.dwo.commons.persistence.entities.PersistentRole;
+import fi.dwo.commons.persistence.entities.PersistentStudentScoData;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.logging.Level;
@@ -18,17 +18,14 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 /**
- * Manages roles in the persistent storage. Roles can not not be changed without
- * breaking the database therefore. Role creation, delete and updates should disabled/
- * commented out in the source.
- * 
- * However source code is implemented.
+ * Manages student sco data in the persistent storage. As this data will be detached
+ * from the main transactional database it is considered separate data to be retrieved.
  *
- * @author Gert van der Plas
+ * @author G.A.J. van der Plas
  */
-public class RoleManager {
+public class StudentScoDataManager {
 
-    private static final Logger LOG = Logger.getLogger(RoleManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(StudentScoDataManager.class.getName());
 
     private static EntityManager getEntityManager() {
         EntityManager em = DwoEmfFactory.createEntityManager();
@@ -38,17 +35,17 @@ public class RoleManager {
     /**
      * Create.
      *
-     * @param role
+     * @param ssd studentScoData
      */
-    public static void create(PersistentRole role) throws PersistenceException {
+    public static void create(PersistentStudentScoData ssd) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            em.persist(role);
+            em.persist(ssd);
             em.getTransaction().commit();
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the role.", e);
+            LOG.log(Level.SEVERE, "Can't create the PersistentStudentScoData.", e);
             throw new PersistenceException(e);
         } finally {
             if (em != null) {
@@ -60,22 +57,22 @@ public class RoleManager {
     /**
      * Update
      *
-     * @param role
+     * @param ssd studentScoData
      * @throws Exception
      */
-    public static void edit(PersistentRole role) throws PersistenceException, Exception {
+    public static void edit(PersistentStudentScoData ssd) throws PersistenceException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            role = em.merge(role);
+            ssd = em.merge(ssd);
             em.getTransaction().commit();
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                int id = role.getGroupID();
+                Integer id = ssd.getStudentSco();
                 if (findEntity(id) == null) {
-                    LOG.log(Level.FINE, "The PersistentRole with " + id + " no longer exists.", e);
+                    LOG.log(Level.FINE, "The PersistentStudentScoData with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
                 }
             }
@@ -92,20 +89,20 @@ public class RoleManager {
      *
      * @param id
      */
-    public static void destroy(int id) throws PersistenceException {
+    public static void destroy(Integer id) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-                PersistentRole role = null;
+            PersistentStudentScoData ssd = null;
             try {
-                role = em.getReference(PersistentRole.class, id);
-                role.getGroupID();
+                ssd = em.getReference(PersistentStudentScoData.class, id);
+                ssd.getStudentSco();
             } catch (EntityNotFoundException e) {
-                LOG.log(Level.FINE, "The PersistentRole with " + id + " no longer exists.", e);
+                LOG.log(Level.FINE, "The PersistentStudentScoData with " + id + " no longer exists.", e);
                 throw new PersistenceException(e);
             }
-            em.remove(role);
+            em.remove(ssd);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -114,19 +111,19 @@ public class RoleManager {
         }
     }
 
-    public static List<PersistentRole> findEntities() {
+    public static List<PersistentStudentScoData> findEntities() {
         return findEntities(true, -1, -1);
     }
 
-    public static List<PersistentRole> findEntities(int maxResults, int firstResult) {
+    public static List<PersistentStudentScoData> findEntities(int maxResults, int firstResult) {
         return findEntities(false, maxResults, firstResult);
     }
 
-    private static List<PersistentRole> findEntities(boolean all, int maxResults, int firstResult) {
+    private static List<PersistentStudentScoData> findEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(PersistentRole.class));
+            cq.select(cq.from(PersistentStudentScoData.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -138,10 +135,10 @@ public class RoleManager {
         }
     }
 
-    public static PersistentRole findEntity(int id) {
+    public static PersistentStudentScoData findEntity(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(PersistentRole.class, id);
+            return em.find(PersistentStudentScoData.class, id);
         } finally {
             em.close();
         }
@@ -151,7 +148,7 @@ public class RoleManager {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<PersistentRole> rt = cq.from(PersistentRole.class);
+            Root<PersistentStudentScoData> rt = cq.from(PersistentStudentScoData.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
@@ -159,4 +156,5 @@ public class RoleManager {
             em.close();
         }
     }
+
 }

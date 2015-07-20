@@ -19,8 +19,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 /**
- * Manages users in the persistent storage. Sample UserManager for building more
- * code. Also useful as it is being reused.
+ * Manages the hasRole's in the persistent storage.
  *
  * @author G.A.J. van der Plas
  */
@@ -46,7 +45,7 @@ public class HasRoleManager {
             em.persist(hasRole);
             em.getTransaction().commit();
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the hasRole.", e);
+            LOG.log(Level.SEVERE, "Can't create the PersistentHasRole.", e);
             throw new PersistenceException(e);
         } finally {
             if (em != null) {
@@ -73,7 +72,7 @@ public class HasRoleManager {
             if (msg == null || msg.length() == 0) {
                 PersistentHasRolePK id = hasRole.getPersistentHasRolePK();
                 if (findEntity(id) == null) {
-                    LOG.log(Level.FINE, "The persistentSchool with " + id + " no longer exists.", e);
+                    LOG.log(Level.FINE, "The PersistentHasRole with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
                 }
             }

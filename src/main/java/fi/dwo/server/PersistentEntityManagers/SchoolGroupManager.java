@@ -14,8 +14,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 /**
- * Manages users in the persistent storage. Sample UserManager for building more
- * code. Also useful as it is being reused.
+ * Manages school groups  in the persistent storage.
  *
  * @author G.A.J. van der Plas
  */
@@ -31,7 +30,7 @@ public class SchoolGroupManager {
     /**
      * Create.
      *
-     * @param school
+     * @param entity
      */
     public static void create(PersistentSchoolGroup entity) throws PersistenceException {
         EntityManager em = null;
@@ -41,7 +40,7 @@ public class SchoolGroupManager {
             em.persist(entity);
             em.getTransaction().commit();
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the schoolgroup.", e);
+            LOG.log(Level.SEVERE, "Can't create the PersistentSchoolGroup.", e);
             throw new PersistenceException(e);
         } finally {
             if (em != null) {
@@ -53,7 +52,7 @@ public class SchoolGroupManager {
     /**
      * Update
      *
-     * @param school
+     * @param entity
      * @throws Exception
      */
     public static void edit(PersistentSchoolGroup entity) throws PersistenceException, Exception {
@@ -68,7 +67,7 @@ public class SchoolGroupManager {
             if (msg == null || msg.length() == 0) {
                 Integer id = entity.getSchoolGroupID();
                 if (findEntity(id) == null) {
-                    LOG.log(Level.FINE, "The persistentSchool with " + id + " no longer exists.", e);
+                    LOG.log(Level.FINE, "The PersistentSchoolGroup with " + id + " no longer exists.", e);
                     throw new PersistenceException(e);
                 }
             }

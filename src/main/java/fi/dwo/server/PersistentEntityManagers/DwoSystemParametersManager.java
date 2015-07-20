@@ -15,7 +15,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 /**
- *
+ * DwoSystemParametersManager.
+ * 
  * @author G.A.J. van der Plas
  */
 public class DwoSystemParametersManager implements Serializable {
@@ -140,7 +141,7 @@ public class DwoSystemParametersManager implements Serializable {
     /**
      * returns null if no user with that name was found.
      * 
-     * @param userName
+     * @param paramName
      * @return 
      */
     public static PersistentDwoSystemParameters findByName(String paramName) {
