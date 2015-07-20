@@ -577,9 +577,11 @@ public class XmlRpcRequest<T> implements Cloneable
 			if (!dataNode.getNodeName().equals("data"))
 				throw new XmlRpcException("An <array> element must contain " + "a single <data> element");
 			List<Object> list = new ArrayList<Object>();
-			for (int i = 0; i < dataNode.getChildNodes().getLength(); i++)
+			NodeList childNodes = dataNode.getChildNodes();
+			int length = childNodes.getLength();
+			for (int i = 0; i < length; i++)
 			{
-				Node valueNode = dataNode.getChildNodes().item(i);
+				Node valueNode = childNodes.item(i);
 				if (valueNode.getNodeType() != Node.ELEMENT_NODE)
 					continue;
 				if (!valueNode.getNodeName().equals("value"))
