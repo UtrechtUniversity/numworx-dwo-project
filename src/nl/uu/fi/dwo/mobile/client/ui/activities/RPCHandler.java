@@ -182,5 +182,61 @@ public class RPCHandler {
 		request.execute();
 	}
 	
+	private <T> void getCourseSequence0(Object schoolID, AsyncCallback<T> callback) {
+		HashMap<String,Object> g = new HashMap<String,Object>();
+		g.put("classID", 0);
+		if(schoolID == null) schoolID = Integer.valueOf(0);
+		g.put("schoolID", schoolID);
+		g.put("profileID", getDwoProfile());
+		String method = "getTable";
+		Object[] params = { "tblCourseSequence", g, "sequencenr" };
+		XmlRpcClient client = getClient();
+		XmlRpcRequest<T> request = new XmlRpcRequest<T>(client, method, params, callback);
+		request.execute();
+	}
+	
+	Map<Object, Integer> courseSortMap = new HashMap<Object,Integer>();
+	
+	class CourseSortCallback implements AsyncCallback<List<Map<String,Object>>> {
+
+		Runnable runner;
+		
+		@Override
+		public void onFailure(Throwable caught) {
+			runner.run();
+		}
+
+		@Override
+		public void onSuccess(List<Map<String, Object>> result) {
+			for (Iterator<Map<String, Object>> iterator = result.iterator(); iterator.hasNext();) {
+				Map<String, Object> map = iterator.next();
+				Object id = map.get("courseID");
+				Number n  = (Number) map.get("sequencenr");
+				courseSortMap.put(id, n.intValue());
+			}
+			runner.run();
+		}
+		
+	}
+	
+	public void getCourseSequence(final Object schoolID, final Runnable runner) {
+		final CourseSortCallback csc = new CourseSortCallback();
+		if(schoolID != null || !"".equals(schoolID)) {
+			Runnable rnull = new Runnable() {
+
+				@Override
+				public void run() {
+					csc.runner = runner;
+					getCourseSequence0(schoolID, csc);
+				}
+				
+			};
+			csc.runner = rnull;
+		} else {
+			csc.runner = runner;
+		}
+		getCourseSequence0(null, csc);
+	}
+	
 	
 }

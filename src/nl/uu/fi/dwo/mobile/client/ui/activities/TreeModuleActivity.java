@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,24 +40,27 @@ import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedEvent;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedHandler;
 
-public class TreeModuleActivity extends MGWTAbstractActivity implements TreeModuleView.Presenter
+public class TreeModuleActivity extends MGWTAbstractActivity implements TreeModuleView.Presenter, Comparator<SelectModuleItem>
 {
 
 	ClientFactory clientFactory;
 	private List<SelectModuleItem> currentModel;
 	private TreeModuleView view;
 	private SelectModuleItem item;
+	private Map<Object,Integer> ranking;
 
 	public TreeModuleActivity(ClientFactory clientFactory, SelectModuleItem i)
 	{
 		this.clientFactory = clientFactory;
 		this.item = i;
+		this.ranking = clientFactory.getRPCHandler().courseSortMap; // FIXME OEF!
 	}
 
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
 		view = clientFactory.getTreeModuleView();
+		view.setSortModel(this);
 		boolean select = true;
 		if(item.getType() == Type.MODULE && DWOplayer.profiledata != null) {
 			Object userID = DWOplayer.profiledata.get("userID");
@@ -158,6 +162,21 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements TreeModu
 	@Override
 	public void goTo(Place place) {
 		clientFactory.getPlaceController().goTo(place);
+	}
+
+	@Override
+	public int compare(SelectModuleItem o1, SelectModuleItem o2) {
+		Object c1 = o1.getID(); Integer n1 = ranking.get(c1);
+		Object c2 = o2.getID(); Integer n2 = ranking.get(c2);
+		if(n2 == null && n1 == null) {
+			// unsorted
+			return o1.getName().compareTo(o2.getName());
+		}
+		if( n2 != null && n1 != null) {
+			return n1.compareTo(n2);
+		}
+		if( n1 == null) return +1;		
+		return -1;
 	}
 
 	

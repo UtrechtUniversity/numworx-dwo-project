@@ -297,10 +297,13 @@ public class DWOplayer implements EntryPoint
 		SelectModuleItemHolder.clear(); // hier leegmaken of elders?
 		count = 1;
 		AsyncCallback<List<Map<String, Object>>> callback = GETCOURSES_CALLBACK;
+		Object schoolID = null;
 		if(profiledata == null)
 			/*clientfactory.getEntryView().setApi()*/api = new SCORM_guest();
 		else
-		{	int userID = ((Integer) profiledata.get("userID")).intValue();
+		{	
+			schoolID = profiledata.get("schoolID");
+			int userID = ((Integer) profiledata.get("userID")).intValue();
 			/*clientfactory.getEntryView().setApi()*/api = new SCORM_DWOmAccess(userID);
 			if(!"".equals(profiledata.get("classID")))
 			{
@@ -319,9 +322,14 @@ public class DWOplayer implements EntryPoint
 			}
 		
 		}
-		
-		
-		clientfactory.getRPCHandler().getCourses(profiledata, callback);
+
+		final AsyncCallback<List<Map<String, Object>>> callback_final = callback;
+		clientfactory.getRPCHandler().getCourseSequence(schoolID, 
+		new Runnable() {
+			public void run() {
+				clientfactory.getRPCHandler().getCourses(profiledata, callback_final);
+			}
+		});
 		
 	}
 
