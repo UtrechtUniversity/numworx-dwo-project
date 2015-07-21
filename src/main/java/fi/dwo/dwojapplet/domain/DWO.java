@@ -1773,7 +1773,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         //lookAndFeel = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
         //lookAndFeel = UIManager.getSystemLookAndFeelClassName();
         //UIManager.setLookAndFeel(lookAndFeel);
-        LOG.log(Level.INFO,"Starting as application");
+//        UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+        LOG.log(Level.INFO,"Starting the DWO as an application.");
         int width = GuiConstants.DWO_WIDTH;
         int height = GuiConstants.DWO_HEIGHT;
 
