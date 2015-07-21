@@ -118,7 +118,7 @@ public class PublicRegistrationManager {
         hasRole.setRegisterDate(now);
         hasRole.setRights("_"); //TODO make a rights manager
         HasRoleManager.create(hasRole);
-        LOG.log(Level.INFO,"HasRole for user, schoolgroup index {0} {1} and role {3} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), hasRole.getSchoolGroup().getRole()});
+        LOG.log(Level.INFO,"HasRole for user, schoolgroup index {0} {1} and role {3} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), newUserReg.getRole().getGroupname()});
         //success
         return Response.status(200).entity(true).build();
     }
