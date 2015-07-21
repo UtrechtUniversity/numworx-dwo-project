@@ -29,7 +29,7 @@ public class PublicServerStatus {
 
     public List<PersistentDwoSystemParameters> getStatus() {
 
-        EntityManager em = DwoEmfFactory.createEntityManager();
+        EntityManager em = DwoEmfFactory.getEntityManager();
 
         List<PersistentDwoSystemParameters> result;
         try {

@@ -28,7 +28,7 @@ public class HasRoleManager {
     private static final Logger LOG = Logger.getLogger(HasRoleManager.class.getName());
 
     private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.createEntityManager();
+        EntityManager em = DwoEmfFactory.getEntityManager();
         return em;
     }
 

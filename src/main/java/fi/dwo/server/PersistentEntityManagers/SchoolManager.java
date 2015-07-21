@@ -27,7 +27,7 @@ public class SchoolManager {
     private static final Logger LOG = Logger.getLogger(SchoolManager.class.getName());
 
     private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.createEntityManager();
+        EntityManager em = DwoEmfFactory.getEntityManager();
         return em;
     }
 
@@ -157,7 +157,7 @@ public class SchoolManager {
     }
 
     public static PersistentSchool findBySchoolName(String schoolName) {
-        EntityManager em = DwoEmfFactory.createEntityManager();
+        EntityManager em = DwoEmfFactory.getEntityManager();
         PersistentSchool school = null;
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentSchool.findBySchoolName");

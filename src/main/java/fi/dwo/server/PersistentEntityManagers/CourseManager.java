@@ -28,7 +28,7 @@ public class CourseManager {
     private static final Logger LOG = Logger.getLogger(CourseManager.class.getName());
 
     private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.createEntityManager();
+        EntityManager em = DwoEmfFactory.getEntityManager();
         return em;
     }
 
@@ -162,7 +162,7 @@ public class CourseManager {
      * @return 
      */
     public static PersistentCourse findByUserName(String courseName) {
-        EntityManager em = DwoEmfFactory.createEntityManager();
+        EntityManager em = DwoEmfFactory.getEntityManager();
         PersistentCourse course = null;
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentCourse.findByCourseName");

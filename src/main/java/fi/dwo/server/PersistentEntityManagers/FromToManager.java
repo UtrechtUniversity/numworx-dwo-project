@@ -23,7 +23,7 @@ public class FromToManager {
     private static final Logger LOG = Logger.getLogger(FromToManager.class.getName());
 
     private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.createEntityManager();
+        EntityManager em = DwoEmfFactory.getEntityManager();
         return em;
     }
 

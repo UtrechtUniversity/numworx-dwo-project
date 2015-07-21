@@ -24,7 +24,7 @@ public class DwoSystemParametersManager implements Serializable {
    // private static final Logger LOG = Logger.getLogger(DwoSystemParametersManager.class.getName());
 
     private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.createEntityManager();
+        EntityManager em = DwoEmfFactory.getEntityManager();
         return em;
     }
 
@@ -145,7 +145,7 @@ public class DwoSystemParametersManager implements Serializable {
      * @return 
      */
     public static PersistentDwoSystemParameters findByName(String paramName) {
-        EntityManager em = DwoEmfFactory.createEntityManager();
+        EntityManager em = DwoEmfFactory.getEntityManager();
         PersistentDwoSystemParameters param = null;
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentDwoSystemParameters.findByName");

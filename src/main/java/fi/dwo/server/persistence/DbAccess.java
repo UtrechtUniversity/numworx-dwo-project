@@ -3598,7 +3598,8 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     }
 
     /**
-     *
+     * Images die bij courses horen. Linked naar Courses. 
+     * 
      * @param id
      * @param image
      * @return

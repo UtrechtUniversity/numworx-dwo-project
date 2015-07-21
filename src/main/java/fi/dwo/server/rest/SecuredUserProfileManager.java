@@ -46,7 +46,7 @@ public class SecuredUserProfileManager {
     @Produces({"application/json"})
     @Path("/get/json")
     public PersistentUser getCurrentUser(@Context SecurityContext sc) {
-        EntityManager em = DwoEmfFactory.createEntityManager();
+        EntityManager em = DwoEmfFactory.getEntityManager();
         PersistentUser user = null;
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
@@ -78,7 +78,7 @@ public class SecuredUserProfileManager {
     public PersistentUser updateCurrentUser(@Context SecurityContext sc, PersistentUser user) {
         if (user.getUsername().equals(sc.getUserPrincipal().getName())) {
             //User to update is logged in user.
-            EntityManager em = DwoEmfFactory.createEntityManager();
+            EntityManager em = DwoEmfFactory.getEntityManager();
             try {
                 em.getTransaction().begin();
 //if(true) { // beperkte update                

@@ -22,7 +22,7 @@ public class SchoolClassManager {
     private static final Logger LOG = Logger.getLogger(SchoolClassManager.class.getName());
 
     private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.createEntityManager();
+        EntityManager em = DwoEmfFactory.getEntityManager();
         return em;
     }
 

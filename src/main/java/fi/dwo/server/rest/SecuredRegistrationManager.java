@@ -48,7 +48,7 @@ public class SecuredRegistrationManager {
     @Produces({"application/json"})
     @Path("/existingUser/json")
     public Response registerExistingUser(@Context SecurityContext sc, NewUserRegistration existingUserReg) {
-        EntityManager em = DwoEmfFactory.createEntityManager();
+        EntityManager em = DwoEmfFactory.getEntityManager();
 
         //Check for userid, should exist.
         PersistentUser user = UserManager.findByUserName(sc.getUserPrincipal().getName());

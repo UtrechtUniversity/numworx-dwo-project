@@ -28,7 +28,7 @@ public class AppletManager {
     private static final Logger LOG = Logger.getLogger(AppletManager.class.getName());
 
     private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.createEntityManager();
+        EntityManager em = DwoEmfFactory.getEntityManager();
         return em;
     }
 
@@ -164,7 +164,7 @@ public class AppletManager {
      * @return 
      */
     public static PersistentApplet findByUserName(String appletName) {
-        EntityManager em = DwoEmfFactory.createEntityManager();
+        EntityManager em = DwoEmfFactory.getEntityManager();
         PersistentApplet applet = null;
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentApplet.findByAppletName");

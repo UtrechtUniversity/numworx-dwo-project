@@ -43,7 +43,7 @@ public class PublicRegistrationManager {
     @Produces({"application/json"})
     @Path("/newUser/json")
     public Response registerNewUser(@Context SecurityContext sc, NewUserRegistration newUserReg) {
-        EntityManager em = DwoEmfFactory.createEntityManager();
+        EntityManager em = DwoEmfFactory.getEntityManager();
         PersistentUser u;
             u = UserManager.findByUserName(newUserReg.getUsername());
         if (u != null) {

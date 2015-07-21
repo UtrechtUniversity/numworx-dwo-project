@@ -64,7 +64,7 @@ public class DwoEmfFactory {
         return _instance;
     }
 
-    public static EntityManager createEntityManager() {
+    public static EntityManager getEntityManager() {
         if (_instance == null) {
              synchronized (DwoEmfFactory.class) {
                if (_instance == null) {
@@ -75,18 +75,18 @@ public class DwoEmfFactory {
         return _instance.createEntityManager();
     }
 
-    /**
-     * Looks up the default data source in the tomcat context.xml.
-     *
-     * @return
-     * @throws NamingException
-     */
-    private static DataSource getDataSource() throws NamingException {
-        Context initContext = new InitialContext();
-        Context envContext = (Context) initContext.lookup("java:/comp/env");
-        DataSource dataSource = (DataSource) envContext.lookup("jdbc/dwodb");
-        LOG.log(Level.FINE, "Datasource jdbc/dwodb is: {0}.", new Object[]{dataSource.toString()});
-        return dataSource;
-    }
+//    /**
+//     * Looks up the default data source in the tomcat context.xml.
+//     *
+//     * @return
+//     * @throws NamingException
+//     */
+//    private static DataSource getDataSource() throws NamingException {
+//        Context initContext = new InitialContext();
+//        Context envContext = (Context) initContext.lookup("java:/comp/env");
+//        DataSource dataSource = (DataSource) envContext.lookup("jdbc/dwodb");
+//        LOG.log(Level.FINE, "Datasource jdbc/dwodb is: {0}.", new Object[]{dataSource.toString()});
+//        return dataSource;
+//    }
 
 }

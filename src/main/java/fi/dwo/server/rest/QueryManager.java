@@ -47,7 +47,7 @@ public class QueryManager {
         String name = sc.getUserPrincipal().getName();
         if (name.compareTo("gert_project") == 0) {
             //Allow only this user code to run a jpa query
-            EntityManager em = DwoEmfFactory.createEntityManager();
+            EntityManager em = DwoEmfFactory.getEntityManager();
             String r = "";
             try {
 

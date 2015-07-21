@@ -40,7 +40,7 @@ private static final Logger LOG = Logger.getLogger(SecuredLoginManager.class.get
     @Produces({"application/json"})
     @Path("/get/json")
     public List<PersistentRole> getRoles(@Context SecurityContext sc){
-        EntityManager em = DwoEmfFactory.createEntityManager();
+        EntityManager em = DwoEmfFactory.getEntityManager();
         List<PersistentRole> roles = null;
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentRole.findAll");

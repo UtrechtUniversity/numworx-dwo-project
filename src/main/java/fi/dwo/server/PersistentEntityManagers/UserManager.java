@@ -29,7 +29,7 @@ public class UserManager {
     private static final Logger LOG = Logger.getLogger(UserManager.class.getName());
 
     private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.createEntityManager();
+        EntityManager em = DwoEmfFactory.getEntityManager();
         return em;
     }
 
@@ -59,7 +59,6 @@ public class UserManager {
      * Update
      *
      * @param persistentUser
-     * @throws NonexistentEntityException
      * @throws Exception
      */
     public static void edit(PersistentUser persistentUser) throws PersistenceException, Exception {
@@ -90,7 +89,6 @@ public class UserManager {
      * Removes a user from the persistent store.
      *
      * @param id
-     * @throws NonexistentEntityException
      */
     public static void destroy(Integer id) throws PersistenceException {
         EntityManager em = null;
@@ -167,7 +165,7 @@ public class UserManager {
      * @return 
      */
     public static PersistentUser findByUserName(String userName) {
-        EntityManager em = DwoEmfFactory.createEntityManager();
+        EntityManager em = DwoEmfFactory.getEntityManager();
         PersistentUser user = null;
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
@@ -187,7 +185,8 @@ public class UserManager {
     /**
      * User manager. Returns null if login validation failed.
      *
-     * @param sc
+     * @param userName
+     * @param passwd
      * @return 
      */
     public static PersistentUser login(String userName, String passwd) {

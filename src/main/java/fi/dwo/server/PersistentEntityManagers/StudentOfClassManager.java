@@ -28,7 +28,7 @@ public class StudentOfClassManager {
     private static final Logger LOG = Logger.getLogger(StudentOfClassManager.class.getName());
 
     private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.createEntityManager();
+        EntityManager em = DwoEmfFactory.getEntityManager();
         return em;
     }
 

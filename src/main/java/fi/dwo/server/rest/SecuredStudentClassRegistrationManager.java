@@ -38,7 +38,7 @@ public class SecuredStudentClassRegistrationManager {
 //    private HttpServletResponse response;
 
     private SchoolRoleAndClass getCurrentSchoolRoleAndClass(String scUsername,long userId) {
-        EntityManager em = DwoEmfFactory.createEntityManager();
+        EntityManager em = DwoEmfFactory.getEntityManager();
 
         SchoolRoleAndClass curSac = new SchoolRoleAndClass();
 //        // retrieve the current active <school,role, class>
@@ -85,7 +85,7 @@ public class SecuredStudentClassRegistrationManager {
 //    @Produces({"application/json"})
 //    @Path("/get/json")
 //    public List<SchoolClass> getClassesAtSchool(@Context SecurityContext sc) {
-//        EntityManager em = DwoEmfFactory.createEntityManager();
+//        EntityManager em = DwoEmfFactory.getEntityManager();
 //
 //        PersistentUser user;
 //        List<SchoolClass> scList = (List<SchoolClass>) new ArrayList<SchoolClass>();
@@ -158,7 +158,7 @@ public class SecuredStudentClassRegistrationManager {
     @Produces({"application/json"})
     @Path("/update/json")
     public SchoolRoleAndClass setActiveSchoolRoleAndClass(@Context SecurityContext sc, SchoolRoleAndClass sarc) {
-        EntityManager em = DwoEmfFactory.createEntityManager();
+        EntityManager em = DwoEmfFactory.getEntityManager();
 
         PersistentUser user;
         SchoolRoleAndClass curSac;

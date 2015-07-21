@@ -27,7 +27,7 @@ public class StudentScoContextManager {
     private static final Logger LOG = Logger.getLogger(StudentScoContextManager.class.getName());
 
     private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.createEntityManager();
+        EntityManager em = DwoEmfFactory.getEntityManager();
         return em;
     }
 
