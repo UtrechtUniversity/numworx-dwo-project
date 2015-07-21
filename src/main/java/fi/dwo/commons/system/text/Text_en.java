@@ -52,7 +52,7 @@ public class Text_en extends ListResourceBundle {
          { TextMapper.GUIW_PASSWORD, "Password" },
          { TextMapper.GUIW_WELCOME, "Welcome" },
          { TextMapper.GUIW_GUESTLOGIN, "Login as guest" },
-         { TextMapper.GUIW_REGISTER, "Register" },
+         { TextMapper.GUIW_REGISTER, "Register for an account" },
          { TextMapper.GUIW_MSG_WORK_NOT_SAVE, "Your work WON'T be saved" },
          { TextMapper.GUIW_MSG_REGISTER_NEW, "New account." },
          { TextMapper.GUIW_MSG_REGISTER_EXISTING, "Existing account." },//

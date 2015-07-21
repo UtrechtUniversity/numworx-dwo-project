@@ -56,7 +56,7 @@ public class Text_nl extends ListResourceBundle {
          { TextMapper.GUIW_PASSWORD, "Wachtwoord" },
          { TextMapper.GUIW_WELCOME, "Welkom" },
          { TextMapper.GUIW_GUESTLOGIN, "Inloggen als gast" },
-         { TextMapper.GUIW_REGISTER, "Aanmelden voor een account of school" },
+         { TextMapper.GUIW_REGISTER, "Registreren voor een account en/of school" },
          { TextMapper.GUIW_MSG_WORK_NOT_SAVE, "Uw werk wordt NIET opgeslagen!" },
          { TextMapper.GUIW_MSG_REGISTER_NEW, "Nieuwe gebruiker" },
          { TextMapper.GUIW_MSG_REGISTER_EXISTING, "Bestaande gebruiker"},
