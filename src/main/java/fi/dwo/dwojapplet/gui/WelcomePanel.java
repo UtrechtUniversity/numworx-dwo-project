@@ -32,7 +32,7 @@ import javax.swing.JTextField;
 
 /**
  * This class represents the panel that is been showed when you start the
- * application. 
+ * application.
  *
  * @author M.J.B. Kupers
  *
@@ -78,8 +78,8 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
     }
 
     /**
-     * Creates a new WelcomePanel with the posibilities to configurePanelsForUser (as guest) or
- to register.
+     * Creates a new WelcomePanel with the posibilities to
+     * configurePanelsForUser (as guest) or to register.
      *
      */
     public WelcomePanel() {
@@ -110,7 +110,8 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
             Manifest manifest = new Manifest(url.openStream());
             // do stuff with it
             version = manifest.getMainAttributes().getValue("Implementation-Version");
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             LOG.log(Level.SEVERE, "Can't read Implementation-Version from manifest.mf.");
         }
         fiButton = new FIButton("DWO", new String[]{"versie-info: " + version,
@@ -188,7 +189,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         //p.setBorderColor(new Color(52,90,126));
-        p.setBounds(dialog.getWidth() /2 - 175, 110, 350, 115);
+        p.setBounds(dialog.getWidth() / 2 - 175, 110, 350, 115);
         dialog.add(p);
 
         /* Inlogdata label */
@@ -260,7 +261,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(dialog.getWidth() /2 - 175, 235 + h, 350, 85);
+        p.setBounds(dialog.getWidth() / 2 - 175, 235 + h, 350, 85);
         //p.setBorderColor(new Color(52,90,126));
         dialog.add(p);
 
@@ -292,7 +293,7 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(new Color(52, 90, 126)));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(dialog.getWidth() /2 - 175, 330 + h, 350, 65);
+        p.setBounds(dialog.getWidth() / 2 - 175, 330 + h, 350, 65);
         //p.setBorderColor(new Color(52,90,126));
         dialog.add(p);
 
@@ -305,22 +306,21 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
         p.add(l);
 
         /* Register button */
-        registerNewUserButton = new JButton(TextMapper.getText(TextMapper.GUIW_MSG_REGISTER_NEW));//, GuiConstants.SUB_BACKGROUND);
+        registerNewUserButton = new JButton(TextMapper.getText(TextMapper.GUIW_MSG_REGISTER_NEW));// GuiConstants.SUB_BACKGROUND);
         fm = registerNewUserButton.getFontMetrics(registerNewUserButton.getFont());
         registerNewUserButton.setSize(registerNewUserButton.getPreferredSize());
         registerNewUserButton.setLocation((p.getSize().width / 2)
-               +10 , 27);
+               - (registerNewUserButton.getPreferredSize().width / 2), 27);
+        p.setBounds(dialog.getWidth() / 2 - 175, 330 + h, 350, 65);
         p.add(registerNewUserButton);
 
-        /* Register button */
-        registerExistingUserButton = new JButton(TextMapper.getText(TextMapper.GUIW_MSG_REGISTER_EXISTING));//, GuiConstants.SUB_BACKGROUND);
-        fm = registerNewUserButton.getFontMetrics(registerExistingUserButton.getFont());
-        registerExistingUserButton.setSize(registerExistingUserButton.getPreferredSize());
-        registerExistingUserButton.setLocation((p.getSize().width / 2)
-                - 2*(registerExistingUserButton.getSize().width / 2), 27);
-        p.add(registerExistingUserButton);
-
-        
+//        /* Register button */
+//        registerExistingUserButton = new JButton(TextMapper.getText(TextMapper.GUIW_MSG_REGISTER_EXISTING));//, GuiConstants.SUB_BACKGROUND);
+//        fm = registerNewUserButton.getFontMetrics(registerExistingUserButton.getFont());
+//        registerExistingUserButton.setSize(registerExistingUserButton.getPreferredSize());
+//        registerExistingUserButton.setLocation((p.getSize().width / 2)
+//                - 2*(registerExistingUserButton.getSize().width / 2), 27);
+//        p.add(registerExistingUserButton);
 //        /* Register message */
 //        l = new JLabel(TextMapper.getText(TextMapper.GUIW_REGISTER));
 //        l.setFont(GuiConstants.NORMAL_TEXT);
@@ -328,10 +328,8 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
 //        l.setSize(fm.stringWidth(l.getText()), fm.getHeight());
 //        l.setLocation((p.getSize().width / 2) - (l.getSize().width / 2), 60);
 //        p.add(l);
-
         guestButton.addActionListener(this);
         registerNewUserButton.addActionListener(this);
-        registerExistingUserButton.addActionListener(this);
 
     }
     private static final Logger LOG = Logger.getLogger(WelcomePanel.class.getName());
@@ -353,19 +351,19 @@ public class WelcomePanel extends ContentPanel implements ActionListener {
                 if (linkcheck != null && linkcheck.isSelected()) {
                     GuiCreator.instance().linkViaSAML();
                 }
-            } catch (LoginException exc) {
+            }
+            catch (LoginException exc) {
                 JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
             }
         } else if (src == guestButton) {
             try {
                 GuiCreator.instance().login();
-            } catch (LoginException exc) {
+            }
+            catch (LoginException exc) {
                 JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
             }
         } else if (src == registerNewUserButton) {
             GuiCreator.instance().toRegisterNewUser();
-        } else if (src == registerExistingUserButton) {
-            GuiCreator.instance().toRegisterExistingUser();
         }
     }
 
