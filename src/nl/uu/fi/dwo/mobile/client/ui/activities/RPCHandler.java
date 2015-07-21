@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.mobile.utils.MD5;
 
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
 import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -220,6 +221,11 @@ public class RPCHandler {
 	}
 	
 	public void getCourseSequence(final Object schoolID, final Runnable runner) {
+
+		if(!GWT.isProdMode()) {
+			runner.run();
+			return;
+		}
 		final CourseSortCallback csc = new CourseSortCallback();
 		if(schoolID != null || !"".equals(schoolID)) {
 			Runnable rnull = new Runnable() {

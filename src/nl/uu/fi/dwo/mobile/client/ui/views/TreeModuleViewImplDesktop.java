@@ -28,6 +28,7 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -69,10 +70,11 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	@UiField SimplePanel container;
 	@UiField (provided=true) CellList<SelectModuleItem> cells;
 	@UiField Tree tree;
+	TreeItem standardMap, schoolMap;
 	
 	private HashMap<SelectModuleItem, TreeItem> inverseMap = new HashMap<SelectModuleItem, TreeItem>();
 	private List<SelectModuleItem> cellItems;
-	private List<SelectModuleItem> model;
+	private List<SelectModuleItem> model, standardModel, schoolModel;
 
 	private Presenter presenter;
 	
@@ -99,6 +101,13 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 		
 		cells.addStyleName("tree-cells");
 		cells.addCellSelectedHandler(this);
+		standardMap = new TreeItem(new SafeHtmlBuilder().appendHtmlConstant("Standaard Modules" ). toSafeHtml());
+		Object schoolName = "school";
+		if(DWOplayer.profiledata != null )
+			schoolName = DWOplayer.profiledata.get("schoolName");
+		schoolMap = new TreeItem(new SafeHtmlBuilder().appendEscaped("Modules " + schoolName).toSafeHtml());
+		schoolMap.setState(true);
+		standardMap.setState(true);
 	}
 
 	//================================================================================
@@ -110,7 +119,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	{
 		TreeItem item = event.getSelectedItem();
 		SelectModuleItem o = (SelectModuleItem) item.getUserObject();
-		selectItem(o);
+		if(o != null) selectItem(o);
 	}
 
 	// werkt niet? @UiHandler("cells")
@@ -212,6 +221,9 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 		if (model != currentModel)
 		{
 			tree.removeItems();
+			tree.addItem(standardMap);
+			tree.addItem(schoolMap);
+
 			inverseMap.clear();
 			model = currentModel;
 			sort(model);
@@ -273,7 +285,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 		else
 		{
 			container.setWidget(new Label("DWO standaard modules")); // Uit het profiel halen!
-			addChildren(model);
+			addChildren(standardModel);
 		}
 	}
 	
@@ -354,17 +366,23 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	
 	private void initTree()
 	{
+		schoolModel = new ArrayList(model.size());
+		standardModel = new ArrayList(model.size());
+		
 		for (SelectModuleItem item : model)
 		{
 			
 			TreeItem treeItem = getTreeItem(item);
 			treeItem.setUserObject(item);
 			inverseMap.put(item, treeItem);
-			tree.addItem(treeItem);
+			(item.isFromSchool() ? schoolModel : standardModel).add(item);
+			(item.isFromSchool() ? schoolMap : standardMap).addItem(treeItem);
 			
 			if(item.getChildren() != null)
 				initTree(item.getChildren(), treeItem);
 		}
+		
+		if(schoolMap.getChildCount() == 0) tree.removeItem(schoolMap);
 	}
 
 	private void initTree(List<SelectModuleItem> model, TreeItem tree) {

@@ -37,7 +37,7 @@ public class SelectModuleItem
 	private String file;
 	private String description;
 	private Object id;
-	private boolean showScore;
+	private boolean showScore, fromSchool;
 
 	private Type type = Type.ROOT;
 	private List<SelectModuleItem> children;
@@ -67,6 +67,9 @@ public class SelectModuleItem
 			if(parentID != null) {
 				this.parent = SelectModuleItemHolder.getItemByID(parentID);
 				if(this.parent != null && this.parent.getType() == Type.ROOT) this.parent = null; // children of root have no parent
+			} 
+			{  Object schoolID = map.get("schoolID");
+			   this.fromSchool = schoolID != null && ! "".equals(schoolID);
 			}
 			this.showScore = false;
 			break;
@@ -84,7 +87,9 @@ public class SelectModuleItem
 		}
 	}
 	
-	
+	public boolean isFromSchool() {
+		return fromSchool;
+	}
 	
 	public SelectModuleItem(Object id, Node node)
 	{
