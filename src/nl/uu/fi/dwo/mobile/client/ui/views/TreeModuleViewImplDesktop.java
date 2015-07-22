@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleCell;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
@@ -77,6 +78,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	private List<SelectModuleItem> model, standardModel, schoolModel;
 
 	private Presenter presenter;
+	private String SCHOOL_MODULES;
 	
 	//================================================================================
     // Constructor and UiBinder 
@@ -101,12 +103,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 		
 		cells.addStyleName("tree-cells");
 		cells.addCellSelectedHandler(this);
-		standardMap = new TreeItem(new SafeHtmlBuilder().appendHtmlConstant("Standaard Modules" ). toSafeHtml());
-		Object schoolName = "school";
-		if(DWOplayer.profiledata != null )
-			schoolName = DWOplayer.profiledata.get("schoolName");
-		schoolMap = new TreeItem(new SafeHtmlBuilder().appendEscaped("Modules " + schoolName).toSafeHtml());
-		schoolMap.setState(true);
+		standardMap = new TreeItem(TEMPLATE.content(Text.constants.standaardModules(), "fa-folder"));
 		standardMap.setState(true);
 	}
 
@@ -120,6 +117,21 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 		TreeItem item = event.getSelectedItem();
 		SelectModuleItem o = (SelectModuleItem) item.getUserObject();
 		if(o != null) selectItem(o);
+		else {
+			SelectModuleItem root = SelectModuleItemHolder.getItemByID("0");
+			container.setWidget(new Label(root.getDescription())); // Uit het profiel halen!
+			if(item == schoolMap) {
+				addChildren(schoolModel);
+				navigationLabel.setText(SCHOOL_MODULES);
+				tree.setSelectedItem(schoolMap, false);
+				schoolMap.setState(true, false);
+			} else if(item == standardMap) {
+				addChildren(standardModel);
+				navigationLabel.setText(root.getName());
+				tree.setSelectedItem(standardMap, false);
+				standardMap.setState(true, false);
+			}
+		}
 	}
 
 	// werkt niet? @UiHandler("cells")
@@ -221,8 +233,6 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 		if (model != currentModel)
 		{
 			tree.removeItems();
-			tree.addItem(standardMap);
-			tree.addItem(schoolMap);
 
 			inverseMap.clear();
 			model = currentModel;
@@ -272,7 +282,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 					addChildren(item.getChildren());
 			} else if(item.getType() == SelectModuleItem.Type.ROOT )
 			{
-				addChildren(model);
+				addChildren(standardModel);
 			}
 			TreeItem node = inverseMap.get(item);
 			tree.setSelectedItem(null, false);
@@ -368,7 +378,14 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	{
 		schoolModel = new ArrayList(model.size());
 		standardModel = new ArrayList(model.size());
-		
+		Object schoolName = "school";
+		if(DWOplayer.profiledata != null )
+			schoolName = DWOplayer.profiledata.get("schoolName");
+		SCHOOL_MODULES = Text.constants.schoolModules() + schoolName;
+		schoolMap = new TreeItem(TEMPLATE.content(SCHOOL_MODULES, "fa-folder"));
+		schoolMap.setState(true);
+		standardMap.removeItems();
+		tree.removeItems();
 		for (SelectModuleItem item : model)
 		{
 			
@@ -381,8 +398,8 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 			if(item.getChildren() != null)
 				initTree(item.getChildren(), treeItem);
 		}
-		
-		if(schoolMap.getChildCount() == 0) tree.removeItem(schoolMap);
+		if(standardMap.getChildCount() != 0) tree.addItem(standardMap);
+		if(schoolMap.getChildCount() != 0) tree.addItem(schoolMap);
 	}
 
 	private void initTree(List<SelectModuleItem> model, TreeItem tree) {

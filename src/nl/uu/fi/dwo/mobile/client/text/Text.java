@@ -30,4 +30,9 @@ public interface Text extends Constants {
 	 */
 	@DefaultStringValue("Geen gebruiker gevonden met opgegeven gebruikersnaam en wachtwoord")
 	String EXR_WRONG_USERNAME_PASSWORD();
+	
+	@DefaultStringValue("Standaard modules")
+	String standaardModules();
+	@DefaultStringValue("Modules ")
+	String schoolModules();
 }

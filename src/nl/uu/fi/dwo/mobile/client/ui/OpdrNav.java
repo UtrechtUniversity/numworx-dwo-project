@@ -154,6 +154,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 				Object object = launchData.get("opdracht_" + (i + 1) + "_" + (j + 1));
 				if(! (object instanceof HashMap)){
 					object = new HashMap(); // XXX Wat is de minimum hashmap hier? 
+					// minimaal: hasAntwoordVak = Boolean
 					java.util.logging.Logger.getLogger("OpdrNav").severe("Opdracht " + (j+1)  + " geen map ");
 				}
 				opdrachten[i][j] = (HashMap<String, Object>) object;
