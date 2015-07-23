@@ -1,11 +1,14 @@
 // Source file:
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\TeacherProfilePanel.java
-package fi.dwo.dwojapplet.gui;
+package fi.dwo.dwojapplet.graveyard.gui;
 
+import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.exceptions.RegisterException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Group;
+import fi.dwo.dwojapplet.gui.GuiConstants;
+import fi.dwo.dwojapplet.gui.ProfilePanel;
 import java.awt.Button;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
@@ -101,6 +104,5 @@ public class TeacherProfilePanel extends ProfilePanel {
                 GuiCreator.instance().deleteUser();
             }
         }
-
     }
 }

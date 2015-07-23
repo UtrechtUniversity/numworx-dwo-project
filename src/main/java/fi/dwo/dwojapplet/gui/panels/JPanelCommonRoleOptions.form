@@ -27,7 +27,7 @@
                   <Component id="jSeparator1" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Component id="jButtonSwitchToProfile" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="119" max="32767" attributes="0"/>
+                      <EmptySpace pref="179" max="32767" attributes="0"/>
                       <Component id="jButtonDeleteProfile" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -53,9 +53,7 @@
   <SubComponents>
     <Component class="javax.swing.JButton" name="jButtonDeleteProfile">
       <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="TextMapper.getText(GUIP_BTN_DELETE_ACCOUNT)" type="code"/>
-        </Property>
+        <Property name="text" type="java.lang.String" value="Add schools"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonDeleteProfileActionPerformed"/>

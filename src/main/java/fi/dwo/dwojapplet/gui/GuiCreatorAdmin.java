@@ -83,7 +83,7 @@ public class GuiCreatorAdmin extends GuiCreator {
         dwo.setWait();
         CenterSubPanel csb;
         csb = //new TeacherProfilePanel();
-                new TabbedProfilePanel(dwo.getGroups());
+                new AccountPanel(dwo.getGroups());
         dwo.setReady();
         return csb;
     }

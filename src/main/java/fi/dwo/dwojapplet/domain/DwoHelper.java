@@ -12,6 +12,7 @@ import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.rest.RoleManager;
+import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.MainPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import java.applet.Applet;
@@ -46,6 +47,8 @@ public final class DwoHelper {
     private static Hashtable loadedImages;
 
     private static Applet applet;
+    
+    private static GuiCreator guic;
 
     private static boolean isApplication = true; // default als je setApplet niet aanroept.
 

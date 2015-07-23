@@ -25,6 +25,7 @@ import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.fullscreen.FramedScoPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
+import java.awt.Component;
 import java.awt.Container;
 import java.util.Date;
 import java.util.Map;
@@ -65,6 +66,20 @@ public class GuiCreator {
 
     }
 
+    /** Allows custom GUI messages.
+     * 
+     * @param parentComponent
+     * @param message
+     * @param title
+     * @param messageType 
+     */
+    public void ShowMessageToUser(Component parentComponent,
+            Object message,
+            String title,
+            int messageType) {
+        JOptionPane.showMessageDialog(parentComponent, message, title, messageType);
+    }
+
     /**
      * Returns the main panel
      *
@@ -93,13 +108,14 @@ public class GuiCreator {
                 //configure GuiCreator to show correct Panels and options.
                 configurePanelsForUser(dwo.getUser());
             }
-        } catch (LoginException e) {
+        }
+        catch (LoginException e) {
             throw e;
-        } finally {
+        }
+        finally {
             dwo.setReady();
         }
     }
-
 
     /**
      * Logs a user in into the system. The user will be remembered while the
@@ -121,12 +137,15 @@ public class GuiCreator {
 
                 //ModuleTreePanel.create(dwo );  
             }
-        } catch (LoginException e) {
+        }
+        catch (LoginException e) {
             throw e;
-        } finally {
+        }
+        finally {
             dwo.setReady();
         }
-    }    
+    }
+
     /**
      * Toon <b>G</b>een waarschuwing. Fix voor gebruikersnamen die met het
      * fidentity systeem ongeldig worden.
@@ -201,14 +220,15 @@ public class GuiCreator {
                 mainPanel = new MainPanel(dwo.getDwoProfile());
                 dwo.setPanel(mainPanel);
             }
-        } catch (LoginException e) {
+        }
+        catch (LoginException e) {
             throw e;
-        } finally {
+        }
+        finally {
             dwo.setReady();
         }
     }
 
-    
     /**
      * Register a user in the system, and shows the WelcomeScreen to the user.
      *
@@ -389,7 +409,7 @@ public class GuiCreator {
         dwo.setWelcomePanel(username);
 
     }
-    
+
     public void setWait() {
         dwo.setWait();
     }
@@ -422,7 +442,8 @@ public class GuiCreator {
             Sco viewSco = null;
             try {
                 viewSco = (Sco) PersistenceFacade.instance().get(dwo.getScoViewNr(), Sco.class);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 LOG.log(Level.SEVERE, null, e);
             }
             if (viewSco != null) {
@@ -437,7 +458,8 @@ public class GuiCreator {
             Course viewCourse = null;
             try {
                 viewCourse = (Course) PersistenceFacade.instance().get(dwo.getCourseViewNr(), Course.class);
-            } catch (Exception exc) {
+            }
+            catch (Exception exc) {
             }
 
             csp = getCoursePanel(viewCourse);
@@ -465,7 +487,8 @@ public class GuiCreator {
                 return new FramedScoPanel(csp, sco);
             }
             return csp;
-        } finally {
+        }
+        finally {
             dwo.setReady();
         }
     }
@@ -493,7 +516,8 @@ public class GuiCreator {
         dwo.setWait();
         CenterSubPanel csb;
 //        csb = new ProfilePanel(dwo.getGroups());
-        csb = new TabbedProfilePanel(dwo.getGroups());
+        csb = new AccountPanel(dwo.getGroups());
+//        csb = new TabbedProfilePanel(dwo.getGroups());
         dwo.setReady();
         return csb;
     }
@@ -522,7 +546,7 @@ public class GuiCreator {
 //        dwo.changeAccount(password, newPassword, reNewPassword, firstName,
 //                middleName, lastName, email);
 //    }
-    
+
     /**
      * Change the current user his account who not is linked to a school.
      *
@@ -921,11 +945,9 @@ public class GuiCreator {
 
     public void unsafeSaveSco(Sco sco) {
 
-
     }
 
     public void updateLogo(Course c) {
-
 
     }
 

@@ -1,4 +1,3 @@
-/* Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui.panels;
 
 import fi.dwo.commons.system.TextMapper;
@@ -9,7 +8,8 @@ import java.awt.Dimension;
  *
  * @author G.A.J. van der Plas
  */
-public class JPanelMyProfile extends javax.swing.JPanel {
+public class JPanelMyProfile extends javax.swing.JPanel  {
+
     /**
      * Creates new form JPaneMylProfile
      */
@@ -67,4 +67,5 @@ public class JPanelMyProfile extends javax.swing.JPanel {
     private fi.dwo.dwojapplet.gui.panels.JPanelSchoolsRolesAndClasses jPanelSchoolsAndClasses;
     private javax.swing.JTabbedPane jTabbedPaneProfile;
     // End of variables declaration//GEN-END:variables
+
 }

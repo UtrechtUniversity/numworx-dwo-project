@@ -10,22 +10,22 @@ import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Group;
 import fi.dwo.dwojapplet.domain.rest.RegistrationManager;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
 
 /**
  * <p>
@@ -48,7 +48,7 @@ import javax.swing.JTextField;
  * <li> Test the reset button </li>
  * </ul>
  */
-public class RegisterKnownUserPanel extends ContentPanel implements ActionListener {
+public class RegisterMoreSchoolsPanel extends JPanel implements CenterSubPanel, ActionListener {
 
     private Group groupList[];
 
@@ -77,8 +77,9 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
     private JButton backButton;
 
     private JComboBox groupChoice;
+    
+    private CenterPanel center;
 
-    private JPanel dialog;
 
     /**
      * Creates a new RegisterPanel. At the register panel, a user can register
@@ -86,54 +87,24 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
      *
      * @param groups The possible groups wherefrom a user can be part of.
      */
-    public RegisterKnownUserPanel(Group[] groups) {
+    public RegisterMoreSchoolsPanel(Group[] groups) {
         groupList = groups;
 
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
-        this.setLayout(null);
-        this.setSize(GuiConstants.DWO_WIDTH, GuiConstants.DWO_HEIGHT);
-        dialog = new JPanel(null);
-        dialog.setOpaque(false);
-        dialog.setSize(getSize());
-        //dialog.setBounds(getWidth() / 2 - 350, 0, 700, getHeight());
-        this.add(dialog); // een extra layer....
-        //setPreferredSize(getSize()); // Sinds 1.5
+         this.setLayout(null);
+        this.setSize(GuiConstants.CENTER_WIDTH/2, GuiConstants.CENTER_HEIGHT/2);
 
         /* Variables used to create items */
         FontMetrics fm;
         JPanel p;
         JLabel l;
 
-        /* Add FI logo */
-        Image fiLogo;
-        fiLogo = DwoHelper.getImage(GuiConstants.RESOURCES + GuiConstants.FI_LOGO_LOCATION);
-        if (fiLogo == null) {
-            fiLogo = DwoHelper.getResourceImage(GuiConstants.FI_LOGO_LOCATION);
-        }
-
-        ImagePanel ip = new ImagePanel(fiLogo);
-        ip.setLocation(getSize().width / 2 - 130, 50);
-        dialog.add(ip);
-        if (GuiConstants.GUI_IMAGE_BG) {
-            dialog.remove(ip);
-        }
-
-        /* Register Label */
-        l = new JLabel(TextMapper.getText(TextMapper.GUIR_REGISTER));
-        l.setFont(GuiConstants.HEADER_TEXT);
-        fm = l.getFontMetrics(l.getFont());
-        l.setBounds(ip.getLocation().x + ip.getSize().width + 10, 70, fm.stringWidth(l.getText()), fm.getHeight());
-        dialog.add(l);
-        if (GuiConstants.GUI_IMAGE_BG) {
-            dialog.remove(l);
-        }
-
         /* Add Register-panel */
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(getForeground()));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         p.setBounds(getSize().width / 2 - 180, 110, 310, 95);//240
-        dialog.add(p);
+        this.add(p);
 
         /* registerinfo label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_REGISTERINFO) + ":");
@@ -187,7 +158,7 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
         p.setBorder(BorderFactory.createLineBorder(Color.black));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
         p.setBounds(getSize().width / 2 - 180, 215, 310, 125);//473
-        dialog.add(p);
+        this.add(p);
 
         /* schoolinfo label */
         l = new JLabel(TextMapper.getText(TextMapper.GUIR_SCHOOLINFO) + ":");
@@ -233,7 +204,7 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
         groupChoice = new JComboBox();
         groupChoice.addItem(TextMapper.getText(TextMapper.GUIR_OPT_SELECT_GROUP));
         List<PersistentRole> rl = DwoHelper.getRoles();
-        for (int i = 0; i < groupList.length; i++) {
+        for (int i = 0; i < rl.size(); i++) {
             //if(!groupList[i].getName().equals("ADMIN"))
             groupChoice.addItem(TextMapper.getText(rl.get(i).getGroupname()));
         }
@@ -260,8 +231,8 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
         p = new JPanel(null);
         p.setBorder(BorderFactory.createLineBorder(Color.black));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(getSize().width / 2 - 180, 350, 310, 80);//487
-        dialog.add(p);
+        p.setBounds(getSize().width / 2 - 180, 350, 310, 45);//487
+        this.add(p);
 
         /* Register button */
         registerButton = new JButton(TextMapper.getText(TextMapper.GUIR_BTN_REGISTER));//, GuiConstants.SUB_BACKGROUND);
@@ -284,28 +255,19 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
                 + registerButton.getSize().width + 5, 10);
         p.add(resetButton);
 
-        backButton = new JButton(TextMapper.getText(TextMapper.GUIR_BTN_BACK));//, GuiConstants.MAIN_BACKGROUND);
-        fm = backButton.getFontMetrics(backButton.getFont());
-        backButton.setSize(backButton.getPreferredSize());
-        backButton.setLocation((p.getSize().width / 2)
-                - ((backButton.getSize().width) / 2), 40);//630
-        p.add(backButton);
+//        backButton = new JButton(TextMapper.getText(TextMapper.GUIR_BTN_BACK));//, GuiConstants.MAIN_BACKGROUND);
+//        fm = backButton.getFontMetrics(backButton.getFont());
+//        backButton.setSize(backButton.getPreferredSize());
+//        backButton.setLocation((p.getSize().width / 2)
+//                - ((backButton.getSize().width) / 2), 40);//630
+//        p.add(backButton);
 
         registerButton.addActionListener(this);
         resetButton.addActionListener(this);
-        backButton.addActionListener(this);
+//        backButton.addActionListener(this);
 
         groupChoice.addItemListener(new GroupItemListener(schoolpassword));
 
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                super.componentResized(e);
-                int width = getWidth();
-                // move dialogbox  horizontal
-                dialog.setLocation(width / 2 - dialog.getWidth() / 2, dialog.getY());
-            }
-        });
 
     }
 
@@ -378,6 +340,7 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
                     nur.setSchoolCode(schoolpassword.getText());
                     RegistrationManager.RegisterExistingUser(nur); //throws Dwo2RestException.
                     JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
+//                    center.loadCenter(new RegisterMoreSchoolsPanel());
                     GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
                 }
                 catch (Dwo2RestException ex) {
@@ -400,7 +363,35 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
         } else if (e.getSource() == backButton) {
             GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
         }
+    }
 
+    @Override
+    public void end() {
+    }
+
+    @Override
+    public Component getHeaderPanel() {
+        return null;
+    }
+
+    @Override
+    public void setCenterPanel(CenterPanel centerPanel) {
+        center = centerPanel;
+    }
+
+    @Override
+    public JComponent getComponent() {
+        return this;
+    }
+
+    @Override
+    public Object getUserObject() {
+        return null;
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

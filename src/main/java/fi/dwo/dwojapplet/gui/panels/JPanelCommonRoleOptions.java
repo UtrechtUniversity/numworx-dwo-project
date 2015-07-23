@@ -4,13 +4,15 @@ package fi.dwo.dwojapplet.gui.panels;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.system.TextMapper;
-import static fi.dwo.commons.system.TextMapper.GUIP_BTN_DELETE_ACCOUNT;
 import static fi.dwo.commons.system.TextMapper.GUIP_BTN_SWITCH_PROFILE;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.gui.AccountPanel;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.ReauthenticatePanel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  *
@@ -43,7 +45,7 @@ public class JPanelCommonRoleOptions extends javax.swing.JPanel {
 
         setPreferredSize(new java.awt.Dimension(387, 353));
 
-        jButtonDeleteProfile.setText(TextMapper.getText(GUIP_BTN_DELETE_ACCOUNT));
+        jButtonDeleteProfile.setText("Add schools");
         jButtonDeleteProfile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonDeleteProfileActionPerformed(evt);
@@ -67,7 +69,7 @@ public class JPanelCommonRoleOptions extends javax.swing.JPanel {
                     .addComponent(jSeparator1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButtonSwitchToProfile)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 119, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 179, Short.MAX_VALUE)
                         .addComponent(jButtonDeleteProfile)))
                 .addContainerGap())
         );
@@ -102,7 +104,12 @@ public class JPanelCommonRoleOptions extends javax.swing.JPanel {
 
     private void jButtonDeleteProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteProfileActionPerformed
         boolean r = ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIREAUTH_AREYOUSURE));
-        LOG.log(Level.INFO,"Result {0}", new Object[]{r});
+        JPanel p = new AccountPanel(null);
+        JFrame f  = new JFrame();
+        f.add(p);
+        f.setEnabled(true);
+        f.setVisible(true);
+        p.setVisible(true);
     }//GEN-LAST:event_jButtonDeleteProfileActionPerformed
 
 

@@ -1,5 +1,3 @@
-// Source file:
-// N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\ProfilePanel.java
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.exceptions.LoginException;
