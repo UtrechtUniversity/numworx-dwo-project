@@ -108,7 +108,7 @@ public class Text_en extends ListResourceBundle {
             { TextMapper.GUIL_BTN_LOGOFF, "Logout" },
 
             { TextMapper.GUIMNU_MAIN_MENU, "Modules" },
-            { TextMapper.GUIMNU_MY_PROFILE, "My profile" },
+            { TextMapper.GUIMNU_MY_PROFILE, "My account" },
             { TextMapper.GUIMNU_STUDENT_IN_CLASS, "Student of class" },
             { TextMapper.GUIMNU_STUDENT_NO_CLASS_0, "You are not yet "},
          	{ TextMapper.GUIMNU_STUDENT_NO_CLASS_1, "member of a class.  "},

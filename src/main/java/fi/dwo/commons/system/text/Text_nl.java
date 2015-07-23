@@ -111,7 +111,7 @@ public class Text_nl extends ListResourceBundle {
          { TextMapper.GUIL_BTN_LOGOFF, "Uitloggen"},
 
          { TextMapper.GUIMNU_MAIN_MENU, "Overzicht modules"},
-         { TextMapper.GUIMNU_MY_PROFILE, "Mijn Profiel"},    
+         { TextMapper.GUIMNU_MY_PROFILE, "Mijn account"},    
          { TextMapper.GUIMNU_STUDENT_IN_CLASS, "Leerling van klas"},    
          { TextMapper.GUIMNU_STUDENT_NO_CLASS_0, "Je bent nog niet "},
          { TextMapper.GUIMNU_STUDENT_NO_CLASS_1, "aangemeld bij een  "},
