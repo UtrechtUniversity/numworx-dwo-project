@@ -25,6 +25,7 @@ public class RoleManager {
      * from the security context.
      *
      * @return Returns null if there was an error.
+     * @throws fi.dwo.commons.exceptions.Dwo2Exception
      * @throws fi.dwo.dwojapplet.domain.rest.RestException
      */
     public static List<PersistentRole> getRoles() throws Dwo2Exception {

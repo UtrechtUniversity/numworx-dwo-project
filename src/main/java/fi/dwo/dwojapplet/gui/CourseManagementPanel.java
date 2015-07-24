@@ -378,6 +378,7 @@ public class CourseManagementPanel extends JPanel implements CenterSubPanel, Act
 	
 	/**
      * @param courses
+     * @param userObject
      */
     public CourseManagementPanel(CourseMap[] courses, Object userObject) {
         super(new BorderLayout(10,10));

@@ -20,6 +20,7 @@ public class UserProfileManager {
     * interface. Technically it should be equal to the data in the DwoHelper.
     * 
     * @return 
+     * @throws fi.dwo.commons.exceptions.Dwo2Exception 
     */
     public static PersistentUser getCurrentUser() throws Dwo2Exception{
         PersistentUser user;
@@ -35,6 +36,7 @@ public class UserProfileManager {
      * 
      * @param user
      * @return 
+     * @throws fi.dwo.commons.exceptions.Dwo2Exception 
      */
 
     public static PersistentUser updateCurrentUser(PersistentUser user) throws Dwo2Exception {

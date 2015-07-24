@@ -129,6 +129,7 @@ public class SchoolClass implements UserGroup, Comparable {
     /**
      * Disconnect an user from the class.
      *
+     * @param classID
      * @param user The user to disconnect.
      *
      */
@@ -143,6 +144,7 @@ public class SchoolClass implements UserGroup, Comparable {
     /**
      * Disconnect an user from the class.
      *
+     * @param sc
      * @param user The user to disconnect.
      *
      */

@@ -35,7 +35,6 @@ public class JPanelClassRegisterProperties {
     }
 
     /**
-     * @param src
      */
     public void setActiveSchoolRoleAndClass() {
         try {

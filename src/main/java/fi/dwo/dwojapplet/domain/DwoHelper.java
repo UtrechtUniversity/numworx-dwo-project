@@ -526,6 +526,7 @@ public final class DwoHelper {
     }
 
     /**
+     * @param aRoles
      * @return the roles
      */
     public static void setRoles(List<PersistentRole> aRoles) {

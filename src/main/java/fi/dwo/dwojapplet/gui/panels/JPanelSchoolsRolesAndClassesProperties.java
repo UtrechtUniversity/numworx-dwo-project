@@ -35,7 +35,6 @@ public class JPanelSchoolsRolesAndClassesProperties {
     }
 
     /**
-     * @param src
      */
     public void setActiveSchoolRoleAndClass() {
         try {

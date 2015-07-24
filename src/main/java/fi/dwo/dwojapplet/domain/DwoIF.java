@@ -338,6 +338,7 @@ public interface DwoIF {
      *
      * @param schoolClass The class to rename.
      * @param newName The new name for the class.
+     * @param newRegistrationKey
      * @param iconizer
      * @return If the class is successfully renamed it returns true. Otherwise
      * it returns false.

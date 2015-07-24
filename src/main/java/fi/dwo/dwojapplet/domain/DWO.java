@@ -1801,6 +1801,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      *
      * @param schoolClass The class to rename.
      * @param newName The new name for the class.
+     * @param newRegistrationKey
      * @return If the class is successfully renamed it returns true. Otherwise
      * it returns false.
      * @see

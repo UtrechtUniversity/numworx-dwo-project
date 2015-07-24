@@ -349,6 +349,7 @@ public class PersistenceFacade {
      * =============================================================================
      * STUDENT FUNCTIONALITY
      * =============================================================================
+     * @throws fi.dwo.commons.exceptions.PersistenceException
      */
     public void addStudentToClass(SchoolClass c, int id) throws PersistenceException {
         try {
@@ -390,6 +391,7 @@ public class PersistenceFacade {
      * =============================================================================
      * TEACHER FUNCTIONALITY
      * =============================================================================
+     * @throws fi.dwo.commons.exceptions.PersistenceException
      */
     public void addTeacherToClass(SchoolClass c, int id) throws PersistenceException {
         try {
@@ -431,6 +433,7 @@ public class PersistenceFacade {
      * =============================================================================
      * SCO FUNCTIONALITY
      * =============================================================================
+     * @param i
      */
     public void addSco(int courseID, String notnull, String notnull0, int appletID, String notnull1, int i) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -1383,6 +1386,7 @@ public class PersistenceFacade {
      * =============================================================================
      * DWOPROFILE FUNCTIONALITY
      * =============================================================================
+     * @return 
      */
     private static int getDwoProfileID() {
         return ((DwoIF) DwoHelper.getApplet()).getDwoProfile().getID();
@@ -2226,6 +2230,7 @@ public class PersistenceFacade {
      *
      * @param schoolClass The class to rename.
      * @param newName The new name of the class.
+     * @param newRegistrationKey
      * @param iconizer
      * @throws ClassException
      */
@@ -2533,6 +2538,7 @@ public class PersistenceFacade {
      * =============================================================================
      * CLASSCOURSE FUNCTIONALITY
      * =============================================================================
+     * @return 
      */
     public boolean deleteCourseClassData(Course course, SchoolClass sc) {
         int courseID = course.getID();
@@ -2590,6 +2596,7 @@ public class PersistenceFacade {
      * =============================================================================
      * COURSESEQUENCE FUNCTIONALITY
      * =============================================================================
+     * @return 
      */
     public CourseSequence[] getCourseSequence(User currentUser) {
         School school = currentUser.getSchool();
@@ -2683,6 +2690,7 @@ public class PersistenceFacade {
      * =============================================================================
      * FROMTO FUNCTIONALITY
      * =============================================================================
+     * @return 
      */
     public Vector getToSchoolsFrom(int schoolID)
             throws IOException, XmlRpcException, SQLException, PersistenceException {
@@ -2706,6 +2714,7 @@ public class PersistenceFacade {
      * =============================================================================
      * BLA FUNCTIONALITY
      * =============================================================================
+     * @return 
      */
     public boolean updateLogo(Course c) {
 
@@ -2785,6 +2794,7 @@ public class PersistenceFacade {
      * Clears data from mapper cache for a certain class
      *
      * @param c Class
+     * @param id
      */
     public void clearObjectInMapperCache(Class c, int id) {
         MapperCreator.instance(c).removeObject(id);

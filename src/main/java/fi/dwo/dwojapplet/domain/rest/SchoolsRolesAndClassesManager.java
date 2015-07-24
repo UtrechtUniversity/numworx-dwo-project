@@ -19,6 +19,7 @@ public class SchoolsRolesAndClassesManager {
     * interface. Technically it should be equal to the data in the DwoHelper.
     * 
     * @return 
+     * @throws fi.dwo.commons.exceptions.Dwo2Exception 
     */
     public static SchoolsRolesAndClasses getCurrentEnlistements() throws Dwo2Exception{
         SchoolsRolesAndClasses src;
@@ -34,6 +35,7 @@ public class SchoolsRolesAndClassesManager {
      * 
      * @param user
      * @return 
+     * @throws fi.dwo.commons.exceptions.Dwo2Exception 
      */
 
     public static SchoolRoleAndClass setActiveSchoolRoleAndClass(SchoolRoleAndClass src) throws Dwo2Exception {

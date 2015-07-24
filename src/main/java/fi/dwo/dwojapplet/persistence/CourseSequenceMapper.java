@@ -80,6 +80,7 @@ class CourseSequenceMapper extends XmlRpcMapper {
 
     /**
      * get sequencearray. Altijd met het profileID!
+     * @param obj
      * @return 
      * @throws java.io.IOException 
      * @throws org.apache.xmlrpc.applet.XmlRpcException 

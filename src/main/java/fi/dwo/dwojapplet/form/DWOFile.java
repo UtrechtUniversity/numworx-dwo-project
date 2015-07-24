@@ -33,6 +33,7 @@ public class DWOFile {
      * @throws SQLException
      * @throws IOException
      * @throws XmlRpcException
+     * @throws fi.dwo.commons.exceptions.PersistenceException
      * @see fi.dwo.server.form.ManifestFile#createIMSManifest(int, int,
      * java.io.OutputStream)
      */

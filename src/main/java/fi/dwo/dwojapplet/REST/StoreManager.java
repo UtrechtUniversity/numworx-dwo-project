@@ -32,6 +32,7 @@ public class StoreManager {
      * Puts an object in the store.
      *
      * @param o Persistent object to be merge into the store.
+     * @return 
      */
     public synchronized static <T> T insertOrUpdate(T o) {
         PersistenceId key = PersistenceIdFactory.createPersistenceId((Object) o);
