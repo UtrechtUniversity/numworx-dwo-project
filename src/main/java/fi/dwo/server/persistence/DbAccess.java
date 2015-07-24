@@ -1328,7 +1328,6 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @param className
      * @return java.util.Hashtable
      * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
-     * @throws fi.dwo.server.persistence.DwoXmlRpcException
      * @throws java.sql.SQLException
      * @@
      *
@@ -1757,6 +1756,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     }
 
     /**
+     * @param userID
      * @param uid
      * @param schoolClassID
      * @return
@@ -2002,7 +2002,6 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * Returns all the available courses for the specified user.
      *
      * @param profileValue
-     * @param schoolID The school for which the courses must selected.
      *
      * @return A Vector containing hash tables with the course data.
      *
@@ -2076,6 +2075,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      *
      * @param scoID
      * @param userID
+     * @param schoolGroupID
      * @param iDataModelElement
      * @return
      * @throws IOException
@@ -2135,6 +2135,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      *
      * @param scoID
      * @param userID
+     * @param schoolGroupID
      * @param iDataModelElement
      * @param iValue
      * @return
@@ -2236,6 +2237,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      *
      * @param scoID
      * @param userID
+     * @param schoolGroupID
      * @param iDataModelElement
      * @param iValue
      * @param random
@@ -2506,6 +2508,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     /**
      * Updates a class entry and the sets the iconizer and bool
      *
+     * @throws java.sql.SQLException
      * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
      */
     @Override
@@ -2521,6 +2524,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
     /**
      * Updates a class entry and the sets the iconizer and bool
      *
+     * @throws java.sql.SQLException
      * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
      */
     @Override
@@ -3711,6 +3715,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * teacher roles for the userID within the school with the given schoolID.
      *
      * @param userID
+     * @param schoolGroupID
      * @param schoolID
      *
      * @return
@@ -4364,6 +4369,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @param userID
      * @return
      * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
+     * @throws org.apache.xmlrpc.applet.XmlRpcException
      */
     @Override
     public Vector<Object> getClassesOfStudent(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {
@@ -4382,6 +4388,7 @@ public class DbAccess extends DbConnect implements DbAccessIF {
      * @param userID
      * @return
      * @throws fi.dwo.commons.exceptions.DwoXmlRpcException
+     * @throws org.apache.xmlrpc.applet.XmlRpcException
      */
     @Override
     public Vector<Object> getClassesOfTeacher(int userID, int schoolID) throws IOException, SQLException, XmlRpcException, DwoXmlRpcException {

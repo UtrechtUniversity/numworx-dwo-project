@@ -35,6 +35,7 @@ public class HasRoleManager {
     /**
      * Create.
      *
+     * @param hasRole
      * @param role
      */
     public static void create(PersistentHasRole hasRole) throws PersistenceException {
@@ -57,6 +58,7 @@ public class HasRoleManager {
     /**
      * Update
      *
+     * @param hasRole
      * @param role
      * @throws Exception
      */
@@ -88,7 +90,6 @@ public class HasRoleManager {
      * Removes a user from the persistent store.
      *
      * @param id
-     * @throws NonexistentEntityException
      */
     public static void destroy(PersistentHasRolePK id) throws PersistenceException {
         EntityManager em = null;

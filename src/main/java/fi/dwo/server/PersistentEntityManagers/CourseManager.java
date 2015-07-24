@@ -159,9 +159,10 @@ public class CourseManager {
 
     /**
      * returns null if no applet with that name was found.courseName@param appletName
+     * @param courseName
      * @return 
      */
-    public static PersistentCourse findByUserName(String courseName) {
+    public static PersistentCourse findByCourseName(String courseName) {
         EntityManager em = DwoEmfFactory.getEntityManager();
         PersistentCourse course = null;
         try {

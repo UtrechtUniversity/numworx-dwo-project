@@ -163,7 +163,7 @@ public class AppletManager {
      * @param appletName
      * @return 
      */
-    public static PersistentApplet findByUserName(String appletName) {
+    public static PersistentApplet findByAppletName(String appletName) {
         EntityManager em = DwoEmfFactory.getEntityManager();
         PersistentApplet applet = null;
         try {
