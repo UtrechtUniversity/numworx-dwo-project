@@ -111,8 +111,8 @@ public class GuiCreatorTeacher extends GuiCreator {
         dwo.setWait();
         CenterSubPanel csb;
         csb = //new TeacherProfilePanel();
-new AccountPanel(dwo.getGroups());
-dwo.setReady();
+                new AccountPanel();
+        dwo.setReady();
         return csb;
     }
 

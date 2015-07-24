@@ -12,9 +12,9 @@ import java.util.logging.Logger;
  * 
  * @author Gert van der Plas <gertvdplas@gmail.com>
  */
-public class JPanelSchoolsRolesAndClassesProperties {
+public class JPanelSchoolsandRolesProperties {
 
-    private static final Logger LOG = Logger.getLogger(JPanelSchoolsRolesAndClassesProperties.class.getName());
+    private static final Logger LOG = Logger.getLogger(JPanelSchoolsandRolesProperties.class.getName());
     private SchoolRoleAndClass selectedSrc;
     private SchoolsRolesAndClasses srcs;
 
@@ -35,6 +35,7 @@ public class JPanelSchoolsRolesAndClassesProperties {
     }
 
     /**
+     * Sets the selected SchoolRoleAndClassCombination in the PeristentStore.
      */
     public void setActiveSchoolRoleAndClass() {
         try {

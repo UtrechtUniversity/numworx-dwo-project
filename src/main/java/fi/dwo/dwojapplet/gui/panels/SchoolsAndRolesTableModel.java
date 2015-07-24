@@ -10,9 +10,9 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author Gert van der Plas <gertvdplas@gmail.com>
  */
-class SchoolsRolesAndClassesTableModel extends AbstractTableModel {
+class SchoolsAndRolesTableModel extends AbstractTableModel {
 
-    private String[] columnNames = {"School", "Role", "Class"};
+    private String[] columnNames = {"School", "Role", "Login", "Delete"};
     static boolean DEBUG = false;
 
     private Object[][] data;
@@ -23,21 +23,14 @@ class SchoolsRolesAndClassesTableModel extends AbstractTableModel {
         for (SchoolRoleAndClass src : srcList) {
             rows++; // one for each item in List
         }
-        data = new Object[rows][4];
+        data = new Object[rows][5];
         int j = 0;
         for (SchoolRoleAndClass src : srcList) {
             data[j][0] = src.getSchoolName();
-            //          data[j][3] = src.getSchoolId();
             data[j][1] = src.getRoleName();
-            //           data[j][4] = src.getRoleId();
-            if (src.getSchoolClassId() == null) {
-                data[j][2] = "";
-                //               data[j][5] = null;
-            } else {
-                data[j][2] = src.getSchoolClassName();
-                //               data[j][5] = src.getSchoolClassId();
-            }
-            data[j][3] = src;
+            data[j][2] = "L"; //login 
+            data[j][3] = "D"; // delete 
+            data[j][4] = src;
             j++;
         }
 

@@ -4,7 +4,6 @@ import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.Group;
 import fi.dwo.dwojapplet.domain.SchoolClass;
 import fi.dwo.dwojapplet.gui.panels.JPanelAccountDataProperties;
 import java.awt.Color;
@@ -29,7 +28,7 @@ import javax.swing.JTextField;
  * @author M.J.B. Kupers
  *
  */
-public class AccountDataPanel extends JPanel implements
+public class AccountDataJPanel extends JPanel implements
         ActionListener {
 
 //    protected Group groupList[];
@@ -63,15 +62,14 @@ public class AccountDataPanel extends JPanel implements
 
 //    protected User user;
     private JPanelAccountDataProperties prop = new JPanelAccountDataProperties();
-    private static final Logger LOG = Logger.getLogger(AccountDataPanel.class.getName());
+    private static final Logger LOG = Logger.getLogger(AccountDataJPanel.class.getName());
 
     /**
      * Creates a new ProfilePanel for the current user. The account of the
      * current user can be changed.
      *
-     * @param groups The possible groups wherefrom a user can be part of.
      */
-    public AccountDataPanel(Group[] groups) {
+    public AccountDataJPanel() {
         //fetch user details.
         try {
             prop.init();
@@ -83,6 +81,7 @@ public class AccountDataPanel extends JPanel implements
 //        groupList = groups;
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         this.setSize(320, 500);
+        this.setMinimumSize(this.getSize());
         this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         this.setPreferredSize(getSize());
         this.setLayout(null);
@@ -380,6 +379,8 @@ public class AccountDataPanel extends JPanel implements
                     } else {
                         GuiCreator.instance().ShowMessageToUser(this, TextMapper.getText(TextMapper.EXR_WRONG_SECOND_PASSWORD), TextMapper.getText(TextMapper.GUIP_ERR_CHANGE), JOptionPane.ERROR_MESSAGE);
                     }
+                    prop.Update();
+                    GuiCreator.instance().ShowMessageToUser(this, TextMapper.getText(TextMapper.DLG_CONFIRM), TextMapper.getText(TextMapper.DLG_CONFIRM), JOptionPane.INFORMATION_MESSAGE);
                 }
                 catch (Dwo2RestException ex) {
                     GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIP_ERR_CHANGE), JOptionPane.ERROR_MESSAGE);
@@ -387,39 +388,37 @@ public class AccountDataPanel extends JPanel implements
             } else {
                 GuiCreator.instance().ShowMessageToUser(this, TextMapper.getText(TextMapper.EXR_WRONG_USERNAME_PASSWORD), TextMapper.getText(TextMapper.GUIP_ERR_CHANGE), JOptionPane.ERROR_MESSAGE);
             }
+        } //
+        //
+        //            if (correct) {
+        //                /*
+        //                 * The data is changed correctly, show a message for
+        //                 * successfully changed data in a dialog
+        //                 */
+        //                try {
+        //                    JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIP_MSG_PROFILE_CHANGED));
+        //                    /* Evil trick to refresh user info */
+        //                    if (password.getText().equals("")) {
+        //                        // TODO this erases the canLogout flag.
+        //                        GuiCreator.instance().clearCurrentUserData();
+        //                        GuiCreator.instance().login(user.getUsername(), oldpassword.getText());
+        //                    } else {
+        //                        GuiCreator.instance().clearCurrentUserData();
+        //                        GuiCreator.instance().login(user.getUsername(), password.getText());
+        //                    }
+        //                }
+        //                catch (LoginException exc) {
+        //                    JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
+        //
+        //                }
+        //            }
+        //
+        else if (e.getSource() == deleteButton) {
+            /* Delete the user account */
+            if (JOptionPane.showConfirmDialog(this, TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER)
+                    + "?", TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                GuiCreator.instance().deleteUser();
+            }
         }
     }
-//
-//
-//            if (correct) {
-//                /*
-//                 * The data is changed correctly, show a message for
-//                 * successfully changed data in a dialog
-//                 */
-//                try {
-//                    JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIP_MSG_PROFILE_CHANGED));
-//                    /* Evil trick to refresh user info */
-//                    if (password.getText().equals("")) {
-//                        // TODO this erases the canLogout flag.
-//                        GuiCreator.instance().clearCurrentUserData();
-//                        GuiCreator.instance().login(user.getUsername(), oldpassword.getText());
-//                    } else {
-//                        GuiCreator.instance().clearCurrentUserData();
-//                        GuiCreator.instance().login(user.getUsername(), password.getText());
-//                    }
-//                }
-//                catch (LoginException exc) {
-//                    JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
-//
-//                }
-//            }
-//
-//        } else if (e.getSource() == deleteButton) {
-//            /* Delete the user account */
-//            if (JOptionPane.showConfirmDialog(this, TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER)
-//                    + "?", TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-//                GuiCreator.instance().deleteUser();
-//            }
-//        }
-
 }

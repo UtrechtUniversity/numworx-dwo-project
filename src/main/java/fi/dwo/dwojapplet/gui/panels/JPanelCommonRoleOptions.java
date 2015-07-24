@@ -7,8 +7,10 @@ import fi.dwo.commons.system.TextMapper;
 import static fi.dwo.commons.system.TextMapper.GUIP_BTN_SWITCH_PROFILE;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.AccountPanel;
+import fi.dwo.dwojapplet.gui.CenterPanel;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.ReauthenticatePanel;
+import fi.dwo.dwojapplet.gui.RegisterMoreSchoolsPanel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -21,7 +23,12 @@ import javax.swing.JPanel;
 public class JPanelCommonRoleOptions extends javax.swing.JPanel {
 
     private static final Logger LOG = Logger.getLogger(JPanelCommonRoleOptions.class.getName());
-    private JPanelSchoolsRolesAndClassesProperties prop = new JPanelSchoolsRolesAndClassesProperties();
+    private JPanelSchoolsandRolesProperties prop = new JPanelSchoolsandRolesProperties();
+
+    private CenterPanel center;
+    public void setCenterPanel(CenterPanel centerPanel) {
+        center = centerPanel;
+    }
 
     /**
      * Creates new form JPanelSchoolAdmin
@@ -103,13 +110,8 @@ public class JPanelCommonRoleOptions extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonSwitchToProfileActionPerformed
 
     private void jButtonDeleteProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteProfileActionPerformed
-        boolean r = ReauthenticatePanel.Reauthenticate(TextMapper.getText(TextMapper.GUIREAUTH_AREYOUSURE));
-        JPanel p = new AccountPanel(null);
-        JFrame f  = new JFrame();
-        f.add(p);
-        f.setEnabled(true);
-        f.setVisible(true);
-        p.setVisible(true);
+        //
+        
     }//GEN-LAST:event_jButtonDeleteProfileActionPerformed
 
 
@@ -122,14 +124,14 @@ public class JPanelCommonRoleOptions extends javax.swing.JPanel {
     /**
      * @return the prop
      */
-    public JPanelSchoolsRolesAndClassesProperties getProp() {
+    public JPanelSchoolsandRolesProperties getProp() {
         return prop;
     }
 
     /**
      * @param prop the prop to set
      */
-    public void setProp(JPanelSchoolsRolesAndClassesProperties prop) {
+    public void setProp(JPanelSchoolsandRolesProperties prop) {
         this.prop = prop;
     }
 }

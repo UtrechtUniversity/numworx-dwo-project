@@ -7,33 +7,26 @@ import fi.dwo.commons.rest.entities.NewUserRegistration;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.Group;
 import fi.dwo.dwojapplet.domain.rest.RegistrationManager;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.event.ChangeEvent;
 
 /**
  * <p>
- * This class is a panel where a known user can register himself for a (new)
- * school.</p>
- *
- * <p>
- * How to test manual:</p>
+ * This is dialog for registering to a school.</p>
+ * 
+ * <p>How to test manual:</p>
  *
  * <ul>
  * <li>Register once for each existing role. Then configurePanelsForUser and
@@ -48,9 +41,7 @@ import javax.swing.event.ChangeEvent;
  * <li> Test the reset button </li>
  * </ul>
  */
-public class RegisterMoreSchoolsPanel extends JPanel implements CenterSubPanel, ActionListener {
-
-    private Group groupList[];
+public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
 
     private JTextField username;
 
@@ -85,79 +76,78 @@ public class RegisterMoreSchoolsPanel extends JPanel implements CenterSubPanel, 
      * Creates a new RegisterPanel. At the register panel, a user can register
      * himself.
      *
-     * @param groups The possible groups wherefrom a user can be part of.
      */
-    public RegisterMoreSchoolsPanel(Group[] groups) {
-        groupList = groups;
+    public RegisterMoreSchoolsPanel() {
+//        groupList = groups;
 
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
          this.setLayout(null);
         this.setSize(GuiConstants.CENTER_WIDTH/2, GuiConstants.CENTER_HEIGHT/2);
-
+        this.setMinimumSize(this.getSize());
         /* Variables used to create items */
         FontMetrics fm;
         JPanel p;
         JLabel l;
 
-        /* Add Register-panel */
-        p = new JPanel(null);
-        p.setBorder(BorderFactory.createLineBorder(getForeground()));
-        p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(getSize().width / 2 - 180, 110, 310, 95);//240
-        this.add(p);
-
-        /* registerinfo label */
-        l = new JLabel(TextMapper.getText(TextMapper.GUIR_REGISTERINFO) + ":");
-        l.setForeground(GuiConstants.RED_COLOR);
-        l.setFont(GuiConstants.RED_TEXT);
-        fm = l.getFontMetrics(l.getFont());
-        l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
-        p.add(l);
-
-        /* Username label */
-        l = new JLabel(TextMapper.getText(TextMapper.GUIR_USERNAME) + ":");
-        l.setForeground(Color.black);
-        l.setFont(GuiConstants.NORMAL_TEXT);
-        fm = l.getFontMetrics(l.getFont());
-        l.setLocation(10, 30);
-        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-        p.add(l);
-
-        /* Username field */
-        username = new JTextField();
-        username.setBounds(160, 28, 120, 20);
-        p.add(username);
-
-        /* Username mandatory label */
-        l = createMandatoryLabel();
-        l.setLocation(285, 28);
-        p.add(l);
-
-        /* Password label */
-        l = new JLabel(TextMapper.getText(TextMapper.GUIR_PASSWORD) + ":");
-        l.setForeground(Color.black);
-        l.setFont(GuiConstants.NORMAL_TEXT);
-        fm = l.getFontMetrics(l.getFont());
-        l.setLocation(10, 55);
-        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-        p.add(l);
-
-        /* Password field */
-        password = new JPasswordField();
-        password.setBounds(160, 53, 120, 20);
-        password.setEchoChar('*');
-        p.add(password);
-
-        /* Password mandatory label */
-        l = createMandatoryLabel();
-        l.setLocation(285, 53);
-        p.add(l);
+//        /* Add Register-panel */
+//        p = new JPanel(null);
+//        //p.setBorder(BorderFactory.createLineBorder(getForeground()));
+//        p.setBackground(GuiConstants.SUB_BACKGROUND);
+//        p.setBounds(getSize().width / 2 - 180, 10, 310, 95);//240
+//        this.add(p);
+//
+//        /* registerinfo label */
+//        l = new JLabel(TextMapper.getText(TextMapper.GUIR_REGISTERINFO) + ":");
+//        l.setForeground(GuiConstants.RED_COLOR);
+//        l.setFont(GuiConstants.RED_TEXT);
+//        fm = l.getFontMetrics(l.getFont());
+//        l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
+//        p.add(l);
+//
+//        /* Username label */
+//        l = new JLabel(TextMapper.getText(TextMapper.GUIR_USERNAME) + ":");
+//        l.setForeground(Color.black);
+//        l.setFont(GuiConstants.NORMAL_TEXT);
+//        fm = l.getFontMetrics(l.getFont());
+//        l.setLocation(10, 30);
+//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
+//        p.add(l);
+//
+//        /* Username field */
+//        username = new JTextField();
+//        username.setBounds(160, 28, 120, 20);
+//        p.add(username);
+//
+//        /* Username mandatory label */
+//        l = createMandatoryLabel();
+//        l.setLocation(285, 28);
+//        p.add(l);
+//
+//        /* Password label */
+//        l = new JLabel(TextMapper.getText(TextMapper.GUIR_PASSWORD) + ":");
+//        l.setForeground(Color.black);
+//        l.setFont(GuiConstants.NORMAL_TEXT);
+//        fm = l.getFontMetrics(l.getFont());
+//        l.setLocation(10, 55);
+//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
+//        p.add(l);
+//
+//        /* Password field */
+//        password = new JPasswordField();
+//        password.setBounds(160, 53, 120, 20);
+//        password.setEchoChar('*');
+//        p.add(password);
+//
+//        /* Password mandatory label */
+//        l = createMandatoryLabel();
+//        l.setLocation(285, 53);
+//        p.add(l);
 
         /* Add School-panel */
         p = new JPanel(null);
-        p.setBorder(BorderFactory.createLineBorder(Color.black));
+        //p.setBorder(BorderFactory.createLineBorder(Color.black));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(getSize().width / 2 - 180, 215, 310, 125);//473
+        p.setBounds(getSize().width / 2 - 180, 10, 310, 120);
         this.add(p);
 
         /* schoolinfo label */
@@ -229,15 +219,16 @@ public class RegisterMoreSchoolsPanel extends JPanel implements CenterSubPanel, 
 
         /* Add Button-panel */
         p = new JPanel(null);
-        p.setBorder(BorderFactory.createLineBorder(Color.black));
+        //p.setBorder(BorderFactory.createLineBorder(Color.black));
         p.setBackground(GuiConstants.SUB_BACKGROUND);
-        p.setBounds(getSize().width / 2 - 180, 350, 310, 45);//487
+        p.setBounds(getSize().width / 2 - 180, 140, 310, 80);//487
         this.add(p);
 
         /* Register button */
         registerButton = new JButton(TextMapper.getText(TextMapper.GUIR_BTN_REGISTER));//, GuiConstants.SUB_BACKGROUND);
         fm = registerButton.getFontMetrics(registerButton.getFont());
         registerButton.setSize(registerButton.getPreferredSize());
+        registerButton.setLocation(p.getX()+this.getWidth()/2-registerButton.getWidth(), p.getY()+p.getHeight()/2-registerButton.getHeight());
 
         /* Reset button */
         resetButton = new JButton(TextMapper.getText(TextMapper.GUIR_BTN_RESET));//, GuiConstants.SUB_BACKGROUND);
@@ -249,11 +240,11 @@ public class RegisterMoreSchoolsPanel extends JPanel implements CenterSubPanel, 
                 + resetButton.getSize().width + 5) / 2), 10);
         p.add(registerButton);
 
-        resetButton.setLocation((p.getSize().width / 2)
-                - ((registerButton.getSize().width
-                + resetButton.getSize().width + 5) / 2)
-                + registerButton.getSize().width + 5, 10);
-        p.add(resetButton);
+//        resetButton.setLocation((p.getSize().width / 2)
+//                - ((registerButton.getSize().width
+//                + resetButton.getSize().width + 5) / 2)
+//                + registerButton.getSize().width + 5, 10);
+//        p.add(resetButton);
 
 //        backButton = new JButton(TextMapper.getText(TextMapper.GUIR_BTN_BACK));//, GuiConstants.MAIN_BACKGROUND);
 //        fm = backButton.getFontMetrics(backButton.getFont());
@@ -267,7 +258,6 @@ public class RegisterMoreSchoolsPanel extends JPanel implements CenterSubPanel, 
 //        backButton.addActionListener(this);
 
         groupChoice.addItemListener(new GroupItemListener(schoolpassword));
-
 
     }
 
@@ -348,50 +338,22 @@ public class RegisterMoreSchoolsPanel extends JPanel implements CenterSubPanel, 
                 }
 
             }
-        } else if (e.getSource() == resetButton) {
-            username.setText("");
-            password.setText("");
-            repassword.setText("");
-            firstname.setText("");
-            middlename.setText("");
-            lastname.setText("");
-            email.setText("");
-            schoollogin.setText("");
-            groupChoice.setSelectedIndex(0);
-            schoolpassword.setText("");
-            schoolpassword.setVisible(true);
-        } else if (e.getSource() == backButton) {
-            GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
         }
-    }
-
-    @Override
-    public void end() {
-    }
-
-    @Override
-    public Component getHeaderPanel() {
-        return null;
-    }
-
-    @Override
-    public void setCenterPanel(CenterPanel centerPanel) {
-        center = centerPanel;
-    }
-
-    @Override
-    public JComponent getComponent() {
-        return this;
-    }
-
-    @Override
-    public Object getUserObject() {
-        return null;
-    }
-
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        else if (e.getSource() == resetButton) {
+//            username.setText("");
+//            password.setText("");
+//            repassword.setText("");
+//            firstname.setText("");
+//            middlename.setText("");
+//            lastname.setText("");
+//            email.setText("");
+//            schoollogin.setText("");
+//            groupChoice.setSelectedIndex(0);
+//            schoolpassword.setText("");
+//            schoolpassword.setVisible(true);
+        } else if (e.getSource() == backButton) {
+            //Call close here.
+        }
     }
 
 }
