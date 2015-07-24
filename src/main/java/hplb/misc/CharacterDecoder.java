@@ -27,7 +27,8 @@ public abstract class CharacterDecoder {
   public abstract void decodeBuffer(InputStream in,
                                     OutputStream out) throws IOException;
 
-  /** Decode the specified String and return result as byte array. */
+  /** Decode the specified String and return result as byte array.
+     * @return  */
   public byte[] decodeBuffer(String s) {
     byte[] buf = ByteArray.getBytes(s);
     ByteArrayInputStream bin = new ByteArrayInputStream(buf);
@@ -38,6 +39,7 @@ public abstract class CharacterDecoder {
 
   /**
    * Decode the InputStream and return result as byte array.
+     * @return 
    * @throws IOException        if an I/O error has occurred.
    */
   public byte[] decodeBuffer(InputStream in) throws IOException {

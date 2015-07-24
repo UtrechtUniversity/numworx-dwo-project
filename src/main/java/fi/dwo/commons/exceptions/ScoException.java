@@ -19,7 +19,7 @@ public class ScoException extends Exception {
     public final static int SE_NO_APPLET = 2;
 
     /**
-
+     * @param exception
      */
     public ScoException(int exception) {
         super(getMesgFromInt(exception));

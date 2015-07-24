@@ -23,6 +23,7 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
      * This constructor is only public because of jax-rs. Use a factory to
      * generate id's.
      *
+     * @param pid
      * @param type the type to set
      */
     private MySQLPersistenceId(PersistenceId pid) {
@@ -44,6 +45,7 @@ public class MySQLPersistenceId extends PersistenceId implements Comparable<Pers
      * generate id's.
      *
      * @param type the type to set
+     * @param aType
      */
     private MySQLPersistenceId(long aId, PersistenceClassType aType) {
         id = aId;

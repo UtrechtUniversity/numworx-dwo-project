@@ -18,7 +18,7 @@ public class LoginException extends Exception {
     public final static int LE_UNKNOWN_USER = 1;
 
     /**
-
+     * @param exception
      */
     public LoginException(int exception) {
         super(getMesgFromInt(exception));

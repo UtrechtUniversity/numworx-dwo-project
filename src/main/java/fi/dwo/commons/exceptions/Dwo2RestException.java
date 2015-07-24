@@ -48,7 +48,6 @@ public class Dwo2RestException extends WebApplicationException implements Dwo2Ex
      * @return A Dwo2 message string.
      *
      * @see Dwo2ExceptionCode
-     * @return
      */
     @Override
     public String getDwo2Message() {

@@ -311,6 +311,7 @@ public class NetworkClassLoader extends ClassLoader {
     /**
      * This method resets this ClassLoader's state and resets the
      * references for garbage collection.
+     * @throws java.lang.Throwable
      */
     protected void finalize() throws Throwable {
         // Cleanup real well. Otherwise, this can be

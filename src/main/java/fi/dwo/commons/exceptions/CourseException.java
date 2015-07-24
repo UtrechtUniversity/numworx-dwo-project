@@ -18,7 +18,7 @@ public class CourseException extends Exception {
     public final static int CE_COURSE_EXISTS = 1;
 
     /**
-
+     * @param exception
      */
     public CourseException(int exception) {
         super(getMesgFromInt(exception));

@@ -74,6 +74,7 @@ public class MySimpleXmlRpcClient {
    
     /** 
      * Construct a XML-RPC client with this URL.
+     * @param url
      */
     public MySimpleXmlRpcClient (URL url) {
 	this.url = url;
@@ -81,6 +82,7 @@ public class MySimpleXmlRpcClient {
 
     /** 
      * Construct a XML-RPC client for the URL represented by this String.
+     * @throws java.net.MalformedURLException
      */
     public MySimpleXmlRpcClient (String url) throws MalformedURLException {
 	this.url = new URL (url);
@@ -88,6 +90,7 @@ public class MySimpleXmlRpcClient {
    
     /** 
      * Construct a XML-RPC client for the specified hostname and port.
+     * @throws java.net.MalformedURLException
      */
     public MySimpleXmlRpcClient (String hostname, int port) throws MalformedURLException {
 	this.url = new URL ("http://"+hostname+":"+port+"/RPC2");
@@ -100,6 +103,7 @@ public class MySimpleXmlRpcClient {
     
     /**
      * Switch debugging output on/off.
+     * @param b
      */
     public static void setDebug(boolean b)
     {
@@ -150,6 +154,7 @@ class MyXmlRpcSupport extends org.xml.sax.HandlerBase {
     
     /**
      * Switch debugging output on/off.
+     * @param val
      */
     public static void setDebug (boolean val) {
 	debug = val;
@@ -158,6 +163,7 @@ class MyXmlRpcSupport extends org.xml.sax.HandlerBase {
     /** 
      * Parse the input stream. For each root level object, method <code>objectParsed</code>
      * is called.
+     * @throws java.lang.Exception
      */
     synchronized void parse (InputStream is) throws Exception {
 	values = new Stack ();
@@ -174,6 +180,7 @@ class MyXmlRpcSupport extends org.xml.sax.HandlerBase {
 
     /**
      * Writes the XML representation of a supported Java object to the XML writer.
+     * @throws java.io.IOException
      */
     void writeObject (Object what, XmlWriter writer) throws IOException {
 	writer.startElement ("value");
@@ -238,6 +245,7 @@ class MyXmlRpcSupport extends org.xml.sax.HandlerBase {
      * Generate an XML-RPC request and send it to the server. Parse the result and
      * return the corresponding Java object.
      *
+     * @return 
      * @exception XmlRpcException: If the remote host returned a fault message.
      * @exception IOException: If the call could not be made for lower level problems.
      */
@@ -314,6 +322,7 @@ class MyXmlRpcSupport extends org.xml.sax.HandlerBase {
    
     /**
      * Called when the return value has been parsed. 
+     * @param what
      */
     void objectParsed (Object what) {
 	result = what;
@@ -322,6 +331,7 @@ class MyXmlRpcSupport extends org.xml.sax.HandlerBase {
     
     /**
      * Generate an XML-RPC request from a method name and a parameter vector.
+     * @throws java.io.IOException
      */
     void writeRequest (XmlWriter writer, String method, Vector params) throws IOException {
 	writer.startElement ("methodCall");
@@ -347,6 +357,7 @@ class MyXmlRpcSupport extends org.xml.sax.HandlerBase {
 
     /**
      * Method called by SAX driver.
+     * @throws org.xml.sax.SAXException
      */
     public void characters (char ch[], int start,
             int length) throws SAXException
@@ -358,6 +369,7 @@ class MyXmlRpcSupport extends org.xml.sax.HandlerBase {
 
     /**
       * Method called by SAX driver.
+     * @throws org.xml.sax.SAXException
      */
     public void endElement (String name) throws SAXException
     {
@@ -418,6 +430,7 @@ class MyXmlRpcSupport extends org.xml.sax.HandlerBase {
 
     /**
       * Method called by SAX driver.
+     * @throws org.xml.sax.SAXException
       */
     public void startElement (String name,
             AttributeList atts) throws SAXException
@@ -535,6 +548,7 @@ class MyXmlRpcSupport extends org.xml.sax.HandlerBase {
 
         /**
           * Notification that a new child element has been parsed.
+         * @param child
           */
         public void endElement (Value child)
         {
@@ -546,6 +560,7 @@ class MyXmlRpcSupport extends org.xml.sax.HandlerBase {
 
         /**
           * Set the type of this value. If it's a container, create the corresponding java container.
+         * @param type
           */
         public void setType (int type)
         {
@@ -560,6 +575,7 @@ class MyXmlRpcSupport extends org.xml.sax.HandlerBase {
         /**
           * Set the character data for the element and interpret it according to the
           * element type
+         * @param cdata
           */
         public void characterData (String cdata)
         {

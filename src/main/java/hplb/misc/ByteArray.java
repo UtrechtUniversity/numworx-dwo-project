@@ -20,7 +20,8 @@ import java.net.*;
  */
 public class ByteArray {
 
-  /** Returns copy of characters in s as a new byte array. */
+  /** Returns copy of characters in s as a new byte array.
+     * @return  */
   public static final byte[] getBytes(String s) {
     int len = s.length();
     byte b[] = new byte[len];
@@ -28,12 +29,14 @@ public class ByteArray {
     return b;
   }
 
-  /** Returns contents of file as byte array. */
+  /** Returns contents of file as byte array.
+     * @return  */
   public static byte[] loadFromFile(String filename) throws IOException {
     return loadFromFile(new File(filename));
   }
 
-  /** Returns contents of file <i>file</i> as byte array. */
+  /** Returns contents of file <i>file</i> as byte array.
+     * @return  */
   public static byte[] loadFromFile(File file) throws IOException {
     int n, nread = 0, len = (int) file.length();
     FileInputStream fin = new FileInputStream(file);
@@ -52,6 +55,7 @@ public class ByteArray {
    * Reads n bytes from the specified input stream. It will return
    * fewer bytes if fewer bytes are available on the stream.
    * Hence the application should check the resulting arrays length.
+     * @return 
    */
   public static byte[] readn(InputStream in, int n) throws IOException {
     byte[] buf = new byte[n];
@@ -75,6 +79,7 @@ public class ByteArray {
    * Return contents of a WWW resource identified by a URL.
    * @param url the resource to retrieve
    * @return    the resource contents as a byte array
+     * @throws java.io.IOException
    */
   public static byte[] getContent(URL url) throws IOException {
     URLConnection conn = url.openConnection();
@@ -97,6 +102,7 @@ public class ByteArray {
    * Read all input from an InputStream and return as a byte array.
    * This method will not return before the end of the stream is reached.
    * @return    contents of the stream
+     * @throws java.io.IOException
    */
   public static byte[] readAll(InputStream in) throws IOException {
     byte[] buf = new byte[1024];
@@ -124,6 +130,7 @@ public class ByteArray {
    * Copies data from the specified input stream to the output stream
    * until end of file is met.
    * @return    the total number of bytes written to the output stream
+     * @throws java.io.IOException
    */
   public static int cpybytes(InputStream in, OutputStream out)
     throws IOException
@@ -141,6 +148,7 @@ public class ByteArray {
    * Copies data from the specified input stream to the output stream
    * until <em>n</em> bytes has been copied or end of file is met.
    * @return    the total number of bytes written to the output stream
+     * @throws java.io.IOException
    */
   public static int cpybytes(InputStream in, OutputStream out, int n)
     throws IOException
@@ -162,6 +170,7 @@ public class ByteArray {
   /**
    * Returns the index within this String of the first occurrence of the
    * specified character or -1 if the character is not found.
+     * @return 
    * @params buf        the buffer to search
    * @params ch         the character to search for
    */
@@ -174,6 +183,7 @@ public class ByteArray {
    * Returns the index within this String of the first occurrence of the
    * specified character, starting the search at fromIndex. This method
    * returns -1 if the character is not found.
+     * @return 
    * @params buf        the buffer to search
    * @params ch         the character to search for
    * @params fromIndex  the index to start the search from 
@@ -197,6 +207,7 @@ public class ByteArray {
   /**
    * Returns the index of the first occurrence of s in the specified
    * buffer or -1 if this is not found.
+     * @return 
    */
   public static final int indexOf(byte[] buf, String s) {
     return indexOf(buf, s, 0);
@@ -206,6 +217,7 @@ public class ByteArray {
    * Returns the index of the first occurrence of s in the specified
    * buffer. The search starts from fromIndex. This method returns -1
    * if the index is not found.
+     * @return 
    */
   public static final int indexOf(byte[] buf, String s, int fromIndex) {
     int i;                  // index into buf
@@ -244,6 +256,7 @@ public class ByteArray {
   }
   /**
    * Find byte pattern ptrn in buffer buf.
+     * @param ptrn
    * @return    index of first occurrence of ptrn in buf, -1 if no occurence
    */
   public static final int findBytes(byte buf[],

@@ -29,7 +29,7 @@ public class RegisterException extends Exception {
     
     public final static int RE_WRONG_EMAILFORMAT = 7;
     /**
-
+     * @param exception
      */
     public RegisterException(int exception) {
         super(getMesgFromInt(exception));
