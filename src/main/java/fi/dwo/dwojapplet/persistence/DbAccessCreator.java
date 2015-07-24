@@ -44,9 +44,9 @@ class DbAccessCreator {
     public static DbAccessIF instance() {
         if (dbAccess == null) {
         URL server;
-            if(DwoHelper.getServletConnectString()!=null){
-            try {
-                        server = new URL(DwoHelper.getServletConnectString());
+            if(DwoHelper.getServerUrlPath()!=null){
+            try {                
+                        server = new URL(DwoHelper.getServerUrlPath(),"xmlrpc");
                         dbAccess = new DbAccessClient(server);
                     } catch (MalformedURLException ex) {
                         LOG.log(Level.SEVERE, null, ex);

@@ -56,9 +56,15 @@ public final class DwoHelper {
 
     private static boolean scormExportLoggedIn, appletExportLoggedIn, adminLoggedIn;
 
-    private static String baseServletUrlString;
-    private static String resourceUrlPathString; // required null if to use the default
-    private static String servletConnectString = null; // required null, filled in main or init
+    /**
+     * ********DWO.property attributes **********
+     */
+    
+    private static URL serverUrlPath=null; 
+    private static URL resourceUrlPath=null; // required null if to use the default
+    private static URL jarUrlPath;
+
+    
     //depending on application or applet start.
     private static SchoolClass schoolClass;
     private static School school;
@@ -392,29 +398,48 @@ public final class DwoHelper {
     }
 
     /**
-     * Returns the url path to the resource location where the jars are stored.
+     * Returns the url path to the resource location where the resources are stored.
      * 
      * @return the resourceUrlPathString
      */
-    public static String getGetResourceURLPathString() {
-        return resourceUrlPathString;
+    public static URL getResourceUrlPath() {
+        return resourceUrlPath;
     }
 
     /**
-     * Sets the url path to the resource location where the jars are stored.
+     * Sets the url path to the resource location where the resources are stored.
      * 
      * @param aGetResourceURLPathString the resourceUrlPathString to set
      */
-    public static void setGetResourceURLPathString(String aGetResourceURLPathString) {
-        resourceUrlPathString = aGetResourceURLPathString;
+    public static void setResourceUrlPath(URL aGetResourceURLPath) {
+        resourceUrlPath = aGetResourceURLPath;
     }
 
-    public static void setServletConnectString(String aServletConnectString) {
-        servletConnectString = aServletConnectString;
+
+     /** Sets the url path to the resource location where the resources are stored.
+     * 
+     * @param jarURLPathStringProperty
+     */
+    public static void setJarUrlPath(URL aJarURLPath) {
+        jarUrlPath = aJarURLPath;
     }
 
-    public static String getServletConnectString() {
-        return servletConnectString;
+    /**
+     * Returns the url path to the resource location where the resources are stored.
+     * 
+     * @return 
+     */
+    public static URL getJarUrlPath() {
+        return jarUrlPath;
+    }
+    
+    
+    public static void setServerUrlPath(URL aServerUrlPath) {
+        serverUrlPath = aServerUrlPath;
+    }
+
+    public static URL getServerUrlPath() {
+        return serverUrlPath;
     }
 
     /**
@@ -482,26 +507,6 @@ public final class DwoHelper {
     @Deprecated
     public static void setCurrentFacadeUser(User aCurrentUser) {
         currentFacadeUser = aCurrentUser;
-    }
-
-    /**
-     * Returns the base dir of our servlet. Determined as being the parent dir of the
-     * url location where the applet was downloaded.
-     * 
-     * @return the baseServletUrlString
-     */
-    public static String getBaseServletUrlString() {
-        return baseServletUrlString;
-    }
-
-    /**
-     * Sets the base dir of our servlet. Determined as being the parent dir of the
-     * url location where the applet was downloaded.
-     * 
-     * @param aBaseServletUrlString the baseServletUrlString to set
-     */
-    public static void setBaseServletUrlString(String aBaseServletUrlString) {
-        baseServletUrlString = aBaseServletUrlString;
     }
 
     /**

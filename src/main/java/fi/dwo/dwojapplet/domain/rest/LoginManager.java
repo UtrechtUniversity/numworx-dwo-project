@@ -31,7 +31,7 @@ public class LoginManager {
         cache.setNoCache(true);
         cache.setNoStore(true);
 
-        Response response = client.target(DwoHelper.getBaseServletUrlString())
+        Response response = client.target(DwoHelper.getServerUrlPath().toString())
                 .path("/rest/secure/user/userprofile/get/json")
                 .request().cacheControl(cache).get(Response.class);
         if (response.getStatus() != 200) {
@@ -44,7 +44,7 @@ public class LoginManager {
             // succeeded login
             LOG.log(Level.INFO, "Logged in with username {0}.", new Object[]{user.getUsername()});
             //Set webtarget with credentials for future rest login.
-            WebTarget target = client.target(DwoHelper.getBaseServletUrlString());
+            WebTarget target = client.target(DwoHelper.getServerUrlPath().toString());
             StoredRestManager.setWebTargetRest(target);
             //Set current user for domain
             DwoHelper.setCurrentUser(user);

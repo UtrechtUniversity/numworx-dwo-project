@@ -24,7 +24,7 @@ public class WiskOpdrEditPanel extends JPanel {
 		super(new BorderLayout());
 		this.text = text;
 		try {
-            if(DwoHelper.getGetResourceURLPathString()!=null) Loader.setPrefix(DwoHelper.getGetResourceURLPathString());
+            if(DwoHelper.getJarUrlPath()!=null) Loader.setPrefix(DwoHelper.getJarUrlPath().toString());
 			Class<?> wiskopdr = Loader.create("wiskopdr.jar").loadClass("fi.wiskopdr.WiskOpdr");
 			Method m = wiskopdr.getMethod("getWiskOpdrEditPanel", String.class);
 			component = (Component) m.invoke(null, text);

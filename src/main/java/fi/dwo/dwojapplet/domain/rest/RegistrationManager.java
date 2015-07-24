@@ -42,7 +42,7 @@ public class RegistrationManager {
         HttpAuthenticationFeature feature = HttpAuthenticationFeature.universalBuilder().credentialsForDigest(existingUserReg.getUsername(), existingUserReg.getPassword()).build();
         Client client = ClientBuilder.newClient().register(feature);
 
-        Response response = client.target(DwoHelper.getBaseServletUrlString())
+        Response response = client.target(DwoHelper.getServerUrlPath().toString())
                 .path("/rest/secure/registration/existingUser/json")
                 .request().put(Entity.entity(existingUserReg, MediaType.APPLICATION_JSON));
         if (response.getStatus() != 200) {
