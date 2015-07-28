@@ -12,7 +12,7 @@ import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.rest.entities.NewUserRegistration;
+import fi.dwo.commons.rest.entities.KnownUserRegistration;
 import fi.dwo.server.PersistentEntityManagers.HasRoleManager;
 import fi.dwo.server.PersistentEntityManagers.UserManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
@@ -47,13 +47,13 @@ public class SecuredRegistrationManager {
     @PUT
     @Produces({"application/json"})
     @Path("/existingUser/json")
-    public Response registerExistingUser(@Context SecurityContext sc, NewUserRegistration existingUserReg) {
+    public Response registerExistingUser(@Context SecurityContext sc, KnownUserRegistration existingUserReg) {
         EntityManager em = DwoEmfFactory.getEntityManager();
 
         //Check for userid, should exist.
         PersistentUser user = UserManager.findByUserName(sc.getUserPrincipal().getName());
         if (user == null) {
-            LOG.log(Level.WARNING, "Username {0}: Authentication for schoollogin {1} and role {2} for usercode {3} failed.", new Object[]{sc.getUserPrincipal().getName(), existingUserReg.getSchoolLogin(), existingUserReg.getRole().getGroupname(), existingUserReg.getUsername()});
+            LOG.log(Level.WARNING, "Username {0}: Authentication for schoollogin {1} and role {2} for usercode {3} failed.", new Object[]{sc.getUserPrincipal().getName(), existingUserReg.getSchoolLogin(), existingUserReg.getRole().getGroupname(), sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "Authentication for " + sc.getUserPrincipal().getName() + " failed.");
         }
         //invariant: have user data
@@ -74,15 +74,16 @@ public class SecuredRegistrationManager {
             sg = (PersistentSchoolGroup) q.getSingleResult();
             school = sg.getSchool(); // Sadly, another query.
             if (school == null) {
-                String msg = String.format("Username {0}: Registration authentication failed for school {1} with school login {2} and school code {3} for usercode {4}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolName(), existingUserReg.getSchoolLogin(), existingUserReg.getSchoolCode(), existingUserReg.getUsername()});
+                String msg = String.format("Username {0}: Registration authentication failed for school {1} with school login {2} and school code {3} for usercode {4}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolName(), existingUserReg.getSchoolLogin(), existingUserReg.getSchoolCode(), user.getUsername()});
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Invalid_school_role_credentials, msg);
             }
             //invariant: usercode does not exists and a school exists for schoollogin and schoolcode
-            LOG.log(Level.FINER, "Username {0}: School-manager retrieved school {1} from school login and school code for usercode {2}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolName(), existingUserReg.getUsername()});
+            LOG.log(Level.FINER, "Username {0}: School-manager retrieved school {1} from school login and school code for usercode {2}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolName(), user.getUsername()});
         }
         catch (Exception ex) {
-            LOG.log(Level.WARNING, "Registration authentication failed due to a possible software error.", ex);
-            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Registration authentication failed due to a software error, please try again.");
+                String msg = String.format("Username {0}: Registration authentication failed for school login {1} and school code {2} for usercode {4}.", new Object[]{sc.getUserPrincipal().getName(), existingUserReg.getSchoolLogin(), existingUserReg.getSchoolCode(), user.getUsername()});
+                LOG.log(Level.WARNING, msg, ex);
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Invalid_school_role_credentials, msg);
         }
         finally {
             em.close();
