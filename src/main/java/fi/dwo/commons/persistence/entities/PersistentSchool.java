@@ -158,7 +158,7 @@ public class PersistentSchool implements Serializable {
         return true;
     }
     public boolean licenseIsValid(){
-    if(getExpire()==null ||getExpire().before(new Date()))
+    if(getExpire()!=null && getExpire().before(new Date()))
         {
             return false;
         }
