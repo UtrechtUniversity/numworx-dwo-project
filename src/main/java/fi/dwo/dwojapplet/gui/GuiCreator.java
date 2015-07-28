@@ -71,7 +71,7 @@ public class GuiCreator {
      * @param parentComponent
      * @param message
      * @param title
-     * @param messageType 
+     * @param messageType A JOptionPane message type.
      */
     public void ShowMessageToUser(Component parentComponent,
             Object message,

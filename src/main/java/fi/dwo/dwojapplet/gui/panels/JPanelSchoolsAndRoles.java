@@ -1,6 +1,7 @@
 /*Copyrighted 2015. */
 package fi.dwo.dwojapplet.gui.panels;
 
+import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.rest.entities.SchoolRoleAndClass;
@@ -12,6 +13,7 @@ import fi.dwo.dwojapplet.gui.ShowJPanelAsDialog;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -30,7 +32,11 @@ public class JPanelSchoolsAndRoles extends javax.swing.JPanel {
      * Creates new form JPanelSchoolsAndClasses
      */
     public JPanelSchoolsAndRoles() {
+        try{
         prop.init();
+        }catch(Dwo2Exception e){
+            GuiCreator.instance().ShowMessageToUser(this, e.getLocalizedMessage(), "", JOptionPane.ERROR_MESSAGE);
+        }
         tableModel = new SchoolsAndRolesTableModel();
         tableModel.init(prop.getSelectedSchoolRoleAndClass(), prop.getSchoolsRolesAndClasses());
         initComponents();

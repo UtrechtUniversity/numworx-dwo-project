@@ -18,12 +18,16 @@ public class JPanelSchoolsandRolesProperties {
     private SchoolRoleAndClass selectedSrc;
     private SchoolsRolesAndClasses srcs;
 
-    public void init() {
+    public void init() throws Dwo2Exception {
         try {
             srcs = SchoolsRolesAndClassesManager.getCurrentEnlistements();
             selectedSrc = srcs.getActiveSchoolRoleAndClass();
         } catch (Dwo2Exception ex) {
+            
             LOG.log(Level.SEVERE, ex.getMessage());
+            srcs = new SchoolsRolesAndClasses();
+            selectedSrc=null;
+            throw ex;
         }
     }
 

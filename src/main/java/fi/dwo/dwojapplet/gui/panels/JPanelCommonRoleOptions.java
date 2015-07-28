@@ -6,15 +6,10 @@ import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.system.TextMapper;
 import static fi.dwo.commons.system.TextMapper.GUIP_BTN_SWITCH_PROFILE;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.gui.AccountPanel;
 import fi.dwo.dwojapplet.gui.CenterPanel;
 import fi.dwo.dwojapplet.gui.GuiCreator;
-import fi.dwo.dwojapplet.gui.ReauthenticatePanel;
-import fi.dwo.dwojapplet.gui.RegisterMoreSchoolsPanel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 /**
  *

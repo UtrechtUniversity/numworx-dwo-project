@@ -1,23 +1,12 @@
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.exceptions.Dwo2RestException;
-import fi.dwo.commons.system.MD5;
-import fi.dwo.commons.system.TextMapper;
+import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.panels.JPanelSchoolsandRolesProperties;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.FontMetrics;
-import java.awt.event.ActionEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 
 /**
  * This class represents a panel for the current user to change his account.
@@ -26,367 +15,30 @@ import javax.swing.JTextField;
  *
  */
 public class AccountSchoolRolesJPanel extends JPanel {
-//
-////    protected User user;
-//    private JPanelSchoolsandRolesProperties prop = new JPanelSchoolsandRolesProperties();
-//    private static final Logger LOG = Logger.getLogger(AccountSchoolRolesJPanel.class.getName());
-//
-//    /**
-//     * Creates a new ProfilePanel for the current user. The account of the
-//     * current user can be changed.
-//     *
-//     */
-//    public AccountSchoolRolesJPanel() {
-//        //fetch user details.
-//        try {
-//            prop.init();
-//        }
-//        catch (Exception e) {
-//            LOG.log(Level.SEVERE, "Can't retrieve initial user settings.", e);
-//        }
-//
-////        groupList = groups;
-//        this.setBackground(GuiConstants.MAIN_BACKGROUND);
-//        this.setSize(320, 500);
-//        this.setMinimumSize(this.getSize());
-//        this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-//        this.setPreferredSize(getSize());
-//        this.setLayout(null);
-//
-//        /* Variables used to create items */
-//        FontMetrics fm;
-//        JPanel p;
-//        JLabel l;
-//
-//        /* Add Register-panel */
-//        p = new JPanel(null);
-////        p.setBorder(BorderFactory.createLineBorder(getForeground()));
-//        p.setBackground(GuiConstants.SUB_BACKGROUND);
-//        p.setBounds(getSize().width / 2 - 155, 20, 310, 130);
-//        this.add(p);
-//
-//        /* registerinfo label */
-//        l = new JLabel(TextMapper.getText(TextMapper.GUIP_REGISTERINFO) + ":");
-//        l.setForeground(GuiConstants.RED_COLOR);
-//        l.setFont(GuiConstants.RED_TEXT);
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
-//        p.add(l);
-//
-//        /* Username label */
-//        l = new JLabel(TextMapper.getText(TextMapper.GUIP_USERNAME) + ":");
-//        l.setForeground(Color.black);
-//        l.setFont(GuiConstants.NORMAL_TEXT);
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-//        l.setLocation(10, 30);
-//        p.add(l);
-//
-//        /* Username Label */
-//        l = new JLabel(prop.getUser().getUsername());
-//        l.setFont(GuiConstants.NORMAL_TEXT);
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-//        l.setLocation(160, 30);
-//        p.add(l);
-//
-//        /* Old-Password label */
-//        l = new JLabel(TextMapper.getText(TextMapper.GUIP_OLD_PASSWORD) + ":");
-//        l.setForeground(Color.black);
-//        l.setFont(GuiConstants.NORMAL_TEXT);
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setLocation(10, 55);
-//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-//        p.add(l);
-//
-//        /* Old-Password field */
-//        oldpassword = new JPasswordField();
-//        oldpassword.setBounds(160, 53, 120, 20);
-//        oldpassword.setEchoChar('*');
-//        p.add(oldpassword);
-//
-//        /* Old-Password mandatory label */
-//        l = createMandatoryLabel();
-//        l.setLocation(285, 53);
-//        p.add(l);
-//
-//        /* Password label */
-//        l = new JLabel(TextMapper.getText(TextMapper.GUIP_PASSWORD) + ":");
-//        l.setForeground(Color.black);
-//        l.setFont(GuiConstants.NORMAL_TEXT);
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setLocation(10, 80);
-//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-//        p.add(l);
-//
-//        /* Password field */
-//        password = new JPasswordField();
-//        password.setBounds(160, 78, 120, 20);
-//        password.setEchoChar('*');
-//        p.add(password);
-//
-//        /* RePassword label */
-//        l = new JLabel(TextMapper.getText(TextMapper.GUIP_RE_PASSWORD) + ":");
-//        l.setForeground(Color.black);
-//        l.setFont(GuiConstants.NORMAL_TEXT);
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setLocation(10, 105);
-//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-//        p.add(l);
-//
-//        /* RePassword field */
-//        repassword = new JPasswordField();
-//        repassword.setBounds(160, 103, 120, 20);
-//        repassword.setEchoChar('*');
-//        p.add(repassword);
-//
-//        /* Add PersonalInfo-panel */
-//        p = new JPanel(null);
-////        p.setBorder(BorderFactory.createLineBorder(getForeground()));
-//        p.setBackground(GuiConstants.SUB_BACKGROUND);
-//        p.setBounds(getSize().width / 2 - 155, 149, 310, 130);
-//        this.add(p);
-//
-//        /* personalinfo label */
-//        l = new JLabel(TextMapper.getText(TextMapper.GUIP_PERSONALINFO) + ":");
-//        l.setForeground(GuiConstants.RED_COLOR);
-//        l.setFont(GuiConstants.RED_TEXT);
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
-//        p.add(l);
-//
-//        /* Firstname label */
-//        l = new JLabel(TextMapper.getText(TextMapper.GUIP_FIRSTNAME) + ":");
-//        l.setForeground(Color.black);
-//        l.setFont(GuiConstants.NORMAL_TEXT);
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setLocation(10, 30);
-//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-//        p.add(l);
-//
-//        /* Firstname field */
-//        firstname = new JTextField();
-//        firstname.setText(prop.getUser().getFirstname());
-//        firstname.setBounds(160, 28, 120, 20);
-//        p.add(firstname);
-//
-//        /* Firstname mandatory label */
-//        l = createMandatoryLabel();
-//        l.setLocation(285, 28);
-//        p.add(l);
-//
-//        /* Middlename label */
-//        String middleNameLabel = TextMapper.getText(TextMapper.GUIP_MIDDLENAME);
-//        l = new JLabel(middleNameLabel + ":");
-//        l.setForeground(Color.black);
-//        l.setFont(GuiConstants.NORMAL_TEXT);
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setLocation(10, 55);
-//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-//        p.add(l);
-//
-//        /* Middlename field */
-//        middlename = new JTextField();
-//        middlename.setText(prop.getUser().getMiddlename());
-//        middlename.setBounds(160, 53, 120, 20);
-//        p.add(middlename);
-//// skip middlename for languages that do not support it.
-//        boolean visible = prop.getUser().getMiddlename().length() > 0 || middleNameLabel.length() > 0;
-//        middlename.setVisible(visible);
-//        l.setVisible(visible);
-//        int v = visible ? 0 : 25;
-//
-//
-//        /* Lastname label */
-//        l = new JLabel(TextMapper.getText(TextMapper.GUIP_LASTNAME) + ":");
-//        l.setForeground(Color.black);
-//        l.setFont(GuiConstants.NORMAL_TEXT);
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setLocation(10, 80 - v);
-//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-//        p.add(l);
-//
-//        /* Lastname field */
-//        lastname = new JTextField();
-//        lastname.setText(prop.getUser().getLastname());
-//        lastname.setBounds(160, 78 - v, 120, 20);
-//        p.add(lastname);
-//
-//        /* Lastname mandatory label */
-//        l = createMandatoryLabel();
-//        l.setLocation(285, 78 - v);
-//        p.add(l);
-//
-//        /* Email label */
-//        l = new JLabel(TextMapper.getText(TextMapper.GUIP_EMAIL) + ":");
-//        l.setForeground(Color.black);
-//        l.setFont(GuiConstants.NORMAL_TEXT);
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setLocation(10, 105 - v);
-//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-//        p.add(l);
-//
-//        /* Email field */
-//        email = new JTextField();
-//        email.setText(prop.getUser().getEmail());
-//        email.setBounds(160, 103 - v, 120, 20);
-//        p.add(email);
-//
-//        /* Email mandatory label */
-//        l = createMandatoryLabel();
-//        l.setLocation(285, 103 - v);
-//        p.add(l);
-//        Container c = p;
-//
-//        addButtonsPanel(c);
-//    }
-//
-//    /**
-//     * This method adds a button panel under the last panel. <BR>
-//     *
-//     * @param p2 The panel where under this panel must appear.
-//     */
-//    protected void addButtonsPanel(Container p2) {
-//        /* Add Button-panel */
-//        FontMetrics fm;
-//
-//        int locationY = p2.getSize().height + p2.getLocation().y
-//                - 1;
-//        JPanel p = new JPanel(null);
-////        p.setBorder(BorderFactory.createLineBorder(getForeground()));
-//        p.setBackground(GuiConstants.SUB_BACKGROUND);
-//        p.setBounds(getSize().width / 2 - 155, locationY, 310, 35);
-//        this.add(p);
-//
-//        /* Change button */
-//        changeButton = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_SAVE));//, GuiConstants.SUB_BACKGROUND);
-//        //fm = changeButton.getFontMetrics(changeButton.getFont());
-//        //changeButton.setSize(fm.stringWidth(changeButton.getLabel()) + 20, fm.getHeight() + 10);
-//        changeButton.setSize(changeButton.getPreferredSize());
-//        /* Reset button */
-//        resetButton = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_RESET));//, GuiConstants.SUB_BACKGROUND);
-//        //fm = resetButton.getFontMetrics(resetButton.getFont());
-//        //resetButton.setSize(fm.stringWidth(resetButton.getLabel()) + 20, fm.getHeight() + 10);
-//        resetButton.setSize(resetButton.getPreferredSize());
-//        changeButton.setLocation((p.getSize().width / 2)
-//                - ((changeButton.getSize().width + resetButton.getSize().width + 5) / 2), 5);
-//        p.add(changeButton);
-//
-//        resetButton.setLocation((p.getSize().width / 2)
-//                - ((changeButton.getSize().width + resetButton.getSize().width + 5) / 2)
-//                + changeButton.getSize().width + 5, 5);
-//        p.add(resetButton);
-//
-//        deleteButton = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_DELETE_PROFILE));//, GuiConstants.MAIN_BACKGROUND);
-//        //fm = deleteButton.getFontMetrics(deleteButton.getFont());
-//        //deleteButton.setSize(fm.stringWidth(deleteButton.getLabel()) + 20, fm.getHeight() + 10);
-//        deleteButton.setSize(deleteButton.getPreferredSize());
-//        deleteButton.setLocation(getSize().width / 2
-//                - deleteButton.getSize().width / 2, p.getLocation().y
-//                + p.getSize().height + 10);
-//        this.add(deleteButton);
-//
-//        changeButton.addActionListener(this);
-//        resetButton.addActionListener(this);
-//        // delete user alleen als:
-//        // user is read/write
-//        // user kan uitloggen
-//        // user heeft geen school (nieuw (17/5/13)
-//        // user mag van klas veranderen.
-//        deleteButton.addActionListener(this);
-//    }
-//
-//    /**
-//     * Creates a new label with a asterisk. It can be used to indicate that a
-//     * field is mandatory.
-//     *
-//     * @return A label with the caption of a asterisk.
-//     */
-//    private JLabel createMandatoryLabel() {
-//        JLabel mandatoryLabel = new JLabel("*");
-//        mandatoryLabel.setForeground(GuiConstants.RED_COLOR);
-//        mandatoryLabel.setFont(GuiConstants.RED_TEXT);
-//        FontMetrics fm = mandatoryLabel.getFontMetrics(mandatoryLabel.getFont());
-//        mandatoryLabel.setSize(fm.stringWidth(mandatoryLabel.getText()) + 5, fm.getHeight());
-//        return mandatoryLabel;
-//    }
-//
-//    /**
-//     * Invoked when an action occurs.
-//     *
-//     * @param e The ActionEvent.
-//     * @see
-//     * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-//     */
-//    @Override
-//    public void actionPerformed(ActionEvent e) {
-//        if (e.getSource() == resetButton) {
-//            /* Reset all the fields */
-//            oldpassword.setText("");
-//            password.setText("");
-//            repassword.setText("");
-//            firstname.setText(prop.getUser().getFirstname());
-//            middlename.setText(prop.getUser().getMiddlename());
-//            lastname.setText(prop.getUser().getLastname());
-//            email.setText(prop.getUser().getEmail());
-//
-//        } else if (e.getSource() == changeButton) {
-//            if (prop.getUser().getPasswd().equals(MD5.getHashString(oldpassword.getText()))) {
-//                //update the data
-//                try {
-//                    prop.getUser().setFirstname(firstname.getText());
-//                    prop.getUser().setMiddlename(middlename.getText());
-//                    prop.getUser().setLastname(lastname.getText());
-//                    prop.getUser().setEmail(email.getText());
-//                    prop.Update();
-//                    if (!password.getText().equals("")
-//                            && repassword.getText().equals(password.getText())) {
-//                        //updates password following some logic.
-//                        prop.getUser().setPasswd(MD5.getHashString(password.getText()));
-//                    } else {
-//                        GuiCreator.instance().ShowMessageToUser(this, TextMapper.getText(TextMapper.EXR_WRONG_SECOND_PASSWORD), TextMapper.getText(TextMapper.GUIP_ERR_CHANGE), JOptionPane.ERROR_MESSAGE);
-//                    }
-//                    prop.Update();
-//                    GuiCreator.instance().ShowMessageToUser(this, TextMapper.getText(TextMapper.DLG_CONFIRM), TextMapper.getText(TextMapper.DLG_CONFIRM), JOptionPane.INFORMATION_MESSAGE);
-//                }
-//                catch (Dwo2RestException ex) {
-//                    GuiCreator.instance().ShowMessageToUser(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIP_ERR_CHANGE), JOptionPane.ERROR_MESSAGE);
-//                }
-//            } else {
-//                GuiCreator.instance().ShowMessageToUser(this, TextMapper.getText(TextMapper.EXR_WRONG_USERNAME_PASSWORD), TextMapper.getText(TextMapper.GUIP_ERR_CHANGE), JOptionPane.ERROR_MESSAGE);
-//            }
-//        } //
-//        //
-//        //            if (correct) {
-//        //                /*
-//        //                 * The data is changed correctly, show a message for
-//        //                 * successfully changed data in a dialog
-//        //                 */
-//        //                try {
-//        //                    JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIP_MSG_PROFILE_CHANGED));
-//        //                    /* Evil trick to refresh user info */
-//        //                    if (password.getText().equals("")) {
-//        //                        // TODO this erases the canLogout flag.
-//        //                        GuiCreator.instance().clearCurrentUserData();
-//        //                        GuiCreator.instance().login(user.getUsername(), oldpassword.getText());
-//        //                    } else {
-//        //                        GuiCreator.instance().clearCurrentUserData();
-//        //                        GuiCreator.instance().login(user.getUsername(), password.getText());
-//        //                    }
-//        //                }
-//        //                catch (LoginException exc) {
-//        //                    JOptionPane.showMessageDialog(this, exc.getMessage(), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
-//        //
-//        //                }
-//        //            }
-//        //
-//        else if (e.getSource() == deleteButton) {
-//            /* Delete the user account */
-//            if (JOptionPane.showConfirmDialog(this, TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER)
-//                    + "?", TextMapper.getText(TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-//                GuiCreator.instance().deleteUser();
-//            }
-//        }
-//    }
+
+//    protected User user;
+    private JPanelSchoolsandRolesProperties prop = new JPanelSchoolsandRolesProperties();
+    private static final Logger LOG = Logger.getLogger(AccountSchoolRolesJPanel.class.getName());
+
+    /**
+     * Creates a new ProfilePanel for the current user. The account of the
+     * current user can be changed.
+     *
+     */
+    public AccountSchoolRolesJPanel() {
+        //fetch user details.
+        try {
+            prop.init();
+        }
+        catch (Dwo2Exception e) {
+            LOG.log(Level.SEVERE, "Can't retrieve initial user settings.", e);
+            GuiCreator.instance().ShowMessageToUser(this, e.getLocalizedCodeExplanation(DwoHelper.getLocale()), "", JOptionPane.ERROR_MESSAGE);
+        }
+
+        //init gui
+        
+        
+        
+    }
 
 }

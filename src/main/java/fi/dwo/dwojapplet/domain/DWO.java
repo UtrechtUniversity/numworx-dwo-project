@@ -226,24 +226,24 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         //assign properties to static value.
         String serverUrlPathProperty = properties.getProperty("serverUrlPath");
         DwoHelper.setServerUrlPath(new URL(serverUrlPathProperty));
-        LOG.log(Level.FINE, "Property {0} is value: {1}", new Object[]{"setServerUrlPathString",
+        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"setServerUrlPathString",
             DwoHelper.getServerUrlPath()});
 
         //if not set pick default path
         String resourceURLPathStringProperty = properties.getProperty("resourceUrlPath", (new URL(DwoHelper.getServerUrlPath(),"resources")).toString());
         DwoHelper.setResourceUrlPath(new URL(resourceURLPathStringProperty));
-        LOG.log(Level.FINE, "Property {0} is value: {1}", new Object[]{"resourceURLPathStringProperty",
+        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"resourceURLPathStringProperty",
             DwoHelper.getResourceUrlPath()});
 
         //if not set pick default path
         String jarURLPathStringProperty = properties.getProperty("jarUrlPath",(new URL(DwoHelper.getServerUrlPath(),"jars")).toString());
         DwoHelper.setJarUrlPath(new URL(jarURLPathStringProperty));
-        LOG.log(Level.FINE, "Property {0} is value: {1}", new Object[]{"jarURLPathStringProperty",
+        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"jarURLPathStringProperty",
             DwoHelper.getJarUrlPath()});
         
         
         String xmlrpc_debug = properties.getProperty("xmlrpc.debug", "false");
-        LOG.log(Level.FINE, "Property {0} is value: {1}", new Object[]{"xmlrpc.debug", xmlrpc_debug});
+        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"xmlrpc.debug", xmlrpc_debug});
         MySimpleXmlRpcClient.setDebug("true".equals(xmlrpc_debug));
         
     }
@@ -456,6 +456,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
      * @throws fi.dwo.commons.exceptions.LoginException
      *
      */
+    @Override
     public boolean loginWithMd5(String username, String password)
             throws LoginException {
         String plainPassword = DwoHelper.getPlainPassword();

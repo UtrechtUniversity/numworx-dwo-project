@@ -36,36 +36,41 @@ public class RegistrationManager {
      * @param existingUserReg
      * @return
      */
-    public static boolean RegisterExistingUser(NewUserRegistration existingUserReg) throws Dwo2RestException {
+    public static boolean RegisterExistingUser(KnownUserRegistration existingUserReg) throws Dwo2Exception {
         boolean r;
-        //login to rest service, note there is usually not yet be a fully configured StoredRestManager.
-        HttpAuthenticationFeature feature = HttpAuthenticationFeature.universalBuilder().credentialsForDigest(existingUserReg.getUsername(), existingUserReg.getPassword()).build();
-        Client client = ClientBuilder.newClient().register(feature);
+        r = StoredRestManager.getInstance().put("/rest/secure/registration/existingUser/json", Boolean.class, existingUserReg);
 
-        Response response = client.target(DwoHelper.getServerUrlPath().toString())
-                .path("/rest/secure/registration/existingUser/json")
-                .request().put(Entity.entity(existingUserReg, MediaType.APPLICATION_JSON));
-        if (response.getStatus() != 200) {
-            // failed login
-            String json = (String) response.readEntity(String.class);
-            //response.getEntity();
-//            throw Dwo2Exception()
-            Dwo2RestException e;
-            if (response.getStatus() == 400) {
-                e = new Dwo2RestException(Dwo2RestException.decodeCodeInJSON(json), Dwo2RestException.decodeMessageInJSON(json));
-                LOG.log(Level.INFO, "Status {0}, Reason {1}, entity {2}, for user {3}.", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase(), json, existingUserReg.getUsername()});
-            } else {
-                e = new Dwo2RestException(Dwo2ExceptionCode.Rest_InterfaceError, response.getStatusInfo().getReasonPhrase());
-                LOG.log(Level.INFO, "Status {0}, Reason {1}, for user {3}.", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase(), existingUserReg.getUsername()});
-            }
-            throw e;
-        } else {
-            //Set return value
-            r = response.readEntity(Boolean.class);
-            // succeeded login
-            LOG.log(Level.INFO, "Registered new role for username {0}.", new Object[]{existingUserReg.getUsername()});
-        }
         return r;
+
+//        boolean r;
+//        //login to rest service, note there is usually not yet be a fully configured StoredRestManager.
+//        HttpAuthenticationFeature feature = HttpAuthenticationFeature.universalBuilder().credentialsForDigest(DwoHelper.getCurrentUser().getUsername(), DwoHelper.getCurrentUser().getPasswd()).build();
+//        Client client = ClientBuilder.newClient().register(feature);
+//
+//        Response response = client.target(DwoHelper.getServerUrlPath().toString())
+//                .path("/rest/secure/registration/existingUser/json")
+//                .request().put(Entity.entity(existingUserReg, MediaType.APPLICATION_JSON));
+//        if (response.getStatus() != 200) {
+//            // failed login
+//            String json = (String) response.readEntity(String.class);
+//            //response.getEntity();
+////            throw Dwo2Exception()
+//            Dwo2RestException e;
+//            if (response.getStatus() == 400) {
+//                e = new Dwo2RestException(Dwo2RestException.decodeCodeInJSON(json), Dwo2RestException.decodeMessageInJSON(json));
+//                LOG.log(Level.INFO, "Status {0}, Reason {1}, entity {2}, for user {3}.", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase(), json, DwoHelper.getCurrentUser().getUsername()});
+//            } else {
+//                e = new Dwo2RestException(Dwo2ExceptionCode.Rest_InterfaceError, response.getStatusInfo().getReasonPhrase());
+//                LOG.log(Level.INFO, "Status {0}, Reason {1}, for user {3}.", new Object[]{response.getStatus(), response.getStatusInfo().getReasonPhrase(), DwoHelper.getCurrentUser().getUsername()});
+//            }
+//            throw e;
+//        } else {
+//            //Set return value
+//            r = response.readEntity(Boolean.class);
+//            // succeeded login
+//            LOG.log(Level.INFO, "Registered new role for username {0}.", new Object[]{DwoHelper.getCurrentUser().getUsername()});
+//        }
+//        return r;
     }
 
 }

@@ -1,10 +1,9 @@
 package fi.dwo.dwojapplet.gui;
 
-import fi.dwo.commons.exceptions.Dwo2RestException;
+import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentRole;
-import fi.dwo.commons.rest.entities.NewUserRegistration;
-import fi.dwo.commons.system.MD5;
+import fi.dwo.commons.rest.entities.KnownUserRegistration;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Group;
@@ -346,14 +345,8 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
         if (e.getSource() == registerButton) {
             if ((groupChoice.getSelectedIndex() == 0) && (schoollogin.getText().equals("")) && (schoolpassword.getText().equals(""))) {
                 try {
-                    NewUserRegistration nur = new NewUserRegistration();
+                    KnownUserRegistration nur = new KnownUserRegistration();
 
-                    nur.setUsername(username.getText());
-                    nur.setPassword(MD5.getHashString(password.getText()));
-                    nur.setGivenName(firstname.getText());
-                    nur.setInsertion(middlename.getText());
-                    nur.setFamilyName(lastname.getText());
-                    nur.setEmail(email.getText());
                     nur.setSchoolLogin(null);
                     nur.setSchoolCode(null);
                     nur.setRole(DwoHelper.getRoles().get(RoleType.NOSCHOOL.ordinal()));
@@ -361,7 +354,7 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
                     JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                     GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
                 }
-                catch (Dwo2RestException ex) {
+                catch (Dwo2Exception ex) {
                     JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 }
             } else {
@@ -370,9 +363,7 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
                     role = DwoHelper.getRoles().get(groupChoice.getSelectedIndex() - 1);
                 }
                 try {
-                    NewUserRegistration nur = new NewUserRegistration();
-                    nur.setUsername(username.getText());
-                    nur.setPassword(MD5.getHashString(password.getText()));
+                    KnownUserRegistration nur = new KnownUserRegistration();
                     nur.setRole(role);
                     nur.setSchoolLogin(schoollogin.getText());
                     nur.setSchoolCode(schoolpassword.getText());
@@ -380,7 +371,7 @@ public class RegisterKnownUserPanel extends ContentPanel implements ActionListen
                     JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                     GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
                 }
-                catch (Dwo2RestException ex) {
+                catch (Dwo2Exception ex) {
                     JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                 }
 

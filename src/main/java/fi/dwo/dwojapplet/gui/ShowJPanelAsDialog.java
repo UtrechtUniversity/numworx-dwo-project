@@ -9,7 +9,8 @@ import java.awt.Toolkit;
 import javax.swing.JDialog;
 
 /**
- *
+ * Shows a JPanel in a JDialog. For component reuse.
+ * 
  * @author Gert van der Plas
  */
 public class ShowJPanelAsDialog extends JDialog {
