@@ -19,6 +19,7 @@
 <%@ page import="javax.servlet.http.HttpServletRequest" %>
 <%@ page import="java.util.Enumeration" %>
 <%@ page import="java.net.URLEncoder" %>
+<%@ page import="java.net.URL" %>
 <%@ page import="net.oauth.OAuth" %>
 <%@ page import="net.oauth.OAuthMessage" %>
 <%@ page import="net.oauth.OAuthConsumer" %>
@@ -30,11 +31,18 @@
 <%@ page import="net.oauth.server.OAuthServlet" %>
 <%@ page import="net.oauth.signature.OAuthSignatureMethod" %>
 <%@ page import="fi.servlet.lti.DbAccess" %>
-<%!
-	private DbAccess dbAccess = new DbAccess(
-			//new DbAccessLocal() // for testing in with local mysql
-	);
+<%@ page import="fi.servlet.dwomaccess.DbAccessFactory" %>
 
+<%!
+	private DbAccess instance;
+
+	private DbAccess getDbAccess() {
+		if(instance == null) {
+			instance = new DbAccess(DbAccessFactory.getDbAccess(getServletContext()));
+		}
+		return instance;
+	}
+					
 	private void doReturn(HttpServletRequest request, HttpServletResponse response, 
         String s, JspWriter out)
 		throws java.io.IOException
@@ -73,7 +81,7 @@
     return;
   }
   OAuthConsumer cons = null;
-  String secret = dbAccess.getSecret(oauth_consumer_key);
+  String secret = getDbAccess().getSecret(oauth_consumer_key);
   if ( secret != null ) {
     cons = new OAuthConsumer("about:blank", oauth_consumer_key, secret, null);
   } else {
@@ -111,8 +119,10 @@
   	if(height == null || height.isEmpty()) height="100%";
   	
 // 	<param name="SERVLET" value="/servlet/fi.dwo.server.persistence.DbAccessServlet" >
-
-  	dbAccess.setCookie(request, response);
+	
+	String servlet = getServletContext().getInitParameter("SERVLET");
+	String ideas   = getServletContext().getInitParameter("IDEAS");
+  	getDbAccess().setCookie(request, response);
 %>
 <applet
 	code="fi.dwo.client.domain.DWO"
@@ -132,7 +142,9 @@
 	<param name="profile" value="<%= profile %>" >
 	<param name='cookies' value='false' >
 	<param name='logoutURL' value="<%=logoutURL %>" >
-	<%= dbAccess.getDeepLink(request.getPathInfo()) %>
+	<param name="SERVLET" value="<%=servlet %>" >
+	<param name="IDEAS" value="<%=ideas %>">
+	<%= getDbAccess().getDeepLink(request.getPathInfo()) %>
 </applet>
 </body>
 </html>

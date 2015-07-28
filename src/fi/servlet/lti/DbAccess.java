@@ -27,12 +27,6 @@ public class DbAccess {
 		this.dbaccess = dbaccess;
 		DbAccessCreator.setInstance(dbaccess);
 	}
-
-	public DbAccess() {
-//		dbaccess = new fi.dwo.server.persistence.DbAccess();
-//		DbAccessCreator.setInstance(dbaccess);
-		dbaccess = DbAccessCreator.instance();
-	}
 	
 	DbAccessIF dbaccess;
 	

@@ -28,11 +28,6 @@ public class ServiceServlet extends HttpServlet {
   		out.println(output);
 	}
 
-	@Override
-	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
-	}
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 		throws ServletException, IOException 
 	{

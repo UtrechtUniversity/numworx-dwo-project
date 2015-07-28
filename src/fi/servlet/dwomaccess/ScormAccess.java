@@ -1,6 +1,7 @@
 package fi.servlet.dwomaccess;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -9,12 +10,14 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import fi.beans.scorm.ScormAdapter;
 import fi.beans.xmlrpc.Servlet;
+import fi.dwo.client.persistence.DbAccessClient;
 import fi.dwo.client.persistence.DbAccessCreator;
 import fi.dwo.client.persistence.DbAccessIF;
 
@@ -54,8 +57,10 @@ public class ScormAccess extends Servlet implements ScormAccessIF {
 		return CONVERT.getProperty(key, key);
 	}
 	
-	
-	DbAccessIF access = DbAccessCreator.instance();
+	public void init() {
+		access = DbAccessFactory.getDbAccess(getServletContext());
+	}
+	private DbAccessIF access;
 	
 	public boolean Commit(int userID, int scoID, Hashtable map) throws Exception {
 		

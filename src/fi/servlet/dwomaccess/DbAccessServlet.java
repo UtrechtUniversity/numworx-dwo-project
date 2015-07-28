@@ -1,22 +1,26 @@
 package fi.servlet.dwomaccess;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Enumeration;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import fi.beans.xmlrpc.Servlet;
-import fi.dwo.client.persistence.DbAccessCreator;
-import fi.dwo.server.persistence.DbAccessLocal;
 
 public class DbAccessServlet extends Servlet {
 
 	public DbAccessServlet() {
-		super(DbAccessCreator.instance());
+		super(null);
 	}
-
+	
+	public void init() {
+		setHandler(DbAccessFactory.getDbAccess(getServletContext()));
+	}
+	
 	/* (non-Javadoc)
 	 * @see javax.servlet.http.HttpServlet#doOptions(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
