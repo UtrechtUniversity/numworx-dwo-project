@@ -68,7 +68,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		init(html, launchdata, randomVarNamen, randomVarWaarden);
 	}
 
-	static String getLocale() {
+	public static String getLocale() {
 		String locale;
 		locale = LocaleInfo.getCurrentLocale().getLocaleName();
 		String query = Window.Location.getQueryString();

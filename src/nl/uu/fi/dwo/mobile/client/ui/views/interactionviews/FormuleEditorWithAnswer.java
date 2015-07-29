@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,8 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.AutoHidePopupPanel;
 import nl.uu.fi.dwo.mobile.utils.ImageUtils;
+import nl.uu.fi.dwo.mobile.utils.LaTransport;
+import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
 
@@ -34,6 +37,7 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.CanvasGradient;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Cursor;
@@ -216,6 +220,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private boolean boxMetRand = true;
 	private int goedHalfFout = AntwoordVakChecker.FOUT;
 	private FacetHelper facet;
+	private Logging logging;
 	
 	private TekstRegel parentRegel;
 	private FormuleEditorPopup fews;
@@ -281,7 +286,13 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				{
 					teltMee = launchState.getBoolean("teltMee");
 				}
-			
+				if(launchState.getBoolean("logOption", false)) {
+					logging = new LaTransport(); // GWT.create(Logging.class);
+					logging.setLogID( launchState.getString("logID"));
+					logging.setClassName("fi.wiskOpdr.SimpelAntwoordFormuleVak");
+				}
+				
+				
 				if(launchState.containsKey("formuleToolBijFocus"))
 					setFormuleToolBijFocus(launchState.getBoolean("formuleToolBijFocus"));
 			
@@ -638,7 +649,18 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		else
 			kijkNa(false, true, false);
 		if(comRoot != null) // alleen niet null als fewa een toplevel is.
+		{
 			comRoot.fireEvent(new CBookEvent(this, "input", toString()));
+			if(logging != null) {
+				Map<String, Object> map = new HashMap<String,Object>();
+				map.put("response", "<math xmlns='http://www.w3.org/1998/Math/MathML'>" + getMainRegel().toMathML() + "</math>");
+				map.put("score", Collections.singletonMap("raw", getScore()));
+				if(correct != null) {
+					map.put("success", correct);
+				}
+				logging.log(map);
+			}
+		}
 		else if( fe != null) {
 			fe.fire("input", toString());
 		}
@@ -1043,6 +1065,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		comRoot.addCBookEventListener("input", this);
 		comRoot.addCBookEventListener("index", this);
+		if(logging != null) 
+			logging.setCommunicationRoot(comRoot);
 	}
 
 	@Override
