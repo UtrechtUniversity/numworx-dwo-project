@@ -22,6 +22,7 @@
     <servlet>
         <description>Servlet voor het genereren van de dwo.html paginaServlet voor het genereren van de dwo.html pagina</description>
         <servlet-name>DwoWebPage</servlet-name>
+        <load-on-startup>0</load-on-startup>
         <servlet-class>fi.dwo.server.persistence.DwoWebPageServlet</servlet-class>
         <!-- note that these parameters can be overridden in the server context.xml and hence should have reverse domain/package naming prefix -->
         <init-param>
@@ -40,6 +41,7 @@
     <servlet>
         <description>Datasource servlet</description>
         <servlet-name>xmlrpc</servlet-name>
+        <load-on-startup>0</load-on-startup>
         <servlet-class>fi.dwo.server.persistence.DataSourceAccessServlet</servlet-class>
         <init-param>
             <param-name>datasource</param-name>
@@ -64,6 +66,7 @@
     </servlet>
     <servlet>
         <servlet-name>jersey-servlet</servlet-name>
+        <load-on-startup>0</load-on-startup>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>    
         <init-param>
             <param-name>jersey.config.server.provider.packages</param-name>
