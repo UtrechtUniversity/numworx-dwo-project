@@ -23,39 +23,10 @@ public class AccountPanel extends JPanel implements CenterSubPanel,
 
     private CenterPanel center;
     private AccountDataJPanel accountDataPanel;
-    private JPanelSchoolsAndRoles sarPanel;
+    private AccountSchoolRolesJPanel sarPanel;
     private RegisterMoreSchoolsPanel rmsPanel = new RegisterMoreSchoolsPanel();
     
-//
-//    protected SchoolClass classList[];
-//
-//    protected JPasswordField oldpassword;
-//
-//    protected JPasswordField password;
-//
-//    protected JPasswordField repassword;
-//
-//    protected JTextField firstname;
-//
-//    protected JTextField middlename;
-//
-//    protected JTextField lastname;
-//
-//    protected JTextField email;
-//
-//    protected JTextField schoollogin;
-//
-//    private JPasswordField schoolpassword;
-//
-//    protected JButton changeButton;
-//
-//    protected JButton resetButton;
-//
-//    protected JButton deleteButton;
-//
-//    private JComboBox groupChoice;
-//
-//    protected User user;
+
 
 /**
      * Creates a new ProfilePanel for the current user. The account of the
@@ -96,7 +67,7 @@ public class AccountPanel extends JPanel implements CenterSubPanel,
 
         /* Add schoolrole-panel */
 //        l = new RegisterMoreSchoolsPanel(groups);
-          sarPanel = new JPanelSchoolsAndRoles();
+          sarPanel = new AccountSchoolRolesJPanel();
 //        l.setBorder(BorderFactory.createLineBorder(getForeground()));
         sarPanel.setBackground(GuiConstants.SUB_BACKGROUND);
         //      p.setBounds(getSize().width / 2 - 155, 20, 310, 130);
