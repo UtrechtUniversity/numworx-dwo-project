@@ -131,7 +131,8 @@ window.inner = {
 			$('user_id').value = $wnd.getLearnerId($wnd.outer);
 			learnername = $wnd.getLearnerName($wnd.outer); // FIXME Last, Given -> Given Last
 			$('lis_person_name_full').value = learnername
-
+			$('roles').value = $wnd.getRole($wnd.outer);
+			
 			$("custom_launch_data").value = launchdata
 			$("custom_randomvalues").value = randomvalues
 			$("custom_context").value = context
@@ -197,7 +198,7 @@ oauth_consumer_key<input name='oauth_consumer_key' id='oauth_consumer_key' value
 <input name='oauth_version' value='1.0'  type='hidden'>
 
 resource_link_id<input name='resource_link_id' id='resource_link_id' value='000000-0-000000' ><br>
-<input name='roles' value='Learner' type='hidden' >
+roles<input name='roles' value='Learner' id='roles' > <br>
 user_id<input name='user_id' id='user_id' value='guest' > <br>
 oauth_signature<input name='oauth_signature' id='oauth_signature' value='?' ><br>
 </form>

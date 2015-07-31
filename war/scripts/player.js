@@ -112,12 +112,17 @@
     }
     
     function onBoot(topic, xwid) {
-    	onBootstrap(topic,xwid);
+    	onBootstrap(topic,xwid );
     	this.publish(xwid + ".setState", window.cmi.suspend_data[xwid]|| {})
     }
     
+    function onLogOption(topic, map ) {
+    	var xwid = map.source;
+    	bootstrap[xwid](topic, map) 
+    }
+    
     function onBootstrap(topic, xwid) {
-    	bootstrap[xwid](topic, xwid);
+    	bootstrap[xwid](topic, {'source': map } );
     }
     
     
@@ -136,3 +141,4 @@
     managedHub.subscribe('*.checked', onCheck)
     managedHub.subscribe('*.changed', onCheck)
     managedHub.subscribe('bootstrap', onBootstrap)
+    managedHub.subscribe('*.logOption', onLogOption)

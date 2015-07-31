@@ -287,11 +287,10 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 					teltMee = launchState.getBoolean("teltMee");
 				}
 				if(launchState.getBoolean("logOption", false)) {
-					logging = new LaTransport(); // GWT.create(Logging.class);
+					logging = DWOplayer.PARAMETERS.getLogging();
 					logging.setLogID( launchState.getString("logID"));
 					logging.setClassName("fi.wiskOpdr.SimpelAntwoordFormuleVak");
 				}
-				
 				
 				if(launchState.containsKey("formuleToolBijFocus"))
 					setFormuleToolBijFocus(launchState.getBoolean("formuleToolBijFocus"));

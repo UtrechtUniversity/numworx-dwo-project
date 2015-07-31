@@ -8,6 +8,8 @@ import nl.uu.fi.dwo.mobile.client.ui.NavigationTextIpad;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.views.ScoreNavFacade;
+import nl.uu.fi.dwo.mobile.utils.Logging;
+import nl.uu.fi.dwo.mobile.utils.NoLogging;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Window;
@@ -111,5 +113,10 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 	@Override
 	public ScoreNavIF getScoreNav() {
 		return new ScoreNavFacade();
+	}
+	
+	@Override
+	public Logging getLogging() {
+		return NoLogging.instance;
 	}
 }

@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.mobile.utils;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,10 +25,13 @@ import com.google.gwt.user.client.Window;
 
 public class LaTransport implements RequestCallback , Logging {
 
+	public static Logging newInstance() { 
+		return new LaTransport();		
+	}
 	
 	private static final DateTimeFormat FORMAT_8601 = DateTimeFormat.getFormat(PredefinedFormat.ISO_8601);
-	private static final String ENDPOINT = "http://193.61.36.32/logactions";
-	private static final String HOST = "lacon.lkl.ac.uk";
+	private static final String ENDPOINT = "http://lacon.lkl.ac.uk/logactions";
+	//private static final String HOST = "lacon.lkl.ac.uk";
 	private static final int TIMEOUT_MS = 10000;
 	private Logger logger = Logger.getLogger(getClass().getName());
 	private OpdrNavIF comRoot;
@@ -76,17 +78,13 @@ public class LaTransport implements RequestCallback , Logging {
 		}
 	}
 	
-	public LaTransport(OpdrNavIF root) {
-		comRoot = root;
-	}
-
-	public LaTransport() {
+	private LaTransport() {
 	}
 
 	public void send0( JSONObject object) {
 		RequestBuilder requestBuilder = new RequestBuilder(
 				RequestBuilder.POST, ENDPOINT);
-		requestBuilder.setHeader("Host", HOST);
+		//requestBuilder.setHeader("Host", HOST); // not allowed in Chrome.
 		requestBuilder.setHeader("Content-Type", "application/json");
 		requestBuilder.setTimeoutMillis(TIMEOUT_MS);
 		String requestData = object.toString();
@@ -113,10 +111,10 @@ public class LaTransport implements RequestCallback , Logging {
 		JSONObject msg = new JSONObject();
 		JSONObject actor = new JSONObject();
 		JSONObject account = new JSONObject();
-		account.put("name", new JSONString(comRoot.getLearnerId()));
+		account.put("name", new JSONString(getLearnerId()));
 		account.put("homePage", new JSONString(getHomePage()));
 		actor.put("account", account);
-		actor.put("name", new JSONString(comRoot.getLearnerName()));
+		actor.put("name", new JSONString(getLearnerName()));
 		msg.put("actor", actor);
 		
 		JSONObject object = new JSONObject();
@@ -142,6 +140,20 @@ public class LaTransport implements RequestCallback , Logging {
 		msg.put("context", context);
 		return msg;
 		
+	}
+
+	private String getLearnerName() {
+		String learnerName = comRoot.getLearnerName();
+		if(learnerName == null || learnerName.isEmpty())
+			return "Guest, Anonymous";
+		return learnerName;
+	}
+
+	private String getLearnerId() {
+		String learnerId = comRoot.getLearnerId();
+		if(null == learnerId || learnerId.isEmpty())
+			return "guest";
+		return learnerId;
 	}
 
 	private String getHomePage() {

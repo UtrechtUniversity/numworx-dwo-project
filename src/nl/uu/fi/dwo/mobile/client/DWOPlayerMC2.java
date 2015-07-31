@@ -1,5 +1,8 @@
 package nl.uu.fi.dwo.mobile.client;
 
+import nl.uu.fi.dwo.mobile.utils.LaTransport;
+import nl.uu.fi.dwo.mobile.utils.Logging;
+
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Window;
 
@@ -32,6 +35,11 @@ public class DWOPlayerMC2 extends DWOplayerDefaults implements DWOplayerParamete
 	@Override
 	public String getResource(String resource) {
 		return getStubView() + super.getResource(resource);
+	}
+
+	@Override
+	public Logging getLogging() {
+		return LaTransport.newInstance();
 	}
 
 	

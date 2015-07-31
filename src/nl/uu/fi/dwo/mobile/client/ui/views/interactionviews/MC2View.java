@@ -11,6 +11,8 @@ import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
+import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 import com.google.gwt.canvas.dom.client.CssColor;
@@ -19,6 +21,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.i18n.client.Dictionary;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Frame;
@@ -29,6 +32,7 @@ public class MC2View extends Composite implements InteractionView {
 
 	private static final Logger LOGGER = java.util.logging.Logger.getLogger("MC2View");
 	public static final String CROSS_WIDGET_ID = "crossWidgetId";
+	private static final String LOG_ID = "logID";
 
 	private static native JavaScriptObject createIframe(String id, int width, int height, String locale, String relay)
 	/*-{
@@ -42,15 +46,26 @@ public class MC2View extends Composite implements InteractionView {
 	
 	private static native void setBootstrap(String id, MC2View diz) /*-{
 		$wnd.setBootstrap(id, function(xwid, data) {
-			diz.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.MC2View::doOpenAjaxEvent(Ljava/lang/String;Ljava/lang/Object;)
+			diz.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.MC2View::doOpenAjaxEvent(Ljava/lang/String;Lcom/google/gwt/core/client/JavaScriptObject;)
 			(xwid, data);
 		})
 		
 	}-*/;
 	
 	
-	private void doOpenAjaxEvent(String topic, Object data) {
+	private Logging latransport = DWOplayer.PARAMETERS.getLogging();
+	
+	private void doOpenAjaxEvent(String topic, JavaScriptObject data) {
 		LOGGER.info("topic:" + topic + " ,data:" + data);
+		
+		if(topic.endsWith(".logOption"))
+		{
+			JSONObject json = new JSONObject(data);
+			json = json.get("parameters").isObject();
+			latransport.log(JSONUtilities.wrapMap(json));
+		}
+			
+		
 	}
 	
 	private static native JavaScriptObject getIframe(JavaScriptObject o) /*-{
@@ -97,7 +112,9 @@ public class MC2View extends Composite implements InteractionView {
 		ObjectMap launchdata = JSONUtilities.wrapMap(h);
 		String id = launchdata.getString(CROSS_WIDGET_ID);
 		locale = StubView.getLocale();
-		relay = getAction(launchdata.getObjectMap("interactiePanelLaunchState").getString("className"));
+		ObjectMap launchState = launchdata.getObjectMap("interactiePanelLaunchState");
+		latransport.setLogID(launchState.getString(LOG_ID));
+		relay = getAction(launchState.getString("className"));
 		InlineHTML html = new InlineHTML();
 		html.getElement().setId(id);
 		initWidget(html);
@@ -223,6 +240,7 @@ public class MC2View extends Composite implements InteractionView {
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
+		latransport.setCommunicationRoot(comRoot);
 	}
 
 	@Override
@@ -269,7 +287,10 @@ public class MC2View extends Composite implements InteractionView {
 	}
 	wnd.getLessonMode = function (viewer) {
 		return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.MC2View::getLessonModeAsString()()
-	}	
+	}
+	wnd.getRole = function (viewer) {
+		return viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.MC2View::getRoleAsString()()
+	}
 	return wnd.inner;
 }-*/;
 
@@ -278,6 +299,7 @@ public class MC2View extends Composite implements InteractionView {
 	
 	String getAction(String name) 
 	{
+		latransport.setClassName(name);
 		try {
 			String action = actionMap.get(name);
 			if(action !=  null)
