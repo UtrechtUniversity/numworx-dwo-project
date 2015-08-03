@@ -49,7 +49,7 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
 
     private Image removeImage, loginImage;
 
-    private Box jtbl;
+    private JPanel jtbl;
 
     private static final int ASSIGN_COL = 3;
     private static final int REMOVE_COL = 4;
@@ -61,6 +61,7 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
      */
     public AccountSchoolRolesJPanel() {
         super(null);
+        this.setSize(320, 500);
 
         //fetch user details.
         try {
@@ -73,12 +74,10 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
 
         //init gui (old code)
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setAlignmentX(LEFT_ALIGNMENT);
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
-        //this.setSize(620, 485);
-        //this.setSize(600, 470);
-        //this.setPreferredSize(getSize());
-        setBorder(BorderFactory.createEmptyBorder(10, 30, 0, 0));
+        this.setAlignmentX(LEFT_ALIGNMENT);
+        this.setAlignmentY(TOP_ALIGNMENT);
+        setBorder(BorderFactory.createEmptyBorder(25, 25, 0, 0));
         /* Add Remove-class image */
         MediaTracker tr = new MediaTracker(this);
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
@@ -95,28 +94,30 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
         /* registerinfo label */
         JLabel l = new JLabel(TextMapper.getText(TextMapper.GUIP_REGISTERINFO) + ":");
         l.setAlignmentX(LEFT_ALIGNMENT);
+        l.setAlignmentY(TOP_ALIGNMENT);
         l.setForeground(GuiConstants.RED_COLOR);
         l.setFont(GuiConstants.RED_TEXT);
         FontMetrics fm = l.getFontMetrics(l.getFont());
         l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
-        this.add(l);
-        this.add(Box.createHorizontalGlue());
-
+        Box b = Box.createHorizontalBox();
+        b.add(l);
+        b.add(Box.createHorizontalGlue());
+        this.add(b);
         this.add(Box.createVerticalStrut(15));
         addRoleButton = new JButton(TextMapper.getText(TextMapper.GUIC_ADD_CLASS));
         addRoleButton.setSize(addRoleButton.getPreferredSize());
-        addRoleButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        addRoleButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
         buildJTable();
 
         //fm = addClassButton.getFontMetrics(addClassButton.getFont());
         addRoleButton.addActionListener(this);
         //addClassButton.setLocation(30, 10);
         addRoleButton.setVisible(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER));
-        addRoleButton.add(Box.createHorizontalGlue());
-        Box header = Box.createHorizontalBox();
-        header.add(addRoleButton);
-        header.add(Box.createHorizontalGlue());
-        this.add(header);
+        JPanel footer = new JPanel();
+        footer.setLayout(new BoxLayout(footer, BoxLayout.X_AXIS));
+        //footer.add(Box.createHorizontalGlue());
+        footer.add(addRoleButton);
+        this.add(footer);
 
     }
 
@@ -192,10 +193,10 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent event) {
-                        // note that we want to update the tableModel first!
-                        fireEditingStopped();
-                        //Let's check the selected col by the image and from the selected row value.
-                        if (value == loginImage) {
+            // note that we want to update the tableModel first!
+            fireEditingStopped();
+            //Let's check the selected col by the image and from the selected row value.
+            if (value == loginImage) {
 //            //get Table setting
 //                int col = tableModel.getSelectedColumn();
                 int row = tableModel.getSelectedRow();
@@ -249,7 +250,8 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
         }
 
         JTable jtable = new JTable();
-        jtbl = Box.createVerticalBox();
+        jtbl = new JPanel();
+        jtbl.setLayout(new BoxLayout(jtbl, BoxLayout.Y_AXIS));
         jtbl.add(jtable.getTableHeader());
         //addClassButton.setVisible(true);
         jtbl.add(jtable);

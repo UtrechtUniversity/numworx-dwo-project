@@ -2,17 +2,19 @@ package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Group;
-import fi.dwo.dwojapplet.gui.panels.JPanelSchoolsAndRoles;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 
 /**
- * This class is an Account panel. The panel has two sub panels that one for 
+ * This class is an Account panel. The panel has two sub panels that one for
  * managing account data and the other for managing school roles combinations.
  *
  * @author G.A.J. van der Plas
@@ -25,37 +27,33 @@ public class AccountPanel extends JPanel implements CenterSubPanel,
     private AccountDataJPanel accountDataPanel;
     private AccountSchoolRolesJPanel sarPanel;
     private RegisterMoreSchoolsPanel rmsPanel = new RegisterMoreSchoolsPanel();
-    
 
-
-/**
+    /**
      * Creates a new ProfilePanel for the current user. The account of the
      * current user can be changed.
      *
      * @param groups The possible groups wherefrom a user can be part of.
      */
     public AccountPanel(Group[] groups) {
-        this.init();    
-    }    
- 
+        this.init();
+    }
 
-/**
+    /**
      * Creates a new ProfilePanel for the current user. The account of the
      * current user can be changed.
      *
      * @param groups The possible groups wherefrom a user can be part of.
      */
     public AccountPanel() {
-        this.init();    
-    }    
-     
-    
+        this.init();
+    }
+
     public void init() {
 //        user = GuiCreator.instance().getUser();
 //        groupList = groups;
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
-        this.setSize(650, 700);
-        this.setPreferredSize(getSize());
+        this.setSize(200, 500);
+//        this.setPreferredSize(getSize());
 
         /* Variables used to create items */
         FontMetrics fm;
@@ -67,39 +65,42 @@ public class AccountPanel extends JPanel implements CenterSubPanel,
 
         /* Add schoolrole-panel */
 //        l = new RegisterMoreSchoolsPanel(groups);
-          sarPanel = new AccountSchoolRolesJPanel();
+        sarPanel = new AccountSchoolRolesJPanel();
 //        l.setBorder(BorderFactory.createLineBorder(getForeground()));
         sarPanel.setBackground(GuiConstants.SUB_BACKGROUND);
         //      p.setBounds(getSize().width / 2 - 155, 20, 310, 130);
+        this.setLayout(null);
+        accountDataPanel.setLocation(10, 10);
+        //this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+        this.add(accountDataPanel);
+        sarPanel.setLocation(330, 10);
+        this.add(sarPanel);
+//        this.add(Box.createRigidArea(new Dimension(5, 0)));
+//        JPanel sarPane = new JPanel();        
+//        sarPane.setLayout(new BoxLayout(sarPane, BoxLayout.PAGE_AXIS));
+//        sarPane.add(sarPanel);
+//        sarPane.setAlignmentY(TOP_ALIGNMENT);
+//        sarPane.setAlignmentX(LEFT_ALIGNMENT);
+//        sarPane.setBackground(GuiConstants.MAIN_BACKGROUND);
+//        this.add(sarPane);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setAutoCreateGaps(true);
-        layout.setAutoCreateContainerGaps(true);
-//            JPanel separator = new JPanel();
-//            JSeparator sep = new JSeparator(JSeparator.VERTICAL);
-//            sep.setBorder(new JBorder(5,5,5,5));
-//            sep.setBackground(GuiConstants.MAIN_BACKGROUND);
-//            separator.setSize(this.getHeight(), 5);
-//            separator.add(sep,BorderLayout.LINE_START);
-            
-
-            
-            layout.setHorizontalGroup(
-                layout.createSequentialGroup()
-                .addComponent(accountDataPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//                        .addComponent(separator)
-                .addComponent(sarPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(accountDataPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-//                        .addComponent(separator)
-                .addComponent(sarPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+//        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        //this.setLayout(layout);
+//            layout.setHorizontalGroup(
+//                layout.createSequentialGroup()
+//                .addComponent(accountDataPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+////                        .addComponent(separator)
+//                .addComponent(sarPanel,  javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+//        );
+//
+//        layout.setVerticalGroup(
+//                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//                .addComponent(accountDataPanel, javax.swing.GroupLayout.Alignment.LEADING,javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+////                        .addComponent(separator)
+//                .addComponent(sarPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+//        );
     }
-    
+
 //
 //    /**
 //     * This method returns the specific panel for the user. <BR>
@@ -487,7 +488,6 @@ public class AccountPanel extends JPanel implements CenterSubPanel,
 //        }
 //
 //    }
-
     /**
      * Returns a Panel that can functionate as a header panel.
      *
