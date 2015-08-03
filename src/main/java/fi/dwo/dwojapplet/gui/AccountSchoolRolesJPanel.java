@@ -1,14 +1,15 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.exceptions.Dwo2Exception;
+import fi.dwo.commons.exceptions.LoginException;
+import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.rest.entities.SchoolRoleAndClass;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.SchoolClass;
-import fi.dwo.dwojapplet.domain.Teacher;
 import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.panels.JPanelSchoolsandRolesProperties;
 import java.awt.Component;
-import java.awt.Dimension;
+import java.awt.FontMetrics;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.ActionEvent;
@@ -40,11 +41,13 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
 
 //    protected User user;
     private JPanelSchoolsandRolesProperties prop = new JPanelSchoolsandRolesProperties();
+    private AccountSchoolsRolesTableModel tableModel;
+
     private static final Logger LOG = Logger.getLogger(AccountSchoolRolesJPanel.class.getName());
 
-    private JButton addClassButton;
+    private JButton addRoleButton;
 
-    private Image removeImage, editImage, usersImage, assignImage;
+    private Image removeImage, loginImage;
 
     private Box jtbl;
 
@@ -70,6 +73,7 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
 
         //init gui (old code)
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setAlignmentX(LEFT_ALIGNMENT);
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
         //this.setSize(620, 485);
         //this.setSize(600, 470);
@@ -78,13 +82,9 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
         /* Add Remove-class image */
         MediaTracker tr = new MediaTracker(this);
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
-        editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_CLASS_IMAGE);
-        usersImage = DwoHelper.getResourceImage(GuiConstants.USERS_CLASS_IMAGE);
-        assignImage = DwoHelper.getResourceImage(GuiConstants.ASSIGN_CLASS_IMAGE);
+        loginImage = DwoHelper.getResourceImage(GuiConstants.USERS_CLASS_IMAGE);
         tr.addImage(removeImage, 0);
-        tr.addImage(editImage, 1);
-        tr.addImage(usersImage, 2);
-        tr.addImage(assignImage, 3);
+        tr.addImage(loginImage, 1);
         try {
             tr.waitForAll();
         }
@@ -92,26 +92,39 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
         }
 
         //FontMetrics fm;
-        addClassButton = new JButton(TextMapper.getText(TextMapper.GUIC_ADD_CLASS));
+        /* registerinfo label */
+        JLabel l = new JLabel(TextMapper.getText(TextMapper.GUIP_REGISTERINFO) + ":");
+        l.setAlignmentX(LEFT_ALIGNMENT);
+        l.setForeground(GuiConstants.RED_COLOR);
+        l.setFont(GuiConstants.RED_TEXT);
+        FontMetrics fm = l.getFontMetrics(l.getFont());
+        l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
+        this.add(l);
+        this.add(Box.createHorizontalGlue());
+
+        this.add(Box.createVerticalStrut(15));
+        addRoleButton = new JButton(TextMapper.getText(TextMapper.GUIC_ADD_CLASS));
+        addRoleButton.setSize(addRoleButton.getPreferredSize());
+        addRoleButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        buildJTable();
+
         //fm = addClassButton.getFontMetrics(addClassButton.getFont());
-        addClassButton.setSize(addClassButton.getPreferredSize());
-        addClassButton.addActionListener(this);
+        addRoleButton.addActionListener(this);
         //addClassButton.setLocation(30, 10);
-        addClassButton.setVisible(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER));
+        addRoleButton.setVisible(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER));
+        addRoleButton.add(Box.createHorizontalGlue());
         Box header = Box.createHorizontalBox();
-        header.add(addClassButton);
+        header.add(addRoleButton);
         header.add(Box.createHorizontalGlue());
         this.add(header);
-        //addClassButton.setVisible(true);
-        this.add(Box.createVerticalStrut(15));
-        buildJTable();
-        
+
     }
 
-    /*******************************************************************************
+    /**
+     * *****************************************************************************
      * Encapsulation of old code starts here
-    /*******************************************************************************/
-    
+     * /******************************************************************************
+     */
     public class ImageRenderer extends JLabel implements TableCellRenderer {
 
         private ImageIcon icon = new ImageIcon();
@@ -168,7 +181,7 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
             JButton button = new JButton(new ImageIcon((Image) value));
             button.addActionListener(this);
             this.row = row;
-            model = (ClassPanel.ClassModel) table.getModel();
+            // model = (ClassPanel.ClassModel) table.getModel();
             return button;
         }
 
@@ -179,51 +192,53 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent event) {
-//            SchoolClass sc = model.classes[row];
-//            final GuiCreator instance = GuiCreator.instance();
-//            if (value == editImage) {
-//                ClassRenamePanel panel = new ClassRenamePanel();
-//                panel.setSchoolClass(sc);
-//    //            int result = JOptionPane.showConfirmDialog(ClassPanel.this, panel, TextMapper.getText(TextMapper.GUIC_MSG_CLASS_CONFIGURATION),
-//                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-//                //case OK persist returned values
-//                if (result == JOptionPane.OK_OPTION) {
-//                    //persist returned values					
-//                    if (instance.renameClass(sc, panel.getClassName(), panel.getRegistrationKey(), panel.isIconizer()));
-//                    //update gui when done
-//                    center.loadMenu();
-//                    model.fireTableCellUpdated(row, 0);
-//                }
-//
-//            } else if (value == removeImage) {
-//                /* Delete the course */
-//                if (JOptionPane.showConfirmDialog(ClassPanel.this, TextMapper.getText(TextMapper.GUIC_MSG_DELETE_CLASS)
-//      //                  + "?", TextMapper.getText(TextMapper.GUIC_DELETE_CLASS), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-//                    if (instance.deleteClass(sc)) {
-//                        center.loadMenu();
-//                        model.removeRow(row);
-//                    }
-//                }
-//
-//            } else if (value == usersImage) {
-//                center.loadCenter(instance.getClassUsersPanel(sc));
-//            } else if (value == assignImage) {
-//                instance.getDWO().setWait();
-//                long t = System.currentTimeMillis();
-//                //setData(domain.selectCourses(SelectCoursesDialog.selectCourses(this, domain.getAllCourses(), domain.getSelectedCourse()), true));
-//                Course[] allCourses = instance.getCourseList();
-//                System.out.println("getCourselist " + (System.currentTimeMillis() - t));
-//                t = System.currentTimeMillis();
-//                Course[] selectedSchoolCourses = sc.getSelectedSchoolCourses();
-//                System.out.println("getSelected list " + (System.currentTimeMillis() - t));
-//                instance.getDWO().setReady();
-//                Course[] selectedCourses = SelectCoursesDialog.selectCourses(ClassPanel.this, allCourses, selectedSchoolCourses, sc);
-//                if (selectedCourses != null) {
-//                    sc.saveSelectedCourses(allCourses, selectedCourses);
-//                }
-//            }
-//            fireEditingStopped();
-// 
+                        // note that we want to update the tableModel first!
+                        fireEditingStopped();
+                        //Let's check the selected col by the image and from the selected row value.
+                        if (value == loginImage) {
+//            //get Table setting
+//                int col = tableModel.getSelectedColumn();
+                int row = tableModel.getSelectedRow();
+
+//            //set prop to table setting
+                prop.setSelectedSchoolRoleAndClass((SchoolRoleAndClass) tableModel.getValueAt(row, 4));
+                prop.setActiveSchoolRoleAndClass();
+//            //get user data
+                PersistentUser user = DwoHelper.getCurrentUser();
+//            // clear user data
+                GuiCreator.instance().clearCurrentUserData();
+                try {
+//                //switch role now
+                    LOG.log(Level.INFO, "switching role now");
+                    GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPasswd());
+                }
+                catch (LoginException ex) {
+                    LOG.log(Level.SEVERE, null, ex);
+                }
+
+            } else if (value == removeImage) {
+//            //get Table setting
+//                int col = tableModel.getSelectedColumn();
+                int row = tableModel.getSelectedRow();
+
+//            //set prop to table setting
+                prop.setSelectedSchoolRoleAndClass((SchoolRoleAndClass) tableModel.getValueAt(row, 4));
+                prop.setActiveSchoolRoleAndClass();
+                //TODO Remove role now
+//            //get user data
+                PersistentUser user = DwoHelper.getCurrentUser();
+//            // clear user data
+                GuiCreator.instance().clearCurrentUserData();
+                try {
+//                //switch role now
+                    LOG.log(Level.INFO, "Removing role now");
+                    GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPasswd());
+                }
+                catch (LoginException ex) {
+                    LOG.log(Level.SEVERE, null, ex);
+                }
+
+            }
         }
     }
 
@@ -233,57 +248,87 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
             jtbl = null;
         }
 
-        JTable table = new JTable();
-        jtbl = Box.createHorizontalBox();
-        jtbl.add(table);
-        jtbl.add(Box.createHorizontalGlue());
+        JTable jtable = new JTable();
+        jtbl = Box.createVerticalBox();
+        jtbl.add(jtable.getTableHeader());
+        //addClassButton.setVisible(true);
+        jtbl.add(jtable);
         //jtbl.getViewport().setBackground(GuiConstants.MAIN_BACKGROUND);
-   make nice proper table.
-        if (GuiCreator.instance().getUser() instanceof Teacher) {
-            Teacher t = (Teacher) GuiCreator.instance().getUser();
-            SchoolClass[] classes = t.getClasses();
-            table.setModel(new AccountSchoolsRolesTableModel());
-        } else {
-            return;
-        }
+        tableModel = new AccountSchoolsRolesTableModel();
 
-        TableUtil.setDefaults(table, false, new ImageRenderer(), new ImageButtonEditor());
-        TableUtil.setJTableSizes(table);
+        tableModel.init(prop, loginImage, removeImage);
+        jtable.setModel(tableModel);
+        jtable.setRowSelectionInterval(0, 0);
+        jtable.setRowSelectionAllowed(false);
+        jtable.setColumnSelectionAllowed(false);
+        jtable.setCellSelectionEnabled(false);
+        TableUtil.setDefaults(jtable, true, new ImageRenderer(), new ImageButtonEditor());
+        TableUtil.setJTableSizes(jtable);
+
 // TODO shrink to fit heeft 520 als breedte
-        Dimension size = table.getPreferredSize();
-        if (size.width < 520) {
-            size.width = 520;
-        }
-        table.setMaximumSize(size);
-        jtbl.setLocation(30, addClassButton.getSize().height
-                + addClassButton.getLocation().y + 15);
-        TableUtil.setBorder(table);
+//        Dimension size = table.getPreferredSize();
+//        if (size.width < 520) {
+//            size.width = 520;
+//        }
+//        table.setMaximumSize(size);
+        jtbl.setLocation(30, addRoleButton.getSize().height
+                + addRoleButton.getLocation().y + 15);
+        TableUtil.setBorder(jtable);
         //TableUtil.shrinkToFit(table, jtbl, 520, 405);
         jtbl.setVisible(false);
         this.add(jtbl);
         jtbl.setVisible(true);
 
     }
-    /*******************************************************************************
-     * Encapsulation of old code ends here
-    /*******************************************************************************/
 
+    /**
+     * *****************************************************************************
+     * Encapsulation of old code ends here
+     * /******************************************************************************
+     */
     /**
      * Invoked when an action occurs.
      *
      * @param e The ActionEvent.
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
-//        if (e.getSource() == addClassButton) {
-//            try {
-//                GuiCreator.instance().addClass();
-//                center.loadMenu();
-//                buildJTable();
-//            } catch (ClassException e1) {
-//                JOptionPane.showMessageDialog(this, e1.getMessage(), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
-//            }
-//
-//        }
+        if (e.getSource() == this.addRoleButton) {
+            ShowJPanelAsDialog dialog = new ShowJPanelAsDialog(new RegisterMoreSchoolsPanel());
+            dialog.setVisible(true);
+            //reload centerpanel
 
+            LOG.log(Level.INFO, "add role");
+        }
+        if (e.getSource() == loginImage) {
+//            //get Table setting
+            int row = tableModel.getSelectedColumn();
+            int col = tableModel.getSelectedRow();
+
+//            //set prop to table setting
+            prop.setSelectedSchoolRoleAndClass((SchoolRoleAndClass) tableModel.getValueAt(4, col));
+            prop.setActiveSchoolRoleAndClass();
+//            //get user data
+            PersistentUser user = DwoHelper.getCurrentUser();
+//            // clear user data
+            GuiCreator.instance().clearCurrentUserData();
+            try {
+//                //switch role now
+                LOG.log(Level.INFO, "switching role now");
+                GuiCreator.instance().loginWithMd5(user.getUsername(), user.getPasswd());
+            }
+            catch (LoginException ex) {
+                LOG.log(Level.SEVERE, null, ex);
+            }
+
+        } else if (e.getSource() == removeImage) {
+            LOG.log(Level.INFO, "remove role");
+
+////                if (JOptionPane.showConfirmDialog(TextMapper.getText(TextMapper.GUIC_MSG_DELETE_CLASS)))
+//      //                  + "?", TextMapper.getText(TextMapper.GUIC_DELETE_CLASS), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+//                    if (instance.deleteClass(sc)) {
+//                        model.removeRow(row);
+//                    }
+        }
     }
 }

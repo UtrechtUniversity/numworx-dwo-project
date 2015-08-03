@@ -2,7 +2,8 @@
 package fi.dwo.dwojapplet.gui;
 
 import fi.dwo.commons.rest.entities.SchoolRoleAndClass;
-import fi.dwo.commons.rest.entities.SchoolsRolesAndClasses;
+import fi.dwo.dwojapplet.gui.panels.JPanelSchoolsandRolesProperties;
+import java.awt.Image;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
@@ -14,11 +15,16 @@ class AccountSchoolsRolesTableModel extends AbstractTableModel {
 
     private String[] columnNames = {"School", "Role", "Login", "Delete"};
     static boolean DEBUG = false;
+    private JPanelSchoolsandRolesProperties prop;
 
+    private int  selectedRow, selectedColumn;
+    
     private Object[][] data;
 
-    public void init(SchoolRoleAndClass noSchool, SchoolsRolesAndClasses srcs) {
-        List<SchoolRoleAndClass> srcList = srcs.getSchoolsRolesAndClassesList();
+    public void init(JPanelSchoolsandRolesProperties props, Image loginImage, Image removeImage) {
+
+        prop = props;
+        List<SchoolRoleAndClass> srcList = prop.getSchoolsRolesAndClasses().getSchoolsRolesAndClassesList();
         int rows = 0;
         for (SchoolRoleAndClass src : srcList) {
             rows++; // one for each item in List
@@ -28,15 +34,14 @@ class AccountSchoolsRolesTableModel extends AbstractTableModel {
         for (SchoolRoleAndClass src : srcList) {
             data[j][0] = src.getSchoolName();
             data[j][1] = src.getRoleName();
-            data[j][2] = "L"; //login 
-            data[j][3] = "D"; // delete 
+            data[j][2] = loginImage;
+            data[j][3] = removeImage; // delete 
             data[j][4] = src;
             j++;
         }
 
     }
 
-    
     @Override
     public int getColumnCount() {
         return columnNames.length;
@@ -66,42 +71,33 @@ class AccountSchoolsRolesTableModel extends AbstractTableModel {
     public Class getColumnClass(int c) {
         return getValueAt(0, c).getClass();
     }
-//
-//    /*
-//     * Don't need to implement this method unless your table's editable.
-//     */
-//    @Override
-//    public boolean isCellEditable(int row, int col) {
-//      //Note that the data/cell address is constant,
-//      //no matter where the cell appears onscreen.
-//      if (col < 2) {
-//        return false;
-//      } else {
-//        return true;
-//      }
-//    }
-//
-//    /*
-//     * Don't need to implement this method unless your table's data can
-//     * change.
-//     */
-//    @Override
-//    public void setValueAt(Object value, int row, int col) {
-//      if (DEBUG) {
-//        System.out.println("Setting value at " + row + "," + col
-//            + " to " + value + " (an instance of "
-//            + value.getClass() + ")");
-//      }
-//
-//      data[row][col] = value;
-//      fireTableCellUpdated(row, col);
-//
-//      if (DEBUG) {
-//        System.out.println("New value of data:");
-//        printDebugData();
-//      }
-//    }
-//
+    
+    /*
+     * Don't need to implement this method unless your table's editable.
+     */
+    @Override
+    public boolean isCellEditable(int row, int col) {
+      //Note that the data/cell address is constant,
+      //no matter where the cell appears onscreen.
+      if (col < 2) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+    
+
+    /*
+     * Don't need to implement this method unless your table's data can
+     * change.
+     */
+    @Override
+    public void setValueAt(Object value, int row, int col) {
+        //don't change any setting, but update selected values.
+        setSelectedRow(row);
+        setSelectedColumn(col);
+    }
+    
 //    private void printDebugData() {
 //      int numRows = getRowCount();
 //      int numCols = getColumnCount();
@@ -115,4 +111,32 @@ class AccountSchoolsRolesTableModel extends AbstractTableModel {
 //      }
 //      System.out.println("--------------------------");
 //    }
+
+    /**
+     * @return the selectedRow
+     */
+    public int getSelectedRow() {
+        return selectedRow;
+    }
+
+    /**
+     * @param selectedRow the selectedRow to set
+     */
+    public void setSelectedRow(int selectedRow) {
+        this.selectedRow = selectedRow;
+    }
+
+    /**
+     * @return the selectedColumn
+     */
+    public int getSelectedColumn() {
+        return selectedColumn;
+    }
+
+    /**
+     * @param selectedColumn the selectedColumn to set
+     */
+    public void setSelectedColumn(int selectedColumn) {
+        this.selectedColumn = selectedColumn;
+    }
 }

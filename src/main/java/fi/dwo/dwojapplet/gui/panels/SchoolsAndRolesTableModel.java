@@ -10,7 +10,7 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author Gert van der Plas <gertvdplas@gmail.com>
  */
-class SchoolsAndRolesTableModel extends AbstractTableModel {
+public class SchoolsAndRolesTableModel extends AbstractTableModel {
 
     private String[] columnNames = {"School", "Role", "Login", "Delete"};
     static boolean DEBUG = false;
