@@ -53,7 +53,7 @@ import com.googlecode.mgwt.ui.client.widget.LayoutPanel;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedEvent;
 import com.googlecode.mgwt.ui.client.widget.celllist.HasCellSelectedHandler;
 
-public class TreeModuleViewImplTablet  extends Composite implements TreeModuleView, ViewModuleView.Loader
+public class TreeModuleViewImplTablet  extends Composite implements TreeModuleView, ViewModuleView.Loader, Comparator<SelectModuleItem>
 {
 
 	@UiField HeaderPanel  navigationHeaderPanel;
@@ -117,9 +117,8 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
     // UiHandlers used by this implementation
     //================================================================================
 
-	private void Log(String log) {
-		
-		Logger.getLogger("DWOplayer").log(Level.INFO, log);
+	private void log(String log) {	
+		Logger.getLogger("TreeModuleViewImplTablet").log(Level.INFO, log);
 	}
 	
 	@UiHandler("cells")
@@ -137,7 +136,7 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 	}
 	@UiHandler("navigationUpButton")
 	public void onNavigationUpTab(TapEvent event) {
-		Log("Go up " + parent);
+		log("Go up " + parent);
 		if(parent != null) 
 			selectItem(parent);
 		else 
@@ -169,7 +168,7 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 			loadedModule = viewModuleViewImpl.initialize(this);
 			viewModuleViewImpl.setApi(DWOplayer.api);
 			int h = moduleHeaderPanel.getOffsetHeight();
-			Log("window top = " + h);
+			log("window top = " + h);
 			viewModuleViewImpl.setWindowTop(h);
 			viewModuleViewImpl.zetMaat();
 			container.add(loadedModule.asWidget());
@@ -225,6 +224,7 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
     //================================================================================
 	private int animation_duration = 200; // XXX is there a gwt standard value ?
 	private SelectModuleItem parent;
+	private Comparator<SelectModuleItem> sortModel;
 	
 	private void toggleNavigationPanel(){
 		if (navigationPanel.getAbsoluteLeft() == 0) {
@@ -304,9 +304,8 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 			return;
 		if (model != currentModel)
 		{
-			//tree.removeItems();
-			//inverseMap.clear();
-			model = currentModel;	
+			model = currentModel;
+			sort(model);
 		}
 	
 	}
@@ -500,8 +499,24 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 
 	@Override
 	public void setSortModel(Comparator<SelectModuleItem> sorter) {
-		// TODO Auto-generated method stub
-		
+		this.sortModel = sorter;
+	}
+
+	private void sort(List<SelectModuleItem> items) {
+		Collections.sort(items, this);
+	}
+
+	@Override
+	public int compare(SelectModuleItem o1, SelectModuleItem o2) {
+		boolean b1 = o1.isFromSchool();
+		boolean b2 = o2.isFromSchool();
+		if(b1 != b2) {
+			return Boolean.compare(b1, b2);
+		}
+		if(sortModel != null)
+			return sortModel.compare(o1, o2);
+		else
+			return o1.getName().compareTo(o2.getName()); // 
 	}
 
 }

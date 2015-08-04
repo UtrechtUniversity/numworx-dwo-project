@@ -85,12 +85,9 @@ public class SelectModuleViewImpl extends Composite implements SelectModuleView
 	
 	public SelectModuleViewImpl()
 	{
-	
-		
 		list = new CellList<SelectModuleItem>(new SelectModuleCell());
 		list.addStyleName(DWOplayer.PARAMETERS.navigationcss().bodyText());
 		initWidget(uiBinder.createAndBindUi(this));
-	
 	}
 
 	HandlerRegistration back,sel;
