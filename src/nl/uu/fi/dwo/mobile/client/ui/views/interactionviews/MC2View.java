@@ -56,7 +56,7 @@ public class MC2View extends Composite implements InteractionView {
 	private Logging latransport = DWOplayer.PARAMETERS.getLogging();
 	
 	private void doOpenAjaxEvent(String topic, JavaScriptObject data) {
-		LOGGER.info("topic:" + topic + " ,data:" + data);
+		LOGGER.info("topic:" + topic + " ,data:" + data + " " + getUUID());
 		
 		if(topic.endsWith(".logOption"))
 		{
