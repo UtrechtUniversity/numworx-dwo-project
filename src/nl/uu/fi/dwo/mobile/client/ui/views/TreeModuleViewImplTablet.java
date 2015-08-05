@@ -470,6 +470,25 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 		if(list == null)
 			list = Collections.emptyList();
 		this.cellItems = list;
+		int len = list.size();
+		if(len > 2) {
+			SelectModuleItem first = list.get(0);
+			SelectModuleItem last  = list.get(len-1);
+			if( first.isFromSchool() != last.isFromSchool()) 
+			{
+				list = new ArrayList<SelectModuleItem>(len + 1);
+				list.addAll(cellItems);
+				while(len > 0 && (first.isFromSchool() != last.isFromSchool())) {
+					len --;
+					last  = list.get(len-1);
+				}
+				SelectModuleItem separator = new SelectModuleItem(null, SelectModuleItem.Type.SEPARATOR);
+				separator.setName("School modules");
+				list.add(len, separator);
+				this.cellItems = list;
+			}
+			
+		}
 		cells.render(list);
 	}
 

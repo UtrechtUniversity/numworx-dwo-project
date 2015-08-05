@@ -23,7 +23,7 @@ public class SelectModuleItem
 	
 	public enum Type
 	{
-		SCO, MODULE, FOLDER, ROOT
+		SCO, MODULE, FOLDER, ROOT, SEPARATOR
 	}
 
 	public static final SelectModuleItem ROOT = new SelectModuleItem(null, SelectModuleItem.Type.ROOT);
@@ -80,6 +80,9 @@ public class SelectModuleItem
 			this.id =  map.get("scoID");
 			this.file = PREFIX + this.id;
 			this.showScore = !Boolean.TRUE.equals(map.get("showscore")); // reverse logica
+		break;
+		case SEPARATOR:
+			this.type = type;
 		break;
 // more to follow....			
 			

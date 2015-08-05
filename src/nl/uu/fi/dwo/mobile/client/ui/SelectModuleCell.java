@@ -26,6 +26,8 @@ public class SelectModuleCell implements Cell<SelectModuleItem>
 	{
 		@SafeHtmlTemplates.Template("<div class='listItem-dwo'><i class='fa {1} fa-2x listItem-dwo-icon'></i><span> {0}</span>{2}</div>")
 		SafeHtml content(String text, String type, SafeHtml extra);
+		@SafeHtmlTemplates.Template("<div class='listItem-dwo-separator'><span>{0}</span></div>")
+		SafeHtml separator(String text);
 	}
 
 	@Override
@@ -50,6 +52,8 @@ public class SelectModuleCell implements Cell<SelectModuleItem>
 		case FOLDER:
 			safeHtmlBuilder.append(TEMPLATE.content(model.getName(), "fa-folder", EMPTY));
 			break;
+		case SEPARATOR:
+			safeHtmlBuilder.append(TEMPLATE.separator(model.getName()));
 		}
 		
 	}
