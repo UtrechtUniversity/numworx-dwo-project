@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +18,8 @@ public class DbAccessServlet extends Servlet {
 		super(null);
 	}
 	
-	public void init() {
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
 		setHandler(DbAccessFactory.getDbAccess(getServletContext()));
 	}
 	
