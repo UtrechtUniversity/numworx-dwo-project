@@ -8,6 +8,7 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.rest.RegistrationManager;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -53,7 +54,7 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
     private JButton backButton;
 
     private JComboBox groupChoice;
-    
+        
     /**
      * Creates a new RegisterPanel. At the register panel, a user can register
      * himself.
@@ -70,60 +71,6 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
         FontMetrics fm;
         JPanel p;
         JLabel l;
-
-//        /* Add Register-panel */
-//        p = new JPanel(null);
-//        //p.setBorder(BorderFactory.createLineBorder(getForeground()));
-//        p.setBackground(GuiConstants.SUB_BACKGROUND);
-//        p.setBounds(getSize().width / 2 - 180, 10, 310, 95);//240
-//        this.add(p);
-//
-//        /* registerinfo label */
-//        l = new JLabel(TextMapper.getText(TextMapper.GUIR_REGISTERINFO) + ":");
-//        l.setForeground(GuiConstants.RED_COLOR);
-//        l.setFont(GuiConstants.RED_TEXT);
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setBounds(10, 5, fm.stringWidth(l.getText()), fm.getHeight());
-//        p.add(l);
-//
-//        /* Username label */
-//        l = new JLabel(TextMapper.getText(TextMapper.GUIR_USERNAME) + ":");
-//        l.setForeground(Color.black);
-//        l.setFont(GuiConstants.NORMAL_TEXT);
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setLocation(10, 30);
-//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-//        p.add(l);
-//
-//        /* Username field */
-//        username = new JTextField();
-//        username.setBounds(160, 28, 120, 20);
-//        p.add(username);
-//
-//        /* Username mandatory label */
-//        l = createMandatoryLabel();
-//        l.setLocation(285, 28);
-//        p.add(l);
-//
-//        /* Password label */
-//        l = new JLabel(TextMapper.getText(TextMapper.GUIR_PASSWORD) + ":");
-//        l.setForeground(Color.black);
-//        l.setFont(GuiConstants.NORMAL_TEXT);
-//        fm = l.getFontMetrics(l.getFont());
-//        l.setLocation(10, 55);
-//        l.setSize(fm.stringWidth(l.getText()) + 10, fm.getHeight());
-//        p.add(l);
-//
-//        /* Password field */
-//        password = new JPasswordField();
-//        password.setBounds(160, 53, 120, 20);
-//        password.setEchoChar('*');
-//        p.add(password);
-//
-//        /* Password mandatory label */
-//        l = createMandatoryLabel();
-//        l.setLocation(285, 53);
-//        p.add(l);
 
         /* Add School-panel */
         p = new JPanel(null);
@@ -211,33 +158,23 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
         fm = registerButton.getFontMetrics(registerButton.getFont());
         registerButton.setSize(registerButton.getPreferredSize());
         registerButton.setLocation(p.getX()+this.getWidth()/2-registerButton.getWidth(), p.getY()+p.getHeight()/2-registerButton.getHeight());
-
-        /* Reset button */
-        resetButton = new JButton(TextMapper.getText(TextMapper.GUIR_BTN_RESET));//, GuiConstants.SUB_BACKGROUND);
-        fm = resetButton.getFontMetrics(resetButton.getFont());
-        resetButton.setSize(resetButton.getPreferredSize());
-
-        registerButton.setLocation((p.getSize().width / 2)
-                - ((registerButton.getSize().width
-                + resetButton.getSize().width + 5) / 2), 10);
+        registerButton.setLocation((p.getSize().width / 4)
+                - (registerButton.getSize().width/2)
+                , 10);
         p.add(registerButton);
 
-//        resetButton.setLocation((p.getSize().width / 2)
-//                - ((registerButton.getSize().width
-//                + resetButton.getSize().width + 5) / 2)
-//                + registerButton.getSize().width + 5, 10);
-//        p.add(resetButton);
+        /* Reset button */
+        backButton = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));//, GuiConstants.SUB_BACKGROUND);
+        fm = backButton.getFontMetrics(backButton.getFont());
+        backButton.setSize(backButton.getPreferredSize());
 
-//        backButton = new JButton(TextMapper.getText(TextMapper.GUIR_BTN_BACK));//, GuiConstants.MAIN_BACKGROUND);
-//        fm = backButton.getFontMetrics(backButton.getFont());
-//        backButton.setSize(backButton.getPreferredSize());
-//        backButton.setLocation((p.getSize().width / 2)
-//                - ((backButton.getSize().width) / 2), 40);//630
-//        p.add(backButton);
+        backButton.setLocation(3*(p.getSize().width / 4)
+                - (backButton.getSize().width/2)
+                , 10);
+        p.add(backButton);
 
         registerButton.addActionListener(this);
-        resetButton.addActionListener(this);
-//        backButton.addActionListener(this);
+        backButton.addActionListener(this);
 
         groupChoice.addItemListener(new GroupItemListener(schoolpassword));
 
@@ -313,21 +250,10 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
 
             }
         }
-        else if (e.getSource() == resetButton) {
-//            username.setText("");
-//            password.setText("");
-//            repassword.setText("");
-//            firstname.setText("");
-//            middlename.setText("");
-//            lastname.setText("");
-//            email.setText("");
-//            schoollogin.setText("");
-//            groupChoice.setSelectedIndex(0);
-//            schoolpassword.setText("");
-//            schoolpassword.setVisible(true);
-        } else if (e.getSource() == backButton) {
-            //Call close here.
-        }
+        else if (e.getSource() == backButton) {
+            //TODO fixe shameful hack.
+            this.getParent().getParent().getParent().getParent().setVisible(false);
+       }
     }
 
 }

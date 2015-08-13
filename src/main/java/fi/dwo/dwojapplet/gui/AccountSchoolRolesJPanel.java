@@ -28,6 +28,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
@@ -104,7 +105,7 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
         b.add(Box.createHorizontalGlue());
         this.add(b);
         this.add(Box.createVerticalStrut(15));
-        addRoleButton = new JButton(TextMapper.getText(TextMapper.GUIC_ADD_CLASS));
+        addRoleButton = new JButton(TextMapper.getText(TextMapper.GUIP_BTN_ADD_ROLE));
         addRoleButton.setSize(addRoleButton.getPreferredSize());
         addRoleButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
         buildJTable();
@@ -115,7 +116,8 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
         addRoleButton.setVisible(GuiCreator.instance().getUser().hasRight(User.CHANGE_CLASS_RIGHT_TEACHER));
         JPanel footer = new JPanel();
         footer.setLayout(new BoxLayout(footer, BoxLayout.X_AXIS));
-        //footer.add(Box.createHorizontalGlue());
+        footer.setBorder(new EmptyBorder(10,10,10,10));
+        footer.setBackground(GuiConstants.MAIN_BACKGROUND);
         footer.add(addRoleButton);
         this.add(footer);
 
