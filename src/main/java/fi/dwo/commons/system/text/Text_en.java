@@ -167,6 +167,8 @@ public class Text_en extends ListResourceBundle {
             { TextMapper.GUIP_BTN_SWITCH_PROFILE, "Switch to selected profile"},
             { TextMapper.GUIP_BTN_DELETE_PROFILE, "Delete profile" },
             { TextMapper.GUIP_BTN_DELETE_ACCOUNT, "Delete account" },
+            { TextMapper.GUIP_BTN_ADD_ROLE, "New login option"},
+            { TextMapper.GUIP_ROLE_OPTIONS, "Login options"},
 
             { TextMapper.GUIP_MSG_PROVIDED_SCHOOL, "Data provided by the school" },
 

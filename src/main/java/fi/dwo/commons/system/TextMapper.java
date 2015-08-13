@@ -223,6 +223,10 @@ public abstract class TextMapper {
     public final static String GUIP_CONFIRM_REMOVE_USER_TITLE = "GUIP_CONFIRM_REMOVE_USER_TITLE";
 
     public final static String GUIP_MSG_PROFILE_CHANGED = "GUIP_MSG_PROFILE_CHANGED";
+    
+    public final static String GUIP_ROLE_OPTIONS = "GUIP_ROLE_OPTIONS";
+    public final static String GUIP_BTN_ADD_ROLE = "GUIP_BTN_ADD_ROLE";
+
 
     /* Teacher-Profile Panel */
     public final static String GUIPT_SCHOOL = "GUIPT_SCHOOL";

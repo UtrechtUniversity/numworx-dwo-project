@@ -181,6 +181,9 @@ public class Text_nl extends ListResourceBundle {
          { TextMapper.GUIP_CONFIRM_REMOVE_USER_TITLE, "Account verwijderen"},
          
          { TextMapper.GUIP_MSG_PROFILE_CHANGED, "Uw account is succesvol gewijzigd"}, 
+         
+         { TextMapper.GUIP_ROLE_OPTIONS, "Loginmogelijkheden"},
+         { TextMapper.GUIP_BTN_ADD_ROLE, "Nieuwe loginmogelijkheid"},
 
          { TextMapper.GUIPT_SCHOOL, "School"},
          { TextMapper.GUIPT_TEACHER_FROM_CLASS, "Docent van Klas"},
