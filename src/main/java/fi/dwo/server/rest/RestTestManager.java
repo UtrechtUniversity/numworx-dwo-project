@@ -79,7 +79,6 @@ public class RestTestManager {
             EntityManager em = DwoEmfFactory.getEntityManager();
             String r = "";
             try {
-
                 LOG.log(Level.INFO, "For user with username {0} the testschool is created {1}", new Object[]{name, schoolName});
                 //Create school here!
 

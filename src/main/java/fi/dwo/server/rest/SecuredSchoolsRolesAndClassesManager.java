@@ -24,7 +24,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
 /**
- * Operations for the GUI Component that manages the Userprofile section.
+ * Operations for the GUI Component that manages the role state data of a user.
  *
  * @see fi.dwo.dwojapplet.gui.panels.JPanel.MyProfile
  *
@@ -75,7 +75,7 @@ public class SecuredSchoolsRolesAndClassesManager {
     }
 
     /**
-     * Returns the currentUser. The information is extracted from the security
+     * Returns the current school role. The information is extracted from the security
      * context.
      *
      * @param sc

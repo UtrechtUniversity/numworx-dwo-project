@@ -16,7 +16,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
 /**
- * User login obtained through validation by the servlet configuraton.
+ * User login obtained through validation by the tomcat configuration.
  * 
  * @author G.A.J. van der Plas
  */

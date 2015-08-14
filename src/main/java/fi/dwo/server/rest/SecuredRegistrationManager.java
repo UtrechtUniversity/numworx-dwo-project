@@ -28,7 +28,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 /**
- * Registration manager for known users.
+ * Registration manager for known users. Registers new school roles
  *
  * @author Gert van der Plas
  */
