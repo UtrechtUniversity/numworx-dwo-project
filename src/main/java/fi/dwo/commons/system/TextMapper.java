@@ -130,6 +130,7 @@ public abstract class TextMapper {
     public final static String GUIR_OPT_TEACHER = "TEACHER";
     public final static String GUIR_OPT_ADMIN = "ADMIN";
     public final static String GUIR_OPT_SCHOOLCODE = "SCHOOLCODE";
+    public final static String GUIR_OPT_NOSCHOOL = "NOSCHOOL";
     public final static String GUIR_OPT_SCHOOLADMIN = "SCHOOLADMIN";
 
     public final static String GUIR_MSG_REGISTERED = "GUIR_MSG_REGISTERED";

@@ -89,6 +89,7 @@ public class Text_en extends ListResourceBundle {
             { TextMapper.GUIR_OPT_SELECT_GROUP, "Make a choice" },
             { TextMapper.GUIR_OPT_STUDENT, "Student" },
             { TextMapper.GUIR_OPT_TEACHER, "Teacher" },
+            { TextMapper.GUIR_OPT_NOSCHOOL, "No school" },
             { TextMapper.GUIR_OPT_ADMIN, "Administrator"},
             { TextMapper.GUIR_OPT_SCHOOLADMIN, "School admin" },
             { TextMapper.GUIR_OPT_SCHOOLCODE, "Key code"},
