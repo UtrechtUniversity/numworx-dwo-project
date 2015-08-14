@@ -6,7 +6,7 @@ import fi.dwo.dwojapplet.REST.StoredRestManager;
 import java.util.logging.Logger;
 
 /**
- * Manages the user profile.
+ * Manages the school roles and classes registered in HasRole.
  * 
  * @author G.A.J. van der Plas
  */
