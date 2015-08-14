@@ -62,7 +62,7 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
      */
     public AccountSchoolRolesJPanel() {
         super(null);
-        this.setSize(320, 500);
+        this.setSize(480, 500);
 
         //fetch user details.
         try {
@@ -82,7 +82,7 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
         /* Add Remove-class image */
         MediaTracker tr = new MediaTracker(this);
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_CLASS_IMAGE);
-        loginImage = DwoHelper.getResourceImage(GuiConstants.USERS_CLASS_IMAGE);
+        loginImage = DwoHelper.getResourceImage(GuiConstants.STUDENT_IMAGE); //"resources/student.png");
         tr.addImage(removeImage, 0);
         tr.addImage(loginImage, 1);
         try {
@@ -93,7 +93,7 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
 
         //FontMetrics fm;
         /* registerinfo label */
-        JLabel l = new JLabel(TextMapper.getText(TextMapper.GUIP_REGISTERINFO) + ":");
+        JLabel l = new JLabel(TextMapper.getText(TextMapper.GUIP_ROLE_OPTIONS) + ":");
         l.setAlignmentX(LEFT_ALIGNMENT);
         l.setAlignmentY(TOP_ALIGNMENT);
         l.setForeground(GuiConstants.RED_COLOR);

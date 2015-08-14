@@ -249,7 +249,7 @@ public class ClassUsersPanel extends JPanel implements CenterSubPanel/*, ActionL
         this.setBackground(GuiConstants.MAIN_BACKGROUND);
 // initialisatie images
         removeImage = DwoHelper.getResourceImage(GuiConstants.REMOVE_STUDENT_IMAGE);
-        userImage = DwoHelper.getResourceImage("resources/student.png");
+        userImage = DwoHelper.getResourceImage(GuiConstants.STUDENT_IMAGE);
         editImage = DwoHelper.getResourceImage(GuiConstants.EDIT_SCO_IMAGE);
 
         MediaTracker tr = new MediaTracker(this);

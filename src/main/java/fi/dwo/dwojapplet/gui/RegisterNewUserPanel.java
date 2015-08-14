@@ -340,7 +340,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
 
         /* Password field */
         groupChoice = new JComboBox();
-        groupChoice.addItem(TextMapper.getText(TextMapper.GUIR_OPT_SELECT_GROUP));
+//        groupChoice.addItem(TextMapper.getText(TextMapper.GUIR_OPT_SELECT_GROUP));
         List<PersistentRole> rl = DwoHelper.getRoles();
         for (int i = 0; i < rl.size(); i++) {
             //if(!groupList[i].getName().equals("ADMIN"))
