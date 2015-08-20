@@ -18,6 +18,7 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PowerVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PrimitieveVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PrvVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.SigmaVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.StelselVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.SubscriptVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.VermenigvuldigingVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.WortelVak;
@@ -128,6 +129,10 @@ public class FormuleDecoder
 			//iv.vulVak(s.substring(2,eind));
 			//insert(iv);
 			//s = s.substring(eind);
+		}
+		else if(ch1=='Q')
+		{
+			return new StelselVak(holder);
 		}
 			
 		return null;

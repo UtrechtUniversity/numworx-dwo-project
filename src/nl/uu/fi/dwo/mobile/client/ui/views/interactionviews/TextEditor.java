@@ -631,6 +631,11 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	public void sigma() {
 		insert(Σ);
 	}
+	
+	@Override
+	public void stelsel() {
+		
+	}
 
 	@Override
 	public void getResponses(List<String> responses) {

@@ -598,6 +598,11 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	}
 	
 	@Override
+	public void stelsel() {
+		insert("$Q@");
+	}
+	
+	@Override
 	public int getAsHoogte() {
 		return facade.wrapAsHoogte(defaultFont.getAscent());
 	}

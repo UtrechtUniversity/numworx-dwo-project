@@ -170,5 +170,9 @@ public class AbstractEditor implements FormuleEditorIF {
 	@Override
 	public void sigma() {
 	}
+	
+	@Override
+	public void stelsel() {
+	}
 
 }

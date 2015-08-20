@@ -475,4 +475,9 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 	public void sigma() {
 		
 	}
+	
+	@Override
+	public void stelsel() {
+		
+	}
 }

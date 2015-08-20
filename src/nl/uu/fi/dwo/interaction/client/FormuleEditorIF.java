@@ -80,5 +80,7 @@ public interface FormuleEditorIF {
 	
 	void sigma();
 	
+	void stelsel();
+	
 	
 }

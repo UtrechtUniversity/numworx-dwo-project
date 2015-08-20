@@ -19,6 +19,7 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeWortelVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PrimitieveVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PrvVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.SigmaVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.StelselVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.SubscriptVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.WortelVak;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
@@ -412,6 +413,11 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 	@Override
 	public void sigma() {
 		addElement(new SigmaVak(getCurrentRegel()));
+	}
+	
+	@Override
+	public void stelsel() {
+		addElement(new StelselVak(getCurrentRegel()));
 	}
 
 

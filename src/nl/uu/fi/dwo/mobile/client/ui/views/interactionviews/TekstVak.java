@@ -413,7 +413,8 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			else if (currentObject instanceof FormuleViewer)
 			{	FormuleFont f = FormuleFont.createFromFontSize(font_size);
 				f.setBold(font_style == 1 || font_style == 3);
-				f.setFont(font_name);
+				if(!FormuleFont.formTimes)
+					f.setFont(font_name);
 				((FormuleViewer) currentObject).setFont(f);
 				((FormuleViewer) currentObject).setDefaultFont(f);
 				((FormuleViewer) currentObject).setColor(fgColor);
