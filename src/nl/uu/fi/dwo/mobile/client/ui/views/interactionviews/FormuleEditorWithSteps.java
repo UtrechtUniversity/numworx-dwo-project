@@ -960,10 +960,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			prefixViewer.setFont(font);
 		for(int i = 0; i < viewers.size(); i++)
 			viewers.get(i).setFont(font);
-//		if(latest_answer_viewer != null)
-//			latest_answer_viewer.setFont(font);
 		editor.setFont(font);
-		//editor.setCurrent(0, 0);
 		
 		stepPanelY = 0;
 		for(int i = 0; i < viewers.size(); i++)
@@ -978,10 +975,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		if(editor != null)
 			contentPanel.setWidgetTopHeight(stepPanels.get(stepPanels.size() - 1), stepPanelY, Style.Unit.PX, editor.getMainRegel().getHeight(), Style.Unit.PX);
 				
-		editor.setCurrentElementRepaint();
-		
-		//TODO: ook zorgen voor herplaatsen van alle viewers en de editor; ze zijn nu niet helemaal zichtbaar omdat de tekst te groot is geworden.
-		
+		editor.setCurrentElementRepaint();		
 	}
 
 	public FormuleEditorWithAnswer addNewEditor(LayoutPanel p)
