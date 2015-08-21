@@ -550,6 +550,14 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	public void setParentRegel(TekstRegel regel)
 	{
 		parentRegel = regel;
+		if(fontOvererving)
+		{	FormuleFont font = FormuleFont.createFromFontSize(parentRegel.getFont().getFontSize(), false);
+			if(!FormuleFont.formTimes)
+				font.setFont(parentRegel.getFont().getFont());
+			setFont(font);
+		}
+				
+		
 	}
 	
 	@Override

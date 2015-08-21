@@ -1143,7 +1143,6 @@ public class TekstVakPanel implements InteractionView, FacetAware
 					tekstVakken[i][j].setFontSize(fontSizeOvererving);
 				}
 			}
-			//TODO: kijken of dit goed gaat met lettertype (arial, etc), die zet je nu volgens mij nog niet.
 		}
 	}
 	

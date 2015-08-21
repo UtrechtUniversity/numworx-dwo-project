@@ -390,7 +390,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 					voegRegelToe();
 					regelVakken[aantalRegels - 1].addObject(currentObject);
 					((AntwoordTekstVak) currentObject).setParentRegel(regelVakken[aantalRegels - 1]);
-					regelBreedte = ((FormuleEditorWithAnswer) currentObject).getWidth();
+					regelBreedte = ((AntwoordTekstVak) currentObject).getWidth();
 				}
 			}
 			else if (currentObject instanceof FormuleEditorWithAnswer)
@@ -408,6 +408,21 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 					regelVakken[aantalRegels - 1].addObject(currentObject);
 					((FormuleEditorWithAnswer) currentObject).setParentRegel(regelVakken[aantalRegels - 1]);
 					regelBreedte = ((FormuleEditorWithAnswer) currentObject).getWidth();
+				}
+			}
+			else if(currentObject instanceof FormuleEditorWithSteps)
+			{
+				if(regelBreedte == 0 || regelBreedte + ((FormuleEditorWithSteps) currentObject).getWidth() <= tekstVakBreedte || pasAanB)
+				{	regelVakken[aantalRegels - 1].addObject(currentObject);
+					((FormuleEditorWithSteps) currentObject).setFont(regelVakken[aantalRegels - 1]);
+					regelBreedte += ((FormuleEditorWithSteps) currentObject).getWidth();
+				}
+				else
+				{
+					voegRegelToe();
+					regelVakken[aantalRegels - 1].addObject(currentObject);
+					((FormuleEditorWithSteps) currentObject).setFont(regelVakken[aantalRegels - 1]);
+					regelBreedte = ((FormuleEditorWithSteps) currentObject).getWidth();
 				}
 			}
 			else if (currentObject instanceof FormuleViewer)

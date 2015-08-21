@@ -142,7 +142,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 	
 	private boolean stapOk = true;
 
-	private FormuleFont defaultfont;
+	private FormuleFont font;
 	private boolean ingevuld = false;
 	private boolean nagekeken = false;
 	private boolean hasFeedback = false;
@@ -164,7 +164,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 
 	public FormuleEditorWithSteps(HashMap<String, Object> h, boolean isVergelijkingVak, String[] randomVarNamen, HashMap randomVarWaarden, AntwoordVakChecker avChecker)
 	{
-		defaultfont = FormuleFont.createFromFontSize(XMLView.getDefaultFontSize());
+		font = FormuleFont.createFromFontSize(XMLView.getDefaultFontSize());
 		
 		this.randomVarNamen = randomVarNamen;
 		this.randomVarWaarden = randomVarWaarden;
@@ -289,7 +289,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 //			prefixViewer.getElement().getStyle().setProperty("clear", "both");
 //			prefixViewer.getElement().getStyle().setMarginLeft(23, Unit.PX);
 			prefixViewer = new FormuleViewer(prefix);
-			prefixViewer.setFont(defaultfont);
+			prefixViewer.setFont(font);
 		}
 		
 		mainPanel = new FlowPanel();
@@ -443,7 +443,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 				startString = startString.substring(0, startString.length() - 1) + "=@";
 
 			FormuleViewer f = new FormuleViewer(prefix.substring(2, prefix.length() - 1) + startString.substring(2, startString.length() - 1));
-			f.setFont(defaultfont);
+			f.setFont(font);
 			f.getMainRegel().getCanvas().getElement().getStyle().setMarginLeft(23, Unit.PX);
 
 			viewers.add(f);
@@ -564,7 +564,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		terugButton.getElement().getStyle().setVisibility(Visibility.VISIBLE);
 
 		FormuleViewer fv = new FormuleViewer(prefix.substring(2, prefix.length() - 1) + useranswer.substring(2, useranswer.length() - 1));
-		fv.setFont(defaultfont);
+		fv.setFont(font);
 		fv.showResult(FormuleViewer.CORRECT);
 		if (latest_answer_viewer != null && !((mode == 2 || mode == 3) && show && !stepsForLinKwad))
 		{
@@ -888,7 +888,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 
 		if(linStrategieVersie)
 		{	FormuleViewer viewer = new FormuleViewer(fv.toString());
-			viewer.setFont(defaultfont);
+			viewer.setFont(font);
 			viewer.getMainRegel().getCanvas().getElement().getStyle().setMarginLeft(23, Unit.PX);
 			viewers.add(viewer);
 			addFormuleViewer(viewer, stepPanel);
@@ -947,6 +947,42 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		}
 		return s;
 	}
+	
+	public void setFont(TekstRegel parentRegel)
+	{
+		//als geen fontOvererving, dan hoeft er niets te gebeuren.
+		if(!fontOvererving)
+			return;
+		font = FormuleFont.createFromFontSize(parentRegel.getFont().getFontSize(), false);
+		if(!FormuleFont.formTimes)
+			font.setFont(parentRegel.getFont().getFont());
+		if(prefixViewer != null)
+			prefixViewer.setFont(font);
+		for(int i = 0; i < viewers.size(); i++)
+			viewers.get(i).setFont(font);
+//		if(latest_answer_viewer != null)
+//			latest_answer_viewer.setFont(font);
+		editor.setFont(font);
+		//editor.setCurrent(0, 0);
+		
+		stepPanelY = 0;
+		for(int i = 0; i < viewers.size(); i++)
+		{
+			LayoutPanel p = stepPanels.get(i);
+			FormuleViewer v = viewers.get(i);
+			p.clear();
+			addFormuleViewer(v, p);
+			contentPanel.setWidgetTopHeight(p, stepPanelY, Style.Unit.PX, v.getHeight(), Style.Unit.PX);
+			stepPanelY += v.getHeight() + stapH;
+		}
+		if(editor != null)
+			contentPanel.setWidgetTopHeight(stepPanels.get(stepPanels.size() - 1), stepPanelY, Style.Unit.PX, editor.getMainRegel().getHeight(), Style.Unit.PX);
+				
+		editor.setCurrentElementRepaint();
+		
+		//TODO: ook zorgen voor herplaatsen van alle viewers en de editor; ze zijn nu niet helemaal zichtbaar omdat de tekst te groot is geworden.
+		
+	}
 
 	public FormuleEditorWithAnswer addNewEditor(LayoutPanel p)
 	{
@@ -961,7 +997,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		FormuleEditorWithAnswer editor = editorInstance();
 		editor.zetMode(mode);
 		editor.setFormuleToolBijFocus(true);
-		editor.setFont(defaultfont);
+		editor.setFont(font);
 		editor.setCurrent(0, 0);
 //		int width = editor.getMainRegel().getWidth();
 //		if(hasPrefix)
@@ -1484,7 +1520,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			}
 
 			FormuleViewer fv = new FormuleViewer(formuleVakInhouden.length > i?formuleVakInhouden[i]:"");
-			fv.setFont(defaultfont);
+			fv.setFont(font);
 			
 			if(i < viewers.size())
 			{	if(viewers.get(i).getAsPanel().getParent() != null)
@@ -2151,7 +2187,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			catch(Exception e){}
 		}
 		FormuleViewer fv = new FormuleViewer(prefix.substring(2, prefix.length() - 1) + antwoord.substring(2, antwoord.length() - 1));
-		fv.setFont(defaultfont);
+		fv.setFont(font);
 		fv.setSelection(selectionStartX, selectionStartY, selectionEndX, selectionEndY);
 		fv.showResult(FormuleViewer.ALMOSTCORRECT);
 		VergelijkingMeerv verg = FormuleParser.parseVergelijking("$f" + fv.toString() + "@");
@@ -2252,7 +2288,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			{	fv = new FormuleViewer("");
 				vergNieuw = null;
 			}
-			fv.setFont(defaultfont);
+			fv.setFont(font);
 			//fv.showResult(fv.ALMOSTCORRECT);
 			
 			if (latest_answer_viewer != null && !(hasStartString && stapNr == 1))
@@ -2345,7 +2381,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 	
 	@Override
 	public int getAsHoogte() {
-		return defaultfont.getAscent();
+		return font.getAscent();
 		
 	}
 
