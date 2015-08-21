@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import com.google.gwt.i18n.client.NumberFormat;
 
+import fi.wiskopdr.Letter;
 import fi.wiskopdr.expressies.repr.AbstractConverter;
 
 public class BasisExpressie extends Expressie
@@ -54,7 +55,7 @@ public class BasisExpressie extends Expressie
 
 	public boolean isVar()
 	{
-		return Character.isLetter(basisString.charAt(0));
+		return Letter.isLetter(basisString.charAt(0));
 	}
 
 	public double geefWaarde()
