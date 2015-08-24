@@ -873,7 +873,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		if (show)
 			if (ingevuld)
 				//comRoot.setChanged(fout);
-				comRoot.setChanged(fout);
+				comRoot.setChanged(teltMee && fout);
 	}
 	
 	private void zetGoedFout(int uitslag)

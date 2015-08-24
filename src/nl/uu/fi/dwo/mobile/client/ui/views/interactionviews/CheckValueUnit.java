@@ -591,7 +591,7 @@ public class CheckValueUnit implements InteractionStub{
         	else
         		foutKruisImage.setVisible(true);
 	        if (ingevuld)
-				comRoot.setChanged(!juist);
+				comRoot.setChanged(teltMee && !juist);
         }
 			
         

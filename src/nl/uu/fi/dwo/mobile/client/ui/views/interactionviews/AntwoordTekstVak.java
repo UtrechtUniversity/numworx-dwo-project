@@ -315,7 +315,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 				}
 				kijkNa();
 				if(comRoot != null)
-					comRoot.setChanged(Boolean.FALSE.equals(correct));
+					comRoot.setChanged(teltMee && Boolean.FALSE.equals(correct));
 			}
 
 			@Override

@@ -73,7 +73,8 @@ public class Variable
 				String exprString = tok;
 				//String[] nameParts = StringUtils.split(exprString, "_");
 				//if(nameParts.length==2) exprString = nameParts[0] + "?(" + nameParts[1] + ")";
-
+				if(exprString.length() == 0)
+					continue;
 				Expressie expr = FormuleParser.parse(FormuleParser.schoon(FormuleParser.formuleString("$f" + exprString + "@")));
 				borders.addElement(expr);
 				borders.addElement(expr);

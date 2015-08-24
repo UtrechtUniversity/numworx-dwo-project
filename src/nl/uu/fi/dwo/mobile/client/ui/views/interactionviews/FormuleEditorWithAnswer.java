@@ -741,7 +741,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				//TODO: feedback syntaxfout tonen.
 			}
 			if(setState)
-				comRoot.setChanged(goedHalfFout == AntwoordVakChecker.FOUT);
+				comRoot.setChanged(teltMee && goedHalfFout == AntwoordVakChecker.FOUT);
 			return;
 		}
 		
@@ -796,7 +796,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		{
 			lastanswer = useranswer;
 			if(mode == 0 || mode ==1) 
-				comRoot.setChanged(goedHalfFout == AntwoordVakChecker.FOUT);
+				comRoot.setChanged(teltMee && goedHalfFout == AntwoordVakChecker.FOUT);
 		
 		}
 		//if(this.fe != null && !(mode == 2 || mode == 3))
