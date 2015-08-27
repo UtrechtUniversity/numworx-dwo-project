@@ -14,6 +14,20 @@ public class Diff extends Expressie
 		isProdukt = false;
 		isBasis = false;
 	}
+	
+	public Expressie evalDiff()
+	{	if(kind1!=null && kind2!=null && kind2.isVar() && !kind2.isWaarde() )
+		{	return kind1.geefDiff((BasisExpressie)kind2);
+		}
+		return null;
+	}
+	 
+	public Expressie geefDiff(BasisExpressie basisExp)
+	{	if(kind1!=null && kind2!=null && kind2.isVar() && !kind2.isWaarde() )
+		{	return kind1.geefDiff((BasisExpressie)kind2);
+		}
+		return null;	
+	}
 
 	public double geefWaarde()
 	{ //if(waarde==Double.NaN) 
@@ -32,10 +46,11 @@ public class Diff extends Expressie
 	}
 
 	public Expressie substitueer(double subst, String var)
-	{
-		if (var.equals(kind2.geefVarNaam()))
-			return this;
-		return new Diff(kind1.substitueer(subst, var), kind2.substitueer(subst, var));
+	{	if(var.equals(kind2.geefVarNaam()))	
+		{
+			return kind1.geefDiff((BasisExpressie)kind2).substitueer(subst, var);
+		}
+		return new Diff(kind1.substitueer(subst,var), kind2.substitueer(subst,var));
 	}
 
 	public Expressie substitueer(Expressie subst, String var)

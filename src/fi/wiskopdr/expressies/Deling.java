@@ -14,6 +14,13 @@ public class Deling extends Expressie
 		isProdukt = true;
 		isBasis = false;
 	}
+	
+	public Expressie geefDiff(BasisExpressie basisExp)
+	{	if(kind1!=null)
+		{	return new Deling(new Aftrekking(new Vermenigvuldiging(kind1.geefDiff(basisExp), kind2),new Vermenigvuldiging(kind2.geefDiff(basisExp), kind1)),new Macht(kind2,new BasisExpressie(2)));
+		}
+		return null;	
+	}
 
 	public double geefWaarde()
 	{	double d1 = kind1.geefWaarde();

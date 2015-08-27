@@ -14,6 +14,13 @@ public class Ln extends Expressie
 		isBasis = false;
 	}
 	
+	public Expressie geefDiff(BasisExpressie basisExp)
+	{	if(kind1!=null)
+		{	return new Deling(kind1.geefDiff(basisExp),kind1);
+		}
+		return null;	
+	}
+	
 	public double geefWaarde()
 	{	return Math.log(kind1.geefWaarde());
 	}

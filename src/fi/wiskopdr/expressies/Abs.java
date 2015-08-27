@@ -14,6 +14,13 @@ public class Abs extends Expressie
 		isBasis = false;
 	}
 	
+	public Expressie geefDiff(BasisExpressie basisExp)
+	{	if(kind1!=null)
+		{	return new Vermenigvuldiging(kind1.geefDiff(basisExp), new Deling(kind1, new Abs(kind1)));
+		}
+		return null;	
+	}
+	
 	public double geefWaarde()
 	{	return Math.abs(kind1.geefWaarde());
 	}

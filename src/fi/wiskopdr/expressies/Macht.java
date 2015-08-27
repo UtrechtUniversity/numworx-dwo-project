@@ -14,6 +14,16 @@ public class Macht extends Expressie
 		isBasis = false;
 	}
 	
+	public Expressie geefDiff(BasisExpressie basisExp)
+	{	if(kind1!=null && kind2!=null && kind2.isWaarde())
+		{	return new Vermenigvuldiging(new Vermenigvuldiging(new BasisExpressie(kind2.geefWaarde()),kind1.geefDiff(basisExp)),new Macht(kind1, new BasisExpressie(kind2.geefWaarde()-1)));
+		}
+		else if(kind1!=null  && kind1.isWaarde() && kind2!=null)
+		{	return new Vermenigvuldiging(kind2.geefDiff(basisExp),new Vermenigvuldiging(new Ln(new BasisExpressie(kind1.geefWaarde())),new Macht(kind1,kind2)));
+		}
+		return null;	
+	}
+	
 	public double geefWaarde()
 	{	
 		if(kind1.geefWaarde()<0 && kind2 instanceof Deling)

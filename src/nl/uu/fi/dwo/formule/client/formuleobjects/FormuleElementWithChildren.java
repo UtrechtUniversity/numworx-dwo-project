@@ -110,6 +110,9 @@ public abstract class FormuleElementWithChildren extends FormuleElement
 		if (s == null)
 			return;
 
+		for(int i = 0; i < this.getChildrenSize(); i++)
+			this.getChild(i).deleteAll();
+		
 		FormuleRegel regel = this.getChild(0);
 
 		while (s.length() > 0)

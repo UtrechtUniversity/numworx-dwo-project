@@ -14,6 +14,13 @@ public class Wortel extends Expressie
 		isBasis = true;
 	}
 	
+	public Expressie geefDiff(BasisExpressie basisExp)
+	{	if(kind1!=null)
+		{	return new Deling(kind1.geefDiff(basisExp), new Vermenigvuldiging(new BasisExpressie(2),new Wortel(kind1)));
+		}
+		return null;	
+	}
+	
 	public double geefWaarde()
 	{	double d1 = kind1.geefWaarde();
 		if(d1>=0)

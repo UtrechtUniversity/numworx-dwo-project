@@ -752,7 +752,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		if(antwoord!=null) casNodig = antwoord.toString().indexOf("$i")>-1 || antwoord.toString().indexOf("$d")>-1 || antwoord.toString().indexOf("$T")>-1  || antwoord.toString().indexOf("$S")>-1  || antwoord.toString().indexOf("$P")>-1;
 		
 		if(casNodig)
-		{	//antwoordEvalCAS = Expressie.evalWithCAS(antwoord);
+		{	antwoordEvalCAS = Expressie.evalWithCAS(antwoord);
 			
 		}
 		
@@ -776,8 +776,8 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 				}
 				else
 				{	for(int i=0 ; i<juisteAntwoorden.length ; i++)
-					{	//if(casNodig)pastGelijkwaardig = pastGelijkwaardig || AntwoordChecker.checkGelijkwaardig(antwoordEvalCAS,juisteAntwoorden[i], absPrecisions[i]);
-						//else 
+					{	if(casNodig)pastGelijkwaardig = pastGelijkwaardig || AntwoordChecker.checkGelijkwaardig(antwoordEvalCAS,juisteAntwoorden[i], absPrecisions[i]);
+						else 
 							pastGelijkwaardig = pastGelijkwaardig || AntwoordChecker.checkGelijkwaardig(antwoord,juisteAntwoorden[i], absPrecisions[i]);
 						
 						if(Algebra.isBreukPlusGetal(juisteAntwoorden[i]))pastExact = pastExact || AntwoordChecker.checkExactBreukPlusGetal(expAntwoordString,juisteAntwoorden[i]);
@@ -812,7 +812,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 			
 			isHerleid = false;	
 			for(int i=0 ; i<juisteAntwoorden.length ; i++)
-			{	if(casNodig);//isGelijkwaardig = isGelijkwaardig || AntwoordChecker.checkGelijkwaardig(antwoordEvalCAS,juisteAntwoorden[i],absPrecisions[i]);
+			{	if(casNodig) isGelijkwaardig = isGelijkwaardig || AntwoordChecker.checkGelijkwaardig(antwoordEvalCAS,juisteAntwoorden[i],absPrecisions[i]);
 				else isGelijkwaardig = isGelijkwaardig || AntwoordChecker.checkGelijkwaardig(antwoord,juisteAntwoorden[i],absPrecisions[i]);
 				if(soortHerleiding!=0)isHerleid = AntwoordChecker.checkHerleiding(antwoord,juisteAntwoorden[0], soortHerleiding);
 				

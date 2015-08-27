@@ -39,6 +39,11 @@ public class BasisExpressie extends Expressie
 		isProdukt = false;
 		isBasis = true;
 	}
+	
+	public Expressie geefDiff(BasisExpressie basisExp)
+	{	if(basisExp.geefVarNaam().equals(basisString))return new BasisExpressie(1);
+		else return new BasisExpressie(0);
+	}
 
 	public double geefW()
 	{

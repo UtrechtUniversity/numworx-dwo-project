@@ -13,6 +13,13 @@ public class ArcCosinus extends Expressie
 		isProdukt = false;
 		isBasis = false;
 	}
+	
+	public Expressie geefDiff(BasisExpressie basisExp)
+	{	if(kind1!=null)
+		{	return new Aftrekking(new BasisExpressie(0),new Deling(kind1.geefDiff(basisExp), new Wortel(new Aftrekking(new BasisExpressie(1),new Macht(kind1,new BasisExpressie(2))))));
+		}
+		return null;	
+	}
 
 	public double geefWaarde()
 	{	if(hoekGraden) return 180.0/Math.PI*Math.acos(kind1.geefWaarde());

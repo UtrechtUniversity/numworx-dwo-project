@@ -15,6 +15,13 @@ public class Aftrekking extends Expressie
 		isProdukt = false;
 		isBasis = false;
 	}
+	
+	public Expressie geefDiff(BasisExpressie basisExp)
+	{	if(kind1!=null)
+		{	return new Aftrekking(kind1.geefDiff(basisExp), kind2.geefDiff(basisExp));
+		}
+		return null;	
+	}
 
 	public double geefWaarde()
 	{	return kind1.geefWaarde()-kind2.geefWaarde();

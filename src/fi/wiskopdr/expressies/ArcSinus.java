@@ -14,6 +14,13 @@ public class ArcSinus extends Expressie
 		isBasis = false;
 	}
 	
+	public Expressie geefDiff(BasisExpressie basisExp)
+	{	if(kind1!=null)
+		{	return new Deling(kind1.geefDiff(basisExp), new Wortel(new Aftrekking(new BasisExpressie(1),new Macht(kind1,new BasisExpressie(2)))));
+		}
+		return null;	
+	}
+	
 	public double geefWaarde()
 	{	if(hoekGraden) return 180.0/Math.PI*Math.asin(kind1.geefWaarde());
 		return Math.asin(kind1.geefWaarde());

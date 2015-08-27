@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.formule.client.formuleobjects.vakken;
 
 import com.google.gwt.canvas.dom.client.Context2d.TextBaseline;
 
+import fi.wiskopdr.expressies.BasisExpressie;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
@@ -17,6 +18,9 @@ public class DiffVak extends FormuleElementWithChildren
 	public DiffVak(FormuleElement editor)
 	{
 		super(editor, 2);
+		//hier op één of andere manier x in tweede kind stoppen. 
+		//Maar wel zo dat die x ook weer verdwijnt als er iets anders (bijvoorbeeld het opgeslagen kind, dat ook x kan zijn) in wordt gezet.
+		getChild(1).insert("x");
 	
 		diffBreuk = getChild(0).toString().length()==1 && Character.isLetter(getChild(0).toString().charAt(0));
         
@@ -28,6 +32,7 @@ public class DiffVak extends FormuleElementWithChildren
         {	getChild(0).setPosition(fm.getAscent()/2 -1, 0);
         
         }
+        
         getChild(1).setPosition(fm.getAscent()/8 + fm.getAscent()/2 - 2, 
         		(height - (2*(fm.getAscent() + fm.getDescent()) + fm.getAscent()/4))/2 + fm.getAscent() + fm.getDescent() + fm.getAscent()/8);
         setAsHoogte(getChild(1).y + 3*fm.getAscent()/8);
@@ -67,7 +72,7 @@ public class DiffVak extends FormuleElementWithChildren
 		height = (int) (Math.max(getChild(0).height, asc + desc + getChild(1).height + asc/4));
         if(diffBreuk) 
         	width = (int) (asc/8+getChild(0).width+asc/3+asc/4);
-        int k1x = (int) (asc/8+asc+asc/3+1);
+        int k1x = (int) (asc/8+asc+asc/3+2);
         int k1y = (int) ((height-getChild(0).height)/2);// + 4*asc/8 + 1);//was zonder - 1
         if(diffBreuk) 
         {	k1x = (int) (asc/2) - 1;
@@ -78,7 +83,8 @@ public class DiffVak extends FormuleElementWithChildren
         if(diffBreuk) 
         	setAsHoogte((int)(asc + desc + 3* asc/8));
         
-    	int k2y = (int) (getAsHoogte() + asc/8 - 3*asc/8); 
+        //int k2y = (int) (getAsHoogte() + asc/8 - 3*asc/8);
+        int k2y = (int) (getAsHoogte() + asc/8 - asc/2 + asc/8);
         setSize(width, height);
         getChild(0).setPosition(k1x, k1y);
         getChild(1).setPosition(k2x, k2y);
@@ -102,7 +108,7 @@ public class DiffVak extends FormuleElementWithChildren
 				
 		ctx.stroke();
 		ctx.fillText(dString, fm.getAscent()/8+ (diffBreuk?0:fm.getAscent()/4), getAsHoogte() - 3*asc/8 - desc);
-		ctx.fillText(dString, fm.getAscent()/8, getAsHoogte() + asc + asc/4 - 3*asc/8 - asc/6);
+		ctx.fillText(dString, fm.getAscent()/8, k2y + asc);
 		fm.setItalic(true);
 		
 		

@@ -14,6 +14,13 @@ public class NdeWortel extends Expressie
 		isBasis = false;
 	}
 	
+	public Expressie geefDiff(BasisExpressie basisExp)
+	{	if(kind1!=null && kind2!=null && kind2.isWaarde())
+		{	return new Vermenigvuldiging(new Vermenigvuldiging(kind1.geefDiff(basisExp),new Deling(new BasisExpressie(1),kind2)),new Macht(kind1, new Aftrekking(new Deling(new BasisExpressie(1),kind2),new BasisExpressie(1))));
+		}
+		return null;	
+	}
+	
 	public double geefWaarde()
 	{	double d1 = kind1.geefWaarde();
 		double d2 = kind2.geefWaarde();

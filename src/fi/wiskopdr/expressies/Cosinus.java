@@ -13,6 +13,13 @@ public class Cosinus extends Expressie
 		isProdukt = false;
 		isBasis = false;
 	}
+	
+	public Expressie geefDiff(BasisExpressie basisExp)
+	{	if(kind1!=null)
+		{	return new Aftrekking(new BasisExpressie(0), new Vermenigvuldiging(kind1.geefDiff(basisExp),new Sinus(kind1)));
+		}
+		return null;	
+	}
 
 	public double geefWaarde()
 	{	if(hoekGraden)return Math.cos(kind1.geefWaarde()/180.0*Math.PI);

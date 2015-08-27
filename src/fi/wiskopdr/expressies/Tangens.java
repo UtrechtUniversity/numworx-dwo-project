@@ -14,6 +14,13 @@ public class Tangens extends Expressie
 		isBasis = false;
 	}
 	
+	public Expressie geefDiff(BasisExpressie basisExp)
+	{	if(kind1!=null)
+		{	return new Deling(kind1.geefDiff(basisExp),new Macht(new Cosinus(kind1),new BasisExpressie(2)));
+		}
+		return null;	
+	}
+	
 	public double geefWaarde()
 	{	if(hoekGraden)return Math.tan(kind1.geefWaarde()/180.0*Math.PI);
 		return Math.tan(kind1.geefWaarde());

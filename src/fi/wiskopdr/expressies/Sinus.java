@@ -14,6 +14,13 @@ public class Sinus extends Expressie
 		isBasis = false;
 	}
 	
+	public Expressie geefDiff(BasisExpressie basisExp)
+	{	if(kind1!=null)
+		{	return new Vermenigvuldiging(kind1.geefDiff(basisExp),new Cosinus(kind1));
+		}
+		return null;	
+	}
+	
 	public double geefWaarde()
 	{	if(hoekGraden)return Math.sin(kind1.geefWaarde()/180.0*Math.PI);
 		return Math.sin(kind1.geefWaarde());

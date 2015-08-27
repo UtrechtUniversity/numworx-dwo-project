@@ -16,6 +16,13 @@ public class Vermenigvuldiging extends Expressie
 		isProdukt = true;
 		isBasis = false;
 	}
+	
+	public Expressie geefDiff(BasisExpressie basisExp)
+	{	if(kind1!=null && kind2!=null)
+		{	return new Optelling(new Vermenigvuldiging(kind1.geefDiff(basisExp),kind2),new Vermenigvuldiging(kind2.geefDiff(basisExp),kind1));
+		}
+		return null;	
+	}
 
 	public double geefWaarde()
 	{

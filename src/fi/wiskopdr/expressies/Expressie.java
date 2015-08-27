@@ -57,6 +57,12 @@ public class Expressie
 			{
 			}
 		*/
+	
+	public Expressie geefDiff(BasisExpressie e)
+	{
+		return null;
+	}
+	
 	public double geefWaarde()
 	{
 		return Double.NaN;
@@ -132,11 +138,21 @@ public class Expressie
 		return null;
 	}
 	//TODO: do we need Ideas  || CAS
-	/*
+	
 		public static Expressie evalWithCAS(Expressie e)
 		{
+			if(e instanceof Diff)
+			{	Expressie diff = ((Diff)e).evalDiff();
+				if(diff!=null)return diff;
+			}
+			return null;
+			/*
+			if(isCasLocal())
+				return evalWithReduce(e);
+			if(isCasIdeas())
+				return evalWithIdeas(e.toStringStrikt());
 			return evalWithCAS(e.toStringCAS());
-			//return evalWithIdeas(e.toStringStrikt());
+			*/
 		}
 	/*
 		private static Expressie evalWithIdeas(String evalCommand)

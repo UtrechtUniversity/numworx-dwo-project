@@ -14,6 +14,13 @@ public class ArcTangens extends Expressie
 		isBasis = false;
 	}
 	
+	public Expressie geefDiff(BasisExpressie basisExp)
+	{	if(kind1!=null)
+		{	return new Deling(kind1.geefDiff(basisExp), new Optelling(new BasisExpressie(1),new Macht(kind1,new BasisExpressie(2))));
+		}
+		return null;	
+	}
+	
 	public double geefWaarde()
 	{	if(hoekGraden) return 180.0/Math.PI*Math.atan(kind1.geefWaarde());
 		return Math.atan(kind1.geefWaarde());

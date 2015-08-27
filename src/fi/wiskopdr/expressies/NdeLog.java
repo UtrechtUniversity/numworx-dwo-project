@@ -15,6 +15,13 @@ public class NdeLog extends Expressie
 		isBasis = false;
 	}
 	
+	public Expressie geefDiff(BasisExpressie basisExp)
+	{	if(kind1!=null && kind2!=null && kind2.isWaarde())
+		{	return new Deling(kind1.geefDiff(basisExp),new Vermenigvuldiging(new Ln(new BasisExpressie(kind2.geefWaarde())),kind1));
+		}
+		return null;	
+	}
+	
 	public double geefWaarde()
 	{	return Math.log(kind1.geefWaarde())/Math.log(kind2.geefWaarde());
 	}
