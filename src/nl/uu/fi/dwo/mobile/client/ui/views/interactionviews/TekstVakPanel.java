@@ -643,7 +643,7 @@ public class TekstVakPanel implements InteractionView, FacetAware
 	public void zetInstellingen(ObjectMap instellingen2)
 	{
 		this.instellingen = instellingen2;
-		if(!anderFont && !fontOvererving)
+		if((!anderFont && !fontOvererving) || isHoofdPanel())
 		{	if(instellingen2.containsKey("fontSize") )
 				font_size =  instellingen2.getInt("fontSize");
 			if(instellingen2.containsKey("fontName"))

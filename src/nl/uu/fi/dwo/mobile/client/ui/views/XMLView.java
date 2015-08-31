@@ -279,9 +279,9 @@ public abstract class XMLView {
 // FIXME ....	
 		hoofdPanel = new TekstVakPanel(breedte, hoogte, randomVarNamen, randomVarWaarden);
 		hoofdPanel.setCommunicationRoot(comRoot);
+		hoofdPanel.setHoofdPanel(true);
 		hoofdPanel.zetInstellingen(instellingen);
 		hoofdPanel.setKeyboard(kb);
-		hoofdPanel.setHoofdPanel(true);
 		hoofdPanel.zetOpdracht(opdracht);
 		
 		destination.add(hoofdPanel);
@@ -291,7 +291,7 @@ public abstract class XMLView {
 		style.setMarginBottom( instellingen.getInt("margeOnder"), Style.Unit.PX);
 		style.setMarginTop(instellingen.getInt("margeBoven"), Style.Unit.PX);
 		style.setMarginLeft(instellingen.getInt("margeLinks"), Style.Unit.PX);
-		style.setMarginRight(instellingen.getInt("margeRechts"), Style.Unit.PX);		
+		style.setMarginRight(instellingen.getInt("margeRechts"), Style.Unit.PX);	
 	}
 
 	public Panel getPanelElement(final FormuleHolder editor) {

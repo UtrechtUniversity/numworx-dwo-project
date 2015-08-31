@@ -412,6 +412,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		feedbackPanel.setSize(breedte - 25, feedbackPanelHeight);
 		feedbackPanel.setFontSize(XMLView.getDefaultFontSize());
 		feedbackPanel.setColor(CssColor.make("black"));
+		feedbackPanel.setMarges(5, 0);
 		feedbackPanel.setCentering(false, true);
 		feedbackPanel.setPasHoogteBreedteAan(true, false);
 		feedbackPanel.getElement().getStyle().setBackgroundColor("#FFFFDD");
@@ -960,7 +961,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			prefixViewer.setFont(font);
 		for(int i = 0; i < viewers.size(); i++)
 			viewers.get(i).setFont(font);
-		editor.setFont(font);
+		if(editor != null)
+			editor.setFont(font);
 		
 		stepPanelY = 0;
 		for(int i = 0; i < viewers.size(); i++)
@@ -973,9 +975,9 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			stepPanelY += v.getHeight() + stapH;
 		}
 		if(editor != null)
-			contentPanel.setWidgetTopHeight(stepPanels.get(stepPanels.size() - 1), stepPanelY, Style.Unit.PX, editor.getMainRegel().getHeight(), Style.Unit.PX);
-				
-		editor.setCurrentElementRepaint();		
+		{	contentPanel.setWidgetTopHeight(stepPanels.get(stepPanels.size() - 1), stepPanelY, Style.Unit.PX, editor.getMainRegel().getHeight(), Style.Unit.PX);
+			editor.setCurrentElementRepaint();
+		}
 	}
 
 	public FormuleEditorWithAnswer addNewEditor(LayoutPanel p)
@@ -2175,6 +2177,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		if(bordjesMethode) {
 			// convert to stringStrikt.
 			try{
+				System.out.println("bordjesmethode parsevergelijking stringstrikt");
 				VergelijkingMeerv e = FormuleParser.parseVergelijking(antwoord);
 				antwoord = "$f"+ e.toStringStrikt() + "@";
 			}

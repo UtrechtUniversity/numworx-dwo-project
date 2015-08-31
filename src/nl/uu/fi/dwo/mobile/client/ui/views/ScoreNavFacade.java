@@ -48,6 +48,7 @@ public class ScoreNavFacade implements ScoreNavIF {
 	private PushButton nakijkKnop;
 	private Checker checker;
 	private PushButton volgendeKnop, vorigeKnop, eindeKnop;
+	boolean vorigeKnopZichtbaar, volgendeKnopZichtbaar;
 	private PushButton scoresObjectivesKnop;
 	private NextPrevHandler nextprev;
 	private ObjectivesHandler objectivesHandler;
@@ -226,6 +227,8 @@ public class ScoreNavFacade implements ScoreNavIF {
 		else
 			sb.addKnop(eindeKnop, true);
 		sb.addKnop(vorigeKnop, true);
+		volgendeKnop.setVisible(volgendeKnopZichtbaar);
+		vorigeKnop.setVisible(vorigeKnopZichtbaar);
 		//volgendeKnop.setEnabled(enable);	
 	}
 
@@ -243,6 +246,7 @@ public class ScoreNavFacade implements ScoreNavIF {
 
 	@Override
 	public void setVolgendeVisible(boolean volgendeKnopZichtbaar) {
+		this.volgendeKnopZichtbaar = volgendeKnopZichtbaar;
 		volgendeKnop.setVisible(volgendeKnopZichtbaar);
 		volgendeKnop.removeFromParent();
 		if(volgendeKnopZichtbaar)
@@ -254,6 +258,7 @@ public class ScoreNavFacade implements ScoreNavIF {
 
 	@Override
 	public void setVorigeVisible(boolean vorigeKnopZichtbaar) {
+		this.vorigeKnopZichtbaar = vorigeKnopZichtbaar;
 		vorigeKnop.setVisible(vorigeKnopZichtbaar);
 		vorigeKnop.removeFromParent();
 		if(vorigeKnopZichtbaar)
