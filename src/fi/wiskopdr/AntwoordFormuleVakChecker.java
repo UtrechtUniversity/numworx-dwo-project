@@ -2,7 +2,9 @@ package fi.wiskopdr;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.logging.Logger;
 
@@ -51,7 +53,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
     
     private String gekozenAntwoordString, gekozenStartString, formuleVakString;
     
-    private ObjectList answerModels;
+    private List<Map<String,Object>> answerModels;
     private String[] randomVarNamen = null;
 	private HashMap<String,Object> randomVarWaarden = null;
 	
@@ -115,7 +117,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		int puntenGelijkwaardig = 10;
 		int puntenHerleiding = 0;
 		int puntenExact = 0;
-		ObjectList answerModels = null;
+		List<Map<String,Object>> answerModels = null;
 		boolean hasFeedback = false;
 		String vormString = "$f@";
 		double eqTestValueMin = 0;
@@ -137,7 +139,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		if(afvCheckerModel.containsKey("puntenGelijkwaardig")) puntenGelijkwaardig = afvCheckerModel.getInt("puntenGelijkwaardig");
 		if(afvCheckerModel.containsKey("puntenHerleiding")) puntenHerleiding = afvCheckerModel.getInt("puntenHerleiding");
 		if(afvCheckerModel.containsKey("puntenExact")) puntenExact = afvCheckerModel.getInt("puntenExact");
-		if(afvCheckerModel.containsKey("answerModels")) answerModels = afvCheckerModel.getObjectList("answerModels");
+		if(afvCheckerModel.containsKey("answerModels")) answerModels = afvCheckerModel.getMapList("answerModels");
 		if(afvCheckerModel.containsKey("hasFeedback")) hasFeedback = afvCheckerModel.getBoolean("hasFeedback");
 		if(afvCheckerModel.containsKey("vormString")) vormString = afvCheckerModel.getString("vormString");
 		if(afvCheckerModel.containsKey("eqTestValueMin")) eqTestValueMin = afvCheckerModel.getDouble("eqTestValueMin");
@@ -175,7 +177,11 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
          
         
         this.gekozenAntwoordString = antwoordString;
-        this.answerModels = answerModels;
+        this.answerModels = new ArrayList<Map<String, Object>> ();
+		for(int i = 0; i < answerModels.size(); i++)
+		{	this.answerModels.add(answerModels.get(i));
+		}
+		initialiseerAnswerModels();
         this.hasFeedback = hasFeedback;
         
         this.eqTestValueMin = eqTestValueMin;
@@ -245,9 +251,74 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		
 		return checkResults;
 	}
+	
+	public void initialiseerAnswerModels()
+	{
+		for(int i = 0; i < answerModels.size(); i++)
+		{
+			Map<String, Object> h = answerModels.get(i);
+			if(h != null)
+			{
+				String antwoordString = "$f@";
+				String feedback = "";
+				String vormString = "$f@";
+				
+				ObjectMap map = JSONUtilities.wrapMap(h);
+				
+				if(map!=null) 
+				{	if(map.containsKey("antwoordString")) 
+						antwoordString = map.getString("antwoordString");
+					if(map.containsKey("feedback")) 
+						feedback = map.getString("feedback");
+					if(map.containsKey("vormString")) 
+						vormString = map.getString("vormString");
+				}
+				try         
+		        {   antwoordString = FormuleParser.randomizeString(antwoordString,randomVarNamen,randomVarWaarden);
+		        }
+		        catch(Exception e)
+		        {   antwoordString = "$f???@";
+		        }
+		        //System.out.println("antwoordString na randomizing: "+antwoordString);
+		        
+		        try         
+		        {   vormString = FormuleParser.randomizeString(vormString,randomVarNamen,randomVarWaarden);
+		        }
+		        catch(Exception e)
+		        {   vormString = "$f???@";
+		            
+		        }
+		        
+		        try         
+		        {   feedback = modifyFeedback(feedback);
+		        	feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);
+		        }
+		        catch(Exception e)
+		        {   feedback = "$f???@";
+		        }
+		        
+		        //Nieuwe hashmap maken die niet meer gekoppeld is aan h; h is namelijk nog gekoppeld aan de launchstate
+		        //en daarin moeten de randomvariabelen niet worden vervangen door waarden (dan gaat 'item opnieuw' en 
+		        //'alles opnieuw' fout). 
+		        Map<String, Object> h2 = new HashMap<String,Object>();
+		        Iterator<String> keys = h.keySet().iterator();
+		        while(keys.hasNext())
+		        {
+		        	String key = keys.next();
+		        	h2.put(key, h.get(key));
+		        }
+		        //h2.putAll((Map<String, Object>) map); //FIXME: waarom werkt dit niet??
+		        h2.put("antwoordString", antwoordString);
+		        h2.put("feedback", feedback);
+		        h2.put("vormString", vormString);
+		        answerModels.remove(i);
+		        answerModels.add(i, h2);
+			}
+		}
+	}
 		
 	public void setAnswerModel(int nr)
-	{	ObjectMap h = answerModels.getObjectMap(nr);
+	{	Map<String,Object> h = answerModels.get(nr);
 		if(h==null) return;
 	
 		String antwoordString = "$f@";
@@ -263,19 +334,20 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		String vormString = "$f@";
 		int goedHalfFout = 0;
 		
-		if(h!=null) 
-		{	if(h.containsKey("antwoordString")) antwoordString = h.getString("antwoordString");
-			if(h.containsKey("gelijkwaardig")) gelijkwaardig = h.getBoolean("gelijkwaardig");
-			if(h.containsKey("herleiding")) herleiding = h.getBoolean("herleiding");
-			if(h.containsKey("exact")) exact = h.getBoolean("exact");
-			if(h.containsKey("soortHerleiding")) soortHerleiding = h.getInt("soortHerleiding");
-			if(h.containsKey("puntenGelijkwaardig")) puntenGelijkwaardig = h.getInt("puntenGelijkwaardig");
-			if(h.containsKey("puntenHerleiding")) puntenHerleiding = h.getInt("puntenHerleiding");
-			if(h.containsKey("puntenExact")) puntenExact = h.getInt("puntenExact");
-			if(h.containsKey("puntenFeedback")) puntenFeedback = h.getInt("puntenFeedback");
-			if(h.containsKey("feedback")) feedback = h.getString("feedback");
-			if(h.containsKey("vormString")) vormString = h.getString("vormString");
-			if(h.containsKey("goedHalfFout")) goedHalfFout = h.getInt("goedHalfFout");
+		ObjectMap map = JSONUtilities.wrapMap(h);
+		if(map!=null) 
+		{	if(map.containsKey("antwoordString")) antwoordString = map.getString("antwoordString");
+			if(map.containsKey("gelijkwaardig")) gelijkwaardig = map.getBoolean("gelijkwaardig");
+			if(map.containsKey("herleiding")) herleiding = map.getBoolean("herleiding");
+			if(map.containsKey("exact")) exact = map.getBoolean("exact");
+			if(map.containsKey("soortHerleiding")) soortHerleiding = map.getInt("soortHerleiding");
+			if(map.containsKey("puntenGelijkwaardig")) puntenGelijkwaardig = map.getInt("puntenGelijkwaardig");
+			if(map.containsKey("puntenHerleiding")) puntenHerleiding = map.getInt("puntenHerleiding");
+			if(map.containsKey("puntenExact")) puntenExact = map.getInt("puntenExact");
+			if(map.containsKey("puntenFeedback")) puntenFeedback = map.getInt("puntenFeedback");
+			if(map.containsKey("feedback")) feedback = map.getString("feedback");
+			if(map.containsKey("vormString")) vormString = map.getString("vormString");
+			if(map.containsKey("goedHalfFout")) goedHalfFout = map.getInt("goedHalfFout");
 		}
 		
 		//correctie voor afstemming op antwoordVergelijkingVakChecker (met extra optie: "door")
@@ -287,27 +359,29 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		this.goedHalfFout = goedHalfFout;
 		this.puntenFeedback = puntenFeedback;
 
-        try         
-        {   antwoordString = FormuleParser.randomizeString(antwoordString,randomVarNamen,randomVarWaarden);
-        }
-        catch(Exception e)
-        {   antwoordString = "$f???@";
-        }
-        
-        try         
-        {   vormString = FormuleParser.randomizeString(vormString,randomVarNamen,randomVarWaarden);
-        }
-        catch(Exception e)
-        {   vormString = "$f???@";
-        }
-        
-        try         
-        {   feedback = modifyFeedback(feedback);
-        	feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);
-        }
-        catch(Exception e)
-        {   feedback = "$f???@";
-        }
+		//Randomiseren niet hier pas, maar al bij initialisatie. 
+		//Dan hoeft het niet bij elke keer nakijken.
+//        try         
+//        {   antwoordString = FormuleParser.randomizeString(antwoordString,randomVarNamen,randomVarWaarden);
+//        }
+//        catch(Exception e)
+//        {   antwoordString = "$f???@";
+//        }
+//        
+//        try         
+//        {   vormString = FormuleParser.randomizeString(vormString,randomVarNamen,randomVarWaarden);
+//        }
+//        catch(Exception e)
+//        {   vormString = "$f???@";
+//        }
+//        
+//        try         
+//        {   feedback = modifyFeedback(feedback);
+//        	feedback = FormuleParser.randomizeTekstVakString(feedback, randomVarNamen, randomVarWaarden);
+//        }
+//        catch(Exception e)
+//        {   feedback = "$f???@";
+//        }
         zetJuisteAntwoord(antwoordString, false);
         zetJuisteVorm(vormString);
        

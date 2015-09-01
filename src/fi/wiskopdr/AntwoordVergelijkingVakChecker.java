@@ -334,7 +334,13 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		}
 		zetStartString(startString);
 
-		this.answerModels = answerModels;
+		//this.answerModels = answerModels;
+		
+		this.answerModels = new ArrayList<Map<String, Object>> ();
+		for(int i = 0; i < answerModels.size(); i++)
+		{	this.answerModels.add(answerModels.get(i));
+		}
+		
 		initialiseerAnswerModels();
 		this.hasFeedback = hasFeedback;
 
@@ -458,6 +464,7 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 				String vormString = "$f@";
 				
 				ObjectMap map = JSONUtilities.wrapMap(h);
+				
 				if(map!=null) 
 				{	if(map.containsKey("antwoordString")) 
 						antwoordString = map.getString("antwoordString");
@@ -491,9 +498,22 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		        {   feedback = "$f???@";
 		        }
 		        
-		        h.put("antwoordString", antwoordString);
-		        h.put("feedback", feedback);
-		        h.put("vormString", vormString);
+		        //Nieuwe hashmap maken die niet meer gekoppeld is aan h; h is namelijk nog gekoppeld aan de launchstate
+		        //en daarin moeten de randomvariabelen niet worden vervangen door waarden (dan gaat 'item opnieuw' en 
+		        //'alles opnieuw' fout). 
+		        Map<String, Object> h2 = new HashMap<String,Object>();
+		        Iterator<String> keys = h.keySet().iterator();
+		        while(keys.hasNext())
+		        {
+		        	String key = keys.next();
+		        	h2.put(key, h.get(key));
+		        }
+		        //h2.putAll((Map<String, Object>) map); //FIXME: waarom werkt dit niet??
+		        h2.put("antwoordString", antwoordString);
+		        h2.put("feedback", feedback);
+		        h2.put("vormString", vormString);
+		        answerModels.remove(i);
+		        answerModels.add(i, h2);
 			}
 		}
 	}
@@ -540,6 +560,8 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 		this.puntenFeedback = puntenFeedback;
 		
 		//System.out.println("antwoordString: "+antwoordString);
+		//Randomiseren niet hier pas, maar al bij initialisatie. 
+		//Dan hoeft het niet bij elke keer nakijken.
 //        try         
 //        {   antwoordString = FormuleParser.randomizeString(antwoordString,randomVarNamen,randomVarWaarden);
 //        }

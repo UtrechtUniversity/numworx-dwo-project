@@ -4,6 +4,7 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElement;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleElementWithChildren;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleTeken;
+import nl.uu.fi.dwo.interaction.client.FormuleFont;
 
 public class OperatorVak extends FormuleElementWithChildren {
 
@@ -18,6 +19,12 @@ public class OperatorVak extends FormuleElementWithChildren {
 		setChanged(true);
 		getChild(0).setPosition(0, 0);
 		
+	}
+	
+	public boolean setFont(FormuleFont f)
+	{
+		teken.setFont(f);
+		return super.setFont(f);
 	}
 
 	public String toString() {
