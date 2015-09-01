@@ -119,6 +119,10 @@ iframe {
 div.listItem-dwo {
 	color: black;
 }
+div.listItem-dwo-separator {
+	color: black;
+	font-size: 13pt;
+}
 
 
 .gwt-PopupPanel-WaitScreen {
@@ -206,4 +210,9 @@ div.listItem-dwo {
 	border-width: 3px;
 	border-color: #484848;
 	margin-top: 0px;	
+}
+
+.gwt-Tree .gwt-TreeItem-selected {
+	text-decoration: underline;
+	color: oldlace;
 }
