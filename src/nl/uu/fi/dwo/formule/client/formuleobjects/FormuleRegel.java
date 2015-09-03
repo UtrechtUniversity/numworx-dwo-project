@@ -627,6 +627,11 @@ public class FormuleRegel extends FormuleElement
 		return this.children.get(i);
 	}
 	
+	public int getElementCount()
+	{
+		return this.children.size();
+	}
+	
 	public void cursorToRight()
 	{	if(this.currentPosition < this.children.size() - 1 && holder instanceof FormuleEditor)
 		{	FormuleHolder holder = (FormuleHolder) this.holder;

@@ -251,39 +251,14 @@ public class FormuleHolder implements TekstElement, FormuleEditorIF
 		}
 		boolean[] selected = new boolean[teller+1];
 		teller = 0;
-		String antwoord = main.toString();
-		for(int i = 0; i < antwoord.length() - 1 && i > -1; i++)
-		{
-			char fc0 = antwoord.charAt(i);
-			char fc1 = antwoord.charAt(i+1);
-			if(fc0 == ofLabel.charAt(0) && fc1 == ofLabel.charAt(1))
-			{	teller++;
-				i++;
-			}
-			
-			else if(hasSelection && i < main.getSelectionStart())
-			{	if(fc0 != ' ')	
-					i = antwoord.substring(i).indexOf(ofLabel.charAt(0)) - 1;
-			}
-			else if(hasSelection && i < main.getSelectionEnd())
-			{	selected[teller]=true;
-				i = antwoord.substring(i).indexOf(ofLabel.charAt(0)) - 1;
-			}
-			else break;
+		for(int i = 0; i < main.getElementCount() - 1; i++)
+		{	FormuleElement fc0 = main.getElementAt(i);
+			FormuleElement fc1 = main.getElementAt(i + 1);
+			if(fc0.toString().equals(ofLabel.substring(0, 1)) && fc1.toString().equals(ofLabel.substring(1)))
+				teller++;	
+			else if(hasSelection && i > main.getSelectionStart() - 1 && i < main.getSelectionEnd())
+				selected[teller]=true;
 		}
-		
-		
-		
-//		for(int i=0 ; i<kind1.getComponentCount()-1 ; i++)
-//		{	FormuleElement fc0 = ((FormuleElement)kind1.getComponent(i));
-//			FormuleElement fc1 = ((FormuleElement)kind1.getComponent(i+1));
-//			if(fc0 instanceof FormuleTeken && fc1 instanceof FormuleTeken
-//					&& ((FormuleTeken)fc0).geefChar()==ofLabel.charAt(0) && ((FormuleTeken)fc1).geefChar()==ofLabel.charAt(1))
-//				teller++;
-//			else if(fc0.isSelected())
-//			selected[teller] = true;
-//			
-//		}
 		return selected[nr];
 	}
 

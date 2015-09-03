@@ -1765,7 +1765,6 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 	
 	private void zetGoedFoutEditor(int uitslag)
 	{
-		System.out.println("zetGoedFoutEditor");
 		if(!check)
 			return;
 		//contentPanel.remove(checkimg);
@@ -2177,7 +2176,6 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		if(bordjesMethode) {
 			// convert to stringStrikt.
 			try{
-				System.out.println("bordjesmethode parsevergelijking stringstrikt");
 				VergelijkingMeerv e = FormuleParser.parseVergelijking(antwoord);
 				antwoord = "$f"+ e.toStringStrikt() + "@";
 			}
