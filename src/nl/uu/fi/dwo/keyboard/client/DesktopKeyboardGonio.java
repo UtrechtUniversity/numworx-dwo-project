@@ -61,4 +61,15 @@ public class DesktopKeyboardGonio extends DesktopKeyboard {
 	void onC31(ClickEvent e) {
 	}
 
+	@Override
+	public void blur() {
+		close();
+		super.blur();
+	}
+
+	void close() {
+		if(alphaKeys != null) 
+			alphaKeys.hideAlpha();
+	}
+
 }

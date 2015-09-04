@@ -148,5 +148,6 @@ public abstract class AbstractKeyboard extends Composite implements FormuleKeybo
 		}
 	}
 	
+	void close() {}
 	
 }

@@ -35,6 +35,7 @@ public class TabbedDesktopKeyboard extends AbstractKeyboard {
 	public void setKeyboard(int nr) {
 		if(nr < 0 || nr > 4) nr = DEFAULT;
 		if(this.nr != nr) {
+			current.close();
 			current.removeFromParent();
 			if(stock[nr] == null) stock[nr] = createKeyboard(nr);
 			this.nr = nr;
@@ -97,6 +98,7 @@ public class TabbedDesktopKeyboard extends AbstractKeyboard {
 
 	@Override
 	public void blur() {
+		current.close();
 		super.blur();
 		resizeScrollPanel(0);
 	}
