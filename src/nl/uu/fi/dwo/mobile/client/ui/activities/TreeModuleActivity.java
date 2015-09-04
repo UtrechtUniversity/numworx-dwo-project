@@ -169,6 +169,8 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements TreeModu
 		Object c1 = o1.getID(); Integer n1 = ranking.get(c1);
 		Object c2 = o2.getID(); Integer n2 = ranking.get(c2);
 		if(n2 == null && n1 == null) {
+			if (o1.getType()== Type.SCO & o2.getType() == Type.SCO)
+				return Integer.signum(o1.getSequencenr()-o2.getSequencenr());
 			// unsorted
 			return o1.getName().compareTo(o2.getName());
 		}

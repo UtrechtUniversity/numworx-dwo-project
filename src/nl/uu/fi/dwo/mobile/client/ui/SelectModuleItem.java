@@ -38,6 +38,7 @@ public class SelectModuleItem
 	private String description;
 	private Object id;
 	private boolean showScore, fromSchool;
+	private int sequencenr;
 
 	private Type type = Type.ROOT;
 	private List<SelectModuleItem> children;
@@ -80,7 +81,8 @@ public class SelectModuleItem
 			this.id =  map.get("scoID");
 			this.file = PREFIX + this.id;
 			this.showScore = !Boolean.TRUE.equals(map.get("showscore")); // reverse logica
-		break;
+			this.sequencenr = ((Number) map.get("sequencenr")).intValue();
+			break;
 		case SEPARATOR:
 			this.type = type;
 		break;
@@ -199,4 +201,7 @@ public class SelectModuleItem
 		this.scoreMap = scoreMap;
 	}
 	
+	public int getSequencenr() {
+		return sequencenr;
+	}
 }
