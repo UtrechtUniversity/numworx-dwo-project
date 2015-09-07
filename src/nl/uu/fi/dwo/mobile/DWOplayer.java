@@ -57,9 +57,24 @@ public class DWOplayer implements EntryPoint
 	public static final DWOplayerParameters PARAMETERS = GWT.create(DWOplayerParameters.class);
 	private static DWOplayer instance;
 	
+	private static native int getDwoProfileID() /*-{
+		return $wnd.DWO_PROFILE_ID
+	}-*/;
+	
+	void setDwoProfileID() {
+		try {
+			int n = getDwoProfileID();
+			log("Profile = " + n);
+			if(n > 0) 
+				PROFILE_ID = n;
+		} catch( Throwable _) {}
+	}
+	
+	
 	public DWOplayer() {
 		super();
 		instance = this;
+		setDwoProfileID();
 	}
 
 	public static final String PREFIX = PARAMETERS.getLaunchData();

@@ -934,30 +934,30 @@ try {
 		return this.initialize();
 	}
 	
-	private final class PinchContent implements PinchHandler, com.google.gwt.animation.client.AnimationScheduler.AnimationCallback {
-		double zoom = 1.0;
-		private AnimationHandle handle;
-		
-		@Override
-		public void onPinch(PinchEvent event) {
-			double factor = event.getScaleFactor();
-			int x = event.getX();
-			int y = event.getY();
-			zoom = zoom / factor;
-			zoom = Math.max(1.0, zoom);
-			zoom = Math.min(5.0, zoom);
-			logger.info("x=" + x + ", y= " + y + ", scale=" + factor + ", z=" + zoom);
-			if(handle == null) {
-				handle = AnimationScheduler.get().requestAnimationFrame(this,contentPanel.getElement());
-			}
-		}
-
-		@Override
-		public void execute(double timestamp) {
-			handle = null;
-			contentPanel.getElement().getStyle().setProperty("zoom", String.valueOf(zoom));
-		}
-	}
+//	private final class PinchContent implements PinchHandler, com.google.gwt.animation.client.AnimationScheduler.AnimationCallback {
+//		double zoom = 1.0;
+//		private AnimationHandle handle;
+//		
+//		@Override
+//		public void onPinch(PinchEvent event) {
+//			double factor = event.getScaleFactor();
+//			int x = event.getX();
+//			int y = event.getY();
+//			zoom = zoom / factor;
+//			zoom = Math.max(1.0, zoom);
+//			zoom = Math.min(5.0, zoom);
+//			logger.info("x=" + x + ", y= " + y + ", scale=" + factor + ", z=" + zoom);
+//			if(handle == null) {
+//				handle = AnimationScheduler.get().requestAnimationFrame(this,contentPanel.getElement());
+//			}
+//		}
+//
+//		@Override
+//		public void execute(double timestamp) {
+//			handle = null;
+//			contentPanel.getElement().getStyle().setProperty("zoom", String.valueOf(zoom));
+//		}
+//	}
 
 	final class Resizer implements ResizeHandler {
 		@Override
@@ -1042,7 +1042,7 @@ try {
 
 		if(TouchEvent.isSupported()) {
 			TouchDelegate touchDelegate = new TouchDelegate(contentPanel);
-			touchDelegate.addPinchHandler(new PinchContent());
+			//touchDelegate.addPinchHandler(new PinchContent());
 			
 			touchDelegate.addSwipeEndHandler(new SwipeEndHandler() {
 				
