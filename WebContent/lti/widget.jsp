@@ -19,7 +19,7 @@
   <style type="text/css">
   body { 
   		margin: 0;
-  		overflow: scroll;
+  		overflow: hidden;
   		background-color: #FFFFFF;
   }
   </style>
@@ -223,7 +223,8 @@
   	String uuid = request.getParameter("resource_link_id");
   	String learnerId = request.getParameter("user_id");
   	String learnerName = request.getParameter("lis_person_name_full");
-
+	String roles = request.getParameter("roles");
+	
   	String context = request.getParameter("custom_context");
   	if(context == null) context = "{\"assessmentMode\": 0}";
   	Map map = (Map) JSONValue.parse(context);
@@ -276,6 +277,7 @@
 	<param name="logOption" value="<%=logOption%>">
 	<param name="scoreMax" value="<%=scoreMax %>" >
 	<param name="codebase_lookup" value="false">
+	<param name="role" value="<%=roles %>" >
 </applet>
 <!-- 
 <div id='footer'>

@@ -32,6 +32,7 @@
     		warfile="build/DWOmAccess.war"
     		webxml="WebContent/WEB-INF/web.xml"	 
     		duplicate="preserve"
+    		manifest="WebContent/META-INF/MANIFEST.MF"
     	>
     		<fileset dir="WebContent" />
         	<lib file="${packagename.jar}"  />
