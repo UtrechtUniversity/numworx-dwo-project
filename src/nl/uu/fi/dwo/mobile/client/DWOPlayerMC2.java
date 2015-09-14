@@ -8,22 +8,16 @@ import com.google.gwt.user.client.Window;
 
 public class DWOPlayerMC2 extends DWOplayerDefaults implements DWOplayerParameters {
 
-	private String launchData;
-	
 	public DWOPlayerMC2() {
-		String host = Window.Location.getHost();
+		String host = getHost();
 		String http = Window.Location.getProtocol();
-		if(!GWT.isProdMode())
-			host = "mc2dme.appspot.com";
-
 		launchData = http +"//"
 				+ host
 				+ "/getJSONLaunchDataBytes?s=";
 	}
-		
-	@Override
-	public String getLaunchData() {
-		return launchData;
+
+	public String getDefaultHost() {
+		return "mc2dme.appspot.com";
 	}
 	@Override
 	public String getStubView() {

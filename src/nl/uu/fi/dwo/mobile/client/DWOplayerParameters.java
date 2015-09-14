@@ -58,6 +58,6 @@ public interface DWOplayerParameters {
 	StatusBarIF getStatusBar();
 	ScoreNavIF  getScoreNav();
 	Logging getLogging();
-	
+	String getHost();
 // More to come....
 }

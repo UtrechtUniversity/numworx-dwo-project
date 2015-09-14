@@ -62,10 +62,8 @@ public class MC2LMS extends DWOplayer implements EntryPoint
 	@Override
 	protected ClientFactory createClientFactory() {
 		ClientFactoryImpl factory = new ClientFactoryImpl();
-		String host = Window.Location.getHost();
+		String host = PARAMETERS.getHost();
 		String http = Window.Location.getProtocol();
-		if(!GWT.isProdMode())
-			host = "9-dot-mc2dme.appspot.com";
 
 		factory.setRPCHandler(new RPCHandler(http + "//" + host + "/dwoapp"));
 		return factory;

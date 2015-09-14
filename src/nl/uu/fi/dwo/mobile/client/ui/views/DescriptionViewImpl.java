@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import nl.uu.fi.dwo.interaction.client.InteractionView;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
@@ -21,7 +22,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class DescriptionViewImpl extends XMLView implements DescriptionView, EntryPoint {
 
 	private static final String GET_COURSE_DESCRIPTION = 
-			"https://ws.fisme.science.uu.nl/DWOmAccess/getCourseDescription?c=";
+			"https://"+DWOplayer.PARAMETERS.getHost()+"/DWOmAccess/getCourseDescription?c=";
 	
 	
 	private SimplePanel main;

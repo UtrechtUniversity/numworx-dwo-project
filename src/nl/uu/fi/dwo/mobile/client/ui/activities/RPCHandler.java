@@ -29,7 +29,7 @@ public class RPCHandler {
 	}
 	
 	public RPCHandler() {
-		this("https://ws.fisme.science.uu.nl/DWOmAccess/dbaccess");
+		this("https://" + DWOplayer.PARAMETERS.getHost() + "/DWOmAccess/dbaccess");
 	}
 	
 

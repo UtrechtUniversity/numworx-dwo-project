@@ -360,6 +360,8 @@ public class TekstBuffer
 			return new StubView("NormVerdGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		case 24:
 			return new StubView("BinomVerdGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+		case 27:
+			return new StubView("MozarchGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 		}
 
 		if (soortVak == 0)

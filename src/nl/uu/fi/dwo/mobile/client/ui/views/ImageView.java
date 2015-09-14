@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 import java.util.Map;
 
 import nl.uu.fi.dwo.interaction.client.TekstElement;
+import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.utils.ImageUtils;
 
 import com.google.gwt.dom.client.Element;
@@ -67,7 +68,7 @@ public class ImageView implements IsWidget, TekstElement
 		{
 			String url = (String) map.get(naam + "/u");
 			if (url.startsWith("/"))
-				url = "https://ws.fisme.science.uu.nl" + url; // IS DIT ALTIJD GOED?
+				url = "https://" + DWOplayer.PARAMETERS.getHost() + url; // IS DIT ALTIJD GOED?
 			return new Image(url);
 		}
 		else

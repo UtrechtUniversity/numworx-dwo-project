@@ -33,10 +33,10 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 		return "/dwo/apps/";
 	}
 
-	@Override
-	public String getLaunchData() {
-		return "https://ws.fisme.science.uu.nl/DWOmAccess/getJSONLaunchDataBytes?s=";
-	}
+//	@Override
+//	public String getLaunchData() {
+//		return "https://ws.fisme.science.uu.nl/DWOmAccess/getJSONLaunchDataBytes?s=";
+//	}
 
 	@Override
 	public String getResource(String resource) {
@@ -54,6 +54,7 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 	}
 
 	private NavigationBundle navigationBundle;
+	protected String launchData;
 	
 	@Override
 	public NavigationCss navigationcss() {		
@@ -118,5 +119,29 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 	@Override
 	public Logging getLogging() {
 		return NoLogging.instance;
+	}
+
+	public DWOplayerDefaults() {
+		super();
+		String host = getHost();
+		String http = Window.Location.getProtocol();
+		launchData = http +"//"
+				+ host
+				+ "/DWOmAccess/getJSONLaunchDataBytes?s=";
+	}
+
+	protected String getDefaultHost() {
+		return "ws.fisme.science.uu.nl";
+	}
+	
+	public String getHost() {
+		if(GWT.isProdMode()) 
+			return Window.Location.getHost();
+		return getDefaultHost();
+	}
+
+	@Override
+	public String getLaunchData() {
+		return launchData;
 	}
 }
