@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
@@ -18,6 +20,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplTablet.slideNavigationToLeftAnimation;
 
 import com.google.gwt.animation.client.Animation;
@@ -65,6 +68,49 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	@UiField HeaderButton moduleBackButton;
 	@UiField LayoutPanel modulePanel;
 	
+	class TreeAnchorContext implements AnchorView.AnchorContext {
+		AnchorView.AnchorContext delegate;
+
+		public void gotoUrl(String href) {
+			if(href.startsWith("goto:."))
+				delegate.gotoUrl(href);
+			else
+			if(href.startsWith("goto:")) 
+			{	String page = "";
+				href = href.substring(5);
+				int dot = href.lastIndexOf('.');
+				if(dot > 0) {
+					page = href.substring(dot+1);
+					href = href.substring(0,dot);
+				}
+				// try numeric first
+				List<SelectModuleItem> children = selected.getParent().getChildren();
+				try { 
+					int sconr = Integer.parseInt(href)-1;
+					SelectModuleItem is = children.get(sconr);
+					selectItem(is);
+				} catch (Exception ex) {
+					for (Iterator<SelectModuleItem> iterator = children.iterator(); iterator.hasNext();) {
+						SelectModuleItem is = iterator.next();
+						if(is.getName().startsWith(href))
+						{
+							selectItem(is);
+							break;
+						}
+					}
+					
+				}
+				
+			}
+		}
+
+		TreeAnchorContext(AnchorContext delegate) {
+			this.delegate = delegate;
+		}
+		
+		
+	}
+	
 	
 	ViewModuleView loadedModule = null;
 	
@@ -76,7 +122,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	private HashMap<SelectModuleItem, TreeItem> inverseMap = new HashMap<SelectModuleItem, TreeItem>();
 	private List<SelectModuleItem> cellItems;
 	private List<SelectModuleItem> model, standardModel, schoolModel;
-
+	private SelectModuleItem selected;
 	private Presenter presenter;
 	private String SCHOOL_MODULES;
 	
@@ -154,6 +200,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	}
 	
 	private void selectItem(SelectModuleItem o) {
+		selected = o;
 		Place place;
 		switch(o.getType()) {
 		default:
@@ -166,6 +213,8 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 			container.clear();
 			cells.getElement().getStyle().setDisplay(Display.NONE);
 			ViewModuleViewImpl viewModuleViewImpl = new ViewModuleViewImpl(false);
+			DWOplayer.clientfactory.setEntryView(viewModuleViewImpl);
+			viewModuleViewImpl.setAnchorContext(new TreeAnchorContext(viewModuleViewImpl.getAnchorContext()));
 			loadedModule = viewModuleViewImpl.initialize(this);
 			viewModuleViewImpl.setApi(DWOplayer.api);
 			viewModuleViewImpl.setWindowTop(41);

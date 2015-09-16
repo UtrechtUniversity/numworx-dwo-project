@@ -120,5 +120,10 @@ public class ClientFactoryImpl implements ClientFactory
 	public void setRPCHandler(RPCHandler handler) {
 		this.handler = handler;
 	}
+
+	@Override
+	public void setEntryView(ViewModuleView view) {
+		entryView = view;
+	}
 	
 }
