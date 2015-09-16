@@ -180,7 +180,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		if(map.containsKey("volledigeBreedte"))
 			volledigeBreedte = map.getBoolean("volledigeBreedte");
 		
-		facade = new PopupFacade(h);
+		facade = new PopupFacade(map);
 		
 		if (h.get("interactiePanelLaunchState") != null)
 		{
@@ -1386,7 +1386,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		for (int i = 0; i < stapNr + 1; i++)
 		{
 			if (viewers.size() > i && viewers.get(i) != null)
-				formuleVakInhouden[i] = "$f" + (viewers.get(i)).toString() + "@" ;
+				formuleVakInhouden[i] = "$f" + getViewerString(i) + "@" ;
 			else
 				formuleVakInhouden[i] = "$f@";
 		}
@@ -1428,6 +1428,16 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		h.put("gebruikersSubStrings", gebruikersSubStrings);
 		
 		return h;
+	}
+
+	private String getViewerString(int i) {
+		String string = (viewers.get(i)).toString();
+		if(hasPrefix && !isVergelijkingVak)
+		{	 
+			
+			string = removePrefix(string);
+		}
+		return string;
 	}
 
 	@Override
@@ -1515,7 +1525,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 				}
 			}
 
-			FormuleViewer fv = new FormuleViewer(formuleVakInhouden.length > i?formuleVakInhouden[i]:"");
+			FormuleViewer fv = new FormuleViewer(setViewerString(formuleVakInhouden, i));
 			fv.setFont(font);
 			
 			if(i < viewers.size())
@@ -1698,6 +1708,14 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		scrollToBottom();
 		
 		
+	}
+
+	private String setViewerString(String[] formuleVakInhouden, int i) {
+		String string = formuleVakInhouden.length > i?formuleVakInhouden[i]:"";
+		if(hasPrefix && !isVergelijkingVak) {
+			string = prefix.substring(2, prefix.length()-1) + string;
+		}
+		return string;
 	}
 	
 	public void zetPijlVakNeer(String[] pijlVakOperatoren, String[] pijlVakInhouden, int i, int h)

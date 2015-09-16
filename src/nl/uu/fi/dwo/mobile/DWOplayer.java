@@ -131,6 +131,7 @@ public class DWOplayer implements EntryPoint
 
 		@Override
 		public void onFailure(Throwable caught) {
+			Logger.getLogger("DWOplayer").log(Level.SEVERE, caught.toString(), caught);
 			Window.alert(caught.toString());
 			goTree();
 		}
