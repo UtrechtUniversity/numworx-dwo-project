@@ -93,6 +93,8 @@ public class ScoreNavFacade implements ScoreNavIF {
 				//TODO: invullen. Kan pas als goto:0 goed geimplementeerd?
 			}
 		});
+		//Tijdelijk:
+		eindeKnop.setVisible(false);
 	
 	}
 	
@@ -225,7 +227,10 @@ public class ScoreNavFacade implements ScoreNavIF {
 		if(enable)
 			sb.addKnop(volgendeKnop, true);
 		else
-			sb.addKnop(eindeKnop, true);
+		{	sb.addKnop(eindeKnop, true);
+		//tijdelijk:
+		eindeKnop.setVisible(false);
+		}
 		sb.addKnop(vorigeKnop, true);
 		volgendeKnop.setVisible(volgendeKnopZichtbaar);
 		vorigeKnop.setVisible(vorigeKnopZichtbaar);

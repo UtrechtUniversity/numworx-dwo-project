@@ -1017,8 +1017,9 @@ try {
 		if(standalone) {
 			HorizontalPanel hbox = new HorizontalPanel();
 			hbox.add(prev); hbox.add(next);
-			if(end != null)
-				hbox.add(end);
+			//tijdelijk: nog even weglaten.
+			//if(end != null)
+			//	hbox.add(end);
 			hp.setRightWidget(hbox);
 			hb = new HeaderButton(DWOplayer.PARAMETERS.headercss());
 			hb.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.menuIcon().getSafeUri().asString() + "')");

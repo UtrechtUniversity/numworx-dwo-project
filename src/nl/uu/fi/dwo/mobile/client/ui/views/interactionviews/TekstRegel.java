@@ -215,13 +215,8 @@ public class TekstRegel extends LayoutPanel
 			int objectHoogte = 0;
 				
 		
-			if(currentObject instanceof TekstElement)
-			{	//objectVerschuiving = ((TekstElement) currentObject).getHeight()-((TekstElement) currentObject).getAsHoogte();
-				objectVerschuiving = ashoogte - ((TekstElement) currentObject).getAsHoogte();
-				//if(currentObject instanceof FormuleViewer)
-				//	objectVerschuiving += 1; //+1 om gelijk te houden met gewone tekst. Zou niet nodig moeten zijn.
-				//if(currentObject instanceof FormuleEditorWithAnswer)
-				//	objectVerschuiving -= 1; //weet nog niet of dit de beste oplossing is..
+			if(currentObject instanceof TekstElement) //formules, imageView, interactionView
+			{	objectVerschuiving = ashoogte - ((TekstElement) currentObject).getAsHoogte();
 				objectBreedte = ((TekstElement) currentObject).getWidth();
 				objectHoogte = ((TekstElement) currentObject).getHeight();
 			}
@@ -235,44 +230,23 @@ public class TekstRegel extends LayoutPanel
 			{
 				objectVerschuiving = ashoogte - tekstAshoogte;
 				objectBreedte = (int) ctx.measureText(currentObject.toString()).getWidth();
+				if(ctx.getFont().contains("italic"))
+					objectBreedte += 1;
 				objectHoogte = tekstHoogte;
 			}
 			else
 			{
 				objectVerschuiving = ashoogte - tekstAshoogte;
 			}
-			
 			if(currentObject instanceof String)
 			{
 				
 				TekstComponent tekst = new TekstComponent(fm, currentObject.toString(), objectBreedte, objectHoogte);
 				tekst.setColor(fgColor);
 				tekst.paint();
-				/*
-				Label label = new Label(currentObject.toString());
-				label.getElement().getStyle().setBackgroundColor("red");
-				label.getElement().getStyle().setProperty("whiteSpace", "pre");//om te zorgen dat meerdere spaties niet worden samengetrokken tot één spatie.
-				label.getElement().getStyle().setFontSize(font_size, Style.Unit.PX);
-				label.getElement().getStyle().setFontStyle(font_style == 2 || font_style == 3 ? FontStyle.ITALIC : FontStyle.NORMAL);
-				label.getElement().getStyle().setFontWeight(font_style == 1 || font_style == 3 ? Style.FontWeight.BOLD : Style.FontWeight.NORMAL);
-				label.getElement().getStyle().setPaddingRight(0, Style.Unit.PX);//nodig?
-				//label.getElement().getStyle().setProperty("verticalAlignment", "bottom");
-				*/
-				
-				
-				/*
-				stringPanel.add(label);
-				stringPanel.setWidgetLeftRight(label, 0, Style.Unit.PX, 0, Style.Unit.PX);
-				stringPanel.setWidgetBottom(label, 2, Style.Unit.PX, 1, Style.Unit.PX);
-				*/
 				
 				if(horPositie == 0 && Character.isLetter(currentObject.toString().charAt(0)))
 					horPositie = 2;
-				
-				
-//				this.add(label);
-//				this.setWidgetLeftWidth(label, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
-//				this.setWidgetTopHeight(label, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
 				Widget w = tekst.getAsPanel();
 				
 				this.add(w);
@@ -286,7 +260,7 @@ public class TekstRegel extends LayoutPanel
 				this.add(a);
 				this.setWidgetLeftWidth(a, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
 				this.setWidgetTopHeight(a, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
-					horPositie += 3; //zorgen dat formule aan de rechterkant ook voldoende afstand tot vervolgtekst krijgt.
+					horPositie += 3; //om te zorgen dat formule aan de rechterkant ook voldoende afstand tot vervolgtekst krijgt.
 			}
 			else if (currentObject instanceof FormuleEditorWithSteps)
 			{
@@ -324,9 +298,13 @@ public class TekstRegel extends LayoutPanel
 				Widget w = iv.getImage();
 				objectBreedte = iv.getWidth();
 				objectHoogte = iv.getHeight();
-				this.add(w);
-				this.setWidgetLeftWidth(w, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
-				this.setWidgetTopHeight(w, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
+				if(w != null) //w kan null zijn als plaatje niet in lijst met images voorkomt.
+				{
+					this.add(w);
+					this.setWidgetLeftWidth(w, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
+					this.setWidgetTopHeight(w, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
+				}
+				
 			}
 			else if (currentObject instanceof AnchorView)
 			{
@@ -392,6 +370,7 @@ public class TekstRegel extends LayoutPanel
 				}
 				
 			}
+			
 			this.setWidgetLeftWidth(w, horPositie, Style.Unit.PX, objectBreedte, Style.Unit.PX);
 			this.setWidgetTopHeight(w, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
 			horPositie += objectBreedte;

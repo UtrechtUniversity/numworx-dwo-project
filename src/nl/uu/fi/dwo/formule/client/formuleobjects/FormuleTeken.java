@@ -9,6 +9,8 @@ import com.google.gwt.canvas.dom.client.Context2d.TextBaseline;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.canvas.dom.client.TextMetrics;
 
+import fi.wiskopdr.Letter;
+
 /**
  * Single character like - + = etc..
  * @author Danny Hendrix
@@ -28,13 +30,14 @@ public class FormuleTeken extends FormuleElement
 	{
 		super(holder);
 		character = tk;
+		//\u2264: kleiner/gelijk, \u2265: groter/gelijk, \u2248: ongeveer gelijk.
 		if (tk == '+' || tk == '=' || tk == '<' || tk == '>' || tk == '\u2264' || tk == '\u2265' || tk == '\u2248' || tk == ':')
-			teken = " " + tk + " ";
+			teken = " " + tk + " "; 
 		//else if(maalteken && (tk == '*' || tk == '\u00d7'))
 		//	teken = " \u00d7 ";
 		else if (tk == '*')
 			teken = null;
-		else if (tk == '\u00d7')
+		else if (tk == '\u00d7') //vermenigvuldigingspunt
 			teken = null;
 		else if (tk == '-')
 			teken = null;
@@ -49,15 +52,15 @@ public class FormuleTeken extends FormuleElement
 		//TODO:removed this?
 		//else if (tk == 'y')
 		//teken = null;
-		else if (tk == '\u3008')
+		else if (tk == '\u3008') //punthaak (<) links
 			teken = null;
-		else if (tk == '\u3009')
+		else if (tk == '\u3009') //punthaak (>) rechts
 			teken = null;
 		else if (tk == '[')
 			teken = null;
 		else if (tk == ']')
 			teken = null;
-		else if (tk == '\u2220')
+		else if (tk == '\u2220') //hoekteken
 			teken = null;
 		else
 			teken = "" + tk;
@@ -173,6 +176,14 @@ public class FormuleTeken extends FormuleElement
 				ctx.fillText(teken, 3, this.getAsHoogte());
 			else if(teken.equals("j") || (FormuleFont.formTimes && (teken.equals("p") || teken.equals("y"))))
 				ctx.fillText(teken, 2, this.getAsHoogte());
+			else if(teken.equals("\u221e"))
+			{
+				FormuleFont fm2 = fm.createCopy();
+				fm2.setFontSize(fm.getFontSize() + 4);
+				ctx.setFont(fm2.getFontStyle());
+				ctx.fillText(teken, -1, this.getAsHoogte()  + 3);
+				ctx.setFont(fm.getFontStyle());
+			}
 			else
 				ctx.fillText(teken, 0, this.getAsHoogte());
 			
@@ -253,24 +264,29 @@ public class FormuleTeken extends FormuleElement
 			this.width = fm.getAscent() / 2;
 			this.setSize(width, height);
 			this.setupCTXState();
+			ctx.setLineWidth(0.6 * fm.getStrokeWidth());
 			ctx.beginPath();
 			ctx.moveTo(3 * fm.getAscent() / 8, 0);
 			ctx.lineTo(fm.getAscent() / 8, 0);
 			ctx.lineTo(fm.getAscent() / 8, fm.getAscent() + fm.getDescent() - 1);
 			ctx.lineTo(3 * fm.getAscent() / 8, fm.getAscent() + fm.getDescent() - 1);
 			ctx.stroke();
+			ctx.setLineWidth(fm.getStrokeWidth());
+			
 		}
 		else if (character == ']')
 		{
 			this.width = fm.getAscent() / 2;
 			this.setSize(width, height);
 			this.setupCTXState();
+			ctx.setLineWidth(0.6 * fm.getStrokeWidth());
 			ctx.beginPath();
 			ctx.moveTo(fm.getAscent() / 8, 0);
 			ctx.lineTo(3 * fm.getAscent() / 8, 0);
 			ctx.lineTo(3 * fm.getAscent() / 8, fm.getAscent() + fm.getDescent() - 1);
 			ctx.lineTo(fm.getAscent() / 8, fm.getAscent() + fm.getDescent() - 1);
 			ctx.stroke();
+			ctx.setLineWidth(fm.getStrokeWidth());
 			
 		}
 		else if (character == '\u2220')
@@ -301,7 +317,7 @@ public class FormuleTeken extends FormuleElement
 		
 		
 		boolean italic = false;
-		if(Character.isLetter(character))
+		if(Letter.isLetter(character))
 		{	if(!functieTeken)
 			{	italic = true;
 				//bold = true;
@@ -425,14 +441,13 @@ public class FormuleTeken extends FormuleElement
 		//x = this.width / 2 - (fm.getAscent() / 2) / 2 - fm.getAscent() / 4;
 		this.setSize(width, height);
 		this.setupCTXState();
-		ctx.setLineWidth(fm.getStrokeWidth());
+		ctx.setLineWidth(0.6 * fm.getStrokeWidth());
 		
 		ctx.beginPath();
 		ctx.moveTo(fm.getAscent() / 4, 5 * fm.getAscent()/8 + 1);
 		ctx.lineTo(fm.getAscent()/4 + fm.getAscent()/2, 5 * fm.getAscent()/8 + 1);// + fm.getAscent() / 6);
 		ctx.stroke();
 		//this.drawline(ctx, x + fm.getAscent() / 4, y + 5 * fm.getAscent() / 8, x + fm.getAscent() / 4 + fm.getAscent() / 2, y + 5 * fm.getAscent() / 8);
-		//TODO:
 		if (getFont().isBold())
 		{	ctx.beginPath();
 			//ctx.moveTo(x + fm.getAscent() / 4, y + 1);// fm.getAscent() / 6 + 1);
@@ -444,6 +459,8 @@ public class FormuleTeken extends FormuleElement
 		
 		//this.drawline(ctx, x + fm.getAscent() / 4, y + 5 * fm.getAscent() / 8 + 1, x + fm.getAscent() / 4 + fm.getAscent() / 2, y + 5 * fm.getAscent() / 8 + 1);
 		}
+		
+		ctx.setLineWidth(fm.getStrokeWidth());
 	}
 
 	private void drawDubbelePunt()

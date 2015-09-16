@@ -83,8 +83,10 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 		regelVakken = new TekstRegel[500];
 		regelVakken[0] = new TekstRegel(this);
 		regelVakken[1] = new TekstRegel(this);
-		//regelVakken[0].getElement().getStyle().setBackgroundColor(CssColor.make(0, 255, 255).toString());
-		//regelVakken[1].getElement().getStyle().setBackgroundColor(CssColor.make(200, 135, 255).toString());
+		
+//		regelVakken[0].getElement().getStyle().setBackgroundColor(CssColor.make(0, 255, 255).toString());
+//		regelVakken[1].getElement().getStyle().setBackgroundColor(CssColor.make(200, 135, 255).toString());
+		
 		aantalRegels = 1;
 		//vPanel = new VerticalPanel();
 		//vPanel.add(flowVak);

@@ -113,6 +113,7 @@ public abstract class FormuleElement implements TekstElement
 	public int getHeight()
 	{
 		return height;
+		
 		//System.out.println("getHeight geeft " + canvas.getCoordinateSpaceHeight());
 		//return canvas.getCoordinateSpaceHeight();
 	}
@@ -190,7 +191,6 @@ public abstract class FormuleElement implements TekstElement
 	protected int minH = 0;
 	public void setSize(int w, int h)
 	{
-		
 		//width = w;
 		//height = h;
 
@@ -201,9 +201,10 @@ public abstract class FormuleElement implements TekstElement
 		height = h;
 		
 		//change the canvas dimensions
+		//this.canvas.setSize(w + "px", h + "px");
 		this.canvas.setCoordinateSpaceHeight(h);
 		this.canvas.setCoordinateSpaceWidth(w);
-
+		
 		this.setChanged(true);
 	}
 		
