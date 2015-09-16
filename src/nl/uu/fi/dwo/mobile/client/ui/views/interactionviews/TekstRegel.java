@@ -29,6 +29,8 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
+import fi.graphtoolgwt.client.GraphToolGWT;
+
 
 public class TekstRegel extends LayoutPanel
 {
@@ -129,14 +131,12 @@ public class TekstRegel extends LayoutPanel
 	
 	public void setFontSize(int font_size)
 	{
-		//System.out.println("setFontSize: " + font_size);
 		this.font_size = font_size;
 		this.getElement().getStyle().setFontSize(font_size, Unit.PX);
 		fm = FormuleFont.createFromFontSize(font_size, true);
 		fm.setFont(font_name);
 		tekstAshoogte = fm.getAscent();//dit is de hoogte van de baseline (de lijn die raakt aan alle onderkanten van de tekst, niet alleen aan de lage uitsteeksels), gezien vanaf de top.
 		tekstHoogte = fm.getAscent() + fm.getDescent();
-		//System.out.println("tekstHoogte = " + tekstHoogte + " en fm.getAscent() = " + fm.getAscent());
 		
 		Canvas canvas = Canvas.createIfSupported();
 		ctx = canvas.getContext2d();

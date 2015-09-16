@@ -215,8 +215,7 @@ public class PopupFacade implements InteractionView, FacetAware {
 	@Override
 	public void setAsHoogte(int ashoogte) {
 		if(!popup)
-		{
-			delegate.setAsHoogte(ashoogte);
+		{	delegate.setAsHoogte(ashoogte);
 		}
 	}
 

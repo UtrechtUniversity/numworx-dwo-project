@@ -1978,6 +1978,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		{	if(stapOk || goedHalfFout == AntwoordVakChecker.GOED)
 			{	vervangEditorDoorViewer("$f" + editor.toString() + "@", show, setState);
 			}
+			else
+				zetGoedFoutEditor(editor.getGoedHalfFout());
 			
 		}
 		else

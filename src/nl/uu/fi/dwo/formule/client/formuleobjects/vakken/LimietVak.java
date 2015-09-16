@@ -46,7 +46,7 @@ public class LimietVak extends FormuleElementWithChildren{
 		ctx.setFont(fm.getFontStyle());
 		//niet italic maken.
 		//ctx.fillText("lim", getChild(1).x+getChild(1).width/2,getChild(2).y);
-		ctx.fillText("lim", getChild(1).x + getChild(1).width / 2, getAsHoogte());
+		ctx.fillText("lim", getChild(1).x + getChild(1).width / 2, getChild(2).y);
 		fm.setItalic(true);
 		int pijlX = getChild(1).getX() + getChild(1).width + getChild(1).getFont().getAscent() / 4;
 		if(getChild(3)!=null && getChild(3).toString().equals("0"))

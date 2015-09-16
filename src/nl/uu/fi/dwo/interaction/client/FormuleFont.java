@@ -164,9 +164,12 @@ public class FormuleFont
 	
 	public static void zetDefaultFont(String font)
 	{
+		if(font.contains("SansSerif"))
+			font = font.replace("SansSerif", "sans-serif");
+		if(font.contains("Dialog"))
+			font = font.replace("Dialog", "Arial");
 		defaultFont = font;
 		defaultTekstFont = font;
-			
 	}
 	
 	public static void zetFormTimes(boolean formTimes)

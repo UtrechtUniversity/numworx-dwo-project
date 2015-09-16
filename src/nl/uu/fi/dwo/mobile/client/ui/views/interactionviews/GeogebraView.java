@@ -11,8 +11,10 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ImageTextButton;
+import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
+import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -43,6 +45,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 	private String ggb;
 	private Boolean correct;
 	private boolean bewaarOptie, nakijken,check;
+	private boolean border;
 	private int score, scoreMax;
 	private PopupFacade facade;
 	private int width;
@@ -124,6 +127,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 		}
 		bewaarOptie = ggbMap.containsKey("bewaarOptie") && ggbMap.getBoolean("bewaarOptie");
 		nakijken    = ggbMap.containsKey("nakijken") &&  ggbMap.getBoolean("nakijken");
+		border 		= ggbMap.containsKey("border") && ggbMap.getBoolean("border");
 		check       = (!ggbMap.containsKey("check")) || ggbMap.getBoolean("check"); // default is true
 		nakijkenGemaakteObjecten = ggbMap.containsKey("nakijkenGemaakteObjecten") && ggbMap.getBoolean("nakijkenGemaakteObjecten");
 		if(ggbMap.containsKey("geogebraCheckObjects"))
@@ -138,7 +142,7 @@ public class GeogebraView implements InteractionView, LoadHandler
 		frame = new Frame(DWOplayer.PARAMETERS.getStubView() + "GeoGebra.html?locale=" + StubView.getLocale());
 		frame.setStylePrimaryName(".gwt-StubView");
 		frame.addStyleDependentName("borderless");
-
+		
 		
 		ggb = "data-param-ggbbase64='" + ggb + "'";
 		StringBuilder params = new StringBuilder();
@@ -181,6 +185,14 @@ public class GeogebraView implements InteractionView, LoadHandler
 		height -= barHeight;
 		ggb += " data-param-width='" + width + "' data-param-height='" + height + "'"; // geeft een scrollbar
 		frame.addLoadHandler(this);
+		
+		
+		if(border)
+		{	mainPanel.getElement().getStyle().setBorderColor("gray");
+			mainPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
+			mainPanel.getElement().getStyle().setBorderWidth(1, Unit.PX);
+		}
+		
 		if(nakijken)
 		{
 			checkBtn = new ImageTextButton(KIJK_NA, new ClickHandler() {
@@ -461,7 +473,8 @@ public class GeogebraView implements InteractionView, LoadHandler
 	
 	@Override
 	public int getAsHoogte() {
-		return facade.wrapAsHoogte(0);
+		return facade.wrapAsHoogte(XMLView.getDefaultFontSize());
+		//was: return facade.wrapAsHoogte(0), maar dan komt Geogebra te laag in de regel te staan.
 	}
 
 	@Override

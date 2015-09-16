@@ -270,7 +270,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		mainPanel.add(contentPanel);
 
 		lb_activiteiten = new ListBox();
-		if (aantalActiviteiten == 1)
+		//We bieden (in elk geval tijdelijk) geen support voor verschillende niveaus. 
+		//Als we de verschillende niveaus er helemaal uit halen, kan de code op den duur ook flink versimpeld.. Maar dat is iets voor langere termijn.
+		//if (aantalActiviteiten == 1)
 			lb_activiteiten.setVisible(false);
 		lb_activiteiten.getElement().getStyle().setFloat(Style.Float.LEFT);
 		lb_activiteiten.getElement().getStyle().setMarginRight(10, Unit.PX);
