@@ -10,6 +10,7 @@ import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
+import nl.uu.fi.dwo.mobile.client.ui.views.IFrameView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
@@ -468,9 +469,9 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				
 				
 			}
-			else if (currentObject instanceof ImageView)
+			else if (currentObject instanceof ImageView || currentObject instanceof IFrameView)
 			{
-				ImageView iv = (ImageView) currentObject;
+				TekstElement iv = (TekstElement) currentObject;
 				//Widget w = iv.getImage();
 				if(regelBreedte == 0 || regelBreedte + iv.getWidth() <= tekstVakBreedte || pasAanB)
 				{	regelVakken[aantalRegels - 1].addObject(currentObject);

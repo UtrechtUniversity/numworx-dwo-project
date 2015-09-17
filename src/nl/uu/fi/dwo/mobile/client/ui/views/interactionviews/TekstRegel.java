@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.TekstElement;
 import nl.uu.fi.dwo.interaction.client.TekstComponent;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
+import nl.uu.fi.dwo.mobile.client.ui.views.IFrameView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 
@@ -23,6 +24,7 @@ import com.google.gwt.dom.client.Style.VerticalAlign;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
@@ -292,10 +294,10 @@ public class TekstRegel extends LayoutPanel
 					this.setWidgetTopHeight(a, objectVerschuiving, Style.Unit.PX, objectHoogte, Style.Unit.PX);
 				}
 			}
-			else if (currentObject instanceof ImageView)
+			else if (currentObject instanceof ImageView || currentObject instanceof IFrameView)
 			{
-				ImageView iv = (ImageView) currentObject;
-				Widget w = iv.getImage();
+				TekstElement iv = (TekstElement) currentObject;
+				Widget w = ((IsWidget) iv).asWidget();
 				objectBreedte = iv.getWidth();
 				objectHoogte = iv.getHeight();
 				if(w != null) //w kan null zijn als plaatje niet in lijst met images voorkomt.

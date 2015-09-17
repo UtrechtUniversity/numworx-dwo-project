@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
+import nl.uu.fi.dwo.mobile.client.ui.views.IFrameView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ImageView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.AntwoordKeuzeVak;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.AntwoordTekstVak;
@@ -170,7 +171,7 @@ public class TekstBuffer
 				}
 				else if (identifier.equals("$H"))
 				{
-					AnchorView lr = getLinkRegel(tekst, i, endIndex);
+					Object lr = getLinkRegel(tekst, i, endIndex);
 					i = i + endIndex;
 					result.add(lr);
 				}
@@ -221,12 +222,21 @@ public class TekstBuffer
 		return fv;
 	}
 	
-	private AnchorView getLinkRegel(String tekst, int i, int endIndex) {
+	private Object getLinkRegel(String tekst, int i, int endIndex) {
 		String data = tekst.substring(i + 2, i + endIndex);
 		int u = data.indexOf("$U");
 		int b = data.indexOf("@", u);
 		tekst = data.substring(0,u);
 		String href = data.substring(u+2, b);
+		boolean embedded = data.contains("$Etrue@");
+		if(embedded) {
+			u = data.indexOf("$B"); b = data.indexOf('@',u);
+			String width = data.substring(u+2,b);
+			u = data.indexOf("$C"); b = data.indexOf('@',u);
+			String height = data.substring(u+2,b);
+			return new IFrameView(href, width, height);
+		}
+		
 		AnchorContext anchorContext = DWOplayer.clientfactory.getEntryView().getAnchorContext();
 		return new AnchorView(tekst, href, anchorContext);
 	}

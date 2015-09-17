@@ -32,6 +32,7 @@ public class AnchorView implements IsWidget, ClickHandler{
 	 * @param context 
 	 */
 	public AnchorView(String tekst, String href, AnchorContext context) {
+		tekst = tekst.trim().replace(' ', '\u00A0');
 		if(href.startsWith("goto:"))
 		{
 			anchor = new Anchor(tekst, "javascript:return false;"); // bug in firefox?
