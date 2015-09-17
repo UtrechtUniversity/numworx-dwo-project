@@ -16,13 +16,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
 /**
- * User login obtained through validation by the tomcat configuration.
+ * User login obtained through validation by the tomcat configuration. 
  * 
  * @author G.A.J. van der Plas
  */
 @Path("/secure/user/login")
 public class SecuredLoginManager {
-
+//TODO rewrite this for SAML stuff or session passwords.
+    
     private static final Logger LOG = Logger.getLogger(SecuredLoginManager.class.getName());
 
     /**
