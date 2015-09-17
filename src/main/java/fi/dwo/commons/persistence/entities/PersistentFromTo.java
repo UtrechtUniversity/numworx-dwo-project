@@ -16,12 +16,12 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author G.A.J. van der Plas
  */
 @Entity
-@Table(name = "tblfromto", catalog = "dwo_productie_v1_2", schema = "")
+@Table(name = "tblfromto", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Tblfromto.findAll", query = "SELECT t FROM Tblfromto t"),
-    @NamedQuery(name = "Tblfromto.findBySchoolFrom", query = "SELECT t FROM Tblfromto t WHERE t.tblfromtoPK.schoolFrom = :schoolFrom"),
-    @NamedQuery(name = "Tblfromto.findBySchoolTo", query = "SELECT t FROM Tblfromto t WHERE t.tblfromtoPK.schoolTo = :schoolTo")})
+    @NamedQuery(name = "PersistentFromTo.findAll", query = "SELECT t FROM PersistentFromTo t"),
+    @NamedQuery(name = "PersistentFromTo.findBySchoolFrom", query = "SELECT t FROM PersistentFromTo t WHERE t.tblfromtoPK.schoolFrom = :schoolFrom"),
+    @NamedQuery(name = "PersistentFromTo.findBySchoolTo", query = "SELECT t FROM PersistentFromTo t WHERE t.tblfromtoPK.schoolTo = :schoolTo")})
 public class PersistentFromTo implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId

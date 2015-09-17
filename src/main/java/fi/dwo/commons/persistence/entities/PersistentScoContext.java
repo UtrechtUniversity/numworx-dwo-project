@@ -25,13 +25,13 @@ import javax.xml.bind.annotation.XmlRootElement;
     @UniqueConstraint(columnNames = {"sconame", "courseID"})})
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "PerisistentScoContext.findAll", query = "SELECT p FROM PerisistentScoContext p"),
-    @NamedQuery(name = "PerisistentScoContext.findByScoID", query = "SELECT p FROM PerisistentScoContext p WHERE p.scoID = :scoID"),
-    @NamedQuery(name = "PerisistentScoContext.findByCourseID", query = "SELECT p FROM PerisistentScoContext p WHERE p.courseID = :courseID"),
-    @NamedQuery(name = "PerisistentScoContext.findByAppletID", query = "SELECT p FROM PerisistentScoContext p WHERE p.appletID = :appletID"),
-    @NamedQuery(name = "PerisistentScoContext.findBySconame", query = "SELECT p FROM PerisistentScoContext p WHERE p.sconame = :sconame"),
-    @NamedQuery(name = "PerisistentScoContext.findByShowscore", query = "SELECT p FROM PerisistentScoContext p WHERE p.showscore = :showscore"),
-    @NamedQuery(name = "PerisistentScoContext.findBySequencenr", query = "SELECT p FROM PerisistentScoContext p WHERE p.sequencenr = :sequencenr")})
+    @NamedQuery(name = "PersistentScoContext.findAll", query = "SELECT p FROM PersistentScoContext p"),
+    @NamedQuery(name = "PersistentScoContext.findByScoID", query = "SELECT p FROM PersistentScoContext p WHERE p.scoID = :scoID"),
+    @NamedQuery(name = "PersistentScoContext.findByCourseID", query = "SELECT p FROM PersistentScoContext p WHERE p.courseID = :courseID"),
+    @NamedQuery(name = "PersistentScoContext.findByAppletID", query = "SELECT p FROM PersistentScoContext p WHERE p.appletID = :appletID"),
+    @NamedQuery(name = "PersistentScoContext.findBySconame", query = "SELECT p FROM PersistentScoContext p WHERE p.sconame = :sconame"),
+    @NamedQuery(name = "PersistentScoContext.findByShowscore", query = "SELECT p FROM PersistentScoContext p WHERE p.showscore = :showscore"),
+    @NamedQuery(name = "PersistentScoContext.findBySequencenr", query = "SELECT p FROM PersistentScoContext p WHERE p.sequencenr = :sequencenr")})
 public class PersistentScoContext implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
