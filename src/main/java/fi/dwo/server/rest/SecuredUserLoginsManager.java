@@ -32,10 +32,10 @@ import javax.ws.rs.core.SecurityContext;
  *
  * @author Gert van der Plas
  */
-@Path("/secure/registration")
-public class SecuredRegistrationManager {
+@Path("/secure/user/account/logins")
+public class SecuredUserLoginsManager {
 
-    private static final Logger LOG = Logger.getLogger(SecuredRegistrationManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(SecuredUserLoginsManager.class.getName());
 
     /**
      * Registers an existing user into a new <school,hasRole> tuple.
@@ -46,8 +46,8 @@ public class SecuredRegistrationManager {
      */
     @PUT
     @Produces({"application/json"})
-    @Path("/existingUser/json")
-    public Response registerExistingUser(@Context SecurityContext sc, KnownUserRegistration existingUserReg) {
+    @Path("/submit")
+    public Response addSchoolLogin(@Context SecurityContext sc, KnownUserRegistration existingUserReg) {
         EntityManager em = DwoEmfFactory.getEntityManager();
 
         //Check for userid, should exist.

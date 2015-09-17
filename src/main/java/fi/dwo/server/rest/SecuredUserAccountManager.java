@@ -28,10 +28,10 @@ import javax.ws.rs.core.SecurityContext;
  * @author G.A.J. van der Plas
  */
 @PermitAll
-@Path("/secure/user/userprofile")
-public class SecuredUserProfileManager {
+@Path("/secure/user/account")
+public class SecuredUserAccountManager {
 
-    private static final Logger LOG = Logger.getLogger(SecuredUserProfileManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(SecuredUserAccountManager.class.getName());
 //    @Context  //injected response proxy supporting multiple threads
 //    private HttpServletResponse response;
 
@@ -44,7 +44,7 @@ public class SecuredUserProfileManager {
      */
     @GET
     @Produces({"application/json"})
-    @Path("/get/json")
+    @Path("/get")
     public PersistentUser getCurrentUser(@Context SecurityContext sc) {
         EntityManager em = DwoEmfFactory.getEntityManager();
         PersistentUser user = null;
@@ -74,7 +74,7 @@ public class SecuredUserProfileManager {
      */
     @PUT
     @Produces({"application/json"})
-    @Path("/update/json")
+    @Path("/update")
     public PersistentUser updateCurrentUser(@Context SecurityContext sc, PersistentUser user) {
         if (user.getUsername().equals(sc.getUserPrincipal().getName())) {
             //User to update is logged in user.
@@ -106,9 +106,51 @@ public class SecuredUserProfileManager {
         }
     }
 
+    /**
+     * Removes all the User data of the current user and returns true.
+     *
+     * @param sc
+     * @param user
+     * @return
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/remove")
+    public Boolean removeCurrentUser(@Context SecurityContext sc, PersistentUser user) {
+        if (user.getUsername().equals(sc.getUserPrincipal().getName())) {
+            //User to update is logged in user.
+            EntityManager em = DwoEmfFactory.getEntityManager();
+//            try {
+//                em.getTransaction().begin();
+////if(true) { // beperkte update                
+//                PersistentUser u = em.find(PersistentUser.class, user.getUserID());
+//                u.setEmail(user.getEmail());
+//                u.setFirstname(user.getFirstname());
+//                u.setMiddlename(user.getMiddlename());
+//                u.setLastname(user.getLastname());
+//                u.setPasswd(user.getPasswd());
+//                user = u;
+////} else { //full update
+////                user = em.merge(user);
+////}
+//                em.getTransaction().commit();
+//                LOG.log(Level.FINE, "Username {0}: Updated User with username {0}", new Object[]{sc.getUserPrincipal().getName(),user.getUsername()});
+//            }
+//            finally {
+//                em.close();
+//            }
+//            return user;
+//        } else {
+//            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to update the user profile of user id {1}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
+//            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to update usercode " + user.getUsername() + ".");
+//
+        }
+        return true;
+    }    
+    
     @GET
     @Produces({"application/json"})
-    @Path("/classinfo/json")
+    @Path("/classinfo")
     public String info() {
         return this.getClass().getName();
     }

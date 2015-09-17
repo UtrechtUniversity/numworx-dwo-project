@@ -21,10 +21,10 @@ import javax.ws.rs.core.SecurityContext;
  * @author G.A.J. van der Plas
  */
 @Path("/secure/user/login")
-public class SecuredLoginManager {
+public class SecuredSamlUserLoginManager {
 //TODO rewrite this for SAML stuff or session passwords.
     
-    private static final Logger LOG = Logger.getLogger(SecuredLoginManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(SecuredSamlUserLoginManager.class.getName());
 
     /**
      * Returns the user data if properly logged in. The information is extracted

@@ -7,7 +7,6 @@
     <non-jta-data-source>java:comp/env/jdbc/dwodb</non-jta-data-source>
     <class>fi.dwo.commons.persistence.entities.PersistentHasRole</class>
     <class>fi.dwo.commons.persistence.entities.PersistentUser</class>
-    <class>fi.dwo.commons.persistence.entities.DwoSystemParameters</class>
     <class>fi.dwo.commons.persistence.entities.PersistentStudentScoContext</class>
     <class>fi.dwo.commons.persistence.entities.PersistentScoData</class>
     <class>fi.dwo.commons.persistence.entities.PersistentAppletConfig</class>
@@ -15,11 +14,12 @@
     <class>fi.dwo.commons.persistence.entities.PersistentApplet</class>
     <class>fi.dwo.commons.persistence.entities.PersistentRole</class>
     <class>fi.dwo.commons.persistence.entities.PersistentDwoProfile</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentDwoSystemParameters</class>
     <class>fi.dwo.commons.persistence.entities.PersistentTeacherOfClass</class>
     <class>fi.dwo.commons.persistence.entities.PersistentSchoolGroup</class>
     <class>fi.dwo.commons.persistence.entities.PersistentImage</class>
     <class>fi.dwo.commons.persistence.entities.PersistentStudentScoData</class>
-    <class>fi.dwo.commons.persistence.entities.PerisistentScoContext</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentScoContext</class>
     <class>fi.dwo.commons.persistence.entities.PersistentSamlUser</class>
     <class>fi.dwo.commons.persistence.entities.PersistentStudentOfClass</class>
     <class>fi.dwo.commons.persistence.entities.PersistentCourseSequence</class>
@@ -27,7 +27,7 @@
     <class>fi.dwo.commons.persistence.entities.PersistentCourse</class>
     <class>fi.dwo.commons.persistence.entities.PersistentSchool</class>
     <class>fi.dwo.commons.persistence.entities.PersistentClassCourse</class>
-    <class>fi.dwo.commons.persistence.entities.PersistenceFromTo</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentFromTo</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <shared-cache-mode>NONE</shared-cache-mode>
     <properties>
