@@ -8,6 +8,7 @@ package fi.dwo.server.rest;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentDwoSystemParameters;
+import fi.dwo.server.PersistentEntityManagers.DwoSystemParametersManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.logging.Level;
@@ -33,9 +34,7 @@ public class PublicServerStatus {
 
         List<PersistentDwoSystemParameters> result;
         try {
-            javax.persistence.Query q;
-            q = em.createNamedQuery("PersistentDwoSystemParameters.findAll");
-            result = (List<PersistentDwoSystemParameters>) q.getResultList();
+            result = DwoSystemParametersManager.findEntities();
             LOG.log(Level.FINER, "Fetched DwoSystemParameters {0}", new Object[]{result.size()});
         }
         catch (Exception e) {
@@ -61,21 +60,14 @@ public class PublicServerStatus {
 
     @GET
     @Produces({"application/json"})
-    @Path("/json")
+    @Path("/get")
     public List<PersistentDwoSystemParameters> getStatusJson() {
         return getStatus();
     }
 
     @GET
-    @Produces({"application/xml"})
-    @Path("/xml")
-    public List<PersistentDwoSystemParameters> getStatusXml() {
-        return getStatus();
-    }
-
-    @GET
     @Produces({"text/plain"})
-    @Path("/html")
+    @Path("/get/html")
     public String getStatusText() {
         List<PersistentDwoSystemParameters> result = getStatus();
         StringBuilder string = new StringBuilder();
