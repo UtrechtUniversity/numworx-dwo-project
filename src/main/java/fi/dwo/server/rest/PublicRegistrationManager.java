@@ -41,7 +41,7 @@ public class PublicRegistrationManager {
      */
     @PUT
     @Produces({"application/json"})
-    @Path("/newUser/json")
+    @Path("/submit")
     public Response registerNewUser(NewUserRegistration newUserReg) {
         EntityManager em = DwoEmfFactory.getEntityManager();
         PersistentUser u;

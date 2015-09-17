@@ -1,19 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package fi.dwo.server.rest;
 
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentDwoSystemParameters;
 import fi.dwo.server.PersistentEntityManagers.DwoSystemParametersManager;
-import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.persistence.EntityManager;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -23,15 +17,12 @@ import javax.ws.rs.Produces;
  *
  * @author G.A.J. van der Plas
  */
-@Path("/public/serverstatus")
+@Path("/public/systemparam")
 public class PublicServerStatus {
 
     private static final Logger LOG = Logger.getLogger(PublicServerStatus.class.getName());
 
     public List<PersistentDwoSystemParameters> getStatus() {
-
-        EntityManager em = DwoEmfFactory.getEntityManager();
-
         List<PersistentDwoSystemParameters> result;
         try {
             result = DwoSystemParametersManager.findEntities();
@@ -41,9 +32,6 @@ public class PublicServerStatus {
             LOG.log(Level.SEVERE, "Can't query the DwoSystemParameters", e);
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the DwoSystemParameters.");
 
-        }
-        finally {
-            em.close();
         }
 
         StringBuilder string = new StringBuilder();
