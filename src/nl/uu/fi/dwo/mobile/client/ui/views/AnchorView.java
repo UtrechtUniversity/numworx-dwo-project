@@ -34,7 +34,7 @@ public class AnchorView implements IsWidget, ClickHandler{
 	public AnchorView(String tekst, String href, AnchorContext context) {
 		if(href.startsWith("goto:"))
 		{
-			anchor = new Anchor(tekst);
+			anchor = new Anchor(tekst, "javascript:return false;"); // bug in firefox?
 			anchor.addClickHandler(this);
 			this.context = context==null?NULL:context;
 			this.href = href;
@@ -52,6 +52,8 @@ public class AnchorView implements IsWidget, ClickHandler{
 
 	@Override
 	public void onClick(ClickEvent event) {
+		event.stopPropagation();
+		event.preventDefault();
 		context.gotoUrl(href);
 	}
 
