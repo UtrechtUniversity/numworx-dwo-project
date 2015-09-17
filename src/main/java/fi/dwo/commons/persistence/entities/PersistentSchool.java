@@ -53,11 +53,6 @@ public class PersistentSchool implements Serializable {
     @Size(min = 1, max = 128)
     @Column(name = "schoollogin", nullable = false, length = 128)
     private String schoollogin;
-//    @Basic(optional = false)
-//    @NotNull
-//    @Size(min = 1, max = 128)
-//    @Column(name = "passwordSchool", nullable = false, length = 128)
-//    private String passwordSchool;
     @Column(name = "export")
     private Boolean export;
     @Size(max = 100)
