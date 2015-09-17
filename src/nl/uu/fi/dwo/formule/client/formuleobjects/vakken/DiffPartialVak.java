@@ -35,7 +35,7 @@ public class DiffPartialVak extends FormuleElementWithChildren
         {	setAsHoogte(getChild(0).height + 3* fm.getAscent()/8);
         }
         
-        
+        getChild(1).insert("x");
         setSize(width, height);
     }
 	

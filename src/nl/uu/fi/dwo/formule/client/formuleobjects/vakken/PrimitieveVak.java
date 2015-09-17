@@ -13,6 +13,7 @@ public class PrimitieveVak extends FormuleElementWithChildren
 	public PrimitieveVak(FormuleElement holder){
 		
 		super(holder, 2);
+		getChild(1).insert("x");
 	}
 
 	public void paintObject()

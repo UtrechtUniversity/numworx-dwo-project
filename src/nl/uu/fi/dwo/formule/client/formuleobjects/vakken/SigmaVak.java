@@ -17,7 +17,12 @@ public class SigmaVak extends FormuleElementWithChildren{
 		getChild(1).setFontChanges(changes);
 		getChild(2).setFontChanges(changes);
 		getChild(3).setFontChanges(changes);
+		
+		getChild(1).insert("i");
+		getChild(2).insert("0");
+		
 		this.setChanged(true);
+		
 	}
 	
 	public void paintObject()

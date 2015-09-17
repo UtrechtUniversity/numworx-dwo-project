@@ -544,7 +544,7 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 		case  5: editor.haakjes();  break;
 		case  6: editor.ndewortel();break;
 		case  7: editor.integraal();break;
-		case  8: editor.primitieve();break;
+		case  8: editor.prv();		break;
 		case  9: editor.ndelog();    break;
 		case 10: editor.abs();       break;
 		case 11: editor.subscript(); break;

@@ -50,6 +50,7 @@ public class PrvVak extends FormuleElementWithChildren
 		
 		ctx.setStrokeStyle(color);
 		ctx.setFillStyle(color);
+		ctx.setLineWidth(0.6 * fm.getStrokeWidth());
 		
 		ctx.beginPath();
 		ctx.moveTo(t1x + t1b, t1y + a/3);
@@ -66,11 +67,15 @@ public class PrvVak extends FormuleElementWithChildren
 		ctx.lineTo(t2x,t2y+t2h-a/3);
 		//ctx.lineTo(t2x+t2b,t2y+t2h-a/3);
 		ctx.stroke();
+		ctx.setLineWidth(fm.getStrokeWidth());
+		
 		
 		this.getChild(0).draw(ctx);
 		this.getChild(1).draw(ctx);
 		this.getChild(2).draw(ctx);
 		//this.getChild(3).draw(ctx);
+		
+		
 		this.drawCursor();
 	}
 	

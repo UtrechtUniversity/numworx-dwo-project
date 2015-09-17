@@ -20,6 +20,9 @@ public class LimietVak extends FormuleElementWithChildren{
 	
 		getChild(1).setFontChanges(changes);
 		getChild(2).setFontChanges(changes);
+		
+		getChild(1).insert("x");
+		getChild(2).insert("0");
 		//getChild(3).setFontChanges(changes);
 	}
 	

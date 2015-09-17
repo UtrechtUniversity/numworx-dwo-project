@@ -14,6 +14,7 @@ import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.IntegraalVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.Machtvak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeLogVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.NdeWortelVak;
+import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PrimitieveVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.PrvVak;
 import nl.uu.fi.dwo.formule.client.formuleobjects.vakken.SubscriptVak;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
@@ -444,6 +445,10 @@ public class FormuleRegel extends FormuleElement
 					onRemove = fewc.getChild(i).toString();
 				}
 			}
+			if(onRemove.equalsIgnoreCase("") == false && (fewc instanceof DiffVak || fewc instanceof DiffPartialVak || fewc instanceof IntegraalVak 
+					|| fewc instanceof PrimitieveVak || fewc instanceof PrvVak))
+				onRemove = "";
+					
 
 		}
 
