@@ -8,6 +8,7 @@ package fi.dwo.server.rest;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentRole;
+import fi.dwo.server.PersistentEntityManagers.RoleManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.logging.Level;
@@ -38,13 +39,12 @@ private static final Logger LOG = Logger.getLogger(SecuredLoginManager.class.get
      */
     @GET
     @Produces({"application/json"})
-    @Path("/get/json")
+    @Path("/get")
     public List<PersistentRole> getRoles(@Context SecurityContext sc){
         EntityManager em = DwoEmfFactory.getEntityManager();
         List<PersistentRole> roles = null;
         try {
-            javax.persistence.Query q = em.createNamedQuery("PersistentRole.findAll");
-            roles = (List<PersistentRole>) q.getResultList();
+            roles = RoleManager.findEntities();
             LOG.log(Level.FINER, "Fetched all {0} user roles. ", new Object[]{roles.size()});
         } catch(Exception e){
             LOG.log(Level.WARNING,"Unexpected exception", e);
