@@ -11,8 +11,8 @@ import java.util.logging.Logger;
  * 
  * @author G.A.J. van der Plas
  */
-public class UserProfileManager {
-    private static final Logger LOG = Logger.getLogger(UserProfileManager.class.getName());
+public class UserAccountManager {
+    private static final Logger LOG = Logger.getLogger(UserAccountManager.class.getName());
     
     /**
     * Returns the current user 'logged in'. The information is extracted from the 
@@ -24,7 +24,7 @@ public class UserProfileManager {
     */
     public static PersistentUser getCurrentUser() throws Dwo2Exception{
         PersistentUser user;
-        user = StoredRestManager.getInstance().get("/rest/secure/user/userprofile/get/json", PersistentUser.class);
+        user = StoredRestManager.getInstance().get("/rest/secure/user/account/get", PersistentUser.class);
         return user;
     }   
     
@@ -40,8 +40,26 @@ public class UserProfileManager {
      */
 
     public static PersistentUser updateCurrentUser(PersistentUser user) throws Dwo2Exception {
-            user = StoredRestManager.getInstance().put("/rest/secure/user/userprofile/update/json", PersistentUser.class, user);
+            user = StoredRestManager.getInstance().put("/rest/secure/user/account/update", PersistentUser.class, user);
             LOG.log(Level.FINE, "Updated user profile of username {0}.",new Object[]{user.getUsername()});
         return user;
+    }
+    
+    
+    /**
+     * Updates the user profile of a user. 
+     * 
+     * Fields updated are email, password and the full name of the user. The full
+     * name exists out of the first, insertion and family name.
+     * 
+     * @param user
+     * @return 
+     * @throws fi.dwo.commons.exceptions.Dwo2Exception 
+     */
+
+    public static void removeCurrentUser() throws Dwo2Exception {
+        boolean b;
+        b = StoredRestManager.getInstance().get("/rest/secure/user/account/remove", Boolean.class);
+        return;
     }
 }
