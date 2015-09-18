@@ -15,6 +15,8 @@ public class IFrameView extends Composite implements TekstElement, IsWidget {
 	
 	public IFrameView(String href, String widthStr, String heightStr) {
 		frame = new Frame(href);
+		frame.setStylePrimaryName(".gwt-StubView");
+		frame.addStyleDependentName("borderless");
 		height = Integer.parseInt(heightStr);
 		width = Integer.parseInt(widthStr);
 		frame.setPixelSize(width, height);
