@@ -5,15 +5,10 @@
  */
 package fi.dwo.server.persistence;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.sql.DataSource;
 
 /**
  * Read the configured datasource from the web.xml and configures the
@@ -75,18 +70,17 @@ public class DwoEmfFactory {
         return _instance.createEntityManager();
     }
 
-//    /**
-//     * Looks up the default data source in the tomcat context.xml.
-//     *
-//     * @return
-//     * @throws NamingException
-//     */
-//    private static DataSource getDataSource() throws NamingException {
-//        Context initContext = new InitialContext();
-//        Context envContext = (Context) initContext.lookup("java:/comp/env");
-//        DataSource dataSource = (DataSource) envContext.lookup("jdbc/dwodb");
-//        LOG.log(Level.FINE, "Datasource jdbc/dwodb is: {0}.", new Object[]{dataSource.toString()});
-//        return dataSource;
-//    }
+    public static void setEntityManagerFactory(String persistenceUnit) {
+             synchronized (DwoEmfFactory.class) {
+                   _instance = Persistence.createEntityManagerFactory(persistenceUnit);
+               }
+    }
 
+    public static void setDefaultEntityManagerFactory() {
+             synchronized (DwoEmfFactory.class) {
+                   _instance = Persistence.createEntityManagerFactory("DWO_MySQLDB");
+               }
+    }
+    
+    
 }

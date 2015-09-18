@@ -53,7 +53,7 @@ public class SecuredDwoadminSchoolManager {
             PersistentSchool s = null;
             try {
                 SchoolManager.create(school);
-                SchoolManager.findBySchoolName(school.getSchoolName());
+                SchoolManager.findBySchoolLogin(school.getSchoolLogin());
                 return s;
             }
             catch (Exception e) {

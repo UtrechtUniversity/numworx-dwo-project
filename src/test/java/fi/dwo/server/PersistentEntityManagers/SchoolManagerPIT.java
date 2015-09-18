@@ -5,10 +5,8 @@ package fi.dwo.server.PersistentEntityManagers;
 
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.persistence.DwoEmfFactory;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -17,17 +15,18 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Light testing of methods. Every method may assume other methods work. We
- * primarily want to know if something works.
+ * SchoolManager persistence integration tests (PIT).  <p/>
+ * 
+ * Light testing. Every method assumes other SchoolManager methods work proper.
  *
  * @author G.A.J. van der Plas
  */
-public class SchoolManagerIT {
+public class SchoolManagerPIT {
 
     PersistentSchool schoolA = new PersistentSchool();
     PersistentSchool schoolB = new PersistentSchool();
 
-    public SchoolManagerIT() {
+    public SchoolManagerPIT() {
         DwoEmfFactory.setEntityManagerFactory("DWO_TestDB");
     }
 

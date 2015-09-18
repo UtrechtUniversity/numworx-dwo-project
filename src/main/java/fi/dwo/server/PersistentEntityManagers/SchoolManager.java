@@ -156,12 +156,13 @@ public class SchoolManager {
         }
     }
 
-    public static PersistentSchool findBySchoolName(String schoolName) {
+
+    public static PersistentSchool findBySchoolLogin(String schoolLogin) {
         EntityManager em = DwoEmfFactory.getEntityManager();
         PersistentSchool school = null;
         try {
-            javax.persistence.Query q = em.createNamedQuery("PersistentSchool.findBySchoolName");
-            q.setParameter("schoolname", schoolName);
+            javax.persistence.Query q = em.createNamedQuery("PersistentSchool.findBySchoolLogin");
+            q.setParameter("schoolLogin", schoolLogin);
             school = (PersistentSchool) q.getSingleResult();
             LOG.log(Level.FINE, "PersistentSchool-manager retrieved school with school {0}", new Object[]{school.getSchoolName()});
         } finally {
@@ -169,6 +170,6 @@ public class SchoolManager {
         }
         return school;
     }
-
+    
 
 }

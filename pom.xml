@@ -119,20 +119,19 @@
             <!-- if your container implements Servlet API older than 3.0, use "jersey-container-servlet-core"  -->
             <artifactId>jersey-container-servlet</artifactId>
             <version>2.17</version>
-            <!--              <scope>provided</scope>-->
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-client</artifactId>
             <version>2.17</version>
         </dependency>
-        <!--  great media type json support -->
+        <!--  best found media type json support -->
         <dependency>
             <groupId>com.owlike</groupId>
             <artifactId>genson</artifactId>
             <version>1.3</version>
         </dependency> 
-        <dependency>
+<!--        <dependency>
             <groupId>org.glassfish.jersey.test-framework</groupId>
             <artifactId>jersey-test-framework-core</artifactId>
             <version>2.19</version>
@@ -143,7 +142,14 @@
             <artifactId>jersey-test-framework-provider-external</artifactId>
             <version>2.19</version>
             <scope>test</scope>
+</dependency>-->
+<dependency>
+	<groupId>mysql</groupId>
+	<artifactId>mysql-connector-java</artifactId>
+	<version>5.1.17</version>
+        <scope>test</scope>
 </dependency>
+
 </dependencies>
 
     <build>
@@ -268,7 +274,8 @@
                     </execution>
                 </executions>
             </plugin>  -->
-            <plugin>
+<!--    deploy without tests -->
+        <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
@@ -278,14 +285,17 @@
                     <path>/DWO/DWOServer</path>
                     <warFile>target/${project.artifactId}-${project.version}.war</warFile>
                 </configuration>
-            </plugin>
+            </plugin> 
+            
                 <!--
                     By default, the Surefire Plugin will automatically include all test classes with the following wildcard patterns:
                     "**/Test*.java" - includes all of its subdirectory and all java filenames that start with "Test". "**/*Test.java" -
                     includes all of its subdirectory and all java filenames that end with "Test". "**/*TestCase.java" - includes all of
                     its subdirectory and all java filenames that end with "TestCase".
-                -->
-            <plugin>
+
+                        dedicated test server: -Djersey.test.host=myhost.org -Djersey.config.test.container.port=8080
+                        -->
+          <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.18.1</version>
@@ -294,8 +304,7 @@
                         <include>**/*Test.java</include>
                         <include>**/*IT.java</include>
                     </includes>
-                    <systemProperties>
-                        <!-- dedicated test server: -Djersey.test.host=myhost.org -Djersey.config.test.container.port=8080 -->
+<!--                   <systemProperties>
                         <property>
                             <name>jersey.config.test.container.factory</name>
                             <value>org.glassfish.jersey.test.framework.spi.container.external.ExternalTestContainerFactory</value>
@@ -308,9 +317,10 @@
                             <name>jersey.config.test.container.port</name>
                             <value>8080</value>
                         </property>
-                    </systemProperties>
+                    </systemProperties>  -->
                 </configuration>
-            </plugin>            
+            </plugin>                    
+        
         </plugins>
         <finalName>${project.artifactId}-${project.version}</finalName>
     </build>
