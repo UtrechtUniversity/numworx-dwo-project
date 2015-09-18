@@ -18,6 +18,8 @@ import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.SelectModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.views.AnchorView.AnchorContext;
+import nl.uu.fi.dwo.mobile.client.ui.views.TreeModuleViewImplDesktop.TreeAnchorContext;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.shared.GWT;
@@ -79,7 +81,53 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 	
 	private List<SelectModuleItem> cellItems;
 	private List<SelectModuleItem> model;
+	private SelectModuleItem selected;
 	private Presenter presenter; 
+	
+	class TreeAnchorContext implements AnchorView.AnchorContext {
+		AnchorView.AnchorContext delegate;
+
+		@Override
+		public void gotoUrl(String href) {
+			if(href.startsWith("goto:."))
+				delegate.gotoUrl(href);
+			else
+			if(href.startsWith("goto:")) 
+			{	String page = "";
+			href = href.substring(5);
+			int dot = href.lastIndexOf('.');
+			if(dot > 0) {
+				page = href.substring(dot+1);
+				href = href.substring(0,dot);
+			}
+			// try numeric first
+			List<SelectModuleItem> children = selected.getParent().getChildren();
+			try { 
+				int sconr = Integer.parseInt(href)-1;
+				SelectModuleItem is = children.get(sconr);
+				selectItem(is);
+			} catch (Exception ex) {
+				for (Iterator<SelectModuleItem> iterator = children.iterator(); iterator.hasNext();) {
+					SelectModuleItem is = iterator.next();
+					if(is.getName().startsWith(href))
+					{
+						selectItem(is);
+						break;
+					}
+				}
+				
+			}
+			
+		}
+			
+		}
+
+		TreeAnchorContext(AnchorContext delegate) {
+			super();
+			this.delegate = delegate;
+		}
+
+	}
 	
 	//================================================================================
     // Constructor and UiBinder 
@@ -155,6 +203,7 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 	
 	private void selectItem(SelectModuleItem o) {
 		Place place = null;
+		selected = o;
 		switch(o.getType()) {
 		default:
 		case ROOT:
@@ -165,6 +214,8 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 			//load sum in the edit area
 			close();
 			ViewModuleViewImpl viewModuleViewImpl = new ViewModuleViewImpl(false);
+			DWOplayer.clientfactory.setEntryView(viewModuleViewImpl);
+			viewModuleViewImpl.setAnchorContext(new TreeAnchorContext(viewModuleViewImpl.getAnchorContext()));
 			loadedModule = viewModuleViewImpl.initialize(this);
 			viewModuleViewImpl.setApi(DWOplayer.api);
 			int h = moduleHeaderPanel.getOffsetHeight();
