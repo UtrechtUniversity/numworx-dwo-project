@@ -278,7 +278,7 @@ try {
 			});
 		}
 		scoreNav.setNextPrevHandler(this);
-		scoreNav.setScoresObjectivesKnop(on.zijnObjectivesAanwezig());
+		scoreNav.setScoresObjectivesKnop(on.zijnObjectivesAanwezig() && mode != OpdrNav.EINDTOETS);
 		scoreNav.setObjectivesHandler(this);
 		stelNavigatieIn();
 	}
@@ -306,6 +306,8 @@ try {
 			source.setKijkNaEnabled(!zelftoetsGeenCorr);
 			//scoresObjectivesKnop.setEnabled(true);//goed? nodig?
 			prev.setVisible(vorigeKnopZichtbaar || !bolletjesZichtbaar && zelftoetsNagekeken);
+			scoreNav.setScoresObjectivesKnop(on.zijnObjectivesAanwezig());
+			
 
 //			totaal = Math.max(0, totaal - (Math.max(0, aantalNakijken[activiteitNr] - 1)) * nakijkStraf);
 //			aantalNakijkLabel.setText("" + aantalNakijken[activiteitNr] + " keer nagekeken");
