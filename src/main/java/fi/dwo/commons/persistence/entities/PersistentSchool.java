@@ -2,6 +2,7 @@
 package fi.dwo.commons.persistence.entities;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -31,7 +32,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentSchool.findAll", query = "SELECT p FROM PersistentSchool p"),
     @NamedQuery(name = "PersistentSchool.findBySchoolID", query = "SELECT p FROM PersistentSchool p WHERE p.schoolID = :schoolID"),
     @NamedQuery(name = "PersistentSchool.findBySchoolName", query = "SELECT p FROM PersistentSchool p WHERE p.schoolName = :schoolName"),
-    @NamedQuery(name = "PersistentSchool.findBySchoollogin", query = "SELECT p FROM PersistentSchool p WHERE p.schoollogin = :schoollogin"),
+    @NamedQuery(name = "PersistentSchool.findBySchoolLogin", query = "SELECT p FROM PersistentSchool p WHERE p.schoolLogin = :schoolLogin"),
     @NamedQuery(name = "PersistentSchool.findByExport", query = "SELECT p FROM PersistentSchool p WHERE p.export = :export"),
     @NamedQuery(name = "PersistentSchool.findBySchoolRights", query = "SELECT p FROM PersistentSchool p WHERE p.schoolRights = :schoolRights"),
     @NamedQuery(name = "PersistentSchool.findByImage", query = "SELECT p FROM PersistentSchool p WHERE p.image = :image"),
@@ -52,7 +53,7 @@ public class PersistentSchool implements Serializable {
     @NotNull
     @Size(min = 1, max = 128)
     @Column(name = "schoollogin", nullable = false, length = 128)
-    private String schoollogin;
+    private String schoolLogin;
     @Column(name = "export")
     private Boolean export;
     @Size(max = 100)
@@ -75,7 +76,7 @@ public class PersistentSchool implements Serializable {
     public PersistentSchool(Integer schoolID, String schoolName, String schoollogin) {
         this.schoolID = schoolID;
         this.schoolName = schoolName;
-        this.schoollogin = schoollogin;
+        this.schoolLogin = schoollogin;
     }
 
     public Integer getSchoolID() {
@@ -94,12 +95,12 @@ public class PersistentSchool implements Serializable {
         this.schoolName = schoolName;
     }
 
-    public String getSchoollogin() {
-        return schoollogin;
+    public String getSchoolLogin() {
+        return schoolLogin;
     }
 
-    public void setSchoollogin(String schoollogin) {
-        this.schoollogin = schoollogin;
+    public void setSchoolLogin(String schoolLogin) {
+        this.schoolLogin = schoolLogin;
     }
     public Boolean getExport() {
         return export;
@@ -159,10 +160,28 @@ public class PersistentSchool implements Serializable {
         }
         return true;
     }
-    
+        
     @Override
     public String toString() {
         return "fi.dwo.server.persistence.PersistentSchool[ schoolID=" + schoolID + " ]";
+    }
+
+    public boolean similar(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof PersistentSchool)) {
+            return false;
+        }
+        PersistentSchool other = (PersistentSchool) object;
+        if ((this.schoolLogin != null && this.schoolLogin.equals(other.schoolLogin))
+                && (this.schoolName != null && this.schoolName.equals(other.schoolName))
+                && (this.schoolRights != null && this.schoolRights.equals(other.schoolRights))
+                && ((this.expire ==null && other.expire == null) || (this.expire != null && (new SimpleDateFormat("MM-dd-yyyy").format(this.expire)).equals(new SimpleDateFormat("MM-dd-yyyy").format(other.expire))))
+                && ((this.image ==null && other.image == null) ||(this.image != null && this.image.equals(other.image)))
+                ) {
+            return true;
+        }       
+        
+        return false;
     }
     
 }

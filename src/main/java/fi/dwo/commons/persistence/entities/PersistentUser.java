@@ -6,6 +6,7 @@
 package fi.dwo.commons.persistence.entities;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -210,5 +211,29 @@ public class PersistentUser implements Serializable {
 
     public PersistentSchoolGroup getPersistentSchoolGroup() {
      return  schoolGroup;
+    }
+    
+
+    public boolean similar(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof PersistentUser)) {
+            return false;
+        }
+        PersistentUser other = (PersistentUser) object;
+        if ((this.username != null && this.username.equals(other.username))
+                && (this.firstname != null && this.firstname.equals(other.firstname))
+                && ((this.middlename ==null && other.middlename == null) || (this.middlename != null && this.middlename.equals(other.middlename)))
+                && (this.lastname != null && this.lastname.equals(other.lastname))
+                && (this.email != null && this.email.equals(other.email))
+                && (this.passwd != null && this.passwd.equals(other.passwd))
+                && ((this.schoolGroupID ==null && other.schoolGroupID == null) || (this.schoolGroupID != null  && this.schoolGroupID.equals(other.schoolGroupID)))
+                && (this.email != null && this.email.equals(other.email))
+                && ((this.schoolGroupID ==null && other.schoolGroupID == null) ||(this.schoolGroupID != null && this.schoolGroupID.equals(other.schoolGroupID)))
+                && (this.registerDate !=null && (new SimpleDateFormat("MM-dd-yyyy").format(this.registerDate)).equals(new SimpleDateFormat("MM-dd-yyyy").format(other.registerDate)))
+                && ((this.lastLogin ==null && other.lastLogin == null) || (this.lastLogin != null && (new SimpleDateFormat("MM-dd-yyyy").format(this.registerDate)).equals(new SimpleDateFormat("MM-dd-yyyy").format(other.lastLogin))))
+                ) {
+            return true;
+        }       
+        return false;    
     }
 }
