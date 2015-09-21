@@ -1002,9 +1002,11 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 	}
 	
 	public void zetVolledigeBreedte(int breedte)
-	{
-		if(volledigeBreedte)
-			this.breedte = breedte;
+	{	if(volledigeBreedte)
+		{	this.breedte = breedte;
+			basisPanel.setPixelSize(breedte, hoogte - 3);
+			antwoordTF.setWidth((breedte - 2) + "px");
+		}
 	}
 
 

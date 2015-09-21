@@ -49,7 +49,8 @@ public class FormuleEditorTouchHandler implements TouchHandler
 			editor.requestFocus();
 			int x = event.touches().get(0).getPageX() - editor.getCanvas().getAbsoluteLeft();
 			int y = event.touches().get(0).getPageY() - editor.getCanvas().getAbsoluteTop();
-			if(!isSupported()) y+=8;// vraag me niet waarom dit nodig is
+			//if(!isSupported()) y+=8;// vraag me niet waarom dit nodig is 
+			//21-09-2015: weggehaald, want zorgt dat je voor aanklikken/selecteren te hoog moet klikken.
 
 			editor.clearSelection();
 			editor.startSelection(x, y);

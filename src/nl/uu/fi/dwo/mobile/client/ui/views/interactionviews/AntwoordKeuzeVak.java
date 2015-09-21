@@ -105,8 +105,10 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	Canvas feedbackSluitKnop;
 	Context2d gImFeedback;
 	LayoutPanel checkPanel;
+	LayoutPanel popupPanel;
 	
 	private boolean gelijkwaardig;
+	private boolean volledigeBreedte = false;
 	
 	
 	private int score;
@@ -118,7 +120,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	static int HALF = 2;
 	static int GEEN = 3;
 	
-	Image goedKrulImage, foutKruisImage; //goedKrulHalfImage
+	Image goedKrulImage, foutKruisImage, goedKrulHalfImage;
 	
 	
 	private boolean logOption;
@@ -140,6 +142,8 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 			breedte = ((Number) h.get("breedte")).intValue();
 		if (h != null && h.containsKey("hoogte"))
 			hoogte = ((Number) h.get("hoogte")).intValue();
+		if(h != null && h.containsKey("volledigeBreedte"))
+			volledigeBreedte =((Boolean) h.get("volledigeBreedte"));
 		if (h != null && h.containsKey("interactiePanelLaunchState"))
 			launchState = (HashMap<String, Object>) h.get("interactiePanelLaunchState");
 		
@@ -204,7 +208,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		ashoogte = hoogte / 2 + 7;
 		basisPanel.setPixelSize(breedte,  hoogte);
 		popupBox = new PopupPanel(true);
-		LayoutPanel popupPanel = new LayoutPanel();
+		popupPanel = new LayoutPanel();
 		popupBox.add(popupPanel);
 		popupBox.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 		popupBox.getElement().getStyle().setBorderColor("black");
@@ -263,6 +267,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		//goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.goedkrul_en().getSafeUri());
 		//foutKruisImage = new Image(DWOplayer.DWO_BUNDLE.foutkruis().getSafeUri());
 		goedKrulImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_groen().getSafeUri());
+		goedKrulHalfImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_vinkje_geel().getSafeUri());
 		foutKruisImage = new Image(FormuleHolder.FORMULE_BUNDLE.mw_kruisje_rood().getSafeUri());
 		
 		
@@ -345,9 +350,12 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		checkPanel = new LayoutPanel();
 		checkPanel.add(goedKrulImage);
 		checkPanel.add(foutKruisImage);
+		checkPanel.add(goedKrulHalfImage);
 		checkPanel.add(feedbackLabel);
 		checkPanel.setWidgetRightWidth(goedKrulImage, 1, Style.Unit.PX, 15, Style.Unit.PX);
 		checkPanel.setWidgetTopHeight(goedKrulImage, -3, Style.Unit.PX, 20, Style.Unit.PX);
+		checkPanel.setWidgetRightWidth(goedKrulHalfImage, 1, Style.Unit.PX, 15, Style.Unit.PX);
+		checkPanel.setWidgetTopHeight(goedKrulHalfImage, -3, Style.Unit.PX, 20, Style.Unit.PX);
 		checkPanel.setWidgetRightWidth(foutKruisImage, 1, Style.Unit.PX, 15, Style.Unit.PX);
 		checkPanel.setWidgetTopHeight(foutKruisImage, -3, Style.Unit.PX, 20, Style.Unit.PX);
 		checkPanel.setWidgetRightWidth(feedbackLabel, 5, Style.Unit.PX, 15, Style.Unit.PX);
@@ -365,6 +373,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		//basisPanel.setWidgetRightWidth(foutKruisImage, 2, Style.Unit.PX, 15, Style.Unit.PX);
 		//basisPanel.setWidgetTopHeight(foutKruisImage, 5, Style.Unit.PX, 15, Style.Unit.PX);
 		goedKrulImage.setVisible(false);
+		goedKrulHalfImage.setVisible(false);
 		foutKruisImage.setVisible(false);
 		basisPanel.add(checkPanel);
 		basisPanel.setWidgetRightWidth(checkPanel, 0, Style.Unit.PX, 16, Style.Unit.PX);
@@ -382,7 +391,8 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		keuzeOptieVakken[0].setObjects(kiesObjects);
 		popupPanel.add(keuzeOptieVakken[0]);
 		keuzeOptieVakken[0].resize();
-		popupPanel.setWidgetLeftWidth(keuzeOptieVakken[0], 0, Style.Unit.PX, breedte - 23, Style.Unit.PX);
+		//popupPanel.setWidgetLeftWidth(keuzeOptieVakken[0], 0, Style.Unit.PX, breedte - 23, Style.Unit.PX);
+		popupPanel.setWidgetLeftRight(keuzeOptieVakken[0], 0, Style.Unit.PX, 0, Style.Unit.PX);
 		popupPanel.setWidgetTopHeight(keuzeOptieVakken[0], hoogtePanels, Style.Unit.PX, keuzeOptieVakken[0].getHeight(), Style.Unit.PX);
 		keuzeOptieVakken[0].getElement().getStyle().setBackgroundColor(CssColor.make(163, 184, 204).toString());
 		keuzeOptieVakken[0].addDomHandler(new MouseOverHandler(){
@@ -409,7 +419,8 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 			}
 		}, ClickEvent.getType());
 		popupPanel.add(keuzeOptiePanels[0]);
-		popupPanel.setWidgetLeftWidth(keuzeOptiePanels[0], 0, Style.Unit.PX, breedte - 23, Style.Unit.PX);
+		//popupPanel.setWidgetLeftWidth(keuzeOptiePanels[0], 0, Style.Unit.PX, breedte - 23, Style.Unit.PX);
+		popupPanel.setWidgetLeftRight(keuzeOptiePanels[0], 0, Style.Unit.PX, 0, Style.Unit.PX);
 		popupPanel.setWidgetTopHeight(keuzeOptiePanels[0], hoogtePanels, Style.Unit.PX, keuzeOptieVakken[0].getHeight(), Style.Unit.PX);
 		hoogtePanels += keuzeOptieVakken[0].getHeight();
 		
@@ -433,10 +444,12 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 			keuzeOptieVakken[i + 1].setObjects(keuzeOptie);
 			keuzeOptieVakken[i + 1].resize();
 			popupPanel.add(keuzeOptieVakken[i + 1]);
-			popupPanel.setWidgetLeftWidth(keuzeOptieVakken[i + 1], 0, Style.Unit.PX, breedte - 23, Style.Unit.PX);
+			//popupPanel.setWidgetLeftWidth(keuzeOptieVakken[i + 1], 0, Style.Unit.PX, breedte - 23, Style.Unit.PX);
+			popupPanel.setWidgetLeftRight(keuzeOptieVakken[i + 1], 0, Style.Unit.PX, 0, Style.Unit.PX);
 			popupPanel.setWidgetTopHeight(keuzeOptieVakken[i + 1], hoogtePanels, Style.Unit.PX, keuzeOptieVakken[i + 1].getHeight(), Style.Unit.PX);
 			popupPanel.add(keuzeOptiePanels[i + 1]);
-			popupPanel.setWidgetLeftWidth(keuzeOptiePanels[i + 1], 0, Style.Unit.PX, breedte - 23, Style.Unit.PX);
+			//popupPanel.setWidgetLeftWidth(keuzeOptiePanels[i + 1], 0, Style.Unit.PX, breedte - 23, Style.Unit.PX);
+			popupPanel.setWidgetLeftRight(keuzeOptiePanels[i + 1], 0, Style.Unit.PX, 0, Style.Unit.PX);
 			popupPanel.setWidgetTopHeight(keuzeOptiePanels[i + 1], hoogtePanels, Style.Unit.PX, keuzeOptieVakken[i + 1].getHeight(), Style.Unit.PX);
 			
 			hoogtePanels += keuzeOptieVakken[i + 1].getHeight();
@@ -562,7 +575,6 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	
 	public void zetSelectie(int index)
 	{
-		
 		selectedIndex = index;
 		huidigeKeuzeVak.clear();
 		
@@ -883,7 +895,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		}
 		
 		goedKrulImage.setVisible(false);
-		//goedKrulHalfImage.setVisible(false);
+		goedKrulHalfImage.setVisible(false);
 		foutKruisImage.setVisible(false);
 		feedbackLabel.setVisible(false);
 		
@@ -893,8 +905,8 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 			goedKrulImage.setVisible(true);
 		else if (uitslag == FOUT)
 			foutKruisImage.setVisible(true);
-		//else if (uitslag == HALF)
-		//	goedKrulHalfImage.setVisible(true);
+		else if (uitslag == HALF)
+			goedKrulHalfImage.setVisible(true);
 	}
 	
 	public void checkAntwoord()
@@ -1042,7 +1054,17 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	
 	public void zetVolledigeBreedte(int breedte)
 	{
-		
+		if(volledigeBreedte)
+		{
+			this.breedte = breedte;
+			basisPanel.setPixelSize(breedte, hoogte);
+			popupPanel.setPixelSize(breedte - 23, hoogtePopup);
+			huidigeKeuzeVak.setPixelSize(breedte - 22, hoogte - 2);
+			for(int i = 0; i < keuzeOptieVakken.length; i++)
+			{	keuzeOptieVakken[i].setWidth((breedte - 23) + "px");
+			
+			}		
+		}
 	}
 
 	

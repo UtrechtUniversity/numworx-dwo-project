@@ -1018,8 +1018,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			public void onClick(ClickEvent event) {
 				if(editor != null)
 				{	if(editor.getAsPanel().getParent().equals(panel))
-					{	
-						if(event.getClientX() > editor.getAsPanel().getAbsoluteLeft() + editor.getMainRegel().getWidth())	
+					{	if(event.getClientX() > editor.getAsPanel().getAbsoluteLeft() + editor.getMainRegel().getWidth())	
 						{	requestFocus();
 							editor.startSelection(editor.getMainRegel().getWidth(), 0);
 							editor.endSelection(editor.getMainRegel().getWidth(), 0);
@@ -1029,7 +1028,6 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 							editor.startSelection(0, 0);
 							editor.endSelection(0, 0);
 							editor.cursorToLeft();
-						
 						}
 						else if(!editor.getKeyboard().getEditor().equals(editor))
 						{	requestFocus();
@@ -1393,7 +1391,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		
 		pijlVakInhouden = new String[stapNr];
 		pijlVakOperatoren = new String[stapNr];
-		for (int i = 0; i < stapNr; i++) {
+		for (int i = 0; i < stapNr && pijlVakken.size() > i; i++) {
 			pijlVakInhouden[i] = pijlVakken.get(i).geefExpressieString();
 			pijlVakOperatoren[i] = pijlVakken.get(i).geefOperator();
 		}
@@ -1481,7 +1479,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		if (h.containsKey("pijlVakInhouden"))
 		{	pijlVakInhouden = JSONUtilities.toStringArray(h.get("pijlVakInhouden"));
 			for(int i = 0; i < pijlVakInhouden.length; i++)
-			{	if(pijlVakInhouden[i].startsWith("$f"))
+			{	if(pijlVakInhouden[i] != null && pijlVakInhouden[i].startsWith("$f"))
 					pijlVakInhouden[i] = pijlVakInhouden[i].substring(2, pijlVakInhouden[i].length() - 1);
 			}
 		}
@@ -1514,7 +1512,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			if (i == 0 && hasStartString)
 			{	
 				if(i < stapNr)
-				{	if(linStrategieVersie || linOefenVersie || bordjesMethode || !pijlVakOperatoren[i].equals(""))
+				{	if(linStrategieVersie || linOefenVersie || bordjesMethode || !(pijlVakOperatoren[i] == null || pijlVakOperatoren[i].equals("")))
 					{	zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, viewers.get(i).getHeight()/2);
 					}
 					i++;

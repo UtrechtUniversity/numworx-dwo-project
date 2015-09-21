@@ -189,6 +189,14 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	
 	private FlowPanel  flow;
 	private int cursor;
+	private Widget menubar, content;
+	FlowPanel hbox;
+	
+	private boolean boxMetRand;
+	private int boxsize;
+	int menuheight = 0;
+	int padding = 4; // TODO bepaal padding;
+	
 	
 	public TextEditor(HashMap<String, Object> currentVakGegevens,
 			String[] randomVarNamen, HashMap<String, Object> randomVarWaarden) {
@@ -197,18 +205,17 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		width = h.getInt("breedte");
 		height = h.getInt("hoogte");
 		volledigeBreedte = h.getBoolean("volledigeBreedte", false);
-		int menuheight = 0;
-		boolean boxMetRand;
 		boxMetRand = launchdata.getBoolean("boxMetRand", true);
-		int boxsize = boxMetRand?2:0;
-		FlowPanel hbox = new FlowPanel();
-		Widget menubar, content;
+		boxsize = boxMetRand?2:0;
+		hbox = new FlowPanel();
+		
 		menubar = getMenuBar(launchdata);
 		if(menubar != null) {
-			menubar.setPixelSize(width-boxsize, menuheight=30);
+			menuheight = 30;
+			menubar.setPixelSize(width-boxsize, menuheight);
 			hbox.add(menubar);
 		}
-		int padding = 4; // TODO bepaal padding;
+		
 		content = getContent(launchdata);
 		content.setPixelSize(width-boxsize-padding, height-menuheight-boxsize-padding);
 		Style style = content.getElement().getStyle();
@@ -300,9 +307,13 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	}
 	
 	public void zetVolledigeBreedte(int breedte)
-	{
-		if(volledigeBreedte)
-			this.width = breedte;
+	{	if(volledigeBreedte)
+		{	this.width = breedte;
+			if(menubar != null)
+				menubar.setPixelSize(width-boxsize, menuheight);
+			content.setPixelSize(width-boxsize-padding, height-menuheight-boxsize-padding);
+			hbox.setPixelSize(width-boxsize, height-boxsize);
+		}
 	}
 
 	@Override
