@@ -16,7 +16,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- *
+ * Tests bi-implication of Roles in RoleType and the database.
+ * 
+ * 
  * @author Gert van der Plas
  */
 public class PublicRoleManagerPIT {
@@ -51,8 +53,23 @@ public class PublicRoleManagerPIT {
         PublicRoleManager instance = new PublicRoleManager();
         List<PersistentRole> result = instance.getRoles(sc);
         RoleType[] types = RoleType.values();
+        // Database roles => RoleTypes
         for (PersistentRole r : result) {
             assertEquals(r.getGroupname(), RoleType.valueOf(r.getGroupname()).name());
         }
+        // RoleTypes => Database roles
+        for (PersistentRole r : result) {
+            Boolean fail = true;
+            for(RoleType t : RoleType.values()){
+                if(t.name().equals(r.getGroupname())){
+                    fail = false;
+                    break;
+                }
+            }
+            if(fail){
+                fail("RoleType roles are missing in the Database.");
+            }
+        }
+
     }
 }
