@@ -1123,10 +1123,19 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 				antwoord = antwoord.substitueer(gebruikersSubstituties[i].geefExpRechts(), gebruikersSubstituties[i].geefExpLinks().geefVarNaam());
 			}
 		}
+		
+		String var = "x";
+		if (gewensteEindOplossing != null)
+			var = gewensteEindOplossing.geefVergelijkingVar();
+		
 
 		if (antwoordSubstituties != null && antwoord != null) {
-			for (int i = 0; i < antwoordSubstituties.length; i++) {
-				antwoord = antwoord.substitueer(antwoordSubstituties[i].geefExpRechts(), antwoordSubstituties[i].geefExpLinks().geefVarNaam());
+			for (int i = 0; i < antwoordSubstituties.length; i++)
+			{
+				if(antwoord.isEindOplossing(var))
+					antwoord = antwoord.substitueerEindOplossing(antwoordSubstituties[i].geefExpRechts(), antwoordSubstituties[i].geefExpLinks().geefVarNaam());
+				else	
+					antwoord = antwoord.substitueer(antwoordSubstituties[i].geefExpRechts(), antwoordSubstituties[i].geefExpLinks().geefVarNaam());
 			}
 		}
 
@@ -1142,9 +1151,9 @@ public class AntwoordVergelijkingVakChecker implements AntwoordVakChecker
 				}
 			// System.out.println("$f" + antwoordIngevuld.toString() + "@");
 			ingevuld = true;
-			String var = "x";
-			if (gewensteEindOplossing != null)
-				var = gewensteEindOplossing.geefVergelijkingVar();
+//			String var = "x";
+//			if (gewensteEindOplossing != null)
+//				var = gewensteEindOplossing.geefVergelijkingVar();
 
 			boolean isGelijkwaardigEind = antwoord.isOplossing(gewensteEindOplossing.geefEindOplossingen(var), var, gewensteEindOplossing.geefVergTekens());
 

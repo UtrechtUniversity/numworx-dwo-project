@@ -478,6 +478,17 @@ public class Vergelijking
 		Expressie e2 = kind2.substitueer(subst, var);
 		return new Vergelijking(e1, e2, vergelijkingsTeken);
 	}
+	
+	public Vergelijking substitueerEindOplossing(Expressie subst, String var)
+	{
+		Expressie e1 = kind1;
+		Expressie e2 = kind2;
+		if(!(kind1.isVar() && kind1.geefVarNaam().equals(var)))
+			e1 = kind1.substitueer(subst, var);
+		if(!(kind2.isVar() && kind2.geefVarNaam().equals(var)))
+			e2 = kind2.substitueer(subst, var);
+		return new Vergelijking(e1, e2, vergelijkingsTeken);
+	}
 
 	public String toString()
 	{

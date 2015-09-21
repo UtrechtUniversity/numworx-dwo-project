@@ -523,7 +523,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		Widget w = fv.getAsPanel();
 		p.add(w);
 		p.setWidgetLeftWidth(w, 0, Style.Unit.PX, fv.getWidth() + 23, Style.Unit.PX);
-		p.setWidgetTopHeight(w, 0, Style.Unit.PX, fv.getHeight(), Style.Unit.PX);
+		p.setWidgetTopHeight(w, 0, Style.Unit.PX, fv.getHeightWithImage(), Style.Unit.PX);
 	}
 
 	public String extractStartString(HashMap<String, Object> h)
@@ -580,7 +580,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		if (hasFeedback)
 		{	contentPanel.add(feedbackPanel);
 			contentPanel.setWidgetLeftRight(feedbackPanel, 5, Style.Unit.PX, 5, Style.Unit.PX);
-			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + fv.getHeight(), Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX); 
+			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + fv.getHeightWithImage(), Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX); 
 		}
 		nagekeken = true;
 		correct = true;
@@ -614,7 +614,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		FormuleViewer fv = viewers.get(viewers.size() - 1);
 		
 		pijlVak = new PijlVak("", this, false); 
-		int y = stepPanelY + fv.getHeight()/2;
+		int y = stepPanelY + fv.getHeightWithImage()/2;
 		//if (pijl)
 		contentPanel.add(pijlVak);
 		contentPanel.setWidgetRightWidth(pijlVak, 0, Style.Unit.PX, pijlX, Style.Unit.PX);
@@ -631,11 +631,11 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		{	feedbackPanel.removeFromParent();
 			contentPanel.add(feedbackPanel);
 			contentPanel.setWidgetLeftRight(feedbackPanel, 5, Style.Unit.PX, 5, Style.Unit.PX);
-			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY + fv.getHeight(), Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX); 
+			contentPanel.setWidgetTopHeight(feedbackPanel, stepPanelY +  fv.getHeightWithImage(), Style.Unit.PX, feedbackPanelHeight, Style.Unit.PX); 
 		}
 
 		editor = addNewEditor(stepPanel);
-		stepPanelY += fv.getHeight() + stapH;
+		stepPanelY += fv.getHeightWithImage() + stapH;
 		contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, editor.getMainRegel().getHeight(), Style.Unit.PX);
 		requestFocus();
 		checkimg.setVisible(false);
@@ -899,7 +899,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			editor = addNewEditor(stepPanel);
 			
 		}
-		stepPanelY += fv.getHeight() + stapH;
+		stepPanelY += fv.getHeightWithImage() + stapH;
 		if(linStrategieVersie)
 			contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, viewers.get(viewers.size()-1).getHeight(), Style.Unit.PX);
 		else
@@ -1577,10 +1577,10 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 				addFormuleViewer(fv, stepPanel);
 				if(viewers.size() > 1)
 					stepPanelY += viewers.get(viewers.size() - 2).getHeight() + stapH;
-				contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, fv.getHeight(), Style.Unit.PX);
+				contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, fv.getHeightWithImage(), Style.Unit.PX);
 				
 				if(i < stapNr)
-					zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, stepPanelY + fv.getHeight()/2);
+					zetPijlVakNeer(pijlVakOperatoren, pijlVakInhouden, i, stepPanelY + fv.getHeightWithImage()/2);
 					
 				if(bordjesMethode)
 				{	if(viewers.size() > 1)
@@ -2341,7 +2341,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			if(bordjesMethode)
 				addFormulePanelListeners((TouchPanel) p, fv); 
 			
-			contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, fv.getHeight(), Style.Unit.PX);
+			contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, fv.getHeightWithImage(), Style.Unit.PX);
 			if(linOefenVersie)
 			{	
 				stepPanel.remove(p);

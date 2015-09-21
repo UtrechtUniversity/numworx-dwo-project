@@ -60,13 +60,12 @@ public class FormuleViewer extends FormuleHolder implements FormuleEditorIF
 		
 	}
 	
-	//16-9-2015: rekening houden met hoogte checkimg lijkt me achterhaald; voor plaatsing formules in tekst is de minimale hoogte van 20 in elk geval 
-	//niet handig. Daarom weggehaald.
-//	public int getHeight()
-//	{
-//		//return Math.max(super.getHeight(), 20); //checkimg heeft hoogte 20, dus die hoogte moet minimaal worden gegeven.
-//	}
-
+	//Voor plaatsen van viewers in FormuleEditorWithSteps; checkimg heeft hoogte 20, dus die hoogte moet minimaal worden gegeven.
+	public int getHeightWithImage()
+	{
+		return Math.max(super.getHeight(), 20); 
+	}
+	
 	public FormuleViewer(String formule, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
 		String currentFormule = formule;
