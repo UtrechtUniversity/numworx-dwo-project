@@ -11,7 +11,7 @@ import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.system.TextMapper;
-import fi.dwo.dwojapplet.domain.rest.RoleManager;
+import fi.dwo.dwojapplet.domain.rest.PublicRoleManager;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.MainPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
@@ -113,7 +113,7 @@ public final class DwoHelper {
     }
 
     public void init() throws Dwo2Exception {
-        roles = RoleManager.getRoles();
+        roles = PublicRoleManager.getRoles();
     }
 
     /**

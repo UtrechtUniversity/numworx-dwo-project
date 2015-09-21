@@ -19,7 +19,7 @@ import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.REST.StoredRestManager;
 import fi.dwo.dwojapplet.domain.rest.LoginManager;
-import fi.dwo.dwojapplet.domain.rest.RoleManager;
+import fi.dwo.dwojapplet.domain.rest.PublicRoleManager;
 import fi.dwo.dwojapplet.domain.utils.CheckEmail;
 import fi.dwo.dwojapplet.gui.CenterSubPanel;
 import fi.dwo.dwojapplet.gui.GuiConstants;
@@ -1287,7 +1287,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, DwoIF, SCORM200
         }
         StoredRestManager.setWebTargetRest(target);
         try {
-            DwoHelper.setRoles(RoleManager.getRoles());
+            DwoHelper.setRoles(PublicRoleManager.getRoles());
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, null, ex);

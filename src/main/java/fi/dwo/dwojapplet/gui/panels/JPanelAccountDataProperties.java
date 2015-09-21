@@ -4,7 +4,7 @@ package fi.dwo.dwojapplet.gui.panels;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.rest.UserAccountManager;
+import fi.dwo.dwojapplet.domain.rest.SecureUserAccountManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,7 +24,7 @@ public class JPanelAccountDataProperties {
     
     public void init(){
         try {
-            user = UserAccountManager.getCurrentUser();
+            user = SecureUserAccountManager.getAccountData();
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
         }
@@ -65,7 +65,7 @@ public class JPanelAccountDataProperties {
      */
     public void Update(){
         try {
-            UserAccountManager.updateCurrentUser(user);
+            SecureUserAccountManager.updateAccountData(user);
             // update local Global storage.
             DwoHelper.setCurrentUser(user);
         } catch (Dwo2Exception ex) {

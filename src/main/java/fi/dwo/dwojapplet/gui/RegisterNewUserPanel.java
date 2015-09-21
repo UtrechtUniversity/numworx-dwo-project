@@ -8,7 +8,7 @@ import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Group;
-import fi.dwo.dwojapplet.domain.rest.RegistrationManager;
+import fi.dwo.dwojapplet.domain.rest.PublicUserRegistrationManager;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -461,8 +461,8 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
                     nur.setEmail(email.getText());
                     nur.setSchoolLogin(null);
                     nur.setSchoolCode(null);
-                    nur.setRole(DwoHelper.getRoles().get(RoleType.NOSCHOOL.ordinal()));
-                    RegistrationManager.RegisterNewUser(nur); //throws Dwo2RestException.
+                    nur.setRole(DwoHelper.getRoles().get(RoleType.STUDENT.ordinal()));
+                    PublicUserRegistrationManager.RegisterNewUser(nur); //throws Dwo2RestException.
                     GuiCreator.instance().ShowMessageToUser(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                     GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
                 }
@@ -485,7 +485,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
                     nur.setRole(role);
                     nur.setSchoolLogin(schoollogin.getText());
                     nur.setSchoolCode(schoolpassword.getText());
-                    RegistrationManager.RegisterNewUser(nur); //throws Dwo2RestException.
+                    PublicUserRegistrationManager.RegisterNewUser(nur); //throws Dwo2RestException.
                     GuiCreator.instance().ShowMessageToUser(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                     GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
                 }

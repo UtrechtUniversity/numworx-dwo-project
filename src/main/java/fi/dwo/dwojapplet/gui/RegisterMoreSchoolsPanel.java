@@ -6,7 +6,8 @@ import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.commons.rest.entities.KnownUserRegistration;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
-import fi.dwo.dwojapplet.domain.rest.RegistrationManager;
+import fi.dwo.dwojapplet.domain.rest.PublicUserRegistrationManager;
+import fi.dwo.dwojapplet.domain.rest.SecureUserAccountLoginsManager;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FontMetrics;
@@ -221,8 +222,8 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
 
                     nur.setSchoolLogin(null);
                     nur.setSchoolCode(null);
-                    nur.setRole(DwoHelper.getRoles().get(RoleType.NOSCHOOL.ordinal()));
-                    RegistrationManager.RegisterExistingUser(nur);
+                    nur.setRole(DwoHelper.getRoles().get(RoleType.ANONYMOUS.ordinal()));
+                    SecureUserAccountLoginsManager.addASchoolLogin(nur);
                     JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
                     GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
                 }
@@ -239,7 +240,7 @@ public class RegisterMoreSchoolsPanel extends JPanel implements ActionListener {
                     nur.setRole(role);
                     nur.setSchoolLogin(schoollogin.getText());
                     nur.setSchoolCode(schoolpassword.getText());
-                    RegistrationManager.RegisterExistingUser(nur); //throws Dwo2RestException.
+                    SecureUserAccountLoginsManager.addASchoolLogin(nur); //throws Dwo2RestException.
                     GuiCreator.instance().ShowMessageToUser(this, TextMapper.getText(TextMapper.GUIR_MSG_REGISTERED), TextMapper.getText(TextMapper.GUIR_ERR_REGISTER), JOptionPane.ERROR_MESSAGE);
 //                    center.loadCenter(new RegisterMoreSchoolsPanel());
                     GuiCreator.instance().loadPanel(GuiCreator.instance().getWelcomePanel());
