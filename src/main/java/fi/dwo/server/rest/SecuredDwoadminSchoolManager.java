@@ -7,8 +7,6 @@ package fi.dwo.server.rest;
 
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
-import fi.dwo.commons.persistence.MySQLPersistenceId;
-import fi.dwo.commons.persistence.PersistenceId;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.PersistentEntityManagers.SchoolManager;
@@ -64,36 +62,36 @@ public class SecuredDwoadminSchoolManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
     }
-    
-    /**
-     * Returns a school from its persistent id.
-     *
-     * @param sc
-     * @param pid
-     * @return Returns null if there was an error.
-     */
-    @GET
-    @Produces({"application/json"})
-    @Path("/get")
-    public PersistentSchool getSchool(@Context SecurityContext sc, PersistenceId pid) {
-        if (RoleChecker.isInRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN)) {
-            // do stuff
-            PersistentSchool s = null;
-            try {
-                s = SchoolManager.findEntity((int) MySQLPersistenceId.getId(pid));
-                LOG.log(Level.FINER, "Fetched school with id {0}. ", new Object[]{s.getSchoolID()});
-                return s;
-            }
-            catch (Exception e) {
-                LOG.log(Level.WARNING, "School " + pid + "Could not be found.", e);
-                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the school.");
-
-            }
-        } else {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access dwoadmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
-        }
-    };
+//    
+//    /**
+//     * Returns a school from its persistent id.
+//     *
+//     * @param sc
+//     * @param pid
+//     * @return Returns null if there was an error.
+//     */
+//    @PUT
+//    @Produces({"application/json"})
+//    @Path("/get")
+//    public PersistentSchool getSchool(@Context SecurityContext sc, PersistenceId pid) {
+//        if (RoleChecker.isInRole(sc.getUserPrincipal().getName(), RoleType.SCHOOLADMIN)) {
+//            // do stuff
+//            PersistentSchool s = null;
+//            try {
+//                s = SchoolManager.findEntity((int) MySQLPersistenceId.getId(pid));
+//                LOG.log(Level.FINER, "Fetched school with id {0}. ", new Object[]{s.getSchoolID()});
+//                return s;
+//            }
+//            catch (Exception e) {
+//                LOG.log(Level.WARNING, "School " + pid + "Could not be found.", e);
+//                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the school.");
+//
+//            }
+//        } else {
+//            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access dwoadmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
+//            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+//        }
+//    };
 
 /**
      * Returns the school data to be displayed.
