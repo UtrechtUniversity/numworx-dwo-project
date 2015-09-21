@@ -22,7 +22,7 @@ public class SecureUserAccountManager {
     * @return 
      * @throws fi.dwo.commons.exceptions.Dwo2Exception 
     */
-    public static PersistentUser getCurrentUser() throws Dwo2Exception{
+    public static PersistentUser getAccountData() throws Dwo2Exception{
         PersistentUser user;
         user = StoredRestManager.getInstance().get("/rest/secure/user/account/get", PersistentUser.class);
         return user;
@@ -39,7 +39,7 @@ public class SecureUserAccountManager {
      * @throws fi.dwo.commons.exceptions.Dwo2Exception 
      */
 
-    public static PersistentUser updateCurrentUser(PersistentUser user) throws Dwo2Exception {
+    public static PersistentUser updateAccountData(PersistentUser user) throws Dwo2Exception {
             user = StoredRestManager.getInstance().put("/rest/secure/user/account/update", PersistentUser.class, user);
             LOG.log(Level.FINE, "Updated user profile of username {0}.",new Object[]{user.getUsername()});
         return user;
@@ -57,7 +57,7 @@ public class SecureUserAccountManager {
      * @throws fi.dwo.commons.exceptions.Dwo2Exception 
      */
 
-    public static void removeCurrentUser() throws Dwo2Exception {
+    public static void removeAccountData() throws Dwo2Exception {
         boolean b;
         b = StoredRestManager.getInstance().get("/rest/secure/user/account/remove", Boolean.class);
         return;
