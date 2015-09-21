@@ -11,8 +11,8 @@ import java.util.logging.Logger;
  * 
  * @author G.A.J. van der Plas
  */
-public class UserAccountManager {
-    private static final Logger LOG = Logger.getLogger(UserAccountManager.class.getName());
+public class SecureUserAccountManager {
+    private static final Logger LOG = Logger.getLogger(SecureUserAccountManager.class.getName());
     
     /**
     * Returns the current user 'logged in'. The information is extracted from the 
