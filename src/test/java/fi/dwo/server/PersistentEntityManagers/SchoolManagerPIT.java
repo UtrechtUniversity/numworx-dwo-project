@@ -63,77 +63,83 @@ public class SchoolManagerPIT {
     public void tearDown() {
     }
 
-//    
-//    /**
-//     * Light testing CRUD and more of class SchoolManager.
-//     */
-//    @Test
-//    public void testCRUD()  {
-//        // create
-//        try{
-//        System.out.println("create school");
-//        SchoolManager.create(schoolA);
-//        SchoolManager.create(schoolB);
-//        }catch(Exception e){
-//            fail("SchoolManager.create() failed.");
-//        }
-//        
-//        // recreate
-//        try{
-//        System.out.println("create school again");
-//            //should fail
-//        SchoolManager.create(schoolA);
-//            fail("SchoolManager.create() did not fail creating a copy of a school.");
-//        }catch(Exception e){
-//            //succeeded
-//        }
-//        
-//        //read 
-//        PersistentSchool school=null;
-//        try{
-//        System.out.println("read school");
-//        school = SchoolManager.findBySchoolLogin(schoolA.getSchoolLogin());
-//        }catch(Exception e){
-//            fail("SchoolManager.read() failed.");
-//        }
-//        
-//        //update proper 
-//        try{
-//        System.out.println("update school");
-//        school = SchoolManager.findBySchoolLogin(schoolA.getSchoolLogin());
-//        school.setSchoolName(schoolB.getSchoolName());
-//        SchoolManager.edit(school);
-//        school = SchoolManager.findBySchoolLogin(schoolA.getSchoolLogin());
-//        if(school.getSchoolName().compareTo(schoolB.getSchoolName())!=0){
-//            fail("SchoolManager.create() failed.");
-//        }
-//        }catch(Exception e){
-//            fail("SchoolManager.create() failed.");
-//        }
-//        //update should fail
-//        try{
-//        school = SchoolManager.findBySchoolLogin(schoolA.getSchoolLogin());
-//        school.setSchoolLogin(schoolB.getSchoolLogin());
-//        SchoolManager.edit(school);
-//        fail("SchoolManager.create() failed.");
-//        }catch(Exception e){
-//            //works
-//        }
-//        
-//        //delete 
-//        System.out.println("delete school");
-//        school = SchoolManager.findBySchoolLogin(schoolA.getSchoolLogin());
-//        SchoolManager.destroy(school.getSchoolID());
-//        school = SchoolManager.findBySchoolLogin(schoolB.getSchoolLogin());
-//        SchoolManager.destroy(schoolB.getSchoolID());
-//        try{
-//        school = SchoolManager.findBySchoolLogin(schoolA.getSchoolLogin());
-//        if(school==null) fail("SchoolManager.destroy() failed.");
-//        }catch(Exception e){
-//            // works
-//        }
-//    }    
-//    
+    
+    /**
+     * Light testing CRUD and more of class SchoolManager.
+     */
+    @Test
+    public void testCRUD()  {
+        // create
+        try{
+        System.out.println("create school");
+        SchoolManager.create(schoolA);
+        SchoolManager.create(schoolB);
+        }catch(Exception e){
+            fail("SchoolManager.create() failed.");
+        }
+        
+        // recreate
+        try{
+        System.out.println("create school again");
+            //should fail
+        SchoolManager.create(schoolA);
+            fail("SchoolManager.create() did not fail creating a copy of a school.");
+        }catch(Exception e){
+            //succeeded
+        }
+        
+        //read 
+        PersistentSchool school=null;
+        try{
+        System.out.println("read school");
+        school = SchoolManager.findBySchoolLogin(schoolA.getSchoolLogin());
+        }catch(Exception e){
+            fail("SchoolManager.read() failed.");
+        }
+        
+        //update proper 
+        try{
+        System.out.println("update school");
+        school = SchoolManager.findBySchoolLogin(schoolA.getSchoolLogin());
+        school.setSchoolName(schoolB.getSchoolName());
+        SchoolManager.edit(school);
+        school = SchoolManager.findBySchoolLogin(schoolA.getSchoolLogin());
+        if(school.getSchoolName().compareTo(schoolB.getSchoolName())!=0){
+            fail("SchoolManager.create() failed.");
+        }
+        }catch(Exception e){
+            fail("SchoolManager.create() failed.");
+        }
+        //update should fail
+        try{
+        school = SchoolManager.findBySchoolLogin(schoolA.getSchoolLogin());
+        school.setSchoolLogin(schoolB.getSchoolLogin());
+        SchoolManager.edit(school);
+        fail("SchoolManager.create() failed.");
+        }catch(Exception e){
+            //works
+        }
+        
+        //delete 
+        System.out.println("delete school");
+        school = SchoolManager.findBySchoolLogin(schoolA.getSchoolLogin());
+        SchoolManager.destroy(school.getSchoolID());
+        school = SchoolManager.findBySchoolLogin(schoolB.getSchoolLogin());
+        SchoolManager.destroy(school.getSchoolID());
+        try{
+        school = SchoolManager.findBySchoolLogin(schoolA.getSchoolLogin());
+        if(school==null) fail("SchoolManager.destroy() schoolA failed.");
+        }catch(Exception e){
+            // works
+        }
+        try{
+        school = SchoolManager.findBySchoolLogin(schoolB.getSchoolLogin());
+        if(school==null) fail("SchoolManager.destroy() schoolB failed.");
+        }catch(Exception e){
+            // works
+        }
+    }    
+    
     /**
      * Test of destroy method, of class SchoolManager.
      */

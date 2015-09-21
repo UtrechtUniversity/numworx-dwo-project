@@ -31,7 +31,6 @@ public class PublicServerStatus {
         catch (Exception e) {
             LOG.log(Level.SEVERE, "Can't query the DwoSystemParameters", e);
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the DwoSystemParameters.");
-
         }
 
         StringBuilder string = new StringBuilder();
@@ -48,7 +47,7 @@ public class PublicServerStatus {
 
     @GET
     @Produces({"application/json"})
-    @Path("/get")
+    @Path("/getlist")
     public List<PersistentDwoSystemParameters> getStatusJson() {
         return getStatus();
     }

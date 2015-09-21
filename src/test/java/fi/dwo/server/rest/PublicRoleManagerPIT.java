@@ -16,7 +16,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Tests bi-implication of Roles in RoleType and the database.
+ * Tests bi-implication of roles in RoleType and the database.
  * 
  * 
  * @author Gert van der Plas

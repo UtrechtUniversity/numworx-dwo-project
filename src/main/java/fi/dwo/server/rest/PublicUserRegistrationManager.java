@@ -18,9 +18,7 @@ import javax.persistence.EntityManager;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 
 /**
  * Handles the public registration of new users.
@@ -28,9 +26,9 @@ import javax.ws.rs.core.SecurityContext;
  * @author G.A.J. van der Plas
  */
 @Path("/public/registration")
-public class PublicRegistrationManager {
+public class PublicUserRegistrationManager {
 
-    private static final Logger LOG = Logger.getLogger(PublicRegistrationManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(PublicUserRegistrationManager.class.getName());
 
     /**
      * Registers a new user.
