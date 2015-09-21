@@ -16,9 +16,9 @@ import java.util.logging.Logger;
  *
  * @author G.A.J. van der Plas
  */
-public class RoleManager {
+public class PublicRoleManager {
 
-    private static final Logger LOG = Logger.getLogger(RoleManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(PublicRoleManager.class.getName());
 
     /**
      * Returns the user data if properly logged in. The information is extracted
@@ -26,7 +26,6 @@ public class RoleManager {
      *
      * @return Returns null if there was an error.
      * @throws fi.dwo.commons.exceptions.Dwo2Exception
-     * @throws fi.dwo.dwojapplet.domain.rest.RestException
      */
     public static List<PersistentRole> getRoles() throws Dwo2Exception {
         //login to rest service
@@ -35,7 +34,7 @@ public class RoleManager {
 //        roles =  StoredRestManager.getWebTargetRest().path("/rest/public/roles/get/json").request().get(oClass);
 //        LOG.log(Level.FINER, "Fetched {0} roles.", new Object[]{roles.size()});
 //        return roles;
-        roles = StoredRestManager.getInstance().getList("/rest/public/roles/get", RestClassType.PersistentRole);
+        roles = StoredRestManager.getInstance().getList("/rest/public/roles/getlist", RestClassType.PersistentRole);
         return roles;
 
     
