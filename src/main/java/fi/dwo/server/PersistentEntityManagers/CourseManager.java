@@ -60,7 +60,7 @@ public class CourseManager {
      * @param course
      * @throws Exception
      */
-    public static void edit(PersistentCourse course) throws PersistenceException, Exception {
+    public static void edit(PersistentCourse course) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -172,8 +172,6 @@ public class CourseManager {
             LOG.log(Level.FINE, "PersistentCourse-manager retrieved user with course name {0}", new Object[]{course.getName()});
         }catch(NoResultException e){
             return null;
-        }catch(Exception e){
-            throw new PersistenceException(e);
         }finally {
             em.close();
         }

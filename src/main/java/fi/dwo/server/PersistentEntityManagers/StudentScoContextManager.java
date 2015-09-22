@@ -5,6 +5,7 @@
  */
 package fi.dwo.server.PersistentEntityManagers;
 
+import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
@@ -134,6 +135,21 @@ public class StudentScoContextManager {
         }
     }
 
+    public static List<PersistentStudentScoContext> findEntities(PersistentHasRolePK key) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentStudentScoContext.findByHasRolePK");
+            q.setParameter("userID", key.getUserID());
+            q.setParameter("schoolGroupID", key.getSchoolGroupID());
+            List<PersistentStudentScoContext> list = q.getResultList();
+            LOG.log(Level.FINE, "PersistentHasRole-manager retrieved {0} PersistentStudentScoContext with userid {1}", new Object[]{list.size(), key});
+            return list;
+        }
+        finally {
+            em.close();
+        }
+    }
+    
     public static PersistentStudentScoContext findEntity(int id) {
         EntityManager em = getEntityManager();
         try {

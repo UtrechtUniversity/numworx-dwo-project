@@ -7,16 +7,19 @@ package fi.dwo.server.PersistentEntityManagers;
 
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
+import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import static jersey.repackaged.com.google.common.collect.Iterators.all;
 
 /**
  * Manages the hasRole's in the persistent storage.
@@ -45,10 +48,12 @@ public class HasRoleManager {
             em.getTransaction().begin();
             em.persist(hasRole);
             em.getTransaction().commit();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             LOG.log(Level.SEVERE, "Can't create the PersistentHasRole.", e);
             throw new PersistenceException(e);
-        } finally {
+        }
+        finally {
             if (em != null) {
                 em.close();
             }
@@ -69,7 +74,8 @@ public class HasRoleManager {
             em.getTransaction().begin();
             hasRole = em.merge(hasRole);
             em.getTransaction().commit();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 PersistentHasRolePK id = hasRole.getPersistentHasRolePK();
@@ -79,7 +85,8 @@ public class HasRoleManager {
                 }
             }
             throw new PersistenceException(e);
-        } finally {
+        }
+        finally {
             if (em != null) {
                 em.close();
             }
@@ -96,17 +103,19 @@ public class HasRoleManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-                PersistentHasRole role = null;
+            PersistentHasRole role = null;
             try {
                 role = em.getReference(PersistentHasRole.class, id);
                 role.getPersistentHasRolePK();
-            } catch (EntityNotFoundException e) {
+            }
+            catch (EntityNotFoundException e) {
                 LOG.log(Level.FINE, "The PersistentHasRole with " + id + " no longer exists.", e);
                 throw new PersistenceException(e);
             }
             em.remove(role);
             em.getTransaction().commit();
-        } finally {
+        }
+        finally {
             if (em != null) {
                 em.close();
             }
@@ -132,7 +141,25 @@ public class HasRoleManager {
                 q.setFirstResult(firstResult);
             }
             return q.getResultList();
-        } finally {
+        }
+        finally {
+            em.close();
+        }
+    }
+
+    public static List<PersistentHasRole> findEntities(int id) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentHasRole.findByUserID");
+            q.setParameter("userID", id);
+            List<PersistentHasRole> rl = q.getResultList();
+            LOG.log(Level.FINE, "PersistentHasRole-manager retrieved {0} hasRoles with userid {1}", new Object[]{rl.size(), id});
+            return rl;
+        }
+        catch (Exception e) {
+            throw new PersistenceException(e);
+        }
+        finally {
             em.close();
         }
     }
@@ -141,7 +168,8 @@ public class HasRoleManager {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentHasRole.class, id);
-        } finally {
+        }
+        finally {
             em.close();
         }
     }
@@ -154,7 +182,8 @@ public class HasRoleManager {
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
-        } finally {
+        }
+        finally {
             em.close();
         }
     }

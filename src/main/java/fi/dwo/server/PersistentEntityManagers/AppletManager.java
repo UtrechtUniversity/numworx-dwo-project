@@ -58,9 +58,8 @@ public class AppletManager {
      * Update
      *
      * @param persistentApplet
-     * @throws Exception
      */
-    public static void edit(PersistentApplet persistentApplet) throws PersistenceException, Exception {
+    public static void edit(PersistentApplet persistentApplet) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -173,8 +172,6 @@ public class AppletManager {
             LOG.log(Level.FINE, "PersistentApplet-manager retrieved user with applet name {0}", new Object[]{applet.getAppletName()});
         }catch(NoResultException e){
             return null;
-        }catch(Exception e){
-            throw new PersistenceException(e);
         }finally {
             em.close();
         }

@@ -5,6 +5,8 @@
  */
 package fi.dwo.server.PersistentEntityManagers;
 
+import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.server.persistence.DwoEmfFactory;
@@ -134,7 +136,22 @@ public class TeacherOfClassManager {
             em.close();
         }
     }
-
+    
+    public static List<PersistentTeacherOfClass> findEntities(PersistentHasRolePK key) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentTeacherOfClass.findByHasRolePK");
+            q.setParameter("userID", key.getUserID());
+            q.setParameter("schoolGroupID", key.getSchoolGroupID());
+            List<PersistentTeacherOfClass> list = q.getResultList();
+            LOG.log(Level.FINE, "PersistentTeacherOfClass-manager retrieved {0} PersistentTeacherOfClass with userid {1}", new Object[]{list.size(), key});
+            return list;
+        }
+        finally {
+            em.close();
+        }
+    }
+    
     public static PersistentTeacherOfClass findEntity(PersistentTeacherOfClassPK id) {
         EntityManager em = getEntityManager();
         try {

@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
@@ -54,7 +55,7 @@ public class ClassCourseManager {
      * @param classCourse
      * @throws Exception
      */
-    public static void edit(PersistentClassCourse classCourse) throws PersistenceException, Exception {
+    public static void edit(PersistentClassCourse classCourse) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();

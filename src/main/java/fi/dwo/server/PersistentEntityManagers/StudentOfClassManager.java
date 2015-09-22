@@ -5,6 +5,7 @@
  */
 package fi.dwo.server.PersistentEntityManagers;
 
+import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.server.persistence.DwoEmfFactory;
@@ -131,6 +132,21 @@ public class StudentOfClassManager {
             }
             return q.getResultList();
         } finally {
+            em.close();
+        }
+    }
+
+    public static List<PersistentStudentOfClass> findEntities(PersistentHasRolePK key) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentStudentOfClass.findByHasRolePK");
+            q.setParameter("userID", key.getUserID());
+            q.setParameter("schoolGroupID", key.getSchoolGroupID());
+            List<PersistentStudentOfClass> list = q.getResultList();
+            LOG.log(Level.FINE, "PersistentStudentOfClass-manager retrieved {0} PersistentStudentOfClass with userid {1}", new Object[]{list.size(), key});
+            return list;
+        }
+        finally {
             em.close();
         }
     }
