@@ -36,6 +36,7 @@ import javax.ws.rs.core.SecurityContext;
  */
 @Path("/secure/user/account/logins")
 public class SecuredUserAccountLoginsManager {
+    //TODO rewrite to use EntityManagers APIs.
 
     private static final Logger LOG = Logger.getLogger(SecuredUserAccountLoginsManager.class.getName());
 //    @Context  //injected response proxy supporting multiple threads

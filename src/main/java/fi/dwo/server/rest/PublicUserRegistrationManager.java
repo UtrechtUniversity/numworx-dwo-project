@@ -49,16 +49,17 @@ public class PublicUserRegistrationManager {
         }
         //invariant: usercode does not exists
 
-        //fetch schoolgroup id.     
         PersistentSchoolGroup sg;
-        
         PersistentSchool school = null;
         //set null school values if appropiate.
         if(newUserReg.getSchoolLogin()==null && newUserReg.getSchoolCode()==null){
             newUserReg.setSchoolLogin("null"); //TODO retrieve the null school login and code from the DwoSystemParameters.
             newUserReg.setSchoolCode("null");
         }
+
+        //TODO user EntityManager APIs
         try {
+ //           school = SchoolManager.findBySchoolLogin(newUserReg.getSchoolLogin());
             javax.persistence.Query q = em.createQuery(" select sg from PersistentSchoolGroup sg join PersistentSchool s where s.schoollogin = :schoollogin and sg.role.groupname = :role and sg.passwd = :schoolcode");
             q.setParameter("schoollogin", newUserReg.getSchoolLogin());
             q.setParameter("schoolcode", newUserReg.getSchoolCode());

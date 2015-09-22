@@ -7,8 +7,19 @@ package fi.dwo.server.rest;
 
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
+import fi.dwo.commons.persistence.entities.PersistentHasRole;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentEntityManagers.HasRoleManager;
+import fi.dwo.server.PersistentEntityManagers.StudentOfClassManager;
+import fi.dwo.server.PersistentEntityManagers.StudentScoContextManager;
+import fi.dwo.server.PersistentEntityManagers.StudentScoDataManager;
+import fi.dwo.server.PersistentEntityManagers.TeacherOfClassManager;
+import fi.dwo.server.PersistentEntityManagers.UserManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.security.PermitAll;
@@ -49,14 +60,12 @@ public class SecuredUserAccountManager {
         EntityManager em = DwoEmfFactory.getEntityManager();
         PersistentUser user = null;
         try {
-            javax.persistence.Query q = em.createNamedQuery("PersistentUser.findByUsername");
-            String userName = sc.getUserPrincipal().getName();
-            q.setParameter("username", userName);
-            user = (PersistentUser) q.getSingleResult();
-            LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(),userName});
+            user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+            LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(),user.getUsername()});
         }
         catch (Exception e) {
-            LOG.log(Level.WARNING, "Username "+sc.getUserPrincipal().getName()+": Unexpected exception",e);
+            LOG.log(Level.SEVERE, "Username "+sc.getUserPrincipal().getName()+": Unexpected exception",e);
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
         }
         finally {
             em.close();
@@ -77,37 +86,25 @@ public class SecuredUserAccountManager {
     @Path("/update")
     public PersistentUser updateCurrentUser(@Context SecurityContext sc, PersistentUser user) {
         if (user.getUsername().equals(sc.getUserPrincipal().getName())) {
-            //User to update is logged in user.
-            EntityManager em = DwoEmfFactory.getEntityManager();
             try {
-                em.getTransaction().begin();
-//if(true) { // beperkte update                
-                PersistentUser u = em.find(PersistentUser.class, user.getUserID());
-                u.setEmail(user.getEmail());
-                u.setFirstname(user.getFirstname());
-                u.setMiddlename(user.getMiddlename());
-                u.setLastname(user.getLastname());
-                u.setPasswd(user.getPasswd());
-                user = u;
-//} else { //full update
-//                user = em.merge(user);
-//}
-                em.getTransaction().commit();
-                LOG.log(Level.FINE, "Username {0}: Updated User with username {0}", new Object[]{sc.getUserPrincipal().getName(),user.getUsername()});
+                //User to update is logged in user.
+                UserManager.edit(user);
+                return UserManager.findByUserName(user.getUsername());
             }
-            finally {
-                em.close();
+            catch (Exception e) {
+            LOG.log(Level.SEVERE, "Username "+sc.getUserPrincipal().getName()+": Unexpected exception",e);
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to update user id " + sc.getUserPrincipal().getName() + " .");
             }
-            return user;
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to update the user profile of user id {1}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to update usercode " + user.getUsername() + ".");
-
         }
     }
 
     /**
      * Removes all the User data of the current user and returns true.
+     * \texttt{StudentScoData},\texttt{StudentScoContext}, \texttt{StudentOf}, \texttt{TeacherOf\texttt{HasRole}, \texttt{SamlUser}, \texttt{User}.
+
      *
      * @param sc
      * @param user
@@ -116,35 +113,29 @@ public class SecuredUserAccountManager {
     @PUT
     @Produces({"application/json"})
     @Path("/remove")
-    public Boolean removeCurrentUser(@Context SecurityContext sc, PersistentUser user) {
-        if (user.getUsername().equals(sc.getUserPrincipal().getName())) {
-            //User to update is logged in user.
-            EntityManager em = DwoEmfFactory.getEntityManager();
-//            try {
-//                em.getTransaction().begin();
-////if(true) { // beperkte update                
-//                PersistentUser u = em.find(PersistentUser.class, user.getUserID());
-//                u.setEmail(user.getEmail());
-//                u.setFirstname(user.getFirstname());
-//                u.setMiddlename(user.getMiddlename());
-//                u.setLastname(user.getLastname());
-//                u.setPasswd(user.getPasswd());
-//                user = u;
-////} else { //full update
-////                user = em.merge(user);
-////}
-//                em.getTransaction().commit();
-//                LOG.log(Level.FINE, "Username {0}: Updated User with username {0}", new Object[]{sc.getUserPrincipal().getName(),user.getUsername()});
-//            }
-//            finally {
-//                em.close();
-//            }
-//            return user;
-//        } else {
-//            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to update the user profile of user id {1}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
-//            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to update usercode " + user.getUsername() + ".");
-//
-        }
+    public Boolean removeCurrentUser(@Context SecurityContext sc) {
+        PersistentUser u = UserManager.findByUserName(sc.getUserPrincipal().getName());
+            List<PersistentHasRole> hrList = HasRoleManager.findEntities(u.getUserID());
+            for(PersistentHasRole hr : hrList){
+                List<PersistentStudentScoContext> sscList = StudentScoContextManager.findEntities(hr.getPersistentHasRolePK());
+                for(PersistentStudentScoContext ssc : sscList){
+                    StudentScoDataManager.destroy(ssc.getStudentSco());
+                    StudentScoContextManager.destroy(ssc.getStudentSco());
+                }
+                //Remove StudentOf and TeacherOf
+                List<PersistentStudentOfClass> soList = StudentOfClassManager.findEntities(hr.getPersistentHasRolePK());
+                for(PersistentStudentOfClass so : soList){
+                    StudentOfClassManager.destroy(so.getPersistentStudentOfClassPK());
+                }
+                List<PersistentTeacherOfClass> toList = TeacherOfClassManager.findEntities(hr.getPersistentHasRolePK());
+                for(PersistentTeacherOfClass to : toList){
+                    TeacherOfClassManager.destroy(to.getPersistentTeacherOfClassPK());
+                }
+                //Ready to remove hasRoles
+                HasRoleManager.destroy(hr.getPersistentHasRolePK());
+            }
+            //Ready to remove User
+            UserManager.destroy(u.getUserID());
         return true;
     }    
     
