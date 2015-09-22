@@ -3,7 +3,10 @@ package fi.dwo.commons.persistence.entities;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,6 +41,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentSchool.findByImage", query = "SELECT p FROM PersistentSchool p WHERE p.image = :image"),
     @NamedQuery(name = "PersistentSchool.findByExpire", query = "SELECT p FROM PersistentSchool p WHERE p.expire = :expire")})
 public class PersistentSchool implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -102,6 +106,7 @@ public class PersistentSchool implements Serializable {
     public void setSchoolLogin(String schoolLogin) {
         this.schoolLogin = schoolLogin;
     }
+
     public Boolean getExport() {
         return export;
     }
@@ -153,14 +158,28 @@ public class PersistentSchool implements Serializable {
         }
         return true;
     }
-    public boolean licenseIsValid(){
-    if(getExpire()!=null && getExpire().before(new Date()))
-        {
-            return false;
+
+    /**
+     * License expires if the expiration day is past. The 
+     * java.util.Date in the persistent store is to be in UTC.
+     *
+     * @return
+     */
+    public boolean licenseIsValid() {
+
+        if (getExpire() == null) {
+            return true;
+        } else {
+            Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            if (c.after(getExpire())) //compare on UTC calendar.
+            {
+                return false;
+            } else {
+                return true;
+            }
         }
-        return true;
     }
-        
+
     @Override
     public String toString() {
         return "fi.dwo.server.persistence.PersistentSchool[ schoolID=" + schoolID + " ]";
@@ -175,13 +194,12 @@ public class PersistentSchool implements Serializable {
         if ((this.schoolLogin != null && this.schoolLogin.equals(other.schoolLogin))
                 && (this.schoolName != null && this.schoolName.equals(other.schoolName))
                 && (this.schoolRights != null && this.schoolRights.equals(other.schoolRights))
-                && ((this.expire ==null && other.expire == null) || (this.expire != null && (new SimpleDateFormat("MM-dd-yyyy").format(this.expire)).equals(new SimpleDateFormat("MM-dd-yyyy").format(other.expire))))
-                && ((this.image ==null && other.image == null) ||(this.image != null && this.image.equals(other.image)))
-                ) {
+                && ((this.expire == null && other.expire == null) || (this.expire != null && (new SimpleDateFormat("MM-dd-yyyy").format(this.expire)).equals(new SimpleDateFormat("MM-dd-yyyy").format(other.expire))))
+                && ((this.image == null && other.image == null) || (this.image != null && this.image.equals(other.image)))) {
             return true;
-        }       
-        
+        }
+
         return false;
     }
-    
+
 }
