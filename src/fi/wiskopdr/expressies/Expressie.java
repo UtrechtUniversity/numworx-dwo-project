@@ -1,9 +1,20 @@
 package fi.wiskopdr.expressies;
 
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import nl.uu.fi.dwo.ideas.client.IdeasIF;
+import nl.uu.fi.dwo.ideas.client.RuleCallback;
+import nl.uu.fi.dwo.ideas.client.RuleIF;
+
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.NumberFormat;
 
+import fi.wiskopdr.FormuleParser;
+import fi.wiskopdr.RestartException;
+import fi.wiskopdr.RestartException.RestartHandler;
+import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.expressies.repr.AbstractConverter;
 
 public class Expressie
@@ -22,12 +33,15 @@ public class Expressie
 	//public static DecimalFormat df3;
 	//public static FontMetrics fm;
 
-	private static HashMap casEvalStrings = new HashMap();
+	private static final HashMap casEvalStrings = new HashMap();
+	private static final Expressie FAILED = new Expressie();
 
 	static boolean hoekGraden;
 
 	public Expressie()
 	{
+	}
+	static {
 		//TODO: test if this formatting conversion is correct
 		//dfs = new DecimalFormatSymbols();
 		//if(WiskOpdr.language.toString().equals("nl")) 
@@ -36,12 +50,11 @@ public class Expressie
 		//if(WiskOpdr.language.toString().equals("nl")) 
 		//dfs.setGroupingSeparator(' ');
 		//else dfs.setGroupingSeparator(' ');
-
 		df = NumberFormat.getFormat("0.##########");//new DecimalFormat("0.##########", dfs);
 		dfe = NumberFormat.getFormat("0.##########E0");//new DecimalFormat("0.##########E0", dfs);
 		df3 = NumberFormat.getFormat("0.###");//new DecimalFormat("0.###", dfs);
 	}
-
+	
 	public static void zetHoekGraden(boolean b)
 	{
 		hoekGraden = b;
@@ -139,13 +152,13 @@ public class Expressie
 	}
 	//TODO: do we need Ideas  || CAS
 	
-		public static Expressie evalWithCAS(Expressie e)
+		public static Expressie evalWithCAS(Expressie e) throws RestartException
 		{
 			if(e instanceof Diff)
 			{	Expressie diff = ((Diff)e).evalDiff();
 				if(diff!=null)return diff;
 			}
-			return null;
+			return evalWithIdeas(e.toStringStrikt());
 			/*
 			if(isCasLocal())
 				return evalWithReduce(e);
@@ -154,19 +167,54 @@ public class Expressie
 			return evalWithCAS(e.toStringCAS());
 			*/
 		}
-	/*
-		private static Expressie evalWithIdeas(String evalCommand)
+	
+		private static class Restart implements RestartHandler, RuleCallback {
+
+			private String message;
+			private Runnable run;
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				Logger.getLogger("Expressie").log(Level.WARNING, message, caught);
+				casEvalStrings.put(message, FAILED);
+				run.run();
+			}
+
+			@Override
+			public void onSuccess(RuleIF result) {
+				Expressie expr;
+				if(!result.isException()) {
+					expr = FormuleParser.geefExpressie("$f" + result.getExpr() + "@");
+					Logger.getLogger("Expressie").info(message + ": " + expr);
+				} else
+				{   
+					expr = FAILED;
+					Logger.getLogger("Expressie").log(Level.WARNING, message + ": " + result.getExpr());
+				}
+				casEvalStrings.put(message, expr);
+				run.run();
+			}
+
+			@Override
+			public void restart(String message, Runnable run) {
+				this.run = run;
+				this.message = message;
+				WiskOpdr.ideas.interpret(message, this);
+			}
+
+		}
+
+		
+		private static Expressie evalWithIdeas(String evalCommand) throws RestartException
 		{
 			Expressie expr = (Expressie) casEvalStrings.get(evalCommand);
-			if (expr != null)
-				return expr;
-			RuleIF result = WiskOpdr.ideas.interpret(evalCommand);
-			if (result.isException())
+			if (expr == FAILED)
 				return null;
-			expr = FormuleParser.geefExpressie("$f" + result.getExpr() + "@");
 			if (expr != null)
-				casEvalStrings.put(evalCommand, expr);
-			return expr;
+			{
+				return expr;
+			}			
+			throw new RestartException(evalCommand, new Restart());		
 		}
 
 		/**

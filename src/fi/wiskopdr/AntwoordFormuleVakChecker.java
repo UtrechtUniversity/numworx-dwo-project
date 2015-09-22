@@ -201,11 +201,11 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 //	{	return checkAnswer(answer, answerPrevious, null,null);
 //	}
 	
-	public HashMap checkAnswer(String answer)
+	public HashMap checkAnswer(String answer) throws RestartException
 	{	return checkAnswer(answer,null,null,null);
 	}
 	
-	public HashMap checkAnswer(String answer, String answerPrevious, Expressie substitutie, Vergelijking[] gebruikersSubstituties)
+	public HashMap checkAnswer(String answer, String answerPrevious, Expressie substitutie, Vergelijking[] gebruikersSubstituties) throws RestartException
 	{	this.isGelijkwaardig = false;
 		this.isHerleid = false;
 		this.isExact = false;
@@ -778,7 +778,7 @@ public class AntwoordFormuleVakChecker implements AntwoordVakChecker
 		return inputStr;
 	}
 	
-	public void check(String expAntwoordString)	
+	public void check(String expAntwoordString) throws RestartException	
 	{	
 		syntaxFout = false;
 		leeg = false;

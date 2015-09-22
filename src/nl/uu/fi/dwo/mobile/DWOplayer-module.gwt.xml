@@ -22,6 +22,7 @@
   <inherits name="com.bouwkamp.gwt.user.User" />
   <inherits name="nl.uu.fi.dwo.interaction.Interaction" />
   <inherits name="nl.uu.fi.dwo.formule.Formule" />
+  <inherits name="nl.uu.fi.dwo.ideas.Ideas"/>
   
   <inherits name="fi.writemathgwt.WriteMathGWT-DWO" />
    

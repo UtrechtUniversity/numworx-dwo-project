@@ -65,6 +65,7 @@ import fi.wiskopdr.AntwoordFormuleVakChecker;
 import fi.wiskopdr.AntwoordVakChecker;
 import fi.wiskopdr.AntwoordVergelijkingVakChecker;
 import fi.wiskopdr.FormuleParser;
+import fi.wiskopdr.RestartException;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
 import fi.wiskopdr.expressies.repr.ContentMathML;
@@ -649,12 +650,24 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			processAntwoord();
 	}
 	
-	public void processAntwoord()
+	private void processAntwoord() {
+		new Runnable() {
+			public void run() {
+				try {
+					processAntwoord0();
+				} catch(RestartException e) {
+					e.restart(this);
+				}
+			}
+		}.run();
+	}
+	
+	private void processAntwoord0() throws RestartException
 	{
 		if(mode == OpdrNavIF.ZELFTOETS || mode == OpdrNavIF.EINDTOETS)
-			kijkNa(false, false, false);
+			kijkNa0(false, false, false);
 		else
-			kijkNa(false, true, false);
+			kijkNa0(false, true, false);
 		if(comRoot != null) // alleen niet null als fewa een toplevel is.
 		{
 			comRoot.fireEvent(new CBookEvent(this, "input", toString()));
@@ -696,7 +709,23 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	private String lastanswer = "$f@";
 	private boolean isVergelijkingVak;
-	public void kijkNa(boolean backStep, boolean show, boolean setState)
+	
+	public void kijkNa(final boolean backStep, final boolean show, final boolean setState) {
+		try {
+			kijkNa0(backStep, show, setState);
+		} catch(RestartException r) {
+			r.restart(new Runnable() {
+				public void run() {
+					try {
+						kijkNa0(backStep, show, setState);
+					} catch (RestartException e) {
+						e.restart(this);
+					}					
+				}});
+		}
+	}
+	
+	private void kijkNa0(boolean backStep, boolean show, boolean setState) throws RestartException
 	{
 		String useranswer = "$f" + this.toString() + "@";
 		if(useranswer.equals("$f@"))
