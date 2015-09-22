@@ -55,8 +55,8 @@ public class PersistentTeacherOfClass implements Serializable {
         this.registerDate = registerDate;
     }
 
-    public PersistentTeacherOfClass(int userID, int classID) {
-        this.persistentTeacherOfClassPK = new PersistentTeacherOfClassPK(userID, classID);
+    public PersistentTeacherOfClass(int userID, int classID, int schoolGroupID) {
+        this.persistentTeacherOfClassPK = new PersistentTeacherOfClassPK(userID, classID, schoolGroupID);
     }
 
     public PersistentTeacherOfClassPK getPersistentTeacherOfClassPK() {

@@ -22,6 +22,10 @@ public class PersistentStudentOfClassPK implements Serializable {
     @Column(name = "userID", nullable = false)
     private int userID;
     @Basic(optional = false)
+    @NotNull    
+    @Column(name = "schoolGroupID", nullable = false)
+    private int schoolGroupID;
+    @Basic(optional = false)
     @NotNull
     @Column(name = "classID", nullable = false)
     private int classID;
@@ -36,9 +40,10 @@ public class PersistentStudentOfClassPK implements Serializable {
     public PersistentStudentOfClassPK() {
     }
 
-    public PersistentStudentOfClassPK(int userID, int classID) {
+    public PersistentStudentOfClassPK(int userID, int classID, int schoolGroupID) {
         this.userID = userID;
         this.classID = classID;
+        this.schoolGroupID = schoolGroupID;
     }
 
     public int getUserID() {
@@ -57,6 +62,15 @@ public class PersistentStudentOfClassPK implements Serializable {
         this.classID = classID;
     }
 
+    public int getSchoolGroupID() {
+        return schoolGroupID;
+    }
+
+
+    public void setSchoolGroupID(int schoolGroupID) {
+        this.schoolGroupID = schoolGroupID;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -85,5 +99,5 @@ public class PersistentStudentOfClassPK implements Serializable {
     public String toString() {
         return "fi.dwo.server.persistence.PersistentStudentOfClassPK[ userID=" + userID + ", classID=" + classID + " ]";
     }
-    
+
 }

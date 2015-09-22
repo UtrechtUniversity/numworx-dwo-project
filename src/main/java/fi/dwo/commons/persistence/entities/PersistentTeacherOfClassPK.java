@@ -24,6 +24,10 @@ public class PersistentTeacherOfClassPK implements Serializable {
     private int userID;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "schoolGroupID", nullable = false)
+    private int schoolGroupID;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "classID", nullable = false)
     private int classID;
 
@@ -37,9 +41,10 @@ public class PersistentTeacherOfClassPK implements Serializable {
     public PersistentTeacherOfClassPK() {
     }
 
-    public PersistentTeacherOfClassPK(int userID, int classID) {
+    public PersistentTeacherOfClassPK(int userID, int classID, int schoolGroupID) {
         this.userID = userID;
         this.classID = classID;
+        this.schoolGroupID = schoolGroupID;
     }
 
     public int getUserID() {
@@ -56,6 +61,14 @@ public class PersistentTeacherOfClassPK implements Serializable {
 
     public void setClassID(int classID) {
         this.classID = classID;
+    }
+
+    public int getSchoolGroupID() {
+        return schoolGroupID;
+    }
+
+    public void setSchoolGroupID(int schoolGroupID) {
+        this.schoolGroupID = schoolGroupID;
     }
 
     @Override

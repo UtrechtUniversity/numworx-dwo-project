@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
 
 /**
  * Primary key for PersistentHasRole entity.
@@ -16,9 +17,11 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class PersistentHasRolePK implements Serializable {
     @Basic(optional = false)
+    @NotNull    
     @Column(name = "userID", nullable = false)
     private int userID;
     @Basic(optional = false)
+    @NotNull    
     @Column(name = "schoolGroupID", nullable = false)
     private int schoolGroupID;
 
