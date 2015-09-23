@@ -6,10 +6,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
@@ -35,7 +37,7 @@ public class DbAccessWrapper implements DbAccessIF {
 
 		public int compare(T o1, T o2) {
 			Object i1 = o1.get("courseID");
-			Object i2 = o1.get("courseID");
+			Object i2 = o2.get("courseID");
 			Integer r1 = ranking.get(i1);
 			Integer r2 = ranking.get(i2);
 			if(r1 == null && r2 == null) 
@@ -346,7 +348,7 @@ public class DbAccessWrapper implements DbAccessIF {
 			throws IOException, XmlRpcException, SQLException {
 		if("tblCourse".equals(table) && "name".equals(orderby))
 		{
-			return fixSequence(getTable(table,wheredef));
+			return fixModules(fixSequence(getTable(table,wheredef)));
 		}
 		return delegate.getTable(table, wheredef, orderby);
 	}
@@ -358,17 +360,32 @@ public class DbAccessWrapper implements DbAccessIF {
 		return unordered; // not any more....
 	}
 
+	Vector fixModules(Vector modules) {
+		for (Iterator iterator = modules.iterator(); iterator.hasNext();) {
+			Map object = (Map) iterator.next();
+			object.remove("imageData");
+		}
+		return modules;
+	}
+	
 	private List<Map<String,Object>> getSequences(Vector<Map<String,Object>> unordered) {
 		if(unordered.isEmpty())
 			return unordered;
 		Map<String,Object> first = unordered.firstElement();
+		Set<Object> parents = new HashSet<Object>();
+		for (Map<String, Object> map : unordered) {
+			Object parent = map.get("parentID");
+			parents.add(parent);
+		}
 		Hashtable<String,Object> wheredef = new Hashtable<String,Object>();
 		Object schoolID = first.get("schoolID"); 
 		wheredef.put("classID", 0);
 		if(schoolID == null) schoolID = Integer.valueOf(0);
 		wheredef.put("schoolID", schoolID);
-		wheredef.put("profileID", first.get("profileID"));
-		String method = "getTable";
+		wheredef.put("profileID", first.get("dwoProfileID"));
+		if(parents.size()==1) {
+			wheredef.put("parent", parents.iterator().next());
+		}
 		try {
 			return getTable( "tblCourseSequence", wheredef, "sequencenr" );
 		} catch (Exception e) {

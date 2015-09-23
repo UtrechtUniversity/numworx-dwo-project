@@ -3,6 +3,8 @@ package fi.servlet.dwomaccess;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -15,7 +17,7 @@ import fi.beans.xmlrpc.Servlet;
 public class DbAccessServlet extends Servlet {
 
 	public DbAccessServlet() {
-		super(null);
+		super();
 	}
 	
 	public void init(ServletConfig config) throws ServletException {
@@ -51,8 +53,12 @@ public class DbAccessServlet extends Servlet {
 		if("POST".equals(req.getMethod()))
 			resp.setHeader("Access-Control-Allow-Origin", "*");
 			resp.setHeader("Access-Control-Expose-Headers", "content-type");
-		//logHeaders(req);
-		super.service(req, resp);
+		try {
+			//logHeaders(req);
+			super.service(req, resp);
+		} catch (RuntimeException e) {
+			Logger.getLogger(getClass().getName()).log(Level.SEVERE, "service " + req.getRequestURI(), e);
+		}
 	}
 
 //	private void logHeaders(HttpServletRequest req) {
