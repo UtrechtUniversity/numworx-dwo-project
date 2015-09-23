@@ -33,7 +33,6 @@ public class DbAccessWrapper implements DbAccessIF {
 			}
 		}
 
-		@Override
 		public int compare(T o1, T o2) {
 			Object i1 = o1.get("courseID");
 			Object i2 = o1.get("courseID");
