@@ -7,19 +7,18 @@ package fi.dwo.server.PersistentEntityManagers;
 
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
-import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import static jersey.repackaged.com.google.common.collect.Iterators.all;
+import static org.eclipse.persistence.sessions.remote.corba.sun.TransporterHelper.id;
 
 /**
  * Manages the hasRole's in the persistent storage.
@@ -164,6 +163,24 @@ public class HasRoleManager {
         }
     }
 
+    public static List<PersistentHasRole> findEntities(PersistentSchoolGroup sg) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentHasRole.findBySchoolGroupID");
+            q.setParameter("schoolGroupID", sg.getSchoolGroupID());
+            List<PersistentHasRole> rl = q.getResultList();
+            LOG.log(Level.FINE, "PersistentHasRole-manager retrieved {0} hasRoles with userid {1}", new Object[]{rl.size(), sg});
+            return rl;
+        }
+        catch (Exception e) {
+            throw new PersistenceException(e);
+        }
+        finally {
+            em.close();
+        }
+    }
+    
+    
     public static PersistentHasRole findEntity(PersistentHasRolePK id) {
         EntityManager em = getEntityManager();
         try {

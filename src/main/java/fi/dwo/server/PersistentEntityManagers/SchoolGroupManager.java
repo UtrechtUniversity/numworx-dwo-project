@@ -1,5 +1,7 @@
 package fi.dwo.server.PersistentEntityManagers;
 
+import fi.dwo.commons.persistence.entities.PersistentCourseSequence;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
@@ -130,6 +132,21 @@ public class SchoolGroupManager {
         }
     }
 
+
+    public static List<PersistentSchoolGroup> findEntities(PersistentSchool school) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentSchoolGroup.findBySchoolID");
+            q.setParameter("schoolID", school.getSchoolID());
+            List<PersistentSchoolGroup> list = q.getResultList();
+            LOG.log(Level.FINE, "SchoolGroup-manager retrieved {0} PersistentSchoolGroup with schoolid {1}", new Object[]{list.size(), school.getSchoolID()});
+            return list;
+        }
+        finally {
+            em.close();
+        }
+    }        
+    
     public static PersistentSchoolGroup findEntity(Integer id) {
         EntityManager em = getEntityManager();
         try {

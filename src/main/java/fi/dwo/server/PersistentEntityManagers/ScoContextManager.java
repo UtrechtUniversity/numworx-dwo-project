@@ -5,6 +5,7 @@
  */
 package fi.dwo.server.PersistentEntityManagers;
 
+import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
@@ -12,7 +13,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
@@ -135,6 +135,21 @@ public class ScoContextManager {
         }
     }
 
+
+    public static List<PersistentScoContext> findEntities(PersistentCourse c) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentScoContext.findByCourseID");
+            q.setParameter("courseID", c.getCourseID());
+            List<PersistentScoContext> list = q.getResultList();
+            LOG.log(Level.FINE, "PersistentScoContext-manager retrieved {0} PersistentScoContext with course id {1}", new Object[]{list.size(), c.getCourseID()});
+            return list;
+        }
+        finally {
+            em.close();
+        }
+    }
+        
     public static PersistentScoContext findEntity(Integer id) {
         EntityManager em = getEntityManager();
         try {

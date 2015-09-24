@@ -1,20 +1,22 @@
 package fi.dwo.server.PersistentEntityManagers;
 
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
+import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 /**
- * Manages class courses in the persistent storage. 
+ * Manages class courses in the persistent storage.
  *
  * @author G.A.J. van der Plas
  */
@@ -39,10 +41,12 @@ public class ClassCourseManager {
             em.getTransaction().begin();
             em.persist(classCourse);
             em.getTransaction().commit();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             LOG.log(Level.SEVERE, "Can't create the PersistentClassCourse.", e);
             throw new PersistenceException(e);
-        } finally {
+        }
+        finally {
             if (em != null) {
                 em.close();
             }
@@ -62,7 +66,8 @@ public class ClassCourseManager {
             em.getTransaction().begin();
             classCourse = em.merge(classCourse);
             em.getTransaction().commit();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 int id = classCourse.getClassCourseID();
@@ -72,7 +77,8 @@ public class ClassCourseManager {
                 }
             }
             throw new PersistenceException(e);
-        } finally {
+        }
+        finally {
             if (em != null) {
                 em.close();
             }
@@ -89,17 +95,19 @@ public class ClassCourseManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-                PersistentClassCourse classCourse = null;
+            PersistentClassCourse classCourse = null;
             try {
                 classCourse = em.getReference(PersistentClassCourse.class, id);
                 classCourse.getClassCourseID();
-            } catch (EntityNotFoundException e) {
+            }
+            catch (EntityNotFoundException e) {
                 LOG.log(Level.FINE, "The PersistentClassCourse with " + id + " no longer exists.", e);
                 throw new PersistenceException(e);
             }
             em.remove(classCourse);
             em.getTransaction().commit();
-        } finally {
+        }
+        finally {
             if (em != null) {
                 em.close();
             }
@@ -125,7 +133,22 @@ public class ClassCourseManager {
                 q.setFirstResult(firstResult);
             }
             return q.getResultList();
-        } finally {
+        }
+        finally {
+            em.close();
+        }
+    }
+
+    public static List<PersistentClassCourse> findEntities(PersistentSchoolClass c) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentClassCourse.findByClassID");
+            q.setParameter("userID", c.getClassID());
+            List<PersistentClassCourse> list = q.getResultList();
+            LOG.log(Level.FINE, "ClassCourse-manager retrieved {0} PersistentClassCourse with userid {1}", new Object[]{list.size(), c.getClassID()});
+            return list;
+        }
+        finally {
             em.close();
         }
     }
@@ -134,7 +157,8 @@ public class ClassCourseManager {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentClassCourse.class, id);
-        } finally {
+        }
+        finally {
             em.close();
         }
     }
@@ -147,7 +171,8 @@ public class ClassCourseManager {
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
-        } finally {
+        }
+        finally {
             em.close();
         }
     }

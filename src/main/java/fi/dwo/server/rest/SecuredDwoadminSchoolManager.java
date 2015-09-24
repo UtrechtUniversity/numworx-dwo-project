@@ -10,15 +10,31 @@ import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.PersistenceId;
 import fi.dwo.commons.persistence.RoleType;
+import fi.dwo.commons.persistence.entities.PersistentClassCourse;
+import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentCourseSequence;
 import fi.dwo.commons.persistence.entities.PersistentFromTo;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
+import fi.dwo.commons.persistence.entities.PersistentSamlUser;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
+import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentEntityManagers.ClassCourseManager;
+import fi.dwo.server.PersistentEntityManagers.CourseManager;
+import fi.dwo.server.PersistentEntityManagers.CourseSequenceManager;
 import fi.dwo.server.PersistentEntityManagers.FromToManager;
 import fi.dwo.server.PersistentEntityManagers.HasRoleManager;
+import fi.dwo.server.PersistentEntityManagers.SamlUserManager;
+import fi.dwo.server.PersistentEntityManagers.SchoolClassManager;
+import fi.dwo.server.PersistentEntityManagers.SchoolGroupManager;
 import fi.dwo.server.PersistentEntityManagers.SchoolManager;
+import fi.dwo.server.PersistentEntityManagers.ScoContextManager;
+import fi.dwo.server.PersistentEntityManagers.ScoDataManager;
 import fi.dwo.server.PersistentEntityManagers.StudentOfClassManager;
 import fi.dwo.server.PersistentEntityManagers.StudentScoContextManager;
 import fi.dwo.server.PersistentEntityManagers.StudentScoDataManager;
@@ -183,52 +199,109 @@ public class SecuredDwoadminSchoolManager {
 //                        \texttt{ScoContext}, \texttt{CourseSequence}, \texttt{FromTo}, 
 //                                 instanties, alle users die een single schoolaccount hebben,
 //                                 \texttt{SchoolGroup}, \texttt{School}. 
-        PersistentHasRole hr = RoleChecker.getCurrentRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-        if (hr != null) {
+        PersistentHasRole phr = RoleChecker.getCurrentRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        if (phr != null) {
             try {
-                    //Loop FromTo's in School
-                    List<PersistentFromTo> ftList = FromToManager.findEntities(school);
-                    for (PersistentFromTo ft : ftList) {
-                        //Remove FromTo
-                        FromToManager.destroy(ft.getPersistentFromToPK());
+                //Loop FromTos in School
+                List<PersistentFromTo> ftList = FromToManager.findEntities(school);
+                for (PersistentFromTo ft : ftList) {
+                    //Remove FromTo
+                    FromToManager.destroy(ft.getPersistentFromToPK());
+                }
+
+                //Loop CourseSequences in School
+                List<PersistentCourseSequence> csList = CourseSequenceManager.findEntities(school);
+                for (PersistentCourseSequence cs : csList) {
+                    //Remove CourseSequence
+                    CourseSequenceManager.destroy(cs.getCoursesequenceID());
+                }
+
+                //Loop SchoolGroups in School
+                List<PersistentSchoolGroup> sgList = SchoolGroupManager.findEntities(school);
+                for (PersistentSchoolGroup sg : sgList) {
+                    //Loop hasRoles in SchoolGroups
+                    List<PersistentHasRole> hrList = HasRoleManager.findEntities(sg);
+                    for (PersistentHasRole hr : hrList) {
+
+                        //Loop StudentOf in hasRole
+                        List<PersistentStudentOfClass> soList = StudentOfClassManager.findEntities(hr.getPersistentHasRolePK());
+                        for (PersistentStudentOfClass so : soList) {
+                            //Remove StudentOf
+                            StudentOfClassManager.destroy(so.getPersistentStudentOfClassPK());
+                        }
+
+                        //Loop TeacherOf in hasRole
+                        List<PersistentTeacherOfClass> toList = TeacherOfClassManager.findEntities(hr.getPersistentHasRolePK());
+                        for (PersistentTeacherOfClass to : toList) {
+                            //Remove TeacherOf
+                            TeacherOfClassManager.destroy(to.getPersistentTeacherOfClassPK());
+                        }
+
+                        //Loop StudentScoContext in hasRole
+                        List<PersistentStudentScoContext> sscList = StudentScoContextManager.findEntities(hr.getPersistentHasRolePK());
+                        for (PersistentStudentScoContext ssc : sscList) {
+                            //Remove StudentScoData
+                            StudentScoDataManager.destroy(ssc.getStudentSco());
+                            //Remove StudentScoContext
+                            StudentScoContextManager.destroy(ssc.getStudentSco());
+                        }
+                        //Remove hasRole
+                        HasRoleManager.destroy(hr.getPersistentHasRolePK());
+                        PersistentUser u = UserManager.findEntity(hr.getUser().getUserID());
+
+                        if(u!=null && u.isSingleSchoolAccount()) {
+                            //Loop samlusers in user
+                            List<PersistentSamlUser> suList = SamlUserManager.findEntities(u);
+                            for(PersistentSamlUser su : suList){
+                                //remove saml user
+                                SamlUserManager.destroy(su.getId());
+                            }
+                            //remove user
+                            UserManager.destroy(u.getUserID());
+                        }
+                    }
+                    //Remove SchoolGroup
+                    SchoolGroupManager.destroy(sg.getSchoolGroupID());
+                }
+
+                //Loop SchoolClasses in School
+                List<PersistentSchoolClass> clList = SchoolClassManager.findEntities(school);
+                for (PersistentSchoolClass cl : clList) {
+                    //Loop ClassCourses in SchoolClass
+                    List<PersistentClassCourse> ccList = ClassCourseManager.findEntities(cl);
+                    for (PersistentClassCourse cc : ccList) {
+                        //Remove ClassCourse
+                        ClassCourseManager.destroy(cc.getClassCourseID());
                     }
 
-                    //Loop CourseSequences in School
-                        //Remove CourseSequence
-                    
-                    //Loop SchoolGroups in School
-                        //Loop hasRoles in SchoolGroups
-                            //Loop StudentOf in hasRole
-                                //Remove StudentOf
-                            //Loop TeacherOf in hasRole
-                                //Remove TeacherOf
-                            //Loop StudentScoContext in hasRole
-                                //Remove StudentScoData
-                                //Remove StudentScoContext
-                            //Remove hasRole
-                    //Remove SchoolGroup
-                    
-                    //Loop SchoolClasses in School
-                        //Loop ClassCourses in SchoolClass
-                            //Remove ClassCourse
                     //Loop Courses in School
+                    List<PersistentCourse> cList = CourseManager.findEntities(school);
+                    for (PersistentCourse c : cList) {
                         //Loop ScoContext in Course
+                        List<PersistentScoContext> pscList = ScoContextManager.findEntities(c);
+                        for (PersistentScoContext psc : pscList) {
                             //Remove ScoData
+                            ScoDataManager.destroy(psc.getScoID());
                             //Remove ScoContext
-                        //Remove Course
-                    
-                    
+                            ScoDataManager.destroy(psc.getScoID());
+                        }
+                        ///Remove Course
+                        CourseManager.destroy(c.getCourseID());
+                    }
+                    //Remove FromTo
+                    SchoolClassManager.destroy(cl.getClassID());
                 }
-                catch (Exception e) {
-                    LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
-                    throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to remove school with id " + school.getSchoolID() + " .");
-                }
-            }else {
+            }
+            catch (Exception e) {
+                LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
+                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to remove school with id " + school.getSchoolID() + " .");
+            }
+        } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to remove the school with id {1}.", new Object[]{sc.getUserPrincipal().getName(), school.getSchoolID()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to rempve the school.");
         }
 
-            return true;
-        }
-
+        return true;
     }
+
+}

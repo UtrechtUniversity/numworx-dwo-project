@@ -6,6 +6,7 @@
 package fi.dwo.server.PersistentEntityManagers;
 
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.logging.Level;
@@ -135,6 +136,21 @@ public class CourseManager {
         }
     }
 
+
+    public static List<PersistentCourse> findEntities(PersistentSchool s) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentCourse.findBySchoolID");
+            q.setParameter("schoolID", s.getSchoolID());
+            List<PersistentCourse> list = q.getResultList();
+            LOG.log(Level.FINE, "Course-manager retrieved {0} PersistentCourse with userid {1}", new Object[]{list.size(), s.getSchoolID()});
+            return list;
+        }
+        finally {
+            em.close();
+        }
+    }
+    
     public static PersistentCourse findEntity(Integer id) {
         EntityManager em = getEntityManager();
         try {

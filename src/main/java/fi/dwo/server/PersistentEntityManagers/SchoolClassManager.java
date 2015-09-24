@@ -1,20 +1,21 @@
 package fi.dwo.server.PersistentEntityManagers;
 
+import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 /**
- * Manages school classes  in the persistent storage.
+ * Manages school classes in the persistent storage.
  *
  * @author G.A.J. van der Plas
  */
@@ -39,10 +40,12 @@ public class SchoolClassManager {
             em.getTransaction().begin();
             em.persist(entity);
             em.getTransaction().commit();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             LOG.log(Level.SEVERE, "Can't create the PersistentSchoolClass.", e);
             throw new PersistenceException(e);
-        } finally {
+        }
+        finally {
             if (em != null) {
                 em.close();
             }
@@ -62,7 +65,8 @@ public class SchoolClassManager {
             em.getTransaction().begin();
             entity = em.merge(entity);
             em.getTransaction().commit();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Integer id = entity.getClassID();
@@ -72,7 +76,8 @@ public class SchoolClassManager {
                 }
             }
             throw new PersistenceException(e);
-        } finally {
+        }
+        finally {
             if (em != null) {
                 em.close();
             }
@@ -89,17 +94,19 @@ public class SchoolClassManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-                PersistentSchoolClass entity = null;
+            PersistentSchoolClass entity = null;
             try {
                 entity = em.getReference(PersistentSchoolClass.class, id);
                 entity.getClassID();
-            } catch (EntityNotFoundException e) {
+            }
+            catch (EntityNotFoundException e) {
                 LOG.log(Level.FINE, "The PersistentSchoolClass with " + id + " no longer exists.", e);
                 throw new PersistenceException(e);
             }
             em.remove(entity);
             em.getTransaction().commit();
-        } finally {
+        }
+        finally {
             if (em != null) {
                 em.close();
             }
@@ -125,7 +132,22 @@ public class SchoolClassManager {
                 q.setFirstResult(firstResult);
             }
             return q.getResultList();
-        } finally {
+        }
+        finally {
+            em.close();
+        }
+    }
+
+    public static List<PersistentSchoolClass> findEntities(PersistentSchool school) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentSchoolClass.findBySchoolID");
+            q.setParameter("schoolID", school.getSchoolID());
+            List<PersistentSchoolClass> list = q.getResultList();
+            LOG.log(Level.FINE, "SchoolClass-manager retrieved {0} PersistentSchoolClass with schoolid {1}", new Object[]{list.size(), school.getSchoolID()});
+            return list;
+        }
+        finally {
             em.close();
         }
     }
@@ -134,7 +156,8 @@ public class SchoolClassManager {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentSchoolClass.class, id);
-        } finally {
+        }
+        finally {
             em.close();
         }
     }
@@ -147,7 +170,8 @@ public class SchoolClassManager {
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
-        } finally {
+        }
+        finally {
             em.close();
         }
     }

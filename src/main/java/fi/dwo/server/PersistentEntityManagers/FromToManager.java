@@ -2,13 +2,14 @@ package fi.dwo.server.PersistentEntityManagers;
 
 import fi.dwo.commons.persistence.entities.PersistentFromTo;
 import fi.dwo.commons.persistence.entities.PersistentFromToPK;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
@@ -130,6 +131,21 @@ public class FromToManager {
             em.close();
         }
     }
+
+
+    public static List<PersistentFromTo> findEntities(PersistentSchool school) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentFromTo.findBySchoolFrom");
+            q.setParameter("schoolID", school.getSchoolID());
+            List<PersistentFromTo> list = q.getResultList();
+            LOG.log(Level.FINE, "FromTo-manager retrieved {0} PersistentFromTo with schoolid {1}", new Object[]{list.size(), school.getSchoolID()});
+            return list;
+        }
+        finally {
+            em.close();
+        }
+    }    
 
     public static PersistentFromTo findEntity(PersistentFromToPK id) {
         EntityManager em = getEntityManager();
