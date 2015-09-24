@@ -139,10 +139,4 @@ public class SecuredUserAccountManager {
         return true;
     }    
     
-    @GET
-    @Produces({"application/json"})
-    @Path("/classinfo")
-    public String info() {
-        return this.getClass().getName();
-    }
 }
