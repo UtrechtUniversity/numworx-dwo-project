@@ -17,6 +17,7 @@ import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.Role;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
@@ -59,12 +60,14 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	private PopupFacade facade;
 	private static FormuleFont defaultFont = FormuleFont.createFromFontSize(18);
 	private HandlerRegistration loadhandler;
+	private boolean[][] logObjectives;
 
 	public StubView(String html, HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
 		html = DWOplayer.PARAMETERS.getStubView() + html;
 		String locale = getLocale();		
 		html += "?locale=" + locale;
+		
 		init(html, launchdata, randomVarNamen, randomVarWaarden);
 	}
 
@@ -102,6 +105,15 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		this.width = width;
 		this.height = height;
 		if(!volledigeBreedte ) initFrame();
+		if(innerMap.containsKey("logObjectives")) 
+		{
+			ObjectList logObjectivesList = ( innerMap.getObjectList("logObjectives") );
+			logObjectives = new boolean[logObjectivesList.size()][];
+			for(int i = 0; i < logObjectivesList.size(); i++)
+			{	logObjectives[i] = logObjectivesList.getBooleanArray(i);
+			}
+		}
+		 
 	}
 
 	
@@ -154,8 +166,19 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	
 	@Override
 	public int[][] getScoreObjectives() {
-		if(innerView != null)
-			return getScoreObjectives(innerView);
+		if(innerView != null && logObjectives != null)
+		{
+			int score = getScore(innerView);
+			// verdeel score over objectives
+			int[][] scoreObjectives = new int[logObjectives.length][];
+			for(int i = 0; i < scoreObjectives.length; i++)
+			{	scoreObjectives[i] = new int[logObjectives[i].length];
+				for(int j = 0; j < scoreObjectives[i].length; j++)
+					if(logObjectives[i][j])
+						scoreObjectives[i][j] = score;
+			}
+			return scoreObjectives;
+		}
 		return null;
 	}
 
@@ -163,10 +186,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		return inner.getScore();
 	}-*/ ;
 	
-	private native static int[][] getScoreObjectives(Object inner) /*-{
-		return inner.getScoreObjectives();
-	}-*/ ;
-
+	
 	private native static String getState(Object inner) /*-{
 		return inner.getState();
 	}-*/;
