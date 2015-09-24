@@ -1,6 +1,6 @@
 package fi.dwo.server.PersistentEntityManagers;
 
-import fi.dwo.commons.persistence.entities.PersistentCourseSequence;
+import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.server.persistence.DwoEmfFactory;
@@ -16,7 +16,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 /**
- * Manages school groups  in the persistent storage.
+ * Manages school groups in the persistent storage.
  *
  * @author G.A.J. van der Plas
  */
@@ -41,10 +41,12 @@ public class SchoolGroupManager {
             em.getTransaction().begin();
             em.persist(entity);
             em.getTransaction().commit();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             LOG.log(Level.SEVERE, "Can't create the PersistentSchoolGroup.", e);
             throw new PersistenceException(e);
-        } finally {
+        }
+        finally {
             if (em != null) {
                 em.close();
             }
@@ -64,7 +66,8 @@ public class SchoolGroupManager {
             em.getTransaction().begin();
             entity = em.merge(entity);
             em.getTransaction().commit();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Integer id = entity.getSchoolGroupID();
@@ -74,7 +77,8 @@ public class SchoolGroupManager {
                 }
             }
             throw new PersistenceException(e);
-        } finally {
+        }
+        finally {
             if (em != null) {
                 em.close();
             }
@@ -91,17 +95,19 @@ public class SchoolGroupManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-                PersistentSchoolGroup entity = null;
+            PersistentSchoolGroup entity = null;
             try {
                 entity = em.getReference(PersistentSchoolGroup.class, id);
                 entity.getSchoolGroupID();
-            } catch (EntityNotFoundException e) {
+            }
+            catch (EntityNotFoundException e) {
                 LOG.log(Level.FINE, "The PersistentSchoolGroup with " + id + " no longer exists.", e);
                 throw new PersistenceException(e);
             }
             em.remove(entity);
             em.getTransaction().commit();
-        } finally {
+        }
+        finally {
             if (em != null) {
                 em.close();
             }
@@ -127,11 +133,11 @@ public class SchoolGroupManager {
                 q.setFirstResult(firstResult);
             }
             return q.getResultList();
-        } finally {
+        }
+        finally {
             em.close();
         }
     }
-
 
     public static List<PersistentSchoolGroup> findEntities(PersistentSchool school) {
         EntityManager em = getEntityManager();
@@ -145,13 +151,28 @@ public class SchoolGroupManager {
         finally {
             em.close();
         }
-    }        
-    
+    }
+
+    public static List<PersistentSchoolGroup> findEntity(PersistentSchool school) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentSchoolGroup.findBySchoolID");
+            q.setParameter("schoolID", school.getSchoolID());
+            List<PersistentSchoolGroup> list = q.getResultList();
+            LOG.log(Level.FINE, "SchoolGroup-manager retrieved {0} PersistentSchoolGroup with schoolid {1}", new Object[]{list.size(), school.getSchoolID()});
+            return list;
+        }
+        finally {
+            em.close();
+        }
+    }
+
     public static PersistentSchoolGroup findEntity(Integer id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(PersistentSchoolGroup.class, id);
-        } finally {
+        }
+        finally {
             em.close();
         }
     }
@@ -164,7 +185,26 @@ public class SchoolGroupManager {
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
-        } finally {
+        }
+        finally {
+            em.close();
+        }
+    }
+
+    public static PersistentSchoolGroup findBySchoolAndRole(PersistentSchool school, RoleType role) {
+        EntityManager em = DwoEmfFactory.getEntityManager();
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentSchool.findBySchoolAndRole");
+            q.setParameter("schoolID", school.getSchoolID());
+            q.setParameter("rolename", role.name());
+            PersistentSchoolGroup sg = (PersistentSchoolGroup) q.getSingleResult();
+            LOG.log(Level.FINE, "PersistentSchool-manager retrieved schoolgroup {0} for null-school students.", new Object[]{sg.getSchoolGroupID()});
+            return sg;
+        }
+        catch (NoResultException e) {
+            return null;
+        }
+        finally {
             em.close();
         }
     }
