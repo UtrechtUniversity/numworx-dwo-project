@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentSchoolGroup.findBySchoolGroupID", query = "SELECT p FROM PersistentSchoolGroup p WHERE p.schoolGroupID = :schoolGroupID"),
     @NamedQuery(name = "PersistentSchoolGroup.findByGroupID", query = "SELECT p FROM PersistentSchoolGroup p WHERE p.groupID = :groupID"),
     @NamedQuery(name = "PersistentSchoolGroup.findBySchoolID", query = "SELECT p FROM PersistentSchoolGroup p WHERE p.schoolID = :schoolID"),
+    @NamedQuery(name = "PersistentSchoolGroup.findBySchoolIDAndRole", query = "SELECT p FROM PersistentSchoolGroup p WHERE p.schoolID = :schoolID and p.role.groupname = :rolename"),
     @NamedQuery(name = "PersistentSchoolGroup.findByPasswd", query = "SELECT p FROM PersistentSchoolGroup p WHERE p.passwd = :passwd")})
 public class PersistentSchoolGroup implements Serializable {
     private static final long serialVersionUID = 1L;
