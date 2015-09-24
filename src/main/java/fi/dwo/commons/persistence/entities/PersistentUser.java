@@ -15,7 +15,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -83,7 +82,7 @@ public class PersistentUser implements Serializable {
     private Date lastLogin;
 //    @OneToMany(mappedBy = "schoolGroupID")
 //    private List<PersistentSchoolGroup> schoolGroups;
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn(name = "schoolGroupID")
     private PersistentSchoolGroup schoolGroup;
 
@@ -184,6 +183,16 @@ public class PersistentUser implements Serializable {
         this.lastLogin = lastLogin;
     }
 
+    /**
+     * Returns true if the username indicates a single user account. It contains
+     * a '#'token.
+     * 
+     * @return 
+     */
+    public boolean isSingleSchoolAccount() {
+        return this.username.contains("#");
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -210,9 +219,8 @@ public class PersistentUser implements Serializable {
     }
 
     public PersistentSchoolGroup getPersistentSchoolGroup() {
-     return  schoolGroup;
+        return schoolGroup;
     }
-    
 
     public boolean similar(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
@@ -222,18 +230,17 @@ public class PersistentUser implements Serializable {
         PersistentUser other = (PersistentUser) object;
         if ((this.username != null && this.username.equals(other.username))
                 && (this.firstname != null && this.firstname.equals(other.firstname))
-                && ((this.middlename ==null && other.middlename == null) || (this.middlename != null && this.middlename.equals(other.middlename)))
+                && ((this.middlename == null && other.middlename == null) || (this.middlename != null && this.middlename.equals(other.middlename)))
                 && (this.lastname != null && this.lastname.equals(other.lastname))
                 && (this.email != null && this.email.equals(other.email))
                 && (this.passwd != null && this.passwd.equals(other.passwd))
-                && ((this.schoolGroupID ==null && other.schoolGroupID == null) || (this.schoolGroupID != null  && this.schoolGroupID.equals(other.schoolGroupID)))
+                && ((this.schoolGroupID == null && other.schoolGroupID == null) || (this.schoolGroupID != null && this.schoolGroupID.equals(other.schoolGroupID)))
                 && (this.email != null && this.email.equals(other.email))
-                && ((this.schoolGroupID ==null && other.schoolGroupID == null) ||(this.schoolGroupID != null && this.schoolGroupID.equals(other.schoolGroupID)))
-                && (this.registerDate !=null && (new SimpleDateFormat("MM-dd-yyyy").format(this.registerDate)).equals(new SimpleDateFormat("MM-dd-yyyy").format(other.registerDate)))
-                && ((this.lastLogin ==null && other.lastLogin == null) || (this.lastLogin != null && (new SimpleDateFormat("MM-dd-yyyy").format(this.registerDate)).equals(new SimpleDateFormat("MM-dd-yyyy").format(other.lastLogin))))
-                ) {
+                && ((this.schoolGroupID == null && other.schoolGroupID == null) || (this.schoolGroupID != null && this.schoolGroupID.equals(other.schoolGroupID)))
+                && (this.registerDate != null && (new SimpleDateFormat("MM-dd-yyyy").format(this.registerDate)).equals(new SimpleDateFormat("MM-dd-yyyy").format(other.registerDate)))
+                && ((this.lastLogin == null && other.lastLogin == null) || (this.lastLogin != null && (new SimpleDateFormat("MM-dd-yyyy").format(this.registerDate)).equals(new SimpleDateFormat("MM-dd-yyyy").format(other.lastLogin))))) {
             return true;
-        }       
-        return false;    
+        }
+        return false;
     }
 }
