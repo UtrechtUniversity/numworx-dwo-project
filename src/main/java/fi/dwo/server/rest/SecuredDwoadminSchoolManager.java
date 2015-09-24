@@ -24,6 +24,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.rest.entities.RestSchool4Admin;
 import fi.dwo.server.PersistentEntityManagers.ClassCourseManager;
 import fi.dwo.server.PersistentEntityManagers.CourseManager;
 import fi.dwo.server.PersistentEntityManagers.CourseSequenceManager;
@@ -40,6 +41,7 @@ import fi.dwo.server.PersistentEntityManagers.StudentScoContextManager;
 import fi.dwo.server.PersistentEntityManagers.StudentScoDataManager;
 import fi.dwo.server.PersistentEntityManagers.TeacherOfClassManager;
 import fi.dwo.server.PersistentEntityManagers.UserManager;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -135,19 +137,25 @@ public class SecuredDwoadminSchoolManager {
     @GET
     @Produces({"application/json"})
     @Path("/getlist")
-    public List<PersistentSchool> getSchools(@Context SecurityContext sc) {
+    public List<RestSchool4Admin> getSchools(@Context SecurityContext sc) {
+                
         List<PersistentSchool> schools = null;
+        List<RestSchool4Admin> restSchools;
         PersistentHasRole hr = RoleChecker.getCurrentRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         if (hr != null) {
             try {
                 schools = SchoolManager.findEntities();
                 LOG.log(Level.FINER, "Fetched all {0} schools. ", new Object[]{schools.size()});
+                restSchools = new ArrayList<RestSchool4Admin>(schools.size());
+                for(PersistentSchool s : schools){
+                    restSchools.add(new RestSchool4Admin(s));
+                }
             }
             catch (Exception e) {
                 LOG.log(Level.WARNING, "Unexpected exception", e);
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the schools.");
             }
-            return schools;
+            return restSchools;
         } else {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access dwoadmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -159,6 +167,7 @@ public class SecuredDwoadminSchoolManager {
      * updated data.
      *
      * @param sc
+     * @param school
      * @return
      */
     @PUT
@@ -186,19 +195,16 @@ public class SecuredDwoadminSchoolManager {
      * Removes all the school data of the current school and returns true.
      *
      * @param sc
-     * @param school
+     * @param restSchool
      * @return
      */
     @PUT
     @Produces({"application/json"})
     @Path("/remove")
-    public Boolean removeSchool(@Context SecurityContext sc, PersistentSchool school) {
-//        Verwijder in de volgende vollegorde de volgende entity instances van een de school in kwestie: 
-//        \texttt{StudentScoData}, \texttt{StudentScoContext}, \texttt{TeacherOf}, \texttt{StudentOf}, 
-//                \texttt{HasRole}, \texttt{SchoolClass}, \texttt{ClassCourse}, \texttt{ScoData},
-//                        \texttt{ScoContext}, \texttt{CourseSequence}, \texttt{FromTo}, 
-//                                 instanties, alle users die een single schoolaccount hebben,
-//                                 \texttt{SchoolGroup}, \texttt{School}. 
+    public Boolean removeSchool(@Context SecurityContext sc, RestSchool4Admin restSchool) {
+        //unwrap persistentid
+        PersistentSchool school = SchoolManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchool.getSchoolId()));
+        
         PersistentHasRole phr = RoleChecker.getCurrentRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         if (phr != null) {
             try {
