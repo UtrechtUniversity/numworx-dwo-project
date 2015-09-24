@@ -34,8 +34,11 @@ public class OperatorVak extends FormuleElementWithChildren {
 	public void paintObject() {
 // at 0,0
 		final FormuleRegel a = getChild(0);
-		a.paint();
-		int width =  a.width;
+		int width = 0;
+		if(!(this instanceof AftrekVak && a.toString().equals("0")))
+		{	a.paint();
+			width = a.width;
+		}
 		int as;
 // at width,0
 		teken.setPosition(width, 0);
@@ -69,7 +72,8 @@ public class OperatorVak extends FormuleElementWithChildren {
 		//this.drawline(ctx, fm.getAscent() / 3, a.height + fm.getAscent() / 8, this.width - (fm.getAscent() / 3), a.height + fm.getAscent() / 8);
 
 		b.draw(ctx, b.x, as-b.getAsHoogte());
-		a.draw(ctx, a.x, as-a.getAsHoogte());
+		if(!(this instanceof AftrekVak && a.toString().equals(0)))
+			a.draw(ctx, a.x, as-a.getAsHoogte());
 		teken.draw(ctx, teken.x, as-teken.getAsHoogte());
 		this.drawCursor();
 
