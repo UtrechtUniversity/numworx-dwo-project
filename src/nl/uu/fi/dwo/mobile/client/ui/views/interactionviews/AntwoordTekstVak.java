@@ -454,6 +454,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 		feedbackTekst = new TekstVak();
 		feedbackTekst.setSize(200, 50);
 		feedbackTekst.setFontSize(XMLView.getDefaultFontSize());
+		feedbackTekst.setFontName(XMLView.getDefaultFontName());
 		feedbackTekst.setColor(CssColor.make("black"));
 		feedbackTekst.setCentering(false, true);
 		feedbackTekst.setPasHoogteBreedteAan(true, false);

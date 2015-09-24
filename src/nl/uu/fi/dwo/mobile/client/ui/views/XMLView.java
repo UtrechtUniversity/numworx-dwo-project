@@ -315,10 +315,10 @@ public abstract class XMLView {
 		return defaultFontSize;
 	}
 	
-//	public static String getDefaultFontName()
-//	{
-//		return defaultFontName;
-//	}
+	public static String getDefaultFontName()
+	{
+		return defaultFontName;
+	}
 	
 	public static String getDefaultFont()
 	{

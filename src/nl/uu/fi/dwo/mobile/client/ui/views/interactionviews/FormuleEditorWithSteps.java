@@ -411,6 +411,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		feedbackPanel = new TekstVak();
 		feedbackPanel.setSize(breedte - 25, feedbackPanelHeight);
 		feedbackPanel.setFontSize(XMLView.getDefaultFontSize());
+		feedbackPanel.setFontName(XMLView.getDefaultFontName());
 		feedbackPanel.setColor(CssColor.make("black"));
 		feedbackPanel.setMarges(5, 0);
 		feedbackPanel.setCentering(false, true);
