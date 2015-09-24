@@ -138,16 +138,15 @@ public class SecuredDwoadminSchoolManager {
     @Produces({"application/json"})
     @Path("/getlist")
     public List<RestSchool4Admin> getSchools(@Context SecurityContext sc) {
-                
-        List<PersistentSchool> schools = null;
-        List<RestSchool4Admin> restSchools;
         PersistentHasRole hr = RoleChecker.getCurrentRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         if (hr != null) {
+            List<PersistentSchool> schools = null;
+            List<RestSchool4Admin> restSchools;
             try {
                 schools = SchoolManager.findEntities();
                 LOG.log(Level.FINER, "Fetched all {0} schools. ", new Object[]{schools.size()});
                 restSchools = new ArrayList<RestSchool4Admin>(schools.size());
-                for(PersistentSchool s : schools){
+                for (PersistentSchool s : schools) {
                     restSchools.add(new RestSchool4Admin(s));
                 }
             }
@@ -204,7 +203,7 @@ public class SecuredDwoadminSchoolManager {
     public Boolean removeSchool(@Context SecurityContext sc, RestSchool4Admin restSchool) {
         //unwrap persistentid
         PersistentSchool school = SchoolManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchool.getSchoolId()));
-        
+
         PersistentHasRole phr = RoleChecker.getCurrentRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         if (phr != null) {
             try {
@@ -255,10 +254,10 @@ public class SecuredDwoadminSchoolManager {
                         HasRoleManager.destroy(hr.getPersistentHasRolePK());
                         PersistentUser u = UserManager.findEntity(hr.getUser().getUserID());
 
-                        if(u!=null && u.isSingleSchoolAccount()) {
+                        if (u != null && u.isSingleSchoolAccount()) {
                             //Loop samlusers in user
                             List<PersistentSamlUser> suList = SamlUserManager.findEntities(u);
-                            for(PersistentSamlUser su : suList){
+                            for (PersistentSamlUser su : suList) {
                                 //remove saml user
                                 SamlUserManager.destroy(su.getId());
                             }
