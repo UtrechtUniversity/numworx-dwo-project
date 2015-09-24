@@ -877,7 +877,7 @@ public class TekstVakPanel implements InteractionView, FacetAware
 						{
 							formuleEditorWithAnswer.getUitwerking(null);
 						}
-						formuleEditorWithAnswer.paint();
+						//formuleEditorWithAnswer.paint(); Verplaatst naar TekstVak.setObjects.
 						
 					}
 					else if (currentObject instanceof FormuleEditorWithAnswer.FormuleEditorPopup)

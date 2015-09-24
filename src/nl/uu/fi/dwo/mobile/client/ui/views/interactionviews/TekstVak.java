@@ -403,6 +403,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 				if(regelBreedte == 0 || regelBreedte + ((FormuleEditorWithAnswer) currentObject).getWidth() <= tekstVakBreedte || pasAanB)
 				{	regelVakken[aantalRegels - 1].addObject(currentObject);
 					((FormuleEditorWithAnswer) currentObject).setParentRegel(regelVakken[aantalRegels - 1]);
+					((FormuleEditorWithAnswer) currentObject).paint();
 					regelBreedte += ((FormuleEditorWithAnswer) currentObject).getWidth();
 				}
 				else
