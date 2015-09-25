@@ -1,6 +1,6 @@
 package fi.dwo.server.rest;
 
-import fi.dwo.server.rest.util.Checker;
+import fi.dwo.server.rest.util.JoinDataManager;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
@@ -54,8 +54,8 @@ public class SecuredAdminSchoolClassManager {
     @Produces({"application/json"})
     @Path("/getlist")
     public List<RestSchoolClass> getSchoolClasses(@Context SecurityContext sc) {
-        PersistentHasRole phr = Checker.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-        PersistentSchool school = Checker.getSchoolforHasRole(phr);
+        PersistentHasRole phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        PersistentSchool school = JoinDataManager.getSchoolforHasRole(phr);
         
         if (phr != null && school!=null) {
             List<PersistentSchoolClass> schoolClasses = null;
@@ -90,8 +90,8 @@ public class SecuredAdminSchoolClassManager {
     @Produces({"application/json"})
     @Path("/getlist")
     public List<RestTeacher> GetTeachersInSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {
-        PersistentHasRole phr = Checker.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-        PersistentSchool school = Checker.getSchoolforHasRole(phr);
+        PersistentHasRole phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        PersistentSchool school = JoinDataManager.getSchoolforHasRole(phr);
         
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
         if (phr != null && school!=null && schoolClass.getSchoolID() == school.getSchoolID()) {
@@ -128,8 +128,8 @@ public class SecuredAdminSchoolClassManager {
     @Produces({"application/json"})
     @Path("/getlist")
     public List<RestStudent> GetStudentsInSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {
-        PersistentHasRole phr = Checker.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-        PersistentSchool school = Checker.getSchoolforHasRole(phr);
+        PersistentHasRole phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        PersistentSchool school = JoinDataManager.getSchoolforHasRole(phr);
         
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
         if (phr != null && school!=null && schoolClass.getSchoolID() == school.getSchoolID()) {
@@ -166,10 +166,10 @@ public class SecuredAdminSchoolClassManager {
     @Produces({"application/json"})
     @Path("/submit")
     public Boolean AddTeacherToSchoolClass(@Context SecurityContext sc, RestTeacher restTeacher, RestSchoolClass restSchoolClass) {
-        PersistentHasRole phr = Checker.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-        PersistentSchool school = Checker.getSchoolforHasRole(phr);
+        PersistentHasRole phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        PersistentSchool school = JoinDataManager.getSchoolforHasRole(phr);
         PersistentUser teacher = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(restTeacher.getId()));
-        PersistentHasRole thr = Checker.getHasRoleInSchool(teacher, school, RoleType.TEACHER);
+        PersistentHasRole thr = JoinDataManager.getHasRoleInSchool(teacher, school, RoleType.TEACHER);
         
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
         if (phr != null && schoolClass!=null && thr!=null && schoolClass.getSchoolID() == school.getSchoolID()) {
@@ -191,8 +191,8 @@ public class SecuredAdminSchoolClassManager {
     @Produces({"application/json"})
     @Path("/remove")
     public Boolean removeSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {
-        PersistentHasRole phr = Checker.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-        PersistentSchool school = Checker.getSchoolforHasRole(phr);
+        PersistentHasRole phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        PersistentSchool school = JoinDataManager.getSchoolforHasRole(phr);
         
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
         if (phr != null && school!=null && schoolClass.getSchoolID() == school.getSchoolID()) {

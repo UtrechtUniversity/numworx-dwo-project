@@ -1,6 +1,6 @@
 package fi.dwo.server.rest;
 
-import fi.dwo.server.rest.util.Checker;
+import fi.dwo.server.rest.util.JoinDataManager;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
@@ -73,7 +73,7 @@ public class SecuredDwoadminSchoolManager {
     @Produces({"application/json"})
     @Path("/submit")
     public PersistentSchool addSchool(@Context SecurityContext sc, PersistentSchool school) {
-        PersistentHasRole hr = Checker.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        PersistentHasRole hr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         if (hr != null) {
             // allowed user role
             PersistentSchool s = null;
@@ -103,7 +103,7 @@ public class SecuredDwoadminSchoolManager {
     @Produces({"application/json"})
     @Path("/get")
     public PersistentSchool getSchool(@Context SecurityContext sc, PersistenceId pid) {
-        PersistentHasRole hr = Checker.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        PersistentHasRole hr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         if (hr != null) {
             PersistentSchool s = null;
             try {
@@ -134,7 +134,7 @@ public class SecuredDwoadminSchoolManager {
     @Produces({"application/json"})
     @Path("/getlist")
     public List<RestSchool4Admin> getSchools(@Context SecurityContext sc) {
-        PersistentHasRole hr = Checker.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        PersistentHasRole hr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         if (hr != null) {
             List<PersistentSchool> schools = null;
             List<RestSchool4Admin> restSchools;
@@ -169,7 +169,7 @@ public class SecuredDwoadminSchoolManager {
     @Produces({"application/json"})
     @Path("/update")
     public PersistentSchool updateSchool(@Context SecurityContext sc, PersistentSchool school) {
-        PersistentHasRole hr = Checker.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        PersistentHasRole hr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         if (hr != null) {
             try {
                 //User to update is logged in user.
@@ -200,7 +200,7 @@ public class SecuredDwoadminSchoolManager {
         //unwrap persistentid
         PersistentSchool school = SchoolManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchool.getId()));
 
-        PersistentHasRole phr = Checker.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        PersistentHasRole phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         if (phr != null) {
             try {
                 //Loop FromTos in School

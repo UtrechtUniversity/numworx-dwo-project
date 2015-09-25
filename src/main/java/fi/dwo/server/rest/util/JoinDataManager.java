@@ -18,7 +18,7 @@ import fi.dwo.server.PersistentEntityManagers.UserManager;
  *
  * @author G.A.J. van der Plas
  */
-public class Checker {
+public class JoinDataManager {
 
     /**
      * Checks if the user is in the given role. Returns the hasRolefor the SchoolGroup
