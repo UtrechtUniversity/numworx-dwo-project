@@ -6,6 +6,7 @@
 package fi.dwo.server.PersistentEntityManagers;
 
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.server.persistence.DwoEmfFactory;
@@ -151,6 +152,20 @@ public class StudentOfClassManager {
         }
     }
 
+    public static List<PersistentStudentOfClass> findEntities(PersistentSchoolClass sc) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentStudentOfClass.findByClassID");
+            q.setParameter("classID", sc.getClassID());
+            List<PersistentStudentOfClass> list = q.getResultList();
+            LOG.log(Level.FINE, "PersistentStudentOfClass-manager retrieved {0} PersistentStudentOfClass with classid {1}", new Object[]{list.size(), sc.getClassID()});
+            return list;
+        }
+        finally {
+            em.close();
+        }
+    }    
+    
     public static PersistentStudentOfClass findEntity(PersistentStudentOfClassPK id) {
         EntityManager em = getEntityManager();
         try {

@@ -115,7 +115,7 @@ public class SecuredUserAccountManager {
     @Path("/remove")
     public Boolean removeCurrentUser(@Context SecurityContext sc) {
         PersistentUser u = UserManager.findByUserName(sc.getUserPrincipal().getName());
-            List<PersistentHasRole> hrList = HasRoleManager.findEntities(u.getUserID());
+            List<PersistentHasRole> hrList = HasRoleManager.findEntities(u);
             for(PersistentHasRole hr : hrList){
                 List<PersistentStudentScoContext> sscList = StudentScoContextManager.findEntities(hr.getPersistentHasRolePK());
                 for(PersistentStudentScoContext ssc : sscList){

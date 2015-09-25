@@ -8,6 +8,7 @@ package fi.dwo.server.PersistentEntityManagers;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
+import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.logging.Level;
@@ -146,13 +147,13 @@ public class HasRoleManager {
         }
     }
 
-    public static List<PersistentHasRole> findEntities(int id) {
+    public static List<PersistentHasRole> findEntities(PersistentUser user) {
         EntityManager em = getEntityManager();
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentHasRole.findByUserID");
-            q.setParameter("userID", id);
+            q.setParameter("userID", user.getUserID());
             List<PersistentHasRole> rl = q.getResultList();
-            LOG.log(Level.FINE, "PersistentHasRole-manager retrieved {0} hasRoles with userid {1}", new Object[]{rl.size(), id});
+            LOG.log(Level.FINE, "PersistentHasRole-manager retrieved {0} hasRoles with userid {1}", new Object[]{rl.size(), user.getUserID()});
             return rl;
         }
         catch (Exception e) {
