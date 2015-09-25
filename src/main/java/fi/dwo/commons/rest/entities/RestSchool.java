@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 public class RestSchool {
-    private PersistenceId schoolId;
+    private PersistenceId id;
     private String schoolName;
 
     RestSchool(){
@@ -23,22 +23,22 @@ public class RestSchool {
     }
     
     RestSchool(PersistentSchool s){
-        this.schoolId = MySQLPersistenceId.createPersistentId(s);
+        this.id = MySQLPersistenceId.createPersistentId(s);
         this.schoolName=s.getSchoolName();
     }
     
     /**
-     * @return the schoolId
+     * @return the id
      */
-    public PersistenceId getSchoolId() {
-        return schoolId;
+    public PersistenceId getId() {
+        return id;
     }
 
     /**
-     * @param schoolId the schoolId to set
+     * @param schoolId the id to set
      */
-    public void setSchoolId(PersistenceId schoolId) {
-        this.schoolId = schoolId;
+    public void setId(PersistenceId schoolId) {
+        this.id = schoolId;
     }
 
     /**
