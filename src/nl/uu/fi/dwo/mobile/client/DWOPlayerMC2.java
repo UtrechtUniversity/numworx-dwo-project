@@ -27,11 +27,6 @@ public class DWOPlayerMC2 extends DWOplayerDefaults implements DWOplayerParamete
 	}
 
 	@Override
-	public String getResource(String resource) {
-		return getStubView() + super.getResource(resource);
-	}
-
-	@Override
 	public Logging getLogging() {
 		return LaTransport.newInstance();
 	}

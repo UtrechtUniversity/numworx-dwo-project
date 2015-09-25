@@ -40,7 +40,7 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 
 	@Override
 	public String getResource(String resource) {
-		return resource;
+		return getStubView() + resource;
 	}
 
 	@Override
