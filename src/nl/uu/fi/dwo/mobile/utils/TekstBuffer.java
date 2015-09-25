@@ -511,9 +511,10 @@ public class TekstBuffer
 				int size = list.size();
 				for (int i = 0; i < size; i++) {
 					ObjectMap map = list.getObjectMap(i);
-					String command = map.keySet().iterator().next();
-					String connect = map.getString(command);
-					JSONObject oo = new JSONObject(); oo.put(fix + command, new JSONString(connect));
+					String xwid = map.keySet().iterator().next();
+					String command = map.getString(xwid);
+					//JSONObject oo = new JSONObject(); oo.put(fix + xwid, new JSONString(command));
+					JSONString oo = new JSONString( fix + xwid + "." + command);
 					array.set(array.size(), oo);
 				}
 				output.put(key, array);
