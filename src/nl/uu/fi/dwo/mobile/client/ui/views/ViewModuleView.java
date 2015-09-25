@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
+import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 
@@ -32,5 +33,7 @@ public interface ViewModuleView extends IsWidget
 	    }
 
 	void setUnitId(String id);
+
+	OpdrNavIF getOpdrNav();
 
 }

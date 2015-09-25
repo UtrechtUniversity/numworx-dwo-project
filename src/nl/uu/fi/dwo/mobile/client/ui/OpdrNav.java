@@ -98,8 +98,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	private Memento memento;
 	private final static EventBus BUS = new SimpleEventBus();
 	
-
-	public OpdrNav(HashMap<String, Object> launchData, ViewModuleViewImpl ev, Memento memento)
+	public OpdrNav() {};
+	public void init(HashMap<String, Object> launchData, ViewModuleViewImpl ev, Memento memento)
 	{
 		this.entry = ev;
 		this.memento = memento;

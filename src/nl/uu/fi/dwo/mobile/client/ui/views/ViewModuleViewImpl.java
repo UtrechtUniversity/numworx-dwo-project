@@ -234,7 +234,7 @@ try {
 		contentPanel.getElement().getStyle().setPadding(0, Unit.PX); // XXX was 15 
 		// GEEN randje aan de linkerkant, want dan klopt de maat (100%) niet meer bij noordhoff
 
-		on =  new OpdrNav(launchData, this, createMemento());
+		(on =  new OpdrNav()).init(launchData, this, createMemento());
 		FlowPanel onp = (FlowPanel) on.getAsPanel();
 		if(bolletjesZichtbaar)
 			sb.addNavPanel(onp);

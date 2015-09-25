@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import com.google.gwt.core.shared.GWT;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
@@ -479,6 +485,7 @@ public class TekstBuffer
 	
 	
 	private HashMap<String, Object> mc2FixInner(HashMap<String, Object> currentVakGegevens) {
+		ObjectMap launchdata = JSONUtilities.wrapMap(currentVakGegevens);
 		@SuppressWarnings("unchecked")
 		HashMap<String,Object> inner = (HashMap<String,Object>)currentVakGegevens.get("interactiePanelLaunchState");
 		String className = currentVakGegevens.get("soortInteractiePanelClass").toString();
@@ -488,9 +495,31 @@ public class TekstBuffer
 		inner.put(CROSS_WIDGET_ID, value);
 		inner.put("className", className);
 		String subscriptions = "{}"; // TODO vullen uit currentVakGegevens.
-		if(currentVakGegevens.containsKey("subscriptions"))
+		if(launchdata.containsKey("subscriptions"))
 		{
-			// ....
+			// FIXME !!!!
+			String fix = DWOplayer.clientfactory.getEntryView().getOpdrNav().getUUID();
+			int last = fix.lastIndexOf('-');
+			fix = fix.substring(0,last+1);
+			
+			ObjectMap o = launchdata.getObjectMap("subscriptions");
+			JSONObject output = new JSONObject();
+			Set<String> keys = o.keySet();
+			for (String key : keys) {
+				JSONArray array = new JSONArray();
+				ObjectList list = o.getObjectList(key);
+				int size = list.size();
+				for (int i = 0; i < size; i++) {
+					ObjectMap map = list.getObjectMap(i);
+					String command = map.keySet().iterator().next();
+					String connect = map.getString(command);
+					JSONObject oo = new JSONObject(); oo.put(fix + command, new JSONString(connect));
+					array.set(array.size(), oo);
+				}
+				output.put(key, array);
+			}
+			
+			subscriptions = output.toString();
 		}
 		inner.put("subscriptions", subscriptions);
 		return currentVakGegevens;
