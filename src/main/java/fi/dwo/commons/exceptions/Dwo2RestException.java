@@ -54,6 +54,21 @@ public class Dwo2RestException extends WebApplicationException implements Dwo2Ex
         return decodeMessageInJSON(super.getMessage());
     }
 
+
+    /**
+     * Converts a Dwo2Exception to a Dwo2RestException.
+     *
+     * @param ex
+     * 
+     * @see Response
+     * @see WebApplicationException
+     */
+    public Dwo2RestException(Dwo2Exception ex) {
+        super(Response.status(400)
+                .entity(encodeJSON(ex.getDwo2Code(), ex.getDwo2Message())).type(MediaType.TEXT_HTML).build()
+        );
+    }
+    
     /**
      * Encodes the parameters as a JSON string into the Exception message. The
      * default status code BAD_REQUEST is set via the Response for the
