@@ -894,6 +894,11 @@ public class TekstVakPanel implements InteractionView, FacetAware
 						if(this.isSleepbaar())
 							((FormuleViewer) currentObject).setSelectable(false);
 					}
+					else if (currentObject instanceof SymboolPanel)
+					{
+						aantalVakken++;
+						((SymboolPanel) currentObject).zetVolledigeHoogte(tekstVakken[i][j].hoogte);
+					}
 					else if (currentObject.getClass().getName().equals("fi.nabouwenaanzichtengwt.client.NabouwenAanzichtenGWT"))
 					{
 						aantalVakken++;
@@ -910,26 +915,7 @@ public class TekstVakPanel implements InteractionView, FacetAware
 				//setObjects(opdrachtObjects, i, j);
 				tekstVakken[i][j].setObjects(opdrachtObjects);
 			}
-			//Nu de hele regel gevuld is kunnen de ashoogtes gelijk worden gesteld, zodat de hele rij netjes is uitgelijnd.
-			//Dit misschien in resize stoppen; daar moet het eigenlijk toch..
 			
-			/*
-			int asHoogte = 0;
-			for(int j = 0; j < breedtes.size(); j++)
-			{
-				if(tekstVakken[i][j].getAsHoogte() > asHoogte)
-				{
-					
-					asHoogte = tekstVakken[i][j].getAsHoogte();
-					
-				}
-				
-			}
-			for(int j = 0; j < breedtes.size(); j++)
-			{	tekstVakken[i][j].setAshoogte(asHoogte);
-				//tekstVakken[i][j].setRegelHoogte(regelHoogte);
-			}
-			*/
 		}
 		
 		if (selectable || (sleepbaar && !sleepHandle))

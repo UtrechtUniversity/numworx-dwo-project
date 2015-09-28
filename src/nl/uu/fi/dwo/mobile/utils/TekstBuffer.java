@@ -29,8 +29,10 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckSleepUnit;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckValueUnit;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithAnswer;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSteps;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.GetallenlijnSprongPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.MC2View;
+import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.SymboolPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TekstVakPanel;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.GeogebraView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.TextEditor;
@@ -440,6 +442,14 @@ public class TekstBuffer
 		else if (soortVak == 13)
 		{
 			result = new AntwoordTekstVak(currentVakGegevens, randomVarNamen, randomVarWaarden);
+		}
+		else if (soortVak == 25)
+		{
+			result = new GetallenlijnSprongPanel(currentVakGegevens, randomVarNamen, randomVarWaarden);
+		}
+		else if (soortVak == 55)
+		{
+			result = new SymboolPanel(currentVakGegevens, randomVarNamen, randomVarWaarden);
 		}
 		else
 		{
