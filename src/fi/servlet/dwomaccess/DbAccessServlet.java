@@ -22,6 +22,7 @@ public class DbAccessServlet extends Servlet {
 	
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
+		//unlock();??????
 		setHandler(
 				new DbAccessWrapper
 				(DbAccessFactory.getDbAccess(getServletContext())));

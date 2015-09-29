@@ -78,12 +78,9 @@
          	for( var command in subscriptions)
          		if((subscriptions.hasOwnProperty(command)))
          		{	map = subscriptions[command]
-         			for (var key in map) {
- 				       if (map.hasOwnProperty(key)) {
- 				         var value = map[key];
- 				         var p = key + "." + value
- 				         console.log("topic is " + p)
- 				         hubClient.subscribe(p, function(topic, publisherData, subscriberData)
+         			for (var topic in map) {
+ 				         console.log("topic is " + topic)
+ 				         hubClient.subscribe(topic, function(topic, publisherData, subscriberData)
  				        		 {
  				        	 		console.log("received " + topic  + "=" + command + " data=" + JSON.stringify(publisherData));
  				        	 		var message = publisherData.message;
@@ -91,7 +88,6 @@
  				        	 		document.API.listen(command, message, JSON.stringify(parameters))
  				        		 }		        		 
  				        	)
- 				       }
  				     }
          		}
          	

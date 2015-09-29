@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 import org.apache.xmlrpc.applet.XmlRpcException;
 
@@ -20,6 +21,8 @@ import fi.dwo.client.persistence.DbAccessIF;
 import fi.dwo.server.persistence.DwoXmlRpcException;
 
 public class DbAccessWrapper implements DbAccessIF {
+	
+	Logger logger = Logger.getLogger(DbAccessWrapper.class.getName());
 	
 	static class CourseSorter<T extends Map<?,?>> implements Comparator<T> {
 
@@ -286,22 +289,23 @@ public class DbAccessWrapper implements DbAccessIF {
 
 	public Vector getCourses(int arg0) throws IOException, XmlRpcException,
 			SQLException {
-		return fixSequence(delegate.getCourses(arg0));
+		return fixModules(fixSequence(delegate.getCourses(arg0)));
 	}
 
+// Alleen sorteren binnen één parent.	
 	public Vector getCoursesForClass(int arg0) throws IOException,
 			XmlRpcException, SQLException {
-		return fixSequence(delegate.getCoursesForClass(arg0));
+		return fixModules(/*fixSequence*/(delegate.getCoursesForClass(arg0)));
 	}
 
 	public Vector getEditableCourses(int arg0) throws IOException,
 			XmlRpcException, SQLException {
-		return fixSequence(delegate.getEditableCourses(arg0));
+		return fixModules(fixSequence(delegate.getEditableCourses(arg0)));
 	}
 
 	public Vector getEditableCoursesAdmin() throws IOException,
 			XmlRpcException, SQLException {
-		return fixSequence(delegate.getEditableCoursesAdmin());
+		return fixModules(fixSequence(delegate.getEditableCoursesAdmin()));
 	}
 
 	public Hashtable getFidentitySchools() throws IOException, XmlRpcException,

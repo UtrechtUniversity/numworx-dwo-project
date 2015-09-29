@@ -161,21 +161,21 @@ public class ScormAccess extends Servlet implements ScormAccessIF {
 		if("POST".equals(req.getMethod()))
 			resp.setHeader("Access-Control-Allow-Origin", "*");
 			resp.setHeader("Access-Control-Expose-Headers", "content-type");
-		logHeaders(req);
+		//logHeaders(req);
 		super.service(req, resp);
 	}
 		
-	private void logHeaders(HttpServletRequest req) {
-		Enumeration<?> e = req.getHeaderNames();
-		while (e.hasMoreElements()) {
-			String key = (String) e.nextElement();
-			Enumeration<?> values = req.getHeaders(key);
-			while (values.hasMoreElements()) {
-				Object object = values.nextElement();
-				log (key + ": " + object);
-			}
-		}
-	}
+//	private void logHeaders(HttpServletRequest req) {
+//		Enumeration<?> e = req.getHeaderNames();
+//		while (e.hasMoreElements()) {
+//			String key = (String) e.nextElement();
+//			Enumeration<?> values = req.getHeaders(key);
+//			while (values.hasMoreElements()) {
+//				Object object = values.nextElement();
+//				log (key + ": " + object);
+//			}
+//		}
+//	}
 	
 	static class CmiConvert extends ScormAdapter {
 

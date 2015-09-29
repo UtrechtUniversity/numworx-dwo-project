@@ -132,7 +132,7 @@
 	mayscript
 	id="API"
 	name="API"
-	codebase="https://ws.fisme.science.uu.nl/dwo/jars/"
+	codebase="/dwo/jars/"
 	>
 	Helaas, Java is niet geinstalleerd op uw computer.
 	Klik <a target="_blank" href="http://java.com/nl">
