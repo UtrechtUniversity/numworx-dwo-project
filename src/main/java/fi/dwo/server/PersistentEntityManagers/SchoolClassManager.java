@@ -162,6 +162,22 @@ public class SchoolClassManager {
         }
     }
 
+    public static PersistentSchoolClass findEntity(String className, PersistentSchool school) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentSchoolClass.findBySchoolIDAndClassName");
+            q.setParameter("schoolID", school.getSchoolID());
+            q.setParameter("className", className);
+            PersistentSchoolClass r = (PersistentSchoolClass) q.getSingleResult();
+            LOG.log(Level.FINE, "SchoolClass-manager retrieved PersistentSchoolClass with schoolid {1} and classname {0}", new Object[]{className, school.getSchoolID()});
+            return r;
+        }
+        finally {
+            em.close();
+        }
+    }
+
+
     public static int getEntityCount() {
         EntityManager em = getEntityManager();
         try {

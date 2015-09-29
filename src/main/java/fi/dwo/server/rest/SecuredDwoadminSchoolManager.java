@@ -1,5 +1,6 @@
 package fi.dwo.server.rest;
 
+import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.server.rest.util.JoinDataManager;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
@@ -73,7 +74,15 @@ public class SecuredDwoadminSchoolManager {
     @Produces({"application/json"})
     @Path("/submit")
     public PersistentSchool addSchool(@Context SecurityContext sc, PersistentSchool school) {
-        PersistentHasRole hr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        PersistentHasRole hr = null;
+        try {
+            hr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        }
+        catch (Dwo2Exception ex) {
+            Logger.getLogger(SecuredDwoadminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Dwo2RestException(ex);
+        }
+
         if (hr != null) {
             // allowed user role
             PersistentSchool s = null;
@@ -103,7 +112,14 @@ public class SecuredDwoadminSchoolManager {
     @Produces({"application/json"})
     @Path("/get")
     public PersistentSchool getSchool(@Context SecurityContext sc, PersistenceId pid) {
-        PersistentHasRole hr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        PersistentHasRole hr = null;
+        try {
+            hr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        }
+        catch (Dwo2Exception ex) {
+            Logger.getLogger(SecuredDwoadminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Dwo2RestException(ex);
+        }
         if (hr != null) {
             PersistentSchool s = null;
             try {
@@ -134,7 +150,14 @@ public class SecuredDwoadminSchoolManager {
     @Produces({"application/json"})
     @Path("/getlist")
     public List<RestSchool4Admin> getSchools(@Context SecurityContext sc) {
-        PersistentHasRole hr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        PersistentHasRole hr = null;
+        try {
+            hr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        }
+        catch (Dwo2Exception ex) {
+            Logger.getLogger(SecuredDwoadminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Dwo2RestException(ex);
+        }
         if (hr != null) {
             List<PersistentSchool> schools = null;
             List<RestSchool4Admin> restSchools;
@@ -169,7 +192,14 @@ public class SecuredDwoadminSchoolManager {
     @Produces({"application/json"})
     @Path("/update")
     public PersistentSchool updateSchool(@Context SecurityContext sc, PersistentSchool school) {
-        PersistentHasRole hr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        PersistentHasRole hr = null;
+        try {
+            hr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        }
+        catch (Dwo2Exception ex) {
+            Logger.getLogger(SecuredDwoadminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Dwo2RestException(ex);
+        }
         if (hr != null) {
             try {
                 //User to update is logged in user.
@@ -200,8 +230,15 @@ public class SecuredDwoadminSchoolManager {
         //unwrap persistentid
         PersistentSchool school = SchoolManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchool.getId()));
 
-        PersistentHasRole phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-        if (phr != null) {
+        PersistentHasRole hr = null;
+        try {
+            hr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        }
+        catch (Dwo2Exception ex) {
+            Logger.getLogger(SecuredDwoadminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Dwo2RestException(ex);
+        }
+        if (hr != null) {
             try {
                 //Loop FromTos in School
                 List<PersistentFromTo> ftList = FromToManager.findEntities(school);
@@ -222,17 +259,17 @@ public class SecuredDwoadminSchoolManager {
                 for (PersistentSchoolGroup sg : sgList) {
                     //Loop hasRoles in SchoolGroups
                     List<PersistentHasRole> hrList = HasRoleManager.findEntities(sg);
-                    for (PersistentHasRole hr : hrList) {
+                    for (PersistentHasRole phr : hrList) {
 
                         //Loop StudentOf in hasRole
-                        List<PersistentStudentOfClass> soList = StudentOfClassManager.findEntities(hr.getPersistentHasRolePK());
+                        List<PersistentStudentOfClass> soList = StudentOfClassManager.findEntities(phr.getPersistentHasRolePK());
                         for (PersistentStudentOfClass so : soList) {
                             //Remove StudentOf
                             StudentOfClassManager.destroy(so.getPersistentStudentOfClassPK());
                         }
 
                         //Loop TeacherOf in hasRole
-                        List<PersistentTeacherOfClass> toList = TeacherOfClassManager.findEntities(hr.getPersistentHasRolePK());
+                        List<PersistentTeacherOfClass> toList = TeacherOfClassManager.findEntities(hr);
                         for (PersistentTeacherOfClass to : toList) {
                             //Remove TeacherOf
                             TeacherOfClassManager.destroy(to.getPersistentTeacherOfClassPK());

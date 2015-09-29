@@ -127,7 +127,7 @@ public class SecuredUserAccountManager {
                 for(PersistentStudentOfClass so : soList){
                     StudentOfClassManager.destroy(so.getPersistentStudentOfClassPK());
                 }
-                List<PersistentTeacherOfClass> toList = TeacherOfClassManager.findEntities(hr.getPersistentHasRolePK());
+                List<PersistentTeacherOfClass> toList = TeacherOfClassManager.findEntities(hr);
                 for(PersistentTeacherOfClass to : toList){
                     TeacherOfClassManager.destroy(to.getPersistentTeacherOfClassPK());
                 }
