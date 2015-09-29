@@ -285,7 +285,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 
 			inverseMap.clear();
 			model = currentModel;
-			sort(model);
+			//sort(model);
 			initTree();
 		}
 	
@@ -452,7 +452,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	}
 
 	private void initTree(List<SelectModuleItem> model, TreeItem tree) {
-		sort(model);
+//		sort(model);
 		tree.removeItems(); // the tree should be empty, but it is not always.
 		for (SelectModuleItem item : model)
 		{
@@ -568,7 +568,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 	private void addChildren(List<SelectModuleItem> list) {
 		if(list == null)
 			list = Collections.emptyList();
-		sort(list);
+//		sort(list);
 		this.cellItems = list;
 		cells.render(list);
 	}
@@ -597,10 +597,10 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 		this.sortModel = sorter;
 	}
 
-	private void sort(List<SelectModuleItem> items) {
-		if(sortModel != null) {
-			Collections.sort(items, sortModel);
-		}
-	}
+//	private void sort(List<SelectModuleItem> items) {
+//		if(sortModel != null) {
+//			Collections.sort(items, sortModel);
+//		}
+//	}
 
 }

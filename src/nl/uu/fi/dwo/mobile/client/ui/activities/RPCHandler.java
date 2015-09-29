@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.mobile.utils.MD5;
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
 import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -29,7 +30,7 @@ public class RPCHandler {
 	}
 	
 	public RPCHandler() {
-		this("https://" + DWOplayer.PARAMETERS.getHost() + "/DWOmAccess/dbaccess");
+		this(Window.Location.getProtocol() +  "//" + DWOplayer.PARAMETERS.getHost() + "/DWOmAccess/dbaccess");
 	}
 	
 

@@ -35,7 +35,7 @@ public class AssetAPI implements Scorm2004IF {
 		return $wnd.GetAssetData(GUID)
 	}-*/;
 	
-	
+	private String lastScore = "";
 	public AssetAPI() {
 		guid = Window.Location.getParameter("guid");
 		if(guid == null) guid = DEFAULT_GUID;
@@ -43,6 +43,7 @@ public class AssetAPI implements Scorm2004IF {
 
 	@Override
 	public String Commit() {
+		SetScore(guid,lastScore); // force commit in Noordhoff software.
 		return "";
 	}
 
@@ -66,7 +67,7 @@ public class AssetAPI implements Scorm2004IF {
 	public String SetValue(String name, String value) {
 		try {
 			if(Memento.SCORE_RAW.equals(name))
-				SetScore(guid, toScore(value));
+				SetScore(guid, lastScore = toScore(value));
 			else if(Memento.SUSPEND_DATA.equals(name))
 				SetAssetData(guid, value);
 			else if(Memento.EXIT_STATUS.equals(name))
@@ -91,6 +92,7 @@ public class AssetAPI implements Scorm2004IF {
 
 	@Override
 	public String Terminate() {
+		Commit();
 		return "";
 	}
 
