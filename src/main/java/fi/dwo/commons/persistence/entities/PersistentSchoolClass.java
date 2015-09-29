@@ -27,6 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "PersistentSchoolClass.findAll", query = "SELECT p FROM PersistentSchoolClass p"),
     @NamedQuery(name = "PersistentSchoolClass.findByClassID", query = "SELECT p FROM PersistentSchoolClass p WHERE p.classID = :classID"),
+    @NamedQuery(name = "PersistentSchoolClass.findBySchoolIDAndClassName", query = "SELECT p FROM PersistentSchoolClass p WHERE p.schoolID = :schoolID and p.class1 = :className"),
     @NamedQuery(name = "PersistentSchoolClass.findByUserID", query = "SELECT p FROM PersistentSchoolClass p WHERE p.userID = :userID"),
     @NamedQuery(name = "PersistentSchoolClass.findBySchoolID", query = "SELECT p FROM PersistentSchoolClass p WHERE p.schoolID = :schoolID"),
     @NamedQuery(name = "PersistentSchoolClass.findByIconizer", query = "SELECT p FROM PersistentSchoolClass p WHERE p.iconizer = :iconizer"),
