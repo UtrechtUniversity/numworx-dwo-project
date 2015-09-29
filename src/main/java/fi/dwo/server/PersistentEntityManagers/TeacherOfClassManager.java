@@ -62,7 +62,7 @@ public class TeacherOfClassManager {
      * @param teacherOf
      * @throws Exception
      */
-    public static void edit(PersistentTeacherOfClass teacherOf) throws PersistenceException, Exception {
+    public static void edit(PersistentTeacherOfClass teacherOf) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();

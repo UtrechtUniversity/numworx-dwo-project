@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.security.PermitAll;
+import javax.persistence.PersistenceException;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -56,8 +57,8 @@ public class SecuredAdminSchoolClassManager {
     public List<RestSchoolClass> getSchoolClasses(@Context SecurityContext sc) {
         PersistentHasRole phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         PersistentSchool school = JoinDataManager.getSchoolforHasRole(phr);
-        
-        if (phr != null && school!=null) {
+
+        if (phr != null && school != null) {
             List<PersistentSchoolClass> schoolClasses = null;
             List<RestSchoolClass> restSchoolClasses;
             try {
@@ -92,12 +93,12 @@ public class SecuredAdminSchoolClassManager {
     public List<RestTeacher> GetTeachersInSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {
         PersistentHasRole phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         PersistentSchool school = JoinDataManager.getSchoolforHasRole(phr);
-        
+
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
-        if (phr != null && school!=null && schoolClass.getSchoolID() == school.getSchoolID()) {
+        if (phr != null && school != null && schoolClass.getSchoolID() == school.getSchoolID()) {
             //Fetch TeacherOfClass
             List<PersistentTeacherOfClass> teachersOfClass = TeacherOfClassManager.findEntities(schoolClass);
-                LOG.log(Level.FINER, "Fetched all {0} teachers. ", new Object[]{teachersOfClass.size()});
+            LOG.log(Level.FINER, "Fetched all {0} teachers. ", new Object[]{teachersOfClass.size()});
             List<RestTeacher> restTeachers;
             try {
                 restTeachers = new ArrayList<RestTeacher>(teachersOfClass.size());
@@ -130,12 +131,12 @@ public class SecuredAdminSchoolClassManager {
     public List<RestStudent> GetStudentsInSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {
         PersistentHasRole phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         PersistentSchool school = JoinDataManager.getSchoolforHasRole(phr);
-        
+
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
-        if (phr != null && school!=null && schoolClass.getSchoolID() == school.getSchoolID()) {
+        if (phr != null && school != null && schoolClass.getSchoolID() == school.getSchoolID()) {
             //Fetch TeacherOfClass
             List<PersistentStudentOfClass> studentsOfClass = StudentOfClassManager.findEntities(schoolClass);
-                LOG.log(Level.FINER, "Fetched all {0} teachers. ", new Object[]{studentsOfClass.size()});
+            LOG.log(Level.FINER, "Fetched all {0} teachers. ", new Object[]{studentsOfClass.size()});
             List<RestStudent> restStudents;
             try {
                 restStudents = new ArrayList<RestStudent>(studentsOfClass.size());
@@ -156,6 +157,49 @@ public class SecuredAdminSchoolClassManager {
     }
 
     /**
+     * Removes all the school data of the current school and returns true.
+     *
+     * @param sc
+     * @param restSchoolClass
+     * @return
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/remove")
+    public Boolean removeSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {
+        PersistentHasRole phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+        PersistentSchool school = JoinDataManager.getSchoolforHasRole(phr);
+
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
+        if (phr != null && school != null && schoolClass.getSchoolID() == school.getSchoolID()) {
+            try {
+                //Loop students in class
+                List<PersistentStudentOfClass> studentList = StudentOfClassManager.findEntities(schoolClass);
+                for (PersistentStudentOfClass t : studentList) {
+                    //remove teachers
+                    StudentOfClassManager.destroy(t.getPersistentStudentOfClassPK());
+                }
+
+                //Loop teachers in class
+                List<PersistentTeacherOfClass> teacherList = TeacherOfClassManager.findEntities(schoolClass);
+                for (PersistentTeacherOfClass t : teacherList) {
+                    //remove teachers
+                    TeacherOfClassManager.destroy(t.getPersistentTeacherOfClassPK());
+                }
+                SchoolClassManager.destroy(schoolClass.getClassID());
+            }
+            catch (PersistenceException e) {
+                return false;
+            }
+        } else {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to remove a schoolClass with id {1}.", new Object[]{sc.getUserPrincipal().getName(), schoolClass.getClassID()});
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to rempve the school class.");
+        }
+
+        return true;
+    }
+
+    /**
      * Registers an existing user into a new <school,hasRole> tuple.
      *
      * @param sc
@@ -170,51 +214,14 @@ public class SecuredAdminSchoolClassManager {
         PersistentSchool school = JoinDataManager.getSchoolforHasRole(phr);
         PersistentUser teacher = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(restTeacher.getId()));
         PersistentHasRole thr = JoinDataManager.getHasRoleInSchool(teacher, school, RoleType.TEACHER);
-        
+
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
-        if (phr != null && schoolClass!=null && thr!=null && schoolClass.getSchoolID() == school.getSchoolID()) {
+        if (phr != null && schoolClass != null && thr != null && schoolClass.getSchoolID() == school.getSchoolID()) {
             PersistentTeacherOfClass toc = new PersistentTeacherOfClass();
-            toc.setPersistentTeacherOfClassPK(new PersistentTeacherOfClassPK(teacher.getUserID(),schoolClass.getClassID(), thr.getPersistentHasRolePK().getSchoolGroupID()));
+            toc.setPersistentTeacherOfClassPK(new PersistentTeacherOfClassPK(teacher.getUserID(), schoolClass.getClassID(), thr.getPersistentHasRolePK().getSchoolGroupID()));
             toc.setRegisterDate(null);
+            TeacherOfClassManager.create(toc);
         }
-        return true;
-    }
-    
-    /**
-     * Removes all the school data of the current school and returns true.
-     *
-     * @param sc
-     * @param restSchoolClass
-     * @return
-     */
-    @PUT
-    @Produces({"application/json"})
-    @Path("/remove")
-    public Boolean removeSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {
-        PersistentHasRole phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-        PersistentSchool school = JoinDataManager.getSchoolforHasRole(phr);
-        
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
-        if (phr != null && school!=null && schoolClass.getSchoolID() == school.getSchoolID()) {
-            //Loop students in class
-            List<PersistentStudentOfClass> studentList = StudentOfClassManager.findEntities(schoolClass);
-            for (PersistentStudentOfClass t : studentList) {
-                //remove teachers
-                StudentOfClassManager.destroy(t.getPersistentStudentOfClassPK());
-            }
-
-            //Loop teachers in class
-            List<PersistentTeacherOfClass> teacherList = TeacherOfClassManager.findEntities(schoolClass);
-            for (PersistentTeacherOfClass t : teacherList) {
-                //remove teachers
-                TeacherOfClassManager.destroy(t.getPersistentTeacherOfClassPK());
-            }
-            SchoolClassManager.destroy(schoolClass.getClassID());
-        } else {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to remove a schoolClass with id {1}.", new Object[]{sc.getUserPrincipal().getName(), schoolClass.getClassID()});
-            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to rempve the school class.");
-        }
-
         return true;
     }
 

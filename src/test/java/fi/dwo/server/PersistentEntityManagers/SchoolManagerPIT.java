@@ -127,14 +127,14 @@ public class SchoolManagerPIT {
         school = SchoolManager.findBySchoolLogin(schoolB.getSchoolLogin());
         SchoolManager.destroy(school.getSchoolID());
         try{
-        school = SchoolManager.findBySchoolLogin(schoolA.getSchoolLogin());
-        if(school==null) fail("SchoolManager.destroy() schoolA failed.");
+            school = SchoolManager.findBySchoolLogin(schoolA.getSchoolLogin());
+            if(school!=null) fail("SchoolManager.destroy() schoolA failed.");
         }catch(Exception e){
             // works
         }
         try{
         school = SchoolManager.findBySchoolLogin(schoolB.getSchoolLogin());
-        if(school==null) fail("SchoolManager.destroy() schoolB failed.");
+        if(school!=null) fail("SchoolManager.destroy() schoolB failed.");
         }catch(Exception e){
             // works
         }
