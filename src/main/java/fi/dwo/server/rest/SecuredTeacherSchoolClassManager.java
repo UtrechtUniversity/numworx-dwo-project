@@ -67,7 +67,7 @@ public class SecuredTeacherSchoolClassManager {
             school = JoinDataManager.getSchoolforHasRole(phr);
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredTeacherSchoolClassManager.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -97,55 +97,48 @@ public class SecuredTeacherSchoolClassManager {
         }
     }
 
-
     /**
      * Returns the school data to be displayed.
      *
      * @param sc
      * @return
      */
-    check
-            
     @GET
     @Produces({"application/json"})
     @Path("/getlist")
     public List<RestTeacher> getTeachersInSchool(@Context SecurityContext sc) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
+        List<RestTeacher> restTeachers=null;
 
         try {
             phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = JoinDataManager.getSchoolforHasRole(phr);
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredAdminSchoolClassManager.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(ex);
         }
-            List<PersistentSchoolClass> scList;
-            List<RestTeacher> restTeachers;
-            try {
-                scList = SchoolClassManager.findEntities(school);
-                restTeachers = new ArrayList<RestTeacher>(50);
-                for(PersistentSchoolClass scls: scList){
-                    List<PersistentTeacherOfClass> tocList = TeacherOfClassManager.findEntities(scls);
-                    for (PersistentTeacherOfClass toc : tocList) {
-                        restTeachers.add(new RestTeacher(UserManager.findEntity(toc.getPersistentTeacherOfClassPK().getUserID())));
-                    }
-                }
+        List<PersistentHasRole> hrList;
+        try {
+            hrList = JoinDataManager.getHasRolesInSchoolAndRole(school, RoleType.TEACHER);
+            for (PersistentHasRole hr : hrList) {
+                restTeachers.add(new RestTeacher(UserManager.findEntity(hr.getPersistentHasRolePK().getUserID())));
             }
-            catch (Exception e) {
-                LOG.log(Level.WARNING, "Unexpected exception", e);
-                throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "An exception occured while fetching the teachers.");
-            }
-            return restTeachers;
+        }catch (Dwo2Exception ex) {
+            LOG.log(Level.SEVERE, null, ex);
+            throw new Dwo2RestException(ex);
+        }
+        
+        return restTeachers;
     }
-    
+
     /**
      * Adds a schoolClass
      *
      * @param sc
      * @param schoolClass
-     * @return
+     * @return true, throws an exception otherwise.
      */
     @PUT
     @Produces({"application/json"})
@@ -157,9 +150,11 @@ public class SecuredTeacherSchoolClassManager {
         try {
             phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = JoinDataManager.getSchoolforHasRole(phr);
+
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredTeacherSchoolClassManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SecuredTeacherSchoolClassManager.class
+                    .getName()).log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -197,15 +192,17 @@ public class SecuredTeacherSchoolClassManager {
         try {
             phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = JoinDataManager.getSchoolforHasRole(phr);
+
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredTeacherSchoolClassManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SecuredTeacherSchoolClassManager.class
+                    .getName()).log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(ex);
         }
 
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
         PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), phr.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
-        if (school != null && schoolClass.getSchoolID() == school.getSchoolID() && toc.getPersistentTeacherOfClassPK().getClassID()==schoolClass.getClassID() ) {
+        if (school != null && schoolClass.getSchoolID() == school.getSchoolID() && toc.getPersistentTeacherOfClassPK().getClassID() == schoolClass.getClassID()) {
             //Fetch TeacherOfClass
             List<PersistentTeacherOfClass> teachersOfClass = TeacherOfClassManager.findEntities(schoolClass);
             LOG.log(Level.FINER, "Fetched all {0} teachers. ", new Object[]{teachersOfClass.size()});
@@ -245,15 +242,17 @@ public class SecuredTeacherSchoolClassManager {
         try {
             phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = JoinDataManager.getSchoolforHasRole(phr);
+
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredTeacherSchoolClassManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SecuredTeacherSchoolClassManager.class
+                    .getName()).log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(ex);
         }
 
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
         PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), phr.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
-        if (school != null && schoolClass.getSchoolID() == school.getSchoolID() && toc.getPersistentTeacherOfClassPK().getClassID()==schoolClass.getClassID() ) {
+        if (school != null && schoolClass.getSchoolID() == school.getSchoolID() && toc.getPersistentTeacherOfClassPK().getClassID() == schoolClass.getClassID()) {
             //Fetch TeacherOfClass
             List<PersistentStudentOfClass> studentsOfClass = StudentOfClassManager.findEntities(schoolClass);
             LOG.log(Level.FINER, "Fetched all {0} students. ", new Object[]{studentsOfClass.size()});
@@ -276,13 +275,12 @@ public class SecuredTeacherSchoolClassManager {
         }
     }
 
-
     /**
      * Removes all the school data of the current school and returns true.
      *
      * @param sc
      * @param restSchoolClass
-     * @return
+     * @return true, throws an exception otherwise.
      */
     @PUT
     @Produces({"application/json"})
@@ -294,15 +292,17 @@ public class SecuredTeacherSchoolClassManager {
         try {
             phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
             school = JoinDataManager.getSchoolforHasRole(phr);
+
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredTeacherSchoolClassManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SecuredTeacherSchoolClassManager.class
+                    .getName()).log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(ex);
         }
 
         PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
         PersistentTeacherOfClass toc = TeacherOfClassManager.findEntity(new PersistentTeacherOfClassPK(phr.getPersistentHasRolePK().getUserID(), phr.getClassID(), phr.getPersistentHasRolePK().getSchoolGroupID()));
-        if (schoolClass.getSchoolID() == school.getSchoolID() && toc.getPersistentTeacherOfClassPK().getClassID()==schoolClass.getClassID()) {
+        if (schoolClass.getSchoolID() == school.getSchoolID() && toc.getPersistentTeacherOfClassPK().getClassID() == schoolClass.getClassID()) {
             try {
                 //Loop students in class
                 List<PersistentStudentOfClass> studentList = StudentOfClassManager.findEntities(schoolClass);
@@ -335,7 +335,7 @@ public class SecuredTeacherSchoolClassManager {
      * @param sc
      * @param restTeacher
      * @param restSchoolClass
-     * @return
+     * @return true, throws an exception otherwise.
      */
     @PUT
     @Produces({"application/json"})
@@ -349,10 +349,15 @@ public class SecuredTeacherSchoolClassManager {
             phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = JoinDataManager.getSchoolforHasRole(phr);
             teacher = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(restTeacher.getId()));
-            if(teacher==null) throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Could not find teacher to add.");
+            if (teacher == null) {
+                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Could not find teacher to add.");
+            }
             thr = JoinDataManager.getHasRoleInSchool(teacher, school, RoleType.TEACHER);
-        }catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredTeacherSchoolClassManager.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+        catch (Dwo2Exception ex) {
+            Logger.getLogger(SecuredTeacherSchoolClassManager.class
+                    .getName()).log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -367,15 +372,13 @@ public class SecuredTeacherSchoolClassManager {
         return true;
     }
 
-    
-
     /**
      * Add a single school student to the school class.
      *
      * @param sc
      * @param restStudent
      * @param restSchoolClass
-     * @return
+     * @return true, throws an exception otherwise.
      */
     @PUT
     @Produces({"application/json"})
@@ -389,10 +392,14 @@ public class SecuredTeacherSchoolClassManager {
             phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = JoinDataManager.getSchoolforHasRole(phr);
             student = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(restStudent.getId()));
-            if(student==null) throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Could not find student to add.");
+            if (student == null) {
+                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Could not find student to add.");
+            }
             thr = JoinDataManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
-        }catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredTeacherSchoolClassManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (Dwo2Exception ex) {
+            Logger.getLogger(SecuredTeacherSchoolClassManager.class
+                    .getName()).log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -406,5 +413,97 @@ public class SecuredTeacherSchoolClassManager {
         }
         return true;
     }
+
+    /**
+     * Removes a teacher from a school class and returns true if the remove occurred.
+     *
+     * @param sc
+     * @param restSchoolClass
+     * @return true if success, false if the teacher does not exists to be removed 
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/remove")
+    public Boolean removeTeacherFromSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass, RestTeacher restTeacher) {
+        PersistentHasRole phr = null;
+        PersistentSchool school = null;
+        PersistentUser teacher = null;
+        PersistentHasRole thr = null;
+        try {
+            phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
+            school = JoinDataManager.getSchoolforHasRole(phr);
+            teacher = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(restTeacher.getId()));
+            thr = JoinDataManager.getHasRoleInSchool(teacher, school, RoleType.TEACHER);
+        }
+        catch (Dwo2Exception ex) {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
+            LOG.log(Level.SEVERE, null, ex);
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+        }
+
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
+
+        if (teacher != null && schoolClass !=null && schoolClass.getSchoolID() == school.getSchoolID()) {
+            try {
+                PersistentTeacherOfClassPK tocId = new PersistentTeacherOfClassPK(thr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), thr.getPersistentHasRolePK().getSchoolGroupID());
+                TeacherOfClassManager.destroy(tocId);
+            }
+            catch (PersistenceException e) {
+                return false;
+            }
+        } else {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to remove a teacher from a schoolclass id {1} one or both do not exists or are not in the school.", new Object[]{sc.getUserPrincipal().getName(), schoolClass.getClassID()});
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to remove the school class.");
+        }
+
+        return true;
+    }
+
+
+    /**
+     * Removes a student from a school class and returns true if the remove occurred.
+     *
+     * @param sc
+     * @param restSchoolClass
+     * @return true if success, false if the student does not exists to be removed 
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/remove")
+    public Boolean removeStudentFromSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass, RestStudent restStudent) {
+        PersistentHasRole phr = null;
+        PersistentSchool school = null;
+        PersistentUser teacher = null;
+        PersistentHasRole thr = null;
+        try {
+            phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
+            school = JoinDataManager.getSchoolforHasRole(phr);
+            teacher = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(restStudent.getId()));
+            thr = JoinDataManager.getHasRoleInSchool(teacher, school, RoleType.STUDENT);
+        }
+        catch (Dwo2Exception ex) {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
+            LOG.log(Level.SEVERE, null, ex);
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+        }
+
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
+
+        if (teacher != null && schoolClass !=null && schoolClass.getSchoolID() == school.getSchoolID()) {
+            try {
+                PersistentStudentOfClassPK socId = new PersistentStudentOfClassPK(thr.getPersistentHasRolePK().getUserID(), schoolClass.getClassID(), thr.getPersistentHasRolePK().getSchoolGroupID());
+                StudentOfClassManager.destroy(socId);
+            }
+            catch (PersistenceException e) {
+                return false;
+            }
+        } else {
+            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to remove a student from a schoolclass id {1} one or both do not exists or are not in the school.", new Object[]{sc.getUserPrincipal().getName(), schoolClass.getClassID()});
+            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to remove the school class.");
+        }
+
+        return true;
+    }
+        
     
 }

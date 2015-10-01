@@ -10,10 +10,12 @@ import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
+import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentEntityManagers.HasRoleManager;
 import fi.dwo.server.PersistentEntityManagers.SchoolGroupManager;
 import fi.dwo.server.PersistentEntityManagers.UserManager;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -108,5 +110,21 @@ public class JoinDataManager {
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "HasRole could not be found.");
         }
         return hr;
+    }
+
+    public static List<PersistentHasRole> getHasRolesInSchoolAndRole(PersistentSchool school, RoleType roleType) throws Dwo2Exception {
+        if (school == null && roleType == null) {
+            LOG.log(Level.SEVERE, "School or role parameter is invalid.");
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Illegal parameters.");
+        }
+
+        PersistentSchoolGroup sg = SchoolGroupManager.findBySchoolAndRole(school, roleType);
+        if (sg == null) {
+            LOG.log(Level.SEVERE, "schoolGroup of schoolId {0} and roleType {1} could not be found.", new Object[]{school.getSchoolID(), roleType.name()});
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "SchoolGroup could not be found.");
+        }
+
+        List<PersistentHasRole> hrList = HasRoleManager.findEntities(sg);
+        return hrList;
     }
 }
