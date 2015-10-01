@@ -61,6 +61,9 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	private static FormuleFont defaultFont = FormuleFont.createFromFontSize(18);
 	private HandlerRegistration loadhandler;
 	private boolean[][] logObjectives;
+	private int scoreMax, score;
+	private boolean teltmee = true;
+	private Boolean correct; 
 
 	public StubView(String html, HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
@@ -113,7 +116,12 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			{	logObjectives[i] = logObjectivesList.getBooleanArray(i);
 			}
 		}
-		 
+		if(innerMap.containsKey("scoreMax"))
+			scoreMax = innerMap.getInt("scoreMax");
+		correct = null;
+		teltmee = true;
+		if(innerMap.containsKey("teltmee")) 
+			teltmee = innerMap.containsKey("teltmee");
 	}
 
 	
@@ -132,19 +140,33 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			{
 				JSONObject js = JSONParser.parseLenient(jso).isObject();
 				//return JSONUtilities.fromJSONObject(js);
-				return JSONUtilities.wrapMap(js);
+				return wrap(JSONUtilities.wrapMap(js));
 			}
 		}
 		if(pendingState != null)
 		{
 			JSONObject js = JSONParser.parseLenient(pendingState).isObject();
-			return JSONUtilities.wrapMap(js);
+			return wrap(JSONUtilities.wrapMap(js));
 		}
-		return null;
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		
+		return wrap(map);
+	}
+
+	private HashMap<String, Object> wrap(HashMap<String, Object> map) {
+		if(map == null) map = new HashMap<>();
+		map.put("STUBVIEW_score", String.valueOf(getScore()));
+		map.put("STUBVIEW_correct", String.valueOf(isCorrect()));
+		return map;
 	}
 
 	@Override
 	public void setState(HashMap<String, Object> h) {
+		if(h.containsKey("STUBVIEW_score"))
+			score = Integer.parseInt(h.get("STUBVIEW_score").toString());
+		if(h.containsKey("STUBVIEW_correct"))
+			correct = toBoolean(h.get("STUBVIEW_correct").toString());
+		
 //		if(h == null) h = new HashMap<String, Object>(); // Never NULL
 		JSONValue object = JSONUtilities.toJSONObject(h);
 		if(innerView != null)
@@ -160,8 +182,8 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	@Override
 	public int getScore() {
 		if(innerView != null)
-			return getScore(innerView);
-		return 0;
+			return score = getScore(innerView);
+		return score;
 	}
 	
 	@Override
@@ -211,10 +233,16 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	public Boolean isCorrect() {
 		if(innerView != null) {
 			String correct = isCorrect(innerView);
-			if(correct == null || "null".equals(correct)) return null;
-			return Boolean.valueOf(correct);
+			return this.correct = toBoolean(correct);
 		}
-		return null; // FIXME betere voorspelling maken.
+		if(scoreMax == 0 || !teltmee)
+			return Boolean.TRUE;
+		return correct; // FIXME betere voorspelling maken.
+	}
+
+	private Boolean toBoolean(String value) {
+		if(value == null || "null".equals(value)) return null;
+		return Boolean.valueOf(value);
 	}
 	
 	public void zetNagekeken(boolean b) {
