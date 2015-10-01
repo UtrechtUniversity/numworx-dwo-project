@@ -81,7 +81,7 @@
 	   <url>http://ws-dev.fisme.science.uu.nl/artifactory/libs-release-local</url>
 	</repository>
 	<snapshotRepository>
-	   <id>release</id>
+	   <id>snapshots</id>
 	   <name>libs-snapshot-local</name>
 	   <url>http://ws-dev.fisme.science.uu.nl/artifactory/libs-snapshot-local</url>
 	</snapshotRepository>

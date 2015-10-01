@@ -150,7 +150,8 @@ public class ScormAccess extends Servlet implements ScormAccessIF {
 		resp.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
 		resp.setHeader("Access-Control-Expose-Headers", "content-type");
 		resp.setHeader("Access-Control-Allow-Headers", "origin, content-type");
-		
+// XXX werkt ook niet Access-Control-Allow-Credentials true	
+		resp.setHeader("Access-Control-Allow-Credentials", "true");
 		resp.setContentType("text/plain");
 		resp.getOutputStream().close();
 	}
