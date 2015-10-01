@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import com.fredhat.gwt.xmlrpc.client.XmlRpcClient;
 import com.fredhat.gwt.xmlrpc.client.XmlRpcRequest;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class SCORM_DWOmAccess extends SCORM_guest implements Scorm2004IF {
@@ -22,7 +23,7 @@ public class SCORM_DWOmAccess extends SCORM_guest implements Scorm2004IF {
 	private Map<String,String> map = new HashMap<String, String>();
 	private Map<String,String> dirty = new HashMap<String, String>();
 	
-	private XmlRpcClient client = new XmlRpcClient("https://" + DWOplayer.PARAMETERS.getHost() + "/DWOmAccess/scormaccess");
+	private XmlRpcClient client = new XmlRpcClient( Window.Location.getProtocol() + "//" + DWOplayer.PARAMETERS.getHost() + "/DWOmAccess/scormaccess");
 		
 	public SCORM_DWOmAccess(int userID) {
 		this.userID = userID;
