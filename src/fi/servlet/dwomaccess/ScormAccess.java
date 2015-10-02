@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -57,8 +58,10 @@ public class ScormAccess extends Servlet implements ScormAccessIF {
 		return CONVERT.getProperty(key, key);
 	}
 	
-	public void init() {
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
 		access = DbAccessFactory.getDbAccess(getServletContext());
+		unLock();
 	}
 	private DbAccessIF access;
 	
@@ -151,7 +154,7 @@ public class ScormAccess extends Servlet implements ScormAccessIF {
 		resp.setHeader("Access-Control-Expose-Headers", "content-type");
 		resp.setHeader("Access-Control-Allow-Headers", "origin, content-type");
 // XXX werkt ook niet Access-Control-Allow-Credentials true	
-		resp.setHeader("Access-Control-Allow-Credentials", "true");
+//		resp.setHeader("Access-Control-Allow-Credentials", "true");
 		resp.setContentType("text/plain");
 		resp.getOutputStream().close();
 	}
