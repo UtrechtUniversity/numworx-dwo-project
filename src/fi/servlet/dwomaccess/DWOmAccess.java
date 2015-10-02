@@ -151,6 +151,7 @@ public class DWOmAccess extends Servlet implements AppletContext, PartialScoreIF
 	public void init() throws ServletException
 	{
 		access = DbAccessFactory.getDbAccess(getServletContext());
+		unLock();
 	}
 	
 	public void sendImage(BufferedImage image, OutputStream out)

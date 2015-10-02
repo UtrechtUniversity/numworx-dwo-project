@@ -22,7 +22,7 @@ public class DbAccessServlet extends Servlet {
 	
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		//unlock();??????
+		unLock();
 		setHandler(
 				new DbAccessWrapper
 				(DbAccessFactory.getDbAccess(getServletContext())));
