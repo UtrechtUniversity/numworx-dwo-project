@@ -4,7 +4,7 @@ package fi.dwo.server.rest;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentDwoSystemParameters;
-import fi.dwo.server.PersistentEntityManagers.DwoSystemParametersManager;
+import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;

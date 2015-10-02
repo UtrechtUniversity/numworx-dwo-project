@@ -3,6 +3,7 @@
  */
 package fi.dwo.server.PersistentEntityManagers;
 
+import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.Date;

@@ -1,7 +1,7 @@
 package fi.dwo.server.rest;
 
 import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.server.rest.util.JoinDataManager;
+import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
@@ -22,22 +22,22 @@ import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.rest.entities.RestSchool4Admin;
-import fi.dwo.server.PersistentEntityManagers.ClassCourseManager;
-import fi.dwo.server.PersistentEntityManagers.CourseManager;
-import fi.dwo.server.PersistentEntityManagers.CourseSequenceManager;
-import fi.dwo.server.PersistentEntityManagers.FromToManager;
-import fi.dwo.server.PersistentEntityManagers.HasRoleManager;
-import fi.dwo.server.PersistentEntityManagers.SamlUserManager;
-import fi.dwo.server.PersistentEntityManagers.SchoolClassManager;
-import fi.dwo.server.PersistentEntityManagers.SchoolGroupManager;
-import fi.dwo.server.PersistentEntityManagers.SchoolManager;
-import fi.dwo.server.PersistentEntityManagers.ScoContextManager;
-import fi.dwo.server.PersistentEntityManagers.ScoDataManager;
-import fi.dwo.server.PersistentEntityManagers.StudentOfClassManager;
-import fi.dwo.server.PersistentEntityManagers.StudentScoContextManager;
-import fi.dwo.server.PersistentEntityManagers.StudentScoDataManager;
-import fi.dwo.server.PersistentEntityManagers.TeacherOfClassManager;
-import fi.dwo.server.PersistentEntityManagers.UserManager;
+import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
+import fi.dwo.server.PersistentDataManagers.core.CourseManager;
+import fi.dwo.server.PersistentDataManagers.core.CourseSequenceManager;
+import fi.dwo.server.PersistentDataManagers.core.FromToManager;
+import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
+import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
+import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
+import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
+import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
+import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -76,7 +76,7 @@ public class SecuredAdminSchoolManager {
     public PersistentSchool addSchool(@Context SecurityContext sc, PersistentSchool school) {
         PersistentHasRole hr = null;
         try {
-            hr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+            hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         }
         catch (Dwo2Exception ex) {
             Logger.getLogger(SecuredAdminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -114,7 +114,7 @@ public class SecuredAdminSchoolManager {
     public PersistentSchool getSchool(@Context SecurityContext sc, PersistenceId pid) {
         PersistentHasRole hr = null;
         try {
-            hr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+            hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         }
         catch (Dwo2Exception ex) {
             Logger.getLogger(SecuredAdminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -152,7 +152,7 @@ public class SecuredAdminSchoolManager {
     public List<RestSchool4Admin> getSchools(@Context SecurityContext sc) {
         PersistentHasRole hr = null;
         try {
-            hr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+            hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         }
         catch (Dwo2Exception ex) {
             Logger.getLogger(SecuredAdminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -194,7 +194,7 @@ public class SecuredAdminSchoolManager {
     public PersistentSchool updateSchool(@Context SecurityContext sc, PersistentSchool school) {
         PersistentHasRole hr = null;
         try {
-            hr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+            hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         }
         catch (Dwo2Exception ex) {
             Logger.getLogger(SecuredAdminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -232,7 +232,7 @@ public class SecuredAdminSchoolManager {
 
         PersistentHasRole hr = null;
         try {
-            hr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+            hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         }
         catch (Dwo2Exception ex) {
             Logger.getLogger(SecuredAdminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);

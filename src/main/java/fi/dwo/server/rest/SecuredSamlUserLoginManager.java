@@ -6,7 +6,7 @@
 package fi.dwo.server.rest;
 
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.server.PersistentEntityManagers.UserManager;
+import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.GET;

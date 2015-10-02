@@ -1,7 +1,7 @@
 package fi.dwo.server.rest;
 
 import fi.dwo.commons.exceptions.Dwo2Exception;
-import fi.dwo.server.rest.util.JoinDataManager;
+import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
@@ -17,10 +17,10 @@ import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.commons.rest.entities.RestStudent;
 import fi.dwo.commons.rest.entities.RestTeacher;
-import fi.dwo.server.PersistentEntityManagers.SchoolClassManager;
-import fi.dwo.server.PersistentEntityManagers.StudentOfClassManager;
-import fi.dwo.server.PersistentEntityManagers.TeacherOfClassManager;
-import fi.dwo.server.PersistentEntityManagers.UserManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
+import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
+import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -63,8 +63,8 @@ public class SecuredTeacherSchoolClassManager {
         PersistentSchool school = null;
 
         try {
-            phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
-            school = JoinDataManager.getSchoolforHasRole(phr);
+            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
+            school = HasRoleUtilManager.getSchoolforHasRole(phr);
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
@@ -112,8 +112,8 @@ public class SecuredTeacherSchoolClassManager {
         List<RestTeacher> restTeachers=null;
 
         try {
-            phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
-            school = JoinDataManager.getSchoolforHasRole(phr);
+            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
+            school = HasRoleUtilManager.getSchoolforHasRole(phr);
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
@@ -121,7 +121,7 @@ public class SecuredTeacherSchoolClassManager {
         }
         List<PersistentHasRole> hrList;
         try {
-            hrList = JoinDataManager.getHasRolesInSchoolAndRole(school, RoleType.TEACHER);
+            hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.TEACHER);
             for (PersistentHasRole hr : hrList) {
                 restTeachers.add(new RestTeacher(UserManager.findEntity(hr.getPersistentHasRolePK().getUserID())));
             }
@@ -148,8 +148,8 @@ public class SecuredTeacherSchoolClassManager {
         PersistentSchool school = null;
 
         try {
-            phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
-            school = JoinDataManager.getSchoolforHasRole(phr);
+            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
+            school = HasRoleUtilManager.getSchoolforHasRole(phr);
 
         }
         catch (Dwo2Exception ex) {
@@ -190,8 +190,8 @@ public class SecuredTeacherSchoolClassManager {
         PersistentSchool school = null;
 
         try {
-            phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
-            school = JoinDataManager.getSchoolforHasRole(phr);
+            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
+            school = HasRoleUtilManager.getSchoolforHasRole(phr);
 
         }
         catch (Dwo2Exception ex) {
@@ -240,8 +240,8 @@ public class SecuredTeacherSchoolClassManager {
         PersistentSchool school = null;
 
         try {
-            phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
-            school = JoinDataManager.getSchoolforHasRole(phr);
+            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
+            school = HasRoleUtilManager.getSchoolforHasRole(phr);
 
         }
         catch (Dwo2Exception ex) {
@@ -290,8 +290,8 @@ public class SecuredTeacherSchoolClassManager {
         PersistentSchool school = null;
 
         try {
-            phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
-            school = JoinDataManager.getSchoolforHasRole(phr);
+            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
+            school = HasRoleUtilManager.getSchoolforHasRole(phr);
 
         }
         catch (Dwo2Exception ex) {
@@ -346,13 +346,13 @@ public class SecuredTeacherSchoolClassManager {
         PersistentUser teacher = null;
         PersistentHasRole thr = null;
         try {
-            phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
-            school = JoinDataManager.getSchoolforHasRole(phr);
+            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
+            school = HasRoleUtilManager.getSchoolforHasRole(phr);
             teacher = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(restTeacher.getId()));
             if (teacher == null) {
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Could not find teacher to add.");
             }
-            thr = JoinDataManager.getHasRoleInSchool(teacher, school, RoleType.TEACHER);
+            thr = HasRoleUtilManager.getHasRoleInSchool(teacher, school, RoleType.TEACHER);
 
         }
         catch (Dwo2Exception ex) {
@@ -389,13 +389,13 @@ public class SecuredTeacherSchoolClassManager {
         PersistentUser student = null;
         PersistentHasRole thr = null;
         try {
-            phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
-            school = JoinDataManager.getSchoolforHasRole(phr);
+            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
+            school = HasRoleUtilManager.getSchoolforHasRole(phr);
             student = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(restStudent.getId()));
             if (student == null) {
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Could not find student to add.");
             }
-            thr = JoinDataManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
+            thr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
         }
         catch (Dwo2Exception ex) {
             Logger.getLogger(SecuredTeacherSchoolClassManager.class
@@ -430,10 +430,10 @@ public class SecuredTeacherSchoolClassManager {
         PersistentUser teacher = null;
         PersistentHasRole thr = null;
         try {
-            phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
-            school = JoinDataManager.getSchoolforHasRole(phr);
+            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
+            school = HasRoleUtilManager.getSchoolforHasRole(phr);
             teacher = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(restTeacher.getId()));
-            thr = JoinDataManager.getHasRoleInSchool(teacher, school, RoleType.TEACHER);
+            thr = HasRoleUtilManager.getHasRoleInSchool(teacher, school, RoleType.TEACHER);
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
@@ -476,10 +476,10 @@ public class SecuredTeacherSchoolClassManager {
         PersistentUser teacher = null;
         PersistentHasRole thr = null;
         try {
-            phr = JoinDataManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
-            school = JoinDataManager.getSchoolforHasRole(phr);
+            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
+            school = HasRoleUtilManager.getSchoolforHasRole(phr);
             teacher = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(restStudent.getId()));
-            thr = JoinDataManager.getHasRoleInSchool(teacher, school, RoleType.STUDENT);
+            thr = HasRoleUtilManager.getHasRoleInSchool(teacher, school, RoleType.STUDENT);
         }
         catch (Dwo2Exception ex) {
             LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
