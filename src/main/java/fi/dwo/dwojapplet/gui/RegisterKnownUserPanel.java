@@ -7,7 +7,6 @@ import fi.dwo.commons.rest.entities.KnownUserRegistration;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Group;
-import fi.dwo.dwojapplet.domain.rest.PublicUserRegistrationManager;
 import fi.dwo.dwojapplet.domain.rest.SecureUserAccountLoginsManager;
 import java.awt.Color;
 import java.awt.FontMetrics;
