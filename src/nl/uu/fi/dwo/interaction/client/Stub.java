@@ -9,6 +9,8 @@ import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.interaction.client.json.JSONObjectMapImpl;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -168,7 +170,7 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 		return $wnd.getBackground($wnd.outer)
 	}-*/;
 	
-	private static native void fireEvent(Object o) /*-{
+	private static native void fireEvent0(JavaScriptObject o) /*-{
 		$wnd.fireEvent(o, $wnd.outer)
 	}-*/;
 	
@@ -288,9 +290,10 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF {
 	};
 	
 	@Override
-	public void fireEvent(CBookEvent event) {
-		// TODO Auto-generated method stub
-		
+	public void fireEvent(CBookEvent event) {	
+		ObjectMap map = event.toObjectMap();
+		JavaScriptObject jso = JSONUtilities.toJSONObject(map).isObject().getJavaScriptObject();
+		fireEvent0(jso);
 	}
 
 	@Override

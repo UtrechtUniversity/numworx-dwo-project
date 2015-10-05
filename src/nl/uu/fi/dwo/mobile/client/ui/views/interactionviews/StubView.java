@@ -370,8 +370,8 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			
 			@Override
 			public void acceptCBookEvent(CBookEvent event) {
-				JSONValue ev = JSONUtilities.toJSONObject(event.toObjectMap());
-				StubView.acceptCBookEvent(listener, ev.isObject().getJavaScriptObject());
+				JSONObject ev = JSONUtilities.toJSONObject(event.toObjectMap()).isObject();
+				StubView.acceptCBookEvent(listener, ev.getJavaScriptObject());
 			}
 		});
 	}
@@ -729,8 +729,8 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 
 	@Override
 	public void fireEvent(CBookEvent event) {
-		
-		
+		if(comRoot != this)
+			comRoot.fireEvent(event);		
 	}
 
 	@Override

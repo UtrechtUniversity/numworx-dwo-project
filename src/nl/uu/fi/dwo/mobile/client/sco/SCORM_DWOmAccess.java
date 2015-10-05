@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.mobile.client.sco;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -170,7 +171,7 @@ public class SCORM_DWOmAccess extends SCORM_guest implements Scorm2004IF {
 		
 				@Override
 				public void onFailure(Throwable caught) {
-					logger.severe("Initialize: "+ caught);
+					logger.log(Level.SEVERE, "Initialize", caught);
 					pending = false;
 					if(callback!=null)callback.onFailure(caught);
 				}
