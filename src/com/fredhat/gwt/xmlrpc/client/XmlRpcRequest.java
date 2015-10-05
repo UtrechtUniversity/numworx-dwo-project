@@ -620,7 +620,23 @@ public class XmlRpcRequest<T> implements Cloneable
 	// convenience method.
 	private String getNodeTextValue(Node node)
 	{
-		if (node.getChildNodes().getLength() != 1)
+// Firefox has multiple textnodes if they get large.
+		final int length = node.getChildNodes().getLength();
+		if(length > 1) {
+			StringBuilder builder = new StringBuilder();
+			for(int i = 0; i < length; i++) {
+				Node childNode = node.getChildNodes().item(i);
+				if(childNode.getNodeType() == Node.TEXT_NODE) {
+					builder.append(childNode.getNodeValue());
+				} else {
+					// skip or error
+				}
+			}
+			return builder.toString();
+		}
+		
+		
+		if (length != 1)
 			return null;
 		Node textNode = (Node) node.getFirstChild();
 		if (textNode.getNodeType() != Node.TEXT_NODE)
