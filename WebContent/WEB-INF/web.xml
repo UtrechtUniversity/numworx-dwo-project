@@ -3,7 +3,7 @@
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
      version="2.4">
- <!-- voor amazon *.dwo.nl - ->
+ <!-- voor amazon *.dwo.nl -->
   <context-param>
   	<param-name>dbaccess.url</param-name>
 	<param-value>http://localhost/dwo/dsaccess</param-value>  
@@ -16,8 +16,8 @@
   	<param-name>IDEAS</param-name>
   	<param-value>/ideas/IdeasServlet</param-value>
   </context-param>
-<!- -  -->
-<!-- voor ws.fisme.science --> 
+<!--  -->
+<!-- voor ws.fisme.science - -> 
   <context-param>
   	<param-name>dbaccess.url</param-name>
 	<param-value>http://localhost/servlet/dwodsaccess</param-value>  
@@ -30,7 +30,7 @@
   	<param-name>IDEAS</param-name>
   	<param-value>/servlet/IdeasServlet</param-value>
   </context-param>
-<!--  -->  
+<!- -  -->  
   
    <filter>
     <filter-name>JAMonFilter</filter-name>
