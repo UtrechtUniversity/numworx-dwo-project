@@ -2,6 +2,8 @@
 package fi.dwo.commons.persistence.entities;
 
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.TimeZone;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,6 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentSamlUser.findBySamluserid", query = "SELECT p FROM PersistentSamlUser p WHERE p.samluserid = :samluserid"),
     @NamedQuery(name = "PersistentSamlUser.findByUserID", query = "SELECT p FROM PersistentSamlUser p WHERE p.userID = :userID")})
 public class PersistentSamlUser implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,6 +54,12 @@ public class PersistentSamlUser implements Serializable {
     @NotNull
     @Column(name = "userID", nullable = false)
     private int userID;
+    @NotNull
+    @Column(name = "authtoken", nullable = false)
+    private int authToken;
+    @NotNull
+    @Column(name = "timestampauthtoken", nullable = false)
+    private long authTokenTimestamp;
 
     public PersistentSamlUser() {
     }
@@ -122,5 +131,45 @@ public class PersistentSamlUser implements Serializable {
     public String toString() {
         return "fi.dwo.server.persistence.PersistentSamlUser[ id=" + id + " ]";
     }
-    
+
+    /**
+     * @return the authToken
+     */
+    public int getAuthToken() {
+        return authToken;
+    }
+
+    /**
+     * @param authToken the authToken to set
+     */
+    public void setAuthToken(int authToken) {
+        this.authToken = authToken;
+    }
+
+    /**
+     * @return the authTokenTimestamp
+     */
+    public long getAuthTokenTimestamp() {
+        return authTokenTimestamp;
+    }
+
+    /**
+     * @param authTokenTimestamp the authTokenTimestamp to set
+     */
+    public void setAuthTokenTimestamp(int authTokenTimestamp) {
+        this.authTokenTimestamp = authTokenTimestamp;
+    }
+
+    /**
+     * Het maximaal aantal milliseconden dat het token oud mag zijn.
+     *
+     * @param milliseconds
+     * @return
+     */
+    public boolean tokenIsValid(int milliseconds) {
+
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        return c.getTime().getTime() < (getAuthTokenTimestamp() + milliseconds);
+    }
+
 }
