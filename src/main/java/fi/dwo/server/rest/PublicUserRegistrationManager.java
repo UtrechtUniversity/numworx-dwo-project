@@ -4,11 +4,13 @@ import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
+import fi.dwo.commons.persistence.entities.PersistentSamlUser;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.rest.entities.NewUserRegistration;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
+import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.Date;
@@ -120,5 +122,17 @@ public class PublicUserRegistrationManager {
         LOG.log(Level.INFO,"HasRole for user, schoolgroup index {0} {1} and role {3} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), newUserReg.getRole().getGroupname()});
         //success
         return Response.status(200).entity(true).build();
+    }
+    
+    PersistentUser getSamlUser(String samlUserId, String samlOrgId, String authToken){
+        PersistentUser user;
+        
+        PersistentSamlUser samlUser = SamlUserManager.findEntity(samlUserId, samlOrgId);
+        if(samlUser.tokenIsValid(1000)){//milisseconden
+            return UserManager.findEntity(samlUser.getUserID());
+        }else{
+                LOG.log(Level.SEVERE, "Incorrect saml-athentication event for samlOrg {0} samlUser {1} and authToken {2}", new Object[]{samlOrgId, samlUserId, authToken});
+                throw new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "The authentication is invalid, this event is logged.");         
+        }
     }
 }

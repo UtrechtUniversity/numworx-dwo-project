@@ -22,7 +22,7 @@ import javax.ws.rs.core.SecurityContext;
 
 @Path("/public/roles")
 public class PublicRoleManager {
-private static final Logger LOG = Logger.getLogger(SecuredSamlUserLoginManager.class.getName());
+private static final Logger LOG = Logger.getLogger(PublicRoleManager.class.getName());
     
 /**
      * Returns the user data if properly logged in.  The information is extracted from the security

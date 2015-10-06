@@ -162,6 +162,21 @@ public class SamlUserManager {
         }
     }
 
+    public static PersistentSamlUser findEntity(String samlUserId, String samlOrgId) {
+        EntityManager em = getEntityManager();
+        try {
+            javax.persistence.Query q = em.createNamedQuery("PersistentSamlUser.findBySamlOrgAndSamlUser");
+            q.setParameter("samlUserId", samlUserId);
+            q.setParameter("samlOrgId", samlOrgId);
+            PersistentSamlUser r = (PersistentSamlUser) q.getSingleResult();
+            LOG.log(Level.FINE, "SamlUser-manager retrieved PersistentSamlUser with id {0} and user id {1}", new Object[]{r.getId(), r.getUserID()});
+            return r;
+        }
+        finally {
+            em.close();
+        }
+    }
+
     public static int getEntityCount() {
         EntityManager em = getEntityManager();
         try {
