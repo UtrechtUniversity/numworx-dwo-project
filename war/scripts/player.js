@@ -66,7 +66,7 @@
     	            // Container's iframe will have these CSS styles:
     	            iframeAttrs: { width: w, height: h, style: { border:"none" }},
     	            // Container's iframe loads the following URL:
-    	            uri: "MCSquared.html?w=" + id + "&locale=" + l,
+    	            uri: "MCSquared.jsp?w=" + id + "&locale=" + l,
     	            timeout: 1000000,
     	            //tunnelURI:  "http://" + window.location.host + "/scripts/tunnel.html",
     	            clientRelay: r
