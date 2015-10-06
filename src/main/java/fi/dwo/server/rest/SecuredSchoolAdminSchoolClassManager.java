@@ -277,6 +277,8 @@ public class SecuredSchoolAdminSchoolClassManager {
      * Registers an existing user into a new <school,hasRole> tuple.
      *
      * @param sc
+     * @param restTeacher
+     * @param restSchoolClass
      * @param existingUserReg
      * @return true, throws an exception otherwise.
      */
