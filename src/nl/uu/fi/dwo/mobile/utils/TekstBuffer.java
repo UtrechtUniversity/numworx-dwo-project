@@ -351,8 +351,8 @@ public class TekstBuffer
 			return new StubView("GeomAlgGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//return new PopupFacade( currentVakGegevens, new fi.geomalggwt.client.GeomAlgGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 5 :
-			//return new StubView("AlgebraPijlenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			return new StubView("AlgebraPijlenGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			//return new PopupFacade( currentVakGegevens, new fi.algebrapijlengwt.client.AlgebraPijlenGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
 		case 35 :
 			return new StubView("AlgebraExprGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			//return new PopupFacade(currentVakGegevens, new fi.algebraexprgwt.client.AlgebraExprGWT(currentVakGegevens, randomVarNamen, randomVarWaarden));
