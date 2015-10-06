@@ -41,7 +41,7 @@ import javax.ws.rs.core.SecurityContext;
  * @author G.A.J. van der Plas
  */
 @PermitAll
-@Path("/secure/dwoadmin/schoolclass")
+@Path("/secure/schooladmin/schoolclass")
 public class SecuredSchoolAdminSchoolClassManager {
 
     private static final Logger LOG = Logger.getLogger(SecuredSchoolAdminSchoolClassManager.class.getName());

@@ -45,7 +45,7 @@ import javax.ws.rs.core.SecurityContext;
  * @author G.A.J. van der Plas
  */
 @PermitAll
-@Path("/secure/dwoadmin/school")
+@Path("/secure/teacher/schoolclass")
 public class SecuredTeacherSchoolClassManager {
 
     private static final Logger LOG = Logger.getLogger(SecuredTeacherSchoolClassManager.class.getName());
@@ -526,7 +526,6 @@ public class SecuredTeacherSchoolClassManager {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentSchoolClass schoolClass = null;
-        PersistentHasRole thr = null;
         try {
             phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
             school = HasRoleUtilManager.getSchoolforHasRole(phr);
