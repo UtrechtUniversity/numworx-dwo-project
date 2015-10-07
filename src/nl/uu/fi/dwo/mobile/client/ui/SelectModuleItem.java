@@ -204,4 +204,9 @@ public class SelectModuleItem
 	public int getSequencenr() {
 		return sequencenr;
 	}
+
+	public void setSequencenr(int sequencenr) {
+		this.sequencenr = sequencenr;
+	}
+	
 }

@@ -340,11 +340,11 @@ public class TreeModuleViewImpl  extends Composite implements TreeModuleView
 		
 	}
 
-	@Override
-	public void setSortModel(Comparator<SelectModuleItem> sorter) {
-		// TODO Auto-generated method stub
-		
-	}
+//	@Override
+//	public void setSortModel(Comparator<SelectModuleItem> sorter) {
+//		// TODO Auto-generated method stub
+//		
+//	}
 
 
 }

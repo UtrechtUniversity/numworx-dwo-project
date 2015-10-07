@@ -40,27 +40,27 @@ import com.googlecode.mgwt.mvp.client.MGWTAbstractActivity;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedEvent;
 import com.googlecode.mgwt.ui.client.widget.celllist.CellSelectedHandler;
 
-public class TreeModuleActivity extends MGWTAbstractActivity implements TreeModuleView.Presenter, Comparator<SelectModuleItem>
+public class TreeModuleActivity extends MGWTAbstractActivity implements TreeModuleView.Presenter//, Comparator<SelectModuleItem>
 {
 
 	ClientFactory clientFactory;
 	private List<SelectModuleItem> currentModel;
 	private TreeModuleView view;
 	private SelectModuleItem item;
-	private Map<Object,Integer> ranking;
+//	private Map<Object,Integer> ranking;
 
 	public TreeModuleActivity(ClientFactory clientFactory, SelectModuleItem i)
 	{
 		this.clientFactory = clientFactory;
 		this.item = i;
-		this.ranking = clientFactory.getRPCHandler().courseSortMap; // FIXME OEF!
+//		this.ranking = clientFactory.getRPCHandler().courseSortMap; // FIXME OEF!
 	}
 
 	@Override
 	public void start(AcceptsOneWidget panel, EventBus eventBus)
 	{
 		view = clientFactory.getTreeModuleView();
-		view.setSortModel(this);
+		//view.setSortModel(this);
 		boolean select = true;
 		if(item.getType() == Type.MODULE && DWOplayer.profiledata != null) {
 			Object userID = DWOplayer.profiledata.get("userID");
@@ -164,22 +164,22 @@ public class TreeModuleActivity extends MGWTAbstractActivity implements TreeModu
 		clientFactory.getPlaceController().goTo(place);
 	}
 
-	@Override
-	public int compare(SelectModuleItem o1, SelectModuleItem o2) {
-		Object c1 = o1.getID(); Integer n1 = ranking.get(c1);
-		Object c2 = o2.getID(); Integer n2 = ranking.get(c2);
-		if(n2 == null && n1 == null) {
-			if (o1.getType()== Type.SCO & o2.getType() == Type.SCO)
-				return Integer.signum(o1.getSequencenr()-o2.getSequencenr());
-			// unsorted
-			return o1.getName().compareTo(o2.getName());
-		}
-		if( n2 != null && n1 != null) {
-			return n1.compareTo(n2);
-		}
-		if( n1 == null) return +1;		
-		return -1;
-	}
+//	@Override
+//	public int compare(SelectModuleItem o1, SelectModuleItem o2) {
+//		Object c1 = o1.getID(); Integer n1 = ranking.get(c1);
+//		Object c2 = o2.getID(); Integer n2 = ranking.get(c2);
+//		if(n2 == null && n1 == null) {
+//			if (o1.getType()== Type.SCO & o2.getType() == Type.SCO)
+//				return Integer.signum(o1.getSequencenr()-o2.getSequencenr());
+//			// unsorted
+//			return o1.getName().compareTo(o2.getName());
+//		}
+//		if( n2 != null && n1 != null) {
+//			return n1.compareTo(n2);
+//		}
+//		if( n1 == null) return +1;		
+//		return -1;
+//	}
 
 	
 

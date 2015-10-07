@@ -1780,7 +1780,7 @@ public class TekstVakPanel implements InteractionView, FacetAware
 			parent.setWidgetTopHeight(this.asWidget(), locationY, Style.Unit.PX, hoogte, Style.Unit.PX);
 		}
 		} else {
-// Werk dit?		
+// Werk dit? FIXME naar de link api.		
 		if(isLink && linkUrls != null) {
 			String link = linkUrls.getString(0);
 			Window.open(link, "_blank", "");

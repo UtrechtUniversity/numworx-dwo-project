@@ -340,12 +340,12 @@ public class DWOplayer implements EntryPoint
 		}
 
 		final AsyncCallback<List<Map<String, Object>>> callback_final = callback;
-		clientfactory.getRPCHandler().getCourseSequence(schoolID, 
-		new Runnable() {
-			public void run() {
+//		clientfactory.getRPCHandler().getCourseSequence(schoolID, 
+//		new Runnable() {
+//			public void run() {
 				clientfactory.getRPCHandler().getCourses(profiledata, callback_final);
-			}
-		});
+//			}
+//		});
 		
 	}
 

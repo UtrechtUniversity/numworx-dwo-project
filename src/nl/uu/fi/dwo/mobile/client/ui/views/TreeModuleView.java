@@ -17,7 +17,7 @@ public interface TreeModuleView extends IsWidget
 	
 	
 	void render(List<SelectModuleItem> currentModel);
-	void setSortModel( Comparator<SelectModuleItem> sorter);
+	//void setSortModel( Comparator<SelectModuleItem> sorter);
 	void selectModule(SelectModuleItem item);
 
 	void close();

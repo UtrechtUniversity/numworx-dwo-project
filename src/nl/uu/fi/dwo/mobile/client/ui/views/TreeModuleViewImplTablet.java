@@ -567,12 +567,19 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 		container.clear();
 	}
 
-	@Override
-	public void setSortModel(Comparator<SelectModuleItem> sorter) {
-		this.sortModel = sorter;
-	}
+//	@Override
+//	public void setSortModel(Comparator<SelectModuleItem> sorter) {
+//		this.sortModel = sorter;
+//	}
 
 	private void sort(List<SelectModuleItem> items) {
+		int i = 1000;
+		for (SelectModuleItem item : items) {
+			if(item.getType() != SelectModuleItem.Type.SCO)
+			{
+				item.setSequencenr(i++);
+			}
+		}
 		Collections.sort(items, this);
 	}
 
@@ -583,10 +590,13 @@ public class TreeModuleViewImplTablet  extends Composite implements TreeModuleVi
 		if(b1 != b2) {
 			return Boolean.compare(b1, b2);
 		}
-		if(sortModel != null)
-			return sortModel.compare(o1, o2);
-		else
-			return o1.getName().compareTo(o2.getName()); // 
+//		if (o1.getType()== SelectModuleItem.Type.SCO & o2.getType() == SelectModuleItem.Type.SCO)
+		return Integer.signum(o1.getSequencenr()-o2.getSequencenr());
+
+//		if(sortModel != null)
+//			return sortModel.compare(o1, o2);
+//		else
+//			return o1.getName().compareTo(o2.getName()); // FIXME NIET GOED
 	}
 
 }

@@ -352,7 +352,7 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
     // Animations
     //================================================================================
 	private int animation_duration = 200; // XXX is there a gwt standard value ?
-	private Comparator<SelectModuleItem> sortModel;
+	//private Comparator<SelectModuleItem> sortModel;
 	
 	private void toggleNavigationPanel(){
 		if (navigationPanel.getAbsoluteLeft() == 0) {
@@ -592,10 +592,10 @@ public class TreeModuleViewImplDesktop  extends Composite implements TreeModuleV
 		
 	}
 
-	@Override
-	public void setSortModel(Comparator<SelectModuleItem> sorter) {
-		this.sortModel = sorter;
-	}
+//	@Override
+//	public void setSortModel(Comparator<SelectModuleItem> sorter) {
+//		this.sortModel = sorter;
+//	}
 
 //	private void sort(List<SelectModuleItem> items) {
 //		if(sortModel != null) {
