@@ -5,17 +5,24 @@ package fi.dwo.server.PersistentDataManagers.util;
 
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.Dwo2ExceptionCode;
+import fi.dwo.commons.exceptions.Dwo2RestException;
+import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
-import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
+import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
+import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import java.util.List;
 import java.util.logging.Level;
@@ -131,5 +138,45 @@ public class HasRoleUtilManager {
         return hrList;
     }
 
+ public static Boolean removeHasRoleAndItsData(PersistentHasRole hr) throws Dwo2Exception{
+        if(hr==null){
+            LOG.log(Level.SEVERE, "HasRole parameter is NULL.");
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Operation could no longer be executed.");
+        }
 
+        List<PersistentStudentScoContext> sscList = StudentScoContextManager.findEntities(hr.getPersistentHasRolePK());
+        for (PersistentStudentScoContext ssc : sscList) {
+            StudentScoDataManager.destroy(ssc.getStudentSco());
+            StudentScoContextManager.destroy(ssc.getStudentSco());
+        }
+        //Remove StudentOf and TeacherOf
+        List<PersistentStudentOfClass> soList = StudentOfClassManager.findEntities(hr.getPersistentHasRolePK());
+        for (PersistentStudentOfClass so : soList) {
+            StudentOfClassManager.destroy(so.getPersistentStudentOfClassPK());
+        }
+        List<PersistentTeacherOfClass> toList = TeacherOfClassManager.findEntities(hr);
+        for (PersistentTeacherOfClass to : toList) {
+            TeacherOfClassManager.destroy(to.getPersistentTeacherOfClassPK());
+        }
+        //Ready to remove hasRoles
+        HasRoleManager.destroy(hr.getPersistentHasRolePK());
+  
+
+        PersistentUser user = UserManager.findEntity(hr.getPersistentHasRolePK().getUserID());
+        if(user==null){
+            LOG.log(Level.SEVERE, "User with id {0} disappeared.", new Object[]{hr.getPersistentHasRolePK().getUserID()});
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "User could not be found.");
+        }
+        //Update the default hasRole to the null school if user is in the current role.
+        if(user.getSchoolGroupID() == hr.getPersistentHasRolePK().getSchoolGroupID()) //userid's already match...
+        {
+            RoleType type = RoleType.STUDENT;
+            PersistentSchoolGroup sg = SchoolGroupManager.findBySchoolAndRole(SchoolManager.findBySchoolLogin("null"), type);
+            user.setSchoolGroupID(sg.getSchoolGroupID());
+        }
+
+        UserManager.edit(user);
+
+        return true;
+ }
 }

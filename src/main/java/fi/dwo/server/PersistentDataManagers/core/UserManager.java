@@ -61,7 +61,7 @@ public class UserManager {
      * @param persistentUser
      * @throws Exception
      */
-    public static void edit(PersistentUser persistentUser) throws PersistenceException, Exception {
+    public static void edit(PersistentUser persistentUser) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
