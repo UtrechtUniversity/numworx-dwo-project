@@ -42,7 +42,8 @@
             onPublish:       onMHPublish,
             onSubscribe:     onMHSubscribe,
             onUnsubscribe:   onMHUnsubscribe,
-            onSecurityAlert: onMHSecurityAlert 
+            onSecurityAlert: onMHSecurityAlert,
+            log: logger
           }
     );
 
@@ -86,21 +87,24 @@
     // Callback called when a subscription receives data
     function onData(topic, publisherData, subscriberData) {
       
-        var messageArea = document.getElementById('messageArea');
+    	var messageArea = document.getElementById('messageArea');
+        if (!messageArea) return;
         // XSS protection: createTextNode strips HTML markup
         var text = document.createTextNode(" " + topic + " " + JSON.stringify( publisherData ));
   	  //messageArea.innerHTML = ""; 
-  	  messageArea.appendChild(text);
-  	  messageArea.appendChild(document.createElement('br'));
+  	  	messageArea.appendChild(text);
+  	  	messageArea.appendChild(document.createElement('br'));
     }
 
     var scores = {} 
     var total = 0
 
     function onCheck(topic, publisherData, subscriberData) {
+    	
     	var s = publisherData.parameters.score
     	var xwid = publisherData.source
     	scores[xwid] = s;
+    	bootstrap[xwid](topic, publisherData)   	
     	total = 0
     	for (xwid in scores) {
     		if (scores.hasOwnProperty(xwid)) {
@@ -108,12 +112,11 @@
     		}
     	}
     	console.log("total = " + total)
-    	document.getElementById('totalspan').innerHTML = "" + total;
     }
     
     function onBoot(topic, xwid) {
     	onBootstrap(topic,xwid );
-    	this.publish(xwid + ".setState", window.cmi.suspend_data[xwid]|| {})
+    	managedHub.publish(xwid + ".setState", (window.cmi && window.cmi.suspend_data && window.cmi.suspend_data[xwid]) || {})
     }
     
     function onLogOption(topic, map ) {
@@ -122,7 +125,7 @@
     }
     
     function onBootstrap(topic, xwid) {
-    	bootstrap[xwid](topic, {'source': map } );
+    	bootstrap[xwid](topic, {'source': xwid } );
     }
     
     

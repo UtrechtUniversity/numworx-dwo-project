@@ -1,6 +1,8 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
+<%@ page import="com.google.appengine.api.utils.SystemProperty" %>
 <meta charset="UTF-8">
 <title>MC Squared</title>
 <script type="text/javascript" language="javascript" src="scripts/sha1.js" ></script>
@@ -174,6 +176,11 @@ window.inner = {
 <!-- http://www.staff.science.uu.nl/~velth101/lti/tool.php -->
 <!-- de.cinderella.CindyWidget: http://cinderella.de/services/widget -->
 <body>
+<%
+	String version = SystemProperty.applicationVersion.get();
+	int dot = version.indexOf('.');
+	version = version.substring(0,dot);
+%>
 <form id='lti' method="POST" action='http://ws.fisme.science.uu.nl/DWOmAccess/lti/widget.jsp' >
 <input type='submit' > <br>
 custom_context<input name='custom_context' id='custom_context' value='{}'><br>
@@ -199,6 +206,7 @@ oauth_consumer_key<input name='oauth_consumer_key' id='oauth_consumer_key' value
 
 resource_link_id<input name='resource_link_id' id='resource_link_id' value='000000-0-000000' ><br>
 roles<input name='roles' value='Learner' id='roles' > <br>
+tool_consumer_info_version<input name='tool_consumer_info_version' value='<%=version %>' > <br>
 user_id<input name='user_id' id='user_id' value='guest' > <br>
 oauth_signature<input name='oauth_signature' id='oauth_signature' value='?' ><br>
 </form>

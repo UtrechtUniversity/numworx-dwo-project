@@ -240,7 +240,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		return correct; // FIXME betere voorspelling maken.
 	}
 
-	private Boolean toBoolean(String value) {
+	static Boolean toBoolean(String value) {
 		if(value == null || "null".equals(value)) return null;
 		return Boolean.valueOf(value);
 	}

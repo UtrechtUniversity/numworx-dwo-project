@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import nl.uu.fi.dwo.interaction.client.InteractionView;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
+import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.utils.Logging;
@@ -63,8 +64,25 @@ public class MC2View extends Composite implements InteractionView {
 			JSONObject json = new JSONObject(data);
 			json = json.get("parameters").isObject();
 			latransport.log(JSONUtilities.wrapMap(json));
+			return;
 		}
-			
+		if(topic.endsWith(".changed") || topic.endsWith(".checked"))
+		{
+			JSONObject json = new JSONObject(data);
+			json = json.get("parameters").isObject();
+			ObjectMap map = JSONUtilities.wrapMap(json);
+			score = map.getInt("score");
+			String status = map.getString("success_status");
+			if ("PASSED".equalsIgnoreCase(status))
+				correct = Boolean.TRUE;
+			else if ("FAILED".equalsIgnoreCase(status))
+				correct = Boolean.FALSE;
+			else 
+				correct = null;
+			comRoot.setChanged(Boolean.FALSE.equals(correct));
+			return;
+		}
+		
 		
 	}
 	
@@ -105,6 +123,11 @@ public class MC2View extends Composite implements InteractionView {
 	private OpdrNavIF comRoot;
 	private JavaScriptObject innerView;
 	private JavaScriptObject container;
+	private int score;
+	private Boolean correct;
+	private int scoreMax;
+	private boolean teltmee;
+	private boolean[][] logObjectives;
 	
 	
 	public MC2View(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
@@ -156,6 +179,22 @@ public class MC2View extends Composite implements InteractionView {
 		width  = 400; if(outermap.containsKey("breedte")) width = outermap.getInt("breedte");
 		height = 400; if(outermap.containsKey("hoogte")) height = outermap.getInt("hoogte");
 		volledigeBreedte  = outermap.getBoolean("volledigeBreedte", false);
+
+		if(innerMap.containsKey("scoreMax"))
+			scoreMax = innerMap.getInt("scoreMax");
+		correct = null;
+		teltmee = true;
+		if(innerMap.containsKey("teltmee")) 
+			teltmee = innerMap.containsKey("teltmee");
+		if(innerMap.containsKey("logObjectives")) 
+		{
+			ObjectList logObjectivesList = ( innerMap.getObjectList("logObjectives") );
+			logObjectives = new boolean[logObjectivesList.size()][];
+			for(int i = 0; i < logObjectivesList.size(); i++)
+			{	logObjectives[i] = logObjectivesList.getBooleanArray(i);
+			}
+		}
+
 		facade = new PopupFacade(outermap);
 	}
 
@@ -201,29 +240,52 @@ public class MC2View extends Composite implements InteractionView {
 	public HashMap<String, Object> getState() {
 		HashMap<String, Object> result = new HashMap<String,Object>();
 		// TODO fill from state[xwid]?
-		return result;
+		return wrap(result);
+	}
+
+	private HashMap<String, Object> wrap(HashMap<String, Object> map) {
+		if(map == null) map = new HashMap<>();
+		map.put("STUBVIEW_score", String.valueOf(getScore()));
+		map.put("STUBVIEW_correct", String.valueOf(isCorrect()));
+		return map;
 	}
 
 	@Override
 	public void setState(HashMap<String, Object> h) {
-		// TODO Auto-generated method stub
+		if(h.containsKey("STUBVIEW_score"))
+			score = Integer.parseInt(h.remove("STUBVIEW_score").toString());
+		if(h.containsKey("STUBVIEW_correct"))
+			correct = StubView.toBoolean(h.remove("STUBVIEW_correct").toString());
 	}
 
 	@Override
 	public int getScore() {
-		// TODO Auto-generated method stub
-		return 0;
+		return score;
 	}
 	
 	@Override
 	public int[][] getScoreObjectives() {
+		if(innerView != null && logObjectives != null)
+		{
+			int score = getScore();
+			// verdeel score over objectives
+			int[][] scoreObjectives = new int[logObjectives.length][];
+			for(int i = 0; i < scoreObjectives.length; i++)
+			{	scoreObjectives[i] = new int[logObjectives[i].length];
+				for(int j = 0; j < scoreObjectives[i].length; j++)
+					if(logObjectives[i][j])
+						scoreObjectives[i][j] = score;
+			}
+			return scoreObjectives;
+		}
 		return null;
 	}
 
 	@Override
 	public Boolean isCorrect() {
-		// TODO Auto-generated method stub
-		return null;
+		if(scoreMax == 0 || !teltmee)
+			return Boolean.TRUE;
+		return correct;
 	}
 
 	@Override
