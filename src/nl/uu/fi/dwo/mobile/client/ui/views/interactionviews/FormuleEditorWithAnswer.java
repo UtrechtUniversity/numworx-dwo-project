@@ -975,6 +975,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}			
 		else	
 		{
+			kijkNa();
 			
 			String[] formuleVakInhouden = {"$f" + this.toString() + "@" } ;
 			if(!this.toString().equals(""))
