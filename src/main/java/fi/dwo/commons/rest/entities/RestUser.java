@@ -17,10 +17,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class RestUser {
     private PersistenceId id;
-    private String usercode;
+    private String username;
     private String givenName;
     private String familyName;
-    private String familyNamePrefix;
+    private String insertion;
 
 
     public RestUser(){
@@ -29,10 +29,10 @@ public class RestUser {
         
     public RestUser(PersistentUser u) {
         this.givenName = u.getFirstname();
-        this.familyNamePrefix = u.getMiddlename();
+        this.insertion = u.getMiddlename();
         this.familyName = u.getLastname();
         this.id = MySQLPersistenceId.createPersistentId(u);
-        this.usercode = u.getUsername();
+        this.username = u.getUsername();
     }
 
     /**
@@ -83,31 +83,31 @@ public class RestUser {
     }
 
     /**
-     * @return the familyNamePrefix
+     * @return the insertion
      */
-    public String getFamilyNamePrefix() {
-        return familyNamePrefix;
+    public String getInsertion() {
+        return insertion;
     }
 
     /**
-     * @param familyNamePrefix the familyNamePrefix to set
+     * @param familyNamePrefix the insertion to set
      */
-    public void setFamilyNamePrefix(String familyNamePrefix) {
-        this.familyNamePrefix = familyNamePrefix;
+    public void setInsertion(String familyNamePrefix) {
+        this.insertion = familyNamePrefix;
     }
 
     /**
      * @return the usercode
      */
-    public String getUsercode() {
-        return usercode;
+    public String getUsername() {
+        return username;
     }
 
     /**
      * @param usercode the usercode to set
      */
-    public void setUsercode(String usercode) {
-        this.usercode = usercode;
+    public void setUsername(String usercode) {
+        this.username = usercode;
     }
 
 }
