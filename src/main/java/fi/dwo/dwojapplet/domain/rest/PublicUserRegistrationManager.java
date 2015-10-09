@@ -14,7 +14,7 @@ public class PublicUserRegistrationManager {
 
     private static final Logger LOG = Logger.getLogger(PublicUserRegistrationManager.class.getName());
 
-    public static boolean RegisterNewUser(NewUserRegistration newUserReg) throws Dwo2Exception {
+    public static boolean RegisterNewUser(RestNewUser newUserReg) throws Dwo2Exception {
         boolean r;
         r = StoredRestManager.getInstance().put("/public/registration/submit", Boolean.class, newUserReg);
 

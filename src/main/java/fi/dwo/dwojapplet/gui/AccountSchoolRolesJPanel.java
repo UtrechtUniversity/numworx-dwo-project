@@ -3,7 +3,7 @@ package fi.dwo.dwojapplet.gui;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.rest.entities.SchoolRoleAndClass;
+import fi.dwo.commons.rest.entities.RestSchoolRoleAndClass;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.User;
@@ -204,7 +204,7 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
                 int row = tableModel.getSelectedRow();
 
 //            //set prop to table setting
-                prop.setSelectedSchoolRoleAndClass((SchoolRoleAndClass) tableModel.getValueAt(row, 4));
+                prop.setSelectedSchoolRoleAndClass((RestSchoolRoleAndClass) tableModel.getValueAt(row, 4));
                 prop.setActiveSchoolRoleAndClass();
 //            //get user data
                 PersistentUser user = DwoHelper.getCurrentUser();
@@ -225,7 +225,7 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
                 int row = tableModel.getSelectedRow();
 
 //            //set prop to table setting
-                prop.setSelectedSchoolRoleAndClass((SchoolRoleAndClass) tableModel.getValueAt(row, 4));
+                prop.setSelectedSchoolRoleAndClass((RestSchoolRoleAndClass) tableModel.getValueAt(row, 4));
                 prop.setActiveSchoolRoleAndClass();
                 //TODO Remove role now
 //            //get user data
@@ -310,7 +310,7 @@ public class AccountSchoolRolesJPanel extends JPanel implements ActionListener {
             int col = tableModel.getSelectedRow();
 
 //            //set prop to table setting
-            prop.setSelectedSchoolRoleAndClass((SchoolRoleAndClass) tableModel.getValueAt(4, col));
+            prop.setSelectedSchoolRoleAndClass((RestSchoolRoleAndClass) tableModel.getValueAt(4, col));
             prop.setActiveSchoolRoleAndClass();
 //            //get user data
             PersistentUser user = DwoHelper.getCurrentUser();

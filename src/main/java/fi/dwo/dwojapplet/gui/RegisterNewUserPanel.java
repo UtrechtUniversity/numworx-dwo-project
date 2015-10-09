@@ -3,7 +3,7 @@ package fi.dwo.dwojapplet.gui;
 import fi.dwo.commons.exceptions.Dwo2Exception;
 import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentRole;
-import fi.dwo.commons.rest.entities.NewUserRegistration;
+import fi.dwo.commons.rest.entities.RestNewUser;
 import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
@@ -451,7 +451,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
         if (e.getSource() == registerButton) {
             if ((groupChoice.getSelectedIndex() == 0) && (schoollogin.getText().equals("")) && (schoolpassword.getText().equals(""))) {
                 try {
-                    NewUserRegistration nur = new NewUserRegistration();
+                    RestNewUser nur = new RestNewUser();
 
                     nur.setUsername(username.getText());
                     nur.setPassword(MD5.getHashString(password.getText()));
@@ -475,7 +475,7 @@ public class RegisterNewUserPanel extends ContentPanel implements ActionListener
                     role = DwoHelper.getRoles().get(groupChoice.getSelectedIndex() - 1);
                 }
                 try {
-                    NewUserRegistration nur = new NewUserRegistration();
+                    RestNewUser nur = new RestNewUser();
                     nur.setUsername(username.getText());
                     nur.setPassword(MD5.getHashString(password.getText()));
                     nur.setGivenName(firstname.getText());

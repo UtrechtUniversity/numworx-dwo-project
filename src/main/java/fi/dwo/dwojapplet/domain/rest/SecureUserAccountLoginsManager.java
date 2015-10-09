@@ -21,9 +21,9 @@ public class SecureUserAccountLoginsManager {
     * @return 
      * @throws fi.dwo.commons.exceptions.Dwo2Exception 
     */
-    public static SchoolsRolesAndClasses getSchoolLogins() throws Dwo2Exception{
-        SchoolsRolesAndClasses src;
-        src= StoredRestManager.getInstance().get("/rest/secure/user/account/logins/getlist", SchoolsRolesAndClasses.class);
+    public static RestSchoolsRolesAndClasses getSchoolLogins() throws Dwo2Exception{
+        RestSchoolsRolesAndClasses src;
+        src= StoredRestManager.getInstance().get("/rest/secure/user/account/logins/getlist", RestSchoolsRolesAndClasses.class);
         return src;
     }   
     
@@ -35,8 +35,8 @@ public class SecureUserAccountLoginsManager {
      * @throws fi.dwo.commons.exceptions.Dwo2Exception 
      */
 
-    public static SchoolRoleAndClass switchToSchoolLogin(SchoolRoleAndClass src) throws Dwo2Exception {
-            src = StoredRestManager.getInstance().put("/rest/secure/user/account/logins/switch", SchoolRoleAndClass.class, src);
+    public static RestSchoolRoleAndClass switchToSchoolLogin(RestSchoolRoleAndClass src) throws Dwo2Exception {
+            src = StoredRestManager.getInstance().put("/rest/secure/user/account/logins/switch", RestSchoolRoleAndClass.class, src);
             //LOG.log(Level.FINE, "Updated active role  of username {0}.",new Object[]{src.getRoleId()});
         return src;
     }
@@ -46,7 +46,7 @@ public class SecureUserAccountLoginsManager {
      * @param existingUserReg
      * @return
      */
-    public static boolean addASchoolLogin(KnownUserRegistration existingUserReg) throws Dwo2Exception {
+    public static boolean addASchoolLogin(RestNewSchoolLogin existingUserReg) throws Dwo2Exception {
         boolean r;
         r = StoredRestManager.getInstance().put("/rest/secure/user/account/logins/submit", Boolean.class, existingUserReg);
 
@@ -60,7 +60,7 @@ public class SecureUserAccountLoginsManager {
      * @param existingUserReg
      * @return
      */
-    public static boolean removeASchoolLogin(KnownUserRegistration existingUserReg) throws Dwo2Exception {
+    public static boolean removeASchoolLogin(RestNewSchoolLogin existingUserReg) throws Dwo2Exception {
         boolean r;
         r = StoredRestManager.getInstance().put("/rest/secure/user/account/logins/delete", Boolean.class, existingUserReg);
 

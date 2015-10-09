@@ -15,8 +15,8 @@ import java.util.logging.Logger;
 public class JPanelSchoolsandRolesProperties {
 
     private static final Logger LOG = Logger.getLogger(JPanelSchoolsandRolesProperties.class.getName());
-    private SchoolRoleAndClass selectedSrc;
-    private SchoolsRolesAndClasses srcs;
+    private RestSchoolRoleAndClass selectedSrc;
+    private RestSchoolsRolesAndClasses srcs;
 
     public void init() throws Dwo2Exception {
         try {
@@ -25,7 +25,7 @@ public class JPanelSchoolsandRolesProperties {
         } catch (Dwo2Exception ex) {
             
             LOG.log(Level.SEVERE, ex.getMessage());
-            srcs = new SchoolsRolesAndClasses();
+            srcs = new RestSchoolsRolesAndClasses();
             selectedSrc=null;
             throw ex;
         }
@@ -34,7 +34,7 @@ public class JPanelSchoolsandRolesProperties {
     /**
      * @return the user
      */
-    public SchoolsRolesAndClasses getSchoolsRolesAndClasses() {
+    public RestSchoolsRolesAndClasses getSchoolsRolesAndClasses() {
         return srcs;
     }
 
@@ -43,7 +43,7 @@ public class JPanelSchoolsandRolesProperties {
      */
     public void setActiveSchoolRoleAndClass() {
         try {
-            SchoolRoleAndClass src = SecureUserAccountLoginsManager.switchToSchoolLogin(getSelectedSchoolRoleAndClass());
+            RestSchoolRoleAndClass src = SecureUserAccountLoginsManager.switchToSchoolLogin(getSelectedSchoolRoleAndClass());
             srcs.setActiveSchoolRoleAndClass(src);
         } catch (Dwo2Exception ex) {
             LOG.log(Level.SEVERE, null, ex);
@@ -53,21 +53,21 @@ public class JPanelSchoolsandRolesProperties {
         /**
      * @return 
      */
-    public SchoolRoleAndClass getActiveSchoolRoleAndClass() {
+    public RestSchoolRoleAndClass getActiveSchoolRoleAndClass() {
         return srcs.getActiveSchoolRoleAndClass();
     }
 
     /**
      * @return the selectedSrc
      */
-    public SchoolRoleAndClass getSelectedSchoolRoleAndClass() {
+    public RestSchoolRoleAndClass getSelectedSchoolRoleAndClass() {
         return selectedSrc;
     }
 
     /**
      * @param selectedSrc the selectedSrc to set
      */
-    public void setSelectedSchoolRoleAndClass(SchoolRoleAndClass selectedSrc) {
+    public void setSelectedSchoolRoleAndClass(RestSchoolRoleAndClass selectedSrc) {
         this.selectedSrc = selectedSrc;
     }
 

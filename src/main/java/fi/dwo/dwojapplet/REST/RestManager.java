@@ -7,7 +7,7 @@ import fi.dwo.commons.exceptions.Dwo2RestException;
 import fi.dwo.commons.rest.RestClassType;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.rest.entities.SchoolRoleAndClass;
+import fi.dwo.commons.rest.entities.RestSchoolRoleAndClass;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -147,7 +147,7 @@ class RestManager {
                     };
                     return (List<T>) response.readEntity(pRoleType);
                 case SchoolsRolesAndClasses:
-                    GenericType<ArrayList<SchoolRoleAndClass>> pSRCType = new GenericType<ArrayList<SchoolRoleAndClass>>() {
+                    GenericType<ArrayList<RestSchoolRoleAndClass>> pSRCType = new GenericType<ArrayList<RestSchoolRoleAndClass>>() {
                     };
                     return (List<T>) response.readEntity(pSRCType);
                 default:
