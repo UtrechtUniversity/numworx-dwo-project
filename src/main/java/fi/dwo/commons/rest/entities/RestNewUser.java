@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class NewUserRegistration {
+public class RestNewUser {
     private String username;
     private String password;
     private String GivenName;
@@ -29,7 +29,7 @@ public class NewUserRegistration {
     private PersistentRole role;
 
     
-    public NewUserRegistration(){
+    public RestNewUser(){
         
     }
     /**

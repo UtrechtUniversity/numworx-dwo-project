@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class SchoolRoleAndClass {
+public class RestSchoolRoleAndClass {
     private PersistenceId schoolId;
     private String schoolName;
     private PersistenceId roleId;

@@ -16,13 +16,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class KnownUserRegistration {
+public class RestNewSchoolLogin {
     private String schoolLogin;
     private String schoolCode;
     private PersistentRole role;
 
     
-    public KnownUserRegistration(){
+    public RestNewSchoolLogin(){
         
     }
 

@@ -15,39 +15,39 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class SchoolsRolesAndClasses {
-    private SchoolRoleAndClass currentSchoolRoleAndClass;
-    private List<SchoolRoleAndClass> schoolsRolesAndClassesList;
+public class RestSchoolsRolesAndClasses {
+    private RestSchoolRoleAndClass currentSchoolRoleAndClass;
+    private List<RestSchoolRoleAndClass> schoolsRolesAndClassesList;
 
     public void init(){
-        currentSchoolRoleAndClass = new SchoolRoleAndClass();
-        schoolsRolesAndClassesList = new ArrayList<SchoolRoleAndClass>();
+        currentSchoolRoleAndClass = new RestSchoolRoleAndClass();
+        schoolsRolesAndClassesList = new ArrayList<RestSchoolRoleAndClass>();
     }
     /**
      * @return the currentSchoolRoleAndClass
      */
-    public SchoolRoleAndClass getActiveSchoolRoleAndClass() {
+    public RestSchoolRoleAndClass getActiveSchoolRoleAndClass() {
         return currentSchoolRoleAndClass;
     }
 
     /**
      * @param currentSRC the currentSchoolRoleAndClass to set
      */
-    public void setActiveSchoolRoleAndClass(SchoolRoleAndClass currentSRC) {
+    public void setActiveSchoolRoleAndClass(RestSchoolRoleAndClass currentSRC) {
         this.currentSchoolRoleAndClass = currentSRC;
     }
 
     /**
      * @return the schoolsRolesAndClassesList
      */
-    public List<SchoolRoleAndClass> getSchoolsRolesAndClassesList() {
+    public List<RestSchoolRoleAndClass> getSchoolsRolesAndClassesList() {
         return schoolsRolesAndClassesList;
     }
 
     /**
      * @param srcList the schoolsRolesAndClassesList to set
      */
-    public void setSchoolsRolesAndClassesList(List<SchoolRoleAndClass> srcList) {
+    public void setSchoolsRolesAndClassesList(List<RestSchoolRoleAndClass> srcList) {
         this.schoolsRolesAndClassesList = srcList;
     }
     
