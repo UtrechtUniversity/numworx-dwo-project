@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard.HasHeight;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
+import nl.uu.fi.dwo.mobile.client.text.Text;
 //import nl.uu.fi.dwo.mobile.client.ui.FormuleKeyboard;
 //import nl.uu.fi.dwo.mobile.client.ui.KeyBoardTabPanel;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
@@ -167,10 +168,11 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 						logger.info("Status: " + response.getStatusCode() + " " + response.getStatusText());
 						logger.info(response.getHeadersAsString());
 						logger.info("Data: " + responseText.substring(0, Math.min(30, responseText.length()) ));
-						if (!responseText.isEmpty())
+						if (responseText.length() > 4 && response.getStatusCode() == 200)
 						{
 							setupView(responseText);
 						} else {
+							Window.alert(Text.constants.noJSONreceived());
 							logger.severe("response empty");
 						}
 					}
@@ -178,7 +180,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 					@Override
 					public void onError(Request request, Throwable exception)
 					{
-						Window.alert("error " + exception);
+						Window.alert(Text.constants.noJSONreceived() + 
+								"\nerror " + exception);
+						logger.log(Level.SEVERE, exception.toString(), exception);
 					}
 				});
 		

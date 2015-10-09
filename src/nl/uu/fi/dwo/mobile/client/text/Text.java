@@ -35,4 +35,7 @@ public interface Text extends Constants {
 	String standaardModules();
 	@DefaultStringValue("Modules ")
 	String schoolModules();
+	
+	@DefaultStringValue("Geen gegevens ontvangen. Open de activiteit in de editor en sla die opnieuw op")
+	String noJSONreceived();
 }
