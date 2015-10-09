@@ -48,10 +48,10 @@ public class SecuredUserAccountLoginsManager {
 //    @Context  //injected response proxy supporting multiple threads
 //    private HttpServletResponse response;
 
-    private SchoolRoleAndClass getCurrentSchoolRoleAndClass(String scUsername, long userId) {
+    private RestSchoolRoleAndClass getCurrentSchoolRoleAndClass(String scUsername, long userId) {
         EntityManager em = DwoEmfFactory.getEntityManager();
 
-        SchoolRoleAndClass curSac = new SchoolRoleAndClass();
+        RestSchoolRoleAndClass curSac = new RestSchoolRoleAndClass();
 //        // retrieve the current active <school,role, class>
         try {
             javax.persistence.Query q = em.createQuery("select h.schoolGroup.schoolID, h.schoolGroup.school.schoolName, h.schoolGroup.groupID, h.schoolGroup.role.groupname, h.classID, h.persistentHasRolePK.userID , h.schoolGroup.schoolGroupID  from PersistentHasRole h where h.persistentHasRolePK.userID = :userID and h.user.schoolGroupID = h.persistentHasRolePK.schoolGroupID");
@@ -79,7 +79,7 @@ public class SecuredUserAccountLoginsManager {
         }
         catch (Exception e) {
             LOG.log(Level.WARNING, "Username " + scUsername + ": Unexpected exception.", e);
-            return new SchoolRoleAndClass();
+            return new RestSchoolRoleAndClass();
         }
         finally {
             em.close();
@@ -96,14 +96,14 @@ public class SecuredUserAccountLoginsManager {
      */
     @GET
     @Produces({"application/json"})
-    @Path("/get")
-    public SchoolsRolesAndClasses getSchoolLogins(@Context SecurityContext sc) {
+    @Path("/getList")
+    public RestSchoolsRolesAndClasses getSchoolLogins(@Context SecurityContext sc) {
         EntityManager em = DwoEmfFactory.getEntityManager();
 
-        SchoolsRolesAndClasses sacs = new SchoolsRolesAndClasses();
+        RestSchoolsRolesAndClasses sacs = new RestSchoolsRolesAndClasses();
         PersistentUser user;
-        List<SchoolRoleAndClass> sacList = (List<SchoolRoleAndClass>) new ArrayList<SchoolRoleAndClass>();
-        SchoolRoleAndClass curSac;
+        List<RestSchoolRoleAndClass> sacList = (List<RestSchoolRoleAndClass>) new ArrayList<RestSchoolRoleAndClass>();
+        RestSchoolRoleAndClass curSac;
 
         // fetch the authenticated user
         try {
@@ -124,10 +124,10 @@ public class SecuredUserAccountLoginsManager {
             q.setParameter("userID", userId);
             List<Object[]> resultList = q.getResultList();
             LOG.log(Level.FINE, "Username {0}: Fetched {2} HasRoles for userId {1}.", new Object[]{sc.getUserPrincipal().getName(), userId, resultList.size()});
-            SchoolRoleAndClass sac;
+            RestSchoolRoleAndClass sac;
             for (Object[] oList : resultList) {
                 LOG.log(Level.FINE, "Fetched hasRole tuple <schoolID, schoolName, groupID, groupname, classID, userID, schoolGroupID>: {0}, {1}, {2}, {3}, {4}, {5}, {6}.", new Object[]{oList[0], oList[1], oList[2], oList[3], oList[4], oList[5], oList[6]});
-                sac = new SchoolRoleAndClass();
+                sac = new RestSchoolRoleAndClass();
                 sac.setSchoolId((PersistenceId) MySQLPersistenceId.createPersistenceId((Integer) oList[0], PersistenceClassType.PersistentSchool));
                 sac.setSchoolName((String) oList[1]);
                 sac.setRoleId((PersistenceId) MySQLPersistenceId.createPersistenceId((Integer) oList[2], PersistenceClassType.PersistentRole));
@@ -147,7 +147,7 @@ public class SecuredUserAccountLoginsManager {
         }
         catch (Exception e) {
             LOG.log(Level.WARNING, "Username " + sc.getUserPrincipal().getName() + " Unexpected exception.", e);
-            return new SchoolsRolesAndClasses();
+            return new RestSchoolsRolesAndClasses();
         }
         finally {
             LOG.log(Level.FINER, " closed em.");
@@ -171,12 +171,12 @@ public class SecuredUserAccountLoginsManager {
      */
     @PUT
     @Produces({"application/json"})
-    @Path("/switch")
-    public SchoolRoleAndClass switchToSchoolLogin(@Context SecurityContext sc, SchoolRoleAndClass sarc) {
+    @Path("/select")
+    public RestSchoolRoleAndClass switchToSchoolLogin(@Context SecurityContext sc, RestSchoolRoleAndClass sarc) {
         EntityManager em = DwoEmfFactory.getEntityManager();
 
         PersistentUser user;
-        SchoolRoleAndClass curSac = new SchoolRoleAndClass();
+        RestSchoolRoleAndClass curSac = new RestSchoolRoleAndClass();
 
         // fetch the authenticated user
         try {
@@ -207,7 +207,7 @@ public class SecuredUserAccountLoginsManager {
         }
         catch (Exception e) {
             LOG.log(Level.WARNING, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception.", e);
-            return new SchoolRoleAndClass();
+            return new RestSchoolRoleAndClass();
         }
         finally {
             em.close();
@@ -226,7 +226,7 @@ public class SecuredUserAccountLoginsManager {
     @PUT
     @Produces({"application/json"})
     @Path("/submit")
-    public Response addASchoolLogin(@Context SecurityContext sc, KnownUserRegistration existingUserReg) {
+    public Response submitASchoolLogin(@Context SecurityContext sc, RestNewSchoolLogin existingUserReg) {
         EntityManager em = DwoEmfFactory.getEntityManager();
 
         //Check for userid, should exist.
@@ -314,7 +314,7 @@ public class SecuredUserAccountLoginsManager {
     @PUT
     @Produces({"application/json"})
     @Path("/remove")
-    public Boolean removeASchoolLogin(@Context SecurityContext sc, SchoolRoleAndClass sarc) {
+    public Boolean removeASchoolLogin(@Context SecurityContext sc, RestSchoolRoleAndClass sarc) {
         PersistentUser user = UserManager.findByUserName(sc.getUserPrincipal().getName());
 
         int userId = (int) (long) MySQLPersistenceId.getId(sarc.getUserId());

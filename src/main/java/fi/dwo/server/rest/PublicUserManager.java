@@ -8,7 +8,7 @@ import fi.dwo.commons.persistence.entities.PersistentSamlUser;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.rest.entities.NewUserRegistration;
+import fi.dwo.commons.rest.entities.RestNewUser;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
@@ -27,10 +27,10 @@ import javax.ws.rs.core.Response;
  *
  * @author G.A.J. van der Plas
  */
-@Path("/public/registration")
-public class PublicUserRegistrationManager {
+@Path("/public/user")
+public class PublicUserManager {
 
-    private static final Logger LOG = Logger.getLogger(PublicUserRegistrationManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(PublicUserManager.class.getName());
 
     /**
      * Registers a new user.
@@ -42,7 +42,7 @@ public class PublicUserRegistrationManager {
     @PUT
     @Produces({"application/json"})
     @Path("/submit")
-    public Response registerNewUser(NewUserRegistration newUserReg) {
+    public Response submitNewUser(RestNewUser newUserReg) {
         EntityManager em = DwoEmfFactory.getEntityManager();
         PersistentUser u;
             u = UserManager.findByUserName(newUserReg.getUsername());
@@ -123,6 +123,17 @@ public class PublicUserRegistrationManager {
         //success
         return Response.status(200).entity(true).build();
     }
+
+    /**
+     * Retrieves a user from samluser.
+     *
+     * @param sc
+     * @param newUserReg
+     * @return
+     */
+    @PUT
+    @Produces({"application/json"})
+    @Path("/submit")
     
     PersistentUser getSamlUser(String samlUserId, String samlOrgId, String authToken){
         PersistentUser user;

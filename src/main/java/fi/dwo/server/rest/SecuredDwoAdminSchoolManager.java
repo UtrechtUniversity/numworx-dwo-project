@@ -22,6 +22,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.rest.entities.RestSchool4Admin;
+import fi.dwo.commons.rest.entities.RestTeacher;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseSequenceManager;
@@ -38,6 +39,7 @@ import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
+import static fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager.getHasRoleInSchool;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -59,9 +61,9 @@ import javax.ws.rs.core.SecurityContext;
  */
 @PermitAll
 @Path("/secure/dwoadmin/school")
-public class SecuredAdminSchoolManager {
+public class SecuredDwoAdminSchoolManager {
 
-    private static final Logger LOG = Logger.getLogger(SecuredAdminSchoolManager.class.getName());
+    private static final Logger LOG = Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName());
 
     /**
      * Registers a new school.
@@ -73,13 +75,13 @@ public class SecuredAdminSchoolManager {
     @PUT
     @Produces({"application/json"})
     @Path("/submit")
-    public PersistentSchool addSchool(@Context SecurityContext sc, PersistentSchool school) {
+    public PersistentSchool submitSchool(@Context SecurityContext sc, PersistentSchool school) {
         PersistentHasRole hr = null;
         try {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredAdminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(ex);
         }
 
@@ -117,7 +119,7 @@ public class SecuredAdminSchoolManager {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredAdminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(ex);
         }
         if (hr != null) {
@@ -148,14 +150,14 @@ public class SecuredAdminSchoolManager {
      */
     @GET
     @Produces({"application/json"})
-    @Path("/getlist")
+    @Path("/getList")
     public List<RestSchool4Admin> getSchools(@Context SecurityContext sc) {
         PersistentHasRole hr = null;
         try {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredAdminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(ex);
         }
         if (hr != null) {
@@ -197,7 +199,7 @@ public class SecuredAdminSchoolManager {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredAdminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(ex);
         }
         if (hr != null) {
@@ -235,7 +237,7 @@ public class SecuredAdminSchoolManager {
             hr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.ADMIN);
         }
         catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredAdminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SecuredDwoAdminSchoolManager.class.getName()).log(Level.SEVERE, null, ex);
             throw new Dwo2RestException(ex);
         }
         if (hr != null) {
@@ -341,5 +343,5 @@ public class SecuredAdminSchoolManager {
 
         return true;
     }
-
+  
 }

@@ -33,7 +33,7 @@ private static final Logger LOG = Logger.getLogger(PublicRoleManager.class.getNa
      */
     @GET
     @Produces({"application/json"})
-    @Path("/getlist")
+    @Path("/getList")
     public List<PersistentRole> getRoles(@Context SecurityContext sc){
         List<PersistentRole> roles = null;
         try {

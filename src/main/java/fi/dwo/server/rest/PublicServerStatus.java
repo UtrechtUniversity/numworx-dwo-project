@@ -47,7 +47,7 @@ public class PublicServerStatus {
 
     @GET
     @Produces({"application/json"})
-    @Path("/getlist")
+    @Path("/getList")
     public List<PersistentDwoSystemParameters> getStatusJson() {
         return getStatus();
     }

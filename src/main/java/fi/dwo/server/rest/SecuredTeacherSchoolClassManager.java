@@ -15,7 +15,6 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.commons.rest.entities.RestSchool;
 import fi.dwo.commons.rest.entities.RestSchoolClass;
 import fi.dwo.commons.rest.entities.RestSchoolClass4Teacher;
 import fi.dwo.commons.rest.entities.RestSingleSchoolStudent;
@@ -26,10 +25,8 @@ import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
-import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.logging.Level;
@@ -64,7 +61,7 @@ public class SecuredTeacherSchoolClassManager {
      */
     @GET
     @Produces({"application/json"})
-    @Path("/getlist")
+    @Path("/getList")
     public List<RestSchoolClass> getTeachersSchoolClasses(@Context SecurityContext sc) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
@@ -112,7 +109,7 @@ public class SecuredTeacherSchoolClassManager {
      */
     @GET
     @Produces({"application/json"})
-    @Path("/getlist")
+    @Path("/getTeachersInSchoolList")
     public List<RestTeacher> getTeachersInSchool(@Context SecurityContext sc) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
@@ -151,7 +148,7 @@ public class SecuredTeacherSchoolClassManager {
     @PUT
     @Produces({"application/json"})
     @Path("/submit")
-    public Boolean AddSchoolClass(@Context SecurityContext sc, PersistentSchoolClass schoolClass) {
+    public Boolean SubmitSchoolClass(@Context SecurityContext sc, PersistentSchoolClass schoolClass) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
 
@@ -192,7 +189,7 @@ public class SecuredTeacherSchoolClassManager {
      */
     @GET
     @Produces({"application/json"})
-    @Path("/getlist")
+    @Path("/getTeacherList")
     public List<RestTeacher> GetTeachersInSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
@@ -242,7 +239,7 @@ public class SecuredTeacherSchoolClassManager {
      */
     @GET
     @Produces({"application/json"})
-    @Path("/getlist")
+    @Path("/getStudentList")
     public List<RestStudent> GetStudentsInSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
@@ -347,8 +344,8 @@ public class SecuredTeacherSchoolClassManager {
      */
     @PUT
     @Produces({"application/json"})
-    @Path("/submit")
-    public Boolean AddTeacherToSchoolClass(@Context SecurityContext sc, RestTeacher restTeacher, RestSchoolClass restSchoolClass) {
+    @Path("/submitTeacher")
+    public Boolean SubmitTeacherToSchoolClass(@Context SecurityContext sc, RestTeacher restTeacher, RestSchoolClass restSchoolClass) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentUser teacher = null;
@@ -380,47 +377,47 @@ public class SecuredTeacherSchoolClassManager {
         return true;
     }
 
-    /**
-     * Add a single school student to the school class.
-     *
-     * @param sc
-     * @param restStudent
-     * @param restSchoolClass
-     * @return true, throws an exception otherwise.
-     */
-    @PUT
-    @Produces({"application/json"})
-    @Path("/submit")
-    public Boolean AddSingleSchoolStudentToSchoolClass(@Context SecurityContext sc, RestStudent restStudent, RestSchoolClass restSchoolClass) {
-        PersistentHasRole phr;
-        PersistentSchool school = null;
-        PersistentUser student = null;
-        PersistentHasRole thr = null;
-        try {
-            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
-            school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            student = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(restStudent.getId()));
-            if (student == null) {
-                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Could not find student to add.");
-            }
-            thr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
-        }
-        catch (Dwo2Exception ex) {
-            Logger.getLogger(SecuredTeacherSchoolClassManager.class
-                    .getName()).log(Level.SEVERE, null, ex);
-            throw new Dwo2RestException(ex);
-        }
-
-        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
-        if (schoolClass.getSchoolID() == school.getSchoolID() && student.isSingleSchoolAccount()) {
-            PersistentStudentOfClass toc = new PersistentStudentOfClass();
-            toc.setPersistentStudentOfClassPK(new PersistentStudentOfClassPK(student.getUserID(), schoolClass.getClassID(), thr.getPersistentHasRolePK().getSchoolGroupID()));
-            java.util.Date d = Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime();
-            toc.setRegisterDate(d);
-            StudentOfClassManager.create(toc);
-        }
-        return true;
-    }
+//    /**
+//     * Add a single school student to the school class.
+//     *
+//     * @param sc
+//     * @param restStudent
+//     * @param restSchoolClass
+//     * @return true, throws an exception otherwise.
+//     */
+//    @PUT
+//    @Produces({"application/json"})
+//    @Path("/submitStudent")
+//    public Boolean SubmitSingleSchoolStudentToSchoolClass(@Context SecurityContext sc, RestStudent restStudent, RestSchoolClass restSchoolClass) {
+//        PersistentHasRole phr;
+//        PersistentSchool school = null;
+//        PersistentUser student = null;
+//        PersistentHasRole thr = null;
+//        try {
+//            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
+//            school = HasRoleUtilManager.getSchoolforHasRole(phr);
+//            student = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(restStudent.getId()));
+//            if (student == null) {
+//                throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Could not find student to add.");
+//            }
+//            thr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
+//        }
+//        catch (Dwo2Exception ex) {
+//            Logger.getLogger(SecuredTeacherSchoolClassManager.class
+//                    .getName()).log(Level.SEVERE, null, ex);
+//            throw new Dwo2RestException(ex);
+//        }
+//
+//        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity((int) (long) MySQLPersistenceId.getId(restSchoolClass.getId()));
+//        if (schoolClass.getSchoolID() == school.getSchoolID() && student.isSingleSchoolAccount()) {
+//            PersistentStudentOfClass toc = new PersistentStudentOfClass();
+//            toc.setPersistentStudentOfClassPK(new PersistentStudentOfClassPK(student.getUserID(), schoolClass.getClassID(), thr.getPersistentHasRolePK().getSchoolGroupID()));
+//            java.util.Date d = Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime();
+//            toc.setRegisterDate(d);
+//            StudentOfClassManager.create(toc);
+//        }
+//        return true;
+//    }
 
     /**
      * Removes a teacher from a school class and returns true if the remove
@@ -433,7 +430,7 @@ public class SecuredTeacherSchoolClassManager {
      */
     @PUT
     @Produces({"application/json"})
-    @Path("/remove")
+    @Path("/removeTeacher")
     public Boolean removeTeacherFromSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass, RestTeacher restTeacher) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
@@ -480,7 +477,7 @@ public class SecuredTeacherSchoolClassManager {
      */
     @PUT
     @Produces({"application/json"})
-    @Path("/remove")
+    @Path("/removeStudent")
     public Boolean removeStudentFromSchoolClass(@Context SecurityContext sc, RestSchoolClass restSchoolClass, RestStudent restStudent) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
@@ -527,7 +524,7 @@ public class SecuredTeacherSchoolClassManager {
      */
     @PUT
     @Produces({"application/json"})
-    @Path("/remove")
+    @Path("/update")
     public Boolean UpdateSchoolClass(@Context SecurityContext sc, RestSchoolClass4Teacher restSchoolClass) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
@@ -561,64 +558,9 @@ public class SecuredTeacherSchoolClassManager {
         return true;
     }
 
-
+    
     /**
-     * Removes a teacher from a school class and returns true.
-     *
-     * @param sc
-     * @param restSchool
-     * @param restStudent
-     * @return true if success, false if the teacher does not exists to be
-     * removed
-     */
-    @PUT
-    @Produces({"application/json"})
-    @Path("/removesingleschoolstudent")
-    public Boolean removeSingleSchoolStudentFromSchool(@Context SecurityContext sc, RestSchool restSchool, RestStudent restStudent) {
-        PersistentHasRole phr = null;
-        PersistentSchool school = null;
-        PersistentUser student = null;
-        PersistentHasRole shr = null;
-        try {
-            phr = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.TEACHER);
-            school = HasRoleUtilManager.getSchoolforHasRole(phr);
-            student = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(restStudent.getId()));
-            if(student == null){
-                return false;
-            }
-            if(!student.isSingleSchoolAccount()){
-                LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to change a non-single school user with username {1} by schooladmin {0}.", new Object[]{sc.getUserPrincipal().getName(),student.getUsername()});
-                throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
-            }
-            shr = HasRoleUtilManager.getHasRoleInSchool(student, school, RoleType.STUDENT);
-        }
-        catch (Dwo2Exception ex) {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            LOG.log(Level.SEVERE, null, ex);
-            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
-        }
-
-        try {
-            HasRoleUtilManager.removeHasRoleAndItsData(shr);
-        }
-        catch (Dwo2Exception ex) {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            LOG.log(Level.SEVERE, null, ex);
-            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
-        }
-
-        try {
-            UserManager.destroy(student.getUserID());
-        }
-        catch (PersistenceException e) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Registers a new user.
+     * Edits a singleSchoolStudent.
      *
      * @param sc
      * @param nssStudent
@@ -626,8 +568,8 @@ public class SecuredTeacherSchoolClassManager {
      */
     @PUT
     @Produces({"application/json"})
-    @Path("/submitsingleschoolstudent")
-    public Boolean AddSingleSchoolStudent(@Context SecurityContext sc, RestSingleSchoolStudent nssStudent) {
+    @Path("/submitSingleSchoolStudent")
+    public Boolean updateSingleSchoolStudent(@Context SecurityContext sc, RestSingleSchoolStudent nssStudent) {
         PersistentHasRole phr = null;
         PersistentSchool school = null;
         PersistentSchoolGroup sg = null;
@@ -642,29 +584,34 @@ public class SecuredTeacherSchoolClassManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
         }
 
-        if(sg!=null){
-            Date now = new Date();
-            PersistentUser user = new PersistentUser();
+        if (sg != null) {
+            PersistentUser user = UserManager.findEntity((int) (long) MySQLPersistenceId.getId(nssStudent.getId()));
+            if (user == null) {
+                LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: could not find user with id to update {1}.", new Object[]{sc.getUserPrincipal().getName(), nssStudent.getId()});
+                throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Could not update user with username " + nssStudent.getUsername() + ".");
+            }
+            if (!user.isSingleSchoolAccount()) {
+                LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to change a non-single school user with username {1} by schooladmin {0}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
+                throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
+            }
+
             user.setEmail(nssStudent.getEmail());
             user.setFirstname(nssStudent.getGivenName());
             user.setMiddlename(nssStudent.getInsertion());
             user.setLastname(nssStudent.getFamilyName());
             user.setPasswd(nssStudent.getPassword());
-            user.setRegisterDate(now);
-            user.setUsername(nssStudent.getUsername());
-            user.setSchoolGroupID(sg.getSchoolGroupID());
-            
             try {
-                SchoolUtilManager.addSingleSchoolStudentAccount(user, school);
+                UserManager.edit(user);
             }
-        catch (Dwo2Exception ex) {
-            LOG.log(Level.WARNING, "Username {0}: ILLEGAL USER-OPERATION: Trying to access schooladmin functionality by user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName()});
-            LOG.log(Level.SEVERE, null, ex);
-            throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
-        }
-        }else{
+            catch (PersistenceException ex) {
+                LOG.log(Level.WARNING, "User {0} could not update user with usercode {0}.", new Object[]{sc.getUserPrincipal().getName(), nssStudent.getUsername()});
+                LOG.log(Level.SEVERE, null, ex);
+                throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "Could not update user " + sc.getUserPrincipal().getName() + ".");
+            }
+        } else {
             return false;
         }
         return true;
-    }    
+    }
+
 }
