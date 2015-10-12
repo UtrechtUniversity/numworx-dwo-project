@@ -586,8 +586,7 @@ public class GetallenlijnSprongPanel implements InteractionStub, FacetAware
 
 	@Override
 	public Boolean isCorrect() {
-		// TODO Auto-generated method stub
-		return null;
+		return true;
 	}
 
 	@Override
