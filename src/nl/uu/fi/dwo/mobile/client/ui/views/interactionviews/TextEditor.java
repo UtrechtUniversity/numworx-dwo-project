@@ -6,9 +6,11 @@ import java.util.List;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.Button;
@@ -65,6 +67,36 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 			}
 		}
 
+	}
+	
+	class TapForFocus implements TouchStartHandler {
+		private Widget cursorWidget;
+		private HandlerRegistration registration;
+
+		/**
+		 * @param cursorWidget
+		 */
+		TapForFocus(Widget cursorWidget) {
+			this.cursorWidget = cursorWidget;
+			TouchDelegate wrap = new TouchDelegate(cursorWidget);
+			registration = wrap.addTouchStartHandler(this);
+		}
+
+		public void finalize() {
+			registration.removeHandler();
+			registration = null;
+			cursorWidget = null;
+		}
+		
+		@Override
+		public void onTouchStart(TouchStartEvent event) {
+			comRoot.getKeyboard().setEditor(TextEditor.this);
+			setCursorWidget(cursorWidget);
+			comRoot.getKeyboard().softFocus();
+			event.stopPropagation();
+			event.preventDefault();
+		}
+		
 	}
 
 	private static final char Σ = 'Σ';
@@ -221,6 +253,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		Style style = content.getElement().getStyle();
 		style.setPadding(padding/2, Unit.PX);
 		style.setBackgroundColor("white");
+		style.setOverflow(Overflow.AUTO);
 		hbox.add(content);
 		hbox.getElement().getStyle().setBackgroundColor("#C0C0C0");
 		hbox.setPixelSize(width-boxsize, height-boxsize);
@@ -256,6 +289,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		setCurrentElementRepaint();
 		widget.setStyleDependentName("cursor", true);
 		cursorWidget = widget;
+		int c = flow.getWidgetIndex(widget);
+		if(c >= 0)
+			cursor = c;
 		return widget;
 	}
 
@@ -528,6 +564,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		
 	}
 
+	
+	
+	
 	@Override
 	public void insert(char charAt) {
 		SafeHtml html;
@@ -535,7 +574,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		builder.append(charAt);
 		html = builder.toSafeHtml();
 		sb.insert(cursor, charAt);
-		flow.insert(new InlineHTML(html),cursor++);
+		InlineHTML w = new InlineHTML(html);
+		new TapForFocus(w);
+		flow.insert(w,cursor++);
 	}
 
 	@Override
