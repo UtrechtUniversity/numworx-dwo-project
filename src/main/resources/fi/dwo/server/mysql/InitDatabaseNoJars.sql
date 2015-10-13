@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.6.24, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: dwo_devel_v1_4
+-- Host: 127.0.0.1    Database: dwojunittest
 -- ------------------------------------------------------
 -- Server version	5.6.26-log
 
@@ -30,8 +30,17 @@ CREATE TABLE `tblapplet` (
   `jarname` varchar(128) NOT NULL DEFAULT '',
   PRIMARY KEY (`appletID`),
   UNIQUE KEY `AK_IDENTIFIER_1` (`classname`)
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tblapplet`
+--
+
+LOCK TABLES `tblapplet` WRITE;
+/*!40000 ALTER TABLE `tblapplet` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tblapplet` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tblappletconfig`
@@ -47,8 +56,17 @@ CREATE TABLE `tblappletconfig` (
   `language` varchar(5) DEFAULT 'nl',
   `launchdata` mediumtext NOT NULL,
   PRIMARY KEY (`appletConfigID`)
-) ENGINE=InnoDB AUTO_INCREMENT=160 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tblappletconfig`
+--
+
+LOCK TABLES `tblappletconfig` WRITE;
+/*!40000 ALTER TABLE `tblappletconfig` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tblappletconfig` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tblclass`
@@ -70,8 +88,17 @@ CREATE TABLE `tblclass` (
   KEY `CLASS_SCHOOL_FK` (`schoolID`),
   CONSTRAINT `tblclass_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `tbluser` (`userID`) ON DELETE SET NULL,
   CONSTRAINT `tblclass_ibfk_2` FOREIGN KEY (`schoolID`) REFERENCES `tblschool` (`schoolID`)
-) ENGINE=InnoDB AUTO_INCREMENT=13480 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tblclass`
+--
+
+LOCK TABLES `tblclass` WRITE;
+/*!40000 ALTER TABLE `tblclass` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tblclass` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tblclasscourse`
@@ -94,6 +121,15 @@ CREATE TABLE `tblclasscourse` (
   KEY `index_class_course` (`ClassID`,`CourseID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tblclasscourse`
+--
+
+LOCK TABLES `tblclasscourse` WRITE;
+/*!40000 ALTER TABLE `tblclasscourse` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tblclasscourse` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tblcourse`
@@ -121,8 +157,17 @@ CREATE TABLE `tblcourse` (
   KEY `AK_DWOPROFILE` (`dwoProfileID`),
   KEY `AK_PARENTID` (`parentID`),
   CONSTRAINT `tblcourse_ibfk_1` FOREIGN KEY (`schoolID`) REFERENCES `tblschool` (`schoolID`)
-) ENGINE=InnoDB AUTO_INCREMENT=81726 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tblcourse`
+--
+
+LOCK TABLES `tblcourse` WRITE;
+/*!40000 ALTER TABLE `tblcourse` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tblcourse` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tblcoursesequence`
@@ -142,8 +187,17 @@ CREATE TABLE `tblcoursesequence` (
   PRIMARY KEY (`coursesequenceID`),
   KEY `schoolID` (`schoolID`),
   CONSTRAINT `tblcoursesequence_ibfk_1` FOREIGN KEY (`schoolID`) REFERENCES `tblschool` (`schoolID`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=106425 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tblcoursesequence`
+--
+
+LOCK TABLES `tblcoursesequence` WRITE;
+/*!40000 ALTER TABLE `tblcoursesequence` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tblcoursesequence` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tbldwoprofile`
@@ -159,8 +213,17 @@ CREATE TABLE `tbldwoprofile` (
   `dwoProfileRights` varchar(100) DEFAULT '_',
   `dwoProfileDescription` varchar(100) DEFAULT '',
   PRIMARY KEY (`dwoProfileID`)
-) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbldwoprofile`
+--
+
+LOCK TABLES `tbldwoprofile` WRITE;
+/*!40000 ALTER TABLE `tbldwoprofile` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbldwoprofile` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tbldwosystemparameters`
@@ -175,6 +238,16 @@ CREATE TABLE `tbldwosystemparameters` (
   PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Only for dwo system parameters like database versioning info';
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbldwosystemparameters`
+--
+
+LOCK TABLES `tbldwosystemparameters` WRITE;
+/*!40000 ALTER TABLE `tbldwosystemparameters` DISABLE KEYS */;
+INSERT INTO `tbldwosystemparameters` VALUES ('DBVersion Build','0'),('DBVersion Major','1'),('DBVersion Minor','4'),('DBVersion Revision','1'),('DwoSchoolIndex','1'),('NullSchoolIndex','2');
+/*!40000 ALTER TABLE `tbldwosystemparameters` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tblfromto`
@@ -195,6 +268,15 @@ CREATE TABLE `tblfromto` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `tblfromto`
+--
+
+LOCK TABLES `tblfromto` WRITE;
+/*!40000 ALTER TABLE `tblfromto` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tblfromto` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tblgroup`
 --
 
@@ -209,6 +291,16 @@ CREATE TABLE `tblgroup` (
   UNIQUE KEY `AK_IDENTIFIER_1` (`groupname`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tblgroup`
+--
+
+LOCK TABLES `tblgroup` WRITE;
+/*!40000 ALTER TABLE `tblgroup` DISABLE KEYS */;
+INSERT INTO `tblgroup` VALUES (1,'STUDENT','The students group'),(2,'TEACHER','The teachers group'),(3,'ADMIN','The admin group'),(4,'ANONYMOUS','The anonymous user'),(5,'SCHOOLADMIN','The schooladmin group');
+/*!40000 ALTER TABLE `tblgroup` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tblhasrole`
@@ -232,6 +324,16 @@ CREATE TABLE `tblhasrole` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `tblhasrole`
+--
+
+LOCK TABLES `tblhasrole` WRITE;
+/*!40000 ALTER TABLE `tblhasrole` DISABLE KEYS */;
+INSERT INTO `tblhasrole` VALUES (1,NULL,1,'2015-10-13','_',NULL);
+/*!40000 ALTER TABLE `tblhasrole` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tblimage`
 --
 
@@ -244,6 +346,39 @@ CREATE TABLE `tblimage` (
   PRIMARY KEY (`courseID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tblimage`
+--
+
+LOCK TABLES `tblimage` WRITE;
+/*!40000 ALTER TABLE `tblimage` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tblimage` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tbljars`
+--
+
+DROP TABLE IF EXISTS `tbljars`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbljars` (
+  `key` varchar(100) NOT NULL DEFAULT '',
+  `jarname` varchar(128) NOT NULL DEFAULT '',
+  `lastdate` date NOT NULL DEFAULT '0000-00-00',
+  PRIMARY KEY (`key`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tbljars`
+--
+
+LOCK TABLES `tbljars` WRITE;
+/*!40000 ALTER TABLE `tbljars` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tbljars` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tblsamluser`
@@ -267,6 +402,15 @@ CREATE TABLE `tblsamluser` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `tblsamluser`
+--
+
+LOCK TABLES `tblsamluser` WRITE;
+/*!40000 ALTER TABLE `tblsamluser` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tblsamluser` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tblschool`
 --
 
@@ -284,8 +428,18 @@ CREATE TABLE `tblschool` (
   `expire` date DEFAULT NULL,
   PRIMARY KEY (`schoolID`),
   UNIQUE KEY `AK_IDENTIFIER_1` (`schoollogin`)
-) ENGINE=InnoDB AUTO_INCREMENT=407 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tblschool`
+--
+
+LOCK TABLES `tblschool` WRITE;
+/*!40000 ALTER TABLE `tblschool` DISABLE KEYS */;
+INSERT INTO `tblschool` VALUES (0,'DwoSchool','dwo','',0,'_',NULL,NULL),(1,'NULL','null','',0,'_',NULL,NULL);
+/*!40000 ALTER TABLE `tblschool` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tblschoolgroup`
@@ -302,28 +456,18 @@ CREATE TABLE `tblschoolgroup` (
   PRIMARY KEY (`schoolGroupID`),
   KEY `PASSWORD_SCHOOL_FK` (`schoolID`),
   KEY `PASSWORD_GROUP_FK` (`groupID`)
-) ENGINE=InnoDB AUTO_INCREMENT=1883 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Temporary view structure for view `tblsco`
+-- Dumping data for table `tblschoolgroup`
 --
 
-DROP TABLE IF EXISTS `tblsco`;
-/*!50001 DROP VIEW IF EXISTS `tblsco`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE VIEW `tblsco` AS SELECT 
- 1 AS `scoID`,
- 1 AS `courseID`,
- 1 AS `appletID`,
- 1 AS `sconame`,
- 1 AS `showscore`,
- 1 AS `sequencenr`,
- 1 AS `description`,
- 1 AS `launchdata`,
- 1 AS `launchdatabytes`*/;
-SET character_set_client = @saved_cs_client;
+LOCK TABLES `tblschoolgroup` WRITE;
+/*!40000 ALTER TABLE `tblschoolgroup` DISABLE KEYS */;
+INSERT INTO `tblschoolgroup` VALUES (1,3,0,'');
+/*!40000 ALTER TABLE `tblschoolgroup` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tblscocontext`
@@ -343,8 +487,17 @@ CREATE TABLE `tblscocontext` (
   UNIQUE KEY `AK_IDENTIFIER_1` (`sconame`,`courseID`),
   KEY `SCO_APPLET_FK` (`appletID`),
   KEY `SCO_COURSE_FK` (`courseID`)
-) ENGINE=InnoDB AUTO_INCREMENT=165680 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tblscocontext`
+--
+
+LOCK TABLES `tblscocontext` WRITE;
+/*!40000 ALTER TABLE `tblscocontext` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tblscocontext` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tblscodata`
@@ -363,24 +516,13 @@ CREATE TABLE `tblscodata` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Temporary view structure for view `tblscoview`
+-- Dumping data for table `tblscodata`
 --
 
-DROP TABLE IF EXISTS `tblscoview`;
-/*!50001 DROP VIEW IF EXISTS `tblscoview`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE VIEW `tblscoview` AS SELECT 
- 1 AS `scoID`,
- 1 AS `courseID`,
- 1 AS `appletID`,
- 1 AS `sconame`,
- 1 AS `showscore`,
- 1 AS `sequencenr`,
- 1 AS `description`,
- 1 AS `launchdata`,
- 1 AS `launchdatabytes`*/;
-SET character_set_client = @saved_cs_client;
+LOCK TABLES `tblscodata` WRITE;
+/*!40000 ALTER TABLE `tblscodata` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tblscodata` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tblstudentof`
@@ -400,6 +542,15 @@ CREATE TABLE `tblstudentof` (
   KEY `userID` (`userID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tblstudentof`
+--
+
+LOCK TABLES `tblstudentof` WRITE;
+/*!40000 ALTER TABLE `tblstudentof` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tblstudentof` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tblstudentscocontext`
@@ -427,6 +578,15 @@ CREATE TABLE `tblstudentscocontext` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `tblstudentscocontext`
+--
+
+LOCK TABLES `tblstudentscocontext` WRITE;
+/*!40000 ALTER TABLE `tblstudentscocontext` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tblstudentscocontext` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tblstudentscodata`
 --
 
@@ -442,6 +602,15 @@ CREATE TABLE `tblstudentscodata` (
   CONSTRAINT `tblstudentscodata_ibfk_2` FOREIGN KEY (`studentSco`) REFERENCES `tblstudentscocontext` (`studentSco`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Contains only context data';
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tblstudentscodata`
+--
+
+LOCK TABLES `tblstudentscodata` WRITE;
+/*!40000 ALTER TABLE `tblstudentscodata` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tblstudentscodata` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tblteacherof`
@@ -461,6 +630,15 @@ CREATE TABLE `tblteacherof` (
   KEY `userID` (`userID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tblteacherof`
+--
+
+LOCK TABLES `tblteacherof` WRITE;
+/*!40000 ALTER TABLE `tblteacherof` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tblteacherof` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tbluser`
@@ -487,106 +665,18 @@ CREATE TABLE `tbluser` (
   KEY `USER_GROUP_FK` (`schoolGroupID`),
   KEY `STUDENT_CLASS_FK` (`classID`),
   CONSTRAINT `tbluser_ibfk_1` FOREIGN KEY (`schoolGroupID`) REFERENCES `tblschoolgroup` (`schoolGroupID`)
-) ENGINE=InnoDB AUTO_INCREMENT=209555 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Temporary view structure for view `tomcat_roles_view`
+-- Dumping data for table `tbluser`
 --
 
-DROP TABLE IF EXISTS `tomcat_roles_view`;
-/*!50001 DROP VIEW IF EXISTS `tomcat_roles_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE VIEW `tomcat_roles_view` AS SELECT 
- 1 AS `username`,
- 1 AS `groupname`*/;
-SET character_set_client = @saved_cs_client;
-
---
--- Temporary view structure for view `tomcat_user_view`
---
-
-DROP TABLE IF EXISTS `tomcat_user_view`;
-/*!50001 DROP VIEW IF EXISTS `tomcat_user_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE VIEW `tomcat_user_view` AS SELECT 
- 1 AS `username`,
- 1 AS `passwd`*/;
-SET character_set_client = @saved_cs_client;
-
---
--- Final view structure for view `tblsco`
---
-
-/*!50001 DROP VIEW IF EXISTS `tblsco`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `tblsco` AS select `tblscocontext`.`scoID` AS `scoID`,`tblscocontext`.`courseID` AS `courseID`,`tblscocontext`.`appletID` AS `appletID`,`tblscocontext`.`sconame` AS `sconame`,`tblscocontext`.`showscore` AS `showscore`,`tblscocontext`.`sequencenr` AS `sequencenr`,`tblscodata`.`description` AS `description`,`tblscodata`.`launchdata` AS `launchdata`,`tblscodata`.`launchdatabytes` AS `launchdatabytes` from (`tblscocontext` join `tblscodata` on((`tblscocontext`.`scoID` = `tblscodata`.`scoID`))) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tblscoview`
---
-
-/*!50001 DROP VIEW IF EXISTS `tblscoview`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `tblscoview` AS select `tblscocontext`.`scoID` AS `scoID`,`tblscocontext`.`courseID` AS `courseID`,`tblscocontext`.`appletID` AS `appletID`,`tblscocontext`.`sconame` AS `sconame`,`tblscocontext`.`showscore` AS `showscore`,`tblscocontext`.`sequencenr` AS `sequencenr`,`tblscodata`.`description` AS `description`,`tblscodata`.`launchdata` AS `launchdata`,`tblscodata`.`launchdatabytes` AS `launchdatabytes` from (`tblscocontext` join `tblscodata` on((`tblscocontext`.`scoID` = `tblscodata`.`scoID`))) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tomcat_roles_view`
---
-
-/*!50001 DROP VIEW IF EXISTS `tomcat_roles_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `tomcat_roles_view` AS select `u`.`username` AS `username`,`g`.`groupname` AS `groupname` from (((`tbluser` `u` join `tblhasrole` `h` on((`u`.`userID` = `h`.`userID`))) join `tblschoolgroup` `sg` on((`h`.`schoolGroupID` = `sg`.`schoolGroupID`))) join `tblgroup` `g` on((`sg`.`groupID` = `g`.`groupID`))) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tomcat_user_view`
---
-
-/*!50001 DROP VIEW IF EXISTS `tomcat_user_view`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `tomcat_user_view` AS select `tbluser`.`username` AS `username`,`tbluser`.`passwd` AS `passwd` from `tbluser` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
+LOCK TABLES `tbluser` WRITE;
+/*!40000 ALTER TABLE `tbluser` DISABLE KEYS */;
+INSERT INTO `tbluser` VALUES (1,NULL,NULL,'John',NULL,'Doe','dwoadmin','d55b2dbcb757e1dc1725798bccda75cd','dwoadmin@dwo.nl','2015-10-13','_',NULL);
+/*!40000 ALTER TABLE `tbluser` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -597,4 +687,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-10-12 15:28:54
+-- Dump completed on 2015-10-13 10:18:33

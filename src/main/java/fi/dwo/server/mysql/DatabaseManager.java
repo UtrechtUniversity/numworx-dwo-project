@@ -19,12 +19,12 @@ import java.util.logging.Logger;
  *
  * @author G.A.J. van der Plas
  */
-public class TestDatabaseManager {
-    private static final Logger LOG = Logger.getLogger(TestDatabaseManager.class.getName());
+public class DatabaseManager {
+    private static final Logger LOG = Logger.getLogger(DatabaseManager.class.getName());
 
     Connection con = null;
 
-    public TestDatabaseManager(String source){
+    public DatabaseManager(String source){
         init(source);
     }
     
@@ -44,8 +44,14 @@ public class TestDatabaseManager {
     public void ClearDatabase() {
         RunScript("ClearTestDatabase.sql");
     }
+    
 
-    public void IntializeDatabase() {
+    public void IntializeEmptyDatabase() {
+        RunScript("InitDatabaseNoJars.sql");
+    }
+    
+
+    public void IntializeTestDatabase() {
         RunScript("InitTestDatabase.sql");
     }
 

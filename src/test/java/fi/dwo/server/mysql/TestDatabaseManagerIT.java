@@ -37,25 +37,25 @@ public class TestDatabaseManagerIT {
     }
 
 //    /**
-//     * Test of ClearDatabase method, of class TestDatabaseManager.
+//     * Test of ClearDatabase method, of class DatabaseManager.
 //     */
 //    @Test
 //    public void testClearDatabase() {
 //        System.out.println("ClearDatabase");
-//        TestDatabaseManager instance = new TestDatabaseManager(resourceString);
+//        DatabaseManager instance = new DatabaseManager(resourceString);
 //        instance.ClearDatabase();
 //        // TODO review the generated test code and remove the default call to fail.
 ////        fail("The test case is a prototype.");
 //    }
 
     /**
-     * Test of IntializeDatabase method, of class TestDatabaseManager.
+     * Test of IntializeTestDatabase method, of class DatabaseManager.
      */
     @Test
     public void testIntializeDatabase() {
         System.out.println("IntializeDatabase");
-        TestDatabaseManager instance = new TestDatabaseManager(resourceString);
-        instance.IntializeDatabase();
+        DatabaseManager instance = new DatabaseManager(resourceString);
+        instance.IntializeTestDatabase();
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
     }

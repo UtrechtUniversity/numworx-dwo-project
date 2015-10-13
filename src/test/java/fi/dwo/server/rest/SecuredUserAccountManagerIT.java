@@ -4,7 +4,7 @@
 package fi.dwo.server.rest;
 
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.server.mysql.TestDatabaseManager;
+import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.testutil.Parameters;
 import javax.ws.rs.core.SecurityContext;
 import org.junit.After;
@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
  */
 public class SecuredUserAccountManagerIT {
 
-    static TestDatabaseManager instance = null;
+    static DatabaseManager instance = null;
 
     public SecuredUserAccountManagerIT() {
     }
@@ -36,60 +36,60 @@ public class SecuredUserAccountManagerIT {
 
     @Before
     public void setUp() {
-        instance = new TestDatabaseManager(Parameters.getResourceString());
-        instance.IntializeDatabase();
+        instance = new DatabaseManager(Parameters.getResourceString());
+        instance.IntializeTestDatabase();
     }
 
     @After
     public void tearDown() {
-        instance = new TestDatabaseManager(Parameters.getResourceString());
+        instance = new DatabaseManager(Parameters.getResourceString());
         instance.ClearDatabase();
     }
-
-    /**
-     * Test of getCurrentUser method, of class SecuredUserAccountManager.
-     */
-    @Test
-    public void testGetCurrentUser() {
-        System.out.println("getCurrentUser");
-        SecurityContext sc = null;
-        SecuredUserAccountManager instance = new SecuredUserAccountManager();
-        PersistentUser expResult = null;
-        PersistentUser result = instance.getCurrentUser(sc);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of updateCurrentUser method, of class SecuredUserAccountManager.
-     */
-    @Test
-    public void testUpdateCurrentUser() {
-        System.out.println("updateCurrentUser");
-        SecurityContext sc = null;
-        PersistentUser user = null;
-        SecuredUserAccountManager instance = new SecuredUserAccountManager();
-        PersistentUser expResult = null;
-        PersistentUser result = instance.updateCurrentUser(sc, user);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of removeCurrentUser method, of class SecuredUserAccountManager.
-     */
-    @Test
-    public void testRemoveCurrentUser() {
-        System.out.println("removeCurrentUser");
-        SecurityContext sc = null;
-        SecuredUserAccountManager instance = new SecuredUserAccountManager();
-        Boolean expResult = null;
-        Boolean result = instance.removeCurrentUser(sc);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+//
+//    /**
+//     * Test of getCurrentUser method, of class SecuredUserAccountManager.
+//     */
+//    @Test
+//    public void testGetCurrentUser() {
+//        System.out.println("getCurrentUser");
+//        SecurityContext sc = null;
+//        SecuredUserAccountManager instance = new SecuredUserAccountManager();
+//        PersistentUser expResult = null;
+//        PersistentUser result = instance.getCurrentUser(sc);
+//        assertEquals(expResult, result);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
+//
+//    /**
+//     * Test of updateCurrentUser method, of class SecuredUserAccountManager.
+//     */
+//    @Test
+//    public void testUpdateCurrentUser() {
+//        System.out.println("updateCurrentUser");
+//        SecurityContext sc = null;
+//        PersistentUser user = null;
+//        SecuredUserAccountManager instance = new SecuredUserAccountManager();
+//        PersistentUser expResult = null;
+//        PersistentUser result = instance.updateCurrentUser(sc, user);
+//        assertEquals(expResult, result);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
+//
+//    /**
+//     * Test of removeCurrentUser method, of class SecuredUserAccountManager.
+//     */
+//    @Test
+//    public void testRemoveCurrentUser() {
+//        System.out.println("removeCurrentUser");
+//        SecurityContext sc = null;
+//        SecuredUserAccountManager instance = new SecuredUserAccountManager();
+//        Boolean expResult = null;
+//        Boolean result = instance.removeCurrentUser(sc);
+//        assertEquals(expResult, result);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
 
 }
