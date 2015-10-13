@@ -1092,6 +1092,11 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			}
 		}
 	}
+	
+	public boolean isIngevuld()
+	{
+		return ingevuld;
+	}
 
 	@Override
 	public void setCommunicationRoot(OpdrNavIF comRoot)
