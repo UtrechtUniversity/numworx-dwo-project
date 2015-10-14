@@ -192,7 +192,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		@Override
 		public void onClick(ClickEvent event) {
 			FormulaVak panel = new FormulaVak();
-			sb.insert(cursor, '@');
+			//sb.insert(cursor, '@');
 			flow.insert(panel, cursor++);
 			comRoot.getKeyboard().setEditor(panel.editor);
 		}
@@ -202,14 +202,14 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		@Override
 		public void onClick(ClickEvent event) {
 			CalculatorVak panel = new CalculatorVak();
-			sb.insert(cursor, '@');
+			//sb.insert(cursor, '@');
 			flow.insert(panel, cursor++);
 			comRoot.getKeyboard().setEditor(panel.editor);
 		}
 		
 	}
 
-	StringBuilder sb = new StringBuilder();
+	//StringBuilder sb = new StringBuilder();
 	
 	private int width;
 	private int height;
@@ -265,7 +265,9 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	private void setState(ObjectMap h) {
 		String tekst = h.getString("tekst");
 		if(tekst == null) tekst = "";
-		sb.setLength(0);
+		else if(tekst.endsWith("\n"))
+			tekst = tekst.substring(0, tekst.length()-1);
+		//sb.setLength(0);
 		cursor = 0;
 		flow.clear();
 		flow.add(setCursorWidget(new InlineHTML(" \u00A0")));
@@ -359,27 +361,27 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	@Override
 	public HashMap<String, Object> getState() {
-		String sb = getAllText();
+		String sb = getAllText().append('\n').toString();
 		HashMap<String,Object> state = new HashMap<String,Object>();
-		state.put("tekst", sb.toString());
+		state.put("tekst", sb);
 		return state;
 	}
 
-	private String getAllText() {
+	private StringBuilder getAllText() {
 		StringBuilder sb = new StringBuilder();
-		int count = flow.getWidgetCount();
+		int count = flow.getWidgetCount()-1;
 		for(int i=0; i < count; i++) {
 			Widget child = flow.getWidget(i);
 			if(child instanceof HasText) {
 				sb.append(((HasText) child).getText());
 			}
 		}
-		return sb.toString();
+		return sb;
 	}
 
-	private String getText() {
-		return sb.toString();
-	}
+//	private String getText() {
+//		return sb.toString();
+//	}
 
 	@Override
 	public void setState(HashMap<String, Object> h) {
@@ -447,14 +449,14 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 				{		
 						FormulaVak fv = new FormulaVak();
 						fv.setText(string);
-						sb.insert(cursor, '@');
+//						sb.insert(cursor, '@');
 						flow.insert(fv,cursor++);
 						break;
 				}
 				if (chars[i+1] == 'R') {
 						CalculatorVak cv = new CalculatorVak();
 						cv.setText(string);
-						sb.insert(cursor, '@');
+//						sb.insert(cursor, '@');
 						flow.insert(cv, cursor++);
 				}
 				break;
@@ -499,7 +501,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	
 	@Override
 	public void enter() {
-		sb.insert( cursor, '\n');
+//		sb.insert( cursor, '\n');
 		flow.insert(new Enter(), cursor); cursor++;
 	}
 
@@ -507,7 +509,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	public void removeCurrentElement() {
 		if(cursor > 0)
 		{	flow.remove(--cursor);
-			sb.replace(cursor, cursor+1, "");
+//			sb.replace(cursor, cursor+1, "");
 		}
 		
 	}
@@ -518,7 +520,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		if(cursor < max){
 			flow.remove(cursor);
 			setCursorWidget(flow.getWidget(cursor));
-			sb.replace(cursor, cursor+1, "");
+//			sb.replace(cursor, cursor+1, "");
 		}
 	}
 
@@ -573,7 +575,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 		SafeHtmlBuilder builder = new SafeHtmlBuilder();
 		builder.append(charAt);
 		html = builder.toSafeHtml();
-		sb.insert(cursor, charAt);
+//		sb.insert(cursor, charAt);
 		InlineHTML w = new InlineHTML(html);
 		new TapForFocus(w);
 		flow.insert(w,cursor++);
@@ -594,6 +596,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 	
 	@Override
 	public void plak(FormuleClipboardIF clip) {
+		insert(clip.getClipboard());
 	}
 
 	@Override
@@ -691,7 +694,7 @@ public class TextEditor  implements InteractionView, TouchStartHandler, FormuleE
 
 	@Override
 	public void getResponses(List<String> responses) {
-		responses.add(getAllText());
+		responses.add(getAllText().toString());
 	}
 
 
