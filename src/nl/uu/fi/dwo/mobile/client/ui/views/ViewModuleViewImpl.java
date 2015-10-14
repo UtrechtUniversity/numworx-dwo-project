@@ -208,6 +208,15 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleView, Entry
 		kb.blur();
 	}
 
+	public void removeTitle() {
+		hp.removeFromParent();
+		setWindowTop(0);
+		int h = mainPanel.getOffsetHeight();
+		sb.setScrollPanel(this, h);
+	}
+	
+	
+	
 	public void setupView(HashMap<String, Object> launchData)
 	{
 		for (int i = 0; i < buttons.size(); i++)
@@ -232,6 +241,9 @@ try {
 			sb.setWriteMathSet(wrap.getInt(WRITE_MATH_SET));
 		} else
 			sb.setKeyboard(-1);
+//
+		
+		
 		
 		
 		contentPanel.getElement().getStyle().setFontSize(font_size, Unit.PX);
@@ -239,6 +251,11 @@ try {
 		// GEEN randje aan de linkerkant, want dan klopt de maat (100%) niet meer bij noordhoff
 
 		(on =  new OpdrNav()).init(launchData, this, createMemento());
+// voor noordhoff
+		int aantalOpdrachten = on.getAantalOpdrachten();
+		if( standalone && !bolletjesZichtbaar && !volgendeKnopZichtbaar && !vorigeKnopZichtbaar && aantalOpdrachten == 1)
+			removeTitle();
+
 		FlowPanel onp = (FlowPanel) on.getAsPanel();
 		if(bolletjesZichtbaar)
 			sb.addNavPanel(onp);
