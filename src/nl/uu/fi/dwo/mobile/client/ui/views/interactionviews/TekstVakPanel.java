@@ -1647,6 +1647,21 @@ public class TekstVakPanel implements InteractionView, FacetAware
 		
 		return juist;
 	}
+	
+	public boolean ipObjectIsIngevuld()
+	{
+		boolean ingevuld = false;
+		for(int i = 0; i < interactionViewObjects.size(); i++)
+		{	Object object = interactionViewObjects.get(i);
+			if(object instanceof FormuleEditorWithAnswer)
+			{	FormuleEditorWithAnswer object2 = (FormuleEditorWithAnswer) object;
+				object2.kijkNa();
+				ingevuld = ingevuld || object2.isIngevuld();
+			}
+		}
+		
+		return ingevuld;
+	}
 
 	
 	public Expressie geefObjectWaarde()
