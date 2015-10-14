@@ -244,7 +244,7 @@ public class MC2View extends Composite implements InteractionView {
 	}
 
 	private HashMap<String, Object> wrap(HashMap<String, Object> map) {
-		if(map == null) map = new HashMap<>();
+		if(map == null) map = new HashMap<String, Object>();
 		map.put("STUBVIEW_score", String.valueOf(getScore()));
 		map.put("STUBVIEW_correct", String.valueOf(isCorrect()));
 		return map;
