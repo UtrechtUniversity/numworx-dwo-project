@@ -69,7 +69,7 @@ public class DatabaseManager {
         //file handle for main.properties
         input = new InputStreamReader(
                     getClass().getResourceAsStream(runPropFile));
-
+        
         //load the properties
         properties.load(input);
 

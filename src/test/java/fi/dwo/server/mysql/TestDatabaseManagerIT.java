@@ -61,7 +61,7 @@ public class TestDatabaseManagerIT {
     @Test
     public void testIntializeDatabase() {
         System.out.println("IntializeDatabase");
-        DatabaseManager instance = new DatabaseManager(resourceString);
+        DatabaseManager instance = new DatabaseManager();
         instance.IntializeTestDatabase();
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");
