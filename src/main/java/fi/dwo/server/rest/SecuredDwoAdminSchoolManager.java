@@ -271,7 +271,7 @@ public class SecuredDwoAdminSchoolManager {
                         }
 
                         //Loop TeacherOf in hasRole
-                        List<PersistentTeacherOfClass> toList = TeacherOfClassManager.findEntities(hr);
+                        List<PersistentTeacherOfClass> toList = TeacherOfClassManager.findEntities(hr.getPersistentHasRolePK());
                         for (PersistentTeacherOfClass to : toList) {
                             //Remove TeacherOf
                             TeacherOfClassManager.destroy(to.getPersistentTeacherOfClassPK());

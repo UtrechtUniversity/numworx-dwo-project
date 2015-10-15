@@ -79,7 +79,7 @@ public class SecuredTeacherSchoolClassManager {
             List<PersistentSchoolClass> schoolClasses = null;
             List<RestSchoolClass> restSchoolClasses;
             try {
-                List<PersistentTeacherOfClass> tocList = TeacherOfClassManager.findEntities(phr);
+                List<PersistentTeacherOfClass> tocList = TeacherOfClassManager.findEntities(phr.getPersistentHasRolePK());
                 restSchoolClasses = new ArrayList<RestSchoolClass>(tocList.size());
                 for (PersistentTeacherOfClass toc : tocList) {
                     PersistentSchoolClass s = SchoolClassManager.findEntity(toc.getPersistentTeacherOfClassPK().getClassID());

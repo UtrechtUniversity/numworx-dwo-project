@@ -87,8 +87,14 @@ public class SecuredUserAccountManager {
     public PersistentUser updateCurrentUser(@Context SecurityContext sc, PersistentUser user) {
         if (user.getUsername().equals(sc.getUserPrincipal().getName())) {
             try {
+                PersistentUser dbUser = UserManager.findByUserName(user.getUsername());
+                dbUser.setFirstname(user.getFirstname());
+                dbUser.setLastname(user.getLastname());
+                dbUser.setMiddlename(user.getMiddlename());
+                dbUser.setEmail(user.getEmail());
+                dbUser.setPasswd(user.getPasswd());
                 //User to update is logged in user.
-                UserManager.edit(user);
+                UserManager.edit(dbUser);
                 return UserManager.findByUserName(user.getUsername());
             }
             catch (Exception e) {
@@ -115,7 +121,8 @@ public class SecuredUserAccountManager {
     @Path("/remove")
     public Boolean removeCurrentUser(@Context SecurityContext sc) {
         PersistentUser u = UserManager.findByUserName(sc.getUserPrincipal().getName());
-            List<PersistentHasRole> hrList = HasRoleManager.findEntities(u);
+        if(u==null) return true;
+        List<PersistentHasRole> hrList = HasRoleManager.findEntities(u);
             for(PersistentHasRole hr : hrList){
                 List<PersistentStudentScoContext> sscList = StudentScoContextManager.findEntities(hr.getPersistentHasRolePK());
                 for(PersistentStudentScoContext ssc : sscList){
@@ -127,7 +134,7 @@ public class SecuredUserAccountManager {
                 for(PersistentStudentOfClass so : soList){
                     StudentOfClassManager.destroy(so.getPersistentStudentOfClassPK());
                 }
-                List<PersistentTeacherOfClass> toList = TeacherOfClassManager.findEntities(hr);
+                List<PersistentTeacherOfClass> toList = TeacherOfClassManager.findEntities(hr.getPersistentHasRolePK());
                 for(PersistentTeacherOfClass to : toList){
                     TeacherOfClassManager.destroy(to.getPersistentTeacherOfClassPK());
                 }

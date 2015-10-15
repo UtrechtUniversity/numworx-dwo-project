@@ -146,7 +146,7 @@ public class SecuredUserAccountManagerIT {
 
         try {
             PersistentUser user = UserManager.findByUserName("user01");
-            fail("Did not remove user." + user.getUsername());
+            if(user!=null) fail("User was not removed by function.");
         }
         catch (Dwo2RestException e) {
             // succeeded

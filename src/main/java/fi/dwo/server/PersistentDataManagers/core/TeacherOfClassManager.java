@@ -6,6 +6,7 @@
 package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
+import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
@@ -138,14 +139,14 @@ public class TeacherOfClassManager {
         }
     }
     
-    public static List<PersistentTeacherOfClass> findEntities(PersistentHasRole hr) {
+    public static List<PersistentTeacherOfClass> findEntities(PersistentHasRolePK key) {
         EntityManager em = getEntityManager();
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentTeacherOfClass.findByHasRolePK");
-            q.setParameter("userID", hr.getPersistentHasRolePK().getUserID());
-            q.setParameter("schoolGroupID", hr.getPersistentHasRolePK().getSchoolGroupID());
+            q.setParameter("userID", key.getUserID());
+            q.setParameter("schoolGroupID", key.getSchoolGroupID());
             List<PersistentTeacherOfClass> list = q.getResultList();
-            LOG.log(Level.FINE, "PersistentTeacherOfClass-manager retrieved {0} PersistentTeacherOfClass with userid {1}", new Object[]{list.size(), hr.getPersistentHasRolePK().getUserID()});
+            LOG.log(Level.FINE, "PersistentTeacherOfClass-manager retrieved {0} PersistentTeacherOfClass with userid {1}", new Object[]{list.size(), key.getUserID()});
             return list;
         }
         finally {
