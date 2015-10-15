@@ -698,7 +698,7 @@ try {
 			
 			for(int i = 0; i < scorePaginas.length; i++)//kan fout gaat als scorePaginas leeg
 			{	if(bezocht[actNr][scorePaginas[i]-1])
-				{	scoreSelectie = scoreSelectie + on.getScore(actNr, scorePaginas[i]-1)-on.getStrafpunten(actNr, scorePaginas[i]-1);
+				{	scoreSelectie = scoreSelectie + on.getScore(actNr, scorePaginas[i]-1);//-on.getStrafpunten(actNr, scorePaginas[i]-1);
 					scoreMaxSelectie += on.getMaxScore(actNr, scorePaginas[i]-1);
 				}
 			}

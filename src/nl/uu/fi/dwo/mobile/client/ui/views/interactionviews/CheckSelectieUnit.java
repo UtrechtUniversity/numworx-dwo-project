@@ -92,6 +92,8 @@ public class CheckSelectieUnit implements InteractionStub
     private int score;
     private int errorCount;
     private int scoreMax=10;
+    private int foutStraf = 2;
+    private boolean changed = false;
     
 	static int GOED = 1;
 	static int FOUT = 0;
@@ -199,27 +201,37 @@ public class CheckSelectieUnit implements InteractionStub
             correct = true;
             fout = false;
             score = scoreMax;
+            if(mode == 1)
+            	score = Math.max(0, scoreMax - errorCount * foutStraf);
         }
         else 
         {   //foutKruisImage.setVisible(true);
             correct = false;
             fout = true;
-            score = 0;
+            verhoogErrorCount();
+        	score = 0;
         }
         
         if(show && check)
-        {	nakijkAchtergrond.setVisible(true);
+        {	if (ingevuld)
+    			comRoot.setChanged(teltMee && !juist);
+        	nakijkAchtergrond.setVisible(true);
         	if(correct)
         		goedKrulImage.setVisible(true);
         	else
         		foutKruisImage.setVisible(true);
-        	if (ingevuld)
-        		comRoot.setChanged(teltMee && !juist);
         }
     }
     
     public void kijkNa(int stapNr)
     { 	kijkNa();
+    }
+    
+    public void verhoogErrorCount()
+    {
+    	if(changed)
+    		errorCount++;
+    	changed = false;
     }
 		
 		
@@ -256,7 +268,7 @@ public class CheckSelectieUnit implements InteractionStub
 	    attemptsCount = this.attemptsCount;
 	    errorCount = this.errorCount;
 
-	    //kijkNa(false);
+	    kijkNa(false);
 		if(logOption)
 		{	
 	    	HashMap logMap = new HashMap<String, Object>();
@@ -601,7 +613,6 @@ public class CheckSelectieUnit implements InteractionStub
 			public void onClick(ClickEvent e)
 			{	e.stopPropagation();
 				kijkNa();
-	        	if(fout) errorCount++;
 	        	attemptsCount++;
 				setAttempt();
 			}
@@ -699,6 +710,7 @@ public class CheckSelectieUnit implements InteractionStub
 				if(i != j)
 					ipList[j].setSelected(false);
 		}
+		changed = true;
 	}
 	/*
 	@Override //nodig?

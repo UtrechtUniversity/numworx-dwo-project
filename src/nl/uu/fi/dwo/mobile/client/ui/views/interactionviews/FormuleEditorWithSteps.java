@@ -137,7 +137,9 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 	private boolean teltMee;
 
 	private int score;
+	private int errorCount = 0;
 	private int scoreMax;
+	private int foutStraf = 2;
 	private Boolean correct;
 	
 	private boolean stapOk = true;
@@ -586,6 +588,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		nagekeken = true;
 		correct = true;
 		score = scoreMax;
+		if(mode == 1)
+			score = Math.max(0, scoreMax - errorCount * foutStraf);
 		if(!setState)
 			comRoot.setChanged(false);
 	}
@@ -607,7 +611,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		//int goedHalfFout = editor.getGoedHalfFout();
 		stapOk = false;
 		nagekeken = false;
-		correct = false;
+		correct = false;//moet correct hier niet null zijn?
 		contentPanel.remove(feedbackPanel);
 		vervangEditorDoorViewer(useranswer, show, setState);
 		
@@ -979,6 +983,12 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		{	contentPanel.setWidgetTopHeight(stepPanels.get(stepPanels.size() - 1), stepPanelY, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
 			editor.setCurrentElementRepaint();
 		}
+	}
+	
+	public void verhoogErrorCount()
+	{
+		//Alleen maar aanroepen vanuit FormuleEditorWithAnswer.verhoogErrorCount(); Dan weet je zeker dat er iets veranderd is.
+		errorCount++;
 	}
 
 	public FormuleEditorWithAnswer addNewEditor(LayoutPanel p)
@@ -1376,11 +1386,13 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		String antwoordString = "";
 		String substitutieString = "";
 		String[] gebruikersSubStrings = null;
+		int errorCount = 0;
 		
 		if(editor != null && !(mode == 2 || mode == 3))
 			editor.kijkNa();
 
 		stapNr = this.stapNr;
+		errorCount = this.errorCount;
 		formuleVakInhouden = new String[stapNr + 1];
 		for (int i = 0; i < stapNr + 1; i++)
 		{
@@ -1423,6 +1435,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		h.put("pijlVakOperatoren", pijlVakOperatoren);
 		h.put("ingevuld", new Boolean(ingevuld));
 		h.put("nagekeken", new Boolean(nagekeken));
+		h.put("errorCount", new Integer(errorCount));
 		h.put("substitutieString", substitutieString);
 		h.put("gebruikersSubStrings", gebruikersSubStrings);
 		
@@ -1458,6 +1471,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		String[] pijlVakOperatoren = null;
 		boolean ingevuld = false;
 		boolean nagekeken = false;
+		int errorCount = 0;
 		String substitutieString = "";
 		String antwoordString = "";
 		String[] gebruikersSubStrings = null;
@@ -1469,6 +1483,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			ingevuld = (Boolean) h.get("ingevuld");
 		if (h.get("nagekeken") != null)
 			nagekeken = (Boolean) h.get("nagekeken");
+		if (h.get("errorCount") != null)
+			errorCount = ((Number) h.get("errorCount")).intValue();
 		if (h.get("formuleVakInhouden") != null)
 		{
 			formuleVakInhouden = JSONUtilities.toStringArray(h.get("formuleVakInhouden"));
@@ -1498,6 +1514,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 		this.stapNr = stapNr;
 		this.ingevuld = ingevuld;
 		this.nagekeken = nagekeken;
+		this.errorCount = errorCount;
 		//terugzetten als gebruikersSubstitutiesVak gemaakt:
 		//gebruikersSubstitutiesVak.zetRegels(gebruikersSubStrings);
 		
@@ -1566,6 +1583,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 				if(antwoordString.startsWith("$f") && antwoordString.endsWith("@"))
 					antwoordString = antwoordString.substring(2, antwoordString.length() - 1);
 				editor.insert(antwoordString);
+				//hier setChanged(false)?
 				if(viewers.size() > 0)
 					stepPanelY += viewers.get(viewers.size() - 1).getHeight() + stapH;
 				contentPanel.setWidgetTopHeight(stepPanel, stepPanelY, Style.Unit.PX, hoogteStepPanelMetEditor(), Style.Unit.PX);
@@ -1618,6 +1636,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 							currentTekst = removePrefix(currentTekst);
 						currentTekst = removeIsTeken(currentTekst);
 						editor.insert(currentTekst);
+						//hier setChanged(false)?
 						if(viewers.size() > 0)
 							latest_answer_viewer = viewers.get(viewers.size() - 1);
 						editor.kijkNa(true);
@@ -1652,6 +1671,7 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 							currentTekst = removePrefix(currentTekst);
 						currentTekst = removeIsTeken(currentTekst);
 						editor.insert(currentTekst);
+						
 						if(viewers.size() > 0)
 							latest_answer_viewer = viewers.get(viewers.size() - 1);
 						editor.kijkNa(true);
@@ -1679,7 +1699,13 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 					fv.showResult(FormuleViewer.ALMOSTCORRECT);
 				else
 					fv.showResult(FormuleViewer.NONE);
-				score = correct == Boolean.TRUE ? scoreMax : 0;
+				if(correct == Boolean.TRUE)
+				{	score = scoreMax;
+					if(mode == 1)
+						score = Math.max(scoreMax - errorCount * foutStraf, 0);
+				}
+				else
+					score = 0;
 			}	
 		}
 		if(mode == 2 || mode == 3)
@@ -1972,6 +1998,12 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			//score = editor.getScore();
 		}
 		score = editor.getScore();
+		if(mode == 1)
+		{
+			//in score niet aantal fouten uit deze specifieke editor (regel), maar aantal fouten uit gehele editorWithSteps meenemen
+			score = editor.getScoreZonderAftrek();
+			score = Math.max(0, score - foutStraf * errorCount);
+		}
 		
 		if(bordjesMethode)
 		{	if(stapOk || goedHalfFout == AntwoordVakChecker.GOED)
@@ -2213,6 +2245,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 			nagekeken = true;
 			correct = true;
 			score = scoreMax;
+			if(mode == 1)
+				score = Math.max(0, scoreMax - errorCount * foutStraf);
 			if(!setState)
 				comRoot.setChanged(false);
 		}
@@ -2319,6 +2353,8 @@ public class FormuleEditorWithSteps implements InteractionView, FacetAware
 				nagekeken = true;
 				correct = true;
 				score = scoreMax;
+				if(mode == 1)
+					score = Math.max(0, scoreMax - errorCount * foutStraf);
 				comRoot.setChanged(false);
 			}
 			else if(vergNieuw != null && linStrategieVersie)

@@ -318,8 +318,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		isCorrect[currentActiviteit][currentOpdracht] = correct;
 		opdrachtenCorrect[currentActiviteit][currentOpdracht] = correct;
 		
-		if(strafpunten != null && mode == OEFENEN_STRAFPUNTEN && fout)
-			strafpunten[currentActiviteit][currentOpdracht] += foutStraf;
+		//met nieuwe implementatie strafpunten: niet meer hier regelen maar in losse antwoordvakken. 
+		//boolean fout is ook niet meer nodig.
+//		if(strafpunten != null && mode == OEFENEN_STRAFPUNTEN && fout)
+//			strafpunten[currentActiviteit][currentOpdracht] += foutStraf;
 		if (buttons != null && buttons.size() > currentOpdracht)
 		{	logger.fine("setChanged zet Button " + currentOpdracht + " correct; correct = " + correct);
 			setButtonCorrect(buttons.get(currentOpdracht), correct, currentOpdracht);
@@ -622,12 +624,13 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		states[currentActiviteit][currentOpdracht] = entry.getState();
 		ScoreNavIF source = entry.scoreNav;
 		int scoreCorrected = entry.getScore();
-		if(strafpunten != null && mode == OEFENEN_STRAFPUNTEN)
-		{
-			scoreCorrected -= strafpunten[currentActiviteit][currentOpdracht];
-			if( scoreCorrected < 0 ) scoreCorrected = 0;
-			memento.setStrafpunten(strafpunten);
-		}
+		//strafpunten worden al in score meegenomen in de entry zelf.
+//		if(strafpunten != null && mode == OEFENEN_STRAFPUNTEN)
+//		{
+//			scoreCorrected -= strafpunten[currentActiviteit][currentOpdracht];
+//			if( scoreCorrected < 0 ) scoreCorrected = 0;
+//			memento.setStrafpunten(strafpunten);
+//		}
 		
 		source.setItemScore(currentOpdracht, 
 				scores[currentActiviteit][currentOpdracht] = scoreCorrected

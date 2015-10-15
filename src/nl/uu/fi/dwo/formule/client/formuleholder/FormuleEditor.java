@@ -41,6 +41,7 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 	//selector
 	private FormuleRegel current = null;
 	private FormuleElement currentElement = null;
+	private boolean changed = false;
 
 	public void enter() {}
 	
@@ -49,6 +50,16 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 	{
 		super();
 		current = this.getMainRegel();
+	}
+	
+	public void setChanged(boolean c)
+	{
+		changed = c;
+	}
+	
+	public boolean isChanged()
+	{
+		return changed;
 	}
 
 	public void addElement(FormuleElement e)
@@ -72,6 +83,7 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 		this.setCurrentElementRepaint(newElement);
 		this.paint();
 		this.hasSelection = false;
+		changed = true;
 		resize();
 	}
 
@@ -89,6 +101,7 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 		current.removePrevious();
 		this.hasSelection = false;
 		this.paint();
+		changed = true;
 		resize();
 	}
 
@@ -97,6 +110,7 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 		current.removeNext();
 		this.hasSelection = false;
 		this.paint();
+		changed = true;
 		resize();
 	}
 
@@ -105,6 +119,7 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 		current.insert(text);
 		this.hasSelection = false;
 		this.paint();
+		changed = true;
 		resize();
 	}
 
@@ -213,6 +228,7 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 	{
 		this.current.deleteAll();
 		this.hasSelection = false;
+		changed = true;
 		resize();
 	}
 
@@ -220,6 +236,7 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 	{
 		this.current.deleteSelection();
 		this.hasSelection = false;
+		changed = true;
 		resize();
 	}
 
@@ -280,6 +297,7 @@ public class FormuleEditor extends FormuleHolder implements FormuleEditorIF
 	public void plak(FormuleClipboardIF clip)
 	{
 		getCurrentRegel().plak(clip);
+		changed = true;
 	}
 
 

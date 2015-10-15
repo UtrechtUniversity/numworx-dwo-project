@@ -67,6 +67,7 @@ public class CheckValueUnit implements InteractionStub{
 	private String[] formuleStrings = null;
     
 	private int errorCount;
+	private int foutStraf = 2;
     private int score;
     private int scoreMax=10;
     
@@ -203,7 +204,7 @@ public class CheckValueUnit implements InteractionStub{
 			public void onClick(ClickEvent e)
 			{	e.stopPropagation();
 				kijkNa();
-				if(fout) errorCount++;
+				//if(fout) errorCount++;
 	        	attemptsCount++;
 				setAttempt();
 			}
@@ -323,7 +324,8 @@ public class CheckValueUnit implements InteractionStub{
 	    attemptsCount = this.attemptsCount;
 	    errorCount = this.errorCount;
 
-	    //if(!("MW".equals(WiskOpdr.deployVariant) || "GR".equals(WiskOpdr.deployVariant))) kijkNa(false);
+	    //if(!("MW".equals(WiskOpdr.deployVariant) || "GR".equals(WiskOpdr.deployVariant))) 
+	    kijkNa(false);
 		if(logOption)
 		{	
 	    	HashMap<String, Object> logMap = new HashMap<String, Object>();
@@ -469,8 +471,7 @@ public class CheckValueUnit implements InteractionStub{
     }
     
     public void kijkNa(boolean show)
-    {	System.out.println("kijkna CheckValueUnit");
-    	nakijkAchtergrond.setVisible(false);
+    {	nakijkAchtergrond.setVisible(false);
 		goedKrulImage.setVisible(false);
         //goedKrulHalfImage.setVisible(false);
         foutKruisImage.setVisible(false);
@@ -627,10 +628,13 @@ public class CheckValueUnit implements InteractionStub{
         else
         {
         	for(int i=0 ; i<aantalValueObjects ; i++)
-	        {   boolean stapJuist = ipValueList[i].ipObjectIsCorrect();
+	        {   //changed opvragen en straks weer terugzetten; wordt altijd op false gezet door kijkNa in ipobjectIsCorrect.
+        		boolean changed = ipValueList[i].ipObjectIsChanged();
+        		boolean stapJuist = ipValueList[i].ipObjectIsCorrect();
 	        	ingevuld = ingevuld || ipValueList[i].ipObjectIsIngevuld();
 	        	juist = juist && stapJuist;
 	        	if(view)ipValueList[i].zetGoedFout(stapJuist);
+	        	ipValueList[i].setChanged(changed);
 		    }
 	    }
         if(juist)
@@ -638,26 +642,45 @@ public class CheckValueUnit implements InteractionStub{
             correct = true;
             fout = false;
             score = scoreMax;
+            if(mode == 1)
+            	score = Math.max(0, scoreMax - errorCount * foutStraf);
         }
         else 
         {   
             correct = false;
             fout = true;
+            verhoogErrorCount();
             score = 0;
         }
         if(show && check)
-        {	nakijkAchtergrond.setVisible(true);
+        {	if (ingevuld)
+				comRoot.setChanged(teltMee && !juist);
+        	nakijkAchtergrond.setVisible(true);
 			if(correct)
         		goedKrulImage.setVisible(true);
         	else
         		foutKruisImage.setVisible(true);
-	        if (ingevuld)
-				comRoot.setChanged(teltMee && !juist);
         }
 			
         
         //if(show || mode==0 || mode==1)produceAction("changed");
     }
+    
+    public void verhoogErrorCount()
+    {
+    	boolean changed = false;
+    	for(int i=0 ; i<aantalValueObjects ; i++)
+        {   
+    		if(ipValueList[i].ipObjectIsChanged())
+    			changed = true;
+        }
+    	if(changed)
+		{
+			errorCount++;
+		}
+    	for(int i = 0; i < aantalValueObjects; i++)
+    		ipValueList[i].setChanged(false);
+	}
     
     public void kijkNa(int stapNr)
     { 	kijkNa();

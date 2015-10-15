@@ -82,6 +82,8 @@ public class CheckSleepUnit implements InteractionStub{
     private int score;
     private int errorCount;
     private int scoreMax=10;
+    private int foutStraf = 2;
+    private boolean changed = false;
     
 	static int GOED = 1;
 	static int FOUT = 0;
@@ -169,7 +171,7 @@ public class CheckSleepUnit implements InteractionStub{
 	    errorCount = this.errorCount;
 
 	    //if(!("MW".equals(WiskOpdr.deployVariant) || "GR".equals(WiskOpdr.deployVariant))) 
-	    //kijkNa(false);
+	    kijkNa(false);
 		if(logOption)
 		{	
 	    	HashMap logMap = new HashMap<String, Object>();
@@ -522,20 +524,25 @@ public class CheckSleepUnit implements InteractionStub{
         {   correct = true;
             fout = false;
             score = scoreMax;
+            if(mode == 1)
+            	score = Math.max(0, scoreMax - errorCount * foutStraf);
         }
         else 
         {   correct = false;
             fout = true;
-            score = 0;
+            verhoogErrorCount();
+        	score = 0;
         }
         if(show && check)
-        {	nakijkAchtergrond.setVisible(true);
+        {	
+        	if (ingevuld)
+        		comRoot.setChanged(teltMee && !juist);
+        	nakijkAchtergrond.setVisible(true);
     		if(correct)
         		goedKrulImage.setVisible(true);
         	else
         		foutKruisImage.setVisible(true);
-        	if (ingevuld)
-        		comRoot.setChanged(teltMee && !juist);
+        	
         }
         
        
@@ -545,6 +552,13 @@ public class CheckSleepUnit implements InteractionStub{
     
     public void kijkNa(int stapNr)
     { 	kijkNa();
+    }
+    
+    public void verhoogErrorCount()
+    {
+    	if(changed)
+    		errorCount++;
+    	changed = false;
     }
     
 	@Override
@@ -675,8 +689,7 @@ public class CheckSleepUnit implements InteractionStub{
 			public void onClick(ClickEvent e)
 			{	e.stopPropagation();
 				kijkNa();
-				if(fout) errorCount++;
-	        	attemptsCount++;
+				attemptsCount++;
 				setAttempt();
 			}
 		});
@@ -779,7 +792,7 @@ public class CheckSleepUnit implements InteractionStub{
 		ingevuld = true;
 		for(int j = 0; j < ipListSleep.length; j++)
 			ipListSleep[j].wisGoedFout();
-		
+		changed = true;
 	}
 	
 	@Override

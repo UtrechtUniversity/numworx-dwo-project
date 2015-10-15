@@ -195,12 +195,15 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	private boolean strict = true;
 	private ObjectMap instellingen = null;
 	private int score = 0;
+	private int scoreZonderAftrek = 0;
 	private Boolean correct = null;
+	private int errorCount = 0;
 	
 	//private Expressie substitutie;
 	private String feedback = "";
 	private boolean hasFeedback = false;
 	private int scoreMax = 0;
+	private int foutStraf = 2;//in later stadium wordt deze instelbaar, dan bij init foutstraf instelbaar maken.
 	private boolean ingevuld = false;
 	private boolean nagekeken = false;
 	
@@ -693,6 +696,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		{
 			clearMain();
 			insert(fews.getEditor().toString());
+			//TODO: setChanged goed regelen.
 		}
 	}
 	
@@ -728,6 +732,8 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	private void kijkNa0(boolean backStep, boolean show, boolean setState) throws RestartException
 	{
+		if(setState)
+			setChanged(false);
 		String useranswer = "$f" + this.toString() + "@";
 		if(useranswer.equals("$f@"))
 			ingevuld = false;
@@ -742,8 +748,14 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		else	
 			checkResults = avChecker.checkAnswer(useranswer);
 
+		this.goedHalfFout = (Integer) checkResults.get("goedHalfFout");
+		if(goedHalfFout == AntwoordVakChecker.FOUT)
+			verhoogErrorCount();
 		this.correct = (Boolean) checkResults.get("correct");
 		this.score = (Integer) checkResults.get("score");
+		this.scoreZonderAftrek = (Integer) checkResults.get("score");;
+		if(mode == 1)
+			score = Math.max(0, score - errorCount * foutStraf);
 		//System.out.println("score = " + score);
 		if(hasFeedback || correct == null || !correct)
 		{	this.feedback = (String) checkResults.get("feedback");
@@ -752,7 +764,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			this.feedback = "";
 		this.syntaxFout = (Boolean) checkResults.get("syntaxFout");
 		
-		this.goedHalfFout = (Integer) checkResults.get("goedHalfFout");
+		
 
 		if(fe != null)
 		{	boolean stapCorrect = fe.controleerStap();
@@ -881,6 +893,22 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		return syntaxFout;
 	}
 	
+	public void verhoogErrorCount()
+	{
+		if(isChanged())
+		{
+			errorCount++;
+			if(fe != null)
+				fe.verhoogErrorCount();
+		}
+		setChanged(false);
+	}
+	
+//	public int getErrorCount()
+//	{
+//		return errorCount;
+//	}
+	
 	public void resize()
 	{
 		breedte = this.getMainRegel().getWidth() + extraWidth; //checkPanel.getOffsetWidth() + extraWidth;// + (getImageVisible()?26:0);
@@ -959,6 +987,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 					this.ingevuld = true;
 				boolean ingevuld = this.ingevuld;
 				boolean nagekeken = false;
+				int errorCount = this.errorCount;
 				
 				nagekeken = this.nagekeken;
 				
@@ -966,6 +995,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				h2.put(ANTWOORD_STRING, "");
 				h2.put("ingevuld", new Boolean(ingevuld));
 				h2.put("nagekeken", new Boolean(nagekeken));
+				h2.put("errorCount", new Integer(errorCount));
 				
 				fews.setState(h2);
 				h2 = fews.getState();
@@ -982,6 +1012,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				this.ingevuld = true;
 			boolean ingevuld = this.ingevuld;
 			boolean nagekeken = false;
+			int errorCount = this.errorCount;
 			
 			//ingevuld = this.ingevuld;
 			nagekeken = this.nagekeken;
@@ -991,6 +1022,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			h.put(ANTWOORD_STRING, formuleVakInhouden[0]);
 			h.put("ingevuld", new Boolean(ingevuld));
 			h.put("nagekeken", new Boolean(nagekeken));
+			h.put("errorCount", new Integer(errorCount));
 			
 		}
 		return h;
@@ -1007,16 +1039,20 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			fews.wis();
 			fews.setState(h);
 		}
-		
+		ObjectMap map = JSONUtilities.wrapMap(h);
 		boolean ingevuld = true;
 		boolean nagekeken = false;
+		int errorCount = 0;
 		if (h.get("ingevuld") != null)
 			ingevuld = (Boolean) h.get("ingevuld");
 		if (h.get("nagekeken") != null)
 			nagekeken = ((Boolean) h.get("nagekeken")).booleanValue();
+		if (map.containsKey("errorCount"))
+			errorCount = map.getInt("errorCount");
 		
 		this.ingevuld = ingevuld;
 		this.nagekeken = nagekeken;
+		this.errorCount = errorCount;
 		String antwoord = (String) h.get(ANTWOORD_STRING);
 		if(antwoord == null || ("".equals(antwoord.trim()) || "$f@".equals(antwoord.trim())) && fews != null)
 			antwoord = fews.getLatestAnswer();
@@ -1030,10 +1066,9 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			lastanswer = "$f" + toString() + "@";
 			//if(mode != 2 && mode != 3)
 			//	kijkNa();
-			
+			setChanged(false);
 			if (mode == 0 || mode == 1 || nagekeken)
 				kijkNa();
-			//TODO: kijken of dit goed gaat met de strafpunten als een antwoord niet goed is..
 		}
 
 	}
@@ -1045,13 +1080,18 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 		}
 		return antwoord;
 	}
-
-	@Override
+	
+		@Override
 	public int getScore()
 	{
 		if(!teltMee)
 			return 0;
 		return score;
+	}
+		
+	public int getScoreZonderAftrek()
+	{
+		return scoreZonderAftrek;
 	}
 
 	@Override

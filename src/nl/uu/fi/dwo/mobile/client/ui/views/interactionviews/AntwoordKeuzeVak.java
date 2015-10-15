@@ -114,6 +114,8 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	private int score;
     private int errorCount;
     private int scoreMax=10;
+    private int foutStraf = 2;
+    private boolean changed = false;
     
 	static int GOED = 1;
 	static int FOUT = 0;
@@ -590,12 +592,11 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		
 		popupBox.hide();
 		isShowing = false;
+		changed = true;
 		
 		if (!checkExternal &&(mode == OpdrNavIF.OEFENEN || mode == OpdrNavIF.OEFENEN_STRAFPUNTEN))
 		{
 			kijkNa();
-			if (fout)
-				errorCount++;
 			attemptsCount++;
 			setAttempt();
 		} 
@@ -625,6 +626,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 		errorCount = this.errorCount;
 
 		//if (!("MW".equals(WiskOpdr.deployVariant) || "GR".equals(WiskOpdr.deployVariant)))
+		if(!checkExternal)
 			kijkNa(false);
 		if (logOption)
 		{
@@ -819,7 +821,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 	
 	public void kijkNa(boolean show)
 	{
-		checkAntwoord();
+		checkAntwoord(show);
 
 		//ingevuld = antwoordKV.getSelectedIndex() > 0;
 		ingevuld = selectedIndex > 0;
@@ -842,6 +844,8 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 				if (show)
 					zetGoedFout(GOED);
 				score = puntenFeedback;
+				if(mode == 1)
+					score = Math.max(0, puntenFeedback - errorCount * foutStraf);
 				correct = true;
 				fout = false;
 			}
@@ -850,6 +854,8 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 				if (show)
 					zetGoedFout(HALF);
 				score = puntenFeedback;
+				if(mode == 1)
+					score = Math.max(0, puntenFeedback - errorCount * foutStraf);
 				correct = false;
 				fout = false;
 			}
@@ -858,8 +864,11 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 				if (show)
 					zetGoedFout(FOUT);
 				score = puntenFeedback;
+				if(mode == 1)
+					score = Math.max(0, puntenFeedback - errorCount * foutStraf);
 				correct = false;
 				fout = true;
+				verhoogErrorCount();
 			}
 		}
 		else
@@ -871,6 +880,8 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 				correct = true;
 				fout = false;
 				score = scoreMax;
+				if(mode == 1)
+					score = Math.max(0, scoreMax - errorCount * foutStraf);
 			}
 			else
 			{
@@ -878,15 +889,21 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 					zetGoedFout(FOUT);
 				correct = false;
 				fout = true;
+				verhoogErrorCount();
 				score = 0;
 			}
 		}
 
 		
-		if (show)
-			if (ingevuld)
-				//comRoot.setChanged(fout);
-				comRoot.setChanged(teltMee && fout);
+		if (show && ingevuld)
+			comRoot.setChanged(teltMee && fout);
+	}
+	
+	private void verhoogErrorCount()
+	{
+		if(changed)
+			errorCount++;
+		changed = false;
 	}
 	
 	private void zetGoedFout(int uitslag)
@@ -910,7 +927,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 			goedKrulHalfImage.setVisible(true);
 	}
 	
-	public void checkAntwoord()
+	public void checkAntwoord(boolean show)
 	{
 		if (hasFeedback)
 		{
@@ -927,7 +944,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware {
 					if (!feedback.trim().equals(""))
 					{
 						zetFeedback();
-						feedbackLabel.setVisible(true);
+						feedbackLabel.setVisible(show);
 					}
 					else
 					{

@@ -146,14 +146,15 @@ public class CheckButton implements InteractionStub
 						InteractionView view = (InteractionView) object;
 						view.kijkNa();
 						//view.zetNagekeken(true); 
-//						Boolean check = view.isCorrect();
-//						if(check == null) correct = null;
-//						if(check == Boolean.FALSE) {
-//							correct = check; 
-//							return; // early out.
-//						}
+	//						Boolean check = view.isCorrect();
+	//						if(check == null) correct = null;
+	//						if(check == Boolean.FALSE) {
+	//							correct = check; 
+	//							return; // early out.
+	//						}
 					}
 				}
+				
 			}
 		});
 	}
@@ -170,13 +171,13 @@ public class CheckButton implements InteractionStub
 	@Override
 	public HashMap<String, Object> getState() {
 		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public void setState(HashMap<String, Object> h) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -207,7 +208,6 @@ public class CheckButton implements InteractionStub
 
 	@Override
 	public void kijkNa() {
-		// TODO Auto-generated method stub
 		
 	}
 	

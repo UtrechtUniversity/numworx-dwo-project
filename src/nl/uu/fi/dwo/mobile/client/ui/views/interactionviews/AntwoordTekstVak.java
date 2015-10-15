@@ -115,6 +115,11 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 	
 	private int score;
 	private int scoreMax = 10;
+	private int errorCount;
+	private int attemptsCount;
+	private Vector attempts;
+	private int foutStraf = 2;
+	private boolean changed = false;
 
 	static int GOED = 1;
 	static int FOUT = 0;
@@ -153,10 +158,6 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 	private String logID;
 	
 	private boolean[][] logObjectives;
-	
-	private int errorCount;
-	private int attemptsCount;
-	private Vector attempts;
 	
 	// TODO: Voor in formule-modus:
 	//private Font formuleVakFont = (!WiskOpdr.formTimes) || WiskOpdr.mac || WiskOpdr.zoefi ? WiskOpdr.formuleFont1Mac : WiskOpdr.formuleFont1; //new Font("TimesRoman",Font.PLAIN,16);
@@ -285,7 +286,8 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 		//antwoordTF.getElement().getStyle().setMarginRight(5, Style.Unit.PX);
 		antwoordTF.addKeyDownHandler(new KeyDownHandler() {
 			public void onKeyDown(KeyDownEvent event) 
-			{	if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) 
+			{	changed = true;
+				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) 
 		    	{	kijkNa();
 		    	
 		    	}
@@ -598,10 +600,10 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 		int attemptsCount = 0;
 		int errorCount = 0;
 
-		if (this.ingevuld && (mode == 0 || this.nagekeken))
-			kijkNa();
-		else
-			kijkNa(false);
+//		if (this.ingevuld && (mode == 0 || mode == 1 || this.nagekeken))
+//			kijkNa();
+//		else
+		kijkNa(false);
 
 		ingevuld = this.ingevuld;
 		nagekeken = this.nagekeken;
@@ -677,7 +679,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 		else
 			antwoordTF.setText(antwoord);
 
-		if (ingevuld && (mode == 0 || nagekeken))
+		if (ingevuld && (mode == 0 || mode == 1 || nagekeken))
 			kijkNa();
 	}
 	
@@ -787,12 +789,16 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 			{	if (show)
 					zetGoedFout(GOED);
 				score = puntenFeedback;
+				if(mode == 1)
+					score = Math.max(0, puntenFeedback - errorCount * foutStraf);
 				correct = Boolean.TRUE;
 			}
 			else if (goedHalfFout == 1)
 			{	if (show)
 					zetGoedFout(HALF);
 				score = puntenFeedback;
+				if(mode == 1)
+					score = Math.max(0, puntenFeedback - errorCount * foutStraf);
 				correct = null;
 
 			}
@@ -800,7 +806,10 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 			{	if (show)
 					zetGoedFout(FOUT);
 				score = puntenFeedback;
+				if(mode == 1)
+					score = Math.max(0, puntenFeedback - errorCount * foutStraf);
 				correct = Boolean.FALSE;
+				verhoogErrorCount();
 			}
 		}
 		else
@@ -811,6 +820,8 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 					zetGoedFout(GOED);
 				correct = Boolean.TRUE;
 				score = scoreMax;
+				if(mode == 1)
+					score = Math.max(0, scoreMax - errorCount * foutStraf);
 			}
 			else
 			{
@@ -818,11 +829,25 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 					zetGoedFout(FOUT);
 				correct = Boolean.FALSE;
 				score = 0;
+				verhoogErrorCount();
 			}
 		}
-
+		if(show && check && ingevuld)
+        {	comRoot.setChanged(teltMee && correct == Boolean.FALSE);
+        }
+		
 		//if (ingevuld && show && mode != -1)
 		//	comRoot.setChanged();
+	}
+	
+	public void verhoogErrorCount()
+	{
+		System.out.println("verhoogErrorCount antwoordtekstvak");
+		if(changed)
+		{	errorCount++;
+			System.out.println("errorCount antwoordtekstvak verhoogd naar " + errorCount);
+		}
+		changed = false;
 	}
 	
 	public void zetNagekeken(boolean b)
@@ -964,7 +989,7 @@ public class AntwoordTekstVak implements InteractionView, FacetAware{
 
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
-		
+		mode = comRoot.getMode();
 	}
 
 
