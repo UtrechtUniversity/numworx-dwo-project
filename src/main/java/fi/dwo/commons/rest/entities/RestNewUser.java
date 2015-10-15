@@ -5,6 +5,7 @@
  */
 package fi.dwo.commons.rest.entities;
 
+import fi.dwo.commons.persistence.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentRole;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -22,11 +23,10 @@ public class RestNewUser {
     private String GivenName;
     private String insertion;
     private String FamilyName;
-    private String lastName;
     private String email;
     private String schoolLogin;
     private String schoolCode;
-    private PersistentRole role;
+    private RoleType role;
 
     
     public RestNewUser(){
@@ -103,20 +103,6 @@ public class RestNewUser {
     }
 
     /**
-     * @return the lastName
-     */
-    public String getLastName() {
-        return lastName;
-    }
-
-    /**
-     * @param lastName the lastName to set
-     */
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    /**
      * @return the email
      */
     public String getEmail() {
@@ -161,14 +147,14 @@ public class RestNewUser {
     /**
      * @return the role
      */
-    public PersistentRole getRole() {
+    public RoleType getRole() {
         return role;
     }
 
     /**
      * @param role the role to set
      */
-    public void setRole(PersistentRole role) {
+    public void setRole(RoleType role) {
         this.role = role;
     }
     

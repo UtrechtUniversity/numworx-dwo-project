@@ -32,6 +32,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "PersistentTeacherOfClass.findAll", query = "SELECT p FROM PersistentTeacherOfClass p"),
     @NamedQuery(name = "PersistentTeacherOfClass.findByUserID", query = "SELECT p FROM PersistentTeacherOfClass p WHERE p.persistentTeacherOfClassPK.userID = :userID"),
     @NamedQuery(name = "PersistentTeacherOfClass.findByClassID", query = "SELECT p FROM PersistentTeacherOfClass p WHERE p.persistentTeacherOfClassPK.classID = :classID"),
+    @NamedQuery(name = "PersistentTeacherOfClass.findByHasRolePK", query = "SELECT p FROM PersistentTeacherOfClass p WHERE p.persistentTeacherOfClassPK.userID = :userID and p.persistentTeacherOfClassPK.schoolGroupID= :schoolGroupID"),
     @NamedQuery(name = "PersistentTeacherOfClass.findByRegisterDate", query = "SELECT p FROM PersistentTeacherOfClass p WHERE p.registerDate = :registerDate")})
 public class PersistentTeacherOfClass implements Serializable {
     private static final long serialVersionUID = 1L;
